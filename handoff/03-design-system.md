@@ -192,7 +192,7 @@ These surfaces are dark in both appearances (`.phone.fixed` in the mockup). Wrap
 
 **Mono labels (`.tagline`, `.intent-l`, `.sub .k`).** **SF Mono via React Native's `fontFamily: 'ui-monospace'`**, weight `'500'`: 12 pt at the default size on the `caption1` ramp, so it scales. **Sentence case** ("Fit check · Full"), no tracking, color `kInk3`. Use `<MonoLabel>` / `<KText role="monoLabel">`:
 - **Why `ui-monospace` (decided):** SF Mono can't be named in `fontFamily` (it's not a public font name), but React Native's iOS font code maps the CSS-style generic `ui-monospace` to `UIFontDescriptorSystemDesignMonospaced`, i.e. SF Mono, the same font SwiftUI's `.monospaced` design gives. Verified in the React Native source (`RCTFontUtils.mm`, New Architecture text layout) at tags v0.86.3 and v0.87.1 and on `main`; not yet seen on a device. It needs no bundled file, follows ruling 29 (SF Mono instead of DM Mono), and also works on the web preview (browsers know `ui-monospace`). **Rejected:** bundling DM Mono (OFL, matches the mockup, but ruling 29 drops it and it's another file to license and ship) and `Menlo` (built in, but older and wider than SF Mono). **Fallback:** if `ui-monospace` renders as SF Pro on some version, switch `typography.ts → monoFamily` to `'Menlo'`.
-- **Default = sentence case everywhere** (ruling 29: "small uppercase mono fights Dynamic Type"). This beats the mockup's CSS uppercase, because the rulings outrank the handoff and the mockup (README precedence). `02-screens.md` §0.2 and `05-build-plan.md` §3.4 say the same.
+- **Default = sentence case everywhere** (ruling 29: "small uppercase mono fights Dynamic Type"). This beats the mockup's CSS uppercase, because the rulings outrank the handoff and the mockup (CLAUDE.md precedence). `02-screens.md` §0.2 and `05-build-plan.md` §3.4 say the same.
 - **FOUNDER DECIDES (open):** to get the mockup's uppercase look back at normal sizes, set `MONO_UPPERCASE_AT_NORMAL_SIZES = true` in `typography.ts`. `KText` then applies `textTransform: 'uppercase'` + 1 pt `letterSpacing`, display-only (it passes the sentence-case string as `accessibilityLabel`, so VoiceOver doesn't spell capitals), and still drops to sentence case at accessibility sizes.
 - **Nothing in mono is below 12 pt.** The mockup's 11.5 pt "Days dressed with intent" becomes 12.
 
@@ -715,7 +715,7 @@ The build spec's tab icons (`bubble.left.and.bubble.right`, `book.closed`, `pers
 
 Kitted's promise is "your face is never kept or sent" (ruling 11, default). That decides which crop shows where.
 
-**Stack note:** React Native has no Vision or Core Image. The pose crop, face pixelation, person masking and metadata stripping below run in **native Swift inside a small local Expo module** (README decision 11; `05` owns the module plan). The Apple API names below stay correct *inside that module*. React Native only displays the results: `NeckDownPhoto` (`components/Chat.tsx`) shows a stored neck-down image, or crops a bundled demo photo with the mockup's `PH` fractions.
+**Stack note:** React Native has no Vision or Core Image. The pose crop, face pixelation, person masking and metadata stripping below run in **native Swift inside a small local Expo module** (original handoff decision 11; `05` owns the module plan). The Apple API names below stay correct *inside that module*. React Native only displays the results: `NeckDownPhoto` (`components/Chat.tsx`) shows a stored neck-down image, or crops a bundled demo photo with the mockup's `PH` fractions.
 
 | Mode | What it is | Where it's used |
 |---|---|---|

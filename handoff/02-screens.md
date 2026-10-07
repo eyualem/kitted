@@ -1,6 +1,6 @@
 # 02 · Screens: the screen-by-screen UI spec
 
-*Written Oct 6, 2026 for a new Claude chat that has no memory of how these decisions were made. You build the React Native (Expo) demo from this file. Read `README.md` and `01-product-brief.md` first.*
+*Written Oct 6, 2026 for a new Claude chat that has no memory of how these decisions were made. You build the React Native (Expo) demo from this file. Read `/CLAUDE.md` and `01-product-brief.md` first.*
 
 > **Stack note (React Native + Expo):** this file was first written in SwiftUI terms (`TabView`, `NavigationStack`, `.sheet`, text styles like `.headline`, `PhotosPicker`, `SFSafariViewController`…). The layout, sizes, copy, states and rules all stand; translate every SwiftUI/iOS API name with **`06-react-native-mapping.md`**. SF Symbol names are used as-is (expo-symbols). Lines that named a Swift-only build step (StoreKit's `SubscriptionStoreView`, a `.storekit` file, SwiftData, the Swift design-system file) have been rewritten for React Native.
 

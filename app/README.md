@@ -1,6 +1,6 @@
 # Kitted app (Expo SDK 57, React Native, TypeScript)
 
-Start here: `../handoff/README.md` and `../handoff/05-build-plan.md`.
+Start here: `../CLAUDE.md` (status, instructions, how to run).
 
 ```sh
 npm run check          # typecheck + core typecheck + lint + core tests (5,694 parity) + jest

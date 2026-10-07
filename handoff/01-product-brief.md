@@ -2,7 +2,7 @@
 
 > **Stack:** React Native + Expo (TypeScript), iOS first. Decided by the founder on Oct 6, 2026; it replaces the earlier SwiftUI plan.
 
-*Written Oct 6, 2026 for a new Claude chat with no memory of how these decisions were made. Everything here is decided unless it is marked **FOUNDER DECIDES**. If a document disagrees with this brief, the precedence order is in `README.md`.*
+*Written Oct 6, 2026 for a new Claude chat with no memory of how these decisions were made. Everything here is decided unless it is marked **FOUNDER DECIDES**. If a document disagrees with this brief, the precedence order is in `/CLAUDE.md`.*
 
 ---
 
@@ -68,7 +68,7 @@ Kitted is a chat-first personal stylist for guys who are beginners at style. He 
 
 ## 6. Decisions with defaults (FOUNDER DECIDES). Build with the default, and keep each switchable from one config value.
 
-These are the three big ones. The full list of open founder decisions, with the default to use meanwhile, is in `README.md` → "Known open decisions for the founder".
+These are the three big ones. The full list of open founder decisions, with the default to use meanwhile, is in `/CLAUDE.md` → "Waiting on the founder".
 
 | Decision | Default to build | Where it's discussed |
 |---|---|---|
