@@ -22,7 +22,12 @@ export interface DemoArgs {
   uiTesting: boolean;
   /** Web only: fake iPhone 17 Pro safe areas. */
   frame: boolean;
+  /** Debug fault for the mock reading (04 §11). */
+  fault: DemoFault | null;
 }
+
+export type DemoFault = 'unreadable' | 'notClothed' | 'offline' | 'ai' | 'paused';
+const FAULTS: readonly string[] = ['unreadable', 'notClothed', 'offline', 'ai', 'paused'];
 
 export const DEFAULT_LATENCY_S = 6.6;
 
@@ -39,6 +44,7 @@ export const defaultDemoArgs: DemoArgs = {
   theme: null,
   uiTesting: false,
   frame: false,
+  fault: null,
 };
 
 /** Raw key → value pairs from one source. Keys use the deep-link names (no leading dash). */
@@ -116,6 +122,11 @@ export function parseArgs(raw: RawArgs): Partial<DemoArgs> {
         if (n !== null) out.freeChecksUsed = n;
         break;
       }
+      case 'fault': {
+        const s = str(value);
+        if (s !== null && FAULTS.includes(s)) out.fault = s as DemoFault;
+        break;
+      }
       case 'theme': {
         const s = str(value);
         if (s === 'light' || s === 'dark') out.theme = s;
@@ -171,4 +182,5 @@ export const LAUNCH_ARG_KEYS = [
   'pro',
   'theme',
   'uiTesting',
+  'fault',
 ] as const;

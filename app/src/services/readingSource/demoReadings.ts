@@ -1,0 +1,55 @@
+// The bundled v3 readings (handoff/fixtures/readings, copied into assets): one per demo photo,
+// plus the variants the story uses (shoe snap, corrections, the real p01 reads).
+import type { Reading } from '@kitted/core';
+import index from '../../../assets/demo-readings/INDEX.json';
+import p01a from '../../../assets/demo-readings/p01a.json';
+import p01b from '../../../assets/demo-readings/p01b.json';
+import s05 from '../../../assets/demo-readings/s05.json';
+import s09 from '../../../assets/demo-readings/s09.json';
+import s10 from '../../../assets/demo-readings/s10.json';
+import s12 from '../../../assets/demo-readings/s12.json';
+import s13 from '../../../assets/demo-readings/s13.json';
+import s14 from '../../../assets/demo-readings/s14.json';
+import s15 from '../../../assets/demo-readings/s15.json';
+import s22 from '../../../assets/demo-readings/s22.json';
+import s24 from '../../../assets/demo-readings/s24.json';
+import s25 from '../../../assets/demo-readings/s25.json';
+import shoeSnapRunners from '../../../assets/demo-readings/variants/s24_shoe_snap_runners.json';
+
+/** The reading files carry provenance next to the reading; keep scene + garments + held_items only. */
+function readingOf(file: unknown): Reading {
+  const f = file as { reading?: Reading } & Reading;
+  const r = (f.reading ?? f) as Reading;
+  return { scene: r.scene, garments: r.garments, ...(r.held_items ? { held_items: r.held_items } : {}) };
+}
+
+const BY_ID: Record<string, Reading> = {
+  p01a: readingOf(p01a), p01b: readingOf(p01b), s05: readingOf(s05), s09: readingOf(s09), s10: readingOf(s10),
+  s12: readingOf(s12), s13: readingOf(s13), s14: readingOf(s14), s15: readingOf(s15), s22: readingOf(s22),
+  s24: readingOf(s24), s25: readingOf(s25),
+};
+
+/**
+ * The shoe snap's own reading (feet only): the runners from the variant file, in an
+ * "upper_only"-style feet frame, exactly expected_scores.json → partials[1].snap_reading.
+ * The variant file itself is the full s24 outfit with those runners (the merged result).
+ */
+export const SHOE_SNAP_READING: Reading = {
+  scene: { framing: 'upper_only', shoes_visible: true, people_count: 1, mirror_selfie: false, lighting: 'good', clothed: 'fully' },
+  garments: readingOf(shoeSnapRunners).garments.filter((g) => g.category === 'footwear'),
+};
+
+export function demoReadingById(id: string): Reading | null {
+  return BY_ID[id] ?? null;
+}
+
+export function demoReadingBySha(sha: string): { id: string; reading: Reading } | null {
+  const hit = index.photos.find((p) => p.photo_sha256 === sha);
+  if (!hit) return null;
+  const reading = BY_ID[hit.id];
+  return reading ? { id: hit.id, reading } : null;
+}
+
+export function demoLatency(id: string): number | null {
+  return index.photos.find((p) => p.id === id)?.latency_s ?? null;
+}
