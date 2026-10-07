@@ -295,7 +295,7 @@ npx expo install expo-dev-client expo-build-properties expo-sqlite expo-secure-s
   expo-crypto expo-haptics expo-constants expo-linking react-native-svg
 npx expo install jest-expo jest @types/jest @testing-library/react-native -- --save-dev
 ```
-  Later phases add: P2 `expo-image-picker`; P3 `expo-speech`; P6 `expo-notifications react-native-view-shot expo-sharing expo-media-library`; P8 `expo-age-range` (stub only in the demo). M1+: the camera choice (S7); M4: `@expo/app-integrity`, `react-native-purchases` (S8, founder approval).
+  Later phases add: P2 `expo-image-picker` (keep its `cameraPermission` equal to the camera string, DECISIONS-LOG #53); P3 `expo-speech`; P6 `expo-notifications react-native-view-shot expo-sharing expo-media-library`; P8 `expo-age-range` (stub only in the demo). M1+: the camera choice (S7); M4: `@expo/app-integrity`, `react-native-purchases` (S8, founder approval).
 - `npx expo lint` once to set up ESLint with `eslint-config-expo` (it installs it; that's part of this setup).
 - **npm workspaces** (step 3): `app/` is both the Expo project and the workspace root. Expo's Metro config handles workspaces by itself since SDK 52; no `metro.config.js` changes needed. Check `npm why react-native` shows one copy (duplicate React Native or React in one app is unsupported).
 - **Keep the core's tests out of the app's tools:** in `app/tsconfig.json` add `"exclude": ["node_modules", "packages"]` (app files that import `@kitted/core` still type-check its `src/`; the core's own `npm run typecheck --workspace @kitted/core` covers its tests), and in `jest.config.js` use `preset: 'jest-expo'` with `testPathIgnorePatterns: ['/node_modules/', '<rootDir>/packages/']` so Jest doesn't pick up the Vitest files in `packages/kitted-core/test/`.

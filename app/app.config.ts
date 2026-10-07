@@ -3,6 +3,9 @@ import type { ExpoConfig } from 'expo/config';
 // Demo tools (demo/* routes, scripted story, demo store) are on unless KITTED_DEMO=0 (App Store builds).
 const demo = process.env.KITTED_DEMO !== '0';
 
+/** The camera prompt's reason (Apple 5.1.1); used by both the plist and the picker plugin. */
+const CAMERA_USAGE = 'Kitted uses the camera to check your outfit. Your face is cropped out before anything is sent.';
+
 const config: ExpoConfig = {
   name: 'Kitted',
   slug: 'kitted',
@@ -19,8 +22,7 @@ const config: ExpoConfig = {
     supportsTablet: false,
     icon: './assets/expo.icon',
     infoPlist: {
-      NSCameraUsageDescription:
-        'Kitted uses the camera to check your outfit. Your face is cropped out before anything is sent.',
+      NSCameraUsageDescription: CAMERA_USAGE,
       ITSAppUsesNonExemptEncryption: false,
     },
     privacyManifests: {
@@ -55,8 +57,10 @@ const config: ExpoConfig = {
     //   ↑ uncomment once the founder OKs the download and the files exist (a missing file fails prebuild).
     'expo-sqlite',
     ['expo-secure-store', { faceIDPermission: false }], // no Face ID in Kitted; keeps NSFaceIDUsageDescription out (05 T29)
-    // PHPicker needs no Photos permission (09 §3); the camera string is set above.
-    ['expo-image-picker', { photosPermission: false, cameraPermission: false, microphonePermission: false }],
+    // PHPicker needs no Photos permission (09 §3). cameraPermission must be the SAME string as
+    // NSCameraUsageDescription above: `false` deletes that key, and iOS then kills the app the
+    // moment the camera asks for access (DECISIONS-LOG #53).
+    ['expo-image-picker', { photosPermission: false, cameraPermission: CAMERA_USAGE, microphonePermission: false }],
     // P6: ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false }],
     // P6: 'expo-notifications',
   ],

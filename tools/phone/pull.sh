@@ -4,7 +4,7 @@
 # Output: screenshots/phone/<time>/ (git-ignored). Works for development builds only.
 set -e
 cd "$(dirname "$0")/../.."
-DEVICE=$(xcrun devicectl list devices 2>/dev/null | awk '/iPhone/ && /connected|available/ {print $(NF-2); exit}')
+DEVICE=$(xcrun devicectl list devices 2>/dev/null | grep -E 'iPhone.*(connected|available)' | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}' | head -1)
 if [[ -z "$DEVICE" ]]; then echo "No iPhone found. Plug it in, unlock it and tap Trust."; exit 1; fi
 OUT="screenshots/phone/$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$OUT"

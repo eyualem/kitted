@@ -6,7 +6,7 @@
 set -e
 cd "$(dirname "$0")/../../app/ios"
 DEVICE_UDID=$(xcrun xctrace list devices 2>/dev/null | awk -F'[()]' '/iPhone/ && !/Simulator/ {print $(NF-1); exit}')
-DEVICE_ID=$(xcrun devicectl list devices 2>/dev/null | awk '/iPhone/ && /connected|available/ {print $(NF-2); exit}')
+DEVICE_ID=$(xcrun devicectl list devices 2>/dev/null | grep -E 'iPhone.*(connected|available)' | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}' | head -1)
 [[ -z "$DEVICE_UDID" || -z "$DEVICE_ID" ]] && { echo "No iPhone found. Plug it in and unlock it."; exit 1; }
 xcodebuild -workspace Kitted.xcworkspace -scheme Kitted -configuration Debug -destination "id=$DEVICE_UDID" \
   -allowProvisioningUpdates -derivedDataPath build/phone COMPILER_INDEX_STORE_ENABLE=NO build -quiet
