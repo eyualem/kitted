@@ -7,7 +7,7 @@
 // the same amount with the scroll offset following, so the newest message stays in view.
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset } from 'react-native-reanimated';
+import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
@@ -16,7 +16,7 @@ import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAct
 import { sessionClock } from '@/state/session';
 import { setToastFloor } from '@/features/toast/toast';
 import { Composer } from './Composer';
-import { COMPOSER_BOTTOM, KEYBOARD_GAP, THREAD_PAD } from './layout';
+import { COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
 import { buildThreadItems } from './thread';
 
@@ -46,7 +46,10 @@ export function StylistScreen() {
     },
   );
   const dockStyle = useAnimatedStyle(() => ({ bottom: COMPOSER_BOTTOM + lift.value }));
-  const footerStyle = useAnimatedStyle(() => ({ height: THREAD_PAD[mode] + lift.value }));
+  // The dock's measured height: at large text sizes it's far taller than the mockup's, and a fixed
+  // pad would leave the newest links under it for good. Never less than the mockup's pad.
+  const dockH = useSharedValue(0);
+  const footerStyle = useAnimatedStyle(() => ({ height: Math.max(THREAD_PAD[mode], COMPOSER_BOTTOM + dockH.value + DOCK_GAP) + lift.value }));
   const atBottom = useRef(true);
   const first = useRef(true);
   const onUserScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -110,6 +113,7 @@ export function StylistScreen() {
         pointerEvents="box-none"
         onLayout={(e) => {
           // Toasts sit above the composer here (its top, measured from the screen bottom at rest).
+          dockH.value = e.nativeEvent.layout.height;
           dockTop.current = COMPOSER_BOTTOM + e.nativeEvent.layout.height;
           setToastFloor(dockTop.current);
         }}

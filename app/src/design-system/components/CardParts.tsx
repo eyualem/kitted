@@ -4,7 +4,7 @@
 import { Pressable, View } from 'react-native';
 import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
-import { opacity, size } from '../tokens';
+import { CONTROL_TEXT_MAX_SCALE, opacity, size } from '../tokens';
 import { displayScore } from '../score';
 import { GarmentIcon, type GarmentIconType } from './GarmentIcon';
 import { Icon } from './Icon';
@@ -16,9 +16,10 @@ import type { SymKey } from '../symbols';
 
 /** "Added 4 to Closet" (`.added`): up to 4 overlapping 28 pt thumbs, text, "Review" link. */
 export function AddedRow({ items, count, onReview }: { items: { type: GarmentIconType; hex: string }[]; count: number; onReview?: () => void }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
+  // AX sizes: thumbs, then the text, then Review, each on its own line (no mid-word breaks).
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+    <View style={isAccessibilitySize ? { gap: 6, alignItems: 'flex-start' } : { flexDirection: 'row', alignItems: 'center', gap: 10 }}>
       <View style={{ flexDirection: 'row' }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         {items.slice(0, 4).map((it, i) => (
           <View
@@ -36,7 +37,7 @@ export function AddedRow({ items, count, onReview }: { items: { type: GarmentIco
         {t('card.added', { n: count })}
       </KText>
       {onReview ? (
-        <View style={{ marginLeft: 'auto' }}>
+        <View style={isAccessibilitySize ? undefined : { marginLeft: 'auto' }}>
           <TextLink title={t('card.review')} onPress={onReview} compact />
         </View>
       ) : null}
@@ -87,13 +88,13 @@ export function QuickStartChip({ title, icon, onPress }: { title: string; icon: 
       accessibilityLabel={title}
       hitSlop={{ top: 5, bottom: 5 }}
       style={({ pressed }) => ({
-        height: 34, paddingHorizontal: 13, borderRadius: 17, borderCurve: 'continuous', backgroundColor: colors.surface,
+        minHeight: 34, paddingHorizontal: 13, paddingVertical: 4, borderRadius: 17, borderCurve: 'continuous', backgroundColor: colors.surface,
         borderWidth: 1, borderColor: colors.line, flexDirection: 'row', alignItems: 'center', gap: 8,
         opacity: pressed ? opacity.pressed : 1,
       })}
     >
       <Icon name={icon} size="regular" color="ink2" />
-      <KText role="quickStart">{title}</KText>
+      <KText role="quickStart" maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>{title}</KText>
     </Pressable>
   );
 }

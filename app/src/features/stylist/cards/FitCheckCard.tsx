@@ -186,7 +186,7 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
 
 /** "Finish the check · Same shoes as Monday?" + the remembered pair, the camera, Skip (02 D11). */
 function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const f = row.details.finish;
   const item = f?.suggestedItemId ? closet.find((c) => c.id === f.suggestedItemId) : undefined;
   const weekday = f?.weekday !== null && f?.weekday !== undefined ? weekdayName(f.weekday) : null;
@@ -196,14 +196,15 @@ function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] 
     ? t('partial.finish.same', { weekday: remembered.weekday })
     : hasShoes ? t('partial.finish.snapOrPick') : t('partial.finish.snapOnly');
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+    // AX sizes: the text on its own line, the controls in a row under it (p2-design-spec 11 §5).
+    <View style={isAccessibilitySize ? { gap: 8 } : { flexDirection: 'row', alignItems: 'center', gap: 8 }}>
       <KText variant="subheadline" color="ink2" style={{ flexShrink: 1 }}>
         <KText variant="subheadline" weight="600" color="ink">
           {t('partial.finish.title')}
         </KText>
         {`\n${second}`}
       </KText>
-      <View style={{ marginLeft: 'auto', flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+      <View style={{ marginLeft: isAccessibilitySize ? 0 : 'auto', flexDirection: 'row', gap: 8, alignItems: 'center' }}>
         {remembered ? (
           <FinishTile
             filled

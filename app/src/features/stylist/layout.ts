@@ -6,3 +6,5 @@ export const COMPOSER_BOTTOM = TAB_BAR.height + TAB_BAR.bottom + 9;
 export const THREAD_PAD = { compact: 146, idle: 184 } as const;
 /** Space between the composer and the keyboard while he types. */
 export const KEYBOARD_GAP = 8;
+/** Space between the newest message and the top of the dock (mockup: 146 = 92 + 48 + 6). */
+export const DOCK_GAP = 6;

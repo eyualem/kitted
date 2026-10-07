@@ -64,9 +64,9 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
             {o.summary}
           </KText>
         ) : null}
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-          <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} icon={wearing ? 'check' : undefined} size="regular" disabled={wearing} onPress={() => void wear()} />
-          <KButton title={t('idea.swap')} size="regular" kind="secondary" />
+        <View style={isAccessibilitySize ? { gap: 8 } : { flexDirection: 'row', gap: 8 }}>
+          <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} icon={wearing ? 'check' : undefined} size="regular" fullWidth={isAccessibilitySize} disabled={wearing} onPress={() => void wear()} />
+          <KButton title={t('idea.swap')} size="regular" kind="secondary" fullWidth={isAccessibilitySize} />
         </View>
       </KCardSection>
     </KCard>

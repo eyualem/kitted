@@ -162,6 +162,9 @@ export const cameraScrims = {
 // ---------------------------------------------------------------------------------------
 // Spacing, radii, sizes (03 §4; 4-pt grid; odd CSS values snapped)
 
+/** Button labels and the composer field stop growing at 2× (body text keeps scaling). */
+export const CONTROL_TEXT_MAX_SCALE = 2;
+
 export const space = {
   xxs: 2,
   xs: 4,

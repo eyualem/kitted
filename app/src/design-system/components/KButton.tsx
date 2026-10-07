@@ -10,7 +10,7 @@
 import { useState, type ReactNode } from 'react';
 import { ActivityIndicator, Pressable, View, type LayoutChangeEvent, type StyleProp, type ViewStyle } from 'react-native';
 import { useTheme } from '../theme';
-import { opacity, size } from '../tokens';
+import { CONTROL_TEXT_MAX_SCALE, opacity, size } from '../tokens';
 import type { SymKey } from '../symbols';
 import { Icon, type SymbolName } from './Icon';
 import { KText } from './KText';
@@ -49,7 +49,7 @@ export function KButton({
   accessibilityHint,
   style,
 }: KButtonProps) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const [lockedWidth, setLockedWidth] = useState<number | undefined>(undefined);
   const large = sz === 'large';
   const height = large ? size.buttonLarge : size.button;
@@ -90,7 +90,10 @@ export function KButton({
           backgroundColor: bg,
           borderWidth: kind === 'outline' ? 1 : 0,
           borderColor: colors.line,
-          flexDirection: 'row',
+          // AX sizes: a column (icon above) and the label stretched to the full width. Labels stop
+          // growing at 2×: at AX5 a 3-line label was measured at one width and drawn at another,
+          // which clipped it ("Share the before and af…", DECISIONS-LOG #39).
+          flexDirection: isAccessibilitySize ? 'column' : 'row',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 6,
@@ -101,7 +104,12 @@ export function KButton({
         ) : (
           <>
             {icon ? <Icon name={icon} size="small" color={fg} scalesWithText /> : null}
-            <KText role={large ? 'buttonLarge' : 'button'} color={fg} style={{ textAlign: 'center', flexShrink: 1 }}>
+            <KText
+              role={large ? 'buttonLarge' : 'button'}
+              color={fg}
+              maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
+              style={[{ textAlign: 'center' }, isAccessibilitySize ? { alignSelf: 'stretch' } : { flexShrink: 1 }]}
+            >
               {title}
             </KText>
           </>

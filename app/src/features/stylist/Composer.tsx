@@ -4,7 +4,7 @@
 // camera button hides while he types so the field gets the full width (DECISIONS-LOG #28).
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { Icon, KText, QuickStartChip, opacity, useTheme } from '@/design-system';
+import { CONTROL_TEXT_MAX_SCALE, Icon, KText, QuickStartChip, opacity, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 
 export interface ComposerProps {
@@ -14,7 +14,7 @@ export interface ComposerProps {
 }
 
 export function Composer({ mode, onCamera, onSend }: ComposerProps) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
   // Typing (field focused, or text in it) shows the compact field alone (02 S1: compact while
@@ -30,7 +30,8 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
           <QuickStartChip title={t('quick.ask')} icon="question" />
         </ScrollView>
       ) : null}
-      <View style={styles.row}>
+      {/* AX sizes: the field gets its own full-width row under the buttons (design-spec A7). */}
+      <View style={isAccessibilitySize ? styles.column : styles.row}>
         {typing ? null : idle ? (
           <Pressable
             onPress={onCamera}
@@ -39,7 +40,7 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
             style={({ pressed }) => [styles.fitBtn, { backgroundColor: colors.primary, opacity: pressed ? opacity.pressed : 1 }]}
           >
             <Icon name="camera" size="large" color={colors.onPrimary} />
-            <KText variant="subheadline" weight="600" color={colors.onPrimary}>
+            <KText variant="subheadline" weight="600" color={colors.onPrimary} maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
               {t('composer.check')}
             </KText>
           </Pressable>
@@ -54,7 +55,7 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
             <Icon name="camera" size="large" color={colors.onPrimary} />
           </Pressable>
         )}
-        <View style={[styles.field, { backgroundColor: colors.surface, borderColor: colors.line }]}>
+        <View style={[styles.field, isAccessibilitySize ? { alignSelf: 'stretch' } : { flex: 1 }, { backgroundColor: colors.surface, borderColor: colors.line }]}>
           <TextInput
             value={text}
             onChangeText={setText}
@@ -65,6 +66,7 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
             accessibilityLabel={t('composer.a11y.field')}
             multiline
             numberOfLines={1}
+            maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
             style={[styles.input, { color: colors.ink }]}
           />
           {text.length > 0 ? (
@@ -91,9 +93,10 @@ const styles = StyleSheet.create({
   quickRow: { marginRight: -16 },
   quickContent: { gap: 8, paddingRight: 16, paddingVertical: 2 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  column: { gap: 8, alignItems: 'flex-start' },
   circle: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  fitBtn: { height: 40, borderRadius: 20, paddingLeft: 13, paddingRight: 16, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  field: { flex: 1, minHeight: 40, borderRadius: 20, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 16, paddingRight: 4 },
+  fitBtn: { minHeight: 40, borderRadius: 20, paddingLeft: 13, paddingRight: 16, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', gap: 8 },
+  field: { minHeight: 40, borderRadius: 20, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 16, paddingRight: 4 },
   input: { flex: 1, fontSize: 17, lineHeight: 22, paddingTop: 8, paddingBottom: 8, maxHeight: 120 },
   send: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
 });
