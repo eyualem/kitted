@@ -148,8 +148,8 @@
 - **A. Camera screen (Simulator):** framing guide, 3-2-1 with haptics and optional spoken count, auto-capture, sample-photo strip, camera-off card.
 - **B. Real camera on my iPhone:** live preview + Apple Vision body pose drive the same guide (local `kitted-vision` module).
 - **C. Photo prep on the phone:** face cut off at the neck, 1024 px, metadata stripped, hash for "same photo, same score". The full-face original is never kept.
-- **D. Real Gemini reading (dev builds only):** the locked config (gemini-3.8-flash, thinking off, v3 format), streamed so pieces appear as they're read. Key in git-ignored `app/.env.local`.
-- **What I do for B–D (one-time):** put the Gemini key in `app/.env.local`; add my Apple ID in Xcode → Settings → Accounts; turn on Developer Mode on the iPhone; plug it in and trust the Mac.
+- **D. Real Gemini reading (dev builds only):** the locked config (gemini-3.8-flash, thinking off, v3 format), streamed so pieces appear as they're read. Key: `EXPO_PUBLIC_GEMINI_DEV_KEY` in git-ignored `app/.env.development.local` (**in place since Oct 7**; Expo loads it only in development, per 05 trap T32).
+- **What I do for B–D (one-time):** ~~put the Gemini key in place~~ (done Oct 7); add my Apple ID in Xcode → Settings → Accounts; turn on Developer Mode on the iPhone; plug it in and trust the Mac.
 - Then **P4 (onboarding)**: 05 §P4. Screens and copy: `handoff/02-screens.md`.
 
 ### 4. Non-build steps (mine)
