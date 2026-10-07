@@ -1,6 +1,9 @@
-// S1 Stylist (02 D12): the thread (inverted list, newest at the bottom) and the composer.
-import { useEffect, useMemo } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+// S1 Stylist (02 D12): the thread (newest at the bottom) and the composer.
+// Not an inverted FlatList: on iOS 26 the scroll-edge fade under the bars is applied to the
+// flipped list and washes out the whole thread (DECISIONS-LOG #25). A normal list that sticks
+// to the bottom instead.
+import { useEffect, useMemo, useRef } from 'react';
+import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { router } from 'expo-router';
 import { useTheme } from '@/design-system';
 import { store } from '@/data/db';
@@ -24,6 +27,14 @@ export function StylistScreen() {
   const mode = now - lastUser < EXCHANGE_MS ? 'compact' : 'idle';
   const openSamples = () => router.push('/sheets/sample-photos?mode=check');
 
+  const list = useRef<FlatList<(typeof items)[number]>>(null);
+  const atBottom = useRef(true);
+  const first = useRef(true);
+  const onUserScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
+    atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < 80;
+  };
+
   const action = usePendingStylistAction();
   useEffect(() => {
     if (!action) return;
@@ -34,11 +45,24 @@ export function StylistScreen() {
   return (
     <KeyboardAvoidingView style={[styles.root, { backgroundColor: colors.bg }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <FlatList
-        inverted
-        data={[...items].reverse()}
+        ref={list}
+        data={items}
         keyExtractor={(i) => i.key}
         renderItem={({ item }) => <ThreadRow item={item} />}
-        contentContainerStyle={[styles.thread, { paddingTop: THREAD_PAD[mode] }]}
+        contentContainerStyle={styles.thread}
+        // A footer, not paddingBottom: scrollToEnd measures rows and footers, not padding.
+        ListFooterComponent={<View style={{ height: THREAD_PAD[mode] }} />}
+        // Only his own scrolling decides whether the thread follows new messages; cards that
+        // finish loading (content growing) keep it pinned to the newest message.
+        onScrollEndDrag={onUserScroll}
+        onMomentumScrollEnd={onUserScroll}
+        onContentSizeChange={() => {
+          if (atBottom.current) list.current?.scrollToEnd({ animated: !first.current });
+        }}
+        onLayout={() => {
+          list.current?.scrollToEnd({ animated: false });
+          first.current = false;
+        }}
         ItemSeparatorComponent={Separator}
         keyboardDismissMode="interactive"
         contentInsetAdjustmentBehavior="never"
@@ -57,6 +81,6 @@ function Separator() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  thread: { paddingHorizontal: 16, paddingBottom: 4 },
+  thread: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 4 },
   dock: { position: 'absolute', left: 0, right: 0, paddingBottom: 0 },
 });

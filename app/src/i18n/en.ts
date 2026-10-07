@@ -86,6 +86,8 @@ const addedInBuild = {
   'why.rounded': 'Rounded to the nearest half',
   'why.adjust': 'Score limits',
   'why.dressedRight': 'dressed right for it',
+  'nqr.fitDetail': '{fit} fit',
+  'nqr.legTitle': '{name} · {leg} leg',
   'why.reason.heldNotWorn': 'the {held} is in your hand, not on',
   'why.reason.noLayer': 'no layer today',
   'why.reason.noElevated': 'all casual pieces today',

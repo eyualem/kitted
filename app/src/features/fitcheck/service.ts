@@ -417,6 +417,16 @@ export function createFitCheckService(deps: ServiceDeps) {
       });
       return (await rescore(row, reading, { details: { ...row.details, hiddenFixTargets: hidden } })).row;
     },
+    /** "Score feels off": stored as feedback; the reading and score don't change. */
+    async scoreFeedback(checkId: string, direction: 'higher' | 'lower', userScore: number | null = null) {
+      const row = await store.fitChecks.get(checkId);
+      if (!row) return null;
+      await store.corrections.put({
+        id: deps.ids('CR'), fitCheckId: checkId, kind: 'scoreOff', field: null, oldValue: null, newValue: direction, userScore,
+        scoreBefore: row.score, scoreAfter: row.score, sentAt: null, createdAt: clock.nowMs(),
+      });
+      return row;
+    },
     /** Partial check → pick the shoes from the closet (S10). */
     async pickShoes(checkId: string, itemId: string) {
       const row = await store.fitChecks.get(checkId);

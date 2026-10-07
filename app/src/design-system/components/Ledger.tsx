@@ -28,14 +28,14 @@ export interface LedgerRowProps {
 
 function formatAmount(n: number, zero: 'plus' | 'plusMinus'): string {
   if (n === 0) return zero === 'plus' ? '+0' : '±0';
-  const abs = Math.abs(n);
+  const abs = Math.round(Math.abs(n) * 100) / 100; // 0.09999999999999964 → 0.1
   const s = Number.isInteger(abs) ? abs.toFixed(0) : String(abs);
   return n > 0 ? `+${s}` : `−${s}`; // U+2212 minus sign, like the mockup
 }
 
 function spokenAmount(n: number): string {
   if (n === 0) return t('a11y.noChange');
-  return t(n > 0 ? 'a11y.plus' : 'a11y.minus', { n: Math.abs(n) });
+  return t(n > 0 ? 'a11y.plus' : 'a11y.minus', { n: Math.round(Math.abs(n) * 100) / 100 });
 }
 
 export function LedgerRow({ rule, item, amount, valueText, zero = 'plus' }: LedgerRowProps) {
