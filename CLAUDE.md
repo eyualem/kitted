@@ -130,23 +130,11 @@
 
 ## Next steps, in order
 
-### 1. Fix first: my feedback from Oct 7
-1. **Tapping the text box makes the composer disappear (bug).**
-   - Cause: in `app/src/features/stylist/StylistScreen.tsx` the composer is absolutely positioned at `bottom: 92` inside a `KeyboardAvoidingView`. The keyboard padding and the 92 pt add up, so the composer is pushed off-screen.
-   - Fix: drop the KeyboardAvoidingView for the dock. Drive its bottom from the keyboard height with Reanimated's keyboard hook (already installed): keyboard up → keyboard height + 8; else 92. Lift the thread's footer spacer the same way.
-   - Test on the Simulator (`⌘⇧K` toggles the software keyboard).
-2. **Composer buttons crowd the text field.**
-   - Decision: **remove the photo-library circle.** The camera screen already has a library thumbnail (mockup 5, the iOS norm).
-   - Also hide the camera circle while he's typing, so the field gets the full width.
-   - Log it as a deliberate difference from the mockup.
-3. **"Cards feel cramped."**
-   - The Simulator is true size, and the mockup is just as dense. The dev-only gear button adds clutter.
-   - Do a spacing pass in the tokens (`app/src/design-system/tokens.ts` `space`, the `KCardSection` defaults):
-     - card padding 14/16 → 16/20
-     - section gap 10 → 12–14
-     - fix-row padding 10 → 12
-     - gap between messages 12 → 16
-   - Show me before/after screenshots of screens 7 and 12, and let me pick.
+### 1. My feedback from Oct 7: done, one pick waiting on me
+1. **Done: the composer no longer disappears when you tap the text box.** It rides just above the keyboard; the thread moves up with it (DECISIONS-LOG #29). Verified on the Simulator.
+2. **Done: composer buttons.** The photo-library circle is gone; the camera button hides while the field is focused or has text, so the field gets the full width (#28, a logged difference from the mockup).
+3. **Spacing pass: built, waiting for my pick.** Card padding 16/20, row gap 12, fix rows 12, gap between messages 16 (#30). Before/after of screens 7 and 12: `screenshots/spacing/compare.html` (git-ignored; regenerate with the simctl commands below). If I pick "before", revert commit `d698bdc`.
+- Note: the floating gear with "Tools" at the top right is the Expo development build's own menu, not app code. It isn't in release builds. In demo runs the first tap after launch sometimes only dismisses its label.
 
 ### 2. Finish P2
 1. "Added to your closet" review sheet (S11): Undo / Add back via `fitCheck.setItemUndone`.
@@ -227,7 +215,7 @@ Exceptions:
 ## Docs map
 | File | What it's for | State |
 |---|---|---|
-| `handoff/DECISIONS-LOG.md` | Every decision and lesson since the build started (#1–27) | **Live**; append to it |
+| `handoff/DECISIONS-LOG.md` | Every decision and lesson since the build started (#1–30) | **Live**; append to it |
 | `handoff/01-product-brief.md` | Product, locked rules, voice | Reference |
 | `handoff/02-screens.md` | Every screen: layout, copy deck §5, states, VoiceOver | Reference (copy is generated into `app/src/i18n/`) |
 | `handoff/03-design-system.md` | Tokens, type, components, SF Symbols | Reference |
@@ -253,3 +241,4 @@ Exceptions:
   - SVG can't take iOS accessibility props; wrap it in a View.
   - Headless Chrome can't go narrower than about 500 px; `frame=1` boxes the app at 402 × 874.
 - **Run `npm run check`, then commit, as separate steps.** Chaining them once committed a type error.
+- **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
