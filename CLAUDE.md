@@ -97,7 +97,7 @@
 - **The scoring engine** (`app/packages/kitted-core`, pure TypeScript):
   - Matches `rubric.py` on all **5,694** parity cases.
   - It also has the day key (4 am rollover), the "Why" ledger, closet matching, re-check outcomes, corrections and partial-check merges.
-- **P2, Stylist chat and the fit check: done (Oct 7), pending your spacing pick.** It works on the iPhone Simulator and matches mockup screens 6–12 closely:
+- **P2, Stylist chat and the fit check: done (Oct 7).** It works on the iPhone Simulator and matches mockup screens 6–12 closely:
   - **Screen 6:** the reading card.
   - **Screen 7:** the 8.0 "Sharp" card, with the fix → 9.0 and "Added 4 to Closet".
   - **Screen 8:** "Why 8.0" (the rows add up).
@@ -133,17 +133,16 @@
 
 ## Next steps, in order
 
-### 1. My feedback from Oct 7: done, one pick waiting on me
+### 1. My feedback from Oct 7: done
 1. **Done: the composer no longer disappears when you tap the text box.** It rides just above the keyboard; the thread moves up with it (DECISIONS-LOG #29). Verified on the Simulator.
 2. **Done: composer buttons.** The photo-library circle is gone; the camera button hides while the field is focused or has text, so the field gets the full width (#28, a logged difference from the mockup).
-3. **Spacing pass: built, waiting for my pick.** Card padding 16/20, row gap 12, fix rows 12, gap between messages 16 (#30). Before/after of screens 7 and 12: `screenshots/spacing/compare.html` (git-ignored; regenerate with the simctl commands below). If I pick "before", revert commit `d698bdc`.
+3. **Done: spacing pass, kept** (founder: "looks good", Oct 7). Card padding 16/20, row gap 12, fix rows 12, gap between messages 16 (#30).
 - Note: the floating gear with "Tools" at the top right is the Expo development build's own menu, not app code. It isn't in release builds. In demo runs the first tap after launch sometimes only dismisses its label.
 
 ### 2. P2 leftovers (small)
-1. Your spacing pick (above).
-2. **Rubric question for me:** correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once.
-3. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
-4. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
+1. **Rubric question for me:** correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once.
+2. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
+3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
 ### 3. Then P3 (camera, simulated) and P4 (onboarding)
 The phases and their acceptance checks are in `handoff/05-build-plan.md` §5. Every screen's layout and copy is in `handoff/02-screens.md`.
