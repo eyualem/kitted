@@ -122,6 +122,18 @@ const addedInBuild = {
   'why.rule.O4_loungewear_out': 'Loungewear outside the gym',
   'why.rule.S2_shoes_too_casual_for_outfit': 'Shoes too casual for the rest',
   'why.rule.O3_large_logo': 'Big logo',
+  // S11 Added to your closet: the row detail ("Top · Regular fit") and VoiceOver.
+  'added.slot.top': 'Top',
+  'added.slot.bottom': 'Bottom',
+  'added.slot.shoes': 'Shoes',
+  'added.slot.outer': 'Layer',
+  'added.detail': '{slot} · {fit}',
+  'added.topFit': '{fit} fit',
+  'added.legFit': '{leg} leg',
+  'added.a11y.row': '{name}, {detail}.',
+  'added.a11y.removed': '{name}, removed.',
+  'added.a11y.undo': 'Undo {name}',
+  'added.a11y.addBack': 'Add back {name}',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

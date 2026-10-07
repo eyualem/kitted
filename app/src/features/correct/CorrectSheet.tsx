@@ -14,7 +14,7 @@ import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { garmentIconType, garmentHex, garmentLabel } from '@/features/fitcheck/labels';
 import { fitCheck } from '@/features/fitcheck/session';
-import { SheetScaffold } from '@/features/sheet/SheetScaffold';
+import { SheetList as List, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
 import { fitField, typeOptions, volumeWord, type FieldOption } from './fields';
 
@@ -149,11 +149,6 @@ export function CorrectSheet() {
       <KButton title={reason === 'score' ? t('nqr.send') : t('nqr.save')} onPress={() => void save()} disabled={reason === 'fix' ? !skipTarget : reason === 'score' ? !feel : !draft} />
     </SheetScaffold>
   );
-}
-
-function List({ children }: { children: React.ReactNode }) {
-  const { colors } = useTheme();
-  return <View style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 20, borderCurve: 'continuous', overflow: 'hidden' }}>{children}</View>;
 }
 
 function OpenPanel({ children }: { children: React.ReactNode }) {

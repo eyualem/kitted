@@ -8,7 +8,7 @@ import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconButton, KText, space, useTheme } from '@/design-system';
+import { IconButton, KText, TextLink, space, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 
 export interface SheetScaffoldProps {
@@ -17,9 +17,11 @@ export interface SheetScaffoldProps {
   subtitle?: string;
   children?: ReactNode;
   onClose?: () => void;
+  /** A text button (e.g. "Done") in place of the X. */
+  doneLabel?: string;
 }
 
-export function SheetScaffold({ title, subtitle, children, onClose }: SheetScaffoldProps) {
+export function SheetScaffold({ title, subtitle, children, onClose, doneLabel }: SheetScaffoldProps) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   return (
@@ -42,12 +44,22 @@ export function SheetScaffold({ title, subtitle, children, onClose }: SheetScaff
             </KText>
             {subtitle ? <KText role="sheetSubtitle">{subtitle}</KText> : null}
           </View>
-          <IconButton icon="close" label={t('common.close')} onPress={onClose ?? (() => router.back())} />
+          {doneLabel ? (
+            <TextLink title={doneLabel} onPress={onClose ?? (() => router.back())} compact />
+          ) : (
+            <IconButton icon="close" label={t('common.close')} onPress={onClose ?? (() => router.back())} />
+          )}
         </View>
       </View>
       <View style={styles.body}>{children}</View>
     </ScrollView>
   );
+}
+
+/** The bordered, rounded list sheets put their rows in (S8, S11). */
+export function SheetList({ children }: { children?: ReactNode }) {
+  const { colors } = useTheme();
+  return <View style={{ borderWidth: 1, borderColor: colors.line, borderRadius: 20, borderCurve: 'continuous', overflow: 'hidden' }}>{children}</View>;
 }
 
 const styles = StyleSheet.create({

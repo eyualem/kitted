@@ -53,6 +53,20 @@ describe('first-run story', () => {
     expect(svc.getState().kind).toBe('idle');
   });
 
+  it('S11 Undo / Add back, tapped quickly: every change lands (no lost writes)', async () => {
+    const { store, svc } = await setup();
+    const r = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };
+    const [a, b, c] = (await store.fitChecks.get(r.checkId))!.details.closetSummary!.added;
+    await Promise.all([svc.setItemUndone(r.checkId, a!, true), svc.setItemUndone(r.checkId, b!, true)]);
+    const undone = async () => [...(await store.fitChecks.get(r.checkId))!.details.closetSummary!.undone].sort();
+    expect(await undone()).toEqual([a, b].sort());
+    await Promise.all([svc.setItemUndone(r.checkId, a!, false), svc.setItemUndone(r.checkId, c!, true)]);
+    const row = (await store.fitChecks.get(r.checkId))!;
+    expect([...row.details.closetSummary!.undone].sort()).toEqual([b, c].sort());
+    expect((await store.closet.all()).filter((x) => x.isDeleted).map((x) => x.id).sort()).toEqual([b, c].sort());
+    expect(row.score).toBe(8);
+  });
+
   it('correction: chinos straight → slim, "Score stays 8.0", a new reading, the closet item confirmed', async () => {
     const { store, svc } = await setup();
     const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };

@@ -76,6 +76,7 @@ export function createFitCheckService(deps: ServiceDeps) {
   const { store, clock } = deps;
   let state: SessionState = IDLE;
   let attempt = 0;
+  let undoQueue: Promise<unknown> = Promise.resolve();
   const listeners = new Set<() => void>();
   const dispatch = (ev: SessionEvent) => {
     const next = reduce(state, ev);
@@ -443,14 +444,19 @@ export function createFitCheckService(deps: ServiceDeps) {
       if (!row) return null;
       return store.fitChecks.patch(checkId, { snapState: 'skipped', details: { ...row.details, finish: null } });
     },
-    /** Undo / add back an auto-added closet item (the score never changes). */
-    async setItemUndone(checkId: string, itemId: string, undone: boolean) {
-      const row = await store.fitChecks.get(checkId);
-      if (!row) return null;
-      await store.closet.patch(itemId, { isDeleted: undone });
-      const cs = row.details.closetSummary ?? { matched: [], added: [], undone: [] };
-      const list = undone ? Array.from(new Set([...cs.undone, itemId])) : cs.undone.filter((x) => x !== itemId);
-      return store.fitChecks.patch(checkId, { details: { ...row.details, closetSummary: { ...cs, undone: list } } });
+    /** Undo / add back an auto-added closet item (the score never changes). Queued: two quick
+     *  taps in S11 would otherwise both read the same row and the second write would drop the first. */
+    setItemUndone(checkId: string, itemId: string, undone: boolean) {
+      const run = undoQueue.then(async () => {
+        const row = await store.fitChecks.get(checkId);
+        if (!row) return null;
+        await store.closet.patch(itemId, { isDeleted: undone });
+        const cs = row.details.closetSummary ?? { matched: [], added: [], undone: [] };
+        const list = undone ? Array.from(new Set([...cs.undone, itemId])) : cs.undone.filter((x) => x !== itemId);
+        return store.fitChecks.patch(checkId, { details: { ...row.details, closetSummary: { ...cs, undone: list } } });
+      });
+      undoQueue = run.catch(() => null);
+      return run;
     },
     /** S21 "Tell me": he did the fix; apply it to the first reading (source userConfirmed). */
     async confirmFixes(recheckId: string) {

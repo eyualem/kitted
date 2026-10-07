@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { AddedSheet } from '@/features/added/AddedSheet';
 
-// S11 · Added items (02-screens.md). Built in P2.
-export default function AddedItemsScreen() {
-  return <Placeholder id="S11" name="Added items" phase="P2" kind="sheet" />;
-}
+// S11 Added to your closet (02 S11).
+export default AddedSheet;
