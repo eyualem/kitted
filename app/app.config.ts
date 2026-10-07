@@ -13,6 +13,8 @@ const config: ExpoConfig = {
   icon: './assets/images/icon.png',
   ios: {
     bundleIdentifier: 'com.trykitted.kitted', // placeholder until the App ID exists; keep it only here
+    // The founder's free Personal Team (7-day dev installs on his iPhone). The paid team replaces it (M4).
+    appleTeamId: '6652QVRQAL',
     buildNumber: '1',
     supportsTablet: false,
     icon: './assets/expo.icon',
