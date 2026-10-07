@@ -2,34 +2,29 @@
 // The demo clock starts at the scenario's `now` (America/New_York) and then ticks forward
 // with real elapsed time; App Store builds use the system clock.
 
+import { US_EASTERN, type ZoneOffset } from '@kitted/core';
+
 export const APP_TIME_ZONE = 'America/New_York';
 
 export interface Clock {
   /** Milliseconds since the epoch. */
   nowMs(): number;
   now(): Date;
+  /** The local time zone's offset from UTC at an instant (for day keys and wall times). */
+  offset: ZoneOffset;
 }
+
+/** The device's own zone (Date's local offset works on Hermes). */
+const deviceZone: ZoneOffset = (utcMs) => -new Date(utcMs).getTimezoneOffset() * 60_000;
 
 export const systemClock: Clock = {
   nowMs: () => Date.now(),
   now: () => new Date(),
+  offset: deviceZone,
 };
 
-/**
- * America/New_York's offset at `utcMs`, from the US rule in force since 2007: EDT (−4 h) from
- * 2 am EST on the second Sunday of March to 2 am EDT on the first Sunday of November, else EST
- * (−5 h). Pure arithmetic, because Hermes on iOS has gaps in Intl time-zone support.
- */
-export function newYorkOffsetMs(utcMs: number): number {
-  const year = new Date(utcMs).getUTCFullYear();
-  const nthSunday = (month: number, n: number) => {
-    const firstDow = new Date(Date.UTC(year, month, 1)).getUTCDay();
-    return 1 + ((7 - firstDow) % 7) + 7 * (n - 1);
-  };
-  const dstStart = Date.UTC(year, 2, nthSunday(2, 2), 2 + 5); // 2:00 EST = 07:00 UTC
-  const dstEnd = Date.UTC(year, 10, nthSunday(10, 1), 2 + 4); // 2:00 EDT = 06:00 UTC
-  return utcMs >= dstStart && utcMs < dstEnd ? -4 * 3_600_000 : -5 * 3_600_000;
-}
+/** America/New_York's offset at `utcMs` (the US DST rule; lives in @kitted/core, no Intl). */
+export const newYorkOffsetMs: ZoneOffset = US_EASTERN;
 
 /** Offset of `timeZone` from UTC at the instant `utcMs`, in ms (e.g. −4 h for EDT). */
 export function tzOffsetMs(utcMs: number, timeZone: string): number {
@@ -79,15 +74,32 @@ export function parseZonedIso(iso: string, timeZone: string = APP_TIME_ZONE): nu
 }
 
 /** A clock that reads `startMs` now and ticks forward with the real clock. */
-export function demoClock(startMs: number, real: Clock = systemClock): Clock {
+export function demoClock(startMs: number, real: Pick<Clock, 'nowMs'> = systemClock, offset: ZoneOffset = US_EASTERN): Clock {
   const base = real.nowMs();
   return {
     nowMs: () => startMs + (real.nowMs() - base),
     now: () => new Date(startMs + (real.nowMs() - base)),
+    offset,
   };
 }
 
-/** A clock frozen at `ms` (tests, screenshots). */
-export function fixedClock(ms: number): Clock {
-  return { nowMs: () => ms, now: () => new Date(ms) };
+/** A clock frozen at `ms` (tests, screenshots). Demo zone by default. */
+export function fixedClock(ms: number, offset: ZoneOffset = US_EASTERN): Clock {
+  return { nowMs: () => ms, now: () => new Date(ms), offset };
+}
+
+/** A clock whose time can be moved by tests (`advance`), in sync with fake timers. */
+export function manualClock(startMs: number, offset: ZoneOffset = US_EASTERN): Clock & { advance(ms: number): void; set(ms: number): void } {
+  let t = startMs;
+  return {
+    nowMs: () => t,
+    now: () => new Date(t),
+    offset,
+    advance(ms) {
+      t += ms;
+    },
+    set(ms) {
+      t = ms;
+    },
+  };
 }

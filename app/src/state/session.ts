@@ -18,6 +18,13 @@ export function getClock(): Clock {
   return clock;
 }
 
+/** A Clock that always forwards to the current session clock (so services follow startClock()). */
+export const sessionClock: Clock = {
+  nowMs: () => clock.nowMs(),
+  now: () => clock.now(),
+  offset: (u) => clock.offset(u),
+};
+
 /**
  * Demo builds start the clock at `isoNow` (the scenario's `now`, or the `now` argument) and
  * then tick normally; `now=real` and App Store builds use the system clock.

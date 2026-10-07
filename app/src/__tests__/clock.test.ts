@@ -20,7 +20,7 @@ describe('clock', () => {
 
   it('demo clock starts at the scenario time and ticks with the real clock', () => {
     let real = 1_000_000;
-    const base = { nowMs: () => real, now: () => new Date(real) };
+    const base = { nowMs: () => real };
     const start = Date.parse('2026-10-22T11:38:00Z');
     const c = demoClock(start, base);
     expect(c.nowMs()).toBe(start);
