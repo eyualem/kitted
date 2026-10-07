@@ -7,7 +7,8 @@
 
 import { View } from 'react-native';
 import { useTheme } from '../theme';
-import { displayScore, scoreWord, spokenScore } from '../score';
+import { displayScore, spokenScore } from '../score';
+import { t } from '@/i18n/en';
 import { numeralSizes } from '../typography';
 import { KText } from './KText';
 import { Numeral } from './Numeral';
@@ -19,27 +20,30 @@ export interface LedgerRowProps {
   item?: string;
   /** Signed amount as a number (+0.5, -0.5, 0). Rendered "+0.5", "−0.5", "±0". */
   amount?: number;
-  /** Literal value text instead of `amount` (e.g. "7.0" on the first row). */
+  /** Literal value text instead of `amount` (e.g. "7.0" on the first row, "—" not rated). */
   valueText?: string;
+  /** How a 0 reads: "+0" for an unearned credit (default), "±0" for the occasion/partial rows. */
+  zero?: 'plus' | 'plusMinus';
 }
 
-function formatAmount(n: number): string {
-  if (n === 0) return '±0';
+function formatAmount(n: number, zero: 'plus' | 'plusMinus'): string {
+  if (n === 0) return zero === 'plus' ? '+0' : '±0';
   const abs = Math.abs(n);
   const s = Number.isInteger(abs) ? abs.toFixed(0) : String(abs);
   return n > 0 ? `+${s}` : `−${s}`; // U+2212 minus sign, like the mockup
 }
 
 function spokenAmount(n: number): string {
-  if (n === 0) return 'no change';
-  return `${n > 0 ? 'plus' : 'minus'} ${Math.abs(n)}`;
+  if (n === 0) return t('a11y.noChange');
+  return t(n > 0 ? 'a11y.plus' : 'a11y.minus', { n: Math.abs(n) });
 }
 
-export function LedgerRow({ rule, item, amount, valueText }: LedgerRowProps) {
+export function LedgerRow({ rule, item, amount, valueText, zero = 'plus' }: LedgerRowProps) {
   const { colors, isAccessibilitySize } = useTheme();
-  const value = valueText ?? (amount !== undefined ? formatAmount(amount) : '');
+  const value = valueText ?? (amount !== undefined ? formatAmount(amount, zero) : '');
   const valueColor = amount === undefined || amount === 0 ? 'ink' : amount > 0 ? 'good' : 'accent';
-  const spoken = [rule, item, valueText ?? (amount !== undefined ? spokenAmount(amount) : undefined)].filter(Boolean).join(', ') + '.';
+  const said = valueText === '—' ? t('a11y.notRated') : (valueText ?? (amount !== undefined ? spokenAmount(amount) : undefined));
+  const spoken = [rule, item, said].filter(Boolean).join(', ') + '.';
   return (
     <View
       accessible
@@ -76,7 +80,7 @@ export function LedgerTotal({ score, note }: LedgerTotalProps) {
   return (
     <View
       accessible
-      accessibilityLabel={`Your score: ${spokenScore(score)} out of 10, ${scoreWord(score)}.${note ? ` ${note}.` : ''}`}
+      accessibilityLabel={t('a11y.ledgerTotal', { score: spokenScore(score), note: note ? `${note}.` : '' }).trim()}
       style={{
         flexDirection: isAccessibilitySize ? 'column' : 'row',
         justifyContent: 'space-between',
@@ -86,13 +90,13 @@ export function LedgerTotal({ score, note }: LedgerTotalProps) {
       }}
     >
       <View style={{ flexShrink: 1, gap: 2 }}>
-        <KText role="ledgerTotal">Your score</KText>
+        <KText role="ledgerTotal">{t('why.total')}</KText>
         {note ? <KText role="finePrint">{note}</KText> : null}
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
         <Numeral size={numeralSizes.ledgerTotal}>{displayScore(score)}</Numeral>
         <KText mono="value" variant="subheadline" color="ink3">
-          /10
+          {t('card.outOf')}
         </KText>
       </View>
     </View>

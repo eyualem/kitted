@@ -5,7 +5,9 @@
 
 import { Pressable, View } from 'react-native';
 import { useTheme } from '../theme';
+import { Icon } from './Icon';
 import { KText } from './KText';
+import { t } from '@/i18n/en';
 import type { InkColor } from '../typography';
 
 export function MonoLabel({ children, color = 'ink3' }: { children: string; color?: InkColor | (string & {}) }) {
@@ -21,16 +23,26 @@ export interface TagLineProps {
   left: string;
   /** "Date" (ink2). */
   right?: string;
-  /** Makes the right side a button (e.g. "Everyday ▾" opens the occasion picker). */
+  /** Makes the right side a button with a chevron.down (the occasion picker, 02 D7). */
   onPressRight?: () => void;
+  /** Right side color: ink2 (occasion) or accent ("How I score ›" link). */
+  rightColor?: 'ink2' | 'accent';
+  /** Hint for the pressable right side. */
+  rightHint?: string;
   /** Spoken form, e.g. "Fit check, full. Occasion: Date. Double-tap to change." */
   accessibilityLabel?: string;
 }
 
-export function TagLine({ left, right, onPressRight, accessibilityLabel }: TagLineProps) {
+export function TagLine({ left, right, onPressRight, rightColor = 'ink2', rightHint, accessibilityLabel }: TagLineProps) {
   const { isAccessibilitySize } = useTheme();
   const spoken = accessibilityLabel ?? [left.replace(/ · /g, ', '), right].filter(Boolean).join('. ');
-  const rightText = right ? <MonoLabel color="ink2">{right}</MonoLabel> : null;
+  const chevron = onPressRight && rightColor === 'ink2';
+  const rightText = right ? (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+      <MonoLabel color={rightColor}>{right}</MonoLabel>
+      {chevron ? <Icon name="chevronDown" size={10} weight="semibold" color="ink2" scalesWithText /> : null}
+    </View>
+  ) : null;
   return (
     <View
       accessible={!onPressRight}
@@ -43,7 +55,13 @@ export function TagLine({ left, right, onPressRight, accessibilityLabel }: TagLi
     >
       <MonoLabel>{left}</MonoLabel>
       {onPressRight && rightText ? (
-        <Pressable onPress={onPressRight} hitSlop={12} accessibilityRole="button" accessibilityLabel={spoken} accessibilityHint="Double-tap to change.">
+        <Pressable
+          onPress={onPressRight}
+          hitSlop={14}
+          accessibilityRole="button"
+          accessibilityLabel={spoken}
+          accessibilityHint={rightHint ?? (chevron ? t('a11y.changeOccasionHint') : undefined)}
+        >
           {rightText}
         </Pressable>
       ) : (

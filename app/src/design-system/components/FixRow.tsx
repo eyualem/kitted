@@ -10,6 +10,7 @@ import { useTheme } from '../theme';
 import { size } from '../tokens';
 import { Icon } from './Icon';
 import { KText } from './KText';
+import { t } from '@/i18n/en';
 
 export interface FixRowProps {
   number: number;
@@ -26,8 +27,8 @@ export function FixRow({ number, title, detail, gain, done }: FixRowProps) {
   const badge = Math.round(size.fixBadge * Math.min(fontScale, 2));
 
   const spoken = done
-    ? `Done: ${title}. Gained ${gain.replace('+', 'plus ')}.`
-    : `Fix ${number}: ${title}.${detail ? ` ${detail.replace(/ · /g, ', ')}.` : ''} Score goes to ${gain.replace('→ ', '')}.`;
+    ? `${t('a11y.fixDone', { title })} ${t('a11y.plus', { n: gain.replace('+', '') })}.`
+    : `${t('a11y.fix', { n: number, title, detail: detail ? detail.replace(/ · /g, ', ') : '' }).replace(' .', '')} ${t('a11y.fixGain', { score: gain.replace('→ ', '') })}`;
 
   const gainView = (
     <KText role="gain" numberOfLines={1}>

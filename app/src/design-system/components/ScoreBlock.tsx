@@ -5,7 +5,8 @@
 
 import { View } from 'react-native';
 import { useTheme } from '../theme';
-import { displayScore, scoreWord, spokenScore } from '../score';
+import { displayScore, scoreWordLabel, spokenScore } from '../score';
+import { t } from '@/i18n/en';
 import { numeralSizes } from '../typography';
 import { Icon } from './Icon';
 import { KText } from './KText';
@@ -15,8 +16,8 @@ export interface ScoreBlockProps {
   score: number;
   /** One-line verdict ("Clean base. The overshirt in your hand finishes it."). */
   verdict?: string;
-  /** e.g. "shoes not included" → "Partial check: shoes not included" (replaces the verdict). */
-  partialMissing?: string;
+  /** The full partial label, e.g. t('partial.label.shoes') (replaces the verdict). */
+  partialLabel?: string;
   /** false for the "Not quite right?" preview variant. */
   showOutOf?: boolean;
   /** Override the derived word (normally leave it). */
@@ -24,12 +25,12 @@ export interface ScoreBlockProps {
   numeralSize?: number;
 }
 
-export function ScoreBlock({ score, verdict, partialMissing, showOutOf = true, word, numeralSize = numeralSizes.hero }: ScoreBlockProps) {
+export function ScoreBlock({ score, verdict, partialLabel, showOutOf = true, word, numeralSize = numeralSizes.hero }: ScoreBlockProps) {
   const { isAccessibilitySize } = useTheme();
-  const resolvedWord = word ?? scoreWord(score);
+  const resolvedWord = word ?? scoreWordLabel(score);
 
-  let label = `Score ${spokenScore(score)} out of 10, ${resolvedWord}.`;
-  if (partialMissing) label += ` Partial check: ${partialMissing}.`;
+  let label = t('a11y.score', { score: spokenScore(score), word: resolvedWord });
+  if (partialLabel) label += ` ${partialLabel}.`;
   else if (verdict) label += ` ${verdict}`;
 
   return (
@@ -46,14 +47,14 @@ export function ScoreBlock({ score, verdict, partialMissing, showOutOf = true, w
         <Numeral size={numeralSize}>{displayScore(score)}</Numeral>
         {showOutOf ? (
           <KText mono="value" variant="subheadline" color="ink3">
-            /10
+            {t('card.outOf')}
           </KText>
         ) : null}
       </View>
       <View style={{ flexShrink: 1, gap: 4, paddingBottom: isAccessibilitySize ? 0 : 4 }}>
         <KText role="scoreWord">{resolvedWord}</KText>
-        {partialMissing ? (
-          <PartialLabel missing={partialMissing} />
+        {partialLabel ? (
+          <PartialLabel label={partialLabel} />
         ) : verdict ? (
           <KText role="verdict">{verdict}</KText>
         ) : null}
@@ -63,16 +64,16 @@ export function ScoreBlock({ score, verdict, partialMissing, showOutOf = true, w
 }
 
 /** "Partial check: shoes not included" with the dashed-square symbol. Always words, never just the icon. */
-export function PartialLabel({ missing }: { missing: string }) {
+export function PartialLabel({ label }: { label: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       <Icon name="partial" size="small" color="ink" scalesWithText />
-      <KText role="partialLabel" style={{ flexShrink: 1 }}>{`Partial check: ${missing}`}</KText>
+      <KText role="partialLabel" style={{ flexShrink: 1 }}>{label}</KText>
     </View>
   );
 }
 
 /** Just the word, for rows and the share card. */
 export function ScoreWordText({ score, color }: { score: number; color?: string }) {
-  return <KText role="scoreWord" color={color}>{scoreWord(score)}</KText>;
+  return <KText role="scoreWord" color={color}>{scoreWordLabel(score)}</KText>;
 }

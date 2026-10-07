@@ -1,6 +1,7 @@
 // Generates src/i18n/en.generated.ts from the copy deck in handoff/02-screens.md §5.
 // Run from app/: `node scripts/gen-en.mjs`. Don't hand-edit the output; change 02 and re-run.
-// Range rows ("`a.x` … `a.y` | A · B · …") are expanded with RANGES below.
+// Range rows ("`a.x` … `a.y` | A · B · …") are expanded with RANGES below; wildcard rows
+// ("`a.*` | A · B") become one key per value (camelCased value).
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,7 +30,14 @@ for (const line of deck.split('\n')) {
   const value = cells[1].replace(/\\n/g, '\n');
   const firstKey = keyCell.match(/`([^`]+)`/)?.[1];
   if (!firstKey) throw new Error(`No key: ${line}`);
-  if (keyCell.includes('…')) {
+  if (firstKey.endsWith('.*')) {
+    // "`value.tuck.*` | Tucked · Half tuck · Untucked" → value.tuck.tucked, value.tuck.halfTuck, …
+    const prefix = firstKey.slice(0, -1);
+    for (const v of value.split(' · ')) {
+      const slug = v.toLowerCase().replace(/[^a-z0-9]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
+      entries.push([prefix + slug, v]);
+    }
+  } else if (keyCell.includes('…')) {
     const keys = RANGES[firstKey];
     if (!keys) throw new Error(`Unknown range row starting at ${firstKey}`);
     const values = value.split(' · ');

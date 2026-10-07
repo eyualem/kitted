@@ -14,6 +14,7 @@ import { useTheme } from '../theme';
 import { size } from '../tokens';
 import { Icon } from './Icon';
 import { KText } from './KText';
+import { t } from '@/i18n/en';
 
 export type StageState = 'pending' | 'now' | 'done';
 
@@ -24,7 +25,10 @@ export interface Stage {
   count?: string;
 }
 
-export const defaultStageLabels = ['Finding your pieces', 'Checking fit', 'Colors & proportion', 'Writing your fixes'] as const;
+/** The four rows, from the copy deck (02 D6). */
+export function defaultStageLabels(): string[] {
+  return [t('read.stage.pieces'), t('read.stage.fit'), t('read.stage.color'), t('read.stage.fixes')];
+}
 
 function SpinningRing({ reduceMotion }: { reduceMotion: boolean }) {
   const { colors } = useTheme();
@@ -59,21 +63,25 @@ function SpinningRing({ reduceMotion }: { reduceMotion: boolean }) {
 export function StageList({ stages }: { stages: readonly Stage[] }) {
   const { colors, a11y } = useTheme();
   const nowIndex = stages.findIndex((s) => s.state === 'now');
-  const announced = useRef(-1);
+  const doneCount = stages.filter((s) => s.state === 'done').length;
+  const announced = useRef(0);
 
+  // Announce each stage once, when it finishes ("Checking fit, done"), 02 D6.
   useEffect(() => {
-    if (nowIndex >= 0 && nowIndex !== announced.current) {
-      announced.current = nowIndex;
-      const s = stages[nowIndex];
-      if (s) AccessibilityInfo.announceForAccessibility(s.label);
+    while (announced.current < doneCount) {
+      const s = stages[announced.current];
+      announced.current += 1;
+      if (s) AccessibilityInfo.announceForAccessibility(t('read.a11y.stageDone', { stage: s.label }));
     }
-  }, [nowIndex, stages]);
+  }, [doneCount, stages]);
 
   const current = stages[nowIndex] ?? stages[stages.length - 1];
-  const value = current ? `${current.label}, step ${(nowIndex >= 0 ? nowIndex : stages.length - 1) + 1} of ${stages.length}` : '';
+  const value = current
+    ? t('read.a11y.progress', { stage: current.label, n: (nowIndex >= 0 ? nowIndex : stages.length - 1) + 1, total: stages.length })
+    : '';
 
   return (
-    <View accessible accessibilityRole="progressbar" accessibilityLabel="Checking your fit" accessibilityValue={{ text: value }} style={{ gap: 12 }}>
+    <View accessible accessibilityRole="progressbar" accessibilityLabel={t('read.tag')} accessibilityValue={{ text: value }} style={{ gap: 12 }}>
       {stages.map((s, i) => (
         <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 13 }}>
           {s.state === 'now' ? (

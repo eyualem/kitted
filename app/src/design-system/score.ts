@@ -1,6 +1,7 @@
 // score.ts — score display, speech and the score word (03 §6).
 // JS numbers are IEEE-754 binary64 like Python floats, so this matches rubric.py exactly.
 
+import { t, type StringKey } from '@/i18n/en';
 import { scoreBands, type ScoreWord } from './tokens';
 
 /**
@@ -41,4 +42,17 @@ export function scoreBandIndex(x: number): number {
     if (r >= band.min) index = i;
   });
   return index;
+}
+
+const WORD_KEYS: Record<ScoreWord, StringKey> = {
+  'Needs a fix': 'score.word.needsFix',
+  'Getting there': 'score.word.gettingThere',
+  'Put together': 'score.word.putTogether',
+  Sharp: 'score.word.sharp',
+  'Dialed in': 'score.word.dialedIn',
+};
+
+/** The word as shown (from the copy deck, 02 §5.4). Always next to the number. */
+export function scoreWordLabel(x: number): string {
+  return t(WORD_KEYS[scoreWord(x)]);
 }

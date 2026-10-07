@@ -1,9 +1,11 @@
 // Chat pieces — StylistMessage (`.say`, `.who`), UserBubble (`.me`), PhotoBubble (`.me.photo`),
 // DayStamp (`.stamp`), and NeckDownPhoto (03 §8 display rules). 03 §5 "Chat", 02 §4.
-// Copy rule: always "Your stylist", never "AI stylist".
+// Copy rule: always "Your stylist", never "AI stylist". All strings come from @/i18n/en.
 
 import type { ReactNode } from 'react';
-import { Image, Pressable, Text, View, type ImageSourcePropType } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { Image, type ImageSource } from 'expo-image';
+import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
 import { fixed, radius, size } from '../tokens';
 import { wordmark, wordmarkStyle } from '../typography';
@@ -26,7 +28,7 @@ export function StylistMessage({ children, showHeader, footer }: StylistMessageP
   const { archivoLoaded } = useTheme();
   return (
     <View style={{ maxWidth: '92%', alignSelf: 'flex-start', gap: 4 }}>
-      <View accessible accessibilityLabel={`Your stylist: ${children}`} style={{ gap: 4 }}>
+      <View accessible accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })} style={{ gap: 4 }}>
         {showHeader ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <View
@@ -44,7 +46,7 @@ export function StylistMessage({ children, showHeader, footer }: StylistMessageP
                 K
               </Text>
             </View>
-            <KText role="stylistWho">Your stylist</KText>
+            <KText role="stylistWho">{t('common.who')}</KText>
           </View>
         ) : null}
         <KText role="chatText">{children}</KText>
@@ -82,7 +84,7 @@ export function UserBubble({ children, onPress }: { children: string; onPress?: 
         onPress={onPress}
         accessibilityRole="button"
         accessibilityLabel={children}
-        accessibilityHint="Double-tap to change."
+        accessibilityHint={t('a11y.changeAnswer')}
         style={{ alignSelf: 'flex-end', maxWidth: '78%' }}
       >
         {bubble}
@@ -107,8 +109,11 @@ export interface PhotoCrop {
   cx: number;
 }
 
+/** Anything expo-image takes: a require() module, a URI string or an ImageSource. */
+export type PhotoSource = number | string | ImageSource;
+
 export interface NeckDownPhotoProps {
-  source: ImageSourcePropType;
+  source: PhotoSource;
   /** Image width / height (needed only with `crop`). */
   aspect?: number;
   crop?: PhotoCrop;
@@ -117,6 +122,30 @@ export interface NeckDownPhotoProps {
   borderRadii?: { tl: number; tr: number; br: number; bl: number };
   /** "Your outfit photo, Oct 22". Never describe the body. */
   accessibilityLabel?: string;
+}
+
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+/** The mockup pads the feet by 1.2% of the image height (placePhoto, mode "neck"). */
+const FOOT_PAD = 0.012;
+
+/**
+ * Where to put the image inside a W×H frame so neck→feet fills the height, centered on the
+ * body, never exposing an image edge (mockup `placePhoto`, mode "neck"; 03 §8).
+ */
+export function neckDownLayout(crop: PhotoCrop, aspect: number, width: number, height: number) {
+  const span = Math.max(0.05, crop.foot + FOOT_PAD - crop.neck);
+  let h = height / span;
+  let w = h * aspect;
+  if (w < width) {
+    w = width;
+    h = width / aspect;
+  }
+  return {
+    width: w,
+    height: h,
+    left: clamp(width / 2 - crop.cx * w, width - w, 0),
+    top: clamp(-crop.neck * h, height - h, 0),
+  };
 }
 
 export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii, accessibilityLabel }: NeckDownPhotoProps) {
@@ -141,24 +170,17 @@ export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii
     : { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' as const };
 
   if (!crop || !aspect) {
+    // Stored check photos are already neck-down: cover, top-aligned.
     return (
       <View style={frame} {...a11y}>
-        <Image source={source} resizeMode="cover" style={{ width, height }} />
+        <Image source={source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} />
       </View>
     );
   }
-  // Scale so the neck→foot band fills the frame height; if that's too narrow, fill the width.
-  let dh = height / Math.max(0.05, crop.foot - crop.neck);
-  let dw = dh * aspect;
-  if (dw < width) {
-    dw = width;
-    dh = width / aspect;
-  }
-  const top = -crop.neck * dh;
-  const left = Math.min(0, Math.max(width - dw, width / 2 - crop.cx * dw));
+  const box = neckDownLayout(crop, aspect, width, height);
   return (
     <View style={frame} {...a11y}>
-      <Image source={source} resizeMode="stretch" style={{ position: 'absolute', width: dw, height: dh, top, left }} />
+      <Image source={source} contentFit="fill" transition={0} style={{ position: 'absolute', ...box }} />
     </View>
   );
 }
@@ -169,7 +191,7 @@ export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii
 // and time right ("Date · 7:42"). While reading (ruling 13): lock + "Only this is sent".
 
 export interface PhotoBubbleProps {
-  source: ImageSourcePropType;
+  source: PhotoSource;
   aspect?: number;
   crop?: PhotoCrop;
   occasion?: string;
@@ -177,17 +199,24 @@ export interface PhotoBubbleProps {
   time: string;
   /** True while the check is reading: the caption shows lock + "Only this is sent" (ruling 13). */
   reading?: boolean;
+  /** Opens the photo viewer (S13). */
+  onPress?: () => void;
 }
 
-export function PhotoBubble({ source, aspect, crop, occasion, time, reading }: PhotoBubbleProps) {
+export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onPress }: PhotoBubbleProps) {
   const { colors } = useTheme();
   const innerW = size.photoBubbleWidth - 8;
-  const spoken = `Your outfit photo, ${time}${occasion ? `, ${occasion}` : ''}.${reading ? ' Only this is sent.' : ''}`;
+  const spoken =
+    (occasion ? t('a11y.photoOccasion', { time, occasion }) : t('a11y.photo', { time })) +
+    (reading ? ` ${t('read.bubble.onlySent')}.` : '');
   return (
-    <View
+    <Pressable
+      onPress={onPress}
+      disabled={!onPress}
       accessible
-      accessibilityRole="image"
+      accessibilityRole={onPress ? 'imagebutton' : 'image'}
       accessibilityLabel={spoken}
+      accessibilityHint={onPress ? t('a11y.photoHint') : undefined}
       style={{
         alignSelf: 'flex-end',
         width: size.photoBubbleWidth,
@@ -208,12 +237,24 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading }: P
         height={size.photoBubbleHeight}
         borderRadii={{ tl: radius.photoBubbleInner, tr: radius.photoBubbleInner, br: radius.photoBubbleInnerTail, bl: radius.photoBubbleInner }}
       />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 6, paddingBottom: 5, paddingHorizontal: 9, opacity: 0.9, gap: 4 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: reading ? 'flex-start' : 'center',
+          paddingTop: 6,
+          paddingBottom: 5,
+          paddingHorizontal: 9,
+          opacity: 0.9,
+          gap: 4,
+        }}
+      >
         {reading ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, flexShrink: 1 }}>
-            <Icon name="lock" size={12} color={colors.onMe} />
-            <KText role="photoCaption" numberOfLines={1} style={{ flexShrink: 1 }}>
-              Only this is sent
+          // 109 pt can't hold lock + "Only this is sent" + the time on one line: the label wraps.
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, flexShrink: 1 }}>
+            <Icon name="lock" size="small" color={colors.onMe} />
+            <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
+              {t('read.bubble.onlySent')}
             </KText>
           </View>
         ) : (
@@ -225,7 +266,7 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading }: P
           {time}
         </KText>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

@@ -16,6 +16,38 @@ const plurals: Partial<Record<keyof typeof enGenerated, { one: string }>> = {
   'push.ready': { one: 'Your fit check is ready. 1 quick fix inside.' },
 };
 
+/**
+ * Strings added during the build (P2+) that the copy deck (02 §5) doesn't have yet: mostly
+ * VoiceOver labels. All are "N" (new); listed in handoff/DECISIONS-LOG.md for the founder.
+ */
+const addedInBuild = {
+  'a11y.stylistSays': '{who}: {text}',
+  'a11y.photo': 'Your outfit photo, {time}.',
+  'a11y.photoOccasion': 'Your outfit photo, {time}, {occasion}.',
+  'a11y.photoHint': 'Opens the photo',
+  'a11y.changeAnswer': 'Changes your answer',
+  'a11y.changeOccasionHint': 'Changes the occasion',
+  'a11y.fix': 'Fix {n}: {title}. {detail}.',
+  'a11y.fixGain': 'Score goes to {score}.',
+  'a11y.fixDone': 'Done: {title}.',
+  'a11y.score': 'Score {score} out of 10, {word}.',
+  'a11y.ledgerRow': '{rule}, {item}, {amount}.',
+  'a11y.ledgerTotal': 'Your score, {score} out of 10. {note}',
+  'a11y.plus': 'plus {n}',
+  'a11y.minus': 'minus {n}',
+  'a11y.noChange': 'no change',
+  'a11y.notRated': 'not rated',
+  'read.a11y.progress': '{stage}, step {n} of {total}',
+  'read.a11y.stageDone': '{stage}, done',
+  'stylist.menu.a11y': 'More',
+  'composer.a11y.field': 'Ask your stylist',
+  'cam.shoe.bubbleCap': 'Shoe snap',
+  'card.a11y.changeOccasion': 'Change occasion',
+  'card.a11y.review': 'Review added items',
+  'card.a11y.recheck': 'Re-check, {occasion}. Score went from {was} to {now}, up {delta}. {word}. Done: {fix}.',
+  'why.a11y.pill': '{garment}. Correct it',
+} as const;
+
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */
 const demoOnly = {
   'demo.placeholder.title': '{id} · {name}',
@@ -25,7 +57,7 @@ const demoOnly = {
   'demo.unknownScreen': 'There is no demo screen {n}.',
 } as const;
 
-export const en = { ...enGenerated, ...demoOnly } as const;
+export const en = { ...enGenerated, ...addedInBuild, ...demoOnly } as const;
 
 export type StringKey = keyof typeof en;
 export type Params = Readonly<Record<string, string | number>>;

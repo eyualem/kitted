@@ -16,6 +16,7 @@ export const sym = {
   close: 'xmark',
   back: 'chevron.left',
   next: 'chevron.right',
+  chevronDown: 'chevron.down',
   settings: 'gearshape',
   check: 'checkmark',
   checkFilled: 'checkmark.circle.fill',

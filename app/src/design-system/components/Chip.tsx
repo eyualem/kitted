@@ -73,6 +73,8 @@ export interface ChipFlowProps {
   style?: StyleProp<ViewStyle>;
   /** Accessibility label for the group ("Occasion"). */
   accessibilityLabel?: string;
+  /** Extra space between wrapped rows (the chips' own hit padding already gives ~10). */
+  rowGap?: number;
 }
 
 /**
@@ -80,7 +82,7 @@ export interface ChipFlowProps {
  * own hit padding). At accessibility sizes it becomes a vertical stack (02 §4).
  * Horizontal scroll rows (Closet filter, quick-starts) use a horizontal ScrollView instead.
  */
-export function ChipFlow({ children, style, accessibilityLabel }: ChipFlowProps) {
+export function ChipFlow({ children, style, accessibilityLabel, rowGap = 0 }: ChipFlowProps) {
   const { isAccessibilitySize } = useTheme();
   return (
     <View
@@ -88,7 +90,7 @@ export function ChipFlow({ children, style, accessibilityLabel }: ChipFlowProps)
       style={[
         isAccessibilitySize
           ? { flexDirection: 'column', alignItems: 'flex-start' }
-          : { flexDirection: 'row', flexWrap: 'wrap', columnGap: space.rowGap, rowGap: 0 },
+          : { flexDirection: 'row', flexWrap: 'wrap', columnGap: space.rowGap, rowGap },
         style,
       ]}
     >
@@ -99,7 +101,10 @@ export function ChipFlow({ children, style, accessibilityLabel }: ChipFlowProps)
 
 export type PillTone = 'gray' | 'accent' | 'ok' | 'pending';
 
-/** Pill: a 26 pt label capsule (22 inline). Labels, not buttons. `ok` always carries a checkmark. */
+/**
+ * Pill: a 26 pt label capsule (22 inline). Labels, not buttons. `ok` always carries a checkmark.
+ * `pending` only changes the color: pass the text from t('read.pending', { slot }) (it has the "…").
+ */
 export function Pill({ title, tone = 'gray', inline }: { title: string; tone?: PillTone; inline?: boolean }) {
   const { colors } = useTheme();
   const h = inline ? size.pillInline : size.pill;
@@ -123,7 +128,7 @@ export function Pill({ title, tone = 'gray', inline }: { title: string; tone?: P
     >
       {tone === 'ok' ? <Icon name="check" size={13} color={fg} weight="semibold" scalesWithText /> : null}
       <KText role="pill" variant={inline ? 'caption' : 'footnote'} color={fg} numberOfLines={1}>
-        {tone === 'pending' ? `${title}…` : title}
+        {title}
       </KText>
     </View>
   );
