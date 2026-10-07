@@ -23,32 +23,44 @@ export function Placeholder({ id, name, phase, kind, note }: PlaceholderProps) {
   const modal = kind === 'sheet' || kind === 'cover';
   const top = kind === 'cover' ? insets.top + space.s : kind === 'sheet' ? space.l : 0;
 
-  return (
-    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: top }]}>
+  const content = (
+    <>
       {modal ? (
         <View style={styles.closeRow}>
           <IconButton icon="close" label={t('common.close')} onPress={() => router.back()} />
         </View>
       ) : null}
-      <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.body}>
-        <KText variant="title2" weight="700">
-          {t('demo.placeholder.title', { id, name })}
+      <KText variant="title2" weight="700">
+        {t('demo.placeholder.title', { id, name })}
+      </KText>
+      <KText variant="subheadline" color="ink2">
+        {t('demo.placeholder.body', { phase })}
+      </KText>
+      {note ? (
+        <KText variant="footnote" color="ink3" mono="label">
+          {note}
         </KText>
-        <KText variant="subheadline" color="ink2">
-          {t('demo.placeholder.body', { phase })}
-        </KText>
-        {note ? (
-          <KText variant="footnote" color="ink3" mono="label">
-            {note}
-          </KText>
-        ) : null}
-      </ScrollView>
+      ) : null}
+    </>
+  );
+
+  return (
+    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: top }]}>
+      {/* Modals use a plain View: a ScrollView inside an iOS formSheet drew nothing on SDK 57
+          even though its frames were correct. Open issue for P2's real sheets (DECISIONS-LOG #14). */}
+      {modal ? (
+        <View style={styles.body}>{content}</View>
+      ) : (
+        <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.body}>
+          {content}
+        </ScrollView>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  closeRow: { paddingHorizontal: space.l, flexDirection: 'row' },
+  closeRow: { flexDirection: 'row', marginLeft: -space.xs, marginBottom: space.s },
   body: { padding: space.xl, gap: space.s },
 });

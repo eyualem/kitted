@@ -30,7 +30,13 @@ export const en = { ...enGenerated, ...demoOnly } as const;
 export type StringKey = keyof typeof en;
 export type Params = Readonly<Record<string, string | number>>;
 
-const pluralRules = new Intl.PluralRules('en-US');
+/**
+ * English cardinal plurals: "one" for exactly 1, "other" for everything else (CLDR's en rule).
+ * Not Intl.PluralRules: Hermes on iOS doesn't implement it (it crashed the first iOS launch).
+ */
+function isOne(n: number): boolean {
+  return n === 1;
+}
 
 function fill(template: string, params?: Params): string {
   if (!params) return template;
@@ -42,14 +48,14 @@ function fill(template: string, params?: Params): string {
 
 /**
  * Looks up a string and fills `{name}` arguments. When `params.n` is a number and the key has
- * a plural variant, the `one` form is used for n = 1 (Intl.PluralRules, "1 fit" / "37 fits").
+ * a plural variant, the `one` form is used for n = 1 ("1 fit" / "37 fits").
  */
 export function t(key: StringKey, params?: Params): string {
   let template: string = en[key];
   const n = params?.n;
   if (typeof n === 'number') {
     const variant = (plurals as Partial<Record<StringKey, { one: string }>>)[key];
-    if (variant && pluralRules.select(n) === 'one') template = variant.one;
+    if (variant && isOne(n)) template = variant.one;
   }
   return fill(template, params);
 }

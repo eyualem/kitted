@@ -52,7 +52,7 @@ const config: ExpoConfig = {
     // ['expo-font', { fonts: ['./assets/fonts/ArchivoCondensed-SemiBold.ttf', './assets/fonts/ArchivoCondensed-Medium.ttf', './assets/fonts/ArchivoExpanded-Bold.ttf'] }],
     //   ↑ uncomment once the founder OKs the download and the files exist (a missing file fails prebuild).
     'expo-sqlite',
-    'expo-secure-store',
+    ['expo-secure-store', { faceIDPermission: false }], // no Face ID in Kitted; keeps NSFaceIDUsageDescription out (05 T29)
     // P2: ['expo-image-picker', { photosPermission: false, cameraPermission: false, microphonePermission: false }],
     // P6: ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false }],
     // P6: 'expo-notifications',

@@ -1,4 +1,4 @@
-import { demoClock, fixedClock, parseZonedIso } from '@/services/clock';
+import { demoClock, fixedClock, newYorkOffsetMs, parseZonedIso } from '@/services/clock';
 
 describe('clock', () => {
   it('reads a wall time without offset in America/New_York (EDT in October)', () => {
@@ -27,5 +27,23 @@ describe('clock', () => {
     real += 90_000;
     expect(c.nowMs()).toBe(start + 90_000);
     expect(fixedClock(5).now().getTime()).toBe(5);
+  });
+});
+
+describe('newYorkOffsetMs (the US rule, no Intl)', () => {
+  const H = 3_600_000;
+  it('matches Intl for every hour around both 2026 changes and a few other years', () => {
+    const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', timeZoneName: 'shortOffset' });
+    const intlOffset = (ms: number) => {
+      const name = fmt.formatToParts(new Date(ms)).find((p) => p.type === 'timeZoneName')?.value ?? '';
+      return Number(/GMT([+-]\d+)/.exec(name)?.[1] ?? 0) * H;
+    };
+    const starts = ['2026-03-07T00:00:00Z', '2026-10-30T00:00:00Z', '2027-03-13T00:00:00Z', '2030-11-02T00:00:00Z'];
+    for (const s of starts) {
+      for (let h = 0; h < 72; h++) {
+        const ms = Date.parse(s) + h * H;
+        expect(newYorkOffsetMs(ms)).toBe(intlOffset(ms));
+      }
+    }
   });
 });

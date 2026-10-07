@@ -15,10 +15,13 @@ export default function DemoScreenRoute() {
 
   useEffect(() => {
     let alive = true;
-    applyDemoScreen(params).then((href) => {
+    applyDemoScreen(params).then((target) => {
       if (!alive) return;
-      if (href) router.replace(href);
-      else setMissing(params.n ?? '');
+      if (!target) return setMissing(params.n ?? '');
+      if (!target.under) return router.replace(target.href);
+      // Present sheets and covers over the screen beneath them, as the real flow does.
+      router.replace(target.under);
+      setTimeout(() => router.push(target.href), 350);
     });
     return () => {
       alive = false;

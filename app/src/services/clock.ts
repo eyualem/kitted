@@ -15,8 +15,25 @@ export const systemClock: Clock = {
   now: () => new Date(),
 };
 
+/**
+ * America/New_York's offset at `utcMs`, from the US rule in force since 2007: EDT (−4 h) from
+ * 2 am EST on the second Sunday of March to 2 am EDT on the first Sunday of November, else EST
+ * (−5 h). Pure arithmetic, because Hermes on iOS has gaps in Intl time-zone support.
+ */
+export function newYorkOffsetMs(utcMs: number): number {
+  const year = new Date(utcMs).getUTCFullYear();
+  const nthSunday = (month: number, n: number) => {
+    const firstDow = new Date(Date.UTC(year, month, 1)).getUTCDay();
+    return 1 + ((7 - firstDow) % 7) + 7 * (n - 1);
+  };
+  const dstStart = Date.UTC(year, 2, nthSunday(2, 2), 2 + 5); // 2:00 EST = 07:00 UTC
+  const dstEnd = Date.UTC(year, 10, nthSunday(10, 1), 2 + 4); // 2:00 EDT = 06:00 UTC
+  return utcMs >= dstStart && utcMs < dstEnd ? -4 * 3_600_000 : -5 * 3_600_000;
+}
+
 /** Offset of `timeZone` from UTC at the instant `utcMs`, in ms (e.g. −4 h for EDT). */
 export function tzOffsetMs(utcMs: number, timeZone: string): number {
+  if (timeZone === APP_TIME_ZONE) return newYorkOffsetMs(utcMs);
   const dtf = new Intl.DateTimeFormat('en-US', {
     timeZone,
     hourCycle: 'h23',

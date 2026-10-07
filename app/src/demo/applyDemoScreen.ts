@@ -9,7 +9,12 @@ import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
 import { screenScenario } from './scenarios';
 
-export async function applyDemoScreen(params: RawArgs): Promise<Href | null> {
+export interface DemoTarget {
+  href: Href;
+  under?: Href;
+}
+
+export async function applyDemoScreen(params: RawArgs): Promise<DemoTarget | null> {
   const n = Number(params.n);
   const scenario = Number.isInteger(n) ? screenScenario(n) : undefined;
   if (!scenario) return null;
@@ -32,5 +37,5 @@ export async function applyDemoScreen(params: RawArgs): Promise<Href | null> {
 
   // Let the root layout re-render with the new gate before navigating into a guarded route.
   await new Promise((resolve) => setTimeout(resolve, 0));
-  return scenario.href as Href;
+  return { href: scenario.href as Href, ...(scenario.under ? { under: scenario.under as Href } : {}) };
 }
