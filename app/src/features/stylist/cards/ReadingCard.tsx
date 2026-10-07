@@ -34,7 +34,7 @@ export function ReadingCard({ s }: { s: Reading }) {
   const slotWord = (k: string) => (k === 'footwear' ? t('label.slot.footwear') : t('label.slot.bottom'));
   return (
     <KCard accessibilityLabel={t('read.tag')}>
-      <KCardSection gap={10}>
+      <KCardSection>
         <TagLine left={t('read.tag')} right={s.slow ? t('read.slow') : t('read.eta')} />
         <View style={styles.scoreRow}>
           <Shimmer style={styles.numeral} />

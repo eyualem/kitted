@@ -173,11 +173,16 @@ export const space = {
   gutter: 16,
   /** Welcome + paywall. */
   heroGutter: 24,
-  /** .card-pad 14px 16px */
-  cardPadH: 16,
-  cardPadV: 14,
-  /** Between cards / thread items. */
-  stack: 12,
+  /** Card section padding. Mockup .card-pad is 14px 16px; opened up after the founder's
+   *  "cards feel cramped" (Oct 7, DECISIONS-LOG #30). */
+  cardPadH: 20,
+  cardPadV: 16,
+  /** Default gap between the rows of a card section (mockup 10). */
+  cardGap: 12,
+  /** A fix row's vertical padding (mockup 10). */
+  fixRowV: 12,
+  /** Between cards / thread items (mockup 12). */
+  stack: 16,
   /** Between chips, buttons, quick-starts. */
   rowGap: 8,
 } as const;
@@ -221,7 +226,8 @@ export const size = {
   navCircle: 44,
   fixBadge: 26,
   stageDot: 24,
-  seamInset: 18,
+  /** Card padding + 2, as in the mockup (16 → 18). */
+  seamInset: 22,
   avatar: 18,
   detectionTag: 28,
   photoBubbleWidth: 135,

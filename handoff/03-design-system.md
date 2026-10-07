@@ -271,10 +271,12 @@ export function useKittedFonts() {
 |---|---|---|
 | `gutter` | 16 | Thread padding 16. The 18 used on tab pages snaps to 16, to match iOS 26 grouped lists (brainstorm 12). |
 | `heroGutter` | 24 | Welcome 28.5 / paywall 23.5 → 24 |
-| `cardPadH` × `cardPadV` | 16 × 14 | `.card-pad 14px 16px` |
-| `stack` | 12 | Gap between thread items and between cards (12–13) |
+| `cardPadH` × `cardPadV` | 20 × 16 | `.card-pad 14px 16px`, opened up (founder, Oct 7; DECISIONS-LOG #30) |
+| `cardGap` | 12 | Gap between a card section's rows (mockup 10) |
+| `fixRowV` | 12 | A fix row's vertical padding (mockup 10.5) |
+| `stack` | 16 | Gap between thread items and between cards (mockup 12–13) |
 | `rowGap` | 8 | Chips, buttons, quick-starts |
-| Inside a fix list | 4 vertical section padding + 10 per row | `.fixes padding-block:4px`, `.fix padding:10.5px 0` |
+| Inside a fix list | 4 vertical section padding + `fixRowV` per row | `.fixes padding-block:4px`, `.fix padding:10.5px 0` |
 | Under the thread | 83 + 8 pt for the tab bar + composer height | `brainstorm/12` §3.7. With NativeTabs, iOS adds the tab bar to the screen's bottom safe area; pin the composer to the bottom with `useSafeAreaInsets().bottom` (react-native-safe-area-context) and give the thread list a matching `contentInset`/bottom padding. Verify on device, with the keyboard up too. |
 
 ### 4.2 Radii (`radius` in `tokens.ts`; always add `borderCurve: 'continuous'`)

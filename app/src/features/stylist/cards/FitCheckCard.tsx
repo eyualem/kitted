@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import {
   AddedRow, FinishTile, FixRow, GarmentIcon, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
-  TagLine, TextLink, TextLinkRow, TipLine, displayScore, spokenScore, useTheme,
+  TagLine, TextLink, TextLinkRow, TipLine, displayScore, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
@@ -122,7 +122,7 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
       accessibilityActions={actions}
       onAccessibilityAction={(e) => void go[e.nativeEvent.actionName as keyof typeof go]?.()}
     >
-      <KCardSection gap={10}>
+      <KCardSection>
         <TagLine
           left={t(partial ? 'card.tag.partial' : 'card.tag.full')}
           right={occasionLabel(row.occasion)}
@@ -140,7 +140,7 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
       <Seam />
       <KCardSection paddingVertical={4} gap={0}>
         {dialed ? (
-          <View style={{ paddingVertical: 10 }}>
+          <View style={{ paddingVertical: space.fixRowV }}>
             <KText role="fixTitle">{score >= 9 ? t('dialed.title') : t('card.noFixes')}</KText>
           </View>
         ) : (

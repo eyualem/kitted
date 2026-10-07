@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset } from 'react-native-reanimated';
 import { router } from 'expo-router';
-import { useTheme } from '@/design-system';
+import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
@@ -93,7 +93,7 @@ export function StylistScreen() {
 }
 
 function Separator() {
-  return <View style={{ height: 12 }} />;
+  return <View style={{ height: space.stack }} />;
 }
 
 const styles = StyleSheet.create({

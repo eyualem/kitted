@@ -53,12 +53,12 @@ export function KCard({ children, radius = R.card, style, accessibilityLabel, ac
 
 export interface KCardSectionProps {
   children?: ReactNode;
-  /** Gap between children (10 default). */
+  /** Gap between children (space.cardGap default). */
   gap?: number;
   paddingVertical?: number;
   style?: StyleProp<ViewStyle>;
 }
 
-export function KCardSection({ children, gap = 10, paddingVertical = space.cardPadV, style }: KCardSectionProps) {
+export function KCardSection({ children, gap = space.cardGap, paddingVertical = space.cardPadV, style }: KCardSectionProps) {
   return <View style={[{ paddingHorizontal: space.cardPadH, paddingVertical, gap }, style]}>{children}</View>;
 }

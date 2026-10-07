@@ -1,13 +1,13 @@
 // FixRow (`.fix`, `.fix.done`) + TipLine (`.tipline`) — 03 §5 "Cards and score".
 // FixRow: 26 pt badge (1.3 pt ink ring, number footnote bold) | title (callout semibold) +
-// detail (footnote ink2) | gain (mono, accent: "→ 9.0"). 10 pt vertical padding, 12 pt gap.
+// detail (footnote ink2) | gain (mono, accent: "→ 9.0"). space.fixRowV vertical padding, 12 pt gap.
 // Done: badge filled ink with a surface checkmark, title ink2 struck through in ink3, detail
 // hidden, gain shows the raw delta ("+0.75"). AX sizes: gain moves under the text, badge to top.
 // Rule (ruling 20): at least one free fix whenever any fix exists, and the free one comes first.
 
 import { View } from 'react-native';
 import { useTheme } from '../theme';
-import { size } from '../tokens';
+import { size, space } from '../tokens';
 import { Icon } from './Icon';
 import { KText } from './KText';
 import { t } from '@/i18n/en';
@@ -40,7 +40,7 @@ export function FixRow({ number, title, detail, gain, done }: FixRowProps) {
     <View
       accessible
       accessibilityLabel={spoken}
-      style={{ flexDirection: 'row', alignItems: isAccessibilitySize ? 'flex-start' : 'center', gap: 12, paddingVertical: 10, minHeight: size.hit }}
+      style={{ flexDirection: 'row', alignItems: isAccessibilitySize ? 'flex-start' : 'center', gap: 12, paddingVertical: space.fixRowV, minHeight: size.hit }}
     >
       <View
         style={{
