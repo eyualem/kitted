@@ -43,6 +43,8 @@ export interface FixOptions extends ScoreOptions {
   closet?: readonly ClosetItem[];
   /** The first check ever (onboarding): adjust tier only, else one "free if you own one". */
   firstCheck?: boolean;
+  /** Targets he said don't apply ("Not quite right? → Fix doesn't apply"): skipped, next candidate shows. */
+  excludeTargets?: readonly string[];
 }
 
 interface FixInfo {
@@ -384,6 +386,10 @@ export function suggestFixes(reading: Reading, opts: FixOptions = {}, engine: Ru
     targets = ["K1_layered", "K2_elevated_piece", "K4_shoes_complement"].filter((k) => !(base.credits as string[]).includes(k));
     if (engine.loungeOk.has(occasion)) targets = []; // at the gym or home, a clean outfit has nothing to fix
     if (base.notRated.includes("shoes") || base.notRated.includes("bottom half")) targets = targets.filter((t) => t !== "K4_shoes_complement");
+  }
+  if (opts.excludeTargets && opts.excludeTargets.length > 0) {
+    const skip = new Set(opts.excludeTargets);
+    targets = targets.filter((t) => !skip.has(t));
   }
   const tiers = catalog.tiers;
 

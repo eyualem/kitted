@@ -9,8 +9,9 @@ export {
 } from "./rubric";
 export { scoreWord, SCORE_WORDS, type ScoreWord } from "./scoreWords";
 export { suggestFixes, applyFix, fixTargets, type Fix, type FixSuggestions, type FixOptions } from "./fixes";
-export { recheckMerge, STATE_FIELDS, type RecheckMerge } from "./recheck";
-export { applyCorrection, correctionLine } from "./corrections";
+export { recheckMerge, recheckOutcome, STATE_FIELDS, type RecheckMerge, type RecheckOutcome } from "./recheck";
+export { applyCorrection, removeGarment, correctionLine } from "./corrections";
+export { matchClosetItem, closetPlan, type ClosetPlan, type ClosetPlanEntry } from "./closetMatch";
 export { partialLabel, mergeShoeSnap, mergeBottomSnap, pickShoesFromCloset } from "./partial";
 export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type RotationResult, type ItemKey, type ComboKey } from "./rotation";
 export { garmentName, G, SUB_NAME, SLOT_TO_CLOSET, CORE, idx } from "./names";

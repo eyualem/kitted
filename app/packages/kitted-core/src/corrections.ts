@@ -14,6 +14,14 @@ export function applyCorrection<K extends keyof Garment & string>(
   return r;
 }
 
+/** "Not in the photo": a new reading without that garment (the original is never edited). */
+export function removeGarment(reading: Reading, garmentIndex: number): Reading {
+  const r = clone(reading);
+  if (!r.garments[garmentIndex]) throw new RangeError(`no garment at index ${garmentIndex}`);
+  r.garments.splice(garmentIndex, 1);
+  return r;
+}
+
 /** "Score stays 8.0" or "Updated 8.5 ↑0.5" (display scores, one decimal). */
 export function correctionLine(before: number, after: number): string {
   if (before === after) return `Score stays ${after.toFixed(1)}`;

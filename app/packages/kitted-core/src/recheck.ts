@@ -5,7 +5,8 @@
 import { CORE, garmentName } from "./names";
 import { defaultRubric, type RubricEngine } from "./rubric";
 import type { Garment, Reading, RuleId, ScoreOptions, Scene } from "./types";
-import { clone, has } from "./util";
+import { fixTargets, type Fix } from "./fixes";
+import { clone, has, pyRound } from "./util";
 
 /** Python str() for the scalar field values that can appear in a note. */
 function pyStr(v: unknown): string {
@@ -116,4 +117,64 @@ export function recheckMerge(
     }
   }
   return { merged, notes };
+}
+
+export interface RecheckOutcome {
+  before: number;
+  after: number;
+  /** Display delta (after − before), e.g. 1.0. Never negative from noise (the merge anchors identity). */
+  delta: number;
+  /** Raw delta, Python round(x, 6), e.g. 0.75. */
+  rawDelta: number;
+  /** The first card's fixes the new photo shows done, each with the raw points it earned. */
+  doneFixes: (Fix & { earned: number })[];
+  /** Rules that fire now and didn't before ("New: …"). */
+  newProblems: RuleId[];
+  /** S21 "change not seen": nothing done and the score didn't move. */
+  notSeen: boolean;
+}
+
+function slotJson(r: Reading, cat: string): string {
+  return JSON.stringify(r.garments.filter((g) => g.category === cat));
+}
+
+function fieldChanged(first: Reading, merged: Reading, cat: string, field: string): boolean {
+  const pick = (r: Reading) => r.garments.filter((g) => cat === "*" || g.category === cat).map((g) => g[field] ?? null);
+  return JSON.stringify(pick(first)) !== JSON.stringify(pick(merged));
+}
+
+/** True when any of the fix's target slots or fields differ between the two readings. */
+function fixDone(fix: Pick<Fix, "edits">, first: Reading, merged: Reading): boolean {
+  return fixTargets([fix]).some((t) => {
+    const dot = t.indexOf(".");
+    if (t === "*") return JSON.stringify(first.garments) !== JSON.stringify(merged.garments);
+    if (dot < 0) return slotJson(first, t) !== slotJson(merged, t);
+    return fieldChanged(first, merged, t.slice(0, dot), t.slice(dot + 1));
+  });
+}
+
+/**
+ * The re-check card's numbers (02 D10, S21). `merged` comes from recheckMerge(first, next, fixTargets(firstFixes)).
+ * A done fix earns the whole raw delta when it's the only one; otherwise its own predicted raw gain.
+ */
+export function recheckOutcome(
+  first: Reading, firstFixes: readonly Fix[], merged: Reading, opts: ScoreOptions = {}, engine: RubricEngine = defaultRubric,
+): RecheckOutcome | null {
+  const a = engine.score(first, opts);
+  const b = engine.score(merged, opts);
+  if (a.overall === null || b.overall === null) return null;
+  const rawDelta = pyRound(b.rawUnrounded - a.rawUnrounded, 6);
+  const done = firstFixes.filter((f) => fixDone(f, first, merged));
+  const doneFixes = done.map((f) => ({ ...clone(f), earned: done.length === 1 ? rawDelta : f.rawGain }));
+  const before = new Set(a.rulesFired);
+  const delta = b.overall - a.overall;
+  return {
+    before: a.overall,
+    after: b.overall,
+    delta,
+    rawDelta,
+    doneFixes,
+    newProblems: b.rulesFired.filter((r) => !before.has(r)),
+    notSeen: doneFixes.length === 0 && delta === 0,
+  };
 }
