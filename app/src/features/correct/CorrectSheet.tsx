@@ -8,12 +8,13 @@ import {
   applyCorrection, garmentName, matchClosetItem, removeGarment, score, suggestFixes, type Garment, type Reading,
 } from '@kitted/core';
 import {
-  Chip, ChipFlow, GarmentIcon, Icon, KButton, KText, Numeral, Pill, RowDivider, displayScore, opacity, useTheme,
+  Chip, ChipFlow, GarmentIcon, Icon, KButton, KText, Pill, RowDivider, displayScore, opacity, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { garmentIconType, garmentHex, garmentLabel } from '@/features/fitcheck/labels';
 import { fitCheck } from '@/features/fitcheck/session';
+import { ScoreMoveLine } from '@/features/sheet/ScoreMoveLine';
 import { SheetList as List, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
 import { fitField, typeOptions, volumeWord, type FieldOption } from './fields';
@@ -190,42 +191,15 @@ function Row({ title, detail, garment, active, onPress }: { title: string; detai
 }
 
 function PreviewLine({ reason, before, after, closetUpdated, nextFix }: { reason: Reason; before: number; after: number; closetUpdated: boolean; nextFix?: string }) {
-  const { colors } = useTheme();
-  let left: React.ReactNode;
-  if (reason === 'fix') {
-    left = <KText variant="subheadline" color="ink2">{nextFix ? t('nqr.nextFix', { title: nextFix }) : t('nqr.scoreStays', { score: displayScore(before) })}</KText>;
-  } else if (reason === 'score') {
-    left = <KText variant="subheadline" color="ink2">{`${t('nqr.scoreStays', { score: displayScore(before) })}. ${t('nqr.thanks')}`}</KText>;
-  } else if (after === before) {
-    const [lead] = t('nqr.scoreStays', { score: '' }).split('{');
-    left = (
-      <KText variant="subheadline" color="ink2">
-        {lead}
-        <KText variant="headline" tabular>
-          {displayScore(before)}
-        </KText>
-      </KText>
-    );
-  } else {
-    left = (
-      <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }} accessible accessibilityLabel={t('nqr.scoreMoves', { from: displayScore(before), to: displayScore(after) })}>
-        <KText variant="subheadline" color="ink2">
-          {t('nqr.scoreMoves', { from: '', to: '' }).split(' ')[0]}
-        </KText>
-        <Numeral size={31}>{displayScore(before)}</Numeral>
-        <KText variant="subheadline" color="ink2">
-          →
-        </KText>
-        <Numeral size={31} color={colors.accent}>
-          {displayScore(after)}
-        </Numeral>
+  if (reason === 'fix' || reason === 'score') {
+    const text = reason === 'fix'
+      ? nextFix ? t('nqr.nextFix', { title: nextFix }) : t('nqr.scoreStays', { score: displayScore(before) })
+      : `${t('nqr.scoreStays', { score: displayScore(before) })}. ${t('nqr.thanks')}`;
+    return (
+      <View style={{ paddingTop: 4 }}>
+        <KText variant="subheadline" color="ink2">{text}</KText>
       </View>
     );
   }
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, paddingTop: 4 }}>
-      <View style={{ flexShrink: 1 }}>{left}</View>
-      {closetUpdated && reason === 'detail' ? <Pill title={t('nqr.closetUpdated')} tone="ok" /> : null}
-    </View>
-  );
+  return <ScoreMoveLine before={before} after={after} trailing={closetUpdated && reason === 'detail' ? <Pill title={t('nqr.closetUpdated')} tone="ok" /> : null} />;
 }

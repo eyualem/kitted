@@ -109,7 +109,10 @@ describe('first-run story', () => {
     const rc = (await svc.start({ mode: 'recheck', photoId: 'p01b', parentCheckId: checkId })) as { checkId: string };
     const row = (await store.fitChecks.get(rc.checkId))!;
     expect([row.score, row.details.recheck!.notSeen]).toEqual([8, true]);
-    const confirmed = (await svc.confirmFixes(rc.checkId))!;
+    const target = (await store.fitChecks.get(checkId))!.fixes[0]!.target;
+    expect(await svc.previewConfirm(rc.checkId, [])).toEqual({ before: 8, after: 8 });
+    expect(await svc.previewConfirm(rc.checkId, [target])).toEqual({ before: 8, after: 9 });
+    const confirmed = (await svc.confirmFixes(rc.checkId, [target]))!;
     expect([confirmed.score, confirmed.rawScore, confirmed.details.confirmed]).toEqual([9, 8.75, true]);
     expect((await store.readings.get(confirmed.readingId!))!.source).toBe('userConfirmed');
     expect((await store.corrections.all()).map((c) => c.kind)).toEqual(['fixConfirmed']);

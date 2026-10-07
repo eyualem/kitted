@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { TellMeSheet } from '@/features/tellMe/TellMeSheet';
 
-// S21 · What changed? (02-screens.md). Built in P2.
-export default function WhatChangedScreen() {
-  return <Placeholder id="S21" name="What changed?" phase="P2" kind="sheet" />;
-}
+// S21 What changed? (02 S21).
+export default TellMeSheet;

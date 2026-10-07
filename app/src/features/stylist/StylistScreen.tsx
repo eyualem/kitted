@@ -5,10 +5,10 @@
 // No KeyboardAvoidingView: its padding stacked on the dock's fixed bottom and pushed the
 // composer off-screen. The dock rides the keyboard directly, and the thread's footer grows by
 // the same amount with the scroll offset following, so the newest message stays in view.
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset } from 'react-native-reanimated';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -20,6 +20,7 @@ import { ThreadRow } from './MessageView';
 import { buildThreadItems } from './thread';
 
 const EXCHANGE_MS = 10 * 60_000;
+const SHEET_DISMISS_MS = 400;
 
 export function StylistScreen() {
   const { colors } = useTheme();
@@ -51,6 +52,18 @@ export function StylistScreen() {
     const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
     atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < 80;
   };
+
+  // A card that changes from a sheet (S21 "Update score", S10 a pair of shoes) grows while the
+  // sheet closes, and the dismissal swallows that scroll. Follow it again once the sheet is gone
+  // (~350 ms on iOS 26; focus fires at the start of the dismissal). DECISIONS-LOG #34.
+  useFocusEffect(
+    useCallback(() => {
+      const timer = setTimeout(() => {
+        if (atBottom.current && !first.current) list.current?.scrollToEnd({ animated: true });
+      }, SHEET_DISMISS_MS);
+      return () => clearTimeout(timer);
+    }, [list]),
+  );
 
   const action = usePendingStylistAction();
   useEffect(() => {

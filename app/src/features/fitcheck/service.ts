@@ -129,6 +129,27 @@ export function createFitCheckService(deps: ServiceDeps) {
     return { ev, row: next! };
   };
 
+  /** S21: the first check's reading with the fixes done applied: the ones he ticks plus the ones
+   *  the re-check already saw. From the FIRST reading, because a re-check re-reads only the changed
+   *  layer (a held overshirt isn't in it, so "wear it open" can't apply there). */
+  const confirmDraft = async (recheckId: string, targets?: readonly string[]) => {
+    const row = await store.fitChecks.get(recheckId);
+    const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
+    const first = parent && (await readingOf(parent));
+    if (!row || !parent || !first) return null;
+    const p = await profile();
+    const opts = { occasion: parent.occasion, styles: p.styles, boldness: p.boldness ?? 'a_little' };
+    const seen = await readingOf(row);
+    const caught = new Set(seen ? (recheckOutcome(first, parent.fixes, seen, opts)?.doneFixes ?? []).map((f) => f.target) : []);
+    const closet = await closetFor(parent);
+    let reading: Reading | null = first;
+    for (const f of parent.fixes.filter((x) => !targets || targets.includes(x.target) || caught.has(x.target))) {
+      reading = reading ? applyFix(reading, f, { closet, occasion: parent.occasion }) : null;
+    }
+    if (!reading) return null;
+    return { row, parent, reading, outcome: recheckOutcome(first, parent.fixes, reading, opts) };
+  };
+
   /** "Same shoes as Monday?": the shoes from the last logged day before this check. */
   const rememberedShoes = async (row: FitCheckRow): Promise<CheckDetails['finish']> => {
     const closet = await store.closet.all();
@@ -458,19 +479,18 @@ export function createFitCheckService(deps: ServiceDeps) {
       undoQueue = run.catch(() => null);
       return run;
     },
-    /** S21 "Tell me": he did the fix; apply it to the first reading (source userConfirmed). */
-    async confirmFixes(recheckId: string) {
-      const row = await store.fitChecks.get(recheckId);
-      const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
-      const first = parent && (await readingOf(parent));
-      if (!row || !parent || !first) return null;
-      let reading: Reading | null = first;
-      for (const f of parent.fixes) reading = reading ? applyFix(reading, f, { closet: await closetFor(parent), occasion: parent.occasion }) : null;
-      if (!reading) return null;
-      const p = await profile();
-      const opts = { occasion: parent.occasion, styles: p.styles, boldness: p.boldness ?? 'a_little' };
+    /** S21 "What changed?": the score if he did these fixes (all the first check's fixes by default). */
+    async previewConfirm(recheckId: string, targets?: readonly string[]) {
+      const d = await confirmDraft(recheckId, targets);
+      return d ? { before: d.row.score, after: d.outcome?.after ?? d.row.score } : null;
+    },
+    /** S21: he did the fix. Apply it to what the re-check read (source userConfirmed), so a change
+     *  the re-check did catch is kept, and re-score against the first check. */
+    async confirmFixes(recheckId: string, targets?: readonly string[]) {
+      const d = await confirmDraft(recheckId, targets);
+      if (!d) return null;
+      const { row, parent, reading, outcome } = d;
       const nr = await insertReading(reading, 'userConfirmed', row.imageHash, parent.readingId);
-      const outcome = recheckOutcome(first, parent.fixes, reading, opts);
       await store.corrections.put({
         id: deps.ids('CR'), fitCheckId: recheckId, kind: 'fixConfirmed', field: null, oldValue: null, newValue: null, userScore: null,
         scoreBefore: row.score, scoreAfter: outcome?.after ?? null, sentAt: null, createdAt: clock.nowMs(),

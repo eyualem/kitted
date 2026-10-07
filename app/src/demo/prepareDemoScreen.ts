@@ -38,11 +38,12 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   11: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 's24', occasion: 'everyday' }] },
   21: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   22: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 's24', occasion: 'everyday' }] },
+  // The re-check that doesn't see the change (the same photo again): S21's case.
   23: {
     steps: [
       { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
       { at: '2026-10-22T07:49:00', do: 'recheckPrompt' },
-      { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 'p01a' },
+      { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 'p01b' },
     ],
   },
   24: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
