@@ -50,3 +50,6 @@ __pycache__/
 *.pyc
 # scratch tooling
 .claude/settings.local.json
+# mockup renders and build scratch (regenerate with tools/mockshots/preview.sh)
+screenshots/
+build/

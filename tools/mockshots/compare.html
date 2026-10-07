@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8">
+<style>
+ html,body{margin:0;background:#777;font:14px -apple-system,sans-serif;color:#fff}
+ .row{display:flex;gap:12px;padding:12px} figure{margin:0;position:relative;width:402px}
+ figcaption{height:20px} img{width:402px;height:874px;display:block}
+ .grid{display:none;position:absolute;left:0;top:20px;width:402px;height:874px;pointer-events:none;
+   background-image:linear-gradient(rgba(255,0,0,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(255,0,0,.25) 1px,transparent 1px);background-size:8px 8px}
+ body.g .grid{display:block}
+ .diff img+img{position:absolute;left:0;top:20px;mix-blend-mode:difference}
+</style>
+<div class="row">
+ <figure><figcaption>Mockup</figcaption><img id="a"><div class="grid"></div></figure>
+ <figure><figcaption>App</figcaption><img id="b"><div class="grid"></div></figure>
+ <figure class="diff"><figcaption>Difference (black = identical)</figcaption><img id="a2"><img id="b2"></figure>
+</div>
+<script>var q=new URLSearchParams(location.hash.slice(1));a.src=a2.src=q.get('a');b.src=b2.src=q.get('b');
+if(q.get('grid'))document.body.className='g';</script>
