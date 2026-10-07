@@ -58,7 +58,7 @@ export function PickShoesSheet() {
                 size={tile}
                 label={t('shoes.snap')}
                 dashed
-                onPress={() => router.replace(`/sheets/sample-photos?mode=shoeSnap&parent=${checkId}`)}
+                onPress={() => router.replace(`/camera?mode=shoeSnap&parent=${checkId}`)}
               >
                 <Icon name="camera" size="large" color="ink2" />
               </ShoeTile>,

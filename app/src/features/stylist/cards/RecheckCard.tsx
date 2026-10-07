@@ -81,7 +81,7 @@ export function RecheckCard({ checkId }: { checkId: string }) {
               fullWidth
               onPress={() => void fitCheck.confirmFixes(row.id)}
             />
-            <KButton title={t('recheck.tryAnother')} size="regular" kind="secondary" fullWidth onPress={() => router.push(`/sheets/sample-photos?mode=recheck&parent=${row.parentId}`)} />
+            <KButton title={t('recheck.tryAnother')} size="regular" kind="secondary" fullWidth onPress={() => router.push(`/camera?mode=recheck&parent=${row.parentId}`)} />
           </View>
         ) : (
           <>

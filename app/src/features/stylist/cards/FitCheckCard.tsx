@@ -105,7 +105,7 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
     nqr: () => router.push(`/sheets/correct/${row.id}`),
     recheck: async () => {
       await fitCheck.postRecheckPrompt(row.id);
-      router.push(`/sheets/sample-photos?mode=recheck&parent=${row.id}`);
+      router.push(`/camera?mode=recheck&parent=${row.id}`);
     },
     share: () => router.push(`/share/${row.id}`),
     review: () => router.push(`/sheets/added/${row.id}`),
@@ -220,7 +220,7 @@ function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] 
             <Icon name="shoes" size="regular" color={colors.ink} />
           </FinishTile>
         ) : null}
-        <FinishTile label={t('partial.a11y.snap')} onPress={() => router.push(`/sheets/sample-photos?mode=shoeSnap&parent=${row.id}`)}>
+        <FinishTile label={t('partial.a11y.snap')} onPress={() => router.push(`/camera?mode=shoeSnap&parent=${row.id}`)}>
           <Icon name="camera" size="regular" color={colors.ink} />
         </FinishTile>
         <TextLink title={t('common.skip')} color="ink2" compact onPress={() => void fitCheck.skipFinish(row.id)} />

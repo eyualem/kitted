@@ -31,7 +31,7 @@ export function StylistScreen() {
   const items = useMemo(() => buildThreadItems(messages, now, sessionClock.offset), [messages, now]);
   const lastUser = messages.filter((m) => m.role === 'user').reduce((a, m) => Math.max(a, m.createdAt), 0);
   const mode = now - lastUser < EXCHANGE_MS ? 'compact' : 'idle';
-  const openSamples = () => router.push('/sheets/sample-photos?mode=check');
+  const openCamera = () => router.push('/camera');
 
   const list = useAnimatedRef<Animated.FlatList<(typeof items)[number]>>();
   const scrollY = useScrollOffset(list);
@@ -92,7 +92,7 @@ export function StylistScreen() {
   useEffect(() => {
     if (!action) return;
     clearStylistAction();
-    if (action.kind === 'checkMyFit') openSamples();
+    if (action.kind === 'checkMyFit') openCamera();
   }, [action]);
 
   return (
@@ -132,7 +132,7 @@ export function StylistScreen() {
         }}
       >
         <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" />
-        <Composer mode={mode} onCamera={openSamples} />
+        <Composer mode={mode} onCamera={openCamera} />
       </Animated.View>
     </View>
   );

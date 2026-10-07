@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { CameraScreen } from '@/features/camera/CameraScreen';
 
-// S2 · Camera (02-screens.md). Built in P3.
-export default function CameraScreen() {
-  return <Placeholder id="S2" name="Camera" phase="P3" kind="cover" />;
-}
+// S2 Camera (02 D5, mockup 5).
+export default CameraScreen;

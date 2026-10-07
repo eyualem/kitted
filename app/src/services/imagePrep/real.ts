@@ -17,6 +17,7 @@ export const imagePrep: ImagePrep = {
       if (__DEV__) console.log('[prep]', JSON.stringify(r));
       return { status: r.status };
     }
+    if (__DEV__) console.log(`[prep] ok · ${r.width}×${r.height} neck-down · pose ${r.pose} · ${r.faceBoxes} face box(es) pixelated · ${r.people} person`);
     return {
       status: 'ok',
       image: {

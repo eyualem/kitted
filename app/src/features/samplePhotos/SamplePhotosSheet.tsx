@@ -1,16 +1,15 @@
-// DEMO: the camera and the library both open this until the camera lands (P3 A/B). Twelve
-// bundled photos, neck-down; a tap starts the check (or the re-check / shoe snap). "Choose from
-// your photos" opens the system picker (no Photos permission): a real photo is prepped on the
-// phone and read by Gemini in DEV builds with the key (05 §P3 C–D).
+// DEMO: the Simulator camera's library button opens this. Twelve bundled photos, neck-down; a
+// tap starts the check (or the re-check / shoe snap) with its saved reading. "Choose from your
+// photos" opens the system picker (no Photos permission): a real photo is prepped on the phone
+// and read by Gemini in DEV builds with the key (05 §P3 C–D). Opened from the camera, a pick
+// closes both the sheet and the camera.
 import * as ImagePicker from 'expo-image-picker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { KButton, NeckDownPhoto, opacity } from '@/design-system';
 import { DEMO_PHOTOS, SAMPLE_ORDER } from '@/demo/demoPhotos';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
-import { fitCheck } from '@/features/fitcheck/session';
-import type { StartOutcome } from '@/features/fitcheck/service';
-import { showToast } from '@/features/toast/toast';
+import { startCheck } from '@/features/camera/startCheck';
 import type { CheckMode } from '@/features/fitcheck/machine';
 import { t } from '@/i18n/en';
 
@@ -18,20 +17,21 @@ const W = 108;
 const H = 146;
 
 export function SamplePhotosSheet() {
-  const { mode: rawMode, parent } = useLocalSearchParams<{ mode?: string; parent?: string }>();
+  const { mode: rawMode, parent, from } = useLocalSearchParams<{ mode?: string; parent?: string; from?: string }>();
+  const close = () => (from === 'camera' ? router.dismissAll() : router.back());
   const mode: CheckMode = rawMode === 'recheck' || rawMode === 'shoeSnap' ? rawMode : 'check';
   const photos = SAMPLE_ORDER.map((id) => DEMO_PHOTOS.find((p) => p.id === id)!).filter(Boolean);
   const subtitle = mode === 'recheck' ? t('demo.samples.recheck') : mode === 'shoeSnap' ? t('demo.samples.snap') : t('demo.samples.sub');
   const pick = (photoId: string) => {
-    router.back();
-    void fitCheck.start({ mode, photoId, parentCheckId: parent }).then(explain);
+    close();
+    void startCheck(mode, { photoId }, parent);
   };
   const chooseOwn = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], allowsEditing: false, quality: 1, exif: false });
     const uri = res.canceled ? null : res.assets[0]?.uri;
     if (!uri) return;
-    router.back();
-    explain(await fitCheck.start({ mode, photoUri: uri, parentCheckId: parent }));
+    close();
+    void startCheck(mode, { photoUri: uri }, parent);
   };
   return (
     <SheetScaffold title={t('demo.samples.title')} subtitle={subtitle}>
@@ -51,17 +51,6 @@ export function SamplePhotosSheet() {
       </View>
     </SheetScaffold>
   );
-}
-
-/** Nothing was sent: say why (02 S3 copy). A check that started shows its own card instead. */
-function explain(r: StartOutcome) {
-  if (r.outcome === 'photoProblem') {
-    showToast(r.reason === 'noPerson' ? t('cam.retake.noPerson') : r.reason === 'multiplePeople' ? t('whichOne.q') : t('cam.retake.cantFrame'));
-  } else if (r.outcome === 'unknownPhoto' || r.outcome === 'notImplemented') {
-    showToast(t('demo.unknownPhoto'));
-  } else if (r.outcome === 'limit') {
-    showToast(t('stylist.quota.used'));
-  }
 }
 
 const styles = StyleSheet.create({

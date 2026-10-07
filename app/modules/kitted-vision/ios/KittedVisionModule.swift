@@ -7,6 +7,7 @@
 //   4. three re-encoded JPEGs, no metadata: the upload copy (1024 px long edge, q0.8, also
 //      returned as base64), the neck-down copy kept on the phone (2048 px) and a 400 px thumb
 //   5. the original is deleted when it's a temporary copy (picker / camera output)
+import AVFoundation
 import CoreImage
 import CoreML
 import CryptoKit
@@ -21,6 +22,28 @@ public class KittedVisionModule: Module {
 
     AsyncFunction("prepare") { (uri: String) -> [String: Any] in
       return try Prep.run(uri: uri)
+    }
+
+    /// false on the Simulator (no camera): the app shows the simulated camera instead.
+    Function("hasCamera") { () -> Bool in
+      AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) != nil
+        || AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) != nil
+    }
+
+    /// "granted" / "denied"; asks the system the first time (02 D5: only from the camera).
+    AsyncFunction("requestCameraPermission") { (promise: Promise) in
+      switch AVCaptureDevice.authorizationStatus(for: .video) {
+      case .authorized: promise.resolve("granted")
+      case .notDetermined: AVCaptureDevice.requestAccess(for: .video) { promise.resolve($0 ? "granted" : "denied") }
+      default: promise.resolve("denied")
+      }
+    }
+
+    View(KittedCameraView.self) {
+      Events("onGuide", "onReady", "onCameraError")
+      Prop("facing") { (view: KittedCameraView, facing: String) in view.setFacing(facing) }
+      Prop("torch") { (view: KittedCameraView, on: Bool) in view.torchOn = on }
+      AsyncFunction("takePhoto") { (view: KittedCameraView, promise: Promise) in view.takePhoto(promise) }
     }
 
     /// "Try again" after a failed read: the upload copy from the first prep (Caches/upload).
