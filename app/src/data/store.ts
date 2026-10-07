@@ -1,9 +1,8 @@
-// The data layer's interface. db.ts implements it on expo-sqlite (iOS, Android);
-// db.web.ts implements it in memory for the web preview (expo-sqlite's web build needs
-// WASM + COOP/COEP headers, which would break the preview loop; 05 S9).
-// Repositories for checks, closet, looks, chat and profile are added phase by phase.
+// The data layer's interface. db.ts implements it on expo-sqlite (iOS, Android); db.web.ts and
+// Jest use the in-memory store. Both are generated from the table specs in tables.ts.
+import type { Tables } from './tables';
 
-export interface KittedStore {
+export interface KittedStore extends Tables {
   /** Opens the database and runs pending migrations. Idempotent. */
   init(): Promise<void>;
   /** The schema version after init (PRAGMA user_version). */
@@ -23,4 +22,5 @@ export const KV = {
   lastOccasion: 'occasion.last',
   ideaTime: 'idea.time',
   scenario: 'demo.scenario',
+  seedLoaded: 'seed.loaded',
 } as const;

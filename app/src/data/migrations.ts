@@ -178,7 +178,16 @@ const V1: Migration = {
   ],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1];
+// V2 (P2): card details and reading lineage.
+const V2: Migration = {
+  version: 2,
+  statements: [
+    `ALTER TABLE fit_checks ADD COLUMN details TEXT NOT NULL DEFAULT '{}'`,
+    `ALTER TABLE readings ADD COLUMN derived_from TEXT`,
+  ],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 

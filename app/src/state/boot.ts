@@ -22,6 +22,7 @@ export async function boot(): Promise<DemoArgs> {
   setDemoState({ theme: args.theme, frame: args.frame });
 
   await store.init();
+  if (__DEV__) console.log('[kitted] schema version', await store.schemaVersion());
   if (DEMO_ENABLED && args.resetData) {
     await store.wipe();
     await clearDeviceId();
