@@ -1,0 +1,52 @@
+{
+ "scene": {
+  "framing": "three_quarter",
+  "shoes_visible": false,
+  "people_count": 1,
+  "mirror_selfie": true,
+  "lighting": "good",
+  "clothed": "fully"
+ },
+ "garments": [
+  {
+   "category": "top",
+   "subcategory": "sweatshirt",
+   "color_family": "black",
+   "pattern": "solid",
+   "logo": "none",
+   "volume": 3,
+   "leg_shape": "na",
+   "hem": "na",
+   "tucked": "none",
+   "condition": "clean",
+   "certainty": "clear",
+   "length": "mid_fly",
+   "pattern_scale": "na",
+   "saturation": "na",
+   "sleeve_end": "at_wrist",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  },
+  {
+   "category": "bottom",
+   "subcategory": "jeans",
+   "color_family": "denim_dark",
+   "pattern": "solid",
+   "logo": "small",
+   "volume": 3,
+   "leg_shape": "slim",
+   "hem": "na",
+   "tucked": "na",
+   "condition": "clean",
+   "certainty": "clear",
+   "length": "na",
+   "pattern_scale": "na",
+   "saturation": "na",
+   "sleeve_end": "na",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  }
+ ]
+}

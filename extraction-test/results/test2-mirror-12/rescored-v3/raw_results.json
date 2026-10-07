@@ -1,0 +1,4841 @@
+[
+ {
+  "outfit": "m01",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "accessory",
+     "subcategory": "hat",
+     "color_family": "white",
+     "pattern": "graphic",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "large",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "graphic_tee",
+     "color_family": "white",
+     "pattern": "graphic",
+     "logo": "small",
+     "volume": 4,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_light",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "basketball_sneaker",
+     "color_family": "multicolor",
+     "pattern": "other",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "watch",
+     "color_family": "grey",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.23,
+   "rules_fired": [
+    "P1_top_volume_vs_style"
+   ],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "tip: big logos read casual; a plain or small-logo piece looks more put together"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1803,
+   "candidatesTokenCount": 930,
+   "totalTokenCount": 3912,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "thoughtsTokenCount": 1179,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m01",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "graphic_tee",
+     "color_family": "white",
+     "pattern": "graphic",
+     "logo": "small",
+     "volume": 4,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_light",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "basketball_sneaker",
+     "color_family": "multicolor",
+     "pattern": "other",
+     "logo": "small",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "hat",
+     "color_family": "off_white_cream",
+     "pattern": "graphic",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "large",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "watch",
+     "color_family": "grey",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.23,
+   "rules_fired": [
+    "P1_top_volume_vs_style"
+   ],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1803,
+   "candidatesTokenCount": 934,
+   "totalTokenCount": 3595,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 858,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m01",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "graphic_tee",
+     "color_family": "white",
+     "pattern": "graphic",
+     "logo": "small",
+     "volume": 4,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_light",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "basketball_sneaker",
+     "color_family": "multicolor",
+     "pattern": "other",
+     "logo": "small",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "hat",
+     "color_family": "off_white_cream",
+     "pattern": "graphic",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "medium",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "watch",
+     "color_family": "grey",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.23,
+   "rules_fired": [
+    "P1_top_volume_vs_style"
+   ],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1803,
+   "candidatesTokenCount": 934,
+   "totalTokenCount": 3952,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1215,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m02",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "denim_jacket",
+     "color_family": "denim_light",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "oxford_shirt",
+     "color_family": "light_blue",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "wide",
+     "hem": "cropped",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "loafer",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.45,
+   "rules_fired": [
+    "P1_leg_vs_style"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 765,
+   "totalTokenCount": 3951,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1399,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m02",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "dim",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "denim_jacket",
+     "color_family": "denim_light",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "oxford_shirt",
+     "color_family": "light_blue",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "wide",
+     "hem": "cropped",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "loafer",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.45,
+   "rules_fired": [
+    "P1_leg_vs_style"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 767,
+   "totalTokenCount": 3466,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 912,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m02",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "dim",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "denim_jacket",
+     "color_family": "denim_light",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "oxford_shirt",
+     "color_family": "light_blue",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "wide",
+     "hem": "cropped",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "loafer",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.45,
+   "rules_fired": [
+    "P1_leg_vs_style"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 767,
+   "totalTokenCount": 3547,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 993,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m03",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "camp_collar_shirt",
+     "color_family": "navy",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "relaxed",
+     "hem": "full_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "retro_runner",
+     "color_family": "off_white_cream",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K2_elevated_piece",
+    "K3_point_of_interest"
+   ],
+   "credit_points": 1.0,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 598,
+   "totalTokenCount": 3761,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1340,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m03",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "dim",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "camp_collar_shirt",
+     "color_family": "navy",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "relaxed",
+     "hem": "full_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "low_profile_sneaker",
+     "color_family": "off_white_cream",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K3_point_of_interest",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.0,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 600,
+   "totalTokenCount": 3460,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1037,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m03",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "dim",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "camp_collar_shirt",
+     "color_family": "navy",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "relaxed",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "low_profile_sneaker",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "watch",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K2_elevated_piece",
+    "K3_point_of_interest",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.5,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 765,
+   "totalTokenCount": 3819,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 1231,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m04",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "graphic_tee",
+     "color_family": "grey",
+     "pattern": "graphic",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "medium",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "athletic_shorts",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 6.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.5,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.6,
+   "rules_fired": [
+    "O4_loungewear_out"
+   ],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "tip: big logos read casual; a plain or small-logo piece looks more put together"
+   ],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1796,
+   "candidatesTokenCount": 420,
+   "totalTokenCount": 2844,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 628,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m04",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "graphic_tee",
+     "color_family": "grey",
+     "pattern": "graphic",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "medium",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "athletic_shorts",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 6.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.5,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.6,
+   "rules_fired": [
+    "O4_loungewear_out"
+   ],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "tip: big logos read casual; a plain or small-logo piece looks more put together"
+   ],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1796,
+   "candidatesTokenCount": 420,
+   "totalTokenCount": 2916,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "thoughtsTokenCount": 700,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m04",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "graphic_tee",
+     "color_family": "grey",
+     "pattern": "graphic",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "medium",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "athletic_shorts",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "relaxed",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 6.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.5,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.6,
+   "rules_fired": [
+    "O4_loungewear_out"
+   ],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "tip: big logos read casual; a plain or small-logo piece looks more put together"
+   ],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1796,
+   "candidatesTokenCount": 420,
+   "totalTokenCount": 2776,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "thoughtsTokenCount": 560,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m05",
+  "stage": "before",
+  "method": "studio",
+  "file": "before_studio.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": false,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "grey",
+     "pattern": "checks_plaid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K2_elevated_piece",
+    "K3_point_of_interest",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.5,
+   "mistake_points": 0.6,
+   "rules_fired": [
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1830,
+   "candidatesTokenCount": 764,
+   "totalTokenCount": 3997,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    }
+   ],
+   "thoughtsTokenCount": 1403,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m05",
+  "stage": "before",
+  "method": "studio",
+  "file": "before_studio.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": false,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "grey",
+     "pattern": "checks_plaid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "slim",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K2_elevated_piece",
+    "K3_point_of_interest",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.5,
+   "mistake_points": 0.83,
+   "rules_fired": [
+    "P1_leg_vs_style",
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1830,
+   "candidatesTokenCount": 764,
+   "totalTokenCount": 3851,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1257,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m05",
+  "stage": "before",
+  "method": "studio",
+  "file": "before_studio.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": false,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "khaki_beige",
+     "pattern": "checks_plaid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "small",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K2_elevated_piece",
+    "K3_point_of_interest",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.5,
+   "mistake_points": 0.6,
+   "rules_fired": [
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1830,
+   "candidatesTokenCount": 767,
+   "totalTokenCount": 3488,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 891,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m06",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "pink",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_mid",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 424,
+   "totalTokenCount": 2989,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 778,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m06",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "pink",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_mid",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [],
+   "credit_points": 0.0,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 424,
+   "totalTokenCount": 3180,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 969,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m06",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "pink",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "na",
+     "saturation": "bright",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_mid",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K3_point_of_interest"
+   ],
+   "credit_points": 0.64,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)"
+   ],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 424,
+   "totalTokenCount": 3282,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1071,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m07",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "sweater",
+     "color_family": "off_white_cream",
+     "pattern": "graphic",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "large",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "chunky_sneaker",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece"
+   ],
+   "credit_points": 1.25,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "tip: big logos read casual; a plain or small-logo piece looks more put together"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 597,
+   "totalTokenCount": 3807,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 1387,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m07",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "sweater",
+     "color_family": "off_white_cream",
+     "pattern": "solid",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "chunky_sneaker",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece"
+   ],
+   "credit_points": 1.25,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "tip: big logos read casual; a plain or small-logo piece looks more put together",
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 597,
+   "totalTokenCount": 3649,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1229,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m07",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "sweater",
+     "color_family": "off_white_cream",
+     "pattern": "solid",
+     "logo": "large",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "chunky_sneaker",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece"
+   ],
+   "credit_points": 1.25,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)",
+    "tip: big logos read casual; a plain or small-logo piece looks more put together",
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 597,
+   "totalTokenCount": 3541,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 1121,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m08",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "blazer",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "derby",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 9.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 930,
+   "totalTokenCount": 3898,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1145,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m08",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "sport_coat",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "derby",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 9.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 931,
+   "totalTokenCount": 3864,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 1110,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m08",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "blazer",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 9.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1823,
+   "candidatesTokenCount": 933,
+   "totalTokenCount": 3949,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1193,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m09",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "suit_jacket",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "orange",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "slim",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece"
+   ],
+   "credit_points": 1.61,
+   "mistake_points": 0.83,
+   "rules_fired": [
+    "P1_leg_vs_style",
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1804,
+   "candidatesTokenCount": 600,
+   "totalTokenCount": 5951,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1081
+    }
+   ],
+   "thoughtsTokenCount": 3547,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m09",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "suit_jacket",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "orange",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "brown",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece"
+   ],
+   "credit_points": 1.61,
+   "mistake_points": 0.6,
+   "rules_fired": [
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1804,
+   "candidatesTokenCount": 764,
+   "totalTokenCount": 3850,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1081
+    }
+   ],
+   "thoughtsTokenCount": 1282,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m09",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "three_quarter",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "suit_jacket",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "orange",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "brown",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "likely",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece"
+   ],
+   "credit_points": 1.61,
+   "mistake_points": 0.6,
+   "rules_fired": [
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1804,
+   "candidatesTokenCount": 767,
+   "totalTokenCount": 4191,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1081
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1620,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m10",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "khaki_beige",
+     "pattern": "checks_plaid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "below_crotch",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "above_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "grey",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "straight",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "tan_camel",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "watch",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 9.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K3_point_of_interest"
+   ],
+   "credit_points": 2.25,
+   "mistake_points": 0.0,
+   "rules_fired": [],
+   "advice": [
+    "next level: add one point of interest (a knit, a sneaker, a beanie)"
+   ],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 935,
+   "totalTokenCount": 4156,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 1434,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m10",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "khaki_beige",
+     "pattern": "checks_plaid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "above_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "grey",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "slim",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "tan_camel",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "watch",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 9.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K3_point_of_interest"
+   ],
+   "credit_points": 2.25,
+   "mistake_points": 0.23,
+   "rules_fired": [
+    "P1_leg_vs_style"
+   ],
+   "advice": [],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 934,
+   "totalTokenCount": 4569,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1848,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m10",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": false,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "khaki_beige",
+     "pattern": "checks_plaid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "above_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "grey",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "slim",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "belt",
+     "color_family": "tan_camel",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "accessory",
+     "subcategory": "watch",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 9.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.0,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K3_point_of_interest"
+   ],
+   "credit_points": 2.25,
+   "mistake_points": 0.23,
+   "rules_fired": [
+    "P1_leg_vs_style"
+   ],
+   "advice": [],
+   "partial": true,
+   "not_rated": [
+    "shoes"
+   ]
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 934,
+   "totalTokenCount": 4466,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 1745,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m11",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "suit_jacket",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "slim",
+     "hem": "no_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "brown",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.83,
+   "rules_fired": [
+    "P1_leg_vs_style",
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1798,
+   "candidatesTokenCount": 765,
+   "totalTokenCount": 3370,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    }
+   ],
+   "thoughtsTokenCount": 807,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m11",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "suit_jacket",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "slim",
+     "hem": "no_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "brown",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.83,
+   "rules_fired": [
+    "P1_leg_vs_style",
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1798,
+   "candidatesTokenCount": 765,
+   "totalTokenCount": 3570,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    }
+   ],
+   "thoughtsTokenCount": 1007,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m11",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "suit_jacket",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "navy",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "slim",
+     "hem": "no_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "brown",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 8.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -0.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K4_shoes_complement"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 0.83,
+   "rules_fired": [
+    "P1_leg_vs_style",
+    "O1_too_formal"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1798,
+   "candidatesTokenCount": 765,
+   "totalTokenCount": 3515,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    }
+   ],
+   "thoughtsTokenCount": 952,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m12",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 0,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "camp_collar_shirt",
+     "color_family": "grey",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "tank_top",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "relaxed",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "wrinkled",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "slides_sandals",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 6.5,
+   "subscores": {
+    "fit": 9.5,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -1.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K3_point_of_interest"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 2.2,
+   "rules_fired": [
+    "F7_care",
+    "S2_shoes_too_casual_for_outfit"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 771,
+   "totalTokenCount": 4180,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1622,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m12",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 1,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "grey",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "small",
+     "saturation": "muted",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "tank_top",
+     "color_family": "off_white_cream",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 2,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "relaxed",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "slides_sandals",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 7.0,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 10.0
+   },
+   "occasion_adj": -1.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K3_point_of_interest"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 1.8,
+   "rules_fired": [
+    "S2_shoes_too_casual_for_outfit"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 769,
+   "totalTokenCount": 3755,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    }
+   ],
+   "thoughtsTokenCount": 1199,
+   "serviceTier": "standard"
+  },
+  "error": null
+ },
+ {
+  "outfit": "m12",
+  "stage": "before",
+  "method": "mirror",
+  "file": "before_mirror.jpg",
+  "run": 2,
+  "extraction": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "tank_top",
+     "color_family": "off_white_cream",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 1,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "full",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "grey",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "khaki_beige",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "relaxed",
+     "hem": "slight_break",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "slides_sandals",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "score": {
+   "overall": 6.5,
+   "subscores": {
+    "fit": 10.0,
+    "color": 10.0,
+    "proportion": 9.5
+   },
+   "occasion_adj": -1.5,
+   "credits": [
+    "K1_layered",
+    "K2_elevated_piece",
+    "K3_point_of_interest"
+   ],
+   "credit_points": 1.75,
+   "mistake_points": 2.25,
+   "rules_fired": [
+    "P1_top_volume_vs_style",
+    "S2_shoes_too_casual_for_outfit"
+   ],
+   "advice": [],
+   "partial": false,
+   "not_rated": []
+  },
+  "usage": {
+   "promptTokenCount": 1787,
+   "candidatesTokenCount": 769,
+   "totalTokenCount": 4808,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 723
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 2252,
+   "serviceTier": "standard"
+  },
+  "error": null
+ }
+]

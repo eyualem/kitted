@@ -1,0 +1,72 @@
+{
+ "scene": {
+  "framing": "full_body",
+  "shoes_visible": false,
+  "people_count": 1,
+  "mirror_selfie": false,
+  "lighting": "good",
+  "clothed": "fully"
+ },
+ "garments": [
+  {
+   "category": "outerwear",
+   "subcategory": "overshirt",
+   "color_family": "khaki_beige",
+   "pattern": "solid",
+   "logo": "none",
+   "volume": 3,
+   "leg_shape": "na",
+   "hem": "na",
+   "tucked": "none",
+   "condition": "wrinkled",
+   "certainty": "clear",
+   "length": "mid_fly",
+   "pattern_scale": "na",
+   "saturation": "na",
+   "sleeve_end": "above_wrist",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  },
+  {
+   "category": "top",
+   "subcategory": "tee",
+   "color_family": "white",
+   "pattern": "solid",
+   "logo": "none",
+   "volume": 3,
+   "leg_shape": "na",
+   "hem": "na",
+   "tucked": "none",
+   "condition": "clean",
+   "certainty": "clear",
+   "length": "mid_fly",
+   "pattern_scale": "na",
+   "saturation": "na",
+   "sleeve_end": "at_wrist",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  },
+  {
+   "category": "bottom",
+   "subcategory": "chinos",
+   "color_family": "tan_camel",
+   "pattern": "solid",
+   "logo": "none",
+   "volume": 2,
+   "leg_shape": "slim",
+   "hem": "slight_break",
+   "tucked": "na",
+   "condition": "wrinkled",
+   "certainty": "clear",
+   "length": "na",
+   "pattern_scale": "na",
+   "saturation": "muted",
+   "sleeve_end": "na",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  }
+ ]
+}

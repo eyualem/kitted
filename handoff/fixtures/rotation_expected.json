@@ -1,0 +1,305 @@
+{
+ "_doc": "Rotation computed by kitted_logic.rotation() on the seed closet (spec: 04-logic-and-demo-data.md section 9). The mockup's 37 / +3 / +9 are DISPLAY seed values; these are what the specified algorithm gives.",
+ "styles": [
+  [
+   "smart_casual",
+   0.5
+  ],
+  [
+   "workwear",
+   0.5
+  ]
+ ],
+ "closetSize": 16,
+ "rotation_with_layers": 180,
+ "rotation_core_only": 48,
+ "rotation_before_this_week": 114,
+ "week_delta": 66,
+ "fits_added_per_item": {
+  "T1": 24,
+  "T2": 24,
+  "T3": 42,
+  "T4": 42,
+  "T5": 24,
+  "T6": 24,
+  "B1": 60,
+  "B2": 60,
+  "B3": 60,
+  "S1": 72,
+  "S2": 18,
+  "S3": 72,
+  "S4": 18,
+  "L1": 48,
+  "L2": 48,
+  "L3": 36
+ },
+ "next_buy_fits_added": {
+  "grey_quarter_zip": {
+   "layers": 42,
+   "coreOnly": 12
+  },
+  "navy_polo": {
+   "layers": 42,
+   "coreOnly": 12
+  },
+  "dark_straight_jeans": {
+   "layers": 0,
+   "coreOnly": 0
+  },
+  "navy_unstructured_blazer": {
+   "layers": 18,
+   "coreOnly": 0
+  },
+  "brown_belt": {
+   "layers": 0,
+   "coreOnly": 0
+  }
+ },
+ "first_10_combos": [
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "chelsea_boot",
+    "black",
+    "solid"
+   ],
+   [
+    "outer",
+    "overshirt",
+    "green",
+    "solid"
+   ]
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "chelsea_boot",
+    "black",
+    "solid"
+   ],
+   [
+    "outer",
+    "overshirt",
+    "navy",
+    "solid"
+   ]
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "chelsea_boot",
+    "black",
+    "solid"
+   ],
+   null
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "loafer",
+    "brown",
+    "solid"
+   ],
+   [
+    "outer",
+    "overshirt",
+    "green",
+    "solid"
+   ]
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "loafer",
+    "brown",
+    "solid"
+   ],
+   [
+    "outer",
+    "overshirt",
+    "navy",
+    "solid"
+   ]
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "loafer",
+    "brown",
+    "solid"
+   ],
+   null
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "retro_runner",
+    "grey",
+    "solid"
+   ],
+   [
+    "outer",
+    "denim_jacket",
+    "denim",
+    "solid"
+   ]
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "retro_runner",
+    "grey",
+    "solid"
+   ],
+   [
+    "outer",
+    "overshirt",
+    "green",
+    "solid"
+   ]
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "retro_runner",
+    "grey",
+    "solid"
+   ],
+   [
+    "outer",
+    "overshirt",
+    "navy",
+    "solid"
+   ]
+  ],
+  [
+   [
+    "top",
+    "oxford_shirt",
+    "blue_light",
+    "solid"
+   ],
+   [
+    "bottom",
+    "chinos",
+    "navy",
+    "solid"
+   ],
+   [
+    "shoes",
+    "retro_runner",
+    "grey",
+    "solid"
+   ],
+   null
+  ]
+ ]
+}

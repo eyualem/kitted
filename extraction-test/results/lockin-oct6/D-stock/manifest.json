@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.8-flash",
+ "thinking": "off",
+ "format": "v4",
+ "image_px": 1024,
+ "runs": 3,
+ "photos": "/Users/eyu/Desktop/files/Kempt/inputs/fitcheck-photos",
+ "photo_count": 40,
+ "styles": {
+  "minimalist": 0.5,
+  "smart_casual": 0.5
+ },
+ "default_occasion": "everyday",
+ "started": "2026-10-06 13:49:44",
+ "prompt_sha": "978b65c4fbd5",
+ "schema_sha": "d421389d4206",
+ "rubric_sha": "807f18c29da1",
+ "finished": "2026-10-06 14:00:42",
+ "model_versions": [
+  "gemini-3.8-flash"
+ ]
+}

@@ -1,0 +1,326 @@
+{
+ "generated_by": "handoff/fixtures/make_readings.py",
+ "locked_source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/lockin-oct6/B-stock/raw_results.json",
+ "locked_config": {
+  "model": "gemini-3.8-flash",
+  "thinking": "off",
+  "format": "v3",
+  "image_px": 1024,
+  "prompt_sha": "392fcb9a0679",
+  "schema_sha": "4e7307888d97",
+  "rubric_sha": "807f18c29da1"
+ },
+ "modal_rule": "most common overall (everyday, minimalist 0.5 / smart_casual 0.5) -> most field agreement -> lowest run",
+ "photos": [
+  {
+   "id": "p01b",
+   "reading_file": "readings/p01b.json",
+   "photo_file": "mockups/img/p01b.jpg",
+   "photo_sha256": "b2c60142634c780d784d54832cfb4b7d26d10cfd1b58262e894452a27e276a59",
+   "original_file": "inputs/fitcheck-photos/p01/before_studio.jpg",
+   "license": "Pexels License (Free; confirmed on page)",
+   "source_url": "https://www.pexels.com/photo/photo-of-a-man-in-a-white-shirt-taking-off-his-jacket-7237042/",
+   "photographer": "Thirdman",
+   "description": "white tee, tan pants, beige overshirt held off, white sneakers",
+   "used_for": "Screens 5-9: camera, reading, result 8.0, Why 8.0, Not quite right?",
+   "latency_s": 6.54,
+   "provenance": "hand-authored",
+   "why": "intended reading for the mockup story; the real p01 reading counts the held overshirt as worn and marks shoes hidden (see variants/p01b_real.json, p01a_real.json)",
+   "real_run_for_reference": "lockin-oct6/B-stock p01/before_studio.jpg run 1",
+   "real_run_scores_test_config": [
+    8.0,
+    8.0,
+    8.0
+   ]
+  },
+  {
+   "id": "p01a",
+   "reading_file": "readings/p01a.json",
+   "photo_file": "mockups/img/p01a.jpg",
+   "photo_sha256": "3667cb27b30a59b5af12b528ea3f22193f524cce617c48f01115101f4b78fc2c",
+   "original_file": "inputs/fitcheck-photos/p01/after_studio.jpg",
+   "license": "Pexels License (Free; confirmed on page)",
+   "source_url": "https://www.pexels.com/photo/photo-of-a-man-in-brown-pants-cleaning-a-plate-7237029/",
+   "photographer": "Thirdman",
+   "description": "beige overshirt over white tee, tan pants, white sneakers",
+   "used_for": "Screens 10, 16, 18, 20: re-check 9.0, Lookbook row, paywall, share card",
+   "latency_s": 6.24,
+   "provenance": "hand-authored",
+   "why": "intended reading for the mockup story; the real p01 reading counts the held overshirt as worn and marks shoes hidden (see variants/p01b_real.json, p01a_real.json)",
+   "real_run_for_reference": "lockin-oct6/B-stock p01/after_studio.jpg run 0",
+   "real_run_scores_test_config": [
+    7.5,
+    8.0,
+    7.5
+   ]
+  },
+  {
+   "id": "s15",
+   "reading_file": "readings/s15.json",
+   "photo_file": "mockups/img/s15.jpg",
+   "photo_sha256": "ffa8ea00ac9218db71506909251b9ebfe443ec32a8e846924a11bd230802df57",
+   "original_file": "inputs/fitcheck-photos/s15/before_street.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/man-walking-down-orange-stairs-with-blue-railing-RUSAfuw_h9w",
+   "photographer": "Babak Eshaghian",
+   "description": "beige plaid overshirt, taupe pants, white sneakers",
+   "used_for": "Screen 1: welcome hero card 8.5 Sharp, Everyday, Full check",
+   "latency_s": 7.91,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s15/before_street.jpg run 2",
+   "run_scores_test_config": [
+    8.5,
+    9.0,
+    8.5
+   ],
+   "modal_score_test_config": 8.5
+  },
+  {
+   "id": "s24",
+   "reading_file": "readings/s24.json",
+   "photo_file": "mockups/img/s24.jpg",
+   "photo_sha256": "17cf7d2217072be888173c97bffa960d52b60b51913f7a492e40999c433b033f",
+   "original_file": "inputs/fitcheck-photos/s24/before_mirror.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/woman-in-brown-jacket-taking-photo-in-front-of-mirror-Dz0hHg7tOdM",
+   "photographer": "Nick Dunlap",
+   "description": "black sweatshirt, black shorts, mirror selfie",
+   "used_for": "Screens 11, 16: partial check 6.5 Getting there, Lookbook row Tue Oct 20",
+   "latency_s": 5.25,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s24/before_mirror.jpg run 0",
+   "run_scores_test_config": [
+    6.5,
+    6.5,
+    6.5
+   ],
+   "modal_score_test_config": 6.5
+  },
+  {
+   "id": "s12",
+   "reading_file": "readings/s12.json",
+   "photo_file": "mockups/img/s12.jpg",
+   "photo_sha256": "a63486ca7e98c8a297aab8ae80e481040e21e27545350455415fca06ffd53273",
+   "original_file": "inputs/fitcheck-photos/s12/before_street.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/a-man-standing-in-the-dark-with-a-cell-phone-Eh7PCY708tM",
+   "photographer": "Eddie Wingertsahn",
+   "description": "grey hoodie, faded jeans, high-top sneakers, phone",
+   "used_for": "Screen 19: limit card photo (held for tomorrow, scored after 4 am)",
+   "latency_s": 6.87,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s12/before_street.jpg run 2",
+   "run_scores_test_config": [
+    7.0,
+    7.0,
+    7.0
+   ],
+   "modal_score_test_config": 7.0
+  },
+  {
+   "id": "s25",
+   "reading_file": "readings/s25.json",
+   "photo_file": "mockups/img/s25.jpg",
+   "photo_sha256": "7cfa974f8058316a2e4863507d319297390bd1306b401538db7f238062b5d740",
+   "original_file": "inputs/fitcheck-photos/s25/before_mirror.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/man-taking-a-selfie-in-a-mirror-with-camera-fJklDSftytk",
+   "photographer": "Les Taylor",
+   "description": "oversized white tee, grey pants, brown shoes, mirror photo",
+   "used_for": "Screen 5: camera library thumbnail",
+   "latency_s": 6.05,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s25/before_mirror.jpg run 0",
+   "run_scores_test_config": [
+    7.5,
+    7.5,
+    7.0
+   ],
+   "modal_score_test_config": 7.5
+  },
+  {
+   "id": "s05",
+   "reading_file": "readings/s05.json",
+   "photo_file": "mockups/img/s05.jpg",
+   "photo_sha256": "8b17541b3c939be9229f8c9e5124fffa62f8d05113108d0e90f70c4efe618eda",
+   "original_file": "inputs/fitcheck-photos/s05/before_studio.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/a-person-standing-in-front-of-a-stone-wall-pYJgD_sQRGQ",
+   "photographer": "Adele Shafiee",
+   "description": "navy hoodie, light jeans, casual sneakers",
+   "used_for": "Screen 2: onboarding look tile (style: minimalist)",
+   "latency_s": 6.32,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s05/before_studio.jpg run 0",
+   "run_scores_test_config": [
+    7.5,
+    8.0,
+    7.5
+   ],
+   "modal_score_test_config": 7.5
+  },
+  {
+   "id": "s22",
+   "reading_file": "readings/s22.json",
+   "photo_file": "mockups/img/s22.jpg",
+   "photo_sha256": "cbd86c083b1e5d8a8fd9a9787077e21c791fa550a91c093292bb9042af6e84a4",
+   "original_file": "inputs/fitcheck-photos/s22/before_phone.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/man-in-brown-polo-shirt-G6HKzNkRkcM",
+   "photographer": "MOHAMMAD AL JANNAT RAKIN",
+   "description": "brown polo, beige trousers, casual shoes",
+   "used_for": "Screens 2-3: onboarding look tile, SELECTED (style: smart_casual)",
+   "latency_s": 6.42,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s22/before_phone.jpg run 1",
+   "run_scores_test_config": [
+    7.5,
+    7.5,
+    7.5
+   ],
+   "modal_score_test_config": 7.5
+  },
+  {
+   "id": "s14",
+   "reading_file": "readings/s14.json",
+   "photo_file": "mockups/img/s14.jpg",
+   "photo_sha256": "e056c499de2d4191138aaefafec869a9949e077697547a10dc8f5a0c78c89d13",
+   "original_file": "inputs/fitcheck-photos/s14/before_street.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/man-walking-on-a-path-in-a-park-43SxbLawFig",
+   "photographer": "Babak Eshaghian",
+   "description": "grey hooded jacket, grey joggers, rugged sneakers",
+   "used_for": "Screen 2: onboarding look tile (style: gorpcore)",
+   "latency_s": 8.22,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s14/before_street.jpg run 0",
+   "run_scores_test_config": [
+    8.5,
+    8.0,
+    8.5
+   ],
+   "modal_score_test_config": 8.5
+  },
+  {
+   "id": "s10",
+   "reading_file": "readings/s10.json",
+   "photo_file": "mockups/img/s10.jpg",
+   "photo_sha256": "4058c7431b6ca31732b15afec5afea408411a91ddf9d1e3b98e3834988f3d16b",
+   "original_file": "inputs/fitcheck-photos/s10/before_street.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/a-man-walking-down-a-sidewalk-in-front-of-a-store-IuMSyLBGRGE",
+   "photographer": "Raviraj Singh Tomar",
+   "description": "denim jacket, red turtleneck, jeans, dark boots",
+   "used_for": "Screens 2-3: onboarding look tile, SELECTED (style: workwear)",
+   "latency_s": 5.79,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s10/before_street.jpg run 0",
+   "run_scores_test_config": [
+    8.0,
+    8.0,
+    8.0
+   ],
+   "modal_score_test_config": 8.0
+  },
+  {
+   "id": "s13",
+   "reading_file": "readings/s13.json",
+   "photo_file": "mockups/img/s13.jpg",
+   "photo_sha256": "815fa8e126554f1b363b87a46cbd4f86e5f9282a08acdb0d44cf60e963087f05",
+   "original_file": "inputs/fitcheck-photos/s13/before_street.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/man-in-embroidered-shirt-on-sidewalk-umGrs1QVJ38",
+   "photographer": "Olek Buzunov",
+   "description": "black bomber, printed shirt, black trousers, sneakers",
+   "used_for": "Screen 2: onboarding look tile (style: streetwear)",
+   "latency_s": 4.97,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s13/before_street.jpg run 0",
+   "run_scores_test_config": [
+    8.0,
+    8.0,
+    8.0
+   ],
+   "modal_score_test_config": 8.0
+  },
+  {
+   "id": "s09",
+   "reading_file": "readings/s09.json",
+   "photo_file": "mockups/img/s09.jpg",
+   "photo_sha256": "f9ce5797962b073248ae58730092e5e9be8317079fc308affeb3e5199ee50e1d",
+   "original_file": "inputs/fitcheck-photos/s09/before_street.jpg",
+   "license": "Unsplash License (free; non-Plus/premium metadata)",
+   "source_url": "https://unsplash.com/photos/man-in-blue-suit-standing-on-sidewalk-during-daytime--eb0moHDPBI",
+   "photographer": "Mohamad Khosravi",
+   "description": "blue suit, white shirt, brown dress shoes",
+   "used_for": "Screen 2: onboarding look tile (style: old_money)",
+   "latency_s": 7.44,
+   "provenance": "real",
+   "run_id": "lockin-oct6/B-stock s09/before_street.jpg run 1",
+   "run_scores_test_config": [
+    6.5,
+    7.0,
+    7.0
+   ],
+   "modal_score_test_config": 7.0
+  }
+ ],
+ "variants": [
+  {
+   "id": "p01b_real",
+   "file": "readings/variants/p01b_real.json",
+   "base": "p01b",
+   "provenance": "real: lockin-oct6/B-stock p01/before_studio.jpg run 1 (modal)",
+   "what": "the real model reading of this photo, kept to document the extraction issue"
+  },
+  {
+   "id": "p01a_real",
+   "file": "readings/variants/p01a_real.json",
+   "base": "p01a",
+   "provenance": "real: lockin-oct6/B-stock p01/after_studio.jpg run 0 (modal)",
+   "what": "the real model reading of this photo, kept to document the extraction issue"
+  },
+  {
+   "id": "p01b_chinos_slim",
+   "file": "readings/variants/p01b_chinos_slim.json",
+   "base": "p01b",
+   "provenance": "hand-derived from p01b",
+   "what": "Not quite right? correction: chinos straight -> slim (screen 9: 'Score stays 8.0')"
+  },
+  {
+   "id": "s24_jeans",
+   "file": "readings/variants/s24_jeans.json",
+   "base": "s24",
+   "provenance": "hand-derived from s24",
+   "what": "what-if: bottom swapped to his closet's Dark jeans (denim_dark, slim). Fix 'Swap to jeans or chino shorts'"
+  },
+  {
+   "id": "s24_jeans_generic",
+   "file": "readings/variants/s24_jeans_generic.json",
+   "base": "s24",
+   "provenance": "hand-derived from s24",
+   "what": "what-if: generic fix edit, bottom.subcategory = jeans (other fields kept). The fix engine's gain for O4"
+  },
+  {
+   "id": "s24_chino_shorts_generic",
+   "file": "readings/variants/s24_chino_shorts_generic.json",
+   "base": "s24",
+   "provenance": "hand-derived from s24",
+   "what": "what-if: generic fix edit, bottom.subcategory = shorts (chino shorts)"
+  },
+  {
+   "id": "s24_closet_shoes",
+   "file": "readings/variants/s24_closet_shoes.json",
+   "base": "s24",
+   "provenance": "hand-derived from s24",
+   "what": "Pick from Closet: his White sneakers added as footwear, scene.shoes_visible = true, hem unknown ('na')"
+  },
+  {
+   "id": "s24_shoe_snap_runners",
+   "file": "readings/variants/s24_shoe_snap_runners.json",
+   "base": "s24",
+   "provenance": "hand-derived from s24",
+   "what": "Shoe snap result: grey retro runners read from a feet photo, merged as the footwear slot"
+  }
+ ]
+}

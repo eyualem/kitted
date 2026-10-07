@@ -1,0 +1,52 @@
+# secrets: never committed
+.env
+.env.*
+!.env.example
+app/.env*
+!app/.env.example
+proxy/.dev.vars
+*.p8
+*.p12
+*.cer
+*.key
+*.pem
+*.jks
+*.keystore
+*.mobileprovision
+# Expo / React Native (Continuous Native Generation: ios/ and android/ are generated)
+node_modules/
+app/ios/
+app/android/
+app/.expo/
+app/dist/
+app/web-build/
+app/expo-env.d.ts
+*.tsbuildinfo
+.metro-health-check*
+npm-debug.*
+app/modules/*/build/
+app/packages/*/dist/
+# build output and screenshots
+app/build/
+app/screenshots/
+*.ipa
+*.apk
+*.aab
+*.xcarchive
+*.dSYM.zip
+DerivedData/
+# Worker (later)
+proxy/node_modules/
+proxy/.wrangler/
+# private photos (people's images never go to GitHub)
+inputs/
+extraction-test/results/**/*.jpg
+extraction-test/results/**/*.jpeg
+extraction-test/results/**/*.png
+extraction-test/results/**/*.heic
+# misc
+.DS_Store
+__pycache__/
+*.pyc
+# scratch tooling
+.claude/settings.local.json

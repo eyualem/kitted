@@ -1,0 +1,27 @@
+{
+  "name": "@kitted/core",
+  "version": "3.1.0",
+  "description": "Kitted scoring core: exact TypeScript port of rubric.py v3.1 plus the fix engine, anchored re-check, corrections, partial checks and Rotation. Shared by the Expo app and the Cloudflare Worker.",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "verify": "tsc -p tsconfig.build.json && node scripts/verify.mjs .verify-build",
+    "gen:rubric": "node scripts/gen-rubric-data.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~6.0.3",
+    "vitest": "^3.2.0"
+  },
+  "files": [
+    "src"
+  ]
+}

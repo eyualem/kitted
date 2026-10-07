@@ -1,0 +1,644 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "scene": {
+   "type": "OBJECT",
+   "properties": {
+    "clothed": {
+     "type": "STRING",
+     "enum": [
+      "fully",
+      "partial"
+     ]
+    },
+    "framing": {
+     "type": "STRING",
+     "enum": [
+      "full_body",
+      "three_quarter",
+      "upper_only"
+     ]
+    },
+    "feet": {
+     "type": "STRING",
+     "enum": [
+      "shoes_on",
+      "socks_or_barefoot",
+      "cut_off"
+     ]
+    }
+   },
+   "required": [
+    "clothed",
+    "framing",
+    "feet"
+   ],
+   "propertyOrdering": [
+    "clothed",
+    "framing",
+    "feet"
+   ]
+  },
+  "top": {
+   "type": "OBJECT",
+   "properties": {
+    "type": {
+     "type": "STRING",
+     "enum": [
+      "tee",
+      "graphic_tee",
+      "polo",
+      "knit_polo",
+      "oxford_shirt",
+      "dress_shirt",
+      "flannel_shirt",
+      "camp_collar_shirt",
+      "rugby_shirt",
+      "sweater",
+      "quarter_zip",
+      "hoodie",
+      "sweatshirt",
+      "tank_top",
+      "jersey",
+      "traditional",
+      "other"
+     ]
+    },
+    "color": {
+     "type": "STRING",
+     "enum": [
+      "white",
+      "off_white_cream",
+      "light_grey",
+      "grey",
+      "charcoal",
+      "black",
+      "navy",
+      "light_blue",
+      "blue",
+      "bright_blue",
+      "denim_light",
+      "denim_mid",
+      "denim_dark",
+      "olive",
+      "green",
+      "bright_green",
+      "sage",
+      "khaki_beige",
+      "tan_camel",
+      "brown",
+      "burgundy",
+      "red",
+      "muted_red",
+      "orange",
+      "muted_orange",
+      "yellow",
+      "muted_yellow",
+      "pink",
+      "dusty_pink",
+      "purple",
+      "muted_purple",
+      "multicolor"
+     ]
+    },
+    "pat": {
+     "type": "STRING",
+     "enum": [
+      "solid",
+      "stripes_fine",
+      "stripes_medium",
+      "stripes_bold",
+      "check_fine",
+      "check_medium",
+      "check_bold",
+      "graphic_print",
+      "camo",
+      "floral",
+      "other"
+     ]
+    },
+    "logo": {
+     "type": "STRING",
+     "enum": [
+      "none",
+      "small",
+      "large"
+     ]
+    },
+    "fit": {
+     "type": "INTEGER"
+    },
+    "hem": {
+     "type": "STRING",
+     "enum": [
+      "tucked_full",
+      "tucked_half",
+      "untucked_cropped",
+      "untucked_at_belt",
+      "untucked_mid_fly",
+      "untucked_below_crotch",
+      "hidden"
+     ]
+    },
+    "sleeve": {
+     "type": "STRING",
+     "enum": [
+      "short",
+      "pushed_or_rolled",
+      "at_wrist",
+      "over_hand",
+      "hidden"
+     ]
+    },
+    "issues": {
+     "type": "ARRAY",
+     "items": {
+      "type": "STRING",
+      "enum": [
+       "faded",
+       "tag_or_sticker",
+       "wrinkled",
+       "stain",
+       "pilling",
+       "stretched_neckline",
+       "fraying",
+       "collar_collapsed",
+       "scuffed",
+       "strain",
+       "hangs_below_jacket",
+       "distressed_by_design"
+      ]
+     }
+    },
+    "sure": {
+     "type": "STRING",
+     "enum": [
+      "clear",
+      "likely",
+      "unsure"
+     ]
+    }
+   },
+   "required": [
+    "type",
+    "color",
+    "pat",
+    "logo",
+    "fit",
+    "hem",
+    "sleeve",
+    "issues",
+    "sure"
+   ],
+   "propertyOrdering": [
+    "type",
+    "color",
+    "pat",
+    "logo",
+    "fit",
+    "hem",
+    "sleeve",
+    "issues",
+    "sure"
+   ],
+   "nullable": true
+  },
+  "outer": {
+   "type": "ARRAY",
+   "items": {
+    "type": "OBJECT",
+    "properties": {
+     "type": {
+      "type": "STRING",
+      "enum": [
+       "overshirt",
+       "flannel_shirt",
+       "camp_collar_shirt",
+       "oxford_shirt",
+       "dress_shirt",
+       "cardigan",
+       "hoodie",
+       "quarter_zip",
+       "blazer",
+       "unstructured_blazer",
+       "sport_coat",
+       "suit_jacket",
+       "denim_jacket",
+       "bomber",
+       "leather_jacket",
+       "chore_coat",
+       "field_jacket",
+       "puffer",
+       "fleece",
+       "overcoat",
+       "rain_jacket",
+       "shell_jacket",
+       "traditional",
+       "other"
+      ]
+     },
+     "color": {
+      "type": "STRING",
+      "enum": [
+       "white",
+       "off_white_cream",
+       "light_grey",
+       "grey",
+       "charcoal",
+       "black",
+       "navy",
+       "light_blue",
+       "blue",
+       "bright_blue",
+       "denim_light",
+       "denim_mid",
+       "denim_dark",
+       "olive",
+       "green",
+       "bright_green",
+       "sage",
+       "khaki_beige",
+       "tan_camel",
+       "brown",
+       "burgundy",
+       "red",
+       "muted_red",
+       "orange",
+       "muted_orange",
+       "yellow",
+       "muted_yellow",
+       "pink",
+       "dusty_pink",
+       "purple",
+       "muted_purple",
+       "multicolor"
+      ]
+     },
+     "pat": {
+      "type": "STRING",
+      "enum": [
+       "solid",
+       "stripes_fine",
+       "stripes_medium",
+       "stripes_bold",
+       "check_fine",
+       "check_medium",
+       "check_bold",
+       "graphic_print",
+       "camo",
+       "floral",
+       "other"
+      ]
+     },
+     "logo": {
+      "type": "STRING",
+      "enum": [
+       "none",
+       "small",
+       "large"
+      ]
+     },
+     "sleeve": {
+      "type": "STRING",
+      "enum": [
+       "short",
+       "pushed_or_rolled",
+       "at_wrist",
+       "over_hand",
+       "hidden"
+      ]
+     },
+     "issues": {
+      "type": "ARRAY",
+      "items": {
+       "type": "STRING",
+       "enum": [
+        "faded",
+        "tag_or_sticker",
+        "wrinkled",
+        "stain",
+        "pilling",
+        "stretched_neckline",
+        "fraying",
+        "collar_collapsed",
+        "scuffed",
+        "strain",
+        "hangs_below_jacket",
+        "distressed_by_design"
+       ]
+      }
+     },
+     "sure": {
+      "type": "STRING",
+      "enum": [
+       "clear",
+       "likely",
+       "unsure"
+      ]
+     }
+    },
+    "required": [
+     "type",
+     "color",
+     "pat",
+     "logo",
+     "sleeve",
+     "issues",
+     "sure"
+    ],
+    "propertyOrdering": [
+     "type",
+     "color",
+     "pat",
+     "logo",
+     "sleeve",
+     "issues",
+     "sure"
+    ]
+   }
+  },
+  "bottom": {
+   "type": "OBJECT",
+   "properties": {
+    "type": {
+     "type": "STRING",
+     "enum": [
+      "jeans",
+      "chinos",
+      "trousers",
+      "drawstring_trousers",
+      "suit_trousers",
+      "cargos",
+      "joggers",
+      "sweatpants",
+      "shorts",
+      "athletic_shorts",
+      "traditional",
+      "other"
+     ]
+    },
+    "color": {
+     "type": "STRING",
+     "enum": [
+      "white",
+      "off_white_cream",
+      "light_grey",
+      "grey",
+      "charcoal",
+      "black",
+      "navy",
+      "light_blue",
+      "blue",
+      "bright_blue",
+      "denim_light",
+      "denim_mid",
+      "denim_dark",
+      "olive",
+      "green",
+      "bright_green",
+      "sage",
+      "khaki_beige",
+      "tan_camel",
+      "brown",
+      "burgundy",
+      "red",
+      "muted_red",
+      "orange",
+      "muted_orange",
+      "yellow",
+      "muted_yellow",
+      "pink",
+      "dusty_pink",
+      "purple",
+      "muted_purple",
+      "multicolor"
+     ]
+    },
+    "pat": {
+     "type": "STRING",
+     "enum": [
+      "solid",
+      "stripes_fine",
+      "stripes_medium",
+      "stripes_bold",
+      "check_fine",
+      "check_medium",
+      "check_bold",
+      "graphic_print",
+      "camo",
+      "floral",
+      "other"
+     ]
+    },
+    "leg": {
+     "type": "STRING",
+     "enum": [
+      "skinny",
+      "slim",
+      "straight",
+      "relaxed",
+      "wide",
+      "flare_bootcut",
+      "barrel",
+      "shorts"
+     ]
+    },
+    "hem": {
+     "type": "STRING",
+     "enum": [
+      "pooling",
+      "full_break",
+      "slight_break",
+      "no_break",
+      "cuffed",
+      "cropped",
+      "shorts",
+      "hidden"
+     ]
+    },
+    "issues": {
+     "type": "ARRAY",
+     "items": {
+      "type": "STRING",
+      "enum": [
+       "faded",
+       "tag_or_sticker",
+       "wrinkled",
+       "stain",
+       "pilling",
+       "stretched_neckline",
+       "fraying",
+       "collar_collapsed",
+       "scuffed",
+       "strain",
+       "hangs_below_jacket",
+       "distressed_by_design"
+      ]
+     }
+    },
+    "sure": {
+     "type": "STRING",
+     "enum": [
+      "clear",
+      "likely",
+      "unsure"
+     ]
+    }
+   },
+   "required": [
+    "type",
+    "color",
+    "pat",
+    "leg",
+    "hem",
+    "issues",
+    "sure"
+   ],
+   "propertyOrdering": [
+    "type",
+    "color",
+    "pat",
+    "leg",
+    "hem",
+    "issues",
+    "sure"
+   ],
+   "nullable": true
+  },
+  "shoes": {
+   "type": "OBJECT",
+   "properties": {
+    "type": {
+     "type": "STRING",
+     "enum": [
+      "white_leather_sneaker",
+      "low_profile_sneaker",
+      "canvas_sneaker",
+      "retro_runner",
+      "performance_runner",
+      "chunky_sneaker",
+      "basketball_sneaker",
+      "loafer",
+      "derby",
+      "dress_shoe",
+      "chelsea_boot",
+      "suede_chukka",
+      "work_boot",
+      "slides_sandals",
+      "other"
+     ]
+    },
+    "color": {
+     "type": "STRING",
+     "enum": [
+      "white",
+      "off_white_cream",
+      "light_grey",
+      "grey",
+      "charcoal",
+      "black",
+      "navy",
+      "light_blue",
+      "blue",
+      "bright_blue",
+      "denim_light",
+      "denim_mid",
+      "denim_dark",
+      "olive",
+      "green",
+      "bright_green",
+      "sage",
+      "khaki_beige",
+      "tan_camel",
+      "brown",
+      "burgundy",
+      "red",
+      "muted_red",
+      "orange",
+      "muted_orange",
+      "yellow",
+      "muted_yellow",
+      "pink",
+      "dusty_pink",
+      "purple",
+      "muted_purple",
+      "multicolor"
+     ]
+    },
+    "issues": {
+     "type": "ARRAY",
+     "items": {
+      "type": "STRING",
+      "enum": [
+       "faded",
+       "tag_or_sticker",
+       "wrinkled",
+       "stain",
+       "pilling",
+       "stretched_neckline",
+       "fraying",
+       "collar_collapsed",
+       "scuffed",
+       "strain",
+       "hangs_below_jacket",
+       "distressed_by_design"
+      ]
+     }
+    },
+    "sure": {
+     "type": "STRING",
+     "enum": [
+      "clear",
+      "likely",
+      "unsure"
+     ]
+    }
+   },
+   "required": [
+    "type",
+    "color",
+    "issues",
+    "sure"
+   ],
+   "propertyOrdering": [
+    "type",
+    "color",
+    "issues",
+    "sure"
+   ],
+   "nullable": true
+  },
+  "extras": {
+   "type": "ARRAY",
+   "items": {
+    "type": "STRING",
+    "enum": [
+     "belt_black",
+     "belt_brown",
+     "belt_other",
+     "watch",
+     "hat",
+     "bag",
+     "tie",
+     "jewelry"
+    ]
+   }
+  }
+ },
+ "required": [
+  "scene",
+  "top",
+  "outer",
+  "bottom",
+  "shoes",
+  "extras"
+ ],
+ "propertyOrdering": [
+  "scene",
+  "top",
+  "outer",
+  "bottom",
+  "shoes",
+  "extras"
+ ]
+}

@@ -1,0 +1,117 @@
+{
+ "_doc": "Fix catalog draft for rubric.json -> fixes. One entry per target (a rule id from rubric.py, or a credit id). Options are listed cheapest tier first. Edits are applied to a COPY of the reading, which is then re-scored by the rubric; the predicted gain is the rubric's own number. Ops are defined in 04-logic-and-demo-data.md section 5.2 and implemented in kitted_logic.py. {name} = plain garment name, {item} = closet item name, {target} = band target (e.g. 'relaxed').",
+ "tiers": {
+  "adjust": {"effort": 1, "free": true, "tag": "Free"},
+  "swapFromCloset": {"effort": 2, "free": true, "tag": "Free · from your closet"},
+  "changeInto": {"effort": 2, "free": true, "tag": "Free if you own one"},
+  "tailor": {"effort": 3, "free": false, "tag": "Tailor ~$15"},
+  "buy": {"effort": 4, "free": false, "tag": "Buy"}
+ },
+ "targets": {
+  "F4_pooling": [
+   {"tier": "adjust", "copy": "Cuff your pants once", "detail": "about 10 seconds", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "cuffed"}}]},
+   {"tier": "tailor", "copy": "Hem them to a slight break", "detail": "~$15 at a tailor", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "slight_break"}}]}
+  ],
+  "F4b_full_break_narrow_leg": [
+   {"tier": "adjust", "copy": "Cuff them once", "detail": "slim pants look sharper with less fabric at the shoe", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "cuffed"}}]},
+   {"tier": "tailor", "copy": "Hem them to no break", "detail": "~$15 at a tailor", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "no_break"}}]}
+  ],
+  "F7_care": [
+   {"tier": "adjust", "copy": "Steam out the wrinkles", "detail": "5 minutes, or hang it in a steamy bathroom", "edits": [{"op": "set_where", "where": {"condition": "wrinkled"}, "fields": {"condition": "clean"}}]},
+   {"tier": "adjust", "copy": "De-pill it or wipe your shoes", "detail": "a fabric shaver or a damp cloth", "edits": [{"op": "set_where", "where": {"condition": "pilled_or_worn"}, "fields": {"condition": "clean"}}]},
+   {"tier": "changeInto", "copy": "Swap to a clean one", "detail": "stains are the one thing that always reads", "edits": [{"op": "set_where", "where": {"condition": "stained"}, "fields": {"condition": "clean"}}]}
+  ],
+  "F6_top_too_long": [
+   {"tier": "adjust", "copy": "Tuck it in", "detail": "a full tuck fixes the length", "edits": [{"op": "set", "slot": "top", "fields": {"tucked": "full", "length": "na"}}]},
+   {"tier": "changeInto", "copy": "Swap to a shorter {name}", "detail": "it should end mid-fly", "edits": [{"op": "set", "slot": "top", "fields": {"length": "mid_fly"}}]}
+  ],
+  "F8_too_big": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "a regular fit reads intentional", "edits": [{"op": "swap_closet", "slot": "top", "match": {"volume_max": 3}}]},
+   {"tier": "changeInto", "copy": "Swap to a regular-fit top", "detail": "", "edits": [{"op": "set", "slot": "top", "fields": {"volume": 3, "length": "mid_fly"}}, {"op": "set_where", "where": {"sleeve_end": "covers_hand"}, "fields": {"sleeve_end": "at_wrist"}}]}
+  ],
+  "F9_sleeves_cover_hands": [
+   {"tier": "adjust", "copy": "Push your sleeves up", "detail": "just above the wrist", "edits": [{"op": "set_where", "where": {"sleeve_end": "covers_hand"}, "fields": {"sleeve_end": "at_wrist"}}]}
+  ],
+  "F10_visible_strain": [
+   {"tier": "changeInto", "copy": "Size up in the {name}", "detail": "pulling fabric is the giveaway", "edits": [{"op": "set_where", "where": {"strain": "clear"}, "fields": {"strain": "none"}}]},
+   {"tier": "buy", "copy": "Get the next size up", "detail": "", "edits": [{"op": "set_where", "where": {"strain": "clear"}, "fields": {"strain": "none"}}]}
+  ],
+  "T1_dress_shirt_untucked": [
+   {"tier": "adjust", "copy": "Tuck in your shirt", "detail": "dress shirts go in", "edits": [{"op": "set", "slot": "top", "fields": {"tucked": "full", "length": "na"}}]}
+  ],
+  "L1_shirt_hangs_below_blazer": [
+   {"tier": "adjust", "copy": "Tuck the shirt in", "detail": "nothing should hang below the jacket", "edits": [{"op": "set", "slot": "top", "fields": {"tucked": "full", "length": "na", "shows_below_outer": false}}]}
+  ],
+  "P1_top_volume_vs_style": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "closer to your style's fit", "edits": [{"op": "swap_closet", "slot": "top", "match": {"volume_in_band": true}}]},
+   {"tier": "changeInto", "copy": "Swap to a {target} top", "detail": "", "edits": [{"op": "set_band", "slot": "top", "field": "volume"}]}
+  ],
+  "P1_leg_vs_style": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "a {target} leg suits your style", "edits": [{"op": "swap_closet", "slot": "bottom", "match": {"leg_in_band": true}}]},
+   {"tier": "changeInto", "copy": "Swap to {target}-leg pants", "detail": "", "edits": [{"op": "set_band", "slot": "bottom", "field": "leg_shape"}]},
+   {"tier": "tailor", "copy": "Have them tapered", "detail": "~$20 at a tailor", "when": {"leg_too_wide": true}, "edits": [{"op": "set_band", "slot": "bottom", "field": "leg_shape"}]}
+  ],
+  "P2_big_top_skinny_leg": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "balance a roomy top with a straight leg", "edits": [{"op": "swap_closet", "slot": "bottom", "match": {"leg_in": ["straight", "relaxed"]}}]},
+   {"tier": "changeInto", "copy": "Swap to straight-leg pants", "detail": "", "edits": [{"op": "set", "slot": "bottom", "fields": {"leg_shape": "straight"}}]}
+  ],
+  "P3_everything_oversized": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "keep one piece roomy, not both", "edits": [{"op": "swap_closet", "slot": "bottom", "match": {"leg_in": ["straight", "relaxed"]}}]},
+   {"tier": "changeInto", "copy": "Swap to straight-leg pants", "detail": "", "edits": [{"op": "set", "slot": "bottom", "fields": {"leg_shape": "straight"}}]}
+  ],
+  "S1_bulky_shoe_narrow_leg": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "a slimmer shoe for slim pants", "edits": [{"op": "swap_closet", "slot": "footwear", "match": {"not_subcategory": ["chunky_sneaker", "performance_runner"]}}]},
+   {"tier": "changeInto", "copy": "Swap to slimmer sneakers", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "low_profile_sneaker"}}]}
+  ],
+  "C1a_too_many_accent_colors": [{"tier": "changeInto", "copy": "Swap the {name} for a neutral one", "detail": "keep one or two colors", "edits": [{"op": "neutralize_culprit"}]}],
+  "C1b_too_many_colors": [{"tier": "changeInto", "copy": "Swap the {name} for a neutral one", "detail": "", "edits": [{"op": "neutralize_culprit"}]}],
+  "C3_bright_clash": [{"tier": "changeInto", "copy": "Swap the {name} for a neutral one", "detail": "one bright piece at a time", "edits": [{"op": "neutralize_culprit"}]}],
+  "B1_too_many_focal_points": [{"tier": "changeInto", "copy": "Swap the {name} for a plain one", "detail": "let one piece stand out", "edits": [{"op": "neutralize_culprit"}]}],
+  "C4a_same_pattern_same_scale": [{"tier": "changeInto", "copy": "Swap the {name} for a solid one", "detail": "", "edits": [{"op": "neutralize_culprit"}]}],
+  "C4a_same_pattern_type": [{"tier": "changeInto", "copy": "Swap the {name} for a solid one", "detail": "", "edits": [{"op": "neutralize_culprit"}]}],
+  "C4b_three_plus_patterns": [{"tier": "changeInto", "copy": "Swap the {name} for a solid one", "detail": "two patterns max", "edits": [{"op": "neutralize_culprit"}]}],
+  "C5_near_match_jacket_trousers": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "clearly different from the jacket", "edits": [{"op": "swap_closet", "slot": "bottom", "match": {"color_not_in": ["charcoal", "navy", "black"]}}]},
+   {"tier": "changeInto", "copy": "Swap to grey or tan trousers", "detail": "", "edits": [{"op": "set", "slot": "bottom", "fields": {"color_family": "khaki_beige"}}]}
+  ],
+  "O1_too_casual": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "one step dressier", "edits": [{"op": "upgrade_culprit", "from_closet": true}]},
+   {"tier": "changeInto", "copy": "Swap the {name} for something dressier", "detail": "", "edits": [{"op": "upgrade_culprit"}]}
+  ],
+  "O1_too_formal": [
+   {"tier": "adjust", "copy": "Take off the {name}", "detail": "a little less formal fits better", "edits": [{"op": "remove_most_formal_outer"}]}
+  ],
+  "O4_loungewear_out": [
+   {"tier": "swapFromCloset", "copy": "Swap to jeans or chino shorts", "detail": "", "closet_requires": {"slot": "bottom", "subcategory_in": ["jeans", "shorts", "chinos"]}, "edits": [{"op": "alternatives", "slot": "bottom", "each": [{"subcategory": "jeans"}, {"subcategory": "shorts"}]}]},
+   {"tier": "changeInto", "copy": "Swap to jeans or chino shorts", "detail": "", "edits": [{"op": "alternatives", "slot": "bottom", "each": [{"subcategory": "jeans"}, {"subcategory": "shorts"}]}]}
+  ],
+  "S2_shoes_too_casual_for_outfit": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "shoes set the outfit's level", "edits": [{"op": "swap_closet", "slot": "footwear", "match": {"formality_min": 3}}]},
+   {"tier": "changeInto", "copy": "Swap to leather shoes", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "loafer", "color_family": "brown"}}]}
+  ],
+  "O3_large_logo": [
+   {"tier": "changeInto", "copy": "Swap to a plain {name}", "detail": "big logos read casual at work", "edits": [{"op": "set_where", "where": {"logo": "large"}, "fields": {"logo": "small"}}]}
+  ],
+  "K1_layered": [
+   {"tier": "adjust", "copy": "Wear the {name}, open", "detail": "it's already in your hand", "edits": [{"op": "add_held", "category": "outerwear"}]},
+   {"tier": "swapFromCloset", "copy": "Add your {item}", "detail": "worn open", "edits": [{"op": "add_closet", "slot": "outerwear"}]},
+   {"tier": "changeInto", "copy": "Add a layer: an overshirt or a knit", "detail": "", "edits": [{"op": "add", "garment": {"category": "outerwear", "subcategory": "overshirt", "color_family": "navy"}}]}
+  ],
+  "K2_elevated_piece": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "one dressier piece lifts it", "edits": [{"op": "swap_closet", "slot": "any_core", "match": {"formality_min": 3}}]}
+  ],
+  "K4_shoes_complement": [
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "shoes that match the outfit's level", "edits": [{"op": "swap_closet", "slot": "footwear", "match": {"formality_min": 2.5}}]}
+  ]
+ },
+ "next_level": {
+  "next level: add one point of interest (a knit, a sneaker, a beanie)": "One standout color, like a rust tee. No score change today."
+ },
+ "tips": {
+  "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)": "A front tuck or a cropped layer can lengthen your legs.",
+  "tip: tonal outfit, vary texture or shade so it doesn't look flat": "All one color family. Mix textures or shades so it doesn't look flat.",
+  "tip: big logos read casual; a plain or small-logo piece looks more put together": "Big logos read casual. A plain piece looks more put together.",
+  "tip: match your belt to your shoes (same color family; black only with black)": "Match your belt to your shoes.",
+  "tip: pair a dark blazer with clearly different trousers (grey, tan, olive) or the matching suit trousers": "Pair a dark blazer with clearly different trousers, or its own suit trousers."
+ }
+}
