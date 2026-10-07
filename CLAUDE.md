@@ -144,13 +144,13 @@
 2. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
-### 3. P3: real readings done first; the camera is next (full plan: `handoff/05-build-plan.md` §P3)
-- **Done Oct 7 (C + D): real scoring works.** Stylist → Check my fit → "Choose from your photos" → the photo is cut at the neck on the phone → real Gemini reading (locked config) → a real card. Two stock photos scored 5.5 and 7.5 in 6.6 s and 10.7 s. The key is in git-ignored `app/.env.local`; in DEV builds with the key the daily limit is off. Sample photos still use saved readings (no network).
-- **Next: A. camera screen (Simulator)**, then **B. real camera on my iPhone** (live preview + body tracking drive the framing guide).
-- **What I do for B (one-time):** add my Apple ID in Xcode → Settings → Accounts; turn on Developer Mode on the iPhone; plug it in and trust the Mac.
-- To test on the Simulator with my own photos: drag photos onto the Simulator window (they land in its Photos), then "Choose from your photos".
+### 3. P3: built; next is testing on my iPhone (full plan: `handoff/05-build-plan.md` §P3)
+- **Done Oct 7:** real scoring (photo cut at the neck on the phone → Gemini → real card) and the camera (live preview, body tracking drives the guide, face blurred live, 3-2-1 auto-capture with a spoken count, Propped/Mirror, flash, flip, camera-off card). On the Simulator a sample photo stands in for the camera.
+- **Next: my phone test.** One-time setup: (1) Xcode → Settings → Accounts → add my Apple ID; (2) iPhone → Settings → Privacy & Security → Developer Mode on (it restarts); (3) plug in, unlock, tap Trust; Mac and phone on the same Wi-Fi. Then Claude runs `cd app && npx expo run:ios --device` and picks my phone.
+- **What Claude sees during my test:** the `[camera]`, `[prep]`, `[gemini]` and `[check]` lines in the Metro log, live; afterwards `tools/phone/pull.sh` copies the app's data and kept neck-down photos off the phone (`screenshots/phone/`, git-ignored).
+- Test plan: 10 propped shots (phone against something, 2–3 m away) + 10 mirror shots in my room; note any guide misfires.
+- Not built yet: the Mirror volume-button shutter, the dark/blurry retake panel, the screenshot "Is this you?" question (#50).
 - Then **P4 (onboarding)**: 05 §P4.
-- Open items from the first real checks: sample-photo tiles that show faces (demo crop table), "held, not worn" isn't in the v3 format, one 10.7 s call vs the 14 s give-up (DECISIONS-LOG #48).
 
 ### 4. Non-build steps (mine)
 1. **Replace the Gemini key before production** (decided Oct 7: keep using the Oct 6 key for development; it has a small balance).
@@ -253,4 +253,6 @@ Exceptions:
 - **`simctl io … screenshot` can fail silently** when the target file exists and is protected; write to a new path.
 - **Apple Vision on the Simulator** needs the CPU forced (`setComputeDevice`), or every request fails with "Could not create inference context".
 - **Never send a photo when the neck/face can't be found** (`couldNotFrame`, ruling 10).
+- **react-native-svg keeps a dash pattern after `strokeDasharray` is removed;** key the shape by state to redraw it.
+- **A new Swift file in a local module needs `pod install`** before Xcode sees it ("cannot find … in scope").
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
