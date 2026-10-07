@@ -180,7 +180,11 @@ export interface OutfitRow {
   id: string;
   itemIds: string[];
   occasion: string;
+  /** "Sharp, not stiff" (hero ideas only). */
+  title: string | null;
   summary: string;
+  /** Predicted score for the occasion (hero ideas), the wearing state, … */
+  details: { predictedScore?: number; wornAt?: number };
   source: 'idea' | 'fitCheck' | 'seed';
   isSaved: boolean;
   createdAt: number;

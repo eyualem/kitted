@@ -8,6 +8,9 @@ import { readLaunchArgs } from '@/demo/launchArgs';
 import { store } from '@/data/db';
 import { clearDeviceId, getAgeBlocked, setAgeBlocked } from '@/data/secure';
 import { KV } from '@/data/store';
+import { loadScenario } from '@/data/seedLoader';
+import { US_EASTERN } from '@kitted/core';
+import seed from '../../assets/seed.json';
 import { markGateReady } from './appGate';
 import { setDemoArgs, startClock } from './session';
 
@@ -32,6 +35,11 @@ export async function boot(): Promise<DemoArgs> {
   if (DEMO_ENABLED && args.seed) await store.setKv(KV.scenario, args.seed === 'full' ? 'full' : 'firstRun');
 
   const scenario = (await store.getKv(KV.scenario)) === 'full' ? 'full' : 'firstRun';
+  // A seed loads only into an empty store or after resetData (05 §5.2). Demo builds only.
+  if (DEMO_ENABLED && (await store.getKv(KV.seedLoaded)) === null) {
+    await loadScenario(store, seed, { scenario, zone: US_EASTERN });
+    await store.setKv(KV.seedLoaded, scenario);
+  }
   startClock(args.now ?? SCENARIO_NOW[scenario]);
 
   markGateReady({

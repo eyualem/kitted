@@ -129,7 +129,7 @@ export const correctionSpec: TableSpec<CorrectionRow> = {
 export const outfitSpec: TableSpec<OutfitRow> = {
   table: 'outfits',
   key: 'id',
-  fields: { id: 'text', itemIds: 'json', occasion: 'text', summary: 'text', source: 'text', isSaved: 'bool', createdAt: 'int' },
+  fields: { id: 'text', itemIds: 'json', occasion: 'text', title: 'text', summary: 'text', details: 'json', source: 'text', isSaved: 'bool', createdAt: 'int' },
 };
 
 export const wearLogSpec: TableSpec<WearLogRow> = {

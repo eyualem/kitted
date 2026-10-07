@@ -187,7 +187,13 @@ const V2: Migration = {
   ],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1, V2];
+// V3 (P2): outfit idea titles and their predicted score.
+const V3: Migration = {
+  version: 3,
+  statements: [`ALTER TABLE outfits ADD COLUMN title TEXT`, `ALTER TABLE outfits ADD COLUMN details TEXT NOT NULL DEFAULT '{}'`],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2, V3];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 
