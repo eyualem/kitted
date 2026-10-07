@@ -1,0 +1,72 @@
+{
+ "scene": {
+  "framing": "full_body",
+  "shoes_visible": true,
+  "people_count": 1,
+  "mirror_selfie": false,
+  "lighting": "good",
+  "clothed": "fully"
+ },
+ "garments": [
+  {
+   "category": "top",
+   "subcategory": "other",
+   "color_family": "black",
+   "pattern": "graphic",
+   "logo": "none",
+   "volume": 3,
+   "leg_shape": "na",
+   "hem": "na",
+   "tucked": "none",
+   "condition": "clean",
+   "certainty": "clear",
+   "length": "mid_fly",
+   "pattern_scale": "medium",
+   "saturation": "na",
+   "sleeve_end": "at_wrist",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  },
+  {
+   "category": "bottom",
+   "subcategory": "trousers",
+   "color_family": "navy",
+   "pattern": "solid",
+   "logo": "none",
+   "volume": 3,
+   "leg_shape": "straight",
+   "hem": "full_break",
+   "tucked": "na",
+   "condition": "clean",
+   "certainty": "clear",
+   "length": "na",
+   "pattern_scale": "na",
+   "saturation": "na",
+   "sleeve_end": "na",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  },
+  {
+   "category": "footwear",
+   "subcategory": "low_profile_sneaker",
+   "color_family": "brown",
+   "pattern": "other",
+   "logo": "none",
+   "volume": 3,
+   "leg_shape": "na",
+   "hem": "na",
+   "tucked": "na",
+   "condition": "clean",
+   "certainty": "likely",
+   "length": "na",
+   "pattern_scale": "small",
+   "saturation": "muted",
+   "sleeve_end": "na",
+   "strain": "none",
+   "distressed_by_design": false,
+   "shows_below_outer": false
+  }
+ ]
+}

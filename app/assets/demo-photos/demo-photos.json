@@ -1,0 +1,125 @@
+{
+ "source": "mockups/kitted-mockups.html const PH (fractions of the image)",
+ "photos": [
+  {
+   "id": "p01b",
+   "neck": 0.315,
+   "foot": 0.985,
+   "cx": 0.5,
+   "faceX": 0.505,
+   "faceY": 0.245,
+   "faceR": 0.055,
+   "box": [
+    0.24,
+    0.175,
+    0.76,
+    0.995
+   ]
+  },
+  {
+   "id": "p01a",
+   "neck": 0.315,
+   "foot": 0.985,
+   "cx": 0.45,
+   "faceX": 0.46,
+   "faceY": 0.235,
+   "faceR": 0.05,
+   "box": [
+    0.24,
+    0.17,
+    0.7,
+    0.995
+   ]
+  },
+  {
+   "id": "s24",
+   "neck": 0.31,
+   "foot": 1.0,
+   "cx": 0.55,
+   "faceX": 0.55,
+   "faceY": 0.25,
+   "faceR": 0.08
+  },
+  {
+   "id": "s15",
+   "neck": 0.235,
+   "foot": 0.895,
+   "cx": 0.5,
+   "faceX": 0.5,
+   "faceY": 0.17,
+   "faceR": 0.04
+  },
+  {
+   "id": "s10",
+   "neck": 0.28,
+   "foot": 0.94,
+   "cx": 0.43,
+   "faceX": 0.44,
+   "faceY": 0.235,
+   "faceR": 0.04
+  },
+  {
+   "id": "s14",
+   "neck": 0.21,
+   "foot": 0.94,
+   "cx": 0.46,
+   "faceX": 0.47,
+   "faceY": 0.16,
+   "faceR": 0.045
+  },
+  {
+   "id": "s22",
+   "neck": 0.32,
+   "foot": 1.0,
+   "cx": 0.45,
+   "faceX": 0.45,
+   "faceY": 0.27,
+   "faceR": 0.05
+  },
+  {
+   "id": "s05",
+   "neck": 0.195,
+   "foot": 0.95,
+   "cx": 0.48,
+   "faceX": 0.49,
+   "faceY": 0.14,
+   "faceR": 0.045
+  },
+  {
+   "id": "s13",
+   "neck": 0.3,
+   "foot": 0.965,
+   "cx": 0.48,
+   "faceX": 0.48,
+   "faceY": 0.255,
+   "faceR": 0.04
+  },
+  {
+   "id": "s12",
+   "neck": 0.235,
+   "foot": 0.875,
+   "cx": 0.55,
+   "faceX": 0.56,
+   "faceY": 0.18,
+   "faceR": 0.04
+  },
+  {
+   "id": "s25",
+   "neck": 0.3,
+   "foot": 0.99,
+   "cx": 0.45,
+   "faceX": 0.45,
+   "faceY": 0.23,
+   "faceR": 0.06
+  },
+  {
+   "id": "s09",
+   "neck": 0.22,
+   "foot": 0.89,
+   "cx": 0.52,
+   "faceX": 0.52,
+   "faceY": 0.17,
+   "faceR": 0.04
+  }
+ ]
+}

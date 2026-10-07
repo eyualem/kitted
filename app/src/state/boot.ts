@@ -1,0 +1,41 @@
+// Runs once before the first screen (the splash stays up until it finishes):
+// demo arguments → database + migrations → resetData → gate values → clock.
+import { DEMO_ENABLED } from '@/demo/config';
+import { queryToRaw, resolveDemoArgs, type DemoArgs } from '@/demo/demoArgs';
+import { setDemoState } from '@/demo/demoState';
+import { readInitialQuery } from '@/demo/initialQuery';
+import { readLaunchArgs } from '@/demo/launchArgs';
+import { store } from '@/data/db';
+import { clearDeviceId, getAgeBlocked, setAgeBlocked } from '@/data/secure';
+import { KV } from '@/data/store';
+import { markGateReady } from './appGate';
+import { setDemoArgs, startClock } from './session';
+
+/** The scenarios' `now` (seed.json): firstRun 07:38, full 12:20, Thu Oct 22 2026, New York. */
+export const SCENARIO_NOW = { firstRun: '2026-10-22T07:38:00', full: '2026-10-22T12:20:00' } as const;
+
+export async function boot(): Promise<DemoArgs> {
+  const args = DEMO_ENABLED
+    ? resolveDemoArgs({ deepLink: queryToRaw(await readInitialQuery()), launch: readLaunchArgs() })
+    : resolveDemoArgs({});
+  setDemoArgs(args);
+  setDemoState({ theme: args.theme, frame: args.frame });
+
+  await store.init();
+  if (DEMO_ENABLED && args.resetData) {
+    await store.wipe();
+    await clearDeviceId();
+    if (args.clearAge) await setAgeBlocked(false);
+  }
+  if (DEMO_ENABLED && args.skipOnboarding) await store.setKv(KV.onboardingDone, '1');
+  if (DEMO_ENABLED && args.seed) await store.setKv(KV.scenario, args.seed === 'full' ? 'full' : 'firstRun');
+
+  const scenario = (await store.getKv(KV.scenario)) === 'full' ? 'full' : 'firstRun';
+  startClock(args.now ?? SCENARIO_NOW[scenario]);
+
+  markGateReady({
+    ageBlocked: await getAgeBlocked(),
+    onboarded: (await store.getKv(KV.onboardingDone)) === '1',
+  });
+  return args;
+}
