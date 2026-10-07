@@ -140,17 +140,17 @@
 - Note: the floating gear with "Tools" at the top right is the Expo development build's own menu, not app code. It isn't in release builds. In demo runs the first tap after launch sometimes only dismisses its label.
 
 ### 2. P2 leftovers (small)
-1. **Rubric question for me:** correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once.
+1. **Rubric question for me:** correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once. (b) Two rules can pick the same fix; the card shows it once, but the engine should offer the next distinct fix (#46).
 2. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
-### 3. P3: camera, photo prep and the real reading (replanned Oct 7; full plan in `handoff/05-build-plan.md` §P3)
-- **A. Camera screen (Simulator):** framing guide, 3-2-1 with haptics and optional spoken count, auto-capture, sample-photo strip, camera-off card.
-- **B. Real camera on my iPhone:** live preview + Apple Vision body pose drive the same guide (local `kitted-vision` module).
-- **C. Photo prep on the phone:** face cut off at the neck, 1024 px, metadata stripped, hash for "same photo, same score". The full-face original is never kept.
-- **D. Real Gemini reading (dev builds only):** the locked config (gemini-3.8-flash, thinking off, v3 format), streamed so pieces appear as they're read. Key: `EXPO_PUBLIC_GEMINI_DEV_KEY` in git-ignored `app/.env.development.local` (**in place since Oct 7**; Expo loads it only in development, per 05 trap T32).
-- **What I do for B–D (one-time):** ~~put the Gemini key in place~~ (done Oct 7); add my Apple ID in Xcode → Settings → Accounts; turn on Developer Mode on the iPhone; plug it in and trust the Mac.
-- Then **P4 (onboarding)**: 05 §P4. Screens and copy: `handoff/02-screens.md`.
+### 3. P3: real readings done first; the camera is next (full plan: `handoff/05-build-plan.md` §P3)
+- **Done Oct 7 (C + D): real scoring works.** Stylist → Check my fit → "Choose from your photos" → the photo is cut at the neck on the phone → real Gemini reading (locked config) → a real card. Two stock photos scored 5.5 and 7.5 in 6.6 s and 10.7 s. The key is in git-ignored `app/.env.local`; in DEV builds with the key the daily limit is off. Sample photos still use saved readings (no network).
+- **Next: A. camera screen (Simulator)**, then **B. real camera on my iPhone** (live preview + body tracking drive the framing guide).
+- **What I do for B (one-time):** add my Apple ID in Xcode → Settings → Accounts; turn on Developer Mode on the iPhone; plug it in and trust the Mac.
+- To test on the Simulator with my own photos: drag photos onto the Simulator window (they land in its Photos), then "Choose from your photos".
+- Then **P4 (onboarding)**: 05 §P4.
+- Open items from the first real checks: sample-photo tiles that show faces (demo crop table), "held, not worn" isn't in the v3 format, one 10.7 s call vs the 14 s give-up (DECISIONS-LOG #48).
 
 ### 4. Non-build steps (mine)
 1. **Replace the Gemini key before production** (decided Oct 7: keep using the Oct 6 key for development; it has a small balance).
@@ -251,4 +251,6 @@ Exceptions:
 - **Large text:** at AX sizes rows stack (`isAccessibilitySize`), and control labels cap at 2× (`CONTROL_TEXT_MAX_SCALE`); wrapping 3-line button labels got clipped on iOS.
 - **A card that changes behind a sheet** needs a scroll-to-end after the sheet closes (Stylist does it on focus, 400 ms).
 - **`simctl io … screenshot` can fail silently** when the target file exists and is protected; write to a new path.
+- **Apple Vision on the Simulator** needs the CPU forced (`setComputeDevice`), or every request fails with "Could not create inference context".
+- **Never send a photo when the neck/face can't be found** (`couldNotFrame`, ruling 10).
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
