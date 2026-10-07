@@ -144,11 +144,16 @@
 2. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
-### 3. Then P3 (camera, simulated) and P4 (onboarding)
-The phases and their acceptance checks are in `handoff/05-build-plan.md` §5. Every screen's layout and copy is in `handoff/02-screens.md`.
+### 3. P3: camera, photo prep and the real reading (replanned Oct 7; full plan in `handoff/05-build-plan.md` §P3)
+- **A. Camera screen (Simulator):** framing guide, 3-2-1 with haptics and optional spoken count, auto-capture, sample-photo strip, camera-off card.
+- **B. Real camera on my iPhone:** live preview + Apple Vision body pose drive the same guide (local `kitted-vision` module).
+- **C. Photo prep on the phone:** face cut off at the neck, 1024 px, metadata stripped, hash for "same photo, same score". The full-face original is never kept.
+- **D. Real Gemini reading (dev builds only):** the locked config (gemini-3.8-flash, thinking off, v3 format), streamed so pieces appear as they're read. Key in git-ignored `app/.env.local`.
+- **What I do for B–D (one-time):** put the Gemini key in `app/.env.local`; add my Apple ID in Xcode → Settings → Accounts; turn on Developer Mode on the iPhone; plug it in and trust the Mac.
+- Then **P4 (onboarding)**: 05 §P4. Screens and copy: `handoff/02-screens.md`.
 
 ### 4. Non-build steps (mine)
-1. **Delete the Gemini API key** pasted in chat on Oct 6, and create a new one.
+1. **Replace the Gemini key before production** (decided Oct 7: keep using the Oct 6 key for development; it has a small balance).
 2. Review `rubric/v3.md` and decide its 2 open questions.
 3. Shoot the gold set: about 80 photos, with 3+ friends (plan in `speed-and-detail-plan.md`).
 4. Claim @kitted.app / @trykitted and register trykitted.com. Then the waitlist page and the TikTok account.
