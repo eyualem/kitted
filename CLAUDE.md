@@ -146,7 +146,7 @@
 
 ### 3. P3: built; next is testing on my iPhone (full plan: `handoff/05-build-plan.md` §P3)
 - **Done Oct 7:** real scoring (photo cut at the neck on the phone → Gemini → real card) and the camera (live preview, body tracking drives the guide, face blurred live, 3-2-1 auto-capture with a spoken count, Propped/Mirror, flash, flip, camera-off card). On the Simulator a sample photo stands in for the camera.
-- **Next: my phone test.** One-time setup: (1) Xcode → Settings → Accounts → add my Apple ID; (2) iPhone → Settings → Privacy & Security → Developer Mode on (it restarts); (3) plug in, unlock, tap Trust; Mac and phone on the same Wi-Fi. Then Claude runs `cd app && npx expo run:ios --device` and picks my phone.
+- **Installed on my iPhone (Oct 7).** Setup is done (Apple ID in Xcode, Developer Mode on, developer trusted). To reinstall (every 7 days, or after native changes): plug in, unlock, run `tools/phone/install.sh`. The Metro dev server must be running (`kitted-web`) and the phone on the same Wi-Fi.
 - **What Claude sees during my test:** the `[camera]`, `[prep]`, `[gemini]` and `[check]` lines in the Metro log, live; afterwards `tools/phone/pull.sh` copies the app's data and kept neck-down photos off the phone (`screenshots/phone/`, git-ignored).
 - Test plan: 10 propped shots (phone against something, 2–3 m away) + 10 mirror shots in my room; note any guide misfires.
 - Not built yet: the Mirror volume-button shutter, the dark/blurry retake panel, the screenshot "Is this you?" question (#50).
