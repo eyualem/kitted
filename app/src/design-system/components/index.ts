@@ -18,6 +18,7 @@ export {
   UserBubble,
   PhotoBubble,
   NeckDownPhoto,
+  neckDownAspect,
   DayStamp,
   type StylistMessageProps,
   type PhotoBubbleProps,

@@ -142,6 +142,8 @@ export const fixed = {
   /** Share watermark (white @ 60%). */
   watermark: 'rgba(255, 255, 255, 0.60)',
   white: '#FFFFFF',
+  /** The photo viewer's cover (S13). */
+  black: '#000000',
 } as const;
 
 /**

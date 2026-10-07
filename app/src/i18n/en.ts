@@ -68,6 +68,8 @@ const addedInBuild = {
   // Time formats (no Intl on Hermes): "Thursday 8:00 am", "Oct 14, 8:00 am", "7:42"
   'fmt.weekdays': 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
   'fmt.months': 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
+  'fmt.monthsLong': 'January,February,March,April,May,June,July,August,September,October,November,December',
+  'fmt.longDate': '{month} {day}',
   'fmt.am': 'am',
   'fmt.pm': 'pm',
   'fmt.stampRecent': '{weekday} {time} {ampm}',
@@ -134,6 +136,9 @@ const addedInBuild = {
   'added.a11y.removed': '{name}, removed.',
   'added.a11y.undo': 'Undo {name}',
   'added.a11y.addBack': 'Add back {name}',
+  // S13 photo viewer: "Date · October 22"; VoiceOver uses a11y.photo with the date.
+  'viewer.caption': '{occasion} · {date}',
+  'viewer.a11y.page': 'Photo {n} of {total}',
   // S10 entry on the partial card's finish row (no remembered pair).
   'partial.a11y.pick': 'Pick shoes from your closet',
 } as const;

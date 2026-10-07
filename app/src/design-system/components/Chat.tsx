@@ -128,6 +128,11 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
 /** The mockup pads the feet by 1.2% of the image height (placePhoto, mode "neck"). */
 const FOOT_PAD = 0.012;
 
+/** width / height of a photo's neck-down region (the full image width over the neck→feet span). */
+export function neckDownAspect(crop: PhotoCrop, aspect: number): number {
+  return aspect / Math.max(0.05, crop.foot + FOOT_PAD - crop.neck);
+}
+
 /**
  * Where to put the image inside a W×H frame so neck→feet fills the height, centered on the
  * body, never exposing an image edge (mockup `placePhoto`, mode "neck"; 03 §8).

@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { PhotoViewer } from '@/features/photoViewer/PhotoViewer';
 
-// S13 · Photo viewer (02-screens.md). Built in P2.
-export default function PhotoViewerScreen() {
-  return <Placeholder id="S13" name="Photo viewer" phase="P2" kind="cover" />;
-}
+// S13 Photo viewer (02 S13).
+export default PhotoViewer;
