@@ -14,6 +14,7 @@ import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
 import { sessionClock } from '@/state/session';
+import { setToastFloor } from '@/features/toast/toast';
 import { Composer } from './Composer';
 import { COMPOSER_BOTTOM, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
@@ -56,6 +57,13 @@ export function StylistScreen() {
   // A card that changes from a sheet (S21 "Update score", S10 a pair of shoes) grows while the
   // sheet closes, and the dismissal swallows that scroll. Follow it again once the sheet is gone
   // (~350 ms on iOS 26; focus fires at the start of the dismissal). DECISIONS-LOG #34.
+  const dockTop = useRef(0);
+  useFocusEffect(
+    useCallback(() => {
+      setToastFloor(dockTop.current);
+      return () => setToastFloor(0);
+    }, []),
+  );
   useFocusEffect(
     useCallback(() => {
       const timer = setTimeout(() => {
@@ -97,7 +105,15 @@ export function StylistScreen() {
         keyboardDismissMode="interactive"
         contentInsetAdjustmentBehavior="never"
       />
-      <Animated.View style={[styles.dock, dockStyle]} pointerEvents="box-none">
+      <Animated.View
+        style={[styles.dock, dockStyle]}
+        pointerEvents="box-none"
+        onLayout={(e) => {
+          // Toasts sit above the composer here (its top, measured from the screen bottom at rest).
+          dockTop.current = COMPOSER_BOTTOM + e.nativeEvent.layout.height;
+          setToastFloor(dockTop.current);
+        }}
+      >
         <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" />
         <Composer mode={mode} onCamera={openSamples} />
       </Animated.View>

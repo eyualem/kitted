@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaFrameContext, SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { ThemeProvider, setAppAppearance, useTheme } from '@/design-system';
 import { DEMO_ENABLED } from '@/demo/config';
+import { ToastHost } from '@/features/toast/ToastHost';
 import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
 import { boot } from '@/state/boot';
@@ -42,7 +43,10 @@ export default function RootLayout() {
     <ThemeProvider scheme={forcedTheme ?? undefined}>
       <WebFrame>
         <NavThemeFromTokens>
-          <RootStack booted={booted} />
+          <View style={{ flex: 1 }}>
+            <RootStack booted={booted} />
+            <ToastHost />
+          </View>
         </NavThemeFromTokens>
       </WebFrame>
     </ThemeProvider>

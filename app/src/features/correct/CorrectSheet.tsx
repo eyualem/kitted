@@ -16,6 +16,7 @@ import { garmentIconType, garmentHex, garmentLabel } from '@/features/fitcheck/l
 import { fitCheck } from '@/features/fitcheck/session';
 import { ScoreMoveLine } from '@/features/sheet/ScoreMoveLine';
 import { SheetList as List, SheetScaffold } from '@/features/sheet/SheetScaffold';
+import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 import { fitField, typeOptions, volumeWord, type FieldOption } from './fields';
 
@@ -64,7 +65,11 @@ export function CorrectSheet() {
   const save = async () => {
     if (reason === 'fix' && skipTarget) await fitCheck.hideFix(row.id, skipTarget);
     else if (reason === 'score' && feel) await fitCheck.scoreFeedback(row.id, feel);
-    else if (draft) await fitCheck.saveCorrection(row.id, 'remove' in draft ? { garmentIndex: draft.index, remove: true } : { garmentIndex: draft.index, field: draft.field, value: draft.value });
+    else if (draft) {
+      const r = await fitCheck.saveCorrection(row.id, 'remove' in draft ? { garmentIndex: draft.index, remove: true } : { garmentIndex: draft.index, field: draft.field, value: draft.value });
+      // "Saved to your tan chinos." when a closet item took the change, else "Correction saved." (02 D9).
+      if (r) showToast(r.itemName ? t('nqr.toast.saved', { item: r.itemName.toLowerCase() }) : t('nqr.toast.generic'));
+    }
     router.back();
   };
 

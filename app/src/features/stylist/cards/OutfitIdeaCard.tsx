@@ -6,28 +6,35 @@ import { GarmentIcon, KButton, KCard, KCardSection, KText, TagLine, useTheme } f
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { garmentIconType } from '@/features/fitcheck/labels';
+import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 import { dayKey } from '@kitted/core';
 import { sessionClock } from '@/state/session';
 
 export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
   const { isAccessibilitySize } = useTheme();
-  const data = useLive(['outfits', 'closet'], async () => {
+  const data = useLive(['outfits', 'closet', 'wearLog'], async () => {
     const o = await store.outfits.get(outfitId);
     const closet = await store.closet.all();
-    return o ? { o, items: o.itemIds.map((id) => closet.find((c) => c.id === id)).filter((c) => !!c) } : null;
+    const today = await store.wearLog.get(dayKey(sessionClock.nowMs(), sessionClock.offset));
+    return o ? { o, items: o.itemIds.map((id) => closet.find((c) => c.id === id)).filter((c) => !!c), wearing: today?.outfitId === outfitId } : null;
   }, [outfitId]);
-  const [wearing, setWearing] = useState(false);
   const [width, setWidth] = useState(0);
   if (!data) return null;
-  const { o, items } = data;
+  const { o, items, wearing } = data;
   const cols = isAccessibilitySize ? 2 : 4;
   const tile = width > 0 ? Math.floor((width - 8 * (cols - 1)) / cols) : 78;
   const names = items.map((i) => i!.name.toLowerCase()).join(', ');
+  // "Logged for today." with Undo, which puts back whatever today's log held before (02 S1).
   const wear = async () => {
-    setWearing(true);
     const now = sessionClock.nowMs();
-    await store.wearLog.put({ day: dayKey(now, sessionClock.offset), fitCheckId: null, outfitId, createdAt: now });
+    const day = dayKey(now, sessionClock.offset);
+    const before = await store.wearLog.get(day);
+    await store.wearLog.put({ day, fitCheckId: null, outfitId, createdAt: now });
+    showToast(t('toast.logged'), async () => {
+      if (before) await store.wearLog.put(before);
+      else await store.wearLog.delete(day);
+    });
   };
   return (
     <KCard
@@ -58,7 +65,7 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
           </KText>
         ) : null}
         <View style={{ flexDirection: 'row', gap: 8 }}>
-          <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} size="regular" disabled={wearing} onPress={() => void wear()} />
+          <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} icon={wearing ? 'check' : undefined} size="regular" disabled={wearing} onPress={() => void wear()} />
           <KButton title={t('idea.swap')} size="regular" kind="secondary" />
         </View>
       </KCardSection>
