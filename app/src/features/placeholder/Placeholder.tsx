@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconButton, KText, space, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
+import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 
 export type PlaceholderKind = 'tab' | 'push' | 'sheet' | 'cover';
 
@@ -22,6 +23,12 @@ export function Placeholder({ id, name, phase, kind, note }: PlaceholderProps) {
   const insets = useSafeAreaInsets();
   const modal = kind === 'sheet' || kind === 'cover';
   const top = kind === 'cover' ? insets.top + space.s : kind === 'sheet' ? space.l : 0;
+
+  if (kind === 'sheet') {
+    return (
+      <SheetScaffold title={t('demo.placeholder.title', { id, name })} subtitle={t('demo.placeholder.body', { phase })} />
+    );
+  }
 
   const content = (
     <>
@@ -46,8 +53,8 @@ export function Placeholder({ id, name, phase, kind, note }: PlaceholderProps) {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: top }]}>
-      {/* Modals use a plain View: a ScrollView inside an iOS formSheet drew nothing on SDK 57
-          even though its frames were correct. Open issue for P2's real sheets (DECISIONS-LOG #14). */}
+      {/* Covers use a plain View; sheets use SheetScaffold (a ScrollView inside a wrapper View
+          is moved out of view by react-native-screens, DECISIONS-LOG #14). */}
       {modal ? (
         <View style={styles.body}>{content}</View>
       ) : (
