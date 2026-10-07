@@ -65,6 +65,16 @@ const addedInBuild = {
   'sum.notSeen.held': 'the {held} in your hand',
   'sum.notSeen.generic': 'the same outfit',
   'card.noFixes': 'No quick fixes for this one.',
+  // Re-check prompt pieces (recheck.prompt = "{fixQuestion} Send it. I'll only re-read the {slotWord}.")
+  'recheck.q.held': '{held} on?',
+  'recheck.q.generic': 'Made the change?',
+  'recheck.slot.outerwear': 'layer',
+  'recheck.slot.top': 'top',
+  'recheck.slot.bottom': 'pants',
+  'recheck.slot.footwear': 'shoes',
+  'recheck.slot.any': 'change',
+  'recheck.fixPast.held': 'wear it',
+  'recheck.fixPast.generic': 'make the change',
   // "Why this score" rows (rule names in plain words, from rubric/v3.md)
   'why.rounded': 'Rounded to the nearest half',
   'why.adjust': 'Score limits',
