@@ -18,6 +18,8 @@ export interface ScoreBlockProps {
   verdict?: string;
   /** The full partial label, e.g. t('partial.label.shoes') (replaces the verdict). */
   partialLabel?: string;
+  /** The partial check was finished (shoe snap or closet pick): a check mark instead of the dashed square. */
+  partialDone?: boolean;
   /** false for the "Not quite right?" preview variant. */
   showOutOf?: boolean;
   /** Override the derived word (normally leave it). */
@@ -25,7 +27,7 @@ export interface ScoreBlockProps {
   numeralSize?: number;
 }
 
-export function ScoreBlock({ score, verdict, partialLabel, showOutOf = true, word, numeralSize = numeralSizes.hero }: ScoreBlockProps) {
+export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutOf = true, word, numeralSize = numeralSizes.hero }: ScoreBlockProps) {
   const { isAccessibilitySize } = useTheme();
   const resolvedWord = word ?? scoreWordLabel(score);
 
@@ -54,7 +56,7 @@ export function ScoreBlock({ score, verdict, partialLabel, showOutOf = true, wor
       <View style={{ flexShrink: 1, gap: 4, paddingBottom: isAccessibilitySize ? 0 : 4 }}>
         <KText role="scoreWord">{resolvedWord}</KText>
         {partialLabel ? (
-          <PartialLabel label={partialLabel} />
+          <PartialLabel label={partialLabel} done={partialDone} />
         ) : verdict ? (
           <KText role="verdict">{verdict}</KText>
         ) : null}
@@ -63,11 +65,12 @@ export function ScoreBlock({ score, verdict, partialLabel, showOutOf = true, wor
   );
 }
 
-/** "Partial check: shoes not included" with the dashed-square symbol. Always words, never just the icon. */
-export function PartialLabel({ label }: { label: string }) {
+/** "Partial check: shoes not included" with the dashed-square symbol; once finished, "Full check
+ *  (shoes from your closet)" with a check mark. Always words, never just the icon. */
+export function PartialLabel({ label, done }: { label: string; done?: boolean }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-      <Icon name="partial" size="small" color="ink" scalesWithText />
+      <Icon name={done ? 'checkFilled' : 'partial'} size="small" color="ink" scalesWithText />
       <KText role="partialLabel" style={{ flexShrink: 1 }}>{label}</KText>
     </View>
   );

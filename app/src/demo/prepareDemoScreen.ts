@@ -11,7 +11,7 @@ import { completeOnboarding } from '@/features/onboarding/complete';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
-import { STORY_FIRST_CHECK, STORY_RECHECK, type ScreenScenario } from './scenarios';
+import { STORY_FIRST_CHECK, STORY_PARTIAL, STORY_RECHECK, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
@@ -36,6 +36,16 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
     ],
   },
   11: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 's24', occasion: 'everyday' }] },
+  21: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  22: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 's24', occasion: 'everyday' }] },
+  23: {
+    steps: [
+      { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
+      { at: '2026-10-22T07:49:00', do: 'recheckPrompt' },
+      { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 'p01a' },
+    ],
+  },
+  24: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   12: { asOf: '2026-10-22T08:01:00', steps: [] },
   13: { asOf: '2026-10-22T08:05:00', steps: [] },
   18: {
@@ -85,7 +95,7 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       await new Promise((r) => setTimeout(r, 30));
       fitCheck.selectOccasion(step.occasion);
     } else {
-      await fitCheck.start({ mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : undefined });
+      await fitCheck.start({ mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL });
     }
   }
   setDemoArgs({ ...getDemoArgs(), latency: args.latency });

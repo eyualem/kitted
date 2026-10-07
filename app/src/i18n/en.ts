@@ -134,6 +134,8 @@ const addedInBuild = {
   'added.a11y.removed': '{name}, removed.',
   'added.a11y.undo': 'Undo {name}',
   'added.a11y.addBack': 'Add back {name}',
+  // S10 entry on the partial card's finish row (no remembered pair).
+  'partial.a11y.pick': 'Pick shoes from your closet',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

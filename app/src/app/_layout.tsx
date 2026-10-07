@@ -81,7 +81,7 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/why/[checkId]" options={sheet([0.78, 1])} />
         <Stack.Screen name="sheets/correct/[checkId]" options={sheet([1])} />
         <Stack.Screen name="sheets/added/[checkId]" options={sheet([0.5, 1])} />
-        <Stack.Screen name="sheets/pick-shoes/[checkId]" options={sheet([0.5])} />
+        <Stack.Screen name="sheets/pick-shoes/[checkId]" options={sheet([0.5, 1])} />
         <Stack.Screen name="sheets/tell-me/[checkId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/edit-item/[id]" options={sheet([1])} />
         <Stack.Screen name="sheets/rotation" options={sheet([0.5])} />

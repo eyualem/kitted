@@ -2,6 +2,8 @@
 //   deep-link / web query  >  iOS launch arguments (UserDefaults)  >  build defaults.
 // Values arrive as strings (or numbers from UserDefaults); everything is validated here.
 
+import { SCREENS } from './scenarios';
+
 export type Seed = 'full' | 'empty';
 export type Theme = 'light' | 'dark';
 
@@ -10,7 +12,7 @@ export interface DemoArgs {
   clearAge: boolean;
   seed: Seed | null;
   skipOnboarding: boolean;
-  /** 1–20, or null. */
+  /** A demo screen number (SCREENS), or null. */
   demoScreen: number | null;
   /** Mock reading time in seconds, or 'real' (the photo's own latency). */
   latency: number | 'real';
@@ -102,7 +104,7 @@ export function parseArgs(raw: RawArgs): Partial<DemoArgs> {
         break;
       }
       case 'demoScreen': {
-        const n = int(value, 1, 20);
+        const n = int(value, 1, SCREENS.length);
         if (n !== null) out.demoScreen = n;
         break;
       }

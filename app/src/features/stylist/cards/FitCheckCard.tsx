@@ -76,7 +76,10 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
   const closet = useCloset() ?? [];
   const score = row.score ?? 0;
   const partial = row.isPartial;
-  const partialText = row.notRated.includes('bottom half') ? t('partial.label.topOnly') : t('partial.label.shoes');
+  const finished = !partial && (row.snapState === 'snapped' || row.snapState === 'closetPick');
+  const partialText = finished
+    ? t(row.snapState === 'closetPick' ? 'partial.fullCloset' : 'partial.full')
+    : row.notRated.includes('bottom half') ? t('partial.label.topOnly') : t('partial.label.shoes');
   const fixes = row.fixes;
   const top = fixes[0];
   const dialed = fixes.length === 0;
@@ -110,7 +113,7 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
     occasion: occasionLabel(row.occasion),
     score: spokenScore(score),
     word: scoreWordLabel(score),
-    partial: partial ? `${partialText}. ` : '',
+    partial: partial || finished ? `${partialText}. ` : '',
     summary: row.explanation ?? '',
     fix: top?.copy ?? t('card.noFixes'),
     tag: top?.tag ?? '',
@@ -128,9 +131,9 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
           right={occasionLabel(row.occasion)}
           onPressRight={go.occasion}
         />
-        {partial ? (
+        {partial || finished ? (
           <>
-            <ScoreBlock score={score} partialLabel={partialText} />
+            <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} />
             {row.explanation ? <KText variant="subheadline" color="ink2">{row.explanation}</KText> : null}
           </>
         ) : (
@@ -187,7 +190,11 @@ function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] 
   const f = row.details.finish;
   const item = f?.suggestedItemId ? closet.find((c) => c.id === f.suggestedItemId) : undefined;
   const weekday = f?.weekday !== null && f?.weekday !== undefined ? weekdayName(f.weekday) : null;
-  const second = item && weekday ? t('partial.finish.same', { weekday }) : t('partial.finish.snapOrPick');
+  const remembered = item && weekday ? { item, weekday } : null;
+  const hasShoes = closet.some((c) => c.slot === 'shoes' && !c.isDeleted);
+  const second = remembered
+    ? t('partial.finish.same', { weekday: remembered.weekday })
+    : hasShoes ? t('partial.finish.snapOrPick') : t('partial.finish.snapOnly');
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
       <KText variant="subheadline" color="ink2" style={{ flexShrink: 1 }}>
@@ -197,9 +204,17 @@ function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] 
         {`\n${second}`}
       </KText>
       <View style={{ marginLeft: 'auto', flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-        {item && weekday ? (
-          <FinishTile filled label={t('partial.a11y.useSame', { shoes: item.name.toLowerCase(), weekday })} onPress={() => void fitCheck.pickShoes(row.id, item.id)}>
-            <GarmentIcon type={garmentIconType(item.garment)} color={item.hex} size={36} />
+        {remembered ? (
+          <FinishTile
+            filled
+            label={t('partial.a11y.useSame', { shoes: remembered.item.name.toLowerCase(), weekday: remembered.weekday })}
+            onPress={() => void fitCheck.pickShoes(row.id, remembered.item.id)}
+          >
+            <GarmentIcon type={garmentIconType(remembered.item.garment)} color={remembered.item.hex} size={36} />
+          </FinishTile>
+        ) : hasShoes ? (
+          <FinishTile filled label={t('partial.a11y.pick')} onPress={() => router.push(`/sheets/pick-shoes/${row.id}`)}>
+            <Icon name="shoes" size="regular" color={colors.ink} />
           </FinishTile>
         ) : null}
         <FinishTile label={t('partial.a11y.snap')} onPress={() => router.push(`/sheets/sample-photos?mode=shoeSnap&parent=${row.id}`)}>

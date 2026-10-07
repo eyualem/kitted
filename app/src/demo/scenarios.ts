@@ -28,6 +28,8 @@ const FULL_NOW = '2026-10-22T12:20:00';
 /** The scripted first-run story's check ids (seed.json's story has none; these are ours). */
 export const STORY_FIRST_CHECK = 'story-first';
 export const STORY_RECHECK = 'story-recheck';
+/** Screen 11's live partial check (s24) inside the full scenario. */
+export const STORY_PARTIAL = 'story-partial';
 
 export const SCREENS: readonly ScreenScenario[] = [
   { n: 1, name: 'Welcome', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome' },
@@ -50,6 +52,11 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 18, name: 'Paywall', id: 'P1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T09:44:00', href: '/paywall', under: '/stylist' },
   { n: 19, name: 'Limit reached', id: 'S17', scenario: 'full', onboarded: true, now: '2026-10-22T21:12:00', freeChecksUsed: 1, href: '/stylist' },
   { n: 20, name: 'Share card', id: 'S12', scenario: 'full', onboarded: true, now: '2026-10-22T07:51:00', href: '/share/FC3R', under: '/stylist' },
+  // Not drawn in the mockups (21+): sheets and covers built from 02's text alone.
+  { n: 21, name: 'Added to your closet', id: 'S11', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/added/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  { n: 22, name: 'Which shoes?', id: 'S10', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: `/sheets/pick-shoes/${STORY_PARTIAL}`, under: '/stylist' },
+  { n: 23, name: 'What changed?', id: 'S21', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: `/sheets/tell-me/${STORY_RECHECK}`, under: '/stylist' },
+  { n: 24, name: 'Photo viewer', id: 'S13', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/photo/${STORY_FIRST_CHECK}`, under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
