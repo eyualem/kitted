@@ -80,7 +80,9 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
   const partialText = finished
     ? t(row.snapState === 'closetPick' ? 'partial.fullCloset' : 'partial.full')
     : row.notRated.includes('bottom half') ? t('partial.label.topOnly') : t('partial.label.shoes');
-  const fixes = row.fixes;
+  // Two rule targets can land on the same move ("Swap to your Navy crewneck" fixes both "top too
+  // big" and "top vs your style"); rubric.py lists it twice, the card shows it once (#42).
+  const fixes = row.fixes.filter((f, i, all) => all.findIndex((g) => g.copy === f.copy) === i);
   const top = fixes[0];
   const dialed = fixes.length === 0;
   const nextLevel = row.details.nextLevel?.[0];

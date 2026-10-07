@@ -45,7 +45,10 @@ export interface ServiceDeps {
 
 export interface CheckRequest {
   mode: CheckMode;
-  photoId: string;
+  /** A bundled demo photo… */
+  photoId?: string;
+  /** …or a real photo (picker / camera file), prepped on the phone before anything is sent. */
+  photoUri?: string;
   /** Re-check and shoe snap: the check they belong to. */
   parentCheckId?: string;
   occasion?: OccasionKey;
@@ -55,7 +58,9 @@ export interface CheckRequest {
 
 export type StartOutcome =
   | { outcome: 'scored' | 'failed' | 'notScored'; checkId: string }
-  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' };
+  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' }
+  /** 02 S3: nothing was sent and nothing counts. */
+  | { outcome: 'photoProblem'; reason: 'noPerson' | 'multiplePeople' | 'couldNotFrame' };
 
 export interface CorrectionDraft {
   garmentIndex: number;
@@ -103,9 +108,11 @@ export function createFitCheckService(deps: ServiceDeps) {
       id: deps.ids('M'), text: null, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {}, ...m,
     } as ChatMessage);
 
-  const insertReading = async (reading: Reading, source: ReadingSourceKind, imageHash: string, derivedFrom: string | null, latencyMs = 0) => {
+  const insertReading = async (
+    reading: Reading, source: ReadingSourceKind, imageHash: string, derivedFrom: string | null, latencyMs = 0, model = 'demo-bundled', promptVersion = 'v3',
+  ) => {
     const row: ReadingRow = {
-      id: deps.ids('R'), imageHash, source, reading, model: 'demo-bundled', promptVersion: 'v3', schemaVersion: 'v3',
+      id: deps.ids('R'), imageHash, source, reading, model, promptVersion, schemaVersion: 'v3',
       latencyMs, createdAt: clock.nowMs(), derivedFrom,
     };
     await store.readings.put(row);
@@ -257,11 +264,19 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
     let reading: Reading | null = null;
     let fail: FailCode | null = null;
+    let model = 'demo-bundled';
+    let promptVersion = 'v3';
+    let latencyMs = 0;
     const work = (async () => {
       for await (const e of deps.source.read(image, kind, { signal: abort.signal })) {
         if (timedOut) break;
         if (e.type === 'slotFound') gotSlot = true;
-        if (e.type === 'reading') reading = e.reading;
+        if (e.type === 'reading') {
+          reading = e.reading;
+          model = e.model;
+          promptVersion = e.promptVersion;
+        }
+        if (e.type === 'meta') latencyMs = Math.round(e.latencySeconds * 1000);
         if (e.type === 'failed') fail = e.code;
         dispatch({ t: 'read', attempt: my, e });
       }
@@ -273,9 +288,9 @@ export function createFitCheckService(deps: ServiceDeps) {
       handles.forEach((h) => deps.scheduler.clearTimer(h));
       if (current?.abort === abort) current = null;
     }
-    if (timedOut) return { reading: null, fail: 'timeout' as FailCode, attempt: my };
-    if (abort.signal.aborted) return { reading: null, fail: null, attempt: my, cancelled: true };
-    return { reading: reading as Reading | null, fail: fail as FailCode | null, attempt: my };
+    if (timedOut) return { reading: null, fail: 'timeout' as FailCode, attempt: my, model, promptVersion, latencyMs };
+    if (abort.signal.aborted) return { reading: null, fail: null, attempt: my, cancelled: true, model, promptVersion, latencyMs };
+    return { reading: reading as Reading | null, fail: fail as FailCode | null, attempt: my, model, promptVersion, latencyMs };
   }
 
   async function failRow(checkId: string, code: FailCode) {
@@ -289,14 +304,17 @@ export function createFitCheckService(deps: ServiceDeps) {
     const parent = req.parentCheckId ? await store.fitChecks.get(req.parentCheckId) : null;
     if ((req.mode === 'recheck' || req.mode === 'shoeSnap') && !parent) return { outcome: 'noParent' };
     if (req.mode === 'check' && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
-    const prep = await deps.prep.prepare({ kind: 'demo', photoId: req.photoId });
+    const prep = await deps.prep.prepare(req.photoUri ? { kind: 'file', uri: req.photoUri } : { kind: 'demo', photoId: req.photoId ?? '' });
+    if (prep.status === 'noPerson' || prep.status === 'multiplePeople' || prep.status === 'couldNotFrame') return { outcome: 'photoProblem', reason: prep.status };
     if (prep.status !== 'ok') return { outcome: prep.status === 'unknownPhoto' ? 'unknownPhoto' : 'notImplemented' };
     const image = prep.image;
+    // His photo in the thread: the bundled id, or the neck-down copy kept on the phone.
+    const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.neckDownUri ?? null, aspect: image.aspect ?? null };
     const lastOccasion = ((await store.getKv(KV.lastOccasion)) as OccasionKey | null) ?? 'everyday';
     const occasion: OccasionKey = req.mode !== 'check' && parent ? parent.occasion : req.occasion ?? lastOccasion;
 
     if (req.mode === 'shoeSnap' && parent) {
-      await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { photoId: req.photoId, snap: true } });
+      await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { ...photoPayload, snap: true } });
       const r = await runRead(parent.id, image, 'shoeSnap', 'shoeSnap', occasion);
       dispatch({ t: 'end' });
       if (!r.reading) return { outcome: 'failed', checkId: parent.id };
@@ -308,10 +326,11 @@ export function createFitCheckService(deps: ServiceDeps) {
     const checkId = req.checkId ?? deps.ids('FC');
     const row = emptyRow({
       id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, demoPhotoId: image.photoId, imageHash: image.sha256,
+      photoFile: image.neckDownUri ?? null, thumbFile: image.thumbUri ?? null,
       parentId: parent?.id ?? null, isFirstCheck: req.mode === 'check' && priorChecks.length === 0,
     });
     await store.fitChecks.put(row);
-    await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: checkId, payload: { photoId: req.photoId } });
+    await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: checkId, payload: photoPayload });
     await message({ createdAt: now + 1, role: 'stylist', kind: 'card', cardType: req.mode === 'recheck' ? 'recheck' : 'fitCheck', fitCheckId: checkId });
 
     if (req.mode === 'check') {
@@ -341,7 +360,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (req.mode === 'recheck' && parent) {
       done = await finalizeRecheck(fresh, parent, r.reading, image);
     } else {
-      const readingRow = await insertReading(r.reading, 'full', image.sha256, null);
+      const readingRow = await insertReading(r.reading, 'full', image.sha256, null, r.latencyMs, r.model, r.promptVersion);
       done = await finalizeCheck(fresh, r.reading, readingRow, false);
     }
     dispatch({ t: 'end' });
@@ -373,9 +392,11 @@ export function createFitCheckService(deps: ServiceDeps) {
     /** S19 "Try again": re-reads the same photo; nothing was counted the first time. */
     async retry(checkId: string): Promise<StartOutcome> {
       const row = await store.fitChecks.get(checkId);
-      if (!row || row.status !== 'failed' || !row.demoPhotoId) return { outcome: 'noParent' };
+      if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
       await store.fitChecks.patch(checkId, { status: 'scoring', details: { ...row.details, failCode: undefined } });
-      const prep = await deps.prep.prepare({ kind: 'demo', photoId: row.demoPhotoId });
+      const prep = await deps.prep.prepare(
+        row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, neckDownUri: row.photoFile, thumbUri: row.thumbFile },
+      );
       if (prep.status !== 'ok') return { outcome: 'unknownPhoto' };
       const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
       const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion);
@@ -386,7 +407,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       dispatch({ t: 'scored', attempt: r.attempt });
       const fresh = (await store.fitChecks.get(checkId))!;
       if (parent) await finalizeRecheck(fresh, parent, r.reading, prep.image);
-      else await finalizeCheck(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null), false);
+      else await finalizeCheck(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
       dispatch({ t: 'end' });
       return { outcome: 'scored', checkId };
     },

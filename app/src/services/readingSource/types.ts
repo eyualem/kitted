@@ -11,6 +11,13 @@ export interface PreparedImage {
   /** SHA-256 of the ORIGINAL bytes (the cache key, "same photo, same score"). */
   sha256: string;
   uploadUri: string | null;
+  /** The upload JPEG as base64 (real photos; the live source sends it). */
+  uploadBase64?: string;
+  /** Kept on the phone: the neck-down copy and its thumbnail (real photos only). */
+  neckDownUri?: string;
+  thumbUri?: string;
+  /** width / height of the neck-down copy. */
+  aspect?: number;
 }
 
 export type SlotKind = 'top' | 'outerwear' | 'held' | 'bottom' | 'footwear';

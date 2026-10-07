@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconButton, KText, NeckDownPhoto, fixed, neckDownAspect } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { demoPhoto, type DemoPhoto } from '@/demo/demoPhotos';
+import { shownPhoto, type ShownPhoto } from '@/demo/demoPhotos';
 import { occasionLabel } from '@/features/stylist/thread';
 import { t } from '@/i18n/en';
 import { longDate } from '@/i18n/format';
@@ -29,8 +29,12 @@ export function PhotoViewer() {
     const row = await store.fitChecks.get(checkId);
     if (!row) return null;
     const msgs = (await store.chat.all()).filter((m) => m.fitCheckId === checkId && m.kind === 'photo');
-    const snapId = msgs.find((m) => m.payload.snap === true)?.payload.photoId;
-    const photos = [demoPhoto(row.demoPhotoId), typeof snapId === 'string' ? demoPhoto(snapId) : undefined].filter((p): p is DemoPhoto => !!p);
+    const first = msgs.find((m) => m.payload.snap !== true);
+    const snap = msgs.find((m) => m.payload.snap === true);
+    const photos = [
+      shownPhoto(row.demoPhotoId, row.photoFile, first?.payload.aspect),
+      snap ? shownPhoto(snap.payload.photoId, snap.payload.photoUri, snap.payload.aspect) : undefined,
+    ].filter((p): p is ShownPhoto => !!p);
     return { photos, caption: t('viewer.caption', { occasion: occasionLabel(row.occasion), date: longDate(row.createdAt, sessionClock.offset) }), date: longDate(row.createdAt, sessionClock.offset) };
   }, [checkId]);
 
@@ -77,12 +81,13 @@ export function PhotoViewer() {
 
 /** One photo: fits the screen between the X and the caption; pinch or double-tap to zoom; pull down to close. */
 function ZoomPage({ photo, width, height, insets, label, onClose }: {
-  photo: DemoPhoto; width: number; height: number; insets: { top: number; bottom: number }; label: string; onClose: () => void;
+  photo: ShownPhoto; width: number; height: number; insets: { top: number; bottom: number }; label: string; onClose: () => void;
 }) {
   const scroll = useRef<ScrollView>(null);
   const zoomed = useRef(false);
   const lastTap = useRef(0);
-  const regionAspect = neckDownAspect(photo.crop, photo.aspect);
+  // A bundled photo: its neck-down region's aspect. A kept copy is already neck-down.
+  const regionAspect = photo.crop && photo.aspect ? neckDownAspect(photo.crop, photo.aspect) : photo.aspect ?? 0.5;
   const maxH = height - insets.top - insets.bottom;
   const w = Math.min(width, maxH * regionAspect);
   const h = w / regionAspect;

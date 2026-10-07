@@ -4,8 +4,9 @@ import { useSyncExternalStore } from 'react';
 import { store } from '@/data/db';
 import { demoEntitlements } from '@/services/entitlements';
 import { newId } from '@/services/ids';
-import { demoImagePrep } from '@/services/imagePrep/demo';
+import { imagePrep } from '@/services/imagePrep/real';
 import { createQuota } from '@/services/quota';
+import { LIVE_READING, routedSource } from '@/services/readingSource/live';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
 import { getDemoArgs, sessionClock } from '@/state/session';
@@ -22,7 +23,8 @@ export const quota = createQuota({
   store,
   clock: sessionClock,
   isPro: () => demoEntitlements.isPro() || getDemoArgs().pro,
-  checksUsedOverride: () => getDemoArgs().freeChecksUsed,
+  // Testing real readings on the founder's phone: the daily limit doesn't apply (DEV + key only).
+  checksUsedOverride: () => getDemoArgs().freeChecksUsed ?? (LIVE_READING ? 0 : null),
 });
 
 let timerOverride: Partial<TimerConfig> = {};
@@ -33,8 +35,8 @@ export function setTimerOverride(o: Partial<TimerConfig>): void {
 
 export const fitCheck = createFitCheckService({
   store,
-  source: readingSource,
-  prep: demoImagePrep,
+  source: routedSource(readingSource),
+  prep: imagePrep,
   quota,
   clock: sessionClock,
   scheduler: realScheduler,

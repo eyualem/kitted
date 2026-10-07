@@ -52,9 +52,21 @@ export function StylistScreen() {
   const footerStyle = useAnimatedStyle(() => ({ height: Math.max(THREAD_PAD[mode], COMPOSER_BOTTOM + dockH.value + DOCK_GAP) + lift.value }));
   const atBottom = useRef(true);
   const first = useRef(true);
+  // Only his finger decides whether the thread follows: the momentum end of our own animated
+  // scrollToEnd (content still growing under it) used to read as "scrolled up" and stop it.
+  const dragging = useRef(false);
   const onUserScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
     atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < 80;
+  };
+  const onDragEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    onUserScroll(e);
+    if (!e.nativeEvent.velocity?.y) dragging.current = false;
+  };
+  const onMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!dragging.current) return;
+    dragging.current = false;
+    onUserScroll(e);
   };
 
   // A card that changes from a sheet (S21 "Update score", S10 a pair of shoes) grows while the
@@ -95,8 +107,9 @@ export function StylistScreen() {
         ListFooterComponent={<Animated.View style={footerStyle} />}
         // Only his own scrolling decides whether the thread follows new messages; cards that
         // finish loading (content growing) keep it pinned to the newest message.
-        onScrollEndDrag={onUserScroll}
-        onMomentumScrollEnd={onUserScroll}
+        onScrollBeginDrag={() => (dragging.current = true)}
+        onScrollEndDrag={onDragEnd}
+        onMomentumScrollEnd={onMomentumEnd}
         onContentSizeChange={() => {
           if (atBottom.current) list.current?.scrollToEnd({ animated: !first.current });
         }}

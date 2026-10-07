@@ -3,7 +3,7 @@
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { PreparedImage } from '../readingSource/types';
 
-export type PhotoRef = { kind: 'demo'; photoId: string } | { kind: 'file'; uri: string };
+export type PhotoRef = { kind: 'demo'; photoId: string } | { kind: 'file'; uri: string } | { kind: 'retry'; sha256: string; neckDownUri: string | null; thumbUri: string | null };
 
 export type PrepResult =
   | { status: 'ok'; image: PreparedImage }
@@ -15,7 +15,7 @@ export interface ImagePrep {
 
 export const demoImagePrep: ImagePrep = {
   async prepare(photo) {
-    if (photo.kind === 'file') return { status: 'notImplemented' };
+    if (photo.kind !== 'demo') return { status: 'notImplemented' };
     const p = demoPhoto(photo.photoId);
     if (!p) return { status: 'unknownPhoto' };
     return { status: 'ok', image: { photoId: p.id, sha256: p.sha256, uploadUri: null } };

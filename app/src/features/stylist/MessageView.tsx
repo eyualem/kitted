@@ -5,7 +5,7 @@ import { Chip, ChipFlow, DayStamp, PhotoBubble, StylistMessage, UserBubble } fro
 import { store } from '@/data/db';
 import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
-import { demoPhoto } from '@/demo/demoPhotos';
+import { shownPhoto } from '@/demo/demoPhotos';
 import { useFitCheckSession } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { clockTime } from '@/i18n/format';
@@ -51,7 +51,7 @@ export function ThreadRow({ item }: { item: ThreadItem }) {
 function PhotoMessage({ m }: { m: ChatMessage }) {
   const session = useFitCheckSession();
   const row = useLive(['fitChecks'], () => (m.fitCheckId ? store.fitChecks.get(m.fitCheckId) : Promise.resolve(null)), [m.fitCheckId], m.fitCheckId);
-  const photo = demoPhoto(typeof m.payload.photoId === 'string' ? m.payload.photoId : row?.demoPhotoId);
+  const photo = shownPhoto(m.payload.photoId ?? row?.demoPhotoId, m.payload.photoUri ?? row?.photoFile, m.payload.aspect);
   if (!photo) return null;
   const snap = m.payload.snap === true;
   const reading = !!row && (row.status === 'scoring' || (snap && session.kind === 'reading' && session.checkId === row.id && session.mode === 'shoeSnap'));

@@ -155,6 +155,7 @@ const demoOnly = {
   'demo.samples.recheck': 'Pick the after photo.',
   'demo.samples.snap': 'Pick a photo to read the shoes from.',
   'demo.samples.a11y': 'Sample photo {n}',
+  'demo.samples.own': 'Choose from your photos',
 } as const;
 
 export const en = { ...enGenerated, ...addedInBuild, ...demoOnly } as const;
