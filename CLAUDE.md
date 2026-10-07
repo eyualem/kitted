@@ -140,7 +140,7 @@
 - Note: the floating gear with "Tools" at the top right is the Expo development build's own menu, not app code. It isn't in release builds. In demo runs the first tap after launch sometimes only dismisses its label.
 
 ### 2. P2 leftovers (small)
-1. **Rubric question for me:** correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once. (b) Two rules can pick the same fix; the card shows it once, but the engine should offer the next distinct fix (#46).
+1. **Rubric questions for me:** (a) correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once. (b) Two rules can pick the same fix; the card shows it once, but the engine should offer the next distinct fix (#46).
 2. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
