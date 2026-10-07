@@ -86,7 +86,7 @@
   - Mockups: `mockups/kitted-mockups.html` (20 screens). Inside each phone 1 CSS px = 1 pt.
 - **Name: KITTED.** Handles @kitted.app and @trykitted are free on TikTok/IG; trykitted.com and trykitted.app are free. Never use "getkitted" (an Australian shop).
 
-## Where things stand (Oct 7, 2026)
+## Where things stand (Oct 7, 2026, end of day)
 
 ### The app build (React Native + Expo SDK 57, TypeScript; iOS first)
 - **P0, the skeleton: done.**
@@ -97,7 +97,7 @@
 - **The scoring engine** (`app/packages/kitted-core`, pure TypeScript):
   - Matches `rubric.py` on all **5,694** parity cases.
   - It also has the day key (4 am rollover), the "Why" ledger, closet matching, re-check outcomes, corrections and partial-check merges.
-- **P2, Stylist chat and the fit check: mostly done.** It works on the iPhone Simulator and matches mockup screens 6–12 closely:
+- **P2, Stylist chat and the fit check: done (Oct 7), pending your spacing pick.** It works on the iPhone Simulator and matches mockup screens 6–12 closely:
   - **Screen 6:** the reading card.
   - **Screen 7:** the 8.0 "Sharp" card, with the fix → 9.0 and "Added 4 to Closet".
   - **Screen 8:** "Why 8.0" (the rows add up).
@@ -106,11 +106,14 @@
   - **Screen 11:** the partial check, 6.5, "Same shoes as Monday?".
   - **Screen 12:** Stylist home, with the morning outfit idea.
   - Also real: occasion changes re-score instantly; the same photo gets the same score; the daily limit; failures never use a check; the 9 s "Taking longer" and 14 s give-up timers.
+  - **Added Oct 7:** the "Added to your closet" sheet (Undo / Add back), "Which shoes?" (pick a pair for a partial check), "What changed?" (confirm a fix the re-check missed), the photo viewer, toasts ("Logged for today." with Undo, "Saved to your tan chinos."), and an extra-large-text pass.
+  - Undrawn sheets have demo screens: **21** Added to your closet · **22** Which shoes? · **23** What changed? · **24** Photo viewer.
+  - P2 report with screenshots: `screenshots/p2-report/index.html` (git-ignored).
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
   - Purchases: the paywall runs on a mock store (P6).
-- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 64 core tests and 100 app tests. All green.
+- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 64 core tests and 126 app tests (incl. automated copy checks). All green.
 
 ### Other workstreams
 - **Extraction test PASSED (Oct 6).** Log: `extraction-test/results/INDEX.md`.
@@ -136,15 +139,11 @@
 3. **Spacing pass: built, waiting for my pick.** Card padding 16/20, row gap 12, fix rows 12, gap between messages 16 (#30). Before/after of screens 7 and 12: `screenshots/spacing/compare.html` (git-ignored; regenerate with the simctl commands below). If I pick "before", revert commit `d698bdc`.
 - Note: the floating gear with "Tools" at the top right is the Expo development build's own menu, not app code. It isn't in release builds. In demo runs the first tap after launch sometimes only dismisses its label.
 
-### 2. Finish P2
-1. "Added to your closet" review sheet (S11): Undo / Add back via `fitCheck.setItemUndone`.
-2. "Which shoes?" sheet (S10): the shoe grid with "Last worn {weekday}" → `fitCheck.pickShoes`; "Not here? Snap them" opens the sample sheet in shoe-snap mode.
-3. "Didn't catch the change? Tell me" sheet (S21) → `fitCheck.confirmFixes`.
-4. Photo viewer (S13): a black cover, the neck-down photo, an X and an "Occasion · date" caption.
-5. Toasts: "Saved to your tan chinos.", Undo for auto-added items, "Logged for today."
-6. Automated copy checks over the strings and card output: no "AI stylist", no "unlimited", no emoji or ✓ ▾ ↑, no unfilled `{`, nothing above 9.5.
-7. An extra-large text check on screens 7–12 on the Simulator.
-8. A P2 report to me with screenshots.
+### 2. P2 leftovers (small)
+1. Your spacing pick (above).
+2. **Rubric question for me:** correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once.
+3. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
+4. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
 ### 3. Then P3 (camera, simulated) and P4 (onboarding)
 The phases and their acceptance checks are in `handoff/05-build-plan.md` §5. Every screen's layout and copy is in `handoff/02-screens.md`.
@@ -161,7 +160,7 @@ The phases and their acceptance checks are in `handoff/05-build-plan.md` §5. Ev
   - fill the map in `app/src/design-system/fontFiles.ts`
   - uncomment the expo-font plugin in `app/app.config.ts`
   - rebuild
-- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names and the VoiceOver lines. Skim it.
+- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names, the VoiceOver lines, and (new Oct 7) the closet-sheet rows ("Top · Regular fit"), the viewer caption ("Date · October 22") and "Pick shoes from your closet". Skim it.
 - **Already built; just confirm:**
   - The "Why" sheet's "Rounded to the nearest half · +0.25" line.
   - "Dialed in. Nothing to fix." only at 9+.
@@ -215,7 +214,7 @@ Exceptions:
 ## Docs map
 | File | What it's for | State |
 |---|---|---|
-| `handoff/DECISIONS-LOG.md` | Every decision and lesson since the build started (#1–30) | **Live**; append to it |
+| `handoff/DECISIONS-LOG.md` | Every decision and lesson since the build started (#1–39) | **Live**; append to it |
 | `handoff/01-product-brief.md` | Product, locked rules, voice | Reference |
 | `handoff/02-screens.md` | Every screen: layout, copy deck §5, states, VoiceOver | Reference (copy is generated into `app/src/i18n/`) |
 | `handoff/03-design-system.md` | Tokens, type, components, SF Symbols | Reference |
@@ -241,4 +240,7 @@ Exceptions:
   - SVG can't take iOS accessibility props; wrap it in a View.
   - Headless Chrome can't go narrower than about 500 px; `frame=1` boxes the app at 402 × 874.
 - **Run `npm run check`, then commit, as separate steps.** Chaining them once committed a type error.
+- **Large text:** at AX sizes rows stack (`isAccessibilitySize`), and control labels cap at 2× (`CONTROL_TEXT_MAX_SCALE`); wrapping 3-line button labels got clipped on iOS.
+- **A card that changes behind a sheet** needs a scroll-to-end after the sheet closes (Stylist does it on focus, 400 ms).
+- **`simctl io … screenshot` can fail silently** when the target file exists and is protected; write to a new path.
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
