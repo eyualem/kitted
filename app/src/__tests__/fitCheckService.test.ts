@@ -148,7 +148,7 @@ describe('partial check (s24, full scenario as of Oct 20 08:09)', () => {
   });
 
   it('pick the white sneakers from the closet → 7.0, full check', async () => {
-    const { store, svc, checkId } = await partialSetup();
+    const { svc, checkId } = await partialSetup();
     const row = (await svc.pickShoes(checkId, 'S1'))!;
     expect([row.score, row.rawScore, row.isPartial, row.snapState]).toEqual([7, 6.9, false, 'closetPick']);
     expect(row.fixes[0]!.to).toBe(7.5);

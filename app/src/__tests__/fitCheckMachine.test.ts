@@ -3,6 +3,7 @@ import { IDLE, pendingSlots, piecesCount, reduce, stageStates, type SessionState
 
 const start = reduce(IDLE, { t: 'start', checkId: 'FC-1', mode: 'check', occasion: 'everyday', attempt: 1 }) as Extract<SessionState, { kind: 'reading' }>;
 const tee = G('top', 'tee', 'white');
+const stageOf = (s: SessionState) => (s.kind === 'reading' ? s.stage : 'pieces');
 
 describe('reading session reducer', () => {
   it('starts on "Finding your pieces" with nothing found', () => {
@@ -16,10 +17,10 @@ describe('reading session reducer', () => {
     expect(piecesCount(s as never)).toEqual({ found: 1, total: 3 });
     expect(pendingSlots(s as never)).toEqual(['bottom']);
     s = reduce(s, { t: 'read', attempt: 1, e: { type: 'stage', stage: 'fit' } });
-    expect(stageStates((s as { stage: never }).stage)).toEqual(['done', 'now', 'pending', 'pending']);
+    expect(stageStates(stageOf(s))).toEqual(['done', 'now', 'pending', 'pending']);
     s = reduce(s, { t: 'read', attempt: 1, e: { type: 'stage', stage: 'color' } });
     s = reduce(s, { t: 'scored', attempt: 1 });
-    expect(stageStates((s as { stage: never }).stage)).toEqual(['done', 'done', 'done', 'now']);
+    expect(stageStates(stageOf(s))).toEqual(['done', 'done', 'done', 'now']);
   });
   it('slow once; hedge only before the first piece; stale timers ignored', () => {
     expect(reduce(start, { t: 'tick', attempt: 1, which: 'slow' })).toMatchObject({ slow: true });
