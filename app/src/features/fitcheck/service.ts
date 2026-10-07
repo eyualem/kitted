@@ -308,8 +308,8 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (prep.status === 'noPerson' || prep.status === 'multiplePeople' || prep.status === 'couldNotFrame') return { outcome: 'photoProblem', reason: prep.status };
     if (prep.status !== 'ok') return { outcome: prep.status === 'unknownPhoto' ? 'unknownPhoto' : 'notImplemented' };
     const image = prep.image;
-    // His photo in the thread: the bundled id, or the neck-down copy kept on the phone.
-    const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.neckDownUri ?? null, aspect: image.aspect ?? null };
+    // His photo in the thread: the bundled id, or the face-blurred copy kept on the phone.
+    const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.keptUri ?? null, aspect: image.aspect ?? null };
     const lastOccasion = ((await store.getKv(KV.lastOccasion)) as OccasionKey | null) ?? 'everyday';
     const occasion: OccasionKey = req.mode !== 'check' && parent ? parent.occasion : req.occasion ?? lastOccasion;
 
@@ -326,7 +326,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const checkId = req.checkId ?? deps.ids('FC');
     const row = emptyRow({
       id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, demoPhotoId: image.photoId, imageHash: image.sha256,
-      photoFile: image.neckDownUri ?? null, thumbFile: image.thumbUri ?? null,
+      photoFile: image.keptUri ?? null, thumbFile: image.thumbUri ?? null,
       parentId: parent?.id ?? null, isFirstCheck: req.mode === 'check' && priorChecks.length === 0,
     });
     await store.fitChecks.put(row);
@@ -395,7 +395,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
       await store.fitChecks.patch(checkId, { status: 'scoring', details: { ...row.details, failCode: undefined } });
       const prep = await deps.prep.prepare(
-        row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, neckDownUri: row.photoFile, thumbUri: row.thumbFile },
+        row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
       );
       if (prep.status !== 'ok') return { outcome: 'unknownPhoto' };
       const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;

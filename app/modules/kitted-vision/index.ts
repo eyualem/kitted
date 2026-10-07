@@ -1,4 +1,4 @@
-// On-device photo prep (05 §P3 C): neck-down crop, face removed, metadata stripped, hashed.
+// On-device photo prep (05 §P3 C): full frame, every face blurred, metadata stripped, hashed.
 // The demo's bundled photos use the mockup's crop table instead and never call this.
 import type { ComponentType, Ref } from 'react';
 import type { ViewProps } from 'react-native';
@@ -10,7 +10,7 @@ export type PrepareResult =
       uploadUri: string;
       /** The upload JPEG (1024 px), base64, so the reading source doesn't re-read the file. */
       uploadBase64: string;
-      neckDownUri: string;
+      keptUri: string;
       thumbUri: string;
       sha256: string;
       width: number;

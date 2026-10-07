@@ -1,6 +1,7 @@
 // S2 Camera (02 D5; mockup 5): full-screen, always dark. Propped (front camera, guide, auto
-// 3-2-1) or Mirror (manual shutter, optional 3 s timer). On a phone the preview, guide and live
-// face blur come from kitted-vision (KittedCameraView); on the Simulator a bundled photo stands
+// 3-2-1) or Mirror (manual shutter, optional 3 s timer). No live face blur: he sees himself as
+// in any camera; faces are hidden after capture, in photo prep (DECISIONS-LOG #54). On a phone
+// the preview and guide come from kitted-vision (KittedCameraView); on the Simulator a bundled photo stands
 // in (SimulatedPreview) and the shutter "shoots" it. A capture closes the cover and starts the
 // check; the photo is prepped on the phone before anything is sent (05 §P3 C).
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -52,8 +53,7 @@ export function CameraScreen() {
   const simBox = useMemo(() => simulatedBody(sim, width, height), [sim, width, height]);
   // Demo screen 5 (freeze=1): the mockup's moment, "good" and counting "3".
   const frozen = p.freeze === '1' && !KittedCameraView && !snap;
-  const simFaces = useMemo(() => [simulatedFace(simBox)], [simBox]);
-  const [guide, setGuide] = useState<GuideEvent>(frozen ? { state: 'good', body: simBox, faces: simFaces } : { state: 'noPerson', faces: [] });
+  const [guide, setGuide] = useState<GuideEvent>(frozen ? { state: 'good', body: simBox, faces: [] } : { state: 'noPerson', faces: [] });
   const [phase, setPhase] = useState<Phase>(frozen ? { kind: 'counting', n: 3 } : { kind: 'waiting' });
   const [whiteout, setWhiteout] = useState(false);
   const cam = useRef<CameraHandle>(null);
@@ -120,7 +120,7 @@ export function CameraScreen() {
     setGuide((prev) => {
       if (prev.state !== g.state) {
         AccessibilityInfo.announceForAccessibility?.(t(TIP[g.state]));
-        if (__DEV__) console.log(`[camera] guide: ${g.state}${g.faces.length ? ` · ${g.faces.length} face(s) blurred` : ''}`);
+        if (__DEV__) console.log(`[camera] guide: ${g.state}${g.faces.length ? ` · ${g.faces.length} face(s) seen` : ''}`);
       }
       return g;
     });
@@ -131,20 +131,20 @@ export function CameraScreen() {
   useEffect(() => {
     if (KittedCameraView || snap || frozen) return;
     const steps: [number, GuideEvent][] = [
-      [600, { state: 'tooClose', body: { ...simBox, height: simBox.height * 0.55 }, faces: simFaces }],
-      [1800, { state: 'good', body: simBox, faces: simFaces }],
+      [600, { state: 'tooClose', body: { ...simBox, height: simBox.height * 0.55 }, faces: [] }],
+      [1800, { state: 'good', body: simBox, faces: [] }],
     ];
     const hs = steps.map(([ms, g]) => setTimeout(() => onGuide(g), ms));
     // Then steady "good" frames, like the real detector's ~10 per second.
     let keep: ReturnType<typeof setInterval> | undefined;
-    const startKeep = setTimeout(() => (keep = setInterval(() => onGuide({ state: 'good', body: simBox, faces: simFaces }), 100)), 1800);
+    const startKeep = setTimeout(() => (keep = setInterval(() => onGuide({ state: 'good', body: simBox, faces: [] }), 100)), 1800);
     return () => {
       hs.forEach(clearTimeout);
       clearTimeout(startKeep);
       if (keep) clearInterval(keep);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [simBox, simFaces, snap, frozen, autoOn]);
+  }, [simBox, snap, frozen, autoOn]);
 
   const switchMode = (m: Mode) => {
     setMode(m);
@@ -193,11 +193,6 @@ export function CameraScreen() {
       ) : (
         <Image source={sim.source} style={StyleSheet.absoluteFill} contentFit="cover" transition={0} />
       )}
-
-      {/* Live face blur (never saved): an ellipse over each face box. */}
-      {guide.faces.map((f, i) => (
-        <BlurView key={i} intensity={80} tint="light" style={[styles.faceBlur, { left: f.x - 14, top: f.y - 14, width: f.width + 28, height: f.height + 28, borderRadius: (f.width + 28) / 2 }]} />
-      ))}
 
       <View style={[StyleSheet.absoluteFill, { experimental_backgroundImage: cameraScrims.top }]} pointerEvents="none" />
       <View style={[StyleSheet.absoluteFill, { experimental_backgroundImage: cameraScrims.bottom }]} pointerEvents="none" />
@@ -309,16 +304,8 @@ function simulatedBody(photo: NonNullable<ReturnType<typeof demoPhoto>>, W: numb
   return { x: cx - w / 2, y: top, width: w, height: bottom - top };
 }
 
-/** The stand-in photo's face, from the same table (above the neck line): blurred like the live one. */
-function simulatedFace(body: ViewBox): ViewBox {
-  const headW = body.width * 0.33;
-  const headH = Math.min(body.height * 0.16, headW * 1.55);
-  return { x: body.x + body.width / 2 - headW / 2, y: body.y, width: headW, height: headH };
-}
-
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: fixed.black },
-  faceBlur: { position: 'absolute', overflow: 'hidden' },
   topBar: { position: 'absolute', left: 18, right: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   tip: {
     flexShrink: 1, minHeight: 36.5, borderRadius: 18, paddingHorizontal: 14.5, paddingVertical: 6, backgroundColor: 'rgba(255,255,255,0.92)',

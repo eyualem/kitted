@@ -2,10 +2,10 @@
 // or shot and returns only what may leave the phone or be kept:
 //   1. SHA-256 of the ORIGINAL bytes ("same photo, same score")
 //   2. orientation fixed; Apple Vision finds the people, the body pose and any faces
-//   3. crop to the main person, cut at the neck (the face never survives), pixelate any face
-//      box still inside the crop (backup)
+//   3. the full frame, with every face (his head and anyone else's) blurred and pixelated; if his
+//      head can't be found, nothing is sent (ruling 10, DECISIONS-LOG #54)
 //   4. three re-encoded JPEGs, no metadata: the upload copy (1024 px long edge, q0.8, also
-//      returned as base64), the neck-down copy kept on the phone (2048 px) and a 400 px thumb
+//      returned as base64), the copy kept on the phone (2048 px) and a 400 px thumb
 //   5. the original is deleted when it's a temporary copy (picker / camera output)
 import AVFoundation
 import CoreImage
@@ -121,49 +121,62 @@ enum Prep {
       return CGPoint(x: p.location.x * W, y: (1 - p.location.y) * H)
     }
 
-    // Neck line: the lowest of the neck joint and the bottom of a face over the main person.
-    let mainFaces = faceBoxes.filter { $0.intersects(main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)) }
-    var neckY: CGFloat? = joint(.neck)?.y
-    if let chin = mainFaces.map({ $0.maxY }).max() { neckY = max(neckY ?? chin, chin) }
-    if neckY == nil, let sh = [joint(.leftShoulder), joint(.rightShoulder)].compactMap({ $0?.y }).min() { neckY = sh }
-    // No neck, face or shoulders: we can't be sure the face is gone, so nothing is sent
-    // (ruling 10, 02 S3 "Couldn't frame this one. Try again.").
-    guard let neck = neckY else { return ["status": "couldNotFrame", "sha256": sha] }
-    let top = max(0, neck)
-    let feet = [joint(.leftAnkle), joint(.rightAnkle)].compactMap { $0?.y }.max()
-    let bottom = min(H, max(main.maxY, (feet ?? 0) + H * 0.04) + H * 0.012)
-    guard bottom - top > H * 0.15 else { return ["status": "couldNotFrame", "sha256": sha] }
+    // Full frame, every face hidden (founder, Oct 7; DECISIONS-LOG #54). His head comes from the
+    // face detector, else the head joints of the body pose, else the space above his shoulders.
+    // If none of those find it, we can't be sure the face is hidden: nothing is sent (ruling 10).
+    let headJoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftEye, .rightEye, .leftEar, .rightEar]
+    let headPts = headJoints.compactMap { joint($0) }
+    let shoulders = [joint(.leftShoulder), joint(.rightShoulder)].compactMap { $0 }
+    var hide: [CGRect] = faceBoxes.map { headBox(around: $0) }
+    let mainHasFace = faceBoxes.contains { $0.intersects(main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)) }
+    if !mainHasFace {
+      if headPts.count >= 2, let minX = headPts.map(\.x).min(), let maxX = headPts.map(\.x).max(),
+         let minY = headPts.map(\.y).min(), let maxY = headPts.map(\.y).max() {
+        let side = max(maxX - minX, maxY - minY, main.width * 0.18)
+        hide.append(headBox(around: CGRect(x: (minX + maxX) / 2 - side / 2, y: (minY + maxY) / 2 - side / 2, width: side, height: side)))
+      } else if shoulders.count == 2 {
+        let span = abs(shoulders[0].x - shoulders[1].x)
+        let top = min(shoulders[0].y, shoulders[1].y)
+        hide.append(CGRect(x: (shoulders[0].x + shoulders[1].x) / 2 - span * 0.55, y: top - span * 1.25, width: span * 1.1, height: span * 1.25))
+      } else if main.minY > H * 0.03 {
+        // A person whose top is inside the frame, but no face, head joints or shoulders: we can't
+        // tell where the face is, so nothing is sent.
+        return ["status": "couldNotFrame", "sha256": sha]
+      }
+      // Otherwise his body runs off the top edge with no face or head found: the head is outside
+      // the photo (a chest-down mirror shot), so there's nothing to hide.
 
-    // Width: the person box plus a margin, at least 0.42 × the crop height, centered on the body.
-    let cx = main.midX
-    let width = min(W, max(main.width * 1.3, (bottom - top) * 0.42))
-    let left = min(max(0, cx - width / 2), W - width)
-    let crop = CGRect(x: left, y: top, width: width, height: bottom - top).integral
-
-    var ci = CIImage(cgImage: image)
-    // Pixelate every face box that reaches into the crop (backup for a face above a low neck line).
-    var pixelated = 0
-    for f in faceBoxes where f.maxY > crop.minY && f.intersects(crop) {
-      let r = CGRect(x: f.minX, y: H - f.maxY, width: f.width, height: f.height) // CI origin is bottom-left
-      let block = max(f.width, f.height) / 6
-      let pix = ci.cropped(to: r).applyingFilter("CIPixellate", parameters: [kCIInputScaleKey: block, kCIInputCenterKey: CIVector(x: r.midX, y: r.midY)]).cropped(to: r)
-      ci = pix.composited(over: ci)
-      pixelated += 1
     }
-    let ciCrop = ci.cropped(to: CGRect(x: crop.minX, y: H - crop.maxY, width: crop.width, height: crop.height))
+    let feet = [joint(.leftAnkle), joint(.rightAnkle)].compactMap { $0?.y }.max()
+
+    // Each region: a heavy blur, then coarse pixels on top (a light blur alone can be undone, 09).
+    var ci = CIImage(cgImage: image)
+    let whole = ci.extent
+    for f in hide {
+      let box = f.intersection(CGRect(x: 0, y: 0, width: W, height: H))
+      guard !box.isNull, box.width > 2, box.height > 2 else { continue }
+      let r = CGRect(x: box.minX, y: H - box.maxY, width: box.width, height: box.height) // CI origin is bottom-left
+      let block = max(r.width, r.height) / 7
+      let hidden = ci.clampedToExtent()
+        .applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: block])
+        .applyingFilter("CIPixellate", parameters: [kCIInputScaleKey: block, kCIInputCenterKey: CIVector(x: r.midX, y: r.midY)])
+        .cropped(to: r)
+      ci = hidden.composited(over: ci).cropped(to: whole)
+    }
     let ctx = CIContext()
-    guard let cropped = ctx.createCGImage(ciCrop, from: ciCrop.extent) else { return ["status": "couldNotFrame", "sha256": sha] }
+    guard let cropped = ctx.createCGImage(ci, from: whole) else { return ["status": "couldNotFrame", "sha256": sha] }
+    let pixelated = hide.count
 
     let fm = FileManager.default
     let keepDir = fm.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("photos", isDirectory: true)
     let uploadDir = fm.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("upload", isDirectory: true)
     try fm.createDirectory(at: keepDir, withIntermediateDirectories: true)
     try fm.createDirectory(at: uploadDir, withIntermediateDirectories: true)
-    let neckURL = keepDir.appendingPathComponent("\(sha)-neck.jpg")
+    let keptURL = keepDir.appendingPathComponent("\(sha)-photo.jpg")
     let thumbURL = keepDir.appendingPathComponent("\(sha)-thumb.jpg")
     let uploadURL = uploadDir.appendingPathComponent("\(sha).jpg")
     let upload = try writeJPEG(cropped, longEdge: uploadPx, quality: 0.8, to: uploadURL)
-    _ = try writeJPEG(cropped, longEdge: keepPx, quality: 0.85, to: neckURL)
+    _ = try writeJPEG(cropped, longEdge: keepPx, quality: 0.85, to: keptURL)
     _ = try writeJPEG(cropped, longEdge: thumbPx, quality: 0.8, to: thumbURL)
 
     // The full-face original is never kept: delete it when it's our temporary copy.
@@ -178,14 +191,20 @@ enum Prep {
       "sha256": sha,
       "uploadUri": uploadURL.absoluteString,
       "uploadBase64": upload.base64EncodedString(),
-      "neckDownUri": neckURL.absoluteString,
+      "keptUri": keptURL.absoluteString,
       "thumbUri": thumbURL.absoluteString,
-      "width": Int(crop.width),
-      "height": Int(crop.height),
+      "width": cropped.width,
+      "height": cropped.height,
       "people": max(1, people.count),
       "faceBoxes": pixelated,
       "pose": poseKind,
     ]
+  }
+
+  /// A face box grown to the whole head (hair, ears, chin): 1.6× wide, 1.9× tall, centered a little high.
+  static func headBox(around f: CGRect) -> CGRect {
+    let w = f.width * 1.6, h = f.height * 1.9
+    return CGRect(x: f.midX - w / 2, y: f.midY - h * 0.55, width: w, height: h)
   }
 
   /// A body-pose box when the person detector found nobody (tight crops, unusual poses).

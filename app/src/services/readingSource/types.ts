@@ -4,7 +4,7 @@ import type { Garment, Reading } from '@kitted/core';
 
 export type ReadKind = 'full' | 'recheck' | 'shoeSnap' | 'bottomSnap';
 
-/** What ImagePrep hands the source: the processed copy (neck-down, metadata stripped) and its hash. */
+/** What ImagePrep hands the source: the processed copy (faces blurred, metadata stripped) and its hash. */
 export interface PreparedImage {
   /** Bundled demo photo id, when it is one (the lookup's first key). */
   photoId: string | null;
@@ -13,10 +13,10 @@ export interface PreparedImage {
   uploadUri: string | null;
   /** The upload JPEG as base64 (real photos; the live source sends it). */
   uploadBase64?: string;
-  /** Kept on the phone: the neck-down copy and its thumbnail (real photos only). */
-  neckDownUri?: string;
+  /** Kept on the phone: the face-blurred copy and its thumbnail (real photos only). */
+  keptUri?: string;
   thumbUri?: string;
-  /** width / height of the neck-down copy. */
+  /** width / height of the kept copy. */
   aspect?: number;
 }
 

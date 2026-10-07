@@ -3,7 +3,7 @@
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { PreparedImage } from '../readingSource/types';
 
-export type PhotoRef = { kind: 'demo'; photoId: string } | { kind: 'file'; uri: string } | { kind: 'retry'; sha256: string; neckDownUri: string | null; thumbUri: string | null };
+export type PhotoRef = { kind: 'demo'; photoId: string } | { kind: 'file'; uri: string } | { kind: 'retry'; sha256: string; keptUri: string | null; thumbUri: string | null };
 
 export type PrepResult =
   | { status: 'ok'; image: PreparedImage }

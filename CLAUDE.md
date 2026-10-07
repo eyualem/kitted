@@ -78,8 +78,9 @@
   8. The notification ask
 - **Notifications:** only 3 kinds, all local: the daily outfit idea, "fit check ready," and "trial ending."
 - **Privacy:**
-  - Only the neck-down crop of a photo is saved, on the phone; the full-face original is never stored.
-  - To score a fit, a face-cropped copy goes to Google's Gemini API, which doesn't train on it and keeps it up to 55 days for abuse checks. Our server stores no photos.
+  - Photos keep the whole outfit (no crop); every face is blurred and pixelated on the phone right after capture. Only that face-hidden copy is saved, on the phone; the original is never stored. If the app can't find his head, nothing is sent. (Decided Oct 7; DECISIONS-LOG #54.)
+  - To score a fit, the face-hidden copy goes to Google's Gemini API, which doesn't train on it and keeps it up to 55 days for abuse checks. Our server stores no photos.
+  - Sending faces unblurred: recommended against for now (biometric-law and App Review risk, no accuracy gain); revisit with a lawyer before launch if wanted.
   - Consent copy: `inputs/app-store-and-age-rules.md` §3.
 - **Look:**
   - Clean and premium, per the mockups: chalk/night backgrounds, indigo ink, a copper accent, Archivo numerals, iOS 26 Liquid Glass tab bar.

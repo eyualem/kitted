@@ -399,7 +399,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 - **Demo note:** the Simulator has no camera. Show the bundled photo `p01b` (crop `full`) as the "live preview", with the guide and the blurred face; the shutter (or the 3-2-1) "captures" it. A "Sample photos" strip (`05` P3) picks which bundled photo is in front of the camera and can "shoot" any of the 12.
 
 **Layout** (status bar white)
-1. **Preview**, full bleed (crop `full`). The face is **blurred live** (an elliptical blur over the face box, about 14 pt radius; never saved).
+1. **Preview**, full bleed (crop `full`). **No live face blur** (founder, Oct 7: he sees himself as in any camera). Faces are hidden after capture, in photo prep. *Differs from mockup because of DECISIONS-LOG #54; the mockup blurs the face live.*
 2. **Scrim:** a vertical gradient: black 45% at the top to clear at 22%, clear to 70%, then black 70% at the bottom.
 3. **Framing guide** (§4 `FramingOverlay`) drawn over the detected body box: head ellipse solid white 2 pt; body outline white 2 pt, dashed 7 / 5 while searching, **solid when good**.
 4. **Top bar** at y = 65, left/right inset 18, `space-between`:
