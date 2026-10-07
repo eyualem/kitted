@@ -697,17 +697,16 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **Dock: idle composer** (pad 8 / 16 / 92, gap 10; 92 = the tab bar's 62 + 21 + 9)
 1. **Quick-start row** (one horizontally scrolling row, bleeding off the right edge, gap 8): chips 34 tall, capsule, pad 0 13, `surface`, 1 pt `line`, `.subheadline.weight(.semibold)`, leading icon 19.5 `ink2`, gap 8: `tshirt` `What should I wear?` · `bag` `I bought something` · `questionmark.circle` `Ask a question`.
-2. **Composer row** (gap 9): **Check my fit** button (40 tall, capsule, pad 0 16 0 13, `primary` fill, `camera` 26 + `Check my fit` `.subheadline.weight(.semibold)`, gap 9) · library circle 40 (`surface`, 1 pt `line`, `photo` 19.5 `ink2`) · text field (flex, 40 tall, capsule, `surface`, 1 pt `line`, pad 0 16, placeholder `Ask…` `.body` `ink3`).
+2. **Composer row** (gap 9): **Check my fit** button (40 tall, capsule, pad 0 16 0 13, `primary` fill, `camera` 26 + `Check my fit` `.subheadline.weight(.semibold)`, gap 9) · text field (flex, 40 tall, capsule, `surface`, 1 pt `line`, pad 0 16, placeholder `Ask…` `.body` `ink3`).
 
-**Compact composer** (the injected `data-composer` in D7, D10, D11, D13, D19; overlay pinned above the tab bar with a `bg` fade above it, pad 8 / 16 / 92): camera circle 40 (`primary`, `camera` 26) · library circle 40 · field placeholder `Ask your stylist…`. When the field has text, a send button `arrow.up.circle.fill` (32, `primary`, not copper: copper is only for gains, links and "+N fits") appears inside the field's trailing edge.
+**Compact composer** (the injected `data-composer` in D7, D10, D11, D13, D19; overlay pinned above the tab bar with a `bg` fade above it, pad 8 / 16 / 92): camera circle 40 (`primary`, `camera` 26) · field placeholder `Ask your stylist…`. When the field has text, a send button `arrow.up.circle.fill` (32, `primary`, not copper: copper is only for gains, links and "+N fits") appears inside the field's trailing edge.
 
-**Which composer shows:** compact while an exchange is active (the newest message is under 10 minutes old and part of something he started: a check, a question, "What should I wear?") or while the keyboard is up. Idle otherwise (quiet for 10+ minutes, a fresh foreground, or the newest message is stylist-started like the daily idea). The quick-start row hides while typing. Reserve 146 pt (compact) or 184 pt (idle) at the bottom of the thread.
+**Which composer shows:** compact while an exchange is active (the newest message is under 10 minutes old and part of something he started: a check, a question, "What should I wear?") or while the keyboard is up. Idle otherwise (quiet for 10+ minutes, a fresh foreground, or the newest message is stylist-started like the daily idea). The quick-start row and the camera button (pill or circle) hide while the field is focused or has text, so the field gets the full width. With the keyboard up the dock sits 8 pt above it. Reserve 146 pt (compact) or 184 pt (idle) at the bottom of the thread.
 
 **Interactions**
 | Element | Action |
 |---|---|
 | Check my fit / camera circle | S2 (or O5 as a sheet first if no consent; or S17 is posted after capture if the free check is used) |
-| Library circle | S4 PhotosPicker (single); then S3 checks, S5 |
 | What should I wear? | S20 flow |
 | I bought something | S24 flow |
 | Ask a question | S25 flow (focuses the field) |
@@ -728,9 +727,9 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **Accessibility:** when scrolled up more than one screen, show G3 (`Latest` pill, 44 pt). Answers stream; VoiceOver announces them once complete.
 
-**VoiceOver:** Check my fit "Check my fit. Opens the camera." Library "Choose a photo". Field "Ask your stylist". The outfit card is one element: "Outfit idea from your closet: navy overshirt, grey tee, khaki chinos, white sneakers." Custom actions: Wear this, Swap one.
+**VoiceOver:** Check my fit "Check my fit. Opens the camera." Field "Ask your stylist". The outfit card is one element: "Outfit idea from your closet: navy overshirt, grey tee, khaki chinos, white sneakers." Custom actions: Wear this, Swap one.
 
-**Differs from mockup:** only the `…` menu (above).
+**Differs from mockup:** the `…` menu (above); and **no library circle in the composer, and the camera button hides while typing.** *Because the composer's three buttons crowded the field (founder, Oct 7); the camera screen's library button (S2) is the iOS norm for picking a photo.*
 
 ---
 
@@ -1126,7 +1125,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 #### S26 · Turn on fit checks (no consent) + See an example
 - **State (a)**, after "Not now" on O5, or after consent is withdrawn in Y7.
 - **Thread:** stylist with "who" header: `Send me a fit. I'll score it and start your closet.` Then a card: title `.headline` `Turn on fit checks`; body (`.subheadline`, `ink2`) `To score a photo, I need your OK to send a face-free copy to Google's Gemini API.` (provider from config); PrimaryButton `Review and turn on` (→ O5 as a sheet with X) · SecondaryButton `See an example` (→ O1e as a sheet).
-- The composer's camera, library and send are visible; tapping them opens O5 as a sheet. Questions are blocked too (they also go to the AI). Closet "Describe it" and Lookbook still work.
+- The composer's camera and send are visible; tapping them opens O5 as a sheet. Questions are blocked too (they also go to the AI). Closet "Describe it" and Lookbook still work.
 
 #### S27 · Support card and refusals
 - **Distress** (an on-device word list catches it **before** anything is sent; no styling content): a card with `heart` icon in `ink2`, text `That sounds like a lot right now. If you're in the US, you can call or text 988 any time to talk to someone.` and PrimaryButton `Call or text 988` (opens a choice: `Call 988` → `tel:988`, `Text 988` → `sms:988`). Nothing is logged except the event name.
@@ -2148,5 +2147,6 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 18. Lookbook tab icon is `square.grid.2x2` (mockup), not `book.closed` (build spec).
 19. Share "Save" icon is `square.and.arrow.down`.
 20. Height stepper value and plan prices are SF Pro, not Archivo; calendar day cells are 44 pt; the small woven label is 11 pt (03 §11).
+21. Stylist composer has no library circle, and its camera button hides while typing (founder, Oct 7; DECISIONS-LOG #28).
 21. Partial card: "Same shoes as Monday?" (computed from the seed), not "Sunday" (04 §12 #3).
 22. A one-time AI note is the first Stylist-thread message (`stylist.aiNote`, ruling 17).

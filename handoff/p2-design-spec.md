@@ -148,7 +148,7 @@ So every gap next to them must be reduced, or they need a compact variant. The c
    - background `linear-gradient(to bottom, transparent, ${bg} 22%)` via `experimental_backgroundImage`
    - Row (`.composer`): gap 9 → 8, alignItems center.
    - Camera circle: 40, `primary`, `camera` icon size 26 (`'large'`) in `onPrimary`, `hitSlop 2`.
-   - Library circle: 40, `surface`, 1 pt `line` border, `photo` icon 20 in `ink2`.
+   - ~~Library circle~~: removed (DECISIONS-LOG #28).
    - Field: `TextInput`, flex 1, minHeight 40, capsule (radius 20), `surface`, 1 pt `line`, paddingHorizontal 16, body 17, text `ink`, `placeholderTextColor` = `ink3`, multiline, grows to 5 lines then scrolls.
    - Send: appears only with text. `arrow.up.circle.fill` drawn ~28 inside a 32 box, `primary` (not copper), inset 4 from the trailing edge; field paddingRight 4 while it shows.
    - Thread bottom padding: 146.
@@ -156,7 +156,7 @@ So every gap next to them must be reduced, or they need a compact variant. The c
    - placeholder `composer.placeholder` ("Ask your stylist…")
    - `composer.a11y.camera`, `cam.a11y.library` ("Choose a photo"), `composer.a11y.send`
    - field label "Ask your stylist" (**NEW** `composer.a11y.field`; the placeholder has an ellipsis)
-4. States: empty / typing (send shows) / keyboard up (lifted with `KeyboardAvoidingView` padding). At AX sizes the field moves to its own row under the circles.
+4. States: empty / typing (send shows) / keyboard up (the dock rides the keyboard via Reanimated's `useAnimatedKeyboard`, 8 pt above it; no `KeyboardAvoidingView`, DECISIONS-LOG #29; the camera circle hides while typing). At AX sizes the field moves to its own row under the circles.
 5. VoiceOver: "Check my fit. Opens the camera." / "Choose a photo" / "Ask your stylist" (text field) / "Send".
 
 **A8. Composer: idle + quick-start row** (screen 12: `.dock`, `.quickrow`, `.qc`, `.fitbtn`)
@@ -166,7 +166,7 @@ So every gap next to them must be reduced, or they need a compact variant. The c
    - Quick row: horizontal `ScrollView`, `showsHorizontalScrollIndicator={false}`, `marginRight: -16` (CSS −15.5) so it bleeds; content gap 8, paddingRight 16.
    - QuickStartChip: height 34, capsule, paddingHorizontal 13, `surface`, 1 pt `line`; icon 20 (`'regular'`, CSS 19.5) in `ink2`; gap 8; label `quickStart` role (subheadline 15/600, ink). Vertical hit padding 5 → 44.
    - "Check my fit" pill (`.fitbtn`): height 40, capsule, padding left 13 / right 16, `primary`; `camera` icon 26 in `onPrimary`, gap 9 → 8; label subheadline/600 in `onPrimary`; `flex: none`.
-   - Then the library circle (as A7), then the field with placeholder `composer.placeholderIdle` ("Ask…").
+   - Then the field with placeholder `composer.placeholderIdle` ("Ask…").
 3. Keys: `quick.wear` (icon `tshirt`), `quick.bought` (`bag`), `quick.ask` (`questionmark.circle`), `composer.check`, `composer.placeholderIdle`.
 4. States:
    - idle = quiet for 10+ minutes, a fresh foreground, or the newest message was stylist-started

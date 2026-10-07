@@ -1,5 +1,7 @@
-// The Stylist composer (design-spec A7/A8): compact (camera · library · field) during an
-// exchange; idle (quick-starts + "Check my fit" pill · library · "Ask…") otherwise.
+// The Stylist composer (design-spec A7/A8): compact (camera · field) during an exchange; idle
+// (quick-starts + "Check my fit" pill · "Ask…") otherwise. Differs from the mockup: no
+// photo-library circle (the camera screen has the library thumbnail, the iOS norm), and the
+// camera button hides while he types so the field gets the full width (DECISIONS-LOG #28).
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Icon, KText, QuickStartChip, opacity, useTheme } from '@/design-system';
@@ -8,14 +10,17 @@ import { t } from '@/i18n/en';
 export interface ComposerProps {
   mode: 'compact' | 'idle';
   onCamera: () => void;
-  onLibrary: () => void;
   onSend?: (text: string) => void;
 }
 
-export function Composer({ mode, onCamera, onLibrary, onSend }: ComposerProps) {
+export function Composer({ mode, onCamera, onSend }: ComposerProps) {
   const { colors } = useTheme();
   const [text, setText] = useState('');
-  const idle = mode === 'idle' && text.length === 0;
+  const [focused, setFocused] = useState(false);
+  // Typing (field focused, or text in it) shows the compact field alone (02 S1: compact while
+  // the keyboard is up; the quick-start row hides while typing).
+  const typing = focused || text.length > 0;
+  const idle = mode === 'idle' && !typing;
   return (
     <View style={styles.wrap}>
       {idle ? (
@@ -26,7 +31,7 @@ export function Composer({ mode, onCamera, onLibrary, onSend }: ComposerProps) {
         </ScrollView>
       ) : null}
       <View style={styles.row}>
-        {idle ? (
+        {typing ? null : idle ? (
           <Pressable
             onPress={onCamera}
             accessibilityRole="button"
@@ -49,19 +54,12 @@ export function Composer({ mode, onCamera, onLibrary, onSend }: ComposerProps) {
             <Icon name="camera" size="large" color={colors.onPrimary} />
           </Pressable>
         )}
-        <Pressable
-          onPress={onLibrary}
-          accessibilityRole="button"
-          accessibilityLabel={t('cam.a11y.library')}
-          hitSlop={2}
-          style={({ pressed }) => [styles.circle, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, opacity: pressed ? opacity.pressed : 1 }]}
-        >
-          <Icon name="photo" size="regular" color="ink2" />
-        </Pressable>
         <View style={[styles.field, { backgroundColor: colors.surface, borderColor: colors.line }]}>
           <TextInput
             value={text}
             onChangeText={setText}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
             placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
             placeholderTextColor={colors.ink3}
             accessibilityLabel={t('composer.a11y.field')}

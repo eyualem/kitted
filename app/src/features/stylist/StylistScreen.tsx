@@ -2,8 +2,12 @@
 // Not an inverted FlatList: on iOS 26 the scroll-edge fade under the bars is applied to the
 // flipped list and washes out the whole thread (DECISIONS-LOG #25). A normal list that sticks
 // to the bottom instead.
+// No KeyboardAvoidingView: its padding stacked on the dock's fixed bottom and pushed the
+// composer off-screen. The dock rides the keyboard directly, and the thread's footer grows by
+// the same amount with the scroll offset following, so the newest message stays in view.
 import { useEffect, useMemo, useRef } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { useTheme } from '@/design-system';
 import { store } from '@/data/db';
@@ -11,7 +15,7 @@ import { useLive } from '@/data/useLive';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
 import { sessionClock } from '@/state/session';
 import { Composer } from './Composer';
-import { COMPOSER_BOTTOM, THREAD_PAD } from './layout';
+import { COMPOSER_BOTTOM, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
 import { buildThreadItems } from './thread';
 
@@ -27,7 +31,20 @@ export function StylistScreen() {
   const mode = now - lastUser < EXCHANGE_MS ? 'compact' : 'idle';
   const openSamples = () => router.push('/sheets/sample-photos?mode=check');
 
-  const list = useRef<FlatList<(typeof items)[number]>>(null);
+  const list = useAnimatedRef<Animated.FlatList<(typeof items)[number]>>();
+  const scrollY = useScrollOffset(list);
+  const keyboard = useAnimatedKeyboard();
+  // How far the dock rises above its resting spot (0 with the keyboard down).
+  const lift = useDerivedValue(() => Math.max(0, keyboard.height.value + KEYBOARD_GAP - COMPOSER_BOTTOM));
+  useAnimatedReaction(
+    () => lift.value,
+    (now, before) => {
+      if (before === null || now === before) return;
+      scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
+    },
+  );
+  const dockStyle = useAnimatedStyle(() => ({ bottom: COMPOSER_BOTTOM + lift.value }));
+  const footerStyle = useAnimatedStyle(() => ({ height: THREAD_PAD[mode] + lift.value }));
   const atBottom = useRef(true);
   const first = useRef(true);
   const onUserScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -43,15 +60,15 @@ export function StylistScreen() {
   }, [action]);
 
   return (
-    <KeyboardAvoidingView style={[styles.root, { backgroundColor: colors.bg }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <FlatList
+    <View style={[styles.root, { backgroundColor: colors.bg }]}>
+      <Animated.FlatList
         ref={list}
         data={items}
         keyExtractor={(i) => i.key}
         renderItem={({ item }) => <ThreadRow item={item} />}
         contentContainerStyle={styles.thread}
         // A footer, not paddingBottom: scrollToEnd measures rows and footers, not padding.
-        ListFooterComponent={<View style={{ height: THREAD_PAD[mode] }} />}
+        ListFooterComponent={<Animated.View style={footerStyle} />}
         // Only his own scrolling decides whether the thread follows new messages; cards that
         // finish loading (content growing) keep it pinned to the newest message.
         onScrollEndDrag={onUserScroll}
@@ -67,11 +84,11 @@ export function StylistScreen() {
         keyboardDismissMode="interactive"
         contentInsetAdjustmentBehavior="never"
       />
-      <View style={[styles.dock, { bottom: COMPOSER_BOTTOM }]} pointerEvents="box-none">
+      <Animated.View style={[styles.dock, dockStyle]} pointerEvents="box-none">
         <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" />
-        <Composer mode={mode} onCamera={openSamples} onLibrary={openSamples} />
-      </View>
-    </KeyboardAvoidingView>
+        <Composer mode={mode} onCamera={openSamples} />
+      </Animated.View>
+    </View>
   );
 }
 

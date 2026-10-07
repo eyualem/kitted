@@ -4,3 +4,5 @@ export const TAB_BAR = { height: 62, bottom: 21 } as const;
 export const COMPOSER_BOTTOM = TAB_BAR.height + TAB_BAR.bottom + 9;
 /** Thread padding under the last message so it clears the composer (design-spec A7/A8). */
 export const THREAD_PAD = { compact: 146, idle: 184 } as const;
+/** Space between the composer and the keyboard while he types. */
+export const KEYBOARD_GAP = 8;
