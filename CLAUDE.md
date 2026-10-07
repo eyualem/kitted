@@ -155,6 +155,10 @@ The phases and their acceptance checks are in `handoff/05-build-plan.md` §5. Ev
 4. Claim @kitted.app / @trykitted and register trykitted.com. Then the waitlist page and the TikTok account.
 5. Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement. They block TestFlight, purchases and the age check, not the demo.
 
+### 5. After launch: v1.1 (December)
+- **"Should I buy this?"** In Stylist, he snaps an item in the store and gets what it goes with in his closet, "+N fits", a duplicate warning, then Buy it / Skip it. No barcodes or prices; Google Lens owns those. With a thin closet the card says what it's based on. Before building: a Codex check of Reddit and TikTok on demand. Details: DECISIONS-LOG #40.
+- **For launch videos now:** fitting-room fit checks already work (mirror selfie), with no new build.
+
 ## Waiting on the founder (Claude builds the default meanwhile)
 - **Archivo fonts:** 3 files of about 185 KB each, OFL license, from `github.com/Omnibus-Type/Archivo` (`fonts/ttf/`). Default: the system font. When approved:
   - fill the map in `app/src/design-system/fontFiles.ts`
@@ -214,7 +218,7 @@ Exceptions:
 ## Docs map
 | File | What it's for | State |
 |---|---|---|
-| `handoff/DECISIONS-LOG.md` | Every decision and lesson since the build started (#1–39) | **Live**; append to it |
+| `handoff/DECISIONS-LOG.md` | Every decision and lesson since the build started (#1–40) | **Live**; append to it |
 | `handoff/01-product-brief.md` | Product, locked rules, voice | Reference |
 | `handoff/02-screens.md` | Every screen: layout, copy deck §5, states, VoiceOver | Reference (copy is generated into `app/src/i18n/`) |
 | `handoff/03-design-system.md` | Tokens, type, components, SF Symbols | Reference |
