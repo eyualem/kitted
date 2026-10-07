@@ -24,3 +24,5 @@ export {
   type NeckDownPhotoProps,
   type PhotoCrop,
 } from './Chat';
+export { GarmentIcon, shade, type GarmentIconType, type GarmentIconProps } from './GarmentIcon';
+export { AddedRow, DeltaRow, QuickStartChip, FinishTile } from './CardParts';

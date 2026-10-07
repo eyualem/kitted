@@ -49,6 +49,8 @@ export interface CheckRequest {
   /** Re-check and shoe snap: the check they belong to. */
   parentCheckId?: string;
   occasion?: OccasionKey;
+  /** A fixed id (demo story: "story-first", "story-recheck"); otherwise one is made. */
+  checkId?: string;
 }
 
 export type StartOutcome =
@@ -281,7 +283,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
 
     const priorChecks = (await store.fitChecks.all()).filter((c) => !c.parentId && c.status === 'scored');
-    const checkId = deps.ids('FC');
+    const checkId = req.checkId ?? deps.ids('FC');
     const row = emptyRow({
       id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, demoPhotoId: image.photoId, imageHash: image.sha256,
       parentId: parent?.id ?? null, isFirstCheck: req.mode === 'check' && priorChecks.length === 0,

@@ -20,7 +20,7 @@ const TABS: readonly { name: string; href: TabHref; label: StringKey; icon: SymK
 export default function WebTabsLayout() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const bottom = Math.max(insets.bottom - 13, 0) + 8; // the mockup's bar sits 21 pt above the bottom on a 34 pt inset
+  const bottom = Math.max(insets.bottom - 13, 8); // the mockup's bar sits 21 pt above the bottom on a 34 pt inset
   return (
     <Tabs>
       <TabSlot />

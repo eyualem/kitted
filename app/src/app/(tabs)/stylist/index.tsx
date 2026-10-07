@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { StylistScreen } from '@/features/stylist/StylistScreen';
 
-// S1 · Stylist (02-screens.md). Built in P2.
-export default function StylistScreen() {
-  return <Placeholder id="S1" name="Stylist" phase="P2" kind="tab" />;
-}
+// S1 Stylist (02 D12).
+export default StylistScreen;

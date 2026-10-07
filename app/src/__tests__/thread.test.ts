@@ -1,0 +1,32 @@
+import { US_EASTERN } from '@kitted/core';
+import seed from '../../assets/seed.json';
+import { createMemoryStore } from '@/data/memoryStore';
+import { loadScenario } from '@/data/seedLoader';
+import { buildThreadItems } from '@/features/stylist/thread';
+import { clockTime, signed, stampText } from '@/i18n/format';
+
+const at = (iso: string) => Date.parse(iso);
+
+describe('thread rows', () => {
+  it('full thread at 12:20: stamps, the who header, the newest message', async () => {
+    const s = createMemoryStore();
+    await loadScenario(s, seed, { scenario: 'full', zone: US_EASTERN });
+    const items = buildThreadItems(await s.chat.all(), at('2026-10-22T12:20:00-04:00'), US_EASTERN);
+    const stamps = items.filter((i) => i.type === 'stamp').map((i) => (i.type === 'stamp' ? i.text : ''));
+    expect(stamps).toEqual(['Sep 24, 7:05 pm', 'Tuesday 8:10 am', 'Thursday 7:42 am', 'Thursday 8:00 am', 'Thursday 12:05 pm']);
+    const who = items.filter((i) => i.type === 'msg' && i.showWho).map((i) => (i.type === 'msg' ? i.message.id : ''));
+    expect(who).toEqual(['M00', 'M08']); // a reply right after his message has no header (mockup 13)
+    const last = items[items.length - 1]!;
+    expect(last.type === 'msg' && [last.message.id, last.newest]).toEqual(['M18', true]);
+  });
+});
+
+describe('formats (no Intl)', () => {
+  it('clock time, stamps and signed numbers', () => {
+    expect(clockTime(at('2026-10-22T07:42:00-04:00'), US_EASTERN)).toBe('7:42');
+    expect(clockTime(at('2026-10-22T12:05:00-04:00'), US_EASTERN)).toBe('12:05');
+    expect(stampText(at('2026-10-22T08:00:00-04:00'), at('2026-10-22T08:01:00-04:00'), US_EASTERN)).toBe('Thursday 8:00 am');
+    expect(stampText(at('2026-10-14T20:00:00-04:00'), at('2026-10-22T08:01:00-04:00'), US_EASTERN)).toBe('Oct 14, 8:00 pm');
+    expect([signed(0.5), signed(-0.6), signed(0), signed(0, '±0'), signed(0.75)]).toEqual(['+0.5', '−0.6', '+0', '±0', '+0.75']);
+  });
+});

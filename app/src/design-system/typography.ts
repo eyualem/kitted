@@ -11,7 +11,7 @@
 // - Tabular figures wherever numbers line up: fontVariant ['tabular-nums'].
 // - Minimum 12 pt for mono labels, 11 pt for anything else.
 
-import type { TextStyle } from 'react-native';
+import { Platform, type TextStyle } from 'react-native';
 import type { ColorTokens } from './tokens';
 
 /** RN's dynamicTypeRamp values (iOS). */
@@ -118,10 +118,11 @@ export type ArchivoFace = keyof typeof archivo;
  * UIFontDescriptorSystemDesignMonospaced; present in RN 0.86 and 0.87 source). Nothing to bundle.
  * Fallback if a device renders it as SF Pro: 'Menlo' (also built into iOS).
  */
-export const monoFamily = 'ui-monospace';
+// Web preview: Chrome has no `ui-monospace`, so give it a CSS stack (iOS takes one family name).
+export const monoFamily = Platform.OS === 'web' ? 'ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace' : 'ui-monospace';
 
 /** System condensed SF, the fallback for score numerals when Archivo isn't bundled yet. */
-export const systemCondensedFamily = 'SystemCondensed';
+export const systemCondensedFamily = Platform.OS === 'web' ? '-apple-system, "SF Pro Display", system-ui, sans-serif' : 'SystemCondensed';
 
 // ---------------------------------------------------------------------------------------
 // Special faces (03 §3.3)

@@ -115,28 +115,41 @@ export interface TextLinkProps {
   title: string;
   onPress?: () => void;
   accessibilityHint?: string;
+  /** Inside cards: no 44 pt layout height (hitSlop reaches 44 instead), so rows keep the mockup's spacing. */
+  compact?: boolean;
+  /** "Later" is ink2; everything else copper. */
+  color?: 'accent' | 'ink2';
 }
 
-/** Copper text link ("Why 8.0?", "Not quite right?", "Review"). 44 pt hit height; 24 pt between links. */
-export function TextLink({ title, onPress, accessibilityHint }: TextLinkProps) {
+/** Copper text link ("Why 8.0?", "Not quite right?", "Review"). 44 pt hit target; 24 pt between links. */
+export function TextLink({ title, onPress, accessibilityHint, compact, color = 'accent' }: TextLinkProps) {
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={title}
       accessibilityHint={accessibilityHint}
-      style={({ pressed }) => ({ minHeight: size.hit, justifyContent: 'center', opacity: pressed ? opacity.pressed : 1 })}
+      hitSlop={compact ? { top: 12, bottom: 12, left: 8, right: 8 } : undefined}
+      style={({ pressed }) => ({ minHeight: compact ? undefined : size.hit, justifyContent: 'center', opacity: pressed ? opacity.pressed : 1 })}
     >
-      <KText role="textLink">{title}</KText>
+      <KText role="textLink" color={color}>
+        {title}
+      </KText>
     </Pressable>
   );
 }
 
 /** A row of TextLinks, 24 pt apart; wraps (and stacks at AX sizes). */
-export function TextLinkRow({ children }: { children?: ReactNode }) {
+export function TextLinkRow({ children, justify = 'flex-start' }: { children?: ReactNode; justify?: 'flex-start' | 'center' }) {
   const { isAccessibilitySize } = useTheme();
   return (
-    <View style={isAccessibilitySize ? { flexDirection: 'column' } : { flexDirection: 'row', flexWrap: 'wrap', columnGap: 24 }}>
+    <View
+      style={
+        isAccessibilitySize
+          ? { flexDirection: 'column', alignItems: justify }
+          : { flexDirection: 'row', flexWrap: 'wrap', columnGap: 24, rowGap: 8, justifyContent: justify }
+      }
+    >
       {children}
     </View>
   );

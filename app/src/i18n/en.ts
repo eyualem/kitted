@@ -65,6 +65,13 @@ const addedInBuild = {
   'sum.notSeen.held': 'the {held} in your hand',
   'sum.notSeen.generic': 'the same outfit',
   'card.noFixes': 'No quick fixes for this one.',
+  // Time formats (no Intl on Hermes): "Thursday 8:00 am", "Oct 14, 8:00 am", "7:42"
+  'fmt.weekdays': 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
+  'fmt.months': 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
+  'fmt.am': 'am',
+  'fmt.pm': 'pm',
+  'fmt.stampRecent': '{weekday} {time} {ampm}',
+  'fmt.stampOlder': '{month} {day}, {time} {ampm}',
   // Re-check prompt pieces (recheck.prompt = "{fixQuestion} Send it. I'll only re-read the {slotWord}.")
   'recheck.q.held': '{held} on?',
   'recheck.q.generic': 'Made the change?',
@@ -122,6 +129,11 @@ const demoOnly = {
   'demo.placeholder.state': 'Demo state: screen {n}',
   'demo.index.title': 'Demo screens',
   'demo.unknownScreen': 'There is no demo screen {n}.',
+  'demo.samples.title': 'Sample photos',
+  'demo.samples.sub': 'The demo scores its bundled photos. Pick one.',
+  'demo.samples.recheck': 'Pick the after photo.',
+  'demo.samples.snap': 'Pick a photo to read the shoes from.',
+  'demo.samples.a11y': 'Sample photo {n}',
 } as const;
 
 export const en = { ...enGenerated, ...addedInBuild, ...demoOnly } as const;

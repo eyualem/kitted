@@ -4,6 +4,7 @@
 
 import { garmentName, type Garment, type Reading } from '@kitted/core';
 import { t } from '@/i18n/en';
+import type { GarmentIconType } from '@/design-system/components/GarmentIcon';
 
 const COLOR: Record<string, string> = {
   white: 'White', off_white_cream: 'Cream', light_grey: 'Light grey', grey: 'Grey', charcoal: 'Charcoal', black: 'Black',
@@ -54,10 +55,7 @@ export function whatIRead(reading: Reading): string[] {
   return [...worn, ...held];
 }
 
-/** Garment-icon type for a piece (the mockup's gi() set). */
-export type GarmentIconType =
-  | 'tee' | 'oxford' | 'overshirt' | 'jacket' | 'sweater' | 'hoodie' | 'chino' | 'jeans' | 'trouser' | 'cargo'
-  | 'sneaker' | 'runner' | 'boot' | 'loafer';
+export type { GarmentIconType };
 
 export function garmentIconType(g: Pick<Garment, 'subcategory' | 'category'>): GarmentIconType {
   const sub = String(g.subcategory ?? '');

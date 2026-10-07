@@ -1,10 +1,9 @@
 // Loads screen n's scenario (04 §10.3) and returns where to navigate. Keys in the link
 // (theme, now, latency, freeChecksUsed, resetData…) override the scenario's defaults.
 import type { Href } from 'expo-router';
-import { store } from '@/data/db';
-import { KV } from '@/data/store';
 import { setOnboarded } from '@/state/appGate';
-import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
+import { getDemoArgs, setDemoArgs } from '@/state/session';
+import { prepareDemoScreen } from './prepareDemoScreen';
 import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
 import { screenScenario } from './scenarios';
@@ -25,10 +24,8 @@ export async function applyDemoScreen(params: RawArgs): Promise<DemoTarget | nul
   if (args.freeChecksUsed === null && scenario.freeChecksUsed !== undefined) args.freeChecksUsed = scenario.freeChecksUsed;
   setDemoArgs(args);
 
-  if (overrides.resetData) await store.wipe();
-  await store.setKv(KV.scenario, scenario.scenario);
+  await prepareDemoScreen(scenario);
   await setOnboarded(scenario.onboarded);
-  startClock(overrides.now ?? scenario.now);
   setDemoState({
     screen: n,
     ...(overrides.theme !== undefined ? { theme: overrides.theme } : {}),

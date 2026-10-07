@@ -262,7 +262,7 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
             {occasion ?? ''}
           </KText>
         )}
-        <KText role="photoCaption" tabular numberOfLines={1}>
+        <KText role="photoCaption" tabular numberOfLines={1} style={{ flexShrink: 0 }}>
           {time}
         </KText>
       </View>

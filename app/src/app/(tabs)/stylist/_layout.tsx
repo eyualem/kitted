@@ -2,11 +2,12 @@
 // custom headerTitle (05 T25), added in P2 with the thread.
 import { Stack } from 'expo-router';
 import { t } from '@/i18n/en';
+import { StylistHeaderTitle } from '@/features/stylist/HeaderTitle';
 
 export default function StylistStack() {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ title: t('tab.stylist') }} />
+      <Stack.Screen name="index" options={{ title: t('tab.stylist'), headerTitle: () => <StylistHeaderTitle />, headerTitleAlign: 'center' }} />
     </Stack>
   );
 }
