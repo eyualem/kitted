@@ -15,6 +15,22 @@ import type {
 } from "./types";
 import { clone, has, isNone, maxOf, nearest, or, pyMax, pyRound, roundHalf, sum, truthy } from "./util";
 
+/** Why a credit wasn't earned (for the "Why this score" ledger). */
+export type CreditReason =
+  | "heldNotWorn" | "noLayer" | "noElevated" | "allNeutral" | "tooMuchInterest" | "shoesHidden" | "shoesOff";
+
+/**
+ * What score() did, step by step, when a trace is passed. Recording never changes the arithmetic.
+ * Indices point into the ORIGINAL reading's `garments` (or `held_items` for heldNotWorn).
+ */
+export interface ScoreTrace {
+  rules: { id: RuleId; sub: SubscoreName | "occasion"; amount: number; culpritIndex: number | null }[];
+  /** Every credit, in rubric (CREDITS) order. */
+  credits: { id: CreditId; earned: boolean; points: number; evidenceIndex: number | null; reason: CreditReason | null; heldIndex: number | null }[];
+  /** Earned credit sum × this = creditPts (1 for a full check; > 1 when parts are hidden, v3.1 R4). */
+  creditFactor: number;
+}
+
 /** The engine version this code implements. Only load a remote rubric.json whose `engine` equals this. */
 export const ENGINE_VERSION = 3;
 
@@ -23,7 +39,7 @@ const MAIN_CATEGORIES: readonly unknown[] = ["top", "bottom", "outerwear"];
 
 export interface RubricEngine {
   readonly data: RubricData;
-  score(reading: Reading, opts?: ScoreOptions): RubricResult;
+  score(reading: Reading, opts?: ScoreOptions, trace?: ScoreTrace): RubricResult;
   formality(g: Garment): number;
   fam(color: unknown): unknown;
   isBright(g: Garment): boolean;
@@ -148,7 +164,7 @@ export function createRubric(data: RubricData): RubricEngine {
     return [t[0]!, t[1]!];
   }
 
-  function score(reading: Reading, opts: ScoreOptions = {}): RubricResult {
+  function score(reading: Reading, opts: ScoreOptions = {}, trace?: ScoreTrace): RubricResult {
     const occasion: string = opts.occasion ?? "everyday";
     const boldness: string = opts.boldness ?? "a_little";
     const styles = stylesMap(opts.styles);
@@ -157,6 +173,10 @@ export function createRubric(data: RubricData): RubricEngine {
     if (scene.clothed !== "fully") {
       return { overall: null, reason: "not_fully_clothed", partial: false, rulesFired: [] };
     }
+    // Original positions survive the filters (same objects), for the ledger's evidence indices.
+    const origIndex = new Map<Garment, number>();
+    (ext.garments ?? []).forEach((g, i) => origIndex.set(g, i));
+    const at = (g: Garment | undefined | null): number | null => (g ? (origIndex.get(g) ?? null) : null);
     let garments: Garment[] = (ext.garments ?? []).filter((g) => g.certainty !== "unsure" && g.category !== "accessory");
     const notRated: NotRated[] = [];
     if (!truthy(has(scene, "shoes_visible") ? scene.shoes_visible : true)) {
@@ -183,12 +203,13 @@ export function createRubric(data: RubricData): RubricEngine {
     let occAdj = 0.0;
     const fired: RuleId[] = [];
     const advice: string[] = [];
-    const fire = (id: RuleId, sub: SubscoreName | "occasion", amount: number): void => {
+    const fire = (id: RuleId, sub: SubscoreName | "occasion", amount: number, culprit?: Garment | null): void => {
       if (amount <= 0) return;
       if (rules[id]?.enabled === false) return; // remote kill switch; every rule is enabled in v3.1
       if (sub === "occasion") occAdj += amount;
       else pen[sub] += amount;
       fired.push(id);
+      trace?.rules.push({ id, sub, amount, culpritIndex: at(culprit) });
     };
 
     const totSum = sum(Array.from(styles.values()));
@@ -209,18 +230,20 @@ export function createRubric(data: RubricData): RubricEngine {
     if (bottom && bottom.hem === "pooling") {
       if (street >= num(R.F4, "streetThreshold")) {
         fire("F4_pooling", "fit",
-          bottom.leg_shape === "relaxed" || bottom.leg_shape === "wide" ? num(R.F4, "streetRelaxedOrWide") : num(R.F4, "streetSlim"));
+          bottom.leg_shape === "relaxed" || bottom.leg_shape === "wide" ? num(R.F4, "streetRelaxedOrWide") : num(R.F4, "streetSlim"), bottom);
       } else {
-        fire("F4_pooling", "fit", num(R.F4, "amount"));
+        fire("F4_pooling", "fit", num(R.F4, "amount"), bottom);
       }
     }
     if (bottom && bottom.hem === "full_break" && list(R.F4b, "legs").includes(bottom.leg_shape) && bottom.certainty === R.F4b["needsCertainty"]) {
-      fire("F4b_full_break_narrow_leg", "fit", num(R.F4b, "amount"));
+      fire("F4b_full_break_narrow_leg", "fit", num(R.F4b, "amount"), bottom);
     }
     let care = 0.0;
+    let careCulprit: Garment | null = null;
     for (const g of garments) {
       if (truthy(g.distressed_by_design)) continue;
       const c = g.condition;
+      if (careCulprit === null && (c === "wrinkled" || (c === "stained" && g.certainty === "clear") || c === "pilled_or_worn")) careCulprit = g;
       if (c === "wrinkled") {
         care += num(R.F7, "wrinkled");
       } else if (c === "stained" && g.certainty === "clear") {
@@ -230,54 +253,54 @@ export function createRubric(data: RubricData): RubricEngine {
         care += half ? num(R.F7, "pilledFootwearStreetish") : num(R.F7, "pilledOrWorn");
       }
     }
-    if (truthy(care)) fire("F7_care", "fit", Math.min(care, num(R.F7, "cap")));
+    if (truthy(care)) fire("F7_care", "fit", Math.min(care, num(R.F7, "cap")), careCulprit);
     if (top && (isNone(top.tucked) || top.tucked === "none" || top.tucked === "na") && top.length === "below_crotch"
         && (or(top.volume, num(R.F6, "volumeDefault")) as number) < num(R.F6, "volumeBelow") && street < num(R.F6, "streetBelow")) {
-      fire("F6_top_too_long", "fit", num(R.F6, "amount"));
+      fire("F6_top_too_long", "fit", num(R.F6, "amount"), top);
     }
     if (top && (or(top.volume, num(R.F8, "volumeDefault")) as number) >= num(R.F8, "volumeAtLeast") && street < num(R.F8, "streetBelow")
         && (top.sleeve_end === "covers_hand" || top.length === "below_crotch")) {
-      fire("F8_too_big", "fit", num(R.F8, "amount"));
+      fire("F8_too_big", "fit", num(R.F8, "amount"), top);
     }
     for (const g of [...tops, ...outer]) {
       if (g.sleeve_end === "covers_hand") {
         const casualKnit = list(R.F9, "casualKnits").includes(g.subcategory) && street >= 0.5;
-        fire("F9_sleeves_cover_hands", "fit", casualKnit ? num(R.F9, "streetCasualKnit") : num(R.F9, "amount"));
+        fire("F9_sleeves_cover_hands", "fit", casualKnit ? num(R.F9, "streetCasualKnit") : num(R.F9, "amount"), g);
         break;
       }
     }
-    if (garments.some((g) => g.strain === "clear")) fire("F10_visible_strain", "fit", num(R.F10, "amount"));
+    if (garments.some((g) => g.strain === "clear")) fire("F10_visible_strain", "fit", num(R.F10, "amount"), garments.find((g) => g.strain === "clear"));
 
     // ================= TUCK =================
     if (top && top.subcategory === "dress_shirt" && (top.tucked === "none" || isNone(top.tucked)) && (
       outer.some((o) => TAILORED_OUTER.has(o.subcategory))
       || (bottom !== undefined && (bottom.subcategory === "trousers" || bottom.subcategory === "suit_trousers"))
       || DRESSY.has(occasion))) {
-      fire("T1_dress_shirt_untucked", "occasion", num(R.T1, "amount"));
+      fire("T1_dress_shirt_untucked", "occasion", num(R.T1, "amount"), top);
     }
 
     // ================= PROPORTION =================
     if (top && truthy(top.volume)) {
       const vol = top.volume as number;
       const steps = pyMax(0, vlo - vol, vol - vhi);
-      fire("P1_top_volume_vs_style", "proportion", num(R.P1t, "perStep") * steps);
+      fire("P1_top_volume_vs_style", "proportion", num(R.P1t, "perStep") * steps, top);
     }
     if (bottom && legIndex(bottom.leg_shape) >= 0) {
       const li = legIndex(bottom.leg_shape);
       const steps = pyMax(0, llo - li, li - lhi);
-      fire("P1_leg_vs_style", "proportion", num(R.P1l, "perStep") * steps);
+      fire("P1_leg_vs_style", "proportion", num(R.P1l, "perStep") * steps, bottom);
     }
     if (top && bottom && (or(top.volume, 0) as number) >= 4 && bottom.leg_shape === "skinny") {
-      fire("P2_big_top_skinny_leg", "proportion", num(R.P2, "amount"));
+      fire("P2_big_top_skinny_leg", "proportion", num(R.P2, "amount"), bottom);
     }
     if (top && bottom && (or(top.volume, 0) as number) >= 4 && bottom.leg_shape === "wide" && street + gorp < num(R.P3, "streetPlusGorpBelow")) {
-      fire("P3_everything_oversized", "proportion", num(R.P3, "amount"));
+      fire("P3_everything_oversized", "proportion", num(R.P3, "amount"), bottom);
     }
     if (top && truthy(top.shows_below_outer) && outer.some((o) => TAILORED_OUTER.has(o.subcategory))) {
-      fire("L1_shirt_hangs_below_blazer", "fit", num(R.L1, "amount"));
+      fire("L1_shirt_hangs_below_blazer", "fit", num(R.L1, "amount"), top);
     }
     if (shoes && bottom && list(R.S1, "shoes").includes(shoes.subcategory) && list(R.S1, "legs").includes(bottom.leg_shape)) {
-      fire("S1_bulky_shoe_narrow_leg", "proportion", num(R.S1, "amount"));
+      fire("S1_bulky_shoe_narrow_leg", "proportion", num(R.S1, "amount"), shoes);
     }
     if (top && outer.length === 0 && (top.tucked === "none" || isNone(top.tucked)) && top.length === "mid_fly" && bottom) {
       advice.push(A.ruleOfThirds);
@@ -344,7 +367,7 @@ export function createRubric(data: RubricData): RubricEngine {
         && DARK_SUITING.has(jacket.color_family) && DARK_SUITING.has(bottom.color_family)
         && jacket.color_family !== bottom.color_family) {
       // v3.1 (R3): navy blazer + black trousers reads like a mismatched suit
-      fire("C5_near_match_jacket_trousers", "color", num(R.C5, "amount"));
+      fire("C5_near_match_jacket_trousers", "color", num(R.C5, "amount"), jacket);
       advice.push(A.nearMatch);
     }
 
@@ -360,19 +383,19 @@ export function createRubric(data: RubricData): RubricEngine {
       }
     }
     if (bottom && LOUNGE_BOTTOMS.has(bottom.subcategory) && !LOUNGE_OK.has(occasion) && street + vintage < num(R.O4, "streetPlusVintageBelow")) {
-      fire("O4_loungewear_out", "occasion", num(R.O4, "amount")); // v3: gym shorts / sweats as a day outfit
+      fire("O4_loungewear_out", "occasion", num(R.O4, "amount"), bottom); // v3: gym shorts / sweats as a day outfit
     }
     if (shoes) {
       const others = garments.filter((g) => MAIN_CATEGORIES.includes(g.category)).map(formality);
       if (others.length > 0 && maxOf(others) - formality(shoes) >= num(R.S2, "gapAtLeast") && !list(R.S2, "exempt").includes(shoes.subcategory)) {
-        fire("S2_shoes_too_casual_for_outfit", "occasion", num(R.S2, "amount"));
+        fire("S2_shoes_too_casual_for_outfit", "occasion", num(R.S2, "amount"), shoes);
       }
     }
     const bigLogo = garments.filter((g) => g.logo === "large");
     if (bigLogo.length > 0 && street + vintage < num(R.O3, "streetPlusVintageBelow")) {
       const prefixes = list(R.O3, "occasionPrefixes") as string[];
       if (prefixes.some((p) => occasion.startsWith(p)) && bigLogo.some((g) => g.certainty === R.O3["needsCertainty"])) {
-        fire("O3_large_logo", "occasion", num(R.O3, "amount"));
+        fire("O3_large_logo", "occasion", num(R.O3, "amount"), bigLogo.find((g) => g.certainty === R.O3["needsCertainty"]));
       } else {
         advice.push(A.bigLogo);
       }
@@ -404,6 +427,37 @@ export function createRubric(data: RubricData): RubricEngine {
     // Score out of what's visible: credits that need hidden parts are scaled up halfway (v3.1 R4), never lost
     const visibleMax = sum(CREDITS.filter((c) => !c.needs.some((n) => hidden.has(n))).map((c) => c.points));
     const creditPts = sum(earned.map(([, p]) => p)) * (1 + CREDIT_MAX / visibleMax) / 2;
+    if (trace) {
+      const got = new Set(earned.map(([id]) => id));
+      const held = ext.held_items ?? [];
+      const heldLayer = held.findIndex((g) => g.category === "outerwear");
+      const why = (id: CreditId): CreditReason => {
+        switch (id) {
+          case "K1_layered": return heldLayer >= 0 ? "heldNotWorn" : "noLayer";
+          case "K2_elevated_piece": return "noElevated";
+          case "K3_point_of_interest": return interest < 1 ? "allNeutral" : "tooMuchInterest";
+          default: return !shoes ? "shoesHidden" : "shoesOff";
+        }
+      };
+      const evidence = (id: CreditId): Garment | undefined => {
+        switch (id) {
+          case "K1_layered": return outer[0] ?? top;
+          case "K2_elevated_piece": return garments.find((g) => CORE_CATEGORIES.includes(g.category) && formality(g) >= 3);
+          case "K3_point_of_interest": return main.find((g) => isBright(g) || MUTED.has(g.color_family) || (!isNone(g.pattern) && g.pattern !== "solid" && g.pattern !== "graphic" && g.pattern !== "other"));
+          default: return shoes;
+        }
+      };
+      for (const c of CREDITS) {
+        const id = c.id as CreditId;
+        const ok = got.has(id);
+        const reason = ok ? null : why(id);
+        trace.credits.push({
+          id, earned: ok, points: c.points, evidenceIndex: ok ? at(evidence(id)) : null, reason,
+          heldIndex: reason === "heldNotWorn" ? heldLayer : null,
+        });
+      }
+      trace.creditFactor = (1 + CREDIT_MAX / visibleMax) / 2;
+    }
 
     const W = S.weights;
     const clampSub = (v: number) => Math.max(S.subMin, Math.min(S.subMax, 10.0 - v));

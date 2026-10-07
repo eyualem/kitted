@@ -15,6 +15,8 @@ export { partialLabel, mergeShoeSnap, mergeBottomSnap, pickShoesFromCloset } fro
 export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type RotationResult, type ItemKey, type ComboKey } from "./rotation";
 export { garmentName, G, SUB_NAME, SLOT_TO_CLOSET, CORE, idx } from "./names";
 export { clone, deepEqual } from "./util";
+export { explainScore, type ScoreLedger, type LedgerCredit, type LedgerRule, type Explained } from "./ledger";
+export type { CreditReason, ScoreTrace } from "./rubric";
 export {
   US_EASTERN, fixedZone, localParts, parseRollover, DEFAULT_ROLLOVER, dayKey, addDays, weekdayOf, daysBetween, wallToUtc, nextRolloverMs,
   type ZoneOffset, type LocalParts,
