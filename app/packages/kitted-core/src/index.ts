@@ -31,3 +31,18 @@ export {
   US_EASTERN, fixedZone, localParts, parseRollover, DEFAULT_ROLLOVER, dayKey, addDays, weekdayOf, daysBetween, wallToUtc, nextRolloverMs,
   type ZoneOffset, type LocalParts,
 } from "./time";
+// Closet identity (phase 1): the deterministic same / new / ask matcher closetMatch.ts will wrap.
+export {
+  COLOR_EDGES, JEANS_ONLY_EDGES, colorDistance, colorNeighbors, FAMILY_HEX, UNKNOWN_HEX, hexToLab, labToHex, lightnessOf,
+  nearestFamily, familyBand, displayHex, type ColorDistance, type ShadeStep, type Lab,
+} from "./closetColor";
+export {
+  parseShade, cleanShadeText, shadeId, shadeFromId, shadeWords, FAMILY_WORD, type ShadeKey, type ShadeFinish,
+} from "./closetShade";
+export {
+  DETAILS, LAYERABLE, FLIP_PAIRS, SAME_MIN, RUNNER_UP_GAP, normalizeBrand, profileOf, profileFromClosetItem, identity, decide,
+  reconcile, reconcileReading,
+  type Detail, type Lightness, type SleeveLength, type ShoeProfile, type DenimWear, type ConfirmedFields, type Observation,
+  type ItemProfile, type ProfileExtra, type IdentityReason, type IdentityResult, type Decision, type ReconcileEntry,
+  type ReadingReconcileEntry,
+} from "./closetIdentity";
