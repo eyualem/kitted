@@ -206,6 +206,7 @@
   4. a Closet "To confirm" card, and every tile opens a piece page;
   5. names that tell pieces apart.
   The question limits are settled in #111. The parallel measure session owns crops, measured color and similarity prints (#112).
+  **Already landed (#113):** the shoe part of step 1. Boots read as "other" and then "slides" now ask instead of splitting, and workstream A's "Boots, sneakers or slides?" answer confirms the kind (boots), not a guessed subtype.
 
 - **C. Close-ups + phone measuring (its own chat): built Oct 8 (#104–107).** Next: after the reinstall, 3–4 real checks while Claude reads the `[prep] … close-ups …` and `[measure] …` lines (prep time, close-up sizes, measured colors). Later: before/after photo comparison for fix detection (needs real fix photos), and flat-lay cut-outs for scans (needs `inputs/item-photos/`).
 
