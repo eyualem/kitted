@@ -239,6 +239,12 @@ P5's real size is about 6.5 days, not 05's 2.
 2. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
+### 2b. Camera guidance: its own session (founder, Oct 8)
+- **What it is:** the camera tells him what to fix before and after the shot in every way a photo comes in: the fit-check camera (Propped/Mirror), the new "Scan clothes" camera (#88) and photos picked from the library.
+- **What it covers:** too dark (offer the light), blurry/moving, cut off, too far, no person / no clothes found, a person in a clothes scan, front side up.
+- **Who:** planned and built in a separate chat. The founder pastes the kickoff prompt.
+- **Not touched by this chat:** item reading (Gemini) and the Closet tab stay with the style-council session.
+
 ### 3. P3: built; next is testing on my iPhone (full plan: `handoff/05-build-plan.md` §P3)
 - **Done Oct 7:** real scoring (photo → faces blurred on the phone → Gemini → real card) and the camera (live preview, body tracking drives the guide, no live blur, 3-2-1 auto-capture with a spoken count, Propped/Mirror, flash, flip, camera-off card). Photos keep the whole outfit; my own copy stays unblurred on the phone, only the upload is blurred (#54–55). On the Simulator a sample photo stands in for the camera.
 - **Installed on my iPhone (Oct 7).** Setup is done (Apple ID in Xcode, Developer Mode on, developer trusted). To reinstall (every 7 days, or after native changes): plug in, unlock, run `tools/phone/install.sh`. The Metro dev server must be running (`kitted-web`) and the phone on the same Wi-Fi.
