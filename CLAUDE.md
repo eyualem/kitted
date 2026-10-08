@@ -194,7 +194,13 @@
 
 ### Next: two workstreams from the founder's Oct 8 phone test (start each in its own chat)
 - **A. Reading accuracy and uncertainty.** Five real checks (Metro log): his boots were read as "other" ×4 and once as "slides" (that read gave the fix "Swap the slides for chunky sneakers → 8.5"); his very baggy black jeans were read as jeans, but never as wide ("Swap to relaxed-leg pants"); the same overshirt read cream vs tan; and the hoodie read as hoodie vs sweatshirt. Ideas to brainstorm: a side photo, asking whenever a score-moving reading is uncertain (not only the 9 tap pairs), explaining the uncertainty on the card, and measuring accuracy on his labeled photos.
-- **B. Closet identity and pictures.** He can't reliably tell his own pieces apart in the closet, and the graphics don't look like his clothes. Ideas to brainstorm: real cut-outs (hard with layers), confirmation questions after a check ("Is this your grey hoodie?"), and making the review step easier to find (he found "Review" only by chance).
+- **B. Closet identity and pictures: proposal ready, waiting on my look (Oct 8; DECISIONS-LOG #110–112).** Proposal page with my photos, the crop test and mockups: `screenshots/closet-identity/index.html` (git-ignored). Diagnosis: my 4 checks saved 9 pieces for my 5 real ones. All 4 duplicates came from hard "definitely different" rules on readings that are shaky when a piece is half hidden or small. A replay of my checks with the proposed rules gives 5 pieces, 4 questions and 0 wrong merges. Ranked plan:
+  1. half-seen pieces ask instead of duplicating;
+  2. my photo on the tile, using the best photo of each piece (fabric-filled drawing when there's none);
+  3. the card's closet row shows my pieces, with ≤1 question inline;
+  4. a Closet "To confirm" card, and every tile opens a piece page;
+  5. names that tell pieces apart.
+  The question limits are settled in #111. The parallel measure session owns crops, measured color and similarity prints (#112).
 
 ### 0. The plan to beta (Oct 7 review, DECISIONS-LOG #56)
 **Features before polish.** The Stylist tab is about 80% of the mockup's polish; the gap is scope. Closet, Lookbook, You, onboarding and the paywall are still placeholders that show spec IDs ("C1 · Closet"). There's also no server, so a release build can't score real photos (the key only loads in dev builds). Order:
@@ -288,6 +294,11 @@ P5's real size is about 6.5 days, not 05's 2.
   - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
+- **Closet identity, 3 taste calls (#111; page `screenshots/closet-identity/index.html`):**
+  1. Is my photo on the tile good enough, with the hand and phone showing on mirror-selfie tops? Recommended: yes.
+  2. For pieces without a clean photo, a drawing filled with my fabric, or the plain drawing? Recommended: my fabric.
+  3. The question copy ("Is this your grey Nike hoodie?" · "I could only see the hood under your shirt." · "Your score stays the same either way." · "Seen once" · "To confirm"). Recommended as written.
+  On a go, Claude builds #1 and #5 first (no taste involved), then #3 and #4, then #2. To let Claude screenshot my real closet: tap "Let Claude use it" on the "Kitted Closet B" Simulator (it holds a copy of my phone data).
 - **"Reads as" when two looks fit (#86):** screen 7 reads "smart casual" because my first pick breaks the tie, while its next-level tip is the minimal one. Default: keep the tie-break. The other choice: always the first detected look.
 - **Shoot ~20 photos of your own clothes for the scanning test (#88; approved: $1 test, free up to 30/day).** Put them in `inputs/item-photos/`. They also tune the scan camera's tips (#101): you can take them with the new Closet **+** → Take photo after the reinstall, or with the phone's camera. Phone camera, normal room light:
   - 6 single pieces flat on your bed (a tee, a hoodie, jeans, chinos, a jacket, a patterned or logo piece)
