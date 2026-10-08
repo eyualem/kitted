@@ -1,0 +1,8 @@
+{
+ "model": "gemini-3.8-flash",
+ "runs": 3,
+ "arms": "AB",
+ "zoom_line": "You get three images of the same photo: image 1 is the whole photo; image 2 is a close-up of the main person's upper body; image 3 is a close-up of their lower body down to the feet. Describe each garment once, from image 1, and use the close-ups for details: footwear type, hems, leg shape, sleeves, fabric and logos.",
+ "boot_line": "- Boots: a boot whose shaft is hidden by the pant hem is still a boot; judge footwear by the toe box, sole and laces. \"work_boot\" = rugged lace-up boot with a thick lug sole; \"suede_chukka\" = ankle-high suede boot with 2-3 eyelets and a thin sole; \"chelsea_boot\" = elastic side panels, no laces.",
+ "finished": "2026-10-08 17:16:45"
+}

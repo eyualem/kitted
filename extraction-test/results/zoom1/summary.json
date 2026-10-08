@@ -1,0 +1,96 @@
+{
+ "A": {
+  "consistency": "24/27",
+  "median_s": 5.59,
+  "p90_s": 6.7,
+  "tokens_in": 1845.6296296296296,
+  "tokens_out": 660.6666666666666,
+  "cents": 0.386,
+  "errors": 0,
+  "fields": {
+   "bottom type": "29/30 (96%)",
+   "color": "72/102 (70%)",
+   "footwear type": "10/30 (33%)",
+   "hem": "12/30 (40%)",
+   "leg_shape": "14/30 (46%)",
+   "outerwear type": "12/12 (100%)",
+   "sleeve_end": "23/30 (76%)",
+   "top type": "24/30 (80%)"
+  },
+  "unstable": [
+   "oct7-ph1 [6.5, 5.0, 5.0]",
+   "oct8-8bc29d [8.5, 7.5, 7.5]",
+   "oct8-d6559a [7.0, 7.0, 6.0]"
+  ]
+ },
+ "B": {
+  "consistency": "26/27",
+  "median_s": 6.21,
+  "p90_s": 7.93,
+  "tokens_in": 4030.703703703704,
+  "tokens_out": 709.074074074074,
+  "cents": 0.568,
+  "errors": 0,
+  "fields": {
+   "bottom type": "30/30 (100%)",
+   "color": "75/102 (73%)",
+   "footwear type": "16/30 (53%)",
+   "hem": "13/30 (43%)",
+   "leg_shape": "13/30 (43%)",
+   "outerwear type": "11/12 (91%)",
+   "sleeve_end": "21/30 (70%)",
+   "top type": "30/30 (100%)"
+  },
+  "unstable": [
+   "mirror-m08 [9.0, 8.0, 9.0]"
+  ]
+ },
+ "C": {
+  "consistency": "24/27",
+  "median_s": 5.5,
+  "p90_s": 6.79,
+  "tokens_in": 1931.6296296296296,
+  "tokens_out": 685.2345679012345,
+  "cents": 0.402,
+  "errors": 0,
+  "fields": {
+   "bottom type": "30/30 (100%)",
+   "color": "78/102 (76%)",
+   "footwear type": "9/30 (30%)",
+   "hem": "9/30 (30%)",
+   "leg_shape": "14/30 (46%)",
+   "outerwear type": "11/12 (91%)",
+   "sleeve_end": "20/30 (66%)",
+   "top type": "26/30 (86%)"
+  },
+  "unstable": [
+   "mirror-m08 [7.5, 8.5, 7.5]",
+   "mirror-m09 [7.0, 8.5, 8.0]",
+   "oct7-ph1 [6.5, 6.5, 5.0]"
+  ]
+ },
+ "D": {
+  "consistency": "24/27",
+  "median_s": 6.02,
+  "p90_s": 8.02,
+  "tokens_in": 4116.7037037037035,
+  "tokens_out": 678.7654320987655,
+  "cents": 0.563,
+  "errors": 0,
+  "fields": {
+   "bottom type": "30/30 (100%)",
+   "color": "73/102 (71%)",
+   "footwear type": "13/30 (43%)",
+   "hem": "8/30 (26%)",
+   "leg_shape": "16/30 (53%)",
+   "outerwear type": "10/12 (83%)",
+   "sleeve_end": "18/30 (60%)",
+   "top type": "29/30 (96%)"
+  },
+  "unstable": [
+   "mirror-m08 [8.0, 9.0, 9.0]",
+   "oct8-d6559a [6.5, 7.5, 6.5]",
+   "oct8-f07193 [8.0, 8.0, 7.0]"
+  ]
+ }
+}

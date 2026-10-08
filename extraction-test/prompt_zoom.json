@@ -1,0 +1,5 @@
+{
+ "_note": "Close-up lines added to the v3 prompt when photo prep sends close-ups (DECISIONS-LOG #104). 'two': full photo + one close-up of the whole person; 'three': full photo + upper and lower close-ups.",
+ "two": "You get two images of the same photo: image 1 is the whole photo; image 2 is a close-up of the main person. Describe each garment once, from image 1, and use the close-up for details: footwear type, hems, leg shape, sleeves, fabric and logos.",
+ "three": "You get three images of the same photo: image 1 is the whole photo; image 2 is a close-up of the main person's upper body; image 3 is a close-up of their lower body down to the feet. Describe each garment once, from image 1, and use the close-ups for details: footwear type, hems, leg shape, sleeves, fabric and logos."
+}

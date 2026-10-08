@@ -44,6 +44,8 @@ extraction-test/results/**/*.jpg
 extraction-test/results/**/*.jpeg
 extraction-test/results/**/*.png
 extraction-test/results/**/*.heic
+# the Mac build of the app's vision code (extraction-test/vision/build.sh)
+extraction-test/vision/bin/
 # misc
 .DS_Store
 __pycache__/

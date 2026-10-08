@@ -20,6 +20,7 @@ import { createMockReadingSource } from '@/services/readingSource/mock';
 import { demoReadingById } from '@/services/readingSource/demoReadings';
 import type { ReadingSource } from '@/services/readingSource/types';
 import { realScheduler } from '@/services/scheduler';
+import type { GarmentMeasurer } from '@/services/measure/garments';
 
 const at = (iso: string) => Date.parse(iso);
 const STYLES = seed.scenarios.firstRun.onboardingAnswers.styles as unknown as [string, number][];
@@ -33,6 +34,7 @@ interface Opts {
   readings?: Record<string, Reading>;
   store?: KittedStore;
   idPrefix?: string;
+  measure?: GarmentMeasurer | null;
 }
 
 /** A reading source that answers with given readings per demo photo id, else the bundled mock. */
@@ -56,7 +58,7 @@ async function setup(o: Opts = {}) {
   const counter = counterIds();
   const ids = (p: string) => `${o.idPrefix ?? ''}${counter(p)}`;
   const closetSource = o.closetSource === undefined ? createMockClosetSource() : o.closetSource;
-  const closet = createClosetService({ store, clock, scheduler: realScheduler, ids, source: closetSource, deadlineMs: o.deadlineMs ?? 12_000 });
+  const closet = createClosetService({ store, clock, scheduler: realScheduler, ids, source: closetSource, deadlineMs: o.deadlineMs ?? 12_000, measure: o.measure });
   const quota = createQuota({ store, clock, isPro: () => true });
   const svc = createFitCheckService({
     store, source: o.readings ? readingsSource(o.readings) : createMockReadingSource({ latency: () => 0, scheduler: realScheduler }),
@@ -441,3 +443,43 @@ describe('the score never changes because of the closet', () => {
     expect([again!.score, again!.rawScore, again!.fixes.map((f) => f.copy)]).toEqual([s0.score, s0.rawScore, s0.fixes.map((f) => f.copy)]);
   });
 });
+
+describe('measured on the phone (#104)', () => {
+  it('each boxed piece is measured once per check before matching; its color, cut-out and quality land on the sighting', async () => {
+    const calls: { hash: string; keys: string[]; boxes: number[][] }[] = [];
+    const measure: GarmentMeasurer = async (check, pieces) => {
+      calls.push({ hash: check.imageHash, keys: pieces.map((p) => p.key), boxes: pieces.map((p) => [...p.box]) });
+      return new Map(pieces.map((p, n) => [p.key, { sampledHex: '#444343', sampledL: 28 + n, cropFile: `closet/x-${p.key}.png`, cropQuality: 0.8 }]));
+    };
+    const env = await setup({ measure });
+    const id = await env.check('p01b');
+    await env.closet.settle();
+    const row = await env.row(id);
+    expect(row.score).toBe(8);
+    expect(calls).toHaveLength(1);
+    // Only pieces the closet call boxed (tee + chinos in this photo's bundled answer).
+    expect(calls[0]!.keys).toEqual(['garment-0', 'garment-1']);
+    expect(calls[0]!.boxes.every((b) => b.length === 4)).toBe(true);
+    const obs = (await env.store.closetObs.all()).filter((o) => o.closet !== null).sort((a, b) => a.garmentIndex! - b.garmentIndex!);
+    expect(obs.map((o) => [o.garmentIndex, o.sampledHex, o.sampledL, o.cropFile, o.cropQuality])).toEqual([
+      [0, '#444343', 28, 'closet/x-garment-0.png', 0.8],
+      [1, '#444343', 29, 'closet/x-garment-1.png', 0.8],
+    ]);
+    const bare = (await env.store.closetObs.all()).filter((o) => o.closet === null);
+    expect(bare.every((o) => o.sampledHex === null && o.cropFile === null)).toBe(true);
+  });
+
+  it('a measurer that throws or finds nothing changes nothing: the closet is written as before', async () => {
+    const base = await setup();
+    const id0 = await base.check('p01b');
+    await base.closet.settle();
+    const names0 = (await base.owned()).map((c) => c.name).sort();
+    const env = await setup({ measure: async () => { throw new Error('native gone'); } });
+    const id = await env.check('p01b');
+    await env.closet.settle();
+    expect((await env.row(id)).details.closetSummary?.state).toBe('done');
+    expect((await env.owned()).map((c) => c.name).sort()).toEqual(names0);
+    expect((await env.row(id)).score).toBe((await base.row(id0)).score);
+  });
+});
+

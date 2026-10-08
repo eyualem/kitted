@@ -7,7 +7,9 @@
 //   4. re-encoded JPEGs, no metadata. A fit check: the face-hidden upload copy (1024 px long edge,
 //      q0.8, also returned as base64); kept only on the phone, his photo unblurred (2048 px) and a
 //      400 px thumb (DECISIONS-LOG #55); and a face-hidden 2048 px detail copy in Caches/detail
-//      for a week, the source for closet crops (DECISIONS-LOG #83). A clothes scan (#88, #100):
+//      for a week, the source for closet crops (DECISIONS-LOG #83); and face-hidden close-ups of his upper
+//      and lower body (or the whole of him) sent with the upload in the same scoring call (#104), also in
+//      Caches/upload. A clothes scan (#88, #100):
 //      kept + thumb + a face-hidden 2048 px copy for the item reading, all in Documents/scans.
 //   5. the temporary original (picker / camera output) is deleted
 // No UIKit or Expo here, so the Mac test harness compiles this same file (DECISIONS-LOG #100).
@@ -48,6 +50,8 @@ enum Prep {
     var main: CGRect?
     var pose = "none"
     var errors: [String] = []
+    /// The main person's body joints (confidence > 0.3), in pixels, origin top-left (KittedMeasure).
+    var joints: [String: CGPoint] = [:]
   }
 
   /// The original's SHA-256, its upright size, and an upright image at most `maxPx` on the long edge.
@@ -162,6 +166,12 @@ enum Prep {
       // Otherwise his body runs off the top edge with no face or head found: the head is outside
       // the photo (a chest-down mirror shot), so there's nothing to hide.
     }
+    let named: [(String, VNHumanBodyPoseObservation.JointName)] = [
+      ("neck", .neck), ("lShoulder", .leftShoulder), ("rShoulder", .rightShoulder), ("lElbow", .leftElbow), ("rElbow", .rightElbow),
+      ("lWrist", .leftWrist), ("rWrist", .rightWrist), ("root", .root), ("lHip", .leftHip), ("rHip", .rightHip),
+      ("lKnee", .leftKnee), ("rKnee", .rightKnee), ("lAnkle", .leftAnkle), ("rAnkle", .rightAnkle),
+    ]
+    for (key, name) in named { if let p = joint(name) { out.joints[key] = p } }
     let feet = [joint(.leftAnkle), joint(.rightAnkle)].compactMap { $0?.y }.max()
     out.pose = feet != nil ? "full" : (joint(.leftHip) ?? joint(.rightHip)) != nil ? "upper" : "none"
     return out
@@ -246,6 +256,9 @@ enum Prep {
     // Oct 7, DECISIONS-LOG #55), re-encoded so location and camera metadata are gone. The detail
     // copy is face-hidden too (closet crops may be sent later), and lives in Caches for a week.
     let upload = try writeJPEG(hidden, longEdge: uploadPx, quality: 0.8, to: uploadURL)
+    let tZoom = CFAbsoluteTimeGetCurrent()
+    let zoom = try zoomCrops(image: image, hidden: hidden, found: found, sha: sha, in: uploadDir)
+    let zoomMs = ms(since: tZoom)
     let kept = try writeJPEG(image, longEdge: keepPx, quality: 0.85, to: keptURL)
     _ = try writeJPEG(image, longEdge: thumbPx, quality: 0.8, to: thumbURL)
     let detail = try writeJPEG(hidden, longEdge: detailPx, quality: 0.85, to: detailURL)
@@ -265,9 +278,42 @@ enum Prep {
       "keptHeight": kept.height,
       "detailWidth": detail.width,
       "detailHeight": detail.height,
+      "zoomBase64": zoom.map { $0.data.base64EncodedString() },
+      "zoomKinds": zoom.map(\.kind),
+      "zoomSizes": zoom.map { [$0.width, $0.height] },
+      "zoomMs": zoomMs,
       "totalMs": ms(since: t0),
     ]) { _, b in b }
     return result
+  }
+
+  /// The close-ups for the scoring call (#104), cut from the face-hidden image: upper and lower body split at
+  /// the hips, or one of the whole person when the pose has no hips; none when there's no person box.
+  /// Written as Caches/upload/<sha>-<kind>.jpg (long edge ≤ the upload's), so "Try again" can resend them.
+  static let zoomKindsTried = [["upper", "lower"], ["body"]]
+
+  static func zoomCrops(image: CGImage, hidden: CGImage, found: Located, sha: String, in dir: URL) throws -> [(kind: String, data: Data, width: Int, height: Int)] {
+    let W = CGFloat(image.width), H = CGFloat(image.height)
+    let s = min(1, CGFloat(Measure.statPx) / max(W, H))
+    let person = Measure.personMask(image, w: max(1, Int((W * s).rounded())), h: max(1, Int((H * s).rounded())))
+    let rects = Measure.zoomRects(located: found, person: person, W: W, H: H)
+    guard let kinds = zoomKindsTried.first(where: { $0.allSatisfy { rects[$0] != nil } }) else { return [] }
+    var out: [(kind: String, data: Data, width: Int, height: Int)] = []
+    for k in kinds {
+      guard let w = try Measure.cropJPEG(hidden, rects[k]!, longEdge: uploadPx, to: dir.appendingPathComponent("\(sha)-\(k).jpg")) else { return [] }
+      out.append((k, w.data, w.width, w.height))
+    }
+    return out
+  }
+
+  /// The close-ups written by an earlier prep, in order (for "Try again"); empty when they're gone.
+  static func reloadZoom(sha: String) -> [String] {
+    let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("upload", isDirectory: true)
+    for kinds in zoomKindsTried {
+      let datas = kinds.compactMap { try? Data(contentsOf: dir.appendingPathComponent("\(sha)-\($0).jpg")) }
+      if datas.count == kinds.count { return datas.map { $0.base64EncodedString() } }
+    }
+    return []
   }
 
   /// The picker's / camera's temporary file is deleted; our re-encoded copy (no metadata) replaces it.

@@ -60,6 +60,20 @@ describe('the request', () => {
     expect(body.contents[0]!.parts[0]).toEqual({ text: prompt });
     expect(body.contents[0]!.parts[1]).toEqual({ inline_data: { mime_type: 'image/jpeg', data: 'QUJD' } });
     expect(body.generationConfig).toEqual({ temperature: 0, responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 0 }, responseSchema: lockedSchema });
+    expect(buildRequest('QUJD', [])).toEqual(body);
+  });
+
+  it('with close-ups (#104) is zoom_test.py arm B: the prompt + the close-up line, then each image after its label', () => {
+    const prompt = fs.readFileSync(path.resolve('..', 'extraction-test', 'prompt.txt'), 'utf8');
+    const zoom = JSON.parse(fs.readFileSync(path.resolve('..', 'extraction-test', 'prompt_zoom.json'), 'utf8')) as { two: string; three: string };
+    const jpeg = (data: string) => ({ inline_data: { mime_type: 'image/jpeg', data } });
+    expect(buildRequest('QUJD', ['VVA=', 'TE8=']).contents[0]!.parts).toEqual([
+      { text: `${prompt}\n${zoom.three}` }, { text: 'Image 1:' }, jpeg('QUJD'), { text: 'Image 2:' }, jpeg('VVA='), { text: 'Image 3:' }, jpeg('TE8='),
+    ]);
+    expect(buildRequest('QUJD', ['Qk9EWQ==']).contents[0]!.parts).toEqual([
+      { text: `${prompt}\n${zoom.two}` }, { text: 'Image 1:' }, jpeg('QUJD'), { text: 'Image 2:' }, jpeg('Qk9EWQ=='),
+    ]);
+    expect(buildRequest('QUJD', ['VVA=', 'TE8=']).generationConfig.responseSchema).toEqual(lockedSchema);
   });
 });
 

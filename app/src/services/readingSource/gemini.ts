@@ -1,22 +1,38 @@
 // DirectGeminiSource (05 §P3 D, app-build-spec §3): the real vision reading for DEV builds on
 // the founder's own phone or Simulator. The request is the Oct 6 lock, byte-for-byte what
 // `run_test.py --format v3 --thinking off` sends: gemini-3.8-flash, temperature 0, JSON with the
-// v3 schema, thinking off. Streamed (SSE) so each garment's pill appears as it's read. Beta
+// v3 schema, thinking off. With close-ups (#104) the same call also carries photo prep's face-hidden upper- and
+// lower-body crops, labelled "Image 1:" … and explained by one line from prompt-zoom.json (zoom_test.py, arm B).
+// Streamed (SSE) so each garment's pill appears as it's read. Beta
 // builds use the Worker proxy instead (M4); this file never runs in a Release build.
 import type { Garment, Reading } from '@kitted/core';
 import promptFile from '../../../assets/gemini/prompt-v3.json';
+import zoomFile from '../../../assets/gemini/prompt-zoom.json';
 import schema from '../../../assets/gemini/schema-v3.json';
 import { AbortError } from '../scheduler';
 import type { FailCode, PreparedImage, ReadingEvent, ReadingSource, ReadKind, SlotKind } from './types';
 
 export const GEMINI_MODEL = 'gemini-3.8-flash';
 export const PROMPT_VERSION = 'v3';
+/** The same v3 answer format, read with close-ups (#104). */
+export const PROMPT_VERSION_ZOOM = 'v3z';
+/** Send photo prep's close-ups with the upload (#104: boots no longer read as slides, tops 80% → 100%, consistency
+ *  64/66 vs 60/66; 0.39 → 0.57¢ and +0.5 s per check). false = exactly the Oct 6 lock. */
+export const SEND_CLOSE_UPS = true;
 const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-/** The request body (pure, tested against run_test.py's). */
-export function buildRequest(jpegBase64: string) {
+/** The request body (pure, tested against run_test.py's and zoom_test.py's). No close-ups: exactly the Oct 6 lock. */
+export function buildRequest(jpegBase64: string, zoomBase64: readonly string[] = []) {
+  const images = [jpegBase64, ...zoomBase64.slice(0, 2)];
+  const jpeg = (data: string) => ({ inline_data: { mime_type: 'image/jpeg', data } });
+  const parts = images.length === 1
+    ? [{ text: promptFile.prompt }, jpeg(jpegBase64)]
+    : [
+        { text: `${promptFile.prompt}\n${images.length === 3 ? zoomFile.three : zoomFile.two}` },
+        ...images.flatMap((data, i) => [{ text: `Image ${i + 1}:` }, jpeg(data)]),
+      ];
   return {
-    contents: [{ parts: [{ text: promptFile.prompt }, { inline_data: { mime_type: 'image/jpeg', data: jpegBase64 } }] }],
+    contents: [{ parts }],
     generationConfig: { temperature: 0, responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 0 }, responseSchema: schema },
   };
 }
@@ -116,13 +132,13 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
   const now = opts.now ?? (() => Date.now());
   let hedgeRequested: (() => void) | null = null;
 
-  async function stream(base64: string, signal: AbortSignal, onGarment: (g: Garment) => void): Promise<Attempt> {
+  async function stream(base64: string, zoom: readonly string[], signal: AbortSignal, onGarment: (g: Garment) => void): Promise<Attempt> {
     let res;
     try {
       res = await opts.fetch(`${BASE}/${GEMINI_MODEL}:streamGenerateContent?alt=sse`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': opts.apiKey },
-        body: JSON.stringify(buildRequest(base64)),
+        body: JSON.stringify(buildRequest(base64, zoom)),
         signal,
       });
     } catch (e) {
@@ -177,6 +193,7 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
     async *read(image: PreparedImage, _kind: ReadKind, o?: { signal?: AbortSignal }): AsyncGenerator<ReadingEvent> {
       void _kind; // re-check and shoe snap send the same full read; core merges the parts
       const base64 = image.uploadBase64;
+      const zoom = SEND_CLOSE_UPS ? image.zoomBase64 ?? [] : [];
       if (!base64) {
         yield { type: 'failed', code: 'unknownPhoto', counted: false };
         return;
@@ -204,7 +221,7 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
         const ac = new AbortController();
         controllers.push(ac);
         if (outer) outer.addEventListener('abort', () => ac.abort(), { once: true });
-        return stream(base64, ac.signal, onGarment);
+        return stream(base64, zoom, ac.signal, onGarment);
       };
       let hedged = false;
       const attempts: Promise<Attempt>[] = [startAttempt()];
@@ -265,7 +282,7 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
       else if (reading.scene?.shoes_visible === false || !slotsShown.has('footwear')) yield { type: 'slotMissing', slot: 'footwear' };
       yield { type: 'stage', stage: 'fit' };
       yield { type: 'stage', stage: 'color' };
-      yield { type: 'reading', reading, model: final.model ?? GEMINI_MODEL, promptVersion: PROMPT_VERSION };
+      yield { type: 'reading', reading, model: final.model ?? GEMINI_MODEL, promptVersion: zoom.length > 0 ? PROMPT_VERSION_ZOOM : PROMPT_VERSION };
       yield { type: 'meta', latencySeconds: seconds };
     },
   };

@@ -1,0 +1,39 @@
+stock-p04-before_street: no upper/lower split (pose none); zoom arms send the body crop
+stock-p05-before_street: no upper/lower split (pose none); zoom arms send the body crop
+stock-p06-after_studio: no upper/lower split (pose none); zoom arms send the body crop
+stock-p06-before_studio: no upper/lower split (pose upper); zoom arms send the body crop
+stock-s17-before_phone: no upper/lower split (pose full); zoom arms send the body crop
+stock-s18-before_phone: prep refused (multiplePeople), skipped
+stock-s19-before_phone: no upper/lower split (pose none); zoom arms send the body crop
+stock-s25-before_mirror: no upper/lower split (pose none); zoom arms send the body crop
+39 photos prepared in results/zoom1-stock/images
+234 calls
+  12/234
+  24/234
+  36/234
+  48/234
+  60/234
+  72/234
+  84/234
+  96/234
+  108/234
+  120/234
+  132/234
+  144/234
+  156/234
+  168/234
+  180/234
+  192/234
+  204/234
+  216/234
+  228/234
+  234/234
+Traceback (most recent call last):
+  File "/Users/eyu/Desktop/files/Kitted/extraction-test/zoom_test.py", line 291, in <module>
+  File "/Users/eyu/Desktop/files/Kitted/extraction-test/zoom_test.py", line 287, in main
+    main()
+  File "/Users/eyu/Desktop/files/Kitted/extraction-test/zoom_test.py", line 199, in analyze
+    cost = statistics.mean(i * PRICE_IN + o * PRICE_OUT for i, o in zip(tin, tout)) if tin else 0
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/statistics.py", line 427, in median
+    data = sorted(data)
+TypeError: '<' not supported between instances of 'float' and 'NoneType'

@@ -1,0 +1,30 @@
+{
+ "A": {
+  "consistency": "36/39",
+  "median_s": 5.48,
+  "p90_s": 7.07,
+  "tokens_in": 1848.025641025641,
+  "tokens_out": 696.1709401709402,
+  "cents": 0.4,
+  "errors": 0,
+  "fields": {},
+  "unstable": [
+   "stock-p01-before_studio [7.5, 7.5, 8.5]",
+   "stock-s02-before_studio [6.5, 6.5, 5.5]",
+   "stock-s17-before_phone [6.0, 7.0, 7.0]"
+  ]
+ },
+ "B": {
+  "consistency": "38/39",
+  "median_s": 5.98,
+  "p90_s": 8.44,
+  "tokens_in": 3916.051282051282,
+  "tokens_out": 723.0940170940171,
+  "cents": 0.565,
+  "errors": 0,
+  "fields": {},
+  "unstable": [
+   "stock-s13-before_street [7.0, 8.0, 7.0]"
+  ]
+ }
+}

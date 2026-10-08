@@ -7,6 +7,7 @@ import { newId } from '@/services/ids';
 import { realScheduler } from '@/services/scheduler';
 import { routedClosetSource } from '@/services/closetSource/live';
 import { createMockClosetSource } from '@/services/closetSource/mock';
+import { liveMeasurer } from '@/services/measure/garments';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { createClosetService } from './service';
 
@@ -24,6 +25,7 @@ export const closetService = createClosetService({
   scheduler: realScheduler,
   ids: newId,
   source: routedClosetSource(closetSource, consentOn),
+  measure: liveMeasurer,
 });
 
 let started = false;

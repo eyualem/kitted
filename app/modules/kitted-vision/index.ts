@@ -33,6 +33,12 @@ export type PrepareResult =
       detailHeight?: number;
       visionMs?: number;
       totalMs?: number;
+      // Added in #104 (absent from older native builds):
+      /** Face-hidden close-ups for the scoring call, in order: upper + lower body, or the whole person. */
+      zoomBase64?: string[];
+      zoomKinds?: string[];
+      zoomSizes?: [number, number][];
+      zoomMs?: number;
     }
   | {
       status: 'noPerson' | 'multiplePeople' | 'couldNotFrame' | 'notImplemented';
@@ -99,11 +105,53 @@ export interface StillAssessment {
   ms?: number;
 }
 
+/** One garment to measure: its closet-call box ([ymin, xmin, ymax, xmax], 0–1000) and a file key. */
+export interface MeasureInput {
+  key: string;
+  category: string;
+  box: number[];
+}
+
+/** What the phone measured for one garment (DECISIONS-LOG #104). Statistics are at 1024 px. */
+export interface MeasuredGarment {
+  key: string;
+  /** The dominant color (largest of 3 Lab clusters) and its CIE L*; absent when no pixel was his. */
+  hex?: string;
+  L?: number;
+  clusters: { hex: string; L: number; share: number }[];
+  /** His pixels the color used, and their share of the box. */
+  ownedPx: number;
+  coverage: number;
+  /** Share of the box under outer-layer boxes ("partly hidden"), and inside head/hand regions. */
+  overlapOuter: number;
+  headOverlap: number;
+  /** Share of his pixels dropped as the outer layer's colors. */
+  droppedOuter: number;
+  /** The box in pixels at 2048, and its sharpness (variance of the Laplacian). */
+  boxW: number;
+  boxH: number;
+  lapVar: number;
+  personMask: boolean;
+  /** Documents/closet/<sha>-<key>.png: the display cut-out (face-hidden source, every head removed). */
+  cropUri?: string;
+  cropW?: number;
+  cropH?: number;
+  /** Documents/closet/<sha>-<key>.print: Apple's image feature print of the cut-out. */
+  printUri?: string;
+}
+
+export type MeasureResult =
+  | { status: 'ok'; garments: MeasuredGarment[]; ms?: number }
+  | { status: 'missing' | 'mismatch' | 'notImplemented' };
+
 interface KittedVisionNative {
   prepare(originalUri: string): Promise<PrepareResult>;
+  measureGarments?(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[]): Promise<MeasureResult>;
+  printDistance?(a: string, b: string): Promise<number | null>;
   prepareItems?(originalUri: string): Promise<PrepareItemsResult>;
   assess?(uri: string, kind: 'fit' | 'scan'): Promise<StillAssessment>;
   reloadUpload(sha256: string): Promise<string | null>;
+  reloadZoom?(sha256: string): Promise<string[]>;
   requestMicrophone(): Promise<'granted' | 'denied'>;
   dictationSupported(): Promise<boolean>;
   startDictation(): Promise<void>;
@@ -137,9 +185,40 @@ export async function assess(uri: string, kind: 'fit' | 'scan'): Promise<StillAs
   }
 }
 
+/** Measures garments on his photo after the closet call (#104): color, quality, cut-out, fingerprint.
+ *  notImplemented on web and in native builds from before #104. Never throws. */
+export async function measureGarments(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[]): Promise<MeasureResult> {
+  if (!native || typeof native.measureGarments !== 'function') return { status: 'notImplemented' };
+  try {
+    return await native.measureGarments(keptUri, detailUri, sha, garments);
+  } catch {
+    return { status: 'missing' };
+  }
+}
+
+/** Feature-print distance between two stored prints (#104); null when it can't be computed. */
+export async function printDistance(a: string, b: string): Promise<number | null> {
+  if (!native || typeof native.printDistance !== 'function') return null;
+  try {
+    return await native.printDistance(a, b);
+  } catch {
+    return null;
+  }
+}
+
 /** The upload copy kept from an earlier prep (base64), for "Try again"; null once it's gone. */
 export async function reloadUpload(sha256: string): Promise<string | null> {
   return native ? native.reloadUpload(sha256) : null;
+}
+
+/** The close-ups kept from an earlier prep (#104), for "Try again"; [] once they're gone or on older builds. */
+export async function reloadZoom(sha256: string): Promise<string[]> {
+  if (!native || typeof native.reloadZoom !== 'function') return [];
+  try {
+    return await native.reloadZoom(sha256);
+  } catch {
+    return [];
+  }
 }
 
 export const isAvailable: boolean = native !== null;

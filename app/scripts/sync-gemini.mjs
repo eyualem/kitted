@@ -1,5 +1,5 @@
 // Copies the locked extraction prompts + schemas (extraction-test/) into the app byte-for-byte:
-//   the scoring call (Oct 6 lock: v3 format) and the closet call (closet1, DECISIONS-LOG #90-91).
+//   the scoring call (Oct 6 lock: v3 format, plus the close-up lines of #104) and the closet call (closet1, #90-91).
 // Run after changing any of them there; geminiRequest / closetSource tests fail on drift.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,4 +12,5 @@ fs.copyFileSync(path.join(root, 'schema.json'), path.join(out, 'schema-v3.json')
 const closetPrompt = fs.readFileSync(path.join(root, 'prompt_closet_v1.txt'), 'utf8');
 fs.writeFileSync(path.join(out, 'prompt-closet-v1.json'), JSON.stringify({ prompt: closetPrompt }, null, 1) + '\n');
 fs.copyFileSync(path.join(root, 'schema_closet_v1.json'), path.join(out, 'schema-closet-v1.json'));
-console.log('synced prompt-v3.json, schema-v3.json, prompt-closet-v1.json and schema-closet-v1.json');
+fs.copyFileSync(path.join(root, 'prompt_zoom.json'), path.join(out, 'prompt-zoom.json'));
+console.log('synced prompt-v3.json, schema-v3.json, prompt-closet-v1.json, schema-closet-v1.json and prompt-zoom.json');

@@ -22,6 +22,7 @@ import type { Scheduler } from '@/services/scheduler';
 import type { PreparedImage } from '@/services/readingSource/types';
 import { buildStubs } from '@/services/closetSource/validate';
 import type { ClosetKind, ClosetSource, StoredClosetReading } from '@/services/closetSource/types';
+import type { GarmentMeasurer, Measured } from '@/services/measure/garments';
 import { garmentHex } from '@/features/fitcheck/labels';
 import { serial } from './checkWrites';
 import { assignNames, baseName, isAutoNamed } from './itemName';
@@ -40,6 +41,8 @@ export interface ClosetServiceDeps {
   /** How long S11 waits for the closet call before writing from the v3 fields. */
   deadlineMs?: number;
   catchUpWindowMs?: number;
+  /** On-device measuring of each piece in his photo (#104): color, cut-out, quality. None: nothing measured. */
+  measure?: GarmentMeasurer | null;
 }
 
 export type DuplicateAnswer = 'same' | 'new' | 'runnerUp';
@@ -100,11 +103,13 @@ export function createClosetService(deps: ClosetServiceDeps) {
 
   function newObs(
     row: FitCheckRow, origin: ObservationOrigin, index: number, garment: Garment, fields: ClosetFields | null, decision: ObservationDecision,
-    o: { itemId?: string; readingId?: string | null; closetReadingId?: string | null; userConfirmed?: ConfirmedFields | null; score?: number | null; candidates?: { id: string; score: number | null }[]; askItemId?: string | null } = {},
+    o: { itemId?: string; readingId?: string | null; closetReadingId?: string | null; userConfirmed?: ConfirmedFields | null; score?: number | null; candidates?: { id: string; score: number | null }[]; askItemId?: string | null; measured?: Measured | null } = {},
   ): ClosetObservationRow {
+    const m = o.measured ?? null;
     return {
       id: ids('O'), itemId: o.itemId ?? '', fitCheckId: row.id, readingId: o.readingId ?? row.readingId, closetReadingId: o.closetReadingId ?? null,
-      garmentIndex: index, origin, garment: clone(garment), closet: fields, sampledHex: null, sampledL: null, cropFile: null, cropQuality: null,
+      garmentIndex: index, origin, garment: clone(garment), closet: fields,
+      sampledHex: m?.sampledHex ?? null, sampledL: m?.sampledL ?? null, cropFile: m?.cropFile ?? null, cropQuality: m?.cropQuality ?? null,
       decision, identityScore: o.score ?? null, candidates: o.candidates ?? [], askItemId: o.askItemId ?? null, answeredAt: null,
       userConfirmed: o.userConfirmed && Object.keys(o.userConfirmed).length > 0 ? o.userConfirmed : null, createdAt: clock.nowMs(), isDeleted: false,
     };
@@ -181,6 +186,28 @@ export function createClosetService(deps: ClosetServiceDeps) {
   // ------------------------------------------------------------------ the engine pass
   interface Piece { origin: ObservationOrigin; index: number; garment: Garment; fields: ClosetFields | null; confirmed: ConfirmedFields | null }
 
+  /** Measures the worn pieces that have a closet box on this check's photo (#104); empty when it can't. */
+  async function measurePieces(row: FitCheckRow, pieces: readonly Piece[]): Promise<Map<Piece, Measured>> {
+    const out = new Map<Piece, Measured>();
+    const measure = deps.measure;
+    const boxed = pieces.filter((p) => p.origin === 'garment' && p.fields?.visible && p.fields.box.length === 4);
+    if (!measure || boxed.length === 0) return out;
+    const key = (p: Piece) => `${p.origin}-${p.index}`;
+    try {
+      const got = await measure(
+        { imageHash: row.imageHash, photoFile: row.photoFile, demoPhotoId: row.demoPhotoId },
+        boxed.map((p) => ({ key: key(p), category: String(p.garment.category), box: p.fields!.box })),
+      );
+      for (const p of boxed) {
+        const m = got.get(key(p));
+        if (m) out.set(p, m);
+      }
+    } catch (e) {
+      console.log('[measure] failed', String(e));
+    }
+    return out;
+  }
+
   /**
    * Runs the engine for `pieces` against his owned closet (minus `exclude`) and writes the result: sightings,
    * new items, worn counts, open questions. Returns the summary parts it produced.
@@ -191,9 +218,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
   ) {
     const items = (await store.closet.all()).filter((c) => isOwned(c) && !o.exclude?.has(c.id));
     const obsAll = await store.closetObs.all();
+    const measured = await measurePieces(row, pieces);
     const reading: Reading = {
       scene: { lighting },
-      garments: pieces.map((p) => observationOf(p.garment, p.fields, { lighting, userConfirmed: p.confirmed })),
+      garments: pieces.map((p) => observationOf(p.garment, p.fields, {
+        lighting, userConfirmed: p.confirmed, sampledHex: measured.get(p)?.sampledHex, sampledL: measured.get(p)?.sampledL,
+      })),
     } as Reading;
     // Every piece is a worn garment for the engine (held pieces are matched the same way); index k = pieces[k].
     for (const g of reading.garments) if (g.certainty === 'unsure') g.certainty = 'likely';
@@ -203,7 +233,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     for (const e of plan.entries) {
       const p = pieces[e.index];
       if (!p) continue;
-      const base = { readingId: row.readingId, closetReadingId, userConfirmed: p.confirmed, score: e.score };
+      const base = { readingId: row.readingId, closetReadingId, userConfirmed: p.confirmed, score: e.score, measured: measured.get(p) ?? null };
       if (e.outcome === 'same' && e.itemId) {
         const obs = newObs(row, p.origin, p.index, p.garment, p.fields, 'same', { ...base, itemId: e.itemId, candidates: [{ id: e.itemId, score: e.score }] });
         await store.closetObs.put(obs);

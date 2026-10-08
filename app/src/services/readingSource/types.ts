@@ -13,6 +13,9 @@ export interface PreparedImage {
   uploadUri: string | null;
   /** The upload JPEG as base64 (real photos; the live source sends it). */
   uploadBase64?: string;
+  /** Face-hidden close-ups cut from the same photo (#104): upper and lower body, or one of the whole person. Sent
+   *  with the upload in the same scoring call. Absent for demo photos and native builds from before #104. */
+  zoomBase64?: string[];
   /** Kept on the phone only: his photo (unblurred, no metadata) and its thumbnail (real photos only). */
   keptUri?: string;
   thumbUri?: string;

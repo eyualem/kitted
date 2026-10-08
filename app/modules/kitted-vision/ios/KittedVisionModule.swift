@@ -20,6 +20,15 @@ public class KittedVisionModule: Module {
     }
 
     /// The quick check after a shot or a library pick: measures only (#100).
+    // On-device measuring after the closet call (KittedMeasure.swift, DECISIONS-LOG #104).
+    AsyncFunction("measureGarments") { (keptUri: String, detailUri: String, sha: String, garments: [[String: Any]]) -> [String: Any] in
+      return try Measure.run(keptUri: keptUri, detailUri: detailUri, sha: sha, garments: garments)
+    }
+
+    AsyncFunction("printDistance") { (a: String, b: String) -> Double? in
+      return Measure.printDistance(a, b)
+    }
+
     AsyncFunction("assess") { (uri: String, kind: String) -> [String: Any] in
       return try Guide.assess(uri: uri, kind: kind)
     }
@@ -80,6 +89,11 @@ public class KittedVisionModule: Module {
       let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         .appendingPathComponent("upload", isDirectory: true).appendingPathComponent("\(sha256).jpg")
       return (try? Data(contentsOf: url))?.base64EncodedString()
+    }
+
+    /// "Try again": the close-ups from the first prep (#104), in order; empty when they're gone.
+    AsyncFunction("reloadZoom") { (sha256: String) -> [String] in
+      return Prep.reloadZoom(sha: sha256)
     }
   }
 }
