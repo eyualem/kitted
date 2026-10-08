@@ -146,6 +146,11 @@
   - **Real on the Simulator:** the after-shot check (the bundled photo reads fine; library photos of flowers → "I can't find clothes", a man in a tee → "I see a person") and scan saving. **Scripted:** the live camera states, and a drawn flat lay stands in for clothes on a bed. **Only on my iPhone:** live brightness, motion, piece boxes, the torch.
   - **Thresholds** were set on the Mac (no false alarms on the 52 real photos; ~90% of blurred copies caught). Real flat-lay photos haven't been tested yet: the `inputs/item-photos/` shoot will tune the scan side. Every tip and check is logged with its raw numbers (Metro, and `Documents/logs/guide.log`, which `tools/phone/pull.sh` prints).
   - **Demo screens:** 41 too dark · 42 backlit · 43 come closer · 44 after the shot: too dark · 45 can't find you · 46 scan, 3 pieces · 47 scan dark · 48 a person · 49 cut off · 50 glare · 51 no clothes · 52 scan after the shot · 53 saved. Screenshots: `screenshots/guidance/` (git-ignored).
+- **Reading accuracy, "the AI names and points, the phone measures": built Oct 8** (DECISIONS-LOG #104–107; its own session). What changes:
+  - **Close-ups in the scoring call:** photo prep cuts two face-hidden close-ups (upper body, lower body to the feet) and sends them with the photo in the same call. On my real photos my boots stopped reading as slides (9 of 21 → 0), tops went from 80% to 100% right, and scores got steadier (64/66 vs 60/66 photos). Cost: 0.39 → 0.57¢ per check, +0.5 s. Test: `extraction-test/results/zoom1*`.
+  - **Measured on the phone after the closet call:** each piece's own pixels (person outline ∩ its box, faces and hands removed, the shirt over it subtracted) give its real color and lightness, a cut-out picture (`Documents/closet/`) and an image fingerprint. My grey hoodie measured the same lightness in 3 different photos while the AI's color words changed. It feeds the closet's matching only; it never changes a score. The closet session decides how tiles use the cut-outs.
+  - **Tried and not used:** a boot definition line in the prompt (no help), leg shape from the body outline (too rough on 50 stock photos), fingerprints as a strong signal (weak for layered tops).
+  - **Real vs not yet:** all of it runs on the Mac with the app's own Swift code and builds for the Simulator. It reaches my phone after the next reinstall (`tools/phone/install.sh`). Demo photos are unchanged.
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
@@ -201,6 +206,8 @@
   4. a Closet "To confirm" card, and every tile opens a piece page;
   5. names that tell pieces apart.
   The question limits are settled in #111. The parallel measure session owns crops, measured color and similarity prints (#112).
+
+- **C. Close-ups + phone measuring (its own chat): built Oct 8 (#104–107).** Next: after the reinstall, 3–4 real checks while Claude reads the `[prep] … close-ups …` and `[measure] …` lines (prep time, close-up sizes, measured colors). Later: before/after photo comparison for fix detection (needs real fix photos), and flat-lay cut-outs for scans (needs `inputs/item-photos/`).
 
 ### 0. The plan to beta (Oct 7 review, DECISIONS-LOG #56)
 **Features before polish.** The Stylist tab is about 80% of the mockup's polish; the gap is scope. Closet, Lookbook, You, onboarding and the paywall are still placeholders that show spec IDs ("C1 · Closet"). There's also no server, so a release build can't score real photos (the key only loads in dev builds). Order:
@@ -294,6 +301,7 @@ P5's real size is about 6.5 days, not 05's 2.
   - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
+- **Close-ups cost +47% per scoring call (#105): 0.39 → 0.57¢ now, about 0.8 → 1.1¢ from Jan 2027.** Default: on (`SEND_CLOSE_UPS` in `app/src/services/readingSource/gemini.ts`; `false` reverts to the Oct 6 lock). Recommended: keep it. It removed the wrong "slides" fixes and made scores steadier.
 - **Closet identity, 3 taste calls (#111; page `screenshots/closet-identity/index.html`):**
   1. Is my photo on the tile good enough, with the hand and phone showing on mirror-selfie tops? Recommended: yes.
   2. For pieces without a clean photo, a drawing filled with my fabric, or the plain drawing? Recommended: my fabric.
