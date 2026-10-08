@@ -260,6 +260,7 @@ P5's real size is about 6.5 days, not 05's 2.
   - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
+- **Closet tab shape (research Oct 8, `mockups/closet-concepts.html`):** OK or veto 4 calls: (1) combinations live in Closet as Pieces | Outfits (no 5th tab, Lookbook stays history); (2) no avatar, a "standing outfit" of his own garment tiles, his real photo on worn outfits; (3) the rotation count = top+bottoms+shoes combos rated Put together or better, layers don't multiply (replaces the unreproducible 37); (4) no numbers on unworn outfits. Plus "Goes with" (3 best outfits) on each piece. Engine is `pickOutfit` top-N; about 3.5 days on top of the tab. Hand to the style-council session once decided.
 - **Mic permission text** (outward-facing; in `app/app.config.ts`): "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
 - **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator. The same reinstall brings the 12 MP camera (#83): take a few Propped and Mirror shots while Claude watches the log.
 - **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Scored for"): greetings, weather lines, why lines, the "Going with your own?" row, the re-score alert, and the style names (Minimal, Sporty, Outdoorsy; the council approved "Outdoor" and "Classic prep" for onboarding, so pick one set).
@@ -338,6 +339,7 @@ Exceptions:
 | `rubric/v4.md` (v3.md superseded), `extraction-test/` | Style rules in plain words; the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
 | `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |
+| `mockups/closet-concepts.html` | Closet tab research (Oct 8): where combinations live, avatar verdict, wireframes, sources | Proposal; waiting on the founder |
 | `speed-and-detail-plan.md`, `testing-plan.md` | Vision speed plan; the 5 validation tests | Reference |
 | `demo-app-spec.md` | Older product spec | Stale; overridden by everything above |
 | `handoff/archive/` | Superseded docs (the original handoff brief, review notes, the P2 plan, the SwiftUI starter) | History only; don't follow |

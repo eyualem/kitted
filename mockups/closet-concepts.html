@@ -1,0 +1,347 @@
+<title>Kitted Closet Concepts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a narrow reading column for the argument, widening to a row of phone wireframes drawn in Kitted's own tokens. */
+:root{
+  --bg:#F3F4F6; --surface:#FFFFFF; --surface-2:#ECEEF1; --ink:#121628; --ink-2:#585E70; --ink-3:#848A99;
+  --line:#E0E3E8; --accent:#9C5326; --accent-soft:rgba(156,83,38,.11); --good:#2F6B4F; --bad:#9A3B3B;
+  --g-stroke:rgba(18,22,40,.22);
+  --display:"Archivo",system-ui,-apple-system,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Archivo",system-ui,sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222,151,98,.15); --good:#7FC4A0; --bad:#E08C8C;
+  --g-stroke:rgba(236,238,243,.28); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222,151,98,.15); --good:#7FC4A0; --bad:#E08C8C;
+  --g-stroke:rgba(236,238,243,.28); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;margin:0;padding-inline:20px;padding-block:40px 80px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+.col{max-width:680px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(34px,6vw,52px);font-weight:750;font-stretch:88%;line-height:1.02}
+h2{font-size:26px;font-weight:700;font-stretch:92%}
+h3{font-size:17px;font-weight:650}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:19px;color:var(--ink-2);max-width:640px}
+section{display:flex;flex-direction:column;gap:18px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.muted{color:var(--ink-2)}
+.small{font-size:14px}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.88em;background:var(--surface-2);padding:1px 5px;border-radius:5px}
+
+/* answer block */
+.answer{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;display:grid;gap:16px}
+.answer ol{margin:0;padding-left:22px;display:grid;gap:10px}
+.answer li::marker{font-family:var(--mono);color:var(--accent)}
+
+/* ranking table */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14.5px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+tr:last-child td{border-bottom:0}
+td.rank{font-family:var(--display);font-size:22px;font-weight:700;width:44px}
+.pill{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:11px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill.pick{background:var(--accent-soft);color:var(--accent)}
+.y{color:var(--good)} .n{color:var(--bad)}
+
+/* phones */
+.phones{display:flex;flex-wrap:wrap;gap:28px;justify-content:center}
+figure{margin:0;display:flex;flex-direction:column;gap:12px;width:300px;max-width:100%}
+figcaption{font-size:14px;color:var(--ink-2)}
+figcaption b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+.phone{width:300px;max-width:100%;height:620px;border-radius:44px;background:var(--bg);border:9px solid var(--ink);overflow:hidden;position:relative;display:flex;flex-direction:column}
+:root[data-theme="dark"] .phone{border-color:#2A2F3B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .phone{border-color:#2A2F3B}}
+.scr{flex:1;overflow:hidden;padding:30px 13px 0;display:flex;flex-direction:column;gap:10px;font-size:12.5px;line-height:1.35}
+.bigt{font-family:var(--display);font-size:25px;font-weight:750;display:flex;justify-content:space-between;align-items:center}
+.plus{width:28px;height:28px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-size:18px;font-weight:400;color:var(--ink-2)}
+.navbk{color:var(--accent);font-size:13px;font-weight:600}
+.segs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border-radius:9px;padding:2px;font-size:12px;font-weight:600}
+.segs i{font-style:normal;text-align:center;padding:5px 0;border-radius:7px;color:var(--ink-2)}
+.segs i.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.card{background:var(--surface);border-radius:14px;padding:11px}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.num{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:5px;overflow:hidden}
+.chip{flex:none;height:24px;padding:0 9px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;font-size:11px;font-weight:600;color:var(--ink-2)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px 6px}
+.tile{aspect-ratio:1/.92;border-radius:12px;background:var(--surface-2);display:grid;place-items:center}
+.tile svg{width:58%;height:auto}
+.tile.ghost{background:transparent;border:1.5px dashed var(--line)}
+.tile.ghost svg{opacity:.5}
+.ml{font-size:10px;color:var(--ink-2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row{display:flex;align-items:center;gap:9px}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chev{color:var(--ink-3)}
+.gain{font-family:var(--mono);font-size:11px;color:var(--accent)}
+.btn{height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:650;background:var(--ink);color:var(--bg)}
+.btn.sec{background:var(--surface-2);color:var(--ink)}
+
+/* the standing outfit */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fit{background:var(--surface);border-radius:14px;padding:8px 8px 9px;display:flex;flex-direction:column;gap:6px}
+.stand{background:var(--surface-2);border-radius:10px;aspect-ratio:3/4;display:grid;grid-template-rows:42% 42% 16%;justify-items:center;align-items:center;padding:6px 0;position:relative}
+.stand svg{height:92%;width:auto}
+.stand .layer{position:absolute;left:6px;top:6px;width:28%;height:auto}
+.stand.photo{background:linear-gradient(160deg,#7d8590,#4a515c);display:block}
+.stand.photo span{position:absolute;inset:auto 6px 6px auto;font-family:var(--mono);font-size:9px;color:#fff;background:rgba(0,0,0,.35);padding:2px 5px;border-radius:5px}
+.fit b{font-size:11.5px;font-weight:650;line-height:1.25}
+.fit .meta{font-size:10px;color:var(--ink-3)}
+.badge{display:inline-flex;height:17px;align-items:center;padding:0 6px;border-radius:9px;font-size:9.5px;font-weight:650;background:var(--accent-soft);color:var(--accent)}
+.badge.worn{background:var(--surface-2);color:var(--ink-2)}
+.hero-item{display:grid;place-items:center;background:var(--surface-2);border-radius:16px;height:150px}
+.hero-item svg{height:70%;width:auto}
+.goes{display:flex;gap:6px}
+.goes .fit{flex:1;padding:6px}
+.goes .stand{grid-template-rows:42% 42% 16%}
+
+/* tradeoff list */
+.pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.pc>div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:8px;align-content:start}
+.pc ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14.5px}
+.decide{display:grid;gap:12px}
+.decide>div{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.decide .q{font-family:var(--display);font-size:24px;font-weight:700;color:var(--accent);grid-row:span 2;line-height:1}
+.decide h3{margin:0}
+.sources{font-size:13.5px;color:var(--ink-2);display:grid;gap:6px}
+.sources a{word-break:break-word}
+@media (prefers-reduced-motion:no-preference){.fit{transition:transform .15s}.fit:hover{transform:translateY(-2px)}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="g-tee" viewBox="0 0 40 40"><path d="M9 7 L15 4 Q20 7.5 25 4 L31 7 L37 14 L31 17 L30 36 L10 36 L9 17 L3 14 Z"/></symbol>
+    <symbol id="g-crew" viewBox="0 0 40 40"><path d="M10 6 L15 4 Q20 7 25 4 L30 6 L37 31 L32.5 32 L29.5 17 L30 36 L10 36 L10.5 17 L7.5 32 L3 31 Z"/></symbol>
+    <symbol id="g-over" viewBox="0 0 40 40"><path d="M10 6 L16 4 L20 9 L24 4 L30 6 L37 31 L32.5 32 L29.5 17 L30 37 L10 37 L10.5 17 L7.5 32 L3 31 Z"/><path d="M20 9 L20 37" fill="none" stroke-width="1"/></symbol>
+    <symbol id="g-pants" viewBox="0 0 40 40"><path d="M11 3 L29 3 L31.5 37 L23.5 37 L20 13 L16.5 37 L8.5 37 Z"/></symbol>
+    <symbol id="g-shoe" viewBox="0 0 40 20"><path d="M2 10 L2 16 L38 16 L38 12.5 Q31 9.5 25 9 L19 3 L12 4 L10 8 L2 8 Z"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+<header class="col stack">
+  <span class="eyebrow">Kitted · Closet tab research · Oct 8, 2026</span>
+  <h1>What goes in the Closet tab</h1>
+  <p class="lede">Three research passes: your own docs and code, 18 competitor apps, and what users say about closet apps. The short version: keep combinations in Closet, show them as a "standing outfit" made of his own pieces instead of an avatar, and make every piece answer "what goes with this?"</p>
+</header>
+
+<section class="col">
+  <div class="answer">
+    <span class="eyebrow">The recommendation</span>
+    <ol>
+      <li><b>Closet gets two views: Pieces and Outfits.</b> Pieces is the grid you already designed. Outfits is the browsable list behind the "fits your closet makes" number, which today is only a number.</li>
+      <li><b>No avatar.</b> Show each outfit as his own garments stacked in body order (top, bottoms, shoes) on one tile. It reads like a person without drawing a body.</li>
+      <li><b>Every piece answers "what goes with this?"</b> Tapping the grey hoodie shows the 3 best outfits built around it. This is the strongest men-specific hook found.</li>
+      <li><b>Outfit ideas come from one engine.</b> The morning card is today's top idea; the Outfits view is the full list; "Goes with" is the same list pinned to one piece. It's all code and free, so no AI cost.</li>
+      <li><b>No new tab.</b> Lookbook stays "what I wore" (real photos, real scores). Closet becomes "what I own and what I can make from it".</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="col stack">
+    <span class="eyebrow">The screens</span>
+    <h2>How it would look</h2>
+    <p class="muted">Wireframes in Kitted's tokens. Garments are drawn icons, as in your mockups, until clean crops exist. The "Outfits" view has no predicted scores, because your spec already rules that out for unworn ideas (02-screens, "no predicted score"). Outfits he has actually worn show their real score.</p>
+  </div>
+  <div class="phones">
+
+    <!-- 1 Pieces -->
+    <figure>
+      <div class="phone"><div class="scr">
+        <div class="bigt">Closet<span class="plus">+</span></div>
+        <div class="segs"><i class="on">Pieces</i><i>Outfits</i></div>
+        <div class="card spread">
+          <div><div class="tag">Your rotation</div><div class="row" style="gap:6px;align-items:flex-end"><span class="num" style="font-size:38px;line-height:1">24</span><span class="muted" style="font-size:11px;padding-bottom:3px">outfits you<br>can make</span></div></div>
+          <span class="chev">See all ›</span>
+        </div>
+        <div class="card row">
+          <span class="tile" style="width:44px;flex:none"><svg fill="#9CA0A6" stroke="var(--g-stroke)"><use href="#g-crew"/></svg></span>
+          <div style="min-width:0"><div class="tag">Next best buy</div><b style="font-size:12.5px">Grey quarter-zip</b> <span class="gain">+9 outfits</span></div>
+        </div>
+        <div class="chips"><span class="chip on">All 16</span><span class="chip">Tops 6</span><span class="chip">Bottoms 3</span><span class="chip">Shoes 4</span></div>
+        <div class="grid3">
+          <div><span class="tile"><svg fill="#5B6440" stroke="var(--g-stroke)"><use href="#g-over"/></svg></span><div class="ml">Olive overshirt</div></div>
+          <div><span class="tile"><svg fill="#F2F0EA" stroke="var(--g-stroke)"><use href="#g-tee"/></svg></span><div class="ml">White tee · 4×</div></div>
+          <div><span class="tile"><svg fill="#2B3550" stroke="var(--g-stroke)"><use href="#g-crew"/></svg></span><div class="ml">Navy crewneck</div></div>
+          <div><span class="tile"><svg fill="#26324F" stroke="var(--g-stroke)"><use href="#g-pants"/></svg></span><div class="ml">Dark jeans · 6×</div></div>
+          <div><span class="tile"><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg></span><div class="ml">Tan chinos</div></div>
+          <div><span class="tile"><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></span><div class="ml">White sneakers</div></div>
+        </div>
+      </div></div>
+      <figcaption><b>Pieces</b>Your screen 15 almost unchanged. The rotation card becomes a door: tap it and Outfits opens. Wear counts come free from fit checks, since every check is a wear log.</figcaption>
+    </figure>
+
+    <!-- 2 Outfits -->
+    <figure>
+      <div class="phone"><div class="scr">
+        <div class="bigt">Closet<span class="plus">+</span></div>
+        <div class="segs"><i>Pieces</i><i class="on">Outfits</i></div>
+        <div class="chips"><span class="chip on">Everyday</span><span class="chip">Class</span><span class="chip">Date</span><span class="chip">Work</span><span class="chip">Going out</span></div>
+        <div class="spread"><b style="font-size:13px">Try next</b><span class="muted" style="font-size:11px">18 not worn yet</span></div>
+        <div class="grid2">
+          <div class="fit">
+            <div class="stand"><svg class="layer" fill="#5B6440" stroke="var(--g-stroke)"><use href="#g-over"/></svg><svg fill="#F2F0EA" stroke="var(--g-stroke)"><use href="#g-tee"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div>
+            <b>Overshirt, tee, tan chinos</b><span class="meta">Earth tones · layered</span>
+          </div>
+          <div class="fit">
+            <div class="stand"><svg fill="#2B3550" stroke="var(--g-stroke)"><use href="#g-crew"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div>
+            <b>Navy crew, tan chinos</b><span class="meta">Dark top, light bottom</span>
+          </div>
+        </div>
+        <div class="spread"><b style="font-size:13px">Your go-tos</b><span class="muted" style="font-size:11px">6 worn</span></div>
+        <div class="grid2">
+          <div class="fit">
+            <div class="stand photo"><span>Oct 2</span></div>
+            <b>Tee, dark jeans</b><span class="row" style="gap:5px"><span class="badge">8.0 Sharp</span><span class="meta">worn 3×</span></span>
+          </div>
+          <div class="fit">
+            <div class="stand"><svg fill="#2B3550" stroke="var(--g-stroke)"><use href="#g-crew"/></svg><svg fill="#26324F" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div>
+            <b>Navy crew, dark jeans</b><span class="row" style="gap:5px"><span class="badge">7.5</span><span class="meta">worn 1×</span></span>
+          </div>
+        </div>
+      </div></div>
+      <figcaption><b>Outfits</b>Ideas, sorted best first for the occasion. "Try next" is combos he owns but hasn't checked, with no scores. "Your go-tos" are ones he wore, shown with his own photo and real score. Tap one and "Wear this" opens Stylist, the same as the morning card.</figcaption>
+    </figure>
+
+    <!-- 3 Item detail -->
+    <figure>
+      <div class="phone"><div class="scr">
+        <div class="spread"><span class="navbk">‹ Closet</span><span class="navbk">Edit</span></div>
+        <div class="hero-item"><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg></div>
+        <div><b style="font-size:17px;font-family:var(--display)">Tan chinos</b><div class="muted" style="font-size:11.5px">Bottoms · Straight · Regular fit</div></div>
+        <div class="card spread"><div><div class="tag">Worn</div><span class="num" style="font-size:20px">2×</span></div><div><div class="tag">Last worn</div><span style="font-size:12.5px;font-weight:600">Sep 28</span></div><div><div class="tag">Outfits</div><span class="num" style="font-size:20px">9</span></div></div>
+        <div class="spread"><b style="font-size:13px">Goes with</b><span class="chev" style="font-size:11px">All 9 ›</span></div>
+        <div class="goes">
+          <div class="fit"><div class="stand"><svg fill="#F2F0EA" stroke="var(--g-stroke)"><use href="#g-tee"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div></div>
+          <div class="fit"><div class="stand"><svg fill="#2B3550" stroke="var(--g-stroke)"><use href="#g-crew"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div></div>
+          <div class="fit"><div class="stand"><svg fill="#5B6440" stroke="var(--g-stroke)"><use href="#g-over"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#3A2A20" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div></div>
+        </div>
+        <div class="btn">Style this</div>
+        <div class="muted" style="font-size:10.5px;text-align:center">Opens Stylist with the chinos pinned</div>
+      </div></div>
+      <figcaption><b>A piece</b>"What goes with this?" is the question men actually ask (Twelve70's whole app, a top post on r/malefashionadvice). Three good options, not a feed. "Style this" jumps to Stylist, which keeps your "do things in Stylist" rule.</figcaption>
+    </figure>
+
+    <!-- 4 Thin closet -->
+    <figure>
+      <div class="phone"><div class="scr">
+        <div class="bigt">Closet<span class="plus">+</span></div>
+        <div class="segs"><i>Pieces</i><i class="on">Outfits</i></div>
+        <div class="card stack" style="gap:6px">
+          <div class="tag">Your rotation</div>
+          <div class="row" style="gap:6px;align-items:flex-end"><span class="num" style="font-size:38px;line-height:1">2</span><span class="muted" style="font-size:11px;padding-bottom:3px">outfits so far</span></div>
+          <div class="muted" style="font-size:11.5px">Every fit check adds what you're wearing. One more pair of shoes would make 4.</div>
+        </div>
+        <div class="grid2">
+          <div class="fit"><div class="stand"><svg fill="#121628" stroke="var(--g-stroke)"><use href="#g-tee"/></svg><svg fill="#26324F" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div><b>Black tee, dark jeans</b><span class="meta">Clean and simple</span></div>
+          <div class="fit"><div class="stand"><svg fill="#9CA0A6" stroke="var(--g-stroke)"><use href="#g-crew"/></svg><svg fill="#26324F" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div><b>Grey crew, dark jeans</b><span class="meta">Easy neutrals</span></div>
+        </div>
+        <div class="fit" style="border:1.5px dashed var(--line);background:transparent;align-items:center;padding:16px 10px;text-align:center;gap:8px">
+          <span class="muted" style="font-size:11.5px">Wearing something new?</span>
+          <div class="btn" style="width:100%">Check my fit</div>
+        </div>
+      </div></div>
+      <figcaption><b>Week one</b>Most guys start with 3–6 pieces, so the list is short. It says so plainly and points at the next check or the next buy. It never says the closet is lacking.</figcaption>
+    </figure>
+
+  </div>
+</section>
+
+<section>
+  <div class="col stack">
+    <span class="eyebrow">Where combinations live</span>
+    <h2>Four places they could go, ranked</h2>
+    <p class="muted">Ranked on user psychology, competition, chance of success before the Nov 3 beta, and money.</p>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>Option</th><th>Why it works</th><th>Why it doesn't</th><th>Fits your rules?</th></tr></thead>
+    <tbody>
+      <tr><td class="rank">1</td><td><b>Closet: Pieces | Outfits</b><br><span class="pill pick">Recommended</span></td><td>The rotation number already lives here, and an outfit is made of pieces. One place answers "what can I wear?" Whering and Acloset both put outfits next to items.</td><td>The Closet tab gets busier. Fix that with the segmented control and Pieces as the default.</td><td class="y">Yes. Looking happens in Closet; "Wear this" and "Style this" go to Stylist.</td></tr>
+      <tr><td class="rank">2</td><td><b>Lookbook</b></td><td>The name means "a book of looks". It already has the calendar and the scored history.</td><td>It mixes "what I wore" (real photo, real score) with "what I could wear" (made up). The calendar and "Days dressed with intent" lose their meaning when half the list never happened.</td><td>Partly. It blurs the honest history Lookbook is built on.</td></tr>
+      <tr><td class="rank">3</td><td><b>Only in Stylist</b><br><span class="muted small">(ask "what goes with my chinos?")</span></td><td>No new UI, and the morning card already gives one idea a day.</td><td>There's no way to browse. Questions are 5 a day on Free and need AI. Twelve70's success shows men want to browse pairings themselves.</td><td>Yes, but it's thin.</td></tr>
+      <tr><td class="rank">4</td><td><b>A 5th "Outfits" tab</b></td><td>Most visible. Apple's guidelines allow up to 5 tabs.</td><td>It splits your closet across two tabs. In week one it holds 2 outfits, so it's an empty tab at the moment it matters most. It's also another full screen to build before beta.</td><td>Not really. It's the "builder canvas" competitors fill with weak combos.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="col">
+  <span class="eyebrow">The avatar question</span>
+  <h2>Don't build one. Use a standing outfit instead.</h2>
+  <p>Your docs already cut avatars and AI try-on (research-context.md; brainstorm 01: "expensive, unreliable, users hate AI art"). The new research makes that case stronger:</p>
+  <div class="pc">
+    <div><h3>It can hurt the user</h3><ul>
+      <li>A 2023 <i>Journal of Marketing Research</i> study (6 studies, 8,000+ shoppers) found virtual fitting rooms <b>lowered self-esteem and sales for heavier shoppers</b>. That collides with "never rate bodies".</li>
+      <li>Reviewers say AI avatars make them thinner and taller or add fake abs (TechCrunch on Doji; Khaleej Times, Jan 2026).</li>
+    </ul></div>
+    <div><h3>It's inaccurate and costly</h3><ul>
+      <li>Google's Doppl renders jeans like leg warmers. A long-time Alta user quit the avatar because clothes "change in appearance".</li>
+      <li>Try-on APIs cost about $0.05–0.075 per image, roughly <b>15×</b> your 0.42¢ scoring call, for every outfit shown.</li>
+      <li>It needs his unblurred face and body sent to another company, which undoes your face-blur design (#54–55).</li>
+    </ul></div>
+    <div><h3>What to do instead</h3><ul>
+      <li>Stack his garments in body order on one tile: top, then bottoms, then shoes, with a layer tucked to the side. Fits (the app) does a version of this with its swipe "Dressing Room".</li>
+      <li>It's free, it's instant, the same outfit always looks the same, and it uses the icons you already draw. Real cut-outs replace the icons later.</li>
+      <li>Outfits he has worn show his <b>own photo</b>, which beats any avatar for realism.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="col">
+  <span class="eyebrow">How it gets built</span>
+  <h2>Mostly done already in code</h2>
+  <div class="stack">
+    <p><b>The engine exists.</b> <code>pickOutfit</code> in <code>ideas.ts</code> already tries every valid combination (up to about 600), scores each with the full rubric for the occasion, and keeps the best one. Keeping the top 20 instead of the top 1 gives the Outfits list. Pinning one item, which it already supports for "Style this", gives "Goes with". <code>rotation()</code> already counts combinations; it only needs to return item ids.</p>
+    <p><b>It costs nothing to run.</b> No AI call, so it's free on every plan, which matches "everything that runs on code is free".</p>
+    <p><b>It fixes an open bug in the plan.</b> The mockup's "37 fits" can't be reproduced. With layers counted, a 16-piece closet makes about 180, which is meaningless (04-logic, open question). Recommended count: <b>top + bottoms + shoes combos the rules rate "Put together" or better; a layer never multiplies the count.</b> It's honest, and it can't be inflated.</p>
+    <p><b>Rough size:</b> engine change ½ day, Outfits view 2 days, "Goes with" on the piece screen 1 day. About 3.5 days on top of the Closet tab itself, which the style-council session owns. A swipe shuffle ("pin the chinos, shuffle the rest") is a nice play feature but has no retention evidence, so it waits for v1.1.</p>
+  </div>
+</section>
+
+<section class="col">
+  <span class="eyebrow">Competition</span>
+  <h2>One thing changed in September</h2>
+  <p>A research pass found that <b>Google Photos "Wardrobe"</b> reached all US users on Sep 24, 2026 (TechCrunch). It builds a closet from your photo library automatically and offers mix-and-match plus try-on. I haven't checked it hands-on. If accurate, "the closet fills itself" is no longer unique to Kitted. What's still unique is <b>judgement</b>: the score, the fixes, and outfits ranked by a rubric instead of matched on tags. That's why the Outfits view should be visibly "your stylist's picks", not a random shuffle. Random-looking combos are the top complaint about Cladwell, Whering and Acloset.</p>
+</section>
+
+<section class="col">
+  <span class="eyebrow">Your calls</span>
+  <h2>Four things to OK or veto</h2>
+  <div class="decide">
+    <div><span class="q">1</span><h3>Combinations live in Closet, as Pieces | Outfits.</h3><p class="muted small">No 5th tab; Lookbook stays history only.</p></div>
+    <div><span class="q">2</span><h3>No avatar. Use a standing outfit of his own pieces.</h3><p class="muted small">His real photo appears on outfits he's worn.</p></div>
+    <div><span class="q">3</span><h3>The count is combos rated "Put together" or better; layers don't multiply it.</h3><p class="muted small">This replaces the unreproducible "37".</p></div>
+    <div><span class="q">4</span><h3>No numbers on outfits he hasn't worn.</h3><p class="muted small">This keeps your existing "no predicted score" rule. Worn outfits show their real score.</p></div>
+  </div>
+</section>
+
+<section class="col">
+  <span class="eyebrow">Sources</span>
+  <div class="sources">
+    <span>Reddit couldn't be reached by these research tools, so the Reddit view is missing. A Codex pass on r/malefashionadvice and r/capsulewardrobe would fill it.</span>
+    <a href="https://news.iastate.edu/news/2023/04/13/virtual-fitting-rooms">Iowa State / Journal of Marketing Research (2023): virtual fitting rooms and self-esteem</a>
+    <a href="https://www.twelve70.com/about">Twelve70: menswear "what goes with this" generator</a>
+    <a href="https://whering.co.uk/faq/shuffle-lookbook-dress-me-1">Whering: Dress Me shuffle with pinning</a>
+    <a href="https://www.fits-app.com/posts/top-8-closet-outfit-planning-apps-reviewed">Fits: Dressing Room swipe layout (vendor post)</a>
+    <a href="https://technocouture.substack.com/p/reflections-from-my-clueless-closet">A long-term closet app user on Alta, avatars and logging</a>
+    <a href="https://apps.apple.com/us/app/cladwell/id1140550878">Cladwell App Store reviews: bad AI outfit suggestions</a>
+    <a href="https://wrap.ngo/media-centre/press-releases/nations-wardrobes-hold-16-billion-items-unworn-clothes-people-open-new">WRAP (2022): 26% of clothes unworn for a year. The "20/80 rule" has no study behind it.</a>
+    <a href="https://techcrunch.com/2025/05/15/doji-raises-14m-to-make-virtual-try-ons-fun-through-ai-avatars">TechCrunch on Doji avatars</a>
+    <a href="https://qz.com/google-doppl-virtual-dressing-room-ai">Quartz on Google Doppl accuracy</a>
+    <a href="https://fashn.ai/blog/pricing-update-for-developer-api">FASHN try-on API pricing</a>
+    <a href="https://techcrunch.com/?p=3168895">TechCrunch: Google Photos Wardrobe (not verified hands-on)</a>
+  </div>
+</section>
+
+</div>
