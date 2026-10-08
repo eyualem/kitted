@@ -34,6 +34,8 @@ export interface MorphPickerProps<T extends string> {
   accessibilityLabel: string;
   /** Plain mono text with a chevron (the result card's tagline) instead of the capsule. */
   plain?: boolean;
+  /** Plain subheadline text with a chevron (the morning card's context line, #70). */
+  inline?: boolean;
 }
 
 const ROW = 44;
@@ -52,7 +54,8 @@ interface Rect {
   h: number;
 }
 
-export function MorphPicker<T extends string>({ label, value, sections, onPick, accessibilityLabel, plain }: MorphPickerProps<T>) {
+export function MorphPicker<T extends string>({ label, value, sections, onPick, accessibilityLabel, plain: mono, inline }: MorphPickerProps<T>) {
+  const plain = mono || inline;
   const { colors, scheme, a11y } = useTheme();
   const win = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -107,7 +110,11 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
 
   const top = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: plain ? 3 : 5, height: from?.h ?? 32, paddingHorizontal: plain ? PLAIN_PAD - 1 : 11 }}>
-      {plain ? (
+      {inline ? (
+        <KText variant="subheadline" weight="500" color="ink" numberOfLines={1}>
+          {label}
+        </KText>
+      ) : plain ? (
         <KText variant="footnote" color="ink" mono="label" numberOfLines={1}>
           {label}
         </KText>
@@ -133,9 +140,15 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
       >
         {plain ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-            <KText variant="footnote" color="ink2" mono="label" numberOfLines={1}>
-              {label}
-            </KText>
+            {inline ? (
+              <KText variant="subheadline" weight="500" color="ink2" numberOfLines={1}>
+                {label}
+              </KText>
+            ) : (
+              <KText variant="footnote" color="ink2" mono="label" numberOfLines={1}>
+                {label}
+              </KText>
+            )}
             <Icon name="chevronDown" size={10} color="ink2" weight="semibold" />
           </View>
         ) : (

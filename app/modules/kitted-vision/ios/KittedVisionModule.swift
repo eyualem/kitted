@@ -18,6 +18,8 @@ import UniformTypeIdentifiers
 import Vision
 
 public class KittedVisionModule: Module {
+  private var dictation: KittedDictation?
+
   public func definition() -> ModuleDefinition {
     Name("KittedVision")
 
@@ -45,6 +47,34 @@ public class KittedVisionModule: Module {
       Prop("facing") { (view: KittedCameraView, facing: String) in view.setFacing(facing) }
       Prop("torch") { (view: KittedCameraView, on: Bool) in view.torchOn = on }
       AsyncFunction("takePhoto") { (view: KittedCameraView, promise: Promise) in view.takePhoto(promise) }
+    }
+
+    // Voice input (DECISIONS-LOG #70): on-device dictation for the composer's mic.
+    Events("onDictation")
+
+    AsyncFunction("dictationSupported") { () async -> Bool in
+      await KittedDictation.isSupported()
+    }
+
+    AsyncFunction("requestMicrophone") { () async -> String in
+      await KittedDictation.requestMicrophone() ? "granted" : "denied"
+    }
+
+    AsyncFunction("startDictation") { () async throws in
+      if self.dictation == nil {
+        self.dictation = KittedDictation { [weak self] event in
+          switch event {
+          case let .text(text, isFinal): self?.sendEvent("onDictation", ["type": "text", "text": text, "final": isFinal])
+          case let .level(level): self?.sendEvent("onDictation", ["type": "level", "level": level])
+          case let .ended(error): self?.sendEvent("onDictation", ["type": "end", "error": error as Any])
+          }
+        }
+      }
+      try await self.dictation?.start()
+    }
+
+    AsyncFunction("stopDictation") { () async in
+      await self.dictation?.stop()
     }
 
     /// "Try again" after a failed read: the upload copy from the first prep (Caches/upload).

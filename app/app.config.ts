@@ -5,6 +5,9 @@ const demo = process.env.KITTED_DEMO !== '0';
 
 /** The camera prompt's reason (Apple 5.1.1); used by both the plist and the picker plugin. */
 const CAMERA_USAGE = 'Kitted uses the camera to check your outfit. Faces are blurred before anything is sent.';
+/** The composer's mic (DECISIONS-LOG #70). Used for the plist AND the picker plugin: `false` there deletes the key (#53). */
+const MIC_USAGE = 'Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone.';
+const SPEECH_USAGE = 'Kitted turns what you say into text on your phone, so you can ask your stylist out loud.';
 
 const config: ExpoConfig = {
   name: 'Kitted',
@@ -23,6 +26,8 @@ const config: ExpoConfig = {
     icon: './assets/expo.icon',
     infoPlist: {
       NSCameraUsageDescription: CAMERA_USAGE,
+      NSMicrophoneUsageDescription: MIC_USAGE,
+      NSSpeechRecognitionUsageDescription: SPEECH_USAGE,
       ITSAppUsesNonExemptEncryption: false,
     },
     privacyManifests: {
@@ -60,7 +65,7 @@ const config: ExpoConfig = {
     // PHPicker needs no Photos permission (09 §3). cameraPermission must be the SAME string as
     // NSCameraUsageDescription above: `false` deletes that key, and iOS then kills the app the
     // moment the camera asks for access (DECISIONS-LOG #53).
-    ['expo-image-picker', { photosPermission: false, cameraPermission: CAMERA_USAGE, microphonePermission: false }],
+    ['expo-image-picker', { photosPermission: false, cameraPermission: CAMERA_USAGE, microphonePermission: MIC_USAGE }],
     // P6: ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false }],
     // P6: 'expo-notifications',
   ],

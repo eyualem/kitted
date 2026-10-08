@@ -300,6 +300,46 @@ Contradictions settled and decisions changed during the build. Newest last.
     - Under v4, `styleEffects()` finds no differences, so the "Scored for" line hides itself.
     - Same photo, same score, whatever he picked.
 
+## Oct 8, 2026 · Card redesign, one-capsule composer with voice, tab bar
+
+70. **Founder picks (Oct 8): card A "hero strip", shrink-on-scroll in Closet/Lookbook only, and the mic now (answers later).** These came from 3 design agents (Apple-native, editorial, clarity) and 1 technical agent.
+    - **What all three designers agreed on:**
+      - say the weather once
+      - give the outfit a headline
+      - merge the pills into one line
+      - no cut-off labels
+      - one primary action per state
+      - the own-fit box becomes a one-line link
+      - one composer capsule
+    - **The card (`MorningCard.tsx`, top to bottom):**
+      - **Hero strip:** the outfit, edge to edge, in equal tiles with 1 pt hairline gaps and no labels (VoiceOver names each); dashed "+ Shoes" tiles for what's missing; 2×2 at accessibility sizes.
+      - **Headline** (title3 semibold) from the first reason or the occasion ("Layer for the cold start", "Sharp for a date"), with the weather badge `☂ 46°→63°` beside it.
+      - **One context line:** `Class ⌄ · Smart casual ⌄`, two inline `MorphPicker`s.
+      - **The reason** (why line).
+      - **The primary action:** Wear this + Swap. After Wear this, "✓ Logged for today" and the primary becomes "Check it on". Thin closet or new user: "Check my fit".
+      - **Footer:** a one-line copper link "Wearing something else? Check it ›", with "Sample weather" on the right.
+      - **Removed:** the weather strip and the boxed "Going with your own?" row. Collapsed, staying-in and past rows are unchanged.
+    - **The composer (`Composer.tsx`):**
+      - **One capsule:** Liquid Glass via expo-glass-effect, 52 pt, holding the camera ("Check my fit" pill when idle, a circle during an exchange), the field, and the mic. The mic turns into send while there's text. Typing hides the camera (#28).
+      - **Voice:**
+        - **Capsule while listening:** ✕, a 5-bar waveform (ink), the live words, and ■ stop.
+        - **Stop drops the words into the field.** It never sends by itself.
+        - **Cap:** stops after 60 s.
+        - **Mic off:** an alert with Open Settings.
+    - **Voice engine:** `KittedDictation.swift` in kitted-vision. It uses Apple's on-device SpeechAnalyzer + DictationTranscriber (iOS 26), so there's no new package and audio never leaves the phone. The mic is converted to `bestAvailableAudioFormat`, the language model downloads on first use, and the audio session is deactivated with notifyOthers so the camera's spoken count still works.
+      - **Permission strings (outward-facing, the founder should skim):**
+        - Microphone: "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
+        - Speech: "Kitted turns what you say into text on your phone, so you can ask your stylist out loud."
+      - **The image-picker plugin** now gets the microphone string too (`false` deletes the key, #53).
+    - **Send:** it used to clear the field with no bubble. Now his question posts as a bubble, and the stylist replies "Questions are coming soon. For now I can check your fit and plan your outfit." It doesn't count toward the 5 a day. Real answers (S25) need the server.
+    - **Tab bar:** `minimizeBehavior` is `onScrollDown` while Closet or Lookbook is focused, and `never` elsewhere. Not on Stylist, because:
+      - Expo documents minimize-on-scroll as unsupported for FlatList;
+      - a chat sits at the bottom, so it never scrolls down;
+      - the composer can't read the bar's shrunk state;
+      - the keyboard already covers the bar while he types.
+    - **#66 / style:** confirmed in the style-council session (their #60.1, #80): a picked style never changes the score; results will read "Reads as …" once their v4 TypeScript port lands. The card's style pill stays (it steers the idea), and the "Scored for" line hides itself under v4.
+    - **Also fixed:** a plain "Check my fit" now scores for today's card style, so both camera paths agree (found by the clarity agent).
+
 ## Oct 8, 2026 · Rubric v4.0 goes live (style council, code-only rulings)
 
 81. **Rubric v4.0 is live in `rubric.py` and in the app's `@kitted/core` (engine 4); founder approved Oct 8.** Scope: the switches tagged B ("before beta") in `rubric/research/style-council/rubric_v4_proto.py`, i.e. only rulings that read today's v3 reading format. Plain words: `rubric/v4.md`; reasons: `RULEBOOK.md`. v3.1 frozen at `extraction-test/rubrics/rubric_v3_1.py`.
@@ -317,3 +357,7 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Screen 7 (p01b result): the next-level line **"One standout color, like a rust tee." → "Mix textures or shades, like a knit or suede."** p01b reads as minimal (ruling 37). The score and the fix are unchanged.
       - Not drawn in the mockups but visible in the demo: s24 with white sneakers picked from Closet 7.0 → 6.5 (demo screen 22); demo screen 33 "Scored for streetwear" now shows no line (picks never change a score); the seeded Oct 12 correction (FC1) is 9.0 before and after (was 8.5 → 9.0); onboarding photos s14 8.0 → 8.5, s10 7.5 → 8.0, s09 6.5 → 7.0, s22 7.5 → 7.0, s25 7.5 → 7.0 (scores not drawn on those tiles).
     - **Not in this step:** the new reading fields and values (N, G, X switches), the tap UI, the "Reads as …" label on the card, onboarding renames (Classic prep, Outdoor).
+    - **As built (verified on the Simulator):**
+      - **The composer camera is always an icon circle.** A labelled "Check my fit" pill in the composer doubled the card's own camera action, and the card always carries a labelled one: "Check my fit", "Check it on", or the link.
+      - **The mic shows only where `dictationSupported()` is true** (an on-device DictationTranscriber locale plus an audio format). There's no SFSpeechRecognizer fallback, because its system prompt says "Speech data from this app will be sent to Apple", which breaks our promise. The Simulator has no model, so the mic is hidden there; transcription must be tested on the founder's iPhone after `tools/phone/install.sh` (native change). An older native build hides the mic instead of crashing.
+      - **Closet's tab bar shrinks** to a single button on scroll-down (seen on the Simulator).

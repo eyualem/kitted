@@ -126,6 +126,12 @@
   - **Demo screens:** 25 morning · 26 thin closet · 27 new user · 28 wearing it · 29 after his own check · 30 evening · 31 weather ask · 32 hot day · 33 "Scored for streetwear". Screen 12 now shows the new card.
   - **Mocked:** all weather is **sample weather**, labelled on the card. Real WeatherKit + location (MC9) waits on the $99 program.
   - **#66 resolved by #68:** he picks the style before the photo; it can't be changed after. When the style-council rulebook is ported, "Scored for" gives way to "Reads as …".
+- **Card redesign + one-capsule composer + voice: built Oct 8** (DECISIONS-LOG #70):
+  - **The morning card is a "hero strip":** the outfit edge to edge on top, a headline ("Layer for the cold start") with `☂ 46°→63°`, one line `Class ⌄ · Smart casual ⌄`, the reason, Wear this + Swap, and a one-line "Wearing something else? Check it ›".
+  - **The composer is one Liquid Glass capsule:** a camera icon, the field, and a mic that turns into send while there's text.
+  - **The mic** listens on the phone (Apple SpeechAnalyzer; audio never leaves). It needs `tools/phone/install.sh` on my iPhone; it's hidden on the Simulator.
+  - **Sending a question** now shows my bubble and "Questions are coming soon…". Real answers are not built.
+  - **Tab bar:** it shrinks on scroll in Closet and Lookbook.
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
@@ -253,6 +259,8 @@ P5's real size is about 6.5 days, not 05's 2.
   - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
+- **Mic permission text** (outward-facing; in `app/app.config.ts`): "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
+- **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator.
 - **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Scored for"): greetings, weather lines, why lines, the "Going with your own?" row, the re-score alert, and the style names (Minimal, Sporty, Outdoorsy; the council approved "Outdoor" and "Classic prep" for onboarding, so pick one set).
 - **Weather band numbers** (core `weather.ts`, for the rubric review): 80 / 65 / 50 / 35 °F feels-like, rain 50%+, a 15° swing. Hot days also favor tees and lighter shoes.
 - **Archivo fonts:** 3 files of about 185 KB each, OFL license, from `github.com/Omnibus-Type/Archivo` (`fonts/ttf/`). Default: the system font. When approved:

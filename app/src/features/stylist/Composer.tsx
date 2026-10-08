@@ -1,12 +1,16 @@
-// The Stylist composer (design-spec A7/A8): compact (camera · field) during an exchange; idle
-// ("Check my fit" pill · "Ask…") otherwise. No quick-start chip row: the morning/evening card
-// replaced it (founder, Oct 7: the row looked cramped; 02 "S1d", DECISIONS-LOG #58). No
-// photo-library circle (the camera screen has the library thumbnail, the iOS norm), and the
-// camera button hides while he types so the field gets the full width (DECISIONS-LOG #28).
+// The Stylist composer: ONE capsule holding the camera, the field and the mic (founder, Oct 8;
+// DECISIONS-LOG #70). Liquid Glass where available, to sit with the tab bar.
+//   idle     (📷) Ask your stylist…                       (🎙)
+//   typing   What goes with tan chinos?|                 (↑)    camera hides (#28), mic → send
+//   voice    (✕) ▁▃▅▇ "what shoes go with…"              (■)    stop drops the words in the field
+// Never sends by itself: he reads what was heard, then taps send.
 import { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
+import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
+import { useDictation } from './useDictation';
 
 export interface ComposerProps {
   mode: 'compact' | 'idle';
@@ -14,81 +18,143 @@ export interface ComposerProps {
   onSend?: (text: string) => void;
 }
 
+let glass: boolean | undefined;
+function hasGlass(): boolean {
+  if (glass === undefined) {
+    try {
+      glass = isLiquidGlassAvailable();
+    } catch {
+      glass = false;
+    }
+  }
+  return glass;
+}
+
+const H = 52;
+const BTN = 40;
+
 export function Composer({ mode, onCamera, onSend }: ComposerProps) {
-  const { colors, isAccessibilitySize } = useTheme();
+  const { colors, scheme, a11y } = useTheme();
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
-  // Typing (field focused, or text in it) shows the compact field alone (02 S1: compact while
-  // the keyboard is up).
+  const mic = useDictation();
   const typing = focused || text.length > 0;
+  const recording = mic.state !== 'idle';
   const idle = mode === 'idle' && !typing;
+
+  const send = () => {
+    const v = text.trim();
+    if (!v) return;
+    onSend?.(v);
+    setText('');
+  };
+  const stopMic = async () => {
+    const heard = await mic.stop();
+    if (heard) setText((cur) => (cur ? `${cur} ${heard}` : heard));
+  };
+
+  const shell = { borderRadius: H / 2, borderCurve: 'continuous' as const, borderWidth: 1, borderColor: colors.line };
+  const background =
+    hasGlass() && !a11y.reduceTransparency ? (
+      <GlassView glassEffectStyle="regular" style={[StyleSheet.absoluteFill, { borderRadius: H / 2 }]} />
+    ) : (
+      <View style={[StyleSheet.absoluteFill, { borderRadius: H / 2, backgroundColor: scheme === 'dark' ? colors.surface : colors.surface }]} />
+    );
+
+  // Always the icon: the card above always carries the labelled camera action ("Check my fit",
+  // "Check it on" or the link), so a labelled pill here said it twice (#70). VoiceOver: "Check my fit".
+  const camera = typing || recording ? null : (
+    <Circle onPress={onCamera} label={t('composer.a11y.camera')} filled color={colors.primary}>
+      <Icon name="camera" size={22} color={colors.onPrimary} />
+    </Circle>
+  );
+
   return (
     <View style={styles.wrap}>
-      {/* AX sizes: the field gets its own full-width row under the buttons (design-spec A7). */}
-      <View style={isAccessibilitySize ? styles.column : styles.row}>
-        {typing ? null : idle ? (
-          <Pressable
-            onPress={onCamera}
-            accessibilityRole="button"
-            accessibilityLabel={t('composer.a11y.camera')}
-            style={({ pressed }) => [styles.fitBtn, { backgroundColor: colors.primary, opacity: pressed ? opacity.pressed : 1 }]}
-          >
-            <Icon name="camera" size="large" color={colors.onPrimary} />
-            <KText variant="subheadline" weight="600" color={colors.onPrimary} maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
-              {t('composer.check')}
-            </KText>
-          </Pressable>
+      <View style={[styles.capsule, shell]}>
+        {background}
+        {recording ? (
+          <>
+            <Circle onPress={() => void mic.cancel()} label={t('mic.a11yCancel')} color={colors.surface2}>
+              <Icon name="close" size={18} color="ink" weight="semibold" />
+            </Circle>
+            <View style={styles.voice} accessibilityLiveRegion="polite">
+              <Waveform level={mic.level} color={colors.ink} />
+              <KText variant="body" color={mic.text ? 'ink' : 'ink3'} numberOfLines={1} style={{ flex: 1 }}>
+                {mic.text ? (mic.text.length > 34 ? `…${mic.text.slice(-33)}` : mic.text) : t('mic.listening')}
+              </KText>
+            </View>
+            <Circle onPress={() => void stopMic()} label={t('mic.a11yStop')} filled color={colors.primary}>
+              <View style={{ width: 12, height: 12, borderRadius: 3, backgroundColor: colors.onPrimary }} />
+            </Circle>
+          </>
         ) : (
-          <Pressable
-            onPress={onCamera}
-            accessibilityRole="button"
-            accessibilityLabel={t('composer.a11y.camera')}
-            hitSlop={2}
-            style={({ pressed }) => [styles.circle, { backgroundColor: colors.primary, opacity: pressed ? opacity.pressed : 1 }]}
-          >
-            <Icon name="camera" size="large" color={colors.onPrimary} />
-          </Pressable>
+          <>
+            {camera}
+            <TextInput
+              value={text}
+              onChangeText={setText}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
+              placeholderTextColor={colors.ink3}
+              accessibilityLabel={t('composer.a11y.field')}
+              multiline
+              numberOfLines={1}
+              maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
+              style={[styles.input, { color: colors.ink, paddingLeft: camera ? 4 : 12 }]}
+            />
+            {text.trim().length > 0 ? (
+              <Circle onPress={send} label={t('composer.a11y.send')} filled color={colors.primary}>
+                <Icon name="arrow.up" size={18} color={colors.onPrimary} weight="bold" />
+              </Circle>
+            ) : mic.available ? (
+              <Circle onPress={() => void mic.start()} label={t('mic.a11y')} color="transparent">
+                <Icon name="mic" size={22} color="ink2" />
+              </Circle>
+            ) : null}
+          </>
         )}
-        <View style={[styles.field, isAccessibilitySize ? { alignSelf: 'stretch' } : { flex: 1 }, { backgroundColor: colors.surface, borderColor: colors.line }]}>
-          <TextInput
-            value={text}
-            onChangeText={setText}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
-            placeholderTextColor={colors.ink3}
-            accessibilityLabel={t('composer.a11y.field')}
-            multiline
-            numberOfLines={1}
-            maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
-            style={[styles.input, { color: colors.ink }]}
-          />
-          {text.length > 0 ? (
-            <Pressable
-              onPress={() => {
-                onSend?.(text);
-                setText('');
-              }}
-              accessibilityRole="button"
-              accessibilityLabel={t('composer.a11y.send')}
-              style={styles.send}
-            >
-              <Icon name="send" size={28} color={colors.primary} />
-            </Pressable>
-          ) : null}
-        </View>
       </View>
     </View>
   );
 }
 
+function Circle({ children, onPress, label, filled, color }: { children: React.ReactNode; onPress: () => void; label: string; filled?: boolean; color: string }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      hitSlop={2}
+      style={({ pressed }) => [styles.circle, { backgroundColor: filled || color !== 'transparent' ? color : 'transparent', opacity: pressed ? opacity.pressed : 1 }]}
+    >
+      {children}
+    </Pressable>
+  );
+}
+
+/** Five bars that follow his voice (ink, never copper: copper is for gains and links). */
+function Waveform({ level, color }: { level: SharedValue<number>; color: string }) {
+  return (
+    <View style={styles.wave} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+      {[0.55, 0.85, 1, 0.75, 0.5].map((k, i) => (
+        <Bar key={i} k={k} level={level} color={color} />
+      ))}
+    </View>
+  );
+}
+
+function Bar({ k, level, color }: { k: number; level: SharedValue<number>; color: string }) {
+  const style = useAnimatedStyle(() => ({ height: 4 + Math.min(1, level.value) * 20 * k }));
+  return <Animated.View style={[{ width: 3, borderRadius: 1.5, backgroundColor: color, opacity: 0.6 }, style]} />;
+}
+
 const styles = StyleSheet.create({
-  wrap: { paddingHorizontal: 16, paddingTop: 8, gap: 10 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  column: { gap: 8, alignItems: 'flex-start' },
-  circle: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  fitBtn: { minHeight: 40, borderRadius: 20, paddingLeft: 13, paddingRight: 16, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  field: { minHeight: 40, borderRadius: 20, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 16, paddingRight: 4 },
-  input: { flex: 1, fontSize: 17, lineHeight: 22, paddingTop: 8, paddingBottom: 8, maxHeight: 120 },
-  send: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
+  wrap: { paddingHorizontal: 16, paddingTop: 8 },
+  capsule: { minHeight: H, flexDirection: 'row', alignItems: 'center', gap: 4, padding: 6, overflow: 'hidden' },
+  circle: { width: BTN, height: BTN, borderRadius: BTN / 2, alignItems: 'center', justifyContent: 'center' },
+  input: { flex: 1, fontSize: 17, lineHeight: 22, paddingTop: 9, paddingBottom: 9, paddingRight: 4, maxHeight: 120 },
+  voice: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 6 },
+  wave: { flexDirection: 'row', alignItems: 'center', gap: 3, height: 24 },
 });

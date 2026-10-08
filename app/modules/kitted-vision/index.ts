@@ -21,9 +21,19 @@ export type PrepareResult =
     }
   | { status: 'noPerson' | 'multiplePeople' | 'couldNotFrame' | 'notImplemented'; sha256?: string };
 
+export type DictationEvent =
+  | { type: 'text'; text: string; final: boolean }
+  | { type: 'level'; level: number }
+  | { type: 'end'; error: string | null };
+
 interface KittedVisionNative {
   prepare(originalUri: string): Promise<PrepareResult>;
   reloadUpload(sha256: string): Promise<string | null>;
+  requestMicrophone(): Promise<'granted' | 'denied'>;
+  dictationSupported(): Promise<boolean>;
+  startDictation(): Promise<void>;
+  stopDictation(): Promise<void>;
+  addListener(event: 'onDictation', cb: (e: DictationEvent) => void): { remove(): void };
 }
 
 // Optional: the module exists only in iOS dev/Release builds, not on web or Android yet.
@@ -40,6 +50,39 @@ export async function reloadUpload(sha256: string): Promise<string | null> {
 }
 
 export const isAvailable: boolean = native !== null;
+
+// ---- Voice input (DECISIONS-LOG #70): on-device dictation ----------------------------------
+
+/** The native module exists (iOS dev/Release builds). Whether THIS phone can dictate on-device: dictationSupported(). */
+export const dictationAvailable: boolean = native !== null && typeof native.startDictation === 'function';
+
+/** True when the phone has an on-device dictation model for his language (no audio leaves the phone). */
+export async function dictationSupported(): Promise<boolean> {
+  if (!native || typeof native.dictationSupported !== 'function') return false;
+  try {
+    return await native.dictationSupported();
+  } catch {
+    return false;
+  }
+}
+
+export async function requestMicrophone(): Promise<'granted' | 'denied'> {
+  return native ? native.requestMicrophone() : 'denied';
+}
+
+export async function startDictation(): Promise<void> {
+  if (native) await native.startDictation();
+}
+
+export async function stopDictation(): Promise<void> {
+  if (native) await native.stopDictation();
+}
+
+export function onDictation(cb: (e: DictationEvent) => void): () => void {
+  if (!native) return () => {};
+  const sub = native.addListener('onDictation', cb);
+  return () => sub.remove();
+}
 
 // ---- The live camera (05 §P3 B) ------------------------------------------------------------
 

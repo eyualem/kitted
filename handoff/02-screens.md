@@ -751,6 +751,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
     - or, for a cost, `Tighter for {style}` with the amount shown in the rows above.
   - Last line: `Change the style on the card to see it scored another way.`
 - **Never:** "wrong style", a penalty for mixing styles, or the AI judging style. Style only adjusts the general standard (rubric research #57).
+- **Redesigned Oct 8 (#70, "hero strip", founder's pick):** the card now opens with the outfit edge to edge (equal tiles, hairline gaps, no labels; dashed `+ Shoes` tiles for gaps), then a headline from the first reason or the occasion with a `☂ 46°→63°` badge, one context line `Class ⌄ · Smart casual ⌄` (inline MorphPickers, `Sample weather` at the right), the why line, Wear this + `Swap` (after Wear this: `✓ Logged for today` + primary `Check it on`; thin or new: `Check my fit`), and a one-line copper link `Wearing something else? Check it ›`. The weather strip and the boxed "Going with your own?" row are gone. **Composer:** one glass capsule (camera icon · field · mic → send); voice per #70. The quick-start row stays removed.
 - **As built (Oct 8, #67):**
   - **Header (#68):** `Fit check · Full` left; right `Everyday ⌄ · Streetwear`. The occasion grows into its menu (`MorphPicker`, #69). **The style is plain text: it can't be changed after the photo** (he picks it on the morning/evening card before the check). VoiceOver: custom action Change occasion.
   - **The alert's buttons:** `Re-score` (default) / `Keep {current}`.

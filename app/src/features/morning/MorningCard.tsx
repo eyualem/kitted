@@ -2,10 +2,11 @@
 // Full while it's the current window and nothing's been checked; collapsed to one row once a fit
 // check lands in its window (with the score), when he's staying in, or once its window has passed.
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { localParts, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
-  Icon, KButton, KCard, KCardSection, KText, MorphPicker, NeckDownPhoto, RowDivider, TagLine, TextLink, displayScore, opacity, scoreWordLabel, useTheme,
+  GarmentIcon, Icon, KButton, KCard, KText, MorphPicker, NeckDownPhoto, TextLink, displayScore, opacity, scoreWordLabel, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -16,13 +17,14 @@ import {
 import { shownPhoto } from '@/demo/demoPhotos';
 import { quota } from '@/features/fitcheck/session';
 import { OutfitTiles } from '@/features/stylist/cards/OutfitTiles';
+import { garmentIconType } from '@/features/fitcheck/labels';
 import { showToast } from '@/features/toast/toast';
 import { setStylistAction } from '@/router/stylistAction';
 import { weatherSource } from '@/services/weather';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { cardOccasionLabel, missingLabel, stripLines, styleLabel, weatherSymbol, whyLine } from './copy';
+import { badgeTemps, cardOccasionLabel, ideaTitle, missingLabel, styleLabel, weatherSymbol, whyLine } from './copy';
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { pickSwap } from './swapPicker';
@@ -92,6 +94,9 @@ export function MorningCard({ ideaId }: { ideaId: string }) {
   return <FullCard m={m} />;
 }
 
+/** The hero-strip card (#70, the Apple-native direction the founder picked): the outfit edge to
+ *  edge on top, a headline with a small weather badge, one context line ("Class ⌄ · Smart casual ⌄"),
+ *  the reason, one primary action per state, and a one-line camera link. */
 function FullCard({ m }: { m: Model }) {
   const { isAccessibilitySize } = useTheme();
   const { row } = m;
@@ -118,77 +123,139 @@ function FullCard({ m }: { m: Model }) {
   };
 
   const wearing = row.state === 'wearing';
-  const right = enough ? t('idea.fromCloset') : m.piecesKnown === 0 ? undefined : m.piecesKnown === 1 ? t('idea.pieces1') : t('idea.piecesN', { n: m.piecesKnown });
+  const title = enough
+    ? ideaTitle(m.reasons, row.occasion)
+    : m.piecesKnown === 0 ? t('idea.title.empty') : m.piecesKnown === 1 ? t('idea.title.thin1') : t('idea.title.thin', { n: m.piecesKnown });
   const why = enough
     ? whyLine(m.reasons, m.items, row.occasion)
     : m.piecesKnown === 0 ? t('idea.empty') : m.piecesKnown === 1 ? t('idea.thin1') : t('idea.thinN', { n: m.piecesKnown });
-  const needs = enough ? (m.missing ? [missingLabel(m.missing)] : []) : m.missingSlots.map(missingLabel);
+  const needs: MissingSlot[] = enough ? (m.missing ? [m.missing] : []) : m.piecesKnown === 0 ? ['top', 'bottom', 'shoes'] : m.missingSlots;
+  const showLink = enough && !wearing;
 
   return (
     <KCard>
-      <KCardSection gap={11}>
-        <TagLine left={evening ? t('idea.tonight') : t('idea.today')} right={right} />
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-          <MorphPicker
-            label={cardOccasionLabel(row.occasion)}
-            value={row.occasion}
-            sections={[{ options: occasions.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
-            onPick={changeOccasion}
-            accessibilityLabel={t('idea.a11y.occasion', { occasion: cardOccasionLabel(row.occasion) })}
-          />
-          <MorphPicker
-            label={styleLabel(row.style)}
-            value={row.style ?? 'none'}
-            sections={[
-              ...(m.myStyles.length ? [{ title: t('style.menu.yours'), options: m.myStyles.map((s) => ({ value: s, label: styleLabel(s) })) }] : []),
-              { title: m.myStyles.length ? t('style.menu.more') : undefined, options: others.map((s) => ({ value: s, label: styleLabel(s) })) },
-            ]}
-            onPick={(s) => s !== 'none' && void changeStyle(s as StyleKey)}
-            accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
-          />
+      <HeroStrip items={enough ? m.items : m.known} needs={needs} />
+      <View style={{ paddingHorizontal: 18, paddingTop: 14, paddingBottom: 12, gap: 10 }}>
+        <View style={{ gap: 4 }}>
+          <View style={isAccessibilitySize ? { gap: 4 } : { flexDirection: 'row', alignItems: 'baseline', gap: 10 }}>
+            <KText variant="title3" weight="600" style={{ flex: isAccessibilitySize ? undefined : 1 }} accessibilityRole="header">
+              {title}
+            </KText>
+            {weather ? <WeatherBadge w={weather} /> : null}
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
+            <MorphPicker
+              inline
+              label={cardOccasionLabel(row.occasion)}
+              value={row.occasion}
+              sections={[{ options: occasions.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
+              onPick={changeOccasion}
+              accessibilityLabel={t('idea.a11y.occasion', { occasion: cardOccasionLabel(row.occasion) })}
+            />
+            <KText variant="subheadline" color="ink3">
+              ·
+            </KText>
+            <MorphPicker
+              inline
+              label={styleLabel(row.style)}
+              value={row.style ?? 'none'}
+              sections={[
+                ...(m.myStyles.length ? [{ title: t('style.menu.yours'), options: m.myStyles.map((s) => ({ value: s, label: styleLabel(s) })) }] : []),
+                { title: m.myStyles.length ? t('style.menu.more') : undefined, options: others.map((s) => ({ value: s, label: styleLabel(s) })) },
+              ]}
+              onPick={(s) => s !== 'none' && void changeStyle(s as StyleKey)}
+              accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
+            />
+            {weather && weatherSource.kind === 'sample' ? (
+              <KText variant="caption" color="ink3" style={{ marginLeft: 'auto' }}>
+                {t('wx.sample')}
+              </KText>
+            ) : null}
+          </View>
         </View>
-        {weather ? <WeatherStrip w={weather} /> : m.permission === 'unknown' && weatherSource.kind !== 'none' ? <LocationAsk onAllow={() => void allow()} /> : null}
-        {m.piecesKnown > 0 ? <OutfitTiles items={enough ? m.items : m.known} needs={needs} /> : null}
+        {!weather && m.permission === 'unknown' && weatherSource.kind !== 'none' ? <LocationAsk onAllow={() => void allow()} /> : null}
         <KText variant="subheadline" color="ink2">
           {why}
         </KText>
-        {enough ? (
+        {wearing ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Icon name="check" size="small" color="ink2" weight="semibold" />
+            <KText variant="footnote" color="ink2">
+              {t('idea.logged')}
+            </KText>
+          </View>
+        ) : null}
+        {enough && !wearing ? (
           <View style={isAccessibilitySize ? { gap: 8 } : { flexDirection: 'row', gap: 8 }}>
-            <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} icon={wearing ? 'check' : undefined} size="regular" fullWidth={isAccessibilitySize} disabled={wearing} onPress={() => void wear()} />
-            <KButton title={t('idea.swap')} size="regular" kind="secondary" fullWidth={isAccessibilitySize} onPress={swap} />
+            <KButton title={t('idea.wear')} size="regular" fullWidth={isAccessibilitySize} style={isAccessibilitySize ? undefined : { flex: 1 }} onPress={() => void wear()} />
+            <KButton title={t('idea.swapShort')} size="regular" kind="secondary" fullWidth={isAccessibilitySize} onPress={swap} accessibilityLabel={t('idea.swap')} />
           </View>
         ) : (
-          <KButton title={t('idea.checkFit')} icon="camera" size="regular" fullWidth={isAccessibilitySize} onPress={openCamera} />
+          <KButton title={wearing ? t('idea.checkItOn') : t('idea.checkFit')} icon="camera" size="regular" fullWidth onPress={openCamera} />
         )}
-      </KCardSection>
-      {enough ? <OwnFitRow evening={evening} wearing={wearing} checkUsed={m.checkUsed} onPress={openCamera} /> : null}
-      {weather && weatherSource.kind === 'sample' ? (
-        <KText variant="caption" color="ink3" style={{ paddingHorizontal: 16, paddingBottom: 12, marginTop: -4 }}>
-          {t('wx.sample')}
-        </KText>
-      ) : null}
+        {showLink ? (
+          m.checkUsed ? (
+            <KText variant="footnote" color="ink3">
+              {t('own.limit')}
+            </KText>
+          ) : (
+            <View style={{ flexDirection: 'row' }}>
+              <TextLink title={`${evening ? t('idea.own.linkEvening') : t('idea.own.link')} ›`} onPress={openCamera} compact accessibilityHint={t('own.a11yHint')} />
+            </View>
+          )
+        ) : null}
+      </View>
     </KCard>
   );
 }
 
-function WeatherStrip({ w }: { w: DayWeather }) {
-  const { colors } = useTheme();
-  const { main, rain } = stripLines(w, localParts(sessionClock.nowMs(), sessionClock.offset).hh);
+/** The outfit, edge to edge across the top of the card: equal tiles with 1 pt hairline gaps, no
+ *  labels (each tile is labelled for VoiceOver), dashed "+" tiles for what's missing. 2×2 at AX sizes. */
+function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: readonly MissingSlot[] }) {
+  const { colors, isAccessibilitySize } = useTheme();
+  const [w, setW] = useState(0);
+  const count = items.length + needs.length;
+  if (count === 0) return null;
+  const cols = isAccessibilitySize ? 2 : count;
+  const tileW = w > 0 ? (w - (cols - 1)) / cols : 0;
+  const tileH = Math.min(Math.round(tileW * 1.05), 120);
   return (
     <View
-      accessible
-      accessibilityLabel={t('wx.strip.a11y', { main: main.replace(/ · /g, ', '), rain })}
-      style={{ flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface2, borderRadius: 12, borderCurve: 'continuous', paddingVertical: 8, paddingHorizontal: 10 }}
+      onLayout={(e) => setW(e.nativeEvent.layout.width)}
+      style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 1, backgroundColor: colors.line, borderTopLeftRadius: 26, borderTopRightRadius: 26, overflow: 'hidden' }}
     >
-      <Icon name={weatherSymbol(w) as never} color="ink2" />
-      <View style={{ flex: 1 }}>
-        <KText variant="subheadline" weight="600">
-          {main}
-        </KText>
-        <KText variant="footnote" color="ink2">
-          {rain}
-        </KText>
-      </View>
+      {tileW > 0
+        ? [
+            ...items.map((it) => (
+              <View key={it.id} accessible accessibilityLabel={t('idea.tile.a11y', { name: it.name })} style={{ width: tileW, height: tileH, backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
+                <GarmentIcon type={garmentIconType(it.garment)} color={it.hex} size={Math.round(Math.min(tileW, tileH) * 0.66)} />
+              </View>
+            )),
+            ...needs.map((n) => (
+              <View key={`need-${n}`} accessible accessibilityLabel={missingLabel(n)} style={{ width: tileW, height: tileH, backgroundColor: colors.surface2, padding: 8 }}>
+                <View style={{ flex: 1, borderRadius: 14, borderCurve: 'continuous', borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.inkFaint, alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                  <Icon name="plus" size="small" color="ink3" />
+                  <KText variant="caption" color="ink3" numberOfLines={1}>
+                    {missingLabel(n)}
+                  </KText>
+                </View>
+              </View>
+            )),
+          ]
+        : null}
+    </View>
+  );
+}
+
+/** "☂ 46°→63°": the weather at a glance; the greeting above says it in words (#70). */
+function WeatherBadge({ w }: { w: DayWeather }) {
+  const { now, later } = badgeTemps(w);
+  return (
+    <View accessible accessibilityLabel={t('idea.badge.a11y', { now, later })} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+      <Icon name={weatherSymbol(w) as never} size={15} color="ink2" />
+      <KText variant="subheadline" weight="500" color="ink2" style={{ fontVariant: ['tabular-nums'] }}>
+        {`${now}°→${later}°`}
+      </KText>
     </View>
   );
 }
@@ -208,38 +275,6 @@ function LocationAsk({ onAllow }: { onAllow: () => void }) {
       </View>
       <TextLink title={t('wx.ask.allow')} onPress={onAllow} />
     </View>
-  );
-}
-
-/** "Going with your own? · Check it before you leave" (#59): one 44 pt+ row, not a third button. */
-function OwnFitRow({ evening, wearing, checkUsed, onPress }: { evening: boolean; wearing: boolean; checkUsed: boolean; onPress: () => void }) {
-  const { colors } = useTheme();
-  const title = wearing ? t('own.dressedTitle') : t('own.title');
-  const sub = checkUsed ? t('own.limit') : wearing ? t('own.dressedSub') : evening ? t('own.subEvening') : t('own.sub');
-  return (
-    <>
-      <RowDivider />
-      <Pressable
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel={`${title} ${sub}.`}
-        accessibilityHint={t('own.a11yHint')}
-        style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 56, paddingVertical: 10, paddingHorizontal: 16, opacity: pressed ? opacity.pressed : 1 })}
-      >
-        <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
-          <Icon name="camera" size="small" color="ink" />
-        </View>
-        <View style={{ flex: 1 }}>
-          <KText variant="subheadline" weight="600">
-            {title}
-          </KText>
-          <KText variant="footnote" color="ink2">
-            {sub}
-          </KText>
-        </View>
-        <Icon name="next" size="small" color="ink3" />
-      </Pressable>
-    </>
   );
 }
 

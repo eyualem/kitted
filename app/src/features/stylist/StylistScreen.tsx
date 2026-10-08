@@ -17,6 +17,7 @@ import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
 import { Composer } from './Composer';
+import { sendQuestion } from './ask';
 import { COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
 import { buildThreadItems } from './thread';
@@ -191,7 +192,7 @@ export function StylistScreen() {
         }}
       >
         <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" />
-        <Composer mode={mode} onCamera={openCamera} />
+        <Composer mode={mode} onCamera={openCamera} onSend={(q) => void sendQuestion(q)} />
       </Animated.View>
     </View>
   );

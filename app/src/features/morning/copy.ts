@@ -67,3 +67,15 @@ export function stripLines(w: DayWeather, nowHour: number): { main: string; rain
     : w.window === 'evening' ? t('wx.strip.dryNight') : t('wx.strip.dry');
   return { main, rain };
 }
+
+/** The card's headline (#70): the first weather reason, else the occasion. */
+export function ideaTitle(reasons: readonly IdeaReason[], occasion: CardOccasion): string {
+  const first = reasons[0]?.key;
+  if (first && first !== 'occasion') return t(`idea.title.${first}` as StringKey);
+  return occasion === 'staying_in' ? t('idea.title.everyday') : t(`idea.title.${occasion}` as StringKey);
+}
+
+/** The glance badge: "46°→63°" by day, "52°→47°" in the evening (now → later). */
+export function badgeTemps(w: DayWeather): { now: number; later: number } {
+  return { now: Math.round(w.nowF), later: Math.round(w.window === 'evening' ? w.lateF ?? w.lowF : w.highF) };
+}
