@@ -35,6 +35,8 @@ export const STORY_RECHECK = 'story-recheck';
 export const STORY_PARTIAL = 'story-partial';
 /** Screens 34–36: the one quick tap on the founder's Oct 7 reading (ph1, on s12's stand-in photo). */
 export const STORY_TAP = 'story-tap';
+/** Screens 60–62: the shoe question on the founder's Oct 8 reading (ph8, his boots read as slides). */
+export const STORY_SHOES = 'story-shoes';
 
 export const SCREENS: readonly ScreenScenario[] = [
   { n: 1, name: 'Welcome', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome' },
@@ -93,6 +95,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 51, name: 'Scan · no clothes found', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?guide=noClothes', under: '/closet' },
   { n: 52, name: 'Scan · after the shot: cut off', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?review=cutOff', under: '/closet' },
   { n: 53, name: 'Scan · saved', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?saved=1', under: '/closet' },
+  { n: 60, name: 'Shoe question', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 61, name: 'Shoe question · Boots', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 62, name: 'Shoe question · skipped', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

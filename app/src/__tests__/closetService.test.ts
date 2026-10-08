@@ -381,6 +381,21 @@ describe('Undo and corrections follow the stored link', () => {
   });
 });
 
+describe("the shoe question's answer (ph8, #120 / #113)", () => {
+  it('"Boots" confirms the kind on the shoes\' sighting, not the type code picked inside it', async () => {
+    const env = await setup();
+    const r = (await env.svc.start({ mode: 'check', photoId: 'ph8', occasion: 'class' })) as { checkId: string };
+    expect((await env.row(r.checkId)).details.tap!.kind).toBe('shoes');
+    await env.svc.answerTap(r.checkId, 'work_boot');
+    await env.closet.settle();
+    const shoes = (await env.owned()).find((c) => c.slot === 'shoes' || c.slot === 'footwear')!;
+    const obs = (await env.store.closetObs.all()).find((o) => o.itemId === shoes.id)!;
+    expect(obs.userConfirmed).toEqual({ shoeKind: 'boots' });
+    expect(shoes.confirmedFields ?? []).not.toContain('subcategory');
+    expect((await env.row(r.checkId)).score).toBe(8.5);
+  });
+});
+
 describe("the founder's case (ph1, #59 / #85)", () => {
   async function answered(o: Opts = {}) {
     const env = await setup(o);

@@ -1,6 +1,7 @@
-// S5q · One quick tap (02 "S5q", DECISIONS-LOG #85): the reading card's slot while the check is 'asking'.
-// One look-alike question ("Jeans or sweatpants?") before the score; two equal answers in the question's word
-// order (no scores shown), and Skip, which scores the more generous reading. Built from existing parts only.
+// S5q · One quick tap (02 "S5q", DECISIONS-LOG #85, #120): the reading card's slot while the check is 'asking'.
+// One question before the score: a look-alike pair ("Jeans or sweatpants?", two answers) or the shoe question
+// ("Boots, sneakers or slides?", three), equal buttons in the question's word order (no scores shown), and Skip
+// (a pair: the more generous reading; the shoe question: the kind that was read). Built from existing parts only.
 import { useEffect, useState } from 'react';
 import { AccessibilityInfo, Platform, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -19,7 +20,11 @@ const deck = en as Record<string, string | undefined>;
 /** The deck's words for the question and its answers (core's text, kept identical by copyChecks); core's own
  *  text if a pair is ever added to the rubric before the deck. */
 export function tapQuestion(tap: Pick<TapState, 'pair' | 'question'>): string {
-  return deck[`tap.q.${tap.pair.replace('/', '_')}`] ?? tap.question;
+  return deck[`tap.q.${tap.pair.split('/').join('_')}`] ?? tap.question;
+}
+/** What a stored value is called on the buttons and in sentences: the shoe question's kind ("boots"), else the value. */
+export function tapWord(tap: Pick<TapState, 'options'>, value: string): string {
+  return tap.options.find((o) => o.value === value)?.group ?? value;
 }
 export function tapOption(value: string): string {
   return deck[`tap.opt.${value}`] ?? value.replace(/_/g, ' ');
@@ -34,7 +39,7 @@ export function TapCard({ row }: { row: FitCheckRow }) {
   const { colors, a11y, isAccessibilitySize } = useTheme();
   const [busy, setBusy] = useState(tap.answer !== null);
   const question = tapQuestion(tap);
-  const choice = tapAs(tap.default);
+  const choice = tapAs(tapWord(tap, tap.default));
 
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility?.(t('tap.a11y.announce', { question }));
@@ -79,12 +84,12 @@ export function TapCard({ row }: { row: FitCheckRow }) {
             {tap.order.map((v) => (
               <KButton
                 key={v}
-                title={tapOption(v)}
+                title={tapOption(tapWord(tap, v))}
                 kind="secondary"
                 size="regular"
                 fullWidth={isAccessibilitySize}
                 disabled={busy}
-                accessibilityHint={t('tap.a11y.optionHint', { choice: tapAs(v) })}
+                accessibilityHint={t('tap.a11y.optionHint', { choice: tapAs(tapWord(tap, v)) })}
                 style={isAccessibilitySize ? undefined : styles.half}
                 onPress={() => pick(v)}
               />
@@ -104,7 +109,7 @@ export function TapCard({ row }: { row: FitCheckRow }) {
             {t('tap.skip')}
           </KText>
           <KText variant="footnote" color="ink3" style={{ flexShrink: 1 }}>
-            {t('tap.skipNote', { choice })}
+            {t(tap.kind === 'shoes' ? 'tap.skipNote.shoes' : 'tap.skipNote', { choice })}
           </KText>
         </Pressable>
       </KCard>

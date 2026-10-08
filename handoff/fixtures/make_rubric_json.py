@@ -86,7 +86,11 @@ def main():
             "order": r.STYLE_ORDER, "names": r.STYLE_NAMES, "pickAlias": r.PICK_ALIAS,
             "sets": {k: sl(getattr(r, k)) for k in DETECTION_SETS},
         },
-        "tap": {"pairs": {k: [list(p) for p in v] for k, v in r.TAP_PAIRS.items()}, "labels": r.TAP_LABEL},
+        "tap": {"pairs": {k: [list(p) for p in v] for k, v in r.TAP_PAIRS.items()}, "labels": r.TAP_LABEL,
+                # tap v2 (#120): the shoe question
+                "shoes": {"kinds": {k: list(v) for k, v in r.FOOT_KIND.items()}, "order": list(r.KIND_ORDER),
+                          "question": r.KIND_QUESTION, "labels": r.KIND_LABEL, "lostSwing": r.KIND_LOST_SWING,
+                          "skipOccasions": list(r.KIND_SKIP_OCCASIONS)}},
         "rules": {k: {"enabled": True, **v} for k, v in RULES.items()},
         "advice": {
             "ruleOfThirds": r.ADVICE["thirds"], "tonal": r.ADVICE["tonal"], "nearMatch": r.ADVICE["near_match"],

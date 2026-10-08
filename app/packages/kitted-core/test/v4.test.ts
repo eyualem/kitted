@@ -31,7 +31,12 @@ describe("rubric v4: the founder's outfit", () => {
   it("read as jeans: 6.5, reads as streetwear, the one fault is the hem dragging over slides", () => {
     const s = score(asJeans) as ScoredResult;
     expect([s.overall, s.rulesFired, s.detectedStyles, s.styleLabel]).toEqual([6.5, ["F4_hem_drags_over_slides"], ["streetwear"], "streetwear"]);
-    expect(askQuestion(asJeans)).toBeNull(); // blue-wash or sure readings never ask
+    expect(askQuestion(asJeans, {}, false)).toBeNull(); // v4.0: blue-wash or sure readings never ask
+    // Tap v2 (#120): his slides were read "likely", so the shoe question asks; a Skip keeps them slides (no free points).
+    const q = askQuestion(asJeans)!;
+    expect([q.question, q.default, q.options.map((o) => [o.label, o.score])]).toEqual(
+      ["Boots, sneakers or slides?", "slides_sandals", [["Boots", 7.0], ["Sneakers", 7.0], ["Slides", 6.5]]],
+    );
   });
 });
 

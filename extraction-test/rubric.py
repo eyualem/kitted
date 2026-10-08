@@ -930,30 +930,111 @@ def _doubt(reading, g, a, b):
 
 
 def _with(reading, i, field, value):
+    """The reading with one garment's field set to his answer. An "unsure" garment becomes "likely" (never "clear"):
+    he told us what it is, so it's scored, but rules that need a certain read still can't start firing. The pair
+    questions never ask about unsure garments, so for them this is only the field change."""
     alt = dict(reading)
     alt["garments"] = [dict(g) for g in reading.get("garments", [])]
     alt["garments"][i][field] = value
+    if alt["garments"][i].get("certainty") == "unsure":
+        alt["garments"][i]["certainty"] = "likely"
     return alt
 
 
-def ask_question(reading, occasion="everyday", styles=None, boldness="a_little"):
-    """None, or {pair, slot, field, garment_index, question, options: [{value, label, score}], default, swing, doubt}.
-    Asks only on the closed list of look-alike pairs, when the other reading moves the displayed score by 1.0+
-    and a doubt signal is present (upward), or by 1.0+ downward when the model wasn't sure. If he skips, the card
-    scores the more generous reading (`default`). Same reading, same question, same default."""
+# The shoe question (DECISIONS-LOG #120, tap v2): when the model lost the shoe type (his boots under wide jeans read
+# "other" / "slides"), ask what kind they are. He answers the kind; code picks the type inside it.
+FOOT_KIND = {
+    "boots": ("work_boot", "suede_chukka", "chelsea_boot"),
+    "sneakers": ("low_profile_sneaker", "white_leather_sneaker", "canvas_sneaker", "retro_runner", "performance_runner",
+                 "chunky_sneaker", "basketball_sneaker"),
+    "slides": ("slides_sandals",),
+}
+KIND_ORDER = ("boots", "sneakers", "slides")
+KIND_QUESTION = "Boots, sneakers or slides?"
+KIND_LABEL = {"boots": "Boots", "sneakers": "Sneakers", "slides": "Slides"}
+KIND_LOST_SWING = 0.5    # the type was lost ("other", unsure, or a slides read that isn't clear): ask at a half point
+# Not asked: a "likely" sneaker or boot read. Tried at a 1.0 swing; it fired mostly at dressy occasions ("were your
+# sneakers boots?" for +1), which invites gaming and caught none of his misreads (#120).
+KIND_SKIP_OCCASIONS = ("gym", "home")   # slides are right there; never ask "boots?" at the gym
+
+
+def _kind_of(sub):
+    return next((k for k in KIND_ORDER if sub in FOOT_KIND[k]), None)
+
+
+def _kind_pick(reading, i, kind):
+    """The type a kind answer scores as. His read type when it's already that kind; sneakers → low-profile; boots →
+    the boot that matches how dressed-up the rest is (work boots ≤ 2.75 average dressiness, suede chukkas ≤ 3.25,
+    else Chelsea boots; nothing else worn → work boots)."""
+    cur = reading["garments"][i].get("subcategory")
+    if cur in FOOT_KIND[kind]:
+        return cur
+    if kind != "boots":
+        return FOOT_KIND[kind][0]
+    rest = [formality(g) for j, g in enumerate(reading.get("garments", []))
+            if j != i and g.get("category") in ("top", "bottom", "outerwear")]
+    avg = sum(rest) / len(rest) if rest else 2.5
+    return "work_boot" if avg <= 2.75 else ("suede_chukka" if avg <= 3.25 else "chelsea_boot")
+
+
+def _shoe_question(reading, i, g, base, occasion, styles, boldness):
+    """The shoe question for footwear garment i, or None (upward only: it never asks to take points away)."""
+    sub, cert = g.get("subcategory"), g.get("certainty")
+    lost = sub == "other" or cert == "unsure" or (sub == "slides_sandals" and cert != "clear")
+    if sub != "other" and _kind_of(sub) is None:
+        return None              # loafers, derbies, dress shoes: not a boots/sneakers/slides question
+    if not lost:
+        return None
+    kinds = KIND_ORDER
+    options = []
+    for k in kinds:
+        v = _kind_pick(reading, i, k)
+        s = score(_with(reading, i, "subcategory", v), occasion, styles, boldness)["overall"]
+        if s is None:
+            return None
+        options.append({"value": v, "label": KIND_LABEL[k], "score": s, "group": k})
+    top = max(o["score"] for o in options)
+    swing = top - base
+    if swing < KIND_LOST_SWING:
+        return None
+    # Skip keeps what the photo showed when the model named a kind (slides stay slides: a skip never buys points the
+    # read didn't see); only a lost type ("other") gets the benefit of the doubt, the highest score (ties: question order).
+    mine = _kind_of(sub)
+    default = (next(o for o in options if o["group"] == mine) if mine in kinds
+               else sorted(options, key=lambda o: (-o["score"], kinds.index(o["group"])))[0])
+    return {"pair": "/".join(kinds), "slot": "footwear", "field": "subcategory", "garment_index": i,
+            "question": KIND_QUESTION, "options": options, "default": default["value"], "swing": swing,
+            "doubt": "shoe type lost", "kind": "shoes"}
+
+
+def ask_question(reading, occasion="everyday", styles=None, boldness="a_little", shoes=True):
+    """None, or {pair, slot, field, garment_index, question, options: [{value, label, score[, group]}], default, swing,
+    doubt[, kind]}. The closed list of look-alike pairs asks when the other reading moves the displayed score by
+    1.0+ and a doubt signal is present (upward), or by 1.0+ downward when the model wasn't sure. With `shoes` (tap v2,
+    #120) the shoe question joins (upward only), and a question that could raise the score always beats one that
+    could lower it. If he skips, a pair scores the more generous reading (`default`); the shoe question keeps the kind that was read (the most generous only when the type was lost). Same reading, same question,
+    same default. `shoes=False` is v4.0 exactly (the frozen prototype check, check_port.py)."""
     base = score(reading, occasion, styles, boldness)["overall"]
     if base is None:
         return None
     scene = reading.get("scene", {}) or {}
     best = None
-    for i, g in enumerate(reading.get("garments", [])):
+
+    def better(q):                # v2: upward first, then the bigger swing; ties keep the earlier question
+        if best is None:
+            return True
+        if shoes and (q["swing"] > 0) != (best["swing"] > 0):
+            return q["swing"] > 0
+        return abs(q["swing"]) > abs(best["swing"])
+
+    def pairs(i, g):              # the closed list's questions for garment i, in table order
         cat = g.get("category")
         if g.get("certainty") == "unsure" or cat not in TAP_PAIRS:
-            continue
+            return
         if cat == "footwear" and not scene.get("shoes_visible", True):
-            continue
+            return
         if cat in ("bottom", "footwear") and scene.get("framing") == "upper_only":
-            continue
+            return
         for a, b, q in TAP_PAIRS[cat]:
             if g.get("subcategory") == "jeans" and "jeans" in (a, b) and str(g.get("color_family", "")).startswith("denim"):
                 continue     # blue-wash jeans read reliably as jeans; never ask "jeans or ...?" about them
@@ -965,11 +1046,20 @@ def ask_question(reading, occasion="everyday", styles=None, boldness="a_little")
                 continue
             swing = s_alt - base
             doubt = _doubt(reading, g, a, b)
-            ok = (swing >= 1.0 and doubt) or (swing <= -1.0 and g.get("certainty") != "clear")
-            if ok and (best is None or abs(swing) > abs(best["swing"])):
+            if (swing >= 1.0 and doubt) or (swing <= -1.0 and g.get("certainty") != "clear"):
                 cur = g.get("subcategory")
-                best = {"pair": f"{a}/{b}", "slot": cat, "field": "subcategory", "garment_index": i, "question": q,
-                        "options": [{"value": cur, "label": TAP_LABEL.get(cur, cur), "score": base},
-                                    {"value": other, "label": TAP_LABEL.get(other, other), "score": s_alt}],
-                        "default": cur if base >= s_alt else other, "swing": swing, "doubt": doubt or "model not sure"}
+                yield {"pair": f"{a}/{b}", "slot": cat, "field": "subcategory", "garment_index": i, "question": q,
+                       "options": [{"value": cur, "label": TAP_LABEL.get(cur, cur), "score": base},
+                                   {"value": other, "label": TAP_LABEL.get(other, other), "score": s_alt}],
+                       "default": cur if base >= s_alt else other, "swing": swing, "doubt": doubt or "model not sure"}
+
+    for i, g in enumerate(reading.get("garments", [])):
+        for q in pairs(i, g):
+            if better(q):
+                best = q
+        if (shoes and g.get("category") == "footwear" and scene.get("shoes_visible", True)
+                and scene.get("framing") != "upper_only" and occasion not in KIND_SKIP_OCCASIONS):
+            q = _shoe_question(reading, i, g, base, occasion, styles, boldness)
+            if q and better(q):
+                best = q
     return best

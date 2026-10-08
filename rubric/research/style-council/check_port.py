@@ -115,7 +115,7 @@ def main():
                         if len(fails) < 20:
                             fails.append((src, occ, st, bold, diff, {k: (a.get(k), b.get(k)) for k in diff if k not in ("raw", "detected", "label")}))
                 # the tap: boldness never enters ask_question in the prototype (it scores at a_little)
-                qa = LIVE.ask_question(copy.deepcopy(r), occ, None if st is None else dict(st))
+                qa = LIVE.ask_question(copy.deepcopy(r), occ, None if st is None else dict(st), shoes=False)   # v4.0 tap (tap v2 is #120)
                 qb = PROTO.ask_question(copy.deepcopy(r), occ, None if st is None else dict(st), F=PROTO.BEFORE_BETA)
                 asks += 1
                 asked += qa is not None

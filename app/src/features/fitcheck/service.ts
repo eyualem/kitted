@@ -229,6 +229,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       pair: q.pair, slot: q.slot, garmentIndex: q.garmentIndex, ordinal: tapOrdinal(reading, q.garmentIndex), question: q.question,
       options: q.options.map((o) => ({ ...o })), order: tapOrder(q).map((o) => o.value), default: q.default, swing: q.swing, doubt: q.doubt,
       occasion: row.occasion, askedAt: clock.nowMs(), answer: null, skipped: false, answeredAt: null, ...(cached ? { free: true } : {}),
+      ...(q.kind ? { kind: q.kind } : {}),
     };
     return (await patchRow(row.id, { status: 'asking', readingId: readingRow.id, details: { ...row.details, tap } }))!;
   }

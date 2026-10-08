@@ -51,7 +51,12 @@ const BUNDLED: readonly DemoPhoto[] = crops.photos.map((c) => {
 /** "ph1": the founder's Oct 7 reading (black wide jeans read as sweatpants, the one quick tap's case) shown on
  *  s12's stock photo as a stand-in. Never his own photo. Its own fake hash, so "same photo again" stays separate. */
 const s12 = BUNDLED.find((p) => p.id === 's12')!;
-export const DEMO_PHOTOS: readonly DemoPhoto[] = [...BUNDLED, { ...s12, id: 'ph1', sha256: 'demo-ph1-oct7', latencySeconds: 6.6 }];
+/** "ph8": the founder's Oct 8 reading (his work boots read as slides: the shoe question, #120), also on s12's photo. */
+export const DEMO_PHOTOS: readonly DemoPhoto[] = [
+  ...BUNDLED,
+  { ...s12, id: 'ph1', sha256: 'demo-ph1-oct7', latencySeconds: 6.6 },
+  { ...s12, id: 'ph8', sha256: 'demo-ph8-oct8', latencySeconds: 9.4 },
+];
 
 export function demoPhoto(id: string | null | undefined): DemoPhoto | undefined {
   return id ? DEMO_PHOTOS.find((p) => p.id === id) : undefined;

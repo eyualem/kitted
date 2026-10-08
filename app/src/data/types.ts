@@ -106,8 +106,11 @@ export interface TapState {
   garmentIndex: number;
   ordinal: number;
   question: string;
-  /** [as read, the look-alike], each with the score it gives (core's askQuestion). */
+  /** A pair: [as read, the look-alike]; the shoe question (tap v2, #120): one per kind, each with its `group`
+   *  (boots / sneakers / slides) and the type code picked inside it. Each with the score it gives. */
   options: TapOption[];
+  /** 'shoes' for "Boots, sneakers or slides?"; absent on the look-alike pairs (and on rows asked before #120). */
+  kind?: 'shoes';
   /** The option values in the question's word order (the buttons). */
   order: string[];
   /** What a skip scores (the more generous reading). */

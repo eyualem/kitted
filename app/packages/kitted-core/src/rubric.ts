@@ -13,7 +13,7 @@
 import { RUBRIC_DATA } from "./rubricData";
 import type {
   Band, CreditId, DetectedStyle, Garment, NotRated, Reading, RubricData, RubricResult, RuleConfig, RuleId, Scene,
-  ScoreOptions, Styles, SubscoreName, TapQuestion,
+  ScoreOptions, ShoeKind, Styles, SubscoreName, TapOption, TapQuestion,
 } from "./types";
 import { clone, has, isNone, maxOf, or, pyMax, pyMin, pyRound, roundHalf, sum, truthy } from "./util";
 
@@ -63,7 +63,7 @@ export interface RubricEngine {
   readonly data: RubricData;
   score(reading: Reading, opts?: ScoreOptions, trace?: ScoreTrace): RubricResult;
   /** The one quick tap (rubric.ask_question): null, or the look-alike question to ask before the score. */
-  askQuestion(reading: Reading, opts?: ScoreOptions): TapQuestion | null;
+  askQuestion(reading: Reading, opts?: ScoreOptions, shoes?: boolean): TapQuestion | null;
   /** rubric.detect_styles on already-scored garments (see scoredGarments). */
   detectStyles(garments: readonly Garment[], picks?: Styles | null): DetectedStyles;
   /** The garments score() judges: filtered, leg aliases normalized, open shirts over a top re-filed as layers. */
@@ -999,38 +999,106 @@ export function createRubric(data: RubricData): RubricEngine {
     return null;
   }
 
-  function askQuestion(reading: Reading, opts: ScoreOptions = {}): TapQuestion | null {
+  /** rubric._with: one garment's field set to his answer; an "unsure" garment becomes "likely" (never "clear"). */
+  function withAnswer(reading: Reading, i: number, field: "subcategory", value: string): Reading {
+    const alt = clone(reading);
+    const g = alt.garments[i]!;
+    g[field] = value;
+    if (g.certainty === "unsure") g.certainty = "likely";
+    return alt;
+  }
+
+  // Tap v2 (#120): the shoe question.
+  const SHOES = data.tap.shoes;
+  const kindOf = (sub: unknown): ShoeKind | null => SHOES.order.find((k) => SHOES.kinds[k].includes(sub as string)) ?? null;
+
+  /** rubric._kind_pick: the type a kind answer scores as. */
+  function kindPick(reading: Reading, i: number, kind: ShoeKind): string {
+    const cur = reading.garments[i]!.subcategory as string;
+    if (SHOES.kinds[kind].includes(cur)) return cur;
+    if (kind !== "boots") return SHOES.kinds[kind][0]!;
+    const rest = (reading.garments ?? [])
+      .filter((g, j) => j !== i && (g.category === "top" || g.category === "bottom" || g.category === "outerwear"))
+      .map((g) => formality(g));
+    let sum = 0;
+    for (const f of rest) sum += f;
+    const avg = rest.length ? sum / rest.length : 2.5;
+    return avg <= 2.75 ? "work_boot" : avg <= 3.25 ? "suede_chukka" : "chelsea_boot";
+  }
+
+  /** rubric._shoe_question: upward only. */
+  function shoeQuestion(reading: Reading, i: number, g: Garment, base: number, opts: ScoreOptions): TapQuestion | null {
+    const sub = g.subcategory as string;
+    const cert = g.certainty;
+    const lost = sub === "other" || cert === "unsure" || (sub === "slides_sandals" && cert !== "clear");
+    const mine = kindOf(sub);
+    if (sub !== "other" && mine === null) return null;
+    if (!lost) return null;
+    const kinds = SHOES.order;
+    const options: TapOption[] = [];
+    for (const k of kinds) {
+      const v = kindPick(reading, i, k);
+      const s = score(withAnswer(reading, i, "subcategory", v), opts).overall;
+      if (s === null) return null;
+      options.push({ value: v, label: SHOES.labels[k], score: s, group: k });
+    }
+    let top = options[0]!.score;
+    for (const o of options) if (o.score > top) top = o.score;
+    const swing = top - base;
+    if (swing < SHOES.lostSwing) return null;
+    // Skip keeps the kind the model named; only a lost type ("other") gets the highest score (ties: question order).
+    const def = mine !== null && kinds.includes(mine)
+      ? options.find((o) => o.group === mine)!
+      : [...options].sort((x, y) => y.score - x.score || kinds.indexOf(x.group!) - kinds.indexOf(y.group!))[0]!;
+    return {
+      pair: kinds.join("/"), slot: "footwear", field: "subcategory", garmentIndex: i, question: SHOES.question,
+      options, default: def.value, swing, doubt: "shoe type lost", kind: "shoes",
+    };
+  }
+
+  function askQuestion(reading: Reading, opts: ScoreOptions = {}, shoes = true): TapQuestion | null {
     const base = score(reading, opts).overall;
     if (base === null) return null;
     const scene: Scene = (truthy(reading.scene) ? reading.scene : {}) as Scene;
+    const shoesVisible = truthy(has(scene, "shoes_visible") ? scene.shoes_visible : true);
+    const occ: string = opts.occasion ?? "everyday";
     let best: TapQuestion | null = null;
+    // v2: upward first, then the bigger swing; ties keep the earlier question.
+    const better = (q: TapQuestion): boolean => {
+      if (best === null) return true;
+      if (shoes && q.swing > 0 !== best.swing > 0) return q.swing > 0;
+      return Math.abs(q.swing) > Math.abs(best.swing);
+    };
     (reading.garments ?? []).forEach((g, i) => {
       const cat = g.category as string;
-      if (g.certainty === "unsure" || !has(TAP_PAIRS, cat)) return;
-      if (cat === "footwear" && !truthy(has(scene, "shoes_visible") ? scene.shoes_visible : true)) return;
-      if ((cat === "bottom" || cat === "footwear") && scene.framing === "upper_only") return;
-      for (const [a, b, q] of TAP_PAIRS[cat]!) {
-        if (g.subcategory === "jeans" && (a === "jeans" || b === "jeans") && String(g.color_family ?? "").startsWith("denim")) continue;
-        if (g.subcategory !== a && g.subcategory !== b) continue;
-        const other = g.subcategory === a ? b : a;
-        const alt = clone(reading);
-        alt.garments[i]!.subcategory = other;
-        const sAlt = score(alt, opts).overall;
-        if (sAlt === null) continue;
-        const swing = sAlt - base;
-        const doubt = doubtOf(reading, scene, g, a, b);
-        const ok = (swing >= 1.0 && doubt !== null) || (swing <= -1.0 && g.certainty !== "clear");
-        if (ok && (best === null || Math.abs(swing) > Math.abs(best.swing))) {
-          const cur = g.subcategory as string;
-          best = {
-            pair: `${a}/${b}`, slot: cat as TapQuestion["slot"], field: "subcategory", garmentIndex: i, question: q,
-            options: [
-              { value: cur, label: has(TAP_LABEL, cur) ? TAP_LABEL[cur]! : cur, score: base },
-              { value: other, label: has(TAP_LABEL, other) ? TAP_LABEL[other]! : other, score: sAlt },
-            ],
-            default: base >= sAlt ? cur : other, swing, doubt: doubt ?? "model not sure",
-          };
+      const pairsOk = g.certainty !== "unsure" && has(TAP_PAIRS, cat) && !(cat === "footwear" && !shoesVisible)
+        && !((cat === "bottom" || cat === "footwear") && scene.framing === "upper_only");
+      if (pairsOk) {
+        for (const [a, b, q] of TAP_PAIRS[cat]!) {
+          if (g.subcategory === "jeans" && (a === "jeans" || b === "jeans") && String(g.color_family ?? "").startsWith("denim")) continue;
+          if (g.subcategory !== a && g.subcategory !== b) continue;
+          const other = g.subcategory === a ? b : a;
+          const sAlt = score(withAnswer(reading, i, "subcategory", other), opts).overall;
+          if (sAlt === null) continue;
+          const swing = sAlt - base;
+          const doubt = doubtOf(reading, scene, g, a, b);
+          if ((swing >= 1.0 && doubt !== null) || (swing <= -1.0 && g.certainty !== "clear")) {
+            const cur = g.subcategory as string;
+            const cand: TapQuestion = {
+              pair: `${a}/${b}`, slot: cat as TapQuestion["slot"], field: "subcategory", garmentIndex: i, question: q,
+              options: [
+                { value: cur, label: has(TAP_LABEL, cur) ? TAP_LABEL[cur]! : cur, score: base },
+                { value: other, label: has(TAP_LABEL, other) ? TAP_LABEL[other]! : other, score: sAlt },
+              ],
+              default: base >= sAlt ? cur : other, swing, doubt: doubt ?? "model not sure",
+            };
+            if (better(cand)) best = cand;
+          }
         }
+      }
+      if (shoes && cat === "footwear" && shoesVisible && scene.framing !== "upper_only" && !SHOES.skipOccasions.includes(occ)) {
+        const q = shoeQuestion(reading, i, g, base, opts);
+        if (q && better(q)) best = q;
       }
     });
     return best;
@@ -1084,8 +1152,8 @@ export function score(reading: Reading, opts: ScoreOptions = {}): RubricResult {
 }
 
 /** rubric.ask_question() with the bundled rubric: the one quick tap, or null. */
-export function askQuestion(reading: Reading, opts: ScoreOptions = {}): TapQuestion | null {
-  return defaultRubric.askQuestion(reading, opts);
+export function askQuestion(reading: Reading, opts: ScoreOptions = {}, shoes = true): TapQuestion | null {
+  return defaultRubric.askQuestion(reading, opts, shoes);
 }
 
 /** rubric.detect_styles() on a reading: what it reads as, and the card label (null = the general standard). */

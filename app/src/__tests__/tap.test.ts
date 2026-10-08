@@ -246,3 +246,37 @@ describe('the derived reading keeps the model', () => {
     expect([answered.source, answered.model, answered.promptVersion]).toEqual(['tapAnswer', 'gemini-3.8-flash', 'v3-test']);
   });
 });
+
+describe('the shoe question (tap v2, #120): his Oct 8 boots read as slides (ph8)', () => {
+  async function shoes(o: Opts = {}) {
+    const env = await setup(o);
+    const r = await env.svc.start({ mode: 'check', photoId: 'ph8', occasion: 'class' });
+    expect(r.outcome).toBe('asking');
+    return { ...env, id: (r as { checkId: string }).checkId };
+  }
+
+  it('asks "Boots, sneakers or slides?" with three answers in that order, stored with kind and groups', async () => {
+    const { store, id } = await shoes();
+    const tap = (await store.fitChecks.get(id))!.details.tap!;
+    expect([tap.question, tap.kind, tap.order, tap.default]).toEqual([
+      'Boots, sneakers or slides?', 'shoes', ['work_boot', 'low_profile_sneaker', 'slides_sandals'], 'slides_sandals',
+    ]);
+    expect(tap.options.map((o) => [o.group, o.score])).toEqual([['boots', 8.5], ['sneakers', 8.5], ['slides', 7.5]]);
+  });
+
+  it('Boots: 8.5, the "Swap the slides" fix is gone, the reading keeps the real model', async () => {
+    const { store, svc, id } = await shoes();
+    const done = (await svc.answerTap(id, 'work_boot'))!;
+    expect([done.status, done.score]).toEqual(['scored', 8.5]);
+    expect(done.rulesFired).not.toContain('F4_hem_drags_over_slides');
+    const reading = (await store.readings.get(done.readingId!))!;
+    expect(reading.reading.garments.find((g) => g.category === 'footwear')!.subcategory).toBe('work_boot');
+  });
+
+  it('Skip keeps slides (7.5, no free points), and the card can still change it', async () => {
+    const { svc, id } = await shoes();
+    const done = (await svc.answerTap(id, 'skip'))!;
+    expect([done.score, done.details.tap!.answer, done.details.tap!.skipped]).toEqual([7.5, 'slides_sandals', true]);
+    expect(done.rulesFired).toContain('F4_hem_drags_over_slides');
+  });
+});

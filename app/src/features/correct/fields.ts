@@ -26,7 +26,8 @@ const TYPES: Record<string, string[]> = {
   top: ['tee', 'polo', 'oxford_shirt', 'sweater', 'hoodie', 'sweatshirt'],
   outerwear: ['overshirt', 'denim_jacket', 'blazer', 'bomber', 'chore_coat'],
   bottom: ['jeans', 'chinos', 'trousers', 'sweatpants', 'joggers', 'shorts', 'athletic_shorts'],
-  footwear: ['white_leather_sneaker', 'retro_runner', 'loafer', 'chelsea_boot', 'work_boot'],
+  // every answer of the shoe question (tap v2, #120) is here, so "Not right? Tap." can always change it
+  footwear: ['white_leather_sneaker', 'low_profile_sneaker', 'retro_runner', 'chunky_sneaker', 'loafer', 'chelsea_boot', 'suede_chukka', 'work_boot', 'slides_sandals'],
 };
 
 /** The slot's types, plus what it was read as and that type's look-alikes from the one quick tap (rubric v4

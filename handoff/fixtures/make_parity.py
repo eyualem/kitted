@@ -183,6 +183,21 @@ def edge_cases():
     add("v4_tap_dark_sweats", R(HOOD(), SWEATS(color_family="black", leg_shape="wide", hem="pooling"), SLIDES(), G("accessory", "belt", "black")))
     add("v4_tap_likely_down", R(G("top", "sweater", "navy", certainty="likely"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"), SNK(sub="white_leather_sneaker")), occ="work")
     add("v4_tap_dim_shorts", R(TEE(), G("bottom", "shorts", "black", leg_shape="relaxed"), SNK(sub="canvas_sneaker")), occ="date")
+    # tap v2 (#120): the shoe question
+    BOOTY = lambda **kw: SNK(**{"sub": "other", "color": "olive", "certainty": "likely", **kw})
+    add("tap2_shoe_other_likely", R(HOOD(), WIDE(color_family="black", hem="full_break"), BOOTY()))
+    add("tap2_shoe_other_unsure", R(HOOD(), WIDE(color_family="black", hem="full_break"), BOOTY(certainty="unsure")))
+    add("tap2_shoe_other_clear", R(HOOD(), WIDE(color_family="black", hem="full_break"), BOOTY(certainty="clear")))
+    add("tap2_slides_likely_boots", R(HOOD(), WIDE(color_family="black", hem="full_break"), SLIDES(certainty="likely")))
+    add("tap2_slides_likely_gym", R(HOOD(), WIDE(color_family="black", hem="full_break"), SLIDES(certainty="likely")), occ="gym")
+    add("tap2_slides_clear", R(HOOD(), WIDE(color_family="black", hem="full_break"), SLIDES(certainty="clear")))
+    add("tap2_chelsea_likely", R(G("top", "sweater", "navy", tucked="none"), JEANS(color_family="denim_dark"), SNK(sub="chelsea_boot", color="brown", certainty="likely")))
+    add("tap2_sneaker_likely_never", R(G("top", "oxford_shirt", "brown", pattern="checks_plaid", tucked="none"), WIDE(color_family="black", hem="full_break"), SNK(sub="low_profile_sneaker", color="grey", certainty="likely")))
+    add("tap2_loafer_unsure", R(G("top", "oxford_shirt", "white", tucked="none"), G("bottom", "chinos", "navy", leg_shape="straight"), SNK(sub="loafer", color="brown", certainty="unsure")))
+    add("tap2_dressy_boot_pick", R(G("top", "dress_shirt", "white", tucked="full"), G("outerwear", "blazer", "navy"), G("bottom", "trousers", "grey", leg_shape="slim", hem="no_break"), BOOTY(color="brown")), occ="work")
+    add("tap2_mid_boot_pick", R(G("top", "oxford_shirt", "light_blue", tucked="none"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"), BOOTY(color="brown")), occ="date")
+    add("tap2_shoes_hidden", R(HOOD(), WIDE(), BOOTY(certainty="unsure"), shoes_visible=False))
+    add("tap2_up_beats_down", R(HOOD(), SWEATS(color_family="black", certainty="likely"), BOOTY()))
     return E
 
 
@@ -287,6 +302,10 @@ def main():
                                                             "boldness": c.get("boldness") or "a_little"})
     for c in json.load(open(os.path.join(council, "phone-checks-oct7.json"))):
         put(c["reading"], f"council:phone-checks-oct7.json:{c['check']}", {"occasion": c.get("occasion") or "everyday", "styles": [], "boldness": "a_little"})
+    # the founder's Oct 8 phone checks (his grey-green work boots read "other" / "slides"): as read and as truth (#120)
+    for c in json.load(open(os.path.join(KEMPT, "rubric/research/reading-accuracy/phone-checks-oct8.json"))):
+        for kind in ("reading", "truth_reading"):
+            put(c[kind], f"phone-oct8:{c['check']}:{kind}", {"occasion": c.get("occasion") or "everyday", "styles": [], "boldness": "a_little"})
     n_council = len(readings) - n_unique_real
     for p in sorted(glob.glob(os.path.join(HERE, "readings/*.json")) + glob.glob(os.path.join(HERE, "readings/variants/*.json"))):
         if p.endswith("INDEX.json"):

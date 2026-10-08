@@ -15,7 +15,7 @@ import { completeOnboarding } from '@/features/onboarding/complete';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
-import { STORY_FIRST_CHECK, STORY_PARTIAL, STORY_RECHECK, STORY_TAP, type ScreenScenario } from './scenarios';
+import { STORY_FIRST_CHECK, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
@@ -27,7 +27,7 @@ type Step =
   | { at: string; do: 'closet'; ids: string[] }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
-  | { at: string; do: 'tap'; answer: 'jeans' | 'skip' };
+  | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string };
 
 const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   5: { steps: [] },
@@ -83,6 +83,10 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   34: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }] },
   35: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'jeans' }] },
   36: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'skip' }] },
+  // The shoe question (#120): ph8 asks "Boots, sneakers or slides?"; Boots → 8.5 (work boots); Skip keeps slides 7.5.
+  60: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }] },
+  61: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'work_boot', checkId: STORY_SHOES }] },
+  62: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'skip', checkId: STORY_SHOES }] },
   // Closet accuracy (#91): the closet call's answer for p01b against seed pieces; B1 (khaki) vs tan chinos is asked.
   37: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   38: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
@@ -134,7 +138,7 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       continue;
     }
     if (step.do === 'tap') {
-      await fitCheck.answerTap(STORY_TAP, step.answer);
+      await fitCheck.answerTap(step.checkId ?? STORY_TAP, step.answer);
       continue;
     }
     if (step.do === 'recheckPrompt') {

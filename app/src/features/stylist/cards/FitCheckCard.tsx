@@ -24,7 +24,7 @@ import { OccasionQuestion, ReadingCard } from './ReadingCard';
 import { useWeatherTip } from '@/features/morning/weatherTip';
 import { styleLabel } from '@/features/morning/copy';
 import { confirmLens } from '@/features/fitcheck/lensUi';
-import { justAnswered, tapAs, TapCard } from '@/features/tap/TapCard';
+import { justAnswered, tapAs, TapCard, tapWord } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { closetSummaryText } from '@/features/closet/summaryText';
 
@@ -108,13 +108,14 @@ function FailureCard({ row }: { row: FitCheckRow }) {
 function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | null; asked: AskedGarment | null }) {
   const closet = useCloset() ?? [];
   const tap = row.details.tap;
-  // After the one quick tap: S8 prefilled with the other answer (the pair's other half).
+  // After the one quick tap: S8 prefilled with the other answer (the pair's other half; for the shoe question, the
+  // next kind in the question's order, and the sheet lists every shoe type).
   const otherAnswer = tap?.answer ? tap.order.find((v) => v !== tap.answer) : undefined;
   const changeAnswer = tap?.answer && asked && asked.value === tap.answer && otherAnswer
     ? () => router.push(`/sheets/correct/${row.id}?reason=item&garment=${asked.index}&field=subcategory&value=${otherAnswer}`)
     : null;
   // "Scored as jeans. Not right? Tap." only after a Skip, while the piece still has the value it was scored as.
-  const skippedAs = tap?.skipped && changeAnswer ? tapAs(tap.answer!) : null;
+  const skippedAs = tap?.skipped && changeAnswer ? tapAs(tapWord(tap, tap.answer!)) : null;
   const readsAs = row.details.readsAs ? t('readsAs.line', { style: styleLabel(row.details.readsAs).toLowerCase() }) : null;
   const score = row.score ?? 0;
   const partial = row.isPartial;

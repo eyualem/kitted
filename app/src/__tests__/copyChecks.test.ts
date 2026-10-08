@@ -79,10 +79,17 @@ describe('the one quick tap and "Reads as" strings', () => {
       const inSentence = label.startsWith('Chelsea') ? label : label.charAt(0).toLowerCase() + label.slice(1);
       if (deck[`tap.as.${v}`] !== inSentence) problems.push(`tap.as.${v}`);
     }
+    // tap v2 (#120): the shoe question and its three kinds
+    const shoes = RUBRIC_DATA.tap.shoes;
+    if (deck[`tap.q.${shoes.order.join('_')}`] !== shoes.question) problems.push('tap.q.shoes');
+    for (const k of shoes.order) {
+      if (deck[`tap.opt.${k}`] !== shoes.labels[k]) problems.push(`tap.opt.${k}`);
+      if (deck[`tap.as.${k}`] !== shoes.labels[k].toLowerCase()) problems.push(`tap.as.${k}`);
+    }
     expect(problems).toEqual([]);
-    expect(Object.keys(en).filter((k) => k.startsWith('tap.q.'))).toHaveLength(9);
-    expect(Object.keys(en).filter((k) => k.startsWith('tap.opt.'))).toHaveLength(13);
-    expect(Object.keys(en).filter((k) => k.startsWith('tap.as.'))).toHaveLength(13);
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.q.'))).toHaveLength(10);
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.opt.'))).toHaveLength(16);
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.as.'))).toHaveLength(16);
   });
   it('the "Scored for" strings are gone', () => {
     expect(Object.keys(en).filter((k) => k.startsWith('scoredFor.') || k.startsWith('why.style.'))).toEqual([]);

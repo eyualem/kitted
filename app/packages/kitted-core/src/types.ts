@@ -295,6 +295,17 @@ export interface RubricData {
   tap: {
     pairs: Record<string, [string, string, string][]>;
     labels: Record<string, string>;
+    /** Tap v2 (#120): "Boots, sneakers or slides?" when the shoe type was lost. */
+    shoes: {
+      kinds: Record<ShoeKind, string[]>;
+      order: ShoeKind[];
+      question: string;
+      labels: Record<ShoeKind, string>;
+      /** Asked when the best answer would raise the score by this much or more. */
+      lostSwing: number;
+      /** Never asked at these occasions (gym, home). */
+      skipOccasions: string[];
+    };
   };
   rules: Record<string, RuleConfig>;
   advice: Record<"ruleOfThirds" | "tonal" | "nearMatch" | "bigLogo" | "belt" | "nextLevel" | "nextLevelMinimal", string>;
@@ -305,11 +316,14 @@ export interface RubricData {
 export type Band = readonly [readonly [number, number], readonly [number, number]];
 
 /** ask_question(): the one quick tap before the score (rubric v4, RULEBOOK Part 5). */
+export type ShoeKind = "boots" | "sneakers" | "slides";
 export interface TapOption {
   value: string;
   label: string;
   /** The displayed score if this is the right reading. */
   score: number;
+  /** The shoe question only: the kind he taps; `value` is the type code picked inside it. */
+  group?: ShoeKind;
 }
 export interface TapQuestion {
   /** "jeans/sweatpants" */
@@ -319,11 +333,13 @@ export interface TapQuestion {
   /** Index into reading.garments of the garment it asks about. */
   garmentIndex: number;
   question: string;
-  /** [as read, the look-alike]. */
-  options: [TapOption, TapOption];
+  /** A pair: [as read, the look-alike]. The shoe question: one per kind, in the question's order. */
+  options: TapOption[];
   /** What a skip scores: the more generous reading. */
   default: string;
-  /** options[1].score - options[0].score */
+  /** A pair: options[1].score - options[0].score. The shoe question: the best option's score - the score as read. */
   swing: number;
   doubt: string;
+  /** "shoes" for the shoe question (tap v2, #120); absent on the look-alike pairs. */
+  kind?: "shoes";
 }

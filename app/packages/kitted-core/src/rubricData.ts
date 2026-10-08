@@ -7,7 +7,7 @@ export const RUBRIC_DATA: RubricData = {
  "engine": 4,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "6340dcfb5d34f4f83f6657630695f0683db48c9660cecf055191934554b5dee4",
+ "rubricSha256": "a98ec2805daef099a39f7169c1b2dafd3d0e2a201bf913b2f3edbd28c1747de0",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,
@@ -858,6 +858,43 @@ export const RUBRIC_DATA: RubricData = {
    "sweatshirt": "Sweatshirt",
    "chelsea_boot": "Chelsea boots",
    "work_boot": "Work boots"
+  },
+  "shoes": {
+   "kinds": {
+    "boots": [
+     "work_boot",
+     "suede_chukka",
+     "chelsea_boot"
+    ],
+    "sneakers": [
+     "low_profile_sneaker",
+     "white_leather_sneaker",
+     "canvas_sneaker",
+     "retro_runner",
+     "performance_runner",
+     "chunky_sneaker",
+     "basketball_sneaker"
+    ],
+    "slides": [
+     "slides_sandals"
+    ]
+   },
+   "order": [
+    "boots",
+    "sneakers",
+    "slides"
+   ],
+   "question": "Boots, sneakers or slides?",
+   "labels": {
+    "boots": "Boots",
+    "sneakers": "Sneakers",
+    "slides": "Slides"
+   },
+   "lostSwing": 0.5,
+   "skipOccasions": [
+    "gym",
+    "home"
+   ]
   }
  },
  "rules": {
