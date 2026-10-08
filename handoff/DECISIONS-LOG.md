@@ -192,3 +192,21 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Re-score updates the card in place** with a "Re-scored · was 8.0 for streetwear" footnote. Why, Lookbook and Share follow.
     - **Same card, not a new one** (founder left it to Claude). It's the same photo and the same reading, with no AI call and no check used. A second card would look like a second check, double the Lookbook entry and clutter the thread. The footnote keeps the history honest.
     - **This changes D7:** the occasion chip used to re-score instantly after the score. Before the score lands (the S5 chips) changes stay instant. On the morning/evening card (a suggestion, not a score) changes re-pick instantly.
+
+## Oct 7, 2026 · Quick-fix batch (from the #56 review)
+
+63. **The 9 quick fixes, as built:**
+    1. **Camera prompt** now reads "Faces are blurred before anything is sent." The review notes (age-rules §4.3) describe the full-frame face blur. It's an Info.plist change, so it needs a native rebuild and a phone reinstall.
+    2. **Kept photos are stored relative to Documents** (`services/photoFiles.ts`: `toStoredPath` at capture in `imagePrep/real.ts`, `resolveStoredPath` in `shownPhoto`). Rows saved earlier as absolute `file://…/Documents/…` URLs are re-rooted on today's container, so his existing test photos come back after a reinstall too.
+    3. **The first check's `Later` link is hidden until P4** builds the "first 3 moves" card it leads to. A link that does nothing is worse than none.
+    4. **Toasts no longer cover the newest card.** While a toast shows, the thread's footer grows by 56 pt and, if he's at the bottom, the thread scrolls up with it (as with the keyboard).
+    5. **All four tab icons are outlines in both states.** `hanger` has no fill variant, so the filled selected icons made Closet the odd one out. The mockup draws outlines.
+    6. **No hairline under the Stylist header** (`headerShadowVisible: false`).
+    7. **Garment icons get a contrast-aware edge** (`garmentEdge`): dark fills (luminance < 0.06) get a lightened rim on dark tiles; near-white fills (> 0.8) a deeper edge on light tiles; everything else keeps the mockup's 30% darker stroke.
+    8. **Sheet heights:** "Not quite right?" opens at 0.83, the mockup's height (its top at y = 150), not full height. "Which shoes?" opens at 0.62 (0.5 cut the second row).
+    9. **Interim tab screens with real data and no spec IDs:**
+       - **Closet:** C1e when empty, else a 3-column grid of his pieces.
+       - **Lookbook:** L1e (ghost look + Check my fit) when empty, else a list of scored checks, with re-checks folded in as "8.0 → 9.0". A row opens the photo.
+       - **You:** "What your stylist knows" (4 newest facts), the plan card with today's usage, and the privacy line. No chevrons, since nothing pushes yet.
+       - The new `EmptyState` component (03) is shared. P5 replaces these screens.
+64. **The reading bubble's caption changes from "Only this is sent" to "Face hidden when sent".** Found while verifying #63: since #55 the bubble shows his unblurred kept photo, so "Only this is sent" next to it was no longer true for real photos with a face in them. The new line stays true for both (demo neck-down crops, real full-frame photos). Copy deck 02 §5 updated (`read.bubble.onlySent`) and regenerated.

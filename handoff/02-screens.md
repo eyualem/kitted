@@ -453,7 +453,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 - **Entry:** a capture or library pick that passes S3. **Exit:** the skeleton fills in place and becomes S6 / S6p / S6r (or S19/S23 on failure). Leaving the app keeps going in the background (`beginBackgroundTask`); a local N2 "fit check ready" fires when it finishes (if allowed).
 
 **Layout in the Stylist thread** (compact composer showing, see S1)
-1. **His photo bubble** (right-aligned, `me`, pad 4, width 135, radius 21 / 21 / 6.5 / 21): photo 135 × 171.5 (inner radius 17 / 17 / 4 / 17), crop `neck` = **exactly the processed upload copy**. Caption row (13.5 → `.footnote`, pad 6.5 / 9 / 5, `space-between`, 90% opacity): left `lock` 15.5 + `Only this is sent`, right the time (`7:42`). When the score lands, the caption becomes `{Occasion}` · time (as in D7).
+1. **His photo bubble** (right-aligned, `me`, pad 4, width 135, radius 21 / 21 / 6.5 / 21): photo 135 × 171.5 (inner radius 17 / 17 / 4 / 17), crop `neck` = **exactly the processed upload copy**. Caption row (13.5 → `.footnote`, pad 6.5 / 9 / 5, `space-between`, 90% opacity): left `lock` 15.5 + `Face hidden when sent` (#64), right the time (`7:42`). When the score lands, the caption becomes `{Occasion}` · time (as in D7).
 2. **Skeleton card** in the final card's exact shape (`KCard`, radius 26):
    - Tagline row: left `Reading your fit`, right `About 7 seconds` (mono 12). At 9 s the right side changes to `Taking longer than usual` (ruling 19).
    - Score row placeholder: a 76 × 62 `surface2` rounded rect where the number goes, and two text bars for the verdict (shimmer; static with Reduce Motion).
@@ -476,7 +476,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **Timing (ruling 19):** hedge request at 5 s if no first token, "Taking longer than usual" at 9 s, abort at 14 s, the app gives up at 16 s → S19 "That took too long."
 
-**VoiceOver:** the skeleton card is one element, "Reading your fit." Each finished stage is announced once ("Finding your pieces, done"). Bubble: "Your outfit photo, 7:42. Only this is sent."
+**VoiceOver:** the skeleton card is one element, "Reading your fit." Each finished stage is announced once ("Finding your pieces, done"). Bubble: "Your outfit photo, 7:42. Face hidden when sent."
 
 ---
 
@@ -1612,7 +1612,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `cam.shoe.a11yShutter` | Take shoe photo | N |
 | `cam.shoe.failed` | Couldn't read your shoes. Try again or pick a pair. | N |
 | `cam.item.tip` | One piece, flat or on a hanger. | N |
-| `read.bubble.onlySent` | Only this is sent | R (mockup: "Only this crop is sent") |
+| `read.bubble.onlySent` | Face hidden when sent | R (mockup: "Only this crop is sent"; changed Oct 7, #64: the bubble shows his unblurred kept photo since #55, so "Only this is sent" was no longer true) |
 | `read.tag` | Reading your fit | M |
 | `read.eta` | About 7 seconds | M |
 | `read.slow` | Taking longer than usual | R |

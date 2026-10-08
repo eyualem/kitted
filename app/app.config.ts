@@ -4,7 +4,7 @@ import type { ExpoConfig } from 'expo/config';
 const demo = process.env.KITTED_DEMO !== '0';
 
 /** The camera prompt's reason (Apple 5.1.1); used by both the plist and the picker plugin. */
-const CAMERA_USAGE = 'Kitted uses the camera to check your outfit. Your face is cropped out before anything is sent.';
+const CAMERA_USAGE = 'Kitted uses the camera to check your outfit. Faces are blurred before anything is sent.';
 
 const config: ExpoConfig = {
   name: 'Kitted',

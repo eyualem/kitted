@@ -2,7 +2,7 @@
 // found pieces as Pills in the skeleton card). Kept in case the founder brings it back.
 // 28 pt capsule, 12 pt padding, footnote semibold white on fixed.photoTag (SOLID backing,
 // never glass), 1 pt white @ 18% border. Pending: dim text + an ellipsis (not color-only).
-// Upload notice: white @ 92% fill, indigo text, leading lock ("Only this is sent").
+// Upload notice: white @ 92% fill, indigo text, leading lock ("Face hidden when sent").
 // The tags are accessibilityHidden; the StageList value summarises what was found.
 
 import { View } from 'react-native';

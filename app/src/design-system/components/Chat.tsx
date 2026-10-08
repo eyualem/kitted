@@ -193,7 +193,7 @@ export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii
 // ---------------------------------------------------------------------------------------
 // PhotoBubble: 135 pt wide me frame, 4 pt padding, outer radius 21 (tail 6). The photo is
 // 172 pt tall, radius 17 (tail 4), neck-down. Caption row: footnote onMe @ 90%, occasion left
-// and time right ("Date · 7:42"). While reading (ruling 13): lock + "Only this is sent".
+// and time right ("Date · 7:42"). While reading (ruling 13): lock + "Face hidden when sent".
 
 export interface PhotoBubbleProps {
   source: PhotoSource;
@@ -202,7 +202,7 @@ export interface PhotoBubbleProps {
   occasion?: string;
   /** "7:42" */
   time: string;
-  /** True while the check is reading: the caption shows lock + "Only this is sent" (ruling 13). */
+  /** True while the check is reading: the caption shows lock + "Face hidden when sent" (ruling 13). */
   reading?: boolean;
   /** Opens the photo viewer (S13). */
   onPress?: () => void;
@@ -255,7 +255,7 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
         }}
       >
         {reading ? (
-          // 109 pt can't hold lock + "Only this is sent" + the time on one line: the label wraps.
+          // 109 pt can't hold lock + "Face hidden when sent" + the time on one line: the label wraps.
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, flexShrink: 1 }}>
             <Icon name="lock" size="small" color={colors.onMe} />
             <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>

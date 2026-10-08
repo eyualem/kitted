@@ -143,7 +143,7 @@
 
 ### 0. The plan to beta (Oct 7 review, DECISIONS-LOG #56)
 **Features before polish.** The Stylist tab is about 80% of the mockup's polish; the gap is scope. Closet, Lookbook, You, onboarding and the paywall are still placeholders that show spec IDs ("C1 · Closet"). There's also no server, so a release build can't score real photos (the key only loads in dev builds). Order:
-1. **Quick-fix batch (half a day):**
+1. **Quick-fix batch: done Oct 7** (DECISIONS-LOG #63; on the Simulator; the camera text reaches my phone after the next `tools/phone/install.sh`). It was:
    - Correct the camera permission text. It still says "face is cropped out"; that's wrong since #54.
    - Store kept-photo paths relative to the app folder. They're absolute today, and iOS changes that folder on reinstall, which would blank old photos.
    - Fix the dead "Later" link.
@@ -236,7 +236,10 @@ P5's real size is about 6.5 days, not 05's 2.
 - **Node and Xcode:** Node 22.23; Xcode 26.6 at `/Applications/Xcode-26.6.app`, selected with `xcode-select`. Leave Xcode 26.3 alone.
 - **Simulator:** iPhone 17 Pro, iOS 26.5, UDID `111D0A09-C2CA-4F72-BF3C-44019A05C89D`, bundle id `com.trykitted.kitted`.
 - **Metro and the web preview:** run by the `kitted-web` launch config (`.claude/launch.json`). Start it with the Browser pane's `preview_start` tool, `name: "kitted-web"`. The dev build hot-reloads from it.
-- **Rebuild native** only after a native package or `app.config.ts` change:
+- **Rebuild native** only after a native package or `app.config.ts` change. After an `app.config.ts` change, run prebuild first: `run:ios` doesn't regenerate `ios/Kitted/Info.plist`, so the old strings ship.
+  ```bash
+  cd app && LANG=en_US.UTF-8 npx expo prebuild --platform ios --no-install
+  ```
   ```bash
   cd app && LANG=en_US.UTF-8 npx expo run:ios --device "iPhone 17 Pro" --no-bundler
   ```

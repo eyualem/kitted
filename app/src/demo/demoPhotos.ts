@@ -3,6 +3,7 @@
 import type { PhotoCrop } from '@/design-system/components/Chat';
 import crops from '../../assets/demo-photos/demo-photos.json';
 import index from '../../assets/demo-readings/INDEX.json';
+import { resolveStoredPath } from '@/services/photoFiles';
 
 export interface DemoPhoto {
   id: string;
@@ -55,7 +56,7 @@ export function demoPhoto(id: string | null | undefined): DemoPhoto | undefined 
 export const SAMPLE_ORDER = ['p01b', 'p01a', 's24', 's15', 's12', 's25', 's05', 's09', 's10', 's13', 's14', 's22'] as const;
 
 /** What a thread bubble or the viewer shows: a bundled photo (with its crop table) or the
- *  neck-down copy kept on the phone (already cropped, so no crop). */
+ *  full-frame copy kept on the phone (stored relative to Documents; no crop). */
 export interface ShownPhoto {
   id: string;
   source: number | string;
@@ -66,6 +67,9 @@ export interface ShownPhoto {
 export function shownPhoto(photoId: unknown, photoUri: unknown, aspect: unknown): ShownPhoto | undefined {
   const demo = typeof photoId === 'string' ? demoPhoto(photoId) : undefined;
   if (demo) return demo;
-  if (typeof photoUri === 'string' && photoUri) return { id: photoUri, source: photoUri, aspect: typeof aspect === 'number' ? aspect : undefined };
+  if (typeof photoUri === 'string' && photoUri) {
+    const uri = resolveStoredPath(photoUri) ?? photoUri;
+    return { id: photoUri, source: uri, aspect: typeof aspect === 'number' ? aspect : undefined };
+  }
   return undefined;
 }

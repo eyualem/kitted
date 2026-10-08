@@ -1,9 +1,13 @@
 // GarmentIcon: the mockup's flat garment drawings (`gi(t, c)` in kitted-mockups.html), ported
 // path for path to react-native-svg. viewBox 60 × 60; strokes are the fill darkened 30%,
 // highlights lightened 20%. Always decorative (the parent carries the VoiceOver label).
+// Contrast fix (DECISIONS-LOG #56): on dark tiles a navy or black garment's darkened edge
+// vanished, so very dark fills get a lightened rim in dark mode; near-white fills get a deeper
+// edge on light tiles.
 
 import { View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import { useTheme } from '../theme';
 /** The mockup's gi() set. */
 export type GarmentIconType =
   | 'tee' | 'oxford' | 'overshirt' | 'jacket' | 'sweater' | 'hoodie' | 'chino' | 'jeans' | 'trouser' | 'cargo'
@@ -26,6 +30,24 @@ export function shade(hex: string, a: number): string {
 const LS = 'M21,9 L13,12 L9,20 L5,50 L12,51 L16,29 L16,53 L44,53 L44,29 L48,51 L55,50 L51,20 L47,12 L39,9 Q30,15 21,9 Z';
 const STITCH = '#C98A4A';
 
+/** Relative luminance (0 black … 1 white) of a #rrggbb color. */
+export function luminance(hex: string): number {
+  const n = parseInt(hex.slice(1), 16);
+  const lin = (v: number) => {
+    const x = v / 255;
+    return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+}
+
+/** The outline color: the mockup's darkened edge, except where it would disappear into the tile. */
+export function garmentEdge(hex: string, scheme: 'light' | 'dark'): string {
+  const y = luminance(hex);
+  if (scheme === 'dark' && y < 0.06) return shade(hex, 0.45);
+  if (scheme === 'light' && y > 0.8) return shade(hex, -0.42);
+  return shade(hex, -0.3);
+}
+
 export interface GarmentIconProps {
   type: GarmentIconType;
   color: string;
@@ -33,7 +55,8 @@ export interface GarmentIconProps {
 }
 
 export function GarmentIcon({ type: t, color: c, size }: GarmentIconProps) {
-  const d = shade(c, -0.3);
+  const { scheme } = useTheme();
+  const d = garmentEdge(c, scheme);
   const l = shade(c, 0.2);
   const st = { stroke: d, strokeWidth: 1.1, strokeLinejoin: 'round' as const };
   return (

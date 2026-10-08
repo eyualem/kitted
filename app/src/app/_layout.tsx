@@ -83,9 +83,11 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="share/[checkId]" options={cover} />
         <Stack.Screen name="paywall" options={cover} />
         <Stack.Screen name="sheets/why/[checkId]" options={sheet([0.78, 1])} />
-        <Stack.Screen name="sheets/correct/[checkId]" options={sheet([1])} />
+        {/* The mockup's height (its top at y = 150 of 874); at full height ~200 pt sat empty under "Save correction" (DECISIONS-LOG #56). */}
+        <Stack.Screen name="sheets/correct/[checkId]" options={sheet([0.83, 1])} />
         <Stack.Screen name="sheets/added/[checkId]" options={sheet([0.5, 1])} />
-        <Stack.Screen name="sheets/pick-shoes/[checkId]" options={sheet([0.5, 1])} />
+        {/* 0.62: at 0.5 the second row of pairs was cut mid-label. */}
+        <Stack.Screen name="sheets/pick-shoes/[checkId]" options={sheet([0.62, 1])} />
         <Stack.Screen name="sheets/tell-me/[checkId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/edit-item/[id]" options={sheet([1])} />
         <Stack.Screen name="sheets/rotation" options={sheet([0.5])} />

@@ -118,7 +118,7 @@ export const fixed = {
   onDark: '#EEF0F5',
   /** Copper on dark: share-band delta, stitches, camera scan line. */
   copper: '#DE9762',
-  /** Camera tip pill, "Only this is sent" (white @ 92%). */
+  /** Camera tip pill, "Face hidden when sent" (white @ 92%). */
   lightPill: 'rgba(255, 255, 255, 0.92)',
   /** FIXED: backing for text on photos (mockup .78 → .80). */
   photoTag: 'rgba(14, 17, 28, 0.80)',

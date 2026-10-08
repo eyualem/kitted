@@ -129,7 +129,7 @@ export const enGenerated = {
   "cam.shoe.a11yShutter": "Take shoe photo",
   "cam.shoe.failed": "Couldn't read your shoes. Try again or pick a pair.",
   "cam.item.tip": "One piece, flat or on a hanger.",
-  "read.bubble.onlySent": "Only this is sent",
+  "read.bubble.onlySent": "Face hidden when sent",
   "read.tag": "Reading your fit",
   "read.eta": "About 7 seconds",
   "read.slow": "Taking longer than usual",

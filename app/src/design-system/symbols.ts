@@ -5,12 +5,9 @@
 
 export const sym = {
   tabStylist: 'bubble.left',
-  tabStylistSelected: 'bubble.left.fill',
   tabCloset: 'hanger',
   tabLookbook: 'square.grid.2x2',
-  tabLookbookSelected: 'square.grid.2x2.fill',
   tabYou: 'person',
-  tabYouSelected: 'person.fill',
   camera: 'camera',
   photo: 'photo',
   close: 'xmark',

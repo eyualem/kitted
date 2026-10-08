@@ -3,6 +3,7 @@
 // blurred; the copy kept on the phone: unblurred; both without metadata) before anything is sent.
 import { prepare as visionPrepare, reloadUpload } from '../../../modules/kitted-vision';
 import { demoImagePrep, type ImagePrep } from './demo';
+import { toStoredPath } from '../photoFiles';
 
 export const imagePrep: ImagePrep = {
   async prepare(photo) {
@@ -22,7 +23,8 @@ export const imagePrep: ImagePrep = {
       status: 'ok',
       image: {
         photoId: null, sha256: r.sha256, uploadUri: r.uploadUri, uploadBase64: r.uploadBase64,
-        keptUri: r.keptUri, thumbUri: r.thumbUri, aspect: r.width / r.height,
+        // Stored relative to Documents (the container path changes on reinstall); resolved when shown.
+        keptUri: toStoredPath(r.keptUri) ?? undefined, thumbUri: toStoredPath(r.thumbUri) ?? undefined, aspect: r.width / r.height,
       },
     };
   },

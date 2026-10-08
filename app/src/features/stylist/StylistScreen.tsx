@@ -7,14 +7,14 @@
 // the same amount with the scroll offset following, so the newest message stays in view.
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue } from 'react-native-reanimated';
+import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
 import { sessionClock } from '@/state/session';
-import { setToastFloor } from '@/features/toast/toast';
+import { setToastFloor, useToast } from '@/features/toast/toast';
 import { Composer } from './Composer';
 import { COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
@@ -22,6 +22,8 @@ import { buildThreadItems } from './thread';
 
 const EXCHANGE_MS = 10 * 60_000;
 const SHEET_DISMISS_MS = 400;
+/** Room a toast takes above the dock (44 tall + 8 gap + a little air), DECISIONS-LOG #56. */
+const TOAST_ROOM = 56;
 
 export function StylistScreen() {
   const { colors } = useTheme();
@@ -45,11 +47,27 @@ export function StylistScreen() {
       scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
     },
   );
+  // A toast sits just above the dock, which used to cover the newest card's buttons ("Logged for
+  // today" over Wear this). While one shows, the thread makes room for it and, if he's at the
+  // bottom, moves up with it, like the keyboard.
+  const toast = useToast();
+  const toastRoom = useSharedValue(0);
+  const follow = useSharedValue(1);
+  useEffect(() => {
+    toastRoom.set(withTiming(toast ? TOAST_ROOM : 0, { duration: 220 }));
+  }, [toast, toastRoom]);
+  useAnimatedReaction(
+    () => toastRoom.value,
+    (now, before) => {
+      if (before === null || now === before || !follow.value) return;
+      scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
+    },
+  );
   const dockStyle = useAnimatedStyle(() => ({ bottom: COMPOSER_BOTTOM + lift.value }));
   // The dock's measured height: at large text sizes it's far taller than the mockup's, and a fixed
   // pad would leave the newest links under it for good. Never less than the mockup's pad.
   const dockH = useSharedValue(0);
-  const footerStyle = useAnimatedStyle(() => ({ height: Math.max(THREAD_PAD[mode], COMPOSER_BOTTOM + dockH.value + DOCK_GAP) + lift.value }));
+  const footerStyle = useAnimatedStyle(() => ({ height: Math.max(THREAD_PAD[mode], COMPOSER_BOTTOM + dockH.value + DOCK_GAP) + lift.value + toastRoom.value }));
   const atBottom = useRef(true);
   const first = useRef(true);
   // Only his finger decides whether the thread follows: the momentum end of our own animated
@@ -58,6 +76,7 @@ export function StylistScreen() {
   const onUserScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
     atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < 80;
+    follow.set(atBottom.current ? 1 : 0);
   };
   const onDragEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     onUserScroll(e);

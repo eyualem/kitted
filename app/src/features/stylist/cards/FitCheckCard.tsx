@@ -179,7 +179,8 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
         <TextLinkRow>
           <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
           <TextLink title={t('card.nqr')} onPress={go.nqr} compact />
-          {row.isFirstCheck && recheckOpen ? <TextLink title={t('card.later')} color="ink2" compact /> : null}
+          {/* `Later` (ruling 23) comes back in P4 with the "first 3 moves" card it leads to;
+              until then a link that does nothing is worse than none. */}
         </TextLinkRow>
       </KCardSection>
     </KCard>
