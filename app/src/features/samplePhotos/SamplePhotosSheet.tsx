@@ -9,7 +9,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { KButton, NeckDownPhoto, opacity } from '@/design-system';
 import { DEMO_PHOTOS, SAMPLE_ORDER } from '@/demo/demoPhotos';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
-import { startCheck } from '@/features/camera/startCheck';
+import { lensFromParams, startCheck } from '@/features/camera/startCheck';
 import type { CheckMode } from '@/features/fitcheck/machine';
 import { t } from '@/i18n/en';
 
@@ -17,21 +17,23 @@ const W = 108;
 const H = 146;
 
 export function SamplePhotosSheet() {
-  const { mode: rawMode, parent, from } = useLocalSearchParams<{ mode?: string; parent?: string; from?: string }>();
+  const params = useLocalSearchParams<{ mode?: string; parent?: string; from?: string; occasion?: string; style?: string }>();
+  const { mode: rawMode, parent, from } = params;
+  const lens = lensFromParams(params);
   const close = () => (from === 'camera' ? router.dismissAll() : router.back());
   const mode: CheckMode = rawMode === 'recheck' || rawMode === 'shoeSnap' ? rawMode : 'check';
   const photos = SAMPLE_ORDER.map((id) => DEMO_PHOTOS.find((p) => p.id === id)!).filter(Boolean);
   const subtitle = mode === 'recheck' ? t('demo.samples.recheck') : mode === 'shoeSnap' ? t('demo.samples.snap') : t('demo.samples.sub');
   const pick = (photoId: string) => {
     close();
-    void startCheck(mode, { photoId }, parent);
+    void startCheck(mode, { photoId }, parent, lens);
   };
   const chooseOwn = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], allowsEditing: false, quality: 1, exif: false });
     const uri = res.canceled ? null : res.assets[0]?.uri;
     if (!uri) return;
     close();
-    void startCheck(mode, { photoUri: uri }, parent);
+    void startCheck(mode, { photoUri: uri }, parent, lens);
   };
   return (
     <SheetScaffold title={t('demo.samples.title')} subtitle={subtitle}>

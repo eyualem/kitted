@@ -1,6 +1,7 @@
 // S8 Not quite right? (02 D9): fix a detail the app got wrong and see the score live; Save
 // makes a NEW corrected reading (the original is never edited). Four reasons; P2 edits fit
 // (tops) and leg shape (bottoms) in "Wrong color or fit".
+import { stylesFor } from '@/features/fitcheck/lens';
 import { useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -47,7 +48,7 @@ export function CorrectSheet() {
 
   const preview = useMemo(() => {
     if (!data) return null;
-    const opts = { occasion: data.row.occasion, styles: data.profile?.styles ?? [], boldness: data.profile?.boldness ?? 'a_little' };
+    const opts = { occasion: data.row.occasion, styles: stylesFor(data.row.style, data.profile?.styles ?? []), boldness: data.profile?.boldness ?? 'a_little' };
     let next: Reading = data.reading;
     if (draft && reason !== 'fix' && reason !== 'score') {
       next = 'remove' in draft ? removeGarment(data.reading, draft.index) : applyCorrection(data.reading, draft.index, draft.field, draft.value);

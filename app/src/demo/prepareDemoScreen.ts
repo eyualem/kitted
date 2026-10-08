@@ -7,6 +7,10 @@ import { store } from '@/data/db';
 import { KV } from '@/data/store';
 import { loadScenario } from '@/data/seedLoader';
 import { fitCheck, readingSource, setTimerOverride } from '@/features/fitcheck/session';
+import { morning } from '@/features/morning';
+import { createMemoryStore } from '@/data/memoryStore';
+import type { OccasionKey } from '@/data/types';
+import { WEATHER_PERMISSION_KV } from '@/services/weather';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
@@ -17,7 +21,10 @@ const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
 /** Story steps per screen (firstRun story; screen 11 runs s24 live inside `full`). */
 type Step =
-  | { at: string; do: 'check'; photoId: string; occasion: 'date' | 'everyday'; hold?: number }
+  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string }
+  | { at: string; do: 'morning' }
+  | { at: string; do: 'wear' }
+  | { at: string; do: 'closet'; ids: string[] }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string };
 
@@ -47,7 +54,6 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
     ],
   },
   24: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
-  12: { asOf: '2026-10-22T08:01:00', steps: [] },
   13: { asOf: '2026-10-22T08:05:00', steps: [] },
   18: {
     steps: [
@@ -57,6 +63,19 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
     ],
   },
   19: { asOf: '2026-10-22T21:12:00', steps: [] },
+  // Morning/evening card: posted by the real service at the screen's time.
+  12: { asOf: '2026-10-22T08:01:00', steps: [{ at: '2026-10-22T08:01:00', do: 'morning' }] },
+  25: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
+  26: { steps: [{ at: '2026-10-22T07:39:00', do: 'closet', ids: ['T2', 'B1'] }, { at: '2026-10-22T07:40:00', do: 'morning' }] },
+  27: { steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
+  28: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }, { at: '2026-10-22T07:41:00', do: 'wear' }] },
+  29: {
+    asOf: '2026-10-22T07:39:00',
+    steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }, { at: '2026-10-22T07:45:00', do: 'check', photoId: 'p01b', occasion: 'class', checkId: STORY_PARTIAL }],
+  },
+  30: { asOf: '2026-10-22T18:29:00', steps: [{ at: '2026-10-22T18:30:00', do: 'morning' }] },
+  31: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
+  32: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
@@ -81,9 +100,30 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
   }
   await store.setKv(KV.scenario, sc.scenario);
   await store.setKv(KV.seedLoaded, sc.scenario);
+  if (sc.weather) {
+    setDemoArgs({ ...getDemoArgs(), weather: args.weather ?? sc.weather });
+    if (sc.weatherAllowed) await store.setKv(WEATHER_PERMISSION_KV, 'granted');
+  }
 
   for (const step of story.steps) {
     startClock(step.at);
+    if (step.do === 'morning') {
+      await morning.ensureCard();
+      continue;
+    }
+    if (step.do === 'wear') {
+      const idea = (await store.dailyIdeas.all()).sort((a, b) => b.createdAt - a.createdAt)[0];
+      if (idea) await morning.wear(idea.id);
+      continue;
+    }
+    if (step.do === 'closet') {
+      const full = seed.scenarios.full.closet as unknown as { id: string }[];
+      const sub = { ...seed, scenarios: { ...seed.scenarios, full: { ...seed.scenarios.full, closet: full.filter((c) => step.ids.includes(c.id)) } } };
+      const tmp = createMemoryStore();
+      await loadScenario(tmp, sub, { scenario: 'full', zone: US_EASTERN });
+      for (const c of await tmp.closet.all()) if (step.ids.includes(c.id)) await store.closet.put(c);
+      continue;
+    }
     if (step.do === 'recheckPrompt') {
       await fitCheck.postRecheckPrompt(STORY_FIRST_CHECK);
     } else if (step.do === 'recheck') {
@@ -96,7 +136,7 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       await new Promise((r) => setTimeout(r, 30));
       fitCheck.selectOccasion(step.occasion);
     } else {
-      await fitCheck.start({ mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL });
+      await fitCheck.start({ mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL) });
     }
   }
   setDemoArgs({ ...getDemoArgs(), latency: args.latency });

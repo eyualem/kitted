@@ -1,10 +1,11 @@
 // The Stylist composer (design-spec A7/A8): compact (camera · field) during an exchange; idle
-// (quick-starts + "Check my fit" pill · "Ask…") otherwise. Differs from the mockup: no
+// ("Check my fit" pill · "Ask…") otherwise. No quick-start chip row: the morning/evening card
+// replaced it (founder, Oct 7: the row looked cramped; 02 "S1d", DECISIONS-LOG #58). No
 // photo-library circle (the camera screen has the library thumbnail, the iOS norm), and the
 // camera button hides while he types so the field gets the full width (DECISIONS-LOG #28).
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { CONTROL_TEXT_MAX_SCALE, Icon, KText, QuickStartChip, opacity, useTheme } from '@/design-system';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 
 export interface ComposerProps {
@@ -18,18 +19,11 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
   // Typing (field focused, or text in it) shows the compact field alone (02 S1: compact while
-  // the keyboard is up; the quick-start row hides while typing).
+  // the keyboard is up).
   const typing = focused || text.length > 0;
   const idle = mode === 'idle' && !typing;
   return (
     <View style={styles.wrap}>
-      {idle ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickRow} contentContainerStyle={styles.quickContent}>
-          <QuickStartChip title={t('quick.wear')} icon="tee" />
-          <QuickStartChip title={t('quick.bought')} icon="bag" />
-          <QuickStartChip title={t('quick.ask')} icon="question" />
-        </ScrollView>
-      ) : null}
       {/* AX sizes: the field gets its own full-width row under the buttons (design-spec A7). */}
       <View style={isAccessibilitySize ? styles.column : styles.row}>
         {typing ? null : idle ? (
@@ -90,8 +84,6 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
 
 const styles = StyleSheet.create({
   wrap: { paddingHorizontal: 16, paddingTop: 8, gap: 10 },
-  quickRow: { marginRight: -16 },
-  quickContent: { gap: 8, paddingRight: 16, paddingVertical: 2 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   column: { gap: 8, alignItems: 'flex-start' },
   circle: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },

@@ -7,6 +7,7 @@ import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { shownPhoto } from '@/demo/demoPhotos';
 import { useFitCheckSession } from '@/features/fitcheck/session';
+import { MorningCard } from '@/features/morning/MorningCard';
 import { t } from '@/i18n/en';
 import { clockTime } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
@@ -23,6 +24,7 @@ export function ThreadRow({ item }: { item: ThreadItem }) {
     if (m.cardType === 'fitCheck' && m.fitCheckId) return <FitCheckCard checkId={m.fitCheckId} />;
     if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} />;
     if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} />;
+    if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} />;
     return null;
   }
   const text = m.payload.aiNote ? t('stylist.aiNote') : m.text ?? '';

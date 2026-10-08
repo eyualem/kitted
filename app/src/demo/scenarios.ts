@@ -20,6 +20,9 @@ export interface ScreenScenario {
   href: string;
   /** For sheets and covers: the screen they're presented over (a sheet needs something beneath it). */
   under?: string;
+  /** Morning/evening card screens: the sample weather, and whether he has allowed it (02 "S1d"). */
+  weather?: 'coldRain' | 'mild' | 'hot' | 'freezing';
+  weatherAllowed?: boolean;
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
@@ -43,7 +46,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 9, name: 'Not quite right?', id: 'S8', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: `/sheets/correct/${STORY_FIRST_CHECK}?reason=detail&garment=1&field=leg_shape&value=slim`, under: '/stylist' },
   { n: 10, name: 'Re-check', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:50:00', href: '/stylist' },
   { n: 11, name: 'Partial check', id: 'S6p', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: '/stylist' },
-  { n: 12, name: 'Stylist home', id: 'S1', scenario: 'full', onboarded: true, now: '2026-10-22T08:01:00', freeChecksUsed: 0, href: '/stylist' },
+  { n: 12, name: 'Stylist home', id: 'S1', scenario: 'full', onboarded: true, now: '2026-10-22T08:01:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: true },
   { n: 13, name: 'Outfit idea', id: 'S20', scenario: 'full', onboarded: true, now: '2026-10-22T08:05:00', href: '/stylist' },
   { n: 14, name: 'Notifications', id: 'N1–N3', scenario: 'full', onboarded: true, now: '2026-10-22T08:00:00', href: '/demo/lockscreen', under: '/stylist' },
   { n: 15, name: 'Closet', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
@@ -57,6 +60,15 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 22, name: 'Which shoes?', id: 'S10', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: `/sheets/pick-shoes/${STORY_PARTIAL}`, under: '/stylist' },
   { n: 23, name: 'What changed?', id: 'S21', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: `/sheets/tell-me/${STORY_RECHECK}`, under: '/stylist' },
   { n: 24, name: 'Photo viewer', id: 'S13', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/photo/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  // The morning/evening card (02 "S1d", 05 §MC8). Sample weather, labelled as such on the card.
+  { n: 25, name: 'Morning card', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: true },
+  { n: 26, name: 'Morning card · thin closet', id: 'S1d', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:40:00', href: '/stylist', weather: 'mild', weatherAllowed: true },
+  { n: 27, name: 'Morning card · new user', id: 'S1d', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:40:00', href: '/stylist', weather: 'mild', weatherAllowed: true },
+  { n: 28, name: 'Morning card · wearing it', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:41:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: true },
+  { n: 29, name: 'Morning card · after his own check', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:46:00', href: '/stylist', weather: 'coldRain', weatherAllowed: true },
+  { n: 30, name: 'Evening card', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T18:30:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: true },
+  { n: 31, name: 'Morning card · weather ask', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: false },
+  { n: 32, name: 'Morning card · hot day', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 0, href: '/stylist', weather: 'hot', weatherAllowed: true },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

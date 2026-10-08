@@ -24,7 +24,7 @@ import {
 } from '../../../modules/kitted-vision';
 import { createAutoCapture, type Phase } from './autoCapture';
 import { BodyOutline, LowerGuide } from './FramingOverlay';
-import { startCheck } from './startCheck';
+import { lensFromParams, lensQuery, startCheck } from './startCheck';
 
 type Mode = 'propped' | 'mirror';
 const MODE_KEY = 'camera.mode';
@@ -37,7 +37,9 @@ const TIP: Record<GuideState, StringKey> = {
 const isGood = (s: GuideState) => s === 'good' || s === 'goodFull';
 
 export function CameraScreen() {
-  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string }>();
+  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string }>();
+  // From the morning/evening card: the card's occasion and style (#61).
+  const lens = lensFromParams(p);
   const checkMode: CheckMode = p.mode === 'recheck' || p.mode === 'shoeSnap' ? p.mode : 'check';
   const snap = checkMode === 'shoeSnap';
   const insets = useSafeAreaInsets();
@@ -71,7 +73,7 @@ export function CameraScreen() {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     if (!KittedCameraView) {
       router.back();
-      void startCheck(checkMode, { photoId: SIM_PHOTO }, p.parent);
+      void startCheck(checkMode, { photoId: SIM_PHOTO }, p.parent, lens);
       return;
     }
     try {
@@ -84,7 +86,7 @@ export function CameraScreen() {
       if (!uri) throw new Error('no photo');
       if (__DEV__) console.log(`[camera] captured (${mode}, ${facing} camera${flash ? ', flash' : ''})`);
       router.back();
-      void startCheck(checkMode, { photoUri: uri }, p.parent);
+      void startCheck(checkMode, { photoUri: uri }, p.parent, lens);
     } catch {
       setWhiteout(false);
       busy.current = false;
@@ -154,14 +156,14 @@ export function CameraScreen() {
   const pickFromLibrary = async () => {
     if (!KittedCameraView) {
       // Simulator: the sample photos (they replay saved readings), with "Choose from your photos".
-      router.push(`/sheets/sample-photos?mode=${checkMode}${p.parent ? `&parent=${p.parent}` : ''}&from=camera`);
+      router.push(`/sheets/sample-photos?mode=${checkMode}${p.parent ? `&parent=${p.parent}` : ''}&from=camera${lensQuery(lens)}`);
       return;
     }
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 1, exif: false });
     const uri = res.canceled ? null : res.assets[0]?.uri;
     if (!uri) return;
     router.back();
-    void startCheck(checkMode, { photoUri: uri }, p.parent);
+    void startCheck(checkMode, { photoUri: uri }, p.parent, lens);
   };
   const shutter = () => {
     if (mode === 'mirror' && timer && phase.kind === 'waiting') auto.current?.startCount();

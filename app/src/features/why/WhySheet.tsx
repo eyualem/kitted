@@ -1,5 +1,6 @@
 // S7 Why this score (02 D8): the math, line by line; "What I read" pills open the correction
 // sheet on that piece; "How I score ›" swaps to the plain-words explainer in place.
+import { stylesFor } from '@/features/fitcheck/lens';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -18,7 +19,7 @@ export function WhySheet() {
     const row = await store.fitChecks.get(checkId);
     const reading = row?.readingId ? (await store.readings.get(row.readingId))?.reading : undefined;
     const p = await store.profile.get('me');
-    return row && reading ? { row, reading, rows: whyRows(reading, row.occasion, p?.styles ?? [], p?.boldness ?? null) } : null;
+    return row && reading ? { row, reading, rows: whyRows(reading, row.occasion, stylesFor(row.style, p?.styles ?? []), p?.boldness ?? null) } : null;
   }, [checkId]);
   if (!data || !data.rows) return <SheetScaffold title={t('why.how.title')} />;
   const { row, reading, rows } = data;

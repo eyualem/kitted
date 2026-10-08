@@ -9,7 +9,7 @@ import {
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
-import type { ChatMessage, CheckDetails, ClosetItemRow, FitCheckRow, OccasionKey, ReadingRow, ReadingSourceKind } from '@/data/types';
+import type { ChatMessage, CheckDetails, ClosetItemRow, FitCheckRow, OccasionKey, ReadingRow, ReadingSourceKind, StyleKey } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
 import type { ImagePrep } from '@/services/imagePrep/demo';
@@ -18,6 +18,7 @@ import type { FailCode, PreparedImage, ReadingSource, ReadKind } from '@/service
 import type { Scheduler } from '@/services/scheduler';
 import { garmentHex, garmentLabel } from './labels';
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
+import { firstStyle, stylesFor } from './lens';
 import { evaluateCheck } from './scoring';
 
 export interface TimerConfig {
@@ -52,6 +53,8 @@ export interface CheckRequest {
   /** Re-check and shoe snap: the check they belong to. */
   parentCheckId?: string;
   occasion?: OccasionKey;
+  /** The one style to score for (#61); omitted = his first onboarding style. */
+  style?: StyleKey | null;
   /** A fixed id (demo story: "story-first", "story-recheck"); otherwise one is made. */
   checkId?: string;
 }
@@ -127,7 +130,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const occasion = patch.occasion ?? row.occasion;
     const details = { ...row.details, ...(patch.details ?? {}) };
     const ev = evaluateCheck({
-      reading, occasion, styles: p.styles, boldness: p.boldness, closet: await closetFor(row), firstCheck: row.isFirstCheck,
+      reading, occasion, styles: stylesFor(patch.style !== undefined ? patch.style : row.style, p.styles), boldness: p.boldness, closet: await closetFor(row), firstCheck: row.isFirstCheck,
       hiddenFixTargets: details.hiddenFixTargets ?? [],
     });
     const next = await store.fitChecks.patch(row.id, {
@@ -145,7 +148,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const first = parent && (await readingOf(parent));
     if (!row || !parent || !first) return null;
     const p = await profile();
-    const opts = { occasion: parent.occasion, styles: p.styles, boldness: p.boldness ?? 'a_little' };
+    const opts = { occasion: parent.occasion, styles: stylesFor(parent.style, p.styles), boldness: p.boldness ?? 'a_little' };
     const seen = await readingOf(row);
     const caught = new Set(seen ? (recheckOutcome(first, parent.fixes, seen, opts)?.doneFixes ?? []).map((f) => f.target) : []);
     const closet = await closetFor(parent);
@@ -204,7 +207,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const parentReading = await readingOf(parent);
     if (!parentReading) throw new Error(`re-check parent ${parent.id} has no reading`);
     const p = await profile();
-    const opts = { occasion: parent.occasion, styles: p.styles, boldness: p.boldness ?? 'a_little' };
+    const opts = { occasion: parent.occasion, styles: stylesFor(parent.style, p.styles), boldness: p.boldness ?? 'a_little' };
     const raw = await insertReading(next, 'recheckRaw', image.sha256, null);
     const { merged, notes } = recheckMerge(parentReading, next, fixTargets(parent.fixes), opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
@@ -312,6 +315,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.keptUri ?? null, aspect: image.aspect ?? null };
     const lastOccasion = ((await store.getKv(KV.lastOccasion)) as OccasionKey | null) ?? 'everyday';
     const occasion: OccasionKey = req.mode !== 'check' && parent ? parent.occasion : req.occasion ?? lastOccasion;
+    const style: StyleKey | null = req.mode !== 'check' && parent ? parent.style : req.style !== undefined ? req.style : firstStyle((await profile()).styles);
 
     if (req.mode === 'shoeSnap' && parent) {
       await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { ...photoPayload, snap: true } });
@@ -325,7 +329,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const priorChecks = (await store.fitChecks.all()).filter((c) => !c.parentId && c.status === 'scored');
     const checkId = req.checkId ?? deps.ids('FC');
     const row = emptyRow({
-      id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, demoPhotoId: image.photoId, imageHash: image.sha256,
+      id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, style, demoPhotoId: image.photoId, imageHash: image.sha256,
       photoFile: image.keptUri ?? null, thumbFile: image.thumbUri ?? null,
       parentId: parent?.id ?? null, isFirstCheck: req.mode === 'check' && priorChecks.length === 0,
     });

@@ -59,7 +59,9 @@ export interface IdeaResult {
 
 /** Candidates kept per slot before combining (keeps a 40-item closet well under 50 ms). */
 const KEEP = { top: 6, bottom: 5, shoes: 4, outer: 4 } as const;
-const W = { recent: 0.75, layerUnneeded: 0.75, layerSuggested: 0.25, wetBoot: 0.5, wetLight: 0.5 } as const;
+const W = { recent: 0.75, layerUnneeded: 0.75, layerSuggested: 0.25, wetBoot: 0.5, wetLight: 0.5, hotBoot: 0.75, hotShortSleeve: 0.5 } as const;
+/** Tops that read cool on a hot day (the reading has no sleeve length; these are short-sleeved by type). */
+const SHORT_SLEEVE: ReadonlySet<unknown> = new Set(["tee", "graphic_tee", "polo", "knit_polo", "tank_top", "camp_collar_shirt", "jersey"]);
 
 /** FNV-1a, for deterministic tie-breaks. */
 function hash(s: string): number {
@@ -102,6 +104,8 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
   const itemBonus = (it: ClosetItem): number => {
     let b = recent.has(it.id) ? -W.recent : 0;
     if (needs?.wet && it.slot === "shoes") b += isBoot(it.garment) ? W.wetBoot : isFairWeatherShoe(it.garment) ? -W.wetLight : 0;
+    if (needs?.hot && it.slot === "shoes" && isBoot(it.garment)) b -= W.hotBoot;
+    if (needs?.hot && it.slot === "top" && SHORT_SLEEVE.has(it.garment.subcategory)) b += W.hotShortSleeve;
     return b;
   };
   const shortlist = (slot: keyof typeof KEEP): ClosetItem[] => {

@@ -77,8 +77,11 @@ describe('first-run story', () => {
     expect(after.readingId).not.toBe(before.readingId);
     expect((await store.readings.get(before.readingId!))!.reading).toEqual(demoReadingById('p01b'));
     expect((await store.readings.get(after.readingId!))!.source).toBe('corrected');
-    expect(after.rawScore).toBe(7.775);
-    expect(after.rulesFired).toEqual(['P1_leg_vs_style']);
+    // Scored for one style, his first (smart casual), not the 50/50 blend with workwear (#61):
+    // slim chinos sit inside smart casual's leg band, so no P1 leg penalty (the blend gave 7.775).
+    expect(after.style).toBe('smart_casual');
+    expect(after.rawScore).toBe(8);
+    expect(after.rulesFired).toEqual([]);
     const chinos = (await store.closet.all()).find((c) => c.name === 'Tan chinos')!;
     expect([chinos.garment.leg_shape, chinos.confirmedFields]).toEqual(['slim', ['leg_shape']]);
     expect((await store.corrections.all())[0]).toMatchObject({ kind: 'wrongDetail', field: 'leg_shape', oldValue: 'straight', newValue: 'slim', scoreBefore: 8, scoreAfter: 8 });

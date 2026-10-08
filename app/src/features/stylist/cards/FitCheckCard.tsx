@@ -20,6 +20,7 @@ import { sessionClock } from '@/state/session';
 import { pickOccasion } from '../occasionPicker';
 import { occasionLabel } from '../thread';
 import { OccasionQuestion, ReadingCard } from './ReadingCard';
+import { useWeatherTip } from '@/features/morning/weatherTip';
 
 function useCheck(checkId: string) {
   return useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -31,6 +32,7 @@ function useCloset() {
 
 export function FitCheckCard({ checkId }: { checkId: string }) {
   const row = useCheck(checkId);
+  const wxTip = useWeatherTip(row);
   const session = useFitCheckSession();
   if (!row) return null;
   if (row.status === 'scoring') {
@@ -46,7 +48,7 @@ export function FitCheckCard({ checkId }: { checkId: string }) {
   }
   if (row.status === 'failed') return <FailureCard row={row} />;
   if (row.status === 'notClothed' || row.status === 'unreadable') return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} />;
-  return <ScoredCard row={row} />;
+  return <ScoredCard row={row} wxTip={wxTip} />;
 }
 
 export function StatusCard({ text }: { text: string }) {
@@ -72,7 +74,7 @@ function FailureCard({ row }: { row: FitCheckRow }) {
   );
 }
 
-function ScoredCard({ row }: { row: FitCheckRow }) {
+function ScoredCard({ row, wxTip }: { row: FitCheckRow; wxTip: string | null }) {
   const closet = useCloset() ?? [];
   const score = row.score ?? 0;
   const partial = row.isPartial;
@@ -157,6 +159,7 @@ function ScoredCard({ row }: { row: FitCheckRow }) {
           ))
         )}
         {nextLevel ? <TipLine lead={t('card.nextLevel')} text={nextLevel} /> : null}
+        {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} /> : null}
       </KCardSection>
       <Seam />
       <KCardSection gap={6}>

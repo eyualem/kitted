@@ -48,6 +48,8 @@ describe("pickOutfit", () => {
     const r = pick({ needs: weatherNeeds(day(72, 88)), occasion: "everyday" });
     expect(slots(r.outfit!.itemIds)).not.toContain("outer");
     expect(r.outfit!.itemIds.map((id) => byId(id).garment.subcategory)).not.toContain("sweater");
+    expect(r.outfit!.itemIds.map((id) => byId(id).garment.subcategory)).not.toContain("chelsea_boot");
+    expect(byId(r.outfit!.itemIds.find((id) => byId(id).slot === "top")!).garment.subcategory).toBe("tee");
     expect(r.outfit!.reasons[0]!.key).toBe("hotLight");
   });
 

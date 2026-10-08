@@ -275,7 +275,25 @@ export function createMorningService(deps: MorningDeps) {
     };
   }
 
-  return { ensureCard, change, swap, wear, greeting };
+  /** He tapped Allow on the card's "Use your local weather?" row: re-plan this card with the weather. */
+  async function refreshWeather(id: string): Promise<void> {
+    const row = await store.dailyIdeas.get(id);
+    if (!row) return;
+    const weather = (await forecast(row.slot)) as unknown as Record<string, unknown> | null;
+    if (!weather) return;
+    const next = { ...row, weather };
+    const result = await pick(next);
+    const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
+    await store.dailyIdeas.put({ ...next, outfitId });
+    const card = row.messageId ? await store.chat.get(row.messageId) : null;
+    if (!card) return;
+    const before = (await store.chat.all())
+      .filter((m) => m.role === 'stylist' && m.kind === 'text' && m.createdAt <= card.createdAt)
+      .sort((a, b) => b.createdAt - a.createdAt)[0];
+    if (before) await store.chat.patch(before.id, { text: greeting(row.slot, weather as unknown as DayWeather, before.createdAt, row.occasion) });
+  }
+
+  return { ensureCard, change, swap, wear, refreshWeather, greeting };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;

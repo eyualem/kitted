@@ -28,3 +28,4 @@ export {
 export { GarmentIcon, shade, type GarmentIconType, type GarmentIconProps } from './GarmentIcon';
 export { AddedRow, DeltaRow, QuickStartChip, FinishTile } from './CardParts';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
+export { PullDownPill, type PullDownPillProps, type PullDownOption } from './PullDownPill';

@@ -6,7 +6,7 @@
 // composer off-screen. The dock rides the keyboard directly, and the thread's footer grows by
 // the same amount with the scroll offset following, so the newest message stays in view.
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { AppState, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { space, useTheme } from '@/design-system';
@@ -15,6 +15,7 @@ import { useLive } from '@/data/useLive';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
 import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
+import { morning } from '@/features/morning';
 import { Composer } from './Composer';
 import { COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
@@ -69,6 +70,18 @@ export function StylistScreen() {
   const dockH = useSharedValue(0);
   const footerStyle = useAnimatedStyle(() => ({ height: Math.max(THREAD_PAD[mode], COMPOSER_BOTTOM + dockH.value + DOCK_GAP) + lift.value + toastRoom.value }));
   const atBottom = useRef(true);
+  // The real content and viewport heights. FlatList's scrollToEnd uses its cached row heights,
+  // which lag behind a card that grows in stages (the morning card: data, then tiles, then the
+  // native pills), so it stopped ~20 pt short. Scrolling to the measured height doesn't.
+  const contentH = useRef(0);
+  const viewH = useRef(0);
+  const toEnd = useCallback(
+    (animated: boolean) => {
+      if (contentH.current > 0 && viewH.current > 0) list.current?.scrollToOffset({ offset: Math.max(0, contentH.current - viewH.current), animated });
+      else list.current?.scrollToEnd({ animated });
+    },
+    [list],
+  );
   const first = useRef(true);
   // Only his finger decides whether the thread follows: the momentum end of our own animated
   // scrollToEnd (content still growing under it) used to read as "scrolled up" and stop it.
@@ -101,10 +114,22 @@ export function StylistScreen() {
   useFocusEffect(
     useCallback(() => {
       const timer = setTimeout(() => {
-        if (atBottom.current && !first.current) list.current?.scrollToEnd({ animated: true });
+        if (atBottom.current && !first.current) toEnd(true);
       }, SHEET_DISMISS_MS);
       return () => clearTimeout(timer);
-    }, [list]),
+    }, [toEnd]),
+  );
+
+  // The morning/evening card (02 "S1d"): posted the first time Stylist is shown in its window,
+  // including when the app comes back to the front the next morning (focus doesn't fire then).
+  useFocusEffect(
+    useCallback(() => {
+      void morning.ensureCard();
+      const sub = AppState.addEventListener('change', (st) => {
+        if (st === 'active') void morning.ensureCard();
+      });
+      return () => sub.remove();
+    }, []),
   );
 
   const action = usePendingStylistAction();
@@ -112,7 +137,15 @@ export function StylistScreen() {
     if (!action) return;
     clearStylistAction();
     if (action.kind === 'checkMyFit') openCamera();
-  }, [action]);
+    if (action.kind === 'scrollTo') {
+      const index = items.findIndex((i) => i.type === 'msg' && i.message.id === action.messageId);
+      if (index >= 0) {
+        atBottom.current = false;
+        follow.set(0);
+        list.current?.scrollToIndex({ index, animated: true, viewPosition: 0.1 });
+      }
+    }
+  }, [action, items, list, follow]);
 
   return (
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
@@ -122,21 +155,28 @@ export function StylistScreen() {
         keyExtractor={(i) => i.key}
         renderItem={({ item }) => <ThreadRow item={item} />}
         contentContainerStyle={styles.thread}
-        // A footer, not paddingBottom: scrollToEnd measures rows and footers, not padding.
+        // A footer, not paddingBottom: content height counts rows and footers, not padding.
         ListFooterComponent={<Animated.View style={footerStyle} />}
         // Only his own scrolling decides whether the thread follows new messages; cards that
         // finish loading (content growing) keep it pinned to the newest message.
         onScrollBeginDrag={() => (dragging.current = true)}
         onScrollEndDrag={onDragEnd}
         onMomentumScrollEnd={onMomentumEnd}
-        onContentSizeChange={() => {
-          if (atBottom.current) list.current?.scrollToEnd({ animated: !first.current });
+        onContentSizeChange={(_w, h) => {
+          contentH.current = h;
+          if (atBottom.current) toEnd(!first.current);
         }}
-        onLayout={() => {
-          list.current?.scrollToEnd({ animated: false });
+        onLayout={(e) => {
+          viewH.current = e.nativeEvent.layout.height;
+          toEnd(false);
           first.current = false;
         }}
         ItemSeparatorComponent={Separator}
+        // Rows have no fixed height: if the target isn't measured yet, jump near it, then retry.
+        onScrollToIndexFailed={(info) => {
+          list.current?.scrollToOffset({ offset: info.averageItemLength * info.index, animated: false });
+          setTimeout(() => list.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 0.1 }), 120);
+        }}
         keyboardDismissMode="interactive"
         contentInsetAdjustmentBehavior="never"
       />
