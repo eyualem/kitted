@@ -308,7 +308,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (prep.status === 'noPerson' || prep.status === 'multiplePeople' || prep.status === 'couldNotFrame') return { outcome: 'photoProblem', reason: prep.status };
     if (prep.status !== 'ok') return { outcome: prep.status === 'unknownPhoto' ? 'unknownPhoto' : 'notImplemented' };
     const image = prep.image;
-    // His photo in the thread: the bundled id, or the face-blurred copy kept on the phone.
+    // His photo in the thread: the bundled id, or his own copy kept on the phone (unblurred; only the upload is blurred).
     const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.keptUri ?? null, aspect: image.aspect ?? null };
     const lastOccasion = ((await store.getKv(KV.lastOccasion)) as OccasionKey | null) ?? 'everyday';
     const occasion: OccasionKey = req.mode !== 'check' && parent ? parent.occasion : req.occasion ?? lastOccasion;

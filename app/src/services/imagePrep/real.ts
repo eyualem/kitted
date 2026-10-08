@@ -1,6 +1,6 @@
 // ImagePrep for real photos (05 §P3 C): bundled demo photos keep the mockup's crop table;
-// anything else goes through kitted-vision on the phone (full frame, every face blurred,
-// metadata stripped, hashed) before it can be sent or kept.
+// anything else goes through kitted-vision on the phone (the upload: full frame, every face
+// blurred; the copy kept on the phone: unblurred; both without metadata) before anything is sent.
 import { prepare as visionPrepare, reloadUpload } from '../../../modules/kitted-vision';
 import { demoImagePrep, type ImagePrep } from './demo';
 

@@ -4,9 +4,10 @@
 //   2. orientation fixed; Apple Vision finds the people, the body pose and any faces
 //   3. the full frame, with every face (his head and anyone else's) blurred and pixelated; if his
 //      head can't be found, nothing is sent (ruling 10, DECISIONS-LOG #54)
-//   4. three re-encoded JPEGs, no metadata: the upload copy (1024 px long edge, q0.8, also
-//      returned as base64), the copy kept on the phone (2048 px) and a 400 px thumb
-//   5. the original is deleted when it's a temporary copy (picker / camera output)
+//   4. three re-encoded JPEGs, no metadata: the face-hidden upload copy (1024 px long edge,
+//      q0.8, also returned as base64), and, kept only on the phone, his photo unblurred
+//      (2048 px) and a 400 px thumb (DECISIONS-LOG #55)
+//   5. the temporary original (picker / camera output) is deleted
 import AVFoundation
 import CoreImage
 import CoreML
@@ -157,14 +158,14 @@ enum Prep {
       guard !box.isNull, box.width > 2, box.height > 2 else { continue }
       let r = CGRect(x: box.minX, y: H - box.maxY, width: box.width, height: box.height) // CI origin is bottom-left
       let block = max(r.width, r.height) / 7
-      let hidden = ci.clampedToExtent()
+      let masked = ci.clampedToExtent()
         .applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: block])
         .applyingFilter("CIPixellate", parameters: [kCIInputScaleKey: block, kCIInputCenterKey: CIVector(x: r.midX, y: r.midY)])
         .cropped(to: r)
-      ci = hidden.composited(over: ci).cropped(to: whole)
+      ci = masked.composited(over: ci).cropped(to: whole)
     }
     let ctx = CIContext()
-    guard let cropped = ctx.createCGImage(ci, from: whole) else { return ["status": "couldNotFrame", "sha256": sha] }
+    guard let hidden = ctx.createCGImage(ci, from: whole) else { return ["status": "couldNotFrame", "sha256": sha] }
     let pixelated = hide.count
 
     let fm = FileManager.default
@@ -175,11 +176,13 @@ enum Prep {
     let keptURL = keepDir.appendingPathComponent("\(sha)-photo.jpg")
     let thumbURL = keepDir.appendingPathComponent("\(sha)-thumb.jpg")
     let uploadURL = uploadDir.appendingPathComponent("\(sha).jpg")
-    let upload = try writeJPEG(cropped, longEdge: uploadPx, quality: 0.8, to: uploadURL)
-    _ = try writeJPEG(cropped, longEdge: keepPx, quality: 0.85, to: keptURL)
-    _ = try writeJPEG(cropped, longEdge: thumbPx, quality: 0.8, to: thumbURL)
+    // Sent: the face-hidden copy. Kept on his phone: his photo as he took it (no blur; founder,
+    // Oct 7, DECISIONS-LOG #55), re-encoded so location and camera metadata are gone.
+    let upload = try writeJPEG(hidden, longEdge: uploadPx, quality: 0.8, to: uploadURL)
+    _ = try writeJPEG(image, longEdge: keepPx, quality: 0.85, to: keptURL)
+    _ = try writeJPEG(image, longEdge: thumbPx, quality: 0.8, to: thumbURL)
 
-    // The full-face original is never kept: delete it when it's our temporary copy.
+    // The picker's / camera's temporary file is deleted; our re-encoded copy (no metadata) replaces it.
     let tmp = [fm.temporaryDirectory.path, fm.urls(for: .cachesDirectory, in: .userDomainMask)[0].path]
     if url.isFileURL, tmp.contains(where: { url.path.hasPrefix($0) }), !url.path.hasPrefix(uploadDir.path) {
       try? fm.removeItem(at: url)
@@ -193,8 +196,8 @@ enum Prep {
       "uploadBase64": upload.base64EncodedString(),
       "keptUri": keptURL.absoluteString,
       "thumbUri": thumbURL.absoluteString,
-      "width": cropped.width,
-      "height": cropped.height,
+      "width": image.width,
+      "height": image.height,
       "people": max(1, people.count),
       "faceBoxes": pixelated,
       "pose": poseKind,

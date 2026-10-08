@@ -13,7 +13,7 @@ export interface PreparedImage {
   uploadUri: string | null;
   /** The upload JPEG as base64 (real photos; the live source sends it). */
   uploadBase64?: string;
-  /** Kept on the phone: the face-blurred copy and its thumbnail (real photos only). */
+  /** Kept on the phone only: his photo (unblurred, no metadata) and its thumbnail (real photos only). */
   keptUri?: string;
   thumbUri?: string;
   /** width / height of the kept copy. */
