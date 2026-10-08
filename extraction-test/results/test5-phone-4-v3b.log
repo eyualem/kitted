@@ -1,0 +1,27 @@
+Using fixes from: /Users/eyu/Desktop/files/Kitted/extraction-test/fixes.csv (2 pairs)
+ph1/before_mirror.jpg (before, mirror)
+   run 1: 4.5  [6.36s]
+   run 2: 4.5  [4.79s]
+   run 3: 4.5  [4.79s]
+ph2/before_mirror.jpg (before, mirror)
+   run 1: 8.0 (partial)  [4.96s]
+   run 2: 8.0 (partial)  [4.67s]
+   run 3: 7.5 (partial)  [4.47s]
+ph3/before_mirror.jpg (before, mirror)
+   run 1: 8.5  [6.88s]
+   run 2: 8.0  [6.47s]
+   run 3: 8.5  [7.49s]
+ph4/before_mirror.jpg (before, mirror)
+   run 1: 8.5 (partial)  [6.25s]
+   run 2: 8.5 (partial)  [4.67s]
+   run 3: 7.5 (partial)  [5.22s]
+# Extraction test report
+
+- Photos scored: **4** (photos with fewer than 3 scored runs are left out), runs: **12**, failed runs: **0**
+- **Score consistency:** 3/4 photos had every run within ±0.5 of the median = **75%** (pass bar 90%) → **FAIL**
+- **Fix detection:** 0/0 = **0%** (pass bar 80%) → **NO DATA**
+- Tokens used: 22,299 in / 8,326 out (multiply by your model's list price to get the test cost; divide by runs for cost per check)
+- Seconds per call (API only): median **5.09**, p90 **6.88**, p95 7.49, slowest 7.49; under 5 s: 50%, under 8 s: 100%
+- Seconds per call including retry waits: median 5.1, slowest 7.5
+
+Full report: results/test5-phone-4-v3b/report.md

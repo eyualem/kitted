@@ -3,7 +3,7 @@
 Pass bars (RULEBOOK Part 6): at least 90% of photos have every run's score within 0.5 of each other,
 and the median API time stays within about 1 s of the locked format's.
 Scores are computed twice: with rubric.py v3.1 (today's app) and with the v4 prototype's code-only rulings.
-Run from extraction-test/:  /usr/bin/python3 compare_v5.py
+Run from extraction-test/:  /usr/bin/python3 compare_v5.py [v5|v5s]
 """
 import copy, json, statistics, sys
 from collections import Counter, defaultdict
@@ -13,10 +13,11 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "rubric" / "research" / "style-council"))
 import rubric_v4_proto as v4  # noqa: E402
 
-SETS = [  # (name, v3 baseline, v5 run)
-    ("stock-40", "results/lockin-oct6/B-stock", "results/test5-stock-40-v5"),
-    ("mirror-12", "results/lockin-oct6/B-mirror", "results/test5-mirror-12-v5"),
-    ("phone-4", "results/test5-phone-4-v3", "results/test5-phone-4-v5"),
+FMT = sys.argv[1] if len(sys.argv) > 1 else "v5"   # v5 or v5s
+SETS = [  # (name, v3 baseline, new-format run)
+    ("stock-40", "results/lockin-oct6/B-stock", f"results/test5-stock-40-{FMT}"),
+    ("mirror-12", "results/lockin-oct6/B-mirror", f"results/test5-mirror-12-{FMT}"),
+    ("phone-4", "results/test5-phone-4-v3" + ("b" if FMT == "v5s" else ""), f"results/test5-phone-4-{FMT}"),
 ]
 NEW_FIELDS = ["denim_wear", "waistband", "lightness", "shoe_profile", "sleeve_length", "shade", "logo_text", "details"]
 OLD_FIELDS = ["subcategory", "color_family", "saturation", "pattern", "pattern_scale", "logo", "volume", "leg_shape", "hem",
@@ -73,8 +74,8 @@ def main():
         if not new:
             print(f"\n## {name}: no v5 results yet ({new_dir})")
             continue
-        print(f"\n## {name}: v3 {len(base)} readings, v5 {len(new)} readings")
-        for label, runs in (("v3 locked", base), ("v5", new)):
+        print(f"\n## {name}: v3 {len(base)} readings, {FMT} {len(new)} readings")
+        for label, runs in (("v3 locked", base), (FMT, new)):
             secs = [r["seconds_api"] for r in runs if r.get("seconds_api")]
             outt = [r["usage"].get("candidatesTokenCount", 0) for r in runs if r.get("usage")]
             c31, n = consistency(scores(runs, v4.V31))
@@ -97,7 +98,7 @@ def main():
         print("- first-run changes v3 -> v5: " + ", ".join(f"{f} {c}" for f, c in changed.items()) or "none")
         for f, ex in examples.items():
             print(f"    {f}: " + "; ".join(ex[:6]) + (" …" if len(ex) > 6 else ""))
-        flips = field_flips(new, NEW_FIELDS + ["hem", "subcategory", "color_family"])
+        flips = field_flips(new, [f for f in NEW_FIELDS if any(f in g for r in new for g in r["extraction"]["garments"])] + ["hem", "subcategory", "color_family"])
         print("- v5 run-to-run flips (garment slots that changed between runs): " +
               ", ".join(f"{f} {a}/{b}" for f, (a, b) in flips.items()))
         hems = Counter(g.get("hem") for r in new for g in r["extraction"]["garments"] if g.get("category") == "bottom")

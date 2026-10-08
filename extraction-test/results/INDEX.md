@@ -15,6 +15,7 @@ Prices are the Gemini 3.8 Flash introductory rates ($0.75 per million tokens in,
 | `lockin-oct6/` | Oct 6 | legacy 52 × 4 arms (A today, B thinking off, C/D thinking off + v4), pass rules written beforehand | gemini-3.8-flash | 3 | A 98% · **B 100%** · C 92% · v4.1 96–98% | A 4/6 · B 5/6 · C 4/6 | ~$2.70 |
 | `selftest/` | — | fake data, no API calls (checks the code only) | — | — | ignore | ignore | $0 |
 | `test5-*-v5/` | Oct 8 | v5 format (v3 + style-council fields) on stock 40, mirror 12, founder's 4 phone photos (+ phone 4 in v3, same hour) | gemini-3.8-flash | 3 | stock **82%** (v3 92%) · mirror 100% · phone 100% | — | ~$1.00 |
+| `test5-*-v5s/` | Oct 8 | slim v5s (v3 + stacked hem + denim_wear + prompt lines) on stock 40, mirror 12, phone 4 (+ phone 4 v3 same hour, `test5-phone-4-v3b`) | gemini-3.8-flash | 3 | stock **85%** (v3 92%) · mirror 92% · phone 100%; all 52: **86.5%** vs 90.4% | — | ~$0.85 |
 
 ## What we learned
 - **The AI reads outfits consistently**, including real mirror selfies and tiny images (168×300 px). Every garment detail agreed 90%+ across runs.
@@ -35,3 +36,4 @@ Prices are the Gemini 3.8 Flash introductory rates ($0.75 per million tokens in,
 - Thinking turned off (speed and cost)
 
 - **Oct 8: v5 FAILED its pass bars** (`compare_v5.py`). Stock consistency 32/39 under the rulebook (bar 90%; locked v3 37/40). It's about 3 s slower than v3 in the same hour (15.1 vs 12.0 s on the phone set; 1,090 vs 765 output tokens). The longer answer destabilized core readings: shoe type, hem, leg shape. The closet fields read well (hoodie: medium grey, Nike swoosh, front pouch); `shade` is free text and differs between runs on 44% of garments. The founder's ph1 was read as sweatpants on all 6 v5 runs, and the tap fired every time. One stock run ended early on a network timeout (117 of 120 readings).
+- **Oct 8: v5s also FAILED the consistency bar**, narrowly: 45/52 photos under the rulebook vs 47/52 for locked v3 (bar 90%). Speed is fine: 6.1 s vs 6.5 s median; same hour on the phone set, 5.0 vs 5.1 s. Only one wobble comes from the new values (s26 pooling/stacked); the rest are the usual wobblers (p06, s02, s09 wrinkled, p03). The founder's ph1 was still sweatpants, "clear", on all 3 runs; the tap fired every time. **The app stays on locked v3.**

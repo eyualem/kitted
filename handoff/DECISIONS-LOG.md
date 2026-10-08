@@ -284,3 +284,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Placement:** it floats over the card, so nothing in the thread moves (the #68 `holdThreadScroll` is gone). It's kept on screen and grows upward when there isn't room below. Reduce Motion: no morph.
     - **Fill:** the pill's own `surface2`. The result card's plain mono "Everyday ⌄" grows a 36 pt row around the text, on a `surface` panel.
     - **Removed:** `InlinePicker` and `scrollHold`.
+
+64. **The slim v5s format also failed; the app stays on the locked v3 format** (Oct 8).
+    - **Consistency:** 45/52 photos under the rulebook vs 47/52 for v3 (bar 90%, set beforehand). The gap is 2 photos, within run-to-run noise, but the bar was set in advance and it fails. Only one new wobble comes from the new values (s26 pooling/stacked).
+    - **Speed:** fine (6.1 s median vs 6.5 s).
+    - **Consequence:**
+      - The stacked-hem and raw-denim fixes wait for the gold set. With truth labels it can judge accuracy, not just consistency, and the bar can be re-set with a known noise floor (re-run v3 itself the same day).
+      - Meanwhile the rulebook's pooled-loose-jeans −0.4 and the "Jeans or sweatpants?" tap cover the founder's case. His ph1 read "sweatpants, clear" on all 3 v5s runs, and the waistband prompt line didn't fix it.

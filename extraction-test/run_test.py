@@ -30,9 +30,10 @@ HERE = Path(__file__).resolve().parent
 FORMATS = {  # answer format: (prompt, schema)
     "v3": ((HERE / "prompt.txt").read_text(), json.loads((HERE / "schema.json").read_text())),
     "v4": ((HERE / "prompt_v4.txt").read_text(), json.loads((HERE / "schema_v4.json").read_text())),
-    "v5": ((HERE / "prompt_v5.txt").read_text(), json.loads((HERE / "schema_v5.json").read_text())),  # v3 + style-council fields (RULEBOOK Part 6)
+    "v5": ((HERE / "prompt_v5.txt").read_text(), json.loads((HERE / "schema_v5.json").read_text())),  # v3 + style-council fields (RULEBOOK Part 6); failed Oct 8
+    "v5s": ((HERE / "prompt_v5s.txt").read_text(), json.loads((HERE / "schema_v5s.json").read_text())),  # v3 + stacked hem + denim_wear only
 }
-FORMAT_FILES = {"v3": ("prompt.txt", "schema.json"), "v4": ("prompt_v4.txt", "schema_v4.json"), "v5": ("prompt_v5.txt", "schema_v5.json")}
+FORMAT_FILES = {"v3": ("prompt.txt", "schema.json"), "v4": ("prompt_v4.txt", "schema_v4.json"), "v5": ("prompt_v5.txt", "schema_v5.json"), "v5s": ("prompt_v5s.txt", "schema_v5s.json")}
 
 
 def prepare_image(path: Path, px: int = 1024) -> bytes:
@@ -88,13 +89,13 @@ def call_gemini(model: str, key: str, img: bytes, use_schema: bool = True, think
                 print(f"   API {e.code} (rate limit or busy); waiting {wait}s")
                 time.sleep(wait); continue
             raise SystemExit(f"API error {e.code}: {msg}")
-        except urllib.error.URLError as e:
-            if "CERTIFICATE_VERIFY_FAILED" in str(e.reason):
+        except OSError as e:  # URLError, and socket timeouts (not URLError on Python 3.9; one ended the Oct 8 run)
+            if isinstance(e, urllib.error.URLError) and "CERTIFICATE_VERIFY_FAILED" in str(e.reason):
                 raise SystemExit("Python can't verify HTTPS certificates. Run once:\n"
                                  '  open "/Applications/Python 3.14/Install Certificates.command"\nthen re-run this test.')
             if attempt == 3:
-                raise SystemExit(f"Network error (check your internet connection): {e.reason}")
-            print(f"   network error ({e.reason}); retrying"); time.sleep(10)
+                raise SystemExit(f"Network error (check your internet connection): {e}")
+            print(f"   network error ({e}); retrying"); time.sleep(10)
         except (KeyError, json.JSONDecodeError) as e:
             if attempt == 3:
                 return {"json": None, "error": str(e), "usage": {}}

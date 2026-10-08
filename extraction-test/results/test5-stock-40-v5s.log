@@ -1,0 +1,171 @@
+Using fixes from: ../inputs/fitcheck-photos/fixes.csv (6 pairs)
+p01/after_studio.jpg (after, studio)
+   run 1: 8.0 (partial)  [19.0s]
+   run 2: 8.0 (partial)  [4.85s]
+   run 3: 8.0 (partial)  [9.12s]
+p01/before_studio.jpg (before, studio)
+   run 1: 8.0 (partial)  [5.27s]
+   run 2: 8.0 (partial)  [4.48s]
+   run 3: 8.0 (partial)  [7.69s]
+p02/after_studio.jpg (after, studio)
+   run 1: 6.0  [5.97s]
+   run 2: 6.0  [5.89s]
+   run 3: 6.0  [5.79s]
+p02/before_studio.jpg (before, studio)
+   run 1: 6.0  [4.79s]
+   run 2: 6.0  [4.77s]
+   run 3: 6.0  [8.79s]
+p03/after_street.jpg (after, street)
+   run 1: 8.5  [6.87s]
+   run 2: 8.5  [8.62s]
+   run 3: 8.0  [6.96s]
+p03/before_street.jpg (before, street)
+   run 1: 8.5  [7.67s]
+   run 2: 8.5  [7.61s]
+   run 3: 7.5  [6.07s]
+p04/after_street.jpg (after, street)
+   run 1: 7.5 (partial)  [5.27s]
+   run 2: 7.5 (partial)  [5.53s]
+   run 3: 7.5 (partial)  [5.63s]
+p04/before_street.jpg (before, street)
+   run 1: 7.5 (partial)  [5.88s]
+   run 2: 7.5 (partial)  [5.47s]
+   run 3: 7.5 (partial)  [10.2s]
+p05/after_street.jpg (after, street)
+   run 1: 8.0  [6.57s]
+   run 2: 8.0  [6.73s]
+   run 3: 8.0  [6.82s]
+p05/before_street.jpg (before, street)
+   run 1: 7.5 (partial)  [5.37s]
+   run 2: 7.5 (partial)  [4.67s]
+   run 3: 7.5 (partial)  [4.46s]
+p06/after_studio.jpg (after, studio)
+   run 1: 8.5 (partial)  [4.6s]
+   run 2: 8.5 (partial)  [4.91s]
+   run 3: 8.5 (partial)  [4.67s]
+p06/before_studio.jpg (before, studio)
+   run 1: 8.5 (partial)  [4.54s]
+   run 2: 7.5 (partial)  [4.92s]
+   run 3: 8.5 (partial)  [5.72s]
+s01/before_studio.jpg (before, studio)
+   run 1: 8.0  [6.64s]
+   run 2: 8.0  [6.79s]
+   run 3: 8.0  [6.59s]
+s02/before_studio.jpg (before, studio)
+   run 1: 5.5  [6.09s]
+   run 2: 5.5  [5.62s]
+   run 3: 5.5  [5.75s]
+s03/before_studio.jpg (before, studio)
+   run 1: 8.0  [6.84s]
+   run 2: 8.0  [6.97s]
+   run 3: 8.0  [11.31s]
+s04/before_studio.jpg (before, studio)
+   run 1: 6.5  [5.91s]
+   run 2: 6.5  [6.14s]
+   run 3: 6.5  [4.84s]
+s05/before_studio.jpg (before, studio)
+   run 1: 8.0  [4.83s]
+   run 2: 8.0  [4.85s]
+   run 3: 7.5  [4.72s]
+s06/before_studio.jpg (before, studio)
+   run 1: 7.0  [4.93s]
+   run 2: 7.0  [4.86s]
+   run 3: 7.0  [4.8s]
+s07/before_studio.jpg (before, studio)
+   run 1: 8.5  [7.05s]
+   run 2: 8.5  [7.27s]
+   run 3: 8.5  [6.65s]
+s08/before_studio.jpg (before, studio)
+   run 1: 8.5  [6.09s]
+   run 2: None  [9.52s]
+   run 3: None  [10.82s]
+s09/before_street.jpg (before, street)
+   run 1: 7.5  [7.76s]
+   run 2: 6.5  [7.37s]
+   run 3: 6.5  [7.68s]
+s10/before_street.jpg (before, street)
+   run 1: 8.0  [5.46s]
+   run 2: 8.0  [6.24s]
+   run 3: 8.0  [6.21s]
+s11/before_street.jpg (before, street)
+   run 1: 7.5  [6.69s]
+   run 2: 7.5  [7.11s]
+   run 3: 7.5  [10.59s]
+s12/before_street.jpg (before, street)
+   run 1: 7.0  [6.43s]
+   run 2: 7.0  [6.67s]
+   run 3: 7.0  [6.49s]
+s13/before_street.jpg (before, street)
+   run 1: 8.0  [5.46s]
+   run 2: 8.0  [5.27s]
+   run 3: 8.0  [5.05s]
+s14/before_street.jpg (before, street)
+   run 1: 8.5  [6.17s]
+   run 2: 8.5  [6.54s]
+   run 3: 8.0  [6.56s]
+s15/before_street.jpg (before, street)
+   run 1: 9.0  [7.0s]
+   run 2: 9.0  [7.81s]
+   run 3: 9.0  [6.47s]
+s16/before_street.jpg (before, street)
+   run 1: 8.5  [6.92s]
+   run 2: 8.5  [6.79s]
+   run 3: 8.5  [6.54s]
+s17/before_phone.jpg (before, phone)
+   run 1: 7.0  [6.46s]
+   run 2: 7.0  [6.37s]
+   run 3: 7.0  [7.11s]
+s18/before_phone.jpg (before, phone)
+   run 1: 8.0  [6.52s]
+   run 2: 8.0  [6.23s]
+   run 3: 8.0  [6.62s]
+s19/before_phone.jpg (before, phone)
+   run 1: 7.5 (partial)  [6.56s]
+   run 2: 7.5 (partial)  [4.78s]
+   run 3: 7.5 (partial)  [5.9s]
+s20/before_phone.jpg (before, phone)
+   run 1: 7.0 (partial)  [5.71s]
+   run 2: 7.0  [6.89s]
+   run 3: 7.0  [6.31s]
+s21/before_phone.jpg (before, phone)
+   run 1: 7.0  [5.29s]
+   run 2: 7.0  [5.23s]
+   run 3: 7.0  [5.1s]
+s22/before_phone.jpg (before, phone)
+   run 1: 7.5 (partial)  [5.37s]
+   run 2: 7.5 (partial)  [5.69s]
+   run 3: 7.5 (partial)  [4.91s]
+s23/before_mirror.jpg (before, mirror)
+   run 1: 7.5 (partial)  [4.93s]
+   run 2: 7.5 (partial)  [4.94s]
+   run 3: 7.5 (partial)  [4.98s]
+s24/before_mirror.jpg (before, mirror)
+   run 1: 6.5 (partial)  [4.46s]
+   run 2: 6.5 (partial)  [4.11s]
+   run 3: 6.5 (partial)  [4.25s]
+s25/before_mirror.jpg (before, mirror)
+   run 1: 6.5  [6.36s]
+   run 2: 7.0  [6.58s]
+   run 3: 6.5  [4.23s]
+s26/before_mirror.jpg (before, mirror)
+   run 1: 7.5 (partial)  [5.09s]
+   run 2: 8.5 (partial)  [4.83s]
+   run 3: 7.5 (partial)  [4.75s]
+s27/before_mirror.jpg (before, mirror)
+   run 1: 7.0 (partial)  [8.64s]
+   run 2: 7.0 (partial)  [3.75s]
+   run 3: 7.0 (partial)  [7.29s]
+s28/before_mirror.jpg (before, mirror)
+   run 1: 7.0 (partial)  [4.22s]
+   run 2: 7.0 (partial)  [10.02s]
+   run 3: 7.0 (partial)  [4.76s]
+# Extraction test report
+
+- Photos scored: **39** (photos with fewer than 3 scored runs are left out), runs: **120**, failed runs: **0**
+- **Score consistency:** 35/39 photos had every run within ±0.5 of the median = **90%** (pass bar 90%) → **FAIL**
+- **Fix detection:** 5/6 = **83%** (pass bar 80%) → **PASS**
+- Tokens used: 254,700 in / 96,904 out (multiply by your model's list price to get the test cost; divide by runs for cost per check)
+- Seconds per call (API only): median **6.09**, p90 **7.81**, p95 10.02, slowest 19.0; under 5 s: 27%, under 8 s: 91%
+- Seconds per call including retry waits: median 6.1, slowest 19.0
+
+Full report: results/test5-stock-40-v5s/report.md
