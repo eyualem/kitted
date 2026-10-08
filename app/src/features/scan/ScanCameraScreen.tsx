@@ -39,7 +39,7 @@ type Stage =
   | { kind: 'saved'; count: number };
 
 export function ScanCameraScreen() {
-  const p = useLocalSearchParams<{ guide?: string; review?: string; saved?: string }>();
+  const p = useLocalSearchParams<{ guide?: string; review?: string; saved?: string; library?: string }>();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   const sim = !KittedCameraView;
@@ -75,6 +75,7 @@ export function ScanCameraScreen() {
   useEffect(() => {
     if (hasCamera) void requestCameraPermission().then(setPermission);
   }, []);
+
 
   // --- live tips ---------------------------------------------------------------------------
   const onGuide = (g: GuideEvent) => {
@@ -189,6 +190,16 @@ export function ScanCameraScreen() {
     if (items.every((i) => !i.issue)) return save(uris, 'library');
     setStage({ kind: 'batch', items });
   };
+
+  // Closet "+" → Choose photos: the picker opens over the scan camera at once.
+  const libraryOpened = useRef(false);
+  useEffect(() => {
+    if (p.library !== '1' || libraryOpened.current) return;
+    libraryOpened.current = true;
+    const h = setTimeout(() => void pickFromLibrary(), 450);
+    return () => clearTimeout(h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [p.library]);
 
   const backToLive = () => {
     if (stage.kind === 'issue') deleteFiles([stage.uri]);
