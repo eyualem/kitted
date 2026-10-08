@@ -1,18 +1,21 @@
-"""Writes fixtures/rubric_parity.json: many readings x configs with rubric.py's exact output, for the Swift
-RubricParityTests. Swift must reproduce every case exactly (see 04-logic-and-demo-data.md section 4.9).
+"""Writes fixtures/rubric_parity.json: many readings x configs with rubric.py's exact output, for the
+@kitted/core parity check (scripts/verify.mjs). The TypeScript must reproduce every case exactly (see 04-logic-and-demo-data.md section 4.9).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parity.py
 
 Readings (deduplicated by canonical JSON of {scene, garments}):
-  1. every saved reading in extraction-test/results/**/raw_results.json (real Gemini runs, all tests)
+  1. every saved reading in a git-tracked extraction-test/results/**/raw_results.json (real Gemini runs; files of a
+     run still in progress are untracked, so they can't make this file unreproducible), plus the style council's
+     cases.json and phone-checks-oct7.json (rubric/research/style-council/)
   2. the demo readings + variants in fixtures/readings/
   3. hand-written edge cases that force every rule, branch and early return
   4. a seeded random fuzz set (schema enums, plus missing keys / unknown values) for branch combinations
 Configs: each reading is scored under 3 configs (its original test config for real readings, plus rotating
 style mixes, boldness levels and every occasion key, including an unknown one).
+Each case also carries `ask`: rubric.ask_question() for the same reading and config (the one quick tap).
 """
 import sys as _sys; _sys.dont_write_bytecode = True  # never write __pycache__ next to rubric.py
-import copy, glob, hashlib, json, os, random, sys
+import copy, glob, hashlib, json, os, random, subprocess, sys
 from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -135,6 +138,51 @@ def edge_cases():
                           G("bottom", "athletic_shorts", "yellow", hem="pooling", leg_shape="skinny", condition="wrinkled"),
                           SNK(sub="slides_sandals", color="pink"), G("outerwear", "puffer", "orange", pattern="camo"), G("top", "graphic_tee", "purple", pattern="floral")), occ="interview_corporate", bold="subtle")
     add("second_top_ignored", R(G("top", "tee", "white"), G("top", "hoodie", "grey", volume=5, length="below_crotch"), JEANS(), SNK()))
+    # ---- v4.0 (style council rulings)
+    WIDE = lambda **kw: G("bottom", "jeans", "black", **{"leg_shape": "wide", "hem": "pooling", **kw})
+    SLIDES = lambda **kw: SNK(sub="slides_sandals", color="black", **kw)
+    HOOD = lambda **kw: G("top", "hoodie", "grey", **{"tucked": "none", "length": "mid_fly", **kw})
+    SWEATS = lambda **kw: G("bottom", "sweatpants", "grey", **{"leg_shape": "relaxed", "hem": "cuffed", **kw})
+    add("v4_drag_over_slides_pooling", R(HOOD(), WIDE(), SLIDES()))
+    add("v4_drag_over_slides_full_break", R(HOOD(), WIDE(hem="full_break"), SLIDES()))
+    add("v4_no_drag_cuffed", R(HOOD(), WIDE(hem="cuffed"), SLIDES()))
+    add("v4_loose_pooling_half", R(TEE(), WIDE(color_family="denim_mid"), SNK(sub="chunky_sneaker")))
+    add("v4_street_shoe_k4", R(G("top", "graphic_tee", "black", tucked="none", length="mid_fly"), WIDE(hem="cuffed"), SNK(sub="chunky_sneaker")))
+    add("v4_street_bomber", R(HOOD(volume=4), G("outerwear", "bomber", "black"), WIDE(hem="cuffed"), SNK(sub="basketball_sneaker")))
+    add("v4_lounge_0_signs", R(HOOD(), SWEATS(), SNK(sub="performance_runner")))
+    add("v4_lounge_0_signs_floor", R(HOOD(), SWEATS(color_family="black", hem="pooling", leg_shape="wide"), SLIDES()), occ="everyday")
+    add("v4_lounge_0_signs_date_no_floor", R(HOOD(), SWEATS(color_family="black", hem="pooling", leg_shape="wide"), SLIDES()), occ="date")
+    add("v4_lounge_1_sign", R(HOOD(), SWEATS(), SNK(sub="retro_runner", color="grey")))
+    add("v4_lounge_2_signs", R(G("top", "quarter_zip", "navy", tucked="none"), G("outerwear", "overcoat", "charcoal"), SWEATS(), SNK(sub="retro_runner")))
+    add("v4_lounge_hero", R(G("top", "jersey", "red", tucked="none"), G("outerwear", "denim_jacket", "denim_mid"), SWEATS(color_family="black"), SNK(sub="low_profile_sneaker")))
+    add("v4_lounge_hero_at_work", R(G("top", "jersey", "red", tucked="none"), G("outerwear", "denim_jacket", "denim_mid"), SWEATS(color_family="black"), SNK(sub="low_profile_sneaker")), occ="work")
+    add("v4_gym_shorts_cap", R(TEE(), G("bottom", "athletic_shorts", "black"), SNK(sub="performance_runner")))
+    add("v4_full_kit", R(G("top", "jersey", "blue", saturation="bright", tucked="none"), G("bottom", "athletic_shorts", "white"), SNK(sub="performance_runner")))
+    add("v4_joggers_join", R(TEE(), G("bottom", "joggers", "black", leg_shape="slim", hem="cuffed"), SNK(sub="canvas_sneaker")))
+    add("v4_garment_cap", R(G("top", "tee", "white", volume=5, length="below_crotch", sleeve_end="covers_hand", tucked="none"), JEANS(leg_shape="skinny"), SNK()))
+    add("v4_one_credit_overshirt", R(TEE(), G("outerwear", "overshirt", "khaki_beige"), JEANS(), SNK()))
+    add("v4_refile_layer", R(G("top", "overshirt", "olive"), TEE(), JEANS(), SNK(sub="work_boot", color="brown")))
+    add("v4_tech_layer_half", R(TEE(), G("outerwear", "shell_jacket", "black"), G("bottom", "cargos", "black", leg_shape="relaxed", hem="cuffed"), SNK(sub="performance_runner", color="black")))
+    add("v4_stained_no_credit", R(TEE(), G("outerwear", "chore_coat", "brown", condition="stained"), JEANS(color_family="denim_dark"), SNK(sub="work_boot", color="brown")))
+    add("v4_worn_work_boot_half", R(G("top", "flannel_shirt", "red", pattern="checks_plaid", pattern_scale="large"), JEANS(color_family="denim_dark", leg_shape="relaxed", hem="cuffed"), SNK(sub="work_boot", color="brown", condition="pilled_or_worn")))
+    add("v4_distressed_stain_counts", R(TEE(), JEANS(condition="stained", distressed_by_design=True), SNK()))
+    add("v4_small_pattern_no_k3", R(G("top", "oxford_shirt", "light_blue", pattern="stripes", pattern_scale="small", tucked="none"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"), SNK(sub="white_leather_sneaker")))
+    add("v4_minimal_wide_trousers", R(G("top", "sweater", "off_white_cream", volume=4, length="at_belt"), G("bottom", "trousers", "grey", leg_shape="wide", hem="no_break"), SNK(sub="loafer", color="black")))
+    add("v4_prep_marker", R(G("top", "polo", "green", saturation="bright", tucked="none"), G("bottom", "shorts", "khaki_beige", leg_shape="straight"), SNK(sub="loafer", color="brown")), styles=[["preppy", 1.0]])
+    add("v4_vintage_rugby_jeans", R(G("top", "rugby_shirt", "navy", pattern="stripes", pattern_scale="large", tucked="none"), JEANS(leg_shape="relaxed"), SNK(sub="retro_runner", color="white")))
+    add("v4_outdoor_shell_cargos", R(G("top", "fleece", "olive"), G("outerwear", "rain_jacket", "orange"), G("bottom", "cargos", "khaki_beige", leg_shape="relaxed", hem="cuffed"), SNK(sub="performance_runner", color="grey")), styles=[["gorpcore", 1.0]])
+    add("v4_workwear_vs_street_tie", R(HOOD(), G("outerwear", "chore_coat", "tan_camel"), WIDE(color_family="denim_mid", hem="cuffed"), SNK(sub="chunky_sneaker")), styles=[["workwear", 1.0]])
+    add("v4_label_pick_tiebreak", R(G("top", "oxford_shirt", "white", tucked="none"), G("outerwear", "unstructured_blazer", "navy"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"), SNK(sub="loafer", color="brown")), styles=[["old_money", 1.0]])
+    add("v4_black_jeans_2_5", R(G("top", "tee", "black"), G("bottom", "jeans", "black", leg_shape="straight", hem="slight_break"), SNK(sub="white_leather_sneaker")))
+    add("v4_s2_ramp", R(G("top", "dress_shirt", "white", tucked="full"), G("outerwear", "blazer", "navy"), G("bottom", "trousers", "grey", leg_shape="straight"), SNK(sub="canvas_sneaker")), occ="work")
+    add("v4_o1_ramp_partial", R(TEE(), JEANS(), SNK(sub="canvas_sneaker")), occ="date")
+    add("v4_muted_half", R(G("top", "tee", "orange", saturation="muted"), G("bottom", "chinos", "blue", saturation="muted", leg_shape="straight"), SNK(color="yellow", saturation="muted"), G("outerwear", "bomber", "purple", saturation="muted")))
+    add("v4_cropped_top_skips_p3", R(G("top", "tee", "white", volume=5, length="cropped"), G("bottom", "trousers", "black", leg_shape="wide", hem="no_break"), SNK(sub="derby", color="black")))
+    add("v4_minimal_next_level", R(G("top", "sweater", "grey"), G("bottom", "trousers", "charcoal", leg_shape="straight", hem="no_break"), SNK(sub="chelsea_boot", color="black")))
+    add("v4_street_logo_quiet", R(G("top", "graphic_tee", "black", logo="large"), WIDE(hem="cuffed"), SNK(sub="chunky_sneaker")))
+    add("v4_tap_dark_sweats", R(HOOD(), SWEATS(color_family="black", leg_shape="wide", hem="pooling"), SLIDES(), G("accessory", "belt", "black")))
+    add("v4_tap_likely_down", R(G("top", "sweater", "navy", certainty="likely"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"), SNK(sub="white_leather_sneaker")), occ="work")
+    add("v4_tap_dim_shorts", R(TEE(), G("bottom", "shorts", "black", leg_shape="relaxed"), SNK(sub="canvas_sneaker")), occ="date")
     return E
 
 
@@ -191,7 +239,8 @@ def fuzz(n, seed=20261006):
 def expected(reading, occ, styles, bold):
     s = K.score(reading, occ, styles, bold)
     keep = ("overall", "reason", "partial", "rules_fired", "raw_score", "raw_unrounded", "subscores", "occasion_adj", "credits",
-            "credit_points", "credit_unrounded", "mistake_points", "mistakes_unrounded", "advice", "not_rated")
+            "credit_points", "credit_unrounded", "mistake_points", "mistakes_unrounded", "advice", "not_rated",
+            "detected_styles", "style_label")
     return {k: s[k] for k in keep if k in s}
 
 
@@ -219,14 +268,26 @@ def main():
             parts = line.split(",")
             if len(parts) >= 3 and parts[2]:
                 fixes_occ[parts[0]] = parts[2]
+    tracked = set(subprocess.run(["git", "-C", KEMPT, "ls-files", "extraction-test/results"], capture_output=True, text=True,
+                                 check=True).stdout.split())
     for f in sorted(glob.glob(os.path.join(RESULTS, "**/raw_results.json"), recursive=True)):
         rel = os.path.relpath(f, RESULTS)
+        if os.path.relpath(f, KEMPT) not in tracked:
+            continue
         for x in json.load(open(f)):
             if not x.get("extraction"):
                 continue
             n_real += 1
             put(x["extraction"], f"{rel}:{x['outfit']}/{x['stage']}/run{x['run']}", {"occasion": fixes_occ.get(x["outfit"], "everyday"), "styles": TEST_STYLES, "boldness": "a_little"})
     n_unique_real = len(readings)
+    council = os.path.join(KEMPT, "rubric/research/style-council")
+    for c in json.load(open(os.path.join(council, "cases.json"))):
+        put(c["reading"], "council:cases.json:" + c["id"], {"occasion": c.get("occasion") or "everyday",
+                                                            "styles": [[k, v] for k, v in (c.get("styles_picked") or {}).items()],
+                                                            "boldness": c.get("boldness") or "a_little"})
+    for c in json.load(open(os.path.join(council, "phone-checks-oct7.json"))):
+        put(c["reading"], f"council:phone-checks-oct7.json:{c['check']}", {"occasion": c.get("occasion") or "everyday", "styles": [], "boldness": "a_little"})
+    n_council = len(readings) - n_unique_real
     for p in sorted(glob.glob(os.path.join(HERE, "readings/*.json")) + glob.glob(os.path.join(HERE, "readings/variants/*.json"))):
         if p.endswith("INDEX.json"):
             continue
@@ -248,7 +309,8 @@ def main():
             cfgs.append((OCCASIONS[j % len(OCCASIONS)], STYLE_MIXES[j % len(STYLE_MIXES)], BOLD[j % len(BOLD)]))
         for occ, styles, bold in cfgs:
             e = expected(r, occ, styles, bold)
-            case = {"reading": rid, "occasion": occ, "styles": styles, "boldness": bold, "expected": e}
+            case = {"reading": rid, "occasion": occ, "styles": styles, "boldness": bold, "expected": e,
+                    "ask": rubric.ask_question(copy.deepcopy(r), occ, {k: w for k, w in styles}, bold)}
             ru = e.get("raw_unrounded")
             if ru is not None:
                 y = ru * 2 + 0.5
@@ -268,23 +330,33 @@ def main():
             cov["advice: " + a.split(":")[0] + ": " + a.split(":")[1][:28].strip()] += 1
     overall = Counter(c["expected"]["overall"] for c in cases)
     fpb = Counter(c.get("fp_boundary") for c in cases if c.get("fp_boundary"))
-    all_rules = ["F4_pooling", "F4b_full_break_narrow_leg", "F7_care", "F6_top_too_long", "F8_too_big", "F9_sleeves_cover_hands", "F10_visible_strain",
+    all_rules = ["F4_pooling", "F4_hem_drags_over_slides", "F4b_full_break_narrow_leg", "F7_care", "F6_top_too_long", "F8_too_big", "F9_sleeves_cover_hands", "F10_visible_strain",
                  "T1_dress_shirt_untucked", "P1_top_volume_vs_style", "P1_leg_vs_style", "P2_big_top_skinny_leg", "P3_everything_oversized",
                  "L1_shirt_hangs_below_blazer", "S1_bulky_shoe_narrow_leg", "C1a_too_many_accent_colors", "C1b_too_many_colors", "C3_bright_clash",
                  "C4a_same_pattern_same_scale", "C4a_same_pattern_type", "C4b_three_plus_patterns", "B1_too_many_focal_points",
                  "C5_near_match_jacket_trousers", "O1_too_casual", "O1_too_formal", "O4_loungewear_out", "S2_shoes_too_casual_for_outfit",
                  "O3_large_logo", "K1_layered", "K2_elevated_piece", "K3_point_of_interest", "K4_shoes_complement"]
+    for c in cases:
+        if c["ask"]:
+            cov["ask: " + c["ask"]["pair"]] += 1
+    for c in cases:
+        for s in c["expected"].get("detected_styles") or []:
+            cov["detected: " + s] += 1
+        if c["expected"].get("style_label"):
+            cov["label: " + c["expected"]["style_label"]] += 1
     missing = [r for r in all_rules if cov[r] == 0]
+    missing += [s for s in rubric.STYLE_ORDER if cov["detected: " + s] == 0]
     assert not missing, f"rules never fired in parity set: {missing}"
 
     out = {
-        "_doc": "Rubric parity fixtures. For each case: score(readings[reading], occasion, styles, boldness) in Swift must equal `expected`: "
+        "_doc": "Rubric parity fixtures. For each case: score(readings[reading], occasion, styles, boldness) in TypeScript must equal `expected`: "
                 "overall, reason, partial, rules_fired (same order), credits (same order), subscores, occasion_adj, advice (same strings, same order), "
-                "not_rated exactly; raw_unrounded / credit_unrounded / mistakes_unrounded exactly as Double (tolerance 1e-9 allowed); "
+                "not_rated, detected_styles (same order), style_label exactly; `ask` (ask_question with the same config) exactly; raw_unrounded / credit_unrounded / mistakes_unrounded exactly as Double (tolerance 1e-9 allowed); "
                 "raw_score / credit_points / mistake_points are Python round(x, 3/2/2) values, compare within 0.0005/0.005. "
                 "styles are ordered [name, weight] pairs: iterate them in this order. Readings may lack keys or carry unknown values on purpose.",
         "rubric_sha256": hashlib.sha256(open(os.path.join(KEMPT, "extraction-test/rubric.py"), "rb").read()).hexdigest(),
-        "counts": {"real_runs_read": n_real, "unique_real_readings": n_unique_real, "demo_and_edge_readings": n_before_fuzz - n_unique_real,
+        "counts": {"real_runs_read": n_real, "unique_real_readings": n_unique_real, "council_readings": n_council,
+                   "demo_and_edge_readings": n_before_fuzz - n_unique_real - n_council,
                    "fuzz_readings": len(readings) - n_before_fuzz, "readings": len(readings), "cases": len(cases),
                    "fp_boundary_cases": dict(fpb)},
         "coverage": dict(sorted(cov.items())), "overall_histogram": {str(k): v for k, v in sorted(overall.items(), key=lambda t: (t[0] is None, t[0] or 0))},

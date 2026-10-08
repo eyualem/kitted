@@ -28,9 +28,9 @@
    "why": "intended reading for the mockup story; the real p01 reading counts the held overshirt as worn and marks shoes hidden (see variants/p01b_real.json, p01a_real.json)",
    "real_run_for_reference": "lockin-oct6/B-stock p01/before_studio.jpg run 1",
    "real_run_scores_test_config": [
-    8.0,
-    8.0,
-    8.0
+    8.5,
+    8.5,
+    8.5
    ]
   },
   {
@@ -50,7 +50,7 @@
    "real_run_for_reference": "lockin-oct6/B-stock p01/after_studio.jpg run 0",
    "real_run_scores_test_config": [
     7.5,
-    8.0,
+    8.5,
     7.5
    ]
   },
@@ -69,11 +69,11 @@
    "provenance": "real",
    "run_id": "lockin-oct6/B-stock s15/before_street.jpg run 2",
    "run_scores_test_config": [
+    8.0,
     8.5,
-    9.0,
-    8.5
+    8.0
    ],
-   "modal_score_test_config": 8.5
+   "modal_score_test_config": 8.0
   },
   {
    "id": "s24",
@@ -132,11 +132,11 @@
    "provenance": "real",
    "run_id": "lockin-oct6/B-stock s25/before_mirror.jpg run 0",
    "run_scores_test_config": [
-    7.5,
-    7.5,
-    7.0
+    7.0,
+    7.0,
+    6.5
    ],
-   "modal_score_test_config": 7.5
+   "modal_score_test_config": 7.0
   },
   {
    "id": "s05",
@@ -154,7 +154,7 @@
    "run_id": "lockin-oct6/B-stock s05/before_studio.jpg run 0",
    "run_scores_test_config": [
     7.5,
-    8.0,
+    7.5,
     7.5
    ],
    "modal_score_test_config": 7.5
@@ -174,11 +174,11 @@
    "provenance": "real",
    "run_id": "lockin-oct6/B-stock s22/before_phone.jpg run 1",
    "run_scores_test_config": [
-    7.5,
-    7.5,
+    7.0,
+    7.0,
     7.5
    ],
-   "modal_score_test_config": 7.5
+   "modal_score_test_config": 7.0
   },
   {
    "id": "s14",
@@ -217,7 +217,7 @@
    "run_id": "lockin-oct6/B-stock s10/before_street.jpg run 0",
    "run_scores_test_config": [
     8.0,
-    8.0,
+    8.5,
     8.0
    ],
    "modal_score_test_config": 8.0

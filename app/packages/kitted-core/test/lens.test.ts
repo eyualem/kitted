@@ -1,4 +1,5 @@
-// "Scored for" (02 "S6s", #61): effects appear only when the style changed a rule.
+// "Scored for" (02 "S6s", #61): effects appear only when the style changed a rule. Since rubric v4 his picked
+// style never changes a score (RULEBOOK ruling 1: the clothes decide), so the list is always empty.
 import { describe, expect, it } from "vitest";
 import { styleEffects, type Reading } from "../src/index";
 import { loadReading } from "./helpers";
@@ -17,12 +18,10 @@ describe("styleEffects", () => {
     expect(styleEffects(oversized, { occasion: "everyday", style: null }).effects).toEqual([]);
   });
 
-  it("streetwear softens the oversized and pooling rules", () => {
+  it("v4: picking streetwear changes nothing (the outfit's own detected styles already apply)", () => {
     const r = styleEffects(oversized, { occasion: "everyday", style: "streetwear" });
-    expect(r.effects.length).toBeGreaterThan(0);
-    for (const e of r.effects) expect(e.withStyle).not.toBe(e.general);
-    expect(r.effects.some((e) => e.withStyle < e.general)).toBe(true);
-    expect(r.overall!).toBeGreaterThanOrEqual(r.overallGeneral!);
+    expect(r.effects).toEqual([]);
+    expect(r.overall).toBe(r.overallGeneral);
   });
 
   it("a plain outfit the style doesn't touch: empty", () => {

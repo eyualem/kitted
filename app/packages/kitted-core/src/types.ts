@@ -88,9 +88,13 @@ export interface Reading {
 }
 
 // ---------------------------------------------------------------- profile inputs
-export type StyleName =
-  | "smart_casual" | "minimalist" | "old_money" | "workwear" | "vintage_sport" | "streetwear" | "preppy" | "gorpcore";
-/** Styles are ORDERED [name, weight] pairs (the order he tapped them). Float sums depend on this order. */
+/** The 7 styles the rubric detects (v4). Old onboarding keys still accepted as picks: preppy / old_money -> classic_prep,
+ *  gorpcore -> outdoor. */
+export type DetectedStyle =
+  | "vintage_sport" | "outdoor" | "workwear" | "streetwear" | "classic_prep" | "minimalist" | "smart_casual";
+export type StyleName = DetectedStyle | "old_money" | "preppy" | "gorpcore";
+/** His picks: ORDERED [name, weight] pairs (the order he tapped them). Since rubric v4 they never change a score;
+ *  they only choose the card label when two detected styles both fit. */
 export type StylePair = readonly [Loose<StyleName>, number];
 export type Styles = readonly StylePair[];
 
@@ -109,7 +113,7 @@ export interface ScoreOptions {
 export type SubscoreName = "fit" | "color" | "proportion";
 export type CreditId = "K1_layered" | "K2_elevated_piece" | "K3_point_of_interest" | "K4_shoes_complement";
 export type RuleId =
-  | "F4_pooling" | "F4b_full_break_narrow_leg" | "F7_care" | "F6_top_too_long" | "F8_too_big"
+  | "F4_pooling" | "F4_hem_drags_over_slides" | "F4b_full_break_narrow_leg" | "F7_care" | "F6_top_too_long" | "F8_too_big"
   | "F9_sleeves_cover_hands" | "F10_visible_strain" | "T1_dress_shirt_untucked" | "P1_top_volume_vs_style"
   | "P1_leg_vs_style" | "P2_big_top_skinny_leg" | "P3_everything_oversized" | "L1_shirt_hangs_below_blazer"
   | "S1_bulky_shoe_narrow_leg" | "C1a_too_many_accent_colors" | "C1b_too_many_colors" | "C3_bright_clash"
@@ -144,6 +148,10 @@ export interface ScoredResult {
   mistakesUnrounded: number;
   advice: string[];
   notRated: NotRated[];
+  /** Styles the outfit reads as (detected from the garments, rubric v4), in the rubric's fixed order. */
+  detectedStyles: DetectedStyle[];
+  /** The one style the card names ("Reads as streetwear"), or null (the general standard applied). */
+  styleLabel: DetectedStyle | null;
 }
 
 export type RubricResult = UnscoredResult | ScoredResult;
@@ -235,16 +243,28 @@ export interface RubricData {
     creditMax: number;
     formalityDefault: number;
     darkUndistressedJeans: number;
+    /** Score points per penalty unit, by sub-score (fit 0.8, color 0.6, proportion 0.6). */
+    mult: Record<SubscoreName, number>;
+    /** One garment's fit + proportion penalties cost at most this on the score. */
+    garmentCap: number;
+    /** The floor at FLOOR_OCCASIONS when no care or strain fault fired. */
+    floor: number;
+    /** Athletic bottoms count as this dressiness in "too casual" at ATHLETIC_AS_CASUAL occasions. */
+    loungeAthleticAsCasual: number;
     [key: string]: unknown;
   };
   tables: {
     FORMALITY: Record<string, number>;
+    DARK_JEANS: string[];
     TAILORED_OUTER: string[];
     SEPARATE_JACKETS: string[];
     DARK_SUITING: string[];
     OCCASION_TARGET: Record<string, number[]>;
     OCCASION_DEFAULT: number[];
     DRESSY_OCCASIONS: string[];
+    OCCASION_FIRST: string[];
+    FLOOR_OCCASIONS: string[];
+    ATHLETIC_AS_CASUAL: string[];
     LEG_ORDER: string[];
     LEG_ALIAS: Record<string, string>;
     STYLE_BANDS: Record<string, { volume: number[]; leg: string[] }>;
@@ -257,12 +277,53 @@ export interface RubricData {
     LOUNGE_BOTTOMS: string[];
     LOUNGE_OK: string[];
     KNIT_TOPS: string[];
+    TECH_LAYERS: string[];
+    LAYER_SHIRTS: string[];
+    DRESSED_OUTER: string[];
+    DRESSED_TOPS: string[];
+    NOT_REAL_SHOES: string[];
     CREDITS: CreditConfig[];
   };
+  /** Style detection (rubric v4): the fixed label order, card names, old pick keys and every set the detector reads. */
+  styles: {
+    order: DetectedStyle[];
+    names: Record<DetectedStyle, string>;
+    pickAlias: Record<string, string>;
+    sets: Record<string, string[]>;
+  };
+  /** The one quick tap: the closed list of look-alike pairs per slot ([a, b, question]) and the button labels. */
+  tap: {
+    pairs: Record<string, [string, string, string][]>;
+    labels: Record<string, string>;
+  };
   rules: Record<string, RuleConfig>;
-  advice: Record<"ruleOfThirds" | "tonal" | "nearMatch" | "bigLogo" | "belt" | "nextLevel", string>;
+  advice: Record<"ruleOfThirds" | "tonal" | "nearMatch" | "bigLogo" | "belt" | "nextLevel" | "nextLevelMinimal", string>;
   fixes: FixCatalog;
 }
 
-/** Blended style band: volume (lo, hi) and leg-index (lo, hi), as rubric.blended_band returns. */
+/** A style band: volume (lo, hi) and leg-index (lo, hi), as rubric.band_index returns. */
 export type Band = readonly [readonly [number, number], readonly [number, number]];
+
+/** ask_question(): the one quick tap before the score (rubric v4, RULEBOOK Part 5). */
+export interface TapOption {
+  value: string;
+  label: string;
+  /** The displayed score if this is the right reading. */
+  score: number;
+}
+export interface TapQuestion {
+  /** "jeans/sweatpants" */
+  pair: string;
+  slot: "top" | "bottom" | "footwear";
+  field: "subcategory";
+  /** Index into reading.garments of the garment it asks about. */
+  garmentIndex: number;
+  question: string;
+  /** [as read, the look-alike]. */
+  options: [TapOption, TapOption];
+  /** What a skip scores: the more generous reading. */
+  default: string;
+  /** options[1].score - options[0].score */
+  swing: number;
+  doubt: string;
+}

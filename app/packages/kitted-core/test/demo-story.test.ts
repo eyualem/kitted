@@ -1,4 +1,4 @@
-// The demo's numbers: every demo reading x 9 occasions (expected_scores.json -> cases), the 23 mockup checks,
+// The demo's numbers: every demo reading x 9 occasions (expected_scores.json -> cases), the 24 mockup checks,
 // the "Not quite right?" correction, the partial checks, and the scripted firstRun story end to end.
 import { describe, expect, it } from "vitest";
 import {
@@ -28,8 +28,8 @@ describe("demo score cases (181)", () => {
     expect(mismatches).toEqual([]);
   });
 
-  it("the 23 numbers the mockups draw", () => {
-    expect(E.mockup_checks.length).toBe(23);
+  it("the 24 numbers the mockups draw (rubric v4 values; make_expected.py lists the ones that differ)", () => {
+    expect(E.mockup_checks.length).toBe(24);
     for (const m of E.mockup_checks as any[]) {
       const got = withWords(score(loadReading(m.case.split("@")[0].split("#")[0]), {
         occasion: m.case.split("@")[1].split("#")[0], styles: m.case.includes("#no_styles") ? [] : DEMO,
@@ -87,15 +87,16 @@ describe("firstRun story (screens 5-10)", () => {
     const corrected = applyCorrection(p01b, 1, "leg_shape", "slim");
     const c = score(corrected, { occasion: "date", styles: DEMO }) as ScoredResult;
     expect(correctionLine(first.overall, c.overall)).toBe("Score stays 8.0");
-    expect(c.rawUnrounded).toBe(7.774999999999999);
+    // rubric v4: slim is inside the general band, so the correction changes nothing (v3.1: 7.775 via the demo picks)
+    expect(c.rawUnrounded).toBe(8.0);
 
     const { merged, notes } = recheckMerge(p01b, loadReading("p01a"), fixTargets(card.fixes), { occasion: "date", styles: DEMO });
     const after = score(merged, { occasion: "date", styles: DEMO }) as ScoredResult;
     expect([after.overall, scoreWord(after.overall), after.overall - first.overall, notes]).toEqual([9.0, "Dialed in", 1.0, ["changed: outerwear"]]);
   });
 
-  it("welcome example: s15 with no styles picked = 8.5 Sharp, full check", () => {
+  it("welcome example: s15 with no styles picked = 8.0 Sharp, full check (rubric v4; the mockup draws 8.5)", () => {
     const s = score(loadReading("s15"), { occasion: "everyday", styles: [] }) as ScoredResult;
-    expect([s.overall, scoreWord(s.overall), s.partial]).toEqual([8.5, "Sharp", false]);
+    expect([s.overall, scoreWord(s.overall), s.partial]).toEqual([8.0, "Sharp", false]);
   });
 });

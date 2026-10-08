@@ -104,6 +104,7 @@ CREDITS = {
 # Tried and dropped (Oct 6): a +0.5 "finishing touch" credit for a belt or watch. The model
 # sees a watch in some runs and not others, which made scores flip (m03). Belts stay advice-only.
 CREDIT_MAX = sum(v[0] for v in CREDITS.values())   # 2.25 -> best possible about 9.5; 10 stays rare
+K1_TECH_LAYER = 0.5     # "Layered" for a shell, rain jacket, puffer, fleece or vest (ruling 5)
 MULT = {"fit": 0.8, "color": 0.6, "proportion": 0.6}   # score points per penalty unit (2.0 x the sub-score weight)
 GARMENT_CAP = 1.0       # fit + proportion penalties traced to one garment cost at most this (ruling R1)
 FLOOR = 5.0
@@ -829,7 +830,7 @@ def score(ext: dict, occasion: str = "everyday", styles: dict = None, boldness: 
         cat, s = g.get("category"), g.get("subcategory")
         if not (cat == "outerwear" or (cat == "top" and s in KNIT_TOPS) or s in ("fleece", "vest")):
             return 0
-        return 0.5 if s in TECH_LAYERS else 0.75
+        return K1_TECH_LAYER if s in TECH_LAYERS else CREDITS["K1_layered"][0]
 
     def interest_of(g):
         # muted counts half only for burgundy/sage here: two muted pieces are not "one standout color"

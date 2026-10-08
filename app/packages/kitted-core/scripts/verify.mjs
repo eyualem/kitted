@@ -55,6 +55,7 @@ function toPy(r) {
     credits: r.credits, credit_points: r.creditPoints, mistake_points: r.mistakePoints, rules_fired: r.rulesFired,
     advice: r.advice, partial: r.partial, not_rated: r.notRated,
     raw_unrounded: r.rawUnrounded, credit_unrounded: r.creditUnrounded, mistakes_unrounded: r.mistakesUnrounded,
+    detected_styles: r.detectedStyles, style_label: r.styleLabel,
   };
 }
 const fixToPy = (f) => ({
@@ -86,10 +87,17 @@ function compareResult(label, got, want, fieldFails) {
   return ok;
 }
 
-// ---------------------------------------------------------------- 1. rubric parity (5,694 cases)
+// ---------------------------------------------------------------- 1. rubric parity (+ the tap on every case)
 const P = load("rubric_parity.json");
 const snapshots = new Map(Object.entries(P.readings).map(([id, r]) => [id, JSON.stringify(r)]));
+const askToPy = (q) => {
+  if (q === null) return null;
+  const { garmentIndex, ...rest } = q;
+  return { ...rest, garment_index: garmentIndex };
+};
 let parityOk = 0;
+let askOk = 0;
+let asked = 0;
 let fpOk = 0;
 let fpTotal = 0;
 const parityFieldFails = {};
@@ -97,6 +105,10 @@ for (const c of P.cases) {
   const got = toPy(K.score(P.readings[c.reading], { occasion: c.occasion, styles: c.styles, boldness: c.boldness }));
   const ok = compareResult(`parity ${c.reading}@${c.occasion} ${show(c.styles)} ${c.boldness}`, got, c.expected, parityFieldFails);
   if (ok) parityOk++;
+  const q = askToPy(K.askQuestion(P.readings[c.reading], { occasion: c.occasion, styles: c.styles, boldness: c.boldness }));
+  if (q !== null) asked++;
+  if (eq(q, c.ask ?? null)) askOk++;
+  else fail(`ask ${c.reading}@${c.occasion} ${show(c.styles)} ${c.boldness}: got ${show(q)} want ${show(c.ask)}`);
   if (c.fp_boundary) {
     fpTotal++;
     if (ok) fpOk++;
@@ -107,6 +119,7 @@ for (const [id, snap] of snapshots) if (JSON.stringify(P.readings[id]) !== snap)
 if (mutated) fail(`score() mutated ${mutated} input readings`);
 console.log(`rubric parity: ${parityOk}/${P.cases.length} cases match exactly (fp_boundary ${fpOk}/${fpTotal}; ` +
   `inputs mutated: ${mutated})` + (Object.keys(parityFieldFails).length ? ` field failures ${show(parityFieldFails)}` : ""));
+console.log(`one quick tap (askQuestion): ${askOk}/${P.cases.length} cases match exactly (${asked} ask)`);
 
 // ---------------------------------------------------------------- 2. expected_scores.json
 const E = load("expected_scores.json");

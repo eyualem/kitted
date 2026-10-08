@@ -192,11 +192,13 @@ describe('partial check (s24, full scenario as of Oct 20 08:09)', () => {
     expect(row.details.finish).toEqual({ suggestedItemId: 'S1', weekday: 1 });
   });
 
-  it('pick the white sneakers from the closet → 7.0, full check', async () => {
+  it('pick the white sneakers from the closet → 6.5, full check', async () => {
     const { svc, checkId } = await partialSetup();
     const row = (await svc.pickShoes(checkId, 'S1'))!;
-    expect([row.score, row.rawScore, row.isPartial, row.snapState]).toEqual([7, 6.9, false, 'closetPick']);
-    expect(row.fixes[0]!.to).toBe(7.5);
+    // rubric v4 (RULEBOOK ruling 6, the loungewear ladder): gym shorts + real shoes still cost -0.6, so 6.5
+    // (v3.1: 7.0); same as handoff/fixtures/expected_scores.json "partial:s24 pick White sneakers from closet".
+    expect([row.score, row.rawScore, row.isPartial, row.snapState]).toEqual([6.5, 6.4, false, 'closetPick']);
+    expect(row.fixes[0]!.to).toBe(7.0);
   });
 
   it('a shoe snap → 6.5, full check; it uses no check', async () => {

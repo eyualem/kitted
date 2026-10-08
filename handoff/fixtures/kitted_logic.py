@@ -102,14 +102,28 @@ def fam(c):
 
 
 # ---------------------------------------------------------------- fix engine
-def _band(styles):
-    if isinstance(styles, list):
-        styles = {k: w for k, w in styles}
-    return rubric.blended_band(styles or {})
+def _bands(reading):
+    """The bands the rubric accepts for this reading (v4: the default band plus each detected style's band;
+    his picks never widen them). Each is ((vlo, vhi), (leg lo, leg hi)) with legs as LEG_ORDER indices."""
+    return rubric.bands_for(reading)
 
 
-def _closet_matches(closet, slot, match, current, styles):
-    (vlo, vhi), (llo, lhi) = _band(styles)
+def _in_band(v, bands, which):
+    return any(b[which][0] <= v <= b[which][1] for b in bands)
+
+
+def _band_target(v, bands, which):
+    """The in-band value nearest to v (whole steps); ties go to the earlier band (the default band first)."""
+    best = None
+    for b in bands:
+        lo, hi = math.ceil(b[which][0]), math.floor(b[which][1])
+        t = min(max(v, lo), hi) if lo <= hi else rubric.nearest((b[which][0] + b[which][1]) / 2)
+        if best is None or abs(t - v) < abs(best - v):
+            best = t
+    return best
+
+
+def _closet_matches(closet, slot, match, current, bands):
     out = []
     for it in closet:
         if it["slot"] != SLOT_TO_CLOSET[slot]:
@@ -120,10 +134,10 @@ def _closet_matches(closet, slot, match, current, styles):
         m = match or {}
         if "volume_max" in m and (g.get("volume") or 3) > m["volume_max"]:
             continue
-        if m.get("volume_in_band") and not (vlo <= (g.get("volume") or 3) <= vhi):
+        if m.get("volume_in_band") and not _in_band(g.get("volume") or 3, bands, 0):
             continue
         if m.get("leg_in_band"):
-            if g.get("leg_shape") not in rubric.LEG_ORDER or not (llo <= rubric.LEG_ORDER.index(g["leg_shape"]) <= lhi):
+            if g.get("leg_shape") not in rubric.LEG_ORDER or not _in_band(rubric.LEG_ORDER.index(g["leg_shape"]), bands, 1):
                 continue
         if "leg_in" in m and g.get("leg_shape") not in m["leg_in"]:
             continue
@@ -172,20 +186,16 @@ def _expand(op, reading, closet, occasion, styles):
         i = idx(r0, op["slot"])
         if i is None:
             return []
-        (vlo, vhi), (llo, lhi) = _band(styles)
+        bands = _bands(r0)
         g = r0["garments"][i]
         r = copy.deepcopy(r0)
         if op["field"] == "volume":
-            lo, hi = math.ceil(vlo), math.floor(vhi)
-            v = g.get("volume") or 3
-            t = min(max(v, lo), hi) if lo <= hi else rubric.nearest((vlo + vhi) / 2)
+            t = _band_target(g.get("volume") or 3, bands, 0)
             r["garments"][i]["volume"] = t
             return [(r, {"name": name(g), "target": VOLUME_WORD.get(t, "regular-fit")})]
         if g.get("leg_shape") not in rubric.LEG_ORDER:
             return []
-        lo, hi = math.ceil(llo), math.floor(lhi)
-        li = rubric.LEG_ORDER.index(g["leg_shape"])
-        t = min(max(li, lo), hi) if lo <= hi else rubric.nearest((llo + lhi) / 2)
+        t = _band_target(rubric.LEG_ORDER.index(g["leg_shape"]), bands, 1)
         r["garments"][i]["leg_shape"] = rubric.LEG_ORDER[t]
         return [(r, {"name": name(g), "target": rubric.LEG_ORDER[t]})]
     if kind in ("swap_closet", "add_closet"):
@@ -195,7 +205,7 @@ def _expand(op, reading, closet, occasion, styles):
             if kind == "swap_closet" and i is None:
                 continue
             cur = r0["garments"][i] if i is not None else None
-            for it in _closet_matches(closet, s, op.get("match"), cur if kind == "swap_closet" else None, styles):
+            for it in _closet_matches(closet, s, op.get("match"), cur if kind == "swap_closet" else None, _bands(r0)):
                 r = copy.deepcopy(r0)
                 g = copy.deepcopy(it["garment"])
                 if kind == "swap_closet":
@@ -242,7 +252,7 @@ def _expand(op, reading, closet, occasion, styles):
                 continue
             g = r0["garments"][i]; c = g["category"]
             if op.get("from_closet"):
-                for it in _closet_matches(closet, c, {"formality_min": f + 0.5}, g, styles):
+                for it in _closet_matches(closet, c, {"formality_min": f + 0.5}, g, _bands(r0)):
                     r = copy.deepcopy(r0); r["garments"][i] = copy.deepcopy(it["garment"])
                     res.append((r, {"name": name(g), "item": it["name"], "item_id": it["id"]}))
             else:
@@ -271,7 +281,7 @@ def _evaluate(option, reading, closet, occasion, styles, boldness):
             return None
     if option.get("when", {}).get("leg_too_wide"):
         i = idx(reading, "bottom")
-        (_, _), (llo, lhi) = _band(styles)
+        lhi = max(b[1][1] for b in _bands(reading))
         if i is None or reading["garments"][i].get("leg_shape") not in rubric.LEG_ORDER or rubric.LEG_ORDER.index(reading["garments"][i]["leg_shape"]) <= lhi:
             return None
     states = [(reading, {})]
@@ -559,16 +569,16 @@ def outfit_valid(items, styles, boldness="a_little"):
     fs = [rubric.formality(it["garment"]) for it in items]
     if max(fs) - min(fs) > 1.0:
         return False
-    (vlo, vhi), (llo, lhi) = _band(styles)
+    reading = outfit_reading(items)
+    bands = _bands(reading)       # v4: the outfit's own detected styles widen the band, not his picks
     for it in items:
         g = it["garment"]
-        if g["category"] == "top" and g.get("volume") and max(0, vlo - g["volume"], g["volume"] - vhi) >= 1:
+        if g["category"] == "top" and g.get("volume") and rubric.band_steps(g["volume"], bands, 0) >= 1:
             return False
         if g["category"] == "bottom" and g.get("leg_shape") in rubric.LEG_ORDER:
-            li = rubric.LEG_ORDER.index(g["leg_shape"])
-            if max(0, llo - li, li - lhi) >= 1:
+            if rubric.band_steps(rubric.LEG_ORDER.index(g["leg_shape"]), bands, 1) >= 1:
                 return False
-    sc = score(outfit_reading(items), "everyday", styles, boldness)
+    sc = score(reading, "everyday", styles, boldness)
     return not (set(sc["rules_fired"]) & HARD_RULES)
 
 

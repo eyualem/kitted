@@ -2,7 +2,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { deepEqual, type ClosetItem, type Fix, type FixSuggestions, type Reading, type RubricResult } from "../src/index";
+import { deepEqual, type ClosetItem, type Fix, type FixSuggestions, type Reading, type RubricResult, type TapQuestion } from "../src/index";
 
 /**
  * handoff/fixtures. Works from both places the package lives:
@@ -40,6 +40,7 @@ export function toPy(r: RubricResult): Record<string, unknown> {
     credits: r.credits, credit_points: r.creditPoints, mistake_points: r.mistakePoints, rules_fired: r.rulesFired,
     advice: r.advice, partial: r.partial, not_rated: r.notRated,
     raw_unrounded: r.rawUnrounded, credit_unrounded: r.creditUnrounded, mistakes_unrounded: r.mistakesUnrounded,
+    detected_styles: r.detectedStyles, style_label: r.styleLabel,
   };
 }
 
@@ -71,4 +72,11 @@ export function diff(label: string, got: Record<string, unknown>, want: Record<s
     if (!deepEqual(got[k], want[k])) out.push(`${label}: ${k} got ${JSON.stringify(got[k])} want ${JSON.stringify(want[k])}`);
   }
   return out;
+}
+
+/** TS TapQuestion -> the dict rubric.ask_question returns. */
+export function askToPy(q: TapQuestion | null): Record<string, unknown> | null {
+  if (q === null) return null;
+  const { garmentIndex, ...rest } = q;
+  return { ...rest, garment_index: garmentIndex };
 }

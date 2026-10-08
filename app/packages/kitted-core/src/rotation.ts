@@ -39,19 +39,19 @@ export function outfitValid(
 ): boolean {
   const fs = items.map((it) => engine.formality(it.garment));
   if (maxOf(fs) - minOf(fs) > 1.0) return false;
-  const [[vlo, vhi], [llo, lhi]] = engine.blendedBand(styles);
+  const reading = outfitReading(items);
+  const bands = engine.bandsFor(reading); // v4: the outfit's own detected styles widen the band, not his picks
   for (const it of items) {
     const g = it.garment;
     if (g.category === "top" && truthy(g.volume)) {
-      const v = g.volume as number;
-      if (pyMax(0, vlo - v, v - vhi) >= 1) return false;
+      if (engine.bandSteps(g.volume as number, bands, 0) >= 1) return false;
     }
     if (g.category === "bottom") {
       const li = engine.legIndex(g.leg_shape);
-      if (li >= 0 && pyMax(0, llo - li, li - lhi) >= 1) return false;
+      if (li >= 0 && engine.bandSteps(li, bands, 1) >= 1) return false;
     }
   }
-  const sc = engine.score(outfitReading(items), { occasion: "everyday", styles, boldness });
+  const sc = engine.score(reading, { occasion: "everyday", styles, boldness });
   return !sc.rulesFired.some((r) => HARD_RULES.has(r));
 }
 

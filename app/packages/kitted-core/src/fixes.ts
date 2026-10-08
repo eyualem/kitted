@@ -5,7 +5,7 @@
 import { garmentName, G, idx, SLOT_TO_CLOSET } from "./names";
 import { defaultRubric, type RubricEngine } from "./rubric";
 import type {
-  ClosetItem, FixCatalog, FixEdit, FixMatch, FixOption, FixTier, Garment, Reading, ScoredResult, ScoreOptions, Styles,
+  Band, ClosetItem, FixCatalog, FixEdit, FixMatch, FixOption, FixTier, Garment, Reading, ScoredResult, ScoreOptions, Styles,
 } from "./types";
 import { clone, has, isNone, nearest, pyMax, pyMin, pyRound, replaceAll, truthy } from "./util";
 
@@ -76,11 +76,27 @@ function getv(g: Garment, k: string): unknown {
   return v === undefined ? null : v;
 }
 
+/** In any accepted band (v4: the default band or a detected style's band). which 0 = volume, 1 = leg index. */
+function inBand(v: number, bands: readonly Band[], which: 0 | 1): boolean {
+  return bands.some((b) => b[which][0] <= v && v <= b[which][1]);
+}
+
+/** kitted_logic._band_target: the in-band whole step nearest to v; ties go to the earlier band (default first). */
+function bandTarget(v: number, bands: readonly Band[], which: 0 | 1): number {
+  let best: number | null = null;
+  for (const b of bands) {
+    const lo = Math.ceil(b[which][0]);
+    const hi = Math.floor(b[which][1]);
+    const t = lo <= hi ? pyMin(pyMax(v, lo), hi) : nearest((b[which][0] + b[which][1]) / 2);
+    if (best === null || Math.abs(t - v) < Math.abs(best - v)) best = t;
+  }
+  return best!;
+}
+
 function closetMatches(
   engine: RubricEngine, closet: readonly ClosetItem[], slot: string, match: FixMatch | undefined,
-  current: Garment | null, styles: Styles | null | undefined,
+  current: Garment | null, bands: readonly Band[],
 ): ClosetItem[] {
-  const [[vlo, vhi], [llo, lhi]] = engine.blendedBand(styles);
   const out: ClosetItem[] = [];
   const want = has(SLOT_TO_CLOSET, slot) ? SLOT_TO_CLOSET[slot] : undefined;
   for (const it of closet) {
@@ -93,10 +109,10 @@ function closetMatches(
     const m: FixMatch = match ?? {};
     const vol = (truthy(g.volume) ? g.volume : 3) as number;
     if (has(m, "volume_max") && vol > m.volume_max!) continue;
-    if (truthy(m.volume_in_band) && !(vlo <= vol && vol <= vhi)) continue;
+    if (truthy(m.volume_in_band) && !inBand(vol, bands, 0)) continue;
     if (truthy(m.leg_in_band)) {
       const li = engine.legIndex(g.leg_shape);
-      if (li < 0 || !(llo <= li && li <= lhi)) continue;
+      if (li < 0 || !inBand(li, bands, 1)) continue;
     }
     if (has(m, "leg_in") && !m.leg_in!.includes(g.leg_shape as string)) continue;
     if (has(m, "not_subcategory") && m.not_subcategory!.includes(g.subcategory as string)) continue;
@@ -144,23 +160,19 @@ function expand(
     case "set_band": {
       const i = idx(r0, op.slot);
       if (i < 0) return [];
-      const [[vlo, vhi], [llo, lhi]] = engine.blendedBand(styles);
+      const bands = engine.bandsFor(r0);
       const g = r0.garments[i]!;
       const r = clone(r0);
       if (op.field === "volume") {
-        const lo = Math.ceil(vlo);
-        const hi = Math.floor(vhi);
         const v = (truthy(g.volume) ? g.volume : 3) as number;
-        const t = lo <= hi ? pyMin(pyMax(v, lo), hi) : nearest((vlo + vhi) / 2);
+        const t = bandTarget(v, bands, 0);
         r.garments[i]!.volume = t;
         const word = has(VOLUME_WORD, String(t)) ? VOLUME_WORD[String(t)]! : "regular-fit";
         return [{ kind: "one", reading: r, info: { name: garmentName(g), target: word } }];
       }
       const li = engine.legIndex(g.leg_shape);
       if (li < 0) return [];
-      const lo = Math.ceil(llo);
-      const hi = Math.floor(lhi);
-      const t = lo <= hi ? pyMin(pyMax(li, lo), hi) : nearest((llo + lhi) / 2);
+      const t = bandTarget(li, bands, 1);
       const leg = engine.legOrder[t]!;
       r.garments[i]!.leg_shape = leg;
       return [{ kind: "one", reading: r, info: { name: garmentName(g), target: leg } }];
@@ -173,7 +185,7 @@ function expand(
         const i = idx(r0, s);
         if (swap && i < 0) continue;
         const cur = i >= 0 ? r0.garments[i]! : null;
-        for (const it of closetMatches(engine, closet, s, op.match, swap ? cur : null, styles)) {
+        for (const it of closetMatches(engine, closet, s, op.match, swap ? cur : null, engine.bandsFor(r0))) {
           const r = clone(r0);
           const g = clone(it.garment);
           if (swap && cur) {
@@ -230,7 +242,7 @@ function expand(
         const g = r0.garments[i]!;
         const c = g.category as string;
         if (truthy(op.from_closet)) {
-          for (const it of closetMatches(engine, closet, c, { formality_min: f + 0.5 }, g, styles)) {
+          for (const it of closetMatches(engine, closet, c, { formality_min: f + 0.5 }, g, engine.bandsFor(r0))) {
             const r = clone(r0);
             r.garments[i] = clone(it.garment);
             res.push({ kind: "one", reading: r, info: { name: garmentName(g), item: it.name, item_id: it.id } });
@@ -284,7 +296,7 @@ function evaluate(
   }
   if (option.when?.leg_too_wide) {
     const i = idx(reading, "bottom");
-    const [, [, lhi]] = engine.blendedBand(styles);
+    const lhi = Math.max(...engine.bandsFor(reading).map((b) => b[1][1]));
     const li = i >= 0 ? engine.legIndex(reading.garments[i]!.leg_shape) : -1;
     if (i < 0 || li < 0 || li <= lhi) return null;
   }

@@ -12,6 +12,10 @@
    {"tier": "adjust", "copy": "Cuff your pants once", "detail": "about 10 seconds", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "cuffed"}}]},
    {"tier": "tailor", "copy": "Hem them to a slight break", "detail": "~$15 at a tailor", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "slight_break"}}]}
   ],
+  "F4_hem_drags_over_slides": [
+   {"tier": "adjust", "copy": "Cuff them once", "detail": "so the hem clears the floor", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "cuffed"}}]},
+   {"tier": "changeInto", "copy": "Swap the slides for chunky sneakers", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "chunky_sneaker"}}]}
+  ],
   "F4b_full_break_narrow_leg": [
    {"tier": "adjust", "copy": "Cuff them once", "detail": "slim pants look sharper with less fabric at the shoe", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "cuffed"}}]},
    {"tier": "tailor", "copy": "Hem them to no break", "detail": "~$15 at a tailor", "edits": [{"op": "set", "slot": "bottom", "fields": {"hem": "no_break"}}]}
@@ -83,7 +87,9 @@
   ],
   "O4_loungewear_out": [
    {"tier": "swapFromCloset", "copy": "Swap to jeans or chino shorts", "detail": "", "closet_requires": {"slot": "bottom", "subcategory_in": ["jeans", "shorts", "chinos"]}, "edits": [{"op": "alternatives", "slot": "bottom", "each": [{"subcategory": "jeans"}, {"subcategory": "shorts"}]}]},
-   {"tier": "changeInto", "copy": "Swap to jeans or chino shorts", "detail": "", "edits": [{"op": "alternatives", "slot": "bottom", "each": [{"subcategory": "jeans"}, {"subcategory": "shorts"}]}]}
+   {"tier": "changeInto", "copy": "Swap to jeans or chino shorts", "detail": "", "edits": [{"op": "alternatives", "slot": "bottom", "each": [{"subcategory": "jeans"}, {"subcategory": "shorts"}]}]},
+   {"tier": "changeInto", "copy": "Swap the {name} for low-profile sneakers", "detail": "", "edits": [{"op": "set_where", "where": {"category": "footwear", "subcategory": "performance_runner"}, "fields": {"subcategory": "low_profile_sneaker"}}]},
+   {"tier": "changeInto", "copy": "Swap the {name} for low-profile sneakers", "detail": "", "edits": [{"op": "set_where", "where": {"category": "footwear", "subcategory": "slides_sandals"}, "fields": {"subcategory": "low_profile_sneaker"}}]}
   ],
   "S2_shoes_too_casual_for_outfit": [
    {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "shoes set the outfit's level", "edits": [{"op": "swap_closet", "slot": "footwear", "match": {"formality_min": 3}}]},
@@ -105,7 +111,8 @@
   ]
  },
  "next_level": {
-  "next level: add one point of interest (a knit, a sneaker, a beanie)": "One standout color, like a rust tee. No score change today."
+  "next level: add one point of interest (a knit, a sneaker, a beanie)": "One standout color, like a rust tee. No score change today.",
+  "next level: vary texture or shade (a knit, suede, a heavier fabric)": "Mix textures or shades, like a knit or suede. No score change today."
  },
  "tips": {
   "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)": "A front tuck or a cropped layer can lengthen your legs.",

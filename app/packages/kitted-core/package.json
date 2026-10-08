@@ -1,7 +1,7 @@
 {
   "name": "@kitted/core",
-  "version": "3.1.0",
-  "description": "Kitted scoring core: exact TypeScript port of rubric.py v3.1 plus the fix engine, anchored re-check, corrections, partial checks and Rotation. Shared by the Expo app and the Cloudflare Worker.",
+  "version": "4.0.0",
+  "description": "Kitted scoring core: exact TypeScript port of rubric.py v4.0 (style detection, the one quick tap) plus the fix engine, anchored re-check, corrections, partial checks and Rotation. Shared by the Expo app and the Cloudflare Worker.",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",

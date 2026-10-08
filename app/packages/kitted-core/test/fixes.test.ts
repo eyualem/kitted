@@ -23,7 +23,8 @@ describe("suggestFixes", () => {
   it("first check: 'Wear the overshirt, open' -> 9.0, plus the next-level tip", () => {
     const out = suggestFixes(loadReading("p01b"), { occasion: "date", styles: DEMO, firstCheck: true });
     expect(out.fixes.map((x) => [x.copy, x.tag, x.to])).toEqual([["Wear the overshirt, open", "Free · it's already in your hand", 9.0]]);
-    expect(out.nextLevel).toEqual(["One standout color, like a rust tee. No score change today."]);
+    // rubric v4 (RULEBOOK ruling 37): p01b reads as minimal, so the idea is texture, not color
+    expect(out.nextLevel).toEqual(["Mix textures or shades, like a knit or suede. No score change today."]);
   });
 
   it("fixTargets of the first-check card = whole outerwear slot", () => {

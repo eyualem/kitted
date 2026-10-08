@@ -1,11 +1,11 @@
 // @kitted/core: the scoring brain shared by the Expo app and (later) the Cloudflare Worker proxy.
-// Pure TypeScript, no runtime dependencies, no I/O. Source of truth: extraction-test/rubric.py (v3.1).
+// Pure TypeScript, no runtime dependencies, no I/O. Source of truth: extraction-test/rubric.py (v4.0).
 
 export * from "./types";
 export { RUBRIC_DATA } from "./rubricData";
 export {
-  ENGINE_VERSION, createRubric, defaultRubric, score, isScored, stylesMap, roundHalf, nearest, pyRound,
-  type RubricEngine,
+  ENGINE_VERSION, createRubric, defaultRubric, score, askQuestion, detectStyles, isScored, stylesMap, roundHalf, nearest, pyRound,
+  type RubricEngine, type DetectedStyles,
 } from "./rubric";
 export { scoreWord, SCORE_WORDS, type ScoreWord } from "./scoreWords";
 export { suggestFixes, applyFix, fixTargets, type Fix, type FixSuggestions, type FixOptions } from "./fixes";

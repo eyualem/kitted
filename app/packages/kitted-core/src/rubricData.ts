@@ -3,11 +3,11 @@
 import type { RubricData } from "./types";
 
 export const RUBRIC_DATA: RubricData = {
- "version": "3.1.0",
- "engine": 3,
+ "version": "4.0.0",
+ "engine": 4,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "807f18c29da1f3a17497ab494628291d46899f44e5661062ac3f837046f20123",
+ "rubricSha256": "6340dcfb5d34f4f83f6657630695f0683db48c9660cecf055191934554b5dee4",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,
@@ -31,16 +31,25 @@ export const RUBRIC_DATA: RubricData = {
   "subMin": 1,
   "subMax": 10,
   "creditMax": 2.25,
-  "partialScaling": "(1 + creditMax / visibleMax) / 2, applied as (earnedSum * (1 + creditMax / visibleMax)) / 2",
+  "partialScaling": "earnedSum * ((1 + creditMax / visibleMax) / 2)",
   "displayRounding": "floor(x * 2 + 0.5) / 2",
   "nearest": "floor(x + 0.5)",
   "formalityDefault": 2,
-  "darkUndistressedJeans": 2.5
+  "darkUndistressedJeans": 2.5,
+  "mult": {
+   "fit": 0.8,
+   "color": 0.6,
+   "proportion": 0.6
+  },
+  "garmentCap": 1,
+  "floor": 5,
+  "loungeAthleticAsCasual": 2,
+  "k1TechLayer": 0.5
  },
  "tables": {
   "FORMALITY": {
    "tank_top": 1,
-   "jersey": 1,
+   "jersey": 2,
    "sweatpants": 1,
    "athletic_shorts": 1,
    "joggers": 1,
@@ -65,7 +74,7 @@ export const RUBRIC_DATA: RubricData = {
    "rugby_shirt": 2,
    "denim_jacket": 2,
    "bomber": 2,
-   "work_boot": 2,
+   "work_boot": 2.5,
    "low_profile_sneaker": 2.5,
    "leather_jacket": 2.5,
    "camp_collar_shirt": 2.5,
@@ -95,6 +104,10 @@ export const RUBRIC_DATA: RubricData = {
    "suit_trousers": 5,
    "dress_shoe": 5
   },
+  "DARK_JEANS": [
+   "black",
+   "denim_dark"
+  ],
   "TAILORED_OUTER": [
    "blazer",
    "sport_coat",
@@ -182,6 +195,26 @@ export const RUBRIC_DATA: RubricData = {
    "wedding_formal",
    "work"
   ],
+  "OCCASION_FIRST": [
+   "event",
+   "interview",
+   "interview_corporate",
+   "interview_tech",
+   "wedding_casual",
+   "wedding_formal",
+   "work",
+   "work_casual"
+  ],
+  "FLOOR_OCCASIONS": [
+   "class",
+   "everyday",
+   "gym",
+   "home"
+  ],
+  "ATHLETIC_AS_CASUAL": [
+   "class",
+   "everyday"
+  ],
   "LEG_ORDER": [
    "skinny",
    "slim",
@@ -211,37 +244,27 @@ export const RUBRIC_DATA: RubricData = {
     ],
     "leg": [
      "straight",
-     "relaxed"
+     "wide"
     ]
    },
-   "old_money": {
+   "classic_prep": {
     "volume": [
      2,
      3
     ],
     "leg": [
-     "straight",
+     "slim",
      "relaxed"
     ]
    },
    "workwear": {
     "volume": [
-     3,
+     2,
      4
     ],
     "leg": [
      "straight",
-     "relaxed"
-    ]
-   },
-   "vintage_sport": {
-    "volume": [
-     3,
-     4
-    ],
-    "leg": [
-     "straight",
-     "relaxed"
+     "wide"
     ]
    },
    "streetwear": {
@@ -254,23 +277,23 @@ export const RUBRIC_DATA: RubricData = {
      "wide"
     ]
    },
-   "preppy": {
-    "volume": [
-     2,
-     3
-    ],
-    "leg": [
-     "slim",
-     "straight"
-    ]
-   },
-   "gorpcore": {
+   "vintage_sport": {
     "volume": [
      3,
      4
     ],
     "leg": [
      "straight",
+     "wide"
+    ]
+   },
+   "outdoor": {
+    "volume": [
+     3,
+     4
+    ],
+    "leg": [
+     "slim",
      "wide"
     ]
    }
@@ -333,7 +356,9 @@ export const RUBRIC_DATA: RubricData = {
   },
   "LOUNGE_BOTTOMS": [
    "athletic_shorts",
-   "sweatpants"
+   "joggers",
+   "sweatpants",
+   "track_pants"
   ],
   "LOUNGE_OK": [
    "gym",
@@ -343,6 +368,55 @@ export const RUBRIC_DATA: RubricData = {
    "cardigan",
    "quarter_zip",
    "sweater"
+  ],
+  "TECH_LAYERS": [
+   "fleece",
+   "puffer",
+   "rain_jacket",
+   "shell_jacket",
+   "vest"
+  ],
+  "LAYER_SHIRTS": [
+   "camp_collar_shirt",
+   "denim_shirt",
+   "flannel_shirt",
+   "fleece",
+   "overshirt"
+  ],
+  "DRESSED_OUTER": [
+   "blazer",
+   "bomber",
+   "camp_collar_shirt",
+   "chore_coat",
+   "denim_jacket",
+   "denim_shirt",
+   "field_jacket",
+   "flannel_shirt",
+   "leather_jacket",
+   "overcoat",
+   "overshirt",
+   "sport_coat",
+   "track_jacket",
+   "unstructured_blazer"
+  ],
+  "DRESSED_TOPS": [
+   "camp_collar_shirt",
+   "cardigan",
+   "denim_shirt",
+   "dress_shirt",
+   "flannel_shirt",
+   "jersey",
+   "knit_polo",
+   "overshirt",
+   "oxford_shirt",
+   "polo",
+   "quarter_zip",
+   "rugby_shirt",
+   "sweater"
+  ],
+  "NOT_REAL_SHOES": [
+   "performance_runner",
+   "slides_sandals"
   ],
   "CREDITS": [
    {
@@ -369,14 +443,442 @@ export const RUBRIC_DATA: RubricData = {
    }
   ]
  },
+ "styles": {
+  "order": [
+   "vintage_sport",
+   "outdoor",
+   "workwear",
+   "streetwear",
+   "classic_prep",
+   "minimalist",
+   "smart_casual"
+  ],
+  "names": {
+   "vintage_sport": "vintage sport",
+   "outdoor": "outdoor",
+   "workwear": "workwear",
+   "streetwear": "streetwear",
+   "classic_prep": "classic prep",
+   "minimalist": "minimal",
+   "smart_casual": "smart casual"
+  },
+  "pickAlias": {
+   "preppy": "classic_prep",
+   "old_money": "classic_prep",
+   "gorpcore": "outdoor"
+  },
+  "sets": {
+   "ATHLETIC_BOTTOMS": [
+    "athletic_shorts",
+    "joggers",
+    "sweatpants",
+    "track_pants"
+   ],
+   "DRESS_SHOES": [
+    "derby",
+    "dress_shoe",
+    "loafer"
+   ],
+   "COLLARED": [
+    "dress_shirt",
+    "knit_polo",
+    "oxford_shirt",
+    "polo",
+    "rugby_shirt"
+   ],
+   "DARK_TECH": [
+    "black",
+    "charcoal",
+    "grey",
+    "navy",
+    "olive"
+   ],
+   "ST_TOP_A": [
+    "graphic_tee",
+    "hoodie",
+    "sweatshirt"
+   ],
+   "ST_OUT_A": [
+    "bomber",
+    "puffer"
+   ],
+   "ST_OUT_H": [
+    "denim_jacket",
+    "fleece",
+    "leather_jacket",
+    "rain_jacket",
+    "shell_jacket",
+    "vest"
+   ],
+   "ST_SHOE_A": [
+    "basketball_sneaker",
+    "chunky_sneaker"
+   ],
+   "ST_SHOE_H": [
+    "canvas_sneaker",
+    "low_profile_sneaker",
+    "performance_runner",
+    "retro_runner",
+    "trail_shoe",
+    "work_boot"
+   ],
+   "ST_STREET_SHOES": [
+    "basketball_sneaker",
+    "canvas_sneaker",
+    "chunky_sneaker",
+    "low_profile_sneaker",
+    "retro_runner",
+    "work_boot"
+   ],
+   "ST_VETO": [
+    "blazer",
+    "dress_shirt",
+    "overcoat",
+    "sport_coat",
+    "suit_jacket",
+    "suit_trousers",
+    "trousers",
+    "unstructured_blazer"
+   ],
+   "PREP_TOPS": [
+    "cardigan",
+    "knit_polo",
+    "oxford_shirt",
+    "polo",
+    "rugby_shirt"
+   ],
+   "EARTH_OUTER": [
+    "brown",
+    "denim_dark",
+    "denim_light",
+    "denim_mid",
+    "khaki_beige",
+    "navy",
+    "off_white_cream",
+    "olive",
+    "tan_camel"
+   ],
+   "WW_VETO": [
+    "athletic_shorts",
+    "dress_shoe",
+    "jersey",
+    "joggers",
+    "slides_sandals",
+    "suit_jacket",
+    "suit_trousers",
+    "sweatpants",
+    "tank_top",
+    "track_jacket",
+    "track_pants"
+   ],
+   "WW_NEG": [
+    "basketball_sneaker",
+    "blazer",
+    "chunky_sneaker",
+    "fleece",
+    "graphic_tee",
+    "performance_runner",
+    "puffer",
+    "rain_jacket",
+    "shell_jacket",
+    "sport_coat",
+    "trail_shoe",
+    "vest"
+   ],
+   "RETRO_SHOES": [
+    "low_profile_sneaker",
+    "retro_runner"
+   ],
+   "VS_BOTTOM_H": [
+    "cargos",
+    "chinos",
+    "drawstring_trousers",
+    "jeans",
+    "joggers",
+    "shorts",
+    "sweatpants",
+    "trousers"
+   ],
+   "OUT_A": [
+    "fleece",
+    "rain_jacket",
+    "shell_jacket",
+    "trail_shoe",
+    "vest"
+   ],
+   "OUT_H": [
+    "cargos",
+    "technical_pants"
+   ],
+   "OUT_VETO": [
+    "athletic_shorts",
+    "blazer",
+    "derby",
+    "dress_shirt",
+    "dress_shoe",
+    "jersey",
+    "loafer",
+    "sport_coat",
+    "suit_jacket",
+    "suit_trousers",
+    "sweatpants",
+    "track_jacket",
+    "track_pants",
+    "trousers",
+    "unstructured_blazer"
+   ],
+   "NEUT_MIN": [
+    "black",
+    "brown",
+    "burgundy",
+    "charcoal",
+    "denim_dark",
+    "grey",
+    "khaki_beige",
+    "light_blue",
+    "light_grey",
+    "navy",
+    "off_white_cream",
+    "olive",
+    "sage",
+    "tan_camel",
+    "white"
+   ],
+   "MIN_HOME_UP": [
+    "cardigan",
+    "knit_polo",
+    "leather_jacket",
+    "overcoat",
+    "overshirt",
+    "oxford_shirt",
+    "sweater",
+    "unstructured_blazer"
+   ],
+   "MIN_HOME_BOTTOM": [
+    "chinos",
+    "drawstring_trousers",
+    "trousers"
+   ],
+   "MIN_HOME_SHOES": [
+    "chelsea_boot",
+    "derby",
+    "loafer",
+    "low_profile_sneaker",
+    "white_leather_sneaker"
+   ],
+   "MIN_AGAINST_SHOES": [
+    "basketball_sneaker",
+    "chunky_sneaker",
+    "performance_runner",
+    "slides_sandals",
+    "trail_shoe"
+   ],
+   "PRESSED": [
+    "chinos",
+    "drawstring_trousers",
+    "suit_trousers",
+    "trousers"
+   ],
+   "PREP_ANCHOR_UP": [
+    "blazer",
+    "cardigan",
+    "knit_polo",
+    "oxford_shirt",
+    "polo",
+    "sport_coat",
+    "unstructured_blazer"
+   ],
+   "PREP_HOME_UP": [
+    "field_jacket",
+    "overcoat",
+    "quarter_zip",
+    "sweater",
+    "vest"
+   ],
+   "PREP_HOME_BOTTOM": [
+    "chinos",
+    "shorts",
+    "trousers"
+   ],
+   "PREP_HOME_SHOES": [
+    "derby",
+    "loafer",
+    "suede_chukka",
+    "white_leather_sneaker"
+   ],
+   "PREP_VETO": [
+    "athletic_shorts",
+    "basketball_sneaker",
+    "cargos",
+    "chunky_sneaker",
+    "joggers",
+    "performance_runner",
+    "slides_sandals",
+    "sweatpants",
+    "track_pants",
+    "trail_shoe",
+    "work_boot"
+   ],
+   "PREP_CASUAL_TOPS": [
+    "fleece",
+    "graphic_tee",
+    "hoodie",
+    "jersey",
+    "sweatshirt",
+    "tank_top"
+   ],
+   "SC_ANCHOR_UP": [
+    "blazer",
+    "cardigan",
+    "knit_polo",
+    "overshirt",
+    "oxford_shirt",
+    "polo",
+    "quarter_zip",
+    "sport_coat",
+    "unstructured_blazer"
+   ],
+   "SC_HOME_UP": [
+    "camp_collar_shirt",
+    "chore_coat",
+    "denim_shirt",
+    "dress_shirt",
+    "field_jacket",
+    "leather_jacket",
+    "overcoat",
+    "sweater",
+    "vest"
+   ],
+   "SC_ANCHOR_SHOES": [
+    "chelsea_boot",
+    "derby",
+    "loafer",
+    "suede_chukka",
+    "white_leather_sneaker"
+   ],
+   "SC_VETO": [
+    "athletic_shorts",
+    "cargos",
+    "flannel_shirt",
+    "fleece",
+    "graphic_tee",
+    "hoodie",
+    "jersey",
+    "joggers",
+    "puffer",
+    "rain_jacket",
+    "rugby_shirt",
+    "shell_jacket",
+    "slides_sandals",
+    "sweatpants",
+    "sweatshirt",
+    "technical_pants",
+    "track_jacket",
+    "track_pants",
+    "trail_shoe"
+   ],
+   "JEANS_FAMILY": [
+    "drawstring_trousers",
+    "jeans",
+    "joggers",
+    "sweatpants"
+   ],
+   "DARK_NONDENIM": [
+    "black",
+    "charcoal",
+    "navy"
+   ]
+  }
+ },
+ "tap": {
+  "pairs": {
+   "bottom": [
+    [
+     "jeans",
+     "sweatpants",
+     "Jeans or sweatpants?"
+    ],
+    [
+     "jeans",
+     "joggers",
+     "Jeans or joggers?"
+    ],
+    [
+     "jeans",
+     "drawstring_trousers",
+     "Jeans or pull-on trousers?"
+    ],
+    [
+     "chinos",
+     "trousers",
+     "Chinos or dress trousers?"
+    ],
+    [
+     "trousers",
+     "suit_trousers",
+     "Separate trousers or suit trousers?"
+    ],
+    [
+     "shorts",
+     "athletic_shorts",
+     "Regular shorts or gym shorts?"
+    ],
+    [
+     "jeans",
+     "chinos",
+     "Jeans or chinos?"
+    ]
+   ],
+   "top": [
+    [
+     "sweater",
+     "sweatshirt",
+     "Knit sweater or sweatshirt?"
+    ]
+   ],
+   "footwear": [
+    [
+     "chelsea_boot",
+     "work_boot",
+     "Chelsea boots or work boots?"
+    ]
+   ]
+  },
+  "labels": {
+   "jeans": "Jeans",
+   "sweatpants": "Sweatpants",
+   "joggers": "Joggers",
+   "drawstring_trousers": "Pull-on trousers",
+   "chinos": "Chinos",
+   "trousers": "Dress trousers",
+   "suit_trousers": "Suit trousers",
+   "shorts": "Regular shorts",
+   "athletic_shorts": "Gym shorts",
+   "sweater": "Knit sweater",
+   "sweatshirt": "Sweatshirt",
+   "chelsea_boot": "Chelsea boots",
+   "work_boot": "Work boots"
+  }
+ },
  "rules": {
+  "F4_hem_drags_over_slides": {
+   "enabled": true,
+   "sub": "fit",
+   "amount": 0.5,
+   "hems": [
+    "pooling",
+    "stacked",
+    "full_break"
+   ],
+   "shoes": [
+    "slides_sandals"
+   ]
+  },
   "F4_pooling": {
    "enabled": true,
    "sub": "fit",
    "amount": 1,
-   "streetThreshold": 0.5,
-   "streetSlim": 0.5,
-   "streetRelaxedOrWide": 0
+   "looseOrAthletic": 0.5
   },
   "F4b_full_break_narrow_leg": {
    "enabled": true,
@@ -394,18 +896,16 @@ export const RUBRIC_DATA: RubricData = {
    "wrinkled": 0.5,
    "stainedClear": 1.5,
    "pilledOrWorn": 0.5,
-   "pilledFootwearStreetish": 0.25,
-   "streetishThreshold": 0.5,
+   "wornWorkBoot": 0.25,
    "cap": 2,
-   "skipDistressedByDesign": true
+   "distressedExcusesWearOnly": true
   },
   "F6_top_too_long": {
    "enabled": true,
    "sub": "fit",
    "amount": 1,
    "volumeBelow": 4,
-   "volumeDefault": 3,
-   "streetBelow": 0.5
+   "volumeDefault": 3
   },
   "F8_too_big": {
    "enabled": true,
@@ -413,7 +913,12 @@ export const RUBRIC_DATA: RubricData = {
    "amount": 0.75,
    "volumeAtLeast": 4,
    "volumeDefault": 0,
-   "streetBelow": 0.5
+   "streetTops": [
+    "hoodie",
+    "tee",
+    "graphic_tee",
+    "sweatshirt"
+   ]
   },
   "F9_sleeves_cover_hands": {
    "enabled": true,
@@ -454,8 +959,7 @@ export const RUBRIC_DATA: RubricData = {
   "P3_everything_oversized": {
    "enabled": true,
    "sub": "proportion",
-   "amount": 0.5,
-   "streetPlusGorpBelow": 0.5
+   "amount": 0.5
   },
   "L1_shirt_hangs_below_blazer": {
    "enabled": true,
@@ -510,8 +1014,7 @@ export const RUBRIC_DATA: RubricData = {
    "enabled": true,
    "sub": "color",
    "amount": 1,
-   "patternsAtLeast": 3,
-   "streetBelow": 0.5
+   "patternsAtLeast": 3
   },
   "B1_too_many_focal_points": {
    "enabled": true,
@@ -539,8 +1042,12 @@ export const RUBRIC_DATA: RubricData = {
    "enabled": true,
    "sub": "occasion",
    "perLevel": 1.25,
-   "max": 2.5,
-   "margin": 0.5
+   "levelStarts": [
+    0.25,
+    1.25
+   ],
+   "rampWidth": 0.5,
+   "formula": "perLevel * clamp01((gap - 0.25) / 0.5) + perLevel * clamp01((gap - 1.25) / 0.5), gap = lo - mean dressiness"
   },
   "O1_too_formal": {
    "enabled": true,
@@ -551,23 +1058,28 @@ export const RUBRIC_DATA: RubricData = {
   "O4_loungewear_out": {
    "enabled": true,
    "sub": "occasion",
-   "amount": 0.5,
-   "streetPlusVintageBelow": 0.5
+   "ladder": [
+    1,
+    0.5,
+    0.25
+   ],
+   "heroBothSigns": 0,
+   "gymShortsMax": 0.5
   },
   "S2_shoes_too_casual_for_outfit": {
    "enabled": true,
    "sub": "occasion",
    "amount": 1.5,
-   "gapAtLeast": 3,
+   "rampFrom": 2,
    "exempt": [
     "white_leather_sneaker"
-   ]
+   ],
+   "formula": "amount * clamp01(gap - rampFrom), gap = max(other dressiness) - shoe dressiness"
   },
   "O3_large_logo": {
    "enabled": true,
    "sub": "occasion",
    "amount": 1.1,
-   "streetPlusVintageBelow": 0.3,
    "occasionPrefixes": [
     "work",
     "interview"
@@ -581,7 +1093,8 @@ export const RUBRIC_DATA: RubricData = {
   "nearMatch": "tip: pair a dark blazer with clearly different trousers (grey, tan, olive) or the matching suit trousers",
   "bigLogo": "tip: big logos read casual; a plain or small-logo piece looks more put together",
   "belt": "tip: match your belt to your shoes (same color family; black only with black)",
-  "nextLevel": "next level: add one point of interest (a knit, a sneaker, a beanie)"
+  "nextLevel": "next level: add one point of interest (a knit, a sneaker, a beanie)",
+  "nextLevelMinimal": "next level: vary texture or shade (a knit, suede, a heavier fabric)"
  },
  "fixes": {
   "_doc": "Fix catalog draft for rubric.json -> fixes. One entry per target (a rule id from rubric.py, or a credit id). Options are listed cheapest tier first. Edits are applied to a COPY of the reading, which is then re-scored by the rubric; the predicted gain is the rubric's own number. Ops are defined in 04-logic-and-demo-data.md section 5.2 and implemented in kitted_logic.py. {name} = plain garment name, {item} = closet item name, {target} = band target (e.g. 'relaxed').",
@@ -638,6 +1151,36 @@ export const RUBRIC_DATA: RubricData = {
        "slot": "bottom",
        "fields": {
         "hem": "slight_break"
+       }
+      }
+     ]
+    }
+   ],
+   "F4_hem_drags_over_slides": [
+    {
+     "tier": "adjust",
+     "copy": "Cuff them once",
+     "detail": "so the hem clears the floor",
+     "edits": [
+      {
+       "op": "set",
+       "slot": "bottom",
+       "fields": {
+        "hem": "cuffed"
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "copy": "Swap the slides for chunky sneakers",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set",
+       "slot": "footwear",
+       "fields": {
+        "subcategory": "chunky_sneaker"
        }
       }
      ]
@@ -1250,6 +1793,40 @@ export const RUBRIC_DATA: RubricData = {
        ]
       }
      ]
+    },
+    {
+     "tier": "changeInto",
+     "copy": "Swap the {name} for low-profile sneakers",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set_where",
+       "where": {
+        "category": "footwear",
+        "subcategory": "performance_runner"
+       },
+       "fields": {
+        "subcategory": "low_profile_sneaker"
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "copy": "Swap the {name} for low-profile sneakers",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set_where",
+       "where": {
+        "category": "footwear",
+        "subcategory": "slides_sandals"
+       },
+       "fields": {
+        "subcategory": "low_profile_sneaker"
+       }
+      }
+     ]
     }
    ],
    "S2_shoes_too_casual_for_outfit": [
@@ -1374,7 +1951,8 @@ export const RUBRIC_DATA: RubricData = {
    ]
   },
   "next_level": {
-   "next level: add one point of interest (a knit, a sneaker, a beanie)": "One standout color, like a rust tee. No score change today."
+   "next level: add one point of interest (a knit, a sneaker, a beanie)": "One standout color, like a rust tee. No score change today.",
+   "next level: vary texture or shade (a knit, suede, a heavier fabric)": "Mix textures or shades, like a knit or suede. No score change today."
   },
   "tips": {
    "tip: a front tuck or a cropped layer can lengthen your legs (rule of thirds)": "A front tuck or a cropped layer can lengthen your legs.",

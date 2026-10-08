@@ -147,7 +147,7 @@ export async function loadScenario(store: KittedStore, seed: unknown, opts: Load
       notRated: arr(o.notRated).map(String), score: numOr(o.score, 0), rawScore: numOr(o.rawScore, 0),
       subscores: obj(o.subscores) as Record<string, number>, occasionAdj: numOr(o.occasionAdj, 0), rulesFired: arr(o.rulesFired).map(String),
       credits: arr(o.credits).map(String), advice: arr(o.advice).map(String), fixes: arr(o.fixes).map(fixFromSeed),
-      explanation: str(o.summary) ?? str(o.verdict), rubricVersion: String(o.rubricVersion ?? '3.1.0'), isFavorite: o.isFavorite === true,
+      explanation: str(o.summary) ?? str(o.verdict), rubricVersion: String(o.rubricVersion ?? '4.0.0'), isFavorite: o.isFavorite === true,
       snapState: (str(o.snapState) ?? 'none') as SnapState, recheckUsed: o.recheckUsed === true, isFirstCheck: id === 'FC0',
       readingId, parentId: str(o.parentID), itemIds: [...arr(cs.matched).map(String), ...arr(cs.added).map(String)], details,
     };

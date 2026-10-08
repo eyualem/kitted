@@ -3,7 +3,7 @@
 //
 //   base 7.0 + earned credits + partial boost − Σ rule impacts + adjust = raw;  raw + rounding = overall
 //
-// `adjust` is non-zero only when a clamp bit (sub-score floor/ceiling, raw 3–10); `rounding` is
+// `adjust` is non-zero only when a clamp, the per-garment cap or the 5.0 floor bit (v4); `rounding` is
 // the step to the nearest half point. Rows are in the order the sheet shows them: earned credits
 // (rubric order), then unearned credits (rubric order), then mistakes in the order they fired.
 
@@ -38,8 +38,12 @@ export interface ScoreLedger {
   /** Extra credit points from scaling for hidden parts (v3.1 R4); 0 on a full check. */
   partialBoost: number;
   rules: LedgerRule[];
-  /** Clamp correction so the rows add up to `raw` (0 unless a clamp bit). */
+  /** Correction so the rows add up to `raw`: clamps, plus (v4) the per-garment cap and the 5.0 floor below. */
   adjust: number;
+  /** v4: points the per-garment cap gave back (included in `adjust`). */
+  capReturned: number;
+  /** v4: points the 5.0 floor added at an ordinary occasion (included in `adjust`). */
+  floorLift: number;
   raw: number;
   /** overall − raw (e.g. +0.25 when 8.75 shows as 9.0). */
   rounding: number;
@@ -81,6 +85,8 @@ export function explainScore(reading: Reading, opts: ScoreOptions = {}, engine: 
       partialBoost: tiny(partialBoost),
       rules,
       adjust: tiny(result.rawUnrounded - expected),
+      capReturned: tiny(trace.capReturned ?? 0),
+      floorLift: tiny(trace.floorLift ?? 0),
       raw: result.rawUnrounded,
       rounding: tiny(result.overall - result.rawUnrounded),
       overall: result.overall,
