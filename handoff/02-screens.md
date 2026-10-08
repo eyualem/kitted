@@ -696,7 +696,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
    - Actions (gap 8): PrimaryButton regular `Wear this` · SecondaryButton regular (`surface2`) `Swap one`.
 
 **Dock: idle composer** (pad 8 / 16 / 92, gap 10; 92 = the tab bar's 62 + 21 + 9)
-1. **Quick-start row** (one horizontally scrolling row, bleeding off the right edge, gap 8): chips 34 tall, capsule, pad 0 13, `surface`, 1 pt `line`, `.subheadline.weight(.semibold)`, leading icon 19.5 `ink2`, gap 8: `tshirt` `What should I wear?` · `bag` `I bought something` · `questionmark.circle` `Ask a question`.
+1. ~~**Quick-start row**~~ **Removed Oct 7 (S1d, #58).** Was: (one horizontally scrolling row, bleeding off the right edge, gap 8): chips 34 tall, capsule, pad 0 13, `surface`, 1 pt `line`, `.subheadline.weight(.semibold)`, leading icon 19.5 `ink2`, gap 8: `tshirt` `What should I wear?` · `bag` `I bought something` · `questionmark.circle` `Ask a question`.
 2. **Composer row** (gap 9): **Check my fit** button (40 tall, capsule, pad 0 16 0 13, `primary` fill, `camera` 26 + `Check my fit` `.subheadline.weight(.semibold)`, gap 9) · text field (flex, 40 tall, capsule, `surface`, 1 pt `line`, pad 0 16, placeholder `Ask…` `.body` `ink3`).
 
 **Compact composer** (the injected `data-composer` in D7, D10, D11, D13, D19; overlay pinned above the tab bar with a `bg` fade above it, pad 8 / 16 / 92): camera circle 40 (`primary`, `camera` 26) · field placeholder `Ask your stylist…`. When the field has text, a send button `arrow.up.circle.fill` (32, `primary`, not copper: copper is only for gains, links and "+N fits") appears inside the field's trailing edge.
@@ -730,6 +730,38 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 **VoiceOver:** Check my fit "Check my fit. Opens the camera." Field "Ask your stylist". The outfit card is one element: "Outfit idea from your closet: navy overshirt, grey tee, khaki chinos, white sneakers." Custom actions: Wear this, Swap one.
 
 **Differs from mockup:** the `…` menu (above); and **no library circle in the composer, and the camera button hides while typing.** *Because the composer's three buttons crowded the field (founder, Oct 7); the camera screen's library button (S2) is the iOS norm for picking a photo.*
+
+---
+
+### S1d · The morning card (decided Oct 7, DECISIONS-LOG #58; replaces the quick-start row)
+*Differs from mockup 12 because the founder found the chip row above the composer cramped. Once a day the stylist opens with the weather and an outfit instead.*
+
+- **When:** posted as a stylist message the first time Stylist is shown after the 4 am day rollover, one per day key. Before 4 pm it plans today ("Morning." / "Afternoon."); from 4 pm it plans tomorrow ("Evening. For tomorrow:"). Never re-posted on later opens that day.
+- **Locked per day:** the outfit for a day key is picked once and stored. The same day shows the same idea in the card and the N1 notification. "Swap one" and an occasion change re-pick deliberately. The notification for the next 3 days is planned from the daily forecast on each app open.
+- **Greeting** (template, no AI): `{Morning|Afternoon|Evening}. {weather phrase}`, e.g. `Morning. Cold start, warm afternoon, rain tonight.` / `Morning. 48° and cloudy, a layer kind of day.` Without weather: `Morning. An easy one for {occasionWord} today:` (the old line).
+- **Card** (KCard):
+  1. Tagline: `Today · {Occasion}` (the occasion is tappable → the occasion picker; weekdays default to his Class/Work, weekends to Everyday) / right `From your closet` (or `{n} pieces so far` when thin).
+  2. **Weather strip** (`surface2`, radius 12): SF Symbol for the condition · `{now}° now · {high}° high` · second line `Rain likely after 5 pm` / `Dry all day`. °F (US-only app). Tapping it does nothing.
+  3. 4 garment tiles (as S1) with a dashed `You'd need: {item}` tile for a slot the closet can't fill (e.g. a layer when it's cold).
+  4. **Why line** (`.subheadline`, `ink2`, one or two sentences, template): names the weather reason, e.g. `Overshirt for the cold walk; it comes off by noon. Boots over the white sneakers for the rain.`
+  5. Actions: `Wear this` (primary) · `Swap one` (secondary). Tapping a tile pushes C2.
+  6. Footer: Apple's Weather mark + `Data sources` link (WeatherKit attribution, required). Only when live weather is shown.
+- **Closet states:**
+  - **Enough** (a valid top + bottom + shoes for the occasion): as above.
+  - **Thin** (some pieces, no valid outfit): the known pieces plus dashed tiles; why line `I only know {n} of your pieces. Check today's fit and I'll learn the rest.`; actions `Check my fit` (primary) · `Add basics` (→ C5).
+  - **Empty** (new user): no tiles; `Send me today's fit and I'll start learning your closet.` + `Check my fit`. With consent declined, S26 instead.
+- **Location ask** (once, inside the first card that would show weather): a row `Use your local weather?` + `Allow` → the system prompt (When In Use, reduced accuracy). Declined or not asked yet: no strip; the greeting and why line use the season ("October: bring a layer").
+- **Weather rules** (code, in `@kitted/core` `weather.ts`; feels-like °F over his day, 8 am to 8 pm):
+  - **80 and up:** no layer; shorts allowed for Everyday.
+  - **65 to 79:** no layer needed.
+  - **50 to 64:** a light layer is suggested.
+  - **35 to 49:** a layer is required; if none fits, show a dashed tile.
+  - **Below 35:** an outer layer is required.
+  - **Rain chance 50%+:** no suede; boots or dark sneakers are preferred over white sneakers.
+  - **A swing of 15° or more between morning and high:** a layer he can take off.
+  - The founder reviews these numbers with the rubric.
+- **Composer:** the quick-start row is gone. Idle dock = `Check my fit` + `Ask…` field only; reserve shrinks accordingly. "What should I wear?" is the card (and later typed questions); "I bought something" is v1.1; "Ask a question" is the field.
+- **VoiceOver:** the card is one element: "Outfit idea for class today. 48 degrees now, high 63, rain likely after 5 pm. Navy overshirt, grey tee, khaki chinos, brown boots." Custom actions: Wear this, Swap one, Change occasion.
 
 ---
 

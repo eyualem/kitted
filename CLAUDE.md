@@ -83,6 +83,7 @@
   - To score a fit, the face-hidden copy goes to Google's Gemini API, which doesn't train on it and keeps it up to 55 days for abuse checks. Our server stores no photos.
   - Sending faces unblurred: recommended against for now (biometric-law and App Review risk, no accuracy gain); revisit with a lawyer before launch if wanted.
   - Consent copy: `inputs/app-store-and-age-rules.md` §3.
+  - **Location (for the morning card's weather only, Oct 7, #58):** approximate (city level), asked inside the card, never in onboarding. It goes to Apple WeatherKit and is never stored by us or sent to Google. If declined, the card uses the season.
 - **Look:**
   - Clean and premium, per the mockups: chalk/night backgrounds, indigo ink, a copper accent, Archivo numerals, iOS 26 Liquid Glass tab bar.
   - Mockups: `mockups/kitted-mockups.html` (20 screens). Inside each phone 1 CSS px = 1 pt.
@@ -152,13 +153,21 @@
    - Fix the navy/black garment icons, which are near-invisible in dark mode.
    - Fix the sheet heights: "Not quite right?" opens too tall, "Which shoes?" too short.
    - Give the empty tabs real empty states.
-2. **Closet tab + the outfit idea** (on demo data, while I phone-test). Tiles use the garment icons in the item's color, not photo cut-outs. Photo-adding items and "Should I buy this?" go to v1.1.
-3. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
-4. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.
-5. **Lookbook**, then **You** (incl. "Delete all my data"; reuses P4's pieces).
-6. **P6:** paywall and limit card, the 3 local notifications, the share card (defaults to the face-hidden photo, #55).
-7. **Age check, App Attest (log-only), policy pages, store screenshots.**
-8. **P7 polish and accessibility across every screen**, then TestFlight about Oct 31.
+2. **The morning card** (founder, Oct 7; DECISIONS-LOG #58; spec in `handoff/02-screens.md` "S1d"), about 3 days on demo weather. This replaces the suggestion buttons above the text box.
+   - **What it is:** once a day the stylist greets him with the weather and a card holding an outfit from his closet. Code picks the outfit; templates write the words.
+   - **Sources:** weather from Apple WeatherKit; location asked inside the card, approximate only.
+   - **Steps:**
+     - **(a) Core:** `ideas.ts` and `weather.ts`, with tests.
+     - **(b) Data:** one locked idea per day, and a `WeatherSource` with demo weather.
+     - **(c) The card and its states,** with the suggestion row removed and demo screens 25–28.
+     - **(d) Native location + WeatherKit.** It works only after the $99 enrollment, so demo weather until then.
+3. **Closet tab** (on demo data, while I phone-test); it reuses the outfit picker from step 2. Tiles use the garment icons in the item's color, not photo cut-outs. Photo-adding items and "Should I buy this?" go to v1.1.
+4. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
+5. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.
+6. **Lookbook**, then **You** (incl. "Delete all my data"; reuses P4's pieces).
+7. **P6:** paywall and limit card, the 3 local notifications, the share card (defaults to the face-hidden photo, #55).
+8. **Age check, App Attest (log-only), policy pages, store screenshots.**
+9. **P7 polish and accessibility across every screen**, then TestFlight about Oct 31.
 
 Deferred to v1.1:
 - the volume-button shutter

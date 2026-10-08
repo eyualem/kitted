@@ -121,3 +121,27 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Second bug:** only burgundy and sage count as muted, though the model returns `saturation`.
     - **Proposed:** fix both bugs; switch on new points one at a time, only after the gold set has truth labels and pairwise human rankings. All point values are unsourced guesses.
     - **Waiting on the founder:** these are scoring changes, and `rubric.py` plus the parity fixtures must move together.
+
+## Oct 7, 2026 · The morning card
+
+58. **A daily morning card replaces the quick-start chips** (founder, Oct 7: the chip row above the text box looks cramped; he wants the stylist to greet him each morning with the weather and an outfit). Spec: 02 "S1d".
+    - **Founder's choices:**
+      - Build it right after the quick-fix batch, before the Closet tab.
+      - Weather from Apple WeatherKit: free for 500k calls/month with the $99 program, no key in the app, Apple's attribution required. Open-Meteo would be $29/month for commercial use.
+      - Location asked inside the card: When In Use, reduced accuracy, never in onboarding.
+      - Weather shown as a strip inside the card.
+    - **Settled by Claude:**
+      - **Code picks the outfit and templates write the words; no AI call.** This keeps it free, instant, offline-capable and deterministic. "The code judges."
+      - **One idea is locked per day key,** so the card and the N1 notification agree. N1 plans 3 days ahead from the daily forecast.
+      - **From 4 pm the card plans tomorrow.**
+      - **Closet states:**
+        - Enough: a valid top + bottom + shoes.
+        - Thin: dashed tiles plus "Check my fit".
+        - Empty: "Send me today's fit…".
+      - **Weather bands are first numbers for the founder's rubric review:** 80/65/50/35 °F feels-like, rain 50%+, a swing of 15°+.
+    - **Why it's worth it:**
+      - It gives a reason to open on the 6 days a week a free user has no fit check left.
+      - Acloset already does weather-based daily outfits, so this is table stakes; our edge is the closet built from fit checks.
+      - It's good video content.
+    - **Until enrollment:** WeatherKit needs the paid program, so it's built behind `WeatherSource` with demo weather.
+    - **Privacy:** location goes only to Apple for weather and is never stored or sent to Google. Privacy label: Coarse Location, App Functionality, not linked to identity.
