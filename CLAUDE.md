@@ -64,6 +64,7 @@
 - **Camera:**
   - The phone propped up, with a body-outline framing guide, a 3-2-1 auto-capture and a staged loading card.
   - Mirror selfies and library photos are backups.
+  - No live face blur in the camera; faces are blurred only in the copy sent for scoring (#54–55).
 - **Free and Pro:**
   - **Free tier:** 1 fit check a day (with one re-check) and 5 questions a day. Everything that runs on code is free; never charge to see a score.
   - **Pro:** $29.99/yr with a 14-day trial, or $5.99/mo, plus a $19.99 founding offer for the waitlist. No lifetime plan, weekly plan or Family Sharing.
@@ -146,9 +147,10 @@
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
 ### 3. P3: built; next is testing on my iPhone (full plan: `handoff/05-build-plan.md` §P3)
-- **Done Oct 7:** real scoring (photo cut at the neck on the phone → Gemini → real card) and the camera (live preview, body tracking drives the guide, face blurred live, 3-2-1 auto-capture with a spoken count, Propped/Mirror, flash, flip, camera-off card). On the Simulator a sample photo stands in for the camera.
+- **Done Oct 7:** real scoring (photo → faces blurred on the phone → Gemini → real card) and the camera (live preview, body tracking drives the guide, no live blur, 3-2-1 auto-capture with a spoken count, Propped/Mirror, flash, flip, camera-off card). Photos keep the whole outfit; my own copy stays unblurred on the phone, only the upload is blurred (#54–55). On the Simulator a sample photo stands in for the camera.
 - **Installed on my iPhone (Oct 7).** Setup is done (Apple ID in Xcode, Developer Mode on, developer trusted). To reinstall (every 7 days, or after native changes): plug in, unlock, run `tools/phone/install.sh`. The Metro dev server must be running (`kitted-web`) and the phone on the same Wi-Fi.
-- **What Claude sees during my test:** the `[camera]`, `[prep]`, `[gemini]` and `[check]` lines in the Metro log, live; afterwards `tools/phone/pull.sh` copies the app's data and kept neck-down photos off the phone (`screenshots/phone/`, git-ignored).
+- **What Claude sees during my test:** the `[camera]`, `[prep]`, `[gemini]` and `[check]` lines in the Metro log, live; afterwards `tools/phone/pull.sh` copies the app's data and kept photos off the phone (`screenshots/phone/`, git-ignored).
+- **Each test session:** unlock the phone and open Kitted (it reconnects to this Mac's dev server), then tell Claude so it can watch the log.
 - Test plan: 10 propped shots (phone against something, 2–3 m away) + 10 mirror shots in my room; note any guide misfires.
 - Not built yet: the Mirror volume-button shutter, the dark/blurry retake panel, the screenshot "Is this you?" question (#50).
 - Then **P4 (onboarding)**: 05 §P4.
@@ -253,7 +255,7 @@ Exceptions:
 - **A card that changes behind a sheet** needs a scroll-to-end after the sheet closes (Stylist does it on focus, 400 ms).
 - **`simctl io … screenshot` can fail silently** when the target file exists and is protected; write to a new path.
 - **Apple Vision on the Simulator** needs the CPU forced (`setComputeDevice`), or every request fails with "Could not create inference context".
-- **Never send a photo when the neck/face can't be found** (`couldNotFrame`, ruling 10).
+- **Never send a photo when his head/face can't be found** (`couldNotFrame`, ruling 10); a photo whose body runs off the top edge has no face to hide and is sent.
 - **react-native-svg keeps a dash pattern after `strokeDasharray` is removed;** key the shape by state to redraw it.
 - **A new Swift file in a local module needs `pod install`** before Xcode sees it ("cannot find … in scope").
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
