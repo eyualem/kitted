@@ -11,6 +11,7 @@ export { scoreWord, SCORE_WORDS, type ScoreWord } from "./scoreWords";
 export { suggestFixes, applyFix, fixTargets, type Fix, type FixSuggestions, type FixOptions } from "./fixes";
 export { recheckMerge, recheckOutcome, STATE_FIELDS, type RecheckMerge, type RecheckOutcome } from "./recheck";
 export { applyCorrection, removeGarment, correctionLine } from "./corrections";
+export { applyTapAnswer, tapOrdinal, tapOrder, carryTapAnswer, type TapCarry } from "./tap";
 export { matchClosetItem, closetPlan, type ClosetPlan, type ClosetPlanEntry } from "./closetMatch";
 export { partialLabel, mergeShoeSnap, mergeBottomSnap, pickShoesFromCloset } from "./partial";
 export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type RotationResult, type ItemKey, type ComboKey } from "./rotation";
