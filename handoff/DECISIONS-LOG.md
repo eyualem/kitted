@@ -400,3 +400,27 @@ Contradictions settled and decisions changed during the build. Newest last.
       - 0 index-alignment errors; lightness 95%; shade key 92% (raw text 72%); details Jaccard 0.94; logo 98%; box IoU median 0.98; 4.3 s median; about 360 output tokens.
       - The founder's hoodie read "medium grey", mid, Nike, hood/front pouch/drawstring on all 3 runs.
     - **Next:** wire the closet call (after the score card shows) + V6 + the engine into the check flow, then crops after the founder reinstalls with full-res capture (#83).
+
+## Oct 8 · Closet tab shape (UI research session; numbered #84)
+
+84. **Founder approved all four Closet-tab calls (Oct 8).** Research and wireframes: `mockups/closet-concepts.html` (3 agents: internal docs, 18 competitor apps, user psychology).
+    1. **Combinations live in Closet, as a Pieces | Outfits segmented control.** Pieces is the default (screen 15 as drawn), and the rotation card opens Outfits. There's no 5th tab, and Lookbook stays history only (worn checks, real photos, real scores).
+       - *Why not Lookbook:* mixing "what I wore" with "what I could wear" breaks the calendar and "Days dressed with intent".
+       - *Why not a 5th tab:* it would be empty in week one, it splits the closet in two, and it's a full extra screen before beta.
+    2. **No avatar or AI try-on; use a "standing outfit".** His garment tiles are stacked in body order (top, bottoms, shoes, with a layer at the side) on one 3:4 tile. Outfits he has worn show his own kept photo instead.
+       - *Why:* JMR 2023 (6 studies, 8,000+ shoppers) found virtual fitting rooms lower self-esteem for higher-BMI shoppers, which clashes with "never rate bodies".
+       - Avatars are widely reported as inaccurate (Doppl, Alta, Glance).
+       - Try-on APIs cost about $0.05–0.075 per image, about 15× a scoring call.
+       - Try-on needs his unblurred body sent to another vendor, which breaks #54–55.
+       - This re-confirms the earlier cut in brainstorm/01.
+    3. **The rotation count is top + bottoms + shoes combos the rules rate "Put together" (7.0) or better at Everyday; a layer never multiplies it.** This settles the 04-logic open question: the mockup's 37 can't be reproduced, and counting layers gives about 180 for 16 pieces.
+    4. **Unworn outfits show no score or score word.** This extends the morning card's "no predicted score" rule (02). Worn outfits show their real score. Scores rank the list but are never displayed for unworn outfits.
+    - **Also approved with it:**
+      - Each piece's screen (C2) gets "Goes with", the 3 best outfits built around that piece (`pickOutfit` with it pinned), plus worn count, last worn and outfit count, then "Style this", which opens Stylist.
+      - Outfits view: occasion chips; "Try next" (not yet worn, best first) and "Your go-tos" (worn).
+      - Tapping an outfit opens "Wear this", which goes to Stylist.
+      - A thin-closet state that names the next check or buy and never says the closet is lacking.
+    - **Engine:** a top-N variant of `pickOutfit` (keep a sorted list, not `best`), and `rotation()` returning item ids. No AI and free on every plan. About 3.5 days on top of the tab.
+    - **Deferred to v1.1:** the swipe shuffle ("pin one, shuffle the rest"); no retention evidence was found.
+    - **Owner:** the style-council session owns the Closet tab (CLAUDE.md). This entry is its UI brief.
+    - **Research gap:** Reddit wasn't reachable by Claude's tools. A Codex prompt was given to the founder; its findings may refine copy and details, not these four calls.

@@ -205,7 +205,7 @@
    - **"Scored for" on every result** (#61): the card shows the occasion + style it was scored for. A plain-words line and a Why section appear only when the style actually changed the score. One style per check, never a blend.
    - **Changing the style or occasion after a score asks first** (#62): "Re-score for smart casual? It would be 7.0 instead of 8.0." Keep or Re-score. It updates the same card, never a new one.
    - Step-by-step plan: `handoff/05-build-plan.md` §MC (MC1–MC11), about 5.5 days.
-3. **Closet tab: owned by the style-council session** (founder, Oct 8). It covers the closet call, shade matching, photo crops and the tab itself, with migration V5. The UI session doesn't plan it. It keeps the outfit picker's inputs (ClosetItemRow slot, garment, hex) and the Closet ScrollView first, so the tab bar can shrink. Photo-adding items and "Should I buy this?" are still v1.1.
+3. **Closet tab: owned by the style-council session** (founder, Oct 8). **Shape approved Oct 8 (#84, `mockups/closet-concepts.html`):** Pieces | Outfits in Closet, a standing outfit (no avatar), "Goes with" on each piece, the count = combos rated Put together+ (layers don't multiply), and no scores on unworn outfits. It covers the closet call, shade matching, photo crops and the tab itself, with migration V5. The UI session doesn't plan it. It keeps the outfit picker's inputs (ClosetItemRow slot, garment, hex) and the Closet ScrollView first, so the tab bar can shrink. Photo-adding items and "Should I buy this?" are still v1.1.
 4. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
 5. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.
 6. **Lookbook**, then **You** (incl. "Delete all my data"; reuses P4's pieces).
@@ -260,7 +260,7 @@ P5's real size is about 6.5 days, not 05's 2.
   - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
-- **Closet tab shape (research Oct 8, `mockups/closet-concepts.html`):** OK or veto 4 calls: (1) combinations live in Closet as Pieces | Outfits (no 5th tab, Lookbook stays history); (2) no avatar, a "standing outfit" of his own garment tiles, his real photo on worn outfits; (3) the rotation count = top+bottoms+shoes combos rated Put together or better, layers don't multiply (replaces the unreproducible 37); (4) no numbers on unworn outfits. Plus "Goes with" (3 best outfits) on each piece. Engine is `pickOutfit` top-N; about 3.5 days on top of the tab. Hand to the style-council session once decided.
+- **Codex research on closet apps (Reddit/TikTok):** prompt given Oct 8; paste the results into `inputs/closet-research-codex.md`. It refines details only; the four Closet calls are approved (#84).
 - **Mic permission text** (outward-facing; in `app/app.config.ts`): "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
 - **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator. The same reinstall brings the 12 MP camera (#83): take a few Propped and Mirror shots while Claude watches the log.
 - **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Scored for"): greetings, weather lines, why lines, the "Going with your own?" row, the re-score alert, and the style names (Minimal, Sporty, Outdoorsy; the council approved "Outdoor" and "Classic prep" for onboarding, so pick one set).
@@ -339,7 +339,7 @@ Exceptions:
 | `rubric/v4.md` (v3.md superseded), `extraction-test/` | Style rules in plain words; the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
 | `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |
-| `mockups/closet-concepts.html` | Closet tab research (Oct 8): where combinations live, avatar verdict, wireframes, sources | Proposal; waiting on the founder |
+| `mockups/closet-concepts.html` | Closet tab research (Oct 8): where combinations live, avatar verdict, wireframes, sources | Approved (#84); the UI brief for the Closet tab |
 | `speed-and-detail-plan.md`, `testing-plan.md` | Vision speed plan; the 5 validation tests | Reference |
 | `demo-app-spec.md` | Older product spec | Stale; overridden by everything above |
 | `handoff/archive/` | Superseded docs (the original handoff brief, review notes, the P2 plan, the SwiftUI starter) | History only; don't follow |
