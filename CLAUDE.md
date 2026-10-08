@@ -48,7 +48,7 @@
 - **Tabs:** Stylist (chat) · Closet · Lookbook · You. **Do things in Stylist; look at things in the other tabs.**
 - **Scoring:** "**The AI sees, the code judges, the AI explains.**"
   - The vision model only describes garments.
-  - Code (`@kitted/core`, the TypeScript port of `extraction-test/rubric.py` v3.1) computes **score = 7.0 + credits − mistakes**, rounded to the nearest half.
+  - Code (`@kitted/core`, the TypeScript port of `extraction-test/rubric.py` **v4.0**, live Oct 8; plain words `rubric/v4.md`) computes **score = 7.0 + credits − mistakes**, rounded to the nearest half.
   - The best possible score is **9.5** for now.
   - Same photo → same score. Re-checks reuse the first reading.
   - **"Not quite right?"** lets him correct a detail.
@@ -98,7 +98,7 @@
   - Demo links: `/demo/screen/<n>` on web; `-demoScreen <n>` as an iOS launch argument.
   - SQLite with migrations (V3). The web preview uses an in-memory store with the same interface.
 - **The scoring engine** (`app/packages/kitted-core`, pure TypeScript):
-  - Matches `rubric.py` on all **5,694** parity cases.
+  - Rubric v4.0 (engine 4, Oct 8, DECISIONS-LOG #81): matches `rubric.py` bit for bit on all **7,146** parity cases, and the one-quick-tap `askQuestion` on all of them. It also exposes `detectStyles` (the "Reads as …" label); the tap UI and the label UI aren't built yet. Under v4 a picked style never changes a score, so "Scored for" never shows.
   - It also has the day key (4 am rollover), the "Why" ledger, closet matching, re-check outcomes, corrections and partial-check merges.
 - **P2, Stylist chat and the fit check: done (Oct 7).** It works on the iPhone Simulator and matches mockup screens 6–12 closely:
   - **Screen 6:** the reading card.
@@ -130,7 +130,7 @@
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
   - Purchases: the paywall runs on a mock store (P6).
-- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 94 core tests and 155 app tests (incl. automated copy checks). All green (Oct 8).
+- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 102 core tests and 156 app tests (incl. automated copy checks). All green (Oct 8).
 
 ### Other workstreams
 - **Extraction test PASSED (Oct 6).** Log: `extraction-test/results/INDEX.md`.
@@ -142,7 +142,7 @@
     - Use `/usr/bin/python3`.
     - Set the key with `read -s GEMINI_API_KEY && export GEMINI_API_KEY`.
     - Turn billing on (the free tier allows 20 calls a day).
-- **Rubric v3:** `rubric/v3.md`. Waiting for my review, including 2 decisions: whether a 10 should be reachable, and human calibration.
+- **Rubric v4:** `rubric/v4.md` (v3 superseded). Open for the gold set: the 7.0 starting point vs 6.75, whether 9+ needs a standout piece (RULEBOOK Part 10).
 - **Rubric research: proportions, color, style types (done Oct 7).** Report: `rubric/research/proportions-color-style.md` (notes in `rubric/research/notes/`). Verdict: v3.1 already covers most well-supported rules, so no rewrite.
   - **Real gaps** (each needs one new coarse reading from the model): baggy jeans stacked on purpose are read as "pooling"; a thin shoe under a wide leg; top and bottom in different colors at the same middle lightness ("muddy").
   - **Bug (confirmed in code):** style exemptions need a weight ≥0.5, and onboarding gives only the 1st pick 0.5. So Streetwear picked 3rd unlocks nothing (his baggy jeans lose 0.8). Fix proposed: any picked style unlocks it when the garment is one of that style's pieces.
@@ -156,7 +156,7 @@
     - One garment earns one credit.
     - The "Jeans or sweatpants?" tap asks on about 4% of checks.
   - **My Oct 7 outfit:** 3.5 → 6.5 read as jeans (5.0 plus the tap if misread). Saved checks at 8+: 53% → 44%. The remaining over-scoring is the 7.0 starting point, which the friend panel decides.
-  - **Not in the app yet.** Next: port the code-only rulings to `rubric.py` and `@kitted/core` (parity fixtures regenerated from `rubric.py`), then one batch of new readings (`stacked` hem, `denim_wear`, closet-only shade/details/logo text) with an extraction re-run.
+  - **Code-only rulings ported Oct 8 (#81):** live in `rubric.py` v4.0 and the app. Port check `check_port.py`: 100% vs the prototype. 80 of 181 demo cases changed; the p01b 8.0 → 9.0 story didn't. Differs from mockup: welcome s15 8.5 → 8.0; screen 7's next-level line (p01b reads as minimal). Next: the tap and label UI, then one batch of new readings (`stacked` hem, `denim_wear`, closet-only shade/details/logo text) with an extraction re-run.
   - **Also found Oct 7:**
     - The camera captures video-size frames (`sessionPreset = .high`), not full-resolution photos.
     - Closet matching merges light grey, grey and charcoal into one color.
@@ -322,7 +322,7 @@ Exceptions:
 | `handoff/p2-design-spec.md` | Measured spec for the chat and cards (screens 6–12) | Reference |
 | `mockups/kitted-mockups.html` | The visual source of truth | Reference |
 | `app-build-spec.md` | Engineering spec: pipeline, proxy (Cloudflare Worker + D1), milestones M0–M4. Its SwiftUI parts are replaced by 05/06 | Reference, partly stale |
-| `rubric/v3.md`, `extraction-test/` | Style rules in plain words; the vision test tools and results | Reference |
+| `rubric/v4.md` (v3.md superseded), `extraction-test/` | Style rules in plain words; the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
 | `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |
 | `speed-and-detail-plan.md`, `testing-plan.md` | Vision speed plan; the 5 validation tests | Reference |

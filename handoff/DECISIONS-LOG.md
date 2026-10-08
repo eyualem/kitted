@@ -299,3 +299,21 @@ Contradictions settled and decisions changed during the build. Newest last.
     - The morning card's style pill stays. It steers outfit ideas and breaks label ties.
     - Under v4, `styleEffects()` finds no differences, so the "Scored for" line hides itself.
     - Same photo, same score, whatever he picked.
+
+## Oct 8, 2026 · Rubric v4.0 goes live (style council, code-only rulings)
+
+81. **Rubric v4.0 is live in `rubric.py` and in the app's `@kitted/core` (engine 4); founder approved Oct 8.** Scope: the switches tagged B ("before beta") in `rubric/research/style-council/rubric_v4_proto.py`, i.e. only rulings that read today's v3 reading format. Plain words: `rubric/v4.md`; reasons: `RULEBOOK.md`. v3.1 frozen at `extraction-test/rubrics/rubric_v3_1.py`.
+    - **Port proven:** `rubric/research/style-council/check_port.py` compares the live `rubric.py` with `rubric_v4_proto.score(F=BEFORE_BETA)` and `ask_question` on 2,247 unique readings (every saved run, demo readings + variants, `cases.json`, the phone checks, the parity edge/fuzz set) × 15 occasion keys × 8 style mixes (none, new keys, old keys) × 3 boldness levels: **808,920 / 808,920 scorings and 269,640 / 269,640 taps identical** (overall, raw to 1e-9, every output key, detected styles, label). Phase-2 markers (`schema: "v4"`) are dropped first: v4.0 ignores the planned new fields.
+    - **TypeScript:** `npm run verify` bit-exact on all 7,146 parity cases, and `askQuestion` matches on all 7,146 (708 ask); 181/181 demo cases, 24/24 mockup checks, fixes, re-checks, corrections, partials, rotation all pass. `npm run check`: typecheck, lint, 102 core tests, 156 app tests green. The parity set now reads only git-tracked result files (a run still writing can't make it unreproducible) plus the council's cases.
+    - **New rule ID:** `F4_hem_drags_over_slides` (−0.4). Fixes: "Cuff them once" (Free) or "Swap the slides for chunky sneakers". The loungewear ladder keeps `O4_loungewear_out`; new fix options "Swap the {running shoes/slides} for low-profile sneakers" (a real shoe is a sign of intent). New next-level line for outfits that read minimal: "Mix textures or shades, like a knit or suede. No score change today." New Why strings (in `addedInBuild`): the new rule, and two reasons a credit wasn't earned ("that piece already counts once", "not while it's stained or worn").
+    - **Decided in the port (Claude):**
+      - The fix engine and Rotation use the bands the score uses (default + the outfit's detected styles), never his picks; a fix target is the nearest whole step inside any accepted band.
+      - `ask_question` takes an optional boldness (default "a little", as in the prototype) so the tap's two scores match the card.
+      - The Why ledger keeps adding up: the per-garment cap and the 5.0 floor go into the existing "Score limits" row; the ledger also reports them separately (`capReturned`, `floorLift`) for a later row.
+      - Stored `rubricVersion` on checks is now 4.0.0.
+    - **Demo numbers:** 80 of 181 demo cases change score. The main story is unchanged: p01b 8.0 Sharp → fix → 9.0 at Date, "Score stays 8.0" on the correction, re-check +1.0, s24 partial 6.5 → 7.0.
+    - **Differs from mockup because rubric v4:**
+      - Screen 1 (welcome hero, s15): **8.5 → 8.0** (still "Sharp"). Wide trousers sit outside the general band; picks no longer widen it.
+      - Screen 7 (p01b result): the next-level line **"One standout color, like a rust tee." → "Mix textures or shades, like a knit or suede."** p01b reads as minimal (ruling 37). The score and the fix are unchanged.
+      - Not drawn in the mockups but visible in the demo: s24 with white sneakers picked from Closet 7.0 → 6.5 (demo screen 22); demo screen 33 "Scored for streetwear" now shows no line (picks never change a score); the seeded Oct 12 correction (FC1) is 9.0 before and after (was 8.5 → 9.0); onboarding photos s14 8.0 → 8.5, s10 7.5 → 8.0, s09 6.5 → 7.0, s22 7.5 → 7.0, s25 7.5 → 7.0 (scores not drawn on those tiles).
+    - **Not in this step:** the new reading fields and values (N, G, X switches), the tap UI, the "Reads as …" label on the card, onboarding renames (Classic prep, Outdoor).
