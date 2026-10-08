@@ -11,6 +11,7 @@ import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimat
 import { router, useFocusEffect } from 'expo-router';
 import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
+import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
 import { sessionClock } from '@/state/session';
@@ -132,6 +133,25 @@ export function StylistScreen() {
       return () => sub.remove();
     }, []),
   );
+
+  // A new check (his photo lands in the thread) always brings the thread down to it, even if he'd
+  // scrolled up to an older card: from here it follows the reading and then the score as they grow.
+  // The first load only records where things stand; the camera cover closes before we scroll.
+  const newestPhoto =
+    loaded === undefined
+      ? undefined
+      : messages.reduce<ChatMessage | null>((a, m) => (m.role === 'user' && m.kind === 'photo' && (!a || m.createdAt >= a.createdAt) ? m : a), null)?.id ?? '';
+  const seenPhoto = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    if (newestPhoto === undefined) return;
+    const before = seenPhoto.current;
+    seenPhoto.current = newestPhoto;
+    if (before === undefined || before === newestPhoto) return;
+    atBottom.current = true;
+    follow.set(1);
+    const timer = setTimeout(() => toEnd(true), SHEET_DISMISS_MS);
+    return () => clearTimeout(timer);
+  }, [newestPhoto, toEnd, follow]);
 
   const action = usePendingStylistAction();
   useEffect(() => {
