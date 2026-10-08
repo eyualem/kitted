@@ -504,7 +504,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 **Interactions**
 | Element | Action |
 |---|---|
-| Occasion chip | Menu of the 7 occasions. Picking one re-scores in code, free; the card updates in place (`8.0 → 7.5` animates as a cross-fade) |
+| Occasion chip · Style chip (#61) | Native pull-down menus (occasions incl. `Going out`; styles). **After the score has landed, picking one asks first** (#62): a native alert `Re-score for {choice}?` · message `Same photo. It would be {new} instead of {old}.` (or `Same photo. The score stays {old}.`) · buttons `Keep {current}` (cancel) / `Re-score` (default). Re-score → the same card updates in place (`8.0 → 7.0` cross-fade), a footnote `Re-scored · was {old} for {previous}` appears under the links, the Why sheet and Lookbook follow. Keep → nothing changes. Free, never uses a check, never a new card. While the reading card is still scoring (S5 chips), changes stay instant with no alert (no score to contradict yet). |
 | Photo bubble / card photo | S13 photo viewer |
 | Review | Sheet S11 (never switches tabs) |
 | Re-check after fixing | Posts the stylist line for S6r (`Overshirt on? Send it. I'll only re-read the layer.`) and opens S2 in the same mode, occasion locked. Hidden after the window closes (30 min; **first-ever check: until 4 am**, ruling 22) or once used |
@@ -733,29 +733,58 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 ---
 
+### S6s · "Scored for" (decided Oct 7, DECISIONS-LOG #61–62; applies to S6, S6p, S6r and the Why sheet S8)
+- **One style per check, never a blend.** The rubric gets `[[style, 1]]`:
+  - from the morning/evening card, the card's style;
+  - from the composer's Check my fit, his first onboarding style;
+  - with no styles ("Not sure"), no style, labelled `Scored by the general standard`.
+- The rule is: same photo + occasion + style → same score.
+- **Card tagline right side:** occasion pill + style pill (`Going out` · `Streetwear ⌄`), both pull-downs. After the score lands, a change asks first (see D7's chip row).
+- **"Scored for" line** (only when the style changed the result; never otherwise): a `surface2` inset (radius 12, pad 8 / 10) with `tag` 14 `ink2` + `.footnote` `ink2`, under the summary, above the fixes. Template from the first style effect:
+  - `Scored for streetwear: the oversized hoodie is on-style here, so it didn't cost you.`
+  - `Scored for smart casual: the roomy top reads a little loose for it.`
+- **How "changed the result" is decided** (code): core `styleEffects(reading, opts)` scores twice, with the style and with no style. It returns the rules whose amount differs (rule, garment, with-style amount, without-style amount). Empty → no line and no Why section.
+- **Why sheet (S8):**
+  - The point rows and the total are unchanged and still add up.
+  - Below the total: a section header `Scored for {style}` and one row per style effect:
+    - `{Garment}` over `On-style for {style}. General standard: −0.5` with a trailing `not counted`;
+    - or, for a cost, `Tighter for {style}` with the amount shown in the rows above.
+  - Last line: `Change the style on the card to see it scored another way.`
+- **Never:** "wrong style", a penalty for mixing styles, or the AI judging style. Style only adjusts the general standard (rubric research #57).
+
 ### S1d · The morning card (decided Oct 7, DECISIONS-LOG #58; replaces the quick-start row)
 *Differs from mockup 12 because the founder found the chip row above the composer cramped. Once a day the stylist opens with the weather and an outfit instead.*
 
-- **When:** posted as a stylist message the first time Stylist is shown after the 4 am day rollover, one per day key. Before 4 pm it plans today ("Morning." / "Afternoon."); from 4 pm it plans tomorrow ("Evening. For tomorrow:"). Never re-posted on later opens that day.
+- **When: two moments a day** (founder, Oct 7, #60). Each is posted as a stylist message the first time Stylist is shown in its window, at most once per day key and slot:
+  - **Day card,** 4 am to 4:59 pm: plans today (`Morning.` / `Afternoon.`).
+  - **Evening card,** 5 pm to 3:59 am: plans tonight (`Evening. Heading out?`). Default occasion `Going out`. The weather strip shows tonight (`58° at 8 pm · 51° by midnight · dry`, `moon` symbol at night). The camera row reads `Check it before you head out`. It's posted even if he checked a day fit; a check after 5 pm collapses it.
+  - `Staying in` in the occasion menu collapses the evening card to `Staying in tonight`. **After 3 evening cards in a row are skipped or ignored, evening cards stop auto-posting.** Picking an evening occasion on any card turns it back on.
+  - Tomorrow's outfit comes from the morning N1 notification, not an evening card.
 - **Locked per day:** the outfit for a day key is picked once and stored. The same day shows the same idea in the card and the N1 notification. "Swap one" and an occasion change re-pick deliberately. The notification for the next 3 days is planned from the daily forecast on each app open.
 - **Greeting** (template, no AI): `{Morning|Afternoon|Evening}. {weather phrase}`, e.g. `Morning. Cold start, warm afternoon, rain tonight.` / `Morning. 48° and cloudy, a layer kind of day.` Without weather: `Morning. An easy one for {occasionWord} today:` (the old line).
 - **Card** (KCard):
-  1. Tagline: `Today · {Occasion}` (the occasion is tappable → the occasion picker; weekdays default to his Class/Work, weekends to Everyday) / right `From your closet` (or `{n} pieces so far` when thin).
+  1. Header: `Today` / `Tonight` (mono tagline) + two pull-down pills (native iOS menus via `@expo/ui`; no new package):
+     - **Occasion pill:** Everyday · Class/Work · Date · Going out · Interview · Event · Staying in (evening only). Weekday days default to his Class/Work, weekends to Everyday, evenings to Going out.
+     - **Style pill** (#61): `Your styles` (his onboarding picks) then `More styles`: Streetwear · Smart casual · Minimal · Workwear · Old money · Sporty · Outdoorsy (rubric ids streetwear, smart_casual, minimalist, workwear, old_money + preppy merged per #57, vintage_sport, gorpcore). The default is his first style. The last pick is remembered separately for the day and evening cards.
+     - **On this card, changes re-pick instantly with no alert** (it's a suggestion, not a score).
+     - **Same outfit after a change:** why line `Same pick works for {style}.`
+     - **Closet can't do the style:** `Closest {style} I can make from your closet.`
+     Right side: `From your closet` (or `{n} pieces so far` when thin).
   2. **Weather strip** (`surface2`, radius 12): SF Symbol for the condition · `{now}° now · {high}° high` · second line `Rain likely after 5 pm` / `Dry all day`. °F (US-only app). Tapping it does nothing.
   3. 4 garment tiles (as S1) with a dashed `You'd need: {item}` tile for a slot the closet can't fill (e.g. a layer when it's cold).
   4. **Why line** (`.subheadline`, `ink2`, one or two sentences, template): names the weather reason, e.g. `Overshirt for the cold walk; it comes off by noon. Boots over the white sneakers for the rain.`
   5. Actions: `Wear this` (primary) · `Swap one` (secondary). Tapping a tile pushes C2.
-  6. **"Your own fit" row** (founder, Oct 7, #59): below the actions, a full-width row inside the card above a 1 pt `line` divider (pad 12 / 16): camera circle 30 (`surface2`) · `Going with your own?` (`.subheadline`) over `Check it before you leave` (`.footnote`, `ink2`) · `chevron.right` (`ink3`). Tap → the camera (S2) with the card's occasion preset (`/camera?occasion=…&from=morning`). One 44 pt+ row, not a third button (the founder found 3-across cramped).
+  6. **"Your own fit" row** (founder, Oct 7, #59): below the actions, a full-width row inside the card above a 1 pt `line` divider (pad 12 / 16): camera circle 30 (`surface2`) · `Going with your own?` (`.subheadline`) over `Check it before you leave` (`.footnote`, `ink2`) · `chevron.right` (`ink3`). Tap → the camera (S2) with the card's occasion and style preset (`/camera?occasion=…&style=…&from=morning`); the check is scored for them (S6s). One 44 pt+ row, not a third button (the founder found 3-across cramped).
      - After `Wear this`: the card shows `Wearing this today` (check) and the row becomes `Dressed? Check it on` / `See how it fits on you`.
      - Free check already used today (non-Pro): the row reads `Your free check resets tomorrow` and opens S17's held flow, never a paywall push.
-     - Evening card (plans tomorrow): no row (he can't check tomorrow's fit tonight); actions `Wear this tomorrow` · `Swap one`.
+     - Evening card: the row reads `Going with your own?` / `Check it before you head out`.
   7. Footer: Apple's Weather mark + `Data sources` link (WeatherKit attribution, required). Only when live weather is shown.
 - **Closet states:**
   - **Enough** (a valid top + bottom + shoes for the occasion): as above.
   - **Thin** (some pieces, no valid outfit): the known pieces plus dashed tiles; why line `I only know {n} of your pieces. Check today's fit and I'll learn the rest.`; actions `Check my fit` (primary) · `Add basics` (→ C5).
   - **Empty** (new user): no tiles; `Send me today's fit and I'll start learning your closet.` + `Check my fit`. With consent declined, S26 instead.
 - **After a fit check today** (either path, or a check from the composer): the card collapses in place to one row: photo thumb 44 × 56 (radius 8) · `Today · {Occasion}` tagline over `You went with your own` / `You wore my pick` · his score (Archivo, `.title2`) with the score word under it. Tapping it scrolls to the full result card in the thread. Re-checks update the number.
-- **Past days:** cards from earlier day keys render collapsed (`Thursday's idea · Wore it` / `· Went with your own · 8.0` / `· Skipped`), so the thread doesn't fill with full cards.
+- **Past days and slots:** earlier cards render collapsed (`Thursday's idea · Wore it` / `· Went with your own · 8.0` / `· Skipped`), so the thread doesn't fill with full cards.
 - **Weather never changes the score** (#59). Same photo, same score on any day. Weather only adds one advice line under the result's fixes when relevant (`Rain tonight: boots over suede.`; `Cold out: bring the overshirt.`), from `weatherTip()` in core.
 - **No predicted score is shown on the idea** (#59). A number from closet items can differ from the photo's score, which undermines trust in the score.
 - **Location ask** (once, inside the first card that would show weather): a row `Use your local weather?` + `Allow` → the system prompt (When In Use, reduced accuracy). Declined or not asked yet: no strip; the greeting and why line use the season ("October: bring a layer").

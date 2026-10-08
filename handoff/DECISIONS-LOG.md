@@ -173,3 +173,22 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **No predicted score on the idea:** a closet-based number can differ from the photo's score and would undermine trust.
     - **Evening cards** (planning tomorrow) have no camera row.
     - Build plan: 05 §MC.
+60. **Evening card instead of "plan tomorrow" after 4 pm** (founder, Oct 7: people plan for the night).
+    - **Two slots per day:** day (4 am–4:59 pm) and evening (5 pm–3:59 am). Each is posted once on the first open in its window.
+    - **The evening card plans tonight:** default occasion Going out, tonight's weather, and the camera row ("Check it before you head out").
+    - **Not nagging:** "Staying in" collapses it, and 3 skipped evenings in a row stop the auto-post.
+    - **Tomorrow** is covered by the morning notification.
+    - **New occasions:** `going_out` (already a rubric occasion) and the card-only `staying_in` join the app's occasion list.
+61. **Style pull-down on the card, and "Scored for" on results** (founder, Oct 7: show the style a fit was judged by and why).
+    - **Styles:** Streetwear, Smart casual, Minimal, Workwear, Old money (preppy merged, #57), Sporty, Outdoorsy. These are the rubric's existing style bands.
+    - **One style per check, `[[style, 1]]`, never a blend.** Why: a blend can't be explained in one line, and it has #57's tap-order bug. The source is the card's style; otherwise his first onboarding style; with none, the general standard.
+    - **When the line shows:** `styleEffects()` scores with and without the style. The "Scored for" line and the Why section show only when the rule amounts differ, so the app never claims the style mattered when it didn't.
+    - **The Why rows still add up.** Switched-off rules show as "not counted" with the general-standard amount.
+    - **Never:** "wrong style", a mixing penalty, or the AI judging style.
+    - **The pull-down** uses `@expo/ui`, already installed, so no new package.
+62. **Re-scoring after a change asks first, and updates the same card** (founder, Oct 7: a 7.5 labelled streetwear must never sit under a different style label).
+    - **When:** after a score has landed, changing the occasion or the style opens a native alert with the preview: "Re-score for smart casual? Same photo. It would be 7.0 instead of 8.0." Buttons: "Keep streetwear" / "Re-score".
+    - **Keep changes nothing.** The label and the score always match.
+    - **Re-score updates the card in place** with a "Re-scored · was 8.0 for streetwear" footnote. Why, Lookbook and Share follow.
+    - **Same card, not a new one** (founder left it to Claude). It's the same photo and the same reading, with no AI call and no check used. A second card would look like a second check, double the Lookbook entry and clutter the thread. The footnote keeps the history honest.
+    - **This changes D7:** the occasion chip used to re-score instantly after the score. Before the score lands (the S5 chips) changes stay instant. On the morning/evening card (a suggestion, not a score) changes re-pick instantly.

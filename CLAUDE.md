@@ -153,7 +153,7 @@
    - Fix the navy/black garment icons, which are near-invisible in dark mode.
    - Fix the sheet heights: "Not quite right?" opens too tall, "Which shoes?" too short.
    - Give the empty tabs real empty states.
-2. **The morning card** (founder, Oct 7; DECISIONS-LOG #58; spec in `handoff/02-screens.md` "S1d"), about 3 days on demo weather. This replaces the suggestion buttons above the text box.
+2. **The morning and evening cards + "Scored for"** (founder, Oct 7; DECISIONS-LOG #58–62; spec in `handoff/02-screens.md` "S1d" and "S6s"), about 5.5 days on demo weather. This replaces the suggestion buttons above the text box.
    - **What it is:** once a day the stylist greets him with the weather and a card holding an outfit from his closet. Code picks the outfit; templates write the words.
    - **Sources:** weather from Apple WeatherKit; location asked inside the card, approximate only.
    - **Steps:**
@@ -163,7 +163,11 @@
      - **(d) Native location + WeatherKit.** It works only after the $99 enrollment, so demo weather until then.
    - **"Going with your own?" row** (founder, Oct 7, #59): a row at the bottom of the card opens the camera with today's occasion set. After "Wear this" it becomes "Dressed? Check it on". After any check that day the card shrinks to one line with the score.
    - Weather never changes the score, only adds a tip. No predicted score on the idea.
-   - Step-by-step plan: `handoff/05-build-plan.md` §MC (MC1–MC9).
+   - **Two cards a day** (#60): a day card from 4 am, and an evening card from 5 pm that plans tonight ("Heading out?", default Going out). Evening cards stop auto-posting after 3 skipped nights.
+   - **A style pull-down on the card** (#61): Streetwear, Smart casual, Minimal, Workwear, Old money, Sporty, Outdoorsy; his onboarding styles listed first.
+   - **"Scored for" on every result** (#61): the card shows the occasion + style it was scored for. A plain-words line and a Why section appear only when the style actually changed the score. One style per check, never a blend.
+   - **Changing the style or occasion after a score asks first** (#62): "Re-score for smart casual? It would be 7.0 instead of 8.0." Keep or Re-score. It updates the same card, never a new one.
+   - Step-by-step plan: `handoff/05-build-plan.md` §MC (MC1–MC11), about 5.5 days.
 3. **Closet tab** (on demo data, while I phone-test); it reuses the outfit picker from step 2. Tiles use the garment icons in the item's color, not photo cut-outs. Photo-adding items and "Should I buy this?" go to v1.1.
 4. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
 5. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.

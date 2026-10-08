@@ -547,7 +547,7 @@ The founder tests on his own iPhone with a development build (free Apple ID "Per
 
 **Tests:** request builder and response parser (fixtures from `extraction-test/results`), prompt/schema drift, the crop math, the Release-key guard; Simulator screenshots for A; an on-phone checklist for B–D.
 
-### MC · The morning card (about 3.5 days + 0.5 after Apple enrollment; added Oct 7, DECISIONS-LOG #58–59; spec 02 "S1d")
+### MC · The morning and evening cards + "Scored for" (about 5.5 days + 0.5 after Apple enrollment; added Oct 7, DECISIONS-LOG #58–62; spec 02 "S1d", "S6s")
 Built after the quick-fix batch and before Closet (it creates the outfit picker Closet reuses). Runs on demo weather until the paid developer program is active.
 
 1. **MC1 · Core `weather.ts`** (0.25 d)
@@ -600,13 +600,12 @@ Built after the quick-fix batch and before Closet (it creates the outfit picker 
    - The result card shows the `weatherTip` line under the fixes when there's live weather or the season.
    - *Check:* the occasion is preset; the score is unchanged by weather (test).
 8. **MC8 · Demo screens and verification** (0.25 d)
-   - **Screens:**
+   - **Screens** (30 is the evening card):
      - **25:** enough, cold + rain (morning).
      - **26:** thin closet.
      - **27:** new user, empty.
      - **28:** after Wear this.
      - **29:** collapsed after his own check (8.0 Sharp).
-     - **30:** evening (plans tomorrow).
      - **31:** location ask.
    - **Copy:** new strings go in `en.ts` → `addedInBuild` for the founder to skim.
    - **Final pass:** `npm run check`, then Simulator screenshots in light and dark plus AX5, then the CLAUDE.md status.
@@ -621,7 +620,26 @@ Built after the quick-fix batch and before Closet (it creates the outfit picker 
      - the WeatherKit entitlement
    - **Privacy label:** add Coarse Location (App Functionality, not linked, no tracking).
    - *Check on his phone:* the strip matches the Weather app within 2°.
-10. **Later (P6):** N1 notifications for the next 3 days are planned from the daily forecast and read the locked idea, so the card and the notification always agree.
+10. **MC10 · Evening slot + style pill** (1 d, #60–61)
+    - **Data:** `daily_ideas` keyed (dayKey, slot day|evening), plus kv for the evening-ignore count and the last style per slot.
+    - **Occasions:** add the `going_out` and `staying_in` occasions to the app's list. `going_out` already exists in the rubric; `staying_in` is card-only and never scored.
+    - **Weather and pills:** an evening weather window (8 pm and midnight); the `StylePill` and `OccasionPill` pull-downs (`@expo/ui` menu; check its iOS 26 rendering first).
+    - *Check:* service tests for 4:59/5:00 pm and the 3-ignore stop; demo screens 30 (evening) and 32 (style menu open).
+11. **MC11 · "Scored for" + confirm before re-score** (1 d, #61–62)
+    - **Core:**
+      - `styleEffects(reading, opts)`: score with the style and without, then diff the rule amounts.
+      - A single-style input for checks, `[[style, 1]]`.
+      - Parity: `rubric.py` already accepts any styles dict, so no fixture changes.
+    - **App:**
+      - `fit_checks.style` (migration) and the style passed from the camera params.
+      - The card's style pill and the "Scored for" inset.
+      - The Why sheet section.
+      - The native confirm alert with the preview score for occasion and style changes after scoring.
+      - The `Re-scored · was …` footnote.
+    - *Check:*
+      - Tests: the line shows only when the effects are non-empty; the Why rows still sum; Keep leaves the row untouched; Re-score updates the card, Why and Lookbook in place with no new message.
+      - Demo screens 33 ("Scored for" line) and 34 (re-score alert).
+12. **Later (P6):** N1 notifications for the next 3 days are planned from the daily forecast and read the locked idea, so the card and the notification always agree.
 
 ### P4 · Onboarding (about 1.5 days)
 **Build** (screen IDs from `02` §1.6; app-build-spec's O4–O8 numbering is different, so ignore it): the `onboarding/` Stack presented as a `fullScreenModal` with Back, no X: O1 Welcome (screen 1) → O2 Pick looks (screen 2, max 3, a 4th tap shakes with "Up to 3.", "Not sure", O2n sheet) → O3 Basics (screen 3: **blank** birth-year wheel O3w as a `formSheet` with a wheel picker, Build/Fit preselected segmented controls, optional height stepper, the silhouette) → under 18 → **O4 age stop** + the secure-store flag → **O5 Consent** (screen 4, age-rules §3 text, "Agree & check my fit" / "Not now" at the same width) → first check: S2 camera → S5 reading → **S6 result** (O1e "See an example" uses s15; the scripted first check uses p01b) → S6r re-check or "Later" → **S14** "Your first 3 moves" → **P1 → P1b** 2-page paywall → **S15** notification ask ("Yes, pick a time" is the only path to the system prompt). The `stylist.aiNote` message is posted when onboarding ends (`02` D12). Save each step right away and resume on relaunch. Back is disabled after the first check is scored (`gestureEnabled: false`, no back button). Pick-look photos come from the bundled stock, each labeled by style and never by the person.
