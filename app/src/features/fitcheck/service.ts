@@ -141,8 +141,13 @@ export function createFitCheckService(deps: ServiceDeps) {
     } as ChatMessage);
 
   const insertReading = async (
-    reading: Reading, source: ReadingSourceKind, imageHash: string, derivedFrom: string | null, latencyMs = 0, model = 'demo-bundled', promptVersion = 'v3',
+    reading: Reading, source: ReadingSourceKind, imageHash: string, derivedFrom: string | null, latencyMs = 0, model?: string, promptVersion?: string,
   ) => {
+    // A derived reading (tap answer, correction, merge) keeps the model of the reading it came from, so a real
+    // Gemini read isn't logged as 'demo-bundled' once he answers or corrects it.
+    const parent = derivedFrom && (model === undefined || promptVersion === undefined) ? await store.readings.get(derivedFrom) : null;
+    model ??= parent?.model ?? 'demo-bundled';
+    promptVersion ??= parent?.promptVersion ?? 'v3';
     const row: ReadingRow = {
       id: deps.ids('R'), imageHash, source, reading, model, promptVersion, schemaVersion: 'v3',
       latencyMs, createdAt: clock.nowMs(), derivedFrom,

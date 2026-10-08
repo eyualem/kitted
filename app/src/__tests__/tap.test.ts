@@ -96,6 +96,7 @@ describe('answering', () => {
     expect(done.details.tap).toMatchObject({ answer: 'jeans', skipped: false });
     expect(done.details.tap!.answeredAt).not.toBeNull();
     const reading = (await store.readings.get(done.readingId!))!;
+    expect([reading.model, reading.promptVersion]).toEqual([(await store.readings.get(reading.derivedFrom!))!.model, 'v3']);
     expect([reading.source, reading.reading.garments[1]!.subcategory, reading.reading.garments[1]!.certainty]).toEqual(['tapAnswer', 'jeans', 'likely']);
     expect((await store.readings.get(reading.derivedFrom!))!.source).toBe('full');
     const jeans = (await store.closet.all()).find((c) => c.slot === 'bottom')!;
@@ -232,5 +233,16 @@ describe('around the question', () => {
     await svc.answerTap(id, 'jeans');
     expect((await store.usage.get('2026-10-21'))!.checks).toBe(1);
     expect((await quota.snapshot()).checksUsed).toBe(0);
+  });
+});
+
+describe('the derived reading keeps the model', () => {
+  it("a real read's answer is logged under that model, not 'demo-bundled' (Oct 8 phone pull)", async () => {
+    const { store, svc, id } = await asking();
+    const raw = (await store.readings.get((await store.fitChecks.get(id))!.readingId!))!;
+    await store.readings.put({ ...raw, model: 'gemini-3.8-flash', promptVersion: 'v3-test' });
+    const done = (await svc.answerTap(id, 'jeans'))!;
+    const answered = (await store.readings.get(done.readingId!))!;
+    expect([answered.source, answered.model, answered.promptVersion]).toEqual(['tapAnswer', 'gemini-3.8-flash', 'v3-test']);
   });
 });
