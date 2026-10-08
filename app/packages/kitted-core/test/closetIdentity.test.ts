@@ -182,6 +182,29 @@ describe("13. sneaker silhouettes", () => {
   });
 });
 
+describe("13b. shoe kinds: his answer names a kind, not a subtype (the shoe quick tap, A #110)", () => {
+  const shoe = (sub: string, extra: Partial<Observation> = {}) => G("footwear", sub, "grey", { shoe_profile: "regular", ...extra }) as Observation;
+  it("his boots read as 'other', then as slides -> ask, not a new piece (Oct 8: one pair became 'Grey shoes' + 'Grey slides')", () => {
+    expect(decide(shoe("slides_sandals"), [one("B", shoe("other"))])).toMatchObject({ outcome: "ask", candidateId: "B" });
+  });
+  it("he said boots: a work_boot pick matches his suede_chukka pick of the same pair, no question", () => {
+    const boots = { userConfirmed: { shoeKind: "boots" as const } };
+    expect(decide(shoe("work_boot", boots), [one("B", shoe("suede_chukka", boots))])).toMatchObject({ outcome: "same", itemId: "B" });
+  });
+  it("he said slides about a sighting -> never his boots", () => {
+    expect(decide(shoe("slides_sandals", { userConfirmed: { shoeKind: "slides" } }), [one("B", shoe("work_boot"))]).outcome).toBe("new");
+  });
+  it("he said boots about the piece; a later sneaker read of it is still another piece", () => {
+    expect(decide(shoe("low_profile_sneaker"), [one("B", shoe("work_boot", { userConfirmed: { shoeKind: "boots" } }))]).outcome).toBe("new");
+  });
+  it("two boot subtypes, nobody said -> ask", () => {
+    expect(decide(shoe("suede_chukka"), [one("B", shoe("work_boot"))])).toMatchObject({ outcome: "ask", candidateId: "B" });
+  });
+  it("sleek vs chunky still splits sneakers whatever the kind says", () => {
+    expect(decide(shoe("chunky_sneaker", { shoe_profile: "chunky" }), [one("S", shoe("white_leather_sneaker", { shoe_profile: "sleek" }))]).outcome).toBe("new");
+  });
+});
+
 describe("14. the demo story: p01b against the seed closet, v3 fields only", () => {
   it("what closetPlan wraps: tee and sneakers same; tan vs khaki chinos ask; held overshirt new", () => {
     const plan = reconcileReading(loadReading("p01b"), seedCloset());

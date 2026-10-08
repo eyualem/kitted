@@ -179,7 +179,15 @@ export function createClosetService(deps: ClosetServiceDeps) {
   function tapConfirmed(row: FitCheckRow): Map<number, ConfirmedFields> {
     const m = new Map<number, ConfirmedFields>();
     const tap = row.details.tap;
-    if (tap?.answer && !tap.skipped) m.set(tap.garmentIndex, { subcategory: tap.answer });
+    if (!tap?.answer || tap.skipped) return m;
+    // The shoe tap ("Boots, sneakers or slides?") confirms the kind he named, not the subtype code picked inside it.
+    const t = tap as { kind?: string; options: readonly { value: string; group?: string }[]; answer: string };
+    if (t.kind === 'shoes') {
+      const group = t.options.find((o) => o.value === t.answer)?.group;
+      if (group === 'boots' || group === 'sneakers' || group === 'slides') m.set(tap.garmentIndex, { shoeKind: group });
+      return m;
+    }
+    m.set(tap.garmentIndex, { subcategory: tap.answer });
     return m;
   }
 

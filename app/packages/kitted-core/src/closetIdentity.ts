@@ -48,6 +48,20 @@ function isFlip(a: string, b: string): boolean {
   return FLIP_PAIRS.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
 }
 
+/** The shoe kinds the quick tap asks about ("Boots, sneakers or slides?"). He names a kind, never a subtype. */
+export type ShoeKind = "boots" | "sneakers" | "slides";
+const SHOE_KINDS: readonly string[] = ["boots", "sneakers", "slides"];
+const SHOE_KIND: Readonly<Record<string, ShoeKind>> = {
+  work_boot: "boots", suede_chukka: "boots", chelsea_boot: "boots",
+  white_leather_sneaker: "sneakers", low_profile_sneaker: "sneakers", canvas_sneaker: "sneakers", retro_runner: "sneakers",
+  performance_runner: "sneakers", chunky_sneaker: "sneakers", basketball_sneaker: "sneakers",
+  slides_sandals: "slides",
+};
+/** A footwear subcategory's kind; null for "other" and for shoes outside the three kinds (loafers, derbies...). */
+export function shoeKindOf(subcategory: unknown): ShoeKind | null {
+  return typeof subcategory === "string" ? SHOE_KIND[subcategory] ?? null : null;
+}
+
 // ---------------------------------------------------------------- brands
 /** Brand id -> the words that name it (logo text, nicknames, the logo itself). Matched as whole words. */
 const BRANDS: Readonly<Record<string, readonly string[]>> = {
@@ -113,6 +127,8 @@ export interface ConfirmedFields {
   brand?: string;
   details?: Detail[];
   shadeKey?: ShadeKey;
+  /** The shoe quick tap: he said "boots", not which boots (the subtype stays the model's or code's guess). */
+  shoeKind?: ShoeKind;
 }
 
 /**
@@ -194,6 +210,8 @@ interface Obs {
   sampledL: number | null;
   dim: boolean;
   notItemIds: string[];
+  /** His shoe-kind answer for this sighting (null: not asked). */
+  shoeKind: ShoeKind | null;
 }
 
 const str = (v: unknown): string | null => (typeof v === "string" && v !== "" ? v : null);
@@ -240,6 +258,7 @@ function readObs(o: Observation): Obs {
     sampledL,
     dim: o.lighting === "dim",
     notItemIds: Array.isArray(o.notItemIds) ? o.notItemIds.filter((x): x is string => typeof x === "string") : [],
+    shoeKind: oneOf(c.shoeKind, SHOE_KINDS) as ShoeKind | null,
   };
 }
 
@@ -376,7 +395,16 @@ export function identity(obsIn: Observation, item: ItemProfile): IdentityResult 
   }
   if (o.subcategory === null || isub === null) vetoes.push("subcategory");
   else if (o.subcategory !== isub && !item.aliases.includes(o.subcategory)) {
-    if (isFlip(o.subcategory, isub)) add("subcategory_lookalike", -3, true);
+    // Shoes: his kind answer ("boots") beats the subtype the model or code guessed; "other" is an unknown type.
+    const shoes = o.slot === "shoes";
+    const ok = shoes ? o.shoeKind ?? shoeKindOf(o.subcategory) : null;
+    const ik = shoes ? item.confirmed.shoeKind ?? shoeKindOf(isub) : null;
+    const saidKind = o.shoeKind !== null || item.confirmed.shoeKind !== undefined;
+    if (shoes && saidKind && ok !== null && ik !== null && ok !== ik) vetoes.push("shoe_kind");
+    else if (shoes && o.shoeKind !== null && ok === ik) add("shoe_kind_confirmed", 0);
+    else if (isFlip(o.subcategory, isub)) add("subcategory_lookalike", -3, true);
+    else if (shoes && ok !== null && ok === ik) add("shoe_same_kind", -1, true);
+    else if (shoes && (o.subcategory === "other" || isub === "other")) add("shoe_type_unknown", 0, true);
     else vetoes.push("subcategory");
   }
 
