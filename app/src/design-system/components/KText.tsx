@@ -40,6 +40,9 @@ export interface KTextProps {
   /** Mono labels only: honours MONO_UPPERCASE_AT_NORMAL_SIZES. */
   monoCase?: boolean;
   numberOfLines?: number;
+  /** iOS: shrink (down to minimumFontScale) instead of clipping when the text can't fit. */
+  adjustsFontSizeToFit?: boolean;
+  minimumFontScale?: number;
   style?: StyleProp<TextStyle>;
   allowFontScaling?: boolean;
   maxFontSizeMultiplier?: number;
@@ -90,6 +93,8 @@ export function KText(props: KTextProps) {
       allowFontScaling={props.allowFontScaling ?? true}
       maxFontSizeMultiplier={props.maxFontSizeMultiplier}
       numberOfLines={props.numberOfLines}
+      adjustsFontSizeToFit={props.adjustsFontSizeToFit}
+      minimumFontScale={props.minimumFontScale}
       accessibilityRole={props.accessibilityRole}
       accessibilityLabel={a11yLabel}
       accessible={props.accessible}

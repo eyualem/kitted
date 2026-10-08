@@ -108,6 +108,11 @@ export function KButton({
               role={large ? 'buttonLarge' : 'button'}
               color={fg}
               maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
+              // AX sizes: up to 2 lines, then shrink to fit. A button sharing its row (the card's
+              // "Re-check after fixing" + share) was still measured too wide and clipped ("…fixi").
+              numberOfLines={isAccessibilitySize ? 2 : undefined}
+              adjustsFontSizeToFit={isAccessibilitySize}
+              minimumFontScale={0.7}
               style={[{ textAlign: 'center' }, isAccessibilitySize ? { alignSelf: 'stretch' } : { flexShrink: 1 }]}
             >
               {title}
