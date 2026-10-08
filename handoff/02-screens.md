@@ -857,6 +857,15 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 ---
 
 ### D15 · C1 Closet
+> **Update Oct 8 (DECISIONS-LOG #84, #87, #88; wireframes `mockups/closet-concepts.html`). These override the layout below where they differ:**
+> - **Pieces | Outfits** segmented control under the title. It opens on **Outfits once he can make 3+ outfits**, otherwise on Pieces, then remembers his last pick. Pieces is the layout below; the rotation card opens Outfits (not C6).
+> - **Outfits:** occasion chips; `Try next` (not yet worn, best first, **no score shown**) and `Your go-tos` (worn: his kept photo + real score). Each outfit is a "standing outfit" tile (top / bottoms / shoes stacked, layer at the side) with a plain reason line from templates. Tap: `Wear this` → Stylist.
+> - **Rotation count:** top + bottoms + shoes combos rated Put together (7.0+) at Everyday; layers don't multiply it.
+> - **No outfits yet** (no top, bottoms or shoes): `No outfits yet` + a 3-row checklist (Top · Bottoms · Shoes, missing slot named: "Add shoes and you'd have {n} outfits") + `Scan a piece` (if built) · `Tap basics you own` · `Describe it` · `Check my fit`. Replaces `closet.rotation.locked`. 1–2 outfits: "{n} outfits so far" with the next unlock.
+> - **C2 (piece):** `Goes with`: 3 standing outfits labelled `Best match` · `Dressier` · `More relaxed`; neutral `Worn {n}×` · `Last worn {date}` · `{n} outfits`; `Style this` → Stylist. No "not worn lately" nudges.
+> - **C7 (next best buy):** named by kind and spec, never a brand; shows the outfits it unlocks with the new piece dashed; no shop links.
+> - **C4 "+":** `Take photo` / `Choose photos` come back for v1 if the founder approves (#88); one photo may hold several pieces laid flat.
+
 - **Presentation:** tab root, large title. **Entry:** tab. **Exit:** pushes and sheets below.
 
 **Layout**
