@@ -361,3 +361,11 @@ Contradictions settled and decisions changed during the build. Newest last.
       - **The composer camera is always an icon circle.** A labelled "Check my fit" pill in the composer doubled the card's own camera action, and the card always carries a labelled one: "Check my fit", "Check it on", or the link.
       - **The mic shows only where `dictationSupported()` is true** (an on-device DictationTranscriber locale plus an audio format). There's no SFSpeechRecognizer fallback, because its system prompt says "Speech data from this app will be sent to Apple", which breaks our promise. The Simulator has no model, so the mic is hidden there; transcription must be tested on the founder's iPhone after `tools/phone/install.sh` (native change). An older native build hides the mic instead of crashing.
       - **Closet's tab bar shrinks** to a single button on scroll-down (seen on the Simulator).
+
+82. **Founder calls, Oct 8 (for the tap, label, closet and camera builds).**
+    1. **"Reads as …" shows for every detected style,** smart casual included.
+    2. **The closet-call test is approved** (about $0.65 on the 56 test photos) before the call reaches the app.
+    3. **The vintage-sport label is "Vintage sport"** (was "Sporty"); the card reads "Reads as vintage sport".
+    4. **Front-camera photos are saved in the true view** (not mirrored like the preview), so logos and text on clothes read correctly. That's the iOS default, and it helps the closet read brands.
+    - **Also settled (Claude):** Mirror mode defaults to the rear camera. The front camera can't see the reflection the Mirror tip describes.
+    - **Build order:** the tap + label + style rename take migration V5; the closet columns take V6.
