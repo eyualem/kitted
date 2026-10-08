@@ -128,6 +128,11 @@
     - Set the key with `read -s GEMINI_API_KEY && export GEMINI_API_KEY`.
     - Turn billing on (the free tier allows 20 calls a day).
 - **Rubric v3:** `rubric/v3.md`. Waiting for my review, including 2 decisions: whether a 10 should be reachable, and human calibration.
+- **Rubric research: proportions, color, style types (done Oct 7).** Report: `rubric/research/proportions-color-style.md` (notes in `rubric/research/notes/`). Verdict: v3.1 already covers most well-supported rules, so no rewrite.
+  - **Real gaps** (each needs one new coarse reading from the model): baggy jeans stacked on purpose are read as "pooling"; a thin shoe under a wide leg; top and bottom in different colors at the same middle lightness ("muddy").
+  - **Bug (confirmed in code):** style exemptions need a weight ≥0.5, and onboarding gives only the 1st pick 0.5. So Streetwear picked 3rd unlocks nothing (his baggy jeans lose 0.8). Fix proposed: any picked style unlocks it when the garment is one of that style's pieces.
+  - **Don't build:** color-wheel harmony, golden ratio, warm/cool, letting the model judge style or harmony (no research support; it breaks same photo → same score).
+  - Proposed changes are waiting for my OK (DECISIONS-LOG #57). Nothing in the code has changed.
 - **Research:**
   - Gemini creator research: I still need to export the Google Sheet as `.xlsx` into `inputs/`. Only rules backed by 2024+ videos count.
   - Codex sneaker deep-dive (sneakers with jeans/chinos, 2025+): results pending.
@@ -186,7 +191,8 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ### 4. Non-build steps (mine)
 1. **Replace the Gemini key before production** (decided Oct 7: keep using the Oct 6 key for development; it has a small balance).
-2. Review `rubric/v3.md` and decide its 2 open questions.
+2. Review `rubric/v3.md` and decide its 2 open questions. Also OK or veto the rubric research changes (#57): the style-exemption fix, muted accents from `saturation`, merging Preppy + Old money (name: "Classic prep"?), and the 3 new readings (`stacked` hem, `shoe_profile`, `lightness`).
+   - Run the 5 Gemini/Codex prompts at the end of the rubric research report; answers go in `inputs/rubric-research/`.
 3. Shoot the gold set: about 80 photos, with 3+ friends (plan in `speed-and-detail-plan.md`).
 4. Claim @kitted.app / @trykitted and register trykitted.com. Then the waitlist page and the TikTok account.
 5. Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement. They block TestFlight, purchases and the age check, not the demo.
@@ -266,6 +272,7 @@ Exceptions:
 | `app-build-spec.md` | Engineering spec: pipeline, proxy (Cloudflare Worker + D1), milestones M0–M4. Its SwiftUI parts are replaced by 05/06 | Reference, partly stale |
 | `rubric/v3.md`, `extraction-test/` | Style rules in plain words; the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
+| `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |
 | `speed-and-detail-plan.md`, `testing-plan.md` | Vision speed plan; the 5 validation tests | Reference |
 | `demo-app-spec.md` | Older product spec | Stale; overridden by everything above |
 | `handoff/archive/` | Superseded docs (the original handoff brief, review notes, the P2 plan, the SwiftUI starter) | History only; don't follow |

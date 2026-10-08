@@ -102,3 +102,22 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Bug found:** kept photo and thumb URIs are stored as absolute `file://…/Documents/…` paths (`KittedVisionModule.swift` → `service.ts:329`). The container path changes on reinstall, so store paths relative to Documents.
     - **Stale copy found:** `CAMERA_USAGE` in `app.config.ts` and the review notes (age-rules §4.3) still say the face is cropped out.
     - **P5 estimate:** about 6.5 days, not 2.
+
+
+## Oct 7, 2026 · Rubric research: proportions, color, style types
+
+57. **Rubric research done; no rubric changes made yet** (founder, Oct 7: the rubric doesn't really cover proportions, color theory or style types). There were four research tracks plus a report: `rubric/research/proportions-color-style.md`. **Findings:**
+    - v3.1 already scores most well-supported rules: pooling (F4), tops past the crotch (F6), big top over skinny pants (P2), all-oversized (P3), chunky shoe with narrow pants (S1), "neutral base plus one accent" (C1), the bright clash, pattern rules, and the near-match blazer (C5).
+    - Three real gaps, each needing one new coarse reading: a `stacked` hem value (intended stacking on baggy jeans ≠ pooling), `shoe_profile` (a thin shoe under a wide leg; 3 sources agree, 0 disagree), and per-garment `lightness` light/mid/dark (a "muddy middle": lightness contrast is the strongest color signal in O'Donovan 2011 and in Ou & Luo).
+    - **Rejected, with reasons:**
+      - Color-wheel harmony schemes: Schloss & Palmer 2011 found "virtually no evidence"; O'Donovan found the templates don't predict ratings.
+      - The golden ratio: McManus's review.
+      - Warm/cool rules: only one source.
+      - Measured pixel color: lighting shifts it 4–10 ΔE.
+      - Letting the model judge style or harmony: GPT-4o flipped 57–74% of verdicts when image order was swapped (ZOZO 2024).
+      - Skin-tone analysis: product rule.
+    - **Style types:** keep the general standard with his styles as modifiers, never penalize mixing, and merge Preppy and Old money. Workwear has the strongest 2025–26 trend signal.
+    - **Confirmed bug:** style exemptions use `street >= 0.5`, etc. (`rubric.py`), and onboarding weights the 1st pick 0.5 and splits the rest (02 O2). So whether an exemption applies depends on the order he tapped his styles.
+    - **Second bug:** only burgundy and sage count as muted, though the model returns `saturation`.
+    - **Proposed:** fix both bugs; switch on new points one at a time, only after the gold set has truth labels and pairwise human rankings. All point values are unsourced guesses.
+    - **Waiting on the founder:** these are scoring changes, and `rubric.py` plus the parity fixtures must move together.
