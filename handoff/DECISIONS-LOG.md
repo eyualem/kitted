@@ -261,3 +261,11 @@ Contradictions settled and decisions changed during the build. Newest last.
       - an empty closet shows no "0 pieces so far";
       - "Add basics" is hidden until Starter essentials (C5) exists.
     - **Real vs. sample:** all weather is sample, and the card says "Sample weather". WeatherKit and location (MC9) wait on the paid developer program; the N1 notification tie-in waits on P6.
+68. **Founder, Oct 8: the dropdown should look like part of the card; the style is picked before the photo, not after. This resolves #66.**
+    - **No system menus.** The `@expo/ui` SwiftUI pull-downs looked like "a default Apple dropdown". They're replaced by `InlinePicker`: a pill (ink outline and an up chevron while open) that opens a tray of chips right under it, inside the card ("Your styles" / "More styles" labels, the current choice filled). Picking a chip closes the tray. One tray is open at a time.
+      - **Where:** the morning/evening card (occasion and style pills), the staying-in row, and the result card's occasion.
+      - **Removed:** `PullDownPill` and the style action sheet. `@expo/ui` is no longer used by app code; it stays installed.
+    - **The thread stays still while a tray opens:** `holdThreadScroll()` pauses "stick to the bottom" for 700 ms, so the pill he tapped doesn't scroll away under the header.
+    - **The style can't be changed after the check:** the result card shows `Everyday ⌄ · Streetwear` with the style as plain text, not a control. He picks the look on the morning/evening card before the photo; a check from "Check my fit" uses his first onboarding style.
+      - **What can still change after the check:** only the occasion, through the tray, asking first (#62).
+    - **"Scored for" stays as built** (today's v3.1 rules apply the picked style). It falls away by itself when the style-council rulebook is ported (`styleEffects()` finds no difference); the "Reads as …" label (council #62) replaces it then. The service keeps `previewLens`/`changeLens` for styles (tested) but no UI calls them.

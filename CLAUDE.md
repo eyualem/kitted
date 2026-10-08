@@ -115,17 +115,17 @@
 - **The morning/evening card + "Scored for": built Oct 8** (05 §MC; DECISIONS-LOG #58–62 "The morning card", #65–67). On the Simulator:
   - **Once a day,** the stylist greets him with the weather ("Morning. 46° now, 63° by afternoon. Rain likely after 5 pm.") and an outfit card: weather strip, 4 tiles, a why line, Wear this / Swap one, and "Going with your own? Check it before you leave", which opens the camera with the card's occasion and style.
   - **From 5 pm,** an evening card plans tonight ("Heading out?", Going out). After 3 ignored evenings it stops posting.
-  - **Occasion and style:** native iOS pull-downs on the card re-pick the outfit.
+  - **Occasion and style:** pills on the card open an in-card tray of chips (#68, not the system menu) and re-pick the outfit.
   - **Small closet:** the card shows what it knows plus dashed tiles. A new user gets "Send me today's fit".
   - **After any check that day,** the card shrinks to one line with the score. Tapping it scrolls to the result.
   - **Results:**
     - a "Weather" tip (never points);
-    - the header shows the occasion and style it was scored for (both pull-downs; a change asks "Re-score for X? It would be 7.0 instead of 8.0" first and updates the same card);
+    - the header shows the occasion and style it was scored for; the style is fixed after the photo (#68), and the occasion opens the tray and asks "Re-score for X? It would be 7.0 instead of 8.0" before updating the same card;
     - a "Scored for streetwear: …" line and a Why-sheet section appear only when the style changed the score.
   - **Composer:** the suggestion-chip row is gone.
   - **Demo screens:** 25 morning · 26 thin closet · 27 new user · 28 wearing it · 29 after his own check · 30 evening · 31 weather ask · 32 hot day · 33 "Scored for streetwear". Screen 12 now shows the new card.
   - **Mocked:** all weather is **sample weather**, labelled on the card. Real WeatherKit + location (MC9) waits on the $99 program.
-  - **Open conflict (#66):** whether a picked style may change the score; the style-council rulebook says no.
+  - **#66 resolved by #68:** he picks the style before the photo; it can't be changed after. When the style-council rulebook is ported, "Scored for" gives way to "Reads as …".
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
@@ -180,7 +180,7 @@
    - Fix the navy/black garment icons, which are near-invisible in dark mode.
    - Fix the sheet heights: "Not quite right?" opens too tall, "Which shoes?" too short.
    - Give the empty tabs real empty states.
-2. **The morning and evening cards + "Scored for": built Oct 8** except MC9 (real weather, after enrollment) and the notification tie-in (P6). (Founder, Oct 7; DECISIONS-LOG #58–62 "The morning card", #65–67; spec in `handoff/02-screens.md` "S1d" and "S6s".) Next: the founder's call on #66. This replaces the suggestion buttons above the text box.
+2. **The morning and evening cards + "Scored for": built Oct 8** except MC9 (real weather, after enrollment) and the notification tie-in (P6). (Founder, Oct 7; DECISIONS-LOG #58–62 "The morning card", #65–67; spec in `handoff/02-screens.md` "S1d" and "S6s".) The dropdowns are now in-card trays and the style is fixed after the photo (#68). This replaces the suggestion buttons above the text box.
    - **What it is:** once a day the stylist greets him with the weather and a card holding an outfit from his closet. Code picks the outfit; templates write the words.
    - **Sources:** weather from Apple WeatherKit; location asked inside the card, approximate only.
    - **Steps:**
@@ -245,7 +245,6 @@ P5's real size is about 6.5 days, not 05's 2.
 - **For launch videos now:** fitting-room fit checks already work (mirror selfie), with no new build.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
-- **#66: may the style he picks change the score?** The morning-card plan says yes, with a re-score confirm. The style-council rulebook says no: styles are detected, the label is "Reads as …", 0 points. Recommended: the rulebook's way on results, and keep the style pill on the morning card (it only steers the outfit).
 - **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Scored for"): greetings, weather lines, why lines, the "Going with your own?" row, the re-score alert, and the style names (Minimal, Sporty, Outdoorsy; the council approved "Outdoor" and "Classic prep" for onboarding, so pick one set).
 - **Weather band numbers** (core `weather.ts`, for the rubric review): 80 / 65 / 50 / 35 °F feels-like, rain 50%+, a 15° swing. Hot days also favor tees and lighter shoes.
 - **Archivo fonts:** 3 files of about 185 KB each, OFL license, from `github.com/Omnibus-Type/Archivo` (`fonts/ttf/`). Default: the system font. When approved:
@@ -344,6 +343,7 @@ Exceptions:
 - **react-native-svg keeps a dash pattern after `strokeDasharray` is removed;** key the shape by state to redraw it.
 - **A new Swift file in a local module needs `pod install`** before Xcode sees it ("cannot find … in scope").
 - **Don't trust FlatList `scrollToEnd` while rows grow;** it uses cached row heights. Scroll to the height from `onContentSizeChange` (StylistScreen `toEnd`).
-- **An alert raised from a SwiftUI `Menu` item is dropped while the menu closes;** wait about 450 ms (`confirmLens`).
+- **An alert raised from a SwiftUI `Menu` item is dropped while the menu closes;** wait about 450 ms (`confirmLens`; the menus are gone since #68, but the wait stays harmless).
+- **A card that grows because he tapped something in it** must call `holdThreadScroll()`, or the thread jumps to the bottom and the control scrolls away.
 - **Demo gating:** read `getDemoArgs().demoScreen`, not the demo state, in code that runs while a demo screen loads.
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).

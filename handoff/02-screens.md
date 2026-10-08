@@ -752,10 +752,10 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
   - Last line: `Change the style on the card to see it scored another way.`
 - **Never:** "wrong style", a penalty for mixing styles, or the AI judging style. Style only adjusts the general standard (rubric research #57).
 - **As built (Oct 8, #67):**
-  - **Header:** `Fit check · Full` left; right `Everyday ⌄ · Streetwear ⌄`, plain mono pull-downs with no capsules. VoiceOver keeps the grouped card, with custom actions Change occasion / Change style (action sheets).
+  - **Header (#68):** `Fit check · Full` left; right `Everyday ⌄ · Streetwear`. The occasion opens an in-card chip tray. **The style is plain text: it can't be changed after the photo** (he picks it on the morning/evening card before the check). VoiceOver: custom action Change occasion.
   - **The alert's buttons:** `Re-score` (default) / `Keep {current}`.
   - **The note under the links:** `Re-scored · was 8.0 for smart casual`.
-- **Open (#66):** the style-council rulebook (#60–62 in that session) says picks never change a score. If the founder confirms that, this section becomes the detected `Reads as {style}` label (0 points), and the style pull-down leaves the result card.
+- **Resolved (#68):** the style is fixed after the photo. When the style-council rulebook is ported (picks never change a score), this line becomes the detected `Reads as {style}` label (0 points).
 
 ### S1d · The morning card (decided Oct 7, DECISIONS-LOG #58; replaces the quick-start row)
 *Differs from mockup 12 because the founder found the chip row above the composer cramped. Once a day the stylist opens with the weather and an outfit instead.*
@@ -768,7 +768,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 - **Locked per day:** the outfit for a day key is picked once and stored. The same day shows the same idea in the card and the N1 notification. "Swap one" and an occasion change re-pick deliberately. The notification for the next 3 days is planned from the daily forecast on each app open.
 - **Greeting** (template, no AI): `{Morning|Afternoon|Evening}. {weather phrase}`, e.g. `Morning. Cold start, warm afternoon, rain tonight.` / `Morning. 48° and cloudy, a layer kind of day.` Without weather: `Morning. An easy one for {occasionWord} today:` (the old line).
 - **Card** (KCard):
-  1. Header: `Today` / `Tonight` (mono tagline) + two pull-down pills (native iOS menus via `@expo/ui`; no new package):
+  1. Header: `Today` / `Tonight` (mono tagline) + two pills that open an in-card tray of chips (`InlinePicker`, #68; was native iOS menus, which looked like a stock dropdown):
      - **Occasion pill:** Everyday · Class/Work · Date · Going out · Interview · Event · Staying in (evening only). Weekday days default to his Class/Work, weekends to Everyday, evenings to Going out.
      - **Style pill** (#61): `Your styles` (his onboarding picks) then `More styles`: Streetwear · Smart casual · Minimal · Workwear · Old money · Sporty · Outdoorsy (rubric ids streetwear, smart_casual, minimalist, workwear, old_money + preppy merged per #57, vintage_sport, gorpcore). The default is his first style. The last pick is remembered separately for the day and evening cards.
      - **On this card, changes re-pick instantly with no alert** (it's a suggestion, not a score).

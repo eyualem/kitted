@@ -2,10 +2,11 @@
 // Full while it's the current window and nothing's been checked; collapsed to one row once a fit
 // check lands in its window (with the score), when he's staying in, or once its window has passed.
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { localParts, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
-  Icon, KButton, KCard, KCardSection, KText, NeckDownPhoto, PullDownPill, RowDivider, TagLine, TextLink, displayScore, opacity, scoreWordLabel, useTheme,
+  Icon, KButton, KCard, KCardSection, KText, NeckDownPhoto, PickerPill, PickerTray, RowDivider, TagLine, TextLink, displayScore, opacity, scoreWordLabel, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -26,6 +27,7 @@ import { cardOccasionLabel, missingLabel, stripLines, styleLabel, weatherSymbol,
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { pickSwap } from './swapPicker';
+import { holdThreadScroll } from '@/features/stylist/scrollHold';
 
 interface Model {
   row: DailyIdeaRow;
@@ -94,6 +96,12 @@ export function MorningCard({ ideaId }: { ideaId: string }) {
 
 function FullCard({ m }: { m: Model }) {
   const { isAccessibilitySize } = useTheme();
+  // Which pill's tray is open (one at a time; 02 "S1d" as built, #68).
+  const [open, setOpen] = useState<'occasion' | 'style' | null>(null);
+  const toggle = (which: 'occasion' | 'style') => {
+    holdThreadScroll();
+    setOpen((cur) => (cur === which ? null : which));
+  };
   const { row } = m;
   const evening = row.slot === 'evening';
   const weather = row.weather as unknown as DayWeather | null;
@@ -129,24 +137,44 @@ function FullCard({ m }: { m: Model }) {
       <KCardSection gap={11}>
         <TagLine left={evening ? t('idea.tonight') : t('idea.today')} right={right} />
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-          <PullDownPill
+          <PickerPill
             label={cardOccasionLabel(row.occasion)}
-            value={row.occasion}
-            sections={[{ options: occasions.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
-            onChange={changeOccasion}
+            open={open === 'occasion'}
+            onPress={() => toggle('occasion')}
             accessibilityLabel={t('idea.a11y.occasion', { occasion: cardOccasionLabel(row.occasion) })}
           />
-          <PullDownPill
+          <PickerPill
             label={styleLabel(row.style)}
+            open={open === 'style'}
+            onPress={() => toggle('style')}
+            accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
+          />
+        </View>
+        {open === 'occasion' ? (
+          <PickerTray
+            value={row.occasion}
+            sections={[{ options: occasions.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
+            onPick={(o) => {
+              holdThreadScroll();
+              setOpen(null);
+              if (o !== row.occasion) changeOccasion(o);
+            }}
+          />
+        ) : null}
+        {open === 'style' ? (
+          <PickerTray
             value={row.style ?? 'none'}
             sections={[
               ...(m.myStyles.length ? [{ title: t('style.menu.yours'), options: m.myStyles.map((s) => ({ value: s, label: styleLabel(s) })) }] : []),
               { title: m.myStyles.length ? t('style.menu.more') : undefined, options: others.map((s) => ({ value: s, label: styleLabel(s) })) },
             ]}
-            onChange={(s) => s !== 'none' && void changeStyle(s as StyleKey)}
-            accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
+            onPick={(s) => {
+              holdThreadScroll();
+              setOpen(null);
+              if (s !== 'none' && s !== row.style) void changeStyle(s as StyleKey);
+            }}
           />
-        </View>
+        ) : null}
         {weather ? <WeatherStrip w={weather} /> : m.permission === 'unknown' && weatherSource.kind !== 'none' ? <LocationAsk onAllow={() => void allow()} /> : null}
         {m.piecesKnown > 0 ? <OutfitTiles items={enough ? m.items : m.known} needs={needs} /> : null}
         <KText variant="subheadline" color="ink2">
@@ -276,19 +304,34 @@ function CheckedRow({ m }: { m: Model }) {
 }
 
 function StayingInRow({ m }: { m: Model }) {
+  const [open, setOpen] = useState(false);
   return (
     <CollapsedShell
       tag={whenLabel(m.row)}
       title={t('idea.stayingIn')}
       a11y={`${whenLabel(m.row)}: ${t('idea.stayingIn')}`}
       right={
-        <PullDownPill
+        <PickerPill
           label={cardOccasionLabel(m.row.occasion)}
-          value={m.row.occasion}
-          sections={[{ options: EVENING_CARD_OCCASIONS.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
-          onChange={(o) => void morning.change(m.row.id, { occasion: o })}
+          open={open}
+          onPress={() => {
+            holdThreadScroll();
+            setOpen((o) => !o);
+          }}
           accessibilityLabel={t('idea.a11y.occasion', { occasion: cardOccasionLabel(m.row.occasion) })}
         />
+      }
+      below={
+        open ? (
+          <PickerTray
+            value={m.row.occasion}
+            sections={[{ options: EVENING_CARD_OCCASIONS.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
+            onPick={(o) => {
+              setOpen(false);
+              if (o !== m.row.occasion) void morning.change(m.row.id, { occasion: o });
+            }}
+          />
+        ) : null
       }
     />
   );
@@ -307,7 +350,7 @@ function PastRow({ m }: { m: Model }) {
   );
 }
 
-function CollapsedShell({ tag, title, left, right, body, onPress, a11y }: { tag: string; title?: string; left?: React.ReactNode; right?: React.ReactNode; body?: React.ReactNode; onPress?: () => void; a11y: string }) {
+function CollapsedShell({ tag, title, left, right, body, below, onPress, a11y }: { tag: string; title?: string; left?: React.ReactNode; right?: React.ReactNode; body?: React.ReactNode; below?: React.ReactNode; onPress?: () => void; a11y: string }) {
   const content = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, paddingHorizontal: 14 }}>
       {left}
@@ -332,10 +375,11 @@ function CollapsedShell({ tag, title, left, right, body, onPress, a11y }: { tag:
           {content}
         </Pressable>
       ) : (
-        <View accessible accessibilityLabel={a11y}>
+        <View accessible={!right} accessibilityLabel={right ? undefined : a11y}>
           {content}
         </View>
       )}
+      {below ? <View style={{ paddingHorizontal: 14, paddingBottom: 12 }}>{below}</View> : null}
     </KCard>
   );
 }
