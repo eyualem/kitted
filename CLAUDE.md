@@ -243,6 +243,10 @@ P5's real size is about 6.5 days, not 05's 2.
 ### 5. After launch: v1.1 (December)
 - **"Should I buy this?"** In Stylist, he snaps an item in the store and gets what it goes with in his closet, "+N fits", a duplicate warning, then Buy it / Skip it. No barcodes or prices; Google Lens owns those. With a thin closet the card says what it's based on. Before building: a Codex check of Reddit and TikTok on demand. Details: DECISIONS-LOG #40.
 - **For launch videos now:** fitting-room fit checks already work (mirror selfie), with no new build.
+- **Accessories in the rubric** (founder, Oct 8: scarves, necklaces and chains, bracelets, bandanas). Today the model reads only belt, hat, bag and watch, and the score ignores all accessories. A +0.5 belt/watch credit was dropped Oct 6 because the watch was seen in some runs and not others.
+  - **Plan:** add accessory types (scarf, chain/necklace, bracelet, bandana, beanie/cap, sunglasses, rings).
+  - **Scoring:** only large, easy-to-see pieces (scarf, headwear, bandana, chunky chain) can earn the existing point-of-interest credit (K3, inside the cap, so no net inflation). Small pieces stay closet and tips only. Having no accessories never costs points, and accessories count toward "too many focal points".
+  - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
 - **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Scored for"): greetings, weather lines, why lines, the "Going with your own?" row, the re-score alert, and the style names (Minimal, Sporty, Outdoorsy; the council approved "Outdoor" and "Classic prep" for onboarding, so pick one set).
