@@ -291,3 +291,11 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Consequence:**
       - The stacked-hem and raw-denim fixes wait for the gold set. With truth labels it can judge accuracy, not just consistency, and the bar can be re-set with a known noise floor (re-run v3 itself the same day).
       - Meanwhile the rulebook's pooled-loose-jeans −0.4 and the "Jeans or sweatpants?" tap cover the founder's case. His ph1 read "sweatpants, clear" on all 3 v5s runs, and the waistband prompt line didn't fix it.
+
+## Oct 8, 2026 · Style-council session (numbered from #80 to avoid collisions)
+
+80. **Founder, Oct 8: a style picked before the photo never changes the score; the clothes decide.** This resolves #66 for good. It confirms #60.1 and the rulebook ("picks never change the score").
+    - The result card shows the detected "Reads as …" label (0 points).
+    - The morning card's style pill stays. It steers outfit ideas and breaks label ties.
+    - Under v4, `styleEffects()` finds no differences, so the "Scored for" line hides itself.
+    - Same photo, same score, whatever he picked.
