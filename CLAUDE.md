@@ -205,7 +205,7 @@
    - **"Scored for" on every result** (#61): the card shows the occasion + style it was scored for. A plain-words line and a Why section appear only when the style actually changed the score. One style per check, never a blend.
    - **Changing the style or occasion after a score asks first** (#62): "Re-score for smart casual? It would be 7.0 instead of 8.0." Keep or Re-score. It updates the same card, never a new one.
    - Step-by-step plan: `handoff/05-build-plan.md` §MC (MC1–MC11), about 5.5 days.
-3. **Closet tab** (on demo data, while I phone-test); it reuses the outfit picker from step 2. Tiles use the garment icons in the item's color, not photo cut-outs. Photo-adding items and "Should I buy this?" go to v1.1.
+3. **Closet tab: owned by the style-council session** (founder, Oct 8). It covers the closet call, shade matching, photo crops and the tab itself, with migration V5. The UI session doesn't plan it. It keeps the outfit picker's inputs (ClosetItemRow slot, garment, hex) and the Closet ScrollView first, so the tab bar can shrink. Photo-adding items and "Should I buy this?" are still v1.1.
 4. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
 5. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.
 6. **Lookbook**, then **You** (incl. "Delete all my data"; reuses P4's pieces).
