@@ -532,3 +532,13 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **`VNClassifyImageRequest` on the Simulator's CPU returned the same labels for two different photos** ("night_sky…" for flowers and a man in a tee); the Mac gives distinct, sensible labels for the same code. Treat Simulator clothes scores as meaningless; the person and piece checks did work there.
     - **The dev build's floating "Tools" button sits over the top-right header button** and takes taps meant for it (drag it away when testing). Not in Release.
     - **JS logs from the Simulator go to whichever Metro the app is attached to** (another session's, in parallel work); writing a small dev log file in Documents and reading it from the Simulator container works for debugging.
+
+94. **The Stylist chat was out of order on his phone; fixed, and the phone's app data was wiped at his request (Oct 8).**
+    - **Cause:** boot always started the clock at the demo scenario's "Thu Oct 22, 7:38" (`SCENARIO_NOW`). Every relaunch went back to 7:38, so a check taken after a relaunch got an earlier timestamp than older ones and sorted into the middle of the thread. Every phone message was stamped Oct 22 07:38–08:53.
+    - **Fix:** on a physical iPhone (`expo-device` `isDevice`) the clock is real time unless a `-demoNow` is passed. The Simulator and demo screens keep the demo clock.
+    - **Scrolling (his request):** a new photo message now always brings the thread to the bottom and follows the reading and then the score card, even if he'd scrolled up (`StylistScreen.tsx`).
+    - **Wipe:** done by uninstalling and reinstalling, which deletes the app's container (checks, kept photos, closet, chat). His Photos library is untouched. The Mac copies from `pull.sh` remain in `screenshots/phone/` (git-ignored).
+    - **iOS lesson:** removing the last app from a developer also removes the trust in that developer, so he had to re-trust it in Settings → General → VPN & Device Management.
+    - **Phone evidence from the check before the wipe (#83 confirmed):**
+      - Mirror mode used the rear camera and captured 3024×4032 in 612 ms; prep took 134 ms (upload 768×1024, kept 1536×2048, 1 face region hidden).
+      - His grey hoodie + black wide jeans read as **jeans**, scoring 7.0 under v4. The slides read as "other".

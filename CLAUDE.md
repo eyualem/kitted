@@ -256,6 +256,7 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ### 3. P3: built; next is testing on my iPhone (full plan: `handoff/05-build-plan.md` §P3)
 - **Done Oct 7:** real scoring (photo → faces blurred on the phone → Gemini → real card) and the camera (live preview, body tracking drives the guide, no live blur, 3-2-1 auto-capture with a spoken count, Propped/Mirror, flash, flip, camera-off card). Photos keep the whole outfit; my own copy stays unblurred on the phone, only the upload is blurred (#54–55). On the Simulator a sample photo stands in for the camera.
+- **Phone, Oct 8:** a clean slate (app data wiped, #94), the real clock on the phone (the chat used to sort out of order), full-res capture confirmed (3024×4032, 0.6 s). Re-trusting the developer was needed after the uninstall.
 - **Installed on my iPhone (Oct 7).** Setup is done (Apple ID in Xcode, Developer Mode on, developer trusted). To reinstall (every 7 days, or after native changes): plug in, unlock, run `tools/phone/install.sh`. The Metro dev server must be running (`kitted-web`) and the phone on the same Wi-Fi.
 - **What Claude sees during my test:** the `[camera]`, `[prep]`, `[gemini]` and `[check]` lines in the Metro log, live; afterwards `tools/phone/pull.sh` copies the app's data and kept photos off the phone (`screenshots/phone/`, git-ignored).
 - **Each test session:** unlock the phone and open Kitted (it reconnects to this Mac's dev server), then tell Claude so it can watch the log.
