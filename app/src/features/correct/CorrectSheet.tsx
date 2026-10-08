@@ -55,7 +55,11 @@ export function CorrectSheet() {
     }
     const after = score(next, opts).overall;
     const original = draft ? data.reading.garments[draft.index] : undefined;
-    const closetHit = original && !('remove' in (draft ?? {})) ? matchClosetItem(original, data.closet) : null;
+    // The piece the change goes to: the stored garment → item link (#91); pre-V6 checks: one of its own pieces.
+    const linked = draft ? (data.row.details.closetSummary?.links ?? []).find((l) => l.origin === 'garment' && l.index === draft.index) : undefined;
+    const closetHit = original && !('remove' in (draft ?? {}))
+      ? (linked ? data.closet.find((c) => c.id === linked.itemId) : matchClosetItem(original, data.closet.filter((c) => data.row.itemIds.includes(c.id)))) ?? null
+      : null;
     const nextFix = skipTarget ? suggestFixes(data.reading, { ...opts, closet: data.closet, excludeTargets: [skipTarget, ...(data.row.details.hiddenFixTargets ?? [])] }).fixes[0] : undefined;
     return { before: data.row.score ?? 0, after: after ?? data.row.score ?? 0, closetHit, nextFix };
   }, [data, draft, reason, skipTarget]);

@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, Pressable, View } from 'react-native';
 import {
-  AddedRow, FinishTile, FixRow, GarmentIcon, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
+  FinishTile, FixRow, GarmentIcon, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
   MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
@@ -25,6 +25,8 @@ import { useWeatherTip } from '@/features/morning/weatherTip';
 import { styleLabel } from '@/features/morning/copy';
 import { confirmLens } from '@/features/fitcheck/lensUi';
 import { justAnswered, tapAs, TapCard } from '@/features/tap/TapCard';
+import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
+import { closetSummaryText } from '@/features/closet/summaryText';
 
 function useCheck(checkId: string) {
   return useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -127,8 +129,10 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const dialed = fixes.length === 0;
   const nextLevel = row.details.nextLevel?.[0];
   const recheckOpen = isRecheckOpen(row, sessionClock.nowMs(), sessionClock);
-  const added = (row.details.closetSummary?.added ?? []).filter((id) => !(row.details.closetSummary?.undone ?? []).includes(id));
-  const addedItems = added.map((id) => closet.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
+  // "Added 3 to Closet · 1 question" / "Checking the details…" (#91): from the closet summary.
+  const closetLine = closetSummaryText(row.details.closetSummary, sessionClock.nowMs());
+  const addedItems = (closetLine?.itemIds ?? []).map((id) => closet.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
+  const showCloset = !!closetLine && (closetLine.pending || addedItems.length > 0) && !partial;
   const finishing = partial && row.snapState === 'pending' && row.details.finish !== undefined;
   const scoreText = displayScore(score);
 
@@ -137,7 +141,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     { name: 'nqr', label: t('card.nqr') },
     ...(recheckOpen ? [{ name: 'recheck', label: t('card.recheck') }] : []),
     { name: 'share', label: t('card.share.a11y') },
-    ...(addedItems.length > 0 && !partial ? [{ name: 'review', label: t('card.a11y.review') }] : []),
+    ...(showCloset ? [{ name: 'review', label: t('card.a11y.review') }] : []),
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
     ...(changeAnswer ? [{ name: 'changeAnswer', label: t('tap.a11y.change') }] : []),
   ];
@@ -214,13 +218,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
         </KCardSection>
         <Seam />
         <KCardSection gap={6}>
-          {addedItems.length > 0 && !partial ? (
-            <AddedRow
-              items={addedItems.map((c) => ({ type: garmentIconType(c.garment), hex: c.hex }))}
-              count={addedItems.length}
-              onReview={go.review}
-            />
-          ) : null}
+          {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={go.review} /> : null}
           {finishing ? <FinishRow row={row} closet={closet} /> : null}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
             {dialed && score >= 9 ? (

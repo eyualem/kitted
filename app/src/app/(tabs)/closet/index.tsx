@@ -1,12 +1,17 @@
 // C1 · Closet (02 D15). Until P5 builds the full screen (Rotation, Starter essentials, filters),
-// it shows what the closet really holds: the C1e empty state, or a plain grid of his pieces.
-// No dev placeholder text in a tab (DECISIONS-LOG #56).
+// it shows what the closet really holds: the C1e empty state, or a grid of his pieces drawn with their
+// details (#91), with a "Same as your …?" card on top for each question the stylist still has.
+// No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
+// minimize behavior).
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { EmptyState, GarmentIcon, KButton, KText, useTheme } from '@/design-system';
+import { EmptyState, KButton, KCard, KCardSection, TagLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { garmentIconType } from '@/features/fitcheck/labels';
+import { ClosetTile } from '@/features/closet/ClosetTile';
+import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { isOwned } from '@/features/closet/profile';
+import { fitCheck } from '@/features/fitcheck/session';
 import { goToStylist } from '@/router/stylistAction';
 import { t } from '@/i18n/en';
 
@@ -14,9 +19,16 @@ const GAP = 10;
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
-  const items = useLive(['closet'], async () => (await store.closet.all()).filter((c) => !c.isDeleted), []);
+  const data = useLive(['closet', 'fitChecks'], async () => {
+    const all = await store.closet.all();
+    const byId = new Map(all.map((c) => [c.id, c]));
+    // Newest first (a row's place in the store moves when it's updated).
+    const items = all.filter(isOwned).sort((a, b) => b.addedAt - a.addedAt || (a.id < b.id ? -1 : 1));
+    return { items, byId, asks: await fitCheck.closet.openAsks() };
+  }, []);
   const [width, setWidth] = useState(0);
-  if (!items) return null;
+  if (!data) return null;
+  const { items, byId, asks } = data;
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
@@ -26,20 +38,25 @@ export default function ClosetScreen() {
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />
         </EmptyState>
       ) : (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: GAP }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-          {tile > 0
-            ? items.map((it) => (
-                <View key={it.id} style={{ width: tile, gap: 6 }} accessible accessibilityLabel={it.name}>
-                  <View style={{ width: tile, height: tile, borderRadius: 18, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
-                    <GarmentIcon type={garmentIconType(it.garment)} color={it.hex} size={Math.round(tile * 0.62)} />
-                  </View>
-                  <KText role="miniLabel" numberOfLines={2}>
-                    {it.name}
-                  </KText>
-                </View>
-              ))
-            : null}
-        </View>
+        <>
+          {asks.map(({ checkId, ask }) => {
+            const photo = byId.get(ask.itemId);
+            const candidate = byId.get(ask.candidateId);
+            if (!photo || !candidate) return null;
+            const runnerUp = ask.runnerUpId ? byId.get(ask.runnerUpId) ?? null : null;
+            return (
+              <KCard key={ask.obsId}>
+                <KCardSection gap={10}>
+                  <TagLine left={t('closet.ask.tag')} />
+                  <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void fitCheck.answerDuplicate(checkId, ask.obsId, a)} />
+                </KCardSection>
+              </KCard>
+            );
+          })}
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: 10.5 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+            {tile > 0 ? items.map((it) => <ClosetTile key={it.id} item={it} size={tile} aspect={0.92} radius={18} label={it.name} />) : null}
+          </View>
+        </>
       )}
     </ScrollView>
   );

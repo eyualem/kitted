@@ -76,10 +76,8 @@ export function composeName(garment: Garment, art: ClosetArt | null | undefined,
 
 /** Names the app may change: ones it made itself (or a pre-V6 auto name), never his own or the seed's. */
 export function isAutoNamed(item: Pick<ClosetItemRow, 'profile' | 'source' | 'name' | 'garment'>): boolean {
-  const p = profileOfItem(item);
-  if (p.nameLocked) return false;
-  if (p.autoName) return true;
-  return item.source === 'fitCheck' && item.name === garmentLabel(item.garment);
+  if (!item.profile) return item.source === 'fitCheck' && item.name === garmentLabel(item.garment); // a pre-V6 auto name
+  return !item.profile.nameLocked && item.profile.autoName === true;
 }
 
 /**

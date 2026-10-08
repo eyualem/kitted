@@ -76,6 +76,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 34, name: 'One quick tap', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 35, name: 'One quick tap · answered', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 36, name: 'One quick tap · skipped', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  // Closet accuracy (#91): p01b against T1, B1, S1 from the seed: tee and sneakers matched, tan vs khaki chinos asked.
+  { n: 37, name: 'Same as your khaki chinos?', id: 'S11', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/added/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  { n: 38, name: 'Closet · detailed graphics + one question', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

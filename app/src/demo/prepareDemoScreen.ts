@@ -83,6 +83,9 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   34: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }] },
   35: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'jeans' }] },
   36: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'skip' }] },
+  // Closet accuracy (#91): the closet call's answer for p01b against seed pieces; B1 (khaki) vs tan chinos is asked.
+  37: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  38: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {

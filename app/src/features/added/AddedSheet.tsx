@@ -1,48 +1,170 @@
-// S11 Added to your closet (02 S11): what this check put in his closet. Undo takes an item out
-// (the row stays, so he can add it back); the score never changes. A row tap opens the item's
-// editor (C3). The "Same as your white tee?" question needs a closet-match confidence the
-// reading doesn't have yet, so it isn't shown (DECISIONS-LOG #31).
+// S11 Added to your closet (02 S11, #91): what this check put in his closet. New pieces with Undo (the row
+// stays, so he can add it back) and, when the stylist wasn't sure, "Same as your khaki chinos?" inline; then
+// "Already in your closet" with "Not the same" for a piece it matched. While the closet call is out (up to
+// 12 s) the rows come from the reading with "Checking the details…". The score never changes here.
+import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { GarmentIcon, Icon, KText, RowDivider, TextLink, opacity, size, useTheme } from '@/design-system';
+import { Icon, KText, RowDivider, TextLink, opacity, size, useTheme } from '@/design-system';
 import { store } from '@/data/db';
-import type { ClosetItemRow } from '@/data/types';
+import type { ClosetAsk, ClosetItemRow, ClosetObservationRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
-import { garmentIconType } from '@/features/fitcheck/labels';
+import { ClosetTile } from '@/features/closet/ClosetTile';
+import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { CLOSET_DEADLINE_MS } from '@/features/closet/service';
+import { isPending } from '@/features/closet/summaryText';
+import { garmentHex, garmentLabel } from '@/features/fitcheck/labels';
 import { fitCheck } from '@/features/fitcheck/session';
 import { SheetList, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
+import { sessionClock } from '@/state/session';
 import { addedDetail } from './addedDetail';
+
+const CLOSET_CATEGORIES = ['top', 'outerwear', 'bottom', 'footwear'];
 
 export function AddedSheet() {
   const { checkId } = useLocalSearchParams<{ checkId: string }>();
-  const data = useLive(['fitChecks', 'closet'], async () => {
+  const data = useLive(['fitChecks', 'closet', 'closetObs', 'readings'], async () => {
     const row = await store.fitChecks.get(checkId);
     if (!row) return null;
     const cs = row.details.closetSummary ?? { matched: [], added: [], undone: [] };
-    const closet = await store.closet.all();
-    const items = cs.added.map((id) => closet.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
-    return { items, undone: new Set(cs.undone) };
+    const byId = new Map((await store.closet.all()).map((c) => [c.id, c]));
+    const obs = new Map((await store.closetObs.all()).filter((o) => o.fitCheckId === checkId).map((o) => [o.id, o]));
+    const reading = row.readingId ? (await store.readings.get(row.readingId))?.reading ?? null : null;
+    return { row, cs, byId, obs, reading };
   }, [checkId]);
+  const [now, setNow] = useState(() => sessionClock.nowMs());
+  const pending = !!data && isPending(data.cs, now);
+  // Re-check at the deadline: past it the rows show what was written from the reading.
+  useEffect(() => {
+    if (!pending || !data?.cs.startedAt) return;
+    const h = setTimeout(() => setNow(sessionClock.nowMs()), Math.max(0, data.cs.startedAt + CLOSET_DEADLINE_MS - sessionClock.nowMs()) + 50);
+    return () => clearTimeout(h);
+  }, [pending, data?.cs.startedAt]);
+
+  if (!data) return <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} doneLabel={t('common.done')} />;
+  const { cs, byId, obs, reading } = data;
+  const undone = new Set(cs.undone);
+  const asks = cs.asks ?? [];
+  const askFor = (itemId: string) => asks.find((a) => a.itemId === itemId && a.answer !== 'same' && a.answer !== 'runnerUp');
+  const answer = (a: ClosetAsk, v: 'same' | 'new' | 'runnerUp') => void fitCheck.answerDuplicate(checkId, a.obsId, v);
+
+  if (pending) {
+    const pieces = [
+      ...(reading?.garments ?? []).filter((g) => typeof g.category === 'string' && CLOSET_CATEGORIES.includes(g.category) && g.certainty !== 'unsure'),
+      ...(reading?.held_items ?? []),
+    ];
+    return (
+      <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} doneLabel={t('common.done')}>
+        <SheetList>
+          {pieces.map((g, i) => {
+            const name = garmentLabel(g);
+            return (
+              <View key={i}>
+                {i > 0 ? <RowDivider /> : null}
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, minHeight: 64, paddingVertical: 10 }} accessible accessibilityLabel={t('added.a11y.pending', { name })}>
+                  <ClosetTile item={{ garment: g, hex: garmentHex(g), art: null, name, isPhotographed: true }} size={44} radius={12} scale={0.82} decorative />
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <KText variant="subheadline" weight="600">{name}</KText>
+                    <KText role="rowSubtitle" color="ink2">{t('added.pending')}</KText>
+                  </View>
+                </View>
+              </View>
+            );
+          })}
+        </SheetList>
+      </SheetScaffold>
+    );
+  }
+
+  const added = cs.added.map((id) => byId.get(id)).filter((c): c is ClosetItemRow => !!c);
+  // Pieces it matched, once each, with the sighting that matched them.
+  const matched: { item: ClosetItemRow; o: ClosetObservationRow | undefined; ask: ClosetAsk | undefined }[] = [];
+  for (const id of [...new Set(cs.matched)]) {
+    const item = byId.get(id);
+    if (!item) continue;
+    const link = (cs.links ?? []).find((l) => l.itemId === id);
+    const o = link ? obs.get(link.obsId) : undefined;
+    const ask = asks.find((a) => link && a.obsId === link.obsId && (a.answer === 'same' || a.answer === 'runnerUp'));
+    matched.push({ item, o, ask });
+  }
 
   return (
     <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} doneLabel={t('common.done')}>
-      {data && data.items.length > 0 ? (
-        <SheetList>
-          {data.items.map((item, i) => (
-            <View key={item.id}>
-              {i > 0 ? <RowDivider /> : null}
-              <AddedItemRow
-                item={item}
-                removed={data.undone.has(item.id)}
-                onEdit={() => router.push(`/sheets/edit-item/${item.id}`)}
-                onToggle={(undone) => void fitCheck.setItemUndone(checkId, item.id, undone)}
-              />
-            </View>
-          ))}
-        </SheetList>
-      ) : null}
+      <View style={{ gap: 18 }}>
+        {added.length > 0 ? (
+          <SheetList>
+            {added.map((item, i) => {
+              const ask = askFor(item.id);
+              const candidate = ask ? byId.get(ask.candidateId) : undefined;
+              const runnerUp = ask?.runnerUpId ? byId.get(ask.runnerUpId) ?? null : null;
+              const removed = undone.has(item.id);
+              return (
+                <View key={item.id}>
+                  {i > 0 ? <RowDivider /> : null}
+                  <AddedItemRow
+                    item={item}
+                    removed={removed}
+                    onEdit={() => router.push(`/sheets/edit-item/${item.id}`)}
+                    onToggle={(u) => void fitCheck.setItemUndone(checkId, item.id, u)}
+                  />
+                  {ask && candidate && !removed ? (
+                    <View style={{ paddingLeft: 72, paddingRight: 16, paddingBottom: 14 }}>
+                      <DuplicateQuestion ask={ask} photo={item} candidate={candidate} runnerUp={runnerUp} onAnswer={(v) => answer(ask, v)} />
+                    </View>
+                  ) : null}
+                </View>
+              );
+            })}
+          </SheetList>
+        ) : null}
+        {matched.length > 0 ? (
+          <View style={{ gap: 8 }}>
+            <KText variant="footnote" weight="600" color="ink2" accessibilityRole="header" style={{ paddingHorizontal: 4 }}>
+              {t('added.section.inCloset')}
+            </KText>
+            <SheetList>
+              {matched.map(({ item, o, ask }, i) => {
+                const photo = ask ? byId.get(ask.itemId) : undefined;
+                const candidate = ask ? byId.get(ask.candidateId) : undefined;
+                const runnerUp = ask?.runnerUpId ? byId.get(ask.runnerUpId) ?? null : null;
+                return (
+                  <View key={item.id}>
+                    {i > 0 ? <RowDivider /> : null}
+                    <MatchedRow item={item} onSplit={o && o.decision === 'same' ? () => void fitCheck.splitItem(checkId, o.id) : undefined} />
+                    {ask && photo && candidate ? (
+                      <View style={{ paddingLeft: 72, paddingRight: 16, paddingBottom: 14 }}>
+                        <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(v) => answer(ask, v)} />
+                      </View>
+                    ) : null}
+                  </View>
+                );
+              })}
+            </SheetList>
+          </View>
+        ) : null}
+      </View>
     </SheetScaffold>
+  );
+}
+
+function MatchedRow({ item, onSplit }: { item: ClosetItemRow; onSplit?: () => void }) {
+  const detail = addedDetail(item);
+  return (
+    <View
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 16, paddingRight: 12, minHeight: 64, paddingVertical: 10 }}
+      accessible
+      accessibilityLabel={t('added.a11y.matched', { name: item.name, detail: detail.replace(' · ', ', ').toLowerCase() })}
+      accessibilityActions={onSplit ? [{ name: 'split', label: t('added.notSame') }] : undefined}
+      onAccessibilityAction={(e) => e.nativeEvent.actionName === 'split' && onSplit?.()}
+    >
+      <ClosetTile item={item} size={44} radius={12} scale={0.82} decorative />
+      <View style={{ flex: 1, gap: 2 }}>
+        <KText variant="subheadline" weight="600">{item.name}</KText>
+        <KText role="rowSubtitle" color="ink2">{detail}</KText>
+      </View>
+      {onSplit ? <TextLink title={t('added.notSame')} onPress={onSplit} compact accessibilityHint={t('added.a11y.notSame', { name: item.name })} /> : null}
+    </View>
   );
 }
 
@@ -68,14 +190,7 @@ function AddedItemRow({ item, removed, onEdit, onToggle }: { item: ClosetItemRow
         disabled={removed}
         style={({ pressed }) => ({ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, opacity: pressed ? opacity.pressed : 1 })}
       >
-        <View
-          style={{
-            width: 44, height: 44, borderRadius: 12, borderCurve: 'continuous', backgroundColor: colors.surface2,
-            alignItems: 'center', justifyContent: 'center', opacity: removed ? 0.4 : 1,
-          }}
-        >
-          <GarmentIcon type={garmentIconType(item.garment)} color={item.hex} size={36} />
-        </View>
+        <ClosetTile item={item} size={44} radius={12} scale={0.82} dim={removed} decorative />
         <View style={{ flex: 1, gap: 2 }}>
           <KText variant="subheadline" weight="600" color={removed ? 'ink3' : 'ink'} style={removed ? { textDecorationLine: 'line-through', textDecorationColor: colors.ink3 } : undefined}>
             {name}
