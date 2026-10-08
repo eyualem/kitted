@@ -16,6 +16,14 @@ export { partialLabel, mergeShoeSnap, mergeBottomSnap, pickShoesFromCloset } fro
 export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type RotationResult, type ItemKey, type ComboKey } from "./rotation";
 export { garmentName, G, SUB_NAME, SLOT_TO_CLOSET, CORE, idx } from "./names";
 export { clone, deepEqual } from "./util";
+export {
+  weatherNeeds, seasonNeeds, weatherTip, itemAllowed, isWarmLayer, isHeavyOuter, isBoot, isSuede, isShorts, isFairWeatherShoe, WEATHER_BANDS,
+  type DayWeather, type WeatherCondition, type WeatherWindow, type WeatherNeeds, type LayerNeed, type WeatherTip, type WeatherTipKey,
+} from "./weather";
+export {
+  pickOutfit, closetState,
+  type PickInput, type PickedOutfit, type IdeaResult, type IdeaReason, type IdeaReasonKey, type ClosetState, type MissingSlot,
+} from "./ideas";
 export { explainScore, type ScoreLedger, type LedgerCredit, type LedgerRule, type Explained } from "./ledger";
 export type { CreditReason, ScoreTrace } from "./rubric";
 export {
