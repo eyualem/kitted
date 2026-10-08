@@ -79,6 +79,7 @@ function RootStack({ booted }: { booted: boolean }) {
       <Stack.Protected guard={ready && !blocked}>
         <Stack.Screen name="camera" options={cover} />
         <Stack.Screen name="shoe-snap" options={cover} />
+        <Stack.Screen name="scan" options={cover} />
         <Stack.Screen name="photo/[checkId]" options={cover} />
         <Stack.Screen name="share/[checkId]" options={cover} />
         <Stack.Screen name="paywall" options={cover} />

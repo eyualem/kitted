@@ -85,6 +85,14 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 43, name: 'Camera · come a little closer', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=tooFar', under: '/stylist' },
   { n: 44, name: 'Camera · after the shot: too dark', id: 'S3', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?review=dark', under: '/stylist' },
   { n: 45, name: "Camera · after the shot: can't find you", id: 'S3', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?review=noPerson', under: '/stylist' },
+  { n: 46, name: 'Scan · 3 pieces in view', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan', under: '/closet' },
+  { n: 47, name: 'Scan · too dark (flash offer)', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?guide=dark', under: '/closet' },
+  { n: 48, name: 'Scan · a person in view', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?guide=person', under: '/closet' },
+  { n: 49, name: 'Scan · a piece cut off', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?guide=cutOff', under: '/closet' },
+  { n: 50, name: 'Scan · glare', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?guide=glare', under: '/closet' },
+  { n: 51, name: 'Scan · no clothes found', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?guide=noClothes', under: '/closet' },
+  { n: 52, name: 'Scan · after the shot: cut off', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?review=cutOff', under: '/closet' },
+  { n: 53, name: 'Scan · saved', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?saved=1', under: '/closet' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

@@ -39,8 +39,25 @@ export const SIM_LAYOUT: readonly { x: number; y: number; w: number; h: number }
   { x: 0.14, y: 0.6, w: 0.34, h: 0.22 }, // sneakers
 ];
 
+/** Where each sample piece is drawn for a state (square art, centered in its layout box). */
+export function simPieceRects(state: ScanTip | 'review', w: number, h: number): ViewBox[] {
+  if (state === 'noClothes' || state === 'person') return [];
+  const far = state === 'tooFar' ? 0.32 : 1;
+  return SIM_LAYOUT.map((l, i) => {
+    const shift = state === 'cutOff' && i === 1 ? 0.24 : 0;
+    const cx = 0.5 + (l.x + l.w / 2 - 0.5) * far + shift, cy = 0.5 + (l.y + l.h / 2 - 0.5) * far;
+    const size = Math.min(l.w * w, l.h * h) * far * 1.05;
+    return { x: cx * w - size / 2, y: cy * h - size / 2, width: size, height: size };
+  });
+}
+
 export function simScanEvent(tip: ScanTip, w: number, h: number): GuideEvent {
-  const pieces: ScanPiece[] = SIM_LAYOUT.map((p) => ({ box: { x: p.x * w, y: p.y * h, width: p.w * w, height: p.h * h }, share: p.w * p.h * 0.6, edge: false }));
+  const pieces: ScanPiece[] = simPieceRects(tip, w, h).map((box) => ({
+    // Clipped to the frame like the real mask; a box reaching the edge is "cut off".
+    box: { ...box, width: Math.min(box.width, w - box.x) },
+    share: tip === 'tooFar' ? 0.015 : (box.width * box.height * 0.5) / (w * h),
+    edge: box.x + box.width >= w - 1,
+  }));
   const g: GuideEvent = { state: 'noPerson', faces: [], luma: 0.55, clipped: 0.01, motion: 0.004, scan: { people: [], clothes: 0.86, labels: [], pieces } };
   switch (tip) {
     case 'dark':
@@ -54,13 +71,6 @@ export function simScanEvent(tip: ScanTip, w: number, h: number): GuideEvent {
       return { ...g, motion: 0.08 };
     case 'glare':
       return { ...g, clipped: 0.18 };
-    case 'cutOff': {
-      // The jeans pushed off the right edge.
-      const ps = pieces.map((p, i) => (i === 1 ? { ...p, box: { ...p.box, x: w * 0.7, width: w * 0.3 }, edge: true } : p));
-      return { ...g, scan: { ...g.scan!, pieces: ps } };
-    }
-    case 'tooFar':
-      return { ...g, scan: { ...g.scan!, pieces: pieces.map((p) => ({ ...p, share: 0.015 })) } };
     case 'looking':
       return { ...g, scan: undefined };
     default:
