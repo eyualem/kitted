@@ -23,6 +23,17 @@ import { whatIRead } from '@/features/fitcheck/labels';
 import { whyRows } from '@/features/why/ledgerRows';
 import { displayScore } from '@/design-system/score';
 import { en, t } from '@/i18n/en';
+import schemaV3 from '../../assets/gemini/schema-v3.json';
+import { createMemoryStore } from '@/data/memoryStore';
+import { createClosetService } from '@/features/closet/service';
+import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
+import { manualClock } from '@/services/clock';
+import { createMockClosetSource } from '@/services/closetSource/mock';
+import { counterIds } from '@/services/ids';
+import { demoImagePrep } from '@/services/imagePrep/demo';
+import { createQuota } from '@/services/quota';
+import { createMockReadingSource } from '@/services/readingSource/mock';
+import { realScheduler } from '@/services/scheduler';
 
 const BANNED: [string, RegExp][] = [
   ['"AI stylist"', /AI stylist/i],
@@ -120,5 +131,44 @@ describe('what the cards say, for every demo reading', () => {
   it('closet rows ("Top · Regular fit") for every seed item', () => {
     const lines = closet.map((c) => addedDetail({ slot: c.slot as never, garment: c.garment }));
     for (const s of lines) expect([bannedIn(s), /[{}]/.test(s)]).toEqual([[], false]);
+  });
+});
+
+describe('closet names (#91)', () => {
+  // Every word a closet name can use comes from a fixed table: the app's color words, the shade step / finish
+  // words, the known brands, garment names and detail words. The model's own shade or logo text never shows.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const core = require('@kitted/core') as typeof import('@kitted/core');
+  const COLORS = ['white', 'cream', 'light', 'grey', 'charcoal', 'black', 'navy', 'light-blue', 'blue', 'mid-wash', 'dark', 'olive', 'green', 'sage', 'beige', 'khaki', 'tan', 'brown', 'burgundy', 'red', 'orange', 'yellow', 'pink', 'purple', 'multicolor'];
+  const SHADE = ['light', 'medium', 'dark', 'heather', 'washed', 'faded', 'raw'];
+  const BRANDS = ['nike', 'jordan', 'adidas', 'puma', 'new', 'balance', 'under', 'armour', 'north', 'face', 'patagonia', 'carhartt', 'champion', 'ralph', 'lauren', 'lacoste', 'tommy', 'hilfiger', 'calvin', 'klein', "levi's", 'gap', 'uniqlo', 'h&m', 'zara', 'supreme', 'stussy', 'essentials', 'vans', 'converse', 'reebok', 'asics', 'columbia', "arc'teryx", 'lululemon', 'gymshark', 'abercrombie', 'american', 'eagle', 'hollister', 'guess', 'boss', 'timberland', 'dr.', 'martens', 'era', 'kith'];
+  const DETAILS = ['zip', 'half-zip', 'pullover', 'cargo', 'striped', 'pleated', 'raw-hem', 'pocket', 'collared', 'hooded', 'drawstring', 'cuffed', 'button-front', 'belted', 'ripped', 'faded', 'chunky', 'slim'];
+  const SUBS = (schemaV3 as { properties: { garments: { items: { properties: { subcategory: { enum: string[] } } } } } }).properties.garments.items.properties.subcategory.enum;
+  const GARMENT = SUBS.flatMap((s) => core.garmentName({ subcategory: s }).toLowerCase().split(' '));
+  const ALLOWED = new Set([...COLORS, ...SHADE, ...BRANDS, ...DETAILS, ...GARMENT.filter((w) => w !== 'other'), 'top', 'layer', 'bottoms', 'shoes', ...'23456789'.split('')]);
+
+  it('names for every demo photo come only from the fixed tables', async () => {
+    const bad: string[] = [];
+    let names = 0;
+    for (const id of ['p01a', 'p01b', 's05', 's09', 's10', 's12', 's13', 's14', 's15', 's22', 's24', 's25', 'ph1']) {
+      const store = createMemoryStore();
+      const clock = manualClock(Date.parse('2026-10-22T07:42:00-04:00'));
+      const ids = counterIds();
+      const closet = createClosetService({ store, clock, scheduler: realScheduler, ids, source: createMockClosetSource() });
+      const svc = createFitCheckService({
+        store, source: createMockReadingSource({ latency: () => 0, scheduler: realScheduler }), prep: demoImagePrep,
+        quota: createQuota({ store, clock, isPro: () => true }), clock, scheduler: realScheduler, ids, closet,
+        timers: () => ({ ...DEFAULT_TIMERS, enabled: false, cacheHitMs: 0 }), tap: () => false,
+      });
+      await svc.start({ mode: 'check', photoId: id, occasion: 'everyday' });
+      await closet.settle();
+      for (const c of await store.closet.all()) {
+        for (const w of c.name.toLowerCase().split(' ')) if (!ALLOWED.has(w)) bad.push(`${id}: "${c.name}" (${w})`);
+        expect(bannedIn(c.name)).toEqual([]);
+        names += 1;
+      }
+    }
+    expect(bad).toEqual([]);
+    expect(names).toBeGreaterThan(30);
   });
 });
