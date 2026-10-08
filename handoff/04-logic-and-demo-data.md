@@ -628,7 +628,11 @@ Expected (`expected_scores.json → rechecks`):
    - Leg chips: Slim / Straight / Relaxed (Skinny and Wide under "More")
    - The mockup subtitles "Regular fit", "How do they really fit?" and "Low profile" are display strings
 3. Create a **new** Reading (`source: corrected`) with that one field changed. The original is never edited. Re-score instantly, with no API call. Preview line in the sheet (`02` D9, copy keys `nqr.scoreStays` / `nqr.scoreMoves`): `"Score stays {x}"` if the overall is unchanged, else `"Score {from} → {to}"` with the new number in copper. The demo case is p01b chinos straight → slim: **"Score stays 8.0"** (raw 7.775) plus the pill "Closet updated".
-4. **Always update the matching ClosetItem** (same slot, subcategory and `FAMILY(color)`). Set the field in its garment and append it to `confirmedFields`. From then on, closet anchoring overrides future readings of that item with the confirmed values (`app-build-spec.md` §2.5).
+4. **Follow the stored link, never re-match** (Oct 8, DECISIONS-LOG #91; the old family re-match could recolor the wrong piece). Every garment of a check has a sighting (`closet_observations`) linked to the item it went to (`fit_checks.details.closetSummary.links`). The correction updates that sighting's garment and `user_confirmed`, then:
+   - **still fits the linked item** (the identity engine finds no veto against its other sightings), or the item has **only this one sighting** → patch the item's garment field and append it to `confirmedFields` (a confirmed type or color renames an auto-named piece: "Black sweatpants" → "Black jeans");
+   - **no longer fits an item seen 2+ times** → the sighting moves: through the engine to another piece he owns, or a new one; the old item loses a wear and keeps its look;
+   - **Wrong item → remove** → the sighting is undone (its piece too, if that was its only sighting) and later garments' links move up one.
+   - Checks from before V6 (no links) may only change one of their own pieces. From then on, closet anchoring overrides future readings of that item with the confirmed values (`app-build-spec.md` §2.5). The one quick tap's answer (not a Skip) is stored the same way, on the sighting (`user_confirmed.subcategory`).
 5. Save a `Correction` (kind, field, old, new, scoreBefore, scoreAfter). In the demo it isn't sent anywhere.
 6. Fix doesn't apply → hide that fix and show the next candidate. Score feels off → stepper "What would you give it?", then "Thanks."
 

@@ -170,12 +170,12 @@
   - **My Oct 7 outfit:** 3.5 → 6.5 read as jeans (5.0 plus the tap if misread). Saved checks at 8+: 53% → 44%. The remaining over-scoring is the 7.0 starting point, which the friend panel decides.
   - **Code-only rulings ported Oct 8 (#81):** live in `rubric.py` v4.0 and the app. Port check `check_port.py`: 100% vs the prototype. 80 of 181 demo cases changed; the p01b 8.0 → 9.0 story didn't. Differs from mockup: welcome s15 8.5 → 8.0; screen 7's next-level line (p01b reads as minimal). Next, in order:
     1. Done Oct 8: the "Jeans or sweatpants?" tap, the "Reads as …" label, and the names Classic prep and Outdoor (#85).
-    2. The closet: a separate closet call after the card shows (approved #63: shade, details, logo text, boxes for crops), and matching by exact shade so two grey hoodies don't merge.
+    2. Done Oct 8 (#91–93): the closet. A separate closet call runs after the card shows (shade, details, logo text, boxes); the matcher keeps two grey hoodies apart and asks "Same as your khaki chinos?" when unsure; corrections follow the stored link; tiles show detailed graphics. What you'll see: names like "Medium grey Nike hoodie", "Added 3 to Closet · 1 question", S11's question with both tiles and "Already in your closet". Real on your phone in the dev build (the closet call uses the dev key); demo photos replay real closet1 answers. Demo screens 37–38. Next: crops from your photo (phase 3) after the reinstall.
     3. Done Oct 8: full-resolution capture (12 MP 4:3, #83); on my phone after a reinstall.
   - **New scoring readings wait for the gold set.** v5 and the slim v5s both failed the consistency bar (#63–64), so the app stays on the locked v3 format.
   - **Also found Oct 7:**
     - The camera captured video-size frames (`sessionPreset = .high`); fixed Oct 8 (#83).
-    - Closet matching merges light grey, grey and charcoal into one color.
+    - Closet matching merged light grey, grey and charcoal into one color; fixed Oct 8 (#91).
     - Raw closet crops aren't clean enough yet; they need full-res capture plus a cut-out.
 - **Research:**
   - Gemini creator research: I still need to export the Google Sheet as `.xlsx` into `inputs/`. Only rules backed by 2024+ videos count.
@@ -236,7 +236,7 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ### 2. P2 leftovers (small)
 1. **Rubric questions for me:** (a) correcting a detail can make the only fix vanish (DECISIONS-LOG #37). Recommended: fall back to the layering/elevate fixes; show "No quick fixes" once. (b) Two rules can pick the same fix; the card shows it once, but the engine should offer the next distinct fix (#46).
-2. The "Same as your white tee?" duplicate question in the closet sheet waits for real closet matching (P3+, #31).
+2. Done Oct 8: the "Same as your …?" duplicate question in the closet sheet (#91).
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
 ### 2b. Camera guidance: its own session (founder, Oct 8)
@@ -293,7 +293,7 @@ P5's real size is about 6.5 days, not 05's 2.
   - fill the map in `app/src/design-system/fontFiles.ts`
   - uncomment the expo-font plugin in `app/app.config.ts`
   - rebuild
-- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names, the VoiceOver lines, and (new Oct 7) the closet-sheet rows ("Top · Regular fit"), the viewer caption ("Date · October 22") and "Pick shoes from your closet". New Oct 8: "One quick tap" (the hint, Skip lines, "Not scored. You sent a newer photo, so nothing was counted.", VoiceOver) and "Reads as". Skim it.
+- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names, the VoiceOver lines, and (new Oct 7) the closet-sheet rows ("Top · Regular fit"), the viewer caption ("Date · October 22") and "Pick shoes from your closet". New Oct 8: "One quick tap" (the hint, Skip lines, "Not scored. You sent a newer photo, so nothing was counted.", VoiceOver), "Reads as", and the closet's lines (#92: "Checking the details…", "1 question", "Already in your closet", "Not the same", "It's my …", "Saved as your …", "Kept as a new piece."). Skim it.
 - **Already built; just confirm:**
   - The "Why" sheet's "Rounded to the nearest half · +0.25" line.
   - "Dialed in. Nothing to fix." only at 9+.
@@ -389,4 +389,6 @@ Exceptions:
 - **An alert raised from a SwiftUI `Menu` item is dropped while the menu closes;** wait about 450 ms (`confirmLens`; the menus are gone since #68, but the wait stays harmless).
 - **Menus that open from a control float in a Modal at its measured spot** (`MorphPicker`), so the thread never moves or clips them.
 - **Demo gating:** read `getDemoArgs().demoScreen`, not the demo state, in code that runs while a demo screen loads.
+- **The closet is the closet service's** (`features/closet/service.ts`, #91): fit-check writes go through `patchCheckKeepCloset`, which keeps `closetSummary` and `itemIds`; never write those from the fit-check service. In tests, share one id factory between services (two counters both made `R-1`).
+- **expo-sqlite `INSERT OR REPLACE` moves a patched row to the end of `all()`;** sort lists explicitly.
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).

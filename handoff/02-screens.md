@@ -881,6 +881,8 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **Tile image order (09 §2, ruling 12):** garment cut-out (pose regions + person mask) → plain crop → color icon. In the demo: color icons from seed data.
 
+**Interim grid (Oct 8, #91), until P5 builds the rest of this screen:** the tiles are the **detailed graphic**: the garment icon in the piece's exact shade (core `displayHex`, always inside its color family) plus at most 3 detail marks (full / half zip, drawstrings, pockets, side stripe, cuffs, belt loops, collar and buttons, denim rips or fade, a graphic panel, stripes or checks, a chunky sole), a faint heather speckle or twill hatch, and a brand as a small neutral chest mark (the word only on C2's large tile; never a logo shape). Real crops from his photo replace them in phase 3. Newest first. Above the grid, one card per open question: tagline `A quick question` + the S11 duplicate question (both tiles, the same chips). VoiceOver per tile: name + what's drawn ("Medium grey Nike hoodie, drawstrings, cuffs, front pouch"). Demo screen **38**.
+
 **Interactions**
 | Element | Action |
 |---|---|
@@ -1114,11 +1116,15 @@ Same visual language as §2: chalk `bg`, white `KCard`s with radius 26 and dashe
 - Tap a pair → applies, dismisses; card label becomes `Full check (shoes from your closet)`. No API.
 
 #### S11 · Added items review (sheet)
-- **Entry:** `Review` on a card's Added row. **Detent:** medium + large. Title `Added to your closet` + `Done`. Subtitle `From this check. Fix anything I got wrong.`
-- **List:** one row per item, same shape as S8's garment rows (44 tile, name `.subheadline.weight(.semibold)`, detail `.footnote` `ink2`, e.g. `Top · Regular fit`), trailing `Undo` button (`arrow.uturn.backward`, `ink2`, 44 hit).
-- **Duplicate question** (inline under a row): `Same as your white tee?` with chips `Yes, same one` · `No, a new one`. "Yes" merges into the existing item (wornCount +1).
+- **Entry:** `Review` on a card's closet row. **Detent:** medium + large. Title `Added to your closet` + `Done`. Subtitle `From this check. Fix anything I got wrong.`
+- **Since Oct 8 (DECISIONS-LOG #91), the closet is written after the score card shows,** from a separate closet call (shade, details, logo text, shape). While it's out (at most 12 s) the rows come from the reading, with the detail `Checking the details…` and no Undo; then the rows are the real pieces (or, offline / slow, the pieces written from the reading alone; a late answer adds the details).
+- **List (new pieces):** one row per item, same shape as S8's garment rows (44 tile with the detailed graphic, name `.subheadline.weight(.semibold)`, detail `.footnote` `ink2`, e.g. `Top · Regular fit`), trailing `Undo` button (`arrow.uturn.backward`, `ink2`, 44 hit). Names: `{shade} {Brand} {detail} {garment}` ("Medium grey Nike hoodie"); see #91.
+- **Duplicate question** (inline under the row of a piece the stylist wasn't sure about): `Same as your khaki chinos?`, two 64 pt tiles `This photo` · `In your closet`, chips `Yes, same one` · `No, a new one` (+ `It's my {runner-up}` when a second piece was close). Until he answers, the piece is its own item (a duplicate does less harm than a wrong merge). "Yes" folds it into the existing item (wornCount +1; a different type read becomes an alias). "No" keeps both and they're never asked about again. Answered: `Saved as your khaki chinos.` / `Kept as a new piece.` + `Change` (re-answerable). At AX sizes each tile gets its own row with the caption beside it.
+- **Already in your closet** (section, `.footnote.weight(.semibold)` `ink2`): the pieces this photo matched, with `Not the same` (accent text link): that sighting becomes its own piece and the two are never matched again.
 - **Tap a row** → C3 Edit item (the sheet's own push). **Undo** → removes that item (it stays in the reading; Rotation updates), row shows `Removed` + `Add back`.
-- **VoiceOver:** "White tee, top, regular fit. Actions: Edit, Undo."
+- **VoiceOver:** "White tee, top, regular fit. Actions: Edit, Undo." Matched: "White tee, already in your closet. Top, regular fit. Actions: Not the same." The question reads both tiles: "Same as your khaki chinos? This photo: Tan chinos, belt loops. In your closet: Khaki chinos, belt loops."
+- **The card's row** reads `Added 3 to Closet · 1 question`, `2 already in your closet` when nothing was new, or `Checking the details…` while pending (`summaryText.ts`).
+- **Differs from the spec above (Oct 8):** the duplicate question shows both tiles; the third chip and the "Already in your closet" section are new (#91). Demo screens **37** (p01b vs seed T1/B1/S1) and **21**.
 
 #### S13 · Photo viewer
 - `fullScreenCover`, black, the stored neck-down copy (the only copy), pinch to zoom, double-tap zoom, swipe down to dismiss, X top-left (glass). Caption at the bottom (`.footnote`, white 75%): `{Occasion} · {date}`. For a look with a shoe snap, swipe left/right between the photo and the snap (page dots).
