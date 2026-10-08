@@ -2,7 +2,7 @@
 // for every demo reading × occasion × closet × first check. Rules from CLAUDE.md "Wording":
 // never "AI stylist", never "unlimited", no emoji or ✓ ▾ ↑ glyphs (SF Symbols draw those),
 // no unfilled {placeholder}, and no score above 9.5.
-import type { ClosetItem, Reading, Styles } from '@kitted/core';
+import { RUBRIC_DATA, type ClosetItem, type Reading, type Styles } from '@kitted/core';
 import expected from '../../../handoff/fixtures/expected_scores.json';
 import seed from '../../assets/seed.json';
 import index from '../../assets/demo-readings/INDEX.json';
@@ -14,6 +14,7 @@ import s24ClosetShoes from '../../assets/demo-readings/variants/s24_closet_shoes
 import s24Jeans from '../../assets/demo-readings/variants/s24_jeans.json';
 import s24JeansGeneric from '../../assets/demo-readings/variants/s24_jeans_generic.json';
 import s24Snap from '../../assets/demo-readings/variants/s24_shoe_snap_runners.json';
+import ph1 from '../../assets/demo-readings/variants/ph1_oct7_misread.json';
 import { demoReadingById } from '@/services/readingSource/demoReadings';
 import { OCCASIONS } from '@/data/types';
 import { addedDetail } from '@/features/added/addedDetail';
@@ -35,7 +36,7 @@ function bannedIn(s: string): string[] {
   return BANNED.filter(([, re]) => re.test(s)).map(([name]) => name);
 }
 
-const VARIANTS = { p01aReal, p01bSlim, p01bReal, s24ChinoShorts, s24ClosetShoes, s24Jeans, s24JeansGeneric, s24Snap } as unknown as Record<string, Reading>;
+const VARIANTS = { p01aReal, p01bSlim, p01bReal, s24ChinoShorts, s24ClosetShoes, s24Jeans, s24JeansGeneric, s24Snap, ph1 } as unknown as Record<string, Reading>;
 const readings: [string, Reading][] = [
   ...index.photos.map((p) => [p.id, demoReadingById(p.id)!] as [string, Reading]),
   ...Object.entries(VARIANTS).map(([name, r]) => [`variant ${name}`, r] as [string, Reading]),
@@ -55,8 +56,30 @@ describe('copy deck and build strings', () => {
   });
 });
 
+describe('the one quick tap and "Reads as" strings', () => {
+  const deck = en as Record<string, string | undefined>;
+  it("every question and answer label is core's text, word for word", () => {
+    const problems: string[] = [];
+    for (const pairs of Object.values(RUBRIC_DATA.tap.pairs)) {
+      for (const [a, b, q] of pairs) if (deck[`tap.q.${a}_${b}`] !== q) problems.push(`tap.q.${a}_${b}`);
+    }
+    for (const [v, label] of Object.entries(RUBRIC_DATA.tap.labels)) {
+      if (deck[`tap.opt.${v}`] !== label) problems.push(`tap.opt.${v}`);
+      const inSentence = label.startsWith('Chelsea') ? label : label.charAt(0).toLowerCase() + label.slice(1);
+      if (deck[`tap.as.${v}`] !== inSentence) problems.push(`tap.as.${v}`);
+    }
+    expect(problems).toEqual([]);
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.q.'))).toHaveLength(9);
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.opt.'))).toHaveLength(13);
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.as.'))).toHaveLength(13);
+  });
+  it('the "Scored for" strings are gone', () => {
+    expect(Object.keys(en).filter((k) => k.startsWith('scoredFor.') || k.startsWith('why.style.'))).toEqual([]);
+  });
+});
+
 describe('what the cards say, for every demo reading', () => {
-  it('reads all 12 demo photos plus the variants', () => expect(readings.length).toBe(20));
+  it('reads all 12 demo photos plus the variants', () => expect(readings.length).toBe(21));
   for (const [file, reading] of readings) {
     it(file, () => {
       const problems: string[] = [];
@@ -80,7 +103,7 @@ describe('what the cards say, for every demo reading', () => {
               check(`${at} fix gain`, t('card.gainTo', { score: displayScore(f.to) }));
             }
             for (const s of [...ev.fixes.nextLevel, ...ev.fixes.tips]) check(`${at} tip`, s);
-            const why = whyRows(reading, occasion, STYLES, null);
+            const why = whyRows(reading, occasion, STYLES, null, ev.row.details.readsAs ?? null);
             for (const row of why?.rows ?? []) {
               check(`${at} why`, row.rule);
               check(`${at} why item`, row.item);

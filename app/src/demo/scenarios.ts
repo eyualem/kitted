@@ -33,6 +33,8 @@ export const STORY_FIRST_CHECK = 'story-first';
 export const STORY_RECHECK = 'story-recheck';
 /** Screen 11's live partial check (s24) inside the full scenario. */
 export const STORY_PARTIAL = 'story-partial';
+/** Screens 34–36: the one quick tap on the founder's Oct 7 reading (ph1, on s12's stand-in photo). */
+export const STORY_TAP = 'story-tap';
 
 export const SCREENS: readonly ScreenScenario[] = [
   { n: 1, name: 'Welcome', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome' },
@@ -69,7 +71,11 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 30, name: 'Evening card', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T18:30:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: true },
   { n: 31, name: 'Morning card · weather ask', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: false },
   { n: 32, name: 'Morning card · hot day', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 0, href: '/stylist', weather: 'hot', weatherAllowed: true },
-  { n: 33, name: 'Scored for streetwear', id: 'S6s', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 33, name: 'Reads as smart casual', id: 'S6s', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  // The one quick tap (02 "S5q", #83): asking, answered Jeans, skipped.
+  { n: 34, name: 'One quick tap', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 35, name: 'One quick tap · answered', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 36, name: 'One quick tap · skipped', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

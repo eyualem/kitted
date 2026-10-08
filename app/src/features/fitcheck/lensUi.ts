@@ -1,15 +1,11 @@
-// The result card's "what it was scored for" (02 "S6s", DECISIONS-LOG #61–62): the confirm alert
-// before a re-score, and the plain-words line that appears only when the style changed something.
+// The result card's re-score (02 D7, DECISIONS-LOG #61–62): the confirm alert before an occasion change.
+// (The "Scored for" line is gone: since rubric v4 a style never changes a score; the card says "Reads as …", #83.)
 import { Alert, Platform } from 'react-native';
-import { styleEffects, type StyleEffect } from '@kitted/core';
-import { store } from '@/data/db';
 import type { FitCheckRow, OccasionKey, StyleKey } from '@/data/types';
-import { useLive } from '@/data/useLive';
 import { displayScore } from '@/design-system';
 import { t } from '@/i18n/en';
 import { occasionLabel } from '@/features/stylist/thread';
 import { styleLabel } from '@/features/morning/copy';
-import { garmentLabel } from './labels';
 import { fitCheck } from './session';
 
 const MENU_DISMISS_MS = 450;
@@ -37,37 +33,4 @@ export async function confirmLens(row: FitCheckRow, lens: Lens): Promise<void> {
     { text: t('rescore.keep', { current: current.toLowerCase() }), style: 'cancel' },
     { text: t('rescore.go'), isPreferred: true, onPress: () => void fitCheck.changeLens(row.id, lens) },
   ]);
-}
-
-export interface ScoredFor {
-  effects: StyleEffect[];
-  /** The line under the summary, or null when the style changed nothing. */
-  line: string | null;
-  garmentNames: (string | null)[];
-}
-
-export function useScoredFor(row: FitCheckRow | null | undefined): ScoredFor | null {
-  return useLive(
-    ['fitChecks', 'readings', 'profile'],
-    async () => {
-      if (!row?.readingId || row.status !== 'scored' || !row.style) return null;
-      const reading = (await store.readings.get(row.readingId))?.reading;
-      if (!reading) return null;
-      const p = await store.profile.get('me');
-      const { effects } = styleEffects(reading, { occasion: row.occasion, style: row.style, boldness: p?.boldness ?? null });
-      const names = effects.map((e) => {
-        const g = e.culpritIndex !== null ? reading.garments[e.culpritIndex] : undefined;
-        return g ? garmentLabel(g).toLowerCase() : null;
-      });
-      const first = effects[0];
-      const style = styleLabel(row.style).toLowerCase();
-      const line = !first
-        ? null
-        : names[0]
-          ? t(first.withStyle < first.general ? 'scoredFor.off' : 'scoredFor.on', { style, garment: names[0] })
-          : t('scoredFor.generic', { style });
-      return { effects, line, garmentNames: names };
-    },
-    [row?.id, row?.readingId, row?.style, row?.occasion, row?.status],
-  ) ?? null;
 }

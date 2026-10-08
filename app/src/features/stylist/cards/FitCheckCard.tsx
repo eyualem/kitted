@@ -2,10 +2,11 @@
 // live reading, then the result, from the same fit_checks row. One VoiceOver element with
 // custom actions; the buttons inside are also there for touch.
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { AccessibilityInfo, Pressable, View } from 'react-native';
 import {
   AddedRow, FinishTile, FixRow, GarmentIcon, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
-  MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, space, spokenScore, useTheme,
+  MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
@@ -22,7 +23,8 @@ import { occasionLabel } from '../thread';
 import { OccasionQuestion, ReadingCard } from './ReadingCard';
 import { useWeatherTip } from '@/features/morning/weatherTip';
 import { styleLabel } from '@/features/morning/copy';
-import { confirmLens, useScoredFor } from '@/features/fitcheck/lensUi';
+import { confirmLens } from '@/features/fitcheck/lensUi';
+import { justAnswered, tapAs, TapCard } from '@/features/tap/TapCard';
 
 function useCheck(checkId: string) {
   return useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -35,7 +37,7 @@ function useCloset() {
 export function FitCheckCard({ checkId }: { checkId: string }) {
   const row = useCheck(checkId);
   const wxTip = useWeatherTip(row);
-  const scoredFor = useScoredFor(row);
+  const asked = useTapGarment(row);
   const session = useFitCheckSession();
   if (!row) return null;
   if (row.status === 'scoring') {
@@ -49,9 +51,32 @@ export function FitCheckCard({ checkId }: { checkId: string }) {
     }
     return null; // a read that never finished (app closed mid-read): nothing to show yet
   }
+  // Read, waiting for the one quick tap (02 "S5q"). From the row, so it survives the app closing.
+  if (row.status === 'asking' && row.details.tap) return <TapCard row={row} />;
   if (row.status === 'failed') return <FailureCard row={row} />;
   if (row.status === 'notClothed' || row.status === 'unreadable') return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} />;
-  return <ScoredCard row={row} wxTip={wxTip} scoredFor={scoredFor?.line ?? null} />;
+  return <ScoredCard row={row} wxTip={wxTip} asked={asked} />;
+}
+
+/** Where the one quick tap's garment is in the CURRENT reading (a correction makes a new one), and its type now. */
+interface AskedGarment {
+  index: number;
+  value: string | null;
+}
+
+function useTapGarment(row: FitCheckRow | null | undefined): AskedGarment | null {
+  const tap = row?.details.tap;
+  return useLive(
+    ['readings'],
+    async () => {
+      if (!tap || !row?.readingId) return null;
+      const r = (await store.readings.get(row.readingId))?.reading;
+      if (!r) return null;
+      const at = r.garments.map((g, i) => [g, i] as const).filter(([g]) => g.category === tap.slot)[tap.ordinal];
+      return at ? { index: at[1], value: typeof at[0].subcategory === 'string' ? at[0].subcategory : null } : null;
+    },
+    [row?.readingId, tap?.slot, tap?.ordinal],
+  ) ?? null;
 }
 
 export function StatusCard({ text }: { text: string }) {
@@ -66,19 +91,29 @@ export function StatusCard({ text }: { text: string }) {
 
 function FailureCard({ row }: { row: FitCheckRow }) {
   const code = row.details.failCode ?? 'ai';
-  const key = code === 'timeout' ? 'fail.timeout' : code === 'offline' ? 'fail.offline' : code === 'paused' ? 'fail.paused' : code === 'unknownPhoto' ? 'demo.unknownPhoto' : 'fail.ai';
+  const key = code === 'timeout' ? 'fail.timeout' : code === 'offline' ? 'fail.offline' : code === 'paused' ? 'fail.paused' : code === 'unknownPhoto' ? 'demo.unknownPhoto'
+    : code === 'replaced' ? 'fail.replaced' : 'fail.ai';
   return (
     <KCard accessibilityLabel={t(key)}>
       <KCardSection gap={6}>
         <KText role="cardSummary">{t(key)}</KText>
-        {code !== 'unknownPhoto' ? <KButton title={t('common.tryAgain')} size="regular" kind="secondary" onPress={() => void fitCheck.retry(row.id)} /> : null}
+        {code !== 'unknownPhoto' && code !== 'replaced' ? <KButton title={t('common.tryAgain')} size="regular" kind="secondary" onPress={() => void fitCheck.retry(row.id)} /> : null}
       </KCardSection>
     </KCard>
   );
 }
 
-function ScoredCard({ row, wxTip, scoredFor }: { row: FitCheckRow; wxTip: string | null; scoredFor: string | null }) {
+function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | null; asked: AskedGarment | null }) {
   const closet = useCloset() ?? [];
+  const tap = row.details.tap;
+  // After the one quick tap: S8 prefilled with the other answer (the pair's other half).
+  const otherAnswer = tap?.answer ? tap.order.find((v) => v !== tap.answer) : undefined;
+  const changeAnswer = tap?.answer && asked && asked.value === tap.answer && otherAnswer
+    ? () => router.push(`/sheets/correct/${row.id}?reason=item&garment=${asked.index}&field=subcategory&value=${otherAnswer}`)
+    : null;
+  // "Scored as jeans. Not right? Tap." only after a Skip, while the piece still has the value it was scored as.
+  const skippedAs = tap?.skipped && changeAnswer ? tapAs(tap.answer!) : null;
+  const readsAs = row.details.readsAs ? t('readsAs.line', { style: styleLabel(row.details.readsAs).toLowerCase() }) : null;
   const score = row.score ?? 0;
   const partial = row.isPartial;
   const finished = !partial && (row.snapState === 'snapped' || row.snapState === 'closetPick');
@@ -104,6 +139,7 @@ function ScoredCard({ row, wxTip, scoredFor }: { row: FitCheckRow; wxTip: string
     { name: 'share', label: t('card.share.a11y') },
     ...(addedItems.length > 0 && !partial ? [{ name: 'review', label: t('card.a11y.review') }] : []),
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
+    ...(changeAnswer ? [{ name: 'changeAnswer', label: t('tap.a11y.change') }] : []),
   ];
   const go = {
     why: () => router.push(`/sheets/why/${row.id}`),
@@ -115,8 +151,9 @@ function ScoredCard({ row, wxTip, scoredFor }: { row: FitCheckRow; wxTip: string
     share: () => router.push(`/share/${row.id}`),
     review: () => router.push(`/sheets/added/${row.id}`),
     occasion: () => pickOccasion(row.occasion, (o) => void confirmLens(row, { occasion: o })),
+    changeAnswer: () => changeAnswer?.(),
   };
-  const label = t('card.a11y.fitCheck', {
+  const label = [t('card.a11y.fitCheck', {
     occasion: occasionLabel(row.occasion),
     score: spokenScore(score),
     word: scoreWordLabel(score),
@@ -124,85 +161,99 @@ function ScoredCard({ row, wxTip, scoredFor }: { row: FitCheckRow; wxTip: string
     summary: row.explanation ?? '',
     fix: top?.copy ?? t('card.noFixes'),
     tag: top?.tag ?? '',
-  });
+  }), readsAs ? `${readsAs}.` : '', skippedAs ? t('tap.skipped', { choice: skippedAs }) : ''].filter(Boolean).join(' ');
+
+  // Just answered the one quick tap here: say the score, then put VoiceOver on the result.
+  const focusRef = useRef<View>(null);
+  useEffect(() => {
+    if (!justAnswered.has(row.id)) return;
+    const h = setTimeout(() => {
+      justAnswered.delete(row.id);
+      AccessibilityInfo.announceForAccessibility?.(t('a11y.score', { score: spokenScore(score), word: scoreWordLabel(score) }));
+      if (focusRef.current) AccessibilityInfo.sendAccessibilityEvent?.(focusRef.current, 'focus');
+    }, 350);
+    return () => clearTimeout(h);
+  }, [row.id, score]);
 
   return (
-    <KCard
-      accessibilityLabel={label}
-      accessibilityActions={actions}
-      onAccessibilityAction={(e) => void go[e.nativeEvent.actionName as keyof typeof go]?.()}
-    >
-      <KCardSection>
-        <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} />
-        {partial || finished ? (
-          <>
-            <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} />
-            {row.explanation ? <KText variant="subheadline" color="ink2">{row.explanation}</KText> : null}
-          </>
-        ) : (
-          <ScoreBlock score={score} verdict={row.explanation ?? undefined} />
-        )}
-        {scoredFor ? <ScoredForLine text={scoredFor} /> : null}
-      </KCardSection>
-      <Seam />
-      <KCardSection paddingVertical={4} gap={0}>
-        {dialed ? (
-          <View style={{ paddingVertical: space.fixRowV }}>
-            <KText role="fixTitle">{score >= 9 ? t('dialed.title') : t('card.noFixes')}</KText>
-          </View>
-        ) : (
-          fixes.map((f, i) => (
-            <View key={f.target + i}>
-              {i > 0 ? <RowDivider /> : null}
-              <FixRow number={i + 1} title={f.copy} detail={f.tag} gain={t('card.gainTo', { score: displayScore(f.to) })} />
+    <View ref={focusRef} collapsable={false}>
+      <KCard
+        accessibilityLabel={label}
+        accessibilityActions={actions}
+        onAccessibilityAction={(e) => void go[e.nativeEvent.actionName as keyof typeof go]?.()}
+      >
+        <KCardSection>
+          <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} />
+          {partial || finished ? (
+            <>
+              <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} />
+              {row.explanation ? <KText variant="subheadline" color="ink2">{row.explanation}</KText> : null}
+            </>
+          ) : (
+            <ScoreBlock score={score} verdict={row.explanation ?? undefined} />
+          )}
+          {readsAs ? <ReadsAsLine text={readsAs} /> : null}
+          {skippedAs && changeAnswer ? <SkippedLine choice={skippedAs} onPress={changeAnswer} /> : null}
+        </KCardSection>
+        <Seam />
+        <KCardSection paddingVertical={4} gap={0}>
+          {dialed ? (
+            <View style={{ paddingVertical: space.fixRowV }}>
+              <KText role="fixTitle">{score >= 9 ? t('dialed.title') : t('card.noFixes')}</KText>
             </View>
-          ))
-        )}
-        {nextLevel ? <TipLine lead={t('card.nextLevel')} text={nextLevel} /> : null}
-        {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} /> : null}
-      </KCardSection>
-      <Seam />
-      <KCardSection gap={6}>
-        {addedItems.length > 0 && !partial ? (
-          <AddedRow
-            items={addedItems.map((c) => ({ type: garmentIconType(c.garment), hex: c.hex }))}
-            count={addedItems.length}
-            onReview={go.review}
-          />
-        ) : null}
-        {finishing ? <FinishRow row={row} closet={closet} /> : null}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
-          {dialed && score >= 9 ? (
-            <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
-          ) : recheckOpen ? (
-            <KButton title={t('card.recheck')} icon="recheck" size="regular" style={{ flex: 1 }} onPress={() => void go.recheck()} />
+          ) : (
+            fixes.map((f, i) => (
+              <View key={f.target + i}>
+                {i > 0 ? <RowDivider /> : null}
+                <FixRow number={i + 1} title={f.copy} detail={f.tag} gain={t('card.gainTo', { score: displayScore(f.to) })} />
+              </View>
+            ))
+          )}
+          {nextLevel ? <TipLine lead={t('card.nextLevel')} text={nextLevel} /> : null}
+          {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} /> : null}
+        </KCardSection>
+        <Seam />
+        <KCardSection gap={6}>
+          {addedItems.length > 0 && !partial ? (
+            <AddedRow
+              items={addedItems.map((c) => ({ type: garmentIconType(c.garment), hex: c.hex }))}
+              count={addedItems.length}
+              onReview={go.review}
+            />
           ) : null}
-          <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} />
-        </View>
-        <TextLinkRow>
-          <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
-          <TextLink title={t('card.nqr')} onPress={go.nqr} compact />
-          {/* `Later` (ruling 23) comes back in P4 with the "first 3 moves" card it leads to;
-              until then a link that does nothing is worse than none. */}
-        </TextLinkRow>
-        {row.details.rescoredFrom ? (
-          <KText variant="footnote" color="ink3">
-            {t('rescore.footnote', {
-              score: displayScore(row.details.rescoredFrom.score),
-              lens: row.details.rescoredFrom.style !== row.style
-                ? styleLabel(row.details.rescoredFrom.style).toLowerCase()
-                : occasionLabel(row.details.rescoredFrom.occasion).toLowerCase(),
-            })}
-          </KText>
-        ) : null}
-      </KCardSection>
-    </KCard>
+          {finishing ? <FinishRow row={row} closet={closet} /> : null}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
+            {dialed && score >= 9 ? (
+              <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
+            ) : recheckOpen ? (
+              <KButton title={t('card.recheck')} icon="recheck" size="regular" style={{ flex: 1 }} onPress={() => void go.recheck()} />
+            ) : null}
+            <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} />
+          </View>
+          <TextLinkRow>
+            <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
+            <TextLink title={t('card.nqr')} onPress={go.nqr} compact />
+            {/* `Later` (ruling 23) comes back in P4 with the "first 3 moves" card it leads to;
+                until then a link that does nothing is worse than none. */}
+          </TextLinkRow>
+          {row.details.rescoredFrom ? (
+            <KText variant="footnote" color="ink3">
+              {t('rescore.footnote', {
+                score: displayScore(row.details.rescoredFrom.score),
+                lens: row.details.rescoredFrom.style !== row.style
+                  ? styleLabel(row.details.rescoredFrom.style).toLowerCase()
+                  : occasionLabel(row.details.rescoredFrom.occasion).toLowerCase(),
+              })}
+            </KText>
+          ) : null}
+        </KCardSection>
+      </KCard>
+    </View>
   );
 }
 
-/** "Fit check · Full" + what it was scored for (02 "S6s"). The occasion opens an in-card tray
- *  (a change asks first, #62); the style is fixed once the photo is in (founder, Oct 8, #68):
- *  he picks the look he's going for before the check (the morning card), not after. */
+/** "Fit check · Full" + the occasion (02 "S6s"). The occasion opens an in-card tray (a change asks first,
+ *  #62). No style here: a style never changes the score (rubric v4); the card says "Reads as …" (#83). */
 function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
@@ -218,26 +269,43 @@ function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
           onPick={(o) => void confirmLens(row, { occasion: o })}
           accessibilityLabel={t('card.a11y.changeOccasion')}
         />
-        {row.style ? (
-          <KText variant="footnote" color="ink2" mono="label">
-            {`· ${styleLabel(row.style)}`}
-          </KText>
-        ) : null}
       </View>
     </View>
   );
 }
 
-/** Only when the style changed a rule (#61): "Scored for streetwear: the hoodie is on-style here…". */
-function ScoredForLine({ text }: { text: string }) {
-  const { colors } = useTheme();
+/** "Reads as streetwear" (02 "S6s", #83): the look the outfit reads as. Never changes the score. */
+function ReadsAsLine({ text }: { text: string }) {
   return (
-    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'flex-start', backgroundColor: colors.surface2, borderRadius: 12, borderCurve: 'continuous', paddingVertical: 8, paddingHorizontal: 10, marginTop: 4 }}>
+    <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center', marginTop: 2 }}>
       <Icon name="tag" size="small" color="ink2" />
-      <KText variant="footnote" color="ink2" style={{ flex: 1 }}>
+      <KText variant="footnote" color="ink2" style={{ flexShrink: 1 }}>
         {text}
       </KText>
     </View>
+  );
+}
+
+/** After a Skip: "Scored as jeans. Not right? Tap." The whole inset opens S8 with the other answer picked. */
+function SkippedLine({ choice, onPress }: { choice: string; onPress: () => void }) {
+  const { colors } = useTheme();
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${t('tap.skipped', { choice })} ${t('tap.a11y.change')}`}
+      style={({ pressed }) => ({
+        minHeight: size.hit, justifyContent: 'center', backgroundColor: colors.surface2, borderRadius: 12, borderCurve: 'continuous',
+        paddingVertical: 8, paddingHorizontal: 12, opacity: pressed ? opacity.pressed : 1,
+      })}
+    >
+      <KText variant="footnote" color="ink2">
+        {`${t('tap.skipped', { choice })} `}
+        <KText variant="footnote" weight="600" color="accent">
+          {t('tap.skipped.fix')}
+        </KText>
+      </KText>
+    </Pressable>
   );
 }
 

@@ -15,7 +15,7 @@ import { completeOnboarding } from '@/features/onboarding/complete';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
-import { STORY_FIRST_CHECK, STORY_PARTIAL, STORY_RECHECK, type ScreenScenario } from './scenarios';
+import { STORY_FIRST_CHECK, STORY_PARTIAL, STORY_RECHECK, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
@@ -26,7 +26,8 @@ type Step =
   | { at: string; do: 'wear' }
   | { at: string; do: 'closet'; ids: string[] }
   | { at: string; do: 'recheckPrompt' }
-  | { at: string; do: 'recheck'; photoId: string };
+  | { at: string; do: 'recheck'; photoId: string }
+  | { at: string; do: 'tap'; answer: 'jeans' | 'skip' };
 
 const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   5: { steps: [] },
@@ -76,8 +77,12 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   30: { asOf: '2026-10-22T18:29:00', steps: [{ at: '2026-10-22T18:30:00', do: 'morning' }] },
   31: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
   32: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
-  // "Scored for" (02 "S6s"): s15's wide trousers are on-style for streetwear (9.0; 8.5 by the general standard).
+  // "Reads as" (02 "S6s", #83): s15 picked as streetwear still reads as smart casual (a pick never changes the score).
   33: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's15', occasion: 'everyday', style: 'streetwear' }] },
+  // The one quick tap (#83): ph1 asks "Jeans or sweatpants?"; Jeans → 6.5, reads as streetwear; Skip → 6.5 + the skip line.
+  34: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }] },
+  35: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'jeans' }] },
+  36: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'skip' }] },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
@@ -121,6 +126,10 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       const tmp = createMemoryStore();
       await loadScenario(tmp, sub, { scenario: 'full', zone: US_EASTERN });
       for (const c of await tmp.closet.all()) if (step.ids.includes(c.id)) await store.closet.put(c);
+      continue;
+    }
+    if (step.do === 'tap') {
+      await fitCheck.answerTap(STORY_TAP, step.answer);
       continue;
     }
     if (step.do === 'recheckPrompt') {

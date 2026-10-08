@@ -58,7 +58,7 @@ export function demoPhoto(id: string | null | undefined): DemoPhoto | undefined 
 }
 
 /** The order the sample-photos sheet shows them in (the story first, then the rest). */
-export const SAMPLE_ORDER = ['p01b', 'p01a', 's24', 's15', 's12', 's25', 's05', 's09', 's10', 's13', 's14', 's22'] as const;
+export const SAMPLE_ORDER = ['p01b', 'p01a', 's24', 's15', 's12', 's25', 's05', 's09', 's10', 's13', 's14', 's22', 'ph1'] as const;
 
 /** What a thread bubble or the viewer shows: a bundled photo (with its crop table) or the
  *  full-frame copy kept on the phone (stored relative to Documents; no crop). */

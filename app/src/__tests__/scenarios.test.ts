@@ -1,8 +1,10 @@
 import { SCREENS } from '@/demo/scenarios';
 
 describe('demo screens', () => {
-  it('covers all 20 mockup screens in order, then the undrawn sheets (21–24) and the morning card (25+)', () => {
-    expect(SCREENS.map((s) => s.n)).toEqual(Array.from({ length: 33 }, (_, i) => i + 1));
+  it('covers all 20 mockup screens in order, then the undrawn sheets (21–24), the morning card (25–32), Reads as (33), the tap (34–36)', () => {
+    expect(SCREENS.map((s) => s.n)).toEqual(Array.from({ length: 36 }, (_, i) => i + 1));
+    expect(SCREENS.filter((s) => s.id === 'S5q').map((s) => [s.n, s.scenario])).toEqual([[34, 'firstRun'], [35, 'firstRun'], [36, 'firstRun']]);
+    expect(SCREENS.find((s) => s.n === 33)?.name).toBe('Reads as smart casual');
   });
 
   it('only screens 1–4 run before onboarding', () => {

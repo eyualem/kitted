@@ -72,3 +72,27 @@ describe('summaries', () => {
     expect([e.status, e.row.score]).toEqual(['notClothed', null]);
   });
 });
+
+describe('"Reads as" (02 "S6s", #83): the look the card names, from core styleLabel, on every re-score', () => {
+  const readsAs = (id: string, styles: Styles = []) =>
+    evaluateCheck({ reading: r(id), occasion: 'everyday', styles, boldness: null, closet: [], firstCheck: false }).row.details.readsAs;
+  it('the demo set with no picks: minimal, smart casual or none', () => {
+    expect(['p01a', 'p01b', 's25', 's14'].map((id) => readsAs(id))).toEqual(['minimalist', 'minimalist', 'minimalist', 'minimalist']);
+    expect(['s10', 's15', 's22'].map((id) => readsAs(id))).toEqual(['smart_casual', 'smart_casual', 'smart_casual']);
+    expect(['s05', 's09', 's12', 's13', 's24'].map((id) => readsAs(id))).toEqual([null, null, null, null, null]);
+  });
+  it('a pick breaks a tie between two looks that both fit (p01b: minimal and smart casual)', () => {
+    expect(readsAs('p01b', [['smart_casual', 1]])).toBe('smart_casual');
+    expect(readsAs('p01b', [['streetwear', 1]])).toBe('minimalist'); // a pick that doesn't fit changes nothing
+    expect(readsAs('s05', [['minimalist', 1]])).toBeNull(); // and never invents a look
+  });
+  it('picks never change it into a score: same score with any style', () => {
+    const a = evaluateCheck({ reading: r('s15'), occasion: 'everyday', styles: [['streetwear', 1]], boldness: null, closet: [], firstCheck: false });
+    const b = evaluateCheck({ reading: r('s15'), occasion: 'everyday', styles: [], boldness: null, closet: [], firstCheck: false });
+    expect(a.row.score).toBe(b.row.score);
+  });
+  it('an unscored reading reads as nothing', () => {
+    const p = r('p01b');
+    expect(evaluateCheck({ reading: { ...p, scene: { ...p.scene, clothed: 'partial' } }, occasion: 'date', styles: STYLES, boldness: null, closet: [], firstCheck: false }).row.details.readsAs).toBeNull();
+  });
+});
