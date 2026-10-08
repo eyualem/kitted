@@ -28,4 +28,4 @@ export {
 export { GarmentIcon, shade, type GarmentIconType, type GarmentIconProps } from './GarmentIcon';
 export { AddedRow, DeltaRow, QuickStartChip, FinishTile } from './CardParts';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
-export { PickerPill, PickerTray, type PickerOption, type PickerSection } from './InlinePicker';
+export { MorphPicker, type MorphOption, type MorphSection, type MorphPickerProps } from './MorphPicker';

@@ -278,3 +278,9 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **His ph1:** sweatpants on all 6 v5 runs, never cuffed; the tap fired on all 6.
     - **Decision (Claude):** the code-only rulings don't need new fields, so they ship on the locked v3 format now. New fields go in only after they pass a re-run.
     - **Proposed to the founder (money):** a lean v5s scoring format (v3 + `stacked` + `denim_wear` + the council's prompt lines), and a separate closet call after the card shows (shade, details, logo text, boxes for crops), off the score's critical path.
+69. **The pill grows into the menu** (founder, Oct 8: the #68 tray looked awkward; he meant the pill itself should morph into the menu, as an extension of it).
+    - **`MorphPicker`** replaces `InlinePicker`. Tapping the pill measures it and opens a transparent Modal. A panel starts exactly at the pill's rectangle (same fill, same label) and animates over 260 ms (ease-out) to a menu at least 220 pt wide. Its top row is still the pill ("Smart casual ⌃"), with a hairline under it, then the choices as 44 pt rows with a check on the current one and the "Your styles" / "More styles" labels.
+    - **Closing:** picking a choice, tapping outside (faint scrim) or tapping the top row shrinks it back into the pill (190 ms), then the change applies.
+    - **Placement:** it floats over the card, so nothing in the thread moves (the #68 `holdThreadScroll` is gone). It's kept on screen and grows upward when there isn't room below. Reduce Motion: no morph.
+    - **Fill:** the pill's own `surface2`. The result card's plain mono "Everyday ⌄" grows a 36 pt row around the text, on a `surface` panel.
+    - **Removed:** `InlinePicker` and `scrollHold`.

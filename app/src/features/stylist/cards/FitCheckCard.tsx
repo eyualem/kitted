@@ -2,11 +2,10 @@
 // live reading, then the result, from the same fit_checks row. One VoiceOver element with
 // custom actions; the buttons inside are also there for touch.
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import {
   AddedRow, FinishTile, FixRow, GarmentIcon, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
-  PickerTray, TextLink, TextLinkRow, TipLine, displayScore, opacity, space, spokenScore, useTheme,
+  MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
@@ -22,7 +21,6 @@ import { pickOccasion } from '../occasionPicker';
 import { occasionLabel } from '../thread';
 import { OccasionQuestion, ReadingCard } from './ReadingCard';
 import { useWeatherTip } from '@/features/morning/weatherTip';
-import { holdThreadScroll } from '../scrollHold';
 import { styleLabel } from '@/features/morning/copy';
 import { confirmLens, useScoredFor } from '@/features/fitcheck/lensUi';
 
@@ -206,48 +204,26 @@ function ScoredCard({ row, wxTip, scoredFor }: { row: FitCheckRow; wxTip: string
  *  (a change asks first, #62); the style is fixed once the photo is in (founder, Oct 8, #68):
  *  he picks the look he's going for before the check (the morning card), not after. */
 function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
-  const [open, setOpen] = useState(false);
   return (
-    <View style={{ gap: 8 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
-        <KText variant="footnote" color="ink2" mono="label">
-          {left}
-        </KText>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <Pressable
-            onPress={() => {
-              holdThreadScroll();
-              setOpen((o) => !o);
-            }}
-            accessibilityRole="button"
-            accessibilityLabel={t('card.a11y.changeOccasion')}
-            accessibilityState={{ expanded: open }}
-            hitSlop={{ top: 10, bottom: 10, left: 6, right: 6 }}
-            style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 3, opacity: pressed ? opacity.pressed : 1 })}
-          >
-            <KText variant="footnote" color={open ? 'ink' : 'ink2'} mono="label">
-              {occasionLabel(row.occasion)}
-            </KText>
-            <Icon name={open ? 'chevron.up' : 'chevronDown'} size={10} color={open ? 'ink' : 'ink2'} weight="semibold" />
-          </Pressable>
-          {row.style ? (
-            <KText variant="footnote" color="ink2" mono="label">
-              {`· ${styleLabel(row.style)}`}
-            </KText>
-          ) : null}
-        </View>
-      </View>
-      {open ? (
-        <PickerTray
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
+      <KText variant="footnote" color="ink2" mono="label">
+        {left}
+      </KText>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+        <MorphPicker
+          plain
+          label={occasionLabel(row.occasion)}
           value={row.occasion}
           sections={[{ options: OCCASIONS.map((o) => ({ value: o, label: occasionLabel(o) })) }]}
-          onPick={(o) => {
-            holdThreadScroll();
-            setOpen(false);
-            if (o !== row.occasion) void confirmLens(row, { occasion: o });
-          }}
+          onPick={(o) => void confirmLens(row, { occasion: o })}
+          accessibilityLabel={t('card.a11y.changeOccasion')}
         />
-      ) : null}
+        {row.style ? (
+          <KText variant="footnote" color="ink2" mono="label">
+            {`· ${styleLabel(row.style)}`}
+          </KText>
+        ) : null}
+      </View>
     </View>
   );
 }

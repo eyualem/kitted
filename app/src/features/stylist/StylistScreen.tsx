@@ -16,7 +16,6 @@ import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAct
 import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
-import { threadScrollHeld } from './scrollHold';
 import { Composer } from './Composer';
 import { COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
@@ -165,7 +164,7 @@ export function StylistScreen() {
         onMomentumScrollEnd={onMomentumEnd}
         onContentSizeChange={(_w, h) => {
           contentH.current = h;
-          if (atBottom.current && !threadScrollHeld()) toEnd(!first.current);
+          if (atBottom.current) toEnd(!first.current);
         }}
         onLayout={(e) => {
           viewH.current = e.nativeEvent.layout.height;

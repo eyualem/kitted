@@ -115,7 +115,7 @@
 - **The morning/evening card + "Scored for": built Oct 8** (05 §MC; DECISIONS-LOG #58–62 "The morning card", #65–67). On the Simulator:
   - **Once a day,** the stylist greets him with the weather ("Morning. 46° now, 63° by afternoon. Rain likely after 5 pm.") and an outfit card: weather strip, 4 tiles, a why line, Wear this / Swap one, and "Going with your own? Check it before you leave", which opens the camera with the card's occasion and style.
   - **From 5 pm,** an evening card plans tonight ("Heading out?", Going out). After 3 ignored evenings it stops posting.
-  - **Occasion and style:** pills on the card open an in-card tray of chips (#68, not the system menu) and re-pick the outfit.
+  - **Occasion and style:** tapping a pill makes it grow into its own menu (#69, `MorphPicker`; not the system menu) and re-picks the outfit.
   - **Small closet:** the card shows what it knows plus dashed tiles. A new user gets "Send me today's fit".
   - **After any check that day,** the card shrinks to one line with the score. Tapping it scrolls to the result.
   - **Results:**
@@ -344,6 +344,6 @@ Exceptions:
 - **A new Swift file in a local module needs `pod install`** before Xcode sees it ("cannot find … in scope").
 - **Don't trust FlatList `scrollToEnd` while rows grow;** it uses cached row heights. Scroll to the height from `onContentSizeChange` (StylistScreen `toEnd`).
 - **An alert raised from a SwiftUI `Menu` item is dropped while the menu closes;** wait about 450 ms (`confirmLens`; the menus are gone since #68, but the wait stays harmless).
-- **A card that grows because he tapped something in it** must call `holdThreadScroll()`, or the thread jumps to the bottom and the control scrolls away.
+- **Menus that open from a control float in a Modal at its measured spot** (`MorphPicker`), so the thread never moves or clips them.
 - **Demo gating:** read `getDemoArgs().demoScreen`, not the demo state, in code that runs while a demo screen loads.
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
