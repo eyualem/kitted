@@ -1,4 +1,4 @@
-// The V5 style rename (#83): one list of keys, the same as the rubric's detected styles, with the old
+// The V5 style rename (#85): one list of keys, the same as the rubric's detected styles, with the old
 // onboarding keys read as the new ones everywhere a style comes from storage or a route.
 import { RUBRIC_DATA } from '@kitted/core';
 import { normStyleKey, STYLES } from '@/data/types';

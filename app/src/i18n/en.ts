@@ -147,7 +147,7 @@ const addedInBuild = {
   // Morning/evening card (02 "S1d", DECISIONS-LOG #58–62). Templates; code picks the outfit.
   'occasion.goingOut': 'Going out',
   'occasion.stayingIn': 'Staying in',
-  // The 7 style names come from the deck (02 §5.2: Classic prep, Outdoor, Vintage sport since V5, #83).
+  // The 7 style names come from the deck (02 §5.2: Classic prep, Outdoor, Vintage sport since V5, #85).
   'style.none': 'Any style',
   'style.menu.yours': 'Your styles',
   'style.menu.more': 'More styles',
@@ -238,7 +238,7 @@ const addedInBuild = {
   'rescore.keep': 'Keep {current}',
   'rescore.go': 'Re-score',
   'rescore.footnote': 'Re-scored · was {score} for {lens}',
-  // The one quick tap (02 "S5q", #83). Questions and labels are core's (rubric v4 tap.pairs / tap.labels; copyChecks
+  // The one quick tap (02 "S5q", #85). Questions and labels are core's (rubric v4 tap.pairs / tap.labels; copyChecks
   // keeps them identical); tap.as.* is the label inside a sentence ("I'll score it as jeans.").
   'tap.hint': "I couldn't tell from the photo. It changes your score.",
   'tap.skip': 'Skip',
@@ -285,7 +285,7 @@ const addedInBuild = {
   'tap.a11y.skip': "Skip. I'll score it as {choice}.",
   'tap.a11y.change': 'Change the answer',
   'fail.replaced': 'Not scored. You sent a newer photo, so nothing was counted.',
-  // "Reads as" (02 "S6s", #82–83): the look the outfit reads as (core styleLabel). Never changes the score.
+  // "Reads as" (02 "S6s", #82, #85): the look the outfit reads as (core styleLabel). Never changes the score.
   'readsAs.line': 'Reads as {style}',
   'why.readsAs.rule': 'Reads as {style}',
   'why.readsAs.item': "the look it's going for",

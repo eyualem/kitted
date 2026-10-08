@@ -61,7 +61,7 @@ export function defaultOccasion(slot: IdeaSlot, nowMs: number, zone: ZoneOffset)
 }
 
 const isStyle = (s: unknown): s is StyleKey => typeof s === 'string' && (STYLES as readonly string[]).includes(s);
-/** Old keys (preppy, old money, gorpcore) read as the V5 names (#83). */
+/** Old keys (preppy, old money, gorpcore) read as the V5 names (#85). */
 const normStyle = (s: unknown): StyleKey | null => (isStyle(s) ? s : normStyleKey(s));
 
 /** One style, never a blend (#61). */

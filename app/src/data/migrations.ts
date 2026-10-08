@@ -216,7 +216,7 @@ const V4: Migration = {
   ],
 };
 
-// V5 (Oct 8, #83): the style keys follow rubric v4's names. preppy and old_money became
+// V5 (Oct 8, #85): the style keys follow rubric v4's names. preppy and old_money became
 // classic_prep, gorpcore became outdoor: the one style on checks and ideas, the remembered card
 // style (kv), the "style" a re-scored check was for (fit_checks.details), and his ordered picks
 // (profile.styles, a JSON array of [name, weight]; only quoted keys are replaced, so order and

@@ -96,9 +96,9 @@
   - Expo app in `app/`, expo-router, NativeTabs (the real iOS 26 glass tab bar).
   - Every screen has a route.
   - Demo links: `/demo/screen/<n>` on web; `-demoScreen <n>` as an iOS launch argument.
-  - SQLite with migrations (V3). The web preview uses an in-memory store with the same interface.
+  - SQLite with migrations (V5). The web preview uses an in-memory store with the same interface.
 - **The scoring engine** (`app/packages/kitted-core`, pure TypeScript):
-  - Rubric v4.0 (engine 4, Oct 8, DECISIONS-LOG #81): matches `rubric.py` bit for bit on all **7,146** parity cases, and the one-quick-tap `askQuestion` on all of them. It also exposes `detectStyles` (the "Reads as …" label); the tap UI and the label UI aren't built yet. Under v4 a picked style never changes a score, so "Scored for" never shows.
+  - Rubric v4.0 (engine 4, Oct 8, DECISIONS-LOG #81): matches `rubric.py` bit for bit on all **7,146** parity cases, and the one-quick-tap `askQuestion` on all of them. It also exposes `detectStyles` (the "Reads as …" label). Under v4 a picked style never changes a score.
   - It also has the day key (4 am rollover), the "Why" ledger, closet matching, re-check outcomes, corrections and partial-check merges.
 - **P2, Stylist chat and the fit check: done (Oct 7).** It works on the iPhone Simulator and matches mockup screens 6–12 closely:
   - **Screen 6:** the reading card.
@@ -121,11 +121,17 @@
   - **Results:**
     - a "Weather" tip (never points);
     - the header shows the occasion and style it was scored for; the style is fixed after the photo (#68), and the occasion opens the tray and asks "Re-score for X? It would be 7.0 instead of 8.0" before updating the same card;
-    - a "Scored for streetwear: …" line and a Why-sheet section appear only when the style changed the score.
+    - (the "Scored for" line was replaced Oct 8 by "Reads as …", below.)
   - **Composer:** the suggestion-chip row is gone.
-  - **Demo screens:** 25 morning · 26 thin closet · 27 new user · 28 wearing it · 29 after his own check · 30 evening · 31 weather ask · 32 hot day · 33 "Scored for streetwear". Screen 12 now shows the new card.
+  - **Demo screens:** 25 morning · 26 thin closet · 27 new user · 28 wearing it · 29 after his own check · 30 evening · 31 weather ask · 32 hot day · 33 "Reads as smart casual". Screen 12 now shows the new card.
   - **Mocked:** all weather is **sample weather**, labelled on the card. Real WeatherKit + location (MC9) waits on the $99 program.
   - **#66 resolved by #68:** he picks the style before the photo; it can't be changed after. When the style-council rulebook is ported, "Scored for" gives way to "Reads as …".
+- **The one quick tap, "Reads as …", and the new style names: built Oct 8** (DECISIONS-LOG #85–86; 02 "S5q", "S6s"). On the Simulator:
+  - **When the photo leaves a look-alike in doubt** (my Oct 7 black jeans read as sweatpants), the card asks "Jeans or sweatpants?" before the score, with two buttons and Skip ("I'll score it as jeans."). Jeans → 6.5, Sweatpants → 5.0. Nothing counts until I answer. After a Skip the card says "Scored as jeans. Not right? Tap." A re-check can't undo the answer.
+  - **Every result names its look:** "Reads as streetwear" under the summary (never points). The "Scored for" line is gone; the Why sheet has a ±0 "Reads as" row.
+  - **Style names:** Classic prep (was Preppy / Old money), Outdoor (was gorpcore), Vintage sport (was Sporty), in the morning card's menu too. Migration V5 renames stored keys.
+  - **Demo screens:** 34 the question · 35 answered Jeans · 36 skipped (my Oct 7 reading on a stock photo). Screenshots: `screenshots/tap/` (git-ignored).
+  - **Real:** it runs on real readings on my phone too (the question appears whenever the AI is unsure of one of the 9 look-alike pairs).
 - **Card redesign + one-capsule composer + voice: built Oct 8** (DECISIONS-LOG #70):
   - **The morning card is a "hero strip":** the outfit edge to edge on top, a headline ("Layer for the cold start") with `☂ 46°→63°`, one line `Class ⌄ · Smart casual ⌄`, the reason, Wear this + Swap, and a one-line "Wearing something else? Check it ›".
   - **The composer is one Liquid Glass capsule:** a camera icon, the field, and a mic that turns into send while there's text.
@@ -136,7 +142,7 @@
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
   - Purchases: the paywall runs on a mock store (P6).
-- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 102 core tests and 156 app tests (incl. automated copy checks). All green (Oct 8).
+- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 148 core tests and 187 app tests (incl. automated copy checks). All green (Oct 8).
 
 ### Other workstreams
 - **Extraction test PASSED (Oct 6).** Log: `extraction-test/results/INDEX.md`.
@@ -163,7 +169,7 @@
     - The "Jeans or sweatpants?" tap asks on about 4% of checks.
   - **My Oct 7 outfit:** 3.5 → 6.5 read as jeans (5.0 plus the tap if misread). Saved checks at 8+: 53% → 44%. The remaining over-scoring is the 7.0 starting point, which the friend panel decides.
   - **Code-only rulings ported Oct 8 (#81):** live in `rubric.py` v4.0 and the app. Port check `check_port.py`: 100% vs the prototype. 80 of 181 demo cases changed; the p01b 8.0 → 9.0 story didn't. Differs from mockup: welcome s15 8.5 → 8.0; screen 7's next-level line (p01b reads as minimal). Next, in order:
-    1. The "Jeans or sweatpants?" tap and the "Reads as …" label on the card (wording approved), and the onboarding names Classic prep and Outdoor.
+    1. Done Oct 8: the "Jeans or sweatpants?" tap, the "Reads as …" label, and the names Classic prep and Outdoor (#85).
     2. The closet: a separate closet call after the card shows (approved #63: shade, details, logo text, boxes for crops), and matching by exact shade so two grey hoodies don't merge.
     3. Done Oct 8: full-resolution capture (12 MP 4:3, #83); on my phone after a reinstall.
   - **New scoring readings wait for the gold set.** v5 and the slim v5s both failed the consistency bar (#63–64), so the app stays on the locked v3 format.
@@ -205,7 +211,7 @@
    - **"Scored for" on every result** (#61): the card shows the occasion + style it was scored for. A plain-words line and a Why section appear only when the style actually changed the score. One style per check, never a blend.
    - **Changing the style or occasion after a score asks first** (#62): "Re-score for smart casual? It would be 7.0 instead of 8.0." Keep or Re-score. It updates the same card, never a new one.
    - Step-by-step plan: `handoff/05-build-plan.md` §MC (MC1–MC11), about 5.5 days.
-3. **Closet tab: owned by the style-council session** (founder, Oct 8). **Shape approved Oct 8 (#84, `mockups/closet-concepts.html`):** Pieces | Outfits in Closet, a standing outfit (no avatar), "Goes with" on each piece, the count = combos rated Put together+ (layers don't multiply), and no scores on unworn outfits. It covers the closet call, shade matching, photo crops and the tab itself, with migration V5. The UI session doesn't plan it. It keeps the outfit picker's inputs (ClosetItemRow slot, garment, hex) and the Closet ScrollView first, so the tab bar can shrink. Photo-adding items and "Should I buy this?" are still v1.1.
+3. **Closet tab: owned by the style-council session** (founder, Oct 8). **Shape approved Oct 8 (#84, `mockups/closet-concepts.html`):** Pieces | Outfits in Closet, a standing outfit (no avatar), "Goes with" on each piece, the count = combos rated Put together+ (layers don't multiply), and no scores on unworn outfits. It covers the closet call, shade matching, photo crops and the tab itself, with migration V6 (V5 is the style rename, #85). The UI session doesn't plan it. It keeps the outfit picker's inputs (ClosetItemRow slot, garment, hex) and the Closet ScrollView first, so the tab bar can shrink. Photo-adding items and "Should I buy this?" are still v1.1.
 4. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
 5. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.
 6. **Lookbook**, then **You** (incl. "Delete all my data"; reuses P4's pieces).
@@ -260,16 +266,17 @@ P5's real size is about 6.5 days, not 05's 2.
   - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
+- **"Reads as" when two looks fit (#86):** screen 7 reads "smart casual" because my first pick breaks the tie, while its next-level tip is the minimal one. Default: keep the tie-break. The other choice: always the first detected look.
 - **Codex research on closet apps (Reddit/TikTok):** prompt given Oct 8; paste the results into `inputs/closet-research-codex.md`. It refines details only; the four Closet calls are approved (#84).
 - **Mic permission text** (outward-facing; in `app/app.config.ts`): "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
 - **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator. The same reinstall brings the 12 MP camera (#83): take a few Propped and Mirror shots while Claude watches the log.
-- **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Scored for"): greetings, weather lines, why lines, the "Going with your own?" row, the re-score alert, and the style names (Minimal, Sporty, Outdoorsy; the council approved "Outdoor" and "Classic prep" for onboarding, so pick one set).
+- **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Re-score"): greetings, weather lines, why lines, the "Wearing something else?" link, the re-score alert. The style names are settled (Classic prep, Outdoor, Vintage sport; #82, #85).
 - **Weather band numbers** (core `weather.ts`, for the rubric review): 80 / 65 / 50 / 35 °F feels-like, rain 50%+, a 15° swing. Hot days also favor tees and lighter shoes.
 - **Archivo fonts:** 3 files of about 185 KB each, OFL license, from `github.com/Omnibus-Type/Archivo` (`fonts/ttf/`). Default: the system font. When approved:
   - fill the map in `app/src/design-system/fontFiles.ts`
   - uncomment the expo-font plugin in `app/app.config.ts`
   - rebuild
-- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names, the VoiceOver lines, and (new Oct 7) the closet-sheet rows ("Top · Regular fit"), the viewer caption ("Date · October 22") and "Pick shoes from your closet". Skim it.
+- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names, the VoiceOver lines, and (new Oct 7) the closet-sheet rows ("Top · Regular fit"), the viewer caption ("Date · October 22") and "Pick shoes from your closet". New Oct 8: "One quick tap" (the hint, Skip lines, "Not scored. You sent a newer photo, so nothing was counted.", VoiceOver) and "Reads as". Skim it.
 - **Already built; just confirm:**
   - The "Why" sheet's "Rounded to the nearest half · +0.25" line.
   - "Dialed in. Nothing to fix." only at 9+.

@@ -1,4 +1,4 @@
-// The one quick tap (02 "S5q", DECISIONS-LOG #83) end to end on the memory store: the founder's Oct 7 outfit
+// The one quick tap (02 "S5q", DECISIONS-LOG #85) end to end on the memory store: the founder's Oct 7 outfit
 // (ph1: black wide jeans read as sweatpants) asks "Jeans or sweatpants?" before the score.
 import { askQuestion } from '@kitted/core';
 import type { DemoFault } from '@/demo/demoArgs';

@@ -41,7 +41,7 @@ export const fitCheck = createFitCheckService({
   clock: sessionClock,
   scheduler: realScheduler,
   ids: newId,
-  // The one quick tap (02 "S5q", #83): on.
+  // The one quick tap (02 "S5q", #85): on.
   tap: () => true,
   timers: () => {
     const lat = getDemoArgs().latency;

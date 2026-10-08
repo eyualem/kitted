@@ -1,4 +1,4 @@
-// S5q · One quick tap (02 "S5q", DECISIONS-LOG #83): the reading card's slot while the check is 'asking'.
+// S5q · One quick tap (02 "S5q", DECISIONS-LOG #85): the reading card's slot while the check is 'asking'.
 // One look-alike question ("Jeans or sweatpants?") before the score; two equal answers in the question's word
 // order (no scores shown), and Skip, which scores the more generous reading. Built from existing parts only.
 import { useEffect, useState } from 'react';

@@ -24,7 +24,7 @@ const CREDIT_NAME: Record<CreditId, StringKey> = {
   K4_shoes_complement: 'why.credit.shoes',
 };
 
-/** `readsAs`: the look the card says it reads as; shown as a ±0 row (a style never changes the score, #83). */
+/** `readsAs`: the look the card says it reads as; shown as a ±0 row (a style never changes the score, #85). */
 export function whyRows(
   reading: Reading, occasion: OccasionKey, styles: Styles, boldness: string | null, readsAs: StyleKey | null = null,
 ): { rows: WhyRow[]; ledger: ScoreLedger } | null {

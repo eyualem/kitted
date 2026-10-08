@@ -733,30 +733,29 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 ---
 
-### S6s · "Scored for" (decided Oct 7, DECISIONS-LOG #61–62; applies to S6, S6p, S6r and the Why sheet S8)
-- **One style per check, never a blend.** The rubric gets `[[style, 1]]`:
-  - from the morning/evening card, the card's style;
-  - from the composer's Check my fit, his first onboarding style;
-  - with no styles ("Not sure"), no style, labelled `Scored by the general standard`.
-- The rule is: same photo + occasion + style → same score.
-- **Card tagline right side:** occasion pill + style pill (`Going out` · `Streetwear ⌄`), both pull-downs. After the score lands, a change asks first (see D7's chip row).
-- **"Scored for" line** (only when the style changed the result; never otherwise): a `surface2` inset (radius 12, pad 8 / 10) with `tag` 14 `ink2` + `.footnote` `ink2`, under the summary, above the fixes. Template from the first style effect:
-  - `Scored for streetwear: the oversized hoodie is on-style here, so it didn't cost you.`
-  - `Scored for smart casual: the roomy top reads a little loose for it.`
-- **How "changed the result" is decided** (code): core `styleEffects(reading, opts)` scores twice, with the style and with no style. It returns the rules whose amount differs (rule, garment, with-style amount, without-style amount). Empty → no line and no Why section.
-- **Why sheet (S8):**
-  - The point rows and the total are unchanged and still add up.
-  - Below the total: a section header `Scored for {style}` and one row per style effect:
-    - `{Garment}` over `On-style for {style}. General standard: −0.5` with a trailing `not counted`;
-    - or, for a cost, `Tighter for {style}` with the amount shown in the rows above.
-  - Last line: `Change the style on the card to see it scored another way.`
-- **Never:** "wrong style", a penalty for mixing styles, or the AI judging style. Style only adjusts the general standard (rubric research #57).
+### S5q · One quick tap (built Oct 8, DECISIONS-LOG #85; founder approved the feature and the wording)
+- **When:** after the reading, before the score, only when core `askQuestion(reading, opts)` returns a question: one garment the reading isn't sure about, read as one half of a fixed look-alike pair, where the answer moves the score by a whole point or more (rubric v4, RULEBOOK Part 5). At most one question per check. Never on a re-check, a shoe snap, the same photo again, or a check that already asked.
+- **Where:** the reading card's slot (the row's status is `asking`). It survives the app closing: the question is stored on the check.
+- **Layout (existing parts only):** tagline `Fit check · Full` with the occasion as plain text (frozen: it can't change while asking) · a static 76 × 62 `surface2` block where the score will be (no shimmer) · the question (`.headline`) over `I couldn't tell from the photo. It changes your score.` (`.subheadline`, `ink2`) · two equal secondary buttons in the question's word order (`Jeans` · `Sweatpants`; no scores shown, the as-read answer isn't marked) · seam · a ≥ 44 pt Skip row: `Skip` + `I'll score it as {choice}.` (`.footnote`, `ink3`). Fades in over 180 ms (none under Reduce Motion). Selection haptic on an answer.
+- **The 9 questions:** `Jeans or sweatpants?` · `Jeans or joggers?` · `Jeans or pull-on trousers?` · `Chinos or dress trousers?` · `Separate trousers or suit trousers?` · `Regular shorts or gym shorts?` · `Jeans or chinos?` · `Knit sweater or sweatshirt?` · `Chelsea boots or work boots?` (core's text; `tap.q.*` keys).
+- **Answer:** the score lands in the same slot (S6) from his answer. **Skip** scores the more generous reading and the card then shows a `surface2` inset `Scored as jeans. Not right? Tap.`; the whole inset is a button to S8 `Wrong item` with the other answer picked. The inset shows only while that piece still has the skipped value.
+- **What counts:** nothing is counted or added to Closet while asking. The check counts when he answers (on the check's own day), and the re-check window opens at the answer. An answer (not a Skip) marks the closet piece's type as confirmed. A new photo while asking sets the open question aside: `Not scored. You sent a newer photo, so nothing was counted.` (no Try again).
+- **AX sizes:** the placeholder block hides; the two buttons stack full width.
+- **VoiceOver:** on appear, announces `One quick question before your score. {question}`; the question is a header; each answer has the hint `Scores it as {choice}`; Skip reads `Skip. I'll score it as {choice}.` After an answer it announces the score and moves focus to the result card. The result card's label adds `Reads as …` and `Scored as …`, and a custom action `Change the answer`.
+- **Demo screens:** 34 asking, 35 answered Jeans (6.5, Reads as streetwear, Black jeans added), 36 skipped (6.5 + the skip inset). The reading is the founder's Oct 7 phone check shown on s12's stock photo (photo id `ph1`; never his photo).
+
+### S6s · "Reads as" (rubric v4; DECISIONS-LOG #82, #85; replaces "Scored for", #61–62; applies to S6, S6p, S6r and the Why sheet S8)
+- **A style never changes a score** (rubric v4, founder Oct 8). The rubric still gets one style per check (`[[style, 1]]`: the morning/evening card's style, else his first onboarding style), but it only breaks a tie when two detected looks both fit.
+- **The line:** `Reads as streetwear` under the summary, above the fixes: `tag` 14 `ink2` + `.footnote` `ink2`, no inset. From core `styleLabel` (the look the outfit reads as), stored on the check (`details.readsAs`) on every re-score. Shown for every detected look, smart casual included (founder, #82). No look detected → no line.
+- **Card tagline:** `Fit check · Full` left; the occasion pull-down right. No style text (it never changed the score).
+- **Why sheet (S8):** one ±0 row `Reads as streetwear · the look it's going for`, just above the occasion row. The rows still add up. The old "Scored for" section is gone.
+- **Never:** "wrong style", a penalty for mixing styles, or the AI judging style.
 - **Redesigned Oct 8 (#70, "hero strip", founder's pick):** the card now opens with the outfit edge to edge (equal tiles, hairline gaps, no labels; dashed `+ Shoes` tiles for gaps), then a headline from the first reason or the occasion with a `☂ 46°→63°` badge, one context line `Class ⌄ · Smart casual ⌄` (inline MorphPickers, `Sample weather` at the right), the why line, Wear this + `Swap` (after Wear this: `✓ Logged for today` + primary `Check it on`; thin or new: `Check my fit`), and a one-line copper link `Wearing something else? Check it ›`. The weather strip and the boxed "Going with your own?" row are gone. **Composer:** one glass capsule (camera icon · field · mic → send); voice per #70. The quick-start row stays removed.
 - **As built (Oct 8, #67):**
-  - **Header (#68):** `Fit check · Full` left; right `Everyday ⌄ · Streetwear`. The occasion grows into its menu (`MorphPicker`, #69). **The style is plain text: it can't be changed after the photo** (he picks it on the morning/evening card before the check). VoiceOver: custom action Change occasion.
+  - **Header (#68, #85):** `Fit check · Full` left; right `Everyday ⌄`. The occasion grows into its menu (`MorphPicker`, #69). VoiceOver: custom action Change occasion.
   - **The alert's buttons:** `Re-score` (default) / `Keep {current}`.
   - **The note under the links:** `Re-scored · was 8.0 for smart casual`.
-- **Resolved (#68):** the style is fixed after the photo. When the style-council rulebook is ported (picks never change a score), this line becomes the detected `Reads as {style}` label (0 points).
+- **Resolved (#68, #85):** built: the `Reads as {style}` label above replaced the "Scored for" line.
 
 ### S1d · The morning card (decided Oct 7, DECISIONS-LOG #58; replaces the quick-start row)
 *Differs from mockup 12 because the founder found the chip row above the composer cramped. Once a day the stylist opens with the weather and an outfit instead.*
@@ -2232,3 +2231,6 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 21. Stylist composer has no library circle, and its camera button hides while typing (founder, Oct 7; DECISIONS-LOG #28).
 21. Partial card: "Same shoes as Monday?" (computed from the seed), not "Sunday" (04 §12 #3).
 22. A one-time AI note is the first Stylist-thread message (`stylist.aiNote`, ruling 17).
+23. **Screen 7 shows `Reads as smart casual`** under the summary (not drawn). *Because rubric v4 names the look an outfit reads as (#82, #85); p01b fits both minimal and smart casual, and his first pick (smart casual) breaks the tie.*
+24. **The one quick tap (S5q) can come between the reading card and the result** (not drawn). *Because rubric v4 asks one look-alike question when the answer moves the score by a point or more (#85).*
+25. **The result card's tagline has no style** (the drawn cards have none either; the build had added one, #68). *Because a style never changes the score (rubric v4).*

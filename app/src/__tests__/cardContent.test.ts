@@ -73,7 +73,7 @@ describe('summaries', () => {
   });
 });
 
-describe('"Reads as" (02 "S6s", #83): the look the card names, from core styleLabel, on every re-score', () => {
+describe('"Reads as" (02 "S6s", #85): the look the card names, from core styleLabel, on every re-score', () => {
   const readsAs = (id: string, styles: Styles = []) =>
     evaluateCheck({ reading: r(id), occasion: 'everyday', styles, boldness: null, closet: [], firstCheck: false }).row.details.readsAs;
   it('the demo set with no picks: minimal, smart casual or none', () => {

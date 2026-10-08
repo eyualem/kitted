@@ -30,7 +30,7 @@ describe('migrations', () => {
 });
 
 // V5 runs on a real SQLite (Node's built-in one), from an empty file through every migration.
-describe('V5: style keys follow rubric v4 (#83)', () => {
+describe('V5: style keys follow rubric v4 (#85)', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { DatabaseSync } = require('node:sqlite') as { DatabaseSync: new (p: string) => { exec(s: string): void; prepare(s: string): { all(): Record<string, unknown>[] } } };
   const upTo = (v: number) => {

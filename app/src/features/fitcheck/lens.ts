@@ -6,7 +6,7 @@ import type { Styles } from '@kitted/core';
 import { normStyleKey, type StyleKey } from '@/data/types';
 
 export function firstStyle(styles: Styles | null | undefined): StyleKey | null {
-  return normStyleKey(styles?.[0]?.[0]); // old onboarding keys map to the V5 names (#83)
+  return normStyleKey(styles?.[0]?.[0]); // old onboarding keys map to the V5 names (#85)
 }
 
 /** The rubric input for a check scored for `style`. */

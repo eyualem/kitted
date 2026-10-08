@@ -1,5 +1,5 @@
 // The result card's re-score (02 D7, DECISIONS-LOG #61–62): the confirm alert before an occasion change.
-// (The "Scored for" line is gone: since rubric v4 a style never changes a score; the card says "Reads as …", #83.)
+// (The "Scored for" line is gone: since rubric v4 a style never changes a score; the card says "Reads as …", #85.)
 import { Alert, Platform } from 'react-native';
 import type { FitCheckRow, OccasionKey, StyleKey } from '@/data/types';
 import { displayScore } from '@/design-system';

@@ -253,7 +253,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
 }
 
 /** "Fit check · Full" + the occasion (02 "S6s"). The occasion opens an in-card tray (a change asks first,
- *  #62). No style here: a style never changes the score (rubric v4); the card says "Reads as …" (#83). */
+ *  #62). No style here: a style never changes the score (rubric v4); the card says "Reads as …" (#85). */
 function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
@@ -274,7 +274,7 @@ function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
   );
 }
 
-/** "Reads as streetwear" (02 "S6s", #83): the look the outfit reads as. Never changes the score. */
+/** "Reads as streetwear" (02 "S6s", #85): the look the outfit reads as. Never changes the score. */
 function ReadsAsLine({ text }: { text: string }) {
   return (
     <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center', marginTop: 2 }}>
