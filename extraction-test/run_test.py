@@ -30,7 +30,9 @@ HERE = Path(__file__).resolve().parent
 FORMATS = {  # answer format: (prompt, schema)
     "v3": ((HERE / "prompt.txt").read_text(), json.loads((HERE / "schema.json").read_text())),
     "v4": ((HERE / "prompt_v4.txt").read_text(), json.loads((HERE / "schema_v4.json").read_text())),
+    "v5": ((HERE / "prompt_v5.txt").read_text(), json.loads((HERE / "schema_v5.json").read_text())),  # v3 + style-council fields (RULEBOOK Part 6)
 }
+FORMAT_FILES = {"v3": ("prompt.txt", "schema.json"), "v4": ("prompt_v4.txt", "schema_v4.json"), "v5": ("prompt_v5.txt", "schema_v5.json")}
 
 
 def prepare_image(path: Path, px: int = 1024) -> bytes:
@@ -312,7 +314,7 @@ def main():
     ap.add_argument("--out", help="results folder (default: results/latest)")
     ap.add_argument("--thinking", default="off", choices=list(THINKING), help="model thinking: off (locked Oct 6), default, low, medium, high")
     ap.add_argument("--image-px", type=int, default=1024, help="long edge of the photo sent to the model")
-    ap.add_argument("--format", default="v3", choices=list(FORMATS), help="answer format: v3 (original) or v4 (short slots)")
+    ap.add_argument("--format", default="v3", choices=list(FORMATS), help="answer format: v3 (original, locked), v4 (short slots) or v5 (v3 + style-council fields)")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
     out_dir = Path(args.out) if args.out else HERE / "results" / ("selftest" if args.selftest else "latest")
@@ -333,8 +335,8 @@ def main():
     manifest = {"model": args.model, "thinking": args.thinking, "format": args.format, "image_px": args.image_px,
                 "runs": args.runs, "photos": str(Path(args.photos).resolve()), "photo_count": len(photos),
                 "styles": styles, "default_occasion": args.occasion, "started": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "prompt_sha": digest(HERE / ("prompt_v4.txt" if args.format == "v4" else "prompt.txt")),
-                "schema_sha": digest(HERE / ("schema_v4.json" if args.format == "v4" else "schema.json")),
+                "prompt_sha": digest(HERE / FORMAT_FILES[args.format][0]),
+                "schema_sha": digest(HERE / FORMAT_FILES[args.format][1]),
                 "rubric_sha": digest(HERE / "rubric.py")}
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=1))
     results = []

@@ -221,3 +221,13 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Rejected: up-scaling credits on partial checks, a standalone slides penalty, prep's halved clash, the matched-set intent path, and "one focal point per garment". Deferred to the gold set: the shared wide-trouser waiver, minimal's clean-palette credit, and the 7.0 baseline (at 6.75, 8+ falls to 28% but 9+ disappears).
     - **Verified independently by Claude:** with every switch off the prototype equals v3.1 (2,340/2,340 scorings). Founder's outfit: misread 3.5 → 5.0 with the "Jeans or sweatpants?" tap; read as jeans 6.0 → 6.5 (detected streetwear; the hem drags over slides, −0.4). Saved readings at 8+: 53% → 44%; minimum 5.5 → 6.0. The rulebook reports error vs. calibration's estimates of 0.52 → 0.35, and 52/52 photos stable within 0.5.
     - **Caveat:** the advocates' anchors shaped the rules, so their near-zero error isn't independent evidence. Only the friend panel validates the scores.
+
+62. **Founder calls on the rulebook (Oct 8).**
+    - **Hems follow the sources:** a hem that drags on the floor costs −0.4 (3 sources agree, 0 disagree). Wearing slides with socks costs nothing (Highsnobiety: a 2025 go-to).
+    - **His Oct 7 jeans were actually cuffed,** a second misread on that photo (all 10 reads said pooling or full break). Read correctly (jeans, cuffed, slides, grey hoodie), it scores 7.0 under the rulebook (6.5 under v3.1). The photo is now a truth-labeled case in `inputs/phone-oct7/truth.csv` (git-ignored, like all photos).
+    - **Approved:**
+      - the onboarding names "Classic prep" (Preppy + Old money) and "Outdoor" (was Gorpcore)
+      - the card wording "Reads as streetwear" (worth 0 points) and the one-tap "Jeans or sweatpants?" with Skip
+      - the extraction re-run for the new readings (about $1.35)
+    - **The v5 answer format** (`prompt_v5.txt`, `schema_v5.json`) is v3 plus RULEBOOK Part 6: a `stacked` hem; `denim_wear`; `waistband`; `trail_shoe` and `vest`; the closet-only `shade`, `details`, `logo_text`, `sleeve_length`, `lightness` and `shoe_profile`; plus the council's prompt lines. The app keeps the locked v3 format until v5 passes. `compare_v5.py` checks it against the lock-in runs.
+    - **First v5 read of his photo:** the hoodie came back as "medium grey", "Nike swoosh", with a hood, drawstring and front pouch. The jeans were still "sweatpants", with a claimed drawstring waist (likely the hoodie's drawstrings). So the waistband field won't save this photo; the tap does, because the certainty was "likely".

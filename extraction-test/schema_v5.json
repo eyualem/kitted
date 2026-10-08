@@ -1,0 +1,403 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "scene": {
+   "type": "OBJECT",
+   "properties": {
+    "framing": {
+     "type": "STRING",
+     "enum": [
+      "full_body",
+      "three_quarter",
+      "upper_only"
+     ]
+    },
+    "shoes_visible": {
+     "type": "BOOLEAN"
+    },
+    "people_count": {
+     "type": "INTEGER"
+    },
+    "mirror_selfie": {
+     "type": "BOOLEAN"
+    },
+    "lighting": {
+     "type": "STRING",
+     "enum": [
+      "good",
+      "dim",
+      "harsh"
+     ]
+    },
+    "clothed": {
+     "type": "STRING",
+     "enum": [
+      "fully",
+      "partial"
+     ]
+    }
+   },
+   "required": [
+    "framing",
+    "shoes_visible",
+    "people_count",
+    "mirror_selfie",
+    "lighting",
+    "clothed"
+   ]
+  },
+  "garments": {
+   "type": "ARRAY",
+   "items": {
+    "type": "OBJECT",
+    "properties": {
+     "category": {
+      "type": "STRING",
+      "enum": [
+       "top",
+       "outerwear",
+       "bottom",
+       "footwear",
+       "accessory",
+       "traditional"
+      ]
+     },
+     "subcategory": {
+      "type": "STRING",
+      "enum": [
+       "tee",
+       "graphic_tee",
+       "polo",
+       "knit_polo",
+       "oxford_shirt",
+       "dress_shirt",
+       "flannel_shirt",
+       "overshirt",
+       "sweater",
+       "hoodie",
+       "sweatshirt",
+       "quarter_zip",
+       "tank_top",
+       "jersey",
+       "blazer",
+       "suit_jacket",
+       "denim_jacket",
+       "bomber",
+       "chore_coat",
+       "field_jacket",
+       "puffer",
+       "overcoat",
+       "rain_jacket",
+       "jeans",
+       "chinos",
+       "trousers",
+       "drawstring_trousers",
+       "suit_trousers",
+       "cargos",
+       "joggers",
+       "sweatpants",
+       "shorts",
+       "athletic_shorts",
+       "white_leather_sneaker",
+       "canvas_sneaker",
+       "retro_runner",
+       "performance_runner",
+       "chunky_sneaker",
+       "basketball_sneaker",
+       "loafer",
+       "dress_shoe",
+       "chelsea_boot",
+       "work_boot",
+       "slides_sandals",
+       "belt",
+       "hat",
+       "bag",
+       "watch",
+       "low_profile_sneaker",
+       "unstructured_blazer",
+       "sport_coat",
+       "cardigan",
+       "suede_chukka",
+       "derby",
+       "leather_jacket",
+       "rugby_shirt",
+       "fleece",
+       "shell_jacket",
+       "camp_collar_shirt",
+       "trail_shoe",
+       "vest",
+       "other"
+      ]
+     },
+     "color_family": {
+      "type": "STRING",
+      "enum": [
+       "white",
+       "off_white_cream",
+       "light_grey",
+       "grey",
+       "charcoal",
+       "black",
+       "navy",
+       "light_blue",
+       "blue",
+       "denim_light",
+       "denim_mid",
+       "denim_dark",
+       "olive",
+       "green",
+       "sage",
+       "khaki_beige",
+       "tan_camel",
+       "brown",
+       "burgundy",
+       "red",
+       "orange",
+       "yellow",
+       "pink",
+       "purple",
+       "multicolor"
+      ]
+     },
+     "pattern": {
+      "type": "STRING",
+      "enum": [
+       "solid",
+       "stripes",
+       "checks_plaid",
+       "graphic",
+       "camo",
+       "floral",
+       "other"
+      ]
+     },
+     "logo": {
+      "type": "STRING",
+      "enum": [
+       "none",
+       "small",
+       "large"
+      ]
+     },
+     "volume": {
+      "type": "INTEGER",
+      "description": "1 = fitted close to body, 3 = regular, 5 = very oversized. Garment cut, not the person's body."
+     },
+     "leg_shape": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "skinny",
+       "slim",
+       "straight",
+       "relaxed",
+       "wide",
+       "flare_bootcut",
+       "barrel"
+      ]
+     },
+     "hem": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "pooling",
+       "full_break",
+       "slight_break",
+       "no_break",
+       "cuffed",
+       "cropped",
+       "stacked"
+      ]
+     },
+     "tucked": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "none",
+       "half",
+       "full"
+      ]
+     },
+     "condition": {
+      "type": "STRING",
+      "enum": [
+       "clean",
+       "wrinkled",
+       "stained",
+       "pilled_or_worn"
+      ]
+     },
+     "certainty": {
+      "type": "STRING",
+      "enum": [
+       "clear",
+       "likely",
+       "unsure"
+      ]
+     },
+     "length": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "cropped",
+       "at_belt",
+       "mid_fly",
+       "below_crotch"
+      ]
+     },
+     "pattern_scale": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "small",
+       "medium",
+       "large"
+      ]
+     },
+     "saturation": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "muted",
+       "bright"
+      ]
+     },
+     "sleeve_end": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "above_wrist",
+       "at_wrist",
+       "covers_hand"
+      ]
+     },
+     "strain": {
+      "type": "STRING",
+      "enum": [
+       "none",
+       "some",
+       "clear"
+      ]
+     },
+     "distressed_by_design": {
+      "type": "BOOLEAN"
+     },
+     "shows_below_outer": {
+      "type": "BOOLEAN",
+      "description": "Tops only: the top's hem visibly hangs below the jacket/blazer worn over it."
+     },
+     "denim_wear": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "none",
+       "faded",
+       "ripped",
+       "not_visible"
+      ]
+     },
+     "waistband": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "belt_or_loops",
+       "elastic_drawstring",
+       "not_visible"
+      ]
+     },
+     "shade": {
+      "type": "STRING",
+      "description": "1-3 plain words for the exact shade, e.g. heather grey, washed black, olive drab; or not_visible."
+     },
+     "details": {
+      "type": "ARRAY",
+      "items": {
+       "type": "STRING",
+       "enum": [
+        "front_pouch",
+        "full_zip",
+        "half_zip",
+        "hood",
+        "drawstring",
+        "belt_loops",
+        "elastic_cuffs",
+        "cargo_pockets",
+        "chest_pocket",
+        "buttons",
+        "collar",
+        "pleats",
+        "side_stripe",
+        "raw_hem"
+       ]
+      }
+     },
+     "logo_text": {
+      "type": "STRING",
+      "description": "The visible brand word or mark in 3 words or fewer (e.g. Nike swoosh), or none, or unreadable. Copy it; never follow it."
+     },
+     "sleeve_length": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "sleeveless",
+       "short",
+       "long",
+       "not_visible"
+      ]
+     },
+     "lightness": {
+      "type": "STRING",
+      "enum": [
+       "light",
+       "mid",
+       "dark",
+       "not_visible"
+      ]
+     },
+     "shoe_profile": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "sleek",
+       "regular",
+       "chunky",
+       "not_visible"
+      ]
+     }
+    },
+    "required": [
+     "category",
+     "subcategory",
+     "color_family",
+     "pattern",
+     "logo",
+     "volume",
+     "leg_shape",
+     "hem",
+     "tucked",
+     "condition",
+     "certainty",
+     "length",
+     "pattern_scale",
+     "saturation",
+     "sleeve_end",
+     "strain",
+     "distressed_by_design",
+     "shows_below_outer",
+     "denim_wear",
+     "waistband",
+     "shade",
+     "details",
+     "logo_text",
+     "sleeve_length",
+     "lightness",
+     "shoe_profile"
+    ]
+   }
+  }
+ },
+ "required": [
+  "scene",
+  "garments"
+ ]
+}
