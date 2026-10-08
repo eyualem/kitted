@@ -165,3 +165,11 @@ Contradictions settled and decisions changed during the build. Newest last.
     2. **Unsure items get one quick tap.** When the model can't tell two types apart and the answer changes the score (jeans vs. sweatpants), the card asks before showing the score, at most once per check. The answer is saved with the closet item.
     3. **Closet tiles show real crops from his photo if they look clean and clear; otherwise a detailed graphic.** This revises #56's icon-only tiles, pending a crop-quality test.
     4. **The style council runs now, at design time.** There are 7 style advocates, a calibration member, a common-ground member and a mediator. Output: `rubric/research/style-council/RULEBOOK.md`, a prototype detector and test cases. At runtime there is still one vision call plus deterministic code. Claude pushed back on per-photo agent debates (slow, about 8× the cost, not repeatable), and the founder agreed.
+59. **The morning card gets a "Going with your own?" path** (founder, Oct 7: let him dress himself and get rated from the card; he agreed to the design below).
+    - **Design:** it's a full-width row at the bottom of the card, not a third button (3-across looked cramped). It opens the same camera with the card's occasion preset.
+    - **After "Wear this":** the row becomes "Dressed? Check it on". Both paths lead to the fit check, the core of the app, and use the same daily free check. When the check is used, the row says "Your free check resets tomorrow".
+    - **After any check that day:** the card collapses to one line (photo, "You went with your own", score). Past days' cards render collapsed.
+    - **Weather never changes the score:** same photo, same score on any day. It adds one advice line on the result.
+    - **No predicted score on the idea:** a closet-based number can differ from the photo's score and would undermine trust.
+    - **Evening cards** (planning tomorrow) have no camera row.
+    - Build plan: 05 §MC.

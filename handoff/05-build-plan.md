@@ -547,6 +547,82 @@ The founder tests on his own iPhone with a development build (free Apple ID "Per
 
 **Tests:** request builder and response parser (fixtures from `extraction-test/results`), prompt/schema drift, the crop math, the Release-key guard; Simulator screenshots for A; an on-phone checklist for B–D.
 
+### MC · The morning card (about 3.5 days + 0.5 after Apple enrollment; added Oct 7, DECISIONS-LOG #58–59; spec 02 "S1d")
+Built after the quick-fix batch and before Closet (it creates the outfit picker Closet reuses). Runs on demo weather until the paid developer program is active.
+
+1. **MC1 · Core `weather.ts`** (0.25 d)
+   - **Types:** `DayWeather` (now/high/low/morning feels-like °F, rain chance and the first rainy hour, condition) and `WeatherNeeds` (layer none/suggested/required/outer, rainSafe, removable).
+   - **Functions:** `weatherNeeds(w)`; `weatherTip(reading, w)` (advice only); the template keys for the greeting and the why line; the season fallback by month.
+   - *Check:* tests on every band edge (79/80, 64/65, 49/50, 34/35, rain 49/50%, swing 14/15); `scoreReading` gives an identical result with and without weather.
+2. **MC2 · Core `ideas.ts`** (0.75 d)
+   - **`closetState(closet, occasion)`** returns enough / thin / empty.
+   - **`pickOutfit({ closet, occasion, styles, boldness, weather?, recentWear, dayKey, pin?, exclude? })`** returns item ids, the missing slot, why keys and an internal predicted score (never shown).
+   - **How it picks:**
+     - Enumerate the valid combos (`outfitValid`) and score each with the rubric for the occasion.
+     - Filter by `weatherNeeds`.
+     - Push down items worn in the last 2 days.
+     - Break ties deterministically by a hash of dayKey + combo.
+     - Prune to the top 4 per slot before combining, so it stays under 50 ms on Hermes.
+   - *Check:* on the seed closet, cold + rain gives a layer + boots, never suede; hot gives no layer; a closet with no shoes gives missing = shoes; the same input gives the same output; a 40-item closet runs in under 50 ms in Jest.
+3. **MC3 · Data** (0.25 d)
+   - **Migration V4:** a `daily_ideas` table with these columns:
+     - dayKey (primary key), occasion, outfitId, weather JSON, isLive, messageId
+     - state: idea / wearing / checked / skipped
+     - fitCheckId, createdAt
+   - **`services/weather`:** a `WeatherSource` interface with a `DemoWeather` source (fixtures `coldRain`, `hot`, `mild`, `none`; launch argument `-demoWeather`) and a `NoWeather` source (season only). The forecast is cached in kv for 1 h.
+   - *Check:* migration tests, store tests.
+4. **MC4 · `features/morning/service.ts`** (0.5 d)
+   - **`ensureMorningCard(now)`** runs on Stylist focus.
+   - **Which day it plans:**
+     - From 4 am to 3:59 pm, it plans today.
+     - From 4 pm on, it plans tomorrow's day key.
+   - **If no row exists for that day:**
+     - Fetch the weather, with a 2 s timeout and a season fallback.
+     - Pick the outfit.
+     - Insert the greeting text plus a `morning` card message.
+     - Store the row; it's locked for that day.
+   - **If a check already exists today,** insert the card already collapsed.
+   - **Linking checks:** `fitCheckService.complete` sets the row to checked with that `fitCheckId` for any check that day (the card, the composer or a re-check). "Wear this" sets wearing and writes `wear_log`, as today.
+   - *Check:* service tests for both sides of 4 am and 4 pm, one card per day key, and a check from the composer collapsing the card.
+5. **MC5 · `MorningCard.tsx`** (1 d)
+   - **States:** enough / thin / empty / wearing / checked (collapsed) / past day (collapsed) / evening / quota used, plus the location-ask row and the attribution footer (live weather only).
+   - **Shared pieces:** extract `OutfitTiles` from `OutfitIdeaCard` and add `WeatherStrip`. The "your own fit" row is `CardActionRow`, a reusable row with 44 pt+ and VoiceOver as one button.
+   - **Swap one** opens the existing S28 route (a minimal version that re-runs `pickOutfit` with the slot excluded, if S28 isn't built yet).
+   - **Occasion tap** reuses `occasionPicker`.
+   - *Check:* every state matches the S1d spec at default size and AX5, in light and dark.
+6. **MC6 · Composer** (0.1 d)
+   - Remove the quick-start row.
+   - Re-measure the idle reserve in `stylist/layout.ts` (`THREAD_PAD.idle` 184 → about 146).
+   - Retire the `quick.*` strings and update `copyChecks` if it asserts them.
+   - *Check:* the dock shows only Check my fit + Ask…; the last card clears the dock.
+7. **MC7 · The camera from the card** (0.25 d)
+   - `camera.tsx` reads `occasion` and `from` params; the service takes `req.occasion`.
+   - The result card shows the `weatherTip` line under the fixes when there's live weather or the season.
+   - *Check:* the occasion is preset; the score is unchanged by weather (test).
+8. **MC8 · Demo screens and verification** (0.25 d)
+   - **Screens:**
+     - **25:** enough, cold + rain (morning).
+     - **26:** thin closet.
+     - **27:** new user, empty.
+     - **28:** after Wear this.
+     - **29:** collapsed after his own check (8.0 Sharp).
+     - **30:** evening (plans tomorrow).
+     - **31:** location ask.
+   - **Copy:** new strings go in `en.ts` → `addedInBuild` for the founder to skim.
+   - **Final pass:** `npm run check`, then Simulator screenshots in light and dark plus AX5, then the CLAUDE.md status.
+9. **MC9 · Native weather** (0.5 d, **after the founder's Apple Developer Program enrollment**; the free Personal Team can't enable the WeatherKit capability)
+   - **In `kitted-vision`** (no new npm package):
+     - CoreLocation When In Use with `NSLocationDefaultAccuracyReduced` = true; a one-shot `requestLocation`.
+     - WeatherKit `WeatherService.shared.weather(for:including: .current, .hourly, .daily)`, mapped to `DayWeather` for today + 3 days.
+     - `attribution` gives the mark URLs and `legalPageURL`.
+   - **`app.config.ts` additions:**
+     - `NSLocationWhenInUseUsageDescription` ("Kitted uses your rough location to pick clothes for today's weather. It isn't stored.")
+     - the reduced-accuracy key
+     - the WeatherKit entitlement
+   - **Privacy label:** add Coarse Location (App Functionality, not linked, no tracking).
+   - *Check on his phone:* the strip matches the Weather app within 2°.
+10. **Later (P6):** N1 notifications for the next 3 days are planned from the daily forecast and read the locked idea, so the card and the notification always agree.
+
 ### P4 · Onboarding (about 1.5 days)
 **Build** (screen IDs from `02` §1.6; app-build-spec's O4–O8 numbering is different, so ignore it): the `onboarding/` Stack presented as a `fullScreenModal` with Back, no X: O1 Welcome (screen 1) → O2 Pick looks (screen 2, max 3, a 4th tap shakes with "Up to 3.", "Not sure", O2n sheet) → O3 Basics (screen 3: **blank** birth-year wheel O3w as a `formSheet` with a wheel picker, Build/Fit preselected segmented controls, optional height stepper, the silhouette) → under 18 → **O4 age stop** + the secure-store flag → **O5 Consent** (screen 4, age-rules §3 text, "Agree & check my fit" / "Not now" at the same width) → first check: S2 camera → S5 reading → **S6 result** (O1e "See an example" uses s15; the scripted first check uses p01b) → S6r re-check or "Later" → **S14** "Your first 3 moves" → **P1 → P1b** 2-page paywall → **S15** notification ask ("Yes, pick a time" is the only path to the system prompt). The `stylist.aiNote` message is posted when onboarding ends (`02` D12). Save each step right away and resume on relaunch. Back is disabled after the first check is scored (`gestureEnabled: false`, no back button). Pick-look photos come from the bundled stock, each labeled by style and never by the person.
 **Done when:** screens 1–4 match. Counting by hand, **6 taps** take you from Get started to the camera. A 2010 birth year blocks, the block survives a relaunch (and on the Simulator, a reinstall), and the stop screen gives no retry hint. "Not now" on consent leaves Closet/Lookbook usable and shows a "Turn on fit checks" card in Stylist.

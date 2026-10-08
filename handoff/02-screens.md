@@ -745,11 +745,19 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
   3. 4 garment tiles (as S1) with a dashed `You'd need: {item}` tile for a slot the closet can't fill (e.g. a layer when it's cold).
   4. **Why line** (`.subheadline`, `ink2`, one or two sentences, template): names the weather reason, e.g. `Overshirt for the cold walk; it comes off by noon. Boots over the white sneakers for the rain.`
   5. Actions: `Wear this` (primary) · `Swap one` (secondary). Tapping a tile pushes C2.
-  6. Footer: Apple's Weather mark + `Data sources` link (WeatherKit attribution, required). Only when live weather is shown.
+  6. **"Your own fit" row** (founder, Oct 7, #59): below the actions, a full-width row inside the card above a 1 pt `line` divider (pad 12 / 16): camera circle 30 (`surface2`) · `Going with your own?` (`.subheadline`) over `Check it before you leave` (`.footnote`, `ink2`) · `chevron.right` (`ink3`). Tap → the camera (S2) with the card's occasion preset (`/camera?occasion=…&from=morning`). One 44 pt+ row, not a third button (the founder found 3-across cramped).
+     - After `Wear this`: the card shows `Wearing this today` (check) and the row becomes `Dressed? Check it on` / `See how it fits on you`.
+     - Free check already used today (non-Pro): the row reads `Your free check resets tomorrow` and opens S17's held flow, never a paywall push.
+     - Evening card (plans tomorrow): no row (he can't check tomorrow's fit tonight); actions `Wear this tomorrow` · `Swap one`.
+  7. Footer: Apple's Weather mark + `Data sources` link (WeatherKit attribution, required). Only when live weather is shown.
 - **Closet states:**
   - **Enough** (a valid top + bottom + shoes for the occasion): as above.
   - **Thin** (some pieces, no valid outfit): the known pieces plus dashed tiles; why line `I only know {n} of your pieces. Check today's fit and I'll learn the rest.`; actions `Check my fit` (primary) · `Add basics` (→ C5).
   - **Empty** (new user): no tiles; `Send me today's fit and I'll start learning your closet.` + `Check my fit`. With consent declined, S26 instead.
+- **After a fit check today** (either path, or a check from the composer): the card collapses in place to one row: photo thumb 44 × 56 (radius 8) · `Today · {Occasion}` tagline over `You went with your own` / `You wore my pick` · his score (Archivo, `.title2`) with the score word under it. Tapping it scrolls to the full result card in the thread. Re-checks update the number.
+- **Past days:** cards from earlier day keys render collapsed (`Thursday's idea · Wore it` / `· Went with your own · 8.0` / `· Skipped`), so the thread doesn't fill with full cards.
+- **Weather never changes the score** (#59). Same photo, same score on any day. Weather only adds one advice line under the result's fixes when relevant (`Rain tonight: boots over suede.`; `Cold out: bring the overshirt.`), from `weatherTip()` in core.
+- **No predicted score is shown on the idea** (#59). A number from closet items can differ from the photo's score, which undermines trust in the score.
 - **Location ask** (once, inside the first card that would show weather): a row `Use your local weather?` + `Allow` → the system prompt (When In Use, reduced accuracy). Declined or not asked yet: no strip; the greeting and why line use the season ("October: bring a layer").
 - **Weather rules** (code, in `@kitted/core` `weather.ts`; feels-like °F over his day, 8 am to 8 pm):
   - **80 and up:** no layer; shorts allowed for Everyday.
@@ -761,6 +769,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
   - **A swing of 15° or more between morning and high:** a layer he can take off.
   - The founder reviews these numbers with the rubric.
 - **Composer:** the quick-start row is gone. Idle dock = `Check my fit` + `Ask…` field only; reserve shrinks accordingly. "What should I wear?" is the card (and later typed questions); "I bought something" is v1.1; "Ask a question" is the field.
+- **VoiceOver:** the "your own fit" row is its own button ("Going with your own? Check it before you leave. Opens the camera."). The collapsed card: "Today, class: you went with your own, 8.0, Sharp. Shows the result."
 - **VoiceOver:** the card is one element: "Outfit idea for class today. 48 degrees now, high 63, rain likely after 5 pm. Navy overshirt, grey tee, khaki chinos, brown boots." Custom actions: Wear this, Swap one, Change occasion.
 
 ---

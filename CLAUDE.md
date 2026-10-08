@@ -161,6 +161,9 @@
      - **(b) Data:** one locked idea per day, and a `WeatherSource` with demo weather.
      - **(c) The card and its states,** with the suggestion row removed and demo screens 25–28.
      - **(d) Native location + WeatherKit.** It works only after the $99 enrollment, so demo weather until then.
+   - **"Going with your own?" row** (founder, Oct 7, #59): a row at the bottom of the card opens the camera with today's occasion set. After "Wear this" it becomes "Dressed? Check it on". After any check that day the card shrinks to one line with the score.
+   - Weather never changes the score, only adds a tip. No predicted score on the idea.
+   - Step-by-step plan: `handoff/05-build-plan.md` §MC (MC1–MC9).
 3. **Closet tab** (on demo data, while I phone-test); it reuses the outfit picker from step 2. Tiles use the garment icons in the item's color, not photo cut-outs. Photo-adding items and "Should I buy this?" go to v1.1.
 4. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
 5. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.
