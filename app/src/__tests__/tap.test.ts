@@ -53,7 +53,7 @@ describe('asking', () => {
     expect([row.status, row.score, row.itemIds]).toEqual(['asking', null, []]);
     const tap = row.details.tap!;
     expect([tap.question, tap.order, tap.default, tap.answer, tap.slot, tap.ordinal, tap.occasion]).toEqual(
-      ['Jeans or sweatpants?', ['jeans', 'sweatpants'], 'jeans', null, 'bottom', 0, 'everyday'],
+      ['Jeans or sweatpants?', ['jeans', 'sweatpants'], 'sweatpants', null, 'bottom', 0, 'everyday'], // Skip keeps the read (#125)
     );
     expect(tap.options.map((o) => [o.value, o.score])).toEqual([['sweatpants', 5], ['jeans', 6.5]]);
     expect((await store.readings.get(row.readingId!))!.source).toBe('full');
@@ -84,7 +84,7 @@ describe('asking', () => {
     expect(q.options).toEqual(row.details.tap!.options);
     const done = (await svc.answerTap(id, 'skip'))!;
     expect(done.score).toBe(row.details.tap!.options.find((o) => o.value === row.details.tap!.default)!.score);
-    expect(done.score).toBe(5.5);
+    expect(done.score).toBe(3.5); // Skip keeps the read: sweatpants at Date (#125)
   });
 });
 
@@ -112,17 +112,17 @@ describe('answering', () => {
     expect((await store.closet.all()).map((c) => c.name)).toContain('Black sweatpants');
   });
 
-  it('Skip: the generous reading (6.5), not confirmed in the closet; then "Not quite right?" can change it', async () => {
+  it('Skip: keeps what was read (5.0, #125), not confirmed in the closet; then "Not quite right?" can change it', async () => {
     const { store, svc, id } = await asking();
     const done = (await svc.answerTap(id, 'skip'))!;
-    expect([done.score, done.details.tap!.answer, done.details.tap!.skipped]).toEqual([6.5, 'jeans', true]);
+    expect([done.score, done.details.tap!.answer, done.details.tap!.skipped]).toEqual([5, 'sweatpants', true]);
     expect((await store.corrections.all()).map((c) => c.kind)).toEqual(['tapSkip']);
     expect((await store.closet.all()).find((c) => c.slot === 'bottom')!.confirmedFields).toEqual([]);
-    const r = await svc.saveCorrection(id, { garmentIndex: done.details.tap!.garmentIndex, field: 'subcategory', value: 'sweatpants' });
-    // The piece takes his word, and its name follows (#91): "Saved to your black sweatpants."
-    expect(r).toEqual({ before: 6.5, after: 5, itemName: 'Black sweatpants' });
+    const r = await svc.saveCorrection(id, { garmentIndex: done.details.tap!.garmentIndex, field: 'subcategory', value: 'jeans' });
+    // The piece takes his word, and its name follows (#91): "Saved to your black jeans."
+    expect(r).toEqual({ before: 5, after: 6.5, itemName: 'Black jeans' });
     const after = (await store.fitChecks.get(id))!;
-    expect([after.status, after.details.tap!.answer]).toEqual(['scored', 'jeans']); // never re-asked
+    expect([after.status, after.details.tap!.answer]).toEqual(['scored', 'sweatpants']); // never re-asked
     expect((await store.readings.get(after.readingId!))!.source).toBe('corrected');
   });
 

@@ -3,7 +3,7 @@
  "engine": 4,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "a98ec2805daef099a39f7169c1b2dafd3d0e2a201bf913b2f3edbd28c1747de0",
+ "rubricSha256": "5e95b69dadf5d60389531c2999a8d91ff0ebb61f485c08efd52bd8bb9743d27f",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,

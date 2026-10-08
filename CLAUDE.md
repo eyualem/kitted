@@ -127,7 +127,7 @@
   - **Mocked:** all weather is **sample weather**, labelled on the card. Real WeatherKit + location (MC9) waits on the $99 program.
   - **#66 resolved by #68:** he picks the style before the photo; it can't be changed after. When the style-council rulebook is ported, "Scored for" gives way to "Reads as …".
 - **The one quick tap, "Reads as …", and the new style names: built Oct 8** (DECISIONS-LOG #85–86; 02 "S5q", "S6s"). On the Simulator:
-  - **When the photo leaves a look-alike in doubt** (my Oct 7 black jeans read as sweatpants), the card asks "Jeans or sweatpants?" before the score, with two buttons and Skip ("I'll score it as jeans."). Jeans → 6.5, Sweatpants → 5.0. Nothing counts until I answer. After a Skip the card says "Scored as jeans. Not right? Tap." A re-check can't undo the answer.
+  - **When the photo leaves a look-alike in doubt** (my Oct 7 black jeans read as sweatpants), the card asks "Jeans or sweatpants?" before the score, with two buttons and Skip, which keeps what was read ("I'll score it as sweatpants."; since #125, was the generous answer). Jeans → 6.5, Sweatpants → 5.0. Nothing counts until I answer. After a Skip the card says "Scored as sweatpants. Not right? Tap." A re-check can't undo the answer.
   - **Every result names its look:** "Reads as streetwear" under the summary (never points). The "Scored for" line is gone; the Why sheet has a ±0 "Reads as" row.
   - **Style names:** Classic prep (was Preppy / Old money), Outdoor (was gorpcore), Vintage sport (was Sporty), in the morning card's menu too. Migration V5 renames stored keys.
   - **Demo screens:** 34 the question · 35 answered Jeans · 36 skipped (my Oct 7 reading on a stock photo). Screenshots: `screenshots/tap/` (git-ignored).
@@ -307,7 +307,6 @@ P5's real size is about 6.5 days, not 05's 2.
   - **Read them in the separate closet call** (#63), not the scoring call. Gate on a run-to-run flip test first.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
-- **Quick-tap wording and Skip (#124, taste):** (1) the hint "I couldn't tell from the photo. It changes your score." Research suggests "I want to get this right." because "It changes your score" tells me which answer pays. Default: unchanged (I approved it in #85). (2) On "Jeans or sweatpants?", Skip scores the generous answer, which gave my real joggers +1.5 twice; the new shoe question's Skip keeps what was read. Default: unchanged. Make the pairs work like the shoe question?
 - **Closet identity, 3 taste calls (#111; page `screenshots/closet-identity/index.html`):**
   1. Is my photo on the tile good enough, with the hand and phone showing on mirror-selfie tops? Recommended: yes.
   2. For pieces without a clean photo, a drawing filled with my fabric, or the plain drawing? Recommended: my fabric.

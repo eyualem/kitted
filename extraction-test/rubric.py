@@ -1012,7 +1012,8 @@ def ask_question(reading, occasion="everyday", styles=None, boldness="a_little",
     doubt[, kind]}. The closed list of look-alike pairs asks when the other reading moves the displayed score by
     1.0+ and a doubt signal is present (upward), or by 1.0+ downward when the model wasn't sure. With `shoes` (tap v2,
     #120) the shoe question joins (upward only), and a question that could raise the score always beats one that
-    could lower it. If he skips, a pair scores the more generous reading (`default`); the shoe question keeps the kind that was read (the most generous only when the type was lost). Same reading, same question,
+    could lower it, and a Skip (`default`) keeps what was read (the shoe question: the kind that was read; the most
+    generous answer only when the type was lost); v4.0's pairs skipped to the more generous reading. Same reading, same question,
     same default. `shoes=False` is v4.0 exactly (the frozen prototype check, check_port.py)."""
     base = score(reading, occasion, styles, boldness)["overall"]
     if base is None:
@@ -1051,7 +1052,8 @@ def ask_question(reading, occasion="everyday", styles=None, boldness="a_little",
                 yield {"pair": f"{a}/{b}", "slot": cat, "field": "subcategory", "garment_index": i, "question": q,
                        "options": [{"value": cur, "label": TAP_LABEL.get(cur, cur), "score": base},
                                    {"value": other, "label": TAP_LABEL.get(other, other), "score": s_alt}],
-                       "default": cur if base >= s_alt else other, "swing": swing, "doubt": doubt or "model not sure"}
+                       # v2 (#125, founder Oct 8): Skip keeps what was read; v4.0 skipped to the more generous one
+                       "default": cur if shoes or base >= s_alt else other, "swing": swing, "doubt": doubt or "model not sure"}
 
     for i, g in enumerate(reading.get("garments", [])):
         for q in pairs(i, g):

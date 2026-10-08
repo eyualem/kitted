@@ -268,7 +268,7 @@ Bands are (top looseness 1–5) / (leg). The default band is 2–3.5 / slim → 
   3. **Also ask if the other reading scores 1.0 or more lower**, only when the certainty isn't "clear".
   4. Never ask "jeans or …?" about jeans that read in a blue denim wash.
   5. If several pairs qualify, ask only the biggest swing. **At most once per check.**
-- **The card:** shown before the score: the question, two buttons, and "Skip". **Skip = the more generous reading**, with the line "Scored as jeans. Not right? Tap." The same photo always gets the same default, so "same photo, same score" holds.
+- **The card:** shown before the score: the question, two buttons, and "Skip". **Skip = the more generous reading**, with the line "Scored as jeans. Not right? Tap." *(Superseded Oct 8 by tap v2, DECISIONS-LOG #125: Skip keeps what was read; the founder chose it after "Jeans or sweatpants?" Skip gave his real joggers +1.5 twice. #123 adds the shoe question.)* The same photo always gets the same default, so "same photo, same score" holds.
 - **Function:** `ask_question(reading, occasion, styles)` in `rubric_v4_proto.py` returns `None` or `{pair, slot, field, garment_index, question, options: [{value, label, score}], default, swing, doubt}`.
 - **Predicted ask rate (saved readings):**
   - Everyday: **7 of 159 readings (4.4%)**: phone1 (jeans/sweatpants, 5.0 → 6.5), s21 ×3 (charcoal "sweatpants", 6.5 → 7.5; the truth is track pants, so "sweatpants" is a harmless answer), s20 ×1 and p03 ×2 (downward checks on "likely" reads).

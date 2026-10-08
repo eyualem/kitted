@@ -61,9 +61,10 @@ describe("an answer scores what the question promised", () => {
             else expect(changed).toEqual(lifted);
           }
           const def = q.options.find((o) => o.value === q.default)!;
-          const named = q.kind === "shoes" ? q.options.find((o) => o.value === r.garments[q.garmentIndex]!.subcategory) : undefined;
-          if (named) expect(def).toBe(named); // the shoe question's skip keeps the kind that was read
-          else expect(def.score).toBe(Math.max(...q.options.map((o) => o.score))); // a skip scores the generous reading
+          // a skip keeps what was read (#125); only a lost shoe type ("other") skips to the best answer
+          const asRead = q.options.find((o) => o.value === r.garments[q.garmentIndex]!.subcategory);
+          if (asRead) expect(def).toBe(asRead);
+          else expect(def.score).toBe(Math.max(...q.options.map((o) => o.score)));
         }
       }
     }

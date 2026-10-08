@@ -240,7 +240,7 @@ const addedInBuild = {
   'rescore.footnote': 'Re-scored · was {score} for {lens}',
   // The one quick tap (02 "S5q", #85). Questions and labels are core's (rubric v4 tap.pairs / tap.labels; copyChecks
   // keeps them identical); tap.as.* is the label inside a sentence ("I'll score it as jeans.").
-  'tap.hint': "I couldn't tell from the photo. It changes your score.",
+  'tap.hint': "I couldn't tell from the photo. I want to get this right.",
   'tap.skip': 'Skip',
   'tap.skipNote': "I'll score it as {choice}.",
   'tap.skipped': 'Scored as {choice}.',

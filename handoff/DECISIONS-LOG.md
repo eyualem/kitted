@@ -623,3 +623,8 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Wide jeans with no detected look still lose 0.45** ("Swap to relaxed-leg pants"). The rulebook defers the shared wide-trouser waiver to the gold set.
 
 108. **Close-ups' cost approved (founder, Oct 8).** He took the recommendation: close-ups stay on (`SEND_CLOSE_UPS = true`, #105). The extra is about 0.18¢ per scoring check now (0.39 → 0.57¢), about 0.3¢ from Jan 2027: roughly $0.18 per 100 checks today. The server (Worker) must send the same request when it replaces the dev-only direct call.
+125. **Founder, Oct 8: "go with" #122–124's recommendations.**
+    - **Close-ups stay on** (already logged by the measure session, #108).
+    - **Skip keeps what was read on every question** (tap v2). On "Jeans or sweatpants?" his real joggers read as sweatpants now skip to 5.0, not 6.5. rubric.py `ask_question(shoes=True)` and kitted-core: `default = as read`; `shoes=False` keeps v4.0's generous skip, so check_port is unaffected. Parity regenerated: 7,233 / 7,233, 847 ask. Demo screen 36 now shows 5.0 with `Scored as sweatpants. Not right? Tap.`
+    - **The hint is now** `I couldn't tell from the photo. I want to get this right.` (was "It changes your score.").
+    - **Next:** "Your green work boots?" for confirmed pieces (#122.3), with B's `knownPieces`.

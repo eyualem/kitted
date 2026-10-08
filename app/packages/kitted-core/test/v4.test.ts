@@ -20,12 +20,13 @@ describe("rubric v4: the founder's outfit", () => {
     expect(score(misread).overall).toBe(5.0);
   });
 
-  it("asks 'Jeans or sweatpants?' first; a skip scores the generous reading", () => {
+  it("asks 'Jeans or sweatpants?' first; a skip keeps what was read (#125)", () => {
     const q = askQuestion(misread)!;
     expect(q.question).toBe("Jeans or sweatpants?");
     expect(q.garmentIndex).toBe(1);
     expect(q.options.map((o) => [o.label, o.score])).toEqual([["Sweatpants", 5.0], ["Jeans", 6.5]]);
-    expect(q.default).toBe("jeans");
+    expect(q.default).toBe("sweatpants");
+    expect(askQuestion(misread, {}, false)!.default).toBe("jeans"); // v4.0 skipped to the more generous reading
   });
 
   it("read as jeans: 6.5, reads as streetwear, the one fault is the hem dragging over slides", () => {

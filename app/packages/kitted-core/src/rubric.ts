@@ -1090,7 +1090,8 @@ export function createRubric(data: RubricData): RubricEngine {
                 { value: cur, label: has(TAP_LABEL, cur) ? TAP_LABEL[cur]! : cur, score: base },
                 { value: other, label: has(TAP_LABEL, other) ? TAP_LABEL[other]! : other, score: sAlt },
               ],
-              default: base >= sAlt ? cur : other, swing, doubt: doubt ?? "model not sure",
+              // v2 (#125): Skip keeps what was read; v4.0 skipped to the more generous reading
+              default: shoes || base >= sAlt ? cur : other, swing, doubt: doubt ?? "model not sure",
             };
             if (better(cand)) best = cand;
           }
