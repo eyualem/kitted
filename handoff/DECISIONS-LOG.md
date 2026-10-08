@@ -621,3 +621,5 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The tap's hint line:** "I couldn't tell from the photo. It changes your score." The UX research suggests "I want to get this right." instead, because "It changes your score" tells him which answer pays. Unchanged until he says (he approved the current wording in #85).
     - **The pairs' generous Skip:** it gave his real joggers +1.5 twice, because "Jeans or sweatpants?" Skip → jeans. Keep it, or make the pairs' Skip keep what was read, like the shoe question?
     - **Wide jeans with no detected look still lose 0.45** ("Swap to relaxed-leg pants"). The rulebook defers the shared wide-trouser waiver to the gold set.
+
+108. **Close-ups' cost approved (founder, Oct 8).** He took the recommendation: close-ups stay on (`SEND_CLOSE_UPS = true`, #105). The extra is about 0.18¢ per scoring check now (0.39 → 0.57¢), about 0.3¢ from Jan 2027: roughly $0.18 per 100 checks today. The server (Worker) must send the same request when it replaces the dev-only direct call.

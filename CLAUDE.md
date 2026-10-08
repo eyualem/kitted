@@ -150,6 +150,7 @@
   - **Close-ups in the scoring call:** photo prep cuts two face-hidden close-ups (upper body, lower body to the feet) and sends them with the photo in the same call. On my real photos my boots stopped reading as slides (9 of 21 → 0), tops went from 80% to 100% right, and scores got steadier (64/66 vs 60/66 photos). Cost: 0.39 → 0.57¢ per check, +0.5 s. Test: `extraction-test/results/zoom1*`.
   - **Measured on the phone after the closet call:** each piece's own pixels (person outline ∩ its box, faces and hands removed, the shirt over it subtracted) give its real color and lightness, a cut-out picture (`Documents/closet/`) and an image fingerprint. My grey hoodie measured the same lightness in 3 different photos while the AI's color words changed. It feeds the closet's matching only; it never changes a score. The closet session decides how tiles use the cut-outs.
   - **Tried and not used:** a boot definition line in the prompt (no help), leg shape from the body outline (too rough on 50 stock photos), fingerprints as a strong signal (weak for layered tops).
+  - **Cost approved (founder, Oct 8, #108):** close-ups stay on for good.
   - **Real vs not yet:** all of it runs on the Mac with the app's own Swift code and builds for the Simulator. It reaches my phone after the next reinstall (`tools/phone/install.sh`). Demo photos are unchanged.
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
@@ -307,7 +308,6 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
 - **Quick-tap wording and Skip (#124, taste):** (1) the hint "I couldn't tell from the photo. It changes your score." Research suggests "I want to get this right." because "It changes your score" tells me which answer pays. Default: unchanged (I approved it in #85). (2) On "Jeans or sweatpants?", Skip scores the generous answer, which gave my real joggers +1.5 twice; the new shoe question's Skip keeps what was read. Default: unchanged. Make the pairs work like the shoe question?
-- **Close-ups cost +47% per scoring call (#105): 0.39 → 0.57¢ now, about 0.8 → 1.1¢ from Jan 2027.** Default: on (`SEND_CLOSE_UPS` in `app/src/services/readingSource/gemini.ts`; `false` reverts to the Oct 6 lock). Recommended: keep it. It removed the wrong "slides" fixes and made scores steadier.
 - **Closet identity, 3 taste calls (#111; page `screenshots/closet-identity/index.html`):**
   1. Is my photo on the tile good enough, with the hand and phone showing on mirror-selfie tops? Recommended: yes.
   2. For pieces without a clean photo, a drawing filled with my fabric, or the plain drawing? Recommended: my fabric.
