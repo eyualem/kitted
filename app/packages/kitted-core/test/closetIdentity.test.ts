@@ -183,7 +183,7 @@ describe("13. sneaker silhouettes", () => {
 });
 
 describe("14. the demo story: p01b against the seed closet, v3 fields only", () => {
-  it("what the closetPlan wrapper will return: tee and sneakers same; tan vs khaki chinos ask; held overshirt new", () => {
+  it("what closetPlan wraps: tee and sneakers same; tan vs khaki chinos ask; held overshirt new", () => {
     const plan = reconcileReading(loadReading("p01b"), seedCloset());
     expect(plan).toEqual([
       { from: "garment", index: 0, outcome: "same", itemId: "T1", score: 5 },
@@ -192,8 +192,11 @@ describe("14. the demo story: p01b against the seed closet, v3 fields only", () 
       { from: "held", index: 0, outcome: "new", score: null },
     ]);
   });
-  it("closetPlan itself is unchanged in this phase (B1 still merges by family)", () => {
-    expect(closetPlan(loadReading("p01b"), seedCloset()).matched.map((m) => m.itemId)).toEqual(["T1", "B1", "S1"]);
+  it("closetPlan wraps it (#91): B1 is a question, not a family merge", () => {
+    const plan = closetPlan(loadReading("p01b"), seedCloset());
+    expect(plan.matched.map((m) => m.itemId)).toEqual(["T1", "S1"]);
+    expect(plan.asks.map((a) => a.candidateId)).toEqual(["B1"]);
+    expect(plan.entries).toEqual(reconcileReading(loadReading("p01b"), seedCloset()));
   });
   it("seed B1's confirmed leg_shape becomes a confirmed field", () => {
     expect(profileFromClosetItem(seedCloset().find((i) => i.id === "B1")!).confirmed).toEqual({ leg_shape: "straight" });

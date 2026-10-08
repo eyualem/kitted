@@ -6,7 +6,7 @@
 //   - soft evidence adds up to a score; only a clear, uncontested score auto-matches ("same");
 //   - everything in between is a question for him ("ask"), never a silent merge.
 // Pure and deterministic: candidates rank by score desc, then id asc, so the closet's order never matters.
-// closetMatch.ts keeps its old behavior for now; it will wrap reconcileReading() in the app-wiring phase.
+// closetMatch.ts closetPlan() wraps reconcileReading() (#91).
 
 import { colorDistance, lightnessOf } from "./closetColor";
 import { parseShade, shadeFromId, shadeId, type ShadeKey } from "./closetShade";

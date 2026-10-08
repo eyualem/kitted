@@ -191,7 +191,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const closet = await closetFor();
     const plan = closetPlan(reading, closet);
     const added: string[] = [];
-    for (const a of plan.toAdd) {
+    for (const a of [...plan.toAdd, ...plan.asks]) {
       const slot = typeof a.garment.category === 'string' ? SLOT_TO_CLOSET[a.garment.category] : undefined;
       if (!slot) continue;
       const item: ClosetItemRow = {

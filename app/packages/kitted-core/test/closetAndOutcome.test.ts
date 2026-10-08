@@ -9,16 +9,23 @@ const DEMO: Styles = [["smart_casual", 0.5], ["workwear", 0.5]];
 const opts = { occasion: "date", styles: DEMO };
 
 describe("closetPlan", () => {
-  it("p01b against the full seed closet: tee, chinos and sneakers match T1/B1/S1; the held overshirt is new", () => {
+  it("p01b against the full seed closet: tee and sneakers match T1/S1; tan vs khaki chinos ask about B1; the held overshirt is new", () => {
     const plan = closetPlan(loadReading("p01b"), seedCloset());
-    expect(plan.matched.map((m) => [m.from, m.index, m.itemId])).toEqual([
-      ["garment", 0, "T1"], ["garment", 1, "B1"], ["garment", 2, "S1"],
-    ]);
+    expect(plan.matched.map((m) => [m.from, m.index, m.itemId])).toEqual([["garment", 0, "T1"], ["garment", 2, "S1"]]);
+    expect(plan.asks.map((a) => [a.from, a.index, a.candidateId, a.garment.subcategory])).toEqual([["garment", 1, "B1", "chinos"]]);
     expect(plan.toAdd.map((a) => [a.from, a.index, a.garment.subcategory])).toEqual([["held", 0, "overshirt"]]);
+  });
+  it("light grey vs charcoal hoodies never merge, on v3 fields alone", () => {
+    const r = loadReading("p01b");
+    const hoodie = (c: string) => ({ ...r.garments[0]!, subcategory: "hoodie", color_family: c });
+    const closet = [{ id: "H1", name: "Light grey hoodie", slot: "top", garment: hoodie("light_grey") }];
+    const plan = closetPlan({ ...r, garments: [hoodie("charcoal")], held_items: [] }, closet);
+    expect([plan.matched, plan.asks, plan.toAdd.length]).toEqual([[], [], 1]);
   });
   it("with an empty closet all four pieces are added (first run: 'Added 4 to Closet')", () => {
     const plan = closetPlan(loadReading("p01b"), []);
     expect(plan.matched).toEqual([]);
+    expect(plan.asks).toEqual([]);
     expect(plan.toAdd).toHaveLength(4);
   });
   it("a closet item matches at most one piece", () => {

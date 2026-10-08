@@ -32,7 +32,7 @@ export {
   US_EASTERN, fixedZone, localParts, parseRollover, DEFAULT_ROLLOVER, dayKey, addDays, weekdayOf, daysBetween, wallToUtc, nextRolloverMs,
   type ZoneOffset, type LocalParts,
 } from "./time";
-// Closet identity (phase 1): the deterministic same / new / ask matcher closetMatch.ts will wrap.
+// Closet identity: the deterministic same / new / ask matcher closetMatch.ts wraps (#90, #91).
 export {
   COLOR_EDGES, JEANS_ONLY_EDGES, colorDistance, colorNeighbors, FAMILY_HEX, UNKNOWN_HEX, hexToLab, labToHex, lightnessOf,
   nearestFamily, familyBand, displayHex, type ColorDistance, type ShadeStep, type Lab,
