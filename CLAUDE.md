@@ -134,7 +134,7 @@
 
 ### Other workstreams
 - **Extraction test PASSED (Oct 6).** Log: `extraction-test/results/INDEX.md`.
-  - **Locked config:** gemini-3.8-flash, thinking off, v3 answer format, rubric v3.1.
+  - **Locked config:** gemini-3.8-flash, thinking off, v3 answer format (re-confirmed Oct 8: v5 and v5s both failed), rubric v4.0.
   - **Speed and cost:** 6.6 s median, 0.42¢ per check (0.83¢ from Jan 2027), 100% consistent.
   - **Fix detection is unproven** (67–83%); real staged fix photos are needed.
   - Speed plan: `speed-and-detail-plan.md`.
@@ -156,7 +156,11 @@
     - One garment earns one credit.
     - The "Jeans or sweatpants?" tap asks on about 4% of checks.
   - **My Oct 7 outfit:** 3.5 → 6.5 read as jeans (5.0 plus the tap if misread). Saved checks at 8+: 53% → 44%. The remaining over-scoring is the 7.0 starting point, which the friend panel decides.
-  - **Code-only rulings ported Oct 8 (#81):** live in `rubric.py` v4.0 and the app. Port check `check_port.py`: 100% vs the prototype. 80 of 181 demo cases changed; the p01b 8.0 → 9.0 story didn't. Differs from mockup: welcome s15 8.5 → 8.0; screen 7's next-level line (p01b reads as minimal). Next: the tap and label UI, then one batch of new readings (`stacked` hem, `denim_wear`, closet-only shade/details/logo text) with an extraction re-run.
+  - **Code-only rulings ported Oct 8 (#81):** live in `rubric.py` v4.0 and the app. Port check `check_port.py`: 100% vs the prototype. 80 of 181 demo cases changed; the p01b 8.0 → 9.0 story didn't. Differs from mockup: welcome s15 8.5 → 8.0; screen 7's next-level line (p01b reads as minimal). Next, in order:
+    1. The "Jeans or sweatpants?" tap and the "Reads as …" label on the card (wording approved), and the onboarding names Classic prep and Outdoor.
+    2. The closet: a separate closet call after the card shows (approved #63: shade, details, logo text, boxes for crops), and matching by exact shade so two grey hoodies don't merge.
+    3. Full-resolution capture in the camera (needs a reinstall).
+  - **New scoring readings wait for the gold set.** v5 and the slim v5s both failed the consistency bar (#63–64), so the app stays on the locked v3 format.
   - **Also found Oct 7:**
     - The camera captures video-size frames (`sessionPreset = .high`), not full-resolution photos.
     - Closet matching merges light grey, grey and charcoal into one color.
