@@ -138,11 +138,19 @@
   - **The mic** listens on the phone (Apple SpeechAnalyzer; audio never leaves). It needs `tools/phone/install.sh` on my iPhone; it's hidden on the Simulator.
   - **Sending a question** now shows my bubble and "Questions are coming soon…". Real answers are not built.
   - **Tab bar:** it shrinks on scroll in Closet and Lookbook.
+- **Camera guidance: built Oct 8** (DECISIONS-LOG #100–103; 02 D5, S3, C4 update blocks). What you'll see:
+  - **Fit-check camera:** the pill says what to fix, most urgent first: "Too dark. Face a window or turn on a light." with a **Turn on flash** button · "Step into the frame" · "Bright light behind you. Turn to face it." · too close · "Come a little closer" · move left/right · "Hold still" (Mirror only) · good. In Propped the problem tips are spoken. The 3-2-1 waits while it's too dark.
+  - **After every shot or library pick,** a quick check (about 0.1–0.3 s on a phone) opens a panel over the frozen photo when it's too dark (**Retake with flash**), too blurry or backlit (**Use anyway** allowed), or can't be sent (no person, or a face we can't hide: no Use anyway).
+  - **Mirror** no longer promises the volume button (not built); it says "Phone at chest height, aimed at the mirror."
+  - **Scan clothes (new):** Closet **+** → Take photo / Choose photos. Rear camera, a 3:4 preview that is exactly the photo, corner brackets on each piece (copper when cut off), "3 pieces in view", the standing hint "Lay pieces flat, front side up, not overlapping.", the same live tips and after-shot panel (a person, no clothes, cut off, glare, dark, blurry). Choosing several photos lists the ones that need a look. A saved scan says "Saved for your closet. Reading clothes from photos is coming soon." Scans wait on the phone (faces hidden in the send copy) in the scan inbox for the style-council session's item reading.
+  - **Real on the Simulator:** the after-shot check (the bundled photo reads fine; library photos of flowers → "I can't find clothes", a man in a tee → "I see a person") and scan saving. **Scripted:** the live camera states, and a drawn flat lay stands in for clothes on a bed. **Only on my iPhone:** live brightness, motion, piece boxes, the torch.
+  - **Thresholds** were set on the Mac (no false alarms on the 52 real photos; ~90% of blurred copies caught). Real flat-lay photos haven't been tested yet: the `inputs/item-photos/` shoot will tune the scan side. Every tip and check is logged with its raw numbers (Metro, and `Documents/logs/guide.log`, which `tools/phone/pull.sh` prints).
+  - **Demo screens:** 41 too dark · 42 backlit · 43 come closer · 44 after the shot: too dark · 45 can't find you · 46 scan, 3 pieces · 47 scan dark · 48 a person · 49 cut off · 50 glare · 51 no clothes · 52 scan after the shot · 53 saved. Screenshots: `screenshots/guidance/` (git-ignored).
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
   - Purchases: the paywall runs on a mock store (P6).
-- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 148 core tests and 187 app tests (incl. automated copy checks). All green (Oct 8).
+- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 151 core tests and 266 app tests (incl. automated copy checks). All green (Oct 8).
 
 ### Other workstreams
 - **Extraction test PASSED (Oct 6).** Log: `extraction-test/results/INDEX.md`.
@@ -239,11 +247,12 @@ P5's real size is about 6.5 days, not 05's 2.
 2. Done Oct 8: the "Same as your …?" duplicate question in the closet sheet (#91).
 3. Thread list height drops 116 pt after a sheet closes (#34). It looks right, but understand it before P5.
 
-### 2b. Camera guidance: its own session (founder, Oct 8)
-- **What it is:** the camera tells him what to fix before and after the shot in every way a photo comes in: the fit-check camera (Propped/Mirror), the new "Scan clothes" camera (#88) and photos picked from the library.
-- **What it covers:** too dark (offer the light), blurry/moving, cut off, too far, no person / no clothes found, a person in a clothes scan, front side up.
-- **Who:** planned and built in a separate chat. The founder pastes the kickoff prompt.
-- **Not touched by this chat:** item reading (Gemini) and the Closet tab stay with the style-council session.
+### 2b. Camera guidance: built Oct 8 (its own session; #100–103)
+- **Done:** live tips + the after-shot check in the fit camera, library photos and the new scan camera (`/scan`, Closet "+"); see "Where things stand".
+- **Next (needs my iPhone):** reinstall (`tools/phone/install.sh`), then 5 minutes: Propped in a dim room (does "Too dark" + Turn on flash appear?), in front of a window (backlit?), walking around in Mirror (Hold still?), then scan a few pieces on the bed and one with me in it. Claude reads the `[guide]` lines (Metro or `pull.sh`) and tunes the ISO, motion and piece thresholds in `guidance.ts` (no rebuild).
+- **Then:** the `inputs/item-photos/` shoot tunes the scan thresholds on real flat lays.
+- **For the style-council session:** scans wait in the key-value list `scan.inbox` (`features/scan/inbox.ts`: kept/thumb/send paths under `Documents/scans`); the item reading takes them from there and adds the review sheet. The Closet "+" is an interim action sheet; `Describe it` joins when C4d is built.
+- **Not built:** lens-smudge detection (can't be told from blur), front side vs. back and overlap (tips only).
 
 ### 3. P3: built; next is testing on my iPhone (full plan: `handoff/05-build-plan.md` §P3)
 - **Done Oct 7:** real scoring (photo → faces blurred on the phone → Gemini → real card) and the camera (live preview, body tracking drives the guide, no live blur, 3-2-1 auto-capture with a spoken count, Propped/Mirror, flash, flip, camera-off card). Photos keep the whole outfit; my own copy stays unblurred on the phone, only the upload is blurred (#54–55). On the Simulator a sample photo stands in for the camera.
@@ -252,7 +261,7 @@ P5's real size is about 6.5 days, not 05's 2.
 - **Each test session:** unlock the phone and open Kitted (it reconnects to this Mac's dev server), then tell Claude so it can watch the log.
 - Test plan: 10 propped shots (phone against something, 2–3 m away) + 10 mirror shots in my room; note any guide misfires.
 - **Done Oct 8 (#83), needs a reinstall:** 12 MP 4:3 photos (the whole outfit, not the 16:9 preview crop); front photos saved true-view; Mirror opens on the rear camera; the guide's left/right judged on screen; prep at 2048 plus a face-hidden 2048 detail copy kept a week (`Caches/detail`, copied by `pull.sh`). Log lines to watch: `[camera] ready · … photo 4032×3024 …`, `[camera] captured … 3024×4032 · … MB · … ms`, `[prep] ok · source … → upload …×1024 · kept … · vision … ms · total … ms`.
-- Not built yet: the Mirror volume-button shutter, the dark/blurry retake panel, the screenshot "Is this you?" question (#50).
+- Not built yet: the Mirror volume-button shutter, the screenshot "Is this you?" question (#50).
 - Then **P4 (onboarding)**: 05 §P4.
 
 ### 4. Non-build steps (mine)
@@ -275,7 +284,7 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
 - **"Reads as" when two looks fit (#86):** screen 7 reads "smart casual" because my first pick breaks the tie, while its next-level tip is the minimal one. Default: keep the tie-break. The other choice: always the first detected look.
-- **Shoot ~20 photos of your own clothes for the scanning test (#88; approved: $1 test, free up to 30/day).** Put them in `inputs/item-photos/`. Phone camera, normal room light:
+- **Shoot ~20 photos of your own clothes for the scanning test (#88; approved: $1 test, free up to 30/day).** Put them in `inputs/item-photos/`. They also tune the scan camera's tips (#101): you can take them with the new Closet **+** → Take photo after the reinstall, or with the phone's camera. Phone camera, normal room light:
   - 6 single pieces flat on your bed (a tee, a hoodie, jeans, chinos, a jacket, a patterned or logo piece)
   - 3 on a hanger against a door or wall
   - 2 pairs of shoes on the floor
@@ -286,14 +295,14 @@ P5's real size is about 6.5 days, not 05's 2.
   The style-council session writes the item prompt and test and runs it.
 - **Closet details I settled from Codex's Reddit research (#87; veto if you disagree):** Closet opens on Outfits once he can make 3+; "Goes with" labels Best match / Dressier / More relaxed; a plain reason on every outfit; next best buy named by kind (no brands, no shop links) and shows what it unlocks; neutral wear counts, no "not worn lately" nudges.
 - **Mic permission text** (outward-facing; in `app/app.config.ts`): "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
-- **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator. The same reinstall brings the 12 MP camera (#83): take a few Propped and Mirror shots while Claude watches the log.
+- **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator. The same reinstall brings the 12 MP camera (#83) and camera guidance (#101): take a few Propped and Mirror shots (one in a dim room, one against a window) and scan a few clothes while Claude watches the log.
 - **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Re-score"): greetings, weather lines, why lines, the "Wearing something else?" link, the re-score alert. The style names are settled (Classic prep, Outdoor, Vintage sport; #82, #85).
 - **Weather band numbers** (core `weather.ts`, for the rubric review): 80 / 65 / 50 / 35 °F feels-like, rain 50%+, a 15° swing. Hot days also favor tees and lighter shoes.
 - **Archivo fonts:** 3 files of about 185 KB each, OFL license, from `github.com/Omnibus-Type/Archivo` (`fonts/ttf/`). Default: the system font. When approved:
   - fill the map in `app/src/design-system/fontFiles.ts`
   - uncomment the expo-font plugin in `app/app.config.ts`
   - rebuild
-- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names, the VoiceOver lines, and (new Oct 7) the closet-sheet rows ("Top · Regular fit"), the viewer caption ("Date · October 22") and "Pick shoes from your closet". New Oct 8: "One quick tap" (the hint, Skip lines, "Not scored. You sent a newer photo, so nothing was counted.", VoiceOver), "Reads as", and the closet's lines (#92: "Checking the details…", "1 question", "Already in your closet", "Not the same", "It's my …", "Saved as your …", "Kept as a new piece."). Skim it.
+- **Copy I wrote that isn't in the copy deck:** `app/src/i18n/en.ts` → `addedInBuild` holds the card summaries, the 27 rule names, the VoiceOver lines, and (new Oct 7) the closet-sheet rows ("Top · Regular fit"), the viewer caption ("Date · October 22") and "Pick shoes from your closet". New Oct 8: "One quick tap" (the hint, Skip lines, "Not scored. You sent a newer photo, so nothing was counted.", VoiceOver), "Reads as", and the closet's lines (#92: "Checking the details…", "1 question", "Already in your closet", "Not the same", "It's my …", "Saved as your …", "Kept as a new piece."). Also new Oct 8: the camera guidance lines (`cam.tip.*`, `cam.retake.*`, `scan.*`: the tips, the after-shot titles, "Saved for your closet" and "Reading clothes from photos is coming soon."). Skim it.
 - **Already built; just confirm:**
   - The "Why" sheet's "Rounded to the nearest half · +0.25" line.
   - "Dialed in. Nothing to fix." only at 9+.
@@ -391,4 +400,7 @@ Exceptions:
 - **Demo gating:** read `getDemoArgs().demoScreen`, not the demo state, in code that runs while a demo screen loads.
 - **The closet is the closet service's** (`features/closet/service.ts`, #91): fit-check writes go through `patchCheckKeepCloset`, which keeps `closetSummary` and `itemIds`; never write those from the fit-check service. In tests, share one id factory between services (two counters both made `R-1`).
 - **expo-sqlite `INSERT OR REPLACE` moves a patched row to the end of `all()`;** sort lists explicitly.
+- **Demo screen numbers may skip** (parallel sessions number from their own block); `-demoScreen` is capped at the highest `n`, not the count (#103).
+- **Simulator Vision:** `VNClassifyImageRequest` on the CPU gives meaningless labels (the same for different photos); person, face and piece checks work. Judge the clothes label on the Mac harness or the phone (#103).
+- **The dev build's floating "Tools" button covers the top-right header button** and takes its taps; drag it away when testing.
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
