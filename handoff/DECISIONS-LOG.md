@@ -83,3 +83,22 @@ Contradictions settled and decisions changed during the build. Newest last.
 54. **Photos: full frame with faces hidden, not the neck-down crop; no live blur in the camera** (founder, Oct 7: the crop "loses the silhouette"; the live blur was unwanted). Photo prep now keeps the whole image and hides every face (his and anyone else's): the face box grown to the whole head (1.6 × 1.9), heavy Gaussian blur then coarse pixels (a light blur can be undone). His head comes from the face detector, else the pose's head joints (nose, eyes, ears), else the area above his shoulders; if none is found and his body's top is inside the frame, nothing is sent (`couldNotFrame`, ruling 10). If his body runs off the top edge with no face or head found (a chest-down mirror shot), there's no face to hide and the photo is sent. Checked on the Mac with the same Swift code: 5 stock + 11 mirror selfies, all faces hidden (phone over the face, face cut by the frame edge), the chest-down shot sent with nothing blurred, metadata gone. This is the fallback ruling 13 §R5 and the build spec already named ("full frame with the face pixelated"); the neck-down crop was never validated (13 risk #1), while the Oct 6 accuracy test used full frames. The consent copy ("face cropped out or blurred first") stays true. Unblurred faces: the founder asked; recommended against for now (BIPA/CUBI rely on face data staying on the phone, App Review's "hot-or-not" line, Google keeps uploads 55 days; no accuracy gain). Reversible later with new consent copy and a lawyer's OK.
 55. **Ruling 11 decided by the founder: his photo is kept unblurred on the phone; only the upload is face-blurred** (Oct 7: seeing his own face blurred is off-putting). Photo prep writes the kept copy (2048 px) and thumb from the oriented original, re-encoded so EXIF/GPS/camera data are gone, and the upload (1024 px) from the face-hidden image. The consent copy stays true ("We don't keep your photos on our servers. They stay on your phone."; "What doesn't [get sent]: your face"). Risk check: a photo stored only on his own device isn't a biometric identifier (BIPA excludes photographs, and nothing face-derived is created or sent); the app sandbox is included in his own iCloud/device backup like any app's photos. Still to do: the share card (P6) should default to the face-hidden image or let him choose, and deleting a check must delete its files.
 
+
+## Oct 7, 2026 · Next-steps review (3 parallel reviews: UI audit, P5 plan, roadmap)
+
+56. **Order to beta: features before polish; P5 split around P4.**
+    - **Why features first:** the Stylist tab matches mockups 6–12 closely (about 80% of the premium feel). What's left there is an hour of polish per item. Meanwhile 3 of 4 tabs, onboarding and the paywall show dev placeholders, and no server exists.
+    - **The order:**
+      1. A quick-fix batch.
+      2. Closet + outfit idea, on seed data. This runs in parallel with the founder's phone test.
+      3. The Worker proxy (it gates real scoring in release builds).
+      4. P4.
+      5. Lookbook, then You. You reuses P4's Silhouette and segmented control.
+      6. P6.
+      7. The age check, App Attest log-only, and store items.
+      8. P7 across every screen.
+    - **Closet tiles** use `GarmentIcon` in the item's color. There's no garment segmentation, and #54 dropped the neck-down crop that 05 assumed. Photo-adding items (no item-reading prompt exists) moves to v1.1, with #40.
+    - **Lookbook check days** come from `fit_checks.dayKey`, never from `wear_log` alone. Its day key lets a later "Wear this" overwrite the check.
+    - **Bug found:** kept photo and thumb URIs are stored as absolute `file://…/Documents/…` paths (`KittedVisionModule.swift` → `service.ts:329`). The container path changes on reinstall, so store paths relative to Documents.
+    - **Stale copy found:** `CAMERA_USAGE` in `app.config.ts` and the review notes (age-rules §4.3) still say the face is cropped out.
+    - **P5 estimate:** about 6.5 days, not 2.

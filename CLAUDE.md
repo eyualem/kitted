@@ -135,6 +135,35 @@
 
 ## Next steps, in order
 
+### 0. The plan to beta (Oct 7 review, DECISIONS-LOG #56)
+**Features before polish.** The Stylist tab is about 80% of the mockup's polish; the gap is scope. Closet, Lookbook, You, onboarding and the paywall are still placeholders that show spec IDs ("C1 · Closet"). There's also no server, so a release build can't score real photos (the key only loads in dev builds). Order:
+1. **Quick-fix batch (half a day):**
+   - Correct the camera permission text. It still says "face is cropped out"; that's wrong since #54.
+   - Store kept-photo paths relative to the app folder. They're absolute today, and iOS changes that folder on reinstall, which would blank old photos.
+   - Fix the dead "Later" link.
+   - Stop toasts covering buttons.
+   - Make all four tab icons outlines.
+   - Remove the hairline under the Stylist header.
+   - Fix the navy/black garment icons, which are near-invisible in dark mode.
+   - Fix the sheet heights: "Not quite right?" opens too tall, "Which shoes?" too short.
+   - Give the empty tabs real empty states.
+2. **Closet tab + the outfit idea** (on demo data, while I phone-test). Tiles use the garment icons in the item's color, not photo cut-outs. Photo-adding items and "Should I buy this?" go to v1.1.
+3. **The server** (Cloudflare Worker + D1): the scoring route, daily limits, a $3/day spending kill-switch, a new key. It gates the beta. Needs my Cloudflare account.
+4. **P4 onboarding**, by about Oct 24: the age gate and consent are the App Review gate for outside testers.
+5. **Lookbook**, then **You** (incl. "Delete all my data"; reuses P4's pieces).
+6. **P6:** paywall and limit card, the 3 local notifications, the share card (defaults to the face-hidden photo, #55).
+7. **Age check, App Attest (log-only), policy pages, store screenshots.**
+8. **P7 polish and accessibility across every screen**, then TestFlight about Oct 31.
+
+Deferred to v1.1:
+- the volume-button shutter
+- "Is this you?"
+- Lookbook filters and its Saved tab
+- "I bought something"
+- multi-select add
+
+P5's real size is about 6.5 days, not 05's 2.
+
 ### 1. My feedback from Oct 7: done
 1. **Done: the composer no longer disappears when you tap the text box.** It rides just above the keyboard; the thread moves up with it (DECISIONS-LOG #29). Verified on the Simulator.
 2. **Done: composer buttons.** The photo-library circle is gone; the camera button hides while the field is focused or has text, so the field gets the full width (#28, a logged difference from the mockup).
