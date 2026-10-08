@@ -4,11 +4,11 @@ import { store } from '@/data/db';
 import { getDemoState } from '@/demo/demoState';
 import { newId } from '@/services/ids';
 import { weatherSource } from '@/services/weather';
-import { sessionClock } from '@/state/session';
+import { getDemoArgs, sessionClock } from '@/state/session';
 import { createMorningService } from './service';
 
-/** Demo screens where the card belongs: Stylist home (12) and the card's own screens (25–34). */
-export const MORNING_DEMO_SCREENS: ReadonlySet<number> = new Set([12, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]);
+/** Demo screens where the card belongs: Stylist home (12) and the card's own screens (25–32). */
+export const MORNING_DEMO_SCREENS: ReadonlySet<number> = new Set([12, 25, 26, 27, 28, 29, 30, 31, 32]);
 
 export const morning = createMorningService({
   store,
@@ -16,7 +16,9 @@ export const morning = createMorningService({
   weather: weatherSource,
   ids: newId,
   enabled: () => {
-    const screen = getDemoState().screen;
+    // The launch/link argument, set before the screen's data loads; Stylist is often already
+    // mounted (and focused) while it does, so the demo state alone was read too late.
+    const screen = getDemoArgs().demoScreen ?? getDemoState().screen;
     return screen === null || MORNING_DEMO_SCREENS.has(screen);
   },
 });

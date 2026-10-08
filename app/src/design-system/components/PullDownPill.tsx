@@ -19,9 +19,11 @@ export interface PullDownPillProps<T extends string> {
   onChange: (value: T) => void;
   accessibilityLabel: string;
   accessibilityHint?: string;
+  /** Plain mono text with a chevron, no capsule: the result card's tagline (02 "S6s"). */
+  plain?: boolean;
 }
 
-export function PullDownPill<T extends string>({ label, value, sections, onChange, accessibilityLabel: a11y, accessibilityHint: hint }: PullDownPillProps<T>) {
+export function PullDownPill<T extends string>({ label, value, sections, onChange, accessibilityLabel: a11y, accessibilityHint: hint, plain }: PullDownPillProps<T>) {
   const { colors, scheme } = useTheme();
   const item = (o: PullDownOption<T>) => (
     <Button key={o.value} label={o.label} systemImage={o.value === value ? 'checkmark' : undefined} onPress={() => o.value !== value && onChange(o.value)} />
@@ -30,19 +32,26 @@ export function PullDownPill<T extends string>({ label, value, sections, onChang
     <Host matchContents colorScheme={scheme}>
       <Menu
         label={
-          <HStack
-            spacing={4}
-            modifiers={[
-              padding({ horizontal: 11, vertical: 6 }),
-              backgroundOverlay({ color: colors.surface2 }),
-              clipShape('capsule'),
-              accessibilityLabel(a11y),
-              ...(hint ? [accessibilityHint(hint)] : []),
-            ]}
-          >
-            <Text modifiers={[font({ size: 14, weight: 'semibold' }), foregroundStyle(colors.ink)]}>{label}</Text>
-            <Image systemName="chevron.down" size={10} color={colors.ink2} />
-          </HStack>
+          plain ? (
+            <HStack spacing={3} modifiers={[padding({ vertical: 4 }), accessibilityLabel(a11y), ...(hint ? [accessibilityHint(hint)] : [])]}>
+              <Text modifiers={[font({ size: 13.5, design: 'monospaced' }), foregroundStyle(colors.ink2)]}>{label}</Text>
+              <Image systemName="chevron.down" size={9} color={colors.ink2} />
+            </HStack>
+          ) : (
+            <HStack
+              spacing={4}
+              modifiers={[
+                padding({ horizontal: 11, vertical: 6 }),
+                backgroundOverlay({ color: colors.surface2 }),
+                clipShape('capsule'),
+                accessibilityLabel(a11y),
+                ...(hint ? [accessibilityHint(hint)] : []),
+              ]}
+            >
+              <Text modifiers={[font({ size: 14, weight: 'semibold' }), foregroundStyle(colors.ink)]}>{label}</Text>
+              <Image systemName="chevron.down" size={10} color={colors.ink2} />
+            </HStack>
+          )
         }
       >
         {sections.map((s, i) =>

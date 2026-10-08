@@ -24,6 +24,7 @@ export {
   pickOutfit, closetState,
   type PickInput, type PickedOutfit, type IdeaResult, type IdeaReason, type IdeaReasonKey, type ClosetState, type MissingSlot,
 } from "./ideas";
+export { styleEffects, type StyleEffect, type StyleLens } from "./lens";
 export { explainScore, type ScoreLedger, type LedgerCredit, type LedgerRule, type Explained } from "./ledger";
 export type { CreditReason, ScoreTrace } from "./rubric";
 export {

@@ -371,7 +371,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     return { outcome: done.status === 'scored' ? 'scored' : 'notScored', checkId };
   }
 
-  return {
+  const api = {
     getState: () => state,
     subscribe(cb: () => void) {
       listeners.add(cb);
@@ -415,14 +415,34 @@ export function createFitCheckService(deps: ServiceDeps) {
       dispatch({ t: 'end' });
       return { outcome: 'scored', checkId };
     },
-    /** The card's occasion chip: instant re-score in code, no new reading (02 D7). */
-    async changeOccasion(checkId: string, occasion: OccasionKey) {
+    /** What the card would score for another occasion or style, without saving (the confirm alert's preview, #62). */
+    async previewLens(checkId: string, lens: { occasion?: OccasionKey; style?: StyleKey | null }) {
       const row = await store.fitChecks.get(checkId);
       const reading = row && (await readingOf(row));
       if (!row || !reading || row.parentId) return null;
-      const { row: next } = await rescore(row, reading, { occasion });
-      await store.setKv(KV.lastOccasion, occasion);
+      const p = await profile();
+      const ev = evaluateCheck({
+        reading, occasion: lens.occasion ?? row.occasion, styles: stylesFor(lens.style !== undefined ? lens.style : row.style, p.styles),
+        boldness: p.boldness, closet: await closetFor(row), firstCheck: row.isFirstCheck, hiddenFixTargets: row.details.hiddenFixTargets ?? [],
+      });
+      return { before: row.score, after: ev.row.score ?? null };
+    },
+    /** He confirmed: re-score the same card in place, in code, no new reading or check (02 D7, #62). */
+    async changeLens(checkId: string, lens: { occasion?: OccasionKey; style?: StyleKey | null }) {
+      const row = await store.fitChecks.get(checkId);
+      const reading = row && (await readingOf(row));
+      if (!row || !reading || row.parentId) return null;
+      const rescoredFrom = { score: row.score ?? 0, occasion: row.occasion, style: row.style };
+      const patch: Partial<FitCheckRow> = { details: { ...row.details, rescoredFrom } };
+      if (lens.occasion) patch.occasion = lens.occasion;
+      if (lens.style !== undefined) patch.style = lens.style;
+      const { row: next } = await rescore(row, reading, patch);
+      if (lens.occasion) await store.setKv(KV.lastOccasion, lens.occasion);
       return next;
+    },
+    /** The occasion chip before the score lands (S5 chips): instant, no confirm. */
+    async changeOccasion(checkId: string, occasion: OccasionKey) {
+      return api.changeLens(checkId, { occasion });
     },
     /** "Not quite right?" → Save correction: a NEW reading with the field changed (04 §7). */
     async saveCorrection(checkId: string, d: CorrectionDraft | { garmentIndex: number; remove: true }) {
@@ -549,6 +569,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       return message({ createdAt: clock.nowMs(), role: 'stylist', kind: 'text', text: t('recheck.prompt', { fixQuestion, slotWord: t(slotKey) }) });
     },
   };
+  return api;
 }
 
 export type FitCheckService = ReturnType<typeof createFitCheckService>;

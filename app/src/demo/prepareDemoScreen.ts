@@ -9,7 +9,7 @@ import { loadScenario } from '@/data/seedLoader';
 import { fitCheck, readingSource, setTimerOverride } from '@/features/fitcheck/session';
 import { morning } from '@/features/morning';
 import { createMemoryStore } from '@/data/memoryStore';
-import type { OccasionKey } from '@/data/types';
+import type { OccasionKey, StyleKey } from '@/data/types';
 import { WEATHER_PERMISSION_KV } from '@/services/weather';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import { newId } from '@/services/ids';
@@ -21,7 +21,7 @@ const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
 /** Story steps per screen (firstRun story; screen 11 runs s24 live inside `full`). */
 type Step =
-  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string }
+  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey }
   | { at: string; do: 'morning' }
   | { at: string; do: 'wear' }
   | { at: string; do: 'closet'; ids: string[] }
@@ -76,6 +76,8 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   30: { asOf: '2026-10-22T18:29:00', steps: [{ at: '2026-10-22T18:30:00', do: 'morning' }] },
   31: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
   32: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
+  // "Scored for" (02 "S6s"): s15's wide trousers are on-style for streetwear (9.0; 8.5 by the general standard).
+  33: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's15', occasion: 'everyday', style: 'streetwear' }] },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
@@ -136,7 +138,10 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       await new Promise((r) => setTimeout(r, 30));
       fitCheck.selectOccasion(step.occasion);
     } else {
-      await fitCheck.start({ mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL) });
+      await fitCheck.start({
+        mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL),
+        ...(step.style ? { style: step.style } : {}),
+      });
     }
   }
   setDemoArgs({ ...getDemoArgs(), latency: args.latency });

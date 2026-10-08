@@ -5,11 +5,11 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import {
   AddedRow, FinishTile, FixRow, GarmentIcon, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
-  TagLine, TextLink, TextLinkRow, TipLine, displayScore, space, spokenScore, useTheme,
+  PullDownPill, TextLink, TextLinkRow, TipLine, displayScore, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
-import type { ClosetItemRow, FitCheckRow } from '@/data/types';
+import { OCCASIONS, STYLES, type ClosetItemRow, type FitCheckRow, type StyleKey } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { garmentIconType } from '@/features/fitcheck/labels';
 import { fitCheck, useFitCheckSession } from '@/features/fitcheck/session';
@@ -21,6 +21,9 @@ import { pickOccasion } from '../occasionPicker';
 import { occasionLabel } from '../thread';
 import { OccasionQuestion, ReadingCard } from './ReadingCard';
 import { useWeatherTip } from '@/features/morning/weatherTip';
+import { styleLabel } from '@/features/morning/copy';
+import { confirmLens, useScoredFor } from '@/features/fitcheck/lensUi';
+import { pickStyle } from '../stylePicker';
 
 function useCheck(checkId: string) {
   return useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -33,6 +36,7 @@ function useCloset() {
 export function FitCheckCard({ checkId }: { checkId: string }) {
   const row = useCheck(checkId);
   const wxTip = useWeatherTip(row);
+  const scoredFor = useScoredFor(row);
   const session = useFitCheckSession();
   if (!row) return null;
   if (row.status === 'scoring') {
@@ -48,7 +52,7 @@ export function FitCheckCard({ checkId }: { checkId: string }) {
   }
   if (row.status === 'failed') return <FailureCard row={row} />;
   if (row.status === 'notClothed' || row.status === 'unreadable') return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} />;
-  return <ScoredCard row={row} wxTip={wxTip} />;
+  return <ScoredCard row={row} wxTip={wxTip} scoredFor={scoredFor?.line ?? null} />;
 }
 
 export function StatusCard({ text }: { text: string }) {
@@ -74,7 +78,7 @@ function FailureCard({ row }: { row: FitCheckRow }) {
   );
 }
 
-function ScoredCard({ row, wxTip }: { row: FitCheckRow; wxTip: string | null }) {
+function ScoredCard({ row, wxTip, scoredFor }: { row: FitCheckRow; wxTip: string | null; scoredFor: string | null }) {
   const closet = useCloset() ?? [];
   const score = row.score ?? 0;
   const partial = row.isPartial;
@@ -101,6 +105,7 @@ function ScoredCard({ row, wxTip }: { row: FitCheckRow; wxTip: string | null }) 
     { name: 'share', label: t('card.share.a11y') },
     ...(addedItems.length > 0 && !partial ? [{ name: 'review', label: t('card.a11y.review') }] : []),
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
+    { name: 'style', label: t('scoredFor.a11yStyle') },
   ];
   const go = {
     why: () => router.push(`/sheets/why/${row.id}`),
@@ -111,7 +116,8 @@ function ScoredCard({ row, wxTip }: { row: FitCheckRow; wxTip: string | null }) 
     },
     share: () => router.push(`/share/${row.id}`),
     review: () => router.push(`/sheets/added/${row.id}`),
-    occasion: () => pickOccasion(row.occasion, (o) => void fitCheck.changeOccasion(row.id, o)),
+    occasion: () => pickOccasion(row.occasion, (o) => void confirmLens(row, { occasion: o })),
+    style: () => pickStyle(row.style, (st) => void confirmLens(row, { style: st })),
   };
   const label = t('card.a11y.fitCheck', {
     occasion: occasionLabel(row.occasion),
@@ -130,11 +136,7 @@ function ScoredCard({ row, wxTip }: { row: FitCheckRow; wxTip: string | null }) 
       onAccessibilityAction={(e) => void go[e.nativeEvent.actionName as keyof typeof go]?.()}
     >
       <KCardSection>
-        <TagLine
-          left={t(partial ? 'card.tag.partial' : 'card.tag.full')}
-          right={occasionLabel(row.occasion)}
-          onPressRight={go.occasion}
-        />
+        <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} />
         {partial || finished ? (
           <>
             <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} />
@@ -143,6 +145,7 @@ function ScoredCard({ row, wxTip }: { row: FitCheckRow; wxTip: string | null }) 
         ) : (
           <ScoreBlock score={score} verdict={row.explanation ?? undefined} />
         )}
+        {scoredFor ? <ScoredForLine text={scoredFor} /> : null}
       </KCardSection>
       <Seam />
       <KCardSection paddingVertical={4} gap={0}>
@@ -185,8 +188,64 @@ function ScoredCard({ row, wxTip }: { row: FitCheckRow; wxTip: string | null }) 
           {/* `Later` (ruling 23) comes back in P4 with the "first 3 moves" card it leads to;
               until then a link that does nothing is worse than none. */}
         </TextLinkRow>
+        {row.details.rescoredFrom ? (
+          <KText variant="footnote" color="ink3">
+            {t('rescore.footnote', {
+              score: displayScore(row.details.rescoredFrom.score),
+              lens: row.details.rescoredFrom.style !== row.style
+                ? styleLabel(row.details.rescoredFrom.style).toLowerCase()
+                : occasionLabel(row.details.rescoredFrom.occasion).toLowerCase(),
+            })}
+          </KText>
+        ) : null}
       </KCardSection>
     </KCard>
+  );
+}
+
+/** "Fit check · Full" + what it was scored for: occasion and style, each a native pull-down (02 "S6s").
+ *  Changing either after the score asks first (#62). */
+function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
+      <KText variant="footnote" color="ink2" mono="label">
+        {left}
+      </KText>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+        <PullDownPill
+          plain
+          label={occasionLabel(row.occasion)}
+          value={row.occasion}
+          sections={[{ options: OCCASIONS.map((o) => ({ value: o, label: occasionLabel(o) })) }]}
+          onChange={(o) => void confirmLens(row, { occasion: o })}
+          accessibilityLabel={t('card.a11y.changeOccasion')}
+        />
+        <KText variant="footnote" color="ink3">
+          ·
+        </KText>
+        <PullDownPill
+          plain
+          label={styleLabel(row.style)}
+          value={row.style ?? 'none'}
+          sections={[{ options: STYLES.map((st) => ({ value: st, label: styleLabel(st) })) }]}
+          onChange={(st) => st !== 'none' && void confirmLens(row, { style: st as StyleKey })}
+          accessibilityLabel={t('scoredFor.a11yStyle')}
+        />
+      </View>
+    </View>
+  );
+}
+
+/** Only when the style changed a rule (#61): "Scored for streetwear: the hoodie is on-style here…". */
+function ScoredForLine({ text }: { text: string }) {
+  const { colors } = useTheme();
+  return (
+    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'flex-start', backgroundColor: colors.surface2, borderRadius: 12, borderCurve: 'continuous', paddingVertical: 8, paddingHorizontal: 10, marginTop: 4 }}>
+      <Icon name="tag" size="small" color="ink2" />
+      <KText variant="footnote" color="ink2" style={{ flex: 1 }}>
+        {text}
+      </KText>
+    </View>
   );
 }
 

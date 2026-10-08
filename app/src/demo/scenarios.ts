@@ -69,6 +69,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 30, name: 'Evening card', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T18:30:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: true },
   { n: 31, name: 'Morning card · weather ask', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 0, href: '/stylist', weather: 'coldRain', weatherAllowed: false },
   { n: 32, name: 'Morning card · hot day', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 0, href: '/stylist', weather: 'hot', weatherAllowed: true },
+  { n: 33, name: 'Scored for streetwear', id: 'S6s', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

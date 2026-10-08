@@ -84,6 +84,8 @@ export interface ChatMessage {
 
 /** What a check card needs beyond the score columns (fit_checks.details, V2). */
 export interface CheckDetails {
+  /** Re-scored for another occasion or style after it landed (#62): what it was before. */
+  rescoredFrom?: { score: number; occasion: OccasionKey; style: StyleKey | null };
   /** Closet ids matched by this photo, ids it added, and added ids he undid. */
   closetSummary?: { matched: string[]; added: string[]; undone: string[] };
   nextLevel?: string[];

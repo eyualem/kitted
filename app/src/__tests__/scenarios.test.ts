@@ -2,7 +2,7 @@ import { SCREENS } from '@/demo/scenarios';
 
 describe('demo screens', () => {
   it('covers all 20 mockup screens in order, then the undrawn sheets (21–24) and the morning card (25+)', () => {
-    expect(SCREENS.map((s) => s.n)).toEqual(Array.from({ length: 32 }, (_, i) => i + 1));
+    expect(SCREENS.map((s) => s.n)).toEqual(Array.from({ length: 33 }, (_, i) => i + 1));
   });
 
   it('only screens 1–4 run before onboarding', () => {
