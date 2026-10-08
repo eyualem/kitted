@@ -1,0 +1,107 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "garments": {
+   "type": "ARRAY",
+   "items": {
+    "type": "OBJECT",
+    "properties": {
+     "i": {
+      "type": "INTEGER"
+     },
+     "visible": {
+      "type": "BOOLEAN"
+     },
+     "box_2d": {
+      "type": "ARRAY",
+      "items": {
+       "type": "INTEGER"
+      }
+     },
+     "shade": {
+      "type": "STRING"
+     },
+     "lightness": {
+      "type": "STRING",
+      "enum": [
+       "light",
+       "mid",
+       "dark",
+       "not_visible"
+      ]
+     },
+     "details": {
+      "type": "ARRAY",
+      "items": {
+       "type": "STRING",
+       "enum": [
+        "front_pouch",
+        "full_zip",
+        "half_zip",
+        "hood",
+        "drawstring",
+        "belt_loops",
+        "elastic_cuffs",
+        "cargo_pockets",
+        "chest_pocket",
+        "buttons",
+        "collar",
+        "pleats",
+        "side_stripe",
+        "raw_hem"
+       ]
+      }
+     },
+     "logo_text": {
+      "type": "STRING"
+     },
+     "sleeve_length": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "sleeveless",
+       "short",
+       "long",
+       "not_visible"
+      ]
+     },
+     "shoe_profile": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "sleek",
+       "regular",
+       "chunky",
+       "not_visible"
+      ]
+     },
+     "denim_wear": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "none",
+       "faded",
+       "ripped",
+       "not_visible"
+      ]
+     }
+    },
+    "required": [
+     "i",
+     "visible",
+     "box_2d",
+     "shade",
+     "lightness",
+     "details",
+     "logo_text",
+     "sleeve_length",
+     "shoe_profile",
+     "denim_wear"
+    ]
+   }
+  }
+ },
+ "required": [
+  "garments"
+ ]
+}

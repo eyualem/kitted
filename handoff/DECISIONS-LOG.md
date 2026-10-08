@@ -381,3 +381,22 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Older native builds keep working with the new JS:** `takePhotoFrom()` accepts the old bare-uri result, and the new prep fields are optional. The phone gets 12 MP only after `tools/phone/install.sh`.
     - **Tools:** `tools/phone/pull.sh` also copies `Library/Caches/detail` into `$OUT/detail`. `extraction-test/run_test.py --media-res {default,high,ultra_high}` adds Gemini 3's per-part `media_resolution` next to the image (recorded in the manifest; non-default uses the v1alpha endpoint) for a later sharper-image test; default sends nothing, so the locked config is unchanged.
 
+
+## Oct 8 · Closet accuracy (style-council session; numbered from #90 so parallel builders' entries don't collide)
+
+90. **Closet matching engine (phase 1) and the closet-call test.**
+    - **Engine** (`@kitted/core` closetColor/closetShade/closetIdentity, commit a9cd8d3): a deterministic identity score with vetoes.
+      - Light grey vs charcoal: new item. Zip vs pullover: new. Nike vs plain: ask. Jeans vs "sweatpants": ask, and after he confirms, an alias makes it auto-match.
+      - Two items he called different are never re-asked.
+      - Shade text maps to a fixed ShadeKey, so the model's raw words are never shown.
+      - `displayHex` stays inside the family band.
+      - 38 tests pass. Not wired into the app yet: `closetPlan` still merges by family until the tap work frees `fitcheck/service.ts`. Migration V6 is reserved for the closet tables.
+      - **Builder's design changes:**
+        - a shoe-profile one-step gap costs −2;
+        - matching logo fields +1;
+        - a shade word naming the item's exact color counts as exact;
+        - brand vs no-logo always asks.
+    - **Closet-call test** (`extraction-test/closet_test.py`, `prompt_closet_v1.txt`, `schema_closet_v1.json`, `results/closet1/`; founder-approved #82): **every pass bar met** on 56 photos × 3 runs.
+      - 0 index-alignment errors; lightness 95%; shade key 92% (raw text 72%); details Jaccard 0.94; logo 98%; box IoU median 0.98; 4.3 s median; about 360 output tokens.
+      - The founder's hoodie read "medium grey", mid, Nike, hood/front pouch/drawstring on all 3 runs.
+    - **Next:** wire the closet call (after the score card shows) + V6 + the engine into the check flow, then crops after the founder reinstalls with full-res capture (#83).

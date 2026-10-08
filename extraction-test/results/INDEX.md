@@ -16,6 +16,7 @@ Prices are the Gemini 3.8 Flash introductory rates ($0.75 per million tokens in,
 | `selftest/` | — | fake data, no API calls (checks the code only) | — | — | ignore | ignore | $0 |
 | `test5-*-v5/` | Oct 8 | v5 format (v3 + style-council fields) on stock 40, mirror 12, founder's 4 phone photos (+ phone 4 in v3, same hour) | gemini-3.8-flash | 3 | stock **82%** (v3 92%) · mirror 100% · phone 100% | — | ~$1.00 |
 | `test5-*-v5s/` | Oct 8 | slim v5s (v3 + stacked hem + denim_wear + prompt lines) on stock 40, mirror 12, phone 4 (+ phone 4 v3 same hour, `test5-phone-4-v3b`) | gemini-3.8-flash | 3 | stock **85%** (v3 92%) · mirror 92% · phone 100%; all 52: **86.5%** vs 90.4% | — | ~$0.85 |
+| `closet1/` | Oct 8 | closet call v1 (separate from scoring: shade, lightness, details, logo text, sleeve, shoe profile, denim wear, boxes) on 56 photos | gemini-3.8-flash | 3 | **all bars passed**: 0 index errors · lightness 95% · shade key 92% · details 0.94 · logo 98% · box IoU 0.98 · 4.3 s median | — | ~$0.55 |
 
 ## What we learned
 - **The AI reads outfits consistently**, including real mirror selfies and tiny images (168×300 px). Every garment detail agreed 90%+ across runs.
