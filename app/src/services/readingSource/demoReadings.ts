@@ -15,6 +15,8 @@ import s22 from '../../../assets/demo-readings/s22.json';
 import s24 from '../../../assets/demo-readings/s24.json';
 import s25 from '../../../assets/demo-readings/s25.json';
 import shoeSnapRunners from '../../../assets/demo-readings/variants/s24_shoe_snap_runners.json';
+// The founder's Oct 7 phone check (reading only; his photo is never bundled): black wide jeans read as sweatpants.
+import ph1 from '../../../assets/demo-readings/variants/ph1_oct7_misread.json';
 
 /** The reading files carry provenance next to the reading; keep scene + garments + held_items only. */
 function readingOf(file: unknown): Reading {
@@ -27,6 +29,8 @@ const BY_ID: Record<string, Reading> = {
   p01a: readingOf(p01a), p01b: readingOf(p01b), s05: readingOf(s05), s09: readingOf(s09), s10: readingOf(s10),
   s12: readingOf(s12), s13: readingOf(s13), s14: readingOf(s14), s15: readingOf(s15), s22: readingOf(s22),
   s24: readingOf(s24), s25: readingOf(s25),
+  // Demo screens 34–36 (the one quick tap): shown with s12's stand-in photo (demoPhotos.ts).
+  ph1: readingOf(ph1),
 };
 
 /**

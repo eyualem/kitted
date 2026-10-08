@@ -35,7 +35,7 @@ const WIDTH: Record<string, number> = {
   p01a: 546, p01b: 546, s24: 543, s25: 461, s05: 656, s14: 656, s15: 656, s22: 615, s09: 546, s10: 546, s13: 546, s12: 547,
 };
 
-export const DEMO_PHOTOS: readonly DemoPhoto[] = crops.photos.map((c) => {
+const BUNDLED: readonly DemoPhoto[] = crops.photos.map((c) => {
   const meta = index.photos.find((p) => p.id === c.id);
   if (!meta) throw new Error(`demo photo ${c.id} missing from INDEX.json`);
   return {
@@ -47,6 +47,11 @@ export const DEMO_PHOTOS: readonly DemoPhoto[] = crops.photos.map((c) => {
     latencySeconds: meta.latency_s,
   };
 });
+
+/** "ph1": the founder's Oct 7 reading (black wide jeans read as sweatpants, the one quick tap's case) shown on
+ *  s12's stock photo as a stand-in. Never his own photo. Its own fake hash, so "same photo again" stays separate. */
+const s12 = BUNDLED.find((p) => p.id === 's12')!;
+export const DEMO_PHOTOS: readonly DemoPhoto[] = [...BUNDLED, { ...s12, id: 'ph1', sha256: 'demo-ph1-oct7', latencySeconds: 6.6 }];
 
 export function demoPhoto(id: string | null | undefined): DemoPhoto | undefined {
   return id ? DEMO_PHOTOS.find((p) => p.id === id) : undefined;

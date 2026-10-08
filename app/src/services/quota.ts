@@ -31,12 +31,16 @@ export interface QuotaSnapshot {
   nextResetMs: number;
 }
 
-/** When a check's included re-check closes. */
-export function recheckDeadline(check: Pick<FitCheckRow, 'createdAt' | 'isFirstCheck'>, clock: Clock): number {
-  return check.isFirstCheck ? nextRolloverMs(check.createdAt, clock.offset) : check.createdAt + RECHECK_WINDOW_MS;
+type WindowCheck = Pick<FitCheckRow, 'createdAt' | 'isFirstCheck'> & { details?: Pick<FitCheckRow['details'], 'tap'> };
+
+/** When a check's included re-check closes. It opens when the score lands: after the one quick tap, that's
+ *  his answer, not the photo. */
+export function recheckDeadline(check: WindowCheck, clock: Clock): number {
+  const start = check.details?.tap?.answeredAt ?? check.createdAt;
+  return check.isFirstCheck ? nextRolloverMs(start, clock.offset) : start + RECHECK_WINDOW_MS;
 }
 
-export function isRecheckOpen(check: Pick<FitCheckRow, 'createdAt' | 'isFirstCheck' | 'recheckUsed' | 'status' | 'parentId'>, nowMs: number, clock: Clock): boolean {
+export function isRecheckOpen(check: WindowCheck & Pick<FitCheckRow, 'recheckUsed' | 'status' | 'parentId'>, nowMs: number, clock: Clock): boolean {
   if (check.recheckUsed || check.status !== 'scored' || check.parentId) return false;
   return nowMs < recheckDeadline(check, clock);
 }
@@ -84,8 +88,8 @@ export function createQuota(deps: QuotaDeps) {
     };
   }
 
-  const bump = async (field: 'checks' | 'rechecks' | 'questions' | 'items') => {
-    const u = await usage(today());
+  const bump = async (field: 'checks' | 'rechecks' | 'questions' | 'items', key: string = today()) => {
+    const u = await usage(key);
     await store.usage.put({ ...u, [field]: u[field] + 1 });
   };
 
@@ -95,7 +99,8 @@ export function createQuota(deps: QuotaDeps) {
       const s = await snapshot();
       return s.checksUsed < s.checkLimit;
     },
-    consumeCheck: () => bump('checks'),
+    /** `day`: the check's own day key (an answer to the one quick tap after 4 am still counts for its day). */
+    consumeCheck: (day?: string) => bump('checks', day),
     consumeRecheck: () => bump('rechecks'),
     consumeQuestion: () => bump('questions'),
   };

@@ -3,9 +3,9 @@
 
 import {
   partialLabel as corePartialLabel, score, suggestFixes, type ClosetItem, type FixSuggestions, type Reading, type RubricResult,
-  type ScoredResult, type Styles,
+  type ScoreOptions, type ScoredResult, type Styles,
 } from '@kitted/core';
-import type { CheckDetails, FitCheckRow, FitCheckStatus, OccasionKey } from '@/data/types';
+import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey } from '@/data/types';
 import { cardSummary } from './explain';
 
 export interface EvaluateInput {
@@ -30,7 +30,13 @@ export interface Evaluation {
   row: Pick<
     FitCheckRow,
     'status' | 'score' | 'rawScore' | 'subscores' | 'occasionAdj' | 'rulesFired' | 'credits' | 'advice' | 'fixes' | 'isPartial' | 'notRated' | 'explanation'
-  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets'> };
+  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets' | 'readsAs'> };
+}
+
+/** The rubric options a check is scored with. The one place they're built, so the one quick tap's two scores
+ *  (askQuestion) are exactly what the card then shows. */
+export function scoreOptions(input: Pick<EvaluateInput, 'occasion' | 'styles' | 'boldness'>): ScoreOptions {
+  return { occasion: input.occasion, styles: input.styles, boldness: input.boldness ?? 'a_little' };
 }
 
 export function partialKind(notRated: readonly string[]): 'shoes' | 'topOnly' | null {
@@ -40,7 +46,7 @@ export function partialKind(notRated: readonly string[]): 'shoes' | 'topOnly' | 
 }
 
 export function evaluateCheck(input: EvaluateInput): Evaluation {
-  const opts = { occasion: input.occasion, styles: input.styles, boldness: input.boldness ?? 'a_little' };
+  const opts = scoreOptions(input);
   const result = score(input.reading, opts);
   const fixes = suggestFixes(input.reading, {
     ...opts,
@@ -54,7 +60,7 @@ export function evaluateCheck(input: EvaluateInput): Evaluation {
       status, result, scored: null, fixes, partial: null, summary: null,
       row: {
         status, score: null, rawScore: null, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [], fixes: [],
-        isPartial: result.partial, notRated: [], explanation: null, details: {},
+        isPartial: result.partial, notRated: [], explanation: null, details: { readsAs: null },
       },
     };
   }
@@ -69,6 +75,7 @@ export function evaluateCheck(input: EvaluateInput): Evaluation {
       details: {
         nextLevel: fixes.nextLevel, tips: fixes.tips, dialedIn: fixes.fixes.length === 0,
         hiddenFixTargets: input.hiddenFixTargets ? [...input.hiddenFixTargets] : [],
+        readsAs: normStyleKey(result.styleLabel),
       },
     },
   };

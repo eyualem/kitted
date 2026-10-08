@@ -4,12 +4,13 @@
 // insert new ones. Failures never use quota. Same photo (same SHA) = same reading, no quota.
 
 import {
-  applyCorrection, applyFix, closetPlan, dayKey, fixTargets, garmentName, matchClosetItem, mergeShoeSnap, pickShoesFromCloset, recheckMerge,
-  recheckOutcome, removeGarment, SLOT_TO_CLOSET, weekdayOf, type ClosetItem, type Garment, type Reading, type Styles,
+  applyCorrection, applyFix, applyTapAnswer, askQuestion, carryTapAnswer, closetPlan, dayKey, fixTargets, garmentName, matchClosetItem,
+  mergeShoeSnap, pickShoesFromCloset, recheckMerge, recheckOutcome, removeGarment, SLOT_TO_CLOSET, tapOrder, tapOrdinal, weekdayOf,
+  type ClosetItem, type Garment, type Reading, type Styles,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
-import type { ChatMessage, CheckDetails, ClosetItemRow, FitCheckRow, OccasionKey, ReadingRow, ReadingSourceKind, StyleKey } from '@/data/types';
+import type { ChatMessage, CheckDetails, ClosetItemRow, FitCheckRow, OccasionKey, ReadingRow, ReadingSourceKind, StyleKey, TapState } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
 import type { ImagePrep } from '@/services/imagePrep/demo';
@@ -20,7 +21,7 @@ import { garmentHex, garmentLabel } from './labels';
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
-import { evaluateCheck } from './scoring';
+import { evaluateCheck, scoreOptions } from './scoring';
 
 export interface TimerConfig {
   /** Off for screen 6's frozen state (headless Chrome's virtual time would fire them). */
@@ -43,6 +44,8 @@ export interface ServiceDeps {
   scheduler: Scheduler;
   ids: (prefix: string) => string;
   timers: () => TimerConfig;
+  /** The one quick tap (02 "S5q"): ask before the score when the reading is unsure about a look-alike. */
+  tap?: () => boolean;
 }
 
 export interface CheckRequest {
@@ -62,6 +65,8 @@ export interface CheckRequest {
 
 export type StartOutcome =
   | { outcome: 'scored' | 'failed' | 'notScored'; checkId: string }
+  /** Read; the one quick tap is waiting (nothing counted yet). */
+  | { outcome: 'asking'; checkId: string }
   | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' }
   /** 02 S3: nothing was sent and nothing counts. */
   | { outcome: 'photoProblem'; reason: 'noPerson' | 'multiplePeople' | 'couldNotFrame' };
@@ -73,6 +78,15 @@ export interface CorrectionDraft {
 }
 
 type Profile = { styles: Styles; boldness: string | null };
+
+/** What a row is scored with: its occasion and one style, his boldness (#61). The one builder for both the
+ *  card (evaluateCheck) and the one quick tap (askQuestion), so the tap's scores are the card's. */
+export function lensInput(occasion: OccasionKey, style: StyleKey | null, p: Profile) {
+  return { occasion, styles: stylesFor(style, p.styles), boldness: p.boldness };
+}
+
+/** The answer to the one quick tap: one of its two values, or a skip (scores the default). */
+export type TapAnswer = string | 'skip';
 
 const emptyRow = (over: Partial<FitCheckRow> & Pick<FitCheckRow, 'id' | 'createdAt' | 'dayKey' | 'occasion'>): FitCheckRow => ({
   photoFile: null, thumbFile: null, demoPhotoId: null, imageHash: '', status: 'scoring', isPartial: false, notRated: [], score: null,
@@ -86,6 +100,7 @@ export function createFitCheckService(deps: ServiceDeps) {
   let state: SessionState = IDLE;
   let attempt = 0;
   let undoQueue: Promise<unknown> = Promise.resolve();
+  let tapQueue: Promise<unknown> = Promise.resolve();
   const listeners = new Set<() => void>();
   const dispatch = (ev: SessionEvent) => {
     const next = reduce(state, ev);
@@ -131,7 +146,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const occasion = patch.occasion ?? row.occasion;
     const details = { ...row.details, ...(patch.details ?? {}) };
     const ev = evaluateCheck({
-      reading, occasion, styles: stylesFor(patch.style !== undefined ? patch.style : row.style, p.styles), boldness: p.boldness, closet: await closetFor(row), firstCheck: row.isFirstCheck,
+      reading, ...lensInput(occasion, patch.style !== undefined ? patch.style : row.style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
       hiddenFixTargets: details.hiddenFixTargets ?? [],
     });
     const next = await store.fitChecks.patch(row.id, {
@@ -148,8 +163,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
     const first = parent && (await readingOf(parent));
     if (!row || !parent || !first) return null;
-    const p = await profile();
-    const opts = { occasion: parent.occasion, styles: stylesFor(parent.style, p.styles), boldness: p.boldness ?? 'a_little' };
+    const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile()));
     const seen = await readingOf(row);
     const caught = new Set(seen ? (recheckOutcome(first, parent.fixes, seen, opts)?.doneFixes ?? []).map((f) => f.target) : []);
     const closet = await closetFor(parent);
@@ -197,20 +211,68 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (ev.status !== 'scored') return scored;
     const finish = ev.partial === 'shoes' ? await rememberedShoes(scored) : null;
     await store.fitChecks.patch(row.id, { snapState: ev.partial ? 'pending' : 'none', details: { ...scored.details, finish } });
-    if (!cached) await deps.quota.consumeCheck();
+    if (!cached) await deps.quota.consumeCheck(row.dayKey);
     await store.setKv(KV.lastOccasion, row.occasion);
     const p = await store.profile.get('me');
     if (p) await store.profile.patch('me', { lastOccasion: row.occasion });
     return scored;
   }
 
+  /** A full check's reading is in: ask the one quick tap first, or score it now. The question is stored on the
+   *  row (status 'asking') before the reading card ends, so the slot never goes blank. */
+  async function afterRead(row: FitCheckRow, reading: Reading, readingRow: ReadingRow, cached: boolean): Promise<FitCheckRow> {
+    const q = deps.tap?.() && !row.details.tap ? askQuestion(reading, scoreOptions(lensInput(row.occasion, row.style, await profile()))) : null;
+    if (!q) return finalizeCheck(row, reading, readingRow, cached);
+    const tap: TapState = {
+      pair: q.pair, slot: q.slot, garmentIndex: q.garmentIndex, ordinal: tapOrdinal(reading, q.garmentIndex), question: q.question,
+      options: q.options.map((o) => ({ ...o })), order: tapOrder(q).map((o) => o.value), default: q.default, swing: q.swing, doubt: q.doubt,
+      occasion: row.occasion, askedAt: clock.nowMs(), answer: null, skipped: false, answeredAt: null, ...(cached ? { free: true } : {}),
+    };
+    return (await store.fitChecks.patch(row.id, { status: 'asking', readingId: readingRow.id, details: { ...row.details, tap } }))!;
+  }
+
+  /** His answer (or Skip): a derived reading with the type set, then the normal finish (closet, quota, score). */
+  async function answer(checkId: string, a: TapAnswer): Promise<FitCheckRow | null> {
+    const row = await store.fitChecks.get(checkId);
+    const tap = row?.details.tap;
+    if (!row || row.status !== 'asking' || !tap || tap.answer !== null) return null;
+    const raw = row.readingId ? await store.readings.get(row.readingId) : null;
+    if (!raw) return null;
+    const skipped = a === 'skip';
+    const value = skipped ? tap.default : a;
+    const chosen = tap.options.find((o) => o.value === value);
+    if (!chosen) return null;
+    const reading = applyTapAnswer(raw.reading, { garmentIndex: tap.garmentIndex, field: 'subcategory' }, value);
+    const answered = await insertReading(reading, 'tapAnswer', row.imageHash, raw.id);
+    const now = clock.nowMs();
+    const next = (await store.fitChecks.patch(checkId, { details: { ...row.details, tap: { ...tap, answer: value, skipped, answeredAt: now } } }))!;
+    await store.corrections.put({
+      id: deps.ids('CR'), fitCheckId: checkId, kind: skipped ? 'tapSkip' : 'tapAnswer', field: 'subcategory',
+      oldValue: String(raw.reading.garments[tap.garmentIndex]?.subcategory ?? ''), newValue: value, userScore: null,
+      scoreBefore: tap.options[0]?.score ?? null, scoreAfter: chosen.score, sentAt: null, createdAt: now,
+    });
+    const done = await finalizeCheck(next, reading, answered, tap.free === true);
+    if (!skipped) {
+      // He told us what it is: the closet piece remembers that (the "Wrong item" sheet won't second-guess it).
+      const g = reading.garments[tap.garmentIndex];
+      const ids = new Set(done.itemIds);
+      const item = g ? matchClosetItem(g, (await store.closet.all()).filter((c) => ids.has(c.id) && !c.isDeleted)) : null;
+      const full = item ? await store.closet.get(item.id) : null;
+      if (full && !full.confirmedFields.includes('subcategory')) await store.closet.patch(full.id, { confirmedFields: [...full.confirmedFields, 'subcategory'] });
+    }
+    return (await store.fitChecks.get(checkId)) ?? done;
+  }
+
   async function finalizeRecheck(row: FitCheckRow, parent: FitCheckRow, next: Reading, image: PreparedImage) {
     const parentReading = await readingOf(parent);
     if (!parentReading) throw new Error(`re-check parent ${parent.id} has no reading`);
-    const p = await profile();
-    const opts = { occasion: parent.occasion, styles: stylesFor(parent.style, p.styles), boldness: p.boldness ?? 'a_little' };
+    const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile()));
     const raw = await insertReading(next, 'recheckRaw', image.sha256, null);
-    const { merged, notes } = recheckMerge(parentReading, next, fixTargets(parent.fixes), opts);
+    // His answer to the one quick tap holds on the re-check (a second misread can't undo it), unless a fix
+    // replaces that whole piece. Re-checks never ask.
+    const tap = parent.details.tap;
+    const carried = tap?.answer ? carryTapAnswer(parentReading, tap, next, fixTargets(parent.fixes)) : next;
+    const { merged, notes } = recheckMerge(parentReading, carried, fixTargets(parent.fixes), opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
     const outcome = recheckOutcome(parentReading, parent.fixes, merged, opts);
     await store.fitChecks.patch(row.id, { readingId: mergedRow.id, itemIds: parent.itemIds, details: { ...row.details, closetSummary: parent.details.closetSummary } });
@@ -335,8 +397,9 @@ export function createFitCheckService(deps: ServiceDeps) {
       return { outcome: 'scored', checkId: parent.id };
     }
 
-    const priorChecks = (await store.fitChecks.all()).filter((c) => !c.parentId && c.status === 'scored');
     const checkId = req.checkId ?? deps.ids('FC');
+    if (req.mode === 'check') await replaceAsking(checkId);
+    const priorChecks = (await store.fitChecks.all()).filter((c) => !c.parentId && c.status === 'scored');
     const row = emptyRow({
       id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, style, demoPhotoId: image.photoId, imageHash: image.sha256,
       photoFile: image.keptUri ?? null, thumbFile: image.thumbUri ?? null,
@@ -347,14 +410,19 @@ export function createFitCheckService(deps: ServiceDeps) {
     await message({ createdAt: now + 1, role: 'stylist', kind: 'card', cardType: req.mode === 'recheck' ? 'recheck' : 'fitCheck', fitCheckId: checkId });
 
     if (req.mode === 'check') {
-      const cached = (await store.readings.all())
+      const readings = await store.readings.all();
+      const cached = readings
         .filter((r) => r.imageHash === image.sha256 && r.source === 'full')
         .sort((a, b) => b.createdAt - a.createdAt)[0];
       if (cached) {
         const ms = deps.timers().cacheHitMs;
         if (ms > 0) await deps.scheduler.sleep(ms);
-        const done = await finalizeCheck(row, cached.reading, cached, true);
-        return { outcome: done.status === 'scored' ? 'scored' : 'notScored', checkId };
+        // Same photo, same score: his earlier answer to the one quick tap is reused, never asked again. Free only
+        // if that photo was scored before (one replaced while asking never counted, so this one does).
+        const answered = readings.filter((r) => r.source === 'tapAnswer' && r.derivedFrom === cached.id).sort((a, b) => b.createdAt - a.createdAt)[0];
+        const free = (await store.fitChecks.all()).some((c) => c.id !== checkId && c.imageHash === image.sha256 && !c.parentId && c.status === 'scored');
+        const done = answered ? await finalizeCheck(row, answered.reading, answered, free) : await afterRead(row, cached.reading, cached, free);
+        return outcomeOf(done);
       }
     }
 
@@ -374,10 +442,21 @@ export function createFitCheckService(deps: ServiceDeps) {
       done = await finalizeRecheck(fresh, parent, r.reading, image);
     } else {
       const readingRow = await insertReading(r.reading, 'full', image.sha256, null, r.latencyMs, r.model, r.promptVersion);
-      done = await finalizeCheck(fresh, r.reading, readingRow, false);
+      done = await afterRead(fresh, r.reading, readingRow, false);
     }
     dispatch({ t: 'end' });
-    return { outcome: done.status === 'scored' ? 'scored' : 'notScored', checkId };
+    return outcomeOf(done);
+  }
+
+  function outcomeOf(done: FitCheckRow): StartOutcome {
+    return { outcome: done.status === 'scored' ? 'scored' : done.status === 'asking' ? 'asking' : 'notScored', checkId: done.id };
+  }
+
+  /** A new photo while a question is open: the open one is set aside (never counted; nothing was added). */
+  async function replaceAsking(exceptId: string) {
+    for (const c of await store.fitChecks.all()) {
+      if (c.status === 'asking' && c.id !== exceptId) await store.fitChecks.patch(c.id, { status: 'failed', details: { ...c.details, failCode: 'replaced' } });
+    }
   }
 
   const api = {
@@ -389,6 +468,13 @@ export function createFitCheckService(deps: ServiceDeps) {
       };
     },
     start,
+    /** The one quick tap (02 "S5q"): his answer or 'skip'. Queued, and a no-op unless the check is still asking
+     *  and unanswered, so a double tap (or a second device) can't score it twice. */
+    answerTap(checkId: string, a: TapAnswer): Promise<FitCheckRow | null> {
+      const run = tapQueue.then(() => answer(checkId, a));
+      tapQueue = run.catch(() => null);
+      return run;
+    },
     /** Occasion tap while reading (stored; no new reading). */
     selectOccasion(occasion: OccasionKey) {
       dispatch({ t: 'occasion', occasion });
@@ -419,16 +505,17 @@ export function createFitCheckService(deps: ServiceDeps) {
       }
       dispatch({ t: 'scored', attempt: r.attempt });
       const fresh = (await store.fitChecks.get(checkId))!;
-      if (parent) await finalizeRecheck(fresh, parent, r.reading, prep.image);
-      else await finalizeCheck(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
+      const done = parent
+        ? await finalizeRecheck(fresh, parent, r.reading, prep.image)
+        : await afterRead(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
       dispatch({ t: 'end' });
-      return { outcome: 'scored', checkId };
+      return outcomeOf(done);
     },
     /** What the card would score for another occasion or style, without saving (the confirm alert's preview, #62). */
     async previewLens(checkId: string, lens: { occasion?: OccasionKey; style?: StyleKey | null }) {
       const row = await store.fitChecks.get(checkId);
       const reading = row && (await readingOf(row));
-      if (!row || !reading || row.parentId) return null;
+      if (!row || !reading || row.parentId || row.status === 'asking') return null;
       const p = await profile();
       const ev = evaluateCheck({
         reading, occasion: lens.occasion ?? row.occasion, styles: stylesFor(lens.style !== undefined ? lens.style : row.style, p.styles),
@@ -440,7 +527,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     async changeLens(checkId: string, lens: { occasion?: OccasionKey; style?: StyleKey | null }) {
       const row = await store.fitChecks.get(checkId);
       const reading = row && (await readingOf(row));
-      if (!row || !reading || row.parentId) return null;
+      if (!row || !reading || row.parentId || row.status === 'asking') return null;
       const rescoredFrom = { score: row.score ?? 0, occasion: row.occasion, style: row.style };
       const patch: Partial<FitCheckRow> = { details: { ...row.details, rescoredFrom } };
       if (lens.occasion) patch.occasion = lens.occasion;
