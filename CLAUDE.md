@@ -269,7 +269,15 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
 - **"Reads as" when two looks fit (#86):** screen 7 reads "smart casual" because my first pick breaks the tie, while its next-level tip is the minimal one. Default: keep the tie-break. The other choice: always the first detected look.
-- **Scanning clothes into Closet (#88), 2 calls:** (1) OK about $1 of Gemini for a small item-photo reading test; (2) the free-tier rule. Recommended: scans free up to 30 pieces a day (about 0.4¢ a photo).
+- **Shoot ~20 photos of your own clothes for the scanning test (#88; approved: $1 test, free up to 30/day).** Put them in `inputs/item-photos/`. Phone camera, normal room light:
+  - 6 single pieces flat on your bed (a tee, a hoodie, jeans, chinos, a jacket, a patterned or logo piece)
+  - 3 on a hanger against a door or wall
+  - 2 pairs of shoes on the floor
+  - 4 group shots with 3–4 pieces laid flat, not overlapping
+  - 2 dark pieces in dim light (the hard case)
+  - 2 messy ones (a piece on a chair, a piece half folded)
+  - 1 of you holding a shirt up in a mirror (checks the face-blur rule)
+  The style-council session writes the item prompt and test and runs it.
 - **Closet details I settled from Codex's Reddit research (#87; veto if you disagree):** Closet opens on Outfits once he can make 3+; "Goes with" labels Best match / Dressier / More relaxed; a plain reason on every outfit; next best buy named by kind (no brands, no shop links) and shows what it unlocks; neutral wear counts, no "not worn lately" nudges.
 - **Mic permission text** (outward-facing; in `app/app.config.ts`): "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
 - **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator. The same reinstall brings the 12 MP camera (#83): take a few Propped and Mirror shots while Claude watches the log.
