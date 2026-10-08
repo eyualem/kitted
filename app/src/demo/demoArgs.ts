@@ -111,7 +111,7 @@ export function parseArgs(raw: RawArgs): Partial<DemoArgs> {
         break;
       }
       case 'demoScreen': {
-        const n = int(value, 1, SCREENS.length);
+        const n = int(value, 1, Math.max(...SCREENS.map((s) => s.n))); // numbers can skip (parallel sessions)
         if (n !== null) out.demoScreen = n;
         break;
       }

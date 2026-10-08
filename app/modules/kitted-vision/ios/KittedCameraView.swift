@@ -1,8 +1,10 @@
 // The live camera (05 §P3 B, 02 D5): an AVCaptureSession preview, Apple Vision body pose +
 // face boxes about 10 times a second (events to JS that drive the framing guide; there is no
 // live face blur, DECISIONS-LOG #54), and a 12 MP still (4:3, JPEG) written to a temporary file
-// that photo prep reads and deletes (DECISIONS-LOG #83). The preview frames are analyzed on the
-// phone and never stored or sent.
+// that photo prep reads and deletes (DECISIONS-LOG #83). Each event also carries the guidance
+// measures (#100): brightness, glare, the camera's ISO and exposure, and motion; in scan mode,
+// people, clothes labels and a box per piece instead of the body pose. The preview frames are
+// analyzed on the phone and never stored or sent.
 import AVFoundation
 import ExpoModulesCore
 import UIKit
@@ -35,6 +37,14 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
   var torchOn = false {
     didSet { sessionQueue.async { self.applyTorch() } }
   }
+  /// Scan mode (#100, the "kind" prop): clothes measures instead of the body pose. Read on visionQueue.
+  var scanMode = false
+  /// The active camera, for its ISO and exposure. Set on sessionQueue, read on visionQueue.
+  private var device: AVCaptureDevice?
+  private var prevGray: Guide.Gray?
+  private var frameN = 0
+  /// Scan mode's slower measures (people, labels, pieces), kept between the frames that run them.
+  private var lastScan: (people: [Double], clothes: Double?, labels: [String], pieces: [Guide.Piece])?
 
   required init(appContext: AppContext? = nil) {
     preview = AVCaptureVideoPreviewLayer(session: session)
@@ -83,6 +93,7 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
       return
     }
     session.addInput(input)
+    self.device = device
     if session.canSetSessionPreset(.photo) { session.sessionPreset = .photo }
     if !configured {
       videoOutput.alwaysDiscardsLateVideoFrames = true
@@ -151,7 +162,29 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
     let now = CFAbsoluteTimeGetCurrent()
     guard now - lastVision >= 0.1, let pb = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
     lastVision = now
+    frameN += 1
     let W = CGFloat(CVPixelBufferGetWidth(pb)), H = CGFloat(CVPixelBufferGetHeight(pb))
+
+    // Light and motion on every analyzed frame (#100), from a 96 px copy of the luma plane.
+    var measures: [String: Any] = [:]
+    let gray = Guide.gray(pb)
+    if let g = gray {
+      let l = Guide.light(g)
+      measures["luma"] = l.mean
+      measures["clipped"] = l.clipped
+      if let p = prevGray, let m = Guide.motion(p, g) { measures["motion"] = m }
+    }
+    prevGray = gray
+    if let d = device {
+      measures["iso"] = Double(d.iso)
+      measures["maxIso"] = Double(d.activeFormat.maxISO)
+      measures["exposure"] = CMTimeGetSeconds(d.exposureDuration)
+    }
+    if scanMode {
+      scanFrame(pb, W, H, measures)
+      return
+    }
+
     let pose = VNDetectHumanBodyPoseRequest()
     let faces = VNDetectFaceRectanglesRequest()
     try? VNImageRequestHandler(cvPixelBuffer: pb, orientation: .up).perform([pose, faces])
@@ -186,23 +219,68 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
       let xs = joints.values.map(\.x), ys = joints.values.map(\.y)
       let w = xs.max()! - xs.min()!, h = ys.max()! - ys.min()!
       bodyBox = CGRect(x: xs.min()!, y: ys.min()!, width: w, height: h).insetBy(dx: -w * 0.25 - 0.02, dy: -h * 0.06 - 0.02)
+      // His height in the frame (shoulders to ankles; "too far" below about 30%), and his own
+      // brightness (a window behind him makes the frame bright and him dark).
+      if !shoulders.isEmpty, !hips.isEmpty { measures["bodyShare"] = Double(h) }
+      if let g = gray, let b = bodyBox { measures["subjectLuma"] = Guide.light(g, in: b).mean }
     }
     let faceBoxes = (faces.results ?? []).map {
       CGRect(x: $0.boundingBox.minX, y: 1 - $0.boundingBox.maxY, width: $0.boundingBox.width, height: $0.boundingBox.height)
     }
 
     DispatchQueue.main.async {
-      // Normalized buffer → view points under aspect fill.
-      let vw = self.bounds.width, vh = self.bounds.height
-      let s = max(vw / W, vh / H)
-      let dx = (W * s - vw) / 2, dy = (H * s - vh) / 2
-      func view(_ r: CGRect) -> [String: CGFloat] {
-        ["x": r.minX * W * s - dx, "y": r.minY * H * s - dy, "width": r.width * W * s, "height": r.height * H * s]
-      }
-      var payload: [String: Any] = ["state": state, "faces": faceBoxes.map(view)]
+      let view = self.viewMapper(W, H)
+      var payload: [String: Any] = measures
+      payload["state"] = state
+      payload["faces"] = faceBoxes.map(view)
       if let b = bodyBox { payload["body"] = view(b) }
       self.onGuide(payload)
     }
+  }
+
+  /// Scan mode: people + faces and the piece boxes about 3 times a second, the clothes label once
+  /// a second; light and motion on every event.
+  private func scanFrame(_ pb: CVPixelBuffer, _ W: CGFloat, _ H: CGFloat, _ measures: [String: Any]) {
+    let heavy = frameN % 3 == 0, classify = frameN % 10 == 1
+    var faceBoxes: [CGRect] = []
+    if heavy || classify {
+      let r = Guide.scanVision(handler: VNImageRequestHandler(cvPixelBuffer: pb, orientation: .up), classify: classify, instances: heavy)
+      let people = (r["people"] as? [[String: Double]] ?? []).map { ($0["width"] ?? 0) * ($0["height"] ?? 0) }
+      faceBoxes = (r["faces"] as? [[String: Double]] ?? []).map { CGRect(x: $0["x"] ?? 0, y: $0["y"] ?? 0, width: $0["width"] ?? 0, height: $0["height"] ?? 0) }
+      var next = lastScan ?? (people: [], clothes: nil, labels: [], pieces: [])
+      next.people = people
+      if classify {
+        next.clothes = r["clothes"] as? Double
+        next.labels = r["labels"] as? [String] ?? []
+      }
+      if heavy, let ps = r["pieceObjects"] as? [Guide.Piece] { next.pieces = ps }
+      // Pieces are only known after the first heavy frame; until then the tip says "Looking…".
+      if heavy || lastScan != nil { lastScan = next }
+    }
+    let scan = lastScan
+    DispatchQueue.main.async {
+      let view = self.viewMapper(W, H)
+      var payload: [String: Any] = measures
+      payload["state"] = "noPerson"
+      payload["faces"] = faceBoxes.map(view)
+      if let s = scan {
+        var d: [String: Any] = [
+          "people": s.people, "labels": s.labels,
+          "pieces": s.pieces.map { ["box": view($0.box), "share": $0.share, "edge": $0.edge] as [String: Any] },
+        ]
+        if let c = s.clothes { d["clothes"] = c }
+        payload["scan"] = d
+      }
+      self.onGuide(payload)
+    }
+  }
+
+  /// Normalized buffer box → view points under aspect fill. Call on main (reads bounds).
+  private func viewMapper(_ W: CGFloat, _ H: CGFloat) -> (CGRect) -> [String: CGFloat] {
+    let vw = bounds.width, vh = bounds.height
+    let s = max(vw / W, vh / H)
+    let dx = (W * s - vw) / 2, dy = (H * s - vh) / 2
+    return { r in ["x": r.minX * W * s - dx, "y": r.minY * H * s - dy, "width": r.width * W * s, "height": r.height * H * s] }
   }
 
   // MARK: Capture

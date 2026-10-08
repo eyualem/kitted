@@ -46,8 +46,63 @@ export type DictationEvent =
   | { type: 'level'; level: number }
   | { type: 'end'; error: string | null };
 
+/** A clothes scan's prep (#88, #100): no person needed; any face is still hidden. */
+export type PrepareItemsResult =
+  | {
+      status: 'ok';
+      sha256: string;
+      /** His photo as taken (no metadata), 2048 px, in Documents/scans. */
+      keptUri: string;
+      thumbUri: string;
+      /** Every face hidden, 2048 px: the copy the item reading will send. */
+      sendUri: string;
+      width: number;
+      height: number;
+      people: number;
+      faceBoxes: number;
+      totalMs?: number;
+    }
+  | { status: 'couldNotFrame' | 'notImplemented'; sha256?: string };
+
+/** Normalized box (0–1, origin top-left). */
+export interface NormBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** The quick check after the shot (#100): measures only; features/camera/guidance.ts judges. */
+export interface StillAssessment {
+  ok: boolean;
+  kind?: 'fit' | 'scan';
+  width?: number;
+  height?: number;
+  /** Mean brightness 0–1, and the share of near-white pixels. */
+  luma?: number;
+  clipped?: number;
+  /** Variance of the Laplacian, and how much of it survives a light blur (near 1 = soft). */
+  lapVar?: number;
+  blurRatio?: number;
+  /** Whether photo prep could send it (the same face rule, ruling 10). */
+  frame?: 'ok' | 'noPerson' | 'multiplePeople' | 'couldNotFrame';
+  /** Fit: the person's own brightness, and his height as a share of the frame. */
+  subjectLuma?: number;
+  bodyShare?: number;
+  pose?: 'full' | 'upper' | 'none';
+  /** Scan: people and faces (normalized), the clothes label's confidence, the top labels, pieces. */
+  people?: NormBox[];
+  faces?: NormBox[];
+  clothes?: number;
+  labels?: string[];
+  pieces?: { box: NormBox; share: number; edge: boolean }[];
+  ms?: number;
+}
+
 interface KittedVisionNative {
   prepare(originalUri: string): Promise<PrepareResult>;
+  prepareItems?(originalUri: string): Promise<PrepareItemsResult>;
+  assess?(uri: string, kind: 'fit' | 'scan'): Promise<StillAssessment>;
   reloadUpload(sha256: string): Promise<string | null>;
   requestMicrophone(): Promise<'granted' | 'denied'>;
   dictationSupported(): Promise<boolean>;
@@ -62,6 +117,24 @@ const native = requireOptionalNativeModule<KittedVisionNative>('KittedVision');
 export async function prepare(originalUri: string): Promise<PrepareResult> {
   if (!native) return { status: 'notImplemented' };
   return native.prepare(originalUri);
+}
+
+/** A clothes scan's prep (#100). notImplemented on web and in older native builds. */
+export async function prepareItems(originalUri: string): Promise<PrepareItemsResult> {
+  if (!native || typeof native.prepareItems !== 'function') return { status: 'notImplemented' };
+  return native.prepareItems(originalUri);
+}
+
+/** The quick check after a shot or a library pick (#100). null where it can't run (web, older
+ *  builds, an unreadable file): the photo then goes on, and photo prep still decides. */
+export async function assess(uri: string, kind: 'fit' | 'scan'): Promise<StillAssessment | null> {
+  if (!native || typeof native.assess !== 'function') return null;
+  try {
+    const r = await native.assess(uri, kind);
+    return r.ok ? r : null;
+  } catch {
+    return null;
+  }
 }
 
 /** The upload copy kept from an earlier prep (base64), for "Try again"; null once it's gone. */
@@ -113,11 +186,34 @@ export interface ViewBox {
   width: number;
   height: number;
 }
+export interface ScanPiece {
+  /** In view points. */
+  box: ViewBox;
+  /** Share of the frame it covers. */
+  share: number;
+  /** Touches the frame edge: probably cut off. */
+  edge: boolean;
+}
 export interface GuideEvent {
   state: GuideState;
   /** The body box and face boxes in view points (for the outline; there's no live blur, #54). */
   body?: ViewBox;
   faces: ViewBox[];
+  // Added in #100 (absent from older native builds; the guide then works on `state` alone):
+  /** Mean brightness 0–1 of the frame, its near-white share, and of the person (fit). */
+  luma?: number;
+  clipped?: number;
+  subjectLuma?: number;
+  /** The camera's exposure: ISO, its maximum, and the shutter time in seconds. */
+  iso?: number;
+  maxIso?: number;
+  exposure?: number;
+  /** Mean change since the last analyzed frame (0–1): shake or movement. */
+  motion?: number;
+  /** Fit: his shoulders-to-ankles height as a share of the frame. */
+  bodyShare?: number;
+  /** Scan mode: people (each a share of the frame), the clothes label's confidence, the pieces. */
+  scan?: { people: number[]; clothes?: number; labels?: string[]; pieces: ScanPiece[] };
 }
 /** A still from the live camera: a temporary JPEG (file://) that photo prep reads and deletes. */
 export interface CapturedPhoto {
@@ -150,6 +246,8 @@ export async function takePhotoFrom(cam: CameraHandle | null | undefined): Promi
 }
 export interface CameraViewProps extends ViewProps {
   facing: 'front' | 'back';
+  /** 'scan' adds the clothes measures (#100). The view should then be sized 3:4, like the photo. */
+  kind?: 'fit' | 'scan';
   torch?: boolean;
   onGuide?: (e: { nativeEvent: GuideEvent }) => void;
   onReady?: (e: { nativeEvent: CameraReadyEvent }) => void;

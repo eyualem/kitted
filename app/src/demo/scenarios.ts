@@ -79,6 +79,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   // Closet accuracy (#91): p01b against T1, B1, S1 from the seed: tee and sneakers matched, tan vs khaki chinos asked.
   { n: 37, name: 'Same as your khaki chinos?', id: 'S11', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/added/${STORY_FIRST_CHECK}`, under: '/stylist' },
   { n: 38, name: 'Closet · detailed graphics + one question', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  // Camera guidance (#100; numbered from 41 so parallel sessions' screens don't collide): one tip held, or the after-shot panel.
+  { n: 41, name: 'Camera · too dark (flash offer)', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=dark', under: '/stylist' },
+  { n: 42, name: 'Camera · bright light behind you', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=backlit', under: '/stylist' },
+  { n: 43, name: 'Camera · come a little closer', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=tooFar', under: '/stylist' },
+  { n: 44, name: 'Camera · after the shot: too dark', id: 'S3', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?review=dark', under: '/stylist' },
+  { n: 45, name: "Camera · after the shot: can't find you", id: 'S3', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?review=noPerson', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

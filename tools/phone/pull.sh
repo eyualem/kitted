@@ -22,3 +22,9 @@ sqlite3 -separator ' · ' "$DB" "
          coalesce(r.model,''), printf('%.1f s', coalesce(r.latency_ms,0)/1000.0), coalesce(f.photo_file,f.demo_photo_id)
   from fit_checks f left join readings r on r.id = f.reading_id
   where f.photo_file is not null order by f.created_at;"
+# Camera guidance (DECISIONS-LOG #100): the last tips and after-shot checks with their raw measures.
+LOG=$(find "$OUT" -name guide.log | head -1)
+if [[ -n "$LOG" ]]; then echo "\nCamera guidance (last 40 lines of $LOG):"; tail -40 "$LOG"; fi
+SCANS=$(find "$OUT" -path '*scans*' -name '*-photo.jpg' | wc -l | tr -d ' ')
+[[ "$SCANS" != "0" ]] && echo "\n$SCANS clothes scan(s) saved (Documents/scans)."
+true

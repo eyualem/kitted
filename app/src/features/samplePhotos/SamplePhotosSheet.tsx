@@ -1,14 +1,15 @@
 // DEMO: the Simulator camera's library button opens this. Twelve bundled photos, neck-down; a
 // tap starts the check (or the re-check / shoe snap) with its saved reading. "Choose from your
 // photos" opens the system picker (no Photos permission): a real photo is prepped on the phone
-// and read by Gemini in DEV builds with the key (05 §P3 C–D). Opened from the camera, a pick
-// closes both the sheet and the camera.
+// and read by Gemini in DEV builds with the key (05 §P3 C–D). Opened from the camera, a sample
+// closes both the sheet and the camera; his own photo goes back to the camera for its quick check.
 import * as ImagePicker from 'expo-image-picker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { KButton, NeckDownPhoto, opacity } from '@/design-system';
 import { DEMO_PHOTOS, SAMPLE_ORDER } from '@/demo/demoPhotos';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
+import { handLibraryPick } from '@/features/camera/libraryInbox';
 import { lensFromParams, startCheck } from '@/features/camera/startCheck';
 import type { CheckMode } from '@/features/fitcheck/machine';
 import { t } from '@/i18n/en';
@@ -32,6 +33,8 @@ export function SamplePhotosSheet() {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], allowsEditing: false, quality: 1, exif: false });
     const uri = res.canceled ? null : res.assets[0]?.uri;
     if (!uri) return;
+    // Opened from the camera: back to it for the quick check (too dark, blurry…; #100).
+    if (from === 'camera' && handLibraryPick(uri)) return router.back();
     close();
     void startCheck(mode, { photoUri: uri }, parent, lens);
   };

@@ -2,10 +2,15 @@
 // 3-2-1) or Mirror (rear camera, manual shutter, optional 3 s timer). No live face blur: he sees himself as
 // in any camera; faces are hidden after capture, in photo prep (DECISIONS-LOG #54). On a phone
 // the preview and guide come from kitted-vision (KittedCameraView); on the Simulator a bundled photo stands
-// in (SimulatedPreview) and the shutter "shoots" it. A capture closes the cover and starts the
-// check; the photo is prepped on the phone before anything is sent (05 §P3 C).
+// in (SimulatedPreview) and the shutter "shoots" it. Guidance (DECISIONS-LOG #100): the tip pill
+// follows guidance.ts (light, framing, distance, motion), offers the flash when it's dark and is
+// spoken in Propped; after a capture or a library pick a quick check opens the S3 panel when the
+// photo is too dark, blurry or backlit (Retake / Use anyway) or can't be sent (no person, a face
+// we can't hide). Otherwise the cover closes and the check starts; the photo is prepped on the
+// phone before anything is sent (05 §P3 C).
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Linking, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { File } from 'expo-file-system';
 import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
@@ -18,27 +23,41 @@ import { Icon, IconButton, KButton, KText, Numeral, cameraScrims, fixed, opacity
 import { store } from '@/data/db';
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { CheckMode } from '@/features/fitcheck/machine';
-import { t, type StringKey } from '@/i18n/en';
+import { t } from '@/i18n/en';
 import {
-  KittedCameraView, hasCamera, requestCameraPermission, takePhotoFrom, type CameraHandle, type CameraReadyEvent, type GuideEvent,
-  type GuideState, type ViewBox,
+  KittedCameraView, assess, hasCamera, requestCameraPermission, takePhotoFrom, type CameraHandle, type CameraReadyEvent, type GuideEvent,
+  type ViewBox,
 } from '../../../modules/kitted-vision';
 import { createAutoCapture, type Phase } from './autoCapture';
 import { BodyOutline, LowerGuide } from './FramingOverlay';
-import { lensFromParams, lensQuery, startCheck } from './startCheck';
+import { createTipFilter, fitIssue, fitTip, type FitTip, type Issue } from './guidance';
+import { fitTipCopy, isSpokenTip, issueTitle } from './guidanceCopy';
+import { RetakePanel } from './RetakePanel';
+import { assessLine, simFitEvent, simIssue } from './simGuide';
+import { lensFromParams, lensQuery, startCheck, type PhotoInput } from './startCheck';
+import { guideLog } from './devLog';
+import { onLibraryPick } from './libraryInbox';
+import { Asset } from 'expo-asset';
 
 type Mode = 'propped' | 'mirror';
 const MODE_KEY = 'camera.mode';
 const SIM_PHOTO = 'p01b';
 
-const TIP: Record<GuideState, StringKey> = {
-  noPerson: 'cam.tip.noPerson', tooClose: 'cam.tip.tooClose', moveLeft: 'cam.tip.moveLeft', moveRight: 'cam.tip.moveRight',
-  good: 'cam.tip.good', goodFull: 'cam.tip.goodFull',
-};
-const isGood = (s: GuideState) => s === 'good' || s === 'goodFull';
+const FIT_TIPS: readonly FitTip[] = ['dark', 'darkFlash', 'noPerson', 'mirrorAim', 'backlit', 'tooClose', 'tooFar', 'moveLeft', 'moveRight', 'moving', 'good', 'goodFull'];
+const isGoodTip = (tip: FitTip) => tip === 'good' || tip === 'goodFull' || tip === 'darkFlash';
+/** Problem tips are spoken at most this often (Propped), and not in the first moment after opening. */
+const SPEAK_GAP_MS = 4000;
+const SPEAK_AFTER_OPEN_MS = 1200;
+
+/** The photo under review (S3): his file (camera or library) or, on the Simulator, the bundled one. */
+interface Review {
+  photo: PhotoInput;
+  source: 'camera' | 'library';
+  issue: Issue | null;
+}
 
 export function CameraScreen() {
-  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string }>();
+  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string; guide?: string; review?: string; camMode?: string }>();
   // From the morning/evening card: the card's occasion and style (#61).
   const lens = lensFromParams(p);
   const checkMode: CheckMode = p.mode === 'recheck' || p.mode === 'shoeSnap' ? p.mode : 'check';
@@ -54,31 +73,85 @@ export function CameraScreen() {
   // Simulator: a bundled photo stands in for the live preview.
   const sim = demoPhoto(SIM_PHOTO)!;
   const simBox = useMemo(() => simulatedBody(sim, width, height), [sim, width, height]);
-  // Demo screen 5 (freeze=1): the mockup's moment, "good" and counting "3".
+  // Demo screen 5 (freeze=1): the mockup's moment, "good" and counting "3". Demo screens 41–44:
+  // one tip held (?guide=) or the after-shot panel (?review=), on the Simulator only.
   const frozen = p.freeze === '1' && !KittedCameraView && !snap;
+  const simTip = !KittedCameraView ? FIT_TIPS.find((x) => x === p.guide) : undefined;
   const [guide, setGuide] = useState<GuideEvent>(frozen ? { state: 'good', body: simBox, faces: [] } : { state: 'noPerson', faces: [] });
+  const [tip, setTip] = useState<FitTip>(frozen ? 'good' : 'noPerson');
+  const [offerFlash, setOfferFlash] = useState(false);
   const [phase, setPhase] = useState<Phase>(frozen ? { kind: 'counting', n: 3 } : { kind: 'waiting' });
   const [whiteout, setWhiteout] = useState(false);
+  const [review, setReview] = useState<Review | null>(null);
+  const [checking, setChecking] = useState(false);
   const cam = useRef<CameraHandle>(null);
   const busy = useRef(false);
+  const filter = useRef(createTipFilter<FitTip>());
+  const opened = useRef(0);
+  const lastSpoken = useRef(0);
+  // The guide handler runs from native events; it reads the current mode and flash from here.
+  const live = useRef({ mode, flash, counting: false });
+  useEffect(() => {
+    live.current = { mode, flash, counting: phase.kind === 'counting' };
+  }, [mode, flash, phase.kind]);
 
   useEffect(() => {
+    opened.current = Date.now();
+  }, []);
+  useEffect(() => {
     void store.getKv(MODE_KEY).then((m) => {
+      if (p.camMode === 'mirror' || p.camMode === 'propped') m = p.camMode;
       if ((m !== 'mirror' && m !== 'propped') || snap) return;
       setMode(m);
       setFacing(m === 'mirror' ? 'back' : 'front');
     });
     if (hasCamera) void requestCameraPermission().then(setPermission);
-  }, [snap]);
+  }, [snap, p.camMode]);
 
-  // --- capture ---------------------------------------------------------------------------
+  // --- capture and the quick check (S3) ----------------------------------------------------
+  const finish = (photo: PhotoInput) => {
+    router.back();
+    void startCheck(checkMode, photo, p.parent, lens);
+  };
+  /** The quick check: nothing to say → the check starts; otherwise the S3 panel. */
+  const reviewPhoto = async (photo: PhotoInput, source: Review['source']) => {
+    if (!('photoUri' in photo)) return finish(photo);
+    setReview({ photo, source, issue: null });
+    setChecking(true);
+    const a = await assess(photo.photoUri, 'fit');
+    setChecking(false);
+    const issue = fitIssue(a, { needsPerson: !snap });
+    if (__DEV__) guideLog(`[guide] after the shot (${source}) → ${issue ? `${issue.reason}${issue.allowUse ? '' : ', not sendable'}` : 'fine'} · ${assessLine(a)}`);
+    if (!issue) return finish(photo);
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setReview({ photo, source, issue });
+  };
+  const discard = () => {
+    // His photo isn't used: the temporary file goes now (prep deletes it only when it's used).
+    if (review && 'photoUri' in review.photo) {
+      try {
+        new File(review.photo.photoUri).delete();
+      } catch {
+        // already gone
+      }
+    }
+    setReview(null);
+    busy.current = false;
+    auto.current?.reset();
+  };
+
   const capture = async () => {
     if (busy.current) return;
     busy.current = true;
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     if (!KittedCameraView) {
-      router.back();
-      void startCheck(checkMode, { photoId: SIM_PHOTO }, p.parent, lens);
+      // Simulator: the bundled photo. A demo screen can ask for the panel (?review=).
+      const forced = simIssue(p.review);
+      if (forced) setReview({ photo: { photoId: SIM_PHOTO }, source: 'camera', issue: forced });
+      else {
+        if (__DEV__) void simAssess(sim.source);
+        finish({ photoId: SIM_PHOTO });
+      }
       return;
     }
     try {
@@ -93,8 +166,7 @@ export function CameraScreen() {
         const size = shot.width ? ` · ${shot.width}×${shot.height} · ${(shot.bytes / 1e6).toFixed(1)} MB · ${shot.ms} ms` : '';
         console.log(`[camera] captured (${mode}, ${facing} camera${flash ? ', flash' : ''})${size}`);
       }
-      router.back();
-      void startCheck(checkMode, { photoUri: shot.uri }, p.parent, lens);
+      await reviewPhoto({ photoUri: shot.uri }, 'camera');
     } catch {
       setWhiteout(false);
       busy.current = false;
@@ -125,21 +197,57 @@ export function CameraScreen() {
     return () => a.dispose();
   }, []);
 
-  const autoOn = mode === 'propped' && !snap && p.freeze !== '1';
+  const autoOn = mode === 'propped' && !snap && p.freeze !== '1' && !simTip && !review;
+  const autoOnRef = useRef(autoOn);
+  useEffect(() => {
+    autoOnRef.current = autoOn;
+  }, [autoOn]);
+  const lastLog = useRef(0);
   const onGuide = (g: GuideEvent) => {
-    setGuide((prev) => {
-      if (prev.state !== g.state) {
-        AccessibilityInfo.announceForAccessibility?.(t(TIP[g.state]));
-        if (__DEV__) console.log(`[camera] guide: ${g.state}${g.faces.length ? ` · ${g.faces.length} face(s) seen` : ''}`);
+    setGuide(g);
+    const { mode: m, flash: f, counting } = live.current;
+    const r = fitTip(g, { mode: m, flash: f });
+    const now = Date.now();
+    const prev = filter.current.shown;
+    const shown = filter.current.feed(r.tip, now);
+    setOfferFlash(r.offerFlash);
+    if (shown !== prev) {
+      setTip(shown);
+      const text = fitTipCopy(shown).text;
+      AccessibilityInfo.announceForAccessibility?.(text);
+      // He's 2–3 m away in Propped and can't read the pill (02 D5: "spoken once per change, throttled").
+      if (m === 'propped' && !counting && isSpokenTip(shown) && now - opened.current > SPEAK_AFTER_OPEN_MS && now - lastSpoken.current > SPEAK_GAP_MS) {
+        lastSpoken.current = now;
+        Speech.speak(text, { rate: 1.0 });
       }
-      return g;
-    });
-    if (autoOn) auto.current?.feed(isGood(g.state));
+      if (__DEV__) guideLog(`[guide] ${shown}${g.faces.length ? ` · ${g.faces.length} face(s) seen` : ''}`);
+    }
+    // DEV: the raw measures every 2 s, to tune the thresholds from the phone (#100).
+    if (__DEV__ && g.luma !== undefined && now - lastLog.current > 2000) {
+      lastLog.current = now;
+      const f3 = (v?: number) => (v === undefined ? '–' : v.toFixed(3));
+      guideLog(`[guide] luma ${f3(g.luma)} · him ${f3(g.subjectLuma)} · clipped ${f3(g.clipped)} · iso ${Math.round(g.iso ?? 0)}/${Math.round(g.maxIso ?? 0)} · 1/${g.exposure ? Math.round(1 / g.exposure) : '?'} s · motion ${f3(g.motion)} · body ${f3(g.bodyShare)}`);
+    }
+    if (autoOnRef.current) auto.current?.feed(r.ready && isGoodTip(shown));
   };
+
+  // Simulator: one tip held for a demo screen (?guide=<tip>), or the review panel (?review=).
+  useEffect(() => {
+    if (KittedCameraView || snap || frozen) return;
+    if (simTip) {
+      const h = setInterval(() => onGuide(simFitEvent(simTip, simBox)), 100);
+      return () => clearInterval(h);
+    }
+    if (p.review) {
+      const h = setTimeout(() => void capture(), 300);
+      return () => clearTimeout(h);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [simTip, p.review, simBox, snap, frozen]);
 
   // Simulator: a scripted guide over the bundled photo (no one → too close → good → 3-2-1).
   useEffect(() => {
-    if (KittedCameraView || snap || frozen) return;
+    if (KittedCameraView || snap || frozen || simTip || p.review) return;
     const steps: [number, GuideEvent][] = [
       [600, { state: 'tooClose', body: { ...simBox, height: simBox.height * 0.55 }, faces: [] }],
       [1800, { state: 'good', body: simBox, faces: [] }],
@@ -166,27 +274,47 @@ export function CameraScreen() {
   };
   const pickFromLibrary = async () => {
     if (!KittedCameraView) {
-      // Simulator: the sample photos (they replay saved readings), with "Choose from your photos".
+      // Simulator: the sample photos (they replay saved readings), with "Choose from your photos"
+      // (that pick comes back here for the quick check, through libraryInbox).
       router.push(`/sheets/sample-photos?mode=${checkMode}${p.parent ? `&parent=${p.parent}` : ''}&from=camera${lensQuery(lens)}`);
       return;
     }
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 1, exif: false });
     const uri = res.canceled ? null : res.assets[0]?.uri;
     if (!uri) return;
-    router.back();
-    void startCheck(checkMode, { photoUri: uri }, p.parent, lens);
+    busy.current = true;
+    await reviewPhoto({ photoUri: uri }, 'library');
   };
+  // A photo chosen in the Simulator's sample sheet ("Choose from your photos") gets the same check.
+  useEffect(
+    () =>
+      onLibraryPick((uri) => {
+        busy.current = true;
+        void reviewPhoto({ photoUri: uri }, 'library');
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
   const shutter = () => {
     if (mode === 'mirror' && timer && phase.kind === 'waiting') auto.current?.startCount();
     else void capture();
   };
 
   // --- render ----------------------------------------------------------------------------
-  const tip: { icon: 'checkFilled' | 'warning' | null; text: string } = snap
-    ? { icon: null, text: t('cam.shoe.tip') }
-    : mode === 'mirror'
-      ? { icon: null, text: t('cam.tip.mirror') }
-      : { icon: isGood(guide.state) ? 'checkFilled' : guide.state === 'noPerson' ? 'warning' : null, text: t(TIP[guide.state]) };
+  const tipView = review ? { icon: null, text: t('cam.checking') } : snap ? { icon: null, text: t('cam.shoe.tip') } : fitTipCopy(tip);
+  const reviewUri = review && 'photoUri' in review.photo ? review.photo.photoUri : null;
+  const panel = review?.issue ? reviewPanel(review.issue) : null;
+  function reviewPanel(issue: Issue) {
+    const lib = review?.source === 'library';
+    const withFlash = issue.reason === 'dark' && !flash && !lib;
+    const primary = lib
+      ? { title: t('cam.retake.chooseAnother'), icon: 'photo' as const, onPress: () => { discard(); void pickFromLibrary(); } }
+      : withFlash
+        ? { title: t('cam.retake.withFlash'), icon: 'flash' as const, onPress: () => { setFlash(true); discard(); } }
+        : { title: t('cam.retake.retake'), onPress: discard };
+    const use = issue.allowUse && review ? { title: t('cam.retake.useAnyway'), onPress: () => finish(review.photo) } : undefined;
+    return <RetakePanel title={issueTitle(issue, 'fit')} body={t('cam.retake.noCount')} primary={primary} secondary={use} />;
+  }
 
   if (permission === 'denied') return <CameraOff onPick={() => void pickFromLibrary()} />;
 
@@ -205,25 +333,31 @@ export function CameraScreen() {
           />
         ) : null
       ) : (
-        <Image source={sim.source} style={StyleSheet.absoluteFill} contentFit="cover" transition={0} />
+        <>
+          <Image source={sim.source} style={StyleSheet.absoluteFill} contentFit="cover" transition={0} />
+          {/* DEMO: the bundled photo stays bright; the dark demo states dim it like a dark room would. */}
+          {simTip === 'dark' || simTip === 'darkFlash' || p.review === 'dark' ? <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.72)' }]} /> : null}
+        </>
       )}
+
+      {reviewUri ? <Image source={{ uri: reviewUri }} style={StyleSheet.absoluteFill} contentFit="cover" transition={0} /> : null}
 
       <View style={[StyleSheet.absoluteFill, { experimental_backgroundImage: cameraScrims.top }]} pointerEvents="none" />
       <View style={[StyleSheet.absoluteFill, { experimental_backgroundImage: cameraScrims.bottom }]} pointerEvents="none" />
 
       {snap ? (
         <LowerGuide share={0.4} label={t('cam.shoe.guide')} width={width} height={height} />
-      ) : guide.body ? (
-        <BodyOutline box={guide.body} solid={isGood(guide.state)} width={width} height={height} />
+      ) : guide.body && !review ? (
+        <BodyOutline box={guide.body} solid={isGoodTip(tip)} width={width} height={height} />
       ) : null}
 
       {/* Top bar */}
       <View style={[styles.topBar, { top: insets.top + 3 }]}>
         <IconButton icon="close" variant="glass" diameter={44} label={t('cam.a11y.close')} onPress={() => router.back()} />
-        <View style={styles.tip} accessibilityLiveRegion="polite">
-          {tip.icon ? <Icon name={tip.icon} size="small" color={tip.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
+        <View style={[styles.tip, review?.issue && { opacity: 0 }]} accessibilityLiveRegion="polite" accessibilityElementsHidden={!!review?.issue}>
+          {tipView.icon ? <Icon name={tipView.icon} size="small" color={tipView.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
           <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={2}>
-            {tip.text}
+            {tipView.text}
           </KText>
         </View>
         {mode === 'mirror' && !snap ? (
@@ -232,6 +366,17 @@ export function CameraScreen() {
           <IconButton icon={flash ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t('cam.a11y.flash')} onPress={() => setFlash(!flash)} />
         )}
       </View>
+
+      {offerFlash && !flash && !review && !snap ? (
+        <View style={[styles.offerWrap, { top: insets.top + 3 + 52 }]}>
+          <Pressable onPress={() => setFlash(true)} accessibilityRole="button" style={({ pressed }) => [styles.offer, { opacity: pressed ? opacity.pressed : 1 }]}>
+            <Icon name="flash" size="small" color={fixed.white} />
+            <KText variant="subheadline" weight="600" color={fixed.white}>
+              {t('cam.flashOffer')}
+            </KText>
+          </Pressable>
+        </View>
+      ) : null}
 
       {phase.kind === 'counting' ? (
         <View style={[styles.countWrap, { top: height * 0.44 - 60 }]} pointerEvents="none">
@@ -282,6 +427,7 @@ export function CameraScreen() {
       </View>
 
       {whiteout ? <View style={[StyleSheet.absoluteFill, { backgroundColor: fixed.white }]} pointerEvents="none" /> : null}
+      {review && !checking ? panel : null}
     </View>
   );
 }
@@ -303,6 +449,19 @@ function CameraOff({ onPick }: { onPick: () => void }) {
       <KButton title={t('common.openSettings')} kind="secondary" onPress={() => void Linking.openSettings()} />
     </View>
   );
+}
+
+/** DEV, Simulator: the real quick check on the bundled photo, logged (it proves the native check
+ *  runs here; the demo still scores the bundled photo's saved reading). */
+async function simAssess(source: number | string | object) {
+  try {
+    const asset = typeof source === 'number' ? await Asset.fromModule(source).downloadAsync() : null;
+    if (!asset?.localUri) return;
+    const a = await assess(asset.localUri, 'fit');
+    guideLog(`[guide] simulator check of the bundled photo → ${fitIssue(a)?.reason ?? 'fine'} · ${assessLine(a)}`);
+  } catch (e) {
+    guideLog(`[guide] simulator check failed: ${String(e)}`);
+  }
 }
 
 function logReady(r: CameraReadyEvent) {
@@ -340,6 +499,11 @@ const styles = StyleSheet.create({
   },
   countInner: { position: 'absolute', top: 5, left: 5, right: 5, bottom: 5, borderRadius: 60, borderWidth: 8, borderColor: 'rgba(255,255,255,0.12)' },
   textShadow: { textShadowColor: 'rgba(0,0,0,0.4)', textShadowRadius: 6 },
+  offerWrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
+  offer: {
+    flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 36, paddingHorizontal: 14, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.6)',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)',
+  },
   bottom: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: 21, paddingBottom: 34 },
   modeSwitch: { flexDirection: 'row', padding: 4, borderRadius: 21, backgroundColor: 'rgba(0,0,0,0.4)' },
   modeSeg: { paddingVertical: 6.5, paddingHorizontal: 15.5, borderRadius: 17, minHeight: 32, justifyContent: 'center' },
