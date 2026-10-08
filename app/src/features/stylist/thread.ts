@@ -39,7 +39,7 @@ export function buildThreadItems(messages: readonly ChatMessage[], nowMs: number
 
 const OCCASION_KEY: Record<OccasionKey, StringKey> = {
   everyday: 'occasion.everyday', class: 'occasion.classWork', date: 'occasion.date', interview: 'occasion.interview',
-  event: 'occasion.event', gym: 'occasion.gym', home: 'occasion.home',
+  event: 'occasion.event', gym: 'occasion.gym', home: 'occasion.home', going_out: 'occasion.goingOut',
 };
 
 export function occasionLabel(o: OccasionKey): string {

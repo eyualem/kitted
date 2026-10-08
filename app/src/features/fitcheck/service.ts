@@ -74,7 +74,7 @@ const emptyRow = (over: Partial<FitCheckRow> & Pick<FitCheckRow, 'id' | 'created
   photoFile: null, thumbFile: null, demoPhotoId: null, imageHash: '', status: 'scoring', isPartial: false, notRated: [], score: null,
   rawScore: null, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [], fixes: [], explanation: null,
   rubricVersion: '3.1.0', isFavorite: false, snapState: 'none', recheckUsed: false, isFirstCheck: false, readingId: null,
-  parentId: null, itemIds: [], details: {}, ...over,
+  parentId: null, itemIds: [], details: {}, style: null, ...over,
 });
 
 export function createFitCheckService(deps: ServiceDeps) {

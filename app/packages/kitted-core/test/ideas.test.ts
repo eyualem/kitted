@@ -48,7 +48,7 @@ describe("pickOutfit", () => {
     const r = pick({ needs: weatherNeeds(day(72, 88)), occasion: "everyday" });
     expect(slots(r.outfit!.itemIds)).not.toContain("outer");
     expect(r.outfit!.itemIds.map((id) => byId(id).garment.subcategory)).not.toContain("sweater");
-    expect(r.outfit!.reasons[0].key).toBe("hotLight");
+    expect(r.outfit!.reasons[0]!.key).toBe("hotLight");
   });
 
   it("freezing with no coat in the closet: a layer anyway, plus a dashed 'coat' tile", () => {

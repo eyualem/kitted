@@ -143,7 +143,7 @@ export async function loadScenario(store: KittedStore, seed: unknown, opts: Load
     if (fin.suggestedItemID) details.finish = { suggestedItemId: String(fin.suggestedItemID), weekday: null };
     const row: FitCheckRow = {
       id, createdAt: created, dayKey: dayKey(created, opts.zone), photoFile: null, thumbFile: null, demoPhotoId: photoId,
-      imageHash: hash, occasion: (str(o.occasion) ?? 'everyday') as OccasionKey, status: 'scored', isPartial: o.isPartial === true,
+      imageHash: hash, occasion: (str(o.occasion) ?? 'everyday') as OccasionKey, style: null, status: 'scored', isPartial: o.isPartial === true,
       notRated: arr(o.notRated).map(String), score: numOr(o.score, 0), rawScore: numOr(o.rawScore, 0),
       subscores: obj(o.subscores) as Record<string, number>, occasionAdj: numOr(o.occasionAdj, 0), rulesFired: arr(o.rulesFired).map(String),
       credits: arr(o.credits).map(String), advice: arr(o.advice).map(String), fixes: arr(o.fixes).map(fixFromSeed),

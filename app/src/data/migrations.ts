@@ -193,7 +193,30 @@ const V3: Migration = {
   statements: [`ALTER TABLE outfits ADD COLUMN title TEXT`, `ALTER TABLE outfits ADD COLUMN details TEXT NOT NULL DEFAULT '{}'`],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1, V2, V3];
+// The morning/evening card (02 "S1d", DECISIONS-LOG #58–62): one locked idea per day key and slot,
+// and the one style a check was scored for.
+const V4: Migration = {
+  version: 4,
+  statements: [
+    `CREATE TABLE IF NOT EXISTS daily_ideas (
+      id TEXT PRIMARY KEY NOT NULL,
+      day_key TEXT NOT NULL DEFAULT '',
+      slot TEXT NOT NULL DEFAULT 'day',
+      occasion TEXT NOT NULL DEFAULT 'everyday',
+      style TEXT,
+      outfit_id TEXT,
+      weather TEXT,
+      message_id TEXT,
+      state TEXT NOT NULL DEFAULT 'idea',
+      fit_check_id TEXT,
+      created_at INTEGER NOT NULL DEFAULT 0
+    )`,
+    `CREATE INDEX IF NOT EXISTS daily_ideas_day ON daily_ideas (day_key)`,
+    `ALTER TABLE fit_checks ADD COLUMN style TEXT`,
+  ],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 
@@ -211,6 +234,7 @@ export const TABLES = [
   'chat_messages',
   'usage_days',
   'event_queue',
+  'daily_ideas',
 ] as const;
 
 /** The migrations still to run from `current` (sorted, strictly newer). */

@@ -3,7 +3,7 @@
 // can't drift. Columns default to the snake_case of the field name.
 
 import type {
-  ChatMessage, ClosetItemRow, CorrectionRow, FactRow, FitCheckRow, OutfitRow, ProfileRow, ReadingRow, UsageDay, WearLogRow,
+  ChatMessage, ClosetItemRow, CorrectionRow, DailyIdeaRow, FactRow, FitCheckRow, OutfitRow, ProfileRow, ReadingRow, UsageDay, WearLogRow,
 } from './types';
 
 export type ColType = 'text' | 'int' | 'real' | 'bool' | 'json';
@@ -75,7 +75,7 @@ export const fitCheckSpec: TableSpec<FitCheckRow> = {
   key: 'id',
   fields: {
     id: 'text', createdAt: 'int', dayKey: 'text', photoFile: 'text', thumbFile: 'text', demoPhotoId: 'text', imageHash: 'text',
-    occasion: 'text', status: 'text', isPartial: 'bool', notRated: 'json', score: 'real', rawScore: 'real', subscores: 'json',
+    occasion: 'text', style: 'text', status: 'text', isPartial: 'bool', notRated: 'json', score: 'real', rawScore: 'real', subscores: 'json',
     occasionAdj: 'real', rulesFired: 'json', credits: 'json', advice: 'json', fixes: 'json', explanation: 'text',
     rubricVersion: 'text', isFavorite: 'bool', snapState: 'text', recheckUsed: 'bool', isFirstCheck: 'bool', readingId: 'text',
     parentId: 'text', itemIds: 'json', details: 'json',
@@ -144,6 +144,15 @@ export const factSpec: TableSpec<FactRow> = {
   fields: { id: 'text', key: 'text', value: 'text', source: 'text', createdAt: 'int', isDeleted: 'bool' },
 };
 
+export const dailyIdeaSpec: TableSpec<DailyIdeaRow> = {
+  table: 'daily_ideas',
+  key: 'id',
+  fields: {
+    id: 'text', dayKey: 'text', slot: 'text', occasion: 'text', style: 'text', outfitId: 'text', weather: 'json', messageId: 'text',
+    state: 'text', fitCheckId: 'text', createdAt: 'int',
+  },
+};
+
 export const SPECS = {
   chat: chatSpec,
   fitChecks: fitCheckSpec,
@@ -155,6 +164,7 @@ export const SPECS = {
   outfits: outfitSpec,
   wearLog: wearLogSpec,
   facts: factSpec,
+  dailyIdeas: dailyIdeaSpec,
 } as const;
 
 export type TableName = keyof typeof SPECS;

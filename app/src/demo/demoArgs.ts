@@ -26,7 +26,12 @@ export interface DemoArgs {
   frame: boolean;
   /** Debug fault for the mock reading (04 §11). */
   fault: DemoFault | null;
+  /** Sample weather for the morning/evening card until WeatherKit is live (02 "S1d"). */
+  weather: DemoWeather | null;
 }
+
+export type DemoWeather = 'coldRain' | 'mild' | 'hot' | 'freezing' | 'none';
+const WEATHERS: readonly string[] = ['coldRain', 'mild', 'hot', 'freezing', 'none'];
 
 export type DemoFault = 'unreadable' | 'notClothed' | 'offline' | 'ai' | 'paused';
 const FAULTS: readonly string[] = ['unreadable', 'notClothed', 'offline', 'ai', 'paused'];
@@ -47,6 +52,7 @@ export const defaultDemoArgs: DemoArgs = {
   uiTesting: false,
   frame: false,
   fault: null,
+  weather: null,
 };
 
 /** Raw key → value pairs from one source. Keys use the deep-link names (no leading dash). */
@@ -56,6 +62,7 @@ export type RawArgs = Readonly<Record<string, unknown>>;
 const LAUNCH_ALIASES: Readonly<Record<string, keyof DemoArgs>> = {
   demoLatency: 'latency',
   demoNow: 'now',
+  demoWeather: 'weather',
 };
 
 const ISO_LOCAL = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+-]\d{2}:\d{2})?$/;
@@ -124,6 +131,11 @@ export function parseArgs(raw: RawArgs): Partial<DemoArgs> {
         if (n !== null) out.freeChecksUsed = n;
         break;
       }
+      case 'weather': {
+        const s = str(value);
+        if (s !== null && WEATHERS.includes(s)) out.weather = s as DemoWeather;
+        break;
+      }
       case 'fault': {
         const s = str(value);
         if (s !== null && FAULTS.includes(s)) out.fault = s as DemoFault;
@@ -185,4 +197,5 @@ export const LAUNCH_ARG_KEYS = [
   'theme',
   'uiTesting',
   'fault',
+  'demoWeather',
 ] as const;

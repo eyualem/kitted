@@ -39,3 +39,14 @@ export function signed(n: number, zero: '+0' | '±0' = '+0'): string {
   const abs = Math.round(Math.abs(n) * 100) / 100;
   return `${n > 0 ? '+' : '−'}${abs}`;
 }
+
+/** "5 pm" (a local hour 0–23; the weather lines). */
+export function hourText(h: number): string {
+  const hh = ((h % 24) + 24) % 24;
+  return `${hh % 12 === 0 ? 12 : hh % 12} ${hh < 12 ? t('fmt.am') : t('fmt.pm')}`;
+}
+
+/** "October" (1–12). */
+export function monthName(m: number): string {
+  return list('fmt.monthsLong')[m - 1] ?? '';
+}

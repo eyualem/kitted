@@ -9,6 +9,7 @@ export type CardType =
   | 'fitCheck'
   | 'recheck'
   | 'outfitIdea'
+  | 'morning'
   | 'turnOnChecks'
   | 'support'
   | 'limit'
@@ -18,8 +19,40 @@ export type CardType =
   | 'item';
 
 /** The seven occasion chips (02 D6); stored as rubric occasion ids. */
-export type OccasionKey = 'everyday' | 'class' | 'date' | 'interview' | 'event' | 'gym' | 'home';
-export const OCCASIONS: readonly OccasionKey[] = ['everyday', 'class', 'date', 'interview', 'event', 'gym', 'home'];
+export type OccasionKey = 'everyday' | 'class' | 'date' | 'going_out' | 'interview' | 'event' | 'gym' | 'home';
+export const OCCASIONS: readonly OccasionKey[] = ['everyday', 'class', 'date', 'going_out', 'interview', 'event', 'gym', 'home'];
+
+/** The morning/evening card's occasion menu (02 "S1d"): no Gym/Home; `staying_in` is evening-only and never scored. */
+export type CardOccasion = Exclude<OccasionKey, 'gym' | 'home'> | 'staying_in';
+export const DAY_CARD_OCCASIONS: readonly CardOccasion[] = ['everyday', 'class', 'date', 'going_out', 'interview', 'event'];
+export const EVENING_CARD_OCCASIONS: readonly CardOccasion[] = ['going_out', 'date', 'event', 'everyday', 'staying_in'];
+
+/** One style per check or idea (DECISIONS-LOG #61): the rubric's style bands, with preppy merged into old money (#57). */
+export type StyleKey = 'streetwear' | 'smart_casual' | 'minimalist' | 'workwear' | 'old_money' | 'vintage_sport' | 'gorpcore';
+export const STYLES: readonly StyleKey[] = ['streetwear', 'smart_casual', 'minimalist', 'workwear', 'old_money', 'vintage_sport', 'gorpcore'];
+
+export type IdeaSlot = 'day' | 'evening';
+export type IdeaState = 'idea' | 'wearing' | 'checked' | 'skipped' | 'stayingIn';
+
+/** One posted morning/evening card (02 "S1d"): locked for its day key and slot (#58, #60). */
+export interface DailyIdeaRow {
+  /** `${dayKey}|${slot}` */
+  id: string;
+  dayKey: string;
+  slot: IdeaSlot;
+  occasion: CardOccasion;
+  /** null = scored by the general standard (no style chosen). */
+  style: StyleKey | null;
+  /** The picked outfit (outfits row), or null when the closet is thin/empty. */
+  outfitId: string | null;
+  /** The DayWeather it was planned with, or null (no location: season only). */
+  weather: Record<string, unknown> | null;
+  messageId: string | null;
+  state: IdeaState;
+  /** The check that collapsed it (any check that day or slot). */
+  fitCheckId: string | null;
+  createdAt: number;
+}
 
 export type FitCheckStatus = 'scoring' | 'scored' | 'unreadable' | 'notClothed' | 'failed' | 'held';
 export type ReadingSourceKind =
@@ -78,6 +111,8 @@ export interface FitCheckRow {
   demoPhotoId: string | null;
   imageHash: string;
   occasion: OccasionKey;
+  /** The one style it was scored for (#61); null = the general standard or a pre-V4 row. */
+  style: StyleKey | null;
   status: FitCheckStatus;
   isPartial: boolean;
   notRated: string[];

@@ -8,7 +8,7 @@ const check = (over: Partial<FitCheckRow>): FitCheckRow => ({
   id: 'FC', createdAt: at('2026-10-22T07:42:00-04:00'), dayKey: '2026-10-22', photoFile: null, thumbFile: null, demoPhotoId: 'p01b',
   imageHash: '', occasion: 'date', status: 'scored', isPartial: false, notRated: [], score: 8, rawScore: 8, subscores: {}, occasionAdj: 0,
   rulesFired: [], credits: [], advice: [], fixes: [], explanation: null, rubricVersion: '3.1.0', isFavorite: false, snapState: 'none',
-  recheckUsed: false, isFirstCheck: false, readingId: null, parentId: null, itemIds: [], details: {}, ...over,
+  recheckUsed: false, isFirstCheck: false, readingId: null, parentId: null, itemIds: [], details: {}, style: null, ...over,
 });
 
 describe('re-check window', () => {
