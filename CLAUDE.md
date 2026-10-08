@@ -165,10 +165,10 @@
   - **Code-only rulings ported Oct 8 (#81):** live in `rubric.py` v4.0 and the app. Port check `check_port.py`: 100% vs the prototype. 80 of 181 demo cases changed; the p01b 8.0 → 9.0 story didn't. Differs from mockup: welcome s15 8.5 → 8.0; screen 7's next-level line (p01b reads as minimal). Next, in order:
     1. The "Jeans or sweatpants?" tap and the "Reads as …" label on the card (wording approved), and the onboarding names Classic prep and Outdoor.
     2. The closet: a separate closet call after the card shows (approved #63: shade, details, logo text, boxes for crops), and matching by exact shade so two grey hoodies don't merge.
-    3. Full-resolution capture in the camera (needs a reinstall).
+    3. Done Oct 8: full-resolution capture (12 MP 4:3, #83); on my phone after a reinstall.
   - **New scoring readings wait for the gold set.** v5 and the slim v5s both failed the consistency bar (#63–64), so the app stays on the locked v3 format.
   - **Also found Oct 7:**
-    - The camera captures video-size frames (`sessionPreset = .high`), not full-resolution photos.
+    - The camera captured video-size frames (`sessionPreset = .high`); fixed Oct 8 (#83).
     - Closet matching merges light grey, grey and charcoal into one color.
     - Raw closet crops aren't clean enough yet; they need full-res capture plus a cut-out.
 - **Research:**
@@ -239,6 +239,7 @@ P5's real size is about 6.5 days, not 05's 2.
 - **What Claude sees during my test:** the `[camera]`, `[prep]`, `[gemini]` and `[check]` lines in the Metro log, live; afterwards `tools/phone/pull.sh` copies the app's data and kept photos off the phone (`screenshots/phone/`, git-ignored).
 - **Each test session:** unlock the phone and open Kitted (it reconnects to this Mac's dev server), then tell Claude so it can watch the log.
 - Test plan: 10 propped shots (phone against something, 2–3 m away) + 10 mirror shots in my room; note any guide misfires.
+- **Done Oct 8 (#83), needs a reinstall:** 12 MP 4:3 photos (the whole outfit, not the 16:9 preview crop); front photos saved true-view; Mirror opens on the rear camera; the guide's left/right judged on screen; prep at 2048 plus a face-hidden 2048 detail copy kept a week (`Caches/detail`, copied by `pull.sh`). Log lines to watch: `[camera] ready · … photo 4032×3024 …`, `[camera] captured … 3024×4032 · … MB · … ms`, `[prep] ok · source … → upload …×1024 · kept … · vision … ms · total … ms`.
 - Not built yet: the Mirror volume-button shutter, the dark/blurry retake panel, the screenshot "Is this you?" question (#50).
 - Then **P4 (onboarding)**: 05 §P4.
 
@@ -260,7 +261,7 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
 - **Mic permission text** (outward-facing; in `app/app.config.ts`): "Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone."
-- **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator.
+- **Reinstall on my phone** (`tools/phone/install.sh`) to get the mic and the new permission texts, then try voice input. It can't be tested on the Simulator. The same reinstall brings the 12 MP camera (#83): take a few Propped and Mirror shots while Claude watches the log.
 - **Morning-card copy to skim** (`app/src/i18n/en.ts` → `addedInBuild`, under "Morning/evening card" and "Scored for"): greetings, weather lines, why lines, the "Going with your own?" row, the re-score alert, and the style names (Minimal, Sporty, Outdoorsy; the council approved "Outdoor" and "Classic prep" for onboarding, so pick one set).
 - **Weather band numbers** (core `weather.ts`, for the rubric review): 80 / 65 / 50 / 35 °F feels-like, rain 50%+, a 15° swing. Hot days also favor tees and lighter shoes.
 - **Archivo fonts:** 3 files of about 185 KB each, OFL license, from `github.com/Omnibus-Type/Archivo` (`fonts/ttf/`). Default: the system font. When approved:
