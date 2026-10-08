@@ -159,3 +159,9 @@ Contradictions settled and decisions changed during the build. Newest last.
       1. One misread garment cost 2.5 points, because two rules punished the same sweatpants.
       2. The model can be confidently wrong ("clear") when the deciding detail is hidden.
       3. Rules can't fix a wrong reading; the reading needs evidence fields and a way to ask him.
+
+60. **Founder decisions on style detection, unsure items, closet tiles and the style council (Oct 7).**
+    1. **Judge the fit by what it's going for.** When an outfit clearly reads as a style, it gets that style's allowances even if he didn't pick that style. His picks break ties and steer suggestions. Detection is computed in code from the garment fields, never from an AI style label (labels flip between runs).
+    2. **Unsure items get one quick tap.** When the model can't tell two types apart and the answer changes the score (jeans vs. sweatpants), the card asks before showing the score, at most once per check. The answer is saved with the closet item.
+    3. **Closet tiles show real crops from his photo if they look clean and clear; otherwise a detailed graphic.** This revises #56's icon-only tiles, pending a crop-quality test.
+    4. **The style council runs now, at design time.** There are 7 style advocates, a calibration member, a common-ground member and a mediator. Output: `rubric/research/style-council/RULEBOOK.md`, a prototype detector and test cases. At runtime there is still one vision call plus deterministic code. Claude pushed back on per-photo agent debates (slow, about 8× the cost, not repeatable), and the founder agreed.
