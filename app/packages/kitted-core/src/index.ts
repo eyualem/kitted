@@ -42,7 +42,7 @@ export {
 } from "./closetShade";
 export {
   DETAILS, LAYERABLE, FLIP_PAIRS, SAME_MIN, RUNNER_UP_GAP, normalizeBrand, profileOf, profileFromClosetItem, identity, decide,
-  reconcile, reconcileReading,
+  reconcile, reconcileReading, shoeKindOf, knownMatches, type KnownPiece,
   type Detail, type Lightness, type SleeveLength, type ShoeProfile, type DenimWear, type ConfirmedFields, type Observation,
   type ItemProfile, type ProfileExtra, type IdentityReason, type IdentityResult, type Decision, type ReconcileEntry,
   type ReadingReconcileEntry, type StoredProfile,

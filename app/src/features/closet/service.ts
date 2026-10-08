@@ -11,7 +11,7 @@
 // (state 'fallback'); a late answer, or a one-time catch-up on the next foreground within 24 h, then enriches it
 // (re-matches only if he hasn't touched S11 for that check).
 import {
-  closetPlan, fixTargets, identity, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment, type Reading,
+  closetPlan, fixTargets, identity, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment, type KnownPiece, type Reading,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
@@ -26,7 +26,7 @@ import type { GarmentMeasurer, Measured } from '@/services/measure/garments';
 import { garmentHex } from '@/features/fitcheck/labels';
 import { serial } from './checkWrites';
 import { assignNames, baseName, isAutoNamed } from './itemName';
-import { artOf, hexOfArt, isLive, isOwned, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
+import { artOf, hexOfArt, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
 export const CLOSET_DEADLINE_MS = 12_000;
 export const CATCH_UP_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -799,6 +799,13 @@ export function createClosetService(deps: ClosetServiceDeps) {
     async settle(): Promise<void> {
       while (jobs.size > 0) await Promise.allSettled([...jobs]);
       await serial(async () => {});
+    },
+    /**
+     * The pieces the app is sure he owns, before `excludeCheckIds` (the check being asked about, and a re-check's first
+     * check): for the reading's "Your green work boots?" question (#122.3), which picks with core knownMatches().
+     */
+    async knownPieces(excludeCheckIds: readonly string[] = []): Promise<KnownPiece[]> {
+      return knownPieces(await store.closet.all(), await store.closetObs.all(), { excludeCheckIds });
     },
     /** The open "Same as your …?" questions across his checks (newest first), for the Closet tab. */
     async openAsks(): Promise<{ checkId: string; ask: ClosetAsk }[]> {

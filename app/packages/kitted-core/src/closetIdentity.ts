@@ -59,6 +59,54 @@ export function shoeKindOf(subcategory: unknown): ShoeKind | null {
   return typeof subcategory === "string" ? SHOE_KIND[subcategory] ?? null : null;
 }
 
+// ---------------------------------------------------------------- known pieces
+/**
+ * A piece the app is sure he owns (he confirmed it, or it was seen in 2+ checks), as it stood before the photo being
+ * asked about. v3 fields only. Built by the app's closet (features/closet/profile.ts knownPieces); the reading's
+ * "Your green work boots?" question (workstream A, #122.3) picks from these with knownMatches().
+ */
+export interface KnownPiece {
+  id: string;
+  /** Closet slot: top | bottom | shoes | outer. */
+  slot: string;
+  /** v3 color family. */
+  colorFamily: string | null;
+  subcategory: string | null;
+  /** His answer to the shoe tap, else the kind of the subtype (null: "other" or not one of the three kinds). */
+  shoeKind: ShoeKind | null;
+  /** True when shoeKind is his own answer. */
+  shoeKindSaid: boolean;
+  name: string;
+  /** He answered for it (the tap, a correction, "Yes, same one", a field or name he set) or added it himself. */
+  confirmed: boolean;
+  /** Live sightings before this photo. */
+  sightings: number;
+}
+
+/**
+ * The known pieces a garment could be, best first; a question should be asked only when exactly one comes back.
+ * Same slot, then: shoes by kind (an unknown kind is compatible; color can't be trusted on shoes, it only breaks
+ * ties); everything else by color family exact or neighbors (grey and charcoal are neighbors). Ties narrow to the
+ * closest color, then the same subcategory. Pure and deterministic.
+ */
+export function knownMatches(known: readonly KnownPiece[], g: Garment): KnownPiece[] {
+  const slot = typeof g.category === "string" ? SLOT_TO_CLOSET[g.category] ?? null : null;
+  if (slot === null) return [];
+  const sub = typeof g.subcategory === "string" ? g.subcategory : null;
+  const color = typeof g.color_family === "string" ? g.color_family : null;
+  const gk = shoeKindOf(sub);
+  const dist = (p: KnownPiece) =>
+    color === null || p.colorFamily === null ? 2 : colorDistance(color, p.colorFamily, { jeans: sub === "jeans" || p.subcategory === "jeans" });
+  const fits = known.filter((p) => {
+    if (p.slot !== slot) return false;
+    if (slot === "shoes") return gk === null || p.shoeKind === null || gk === p.shoeKind;
+    return dist(p) <= 1;
+  });
+  const rank = (p: KnownPiece) => dist(p) * 2 + (p.subcategory === sub ? 0 : 1);
+  const best = Math.min(...fits.map(rank));
+  return fits.filter((p) => rank(p) === best).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+}
+
 // ---------------------------------------------------------------- brands
 /** Brand id -> the words that name it (logo text, nicknames, the logo itself). Matched as whole words. */
 const BRANDS: Readonly<Record<string, readonly string[]>> = {

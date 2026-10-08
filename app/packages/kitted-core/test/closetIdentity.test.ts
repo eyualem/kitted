@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 import { FAMILY_HEX, colorDistance, displayHex, familyBand, lightnessOf } from "../src/closetColor";
 import { parseShade, shadeWords } from "../src/closetShade";
 import {
-  decide, identity, normalizeBrand, profileOf, profileFromClosetItem, reconcile, reconcileReading,
-  type ItemProfile, type Observation,
+  decide, identity, knownMatches, normalizeBrand, profileOf, profileFromClosetItem, reconcile, reconcileReading, shoeKindOf,
+  type ItemProfile, type KnownPiece, type Observation,
 } from "../src/closetIdentity";
 import { G } from "../src/names";
 import { closetPlan } from "../src/closetMatch";
@@ -320,5 +320,34 @@ describe("18. stored sightings replace the item's own garment (V6 closet tables,
   it("confirmed fields still come from the row", () => {
     const b1 = seedCloset().find((i) => i.id === "B1")!;
     expect(profileFromClosetItem(b1, { sightings: [b1.garment as Observation] }).confirmed).toEqual({ leg_shape: "straight" });
+  });
+});
+
+describe("19. knownMatches: which known piece a garment could be (the reading's 'Your green work boots?', #122.3)", () => {
+  const kp = (id: string, slot: string, colorFamily: string, subcategory: string, extra: Partial<KnownPiece> = {}): KnownPiece => ({
+    id, slot, colorFamily, subcategory, shoeKind: shoeKindOf(subcategory), shoeKindSaid: false, name: id, confirmed: true, sightings: 2, ...extra,
+  });
+  const boots = kp("B", "shoes", "grey", "work_boot", { shoeKind: "boots", shoeKindSaid: true });
+  it("shoes match by kind, never by color: his boots read as olive work boots or 'other' still match", () => {
+    expect(knownMatches([boots], G("footwear", "work_boot", "olive")).map((p) => p.id)).toEqual(["B"]);
+    expect(knownMatches([boots], G("footwear", "other", "black")).map((p) => p.id)).toEqual(["B"]);
+  });
+  it("a different kind is not his boots", () => {
+    expect(knownMatches([boots], G("footwear", "low_profile_sneaker", "grey"))).toEqual([]);
+  });
+  it("two boots: color breaks the tie", () => {
+    const brown = kp("C", "shoes", "brown", "suede_chukka");
+    expect(knownMatches([boots, brown], G("footwear", "work_boot", "grey")).map((p) => p.id)).toEqual(["B"]);
+  });
+  it("tops match by color family, neighbors included (grey reads as charcoal); navy is not his grey hoodie", () => {
+    const hood = kp("H", "top", "grey", "hoodie");
+    expect(knownMatches([hood], G("top", "sweatshirt", "charcoal")).map((p) => p.id)).toEqual(["H"]);
+    expect(knownMatches([hood], G("top", "hoodie", "navy"))).toEqual([]);
+  });
+  it("two grey tops: the same type wins; two identical black jeans: both come back (don't ask)", () => {
+    const hood = kp("H", "top", "grey", "hoodie"), tee = kp("T", "top", "grey", "tee");
+    expect(knownMatches([hood, tee], G("top", "hoodie", "grey")).map((p) => p.id)).toEqual(["H"]);
+    const j1 = kp("J1", "bottom", "black", "jeans"), j2 = kp("J2", "bottom", "black", "jeans");
+    expect(knownMatches([j1, j2], G("bottom", "jeans", "black")).map((p) => p.id)).toEqual(["J1", "J2"]);
   });
 });

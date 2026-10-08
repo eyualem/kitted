@@ -3,8 +3,8 @@
 // the drift guard: what a piece looks like changes only when 2 newer sightings agree, or he confirms it. No UI or
 // store imports, so the seed loader and tests use it directly.
 import {
-  colorDistance, displayHex, normalizeBrand, parseShade, shadeFromId, shadeId, type ConfirmedFields, type Garment, type Observation,
-  type StoredProfile,
+  colorDistance, displayHex, normalizeBrand, parseShade, shadeFromId, shadeId, shoeKindOf, type ConfirmedFields, type Garment,
+  type KnownPiece, type Observation, type StoredProfile,
 } from '@kitted/core';
 import type { ClosetArt, ClosetFields, ClosetItemRow, ClosetObservationRow, ClosetProfile } from '@/data/types';
 
@@ -60,6 +60,41 @@ export function storedProfiles(items: readonly ClosetItemRow[], obs: readonly Cl
 
 /** The closet a check is matched against: his pieces that are live (not undone, not merged into another). */
 export const isOwned = (c: ClosetItemRow): boolean => !c.isDeleted && !c.mergedInto;
+
+/** Sighting decisions that are his own answer: "Yes, same one", "No, a new one", "Not the same". */
+const ANSWERED: readonly string[] = ['answeredSame', 'answeredNew', 'split'];
+
+/**
+ * The pieces the app is sure he owns, as they stood before the checks in `excludeCheckIds` (the check being asked
+ * about, and its first check for a re-check): a check can't make its own pieces known. Known = he confirmed it (a
+ * tap answer, a correction, an answer to "Same as your …?", a name he set, or he added it himself) or it was seen in
+ * 2+ other checks. Sightings and answers from the excluded checks don't count. Sorted by id.
+ */
+export function knownPieces(
+  items: readonly ClosetItemRow[], obs: readonly ClosetObservationRow[], opts: { excludeCheckIds?: readonly string[] } = {},
+): KnownPiece[] {
+  const exclude = new Set(opts.excludeCheckIds ?? []);
+  const out: KnownPiece[] = [];
+  for (const it of items) {
+    if (!isOwned(it)) continue;
+    const seen = sightingsOf(it.id, obs).filter((o) => o.fitCheckId === null || !exclude.has(o.fitCheckId));
+    const p = profileOfItem(it);
+    const selfAdded = it.source !== 'fitCheck';
+    if (seen.length === 0 && !selfAdded) continue;
+    const answered = seen.some((o) => ANSWERED.includes(o.decision) || Object.keys(o.userConfirmed ?? {}).length > 0);
+    const confirmed = selfAdded || p.nameLocked === true || Object.keys(p.confirmed).length > 0 || answered;
+    if (!confirmed && seen.length < 2) continue;
+    const saidKind = p.confirmed.shoeKind ?? [...seen].reverse().find((o) => o.userConfirmed?.shoeKind)?.userConfirmed?.shoeKind ?? null;
+    const sub = typeof it.garment.subcategory === 'string' ? it.garment.subcategory : null;
+    out.push({
+      id: it.id, slot: String(it.slot),
+      colorFamily: typeof it.garment.color_family === 'string' ? it.garment.color_family : null,
+      subcategory: sub, shoeKind: saidKind ?? shoeKindOf(sub), shoeKindSaid: saidKind !== null,
+      name: it.name, confirmed, sightings: seen.length,
+    });
+  }
+  return out.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+}
 
 // ---------------------------------------------------------------- the drift guard
 
