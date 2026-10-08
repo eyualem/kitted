@@ -22,6 +22,8 @@ export async function applyDemoScreen(params: RawArgs): Promise<DemoTarget | nul
   const overrides = parseArgs(rest);
   const args = { ...getDemoArgs(), ...overrides, demoScreen: n };
   if (args.freeChecksUsed === null && scenario.freeChecksUsed !== undefined) args.freeChecksUsed = scenario.freeChecksUsed;
+  // Each screen's own sample weather unless this link names one (not the previous screen's).
+  args.weather = overrides.weather ?? scenario.weather ?? null;
   setDemoArgs(args);
 
   await prepareDemoScreen(scenario);

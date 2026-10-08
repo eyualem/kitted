@@ -102,10 +102,7 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
   }
   await store.setKv(KV.scenario, sc.scenario);
   await store.setKv(KV.seedLoaded, sc.scenario);
-  if (sc.weather) {
-    setDemoArgs({ ...getDemoArgs(), weather: args.weather ?? sc.weather });
-    if (sc.weatherAllowed) await store.setKv(WEATHER_PERMISSION_KV, 'granted');
-  }
+  if (sc.weather && sc.weatherAllowed) await store.setKv(WEATHER_PERMISSION_KV, 'granted');
 
   for (const step of story.steps) {
     startClock(step.at);
