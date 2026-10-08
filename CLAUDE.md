@@ -134,6 +134,19 @@
   - **Bug (confirmed in code):** style exemptions need a weight ≥0.5, and onboarding gives only the 1st pick 0.5. So Streetwear picked 3rd unlocks nothing (his baggy jeans lose 0.8). Fix proposed: any picked style unlocks it when the garment is one of that style's pieces.
   - **Don't build:** color-wheel harmony, golden ratio, warm/cool, letting the model judge style or harmony (no research support; it breaks same photo → same score).
   - Proposed changes are waiting for my OK (DECISIONS-LOG #57). Nothing in the code has changed.
+- **Style council: done (Oct 7).** Rulebook: `rubric/research/style-council/RULEBOOK.md` (Part 1 is the one-page summary); prototype `rubric_v4_proto.py` (matches v3.1 exactly with every switch off; Claude re-checked 2,340/2,340) and 111 test cases (all pass). DECISIONS-LOG #59–61.
+  - **What it changes:**
+    - Styles are detected from the clothes, and my picks never change a score.
+    - Sweatpants cost one penalty, not four.
+    - One garment can cost at most −1.0 for fit and proportion, and a clean outfit can't drop below 5.0 at Everyday.
+    - One garment earns one credit.
+    - The "Jeans or sweatpants?" tap asks on about 4% of checks.
+  - **My Oct 7 outfit:** 3.5 → 6.5 read as jeans (5.0 plus the tap if misread). Saved checks at 8+: 53% → 44%. The remaining over-scoring is the 7.0 starting point, which the friend panel decides.
+  - **Not in the app yet.** Next: port the code-only rulings to `rubric.py` and `@kitted/core` (parity fixtures regenerated from `rubric.py`), then one batch of new readings (`stacked` hem, `denim_wear`, closet-only shade/details/logo text) with an extraction re-run.
+  - **Also found Oct 7:**
+    - The camera captures video-size frames (`sessionPreset = .high`), not full-resolution photos.
+    - Closet matching merges light grey, grey and charcoal into one color.
+    - Raw closet crops aren't clean enough yet; they need full-res capture plus a cut-out.
 - **Research:**
   - Gemini creator research: I still need to export the Google Sheet as `.xlsx` into `inputs/`. Only rules backed by 2024+ videos count.
   - Codex sneaker deep-dive (sneakers with jeans/chinos, 2025+): results pending.

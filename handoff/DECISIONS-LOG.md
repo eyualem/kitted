@@ -210,3 +210,14 @@ Contradictions settled and decisions changed during the build. Newest last.
        - **You:** "What your stylist knows" (4 newest facts), the plan card with today's usage, and the privacy line. No chevrons, since nothing pushes yet.
        - The new `EmptyState` component (03) is shared. P5 replaces these screens.
 64. **The reading bubble's caption changes from "Only this is sent" to "Face hidden when sent".** Found while verifying #63: since #55 the bubble shows his unblurred kept photo, so "Only this is sent" next to it was no longer true for real photos with a face in them. The new line stays true for both (demo neck-down crops, real full-frame photos). Copy deck 02 §5 updated (`read.bubble.onlySent`) and regenerated.
+
+61. **Style council finished: the rulebook is written, not yet built** (`rubric/research/style-council/RULEBOOK.md`, `rubric_v4_proto.py`, `cases.json`). There were 7 style advocates, a calibration member, a common-ground member (32 numbered conflicts) and a mediator over three rounds. Every ruling, its reason and its dissents are in RULEBOOK Part 2.
+    - **Main rulings:**
+      - Styles are detected in code from garment slots, anchors and vetoes; a detected style only widens what's allowed. His picks only choose the label on a tie (0 score changes across 2,400 test scorings).
+      - Loungewear is one charge sized by signs of intent (−1.2 / −0.6 / −0.3, 0 with a sport hero piece); the matched sweatsuit is not intent.
+      - One garment's fit and proportion problems cost at most −1.0. Clean outfits have a 5.0 floor at Everyday, Class, Home and Gym.
+      - One garment earns one credit, shoes don't earn "Elevated piece", and fine patterns aren't a point of interest.
+      - No style excuses care or fit faults (the one exception: worn work boots at half price).
+      - Rejected: up-scaling credits on partial checks, a standalone slides penalty, prep's halved clash, the matched-set intent path, and "one focal point per garment". Deferred to the gold set: the shared wide-trouser waiver, minimal's clean-palette credit, and the 7.0 baseline (at 6.75, 8+ falls to 28% but 9+ disappears).
+    - **Verified independently by Claude:** with every switch off the prototype equals v3.1 (2,340/2,340 scorings). Founder's outfit: misread 3.5 → 5.0 with the "Jeans or sweatpants?" tap; read as jeans 6.0 → 6.5 (detected streetwear; the hem drags over slides, −0.4). Saved readings at 8+: 53% → 44%; minimum 5.5 → 6.0. The rulebook reports error vs. calibration's estimates of 0.52 → 0.35, and 52/52 photos stable within 0.5.
+    - **Caveat:** the advocates' anchors shaped the rules, so their near-zero error isn't independent evidence. Only the friend panel validates the scores.
