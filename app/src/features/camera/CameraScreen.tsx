@@ -1,5 +1,5 @@
 // S2 Camera (02 D5; mockup 5): full-screen, always dark. Propped (front camera, guide, auto
-// 3-2-1) or Mirror (manual shutter, optional 3 s timer). No live face blur: he sees himself as
+// 3-2-1) or Mirror (rear camera, manual shutter, optional 3 s timer). No live face blur: he sees himself as
 // in any camera; faces are hidden after capture, in photo prep (DECISIONS-LOG #54). On a phone
 // the preview and guide come from kitted-vision (KittedCameraView); on the Simulator a bundled photo stands
 // in (SimulatedPreview) and the shutter "shoots" it. A capture closes the cover and starts the
@@ -20,7 +20,8 @@ import { demoPhoto } from '@/demo/demoPhotos';
 import type { CheckMode } from '@/features/fitcheck/machine';
 import { t, type StringKey } from '@/i18n/en';
 import {
-  KittedCameraView, hasCamera, requestCameraPermission, type CameraHandle, type GuideEvent, type GuideState, type ViewBox,
+  KittedCameraView, hasCamera, requestCameraPermission, takePhotoFrom, type CameraHandle, type CameraReadyEvent, type GuideEvent,
+  type GuideState, type ViewBox,
 } from '../../../modules/kitted-vision';
 import { createAutoCapture, type Phase } from './autoCapture';
 import { BodyOutline, LowerGuide } from './FramingOverlay';
@@ -62,7 +63,11 @@ export function CameraScreen() {
   const busy = useRef(false);
 
   useEffect(() => {
-    void store.getKv(MODE_KEY).then((m) => (m === 'mirror' || m === 'propped') && !snap && setMode(m));
+    void store.getKv(MODE_KEY).then((m) => {
+      if ((m !== 'mirror' && m !== 'propped') || snap) return;
+      setMode(m);
+      setFacing(m === 'mirror' ? 'back' : 'front');
+    });
     if (hasCamera) void requestCameraPermission().then(setPermission);
   }, [snap]);
 
@@ -81,12 +86,15 @@ export function CameraScreen() {
         setWhiteout(true); // the front "flash": a white screen lights his face and clothes
         await new Promise((r) => setTimeout(r, 250));
       }
-      const uri = await cam.current?.takePhoto();
+      const shot = await takePhotoFrom(cam.current);
       setWhiteout(false);
-      if (!uri) throw new Error('no photo');
-      if (__DEV__) console.log(`[camera] captured (${mode}, ${facing} camera${flash ? ', flash' : ''})`);
+      if (!shot) throw new Error('no photo');
+      if (__DEV__) {
+        const size = shot.width ? ` · ${shot.width}×${shot.height} · ${(shot.bytes / 1e6).toFixed(1)} MB · ${shot.ms} ms` : '';
+        console.log(`[camera] captured (${mode}, ${facing} camera${flash ? ', flash' : ''})${size}`);
+      }
       router.back();
-      void startCheck(checkMode, { photoUri: uri }, p.parent, lens);
+      void startCheck(checkMode, { photoUri: shot.uri }, p.parent, lens);
     } catch {
       setWhiteout(false);
       busy.current = false;
@@ -148,8 +156,11 @@ export function CameraScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [simBox, snap, frozen, autoOn]);
 
+  // Mirror uses the rear camera (it sees his reflection, and it's the better camera); Propped
+  // faces him. A manual flip still overrides until the next mode change (DECISIONS-LOG #82).
   const switchMode = (m: Mode) => {
     setMode(m);
+    setFacing(m === 'mirror' ? 'back' : 'front');
     auto.current?.reset();
     void store.setKv(MODE_KEY, m);
   };
@@ -190,6 +201,7 @@ export function CameraScreen() {
             facing={facing}
             torch={flash && facing === 'back'}
             onGuide={(e) => onGuide(e.nativeEvent)}
+            onReady={(e) => logReady(e.nativeEvent)}
           />
         ) : null
       ) : (
@@ -291,6 +303,14 @@ function CameraOff({ onPick }: { onPick: () => void }) {
       <KButton title={t('common.openSettings')} kind="secondary" onPress={() => void Linking.openSettings()} />
     </View>
   );
+}
+
+function logReady(r: CameraReadyEvent) {
+  if (!__DEV__) return;
+  const extra = r.photo
+    ? ` · photo ${r.photo} · frames ${r.frames ?? '?'} · zsl ${r.zsl ? 'on' : 'off'} · thermal ${r.thermal ?? '?'} · sizes ${(r.photoSizes ?? []).join(', ')}`
+    : ' · (older native build: reinstall for 12 MP)';
+  console.log(`[camera] ready · ${r.facing}${extra}`);
 }
 
 /** Where the body sits in the bundled photo under `cover` (the mockup's PH crop table). */

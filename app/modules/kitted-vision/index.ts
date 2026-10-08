@@ -13,13 +13,33 @@ export type PrepareResult =
       keptUri: string;
       thumbUri: string;
       sha256: string;
+      /** The working image (long edge ≤ 2048 since #83; 4096 in older native builds). */
       width: number;
       height: number;
       people: number;
       faceBoxes: number;
       pose: 'full' | 'upper' | 'none';
+      // Added in #83 (absent from older native builds until the app is reinstalled):
+      /** Face-hidden 2048 px copy in Caches/detail, kept a week: the source for closet crops. */
+      detailUri?: string;
+      sourceWidth?: number;
+      sourceHeight?: number;
+      uploadWidth?: number;
+      uploadHeight?: number;
+      uploadBytes?: number;
+      keptWidth?: number;
+      keptHeight?: number;
+      detailWidth?: number;
+      detailHeight?: number;
+      visionMs?: number;
+      totalMs?: number;
     }
-  | { status: 'noPerson' | 'multiplePeople' | 'couldNotFrame' | 'notImplemented'; sha256?: string };
+  | {
+      status: 'noPerson' | 'multiplePeople' | 'couldNotFrame' | 'notImplemented';
+      sha256?: string;
+      sourceWidth?: number;
+      sourceHeight?: number;
+    };
 
 export type DictationEvent =
   | { type: 'text'; text: string; final: boolean }
@@ -95,19 +115,44 @@ export interface ViewBox {
 }
 export interface GuideEvent {
   state: GuideState;
-  /** The body box and face boxes in view points (for the outline and the live face blur). */
+  /** The body box and face boxes in view points (for the outline; there's no live blur, #54). */
   body?: ViewBox;
   faces: ViewBox[];
 }
+/** A still from the live camera: a temporary JPEG (file://) that photo prep reads and deletes. */
+export interface CapturedPhoto {
+  uri: string;
+  /** Upright pixels (12 MP: 3024 × 4032); 0 when an older native build returned only the uri. */
+  width: number;
+  height: number;
+  bytes: number;
+  /** Shutter press to photo data. */
+  ms: number;
+}
+export interface CameraReadyEvent {
+  facing: string;
+  /** Added in #83; absent from older native builds. */
+  photo?: string;
+  photoSizes?: string[];
+  frames?: string;
+  zsl?: boolean;
+  thermal?: string;
+}
 export interface CameraHandle {
-  /** A temporary JPEG (file://); photo prep deletes it after cropping. */
-  takePhoto(): Promise<string>;
+  /** Older native builds resolve a bare uri string; use takePhotoFrom() to read either shape. */
+  takePhoto(): Promise<CapturedPhoto | string>;
+}
+/** Takes a photo and normalizes the result across native builds. */
+export async function takePhotoFrom(cam: CameraHandle | null | undefined): Promise<CapturedPhoto | null> {
+  const r = await cam?.takePhoto();
+  if (!r) return null;
+  return typeof r === 'string' ? { uri: r, width: 0, height: 0, bytes: 0, ms: 0 } : r;
 }
 export interface CameraViewProps extends ViewProps {
   facing: 'front' | 'back';
   torch?: boolean;
   onGuide?: (e: { nativeEvent: GuideEvent }) => void;
-  onReady?: (e: { nativeEvent: { facing: string } }) => void;
+  onReady?: (e: { nativeEvent: CameraReadyEvent }) => void;
   onCameraError?: (e: { nativeEvent: { code: string } }) => void;
   ref?: Ref<CameraHandle>;
 }

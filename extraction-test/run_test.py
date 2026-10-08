@@ -49,18 +49,27 @@ THINKING = {"default": None, "off": {"thinkingBudget": 0}, "low": {"thinkingLeve
             "medium": {"thinkingLevel": "medium"}, "high": {"thinkingLevel": "high"}}
 
 
-def call_gemini(model: str, key: str, img: bytes, use_schema: bool = True, thinking: str = "default", fmt: str = "v3") -> dict:
+# Per-image media resolution (Gemini 3 per-part `media_resolution`; DECISIONS-LOG #83). "default"
+# sends nothing (the locked config). The per-part field may need the v1alpha endpoint.
+MEDIA_RES = {"default": None, "high": "media_resolution_high", "ultra_high": "media_resolution_ultra_high"}
+
+
+def call_gemini(model: str, key: str, img: bytes, use_schema: bool = True, thinking: str = "default", fmt: str = "v3",
+                media_res: str = "default") -> dict:
     """One extraction call. Returns the v3-shaped extraction plus timing: seconds_api is the
     successful attempt only; retry waits are excluded (they show up in seconds_total)."""
     prompt, schema = FORMATS[fmt]
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+    api = "v1beta" if MEDIA_RES[media_res] is None else "v1alpha"
+    url = f"https://generativelanguage.googleapis.com/{api}/models/{model}:generateContent"
     gen = {"temperature": 0, "responseMimeType": "application/json"}
     if THINKING.get(thinking):
         gen["thinkingConfig"] = THINKING[thinking]
     if use_schema:
         gen["responseSchema"] = schema
-    body = {"contents": [{"parts": [{"text": prompt},
-                                    {"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(img).decode()}}]}],
+    image_part = {"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(img).decode()}}
+    if MEDIA_RES[media_res]:
+        image_part["media_resolution"] = {"level": MEDIA_RES[media_res]}
+    body = {"contents": [{"parts": [{"text": prompt}, image_part]}],
             "generationConfig": gen}
     req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST",
                                  headers={"Content-Type": "application/json", "x-goog-api-key": key})
@@ -81,7 +90,7 @@ def call_gemini(model: str, key: str, img: bytes, use_schema: bool = True, think
             body = e.read().decode(errors="ignore"); msg = body[:400]
             if e.code == 400 and use_schema and "schema" in msg.lower():
                 print("   schema rejected by API; retrying with schema in prompt only")
-                return call_gemini(model, key, img, use_schema=False, thinking=thinking, fmt=fmt)
+                return call_gemini(model, key, img, use_schema=False, thinking=thinking, fmt=fmt, media_res=media_res)
             if e.code == 429 and "PerDay" in body:
                 raise SystemExit("Daily free-tier limit reached for this model (20 calls/day). Turn on billing in AI Studio, then re-run.")
             if e.code in (429, 500, 503):
@@ -316,6 +325,8 @@ def main():
     ap.add_argument("--thinking", default="off", choices=list(THINKING), help="model thinking: off (locked Oct 6), default, low, medium, high")
     ap.add_argument("--image-px", type=int, default=1024, help="long edge of the photo sent to the model")
     ap.add_argument("--format", default="v3", choices=list(FORMATS), help="answer format: v3 (original, locked), v4 (short slots) or v5 (v3 + style-council fields)")
+    ap.add_argument("--media-res", default="default", choices=list(MEDIA_RES),
+                    help="per-image media_resolution: default (locked, sends nothing), high or ultra_high; pair with --image-px")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
     out_dir = Path(args.out) if args.out else HERE / "results" / ("selftest" if args.selftest else "latest")
@@ -334,7 +345,7 @@ def main():
     styles = rubric.parse_styles(os.environ.get("TEST_STYLES", "minimalist:0.5,smart_casual:0.5"))
     digest = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()[:12]
     manifest = {"model": args.model, "thinking": args.thinking, "format": args.format, "image_px": args.image_px,
-                "runs": args.runs, "photos": str(Path(args.photos).resolve()), "photo_count": len(photos),
+                "media_res": args.media_res, "runs": args.runs, "photos": str(Path(args.photos).resolve()), "photo_count": len(photos),
                 "styles": styles, "default_occasion": args.occasion, "started": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "prompt_sha": digest(HERE / FORMAT_FILES[args.format][0]),
                 "schema_sha": digest(HERE / FORMAT_FILES[args.format][1]),
@@ -347,7 +358,7 @@ def main():
         occ = (fixes.get(p["outfit"], {}) or {}).get("occasion") or args.occasion
         for i in range(args.runs):
             t0 = time.time()
-            r = call_gemini(args.model, key, img, thinking=args.thinking, fmt=args.format)
+            r = call_gemini(args.model, key, img, thinking=args.thinking, fmt=args.format, media_res=args.media_res)
             secs = round(time.time() - t0, 1)
             time.sleep(args.delay)
             ext = r.get("json")

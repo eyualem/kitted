@@ -1,7 +1,8 @@
 // The live camera (05 §P3 B, 02 D5): an AVCaptureSession preview, Apple Vision body pose +
-// face boxes about 10 times a second (events to JS that drive the framing guide and the live
-// face blur), and a still capture written to a temporary file (photo prep deletes it later).
-// The frames are analyzed on the phone and never stored or sent.
+// face boxes about 10 times a second (events to JS that drive the framing guide; there is no
+// live face blur, DECISIONS-LOG #54), and a 12 MP still (4:3, JPEG) written to a temporary file
+// that photo prep reads and deletes (DECISIONS-LOG #83). The preview frames are analyzed on the
+// phone and never stored or sent.
 import AVFoundation
 import ExpoModulesCore
 import UIKit
@@ -22,6 +23,15 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
   private var configured = false
   private var lastVision: CFAbsoluteTime = 0
   private var pendingPhoto: Promise?
+  private var captureStart: CFAbsoluteTime = 0
+  /// The view's width / height, for judging left/right on what he actually sees (aspect fill
+  /// crops the 3:4 frame's sides). Set on main in layoutSubviews, read on visionQueue.
+  private var viewAspect: CGFloat = 402.0 / 874.0
+  /// The longest photo edge we ask for: 12 MP on both cameras. 48 MP is wasted (prep works at 2048).
+  static let maxPhotoEdge: Int32 = 4032
+  /// false: the front camera's photo is saved in the true view (logos and text read correctly),
+  /// while the preview and the guide's frames stay mirrored (founder, DECISIONS-LOG #82.4).
+  static let mirrorFrontPhoto = false
   var torchOn = false {
     didSet { sessionQueue.async { self.applyTorch() } }
   }
@@ -37,6 +47,7 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
   override func layoutSubviews() {
     super.layoutSubviews()
     preview.frame = bounds
+    if bounds.height > 0 { viewAspect = bounds.width / bounds.height }
   }
 
   override func didMoveToWindow() {
@@ -58,11 +69,11 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
     sessionQueue.async { if self.configured { self.configure() } }
   }
 
-  /// Portrait, upright buffers; the front camera mirrored like the preview, so Vision's
-  /// coordinates line up with what he sees.
+  /// Portrait, upright buffers; the front camera's video mirrored like the preview, so Vision's
+  /// coordinates line up with what he sees. `.photo` gives the 4:3 photo format (the whole
+  /// outfit, wider than the 16:9 preview crop) and preview-sized video frames for the guide.
   private func configure() {
     session.beginConfiguration()
-    if !configured { session.sessionPreset = .high }
     for input in session.inputs { session.removeInput(input) }
     guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position),
           let input = try? AVCaptureDeviceInput(device: device), session.canAddInput(input)
@@ -72,25 +83,58 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
       return
     }
     session.addInput(input)
+    if session.canSetSessionPreset(.photo) { session.sessionPreset = .photo }
     if !configured {
       videoOutput.alwaysDiscardsLateVideoFrames = true
       videoOutput.setSampleBufferDelegate(self, queue: visionQueue)
       if session.canAddOutput(videoOutput) { session.addOutput(videoOutput) }
       if session.canAddOutput(photoOutput) { session.addOutput(photoOutput) }
+      photoOutput.maxPhotoQualityPrioritization = .quality // each shot asks for .balanced
     }
-    for c in [videoOutput.connection(with: .video), photoOutput.connection(with: .video)].compactMap({ $0 }) {
+    // A plain JPEG: no Live Photo, depth, ProRAW or deferred delivery.
+    if photoOutput.isLivePhotoCaptureSupported { photoOutput.isLivePhotoCaptureEnabled = false }
+    if photoOutput.isDepthDataDeliverySupported { photoOutput.isDepthDataDeliveryEnabled = false }
+    if photoOutput.isAppleProRAWSupported { photoOutput.isAppleProRAWEnabled = false }
+    if photoOutput.isAutoDeferredPhotoDeliverySupported { photoOutput.isAutoDeferredPhotoDeliveryEnabled = false }
+    let photoConnection = photoOutput.connection(with: .video)
+    for c in [videoOutput.connection(with: .video), photoConnection].compactMap({ $0 }) {
       if c.isVideoRotationAngleSupported(90) { c.videoRotationAngle = 90 }
       if c.isVideoMirroringSupported {
         c.automaticallyAdjustsVideoMirroring = false
-        c.isVideoMirrored = position == .front
+        c.isVideoMirrored = position == .front && (c !== photoConnection || Self.mirrorFrontPhoto)
       }
     }
     session.commitConfiguration()
+    // Only after the commit is the new device's format active; a size not in its list crashes.
+    let sizes = device.activeFormat.supportedMaxPhotoDimensions
+    let fits = sizes.filter { max($0.width, $0.height) <= Self.maxPhotoEdge }
+    let area = { (d: CMVideoDimensions) in Int(d.width) * Int(d.height) }
+    if let pick = fits.max(by: { area($0) < area($1) }) ?? sizes.min(by: { area($0) < area($1) }) {
+      photoOutput.maxPhotoDimensions = pick
+    }
     configured = true
     applyTorch()
+    let photo = photoOutput.maxPhotoDimensions
+    let vs = videoOutput.videoSettings ?? [:]
+    let frames = [vs[kCVPixelBufferWidthKey as String], vs[kCVPixelBufferHeightKey as String]].map { ($0 as? Int).map(String.init) ?? "?" }
+    let thermal: String = switch ProcessInfo.processInfo.thermalState {
+    case .nominal: "nominal"
+    case .fair: "fair"
+    case .serious: "serious"
+    case .critical: "critical"
+    @unknown default: "unknown"
+    }
+    let ready: [String: Any] = [
+      "facing": position == .front ? "front" : "back",
+      "photo": "\(photo.width)×\(photo.height)",
+      "photoSizes": sizes.map { "\($0.width)×\($0.height)" },
+      "frames": frames.joined(separator: "×"),
+      "zsl": photoOutput.isZeroShutterLagEnabled,
+      "thermal": thermal,
+    ]
     DispatchQueue.main.async {
       if let c = self.preview.connection, c.isVideoRotationAngleSupported(90) { c.videoRotationAngle = 90 }
-      self.onReady(["facing": self.position == .front ? "front" : "back"])
+      self.onReady(ready)
     }
   }
 
@@ -124,12 +168,16 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
     let ankles = [joints[.leftAnkle], joints[.rightAnkle]].compactMap { $0 }
     let core = shoulders + hips
     let cx = core.isEmpty ? 0.5 : core.map(\.x).reduce(0, +) / CGFloat(core.count)
+    // Left/right is judged on screen: aspect fill shows only the middle `shown` share of the
+    // 3:4 frame's width (about 61% on an iPhone 17 Pro).
+    let shown = min(1, viewAspect / (W / H))
+    let sx = (cx - (1 - shown) / 2) / shown
 
     let state: String
     if shoulders.isEmpty { state = "noPerson" }
     else if hips.isEmpty { state = "tooClose" }
-    else if cx < 0.3 { state = "moveRight" }
-    else if cx > 0.7 { state = "moveLeft" }
+    else if sx < 0.3 { state = "moveRight" }
+    else if sx > 0.7 { state = "moveLeft" }
     else if ankles.count == 2 { state = "goodFull" }
     else { state = "good" }
 
@@ -166,8 +214,13 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
         return
       }
       self.pendingPhoto = promise
-      let settings = AVCapturePhotoSettings()
+      let settings = self.photoOutput.availablePhotoCodecTypes.contains(.jpeg)
+        ? AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+        : AVCapturePhotoSettings()
+      settings.maxPhotoDimensions = self.photoOutput.maxPhotoDimensions
+      settings.photoQualityPrioritization = .balanced // .quality's extra fusion time isn't worth it here
       settings.flashMode = .off // the front "flash" is the white screen (JS); the rear uses the torch
+      self.captureStart = CFAbsoluteTimeGetCurrent()
       self.photoOutput.capturePhoto(with: settings, delegate: self)
     }
   }
@@ -179,10 +232,17 @@ final class KittedCameraView: ExpoView, AVCaptureVideoDataOutputSampleBufferDele
       promise?.reject("E_CAPTURE", error?.localizedDescription ?? "No photo data")
       return
     }
+    let ms = Int(((CFAbsoluteTimeGetCurrent() - captureStart) * 1000).rounded())
+    // photoDimensions are in sensor orientation (landscape); the file is upright via its EXIF tag.
+    let d = photo.resolvedSettings.photoDimensions
     let url = FileManager.default.temporaryDirectory.appendingPathComponent("kitted-capture-\(UUID().uuidString).jpg")
     do {
       try data.write(to: url, options: .atomic)
-      promise?.resolve(url.absoluteString)
+      promise?.resolve([
+        "uri": url.absoluteString,
+        "width": Int(min(d.width, d.height)), "height": Int(max(d.width, d.height)),
+        "bytes": data.count, "ms": ms,
+      ] as [String: Any])
     } catch {
       promise?.reject("E_CAPTURE", error.localizedDescription)
     }

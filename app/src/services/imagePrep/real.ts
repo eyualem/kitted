@@ -18,7 +18,14 @@ export const imagePrep: ImagePrep = {
       if (__DEV__) console.log('[prep]', JSON.stringify(r));
       return { status: r.status };
     }
-    if (__DEV__) console.log(`[prep] ok · ${r.width}×${r.height} · pose ${r.pose} · ${r.faceBoxes} region(s) blurred · ${r.people} person`);
+    if (__DEV__) {
+      const dim = (w?: number, h?: number) => (w && h ? `${w}×${h}` : '?');
+      const sizes = r.sourceWidth
+        ? ` · source ${dim(r.sourceWidth, r.sourceHeight)} → upload ${dim(r.uploadWidth, r.uploadHeight)} (${Math.round((r.uploadBytes ?? 0) / 1024)} KB)` +
+          ` · kept ${dim(r.keptWidth, r.keptHeight)} · detail ${dim(r.detailWidth, r.detailHeight)} · vision ${r.visionMs} ms · total ${r.totalMs} ms`
+        : ` · ${r.width}×${r.height}`;
+      console.log(`[prep] ok${sizes} · pose ${r.pose} · ${r.faceBoxes} region(s) blurred · ${r.people} person`);
+    }
     return {
       status: 'ok',
       image: {
