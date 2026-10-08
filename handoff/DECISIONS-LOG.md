@@ -145,3 +145,17 @@ Contradictions settled and decisions changed during the build. Newest last.
       - It's good video content.
     - **Until enrollment:** WeatherKit needs the paid program, so it's built behind `WeatherSource` with demo weather.
     - **Privacy:** location goes only to Apple for weather and is never stored or sent to Google. Privacy label: Coarse Location, App Functionality, not linked to identity.
+
+
+## Oct 7, 2026 · Why the hoodie + wide jeans check scored 3.5
+
+59. **The founder's 3.5 (grey Nike hoodie, black wide jeans, slides) was mostly a misread, not the rules.** From `tools/phone/pull.sh`, check FC-e226a94d:
+    - **What was read:** Gemini read the jeans as **black wide sweatpants, pooling**. That fired loungewear (O4) and too casual (O1) on top of pooling (F4) and leg vs. style (P1): 3.5. With the jeans read correctly it's 6.0. Resting on the shoe instead of pooling: 6.5. With Streetwear picked: 7.0. His phone profile has no styles (the install skips onboarding).
+    - **Not a one-off:** 9 more reads of the same photo (temperature 0, the prompt with belt-loop/denim hints, and "bigger" uploads) all said sweatpants. The hem flipped between pooling and full_break, a 0.8 swing.
+    - **Free-text probe:** asked only about the pants, it said "sweatpants 92" once and "jeans 80–85" twice. The evidence in the photo is genuinely ambiguous: the hoodie covers the waistband, and the pants are black.
+    - **The photo was small:** 429 × 860 px. The phone runs the old body-crop build, and the camera uses `sessionPreset = .high` (video-size frames, about 1080 px wide), not full-resolution photo capture. Upscaling proved nothing (same 1,848 input tokens).
+    - **Also found:** closet matching treats light grey, grey and charcoal as one color (`closetMatch.ts` uses `fam()`), so two different grey hoodies merge into one item. And this check saved "Black sweatpants" to his closet.
+    - **Lessons:**
+      1. One misread garment cost 2.5 points, because two rules punished the same sweatpants.
+      2. The model can be confidently wrong ("clear") when the deciding detail is hidden.
+      3. Rules can't fix a wrong reading; the reading needs evidence fields and a way to ask him.
