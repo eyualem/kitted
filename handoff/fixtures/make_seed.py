@@ -56,6 +56,33 @@ CLOSET = [
     item("L2", "Olive overshirt", "outer", G("outerwear", "overshirt", "olive", tucked="none", length="mid_fly", sleeve_end="at_wrist"), "#5B6440", "overshirt", ts("2026-10-21", "18:40"), "chat", sourceRef="I bought something"),
     item("L3", "Denim jacket", "outer", G("outerwear", "denim_jacket", "denim_mid", tucked="none", length="at_belt", sleeve_end="at_wrist"), "#5D7393", "jacket", ts("2026-10-09", "21:05"), "chat", starterID="s08", isPhotographed=False, sourceRef="I have a denim jacket"),
 ]
+# The closet call's fields per seed item (DECISIONS-LOG #91): shade words, details, logo text, shape. They feed
+# closet matching and the detailed tiles only; they are never scored (the garment above is what's scored).
+# L3 was only described in chat, so it has none.
+def CF(shade, lightness, details=(), logo="none", sleeve=None, shoe=None, denim=None):
+    return {"visible": True, "box": [], "shade": shade, "lightness": lightness, "details": list(details), "logo_text": logo,
+            "sleeve_length": sleeve, "shoe_profile": shoe, "denim_wear": denim}
+CLOSET_FIELDS = {
+    "T1": CF("white", "light", sleeve="short"),
+    "T2": CF("heather grey", "mid", sleeve="short"),
+    "T3": CF("navy", "dark", sleeve="long"),
+    "T4": CF("light blue", "light", ["collar", "buttons", "chest_pocket"], sleeve="long"),
+    "T5": CF("black", "dark", sleeve="short"),
+    "T6": CF("faded black", "dark", sleeve="long"),
+    "B1": CF("khaki", "mid", ["belt_loops"]),
+    "B2": CF("navy", "dark", ["belt_loops"]),
+    "B3": CF("dark wash", "dark", ["belt_loops"], denim="none"),
+    "S1": CF("white", "light", shoe="sleek"),
+    "S2": CF("brown", "dark", shoe="sleek"),
+    "S3": CF("grey", "mid", logo="New Balance", shoe="regular"),
+    "S4": CF("black", "dark", shoe="sleek"),
+    "L1": CF("navy", "dark", ["collar", "buttons", "chest_pocket"], sleeve="long"),
+    "L2": CF("olive", "mid", ["collar", "buttons", "chest_pocket"], sleeve="long"),
+    "L3": None,
+}
+for _c in CLOSET:
+    _c["closet"] = CLOSET_FIELDS[_c["id"]]
+
 GRID_ORDER = ["L2", "T1", "T3", "B3", "S1", "L3", "T4", "T2", "T5", "T6", "B1", "B2", "S2", "S3", "S4", "L1"]
 
 STARTER = [  # rubric/v3.md "Starter 12" (2026 prices: budget / mid)
@@ -340,6 +367,7 @@ def main():
     assert seed["welcomeExample"]["score"] == 8.0      # rubric v4 (the mockup draws 8.5): wide trousers are outside the general band
     assert full["heldPhotoScript"]["expectedQuestionsLeft"] == 5 - full["usageToday"]["questions"]
     assert set(GRID_ORDER) == {c["id"] for c in CLOSET}
+    assert set(CLOSET_FIELDS) == {c["id"] for c in CLOSET} and all("closet" not in c["garment"] for c in CLOSET), "closet fields never scored"
     for o in outfits:
         assert all(any(c["id"] == i for c in CLOSET) for i in o["itemIDs"])
 

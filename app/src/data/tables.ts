@@ -3,7 +3,7 @@
 // can't drift. Columns default to the snake_case of the field name.
 
 import type {
-  ChatMessage, ClosetItemRow, CorrectionRow, DailyIdeaRow, FactRow, FitCheckRow, OutfitRow, ProfileRow, ReadingRow, UsageDay, WearLogRow,
+  ChatMessage, ClosetItemRow, ClosetObservationRow, CorrectionRow, DailyIdeaRow, FactRow, FitCheckRow, OutfitRow, ProfileRow, ReadingRow, UsageDay, WearLogRow,
 } from './types';
 
 export type ColType = 'text' | 'int' | 'real' | 'bool' | 'json';
@@ -98,7 +98,19 @@ export const closetSpec: TableSpec<ClosetItemRow> = {
     id: 'text', name: 'text', slot: 'text', garment: ['json', 'garment_json'], hex: 'text', confirmedFields: 'json',
     photoFile: 'text', demoPhotoId: 'text', isPhotographed: 'bool', source: 'text', starterId: 'text', wornCount: 'int',
     lastWornAt: 'int', addedAt: ['int', 'created_at'], isDeleted: 'bool',
+    shade: 'text', profile: 'json', cropFile: 'text', cropScore: 'real', art: 'json', mergedInto: 'text', maybeSameAs: 'text', updatedAt: 'int',
   } as TableSpec<ClosetItemRow>['fields'],
+};
+
+export const closetObservationSpec: TableSpec<ClosetObservationRow> = {
+  table: 'closet_observations',
+  key: 'id',
+  fields: {
+    id: 'text', itemId: 'text', fitCheckId: 'text', readingId: 'text', closetReadingId: 'text', garmentIndex: 'int', origin: 'text',
+    garment: ['json', 'garment_json'], closet: ['json', 'closet_json'], sampledHex: 'text', sampledL: 'real', cropFile: 'text',
+    cropQuality: 'real', decision: 'text', identityScore: 'real', candidates: 'json', askItemId: 'text', answeredAt: 'int',
+    userConfirmed: 'json', createdAt: 'int', isDeleted: 'bool',
+  },
 };
 
 export const usageSpec: TableSpec<UsageDay> = {
@@ -158,6 +170,7 @@ export const SPECS = {
   fitChecks: fitCheckSpec,
   readings: readingSpec,
   closet: closetSpec,
+  closetObs: closetObservationSpec,
   usage: usageSpec,
   profile: profileSpec,
   corrections: correctionSpec,

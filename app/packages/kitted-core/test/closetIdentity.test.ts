@@ -285,3 +285,17 @@ describe("17. shade lexicon and display colors", () => {
     expect(pulled).toBeLessThan(familyBand("charcoal")!.hi);
   });
 });
+
+describe("18. stored sightings replace the item's own garment (V6 closet tables, #91)", () => {
+  const tee = loadReading("p01b").garments[0]! as Observation;
+  const item = seedCloset().find((i) => i.id === "T1")!;
+  it("sightings are the whole history: the creating sighting isn't counted twice", () => {
+    expect(profileFromClosetItem(item, { sightings: [tee, tee] }).sightings).toBe(2);
+    expect(profileFromClosetItem(item, { observations: [tee] }).sightings).toBe(2);
+    expect(profileFromClosetItem(item, { sightings: [] }).sightings).toBe(1);
+  });
+  it("confirmed fields still come from the row", () => {
+    const b1 = seedCloset().find((i) => i.id === "B1")!;
+    expect(profileFromClosetItem(b1, { sightings: [b1.garment as Observation] }).confirmed).toEqual({ leg_shape: "straight" });
+  });
+});

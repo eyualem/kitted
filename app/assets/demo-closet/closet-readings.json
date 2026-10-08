@@ -1,0 +1,1191 @@
+{
+ "generated_by": "app/scripts/make-demo-closet.mjs",
+ "provenance": "real closet1 answers (extraction-test/results/closet1/raw.json, run 0), re-indexed to the bundled readings; no new calls",
+ "prompt_version": "closet1",
+ "photos": {
+  "p01b": {
+   "source": "p01/before_studio.jpg run 0",
+   "seconds": 8.4,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "white"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "chinos",
+     "color_family": "tan_camel"
+    },
+    {
+     "i": 2,
+     "category": "footwear",
+     "subcategory": "white_leather_sneaker",
+     "color_family": "white"
+    }
+   ],
+   "mapping": [
+    "0 top/tee <- test 0 top/tee",
+    "1 bottom/chinos <- test 2 bottom/chinos",
+    "2 footwear/white_leather_sneaker: not in the test's stubs (not seen)"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       286,
+       321,
+       534,
+       663
+      ],
+      "shade": "white",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "short",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       516,
+       404,
+       899,
+       650
+      ],
+      "shade": "tan camel",
+      "lightness": "mid",
+      "details": [
+       "belt_loops"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "none"
+     }
+    ]
+   }
+  },
+  "p01a": {
+   "source": "p01/after_studio.jpg run 0",
+   "seconds": 3.92,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "white"
+    },
+    {
+     "i": 1,
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "khaki_beige"
+    },
+    {
+     "i": 2,
+     "category": "bottom",
+     "subcategory": "chinos",
+     "color_family": "tan_camel"
+    },
+    {
+     "i": 3,
+     "category": "footwear",
+     "subcategory": "white_leather_sneaker",
+     "color_family": "white"
+    }
+   ],
+   "mapping": [
+    "0 top/tee <- test 1 top/tee",
+    "1 outerwear/overshirt <- test 0 outerwear/overshirt",
+    "2 bottom/chinos <- test 2 bottom/chinos",
+    "3 footwear/white_leather_sneaker: not in the test's stubs (not seen)"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       297,
+       344,
+       489,
+       471
+      ],
+      "shade": "white",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       278,
+       215,
+       584,
+       590
+      ],
+      "shade": "beige",
+      "lightness": "mid",
+      "details": [
+       "collar",
+       "buttons",
+       "chest_pocket"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       564,
+       310,
+       897,
+       569
+      ],
+      "shade": "tan",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "none"
+     }
+    ]
+   }
+  },
+  "s15": {
+   "source": "s15/before_street.jpg run 0",
+   "seconds": 6.37,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "off_white_cream"
+    },
+    {
+     "i": 1,
+     "category": "top",
+     "subcategory": "tee",
+     "color_family": "tan_camel"
+    },
+    {
+     "i": 2,
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "khaki_beige"
+    },
+    {
+     "i": 3,
+     "category": "footwear",
+     "subcategory": "chunky_sneaker",
+     "color_family": "white"
+    }
+   ],
+   "mapping": [
+    "0 outerwear/overshirt <- test 1 outerwear/flannel_shirt",
+    "1 top/tee <- test 0 top/tee",
+    "2 bottom/trousers <- test 2 bottom/trousers",
+    "3 footwear/chunky_sneaker <- test 3 footwear/chunky_sneaker"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       239,
+       404,
+       532,
+       752
+      ],
+      "shade": "cream plaid",
+      "lightness": "light",
+      "details": [
+       "collar",
+       "buttons"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       253,
+       517,
+       394,
+       608
+      ],
+      "shade": "mustard tan",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "not_visible",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       488,
+       439,
+       874,
+       700
+      ],
+      "shade": "taupe beige",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "none"
+     },
+     {
+      "i": 3,
+      "visible": true,
+      "box_2d": [
+       773,
+       467,
+       898,
+       658
+      ],
+      "shade": "white",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "chunky",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "s24": {
+   "source": "s24/before_mirror.jpg run 0",
+   "seconds": 4.28,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "sweatshirt",
+     "color_family": "black"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "athletic_shorts",
+     "color_family": "black"
+    }
+   ],
+   "mapping": [
+    "0 top/sweatshirt <- test 0 top/sweatshirt",
+    "1 bottom/athletic_shorts <- test 1 bottom/athletic_shorts"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       211,
+       403,
+       686,
+       881
+      ],
+      "shade": "faded black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       638,
+       486,
+       870,
+       866
+      ],
+      "shade": "black",
+      "lightness": "dark",
+      "details": [
+       "side_stripe"
+      ],
+      "logo_text": "adidas",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "none"
+     }
+    ]
+   }
+  },
+  "s12": {
+   "source": "s12/before_street.jpg run 0",
+   "seconds": 5.22,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "hoodie",
+     "color_family": "grey"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_mid"
+    },
+    {
+     "i": 2,
+     "category": "footwear",
+     "subcategory": "retro_runner",
+     "color_family": "multicolor"
+    }
+   ],
+   "mapping": [
+    "0 top/hoodie <- test 0 top/hoodie",
+    "1 bottom/jeans <- test 1 bottom/jeans",
+    "2 footwear/retro_runner <- test 2 footwear/chunky_sneaker"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       193,
+       489,
+       471,
+       750
+      ],
+      "shade": "heather grey",
+      "lightness": "mid",
+      "details": [
+       "hood",
+       "front_pouch",
+       "drawstring"
+      ],
+      "logo_text": "Nike swoosh",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       447,
+       506,
+       799,
+       735
+      ],
+      "shade": "medium blue wash",
+      "lightness": "mid",
+      "details": [
+       "belt_loops"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "ripped"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       770,
+       458,
+       856,
+       747
+      ],
+      "shade": "grey and red",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "chunky",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "s25": {
+   "source": "s25/before_mirror.jpg run 0",
+   "seconds": 3.71,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "camp_collar_shirt",
+     "color_family": "off_white_cream"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "drawstring_trousers",
+     "color_family": "khaki_beige"
+    },
+    {
+     "i": 2,
+     "category": "footwear",
+     "subcategory": "chelsea_boot",
+     "color_family": "tan_camel"
+    }
+   ],
+   "mapping": [
+    "0 top/camp_collar_shirt <- test 0 top/camp_collar_shirt",
+    "1 bottom/drawstring_trousers <- test 1 bottom/drawstring_trousers",
+    "2 footwear/chelsea_boot <- test 2 footwear/chelsea_boot"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       243,
+       203,
+       586,
+       781
+      ],
+      "shade": "off-white",
+      "lightness": "light",
+      "details": [
+       "collar",
+       "buttons"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "short",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       535,
+       332,
+       866,
+       672
+      ],
+      "shade": "khaki",
+      "lightness": "mid",
+      "details": [
+       "drawstring"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "none"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       850,
+       313,
+       922,
+       666
+      ],
+      "shade": "tan",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "regular",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "s05": {
+   "source": "s05/before_studio.jpg run 0",
+   "seconds": 3.65,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "hoodie",
+     "color_family": "navy"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_mid"
+    },
+    {
+     "i": 2,
+     "category": "footwear",
+     "subcategory": "retro_runner",
+     "color_family": "white"
+    }
+   ],
+   "mapping": [
+    "0 top/hoodie <- test 0 top/hoodie",
+    "1 bottom/jeans <- test 1 bottom/jeans",
+    "2 footwear/retro_runner <- test 2 footwear/retro_runner"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       211,
+       313,
+       558,
+       695
+      ],
+      "shade": "navy",
+      "lightness": "dark",
+      "details": [
+       "front_pouch",
+       "hood",
+       "drawstring"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       538,
+       381,
+       897,
+       606
+      ],
+      "shade": "medium blue wash",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "faded"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       886,
+       393,
+       977,
+       477
+      ],
+      "shade": "white",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "regular",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "s22": {
+   "source": "s22/before_phone.jpg run 0",
+   "seconds": 3.89,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "knit_polo",
+     "color_family": "tan_camel"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "chinos",
+     "color_family": "khaki_beige"
+    }
+   ],
+   "mapping": [
+    "0 top/knit_polo <- test 0 top/knit_polo",
+    "1 bottom/chinos <- test 1 bottom/chinos"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       336,
+       316,
+       680,
+       642
+      ],
+      "shade": "camel brown",
+      "lightness": "mid",
+      "details": [
+       "collar",
+       "buttons"
+      ],
+      "logo_text": "unreadable",
+      "sleeve_length": "short",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       668,
+       323,
+       1000,
+       608
+      ],
+      "shade": "khaki beige",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "none"
+     }
+    ]
+   }
+  },
+  "s14": {
+   "source": "s14/before_street.jpg run 0",
+   "seconds": 5.04,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "sweater",
+     "color_family": "white"
+    },
+    {
+     "i": 1,
+     "category": "outerwear",
+     "subcategory": "denim_jacket",
+     "color_family": "charcoal"
+    },
+    {
+     "i": 2,
+     "category": "bottom",
+     "subcategory": "drawstring_trousers",
+     "color_family": "grey"
+    },
+    {
+     "i": 3,
+     "category": "footwear",
+     "subcategory": "chunky_sneaker",
+     "color_family": "grey"
+    }
+   ],
+   "mapping": [
+    "0 top/sweater <- test 0 top/sweater",
+    "1 outerwear/denim_jacket <- test 1 outerwear/denim_jacket",
+    "2 bottom/drawstring_trousers <- test 2 bottom/drawstring_trousers",
+    "3 footwear/chunky_sneaker <- test 3 footwear/chunky_sneaker"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       198,
+       444,
+       502,
+       591
+      ],
+      "shade": "white",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       195,
+       362,
+       545,
+       759
+      ],
+      "shade": "washed black",
+      "lightness": "dark",
+      "details": [
+       "hood",
+       "buttons",
+       "chest_pocket"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "faded"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       486,
+       428,
+       869,
+       679
+      ],
+      "shade": "grey",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 3,
+      "visible": true,
+      "box_2d": [
+       840,
+       471,
+       942,
+       676
+      ],
+      "shade": "grey",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "chunky",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "s10": {
+   "source": "s10/before_street.jpg run 0",
+   "seconds": 7.21,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "outerwear",
+     "subcategory": "denim_jacket",
+     "color_family": "black"
+    },
+    {
+     "i": 1,
+     "category": "top",
+     "subcategory": "sweater",
+     "color_family": "burgundy"
+    },
+    {
+     "i": 2,
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "black"
+    },
+    {
+     "i": 3,
+     "category": "footwear",
+     "subcategory": "chelsea_boot",
+     "color_family": "black"
+    }
+   ],
+   "mapping": [
+    "0 outerwear/denim_jacket <- test 0 outerwear/denim_jacket",
+    "1 top/sweater <- test 1 top/sweater",
+    "2 bottom/jeans <- test 2 bottom/jeans",
+    "3 footwear/chelsea_boot <- test 3 footwear/chelsea_boot"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       263,
+       383,
+       545,
+       742
+      ],
+      "shade": "washed black",
+      "lightness": "dark",
+      "details": [
+       "collar",
+       "buttons",
+       "chest_pocket"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "faded"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       273,
+       463,
+       521,
+       554
+      ],
+      "shade": "burgundy",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       516,
+       442,
+       843,
+       663
+      ],
+      "shade": "washed black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "faded"
+     },
+     {
+      "i": 3,
+      "visible": true,
+      "box_2d": [
+       764,
+       355,
+       924,
+       692
+      ],
+      "shade": "black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "sleek",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "s13": {
+   "source": "s13/before_street.jpg run 0",
+   "seconds": 4.65,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "other",
+     "color_family": "black"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "trousers",
+     "color_family": "navy"
+    },
+    {
+     "i": 2,
+     "category": "footwear",
+     "subcategory": "low_profile_sneaker",
+     "color_family": "brown"
+    }
+   ],
+   "mapping": [
+    "0 top/other <- test 0 top/other",
+    "1 bottom/trousers <- test 1 bottom/trousers",
+    "2 footwear/low_profile_sneaker <- test 2 footwear/low_profile_sneaker"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       308,
+       280,
+       611,
+       649
+      ],
+      "shade": "black",
+      "lightness": "dark",
+      "details": [
+       "collar",
+       "buttons"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       566,
+       323,
+       915,
+       642
+      ],
+      "shade": "navy",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       874,
+       385,
+       960,
+       672
+      ],
+      "shade": "brown",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "sleek",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "s09": {
+   "source": "s09/before_street.jpg run 0",
+   "seconds": 4.73,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "outerwear",
+     "subcategory": "suit_jacket",
+     "color_family": "navy"
+    },
+    {
+     "i": 1,
+     "category": "top",
+     "subcategory": "dress_shirt",
+     "color_family": "white"
+    },
+    {
+     "i": 2,
+     "category": "bottom",
+     "subcategory": "suit_trousers",
+     "color_family": "navy"
+    },
+    {
+     "i": 3,
+     "category": "footwear",
+     "subcategory": "dress_shoe",
+     "color_family": "brown"
+    }
+   ],
+   "mapping": [
+    "0 outerwear/suit_jacket <- test 0 outerwear/suit_jacket",
+    "1 top/dress_shirt <- test 1 top/dress_shirt",
+    "2 bottom/suit_trousers <- test 2 bottom/suit_trousers",
+    "3 footwear/dress_shoe <- test 3 footwear/dress_shoe"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       227,
+       298,
+       545,
+       712
+      ],
+      "shade": "navy",
+      "lightness": "dark",
+      "details": [
+       "collar",
+       "chest_pocket",
+       "buttons"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       226,
+       390,
+       461,
+       521
+      ],
+      "shade": "white",
+      "lightness": "light",
+      "details": [
+       "collar",
+       "buttons"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       463,
+       375,
+       856,
+       630
+      ],
+      "shade": "navy",
+      "lightness": "dark",
+      "details": [
+       "belt_loops"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "none"
+     },
+     {
+      "i": 3,
+      "visible": true,
+      "box_2d": [
+       773,
+       520,
+       890,
+       592
+      ],
+      "shade": "cognac brown",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "sleek",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  },
+  "ph1": {
+   "source": "ph1/before_mirror.jpg run 0",
+   "seconds": 4.11,
+   "stubs": [
+    {
+     "i": 0,
+     "category": "top",
+     "subcategory": "hoodie",
+     "color_family": "grey"
+    },
+    {
+     "i": 1,
+     "category": "bottom",
+     "subcategory": "sweatpants",
+     "color_family": "black"
+    },
+    {
+     "i": 2,
+     "category": "footwear",
+     "subcategory": "slides_sandals",
+     "color_family": "black"
+    }
+   ],
+   "mapping": [
+    "0 top/hoodie <- test 0 top/hoodie",
+    "1 bottom/sweatpants <- test 1 bottom/sweatpants",
+    "2 footwear/slides_sandals <- test 2 footwear/slides_sandals"
+   ],
+   "answer": {
+    "garments": [
+     {
+      "i": 0,
+      "visible": true,
+      "box_2d": [
+       0,
+       126,
+       363,
+       888
+      ],
+      "shade": "medium grey",
+      "lightness": "mid",
+      "details": [
+       "front_pouch",
+       "hood",
+       "drawstring",
+       "elastic_cuffs"
+      ],
+      "logo_text": "Nike swoosh",
+      "sleeve_length": "long",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 1,
+      "visible": true,
+      "box_2d": [
+       334,
+       184,
+       929,
+       699
+      ],
+      "shade": "black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "na",
+      "denim_wear": "na"
+     },
+     {
+      "i": 2,
+      "visible": true,
+      "box_2d": [
+       818,
+       447,
+       887,
+       630
+      ],
+      "shade": "black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "na",
+      "shoe_profile": "regular",
+      "denim_wear": "na"
+     }
+    ]
+   }
+  }
+ }
+}

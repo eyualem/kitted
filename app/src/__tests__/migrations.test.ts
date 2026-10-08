@@ -30,7 +30,7 @@ describe('migrations', () => {
 });
 
 // V5 runs on a real SQLite (Node's built-in one), from an empty file through every migration.
-describe('V5: style keys follow rubric v4 (#85)', () => {
+describe('V5 and V6 on a real SQLite', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { DatabaseSync } = require('node:sqlite') as { DatabaseSync: new (p: string) => { exec(s: string): void; prepare(s: string): { all(): Record<string, unknown>[] } } };
   const upTo = (v: number) => {
@@ -68,6 +68,26 @@ describe('V5: style keys follow rubric v4 (#85)', () => {
   it('runs on a fresh install (every migration from 0)', () => {
     const db = upTo(LATEST_VERSION);
     expect(db.prepare('SELECT COUNT(*) AS n FROM fit_checks').all()[0]!.n).toBe(0);
-    expect(LATEST_VERSION).toBeGreaterThanOrEqual(5);
+    expect(LATEST_VERSION).toBeGreaterThanOrEqual(6);
+  });
+
+  it('V6 (#91): the closet columns, closet_observations, and one sighting per existing item', () => {
+    const db = upTo(5);
+    db.exec(`INSERT INTO closet_items (id, name, slot, garment_json, source, created_at) VALUES
+      ('C-1', 'Black sweatpants', 'bottom', '{"category":"bottom","subcategory":"sweatpants","color_family":"black"}', 'fitCheck', 100),
+      ('C-2', 'Grey tee', 'top', '{"category":"top","subcategory":"tee","color_family":"grey"}', 'added', 200),
+      ('T1', 'White tee', 'top', '{}', 'seed', 300)`);
+    for (const s of MIGRATIONS.find((m) => m.version === 6)!.statements) db.exec(s);
+    const rows = (sql: string) => db.prepare(sql).all();
+    expect(rows('SELECT id, item_id, origin, decision, created_at, garment_json FROM closet_observations ORDER BY id')).toEqual([
+      { id: 'O-C-1', item_id: 'C-1', origin: 'garment', decision: 'new', created_at: 100, garment_json: '{"category":"bottom","subcategory":"sweatpants","color_family":"black"}' },
+      { id: 'O-C-2', item_id: 'C-2', origin: 'describe', decision: 'new', created_at: 200, garment_json: '{"category":"top","subcategory":"tee","color_family":"grey"}' },
+      { id: 'O-T1', item_id: 'T1', origin: 'seed', decision: 'new', created_at: 300, garment_json: '{}' },
+    ]);
+    expect(rows('SELECT id, shade, profile, art, merged_into, maybe_same_as, updated_at FROM closet_items ORDER BY id')[0]).toEqual(
+      { id: 'C-1', shade: null, profile: null, art: null, merged_into: null, maybe_same_as: null, updated_at: 100 },
+    );
+    expect(rows(`SELECT name FROM sqlite_master WHERE type = 'index' AND tbl_name = 'closet_observations' AND name NOT LIKE 'sqlite_%' ORDER BY name`).map((r) => r.name))
+      .toEqual(['closet_observations_check', 'closet_observations_item']);
   });
 });

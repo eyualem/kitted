@@ -512,7 +512,18 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:10:00-04:00",
      "wornCount": 4,
-     "lastWornAt": "2026-10-22"
+     "lastWornAt": "2026-10-22",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "white",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "short",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "T2",
@@ -549,7 +560,18 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:14:00-04:00",
      "wornCount": 2,
-     "lastWornAt": "2026-10-12"
+     "lastWornAt": "2026-10-12",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "heather grey",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "short",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "T3",
@@ -586,7 +608,18 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:14:00-04:00",
      "wornCount": 4,
-     "lastWornAt": "2026-10-09"
+     "lastWornAt": "2026-10-09",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "navy",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "T4",
@@ -623,7 +656,22 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:14:00-04:00",
      "wornCount": 4,
-     "lastWornAt": "2026-10-19"
+     "lastWornAt": "2026-10-19",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "light blue",
+      "lightness": "light",
+      "details": [
+       "collar",
+       "buttons",
+       "chest_pocket"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "T5",
@@ -660,7 +708,18 @@
      "confirmedFields": [],
      "createdAt": "2026-09-28T07:55:00-04:00",
      "wornCount": 4,
-     "lastWornAt": "2026-10-15"
+     "lastWornAt": "2026-10-15",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "short",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "T6",
@@ -697,7 +756,18 @@
      "confirmedFields": [],
      "createdAt": "2026-10-20T08:11:00-04:00",
      "wornCount": 1,
-     "lastWornAt": "2026-10-20"
+     "lastWornAt": "2026-10-20",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "faded black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "B1",
@@ -736,7 +806,20 @@
      ],
      "createdAt": "2026-09-24T19:10:00-04:00",
      "wornCount": 6,
-     "lastWornAt": "2026-10-22"
+     "lastWornAt": "2026-10-22",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "khaki",
+      "lightness": "mid",
+      "details": [
+       "belt_loops"
+      ],
+      "logo_text": "none",
+      "sleeve_length": null,
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "B2",
@@ -773,7 +856,20 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:14:00-04:00",
      "wornCount": 5,
-     "lastWornAt": "2026-10-13"
+     "lastWornAt": "2026-10-13",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "navy",
+      "lightness": "dark",
+      "details": [
+       "belt_loops"
+      ],
+      "logo_text": "none",
+      "sleeve_length": null,
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "B3",
@@ -810,7 +906,20 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:14:00-04:00",
      "wornCount": 7,
-     "lastWornAt": "2026-10-19"
+     "lastWornAt": "2026-10-19",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "dark wash",
+      "lightness": "dark",
+      "details": [
+       "belt_loops"
+      ],
+      "logo_text": "none",
+      "sleeve_length": null,
+      "shoe_profile": null,
+      "denim_wear": "none"
+     }
     },
     {
      "id": "S1",
@@ -847,7 +956,18 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:10:00-04:00",
      "wornCount": 9,
-     "lastWornAt": "2026-10-22"
+     "lastWornAt": "2026-10-22",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "white",
+      "lightness": "light",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": null,
+      "shoe_profile": "sleek",
+      "denim_wear": null
+     }
     },
     {
      "id": "S2",
@@ -884,7 +1004,18 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:14:00-04:00",
      "wornCount": 4,
-     "lastWornAt": "2026-10-09"
+     "lastWornAt": "2026-10-09",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "brown",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": null,
+      "shoe_profile": "sleek",
+      "denim_wear": null
+     }
     },
     {
      "id": "S3",
@@ -921,7 +1052,18 @@
      "confirmedFields": [],
      "createdAt": "2026-10-05T07:50:00-04:00",
      "wornCount": 4,
-     "lastWornAt": "2026-10-16"
+     "lastWornAt": "2026-10-16",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "grey",
+      "lightness": "mid",
+      "details": [],
+      "logo_text": "New Balance",
+      "sleeve_length": null,
+      "shoe_profile": "regular",
+      "denim_wear": null
+     }
     },
     {
      "id": "S4",
@@ -958,7 +1100,18 @@
      "confirmedFields": [],
      "createdAt": "2026-10-14T18:30:00-04:00",
      "wornCount": 1,
-     "lastWornAt": "2026-10-14"
+     "lastWornAt": "2026-10-14",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "black",
+      "lightness": "dark",
+      "details": [],
+      "logo_text": "none",
+      "sleeve_length": null,
+      "shoe_profile": "sleek",
+      "denim_wear": null
+     }
     },
     {
      "id": "L1",
@@ -995,7 +1148,22 @@
      "confirmedFields": [],
      "createdAt": "2026-09-24T19:14:00-04:00",
      "wornCount": 8,
-     "lastWornAt": "2026-10-15"
+     "lastWornAt": "2026-10-15",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "navy",
+      "lightness": "dark",
+      "details": [
+       "collar",
+       "buttons",
+       "chest_pocket"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "L2",
@@ -1032,7 +1200,22 @@
      "confirmedFields": [],
      "createdAt": "2026-10-21T18:40:00-04:00",
      "wornCount": 1,
-     "lastWornAt": "2026-10-21"
+     "lastWornAt": "2026-10-21",
+     "closet": {
+      "visible": true,
+      "box": [],
+      "shade": "olive",
+      "lightness": "mid",
+      "details": [
+       "collar",
+       "buttons",
+       "chest_pocket"
+      ],
+      "logo_text": "none",
+      "sleeve_length": "long",
+      "shoe_profile": null,
+      "denim_wear": null
+     }
     },
     {
      "id": "L3",
@@ -1069,7 +1252,8 @@
      "confirmedFields": [],
      "createdAt": "2026-10-09T21:05:00-04:00",
      "wornCount": 1,
-     "lastWornAt": "2026-10-19"
+     "lastWornAt": "2026-10-19",
+     "closet": null
     }
    ],
    "closetGridOrder": [

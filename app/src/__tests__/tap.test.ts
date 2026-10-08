@@ -118,7 +118,8 @@ describe('answering', () => {
     expect((await store.corrections.all()).map((c) => c.kind)).toEqual(['tapSkip']);
     expect((await store.closet.all()).find((c) => c.slot === 'bottom')!.confirmedFields).toEqual([]);
     const r = await svc.saveCorrection(id, { garmentIndex: done.details.tap!.garmentIndex, field: 'subcategory', value: 'sweatpants' });
-    expect(r).toEqual({ before: 6.5, after: 5, itemName: 'Black jeans' });
+    // The piece takes his word, and its name follows (#91): "Saved to your black sweatpants."
+    expect(r).toEqual({ before: 6.5, after: 5, itemName: 'Black sweatpants' });
     const after = (await store.fitChecks.get(id))!;
     expect([after.status, after.details.tap!.answer]).toEqual(['scored', 'jeans']); // never re-asked
     expect((await store.readings.get(after.readingId!))!.source).toBe('corrected');

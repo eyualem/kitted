@@ -10,6 +10,7 @@ import { LIVE_READING, routedSource } from '@/services/readingSource/live';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
 import { getDemoArgs, sessionClock } from '@/state/session';
+import { closetService, startClosetCatchUp } from '@/features/closet/session';
 import { createFitCheckService, DEFAULT_TIMERS, type TimerConfig } from './service';
 import type { SessionState } from './machine';
 
@@ -43,11 +44,15 @@ export const fitCheck = createFitCheckService({
   ids: newId,
   // The one quick tap (02 "S5q", #85): on.
   tap: () => true,
+  // The closet call after the score card (#91).
+  closet: closetService,
   timers: () => {
     const lat = getDemoArgs().latency;
     return { ...DEFAULT_TIMERS, cacheHitMs: lat === 0 ? 0 : DEFAULT_TIMERS.cacheHitMs, ...timerOverride };
   },
 });
+
+startClosetCatchUp();
 
 export function useFitCheckSession(): SessionState {
   return useSyncExternalStore(fitCheck.subscribe, fitCheck.getState, fitCheck.getState);

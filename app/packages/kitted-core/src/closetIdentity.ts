@@ -304,16 +304,28 @@ export function profileOf(id: string, observations: readonly Observation[], extr
 const CONFIRMABLE: readonly string[] = [
   "subcategory", "color_family", "pattern", "logo", "leg_shape", "sleeve_length", "lightness", "shoe_profile", "denim_wear", "brand",
 ];
+/** Stored history for one item (the V6 closet tables). */
+export interface StoredProfile extends ProfileExtra {
+  /** Extra sightings after the item's own garment. */
+  observations?: readonly Observation[];
+  /** Every sighting of the item, oldest first (the app's closet_observations rows). When non-empty these replace
+   *  the item's own garment as the history, so the sighting that created the item isn't counted twice. */
+  sightings?: readonly Observation[];
+}
+
 /**
- * A closet row as a profile: its garment is one sighting (plus any stored `observations`), and the field names in
- * `confirmedFields` become confirmed values. This is what closetMatch.ts will use until the V6 closet tables exist.
+ * A closet row as a profile: its garment is one sighting (plus any stored `observations`; or exactly `sightings`
+ * when given), and the field names in `confirmedFields` become confirmed values.
  */
-export function profileFromClosetItem(item: ClosetItem, extra: ProfileExtra & { observations?: readonly Observation[] } = {}): ItemProfile {
+export function profileFromClosetItem(item: ClosetItem, extra: StoredProfile = {}): ItemProfile {
   const confirmed: Record<string, unknown> = {};
   for (const f of item.confirmedFields ?? []) {
     if (CONFIRMABLE.includes(f) && typeof item.garment[f] === "string") confirmed[f] = item.garment[f];
   }
-  return profileOf(item.id, [item.garment as Observation, ...(extra.observations ?? [])], {
+  const history = extra.sightings && extra.sightings.length > 0
+    ? extra.sightings
+    : [item.garment as Observation, ...(extra.observations ?? [])];
+  return profileOf(item.id, history, {
     slot: extra.slot ?? String(item.slot),
     confirmed: { ...(confirmed as ConfirmedFields), ...(extra.confirmed ?? {}) },
     aliases: extra.aliases ?? [],
@@ -572,7 +584,7 @@ const CLOSET_CATEGORIES: readonly string[] = ["top", "bottom", "footwear", "oute
  */
 export function reconcileReading(
   reading: Reading, closet: readonly ClosetItem[],
-  profiles: Readonly<Record<string, ProfileExtra & { observations?: readonly Observation[] }>> = {},
+  profiles: Readonly<Record<string, StoredProfile>> = {},
 ): ReadingReconcileEntry[] {
   const lighting = reading.scene?.lighting ?? null;
   const picked: { from: "garment" | "held"; index: number; obs: Observation }[] = [];

@@ -17,6 +17,15 @@ describe('seed loader: full', () => {
     expect(closet.find((c) => c.id === 'L3')!.isPhotographed).toBe(false);
     expect(closet.find((c) => c.id === 'B1')!.confirmedFields).toEqual(['leg_shape']);
     expect(closet.find((c) => c.id === 'T1')!.hex).toBe('#F2F0EA');
+    // V6 (#91): one 'seed' sighting per item with its closet fields (never scored); the tiles keep the seed colors.
+    const obs = await s.closetObs.all();
+    expect(obs).toHaveLength(16);
+    expect(obs.every((o) => o.origin === 'seed' && o.decision === 'new' && o.itemId === o.id.slice(2))).toBe(true);
+    expect(obs.find((o) => o.itemId === 'L3')!.closet).toBeNull();
+    expect(obs.find((o) => o.itemId === 'S3')!.closet).toMatchObject({ logo_text: 'New Balance', shoe_profile: 'regular' });
+    expect(closet.find((c) => c.id === 'T2')!.art).toEqual({ family: 'grey', shade: 'grey|-|heather', details: [], brand: null, shoeProfile: null, denimWear: null });
+    expect(closet.find((c) => c.id === 'B1')!.hex).toBe('#C9B48A');
+    expect(closet.every((c) => !('closet' in c.garment))).toBe(true);
 
     const checks = (await s.fitChecks.all()).sort((a, b) => a.createdAt - b.createdAt);
     expect(checks.map((c) => [c.id, c.score])).toEqual([['FC0', 8], ['FC1', 9], ['FC2', 6.5], ['FC3', 8], ['FC3R', 9]]);

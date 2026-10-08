@@ -87,6 +87,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
   await fitCheck.cancel();
+  await fitCheck.closet.settle();
   readingSource.holdAt = null;
   setTimerOverride({});
   await store.wipe();
@@ -126,6 +127,7 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       const tmp = createMemoryStore();
       await loadScenario(tmp, sub, { scenario: 'full', zone: US_EASTERN });
       for (const c of await tmp.closet.all()) if (step.ids.includes(c.id)) await store.closet.put(c);
+      for (const o of await tmp.closetObs.all()) if (step.ids.includes(o.itemId)) await store.closetObs.put(o);
       continue;
     }
     if (step.do === 'tap') {
@@ -150,6 +152,8 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       });
     }
   }
+  // The closet call lands after the score card: wait for it so the screen shows the written closet.
+  await fitCheck.closet.settle();
   setDemoArgs({ ...getDemoArgs(), latency: args.latency });
   startClock(getDemoArgs().now ?? sc.now);
 }

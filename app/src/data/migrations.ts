@@ -235,7 +235,57 @@ const V5: Migration = {
   ],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5];
+// V6 (Oct 8, #91): closet accuracy. Each closet item keeps its display shade (a fixed ShadeKey id, never the
+// model's words), its profile (aliases, "different from", what he confirmed), the detailed-graphic inputs (art),
+// a crop slot for phase 3, and the merge / "maybe the same as" flags. Every sighting of a piece is a row in
+// closet_observations (the v3 garment after corrections + the closet call's fields), so a correction follows
+// the stored link instead of re-matching. Existing items get one sighting each from their own garment.
+const V6: Migration = {
+  version: 6,
+  statements: [
+    `ALTER TABLE closet_items ADD COLUMN shade TEXT`,
+    `ALTER TABLE closet_items ADD COLUMN profile TEXT`,
+    `ALTER TABLE closet_items ADD COLUMN crop_file TEXT`,
+    `ALTER TABLE closet_items ADD COLUMN crop_score REAL`,
+    `ALTER TABLE closet_items ADD COLUMN art TEXT`,
+    `ALTER TABLE closet_items ADD COLUMN merged_into TEXT`,
+    `ALTER TABLE closet_items ADD COLUMN maybe_same_as TEXT`,
+    `ALTER TABLE closet_items ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0`,
+    // origin: garment / held / snap / seed / describe. decision: pending / same / new / ask / answeredSame /
+    // answeredNew / split / undone. closet_json = the validated closet-call fields (null: v3 only).
+    `CREATE TABLE IF NOT EXISTS closet_observations (
+      id TEXT PRIMARY KEY NOT NULL,
+      item_id TEXT NOT NULL DEFAULT '',
+      fit_check_id TEXT,
+      reading_id TEXT,
+      closet_reading_id TEXT,
+      garment_index INTEGER,
+      origin TEXT NOT NULL DEFAULT 'garment',
+      garment_json TEXT NOT NULL DEFAULT '{}',
+      closet_json TEXT,
+      sampled_hex TEXT,
+      sampled_l REAL,
+      crop_file TEXT,
+      crop_quality REAL,
+      decision TEXT NOT NULL DEFAULT 'new',
+      identity_score REAL,
+      candidates TEXT NOT NULL DEFAULT '[]',
+      ask_item_id TEXT,
+      answered_at INTEGER,
+      user_confirmed TEXT,
+      created_at INTEGER NOT NULL DEFAULT 0,
+      is_deleted INTEGER NOT NULL DEFAULT 0
+    )`,
+    `CREATE INDEX IF NOT EXISTS closet_observations_item ON closet_observations (item_id)`,
+    `CREATE INDEX IF NOT EXISTS closet_observations_check ON closet_observations (fit_check_id)`,
+    `INSERT INTO closet_observations (id, item_id, origin, garment_json, decision, created_at, is_deleted)
+      SELECT 'O-' || id, id, CASE source WHEN 'seed' THEN 'seed' WHEN 'fitCheck' THEN 'garment' ELSE 'describe' END,
+        garment_json, 'new', created_at, 0 FROM closet_items`,
+    `UPDATE closet_items SET updated_at = created_at`,
+  ],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5, V6];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 
@@ -254,6 +304,7 @@ export const TABLES = [
   'usage_days',
   'event_queue',
   'daily_ideas',
+  'closet_observations',
 ] as const;
 
 /** The migrations still to run from `current` (sorted, strictly newer). */

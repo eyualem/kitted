@@ -45,5 +45,5 @@ export {
   reconcile, reconcileReading,
   type Detail, type Lightness, type SleeveLength, type ShoeProfile, type DenimWear, type ConfirmedFields, type Observation,
   type ItemProfile, type ProfileExtra, type IdentityReason, type IdentityResult, type Decision, type ReconcileEntry,
-  type ReadingReconcileEntry,
+  type ReadingReconcileEntry, type StoredProfile,
 } from "./closetIdentity";

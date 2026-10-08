@@ -1,7 +1,7 @@
 // Row types for the app's data. @kitted/core owns the value types (Reading, Garment, Fix,
 // ClosetItem); these wrap them with what the app stores. Times are epoch ms.
 
-import type { ClosetItem, DetectedStyle, Fix, Reading, Styles, TapOption, TapQuestion } from '@kitted/core';
+import type { ClosetItem, ConfirmedFields, DetectedStyle, Fix, Garment, Reading, Styles, TapOption, TapQuestion } from '@kitted/core';
 
 export type Role = 'user' | 'stylist';
 export type MessageKind = 'text' | 'photo' | 'card';
@@ -75,7 +75,9 @@ export type ReadingSourceKind =
   | 'snapMerged'
   | 'closetPick'
   /** The one quick tap's answer (or a skip's default) applied to the full reading (derivedFrom = it). */
-  | 'tapAnswer';
+  | 'tapAnswer'
+  /** The closet call's raw answer (V6, #91): `reading` holds a StoredClosetReading, not a v3 Reading. */
+  | 'closet';
 export type SnapState = 'none' | 'pending' | 'closetPick' | 'snapped' | 'skipped';
 
 export interface ChatMessage {
@@ -127,8 +129,9 @@ export interface TapState {
 export interface CheckDetails {
   /** Re-scored for another occasion or style after it landed (#62): what it was before. */
   rescoredFrom?: { score: number; occasion: OccasionKey; style: StyleKey | null };
-  /** Closet ids matched by this photo, ids it added, and added ids he undid. */
-  closetSummary?: { matched: string[]; added: string[]; undone: string[] };
+  /** Closet ids matched by this photo, ids it added, and added ids he undid; since V6 also every garment's link
+   *  and the open "Same as your …?" questions. Readers of matched/added/undone keep working without the rest. */
+  closetSummary?: ClosetSummary;
   nextLevel?: string[];
   tips?: string[];
   /** No fix applies. */
@@ -197,7 +200,122 @@ export interface ReadingRow {
   derivedFrom: string | null;
 }
 
+/** One garment of a check and the closet item it went to (S11, corrections follow this link). */
+export interface ClosetLink {
+  origin: ObservationOrigin;
+  /** Index into the reading's garments (origin garment / snap) or held_items (held). */
+  index: number;
+  itemId: string;
+  obsId: string;
+}
+
+/** An open (or answered) "Same as your …?" question: the new piece (itemId) may be the candidate. */
+export interface ClosetAsk {
+  obsId: string;
+  itemId: string;
+  candidateId: string;
+  runnerUpId?: string;
+  /** null while open. */
+  answer?: 'same' | 'new' | 'runnerUp' | null;
+  /** What a "Yes" changed on the piece, so a changed answer can put it back: an alias it added, the type it replaced. */
+  alias?: string | null;
+  replacedSub?: string | null;
+}
+
+export interface ClosetSummary {
+  matched: string[];
+  added: string[];
+  undone: string[];
+  links?: ClosetLink[];
+  asks?: ClosetAsk[];
+  /** pending: the closet call is still out (S11 rows say "Checking the details…"); done: written with it;
+   *  fallback: written from the v3 fields alone (offline, failed, slow). Absent: before V6. */
+  state?: 'pending' | 'done' | 'fallback';
+  /** When the closet write started (pending → fallback after 12 s). */
+  startedAt?: number;
+  /** He answered, undid or split something in S11 for this check (a late closet answer then only enriches). */
+  touched?: boolean;
+  /** A late closet answer was folded in (catch-up or after a slow call). */
+  enrichedAt?: number;
+}
+
 export type ClosetSource = 'fitCheck' | 'added' | 'chat' | 'seed';
+
+/** The closet call's validated fields for one garment (services/closetSource/validate.ts). */
+export interface ClosetFields {
+  visible: boolean;
+  /** [ymin, xmin, ymax, xmax] 0–1000, or [] when not visible. */
+  box: number[];
+  /** 1–3 cleaned words, never shown (parsed into a ShadeKey). */
+  shade: string | null;
+  lightness: 'light' | 'mid' | 'dark' | null;
+  details: string[];
+  /** Copied logo text, 'none' or 'unreadable' (cleaned; matched against a brand list, never shown raw). */
+  logo_text: string | null;
+  sleeve_length: 'short' | 'long' | 'sleeveless' | null;
+  shoe_profile: 'sleek' | 'regular' | 'chunky' | null;
+  denim_wear: 'none' | 'faded' | 'ripped' | null;
+}
+
+/** What the closet tile draws (features/closet/artSpec.ts reads it): settled by the drift guard. */
+export interface ClosetArt {
+  /** The color family shown (the garment's, unless 2 newer sightings or his confirmation moved it). */
+  family: string | null;
+  /** ShadeKey id ("grey|mid|-"), or null. */
+  shade: string | null;
+  details: string[];
+  /** Brand id from core normalizeBrand (a listed brand only), or null. */
+  brand: string | null;
+  shoeProfile: 'sleek' | 'regular' | 'chunky' | null;
+  denimWear: 'none' | 'faded' | 'ripped' | null;
+}
+
+/** closet_items.profile: what the matcher and the namer remember beyond the sightings. */
+export interface ClosetProfile {
+  /** Subcategories he confirmed are this item ("Yes, same one" on a sweatpants read of his jeans). */
+  aliases: string[];
+  /** Items he said are different pieces. */
+  distinctFrom: string[];
+  confirmed: ConfirmedFields;
+  /** He named it himself: never auto-renamed. */
+  nameLocked?: boolean;
+  /** The app named it (closet names, #91), so it may rename it when a detail is needed or the look settles. */
+  autoName?: boolean;
+  /** The detail word the name carries to tell it from another of his pieces ("zip"), sticky. */
+  nameDetail?: string | null;
+}
+
+export type ObservationOrigin = 'garment' | 'held' | 'snap' | 'seed' | 'describe';
+export type ObservationDecision = 'pending' | 'same' | 'new' | 'ask' | 'answeredSame' | 'answeredNew' | 'split' | 'undone';
+
+/** One sighting of a closet piece (V6). */
+export interface ClosetObservationRow {
+  id: string;
+  itemId: string;
+  fitCheckId: string | null;
+  /** The v3 reading the garment came from (after corrections / the tap answer). */
+  readingId: string | null;
+  closetReadingId: string | null;
+  garmentIndex: number | null;
+  origin: ObservationOrigin;
+  /** The v3 garment after corrections and the tap answer (canonical, scored fields only). */
+  garment: Garment;
+  closet: ClosetFields | null;
+  sampledHex: string | null;
+  sampledL: number | null;
+  cropFile: string | null;
+  cropQuality: number | null;
+  decision: ObservationDecision;
+  identityScore: number | null;
+  /** The items it was compared with (best first). */
+  candidates: { id: string; score: number | null }[];
+  /** decision ask: the item it may be. */
+  askItemId: string | null;
+  answeredAt: number | null;
+  userConfirmed: ConfirmedFields | null;
+  createdAt: number;
+  isDeleted: boolean;
+}
 
 /** A closet item as stored. `garment`, `name`, `slot`, `confirmedFields` are core's ClosetItem. */
 export interface ClosetItemRow extends ClosetItem {
@@ -213,6 +331,18 @@ export interface ClosetItemRow extends ClosetItem {
   addedAt: number;
   /** Set by Undo on an auto-added item; the row stays so it can be added back. */
   isDeleted: boolean;
+  /** V6 (#91). Display shade: a ShadeKey id ("grey|mid|-"), never the model's words. */
+  shade?: string | null;
+  profile?: ClosetProfile | null;
+  /** Phase 3: a clean crop from his photo, and its quality. */
+  cropFile?: string | null;
+  cropScore?: number | null;
+  art?: ClosetArt | null;
+  /** "Yes, same one": this row was folded into that item (and is soft-deleted). */
+  mergedInto?: string | null;
+  /** Created while unsure: maybe the same piece as that item (an open "Same as your …?"). */
+  maybeSameAs?: string | null;
+  updatedAt?: number | null;
 }
 
 export interface UsageDay {

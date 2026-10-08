@@ -7,8 +7,10 @@
 
 import { dayKey, type Fix, type Reading, type Styles, type ZoneOffset } from '@kitted/core';
 import type { KittedStore } from './store';
+import { artOf, observationOf } from '@/features/closet/profile';
+import { cleanFields } from '@/services/closetSource/validate';
 import type {
-  ChatMessage, CheckDetails, ClosetItemRow, ClosetSource, FactRow, FitCheckRow, OccasionKey, OutfitRow, ProfileRow,
+  ChatMessage, CheckDetails, ClosetItemRow, ClosetObservationRow, ClosetSource, FactRow, FitCheckRow, OccasionKey, OutfitRow, ProfileRow,
   ReadingRow, ReadingSourceKind, SnapState, WearLogRow,
 } from './types';
 
@@ -103,9 +105,21 @@ export async function loadScenario(store: KittedStore, seed: unknown, opts: Load
       confirmedFields: arr(o.confirmedFields).map(String), hex: String(o.colorHex ?? '#ECEEF1'), photoFile: null,
       demoPhotoId: null, isPhotographed: o.isPhotographed !== false, source: (str(o.source) ?? 'seed') as ClosetSource,
       starterId: str(o.starterID), wornCount: numOr(o.wornCount, 0), lastWornAt: o.lastWornAt ? ms(o.lastWornAt) : null,
-      addedAt: added, isDeleted: false,
+      addedAt: added, isDeleted: false, mergedInto: null, maybeSameAs: null, cropFile: null, cropScore: null, updatedAt: added,
+      profile: { aliases: [], distinctFrom: [], confirmed: {} },
     };
+    // One 'seed' sighting per item, with its closet-call fields (make_seed.py; never scored). The tile keeps the
+    // seed's own color (drawn for the mockups); the art adds the shade and details.
+    const fields = cleanFields(o.closet);
+    const obs: ClosetObservationRow = {
+      id: `O-${item.id}`, itemId: item.id, fitCheckId: null, readingId: null, closetReadingId: null, garmentIndex: null, origin: 'seed',
+      garment: item.garment, closet: fields, sampledHex: null, sampledL: null, cropFile: null, cropQuality: null, decision: 'new',
+      identityScore: null, candidates: [], askItemId: null, answeredAt: null, userConfirmed: null, createdAt: added, isDeleted: false,
+    };
+    item.art = artOf(item, [observationOf(item.garment, fields)]);
+    item.shade = item.art.shade;
     await store.closet.put(item);
+    await store.closetObs.put(obs);
     bump('closet');
   }
 

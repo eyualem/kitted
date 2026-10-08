@@ -2,22 +2,26 @@
 // Scheduler): posts the photo and the card, streams the reading into the session reducer, scores
 // with @kitted/core and writes the row. Readings are never edited: corrections, merges and snaps
 // insert new ones. Failures never use quota. Same photo (same SHA) = same reading, no quota.
+// The closet is the closet service's (features/closet/service.ts, #91): it's written after the score, never
+// before, and this file never writes a check's closetSummary or itemIds (patchRow keeps them).
 
 import {
-  applyCorrection, applyFix, applyTapAnswer, askQuestion, carryTapAnswer, closetPlan, dayKey, fixTargets, garmentName, matchClosetItem,
-  mergeShoeSnap, pickShoesFromCloset, recheckMerge, recheckOutcome, removeGarment, SLOT_TO_CLOSET, tapOrder, tapOrdinal, weekdayOf,
+  applyCorrection, applyFix, applyTapAnswer, askQuestion, carryTapAnswer, dayKey, fixTargets, garmentName,
+  mergeShoeSnap, pickShoesFromCloset, recheckMerge, recheckOutcome, removeGarment, tapOrder, tapOrdinal, weekdayOf,
   type ClosetItem, type Garment, type Reading, type Styles,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
-import type { ChatMessage, CheckDetails, ClosetItemRow, FitCheckRow, OccasionKey, ReadingRow, ReadingSourceKind, StyleKey, TapState } from '@/data/types';
+import type { ChatMessage, CheckDetails, FitCheckRow, OccasionKey, ReadingRow, ReadingSourceKind, StyleKey, TapState } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
 import type { ImagePrep } from '@/services/imagePrep/demo';
 import type { QuotaService } from '@/services/quota';
 import type { FailCode, PreparedImage, ReadingSource, ReadKind } from '@/services/readingSource/types';
 import type { Scheduler } from '@/services/scheduler';
-import { garmentHex, garmentLabel } from './labels';
+import { patchCheckKeepCloset } from '@/features/closet/checkWrites';
+import { isOwned } from '@/features/closet/profile';
+import { createClosetService, type ClosetService, type DuplicateAnswer } from '@/features/closet/service';
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
@@ -46,6 +50,8 @@ export interface ServiceDeps {
   timers: () => TimerConfig;
   /** The one quick tap (02 "S5q"): ask before the score when the reading is unsure about a look-alike. */
   tap?: () => boolean;
+  /** The closet write path (#91). Default: no closet call (written from the v3 fields). */
+  closet?: ClosetService;
 }
 
 export interface CheckRequest {
@@ -97,9 +103,14 @@ const emptyRow = (over: Partial<FitCheckRow> & Pick<FitCheckRow, 'id' | 'created
 
 export function createFitCheckService(deps: ServiceDeps) {
   const { store, clock } = deps;
+  const closet = deps.closet ?? createClosetService({ store, clock, scheduler: deps.scheduler, ids: deps.ids, source: null });
+  /** Every fit-check write here keeps the closet's part of the row (closetSummary, itemIds) as stored. */
+  const patchRow = (id: string, patch: Partial<FitCheckRow>) => patchCheckKeepCloset(store, id, patch);
+  /** The prepared photo per check, for its closet call (the tap answer comes later). */
+  const images = new Map<string, PreparedImage>();
+  const imageOf = (row: FitCheckRow): PreparedImage => images.get(row.id) ?? { photoId: row.demoPhotoId, sha256: row.imageHash, uploadUri: null };
   let state: SessionState = IDLE;
   let attempt = 0;
-  let undoQueue: Promise<unknown> = Promise.resolve();
   let tapQueue: Promise<unknown> = Promise.resolve();
   const listeners = new Set<() => void>();
   const dispatch = (ev: SessionEvent) => {
@@ -116,10 +127,12 @@ export function createFitCheckService(deps: ServiceDeps) {
     return { styles: p?.styles ?? [], boldness: p?.boldness ?? null };
   };
 
-  /** The closet a check's fixes may use: not undone, and not the pieces this same photo added. */
+  /** The closet a check's fixes may use: not undone or merged away, and not the pieces this photo (or, for a
+   *  re-check, its first photo) added. So the closet written after a score can never change that score. */
   const closetFor = async (row?: FitCheckRow | null): Promise<ClosetItem[]> => {
-    const exclude = new Set(row?.details.closetSummary?.added ?? []);
-    return (await store.closet.all()).filter((c) => !c.isDeleted && !exclude.has(c.id));
+    const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
+    const exclude = new Set([...(row?.details.closetSummary?.added ?? []), ...(parent?.details.closetSummary?.added ?? [])]);
+    return (await store.closet.all()).filter((c) => isOwned(c) && !exclude.has(c.id));
   };
 
   const message = async (m: Omit<ChatMessage, 'id' | 'chips' | 'payload' | 'text' | 'cardType' | 'outfitId' | 'itemId' | 'fitCheckId'> & Partial<ChatMessage>) =>
@@ -149,7 +162,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       reading, ...lensInput(occasion, patch.style !== undefined ? patch.style : row.style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
       hiddenFixTargets: details.hiddenFixTargets ?? [],
     });
-    const next = await store.fitChecks.patch(row.id, {
+    const next = await patchRow(row.id, {
       ...ev.row, ...patch, details: { ...details, ...ev.row.details, hiddenFixTargets: details.hiddenFixTargets ?? [] },
     });
     return { ev, row: next! };
@@ -188,34 +201,18 @@ export function createFitCheckService(deps: ServiceDeps) {
   };
 
   async function finalizeCheck(row: FitCheckRow, reading: Reading, readingRow: ReadingRow, cached: boolean) {
-    const closet = await closetFor();
-    const plan = closetPlan(reading, closet);
-    const added: string[] = [];
-    for (const a of [...plan.toAdd, ...plan.asks]) {
-      const slot = typeof a.garment.category === 'string' ? SLOT_TO_CLOSET[a.garment.category] : undefined;
-      if (!slot) continue;
-      const item: ClosetItemRow = {
-        id: deps.ids('C'), name: garmentLabel(a.garment), slot, garment: a.garment, confirmedFields: [], hex: garmentHex(a.garment),
-        photoFile: null, demoPhotoId: row.demoPhotoId, isPhotographed: true, source: 'fitCheck', starterId: null, wornCount: 1,
-        lastWornAt: row.createdAt, addedAt: clock.nowMs(), isDeleted: false,
-      };
-      await store.closet.put(item);
-      added.push(item.id);
-    }
-    const matched = plan.matched.map((m) => m.itemId);
-    const base = await store.fitChecks.patch(row.id, {
-      readingId: readingRow.id, itemIds: [...matched, ...added],
-      details: { ...row.details, closetSummary: { matched, added, undone: [] } },
-    });
+    const base = await patchRow(row.id, { readingId: readingRow.id });
     const { ev, row: scored } = await rescore(base!, reading);
     if (ev.status !== 'scored') return scored;
     const finish = ev.partial === 'shoes' ? await rememberedShoes(scored) : null;
-    await store.fitChecks.patch(row.id, { snapState: ev.partial ? 'pending' : 'none', details: { ...scored.details, finish } });
+    await patchRow(row.id, { snapState: ev.partial ? 'pending' : 'none', details: { ...scored.details, finish } });
     if (!cached) await deps.quota.consumeCheck(row.dayKey);
     await store.setKv(KV.lastOccasion, row.occasion);
     const p = await store.profile.get('me');
     if (p) await store.profile.patch('me', { lastOccasion: row.occasion });
-    return scored;
+    // The score is in: now the closet (the closet call runs in the background; S11 shows it landing).
+    await closet.afterCheck(row.id, imageOf(scored));
+    return (await store.fitChecks.get(row.id)) ?? scored;
   }
 
   /** A full check's reading is in: ask the one quick tap first, or score it now. The question is stored on the
@@ -228,7 +225,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       options: q.options.map((o) => ({ ...o })), order: tapOrder(q).map((o) => o.value), default: q.default, swing: q.swing, doubt: q.doubt,
       occasion: row.occasion, askedAt: clock.nowMs(), answer: null, skipped: false, answeredAt: null, ...(cached ? { free: true } : {}),
     };
-    return (await store.fitChecks.patch(row.id, { status: 'asking', readingId: readingRow.id, details: { ...row.details, tap } }))!;
+    return (await patchRow(row.id, { status: 'asking', readingId: readingRow.id, details: { ...row.details, tap } }))!;
   }
 
   /** His answer (or Skip): a derived reading with the type set, then the normal finish (closet, quota, score). */
@@ -245,21 +242,15 @@ export function createFitCheckService(deps: ServiceDeps) {
     const reading = applyTapAnswer(raw.reading, { garmentIndex: tap.garmentIndex, field: 'subcategory' }, value);
     const answered = await insertReading(reading, 'tapAnswer', row.imageHash, raw.id);
     const now = clock.nowMs();
-    const next = (await store.fitChecks.patch(checkId, { details: { ...row.details, tap: { ...tap, answer: value, skipped, answeredAt: now } } }))!;
+    const next = (await patchRow(checkId, { details: { ...row.details, tap: { ...tap, answer: value, skipped, answeredAt: now } } }))!;
     await store.corrections.put({
       id: deps.ids('CR'), fitCheckId: checkId, kind: skipped ? 'tapSkip' : 'tapAnswer', field: 'subcategory',
       oldValue: String(raw.reading.garments[tap.garmentIndex]?.subcategory ?? ''), newValue: value, userScore: null,
       scoreBefore: tap.options[0]?.score ?? null, scoreAfter: chosen.score, sentAt: null, createdAt: now,
     });
+    // He told us what it is: the closet write gives that piece's sighting (and a new piece) the confirmed type, so
+    // the "Wrong item" sheet won't second-guess it. A Skip learns nothing.
     const done = await finalizeCheck(next, reading, answered, tap.free === true);
-    if (!skipped) {
-      // He told us what it is: the closet piece remembers that (the "Wrong item" sheet won't second-guess it).
-      const g = reading.garments[tap.garmentIndex];
-      const ids = new Set(done.itemIds);
-      const item = g ? matchClosetItem(g, (await store.closet.all()).filter((c) => ids.has(c.id) && !c.isDeleted)) : null;
-      const full = item ? await store.closet.get(item.id) : null;
-      if (full && !full.confirmedFields.includes('subcategory')) await store.closet.patch(full.id, { confirmedFields: [...full.confirmedFields, 'subcategory'] });
-    }
     return (await store.fitChecks.get(checkId)) ?? done;
   }
 
@@ -275,7 +266,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const { merged, notes } = recheckMerge(parentReading, carried, fixTargets(parent.fixes), opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
     const outcome = recheckOutcome(parentReading, parent.fixes, merged, opts);
-    await store.fitChecks.patch(row.id, { readingId: mergedRow.id, itemIds: parent.itemIds, details: { ...row.details, closetSummary: parent.details.closetSummary } });
+    await patchRow(row.id, { readingId: mergedRow.id });
     const fresh = (await store.fitChecks.get(row.id))!;
     const { row: scored } = await rescore(fresh, merged, {
       details: {
@@ -288,19 +279,23 @@ export function createFitCheckService(deps: ServiceDeps) {
       },
     });
     void raw;
-    await store.fitChecks.patch(parent.id, { recheckUsed: true });
+    await patchRow(parent.id, { recheckUsed: true });
     await deps.quota.consumeRecheck();
-    return scored;
+    // Changed pieces (the fix) go through the closet engine; the rest are another sighting of the first check's.
+    await closet.afterRecheck(row.id, image);
+    return (await store.fitChecks.get(row.id)) ?? scored;
   }
 
   async function finalizeSnap(parent: FitCheckRow, snap: Reading, image: PreparedImage) {
     const parentReading = await readingOf(parent);
     if (!parentReading) return parent;
-    await insertReading(snap, 'lower', image.sha256, null);
+    const snapRow = await insertReading(snap, 'lower', image.sha256, null);
     const merged = mergeShoeSnap(parentReading, snap);
     const mergedRow = await insertReading(merged, 'snapMerged', parent.imageHash, parent.readingId);
     const { row } = await rescore(parent, merged, { readingId: mergedRow.id, snapState: 'snapped', details: { ...parent.details, finish: null } });
-    return row;
+    // The snapped shoes join the closet (footwear only), linked to the first check.
+    await closet.afterSnap(parent.id, snapRow.id, image);
+    return (await store.fitChecks.get(parent.id)) ?? row;
   }
 
   /** Streams one read into the session, with the ruling 19 timers. */
@@ -361,7 +356,7 @@ export function createFitCheckService(deps: ServiceDeps) {
 
   async function failRow(checkId: string, code: FailCode) {
     const row = await store.fitChecks.get(checkId);
-    if (row) await store.fitChecks.patch(checkId, { status: 'failed', details: { ...row.details, failCode: code } });
+    if (row) await patchRow(checkId, { status: 'failed', details: { ...row.details, failCode: code } });
     dispatch({ t: 'end' });
   }
 
@@ -406,6 +401,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       parentId: parent?.id ?? null, isFirstCheck: req.mode === 'check' && priorChecks.length === 0,
     });
     await store.fitChecks.put(row);
+    images.set(checkId, image);
     await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: checkId, payload: photoPayload });
     await message({ createdAt: now + 1, role: 'stylist', kind: 'card', cardType: req.mode === 'recheck' ? 'recheck' : 'fitCheck', fitCheckId: checkId });
 
@@ -434,7 +430,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
     // The occasion he tapped while it read (ignored for re-checks).
     const chosen = state.kind === 'reading' && state.checkId === checkId ? state.occasion : occasion;
-    if (chosen !== occasion) await store.fitChecks.patch(checkId, { occasion: chosen });
+    if (chosen !== occasion) await patchRow(checkId, { occasion: chosen });
     dispatch({ t: 'scored', attempt: r.attempt });
     const fresh = (await store.fitChecks.get(checkId))!;
     let done: FitCheckRow;
@@ -455,7 +451,7 @@ export function createFitCheckService(deps: ServiceDeps) {
   /** A new photo while a question is open: the open one is set aside (never counted; nothing was added). */
   async function replaceAsking(exceptId: string) {
     for (const c of await store.fitChecks.all()) {
-      if (c.status === 'asking' && c.id !== exceptId) await store.fitChecks.patch(c.id, { status: 'failed', details: { ...c.details, failCode: 'replaced' } });
+      if (c.status === 'asking' && c.id !== exceptId) await patchRow(c.id, { status: 'failed', details: { ...c.details, failCode: 'replaced' } });
     }
   }
 
@@ -492,11 +488,12 @@ export function createFitCheckService(deps: ServiceDeps) {
     async retry(checkId: string): Promise<StartOutcome> {
       const row = await store.fitChecks.get(checkId);
       if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
-      await store.fitChecks.patch(checkId, { status: 'scoring', details: { ...row.details, failCode: undefined } });
+      await patchRow(checkId, { status: 'scoring', details: { ...row.details, failCode: undefined } });
       const prep = await deps.prep.prepare(
         row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
       );
       if (prep.status !== 'ok') return { outcome: 'unknownPhoto' };
+      images.set(checkId, prep.image);
       const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
       const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion);
       if (!r.reading) {
@@ -550,16 +547,10 @@ export function createFitCheckService(deps: ServiceDeps) {
       const next = 'remove' in d ? removeGarment(reading, d.garmentIndex) : applyCorrection(reading, d.garmentIndex, d.field, d.value);
       const nr = await insertReading(next, 'corrected', row.imageHash, row.readingId);
       const { row: after } = await rescore(row, next, { readingId: nr.id });
-      let itemName: string | null = null;
-      if (original && !('remove' in d)) {
-        const hit = matchClosetItem(original, (await store.closet.all()).filter((c) => !c.isDeleted));
-        if (hit) {
-          const item = (await store.closet.get(hit.id))!;
-          const confirmed = item.confirmedFields.includes(d.field) ? item.confirmedFields : [...item.confirmedFields, d.field];
-          await store.closet.patch(hit.id, { garment: { ...item.garment, [d.field]: d.value }, confirmedFields: confirmed });
-          itemName = item.name;
-        }
-      }
+      // The closet follows the stored garment → item link (never a re-match, which could recolor the wrong piece).
+      const { itemName } = await closet.correction(
+        checkId, 'remove' in d ? { garmentIndex: d.garmentIndex, remove: true } : { garmentIndex: d.garmentIndex, field: d.field, value: d.value }, next, nr.id,
+      );
       await store.corrections.put({
         id: deps.ids('CR'), fitCheckId: checkId, kind: 'remove' in d ? 'wrongItem' : 'wrongDetail',
         field: 'remove' in d ? null : d.field, oldValue: original && !('remove' in d) ? String(original[d.field] ?? '') : null,
@@ -604,22 +595,23 @@ export function createFitCheckService(deps: ServiceDeps) {
     async skipFinish(checkId: string) {
       const row = await store.fitChecks.get(checkId);
       if (!row) return null;
-      return store.fitChecks.patch(checkId, { snapState: 'skipped', details: { ...row.details, finish: null } });
+      return patchRow(checkId, { snapState: 'skipped', details: { ...row.details, finish: null } });
     },
-    /** Undo / add back an auto-added closet item (the score never changes). Queued: two quick
-     *  taps in S11 would otherwise both read the same row and the second write would drop the first. */
+    /** Undo / add back an auto-added closet item (the score never changes). Queued (with every closet write),
+     *  so two quick taps in S11 both land. */
     setItemUndone(checkId: string, itemId: string, undone: boolean) {
-      const run = undoQueue.then(async () => {
-        const row = await store.fitChecks.get(checkId);
-        if (!row) return null;
-        await store.closet.patch(itemId, { isDeleted: undone });
-        const cs = row.details.closetSummary ?? { matched: [], added: [], undone: [] };
-        const list = undone ? Array.from(new Set([...cs.undone, itemId])) : cs.undone.filter((x) => x !== itemId);
-        return store.fitChecks.patch(checkId, { details: { ...row.details, closetSummary: { ...cs, undone: list } } });
-      });
-      undoQueue = run.catch(() => null);
-      return run;
+      return closet.setUndone(checkId, itemId, undone);
     },
+    /** "Same as your khaki chinos?": Yes (merge), No (a new piece), or "It's my {runner-up}". Re-answerable. */
+    answerDuplicate(checkId: string, obsId: string, a: DuplicateAnswer) {
+      return closet.answer(checkId, obsId, a);
+    },
+    /** "Not the same": a matched piece was a different one; it becomes its own item. */
+    splitItem(checkId: string, obsId: string) {
+      return closet.split(checkId, obsId);
+    },
+    /** The closet service (catch-up on foreground, settle for demo screens and tests). */
+    closet,
     /** S21 "What changed?": the score if he did these fixes (all the first check's fixes by default). */
     async previewConfirm(recheckId: string, targets?: readonly string[]) {
       const d = await confirmDraft(recheckId, targets);
