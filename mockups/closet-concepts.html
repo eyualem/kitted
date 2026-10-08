@@ -104,6 +104,7 @@ figcaption b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
 .goes{display:flex;gap:6px}
 .goes .fit{flex:1;padding:6px}
 .goes .stand{grid-template-rows:42% 42% 16%}
+.goes .lbl{font-size:9.5px;font-weight:650;color:var(--ink-2);text-align:center}
 
 /* tradeoff list */
 .pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
@@ -147,6 +148,20 @@ figcaption b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
       <li><b>No new tab.</b> Lookbook stays "what I wore" (real photos, real scores). Closet becomes "what I own and what I can make from it".</li>
     </ol>
   </div>
+</section>
+
+<section class="col">
+  <span class="eyebrow">After the Reddit research · Oct 8</span>
+  <h2>What Codex's Reddit pass changed</h2>
+  <p class="muted">39 Reddit threads (no TikTok was reachable). It confirmed all four calls and sharpened five details. Full notes: <code>inputs/closet-research-codex.md</code>.</p>
+  <div class="decide">
+    <div><span class="q">a</span><h3>Closet opens on Outfits once he can make 3 or more.</h3><p class="muted small">The pain men repeat is "I rewear the same couple outfits." Before that, it opens on Pieces. After he taps a segment, it remembers his choice.</p></div>
+    <div><span class="q">b</span><h3>"Goes with" shows 3 options with roles: best match, dressier, more relaxed.</h3><p class="muted small">Guys asking "what pants go with this?" want one answer plus a couple of alternatives. Code picks the roles from the rubric's dressiness levels.</p></div>
+    <div><span class="q">c</span><h3>Every outfit card carries a plain reason.</h3><p class="muted small">"Light top, dark bottom." "Earth tones work together." Written from templates, never blank. Visible rules are what make a combo feel trustworthy rather than random.</p></div>
+    <div><span class="q">d</span><h3>"Next best buy" is described by kind, not brand, and shows what it unlocks.</h3><p class="muted small">Tap it to see the actual outfits it would make, with the new piece dashed. No shop links, which read as an ad.</p></div>
+    <div><span class="q">e</span><h3>Wear counts stay neutral.</h3><p class="muted small">"Worn 2×" and "Last worn Sep 28" on a piece. No "neglected" filter or "haven't worn in 30 days" nudges; tracking turns into guilt fast.</p></div>
+  </div>
+  <p class="small muted">Google Photos Wardrobe is confirmed on Google's own pages (US, India, Brazil; Sep 24, 2026). It needs a Google AI Pro/Ultra plan, or 1,000+ photos of yourself plus face grouping. Early users say it pulled only "a handful" of pieces and can't be corrected. Kitted's edge is control and judgement: correct any item, add from a fit photo, outfits ranked by real rules.</p>
 </section>
 
 <section>
@@ -224,14 +239,14 @@ figcaption b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
         <div class="card spread"><div><div class="tag">Worn</div><span class="num" style="font-size:20px">2×</span></div><div><div class="tag">Last worn</div><span style="font-size:12.5px;font-weight:600">Sep 28</span></div><div><div class="tag">Outfits</div><span class="num" style="font-size:20px">9</span></div></div>
         <div class="spread"><b style="font-size:13px">Goes with</b><span class="chev" style="font-size:11px">All 9 ›</span></div>
         <div class="goes">
-          <div class="fit"><div class="stand"><svg fill="#F2F0EA" stroke="var(--g-stroke)"><use href="#g-tee"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div></div>
-          <div class="fit"><div class="stand"><svg fill="#2B3550" stroke="var(--g-stroke)"><use href="#g-crew"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div></div>
-          <div class="fit"><div class="stand"><svg fill="#5B6440" stroke="var(--g-stroke)"><use href="#g-over"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#3A2A20" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div></div>
+          <div class="fit"><div class="stand"><svg fill="#F2F0EA" stroke="var(--g-stroke)"><use href="#g-tee"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div><span class="lbl">Best match</span></div>
+          <div class="fit"><div class="stand"><svg fill="#2B3550" stroke="var(--g-stroke)"><use href="#g-crew"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#F2F1EC" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div><span class="lbl">Dressier</span></div>
+          <div class="fit"><div class="stand"><svg fill="#5B6440" stroke="var(--g-stroke)"><use href="#g-over"/></svg><svg fill="#B98E62" stroke="var(--g-stroke)"><use href="#g-pants"/></svg><svg fill="#3A2A20" stroke="var(--g-stroke)" viewBox="0 0 40 20"><use href="#g-shoe"/></svg></div><span class="lbl">More relaxed</span></div>
         </div>
         <div class="btn">Style this</div>
         <div class="muted" style="font-size:10.5px;text-align:center">Opens Stylist with the chinos pinned</div>
       </div></div>
-      <figcaption><b>A piece</b>"What goes with this?" is the question men actually ask (Twelve70's whole app, a top post on r/malefashionadvice). Three good options, not a feed. "Style this" jumps to Stylist, which keeps your "do things in Stylist" rule.</figcaption>
+      <figcaption><b>A piece</b>"What goes with this?" is the question men actually ask. Three options with roles (best match, dressier, more relaxed), not a feed. "Style this" jumps to Stylist, which keeps your "do things in Stylist" rule.</figcaption>
     </figure>
 
     <!-- 4 Thin closet -->
