@@ -19,6 +19,7 @@ import type { Scheduler } from '@/services/scheduler';
 import { garmentHex, garmentLabel } from './labels';
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { firstStyle, stylesFor } from './lens';
+import { ideaId, slotAt } from '@/features/morning/service';
 import { evaluateCheck } from './scoring';
 
 export interface TimerConfig {
@@ -315,7 +316,15 @@ export function createFitCheckService(deps: ServiceDeps) {
     const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.keptUri ?? null, aspect: image.aspect ?? null };
     const lastOccasion = ((await store.getKv(KV.lastOccasion)) as OccasionKey | null) ?? 'everyday';
     const occasion: OccasionKey = req.mode !== 'check' && parent ? parent.occasion : req.occasion ?? lastOccasion;
-    const style: StyleKey | null = req.mode !== 'check' && parent ? parent.style : req.style !== undefined ? req.style : firstStyle((await profile()).styles);
+    // One style per check (#61). A plain "Check my fit" uses the style on today's card for this
+    // window (so both camera paths score the same photo the same way), else his first style.
+    const cardStyle = async (): Promise<StyleKey | null | undefined> => {
+      const { day, slot } = slotAt(now, clock.offset);
+      return (await store.dailyIdeas.get(ideaId(day, slot)))?.style;
+    };
+    const style: StyleKey | null = req.mode !== 'check' && parent
+      ? parent.style
+      : req.style !== undefined ? req.style : (await cardStyle()) ?? firstStyle((await profile()).styles);
 
     if (req.mode === 'shoeSnap' && parent) {
       await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { ...photoPayload, snap: true } });
