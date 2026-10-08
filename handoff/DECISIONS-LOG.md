@@ -269,3 +269,12 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The style can't be changed after the check:** the result card shows `Everyday ⌄ · Streetwear` with the style as plain text, not a control. He picks the look on the morning/evening card before the photo; a check from "Check my fit" uses his first onboarding style.
       - **What can still change after the check:** only the occasion, through the tray, asking first (#62).
     - **"Scored for" stays as built** (today's v3.1 rules apply the picked style). It falls away by itself when the style-council rulebook is ported (`styleEffects()` finds no difference); the "Reads as …" label (council #62) replaces it then. The service keeps `previewLens`/`changeLens` for styles (tested) but no UI calls them.
+
+63. **The v5 answer format failed; the scoring call stays lean** (Oct 8, `compare_v5.py`, results in `extraction-test/results/test5-*`).
+    - **Consistency:** stock photos 32/39 (82%, bar 90%; locked v3 37/40), mirror 12/12, phone 4/4.
+    - **Speed:** about 3 s slower than v3 measured in the same hour (15.1 vs 12.0 s; output 765 → 1,090 tokens). Tonight's API was slow overall: v3 ran 12 s vs 6.6 s on Oct 6.
+    - **Cause:** the longer answer made the core readings flip between runs (s01 dress shoe/loafer, s05 canvas/low-profile, s26 pooling/stacked, s15 hem and leg).
+    - **The closet fields read well but don't belong in the scoring call:** shade, details and logo text (the founder's hoodie: "medium grey", "Nike swoosh", hood, drawstring, front pouch).
+    - **His ph1:** sweatpants on all 6 v5 runs, never cuffed; the tap fired on all 6.
+    - **Decision (Claude):** the code-only rulings don't need new fields, so they ship on the locked v3 format now. New fields go in only after they pass a re-run.
+    - **Proposed to the founder (money):** a lean v5s scoring format (v3 + `stacked` + `denim_wear` + the council's prompt lines), and a separate closet call after the card shows (shade, details, logo text, boxes for crops), off the score's critical path.

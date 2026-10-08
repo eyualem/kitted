@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.8-flash",
+ "thinking": "off",
+ "format": "v5",
+ "image_px": 1024,
+ "runs": 3,
+ "photos": "/Users/eyu/Desktop/files/Kitted/inputs/phone-oct7",
+ "photo_count": 4,
+ "styles": {
+  "minimalist": 0.5,
+  "smart_casual": 0.5
+ },
+ "default_occasion": "everyday",
+ "started": "2026-10-08 00:58:07",
+ "prompt_sha": "4a4751e3430a",
+ "schema_sha": "9e6916404f59",
+ "rubric_sha": "807f18c29da1",
+ "finished": "2026-10-08 01:01:35",
+ "model_versions": [
+  "gemini-3.8-flash"
+ ]
+}

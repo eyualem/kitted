@@ -1,0 +1,191 @@
+Using fixes from: ../inputs/fitcheck-photos/fixes.csv (6 pairs)
+p01/after_studio.jpg (after, studio)
+   run 1: 7.5 (partial)  [7.72s]
+   run 2: 8.5 (partial)  [9.12s]
+   run 3: 8.0 (partial)  [6.66s]
+p01/before_studio.jpg (before, studio)
+   run 1: 8.0 (partial)  [7.1s]
+   run 2: 8.0 (partial)  [5.98s]
+   run 3: 8.0 (partial)  [9.59s]
+p02/after_studio.jpg (after, studio)
+   run 1: 6.5  [7.69s]
+   run 2: 6.0  [8.43s]
+   run 3: 6.0  [8.57s]
+p02/before_studio.jpg (before, studio)
+   run 1: 6.0  [7.66s]
+   run 2: 5.5  [7.57s]
+   run 3: 6.0  [6.56s]
+p03/after_street.jpg (after, street)
+   run 1: 8.5  [10.18s]
+   run 2: 8.5  [9.62s]
+   run 3: 8.5  [9.51s]
+p03/before_street.jpg (before, street)
+   run 1: 7.5  [10.66s]
+   run 2: 7.5  [10.92s]
+   run 3: 7.0  [11.64s]
+p04/after_street.jpg (after, street)
+   run 1: 7.5 (partial)  [8.21s]
+   run 2: 7.5 (partial)  [8.66s]
+   run 3: 7.5 (partial)  [7.66s]
+p04/before_street.jpg (before, street)
+   run 1: 7.5 (partial)  [8.1s]
+   run 2: 7.5 (partial)  [9.07s]
+   run 3: 7.5 (partial)  [9.31s]
+p05/after_street.jpg (after, street)
+   run 1: 8.0  [9.79s]
+   run 2: 8.0  [11.8s]
+   run 3: 8.0  [8.44s]
+p05/before_street.jpg (before, street)
+   run 1: 7.5 (partial)  [7.73s]
+   run 2: 7.5 (partial)  [6.09s]
+   run 3: 6.5 (partial)  [7.92s]
+p06/after_studio.jpg (after, studio)
+   run 1: 8.5 (partial)  [7.34s]
+   run 2: 8.5 (partial)  [10.32s]
+   run 3: 8.5 (partial)  [8.09s]
+p06/before_studio.jpg (before, studio)
+   run 1: 8.5 (partial)  [6.77s]
+   run 2: 8.0 (partial)  [15.96s]
+   run 3: 8.5 (partial)  [6.88s]
+s01/before_studio.jpg (before, studio)
+   run 1: 8.0  [10.18s]
+   run 2: 8.5  [9.65s]
+   run 3: 8.0  [9.24s]
+s02/before_studio.jpg (before, studio)
+   run 1: 6.0  [8.28s]
+   run 2: 5.5  [8.52s]
+   run 3: 6.0  [8.72s]
+s03/before_studio.jpg (before, studio)
+   run 1: 8.0  [10.35s]
+   run 2: 8.0  [17.16s]
+   run 3: 8.0  [9.08s]
+s04/before_studio.jpg (before, studio)
+   run 1: 6.5  [8.05s]
+   run 2: 6.5  [7.15s]
+   run 3: 7.0  [17.51s]
+s05/before_studio.jpg (before, studio)
+   run 1: 7.5  [8.3s]
+   run 2: 8.0  [7.78s]
+   run 3: 7.0  [7.98s]
+s06/before_studio.jpg (before, studio)
+   run 1: 7.0  [6.67s]
+   run 2: 7.0  [6.45s]
+   run 3: 7.0  [6.24s]
+s07/before_studio.jpg (before, studio)
+   run 1: 8.5  [9.78s]
+   run 2: 8.5  [11.25s]
+   run 3: 8.5  [10.7s]
+s08/before_studio.jpg (before, studio)
+   run 1: 8.0  [6.93s]
+   run 2: 8.0  [20.52s]
+   run 3: 8.5  [8.35s]
+s09/before_street.jpg (before, street)
+   run 1: 7.5  [9.71s]
+   run 2: 8.0  [9.21s]
+   run 3: 7.0  [8.64s]
+s10/before_street.jpg (before, street)
+   API 500 (rate limit or busy); waiting 20s
+   run 1: 8.0  [26.82s]
+   run 2: 8.0  [12.87s]
+   run 3: 8.0  [11.17s]
+s11/before_street.jpg (before, street)
+   run 1: 7.5  [9.45s]
+   run 2: 7.0  [9.28s]
+   run 3: 7.0  [9.71s]
+s12/before_street.jpg (before, street)
+   run 1: 7.0  [8.93s]
+   run 2: 7.0  [14.18s]
+   run 3: 7.0  [8.02s]
+s13/before_street.jpg (before, street)
+   run 1: 8.0  [6.99s]
+   run 2: 7.5 (partial)  [6.23s]
+   run 3: 7.5  [6.65s]
+s14/before_street.jpg (before, street)
+   run 1: 8.5  [7.9s]
+   run 2: 8.0  [8.17s]
+   run 3: 8.5  [8.81s]
+s15/before_street.jpg (before, street)
+   run 1: 8.5  [11.88s]
+   run 2: 9.0  [9.25s]
+   run 3: 8.5  [11.75s]
+s16/before_street.jpg (before, street)
+   run 1: 8.5  [10.32s]
+   run 2: 8.5  [9.36s]
+   run 3: 8.5  [9.27s]
+s17/before_phone.jpg (before, phone)
+   run 1: 7.0  [8.64s]
+   run 2: 7.0  [9.59s]
+   run 3: 7.0  [10.47s]
+s18/before_phone.jpg (before, phone)
+   run 1: 8.0  [10.37s]
+   run 2: 8.0  [11.15s]
+   run 3: 8.0  [16.3s]
+s19/before_phone.jpg (before, phone)
+   run 1: 7.5 (partial)  [14.24s]
+   run 2: 7.5 (partial)  [14.31s]
+   run 3: 7.5 (partial)  [27.87s]
+s20/before_phone.jpg (before, phone)
+   run 1: 7.0  [16.9s]
+   run 2: 6.5  [17.69s]
+   run 3: 7.0  [19.91s]
+s21/before_phone.jpg (before, phone)
+   run 1: 7.0  [17.24s]
+   run 2: 7.0  [18.4s]
+   run 3: 7.0  [20.09s]
+s22/before_phone.jpg (before, phone)
+   run 1: 8.0 (partial)  [16.27s]
+   run 2: 8.0 (partial)  [15.13s]
+   run 3: 7.5 (partial)  [17.71s]
+s23/before_mirror.jpg (before, mirror)
+   run 1: 7.5 (partial)  [14.06s]
+   run 2: 7.5 (partial)  [14.2s]
+   run 3: 7.5 (partial)  [9.0s]
+s24/before_mirror.jpg (before, mirror)
+   run 1: 7.0 (partial)  [32.26s]
+   run 2: 6.5 (partial)  [30.69s]
+   run 3: 6.5 (partial)  [36.25s]
+s25/before_mirror.jpg (before, mirror)
+   run 1: 7.5  [55.16s]
+   run 2: 7.5  [72.32s]
+   run 3: 7.5  [63.89s]
+s26/before_mirror.jpg (before, mirror)
+   run 1: 7.5 (partial)  [80.36s]
+   run 2: 8.5 (partial)  [87.77s]
+   run 3: 7.5 (partial)  [83.74s]
+s27/before_mirror.jpg (before, mirror)
+   run 1: 7.0 (partial)  [48.06s]
+   run 2: 7.0 (partial)  [45.22s]
+   run 3: 7.0 (partial)  [42.48s]
+s28/before_mirror.jpg (before, mirror)
+Traceback (most recent call last):
+  File "/Users/eyu/Desktop/files/Kitted/extraction-test/run_test.py", line 367, in <module>
+    main()
+  File "/Users/eyu/Desktop/files/Kitted/extraction-test/run_test.py", line 349, in main
+    r = call_gemini(args.model, key, img, thinking=args.thinking, fmt=args.format)
+  File "/Users/eyu/Desktop/files/Kitted/extraction-test/run_test.py", line 69, in call_gemini
+    with urllib.request.urlopen(req, timeout=90) as r:
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1389, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/ssl.py", line 1241, in recv_into
+    return self.read(nbytes, buffer)
+  File "/Applications/Xcode-26.6.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/ssl.py", line 1099, in read
+    return self._sslobj.read(len, buffer)
+socket.timeout: The read operation timed out

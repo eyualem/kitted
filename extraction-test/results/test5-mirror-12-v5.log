@@ -1,0 +1,59 @@
+Using fixes from: ../inputs/mirror-fit-check-1/fixes.csv (0 pairs)
+m01/before_mirror.jpg (before, mirror)
+   run 1: 7.0  [61.96s]
+   run 2: 7.0  [27.65s]
+   run 3: 7.0  [14.67s]
+m02/before_mirror.jpg (before, mirror)
+   run 1: 8.5  [14.32s]
+   run 2: 8.5  [18.28s]
+   run 3: 8.5  [12.39s]
+m03/before_mirror.jpg (before, mirror)
+   run 1: 8.5  [31.12s]
+   run 2: 8.5  [28.99s]
+   run 3: 6.5  [34.51s]
+m04/before_mirror.jpg (before, mirror)
+   run 1: 6.5 (partial)  [20.32s]
+   run 2: 6.5 (partial)  [20.74s]
+   run 3: 6.5 (partial)  [13.47s]
+m05/before_studio.jpg (before, studio)
+   run 1: 8.5  [21.45s]
+   run 2: 7.5  [18.99s]
+   run 3: 8.5  [20.38s]
+m06/before_mirror.jpg (before, mirror)
+   run 1: 7.5 (partial)  [22.48s]
+   run 2: 7.0 (partial)  [21.67s]
+   run 3: 7.0 (partial)  [28.86s]
+m07/before_mirror.jpg (before, mirror)
+   run 1: 8.5  [18.75s]
+   run 2: 9.0  [16.06s]
+   run 3: 9.0  [18.39s]
+m08/before_mirror.jpg (before, mirror)
+   run 1: 8.0  [21.54s]
+   run 2: 8.0  [19.27s]
+   run 3: 8.0  [21.02s]
+m09/before_mirror.jpg (before, mirror)
+   run 1: 8.0 (partial)  [20.57s]
+   run 2: 8.0 (partial)  [17.74s]
+   run 3: 8.0 (partial)  [16.82s]
+m10/before_mirror.jpg (before, mirror)
+   run 1: 8.5 (partial)  [17.49s]
+   run 2: 8.5 (partial)  [8.94s]
+   run 3: 9.0 (partial)  [8.28s]
+m11/before_mirror.jpg (before, mirror)
+   run 1: 8.0  [22.79s]
+   run 2: 8.0  [28.32s]
+   run 3: 8.0  [26.68s]
+m12/before_mirror.jpg (before, mirror)
+   run 1: 8.5  [17.01s]
+   run 2: 8.5  [16.18s]
+   run 3: 8.5  [29.65s]
+# Extraction test report
+
+- Photos scored: **12** (photos with fewer than 3 scored runs are left out), runs: **36**, failed runs: **0**
+- **Score consistency:** 10/12 photos had every run within ±0.5 of the median = **83%** (pass bar 90%) → **FAIL**
+- **Fix detection:** 0/0 = **0%** (pass bar 80%) → **NO DATA**
+- Tokens used: 87,804 in / 38,654 out (multiply by your model's list price to get the test cost; divide by runs for cost per check)
+- Seconds per call (API only): median **20.35**, p90 **29.65**, p95 34.51, slowest 61.96; under 5 s: 0%, under 8 s: 0%
+- Seconds per call including retry waits: median 20.35, slowest 62.0
+
+Full report: results/test5-mirror-12-v5/report.md

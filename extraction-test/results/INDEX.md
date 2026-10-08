@@ -14,6 +14,7 @@ Prices are the Gemini 3.8 Flash introductory rates ($0.75 per million tokens in,
 | `probe-thinking-*/` (4 folders) | Oct 6 | 8 hard photos (`inputs/speed-probe-8`): thinking off / low at 1024 px, off at 768 and 512 px | gemini-3.8-flash | 3 | 6–8 of 8 (differences are noise: low = off on 3.8) | — | ~$0.30 |
 | `lockin-oct6/` | Oct 6 | legacy 52 × 4 arms (A today, B thinking off, C/D thinking off + v4), pass rules written beforehand | gemini-3.8-flash | 3 | A 98% · **B 100%** · C 92% · v4.1 96–98% | A 4/6 · B 5/6 · C 4/6 | ~$2.70 |
 | `selftest/` | — | fake data, no API calls (checks the code only) | — | — | ignore | ignore | $0 |
+| `test5-*-v5/` | Oct 8 | v5 format (v3 + style-council fields) on stock 40, mirror 12, founder's 4 phone photos (+ phone 4 in v3, same hour) | gemini-3.8-flash | 3 | stock **82%** (v3 92%) · mirror 100% · phone 100% | — | ~$1.00 |
 
 ## What we learned
 - **The AI reads outfits consistently**, including real mirror selfies and tiny images (168×300 px). Every garment detail agreed 90%+ across runs.
@@ -32,3 +33,5 @@ Prices are the Gemini 3.8 Flash introductory rates ($0.75 per million tokens in,
 - Real fix pairs (cuff, tuck, roll sleeves): does the score go up?
 - The shoe snap (straight down vs. knee height)
 - Thinking turned off (speed and cost)
+
+- **Oct 8: v5 FAILED its pass bars** (`compare_v5.py`). Stock consistency 32/39 under the rulebook (bar 90%; locked v3 37/40). It's about 3 s slower than v3 in the same hour (15.1 vs 12.0 s on the phone set; 1,090 vs 765 output tokens). The longer answer destabilized core readings: shoe type, hem, leg shape. The closet fields read well (hoodie: medium grey, Nike swoosh, front pouch); `shade` is free text and differs between runs on 44% of garments. The founder's ph1 was read as sweatpants on all 6 v5 runs, and the tap fired every time. One stock run ended early on a network timeout (117 of 120 readings).
