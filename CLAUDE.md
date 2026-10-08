@@ -192,6 +192,10 @@
 
 ## Next steps, in order
 
+### Next: two workstreams from the founder's Oct 8 phone test (start each in its own chat)
+- **A. Reading accuracy and uncertainty.** Five real checks (Metro log): his boots were read as "other" ×4 and once as "slides" (that read gave the fix "Swap the slides for chunky sneakers → 8.5"); his very baggy black jeans were read as jeans, but never as wide ("Swap to relaxed-leg pants"); the same overshirt read cream vs tan; and the hoodie read as hoodie vs sweatshirt. Ideas to brainstorm: a side photo, asking whenever a score-moving reading is uncertain (not only the 9 tap pairs), explaining the uncertainty on the card, and measuring accuracy on his labeled photos.
+- **B. Closet identity and pictures.** He can't reliably tell his own pieces apart in the closet, and the graphics don't look like his clothes. Ideas to brainstorm: real cut-outs (hard with layers), confirmation questions after a check ("Is this your grey hoodie?"), and making the review step easier to find (he found "Review" only by chance).
+
 ### 0. The plan to beta (Oct 7 review, DECISIONS-LOG #56)
 **Features before polish.** The Stylist tab is about 80% of the mockup's polish; the gap is scope. Closet, Lookbook, You, onboarding and the paywall are still placeholders that show spec IDs ("C1 · Closet"). There's also no server, so a release build can't score real photos (the key only loads in dev builds). Order:
 1. **Quick-fix batch: done Oct 7** (DECISIONS-LOG #63; on the Simulator; the camera text reaches my phone after the next `tools/phone/install.sh`). It was:
