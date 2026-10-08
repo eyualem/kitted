@@ -11,7 +11,7 @@ import {
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import {
-  DAY_CARD_OCCASIONS, EVENING_CARD_OCCASIONS, STYLES,
+  DAY_CARD_OCCASIONS, EVENING_CARD_OCCASIONS, normStyleKey, STYLES,
   type CardOccasion, type ClosetItemRow, type DailyIdeaRow, type FitCheckRow, type StyleKey,
 } from '@/data/types';
 import { shownPhoto } from '@/demo/demoPhotos';
@@ -75,7 +75,7 @@ async function load(ideaId: string): Promise<Model | null> {
   const cur = slotAt(now, zone);
   const snap = await quota.snapshot();
   const profile = await store.profile.get('me');
-  const myStyles = (profile?.styles ?? []).map(([s]) => (s === 'preppy' ? 'old_money' : s)).filter((s): s is StyleKey => (STYLES as readonly string[]).includes(s));
+  const myStyles = Array.from(new Set((profile?.styles ?? []).map(([s]) => normStyleKey(s)).filter((s): s is StyleKey => s !== null)));
   return {
     row, items, known, missing: details.missing ?? null, missingSlots, reasons: details.reasons ?? [], piecesKnown: closet.length, check,
     current: cur.day === row.dayKey && cur.slot === row.slot,

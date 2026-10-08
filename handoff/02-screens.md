@@ -1539,12 +1539,11 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.byName.sub` | Up to 3. You can change these later in You. | N |
 | `style.smart_casual` | Smart casual | M |
 | `style.minimalist` | Minimal | N |
-| `style.old_money` | Old money | N |
 | `style.workwear` | Workwear | M |
 | `style.vintage_sport` | Vintage sport | N |
 | `style.streetwear` | Streetwear | N |
-| `style.preppy` | Preppy | N |
-| `style.gorpcore` | Outdoor | N |
+| `style.classic_prep` | Classic prep | N |
+| `style.outdoor` | Outdoor | N |
 | `onb.basics.echoNotSure` | Not sure yet | N |
 | `onb.basics.replyTwo` | {style1} with some {style2}. Good mix. Now your basics, so the advice fits your frame. | M (template) |
 | `onb.basics.replyOne` | {style1}. Good pick. Now your basics, so the advice fits your frame. | N |

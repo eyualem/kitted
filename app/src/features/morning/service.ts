@@ -15,7 +15,7 @@ import type { KittedStore } from '@/data/store';
 import type {
   CardOccasion, ChatMessage, ClosetItemRow, DailyIdeaRow, FitCheckRow, IdeaSlot, OccasionKey, OutfitRow, StyleKey,
 } from '@/data/types';
-import { STYLES } from '@/data/types';
+import { normStyleKey, STYLES } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
 import { t, type StringKey } from '@/i18n/en';
@@ -61,8 +61,8 @@ export function defaultOccasion(slot: IdeaSlot, nowMs: number, zone: ZoneOffset)
 }
 
 const isStyle = (s: unknown): s is StyleKey => typeof s === 'string' && (STYLES as readonly string[]).includes(s);
-/** Preppy merged into old money (#57). */
-const normStyle = (s: unknown): StyleKey | null => (s === 'preppy' ? 'old_money' : isStyle(s) ? s : null);
+/** Old keys (preppy, old money, gorpcore) read as the V5 names (#83). */
+const normStyle = (s: unknown): StyleKey | null => (isStyle(s) ? s : normStyleKey(s));
 
 /** One style, never a blend (#61). */
 export const styleInput = (style: StyleKey | null): Styles | null => (style ? [[style, 1]] : null);

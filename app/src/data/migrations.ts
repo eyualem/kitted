@@ -216,7 +216,26 @@ const V4: Migration = {
   ],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4];
+// V5 (Oct 8, #83): the style keys follow rubric v4's names. preppy and old_money became
+// classic_prep, gorpcore became outdoor: the one style on checks and ideas, the remembered card
+// style (kv), the "style" a re-scored check was for (fit_checks.details), and his ordered picks
+// (profile.styles, a JSON array of [name, weight]; only quoted keys are replaced, so order and
+// weights stay). The app also normalizes on read (normStyleKey), so a missed row still works.
+const V5: Migration = {
+  version: 5,
+  statements: [
+    `UPDATE fit_checks SET style = 'classic_prep' WHERE style IN ('preppy', 'old_money')`,
+    `UPDATE fit_checks SET style = 'outdoor' WHERE style = 'gorpcore'`,
+    `UPDATE daily_ideas SET style = 'classic_prep' WHERE style IN ('preppy', 'old_money')`,
+    `UPDATE daily_ideas SET style = 'outdoor' WHERE style = 'gorpcore'`,
+    `UPDATE kv SET value = 'classic_prep' WHERE key IN ('idea.style.day', 'idea.style.evening') AND value IN ('preppy', 'old_money')`,
+    `UPDATE kv SET value = 'outdoor' WHERE key IN ('idea.style.day', 'idea.style.evening') AND value = 'gorpcore'`,
+    `UPDATE fit_checks SET details = REPLACE(REPLACE(REPLACE(details, '"style":"preppy"', '"style":"classic_prep"'), '"style":"old_money"', '"style":"classic_prep"'), '"style":"gorpcore"', '"style":"outdoor"')`,
+    `UPDATE profile SET styles = REPLACE(REPLACE(REPLACE(styles, '"preppy"', '"classic_prep"'), '"old_money"', '"classic_prep"'), '"gorpcore"', '"outdoor"')`,
+  ],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 

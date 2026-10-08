@@ -1,7 +1,7 @@
 // The morning card's words, from templates (02 "S1d"): the why line, the weather strip and the
 // spoken summary. Pure, so they're tested without rendering.
 import type { DayWeather, IdeaReason, MissingSlot } from '@kitted/core';
-import type { CardOccasion, ClosetItemRow, StyleKey } from '@/data/types';
+import { normStyleKey, type CardOccasion, type ClosetItemRow, type StyleKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
 import { hourText } from '@/i18n/format';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -11,7 +11,8 @@ export function cardOccasionLabel(o: CardOccasion): string {
 }
 
 export function styleLabel(s: StyleKey | null): string {
-  return s ? t(`style.${s}` as StringKey) : t('style.none');
+  const k = normStyleKey(s);
+  return k ? t(`style.${k}` as StringKey) : t('style.none');
 }
 
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);

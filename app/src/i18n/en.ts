@@ -147,13 +147,7 @@ const addedInBuild = {
   // Morning/evening card (02 "S1d", DECISIONS-LOG #58–62). Templates; code picks the outfit.
   'occasion.goingOut': 'Going out',
   'occasion.stayingIn': 'Staying in',
-  'style.streetwear': 'Streetwear',
-  'style.smart_casual': 'Smart casual',
-  'style.minimalist': 'Minimal',
-  'style.workwear': 'Workwear',
-  'style.old_money': 'Old money',
-  'style.vintage_sport': 'Sporty',
-  'style.gorpcore': 'Outdoorsy',
+  // The 7 style names come from the deck (02 §5.2: Classic prep, Outdoor, Vintage sport since V5, #83).
   'style.none': 'Any style',
   'style.menu.yours': 'Your styles',
   'style.menu.more': 'More styles',

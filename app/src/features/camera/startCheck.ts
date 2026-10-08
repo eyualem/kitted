@@ -1,7 +1,7 @@
 // One way into a check from any photo source (camera, library, sample sheet): start it and,
 // when nothing was sent, say why in a toast (02 S3 copy). A check that started shows its card.
 import { store } from '@/data/db';
-import { OCCASIONS, STYLES, type OccasionKey, type StyleKey } from '@/data/types';
+import { normStyleKey, OCCASIONS, type OccasionKey, type StyleKey } from '@/data/types';
 import { fitCheck } from '@/features/fitcheck/session';
 import type { CheckMode } from '@/features/fitcheck/machine';
 import type { StartOutcome } from '@/features/fitcheck/service';
@@ -20,7 +20,8 @@ export interface CheckLens {
 export function lensFromParams(p: { occasion?: string; style?: string }): CheckLens {
   const lens: CheckLens = {};
   if (p.occasion && (OCCASIONS as readonly string[]).includes(p.occasion)) lens.occasion = p.occasion as OccasionKey;
-  if (p.style && (STYLES as readonly string[]).includes(p.style)) lens.style = p.style as StyleKey;
+  const style = normStyleKey(p.style);
+  if (style) lens.style = style;
   return lens;
 }
 

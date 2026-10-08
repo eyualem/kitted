@@ -3,12 +3,10 @@
 // onboarding style; no styles ("Not sure") means the general standard. Rows from before V4
 // (style null with styles in his profile) keep the profile blend they were scored with.
 import type { Styles } from '@kitted/core';
-import { STYLES, type StyleKey } from '@/data/types';
+import { normStyleKey, type StyleKey } from '@/data/types';
 
 export function firstStyle(styles: Styles | null | undefined): StyleKey | null {
-  const s = styles?.[0]?.[0];
-  if (s === 'preppy') return 'old_money'; // merged (#57)
-  return typeof s === 'string' && (STYLES as readonly string[]).includes(s) ? (s as StyleKey) : null;
+  return normStyleKey(styles?.[0]?.[0]); // old onboarding keys map to the V5 names (#83)
 }
 
 /** The rubric input for a check scored for `style`. */

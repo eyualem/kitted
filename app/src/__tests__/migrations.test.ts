@@ -28,3 +28,46 @@ describe('migrations', () => {
     expect(pendingMigrations(LATEST_VERSION)).toEqual([]);
   });
 });
+
+// V5 runs on a real SQLite (Node's built-in one), from an empty file through every migration.
+describe('V5: style keys follow rubric v4 (#83)', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { DatabaseSync } = require('node:sqlite') as { DatabaseSync: new (p: string) => { exec(s: string): void; prepare(s: string): { all(): Record<string, unknown>[] } } };
+  const upTo = (v: number) => {
+    const db = new DatabaseSync(':memory:');
+    for (const m of MIGRATIONS.filter((x) => x.version <= v)) for (const s of m.statements) db.exec(s);
+    return db;
+  };
+
+  it('rewrites checks, ideas, the remembered card style, re-scored details and his picks', () => {
+    const db = upTo(4);
+    db.exec(`INSERT INTO fit_checks (id, style, details) VALUES
+      ('a', 'preppy', '{}'), ('b', 'old_money', '{"rescoredFrom":{"score":8,"occasion":"date","style":"gorpcore"}}'),
+      ('c', 'gorpcore', '{}'), ('d', 'streetwear', '{"rescoredFrom":{"score":7,"occasion":"class","style":"old_money"}}'), ('e', NULL, '{}')`);
+    db.exec(`INSERT INTO daily_ideas (id, style) VALUES ('x|day', 'old_money'), ('y|day', 'gorpcore'), ('z|day', NULL), ('w|day', 'minimalist')`);
+    db.exec(`INSERT INTO kv (key, value) VALUES ('idea.style.day', 'preppy'), ('idea.style.evening', 'gorpcore'), ('occasion.last', 'date')`);
+    db.exec(`INSERT INTO profile (id, styles) VALUES ('me', '[["preppy",0.5],["gorpcore",0.3],["streetwear",0.2]]')`);
+    for (const s of MIGRATIONS.find((m) => m.version === 5)!.statements) db.exec(s);
+
+    const rows = (sql: string) => db.prepare(sql).all();
+    expect(rows('SELECT id, style, details FROM fit_checks ORDER BY id')).toEqual([
+      { id: 'a', style: 'classic_prep', details: '{}' },
+      { id: 'b', style: 'classic_prep', details: '{"rescoredFrom":{"score":8,"occasion":"date","style":"outdoor"}}' },
+      { id: 'c', style: 'outdoor', details: '{}' },
+      { id: 'd', style: 'streetwear', details: '{"rescoredFrom":{"score":7,"occasion":"class","style":"classic_prep"}}' },
+      { id: 'e', style: null, details: '{}' },
+    ]);
+    expect(rows('SELECT id, style FROM daily_ideas ORDER BY id').map((r) => r.style)).toEqual(['minimalist', 'classic_prep', 'outdoor', null]);
+    expect(rows('SELECT key, value FROM kv ORDER BY key')).toEqual([
+      { key: 'idea.style.day', value: 'classic_prep' }, { key: 'idea.style.evening', value: 'outdoor' }, { key: 'occasion.last', value: 'date' },
+    ]);
+    // Order and weights stay (the label tie-break reads the order).
+    expect(JSON.parse(String(rows("SELECT styles FROM profile WHERE id = 'me'")[0]!.styles))).toEqual([['classic_prep', 0.5], ['outdoor', 0.3], ['streetwear', 0.2]]);
+  });
+
+  it('runs on a fresh install (every migration from 0)', () => {
+    const db = upTo(LATEST_VERSION);
+    expect(db.prepare('SELECT COUNT(*) AS n FROM fit_checks').all()[0]!.n).toBe(0);
+    expect(LATEST_VERSION).toBeGreaterThanOrEqual(5);
+  });
+});
