@@ -11,7 +11,8 @@
 import { colorDistance, lightnessOf } from "./closetColor";
 import { parseShade, shadeFromId, shadeId, type ShadeKey } from "./closetShade";
 import { SLOT_TO_CLOSET } from "./names";
-import type { ClosetItem, Garment, Reading } from "./types";
+import { RUBRIC_DATA } from "./rubricData";
+import type { ClosetItem, Garment, Reading, ShoeKind } from "./types";
 
 // ---------------------------------------------------------------- vocabulary
 export const DETAILS = [
@@ -48,15 +49,11 @@ function isFlip(a: string, b: string): boolean {
   return FLIP_PAIRS.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
 }
 
-/** The shoe kinds the quick tap asks about ("Boots, sneakers or slides?"). He names a kind, never a subtype. */
-export type ShoeKind = "boots" | "sneakers" | "slides";
-const SHOE_KINDS: readonly string[] = ["boots", "sneakers", "slides"];
-const SHOE_KIND: Readonly<Record<string, ShoeKind>> = {
-  work_boot: "boots", suede_chukka: "boots", chelsea_boot: "boots",
-  white_leather_sneaker: "sneakers", low_profile_sneaker: "sneakers", canvas_sneaker: "sneakers", retro_runner: "sneakers",
-  performance_runner: "sneakers", chunky_sneaker: "sneakers", basketball_sneaker: "sneakers",
-  slides_sandals: "slides",
-};
+/** Footwear subtype -> the kind the shoe quick tap asks about (rubric.py's tap.shoes.kinds). He names a kind, never a subtype. */
+const SHOE_KIND: Readonly<Record<string, ShoeKind>> = Object.fromEntries(
+  (Object.entries(RUBRIC_DATA.tap.shoes.kinds) as [ShoeKind, string[]][]).flatMap(([kind, subs]) => subs.map((s) => [s, kind])),
+);
+const SHOE_KINDS: readonly string[] = RUBRIC_DATA.tap.shoes.order;
 /** A footwear subcategory's kind; null for "other" and for shoes outside the three kinds (loafers, derbies...). */
 export function shoeKindOf(subcategory: unknown): ShoeKind | null {
   return typeof subcategory === "string" ? SHOE_KIND[subcategory] ?? null : null;

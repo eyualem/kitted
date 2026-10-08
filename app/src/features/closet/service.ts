@@ -181,10 +181,9 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const tap = row.details.tap;
     if (!tap?.answer || tap.skipped) return m;
     // The shoe tap ("Boots, sneakers or slides?") confirms the kind he named, not the subtype code picked inside it.
-    const t = tap as { kind?: string; options: readonly { value: string; group?: string }[]; answer: string };
-    if (t.kind === 'shoes') {
-      const group = t.options.find((o) => o.value === t.answer)?.group;
-      if (group === 'boots' || group === 'sneakers' || group === 'slides') m.set(tap.garmentIndex, { shoeKind: group });
+    if (tap.kind === 'shoes') {
+      const group = tap.options.find((o) => o.value === tap.answer)?.group;
+      if (group) m.set(tap.garmentIndex, { shoeKind: group });
       return m;
     }
     m.set(tap.garmentIndex, { subcategory: tap.answer });
