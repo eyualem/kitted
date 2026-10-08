@@ -231,3 +231,33 @@ Contradictions settled and decisions changed during the build. Newest last.
       - the extraction re-run for the new readings (about $1.35)
     - **The v5 answer format** (`prompt_v5.txt`, `schema_v5.json`) is v3 plus RULEBOOK Part 6: a `stacked` hem; `denim_wear`; `waistband`; `trail_shoe` and `vest`; the closet-only `shade`, `details`, `logo_text`, `sleeve_length`, `lightness` and `shoe_profile`; plus the council's prompt lines. The app keeps the locked v3 format until v5 passes. `compare_v5.py` checks it against the lock-in runs.
     - **First v5 read of his photo:** the hoodie came back as "medium grey", "Nike swoosh", with a hood, drawstring and front pouch. The jeans were still "sweatpants", with a claimed drawstring waist (likely the hoodie's drawstrings). So the waistband field won't save this photo; the tap does, because the certainty was "likely".
+
+## Oct 8, 2026 · Morning card built (05 §MC1–MC8, MC10–MC11)
+
+65. **Numbering collision: two sessions both used #59–62 on Oct 7–8.**
+    - **This session's morning-card entries** are the #59–62 under "## Oct 7, 2026 · The morning card": #59 "Going with your own?", #60 evening card, #61 style pull-down + "Scored for", #62 confirm before re-score. Code comments, 02 "S1d"/"S6s" and 05 §MC cite these as "#59–62".
+    - **The style-council session's** #59–62 sit under their own headings: the 3.5 hoodie check, founder style decisions, the rulebook, and the Oct 8 calls.
+    - Numbers continue from #65, and every new entry gets its heading's context.
+66. **Open conflict for the founder: does the style he picks change the score?**
+    - **Morning-card #61–62 (this chat, Oct 7):** each check is scored for one picked style. The result card has a style pull-down, and a change asks "Re-score for X?" first.
+    - **Style council #60.1, #61, #62 (other chat, Oct 7–8):** styles are detected from the clothes. His picks only break ties and never change a score; the approved card line is "Reads as streetwear" (0 points).
+    - **What's built:** the app still runs rubric v3.1, where a style input does change P1/F4/F6/F8, so the morning-card behavior is what ships today.
+    - **When the rulebook is ported:** `styleEffects()` will find no differences, so the "Scored for" line disappears by itself. The result card's style pull-down would then always say "The score stays". It should become the detected "Reads as …" label.
+    - **The morning card's style pill is fine under both:** the rulebook keeps picks for "steering suggestions".
+    - **Waiting on the founder.** Claude recommends the rulebook's way for the result card (detected, 0 points), keeping the style pill on the morning card.
+67. **Build notes:**
+    - **Scroll to the end:** FlatList's `scrollToEnd` uses cached row heights. A card that grows in stages (data, then tiles, then native pills) ended ~20 pt short, under the dock. The thread now scrolls to the measured content height (`onContentSizeChange`), not `scrollToEnd`.
+    - **Native pull-downs:** `@expo/ui` SwiftUI `Menu` inside a `Host` (already installed; no new package). An alert presented while the menu is still closing is dropped by iOS, so `confirmLens` waits 450 ms.
+    - **Demo screens and the card:** `morning.enabled()` reads `getDemoArgs().demoScreen`, because Stylist is mounted while a screen's data loads and the demo state was set too late. Card screens: 12, 25–32; screen 33 is "Scored for".
+    - **Single-style scoring changed one test:** the demo story's slim-chinos correction scores raw 8.0 for smart casual instead of 7.775 under the old 50/50 blend with workwear. The shown 8.0 and "Score stays 8.0" are unchanged.
+    - **Picker tuning after the first screenshots:**
+      - hot days rule out sweaters and hoodies, push boots down (−0.75) and favor short-sleeve tops (+0.5);
+      - a mild day penalizes any warm piece (−0.75), not only jackets.
+    - **Card copy:**
+      - occasions read naturally ("for a date", "a night out");
+      - weather tips say "Rain today" once the hour has passed;
+      - the weather-ask "Allow" is a copper text link (a secondary button vanished on the strip).
+    - **Card behavior:**
+      - an empty closet shows no "0 pieces so far";
+      - "Add basics" is hidden until Starter essentials (C5) exists.
+    - **Real vs. sample:** all weather is sample, and the card says "Sample weather". WeatherKit and location (MC9) wait on the paid developer program; the N1 notification tie-in waits on P6.

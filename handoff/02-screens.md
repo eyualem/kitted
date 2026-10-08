@@ -751,6 +751,11 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
     - or, for a cost, `Tighter for {style}` with the amount shown in the rows above.
   - Last line: `Change the style on the card to see it scored another way.`
 - **Never:** "wrong style", a penalty for mixing styles, or the AI judging style. Style only adjusts the general standard (rubric research #57).
+- **As built (Oct 8, #67):**
+  - **Header:** `Fit check · Full` left; right `Everyday ⌄ · Streetwear ⌄`, plain mono pull-downs with no capsules. VoiceOver keeps the grouped card, with custom actions Change occasion / Change style (action sheets).
+  - **The alert's buttons:** `Re-score` (default) / `Keep {current}`.
+  - **The note under the links:** `Re-scored · was 8.0 for smart casual`.
+- **Open (#66):** the style-council rulebook (#60–62 in that session) says picks never change a score. If the founder confirms that, this section becomes the detected `Reads as {style}` label (0 points), and the style pull-down leaves the result card.
 
 ### S1d · The morning card (decided Oct 7, DECISIONS-LOG #58; replaces the quick-start row)
 *Differs from mockup 12 because the founder found the chip row above the composer cramped. Once a day the stylist opens with the weather and an outfit instead.*
@@ -798,6 +803,13 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
   - **A swing of 15° or more between morning and high:** a layer he can take off.
   - The founder reviews these numbers with the rubric.
 - **Composer:** the quick-start row is gone. Idle dock = `Check my fit` + `Ask…` field only; reserve shrinks accordingly. "What should I wear?" is the card (and later typed questions); "I bought something" is v1.1; "Ask a question" is the field.
+- **As built (Oct 8, #67):**
+  - **Header:** two rows: the mono tagline (`Today` / `Tonight` · `From your closet`), then the two pills.
+  - **Sample weather:** the strip's footer reads `Sample weather` until WeatherKit is live; Apple's mark replaces it then.
+  - **Allow:** the copper text link (`TextLink`).
+  - **Thin closet:** shows only `Check my fit` until Starter essentials (C5) exists; `Add basics` is hidden.
+  - **Swap one:** the iOS action sheet (`The navy chinos`, …), not S28's sheet yet.
+  - **Same pick after a style change:** a toast `Same pick works for {style}.`, not a why line.
 - **VoiceOver:** the "your own fit" row is its own button ("Going with your own? Check it before you leave. Opens the camera."). The collapsed card: "Today, class: you went with your own, 8.0, Sharp. Shows the result."
 - **VoiceOver:** the card is one element: "Outfit idea for class today. 48 degrees now, high 63, rain likely after 5 pm. Navy overshirt, grey tee, khaki chinos, brown boots." Custom actions: Wear this, Swap one, Change occasion.
 

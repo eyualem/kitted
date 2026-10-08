@@ -87,6 +87,21 @@ describe('first-run story', () => {
     expect((await store.corrections.all())[0]).toMatchObject({ kind: 'wrongDetail', field: 'leg_shape', oldValue: 'straight', newValue: 'slim', scoreBefore: 8, scoreAfter: 8 });
   });
 
+  it('style lens (#61–62): preview changes nothing; re-score updates the same card, no new message', async () => {
+    const { store, svc } = await setup();
+    const { checkId } = (await svc.start({ mode: 'check', photoId: 's15', occasion: 'everyday', style: 'smart_casual' })) as { checkId: string };
+    const before = (await store.fitChecks.get(checkId))!;
+    const msgs = (await store.chat.all()).length;
+    const preview = (await svc.previewLens(checkId, { style: 'streetwear' }))!;
+    expect(preview.before).toBe(before.score);
+    expect(await store.fitChecks.get(checkId)).toEqual(before); // "Keep" = nothing happened
+    const after = (await svc.changeLens(checkId, { style: 'streetwear' }))!;
+    expect(after.style).toBe('streetwear');
+    expect(after.score).toBe(preview.after);
+    expect(after.details.rescoredFrom).toEqual({ score: before.score, occasion: 'everyday', style: 'smart_casual' });
+    expect((await store.chat.all()).length).toBe(msgs);
+  });
+
   it('re-check with p01a: 9.0, +1.0, the overshirt fix done (+0.75); uses the re-check, not a check', async () => {
     const { store, svc, quota } = await setup();
     const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };

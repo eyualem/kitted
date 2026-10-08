@@ -550,6 +550,11 @@ The founder tests on his own iPhone with a development build (free Apple ID "Per
 ### MC · The morning and evening cards + "Scored for" (about 5.5 days + 0.5 after Apple enrollment; added Oct 7, DECISIONS-LOG #58–62; spec 02 "S1d", "S6s")
 Built after the quick-fix batch and before Closet (it creates the outfit picker Closet reuses). Runs on demo weather until the paid developer program is active.
 
+**Status (Oct 8):**
+- **Done:** MC1–MC8, MC10, MC11. Demo screens 25–33; notes in DECISIONS-LOG #67.
+- **Waiting:** MC9 (WeatherKit + location; needs the paid team) and the N1 tie-in (P6).
+- **Open:** the founder's call on #66.
+
 1. **MC1 · Core `weather.ts`** (0.25 d)
    - **Types:** `DayWeather` (now/high/low/morning feels-like °F, rain chance and the first rainy hour, condition) and `WeatherNeeds` (layer none/suggested/required/outer, rainSafe, removable).
    - **Functions:** `weatherNeeds(w)`; `weatherTip(reading, w)` (advice only); the template keys for the greeting and the why line; the season fallback by month.
