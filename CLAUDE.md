@@ -433,4 +433,5 @@ Exceptions:
 - **Demo screen numbers may skip** (parallel sessions number from their own block); `-demoScreen` is capped at the highest `n`, not the count (#103).
 - **Simulator Vision:** `VNClassifyImageRequest` on the CPU gives meaningless labels (the same for different photos); person, face and piece checks work. Judge the clothes label on the Mac harness or the phone (#103).
 - **The dev build's floating "Tools" button covers the top-right header button** and takes its taps; drag it away when testing.
+- **Parallel sessions share files: stage only your own hunks** (`git add -p`) of shared files like core `index.ts`, and check HEAD alone with `npx tsc --noEmit -p app/packages/kitted-core` in a clean worktree. A worktree whose `node_modules` is symlinked to this folder typechecks this folder's core, not HEAD's (#127).
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
