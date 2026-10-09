@@ -462,9 +462,9 @@ describe('the score never changes because of the closet', () => {
 
 describe('measured on the phone (#104)', () => {
   it('each boxed piece is measured once per check before matching; its color, cut-out and quality land on the sighting', async () => {
-    const calls: { hash: string; keys: string[]; boxes: number[][] }[] = [];
+    const calls: { hash: string; keys: string[]; boxes: number[][]; mirrored?: boolean }[] = [];
     const measure: GarmentMeasurer = async (check, pieces) => {
-      calls.push({ hash: check.imageHash, keys: pieces.map((p) => p.key), boxes: pieces.map((p) => [...p.box]) });
+      calls.push({ hash: check.imageHash, keys: pieces.map((p) => p.key), boxes: pieces.map((p) => [...p.box]), mirrored: check.mirrored });
       return new Map(pieces.map((p, n) => [p.key, { sampledHex: '#444343', sampledL: 28 + n, cropFile: `closet/x-${p.key}.png`, cropQuality: 0.8 }]));
     };
     const env = await setup({ measure });
@@ -476,6 +476,7 @@ describe('measured on the phone (#104)', () => {
     // Only pieces the closet call boxed (tee + chinos in this photo's bundled answer).
     expect(calls[0]!.keys).toEqual(['garment-0', 'garment-1']);
     expect(calls[0]!.boxes.every((b) => b.length === 4)).toBe(true);
+    expect(calls[0]!.mirrored).toBe(false); // a studio photo: the cut-outs aren't flipped
     const obs = (await env.store.closetObs.all()).filter((o) => o.closet !== null).sort((a, b) => a.garmentIndex! - b.garmentIndex!);
     expect(obs.map((o) => [o.garmentIndex, o.sampledHex, o.sampledL, o.cropFile, o.cropQuality])).toEqual([
       [0, '#444343', 28, 'closet/x-garment-0.png', 0.8],
@@ -630,5 +631,17 @@ describe('"Your grey work boots?" in the closet (#126 / #115)', () => {
     expect(s?.itemId).not.toBe(env.knownId);
     expect(s?.userConfirmed ?? null).toBeNull();
     expect((await env.store.closet.get(env.knownId))!.wornCount).toBe(env.wornBefore);
+  });
+
+});
+
+describe('measured on the phone: mirror selfies (#109)', () => {
+  it('a mirror selfie (the reading says so) asks for the cut-outs flipped back to true view (#109)', async () => {
+    const seen: (boolean | undefined)[] = [];
+    const measure: GarmentMeasurer = async (check) => { seen.push(check.mirrored); return new Map(); };
+    const env = await setup({ measure, readings: { p01b: { ...demoReadingById('p01b')!, scene: { ...demoReadingById('p01b')!.scene, mirror_selfie: true } } as Reading } });
+    await env.check('p01b');
+    await env.closet.settle();
+    expect(seen).toEqual([true]);
   });
 });

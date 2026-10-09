@@ -236,9 +236,11 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const boxed = pieces.filter((p) => p.origin === 'garment' && p.fields?.visible && p.fields.box.length === 4);
     if (!measure || boxed.length === 0) return out;
     const key = (p: Piece) => `${p.origin}-${p.index}`;
+    // A mirror selfie's photo is the reflection: its cut-outs are flipped back to true view (#109).
+    const mirrored = (await readingOf(row.readingId))?.reading.scene?.mirror_selfie === true;
     try {
       const got = await measure(
-        { imageHash: row.imageHash, photoFile: row.photoFile, demoPhotoId: row.demoPhotoId },
+        { imageHash: row.imageHash, photoFile: row.photoFile, demoPhotoId: row.demoPhotoId, mirrored },
         boxed.map((p) => ({ key: key(p), category: String(p.garment.category), box: p.fields!.box })),
       );
       for (const p of boxed) {
