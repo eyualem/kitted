@@ -1,0 +1,138 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.80000000000000004,
+      "x" : 473,
+      "y" : 527
+    },
+    "lHip" : {
+      "c" : 0.59999999999999998,
+      "x" : 419,
+      "y" : 691
+    },
+    "lKnee" : {
+      "c" : 0.51000000000000001,
+      "x" : 415,
+      "y" : 904
+    },
+    "lShoulder" : {
+      "c" : 0.76000000000000001,
+      "x" : 456,
+      "y" : 400
+    },
+    "lWrist" : {
+      "c" : 0.78000000000000003,
+      "x" : 492,
+      "y" : 656
+    },
+    "neck" : {
+      "c" : 0.75,
+      "x" : 377,
+      "y" : 401
+    },
+    "rElbow" : {
+      "c" : 0.83999999999999997,
+      "x" : 257,
+      "y" : 536
+    },
+    "rHip" : {
+      "c" : 0.56000000000000005,
+      "x" : 318,
+      "y" : 690
+    },
+    "rKnee" : {
+      "c" : 0.70999999999999996,
+      "x" : 294,
+      "y" : 886
+    },
+    "root" : {
+      "c" : 0.57999999999999996,
+      "x" : 369,
+      "y" : 691
+    },
+    "rShoulder" : {
+      "c" : 0.75,
+      "x" : 297,
+      "y" : 402
+    },
+    "rWrist" : {
+      "c" : 0.83999999999999997,
+      "x" : 271,
+      "y" : 669
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 457,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s22\/before_phone.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 0,
+        "pos" : 0.73999999999999999,
+        "refL" : 61,
+        "side" : "l",
+        "spread" : 2.2000000000000002,
+        "thr" : 10,
+        "value" : "mid_bicep"
+      },
+      {
+        "bend" : 22,
+        "pocket" : true,
+        "pos" : 2.2999999999999998,
+        "refL" : 58,
+        "side" : "r",
+        "spread" : 0.5,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "hand in pocket"
+      }
+    ],
+    "bend" : 0,
+    "pos" : 0.73999999999999999,
+    "refL" : 61,
+    "side" : "l",
+    "spread" : 2.2000000000000002,
+    "thr" : 10,
+    "value" : "mid_bicep"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 79,
+    "pos" : 0.029000000000000001,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 21,
+        "side" : "l",
+        "u" : 0.039
+      },
+      {
+        "score" : 1,
+        "sep" : 24,
+        "side" : "r",
+        "u" : 0.02
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "pos" : 0.025999999999999999,
+    "value" : "at_belt"
+  },
+  "w" : 768
+}

@@ -1,0 +1,121 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.81000000000000005,
+      "x" : 452,
+      "y" : 597
+    },
+    "lHip" : {
+      "c" : 0.62,
+      "x" : 409,
+      "y" : 747
+    },
+    "lKnee" : {
+      "c" : 0.65000000000000002,
+      "x" : 412,
+      "y" : 910
+    },
+    "lShoulder" : {
+      "c" : 0.70999999999999996,
+      "x" : 444,
+      "y" : 539
+    },
+    "lWrist" : {
+      "c" : 0.88,
+      "x" : 423,
+      "y" : 501
+    },
+    "neck" : {
+      "c" : 0.64000000000000001,
+      "x" : 393,
+      "y" : 538
+    },
+    "rElbow" : {
+      "c" : 0.82999999999999996,
+      "x" : 293,
+      "y" : 604
+    },
+    "rHip" : {
+      "c" : 0.59999999999999998,
+      "x" : 327,
+      "y" : 731
+    },
+    "rKnee" : {
+      "c" : 0.65000000000000002,
+      "x" : 310,
+      "y" : 914
+    },
+    "root" : {
+      "c" : 0.60999999999999999,
+      "x" : 368,
+      "y" : 739
+    },
+    "rShoulder" : {
+      "c" : 0.56000000000000005,
+      "x" : 341,
+      "y" : 537
+    },
+    "rWrist" : {
+      "c" : 0.81999999999999995,
+      "x" : 350,
+      "y" : 523
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 308,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s28\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm lengths"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm lengths \/ arm not hanging"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 14,
+    "pos" : 0.13900000000000001,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 79,
+        "side" : "l",
+        "u" : 0.13900000000000001
+      },
+      {
+        "score" : 1,
+        "sep" : 74,
+        "side" : "r",
+        "u" : -0.107
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "pos" : 0.19,
+    "value" : "mid_fly"
+  },
+  "w" : 576
+}

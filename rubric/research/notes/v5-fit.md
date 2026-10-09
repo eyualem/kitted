@@ -144,6 +144,8 @@
   - The phone and hand cover part of the chest, often where the placket is.
 
 ### What the phone can measure (positions only)
+
+*Tested Oct 9 (`fit-ruler.md`, DECISIONS-LOG #170): "safe" below means safe for privacy and fairness, not accurate. Built from these walks, the ruler lost to the AI on sleeve end and hem and tied on top length, and said "unsure" on 30–54% of photos.*
 Apple Vision's body pose gives 19 points: nose, eyes, ears, neck, shoulders, elbows, wrists, root (waist), hips, knees and ankles ([Apple JointName docs](https://developer.apple.com/documentation/vision/vnhumanbodyposeobservation/jointname.md)). Kitted's prep already stores 14 of them (`KittedPrep.swift`) plus the person outline and each piece's box. A **position along his own limb** (for example "the sleeve ends 40% of the way from shoulder to elbow") doesn't depend on his height or width, because it's a ratio of his own segment.
 
 | Measure | How | Safe? | Caveats |

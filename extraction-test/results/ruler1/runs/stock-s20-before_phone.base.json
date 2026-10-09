@@ -1,0 +1,121 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.26000000000000001,
+      "x" : 752,
+      "y" : 912
+    },
+    "lElbow" : {
+      "c" : 0.78000000000000003,
+      "x" : 458,
+      "y" : 431
+    },
+    "lHip" : {
+      "c" : 0.47999999999999998,
+      "x" : 466,
+      "y" : 557
+    },
+    "lKnee" : {
+      "c" : 0.58999999999999997,
+      "x" : 601,
+      "y" : 685
+    },
+    "lShoulder" : {
+      "c" : 0.70999999999999996,
+      "x" : 387,
+      "y" : 317
+    },
+    "lWrist" : {
+      "c" : 0.77000000000000002,
+      "x" : 458,
+      "y" : 549
+    },
+    "neck" : {
+      "c" : 0.73999999999999999,
+      "x" : 305,
+      "y" : 356
+    },
+    "rElbow" : {
+      "c" : 0.81999999999999995,
+      "x" : 299,
+      "y" : 527
+    },
+    "rHip" : {
+      "c" : 0.44,
+      "x" : 380,
+      "y" : 645
+    },
+    "rKnee" : {
+      "c" : 0.12,
+      "x" : 466,
+      "y" : 852
+    },
+    "root" : {
+      "c" : 0.46000000000000002,
+      "x" : 423,
+      "y" : 601
+    },
+    "rShoulder" : {
+      "c" : 0.76000000000000001,
+      "x" : 223,
+      "y" : 395
+    },
+    "rWrist" : {
+      "c" : 0.81999999999999995,
+      "x" : 411,
+      "y" : 578
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 677,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s20\/before_phone.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 32,
+        "pos" : 0.64000000000000001,
+        "refL" : 11,
+        "side" : "l",
+        "spread" : 0.80000000000000004,
+        "thr" : 10,
+        "value" : "mid_bicep"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "bend" : 32,
+    "pos" : 0.64000000000000001,
+    "refL" : 11,
+    "side" : "l",
+    "spread" : 0.80000000000000004,
+    "thr" : 10,
+    "value" : "mid_bicep"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "torso\/thigh lengths"
+  },
+  "top_length_box" : {
+    "pos" : -0.045999999999999999,
+    "value" : "at_belt"
+  },
+  "w" : 819
+}

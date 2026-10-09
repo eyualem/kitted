@@ -1,0 +1,142 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.80000000000000004,
+      "x" : 353,
+      "y" : 799
+    },
+    "lElbow" : {
+      "c" : 0.83999999999999997,
+      "x" : 391,
+      "y" : 522
+    },
+    "lHip" : {
+      "c" : 0.70999999999999996,
+      "x" : 363,
+      "y" : 592
+    },
+    "lKnee" : {
+      "c" : 0.81000000000000005,
+      "x" : 361,
+      "y" : 693
+    },
+    "lShoulder" : {
+      "c" : 0.85999999999999999,
+      "x" : 375,
+      "y" : 462
+    },
+    "lWrist" : {
+      "c" : 0.78000000000000003,
+      "x" : 360,
+      "y" : 551
+    },
+    "neck" : {
+      "c" : 0.87,
+      "x" : 333,
+      "y" : 462
+    },
+    "rAnkle" : {
+      "c" : 0.77000000000000002,
+      "x" : 327,
+      "y" : 796
+    },
+    "rElbow" : {
+      "c" : 0.78000000000000003,
+      "x" : 280,
+      "y" : 526
+    },
+    "rHip" : {
+      "c" : 0.71999999999999997,
+      "x" : 312,
+      "y" : 594
+    },
+    "rKnee" : {
+      "c" : 0.81999999999999995,
+      "x" : 315,
+      "y" : 695
+    },
+    "root" : {
+      "c" : 0.70999999999999996,
+      "x" : 338,
+      "y" : 593
+    },
+    "rShoulder" : {
+      "c" : 0.87,
+      "x" : 292,
+      "y" : 462
+    },
+    "rWrist" : {
+      "c" : 0.77000000000000002,
+      "x" : 281,
+      "y" : 572
+    }
+  },
+  "layers" : {
+    "outer" : "overshirt",
+    "pos" : 0,
+    "under" : "tee",
+    "value" : "no"
+  },
+  "max" : 2048,
+  "ms" : 380,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s26\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 12,
+        "pos" : 0.93999999999999995,
+        "refL" : 62,
+        "side" : "r",
+        "spread" : 8.0999999999999996,
+        "thr" : 20.399999999999999,
+        "value" : "above_wrist"
+      }
+    ],
+    "bend" : 12,
+    "pos" : 0.93999999999999995,
+    "refL" : 62,
+    "side" : "r",
+    "spread" : 8.0999999999999996,
+    "thr" : 20.399999999999999,
+    "value" : "above_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 77,
+    "pos" : 0.13600000000000001,
+    "sides" : [
+      {
+        "sep" : 11,
+        "side" : "l",
+        "why" : "top and bottoms look the same"
+      },
+      {
+        "score" : 0.63,
+        "sep" : 18,
+        "side" : "r",
+        "u" : 0.13600000000000001
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "pos" : 0.20999999999999999,
+    "value" : "mid_fly"
+  },
+  "w" : 683
+}

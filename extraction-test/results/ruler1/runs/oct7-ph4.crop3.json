@@ -1,0 +1,47 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+
+  },
+  "layers" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "max" : 2048,
+  "ms" : 327,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/phone-oct7\/ph4\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      },
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "joints \/ joints"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 621
+}

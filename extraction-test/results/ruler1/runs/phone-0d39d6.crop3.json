@@ -1,0 +1,141 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.75,
+      "x" : 411,
+      "y" : 905
+    },
+    "lElbow" : {
+      "c" : 0.81000000000000005,
+      "x" : 506,
+      "y" : 526
+    },
+    "lHip" : {
+      "c" : 0.64000000000000001,
+      "x" : 424,
+      "y" : 652
+    },
+    "lKnee" : {
+      "c" : 0.52000000000000002,
+      "x" : 415,
+      "y" : 792
+    },
+    "lShoulder" : {
+      "c" : 0.65000000000000002,
+      "x" : 457,
+      "y" : 456
+    },
+    "lWrist" : {
+      "c" : 0.75,
+      "x" : 467,
+      "y" : 447
+    },
+    "neck" : {
+      "c" : 0.73999999999999999,
+      "x" : 394,
+      "y" : 446
+    },
+    "rAnkle" : {
+      "c" : 0.63,
+      "x" : 338,
+      "y" : 954
+    },
+    "rElbow" : {
+      "c" : 0.75,
+      "x" : 303,
+      "y" : 540
+    },
+    "rHip" : {
+      "c" : 0.63,
+      "x" : 345,
+      "y" : 650
+    },
+    "rKnee" : {
+      "c" : 0.67000000000000004,
+      "x" : 341,
+      "y" : 803
+    },
+    "root" : {
+      "c" : 0.63,
+      "x" : 385,
+      "y" : 651
+    },
+    "rShoulder" : {
+      "c" : 0.82999999999999996,
+      "x" : 332,
+      "y" : 436
+    },
+    "rWrist" : {
+      "c" : 0.87,
+      "x" : 304,
+      "y" : 629
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 311,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261008-162946\/photos\/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 15,
+        "pos" : 2.3399999999999999,
+        "refL" : 26,
+        "side" : "r",
+        "spread" : 1.8,
+        "thr" : 10,
+        "value" : "covers_hand"
+      }
+    ],
+    "bend" : 15,
+    "pos" : 2.3399999999999999,
+    "refL" : 26,
+    "side" : "r",
+    "spread" : 1.8,
+    "thr" : 10,
+    "value" : "covers_hand"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 3,
+    "pos" : -0.050000000000000003,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 31,
+        "side" : "l",
+        "u" : -0.050000000000000003
+      },
+      {
+        "score" : 1,
+        "sep" : 34,
+        "side" : "r",
+        "u" : -0.050000000000000003
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "no top box"
+  },
+  "w" : 768
+}

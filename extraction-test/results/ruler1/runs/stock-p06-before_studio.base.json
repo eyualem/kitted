@@ -1,0 +1,98 @@
+{
+  "crop" : 0,
+  "h" : 683,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.73999999999999999,
+      "x" : 964,
+      "y" : 403
+    },
+    "lHip" : {
+      "c" : 0.32000000000000001,
+      "x" : 795,
+      "y" : 651
+    },
+    "lShoulder" : {
+      "c" : 0.46999999999999997,
+      "x" : 803,
+      "y" : 328
+    },
+    "lWrist" : {
+      "c" : 0.80000000000000004,
+      "x" : 880,
+      "y" : 292
+    },
+    "neck" : {
+      "c" : 0.48999999999999999,
+      "x" : 714,
+      "y" : 338
+    },
+    "rElbow" : {
+      "c" : 0.29999999999999999,
+      "x" : 494,
+      "y" : 398
+    },
+    "rHip" : {
+      "c" : 0.34999999999999998,
+      "x" : 681,
+      "y" : 643
+    },
+    "root" : {
+      "c" : 0.34000000000000002,
+      "x" : 738,
+      "y" : 647
+    },
+    "rShoulder" : {
+      "c" : 0.51000000000000001,
+      "x" : 625,
+      "y" : 348
+    },
+    "rWrist" : {
+      "c" : 0.81000000000000005,
+      "x" : 573,
+      "y" : 318
+    }
+  },
+  "layers" : {
+    "outer" : "overshirt",
+    "pos" : -0.121,
+    "under" : "tee",
+    "value" : "no"
+  },
+  "max" : 2048,
+  "ms" : 420,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p06\/before_studio.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ joints"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "knees"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "knees"
+  },
+  "w" : 1024
+}

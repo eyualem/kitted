@@ -1,0 +1,130 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.81000000000000005,
+      "x" : 374,
+      "y" : 633
+    },
+    "lHip" : {
+      "c" : 0.46999999999999997,
+      "x" : 330,
+      "y" : 773
+    },
+    "lKnee" : {
+      "c" : 0.42999999999999999,
+      "x" : 358,
+      "y" : 968
+    },
+    "lShoulder" : {
+      "c" : 0.75,
+      "x" : 335,
+      "y" : 510
+    },
+    "lWrist" : {
+      "c" : 0.79000000000000004,
+      "x" : 391,
+      "y" : 765
+    },
+    "neck" : {
+      "c" : 0.73999999999999999,
+      "x" : 257,
+      "y" : 500
+    },
+    "rElbow" : {
+      "c" : 0.16,
+      "x" : 175,
+      "y" : 635
+    },
+    "rHip" : {
+      "c" : 0.40000000000000002,
+      "x" : 216,
+      "y" : 782
+    },
+    "rKnee" : {
+      "c" : 0.39000000000000001,
+      "x" : 242,
+      "y" : 965
+    },
+    "root" : {
+      "c" : 0.44,
+      "x" : 273,
+      "y" : 777
+    },
+    "rShoulder" : {
+      "c" : 0.71999999999999997,
+      "x" : 179,
+      "y" : 490
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 1600,
+  "ms" : 311,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s27\/before_mirror.jpg",
+  "shorts_length" : {
+    "legs" : [
+      {
+        "k" : 0.035999999999999997,
+        "side" : "l"
+      },
+      {
+        "side" : "r",
+        "why" : "shorts not on body"
+      }
+    ],
+    "pos" : 0.035999999999999997,
+    "value" : "at_knee"
+  },
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 9,
+        "refL" : 40,
+        "side" : "l",
+        "spread" : 0.5,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "no step (hand matches the sleeve, or the sleeve covers it)"
+      },
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "no step (hand matches the sleeve, or the sleeve covers it) \/ joints"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 64,
+    "pos" : 0.121,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 17,
+        "side" : "l",
+        "u" : 0.121
+      },
+      {
+        "sep" : 9,
+        "side" : "r",
+        "why" : "top and bottoms look the same"
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "pos" : 1.3009999999999999,
+    "value" : "below_crotch"
+  },
+  "w" : 683
+}

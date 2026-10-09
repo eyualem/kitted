@@ -8,6 +8,8 @@
 //   kmeasure zoom <photo.jpg> <outdir> <stem>
 //       writes <stem>.full.jpg (faces hidden, 1024), <stem>.body/.upper/.lower.jpg (faces hidden, 1024)
 //       and <stem>.json (rects, joints)
+//   kmeasure ruler <photo.jpg> <out.json> [--boxes garments.json] [--shorts] [--overlay out.jpg] [--max px] [--crop share]
+//       the fit ruler (FitRuler.swift): sleeve end, top hem, pant hem, shorts length, layers, from his own joints
 import CoreImage
 import Foundation
 import ImageIO
@@ -124,6 +126,49 @@ case "prep":
   r["zoomBase64"] = (r["zoomBase64"] as? [String])?.map { "\($0.count) chars" }
   let d = try JSONSerialization.data(withJSONObject: r, options: [.sortedKeys, .prettyPrinted])
   print(String(data: d, encoding: .utf8)!)
+
+case "ruler":
+  // kmeasure ruler <photo.jpg> <out.json> [--boxes garments.json] [--shorts] [--overlay out.jpg] [--max px] [--crop share]
+  //   The fit ruler (FitRuler.swift, DECISIONS-LOG #170). --max decodes smaller than the 2048 working size and
+  //   --crop trims that share off every side first: the nuisance test (the same photo, slightly different input).
+  guard args.count >= 4 else { print("bad args"); exit(2) }
+  var boxes: [[String: Any]] = [], shorts = false, overlayPath: String?, maxPx = Prep.workPx, crop: CGFloat = 0
+  var i = 4
+  while i < args.count {
+    switch args[i] {
+    case "--boxes": if let d = FileManager.default.contents(atPath: args[i + 1]), let l = try JSONSerialization.jsonObject(with: d) as? [[String: Any]] { boxes = l }; i += 2
+    case "--shorts": shorts = true; i += 1
+    case "--overlay": overlayPath = args[i + 1]; i += 2
+    case "--max": maxPx = CGFloat(Double(args[i + 1]) ?? 2048); i += 2
+    case "--crop": crop = CGFloat(Double(args[i + 1]) ?? 0); i += 2
+    default: print("unknown option \(args[i])"); exit(2)
+    }
+  }
+  guard let data = FileManager.default.contents(atPath: args[2]), var image = Prep.decode(data, maxPx: maxPx).image else { print("unreadable"); exit(1) }
+  if crop > 0 {
+    let W = CGFloat(image.width), H = CGFloat(image.height)
+    let r = CGRect(x: W * crop, y: H * crop, width: W * (1 - 2 * crop), height: H * (1 - 2 * crop)).integral
+    guard let c = image.cropping(to: r) else { exit(1) }
+    image = c
+    // The boxes are 0–1000 of the uncropped photo: move them into the crop.
+    boxes = boxes.map { g in
+      var g = g
+      if let b = g["box"] as? [Double] {
+        let f = Double(crop)
+        g["box"] = b.map { (($0 / 1000 - f) / (1 - 2 * f)) * 1000 }
+      }
+      return g
+    }
+  }
+  let res = Ruler.run(image, boxes: boxes, shorts: shorts)
+  var out = res.json
+  out["photo"] = args[2]; out["max"] = Int(maxPx); out["crop"] = Double(crop)
+  try writeJSON(out, args[3])
+  if let o = overlayPath, !res.readings.isEmpty, let hidden = Prep.hideRegions(image, res.hide), let rgb = Measure.rgb(hidden, maxSide: Measure.statPx) {
+    try Ruler.overlay(rgb, res.readings, res.joints, to: URL(fileURLWithPath: o))
+  }
+  let summary = ["sleeve_end", "top_length", "hem", "shorts_length", "layers"].compactMap { k in (out[k] as? [String: Any]).map { "\(k)=\($0["value"] ?? "?")" } }
+  print(summary.joined(separator: " "))
 
 default:
   print("unknown command"); exit(2)

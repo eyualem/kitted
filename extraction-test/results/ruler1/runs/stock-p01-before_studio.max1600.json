@@ -1,0 +1,133 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.63,
+      "x" : 376,
+      "y" : 865
+    },
+    "lElbow" : {
+      "c" : 0.56999999999999995,
+      "x" : 467,
+      "y" : 337
+    },
+    "lHip" : {
+      "c" : 0.62,
+      "x" : 391,
+      "y" : 553
+    },
+    "lKnee" : {
+      "c" : 0.81999999999999995,
+      "x" : 414,
+      "y" : 736
+    },
+    "lShoulder" : {
+      "c" : 0.71999999999999997,
+      "x" : 396,
+      "y" : 320
+    },
+    "lWrist" : {
+      "c" : 0.57999999999999996,
+      "x" : 524,
+      "y" : 300
+    },
+    "neck" : {
+      "c" : 0.76000000000000001,
+      "x" : 330,
+      "y" : 325
+    },
+    "rAnkle" : {
+      "c" : 0.70999999999999996,
+      "x" : 348,
+      "y" : 907
+    },
+    "rElbow" : {
+      "c" : 0.55000000000000004,
+      "x" : 200,
+      "y" : 385
+    },
+    "rHip" : {
+      "c" : 0.57999999999999996,
+      "x" : 310,
+      "y" : 551
+    },
+    "rKnee" : {
+      "c" : 0.72999999999999998,
+      "x" : 324,
+      "y" : 738
+    },
+    "root" : {
+      "c" : 0.59999999999999998,
+      "x" : 350,
+      "y" : 552
+    },
+    "rShoulder" : {
+      "c" : 0.80000000000000004,
+      "x" : 263,
+      "y" : 329
+    },
+    "rWrist" : {
+      "c" : 0.67000000000000004,
+      "x" : 139,
+      "y" : 326
+    }
+  },
+  "layers" : {
+    "outer" : "overshirt",
+    "pos" : 0.46400000000000002,
+    "under" : "tee",
+    "value" : "yes"
+  },
+  "max" : 1600,
+  "ms" : 314,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p01\/before_studio.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ arm not hanging"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 36,
+    "pos" : -0.042999999999999997,
+    "sides" : [
+      {
+        "score" : 0.88,
+        "sep" : 63,
+        "side" : "l",
+        "u" : -0.042999999999999997
+      },
+      {
+        "score" : 1,
+        "sep" : 48,
+        "side" : "r",
+        "u" : -0.042999999999999997
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "pos" : -0.031,
+    "value" : "at_belt"
+  },
+  "w" : 682
+}

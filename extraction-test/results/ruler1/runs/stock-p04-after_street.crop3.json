@@ -1,0 +1,106 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.73999999999999999,
+      "x" : 541,
+      "y" : 613
+    },
+    "lHip" : {
+      "c" : 0.23999999999999999,
+      "x" : 420,
+      "y" : 842
+    },
+    "lShoulder" : {
+      "c" : 0.67000000000000004,
+      "x" : 496,
+      "y" : 404
+    },
+    "lWrist" : {
+      "c" : 0.76000000000000001,
+      "x" : 503,
+      "y" : 713
+    },
+    "neck" : {
+      "c" : 0.59999999999999998,
+      "x" : 337,
+      "y" : 416
+    },
+    "rElbow" : {
+      "c" : 0.75,
+      "x" : 72,
+      "y" : 637
+    },
+    "rHip" : {
+      "c" : 0.17000000000000001,
+      "x" : 212,
+      "y" : 862
+    },
+    "root" : {
+      "c" : 0.20999999999999999,
+      "x" : 316,
+      "y" : 852
+    },
+    "rShoulder" : {
+      "c" : 0.54000000000000004,
+      "x" : 179,
+      "y" : 428
+    },
+    "rWrist" : {
+      "c" : 0.67000000000000004,
+      "x" : 160,
+      "y" : 808
+    }
+  },
+  "layers" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "max" : 2048,
+  "ms" : 403,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p04\/after_street.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 32,
+        "pos" : 1.96,
+        "refL" : 7,
+        "side" : "l",
+        "spread" : 0.59999999999999998,
+        "thr" : 10,
+        "value" : "at_wrist"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "bend" : 32,
+    "pos" : 1.96,
+    "refL" : 7,
+    "side" : "l",
+    "spread" : 0.59999999999999998,
+    "thr" : 10,
+    "value" : "at_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 683
+}

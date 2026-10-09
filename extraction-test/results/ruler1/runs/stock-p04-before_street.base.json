@@ -1,0 +1,111 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.78000000000000003,
+      "x" : 501,
+      "y" : 552
+    },
+    "lHip" : {
+      "c" : 0.23999999999999999,
+      "x" : 411,
+      "y" : 722
+    },
+    "lShoulder" : {
+      "c" : 0.67000000000000004,
+      "x" : 469,
+      "y" : 357
+    },
+    "lWrist" : {
+      "c" : 0.75,
+      "x" : 444,
+      "y" : 658
+    },
+    "neck" : {
+      "c" : 0.64000000000000001,
+      "x" : 335,
+      "y" : 360
+    },
+    "rElbow" : {
+      "c" : 0.77000000000000002,
+      "x" : 106,
+      "y" : 564
+    },
+    "rHip" : {
+      "c" : 0.20000000000000001,
+      "x" : 264,
+      "y" : 691
+    },
+    "rKnee" : {
+      "c" : 0.10000000000000001,
+      "x" : 264,
+      "y" : 996
+    },
+    "root" : {
+      "c" : 0.22,
+      "x" : 338,
+      "y" : 706
+    },
+    "rShoulder" : {
+      "c" : 0.60999999999999999,
+      "x" : 201,
+      "y" : 363
+    },
+    "rWrist" : {
+      "c" : 0.51000000000000001,
+      "x" : 179,
+      "y" : 725
+    }
+  },
+  "layers" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "max" : 2048,
+  "ms" : 415,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p04\/before_street.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 37,
+        "pos" : 2.02,
+        "refL" : 14,
+        "side" : "l",
+        "spread" : 2.2000000000000002,
+        "thr" : 10,
+        "value" : "at_wrist"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "bend" : 37,
+    "pos" : 2.02,
+    "refL" : 14,
+    "side" : "l",
+    "spread" : 2.2000000000000002,
+    "thr" : 10,
+    "value" : "at_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 683
+}

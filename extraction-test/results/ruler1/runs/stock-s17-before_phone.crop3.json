@@ -1,0 +1,131 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "hem" : {
+    "legs" : [
+      {
+        "side" : "l",
+        "why" : "joints"
+      },
+      {
+        "side" : "r",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "joints"
+  },
+  "hem_box" : {
+    "pos" : 1.482,
+    "value" : "covers"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.19,
+      "x" : 395,
+      "y" : 715
+    },
+    "lElbow" : {
+      "c" : 0.69999999999999996,
+      "x" : 270,
+      "y" : 308
+    },
+    "lHip" : {
+      "c" : 0.14999999999999999,
+      "x" : 100,
+      "y" : 351
+    },
+    "lKnee" : {
+      "c" : 0.20999999999999999,
+      "x" : 314,
+      "y" : 505
+    },
+    "lShoulder" : {
+      "c" : 0.37,
+      "x" : 244,
+      "y" : 173
+    },
+    "lWrist" : {
+      "c" : 0.63,
+      "x" : 284,
+      "y" : 384
+    },
+    "neck" : {
+      "c" : 0.40999999999999998,
+      "x" : 164,
+      "y" : 157
+    },
+    "rAnkle" : {
+      "c" : 0.14999999999999999,
+      "x" : 146,
+      "y" : 867
+    },
+    "rElbow" : {
+      "c" : 0.76000000000000001,
+      "x" : 49,
+      "y" : 393
+    },
+    "rKnee" : {
+      "c" : 0.66000000000000003,
+      "x" : 131,
+      "y" : 518
+    },
+    "root" : {
+      "c" : 0.080000000000000002,
+      "x" : 50,
+      "y" : 175
+    },
+    "rShoulder" : {
+      "c" : 0.45000000000000001,
+      "x" : 84,
+      "y" : 141
+    },
+    "rWrist" : {
+      "c" : 0.65000000000000002,
+      "x" : 248,
+      "y" : 427
+    }
+  },
+  "layers" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "max" : 2048,
+  "ms" : 474,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s17\/before_phone.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 0,
+        "pos" : 0.54000000000000004,
+        "refL" : 7,
+        "side" : "l",
+        "spread" : 0.80000000000000004,
+        "thr" : 10,
+        "value" : "above_wrist"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "bend" : 0,
+    "pos" : 0.54000000000000004,
+    "refL" : 7,
+    "side" : "l",
+    "spread" : 0.80000000000000004,
+    "thr" : 10,
+    "value" : "above_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 683
+}

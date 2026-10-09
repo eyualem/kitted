@@ -1,0 +1,153 @@
+{
+  "crop" : 0,
+  "h" : 640,
+  "hem" : {
+    "legs" : [
+      {
+        "bend" : 7,
+        "footEnd" : 1.4099999999999999,
+        "pantsL" : 0,
+        "shoeSep" : 1,
+        "shoeTop" : 1.04,
+        "side" : "l",
+        "why" : "pants and shoes look the same"
+      },
+      {
+        "bend" : 2,
+        "footEnd" : 1.4299999999999999,
+        "pantsL" : 0,
+        "shoeSep" : 2,
+        "shoeTop" : 0.93000000000000005,
+        "side" : "r",
+        "why" : "pants and shoes look the same"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "pants and shoes look the same"
+  },
+  "hem_box" : {
+    "pos" : 0.23499999999999999,
+    "value" : "meets"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.71999999999999997,
+      "x" : 259,
+      "y" : 558
+    },
+    "lElbow" : {
+      "c" : 0.64000000000000001,
+      "x" : 310,
+      "y" : 249
+    },
+    "lHip" : {
+      "c" : 0.60999999999999999,
+      "x" : 275,
+      "y" : 333
+    },
+    "lKnee" : {
+      "c" : 0.57999999999999996,
+      "x" : 273,
+      "y" : 452
+    },
+    "lShoulder" : {
+      "c" : 0.80000000000000004,
+      "x" : 303,
+      "y" : 183
+    },
+    "lWrist" : {
+      "c" : 0.79000000000000004,
+      "x" : 279,
+      "y" : 206
+    },
+    "neck" : {
+      "c" : 0.77000000000000002,
+      "x" : 244,
+      "y" : 181
+    },
+    "rAnkle" : {
+      "c" : 0.67000000000000004,
+      "x" : 193,
+      "y" : 570
+    },
+    "rElbow" : {
+      "c" : 0.71999999999999997,
+      "x" : 157,
+      "y" : 251
+    },
+    "rHip" : {
+      "c" : 0.5,
+      "x" : 212,
+      "y" : 333
+    },
+    "rKnee" : {
+      "c" : 0.59999999999999998,
+      "x" : 200,
+      "y" : 447
+    },
+    "root" : {
+      "c" : 0.56000000000000005,
+      "x" : 243,
+      "y" : 333
+    },
+    "rShoulder" : {
+      "c" : 0.73999999999999999,
+      "x" : 185,
+      "y" : 178
+    },
+    "rWrist" : {
+      "c" : 0.68000000000000005,
+      "x" : 186,
+      "y" : 309
+    }
+  },
+  "layers" : {
+    "outer" : "denim_jacket",
+    "pos" : -0.28599999999999998,
+    "under" : "oxford_shirt",
+    "value" : "no"
+  },
+  "max" : 1600,
+  "ms" : 320,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m02\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ arm not hanging"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 0,
+    "pos" : 0.021000000000000001,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 29,
+        "side" : "l",
+        "u" : 0.021000000000000001
+      },
+      {
+        "score" : 1,
+        "sep" : 62,
+        "side" : "r",
+        "u" : -0.36699999999999999
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "pos" : 0.045999999999999999,
+    "value" : "at_belt"
+  },
+  "w" : 480
+}

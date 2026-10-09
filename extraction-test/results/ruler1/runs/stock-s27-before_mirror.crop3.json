@@ -1,0 +1,116 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.73999999999999999,
+      "x" : 377,
+      "y" : 641
+    },
+    "lHip" : {
+      "c" : 0.41999999999999998,
+      "x" : 331,
+      "y" : 797
+    },
+    "lKnee" : {
+      "c" : 0.29999999999999999,
+      "x" : 359,
+      "y" : 995
+    },
+    "lShoulder" : {
+      "c" : 0.73999999999999999,
+      "x" : 336,
+      "y" : 510
+    },
+    "lWrist" : {
+      "c" : 0.75,
+      "x" : 398,
+      "y" : 783
+    },
+    "neck" : {
+      "c" : 0.65000000000000002,
+      "x" : 251,
+      "y" : 501
+    },
+    "rHip" : {
+      "c" : 0.34000000000000002,
+      "x" : 210,
+      "y" : 801
+    },
+    "rKnee" : {
+      "c" : 0.28999999999999998,
+      "x" : 235,
+      "y" : 990
+    },
+    "root" : {
+      "c" : 0.38,
+      "x" : 271,
+      "y" : 799
+    },
+    "rShoulder" : {
+      "c" : 0.56000000000000005,
+      "x" : 166,
+      "y" : 491
+    },
+    "rWrist" : {
+      "c" : 0.11,
+      "x" : 192,
+      "y" : 784
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 298,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s27\/before_mirror.jpg",
+  "shorts_length" : {
+    "legs" : [
+      {
+        "side" : "l",
+        "why" : "joints"
+      },
+      {
+        "side" : "r",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "no hem"
+  },
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 8,
+        "refL" : 40,
+        "side" : "l",
+        "spread" : 0.40000000000000002,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "no step (hand matches the sleeve, or the sleeve covers it)"
+      },
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "no step (hand matches the sleeve, or the sleeve covers it) \/ joints"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "knees"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "knees"
+  },
+  "w" : 683
+}

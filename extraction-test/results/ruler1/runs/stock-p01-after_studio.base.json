@@ -1,0 +1,143 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.68000000000000005,
+      "x" : 277,
+      "y" : 870
+    },
+    "lElbow" : {
+      "c" : 0.59999999999999998,
+      "x" : 369,
+      "y" : 422
+    },
+    "lHip" : {
+      "c" : 0.60999999999999999,
+      "x" : 338,
+      "y" : 558
+    },
+    "lKnee" : {
+      "c" : 0.81000000000000005,
+      "x" : 361,
+      "y" : 724
+    },
+    "lShoulder" : {
+      "c" : 0.81999999999999995,
+      "x" : 344,
+      "y" : 335
+    },
+    "lWrist" : {
+      "c" : 0.72999999999999998,
+      "x" : 384,
+      "y" : 466
+    },
+    "neck" : {
+      "c" : 0.80000000000000004,
+      "x" : 274,
+      "y" : 338
+    },
+    "rAnkle" : {
+      "c" : 0.64000000000000001,
+      "x" : 255,
+      "y" : 871
+    },
+    "rElbow" : {
+      "c" : 0.73999999999999999,
+      "x" : 168,
+      "y" : 453
+    },
+    "rHip" : {
+      "c" : 0.58999999999999997,
+      "x" : 249,
+      "y" : 557
+    },
+    "rKnee" : {
+      "c" : 0.75,
+      "x" : 265,
+      "y" : 720
+    },
+    "root" : {
+      "c" : 0.59999999999999998,
+      "x" : 294,
+      "y" : 558
+    },
+    "rShoulder" : {
+      "c" : 0.78000000000000003,
+      "x" : 204,
+      "y" : 340
+    },
+    "rWrist" : {
+      "c" : 0.81999999999999995,
+      "x" : 263,
+      "y" : 479
+    }
+  },
+  "layers" : {
+    "outer" : "overshirt",
+    "pos" : -0.442,
+    "under" : "tee",
+    "value" : "no"
+  },
+  "max" : 2048,
+  "ms" : 371,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p01\/after_studio.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 3,
+        "pos" : 2.4199999999999999,
+        "refL" : 86,
+        "side" : "l",
+        "spread" : 0.80000000000000004,
+        "thr" : 10,
+        "value" : "covers_hand"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "bend" : 3,
+    "pos" : 2.4199999999999999,
+    "refL" : 86,
+    "side" : "l",
+    "spread" : 0.80000000000000004,
+    "thr" : 10,
+    "value" : "covers_hand"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 52,
+    "pos" : 0.24299999999999999,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 40,
+        "side" : "l",
+        "u" : 0.252
+      },
+      {
+        "score" : 0.78000000000000003,
+        "sep" : 35,
+        "side" : "r",
+        "u" : 0.23300000000000001
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "pos" : 0.24299999999999999,
+    "value" : "mid_fly"
+  },
+  "w" : 683
+}

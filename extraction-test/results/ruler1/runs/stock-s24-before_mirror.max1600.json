@@ -1,0 +1,129 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.33000000000000002,
+      "x" : 575,
+      "y" : 253
+    },
+    "lHip" : {
+      "c" : 0.40999999999999998,
+      "x" : 513,
+      "y" : 699
+    },
+    "lKnee" : {
+      "c" : 0.75,
+      "x" : 552,
+      "y" : 913
+    },
+    "lShoulder" : {
+      "c" : 0.29999999999999999,
+      "x" : 500,
+      "y" : 349
+    },
+    "lWrist" : {
+      "c" : 0.64000000000000001,
+      "x" : 470,
+      "y" : 230
+    },
+    "neck" : {
+      "c" : 0.53000000000000003,
+      "x" : 404,
+      "y" : 370
+    },
+    "rElbow" : {
+      "c" : 0.69999999999999996,
+      "x" : 327,
+      "y" : 534
+    },
+    "rHip" : {
+      "c" : 0.41999999999999998,
+      "x" : 396,
+      "y" : 706
+    },
+    "rKnee" : {
+      "c" : 0.78000000000000003,
+      "x" : 399,
+      "y" : 925
+    },
+    "root" : {
+      "c" : 0.40999999999999998,
+      "x" : 455,
+      "y" : 702
+    },
+    "rShoulder" : {
+      "c" : 0.76000000000000001,
+      "x" : 307,
+      "y" : 391
+    },
+    "rWrist" : {
+      "c" : 0.75,
+      "x" : 400,
+      "y" : 398
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 1600,
+  "ms" : 522,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s24\/before_mirror.jpg",
+  "shorts_length" : {
+    "legs" : [
+      {
+        "k" : -0.22,
+        "side" : "l"
+      },
+      {
+        "k" : -0.19,
+        "side" : "r"
+      }
+    ],
+    "pos" : -0.20499999999999999,
+    "value" : "above_knee"
+  },
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "joints \/ arm not hanging"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 20,
+    "sides" : [
+      {
+        "sep" : 0,
+        "side" : "l",
+        "why" : "top and bottoms look the same"
+      },
+      {
+        "sep" : 0,
+        "side" : "r",
+        "why" : "top and bottoms look the same"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "top and bottoms look the same"
+  },
+  "top_length_box" : {
+    "pos" : -0.001,
+    "value" : "at_belt"
+  },
+  "w" : 678
+}

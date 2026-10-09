@@ -1,0 +1,131 @@
+{
+  "crop" : 0,
+  "h" : 631,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.28999999999999998,
+      "x" : 239,
+      "y" : 606
+    },
+    "lElbow" : {
+      "c" : 0.42999999999999999,
+      "x" : 273,
+      "y" : 351
+    },
+    "lHip" : {
+      "c" : 0.34999999999999998,
+      "x" : 255,
+      "y" : 435
+    },
+    "lKnee" : {
+      "c" : 0.45000000000000001,
+      "x" : 259,
+      "y" : 536
+    },
+    "lShoulder" : {
+      "c" : 0.58999999999999997,
+      "x" : 267,
+      "y" : 230
+    },
+    "lWrist" : {
+      "c" : 0.22,
+      "x" : 284,
+      "y" : 440
+    },
+    "neck" : {
+      "c" : 0.57999999999999996,
+      "x" : 201,
+      "y" : 221
+    },
+    "rElbow" : {
+      "c" : 0.66000000000000003,
+      "x" : 125,
+      "y" : 340
+    },
+    "rHip" : {
+      "c" : 0.34999999999999998,
+      "x" : 184,
+      "y" : 444
+    },
+    "rKnee" : {
+      "c" : 0.54000000000000004,
+      "x" : 198,
+      "y" : 582
+    },
+    "root" : {
+      "c" : 0.34999999999999998,
+      "x" : 220,
+      "y" : 440
+    },
+    "rShoulder" : {
+      "c" : 0.57999999999999996,
+      "x" : 134,
+      "y" : 213
+    },
+    "rWrist" : {
+      "c" : 0.35999999999999999,
+      "x" : 151,
+      "y" : 434
+    }
+  },
+  "layers" : {
+    "outer" : "suit_jacket",
+    "pos" : -1.0289999999999999,
+    "under" : "dress_shirt",
+    "value" : "no"
+  },
+  "max" : 2048,
+  "ms" : 318,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m09\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      },
+      {
+        "bend" : 19,
+        "refL" : 41,
+        "side" : "r",
+        "spread" : 0.40000000000000002,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "no step (hand matches the sleeve, or the sleeve covers it)"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "joints \/ no step (hand matches the sleeve, or the sleeve covers it)"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 47,
+    "sides" : [
+      {
+        "sep" : 6,
+        "side" : "l",
+        "why" : "top and bottoms look the same"
+      },
+      {
+        "sep" : 8,
+        "side" : "r",
+        "why" : "top and bottoms look the same"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "top and bottoms look the same"
+  },
+  "top_length_box" : {
+    "pos" : 0.34999999999999998,
+    "value" : "below_crotch"
+  },
+  "w" : 316
+}

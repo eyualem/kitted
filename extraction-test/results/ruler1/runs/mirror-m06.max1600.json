@@ -1,0 +1,116 @@
+{
+  "crop" : 0,
+  "h" : 640,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.65000000000000002,
+      "x" : 283,
+      "y" : 448
+    },
+    "lElbow" : {
+      "c" : 0.73999999999999999,
+      "x" : 304,
+      "y" : 61
+    },
+    "lHip" : {
+      "c" : 0.5,
+      "x" : 246,
+      "y" : 184
+    },
+    "lKnee" : {
+      "c" : 0.59999999999999998,
+      "x" : 269,
+      "y" : 329
+    },
+    "lShoulder" : {
+      "c" : 0.27000000000000002,
+      "x" : 274,
+      "y" : 16
+    },
+    "lWrist" : {
+      "c" : 0.76000000000000001,
+      "x" : 251,
+      "y" : 88
+    },
+    "neck" : {
+      "c" : 0.20000000000000001,
+      "x" : 201,
+      "y" : 14
+    },
+    "rAnkle" : {
+      "c" : 0.68000000000000005,
+      "x" : 140,
+      "y" : 460
+    },
+    "rElbow" : {
+      "c" : 0.73999999999999999,
+      "x" : 94,
+      "y" : 66
+    },
+    "rHip" : {
+      "c" : 0.47999999999999998,
+      "x" : 162,
+      "y" : 185
+    },
+    "rKnee" : {
+      "c" : 0.57999999999999996,
+      "x" : 149,
+      "y" : 332
+    },
+    "root" : {
+      "c" : 0.48999999999999999,
+      "x" : 204,
+      "y" : 185
+    },
+    "rShoulder" : {
+      "c" : 0.13,
+      "x" : 127,
+      "y" : 13
+    },
+    "rWrist" : {
+      "c" : 0.78000000000000003,
+      "x" : 155,
+      "y" : 80
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 1600,
+  "ms" : 314,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m06\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      },
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "joints \/ joints"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "pos" : 0.104,
+    "value" : "mid_fly"
+  },
+  "w" : 480
+}

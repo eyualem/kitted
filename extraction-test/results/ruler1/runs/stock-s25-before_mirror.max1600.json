@@ -1,0 +1,111 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "legs" : [
+      {
+        "side" : "l",
+        "why" : "joints"
+      },
+      {
+        "side" : "r",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "joints"
+  },
+  "hem_box" : {
+    "pos" : 0.222,
+    "value" : "meets"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.13,
+      "x" : 97,
+      "y" : 498
+    },
+    "lElbow" : {
+      "c" : 0.17999999999999999,
+      "x" : 151,
+      "y" : 334
+    },
+    "lHip" : {
+      "c" : 0.25,
+      "x" : 124,
+      "y" : 387
+    },
+    "lShoulder" : {
+      "c" : 0.55000000000000004,
+      "x" : 136,
+      "y" : 279
+    },
+    "neck" : {
+      "c" : 0.58999999999999997,
+      "x" : 99,
+      "y" : 279
+    },
+    "rAnkle" : {
+      "c" : 0.14999999999999999,
+      "x" : 84,
+      "y" : 496
+    },
+    "rElbow" : {
+      "c" : 0.45000000000000001,
+      "x" : 55,
+      "y" : 353
+    },
+    "rHip" : {
+      "c" : 0.28999999999999998,
+      "x" : 80,
+      "y" : 389
+    },
+    "root" : {
+      "c" : 0.27000000000000002,
+      "x" : 102,
+      "y" : 388
+    },
+    "rShoulder" : {
+      "c" : 0.63,
+      "x" : 61,
+      "y" : 279
+    },
+    "rWrist" : {
+      "c" : 0.17000000000000001,
+      "x" : 85,
+      "y" : 389
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 1600,
+  "ms" : 406,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s25\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      },
+      {
+        "value" : "unsure",
+        "why" : "joints"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "joints \/ joints"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 576
+}

@@ -1,0 +1,131 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.75,
+      "x" : 485,
+      "y" : 526
+    },
+    "lHip" : {
+      "c" : 0.63,
+      "x" : 411,
+      "y" : 730
+    },
+    "lKnee" : {
+      "c" : 0.70999999999999996,
+      "x" : 415,
+      "y" : 900
+    },
+    "lShoulder" : {
+      "c" : 0.81999999999999995,
+      "x" : 402,
+      "y" : 508
+    },
+    "lWrist" : {
+      "c" : 0.81000000000000005,
+      "x" : 462,
+      "y" : 448
+    },
+    "neck" : {
+      "c" : 0.81999999999999995,
+      "x" : 338,
+      "y" : 518
+    },
+    "rElbow" : {
+      "c" : 0.81999999999999995,
+      "x" : 264,
+      "y" : 651
+    },
+    "rHip" : {
+      "c" : 0.57999999999999996,
+      "x" : 327,
+      "y" : 744
+    },
+    "rKnee" : {
+      "c" : 0.72999999999999998,
+      "x" : 349,
+      "y" : 910
+    },
+    "root" : {
+      "c" : 0.59999999999999998,
+      "x" : 369,
+      "y" : 737
+    },
+    "rShoulder" : {
+      "c" : 0.82999999999999996,
+      "x" : 275,
+      "y" : 527
+    },
+    "rWrist" : {
+      "c" : 0.84999999999999998,
+      "x" : 281,
+      "y" : 758
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 408,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s23\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 14,
+        "pos" : 0.73999999999999999,
+        "refL" : 16,
+        "side" : "r",
+        "spread" : 1,
+        "thr" : 10,
+        "value" : "mid_bicep"
+      }
+    ],
+    "bend" : 14,
+    "pos" : 0.73999999999999999,
+    "refL" : 16,
+    "side" : "r",
+    "spread" : 1,
+    "thr" : 10,
+    "value" : "mid_bicep"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 26,
+    "pos" : 0.058000000000000003,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 54,
+        "side" : "l",
+        "u" : 0.040000000000000001
+      },
+      {
+        "score" : 1,
+        "sep" : 61,
+        "side" : "r",
+        "u" : 0.076999999999999999
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "pos" : 0.098000000000000004,
+    "value" : "mid_fly"
+  },
+  "w" : 683
+}

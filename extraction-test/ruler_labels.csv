@@ -1,0 +1,73 @@
+photo,sleeve_end,top_length,shows_below_outer,hem,hem_pos,shorts_length,skin,labeler,notes
+phone-0d39d6,at_wrist,at_belt,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","grey hoodie ends at the belt (black belt visible); wide jeans rolled, resting on slides"
+phone-1f1997,at_wrist,at_belt,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)",black Nike hoodie + black wide jeans + black slides: same-color top and pants
+phone-5a9049,at_wrist,mid_fly,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","gingham shirt alone, untucked; hanging hand in the pocket; jeans over boots"
+phone-6b14db,at_wrist,at_belt,yes,cuffed,gap,na,deep,"Claude (Oct 9, before the ruler ran)","grey hoodie, white tee peeks below it at the waistband; joggers cuffed at the ankle, black socks, slides"
+phone-7de605,at_wrist,at_belt,yes,cuffed,gap,na,deep,"Claude (Oct 9, before the ruler ran)",same outfit as a765e8; hanging hand in the hoodie pocket area / pants pocket
+phone-a765e8,at_wrist,at_belt,yes,cuffed,gap,na,deep,"Claude (Oct 9, before the ruler ran)","grey hoodie, white tee peeks at the waistband; joggers cuffed, black socks, slides; hanging hand in the pocket"
+phone-7f14a4,at_wrist,at_belt|mid_fly,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","same as 5a9049 (gingham alone, hand in pocket)"
+phone-8bc29d,at_wrist,at_belt,no,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)",open cream striped shirt over grey hoodie; both end near the belt
+phone-968016,at_wrist,at_belt,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","boxy green crewneck, ribbed hem at the waistband; wide black jeans over white sneakers"
+phone-b0f0c8,at_wrist,at_belt,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","grey hoodie, black jeans over green boots"
+phone-d58b14,at_wrist,at_belt?,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","propped, both arms hanging; black hoodie + black jeans: the hem line is hard to see even by eye"
+phone-d6559a,at_wrist,at_belt,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","grey hoodie, jeans over boots"
+phone-d918c0,at_wrist,at_belt,no,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)",olive fleece over check shirt; the hanging hand is in the fleece pocket (sleeve end hidden)
+phone-e026de,above_wrist,at_belt,no,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)",open gingham over grey hoodie; on the hanging arm the gingham sleeve stops above the wrist and the hoodie cuff shows below it (truth.csv says at_wrist)
+phone-f07193,at_wrist,at_belt|mid_fly,no,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)",gingham buttoned over the hoodie; cuff open at the wrist
+phone-f4870b,at_wrist,at_belt|mid_fly,no,slight_break,meets,na,light,"Claude (Oct 9, before the ruler ran)","friend: navy chore coat over white tee, washed black straight jeans resting on dark sneakers"
+phone-fb0b17,at_wrist,at_belt|mid_fly,no,slight_break,meets,na,light,"Claude (Oct 9, before the ruler ran)","same as f4870b, closer"
+oct7-ph1,at_wrist,at_belt,na,full_break|pooling,covers,na,deep,"Claude (Oct 9, before the ruler ran)","chest-down mirror shot; grey hoodie, belt shows; wide jeans long over slides"
+oct7-ph2,at_wrist,tucked,na,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)","dress shirt tucked, tie, navy trousers; socks, no shoes: hem not judged"
+oct7-ph3,at_wrist,mid_fly|below_crotch,no,slight_break|no_break,meets,na,light,"Claude (Oct 9, before the ruler ran)",open light-blue blazer over a tucked shirt + belt; blazer hem near the crotch; trousers on loafers
+oct7-ph4,ns,mid_fly|at_belt,no,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)","brown quilted jacket over blue tee; no hanging arm (one bent in front, one holds the phone); socks, no shoes"
+mirror-m01,at_elbow|mid_bicep,mid_fly,na,slight_break,meets,na,light,"Claude (Oct 9, before the ruler ran)",boxy white tee; hanging hand in pocket (sleeve visible); light jeans stacked on high-tops
+mirror-m02,ns,at_belt,na,no_break|cropped,meets|gap,na,medium,"Claude (Oct 9, before the ruler ran)",denim jacket over tucked chambray shirt; hanging hand in pocket; pleated navy trousers on loafers
+mirror-m03,at_elbow|mid_bicep,at_belt|mid_fly,na,slight_break|full_break,meets|covers,na,medium,"Claude (Oct 9, before the ruler ran)","low-res; navy striped short-sleeve shirt, white trousers on white sneakers"
+mirror-m04,mid_bicep,mid_fly,na,ns,ns,ns,light,"Claude (Oct 9, before the ruler ran)","grey tee, black shorts; knees out of frame"
+mirror-m05,at_wrist,tucked,na,slight_break,meets,na,deep,"Claude (Oct 9, before the ruler ran)","studio, not a mirror; white shirt tucked with a belt; one hand in pocket, the other hanging"
+mirror-m06,ns,at_belt,na,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)",pink long-sleeve tee; both hands on the phone; socks only
+mirror-m07,at_wrist,at_belt,na,slight_break|full_break,meets|covers,na,light,"Claude (Oct 9, before the ruler ran)",cream knit with ribbed hem; dark jeans stack on sneakers
+mirror-m08,ns,mid_fly|below_crotch,no,slight_break,meets,na,light,"Claude (Oct 9, before the ruler ran)",blazer open over tucked shirt + belt; both hands on the phone
+mirror-m09,ns,below_crotch,no,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)",long linen blazer; hanging hand in pocket; feet cut off
+mirror-m10,above_wrist,mid_fly,no,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)","open overshirt, sleeves rolled to the forearm (styling), tee tucked with belt; barefoot"
+mirror-m11,at_wrist,mid_fly|below_crotch,no,slight_break|no_break,meets,na,light,"Claude (Oct 9, before the ruler ran)","suit; one arm held straight out (sleeve test), the other on the phone"
+mirror-m12,at_elbow|mid_bicep,mid_fly,no,slight_break,meets,na,light,"Claude (Oct 9, before the ruler ran)",open short-sleeve shirt over a tank; hanging hand in pocket; drawstring trousers on sandals
+stock-p01-after_studio,ns,mid_fly,no,ns,ns,na,deep,"Claude (Oct 9, before the ruler ran)","overshirt over white long-sleeve tee, arms bent holding a plate; socks, no shoes"
+stock-p01-before_studio,ns,at_belt,na,ns,ns,na,deep,"Claude (Oct 9, before the ruler ran)","pulling the overshirt on, arms raised (lifts the tee); socks, no shoes"
+stock-p02-after_studio,at_wrist,at_belt,na,cuffed,meets,na,deep,"Claude (Oct 9, before the ruler ran)",beige hoodie + beige sweatpants (same color); both hands in pockets; cuffs bunch on brown boots
+stock-p02-before_studio,at_wrist,at_belt,na,cuffed,gap|meets,na,deep,"Claude (Oct 9, before the ruler ran)",same set; both hands in pockets; cuffed at the ankle over sneakers
+stock-p03-after_street,ns,below_crotch,no,no_break,meets,na,light,"Claude (Oct 9, before the ruler ran)","all black: long overcoat, turtleneck, trousers, chelsea boots; arms bent"
+stock-p03-before_street,at_wrist,mid_fly|below_crotch,no,no_break,meets,na,light,"Claude (Oct 9, before the ruler ran)","all-black blazer, turtleneck tucked + belt; trousers into black chelsea boots"
+stock-p04-after_street,ns,ns,no,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)",half body; black blazer and shirt; arms bent; legs cut off
+stock-p04-before_street,ns,ns,no,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)",half body; black blazer over white shirt; arms bent; legs cut off
+stock-p05-after_street,above_wrist,tucked,na,na,na,above_knee,light,"Claude (Oct 9, before the ruler ran)","striped shirt tucked, sleeves rolled to the forearm (styling), hands in pockets; white cuffed shorts above the knee; walking"
+stock-p05-before_street,ns,tucked,na,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)","side view, half body; white shirt tucked; arm bent; legs cut off"
+stock-p06-after_studio,ns,ns,na,ns,ns,na,deep,"Claude (Oct 9, before the ruler ran)",sitting on the floor
+stock-p06-before_studio,ns,at_belt,no,ns,ns,na,deep,"Claude (Oct 9, before the ruler ran)","half body, putting on the overshirt (arms raised); tee hem at the waistband"
+stock-s01-before_studio,at_wrist,tucked,na,full_break|slight_break,covers|meets,na,deep,"Claude (Oct 9, before the ruler ran)","white shirt under a knit vest, tucked, belt; one arm raised, one hanging; flared trousers over the shoes"
+stock-s02-before_studio,mid_bicep|at_elbow,mid_fly,na,na,na,above_knee,deep,"Claude (Oct 9, before the ruler ran)","black oversized tee, black shorts above the knee, high-tops; both arms hanging"
+stock-s03-before_studio,at_wrist,tucked,na,slight_break,meets,na,medium,"Claude (Oct 9, before the ruler ran)","black sweater tucked, belt; hands in pockets; black trousers on black shoes, legs crossed; black backdrop"
+stock-s04-before_studio,at_wrist,at_belt,yes,cropped,gap,na,light,"Claude (Oct 9, before the ruler ran)","green hoodie, black tee peeks below; body tilted; cropped raw-hem jeans, ankles show above sneakers"
+stock-s05-before_studio,at_wrist,at_belt|mid_fly,na,cuffed,gap,na,light,"Claude (Oct 9, before the ruler ran)",navy hoodie; one arm hanging; jeans rolled at the ankle above sneakers; walking
+stock-s06-before_studio,at_wrist,mid_fly,na,cuffed,gap,na,light,"Claude (Oct 9, before the ruler ran)","light blue shirt untucked; one arm hanging, one raised; joggers cuffed at the ankle, socks show; wide frame"
+stock-s07-before_studio,at_wrist,mid_fly|below_crotch,no,slight_break|no_break,meets,na,medium,"Claude (Oct 9, before the ruler ran)","olive suit, turtleneck tucked; hands in pockets"
+stock-s08-before_studio,at_wrist,at_belt|cropped,na,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","white cropped puffer, white flared trousers over black shoes: jacket and trousers the same white"
+stock-s09-before_street,ns,mid_fly|below_crotch,no,cropped,gap,na,light,"Claude (Oct 9, before the ruler ran)","navy suit, shirt tucked + belt; both hands at the lapels; trousers rolled above the ankle, no-show socks, brogues"
+stock-s10-before_street,at_wrist,at_belt,no,no_break|slight_break,meets,na,medium,"Claude (Oct 9, before the ruler ran)","black denim jacket over burgundy turtleneck; walking, arms near straight; skinny jeans into chelsea boots"
+stock-s11-before_street,above_wrist,mid_fly,na,slight_break,meets,na,medium,"Claude (Oct 9, before the ruler ran)","plaid shirt untucked, sleeves rolled to the forearm (styling); one hand in pocket"
+stock-s12-before_street,ns,at_belt,na,slight_break|full_break,meets|covers,na,medium,"Claude (Oct 9, before the ruler ran)","night; grey hoodie; one hand in pocket, one on the phone; jeans stacked on runners"
+stock-s13-before_street,at_wrist,mid_fly,na,slight_break,meets,na,light,"Claude (Oct 9, before the ruler ran)",black embroidered shirt untucked; one arm hanging with the phone
+stock-s14-before_street,at_wrist,at_belt|mid_fly,no,full_break|slight_break,covers|meets,na,light,"Claude (Oct 9, before the ruler ran)",denim jacket with grey fleece sleeves over a white turtleneck; grey trousers on grey chunky sneakers
+stock-s15-before_street,ns,mid_fly,na,slight_break|full_break,meets|covers,na,light,"Claude (Oct 9, before the ruler ran)","plaid overshirt over a tee, sleeves rolled; walking down stairs; one hand in pocket, one on the phone; wide trousers"
+stock-s16-before_street,ns,at_belt,no,full_break,covers,na,deep,"Claude (Oct 9, before the ruler ran)","light denim jacket over shirt + tie, hands clasped in front; light jeans stacked on loafers"
+stock-s17-before_phone,ns,ns,na,ns,ns,na,deep,"Claude (Oct 9, before the ruler ran)","sitting, bent over a phone; not judged"
+stock-s19-before_phone,ns,ns,na,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)",sitting on stairs; not judged
+stock-s20-before_phone,mid_bicep,ns,na,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)","black tee, arms angled down swinging a bat; black on black at the waist; boots in rubble"
+stock-s21-before_phone,at_wrist,mid_fly,na,slight_break,meets,na,medium,"Claude (Oct 9, before the ruler ran)","black rain jacket; one arm hanging, one holds the phone; dark joggers on black sneakers"
+stock-s22-before_phone,mid_bicep,at_belt,na,ns,ns,na,medium,"Claude (Oct 9, before the ruler ran)","brown knit polo, ribbed hem at the waistband; both arms hanging; legs cut at the shin"
+stock-s23-before_mirror,mid_bicep,mid_fly,na,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)",red tee; one arm hanging; legs cut at the shin
+stock-s24-before_mirror,ns,at_belt,yes,na,na,above_knee,light,"Claude (Oct 9, before the ruler ran)","dark sweater, both hands on the camera; grey tee peeks; Adidas shorts above the knee"
+stock-s25-before_mirror,at_elbow|mid_bicep,mid_fly|below_crotch,na,slight_break,meets,na,medium,"Claude (Oct 9, before the ruler ran)","cream short-sleeve shirt, untucked; one arm hanging with a camera rig; trousers on suede shoes"
+stock-s26-before_mirror,ns,mid_fly,no,ns,ns,na,deep,"Claude (Oct 9, before the ruler ran)",small in frame; patterned shirt open over a white tee; hands on camera and in pocket; barefoot
+stock-s27-before_mirror,mid_bicep|at_elbow,mid_fly,na,ns,ns,ns,light,"Claude (Oct 9, before the ruler ran)","hazy mirror; dark short-sleeve shirt; one arm hanging; white shorts, knees out of frame"
+stock-s28-before_mirror,ns,mid_fly,na,ns,ns,na,light,"Claude (Oct 9, before the ruler ran)","white tee, both arms raised to the camera; legs cut off"

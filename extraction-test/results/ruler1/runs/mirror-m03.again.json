@@ -1,0 +1,157 @@
+{
+  "crop" : 0,
+  "h" : 300,
+  "hem" : {
+    "legs" : [
+      {
+        "bend" : 8,
+        "footEnd" : 1.4199999999999999,
+        "pantsL" : 50,
+        "shoeSep" : 3,
+        "shoeTop" : 0.98999999999999999,
+        "side" : "l",
+        "why" : "pants and shoes look the same"
+      },
+      {
+        "bend" : 0,
+        "footEnd" : 1.1100000000000001,
+        "pantsL" : 52,
+        "shoeSep" : 2,
+        "shoeTop" : 0.93999999999999995,
+        "side" : "r",
+        "why" : "pants and shoes look the same"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "pants and shoes look the same"
+  },
+  "hem_box" : {
+    "pos" : 0.443,
+    "value" : "meets"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.66000000000000003,
+      "x" : 101,
+      "y" : 212
+    },
+    "lElbow" : {
+      "c" : 0.83999999999999997,
+      "x" : 116,
+      "y" : 121
+    },
+    "lHip" : {
+      "c" : 0.62,
+      "x" : 104,
+      "y" : 150
+    },
+    "lKnee" : {
+      "c" : 0.65000000000000002,
+      "x" : 105,
+      "y" : 183
+    },
+    "lShoulder" : {
+      "c" : 0.83999999999999997,
+      "x" : 111,
+      "y" : 98
+    },
+    "lWrist" : {
+      "c" : 0.78000000000000003,
+      "x" : 101,
+      "y" : 108
+    },
+    "neck" : {
+      "c" : 0.82999999999999996,
+      "x" : 95,
+      "y" : 98
+    },
+    "rAnkle" : {
+      "c" : 0.63,
+      "x" : 83,
+      "y" : 214
+    },
+    "rElbow" : {
+      "c" : 0.78000000000000003,
+      "x" : 73,
+      "y" : 122
+    },
+    "rHip" : {
+      "c" : 0.62,
+      "x" : 86,
+      "y" : 148
+    },
+    "rKnee" : {
+      "c" : 0.77000000000000002,
+      "x" : 85,
+      "y" : 180
+    },
+    "root" : {
+      "c" : 0.62,
+      "x" : 95,
+      "y" : 149
+    },
+    "rShoulder" : {
+      "c" : 0.82999999999999996,
+      "x" : 80,
+      "y" : 98
+    },
+    "rWrist" : {
+      "c" : 0.83999999999999997,
+      "x" : 78,
+      "y" : 138
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 313,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m03\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 34,
+        "pos" : 1.28,
+        "refL" : 3,
+        "side" : "r",
+        "spread" : 1.2,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "a short sleeve that runs past the elbow"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ a short sleeve that runs past the elbow"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 51,
+    "pos" : 0.14699999999999999,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 51,
+        "side" : "l",
+        "u" : 0.157
+      },
+      {
+        "score" : 1,
+        "sep" : 50,
+        "side" : "r",
+        "u" : 0.13700000000000001
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "pos" : 0.20699999999999999,
+    "value" : "mid_fly"
+  },
+  "w" : 168
+}

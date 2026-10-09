@@ -1,0 +1,143 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "legs" : [
+      {
+        "bend" : 32,
+        "class" : "covers",
+        "footEnd" : 1.55,
+        "hem" : 1.1399999999999999,
+        "over" : 0.39000000000000001,
+        "pantsL" : 63,
+        "shoeSep" : 60,
+        "shoeTop" : 0.88,
+        "side" : "l"
+      },
+      {
+        "bend" : 30,
+        "footEnd" : 1.47,
+        "pantsL" : 2,
+        "shoeSep" : 0,
+        "shoeTop" : 0.51000000000000001,
+        "side" : "r",
+        "why" : "pants and shoes look the same"
+      }
+    ],
+    "pos" : 0.14000000000000001,
+    "value" : "covers"
+  },
+  "hem_box" : {
+    "pos" : 1.482,
+    "value" : "covers"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.56000000000000005,
+      "x" : 395,
+      "y" : 704
+    },
+    "lElbow" : {
+      "c" : 0.75,
+      "x" : 275,
+      "y" : 319
+    },
+    "lHip" : {
+      "c" : 0.20999999999999999,
+      "x" : 113,
+      "y" : 359
+    },
+    "lKnee" : {
+      "c" : 0.31,
+      "x" : 319,
+      "y" : 508
+    },
+    "lShoulder" : {
+      "c" : 0.42999999999999999,
+      "x" : 251,
+      "y" : 193
+    },
+    "lWrist" : {
+      "c" : 0.71999999999999997,
+      "x" : 288,
+      "y" : 392
+    },
+    "neck" : {
+      "c" : 0.46000000000000002,
+      "x" : 173,
+      "y" : 178
+    },
+    "rAnkle" : {
+      "c" : 0.34000000000000002,
+      "x" : 154,
+      "y" : 838
+    },
+    "rElbow" : {
+      "c" : 0.79000000000000004,
+      "x" : 64,
+      "y" : 401
+    },
+    "rKnee" : {
+      "c" : 0.70999999999999996,
+      "x" : 139,
+      "y" : 516
+    },
+    "root" : {
+      "c" : 0.10000000000000001,
+      "x" : 56,
+      "y" : 179
+    },
+    "rShoulder" : {
+      "c" : 0.47999999999999998,
+      "x" : 94,
+      "y" : 162
+    },
+    "rWrist" : {
+      "c" : 0.65000000000000002,
+      "x" : 257,
+      "y" : 431
+    }
+  },
+  "layers" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "max" : 1600,
+  "ms" : 611,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s17\/before_phone.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 0,
+        "pos" : 0.54000000000000004,
+        "refL" : 7,
+        "side" : "l",
+        "spread" : 0.80000000000000004,
+        "thr" : 10,
+        "value" : "above_wrist"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "bend" : 0,
+    "pos" : 0.54000000000000004,
+    "refL" : 7,
+    "side" : "l",
+    "spread" : 0.80000000000000004,
+    "thr" : 10,
+    "value" : "above_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 683
+}

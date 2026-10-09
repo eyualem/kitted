@@ -1,0 +1,141 @@
+{
+  "crop" : 0,
+  "h" : 251,
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.78000000000000003,
+      "x" : 111,
+      "y" : 129
+    },
+    "lHip" : {
+      "c" : 0.46999999999999997,
+      "x" : 92,
+      "y" : 184
+    },
+    "lKnee" : {
+      "c" : 0.20999999999999999,
+      "x" : 95,
+      "y" : 236
+    },
+    "lShoulder" : {
+      "c" : 0.51000000000000001,
+      "x" : 97,
+      "y" : 96
+    },
+    "lWrist" : {
+      "c" : 0.79000000000000004,
+      "x" : 101,
+      "y" : 94
+    },
+    "neck" : {
+      "c" : 0.57999999999999996,
+      "x" : 73,
+      "y" : 95
+    },
+    "rElbow" : {
+      "c" : 0.79000000000000004,
+      "x" : 40,
+      "y" : 134
+    },
+    "rHip" : {
+      "c" : 0.45000000000000001,
+      "x" : 55,
+      "y" : 181
+    },
+    "rKnee" : {
+      "c" : 0.40000000000000002,
+      "x" : 57,
+      "y" : 233
+    },
+    "root" : {
+      "c" : 0.46000000000000002,
+      "x" : 73,
+      "y" : 183
+    },
+    "rShoulder" : {
+      "c" : 0.65000000000000002,
+      "x" : 48,
+      "y" : 95
+    },
+    "rWrist" : {
+      "c" : 0.64000000000000001,
+      "x" : 40,
+      "y" : 175
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 312,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m04\/before_mirror.jpg",
+  "shorts_length" : {
+    "legs" : [
+      {
+        "side" : "l",
+        "why" : "joints"
+      },
+      {
+        "k" : -0.20000000000000001,
+        "side" : "r"
+      }
+    ],
+    "pos" : -0.20000000000000001,
+    "value" : "above_knee"
+  },
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 11,
+        "pos" : 0.66000000000000003,
+        "refL" : 33,
+        "side" : "r",
+        "spread" : 1.7,
+        "thr" : 10,
+        "value" : "mid_bicep"
+      }
+    ],
+    "bend" : 11,
+    "pos" : 0.66000000000000003,
+    "refL" : 33,
+    "side" : "r",
+    "spread" : 1.7,
+    "thr" : 10,
+    "value" : "mid_bicep"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 0,
+    "pos" : 0.113,
+    "sides" : [
+      {
+        "score" : 0.94999999999999996,
+        "sep" : 35,
+        "side" : "l",
+        "u" : 0.14499999999999999
+      },
+      {
+        "score" : 0.93000000000000005,
+        "sep" : 43,
+        "side" : "r",
+        "u" : 0.081000000000000003
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "pos" : 0.14899999999999999,
+    "value" : "mid_fly"
+  },
+  "w" : 201
+}

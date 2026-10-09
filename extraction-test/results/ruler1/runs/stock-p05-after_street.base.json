@@ -1,0 +1,148 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem_box" : {
+    "pos" : -0.52800000000000002,
+    "value" : "gap"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.78000000000000003,
+      "x" : 504,
+      "y" : 845
+    },
+    "lElbow" : {
+      "c" : 0.81000000000000005,
+      "x" : 475,
+      "y" : 386
+    },
+    "lHip" : {
+      "c" : 0.57999999999999996,
+      "x" : 401,
+      "y" : 525
+    },
+    "lKnee" : {
+      "c" : 0.81999999999999995,
+      "x" : 439,
+      "y" : 738
+    },
+    "lShoulder" : {
+      "c" : 0.71999999999999997,
+      "x" : 405,
+      "y" : 269
+    },
+    "lWrist" : {
+      "c" : 0.80000000000000004,
+      "x" : 451,
+      "y" : 502
+    },
+    "neck" : {
+      "c" : 0.77000000000000002,
+      "x" : 334,
+      "y" : 286
+    },
+    "rAnkle" : {
+      "c" : 0.78000000000000003,
+      "x" : 327,
+      "y" : 939
+    },
+    "rElbow" : {
+      "c" : 0.48999999999999999,
+      "x" : 280,
+      "y" : 434
+    },
+    "rHip" : {
+      "c" : 0.60999999999999999,
+      "x" : 309,
+      "y" : 521
+    },
+    "rKnee" : {
+      "c" : 0.73999999999999999,
+      "x" : 295,
+      "y" : 717
+    },
+    "root" : {
+      "c" : 0.58999999999999997,
+      "x" : 355,
+      "y" : 523
+    },
+    "rShoulder" : {
+      "c" : 0.81000000000000005,
+      "x" : 263,
+      "y" : 302
+    },
+    "rWrist" : {
+      "c" : 0.34000000000000002,
+      "x" : 289,
+      "y" : 507
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 612,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p05\/after_street.jpg",
+  "shorts_length" : {
+    "legs" : [
+      {
+        "k" : -0.16,
+        "side" : "l"
+      },
+      {
+        "k" : -0.20000000000000001,
+        "side" : "r"
+      }
+    ],
+    "pos" : -0.17999999999999999,
+    "value" : "above_knee"
+  },
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 0,
+        "pocket" : true,
+        "pos" : 1.7,
+        "refL" : 72,
+        "side" : "r",
+        "spread" : 1,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "hand in pocket"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ hand in pocket"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 87,
+    "pos" : -0.059999999999999998,
+    "sides" : [
+      {
+        "score" : 0.69999999999999996,
+        "sep" : 21,
+        "side" : "l",
+        "u" : -0.016
+      },
+      {
+        "score" : 0.64000000000000001,
+        "sep" : 21,
+        "side" : "r",
+        "u" : -0.104
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "pos" : -0.11,
+    "value" : "at_belt"
+  },
+  "w" : 819
+}

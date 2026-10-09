@@ -1,0 +1,106 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.79000000000000004,
+      "x" : 529,
+      "y" : 605
+    },
+    "lHip" : {
+      "c" : 0.29999999999999999,
+      "x" : 404,
+      "y" : 826
+    },
+    "lShoulder" : {
+      "c" : 0.65000000000000002,
+      "x" : 485,
+      "y" : 410
+    },
+    "lWrist" : {
+      "c" : 0.76000000000000001,
+      "x" : 493,
+      "y" : 700
+    },
+    "neck" : {
+      "c" : 0.58999999999999997,
+      "x" : 337,
+      "y" : 421
+    },
+    "rElbow" : {
+      "c" : 0.76000000000000001,
+      "x" : 84,
+      "y" : 628
+    },
+    "rHip" : {
+      "c" : 0.22,
+      "x" : 223,
+      "y" : 826
+    },
+    "root" : {
+      "c" : 0.26000000000000001,
+      "x" : 314,
+      "y" : 826
+    },
+    "rShoulder" : {
+      "c" : 0.54000000000000004,
+      "x" : 189,
+      "y" : 433
+    },
+    "rWrist" : {
+      "c" : 0.65000000000000002,
+      "x" : 170,
+      "y" : 793
+    }
+  },
+  "layers" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "max" : 2048,
+  "ms" : 423,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p04\/after_street.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "bend" : 33,
+        "pos" : 1.96,
+        "refL" : 8,
+        "side" : "l",
+        "spread" : 0.5,
+        "thr" : 10,
+        "value" : "at_wrist"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "bend" : 33,
+    "pos" : 1.96,
+    "refL" : 8,
+    "side" : "l",
+    "spread" : 0.5,
+    "thr" : 10,
+    "value" : "at_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 683
+}

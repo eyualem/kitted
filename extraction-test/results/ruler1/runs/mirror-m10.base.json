@@ -1,0 +1,143 @@
+{
+  "crop" : 0,
+  "h" : 640,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.68999999999999995,
+      "x" : 248,
+      "y" : 598
+    },
+    "lElbow" : {
+      "c" : 0.70999999999999996,
+      "x" : 374,
+      "y" : 247
+    },
+    "lHip" : {
+      "c" : 0.45000000000000001,
+      "x" : 253,
+      "y" : 387
+    },
+    "lKnee" : {
+      "c" : 0.40999999999999998,
+      "x" : 262,
+      "y" : 512
+    },
+    "lShoulder" : {
+      "c" : 0.64000000000000001,
+      "x" : 304,
+      "y" : 165
+    },
+    "lWrist" : {
+      "c" : 0.80000000000000004,
+      "x" : 355,
+      "y" : 155
+    },
+    "neck" : {
+      "c" : 0.65000000000000002,
+      "x" : 232,
+      "y" : 172
+    },
+    "rAnkle" : {
+      "c" : 0.44,
+      "x" : 130,
+      "y" : 620
+    },
+    "rElbow" : {
+      "c" : 0.82999999999999996,
+      "x" : 130,
+      "y" : 275
+    },
+    "rHip" : {
+      "c" : 0.5,
+      "x" : 175,
+      "y" : 383
+    },
+    "rKnee" : {
+      "c" : 0.68999999999999995,
+      "x" : 132,
+      "y" : 515
+    },
+    "root" : {
+      "c" : 0.46999999999999997,
+      "x" : 214,
+      "y" : 385
+    },
+    "rShoulder" : {
+      "c" : 0.66000000000000003,
+      "x" : 160,
+      "y" : 179
+    },
+    "rWrist" : {
+      "c" : 0.75,
+      "x" : 150,
+      "y" : 350
+    }
+  },
+  "layers" : {
+    "outer" : "overshirt",
+    "pos" : -0.29799999999999999,
+    "under" : "tee",
+    "value" : "no"
+  },
+  "max" : 2048,
+  "ms" : 322,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m10\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 32,
+        "pos" : 1.2,
+        "refL" : 82,
+        "side" : "r",
+        "spread" : 1.1000000000000001,
+        "thr" : 10,
+        "value" : "above_wrist"
+      }
+    ],
+    "bend" : 32,
+    "pos" : 1.2,
+    "refL" : 82,
+    "side" : "r",
+    "spread" : 1.1000000000000001,
+    "thr" : 10,
+    "value" : "above_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 21,
+    "pos" : -0.26300000000000001,
+    "sides" : [
+      {
+        "score" : 0.95999999999999996,
+        "sep" : 35,
+        "side" : "l",
+        "u" : -0.014999999999999999
+      },
+      {
+        "score" : 1,
+        "sep" : 38,
+        "side" : "r",
+        "u" : -0.26300000000000001
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "pos" : 0.38700000000000001,
+    "value" : "below_crotch"
+  },
+  "w" : 480
+}

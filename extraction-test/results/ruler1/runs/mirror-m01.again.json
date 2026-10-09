@@ -1,0 +1,165 @@
+{
+  "crop" : 0,
+  "h" : 675,
+  "hem" : {
+    "legs" : [
+      {
+        "bend" : 2,
+        "class" : "meets",
+        "footEnd" : 1.52,
+        "hem" : 0.93999999999999995,
+        "over" : 0.23000000000000001,
+        "pantsL" : 38,
+        "shoeSep" : 19,
+        "shoeTop" : 0.77000000000000002,
+        "side" : "l"
+      },
+      {
+        "bend" : 2,
+        "class" : "meets",
+        "footEnd" : 1.6499999999999999,
+        "hem" : 1.0800000000000001,
+        "over" : 0.20999999999999999,
+        "pantsL" : 37,
+        "shoeSep" : 13,
+        "shoeTop" : 0.93000000000000005,
+        "side" : "r"
+      }
+    ],
+    "pos" : 0.080000000000000002,
+    "value" : "meets"
+  },
+  "hem_box" : {
+    "pos" : 0.27400000000000002,
+    "value" : "meets"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.57999999999999996,
+      "x" : 249,
+      "y" : 561
+    },
+    "lElbow" : {
+      "c" : 0.84999999999999998,
+      "x" : 298,
+      "y" : 263
+    },
+    "lHip" : {
+      "c" : 0.63,
+      "x" : 255,
+      "y" : 349
+    },
+    "lKnee" : {
+      "c" : 0.65000000000000002,
+      "x" : 254,
+      "y" : 463
+    },
+    "lShoulder" : {
+      "c" : 0.57999999999999996,
+      "x" : 281,
+      "y" : 200
+    },
+    "lWrist" : {
+      "c" : 0.85999999999999999,
+      "x" : 287,
+      "y" : 197
+    },
+    "neck" : {
+      "c" : 0.68999999999999995,
+      "x" : 233,
+      "y" : 194
+    },
+    "rAnkle" : {
+      "c" : 0.72999999999999998,
+      "x" : 161,
+      "y" : 545
+    },
+    "rElbow" : {
+      "c" : 0.81999999999999995,
+      "x" : 159,
+      "y" : 264
+    },
+    "rHip" : {
+      "c" : 0.62,
+      "x" : 194,
+      "y" : 343
+    },
+    "rKnee" : {
+      "c" : 0.70999999999999996,
+      "x" : 178,
+      "y" : 452
+    },
+    "root" : {
+      "c" : 0.63,
+      "x" : 224,
+      "y" : 346
+    },
+    "rShoulder" : {
+      "c" : 0.80000000000000004,
+      "x" : 185,
+      "y" : 189
+    },
+    "rWrist" : {
+      "c" : 0.80000000000000004,
+      "x" : 163,
+      "y" : 333
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 318,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m01\/before_mirror.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 22,
+        "pos" : 1,
+        "refL" : 68,
+        "side" : "r",
+        "spread" : 0.5,
+        "thr" : 10,
+        "value" : "at_elbow"
+      }
+    ],
+    "bend" : 22,
+    "pos" : 1,
+    "refL" : 68,
+    "side" : "r",
+    "spread" : 0.5,
+    "thr" : 10,
+    "value" : "at_elbow"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 37,
+    "pos" : 0.02,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 35,
+        "side" : "l",
+        "u" : 0.039
+      },
+      {
+        "score" : 1,
+        "sep" : 32,
+        "side" : "r",
+        "u" : 0.002
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "pos" : 0.045999999999999999,
+    "value" : "at_belt"
+  },
+  "w" : 454
+}
