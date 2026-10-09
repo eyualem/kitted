@@ -23,10 +23,10 @@
 - [ ] **P3** · Optional, 5 min: ask Gemini to log the second Brandon Balfour video (`Y71miKP8yJE`) with the R3b honesty rules. Online research is otherwise done (#166); the gold set is what sets the scores.
 - [ ] **P1** · **Export the old Gemini creator-research Google Sheet as `.xlsx`** into `inputs/rubric-research/` (2 min). *Unblocks: the same v5 rules ledger.*
 - [ ] **P1** · **Set up a Cloudflare account** for the server. *Unblocks: scoring in release builds, so outside testers can use it.*
+- [ ] **P1** · **Shoot the gold set:** about 80 outfit photos with 3+ friends (plan in `speed-and-detail-plan.md`). Add the v5 cases: "layered but not an 8" fits, accessory on/off pairs, strong no-layer streetwear, plain basics. *Unblocks: tuning the scores against real people's opinions; online ratings ran out (#166), so this is the only calibration.*
 - [ ] **P2** · **Claim @kitted.app / @trykitted and register trykitted.com.** About 10 minutes, and the names could be taken any time. *Unblocks: the waitlist page and the TikTok account.*
 - [ ] **P2** · **Size-ladder shoot (#164), about 45 min with a friend:** the same tee, hoodie and jeans in 2–3 sizes each (trade clothes), plus one piece that's oversized on purpose; mirror and propped, ~30 photos into `inputs/size-ladder/` (name each file with the piece and size, e.g. `tee-grey-M.jpg`). *Unblocks: judging fit (fitted vs oversized vs too big) and storing each piece's fit in the closet.* Optional: run R3c (YouTube fit guides) in Gemini, prompt in `rubric/research/v5-brief.md`.
 - [ ] **P2** · **Shoot ~20 photos of my clothes** into `inputs/item-photos/` (shot list in "Waiting on the founder"). *Unblocks: scanning clothes into the closet.*
-- [ ] **P1** · **Shoot the gold set:** about 80 outfit photos with 3+ friends (plan in `speed-and-detail-plan.md`). *Unblocks: tuning the scores against real people's opinions.*
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
