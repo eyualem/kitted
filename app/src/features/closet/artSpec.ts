@@ -1,13 +1,13 @@
-// What a closet tile draws (DECISIONS-LOG #91; founder-approved "detailed graphic" until real crops in phase 3):
-// the existing GarmentIcon in the piece's exact shade, plus at most 3 detail glyphs in the same 60 × 60 viewBox
-// (zip, drawstrings, pockets, a stripe, cuffs, belt loops, collar and buttons, denim rips or fade, a graphic panel,
-// stripes or checks, the sole height), a faint fabric hint (heather speckle, twill hatch), and a brand as a plain
-// neutral mark (the word only at large size). Never a brand's logo shape. Pure: GarmentArt.tsx renders it.
+// What a piece's drawing shows (founder, Oct 8: DECISIONS-LOG #141, code-drawn tiles everywhere pieces are shown).
+// Maps the reading (subcategory, volume, leg shape, hem, pattern) and the closet call's art (shade, details,
+// brand, shoe profile, denim wear) to a FlatSpec for flats.ts, in the piece's own tile color. A v3-only piece
+// (no closet call yet) draws its type's usual details. The brand is a plain word, never a logo shape.
+// Pure: GarmentArt.tsx renders it.
 import { shadeFromId } from '@kitted/core';
-import type { GarmentIconType } from '@/design-system/components/GarmentIcon';
 import type { ClosetArt, ClosetItemRow } from '@/data/types';
-import { garmentIconType } from '@/features/fitcheck/labels';
 import { t, type StringKey } from '@/i18n/en';
+import type { BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType } from './flats';
+import { contrastLine, mix } from './flats';
 import { brandWord } from './itemName';
 
 export type Glyph =
@@ -17,28 +17,29 @@ export type Glyph =
 export type ArtShape = 'top' | 'bottom' | 'shoe';
 
 export interface ArtSpec {
-  icon: GarmentIconType;
   shape: ArtShape;
-  hex: string;
-  /** At most 3, most telling first. */
+  flat: FlatSpec;
+  /** The telling details drawn, most telling first (VoiceOver and tests). */
   glyphs: Glyph[];
-  fabric: 'heather' | 'twill' | null;
-  /** A plain chest mark (tiles) or the brand word (large); never a logo shape. */
-  brand: { word: string; mark: 'dot' | 'word' } | null;
-  /** VoiceOver: the name and what's drawn ("Medium grey Nike hoodie, front pouch, drawstrings"). */
+  /** VoiceOver: the name and what's drawn ("Medium grey Nike hoodie, drawstrings, front pouch"). */
   a11y: string;
 }
 
-const SHAPE: Record<GarmentIconType, ArtShape> = {
-  tee: 'top', oxford: 'top', overshirt: 'top', jacket: 'top', sweater: 'top', hoodie: 'top',
-  chino: 'bottom', jeans: 'bottom', trouser: 'bottom', cargo: 'bottom',
-  sneaker: 'shoe', runner: 'shoe', boot: 'shoe', loafer: 'shoe',
+const TOP: Record<string, TopType> = {
+  tee: 'tee', graphic_tee: 'tee', jersey: 'tee', tank_top: 'tank', polo: 'polo', knit_polo: 'polo',
+  oxford_shirt: 'shirt', dress_shirt: 'shirt', flannel_shirt: 'shirt', camp_collar_shirt: 'shirt', overshirt: 'overshirt', chore_coat: 'overshirt',
+  sweater: 'crew', sweatshirt: 'crew', fleece: 'crew', rugby_shirt: 'crew', quarter_zip: 'quarter_zip', cardigan: 'cardigan', hoodie: 'hoodie',
+  denim_jacket: 'denim_jacket', bomber: 'bomber', leather_jacket: 'jacket', field_jacket: 'jacket', shell_jacket: 'jacket', rain_jacket: 'jacket',
+  puffer: 'puffer', blazer: 'blazer', unstructured_blazer: 'blazer', sport_coat: 'blazer', suit_jacket: 'blazer', overcoat: 'coat',
 };
-
-/** Icons that already draw a detail (the overlay doesn't draw it twice). */
-const BUILT_IN: Partial<Record<GarmentIconType, Glyph[]>> = {
-  hoodie: ['pouch'], oxford: ['collarButtons'], overshirt: ['collarButtons', 'chestPocket'], jacket: ['collarButtons', 'chestPocket'],
-  cargo: ['cargoPockets'],
+const BOTTOM: Record<string, BottomType> = {
+  jeans: 'jeans', chinos: 'chinos', trousers: 'trousers', suit_trousers: 'trousers', drawstring_trousers: 'trousers', cargos: 'cargos',
+  joggers: 'joggers', sweatpants: 'joggers', shorts: 'shorts', athletic_shorts: 'shorts',
+};
+const SHOE: Record<string, ShoeType> = {
+  white_leather_sneaker: 'sneaker', canvas_sneaker: 'sneaker', low_profile_sneaker: 'sneaker', basketball_sneaker: 'sneaker', chunky_sneaker: 'sneaker',
+  retro_runner: 'runner', performance_runner: 'runner', work_boot: 'work_boot', suede_chukka: 'chukka', chelsea_boot: 'chelsea',
+  loafer: 'loafer', dress_shoe: 'derby', derby: 'derby', slides_sandals: 'slides',
 };
 
 const PRIORITY: readonly Glyph[] = [
@@ -54,48 +55,108 @@ const A11Y: Record<Glyph, StringKey> = {
   waistDrawstring: 'closet.art.drawstrings',
 };
 
-/** The tile drawing for a piece. `size` 'large' (C2's full-width tile) writes the brand word. */
-export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'name'>, size: 'tile' | 'large' = 'tile'): ArtSpec {
+function shapeOf(category: unknown, sub: string): ArtShape {
+  if (SHOE[sub] || category === 'footwear') return 'shoe';
+  if (BOTTOM[sub] || category === 'bottom') return 'bottom';
+  return 'top';
+}
+
+/** The drawing for a piece. */
+export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'name'>): ArtSpec {
   const g = item.garment;
-  const icon = garmentIconType(g);
-  const shape = SHAPE[icon];
+  const sub = String(g.subcategory ?? '');
+  const shape = shapeOf(g.category, sub);
   const art: ClosetArt | null = item.art ?? null;
   const d = new Set(art?.details ?? []);
-  const want = new Set<Glyph>();
-  if (shape === 'top') {
-    if (d.has('full_zip')) want.add('fullZip');
-    else if (d.has('half_zip') || g.subcategory === 'quarter_zip') want.add('halfZip');
-    if (d.has('front_pouch') && !d.has('full_zip')) want.add('pouch');
-    if (d.has('drawstring') && (d.has('hood') || icon === 'hoodie')) want.add('drawstrings');
-    if (d.has('chest_pocket')) want.add('chestPocket');
-    if (d.has('elastic_cuffs')) want.add('cuffs');
-    if (d.has('collar') || d.has('buttons')) want.add('collarButtons');
-    if (d.has('side_stripe')) want.add('sideStripe');
-  } else if (shape === 'bottom') {
-    if (d.has('cargo_pockets')) want.add('cargoPockets');
-    if (d.has('side_stripe')) want.add('sideStripe');
-    if (d.has('elastic_cuffs')) want.add('cuffs');
-    if (d.has('belt_loops')) want.add('beltLoops');
-    if (d.has('drawstring')) want.add('waistDrawstring');
-    if (art?.denimWear === 'ripped') want.add('rips');
-    if (art?.denimWear === 'faded') want.add('fade');
-  } else if (art?.shoeProfile === 'chunky') want.add('chunkySole');
-  if (shape !== 'shoe') {
-    if (g.pattern === 'graphic') want.add('graphic');
-    if (g.pattern === 'stripes') want.add('stripes');
-    if (g.pattern === 'checks_plaid') want.add('checks');
-  }
-  const builtIn = new Set(BUILT_IN[icon] ?? []);
-  // A full zip opens the hoodie's pouch: the overlay draws the zip through it.
-  const glyphs = PRIORITY.filter((x) => want.has(x) && !builtIn.has(x)).slice(0, 3);
+  const known = !!art && (art.details?.length ?? 0) > 0;
+  const has = (x: string, usual: boolean) => (known ? d.has(x) : usual);
   const key = art?.shade ? shadeFromId(art.shade) : null;
-  const fabric = key?.finish === 'heather' ? 'heather' : shape === 'bottom' && (g.subcategory === 'chinos' || g.subcategory === 'trousers' || icon === 'jeans') ? 'twill' : null;
-  const word = brandWord(art?.brand);
-  const drawn = [...builtIn].filter((x) => want.has(x));
-  const said = [...new Set([...glyphs, ...drawn].map((x) => t(A11Y[x])))];
-  return {
-    icon, shape, hex: item.hex, glyphs, fabric,
-    brand: word ? { word, mark: size === 'large' ? 'word' : 'dot' } : null,
-    a11y: [item.name, ...said].join(', '),
-  };
+  const heather = key?.finish === 'heather';
+  const pattern = String(art?.pattern ?? g.pattern ?? 'solid');
+  const brand = brandWord(art?.brand)?.toUpperCase() ?? null;
+  const c = item.hex;
+  const glyphs = new Set<Glyph>();
+  let flat: FlatSpec;
+
+  if (shape === 'top') {
+    let type: TopType = TOP[sub] ?? (g.category === 'outerwear' ? 'jacket' : 'tee');
+    if (type === 'crew' && d.has('half_zip')) type = 'quarter_zip';
+    if (type === 'crew' && d.has('full_zip')) type = 'jacket';
+    const vol = typeof g.volume === 'number' ? g.volume : 3;
+    const knit = type === 'crew' || type === 'quarter_zip' || type === 'cardigan' || type === 'hoodie' || type === 'bomber';
+    const hood = type === 'hoodie';
+    const shirtLike = type === 'shirt' || type === 'overshirt';
+    const pockets = type === 'overshirt' ? (known ? (d.has('chest_pocket') ? 2 : 0) : 2) : type === 'shirt' || type === 'denim_jacket' ? (has('chest_pocket', type === 'denim_jacket' || sub === 'oxford_shirt') ? (type === 'denim_jacket' ? 2 : 1) : 0) : 0;
+    const details: TopFlat['details'] = {
+      drawstrings: hood && has('drawstring', true),
+      pouch: hood && has('front_pouch', !d.has('full_zip')),
+      fullZip: hood && d.has('full_zip'),
+      ribHem: knit,
+      ribCuffs: knit || d.has('elastic_cuffs'),
+      chestPockets: pockets as 0 | 1 | 2,
+      flaps: type === 'overshirt' || type === 'denim_jacket',
+    };
+    const p: TopFlat['pattern'] =
+      pattern === 'stripes' ? { type: 'stripes', line: contrastLine(c), scale: 4.4 }
+        : pattern === 'checks_plaid' ? { type: 'gingham', line: contrastLine(c), scale: sub === 'flannel_shirt' ? 9 : 5.5 }
+          : heather ? { type: 'heather' }
+            : type === 'denim_jacket' ? { type: 'twill' } : { type: 'solid' };
+    flat = {
+      kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 4 ? 'relaxed' : type === 'overshirt' ? 'relaxed' : 'regular',
+      pattern: p, details, brand, print: pattern === 'graphic',
+      buttonColor: type === 'denim_jacket' ? '#B87A45' : undefined, stitch: type === 'denim_jacket' ? '#D49A5E' : undefined,
+    };
+    if (details.fullZip || type === 'jacket' || type === 'bomber' || type === 'puffer') glyphs.add('fullZip');
+    if (type === 'quarter_zip') glyphs.add('halfZip');
+    if (details.pouch && known) glyphs.add('pouch');
+    if (details.drawstrings && known) glyphs.add('drawstrings');
+    if (pockets && known) glyphs.add('chestPocket');
+    if (d.has('elastic_cuffs')) glyphs.add('cuffs');
+    if (shirtLike && (d.has('collar') || d.has('buttons'))) glyphs.add('collarButtons');
+  } else if (shape === 'bottom') {
+    let type: BottomType = BOTTOM[sub] ?? 'chinos';
+    if ((type === 'chinos' || type === 'trousers') && d.has('cargo_pockets')) type = 'cargos';
+    if (type === 'trousers' && d.has('elastic_cuffs')) type = 'joggers';
+    const leg = String(g.leg_shape ?? '');
+    const fit: BottomFlat['fit'] = leg === 'skinny' || leg === 'slim' ? 'slim' : leg === 'relaxed' || leg === 'barrel' ? 'relaxed' : leg === 'wide' ? 'wide' : type === 'joggers' ? 'relaxed' : 'straight';
+    const hemRaw = String(g.hem ?? '');
+    const hem: BottomFlat['hem'] = hemRaw === 'full_break' || hemRaw === 'pooling' ? 'full_break' : hemRaw === 'slight_break' ? 'slight_break' : hemRaw === 'cuffed' ? 'cuffed' : 'no_break';
+    const jeans = type === 'jeans';
+    const denim = String(g.color_family ?? '').startsWith('denim');
+    flat = {
+      kind: 'bottom', type, color: c, fit, hem,
+      wash: art?.denimWear === 'faded' ? 'faded' : String(g.color_family) === 'denim_dark' ? 'rinse' : 'washed',
+      ripped: art?.denimWear === 'ripped' || (!art && g.distressed_by_design === true),
+      sideStripe: d.has('side_stripe'),
+      pattern: type === 'joggers' ? (heather ? { type: 'heather' } : { type: 'solid' }) : { type: 'twill' },
+      stitch: jeans ? (denim ? '#C8925A' : mix(c, 0.32)) : undefined,
+      buttonColor: jeans && !denim ? '#8D9096' : undefined,
+      brand,
+    };
+    if (type === 'cargos') glyphs.add('cargoPockets');
+    if (flat.sideStripe) glyphs.add('sideStripe');
+    if (flat.ripped) glyphs.add('rips');
+    if (art?.denimWear === 'faded') glyphs.add('fade');
+    if (type === 'joggers' && d.has('elastic_cuffs')) glyphs.add('cuffs');
+    if (type === 'joggers' && d.has('drawstring')) glyphs.add('waistDrawstring');
+    if (d.has('belt_loops') && type !== 'joggers') glyphs.add('beltLoops');
+  } else {
+    const type: ShoeType = SHOE[sub] ?? 'sneaker';
+    const chunky = art?.shoeProfile === 'chunky' || sub === 'chunky_sneaker';
+    const suede = sub === 'suede_chukka';
+    flat = {
+      kind: 'shoe', type, color: c, chunky: chunky && (type === 'sneaker' || type === 'runner'),
+      pattern: suede ? { type: 'suede' } : { type: 'solid' }, brand,
+      sole: type === 'sneaker' || type === 'runner' ? (String(g.color_family) === 'black' && !chunky ? '#F4F3EF' : undefined) : undefined,
+    };
+    if (chunky) glyphs.add('chunkySole');
+  }
+  if (shape !== 'shoe') {
+    if (pattern === 'graphic') glyphs.add('graphic');
+    if (pattern === 'stripes') glyphs.add('stripes');
+    if (pattern === 'checks_plaid') glyphs.add('checks');
+  }
+  const ordered = PRIORITY.filter((x) => glyphs.has(x));
+  const said = [...new Set(ordered.map((x) => t(A11Y[x])))];
+  return { shape, flat, glyphs: ordered, a11y: [item.name, ...said].join(', ') };
 }

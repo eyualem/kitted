@@ -9,17 +9,18 @@ import {
   applyCorrection, garmentName, matchClosetItem, removeGarment, score, suggestFixes, type Garment, type Reading,
 } from '@kitted/core';
 import {
-  Chip, ChipFlow, GarmentIcon, Icon, KButton, KText, Pill, RowDivider, displayScore, opacity, useTheme,
+  Chip, ChipFlow, Icon, KButton, KText, Pill, RowDivider, displayScore, opacity, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { garmentIconType, garmentHex, garmentLabel } from '@/features/fitcheck/labels';
+import { garmentHex, garmentLabel } from '@/features/fitcheck/labels';
 import { fitCheck } from '@/features/fitcheck/session';
 import { ScoreMoveLine } from '@/features/sheet/ScoreMoveLine';
 import { SheetList as List, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 import { fitField, typeOptions, volumeWord, type FieldOption } from './fields';
+import { PieceArt } from '@/features/closet/GarmentArt';
 
 type Reason = 'item' | 'detail' | 'fix' | 'score';
 const REASONS: [Reason, Parameters<typeof t>[0]][] = [
@@ -182,7 +183,7 @@ function Row({ title, detail, garment, active, onPress }: { title: string; detai
     >
       {garment ? (
         <View style={{ width: 44, height: 44, borderRadius: 12, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
-          <GarmentIcon type={garmentIconType(garment)} color={garmentHex(garment)} size={36} />
+          <PieceArt item={{ garment, hex: garmentHex(garment) }} size={40} />
         </View>
       ) : null}
       <View style={{ flex: 1, gap: 2 }}>

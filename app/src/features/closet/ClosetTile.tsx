@@ -12,9 +12,8 @@ export interface ClosetTileProps {
   size: number;
   aspect?: number;
   radius?: number;
-  /** Share of the tile the drawing takes (02 C1: 62%). */
+  /** Share of the tile the drawing takes (the flats carry their own margin; 02 C1's 62% was for the old icons). */
   scale?: number;
-  large?: boolean;
   dim?: boolean;
   /** Draw the name under it. */
   label?: string | null;
@@ -24,9 +23,9 @@ export interface ClosetTileProps {
   decorative?: boolean;
 }
 
-export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.62, large, dim, label, onPress, accessibilityHint, decorative }: ClosetTileProps) {
+export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, label, onPress, accessibilityHint, decorative }: ClosetTileProps) {
   const { colors } = useTheme();
-  const spec = artSpec(item, large ? 'large' : 'tile');
+  const spec = artSpec(item);
   const ghost = item.isPhotographed === false;
   const h = Math.round(size * aspect);
   const body = (

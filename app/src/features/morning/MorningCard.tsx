@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { localParts, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
-  GarmentIcon, Icon, KButton, KCard, KText, MorphPicker, NeckDownPhoto, TextLink, displayScore, opacity, scoreWordLabel, useTheme,
+  Icon, KButton, KCard, KText, MorphPicker, NeckDownPhoto, TextLink, displayScore, opacity, scoreWordLabel, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -17,7 +17,6 @@ import {
 import { shownPhoto } from '@/demo/demoPhotos';
 import { quota } from '@/features/fitcheck/session';
 import { OutfitTiles } from '@/features/stylist/cards/OutfitTiles';
-import { garmentIconType } from '@/features/fitcheck/labels';
 import { showToast } from '@/features/toast/toast';
 import { setStylistAction } from '@/router/stylistAction';
 import { weatherSource } from '@/services/weather';
@@ -28,6 +27,7 @@ import { badgeTemps, cardOccasionLabel, ideaTitle, missingLabel, styleLabel, wea
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { pickSwap } from './swapPicker';
+import { PieceArt } from '@/features/closet/GarmentArt';
 
 interface Model {
   row: DailyIdeaRow;
@@ -228,7 +228,7 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
         ? [
             ...items.map((it) => (
               <View key={it.id} accessible accessibilityLabel={t('idea.tile.a11y', { name: it.name })} style={{ width: tileW, height: tileH, backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
-                <GarmentIcon type={garmentIconType(it.garment)} color={it.hex} size={Math.round(Math.min(tileW, tileH) * 0.66)} />
+                <PieceArt item={it} size={Math.round(Math.min(tileW, tileH) * 0.84)} />
               </View>
             )),
             ...needs.map((n) => (

@@ -2,9 +2,9 @@
 // "You'd need" tiles for slots the closet can't fill. 4 across; 2 at accessibility text sizes.
 import { useState } from 'react';
 import { View } from 'react-native';
-import { GarmentIcon, Icon, KText, useTheme } from '@/design-system';
+import { Icon, KText, useTheme } from '@/design-system';
 import type { ClosetItemRow } from '@/data/types';
-import { garmentIconType } from '@/features/fitcheck/labels';
+import { PieceArt } from '@/features/closet/GarmentArt';
 
 const GAP = 8;
 
@@ -21,7 +21,7 @@ export function OutfitTiles({ items, needs = [], compact = false }: { items: rea
             ...items.map((it) => (
               <View key={it.id} style={{ width: tile, gap: 6 }}>
                 <View style={{ width: tile, height: tile, borderRadius: radius, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
-                  <GarmentIcon type={garmentIconType(it.garment)} color={it.hex} size={Math.round(tile * 0.62)} />
+                  <PieceArt item={it} size={Math.round(tile * 0.8)} />
                 </View>
                 {compact ? null : (
                   <KText role="miniLabel" numberOfLines={2}>

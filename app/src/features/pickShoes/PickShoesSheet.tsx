@@ -6,15 +6,15 @@
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { GarmentIcon, Icon, KText, opacity, useTheme } from '@/design-system';
+import { Icon, KText, opacity, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ClosetItemRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
-import { garmentIconType } from '@/features/fitcheck/labels';
 import { fitCheck } from '@/features/fitcheck/session';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
+import { PieceArt } from '@/features/closet/GarmentArt';
 
 const COLUMNS = 3;
 const GAP = 8;
@@ -49,7 +49,7 @@ export function PickShoesSheet() {
                 const lastWorn = data.last?.id === item.id ? t('shoes.lastWorn', { weekday: data.last.weekday }) : null;
                 return (
                   <ShoeTile key={item.id} size={tile} label={item.name} lastWorn={lastWorn} onPress={() => void pick(item)}>
-                    <GarmentIcon type={garmentIconType(item.garment)} color={item.hex} size={Math.round(tile * 0.62)} />
+                    <PieceArt item={item} size={Math.round(tile * 0.8)} />
                   </ShoeTile>
                 );
               }),

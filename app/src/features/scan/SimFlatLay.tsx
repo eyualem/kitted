@@ -10,9 +10,9 @@ import type { ScanTip } from '@/features/camera/guidance';
 import { simPieceRects } from '@/features/camera/simGuide';
 
 const PIECES: ArtSpec[] = [
-  { icon: 'hoodie', shape: 'top', hex: '#7E848E', glyphs: ['drawstrings'], fabric: 'heather', brand: null, a11y: '' },
-  { icon: 'jeans', shape: 'bottom', hex: '#3B4F6E', glyphs: ['beltLoops'], fabric: 'twill', brand: null, a11y: '' },
-  { icon: 'sneaker', shape: 'shoe', hex: '#EDEBE5', glyphs: [], fabric: null, brand: null, a11y: '' },
+  { shape: 'top', flat: { kind: 'top', type: 'hoodie', color: '#7E848E', pattern: { type: 'heather' }, details: { drawstrings: true, pouch: true, ribHem: true, ribCuffs: true } }, glyphs: [], a11y: '' },
+  { shape: 'bottom', flat: { kind: 'bottom', type: 'jeans', color: '#3B4F6E', fit: 'straight', pattern: { type: 'twill' } }, glyphs: [], a11y: '' },
+  { shape: 'shoe', flat: { kind: 'shoe', type: 'sneaker', color: '#EDEBE5' }, glyphs: [], a11y: '' },
 ];
 
 export function SimFlatLay({ width, height, state }: { width: number; height: number; state: ScanTip | 'review' }) {
@@ -28,7 +28,7 @@ export function SimFlatLay({ width, height, state }: { width: number; height: nu
       <View style={[styles.fold, { top: height * 0.33, transform: [{ rotate: '-4deg' }] }]} />
       <View style={[styles.fold, { top: height * 0.71, transform: [{ rotate: '3deg' }] }]} />
       {rects.map((r, i) => (
-        <View key={PIECES[i]!.icon} style={{ position: 'absolute', left: r.x, top: r.y }}>
+        <View key={PIECES[i]!.shape} style={{ position: 'absolute', left: r.x, top: r.y }}>
           <GarmentArt spec={PIECES[i]!} size={r.width} />
         </View>
       ))}

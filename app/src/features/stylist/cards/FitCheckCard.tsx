@@ -5,14 +5,13 @@ import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, Pressable, View } from 'react-native';
 import {
-  FinishTile, FixRow, GarmentIcon, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
+  FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
   MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
 import { OCCASIONS, type ClosetItemRow, type FitCheckRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
-import { garmentIconType } from '@/features/fitcheck/labels';
 import { fitCheck, useFitCheckSession } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
@@ -27,6 +26,7 @@ import { confirmLens } from '@/features/fitcheck/lensUi';
 import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { closetSummaryText } from '@/features/closet/summaryText';
+import { PieceArt } from '@/features/closet/GarmentArt';
 
 function useCheck(checkId: string) {
   return useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -335,7 +335,7 @@ function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] 
             label={t('partial.a11y.useSame', { shoes: remembered.item.name.toLowerCase(), weekday: remembered.weekday })}
             onPress={() => void fitCheck.pickShoes(row.id, remembered.item.id)}
           >
-            <GarmentIcon type={garmentIconType(remembered.item.garment)} color={remembered.item.hex} size={36} />
+            <PieceArt item={remembered.item} size={40} />
           </FinishTile>
         ) : hasShoes ? (
           <FinishTile filled label={t('partial.a11y.pick')} onPress={() => router.push(`/sheets/pick-shoes/${row.id}`)}>

@@ -2,14 +2,14 @@
 // Built from closet items in code (no AI). P2 renders the seeded ideas; the generator is P5.
 import { useState } from 'react';
 import { View } from 'react-native';
-import { GarmentIcon, KButton, KCard, KCardSection, KText, TagLine, useTheme } from '@/design-system';
+import { KButton, KCard, KCardSection, KText, TagLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { garmentIconType } from '@/features/fitcheck/labels';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 import { dayKey } from '@kitted/core';
 import { sessionClock } from '@/state/session';
+import { PieceArt } from '@/features/closet/GarmentArt';
 
 export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
   const { isAccessibilitySize } = useTheme();
@@ -51,7 +51,7 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
           {items.map((it) => (
             <View key={it!.id} style={{ width: tile, gap: 6 }}>
               <TileBox size={tile}>
-                <GarmentIcon type={garmentIconType(it!.garment)} color={it!.hex} size={Math.round(tile * 0.62)} />
+                <PieceArt item={it!} size={Math.round(tile * 0.8)} />
               </TileBox>
               <KText role="miniLabel" numberOfLines={2}>
                 {it!.name}
