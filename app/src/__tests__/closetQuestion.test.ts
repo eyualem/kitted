@@ -4,21 +4,33 @@ import { askQuestionText, askReasonText } from '@/features/closet/askText';
 import { cropLayout } from '@/features/closet/cropLayout';
 
 describe('cropLayout', () => {
-  // His Oct 8 boxes: the hoodie under the cream shirt (a strip), the hoodie alone, the jeans, the boots (wide and low).
-  const boxes = [[347, 375, 571, 483], [334, 362, 568, 622], [546, 399, 821, 603], [805, 365, 863, 570]];
+  // His Oct 8 boxes: the hoodie under the cream shirt (a strip), the hoodie alone, the jeans, the boots (wide and low),
+  // and his Oct 8 boots from the mirror (both feet, floor between them; the tile showed only the floor, #183).
+  const boxes = [[347, 375, 571, 483], [334, 362, 568, 622], [546, 399, 821, 603], [805, 365, 863, 570], [894, 375, 977, 620]];
   for (const box of boxes) {
-    for (const [w, h] of [[150, 172], [120, 138], [300, 120]]) {
-      it(`box ${box.join(',')} in ${w}×${h}: nothing above the piece's top, the frame covered`, () => {
-        const { imgW, imgH, left, top } = cropLayout(box, 0.75, w!, h!);
-        const shownTop = -top / imgH; // the photo's y (0–1) at the frame's top edge
-        expect(shownTop).toBeGreaterThanOrEqual(box[0]! / 1000 - 1e-9);
+    for (const [w, h] of [[150, 172], [120, 138], [300, 120], [128, 128]]) {
+      it(`box ${box.join(',')} in ${w}×${h}: nothing above the piece's top, the whole piece in view`, () => {
+        const { imgW, imgH, left, top, hideAbove } = cropLayout(box, 0.75, w!, h!);
+        // The photo's y (0–1) at the first row that isn't painted solid: never above the piece's top.
+        expect((hideAbove - top) / imgH).toBeGreaterThanOrEqual(box[0]! / 1000 - 1e-9);
+        // The piece's full width shows (both shoes, not the floor between them).
+        expect(left + (box[1]! / 1000) * imgW).toBeGreaterThanOrEqual(-1e-9);
+        expect(left + (box[3]! / 1000) * imgW).toBeLessThanOrEqual(w! + 1e-9);
+        // The photo spans the frame's width; it covers the whole frame unless the region is wider than the frame.
         expect(left).toBeLessThanOrEqual(1e-9);
-        expect(top).toBeLessThanOrEqual(1e-9);
         expect(left + imgW).toBeGreaterThanOrEqual(w! - 1e-9);
-        expect(top + imgH).toBeGreaterThanOrEqual(h! - 1e-9);
+        if (hideAbove === 0) {
+          expect(top).toBeLessThanOrEqual(1e-9);
+          expect(top + imgH).toBeGreaterThanOrEqual(h! - 1e-9);
+        }
       });
     }
   }
+  it('a pair of shoes is fitted to the width, not zoomed into the floor between them', () => {
+    const { hideAbove, piece } = cropLayout([894, 375, 977, 620], 0.75, 128, 128);
+    expect(hideAbove).toBeGreaterThan(0);
+    expect(piece.right - piece.left).toBeGreaterThan(0.6 * 128);
+  });
 });
 
 describe('askReasonText', () => {

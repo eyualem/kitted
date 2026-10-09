@@ -191,7 +191,10 @@ ST_TOP_A = {"hoodie", "sweatshirt", "graphic_tee"}
 ST_OUT_A = {"bomber", "puffer"}
 ST_OUT_H = {"denim_jacket", "leather_jacket", "shell_jacket", "rain_jacket", "fleece", "vest"}
 ST_SHOE_A = {"chunky_sneaker", "basketball_sneaker"}
-ST_SHOE_H = {"canvas_sneaker", "retro_runner", "work_boot", "low_profile_sneaker", "performance_runner", "trail_shoe"}
+# white_leather_sneaker: a plain white sneaker (Club C, AF1 Low) is a streetwear staple; without it a boxy tee +
+# wide jeans + white sneakers read as no style and lost ~1.0 for "too baggy" (DECISIONS-LOG #183).
+ST_SHOE_H = {"canvas_sneaker", "retro_runner", "work_boot", "low_profile_sneaker", "performance_runner", "trail_shoe",
+             "white_leather_sneaker"}
 ST_STREET_SHOES = ST_SHOE_A | {"canvas_sneaker", "retro_runner", "low_profile_sneaker", "work_boot"}
 ST_VETO = {"blazer", "sport_coat", "suit_jacket", "unstructured_blazer", "suit_trousers", "trousers", "dress_shirt", "overcoat"}
 PREP_TOPS = {"polo", "knit_polo", "oxford_shirt", "cardigan", "rugby_shirt"}

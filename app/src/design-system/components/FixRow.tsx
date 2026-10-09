@@ -72,11 +72,11 @@ export function FixRow({ number, title, detail, gain, done }: FixRowProps) {
   );
 }
 
-/** TipLine: 1 pt line on top, footnote ink2 text with a copper semibold lead-in ("Next level"). */
-export function TipLine({ lead, text }: { lead: string; text: string }) {
+/** TipLine: 1 pt line on top (none when it opens its section), footnote ink2 text with a copper semibold lead-in ("Next level"). */
+export function TipLine({ lead, text, first }: { lead: string; text: string; first?: boolean }) {
   const { colors } = useTheme();
   return (
-    <View style={{ borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 8, paddingBottom: 6 }} accessible accessibilityLabel={`${lead}: ${text}`}>
+    <View style={{ borderTopWidth: first ? 0 : 1, borderTopColor: colors.line, paddingTop: first ? 10 : 8, paddingBottom: 6 }} accessible accessibilityLabel={`${lead}: ${text}`}>
       <KText role="tipLine">
         <KText role="tipLead">{lead}</KText>
         {` ${text}`}

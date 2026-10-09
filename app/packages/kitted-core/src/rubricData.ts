@@ -7,7 +7,7 @@ export const RUBRIC_DATA: RubricData = {
  "engine": 4,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "5e95b69dadf5d60389531c2999a8d91ff0ebb61f485c08efd52bd8bb9743d27f",
+ "rubricSha256": "b42d11accde2a2de536a501367e2826b0171d83e73e58d716d3503f0b62a0e2e",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,
@@ -520,6 +520,7 @@ export const RUBRIC_DATA: RubricData = {
     "performance_runner",
     "retro_runner",
     "trail_shoe",
+    "white_leather_sneaker",
     "work_boot"
    ],
    "ST_STREET_SHOES": [

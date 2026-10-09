@@ -130,6 +130,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const top = fixes[0];
   const dialed = fixes.length === 0;
   const nextLevel = row.details.nextLevel?.[0];
+  // The fix area can skip its "No quick fixes" row only when the summary says it and a tip still fills the section.
+  const quietNoFix = score < 9 && !!row.explanation?.includes(t('sum.noQuickFix')) && !!(nextLevel || wxTip);
   const recheckOpen = isRecheckOpen(row, sessionClock.nowMs(), sessionClock);
   // "Added 3 to Closet · 1 question" / "Checking the details…" (#91): from the closet summary.
   const closetLine = closetSummaryText(row.details.closetSummary, sessionClock.nowMs());
@@ -211,7 +213,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
         </KCardSection>
         <Seam />
         <KCardSection paddingVertical={4} gap={0}>
-          {dialed ? (
+          {/* Below 9 with no fixes the summary already says "No quick fixes for this one."; don't say it twice (#183). */}
+          {dialed && quietNoFix ? null : dialed ? (
             <View style={{ paddingVertical: space.fixRowV }}>
               <KText role="fixTitle">{score >= 9 ? t('dialed.title') : t('card.noFixes')}</KText>
             </View>
@@ -223,8 +226,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
               </View>
             ))
           )}
-          {nextLevel ? <TipLine lead={t('card.nextLevel')} text={nextLevel} /> : null}
-          {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} /> : null}
+          {nextLevel ? <TipLine lead={t('card.nextLevel')} text={nextLevel} first={dialed && quietNoFix} /> : null}
+          {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} first={dialed && quietNoFix && !nextLevel} /> : null}
         </KCardSection>
         <Seam />
         <KCardSection gap={6}>
