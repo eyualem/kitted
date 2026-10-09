@@ -212,6 +212,7 @@
   4. a Closet "To confirm" card, and every tile opens a piece page;
   5. names that tell pieces apart.
   The question limits are settled in #111. The parallel measure session owns crops, measured color and similarity prints (#112).
+  **Steps 1 and 2 built Oct 8 (#115):** half-seen pieces ask instead of splitting (my 4 checks replay to 5 pieces, 0 wrong merges, questions 0/2/1/1), a Yes teaches the piece so the same flip doesn't ask again, and names carry a brand seen once plus strong patterns ("Grey Nike hoodie", "Tan plaid overshirt"). Real on my phone through Metro now. Steps 3–5 wait on my 3 taste calls. Not done yet: storing the half-seen flag (needed by step 5), and the question cap (lands with step 3).
   **Already landed (#113):** the shoe part of step 1. Boots read as "other" and then "slides" now ask instead of splitting, and workstream A's "Boots, sneakers or slides?" answer confirms the kind (boots), not a guessed subtype. **Also built (#114):** `knownPieces` plus core `knownMatches`, so A's "Your green work boots?" question can only offer pieces I confirmed or that were seen in 2+ earlier checks.
 
 - **C. Close-ups + phone measuring (its own chat): built Oct 8 (#104–107).** Next: after the reinstall, 3–4 real checks while Claude reads the `[prep] … close-ups …` and `[measure] …` lines (prep time, close-up sizes, measured colors). Later: before/after photo comparison for fix detection (needs real fix photos), and flat-lay cut-outs for scans (needs `inputs/item-photos/`).
