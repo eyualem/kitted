@@ -1,6 +1,6 @@
 // Dates and times without Intl (Hermes on iOS lacks parts of it). Wall time comes from the
 // clock's zone (America/New_York in the demo).
-import { localParts, type ZoneOffset } from '@kitted/core';
+import { dayKey, localParts, type ZoneOffset } from '@kitted/core';
 import { t } from './en';
 
 const list = (key: 'fmt.weekdays' | 'fmt.months' | 'fmt.monthsLong') => t(key).split(',');
@@ -31,6 +31,15 @@ export function stampText(utcMs: number, nowMs: number, zone: ZoneOffset): strin
 export function longDate(utcMs: number, zone: ZoneOffset): string {
   const p = localParts(utcMs, zone);
   return t('fmt.longDate', { month: list('fmt.monthsLong')[p.m - 1] ?? '', day: p.d });
+}
+
+/** A past chat's title (Past chats): "Yesterday", "Tuesday" within the week, else "Sep 24". */
+export function chatDayTitle(utcMs: number, nowMs: number, zone: ZoneOffset): string {
+  const k = dayKey(utcMs, zone);
+  if (k === dayKey(nowMs - 24 * 3_600_000, zone)) return t('history.yesterday');
+  const p = localParts(utcMs, zone);
+  if (nowMs - utcMs < 6 * 24 * 3_600_000) return weekdayName(p.dow);
+  return t('history.dayShort', { month: list('fmt.months')[p.m - 1] ?? '', day: p.d });
 }
 
 /** "+0.5", "−0.5" (U+2212), "+0" / "±0" for zero. Trailing zeros dropped (0.75, 0.6). */

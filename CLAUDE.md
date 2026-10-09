@@ -24,7 +24,8 @@
 
 **Do (things only I can do):**
 - [ ] **P1** · **Tell Claude your own profile, 1 min:** your birth year, the 3 looks you'd pick in onboarding in order (Streetwear, Minimal, Smart casual, Classic prep, Workwear, Outdoor, Vintage sport), and height, build and fit if you want. *Unblocks: re-scoring your saved checks the way the app will see you (rule 7); today they use a made-up profile.*
-- [ ] **P1** · **Phone test, about 10 min left** (reinstalled again Oct 9 and connected to the dev server; close-ups and measuring confirmed Oct 8 on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it was `10.0.0.33:8081` on Oct 8). Tell Claude when you start. Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
+- [ ] **P1** · **Phone test, about 10 min left** (reinstalled again Oct 9 and connected to the dev server; close-ups and measuring confirmed Oct 8 on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it was `10.0.0.33:8081` on Oct 8). Tell Claude when you start. Also type one question in Stylist (does the text box ride the keyboard?) and scroll the chat (does the tab bar shrink with "Ask…" beside it?). Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
+- [ ] **P2** · **Decide the Lookbook direction** (Claude's recommendation in the Oct 9 chat: keep the tab, turn it into "how you're doing": a month summary up top, then the looks grid). 2 min. *Unblocks: the Lookbook rebuild.*
 - [ ] **P1** · **Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement.** Enrollment can take a few days. *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check.*
 - [ ] **P3** · Optional, 5 min: ask Gemini to log the second Brandon Balfour video (`Y71miKP8yJE`) with the R3b honesty rules. Online research is otherwise done (#166); the gold set is what sets the scores.
 - [ ] **P1** · **Export the old Gemini creator-research Google Sheet as `.xlsx`** into `inputs/rubric-research/` (2 min). *Unblocks: the same v5 rules ledger.*
@@ -173,7 +174,7 @@
   - **The composer is one Liquid Glass capsule:** a camera icon, the field, and a mic that turns into send while there's text.
   - **The mic** listens on the phone (Apple SpeechAnalyzer; audio never leaves). It needs `tools/phone/install.sh` on my iPhone; it's hidden on the Simulator.
   - **Sending a question** now shows my bubble and "Questions are coming soon…". Real answers are not built.
-  - **Tab bar:** it shrinks on scroll in Closet and Lookbook.
+  - **Tab bar:** it shrinks on scroll on every tab (since Oct 9, #180).
 - **Camera guidance: built Oct 8** (DECISIONS-LOG #100–103; 02 D5, S3, C4 update blocks). What you'll see:
   - **Fit-check camera:** the pill says what to fix, most urgent first: "Too dark. Face a window or turn on a light." with a **Turn on flash** button · "Step into the frame" · "Bright light behind you. Turn to face it." · too close · "Come a little closer" · move left/right · "Hold still" (Mirror only) · good. In Propped the problem tips are spoken. The 3-2-1 waits while it's too dark.
   - **After every shot or library pick,** a quick check (about 0.1–0.3 s on a phone) opens a panel over the frozen photo when it's too dark (**Retake with flash**), too blurry or backlit (**Use anyway** allowed), or can't be sent (no person, or a face we can't hide: no Use anyway).
@@ -188,6 +189,11 @@
   - **Tried and not used:** a boot definition line in the prompt (no help), leg shape from the body outline (too rough on 50 stock photos), fingerprints as a strong signal (weak for layered tops).
   - **Cost approved (founder, Oct 8, #108):** close-ups stay on for good.
   - **Real vs not yet:** all of it runs on the Mac with the app's own Swift code and builds for the Simulator. It reaches my phone after the next reinstall (`tools/phone/install.sh`). Demo photos are unchanged.
+- **Stylist by day + the ask bar in the tab bar: built Oct 9** (DECISIONS-LOG #180–181). What you'll see:
+  - **Stylist shows today's chat only** (4 am rollover). A clock button (top left) and an "Earlier chats ›" pill at the top open **Past chats**: one row per day ("Yesterday", "Tuesday", "Sep 24") with that day's best look and "Fit check · 6.5 Getting there"; a day opens as its own page.
+  - **"Ask your stylist…" lives in the tab bar's glass** (iOS 26 accessory). Scroll down and the tab bar shrinks to a circle with "📷 Ask…" beside it; scroll up and it grows back. Tapping it opens the real text box over it, which rides the keyboard and goes away when it's empty.
+  - **Scrolling** goes to the real bottom now (plain list; one day is short).
+  - **Real on the Simulator** (screenshots `screenshots/stylist-oct9/`, git-ignored). Not yet seen with a real on-screen keyboard (the Simulator uses the Mac's keyboard): check typing on the phone.
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
@@ -478,4 +484,5 @@ Exceptions:
 - **Simulator Vision:** `VNClassifyImageRequest` on the CPU gives meaningless labels (the same for different photos); person, face and piece checks work. Judge the clothes label on the Mac harness or the phone (#103).
 - **The dev build's floating "Tools" button covers the top-right header button** and takes its taps; drag it away when testing.
 - **Parallel sessions share files: stage only your own hunks** (`git add -p`) of shared files like core `index.ts`, and check HEAD alone with `npx tsc --noEmit -p app/packages/kitted-core` in a clean worktree. A worktree whose `node_modules` is symlinked to this folder typechecks this folder's core, not HEAD's (#127).
+- **iOS 26 tab-bar shrink on scroll needs the screen's first view to be a ScrollView** (not a FlatList, not wrapped in a View; a sibling after it is fine). The Simulator tool's instant taps miss glass header buttons; tap with `duration: 0.15` (#181).
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).

@@ -1,4 +1,6 @@
 // The Stylist thread's rows (02 D12), pure: day stamps and the "Your stylist" header.
+// Chats are kept by day (founder, Oct 9): Stylist shows today's (the 4 am day key), and each
+// earlier day is its own page under "Past chats".
 // A stamp goes before the first message of a day, after a 60-minute gap, or where the message
 // asks for one (seed M08). The header shows on the first stylist message after a stamp.
 import { dayKey, type ZoneOffset } from '@kitted/core';
@@ -35,6 +37,35 @@ export function buildThreadItems(messages: readonly ChatMessage[], nowMs: number
     prev = m;
   });
   return out;
+}
+
+export interface ChatDay {
+  /** The 4 am day key, "2026-10-22". */
+  key: string;
+  messages: ChatMessage[];
+  firstAt: number;
+  lastAt: number;
+}
+
+/** His chat split by day, newest day first; each day's messages oldest first. */
+export function chatDays(messages: readonly ChatMessage[], zone: ZoneOffset): ChatDay[] {
+  const days = new Map<string, ChatMessage[]>();
+  for (const m of sortMessages(messages)) {
+    const k = dayKey(m.createdAt, zone);
+    const list = days.get(k);
+    if (list) list.push(m);
+    else days.set(k, [m]);
+  }
+  return [...days.entries()]
+    .map(([key, ms]) => ({ key, messages: ms, firstAt: ms[0]!.createdAt, lastAt: ms[ms.length - 1]!.createdAt }))
+    .sort((a, b) => b.lastAt - a.lastAt);
+}
+
+/** Today's messages, and whether there's anything on an earlier day. */
+export function splitToday(messages: readonly ChatMessage[], nowMs: number, zone: ZoneOffset): { today: ChatMessage[]; hasEarlier: boolean } {
+  const key = dayKey(nowMs, zone);
+  const today = messages.filter((m) => dayKey(m.createdAt, zone) === key);
+  return { today, hasEarlier: today.length < messages.length };
 }
 
 const OCCASION_KEY: Record<OccasionKey, StringKey> = {

@@ -51,6 +51,7 @@ export const sym = {
   offline: 'wifi.slash',
   latest: 'arrow.down',
   closet: 'hanger',
+  history: 'clock.arrow.circlepath',
 } as const;
 
 export type SymKey = keyof typeof sym;

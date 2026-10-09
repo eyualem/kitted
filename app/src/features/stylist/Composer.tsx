@@ -4,7 +4,9 @@
 //   typing   What goes with tan chinos?|                 (↑)    camera hides (#28), mic → send
 //   voice    (✕) ▁▃▅▇ "what shoes go with…"              (■)    stop drops the words in the field
 // Never sends by itself: he reads what was heard, then taps send.
-import { useState } from 'react';
+// On iOS it opens from the tab bar's "Ask your stylist…" accessory (StylistBar) and tells the
+// screen when it's done (empty, unfocused, not listening), so the accessory shows again.
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
@@ -16,6 +18,12 @@ export interface ComposerProps {
   mode: 'compact' | 'idle';
   onCamera: () => void;
   onSend?: (text: string) => void;
+  /** Focus the field on mount (opened from the accessory's field). */
+  autoFocus?: boolean;
+  /** Start listening on mount (opened from the accessory's mic). */
+  startVoice?: boolean;
+  /** Called once it's been used and is back to nothing: empty, keyboard down, mic off. */
+  onIdle?: () => void;
 }
 
 let glass: boolean | undefined;
@@ -33,7 +41,7 @@ function hasGlass(): boolean {
 const H = 52;
 const BTN = 40;
 
-export function Composer({ mode, onCamera, onSend }: ComposerProps) {
+export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle }: ComposerProps) {
   const { colors, scheme, a11y } = useTheme();
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
@@ -41,6 +49,18 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
   const typing = focused || text.length > 0;
   const recording = mic.state !== 'idle';
   const idle = mode === 'idle' && !typing;
+  const used = useRef(false);
+  // Between the mic going quiet and the words landing in the field it's briefly "empty": not idle.
+  const stopping = useRef(false);
+  useEffect(() => {
+    if (startVoice) void mic.start();
+    // Mount only: the accessory's mic opens it listening.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    if (focused || recording) used.current = true;
+    else if (used.current && !stopping.current && text.length === 0) onIdle?.();
+  }, [focused, recording, text, onIdle]);
 
   const send = () => {
     const v = text.trim();
@@ -49,8 +69,11 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
     setText('');
   };
   const stopMic = async () => {
+    stopping.current = true;
     const heard = await mic.stop();
+    stopping.current = false;
     if (heard) setText((cur) => (cur ? `${cur} ${heard}` : heard));
+    else if (!focused && !text) onIdle?.();
   };
 
   const shell = { borderRadius: H / 2, borderCurve: 'continuous' as const, borderWidth: 1, borderColor: colors.line };
@@ -96,6 +119,7 @@ export function Composer({ mode, onCamera, onSend }: ComposerProps) {
               onChangeText={setText}
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
+              autoFocus={autoFocus}
               placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
               placeholderTextColor={colors.ink3}
               accessibilityLabel={t('composer.a11y.field')}

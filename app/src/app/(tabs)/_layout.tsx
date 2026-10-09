@@ -7,16 +7,23 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useTheme } from '@/design-system';
 import { sym } from '@/design-system/symbols';
 import { t } from '@/i18n/en';
+import { StylistBar } from '@/features/stylist/StylistBar';
 
 export default function TabsLayout() {
   const { colors } = useTheme();
-  // The bar shrinks as he scrolls down the browsing grids (Closet, Lookbook), the iOS 26 way.
-  // Not on Stylist: a chat sits at the bottom, so "scrolling down" never happens there, and the
-  // composer can't follow a shrunk bar; the keyboard already covers it while he types (#70).
+  // The bar shrinks as he scrolls down, the iOS 26 way, on every tab. On Stylist the "Ask your
+  // stylist…" bar is the tab bar's bottom accessory, so it tucks in beside the shrunk bar instead of
+  // floating over the thread (founder, Oct 9; this replaces #70's "never" on Stylist). Only on the
+  // thread itself: not on Past chats, and never on the other tabs.
   const segments = useSegments() as string[];
-  const browsing = segments.includes('closet') || segments.includes('lookbook');
+  const onThread = segments[segments.length - 1] === 'stylist' || (segments.includes('stylist') && segments[segments.length - 1] === 'index');
   return (
-    <NativeTabs tintColor={colors.accent} minimizeBehavior={browsing ? 'onScrollDown' : 'never'}>
+    <NativeTabs tintColor={colors.accent} minimizeBehavior="onScrollDown">
+      {onThread ? (
+        <NativeTabs.BottomAccessory>
+          <StylistBar />
+        </NativeTabs.BottomAccessory>
+      ) : null}
       <NativeTabs.Trigger name="stylist">
         <NativeTabs.Trigger.Label>{t('tab.stylist')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={sym.tabStylist} md="chat_bubble" />

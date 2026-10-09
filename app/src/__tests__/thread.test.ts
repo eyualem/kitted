@@ -2,8 +2,8 @@ import { US_EASTERN } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
-import { buildThreadItems } from '@/features/stylist/thread';
-import { clockTime, signed, stampText } from '@/i18n/format';
+import { buildThreadItems, chatDays, splitToday } from '@/features/stylist/thread';
+import { chatDayTitle, clockTime, signed, stampText } from '@/i18n/format';
 
 const at = (iso: string) => Date.parse(iso);
 
@@ -18,6 +18,30 @@ describe('thread rows', () => {
     expect(who).toEqual(['M00', 'M08']); // a reply right after his message has no header (mockup 13)
     const last = items[items.length - 1]!;
     expect(last.type === 'msg' && [last.message.id, last.newest]).toEqual(['M18', true]);
+  });
+});
+
+describe('chats by day (founder, Oct 9)', () => {
+  it('splits the full thread into days, newest first, and keeps only today on Stylist', async () => {
+    const s = createMemoryStore();
+    await loadScenario(s, seed, { scenario: 'full', zone: US_EASTERN });
+    const all = await s.chat.all();
+    const days = chatDays(all, US_EASTERN);
+    expect(days.map((d) => d.key)).toEqual(['2026-10-22', '2026-10-20', '2026-09-24']);
+    expect(days.reduce((n, d) => n + d.messages.length, 0)).toBe(all.length);
+    const now = at('2026-10-22T12:20:00-04:00');
+    const { today, hasEarlier } = splitToday(all, now, US_EASTERN);
+    expect(hasEarlier).toBe(true);
+    expect(today.map((m) => m.id)).toEqual(days[0]!.messages.map((m) => m.id));
+    // 2 am still belongs to yesterday's chat (4 am rollover).
+    expect(splitToday(all, at('2026-10-23T02:00:00-04:00'), US_EASTERN).today.length).toBe(today.length);
+  });
+
+  it('titles past days', () => {
+    const now = at('2026-10-22T12:20:00-04:00');
+    expect(chatDayTitle(at('2026-10-21T09:00:00-04:00'), now, US_EASTERN)).toBe('Yesterday');
+    expect(chatDayTitle(at('2026-10-20T08:10:00-04:00'), now, US_EASTERN)).toBe('Tuesday');
+    expect(chatDayTitle(at('2026-09-24T19:05:00-04:00'), now, US_EASTERN)).toBe('Sep 24');
   });
 });
 

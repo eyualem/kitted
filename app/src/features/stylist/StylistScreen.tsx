@@ -1,15 +1,19 @@
-// S1 Stylist (02 D12): the thread (newest at the bottom) and the composer.
-// Not an inverted FlatList: on iOS 26 the scroll-edge fade under the bars is applied to the
-// flipped list and washes out the whole thread (DECISIONS-LOG #25). A normal list that sticks
-// to the bottom instead.
-// No KeyboardAvoidingView: its padding stacked on the dock's fixed bottom and pushed the
-// composer off-screen. The dock rides the keyboard directly, and the thread's footer grows by
-// the same amount with the scroll offset following, so the newest message stays in view.
+// S1 Stylist (02 D12): today's thread (newest at the bottom) and the composer.
+// Chats are kept by day (founder, Oct 9): this is today's (4 am day key); earlier days open from
+// "Past chats". A day is a handful of rows, so a plain ScrollView, not a FlatList: it scrolls to
+// its real end (FlatList's cached row heights stopped short as cards grew), and iOS 26 can shrink
+// the tab bar on scroll only when the screen's first view is a ScrollView (FlatList unsupported).
+// Not inverted: on iOS 26 the scroll-edge fade washes out a flipped list (DECISIONS-LOG #25).
+// The "Ask your stylist…" bar is the tab bar's accessory (StylistBar); tapping it opens the dock
+// here, which rides the keyboard. No KeyboardAvoidingView: its padding stacked on the dock's fixed
+// bottom. The thread's footer grows with the dock instead, the scroll offset following, so the
+// newest message stays in view.
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { AppState, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { AppState, Keyboard, Platform, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
-import { space, useTheme } from '@/design-system';
+import { dayKey } from '@kitted/core';
+import { Icon, KText, opacity, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -19,9 +23,14 @@ import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
 import { Composer } from './Composer';
 import { sendQuestion } from './ask';
-import { COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
+import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
-import { buildThreadItems } from './thread';
+import { buildThreadItems, splitToday } from './thread';
+import { composerState, useComposerOpen } from './composerState';
+import { t } from '@/i18n/en';
+
+/** No tab-bar accessory off iOS (the web preview): the composer stays docked. */
+const DOCK_ALWAYS = Platform.OS !== 'ios';
 
 const EXCHANGE_MS = 10 * 60_000;
 const SHEET_DISMISS_MS = 400;
@@ -31,14 +40,19 @@ const TOAST_ROOM = 56;
 export function StylistScreen() {
   const { colors } = useTheme();
   const loaded = useLive(['chat'], () => store.chat.all(), []);
-  const messages = useMemo(() => loaded ?? [], [loaded]);
+  const all = useMemo(() => loaded ?? [], [loaded]);
   const now = sessionClock.nowMs();
+  const { today: messages, hasEarlier } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
   const items = useMemo(() => buildThreadItems(messages, now, sessionClock.offset), [messages, now]);
+  const open = useComposerOpen();
+  const docked = DOCK_ALWAYS || open !== null;
+  // Leaving the tab closes an empty composer; the accessory comes back with the thread.
+  useFocusEffect(useCallback(() => () => composerState.close(), []));
   const lastUser = messages.filter((m) => m.role === 'user').reduce((a, m) => Math.max(a, m.createdAt), 0);
   const mode = now - lastUser < EXCHANGE_MS ? 'compact' : 'idle';
   const openCamera = () => router.push('/camera');
 
-  const list = useAnimatedRef<Animated.FlatList<(typeof items)[number]>>();
+  const list = useAnimatedRef<Animated.ScrollView>();
   const scrollY = useScrollOffset(list);
   const keyboard = useAnimatedKeyboard();
   // How far the dock rises above its resting spot (0 with the keyboard down).
@@ -69,7 +83,7 @@ export function StylistScreen() {
   const dockStyle = useAnimatedStyle(() => ({ bottom: COMPOSER_BOTTOM + lift.value }));
   // The dock's measured height: at large text sizes it's far taller than the mockup's, and a fixed
   // pad would leave the newest links under it for good. Never less than the mockup's pad.
-  const dockH = useSharedValue(0);
+  const dockH = useSharedValue(DOCK_ALWAYS ? 0 : ACCESSORY_H);
   const footerStyle = useAnimatedStyle(() => ({ height: Math.max(THREAD_PAD[mode], COMPOSER_BOTTOM + dockH.value + DOCK_GAP) + lift.value + toastRoom.value }));
   const atBottom = useRef(true);
   // The real content and viewport heights. FlatList's scrollToEnd uses its cached row heights,
@@ -79,7 +93,7 @@ export function StylistScreen() {
   const viewH = useRef(0);
   const toEnd = useCallback(
     (animated: boolean) => {
-      if (contentH.current > 0 && viewH.current > 0) list.current?.scrollToOffset({ offset: Math.max(0, contentH.current - viewH.current), animated });
+      if (contentH.current > 0 && viewH.current > 0) list.current?.scrollTo({ y: Math.max(0, contentH.current - viewH.current), animated });
       else list.current?.scrollToEnd({ animated });
     },
     [list],
@@ -106,7 +120,13 @@ export function StylistScreen() {
   // A card that changes from a sheet (S21 "Update score", S10 a pair of shoes) grows while the
   // sheet closes, and the dismissal swallows that scroll. Follow it again once the sheet is gone
   // (~350 ms on iOS 26; focus fires at the start of the dismissal). DECISIONS-LOG #34.
-  const dockTop = useRef(0);
+  const dockTop = useRef(COMPOSER_BOTTOM + ACCESSORY_H);
+  useEffect(() => {
+    if (docked) return;
+    // Closed: toasts sit above the accessory's capsule.
+    dockTop.current = COMPOSER_BOTTOM + ACCESSORY_H;
+    setToastFloor(dockTop.current);
+  }, [docked]);
   useFocusEffect(
     useCallback(() => {
       setToastFloor(dockTop.current);
@@ -153,36 +173,44 @@ export function StylistScreen() {
     return () => clearTimeout(timer);
   }, [newestPhoto, toEnd, follow]);
 
+  // Each row's top, for "scroll to this card" (the morning card's one-line score).
+  const rowY = useRef(new Map<string, number>());
   const action = usePendingStylistAction();
   useEffect(() => {
     if (!action) return;
     clearStylistAction();
     if (action.kind === 'checkMyFit') openCamera();
     if (action.kind === 'scrollTo') {
-      const index = items.findIndex((i) => i.type === 'msg' && i.message.id === action.messageId);
-      if (index >= 0) {
+      const y = rowY.current.get(action.messageId);
+      if (y !== undefined) {
         atBottom.current = false;
         follow.set(0);
-        list.current?.scrollToIndex({ index, animated: true, viewPosition: 0.1 });
+        list.current?.scrollTo({ y: Math.max(0, y - viewH.current * 0.1), animated: true });
+      } else {
+        // On an earlier day: open that day's chat.
+        const m = all.find((x) => x.id === action.messageId);
+        if (m) router.push(`/stylist/day/${dayKey(m.createdAt, sessionClock.offset)}`);
       }
     }
-  }, [action, items, list, follow]);
+  }, [action, all, list, follow]);
 
+  // The first view must be the ScrollView itself (no wrapper) for the tab bar to shrink on scroll.
   return (
-    <View style={[styles.root, { backgroundColor: colors.bg }]}>
-      <Animated.FlatList
+    <>
+      <Animated.ScrollView
         ref={list}
-        data={items}
-        keyExtractor={(i) => i.key}
-        renderItem={({ item }) => <ThreadRow item={item} />}
+        style={{ backgroundColor: colors.bg }}
         contentContainerStyle={styles.thread}
-        // A footer, not paddingBottom: content height counts rows and footers, not padding.
-        ListFooterComponent={<Animated.View style={footerStyle} />}
         // Only his own scrolling decides whether the thread follows new messages; cards that
         // finish loading (content growing) keep it pinned to the newest message.
-        onScrollBeginDrag={() => (dragging.current = true)}
+        onScrollBeginDrag={() => {
+          dragging.current = true;
+          // Focused with no keyboard on screen (a hardware keyboard): scrolling puts the field away.
+          if (!Keyboard.isVisible()) Keyboard.dismiss();
+        }}
         onScrollEndDrag={onDragEnd}
         onMomentumScrollEnd={onMomentumEnd}
+        scrollEventThrottle={16}
         onContentSizeChange={(_w, h) => {
           contentH.current = h;
           if (atBottom.current) toEnd(!first.current);
@@ -192,38 +220,69 @@ export function StylistScreen() {
           toEnd(false);
           first.current = false;
         }}
-        ItemSeparatorComponent={Separator}
-        // Rows have no fixed height: if the target isn't measured yet, jump near it, then retry.
-        onScrollToIndexFailed={(info) => {
-          list.current?.scrollToOffset({ offset: info.averageItemLength * info.index, animated: false });
-          setTimeout(() => list.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 0.1 }), 120);
-        }}
         keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior="never"
-      />
-      <Animated.View
-        style={[styles.dock, dockStyle]}
-        pointerEvents="box-none"
-        onLayout={(e) => {
-          // Toasts sit above the composer here (its top, measured from the screen bottom at rest).
-          dockH.value = e.nativeEvent.layout.height;
-          dockTop.current = COMPOSER_BOTTOM + e.nativeEvent.layout.height;
-          setToastFloor(dockTop.current);
-        }}
       >
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" />
-        <Composer mode={mode} onCamera={openCamera} onSend={(q) => void sendQuestion(q)} />
-      </Animated.View>
-    </View>
+        {hasEarlier ? <EarlierChats /> : null}
+        {items.map((item, i) => (
+          <View
+            key={item.key}
+            style={i > 0 ? { marginTop: space.stack } : undefined}
+            onLayout={item.type === 'msg' ? (e) => rowY.current.set(item.message.id, e.nativeEvent.layout.y) : undefined}
+          >
+            <ThreadRow item={item} />
+          </View>
+        ))}
+        {/* A footer, not paddingBottom: it animates with the dock and the keyboard. */}
+        <Animated.View style={footerStyle} />
+      </Animated.ScrollView>
+      {docked ? (
+        <Animated.View
+          style={[styles.dock, dockStyle]}
+          pointerEvents="box-none"
+          onLayout={(e) => {
+            // Toasts sit above the composer here (its top, measured from the screen bottom at rest).
+            dockH.value = e.nativeEvent.layout.height;
+            dockTop.current = COMPOSER_BOTTOM + e.nativeEvent.layout.height;
+            setToastFloor(dockTop.current);
+          }}
+        >
+          {DOCK_ALWAYS ? <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" /> : null}
+          <Composer
+            mode={mode}
+            onCamera={openCamera}
+            onSend={(q) => void sendQuestion(q)}
+            autoFocus={open === 'type'}
+            startVoice={open === 'voice'}
+            onIdle={DOCK_ALWAYS ? undefined : composerState.close}
+          />
+        </Animated.View>
+      ) : null}
+    </>
   );
 }
 
-function Separator() {
-  return <View style={{ height: space.stack }} />;
+/** Top of today's thread: the way back to earlier days (also the header's clock button). */
+function EarlierChats() {
+  const { colors } = useTheme();
+  return (
+    <Pressable
+      onPress={() => router.push('/stylist/history')}
+      accessibilityRole="button"
+      accessibilityLabel={t('history.open.a11y')}
+      style={({ pressed }) => [styles.earlier, { backgroundColor: colors.surface2, opacity: pressed ? opacity.pressed : 1 }]}
+    >
+      <KText variant="footnote" weight="500" color="ink2">
+        {t('history.open')}
+      </KText>
+      <Icon name="next" size={11} color="ink3" weight="semibold" />
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
   thread: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 4 },
   dock: { position: 'absolute', left: 0, right: 0, paddingBottom: 0 },
+  earlier: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, marginBottom: space.stack },
 });
