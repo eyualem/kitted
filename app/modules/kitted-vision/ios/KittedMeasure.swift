@@ -59,9 +59,9 @@ enum Measure {
   // MARK: Person mask
 
   /// Vision's person segmentation at w×h (0–255), or nil when it can't run.
-  static func personMask(_ img: CGImage, w: Int, h: Int) -> Guide.Gray? {
+  static func personMask(_ img: CGImage, w: Int, h: Int, quality: VNGeneratePersonSegmentationRequest.QualityLevel = .accurate) -> Guide.Gray? {
     let req = VNGeneratePersonSegmentationRequest()
-    req.qualityLevel = .accurate
+    req.qualityLevel = quality
     req.outputPixelFormat = kCVPixelFormatType_OneComponent8
     Prep.cpuOnSimulator([req])
     do { try VNImageRequestHandler(cgImage: img, orientation: .up).perform([req]) } catch { return nil }

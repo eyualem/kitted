@@ -1,0 +1,24 @@
+{
+  "bottom" : "jeans",
+  "box" : true,
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "joints" : {
+
+  },
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "hip or knee"
+    },
+    {
+      "side" : "r",
+      "why" : "hip or knee"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 326,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/phone-oct7\/ph4\/before_mirror.jpg",
+  "status" : "ok",
+  "w" : 621
+}

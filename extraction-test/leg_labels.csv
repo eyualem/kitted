@@ -1,0 +1,76 @@
+photo,group,person,profile,leg_shape,hem,source,labeler,notes
+phone-0d39d6,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans with belt, one leg rolled, on slides; black on black"
+phone-1f1997,phone,founder,profile pending,wide,full,eye,"Claude subagent, Oct 9, before the probe ran","black wide jeans on black slides, black hoodie: dark on dark"
+phone-403ade,phone,founder,profile pending,wide,stacked,eye,"Claude subagent, Oct 9, before the probe ran","black wide jeans stacking on white sneakers; hand at the waist"
+phone-5a9049,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans over boots; hand in pocket"
+phone-6b14db,phone,founder,profile pending,slim,cropped,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","tapered black joggers, elastic cuff at the ankle (truth.csv: slim)"
+phone-7de605,phone,founder,profile pending,slim,cropped,eye,"Claude subagent, Oct 9, before the probe ran","same tapered joggers as a765e8, elastic cuffs (failed check, no AI reading)"
+phone-7f14a4,phone,founder,profile pending,wide,full,eye,"Claude subagent, Oct 9, before the probe ran","same photo framing as 5a9049: baggy black jeans over boots"
+phone-8ad378,phone,founder,profile pending,wide,stacked,eye,"Claude subagent, Oct 9, before the probe ran","black wide jeans stacking on white sneakers"
+phone-8bc29d,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans over boots"
+phone-968016,phone,founder,profile pending,wide,stacked,eye,"Claude subagent, Oct 9, before the probe ran","black wide jeans on white sneakers, teal sweatshirt"
+phone-a765e8,phone,founder,profile pending,slim,cropped,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","tapered black joggers, elastic cuffs, slides"
+phone-b0f0c8,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans over boots"
+phone-d1967f,phone,friend,"friend, profile unknown",relaxed|straight,full,eye,"Claude subagent, Oct 9, before the probe ran","navy blazer friend: light-wash loose straight jeans, one hem stacked on chukkas; photo cut at the waist, landscape"
+phone-d58b14,phone,founder,profile pending,wide,full,eye,"Claude subagent, Oct 9, before the probe ran","black wide pants on black slides, hands at the hips; dark on dark"
+phone-d6559a,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans over boots"
+phone-d918c0,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans over boots, olive fleece"
+phone-e026de,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans over boots; one leg forward"
+phone-f07193,phone,founder,profile pending,wide,full,truth.csv + eye,"Claude subagent, Oct 9, before the probe ran","baggy black jeans over boots"
+phone-f4870b,phone,friend,"friend, profile unknown",straight|relaxed,slight,eye,"Claude subagent, Oct 9, before the probe ran","chore coat + white tee friend: faded black straight jeans on dark suede sneakers"
+phone-fb0b17,phone,friend,"friend, profile unknown",straight|relaxed,slight,eye,"Claude subagent, Oct 9, before the probe ran","same friend and jeans as f4870b"
+oct7-ph1,oct7,founder,profile pending,wide,full,eye,"Claude subagent, Oct 9, before the probe ran","grey hoodie, baggy black jeans on slides; mirror selfie"
+oct7-ph2,oct7,founder,profile pending,straight|slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","navy dress trousers, white socks, no shoes"
+oct7-ph3,oct7,founder,profile pending,straight,slight,eye,"Claude subagent, Oct 9, before the probe ran","navy trousers on loafers, blue blazer"
+oct7-ph4,oct7,founder,profile pending,relaxed|straight,full,eye,"Claude subagent, Oct 9, before the probe ran","dark grey jeans (the Oct 7 'sweatpants' misread), socks, no shoes"
+mirror-m01,mirror,web photo,profile unknown,slim|straight,cropped,eye,"Claude subagent, Oct 9, before the probe ran","light jeans tapering, rolled above high-tops"
+mirror-m02,mirror,web photo,profile unknown,straight,cropped,eye,"Claude subagent, Oct 9, before the probe ran","black cropped trousers, loafers; dark photo"
+mirror-m03,mirror,web photo,profile unknown,straight|relaxed,full,eye,"Claude subagent, Oct 9, before the probe ran","white trousers, very blurry low-res"
+mirror-m04,mirror,web photo,profile unknown,na,na,eye,"Claude subagent, Oct 9, before the probe ran",shorts
+mirror-m05,mirror,web photo,profile unknown,slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","tailored check trousers tapering to dress shoes"
+mirror-m06,mirror,web photo,profile unknown,straight,full,eye,"Claude subagent, Oct 9, before the probe ran","mid-wash straight jeans on socks"
+mirror-m07,mirror,web photo,profile unknown,straight,slight,eye,"Claude subagent, Oct 9, before the probe ran","black straight jeans on white sneakers, one leg forward"
+mirror-m08,mirror,web photo,profile unknown,straight|relaxed,slight,eye,"Claude subagent, Oct 9, before the probe ran","navy trousers, dress shoes, blazer"
+mirror-m09,mirror,web photo,profile unknown,unsure,unsure,eye,"Claude subagent, Oct 9, before the probe ran","beige trousers at an angle, feet cut off"
+mirror-m10,mirror,web photo,profile unknown,straight|slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","dark grey jeans, barefoot"
+mirror-m11,mirror,web photo,profile unknown,slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","navy suit trousers, brown oxfords"
+mirror-m12,mirror,web photo,profile unknown,relaxed,slight,eye,"Claude subagent, Oct 9, before the probe ran","beige pleated linen trousers, sandals"
+stock-p01-after_studio,stock,stock photo,profile unknown,slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","tan chinos, legs crossed, socks"
+stock-p01-before_studio,stock,stock photo,profile unknown,slim,cropped,eye,"Claude subagent, Oct 9, before the probe ran","tan chinos, walking, socks"
+stock-p02-after_studio,stock,stock photo,profile unknown,relaxed,cropped,eye,"Claude subagent, Oct 9, before the probe ran","baggy cream sweatpants, elastic cuffs, boots"
+stock-p02-before_studio,stock,stock photo,profile unknown,relaxed,cropped,eye,"Claude subagent, Oct 9, before the probe ran","same sweatpants, sneakers"
+stock-p03-after_street,stock,stock photo,profile unknown,skinny,slight,eye,"Claude subagent, Oct 9, before the probe ran","black skinny trousers, Chelsea boots"
+stock-p03-before_street,stock,stock photo,profile unknown,skinny,none,eye,"Claude subagent, Oct 9, before the probe ran","black skinny trousers, walking"
+stock-p04-after_street,stock,stock photo,profile unknown,unsure,unsure,eye,"Claude subagent, Oct 9, before the probe ran",legs not in the photo
+stock-p04-before_street,stock,stock photo,profile unknown,unsure,unsure,eye,"Claude subagent, Oct 9, before the probe ran",legs not in the photo
+stock-p05-after_street,stock,stock photo,profile unknown,na,na,eye,"Claude subagent, Oct 9, before the probe ran",shorts
+stock-p05-before_street,stock,stock photo,profile unknown,unsure,unsure,eye,"Claude subagent, Oct 9, before the probe ran",legs not in the photo
+stock-p06-after_studio,stock,stock photo,profile unknown,unsure,unsure,eye,"Claude subagent, Oct 9, before the probe ran",seated
+stock-p06-before_studio,stock,stock photo,profile unknown,unsure,unsure,eye,"Claude subagent, Oct 9, before the probe ran",legs not in the photo
+stock-s01-before_studio,stock,stock photo,profile unknown,flare,full,eye,"Claude subagent, Oct 9, before the probe ran","houndstooth flared trousers"
+stock-s02-before_studio,stock,stock photo,profile unknown,na,na,eye,"Claude subagent, Oct 9, before the probe ran",shorts
+stock-s03-before_studio,stock,stock photo,profile unknown,slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","black slim trousers, legs crossed, dark background"
+stock-s04-before_studio,stock,stock photo,profile unknown,relaxed,cropped,eye,"Claude subagent, Oct 9, before the probe ran","cropped tapered jeans, raw hem, side view"
+stock-s05-before_studio,stock,stock photo,profile unknown,slim,cropped,eye,"Claude subagent, Oct 9, before the probe ran","slim jeans, cuffed, walking"
+stock-s06-before_studio,stock,stock photo,profile unknown,slim,cropped,eye,"Claude subagent, Oct 9, before the probe ran","pink tapered joggers, elastic cuffs, wide stance"
+stock-s07-before_studio,stock,stock photo,profile unknown,slim|straight,slight,eye,"Claude subagent, Oct 9, before the probe ran","olive suit trousers"
+stock-s08-before_studio,stock,stock photo,profile unknown,flare,full,eye,"Claude subagent, Oct 9, before the probe ran","white flared trousers"
+stock-s09-before_street,stock,stock photo,profile unknown,skinny,cropped,eye,"Claude subagent, Oct 9, before the probe ran","navy skinny trousers, cuffed, walking"
+stock-s10-before_street,stock,stock photo,profile unknown,skinny,stacked,eye,"Claude subagent, Oct 9, before the probe ran","black skinny jeans stacked on boots, stepping down"
+stock-s11-before_street,stock,stock photo,profile unknown,slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","ripped slim jeans"
+stock-s12-before_street,stock,stock photo,profile unknown,slim|straight,stacked,eye,"Claude subagent, Oct 9, before the probe ran","grey jeans stacking on Air Max, dark scene"
+stock-s13-before_street,stock,stock photo,profile unknown,straight|relaxed,full,eye,"Claude subagent, Oct 9, before the probe ran","navy trousers on sneakers"
+stock-s14-before_street,stock,stock photo,profile unknown,relaxed,stacked,eye,"Claude subagent, Oct 9, before the probe ran","grey relaxed chinos on chunky sneakers, walking"
+stock-s15-before_street,stock,stock photo,profile unknown,wide,full,eye,"Claude subagent, Oct 9, before the probe ran","brown wide trousers, walking down stairs"
+stock-s16-before_street,stock,stock photo,profile unknown,relaxed,stacked,eye,"Claude subagent, Oct 9, before the probe ran","light loose jeans on loafers, legs together"
+stock-s17-before_phone,stock,stock photo,profile unknown,skinny,none,eye,"Claude subagent, Oct 9, before the probe ran",seated
+stock-s19-before_phone,stock,stock photo,profile unknown,slim|skinny,unsure,eye,"Claude subagent, Oct 9, before the probe ran",seated
+stock-s20-before_phone,stock,stock photo,profile unknown,unsure,unsure,eye,"Claude subagent, Oct 9, before the probe ran",action pose
+stock-s21-before_phone,stock,stock photo,profile unknown,slim,slight,eye,"Claude subagent, Oct 9, before the probe ran","grey track pants, walking"
+stock-s22-before_phone,stock,stock photo,profile unknown,slim,unsure,eye,"Claude subagent, Oct 9, before the probe ran","beige chinos, feet cut off"
+stock-s23-before_mirror,stock,stock photo,profile unknown,straight|slim,unsure,eye,"Claude subagent, Oct 9, before the probe ran","blue chinos, feet cut off"
+stock-s24-before_mirror,stock,stock photo,profile unknown,na,na,eye,"Claude subagent, Oct 9, before the probe ran",shorts
+stock-s25-before_mirror,stock,stock photo,profile unknown,straight,slight,eye,"Claude subagent, Oct 9, before the probe ran","beige trousers, tripod in front of one leg"
+stock-s26-before_mirror,stock,stock photo,profile unknown,relaxed|wide,stacked,eye,"Claude subagent, Oct 9, before the probe ran","light loose jeans, cuffed, barefoot, legs together"
+stock-s27-before_mirror,stock,stock photo,profile unknown,na,na,eye,"Claude subagent, Oct 9, before the probe ran",shorts
+stock-s28-before_mirror,stock,stock photo,profile unknown,straight|relaxed,unsure,eye,"Claude subagent, Oct 9, before the probe ran","carpenter jeans, feet cut off, dark"

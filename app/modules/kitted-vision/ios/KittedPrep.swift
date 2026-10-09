@@ -144,10 +144,22 @@ enum Prep {
     // Full frame, every face hidden (founder, Oct 7; DECISIONS-LOG #54). His head comes from the
     // face detector, else the head joints of the body pose, else the space above his shoulders.
     // If none of those find it, we can't be sure the face is hidden: nothing is sent (ruling 10).
+    //
+    // #188: the top of his own outline (person segmentation) is always hidden too, and a face only counts as his when
+    // it sits on that outline. A stock mirror selfie (camera over his face, T-shirts with a printed face on the wall)
+    // had the face detector find the print, the body pose land on the shirts, and his real face sent unhidden.
+    let mask = kind == .fit ? Measure.personMask(image, w: maskW, h: Int((CGFloat(maskW) * H / W).rounded()), quality: .balanced) : nil
+    let band = mask.flatMap { headBand($0, main: main, W: W, H: H) }
+    if let band { out.hide.append(band) }
+    func onOutline(_ r: CGRect) -> Bool {
+      guard let m = mask else { return true }
+      return maskShare(m, r, W: W, H: H) >= 0.15 || (band?.intersects(r) ?? false)
+    }
+    func onOutline(_ p: CGPoint) -> Bool { onOutline(CGRect(x: p.x - 2, y: p.y - 2, width: 4, height: 4)) }
     let headJoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftEye, .rightEye, .leftEar, .rightEar]
-    let headPts = headJoints.compactMap { joint($0) }
-    let shoulders = [joint(.leftShoulder), joint(.rightShoulder)].compactMap { $0 }
-    let mainHasFace = faceBoxes.contains { $0.intersects(main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)) }
+    let headPts = headJoints.compactMap { joint($0) }.filter { onOutline($0) }
+    let shoulders = [joint(.leftShoulder), joint(.rightShoulder)].compactMap { $0 }.filter { onOutline($0) }
+    let mainHasFace = faceBoxes.contains { $0.intersects(main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)) && onOutline($0) }
     if !mainHasFace {
       if headPts.count >= 2, let minX = headPts.map(\.x).min(), let maxX = headPts.map(\.x).max(),
          let minY = headPts.map(\.y).min(), let maxY = headPts.map(\.y).max() {
@@ -157,7 +169,7 @@ enum Prep {
         let span = abs(shoulders[0].x - shoulders[1].x)
         let top = min(shoulders[0].y, shoulders[1].y)
         out.hide.append(CGRect(x: (shoulders[0].x + shoulders[1].x) / 2 - span * 0.55, y: top - span * 1.25, width: span * 1.1, height: span * 1.25))
-      } else if main.minY > H * 0.03 {
+      } else if band == nil, main.minY > H * 0.03 {
         // A person whose top is inside the frame, but no face, head joints or shoulders: we can't
         // tell where the face is, so nothing is sent.
         out.status = "couldNotFrame"
@@ -336,6 +348,43 @@ enum Prep {
         try? fm.removeItem(at: f)
       }
     }
+  }
+
+  /// The person mask's width for the head band (#188): coarse is enough to find the top of the outline.
+  static let maskW = 256
+
+  /// Share of a pixel rect (origin top-left) that lies on the person mask.
+  static func maskShare(_ m: Guide.Gray, _ r: CGRect, W: CGFloat, H: CGFloat) -> CGFloat {
+    let sx = CGFloat(m.w) / W, sy = CGFloat(m.h) / H
+    let x0 = max(0, Int(r.minX * sx)), x1 = min(m.w - 1, Int(r.maxX * sx)), y0 = max(0, Int(r.minY * sy)), y1 = min(m.h - 1, Int(r.maxY * sy))
+    guard x1 >= x0, y1 >= y0 else { return 0 }
+    var on = 0, all = 0
+    for y in y0...y1 { for x in x0...x1 { all += 1; if m.px[y * m.w + x] > 127 { on += 1 } } }
+    return all > 0 ? CGFloat(on) / CGFloat(all) : 0
+  }
+
+  /// The top of his outline inside the main box, grown to cover the whole head and chin (#188), in pixels. Nil when
+  /// the outline runs off the top edge (a chest-down shot: the head is outside the photo) or there's no outline.
+  static func headBand(_ m: Guide.Gray, main: CGRect, W: CGFloat, H: CGFloat) -> CGRect? {
+    let sx = CGFloat(m.w) / W, sy = CGFloat(m.h) / H
+    let cx0 = max(0, Int((main.minX - main.width * 0.1) * sx)), cx1 = min(m.w - 1, Int((main.maxX + main.width * 0.1) * sx))
+    guard cx1 > cx0 else { return nil }
+    func span(_ y: Int) -> (Int, Int)? {
+      var lo = -1, hi = -1
+      for x in cx0...cx1 where m.px[y * m.w + x] > 127 { if lo < 0 { lo = x }; hi = x }
+      return lo >= 0 && hi - lo + 1 >= 2 ? (lo, hi) : nil
+    }
+    guard let top = (0..<m.h).first(where: { span($0) != nil }), let bottom = (0..<m.h).last(where: { span($0) != nil }), bottom > top else { return nil }
+    if top <= 1 { return nil }   // the outline touches the top edge: no head in the photo to find
+    let height = bottom - top
+    // The head's width: the widest span a little below the crown (a raised phone hand only makes it wider).
+    let probe = (top + max(1, height * 4 / 100))...min(bottom, top + max(2, height * 9 / 100))
+    let spans = probe.compactMap { span($0) }
+    guard let lo = spans.map(\.0).min(), let hi = spans.map(\.1).max() else { return nil }
+    let headW = CGFloat(hi - lo + 1) / sx
+    let bandH = min(max(1.5 * headW, 0.12 * CGFloat(height) / sy), 0.30 * CGFloat(height) / sy)
+    let x = CGFloat(lo) / sx - headW * 0.15, y = CGFloat(top) / sy - headW * 0.1
+    return CGRect(x: x, y: y, width: headW * 1.3, height: bandH + headW * 0.1).intersection(CGRect(x: 0, y: 0, width: W, height: H))
   }
 
   /// A face box grown to the whole head (hair, ears, chin): 1.6× wide, 1.9× tall, centered a little high.

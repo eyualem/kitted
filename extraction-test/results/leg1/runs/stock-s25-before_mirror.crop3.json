@@ -1,0 +1,63 @@
+{
+  "bottom" : "drawstring_trousers",
+  "box" : true,
+  "crop" : 0.029999999999999999,
+  "h" : 1024,
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.11,
+      "x" : 137,
+      "y" : 316
+    },
+    "lHip" : {
+      "c" : 0.16,
+      "x" : 108,
+      "y" : 371
+    },
+    "lShoulder" : {
+      "c" : 0.41999999999999998,
+      "x" : 125,
+      "y" : 263
+    },
+    "neck" : {
+      "c" : 0.47999999999999998,
+      "x" : 90,
+      "y" : 262
+    },
+    "rElbow" : {
+      "c" : 0.14000000000000001,
+      "x" : 54,
+      "y" : 330
+    },
+    "rHip" : {
+      "c" : 0.17000000000000001,
+      "x" : 64,
+      "y" : 373
+    },
+    "root" : {
+      "c" : 0.16,
+      "x" : 86,
+      "y" : 372
+    },
+    "rShoulder" : {
+      "c" : 0.54000000000000004,
+      "x" : 54,
+      "y" : 261
+    }
+  },
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "hip or knee"
+    },
+    {
+      "side" : "r",
+      "why" : "hip or knee"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 315,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s25\/before_mirror.jpg",
+  "status" : "ok",
+  "w" : 577
+}

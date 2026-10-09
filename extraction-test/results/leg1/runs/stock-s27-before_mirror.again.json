@@ -1,0 +1,162 @@
+{
+  "bottom" : "shorts",
+  "box" : true,
+  "crop" : 0,
+  "h" : 1024,
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.80000000000000004,
+      "x" : 374,
+      "y" : 633
+    },
+    "lHip" : {
+      "c" : 0.47999999999999998,
+      "x" : 330,
+      "y" : 772
+    },
+    "lKnee" : {
+      "c" : 0.46000000000000002,
+      "x" : 361,
+      "y" : 968
+    },
+    "lShoulder" : {
+      "c" : 0.75,
+      "x" : 335,
+      "y" : 510
+    },
+    "lWrist" : {
+      "c" : 0.80000000000000004,
+      "x" : 391,
+      "y" : 764
+    },
+    "neck" : {
+      "c" : 0.73999999999999999,
+      "x" : 256,
+      "y" : 501
+    },
+    "rElbow" : {
+      "c" : 0.14000000000000001,
+      "x" : 170,
+      "y" : 640
+    },
+    "rHip" : {
+      "c" : 0.41999999999999998,
+      "x" : 217,
+      "y" : 783
+    },
+    "rKnee" : {
+      "c" : 0.40000000000000002,
+      "x" : 242,
+      "y" : 965
+    },
+    "root" : {
+      "c" : 0.45000000000000001,
+      "x" : 274,
+      "y" : 778
+    },
+    "rShoulder" : {
+      "c" : 0.71999999999999997,
+      "x" : 178,
+      "y" : 492
+    },
+    "rWrist" : {
+      "c" : 0.11,
+      "x" : 191,
+      "y" : 762
+    }
+  },
+  "legs" : [
+    {
+      "conf" : 0,
+      "shoe" : {
+        "why" : "no shoe box"
+      },
+      "side" : "l",
+      "split" : {
+        "hem" : {
+          "why" : "ankle not found"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "t" : 0.95999999999999996,
+          "w" : 86.5
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "ankle not found"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "arm or hand on the leg"
+        }
+      },
+      "strict" : {
+        "hem" : {
+          "why" : "ankle not found"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "t" : 0.95999999999999996,
+          "w" : 86.5
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "ankle not found"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "arm or hand on the leg"
+        }
+      }
+    },
+    {
+      "conf" : 0,
+      "shoe" : {
+        "why" : "no shoe box"
+      },
+      "side" : "r",
+      "split" : {
+        "hem" : {
+          "why" : "ankle not found"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "off his outline"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "ankle not found"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "split" : true,
+          "t" : 0.25,
+          "w" : 33.200000000000003
+        }
+      },
+      "strict" : {
+        "hem" : {
+          "why" : "ankle not found"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "off his outline"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "ankle not found"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "legs merged"
+        }
+      }
+    }
+  ],
+  "max" : 2048,
+  "ms" : 356,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s27\/before_mirror.jpg",
+  "sideView" : false,
+  "status" : "ok",
+  "w" : 683
+}

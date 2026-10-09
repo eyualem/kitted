@@ -10,6 +10,8 @@
 //       and <stem>.json (rects, joints)
 //   kmeasure ruler <photo.jpg> <out.json> [--boxes garments.json] [--shorts] [--overlay out.jpg] [--max px] [--crop share]
 //       the fit ruler (FitRuler.swift): sleeve end, top hem, pant hem, shorts length, layers, from his own joints
+//   kmeasure legs <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
+//       the leg probe (LegTaper.swift): pant widths at thigh, knee, hem and the shoe, as garment-to-garment ratios
 import CoreImage
 import Foundation
 import ImageIO
@@ -117,6 +119,14 @@ case "shape":
     print(String(data: d, encoding: .utf8)!)
   }
 
+case "locate":
+  // kmeasure locate <photo.jpg>: what photo prep hides (Prep.locate), as JSON (#188).
+  guard args.count == 3, let img = load(args[2]) else { print("bad args"); exit(2) }
+  let f = Prep.locate(img)
+  let d = try JSONSerialization.data(withJSONObject: ["status": f.status, "hide": f.hide.map(rectDict), "main": f.main.map(rectDict) ?? [:],
+    "joints": f.joints.mapValues { [Int($0.x), Int($0.y)] }, "size": [img.width, img.height]] as [String: Any], options: [.sortedKeys])
+  print(String(data: d, encoding: .utf8)!)
+
 case "prep":
   // kmeasure prep <photo.jpg> <root>: the app's whole photo prep (Prep.run) with Documents/Caches under <root>.
   guard args.count == 4 else { print("bad args"); exit(2) }
@@ -169,6 +179,39 @@ case "ruler":
   }
   let summary = ["sleeve_end", "top_length", "hem", "shorts_length", "layers"].compactMap { k in (out[k] as? [String: Any]).map { "\(k)=\($0["value"] ?? "?")" } }
   print(summary.joined(separator: " "))
+
+case "legs":
+  // kmeasure legs <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
+  guard args.count >= 4 else { print("bad args"); exit(2) }
+  var lboxes: [[String: Any]] = [], lover: String?, lmax = Prep.workPx, lcrop: CGFloat = 0
+  var li = 4
+  while li < args.count {
+    switch args[li] {
+    case "--boxes": if let d = FileManager.default.contents(atPath: args[li + 1]), let l = try JSONSerialization.jsonObject(with: d) as? [[String: Any]] { lboxes = l }; li += 2
+    case "--overlay": lover = args[li + 1]; li += 2
+    case "--max": lmax = CGFloat(Double(args[li + 1]) ?? 2048); li += 2
+    case "--crop": lcrop = CGFloat(Double(args[li + 1]) ?? 0); li += 2
+    default: print("unknown option \(args[li])"); exit(2)
+    }
+  }
+  guard let ldata = FileManager.default.contents(atPath: args[2]), var limg = Prep.decode(ldata, maxPx: lmax).image else { print("unreadable"); exit(1) }
+  if lcrop > 0 {
+    let W = CGFloat(limg.width), H = CGFloat(limg.height)
+    guard let c = limg.cropping(to: CGRect(x: W * lcrop, y: H * lcrop, width: W * (1 - 2 * lcrop), height: H * (1 - 2 * lcrop)).integral) else { exit(1) }
+    limg = c
+    let f = Double(lcrop)
+    lboxes = lboxes.map { g in var g = g; if let b = g["box"] as? [Double] { g["box"] = b.map { (($0 / 1000 - f) / (1 - 2 * f)) * 1000 } }; return g }
+  }
+  let lres = LegTaper.run(limg, boxes: lboxes)
+  var lout = lres.json
+  lout["photo"] = args[2]; lout["max"] = Int(lmax); lout["crop"] = Double(lcrop)
+  try writeJSON(lout, args[3])
+  if let o = lover, !lres.lines.isEmpty { try LegTaper.overlay(limg, hide: lres.hide, lines: lres.lines, to: URL(fileURLWithPath: o)) }
+  let lsum = ((lout["legs"] as? [[String: Any]]) ?? []).map { leg -> String in
+    let d = leg["split"] as? [String: Any] ?? [:]
+    return "\(leg["side"] ?? "?"): h/k=\(d["hemToKnee"] ?? "-") k/t=\(d["kneeToThigh"] ?? "-") o/s=\(d["openToShoe"] ?? "-")"
+  }
+  print(lsum.joined(separator: " · "))
 
 default:
   print("unknown command"); exit(2)

@@ -1,0 +1,174 @@
+{
+  "bottom" : "shorts",
+  "box" : true,
+  "crop" : 0,
+  "h" : 1024,
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.78000000000000003,
+      "x" : 504,
+      "y" : 845
+    },
+    "lElbow" : {
+      "c" : 0.81000000000000005,
+      "x" : 475,
+      "y" : 386
+    },
+    "lHip" : {
+      "c" : 0.57999999999999996,
+      "x" : 401,
+      "y" : 525
+    },
+    "lKnee" : {
+      "c" : 0.81999999999999995,
+      "x" : 439,
+      "y" : 738
+    },
+    "lShoulder" : {
+      "c" : 0.71999999999999997,
+      "x" : 405,
+      "y" : 269
+    },
+    "lWrist" : {
+      "c" : 0.80000000000000004,
+      "x" : 451,
+      "y" : 502
+    },
+    "neck" : {
+      "c" : 0.77000000000000002,
+      "x" : 334,
+      "y" : 286
+    },
+    "rAnkle" : {
+      "c" : 0.78000000000000003,
+      "x" : 327,
+      "y" : 939
+    },
+    "rElbow" : {
+      "c" : 0.48999999999999999,
+      "x" : 280,
+      "y" : 434
+    },
+    "rHip" : {
+      "c" : 0.60999999999999999,
+      "x" : 309,
+      "y" : 521
+    },
+    "rKnee" : {
+      "c" : 0.73999999999999999,
+      "x" : 295,
+      "y" : 717
+    },
+    "root" : {
+      "c" : 0.58999999999999997,
+      "x" : 355,
+      "y" : 523
+    },
+    "rShoulder" : {
+      "c" : 0.81000000000000005,
+      "x" : 263,
+      "y" : 302
+    },
+    "rWrist" : {
+      "c" : 0.34000000000000002,
+      "x" : 289,
+      "y" : 507
+    }
+  },
+  "legs" : [
+    {
+      "bend" : 21,
+      "conf" : 0.57999999999999996,
+      "shoe" : {
+        "w" : 52
+      },
+      "side" : "l",
+      "split" : {
+        "hem" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "off his outline"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "split" : true,
+          "t" : 0.25,
+          "w" : 102.90000000000001
+        }
+      },
+      "strict" : {
+        "hem" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "off his outline"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "legs merged"
+        }
+      }
+    },
+    {
+      "bend" : 12,
+      "conf" : 0.60999999999999999,
+      "shoe" : {
+        "w" : 82
+      },
+      "side" : "r",
+      "split" : {
+        "hem" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "off his outline"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "split" : true,
+          "t" : 0.25,
+          "w" : 88.599999999999994
+        }
+      },
+      "strict" : {
+        "hem" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "off his outline"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "pants end above the hem sample (cropped)"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "legs merged"
+        }
+      }
+    }
+  ],
+  "max" : 2048,
+  "ms" : 315,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p05\/after_street.jpg",
+  "sideView" : false,
+  "status" : "ok",
+  "w" : 819
+}
