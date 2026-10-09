@@ -31,7 +31,10 @@ export interface MeasurePiece {
 }
 
 /** Measures a check's pieces. Resolves to an empty map whenever it can't run; never throws. */
-export type GarmentMeasurer = (check: { imageHash: string; photoFile: string | null; demoPhotoId: string | null }, pieces: readonly MeasurePiece[]) => Promise<Map<string, Measured>>;
+export type GarmentMeasurer = (
+  check: { imageHash: string; photoFile: string | null; demoPhotoId: string | null; mirrored?: boolean },
+  pieces: readonly MeasurePiece[],
+) => Promise<Map<string, Measured>>;
 
 /** Fewer of his pixels than this (at 1024 px) and the color isn't trusted. */
 export const MIN_COLOR_PX = 400;
@@ -74,7 +77,7 @@ export const liveMeasurer: GarmentMeasurer = async (check, pieces) => {
   const detail = detailUri(check.imageHash);
   if (!kept || !detail) return out;
   const input: MeasureInput[] = pieces.filter((p) => p.box.length === 4).map((p) => ({ key: p.key, category: p.category, box: [...p.box] }));
-  const r = await measureGarments(kept, detail, check.imageHash, input);
+  const r = await measureGarments(kept, detail, check.imageHash, input, check.mirrored === true);
   if (r.status !== 'ok') {
     if (__DEV__ && r.status !== 'notImplemented') console.log(`[measure] ${r.status}`);
     return out;
@@ -82,7 +85,7 @@ export const liveMeasurer: GarmentMeasurer = async (check, pieces) => {
   for (const g of r.garments) out.set(g.key, measuredOf(g));
   if (__DEV__) {
     const parts = r.garments.map((g) => `${g.key} ${g.hex ?? '-'} L${g.L ?? '-'} px${g.ownedPx} q${g.cropUri ? cropQuality(g) : '-'}`);
-    console.log(`[measure] ${r.ms ?? '?'} ms · ${parts.join(' · ')}`);
+    console.log(`[measure] ${r.ms ?? '?'} ms${check.mirrored ? ' · mirrored' : ''} · ${parts.join(' · ')}`);
   }
   return out;
 };

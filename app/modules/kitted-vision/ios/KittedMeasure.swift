@@ -355,6 +355,17 @@ enum Measure {
     return r.insetBy(dx: -r.width * 0.08, dy: -r.height * 0.08).intersection(rect)
   }
 
+  /// A mirror image of `img` (alpha kept): a mirror selfie's cut-out back to true view.
+  static func flippedHorizontally(_ img: CGImage) -> CGImage? {
+    let w = img.width, h = img.height
+    guard let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: 0,
+                              space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return nil }
+    ctx.translateBy(x: CGFloat(w), y: 0)
+    ctx.scaleBy(x: -1, y: 1)
+    ctx.draw(img, in: CGRect(x: 0, y: 0, width: w, height: h))
+    return ctx.makeImage()
+  }
+
   /// Apple's image feature print of a cut-out laid on mid grey (so the background never counts).
   static func featurePrint(_ cutout: CGImage) -> VNFeaturePrintObservation? {
     let w = cutout.width, h = cutout.height
@@ -427,8 +438,9 @@ enum Measure {
   /// box = [ymin, xmin, ymax, xmax] 0–1000. Finds the heads on his kept photo (unblurred, never leaves
   /// the phone), cuts from the face-hidden detail copy, and writes Documents/closet/<sha>-<key>.png (the
   /// display cut-out) and .print (the feature print, raw Float32). Per garment: the dominant color, its
-  /// L*, the quality numbers and the two file URIs.
-  static func run(keptUri: String, detailUri: String, sha: String, garments list: [[String: Any]]) throws -> [String: Any] {
+  /// L*, the quality numbers and the two file URIs. `mirrored` (a mirror selfie: the photo is the reflection)
+  /// flips each cut-out back to true view, so logos read the right way; the print is taken on the flipped one.
+  static func run(keptUri: String, detailUri: String, sha: String, garments list: [[String: Any]], mirrored: Bool = false) throws -> [String: Any] {
     let t0 = CFAbsoluteTimeGetCurrent()
     func url(_ u: String) -> URL { u.hasPrefix("file://") ? URL(string: u)! : URL(fileURLWithPath: u) }
     guard let keptData = try? Data(contentsOf: url(keptUri)), let kept = Prep.decode(keptData, maxPx: Prep.workPx).image,
@@ -456,12 +468,13 @@ enum Measure {
     for (k, (g, r)) in zip(keys, zip(garments, results)) {
       var row: [String: Any] = [
         "key": k, "ownedPx": r.ownedPx, "coverage": r3(r.coverage), "overlapOuter": r3(r.overlapOuter), "headOverlap": r3(r.headOverlap),
-        "droppedOuter": r3(r.droppedOuter), "boxW": r.boxW, "boxH": r.boxH, "lapVar": Int(r.lapVar), "personMask": person != nil,
+        "droppedOuter": r3(r.droppedOuter), "boxW": r.boxW, "boxH": r.boxH, "lapVar": Int(r.lapVar), "personMask": person != nil, "mirrored": mirrored,
         "clusters": r.clusters.map { ["hex": hex($0.lab), "L": r3($0.lab.L), "share": r3($0.share)] as [String: Any] },
       ]
       if let top = r.clusters.first { row["hex"] = hex(top.lab); row["L"] = (top.lab.L * 10).rounded() / 10 }
       let cropRect = g.category == "footwear" ? singleShoeRect(mask: r.tileMask, maskW: rgb.w, maskH: rgb.h, rect: g.rect, W: W, H: H) ?? g.rect : g.rect
-      if !r.tileMask.isEmpty, let cut = cutout(source: detail, mask: r.tileMask, maskW: rgb.w, maskH: rgb.h, rect: cropRect) {
+      if !r.tileMask.isEmpty, let raw = cutout(source: detail, mask: r.tileMask, maskW: rgb.w, maskH: rgb.h, rect: cropRect),
+         let cut = mirrored ? flippedHorizontally(raw) : raw {
         let png = dir.appendingPathComponent("\(sha)-\(k).png")
         try writePNG(cut, to: png)
         row["cropUri"] = png.absoluteString

@@ -132,6 +132,8 @@ export interface MeasuredGarment {
   boxH: number;
   lapVar: number;
   personMask: boolean;
+  /** The cut-out was flipped back to true view (a mirror selfie, #109). Absent before #109. */
+  mirrored?: boolean;
   /** Documents/closet/<sha>-<key>.png: the display cut-out (face-hidden source, every head removed). */
   cropUri?: string;
   cropW?: number;
@@ -146,7 +148,7 @@ export type MeasureResult =
 
 interface KittedVisionNative {
   prepare(originalUri: string): Promise<PrepareResult>;
-  measureGarments?(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[]): Promise<MeasureResult>;
+  measureGarments?(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[], mirrored?: boolean): Promise<MeasureResult>;
   printDistance?(a: string, b: string): Promise<number | null>;
   prepareItems?(originalUri: string): Promise<PrepareItemsResult>;
   assess?(uri: string, kind: 'fit' | 'scan'): Promise<StillAssessment>;
@@ -185,12 +187,13 @@ export async function assess(uri: string, kind: 'fit' | 'scan'): Promise<StillAs
   }
 }
 
-/** Measures garments on his photo after the closet call (#104): color, quality, cut-out, fingerprint.
- *  notImplemented on web and in native builds from before #104. Never throws. */
-export async function measureGarments(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[]): Promise<MeasureResult> {
+/** Measures garments on his photo after the closet call (#104): color, quality, cut-out, fingerprint. `mirrored`
+ *  (a mirror selfie) flips the cut-outs back to true view (#109). notImplemented on web and in native builds from
+ *  before #104. Never throws. */
+export async function measureGarments(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[], mirrored = false): Promise<MeasureResult> {
   if (!native || typeof native.measureGarments !== 'function') return { status: 'notImplemented' };
   try {
-    return await native.measureGarments(keptUri, detailUri, sha, garments);
+    return await native.measureGarments(keptUri, detailUri, sha, garments, mirrored);
   } catch {
     return { status: 'missing' };
   }

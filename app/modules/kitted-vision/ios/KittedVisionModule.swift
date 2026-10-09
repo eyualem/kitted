@@ -21,8 +21,8 @@ public class KittedVisionModule: Module {
 
     /// The quick check after a shot or a library pick: measures only (#100).
     // On-device measuring after the closet call (KittedMeasure.swift, DECISIONS-LOG #104).
-    AsyncFunction("measureGarments") { (keptUri: String, detailUri: String, sha: String, garments: [[String: Any]]) -> [String: Any] in
-      return try Measure.run(keptUri: keptUri, detailUri: detailUri, sha: sha, garments: garments)
+    AsyncFunction("measureGarments") { (keptUri: String, detailUri: String, sha: String, garments: [[String: Any]], mirrored: Bool?) -> [String: Any] in
+      return try Measure.run(keptUri: keptUri, detailUri: detailUri, sha: sha, garments: garments, mirrored: mirrored ?? false)
     }
 
     AsyncFunction("printDistance") { (a: String, b: String) -> Double? in

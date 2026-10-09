@@ -23,6 +23,9 @@ def main():
     rows = db.execute("""select f.image_hash, o.garment_index, o.garment_json, o.closet_json from closet_observations o
                          join fit_checks f on f.id = o.fit_check_id where o.closet_json is not null and o.is_deleted = 0
                          order by f.created_at, o.garment_index""").fetchall()
+    # A mirror selfie (the scoring reading says so) gets its cut-outs flipped back to true view (#109).
+    mirrored = {h for h, m in db.execute("""select f.image_hash, json_extract(r.reading_json, '$.scene.mirror_selfie')
+                                             from fit_checks f join readings r on r.id = f.reading_id""") if m == 1}
     by_hash = {}
     for h, i, gj, cj in rows:
         g, c = json.loads(gj), json.loads(cj)
@@ -38,7 +41,8 @@ def main():
             continue
         with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
             json.dump(list(gs.values()), f)
-        subprocess.run([str(HERE / "bin" / "kmeasure"), "crops", str(kept), str(detail), f.name, str(out), h[:8]], check=True)
+        cmd = [str(HERE / "bin" / "kmeasure"), "crops", str(kept), str(detail), f.name, str(out), h[:8]]
+        subprocess.run(cmd + (["mirrored"] if h in mirrored else []), check=True)
         m = json.loads((out / f"{h[:8]}.json").read_text())
         for r in m["garments"]:
             g = gs[r["index"]]

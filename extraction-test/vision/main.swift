@@ -29,10 +29,11 @@ guard args.count >= 2 else { print("usage: kmeasure crops|zoom ..."); exit(2) }
 
 switch args[1] {
 case "crops":
-  guard args.count == 7, let kept = load(args[2]), let detail = load(args[3]),
+  // An optional 8th argument "mirrored" flips the cut-outs back to true view (a mirror selfie, #109).
+  guard args.count == 7 || args.count == 8, let kept = load(args[2]), let detail = load(args[3]),
         let gdata = FileManager.default.contents(atPath: args[4]),
         let glist = try JSONSerialization.jsonObject(with: gdata) as? [[String: Any]] else { print("bad args"); exit(2) }
-  let out = args[5], prefix = args[6]
+  let out = args[5], prefix = args[6], mirrored = args.count == 8 && args[7] == "mirrored"
   let W = CGFloat(kept.width), H = CGFloat(kept.height)
   let garments: [Measure.Garment] = glist.compactMap { g in
     guard let i = g["index"] as? Int, let c = g["category"] as? String, let b = g["box"] as? [Double], b.count == 4 else { return nil }
@@ -56,7 +57,8 @@ case "crops":
     let t1 = CFAbsoluteTimeGetCurrent()
     // The display cut-out (<prefix>-<i>.png) and the one the color was measured on (-color.png).
     let cropRect = g.category == "footwear" ? Measure.singleShoeRect(mask: r.tileMask, maskW: rgb.w, maskH: rgb.h, rect: g.rect, W: W, H: H) ?? g.rect : g.rect
-    if !r.tileMask.isEmpty, let cut = Measure.cutout(source: detail, mask: r.tileMask, maskW: rgb.w, maskH: rgb.h, rect: cropRect) {
+    if !r.tileMask.isEmpty, let raw = Measure.cutout(source: detail, mask: r.tileMask, maskW: rgb.w, maskH: rgb.h, rect: cropRect),
+       let cut = mirrored ? Measure.flippedHorizontally(raw) : raw {
       let file = "\(prefix)-\(g.index).png"
       try Measure.writePNG(cut, to: URL(fileURLWithPath: out).appendingPathComponent(file))
       row["file"] = file
