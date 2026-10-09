@@ -28,8 +28,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
-- [ ] **P1** · **Closet tiles and question wording, 3 calls** (#111; they hold up the closet steps 3–5; open `screenshots/closet-identity/index.html`).
-- [ ] **P1** · **Closet pictures under layers: do the new drawings look right?** (#140; open `screenshots/closet-graphics/index.html`, and `screenshots/closet-pictures/index.html` for my photos tried 5 ways). Default: my own photo when a piece was ever seen clearly, linked by "Same as your …?" answers; the new drawings everywhere else (about 3.5 days for my pieces + 4 common types, $0). No AI-generated pictures in v1.
+- [ ] **P1** · **Closet question wording, 1 call left** (#111; tiles settled by #141; they hold up the closet steps 3–5; open `screenshots/closet-identity/index.html`).
 - [ ] **P2** · **Wide jeans:** when an outfit doesn't read as streetwear or workwear, wide legs still lose 0.45 ("Swap to relaxed-leg pants", #124). Allow them by default? Default: keep it until the gold set.
 - [ ] **P2** · **OK the mic permission text** (in "Waiting on the founder"; it ships with the TestFlight build).
 - [ ] **P2** · **OK the Archivo font download** (3 free files, about 185 KB each). Default: the system font.
@@ -337,8 +336,8 @@ P5's real size is about 6.5 days, not 05's 2.
 
 ## Waiting on the founder (Claude builds the default meanwhile)
 - **Closet identity, 3 taste calls (#111; page `screenshots/closet-identity/index.html`):**
-  1. Is my photo on the tile good enough, with the hand and phone showing on mirror-selfie tops? Recommended: yes.
-  2. For pieces without a clean photo, a drawing filled with my fabric, or the plain drawing? Recommended: my fabric.
+  1. ~~My photo on the tile?~~ **Decided Oct 8 (#141): no.** Code-drawn tiles everywhere pieces are shown (Closet, outfits, morning card); my photos only as evidence (the "Same as your …?" question and the piece page's "Seen in").
+  2. ~~Fabric-filled or plain drawing?~~ **Decided (#141): the plain new drawing** in my measured color (fabric patches looked worse on prints).
   3. The question copy ("Is this your grey Nike hoodie?" · "I could only see the hood under your shirt." · "Your score stays the same either way." · "Seen once" · "To confirm"). Recommended as written.
   On a go, Claude builds #1 and #5 first (no taste involved), then #3 and #4, then #2. To let Claude screenshot my real closet: tap "Let Claude use it" on the "Kitted Closet B" Simulator (it holds a copy of my phone data).
 - **"Reads as" when two looks fit (#86):** screen 7 reads "smart casual" because my first pick breaks the tie, while its next-level tip is the minimal one. Default: keep the tie-break. The other choice: always the first detected look.
