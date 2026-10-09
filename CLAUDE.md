@@ -29,6 +29,7 @@ Ordered by what unblocks the most. Details for each are in "Waiting on the found
 
 **Decide (quick taste calls; Claude has a default for each):**
 - [ ] **Closet tiles and question wording, 3 calls** (#111; open `screenshots/closet-identity/index.html`).
+- [ ] **Closet pictures under layers: do the new drawings look right?** (#140; open `screenshots/closet-graphics/index.html`, and `screenshots/closet-pictures/index.html` for my photos tried 5 ways). Default: my own photo when a piece was ever seen clearly, linked by "Same as your …?" answers; the new drawings everywhere else (about 3.5 days for my pieces + 4 common types, $0). No AI-generated pictures in v1.
 - [ ] **Wide jeans:** when an outfit doesn't read as streetwear or workwear, wide legs still lose 0.45 ("Swap to relaxed-leg pants", #124). Allow them by default? Default: keep it until the gold set.
 - [ ] **"Reads as" when two looks fit** (#86). Default: my first pick breaks the tie.
 - [ ] **The rubric's open questions** (`rubric/v3.md`, and #57's proposed changes).

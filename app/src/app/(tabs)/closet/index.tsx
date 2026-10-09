@@ -10,7 +10,7 @@ import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { ClosetTile } from '@/features/closet/ClosetTile';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
-import { isOwned } from '@/features/closet/profile';
+import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { fitCheck } from '@/features/fitcheck/session';
 import { goToStylist } from '@/router/stylistAction';
 import { t } from '@/i18n/en';
@@ -22,8 +22,10 @@ export default function ClosetScreen() {
   const data = useLive(['closet', 'fitChecks'], async () => {
     const all = await store.closet.all();
     const byId = new Map(all.map((c) => [c.id, c]));
-    // Newest first (a row's place in the store moves when it's updated).
-    const items = all.filter(isOwned).sort((a, b) => b.addedAt - a.addedAt || (a.id < b.id ? -1 : 1));
+    // Newest first (a row's place in the store moves when it's updated). A piece still waiting on his answer shows in
+    // its question card only, not as a tile of its own (#116).
+    const owned = all.filter(isOwned);
+    const items = owned.filter((c) => !isAwaitingAnswer(c, owned)).sort((a, b) => b.addedAt - a.addedAt || (a.id < b.id ? -1 : 1));
     return { items, byId, asks: await fitCheck.closet.openAsks() };
   }, []);
   const [width, setWidth] = useState(0);

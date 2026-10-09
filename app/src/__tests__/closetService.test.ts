@@ -556,6 +556,47 @@ describe('half-seen pieces ask instead of splitting, and a Yes teaches (#115)', 
   });
 });
 
+describe('an unanswered question is never asked twice (#116)', () => {
+  const base = demoReadingById('ph1')!;
+  const garments = (top: Record<string, unknown>, leg: string, outer: boolean) => [
+    ...(outer ? [{ ...base.garments[0]!, category: 'outerwear', subcategory: 'overshirt', color_family: 'tan_camel', logo: 'none', pattern: 'checks_plaid' }] : []),
+    { ...base.garments[0]!, ...top },
+    { ...base.garments[1]!, subcategory: 'jeans', certainty: 'clear', leg_shape: leg },
+    { ...base.garments[2]!, subcategory: 'white_leather_sneaker', color_family: 'white', certainty: 'clear' },
+  ];
+  const alone = { ...base, garments: garments({}, 'wide', false) } as Reading;
+  const asTee = { ...base, garments: garments({ subcategory: 'tee', certainty: 'likely', logo: 'none' }, 'straight', true) } as Reading;
+  const asSweat = { ...base, garments: garments({ subcategory: 'sweatshirt', certainty: 'likely', logo: 'none' }, 'straight', true) } as Reading;
+
+  it('the next photo joins the open questions; the grid and the known list leave them out; one Yes moves both sightings', async () => {
+    const env = await setup({ readings: { ph1: alone, s05: asTee, s09: asSweat }, closetSource: null });
+    await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const hoodie = (await env.owned()).find((c) => c.garment.subcategory === 'hoodie')!;
+    const id2 = await env.check('s05', 'everyday');
+    await env.closet.settle();
+    const ownedAfter2 = (await env.owned()).length;
+    const id3 = await env.check('s09', 'everyday');
+    await env.closet.settle();
+    const cs3 = (await env.row(id3)).details.closetSummary!;
+    expect(cs3.asks ?? []).toEqual([]); // no second "Same as your grey hoodie?" / jeans question
+    expect((await env.owned()).length).toBe(ownedAfter2); // no third tee or jeans entry
+    const teeAsk = (await env.row(id2)).details.closetSummary!.asks!.find((a) => a.candidateId === hoodie.id)!;
+    const copy = (await env.store.closet.get(teeAsk.itemId))!;
+    expect(cs3.links!.some((l) => l.itemId === copy.id)).toBe(true);
+    expect((await env.closet.knownPieces()).map((k) => k.id)).not.toContain(copy.id);
+
+    const worn = (await env.store.closet.get(hoodie.id))!.wornCount;
+    await env.svc.answerDuplicate(id2, teeAsk.obsId, 'same');
+    expect((await env.store.closet.get(hoodie.id))!.wornCount).toBe(worn + 2);
+    expect((await env.row(id3)).details.closetSummary!.links!.some((l) => l.itemId === hoodie.id)).toBe(true);
+    // Changing the answer moves the joined sighting back with it.
+    await env.svc.answerDuplicate(id2, teeAsk.obsId, 'new');
+    expect((await env.store.closet.get(hoodie.id))!.wornCount).toBe(worn);
+    expect((await env.row(id3)).details.closetSummary!.links!.some((l) => l.itemId === copy.id)).toBe(true);
+  });
+});
+
 describe('"Your grey work boots?" in the closet (#126 / #115)', () => {
   async function asked() {
     const env = await setup({ now: '2026-10-21T16:40:00-04:00' });

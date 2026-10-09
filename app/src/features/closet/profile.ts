@@ -92,6 +92,14 @@ export function storedProfiles(items: readonly ClosetItemRow[], obs: readonly Cl
 /** The closet a check is matched against: his pieces that are live (not undone, not merged into another). */
 export const isOwned = (c: ClosetItemRow): boolean => !c.isDeleted && !c.mergedInto;
 
+/**
+ * A piece still waiting on his "Same as your …?" answer (#116): created while unsure, its candidate still his. It
+ * shows in its question card only, isn't matched as a piece of its own, and isn't "known" until he answers.
+ */
+export function isAwaitingAnswer(item: Pick<ClosetItemRow, 'maybeSameAs'>, owned: readonly Pick<ClosetItemRow, 'id'>[]): boolean {
+  return !!item.maybeSameAs && owned.some((c) => c.id === item.maybeSameAs);
+}
+
 /** Sighting decisions that are his own answer: "Yes, same one", "No, a new one", "Not the same". */
 const ANSWERED: readonly string[] = ['answeredSame', 'answeredNew', 'split'];
 
@@ -99,15 +107,17 @@ const ANSWERED: readonly string[] = ['answeredSame', 'answeredNew', 'split'];
  * The pieces the app is sure he owns, as they stood before the checks in `excludeCheckIds` (the check being asked
  * about, and its first check for a re-check): a check can't make its own pieces known. Known = he confirmed it (a
  * tap answer, a correction, an answer to "Same as your …?", a name he set, or he added it himself) or it was seen in
- * 2+ other checks. Sightings and answers from the excluded checks don't count. Sorted by id.
+ * 2+ other checks. Sightings and answers from the excluded checks don't count; a piece awaiting his answer isn't known.
+ * Sorted by id.
  */
 export function knownPieces(
   items: readonly ClosetItemRow[], obs: readonly ClosetObservationRow[], opts: { excludeCheckIds?: readonly string[] } = {},
 ): KnownPiece[] {
   const exclude = new Set(opts.excludeCheckIds ?? []);
   const out: KnownPiece[] = [];
-  for (const it of items) {
-    if (!isOwned(it)) continue;
+  const owned = items.filter(isOwned);
+  for (const it of owned) {
+    if (isAwaitingAnswer(it, owned)) continue;
     const seen = sightingsOf(it.id, obs).filter((o) => o.fitCheckId === null || !exclude.has(o.fitCheckId));
     const p = profileOfItem(it);
     const selfAdded = it.source !== 'fitCheck';

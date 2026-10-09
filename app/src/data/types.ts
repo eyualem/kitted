@@ -228,6 +228,8 @@ export interface ClosetAsk {
   replacedSub?: string | null;
   /** Shape readings this "Yes" taught the piece (#115: leg / sleeve / shoe profile), removed again on a changed answer. */
   addedFieldAliases?: Record<string, string[]> | null;
+  /** Later sightings that joined this open question (#116) and moved with its "Yes", so a changed answer moves them back. */
+  riders?: string[] | null;
 }
 
 export interface ClosetSummary {

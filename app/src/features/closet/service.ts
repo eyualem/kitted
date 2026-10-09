@@ -26,7 +26,7 @@ import type { GarmentMeasurer, Measured } from '@/services/measure/garments';
 import { garmentHex } from '@/features/fitcheck/labels';
 import { serial } from './checkWrites';
 import { assignNames, baseName, isAutoNamed } from './itemName';
-import { artOf, halfSeen, hexOfArt, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
+import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
 export const CLOSET_DEADLINE_MS = 12_000;
 export const CATCH_UP_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -283,7 +283,11 @@ export function createClosetService(deps: ClosetServiceDeps) {
       out.links.push({ origin: p.origin, index: p.index, itemId: target.id, obsId: obs.id });
     }
     const pieces = rest;
-    const items = owned.filter((c) => !linked.has(c.id));
+    // A piece still waiting on his answer isn't matched as a piece of its own (#116): a later sighting of the same thing
+    // joins that open question (below) instead of opening another one about the same piece.
+    const awaiting = owned.filter((c) => isAwaitingAnswer(c, owned));
+    const items = owned.filter((c) => !linked.has(c.id) && !awaiting.includes(c));
+    const joined = new Set<string>();
     const reading: Reading = {
       scene: { lighting },
       garments: pieces.map((p) => observationOf(p.garment, p.fields, {
@@ -317,6 +321,18 @@ export function createClosetService(deps: ClosetServiceDeps) {
         ...(e.candidateId ? [{ id: e.candidateId, score: e.score }] : []),
         ...(e.runnerUpId ? [{ id: e.runnerUpId, score: null }] : []),
       ];
+      const open = ask ? awaiting.find((f) => f.maybeSameAs === ask && f.slot === SLOT_TO_CLOSET[String(p.garment.category)] && !joined.has(f.id)) : undefined;
+      if (open) {
+        // Same question as one he hasn't answered yet: this sighting joins it; his one answer settles both.
+        joined.add(open.id);
+        const rider = newObs(row, p.origin, p.index, p.garment, p.fields, 'ask', { ...base, itemId: open.id, candidates, askItemId: ask });
+        await store.closetObs.put(rider);
+        if (!o.noWear?.has(open.id)) await store.closet.patch(open.id, { wornCount: open.wornCount + 1, lastWornAt: Math.max(open.lastWornAt ?? 0, row.createdAt) });
+        touched.add(open.id);
+        out.matched.push(open.id);
+        out.links.push({ origin: p.origin, index: p.index, itemId: open.id, obsId: rider.id });
+        continue;
+      }
       const obs = newObs(row, p.origin, p.index, p.garment, p.fields, ask ? 'ask' : 'new', { ...base, candidates, askItemId: ask });
       const item = newItem(row, p.garment, obs, ask);
       if (!item) continue;
@@ -553,10 +569,13 @@ export function createClosetService(deps: ClosetServiceDeps) {
       const t = await store.closet.get(target);
       await store.closetObs.patch(ask.obsId, { itemId: ask.itemId, decision: 'ask', answeredAt: null });
       await store.closet.patch(ask.itemId, { isDeleted: false, mergedInto: null, maybeSameAs: ask.candidateId, updatedAt: now });
+      const riders = ask.answer === 'same' ? ask.riders ?? [] : [];
+      for (const id of riders) await store.closetObs.patch(id, { itemId: ask.itemId, decision: 'ask' });
+      await moveRiderLinks(riders, target, ask.itemId);
       if (t) {
         const p = profileOfItem(t);
         const back: Partial<ClosetItemRow> = {
-          wornCount: Math.max(0, t.wornCount - 1), updatedAt: now,
+          wornCount: Math.max(0, t.wornCount - 1 - riders.length), updatedAt: now,
           profile: { ...p, aliases: p.aliases.filter((x) => x !== ask.alias), fieldAliases: withoutAliases(p.fieldAliases, ask.addedFieldAliases) },
         };
         if (ask.replacedSub) {
@@ -580,6 +599,21 @@ export function createClosetService(deps: ClosetServiceDeps) {
     ask.alias = null;
     ask.replacedSub = null;
     ask.addedFieldAliases = null;
+    ask.riders = null;
+  }
+
+  /** The other checks' cards follow their sightings when a "Yes" moves them (#116). */
+  async function moveRiderLinks(obsIds: readonly string[], from: string, to: string) {
+    if (obsIds.length === 0) return;
+    const obs = (await store.closetObs.all()).filter((o) => obsIds.includes(o.id));
+    for (const checkId of uniq(obs.map((o) => o.fitCheckId).filter((x): x is string => !!x))) {
+      const row = await store.fitChecks.get(checkId);
+      if (!row) continue;
+      const cs = summaryOf(row);
+      cs.links = cs.links.map((l) => (obsIds.includes(l.obsId) ? { ...l, itemId: to } : l));
+      cs.matched = uniq(cs.matched.map((id) => (id === from && !cs.links.some((l) => l.itemId === from) ? to : id)));
+      await saveSummary(checkId, cs);
+    }
   }
 
   async function applyAnswer(checkId: string, obsId: string, a: DuplicateAnswer) {
@@ -605,7 +639,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
       const confirmedSub = obs.userConfirmed?.subcategory ?? null;
       let alias: string | null = null;
       let replacedSub: string | null = null;
-      const patch: Partial<ClosetItemRow> = { wornCount: target.wornCount + 1, lastWornAt: Math.max(target.lastWornAt ?? 0, row.createdAt), updatedAt: now };
+      // Sightings that joined this open question from later checks (#116) are his answer too.
+      const riders = a === 'same' ? (await store.closetObs.all()).filter((r) => r.itemId === flagged.id && r.id !== obsId && isLive(r)) : [];
+      const patch: Partial<ClosetItemRow> = {
+        wornCount: target.wornCount + 1 + riders.length, updatedAt: now,
+        lastWornAt: Math.max(target.lastWornAt ?? 0, row.createdAt, ...riders.map((r) => r.createdAt)),
+      };
       if (confirmedSub && target.garment.subcategory !== confirmedSub && !target.confirmedFields.includes('subcategory')) {
         // He told us what it is (the quick tap) and now that it's this piece: the piece takes his word.
         replacedSub = typeof target.garment.subcategory === 'string' ? target.garment.subcategory : null;
@@ -620,6 +659,8 @@ export function createClosetService(deps: ClosetServiceDeps) {
       patch.profile = { ...p, aliases: alias ? uniq([...p.aliases, alias]).sort() : p.aliases, fieldAliases: lessons.fieldAliases };
       await store.closet.patch(targetId, patch);
       await store.closetObs.patch(obsId, { itemId: targetId, decision: 'answeredSame', answeredAt: now });
+      for (const r of riders) await store.closetObs.patch(r.id, { itemId: targetId, decision: 'same' });
+      await moveRiderLinks(riders.map((r) => r.id), flagged.id, targetId);
       await store.closet.patch(flagged.id, { isDeleted: true, mergedInto: targetId, maybeSameAs: null, updatedAt: now });
       cs.added = cs.added.filter((id) => id !== flagged.id);
       cs.matched = uniq([...cs.matched, targetId]);
@@ -628,6 +669,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       ask.alias = alias;
       ask.replacedSub = replacedSub;
       ask.addedFieldAliases = Object.keys(addedFieldAliases).length > 0 ? addedFieldAliases : null;
+      ask.riders = riders.length > 0 ? riders.map((r) => r.id) : null;
       await refreshItem(targetId);
     } else {
       // A different piece: never asked about these two again.
