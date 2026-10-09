@@ -314,6 +314,8 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **VoiceOver:** each tile: "Outfit: smart casual" + selected trait; never describes the person. Progress bar: "Step 2 of 6". Back: "Back".
 
+**Update Oct 9 (DECISIONS-LOG #173; founder asked for pictures that explain each style, Claude chose the medium):** the six stock photos are replaced by **one tile per style, 7 tiles, each showing two code-drawn outfits** (the Closet's drawings, `features/closet/flats.ts`; no person, no face, no body, no avatar) **plus the style name and one plain line** ("Hoodies, graphic tees, baggy jeans or cargos, big sneakers"). Two outfits per tile so a style reads as a range, not a uniform. Grid 2 columns. An 8th tile, `Something else? Tell me in your words`, opens a one-line text field; the words are logged (no style is guessed from them) so missing styles show up. Names follow #85: Streetwear, Minimal, Smart casual, Classic prep, Workwear, Outdoor, Vintage sport (O2n's 8 chips become these 7). The stylist line becomes `Which of these would you actually wear? Tap up to 3.` Fit (fitted vs. relaxed) stays a separate question in O3 Basics, because every style comes in both. Sketch: `screenshots/style-picker/light.html` (git-ignored). The outfits per style are seed data, checked against RULEBOOK Part 2 anchors.
+
 **Differs from mockup:** none.
 
 ---
