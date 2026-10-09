@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { PickLooksScreen } from '@/features/onboarding/PickLooksScreen';
 
-// O2 · Pick looks (02-screens.md). Built in P4.
-export default function PickLooksScreen() {
-  return <Placeholder id="O2" name="Pick looks" phase="P4" kind="push" />;
-}
+// O2 · Pick looks (02-screens.md D2, #173).
+export default PickLooksScreen;

@@ -314,7 +314,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **VoiceOver:** each tile: "Outfit: smart casual" + selected trait; never describes the person. Progress bar: "Step 2 of 6". Back: "Back".
 
-**Update Oct 9 (DECISIONS-LOG #173; founder asked for pictures that explain each style, Claude chose the medium):** the six stock photos are replaced by **one tile per style, 7 tiles, each showing two code-drawn outfits** (the Closet's drawings, `features/closet/flats.ts`; no person, no face, no body, no avatar) **plus the style name and one plain line** ("Hoodies, graphic tees, baggy jeans or cargos, big sneakers"). Two outfits per tile so a style reads as a range, not a uniform. Grid 2 columns. An 8th tile, `Something else? Tell me in your words`, opens a one-line text field; the words are logged (no style is guessed from them) so missing styles show up. Names follow #85: Streetwear, Minimal, Smart casual, Classic prep, Workwear, Outdoor, Vintage sport (O2n's 8 chips become these 7). The stylist line becomes `Which of these would you actually wear? Tap up to 3.` Fit (fitted vs. relaxed) stays a separate question in O3 Basics, because every style comes in both. Sketch: `screenshots/style-picker/light.html` (git-ignored). The outfits per style are seed data, checked against RULEBOOK Part 2 anchors.
+**Update Oct 9 (DECISIONS-LOG #173; founder asked for pictures that explain each style, Claude chose the medium):** the six stock photos are replaced by **one tile per style, 7 tiles, each showing two code-drawn outfits** (the Closet's drawings, `features/closet/flats.ts`; no person, no face, no body, no avatar) **plus the style name and one plain line** ("Hoodies, graphic tees, baggy jeans or cargos, big sneakers"). Two outfits per tile so a style reads as a range, not a uniform. Grid 2 columns. An 8th tile, `Something else? Tell me in your words`, opens a one-line text field; the words are logged (no style is guessed from them) so missing styles show up. Names follow #85: Streetwear, Minimal, Smart casual, Classic prep, Workwear, Outdoor, Vintage sport (O2n's 8 chips become these 7). The stylist line becomes `Which of these would you actually wear? Tap up to 3.` Fit (fitted vs. relaxed) stays a separate question in O3 Basics, because every style comes in both. The `Pick by name instead` link is dropped (the names are on the tiles); `Not sure` stays. Continue is enabled with 1–3 picks or with words typed in `Something else?`; the picks save to kv `onboarding.looks` and the words to `onboarding.otherStyle` until O5 saves the profile. Selected tile: a 2.5 pt `ink` border and the check circle. At AX sizes, 1 column. Sketch: `screenshots/style-picker/light.html` (git-ignored). The outfits per style are seed data, checked against RULEBOOK Part 2 anchors.
 
 **Differs from mockup:** none.
 
@@ -1553,13 +1553,25 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.welcome.start` | Get started | M |
 | `onb.welcome.example` | See an example check | M |
 | `onb.progress.a11y` | Step {n} of 6 | N |
-| `onb.looks.prompt` | Hey. I'm your stylist. Tap up to 3 looks you'd actually wear. No style words needed. | M |
+| `onb.looks.prompt` | Which of these would you actually wear? Tap up to 3. | R (#173; was M: "Hey. I'm your stylist. Tap up to 3 looks you'd actually wear. No style words needed.") |
 | `onb.looks.byName` | Pick by name instead | M |
 | `onb.looks.notSure` | Not sure | M |
 | `onb.looks.continue` | Continue | N |
 | `onb.looks.continueCount` | Continue · {n} of 3 | M |
 | `onb.looks.max` | Up to 3. | R |
-| `onb.looks.tileA11y` | Outfit: {style} | R |
+| `onb.looks.tileA11y` | {style}: {line} | R (#173) |
+| `onb.looks.line.streetwear` | Hoodies, graphic tees, baggy jeans or cargos, big sneakers | R (#173) |
+| `onb.looks.line.minimalist` | Plain pieces, quiet colors, clean lines | R (#173) |
+| `onb.looks.line.smart_casual` | Polos, quarter-zips, button-ups, chinos, neat shoes | R (#173) |
+| `onb.looks.line.classic_prep` | Blazers, polos, knits, chinos, loafers | R (#173) |
+| `onb.looks.line.workwear` | Chore coats, flannels, sturdy jeans, boots | R (#173) |
+| `onb.looks.line.outdoor` | Shell jackets, fleeces, cargos, trail shoes | R (#173) |
+| `onb.looks.line.vintage_sport` | Football jerseys, rugby shirts, retro sneakers | R (#173) |
+| `onb.looks.else.title` | Something else? | R (#173) |
+| `onb.looks.else.cta` | Tell me in your words | R (#173) |
+| `onb.looks.else.placeholder` | Like skater, or all black | N |
+| `onb.looks.else.a11y` | Something else. Describe your style in your own words. | N |
+| `onb.looks.else.saved` | "{words}" | N |
 | `onb.byName.title` | Pick by name | N |
 | `onb.byName.sub` | Up to 3. You can change these later in You. | N |
 | `style.smart_casual` | Smart casual | M |

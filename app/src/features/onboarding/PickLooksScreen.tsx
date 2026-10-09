@@ -1,0 +1,147 @@
+// O2 · Pick looks (02 D2, update Oct 9, DECISIONS-LOG #173): 7 style tiles drawn in code, up to 3 picks, a
+// "Something else?" tile for his own words, Not sure, Continue · N of 3. The picks wait in kv until O5 saves
+// the profile (onboarding.looks, onboarding.otherStyle).
+import { router } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { Keyboard, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
+import { KButton, KText, StylistMessage, TextLink, space, useTheme } from '@/design-system';
+import { radius } from '@/design-system/tokens';
+import { store } from '@/data/db';
+import type { StyleKey } from '@/data/types';
+import { normStyleKey } from '@/data/types';
+import { t } from '@/i18n/en';
+import { LookTile } from './LookTile';
+import { cleanOtherWords, LOOKS, togglePick } from './looks';
+import { OnboardingNav } from './OnboardingNav';
+
+export const LOOKS_KEY = 'onboarding.looks';
+export const OTHER_STYLE_KEY = 'onboarding.otherStyle';
+
+const GAP = 10;
+
+export function PickLooksScreen() {
+  const { colors, isAccessibilitySize } = useTheme();
+  const insets = useSafeAreaInsets();
+  const window = useWindowDimensions();
+  // The grid's own width (the web preview's phone frame is narrower than the window).
+  const [gridW, setGridW] = useState(0);
+  const width = gridW || window.width - 2 * space.gutter;
+  const [picks, setPicks] = useState<StyleKey[]>([]);
+  const [shake, setShake] = useState<Record<string, number>>({});
+  const [maxNote, setMaxNote] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [words, setWords] = useState('');
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Back from O3 keeps what he picked.
+  useEffect(() => {
+    void (async () => {
+      const raw = await store.getKv(LOOKS_KEY);
+      try {
+        const saved = raw ? (JSON.parse(raw) as unknown[]).map(normStyleKey).filter((s): s is StyleKey => s !== null) : [];
+        if (saved.length) setPicks(saved.slice(0, 3));
+      } catch { /* a bad draft starts fresh */ }
+      setWords((await store.getKv(OTHER_STYLE_KEY)) ?? '');
+    })();
+    return () => { if (timer.current) clearTimeout(timer.current); };
+  }, []);
+
+  const columns = isAccessibilitySize ? 1 : 2;
+  const tileW = Math.floor((width - GAP * (columns - 1)) / columns);
+  const other = cleanOtherWords(words);
+
+  const tap = (style: StyleKey) => {
+    const r = togglePick(picks, style);
+    if (r.full) {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      setShake((s) => ({ ...s, [style]: (s[style] ?? 0) + 1 }));
+      setMaxNote(true);
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setMaxNote(false), 2000);
+      return;
+    }
+    void Haptics.selectionAsync();
+    setPicks(r.picks);
+  };
+
+  const save = async (chosen: readonly StyleKey[], otherWords: string | null) => {
+    await store.setKv(LOOKS_KEY, JSON.stringify(chosen));
+    if (otherWords) await store.setKv(OTHER_STYLE_KEY, otherWords);
+    else await store.deleteKv(OTHER_STYLE_KEY);
+    router.push('/onboarding/basics');
+  };
+
+  const back = () => (router.canGoBack() ? router.back() : router.replace('/onboarding/welcome'));
+  const canContinue = picks.length > 0 || other !== null;
+
+  return (
+    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
+      <OnboardingNav step={2} onBack={back} />
+      <ScrollView contentContainerStyle={[styles.thread, { paddingBottom: space.xl }]} keyboardShouldPersistTaps="handled">
+        <StylistMessage showHeader>{t('onb.looks.prompt')}</StylistMessage>
+        <View style={[styles.grid, { gap: GAP }]} onLayout={(e) => setGridW(e.nativeEvent.layout.width)}>
+          {LOOKS.map((look) => (
+            <LookTile key={look.style} look={look} width={tileW} selected={picks.includes(look.style)} shake={shake[look.style] ?? 0} onPress={() => tap(look.style)} />
+          ))}
+          <Pressable
+            onPress={() => setEditing(true)}
+            accessibilityRole="button"
+            accessibilityLabel={t('onb.looks.else.a11y')}
+            style={[styles.other, { width: tileW, minHeight: columns === 2 ? 120 : undefined, backgroundColor: colors.surface, borderColor: other ? colors.ink : colors.line, borderWidth: other ? 2.5 : StyleSheet.hairlineWidth * 2 }]}
+          >
+            <KText variant="subheadline" color="ink3" style={styles.center}>
+              {t('onb.looks.else.title')}
+            </KText>
+            <KText variant="subheadline" weight="600" color={other ? 'ink' : 'accent'} style={styles.center} numberOfLines={3}>
+              {other ? t('onb.looks.else.saved', { words: other }) : t('onb.looks.else.cta')}
+            </KText>
+          </Pressable>
+        </View>
+        {editing ? (
+          <TextInput
+            autoFocus
+            value={words}
+            onChangeText={setWords}
+            placeholder={t('onb.looks.else.placeholder')}
+            placeholderTextColor={colors.ink3}
+            maxLength={80}
+            returnKeyType="done"
+            onSubmitEditing={() => { setEditing(false); Keyboard.dismiss(); }}
+            onBlur={() => setEditing(false)}
+            accessibilityLabel={t('onb.looks.else.a11y')}
+            style={[styles.input, { color: colors.ink, backgroundColor: colors.surface, borderColor: colors.line }]}
+          />
+        ) : null}
+        <View style={styles.links}>
+          <TextLink title={t('onb.looks.notSure')} onPress={() => void save([], other)} />
+        </View>
+      </ScrollView>
+      <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l) }]}>
+        {/* The grid runs past the screen, so the 4th-tap note sits by the button where he can see it. */}
+        {maxNote ? (
+          <KText variant="footnote" color="ink2" accessibilityRole="alert" style={styles.center}>
+            {t('onb.looks.max')}
+          </KText>
+        ) : null}
+        <KButton
+          title={picks.length ? t('onb.looks.continueCount', { n: picks.length }) : t('onb.looks.continue')}
+          disabled={!canContinue}
+          onPress={() => void save(picks, other)}
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  thread: { paddingHorizontal: space.gutter, paddingTop: space.xs, gap: space.m },
+  grid: { flexDirection: 'row', flexWrap: 'wrap' },
+  other: { borderRadius: radius.look + 1, padding: space.m, alignItems: 'center', justifyContent: 'center', gap: space.xs },
+  center: { textAlign: 'center' },
+  input: { borderWidth: StyleSheet.hairlineWidth * 2, borderRadius: 22, height: 44, paddingHorizontal: space.l, fontSize: 17 },
+  links: { flexDirection: 'row', justifyContent: 'flex-start' },
+  dock: { paddingHorizontal: space.gutter, paddingTop: space.s, gap: space.s },
+});
