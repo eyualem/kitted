@@ -124,10 +124,14 @@ Gemini made up its TikTok rows, and Codex couldn't reach Reddit. These two promp
 v4 judges fit with these: "too big" = volume 4+ with sleeves over hands or a hem below the crotch; "everything oversized"; top and leg against the style's bands; strain. So "intentionally oversized" and "a size too big" are the same thing to it.
 
 ### The design: the AI names the cut and the cue, the phone measures positions, the code judges
-1. **Two answers per piece instead of one number** (replaces `volume`, so the answer doesn't get longer; the v5 lesson, #63–64):
-   - `cut`, how it's designed: `fitted` · `regular` · `relaxed` · `oversized` (boxy, dropped shoulders, made big on purpose).
-   - `size_fit`, how it fits him: `too_tight` · `right` · `too_big` · `unsure`.
-   - `fit_cue`, the one visible reason when it isn't `right`: `seam_down_arm` · `sleeves_past_hand` · `long_body` · `bunching_at_waist` · `pulling_creases` · `placket_gaping` · `riding_up` · `sleeves_short`. Every cue is on the garment, never the body.
+1. **The AI reports what it sees; the code decides the fit** (revised Oct 9 after `notes/v5-fit.md`: asking the model "oversized on purpose?" is the same guess as `volume`, and no benchmark shows VLMs can judge fit):
+   - Keep `volume` (width only), `length`, `sleeve_end`, `strain`.
+   - Add **`shoulder_seam`**: `on_edge` · `just_past` · `down_arm` · `na`. This is the strongest single tell and visible at 1024 px when it's far off.
+   - Add **`ribbed_hem`** (true/false) for tops: a designed-oversized hoodie or sweatshirt is wide but short with a ribbed band.
+   - Widen `sleeve_end` for short sleeves: `mid_bicep` · `at_elbow`.
+   - Read sleeves only on the hanging arm in mirror selfies (a prompt line).
+   - **In code:** `cut` = oversized when the seam is `just_past` or `down_arm` **and** the body is short or ribbed; `size_fit` = too big when the seam is `down_arm`, or the body is long with sleeves past the hand; too tight from `strain` or a riding-up hem. Both are stored, not read.
+   - Net: 2 new fields and 2 new values, still a short answer. Each one goes through the flip test before it can move a score.
 2. **Checkpoints per garment type** (the prompt gives the AI a short checklist; the fit research in `notes/v5-fit.md` fills in the targets):
    - **Tee:** shoulder seam on the shoulder (regular) or dropped (oversized); sleeve mid-bicep vs. elbow; hem at the belt to mid-fly; pulling across the chest.
    - **Hoodie / sweatshirt:** seam position; cuffs at the wrist vs. bunched over the hand; hem band at the hips vs. hanging past the crotch.
@@ -136,14 +140,14 @@ v4 judges fit with these: "too big" = volume 4+ with sleeves over hands or a hem
    - **Jacket / coat:** shoulder edge; sleeve covers the shirt cuff or not; length vs. the top underneath (`shows_below_outer`).
    - **Pants:** thigh pulling; leg shape; break; stacked on purpose vs. pooling.
    - **Shorts:** length vs. the knee; leg opening.
-3. **The phone measures positions from body-pose joints, never widths.** Sleeve end vs. the wrist joint, top hem vs. the hip joints, pant hem vs. the ankle and the shoe top, from the joints Apple Vision already finds (prep, camera guide) and the closet call's boxes. These replace the AI's guess for `sleeve_end`, `length` and `hem` when the joints are clearly visible. **No garment-width-vs-body measurement, ever:** it would grow with body size and end up rating bodies (and the Oct 8 leg-shape-from-outline try was too rough anyway, #106). Width and cut stay the AI's description of the garment.
+3. **The phone measures positions from body-pose joints, never widths.** Safe, as fractions of his own limb segments: pant hem vs. ankle and shoe top, shorts hem vs. knee, top or jacket hem between waist and knee, outer layer vs. under layer from two boxes. Untested: sleeve end vs. wrist on the hanging arm. Each needs a joint-confidence gate (hips are the least certain joint, and loose clothes blur the pose). The Mac harness's `Measure.legShape` (knee width over hip span) is a width measure and stays out of the app. Sleeve end vs. the wrist joint, top hem vs. the hip joints, pant hem vs. the ankle and the shoe top, from the joints Apple Vision already finds (prep, camera guide) and the closet call's boxes. These replace the AI's guess for `sleeve_end`, `length` and `hem` when the joints are clearly visible. **No garment-width-vs-body measurement, ever:** it would grow with body size and end up rating bodies (and the Oct 8 leg-shape-from-outline try was too rough anyway, #106). Width and cut stay the AI's description of the garment.
 4. **The code judges, by garment type and the detected style:**
    - `too_big` and `too_tight` are size faults for every style (sized from the cue; sleeves past the hand are milder than a seam halfway down the arm).
    - `oversized` + `right` is a style choice, judged only by proportion (top vs. leg, the style's bands), never as "too big".
    - Fixes name the garment, never the body: "Try a size down in the tee", "Tailor the sleeves", "Roll the cuffs once", "A boxier tee would suit the wide jeans".
    - The copy checks gain a banned-words test for body words (body, weight, belly, skinny as a person word…).
 5. **The closet keeps each piece's fit:**
-   - Stored per piece: `cut` and `size_fit` (the clearest sighting wins; a half-seen read never overwrites a clear one), plus the measured sleeve and length positions.
+   - Stored per piece: the code's `cut` and `size_fit` (the clearest sighting wins; a half-seen read never overwrites a clear one), plus the measured sleeve and length positions.
    - Uses: **matching** (a boxy grey tee and a fitted grey tee are different pieces); the **drawn tile** (width and length follow the cut); the **piece page** ("Boxy oversized · fits well" or "Runs big on you"); **fixes** ("Swap to your fitted white tee"); the **morning card** (an oversized top goes with a straight or wide leg, per the style's bands).
    - A "This fits differently" correction on the piece page, which teaches the piece like the closet questions do.
 6. **How we'll know it works:**
@@ -152,7 +156,7 @@ v4 judges fit with these: "too big" = volume 4+ with sleeves over hands or a hem
    - **Accuracy on the size ladder:** ≥ 80% per field, or it stays a tip with no points.
    - **Measured positions vs. the AI:** on the gold set's labels.
    - **Safety:** every fit line in the copy deck passes the body-words test, and no rule reads a width.
-7. **Order:** fit research (running) → prompt and schema change (`cut`/`size_fit`/`fit_cue` in place of `volume`), flip test (about $2) → phone position measures (Swift, in the measure layer) → size-ladder shoot → rules in the v5 ledger → closet fields (a migration) and the piece page → port with parity. Rides with v5; nothing changes scores before the shoot.
+7. **Order:** fit research (running) → prompt and schema change (`shoulder_seam`, `ribbed_hem`, short-sleeve values), flip test (about $2) → phone position measures (Swift, in the measure layer) → size-ladder shoot → rules in the v5 ledger → closet fields (a migration) and the piece page → port with parity. Rides with v5; nothing changes scores before the shoot.
 
 ### R3c · Gemini · YouTube fit guides (optional, same honesty rules as R3b)
 > **Honesty rules, read first:** Only record what you actually opened and read. Never generate, template or "fill in" rows, and never write a script that makes rows. Every row needs a real YouTube URL (11-character video ID) and a timestamp from the transcript. Fewer real rows beat more invented ones. Save files exactly where asked.
