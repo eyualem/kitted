@@ -168,6 +168,7 @@
     - Use `/usr/bin/python3`.
     - Set the key with `read -s GEMINI_API_KEY && export GEMINI_API_KEY`.
     - Turn billing on (the free tier allows 20 calls a day).
+- **Rubric v4 open items from the Oct 8 phone checks (#150):** the front-tuck tip fires on hoodies (a bug, tip only); slides never become the fix (taste call, recommended a no-points next-level line); "Add a layer" repeats. Coordinate with session A, which is editing `rubric.py`.
 - **Rubric v4:** `rubric/v4.md` (v3 superseded). Open for the gold set: the 7.0 starting point vs 6.75, whether 9+ needs a standout piece (RULEBOOK Part 10).
 - **Rubric research: proportions, color, style types (done Oct 7).** Report: `rubric/research/proportions-color-style.md` (notes in `rubric/research/notes/`). Verdict: v3.1 already covers most well-supported rules, so no rewrite.
   - **Real gaps** (each needs one new coarse reading from the model): baggy jeans stacked on purpose are read as "pooling"; a thin shoe under a wide leg; top and bottom in different colors at the same middle lightness ("muddy").
