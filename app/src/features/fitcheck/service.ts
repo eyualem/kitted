@@ -6,7 +6,7 @@
 // before, and this file never writes a check's closetSummary or itemIds (patchRow keeps them).
 
 import {
-  applyCorrection, applyFix, applyTapAnswer, askQuestion, carryTapAnswer, dayKey, fixTargets, garmentName,
+  applyCorrection, applyFix, applyTapAnswer, askWithCloset, carryTapAnswer, dayKey, fixTargets, garmentName,
   mergeShoeSnap, pickShoesFromCloset, recheckMerge, recheckOutcome, removeGarment, tapOrder, tapOrdinal, weekdayOf,
   type ClosetItem, type Garment, type Reading, type Styles,
 } from '@kitted/core';
@@ -223,13 +223,18 @@ export function createFitCheckService(deps: ServiceDeps) {
   /** A full check's reading is in: ask the one quick tap first, or score it now. The question is stored on the
    *  row (status 'asking') before the reading card ends, so the slot never goes blank. */
   async function afterRead(row: FitCheckRow, reading: Reading, readingRow: ReadingRow, cached: boolean): Promise<FitCheckRow> {
-    const q = deps.tap?.() && !row.details.tap ? askQuestion(reading, scoreOptions(lensInput(row.occasion, row.style, await profile()))) : null;
+    // With what he owned before this photo (#126): "Your green work boots?" about a piece he confirmed, or none when
+    // his closet agrees with the read. The question (and so the snapshot's effect) is stored on the row.
+    const q = deps.tap?.() && !row.details.tap
+      ? askWithCloset(reading, scoreOptions(lensInput(row.occasion, row.style, await profile())), await closet.knownPieces([row.id]))
+      : null;
     if (!q) return finalizeCheck(row, reading, readingRow, cached);
     const tap: TapState = {
       pair: q.pair, slot: q.slot, garmentIndex: q.garmentIndex, ordinal: tapOrdinal(reading, q.garmentIndex), question: q.question,
       options: q.options.map((o) => ({ ...o })), order: tapOrder(q).map((o) => o.value), default: q.default, swing: q.swing, doubt: q.doubt,
       occasion: row.occasion, askedAt: clock.nowMs(), answer: null, skipped: false, answeredAt: null, ...(cached ? { free: true } : {}),
       ...(q.kind ? { kind: q.kind } : {}),
+      ...(q.knownId ? { knownId: q.knownId, knownName: q.knownName } : {}),
     };
     return (await patchRow(row.id, { status: 'asking', readingId: readingRow.id, details: { ...row.details, tap } }))!;
   }
@@ -423,7 +428,11 @@ export function createFitCheckService(deps: ServiceDeps) {
         // if that photo was scored before (one replaced while asking never counted, so this one does).
         const answered = readings.filter((r) => r.source === 'tapAnswer' && r.derivedFrom === cached.id).sort((a, b) => b.createdAt - a.createdAt)[0];
         const free = (await store.fitChecks.all()).some((c) => c.id !== checkId && c.imageHash === image.sha256 && !c.parentId && c.status === 'scored');
-        const done = answered ? await finalizeCheck(row, answered.reading, answered, free) : await afterRead(row, cached.reading, cached, free);
+        // Scored before without a question (none qualified, or his closet agreed): score it the same way again, so
+        // a closet that changed since can't make the same photo ask, or score, differently (#126).
+        const done = answered ? await finalizeCheck(row, answered.reading, answered, free)
+          : free ? await finalizeCheck(row, cached.reading, cached, free)
+          : await afterRead(row, cached.reading, cached, free);
         return outcomeOf(done);
       }
     }

@@ -37,6 +37,8 @@ export const STORY_PARTIAL = 'story-partial';
 export const STORY_TAP = 'story-tap';
 /** Screens 60–62: the shoe question on the founder's Oct 8 reading (ph8, his boots read as slides). */
 export const STORY_SHOES = 'story-shoes';
+/** Screens 63–64: "Your grey work boots?" (#126): ph8 answered Boots on Oct 21, then ph9 (boots read "other") on Oct 22. */
+export const STORY_KNOWN = 'story-known';
 
 export const SCREENS: readonly ScreenScenario[] = [
   { n: 1, name: 'Welcome', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome' },
@@ -98,6 +100,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 60, name: 'Shoe question', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 61, name: 'Shoe question · Boots', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 62, name: 'Shoe question · skipped', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 63, name: 'Your boots?', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 64, name: 'Your boots? · Yes', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

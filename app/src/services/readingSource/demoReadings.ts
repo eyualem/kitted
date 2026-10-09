@@ -19,6 +19,8 @@ import shoeSnapRunners from '../../../assets/demo-readings/variants/s24_shoe_sna
 import ph1 from '../../../assets/demo-readings/variants/ph1_oct7_misread.json';
 // The founder's Oct 8 phone check (reading only): his work boots read as slides (the shoe question, #120).
 import ph8 from '../../../assets/demo-readings/variants/ph8_oct8_boots_as_slides.json';
+// ...and his boots read as "other" (f07193): "Your grey work boots?" once he has confirmed them (#126).
+import ph9 from '../../../assets/demo-readings/variants/ph9_oct8_boots_as_other.json';
 
 /** The reading files carry provenance next to the reading; keep scene + garments + held_items only. */
 function readingOf(file: unknown): Reading {
@@ -35,6 +37,7 @@ const BY_ID: Record<string, Reading> = {
   ph1: readingOf(ph1),
   // Demo screens 60–62 (the shoe question): shown with s12's stand-in photo too.
   ph8: readingOf(ph8),
+  ph9: readingOf(ph9),
 };
 
 /**

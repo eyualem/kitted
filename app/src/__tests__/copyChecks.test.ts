@@ -87,8 +87,9 @@ describe('the one quick tap and "Reads as" strings', () => {
       if (deck[`tap.as.${k}`] !== shoes.labels[k].toLowerCase()) problems.push(`tap.as.${k}`);
     }
     expect(problems).toEqual([]);
-    expect(Object.keys(en).filter((k) => k.startsWith('tap.q.'))).toHaveLength(10);
-    expect(Object.keys(en).filter((k) => k.startsWith('tap.opt.'))).toHaveLength(16);
+    // + "Your {item}?" with Yes / No (#126): app copy, not core's
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.q.'))).toHaveLength(11);
+    expect(Object.keys(en).filter((k) => k.startsWith('tap.opt.'))).toHaveLength(18);
     expect(Object.keys(en).filter((k) => k.startsWith('tap.as.'))).toHaveLength(16);
   });
   it('the "Scored for" strings are gone', () => {

@@ -12,6 +12,7 @@ export { suggestFixes, applyFix, fixTargets, type Fix, type FixSuggestions, type
 export { recheckMerge, recheckOutcome, STATE_FIELDS, type RecheckMerge, type RecheckOutcome } from "./recheck";
 export { applyCorrection, removeGarment, correctionLine } from "./corrections";
 export { applyTapAnswer, tapOrdinal, tapOrder, tapSpan, isShoeQuestion, carryTapAnswer, type TapCarry } from "./tap";
+export { askWithCloset, KNOWN_SWING } from "./known";
 export { matchClosetItem, closetPlan, type ClosetPlan, type ClosetPlanEntry } from "./closetMatch";
 export { partialLabel, mergeShoeSnap, mergeBottomSnap, pickShoesFromCloset } from "./partial";
 export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type RotationResult, type ItemKey, type ComboKey } from "./rotation";
@@ -42,7 +43,7 @@ export {
 } from "./closetShade";
 export {
   DETAILS, LAYERABLE, FLIP_PAIRS, SAME_MIN, RUNNER_UP_GAP, normalizeBrand, profileOf, profileFromClosetItem, identity, decide,
-  reconcile, reconcileReading, shoeKindOf, knownMatches, type KnownPiece,
+  reconcile, reconcileReading, shoeKindOf, knownMatches, lessonsOfYes, PARTIAL_ASK_MIN, type KnownPiece,
   type Detail, type Lightness, type SleeveLength, type ShoeProfile, type DenimWear, type ConfirmedFields, type Observation,
   type ItemProfile, type ProfileExtra, type IdentityReason, type IdentityResult, type Decision, type ReconcileEntry,
   type ReadingReconcileEntry, type StoredProfile,

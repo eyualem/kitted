@@ -280,3 +280,40 @@ describe('the shoe question (tap v2, #120): his Oct 8 boots read as slides (ph8)
     expect(done.rulesFired).toContain('F4_hem_drags_over_slides');
   });
 });
+
+describe('"Your … boots?" (#126): a piece he confirmed is asked about by name', () => {
+  async function boots(pro = false) {
+    const env = await setup({ now: '2026-10-21T16:40:00-04:00', pro });
+    // Oct 21: his boots read as slides; he answers Boots (the shoe question), so the closet knows them.
+    const first = (await env.svc.start({ mode: 'check', photoId: 'ph8', occasion: 'class' })) as { checkId: string };
+    await env.svc.answerTap(first.checkId, 'work_boot');
+    env.clock.set(at('2026-10-22T16:40:00-04:00'));
+    const r = await env.svc.start({ mode: 'check', photoId: 'ph9', occasion: 'class' });
+    return { ...env, first: first.checkId, r };
+  }
+
+  it('the next day his boots read "other": the card asks about his own boots, with Yes / No', async () => {
+    const { store, r } = await boots();
+    expect(r.outcome).toBe('asking');
+    const tap = (await store.fitChecks.get((r as { checkId: string }).checkId))!.details.tap!;
+    const piece = (await store.closet.get(tap.knownId!))!;
+    expect([tap.kind, tap.knownName, tap.options.map((o) => [o.answer, o.value]), tap.default]).toEqual([
+      'known', piece.name, [['yes', 'work_boot'], ['no', 'other']], 'work_boot',
+    ]);
+    expect(piece.slot).toBe('shoes');
+  });
+
+  it('Yes scores his boots (8.0, the truth); the same photo again reuses it and never asks', async () => {
+    const { svc, r } = await boots(true); // Pro: a second check the same day
+    const id = (r as { checkId: string }).checkId;
+    expect((await svc.answerTap(id, 'work_boot'))!.score).toBe(8);
+    const again = await svc.start({ mode: 'check', photoId: 'ph9', occasion: 'class' });
+    expect(again.outcome).toBe('scored');
+  });
+
+  it('with no confirmed piece, the same photo gets the shoe question instead', async () => {
+    const env = await setup({ now: '2026-10-22T16:40:00-04:00' });
+    const r = (await env.svc.start({ mode: 'check', photoId: 'ph9', occasion: 'class' })) as { checkId: string };
+    expect((await env.store.fitChecks.get(r.checkId))!.details.tap!.question).toBe('Boots, sneakers or slides?');
+  });
+});

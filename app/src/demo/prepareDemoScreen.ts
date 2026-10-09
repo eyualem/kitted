@@ -15,7 +15,7 @@ import { completeOnboarding } from '@/features/onboarding/complete';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
-import { STORY_FIRST_CHECK, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
+import { STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
@@ -87,6 +87,15 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   60: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }] },
   61: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'work_boot', checkId: STORY_SHOES }] },
   62: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'skip', checkId: STORY_SHOES }] },
+  // "Your grey work boots?" (#126): yesterday he answered Boots, so today's "other" read asks about his own boots.
+  63: { steps: [
+    { at: '2026-10-21T16:40:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }, { at: '2026-10-21T16:40:30', do: 'tap', answer: 'work_boot', checkId: STORY_SHOES },
+    { at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph9', occasion: 'class', checkId: STORY_KNOWN },
+  ] },
+  64: { steps: [
+    { at: '2026-10-21T16:40:00', do: 'check', photoId: 'ph8', occasion: 'class', checkId: STORY_SHOES }, { at: '2026-10-21T16:40:30', do: 'tap', answer: 'work_boot', checkId: STORY_SHOES },
+    { at: '2026-10-22T07:42:00', do: 'check', photoId: 'ph9', occasion: 'class', checkId: STORY_KNOWN }, { at: '2026-10-22T07:42:30', do: 'tap', answer: 'work_boot', checkId: STORY_KNOWN },
+  ] },
   // Closet accuracy (#91): the closet call's answer for p01b against seed pieces; B1 (khaki) vs tan chinos is asked.
   37: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   38: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },

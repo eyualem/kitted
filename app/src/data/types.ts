@@ -110,7 +110,10 @@ export interface TapState {
    *  (boots / sneakers / slides) and the type code picked inside it. Each with the score it gives. */
   options: TapOption[];
   /** 'shoes' for "Boots, sneakers or slides?"; absent on the look-alike pairs (and on rows asked before #120). */
-  kind?: 'shoes';
+  kind?: 'shoes' | 'known';
+  /** 'known' only (#126): the closet piece "Your {piece}?" asks about, and its name as asked. */
+  knownId?: string;
+  knownName?: string;
   /** The option values in the question's word order (the buttons). */
   order: string[];
   /** What a skip scores (the more generous reading). */

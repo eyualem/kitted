@@ -289,6 +289,12 @@ const addedInBuild = {
   'tap.as.sneakers': "sneakers",
   'tap.as.slides': "slides",
   'tap.skipNote.shoes': "I'll score them as {choice}.",
+  // "Your green work boots?" (#126): the tap about a piece he owns. {item} is the piece's name, lower-case first word.
+  'tap.q.known': "Your {item}?",
+  'tap.opt.yes': "Yes",
+  'tap.opt.no': "No",
+  'tap.skipNote.known': "I'll score them as your {item}.",
+  'tap.skipped.known': 'Scored as your {item}.',
   'tap.a11y.announce': 'One quick question before your score. {question}',
   'tap.a11y.optionHint': 'Scores it as {choice}',
   'tap.a11y.skip': "Skip. I'll score it as {choice}.",

@@ -33,7 +33,8 @@ export function tapOrdinal(reading: Reading, garmentIndex: number): number {
 
 /** The options in the question's word order ("Jeans or sweatpants?" → Jeans, Sweatpants; "Boots, sneakers or
  *  slides?" → Boots, Sneakers, Slides), not as-read first. */
-export function tapOrder(q: Pick<TapQuestion, "pair" | "options">): TapOption[] {
+export function tapOrder(q: Pick<TapQuestion, "pair" | "options"> & { kind?: TapQuestion["kind"] }): TapOption[] {
+  if (q.kind === "known") return [...q.options]; // Yes, No
   const words = q.pair.split("/");
   const at = (o: TapOption) => {
     const i = words.indexOf(o.group ?? o.value);

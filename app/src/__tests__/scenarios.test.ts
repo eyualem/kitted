@@ -7,7 +7,7 @@ describe('demo screens', () => {
     // Parallel sessions number from their own block (camera guidance from 41), so gaps are fine; order and uniqueness aren't.
     expect([...ns].sort((a, b) => a - b)).toEqual(ns);
     expect(new Set(ns).size).toBe(ns.length);
-    expect(SCREENS.filter((s) => s.id === 'S5q').map((s) => [s.n, s.scenario])).toEqual([[34, 'firstRun'], [35, 'firstRun'], [36, 'firstRun'], [60, 'firstRun'], [61, 'firstRun'], [62, 'firstRun']]); // 60–62: the shoe question (#120)
+    expect(SCREENS.filter((s) => s.id === 'S5q').map((s) => [s.n, s.scenario])).toEqual([[34, 'firstRun'], [35, 'firstRun'], [36, 'firstRun'], [60, 'firstRun'], [61, 'firstRun'], [62, 'firstRun'], [63, 'firstRun'], [64, 'firstRun']]); // 60–62: the shoe question (#120); 63–64: his boots (#126)
     expect(SCREENS.find((s) => s.n === 33)?.name).toBe('Reads as smart casual');
   });
 

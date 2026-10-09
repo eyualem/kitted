@@ -7,6 +7,9 @@ import { AccessibilityInfo, Platform, Pressable, StyleSheet, View } from 'react-
 import Animated, { FadeIn } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { KButton, KCard, KCardSection, KText, Seam, TagLine, opacity, size, space, useTheme } from '@/design-system';
+import { store } from '@/data/db';
+import { useLive } from '@/data/useLive';
+import { ClosetTile } from '@/features/closet/ClosetTile';
 import type { FitCheckRow, TapState } from '@/data/types';
 import { fitCheck } from '@/features/fitcheck/session';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -19,8 +22,19 @@ const deck = en as Record<string, string | undefined>;
 
 /** The deck's words for the question and its answers (core's text, kept identical by copyChecks); core's own
  *  text if a pair is ever added to the rubric before the deck. */
-export function tapQuestion(tap: Pick<TapState, 'pair' | 'question'>): string {
+export function tapQuestion(tap: Pick<TapState, 'pair' | 'question' | 'kind' | 'knownName'>): string {
+  if (tap.kind === 'known' && tap.knownName) return t('tap.q.known', { item: pieceWords(tap.knownName) });
   return deck[`tap.q.${tap.pair.split('/').join('_')}`] ?? tap.question;
+}
+/** A closet name inside a sentence: "Grey work boots" → "grey work boots" (brands keep their capital: "Nike"). */
+export function pieceWords(name: string): string {
+  return name.charAt(0).toLowerCase() + name.slice(1);
+}
+/** The words for the answer a skip (or a past answer) scored: "your grey work boots" for the known piece's Yes. */
+export function tapChoice(tap: Pick<TapState, 'options' | 'kind' | 'knownName'>, value: string): string {
+  const o = tap.options.find((x) => x.value === value);
+  if (tap.kind === 'known' && o?.answer === 'yes' && tap.knownName) return `your ${pieceWords(tap.knownName)}`;
+  return tapAs(tapWord(tap, value));
 }
 /** What a stored value is called on the buttons and in sentences: the shoe question's kind ("boots"), else the value. */
 export function tapWord(tap: Pick<TapState, 'options'>, value: string): string {
@@ -39,7 +53,9 @@ export function TapCard({ row }: { row: FitCheckRow }) {
   const { colors, a11y, isAccessibilitySize } = useTheme();
   const [busy, setBusy] = useState(tap.answer !== null);
   const question = tapQuestion(tap);
-  const choice = tapAs(tapWord(tap, tap.default));
+  const choice = tapChoice(tap, tap.default);
+  const known = tap.kind === 'known';
+  const piece = useLive(['closet'], async () => (tap.knownId ? (await store.closet.get(tap.knownId)) ?? null : null), [tap.knownId], tap.knownId ?? '');
 
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility?.(t('tap.a11y.announce', { question }));
@@ -64,7 +80,10 @@ export function TapCard({ row }: { row: FitCheckRow }) {
         <KCardSection>
           <TagLine left={t(row.isPartial ? 'card.tag.partial' : 'card.tag.full')} right={occasionLabel(tap.occasion)} />
           <View style={styles.qRow}>
-            {isAccessibilitySize ? null : (
+            {isAccessibilitySize ? null : known && piece ? (
+              // His piece, as his closet draws it, where the score will land.
+              <ClosetTile item={piece} size={76} aspect={62 / 76} radius={12} decorative />
+            ) : (
               <View
                 style={[styles.placeholder, { backgroundColor: colors.surface2 }]}
                 accessibilityElementsHidden
@@ -84,12 +103,12 @@ export function TapCard({ row }: { row: FitCheckRow }) {
             {tap.order.map((v) => (
               <KButton
                 key={v}
-                title={tapOption(tapWord(tap, v))}
+                title={known ? t(tap.options.find((o) => o.value === v)?.answer === 'yes' ? 'tap.opt.yes' : 'tap.opt.no') : tapOption(tapWord(tap, v))}
                 kind="secondary"
                 size="regular"
                 fullWidth={isAccessibilitySize}
                 disabled={busy}
-                accessibilityHint={t('tap.a11y.optionHint', { choice: tapAs(tapWord(tap, v)) })}
+                accessibilityHint={t('tap.a11y.optionHint', { choice: tapChoice(tap, v) })}
                 style={isAccessibilitySize ? undefined : styles.half}
                 onPress={() => pick(v)}
               />
@@ -109,7 +128,9 @@ export function TapCard({ row }: { row: FitCheckRow }) {
             {t('tap.skip')}
           </KText>
           <KText variant="footnote" color="ink3" style={{ flexShrink: 1 }}>
-            {t(tap.kind === 'shoes' ? 'tap.skipNote.shoes' : 'tap.skipNote', { choice })}
+            {known && tap.options.find((o) => o.value === tap.default)?.answer === 'yes'
+              ? t('tap.skipNote.known', { item: pieceWords(tap.knownName ?? '') })
+              : t(tap.kind === 'shoes' ? 'tap.skipNote.shoes' : 'tap.skipNote', { choice })}
           </KText>
         </Pressable>
       </KCard>

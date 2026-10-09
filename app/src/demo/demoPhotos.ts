@@ -56,6 +56,7 @@ export const DEMO_PHOTOS: readonly DemoPhoto[] = [
   ...BUNDLED,
   { ...s12, id: 'ph1', sha256: 'demo-ph1-oct7', latencySeconds: 6.6 },
   { ...s12, id: 'ph8', sha256: 'demo-ph8-oct8', latencySeconds: 9.4 },
+  { ...s12, id: 'ph9', sha256: 'demo-ph9-oct8', latencySeconds: 5.7 },
 ];
 
 export function demoPhoto(id: string | null | undefined): DemoPhoto | undefined {

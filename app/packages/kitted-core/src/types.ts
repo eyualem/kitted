@@ -324,6 +324,8 @@ export interface TapOption {
   score: number;
   /** The shoe question only: the kind he taps; `value` is the type code picked inside it. */
   group?: ShoeKind;
+  /** A known-piece question ("Your green work boots?") only: Yes = his piece's type, No = as read. */
+  answer?: "yes" | "no";
 }
 export interface TapQuestion {
   /** "jeans/sweatpants" */
@@ -340,6 +342,9 @@ export interface TapQuestion {
   /** A pair: options[1].score - options[0].score. The shoe question: the best option's score - the score as read. */
   swing: number;
   doubt: string;
-  /** "shoes" for the shoe question (tap v2, #120); absent on the look-alike pairs. */
-  kind?: "shoes";
+  /** "shoes" for the shoe question (tap v2, #120); "known" for "Your {piece}?" (#126, askWithCloset); absent on the pairs. */
+  kind?: "shoes" | "known";
+  /** "known" only: the closet piece it asks about, and its name when asked. */
+  knownId?: string;
+  knownName?: string;
 }
