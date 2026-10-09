@@ -87,3 +87,24 @@ Today a credit is earned by **having** something (any layer +0.75, any dressy pi
 - Count a rule as supported only when 3+ independent sources agree (different subreddits or channels), and record dissent.
 - Creator numbers (TikTok, YouTube) inform the **order** of fits more than the **level**; entertainment scoring runs harsh or generous.
 - Popularity (likes, upvotes) is never a quality signal (ZOZO 2024: popularity vs. human rankings ρ −0.36 to 0.27).
+
+## Re-runs after the Oct 9 check (`notes/v5-r1-r2-check.md`)
+Gemini made up its TikTok rows, and Codex couldn't reach Reddit. These two prompts replace R3 and widen R2. Both start with the same honesty rules.
+
+### R3b · Gemini · YouTube stylists (with honesty rules)
+> **Honesty rules, read first:** Only record what you actually opened and read. Never generate, template, estimate or "fill in" rows, and never write a script that makes rows. Every row must have a real YouTube URL (11-character video ID after `watch?v=`) and a timestamp you saw in the transcript. If you find fewer than the target, stop and say how many you found; 15 real rows beat 60 invented ones. Mark anything you're unsure of as "unsure". Save files exactly where asked.
+>
+> Research task for a men's outfit-rating app, using YouTube transcripts. Only videos from January 2024 or later, from channels with 100k+ subscribers focused on men's style. Skip anything that rates faces or bodies.
+>
+> **Part A, rated outfits:** videos where a menswear creator rates real people's outfits with a number or a clear verdict (subscriber fit reviews, street-style ratings, "rating your outfits"). Target 40 outfits from at least 4 channels. One row each: video url · channel · subscriber count · date · timestamp · each piece in plain words (specific: leg shape, how the hem sits, layer open or closed) · accessories below the neck · headwear · score or verdict · the reasons (short quotes, 12 words max, from the transcript) · what would raise it · comments on the layer, accessories and colors.
+>
+> **Part B, accessory rules:** from 2024+ videos about men's accessories (chains, bracelets, rings, watches, belts, bandanas, scarves, caps and beanies, bags, socks), each rule a creator states, with the video URL, timestamp and the style it applies to. Mark each rule as stated by 1, 2, or 3+ different channels.
+>
+> **Part C, layering and color rules:** the same for layering (when a layer helps, overshirts over hoodies, jacket length vs. the top, layer colors) and color (repeating a color between pieces, contrast between top and bottom, tonal outfits, how many colors).
+>
+> **Save in this exact folder:** `/Users/eyu/Desktop/files/Kitted/inputs/rubric-research/` as `youtube-rated-fits.csv`, `youtube-rules.csv` (Parts B and C) and `youtube-summary.md`. At the end, list every video you opened.
+
+### R2b · Codex · more TikTok creators (the embed pages worked)
+> **Honesty rules, read first:** Only record what you actually opened and read. Never generate or template rows. Every row needs a real TikTok URL (19-digit ID). If you find fewer than the target, stop and say so. Do not download videos or save images.
+>
+> Continue the TikTok fit-rating research in `/Users/eyu/Desktop/files/Kitted/inputs/rubric-research/tiktok-rated-fits.csv` (keep the existing @lo2trimm rows and the same columns). Using TikTok embed pages (`https://www.tiktok.com/embed/v2/<id>`), which worked last time, add **at least 4 more creators** who rate men's outfits with numbers out of 10, preferring 10k+ followers, posted January 2024 or later, men who look 18+, nothing that rates faces or bodies. Aim for 10 rated outfits per creator, with a mix of styles (not only streetwear: some smart casual, workwear and plain everyday fits). **Include plain basic outfits** (hoodie or tee + jeans + sneakers) and **outfits with a jacket or overshirt**, because those are the cases we're testing. Fill the same columns, and for accessories and headwear only write what you actually saw (never infer from words in captions). Update `tiktok-summary.md` with a creator table and how each creator's scale compares (harsh, generous, typical range).
