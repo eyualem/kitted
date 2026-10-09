@@ -20,11 +20,12 @@
 **Do (things only I can do):**
 - [ ] **P1** · **Phone test, about 10 min left** (reinstalled again Oct 9 and connected to the dev server; close-ups and measuring confirmed Oct 8 on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it was `10.0.0.33:8081` on Oct 8). Tell Claude when you start. Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
 - [ ] **P1** · **Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement.** Enrollment can take a few days. *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check.*
+- [ ] **P1** · **Run the 3 scoring-research prompts** (copy them from `rubric/research/v5-brief.md`): R1 Reddit rated fits and R2 TikTok fit ratings in Codex, R3 YouTube stylists + accessory rules in Gemini. About 10 min to start each; they save into `inputs/rubric-research/`. Tell Claude when they land. *Unblocks: a meticulous v5 score (rules from real raters, accessories, layers that have to earn their points).*
+- [ ] **P1** · **Export the old Gemini creator-research Google Sheet as `.xlsx`** into `inputs/rubric-research/` (2 min). *Unblocks: the same v5 rules ledger.*
 - [ ] **P1** · **Set up a Cloudflare account** for the server. *Unblocks: scoring in release builds, so outside testers can use it.*
 - [ ] **P2** · **Claim @kitted.app / @trykitted and register trykitted.com.** About 10 minutes, and the names could be taken any time. *Unblocks: the waitlist page and the TikTok account.*
 - [ ] **P2** · **Shoot ~20 photos of my clothes** into `inputs/item-photos/` (shot list in "Waiting on the founder"). *Unblocks: scanning clothes into the closet.*
 - [ ] **P2** · **Shoot the gold set:** about 80 outfit photos with 3+ friends (plan in `speed-and-detail-plan.md`). *Unblocks: tuning the scores against real people's opinions.*
-- [ ] **P3** · **Export the Gemini creator-research Google Sheet as `.xlsx`** into `inputs/`.
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
@@ -196,6 +197,7 @@
     - Turn billing on (the free tier allows 20 calls a day).
 - **Rubric v4 open items from the Oct 8 phone checks (#150):** the front-tuck tip fires on hoodies (a bug, tip only); slides never become the fix (taste call, recommended a no-points next-level line); "Add a layer" repeats. Coordinate with session A, which is editing `rubric.py`.
 - **Layer bias, audited Oct 9 (#160), not built yet:** a clean outfit gets "Add a layer" or nothing (45/45 each way on 90 saved clean outfits; all 4 of my no-jacket phone checks). Cause: only the layer credit has a generic fix (shoes and "elevated piece" can only suggest closet items), it's the biggest credit, and rounding shows it as +1.0. The line is always "an overshirt or a knit", even over a hoodie and in summer. Recommended code-only fix (no score change): generic shoe and top swaps, a swap beats adding a piece on a tie, a layer line that fits what's underneath, and no layer tip on warm days. The score side (a knit worn alone counts as "Layered"; 0.75) waits for the gold set.
+- **Rubric v5, "every point earned" (founder, Oct 9, #161; brief + prompts `rubric/research/v5-brief.md`):** credits earned on quality, not presence (a layer that just sits there earns little), a "finished" credit from big visible accessories (chain, belt, scarf, neck bandana, cap) inside the cap, 9+ needs a standout piece. Steps: #160 fix-engine fix → research (Codex Reddit + TikTok, Gemini YouTube, Claude editorial) → verify → rules ledger + council → paper calibration on the rated fits → new readings one at a time (flip test, ~$2) → gold set with "layered but not an 8" and accessory pairs → calibrate, lock, port. Glasses, sunglasses and anything on the head are never scored (the upload hides the whole head; glasses are mostly prescription). If the gold set slips, new rules ship as tips only.
 - **Rubric v4:** `rubric/v4.md` (v3 superseded). Open for the gold set: the 7.0 starting point vs 6.75, whether 9+ needs a standout piece (RULEBOOK Part 10).
 - **Rubric research: proportions, color, style types (done Oct 7).** Report: `rubric/research/proportions-color-style.md` (notes in `rubric/research/notes/`). Verdict: v3.1 already covers most well-supported rules, so no rewrite.
   - **Real gaps** (each needs one new coarse reading from the model): baggy jeans stacked on purpose are read as "pooling"; a thin shoe under a wide leg; top and bottom in different colors at the same middle lightness ("muddy").
@@ -430,6 +432,7 @@ Exceptions:
 | `app-build-spec.md` | Engineering spec: pipeline, proxy (Cloudflare Worker + D1), milestones M0–M4. Its SwiftUI parts are replaced by 05/06 | Reference, partly stale |
 | `rubric/v4.md` (v3.md superseded), `extraction-test/` | Style rules in plain words; the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
+| `rubric/research/v5-brief.md` | Rubric v5 plan (Oct 9): what "meticulous" means, the 8 steps, research questions, the Codex/Gemini prompts | **Live** until v5 locks |
 | `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |
 | `mockups/closet-concepts.html` | Closet tab research (Oct 8): where combinations live, avatar verdict, wireframes, sources | Approved (#84); the UI brief for the Closet tab |
 | `speed-and-detail-plan.md`, `testing-plan.md` | Vision speed plan; the 5 validation tests | Reference |
