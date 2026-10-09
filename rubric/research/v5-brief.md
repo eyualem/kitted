@@ -167,3 +167,31 @@ v4 judges fit with these: "too big" = volume 4+ with sleeves over hands or a hem
 
 ### R5 · Codex · Instagram + Pinterest fits by style (founder idea, Oct 9; #167)
 No ratings, but curated good fits per style. Uses: (1) **top-end check**: known-good fits should mostly score 8+; where v4 gives 7, it underrates that style; (2) **what good fits are made of** per style (share with a layer, accessories, a color tie-in, a standout piece, stacked hems); (3) **style detection check** ("Reads as" vs. the account's style). Can't show the low end (nobody posts bad fits). Text only (no images saved: copyright, and others' faces never go to Google); Pinterest only when the pin traces to a real person's or brand's post (AI-generated outfit pins are common); slow, one tab, about 6 posts per account so his logged-in account isn't flagged; likes are never a signal. The prompt is in the founder's Oct 9 chat; saves to `inputs/rubric-research/insta-pinterest-fits.csv` + `insta-pinterest-summary.md`.
+
+## Measure instead of guess (founder, Oct 9: "employ scripts where the AI isn't doing it correctly"; DECISIONS-LOG #187)
+
+**The goal.** For each detail the AI keeps getting wrong, a phone-side measurement (Apple Vision: body outline, pose joints, the garment boxes the closet call already returns, the face-hidden close-ups) that is checked against labeled truth and takes over **only where it beats the AI**. The rule stays "the AI names and points, the phone measures, the code judges" (#104).
+
+**Rules for every measurement (non-negotiable).**
+- **Garment against garment, or a position along his own limbs.** Never a garment's width against his body (#164): that drifts into rating bodies. Body joints may only say *where* to measure.
+- **On the phone, no extra AI call, nothing new uploaded.** Same photo → same number (repeatable).
+- **It may say "unsure."** Then the AI's reading stands, or the one-quick-tap question asks him.
+- **Takeover bar:** on labeled truth it beats the AI's accuracy clearly (≥10 points), it says "unsure" on at most 30% of photos, it gives the same answer twice, and it holds on mirror selfies, propped shots and dark-on-dark outfits. Otherwise it stays a shadow log, like the fit ruler (#170).
+- **How it's used when it passes:** first as a tie-breaker (when the AI's read is "likely" or the two disagree: the measurement wins, or the tap asks), then as the reading itself if the gold set agrees.
+- **Before any score moves**, the founder sees the before/after list on the saved fits (like `notes/v5-paper-test-a.md`).
+
+**Truth is the bottleneck, not code.** Today's labels: his 11 Oct 8 checks (`inputs/phone-oct8/truth.csv`), Claude's labels (`extraction-test/ruler_labels.csv`, `leg_labels.csv`). The **gold set** and the **size-ladder shoot** (his to-do list) are what make these testable; each probe re-runs on them.
+
+**The list, in order (one agent per step, Mac harness `extraction-test/vision/` first; report in `notes/<name>-probe.md`):**
+
+| # | Detail the AI gets wrong | How wrong (his photos) | What it costs | Measurement idea | Status |
+|---|---|---|---|---|---|
+| M1 | Leg shape (slim / straight / relaxed / wide) | 40–53% right | Silhouette rules can't tell a chore coat over slim vs straight jeans (his friend's 8.5) | Taper per leg (hem ÷ knee width, along the knee→ankle axis) + leg opening ÷ shoe width | **Running Oct 9** (`notes/leg-probe.md`) |
+| M2 | Hem: break, stack, pooling | 26–43% right; flips on 16 of 52 photos | The blazer-hem rule (A2, ready) fires on nothing; stacked jeans read "slight break" | In the lower close-up: count horizontal fold edges above the shoe and how far fabric sits over the shoe box. (The fit ruler's hem *position* lost to the AI, 52% vs 81%: measure folds, not position) | Next |
+| M3 | Shoe type and profile (boots / sneakers / slides; chunky / regular / sleek) | footwear type 30–53% | His boots read as slides (−1.0); `shoe_profile` (dainty shoe under wide legs) can't be read at all | Shoe box ∩ outline: shaft height vs the ankle joint (boot), sole thickness ÷ shoe length (chunky/sleek), an open top (slides). Garment-only ratios | After M2 |
+| M4 | Tee hanging below a layer | `shows_below_outer` true in 4 of 326 layer reads (likely under-read) | The "tee clearly below the jacket blocks the layer credit" rule (S8) can't fire | The outer box's bottom edge vs the inner top's bottom edge from the closet call's boxes, plus a colour change below the jacket hem | After M3 |
+| M5 | How boxy a top or jacket is (looseness) | `volume` hugs 3 (top 4+ in 48 of 731 reads) | "Boxy over skinny", too-big blazer, "big pants, little shirt" | The garment's own shape: hem width ÷ shoulder width of the same top, sleeve width near the cuff ÷ at the shoulder. No body widths | Later |
+| M6 | Colour family | 70–76% right | Colour rules (tonal, accents) misfire; closet duplicates | Already measured per piece for the closet (#104–107); test feeding the measured colour family to scoring | Later (needs the closet session) |
+| — | Sleeve end, top length | AI wins or ties (fit ruler #170) | — | Don't redo; re-run the ruler on the gold set only | Parked |
+
+**Order and pace:** one probe at a time (founder: "step by step"); each ends with an adopt / shadow / drop verdict. Nothing reaches the app until a probe passes the bar and the founder has seen the score changes.
