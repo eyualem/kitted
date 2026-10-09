@@ -7,7 +7,8 @@ import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import type { KittedStore } from '@/data/store';
-import type { FitCheckRow } from '@/data/types';
+import type { ClosetItemRow, FitCheckRow } from '@/data/types';
+import { profileOfItem } from '@/features/closet/profile';
 import { createClosetService } from '@/features/closet/service';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
 import { manualClock } from '@/services/clock';
@@ -498,3 +499,95 @@ describe('measured on the phone (#104)', () => {
   });
 });
 
+
+const profileOf = (c: ClosetItemRow | null | undefined) => profileOfItem(c!);
+
+describe('half-seen pieces ask instead of splitting, and a Yes teaches (#115)', () => {
+  // His Oct 8 story in miniature: the grey hoodie alone, then under a tan overshirt (read as a tee, jeans read straight),
+  // then under it again (read as a sweatshirt). No closet call, no measuring: the v3 fields and the outer-layer rule.
+  const base = demoReadingById('ph1')!;
+  const garments = (top: Record<string, unknown>, leg: string, outer: boolean) => [
+    ...(outer ? [{ ...base.garments[0]!, category: 'outerwear', subcategory: 'overshirt', color_family: 'tan_camel', logo: 'none', pattern: 'checks_plaid' }] : []),
+    { ...base.garments[0]!, ...top },
+    { ...base.garments[1]!, subcategory: 'jeans', certainty: 'clear', leg_shape: leg },
+    { ...base.garments[2]!, subcategory: 'white_leather_sneaker', color_family: 'white', certainty: 'clear' },
+  ];
+  const alone = { ...base, garments: garments({}, 'wide', false) } as Reading;
+  const asTee = { ...base, garments: garments({ subcategory: 'tee', certainty: 'likely', logo: 'none' }, 'straight', true) } as Reading;
+  const asSweat = { ...base, garments: garments({ subcategory: 'sweatshirt', certainty: 'likely', logo: 'none' }, 'straight', true) } as Reading;
+  const story = () => setup({ readings: { ph1: alone, s05: asTee, s09: asSweat }, closetSource: null });
+  const byName = async (env: Awaited<ReturnType<typeof setup>>, sub: string) =>
+    (await env.owned()).find((c) => c.garment.subcategory === sub && !c.maybeSameAs)!;
+
+  it('the hoodie under a shirt read as a tee, and the jeans read straight: two questions, not two new pieces', async () => {
+    const env = await story();
+    await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const hoodie = await byName(env, 'hoodie'), jeans = await byName(env, 'jeans');
+    const id = await env.check('s05', 'everyday');
+    await env.closet.settle();
+    const asks = (await env.row(id)).details.closetSummary!.asks!;
+    expect(asks.map((a) => a.candidateId).sort()).toEqual([hoodie.id, jeans.id].sort());
+    // Before #115 both were vetoed into new pieces ("Grey tee", a second pair of jeans) with no question.
+  });
+
+  it('after his two Yes answers, the next layered photo matches by itself; a changed answer takes the lesson back', async () => {
+    const env = await story();
+    await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const hoodie = await byName(env, 'hoodie'), jeans = await byName(env, 'jeans');
+    const id = await env.check('s05', 'everyday');
+    await env.closet.settle();
+    const asks = (await env.row(id)).details.closetSummary!.asks!;
+    for (const a of asks) await env.svc.answerDuplicate(id, a.obsId, 'same');
+    expect(profileOf(await env.store.closet.get(hoodie.id)).aliases).toContain('tee');
+    expect(profileOf(await env.store.closet.get(jeans.id)).fieldAliases).toEqual({ leg_shape: ['straight', 'wide'] });
+
+    const id3 = await env.check('s09', 'everyday');
+    await env.closet.settle();
+    const cs = (await env.row(id3)).details.closetSummary!;
+    expect(cs.asks ?? []).toEqual([]);
+    expect(cs.matched).toEqual(expect.arrayContaining([hoodie.id, jeans.id]));
+    expect((await env.owned()).length).toBe(4); // hoodie, jeans, sneakers, overshirt
+
+    const jeansAsk = asks.find((a) => a.candidateId === jeans.id)!;
+    await env.svc.answerDuplicate(id, jeansAsk.obsId, 'new');
+    expect(profileOf(await env.store.closet.get(jeans.id)).fieldAliases).toEqual({});
+  });
+});
+
+describe('"Your grey work boots?" in the closet (#126 / #115)', () => {
+  async function asked() {
+    const env = await setup({ now: '2026-10-21T16:40:00-04:00' });
+    const first = (await env.svc.start({ mode: 'check', photoId: 'ph8', occasion: 'everyday' })) as { checkId: string };
+    await env.svc.answerTap(first.checkId, 'work_boot'); // the shoe question: Boots
+    await env.closet.settle();
+    env.clock.set(at('2026-10-22T16:40:00-04:00'));
+    const r = (await env.svc.start({ mode: 'check', photoId: 'ph9', occasion: 'everyday' })) as { checkId: string; outcome: string };
+    expect(r.outcome).toBe('asking');
+    const tap = (await env.row(r.checkId)).details.tap!;
+    expect(tap.kind).toBe('known');
+    return { ...env, id: r.checkId, knownId: tap.knownId!, wornBefore: (await env.store.closet.get(tap.knownId!))!.wornCount };
+  }
+  const shoeSighting = async (env: Awaited<ReturnType<typeof asked>>) =>
+    (await env.store.closetObs.all()).find((o) => o.fitCheckId === env.id && o.garment.category === 'footwear');
+
+  it('Yes: the sighting is his boots (linked as his answer, worn +1), no new shoes', async () => {
+    const env = await asked();
+    await env.svc.answerTap(env.id, 'work_boot');
+    await env.closet.settle();
+    expect(await shoeSighting(env)).toMatchObject({ itemId: env.knownId, decision: 'answeredSame', userConfirmed: null });
+    expect((await env.store.closet.get(env.knownId))!.wornCount).toBe(env.wornBefore + 1);
+    expect((await env.owned()).filter((c) => c.slot === 'shoes')).toHaveLength(1);
+  });
+
+  it('No: never his boots for this sighting, and nothing claimed about the type', async () => {
+    const env = await asked();
+    await env.svc.answerTap(env.id, 'other');
+    await env.closet.settle();
+    const s = await shoeSighting(env);
+    expect(s?.itemId).not.toBe(env.knownId);
+    expect(s?.userConfirmed ?? null).toBeNull();
+    expect((await env.store.closet.get(env.knownId))!.wornCount).toBe(env.wornBefore);
+  });
+});

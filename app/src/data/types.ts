@@ -226,6 +226,8 @@ export interface ClosetAsk {
   /** What a "Yes" changed on the piece, so a changed answer can put it back: an alias it added, the type it replaced. */
   alias?: string | null;
   replacedSub?: string | null;
+  /** Shape readings this "Yes" taught the piece (#115: leg / sleeve / shoe profile), removed again on a changed answer. */
+  addedFieldAliases?: Record<string, string[]> | null;
 }
 
 export interface ClosetSummary {
@@ -272,6 +274,8 @@ export interface ClosetArt {
   details: string[];
   /** Brand id from core normalizeBrand (a listed brand only), or null. */
   brand: string | null;
+  /** v3 pattern under the drift guard (#115: strong ones go in the name). Missing on art written before it. */
+  pattern?: string | null;
   shoeProfile: 'sleek' | 'regular' | 'chunky' | null;
   denimWear: 'none' | 'faded' | 'ripped' | null;
 }
@@ -283,6 +287,8 @@ export interface ClosetProfile {
   /** Items he said are different pieces. */
   distinctFrom: string[];
   confirmed: ConfirmedFields;
+  /** Shape readings he said belong to this piece (#115), per field: "Yes, same one" across a straight and a wide read. */
+  fieldAliases?: Record<string, string[]>;
   /** He named it himself: never auto-renamed. */
   nameLocked?: boolean;
   /** The app named it (closet names, #91), so it may rename it when a detail is needed or the look settles. */

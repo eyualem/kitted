@@ -23,7 +23,7 @@ describe('seed loader: full', () => {
     expect(obs.every((o) => o.origin === 'seed' && o.decision === 'new' && o.itemId === o.id.slice(2))).toBe(true);
     expect(obs.find((o) => o.itemId === 'L3')!.closet).toBeNull();
     expect(obs.find((o) => o.itemId === 'S3')!.closet).toMatchObject({ logo_text: 'New Balance', shoe_profile: 'regular' });
-    expect(closet.find((c) => c.id === 'T2')!.art).toEqual({ family: 'grey', shade: 'grey|-|heather', details: [], brand: null, shoeProfile: null, denimWear: null });
+    expect(closet.find((c) => c.id === 'T2')!.art).toEqual({ family: 'grey', shade: 'grey|-|heather', details: [], brand: null, pattern: 'solid', shoeProfile: null, denimWear: null });
     expect(closet.find((c) => c.id === 'B1')!.hex).toBe('#C9B48A');
     expect(closet.every((c) => !('closet' in c.garment))).toBe(true);
 

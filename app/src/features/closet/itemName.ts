@@ -1,4 +1,5 @@
-// Closet names (DECISIONS-LOG #91): "{shade} {Brand} {detail} {garment}", e.g. "Medium grey Nike hoodie".
+// Closet names (DECISIONS-LOG #91, #115): "{shade} {pattern} {Brand} {detail} {garment}", e.g. "Medium grey Nike hoodie",
+// "Tan plaid overshirt".
 // - The color words come only from fixed tables: core shadeWords' step / finish words + the app's color word
 //   (labels.ts colorWord), never the model's text. Denim keeps its wash word ("Dark jeans"), plus a finish.
 // - A brand only from the known list (core normalizeBrand ids), or one clean word that 2 sightings agree on.
@@ -75,9 +76,16 @@ export function baseName(garment: Garment, art: ClosetArt | null | undefined): s
   return composeName(garment, art, null);
 }
 
+/** Strong patterns tell two pieces of one color apart at a glance (#115): "Tan plaid overshirt". */
+const PATTERN_WORD: Readonly<Record<string, string>> = { stripes: 'striped', checks_plaid: 'plaid', camo: 'camo', floral: 'floral' };
+export function patternWord(pattern: string | null | undefined): string | null {
+  return pattern ? PATTERN_WORD[pattern] ?? null : null;
+}
+
 export function composeName(garment: Garment, art: ClosetArt | null | undefined, detail: string | null): string {
   const color = colorPhrase(art?.family ?? garment.color_family, art?.shade ?? null, garment.subcategory);
-  const parts = [color, brandWord(art?.brand), detail, pieceWord(garment)].filter((p): p is string => !!p);
+  const pattern = patternWord(art ? art.pattern : garment.pattern as string | undefined);
+  const parts = [color, pattern, brandWord(art?.brand), detail === pattern ? null : detail, pieceWord(garment)].filter((p): p is string => !!p);
   return cap(parts.join(' '));
 }
 

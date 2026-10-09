@@ -11,7 +11,7 @@
 // (state 'fallback'); a late answer, or a one-time catch-up on the next foreground within 24 h, then enriches it
 // (re-matches only if he hasn't touched S11 for that check).
 import {
-  closetPlan, fixTargets, identity, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment, type KnownPiece, type Reading,
+  closetPlan, fixTargets, identity, lessonsOfYes, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment, type KnownPiece, type Reading,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
@@ -26,7 +26,7 @@ import type { GarmentMeasurer, Measured } from '@/services/measure/garments';
 import { garmentHex } from '@/features/fitcheck/labels';
 import { serial } from './checkWrites';
 import { assignNames, baseName, isAutoNamed } from './itemName';
-import { artOf, hexOfArt, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
+import { artOf, halfSeen, hexOfArt, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
 export const CLOSET_DEADLINE_MS = 12_000;
 export const CATCH_UP_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -52,6 +52,26 @@ const CONFIRMABLE: readonly string[] = [
   'subcategory', 'color_family', 'pattern', 'logo', 'leg_shape', 'sleeve_length', 'lightness', 'shoe_profile', 'denim_wear',
 ];
 const uniq = <T,>(xs: readonly T[]): T[] => [...new Set(xs)];
+
+type FieldAliases = Readonly<Record<string, readonly string[]>> | null | undefined;
+/** The values `next` has that `prev` didn't, per field (what one "Yes" taught). */
+function addedAliases(prev: FieldAliases, next: FieldAliases): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const [f, vals] of Object.entries(next ?? {})) {
+    const fresh = vals.filter((v) => !(prev?.[f] ?? []).includes(v));
+    if (fresh.length > 0) out[f] = [...fresh];
+  }
+  return out;
+}
+/** `cur` without what one answer added; a field left with fewer than 2 values teaches nothing and is dropped. */
+function withoutAliases(cur: FieldAliases, added: FieldAliases): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const [f, vals] of Object.entries(cur ?? {})) {
+    const left = vals.filter((v) => !(added?.[f] ?? []).includes(v));
+    if (left.length > 1) out[f] = left;
+  }
+  return out;
+}
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 
 export function emptySummary(): ClosetSummary {
@@ -175,23 +195,39 @@ export function createClosetService(deps: ClosetServiceDeps) {
     return out;
   }
 
-  /** The tap answer (#85) is something he told us: the observation carries it (a Skip learns nothing). */
-  function tapConfirmed(row: FitCheckRow): Map<number, ConfirmedFields> {
-    const m = new Map<number, ConfirmedFields>();
+  /** What the tap answer (#85) told us about one garment of the check. A Skip learns nothing. */
+  interface TapLesson { confirmed: ConfirmedFields | null; linkTo?: string; notItemIds?: string[] }
+  function tapLessons(row: FitCheckRow): Map<number, TapLesson> {
+    const m = new Map<number, TapLesson>();
     const tap = row.details.tap;
     if (!tap?.answer || tap.skipped) return m;
+    const option = tap.options.find((o) => o.value === tap.answer);
     // The shoe tap ("Boots, sneakers or slides?") confirms the kind he named, not the subtype code picked inside it.
     if (tap.kind === 'shoes') {
-      const group = tap.options.find((o) => o.value === tap.answer)?.group;
-      if (group) m.set(tap.garmentIndex, { shoeKind: group });
+      if (option?.group) m.set(tap.garmentIndex, { confirmed: { shoeKind: option.group } });
       return m;
     }
-    m.set(tap.garmentIndex, { subcategory: tap.answer });
+    // "Your grey work boots?" (#126): Yes is that piece (linked, no type claimed); No is "not that piece" (the No
+    // value is only the read type, maybe "other").
+    if (tap.kind === 'known') {
+      if (tap.knownId && option?.answer === 'yes') m.set(tap.garmentIndex, { confirmed: null, linkTo: tap.knownId });
+      else if (tap.knownId && option?.answer === 'no') m.set(tap.garmentIndex, { confirmed: null, notItemIds: [tap.knownId] });
+      return m;
+    }
+    m.set(tap.garmentIndex, { confirmed: { subcategory: tap.answer } });
     return m;
   }
 
   // ------------------------------------------------------------------ the engine pass
-  interface Piece { origin: ObservationOrigin; index: number; garment: Garment; fields: ClosetFields | null; confirmed: ConfirmedFields | null }
+  interface Piece {
+    origin: ObservationOrigin; index: number; garment: Garment; fields: ClosetFields | null; confirmed: ConfirmedFields | null;
+    /** Half seen in its reading (core halfSeen rules, #115); a low crop quality adds to it in matchPieces. */
+    partial?: boolean;
+    /** He said it's this piece ("Your grey work boots?" Yes): linked without the engine. */
+    linkTo?: string;
+    /** He said it's not these pieces (that question's No). */
+    notItemIds?: string[];
+  }
 
   /** Measures the worn pieces that have a closet box on this check's photo (#104); empty when it can't. */
   async function measurePieces(row: FitCheckRow, pieces: readonly Piece[]): Promise<Map<Piece, Measured>> {
@@ -220,23 +256,44 @@ export function createClosetService(deps: ClosetServiceDeps) {
    * new items, worn counts, open questions. Returns the summary parts it produced.
    */
   async function matchPieces(
-    row: FitCheckRow, pieces: readonly Piece[], lighting: string | null, closetReadingId: string | null,
+    row: FitCheckRow, allPieces: readonly Piece[], lighting: string | null, closetReadingId: string | null,
     o: { exclude?: ReadonlySet<string>; noWear?: ReadonlySet<string> } = {},
   ) {
-    const items = (await store.closet.all()).filter((c) => isOwned(c) && !o.exclude?.has(c.id));
+    const owned = (await store.closet.all()).filter((c) => isOwned(c) && !o.exclude?.has(c.id));
     const obsAll = await store.closetObs.all();
-    const measured = await measurePieces(row, pieces);
+    const measured = await measurePieces(row, allPieces);
+    const out = { matched: [] as string[], added: [] as string[], links: [] as ClosetLink[], asks: [] as ClosetAsk[] };
+    const touched = new Set<string>();
+    // He already said which piece it is: link it, and keep that piece out of the engine's reach for this check.
+    const linked = new Set<string>();
+    const rest: Piece[] = [];
+    for (const p of allPieces) {
+      const target = p.linkTo ? owned.find((c) => c.id === p.linkTo && c.slot === SLOT_TO_CLOSET[String(p.garment.category)]) : undefined;
+      if (!target || linked.has(target.id)) { rest.push(p); continue; }
+      linked.add(target.id);
+      const obs = newObs(row, p.origin, p.index, p.garment, p.fields, 'answeredSame', {
+        readingId: row.readingId, closetReadingId, userConfirmed: p.confirmed, measured: measured.get(p) ?? null, itemId: target.id,
+        candidates: [{ id: target.id, score: null }], askItemId: target.id,
+      });
+      obs.answeredAt = clock.nowMs();
+      await store.closetObs.put(obs);
+      if (!o.noWear?.has(target.id)) await store.closet.patch(target.id, { wornCount: target.wornCount + 1, lastWornAt: Math.max(target.lastWornAt ?? 0, row.createdAt) });
+      touched.add(target.id);
+      out.matched.push(target.id);
+      out.links.push({ origin: p.origin, index: p.index, itemId: target.id, obsId: obs.id });
+    }
+    const pieces = rest;
+    const items = owned.filter((c) => !linked.has(c.id));
     const reading: Reading = {
       scene: { lighting },
       garments: pieces.map((p) => observationOf(p.garment, p.fields, {
         lighting, userConfirmed: p.confirmed, sampledHex: measured.get(p)?.sampledHex, sampledL: measured.get(p)?.sampledL,
+        partial: isHalfSeen(p, measured.get(p)), notItemIds: p.notItemIds,
       })),
     } as Reading;
     // Every piece is a worn garment for the engine (held pieces are matched the same way); index k = pieces[k].
     for (const g of reading.garments) if (g.certainty === 'unsure') g.certainty = 'likely';
     const plan = closetPlan(reading, items as ClosetItem[], storedProfiles(items, obsAll));
-    const out = { matched: [] as string[], added: [] as string[], links: [] as ClosetLink[], asks: [] as ClosetAsk[] };
-    const touched = new Set<string>();
     for (const e of plan.entries) {
       const p = pieces[e.index];
       if (!p) continue;
@@ -278,11 +335,15 @@ export function createClosetService(deps: ClosetServiceDeps) {
   /** The pieces of a full check's reading the closet keeps (worn then held; not accessories, traditional or unsure). */
   function piecesOf(row: FitCheckRow, reading: Reading, stored: StoredClosetReading | null): Piece[] {
     const fields = fieldsFor(reading.garments, 'full', stored);
-    const conf = tapConfirmed(row);
+    const taps = tapLessons(row);
     const out: Piece[] = [];
     reading.garments.forEach((g, i) => {
       if (typeof g.category !== 'string' || !CLOSET_CATEGORIES.includes(g.category) || g.certainty === 'unsure') return;
-      out.push({ origin: 'garment', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: conf.get(i) ?? null });
+      const t = taps.get(i);
+      out.push({
+        origin: 'garment', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: t?.confirmed ?? null, partial: halfSeen(reading.garments, i),
+        ...(t?.linkTo ? { linkTo: t.linkTo } : {}), ...(t?.notItemIds ? { notItemIds: t.notItemIds } : {}),
+      });
     });
     (reading.held_items ?? []).forEach((g, i) => {
       if (typeof g.category !== 'string' || !CLOSET_CATEGORIES.includes(g.category) || g.certainty === 'unsure') return;
@@ -330,7 +391,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const parentGarment = (l: ClosetLink) => (l.origin === 'held' ? parentReading?.held_items?.[l.index] : parentReading?.garments[l.index]);
     merged.garments.forEach((g, i) => {
       if (typeof g.category !== 'string' || !CLOSET_CATEGORIES.includes(g.category) || g.certainty === 'unsure') return;
-      const piece: Piece = { origin: 'garment', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null };
+      const piece: Piece = { origin: 'garment', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null, partial: halfSeen(merged.garments, i) };
       if (changed.has(g.category)) return void changedPieces.push(piece);
       // Unchanged: another sighting of the piece the first check linked (no extra wear: same outfit, same day).
       const link = ps.links.find((l) => !used.has(l.obsId) && l.origin !== 'snap' && parentGarment(l)?.category === g.category && parentGarment(l)?.subcategory === g.subcategory && !ps.undone.includes(l.itemId));
@@ -363,7 +424,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const pieces: Piece[] = [];
     snap.garments.forEach((g, i) => {
       if (g.category !== 'footwear' || g.certainty === 'unsure') return;
-      pieces.push({ origin: 'snap', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null });
+      pieces.push({ origin: 'snap', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null, partial: halfSeen(snap.garments, i) });
     });
     const prev = summaryOf(parent);
     if (prev.links.some((l) => l.origin === 'snap')) return; // one snap per check
@@ -494,7 +555,10 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await store.closet.patch(ask.itemId, { isDeleted: false, mergedInto: null, maybeSameAs: ask.candidateId, updatedAt: now });
       if (t) {
         const p = profileOfItem(t);
-        const back: Partial<ClosetItemRow> = { wornCount: Math.max(0, t.wornCount - 1), profile: { ...p, aliases: p.aliases.filter((x) => x !== ask.alias) }, updatedAt: now };
+        const back: Partial<ClosetItemRow> = {
+          wornCount: Math.max(0, t.wornCount - 1), updatedAt: now,
+          profile: { ...p, aliases: p.aliases.filter((x) => x !== ask.alias), fieldAliases: withoutAliases(p.fieldAliases, ask.addedFieldAliases) },
+        };
         if (ask.replacedSub) {
           back.garment = { ...t.garment, subcategory: ask.replacedSub };
           back.confirmedFields = t.confirmedFields.filter((f) => f !== 'subcategory');
@@ -515,6 +579,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     ask.answer = null;
     ask.alias = null;
     ask.replacedSub = null;
+    ask.addedFieldAliases = null;
   }
 
   async function applyAnswer(checkId: string, obsId: string, a: DuplicateAnswer) {
@@ -549,7 +614,10 @@ export function createClosetService(deps: ClosetServiceDeps) {
       } else if (sub && sub !== target.garment.subcategory && !p.aliases.includes(sub)) {
         alias = sub;
       }
-      patch.profile = { ...p, aliases: alias ? uniq([...p.aliases, alias]).sort() : p.aliases };
+      // What the Yes teaches (#115): the shape reads that differed (his wide jeans read straight) stop costing points.
+      const lessons = lessonsOfYes(null, sightingsOf(targetId, await store.closetObs.all()).map(observationOfRow), observationOfRow(obs), { fieldAliases: p.fieldAliases });
+      const addedFieldAliases = addedAliases(p.fieldAliases, lessons.fieldAliases);
+      patch.profile = { ...p, aliases: alias ? uniq([...p.aliases, alias]).sort() : p.aliases, fieldAliases: lessons.fieldAliases };
       await store.closet.patch(targetId, patch);
       await store.closetObs.patch(obsId, { itemId: targetId, decision: 'answeredSame', answeredAt: now });
       await store.closet.patch(flagged.id, { isDeleted: true, mergedInto: targetId, maybeSameAs: null, updatedAt: now });
@@ -559,6 +627,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       ask.answer = a;
       ask.alias = alias;
       ask.replacedSub = replacedSub;
+      ask.addedFieldAliases = Object.keys(addedFieldAliases).length > 0 ? addedFieldAliases : null;
       await refreshItem(targetId);
     } else {
       // A different piece: never asked about these two again.
@@ -708,7 +777,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     cs.links = cs.links.filter((l) => l.obsId !== obs.id);
     cs.matched = cs.matched.filter((id) => id !== item.id || cs.links.some((l) => l.itemId === id));
     cs.added = cs.added.filter((id) => id !== item.id || cs.links.some((l) => l.itemId === id));
-    const res = await matchPieces(row, [{ origin: 'garment', index: d.garmentIndex, garment: g, fields: obs.closet, confirmed }], next.scene?.lighting ?? null, obs.closetReadingId, { exclude: new Set([item.id]) });
+    const res = await matchPieces(row, [{ origin: 'garment', index: d.garmentIndex, garment: g, fields: obs.closet, confirmed, partial: halfSeen(next.garments, d.garmentIndex) }], next.scene?.lighting ?? null, obs.closetReadingId, { exclude: new Set([item.id]) });
     await store.closetObs.delete(obs.id);
     cs.matched = uniq([...cs.matched, ...res.matched]);
     cs.added = uniq([...cs.added, ...res.added]);
