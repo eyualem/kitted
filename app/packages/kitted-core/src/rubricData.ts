@@ -1929,6 +1929,7 @@ export const RUBRIC_DATA: RubricData = {
     },
     {
      "tier": "swapFromCloset",
+     "effort": 3,
      "copy": "Add your {item}",
      "detail": "worn open",
      "edits": [
@@ -1940,6 +1941,35 @@ export const RUBRIC_DATA: RubricData = {
     },
     {
      "tier": "changeInto",
+     "effort": 3,
+     "when": {
+      "top_in": [
+       "hoodie",
+       "sweatshirt"
+      ]
+     },
+     "copy": "Add a jacket over it: denim, bomber or chore coat",
+     "detail": "",
+     "edits": [
+      {
+       "op": "add",
+       "garment": {
+        "category": "outerwear",
+        "subcategory": "bomber",
+        "color_family": "navy"
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "effort": 3,
+     "when": {
+      "top_not_in": [
+       "hoodie",
+       "sweatshirt"
+      ]
+     },
      "copy": "Add a layer: an overshirt or a knit",
      "detail": "",
      "edits": [
@@ -1981,6 +2011,99 @@ export const RUBRIC_DATA: RubricData = {
        "slot": "footwear",
        "match": {
         "formality_min": 2.5
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "copy": "Swap the {name} for chunky sneakers",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set",
+       "slot": "footwear",
+       "fields": {
+        "subcategory": "chunky_sneaker"
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "when": {
+      "bottom_not_in": [
+       "shorts",
+       "athletic_shorts"
+      ],
+      "not_warm": true
+     },
+     "copy": "Swap the {name} for boots",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set",
+       "slot": "footwear",
+       "fields": {
+        "subcategory": "work_boot"
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "when": {
+      "shoe_not_in": [
+       "white_leather_sneaker",
+       "canvas_sneaker",
+       "retro_runner"
+      ]
+     },
+     "copy": "Swap the {name} for low-profile sneakers",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set",
+       "slot": "footwear",
+       "fields": {
+        "subcategory": "low_profile_sneaker"
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "when": {
+      "shoe_not_in": [
+       "low_profile_sneaker",
+       "canvas_sneaker",
+       "retro_runner"
+      ]
+     },
+     "copy": "Swap the {name} for white leather sneakers",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set",
+       "slot": "footwear",
+       "fields": {
+        "subcategory": "white_leather_sneaker",
+        "color_family": "white"
+       }
+      }
+     ]
+    },
+    {
+     "tier": "changeInto",
+     "copy": "Swap the {name} for loafers",
+     "detail": "",
+     "edits": [
+      {
+       "op": "set",
+       "slot": "footwear",
+       "fields": {
+        "subcategory": "loafer",
+        "color_family": "brown"
        }
       }
      ]

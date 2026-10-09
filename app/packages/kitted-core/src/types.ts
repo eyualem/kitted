@@ -213,7 +213,14 @@ export interface FixOption {
   detail?: string;
   edits: FixEdit[];
   closet_requires?: { slot: string; subcategory_in: string[] };
-  when?: { leg_too_wide?: boolean };
+  /** Only when a top is (isn't) one of top_in (top_not_in), no bottom / shoe is in bottom_not_in / shoe_not_in,
+   *  and (not_warm) the day isn't warm (#160). */
+  when?: {
+    leg_too_wide?: boolean; top_in?: string[]; top_not_in?: string[]; bottom_not_in?: string[]; shoe_not_in?: string[];
+    not_warm?: boolean;
+  };
+  /** Overrides the tier's effort (adding a whole piece = 3, #160). */
+  effort?: number;
 }
 
 export interface FixCatalog {

@@ -273,7 +273,7 @@ def _expand(op, reading, closet, occasion, styles):
     raise ValueError(kind)
 
 
-def _evaluate(option, reading, closet, occasion, styles, boldness):
+def _evaluate(option, reading, closet, occasion, styles, boldness, warm=False):
     """Apply an option's edits (chained) and return the scored outcome, or None if it doesn't apply."""
     if "closet_requires" in option:
         cr = option["closet_requires"]
@@ -284,6 +284,19 @@ def _evaluate(option, reading, closet, occasion, styles, boldness):
         lhi = max(b[1][1] for b in _bands(reading))
         if i is None or reading["garments"][i].get("leg_shape") not in rubric.LEG_ORDER or rubric.LEG_ORDER.index(reading["garments"][i]["leg_shape"]) <= lhi:
             return None
+    when = option.get("when", {})
+    tops = {g.get("subcategory") for g in reading["garments"] if g.get("category") == "top"}
+    if "top_in" in when and not tops & set(when["top_in"]):
+        return None
+    if "top_not_in" in when and tops & set(when["top_not_in"]):
+        return None
+    sub_of = lambda c: {g.get("subcategory") for g in reading["garments"] if g.get("category") == c}
+    if "bottom_not_in" in when and sub_of("bottom") & set(when["bottom_not_in"]):
+        return None
+    if "shoe_not_in" in when and sub_of("footwear") & set(when["shoe_not_in"]):
+        return None
+    if when.get("not_warm") and warm:
+        return None
     states = [(reading, {})]
     for op in option["edits"]:
         nxt = []
@@ -320,7 +333,18 @@ def _copy_line(option, info):
     return s, tag
 
 
-def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little", closet=(), first_check=False):
+def _shoe_shift(option, reading):
+    """How far a shoe swap moves the shoes' dressiness; on a tie the smallest change wins (#160). 0 for other fixes."""
+    i = idx(reading, "footwear")
+    for op in option["edits"]:
+        if op["op"] == "set" and op["slot"] == "footwear" and "subcategory" in op["fields"] and i is not None:
+            return abs(rubric.formality({"subcategory": op["fields"]["subcategory"]}) - rubric.formality(reading["garments"][i]))
+    return 0
+
+
+def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little", closet=(), first_check=False,
+                  warm=False):
+    """warm: a warm day (weather band "none", else the season): no "add a layer" and no boots fix (#160)."""
     base = score(reading, occasion, styles, boldness)
     out = {"base_overall": base.get("overall"), "base_raw": base.get("raw_unrounded"), "fixes": [], "next_level": [], "tips": []}
     if base.get("overall") is None:
@@ -339,6 +363,8 @@ def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little"
             targets = []
         if "shoes" in base["not_rated"] or "bottom half" in base["not_rated"]:
             targets = [t for t in targets if t != "K4_shoes_complement"]
+    if warm:
+        targets = [t for t in targets if t != "K1_layered"]
     tiers = FIXES["tiers"]
 
     def candidates(allowed):
@@ -348,7 +374,7 @@ def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little"
             for opt in FIXES["targets"].get(t, []):
                 if opt["tier"] not in allowed:
                     continue
-                ev = _evaluate(opt, reading, closet, occasion, styles, boldness)
+                ev = _evaluate(opt, reading, closet, occasion, styles, boldness, warm)
                 if not ev:
                     continue
                 sc, rr, info = ev
@@ -356,12 +382,13 @@ def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little"
                 raw_gain = sc["raw_unrounded"] - base["raw_unrounded"]
                 if gain < 0.5:
                     continue
-                eff = tiers[opt["tier"]]["effort"]
+                eff = opt.get("effort", tiers[opt["tier"]]["effort"])   # adding a whole piece costs 3 (#160)
                 c = {"target": t, "tier": opt["tier"], "effort": eff, "free": tiers[opt["tier"]]["free"],
                      "to": sc["overall"], "to_raw": round(sc["raw_unrounded"], 6), "gain": gain, "raw_gain": round(raw_gain, 6),
                      "edits": opt["edits"], "item_id": info.get("item_id"), "order": order}
                 c["copy"], c["tag"] = _copy_line(opt, info)
-                if best is None or (raw_gain / eff, -eff) > (best["raw_gain"] / best["effort"], -best["effort"]):
+                c["_shift"] = _shoe_shift(opt, reading)
+                if best is None or (raw_gain / eff, -eff, -c["_shift"]) > (best["raw_gain"] / best["effort"], -best["effort"], -best["_shift"]):
                     best = c
             if best:
                 cands.append(best)
@@ -369,9 +396,10 @@ def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little"
 
     allowed = {"adjust"} if first_check else set(tiers)
     cands = candidates(allowed)
-    if first_check and not cands:          # at least one free fix whenever any fix exists
-        cands = candidates({"adjust", "changeInto"})[:1]
-    cands.sort(key=lambda c: (-c["raw_gain"] / c["effort"], c["effort"], c["order"]))
+    rank = lambda c: (-c["raw_gain"] / c["effort"], c["effort"], c["order"])
+    if first_check and not cands:          # at least one free fix whenever any fix exists: the best-ranked one (#160)
+        cands = sorted(candidates({"adjust", "changeInto"}), key=rank)[:1]
+    cands.sort(key=rank)
     best_free = max((c["to"] for c in cands if c["free"]), default=None)
     picked = []
     for c in cands:
@@ -383,9 +411,10 @@ def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little"
     if cands and not any(p["free"] for p in picked) and any(c["free"] for c in cands):
         f = next(c for c in cands if c["free"])
         picked = (picked[:2] + [f]) if len(picked) == 3 else picked + [f]
-    picked.sort(key=lambda c: (not c["free"], -c["gain"], c["effort"]))
+    picked.sort(key=lambda c: (not c["free"],) + rank(c))   # shown in rank order, free first (#160; was by rounded gain)
     for c in picked:
         c.pop("order", None)
+        c.pop("_shift", None)
     out["fixes"] = picked
     if not picked:
         out["dialed_in"] = "This is dialed in. Nothing to fix."

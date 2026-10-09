@@ -7,8 +7,8 @@
 
 import {
   applyCorrection, applyFix, applyTapAnswer, askWithCloset, carryTapAnswer, dayKey, fixTargets, garmentName,
-  mergeShoeSnap, pickShoesFromCloset, recheckMerge, recheckOutcome, removeGarment, tapOrder, tapOrdinal, weekdayOf,
-  type ClosetItem, type Garment, type Reading, type Styles,
+  localParts, mergeShoeSnap, pickShoesFromCloset, recheckMerge, recheckOutcome, removeGarment, seasonNeeds, tapOrder, tapOrdinal,
+  weatherNeeds, weekdayOf, type ClosetItem, type DayWeather, type Garment, type Reading, type Styles,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
@@ -135,6 +135,13 @@ export function createFitCheckService(deps: ServiceDeps) {
     return (await store.closet.all()).filter((c) => isOwned(c) && !exclude.has(c.id));
   };
 
+  /** A warm day for this check (its card's weather, else the month): no "add a layer" or boots fix (#160). */
+  const warmFor = async (row: FitCheckRow): Promise<boolean> => {
+    const { day, slot } = slotAt(row.createdAt, clock.offset);
+    const w = (await store.dailyIdeas.get(ideaId(day, slot)))?.weather as unknown as DayWeather | null | undefined;
+    return (w ? weatherNeeds(w) : seasonNeeds(localParts(row.createdAt, clock.offset).m)).layer === 'none';
+  };
+
   const message = async (m: Omit<ChatMessage, 'id' | 'chips' | 'payload' | 'text' | 'cardType' | 'outfitId' | 'itemId' | 'fitCheckId'> & Partial<ChatMessage>) =>
     store.chat.put({
       id: deps.ids('M'), text: null, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {}, ...m,
@@ -165,7 +172,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const details = { ...row.details, ...(patch.details ?? {}) };
     const ev = evaluateCheck({
       reading, ...lensInput(occasion, patch.style !== undefined ? patch.style : row.style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
-      hiddenFixTargets: details.hiddenFixTargets ?? [],
+      hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row),
     });
     const next = await patchRow(row.id, {
       ...ev.row, ...patch, details: { ...details, ...ev.row.details, hiddenFixTargets: details.hiddenFixTargets ?? [] },
@@ -532,6 +539,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       const ev = evaluateCheck({
         reading, occasion: lens.occasion ?? row.occasion, styles: stylesFor(lens.style !== undefined ? lens.style : row.style, p.styles),
         boldness: p.boldness, closet: await closetFor(row), firstCheck: row.isFirstCheck, hiddenFixTargets: row.details.hiddenFixTargets ?? [],
+        warm: await warmFor(row),
       });
       return { before: row.score, after: ev.row.score ?? null };
     },

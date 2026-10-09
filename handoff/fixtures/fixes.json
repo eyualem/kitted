@@ -100,14 +100,20 @@
   ],
   "K1_layered": [
    {"tier": "adjust", "copy": "Wear the {name}, open", "detail": "it's already in your hand", "edits": [{"op": "add_held", "category": "outerwear"}]},
-   {"tier": "swapFromCloset", "copy": "Add your {item}", "detail": "worn open", "edits": [{"op": "add_closet", "slot": "outerwear"}]},
-   {"tier": "changeInto", "copy": "Add a layer: an overshirt or a knit", "detail": "", "edits": [{"op": "add", "garment": {"category": "outerwear", "subcategory": "overshirt", "color_family": "navy"}}]}
+   {"tier": "swapFromCloset", "effort": 3, "copy": "Add your {item}", "detail": "worn open", "edits": [{"op": "add_closet", "slot": "outerwear"}]},
+   {"tier": "changeInto", "effort": 3, "when": {"top_in": ["hoodie", "sweatshirt"]}, "copy": "Add a jacket over it: denim, bomber or chore coat", "detail": "", "edits": [{"op": "add", "garment": {"category": "outerwear", "subcategory": "bomber", "color_family": "navy"}}]},
+   {"tier": "changeInto", "effort": 3, "when": {"top_not_in": ["hoodie", "sweatshirt"]}, "copy": "Add a layer: an overshirt or a knit", "detail": "", "edits": [{"op": "add", "garment": {"category": "outerwear", "subcategory": "overshirt", "color_family": "navy"}}]}
   ],
   "K2_elevated_piece": [
    {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "one dressier piece lifts it", "edits": [{"op": "swap_closet", "slot": "any_core", "match": {"formality_min": 3}}]}
   ],
   "K4_shoes_complement": [
-   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "shoes that match the outfit's level", "edits": [{"op": "swap_closet", "slot": "footwear", "match": {"formality_min": 2.5}}]}
+   {"tier": "swapFromCloset", "copy": "Swap to your {item}", "detail": "shoes that match the outfit's level", "edits": [{"op": "swap_closet", "slot": "footwear", "match": {"formality_min": 2.5}}]},
+   {"tier": "changeInto", "copy": "Swap the {name} for chunky sneakers", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "chunky_sneaker"}}]},
+   {"tier": "changeInto", "when": {"bottom_not_in": ["shorts", "athletic_shorts"], "not_warm": true}, "copy": "Swap the {name} for boots", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "work_boot"}}]},
+   {"tier": "changeInto", "when": {"shoe_not_in": ["white_leather_sneaker", "canvas_sneaker", "retro_runner"]}, "copy": "Swap the {name} for low-profile sneakers", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "low_profile_sneaker"}}]},
+   {"tier": "changeInto", "when": {"shoe_not_in": ["low_profile_sneaker", "canvas_sneaker", "retro_runner"]}, "copy": "Swap the {name} for white leather sneakers", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "white_leather_sneaker", "color_family": "white"}}]},
+   {"tier": "changeInto", "copy": "Swap the {name} for loafers", "detail": "", "edits": [{"op": "set", "slot": "footwear", "fields": {"subcategory": "loafer", "color_family": "brown"}}]}
   ]
  },
  "next_level": {

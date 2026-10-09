@@ -250,3 +250,26 @@ describe('timers (ruling 19)', () => {
     expect(jest.getTimerCount()).toBe(0);
   });
 });
+
+describe('warm days (#160)', () => {
+  const fixesFor = async (now: string) => {
+    const { store, svc } = await setup({ now, pro: true });
+    await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' }); // the first check only offers 60-second fixes
+    const r = (await svc.start({ mode: 'check', photoId: 's12', occasion: 'everyday' })) as { checkId: string };
+    const row = (await store.fitChecks.get(r.checkId))!;
+    return { copies: row.fixes.map((f) => f.copy), warm: row.details.warm, score: row.score };
+  };
+  it('October (no weather, by the month): swaps lead, adding a piece comes last', async () => {
+    const oct = await fixesFor('2026-10-22T07:42:00-04:00');
+    expect(oct.warm).toBe(false);
+    // the closet holds p01b's beige overshirt, so the layer is his own piece rather than the generic line
+    expect(oct.copies).toEqual(['Swap to your Tan chinos', 'Swap the runners for boots', 'Add your Beige overshirt']);
+  });
+  it('July: no layer and no boots, and the score is the same', async () => {
+    const oct = await fixesFor('2026-10-22T07:42:00-04:00');
+    const jul = await fixesFor('2026-07-15T07:42:00-04:00');
+    expect(jul.warm).toBe(true);
+    expect(jul.copies.some((c) => c.startsWith('Add a jacket') || c.startsWith('Add a layer') || c.endsWith('for boots'))).toBe(false);
+    expect(jul.score).toBe(oct.score);
+  });
+});

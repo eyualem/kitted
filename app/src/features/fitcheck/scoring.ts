@@ -17,6 +17,8 @@ export interface EvaluateInput {
   closet: readonly ClosetItem[];
   firstCheck: boolean;
   hiddenFixTargets?: readonly string[];
+  /** A warm day: no "add a layer" or boots fix (#160). Never changes the score. */
+  warm?: boolean;
 }
 
 export interface Evaluation {
@@ -30,7 +32,7 @@ export interface Evaluation {
   row: Pick<
     FitCheckRow,
     'status' | 'score' | 'rawScore' | 'subscores' | 'occasionAdj' | 'rulesFired' | 'credits' | 'advice' | 'fixes' | 'isPartial' | 'notRated' | 'explanation'
-  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets' | 'readsAs'> };
+  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets' | 'readsAs' | 'warm'> };
 }
 
 /** The rubric options a check is scored with. The one place they're built, so the one quick tap's two scores
@@ -53,6 +55,7 @@ export function evaluateCheck(input: EvaluateInput): Evaluation {
     closet: input.closet,
     firstCheck: input.firstCheck,
     excludeTargets: input.hiddenFixTargets ? [...input.hiddenFixTargets] : [],
+    warm: input.warm ?? false,
   });
   if (result.overall === null) {
     const status: FitCheckStatus = result.reason === 'not_fully_clothed' ? 'notClothed' : 'unreadable';
@@ -75,6 +78,7 @@ export function evaluateCheck(input: EvaluateInput): Evaluation {
       details: {
         nextLevel: fixes.nextLevel, tips: fixes.tips, dialedIn: fixes.fixes.length === 0,
         hiddenFixTargets: input.hiddenFixTargets ? [...input.hiddenFixTargets] : [],
+        warm: input.warm ?? false,
         readsAs: normStyleKey(result.styleLabel),
       },
     },

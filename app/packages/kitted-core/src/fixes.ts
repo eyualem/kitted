@@ -45,6 +45,8 @@ export interface FixOptions extends ScoreOptions {
   firstCheck?: boolean;
   /** Targets he said don't apply ("Not quite right? → Fix doesn't apply"): skipped, next candidate shows. */
   excludeTargets?: readonly string[];
+  /** A warm day (weather band "none", else the season): no "add a layer" and no boots fix (#160). */
+  warm?: boolean;
 }
 
 interface FixInfo {
@@ -287,7 +289,7 @@ interface Evaluated {
 /** Apply an option's edits (chained) and score the outcome; null when it doesn't apply (kitted_logic._evaluate). */
 function evaluate(
   engine: RubricEngine, option: FixOption, reading: Reading, closet: readonly ClosetItem[], occasion: string,
-  styles: Styles | null | undefined, boldness: string,
+  styles: Styles | null | undefined, boldness: string, warm = false,
 ): Evaluated | null {
   const cr = option.closet_requires;
   if (cr) {
@@ -299,6 +301,16 @@ function evaluate(
     const lhi = Math.max(...engine.bandsFor(reading).map((b) => b[1][1]));
     const li = i >= 0 ? engine.legIndex(reading.garments[i]!.leg_shape) : -1;
     if (i < 0 || li < 0 || li <= lhi) return null;
+  }
+  const when = option.when;
+  if (when) {
+    const subs = (c: string) => reading.garments.filter((g) => g.category === c).map((g) => g.subcategory as string);
+    const tops = subs("top");
+    if (when.top_in && !tops.some((s) => when.top_in!.includes(s))) return null;
+    if (when.top_not_in && tops.some((s) => when.top_not_in!.includes(s))) return null;
+    if (when.bottom_not_in && subs("bottom").some((s) => when.bottom_not_in!.includes(s))) return null;
+    if (when.shoe_not_in && subs("footwear").some((s) => when.shoe_not_in!.includes(s))) return null;
+    if (when.not_warm && warm) return null;
   }
   let states: Expanded[] = [{ kind: "one", reading, info: {} }];
   for (const op of option.edits) {
@@ -353,11 +365,22 @@ function copyLine(option: FixOption, info: FixInfo): [string, string] {
   return [s, tags[option.tier]];
 }
 
-type Candidate = Fix & { order: number };
+type Candidate = Fix & { order: number; shift: number };
 
-/** Python tuple comparison (a1, a2) > (b1, b2). */
-function tupleGt(a: [number, number], b: [number, number]): boolean {
-  return a[0] > b[0] || (a[0] === b[0] && a[1] > b[1]);
+/** Python tuple comparison (a1, a2, a3) > (b1, b2, b3). */
+function tupleGt(a: [number, number, number], b: [number, number, number]): boolean {
+  return a[0] > b[0] || (a[0] === b[0] && (a[1] > b[1] || (a[1] === b[1] && a[2] > b[2])));
+}
+
+/** How far a shoe swap moves the shoes' dressiness; on a tie the smallest change wins (#160). 0 for other fixes. */
+function shoeShift(engine: RubricEngine, option: FixOption, reading: Reading): number {
+  const i = idx(reading, "footwear");
+  for (const op of option.edits) {
+    if (op.op === "set" && op.slot === "footwear" && has(op.fields, "subcategory") && i >= 0) {
+      return Math.abs(engine.formality({ subcategory: op.fields.subcategory } as Garment) - engine.formality(reading.garments[i]!));
+    }
+  }
+  return 0;
 }
 
 /** Lexicographic comparator over number tuples (Python sort key). */
@@ -399,6 +422,7 @@ export function suggestFixes(reading: Reading, opts: FixOptions = {}, engine: Ru
     if (engine.loungeOk.has(occasion)) targets = []; // at the gym or home, a clean outfit has nothing to fix
     if (base.notRated.includes("shoes") || base.notRated.includes("bottom half")) targets = targets.filter((t) => t !== "K4_shoes_complement");
   }
+  if (opts.warm) targets = targets.filter((t) => t !== "K1_layered");
   if (opts.excludeTargets && opts.excludeTargets.length > 0) {
     const skip = new Set(opts.excludeTargets);
     targets = targets.filter((t) => !skip.has(t));
@@ -411,31 +435,33 @@ export function suggestFixes(reading: Reading, opts: FixOptions = {}, engine: Ru
       let best: Candidate | null = null;
       for (const opt of has(catalog.targets, t) ? catalog.targets[t]! : []) {
         if (!allowed.has(opt.tier)) continue;
-        const ev = evaluate(engine, opt, reading, closet, occasion, styles, boldness);
+        const ev = evaluate(engine, opt, reading, closet, occasion, styles, boldness, opts.warm ?? false);
         if (!ev) continue;
         const sc = ev.result;
         const gain = sc.overall - base.overall;
         const rawGain = sc.rawUnrounded - base.rawUnrounded;
         if (gain < 0.5) continue;
-        const eff = tiers[opt.tier].effort;
+        const eff = opt.effort ?? tiers[opt.tier].effort; // adding a whole piece costs 3 (#160)
         const [copy, tag] = copyLine(opt, ev.info);
         const c: Candidate = {
           target: t, tier: opt.tier, effort: eff, free: tiers[opt.tier].free,
           to: sc.overall, toRaw: pyRound(sc.rawUnrounded, 6), gain, rawGain: pyRound(rawGain, 6),
-          edits: clone(opt.edits), itemId: ev.info.item_id ?? null, copy, tag, order,
+          edits: clone(opt.edits), itemId: ev.info.item_id ?? null, copy, tag, order, shift: shoeShift(engine, opt, reading),
         };
         // NOTE: Python compares this option's UNROUNDED raw gain against the best's ROUNDED one. Kept on purpose.
-        if (best === null || tupleGt([rawGain / eff, -eff], [best.rawGain / best.effort, -best.effort])) best = c;
+        if (best === null || tupleGt([rawGain / eff, -eff, -c.shift], [best.rawGain / best.effort, -best.effort, -best.shift])) best = c;
       }
       if (best) cands.push(best);
     });
     return cands;
   };
 
+  const rank = (c: Candidate): number[] => [-c.rawGain / c.effort, c.effort, c.order];
   const allowed = new Set<string>(opts.firstCheck ? ["adjust"] : Object.keys(tiers));
   let cands = candidates(allowed);
-  if (opts.firstCheck && cands.length === 0) cands = candidates(new Set(["adjust", "changeInto"])).slice(0, 1);
-  cands.sort(byKey((c: Candidate) => [-c.rawGain / c.effort, c.effort, c.order])); // stable, like Python
+  // at least one free fix whenever any fix exists: the best-ranked one (#160)
+  if (opts.firstCheck && cands.length === 0) cands = candidates(new Set(["adjust", "changeInto"])).sort(byKey(rank)).slice(0, 1);
+  cands.sort(byKey(rank)); // stable, like Python
   const freeTos = cands.filter((c) => c.free).map((c) => c.to);
   const bestFree = freeTos.length ? freeTos.reduce((m, x) => (x > m ? x : m)) : null;
   let picked: Candidate[] = [];
@@ -448,8 +474,8 @@ export function suggestFixes(reading: Reading, opts: FixOptions = {}, engine: Ru
     const f = cands.find((c) => c.free)!;
     picked = picked.length === 3 ? [...picked.slice(0, 2), f] : [...picked, f];
   }
-  picked.sort(byKey((c: Candidate) => [c.free ? 0 : 1, -c.gain, c.effort]));
-  out.fixes = picked.map(({ order: _order, ...fix }) => fix);
+  picked.sort(byKey((c: Candidate) => [c.free ? 0 : 1, ...rank(c)])); // rank order, free first (#160; was by rounded gain)
+  out.fixes = picked.map(({ order: _order, shift: _shift, ...fix }) => fix);
   if (out.fixes.length === 0) out.dialedIn = "This is dialed in. Nothing to fix.";
   return out;
 }
