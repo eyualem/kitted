@@ -160,8 +160,15 @@ describe("11. denim washes and wear", () => {
   it("mid vs dark, same leg -> ask", () => {
     expect(decide(G("bottom", "jeans", "denim_mid", { leg_shape: "slim" }), [item])).toMatchObject({ outcome: "ask", candidateId: "D" });
   });
-  it("leg shape two steps apart -> new", () => {
-    expect(decide(G("bottom", "jeans", "denim_dark", { leg_shape: "relaxed" }), [item]).outcome).toBe("new");
+  it("leg shape two steps apart -> ask, not new (#115: his wide jeans read straight at 2 m)", () => {
+    expect(decide(G("bottom", "jeans", "denim_dark", { leg_shape: "relaxed" }), [item])).toMatchObject({ outcome: "ask", candidateId: "D" });
+  });
+  it("leg shape three steps apart -> new", () => {
+    expect(decide(G("bottom", "jeans", "denim_dark", { leg_shape: "wide" }), [item]).outcome).toBe("new");
+  });
+  it("after his Yes across slim and relaxed, that flip costs nothing", () => {
+    const learned = profileOf("D", [G("bottom", "jeans", "denim_dark", { leg_shape: "slim", denim_wear: "none" }) as Observation], { fieldAliases: { leg_shape: ["slim", "relaxed"] } });
+    expect(identity(G("bottom", "jeans", "denim_dark", { leg_shape: "relaxed" }) as Observation, learned).reasons.map((r) => r.code)).toContain("leg_known");
   });
 });
 

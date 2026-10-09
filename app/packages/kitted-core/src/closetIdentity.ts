@@ -200,6 +200,8 @@ export interface Observation extends Garment {
   userConfirmed?: ConfirmedFields | null;
   /** He said "No, a different one" to these items for this garment (this check). */
   notItemIds?: string[] | null;
+  /** Half seen: under an outer layer, or small and soft in the frame (shoes). Its type and shape reads are shaky (#115). */
+  partial?: boolean | null;
 }
 
 type CountField =
@@ -226,6 +228,8 @@ export interface ItemProfile {
   aliases: string[];
   /** Items he said are different pieces. */
   distinctFrom: string[];
+  /** Readings he said belong to this piece, per field ("Yes, same one" on a straight-leg read of his wide jeans). */
+  fieldAliases: Record<string, string[]>;
 }
 
 export interface ProfileExtra {
@@ -233,6 +237,7 @@ export interface ProfileExtra {
   confirmed?: ConfirmedFields;
   aliases?: readonly string[];
   distinctFrom?: readonly string[];
+  fieldAliases?: Readonly<Record<string, readonly string[]>>;
 }
 
 /** The validated, effective view of one observation. */
@@ -255,6 +260,7 @@ interface Obs {
   sampledL: number | null;
   dim: boolean;
   notItemIds: string[];
+  partial: boolean;
   /** His shoe-kind answer for this sighting (null: not asked). */
   shoeKind: ShoeKind | null;
 }
@@ -304,6 +310,7 @@ function readObs(o: Observation): Obs {
     dim: o.lighting === "dim",
     notItemIds: Array.isArray(o.notItemIds) ? o.notItemIds.filter((x): x is string => typeof x === "string") : [],
     shoeKind: oneOf(c.shoeKind, SHOE_KINDS) as ShoeKind | null,
+    partial: o.partial === true,
   };
 }
 
@@ -362,6 +369,9 @@ export function profileOf(id: string, observations: readonly Observation[], extr
     counts, volume, sampledL, details, confirmed,
     aliases: [...new Set(extra.aliases ?? [])].sort(),
     distinctFrom: [...new Set(extra.distinctFrom ?? [])].sort(),
+    fieldAliases: Object.fromEntries(
+      Object.entries(extra.fieldAliases ?? {}).sort(([a], [b]) => (a < b ? -1 : 1)).map(([k, v]) => [k, [...new Set(v)].sort()]),
+    ),
   };
 }
 
@@ -394,6 +404,7 @@ export function profileFromClosetItem(item: ClosetItem, extra: StoredProfile = {
     confirmed: { ...(confirmed as ConfirmedFields), ...(extra.confirmed ?? {}) },
     aliases: extra.aliases ?? [],
     distinctFrom: extra.distinctFrom ?? [],
+    fieldAliases: extra.fieldAliases ?? {},
   });
 }
 
@@ -419,6 +430,11 @@ export interface IdentityResult {
 }
 
 const STEP_INDEX: Readonly<Record<string, number>> = { light: 0, mid: 1, dark: 2 };
+/** Measured L* (0–100) within this of the piece's average reads as the same lightness; this far apart, as different. */
+const MEASURED_SAME = 6;
+const MEASURED_FAR = 15;
+/** Tops the model swaps when only a strip shows under a layer. */
+const TOP_LOOKS: readonly string[] = ["tee", "graphic_tee", "long_sleeve_tee", "hoodie", "sweatshirt", "sweater"];
 
 /** How strongly this sighting is this item. */
 export function identity(obsIn: Observation, item: ItemProfile): IdentityResult {
@@ -427,6 +443,11 @@ export function identity(obsIn: Observation, item: ItemProfile): IdentityResult 
   const reasons: IdentityReason[] = [];
   let capUnsure = false;
   const add = (code: string, points: number, cap = false) => { reasons.push({ code, points }); if (cap) capUnsure = true; };
+  // Two readings he already said belong to this piece (a "Yes, same one" across them) cost nothing.
+  const known = (f: string, a: string | null, b: string | null) =>
+    a !== null && b !== null && (item.fieldAliases[f] ?? []).includes(a) && (item.fieldAliases[f] ?? []).includes(b);
+  // He has confirmed this piece shows up as another top look when half seen (his hoodie under a shirt read as a tee).
+  const layeredBefore = o.partial && o.subcategory !== null && TOP_LOOKS.includes(o.subcategory) && item.aliases.some((a) => TOP_LOOKS.includes(a));
 
   if (o.notItemIds.includes(item.id)) vetoes.push("said_different");
 
@@ -447,9 +468,11 @@ export function identity(obsIn: Observation, item: ItemProfile): IdentityResult 
     const saidKind = o.shoeKind !== null || item.confirmed.shoeKind !== undefined;
     if (shoes && saidKind && ok !== null && ik !== null && ok !== ik) vetoes.push("shoe_kind");
     else if (shoes && o.shoeKind !== null && ok === ik) add("shoe_kind_confirmed", 0);
-    else if (isFlip(o.subcategory, isub)) add("subcategory_lookalike", -3, true);
+    else if (layeredBefore) add("seen_layered_before", 0);
+    else if (isFlip(o.subcategory, isub)) add("subcategory_lookalike", o.partial ? -1 : -3, true);
     else if (shoes && ok !== null && ok === ik) add("shoe_same_kind", -1, true);
     else if (shoes && (o.subcategory === "other" || isub === "other")) add("shoe_type_unknown", 0, true);
+    else if (o.partial) add("subcategory_half_seen", -2, true);
     else vetoes.push("subcategory");
   }
 
@@ -470,8 +493,15 @@ export function identity(obsIn: Observation, item: ItemProfile): IdentityResult 
   if (o.lightness !== null && il !== null && o.lightness !== il && o.lightness !== "mid" && il !== "mid") {
     lightnessFired = true;
     const iL = item.sampledL.n > 0 ? item.sampledL.sum / item.sampledL.n : null;
-    if (colorD >= 1 || (o.sampledL !== null && iL !== null && Math.abs(o.sampledL - iL) >= 25)) vetoes.push("lightness");
+    if (colorD >= 1 || (!o.partial && o.sampledL !== null && iL !== null && Math.abs(o.sampledL - iL) >= 25)) vetoes.push("lightness");
     else add("lightness_light_vs_dark", -3, true);
+  }
+  // Measured lightness (the on-phone sample, #104): steadier across photos than the shade words.
+  const iLm = item.sampledL.n > 0 ? item.sampledL.sum / item.sampledL.n : null;
+  if (o.sampledL !== null && iLm !== null && colorD < 2) {
+    const dL = Math.abs(o.sampledL - iLm);
+    if (dL <= MEASURED_SAME) add("measured_same", 1);
+    else if (dL >= MEASURED_FAR) add("measured_far", o.partial ? -1 : -2);
   }
   if (os && is) {
     const fo = os.family ?? o.color, fi = is.family ?? ic;
@@ -497,7 +527,7 @@ export function identity(obsIn: Observation, item: ItemProfile): IdentityResult 
       else add("brand_text_differs", -3, true);
     } else if (iNone >= 2) add("brand_vs_no_logo", -4, true);
     else if (iNone === 1) add("brand_vs_no_logo_once", -2, true);
-  } else if (o.brand === "none" && isBrandValue(ib)) {
+  } else if (o.brand === "none" && isBrandValue(ib) && !o.partial) {
     add(ibCount >= 2 ? "no_logo_vs_brand" : "no_logo_vs_brand_once", ibCount >= 2 ? -3 : -2, true);
   }
   const ilogo = itemVal(item, "logo");
@@ -521,15 +551,21 @@ export function identity(obsIn: Observation, item: ItemProfile): IdentityResult 
   const ileg = itemVal(item, "leg_shape");
   if (o.leg !== null && ileg !== null && LEG_ORDER.includes(ileg)) {
     const gap = Math.abs(LEG_ORDER.indexOf(o.leg) - LEG_ORDER.indexOf(ileg));
-    if (gap >= 2) vetoes.push("leg_shape");
+    if (known("leg_shape", o.leg, ileg)) add("leg_known", 0);
+    else if (gap >= 3) vetoes.push("leg_shape");
+    else if (gap === 2) add("leg_two_steps", -2, true);
     else if (gap === 1) add("leg_one_step", -1);
   }
   const isl = itemVal(item, "sleeve_length");
-  if (o.sleeve !== null && isl !== null && o.sleeve !== isl) vetoes.push("sleeve_length");
+  if (o.sleeve !== null && isl !== null && o.sleeve !== isl && !known("sleeve_length", o.sleeve, isl)) {
+    if (o.partial) add("sleeve_half_seen", -1, true);
+    else vetoes.push("sleeve_length");
+  }
   const ishoe = itemVal(item, "shoe_profile");
   if (o.shoe !== null && ishoe !== null && SHOE_ORDER.includes(ishoe)) {
     const gap = Math.abs(SHOE_ORDER.indexOf(o.shoe) - SHOE_ORDER.indexOf(ishoe));
-    if (gap >= 2) vetoes.push("shoe_profile");
+    if (known("shoe_profile", o.shoe, ishoe)) add("shoe_profile_known", 0);
+    else if (gap >= 2) { if (o.partial) add("shoe_profile_half_seen", -2, true); else vetoes.push("shoe_profile"); }
     else if (gap === 1) add("shoe_profile_one_step", -2);
   }
   const iden = itemVal(item, "denim_wear");
@@ -561,16 +597,47 @@ export function identity(obsIn: Observation, item: ItemProfile): IdentityResult 
       else if (neverInTwo(d) && d !== "hood") add(`detail_new:${d}`, -1.5);
     }
     if (shared > 0) add("details_shared", Math.min(3, shared));
-    const known = cd ? [...cd] : Object.keys(item.details.counts);
-    for (const d of known.sort()) if (established(d) && !od.has(d)) add(`detail_missing:${d}`, -0.5);
+    const knownDetails = cd ? [...cd] : Object.keys(item.details.counts);
+    if (!o.partial) for (const d of knownDetails.sort()) if (established(d) && !od.has(d)) add(`detail_missing:${d}`, -0.5);
   }
 
   const score = reasons.reduce((s, r) => s + r.points, 0);
   return { score, vetoes: [...new Set(vetoes)], capUnsure, reasons };
 }
 
+// ---------------------------------------------------------------- what a "Yes, same one" teaches
+/** Fields whose differing reads become aliases once he says two sightings are one piece. */
+const LEARNED_FIELDS = ["leg_shape", "sleeve_length", "shoe_profile"] as const;
+
+/**
+ * After he says a sighting is this piece: its type read becomes an alias when it differs from the piece's type, and
+ * every value of a shaky shape field seen across the piece's sightings and this one becomes a field alias, so the
+ * same flip never asks again (his wide jeans read straight). Pure; returns the new aliases and field aliases.
+ */
+export function lessonsOfYes(
+  itemSubcategory: string | null, sightings: readonly Observation[], answered: Observation,
+  prev: { aliases?: readonly string[]; fieldAliases?: Readonly<Record<string, readonly string[]>> } = {},
+): { aliases: string[]; fieldAliases: Record<string, string[]> } {
+  const aliases = new Set(prev.aliases ?? []);
+  const sub = readObs(answered).subcategory;
+  if (sub !== null && itemSubcategory !== null && sub !== itemSubcategory) aliases.add(sub);
+  const fieldAliases: Record<string, string[]> = {};
+  for (const [k, v] of Object.entries(prev.fieldAliases ?? {})) fieldAliases[k] = [...v];
+  const all = [...sightings, answered].map(readObs);
+  const valueOf: Record<(typeof LEARNED_FIELDS)[number], (o: Obs) => string | null> = {
+    leg_shape: (o) => o.leg, sleeve_length: (o) => o.sleeve, shoe_profile: (o) => o.shoe,
+  };
+  for (const f of LEARNED_FIELDS) {
+    const vals = new Set([...(fieldAliases[f] ?? []), ...all.map(valueOf[f]).filter((v): v is string => v !== null)]);
+    if (vals.size > 1) fieldAliases[f] = [...vals].sort();
+  }
+  return { aliases: [...aliases].sort(), fieldAliases };
+}
+
 // ---------------------------------------------------------------- decide / reconcile
 export const SAME_MIN = 4;
+/** A half-seen sighting asks about its best candidate down to this score, instead of quietly becoming a new piece. */
+export const PARTIAL_ASK_MIN = -4;
 export const RUNNER_UP_GAP = 2;
 
 export interface Decision {
@@ -604,7 +671,7 @@ export function decide(obs: Observation, closet: readonly ItemProfile[], taken: 
   const best = ranked[0];
   if (!best) return { outcome: "new", score: null };
   const S = best.r.score;
-  if (S < 0) return { outcome: "new", score: S };
+  if (S < 0 && !(readObs(obs).partial && S >= PARTIAL_ASK_MIN)) return { outcome: "new", score: S };
   const runner = ranked[1];
   const clearOfRunner = !runner
     || (distinct(best.it, runner.it) ? runner.r.score <= S - 1 : runner.r.score < S - RUNNER_UP_GAP);
