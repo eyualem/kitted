@@ -12,32 +12,32 @@
 3. **`handoff/DECISIONS-LOG.md`** is the append-only record of decisions and technical lessons, with the reasons. Add a numbered entry whenever you settle a contradiction or change a decision.
 4. **Commit and push to GitHub** (`eyualem/kitted`, private) after every finished step.
 5. Work only in this folder. Codex and Gemini research outputs go in `inputs/`.
-6. **Keep "My to-do list" (below) current, and remind me** (founder, Oct 8). Whenever something needs me (a test on my phone, photos to shoot, an account, a decision), add it there in plain words: what to do, how long, and what it unblocks. Check it off or remove it when it's done. When you report a result, now and then (not every message) end with one line like "Still on your list: the phone test and the clothes photos", picking the 1–3 items that unblock the most.
+6. **Keep "My to-do list" (below) current, and remind me** (founder, Oct 8). Whenever something needs me (a test on my phone, photos to shoot, an account, a decision), add it there in plain words with a priority (P1 this week / P2 before the beta / P3 before launch): what to do, how long, and what it unblocks. Check it off or remove it when it's done. When you report a result, now and then (not every message) end with one line like "Still on your list: the phone test and the clothes photos", picking the 1–3 items that unblock the most.
 
 ## My to-do list (founder; every chat keeps this current, rule 6)
-Ordered by what unblocks the most. Details for each are in "Waiting on the founder" further down.
+**Priority:** **P1** = this week; it blocks a test, the beta, or other chats' work. **P2** = before the beta (Nov 3). **P3** = before launch, or when I have time. (These are my priorities, not the build phases P0–P8.) Within each group, the most urgent is first. Details for each are in "Waiting on the founder" further down.
 
 **Do (things only I can do):**
-- [ ] **Phone test, about 10 min left** (Oct 8: reinstalled; close-ups and measuring confirmed on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it was `10.0.0.33:8081` on Oct 8). Tell Claude when you start. Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
-- [ ] **Shoot ~20 photos of my clothes** into `inputs/item-photos/` (shot list in "Waiting on the founder"). *Unblocks: scanning clothes into the closet.*
-- [ ] **Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement.** *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check.*
-- [ ] **Set up a Cloudflare account** for the server. *Unblocks: scoring in release builds, so outside testers can use it.*
-- [ ] **Claim @kitted.app / @trykitted and register trykitted.com.** *Unblocks: the waitlist page and the TikTok account.*
-- [ ] **Shoot the gold set:** about 80 outfit photos with 3+ friends (plan in `speed-and-detail-plan.md`). *Unblocks: tuning the scores against real people's opinions.*
-- [ ] **Export the Gemini creator-research Google Sheet as `.xlsx`** into `inputs/`.
-- [ ] Later, before launch: replace the Gemini key.
+- [ ] **P1** · **Phone test, about 10 min left** (Oct 8: reinstalled; close-ups and measuring confirmed on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it was `10.0.0.33:8081` on Oct 8). Tell Claude when you start. Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
+- [ ] **P1** · **Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement.** Enrollment can take a few days. *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check.*
+- [ ] **P1** · **Set up a Cloudflare account** for the server. *Unblocks: scoring in release builds, so outside testers can use it.*
+- [ ] **P2** · **Claim @kitted.app / @trykitted and register trykitted.com.** About 10 minutes, and the names could be taken any time. *Unblocks: the waitlist page and the TikTok account.*
+- [ ] **P2** · **Shoot ~20 photos of my clothes** into `inputs/item-photos/` (shot list in "Waiting on the founder"). *Unblocks: scanning clothes into the closet.*
+- [ ] **P2** · **Shoot the gold set:** about 80 outfit photos with 3+ friends (plan in `speed-and-detail-plan.md`). *Unblocks: tuning the scores against real people's opinions.*
+- [ ] **P3** · **Export the Gemini creator-research Google Sheet as `.xlsx`** into `inputs/`.
+- [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
-- [ ] **Closet tiles and question wording, 3 calls** (#111; open `screenshots/closet-identity/index.html`).
-- [ ] **Closet pictures under layers: do the new drawings look right?** (#140; open `screenshots/closet-graphics/index.html`, and `screenshots/closet-pictures/index.html` for my photos tried 5 ways). Default: my own photo when a piece was ever seen clearly, linked by "Same as your …?" answers; the new drawings everywhere else (about 3.5 days for my pieces + 4 common types, $0). No AI-generated pictures in v1.
-- [ ] **Wide jeans:** when an outfit doesn't read as streetwear or workwear, wide legs still lose 0.45 ("Swap to relaxed-leg pants", #124). Allow them by default? Default: keep it until the gold set.
-- [ ] **"Reads as" when two looks fit** (#86). Default: my first pick breaks the tie.
-- [ ] **The rubric's open questions** (`rubric/v3.md`, and #57's proposed changes).
-- [ ] **OK the Archivo font download** (3 free files, about 185 KB each). Default: the system font.
-- [ ] **OK the mic permission text** (in "Waiting on the founder").
+- [ ] **P1** · **Closet tiles and question wording, 3 calls** (#111; they hold up the closet steps 3–5; open `screenshots/closet-identity/index.html`).
+- [ ] **P1** · **Closet pictures under layers: do the new drawings look right?** (#140; open `screenshots/closet-graphics/index.html`, and `screenshots/closet-pictures/index.html` for my photos tried 5 ways). Default: my own photo when a piece was ever seen clearly, linked by "Same as your …?" answers; the new drawings everywhere else (about 3.5 days for my pieces + 4 common types, $0). No AI-generated pictures in v1.
+- [ ] **P2** · **Wide jeans:** when an outfit doesn't read as streetwear or workwear, wide legs still lose 0.45 ("Swap to relaxed-leg pants", #124). Allow them by default? Default: keep it until the gold set.
+- [ ] **P2** · **OK the mic permission text** (in "Waiting on the founder"; it ships with the TestFlight build).
+- [ ] **P2** · **OK the Archivo font download** (3 free files, about 185 KB each). Default: the system font.
+- [ ] **P2** · **The rubric's open questions** (`rubric/v3.md`, and #57's proposed changes).
+- [ ] **P3** · **"Reads as" when two looks fit** (#86). Default: my first pick breaks the tie.
 
 **Skim when I have 10 minutes:**
-- [ ] The copy Claude wrote (`app/src/i18n/en.ts` → `addedInBuild`), and the 3 "already built; just confirm" items in "Waiting on the founder".
+- [ ] **P3** · The copy Claude wrote (`app/src/i18n/en.ts` → `addedInBuild`), and the 3 "already built; just confirm" items in "Waiting on the founder".
 
 ## Who I am and how I like to work
 - **Who I am:**
