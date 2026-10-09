@@ -25,7 +25,8 @@ RULES = {  # transcribed from rubric.score(); keys = rule ids as they appear in 
     "F10_visible_strain": {"sub": "fit", "amount": 0.75},
     "T1_dress_shirt_untucked": {"sub": "occasion", "amount": 0.5},
     "P1_top_volume_vs_style": {"sub": "proportion", "perStep": 0.75},
-    "P1_leg_vs_style": {"sub": "proportion", "perStep": 0.75},
+    "P1_leg_vs_style": {"sub": "proportion", "perStep": 0.75, "freeLoose": sorted(r.LEG_FREE_LOOSE), "closeTopMaxVolume": 2,
+                        "shortLengths": ["cropped", "at_belt"]},
     "P2_big_top_skinny_leg": {"sub": "proportion", "amount": 0.5},
     "P3_everything_oversized": {"sub": "proportion", "amount": 0.5},
     "L1_shirt_hangs_below_blazer": {"sub": "fit", "amount": 0.75},
@@ -43,6 +44,8 @@ RULES = {  # transcribed from rubric.score(); keys = rule ids as they appear in 
     "O1_too_formal": {"sub": "occasion", "amount": 0.5, "margin": 1.5},
     "O4_loungewear_out": {"sub": "occasion", "ladder": [r.LOUNGE_LADDER[0], r.LOUNGE_LADDER[1], r.LOUNGE_LADDER[2]], "heroBothSigns": 0.0, "gymShortsMax": 0.5},
     "S2_shoes_too_casual_for_outfit": {"sub": "occasion", "amount": 1.5, "rampFrom": 2.0, "exempt": ["white_leather_sneaker"],
+                                       "tailoredFloor": r.S2_TAILORED_FLOOR, "tailoredFloorOccasions": sorted(r.S2_TAILORED_FLOOR_OCCASIONS),
+                                       "tailoredFloorShoes": list(r.FOOT_KIND["sneakers"]),
                                        "formula": "amount * clamp01(gap - rampFrom), gap = max(other dressiness) - shoe dressiness"},
     "O3_large_logo": {"sub": "occasion", "amount": 1.1, "occasionPrefixes": ["work", "interview"], "needsCertainty": "clear"},
 }
@@ -58,7 +61,7 @@ DETECTION_SETS = ["ATHLETIC_BOTTOMS", "DRESS_SHOES", "COLLARED", "DARK_TECH", "S
 def main():
     sl = lambda s: sorted(s)
     out = {
-        "version": "4.0.0", "engine": 4, "minAppBuild": 1, "source": "extraction-test/rubric.py",
+        "version": "4.1.0", "engine": 5, "minAppBuild": 1, "source": "extraction-test/rubric.py",
         "rubricSha256": __import__("hashlib").sha256(open(os.path.join(K.KEMPT, "extraction-test/rubric.py"), "rb").read()).hexdigest(),
         "config": {"minAge": 18, "freeChecksPerDay": 1, "freeRechecksPerCheck": 1, "freeQuestionsPerDay": 5, "proChecksPerDay": 10,
                    "proQuestionsPerDay": 50, "dayRollsOverAt": "04:00"},

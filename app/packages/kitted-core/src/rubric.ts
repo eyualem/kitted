@@ -42,7 +42,7 @@ export interface ScoreTrace {
 }
 
 /** The engine version this code implements. Only load a remote rubric.json whose `engine` equals this. */
-export const ENGINE_VERSION = 4;
+export const ENGINE_VERSION = 5;
 
 const CORE_CATEGORIES: readonly unknown[] = ["top", "bottom", "footwear", "outerwear"];
 const MAIN_CATEGORIES: readonly unknown[] = ["top", "bottom", "outerwear"];
@@ -547,6 +547,18 @@ export function createRubric(data: RubricData): RubricEngine {
     return detectWith(outfitOf(garments), stylesMap(picks));
   }
 
+  /** v4.1 (#186): wide legs aren't "too wide" when they're jeans or cargos, or when the top half is close or short
+   * ("big pants, little shirt"). Under a layer, the layer decides; never for loungewear bottoms. */
+  function legExcused(bottom: Garment, top: Garment | undefined, outer: readonly Garment[]): boolean {
+    if (!LOOSE.includes(bottom.leg_shape)) return false;
+    if (list(R.P1l, "freeLoose").includes(bottom.subcategory)) return true;
+    if (LOUNGE_BOTTOMS.has(bottom.subcategory)) return false;
+    const short = list(R.P1l, "shortLengths"), maxVol = num(R.P1l, "closeTopMaxVolume");
+    const o = outer[0];
+    if (o) return vol(o, 3) <= maxVol || short.includes(o.length);
+    return !!top && (vol(top, 3) <= maxVol || short.includes(top.length) || top.tucked === "full");
+  }
+
   // ================= PREPARE =================
   function prepare(ext: Reading): { scene: Scene; garments: Garment[]; notRated: NotRated[] } {
     const scene: Scene = (truthy(ext.scene) ? ext.scene : {}) as Scene;
@@ -716,7 +728,7 @@ export function createRubric(data: RubricData): RubricEngine {
     if (top && truthy(top.volume)) {
       fire("P1_top_volume_vs_style", "proportion", num(R.P1t, "perStep") * bandSteps(top.volume as number, bands, 0), top, "top");
     }
-    if (bottom && legIndex(bottom.leg_shape) >= 0) {
+    if (bottom && legIndex(bottom.leg_shape) >= 0 && !legExcused(bottom, top, outer)) {
       fire("P1_leg_vs_style", "proportion", num(R.P1l, "perStep") * bandSteps(legIndex(bottom.leg_shape), bands, 1), bottom, "bottom");
     }
     if (top && bottom && vol(top, 0) >= 4 && bottom.leg_shape === "skinny") {
@@ -834,9 +846,13 @@ export function createRubric(data: RubricData): RubricEngine {
     }
     if (shoes) {
       const others = garments.filter((g) => MAIN_CATEGORIES.includes(g.category)).map(formality);
-      if (others.length > 0 && !list(R.S2, "exempt").includes(shoes.subcategory)) {
+      // v4.1 (#186): any sneaker under a tailored jacket at an interview costs at least `tailoredFloor` (white leather included).
+      const floor = list(R.S2, "tailoredFloorOccasions").includes(occasion) && list(R.S2, "tailoredFloorShoes").includes(shoes.subcategory)
+        && outer.some((o) => TAILORED_OUTER.has(o.subcategory));
+      if (others.length > 0 && (!list(R.S2, "exempt").includes(shoes.subcategory) || floor)) {
         const gap = maxOf(others) - formality(shoes);
-        fire("S2_shoes_too_casual_for_outfit", "occasion", num(R.S2, "amount") * clamp01(gap - num(R.S2, "rampFrom")), shoes, "shoes");
+        const amt = num(R.S2, "amount") * clamp01(gap - num(R.S2, "rampFrom"));
+        fire("S2_shoes_too_casual_for_outfit", "occasion", floor ? pyMax(amt, num(R.S2, "tailoredFloor")) : amt, shoes, "shoes");
       }
     }
     const bigLogo = garments.filter((g) => g.logo === "large");

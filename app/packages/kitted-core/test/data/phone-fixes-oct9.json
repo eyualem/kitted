@@ -1,5 +1,5 @@
 {
- "_doc": "DECISIONS-LOG #160: fix choices on the founder's Oct 8-9 phone readings (readings only, no photos) plus made-up outfits, from kitted_logic.suggest_fixes with an empty closet. Regenerate if the fix catalog changes.",
+ "_doc": "DECISIONS-LOG #160: fix choices on the founder's Oct 8-9 phone readings (readings only, no photos) plus made-up outfits, from kitted_logic.suggest_fixes with an empty closet. Regenerate if the fix catalog changes. Regenerated Oct 9 for rubric v4.1 (#186).",
  "cases": [
   {
    "id": "phone-8bc29d@everyday",
@@ -847,14 +847,8 @@
     {
      "target": "F9_sleeves_cover_hands",
      "copy": "Push your sleeves up",
-     "to": 7.5,
+     "to": 8.0,
      "effort": 1
-    },
-    {
-     "target": "P1_leg_vs_style",
-     "copy": "Swap to relaxed-leg pants",
-     "to": 7.5,
-     "effort": 2
     }
    ]
   },
@@ -958,14 +952,8 @@
     {
      "target": "F9_sleeves_cover_hands",
      "copy": "Push your sleeves up",
-     "to": 7.5,
+     "to": 8.0,
      "effort": 1
-    },
-    {
-     "target": "P1_leg_vs_style",
-     "copy": "Swap to relaxed-leg pants",
-     "to": 7.5,
-     "effort": 2
     }
    ]
   },
@@ -1069,14 +1057,8 @@
     {
      "target": "F9_sleeves_cover_hands",
      "copy": "Push your sleeves up",
-     "to": 7.5,
+     "to": 8.0,
      "effort": 1
-    },
-    {
-     "target": "P1_leg_vs_style",
-     "copy": "Swap to relaxed-leg pants",
-     "to": 7.5,
-     "effort": 2
     }
    ]
   },
@@ -1180,14 +1162,8 @@
     {
      "target": "F9_sleeves_cover_hands",
      "copy": "Push your sleeves up",
-     "to": 7.5,
+     "to": 8.0,
      "effort": 1
-    },
-    {
-     "target": "P1_leg_vs_style",
-     "copy": "Swap to relaxed-leg pants",
-     "to": 7.5,
-     "effort": 2
     }
    ]
   },

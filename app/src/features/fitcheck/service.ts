@@ -7,7 +7,7 @@
 
 import {
   applyCorrection, applyFix, applyTapAnswer, askWithCloset, carryTapAnswer, dayKey, fixTargets, garmentName,
-  localParts, mergeShoeSnap, pickShoesFromCloset, recheckMerge, recheckOutcome, removeGarment, seasonNeeds, tapOrder, tapOrdinal,
+  localParts, mergeShoeSnap, pickShoesFromCloset, RUBRIC_DATA, recheckMerge, recheckOutcome, removeGarment, seasonNeeds, tapOrder, tapOrdinal,
   weatherNeeds, weekdayOf, type ClosetItem, type DayWeather, type Garment, type Reading, type Styles,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
@@ -97,7 +97,7 @@ export type TapAnswer = string | 'skip';
 const emptyRow = (over: Partial<FitCheckRow> & Pick<FitCheckRow, 'id' | 'createdAt' | 'dayKey' | 'occasion'>): FitCheckRow => ({
   photoFile: null, thumbFile: null, demoPhotoId: null, imageHash: '', status: 'scoring', isPartial: false, notRated: [], score: null,
   rawScore: null, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [], fixes: [], explanation: null,
-  rubricVersion: '4.0.0', isFavorite: false, snapState: 'none', recheckUsed: false, isFirstCheck: false, readingId: null,
+  rubricVersion: RUBRIC_DATA.version, isFavorite: false, snapState: 'none', recheckUsed: false, isFirstCheck: false, readingId: null,
   parentId: null, itemIds: [], details: {}, style: null, ...over,
 });
 

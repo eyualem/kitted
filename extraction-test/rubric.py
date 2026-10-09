@@ -1,4 +1,4 @@
-"""Rubric v4.0 (Oct 8, 2026). The live rubric. Frozen older versions: rubrics/ (v3.1 = rubrics/rubric_v3_1.py).
+"""Rubric v4.1 (Oct 9, 2026; v4.0 Oct 8 + #186: wide jeans/cargos and wide legs under a close top aren't charged, sneakers under tailoring at an interview cost at least 1.0). The live rubric. Frozen older versions: rubrics/ (v3.1 = rubrics/rubric_v3_1.py).
 v4.0 = the style council's rulebook, code-only rulings ("before beta", tag B in
 ../rubric/research/style-council/RULEBOOK.md Part 8). Plain-language version: ../rubric/v4.md.
 
@@ -608,6 +608,28 @@ def band_steps(value, bands, which):
     return min(max(0, b[which][0] - value, value - b[which][1]) for b in bands)
 
 
+# v4.1 (#186, research `rubric/research/notes/v5-silhouette.md` S6 + the founder's wide-jeans call): wide legs aren't
+# "too wide" (P1_leg_vs_style) when (a) they're jeans or cargos, or (b) the top half is close or short ("big pants,
+# little shirt"; a short layer over a full leg). Under a layer, the layer decides; never for loungewear bottoms.
+LEG_FREE_LOOSE = {"jeans", "cargos"}
+S2_TAILORED_FLOOR_OCCASIONS = {"interview", "wedding_formal"}
+S2_TAILORED_FLOOR = 1.0
+
+
+def leg_excused(bottom, top, outer) -> bool:
+    if bottom.get("leg_shape") not in LOOSE:
+        return False
+    if bottom.get("subcategory") in LEG_FREE_LOOSE:
+        return True
+    if bottom.get("subcategory") in LOUNGE_BOTTOMS:
+        return False
+    if outer:
+        o = outer[0]
+        return (o.get("volume") or 3) <= 2 or o.get("length") in ("cropped", "at_belt")
+    return bool(top) and ((top.get("volume") or 3) <= 2 or top.get("length") in ("cropped", "at_belt")
+                          or top.get("tucked") == "full")
+
+
 def score(ext: dict, occasion: str = "everyday", styles: dict = None, boldness: str = "a_little") -> dict:
     """styles: his picks ({style: weight}). They never change the score; they only pick the label when two
     detected styles both fit (old keys preppy / old_money / gorpcore are accepted)."""
@@ -702,7 +724,7 @@ def score(ext: dict, occasion: str = "everyday", styles: dict = None, boldness: 
     bands = [band_index(DEFAULT_BAND)] + [band_index(STYLE_BANDS[s]) for s in det]   # widen only
     if top and top.get("volume"):
         fire("P1_top_volume_vs_style", "proportion", 0.75 * band_steps(top["volume"], bands, 0), "top")
-    if bottom and bottom.get("leg_shape") in LEG_ORDER:
+    if bottom and bottom.get("leg_shape") in LEG_ORDER and not leg_excused(bottom, top, outer):
         fire("P1_leg_vs_style", "proportion", 0.75 * band_steps(LEG_ORDER.index(bottom["leg_shape"]), bands, 1), "bottom")
     if top and bottom and (top.get("volume") or 0) >= 4 and bottom.get("leg_shape") == "skinny":
         fire("P2_big_top_skinny_leg", "proportion", 0.5, "top")
@@ -802,9 +824,13 @@ def score(ext: dict, occasion: str = "everyday", styles: dict = None, boldness: 
         fire("O4_loungewear_out", "occasion", a, "bottom")
     if shoes:
         others = [formality(g) for g in garments if g.get("category") in ("top", "bottom", "outerwear")]
-        if others and shoes.get("subcategory") != "white_leather_sneaker":
+        # v4.1 (#186): any sneaker under a tailored jacket at an interview costs at least 1.0 (white leather included).
+        floor = (occasion in S2_TAILORED_FLOOR_OCCASIONS and shoes.get("subcategory") in FOOT_KIND["sneakers"]
+                 and any(o.get("subcategory") in TAILORED_OUTER for o in outer))
+        if others and (shoes.get("subcategory") != "white_leather_sneaker" or floor):
             gap = max(others) - formality(shoes)
-            fire("S2_shoes_too_casual_for_outfit", "occasion", 1.5 * clamp01(gap - 2.0), "shoes")   # ramps from 2 to 3 levels
+            amt = 1.5 * clamp01(gap - 2.0)                                                   # ramps from 2 to 3 levels
+            fire("S2_shoes_too_casual_for_outfit", "occasion", max(amt, S2_TAILORED_FLOOR) if floor else amt, "shoes")
     big_logo = [g for g in garments if g.get("logo") == "large"]
     if big_logo:
         # only scored where it really matters, and only when the model is sure; otherwise a tip

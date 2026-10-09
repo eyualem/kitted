@@ -3,11 +3,11 @@
 import type { RubricData } from "./types";
 
 export const RUBRIC_DATA: RubricData = {
- "version": "4.0.0",
- "engine": 4,
+ "version": "4.1.0",
+ "engine": 5,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "b42d11accde2a2de536a501367e2826b0171d83e73e58d716d3503f0b62a0e2e",
+ "rubricSha256": "375efdf5a2f99a0bbb74adafc14b6bb80d4fc9430ecf2e0c8884417a9fc99289",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,
@@ -987,7 +987,16 @@ export const RUBRIC_DATA: RubricData = {
   "P1_leg_vs_style": {
    "enabled": true,
    "sub": "proportion",
-   "perStep": 0.75
+   "perStep": 0.75,
+   "freeLoose": [
+    "cargos",
+    "jeans"
+   ],
+   "closeTopMaxVolume": 2,
+   "shortLengths": [
+    "cropped",
+    "at_belt"
+   ]
   },
   "P2_big_top_skinny_leg": {
    "enabled": true,
@@ -1111,6 +1120,20 @@ export const RUBRIC_DATA: RubricData = {
    "rampFrom": 2,
    "exempt": [
     "white_leather_sneaker"
+   ],
+   "tailoredFloor": 1,
+   "tailoredFloorOccasions": [
+    "interview",
+    "wedding_formal"
+   ],
+   "tailoredFloorShoes": [
+    "low_profile_sneaker",
+    "white_leather_sneaker",
+    "canvas_sneaker",
+    "retro_runner",
+    "performance_runner",
+    "chunky_sneaker",
+    "basketball_sneaker"
    ],
    "formula": "amount * clamp01(gap - rampFrom), gap = max(other dressiness) - shoe dressiness"
   },

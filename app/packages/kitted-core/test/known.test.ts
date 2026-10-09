@@ -42,13 +42,13 @@ describe("askWithCloset: his confirmed boots", () => {
 
   it("the close-ups' split (a 'likely' chukka or derby): asks about his boots; Skip keeps the read", () => {
     const c = check("f07193");
-    for (const sub of ["suede_chukka", "derby"]) {
-      const r = readAs(c, sub);
-      expect(askQuestion(r, at(c))).toBeNull(); // the rubric alone never asks
-      const q = askWithCloset(r, at(c), [BOOTS])!;
-      expect([q.kind, q.default, q.options.map((o) => o.value)]).toEqual(["known", sub, ["work_boot", sub]]);
-      expect(q.swing).toBeGreaterThanOrEqual(0.5);
-    }
+    const r = readAs(c, "derby");
+    expect(askQuestion(r, at(c))).toBeNull(); // the rubric alone never asks
+    const q = askWithCloset(r, at(c), [BOOTS])!;
+    expect([q.kind, q.default, q.options.map((o) => o.value)]).toEqual(["known", "derby", ["work_boot", "derby"]]);
+    expect(q.swing).toBeGreaterThanOrEqual(0.5);
+    // v4.1 (#186): his wide jeans aren't charged any more, so boots and chukkas score the same (8.0) here: nothing to ask.
+    expect(askWithCloset(readAs(c, "suede_chukka"), at(c), [BOOTS])).toBeNull();
   });
 
   it("a sure read that disagrees is trusted: no question", () => {
@@ -58,7 +58,8 @@ describe("askWithCloset: his confirmed boots", () => {
 
   it("his piece agrees with the read: the rubric's wasted 'Chelsea boots or work boots?' (d918c0) is dropped", () => {
     const c = check("d918c0");
-    expect(askQuestion(c.reading, at(c))?.question).toBe("Chelsea boots or work boots?");
+    // v4.1 (#186): Chelsea vs work boots now moves him only 7.5 → 8.0, under the rubric's own bar, so it no longer asks.
+    expect(askQuestion(c.reading, at(c))).toBeNull();
     expect(askWithCloset(c.reading, at(c), [BOOTS])).toBeNull();
   });
 
