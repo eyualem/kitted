@@ -25,7 +25,8 @@ export const LOOKS: readonly Look[] = [
     [top('hoodie', '#4A4C52', { fit: 'relaxed', pattern: { type: 'heather' }, details: { drawstrings: true, pouch: true, ...RIB } }),
       bottom('jeans', '#24262C', { fit: 'wide', hem: 'full_break', wash: 'washed', pattern: { type: 'twill' } }),
       shoe('sneaker', '#F4F3EF', { chunky: true, sole: '#EDEBE6' })],
-    [top('tee', '#1E1F23', { fit: 'relaxed', print: true }),
+    // Not a graphic tee: the closet's print mark reads as a missing picture at this size.
+    [top('crew', '#1E1F23', { fit: 'relaxed', details: { ...RIB } }),
       bottom('cargos', '#5B5E44', { fit: 'wide', hem: 'full_break' }),
       shoe('sneaker', '#B5332E', { chunky: true, sole: WHITE_SOLE, laceColor: '#FFFFFF' })],
   ] },
