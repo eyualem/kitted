@@ -133,6 +133,8 @@ export interface TapState {
 
 /** What a check card needs beyond the score columns (fit_checks.details, V2). */
 export interface CheckDetails {
+  /** He removed this look from the Lookbook (#118): hidden there, and its pieces don't count it as a wear. The chat card stays. */
+  removedFromLookbook?: number | null;
   /** Re-scored for another occasion or style after it landed (#62): what it was before. */
   rescoredFrom?: { score: number; occasion: OccasionKey; style: StyleKey | null };
   /** Closet ids matched by this photo, ids it added, and added ids he undid; since V6 also every garment's link
@@ -234,6 +236,15 @@ export interface ClosetAsk {
   reason?: AskReason | null;
   /** The word that line needs: the layer it was under ("overshirt"), or the type it read as ("sweatshirt"). */
   reasonWord?: string | null;
+}
+
+/** What removing a look changed, so Undo can put it back exactly (#118). */
+export interface LookRemoval {
+  checkIds: string[];
+  /** Wears taken back per piece. */
+  wears: Record<string, number>;
+  /** Pieces only this look had, removed with it ("Remove look and its new pieces"). */
+  removedItems: string[];
 }
 
 export type AskReason = 'halfSeen' | 'shoes' | 'logo' | 'logoDiffers' | 'fit' | 'type' | 'color' | 'similar';

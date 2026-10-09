@@ -645,3 +645,61 @@ describe('measured on the phone: mirror selfies (#109)', () => {
     expect(seen).toEqual([true]);
   });
 });
+
+describe('removing a piece or a look (#118)', () => {
+  const base = demoReadingById('ph1')!;
+  const garments = (outer: boolean) => [
+    ...(outer ? [{ ...base.garments[0]!, category: 'outerwear', subcategory: 'overshirt', color_family: 'tan_camel', logo: 'none', pattern: 'checks_plaid' }] : []),
+    { ...base.garments[0]! },
+    { ...base.garments[1]!, subcategory: 'jeans', certainty: 'clear', leg_shape: 'wide' },
+    { ...base.garments[2]!, subcategory: 'white_leather_sneaker', color_family: 'white', certainty: 'clear' },
+  ];
+  const story = () => setup({ readings: { ph1: { ...base, garments: garments(false) } as Reading, s05: { ...base, garments: garments(true) } as Reading }, closetSource: null });
+
+  it('a piece leaves the closet and comes back with Undo; scores never change', async () => {
+    const env = await story();
+    const id = await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const score = (await env.row(id)).score;
+    const hoodie = (await env.owned()).find((c) => c.garment.subcategory === 'hoodie')!;
+    expect((await env.closet.removeItem(hoodie.id))?.id).toBe(hoodie.id);
+    expect((await env.owned()).map((c) => c.id)).not.toContain(hoodie.id);
+    expect((await env.row(id)).score).toBe(score);
+    await env.closet.restoreItem(hoodie.id);
+    expect((await env.owned()).map((c) => c.id)).toContain(hoodie.id);
+  });
+
+  it('a look hides from the Lookbook and stops counting as a wear; "with its new pieces" removes what only it had; Undo puts it all back', async () => {
+    const env = await story();
+    await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const id = await env.check('s05', 'everyday');
+    await env.closet.settle();
+    const owned = await env.owned();
+    const hoodie = owned.find((c) => c.garment.subcategory === 'hoodie')!;
+    const overshirt = owned.find((c) => c.garment.subcategory === 'overshirt')!;
+    expect((await env.closet.onlyInLook(id)).map((c) => c.id)).toEqual([overshirt.id]);
+
+    const r = (await env.closet.removeLook(id, true))!;
+    expect((await env.row(id)).details.removedFromLookbook).toBeTruthy();
+    expect((await env.store.closet.get(hoodie.id))!.wornCount).toBe(hoodie.wornCount - 1);
+    expect((await env.owned()).map((c) => c.id)).not.toContain(overshirt.id);
+    expect(r.removedItems).toEqual([overshirt.id]);
+
+    await env.closet.restoreLook(r);
+    expect((await env.row(id)).details.removedFromLookbook ?? null).toBeNull();
+    expect((await env.store.closet.get(hoodie.id))!.wornCount).toBe(hoodie.wornCount);
+    expect((await env.owned()).map((c) => c.id)).toContain(overshirt.id);
+  });
+
+  it('"Remove from Lookbook" alone keeps every piece', async () => {
+    const env = await story();
+    await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const id = await env.check('s05', 'everyday');
+    await env.closet.settle();
+    const before = (await env.owned()).length;
+    await env.closet.removeLook(id, false);
+    expect((await env.owned()).length).toBe(before);
+  });
+});

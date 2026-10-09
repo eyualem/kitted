@@ -16,7 +16,7 @@ import {
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
-  AskReason, ClosetAsk, ClosetFields, ClosetItemRow, ClosetLink, ClosetObservationRow, ClosetSummary, FitCheckRow, ObservationDecision, ObservationOrigin, ReadingRow,
+  AskReason, ClosetAsk, ClosetFields, ClosetItemRow, LookRemoval, ClosetLink, ClosetObservationRow, ClosetSummary, FitCheckRow, ObservationDecision, ObservationOrigin, ReadingRow,
 } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import type { Scheduler } from '@/services/scheduler';
@@ -252,6 +252,21 @@ export function createClosetService(deps: ClosetServiceDeps) {
       console.log('[measure] failed', String(e));
     }
     return out;
+  }
+
+  /** A look's check and its re-checks (a re-check folds into its look in the Lookbook). */
+  async function lookCheckIds(checkId: string): Promise<string[]> {
+    const all = await store.fitChecks.all();
+    if (!all.some((c) => c.id === checkId)) return [];
+    return [checkId, ...all.filter((c) => c.parentId === checkId).map((c) => c.id)];
+  }
+  async function onlyInLookIds(checkIds: readonly string[]): Promise<string[]> {
+    const obs = (await store.closetObs.all()).filter(isLive);
+    const items = await store.closet.all();
+    const owned = items.filter(isOwned);
+    return owned.filter((it) => it.source === 'fitCheck' && !isAwaitingAnswer(it, owned)
+      && obs.some((o) => o.itemId === it.id && checkIds.includes(o.fitCheckId ?? ''))
+      && obs.every((o) => o.itemId !== it.id || checkIds.includes(o.fitCheckId ?? ''))).map((it) => it.id);
   }
 
   /**
@@ -946,6 +961,64 @@ export function createClosetService(deps: ClosetServiceDeps) {
     async knownPieces(excludeCheckIds: readonly string[] = []): Promise<KnownPiece[]> {
       return knownPieces(await store.closet.all(), await store.closetObs.all(), { excludeCheckIds });
     },
+    /** Long-press → "Remove from Closet" (#118): out of the grid, the morning card and matching; his scores never change. */
+    removeItem: (itemId: string) => serial(async () => {
+      const it = await store.closet.get(itemId);
+      if (!it || !isOwned(it)) return null;
+      await store.closet.patch(itemId, { isDeleted: true, updatedAt: clock.nowMs() });
+      await renameAll();
+      return it;
+    }),
+    /** Undo for removeItem. */
+    restoreItem: (itemId: string) => serial(async () => {
+      await store.closet.patch(itemId, { isDeleted: false, updatedAt: clock.nowMs() });
+      await renameAll();
+    }),
+    /** The pieces a look added that no other check has seen: what "Remove look and its new pieces" would remove. */
+    async onlyInLook(checkId: string): Promise<ClosetItemRow[]> {
+      const ids = new Set(await onlyInLookIds(await lookCheckIds(checkId)));
+      return (await store.closet.all()).filter((it) => ids.has(it.id));
+    },
+    /**
+     * Long-press a look → "Remove from Lookbook" (#118): the look (and its re-checks) hides from the Lookbook and stops
+     * counting as a wear of its pieces; with `withPieces`, the pieces only it had leave the closet too (a fitting-room
+     * try-on). The chat card stays. Returns what changed, for Undo.
+     */
+    removeLook: (checkId: string, withPieces: boolean) => serial(async (): Promise<LookRemoval | null> => {
+      const checkIds = await lookCheckIds(checkId);
+      if (checkIds.length === 0) return null;
+      const now = clock.nowMs();
+      const removedItems = withPieces ? (await onlyInLookIds(checkIds)) : [];
+      const wears: Record<string, number> = {};
+      for (const o of (await store.closetObs.all()).filter((x) => isLive(x) && checkIds.includes(x.fitCheckId ?? ''))) {
+        if (!removedItems.includes(o.itemId)) wears[o.itemId] = (wears[o.itemId] ?? 0) + 1;
+      }
+      for (const [id, n] of Object.entries(wears)) {
+        const it = await store.closet.get(id);
+        if (it) await store.closet.patch(id, { wornCount: Math.max(0, it.wornCount - n), updatedAt: now });
+      }
+      for (const id of removedItems) await store.closet.patch(id, { isDeleted: true, updatedAt: now });
+      for (const id of checkIds) {
+        const row = await store.fitChecks.get(id);
+        if (row) await store.fitChecks.patch(id, { details: { ...row.details, removedFromLookbook: now } });
+      }
+      await renameAll();
+      return { checkIds, wears, removedItems };
+    }),
+    /** Undo for removeLook: exactly what it changed, back. */
+    restoreLook: (r: LookRemoval) => serial(async () => {
+      const now = clock.nowMs();
+      for (const [id, n] of Object.entries(r.wears)) {
+        const it = await store.closet.get(id);
+        if (it) await store.closet.patch(id, { wornCount: it.wornCount + n, updatedAt: now });
+      }
+      for (const id of r.removedItems) await store.closet.patch(id, { isDeleted: false, updatedAt: now });
+      for (const id of r.checkIds) {
+        const row = await store.fitChecks.get(id);
+        if (row) await store.fitChecks.patch(id, { details: { ...row.details, removedFromLookbook: null } });
+      }
+      await renameAll();
+    }),
     /** The open "Same as your …?" questions across his checks (newest first), for the Closet tab. */
     async openAsks(): Promise<{ checkId: string; ask: ClosetAsk }[]> {
       const items = new Map((await store.closet.all()).map((c) => [c.id, c]));

@@ -4,10 +4,12 @@
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ActionSheetIOS, ScrollView, View } from 'react-native';
 import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
+import type { ClosetItemRow } from '@/data/types';
+import { showToast } from '@/features/toast/toast';
 import { ClosetTile } from '@/features/closet/ClosetTile';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
@@ -16,6 +18,21 @@ import { goToStylist } from '@/router/stylistAction';
 import { t } from '@/i18n/en';
 
 const GAP = 10;
+
+const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
+
+/** Long-press a piece (#118): its name, "Remove from Closet" (red), Cancel; then a toast with Undo. */
+function pieceMenu(item: ClosetItemRow) {
+  ActionSheetIOS.showActionSheetWithOptions(
+    { title: item.name, options: [t('closet.remove.action'), t('common.cancel')], destructiveButtonIndex: 0, cancelButtonIndex: 1 },
+    (i) => {
+      if (i !== 0) return;
+      void fitCheck.closet.removeItem(item.id).then((it) => {
+        if (it) showToast(t('closet.removed', { item: lower(it.name) }), () => fitCheck.closet.restoreItem(it.id));
+      });
+    },
+  );
+}
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
@@ -61,7 +78,9 @@ export default function ClosetScreen() {
             </KCard>
           ) : null}
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: 10.5 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-            {tile > 0 ? items.map((it) => <ClosetTile key={it.id} item={it} size={tile} aspect={0.92} radius={18} label={it.name} />) : null}
+            {tile > 0 ? items.map((it) => (
+              <ClosetTile key={it.id} item={it} size={tile} aspect={0.92} radius={18} label={it.name} onLongPress={() => pieceMenu(it)} longPressLabel={t('closet.remove.action')} />
+            )) : null}
           </View>
         </>
       )}

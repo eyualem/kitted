@@ -18,12 +18,15 @@ export interface ClosetTileProps {
   /** Draw the name under it. */
   label?: string | null;
   onPress?: () => void;
+  /** Long-press (the piece's menu, #118); VoiceOver gets it as the custom action `longPressLabel`. */
+  onLongPress?: () => void;
+  longPressLabel?: string;
   accessibilityHint?: string;
   /** Inside a row that carries VoiceOver itself. */
   decorative?: boolean;
 }
 
-export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, label, onPress, accessibilityHint, decorative }: ClosetTileProps) {
+export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, label, onPress, onLongPress, longPressLabel, accessibilityHint, decorative }: ClosetTileProps) {
   const { colors } = useTheme();
   const spec = artSpec(item);
   const ghost = item.isPhotographed === false;
@@ -49,9 +52,14 @@ export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, l
     </View>
   );
   if (decorative) return <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{body}</View>;
-  if (!onPress) return <View accessible accessibilityLabel={spec.a11y}>{body}</View>;
+  if (!onPress && !onLongPress) return <View accessible accessibilityLabel={spec.a11y}>{body}</View>;
+  const actions = onLongPress && longPressLabel ? [{ name: 'longpress', label: longPressLabel }] : undefined;
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={spec.a11y} accessibilityHint={accessibilityHint} style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}>
+    <Pressable
+      onPress={onPress} onLongPress={onLongPress} accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={spec.a11y}
+      accessibilityHint={accessibilityHint} accessibilityActions={actions} onAccessibilityAction={(e) => e.nativeEvent.actionName === 'longpress' && onLongPress?.()}
+      style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
+    >
       {body}
     </Pressable>
   );
