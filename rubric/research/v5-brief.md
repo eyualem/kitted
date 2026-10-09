@@ -108,3 +108,55 @@ Gemini made up its TikTok rows, and Codex couldn't reach Reddit. These two promp
 > **Honesty rules, read first:** Only record what you actually opened and read. Never generate or template rows. Every row needs a real TikTok URL (19-digit ID). If you find fewer than the target, stop and say so. Do not download videos or save images.
 >
 > Continue the TikTok fit-rating research in `/Users/eyu/Desktop/files/Kitted/inputs/rubric-research/tiktok-rated-fits.csv` (keep the existing @lo2trimm rows and the same columns). Using TikTok embed pages (`https://www.tiktok.com/embed/v2/<id>`), which worked last time, add **at least 4 more creators** who rate men's outfits with numbers out of 10, preferring 10k+ followers, posted January 2024 or later, men who look 18+, nothing that rates faces or bodies. Aim for 10 rated outfits per creator, with a mix of styles (not only streetwear: some smart casual, workwear and plain everyday fits). **Include plain basic outfits** (hoodie or tee + jeans + sneakers) and **outfits with a jacket or overshirt**, because those are the cases we're testing. Fill the same columns, and for accessories and headwear only write what you actually saw (never infer from words in captions). Update `tiktok-summary.md` with a creator table and how each creator's scale compares (harsh, generous, typical range).
+
+## Fit, piece by piece (founder, Oct 9: "know the distinction between oversized, fitted, tight… judge the fit… and log it in the closet")
+
+### What we read today, and why it isn't enough
+| Reading | Values | Same across 3 runs (his photos / stock) | Accuracy vs. truth | Problem |
+|---|---|---|---|---|
+| `volume` | 1 fitted … 5 very oversized | 34/39 · 49/55 | not labeled yet | **Hugs the middle:** on his photos 91 of 117 top reads were 3 ("regular"), 6 were 4, **never 5**, hoodies included. One number mixes two things: how the piece is cut and whether it's his size |
+| `strain` | none / some / clear | 63/66 · 84/94 | not labeled | Only catches "too tight" when it's obvious |
+| `sleeve_end` | above / at wrist / covers hand | 36/39 · 49/55 | 70–76% | The phone hand bends one arm in every mirror selfie |
+| `length` (top hem) | cropped / at belt / mid fly / below crotch | 21/27 · 32/37 | not labeled | — |
+| `leg_shape` | skinny … wide, barrel | 19/27 · 34/39 | 40–53% | Weak, and it drives several rules |
+| `hem` (break) | pooling … cropped | 18/27 · 28/39 | 40–53% | Weak; can't tell stacked-on-purpose from pooling |
+
+v4 judges fit with these: "too big" = volume 4+ with sleeves over hands or a hem below the crotch; "everything oversized"; top and leg against the style's bands; strain. So "intentionally oversized" and "a size too big" are the same thing to it.
+
+### The design: the AI names the cut and the cue, the phone measures positions, the code judges
+1. **Two answers per piece instead of one number** (replaces `volume`, so the answer doesn't get longer; the v5 lesson, #63–64):
+   - `cut`, how it's designed: `fitted` · `regular` · `relaxed` · `oversized` (boxy, dropped shoulders, made big on purpose).
+   - `size_fit`, how it fits him: `too_tight` · `right` · `too_big` · `unsure`.
+   - `fit_cue`, the one visible reason when it isn't `right`: `seam_down_arm` · `sleeves_past_hand` · `long_body` · `bunching_at_waist` · `pulling_creases` · `placket_gaping` · `riding_up` · `sleeves_short`. Every cue is on the garment, never the body.
+2. **Checkpoints per garment type** (the prompt gives the AI a short checklist; the fit research in `notes/v5-fit.md` fills in the targets):
+   - **Tee:** shoulder seam on the shoulder (regular) or dropped (oversized); sleeve mid-bicep vs. elbow; hem at the belt to mid-fly; pulling across the chest.
+   - **Hoodie / sweatshirt:** seam position; cuffs at the wrist vs. bunched over the hand; hem band at the hips vs. hanging past the crotch.
+   - **Button-up / overshirt:** placket pulling or gaping; sleeve to the wrist; length (tucked or not); as a layer, open over a top.
+   - **Knit:** same as the hoodie plus cling.
+   - **Jacket / coat:** shoulder edge; sleeve covers the shirt cuff or not; length vs. the top underneath (`shows_below_outer`).
+   - **Pants:** thigh pulling; leg shape; break; stacked on purpose vs. pooling.
+   - **Shorts:** length vs. the knee; leg opening.
+3. **The phone measures positions from body-pose joints, never widths.** Sleeve end vs. the wrist joint, top hem vs. the hip joints, pant hem vs. the ankle and the shoe top, from the joints Apple Vision already finds (prep, camera guide) and the closet call's boxes. These replace the AI's guess for `sleeve_end`, `length` and `hem` when the joints are clearly visible. **No garment-width-vs-body measurement, ever:** it would grow with body size and end up rating bodies (and the Oct 8 leg-shape-from-outline try was too rough anyway, #106). Width and cut stay the AI's description of the garment.
+4. **The code judges, by garment type and the detected style:**
+   - `too_big` and `too_tight` are size faults for every style (sized from the cue; sleeves past the hand are milder than a seam halfway down the arm).
+   - `oversized` + `right` is a style choice, judged only by proportion (top vs. leg, the style's bands), never as "too big".
+   - Fixes name the garment, never the body: "Try a size down in the tee", "Tailor the sleeves", "Roll the cuffs once", "A boxier tee would suit the wide jeans".
+   - The copy checks gain a banned-words test for body words (body, weight, belly, skinny as a person word…).
+5. **The closet keeps each piece's fit:**
+   - Stored per piece: `cut` and `size_fit` (the clearest sighting wins; a half-seen read never overwrites a clear one), plus the measured sleeve and length positions.
+   - Uses: **matching** (a boxy grey tee and a fitted grey tee are different pieces); the **drawn tile** (width and length follow the cut); the **piece page** ("Boxy oversized · fits well" or "Runs big on you"); **fixes** ("Swap to your fitted white tee"); the **morning card** (an oversized top goes with a straight or wide leg, per the style's bands).
+   - A "This fits differently" correction on the piece page, which teaches the piece like the closet questions do.
+6. **How we'll know it works:**
+   - **Size-ladder shoot (founder + friends, about 45 min):** the same tee, hoodie and jeans in 2–3 sizes each (trade clothes), plus one designed-oversized piece, mirror and propped. The size is known, so the truth is free: about 30 photos.
+   - **3-run flip test:** `cut` and `size_fit` must read the same on ≥ 90% of photos.
+   - **Accuracy on the size ladder:** ≥ 80% per field, or it stays a tip with no points.
+   - **Measured positions vs. the AI:** on the gold set's labels.
+   - **Safety:** every fit line in the copy deck passes the body-words test, and no rule reads a width.
+7. **Order:** fit research (running) → prompt and schema change (`cut`/`size_fit`/`fit_cue` in place of `volume`), flip test (about $2) → phone position measures (Swift, in the measure layer) → size-ladder shoot → rules in the v5 ledger → closet fields (a migration) and the piece page → port with parity. Rides with v5; nothing changes scores before the shoot.
+
+### R3c · Gemini · YouTube fit guides (optional, same honesty rules as R3b)
+> **Honesty rules, read first:** Only record what you actually opened and read. Never generate, template or "fill in" rows, and never write a script that makes rows. Every row needs a real YouTube URL (11-character video ID) and a timestamp from the transcript. Fewer real rows beat more invented ones. Save files exactly where asked.
+>
+> From 2024+ YouTube videos by men's style channels with 100k+ subscribers, collect how each garment should fit: tees, hoodies and sweatshirts, button-ups and overshirts, knits, jackets, jeans and trousers, shorts. For each rule: video URL · channel · date · timestamp · garment · the checkpoint (shoulder seam, sleeve length, body length, width, break, rise…) · the target for a regular cut · the target for an intentionally oversized cut · how to tell "oversized on purpose" from "a size too big" · signs of too tight · the style it applies to · a short quote (12 words max). Mark each rule as stated by 1, 2, or 3+ channels. Only rules about the clothes, never about body types.
+>
+> Save as `/Users/eyu/Desktop/files/Kitted/inputs/rubric-research/youtube-fit-rules.csv` and `youtube-fit-summary.md`.
