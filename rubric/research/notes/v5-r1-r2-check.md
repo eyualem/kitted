@@ -49,3 +49,18 @@ What his ratings show that v4 can't see (each needs more sources before it becom
 - **A new pass bar for the gold set: spread, not just average error.** The score must spread fits the way people do (target: the standard deviation of our scores at least 70% of the friends' average), or a 7-for-everything rubric "passes" on average error.
 - **Ledger priority:** (1) layer contrast (R4), (2) the color tie-in, (3) a clutter rule (graphics, patterns and visible accessories counted as focal points), (4) stacked hems on loose legs, (5) a "finished" credit. The "basic" level waits for the gold set.
 - **More research needed:** a re-run of R3 on YouTube with fabrication guards, and R2 widened to more creators through the embed pages that worked. Reddit is blocked for Codex; don't re-run R1 as is.
+
+## Re-runs (Oct 9, afternoon)
+| Source | Got | Verified | Use |
+|---|---|---|---|
+| **R3b Gemini YouTube** | 14 rated outfits from **1 channel** (Brandon Balfour, "Rating My Followers Outfits (Brutally Honest)", `i0758MeMjSQ`) + 13 rules (10 from Fly With Johnny Thai's accessories ranking, `AgSRRTeSY58`; 3 from Brandon) | **Real this time:** all 4 listed videos exist with the right titles and channels (YouTube oEmbed); upload dates match (Sep 15 2024; May 22 2025); every timestamp falls inside the video's length (14:37; 16:53); the Balfour description links plain socks, matching the "non-branded socks" verdict. Quotes not checked word for word (YouTube blocked the caption download). The second Balfour video (`Y71miKP8yJE`) was opened but has no rows | **Verdicts are 3 tiers** ("clean" / "almost there" / "needs major improvement"), not numbers, so it's order evidence only. Rules count as 1 channel each |
+| **R2b Codex TikTok** | Nothing added (Edge blanked TikTok pages, even a known-good post) | Honest stop | — |
+
+What the YouTube rows add (each is 1–2 sources, so ledger candidates, not rules):
+- **Chain with tailoring is a miss** ("chain doesn't fit the smart tailored look, just go with the watch"). With R4's "jewelry with tailoring is a miss", that's **2 independent sources**: an accessory credit has to depend on the style.
+- **Too-slim pants knock a fit down** ("add about two more inches to the width"). Fits the fit research (skinny under anything reads dated).
+- **Branded high socks + chunky sneakers under a smart top read as a formality clash.** v4 only charges shoes 2+ dressiness levels below the rest, so it misses this one (AF1s 2 vs. a polo 3).
+- **Missing accessories cost a tier** for Balfour, and Johnny Thai says an outfit "is not complete" without jewelry. **Dissent:** R4's 6 editorial sources say restraint and nothing required, and the photo can't see small jewelry anyway. Kitted keeps "no accessories never costs points"; an accessory can earn, inside the cap.
+- **Shoes decide** ("can't give you a solid rating cuz you got no shoes on"), which matches partial checks: no shoes, no shoe credit.
+
+**Online collection is done.** Bot blocks stopped Codex on Reddit and TikTok, and big YouTube channels rate few real outfits. Across 4 tools we have 20 numeric ratings from 1 creator and 14 tier verdicts from 1 channel. That's enough for themes and a spread check, not for setting the level. **The gold set (friends rating blind, plus pairwise picks) is the calibration.** Optional, 5 minutes: ask Gemini to log the second Balfour video with the same honesty rules. Don't widen to 2021–2023: that's the skinny-jean era, and fit norms have moved.

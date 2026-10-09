@@ -20,13 +20,13 @@
 **Do (things only I can do):**
 - [ ] **P1** · **Phone test, about 10 min left** (reinstalled again Oct 9 and connected to the dev server; close-ups and measuring confirmed Oct 8 on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it was `10.0.0.33:8081` on Oct 8). Tell Claude when you start. Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
 - [ ] **P1** · **Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement.** Enrollment can take a few days. *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check.*
-- [ ] **P1** · **Run the 2 research re-runs** (prompts in `rubric/research/v5-brief.md` → "Re-runs"): **R3b YouTube in Gemini** (its first run made up its TikTok rows and skipped YouTube; the new prompt forbids that and saves into Kitted), **R2b more TikTok creators in Codex**. About 5 min to start each. Reddit is blocked for Codex, so skip it. *Unblocks: the v5 rules list. Today's check: `rubric/research/notes/v5-r1-r2-check.md`.*
+- [ ] **P3** · Optional, 5 min: ask Gemini to log the second Brandon Balfour video (`Y71miKP8yJE`) with the R3b honesty rules. Online research is otherwise done (#166); the gold set is what sets the scores.
 - [ ] **P1** · **Export the old Gemini creator-research Google Sheet as `.xlsx`** into `inputs/rubric-research/` (2 min). *Unblocks: the same v5 rules ledger.*
 - [ ] **P1** · **Set up a Cloudflare account** for the server. *Unblocks: scoring in release builds, so outside testers can use it.*
 - [ ] **P2** · **Claim @kitted.app / @trykitted and register trykitted.com.** About 10 minutes, and the names could be taken any time. *Unblocks: the waitlist page and the TikTok account.*
 - [ ] **P2** · **Size-ladder shoot (#164), about 45 min with a friend:** the same tee, hoodie and jeans in 2–3 sizes each (trade clothes), plus one piece that's oversized on purpose; mirror and propped, ~30 photos into `inputs/size-ladder/` (name each file with the piece and size, e.g. `tee-grey-M.jpg`). *Unblocks: judging fit (fitted vs oversized vs too big) and storing each piece's fit in the closet.* Optional: run R3c (YouTube fit guides) in Gemini, prompt in `rubric/research/v5-brief.md`.
 - [ ] **P2** · **Shoot ~20 photos of my clothes** into `inputs/item-photos/` (shot list in "Waiting on the founder"). *Unblocks: scanning clothes into the closet.*
-- [ ] **P2** · **Shoot the gold set:** about 80 outfit photos with 3+ friends (plan in `speed-and-detail-plan.md`). *Unblocks: tuning the scores against real people's opinions.*
+- [ ] **P1** · **Shoot the gold set:** about 80 outfit photos with 3+ friends (plan in `speed-and-detail-plan.md`). *Unblocks: tuning the scores against real people's opinions.*
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
