@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { BasicsScreen } from '@/features/onboarding/BasicsScreen';
 
-// O3 · Basics (02-screens.md). Built in P4.
-export default function BasicsScreen() {
-  return <Placeholder id="O3" name="Basics" phase="P4" kind="push" />;
-}
+// O3 · Basics (02-screens.md D3).
+export default BasicsScreen;

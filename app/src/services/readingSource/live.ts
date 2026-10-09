@@ -9,7 +9,9 @@ import type { ReadingSource } from './types';
 const KEY: string | undefined = __DEV__ ? process.env.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined;
 export const LIVE_READING = !!KEY;
 
-export function routedSource(mock: ReadingSource): ReadingSource {
+/** `consent`: whether a photo may leave the phone (onboarded without consent = never, 02 D4). Without it a real
+ *  photo never reaches Gemini; the mock answers instead (it knows only the bundled photos). */
+export function routedSource(mock: ReadingSource, consent: () => Promise<boolean> = async () => true): ReadingSource {
   const live = KEY
     ? createGeminiSource({
         apiKey: KEY,
@@ -22,8 +24,9 @@ export function routedSource(mock: ReadingSource): ReadingSource {
       mock.hedge?.();
       live?.hedge?.();
     },
-    read(image, kind, opts) {
-      return image.photoId || !live || !image.uploadBase64 ? mock.read(image, kind, opts) : live.read(image, kind, opts);
+    async *read(image, kind, opts) {
+      const useLive = !image.photoId && !!live && !!image.uploadBase64 && (await consent());
+      yield* useLive ? live!.read(image, kind, opts) : mock.read(image, kind, opts);
     },
   };
 }

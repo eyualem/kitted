@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { AgeStopScreen } from '@/features/onboarding/AgeStopScreen';
 
-// O4 · Age stop (02-screens.md). Built in P4.
-export default function AgeStopScreen() {
-  return <Placeholder id="O4" name="Age stop" phase="P4" kind="push" />;
-}
+// O4 · Age stop (02-screens.md §3, ruling 3).
+export default AgeStopScreen;

@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { WelcomeScreen } from '@/features/onboarding/WelcomeScreen';
 
-// O1 · Welcome (02-screens.md). Built in P4.
-export default function WelcomeScreen() {
-  return <Placeholder id="O1" name="Welcome" phase="P4" kind="push" />;
-}
+// O1 · Welcome (02-screens.md D1).
+export default WelcomeScreen;

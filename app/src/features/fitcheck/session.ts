@@ -11,6 +11,7 @@ import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { closetService, startClosetCatchUp } from '@/features/closet/session';
+import { hasConsent } from '@/features/onboarding/complete';
 import { createFitCheckService, DEFAULT_TIMERS, type TimerConfig } from './service';
 import type { SessionState } from './machine';
 
@@ -36,7 +37,8 @@ export function setTimerOverride(o: Partial<TimerConfig>): void {
 
 export const fitCheck = createFitCheckService({
   store,
-  source: routedSource(readingSource),
+  // The same consent rule as the closet call: "Not now" means no photo is ever sent (02 D4).
+  source: routedSource(readingSource, () => hasConsent(store)),
   prep: imagePrep,
   quota,
   clock: sessionClock,

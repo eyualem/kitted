@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { BirthYearSheet } from '@/features/onboarding/BirthYearSheet';
 
-// O3w · Birth year (02-screens.md). Built in P4.
-export default function BirthYearScreen() {
-  return <Placeholder id="O3w" name="Birth year" phase="P4" kind="sheet" />;
-}
+// O3w · Birth year (02-screens.md §3).
+export default BirthYearSheet;

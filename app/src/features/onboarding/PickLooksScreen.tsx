@@ -12,12 +12,11 @@ import { store } from '@/data/db';
 import type { StyleKey } from '@/data/types';
 import { normStyleKey } from '@/data/types';
 import { t } from '@/i18n/en';
+import { LOOKS_KEY, OTHER_STYLE_KEY } from './basics';
 import { LookTile } from './LookTile';
 import { cleanOtherWords, LOOKS, togglePick } from './looks';
 import { OnboardingNav } from './OnboardingNav';
 
-export const LOOKS_KEY = 'onboarding.looks';
-export const OTHER_STYLE_KEY = 'onboarding.otherStyle';
 
 const GAP = 10;
 

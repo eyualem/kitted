@@ -96,8 +96,9 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/describe" options={sheet([0.5, 1])} />
         <Stack.Screen name="sheets/fact/[id]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/looks-by-name" options={sheet([0.5])} />
-        {/* 02 O3w asks for a 320 pt detent; 320 / 874 ≈ 0.37 on iPhone 17 Pro (numeric detents only, 05 T34). */}
-        <Stack.Screen name="sheets/birth-year" options={sheet([0.37])} />
+        {/* 02 O3w asked for a 320 pt wheel; it's a list of years now (no new package), so it opens taller. */}
+        <Stack.Screen name="sheets/birth-year" options={sheet([0.6, 1])} />
+        <Stack.Screen name="sheets/consent" options={sheet([1])} />
         <Stack.Screen name="sheets/swap/[ideaId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
       </Stack.Protected>
