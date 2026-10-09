@@ -98,6 +98,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   ] },
   // Closet accuracy (#91): the closet call's answer for p01b against seed pieces; B1 (khaki) vs tan chinos is asked.
   37: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  70: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   38: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
 };
 

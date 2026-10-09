@@ -230,7 +230,13 @@ export interface ClosetAsk {
   addedFieldAliases?: Record<string, string[]> | null;
   /** Later sightings that joined this open question (#116) and moved with its "Yes", so a changed answer moves them back. */
   riders?: string[] | null;
+  /** Why it asks, for the card's one plain line (#117): set when the question is made. Missing on older rows. */
+  reason?: AskReason | null;
+  /** The word that line needs: the layer it was under ("overshirt"), or the type it read as ("sweatshirt"). */
+  reasonWord?: string | null;
 }
+
+export type AskReason = 'halfSeen' | 'shoes' | 'logo' | 'logoDiffers' | 'fit' | 'type' | 'color' | 'similar';
 
 export interface ClosetSummary {
   matched: string[];

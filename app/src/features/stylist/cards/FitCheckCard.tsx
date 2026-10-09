@@ -25,7 +25,8 @@ import { styleLabel } from '@/features/morning/copy';
 import { confirmLens } from '@/features/fitcheck/lensUi';
 import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
-import { closetSummaryText } from '@/features/closet/summaryText';
+import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
+import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { PieceArt } from '@/features/closet/GarmentArt';
 
 function useCheck(checkId: string) {
@@ -134,6 +135,14 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const closetLine = closetSummaryText(row.details.closetSummary, sessionClock.nowMs());
   const addedItems = (closetLine?.itemIds ?? []).map((id) => closet.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
   const showCloset = !!closetLine && (closetLine.pending || addedItems.length > 0) && !partial;
+  // The closet question rides on the card right after the score (#117): the check's first question (answered: its
+  // one line and Change); any others wait in Closet's "To confirm".
+  const cs = row.details.closetSummary;
+  const firstAsk = showCloset && !closetLine?.pending ? (cs?.asks ?? []).find((a) => !(cs?.undone ?? []).includes(a.itemId)) : undefined;
+  const askPhoto = firstAsk ? closet.find((c) => c.id === firstAsk.itemId) : undefined;
+  const askCandidate = firstAsk ? closet.find((c) => c.id === firstAsk.candidateId) : undefined;
+  const askRunnerUp = firstAsk?.runnerUpId ? closet.find((c) => c.id === firstAsk.runnerUpId) ?? null : null;
+  const moreAsks = firstAsk ? openAsks(cs).filter((a) => a.obsId !== firstAsk.obsId).length : 0;
   const finishing = partial && row.snapState === 'pending' && row.details.finish !== undefined;
   const scoreText = displayScore(score);
 
@@ -220,6 +229,15 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
         <Seam />
         <KCardSection gap={6}>
           {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={go.review} /> : null}
+          {firstAsk && askPhoto && askCandidate ? (
+            <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
+              <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact
+                onAnswer={(a) => void fitCheck.answerDuplicate(row.id, firstAsk.obsId, a)} />
+              {moreAsks > 0 ? (
+                <TextLink title={moreAsks === 1 ? t('closet.q.more1') : t('closet.q.more', { n: moreAsks })} onPress={() => router.navigate('/closet')} compact />
+              ) : null}
+            </View>
+          ) : null}
           {finishing ? <FinishRow row={row} closet={closet} /> : null}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
             {dialed && score >= 9 ? (

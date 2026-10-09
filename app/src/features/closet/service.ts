@@ -11,11 +11,12 @@
 // (state 'fallback'); a late answer, or a one-time catch-up on the next foreground within 24 h, then enriches it
 // (re-matches only if he hasn't touched S11 for that check).
 import {
-  closetPlan, fixTargets, identity, lessonsOfYes, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment, type KnownPiece, type Reading,
+  closetPlan, fixTargets, garmentName, identity, lessonsOfYes, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment,
+  type KnownPiece, type Observation, type Reading, type StoredProfile,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
-  ClosetAsk, ClosetFields, ClosetItemRow, ClosetLink, ClosetObservationRow, ClosetSummary, FitCheckRow, ObservationDecision, ObservationOrigin, ReadingRow,
+  AskReason, ClosetAsk, ClosetFields, ClosetItemRow, ClosetLink, ClosetObservationRow, ClosetSummary, FitCheckRow, ObservationDecision, ObservationOrigin, ReadingRow,
 } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import type { Scheduler } from '@/services/scheduler';
@@ -254,6 +255,27 @@ export function createClosetService(deps: ClosetServiceDeps) {
   }
 
   /**
+   * Why a question asks, in one plain line on its card (#117): half seen under a layer (and which), small shoes, or the
+   * strongest doubt the matcher found (a hidden logo, a different fit, a look-alike type, a near color).
+   */
+  function askReason(o: Observation, candidate: ClosetItemRow | undefined, profiles: Record<string, StoredProfile>, all: readonly Piece[]): { reason: AskReason; reasonWord: string | null } {
+    if (o.partial && o.category === 'footwear') return { reason: 'shoes', reasonWord: null };
+    if (o.partial) {
+      const layer = all.find((p) => p.garment.category === 'outerwear' && p.origin === 'garment');
+      return { reason: 'halfSeen', reasonWord: layer ? garmentName(layer.garment) : null };
+    }
+    if (!candidate) return { reason: 'similar', reasonWord: null };
+    const codes = identity(o, profileFromClosetItem(candidate as ClosetItem, profiles[candidate.id] ?? {})).reasons.map((r) => r.code);
+    const has = (...cs: string[]) => codes.some((c) => cs.some((x) => c.startsWith(x)));
+    if (has('brand_vs_no_logo', 'no_logo_vs_brand')) return { reason: 'logo', reasonWord: null };
+    if (has('brand_text_differs')) return { reason: 'logoDiffers', reasonWord: null };
+    if (has('leg_two_steps', 'leg_one_step')) return { reason: 'fit', reasonWord: null };
+    if (has('subcategory_', 'shoe_same_kind', 'shoe_type_unknown')) return { reason: 'type', reasonWord: garmentName(o) };
+    if (has('color_near', 'shade_', 'lightness_', 'measured_far')) return { reason: 'color', reasonWord: null };
+    return { reason: 'similar', reasonWord: null };
+  }
+
+  /**
    * Runs the engine for `pieces` against his owned closet (minus `exclude`) and writes the result: sightings,
    * new items, worn counts, open questions. Returns the summary parts it produced.
    */
@@ -299,7 +321,8 @@ export function createClosetService(deps: ClosetServiceDeps) {
     } as Reading;
     // Every piece is a worn garment for the engine (held pieces are matched the same way); index k = pieces[k].
     for (const g of reading.garments) if (g.certainty === 'unsure') g.certainty = 'likely';
-    const plan = closetPlan(reading, items as ClosetItem[], storedProfiles(items, obsAll));
+    const profiles = storedProfiles(items, obsAll);
+    const plan = closetPlan(reading, items as ClosetItem[], profiles);
     for (const e of plan.entries) {
       const p = pieces[e.index];
       if (!p) continue;
@@ -343,7 +366,10 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await store.closetObs.put(obs);
       out.added.push(item.id);
       out.links.push({ origin: p.origin, index: p.index, itemId: item.id, obsId: obs.id });
-      if (ask) out.asks.push({ obsId: obs.id, itemId: item.id, candidateId: ask, ...(e.runnerUpId ? { runnerUpId: e.runnerUpId } : {}), answer: null });
+      if (ask) {
+        const why = askReason(reading.garments[e.index]!, items.find((c) => c.id === ask), profiles, allPieces);
+        out.asks.push({ obsId: obs.id, itemId: item.id, candidateId: ask, ...(e.runnerUpId ? { runnerUpId: e.runnerUpId } : {}), answer: null, ...why });
+      }
     }
     for (const id of touched) await refreshItem(id);
     await renameAll();

@@ -5,7 +5,7 @@
 // minimize behavior).
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { EmptyState, KButton, KCard, KCardSection, TagLine, useTheme } from '@/design-system';
+import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { ClosetTile } from '@/features/closet/ClosetTile';
@@ -31,6 +31,11 @@ export default function ClosetScreen() {
   const [width, setWidth] = useState(0);
   if (!data) return null;
   const { items, byId, asks } = data;
+  const open = asks.flatMap(({ checkId, ask }) => {
+    const photo = byId.get(ask.itemId), candidate = byId.get(ask.candidateId);
+    if (!photo || !candidate) return [];
+    return [{ checkId, ask, photo, candidate, runnerUp: ask.runnerUpId ? byId.get(ask.runnerUpId) ?? null : null }];
+  });
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
@@ -41,20 +46,20 @@ export default function ClosetScreen() {
         </EmptyState>
       ) : (
         <>
-          {asks.map(({ checkId, ask }) => {
-            const photo = byId.get(ask.itemId);
-            const candidate = byId.get(ask.candidateId);
-            if (!photo || !candidate) return null;
-            const runnerUp = ask.runnerUpId ? byId.get(ask.runnerUpId) ?? null : null;
-            return (
-              <KCard key={ask.obsId}>
-                <KCardSection gap={10}>
-                  <TagLine left={t('closet.ask.tag')} />
-                  <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void fitCheck.answerDuplicate(checkId, ask.obsId, a)} />
-                </KCardSection>
-              </KCard>
-            );
-          })}
+          {/* "To confirm · 2" (#117): every open question in one quiet card on top; no badge, no push. */}
+          {open.length > 0 ? (
+            <KCard>
+              <KCardSection gap={12}>
+                <TagLine left={t('closet.confirm.tag')} right={String(open.length)} />
+                {open.map(({ checkId, ask, photo, candidate, runnerUp }, i) => (
+                  <View key={ask.obsId} style={{ gap: 12 }}>
+                    {i > 0 ? <RowDivider /> : null}
+                    <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void fitCheck.answerDuplicate(checkId, ask.obsId, a)} />
+                  </View>
+                ))}
+              </KCardSection>
+            </KCard>
+          ) : null}
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: 10.5 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
             {tile > 0 ? items.map((it) => <ClosetTile key={it.id} item={it} size={tile} aspect={0.92} radius={18} label={it.name} />) : null}
           </View>

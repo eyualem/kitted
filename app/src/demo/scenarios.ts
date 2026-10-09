@@ -102,6 +102,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 62, name: 'Shoe question · skipped', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 63, name: 'Your boots?', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 64, name: 'Your boots? · Yes', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  // The closet question on the score card (#117; B's block from 70): screen 37's story, left on Stylist.
+  { n: 70, name: 'Score card · Are these your khaki chinos?', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
