@@ -19,7 +19,7 @@
    - Profiles stay in `inputs/` (git-ignored): first names or codes, birth year, no faces or contact details, and only with the person's OK.
 8. **Keep "My to-do list" (below) current, and remind me** (founder, Oct 8). Whenever something needs me (a test on my phone, photos to shoot, an account, a decision), add it there in plain words with a priority (P1 this week / P2 before the beta / P3 before launch): what to do, how long, and what it unblocks. Check it off or remove it when it's done. When you report a result, now and then (not every message) end with one line like "Still on your list: the phone test and the clothes photos", picking the 1–3 items that unblock the most.
 
-## My to-do list (founder; every chat keeps this current, rule 6)
+## My to-do list (founder; every chat keeps this current, rule 8)
 **Priority:** **P1** = this week; it blocks a test, the beta, or other chats' work. **P2** = before the beta (Nov 3). **P3** = before launch, or when I have time. (These are my priorities, not the build phases P0–P8.) Within each group, the most urgent is first. Details for each are in "Waiting on the founder" further down.
 
 **Do (things only I can do):**
