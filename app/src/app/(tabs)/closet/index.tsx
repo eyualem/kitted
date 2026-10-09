@@ -9,7 +9,7 @@ import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, useTheme
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { ClosetItemRow } from '@/data/types';
-import { showToast } from '@/features/toast/toast';
+import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { ClosetTile } from '@/features/closet/ClosetTile';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
@@ -28,7 +28,7 @@ function pieceMenu(item: ClosetItemRow) {
     (i) => {
       if (i !== 0) return;
       void fitCheck.closet.removeItem(item.id).then((it) => {
-        if (it) showToast(t('closet.removed', { item: lower(it.name) }), () => fitCheck.closet.restoreItem(it.id));
+        if (it) showToast(t('closet.removed', { item: lower(it.name) }), () => fitCheck.closet.restoreItem(it.id), { ms: TOAST_MS_REMOVAL });
       });
     },
   );

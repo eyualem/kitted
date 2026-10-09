@@ -28,13 +28,16 @@ export function ToastHost() {
     if (!toast) return;
     const label = toast.undo ? `${toast.text} ${t('common.undo')}` : toast.text;
     AccessibilityInfo.announceForAccessibility?.(label);
-    const timer = setTimeout(() => hideToast(toast.id), voiceOver ? TOAST_MS_VOICEOVER : TOAST_MS);
+    const ms = toast.ms ?? TOAST_MS;
+    const timer = setTimeout(() => hideToast(toast.id), voiceOver ? Math.max(TOAST_MS_VOICEOVER, ms * 2) : ms);
     return () => clearTimeout(timer);
   }, [toast, voiceOver]);
 
-  if (!toast) return null;
+  // The container stays mounted; only the capsule comes and goes. Unmounting the parent together with an exiting
+  // capsule left later capsules' entering animation stuck invisible on iOS: only the first toast of a session showed (#118).
   return (
     <View pointerEvents="box-none" style={{ position: 'absolute', left: 16, right: 16, bottom: Math.max(BOTTOM, floor + ABOVE_DOCK), alignItems: 'center' }}>
+      {toast ? (
       <Animated.View
         key={toast.id}
         entering={a11y.reduceMotion ? FadeIn.duration(150) : FadeInDown.duration(220)}
@@ -65,6 +68,7 @@ export function ToastHost() {
           </Pressable>
         ) : null}
       </Animated.View>
+      ) : null}
     </View>
   );
 }

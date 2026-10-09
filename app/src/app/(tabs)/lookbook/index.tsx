@@ -10,7 +10,7 @@ import type { FitCheckRow } from '@/data/types';
 import { shownPhoto } from '@/demo/demoPhotos';
 import { fitCheck } from '@/features/fitcheck/session';
 import { occasionLabel } from '@/features/stylist/thread';
-import { showToast } from '@/features/toast/toast';
+import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { goToStylist } from '@/router/stylistAction';
 import { longDate } from '@/i18n/format';
 import { t } from '@/i18n/en';
@@ -110,7 +110,7 @@ async function lookMenu(checkId: string, title: string) {
       void fitCheck.closet.removeLook(checkId, withPieces).then((r) => {
         if (!r) return;
         const n = r.removedItems.length;
-        showToast(n === 0 ? t('lookbook.removed') : n === 1 ? t('lookbook.removed1') : t('lookbook.removedN', { n }), () => fitCheck.closet.restoreLook(r));
+        showToast(n === 0 ? t('lookbook.removed') : n === 1 ? t('lookbook.removed1') : t('lookbook.removedN', { n }), () => fitCheck.closet.restoreLook(r), { ms: TOAST_MS_REMOVAL });
       });
     },
   );

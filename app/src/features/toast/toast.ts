@@ -7,6 +7,8 @@ export interface Toast {
   text: string;
   /** Shows a copper "Undo"; tapping it runs this and hides the toast. */
   undo?: () => void | Promise<void>;
+  /** On screen this long (doubled with VoiceOver on); default TOAST_MS. */
+  ms?: number;
 }
 
 export const TOAST_MS = 5_000;
@@ -17,8 +19,11 @@ let nextId = 1;
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 
-export function showToast(text: string, undo?: Toast['undo']): number {
-  current = { id: nextId++, text, undo };
+/** A removal's Undo is the only way back, so it stays longer (#118). */
+export const TOAST_MS_REMOVAL = 8_000;
+
+export function showToast(text: string, undo?: Toast['undo'], o: { ms?: number } = {}): number {
+  current = { id: nextId++, text, undo, ...(o.ms ? { ms: o.ms } : {}) };
   emit();
   return current.id;
 }
