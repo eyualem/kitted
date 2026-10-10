@@ -868,3 +868,23 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Cost:** +0.24¢ per check for both calls, and 1 in 8 finishes after the scoring call.
     - **Claude's calls:** the peek and "rests on the shoe" go into the parts engine as a second look (the peek as a tip, or −0.5 at most, until the gold set). The shoulder seam is dropped. Jacket length and the hem stack stay unreadable for now. Next tries: a tight high-resolution hem-and-shoe crop with one "folds above the shoe?" question (cheap), and the gold set.
     - **Meanwhile:** build the parts-engine prototype on the fields that are reliable today (free), so he can see the before/after on his saved fits.
+200. **Parts-engine prototype and paper test (`rubric/research/parts/prototype-results.md`; `extraction-test/rubrics/parts_proto.py`, `parts_test.py`, `results/parts1/`).** It uses only readings that passed steadiness tests; everything else is a tip.
+    - **Steadier than v4.1:** 49/49 photos have all 3 runs within 0.5 (v4.1: 47/49), and 86% agree exactly (v4.1: 63%).
+    - **Much closer to the judge panel:** mean difference −0.03 (v4.1 +0.54); within 0.5 on 50 of 59 (v4.1: 32); on his and his friends' photos the gap drops from +0.93 to +0.40.
+    - **His and his friends' checks:**
+        - friend's blazer: 8.5 → 7.0 ("Style 6: the tailored jacket and the loose washed jeans come from different worlds"; panel 5.5)
+        - chore coat ×3: 8.5 → 7.0 (his own estimate was ~7)
+        - his tee + wide jeans: 7.5 → 7.0
+        - gingham: 7.5 → 6.5 (sleeves past the wrists)
+        - the quilted jacket (ebe23f): 8.0 → 7.0
+    - **The problem:** too compressed. Only 5.5, 6.5, 7.0 and 7.5 occur, and **nothing reaches 8** (the panel puts 7% at 8+). Fit can't go above 7 without a shoulder-seam reading, Proportions rarely earns its rewards, and a 15% part moves the total only 0.075 per half point.
+    - **The prototype's calls, to confirm before the port:**
+        - shoe wear is a flat −1.0 (−0.5 for work boots and suede; the worn read flips, and suede nap reads as wear)
+        - only pooling blocks the proportion rewards
+        - shoes out of the photo count as real shoes in the loungewear ladder
+        - a lost shoe type makes Shoes NA
+        - overdressed ramps from 1.5 levels above
+        - parts are averaged unrounded
+    - **Claude's call:** adopt it as the core. Before the port, tune the reward sizes so deliberate fits reach 8: anchor on the panel's top photos (P010, P021, P001, P043/P044) with the readable rewards (waist break, a short layer over a full leg, cohesion's signature pieces and standout, color's tie-in and standout, shoes clearly chosen). Don't stretch the whole scale (×1.5 gets 8+ to only 5% while seeing nothing new). New readings for 8–9 (shoulder seam, a stack cue) wait for the gold set.
+    - **The fix engine has to be rebuilt around parts:** today's "Swap to … → 8.5" lines come from v4 credits.
+    - **Taste calls for the founder:** slides at 4.5; Shoes NA on a lost type; no credit just for wearing a chore coat; what the card leads with when every part is 7.

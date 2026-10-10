@@ -1,0 +1,249 @@
+PARTS PAPER TEST · parts-proto-1 (Oct 10, 2026) vs rubric.py v4.1 · test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age
+Distinct photos with a reading: 78 (Counter({'corpus stock': 39, 'corpus zoom1': 22, 'pull': 16, 'b1': 1}))
+Corpus readings: 78; newest pull: 16 distinct checks; batch 1 arm A: 50 photos x 3; look1: 50 photos x 3 (U, L); zoom1 arm B: 66 photos x 3
+
+(a) SCORE SPREAD, one reading per distinct photo (each reading's own occasion)
+  all photos · v4.1            n= 78 median 7.5  mean 7.48  <=5.5 2 (3%)  6-6.5 11 (14%)  7-7.5 33 (42%)  8+ 32 (41%)  9+ 3 (4%)
+  all photos · parts           n= 78 median 7.0  mean 6.88  <=5.5 5 (6%)  6-6.5 14 (18%)  7-7.5 59 (76%)  8+ 0 (0%)  9+ 0 (0%)
+  founder · v4.1               n= 21 median 7.5  mean 7.0  <=5.5 2 (10%)  6-6.5 4 (19%)  7-7.5 13 (62%)  8+ 2 (10%)  9+ 0 (0%)
+  founder · parts              n= 21 median 7.0  mean 6.62  <=5.5 4 (19%)  6-6.5 6 (29%)  7-7.5 11 (52%)  8+ 0 (0%)  9+ 0 (0%)
+  friends · v4.1               n=  4 median 8.5  mean 8.5  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 0 (0%)  8+ 4 (100%)  9+ 0 (0%)
+  friends · parts              n=  4 median 7.0  mean 7.0  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 4 (100%)  8+ 0 (0%)  9+ 0 (0%)
+  unknown (ask) · v4.1         n=  2 median 7.75  mean 7.75  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 1 (50%)  8+ 1 (50%)  9+ 0 (0%)
+  unknown (ask) · parts        n=  2 median 7.25  mean 7.25  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 2 (100%)  8+ 0 (0%)  9+ 0 (0%)
+  web mirror · v4.1            n= 12 median 8.0  mean 7.83  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 4 (33%)  8+ 8 (67%)  9+ 1 (8%)
+  web mirror · parts           n= 12 median 7.0  mean 7.12  <=5.5 0 (0%)  6-6.5 1 (8%)  7-7.5 11 (92%)  8+ 0 (0%)  9+ 0 (0%)
+  stock · v4.1                 n= 39 median 7.5  mean 7.51  <=5.5 0 (0%)  6-6.5 7 (18%)  7-7.5 15 (38%)  8+ 17 (44%)  9+ 2 (5%)
+  stock · parts                n= 39 median 7.0  mean 6.91  <=5.5 1 (3%)  6-6.5 7 (18%)  7-7.5 31 (79%)  8+ 0 (0%)  9+ 0 (0%)
+  his + friends + unknown · v4.1 n= 27 median 7.5  mean 7.28  <=5.5 2 (7%)  6-6.5 4 (15%)  7-7.5 14 (52%)  8+ 7 (26%)  9+ 0 (0%)
+  his + friends + unknown · parts n= 27 median 7.0  mean 6.72  <=5.5 4 (15%)  6-6.5 6 (22%)  7-7.5 17 (63%)  8+ 0 (0%)  9+ 0 (0%)
+  parts - v4.1 per photo: {-2.0: 1, -1.5: 13, -1.0: 21, -0.5: 18, 0.0: 16, 0.5: 9}  mean -0.60
+  the second look's effect on the parts score (photos that have one, n=50): {0.0: 50}
+  batch 1 arm A medians · v4.1 n= 50 median 7.5  mean 7.38  <=5.5 2 (4%)  6-6.5 11 (22%)  7-7.5 20 (40%)  8+ 17 (34%)  9+ 2 (4%)
+  batch 1 arm A medians · parts n= 50 median 7.0  mean 6.81  <=5.5 6 (12%)  6-6.5 7 (14%)  7-7.5 37 (74%)  8+ 0 (0%)  9+ 0 (0%)
+  part distributions (one reading per photo, with the second look where it exists):
+    proportions  NA  5 · at 7: 50/73 · median 7.0 · {6.5: 9, 7.0: 50, 7.5: 7, 8.0: 7}
+    fit          NA  0 · at 7: 74/78 · median 7.0 · {5.5: 3, 6.5: 1, 7.0: 74}
+    color        NA  0 · at 7: 66/78 · median 7.0 · {5.5: 1, 7.0: 66, 7.5: 9, 8.0: 2}
+    shoes        NA 24 · at 7: 9/54 · median 7.5 · {4.0: 3, 4.5: 6, 5.5: 2, 6.0: 5, 6.5: 1, 7.0: 9, 7.5: 17, 8.0: 10, 8.5: 1}
+    cohesion     NA  0 · at 7: 28/78 · median 7.5 · {6.0: 1, 6.5: 1, 7.0: 28, 7.5: 36, 8.0: 12}
+
+(b) 3-RUN STEADINESS (Everyday, the test profile)
+  batch 1 arm A (validation), with look1 run i paired to run i
+    all 3 within 0.5 of the median (b1's measure)  v4.1    47/49 (96%)   parts   49/49 (100%)
+    max - min <= 0.5                               v4.1    46/49 (94%)   parts   49/49 (100%)
+    exactly the same                               v4.1    31/49 (63%)   parts    42/49 (86%)
+    mean spread v4.1 0.214 · parts 0.071; worst v4.1 1.0 · parts 0.5
+    parts not exact (7): mirror-m08 v4 [8.0, 8.0, 9.0] parts [7.0, 7.0, 7.5]; mirror-m09 v4 [8.0, 7.5, 7.5] parts [7.5, 7.0, 7.0]; oct7-ph2 v4 [7.5, 7.0, 7.0] parts [7.0, 6.5, 6.5]; phone-968016 v4 [7.5, 7.5, 7.5] parts [7.0, 7.5, 7.5]; phone-d918c0 v4 [8.0, 7.5, 7.5] parts [7.5, 7.0, 7.0]; phone-f07193 v4 [7.5, 7.0, 7.5] parts [6.5, 6.5, 7.0]; stock-s11-before_street v4 [8.0, 7.5, 7.5] parts [7.0, 7.5, 7.5]
+    v4.1 not exact (18): mirror-m02 [8.5, 8.5, 9.0]; mirror-m03 [8.0, 7.0, 7.5]; mirror-m08 [8.0, 8.0, 9.0]; mirror-m09 [8.0, 7.5, 7.5]; mirror-m12 [7.5, 7.5, 8.0]; oct7-ph2 [7.5, 7.0, 7.0]; oct7-ph3 [8.0, 8.5, 8.0]; phone-1f1997 [7.0, 6.5, 6.5]; phone-5a9049 [7.0, 6.5, 7.0]; phone-6b14db [5.5, 6.0, 6.0]; phone-7f14a4 [6.5, 7.5, 7.5]; phone-b0f0c8 [6.5, 6.5, 7.0]; phone-d6559a [6.5, 7.0, 6.5]; phone-d918c0 [8.0, 7.5, 7.5]; phone-e026de [8.0, 7.5, 7.5]; phone-f07193 [7.5, 7.0, 7.5]; stock-s10-before_street [8.0, 8.5, 8.5]; stock-s11-before_street [8.0, 7.5, 7.5]
+  batch 1 arm A, without the second look
+    all 3 within 0.5 of the median (b1's measure)  v4.1    47/49 (96%)   parts   49/49 (100%)
+    max - min <= 0.5                               v4.1    46/49 (94%)   parts   49/49 (100%)
+    exactly the same                               v4.1    31/49 (63%)   parts    42/49 (86%)
+    mean spread v4.1 0.214 · parts 0.071; worst v4.1 1.0 · parts 0.5
+    parts not exact (7): mirror-m08 v4 [8.0, 8.0, 9.0] parts [7.0, 7.0, 7.5]; mirror-m09 v4 [8.0, 7.5, 7.5] parts [7.5, 7.0, 7.0]; oct7-ph2 v4 [7.5, 7.0, 7.0] parts [7.0, 6.5, 6.5]; phone-968016 v4 [7.5, 7.5, 7.5] parts [7.0, 7.5, 7.5]; phone-d918c0 v4 [8.0, 7.5, 7.5] parts [7.5, 7.0, 7.0]; phone-f07193 v4 [7.5, 7.0, 7.5] parts [6.5, 6.5, 7.0]; stock-s11-before_street v4 [8.0, 7.5, 7.5] parts [7.0, 7.5, 7.5]
+    v4.1 not exact (18): mirror-m02 [8.5, 8.5, 9.0]; mirror-m03 [8.0, 7.0, 7.5]; mirror-m08 [8.0, 8.0, 9.0]; mirror-m09 [8.0, 7.5, 7.5]; mirror-m12 [7.5, 7.5, 8.0]; oct7-ph2 [7.5, 7.0, 7.0]; oct7-ph3 [8.0, 8.5, 8.0]; phone-1f1997 [7.0, 6.5, 6.5]; phone-5a9049 [7.0, 6.5, 7.0]; phone-6b14db [5.5, 6.0, 6.0]; phone-7f14a4 [6.5, 7.5, 7.5]; phone-b0f0c8 [6.5, 6.5, 7.0]; phone-d6559a [6.5, 7.0, 6.5]; phone-d918c0 [8.0, 7.5, 7.5]; phone-e026de [8.0, 7.5, 7.5]; phone-f07193 [7.5, 7.0, 7.5]; stock-s10-before_street [8.0, 8.5, 8.5]; stock-s11-before_street [8.0, 7.5, 7.5]
+  zoom1 + zoom1-stock arm B (design set), no second look
+    all 3 within 0.5 of the median (b1's measure)  v4.1    64/66 (97%)   parts   66/66 (100%)
+    max - min <= 0.5                               v4.1    63/66 (95%)   parts   66/66 (100%)
+    exactly the same                               v4.1    39/66 (59%)   parts    57/66 (86%)
+    mean spread v4.1 0.227 · parts 0.068; worst v4.1 1.0 · parts 0.5
+    parts not exact (9): mirror-m06 v4 [7.5, 7.5, 7.5] parts [7.5, 7.5, 7.0]; mirror-m08 v4 [9.0, 8.0, 9.0] parts [7.5, 7.0, 7.5]; oct7-ph2 v4 [7.0, 7.5, 7.0] parts [7.0, 7.0, 6.5]; phone-8bc29d v4 [7.0, 6.5, 7.0] parts [6.0, 6.0, 6.5]; stock-p03-before_street v4 [8.0, 7.5, 7.0] parts [7.0, 7.0, 6.5]; stock-s02-before_studio v4 [6.0, 6.5, 6.5] parts [6.5, 7.0, 7.0]; stock-s09-before_street v4 [6.5, 7.0, 7.0] parts [6.0, 6.5, 6.5]; stock-s11-before_street v4 [7.5, 7.5, 8.0] parts [7.5, 7.0, 7.0]; stock-s14-before_street v4 [8.0, 8.0, 8.5] parts [7.0, 6.5, 7.0]
+    v4.1 not exact (27): mirror-m02 [9.0, 9.0, 8.5]; mirror-m03 [7.5, 8.0, 8.0]; mirror-m08 [9.0, 8.0, 9.0]; mirror-m12 [7.5, 7.5, 8.0]; oct7-ph2 [7.0, 7.5, 7.0]; oct7-ph3 [8.5, 8.0, 8.5]; phone-0d39d6 [6.5, 6.5, 7.0]; phone-5a9049 [7.0, 7.5, 7.0]; phone-6b14db [6.0, 5.5, 5.5]; phone-8bc29d [7.0, 6.5, 7.0]; phone-e026de [8.5, 8.0, 8.0]; stock-p01-after_studio [8.5, 8.0, 8.5]; stock-p02-after_studio [6.5, 6.0, 6.5]; stock-p02-before_studio [6.5, 6.0, 6.0]; stock-p03-before_street [8.0, 7.5, 7.0]; stock-p04-after_street [7.5, 8.0, 8.0]; stock-s02-before_studio [6.0, 6.5, 6.5]; stock-s05-before_studio [7.5, 8.0, 8.0]; stock-s09-before_street [6.5, 7.0, 7.0]; stock-s10-before_street [8.0, 8.5, 8.0]; stock-s11-before_street [7.5, 7.5, 8.0]; stock-s13-before_street [7.0, 8.0, 7.0]; stock-s14-before_street [8.0, 8.0, 8.5]; stock-s15-before_street [8.5, 8.0, 8.5]; stock-s20-before_phone [7.0, 7.0, 6.5]; stock-s22-before_phone [8.0, 8.0, 7.5]; stock-s24-before_mirror [6.5, 6.5, 7.0]
+  per-part steadiness on batch 1 arm A (with the second look): the part's display value the same on all 3 runs
+    proportions  47/48 (98%)   flips: stock-s08-before_studio [None, None, 7.0]
+    fit          46/50 (92%)   flips: phone-5a9049 [7.0, 5.5, 7.0]; phone-968016 [6.5, 7.0, 7.0]; phone-e026de [7.0, 6.5, 6.5]; stock-s08-before_studio [None, None, 7.0]
+    color        44/50 (88%)   flips: phone-5a9049 [7.0, 7.5, 7.5]; phone-d918c0 [7.5, 7.0, 7.0]; phone-f07193 [7.0, 7.0, 7.5]; mirror-m08 [5.5, 5.5, 7.0]; stock-s01-before_studio [5.5, 7.5, 5.5]; stock-s08-before_studio [None, None, 7.0]
+    shoes        32/41 (78%)   flips: mirror-m03 [8.0, 7.5, 7.5]; phone-5a9049 [None, 7.0, 7.0]; phone-7f14a4 [6.0, 7.0, 7.0]; phone-8bc29d [7.0, 6.5, 7.0]; phone-b0f0c8 [None, None, 7.0]; phone-e026de [8.0, 7.5, 7.5]; phone-ebe23f [7.5, 6.5, 6.5]; phone-f07193 [7.5, 6.5, 7.0]; stock-s08-before_studio [None, None, 7.5]
+    cohesion     37/50 (74%)   flips: mirror-m03 [7.5, 7.0, 7.0]; phone-7f14a4 [7.5, 7.0, 7.0]; phone-b0f0c8 [7.0, 7.5, 7.5]; phone-e026de [7.5, 7.0, 7.5]; oct7-ph4 [7.5, 7.5, 7.0]; mirror-m01 [7.0, 7.0, 7.5]; mirror-m02 [7.5, 8.0, 7.5]; stock-s02-before_studio [7.0, 7.0, 7.5]; stock-s08-before_studio [None, None, 7.5]; stock-s10-before_street [7.0, 7.5, 7.5]; stock-s11-before_street [7.0, 7.5, 7.5]; stock-s14-before_street [7.5, 7.0, 7.5] …
+  check-level steadiness on zoom1 arm B (design set) and batch 1 arm A: photos where a check fires on some
+  but not all 3 runs, out of photos where it fires at least once
+    zoom1 B: H1_reads_as_style 11/42; SD1_matches 4/27; SC_chosen_for_look 4/13; SQ_worn 3/7; CP2_quiet_accent 2/7; PR3_tailored_line 0/7; H2_suit 0/7; SK1_slides_out 0/6; OCC:loungewear out of the house: held to 5.5 0/5; H4_standout_piece 2/5; OCC:a bit dressy for everyday 0/5; PR1_waist_break 2/4; H2_clear_top_to_toe 0/3; SCol1_loud_vs_loud 2/3; PR2_short_layer 0/3; OCC:loungewear out of the house: held to 6.5 0/3; PF6_layer_over_skinny 0/3; SCol2_shoe_accent 1/3; SK2_runners 1/3; COND:the overshirt looks wrinkled 0/2; COND:the dress shirt looks wrinkled 2/2; CP1_standout_color 0/2; FF7_pooling 1/2; FF6_strain 1/2; H5_too_many_statements 2/2; SW1_runner_narrow 1/2; COND:the chinos looks wrinkled 2/2; SK1b_hem_drags 1/1; FF1_sleeves_long 0/1; FF5_too_big 0/1; COND:the unstructured blazer looks wrinkled 1/1; COND:the sport coat looks wrinkled 1/1; CC4_near_match 1/1; COND:the drawstring trousers looks wrinkled 1/1; CC6_three_patterns 1/1; COND:the oxford shirt looks wrinkled 0/1; COND:the trousers looks wrinkled 1/1; SW1_chunky_narrow 1/1
+    b1 A: H1_reads_as_style 12/36; SD1_matches 4/26; CP2_quiet_accent 4/10; SC_chosen_for_look 2/9; SQ_worn 5/9; SK1_slides_out 0/8; PF10_peek 0/6; OCC:loungewear out of the house: held to 5.5 0/6; PR3_tailored_line 0/4; H2_clear_top_to_toe 1/3; SK1b_hem_drags 0/2; H2_suit 0/2; FF1_sleeves_long 1/2; PR1_waist_break 0/2; FF1_cuffs_ribbed 2/2; PR2_short_layer 0/2; SCol2_shoe_accent 0/2; COND:the overshirt looks wrinkled 0/1; H3_another_world 0/1; COND:the dress shirt looks wrinkled 1/1; COND:the sport coat looks wrinkled 0/1; SCol1_loud_vs_loud 0/1; CC4_near_match 1/1; OCC:a bit dressy for everyday 0/1; COND:the suit trousers looks wrinkled 1/1; COND:the drawstring trousers looks wrinkled 1/1; CC6_three_patterns 1/1; CP1_standout_color 0/1; H4_standout_piece 0/1; SK2_runners 0/1; FF7_pooling 0/1
+
+(c) AGAINST THE JUDGE PILOT (panel = median of 5 judges' weighted totals; parts = median of judges)
+  panel photos: 59; with a reading here: 59
+  all                                v4.1: n 59 · mean diff +0.54 · MAE 0.71 · within 0.5 32 · off 1.5+ 8 · r 0.58   parts: n 59 · mean diff -0.03 · MAE 0.46 · within 0.5 50 · off 1.5+ 3 · r 0.59
+  founder or friend (phone)          v4.1: n 20 · mean diff +0.93 · MAE 0.93 · within 0.5 9 · off 1.5+ 5 · r 0.62   parts: n 20 · mean diff +0.40 · MAE 0.55 · within 0.5 14 · off 1.5+ 2 · r 0.56
+  stock/web                          v4.1: n 33 · mean diff +0.38 · MAE 0.68 · within 0.5 18 · off 1.5+ 3 · r 0.56   parts: n 33 · mean diff -0.32 · MAE 0.44 · within 0.5 30 · off 1.5+ 1 · r 0.63
+  web mirror selfie                  v4.1: n 6 · mean diff +0.17 · MAE 0.17 · within 0.5 5 · off 1.5+ 0 · r 0.0   parts: n 6 · mean diff +0.08 · MAE 0.25 · within 0.5 6 · off 1.5+ 0 · r -0.32
+  part by part (ours vs the panel's median part; the panel's parts are a halo of its gut: fit~proportion 0.93,
+  cohesion~gut 0.96, so this checks direction only):
+    proportions  n 55 · mean diff +0.25 · within 0.5 42 · r 0.38
+    fit          n 59 · mean diff -0.10 · within 0.5 43 · r 0.11
+    color        n 59 · mean diff -0.01 · within 0.5 50 · r -0.02
+    shoes        n 42 · mean diff +0.08 · within 0.5 32 · r 0.82
+    cohesion     n 59 · mean diff +0.53 · within 0.5 37 · r 0.53
+  per photo (panel · v4.1 · parts):
+    P001 stock-s01-before_studio    panel 8.0  v4.1 7.0  parts 7.5  Proportions 8 · Fit 7 · Color 7.5 · Shoes 8.5 · Style 7.5
+    P002 phone-b0f0c8               panel 6.5  v4.1 7.0  parts 7.0  Proportions 6.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    P003 stock-p06-after_studio     panel 7.5  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 7.5
+    P004 phone-0d39d6               panel 5.5  v4.1 6.5  parts 6.5  Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+    P005 phone-f07193               panel 6.0  v4.1 7.5  parts 6.5  Proportions 7 · Fit 5.5 · Color 7 · Style 7
+    P006 phone-d58b14               panel 6.0  v4.1 7.0  parts 6.5  Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+    P007 stock-s19-before_phone     panel 7.0  v4.1 7.0  parts 7.0  Proportions 7 · Fit 7 · Color 7.5 · Style 7
+    P008 stock-s05-before_studio    panel 7.5  v4.1 8.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    P009 stock-p01-after_studio     panel 7.0  v4.1 8.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 7.5
+    P010 stock-s08-before_studio    panel 8.5  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    P011 stock-s13-before_street    panel 6.5  v4.1 8.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+    P012 stock-p06-before_studio    panel 7.5  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 7.5
+    P013 stock-p05-after_street     panel 7.0  v4.1 7.5  parts 7.0  Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    P015 phone-d1967f               panel 5.5  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 6
+    P016 phone-1f1997               panel 5.5  v4.1 7.0  parts 6.5  Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+    P017 stock-s10-before_street    panel 7.5  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7.5 · Shoes 7.5 · Style 7.5
+    P018 stock-s28-before_mirror    panel 7.0  v4.1 7.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 7
+    P019 stock-s11-before_street    panel 6.5  v4.1 7.5  parts 7.0  Proportions 7 · Fit 7 · Color 8 · Shoes 7 · Style 7
+    P020 phone-8bc29d               panel 6.5  v4.1 7.5  parts 6.5  Proportions 7 · Fit 7 · Color 7 · Style 7.5
+    P021 stock-s07-before_studio    panel 8.5  v4.1 9.0  parts 7.5  Proportions 7.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 8
+    P022 stock-s20-before_phone     panel 6.5  v4.1 7.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+    P023 stock-s17-before_phone     panel 7.0  v4.1 7.0  parts 6.5  Proportions 6.5 · Fit 7 · Color 7 · Shoes 5.5 · Style 7
+    P024 phone-6b14db               panel 5.5  v4.1 5.5  parts 5.5  Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+    P025 phone-d918c0               panel 6.0  v4.1 7.5  parts 7.5  Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+    P026 phone-8ad378               panel 7.5  v4.1 7.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    P027 phone-fb0b17               panel 7.5  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    P028 phone-e026de               panel 6.5  v4.1 7.5  parts 6.5  Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+    P029 stock-s06-before_studio    panel 6.0  v4.1 6.0  parts 6.5  Proportions 7 · Fit 7 · Color 7.5 · Shoes 5.5 · Style 7
+    P030 stock-p01-before_studio    panel 7.0  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 7.5
+    P031 stock-s27-before_mirror    panel 7.0  v4.1 7.0  parts 7.0  Fit 7 · Color 7 · Style 7
+    P032 stock-s22-before_phone     panel 7.5  v4.1 8.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 8
+    P033 phone-403ade               panel 7.0  v4.1 7.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    P034 stock-s25-before_mirror    panel 7.0  v4.1 7.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    P035 stock-s03-before_studio    panel 8.0  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    P036 stock-p04-before_street    panel 7.5  v4.1 8.0  parts 7.0  Proportions 7.5 · Fit 7 · Color 7 · Style 8
+    P037 phone-d6559a               panel 6.5  v4.1 7.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 7
+    P038 phone-7de605               panel 5.5  v4.1 6.0  parts 5.5  Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+    P039 stock-s24-before_mirror    panel 6.5  v4.1 6.5  parts 7.0  Fit 7 · Color 7 · Style 7
+    P040 phone-a765e8               panel 5.5  v4.1 6.0  parts 5.5  Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+    P041 stock-s04-before_studio    panel 7.5  v4.1 6.5  parts 7.0  Proportions 6.5 · Fit 7 · Color 7.5 · Shoes 6 · Style 7
+    P042 phone-968016               panel 7.0  v4.1 7.5  parts 7.5  Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+    P043 stock-s15-before_street    panel 7.5  v4.1 8.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 8
+    P044 stock-s16-before_street    panel 7.5  v4.1 8.5  parts 7.5  Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    P045 stock-p03-before_street    panel 7.0  v4.1 7.5  parts 7.0  Proportions 6.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 8
+    P046 stock-p02-after_studio     panel 7.0  v4.1 6.0  parts 6.5  Proportions 7 · Fit 6.5 · Color 7 · Shoes 7 · Style 7.5
+    P047 stock-s02-before_studio    panel 7.5  v4.1 6.5  parts 7.0  Fit 7 · Color 7 · Shoes 7.5 · Style 7
+    P048 stock-s21-before_phone     panel 6.0  v4.1 6.5  parts 5.5  Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7
+    P049 phone-f4870b               panel 7.5  v4.1 8.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    P050 stock-s26-before_mirror    panel 7.0  v4.1 7.0  parts 6.5  Proportions 6.5 · Fit 5.5 · Color 7 · Style 7
+    P051 stock-s12-before_street    panel 7.0  v4.1 7.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+    P052 stock-p04-after_street     panel 7.5  v4.1 8.0  parts 7.0  Proportions 7.5 · Fit 7 · Color 7 · Style 8
+    P053 stock-s23-before_mirror    panel 6.5  v4.1 7.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 6.5
+    P054 phone-7f14a4               panel 6.0  v4.1 6.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7.5
+    P055 stock-p03-after_street     panel 7.5  v4.1 9.0  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    P056 stock-p02-before_studio    panel 7.0  v4.1 6.0  parts 6.5  Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7.5
+    P057 phone-5a9049               panel 6.0  v4.1 7.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    P058 stock-s14-before_street    panel 7.0  v4.1 8.0  parts 6.5  Proportions 8 · Fit 7 · Color 7 · Shoes 6 · Style 7
+    P059 stock-p05-before_street    panel 7.0  v4.1 7.5  parts 7.0  Proportions 7 · Fit 7 · Color 7 · Style 7.5
+    P060 stock-s09-before_street    panel 7.0  v4.1 7.0  parts 6.5  Proportions 6.5 · Fit 5.5 · Color 7 · Shoes 7.5 · Style 8
+
+(d) EVERY CHECK OF THE FOUNDER, HIS FRIENDS AND THE TWO UNKNOWNS (each check's own occasion; v4.1 -> parts)
+  phone-d1967f [a friend (profile unknown); class; pull 20261010] v4.1 8.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 6 | condition: clean | occasion: right for it
+      lowest: Style 6: the tailored jacket and the loose or washed jeans come from different worlds | suit_jacket, tee, jeans, suede_chukka
+  phone-e438d4 [a friend (profile unknown); class; pull 20261010] v4.1 8.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | chore_coat, tee, jeans, low_profile_sneaker
+  phone-f4870b [a friend (profile unknown); class; pull 20261010] v4.1 8.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | chore_coat, tee, jeans, low_profile_sneaker
+  phone-fb0b17 [a friend (profile unknown); class; pull 20261010] v4.1 8.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | chore_coat, tee, jeans, low_profile_sneaker
+  oct7-ph1 [the founder (profile pending); everyday; corpus zoom1] v4.1 5.0 -> parts 5.5
+      Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7 | condition: clean | occasion: loungewear out of the house: held to 5.5
+      lowest: Shoes 4.5: slides read as staying in | hoodie, sweatpants, slides_sandals
+  oct7-ph2 [the founder (profile pending); everyday; corpus zoom1] v4.1 7.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | dress_shirt, suit_trousers, other
+  oct7-ph3 [the founder (profile pending); everyday; corpus zoom1] v4.1 8.0 -> parts 7.0
+      Proportions 7.5 · Fit 7 · Color 7 · Shoes 8 · Style 8 | condition: the sport coat looks wrinkled | occasion: right for it
+      lowest: Fit 7: nothing looks the wrong size | sport_coat, dress_shirt, other, suit_trousers, loafer
+  oct7-ph4 [the founder (profile pending); everyday; corpus zoom1] v4.1 8.0 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Style 7.5 | condition: couldn't check in this light | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | field_jacket, tee, jeans
+  phone-0d39d6 [the founder (profile pending); everyday; corpus zoom1] v4.1 6.5 -> parts 6.5
+      Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Shoes 4: slides read as staying in | hoodie, jeans, slides_sandals, belt
+  phone-1f1997 [the founder (profile pending); class; pull 20261010] v4.1 7.0 -> parts 6.5
+      Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Shoes 4: slides read as staying in | hoodie, jeans, slides_sandals
+  phone-403ade [the founder (profile pending); class; pull 20261010] v4.1 7.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | tee, jeans, white_leather_sneaker
+  phone-5a9049 [the founder (profile pending); everyday; corpus zoom1] v4.1 7.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | oxford_shirt, jeans, work_boot
+  phone-6b14db [the founder (profile pending); everyday; corpus zoom1] v4.1 5.5 -> parts 5.5
+      Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7 | condition: clean | occasion: loungewear out of the house: held to 5.5
+      lowest: Shoes 4.5: slides read as staying in | hoodie, sweatpants, slides_sandals
+  phone-7de605 [the founder (profile pending); everyday; corpus zoom1] v4.1 6.0 -> parts 5.5
+      Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7 | condition: clean | occasion: loungewear out of the house: held to 5.5
+      lowest: Shoes 4.5: slides read as staying in | hoodie, tee, sweatpants, slides_sandals
+  phone-7f14a4 [the founder (profile pending); everyday; b1 arm A run 0] v4.1 6.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Shoes 6: the shoes look worn | flannel_shirt, jeans, derby
+  phone-8ad378 [the founder (profile pending); class; pull 20261010] v4.1 7.5 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | tee, jeans, white_leather_sneaker
+  phone-8bc29d [the founder (profile pending); class; pull 20261010] v4.1 7.5 -> parts 6.5
+      Proportions 7 · Fit 7 · Color 7 · Style 7.5 | condition: the overshirt looks wrinkled | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | overshirt, hoodie, jeans, other
+      with his true shoes (work_boot, read as other): v4.1 8.0 · parts 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  phone-968016 [the founder (profile pending); class; pull 20261010] v4.1 7.5 -> parts 7.5
+      Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | sweatshirt, jeans, white_leather_sneaker
+  phone-a765e8 [the founder (profile pending); everyday; corpus zoom1] v4.1 6.0 -> parts 5.5
+      Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7 | condition: clean | occasion: loungewear out of the house: held to 5.5
+      lowest: Shoes 4.5: slides read as staying in | hoodie, tee, sweatpants, slides_sandals
+  phone-b0f0c8 [the founder (profile pending); everyday; corpus zoom1] v4.1 7.0 -> parts 7.0
+      Proportions 6.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 6.5: the top underneath shows below the outer piece | hoodie, jeans, work_boot
+  phone-d58b14 [the founder (profile pending); class; pull 20261010] v4.1 7.0 -> parts 6.5
+      Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7 | condition: clean | occasion: right for it
+      lowest: Shoes 4.5: slides read as staying in | hoodie, jeans, slides_sandals
+  phone-d6559a [the founder (profile pending); class; pull 20261010] v4.1 7.0 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Style 7 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | hoodie, jeans, other
+      with his true shoes (work_boot, read as other): v4.1 7.5 · parts 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-d918c0 [the founder (profile pending); class; pull 20261010] v4.1 7.5 -> parts 7.5
+      Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | fleece, flannel_shirt, jeans, suede_chukka
+      with his true shoes (work_boot, read as suede_chukka): v4.1 8.0 · parts 7.5 · Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  phone-e026de [the founder (profile pending); class; pull 20261010] v4.1 7.5 -> parts 6.5
+      Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5 | condition: clean | occasion: right for it
+      lowest: Shoes 4: slides read as staying in | overshirt, sweatshirt, jeans, slides_sandals
+      with his true shoes (work_boot, read as slides_sandals): v4.1 8.5 · parts 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  phone-f07193 [the founder (profile pending); class; pull 20261010] v4.1 7.5 -> parts 6.5
+      Proportions 7 · Fit 5.5 · Color 7 · Style 7 | condition: clean | occasion: right for it
+      lowest: Fit 5.5: the overshirt's sleeves run past the wrists | tee, overshirt, jeans, other
+      with his true shoes (work_boot, read as other): v4.1 8.0 · parts 7.0 · Proportions 7 · Fit 5.5 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-703a8b [unknown, ask the founder; class; pull 20261010] v4.1 7.5 -> parts 7.5
+      Proportions 8 · Fit 7 · Color 7.5 · Style 7 | condition: couldn't check in this light | occasion: right for it
+      lowest: Fit 7: nothing looks the wrong size | polo, jeans, belt
+  phone-ebe23f [unknown, ask the founder; class; pull 20261010] v4.1 8.0 -> parts 7.0
+      Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7 | condition: clean | occasion: right for it
+      lowest: Proportions 7: a balanced, classic shape | other, jeans, white_leather_sneaker
+
+(e) WHAT STILL CAN'T BE SEEN
+  tips fired (a real rule whose reading hasn't passed), one reading per photo: P_next_level 17; CP3_tonal_flat 15; CC5_denim_near_match 3; PF4_long_shirt_wide_leg 2; SW3_dainty_wide 1
+  photos where Proportions and Fit (55% of the weight) both sit at 7 or NA: 53/78 (68%); their parts scores: {5.5: 2, 6.5: 8, 7.0: 41, 7.5: 2}
+  with Claude's blind labels standing in for the failed length/hem readings (50 batch-1 photos): 5 photos would move
+    phone-5a9049               the founder (profile pending)  7.0 -> 7.0  (shirt hangs long over wide legs (a tip today))
+    phone-7f14a4               the founder (profile pending)  7.0 -> 6.5  (shirt hangs long over wide legs (a tip today))
+    phone-d1967f               a friend (profile unknown)     7.0 -> 6.5  (heavy hem under tailoring)
+    stock-s01-before_studio    stock photo (profile unknown)  7.5 -> 7.5  (reward blocked (heavy hem or a fault))
+    stock-s14-before_street    stock photo (profile unknown)  6.5 -> 6.5  (reward blocked (heavy hem or a fault))
+  with the lightness word in the scoring call (color's tonal / light-mid-dark credits; 50 batch-1 photos): 11 photos earn a credit, 0 change score
+    phone-403ade               the founder (profile pending)  7.0 -> 7.0  (tonal, anchored by the shoes)
+    phone-5a9049               the founder (profile pending)  7.0 -> 7.0  (light, mid and dark)
+    phone-7f14a4               the founder (profile pending)  7.0 -> 7.0  (light, mid and dark)
+    phone-8ad378               the founder (profile pending)  7.0 -> 7.0  (tonal, anchored by the shoes)
+    phone-968016               the founder (profile pending)  7.5 -> 7.5  (light, mid and dark)
+    phone-e026de               the founder (profile pending)  6.5 -> 6.5  (light, mid and dark)
+    phone-ebe23f               unknown, ask the founder       7.0 -> 7.0  (tonal, anchored by the shoes)
+    stock-s02-before_studio    stock photo (profile unknown)  7.0 -> 7.0  (tonal, anchored by the shoes)
+    stock-s07-before_studio    stock photo (profile unknown)  7.5 -> 7.5  (tonal with a range)
+    stock-s08-before_studio    stock photo (profile unknown)  7.0 -> 7.0  (tonal, anchored by the shoes)
+    stock-s15-before_street    stock photo (profile unknown)  7.0 -> 7.0  (tonal, anchored by the shoes)
+  what-if, not built: stretch every part around 7 by k (spread on one reading per photo; steadiness on b1 arm A)
+  stretch x1.5                 n= 78 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 14 (18%)  7-7.5 55 (71%)  8+ 4 (5%)  9+ 0 (0%)  · b1 steady (within 0.5 of median) 49/49 (100%)
+  stretch x2.0                 n= 78 median 7.0  mean 7.03  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 53 (68%)  8+ 7 (9%)  9+ 0 (0%)  · b1 steady (within 0.5 of median) 48/49 (98%)
