@@ -1,0 +1,83 @@
+{
+  "bottom" : "sweatpants",
+  "crop" : 0,
+  "h" : 2048,
+  "legs" : [
+    {
+      "bend" : 1,
+      "box" : {
+        "y0" : 1656,
+        "y1" : 1972
+      },
+      "conf" : 0.72999999999999998,
+      "coverBox" : 0.33000000000000002,
+      "edgeStep" : 51,
+      "foldL" : 56,
+      "foldRatio" : 3.1200000000000001,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 1.6100000000000001,
+      "gapT" : 0,
+      "midStd" : 0.52000000000000002,
+      "orient" : 1.1599999999999999,
+      "orientMid" : 1.01,
+      "orientRatio" : 1.1499999999999999,
+      "pantsL" : 46,
+      "sharp" : 6.2000000000000002,
+      "shin" : 367,
+      "shoeColors" : [
+        "#150B08",
+        "#301E19"
+      ],
+      "shoeSep" : 43,
+      "shoeVisT" : 0.57399999999999995,
+      "shoeVisToW" : 2.0899999999999999,
+      "shoeW" : 101,
+      "side" : "l",
+      "spread" : 0.876,
+      "tHem" : 1.002,
+      "tSole" : 1.5760000000000001
+    },
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 1656,
+        "y1" : 1972
+      },
+      "conf" : 0.37,
+      "coverBox" : 0.080000000000000002,
+      "edgeStep" : 42,
+      "foldL" : 31,
+      "foldRatio" : 9.6999999999999993,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 5.3200000000000003,
+      "gapT" : 0,
+      "midStd" : 0.55000000000000004,
+      "orient" : 1.98,
+      "orientMid" : 1.02,
+      "orientRatio" : 1.9399999999999999,
+      "pantsL" : 48,
+      "sharp" : 3.6000000000000001,
+      "shin" : 280,
+      "shoeColors" : [
+        "#251715",
+        "#150C09"
+      ],
+      "shoeSep" : 39,
+      "shoeVisT" : 0.69599999999999995,
+      "shoeVisToW" : 1.8100000000000001,
+      "shoeW" : 108,
+      "side" : "r",
+      "spread" : 0.84799999999999998,
+      "tHem" : 1.0529999999999999,
+      "tSole" : 1.75
+    }
+  ],
+  "max" : 2048,
+  "ms" : 341,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p02\/after_studio.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1365
+}

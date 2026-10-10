@@ -1,0 +1,42 @@
+{
+  "bottom" : "suit_trousers",
+  "crop" : 0.029999999999999999,
+  "h" : 1048,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "conf" : 0.29999999999999999,
+      "edgeStep" : 43,
+      "foldL" : 5,
+      "foldRatio" : 1.0600000000000001,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.32000000000000001,
+      "midStd" : 0.029999999999999999,
+      "orient" : 0.95999999999999996,
+      "orientMid" : 1.3200000000000001,
+      "orientRatio" : 0.72999999999999998,
+      "pantsL" : 1,
+      "shin" : 184,
+      "side" : "r",
+      "spread" : 0.873,
+      "tHem" : 1.5780000000000001,
+      "tSole" : 1.784,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box",
+        "feet cut off",
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 336,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/phone-oct7\/ph2\/before_mirror.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 670
+}

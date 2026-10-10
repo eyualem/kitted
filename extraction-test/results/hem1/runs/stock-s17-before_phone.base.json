@@ -1,0 +1,31 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 1800,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "conf" : 0.33000000000000002,
+      "edgeStep" : 0,
+      "pantsL" : 2,
+      "shin" : 560,
+      "shoeFrom" : "outline",
+      "shoeSep" : 2,
+      "side" : "r",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 346,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s17\/before_phone.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1200
+}

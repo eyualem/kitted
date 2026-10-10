@@ -1,0 +1,85 @@
+{
+  "bottom" : "trousers",
+  "crop" : 0,
+  "h" : 1800,
+  "legs" : [
+    {
+      "bend" : 7,
+      "box" : {
+        "y0" : 1573,
+        "y1" : 1728
+      },
+      "conf" : 0.68999999999999995,
+      "coverBox" : 0.40000000000000002,
+      "edgeStep" : 12,
+      "foldL" : 17,
+      "foldRatio" : 9.5399999999999991,
+      "folds" : 2,
+      "foldsAbs" : 2,
+      "foldStd" : 4.1900000000000004,
+      "gapT" : 0,
+      "midStd" : 0.44,
+      "orient" : 2.0800000000000001,
+      "orientMid" : 1.1599999999999999,
+      "orientRatio" : 1.79,
+      "pantsL" : 14,
+      "sharp" : 19.600000000000001,
+      "shin" : 281,
+      "shoeColors" : [
+        "#434242",
+        "#EAECE5",
+        "#84817F"
+      ],
+      "shoeSep" : 15,
+      "shoeVisT" : 0.36499999999999999,
+      "shoeVisToW" : 1.0600000000000001,
+      "shoeW" : 97,
+      "side" : "l",
+      "spread" : 0.84199999999999997,
+      "tHem" : 1.1259999999999999,
+      "tSole" : 1.492
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 1573,
+        "y1" : 1728
+      },
+      "conf" : 0.67000000000000004,
+      "coverBox" : 0.14000000000000001,
+      "edgeStep" : 13,
+      "foldL" : 13,
+      "foldRatio" : 10.17,
+      "folds" : 2,
+      "foldsAbs" : 2,
+      "foldStd" : 3.0499999999999998,
+      "gapT" : 0,
+      "midStd" : 0.14999999999999999,
+      "orient" : 1.8,
+      "orientMid" : 0.93999999999999995,
+      "orientRatio" : 1.8999999999999999,
+      "pantsL" : 7,
+      "sharp" : 15.9,
+      "shin" : 232,
+      "shoeColors" : [
+        "#E1E2D8",
+        "#4D4D49",
+        "#8C8984"
+      ],
+      "shoeSep" : 82,
+      "shoeVisT" : 0.34399999999999997,
+      "shoeVisToW" : 1,
+      "shoeW" : 80,
+      "side" : "r",
+      "spread" : 0.81299999999999994,
+      "tHem" : 1.181,
+      "tSole" : 1.5249999999999999
+    }
+  ],
+  "max" : 2048,
+  "ms" : 358,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s13\/before_street.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1200
+}

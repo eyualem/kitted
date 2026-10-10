@@ -1,0 +1,74 @@
+{
+  "bottom" : "suit_trousers",
+  "crop" : 0,
+  "h" : 718,
+  "legs" : [
+    {
+      "bend" : 4,
+      "box" : {
+        "y0" : 489,
+        "y1" : 551
+      },
+      "conf" : 0.66000000000000003,
+      "coverBox" : 0.16,
+      "edgeStep" : 13,
+      "foldL" : 5,
+      "foldRatio" : 0.96999999999999997,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.28999999999999998,
+      "gapT" : 0,
+      "midStd" : 0.040000000000000001,
+      "orient" : 1.1899999999999999,
+      "orientMid" : 0.70999999999999996,
+      "orientRatio" : 1.6899999999999999,
+      "pantsL" : 3,
+      "sharp" : 14.300000000000001,
+      "shin" : 119,
+      "shoeColors" : [
+        "#563628",
+        "#3B251A"
+      ],
+      "shoeSep" : 29,
+      "shoeVisT" : 0.42699999999999999,
+      "shoeVisToW" : 1.3100000000000001,
+      "shoeW" : 39,
+      "side" : "l",
+      "spread" : 0.90300000000000002,
+      "tHem" : 1.071,
+      "tSole" : 1.498,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    },
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 489,
+        "y1" : 551
+      },
+      "conf" : 0.62,
+      "edgeStep" : 8,
+      "pantsL" : 6,
+      "sharp" : 15.5,
+      "shin" : 120,
+      "shoeColors" : [
+        "#412B1C",
+        "#574131"
+      ],
+      "shoeSep" : 21,
+      "side" : "r",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 334,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m11\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 427
+}

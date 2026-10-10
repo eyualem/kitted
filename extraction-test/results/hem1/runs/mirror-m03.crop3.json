@@ -1,0 +1,27 @@
+{
+  "bottom" : "chinos",
+  "crop" : 0.029999999999999999,
+  "h" : 282,
+  "legs" : [
+    {
+      "bend" : 9,
+      "conf" : 0.57999999999999996,
+      "shin" : 28,
+      "side" : "l",
+      "why" : "no pants on the shin"
+    },
+    {
+      "bend" : 2,
+      "conf" : 0.64000000000000001,
+      "shin" : 33,
+      "side" : "r",
+      "why" : "no pants on the shin"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 335,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m03\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 158
+}

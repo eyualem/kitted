@@ -1,0 +1,83 @@
+{
+  "bottom" : "sweatpants",
+  "crop" : 0.029999999999999999,
+  "h" : 1926,
+  "legs" : [
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 1596,
+        "y1" : 1911
+      },
+      "conf" : 0.68999999999999995,
+      "coverBox" : 0.33000000000000002,
+      "edgeStep" : 51,
+      "foldL" : 56,
+      "foldRatio" : 3.5699999999999998,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 1.6299999999999999,
+      "gapT" : 0,
+      "midStd" : 0.46000000000000002,
+      "orient" : 1.1299999999999999,
+      "orientMid" : 1.05,
+      "orientRatio" : 1.0800000000000001,
+      "pantsL" : 45,
+      "sharp" : 6,
+      "shin" : 375,
+      "shoeColors" : [
+        "#150B08",
+        "#301E19"
+      ],
+      "shoeSep" : 43,
+      "shoeVisT" : 0.56200000000000006,
+      "shoeVisToW" : 2.1099999999999999,
+      "shoeW" : 100,
+      "side" : "l",
+      "spread" : 0.88400000000000001,
+      "tHem" : 0.97899999999999998,
+      "tSole" : 1.5409999999999999
+    },
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 1596,
+        "y1" : 1911
+      },
+      "conf" : 0.38,
+      "coverBox" : 0.080000000000000002,
+      "edgeStep" : 40,
+      "foldL" : 30,
+      "foldRatio" : 10.949999999999999,
+      "folds" : 2,
+      "foldsAbs" : 1,
+      "foldStd" : 5.6500000000000004,
+      "gapT" : 0,
+      "midStd" : 0.52000000000000002,
+      "orient" : 2.1000000000000001,
+      "orientMid" : 1.01,
+      "orientRatio" : 2.0800000000000001,
+      "pantsL" : 46,
+      "sharp" : 3.6000000000000001,
+      "shin" : 262,
+      "shoeColors" : [
+        "#251714",
+        "#150C09"
+      ],
+      "shoeSep" : 37,
+      "shoeVisT" : 0.747,
+      "shoeVisToW" : 1.8100000000000001,
+      "shoeW" : 108,
+      "side" : "r",
+      "spread" : 0.78500000000000003,
+      "tHem" : 1.032,
+      "tSole" : 1.78
+    }
+  ],
+  "max" : 2048,
+  "ms" : 341,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p02\/after_studio.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1285
+}

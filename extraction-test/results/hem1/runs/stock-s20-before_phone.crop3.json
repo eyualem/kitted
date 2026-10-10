@@ -1,0 +1,29 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 1692,
+  "legs" : [
+    {
+      "bend" : 11,
+      "conf" : 0.38,
+      "pantsL" : 32,
+      "shin" : 491,
+      "side" : "l",
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box",
+        "no hem edge"
+      ]
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 336,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s20\/before_phone.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1354
+}

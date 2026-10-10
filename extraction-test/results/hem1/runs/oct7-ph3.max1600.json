@@ -1,0 +1,76 @@
+{
+  "bottom" : "trousers",
+  "crop" : 0,
+  "h" : 971,
+  "legs" : [
+    {
+      "bend" : 4,
+      "box" : {
+        "y0" : 821,
+        "y1" : 937
+      },
+      "conf" : 0.38,
+      "edgeStep" : 10,
+      "pantsL" : 2,
+      "sharp" : 5.4000000000000004,
+      "shin" : 296,
+      "shoeColors" : [
+        "#17120E",
+        "#221D17"
+      ],
+      "shoeSep" : 4,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 1,
+      "box" : {
+        "y0" : 821,
+        "y1" : 937
+      },
+      "conf" : 0.39000000000000001,
+      "coverBox" : 0.17000000000000001,
+      "edgeStep" : 14,
+      "foldL" : 4,
+      "foldRatio" : 5.9800000000000004,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 1.79,
+      "gapT" : 0,
+      "midStd" : 0.050000000000000003,
+      "orient" : 1.1499999999999999,
+      "orientMid" : 0.55000000000000004,
+      "orientRatio" : 2.0800000000000001,
+      "pantsL" : 1,
+      "sharp" : 6.9000000000000004,
+      "shin" : 258,
+      "shoeColors" : [
+        "#18110A",
+        "#2E2820"
+      ],
+      "shoeSep" : 6,
+      "shoeVisT" : 0.35199999999999998,
+      "shoeVisToW" : 1.3200000000000001,
+      "shoeW" : 69,
+      "side" : "r",
+      "spread" : 0.84699999999999998,
+      "tHem" : 1.077,
+      "tSole" : 1.429,
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 1600,
+  "ms" : 332,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/phone-oct7\/ph3\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 544
+}

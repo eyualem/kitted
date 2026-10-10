@@ -1,0 +1,95 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 563,
+  "legs" : [
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 444,
+        "y1" : 530
+      },
+      "conf" : 0.67000000000000004,
+      "coverBox" : 0.46000000000000002,
+      "edgeStep" : 83,
+      "foldL" : 5,
+      "foldRatio" : 2.0499999999999998,
+      "folds" : 1,
+      "foldsAbs" : 0,
+      "foldStd" : 0.62,
+      "gapT" : 0,
+      "midStd" : 0.13,
+      "orient" : 1.4099999999999999,
+      "orientMid" : 0.73999999999999999,
+      "orientRatio" : 1.8999999999999999,
+      "pantsL" : 7,
+      "sharp" : 33.899999999999999,
+      "shin" : 77,
+      "shoeColors" : [
+        "#E1E6E9",
+        "#1B1E24",
+        "#8A8985"
+      ],
+      "shoeSep" : 83,
+      "shoeVisT" : 0.55400000000000005,
+      "shoeVisToW" : 1.3899999999999999,
+      "shoeW" : 31,
+      "side" : "l",
+      "spread" : 1.044,
+      "tHem" : 1.125,
+      "tSole" : 1.679,
+      "why" : "too small",
+      "whys" : [
+        "too small",
+        "pants too dark to show folds"
+      ]
+    },
+    {
+      "bend" : 4,
+      "box" : {
+        "y0" : 444,
+        "y1" : 530
+      },
+      "conf" : 0.63,
+      "coverBox" : 0.11,
+      "edgeStep" : 56,
+      "foldL" : 5,
+      "foldRatio" : 6.7699999999999996,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 2.0299999999999998,
+      "gapT" : 0,
+      "midStd" : 0.02,
+      "orient" : 1.24,
+      "orientMid" : 0.87,
+      "orientRatio" : 1.4199999999999999,
+      "pantsL" : 0,
+      "sharp" : 37.700000000000003,
+      "shin" : 74,
+      "shoeColors" : [
+        "#E3E7E6",
+        "#BEC2BF",
+        "#70726D"
+      ],
+      "shoeSep" : 90,
+      "shoeVisT" : 0.35099999999999998,
+      "shoeVisToW" : 0.95999999999999996,
+      "shoeW" : 27,
+      "side" : "r",
+      "spread" : 1.389,
+      "tHem" : 1.109,
+      "tSole" : 1.4590000000000001,
+      "why" : "too small",
+      "whys" : [
+        "too small",
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 339,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m07\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 315
+}

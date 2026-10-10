@@ -1,0 +1,52 @@
+{
+  "bottom" : "chinos",
+  "crop" : 0,
+  "h" : 2048,
+  "legs" : [
+    {
+      "bend" : 37,
+      "conf" : 0.68000000000000005,
+      "edgeStep" : 10,
+      "pantsL" : 52,
+      "shin" : 336,
+      "side" : "l",
+      "why" : "leg bent",
+      "whys" : [
+        "leg bent",
+        "no shoe box",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 9,
+      "conf" : 0.64000000000000001,
+      "edgeStep" : 32,
+      "foldL" : 34,
+      "foldRatio" : 1.3799999999999999,
+      "folds" : 3,
+      "foldsAbs" : 1,
+      "foldStd" : 1.3500000000000001,
+      "midStd" : 0.96999999999999997,
+      "orient" : 0.81999999999999995,
+      "orientMid" : 0.87,
+      "orientRatio" : 0.94999999999999996,
+      "pantsL" : 48,
+      "shin" : 303,
+      "side" : "r",
+      "spread" : 0.62,
+      "spreadMerged" : true,
+      "tHem" : 1.0229999999999999,
+      "tSole" : 1.7350000000000001,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 341,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p01\/after_studio.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1366
+}

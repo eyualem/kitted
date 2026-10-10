@@ -1,0 +1,85 @@
+{
+  "bottom" : "trousers",
+  "crop" : 0,
+  "h" : 1600,
+  "legs" : [
+    {
+      "bend" : 7,
+      "box" : {
+        "y0" : 1398,
+        "y1" : 1536
+      },
+      "conf" : 0.68999999999999995,
+      "coverBox" : 0.40000000000000002,
+      "edgeStep" : 12,
+      "foldL" : 17,
+      "foldRatio" : 9.9499999999999993,
+      "folds" : 2,
+      "foldsAbs" : 2,
+      "foldStd" : 4.1600000000000001,
+      "gapT" : 0,
+      "midStd" : 0.41999999999999998,
+      "orient" : 2.0800000000000001,
+      "orientMid" : 1.03,
+      "orientRatio" : 2.02,
+      "pantsL" : 14,
+      "sharp" : 20.300000000000001,
+      "shin" : 248,
+      "shoeColors" : [
+        "#444343",
+        "#827F7D",
+        "#EAECE5"
+      ],
+      "shoeSep" : 15,
+      "shoeVisT" : 0.36599999999999999,
+      "shoeVisToW" : 1.0600000000000001,
+      "shoeW" : 86,
+      "side" : "l",
+      "spread" : 0.84199999999999997,
+      "tHem" : 1.133,
+      "tSole" : 1.4990000000000001
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 1398,
+        "y1" : 1536
+      },
+      "conf" : 0.67000000000000004,
+      "coverBox" : 0.13,
+      "edgeStep" : 12,
+      "foldL" : 14,
+      "foldRatio" : 10.5,
+      "folds" : 2,
+      "foldsAbs" : 2,
+      "foldStd" : 3.1499999999999999,
+      "gapT" : 0,
+      "midStd" : 0.16,
+      "orient" : 1.78,
+      "orientMid" : 0.93000000000000005,
+      "orientRatio" : 1.9199999999999999,
+      "pantsL" : 7,
+      "sharp" : 18,
+      "shin" : 206,
+      "shoeColors" : [
+        "#E1E1D8",
+        "#4C4C49",
+        "#888582"
+      ],
+      "shoeSep" : 82,
+      "shoeVisT" : 0.34899999999999998,
+      "shoeVisToW" : 1.01,
+      "shoeW" : 71,
+      "side" : "r",
+      "spread" : 0.81799999999999995,
+      "tHem" : 1.1830000000000001,
+      "tSole" : 1.532
+    }
+  ],
+  "max" : 1600,
+  "ms" : 364,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s13\/before_street.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1067
+}

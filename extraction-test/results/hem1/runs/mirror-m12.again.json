@@ -1,0 +1,77 @@
+{
+  "bottom" : "drawstring_trousers",
+  "crop" : 0,
+  "h" : 516,
+  "legs" : [
+    {
+      "bend" : 6,
+      "box" : {
+        "y0" : 456,
+        "y1" : 482
+      },
+      "conf" : 0.60999999999999999,
+      "coverBox" : 0.14000000000000001,
+      "edgeStep" : 43,
+      "foldL" : 77,
+      "foldRatio" : 5.3300000000000001,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 1.6000000000000001,
+      "gapT" : 0,
+      "midStd" : 0.25,
+      "orient" : 1.04,
+      "orientMid" : 0.79000000000000004,
+      "orientRatio" : 1.3200000000000001,
+      "pantsL" : 78,
+      "sharp" : 28.699999999999999,
+      "shin" : 78,
+      "shoeColors" : [
+        "#403C3A",
+        "#C19B98",
+        "#695E5B"
+      ],
+      "shoeSep" : 52,
+      "shoeVisT" : 0.26800000000000002,
+      "shoeVisToW" : 0.69999999999999996,
+      "shoeW" : 30,
+      "side" : "l",
+      "spread" : 0.83599999999999997,
+      "tHem" : 1.179,
+      "tSole" : 1.4470000000000001,
+      "why" : "too small",
+      "whys" : [
+        "too small"
+      ]
+    },
+    {
+      "bend" : 0,
+      "conf" : 0.58999999999999997,
+      "edgeStep" : 48,
+      "foldL" : 75,
+      "foldRatio" : 8.5099999999999998,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 2.5499999999999998,
+      "gapT" : 0.010999999999999999,
+      "midStd" : 0.23999999999999999,
+      "orient" : 1.49,
+      "orientMid" : 0.72999999999999998,
+      "orientRatio" : 2.04,
+      "pantsL" : 82,
+      "shin" : 94,
+      "shoeFrom" : "outline",
+      "shoeSep" : 57,
+      "shoeVisT" : 0.307,
+      "side" : "r",
+      "spread" : 0.92600000000000005,
+      "tHem" : 1.103,
+      "tSole" : 1.4199999999999999
+    }
+  ],
+  "max" : 2048,
+  "ms" : 335,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m12\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 387
+}

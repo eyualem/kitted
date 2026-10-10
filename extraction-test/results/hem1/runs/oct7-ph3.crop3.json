@@ -1,0 +1,21 @@
+{
+  "bottom" : "trousers",
+  "crop" : 0.029999999999999999,
+  "h" : 913,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 359,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/phone-oct7\/ph3\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 512
+}

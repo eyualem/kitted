@@ -1,0 +1,58 @@
+{
+  "bottom" : "sweatpants",
+  "crop" : 0,
+  "h" : 1600,
+  "legs" : [
+    {
+      "bend" : 5,
+      "box" : {
+        "y0" : 1374,
+        "y1" : 1518
+      },
+      "conf" : 0.59999999999999998,
+      "edgeStep" : 31,
+      "pantsL" : 64,
+      "sharp" : 16,
+      "shin" : 264,
+      "shoeColors" : [
+        "#A29990",
+        "#C6CBCE"
+      ],
+      "shoeSep" : 4,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 1374,
+        "y1" : 1518
+      },
+      "conf" : 0.52000000000000002,
+      "edgeStep" : 8,
+      "pantsL" : 63,
+      "sharp" : 15.4,
+      "shin" : 269,
+      "shoeColors" : [
+        "#D2DADF",
+        "#A8A8A6"
+      ],
+      "shoeSep" : 27,
+      "side" : "r",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 1600,
+  "ms" : 332,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p02\/before_studio.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1067
+}

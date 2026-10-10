@@ -12,6 +12,8 @@
 //       the fit ruler (FitRuler.swift): sleeve end, top hem, pant hem, shorts length, layers, from his own joints
 //   kmeasure legs <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
 //       the leg probe (LegTaper.swift): pant widths at thigh, knee, hem and the shoe, as garment-to-garment ratios
+//   kmeasure hems <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
+//       the hem probe (HemProbe.swift): folds above the hem, fabric over the shoe, hem spread (M2)
 import CoreImage
 import Foundation
 import ImageIO
@@ -212,6 +214,38 @@ case "legs":
     return "\(leg["side"] ?? "?"): h/k=\(d["hemToKnee"] ?? "-") k/t=\(d["kneeToThigh"] ?? "-") o/s=\(d["openToShoe"] ?? "-")"
   }
   print(lsum.joined(separator: " · "))
+
+case "hems":
+  // kmeasure hems <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
+  guard args.count >= 4 else { print("bad args"); exit(2) }
+  var hboxes: [[String: Any]] = [], hover: String?, hmax = Prep.workPx, hcrop: CGFloat = 0
+  var hi = 4
+  while hi < args.count {
+    switch args[hi] {
+    case "--boxes": if let d = FileManager.default.contents(atPath: args[hi + 1]), let l = try JSONSerialization.jsonObject(with: d) as? [[String: Any]] { hboxes = l }; hi += 2
+    case "--overlay": hover = args[hi + 1]; hi += 2
+    case "--max": hmax = CGFloat(Double(args[hi + 1]) ?? 2048); hi += 2
+    case "--crop": hcrop = CGFloat(Double(args[hi + 1]) ?? 0); hi += 2
+    default: print("unknown option \(args[hi])"); exit(2)
+    }
+  }
+  guard let hdata = FileManager.default.contents(atPath: args[2]), var himg = Prep.decode(hdata, maxPx: hmax).image else { print("unreadable"); exit(1) }
+  if hcrop > 0 {
+    let W = CGFloat(himg.width), H = CGFloat(himg.height)
+    guard let c = himg.cropping(to: CGRect(x: W * hcrop, y: H * hcrop, width: W * (1 - 2 * hcrop), height: H * (1 - 2 * hcrop)).integral) else { exit(1) }
+    himg = c
+    let f = Double(hcrop)
+    hboxes = hboxes.map { g in var g = g; if let b = g["box"] as? [Double] { g["box"] = b.map { (($0 / 1000 - f) / (1 - 2 * f)) * 1000 } }; return g }
+  }
+  let hres = HemProbe.run(himg, boxes: hboxes)
+  var hout = hres.json
+  hout["photo"] = args[2]; hout["max"] = Int(hmax); hout["crop"] = Double(hcrop)
+  try writeJSON(hout, args[3])
+  if let o = hover, let hidden = hres.hidden { try HemProbe.overlay(hidden, marks: hres.marks, to: URL(fileURLWithPath: o)) }
+  let hsum = ((hout["legs"] as? [[String: Any]]) ?? []).map { leg -> String in
+    "\(leg["side"] ?? "?"): hem=\(leg["tHem"] ?? "-") gap=\(leg["gapT"] ?? "-") vis/w=\(leg["shoeVisToW"] ?? "-") folds=\(leg["folds"] ?? "-") fr=\(leg["foldRatio"] ?? "-") spread=\(leg["spread"] ?? "-") \(leg["why"] ?? "")"
+  }
+  print(hsum.joined(separator: " · "))
 
 default:
   print("unknown command"); exit(2)

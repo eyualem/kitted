@@ -1,0 +1,95 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 1692,
+  "legs" : [
+    {
+      "bend" : 3,
+      "box" : {
+        "y0" : 1587,
+        "y1" : 1744
+      },
+      "conf" : 0.56000000000000005,
+      "coverBox" : -0.52000000000000002,
+      "edgeStep" : 56,
+      "foldL" : 24,
+      "foldRatio" : 2.3900000000000001,
+      "folds" : 1,
+      "foldsAbs" : 0,
+      "foldStd" : 0.71999999999999997,
+      "gapT" : 0.26700000000000002,
+      "midStd" : 0.23999999999999999,
+      "orient" : 0.94999999999999996,
+      "orientMid" : 0.94999999999999996,
+      "orientRatio" : 1,
+      "pantsL" : 25,
+      "sharp" : 8.4000000000000004,
+      "shin" : 393,
+      "shoeColors" : [
+        "#C8B7A0",
+        "#9B947B",
+        "#596952"
+      ],
+      "shoeSep" : 52,
+      "shoeVisT" : 0.224,
+      "shoeVisToW" : 0.72999999999999998,
+      "shoeW" : 121,
+      "side" : "l",
+      "spread" : 0.97499999999999998,
+      "spreadMerged" : true,
+      "tHem" : 0.82899999999999996,
+      "tSole" : 1.3200000000000001,
+      "why" : "feet cut off",
+      "whys" : [
+        "feet cut off"
+      ]
+    },
+    {
+      "bend" : 1,
+      "box" : {
+        "y0" : 1587,
+        "y1" : 1744
+      },
+      "conf" : 0.60999999999999999,
+      "coverBox" : -0.40999999999999998,
+      "edgeStep" : 53,
+      "foldL" : 28,
+      "foldRatio" : 1.3300000000000001,
+      "folds" : 1,
+      "foldsAbs" : 0,
+      "foldStd" : 0.40000000000000002,
+      "gapT" : 0.0030000000000000001,
+      "midStd" : 0.20999999999999999,
+      "orient" : 0.94999999999999996,
+      "orientMid" : 0.98999999999999999,
+      "orientRatio" : 0.95999999999999996,
+      "pantsL" : 30,
+      "sharp" : 8.0999999999999996,
+      "shin" : 377,
+      "shoeColors" : [
+        "#B7AB92",
+        "#828C74",
+        "#B18F6D"
+      ],
+      "shoeSep" : 44,
+      "shoeVisT" : 0.48199999999999998,
+      "shoeVisToW" : 0.82999999999999996,
+      "shoeW" : 219,
+      "side" : "r",
+      "spread" : 0.80100000000000005,
+      "spreadMerged" : true,
+      "tHem" : 0.86499999999999999,
+      "tSole" : 1.3500000000000001,
+      "why" : "feet cut off",
+      "whys" : [
+        "feet cut off"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 342,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s04\/before_studio.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1354
+}

@@ -1,0 +1,85 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 635,
+  "legs" : [
+    {
+      "bend" : 3,
+      "box" : {
+        "y0" : 518,
+        "y1" : 595
+      },
+      "conf" : 0.65000000000000002,
+      "coverBox" : 0.28000000000000003,
+      "edgeStep" : 24,
+      "foldL" : 29,
+      "foldRatio" : 5.2999999999999998,
+      "folds" : 2,
+      "foldsAbs" : 1,
+      "foldStd" : 2.5699999999999998,
+      "gapT" : 0,
+      "midStd" : 0.47999999999999998,
+      "orient" : 1.1299999999999999,
+      "orientMid" : 0.85999999999999999,
+      "orientRatio" : 1.3100000000000001,
+      "pantsL" : 36,
+      "sharp" : 38.200000000000003,
+      "shin" : 105,
+      "shoeColors" : [
+        "#1B110B",
+        "#A29489",
+        "#483A31"
+      ],
+      "shoeSep" : 30,
+      "shoeVisT" : 0.51000000000000001,
+      "shoeVisToW" : 1.5,
+      "shoeW" : 36,
+      "side" : "l",
+      "spread" : 0.84199999999999997,
+      "tHem" : 0.876,
+      "tSole" : 1.3859999999999999
+    },
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 518,
+        "y1" : 595
+      },
+      "conf" : 0.77000000000000002,
+      "coverBox" : 0.22,
+      "edgeStep" : 40,
+      "foldL" : 39,
+      "foldRatio" : 3.4100000000000001,
+      "folds" : 2,
+      "foldsAbs" : 2,
+      "foldStd" : 3.5499999999999998,
+      "gapT" : 0,
+      "midStd" : 1.04,
+      "orient" : 1,
+      "orientMid" : 0.82999999999999996,
+      "orientRatio" : 1.2,
+      "pantsL" : 36,
+      "sharp" : 37.899999999999999,
+      "shin" : 93,
+      "shoeColors" : [
+        "#31251F",
+        "#D6C6BA",
+        "#65574E"
+      ],
+      "shoeSep" : 20,
+      "shoeVisT" : 0.56699999999999995,
+      "shoeVisToW" : 1.29,
+      "shoeW" : 41,
+      "side" : "r",
+      "spread" : 0.83099999999999996,
+      "tHem" : 1.091,
+      "tSole" : 1.6579999999999999
+    }
+  ],
+  "max" : 2048,
+  "ms" : 350,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m01\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 428
+}

@@ -1,0 +1,63 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 1692,
+  "legs" : [
+    {
+      "bend" : 0,
+      "conf" : 0.72999999999999998,
+      "edgeStep" : 24,
+      "foldL" : 66,
+      "foldRatio" : 0.85999999999999999,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 1.5700000000000001,
+      "midStd" : 1.8300000000000001,
+      "orient" : 0.88,
+      "orientMid" : 0.77000000000000002,
+      "orientRatio" : 1.1399999999999999,
+      "pantsL" : 71,
+      "shin" : 187,
+      "side" : "l",
+      "spread" : 0.91600000000000004,
+      "spreadMerged" : true,
+      "tHem" : 1.0860000000000001,
+      "tSole" : 1.2090000000000001,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box"
+      ]
+    },
+    {
+      "bend" : 4,
+      "conf" : 0.75,
+      "edgeStep" : 13,
+      "foldL" : 56,
+      "foldRatio" : 2.0800000000000001,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 1.98,
+      "midStd" : 0.94999999999999996,
+      "orient" : 0.88,
+      "orientMid" : 0.54000000000000004,
+      "orientRatio" : 1.6399999999999999,
+      "pantsL" : 77,
+      "shin" : 178,
+      "side" : "r",
+      "spread" : 0.80400000000000005,
+      "spreadMerged" : true,
+      "tHem" : 1.0569999999999999,
+      "tSole" : 1.2869999999999999,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 323,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s26\/before_mirror.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1128
+}

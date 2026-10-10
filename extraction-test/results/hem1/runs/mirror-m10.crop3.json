@@ -1,0 +1,31 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 602,
+  "legs" : [
+    {
+      "bend" : 16,
+      "conf" : 0.40999999999999998,
+      "edgeStep" : 2,
+      "pantsL" : 20,
+      "shin" : 73,
+      "side" : "l",
+      "why" : "too small",
+      "whys" : [
+        "too small",
+        "no shoe box",
+        "no hem edge"
+      ]
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 338,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m10\/before_mirror.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 452
+}

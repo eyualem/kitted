@@ -1,0 +1,21 @@
+{
+  "bottom" : "chinos",
+  "crop" : 0,
+  "h" : 2048,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 337,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p06\/after_studio.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1365
+}

@@ -1,0 +1,51 @@
+{
+  "bottom" : null,
+  "crop" : 0,
+  "h" : 1676,
+  "legs" : [
+    {
+      "bend" : 0,
+      "conf" : 0.69999999999999996,
+      "edgeStep" : 6,
+      "pantsL" : 14,
+      "shin" : 177,
+      "side" : "l",
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 1,
+      "conf" : 0.69999999999999996,
+      "edgeStep" : 23,
+      "foldL" : 3,
+      "foldRatio" : 0.63,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.19,
+      "midStd" : 0.20000000000000001,
+      "orient" : 1.3200000000000001,
+      "orientMid" : 0.93000000000000005,
+      "orientRatio" : 1.4199999999999999,
+      "pantsL" : 12,
+      "shin" : 181,
+      "side" : "r",
+      "spread" : 1.0700000000000001,
+      "tHem" : 1.0820000000000001,
+      "tSole" : 1.4510000000000001,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box",
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 345,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261009-182134\/photos\/7f14a43e30f31d5e9d6f6d9a40582c8b4ee160ffcdb984d48d1a7684e1ed7108-photo.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1290
+}

@@ -1,0 +1,48 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 1600,
+  "legs" : [
+    {
+      "box" : {
+        "y0" : 1064,
+        "y1" : 1243
+      },
+      "conf" : 0.31,
+      "edgeStep" : 7,
+      "pantsL" : 57,
+      "sharp" : 4.7999999999999998,
+      "shin" : 327,
+      "shoeColors" : [
+        "#021212",
+        "#0B282D"
+      ],
+      "shoeSep" : 53,
+      "side" : "l",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    },
+    {
+      "conf" : 0.34000000000000002,
+      "edgeStep" : 0,
+      "pantsL" : 2,
+      "shin" : 502,
+      "shoeFrom" : "outline",
+      "shoeSep" : 2,
+      "side" : "r",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 1600,
+  "ms" : 339,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s17\/before_phone.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1067
+}

@@ -1,0 +1,92 @@
+{
+  "bottom" : "trousers",
+  "crop" : 0.029999999999999999,
+  "h" : 640,
+  "legs" : [
+    {
+      "bend" : 7,
+      "box" : {
+        "y0" : 578,
+        "y1" : 647
+      },
+      "conf" : 0.62,
+      "coverBox" : 0.11,
+      "edgeStep" : 31,
+      "foldL" : 41,
+      "foldRatio" : 1.46,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.72999999999999998,
+      "gapT" : 0,
+      "midStd" : 0.5,
+      "orient" : 0.58999999999999997,
+      "orientMid" : 0.62,
+      "orientRatio" : 0.94999999999999996,
+      "pantsL" : 33,
+      "sharp" : 15,
+      "shin" : 135,
+      "shoeColors" : [
+        "#171716",
+        "#34302B"
+      ],
+      "shoeSep" : 26,
+      "shoeVisT" : 0.28000000000000003,
+      "shoeVisToW" : 1.1200000000000001,
+      "shoeW" : 34,
+      "side" : "l",
+      "spread" : 0.86199999999999999,
+      "tHem" : 1.0509999999999999,
+      "tSole" : 1.3300000000000001,
+      "why" : "feet cut off",
+      "whys" : [
+        "feet cut off"
+      ]
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 578,
+        "y1" : 647
+      },
+      "conf" : 0.54000000000000004,
+      "coverBox" : 0.37,
+      "edgeStep" : 33,
+      "foldL" : 41,
+      "foldRatio" : 3.4900000000000002,
+      "folds" : 1,
+      "foldsAbs" : 0,
+      "foldStd" : 1.78,
+      "gapT" : 0,
+      "midStd" : 0.51000000000000001,
+      "orient" : 1.1499999999999999,
+      "orientMid" : 0.90000000000000002,
+      "orientRatio" : 1.27,
+      "pantsL" : 39,
+      "sharp" : 12.1,
+      "shin" : 143,
+      "shoeColors" : [
+        "#141614",
+        "#252624",
+        "#453C33"
+      ],
+      "shoeSep" : 33,
+      "shoeVisT" : 0.24399999999999999,
+      "shoeVisToW" : 0.88,
+      "shoeW" : 40,
+      "side" : "r",
+      "spread" : 0.86099999999999999,
+      "tHem" : 1.073,
+      "tSole" : 1.3160000000000001,
+      "why" : "feet cut off",
+      "whys" : [
+        "feet cut off"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 354,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m05\/before_studio.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 425
+}

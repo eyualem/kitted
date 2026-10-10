@@ -1,0 +1,60 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 1132,
+  "legs" : [
+    {
+      "conf" : 0.39000000000000001,
+      "edgeStep" : 33,
+      "foldL" : 8,
+      "foldRatio" : 3.6499999999999999,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 1.1000000000000001,
+      "midStd" : 0.16,
+      "orient" : 0.94999999999999996,
+      "orientMid" : 0.92000000000000004,
+      "orientRatio" : 1.04,
+      "pantsL" : 4,
+      "shin" : 239,
+      "side" : "l",
+      "spread" : 0.82199999999999995,
+      "tHem" : 1.0680000000000001,
+      "tSole" : 1.5149999999999999,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box",
+        "feet cut off"
+      ]
+    },
+    {
+      "conf" : 0.37,
+      "edgeStep" : 50,
+      "foldL" : 9,
+      "foldRatio" : 3.27,
+      "folds" : 1,
+      "foldsAbs" : 0,
+      "foldStd" : 0.97999999999999998,
+      "midStd" : 0.12,
+      "orient" : 1.1899999999999999,
+      "orientMid" : 1.0900000000000001,
+      "orientRatio" : 1.0900000000000001,
+      "pantsL" : 5,
+      "shin" : 227,
+      "side" : "r",
+      "spread" : 0.93100000000000005,
+      "tHem" : 1.1499999999999999,
+      "tSole" : 1.4670000000000001,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 345,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/phone-oct7\/ph4\/before_mirror.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 686
+}

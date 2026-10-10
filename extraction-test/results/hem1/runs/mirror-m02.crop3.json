@@ -1,0 +1,57 @@
+{
+  "bottom" : "trousers",
+  "crop" : 0.029999999999999999,
+  "h" : 602,
+  "legs" : [
+    {
+      "bend" : 7,
+      "box" : {
+        "y0" : 543,
+        "y1" : 606
+      },
+      "conf" : 0.52000000000000002,
+      "edgeStep" : 2,
+      "pantsL" : 0,
+      "sharp" : 10.6,
+      "shin" : 111,
+      "shoeColors" : [
+        "#05080A"
+      ],
+      "shoeSep" : 1,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 4,
+      "box" : {
+        "y0" : 543,
+        "y1" : 606
+      },
+      "conf" : 0.55000000000000004,
+      "edgeStep" : 3,
+      "pantsL" : 0,
+      "sharp" : 12.6,
+      "shin" : 128,
+      "shoeColors" : [
+        "#090C0D"
+      ],
+      "shoeSep" : 2,
+      "side" : "r",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 337,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m02\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 452
+}

@@ -1,0 +1,92 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 597,
+  "legs" : [
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 460,
+        "y1" : 546
+      },
+      "conf" : 0.71999999999999997,
+      "coverBox" : 0.46000000000000002,
+      "edgeStep" : 83,
+      "foldL" : 5,
+      "foldRatio" : 2.0800000000000001,
+      "folds" : 1,
+      "foldsAbs" : 0,
+      "foldStd" : 0.63,
+      "gapT" : 0,
+      "midStd" : 0.13,
+      "orient" : 1.4199999999999999,
+      "orientMid" : 0.79000000000000004,
+      "orientRatio" : 1.8100000000000001,
+      "pantsL" : 7,
+      "sharp" : 33.899999999999999,
+      "shin" : 76,
+      "shoeColors" : [
+        "#E1E7E9",
+        "#1B1D23"
+      ],
+      "shoeSep" : 83,
+      "shoeVisT" : 0.57699999999999996,
+      "shoeVisToW" : 1.4199999999999999,
+      "shoeW" : 31,
+      "side" : "l",
+      "spread" : 1.0760000000000001,
+      "tHem" : 1.139,
+      "tSole" : 1.7150000000000001,
+      "why" : "too small",
+      "whys" : [
+        "too small",
+        "pants too dark to show folds"
+      ]
+    },
+    {
+      "bend" : 5,
+      "box" : {
+        "y0" : 460,
+        "y1" : 546
+      },
+      "conf" : 0.65000000000000002,
+      "coverBox" : 0.13,
+      "edgeStep" : 58,
+      "foldL" : 7,
+      "foldRatio" : 9.3100000000000005,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 2.79,
+      "gapT" : 0.014,
+      "midStd" : 0.02,
+      "orient" : 1.3400000000000001,
+      "orientMid" : 0.90000000000000002,
+      "orientRatio" : 1.48,
+      "pantsL" : 0,
+      "sharp" : 55.5,
+      "shin" : 73,
+      "shoeColors" : [
+        "#E3E7E6",
+        "#C1C6C2"
+      ],
+      "shoeSep" : 90,
+      "shoeVisT" : 0.32700000000000001,
+      "shoeVisToW" : 0.89000000000000001,
+      "shoeW" : 27,
+      "side" : "r",
+      "spread" : 1.393,
+      "tHem" : 1.1160000000000001,
+      "tSole" : 1.4570000000000001,
+      "why" : "too small",
+      "whys" : [
+        "too small"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 336,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m07\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 335
+}

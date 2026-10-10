@@ -1,0 +1,77 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 1926,
+  "legs" : [
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 1376,
+        "y1" : 1520
+      },
+      "conf" : 0.72999999999999998,
+      "edgeStep" : 8,
+      "pantsL" : 0,
+      "sharp" : 10.6,
+      "shin" : 176,
+      "shoeColors" : [
+        "#120A04",
+        "#241910",
+        "#3C342B"
+      ],
+      "shoeSep" : 4,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 1376,
+        "y1" : 1520
+      },
+      "conf" : 0.71999999999999997,
+      "coverBox" : 0.45000000000000001,
+      "edgeStep" : 21,
+      "foldL" : 1,
+      "foldRatio" : 0.41999999999999998,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.13,
+      "gapT" : 0,
+      "midStd" : 0.10000000000000001,
+      "orient" : 1.26,
+      "orientMid" : 1.04,
+      "orientRatio" : 1.21,
+      "pantsL" : 1,
+      "sharp" : 8,
+      "shin" : 235,
+      "shoeColors" : [
+        "#635446",
+        "#180E06",
+        "#423629"
+      ],
+      "shoeSep" : 37,
+      "shoeVisT" : 0.33500000000000002,
+      "shoeVisToW" : 1.0800000000000001,
+      "shoeW" : 73,
+      "side" : "r",
+      "spread" : 0.97199999999999998,
+      "tHem" : 1.085,
+      "tSole" : 1.4199999999999999,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 341,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261009-182134\/photos\/e026de2ad49038ee95dae8f102cc8d7c14b5fbbaae08028d3e232f7c81524de2-photo.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1444
+}

@@ -1,0 +1,91 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 1600,
+  "legs" : [
+    {
+      "bend" : 6,
+      "box" : {
+        "y0" : 1384,
+        "y1" : 1478
+      },
+      "conf" : 0.62,
+      "coverBox" : 0.12,
+      "edgeStep" : 64,
+      "foldL" : 1,
+      "foldRatio" : 0.63,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.19,
+      "gapT" : 0,
+      "midStd" : 0.040000000000000001,
+      "orient" : 1,
+      "orientMid" : 0.95999999999999996,
+      "orientRatio" : 1.04,
+      "pantsL" : 1,
+      "sharp" : 14.199999999999999,
+      "shin" : 173,
+      "shoeColors" : [
+        "#A0A59F",
+        "#CBE0E2"
+      ],
+      "shoeSep" : 66,
+      "shoeVisT" : 0.42799999999999999,
+      "shoeVisToW" : 1.0900000000000001,
+      "shoeW" : 68,
+      "side" : "l",
+      "spread" : 0.69299999999999995,
+      "tHem" : 1.1200000000000001,
+      "tSole" : 1.548,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    },
+    {
+      "bend" : 7,
+      "box" : {
+        "y0" : 1384,
+        "y1" : 1478
+      },
+      "conf" : 0.69999999999999996,
+      "coverBox" : 0.12,
+      "edgeStep" : 69,
+      "foldL" : 4,
+      "foldRatio" : 0.68999999999999995,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.31,
+      "gapT" : 0,
+      "midStd" : 0.45000000000000001,
+      "orient" : 0.98999999999999999,
+      "orientMid" : 0.81999999999999995,
+      "orientRatio" : 1.21,
+      "pantsL" : 6,
+      "sharp" : 12,
+      "shin" : 200,
+      "shoeColors" : [
+        "#9C9F98",
+        "#D7E3E1"
+      ],
+      "shoeSep" : 59,
+      "shoeVisT" : 0.40799999999999997,
+      "shoeVisToW" : 1.26,
+      "shoeW" : 65,
+      "side" : "r",
+      "spread" : 0.95199999999999996,
+      "tHem" : 1.117,
+      "tSole" : 1.5249999999999999,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 1600,
+  "ms" : 355,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261009-182134\/photos\/968016f009ad3f2fff6fc3d89685999f49385d82e86d42faf23b04dad5408313-photo.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1200
+}

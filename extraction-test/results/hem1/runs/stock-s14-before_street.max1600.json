@@ -1,0 +1,57 @@
+{
+  "bottom" : "drawstring_trousers",
+  "crop" : 0,
+  "h" : 1600,
+  "legs" : [
+    {
+      "bend" : 13,
+      "box" : {
+        "y0" : 1344,
+        "y1" : 1507
+      },
+      "conf" : 0.67000000000000004,
+      "edgeStep" : 21,
+      "pantsL" : 42,
+      "sharp" : 11,
+      "shin" : 292,
+      "shoeColors" : [
+        "#897E76",
+        "#4A433B"
+      ],
+      "shoeSep" : 16,
+      "side" : "l",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 10,
+      "box" : {
+        "y0" : 1344,
+        "y1" : 1507
+      },
+      "conf" : 0.55000000000000004,
+      "edgeStep" : 9,
+      "pantsL" : 35,
+      "sharp" : 11.6,
+      "shin" : 257,
+      "shoeColors" : [
+        "#6D645C",
+        "#2C2821"
+      ],
+      "shoeSep" : 13,
+      "side" : "r",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 1600,
+  "ms" : 339,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s14\/before_street.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1280
+}

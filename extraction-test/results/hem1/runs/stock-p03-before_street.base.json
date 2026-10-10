@@ -1,0 +1,60 @@
+{
+  "bottom" : "suit_trousers",
+  "crop" : 0,
+  "h" : 1800,
+  "legs" : [
+    {
+      "bend" : 11,
+      "box" : {
+        "y0" : 1445,
+        "y1" : 1744
+      },
+      "conf" : 0.67000000000000004,
+      "edgeStep" : 7,
+      "pantsL" : 3,
+      "sharp" : 9.0999999999999996,
+      "shin" : 211,
+      "shoeColors" : [
+        "#0E1615",
+        "#212D2F"
+      ],
+      "shoeSep" : 3,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 3,
+      "box" : {
+        "y0" : 1445,
+        "y1" : 1744
+      },
+      "conf" : 0.73999999999999999,
+      "edgeStep" : 1,
+      "pantsL" : 4,
+      "sharp" : 12.4,
+      "shin" : 357,
+      "shoeColors" : [
+        "#141B1B",
+        "#53585C",
+        "#BEBEBF"
+      ],
+      "shoeSep" : 5,
+      "side" : "r",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 341,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p03\/before_street.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1440
+}

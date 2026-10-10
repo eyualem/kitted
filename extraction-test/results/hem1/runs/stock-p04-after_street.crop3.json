@@ -1,0 +1,21 @@
+{
+  "bottom" : "suit_trousers",
+  "crop" : 0.029999999999999999,
+  "h" : 1692,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 335,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p04\/after_street.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1128
+}

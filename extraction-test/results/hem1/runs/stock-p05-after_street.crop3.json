@@ -1,0 +1,75 @@
+{
+  "bottom" : "shorts",
+  "crop" : 0.029999999999999999,
+  "h" : 1692,
+  "legs" : [
+    {
+      "bend" : 22,
+      "box" : {
+        "y0" : 1366,
+        "y1" : 1717
+      },
+      "conf" : 0.69999999999999996,
+      "coverBox" : 0.14999999999999999,
+      "edgeStep" : 13,
+      "foldL" : 38,
+      "foldRatio" : 4.5800000000000001,
+      "folds" : 2,
+      "foldsAbs" : 2,
+      "foldStd" : 1.6000000000000001,
+      "gapT" : 0,
+      "midStd" : 0.34999999999999998,
+      "orient" : 0.81000000000000005,
+      "orientMid" : 0.84999999999999998,
+      "orientRatio" : 0.95999999999999996,
+      "pantsL" : 48,
+      "sharp" : 7.2000000000000002,
+      "shin" : 220,
+      "shoeColors" : [
+        "#071111",
+        "#16292C"
+      ],
+      "shoeSep" : 46,
+      "shoeVisT" : 0.80700000000000005,
+      "shoeVisToW" : 1.9099999999999999,
+      "shoeW" : 93,
+      "side" : "l",
+      "spread" : 1.5940000000000001,
+      "tHem" : 0.99299999999999999,
+      "tSole" : 1.8,
+      "why" : "feet cut off",
+      "whys" : [
+        "feet cut off"
+      ]
+    },
+    {
+      "bend" : 11,
+      "box" : {
+        "y0" : 1366,
+        "y1" : 1717
+      },
+      "conf" : 0.70999999999999996,
+      "edgeStep" : 2,
+      "pantsL" : 68,
+      "sharp" : 9.5,
+      "shin" : 401,
+      "shoeColors" : [
+        "#081517",
+        "#253B42",
+        "#B39D90"
+      ],
+      "shoeSep" : 64,
+      "side" : "r",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 336,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p05\/after_street.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1354
+}

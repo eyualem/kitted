@@ -1,0 +1,63 @@
+{
+  "bottom" : "chinos",
+  "crop" : 0,
+  "h" : 300,
+  "legs" : [
+    {
+      "bend" : 8,
+      "box" : {
+        "y0" : 212,
+        "y1" : 230
+      },
+      "conf" : 0.65000000000000002,
+      "edgeStep" : 4,
+      "pantsL" : 49,
+      "sharp" : 16.699999999999999,
+      "shin" : 29,
+      "shoeColors" : [
+        "#837366",
+        "#67574B",
+        "#3E3127"
+      ],
+      "shoeSep" : 3,
+      "side" : "l",
+      "why" : "too small",
+      "whys" : [
+        "too small",
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 212,
+        "y1" : 230
+      },
+      "conf" : 0.63,
+      "edgeStep" : 2,
+      "pantsL" : 52,
+      "sharp" : 12.6,
+      "shin" : 33,
+      "shoeColors" : [
+        "#8F8177",
+        "#6F5E54",
+        "#96887B"
+      ],
+      "shoeSep" : 2,
+      "side" : "r",
+      "why" : "too small",
+      "whys" : [
+        "too small",
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 349,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/mirror-fit-check-1\/m03\/before_mirror.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 168
+}

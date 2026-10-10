@@ -1,0 +1,21 @@
+{
+  "bottom" : "chinos",
+  "crop" : 0,
+  "h" : 1800,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 359,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s22\/before_phone.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1350
+}

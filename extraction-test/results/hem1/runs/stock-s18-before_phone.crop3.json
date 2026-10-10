@@ -1,0 +1,44 @@
+{
+  "bottom" : "suit_trousers",
+  "crop" : 0.029999999999999999,
+  "h" : 1285,
+  "legs" : [
+    {
+      "bend" : 2,
+      "conf" : 0.75,
+      "edgeStep" : 6,
+      "pantsL" : 9,
+      "shin" : 296,
+      "shoeFrom" : "outline",
+      "shoeSep" : 5,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 119,
+      "conf" : 0.41999999999999998,
+      "edgeStep" : 1,
+      "pantsL" : 8,
+      "shin" : 206,
+      "shoeFrom" : "outline",
+      "shoeSep" : 3,
+      "side" : "r",
+      "why" : "leg bent",
+      "whys" : [
+        "leg bent",
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 333,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s18\/before_phone.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1926
+}

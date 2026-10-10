@@ -1,0 +1,71 @@
+{
+  "bottom" : "sweatpants",
+  "crop" : 0,
+  "h" : 2048,
+  "legs" : [
+    {
+      "bend" : 5,
+      "box" : {
+        "y0" : 1759,
+        "y1" : 1943
+      },
+      "conf" : 0.62,
+      "edgeStep" : 24,
+      "pantsL" : 64,
+      "sharp" : 14.9,
+      "shin" : 340,
+      "shoeColors" : [
+        "#A0978E",
+        "#C6CACD"
+      ],
+      "shoeSep" : 4,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 1,
+      "box" : {
+        "y0" : 1759,
+        "y1" : 1943
+      },
+      "conf" : 0.52000000000000002,
+      "coverBox" : 0.26000000000000001,
+      "edgeStep" : 12,
+      "foldL" : 58,
+      "foldRatio" : 5.5800000000000001,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 4.6399999999999997,
+      "gapT" : 0,
+      "midStd" : 0.82999999999999996,
+      "orient" : 1.8300000000000001,
+      "orientMid" : 1.1200000000000001,
+      "orientRatio" : 1.6399999999999999,
+      "pantsL" : 63,
+      "sharp" : 13.699999999999999,
+      "shin" : 344,
+      "shoeColors" : [
+        "#D2D9DE",
+        "#A8A7A6"
+      ],
+      "shoeSep" : 27,
+      "shoeVisT" : 0.38600000000000001,
+      "shoeVisToW" : 1.04,
+      "shoeW" : 128,
+      "side" : "r",
+      "spread" : 0.58499999999999996,
+      "tHem" : 1.139,
+      "tSole" : 1.5249999999999999
+    }
+  ],
+  "max" : 2048,
+  "ms" : 359,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p02\/before_studio.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1365
+}

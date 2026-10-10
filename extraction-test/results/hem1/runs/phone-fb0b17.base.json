@@ -1,0 +1,60 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 2048,
+  "legs" : [
+    {
+      "bend" : 3,
+      "box" : {
+        "y0" : 1538,
+        "y1" : 1646
+      },
+      "conf" : 0.78000000000000003,
+      "edgeStep" : 1,
+      "pantsL" : 2,
+      "sharp" : 5.2000000000000002,
+      "shin" : 194,
+      "shoeColors" : [
+        "#121314",
+        "#26170C"
+      ],
+      "shoeSep" : 3,
+      "side" : "l",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 1538,
+        "y1" : 1646
+      },
+      "conf" : 0.72999999999999998,
+      "edgeStep" : 2,
+      "pantsL" : 2,
+      "sharp" : 4.9000000000000004,
+      "shin" : 171,
+      "shoeColors" : [
+        "#0F0E0F",
+        "#291A10",
+        "#1B1A1A"
+      ],
+      "shoeSep" : 1,
+      "side" : "r",
+      "why" : "dark on dark (pants and shoes match)",
+      "whys" : [
+        "dark on dark (pants and shoes match)",
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 349,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261009-182134\/photos\/fb0b17cbae82f31df62a6e195e0185d2e2801dc265253668a2e1dcc3dc86eb82-photo.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1536
+}

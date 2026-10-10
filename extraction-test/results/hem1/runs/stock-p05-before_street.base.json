@@ -1,0 +1,21 @@
+{
+  "bottom" : "trousers",
+  "crop" : 0,
+  "h" : 1800,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 330,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/p05\/before_street.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1350
+}

@@ -1,0 +1,63 @@
+{
+  "bottom" : null,
+  "crop" : 0,
+  "h" : 1600,
+  "legs" : [
+    {
+      "bend" : 0,
+      "conf" : 0.68999999999999995,
+      "edgeStep" : 42,
+      "foldL" : 3,
+      "foldRatio" : 0.31,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.089999999999999997,
+      "midStd" : 0.059999999999999998,
+      "orient" : 1.1299999999999999,
+      "orientMid" : 1.04,
+      "orientRatio" : 1.0800000000000001,
+      "pantsL" : 3,
+      "shin" : 184,
+      "side" : "l",
+      "spread" : 1.1910000000000001,
+      "tHem" : 1.175,
+      "tSole" : 1.718,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box",
+        "pants too dark to show folds"
+      ]
+    },
+    {
+      "bend" : 4,
+      "conf" : 0.68000000000000005,
+      "edgeStep" : 48,
+      "foldL" : 5,
+      "foldRatio" : 0.96999999999999997,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.28999999999999998,
+      "midStd" : 0.059999999999999998,
+      "orient" : 1.0800000000000001,
+      "orientMid" : 1.1499999999999999,
+      "orientRatio" : 0.93999999999999995,
+      "pantsL" : 5,
+      "shin" : 182,
+      "side" : "r",
+      "spread" : 1.1240000000000001,
+      "tHem" : 1.2,
+      "tSole" : 1.7270000000000001,
+      "why" : "no shoe box",
+      "whys" : [
+        "no shoe box",
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 1600,
+  "ms" : 322,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261008-162946\/photos\/6b14dbaf24f1df9ebed0f939332a93877dc18130bea8fa974241dca76222044c-photo.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 900
+}

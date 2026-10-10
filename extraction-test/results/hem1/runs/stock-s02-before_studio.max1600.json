@@ -1,0 +1,58 @@
+{
+  "bottom" : "athletic_shorts",
+  "crop" : 0,
+  "h" : 1600,
+  "legs" : [
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 1238,
+        "y1" : 1385
+      },
+      "conf" : 0.79000000000000004,
+      "edgeStep" : 84,
+      "pantsL" : 26,
+      "sharp" : 41.899999999999999,
+      "shin" : 231,
+      "shoeColors" : [
+        "#F0ECE4",
+        "#1D1D18",
+        "#696259"
+      ],
+      "shoeSep" : 69,
+      "side" : "l",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 0,
+      "box" : {
+        "y0" : 1238,
+        "y1" : 1385
+      },
+      "conf" : 0.76000000000000001,
+      "edgeStep" : 30,
+      "pantsL" : 27,
+      "sharp" : 36.899999999999999,
+      "shin" : 230,
+      "shoeColors" : [
+        "#F4EFE7",
+        "#22211B"
+      ],
+      "shoeSep" : 70,
+      "side" : "r",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    }
+  ],
+  "max" : 1600,
+  "ms" : 336,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s02\/before_studio.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1280
+}

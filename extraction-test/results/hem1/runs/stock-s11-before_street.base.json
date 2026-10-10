@@ -1,0 +1,85 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 1800,
+  "legs" : [
+    {
+      "bend" : 6,
+      "box" : {
+        "y0" : 1551,
+        "y1" : 1702
+      },
+      "conf" : 0.72999999999999998,
+      "coverBox" : 0.040000000000000001,
+      "edgeStep" : 22,
+      "foldL" : 30,
+      "foldRatio" : 7.1200000000000001,
+      "folds" : 3,
+      "foldsAbs" : 3,
+      "foldStd" : 2.1400000000000001,
+      "gapT" : 0,
+      "midStd" : 0.28999999999999998,
+      "orient" : 1.6399999999999999,
+      "orientMid" : 0.95999999999999996,
+      "orientRatio" : 1.71,
+      "pantsL" : 31,
+      "sharp" : 6.7999999999999998,
+      "shin" : 277,
+      "shoeColors" : [
+        "#3E3B32",
+        "#4A494D",
+        "#5F594C"
+      ],
+      "shoeSep" : 27,
+      "shoeVisT" : 0.36099999999999999,
+      "shoeVisToW" : 0.90000000000000002,
+      "shoeW" : 111,
+      "side" : "l",
+      "spread" : 0.91300000000000003,
+      "tHem" : 1.0209999999999999,
+      "tSole" : 1.3819999999999999
+    },
+    {
+      "bend" : 1,
+      "box" : {
+        "y0" : 1551,
+        "y1" : 1702
+      },
+      "conf" : 0.72999999999999998,
+      "coverBox" : 0.26000000000000001,
+      "edgeStep" : 16,
+      "foldL" : 30,
+      "foldRatio" : 1.8,
+      "folds" : 3,
+      "foldsAbs" : 3,
+      "foldStd" : 1.7,
+      "gapT" : 0,
+      "midStd" : 0.94999999999999996,
+      "orient" : 1.8899999999999999,
+      "orientMid" : 0.93000000000000005,
+      "orientRatio" : 2.0299999999999998,
+      "pantsL" : 35,
+      "sharp" : 9.6999999999999993,
+      "shin" : 270,
+      "shoeColors" : [
+        "#484748",
+        "#5A554A",
+        "#2F2E29"
+      ],
+      "shoeSep" : 25,
+      "shoeVisT" : 0.41799999999999998,
+      "shoeVisToW" : 1.49,
+      "shoeW" : 76,
+      "side" : "r",
+      "spread" : 0.98699999999999999,
+      "tHem" : 1.0580000000000001,
+      "tSole" : 1.476
+    }
+  ],
+  "max" : 2048,
+  "ms" : 385,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fitcheck-photos\/s11\/before_street.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1013
+}

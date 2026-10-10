@@ -1,0 +1,91 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 2048,
+  "legs" : [
+    {
+      "bend" : 6,
+      "box" : {
+        "y0" : 1771,
+        "y1" : 1892
+      },
+      "conf" : 0.64000000000000001,
+      "coverBox" : 0.12,
+      "edgeStep" : 64,
+      "foldL" : 1,
+      "foldRatio" : 0.60999999999999999,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.17999999999999999,
+      "gapT" : 0,
+      "midStd" : 0.040000000000000001,
+      "orient" : 1.01,
+      "orientMid" : 0.98999999999999999,
+      "orientRatio" : 1.02,
+      "pantsL" : 1,
+      "sharp" : 12.699999999999999,
+      "shin" : 219,
+      "shoeColors" : [
+        "#A0A6A0",
+        "#CCE2E3"
+      ],
+      "shoeSep" : 66,
+      "shoeVisT" : 0.432,
+      "shoeVisToW" : 1.0900000000000001,
+      "shoeW" : 87,
+      "side" : "l",
+      "spread" : 0.69299999999999995,
+      "tHem" : 1.141,
+      "tSole" : 1.573,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    },
+    {
+      "bend" : 6,
+      "box" : {
+        "y0" : 1771,
+        "y1" : 1892
+      },
+      "conf" : 0.67000000000000004,
+      "coverBox" : 0.12,
+      "edgeStep" : 69,
+      "foldL" : 4,
+      "foldRatio" : 0.77000000000000002,
+      "folds" : 0,
+      "foldsAbs" : 0,
+      "foldStd" : 0.27000000000000002,
+      "gapT" : 0,
+      "midStd" : 0.34999999999999998,
+      "orient" : 0.96999999999999997,
+      "orientMid" : 0.90000000000000002,
+      "orientRatio" : 1.0800000000000001,
+      "pantsL" : 6,
+      "sharp" : 10.800000000000001,
+      "shin" : 251,
+      "shoeColors" : [
+        "#9DA099",
+        "#D7E3E1"
+      ],
+      "shoeSep" : 60,
+      "shoeVisT" : 0.41399999999999998,
+      "shoeVisToW" : 1.24,
+      "shoeW" : 84,
+      "side" : "r",
+      "spread" : 0.94299999999999995,
+      "tHem" : 1.1240000000000001,
+      "tSole" : 1.538,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 343,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261009-182134\/photos\/968016f009ad3f2fff6fc3d89685999f49385d82e86d42faf23b04dad5408313-photo.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1536
+}
