@@ -1,0 +1,42 @@
+441 calls; spent so far $0.011
+  21 done · $0.026
+  33 done · $0.041
+  45 done · $0.056
+  57 done · $0.071
+  69 done · $0.086
+  81 done · $0.101
+  93 done · $0.116
+  105 done · $0.131
+  117 done · $0.146
+  129 done · $0.161
+  141 done · $0.176
+  153 done · $0.191
+  165 done · $0.206
+  177 done · $0.221
+  189 done · $0.236
+  201 done · $0.250
+  213 done · $0.265
+  225 done · $0.280
+  237 done · $0.295
+  249 done · $0.310
+  261 done · $0.326
+  273 done · $0.341
+  285 done · $0.355
+  297 done · $0.370
+  309 done · $0.385
+  321 done · $0.400
+  333 done · $0.415
+  345 done · $0.430
+  357 done · $0.444
+  369 done · $0.459
+  381 done · $0.474
+  393 done · $0.489
+  405 done · $0.505
+  417 done · $0.520
+  429 done · $0.535
+  441 done · $0.549
+  450 done · $0.561
+U: 150 calls · in 1427 · out 50 · 0.1258¢/call · median 2.72 s
+US: 150 calls · in 1514 · out 66 · 0.1383¢/call · median 1.8 s
+L: 150 calls · in 1374 · out 17 · 0.1096¢/call · median 2.73 s
+total spent $0.561

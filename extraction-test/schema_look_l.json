@@ -1,0 +1,35 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "pant_end": {
+   "type": "STRING",
+   "enum": [
+    "shorts",
+    "cropped",
+    "no_break",
+    "slight_break",
+    "full_break",
+    "stacked",
+    "pooling",
+    "not_visible"
+   ]
+  },
+  "covers_shoe": {
+   "type": "STRING",
+   "enum": [
+    "no",
+    "partly",
+    "mostly",
+    "no_shoes_visible"
+   ]
+  }
+ },
+ "required": [
+  "pant_end",
+  "covers_shoe"
+ ],
+ "propertyOrdering": [
+  "pant_end",
+  "covers_shoe"
+ ]
+}

@@ -1,0 +1,20 @@
+This is a close-up of one person's upper body, cut from an outfit photo. The face is hidden on purpose. Describe only the tops, not the person.
+
+Pick two pieces:
+- outer piece: the outermost top layer. A jacket, coat, blazer, vest or an open shirt worn over something is the outer piece. If there is no jacket, a hoodie, sweatshirt, sweater or quarter-zip worn over another top is the outer piece: look for a band of a different fabric at its bottom edge or neck. If only one top is visible, that top is the outer piece and under_present is "no".
+- under piece: the top directly under the outer piece.
+
+hem_at: where the piece's own bottom edge sits, judged against the pants:
+- tucked: tucked into the pants
+- cropped: ends above the pants' waistband
+- waistband: ends at the waistband or belt
+- hip: covers the waistband and ends above the bottom of the fly
+- crotch: ends near the bottom of the fly, where the pant legs split
+- thigh: ends partway down the pant legs
+- knee: ends at the pants' knees or lower
+- not_visible: the bottom edge is hidden or out of frame
+
+under_shows: does the under piece show below the outer piece's bottom edge? "no", "a_little" (a thin band), or "clearly" (a wide band or a long hang). An open front doesn't count; judge only the bottom edge. Use "no" when there is no under piece.
+
+outer_shoulder_seam: where the outer piece's shoulder seam (the seam joining sleeve and body) sits: "on_edge" (at the top corner of the arm), "just_past" (a little way down the upper arm), "down_arm" (well down the upper arm, toward the elbow), or "not_visible" (hidden, covered, raglan or no seam).
+Return only JSON that matches the schema.

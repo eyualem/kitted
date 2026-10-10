@@ -1,0 +1,100 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "outer_kind": {
+   "type": "STRING",
+   "enum": [
+    "jacket_or_coat",
+    "blazer",
+    "vest",
+    "open_shirt",
+    "shirt",
+    "hoodie_or_sweatshirt",
+    "sweater_or_quarter_zip",
+    "tee_or_polo",
+    "tank",
+    "other"
+   ]
+  },
+  "outer_hem_at": {
+   "type": "STRING",
+   "enum": [
+    "tucked",
+    "cropped",
+    "waistband",
+    "hip",
+    "crotch",
+    "thigh",
+    "knee",
+    "not_visible"
+   ]
+  },
+  "under_present": {
+   "type": "STRING",
+   "enum": [
+    "yes",
+    "no"
+   ]
+  },
+  "under_kind": {
+   "type": "STRING",
+   "enum": [
+    "none",
+    "tee_or_tank",
+    "shirt",
+    "hoodie_or_sweatshirt",
+    "sweater",
+    "other"
+   ]
+  },
+  "under_hem_at": {
+   "type": "STRING",
+   "enum": [
+    "tucked",
+    "cropped",
+    "waistband",
+    "hip",
+    "crotch",
+    "thigh",
+    "knee",
+    "not_visible",
+    "none"
+   ]
+  },
+  "under_shows": {
+   "type": "STRING",
+   "enum": [
+    "no",
+    "a_little",
+    "clearly"
+   ]
+  },
+  "outer_shoulder_seam": {
+   "type": "STRING",
+   "enum": [
+    "on_edge",
+    "just_past",
+    "down_arm",
+    "not_visible"
+   ]
+  }
+ },
+ "required": [
+  "outer_kind",
+  "outer_hem_at",
+  "under_present",
+  "under_kind",
+  "under_hem_at",
+  "under_shows",
+  "outer_shoulder_seam"
+ ],
+ "propertyOrdering": [
+  "outer_kind",
+  "outer_hem_at",
+  "under_present",
+  "under_kind",
+  "under_hem_at",
+  "under_shows",
+  "outer_shoulder_seam"
+ ]
+}

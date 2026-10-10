@@ -1,0 +1,1663 @@
+{
+ "cost": {
+  "U": {
+   "calls": 150,
+   "cents_per_call": 0.1258,
+   "spent_usd": 0.1888,
+   "median_s": 2.675,
+   "p90_s": 5.24,
+   "max_s": 10.16,
+   "errors": 0,
+   "under_5s": [
+    132,
+    150
+   ]
+  },
+  "US": {
+   "calls": 150,
+   "cents_per_call": 0.1383,
+   "spent_usd": 0.2075,
+   "median_s": 1.795,
+   "p90_s": 3.2,
+   "max_s": 8.97,
+   "errors": 0,
+   "under_5s": [
+    145,
+    150
+   ]
+  },
+  "L": {
+   "calls": 150,
+   "cents_per_call": 0.1096,
+   "spent_usd": 0.1644,
+   "median_s": 2.5549999999999997,
+   "p90_s": 5.69,
+   "max_s": 12.2,
+   "errors": 0,
+   "under_5s": [
+    127,
+    150
+   ]
+  }
+ },
+ "fields": {
+  "U.outer_hem_at": {
+   "same": [
+    37,
+    50
+   ],
+   "right": [
+    109,
+    144
+   ],
+   "precision": {
+    "hip": [
+     57,
+     68
+    ],
+    "crotch": [
+     30,
+     43
+    ],
+    "thigh": [
+     0,
+     1
+    ],
+    "waistband": [
+     15,
+     18
+    ],
+    "tucked": [
+     6,
+     9
+    ],
+    "cropped": [
+     1,
+     2
+    ],
+    "not_visible": [
+     0,
+     3
+    ]
+   },
+   "recall": {
+    "hip": [
+     13,
+     24
+    ],
+    "waistband": [
+     10,
+     21
+    ],
+    "tucked": [
+     3,
+     3
+    ],
+    "thigh": [
+     0,
+     3
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     19,
+     23,
+     47,
+     63
+    ],
+    "founder (profile pending)": [
+     14,
+     21,
+     47,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     3,
+     6
+    ],
+    "friends (profile unknown)": [
+     2,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "hip|crotch -> hip": 23,
+    "waistband|hip -> hip": 18,
+    "hip -> hip": 13,
+    "hip|crotch -> crotch": 13,
+    "waistband -> waistband": 10,
+    "crotch|hip -> crotch": 8,
+    "waistband -> hip": 7,
+    "crotch|thigh -> crotch": 6,
+    "hip -> crotch": 5,
+    "waistband|hip -> waistband": 4,
+    "waistband|cropped -> hip": 4,
+    "hip|unsure -> crotch": 3,
+    "thigh|crotch -> crotch": 3,
+    "tucked -> tucked": 3,
+    "waistband -> tucked": 3,
+    "hip -> waistband": 3,
+    "waistband|hip|unsure -> hip": 3,
+    "thigh -> not_visible": 3,
+    "waistband|tucked -> tucked": 3,
+    "hip|waistband -> crotch": 3,
+    "waistband|hip -> crotch": 2,
+    "crotch|hip -> thigh": 1,
+    "waistband -> cropped": 1,
+    "waistband|cropped -> cropped": 1,
+    "waistband|cropped -> waistband": 1
+   },
+   "flips": [
+    "mirror-m07 ['crotch', 'crotch', 'hip']",
+    "mirror-m10 ['crotch', 'crotch', 'thigh']",
+    "phone-403ade ['crotch', 'crotch', 'hip']",
+    "phone-5a9049 ['crotch', 'hip', 'hip']",
+    "phone-6b14db ['hip', 'hip', 'waistband']",
+    "phone-7f14a4 ['hip', 'crotch', 'crotch']",
+    "phone-a765e8 ['waistband', 'cropped', 'waistband']",
+    "phone-b0f0c8 ['waistband', 'hip', 'hip']",
+    "phone-d6559a ['waistband', 'hip', 'hip']",
+    "phone-e438d4 ['crotch', 'crotch', 'hip']",
+    "phone-f4870b ['hip', 'crotch', 'hip']",
+    "stock-s04-before_studio ['cropped', 'waistband', 'hip']",
+    "stock-s15-before_street ['crotch', 'hip', 'hip']"
+   ]
+  },
+  "U.under_present": {
+   "same": [
+    50,
+    50
+   ],
+   "right": [
+    144,
+    147
+   ],
+   "precision": {
+    "no": [
+     57,
+     57
+    ],
+    "yes": [
+     87,
+     90
+    ]
+   },
+   "recall": {
+    "no": [
+     57,
+     60
+    ],
+    "yes": [
+     84,
+     84
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     23,
+     23,
+     66,
+     66
+    ],
+    "founder (profile pending)": [
+     21,
+     21,
+     60,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     6,
+     6
+    ],
+    "friends (profile unknown)": [
+     4,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "yes -> yes": 84,
+    "no -> no": 57,
+    "no -> yes": 3,
+    "yes|no -> yes": 3
+   },
+   "flips": []
+  },
+  "U.under_hem_at": {
+   "same": [
+    41,
+    50
+   ],
+   "right": [
+    59,
+    63
+   ],
+   "precision": {
+    "tucked": [
+     22,
+     22
+    ],
+    "waistband": [
+     11,
+     12
+    ],
+    "hip": [
+     26,
+     26
+    ],
+    "crotch": [
+     0,
+     3
+    ]
+   },
+   "recall": {
+    "tucked": [
+     21,
+     21
+    ],
+    "waistband": [
+     3,
+     3
+    ],
+    "hip": [
+     8,
+     12
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     20,
+     23,
+     33,
+     33
+    ],
+    "founder (profile pending)": [
+     18,
+     21,
+     21,
+     21
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     0,
+     0
+    ],
+    "friends (profile unknown)": [
+     1,
+     4,
+     5,
+     9
+    ]
+   },
+   "confusion": {
+    "tucked -> tucked": 18,
+    "waistband|hip -> hip": 18,
+    "hip|unsure -> hip": 8,
+    "waistband|hip -> waistband": 6,
+    "tucked|unsure -> tucked": 3,
+    "waistband -> waistband": 3,
+    "hip|unsure -> crotch": 3,
+    "tucked|waistband|unsure -> waistband": 2,
+    "tucked|waistband|unsure -> tucked": 1,
+    "hip|unsure -> waistband": 1
+   },
+   "flips": [
+    "mirror-m12 ['tucked', 'waistband', 'waistband']",
+    "phone-6b14db ['hip', 'hip', 'waistband']",
+    "phone-a765e8 ['waistband', 'waistband', 'hip']",
+    "phone-b0f0c8 ['waistband', 'hip', 'hip']",
+    "phone-e438d4 ['crotch', 'crotch', 'hip']",
+    "phone-f4870b ['hip', 'crotch', 'hip']",
+    "phone-fb0b17 ['hip', 'waistband', 'hip']",
+    "stock-s04-before_studio ['waistband', 'hip', 'hip']",
+    "stock-s24-before_mirror ['waistband', 'waistband', 'hip']"
+   ]
+  },
+  "U.under_shows": {
+   "same": [
+    49,
+    50
+   ],
+   "right": [
+    147,
+    150
+   ],
+   "precision": {
+    "no": [
+     129,
+     129
+    ],
+    "a_little": [
+     14,
+     17
+    ],
+    "clearly": [
+     4,
+     4
+    ]
+   },
+   "recall": {
+    "no": [
+     117,
+     120
+    ],
+    "clearly": [
+     3,
+     3
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     23,
+     23,
+     69,
+     69
+    ],
+    "founder (profile pending)": [
+     20,
+     21,
+     60,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     6,
+     6
+    ],
+    "friends (profile unknown)": [
+     4,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "no -> no": 114,
+    "no|a_little -> no": 12,
+    "a_little|clearly -> a_little": 11,
+    "no -> a_little": 3,
+    "no|unsure -> no": 3,
+    "clearly -> clearly": 3,
+    "no|a_little -> a_little": 3,
+    "a_little|clearly -> clearly": 1
+   },
+   "flips": [
+    "phone-6b14db ['a_little', 'a_little', 'clearly']"
+   ]
+  },
+  "US.outer_hem_at": {
+   "same": [
+    32,
+    50
+   ],
+   "right": [
+    110,
+    144
+   ],
+   "precision": {
+    "hip": [
+     56,
+     69
+    ],
+    "crotch": [
+     33,
+     48
+    ],
+    "waistband": [
+     14,
+     15
+    ],
+    "tucked": [
+     6,
+     9
+    ],
+    "not_visible": [
+     0,
+     2
+    ],
+    "thigh": [
+     1,
+     1
+    ]
+   },
+   "recall": {
+    "hip": [
+     12,
+     24
+    ],
+    "waistband": [
+     7,
+     21
+    ],
+    "tucked": [
+     3,
+     3
+    ],
+    "thigh": [
+     1,
+     3
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     17,
+     23,
+     52,
+     63
+    ],
+    "founder (profile pending)": [
+     11,
+     21,
+     43,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "friends (profile unknown)": [
+     3,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "hip|crotch -> hip": 21,
+    "waistband|hip -> hip": 20,
+    "hip|crotch -> crotch": 15,
+    "hip -> hip": 12,
+    "waistband -> hip": 11,
+    "crotch|hip -> crotch": 9,
+    "hip -> crotch": 8,
+    "waistband -> waistband": 7,
+    "crotch|thigh -> crotch": 6,
+    "waistband|hip -> waistband": 4,
+    "hip|unsure -> crotch": 3,
+    "thigh|crotch -> crotch": 3,
+    "tucked -> tucked": 3,
+    "waistband -> tucked": 3,
+    "waistband|hip|unsure -> hip": 3,
+    "waistband|tucked -> tucked": 3,
+    "waistband|cropped -> waistband": 3,
+    "hip|waistband -> crotch": 3,
+    "thigh -> not_visible": 2,
+    "waistband|cropped -> hip": 2,
+    "hip -> waistband": 1,
+    "thigh -> thigh": 1,
+    "waistband|cropped -> crotch": 1
+   },
+   "flips": [
+    "oct7-ph1 ['waistband', 'waistband', 'hip']",
+    "oct7-ph4 ['crotch', 'hip', 'crotch']",
+    "phone-403ade ['hip', 'hip', 'crotch']",
+    "phone-5a9049 ['crotch', 'hip', 'crotch']",
+    "phone-6b14db ['waistband', 'hip', 'hip']",
+    "phone-7de605 ['hip', 'waistband', 'hip']",
+    "phone-8ad378 ['crotch', 'hip', 'hip']",
+    "phone-8bc29d ['hip', 'hip', 'waistband']",
+    "phone-d6559a ['waistband', 'hip', 'hip']",
+    "phone-ebe23f ['crotch', 'hip', 'hip']",
+    "phone-f07193 ['crotch', 'hip', 'hip']",
+    "phone-fb0b17 ['crotch', 'hip', 'hip']",
+    "stock-p03-after_street ['not_visible', 'thigh', 'not_visible']",
+    "stock-p06-after_studio ['hip', 'crotch', 'hip']",
+    "stock-s08-before_studio ['hip', 'hip', 'crotch']",
+    "stock-s11-before_street ['crotch', 'hip', 'hip']",
+    "stock-s15-before_street ['hip', 'crotch', 'crotch']",
+    "stock-s21-before_phone ['crotch', 'crotch', 'hip']"
+   ]
+  },
+  "US.under_present": {
+   "same": [
+    48,
+    50
+   ],
+   "right": [
+    142,
+    147
+   ],
+   "precision": {
+    "no": [
+     55,
+     55
+    ],
+    "yes": [
+     87,
+     92
+    ]
+   },
+   "recall": {
+    "no": [
+     55,
+     60
+    ],
+    "yes": [
+     84,
+     84
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     23,
+     23,
+     66,
+     66
+    ],
+    "founder (profile pending)": [
+     19,
+     21,
+     58,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     6,
+     6
+    ],
+    "friends (profile unknown)": [
+     4,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "yes -> yes": 84,
+    "no -> no": 55,
+    "no -> yes": 5,
+    "yes|no -> yes": 3
+   },
+   "flips": [
+    "phone-968016 ['no', 'yes', 'no']",
+    "phone-b0f0c8 ['no', 'no', 'yes']"
+   ]
+  },
+  "US.under_hem_at": {
+   "same": [
+    38,
+    50
+   ],
+   "right": [
+    56,
+    63
+   ],
+   "precision": {
+    "tucked": [
+     20,
+     20
+    ],
+    "waistband": [
+     4,
+     6
+    ],
+    "hip": [
+     32,
+     34
+    ],
+    "crotch": [
+     0,
+     3
+    ]
+   },
+   "recall": {
+    "tucked": [
+     19,
+     21
+    ],
+    "waistband": [
+     1,
+     3
+    ],
+    "hip": [
+     11,
+     12
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     18,
+     23,
+     31,
+     33
+    ],
+    "founder (profile pending)": [
+     16,
+     21,
+     17,
+     21
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     0,
+     0
+    ],
+    "friends (profile unknown)": [
+     2,
+     4,
+     8,
+     9
+    ]
+   },
+   "confusion": {
+    "waistband|hip -> hip": 21,
+    "tucked -> tucked": 16,
+    "hip|unsure -> hip": 11,
+    "tucked|unsure -> tucked": 3,
+    "tucked|waistband|unsure -> waistband": 2,
+    "waistband -> hip": 2,
+    "waistband|hip -> crotch": 2,
+    "tucked -> waistband": 2,
+    "tucked|waistband|unsure -> tucked": 1,
+    "waistband|hip -> waistband": 1,
+    "waistband -> waistband": 1,
+    "hip|unsure -> crotch": 1
+   },
+   "flips": [
+    "mirror-m12 ['waistband', 'tucked', 'waistband']",
+    "oct7-ph4 ['hip', 'waistband', 'hip']",
+    "phone-8bc29d ['hip', 'hip', 'waistband']",
+    "phone-968016 ['none', 'hip', 'none']",
+    "phone-b0f0c8 ['none', 'none', 'hip']",
+    "phone-d1967f ['waistband', 'not_visible', 'not_visible']",
+    "phone-e026de ['hip', 'crotch', 'crotch']",
+    "phone-fb0b17 ['crotch', 'hip', 'hip']",
+    "stock-p06-after_studio ['tucked', 'waistband', 'tucked']",
+    "stock-s07-before_studio ['waistband', 'tucked', 'waistband']",
+    "stock-s10-before_street ['hip', 'hip', 'waistband']",
+    "stock-s15-before_street ['tucked', 'not_visible', 'not_visible']"
+   ]
+  },
+  "US.under_shows": {
+   "same": [
+    46,
+    50
+   ],
+   "right": [
+    145,
+    150
+   ],
+   "precision": {
+    "no": [
+     129,
+     129
+    ],
+    "a_little": [
+     12,
+     17
+    ],
+    "clearly": [
+     4,
+     4
+    ]
+   },
+   "recall": {
+    "no": [
+     115,
+     120
+    ],
+    "clearly": [
+     3,
+     3
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     21,
+     23,
+     69,
+     69
+    ],
+    "founder (profile pending)": [
+     19,
+     21,
+     58,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     6,
+     6
+    ],
+    "friends (profile unknown)": [
+     4,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "no -> no": 112,
+    "no|a_little -> no": 14,
+    "a_little|clearly -> a_little": 11,
+    "no -> a_little": 5,
+    "no|unsure -> no": 3,
+    "clearly -> clearly": 3,
+    "a_little|clearly -> clearly": 1,
+    "no|a_little -> a_little": 1
+   },
+   "flips": [
+    "phone-968016 ['no', 'a_little', 'no']",
+    "phone-b0f0c8 ['no', 'no', 'a_little']",
+    "stock-s24-before_mirror ['clearly', 'a_little', 'a_little']",
+    "stock-s26-before_mirror ['no', 'no', 'a_little']"
+   ]
+  },
+  "US.outer_shoulder_seam": {
+   "same": [
+    39,
+    50
+   ],
+   "right": [
+    99,
+    135
+   ],
+   "precision": {
+    "down_arm": [
+     32,
+     47
+    ],
+    "just_past": [
+     29,
+     30
+    ],
+    "on_edge": [
+     35,
+     49
+    ],
+    "not_visible": [
+     3,
+     9
+    ]
+   },
+   "recall": {
+    "not_visible": [
+     3,
+     15
+    ],
+    "on_edge": [
+     12,
+     12
+    ],
+    "just_past": [
+     13,
+     21
+    ],
+    "down_arm": [
+     1,
+     3
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     18,
+     23,
+     47,
+     60
+    ],
+    "founder (profile pending)": [
+     16,
+     21,
+     37,
+     57
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     3,
+     6
+    ],
+    "friends (profile unknown)": [
+     3,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "just_past|down_arm -> down_arm": 28,
+    "on_edge|just_past -> on_edge": 17,
+    "just_past|unsure -> just_past": 13,
+    "on_edge|just_past -> just_past": 11,
+    "not_visible|unsure -> on_edge": 9,
+    "on_edge -> on_edge": 9,
+    "on_edge|just_past -> down_arm": 8,
+    "just_past|unsure -> down_arm": 5,
+    "just_past|down_arm -> just_past": 5,
+    "just_past|down_arm|unsure -> down_arm": 3,
+    "on_edge|unsure -> on_edge": 3,
+    "not_visible|on_edge|unsure -> on_edge": 3,
+    "just_past|unsure -> on_edge": 3,
+    "on_edge|just_past|unsure -> not_visible": 3,
+    "na -> not_visible": 3,
+    "just_past|down_arm -> not_visible": 3,
+    "on_edge|just_past|unsure -> on_edge": 3,
+    "not_visible|unsure -> down_arm": 2,
+    "unsure|down_arm -> on_edge": 2,
+    "not_visible|unsure -> just_past": 1,
+    "unsure|down_arm -> down_arm": 1
+   },
+   "flips": [
+    "mirror-m02 ['just_past', 'down_arm', 'down_arm']",
+    "mirror-m03 ['down_arm', 'just_past', 'just_past']",
+    "oct7-ph1 ['down_arm', 'just_past', 'down_arm']",
+    "phone-5a9049 ['just_past', 'on_edge', 'just_past']",
+    "phone-6b14db ['down_arm', 'just_past', 'down_arm']",
+    "phone-8ad378 ['just_past', 'down_arm', 'down_arm']",
+    "phone-d58b14 ['just_past', 'just_past', 'on_edge']",
+    "phone-fb0b17 ['just_past', 'on_edge', 'just_past']",
+    "stock-s08-before_studio ['on_edge', 'on_edge', 'down_arm']",
+    "stock-s21-before_phone ['just_past', 'on_edge', 'on_edge']",
+    "stock-s26-before_mirror ['just_past', 'down_arm', 'down_arm']"
+   ]
+  },
+  "L.pant_end": {
+   "same": [
+    37,
+    50
+   ],
+   "right": [
+    76,
+    141
+   ],
+   "precision": {
+    "stacked": [
+     9,
+     17
+    ],
+    "slight_break": [
+     12,
+     43
+    ],
+    "cropped": [
+     17,
+     23
+    ],
+    "not_visible": [
+     6,
+     17
+    ],
+    "full_break": [
+     23,
+     23
+    ],
+    "no_break": [
+     3,
+     12
+    ],
+    "shorts": [
+     6,
+     6
+    ]
+   },
+   "recall": {
+    "cropped": [
+     15,
+     15
+    ],
+    "not_visible": [
+     6,
+     6
+    ],
+    "full_break": [
+     15,
+     39
+    ],
+    "shorts": [
+     6,
+     6
+    ],
+    "stacked": [
+     3,
+     3
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     18,
+     23,
+     34,
+     60
+    ],
+    "founder (profile pending)": [
+     14,
+     21,
+     27,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     6,
+     6
+    ],
+    "friends (profile unknown)": [
+     3,
+     4,
+     9,
+     12
+    ]
+   },
+   "confusion": {
+    "full_break -> slight_break": 16,
+    "cropped -> cropped": 15,
+    "full_break -> full_break": 15,
+    "slight_break|full_break -> slight_break": 12,
+    "full_break -> no_break": 8,
+    "not_visible -> not_visible": 6,
+    "full_break|stacked -> slight_break": 6,
+    "shorts -> shorts": 6,
+    "stacked|full_break -> slight_break": 4,
+    "slight_break|full_break -> stacked": 3,
+    "slight_break|no_break -> not_visible": 3,
+    "full_break|pooling -> full_break": 3,
+    "no_break|slight_break -> not_visible": 3,
+    "slight_break|no_break -> cropped": 3,
+    "full_break|slight_break -> not_visible": 3,
+    "full_break|pooling -> slight_break": 3,
+    "slight_break|full_break -> full_break": 3,
+    "slight_break|stacked|no_break -> stacked": 3,
+    "no_break|slight_break -> cropped": 3,
+    "stacked -> stacked": 3,
+    "slight_break|no_break -> no_break": 3,
+    "slight_break|no_break -> stacked": 3,
+    "cropped|no_break -> stacked": 2,
+    "cropped|no_break -> slight_break": 2,
+    "cropped|no_break -> cropped": 2,
+    "full_break|stacked -> full_break": 2,
+    "stacked|full_break -> stacked": 2,
+    "stacked|full_break -> not_visible": 2,
+    "full_break|stacked -> stacked": 1,
+    "stacked|full_break -> no_break": 1
+   },
+   "flips": [
+    "mirror-m01 ['stacked', 'stacked', 'slight_break']",
+    "mirror-m03 ['stacked', 'full_break', 'full_break']",
+    "mirror-m12 ['slight_break', 'cropped', 'cropped']",
+    "phone-403ade ['slight_break', 'stacked', 'slight_break']",
+    "phone-8ad378 ['full_break', 'full_break', 'slight_break']",
+    "phone-8bc29d ['full_break', 'slight_break', 'full_break']",
+    "phone-b0f0c8 ['full_break', 'full_break', 'slight_break']",
+    "phone-d1967f ['slight_break', 'no_break', 'slight_break']",
+    "phone-d58b14 ['slight_break', 'full_break', 'slight_break']",
+    "phone-e026de ['no_break', 'slight_break', 'no_break']",
+    "phone-f07193 ['slight_break', 'full_break', 'slight_break']",
+    "stock-s14-before_street ['slight_break', 'slight_break', 'stacked']",
+    "stock-s26-before_mirror ['stacked', 'not_visible', 'not_visible']"
+   ]
+  },
+  "L.covers_shoe": {
+   "same": [
+    43,
+    50
+   ],
+   "right": [
+    138,
+    147
+   ],
+   "precision": {
+    "no": [
+     34,
+     34
+    ],
+    "partly": [
+     71,
+     74
+    ],
+    "no_shoes_visible": [
+     27,
+     27
+    ],
+    "mostly": [
+     6,
+     12
+    ]
+   },
+   "recall": {
+    "no": [
+     33,
+     36
+    ],
+    "no_shoes_visible": [
+     27,
+     27
+    ],
+    "partly": [
+     51,
+     57
+    ],
+    "mostly": [
+     3,
+     3
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     19,
+     23,
+     61,
+     66
+    ],
+    "founder (profile pending)": [
+     18,
+     21,
+     59,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     6,
+     6
+    ],
+    "friends (profile unknown)": [
+     4,
+     4,
+     12,
+     12
+    ]
+   },
+   "confusion": {
+    "partly -> partly": 51,
+    "no -> no": 33,
+    "no_shoes_visible -> no_shoes_visible": 27,
+    "no|partly -> partly": 20,
+    "partly -> mostly": 6,
+    "partly|mostly -> mostly": 3,
+    "mostly -> mostly": 3,
+    "no -> partly": 3,
+    "no|partly -> no": 1
+   },
+   "flips": [
+    "phone-8bc29d ['partly', 'partly', 'mostly']",
+    "phone-b0f0c8 ['mostly', 'partly', 'partly']",
+    "phone-d6559a ['partly', 'mostly', 'mostly']",
+    "stock-p03-after_street ['no', 'partly', 'partly']",
+    "stock-s11-before_street ['partly', 'partly', 'no']",
+    "stock-s15-before_street ['partly', 'mostly', 'mostly']",
+    "stock-s21-before_phone ['partly', 'no', 'no']"
+   ]
+  },
+  "L.heavy": {
+   "same": [
+    41,
+    50
+   ],
+   "right": [
+    87,
+    141
+   ],
+   "precision": {
+    "heavy": [
+     35,
+     40
+    ],
+    "light": [
+     40,
+     78
+    ],
+    "other": [
+     12,
+     23
+    ]
+   },
+   "recall": {
+    "light": [
+     28,
+     39
+    ],
+    "other": [
+     12,
+     12
+    ],
+    "heavy": [
+     26,
+     66
+    ]
+   },
+   "by_group": {
+    "web + stock (profile unknown)": [
+     20,
+     23,
+     42,
+     60
+    ],
+    "founder (profile pending)": [
+     15,
+     21,
+     30,
+     63
+    ],
+    "703a8b/ebe23f (ask the founder)": [
+     2,
+     2,
+     6,
+     6
+    ],
+    "friends (profile unknown)": [
+     4,
+     4,
+     9,
+     12
+    ]
+   },
+   "confusion": {
+    "full_break -> light": 24,
+    "cropped -> light": 15,
+    "full_break -> heavy": 15,
+    "slight_break|full_break -> light": 12,
+    "slight_break|full_break -> heavy": 6,
+    "not_visible -> other": 6,
+    "slight_break|no_break -> light": 6,
+    "full_break|stacked -> light": 6,
+    "shorts -> other": 6,
+    "stacked|full_break -> light": 5,
+    "cropped|no_break -> light": 4,
+    "slight_break|no_break -> other": 3,
+    "full_break|pooling -> heavy": 3,
+    "no_break|slight_break -> other": 3,
+    "full_break|slight_break -> other": 3,
+    "full_break|pooling -> light": 3,
+    "full_break|stacked -> heavy": 3,
+    "slight_break|stacked|no_break -> heavy": 3,
+    "no_break|slight_break -> light": 3,
+    "stacked -> heavy": 3,
+    "slight_break|no_break -> heavy": 3,
+    "cropped|no_break -> heavy": 2,
+    "stacked|full_break -> heavy": 2,
+    "stacked|full_break -> other": 2
+   },
+   "flips": [
+    "mirror-m01 ['heavy', 'heavy', 'light']",
+    "phone-403ade ['light', 'heavy', 'light']",
+    "phone-8ad378 ['heavy', 'heavy', 'light']",
+    "phone-8bc29d ['heavy', 'light', 'heavy']",
+    "phone-b0f0c8 ['heavy', 'heavy', 'light']",
+    "phone-d58b14 ['light', 'heavy', 'light']",
+    "phone-f07193 ['light', 'heavy', 'light']",
+    "stock-s14-before_street ['light', 'light', 'heavy']",
+    "stock-s26-before_mirror ['heavy', 'other', 'other']"
+   ]
+  }
+ },
+ "peeks": {
+  "phone-6b14db": {
+   "label": "a_little|clearly",
+   "U": [
+    "a_little",
+    "a_little",
+    "clearly"
+   ],
+   "US": [
+    "a_little",
+    "a_little",
+    "a_little"
+   ],
+   "U_kinds": [
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank"
+   ]
+  },
+  "phone-7de605": {
+   "label": "a_little|clearly",
+   "U": [
+    "a_little",
+    "a_little",
+    "a_little"
+   ],
+   "US": [
+    "a_little",
+    "a_little",
+    "a_little"
+   ],
+   "U_kinds": [
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank"
+   ]
+  },
+  "phone-a765e8": {
+   "label": "a_little|clearly",
+   "U": [
+    "a_little",
+    "a_little",
+    "a_little"
+   ],
+   "US": [
+    "a_little",
+    "a_little",
+    "a_little"
+   ],
+   "U_kinds": [
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank"
+   ]
+  },
+  "phone-e026de": {
+   "label": "no|a_little",
+   "U": [
+    "no",
+    "no",
+    "no"
+   ],
+   "US": [
+    "no",
+    "no",
+    "no"
+   ],
+   "U_kinds": [
+    "open_shirt/hoodie_or_sweatshirt",
+    "open_shirt/hoodie_or_sweatshirt",
+    "open_shirt/hoodie_or_sweatshirt"
+   ]
+  },
+  "phone-e438d4": {
+   "label": "no|a_little",
+   "U": [
+    "no",
+    "no",
+    "no"
+   ],
+   "US": [
+    "no",
+    "no",
+    "no"
+   ],
+   "U_kinds": [
+    "jacket_or_coat/tee_or_tank",
+    "jacket_or_coat/tee_or_tank",
+    "jacket_or_coat/tee_or_tank"
+   ]
+  },
+  "phone-f4870b": {
+   "label": "no|a_little",
+   "U": [
+    "no",
+    "no",
+    "no"
+   ],
+   "US": [
+    "no",
+    "no",
+    "no"
+   ],
+   "U_kinds": [
+    "jacket_or_coat/tee_or_tank",
+    "jacket_or_coat/tee_or_tank",
+    "jacket_or_coat/tee_or_tank"
+   ]
+  },
+  "phone-fb0b17": {
+   "label": "no|a_little",
+   "U": [
+    "no",
+    "no",
+    "no"
+   ],
+   "US": [
+    "no",
+    "no",
+    "no"
+   ],
+   "U_kinds": [
+    "jacket_or_coat/tee_or_tank",
+    "jacket_or_coat/tee_or_tank",
+    "jacket_or_coat/tee_or_tank"
+   ]
+  },
+  "stock-s04-before_studio": {
+   "label": "clearly",
+   "U": [
+    "clearly",
+    "clearly",
+    "clearly"
+   ],
+   "US": [
+    "clearly",
+    "clearly",
+    "clearly"
+   ],
+   "U_kinds": [
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank"
+   ]
+  },
+  "stock-s24-before_mirror": {
+   "label": "a_little|clearly",
+   "U": [
+    "a_little",
+    "a_little",
+    "a_little"
+   ],
+   "US": [
+    "clearly",
+    "a_little",
+    "a_little"
+   ],
+   "U_kinds": [
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank",
+    "hoodie_or_sweatshirt/tee_or_tank"
+   ]
+  },
+  "stock-s26-before_mirror": {
+   "label": "no|a_little",
+   "U": [
+    "a_little",
+    "a_little",
+    "a_little"
+   ],
+   "US": [
+    "no",
+    "no",
+    "a_little"
+   ],
+   "U_kinds": [
+    "open_shirt/tee_or_tank",
+    "open_shirt/tee_or_tank",
+    "open_shirt/tee_or_tank"
+   ]
+  },
+  "U_caught_firm": [
+   5,
+   5
+  ],
+  "U_caught_all": [
+   6,
+   10
+  ],
+  "US_caught_firm": [
+   5,
+   5
+  ],
+  "US_caught_all": [
+   5,
+   10
+  ],
+  "U_false": [
+   [
+    "phone-b0f0c8",
+    [
+     "a_little",
+     "a_little",
+     "a_little"
+    ]
+   ]
+  ],
+  "US_false": [
+   [
+    "phone-968016",
+    [
+     "no",
+     "a_little",
+     "no"
+    ]
+   ],
+   [
+    "phone-b0f0c8",
+    [
+     "no",
+     "no",
+     "a_little"
+    ]
+   ],
+   [
+    "phone-d6559a",
+    [
+     "a_little",
+     "a_little",
+     "a_little"
+    ]
+   ]
+  ]
+ },
+ "b1_hem": {
+  "A": {
+   "same": [
+    32,
+    50
+   ],
+   "right": [
+    74,
+    129
+   ],
+   "heavy_same": [
+    37,
+    50
+   ],
+   "heavy_right": [
+    84,
+    129
+   ]
+  },
+  "B1": {
+   "same": [
+    35,
+    50
+   ],
+   "right": [
+    68,
+    129
+   ],
+   "heavy_same": [
+    36,
+    50
+   ],
+   "heavy_right": [
+    76,
+    129
+   ]
+  }
+ },
+ "derived": {
+  "U.outer_hem_at (coarse)": {
+   "same": [
+    43,
+    50
+   ],
+   "right": [
+    128,
+    144
+   ],
+   "precision": {
+    "short": [
+     97,
+     97
+    ],
+    "long": [
+     31,
+     44
+    ],
+    "not_visible": [
+     0,
+     3
+    ]
+   }
+  },
+  "US.outer_hem_at (coarse)": {
+   "same": [
+    37,
+    50
+   ],
+   "right": [
+    127,
+    144
+   ],
+   "precision": {
+    "short": [
+     93,
+     93
+    ],
+    "long": [
+     34,
+     49
+    ],
+    "not_visible": [
+     0,
+     2
+    ]
+   }
+  },
+  "U.under_hem_at (coarse)": {
+   "same": [
+    26,
+    28
+   ],
+   "right": [
+    60,
+    63
+   ],
+   "precision": {
+    "short": [
+     60,
+     60
+    ],
+    "long": [
+     0,
+     3
+    ]
+   }
+  },
+  "U.under_shows (coarse)": {
+   "same": [
+    50,
+    50
+   ],
+   "right": [
+    147,
+    150
+   ],
+   "precision": {
+    "no": [
+     129,
+     129
+    ],
+    "peek": [
+     18,
+     21
+    ]
+   }
+  },
+  "US.under_shows (coarse)": {
+   "same": [
+    47,
+    50
+   ],
+   "right": [
+    145,
+    150
+   ],
+   "precision": {
+    "no": [
+     129,
+     129
+    ],
+    "peek": [
+     16,
+     21
+    ]
+   }
+  },
+  "L.covers_shoe (coarse)": {
+   "same": [
+    47,
+    50
+   ],
+   "right": [
+    144,
+    147
+   ],
+   "precision": {
+    "no": [
+     34,
+     34
+    ],
+    "covers": [
+     83,
+     86
+    ],
+    "no_shoes_visible": [
+     27,
+     27
+    ]
+   }
+  },
+  "L.pant_end (shoes visible)": {
+   "same": [
+    29,
+    40
+   ],
+   "right": [
+    66,
+    120
+   ],
+   "precision": {
+    "stacked": [
+     8,
+     16
+    ],
+    "slight_break": [
+     12,
+     43
+    ],
+    "cropped": [
+     17,
+     23
+    ],
+    "full_break": [
+     23,
+     23
+    ],
+    "no_break": [
+     3,
+     12
+    ],
+    "shorts": [
+     3,
+     3
+    ]
+   }
+  },
+  "L.heavy (shoes visible)": {
+   "same": [
+    32,
+    40
+   ],
+   "right": [
+    77,
+    120
+   ],
+   "precision": {
+    "heavy": [
+     34,
+     39
+    ],
+    "light": [
+     40,
+     78
+    ],
+    "other": [
+     3,
+     3
+    ]
+   }
+  }
+ }
+}

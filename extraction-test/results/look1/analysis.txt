@@ -1,0 +1,119 @@
+COST AND SPEED (every call)
+  U: {'calls': 150, 'cents_per_call': 0.1258, 'spent_usd': 0.1888, 'median_s': 2.675, 'p90_s': 5.24, 'max_s': 10.16, 'errors': 0}
+  US: {'calls': 150, 'cents_per_call': 0.1383, 'spent_usd': 0.2075, 'median_s': 1.795, 'p90_s': 3.2, 'max_s': 8.97, 'errors': 0}
+  L: {'calls': 150, 'cents_per_call': 0.1096, 'spent_usd': 0.1644, 'median_s': 2.5549999999999997, 'p90_s': 5.69, 'max_s': 12.2, 'errors': 0}
+  total $0.561
+
+ARM U
+  outer_hem_at         same    37/50 (74%)   right    109/144 (76%)
+     fires: hip 57/68 (84%) · crotch 30/43 (70%) · waistband 15/18 (83%) · tucked 6/9 (67%) · not_visible 0/3 (0%) · cropped 1/2 (50%) · thigh 0/1 (0%)
+     found: hip 13/24 (54%) · waistband 10/21 (48%) · tucked 3/3 (100%) · thigh 0/3 (0%)
+     by group (same · right): web + stock (profile unknown): 19/23 (83%) · 47/63 (75%) | founder (profile pending): 14/21 (67%) · 47/63 (75%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 3/6 (50%) | friends (profile unknown): 2/4 (50%) · 12/12 (100%)
+     flips (13): mirror-m07 ['crotch', 'crotch', 'hip']; mirror-m10 ['crotch', 'crotch', 'thigh']; phone-403ade ['crotch', 'crotch', 'hip']; phone-5a9049 ['crotch', 'hip', 'hip']; phone-6b14db ['hip', 'hip', 'waistband']; phone-7f14a4 ['hip', 'crotch', 'crotch']; phone-a765e8 ['waistband', 'cropped', 'waistband']; phone-b0f0c8 ['waistband', 'hip', 'hip']; phone-d6559a ['waistband', 'hip', 'hip']; phone-e438d4 ['crotch', 'crotch', 'hip']; phone-f4870b ['hip', 'crotch', 'hip']; stock-s04-before_studio ['cropped', 'waistband', 'hip']; stock-s15-before_street ['crotch', 'hip', 'hip']
+     top confusions: waistband -> hip ×7
+  under_present        same   50/50 (100%)   right    144/147 (98%)
+     fires: yes 87/90 (97%) · no 57/57 (100%)
+     found: yes 84/84 (100%) · no 57/60 (95%)
+     by group (same · right): web + stock (profile unknown): 23/23 (100%) · 66/66 (100%) | founder (profile pending): 21/21 (100%) · 60/63 (95%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 6/6 (100%) | friends (profile unknown): 4/4 (100%) · 12/12 (100%)
+     flips (0): 
+     top confusions: no -> yes ×3
+  under_hem_at         same    41/50 (82%)   right      59/63 (94%)
+     fires: hip 26/26 (100%) · tucked 22/22 (100%) · waistband 11/12 (92%) · crotch 0/3 (0%)
+     found: tucked 21/21 (100%) · hip 8/12 (67%) · waistband 3/3 (100%)
+     by group (same · right): web + stock (profile unknown): 20/23 (87%) · 33/33 (100%) | founder (profile pending): 18/21 (86%) · 21/21 (100%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · – | friends (profile unknown): 1/4 (25%) · 5/9 (56%)
+     flips (9): mirror-m12 ['tucked', 'waistband', 'waistband']; phone-6b14db ['hip', 'hip', 'waistband']; phone-a765e8 ['waistband', 'waistband', 'hip']; phone-b0f0c8 ['waistband', 'hip', 'hip']; phone-e438d4 ['crotch', 'crotch', 'hip']; phone-f4870b ['hip', 'crotch', 'hip']; phone-fb0b17 ['hip', 'waistband', 'hip']; stock-s04-before_studio ['waistband', 'hip', 'hip']; stock-s24-before_mirror ['waistband', 'waistband', 'hip']
+     top confusions: hip|unsure -> crotch ×3
+  under_shows          same    49/50 (98%)   right    147/150 (98%)
+     fires: no 129/129 (100%) · a_little 14/17 (82%) · clearly 4/4 (100%)
+     found: no 117/120 (98%) · clearly 3/3 (100%)
+     by group (same · right): web + stock (profile unknown): 23/23 (100%) · 69/69 (100%) | founder (profile pending): 20/21 (95%) · 60/63 (95%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 6/6 (100%) | friends (profile unknown): 4/4 (100%) · 12/12 (100%)
+     flips (1): phone-6b14db ['a_little', 'a_little', 'clearly']
+     top confusions: no -> a_little ×3
+
+ARM US
+  outer_hem_at         same    32/50 (64%)   right    110/144 (76%)
+     fires: hip 56/69 (81%) · crotch 33/48 (69%) · waistband 14/15 (93%) · tucked 6/9 (67%) · not_visible 0/2 (0%) · thigh 1/1 (100%)
+     found: hip 12/24 (50%) · waistband 7/21 (33%) · tucked 3/3 (100%) · thigh 1/3 (33%)
+     by group (same · right): web + stock (profile unknown): 17/23 (74%) · 52/63 (83%) | founder (profile pending): 11/21 (52%) · 43/63 (68%) | 703a8b/ebe23f (ask the founder): 1/2 (50%) · 3/6 (50%) | friends (profile unknown): 3/4 (75%) · 12/12 (100%)
+     flips (18): oct7-ph1 ['waistband', 'waistband', 'hip']; oct7-ph4 ['crotch', 'hip', 'crotch']; phone-403ade ['hip', 'hip', 'crotch']; phone-5a9049 ['crotch', 'hip', 'crotch']; phone-6b14db ['waistband', 'hip', 'hip']; phone-7de605 ['hip', 'waistband', 'hip']; phone-8ad378 ['crotch', 'hip', 'hip']; phone-8bc29d ['hip', 'hip', 'waistband']; phone-d6559a ['waistband', 'hip', 'hip']; phone-ebe23f ['crotch', 'hip', 'hip']; phone-f07193 ['crotch', 'hip', 'hip']; phone-fb0b17 ['crotch', 'hip', 'hip']; stock-p03-after_street ['not_visible', 'thigh', 'not_visible']; stock-p06-after_studio ['hip', 'crotch', 'hip']; stock-s08-before_studio ['hip', 'hip', 'crotch']; stock-s11-before_street ['crotch', 'hip', 'hip']; stock-s15-before_street ['hip', 'crotch', 'crotch']; stock-s21-before_phone ['crotch', 'crotch', 'hip']
+     top confusions: waistband -> hip ×11; hip -> crotch ×8
+  under_present        same    48/50 (96%)   right    142/147 (97%)
+     fires: yes 87/92 (95%) · no 55/55 (100%)
+     found: yes 84/84 (100%) · no 55/60 (92%)
+     by group (same · right): web + stock (profile unknown): 23/23 (100%) · 66/66 (100%) | founder (profile pending): 19/21 (90%) · 58/63 (92%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 6/6 (100%) | friends (profile unknown): 4/4 (100%) · 12/12 (100%)
+     flips (2): phone-968016 ['no', 'yes', 'no']; phone-b0f0c8 ['no', 'no', 'yes']
+     top confusions: no -> yes ×5
+  under_hem_at         same    38/50 (76%)   right      56/63 (89%)
+     fires: hip 32/34 (94%) · tucked 20/20 (100%) · waistband 4/6 (67%) · crotch 0/3 (0%)
+     found: tucked 19/21 (90%) · hip 11/12 (92%) · waistband 1/3 (33%)
+     by group (same · right): web + stock (profile unknown): 18/23 (78%) · 31/33 (94%) | founder (profile pending): 16/21 (76%) · 17/21 (81%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · – | friends (profile unknown): 2/4 (50%) · 8/9 (89%)
+     flips (12): mirror-m12 ['waistband', 'tucked', 'waistband']; oct7-ph4 ['hip', 'waistband', 'hip']; phone-8bc29d ['hip', 'hip', 'waistband']; phone-968016 ['none', 'hip', 'none']; phone-b0f0c8 ['none', 'none', 'hip']; phone-d1967f ['waistband', 'not_visible', 'not_visible']; phone-e026de ['hip', 'crotch', 'crotch']; phone-fb0b17 ['crotch', 'hip', 'hip']; stock-p06-after_studio ['tucked', 'waistband', 'tucked']; stock-s07-before_studio ['waistband', 'tucked', 'waistband']; stock-s10-before_street ['hip', 'hip', 'waistband']; stock-s15-before_street ['tucked', 'not_visible', 'not_visible']
+     top confusions: waistband -> hip ×2; waistband|hip -> crotch ×2; tucked -> waistband ×2
+  under_shows          same    46/50 (92%)   right    145/150 (97%)
+     fires: no 129/129 (100%) · a_little 12/17 (71%) · clearly 4/4 (100%)
+     found: no 115/120 (96%) · clearly 3/3 (100%)
+     by group (same · right): web + stock (profile unknown): 21/23 (91%) · 69/69 (100%) | founder (profile pending): 19/21 (90%) · 58/63 (92%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 6/6 (100%) | friends (profile unknown): 4/4 (100%) · 12/12 (100%)
+     flips (4): phone-968016 ['no', 'a_little', 'no']; phone-b0f0c8 ['no', 'no', 'a_little']; stock-s24-before_mirror ['clearly', 'a_little', 'a_little']; stock-s26-before_mirror ['no', 'no', 'a_little']
+     top confusions: no -> a_little ×5
+  outer_shoulder_seam  same    39/50 (78%)   right     99/135 (73%)
+     fires: on_edge 35/49 (71%) · down_arm 32/47 (68%) · just_past 29/30 (97%) · not_visible 3/9 (33%)
+     found: just_past 13/21 (62%) · not_visible 3/15 (20%) · on_edge 12/12 (100%) · down_arm 1/3 (33%)
+     by group (same · right): web + stock (profile unknown): 18/23 (78%) · 47/60 (78%) | founder (profile pending): 16/21 (76%) · 37/57 (65%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 3/6 (50%) | friends (profile unknown): 3/4 (75%) · 12/12 (100%)
+     flips (11): mirror-m02 ['just_past', 'down_arm', 'down_arm']; mirror-m03 ['down_arm', 'just_past', 'just_past']; oct7-ph1 ['down_arm', 'just_past', 'down_arm']; phone-5a9049 ['just_past', 'on_edge', 'just_past']; phone-6b14db ['down_arm', 'just_past', 'down_arm']; phone-8ad378 ['just_past', 'down_arm', 'down_arm']; phone-d58b14 ['just_past', 'just_past', 'on_edge']; phone-fb0b17 ['just_past', 'on_edge', 'just_past']; stock-s08-before_studio ['on_edge', 'on_edge', 'down_arm']; stock-s21-before_phone ['just_past', 'on_edge', 'on_edge']; stock-s26-before_mirror ['just_past', 'down_arm', 'down_arm']
+     top confusions: not_visible|unsure -> on_edge ×9; on_edge|just_past -> down_arm ×8; just_past|unsure -> down_arm ×5
+
+ARM L
+  pant_end             same    37/50 (74%)   right     76/141 (54%)
+     fires: slight_break 12/43 (28%) · cropped 17/23 (74%) · full_break 23/23 (100%) · stacked 9/17 (53%) · not_visible 6/17 (35%) · no_break 3/12 (25%) · shorts 6/6 (100%)
+     found: full_break 15/39 (38%) · cropped 15/15 (100%) · not_visible 6/6 (100%) · shorts 6/6 (100%) · stacked 3/3 (100%)
+     by group (same · right): web + stock (profile unknown): 18/23 (78%) · 34/60 (57%) | founder (profile pending): 14/21 (67%) · 27/63 (43%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 6/6 (100%) | friends (profile unknown): 3/4 (75%) · 9/12 (75%)
+     flips (13): mirror-m01 ['stacked', 'stacked', 'slight_break']; mirror-m03 ['stacked', 'full_break', 'full_break']; mirror-m12 ['slight_break', 'cropped', 'cropped']; phone-403ade ['slight_break', 'stacked', 'slight_break']; phone-8ad378 ['full_break', 'full_break', 'slight_break']; phone-8bc29d ['full_break', 'slight_break', 'full_break']; phone-b0f0c8 ['full_break', 'full_break', 'slight_break']; phone-d1967f ['slight_break', 'no_break', 'slight_break']; phone-d58b14 ['slight_break', 'full_break', 'slight_break']; phone-e026de ['no_break', 'slight_break', 'no_break']; phone-f07193 ['slight_break', 'full_break', 'slight_break']; stock-s14-before_street ['slight_break', 'slight_break', 'stacked']; stock-s26-before_mirror ['stacked', 'not_visible', 'not_visible']
+     top confusions: full_break -> slight_break ×16; full_break -> no_break ×8; full_break|stacked -> slight_break ×6
+  covers_shoe          same    43/50 (86%)   right    138/147 (94%)
+     fires: partly 71/74 (96%) · no 34/34 (100%) · no_shoes_visible 27/27 (100%) · mostly 6/12 (50%)
+     found: partly 51/57 (89%) · no 33/36 (92%) · no_shoes_visible 27/27 (100%) · mostly 3/3 (100%)
+     by group (same · right): web + stock (profile unknown): 19/23 (83%) · 61/66 (92%) | founder (profile pending): 18/21 (86%) · 59/63 (94%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 6/6 (100%) | friends (profile unknown): 4/4 (100%) · 12/12 (100%)
+     flips (7): phone-8bc29d ['partly', 'partly', 'mostly']; phone-b0f0c8 ['mostly', 'partly', 'partly']; phone-d6559a ['partly', 'mostly', 'mostly']; stock-p03-after_street ['no', 'partly', 'partly']; stock-s11-before_street ['partly', 'partly', 'no']; stock-s15-before_street ['partly', 'mostly', 'mostly']; stock-s21-before_phone ['partly', 'no', 'no']
+     top confusions: partly -> mostly ×6; no -> partly ×3
+  heavy                same    41/50 (82%)   right     87/141 (62%)
+     fires: light 40/78 (51%) · heavy 35/40 (88%) · other 12/23 (52%)
+     found: heavy 26/66 (39%) · light 28/39 (72%) · other 12/12 (100%)
+     by group (same · right): web + stock (profile unknown): 20/23 (87%) · 42/60 (70%) | founder (profile pending): 15/21 (71%) · 30/63 (48%) | 703a8b/ebe23f (ask the founder): 2/2 (100%) · 6/6 (100%) | friends (profile unknown): 4/4 (100%) · 9/12 (75%)
+     flips (9): mirror-m01 ['heavy', 'heavy', 'light']; phone-403ade ['light', 'heavy', 'light']; phone-8ad378 ['heavy', 'heavy', 'light']; phone-8bc29d ['heavy', 'light', 'heavy']; phone-b0f0c8 ['heavy', 'heavy', 'light']; phone-d58b14 ['light', 'heavy', 'light']; phone-f07193 ['light', 'heavy', 'light']; stock-s14-before_street ['light', 'light', 'heavy']; stock-s26-before_mirror ['heavy', 'other', 'other']
+     top confusions: full_break -> light ×24; cropped -> light ×15; full_break -> heavy ×15; slight_break|full_break -> light ×12; slight_break|full_break -> heavy ×6; not_visible -> other ×6; slight_break|no_break -> light ×6; full_break|stacked -> light ×6
+
+LABELLED PEEKS (label: a_little/clearly possible), runs per arm:
+  phone-6b14db               label a_little|clearly U ['a_little', 'a_little', 'clearly']  US ['a_little', 'a_little', 'a_little']  kinds ['hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank']
+  phone-7de605               label a_little|clearly U ['a_little', 'a_little', 'a_little']  US ['a_little', 'a_little', 'a_little']  kinds ['hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank']
+  phone-a765e8               label a_little|clearly U ['a_little', 'a_little', 'a_little']  US ['a_little', 'a_little', 'a_little']  kinds ['hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank']
+  phone-e026de               label no|a_little      U ['no', 'no', 'no']  US ['no', 'no', 'no']  kinds ['open_shirt/hoodie_or_sweatshirt', 'open_shirt/hoodie_or_sweatshirt', 'open_shirt/hoodie_or_sweatshirt']
+  phone-e438d4               label no|a_little      U ['no', 'no', 'no']  US ['no', 'no', 'no']  kinds ['jacket_or_coat/tee_or_tank', 'jacket_or_coat/tee_or_tank', 'jacket_or_coat/tee_or_tank']
+  phone-f4870b               label no|a_little      U ['no', 'no', 'no']  US ['no', 'no', 'no']  kinds ['jacket_or_coat/tee_or_tank', 'jacket_or_coat/tee_or_tank', 'jacket_or_coat/tee_or_tank']
+  phone-fb0b17               label no|a_little      U ['no', 'no', 'no']  US ['no', 'no', 'no']  kinds ['jacket_or_coat/tee_or_tank', 'jacket_or_coat/tee_or_tank', 'jacket_or_coat/tee_or_tank']
+  stock-s04-before_studio    label clearly          U ['clearly', 'clearly', 'clearly']  US ['clearly', 'clearly', 'clearly']  kinds ['hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank']
+  stock-s24-before_mirror    label a_little|clearly U ['a_little', 'a_little', 'a_little']  US ['clearly', 'a_little', 'a_little']  kinds ['hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank', 'hoodie_or_sweatshirt/tee_or_tank']
+  stock-s26-before_mirror    label no|a_little      U ['a_little', 'a_little', 'a_little']  US ['no', 'no', 'a_little']  kinds ['open_shirt/tee_or_tank', 'open_shirt/tee_or_tank', 'open_shirt/tee_or_tank']
+  U: firm peeks caught (2+ of 3 runs) 5/5; any peek label 6/10
+  US: firm peeks caught (2+ of 3 runs) 5/5; any peek label 5/10
+  U peeks on 'no' photos: [('phone-b0f0c8', ['a_little', 'a_little', 'a_little'])]
+  US peeks on 'no' photos: [('phone-968016', ['no', 'a_little', 'no']), ('phone-b0f0c8', ['no', 'no', 'a_little']), ('phone-d6559a', ['a_little', 'a_little', 'a_little'])]
+
+phone-d1967f (navy blazer friend), L runs: [{'pant_end': 'slight_break', 'covers_shoe': 'partly'}, {'pant_end': 'no_break', 'covers_shoe': 'partly'}, {'pant_end': 'slight_break', 'covers_shoe': 'partly'}]
+  batch 1 hem (A, B1): [('A', ['full_break']), ('B1', ['slight_break']), ('A', ['full_break']), ('B1', ['slight_break']), ('A', ['slight_break']), ('B1', ['slight_break'])]
+
+BATCH 1 scoring-call hem vs the same L labels (live values: no stacked)
+  A: hem same 32/50 (64%) · right 74/129 (57%) · heavy/light same 37/50 (74%) · right 84/129 (65%)
+  B1: hem same 35/50 (70%) · right 68/129 (53%) · heavy/light same 36/50 (72%) · right 76/129 (59%)
+
+DERIVED COARSE FIELDS
+  U.outer_hem_at (coarse)            same    43/50 (86%) · right  128/144 (89%) · fires short 97/97 (100%) · long 31/44 (70%) · not_visible 0/3 (0%)
+  US.outer_hem_at (coarse)           same    37/50 (74%) · right  127/144 (88%) · fires short 93/93 (100%) · long 34/49 (69%) · not_visible 0/2 (0%)
+  U.under_hem_at (coarse)            same    26/28 (93%) · right    60/63 (95%) · fires short 60/60 (100%) · long 0/3 (0%)
+  U.under_shows (coarse)             same   50/50 (100%) · right  147/150 (98%) · fires no 129/129 (100%) · peek 18/21 (86%)
+  US.under_shows (coarse)            same    47/50 (94%) · right  145/150 (97%) · fires no 129/129 (100%) · peek 16/21 (76%)
+  L.covers_shoe (coarse)             same    47/50 (94%) · right  144/147 (98%) · fires covers 83/86 (97%) · no 34/34 (100%) · no_shoes_visible 27/27 (100%)
+  L.pant_end (shoes visible)         same    29/40 (72%) · right   66/120 (55%) · fires slight_break 12/43 (28%) · cropped 17/23 (74%) · full_break 23/23 (100%) · stacked 8/16 (50%) · no_break 3/12 (25%) · shorts 3/3 (100%)
+  L.heavy (shoes visible)            same    32/40 (80%) · right   77/120 (64%) · fires light 40/78 (51%) · heavy 34/39 (87%) · other 3/3 (100%)
+  U calls finishing within 5 s: 132/150 (88%)
+  US calls finishing within 5 s: 145/150 (97%)
+  L calls finishing within 5 s: 127/150 (85%)

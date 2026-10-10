@@ -1,0 +1,14 @@
+This is a close-up of one person's legs and shoes, cut from an outfit photo. Describe only how the pants end at the shoes, not the person. If the two legs differ, describe the leg with more fabric at the hem.
+
+pant_end:
+- shorts: shorts or a short garment, no pant hem near the shoes
+- cropped: the hem ends above the shoe; ankle, sock or a gap shows (an elastic jogger cuff above the ankle counts)
+- no_break: the hem just reaches the top of the shoe, with no fold
+- slight_break: the hem rests on the shoe with one small dent at the front
+- full_break: the hem rests on the shoe with one deep fold, and the back of the hem reaches the heel
+- stacked: several soft folds sit on the lower leg, above the shoe, like an accordion
+- pooling: so much extra fabric that it collapses over the shoe and spreads onto the floor or under the heel
+- not_visible: the hem or the shoes are hidden or out of frame
+
+covers_shoe: how much of the top of the shoe (laces, tongue, collar) the pant fabric covers: "no", "partly", "mostly", or "no_shoes_visible" (barefoot, socks only, or shoes out of frame).
+Return only JSON that matches the schema.
