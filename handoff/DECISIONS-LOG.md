@@ -842,3 +842,19 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **One change to the founder's version:** Gemini doesn't give part scores. It reports facts, and code (plus phone scripts, most likely for color, from the closet's measured color and lightness) computes each part, so the same photo still gets the same score (#63–64).
     - **Research started:** five agents, one per part (color; proportions; fit; shoes + occasion; cohesion + condition), working from `rubric/research/parts/BRIEF.md`. Each writes `rubric/research/parts/<part>.md` with its checks, evidence, the tool for each check and its measured reliability, anchors, worked examples against the judge pilot, the v4 rules it absorbs, the card line and a test plan.
     - **Next:** Claude merges them into one spec (weights, NA, the occasion choice, how 9–9.5 stay reachable) for his approval. Nothing in the app changes before then. This becomes the core of rubric v5 (`v5-brief.md`).
+196. **Parts scoring: merged spec (`rubric/research/parts/SPEC.md`, from the six part reports in that folder). Waiting on the founder's OK.**
+    - **Averaged parts:** Proportions 30%, Fit 25% (worst piece counts), Color 15%, Shoes 15%, Cohesion 15%. Each starts at 7 (the balanced, fine middle). Faults subtract; rewards apply only when there's no fault. An unseen part is NA and the weights renormalize.
+    - **After the average:** Condition subtracts faults only (stain −1.2, wrinkled −0.4, cap −1.6). Occasion only holds the score down (a ceiling plus up to −0.5, never averaged in, because averaging would add about +0.45 to most fits). Round to the half.
+    - **Each fact has one owner** (listed in the spec).
+    - **Today's fields cap Fit at 7 and Proportions at about 8.5,** so 9 is hard and 9.5 waits for new fit cues.
+    - **What the research found:**
+        - The judge pilot's part scores are halo (they check direction, not each part).
+        - The AI almost never reports condition faults (2 of 19).
+        - Skin pixels leak into the phone's measured garment colors (5 of 83 neutral pieces), so no measured color feeds a score until it's skin-free. Closet matching has the same leak, which belongs to the closet session.
+        - Until reading batch 1 passes, Proportions and Fit mostly say 7.
+    - **Order:**
+        1. Reading batches 1 and 2 plus a condition prompt, each flip-tested. About $4 in all; needs his OK.
+        2. A Python prototype of the parts engine, paper-tested on his saved fits and the pilot.
+        3. Port it, build a new fix engine aimed at parts, and the card's parts row (mockup first).
+        4. The gold set tunes the weights.
+    - **Founder calls:** the design, the ~$4, the Event chip's band or name, splitting Class/Work later, and the card mockup.
