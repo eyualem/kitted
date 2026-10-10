@@ -1,0 +1,34 @@
+oct7-ph1: no upper/lower split (pose full); zoom arms send the body crop
+oct7-ph4: no upper/lower split (pose full); zoom arms send the body crop
+stock-p06-after_studio: no upper/lower split (pose none); zoom arms send the body crop
+stock-s19-before_phone: no upper/lower split (pose none); zoom arms send the body crop
+50 photos prepared in /Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images
+292 calls; spent so far $0.049
+  20 done · $0.120
+  32 done · $0.190
+  44 done · $0.264
+  56 done · $0.333
+  68 done · $0.408
+  80 done · $0.486
+  92 done · $0.562
+  104 done · $0.634
+  116 done · $0.705
+  128 done · $0.777
+  140 done · $0.850
+  152 done · $0.924
+  164 done · $0.997
+  176 done · $1.075
+  188 done · $1.152
+  200 done · $1.223
+  212 done · $1.294
+  224 done · $1.366
+  236 done · $1.439
+  248 done · $1.511
+  260 done · $1.585
+  272 done · $1.665
+  284 done · $1.739
+  296 done · $1.811
+  300 done · $1.834
+A: 150 calls · in 4019 · out 718 · 0.571¢/call · median 5.17 s
+B1: 150 calls · in 4312 · out 876 · 0.652¢/call · median 6.05 s
+total spent $1.834

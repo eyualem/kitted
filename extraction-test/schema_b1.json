@@ -1,0 +1,370 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "scene": {
+   "type": "OBJECT",
+   "properties": {
+    "framing": {
+     "type": "STRING",
+     "enum": [
+      "full_body",
+      "three_quarter",
+      "upper_only"
+     ]
+    },
+    "shoes_visible": {
+     "type": "BOOLEAN"
+    },
+    "people_count": {
+     "type": "INTEGER"
+    },
+    "mirror_selfie": {
+     "type": "BOOLEAN"
+    },
+    "lighting": {
+     "type": "STRING",
+     "enum": [
+      "good",
+      "dim",
+      "harsh"
+     ]
+    },
+    "clothed": {
+     "type": "STRING",
+     "enum": [
+      "fully",
+      "partial"
+     ]
+    },
+    "pose": {
+     "type": "STRING",
+     "enum": [
+      "standing",
+      "seated",
+      "other"
+     ]
+    }
+   },
+   "required": [
+    "framing",
+    "shoes_visible",
+    "people_count",
+    "mirror_selfie",
+    "lighting",
+    "clothed",
+    "pose"
+   ]
+  },
+  "garments": {
+   "type": "ARRAY",
+   "items": {
+    "type": "OBJECT",
+    "properties": {
+     "category": {
+      "type": "STRING",
+      "enum": [
+       "top",
+       "outerwear",
+       "bottom",
+       "footwear",
+       "accessory",
+       "traditional"
+      ]
+     },
+     "subcategory": {
+      "type": "STRING",
+      "enum": [
+       "tee",
+       "graphic_tee",
+       "polo",
+       "knit_polo",
+       "oxford_shirt",
+       "dress_shirt",
+       "flannel_shirt",
+       "overshirt",
+       "sweater",
+       "hoodie",
+       "sweatshirt",
+       "quarter_zip",
+       "tank_top",
+       "jersey",
+       "blazer",
+       "suit_jacket",
+       "denim_jacket",
+       "bomber",
+       "chore_coat",
+       "field_jacket",
+       "puffer",
+       "overcoat",
+       "rain_jacket",
+       "jeans",
+       "chinos",
+       "trousers",
+       "drawstring_trousers",
+       "suit_trousers",
+       "cargos",
+       "joggers",
+       "sweatpants",
+       "shorts",
+       "athletic_shorts",
+       "white_leather_sneaker",
+       "canvas_sneaker",
+       "retro_runner",
+       "performance_runner",
+       "chunky_sneaker",
+       "basketball_sneaker",
+       "loafer",
+       "dress_shoe",
+       "chelsea_boot",
+       "work_boot",
+       "slides_sandals",
+       "belt",
+       "hat",
+       "bag",
+       "watch",
+       "low_profile_sneaker",
+       "unstructured_blazer",
+       "sport_coat",
+       "cardigan",
+       "suede_chukka",
+       "derby",
+       "leather_jacket",
+       "rugby_shirt",
+       "fleece",
+       "shell_jacket",
+       "camp_collar_shirt",
+       "other"
+      ]
+     },
+     "color_family": {
+      "type": "STRING",
+      "enum": [
+       "white",
+       "off_white_cream",
+       "light_grey",
+       "grey",
+       "charcoal",
+       "black",
+       "navy",
+       "light_blue",
+       "blue",
+       "denim_light",
+       "denim_mid",
+       "denim_dark",
+       "olive",
+       "green",
+       "sage",
+       "khaki_beige",
+       "tan_camel",
+       "brown",
+       "burgundy",
+       "red",
+       "orange",
+       "yellow",
+       "pink",
+       "purple",
+       "multicolor"
+      ]
+     },
+     "pattern": {
+      "type": "STRING",
+      "enum": [
+       "solid",
+       "stripes",
+       "checks_plaid",
+       "graphic",
+       "camo",
+       "floral",
+       "other"
+      ]
+     },
+     "logo": {
+      "type": "STRING",
+      "enum": [
+       "none",
+       "small",
+       "large"
+      ]
+     },
+     "volume": {
+      "type": "INTEGER",
+      "description": "1 = fitted close to body, 3 = regular, 5 = very oversized. Garment cut, not the person's body."
+     },
+     "leg_shape": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "skinny",
+       "slim",
+       "straight",
+       "relaxed",
+       "wide",
+       "flare_bootcut",
+       "barrel"
+      ]
+     },
+     "hem": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "pooling",
+       "full_break",
+       "slight_break",
+       "no_break",
+       "cuffed",
+       "cropped"
+      ]
+     },
+     "tucked": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "none",
+       "half",
+       "full"
+      ]
+     },
+     "condition": {
+      "type": "STRING",
+      "enum": [
+       "clean",
+       "wrinkled",
+       "stained",
+       "pilled_or_worn"
+      ]
+     },
+     "certainty": {
+      "type": "STRING",
+      "enum": [
+       "clear",
+       "likely",
+       "unsure"
+      ]
+     },
+     "length": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "cropped",
+       "at_belt",
+       "mid_fly",
+       "below_crotch"
+      ]
+     },
+     "pattern_scale": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "small",
+       "medium",
+       "large"
+      ]
+     },
+     "saturation": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "muted",
+       "bright"
+      ]
+     },
+     "sleeve_end": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "above_wrist",
+       "at_wrist",
+       "covers_hand",
+       "short_sleeve",
+       "stacked_at_cuff",
+       "pushed_up"
+      ]
+     },
+     "strain": {
+      "type": "STRING",
+      "enum": [
+       "none",
+       "some",
+       "clear"
+      ]
+     },
+     "distressed_by_design": {
+      "type": "BOOLEAN"
+     },
+     "shows_below_outer": {
+      "type": "BOOLEAN",
+      "description": "Tops only: the top's hem visibly hangs below the jacket/blazer worn over it."
+     },
+     "hem_at": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "tucked",
+       "cropped",
+       "waistband",
+       "hip",
+       "crotch",
+       "thigh",
+       "knee"
+      ]
+     },
+     "under_shows": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "no",
+       "a_little",
+       "clearly"
+      ]
+     },
+     "shoulder_seam": {
+      "type": "STRING",
+      "enum": [
+       "na",
+       "on_edge",
+       "just_past",
+       "down_arm",
+       "not_visible"
+      ]
+     },
+     "lightness": {
+      "type": "STRING",
+      "enum": [
+       "light",
+       "mid",
+       "dark"
+      ]
+     }
+    },
+    "required": [
+     "category",
+     "subcategory",
+     "color_family",
+     "pattern",
+     "logo",
+     "volume",
+     "leg_shape",
+     "hem",
+     "tucked",
+     "condition",
+     "certainty",
+     "length",
+     "pattern_scale",
+     "saturation",
+     "sleeve_end",
+     "strain",
+     "distressed_by_design",
+     "shows_below_outer",
+     "hem_at",
+     "under_shows",
+     "shoulder_seam",
+     "lightness"
+    ]
+   }
+  }
+ },
+ "required": [
+  "scene",
+  "garments"
+ ]
+}

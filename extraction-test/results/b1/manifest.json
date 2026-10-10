@@ -1,0 +1,10 @@
+{
+ "model": "gemini-3.8-flash",
+ "runs": 3,
+ "arms": [
+  "A",
+  "B1"
+ ],
+ "zoom_line": "You get three images of the same photo: image 1 is the whole photo; image 2 is a close-up of the main person's upper body; image 3 is a close-up of their lower body down to the feet. Describe each garment once, from image 1, and use the close-ups for details: footwear type, hems, leg shape, sleeves, fabric and logos.",
+ "finished": "2026-10-10 19:14:33"
+}

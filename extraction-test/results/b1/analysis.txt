@@ -1,0 +1,158 @@
+Photos with 3 runs in both arms: 50
+A: {'calls': 150, 'cents_per_call': 0.571, 'spent_usd': 0.856, 'median_s': 5.17, 'p90_s': 7.32, 'tokens_in': 4019, 'tokens_out': 718, 'errors': 0, 'finish_not_stop': 0}
+B1: {'calls': 150, 'cents_per_call': 0.652, 'spent_usd': 0.978, 'median_s': 6.045, 'p90_s': 8.34, 'tokens_in': 4312, 'tokens_out': 876, 'errors': 0, 'finish_not_stop': 0}
+total spent $1.834
+
+OLD FIELDS: 3-run agreement (A vs B1, diff in points)
+  subcategory              A  131/162 (81%)   B1  137/163 (84%)   +3.2
+  color_family             A  139/162 (86%)   B1  139/163 (85%)   -0.5
+  pattern                  A  154/162 (95%)   B1  152/163 (93%)   -1.8
+  logo                     A  154/162 (95%)   B1  154/163 (94%)   -0.6
+  volume                   A  143/162 (88%)   B1  139/163 (85%)   -3.0
+  condition                A  155/162 (96%)   B1  155/163 (95%)   -0.6
+  certainty                A  142/162 (88%)   B1  142/163 (87%)   -0.5
+  pattern_scale            A  153/162 (94%)   B1  151/163 (93%)   -1.8
+  saturation               A  141/162 (87%)   B1  149/163 (91%)   +4.4
+  strain                   A  157/162 (97%)   B1  160/163 (98%)   +1.2
+  distressed_by_design     A  157/162 (97%)   B1  158/163 (97%)   +0.0
+  leg_shape                A    39/50 (78%)   B1    38/50 (76%)   -2.0
+  hem                      A    32/50 (64%)   B1    35/50 (70%)   +6.0
+  tucked                   A   47/47 (100%)   B1   47/47 (100%)   +0.0
+  length                   A    56/71 (79%)   B1    55/72 (76%)   -2.5
+  sleeve_end               A    60/71 (85%)   B1    61/72 (85%)   +0.2
+  shows_below_outer        A    44/47 (94%)   B1    46/47 (98%)   +4.3
+  scene.framing            A    48/50 (96%)   B1    48/50 (96%)   +0.0
+  scene.shoes_visible      A   50/50 (100%)   B1   50/50 (100%)   +0.0
+  scene.people_count       A   50/50 (100%)   B1   50/50 (100%)   +0.0
+  scene.mirror_selfie      A    49/50 (98%)   B1   50/50 (100%)   +2.0
+  scene.lighting           A    44/50 (88%)   B1    48/50 (96%)   +8.0
+  scene.clothed            A    49/50 (98%)   B1    49/50 (98%)   +0.0
+  garment set              A    45/50 (90%)   B1    49/50 (98%)   +8.0
+  pooled old garment fields: A 1904/2118 (90%)  B1 1918/2131 (90%)
+
+SCORES (v4.1, Everyday, test profile Minimal + Smart casual)
+  within 0.5 of median   A 47/49 (96%)   B1 42/49 (86%)
+  exact                  A 31/49 (63%)   B1 26/49 (53%)
+  phone    A exact 14/23 (61%) · ±0.5 22/23 (96%)   B1 exact 10/23 (43%) · ±0.5 19/23 (83%)
+  oct7     A exact 2/4 (50%) · ±0.5 4/4 (100%)   B1 exact 2/4 (50%) · ±0.5 4/4 (100%)
+  mirror   A exact 3/8 (38%) · ±0.5 7/8 (88%)   B1 exact 5/8 (62%) · ±0.5 7/8 (88%)
+  stock    A exact 12/14 (86%) · ±0.5 14/14 (100%)   B1 exact 9/14 (64%) · ±0.5 12/14 (86%)
+  founder                                  n=21 A exact 10/21 (48%) mean-median 6.86   B1 exact 8/21 (38%) mean-median 6.90
+  friend: chore coat + white tee           n=3 A exact 3/3 (100%) mean-median 8.50   B1 exact 3/3 (100%) mean-median 8.50
+  friend: navy blazer                      n=1 A exact 1/1 (100%) mean-median 8.50   B1 exact 0/1 (0%) mean-median 8.50
+  stock photo                              n=15 A exact 12/14 (86%) mean-median 7.60   B1 exact 9/14 (64%) mean-median 7.67
+  unknown (ask the founder)                n=1 A exact 1/1 (100%) mean-median 7.50   B1 exact 1/1 (100%) mean-median 7.50
+  unknown (ask the founder): the 2026-10-1 n=1 A exact 1/1 (100%) mean-median 7.50   B1 exact 0/1 (0%) mean-median 8.00
+  web photo                                n=8 A exact 3/8 (38%) mean-median 7.75   B1 exact 5/8 (62%) mean-median 7.81
+  median score B1 - A: mean +0.06, photos moved 15 / 50
+  A unsteady (not exact): mirror-m02 [8.5, 8.5, 9.0]; mirror-m03 [8.0, 7.0, 7.5]; mirror-m08 [8.0, 8.0, 9.0]; mirror-m09 [8.0, 7.5, 7.5]; mirror-m12 [7.5, 7.5, 8.0]; oct7-ph2 [7.5, 7.0, 7.0]; oct7-ph3 [8.0, 8.5, 8.0]; phone-1f1997 [7.0, 6.5, 6.5]; phone-5a9049 [7.0, 6.5, 7.0]; phone-6b14db [5.5, 6.0, 6.0]; phone-7f14a4 [6.5, 7.5, 7.5]; phone-b0f0c8 [6.5, 6.5, 7.0]; phone-d6559a [6.5, 7.0, 6.5]; phone-d918c0 [8.0, 7.5, 7.5]; phone-e026de [8.0, 7.5, 7.5]; phone-f07193 [7.5, 7.0, 7.5]; stock-s10-before_street [8.0, 8.5, 8.5]; stock-s11-before_street [8.0, 7.5, 7.5]
+  B1 unsteady (not exact): mirror-m03 [7.5, 7.5, 7.0]; mirror-m08 [9.0, 8.0, 7.5]; mirror-m12 [8.0, 7.0, 7.5]; oct7-ph2 [7.5, 7.0, 7.5]; oct7-ph3 [8.5, 8.0, 8.5]; phone-0d39d6 [6.5, 6.5, 7.0]; phone-1f1997 [6.5, 7.0, 7.0]; phone-5a9049 [6.0, 7.0, 8.0]; phone-7f14a4 [6.5, 7.5, 6.5]; phone-8bc29d [6.5, 7.5, 7.0]; phone-a765e8 [5.5, 5.5, 6.0]; phone-b0f0c8 [7.0, 7.0, 7.5]; phone-d1967f [8.5, 8.5, 7.5]; phone-d58b14 [5.5, 5.0, 5.5]; phone-d6559a [7.0, 7.5, 7.5]; phone-e026de [8.5, 8.0, 8.0]; phone-ebe23f [7.5, 8.0, 8.0]; phone-f07193 [7.5, 6.5, 6.5]; stock-s01-before_studio [7.5, 7.5, 7.0]; stock-s10-before_street [8.5, 7.5, 7.5]; stock-s11-before_street [7.0, 7.5, 7.5]; stock-s15-before_street [7.5, 8.0, 8.0]; stock-s26-before_mirror [7.0, 8.0, 8.0]
+
+NEW FIELDS (B1): 3-run agreement
+  hem_at·top                 37/47 (79%)
+  hem_at·outerwear           16/25 (64%)
+  hem_at                     53/72 (74%)
+  under_shows·outerwear      24/25 (96%)
+  under_shows                24/25 (96%)
+  shoulder_seam·top          37/47 (79%)
+  shoulder_seam·outerwear    19/25 (76%)
+  shoulder_seam              56/72 (78%)
+  lightness·top              44/47 (94%)
+  lightness·outerwear        23/25 (92%)
+  lightness·bottom           48/50 (96%)
+  lightness·footwear         40/41 (98%)
+  lightness                  155/163 (95%)
+  sleeve_end_b1·top          31/47 (66%)
+  sleeve_end_b1·outerwear    20/25 (80%)
+  sleeve_end_b1              51/72 (71%)
+  scene.pose                 50/50 (100%)
+  flips hem_at: mirror-m03·top ['crotch', 'hip', 'crotch']; mirror-m09·outerwear ['thigh', 'crotch', 'crotch']; mirror-m10·outerwear ['hip', 'crotch', 'crotch']; mirror-m12·outerwear ['crotch', 'hip', 'hip']; oct7-ph1·top ['waistband', 'waistband', 'hip']; oct7-ph3·outerwear ['crotch', 'thigh', 'thigh']; phone-403ade·top ['hip', 'hip', 'crotch']; phone-7de605·top ['waistband', 'hip', 'hip']; phone-968016·top ['waistband', 'waistband', 'hip']; phone-a765e8·top ['waistband', 'waistband', 'hip']; phone-f4870b·top ['hip', 'waistband', 'waistband']; phone-f4870b·outerwear ['crotch', 'hip', 'hip']; stock-s04-before_studio·top ['hip', 'waistband', 'waistband']; stock-s08-before_studio·outerwear ['hip', 'waistband', 'hip']; stock-s10-before_street·top ['hip', 'hip', 'waistband']; stock-s14-before_street·top ['hip', 'hip', 'waistband']; stock-s14-before_street·outerwear ['crotch', 'crotch', 'hip']; stock-s15-before_street·outerwear ['hip', 'crotch', 'hip']; stock-s26-before_mirror·outerwear ['crotch', 'hip', 'crotch']
+  flips under_shows: stock-s26-before_mirror·outerwear ['a_little', 'clearly', 'a_little']
+  flips shoulder_seam: mirror-m02·top ['not_visible', 'on_edge', 'just_past']; mirror-m03·top ['just_past', 'just_past', 'down_arm']; mirror-m08·top ['not_visible', 'on_edge', 'on_edge']; mirror-m10·top ['not_visible', 'on_edge', 'on_edge']; mirror-m10·outerwear ['on_edge', 'just_past', 'on_edge']; phone-5a9049·top ['just_past', 'on_edge', 'just_past']; phone-8ad378·top ['down_arm', 'down_arm', 'just_past']; phone-8bc29d·outerwear ['down_arm', 'just_past', 'just_past']; phone-a765e8·top ['down_arm', 'just_past', 'just_past']; phone-d1967f·top ['not_visible', 'not_visible', 'on_edge']; phone-d918c0·outerwear ['just_past', 'just_past', 'on_edge']; phone-f4870b·outerwear ['on_edge', 'just_past', 'just_past']; stock-p06-after_studio·top ['on_edge', 'not_visible', 'not_visible']; stock-p06-after_studio·outerwear ['just_past', 'down_arm', 'down_arm']; stock-s01-before_studio·top ['just_past', 'on_edge', 'just_past']; stock-s10-before_street·outerwear ['on_edge', 'just_past', 'just_past']
+  flips lightness: mirror-m09·top ['light', 'mid', 'light']; mirror-m10·bottom ['mid', 'dark', 'dark']; phone-8bc29d·top ['mid', 'dark', 'mid']; phone-d918c0·outerwear ['dark', 'mid', 'mid']; phone-e026de·footwear ['light', 'mid', 'mid']; stock-p06-after_studio·outerwear ['mid', 'light', 'light']; stock-s01-before_studio·top ['light', 'mid', 'light']; stock-s19-before_phone·bottom ['light', 'mid', 'mid']
+  flips sleeve_end_b1: mirror-m02·outerwear ['at_wrist', 'covers_hand', 'at_wrist']; mirror-m09·top ['at_wrist', 'na', 'na']; mirror-m12·top ['na', 'short_sleeve', 'na']; oct7-ph4·top ['short_sleeve', 'short_sleeve', 'na']; phone-5a9049·top ['covers_hand', 'at_wrist', 'at_wrist']; phone-8bc29d·top ['at_wrist', 'covers_hand', 'covers_hand']; phone-968016·top ['covers_hand', 'covers_hand', 'at_wrist']; phone-d1967f·top ['na', 'short_sleeve', 'short_sleeve']; phone-d918c0·outerwear ['covers_hand', 'at_wrist', 'at_wrist']; phone-ebe23f·outerwear ['stacked_at_cuff', 'at_wrist', 'at_wrist']; phone-f07193·top ['at_wrist', 'at_wrist', 'na']; phone-f4870b·top ['short_sleeve', 'short_sleeve', 'na']; phone-fb0b17·top ['short_sleeve', 'short_sleeve', 'na']; stock-p03-after_street·top ['at_wrist', 'na', 'na']; stock-s01-before_studio·top ['at_wrist', 'na', 'at_wrist']; stock-s10-before_street·top ['above_wrist', 'covers_hand', 'covers_hand']; stock-s10-before_street·outerwear ['above_wrist', 'at_wrist', 'at_wrist']; stock-s11-before_street·top ['above_wrist', 'pushed_up', 'above_wrist']; stock-s14-before_street·outerwear ['at_wrist', 'at_wrist', 'stacked_at_cuff']; stock-s15-before_street·top ['short_sleeve', 'na', 'na']; stock-s26-before_mirror·top ['na', 'short_sleeve', 'na']
+
+NEW FIELDS (B1): accuracy vs b1_labels.csv, every run
+  hem_at                 overall 150/189 (79%)
+  hem_at·outer           overall 58/69 (84%)
+  hem_at·top             overall 92/120 (77%)
+  lightness              overall 462/480 (96%)
+  pose                   overall 150/150 (100%)
+  shoulder_seam          overall 165/198 (83%)
+  sleeve_end             overall 128/144 (89%)
+  under_shows            overall 68/75 (91%)
+  precision when it fires (AI value -> right):
+    hem_at=crotch                      20/33 (61%)
+    hem_at=hip                         76/89 (85%)
+    hem_at=thigh                       4/6 (67%)
+    hem_at=tucked                      27/30 (90%)
+    hem_at=waistband                   23/31 (74%)
+    hem_at·outer=crotch                17/24 (71%)
+    hem_at·outer=hip                   33/35 (94%)
+    hem_at·outer=thigh                 4/6 (67%)
+    hem_at·outer=waistband             4/4 (100%)
+    hem_at·top=crotch                  3/9 (33%)
+    hem_at·top=hip                     43/54 (80%)
+    hem_at·top=tucked                  27/30 (90%)
+    hem_at·top=waistband               19/27 (70%)
+    lightness=dark                     225/229 (98%)
+    lightness=light                    101/108 (94%)
+    lightness=mid                      136/143 (95%)
+    pose=seated                        6/6 (100%)
+    pose=standing                      144/144 (100%)
+    shoulder_seam=down_arm             16/21 (76%)
+    shoulder_seam=just_past            66/73 (90%)
+    shoulder_seam=na                   0/3 (0%)
+    shoulder_seam=not_visible          52/52 (100%)
+    shoulder_seam=on_edge              31/49 (63%)
+    sleeve_end=above_wrist             7/9 (78%)
+    sleeve_end=at_wrist                86/88 (98%)
+    sleeve_end=covers_hand             3/14 (21%)
+    sleeve_end=pushed_up               7/7 (100%)
+    sleeve_end=short_sleeve            24/24 (100%)
+    sleeve_end=stacked_at_cuff         1/2 (50%)
+    under_shows=a_little               5/11 (45%)
+    under_shows=clearly                0/1 (0%)
+    under_shows=no                     63/63 (100%)
+  recall (single-value labels found):
+    hem_at=hip                         17/36 (47%)
+    hem_at=thigh                       3/3 (100%)
+    hem_at=tucked                      24/24 (100%)
+    hem_at=waistband                   11/24 (46%)
+    hem_at·outer=hip                   7/12 (58%)
+    hem_at·outer=thigh                 3/3 (100%)
+    hem_at·top=hip                     10/24 (42%)
+    hem_at·top=tucked                  24/24 (100%)
+    hem_at·top=waistband               11/24 (46%)
+    lightness=dark                     198/198 (100%)
+    lightness=light                    98/108 (91%)
+    lightness=mid                      85/93 (91%)
+    pose=seated                        6/6 (100%)
+    pose=standing                      123/123 (100%)
+    shoulder_seam=down_arm             0/3 (0%)
+    shoulder_seam=just_past            21/24 (88%)
+    shoulder_seam=not_visible          52/75 (69%)
+    shoulder_seam=on_edge              12/12 (100%)
+    sleeve_end=at_wrist                47/57 (82%)
+    sleeve_end=pushed_up               7/9 (78%)
+    sleeve_end=short_sleeve            24/24 (100%)
+    under_shows=no                     54/60 (90%)
+  labelled peeks, B1 runs (outer subcategory/under_shows): phone-6b14db: no outer/-, no outer/-, no outer/- | phone-7de605: no outer/-, no outer/-, no outer/- | phone-a765e8: no outer/-, no outer/-, no outer/- | phone-e026de: overshirt/a_little, flannel_shirt/a_little, flannel_shirt/a_little | phone-e438d4: chore_coat/no, chore_coat/no, chore_coat/no | phone-f4870b: chore_coat/no, chore_coat/no, chore_coat/no | phone-fb0b17: chore_coat/no, chore_coat/no, chore_coat/no | stock-s04-before_studio: no outer/-, no outer/-, no outer/- | stock-s24-before_mirror: no outer/-, no outer/-, no outer/- | stock-s26-before_mirror: overshirt/a_little, overshirt/clearly, overshirt/a_little
+
+OLD FIELDS: accuracy vs existing labels, both arms, every run
+  hem                        A 67/123 (54%)   B1 62/123 (50%)
+  leg_shape                  A 86/129 (67%)   B1 80/129 (62%)
+  length (lowest top edge)   A 84/126 (67%)   B1 74/126 (59%)
+  sleeve_end (old values)    A 90/102 (88%)   B1 88/102 (86%)
+
+NEW FIELDS steadiness by group (B1)
+  phone   n=23  hem_at 25/31 (81%) · under_shows 9/9 (100%) · shoulder_seam 24/31 (77%) · lightness 73/76 (96%) · sleeve_end_b1 22/31 (71%) · pose 23/23 (100%)
+  oct7    n= 4  hem_at 4/6 (67%) · under_shows 2/2 (100%) · shoulder_seam 6/6 (100%) · lightness 12/12 (100%) · sleeve_end_b1 5/6 (83%) · pose 4/4 (100%)
+  mirror  n= 8  hem_at 9/13 (69%) · under_shows 5/5 (100%) · shoulder_seam 8/13 (62%) · lightness 25/27 (93%) · sleeve_end_b1 10/13 (77%) · pose 8/8 (100%)
+  stock   n=15  hem_at 15/22 (68%) · under_shows 8/9 (89%) · shoulder_seam 18/22 (82%) · lightness 45/48 (94%) · sleeve_end_b1 14/22 (64%) · pose 15/15 (100%)
+
+OLD pooled garment-field steadiness by group
+  phone   A 877/975 (90%)   B1 896/988 (91%)
+  oct7    A 136/160 (85%)   B1 145/160 (91%)
+  mirror  A 319/355 (90%)   B1 319/355 (90%)
+  stock   A 572/628 (91%)   B1 558/628 (89%)
