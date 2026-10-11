@@ -24,6 +24,8 @@ export interface LedgerRowProps {
   valueText?: string;
   /** How a 0 reads: "+0" for an unearned credit (default), "±0" for the occasion/partial rows. */
   zero?: 'plus' | 'plusMinus';
+  /** A reason sentence (the parts groups): regular weight, not a rule name. */
+  plain?: boolean;
 }
 
 function formatAmount(n: number, zero: 'plus' | 'plusMinus'): string {
@@ -38,7 +40,7 @@ function spokenAmount(n: number): string {
   return t(n > 0 ? 'a11y.plus' : 'a11y.minus', { n: Math.round(Math.abs(n) * 100) / 100 });
 }
 
-export function LedgerRow({ rule, item, amount, valueText, zero = 'plus' }: LedgerRowProps) {
+export function LedgerRow({ rule, item, amount, valueText, zero = 'plus', plain }: LedgerRowProps) {
   const { colors, isAccessibilitySize } = useTheme();
   const value = valueText ?? (amount !== undefined ? formatAmount(amount, zero) : '');
   const valueColor = amount === undefined || amount === 0 ? 'ink' : amount > 0 ? 'good' : 'accent';
@@ -59,7 +61,7 @@ export function LedgerRow({ rule, item, amount, valueText, zero = 'plus' }: Ledg
       }}
     >
       <KText role="ledgerLabel" style={{ flexShrink: 1 }}>
-        <KText role="ledgerRule">{rule}</KText>
+        {plain ? <KText role="ledgerLabel" color="ink">{rule}</KText> : <KText role="ledgerRule">{rule}</KText>}
         {item ? ` · ${item}` : ''}
       </KText>
       <KText role="ledgerValue" color={valueColor} numberOfLines={1}>

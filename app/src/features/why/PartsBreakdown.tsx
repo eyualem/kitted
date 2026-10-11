@@ -1,0 +1,115 @@
+// The parts in "Why 7.0" (#205, #209; mockups/parts-card.html option 1): the five-part strip (label over the number,
+// hairlines between, the part with the most to gain in copper), then one group per part and the rows after the
+// parts, ending in the score. At accessibility sizes the strip becomes a list (label leading, number trailing).
+import { View } from 'react-native';
+import { KText, LedgerRow, LedgerTotal, Numeral, useTheme } from '@/design-system';
+import { t } from '@/i18n/en';
+import { partText, type PartGroup, type StripCell, type WhyParts } from './partsRows';
+
+const STRIP_NUMERAL = 26;
+const GROUP_NUMERAL = 24;
+
+export function PartsBreakdown({ parts, score }: { parts: WhyParts; score: number }) {
+  return (
+    <View style={{ gap: 16 }}>
+      <PartsStrip cells={parts.strip} label={parts.stripLabel} />
+      <View style={{ gap: 18 }}>
+        {parts.groups.map((g) => (
+          <Group key={g.part} g={g} />
+        ))}
+      </View>
+      <View>
+        <LedgerRow rule={t('pwhy.average')} valueText={parts.average.toFixed(1)} />
+        {parts.after.map((r) => (
+          <LedgerRow key={r.key} rule={r.rule} item={r.item} amount={r.amount} valueText={r.valueText} zero={r.zero} />
+        ))}
+        <LedgerTotal score={score} note={t('why.rounded')} />
+      </View>
+    </View>
+  );
+}
+
+function PartsStrip({ cells, label }: { cells: StripCell[]; label: string }) {
+  const { colors, isAccessibilitySize } = useTheme();
+  if (isAccessibilitySize) {
+    return (
+      <View accessible accessibilityLabel={label} style={{ borderRadius: 12, borderCurve: 'continuous', backgroundColor: colors.surface2, paddingHorizontal: 14 }}>
+        {cells.map((c, i) => (
+          <View
+            key={c.part}
+            style={{
+              flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10,
+              borderTopWidth: i === 0 ? 0 : 1, borderTopColor: colors.line,
+            }}
+          >
+            <KText variant="body" weight="600" color={c.gain ? 'accent' : 'ink'} style={{ flexShrink: 1 }}>
+              {c.label}
+            </KText>
+            <Numeral size={STRIP_NUMERAL} color={c.gain ? colors.accent : c.display === null ? colors.ink3 : undefined}>{partText(c.display)}</Numeral>
+          </View>
+        ))}
+      </View>
+    );
+  }
+  return (
+    <View
+      accessible
+      accessibilityLabel={label}
+      style={{ flexDirection: 'row', borderRadius: 12, borderCurve: 'continuous', backgroundColor: colors.surface2, paddingVertical: 10 }}
+    >
+      {cells.map((c, i) => (
+        <View
+          key={c.part}
+          style={{
+            flex: 1, minWidth: 0, alignItems: 'center', gap: 4, paddingHorizontal: 2,
+            borderLeftWidth: i === 0 ? 0 : 1, borderLeftColor: colors.line,
+          }}
+        >
+          <KText variant="caption" weight="600" color={c.gain ? 'accent' : 'ink2'} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+            {c.label}
+          </KText>
+          <View style={c.gain ? { backgroundColor: colors.accentSoft, borderRadius: 8, paddingHorizontal: 6 } : { paddingHorizontal: 6 }}>
+            <Numeral size={STRIP_NUMERAL} color={c.gain ? colors.accent : c.display === null ? colors.ink3 : undefined}>{partText(c.display)}</Numeral>
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+function Group({ g }: { g: PartGroup }) {
+  const { colors } = useTheme();
+  const spoken = g.display === null
+    ? `${g.label}, ${t('pwhy.naShort')}${g.na ? `: ${g.na}` : ''}.`
+    : `${g.label}, ${g.weight}, ${partText(g.display)}.`;
+  return (
+    <View>
+      <View
+        accessible
+        accessibilityRole="header"
+        accessibilityLabel={spoken}
+        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, paddingBottom: 6, borderBottomWidth: 1, borderBottomColor: colors.line }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8, flexShrink: 1, flexWrap: 'wrap' }}>
+          <KText variant="headline">{g.label}</KText>
+          <KText variant="footnote" color="ink3" mono="small">
+            {g.weight}
+          </KText>
+        </View>
+        <Numeral size={GROUP_NUMERAL} color={g.display === null ? colors.ink3 : undefined}>{partText(g.display)}</Numeral>
+      </View>
+      {g.display === null ? (
+        <KText role="ledgerLabel" style={{ paddingVertical: 9 }}>
+          {t('pwhy.na', { reason: g.na ?? '' })}
+        </KText>
+      ) : (
+        g.rows.map((r) => <LedgerRow key={r.key} rule={r.rule} item={r.item} amount={r.amount} valueText={r.valueText} zero={r.zero} plain />)
+      )}
+      {g.note ? (
+        <KText role="finePrint" style={{ paddingTop: 6 }}>
+          {g.note}
+        </KText>
+      ) : null}
+    </View>
+  );
+}

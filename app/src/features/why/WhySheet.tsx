@@ -11,6 +11,8 @@ import { whatIRead } from '@/features/fitcheck/labels';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
 import { whyRows } from './ledgerRows';
+import { PartsBreakdown } from './PartsBreakdown';
+import { whyParts } from './partsRows';
 
 export function WhySheet() {
   const { checkId } = useLocalSearchParams<{ checkId: string }>();
@@ -20,10 +22,15 @@ export function WhySheet() {
     const reading = row?.readingId ? (await store.readings.get(row.readingId))?.reading : undefined;
     const p = await store.profile.get('me');
     if (!row || !reading) return null;
-    return { row, reading, rows: whyRows(reading, row.occasion, stylesFor(row.style, p?.styles ?? []), p?.boldness ?? null, row.details.readsAs ?? null) };
+    // A parts-scored check (#209) shows what it stored; older checks keep v4.1's ledger.
+    if (row.details.parts) {
+      const parts = whyParts(row.details.parts, { occasion: row.occasion, readsAs: row.details.readsAs ?? null, gainPart: row.details.parts.gainPart });
+      return { row, reading, rows: null, parts };
+    }
+    return { row, reading, parts: null, rows: whyRows(reading, row.occasion, stylesFor(row.style, p?.styles ?? []), p?.boldness ?? null, row.details.readsAs ?? null) };
   }, [checkId]);
-  if (!data || !data.rows) return <SheetScaffold title={t('why.how.title')} />;
-  const { row, reading, rows } = data;
+  if (!data || (!data.rows && !data.parts)) return <SheetScaffold title={t('why.how.title')} />;
+  const { row, reading, rows, parts } = data;
   const score = row.score ?? 0;
 
   if (how) {
@@ -38,17 +45,21 @@ export function WhySheet() {
     );
   }
 
-  const mistakes = rows.ledger.rules.length;
   const pills = whatIRead(reading);
   const wornCount = reading.garments.filter((g) => g.certainty !== 'unsure' && g.category !== 'accessory').length;
+  const mistakes = rows ? rows.ledger.rules.length : 0;
   return (
-    <SheetScaffold title={t('why.title', { score: displayScore(score) })} subtitle={t('why.sub')}>
-      <View>
-        {rows.rows.map((r) => (
-          <LedgerRow key={r.key} rule={r.rule} item={r.item} amount={r.amount} valueText={r.valueText} zero={r.zero} />
-        ))}
-        <LedgerTotal score={score} note={mistakes === 0 ? t('why.noMistakes') : t('why.mistakes', { n: mistakes })} />
-      </View>
+    <SheetScaffold title={t('why.title', { score: displayScore(score) })} subtitle={parts ? t('pwhy.sub') : t('why.sub')}>
+      {parts ? (
+        <PartsBreakdown parts={parts} score={score} />
+      ) : rows ? (
+        <View>
+          {rows.rows.map((r) => (
+            <LedgerRow key={r.key} rule={r.rule} item={r.item} amount={r.amount} valueText={r.valueText} zero={r.zero} />
+          ))}
+          <LedgerTotal score={score} note={mistakes === 0 ? t('why.noMistakes') : t('why.mistakes', { n: mistakes })} />
+        </View>
+      ) : null}
       <View style={{ gap: 8, paddingTop: 12 }}>
         <TagLine left={t('why.read')} right={t('why.howLink')} rightColor="accent" onPressRight={() => setHow(true)} />
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>

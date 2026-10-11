@@ -565,7 +565,7 @@ const addedInBuild = {
   'pwhy.conditionClean': 'looks clean',
   'pwhy.partsAlone': 'the parts alone make {score}',
   'pwhy.floor': 'Lowest score at {occasion}',
-  'pwhy.rounded': 'Rounded to the nearest half',
+  'pwhy.rounded': 'Rounding',
   'pwhy.strip.a11y': 'Parts: {parts}.',
   'pwhy.strip.part': '{part} {score}',
   'pwhy.strip.partNa': '{part} not scored',
