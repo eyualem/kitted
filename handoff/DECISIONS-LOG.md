@@ -892,3 +892,26 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The tuning runs on the prototype (report `rubric/research/parts/tuning-results.md`).** Only readable rewards change size, possibly with an "earned" bonus when two or more parts are strong and none is weak. The whole scale isn't stretched.
     - **Guarding against noise:** a held-out half of the judge-pilot photos (his outfits never split across halves).
     - **Targets:** median about 7; 8+ at 5–12%; steadiness no worse than v1; the panel gap within ±0.2. The friend's blazer stays at 7 or below. The obvious fixes and the stock before/after pairs have to lift the score.
+202. **Parts engine tuned, v2 (`rubric/research/parts/tuning-results.md`; `extraction-test/parts2_test.py`, `results/parts2/`; test corpus now saved at `results/parts1/corpus.json`).**
+    - **Results:**
+        - 8+ on 5 of 78 photos (6%): the tucked shirt over straight trousers, the olive suit, three web photos. None at 9; median 7.0. The 11 that moved all went up 0.5.
+        - Steadiness unchanged (49/49).
+        - Panel gap +0.01, within 0.5 on 51 of 59. On the held-out half: 26/29 within 0.5 (v1 25), correlation 0.56 (v1 0.43).
+    - **His fits:**
+        - friend's blazer and the chore coat: 7.0
+        - his gingham overshirt: 6.5
+        - his gingham shirt worn alone: still 7.0 (panel 6.0); the shirt hanging long has no reliable reading
+    - **Fixes lift and never lower:** tucking his black tee 7.0 → 7.5; slides to sneakers +0.5 to +1.0 on all 9 slide photos; better sleeves +0.5. The stock before/after pairs never drop, but none of their changes is something the engine rewards.
+    - **What changed:**
+        - the waist-break and short-layer rewards: +1.0 → +1.5 (+0.5 for an untucked short top in a mirror selfie, where the raised arms lift the hem)
+        - a full tailored outfit: +1.0, with the proportions cap at +2.5
+        - one style top to toe, or a suit worn right: +1.0; a standout piece: +0.75
+        - color credits stack up to +2.0
+        - dress shoes, loafers and Chelsea boots under a suit count as the outfit's own shoe
+        - a +0.25 earned bonus when a second part reaches 8 and nothing is under 7 (+0.5 broke steadiness)
+        - the weights are unchanged
+    - **Honest limits:**
+        - the tuning half couldn't separate the settings, so they were chosen on steadiness, the share of 8s and the named photos; the held-out half isn't fully clean
+        - **the lift went mostly to tailoring:** streetwear has almost no reward the readings can see (volume, stacking on purpose, texture), a bias against the core audience
+        - good fit (Fit ≤ 7), lengths, hems against the shoe, texture, fading and accessories stay invisible
+    - **Claude's call:** before the port, a short streetwear pass that uses readable facts (a boxy top over a wide leg with a street shoe; the look's own shoe; the style read) so 8s aren't tailoring-only. Then the port, the parts-based fix engine and the card.

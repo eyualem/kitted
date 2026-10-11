@@ -39,7 +39,7 @@ sys.path.insert(0, str(HERE / "rubrics"))
 import rubric as R  # noqa: E402  v4.1, the live rubric
 import parts_proto as P  # noqa: E402
 
-CORPUS = Path("/private/tmp/claude-501/-Users-eyu-Desktop-files-Kitted/2fa3c8a0-f67c-4b1d-8bec-64185ea7a1c4/scratchpad/corpus.json")
+CORPUS = Path("results/parts1/corpus.json")
 PULL = K / "screenshots/phone/20261010-185554/SQLite/kitted.db"
 OUT = HERE / "results" / "parts1"
 PROFILE = R.parse_styles("minimalist:0.5,smart_casual:0.5")      # the stated test profile (b1's)
@@ -173,7 +173,7 @@ def v4(reading, occ):
 
 
 def parts(reading, occ, sl=None):
-    return P.score_parts(reading, occ, PROFILE, sl, BOLD)
+    return P.score_parts(reading, occ, PROFILE, sl, BOLD, engine="v1")      # parts-proto-1 (v2: parts2_test.py)
 
 
 def bands(vals):
@@ -196,7 +196,7 @@ def band_line(name, vals):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     res = {"profile": "test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age",
-           "engine": P.VERSION}
+           "engine": P.VERSIONS["v1"]}
     corpus = json.load(open(CORPUS))
     pull = load_pull()
     B1 = load_runs(HERE / "results/b1/raw.json", "A")
@@ -217,7 +217,7 @@ def main():
     for k, runs in B1.items():
         if k not in prim:
             prim[k] = {"reading": runs[0], "occ": "everyday", "src": "b1 arm A run 0", "app": None}
-    say(f"PARTS PAPER TEST · {P.VERSION} vs rubric.py v4.1 · {res['profile']}")
+    say(f"PARTS PAPER TEST · {P.VERSIONS['v1']} vs rubric.py v4.1 · {res['profile']}")
     say(f"Distinct photos with a reading: {len(prim)} "
         f"({Counter(v['src'].split()[0] + (' ' + v['src'].split()[1] if v['src'].startswith('corpus') else '') for v in prim.values())})")
     say(f"Corpus readings: {len(corpus)}; newest pull: {len(pull)} distinct checks; batch 1 arm A: "
@@ -537,7 +537,7 @@ def main():
             if why:
                 ps = {pk: r["parts"][pk]["score"] for pk in P.PART_ORDER if r["parts"][pk]["score"] is not None}
                 ps["proportions"] = max(2.0, new)
-                _, x, _, _ = P.combine(ps, r["condition"], r["occasion"], occ, r["care_or_strain"])
+                _, x, _, _ = P.combine(ps, r["condition"], r["occasion"], occ, r["care_or_strain"], engine="v1")
                 orc.append((k, r["overall"], P.round_half(x), why))
     say(f"  with Claude's blind labels standing in for the failed length/hem readings (50 batch-1 photos): "
         f"{len(orc)} photos would move")
@@ -579,7 +579,7 @@ def main():
         if add_pts:
             ps = {pk: r["parts"][pk]["score"] for pk in P.PART_ORDER if r["parts"][pk]["score"] is not None}
             ps["color"] = min(9.5, ps["color"] + add_pts)
-            _, x, _, _ = P.combine(ps, r["condition"], r["occasion"], occ, r["care_or_strain"])
+            _, x, _, _ = P.combine(ps, r["condition"], r["occasion"], occ, r["care_or_strain"], engine="v1")
             lmoves.append((k, r["overall"], P.round_half(x), why))
     say(f"  with the lightness word in the scoring call (color's tonal / light-mid-dark credits; 50 batch-1 photos): "
         f"{len(lmoves)} photos earn a credit, {sum(1 for _, a, b, _ in lmoves if b != a)} change score")
@@ -594,7 +594,7 @@ def main():
 
     def stretched(r, occ, k_):
         ps = {pk: 7 + k_ * (r["parts"][pk]["score"] - 7) for pk in P.PART_ORDER if r["parts"][pk]["score"] is not None}
-        _, x, _, _ = P.combine(ps, r["condition"], r["occasion"], occ, r["care_or_strain"])
+        _, x, _, _ = P.combine(ps, r["condition"], r["occasion"], occ, r["care_or_strain"], engine="v1")
         return P.round_half(x)
 
     for k_ in (1.5, 2.0):

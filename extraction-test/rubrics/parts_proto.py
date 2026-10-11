@@ -29,6 +29,12 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
+Two engines (Oct 10): engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" (the default) tunes only
+the rewards whose readings passed, and adds one step after the average (see TUNE below):
+  2b. EARNED BONUS (v2): +0.25 when a second part reaches 8 and no part is under 7, so excellence in two parts adds
+      up instead of being averaged away. Paper test: ../parts2_test.py, report: ../../rubric/research/parts/
+      tuning-results.md.
+
 Reuses rubric.py v4.1's helpers (formality, colors, style detection, prepare/normalize) by import; nothing copied.
 Deterministic: same reading (+ same second look) -> same result.
 """
@@ -39,7 +45,56 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-1 (Oct 10, 2026)"
+VERSION = "parts-proto-2 (Oct 10, 2026)"
+VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)"}
+
+# ---- Reward tuning (Oct 10, founder-approved). engine="v1" reproduces parts-proto-1 exactly (paper test results/parts1/); engine="v2" is
+# the tuned engine (paper test parts2_test.py, report rubric/research/parts/tuning-results.md). Only rewards built on
+# readings that passed a steadiness test were tuned; every fault, ceiling and floor is the same in both.
+TUNE = {
+    "v1": {
+        "pr1": 1.0, "pr1_mirror_short": 1.0, "pr1b": 0.5, "pr2": 1.0, "pr3": 0.5, "prop_cap": 2.0,   # Proportions
+        "h1": 0.5, "h2": 0.5, "h2_suit": 0.5, "h4": 0.5,                         # Cohesion rewards
+        "cp1": 1.0, "cp2": 0.5, "cp5": 0.5, "lightness": False, "color_cap": None,   # Color rewards
+        "suit_shoe": False,                                                       # Shoes: a suit's own shoe
+        "earned": None,                                                           # the bonus after the average
+        "solid_line": False,                                                      # "every part is solid" card line
+    },
+    "v2": {
+        # Proportions: the waist break and a short layer over a full leg are the two best-evidenced deliberate shapes
+        # (proportions.md R1/R2: 6 and 4 sources, 0 against) and their readings are the steadiest in the engine
+        # (tuck 97%, short top precision 100%, leg full/narrow 94%, layer type 100%). +1.0 left them at 8, which the
+        # 30% weight turns into +0.3 on the total: one deliberate shape could never show. +1.5 -> part 8.5, the
+        # anchor's "one deliberate shape, nothing off" (8-8.5). The tailored line (+0.5 -> +1.0) is the same idea
+        # for tailoring: a jacket, a tucked top and pressed trousers, nothing skinny. The half tuck stays +0.5
+        # (half vs none was never tested). Cap +2.0 -> +2.5, so a tuck plus a tailored line can reach 9.5.
+        # One guard: an UNTUCKED short top in a mirror selfie earns +0.5 only. Both arms up to hold the phone lift the
+        # hem, so "at the belt" there is often the pose, not the cut (proportions.md, known problem 2; web m06: a long
+        # tee read at_belt with both arms raised). A full tuck reads the same in a mirror, so it keeps +1.5.
+        "pr1": 1.5, "pr1_mirror_short": 0.5, "pr1b": 0.5, "pr2": 1.5, "pr3": 1.0, "prop_cap": 2.5,
+        # Cohesion: "Reads as a style" stays +0.5 (style detection is the wobbliest fact: 11-12 of ~40 photos flip).
+        # "Clearly that style top to toe" (an anchor piece in all 3 slots, nothing against) is the signature-pieces
+        # credit, steady (1 of 3 and 0 of 7 flips): +0.5 -> +1.0. One standout piece +0.5 -> +0.75.
+        "h1": 0.5, "h2": 1.0, "h2_suit": 1.0, "h4": 0.75,
+        # Color: standout, quiet accent and tie-in unchanged in size; the lightness credits (tonal with a range +1.0,
+        # tonal anchored by the shoes +0.5, light-mid-dark +0.5) switch on whenever the reading carries `lightness`
+        # (it passed alone in batch 1: 95% the same, 94-98% right; it isn't in the live reading yet). They stack
+        # with the standout and the tie-in up to +2.0 (part 9.0 at most).
+        "cp1": 1.0, "cp2": 0.5, "cp5": 0.5, "lightness": True, "color_cap": 2.0,
+        # Shoes: a matching suit is a look, so dress shoes, derbies, loafers or Chelsea boots under it are "the
+        # look's own shoe" (style detection returns no style for a suit, so S-C could never fire under one).
+        "suit_shoe": True,
+        # The earned bonus: excellence adds up across parts instead of being diluted by the 15-30% weights. Each
+        # part's excess over 7.5 (one routine credit is not excellence) is summed, the single largest is dropped
+        # (one strong part is already in the average), and half of the rest is added, at most +0.25: in practice
+        # "+0.25 when a second part reaches 8 and nothing is under 7". It fades in as the weakest part goes from
+        # 6.5 to 7.0, so a weak part switches it off. The cap is 0.25, not 0.5: at 0.5, a flip-prone color fault
+        # (s01's vest read as a third pattern on 2 of 3 runs) switched the whole bonus on and off and moved one
+        # photo a full point between runs (batch 1, 48/49 steady); at 0.25 it stays 49/49.
+        "earned": {"over": 7.5, "rate": 0.5, "cap": 0.25, "gate": (6.5, 7.0)},
+        "solid_line": True,
+    },
+}
 WEIGHTS = {"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -77,6 +132,7 @@ NARROW = {"skinny", "slim"}
 FULL_LEG = {"straight", "relaxed", "wide"}                    # flare/bootcut and barrel are aliased by rubric.py
 SHORT_LAYERS = {"bomber", "denim_jacket", "leather_jacket"}   # cut to end at the waist/hip by type (R2 stand-in)
 BULKY = {"chunky_sneaker", "basketball_sneaker"}
+SUIT_SHOES = {"dress_shoe", "derby", "loafer", "chelsea_boot"}   # v2: a suit's own shoes (v5-tailoring.md)
 RUNNER = {"performance_runner"}
 SLIDES = {"slides_sandals"}
 SHORTS = {"shorts", "athletic_shorts"}
@@ -178,7 +234,7 @@ class _Part:
 # =====================================================================================================
 # PROPORTIONS (30%): length against length, weight against weight. Never a width against his body.
 # =====================================================================================================
-def _proportions(o, sl):
+def _proportions(o, sl, t):
     p = _Part("proportions")
     T, O, B, S = o["top"], o["outer"], o["bottom"], o["shoes"]
     if B is None:
@@ -226,17 +282,18 @@ def _proportions(o, sl):
         short = T.get("length") in ("cropped", "at_belt")
         ribbed_ok = T.get("subcategory") not in RIBBED or (T.get("volume") or 3) >= 4
         if O is None and _earns(T) and (tuck or (short and ribbed_ok)):
-            rewards.append((1.0, "a tucked or short top over a full leg gives it a waist", "PR1_waist_break"))
+            pts = t["pr1"] if (tuck or not o.get("mirror")) else t["pr1_mirror_short"]
+            rewards.append((pts, "a tucked or short top over a full leg gives it a waist", "PR1_waist_break"))
         elif O is None and _earns(T) and T.get("tucked") == "half" and T.get("subcategory") not in RIBBED:
-            rewards.append((0.5, "the front tuck gives it a waist", "PR1b_half_tuck"))
+            rewards.append((t["pr1b"], "the front tuck gives it a waist", "PR1b_half_tuck"))
     if not blocked and full and O is not None and o_sub in SHORT_LAYERS and _earns(O) and not sl["peek"]:
-        rewards.append((1.0, f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
+        rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
     if (not blocked and o_tailored and T is not None and T.get("tucked") == "full" and B.get("subcategory") in PRESSED
             and leg != "skinny" and _earns(O)):
-        rewards.append((0.5, "a complete tailored line", "PR3_tailored_line"))
+        rewards.append((t["pr3"], "a complete tailored line", "PR3_tailored_line"))
     total = 0.0
     for pts, line, check in rewards:
-        pts = min(pts, 2.0 - total)                                   # reward cap +2.0
+        pts = min(pts, t["prop_cap"] - total)                         # reward cap (+2.0 v1, +2.5 v2)
         if pts > 0:
             p.add(pts, line, check); total += pts
     if not p.reasons and T is not None and O is None and T.get("subcategory") not in RIBBED:
@@ -312,7 +369,7 @@ def _fit(o):
 # =====================================================================================================
 # COLOR (15%): the clothes' colors and patterns (the shoe's color is Shoes'). Faults block the positives.
 # =====================================================================================================
-def _color(o, boldness):
+def _color(o, boldness, t):
     p = _Part("color")
     main = [g for g in o["main"] if g.get("category") in ("top", "outerwear", "bottom")]
     if len(main) < 2:
@@ -361,20 +418,46 @@ def _color(o, boldness):
         return p
     # positives (only when no fault). P3/P4/P6 need the lightness word, which isn't in the live reading.
     non_neutral = [g for g in colored if g["color_family"] not in R.NEUTRALS]
+    pos = []                                                          # (points, line, check); capped below (v2)
     if len(bright) == 1 and len(non_neutral) == 1 and _earns(bright[0]):
         g = bright[0]
-        p.add(1.0, f"the {g.get('color_family').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is the one standout",
-              "CP1_standout_color")
+        pos.append((t["cp1"], f"the {g.get('color_family').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is the one standout",
+                    "CP1_standout_color"))
         o["credited"].add(id(g))
     elif not bright and len(non_neutral) == 1 and _earns(non_neutral[0]):
         g = non_neutral[0]
-        p.add(0.5, f"the {g.get('color_family').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is a quiet accent",
-              "CP2_quiet_accent")
+        pos.append((t["cp2"], f"the {g.get('color_family').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is a quiet accent",
+                    "CP2_quiet_accent"))
     S = o["shoes"]
     upper = [g for g in main if g.get("category") in ("top", "outerwear")]
     if S is not None and _fam(S) not in NO_TIE_IN and not R.is_bright(S) \
             and any(_fam(g) == _fam(S) for g in upper):
-        p.add(0.5, f"the shoes pick up the {_fam(S).replace('_', ' ')} up top", "CP5_tie_in")
+        pos.append((t["cp5"], f"the shoes pick up the {_fam(S).replace('_', ' ')} up top", "CP5_tie_in"))
+    # v2: the lightness credits (color.md P3/P4/P6), only when the reading carries `lightness` on every main piece
+    # (and on the shoes for the two that use them). Same logic as the parts1 what-if.
+    LV = ("light", "mid", "dark")
+    if t["lightness"] and main and all(g.get("lightness") in LV for g in main):
+        fams = {_fam(g) for g in main}
+        lv = {g.get("lightness") for g in main}
+        shoe_l = S.get("lightness") if S is not None and S.get("lightness") in LV else None
+        if len(fams) == 1 and fams != {"black"} and len(lv) >= 2:
+            pos.append((1.0, f"all {next(iter(fams)).replace('_', ' ')}, with a lighter and a darker piece for depth",
+                        "CP3_tonal_range"))
+        else:
+            tb = [g for g in main if g.get("category") in ("top", "bottom")]
+            if shoe_l and tb and len({_fam(g) for g in tb}) == 1 and shoe_l not in {g.get("lightness") for g in tb}:
+                pos.append((0.5, "one color top and bottom, anchored by the shoes", "CP4_tonal_shoes"))
+        up_l = next((g.get("lightness") for g in main if g.get("category") == "top"), None) or \
+            next((g.get("lightness") for g in main if g.get("category") == "outerwear"), None)
+        bot_l = next((g.get("lightness") for g in main if g.get("category") == "bottom"), None)
+        if shoe_l and up_l and bot_l and len({up_l, bot_l, shoe_l}) == 3:
+            pos.append((0.5, "light, mid and dark from top to shoes", "CP6_light_mid_dark"))
+    total = 0.0
+    cap = t["color_cap"] if t["color_cap"] is not None else 99.0
+    for pts, line, check in pos:
+        pts = min(pts, cap - total)
+        if pts > 0:
+            p.add(pts, line, check); total += pts
     return p
 
 
@@ -393,7 +476,7 @@ def _match_window(gap):
     return 1.0
 
 
-def _shoes(o, occasion, sl):
+def _shoes(o, occasion, sl, t):
     p = _Part("shoes")
     S, B = o["shoes"], o["bottom"]
     if S is None:
@@ -448,9 +531,14 @@ def _shoes(o, occasion, sl):
         # (detection without the shoe, so the shoe can't reward itself; cohesion.md / shoes.md S-C)
         c = R.Outfit(o["main"])
         role = max([R.STYLES[st][0](S, c)[0] for st in o["det_noshoe"]] or [0])
+        subs = {g.get("subcategory") for g in o["main"]}
+        suit = "suit_jacket" in subs and "suit_trousers" in subs
         if role and _earns(S):
             p.add(0.5 * up, f"a {R.STYLE_NAMES[o['det_noshoe'][0]]} shoe for a {R.STYLE_NAMES[o['det_noshoe'][0]]} outfit"
                   if len(o["det_noshoe"]) == 1 else "the shoes belong to the look", "SC_chosen_for_look")
+        elif t["suit_shoe"] and suit and sub in SUIT_SHOES and _earns(S):
+            # v2: a matching suit is a look of its own (style detection names none), and these are its shoes
+            p.add(0.5 * up, "the right shoes for a suit", "SC_chosen_for_look")
     # shoe weight against the leg (Shoes owns both directions)
     if sub in BULKY and leg in NARROW:
         p.add(-1.5, "chunky sneakers look heavy under narrow legs", "SW1_chunky_narrow")
@@ -482,7 +570,7 @@ def _shoes(o, occasion, sl):
 # =====================================================================================================
 # COHESION / STYLE (15%): a narrow, written-down version (the council's tables). "Is the mix deliberate?" stays out.
 # =====================================================================================================
-def _cohesion(o, boldness):
+def _cohesion(o, boldness, t):
     p = _Part("cohesion")
     if len(o["slots"]) < 2:
         p.na = "fewer than two of top, bottoms and shoes in view"; return p
@@ -490,7 +578,7 @@ def _cohesion(o, boldness):
     subs = {g.get("subcategory") for g in o["main"]}
     suit = "suit_jacket" in subs and "suit_trousers" in subs
     if det or suit:
-        p.add(0.5, f"reads as {R.STYLE_NAMES[label]}" if label else "a matching suit", "H1_reads_as_style")
+        p.add(t["h1"], f"reads as {R.STYLE_NAMES[label]}" if label else "a matching suit", "H1_reads_as_style")
     # H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
     if label and len(o["slots"]) == 3:
         role = R.STYLES[label][0]
@@ -502,9 +590,9 @@ def _cohesion(o, boldness):
             best[sl] = max(best.get(sl, 0), pos)
             against += neg
         if all(best.get(s, 0) >= 2 for s in ("upper", "bottom", "shoes")) and against == 0:
-            p.add(0.5, f"clearly {R.STYLE_NAMES[label]} top to toe", "H2_clear_top_to_toe")
+            p.add(t["h2"], f"clearly {R.STYLE_NAMES[label]} top to toe", "H2_clear_top_to_toe")
     elif suit and o["tops"]:
-        p.add(0.5, "a suit worn properly over a top", "H2_suit")
+        p.add(t["h2_suit"], "a suit worn properly over a top", "H2_suit")
     # H3: a piece from another world (the larger of the jacket rule and the spread rule, never both)
     B = o["bottom"]
     h3, h3_line = 0.0, None
@@ -540,7 +628,7 @@ def _cohesion(o, boldness):
                and g.get("pattern") not in (None, "solid", "graphic", "other") and g.get("pattern_scale") not in ("small", "na", None)]
         if len(pat) == 1 and _earns(pat[0]) and id(pat[0]) not in o["credited"]:
             g = pat[0]
-            p.add(0.5, f"the {g.get('pattern').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is the one standout",
+            p.add(t["h4"], f"the {g.get('pattern').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is the one standout",
                   "H4_standout_piece")
     return p
 
@@ -651,14 +739,35 @@ def _occasion(o, occasion):
     return out
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain):
+def _tune(engine="v2", tune=None):
+    t = dict(TUNE[engine])
+    t.update(tune or {})
+    return t
+
+
+def earned_bonus(part_scores, engine="v2", tune=None):
+    """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
+    excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
+    and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
+    off without a cliff. Uses the exact part values, so a ramped shoe credit counts in proportion."""
+    e = _tune(engine, tune)["earned"]
+    if not e or not part_scores:
+        return 0.0
+    ex = sorted((max(0.0, v - e["over"]) for v in part_scores.values()), reverse=True)
+    raw = e["rate"] * sum(ex[1:])
+    gate = ramp(min(part_scores.values()), *e["gate"])
+    return round(min(e["cap"], raw) * gate, 4)
+
+
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v2", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
-    minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0 floor at everyday/class/
-    home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns (average, raw final, floored, wsum).
-    Public so the paper test can ask "what if a part read differently" without a second copy of these steps."""
+    plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
+    floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
+    (average, raw final, floored, wsum). Public so the paper tests can ask "what if a part read differently" without
+    a second copy of these steps."""
     wsum = sum(WEIGHTS[k] for k in part_scores)
     avg = sum(WEIGHTS[k] * v for k, v in part_scores.items()) / wsum
-    x = avg - cond["deduction"] - occ["deduction"]
+    x = avg + earned_bonus(part_scores, engine, tune) - cond["deduction"] - occ["deduction"]
     if occ["ceiling"] is not None:
         x = min(x, occ["ceiling"])
     floored = False
@@ -682,13 +791,15 @@ def _outfit(garments, styles):
     return {"tops": tops, "outers": outers, "top": tops[0] if tops else None, "outer": outers[0] if outers else None,
             "bottom": bottom, "shoes": shoes, "main": main, "det": d["detected"], "label": d["label"],
             "det_noshoe": nd["detected"], "slots": {R.SLOT[g["category"]] for g in main}, "credited": set(),
-            "color_fault": False}
+            "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little"):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v2", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
+    _second_look). engine: "v2" (tuned) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
+    (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
+    t = _tune(engine, tune)
     styles = styles or {}
     sl = _second_look(second_look)
     scene, garments, not_rated = R._prepare(reading)
@@ -698,11 +809,12 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
         return {"overall": None, "reason": "nothing_readable", "parts": {}, "na_parts": PART_ORDER[:]}
     garments = _refile(R._normalize(garments))
     o = _outfit(garments, styles)
+    o["mirror"] = bool(scene.get("mirror_selfie"))
 
-    color = _color(o, boldness)
+    color = _color(o, boldness, t)
     o["color_fault"] = bool(color.reasons) and any(r["points"] < 0 for r in color.reasons)
-    parts = {"proportions": _proportions(o, sl), "fit": _fit(o), "color": color,
-             "shoes": _shoes(o, occasion, sl), "cohesion": _cohesion(o, boldness)}
+    parts = {"proportions": _proportions(o, sl, t), "fit": _fit(o), "color": color,
+             "shoes": _shoes(o, occasion, sl, t), "cohesion": _cohesion(o, boldness, t)}
     res = {k: (v.result(lo=1.0) if k == "cohesion" else v.result()) for k, v in parts.items()}
     live = {k: r for k, r in res.items() if r["score"] is not None}
     if not live:
@@ -710,7 +822,9 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     cond = _condition(o, scene, occasion)
     occ = _occasion(o, occasion)
     care_or_strain = any(_care_fault(g) for g in o["main"]) or any(g.get("strain") == "clear" for g in o["main"])
-    avg, x, floored, wsum = combine({k: r["score"] for k, r in live.items()}, cond, occ, occasion, care_or_strain)
+    ps = {k: r["score"] for k, r in live.items()}
+    avg, x, floored, wsum = combine(ps, cond, occ, occasion, care_or_strain, engine, tune)
+    bonus = earned_bonus(ps, engine, tune)
     overall = round_half(x)
 
     # the lowest part leads the card, with its one-line reason (ties: the heavier part)
@@ -721,12 +835,17 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
             {"fit": "nothing looks the wrong size", "proportions": "a balanced, classic shape",
              "color": "clean neutrals, nothing fighting", "shoes": "clean and easy with this",
              "cohesion": "the pieces go together; nothing ties them to one look yet"}[low_k])
+    lowest = {"part": low_k, "score": lr["display"], "line": f"{PART_NAMES[low_k]} {lr['display']:g}: {line}"}
+    if t["solid_line"] and all(r["display"] == BASE for r in live.values()):
+        # the founder's call (Oct 10): when every part is 7, don't name a "weakest" part
+        lowest = {"part": None, "score": BASE, "line": "Every part is solid: nothing off, nothing standing out yet."}
     return {
-        "overall": overall, "raw_score": round(x, 3), "average": round(avg, 3), "version": VERSION,
+        "overall": overall, "raw_score": round(x, 3), "average": round(avg, 3), "earned_bonus": bonus,
+        "version": VERSIONS[engine], "engine": engine,
         "parts": res, "na_parts": [k for k in PART_ORDER if res[k]["score"] is None],
         "weights_used": {k: round(WEIGHTS[k] / wsum, 3) for k in live},
         "condition": cond, "occasion": occ, "floored": floored, "care_or_strain": care_or_strain,
-        "lowest": {"part": low_k, "score": lr["display"], "line": f"{PART_NAMES[low_k]} {lr['display']:g}: {line}"},
+        "lowest": lowest,
         "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
         "partial": bool(not_rated),
     }
