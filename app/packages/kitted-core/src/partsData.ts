@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.0.0",
- "engine": "v3",
- "label": "parts-proto-3 (Oct 10, 2026)",
+ "version": "1.1.0",
+ "engine": "v4",
+ "label": "parts-proto-4 (Oct 11, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "cf00ee3f9cc3056e96cccd1eaee22de96b252c353cb1d5d70440b24af1d79d2d",
+ "sourceSha256": "70dacbda86953a6859f8062bd1b0b7c1dab49696f9e4748a53ffca7d32b21347",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -82,7 +82,35 @@ export const PARTS_DATA: PartsData = {
    "relaxed",
    "wide"
   ],
-  "pr4_signature_v3": false
+  "pr4_signature_v3": false,
+  "pr5": 1,
+  "pr5_layers": [
+   "chore_coat"
+  ],
+  "pr5_bottoms": [
+   "cargos",
+   "jeans",
+   "work_pants"
+  ],
+  "pr5_shoes": [
+   "chelsea_boot",
+   "suede_chukka",
+   "work_boot"
+  ],
+  "pr6": 0.5,
+  "pr6_layers": [
+   "fleece",
+   "rain_jacket",
+   "shell_jacket"
+  ],
+  "pr6_shoes": [
+   "trail_shoe"
+  ],
+  "short_layers_extra": [
+   "track_jacket"
+  ],
+  "sc_pair": false,
+  "h2_pick_free": true
  },
  "sets": {
   "TAILORED": [

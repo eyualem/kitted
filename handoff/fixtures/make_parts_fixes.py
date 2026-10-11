@@ -1,5 +1,5 @@
 """Writes fixtures/parts_fixes.json: the parts fix engine's exact Python output (parts_fixes.suggest_parts_fixes on
-parts_proto.py v3) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
+parts_proto.py v4) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
 
 Run (after make_parts_parity.py, whose loaders and edge cases it reuses):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_fixes.py
@@ -11,10 +11,13 @@ Readings x configs:
      plus the first check (free fixes only) at the reading's own occasion
   2. rubric_parity.json's hand-written edge readings and make_parts_parity's parts edge cases (with their own second
      look), at every app occasion, warm on and off, both closets
-  3. fix edge cases below, written to make every candidate, the Smaller step, both Next level lines and both "no fix"
+  3. fix edge cases below, written to make every candidate, the Smaller step, every Next level line and both "no fix"
      lines appear (the generator asserts it)
+  4. picks variants: the real readings at their own occasion and every edge with no picks, one pick (each of the 7
+     styles) and three picks, so the pick tie-break and the first pick's Next level line are covered
 Profile (CLAUDE.md rule 7): the paper tests' one stated test profile (picks Minimal + Smart casual 0.5 each,
-boldness a little, no age); picks never move a number.
+boldness a little, no age) unless the case names its own `styles`; picks never move a number (the generator
+asserts the base score is the same under every picks).
 
 Each case's `expected` is suggest_parts_fixes()'s dict. Fix and Smaller-step objects repeat across thousands of
 cases, so each is stored once in `pool` and referenced by index.
@@ -88,7 +91,26 @@ def fix_edges():
     add("no_shoes", Rd(TEE(), JEANS(), SHOE(), shoes_visible=False))
     add("upper_only", Rd(TEE(), G("outerwear", "overshirt", "olive"), framing="upper_only", shoes_visible=False))
     add("not_scored", Rd(TEE(), JEANS(), SHOE(), clothed="partial"))
+    # his first pick's path to 8 (the Next level lines with a style)
+    CHORE = G("outerwear", "chore_coat", "tan_camel")
+    add("pick_chore_sneakers", Rd(TEE(), CHORE, JEANS(color="black"), SHOE(sub="canvas_sneaker", color="white")))
+    add("pick_chore_low", Rd(TEE(color="black"), dict(CHORE, color_family="olive"), JEANS(color="denim_dark", leg_shape="wide", hem="cuffed"),
+                             SHOE(sub="low_profile_sneaker", color="white")))
+    add("pick_jeans_boots", Rd(TEE(color="grey"), JEANS(color="denim_dark"), SHOE(sub="work_boot", color="brown")))
+    add("pick_street", Rd(TEE(sub="hoodie", color="black", volume=4, length="mid_fly"), JEANS(color="black", leg_shape="wide", hem="cuffed"),
+                          SHOE(sub="chunky_sneaker", color="white")))
+    add("pick_knit_trousers", Rd(G("top", "sweater", "cream", tucked="none", length="mid_fly"), G("bottom", "trousers", "grey", leg_shape="wide", hem="slight_break"),
+                                 SHOE(sub="loafer", color="black")))
+    add("pick_knit_jeans", Rd(G("top", "sweater", "navy", tucked="none", length="mid_fly"), JEANS(color="denim_dark"), SHOE(sub="white_leather_sneaker")))
+    add("pick_oxford_chinos", Rd(G("top", "oxford_shirt", "light_blue", tucked="none", length="mid_fly"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"),
+                                 SHOE(sub="loafer", color="brown")))
+    add("pick_oxford_half", Rd(G("top", "oxford_shirt", "light_blue", tucked="half"), G("bottom", "chinos", "navy", leg_shape="straight"),
+                               SHOE(sub="loafer", color="brown")))
+    add("pick_polo_jeans",Rd(G("top", "polo", "navy", tucked="none", length="mid_fly"), JEANS(color="denim_dark"), SHOE(sub="white_leather_sneaker")))
     return E
+
+
+PICK_LEADS = []
 
 
 def main():
@@ -111,13 +133,26 @@ def main():
                                       **({"held_items": r["held_items"]} if r.get("held_items") else {})})
         return rid
 
-    def add(src, r, occ, sl, warm, closet, first=False):
+    def add(src, r, occ, sl, warm, closet, first=False, styles=None):
         rid = ref(r)
-        # _working must score the same as the reading itself
-        b0 = F._score(r, occ, dict(PROFILE), sl, BOLD)
-        b1 = F._score(F._working(r), occ, dict(PROFILE), sl, BOLD)
+        st = PROFILE if styles is None else styles
+        # _working must score the same as the reading itself, and picks never move the score
+        b0 = F._score(r, occ, dict(st), sl, BOLD)
+        b1 = F._score(F._working(r), occ, dict(st), sl, BOLD)
+        bn = F._score(r, occ, {}, sl, BOLD)
         assert b0.get("overall") == b1.get("overall") and b0.get("raw_unrounded") == b1.get("raw_unrounded"), src
-        exp = F.suggest_parts_fixes(r, occ, PROFILE, BOLD, sl, CLOSET if closet else [], warm, first)
+        assert b0.get("overall") == bn.get("overall") and b0.get("raw_unrounded") == bn.get("raw_unrounded"), src
+        exp = F.suggest_parts_fixes(r, occ, st, BOLD, sl, CLOSET if closet else [], warm, first)
+        if styles is not None:
+            ref_exp = F.suggest_parts_fixes(r, occ, [], BOLD, sl, CLOSET if closet else [], warm, first)
+            assert ref_exp["base_overall"] == exp["base_overall"] and ref_exp["base_raw"] == exp["base_raw"], src
+            lead = lambda e: e["fixes"][0]["id"] if e["fixes"] else None  # noqa: E731
+            cov["picks: cards"] += 1
+            cov["picks: lead fix differs from no picks"] += lead(exp) != lead(ref_exp)
+            cov["picks: fix order differs from no picks"] += [f["id"] for f in exp["fixes"]] != [f["id"] for f in ref_exp["fixes"]]
+            cov["picks: next level differs from no picks"] += (exp["next_level"] or {}).get("id") != (ref_exp["next_level"] or {}).get("id")
+            if lead(exp) != lead(ref_exp):
+                PICK_LEADS.append((src, st, lead(ref_exp), lead(exp)))
         for f in exp["fixes"]:
             cov["fix " + f["id"]] += 1
         if exp["smaller_step"]:
@@ -131,8 +166,11 @@ def main():
         exp["fixes"] = [intern(f) for f in exp["fixes"]]
         if exp["smaller_step"] is not None:
             exp["smaller_step"] = intern(exp["smaller_step"])
-        cases.append({"src": src, "reading": rid, "occasion": occ, "second_look": sl, "warm": warm,
-                      "closet": "seed" if closet else "empty", "first_check": first, "expected": exp})
+        case = {"src": src, "reading": rid, "occasion": occ, "second_look": sl, "warm": warm,
+                "closet": "seed" if closet else "empty", "first_check": first, "expected": exp}
+        if styles is not None:
+            case["styles"] = styles
+        cases.append(case)
 
     # 1. real readings
     U = T.load_runs(os.path.join(ET, "results/look1/raw.json"), "U")
@@ -182,6 +220,25 @@ def main():
                     add(f"fix-edge:{name}@{o}", r, o, sl, warm, closet)
         add(f"fix-edge:{name}@{occ}:first", r, occ, sl, False, False, True)
 
+    # 4. picks variants
+    n_before_picks = len(cases)
+    STY = list(P.R.STYLE_NAMES)
+    PICKS = [("none", [])] + [(f"one:{x}", [[x, 1.0]]) for x in STY] + \
+            [("three", [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]),
+             ("three-b", [["workwear", 0.5], ["minimalist", 0.25], ["classic_prep", 0.25]])]
+    for src, k, r, occ in uniq:
+        sl = T.second_look_for(k, U, L)
+        for pn, st in PICKS:
+            add(f"picks:{pn}:{src}|{k}@{occ}", r, occ, sl, False, False, False, st)
+    for src, r, sl in edges:
+        for pn, st in PICKS:
+            add(f"picks:{pn}:{src}@everyday", r, "everyday", sl, False, False, False, st)
+    for name, r, occ, sl in fe:
+        for pn, st in PICKS:
+            for closet in (False, True):
+                add(f"picks:{pn}:fix-edge:{name}@{occ}", r, occ, sl, False, closet, False, st)
+    n_picks = len(cases) - n_before_picks
+
     must = ["fix " + c["id"] for c in F.CATALOG["candidates"]] + ["next " + n["id"] for n in F.CATALOG["nextLevel"]] + \
            ["none " + F.CATALOG["copy"]["noFixes"], "(not scored)"]
     # "Dialed in" (9+) can't happen yet: Fit tops out at 7 until the fit cues pass, so the best a reading reaches is 8.5
@@ -190,8 +247,8 @@ def main():
     assert sum(v for k, v in cov.items() if k.startswith("step ")) > 0
 
     out = {
-        "_doc": "Parts fix engine parity fixtures (handoff/fixtures/parts_fixes.py on parts_proto.py v3, catalog fixes.json -> "
-                "parts). For each case, suggestPartsFixes(reading, {occasion, styles: profile, boldness, secondLook, closet, warm, "
+        "_doc": "Parts fix engine parity fixtures (handoff/fixtures/parts_fixes.py on parts_proto.py v4, catalog fixes.json -> "
+                "parts). For each case, suggestPartsFixes(reading, {occasion, styles: the case's styles, else profile, boldness, secondLook, closet, warm, "
                 "firstCheck}) must equal `expected` after mapping camelCase to these keys, exactly. closet 'seed' = `closet` here, "
                 "'empty' = []. A case's reading is readings[id] here, else rubric_parity.json's readings[id]. expected.fixes[i] and "
                 "expected.smaller_step are indices into `pool`.",
@@ -201,7 +258,7 @@ def main():
         "pull": os.path.relpath(pull_path, KEMPT) if pull_path else None,
         "profile": PROFILE, "boldness": BOLD, "occasions": OCCASIONS, "closet": CLOSET,
         "counts": {"real_readings": len(uniq), "real_cases": n_real, "edge_readings": len(edges), "edge_cases": n_edge,
-                   "fix_edge_readings": len(fe), "cases": len(cases), "own_readings": len(readings), "pool": len(pool)},
+                   "fix_edge_readings": len(fe), "picks_cases": n_picks, "cases": len(cases), "own_readings": len(readings), "pool": len(pool)},
         "coverage": dict(sorted(cov.items())),
         "pool": pool, "readings": readings, "cases": cases,
     }
@@ -212,6 +269,9 @@ def main():
     print("file size MB:", round(os.path.getsize(path) / 1e6, 2))
     for k, v in sorted(cov.items()):
         print(f"   {v:6d}  {k}")
+    print("lead fix changed by picks:")
+    for x in PICK_LEADS:
+        print("   ", x)
 
 
 if __name__ == "__main__":

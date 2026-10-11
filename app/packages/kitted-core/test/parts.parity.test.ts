@@ -1,4 +1,4 @@
-// Parts engine parity: every case in fixtures/parts_parity.json must equal parts_proto.py (v3, or the named tune
+// Parts engine parity: every case in fixtures/parts_parity.json must equal parts_proto.py (v4, or the named tune
 // variant) exactly: parts, reasons and tips in order, NA, condition, occasion, the lowest-part line, the bonus, the
 // final score, and the unrounded average / final within 1e-9. If TS and Python disagree, TS is wrong: never edit
 // parts_proto.py or the fixtures to make this pass (regenerate with make_parts_parity.py after a Python change).
@@ -99,7 +99,7 @@ function mismatch(c: PartsCase): string | null {
   return out.length ? `${label}: ${out.join(" | ")}` : null;
 }
 
-describe("parts engine parity (parts_proto.py v3)", () => {
+describe("parts engine parity (parts_proto.py v4)", () => {
   it("has every case, from the same prototype and data version", () => {
     expect(P.cases.length).toBe(P.counts.cases);
     expect(P.cases.length).toBeGreaterThan(10000);
@@ -108,7 +108,7 @@ describe("parts engine parity (parts_proto.py v3)", () => {
     expect(P.parts_proto_sha256).toBe(PARTS_DATA.sourceSha256);
   });
 
-  it("matches every v3 case exactly", () => {
+  it("matches every v4 case exactly", () => {
     const bad: string[] = [];
     for (const c of P.cases) {
       if (c.tune) continue;
@@ -119,7 +119,7 @@ describe("parts engine parity (parts_proto.py v3)", () => {
     expect(bad).toEqual([]);
   });
 
-  it("matches the tune variants (v1, v2, the v3 what-ifs): tuning is a data change", () => {
+  it("matches the tune variants (v1, v2, v3, the v4 what-ifs): tuning is a data change", () => {
     const tuned = P.cases.filter((c) => c.tune);
     expect(new Set(tuned.map((c) => c.tune))).toEqual(new Set(Object.keys(P.tunes)));
     const bad: string[] = [];
@@ -143,6 +143,35 @@ describe("parts engine parity (parts_proto.py v3)", () => {
       expect(r.overall).toBe(c.expected["overall"]);
       expect(r.overall === null ? null : r.rawUnrounded).toBe(c.expected["raw_unrounded"]);
     }
+  });
+
+  it("picks never move a number: every parity reading scores the same with no picks, one, three or his own", () => {
+    const STY = ["streetwear", "minimalist", "smart_casual", "classic_prep", "workwear", "outdoor", "vintage_sport"];
+    const PICKS: Styles[] = [[], ...STY.map((s) => [[s, 1]] as Styles),
+      [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]], [["minimalist", 0.5], ["smart_casual", 0.5]]];
+    const sig = (r: PartsResult) => JSON.stringify([r.overall, r.overall === null ? null : r.rawUnrounded,
+      Object.entries(r.parts).map(([k, p]) => [k, p.score])]);
+    const bad: string[] = [];
+    const seen = new Set<string>();
+    let n = 0;
+    for (const c of P.cases) {
+      if (c.tune || "error" in c.expected) continue;
+      const key = `${c.reading}|${c.occasion}|${c.boldness}|${JSON.stringify(c.second_look)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const opts = { occasion: c.occasion, boldness: c.boldness, secondLook: c.second_look };
+      const want = sig(scoreParts(readingOf(c.reading), { ...opts, styles: c.styles as Styles }));
+      // every picks set on the everyday cases; elsewhere none plus one rotating set (keeps the test fast)
+      const sets = c.occasion === "everyday" ? PICKS : [PICKS[0]!, PICKS[1 + (n % (PICKS.length - 1))]!];
+      for (const st of sets) {
+        const got = sig(scoreParts(readingOf(c.reading), { ...opts, styles: st }));
+        if (got !== want) bad.push(`${c.src} ${c.reading}@${c.occasion} picks ${JSON.stringify(st)}: ${got} vs ${want}`);
+      }
+      n++;
+      if (bad.length > 20) break;
+    }
+    expect(n).toBeGreaterThan(5000);
+    expect(bad).toEqual([]);
   });
 
   it("never mutates its input", () => {

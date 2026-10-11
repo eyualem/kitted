@@ -1,5 +1,7 @@
 # Parts engine: the style fairness pass (Oct 11, 2026)
 
+> **Update (Oct 11, DECISIONS-LOG #NEXT): adopted.** v4 is now the parts engine's default (outdoor kept at +0.5), ported to `@kitted/core` with parity, and the picks proposal is built: a fix toward his earliest pick wins ties, and his first pick's path to 8 is the Next level line when there's nothing to fix. One change on the way: H2 ("clearly X top to toe") read the pick-chosen label, so a pick could add points (5 of 25,048 reading × pick runs); v4 judges H2 on the label with no picks. The workwear "swap to boots" line was dropped because v4's own boots fix already shows it with a number (+1.0 on a chore coat over sneakers).
+
 *Claude (subagent). The founder (Oct 11): "I want the scoring to be very good, regardless of the style, and also based on the style that the user picks." No API calls, no money. Nothing in the app, `rubric.py`, the prompt or the fixtures changed.*
 
 **Files:**
