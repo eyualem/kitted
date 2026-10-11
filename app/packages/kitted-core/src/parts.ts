@@ -1,9 +1,10 @@
-// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v6" (parts-proto-6, the
-// default since Oct 11; DECISIONS-LOG #195-217: v3 plus the workwear and outdoor shapes, the track jacket as a short
+// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v7" (parts-proto-7, the
+// default since Oct 11; DECISIONS-LOG #195-219: v3 plus the workwear and outdoor shapes, the track jacket as a short
 // layer, H2 judged on the pick-free label so picks never move a number (v4), SX1 "a piece from another look", the
 // style-crossing fault on Style (v5), and v6: PB1 "roomier than the look" (the style council's per-style bands as one
 // Proportions fault, with PB2 its leg-side tip), H2 judged on every style the outfit reads as, and Event's softer
-// band). The app scores new checks with it (features/fitcheck/scoring.ts).
+// band), and v7: a condition read (wrinkled, worn, stained) moves points only on a garment read "clear"; on a
+// "likely" one it is a no-points Condition tip (#219). The app scores new checks with it (features/fitcheck/scoring.ts).
 //
 // "The AI sees, the code judges": it reads only the garment description (plus the optional second look's two yes/no
 // answers). It never reads a face, body or skin, and never his profile (picks only choose the "Reads as" label).
@@ -18,7 +19,7 @@
 //  - Python `x in (…)` on a missing key is `None in (…)`: undefined and null both mean None (nv)
 //  - one garment, one credit: "already credited" is object identity on our own copies (Python's id(g))
 //  - where Python would raise (a garment without a subcategory reaching a reason line), this throws the same error
-// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.3.0); the v4.1
+// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.4.0); the v4.1
 // helpers it shares (formality, colors, style detection, prepare/normalize) come from the rubric engine.
 
 import { PARTS_DATA } from "./partsData";
@@ -95,6 +96,8 @@ export interface PartsTune {
   h2_any: boolean;
   /** v6: occasion bands that replace the rubric's OCCASION_TARGET ({event: [3, 4]}). */
   occ_target: Record<string, [number, number]>;
+  /** v7: a condition read moves points only on a garment read "clear"; otherwise a no-points Condition tip. */
+  cond_clear_only: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -102,7 +105,7 @@ interface Range { points: number; from: number; to: number }
 /** fixtures/parts.json (make_parts_json.py). */
 export interface PartsData {
   version: string;
-  /** "v6" for the bundled data; "v1" - "v5" reproduce the earlier prototypes. */
+  /** "v7" for the bundled data; "v1" - "v6" reproduce the earlier prototypes. */
   engine: string;
   label: string;
   source: string;
@@ -219,6 +222,8 @@ export interface PartsCondition {
   display: string;
   /** What Condition would show as a part (only when a care fault fired), or null. */
   part: number | null;
+  /** v7: condition reads on garments that weren't "clear", not counted (no points). Empty in dim light and in v1-v6. */
+  tips: PartTip[];
 }
 
 export interface PartsOccasion {
@@ -432,6 +437,28 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (c === "pilled_or_worn" && !(truthy(g.distressed_by_design) && g.category !== "footwear")) return "worn";
     return null;
   }
+  /**
+   * v7 (cond_clear_only): on the engine's own copies, a condition read on a garment that isn't "clear" becomes "clean"
+   * (kept as condition_raw) and a no-points tip, in garment order. Clothes worn by design were already excused.
+   */
+  function unsureCare(garments: Garment[]): PartTip[] {
+    const tips: PartTip[] = [];
+    if (!truthy(t.cond_clear_only)) return tips;
+    for (const g of garments) {
+      const c = g.condition;
+      if (!(c === "wrinkled" || c === "pilled_or_worn" || c === "stained") || g.certainty === "clear") continue;
+      const foot = g.category === "footwear";
+      if (c === "pilled_or_worn" && truthy(g.distressed_by_design) && !foot) continue;
+      const name = foot ? "shoes" : rep(or(g.subcategory, "piece"));
+      const what = c === "wrinkled" ? `the ${name} might be wrinkled` : c === "pilled_or_worn" ? `the ${name} might look worn` : `there might be a stain on the ${name}`;
+      const check = c === "wrinkled" ? "C_unsure_wrinkled" : c === "pilled_or_worn" ? "C_unsure_worn" : "C_unsure_stain";
+      tips.push({ check, line: `${what}; not counted, it isn't clear enough in the photo`, wouldCost: null });
+      g["condition_raw"] = c;
+      g.condition = "clean";
+    }
+    return tips;
+  }
+
   /** Ruling 46: a stained or worn piece earns no credit in any part. */
   const earns = (g: Garment | null): boolean => g !== null && careFault(g) === null;
 
@@ -1011,9 +1038,9 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   }
 
   // ---------------------------------------------------------------- CONDITION (after the average)
-  function condition(o: PartsOutfit, scene: Scene, occasion: string): PartsCondition {
+  function condition(o: PartsOutfit, scene: Scene, occasion: string, tips: readonly PartTip[]): PartsCondition {
     const CD = data.condition;
-    if (scene.lighting === "dim") return { deduction: 0.0, faults: [], display: "couldn't check in this light", part: null };
+    if (scene.lighting === "dim") return { deduction: 0.0, faults: [], display: "couldn't check in this light", part: null, tips: [] };
     let care = 0.0;
     const faults: string[] = [];
     for (const g of o.main) {
@@ -1043,7 +1070,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
     const ded = care + t1;
     const part = !truthy(care) ? null : roundHalf(pyMax(CD.partFloor, BASE - CD.partRate * care));
-    return { deduction: pyRound(ded, 3), faults, display: faults.length === 0 ? "clean" : faults.join("; "), part };
+    return { deduction: pyRound(ded, 3), faults, display: faults.length === 0 ? "clean" : faults.join("; "), part, tips: [...tips] };
   }
 
   // ---------------------------------------------------------------- OCCASION (after the average; only holds down)
@@ -1160,6 +1187,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (scene.clothed !== "fully") return { overall: null, reason: "not_fully_clothed", parts: {}, naParts: [...ORDER] };
     if (prep.garments.length === 0) return { overall: null, reason: "nothing_readable", parts: {}, naParts: [...ORDER] };
     const garments = refile(prep.garments);
+    const careTips = unsureCare(garments); // v7: condition reads count only when "clear"
     const o = outfit(garments, picks);
     o.mirror = truthy(scene.mirror_selfie);
     o.sx = styleClash(o); // v5's SX1, read by Style and (v6) Proportions
@@ -1177,7 +1205,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const live = new Map<PartName, PartResult>();
     for (const k of ORDER) if (res[k].score !== null) live.set(k, res[k]);
     if (live.size === 0) return { overall: null, reason: "no_part_readable", parts: res, naParts: [...ORDER] };
-    const cond = condition(o, scene, occasion);
+    const cond = condition(o, scene, occasion, careTips);
     const occ = occasionPart(o, occasion);
     const careOrStrain = o.main.some((g) => careFault(g) !== null) || o.main.some((g) => g.strain === "clear");
     const ps = new Map<PartName, number>();
@@ -1220,7 +1248,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 /** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
 export const defaultParts: PartsEngine = createParts(PARTS_DATA);
 
-/** parts_proto.score_parts() (engine v6) with the bundled data. Never mutates `reading`. */
+/** parts_proto.score_parts() (engine v7) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
 }

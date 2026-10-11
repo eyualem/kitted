@@ -81,12 +81,39 @@ export interface KnownPiece {
   confirmed: boolean;
   /** Live sightings before this photo. */
   sightings: number;
+  /** v3 pattern (solid, stripes, checks_plaid, graphic…) as the closet shows it; null/absent = unknown. */
+  pattern?: string | null;
+}
+
+// "Your White tee?" was offered for his cream striped oxford (Oct 11, #219): a known piece is never offered when the
+// read shows a different pattern or a different collar family, whatever the colour says.
+/** Collared shirts and polos. */
+const COLLARED_TOPS: ReadonlySet<string> = new Set([
+  "oxford_shirt", "dress_shirt", "polo", "knit_polo", "rugby_shirt", "camp_collar_shirt", "flannel_shirt", "overshirt",
+]);
+/** Collarless tops: tees and knits. */
+const COLLARLESS_TOPS: ReadonlySet<string> = new Set([
+  "tee", "graphic_tee", "tank_top", "sweater", "sweatshirt", "hoodie", "cardigan",
+]);
+/** True when one is a collared shirt and the other a tee or knit (a hoodie vs a tee stays possible: a look-alike). */
+export function collarFamiliesDiffer(a: unknown, b: unknown): boolean {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  return (COLLARED_TOPS.has(a) && COLLARLESS_TOPS.has(b)) || (COLLARLESS_TOPS.has(a) && COLLARED_TOPS.has(b));
+}
+/** True when both patterns are known and differ: solid vs any pattern, or two different patterns ("other" = some
+ *  pattern, so it differs only from solid). Unknown (null, "na") never differs. */
+export function patternsDiffer(a: unknown, b: unknown): boolean {
+  const known = (p: unknown): p is string => typeof p === "string" && p !== "" && p !== "na";
+  if (!known(a) || !known(b) || a === b) return false;
+  if (a === "solid" || b === "solid") return true;
+  return a !== "other" && b !== "other";
 }
 
 /**
  * The known pieces a garment could be, best first; a question should be asked only when exactly one comes back.
  * Same slot, then: shoes by kind (an unknown kind is compatible; color can't be trusted on shoes, it only breaks
- * ties); everything else by color family exact or neighbors (grey and charcoal are neighbors). Ties narrow to the
+ * ties); everything else by the same pattern and collar family (#219: a striped oxford is never "your white tee") and
+ * color family exact or neighbors (grey and charcoal are neighbors). Ties narrow to the
  * closest color, then the same subcategory. Pure and deterministic.
  */
 export function knownMatches(known: readonly KnownPiece[], g: Garment): KnownPiece[] {
@@ -100,6 +127,8 @@ export function knownMatches(known: readonly KnownPiece[], g: Garment): KnownPie
   const fits = known.filter((p) => {
     if (p.slot !== slot) return false;
     if (slot === "shoes") return gk === null || p.shoeKind === null || gk === p.shoeKind;
+    // a different pattern or collar family is a different piece (shoes' pattern reads are noise: not used there)
+    if (patternsDiffer(g.pattern, p.pattern) || collarFamiliesDiffer(sub, p.subcategory)) return false;
     return dist(p) <= 1;
   });
   const rank = (p: KnownPiece) => dist(p) * 2 + (p.subcategory === sub ? 0 : 1);

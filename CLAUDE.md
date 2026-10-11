@@ -229,6 +229,13 @@
   - **While it reads:** a light panel slides up inside the reading card, "While I read it · What are you going for?", with your 3 looks as small drawings plus Not sure, More (the other looks, Something else), and "Headed: Everyday ⌄". One look is already picked, with a line saying why ("Your first pick from setup."). A tap adds a check and nothing moves; the score never waits for you.
   - **On the result:** one line at the top, "Going for minimal · Everyday · Change". The card says "It reads that way too." or "Reads as smart casual. For a minimal look, the overshirt pulls the other way." with one move toward the look (no number). Change reopens the panel: a new look rewrites the tips only; a new occasion asks "Re-score for interview? …" as before.
   - **Real:** all of it runs on real readings; it never changes the score (a test checks every demo photo × every look). Mocked: nothing new. Not on your phone until Metro serves it (no reinstall needed).
+- **Your Oct 11 re-check fixed (DECISIONS-LOG #219).** Your green zip hoodie over the striped oxford scored 6.5, then 7.0 on the identical photo. Now:
+  - **Re-checking the same photo doesn't ask the AI again.** It keeps the same score, doesn't use up your re-check, and the card says "That's the same photo as before, so nothing changed. Make the fix, then take a new photo." with a Take a new photo button.
+  - **Wrinkles, wear and stains only count when the AI is clear about that piece.** On a piece it's only "likely" about, they show in the Why sheet's Condition row as a note with no points.
+  - **"Your White tee?" can't be asked about a striped or collared shirt** (a different pattern or collar means a different piece).
+  - **A hoodie worn as the jacket counts as streetwear,** so your fit reads as streetwear and scores **7.5** on every reading of that photo.
+  - Your friends' fits, plain fits, steadiness and the 8+ share are all unchanged. One stock photo moved (7.0 → 7.5).
+  - On your phone through Metro now; no reinstall needed for this.
 - **Scoring by parts is live in the app (Oct 11, DECISIONS-LOG #209).** What you'll see:
   - **New fit checks score with the parts engine** (Proportions, Fit, Color, Shoes, Style averaged, then condition and occasion). Fix rows say what they raise ("Raises Shoes and Style · free if you own one"), and a "Smaller step" tip appears when a move lifts a part but not the score. Old checks keep their old scores.
   - **Tap the score** (a small › after "/10") or "Why 8.0?": the Why sheet shows the five parts in a strip (the one with the most to gain in copper), then each part with its reasons, then Average of the parts, the bonus, Condition, Occasion, Reads as and the score. The "Reads as" line left the card.

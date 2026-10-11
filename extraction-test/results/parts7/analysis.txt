@@ -1,0 +1,103 @@
+PARTS ENGINE v7 PAPER TEST · before = v6 with the old streetwear outer list · v6 = + hoodie/sweatshirt as a streetwear outer · v7 = + condition counts only on clear garments (default)
+  test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age. Rule 7: founder profile pending; friends profile unknown; 703a8b and ebe23f unknown; stock/web profile unknown; council cases are made-up readings with no person.
+
+(1) THE FOUNDER'S OCT 11 CHECK (af7e93; green zip hoodie over a cream striped oxford, light wide jeans, Dunk-style sneakers; Class). Each stored reading, test profile and 'going for streetwear'
+  full:R-f8e1bd93        before 6.5 (raw 6.675) [no style] condition: the oxford shirt looks wrinkled | Proportions 7 · Fit 7 · Color 7.5 · Shoes 7 · Style 7
+  full:R-f8e1bd93        v6     7.5 (raw 7.3) [streetwear] condition: the oxford shirt looks wrinkled | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  full:R-f8e1bd93        v7     7.5 (raw 7.7) [streetwear] condition: clean · tip C_unsure_wrinkled | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  tapAnswer:R-ce5c7391   before 6.5 (raw 6.675) [no style] condition: the oxford shirt looks wrinkled | Proportions 7 · Fit 7 · Color 7.5 · Shoes 7 · Style 7
+  tapAnswer:R-ce5c7391   v6     7.5 (raw 7.3) [streetwear] condition: the oxford shirt looks wrinkled | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  tapAnswer:R-ce5c7391   v7     7.5 (raw 7.7) [streetwear] condition: clean · tip C_unsure_wrinkled | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  recheckRaw:R-32195564  before 7.0 (raw 7.075) [no style] condition: clean | Proportions 7 · Fit 7 · Color 7.5 · Shoes 7 · Style 7
+  recheckRaw:R-32195564  v6     7.5 (raw 7.7) [streetwear] condition: clean | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  recheckRaw:R-32195564  v7     7.5 (raw 7.7) [streetwear] condition: clean | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  recheckMerged:R-bbb8582d before 7.0 (raw 7.075) [no style] condition: clean | Proportions 7 · Fit 7 · Color 7.5 · Shoes 7 · Style 7
+  recheckMerged:R-bbb8582d v6     7.5 (raw 7.7) [streetwear] condition: clean | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  recheckMerged:R-bbb8582d v7     7.5 (raw 7.7) [streetwear] condition: clean | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+  v7 on all four readings: [7.5] (raw [7.7])
+
+(2) REAL PHOTOS (one reading per photo, its own occasion; the corpus + the Oct 10 pull)
+  before -> v6: shown score moves on 0 of 78, raw on 0
+  v6 -> v7: shown score moves on 1 of 78, raw on 5
+    stock-s14-before_street    [stock photo (profile unknown); everyday; no style -> no style] 7.0 -> 7.5 (raw 6.9 -> 7.3) cond 0.4 -> 0.0 tips C_unsure_wrinkled
+  before -> v7: shown score moves on 1 of 78, raw on 5
+    stock-s14-before_street    [stock photo (profile unknown); everyday; no style -> no style] 7.0 -> 7.5 (raw 6.9 -> 7.3) cond 0.4 -> 0.0 tips C_unsure_wrinkled
+  v7's condition tip (a 'likely' garment's condition read, no points) on 5 photos
+  real photos with a hoodie or sweatshirt read as the outer layer: 0
+  all photos · before                n= 78 median 7.0  mean 6.95  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 55 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 45, 7.5: 10, 8.0: 5}
+  all photos · v6                    n= 78 median 7.0  mean 6.95  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 55 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 45, 7.5: 10, 8.0: 5}
+  all photos · v7                    n= 78 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 55 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 11, 8.0: 5}
+
+(3) 3-RUN STEADINESS (Everyday, the test profile)
+  batch 1 arm A (validation), second look run i paired
+    before within 0.5 of median 49/49 · exact 40/49
+    v6     within 0.5 of median 49/49 · exact 40/49
+    v7     within 0.5 of median 49/49 · exact 39/49
+      phone-5a9049: before [7.0, 7.0, 7.0] · v6 [7.0, 7.0, 7.0] · v7 [7.0, 7.0, 7.5]
+      phone-8bc29d: before [6.5, 6.5, 6.5] · v6 [6.5, 6.5, 6.5] · v7 [7.0, 7.0, 7.0]
+  zoom1 + zoom1-stock arm B (design set)
+    before within 0.5 of median 66/66 · exact 57/66
+    v6     within 0.5 of median 66/66 · exact 57/66
+    v7     within 0.5 of median 66/66 · exact 57/66
+      stock-s14-before_street: before [7.0, 7.0, 7.5] · v6 [7.0, 7.0, 7.5] · v7 [7.0, 7.5, 7.5]
+  garments (one per slot) with a non-clean condition in any of the 3 batch 1 arm A runs: does the read flip, and was the garment ever read 'likely'?
+    {'flips / all clear': 4, 'flips / any likely': 3, 'steady / all clear': 4, 'steady / any likely': 3}
+
+(4) AGAINST THE JUDGE PILOT (panel = median of 5 judges' weighted totals), the v2 split
+  all            before n 59 · mean diff +0.01 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+  all            v6     n 59 · mean diff +0.01 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+  all            v7     n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+  HELD-OUT half  before n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+  HELD-OUT half  v6     n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+  HELD-OUT half  v7     n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+
+(5) THE STYLE COUNCIL'S CASES (made-up readings, no person; each case's own occasion, picks, boldness)
+  110 cases; moved before -> v7: 0
+
+(6) EVERY CHECK OF THE FOUNDER, HIS FRIENDS AND THE TWO UNKNOWNS (own occasion)
+  phone-d1967f     [a friend (profile unknown); class; smart casual] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 6
+  phone-e438d4     [a friend (profile unknown); class; workwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-f4870b     [a friend (profile unknown); class; workwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-fb0b17     [a friend (profile unknown); class; workwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  oct7-ph1         [the founder (profile pending); everyday; no style] before 5.5 -> v7 5.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  oct7-ph2         [the founder (profile pending); everyday; smart casual] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  oct7-ph3         [the founder (profile pending); everyday; smart casual] before 7.5 -> v7 7.5 | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  oct7-ph4         [the founder (profile pending); everyday; workwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  phone-0d39d6     [the founder (profile pending); everyday; streetwear] before 6.5 -> v7 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-1f1997     [the founder (profile pending); class; streetwear] before 6.5 -> v7 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-403ade     [the founder (profile pending); class; streetwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-5a9049     [the founder (profile pending); everyday; workwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-6b14db     [the founder (profile pending); everyday; no style] before 5.5 -> v7 5.5 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-7de605     [the founder (profile pending); everyday; no style] before 5.5 -> v7 5.5 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-7f14a4     [the founder (profile pending); everyday; workwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  phone-8ad378     [the founder (profile pending); class; streetwear] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-8bc29d     [the founder (profile pending); class; minimal] before 6.5 -> v7 6.5 | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  phone-968016     [the founder (profile pending); class; streetwear] before 7.5 -> v7 7.5 | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  phone-a765e8     [the founder (profile pending); everyday; no style] before 5.5 -> v7 5.5 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-b0f0c8     [the founder (profile pending); everyday; workwear] before 7.0 -> v7 7.0 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  phone-d58b14     [the founder (profile pending); class; no style] before 6.5 -> v7 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-d6559a     [the founder (profile pending); class; no style] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Style 7
+  phone-d918c0     [the founder (profile pending); class; workwear] before 7.5 -> v7 7.5 | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  phone-e026de     [the founder (profile pending); class; streetwear] before 6.5 -> v7 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-f07193     [the founder (profile pending); class; no style] before 6.5 -> v7 6.5 | Proportions 7 · Fit 5.5 · Color 7 · Style 7
+  phone-703a8b     [unknown, ask the founder; class; no style] before 7.5 -> v7 7.5 | Proportions 8.5 · Fit 7 · Color 7.5 · Style 7
+  phone-ebe23f     [unknown, ask the founder; class; no style] before 7.0 -> v7 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+
+(7) PICKS NEVER MOVE A NUMBER (v7): readings whose score changed with the picks: 0 of 193
+
+(8) v4.1's F7 (care) IF IT ALSO NEEDED 'clear' (not adopted; v4.1 now scores only old checks)
+  real photos whose v4.1 score would move: 5 of 78: phone-b0f0c8, phone-5a9049, stock-s14-before_street, stock-s20-before_phone, phone-7f14a4
+
+  targets:
+    [met] his Oct 11 green hoodie fit at 7.5 on every stored reading (first read, tap answer, re-check raw and merged)
+    [met] the friend's blazer d1967f at 7 or below
+    [met] the chore coat (e438d4, f4870b, fb0b17) at 7-7.5
+    [met] his black tee + wide jeans + white leather sneakers (8ad378, 403ade) at 7
+    [met] council plain fits that sat at 6.5-7.5 still do
+    [met] council deliberate fits that reached 8 still do
+    [met] batch 1 arm A steady 49/49 (49/49)
+    [met] panel gap within +-0.2 (+0.02)
+    [met] no loss on the held-out half, within 0.5 of the panel (26 -> 26)
+    [NOT MET] held-out MAE no worse (0.43 -> 0.45)
+    [met] 8+ at 5-12% on the real photos (6%)
+    [met] picks never change a score

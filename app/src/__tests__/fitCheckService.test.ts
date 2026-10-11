@@ -141,7 +141,8 @@ describe('first-run story', () => {
   it('re-check that sees no change: 8.0 stays, S21; "Tell me" confirms to 9.0', async () => {
     const { store, svc } = await setup();
     const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };
-    const rc = (await svc.start({ mode: 'recheck', photoId: 'p01b', parentCheckId: checkId })) as { checkId: string };
+    // a new photo of the same outfit (the identical photo isn't re-read at all since #219: samePhotoRecheck.test.ts)
+    const rc = (await svc.start({ mode: 'recheck', photoId: 'p01b2', parentCheckId: checkId })) as { checkId: string };
     const row = (await store.fitChecks.get(rc.checkId))!;
     expect([row.score, row.details.recheck!.notSeen]).toEqual([8, true]);
     const target = (await store.fitChecks.get(checkId))!.fixes[0]!.target;

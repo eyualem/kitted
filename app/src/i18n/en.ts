@@ -95,6 +95,10 @@ const addedInBuild = {
   'recheck.slot.any': 'change',
   'recheck.fixPast.held': 'wear it',
   'recheck.fixPast.generic': 'make the change',
+  // A re-check of the same photo (#219): no new read, nothing counted, the re-check stays open
+  'recheck.samePhoto': "That's the same photo as before, so nothing changed. Make the fix, then take a new photo.",
+  'recheck.samePhoto.button': 'Take a new photo',
+  'card.a11y.recheckSame': 'Re-check, {occasion}. Same photo as before, still {now}, {word}. Make the fix, then take a new photo.',
   // "Why this score" rows (rule names in plain words, from rubric/v3.md)
   'why.rounded': 'Rounded to the nearest half',
   'why.adjust': 'Score limits',

@@ -92,9 +92,11 @@ export function whyParts(
   const after: WhyRow[] = [];
   if (res.earnedBonus > 0) after.push({ key: 'bonus', rule: t('pwhy.bonus'), amount: r2(res.earnedBonus) });
   const cond = res.condition;
+  // v7 (#219): a condition read on a piece the AI wasn't clear about is a tip with no points; it's named, never counted.
+  const unsure = (cond.tips ?? []).map((x) => x.line).join('; ');
   after.push(cond.deduction > 0
-    ? { key: 'condition', rule: t('pwhy.condition'), item: cond.display, amount: -r2(cond.deduction) }
-    : { key: 'condition', rule: t('pwhy.condition'), item: t('pwhy.conditionClean'), amount: 0, zero: 'plusMinus' });
+    ? { key: 'condition', rule: t('pwhy.condition'), item: unsure ? `${cond.display}; ${unsure}` : cond.display, amount: -r2(cond.deduction) }
+    : { key: 'condition', rule: t('pwhy.condition'), item: unsure || t('pwhy.conditionClean'), amount: 0, zero: 'plusMinus' });
   const pre = res.averageUnrounded + res.earnedBonus - cond.deduction;
   let post = pre - res.occasion.deduction;
   if (res.occasion.ceiling !== null) post = Math.min(post, res.occasion.ceiling);

@@ -1,9 +1,9 @@
 {
- "version": "1.3.0",
- "engine": "v6",
- "label": "parts-proto-6 (Oct 11, 2026)",
+ "version": "1.4.0",
+ "engine": "v7",
+ "label": "parts-proto-7 (Oct 11, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "59681450ffee8a5e93a320cc835570953a6dd98241c40b0bfc690940b24cf13e",
+ "sourceSha256": "b4e63e6df50f8ff05360f43e0e009b0f8de448a0aab26a3a34b1534cdbf5ba0b",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -160,7 +160,8 @@
     3,
     4
    ]
-  }
+  },
+  "cond_clear_only": true
  },
  "sets": {
   "TAILORED": [

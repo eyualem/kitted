@@ -26,6 +26,25 @@ export function RecheckCard({ checkId }: { checkId: string }) {
   if (row.status !== 'scored' || !row.details.recheck) return <FitCheckCard checkId={checkId} />;
   const rc = row.details.recheck;
   const now = row.score ?? 0;
+  const occasionWord = occasionLabel(row.occasion);
+  // The same photo again (#219): nothing was re-read or counted; say so and ask for a new photo after the fix.
+  if (rc.samePhoto) {
+    return (
+      <KCard accessibilityLabel={t('card.a11y.recheckSame', { occasion: occasionWord, now: spokenScore(now), word: scoreWordLabel(now) })}>
+        <KCardSection gap={12}>
+          <TagLine left={t('card.tag.recheck')} right={occasionWord} />
+          <ScoreBlock score={now} />
+          <KText role="cardSummary">{t('recheck.samePhoto')}</KText>
+        </KCardSection>
+        <KCardSection gap={4} style={{ paddingTop: 4 }}>
+          <KButton
+            title={t('recheck.samePhoto.button')} icon="camera" size="regular" fullWidth
+            onPress={() => router.push(`/camera?mode=recheck&parent=${row.parentId}`)}
+          />
+        </KCardSection>
+      </KCard>
+    );
+  }
   const notSeen = rc.notSeen && !row.details.confirmed;
   const done = rc.doneFixes[0];
   const occasion = occasionLabel(row.occasion);

@@ -1,10 +1,10 @@
-# Kitted's style rules, as the app applies them (parts engine v6)
+# Kitted's style rules, as the app applies them (parts engine v7)
 
-*Oct 11, 2026. DECISIONS-LOG #216; v6's three fixes #217. The founder: "be sure the app is following streetwear rules, smart casual rules and so on… it should follow the rules that are listed, it shouldn't just guess."*
+*Oct 11, 2026. DECISIONS-LOG #216; v6's three fixes #217; v7's condition rule and the hoodie as a streetwear jacket #219. The founder: "be sure the app is following streetwear rules, smart casual rules and so on… it should follow the rules that are listed, it shouldn't just guess."*
 
-This is the rulebook the app **actually follows today** on every new fit check. It was written from the engine's code and data (`extraction-test/rubrics/parts_proto.py`, engine v6, and its TypeScript twin in the app, parts data 1.3.0), not from the research. Where the research says something the engine doesn't do, or the other way round, it's listed at the end under **Known differences**.
+This is the rulebook the app **actually follows today** on every new fit check. It was written from the engine's code and data (`extraction-test/rubrics/parts_proto.py`, engine v7, and its TypeScript twin in the app, parts data 1.4.0), not from the research. Where the research says something the engine doesn't do, or the other way round, it's listed at the end under **Known differences**.
 
-**Every rule has an ID in brackets, like [STR-5].** Each ID has one or more made-up test outfits that must behave exactly as the line says: 290 outfits for 128 rules. They run in Python (`extraction-test/rules_conformance.py`) and in the app's tests (`rulesConformance.test.ts`), and a test's name starts with its rule ID. So if a change ever breaks a rule written here, the test named after that rule fails.
+**Every rule has an ID in brackets, like [STR-5].** Each ID has one or more made-up test outfits that must behave exactly as the line says: 298 outfits for 129 rules. They run in Python (`extraction-test/rules_conformance.py`) and in the app's tests (`rulesConformance.test.ts`), and a test's name starts with its rule ID. So if a change ever breaks a rule written here, the test named after that rule fails.
 
 **The AI never judges.** It only names each piece (what it is, its color, pattern, how roomy it is, the leg shape, the hem, whether it's tucked and where it ends, its condition). Everything below is code applied to those names. The same photo always gets the same score. Faces, bodies, weight and skin are never rated, and his age and picked styles never change a number.
 
@@ -97,10 +97,11 @@ These apply to everyone. Each style below only adds to them (what it recognizes,
 - **[STY-8]** Not scored with fewer than two of top, bottoms and shoes in view. Style never goes below 1.
 
 ### Condition (taken off after the average)
-- **[CON-1] Faults only:** a stain the AI is sure of **−1.2**; wrinkles **−0.4** (−0.2 on pull-on trousers and camp shirts, likely linen); pilling or wear **−0.4** (not on pieces distressed by design); **−1.6 at most**. Shoes aren't counted here (Shoes owns them).
+- **[CON-1] Faults only,** on pieces the AI is clear about ([CON-5]): a stain **−1.2**; wrinkles **−0.4** (−0.2 on pull-on trousers and camp shirts, likely linen); pilling or wear **−0.4** (not on pieces distressed by design); **−1.6 at most**. Shoes aren't counted here (Shoes owns them).
 - **[CON-2] Not checked in a dim photo.**
 - **[CON-3] An untucked dress shirt, −0.6,** under a blazer, with dress trousers, or at a dressy occasion. With jeans on an everyday day it's fine.
 - **[CON-4] A stained or worn piece earns no credit in any part** (a stained red sweater loses its standout too).
+- **[CON-5] A condition read counts only when the AI is clear about that piece** (new in v7, #219). Wrinkles, wear and stains are the readings that flip most between runs: the founder's striped oxford read "wrinkled" once and "clean" on the same photo, with the AI only "likely" about the shirt. So on a piece read "likely", a condition read moves no points anywhere (no Condition fault, no "shoes look worn" on Shoes [SHO-11], no lost credit [CON-4], no lost floor [SCO-3]); it becomes a Condition tip with no points: "the oxford shirt might be wrinkled; not counted, it isn't clear enough in the photo". A likely-wrinkled oxford with chinos and loafers scores exactly what the clean one does; read clear, it's −0.4. Not checked in a dim photo, so no tip there either.
 
 ### Occasion (it can only hold a score down; it never changes a part)
 The app's occasions and the dressiness each expects (the average over every visible piece, shoes included): Everyday and Class 2–3 · Date and Going out 2.5–3.5 · Event 3–4 · Interview 3.5–4.5 · Gym 1–2 · Home 1–2.5.
@@ -127,7 +128,7 @@ How a style is recognized, for all seven: each piece in the outfit can be one of
 
 ### Streetwear (14 rules)
 **How the app recognizes it**
-- **[STR-1] Signature pieces:** a hoodie, sweatshirt or graphic tee; a bomber or puffer (or a dark shell over cargos in an all-dark outfit); relaxed or wide jeans or cargos; chunky or basketball sneakers. Grey hoodie + wide jeans + chunky sneakers reads as streetwear.
+- **[STR-1] Signature pieces:** a hoodie, sweatshirt or graphic tee; a bomber or puffer, or a hoodie or sweatshirt worn as the jacket (a zip hoodie open over a shirt; #219) (or a dark shell over cargos in an all-dark outfit); relaxed or wide jeans or cargos; chunky or basketball sneakers. Grey hoodie + wide jeans + chunky sneakers reads as streetwear; so does a green zip hoodie over a cream striped oxford with light wide jeans and basketball sneakers, 7.5 at Class.
 - **[STR-2] Home pieces:** a tee, tank, jersey or flannel over loose jeans or cargos; any tee at roominess 4+; a fleece; a denim jacket, leather jacket, shell or rain jacket, or any roomy jacket (not a chore coat, field jacket, overshirt or overcoat); cargos in any leg; loose shorts; sweats, joggers or gym shorts only with a street shoe; canvas, retro, low-profile, white leather or running sneakers and work boots. Chinos count against it. A plain tee over wide jeans with white leather sneakers reads as streetwear.
 - **[STR-3] Never streetwear with:** a blazer, sport coat, suit piece or overcoat; dress trousers or a dress shirt; loafers, derbies or dress shoes; skinny legs; a polo, oxford, knit polo, cardigan or rugby shirt with no jacket.
 - **[STR-4] It also needs volume on purpose** (loose legs, a roomy top or jacket, or the all-dark technical look), **a street piece up top, and a total of 4.** A regular hoodie over straight jeans isn't streetwear; nor is a sweater over wide jeans. When outdoor also fits, chunky or basketball sneakers make it streetwear (a trail shoe or any other shoe makes it outdoor).
@@ -263,7 +264,7 @@ How a style is recognized, for all seven: each piece in the outfit can be one of
 ---
 
 ## Rule count
-Shared rules 67 (How a score is made 6, Proportions 12, Fit 6, Color 7, Shoes 12, Style 8, Condition 4, Occasion 6, Loungewear 6) · Streetwear 14 · Workwear 10 · Vintage sport 8 · Outdoor 7 · Minimal 8 · Classic prep 5 · Smart casual 6 · No clear style 3. **128 rules, 290 test outfits.**
+Shared rules 68 (How a score is made 6, Proportions 12, Fit 6, Color 7, Shoes 12, Style 8, Condition 5, Occasion 6, Loungewear 6) · Streetwear 14 · Workwear 10 · Vintage sport 8 · Outdoor 7 · Minimal 8 · Classic prep 5 · Smart casual 6 · No clear style 3. **129 rules, 298 test outfits.**
 
 ---
 
@@ -279,7 +280,7 @@ Each is either a researched rule the engine doesn't apply, or something the engi
 7. **KD-9: An oversized graphic tee under a blazer isn't charged.** FashionBeans 2025 says no oversized fits or cartoon graphics under a blazer; the engine treats a blazer as bridging any top. Founder call (open). [STY-5]
 8. **KD-10: A graphic tee with only one dressy piece is a tip.** The founder's words ("in minimal or classy they wouldn't stand") could cover it; it's a very common outfit, so it waits for the gold set. Founder call (open). [STY-5, MIN-7]
 9. **KD-11: [STY-5] partly reverses the style council** (RULEBOOK Part 3, "mixing styles is never a mistake"; ruling 2, "detection never adds a penalty"), on the founder's Oct 11 word. Every other mix still costs nothing.
-10. **KD-12: Shoe wear is a flat −1.0, not the research's cap at 6.0.** The worn read flips between runs on about half the photos where it fires, and reads suede nap as wear, so a cap turned one shaky read into a 1.5–2 point drop (`parts/prototype-results.md`). [SHO-11]
+10. **KD-12: Shoe wear is a flat −1.0, not the research's cap at 6.0.** The worn read flips between runs on about half the photos where it fires, and reads suede nap as wear, so a cap turned one shaky read into a 1.5–2 point drop (`parts/prototype-results.md`). Since v7 it also needs the AI to be clear about the shoes ([CON-5]). [SHO-11]
 11. **KD-13: Fit can't go above 7.** The fit research rewards a good fit (shoulder seam on the shoulder, clean sleeve length); the shoulder-seam reading failed (78%), so Fit only finds faults. [FIT-1]
 12. **KD-14: Accessories aren't scored.** The cohesion research names chains, crossbody bags and visible socks as streetwear's finishing touches; there's no reading for them, and anything on the head is never scored (the upload hides the head). [SCO-6]
 13. **KD-15: The second look isn't sent by the app.** The engine can charge a shirt showing below a jacket and can tell when loose jeans rest on slides; the app doesn't run that second look yet, so the first never fires and the second falls back to the hem reading. [PRO-9, SHO-2]

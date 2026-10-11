@@ -1,0 +1,709 @@
+{
+ "profile": "test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age",
+ "columns": {
+  "before": "v6 + the old ST_OUT_A {bomber, puffer}",
+  "v6": "v6 + hoodie/sweatshirt in ST_OUT_A",
+  "v7": "v7 (the default) + hoodie/sweatshirt in ST_OUT_A"
+ },
+ "oct11": {
+  "full:R-f8e1bd93": {
+   "test": {
+    "before": {
+     "overall": 6.5,
+     "raw": 6.675,
+     "label": "no style",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.3,
+     "label": "streetwear",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [
+      "C_unsure_wrinkled"
+     ],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   },
+   "streetwear": {
+    "before": {
+     "overall": 6.5,
+     "raw": 6.675,
+     "label": "no style",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.3,
+     "label": "streetwear",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [
+      "C_unsure_wrinkled"
+     ],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   }
+  },
+  "tapAnswer:R-ce5c7391": {
+   "test": {
+    "before": {
+     "overall": 6.5,
+     "raw": 6.675,
+     "label": "no style",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.3,
+     "label": "streetwear",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [
+      "C_unsure_wrinkled"
+     ],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   },
+   "streetwear": {
+    "before": {
+     "overall": 6.5,
+     "raw": 6.675,
+     "label": "no style",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.3,
+     "label": "streetwear",
+     "condition": "the oxford shirt looks wrinkled",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [
+      "C_unsure_wrinkled"
+     ],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   }
+  },
+  "recheckRaw:R-32195564": {
+   "test": {
+    "before": {
+     "overall": 7.0,
+     "raw": 7.075,
+     "label": "no style",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   },
+   "streetwear": {
+    "before": {
+     "overall": 7.0,
+     "raw": 7.075,
+     "label": "no style",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   }
+  },
+  "recheckMerged:R-bbb8582d": {
+   "test": {
+    "before": {
+     "overall": 7.0,
+     "raw": 7.075,
+     "label": "no style",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   },
+   "streetwear": {
+    "before": {
+     "overall": 7.0,
+     "raw": 7.075,
+     "label": "no style",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 7 \u00b7 Style 7"
+    },
+    "v6": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    },
+    "v7": {
+     "overall": 7.5,
+     "raw": 7.7,
+     "label": "streetwear",
+     "condition": "clean",
+     "tips": [],
+     "row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5"
+    }
+   }
+  }
+ },
+ "real": {
+  "before->v6": {
+   "moved": {},
+   "raw_moved": 0
+  },
+  "v6->v7": {
+   "moved": {
+    "stock-s14-before_street": [
+     7.0,
+     7.5
+    ]
+   },
+   "raw_moved": 5
+  },
+  "before->v7": {
+   "moved": {
+    "stock-s14-before_street": [
+     7.0,
+     7.5
+    ]
+   },
+   "raw_moved": 5
+  }
+ },
+ "real_cond_tips": {
+  "phone-b0f0c8": [
+   "C_unsure_worn"
+  ],
+  "phone-5a9049": [
+   "C_unsure_worn"
+  ],
+  "stock-s14-before_street": [
+   "C_unsure_wrinkled"
+  ],
+  "stock-s20-before_phone": [
+   "C_unsure_worn"
+  ],
+  "phone-7f14a4": [
+   "C_unsure_worn"
+  ]
+ },
+ "outer_hoodie": {},
+ "spread": {
+  "before": {
+   "n": 78,
+   "median": 7.0,
+   "mean": 6.95,
+   "le5.5": 5,
+   "6-6.5": 13,
+   "7-7.5": 55,
+   "8+": 5,
+   "9+": 0,
+   "values": {
+    "5.5": 5,
+    "6.5": 13,
+    "7.0": 45,
+    "7.5": 10,
+    "8.0": 5
+   },
+   "pct8": 6
+  },
+  "v6": {
+   "n": 78,
+   "median": 7.0,
+   "mean": 6.95,
+   "le5.5": 5,
+   "6-6.5": 13,
+   "7-7.5": 55,
+   "8+": 5,
+   "9+": 0,
+   "values": {
+    "5.5": 5,
+    "6.5": 13,
+    "7.0": 45,
+    "7.5": 10,
+    "8.0": 5
+   },
+   "pct8": 6
+  },
+  "v7": {
+   "n": 78,
+   "median": 7.0,
+   "mean": 6.96,
+   "le5.5": 5,
+   "6-6.5": 13,
+   "7-7.5": 55,
+   "8+": 5,
+   "9+": 0,
+   "values": {
+    "5.5": 5,
+    "6.5": 13,
+    "7.0": 44,
+    "7.5": 11,
+    "8.0": 5
+   },
+   "pct8": 6
+  }
+ },
+ "steady": {
+  "b1_A": {
+   "before": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "exact": [
+     40,
+     49
+    ]
+   },
+   "v6": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "exact": [
+     40,
+     49
+    ]
+   },
+   "v7": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "exact": [
+     39,
+     49
+    ]
+   },
+   "changed": {
+    "phone-5a9049": {
+     "before": [
+      7.0,
+      7.0,
+      7.0
+     ],
+     "v6": [
+      7.0,
+      7.0,
+      7.0
+     ],
+     "v7": [
+      7.0,
+      7.0,
+      7.5
+     ]
+    },
+    "phone-8bc29d": {
+     "before": [
+      6.5,
+      6.5,
+      6.5
+     ],
+     "v6": [
+      6.5,
+      6.5,
+      6.5
+     ],
+     "v7": [
+      7.0,
+      7.0,
+      7.0
+     ]
+    }
+   }
+  },
+  "zoom1_B": {
+   "before": {
+    "within_0.5_of_median": [
+     66,
+     66
+    ],
+    "exact": [
+     57,
+     66
+    ]
+   },
+   "v6": {
+    "within_0.5_of_median": [
+     66,
+     66
+    ],
+    "exact": [
+     57,
+     66
+    ]
+   },
+   "v7": {
+    "within_0.5_of_median": [
+     66,
+     66
+    ],
+    "exact": [
+     57,
+     66
+    ]
+   },
+   "changed": {
+    "stock-s14-before_street": {
+     "before": [
+      7.0,
+      7.0,
+      7.5
+     ],
+     "v6": [
+      7.0,
+      7.0,
+      7.5
+     ],
+     "v7": [
+      7.0,
+      7.5,
+      7.5
+     ]
+    }
+   }
+  }
+ },
+ "b1_condition_flips": {
+  "flips / all clear": 4,
+  "flips / any likely": 3,
+  "steady / all clear": 4,
+  "steady / any likely": 3
+ },
+ "judge": {
+  "all": {
+   "before": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "v6": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "v7": {
+    "n": 59,
+    "mean_diff": 0.02,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   }
+  },
+  "held": {
+   "before": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "v6": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "v7": {
+    "n": 29,
+    "mean_diff": 0.1,
+    "mae": 0.45,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   }
+  }
+ },
+ "council_moved": [],
+ "checks": {
+  "phone-d1967f": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-e438d4": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-f4870b": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-fb0b17": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "oct7-ph1": {
+   "before": 5.5,
+   "v6": 5.5,
+   "v7": 5.5
+  },
+  "oct7-ph2": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "oct7-ph3": {
+   "before": 7.5,
+   "v6": 7.5,
+   "v7": 7.5
+  },
+  "oct7-ph4": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-0d39d6": {
+   "before": 6.5,
+   "v6": 6.5,
+   "v7": 6.5
+  },
+  "phone-1f1997": {
+   "before": 6.5,
+   "v6": 6.5,
+   "v7": 6.5
+  },
+  "phone-403ade": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-5a9049": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-6b14db": {
+   "before": 5.5,
+   "v6": 5.5,
+   "v7": 5.5
+  },
+  "phone-7de605": {
+   "before": 5.5,
+   "v6": 5.5,
+   "v7": 5.5
+  },
+  "phone-7f14a4": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-8ad378": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-8bc29d": {
+   "before": 6.5,
+   "v6": 6.5,
+   "v7": 6.5
+  },
+  "phone-968016": {
+   "before": 7.5,
+   "v6": 7.5,
+   "v7": 7.5
+  },
+  "phone-a765e8": {
+   "before": 5.5,
+   "v6": 5.5,
+   "v7": 5.5
+  },
+  "phone-b0f0c8": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-d58b14": {
+   "before": 6.5,
+   "v6": 6.5,
+   "v7": 6.5
+  },
+  "phone-d6559a": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  },
+  "phone-d918c0": {
+   "before": 7.5,
+   "v6": 7.5,
+   "v7": 7.5
+  },
+  "phone-e026de": {
+   "before": 6.5,
+   "v6": 6.5,
+   "v7": 6.5
+  },
+  "phone-f07193": {
+   "before": 6.5,
+   "v6": 6.5,
+   "v7": 6.5
+  },
+  "phone-703a8b": {
+   "before": 7.5,
+   "v6": 7.5,
+   "v7": 7.5
+  },
+  "phone-ebe23f": {
+   "before": 7.0,
+   "v6": 7.0,
+   "v7": 7.0
+  }
+ },
+ "picks_moved": [],
+ "v41_f7_would_move": [
+  "phone-b0f0c8",
+  "phone-5a9049",
+  "stock-s14-before_street",
+  "stock-s20-before_phone",
+  "phone-7f14a4"
+ ],
+ "targets": [
+  {
+   "target": "his Oct 11 green hoodie fit at 7.5 on every stored reading (first read, tap answer, re-check raw and merged)",
+   "met": true
+  },
+  {
+   "target": "the friend's blazer d1967f at 7 or below",
+   "met": true
+  },
+  {
+   "target": "the chore coat (e438d4, f4870b, fb0b17) at 7-7.5",
+   "met": true
+  },
+  {
+   "target": "his black tee + wide jeans + white leather sneakers (8ad378, 403ade) at 7",
+   "met": true
+  },
+  {
+   "target": "council plain fits that sat at 6.5-7.5 still do",
+   "met": true
+  },
+  {
+   "target": "council deliberate fits that reached 8 still do",
+   "met": true
+  },
+  {
+   "target": "batch 1 arm A steady 49/49 (49/49)",
+   "met": true
+  },
+  {
+   "target": "panel gap within +-0.2 (+0.02)",
+   "met": true
+  },
+  {
+   "target": "no loss on the held-out half, within 0.5 of the panel (26 -> 26)",
+   "met": true
+  },
+  {
+   "target": "held-out MAE no worse (0.43 -> 0.45)",
+   "met": false
+  },
+  {
+   "target": "8+ at 5-12% on the real photos (6%)",
+   "met": true
+  },
+  {
+   "target": "picks never change a score",
+   "met": true
+  }
+ ]
+}

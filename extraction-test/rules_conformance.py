@@ -573,6 +573,27 @@ case("CON-4-stained", "CON-4", "the same sweater stained earns nothing anywhere"
      Rd(top("sweater", "red", condition="stained"), DJEANS, WLS),
      {"not_fired": [F("CP1_standout_color")], "band": "Getting there"},
      vs={"case": "CON-4-clean", "parts": {"color": -1.0}, "overall": "down"})
+case("CON-5-wrinkled", "CON-5", "a wrinkled oxford the AI is only 'likely' about: no charge, a no-points tip",
+     Rd(top("oxford_shirt", "white", condition="wrinkled", certainty="likely"), CHINOS, LOAFER),
+     {"cond_deduction": 0.0, "cond_tips": ["C_unsure_wrinkled"], "band": "Put together"},
+     vs={"case": "CON-1-wrinkled", "parts": {"proportions": 0.0, "fit": 0.0, "color": 0.0, "shoes": 0.0, "cohesion": 0.0}})
+case("CON-5-clear", "CON-5", "the same oxford read 'clear': -0.4 and no tip",
+     Rd(top("oxford_shirt", "white", condition="wrinkled"), CHINOS, LOAFER), {"cond_deduction": 0.4, "cond_tips": [], "band": "Put together"})
+case("CON-5-shoes", "CON-5", "worn sneakers the AI is only 'likely' about: no Shoes charge, a tip",
+     Rd(TEE, DJEANS, mod(WLS, condition="pilled_or_worn", certainty="likely")),
+     {"not_fired": [F("SQ_worn")], "cond_deduction": 0.0, "cond_tips": ["C_unsure_worn"], "band": "Put together"},
+     vs={"case": "SHO-11-worn", "parts": {"shoes": 1.0}, "overall": "same"})
+case("CON-5-credit", "CON-5", "a worn red sweater the AI is only 'likely' about keeps its standout",
+     Rd(top("sweater", "red", condition="pilled_or_worn", certainty="likely"), DJEANS, WLS),
+     {"fired": [F("CP1_standout_color", "color", 1.0)], "cond_deduction": 0.0, "cond_tips": ["C_unsure_worn"], "band": "Put together"},
+     vs={"case": "CON-4-clean", "parts": {"color": 0.0}, "overall": "same"})
+case("CON-5-floor", "CON-5", "the messy outfit with a 'likely' worn top keeps the 5.0 floor",
+     Rd(top("oxford_shirt", "red", 4, sleeve_end="covers_hand", condition="pilled_or_worn", certainty="likely"), top("sweater", "yellow"),
+        outer("bomber", "purple"), mod(SKJEANS, hem="pooling"), SLIDES),
+     {"floored": True, "overall": 5.0, "cond_tips": ["C_unsure_worn"], "band": "Needs a fix"})
+case("CON-5-dim", "CON-5", "in a dim photo nothing is checked, so no tip either",
+     Rd(top("tee", "white", condition="wrinkled", certainty="likely"), DJEANS, WLS, lighting="dim"),
+     {"cond_deduction": 0.0, "cond_tips": [], "band": "Put together"})
 
 # ===== Occasion (OCC) ================================================================================================
 HOODIE_FIT = Rd(top("hoodie", "grey"), DJEANS, WLS)
@@ -645,6 +666,13 @@ case("LNG-6-class", "LNG-6", "joggers, a tee and slides at Class: counted as cas
 HOODIE_STREET = Rd(top("hoodie", "grey"), WJEANS, CHUNKY)
 case("STR-1-reads", "STR-1", "grey hoodie, wide jeans, chunky sneakers: streetwear", HOODIE_STREET,
      {"detected_has": ["streetwear"], "label": "streetwear", "band": "Put together"})
+case("STR-1-hoodie-layer", "STR-1", "a green zip hoodie worn open over a cream striped oxford, light wide jeans, basketball sneakers: "
+     "the hoodie as the jacket is a signature piece too (the founder's Oct 11 check)",
+     Rd(top("oxford_shirt", "off_white_cream", pattern="stripes", pattern_scale="small"), outer("hoodie", "green"),
+        bottom("jeans", "denim_mid", "wide", "full_break", volume=4), shoe("basketball_sneaker", "black")),
+     {"detected_has": ["streetwear"], "label": "streetwear", "overall": 7.5, "band": "Put together"}, occasion="class")
+case("STR-1-sweatshirt-layer", "STR-1", "a sweatshirt worn over a tee with wide jeans and chunky sneakers: streetwear",
+     Rd(TEE, outer("sweatshirt", "grey"), WJEANS, CHUNKY), {"detected_has": ["streetwear"], "band": "Put together"})
 case("STR-2-home", "STR-2", "a plain tee over wide jeans with white leather sneakers: streetwear from home pieces",
      Rd(TEE, WJEANS, WLS), {"detected_has": ["streetwear"], "band": "Put together"})
 case("STR-3-loafers", "STR-3", "a hoodie and wide jeans with loafers: dress shoes rule streetwear out",
@@ -1068,6 +1096,8 @@ def check(c, r, results):
             bad.append(f"occasion line '{s}' present ({occ.get('lines')})")
     if "cond_deduction" in e and abs((r.get("condition") or {}).get("deduction", 0) - e["cond_deduction"]) > 1e-3:
         bad.append(f"condition {(r.get('condition') or {}).get('deduction')} != {e['cond_deduction']}")
+    if "cond_tips" in e and [t["check"] for t in (r.get("condition") or {}).get("tips", [])] != e["cond_tips"]:
+        bad.append(f"condition tips {[t['check'] for t in (r.get('condition') or {}).get('tips', [])]} != {e['cond_tips']}")
     if "floored" in e and bool(r.get("floored")) != e["floored"]:
         bad.append(f"floored {r.get('floored')} != {e['floored']}")
     if "bonus" in e and abs((r.get("earned_bonus") or 0) - e["bonus"]) > EPS:

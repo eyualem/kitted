@@ -1,4 +1,4 @@
-// Parts engine parity: every case in fixtures/parts_parity.json must equal parts_proto.py (v6, or the named tune
+// Parts engine parity: every case in fixtures/parts_parity.json must equal parts_proto.py (v7, or the named tune
 // variant) exactly: parts, reasons and tips in order, NA, condition, occasion, the lowest-part line, the bonus, the
 // final score, and the unrounded average / final within 1e-9. If TS and Python disagree, TS is wrong: never edit
 // parts_proto.py or the fixtures to make this pass (regenerate with make_parts_parity.py after a Python change).
@@ -52,7 +52,8 @@ function toPy(r: PartsResult): Record<string, unknown> {
   if (r.overall === null) return { overall: null, reason: r.reason, parts, na_parts: r.naParts };
   return {
     overall: r.overall, raw_score: r.rawScore, average: r.average, earned_bonus: r.earnedBonus, version: r.version, engine: r.engine,
-    parts, na_parts: r.naParts, weights_used: r.weightsUsed, condition: r.condition, occasion: r.occasion, floored: r.floored,
+    parts, na_parts: r.naParts, weights_used: r.weightsUsed,
+    condition: { ...r.condition, tips: r.condition.tips.map((t) => ({ check: t.check, line: t.line, would_cost: t.wouldCost })) }, occasion: r.occasion, floored: r.floored,
     care_or_strain: r.careOrStrain, lowest: r.lowest, second_look: { peek: r.secondLook.peek, rests_on_shoe: r.secondLook.restsOnShoe },
     detected_styles: r.detectedStyles, style_label: r.styleLabel, not_rated: r.notRated, partial: r.partial,
     average_unrounded: r.averageUnrounded, raw_unrounded: r.rawUnrounded,
@@ -99,7 +100,7 @@ function mismatch(c: PartsCase): string | null {
   return out.length ? `${label}: ${out.join(" | ")}` : null;
 }
 
-describe("parts engine parity (parts_proto.py v6)", () => {
+describe("parts engine parity (parts_proto.py v7)", () => {
   it("has every case, from the same prototype and data version", () => {
     expect(P.cases.length).toBe(P.counts.cases);
     expect(P.cases.length).toBeGreaterThan(10000);
@@ -108,7 +109,7 @@ describe("parts engine parity (parts_proto.py v6)", () => {
     expect(P.parts_proto_sha256).toBe(PARTS_DATA.sourceSha256);
   });
 
-  it("matches every v6 case exactly", () => {
+  it("matches every v7 case exactly", () => {
     const bad: string[] = [];
     for (const c of P.cases) {
       if (c.tune) continue;
@@ -119,7 +120,7 @@ describe("parts engine parity (parts_proto.py v6)", () => {
     expect(bad).toEqual([]);
   });
 
-  it("matches the tune variants (v1 to v5, the v4, v5 and v6 what-ifs): tuning is a data change", () => {
+  it("matches the tune variants (v1 to v6, the v4, v5 and v6 what-ifs): tuning is a data change", () => {
     const tuned = P.cases.filter((c) => c.tune);
     expect(new Set(tuned.map((c) => c.tune))).toEqual(new Set(Object.keys(P.tunes)));
     const bad: string[] = [];

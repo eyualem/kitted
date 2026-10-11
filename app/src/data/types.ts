@@ -151,7 +151,11 @@ export interface CheckDetails {
   /** Scored on a warm day (its card's weather, else the month): no "add a layer" or boots fix (#160). */
   warm?: boolean;
   /** Re-check only. */
-  recheck?: { parentScore: number; delta: number; rawDelta: number; notes: string[]; doneFixes: { copy: string; earned: number }[]; newProblems: string[]; notSeen: boolean };
+  recheck?: {
+    parentScore: number; delta: number; rawDelta: number; notes: string[]; doneFixes: { copy: string; earned: number }[]; newProblems: string[]; notSeen: boolean;
+    /** The same photo as an earlier check that day (#219): its reading reused, no new read, the re-check not used up. */
+    samePhoto?: { checkId: string };
+  };
   /** "Tell me": he confirmed the fix. */
   confirmed?: boolean;
   /** Partial: the remembered pair to offer and the weekday it was worn (0 = Sunday). */

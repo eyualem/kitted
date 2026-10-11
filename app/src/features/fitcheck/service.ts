@@ -295,11 +295,44 @@ export function createFitCheckService(deps: ServiceDeps) {
     return (await store.fitChecks.get(checkId)) ?? done;
   }
 
-  async function finalizeRecheck(row: FitCheckRow, parent: FitCheckRow, next: Reading, image: PreparedImage) {
+  /** The check a re-check's photo already belongs to (#219): its first check's own photo, else any check that day with
+   *  the same image hash and a reading. Same photo, same reading, same score. */
+  async function samePhotoAs(row: FitCheckRow, parent: FitCheckRow): Promise<FitCheckRow | null> {
+    if (!row.imageHash) return null;
+    if (parent.imageHash === row.imageHash && parent.readingId) return parent;
+    return (await store.fitChecks.all())
+      .filter((c) => c.id !== row.id && c.imageHash === row.imageHash && c.dayKey === row.dayKey && c.status === 'scored' && c.readingId)
+      .sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
+  }
+
+  /** A re-check of a photo already scored today: no read, its reading reused (so the score is the same), nothing
+   *  counted (the re-check stays open, the closet gets no new sighting), and the card says it's the same photo. */
+  async function finalizeSamePhoto(row: FitCheckRow, parent: FitCheckRow, match: FitCheckRow): Promise<FitCheckRow> {
+    const ms = deps.timers().cacheHitMs;
+    if (ms > 0) await deps.scheduler.sleep(ms);
+    const reading = (await store.readings.get(match.readingId!))?.reading;
+    if (!reading) return row;
+    const base = (await patchRow(row.id, { readingId: match.readingId }))!;
+    const { row: scored } = await rescore(base, reading);
+    const before = parent.score ?? scored.score ?? 0;
+    const now = scored.score ?? before;
+    await patchRow(row.id, {
+      details: {
+        ...scored.details,
+        recheck: {
+          parentScore: before, delta: now - before, rawDelta: (scored.rawScore ?? 0) - (parent.rawScore ?? 0), notes: [], doneFixes: [],
+          newProblems: [], notSeen: false, samePhoto: { checkId: match.id },
+        },
+      },
+    });
+    return (await store.fitChecks.get(row.id)) ?? scored;
+  }
+
+  async function finalizeRecheck(row: FitCheckRow, parent: FitCheckRow, next: Reading, image: PreparedImage, model?: string, promptVersion?: string, latencyMs = 0) {
     const parentReading = await readingOf(parent);
     if (!parentReading) throw new Error(`re-check parent ${parent.id} has no reading`);
     const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile()));
-    const raw = await insertReading(next, 'recheckRaw', image.sha256, null);
+    const raw = await insertReading(next, 'recheckRaw', image.sha256, null, latencyMs, model, promptVersion);
     // His answer to the one quick tap holds on the re-check (a second misread can't undo it), unless a fix
     // replaces that whole piece. Re-checks never ask.
     const tap = parent.details.tap;
@@ -490,6 +523,11 @@ export function createFitCheckService(deps: ServiceDeps) {
         return outcomeOf(done);
       }
     }
+    // A re-check of the same photo (#219): the reading is reused, never re-read, so the score can't move by itself.
+    if (req.mode === 'recheck' && parent) {
+      const match = await samePhotoAs(row, parent);
+      if (match) return outcomeOf(await finalizeSamePhoto(row, parent, match));
+    }
 
     const r = await runRead(checkId, image, req.mode === 'recheck' ? 'recheck' : 'full', req.mode, occasion, going ?? undefined);
     if ('cancelled' in r && r.cancelled) return { outcome: 'failed', checkId };
@@ -506,7 +544,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const fresh = (await store.fitChecks.get(checkId))!;
     let done: FitCheckRow;
     if (req.mode === 'recheck' && parent) {
-      done = await finalizeRecheck(fresh, parent, r.reading, image);
+      done = await finalizeRecheck(fresh, parent, r.reading, image, r.model, r.promptVersion, r.latencyMs);
     } else {
       const readingRow = await insertReading(r.reading, 'full', image.sha256, null, r.latencyMs, r.model, r.promptVersion);
       done = await afterRead(fresh, r.reading, readingRow, false);
@@ -612,7 +650,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       dispatch({ t: 'scored', attempt: r.attempt });
       const fresh = (await store.fitChecks.get(checkId))!;
       const done = parent
-        ? await finalizeRecheck(fresh, parent, r.reading, prep.image)
+        ? await finalizeRecheck(fresh, parent, r.reading, prep.image, r.model, r.promptVersion, r.latencyMs)
         : await afterRead(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
       dispatch({ t: 'end' });
       return outcomeOf(done);

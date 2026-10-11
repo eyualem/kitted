@@ -1,5 +1,5 @@
 """Writes fixtures/parts_parity.json: the parts engine's exact Python output (extraction-test/rubrics/parts_proto.py,
-v6 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
+v7 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
 
 Run (after make_parity.py, whose readings it reuses by id):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_parity.py
@@ -15,13 +15,13 @@ Readings and configs:
      and arm A with B1's lightness copied on (parts2_test.with_lightness); zoom1 / zoom1-stock arm B
   4. second-look variants (both input forms) on rubric_parity's hand-written edge readings
   5. hand-written parts edge cases that force every check, tip, NA reason, ceiling and early return
-  6. tune variants: engines v1 to v5 (TUNE["v1"..."v5"]), the v4 what-if knobs, a v5 what-if (SX1 smaller, one
+  6. tune variants: engines v1 to v6 (TUNE["v1"..."v6"]), the v4 what-if knobs, a v5 what-if (SX1 smaller, one
      dressy piece enough) and a v6 what-if (PB1 smaller, H2 on the label only, Event on the interview band), on the
      corpus, the pull and the edge cases, so a tuning change is proven to be a data change
   7. picks variants: the corpus and the pull at their own occasion, and the parts edge cases, with no picks, one pick
      and three picks. Picks never move a number: the generator asserts every reading x occasion x boldness x second
      look scores the same under every picks it ran (the TS test checks it again)
-The run also re-scores every default case with engine v5 and stores which cases v6 changed (`v6_vs_v5`).
+The run also re-scores every default case with engine v6 and stores which cases v7 changed (`v7_vs_v6`).
 Profile (CLAUDE.md rule 7): real readings use the paper tests' one stated test profile (picks Minimal + Smart casual
 0.5 each, boldness a little, no age); picks only choose the "Reads as" label and never move a number.
 
@@ -67,7 +67,7 @@ def rid_of(r):
     return "r" + hashlib.sha256(canon(r).encode()).hexdigest()[:12]
 
 
-def run(reading, occ, styles, sl, bold, engine="v6", tune=None):
+def run(reading, occ, styles, sl, bold, engine="v7", tune=None):
     try:
         res = P.score_parts(copy.deepcopy(reading), occ, {k: w for k, w in styles}, copy.deepcopy(sl), bold, engine, tune)
     except Exception as e:  # a prototype bug: recorded, the TS must throw too
@@ -319,6 +319,20 @@ def parts_edges():
     # condition
     add("cond_dim", Rd(TEE(condition="wrinkled"), JEANS(), SHOE(), lighting="dim"))
     add("cond_faults", Rd(TEE(condition="stained"), G("outerwear", "overshirt", "olive", condition="wrinkled"), JEANS(condition="pilled_or_worn"), SHOE()))
+    # v7: a condition read on a garment that isn't "clear" is a no-points tip (DECISIONS-LOG #219)
+    add("v7_cond_likely_wrinkled", Rd(TEE(sub="oxford_shirt", color="off_white_cream", pattern="stripes", certainty="likely", condition="wrinkled"),
+                                       G("outerwear", "hoodie", "green", length="at_belt"), JEANS(leg_shape="wide", hem="full_break", volume=4),
+                                       SHOE(sub="basketball_sneaker", color="black", certainty="likely")), occ="class")
+    add("v7_cond_likely_all", Rd(TEE(condition="stained", certainty="likely"), G("outerwear", "overshirt", "olive", condition="wrinkled", certainty="likely"),
+                                  JEANS(condition="pilled_or_worn", certainty="likely"), SHOE(condition="pilled_or_worn", certainty="likely")))
+    add("v7_cond_likely_linen", Rd(TEE(sub="camp_collar_shirt", condition="wrinkled", certainty="likely"), JEANS(sub="drawstring_trousers", color="khaki_beige", condition="wrinkled"), SHOE(sub="loafer", color="brown")))
+    add("v7_cond_likely_distressed", Rd(TEE(), JEANS(condition="pilled_or_worn", certainty="likely", distressed_by_design=True),
+                                         SHOE(sub="work_boot", color="brown", condition="pilled_or_worn", certainty="likely", distressed_by_design=True)))
+    add("v7_cond_likely_dirty_shoes", Rd(TEE(), JEANS(), SHOE(condition="stained", certainty="likely")))
+    add("v7_cond_likely_dim", Rd(TEE(condition="wrinkled", certainty="likely"), JEANS(), SHOE(), lighting="dim"))
+    add("v7_cond_likely_floor", Rd(G("top", "hoodie", "grey", condition="pilled_or_worn", certainty="likely"),
+                                    G("bottom", "sweatpants", "grey", leg_shape="relaxed", hem="pooling"), SHOE(sub="slides_sandals", color="black")))
+    add("v7_cond_clear_still_counts", Rd(TEE(condition="wrinkled"), JEANS(condition="pilled_or_worn"), SHOE(condition="pilled_or_worn")))
     add("cond_cap", Rd(TEE(condition="stained"), G("outerwear", "overshirt", "olive", condition="stained"), JEANS(condition="wrinkled"), SHOE()))
     add("cond_linen", Rd(G("top", "camp_collar_shirt", "white", condition="wrinkled", tucked="none"), G("bottom", "drawstring_trousers", "khaki_beige", leg_shape="straight", condition="wrinkled"), SHOE(sub="loafer", color="brown")))
     add("cond_distressed", Rd(TEE(), JEANS(condition="pilled_or_worn", distressed_by_design=True), SHOE()))
@@ -385,7 +399,7 @@ def main():
 
     def add(src, r, occ, styles, bold, sl=None, tune=None):
         rid = ref(r)
-        eng, tn = ("v6", None) if tune is None else TUNES[tune]["call"]
+        eng, tn = ("v7", None) if tune is None else TUNES[tune]["call"]
         exp = run(r, occ, styles, sl, bold, eng, tn)
         case = {"src": src, "reading": rid, "occasion": occ, "styles": styles, "boldness": bold, "second_look": sl, "expected": exp}
         if tune is not None:
@@ -415,6 +429,8 @@ def main():
                 cov["solid_line"] += exp["lowest"]["part"] is None
                 cov["condition part"] += exp["condition"]["part"] is not None
                 cov["condition dim"] += exp["condition"]["display"] == "couldn't check in this light"
+                for t in exp["condition"]["tips"]:
+                    cov["condition tip " + t["check"]] += 1
                 for ln in exp["occasion"]["lines"]:
                     cov["occasion: " + ln.split(" for ")[0].split(":")[0]] += 1
 
@@ -426,6 +442,7 @@ def main():
         "v4_whatif": {"call": ("v4", WHATIF), "data": {"engine": "v4", "label": P.VERSIONS["v4"], "tune": MJ.tune_json(P._tune("v4", WHATIF))}},
         "v5": {"call": ("v5", None), "data": {"engine": "v5", "label": P.VERSIONS["v5"], "tune": MJ.tune_json(P.TUNE["v5"])}},
         "v5_whatif": {"call": ("v5", WHATIF5), "data": {"engine": "v5", "label": P.VERSIONS["v5"], "tune": MJ.tune_json(P._tune("v5", WHATIF5))}},
+        "v6": {"call": ("v6", None), "data": {"engine": "v6", "label": P.VERSIONS["v6"], "tune": MJ.tune_json(P.TUNE["v6"])}},
         "v6_whatif": {"call": ("v6", WHATIF6), "data": {"engine": "v6", "label": P.VERSIONS["v6"], "tune": MJ.tune_json(P._tune("v6", WHATIF6))}},
     }
 
@@ -518,19 +535,19 @@ def main():
     bad = [g for g, v in groups.items() if len(v) > 1]
     assert not bad, f"picks moved a score: {bad[:3]}"
 
-    # what v6 changed against v5 (default cases only)
+    # what v7 changed against v6 (default cases only)
     changed = []
     for c in cases:
         if "tune" in c or "error" in c["expected"]:
             continue
         r = rp["readings"].get(c["reading"]) or readings[c["reading"]]
-        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v5")
+        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v6")
         e5 = c["expected"]
         if e4.get("overall") != e5.get("overall") or e4.get("raw_score") != e5.get("raw_score"):
             r4 = {rr["check"] for p in e4.get("parts", {}).values() for rr in p["reasons"]}
             r5 = {rr["check"] for p in e5.get("parts", {}).values() for rr in p["reasons"]}
-            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v5": e4.get("overall"),
-                            "v6": e5.get("overall"), "v5_raw": e4.get("raw_score"), "v6_raw": e5.get("raw_score"),
+            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v6": e4.get("overall"),
+                            "v7": e5.get("overall"), "v6_raw": e4.get("raw_score"), "v7_raw": e5.get("raw_score"),
                             "added": sorted(r5 - r4), "removed": sorted(r4 - r5)})
 
     must = ["PB1_roomier_than_look", "tip PB2_wide_leg_band", "SX1_another_look", "tip SX1_tip", "PR5_workwear_shape", "PR6_outdoor_shape", "PF5_big_top_skinny_leg", "PF6_layer_over_skinny", "PF10_peek", "PR1_waist_break", "PR1b_half_tuck", "PR4_street_shape",
@@ -544,7 +561,8 @@ def main():
             "tip PF2_long_top", "tip PF3_long_layer_loose_leg", "tip PF1_heavy_hem_tailored", "tip PF4_long_shirt_wide_leg",
             "tip P_next_level", "tip FF7b_full_break_narrow", "tip CP3_tonal_flat", "tip CC5_denim_near_match", "tip SW3_dainty_wide",
             "(none) not_fully_clothed", "(none) nothing_readable", "(none) no_part_readable", "earned_bonus>0", "floored", "solid_line",
-            "condition part", "condition dim"]
+            "condition part", "condition dim", "condition tip C_unsure_wrinkled", "condition tip C_unsure_worn",
+            "condition tip C_unsure_stain"]
     missing = [m for m in must if not cov[m]]
     assert not missing, f"never fired: {missing}"
 
@@ -569,7 +587,7 @@ def main():
     tunes = {k: v["data"] for k, v in TUNES.items()}
     base = MJ.data()
     out = {
-        "_doc": "Parts engine parity fixtures (parts_proto.py, v6 unless `tune` names a variant in `tunes`). For each case, "
+        "_doc": "Parts engine parity fixtures (parts_proto.py, v7 unless `tune` names a variant in `tunes`). For each case, "
                 "scoreParts(reading, {occasion, styles, boldness, secondLook}) in TypeScript must equal `expected` after mapping "
                 "camelCase to these keys: overall, reason, parts (score, display, na, reasons in order, tips in order), na_parts, "
                 "weights_used, condition, occasion, lowest, second_look, detected_styles, style_label, not_rated, partial, floored, "
@@ -589,7 +607,7 @@ def main():
                    "fp_boundary_cases": dict(Counter(c["fp_boundary"] for c in cases if c.get("fp_boundary")))},
         "coverage": dict(sorted(cov.items())),
         "overall_histogram": dict(sorted(Counter(str(c["expected"].get("overall")) for c in cases if "tune" not in c).items())),
-        "v6_vs_v5": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v5"] != x["v6"]),
+        "v7_vs_v6": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v6"] != x["v7"]),
                      "changed": changed},
         "tunes": tunes,
         "pool": pool,
@@ -601,10 +619,10 @@ def main():
         json.dump(out, f, separators=(",", ":"), ensure_ascii=False)
     print(json.dumps(out["counts"]))
     print("file size MB:", round(os.path.getsize(path) / 1e6, 2))
-    print("overall histogram (v6):", out["overall_histogram"])
-    print("v6 vs v5:", out["v6_vs_v5"]["cases_changed"], "cases changed,", out["v6_vs_v5"]["overall_changed"], "with a new overall")
+    print("overall histogram (v7):", out["overall_histogram"])
+    print("v7 vs v6:", out["v7_vs_v6"]["cases_changed"], "cases changed,", out["v7_vs_v6"]["overall_changed"], "with a new overall")
     for x in changed:
-        print("   ", x["src"], x["occasion"], x["styles"], x["v5"], "->", x["v6"], f'({x["v5_raw"]} -> {x["v6_raw"]})', "+", x["added"], "-", x["removed"])
+        print("   ", x["src"], x["occasion"], x["styles"], x["v6"], "->", x["v7"], f'({x["v6_raw"]} -> {x["v7_raw"]})', "+", x["added"], "-", x["removed"])
     for k, v in sorted(cov.items()):
         print(f"   {v:6d}  {k}")
 

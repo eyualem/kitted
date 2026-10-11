@@ -132,6 +132,8 @@ export function knownPieces(
       colorFamily: typeof it.garment.color_family === 'string' ? it.garment.color_family : null,
       subcategory: sub, shoeKind: saidKind ?? shoeKindOf(sub), shoeKindSaid: saidKind !== null,
       name: it.name, confirmed, sightings: seen.length,
+      // the pattern the tile shows (drift-guarded), else the item's own read: a striped read never matches a solid piece (#219)
+      pattern: it.art?.pattern ?? (typeof it.garment.pattern === 'string' ? it.garment.pattern : null),
     });
   }
   return out.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));

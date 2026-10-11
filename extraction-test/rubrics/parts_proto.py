@@ -29,7 +29,8 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Six engines (engine="v6" is THE DEFAULT since Oct 11: v5 plus PB1 "roomier than the look" (the council's per-style
+Seven engines (engine="v7" is THE DEFAULT since Oct 11: v6 plus "a condition read moves points only on a garment
+read clear" (TUNE["v7"], ../parts7_test.py, DECISIONS-LOG #219). engine="v6" (the default before it: v5 plus PB1 "roomier than the look" (the council's per-style
 bands, back as one Proportions fault), H2 judged on every style the outfit reads as, and Event's softer band; see
 TUNE["v6"], ../parts6_test.py, report ../../rubric/research/parts/v6.md. engine="v5" is v4 plus SX1 "a piece from another look", the style-crossing
 fault on Style; see TUNE["v5"], ../parts5_test.py, report ../../rubric/research/parts/style-clash.md). engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
@@ -53,10 +54,11 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-6 (Oct 11, 2026)"
+VERSION = "parts-proto-7 (Oct 11, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
-            "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)"}
+            "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
+            "v7": "parts-proto-7 (Oct 11, 2026)"}
 
 # ---- Reward tuning (Oct 10, founder-approved). engine="v1" reproduces parts-proto-1 exactly (paper test results/parts1/); engine="v2" is
 # the tuned engine (paper test parts2_test.py, report rubric/research/parts/tuning-results.md). Only rewards built on
@@ -262,6 +264,15 @@ _OFF6 = dict(pb=0.0, pb_roomy_full=frozenset(), pb_roomy_narrow=frozenset(), pb_
              occ_target={})
 for _e in ("v1", "v2", "v3", "v4", "v5"):
     TUNE[_e].update(_OFF6)
+# v7 (Oct 11, THE DEFAULT; DECISIONS-LOG #219, test ../parts7_test.py). The founder's re-check of the identical photo
+# (Oct 11) read his striped oxford "wrinkled" once and "clean" once: the condition read flips, and it moved points on
+# a garment the AI itself only called "likely". v7: a condition read (wrinkled, worn, stained) moves points only on a
+# garment read "clear". On a "likely" garment it becomes a Condition tip with no points, everywhere a condition read
+# acts: the Condition deduction, ruling 46's "a worn piece earns no credit", the shoes' "look worn" (Shoes) and the
+# floor's "no stain or wear" test. (A stain already needed "clear" in every engine.) Nothing else changes.
+TUNE["v7"] = dict(TUNE["v6"], cond_clear_only=True)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6"):
+    TUNE[_e].update(cond_clear_only=False)
 WEIGHTS = {"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -927,9 +938,36 @@ def _cohesion(o, boldness, t):
 # =====================================================================================================
 # CONDITION: faults only, subtracted after the average (condition.md). Footwear excluded (Shoes owns it).
 # =====================================================================================================
-def _condition(o, scene, occasion):
+CARE_READS = ("wrinkled", "pilled_or_worn", "stained")
+
+
+def _unsure_care(garments, t):
+    """v7 (cond_clear_only): a condition read on a garment that isn't "clear" moves no points. On the engine's own
+    copies, the condition becomes "clean" (kept as condition_raw) and a no-points tip is returned for each, in garment
+    order. Clothes worn by design were already excused (no tip). Off in v1-v6: nothing changes, no tips."""
+    tips = []
+    if not t["cond_clear_only"]:
+        return tips
+    for g in garments:
+        c = g.get("condition")
+        if c not in CARE_READS or g.get("certainty") == "clear":
+            continue
+        foot = g.get("category") == "footwear"
+        if c == "pilled_or_worn" and g.get("distressed_by_design") and not foot:
+            continue
+        name = "shoes" if foot else (g.get("subcategory") or "piece").replace("_", " ")
+        what = {"wrinkled": f"the {name} might be wrinkled", "pilled_or_worn": f"the {name} might look worn",
+                "stained": f"there might be a stain on the {name}"}[c]
+        tips.append({"check": "C_unsure_" + {"wrinkled": "wrinkled", "pilled_or_worn": "worn", "stained": "stain"}[c],
+                     "line": f"{what}; not counted, it isn't clear enough in the photo", "would_cost": None})
+        g["condition_raw"] = c
+        g["condition"] = "clean"
+    return tips
+
+
+def _condition(o, scene, occasion, tips=()):
     if scene.get("lighting") == "dim":
-        return {"deduction": 0.0, "faults": [], "display": "couldn't check in this light", "part": None}
+        return {"deduction": 0.0, "faults": [], "display": "couldn't check in this light", "part": None, "tips": []}
     care, faults = 0.0, []
     for g in o["main"]:
         if g.get("category") == "footwear":
@@ -953,7 +991,7 @@ def _condition(o, scene, occasion):
     ded = care + t1
     part = None if not care else round_half(max(2.0, BASE - 2.5 * care))
     return {"deduction": round(ded, 3), "faults": faults, "display": "clean" if not faults else "; ".join(faults),
-            "part": part}
+            "part": part, "tips": list(tips)}
 
 
 # =====================================================================================================
@@ -1030,13 +1068,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v6", tune=None):
+def _tune(engine="v7", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v6", tune=None):
+def earned_bonus(part_scores, engine="v7", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1050,7 +1088,7 @@ def earned_bonus(part_scores, engine="v6", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v6", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v7", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1087,10 +1125,10 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v6", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v7", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v6" (KD-3/5/16 fixed, default), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v7" (condition reads count only on "clear" garments, default), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
@@ -1102,6 +1140,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     if not garments:
         return {"overall": None, "reason": "nothing_readable", "parts": {}, "na_parts": PART_ORDER[:]}
     garments = _refile(R._normalize(garments))
+    care_tips = _unsure_care(garments, t)                            # v7: condition reads count only when "clear"
     o = _outfit(garments, styles)
     o["mirror"] = bool(scene.get("mirror_selfie"))
     o["sx"] = _style_clash(o, t)                                      # v5's SX1, read by Style and (v6) Proportions
@@ -1114,7 +1153,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     live = {k: r for k, r in res.items() if r["score"] is not None}
     if not live:
         return {"overall": None, "reason": "no_part_readable", "parts": res, "na_parts": PART_ORDER[:]}
-    cond = _condition(o, scene, occasion)
+    cond = _condition(o, scene, occasion, care_tips)
     occ = _occasion(o, occasion, t)
     care_or_strain = any(_care_fault(g) for g in o["main"]) or any(g.get("strain") == "clear" for g in o["main"])
     ps = {k: r["score"] for k, r in live.items()}

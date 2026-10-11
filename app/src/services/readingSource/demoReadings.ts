@@ -33,6 +33,8 @@ const BY_ID: Record<string, Reading> = {
   p01a: readingOf(p01a), p01b: readingOf(p01b), s05: readingOf(s05), s09: readingOf(s09), s10: readingOf(s10),
   s12: readingOf(s12), s13: readingOf(s13), s14: readingOf(s14), s15: readingOf(s15), s22: readingOf(s22),
   s24: readingOf(s24), s25: readingOf(s25),
+  // A second shot of p01b's outfit (its own hash; demoPhotos.ts): S21's re-check that doesn't see the change (#219).
+  p01b2: readingOf(p01b),
   // Demo screens 34–36 (the one quick tap): shown with s12's stand-in photo (demoPhotos.ts).
   ph1: readingOf(ph1),
   // Demo screens 60–62 (the shoe question): shown with s12's stand-in photo too.

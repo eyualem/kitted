@@ -7,7 +7,7 @@ export const RUBRIC_DATA: RubricData = {
  "engine": 5,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "375efdf5a2f99a0bbb74adafc14b6bb80d4fc9430ecf2e0c8884417a9fc99289",
+ "rubricSha256": "0da19bc2ee0e178e816565c131c9107dae00a6a676761f18206f9b58f676a9a5",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,
@@ -500,7 +500,9 @@ export const RUBRIC_DATA: RubricData = {
    ],
    "ST_OUT_A": [
     "bomber",
-    "puffer"
+    "hoodie",
+    "puffer",
+    "sweatshirt"
    ],
    "ST_OUT_H": [
     "denim_jacket",

@@ -188,7 +188,9 @@ DARK_TECH = {"black", "charcoal", "grey", "navy", "olive"}
 # can't produce yet; they are kept so the planned schema batch only adds values, not rules.
 # --- streetwear (absorbs skater, Y2K, grunge, techwear)
 ST_TOP_A = {"hoodie", "sweatshirt", "graphic_tee"}
-ST_OUT_A = {"bomber", "puffer"}
+# hoodie / sweatshirt worn as the outer layer (a zip hoodie over a shirt): the same streetwear anchor as when worn as
+# the top (ST_TOP_A). Without them a hoodie over an oxford + wide jeans + Dunks read as no style (DECISIONS-LOG #219).
+ST_OUT_A = {"bomber", "puffer", "hoodie", "sweatshirt"}
 ST_OUT_H = {"denim_jacket", "leather_jacket", "shell_jacket", "rain_jacket", "fleece", "vest"}
 ST_SHOE_A = {"chunky_sneaker", "basketball_sneaker"}
 # white_leather_sneaker: a plain white sneaker (Club C, AF1 Low) is a streetwear staple; without it a boxy tee +

@@ -15,7 +15,7 @@ interface Expect {
   part?: Record<string, { score?: number; na?: boolean }>;
   detected_has?: string[]; detected_lacks?: string[]; label?: string | null; label_in?: (string | null)[];
   ceiling?: number | null; occ_deduction?: number; occ_lines_has?: string[]; occ_lines_lacks?: string[];
-  cond_deduction?: number; floored?: boolean; bonus?: number;
+  cond_deduction?: number; cond_tips?: string[]; floored?: boolean; bonus?: number;
 }
 interface Case {
   id: string; rule: string; what: string; reading: Reading; occasion: string; styles: [string, number][];
@@ -89,6 +89,8 @@ function check(c: Case, r: PartsResult): string[] {
   for (const s of e.occ_lines_lacks ?? []) if (occ.lines.some((l) => l.includes(s))) bad.push(`occasion line '${s}' present`);
   if (e.cond_deduction !== undefined && Math.abs(r.condition.deduction - e.cond_deduction) > 1e-3)
     bad.push(`condition ${r.condition.deduction} != ${e.cond_deduction}`);
+  if (e.cond_tips !== undefined && JSON.stringify(r.condition.tips.map((x) => x.check)) !== JSON.stringify(e.cond_tips))
+    bad.push(`condition tips ${JSON.stringify(r.condition.tips.map((x) => x.check))} != ${JSON.stringify(e.cond_tips)}`);
   if (e.floored !== undefined && r.floored !== e.floored) bad.push(`floored ${r.floored} != ${e.floored}`);
   if (e.bonus !== undefined && Math.abs(r.earnedBonus - e.bonus) > EPS) bad.push(`bonus ${r.earnedBonus} != ${e.bonus}`);
   if (c.vs) {
