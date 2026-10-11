@@ -36,6 +36,9 @@ export interface MorphPickerProps<T extends string> {
   plain?: boolean;
   /** Plain subheadline text with a chevron (the morning card's context line, #70). */
   inline?: boolean;
+  /** A quiet lead-in before the label, both in one 44 pt row ("Headed: **Everyday** ⌄", the Going-for inset, #215).
+   *  Implies the inline look, with the label in ink and semibold. */
+  prefix?: string;
 }
 
 const ROW = 44;
@@ -54,7 +57,8 @@ interface Rect {
   h: number;
 }
 
-export function MorphPicker<T extends string>({ label, value, sections, onPick, accessibilityLabel, plain: mono, inline }: MorphPickerProps<T>) {
+export function MorphPicker<T extends string>({ label, value, sections, onPick, accessibilityLabel, plain: mono, inline: inlineProp, prefix }: MorphPickerProps<T>) {
+  const inline = inlineProp || prefix !== undefined;
   const plain = mono || inline;
   const { colors, scheme, a11y } = useTheme();
   const win = useWindowDimensions();
@@ -110,7 +114,14 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
 
   const top = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: plain ? 3 : 5, height: from?.h ?? 32, paddingHorizontal: plain ? PLAIN_PAD - 1 : 11 }}>
-      {inline ? (
+      {prefix !== undefined ? (
+        <KText variant="callout" color="ink2" numberOfLines={1}>
+          {`${prefix} `}
+          <KText variant="callout" weight="600" color="ink">
+            {label}
+          </KText>
+        </KText>
+      ) : inline ? (
         <KText variant="subheadline" weight="500" color="ink" numberOfLines={1}>
           {label}
         </KText>
@@ -138,7 +149,19 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
         hitSlop={plain ? { top: 10, bottom: 10, left: 6, right: 6 } : { top: 6, bottom: 6 }}
         style={({ pressed }) => ({ opacity: from ? 0 : pressed ? opacity.pressed : 1 })}
       >
-        {plain ? (
+        {prefix !== undefined ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', alignContent: 'center', flexWrap: 'wrap', columnGap: 6, minHeight: 44 }}>
+            <KText variant="callout" color="ink2">
+              {prefix}
+            </KText>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <KText variant="callout" weight="600" color="ink">
+                {label}
+              </KText>
+              <Icon name="chevronDown" size={11} color="ink" weight="semibold" scalesWithText />
+            </View>
+          </View>
+        ) : plain ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
             {inline ? (
               <KText variant="subheadline" weight="500" color="ink2" numberOfLines={1}>

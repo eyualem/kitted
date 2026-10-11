@@ -7,11 +7,11 @@
 // that is being changed: an answer, a correction, the occasion) use it.
 
 import {
-  PARTS_FIXES_DATA, PARTS_RUBRIC_VERSION, partialLabel as corePartialLabel, partsFixAsFix, RUBRIC_DATA, score, scoreParts, suggestFixes,
+  goingForAdvice, PARTS_FIXES_DATA, PARTS_RUBRIC_VERSION, partialLabel as corePartialLabel, partsFixAsFix, RUBRIC_DATA, score, scoreParts, suggestFixes,
   suggestPartsFixes, type ClosetItem, type Fix, type FixSuggestions, type PartName, type PartsFixSuggestions, type PartsScored, type Reading,
   type RubricResult, type ScoreOptions, type ScoredResult, type Styles,
 } from '@kitted/core';
-import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey, type StoredParts } from '@/data/types';
+import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey, type StoredParts, type StyleKey } from '@/data/types';
 import { cardSummary } from './explain';
 
 export type ScoringEngine = 'parts' | 'v4';
@@ -38,6 +38,9 @@ export interface EvaluateInput {
   warm?: boolean;
   /** Default: the switch. */
   engine?: ScoringEngine;
+  /** "Going for" (#215): the look he's going for (null = Not sure). Undefined = a check from before the question, so no
+   *  advice is written. Advice only: it's computed with no picks and can't reach the score. */
+  goingFor?: StyleKey | null;
 }
 
 export interface Evaluation {
@@ -58,7 +61,7 @@ export interface Evaluation {
     FitCheckRow,
     'status' | 'score' | 'rawScore' | 'subscores' | 'occasionAdj' | 'rulesFired' | 'credits' | 'advice' | 'fixes' | 'isPartial' | 'notRated' | 'explanation'
     | 'rubricVersion'
-  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets' | 'readsAs' | 'warm' | 'tipLead' | 'parts'> };
+  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets' | 'readsAs' | 'warm' | 'tipLead' | 'parts' | 'goingForAdvice'> };
 }
 
 /** The rubric options a check is scored with. The one place they're built, so the one quick tap's two scores
@@ -180,6 +183,9 @@ function evaluateParts(input: EvaluateInput): Evaluation {
       details: {
         nextLevel: tip ? [tip] : [], tips: [], dialedIn: fixes.length === 0, hiddenFixTargets: hidden, warm: input.warm ?? false,
         readsAs: normStyleKey(res.styleLabel), tipLead: fx.smallerStep ? 'smallerStep' : 'nextLevel', parts: storedParts(res, fx),
+        ...(input.goingFor !== undefined
+          ? { goingForAdvice: goingForAdvice(input.reading, input.goingFor, { occasion: input.occasion, boldness: opts.boldness, closet: input.closet, warm: input.warm ?? false }) }
+          : {}),
       },
     },
   };

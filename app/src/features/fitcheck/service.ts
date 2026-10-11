@@ -13,7 +13,7 @@ import {
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
-import type { ChatMessage, CheckDetails, FitCheckRow, OccasionKey, ReadingRow, ReadingSourceKind, StyleKey, TapState } from '@/data/types';
+import { normStyleKey, type ChatMessage, type CheckDetails, type FitCheckRow, type GoingForSource, type GoingForState, type OccasionKey, type ReadingRow, type ReadingSourceKind, type StyleKey, type TapState } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
 import type { ImagePrep } from '@/services/imagePrep/demo';
@@ -34,6 +34,11 @@ export function engineOf(row: Pick<FitCheckRow, 'rubricVersion'>): ScoringEngine
   return row.rubricVersion.startsWith('parts-') ? 'parts' : 'v4';
 }
 const versionFor = (e: ScoringEngine) => (e === 'parts' ? PARTS_RUBRIC_VERSION : RUBRIC_DATA.version);
+
+/** "Going for" (#215): his last confirmed look ({ style, at }), the pre-pick for 7 days after he chose it. */
+export const GOING_FOR_LAST_KV = 'goingFor.last';
+export const LAST_LOOK_MS = 7 * 24 * 3600 * 1000;
+
 
 /** The re-check card's numbers, with the engine the first check was scored with. */
 function outcomeFor(engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: ScoreOptions) {
@@ -183,9 +188,11 @@ export function createFitCheckService(deps: ServiceDeps) {
     const p = await profile();
     const occasion = patch.occasion ?? row.occasion;
     const details = { ...row.details, ...(patch.details ?? {}) };
+    const style = patch.style !== undefined ? patch.style : row.style;
     const ev = evaluateCheck({
-      reading, ...lensInput(occasion, patch.style !== undefined ? patch.style : row.style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+      reading, ...lensInput(occasion, style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
       hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row),
+      goingFor: details.goingFor ? details.goingFor.style : undefined,
     });
     const next = await patchRow(row.id, {
       ...ev.row, ...patch, details: { ...details, ...ev.row.details, hiddenFixTargets: details.hiddenFixTargets ?? [] },
@@ -335,10 +342,13 @@ export function createFitCheckService(deps: ServiceDeps) {
   }
 
   /** Streams one read into the session, with the ruling 19 timers. */
-  async function runRead(checkId: string, image: PreparedImage, kind: ReadKind, mode: CheckMode, occasion: OccasionKey) {
+  async function runRead(
+    checkId: string, image: PreparedImage, kind: ReadKind, mode: CheckMode, occasion: OccasionKey,
+    look?: { style: StyleKey | null; source: GoingForSource; bothFromCard?: boolean },
+  ) {
     attempt += 1;
     const my = attempt;
-    dispatch({ t: 'start', checkId, mode, occasion, attempt: my });
+    dispatch({ t: 'start', checkId, mode, occasion, attempt: my, ...(look ? { look } : {}) });
     const abort = new AbortController();
     const cfg = deps.timers();
     const handles: unknown[] = [];
@@ -396,6 +406,27 @@ export function createFitCheckService(deps: ServiceDeps) {
     dispatch({ t: 'end' });
   }
 
+  /** The wait's pre-pick (02 "Going for"): the morning card's look when he opened the camera from it, else his last
+   *  confirmed look (within 7 days), else his first pick from setup, else Not sure. */
+  async function prePick(req: CheckRequest, now: number): Promise<GoingForState> {
+    if (req.style !== undefined) return { style: req.style, confirmed: false, source: 'card', bothFromCard: req.occasion !== undefined };
+    try {
+      const raw = await store.getKv(GOING_FOR_LAST_KV);
+      const last = raw ? (JSON.parse(raw) as { style?: unknown; at?: unknown }) : null;
+      const style = normStyleKey(last?.style);
+      if (style && typeof last?.at === 'number' && now - last.at <= LAST_LOOK_MS && now >= last.at) return { style, confirmed: false, source: 'last' };
+    } catch {
+      // a damaged value: fall through to his first pick
+    }
+    const first = firstStyle((await profile()).styles);
+    return first ? { style: first, confirmed: false, source: 'setup' } : { style: null, confirmed: false, source: 'none' };
+  }
+
+  /** He chose a look (not Not sure): it's the pre-pick for the next 7 days. */
+  async function rememberLook(style: StyleKey | null) {
+    if (style) await store.setKv(GOING_FOR_LAST_KV, JSON.stringify({ style, at: clock.nowMs() }));
+  }
+
   async function start(req: CheckRequest): Promise<StartOutcome> {
     const now = clock.nowMs();
     const parent = req.parentCheckId ? await store.fitChecks.get(req.parentCheckId) : null;
@@ -409,15 +440,10 @@ export function createFitCheckService(deps: ServiceDeps) {
     const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.keptUri ?? null, aspect: image.aspect ?? null };
     const lastOccasion = ((await store.getKv(KV.lastOccasion)) as OccasionKey | null) ?? 'everyday';
     const occasion: OccasionKey = req.mode !== 'check' && parent ? parent.occasion : req.occasion ?? lastOccasion;
-    // One style per check (#61). A plain "Check my fit" uses the style on today's card for this
-    // window (so both camera paths score the same photo the same way), else his first style.
-    const cardStyle = async (): Promise<StyleKey | null | undefined> => {
-      const { day, slot } = slotAt(now, clock.offset);
-      return (await store.dailyIdeas.get(ideaId(day, slot)))?.style;
-    };
-    const style: StyleKey | null = req.mode !== 'check' && parent
-      ? parent.style
-      : req.style !== undefined ? req.style : (await cardStyle()) ?? firstStyle((await profile()).styles);
+    // One look per check (#61), now the "Going for" answer (#215): pre-picked, and he can change it during the wait. A
+    // re-check or a shoe snap keeps its first check's. It shapes the advice only; the score never reads it.
+    const going = req.mode === 'check' ? await prePick(req, now) : null;
+    const style: StyleKey | null = req.mode !== 'check' && parent ? parent.style : going!.style;
 
     if (req.mode === 'shoeSnap' && parent) {
       await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { ...photoPayload, snap: true } });
@@ -433,6 +459,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const priorChecks = (await store.fitChecks.all()).filter((c) => !c.parentId && c.status === 'scored');
     const row = emptyRow({
       id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, style, demoPhotoId: image.photoId, imageHash: image.sha256,
+      details: going ? { goingFor: going } : req.mode === 'recheck' && parent?.details.goingFor ? { goingFor: { ...parent.details.goingFor } } : {},
       photoFile: image.keptUri ?? null, thumbFile: image.thumbUri ?? null,
       parentId: parent?.id ?? null, isFirstCheck: req.mode === 'check' && priorChecks.length === 0,
       // A re-check is scored like its first check, so the two numbers compare (#209).
@@ -464,15 +491,17 @@ export function createFitCheckService(deps: ServiceDeps) {
       }
     }
 
-    const r = await runRead(checkId, image, req.mode === 'recheck' ? 'recheck' : 'full', req.mode, occasion);
+    const r = await runRead(checkId, image, req.mode === 'recheck' ? 'recheck' : 'full', req.mode, occasion, going ?? undefined);
     if ('cancelled' in r && r.cancelled) return { outcome: 'failed', checkId };
     if (!r.reading) {
       await failRow(checkId, r.fail ?? 'ai');
       return { outcome: 'failed', checkId };
     }
-    // The occasion he tapped while it read (ignored for re-checks).
-    const chosen = state.kind === 'reading' && state.checkId === checkId ? state.occasion : occasion;
+    // The occasion he tapped while it read (ignored for re-checks), and the look (#215).
+    const live = state.kind === 'reading' && state.checkId === checkId ? state : null;
+    const chosen = live ? live.occasion : occasion;
     if (chosen !== occasion) await patchRow(checkId, { occasion: chosen });
+    if (going && live?.lookTouched) await saveLookAnswer(checkId, live.look, live.lookOther);
     dispatch({ t: 'scored', attempt: r.attempt });
     const fresh = (await store.fitChecks.get(checkId))!;
     let done: FitCheckRow;
@@ -484,6 +513,14 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
     dispatch({ t: 'end' });
     return outcomeOf(done);
+  }
+
+  /** His answer during the wait: on the row (style + goingFor, confirmed) before it's scored. */
+  async function saveLookAnswer(checkId: string, style: StyleKey | null, other: string | null) {
+    const row = await store.fitChecks.get(checkId);
+    if (!row?.details.goingFor) return;
+    await patchRow(checkId, { style, details: { ...row.details, goingFor: { ...row.details.goingFor, style, confirmed: true, other: other ?? null } } });
+    await rememberLook(style);
   }
 
   function outcomeOf(done: FitCheckRow): StartOutcome {
@@ -517,6 +554,34 @@ export function createFitCheckService(deps: ServiceDeps) {
     selectOccasion(occasion: OccasionKey) {
       dispatch({ t: 'occasion', occasion });
     },
+    /** "Going for" tap while reading (#215): saved when the score lands; the score never waits for it. */
+    selectLook(style: StyleKey | null, other?: string | null) {
+      dispatch({ t: 'look', style, other: other ?? null });
+    },
+    /** "Going for" changed after the score (Change): the advice is rewritten, the score columns are never touched
+     *  (the number, the word, the parts and the Why rows stay as stored). Free, no new check, no confirm. */
+    async changeGoingFor(checkId: string, style: StyleKey | null, other?: string | null) {
+      const row = await store.fitChecks.get(checkId);
+      const reading = row && (await readingOf(row));
+      if (!row || !reading || row.parentId || row.status !== 'scored' || !row.details.goingFor) return null;
+      const p = await profile();
+      const ev = evaluateCheck({
+        reading, ...lensInput(row.occasion, style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+        hiddenFixTargets: row.details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row), goingFor: style,
+      });
+      const d = ev.row.details;
+      const next = await patchRow(checkId, {
+        style, fixes: ev.row.fixes, explanation: ev.row.explanation,
+        details: {
+          ...row.details, nextLevel: d.nextLevel, tips: d.tips, dialedIn: d.dialedIn, tipLead: d.tipLead,
+          ...(row.details.parts && d.parts ? { parts: { ...row.details.parts, gainPart: d.parts.gainPart } } : {}),
+          goingFor: { ...row.details.goingFor, style, confirmed: true, other: other ?? null },
+          goingForAdvice: d.goingForAdvice ?? null,
+        },
+      });
+      await rememberLook(style);
+      return next;
+    },
     /** Stop the current read (screen changes, demo resets). */
     async cancel() {
       const c = current;
@@ -537,11 +602,13 @@ export function createFitCheckService(deps: ServiceDeps) {
       if (prep.status !== 'ok') return { outcome: 'unknownPhoto' };
       images.set(checkId, prep.image);
       const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
-      const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion);
+      const gf = !parent ? row.details.goingFor : undefined;
+      const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion, gf ? { ...gf } : undefined);
       if (!r.reading) {
         await failRow(checkId, r.fail ?? 'ai');
         return { outcome: 'failed', checkId };
       }
+      if (gf && state.kind === 'reading' && state.checkId === checkId && state.lookTouched) await saveLookAnswer(checkId, state.look, state.lookOther);
       dispatch({ t: 'scored', attempt: r.attempt });
       const fresh = (await store.fitChecks.get(checkId))!;
       const done = parent

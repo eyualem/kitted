@@ -50,6 +50,8 @@ export {
 export {
   PARTS_RUBRIC_VERSION, isPartsFix, partsFixAsFix, partsFixTargets, cardFixTargets, applyPartsFix, partsRecheckOutcome,
 } from "./partsCheck";
+// "Going for" (#215): what his stated look changes on the card (the advice), never the score.
+export { goingForAdvice, type GoingForAdvice, type GoingForMove, type GoingForOptions, type GoingForEngines } from "./goingFor";
 export {
   US_EASTERN, fixedZone, localParts, parseRollover, DEFAULT_ROLLOVER, dayKey, addDays, weekdayOf, daysBetween, wallToUtc, nextRolloverMs,
   type ZoneOffset, type LocalParts,

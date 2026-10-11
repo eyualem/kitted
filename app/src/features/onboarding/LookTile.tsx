@@ -17,8 +17,9 @@ function Flat({ spec, width, height }: { spec: FlatSpec; width: number; height: 
   return <SvgXml xml={xml} width={width} height={height} />;
 }
 
-/** One outfit standing: the top, the bottoms tucked up under it, the shoes under the hems. */
-function Outfit({ outfit, w }: { outfit: LookOutfit; w: number }) {
+/** One outfit standing: the top, the bottoms tucked up under it, the shoes under the hems (about 2.3 × w tall). Also the
+ *  Going-for inset's compact tiles (#215). */
+export function Outfit({ outfit, w }: { outfit: LookOutfit; w: number }) {
   const [top, bottom, shoe] = outfit;
   return (
     <View style={{ width: w, alignItems: 'center' }}>

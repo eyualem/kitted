@@ -2,7 +2,7 @@
 // ClosetItem); these wrap them with what the app stores. Times are epoch ms.
 
 import type {
-  ClosetItem, ConfirmedFields, DetectedStyle, Fix, Garment, PartName, PartResult, PartsCondition, PartsOccasion, Reading, Styles, TapOption, TapQuestion,
+  ClosetItem, ConfirmedFields, DetectedStyle, Fix, Garment, GoingForAdvice, PartName, PartResult, PartsCondition, PartsOccasion, Reading, Styles, TapOption, TapQuestion,
 } from '@kitted/core';
 
 export type Role = 'user' | 'stylist';
@@ -166,6 +166,27 @@ export interface CheckDetails {
   tipLead?: 'nextLevel' | 'smallerStep';
   /** Parts-scored checks only (rubricVersion "parts-…", #209): what the Why sheet shows. Older checks: absent. */
   parts?: StoredParts;
+  /** "Going for" (#215): the look he's going for on this check, asked during the wait. Absent on older checks. */
+  goingFor?: GoingForState;
+  /** What the answer changes on the card (core goingForAdvice): a match, or the look it reads as with a piece and a
+   *  move. null: Not sure, the gym or home. Advice only; it never changes the score. */
+  goingForAdvice?: GoingForAdvice | null;
+}
+
+/** Where a pre-picked look came from (02 "Going for"): today's card, his last confirmed look (7 days), his first pick
+ *  from setup, or none (Not sure). */
+export type GoingForSource = 'card' | 'last' | 'setup' | 'none';
+
+/** His answer as stored on the check. `style` mirrors the row's `style` (null = Not sure). */
+export interface GoingForState {
+  style: StyleKey | null;
+  /** He tapped it (during the wait or with Change); false = the pre-pick stood. */
+  confirmed: boolean;
+  source: GoingForSource;
+  /** The pre-pick and the occasion both came from the morning card ("Both from this morning's card."). */
+  bothFromCard?: boolean;
+  /** "Something else": his own words (trimmed, 80 max). No look is guessed from them; the advice runs as Not sure. */
+  other?: string | null;
 }
 
 /** The parts engine's result as a check stores it (core PartsScored, trimmed) plus the part the card's move raises. */

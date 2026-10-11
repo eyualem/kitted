@@ -2,24 +2,28 @@
 // live reading, then the result, from the same fit_checks row. One VoiceOver element with
 // custom actions; the buttons inside are also there for touch.
 import { router } from 'expo-router';
-import { useEffect, useRef } from 'react';
-import { AccessibilityInfo, Pressable, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import {
   FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
   MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
-import { OCCASIONS, type ClosetItemRow, type FitCheckRow } from '@/data/types';
+import { OCCASIONS, type ClosetItemRow, type FitCheckRow, type StyleKey } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { fitCheck, useFitCheckSession } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { isRecheckOpen } from '@/services/quota';
 import { sessionClock } from '@/state/session';
+import { setStylistAction } from '@/router/stylistAction';
 import { pickOccasion } from '../occasionPicker';
 import { occasionLabel } from '../thread';
-import { OccasionQuestion, ReadingCard } from './ReadingCard';
+import { ReadingCard, useInsetShown } from './ReadingCard';
+import { adviceA11y, GoingForAdviceBlock, GoingForInset, GoingForLine } from './GoingFor';
+import { arriveAnnouncement, lineA11y, lookTiles, picksOf } from '@/features/fitcheck/goingFor';
+import type { SessionState } from '@/features/fitcheck/machine';
 import { useWeatherTip } from '@/features/morning/weatherTip';
 import { styleLabel } from '@/features/morning/copy';
 import { confirmLens } from '@/features/fitcheck/lensUi';
@@ -38,6 +42,46 @@ function useCloset() {
   return useLive(['closet'], () => store.closet.all(), []);
 }
 
+/** His picks from setup (the Going-for tiles). */
+function usePicks(): StyleKey[] {
+  const p = useLive(['profile'], () => store.profile.get('me'), []);
+  return picksOf(p?.styles);
+}
+
+/** The reading card with the Going-for question inside it (#215). Full checks only: a re-check keeps its first look. */
+function ReadingWithQuestion({ s }: { s: Extract<SessionState, { kind: 'reading' }> }) {
+  const picks = usePicks();
+  const shown = useInsetShown(s, s.mode === 'check');
+  const said = useRef<number | null>(null);
+  useEffect(() => {
+    if (!shown || said.current === s.attempt) return;
+    said.current = s.attempt;
+    AccessibilityInfo.announceForAccessibility?.(arriveAnnouncement(s.look, s.lookSource));
+  }, [shown, s.attempt, s.look, s.lookSource]);
+  return (
+    <ReadingCard
+      s={s}
+      inset={shown ? (
+        <GoingForInset
+          where="wait" look={s.look} touched={s.lookTouched} source={s.lookSource} bothFromCard={s.bothFromCard} other={s.lookOther}
+          occasion={s.occasion} picks={picks} onLook={(st, o) => fitCheck.selectLook(st, o)} onOccasion={(o) => fitCheck.selectOccasion(o)}
+        />
+      ) : undefined}
+    />
+  );
+}
+
+/** VoiceOver's way to change the look (the result card is one element): the looks as an action sheet. */
+function pickLook(picks: readonly StyleKey[], current: StyleKey | null, onPick: (s: StyleKey | null) => void) {
+  if (Platform.OS !== 'ios') return;
+  const { tiles, more } = lookTiles(picks);
+  const looks: (StyleKey | null)[] = [...tiles, ...more, null];
+  const labels = looks.map((l) => (l ? styleLabel(l) : t('gf.notSure')));
+  ActionSheetIOS.showActionSheetWithOptions({ options: [...labels, t('common.cancel')], cancelButtonIndex: labels.length, title: t('gf.q') }, (i) => {
+    if (i < looks.length && looks[i] !== current) onPick(looks[i]!);
+  });
+}
+
 export function FitCheckCard({ checkId }: { checkId: string }) {
   const row = useCheck(checkId);
   const wxTip = useWeatherTip(row);
@@ -46,12 +90,7 @@ export function FitCheckCard({ checkId }: { checkId: string }) {
   if (!row) return null;
   if (row.status === 'scoring') {
     if (session.kind === 'reading' && session.checkId === checkId) {
-      return (
-        <View style={{ gap: 12 }}>
-          <ReadingCard s={session} />
-          {session.mode === 'check' ? <OccasionQuestion s={session} onPick={(o) => fitCheck.selectOccasion(o)} /> : null}
-        </View>
-      );
+      return <ReadingWithQuestion s={session} />;
     }
     return null; // a read that never finished (app closed mid-read): nothing to show yet
   }
@@ -109,6 +148,20 @@ function FailureCard({ row }: { row: FitCheckRow }) {
 
 function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | null; asked: AskedGarment | null }) {
   const closet = useCloset() ?? [];
+  const picks = usePicks();
+  // "Going for" (#215): the folded line at the top; Change grows it back into the question, in place.
+  const gf = row.details.goingFor;
+  const advice = row.details.goingForAdvice ?? null;
+  const [changing, setChanging] = useState(false);
+  const [flash, setFlash] = useState(0);
+  const changeLook = async (style: StyleKey | null, other?: string | null) => {
+    if (!gf) return;
+    const same = style === gf.style && (other ?? null) === (gf.other ?? null);
+    setTimeout(() => setChanging(false), 400); // the check shows, then it folds
+    if (same && gf.confirmed) return;
+    await fitCheck.changeGoingFor(row.id, style, other);
+    if (!same) setFlash((n) => n + 1);
+  };
   const tap = row.details.tap;
   // After the one quick tap: S8 prefilled with the other answer (the pair's other half; for the shoe question, the
   // next kind in the question's order, and the sheet lists every shoe type).
@@ -147,6 +200,9 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const moreAsks = firstAsk ? openAsks(cs).filter((a) => a.obsId !== firstAsk.obsId).length : 0;
   const finishing = partial && row.snapState === 'pending' && row.details.finish !== undefined;
   const scoreText = displayScore(score);
+  // The Going-for move is already a fix on the card: say so instead of drawing it twice.
+  const moveFix = advice?.move ? fixes.findIndex((f) => f.copy === advice.move!.copy) : -1;
+  const moveIsFix = moveFix >= 0 ? moveFix + 1 : null;
 
   const actions = [
     { name: 'why', label: t('card.why', { score: scoreText }) },
@@ -155,6 +211,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     { name: 'share', label: t('card.share.a11y') },
     ...(showCloset ? [{ name: 'review', label: t('card.a11y.review') }] : []),
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
+    ...(gf ? [{ name: 'look', label: t('card.a11y.changeLook') }] : []),
     ...(changeAnswer ? [{ name: 'changeAnswer', label: t('tap.a11y.change') }] : []),
   ];
   const go = {
@@ -167,6 +224,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     share: () => router.push(`/share/${row.id}`),
     review: () => router.push(`/sheets/added/${row.id}`),
     occasion: () => pickOccasion(row.occasion, (o) => void confirmLens(row, { occasion: o })),
+    look: () => pickLook(picks, gf?.style ?? null, (st) => void changeLook(st)),
     changeAnswer: () => changeAnswer?.(),
   };
   const label = [t('card.a11y.fitCheck', {
@@ -177,7 +235,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     summary: row.explanation ?? '',
     fix: top?.copy ?? t('card.noFixes'),
     tag: top?.tag ?? '',
-  }), skippedAs ? t('tap.skipped', { choice: skippedAs }) : ''].filter(Boolean).join(' ');
+  }), skippedAs ? t('tap.skipped', { choice: skippedAs }) : '', gf ? lineA11y(gf, occasionLabel(row.occasion)) : '', adviceA11y(advice, moveIsFix)].filter(Boolean).join(' ');
 
   // Just answered the one quick tap here: say the score, then put VoiceOver on the result.
   const focusRef = useRef<View>(null);
@@ -194,12 +252,34 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   return (
     <View ref={focusRef} collapsable={false}>
       <KCard
-        accessibilityLabel={label}
-        accessibilityActions={actions}
+        // While Change is open the card isn't one VoiceOver element, so the looks can be reached one by one.
+        accessibilityLabel={changing ? undefined : label}
+        accessibilityActions={changing ? undefined : actions}
         onAccessibilityAction={(e) => void go[e.nativeEvent.actionName as keyof typeof go]?.()}
       >
+        {gf ? (
+          changing ? (
+            <GoingForInset
+              where="result" look={gf.style} touched={gf.confirmed} source={gf.source} other={gf.other} occasion={row.occasion} picks={picks}
+              onLook={(st, o) => void changeLook(st, o)}
+              onOccasion={(o) => {
+                setChanging(false);
+                void confirmLens(row, { occasion: o });
+              }}
+            />
+          ) : (
+            <GoingForLine g={gf} occasion={row.occasion} onChange={() => {
+              setChanging(true);
+              // It grows in place: keep the card's top in view (the thread otherwise stays pinned to the bottom).
+              void store.chat.all().then((ms) => {
+                const m = ms.find((x) => x.kind === 'card' && x.fitCheckId === row.id);
+                if (m) setStylistAction({ kind: 'scrollTo', messageId: m.id });
+              });
+            }} />
+          )
+        ) : null}
         <KCardSection>
-          <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} />
+          <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} occasionHere={!gf} />
           {partial || finished ? (
             <>
               <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} onPress={go.why} />
@@ -213,6 +293,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
         </KCardSection>
         <Seam />
         <KCardSection paddingVertical={4} gap={0}>
+          {advice ? <GoingForAdviceBlock advice={advice} flash={flash} moveIsFix={moveIsFix} /> : null}
+          {advice && !(dialed && quietNoFix) ? <RowDivider /> : null}
           {/* Below 9 with no fixes the summary already says "No quick fixes for this one."; don't say it twice (#183). */}
           {dialed && quietNoFix ? null : dialed ? (
             <View style={{ paddingVertical: space.fixRowV }}>
@@ -226,8 +308,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
               </View>
             ))
           )}
-          {nextLevel ? <TipLine lead={tipLeadText(row.details.tipLead) ?? t('card.nextLevel')} text={nextLevel} first={dialed && quietNoFix} /> : null}
-          {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} first={dialed && quietNoFix && !nextLevel} /> : null}
+          {nextLevel ? <TipLine lead={tipLeadText(row.details.tipLead) ?? t('card.nextLevel')} text={nextLevel} first={dialed && quietNoFix && !advice} /> : null}
+          {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} first={dialed && quietNoFix && !nextLevel && !advice} /> : null}
         </KCardSection>
         <Seam />
         <KCardSection gap={6}>
@@ -260,7 +342,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
             <KText variant="footnote" color="ink3">
               {t('rescore.footnote', {
                 score: displayScore(row.details.rescoredFrom.score),
-                lens: row.details.rescoredFrom.style !== row.style
+                // A new look never re-scores (#215), so on a Going-for check the footnote is always about the occasion.
+                lens: row.details.rescoredFrom.style !== row.style && !gf
                   ? styleLabel(row.details.rescoredFrom.style).toLowerCase()
                   : occasionLabel(row.details.rescoredFrom.occasion).toLowerCase(),
               })}
@@ -273,8 +356,16 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
 }
 
 /** "Fit check · Full" + the occasion (02 "S6s"). The occasion opens an in-card tray (a change asks first,
- *  #62). No style here: a style never changes the score (rubric v4); the card says "Reads as …" (#85). */
-function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
+ *  #62). No style here: a style never changes the score (rubric v4); the card says "Reads as …" (#85). On a check with
+ *  the Going-for line (#215) the occasion lives in that line instead, so it's in one place. */
+function LensTagline({ row, left, occasionHere = true }: { row: FitCheckRow; left: string; occasionHere?: boolean }) {
+  if (!occasionHere) {
+    return (
+      <KText variant="footnote" color="ink2" mono="label">
+        {left}
+      </KText>
+    );
+  }
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
       <KText variant="footnote" color="ink2" mono="label">

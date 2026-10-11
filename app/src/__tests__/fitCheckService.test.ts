@@ -93,14 +93,15 @@ describe('first-run story', () => {
     expect((await store.corrections.all())[0]).toMatchObject({ kind: 'wrongDetail', field: 'leg_shape', oldValue: 'straight', newValue: 'slim', scoreBefore: 8, scoreAfter: 8 });
   });
 
-  it("a plain Check my fit is scored for today's card style, not his first onboarding style", async () => {
+  it("a plain Check my fit pre-picks his first look from setup, not today's card (#215: the card's look only when opened from it)", async () => {
     const { store, svc } = await setup();
     await store.dailyIdeas.put({
       id: '2026-10-22|day', dayKey: '2026-10-22', slot: 'day', occasion: 'class', style: 'streetwear', outfitId: null, weather: null,
       messageId: null, state: 'idea', fitCheckId: null, createdAt: Date.parse('2026-10-22T07:40:00-04:00'),
     });
     const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };
-    expect((await store.fitChecks.get(checkId))!.style).toBe('streetwear');
+    const row = (await store.fitChecks.get(checkId))!;
+    expect([row.style, row.details.goingFor?.source]).toEqual(['smart_casual', 'setup']);
   });
 
   it('style lens (#61–62): preview changes nothing; re-score updates the same card, no new message', async () => {

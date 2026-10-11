@@ -104,6 +104,15 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 64, name: 'Your boots? · Yes', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   // The closet question on the score card (#117; B's block from 70): screen 37's story, left on Stylist.
   { n: 70, name: 'Score card · Are these your khaki chinos?', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  // "Going for" (#215; mockups/going-for.html v2), numbered after 70. 71–72 hold the read mid-way; 78 is 71 for large text.
+  { n: 71, name: 'Going for · the wait', id: 'S5g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
+  { n: 72, name: 'Going for · tapped', id: 'S5g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
+  { n: 73, name: 'Going for · the score first', id: 'S6g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 74, name: 'Going for · Change to a new look', id: 'S6g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: '/stylist' },
+  { n: 75, name: 'Going for · re-scored for Interview', id: 'S6g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: '/stylist' },
+  { n: 76, name: 'Going for · a match', id: 'S6g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 77, name: 'Going for · a mismatch', id: 'S6g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 78, name: 'Going for · the wait at large text', id: 'S5g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

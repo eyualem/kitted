@@ -40,7 +40,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
-- [ ] **P2** · **"Going for: X" on the card (your Oct 11 idea):** shown pre-filled, it changes the advice ("For a minimal look, the graphic tee pulls the other way"), not the score. Should it ever lower the score when the outfit clearly misses that style? Default: advice only.
+- [ ] **P2** · **"Going for" (built Oct 11, #218; demo screens 71–78):** it changes the advice, never the score. Should it ever lower the score when the outfit clearly misses that look? Default: advice only. Also skim its words (`app/src/i18n/en.ts`, keys `gf.*`), 5 min.
 - [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
 - [ ] **P2** · **Look at the new card and sheet** on the Simulator or your phone (5 min): `screenshots/parts-app/`. Is the chevron after "/10" a clear enough cue? Default: keep it.
 - [ ] **P3** · **Skim the closet question wording** (built Oct 8 with the recommended words, #117): "Is this your grey Nike hoodie?" / "Are these your khaki chinos?", the reason lines ("I could only see part of it under your overshirt."), "Your score stays the same either way.", "To confirm". Change any word you don't like (`app/src/i18n/en.ts`, keys `closet.q.*`). See it on the Simulator: demo screens 70 (score card) and 38 (Closet).
@@ -225,6 +225,10 @@
   - **"Ask your stylist…" lives in the tab bar's glass** (iOS 26 accessory). Scroll down and the tab bar shrinks to a circle with "📷 Ask…" beside it; scroll up and it grows back. Tapping it opens the real text box over it, which rides the keyboard and goes away when it's empty.
   - **Scrolling** goes to the real bottom now (plain list; one day is short).
   - **Real on the Simulator** (screenshots `screenshots/stylist-oct9/`, git-ignored). Not yet seen with a real on-screen keyboard (the Simulator uses the Mac's keyboard): check typing on the phone.
+- **"Going for" is built (Oct 11, DECISIONS-LOG #218; demo screens 71–78, screenshots `screenshots/going-for-app/`).** What you'll see:
+  - **While it reads:** a light panel slides up inside the reading card, "While I read it · What are you going for?", with your 3 looks as small drawings plus Not sure, More (the other looks, Something else), and "Headed: Everyday ⌄". One look is already picked, with a line saying why ("Your first pick from setup."). A tap adds a check and nothing moves; the score never waits for you.
+  - **On the result:** one line at the top, "Going for minimal · Everyday · Change". The card says "It reads that way too." or "Reads as smart casual. For a minimal look, the overshirt pulls the other way." with one move toward the look (no number). Change reopens the panel: a new look rewrites the tips only; a new occasion asks "Re-score for interview? …" as before.
+  - **Real:** all of it runs on real readings; it never changes the score (a test checks every demo photo × every look). Mocked: nothing new. Not on your phone until Metro serves it (no reinstall needed).
 - **Scoring by parts is live in the app (Oct 11, DECISIONS-LOG #209).** What you'll see:
   - **New fit checks score with the parts engine** (Proportions, Fit, Color, Shoes, Style averaged, then condition and occasion). Fix rows say what they raise ("Raises Shoes and Style · free if you own one"), and a "Smaller step" tip appears when a move lifts a part but not the score. Old checks keep their old scores.
   - **Tap the score** (a small › after "/10") or "Why 8.0?": the Why sheet shows the five parts in a strip (the one with the most to gain in copper), then each part with its reasons, then Average of the parts, the bonus, Condition, Occasion, Reads as and the score. The "Reads as" line left the card.

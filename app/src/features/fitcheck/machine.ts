@@ -3,7 +3,7 @@
 // Everything durable (score, fixes, failures) lives in the fit_checks row, not here.
 
 import type { Garment } from '@kitted/core';
-import type { OccasionKey } from '@/data/types';
+import type { GoingForSource, OccasionKey, StyleKey } from '@/data/types';
 import type { ReadingEvent, SlotKind } from '@/services/readingSource/types';
 
 export type CheckMode = 'check' | 'recheck' | 'shoeSnap';
@@ -33,13 +33,26 @@ export type SessionState =
       occasion: OccasionKey;
       /** He tapped an occasion chip (the hint hides, B13). */
       occasionTouched: boolean;
+      /** "Going for" (#215): the look in the wait's question (null = Not sure), pre-picked from `lookSource`. */
+      look: StyleKey | null;
+      lookSource: GoingForSource;
+      /** The look and the occasion both came from the morning card. */
+      bothFromCard: boolean;
+      /** He tapped a look (the note says "Got it"); the answer is saved when the score lands. */
+      lookTouched: boolean;
+      /** "Something else": his words (the advice runs as Not sure). */
+      lookOther: string | null;
     };
 
 export type SessionEvent =
-  | { t: 'start'; checkId: string; mode: CheckMode; occasion: OccasionKey; attempt: number }
+  | {
+      t: 'start'; checkId: string; mode: CheckMode; occasion: OccasionKey; attempt: number;
+      look?: { style: StyleKey | null; source: GoingForSource; bothFromCard?: boolean };
+    }
   | { t: 'read'; attempt: number; e: ReadingEvent }
   | { t: 'tick'; attempt: number; which: 'hedge' | 'slow' }
   | { t: 'occasion'; occasion: OccasionKey }
+  | { t: 'look'; style: StyleKey | null; other?: string | null }
   | { t: 'scored'; attempt: number }
   | { t: 'end' };
 
@@ -51,6 +64,7 @@ export function reduce(s: SessionState, ev: SessionEvent): SessionState {
       return {
         kind: 'reading', checkId: ev.checkId, mode: ev.mode, attempt: ev.attempt, stage: 'pieces', slots: [], expected: 4,
         slow: false, hedged: false, occasion: ev.occasion, occasionTouched: false,
+        look: ev.look?.style ?? null, lookSource: ev.look?.source ?? 'none', bothFromCard: ev.look?.bothFromCard ?? false, lookTouched: false, lookOther: null,
       };
     case 'end':
       return IDLE;
@@ -62,6 +76,9 @@ export function reduce(s: SessionState, ev: SessionEvent): SessionState {
     case 'occasion':
       // A re-check keeps the first check's occasion (02 D10), so taps are ignored there.
       return s.mode === 'recheck' ? s : { ...s, occasion: ev.occasion, occasionTouched: true };
+    case 'look':
+      // Only a full check asks (a re-check keeps its first check's look).
+      return s.mode !== 'check' ? s : { ...s, look: ev.style, lookTouched: true, lookOther: ev.other ?? null };
     case 'tick':
       if (ev.attempt !== s.attempt) return s; // a stale timer from an earlier attempt
       if (ev.which === 'slow') return s.slow ? s : { ...s, slow: true };

@@ -12,6 +12,7 @@ import { createMemoryStore } from '@/data/memoryStore';
 import type { OccasionKey, StyleKey } from '@/data/types';
 import { WEATHER_PERMISSION_KV } from '@/services/weather';
 import { completeOnboarding } from '@/features/onboarding/complete';
+import { picksToStyles } from '@/features/onboarding/looks';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
@@ -21,13 +22,21 @@ const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
 /** Story steps per screen (firstRun story; screen 11 runs s24 live inside `full`). */
 type Step =
-  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey }
+  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey; tapLook?: StyleKey }
+  /** His picks from setup (the Going-for tiles, #215), in order. */
+  | { at: string; do: 'looks'; styles: StyleKey[] }
+  /** "Going for" changed after the score (Change → a look): advice only. */
+  | { at: string; do: 'goingFor'; style: StyleKey | null; checkId?: string }
+  /** The occasion re-scored after the score (he said Re-score to the #62 confirm). */
+  | { at: string; do: 'rescore'; occasion: OccasionKey; checkId?: string }
   | { at: string; do: 'morning' }
   | { at: string; do: 'wear' }
   | { at: string; do: 'closet'; ids: string[] }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
   | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string };
+
+const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
 
 const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   5: { steps: [] },
@@ -100,6 +109,15 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   37: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   70: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   38: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  // "Going for" (#215; mockups/going-for.html v2). Test picks Minimal, Streetwear, Smart casual (the mockup's), stock photos.
+  71: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', hold: 0.86 }] },
+  72: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', hold: 0.93, tapLook: 'minimalist' }] },
+  73: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' }] },
+  74: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' }, { at: '2026-10-22T07:43:00', do: 'goingFor', style: 'smart_casual' }] },
+  75: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' }, { at: '2026-10-22T07:43:00', do: 'rescore', occasion: 'interview' }] },
+  76: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:42:30', do: 'goingFor', style: 'minimalist' }] },
+  77: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's15', occasion: 'everyday' }, { at: '2026-10-22T07:42:30', do: 'goingFor', style: 'minimalist' }] },
+  78: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', hold: 0.86 }] },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
@@ -151,6 +169,18 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       await fitCheck.answerTap(step.checkId ?? STORY_TAP, step.answer);
       continue;
     }
+    if (step.do === 'looks') {
+      await store.profile.patch('me', { styles: picksToStyles(step.styles) });
+      continue;
+    }
+    if (step.do === 'goingFor') {
+      await fitCheck.changeGoingFor(step.checkId ?? STORY_FIRST_CHECK, step.style);
+      continue;
+    }
+    if (step.do === 'rescore') {
+      await fitCheck.changeLens(step.checkId ?? STORY_FIRST_CHECK, { occasion: step.occasion });
+      continue;
+    }
     if (step.do === 'recheckPrompt') {
       await fitCheck.postRecheckPrompt(STORY_FIRST_CHECK);
     } else if (step.do === 'recheck') {
@@ -161,7 +191,8 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       setTimerOverride({ enabled: false });
       void fitCheck.start({ mode: 'check', photoId: step.photoId, occasion: 'everyday', checkId: STORY_FIRST_CHECK });
       await new Promise((r) => setTimeout(r, 30));
-      fitCheck.selectOccasion(step.occasion);
+      if (step.occasion !== 'everyday') fitCheck.selectOccasion(step.occasion);
+      if (step.tapLook) fitCheck.selectLook(step.tapLook);
     } else {
       await fitCheck.start({
         mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL),
