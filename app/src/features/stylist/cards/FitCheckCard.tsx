@@ -118,7 +118,6 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     : null;
   // "Scored as jeans. Not right? Tap." only after a Skip, while the piece still has the value it was scored as.
   const skippedAs = tap?.skipped && changeAnswer ? tapChoice(tap, tap.answer!) : null;
-  const readsAs = row.details.readsAs ? t('readsAs.line', { style: styleLabel(row.details.readsAs).toLowerCase() }) : null;
   const score = row.score ?? 0;
   const partial = row.isPartial;
   const finished = !partial && (row.snapState === 'snapped' || row.snapState === 'closetPick');
@@ -178,7 +177,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     summary: row.explanation ?? '',
     fix: top?.copy ?? t('card.noFixes'),
     tag: top?.tag ?? '',
-  }), readsAs ? `${readsAs}.` : '', skippedAs ? t('tap.skipped', { choice: skippedAs }) : ''].filter(Boolean).join(' ');
+  }), skippedAs ? t('tap.skipped', { choice: skippedAs }) : ''].filter(Boolean).join(' ');
 
   // Just answered the one quick tap here: say the score, then put VoiceOver on the result.
   const focusRef = useRef<View>(null);
@@ -203,13 +202,13 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
           <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} />
           {partial || finished ? (
             <>
-              <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} />
+              <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} onPress={go.why} />
               {row.explanation ? <KText variant="subheadline" color="ink2">{row.explanation}</KText> : null}
             </>
           ) : (
-            <ScoreBlock score={score} verdict={row.explanation ?? undefined} />
+            <ScoreBlock score={score} verdict={row.explanation ?? undefined} onPress={go.why} />
           )}
-          {readsAs ? <ReadsAsLine text={readsAs} /> : null}
+          {/* "Reads as …" moved into the Why sheet (#205, #209). */}
           {skippedAs && changeAnswer ? <SkippedLine choice={skippedAs} onPress={changeAnswer} /> : null}
         </KCardSection>
         <Seam />
@@ -291,18 +290,6 @@ function LensTagline({ row, left }: { row: FitCheckRow; left: string }) {
           accessibilityLabel={t('card.a11y.changeOccasion')}
         />
       </View>
-    </View>
-  );
-}
-
-/** "Reads as streetwear" (02 "S6s", #85): the look the outfit reads as. Never changes the score. */
-function ReadsAsLine({ text }: { text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center', marginTop: 2 }}>
-      <Icon name="tag" size="small" color="ink2" />
-      <KText variant="footnote" color="ink2" style={{ flexShrink: 1 }}>
-        {text}
-      </KText>
     </View>
   );
 }

@@ -3,11 +3,12 @@
 // and the word always shows next to it (and in the VoiceOver label).
 // Layout: numeral + "/10" | 16 gap | word + verdict-or-partial. At AX sizes they stack.
 
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useTheme } from '../theme';
 import { displayScore, scoreWordLabel, spokenScore } from '../score';
 import { t } from '@/i18n/en';
 import { numeralSizes } from '../typography';
+import { opacity } from '../tokens';
 import { Icon } from './Icon';
 import { KText } from './KText';
 import { Numeral } from './Numeral';
@@ -25,9 +26,11 @@ export interface ScoreBlockProps {
   /** Override the derived word (normally leave it). */
   word?: string;
   numeralSize?: number;
+  /** The card's score opens "Why" (#205): the block becomes a button with a small chevron after "/10". */
+  onPress?: () => void;
 }
 
-export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutOf = true, word, numeralSize = numeralSizes.hero }: ScoreBlockProps) {
+export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutOf = true, word, numeralSize = numeralSizes.hero, onPress }: ScoreBlockProps) {
   const { isAccessibilitySize } = useTheme();
   const resolvedWord = word ?? scoreWordLabel(score);
 
@@ -35,22 +38,22 @@ export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutO
   if (partialLabel) label += ` ${partialLabel}.`;
   else if (verdict) label += ` ${verdict}`;
 
-  return (
-    <View
-      accessible
-      accessibilityLabel={label}
-      style={
-        isAccessibilitySize
-          ? { flexDirection: 'column', alignItems: 'flex-start', gap: 8 }
-          : { flexDirection: 'row', alignItems: 'flex-end', gap: 16 }
-      }
-    >
+  const layout = isAccessibilitySize
+    ? ({ flexDirection: 'column', alignItems: 'flex-start', gap: 8 } as const)
+    : ({ flexDirection: 'row', alignItems: 'flex-end', gap: 16 } as const);
+  const body = (
+    <>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
         <Numeral size={numeralSize}>{displayScore(score)}</Numeral>
         {showOutOf ? (
           <KText mono="value" variant="subheadline" color="ink3">
             {t('card.outOf')}
           </KText>
+        ) : null}
+        {onPress ? (
+          <View style={{ alignSelf: 'center', marginLeft: 2 }}>
+            <Icon name="next" size="small" color="ink3" weight="semibold" scalesWithText />
+          </View>
         ) : null}
       </View>
       <View style={{ flexShrink: 1, gap: 4, paddingBottom: isAccessibilitySize ? 0 : 4 }}>
@@ -61,6 +64,25 @@ export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutO
           <KText role="verdict">{verdict}</KText>
         ) : null}
       </View>
+    </>
+  );
+  if (onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={t('card.score.a11y', { score: spokenScore(score), word: resolvedWord })}
+        accessibilityHint={t('card.score.hint')}
+        hitSlop={{ top: 6, bottom: 6 }}
+        style={({ pressed }) => [layout, { opacity: pressed ? opacity.pressed : 1 }]}
+      >
+        {body}
+      </Pressable>
+    );
+  }
+  return (
+    <View accessible accessibilityLabel={label} style={layout}>
+      {body}
     </View>
   );
 }
