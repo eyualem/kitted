@@ -44,6 +44,10 @@ export {
   type PartsFixCatalog, type PartsFixCandidate, type PartsNextLevel, type PartsFixEdit, type PartsFixClass, type PartsFix,
   type PartRaise, type PartsSmallerStep, type PartsFixSuggestions, type PartsFixOptions, type PartsFixEngines,
 } from "./partsFixes";
+// The parts engine in the app's check flow (#209): card fix rows, re-check targets and outcome.
+export {
+  PARTS_RUBRIC_VERSION, isPartsFix, partsFixAsFix, partsFixTargets, cardFixTargets, applyPartsFix, partsRecheckOutcome,
+} from "./partsCheck";
 export {
   US_EASTERN, fixedZone, localParts, parseRollover, DEFAULT_ROLLOVER, dayKey, addDays, weekdayOf, daysBetween, wallToUtc, nextRolloverMs,
   type ZoneOffset, type LocalParts,

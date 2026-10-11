@@ -29,12 +29,13 @@ describe('garment labels', () => {
   });
 });
 
+// v4.1 engine tests (expected_scores.json and the seed's v4 summaries): pinned to engine 'v4' (#209).
 describe('evaluateCheck vs expected_scores.json → fixes', () => {
   for (const c of expected.fixes) {
     it(c.id, () => {
       const ev = evaluateCheck({
         reading: r(c.reading), occasion: c.occasion as OccasionKey, styles: STYLES, boldness: null,
-        closet: c.closet === 'empty' ? [] : closet, firstCheck: c.firstCheck === true,
+        closet: c.closet === 'empty' ? [] : closet, firstCheck: c.firstCheck === true, engine: 'v4',
       });
       expect(ev.scored?.overall).toBe(c.expected.base_overall);
       expect(ev.fixes.fixes.map((f) => [f.copy, f.tag, f.to])).toEqual(c.expected.fixes.map((f) => [f.copy, f.tag, f.to]));
@@ -47,7 +48,7 @@ describe('evaluateCheck vs expected_scores.json → fixes', () => {
 
 describe('summaries', () => {
   const ev = (id: string, occasion: OccasionKey, full = true, firstCheck = false) =>
-    evaluateCheck({ reading: r(id), occasion, styles: STYLES, boldness: null, closet: full ? closet : [], firstCheck });
+    evaluateCheck({ reading: r(id), occasion, styles: STYLES, boldness: null, closet: full ? closet : [], firstCheck, engine: 'v4' });
   it('p01b at Date: the mockup verdict', () => {
     expect(ev('p01b', 'date', false, true).summary).toBe(t('card.example.verdict'));
     expect(ev('p01b', 'date', false, true).summary).toBe(seed.scenarios.full.fitChecks[3]!.verdict);

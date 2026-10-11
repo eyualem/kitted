@@ -6,9 +6,10 @@
 // before, and this file never writes a check's closetSummary or itemIds (patchRow keeps them).
 
 import {
-  applyCorrection, applyFix, applyTapAnswer, askWithCloset, carryTapAnswer, dayKey, fixTargets, garmentName,
-  localParts, mergeShoeSnap, pickShoesFromCloset, RUBRIC_DATA, recheckMerge, recheckOutcome, removeGarment, seasonNeeds, tapOrder, tapOrdinal,
-  weatherNeeds, weekdayOf, type ClosetItem, type DayWeather, type Garment, type Reading, type Styles,
+  applyCorrection, applyFix, applyPartsFix, applyTapAnswer, askWithCloset, cardFixTargets, carryTapAnswer, dayKey, garmentName, isPartsFix,
+  localParts, mergeShoeSnap, PARTS_RUBRIC_VERSION, partsRecheckOutcome, pickShoesFromCloset, RUBRIC_DATA, recheckMerge, recheckOutcome, removeGarment,
+  seasonNeeds, tapOrder, tapOrdinal, weatherNeeds, weekdayOf, type ClosetItem, type DayWeather, type Fix, type Garment, type Reading,
+  type ScoreOptions, type Styles,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
@@ -25,7 +26,19 @@ import { createClosetService, type ClosetService, type DuplicateAnswer } from '@
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
-import { evaluateCheck, scoreOptions } from './scoring';
+import { evaluateCheck, overallFor, scoreOptions, scoringEngine, type ScoringEngine } from './scoring';
+
+/** The engine a stored check is scored with (#209): the one its rubricVersion names, so editing an old check (a
+ *  correction, the occasion, its re-check) never moves it to another engine. New rows take the switch's. */
+export function engineOf(row: Pick<FitCheckRow, 'rubricVersion'>): ScoringEngine {
+  return row.rubricVersion.startsWith('parts-') ? 'parts' : 'v4';
+}
+const versionFor = (e: ScoringEngine) => (e === 'parts' ? PARTS_RUBRIC_VERSION : RUBRIC_DATA.version);
+
+/** The re-check card's numbers, with the engine the first check was scored with. */
+function outcomeFor(engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: ScoreOptions) {
+  return engine === 'parts' ? partsRecheckOutcome(first, fixes, merged, opts) : recheckOutcome(first, fixes, merged, opts);
+}
 
 export interface TimerConfig {
   /** Off for screen 6's frozen state (headless Chrome's virtual time would fire them). */
@@ -97,7 +110,7 @@ export type TapAnswer = string | 'skip';
 const emptyRow = (over: Partial<FitCheckRow> & Pick<FitCheckRow, 'id' | 'createdAt' | 'dayKey' | 'occasion'>): FitCheckRow => ({
   photoFile: null, thumbFile: null, demoPhotoId: null, imageHash: '', status: 'scoring', isPartial: false, notRated: [], score: null,
   rawScore: null, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [], fixes: [], explanation: null,
-  rubricVersion: RUBRIC_DATA.version, isFavorite: false, snapState: 'none', recheckUsed: false, isFirstCheck: false, readingId: null,
+  rubricVersion: versionFor(scoringEngine()), isFavorite: false, snapState: 'none', recheckUsed: false, isFirstCheck: false, readingId: null,
   parentId: null, itemIds: [], details: {}, style: null, ...over,
 });
 
@@ -172,7 +185,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const details = { ...row.details, ...(patch.details ?? {}) };
     const ev = evaluateCheck({
       reading, ...lensInput(occasion, patch.style !== undefined ? patch.style : row.style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
-      hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row),
+      hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row),
     });
     const next = await patchRow(row.id, {
       ...ev.row, ...patch, details: { ...details, ...ev.row.details, hiddenFixTargets: details.hiddenFixTargets ?? [] },
@@ -190,14 +203,15 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (!row || !parent || !first) return null;
     const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile()));
     const seen = await readingOf(row);
-    const caught = new Set(seen ? (recheckOutcome(first, parent.fixes, seen, opts)?.doneFixes ?? []).map((f) => f.target) : []);
+    const engine = engineOf(parent);
+    const caught = new Set(seen ? (outcomeFor(engine, first, parent.fixes, seen, opts)?.doneFixes ?? []).map((f) => f.target) : []);
     const closet = await closetFor(parent);
     let reading: Reading | null = first;
     for (const f of parent.fixes.filter((x) => !targets || targets.includes(x.target) || caught.has(x.target))) {
-      reading = reading ? applyFix(reading, f, { closet, occasion: parent.occasion }) : null;
+      reading = reading ? (isPartsFix(f) ? applyPartsFix(reading, f, { closet }) : applyFix(reading, f, { closet, occasion: parent.occasion })) : null;
     }
     if (!reading) return null;
-    return { row, parent, reading, outcome: recheckOutcome(first, parent.fixes, reading, opts) };
+    return { row, parent, reading, outcome: outcomeFor(engine, first, parent.fixes, reading, opts) };
   };
 
   /** "Same shoes as Monday?": the shoes from the last logged day before this check. */
@@ -232,9 +246,18 @@ export function createFitCheckService(deps: ServiceDeps) {
   async function afterRead(row: FitCheckRow, reading: Reading, readingRow: ReadingRow, cached: boolean): Promise<FitCheckRow> {
     // With what he owned before this photo (#126): "Your green work boots?" about a piece he confirmed, or none when
     // his closet agrees with the read. The question (and so the snapshot's effect) is stored on the row.
-    const q = deps.tap?.() && !row.details.tap
-      ? askWithCloset(reading, scoreOptions(lensInput(row.occasion, row.style, await profile())), await closet.knownPieces([row.id]))
-      : null;
+    const tapOpts = scoreOptions(lensInput(row.occasion, row.style, await profile()));
+    const asked = deps.tap?.() && !row.details.tap ? askWithCloset(reading, tapOpts, await closet.knownPieces([row.id])) : null;
+    // Which question to ask is still v4.1's (parity-tested against rubric.py; its swing decides whether to ask). The
+    // two answers' scores are the engine's this check uses, so "Jeans → 6.5" is what the card then shows (#209).
+    const q = asked && engineOf(row) === 'parts'
+      ? (() => {
+          const options = asked.options.map((o) => ({
+            ...o, score: overallFor(applyTapAnswer(reading, { garmentIndex: asked.garmentIndex, field: 'subcategory' }, o.value), tapOpts, 'parts') ?? o.score,
+          }));
+          return { ...asked, options, swing: (options[0]?.score ?? 0) - (options[1]?.score ?? 0) };
+        })()
+      : asked;
     if (!q) return finalizeCheck(row, reading, readingRow, cached);
     const tap: TapState = {
       pair: q.pair, slot: q.slot, garmentIndex: q.garmentIndex, ordinal: tapOrdinal(reading, q.garmentIndex), question: q.question,
@@ -280,10 +303,12 @@ export function createFitCheckService(deps: ServiceDeps) {
     // His answer to the one quick tap holds on the re-check (a second misread can't undo it), unless a fix
     // replaces that whole piece. Re-checks never ask.
     const tap = parent.details.tap;
-    const carried = tap?.answer ? carryTapAnswer(parentReading, tap, next, fixTargets(parent.fixes)) : next;
-    const { merged, notes } = recheckMerge(parentReading, carried, fixTargets(parent.fixes), opts);
+    const targets = cardFixTargets(parent.fixes);
+    const carried = tap?.answer ? carryTapAnswer(parentReading, tap, next, targets) : next;
+    // The anchored merge is engine-free except its "new problem" test, which still asks v4.1's rules (#209).
+    const { merged, notes } = recheckMerge(parentReading, carried, targets, opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
-    const outcome = recheckOutcome(parentReading, parent.fixes, merged, opts);
+    const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts);
     await patchRow(row.id, { readingId: mergedRow.id });
     const fresh = (await store.fitChecks.get(row.id))!;
     const { row: scored } = await rescore(fresh, merged, {
@@ -417,6 +442,8 @@ export function createFitCheckService(deps: ServiceDeps) {
       id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, style, demoPhotoId: image.photoId, imageHash: image.sha256,
       photoFile: image.keptUri ?? null, thumbFile: image.thumbUri ?? null,
       parentId: parent?.id ?? null, isFirstCheck: req.mode === 'check' && priorChecks.length === 0,
+      // A re-check is scored like its first check, so the two numbers compare (#209).
+      ...(req.mode === 'recheck' && parent ? { rubricVersion: parent.rubricVersion } : {}),
     });
     await store.fitChecks.put(row);
     images.set(checkId, image);
@@ -539,7 +566,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       const ev = evaluateCheck({
         reading, occasion: lens.occasion ?? row.occasion, styles: stylesFor(lens.style !== undefined ? lens.style : row.style, p.styles),
         boldness: p.boldness, closet: await closetFor(row), firstCheck: row.isFirstCheck, hiddenFixTargets: row.details.hiddenFixTargets ?? [],
-        warm: await warmFor(row),
+        warm: await warmFor(row), engine: engineOf(row),
       });
       return { before: row.score, after: ev.row.score ?? null };
     },
@@ -674,7 +701,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       const held = top?.edits.some((e) => e.op === 'add_held') ? (reading.held_items ?? []).find((g) => g.category === 'outerwear') : undefined;
       const heldName = held ? garmentName(held) : '';
       const fixQuestion = held ? t('recheck.q.held', { held: heldName.charAt(0).toUpperCase() + heldName.slice(1) }) : t('recheck.q.generic');
-      const cat = top ? fixTargets([top])[0]?.split('.')[0] ?? '' : '';
+      const cat = top ? cardFixTargets([top])[0]?.split('.')[0] ?? '' : '';
       const slotKey = (['outerwear', 'top', 'bottom', 'footwear'].includes(cat) ? `recheck.slot.${cat}` : 'recheck.slot.any') as
         'recheck.slot.outerwear' | 'recheck.slot.top' | 'recheck.slot.bottom' | 'recheck.slot.footwear' | 'recheck.slot.any';
       return message({ createdAt: clock.nowMs(), role: 'stylist', kind: 'text', text: t('recheck.prompt', { fixQuestion, slotWord: t(slotKey) }) });

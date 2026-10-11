@@ -27,6 +27,11 @@ export interface Fix {
   itemId: string | null;
   copy: string;
   tag: string;
+  /** Set on a parts-engine fix shown on the card (partsCheck.ts): its `edits` are then parts edits (PartsFixEdit),
+   *  `target` is the parts candidate id, and only partsFixTargets / applyPartsFix may read them. */
+  engine?: "parts";
+  /** Parts fixes: "Raises Style to 7.5", "Clears the condition point", … ("" if none). */
+  raisesLine?: string;
 }
 
 export interface FixSuggestions {

@@ -23,6 +23,7 @@ import { OccasionQuestion, ReadingCard } from './ReadingCard';
 import { useWeatherTip } from '@/features/morning/weatherTip';
 import { styleLabel } from '@/features/morning/copy';
 import { confirmLens } from '@/features/fitcheck/lensUi';
+import { tipLeadText } from '@/features/fitcheck/scoring';
 import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
@@ -226,7 +227,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
               </View>
             ))
           )}
-          {nextLevel ? <TipLine lead={t('card.nextLevel')} text={nextLevel} first={dialed && quietNoFix} /> : null}
+          {nextLevel ? <TipLine lead={tipLeadText(row.details.tipLead) ?? t('card.nextLevel')} text={nextLevel} first={dialed && quietNoFix} /> : null}
           {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} first={dialed && quietNoFix && !nextLevel} /> : null}
         </KCardSection>
         <Seam />

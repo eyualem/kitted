@@ -549,6 +549,30 @@ const addedInBuild = {
   'pfix.hem_tailor.step': 'A slight break lifts',
   'pfix.next_color': 'One standout color, like a rust knit, lifts Color. The score may not move yet.',
   'pfix.next_style': 'One standout piece, like a plaid overshirt, lifts Style. The score may not move yet.',
+  // The Why sheet on the parts engine (#205, #209; wording from mockups/parts-card.html). Part names and the reason lines
+  // are core's (parts data partNames, the engine's own lines).
+  'pwhy.sub': 'Same photo, same score. Every part starts at 7.',
+  'pwhy.weight': '{n}%',
+  'pwhy.na': 'Not scored: {reason}',
+  'pwhy.naShort': 'not scored',
+  'pwhy.noReasons': 'Nothing moved it',
+  'pwhy.partRounded': 'Rounded to the half',
+  'pwhy.fitNote': 'I can spot a bad fit, not a great one yet, so Fit stops at 7.',
+  'pwhy.naNote': 'The other parts share its weight.',
+  'pwhy.average': 'Average of the parts',
+  'pwhy.bonus': 'Strong in more than one part',
+  'pwhy.condition': 'Condition',
+  'pwhy.conditionClean': 'looks clean',
+  'pwhy.partsAlone': 'the parts alone make {score}',
+  'pwhy.floor': 'Lowest score at {occasion}',
+  'pwhy.rounded': 'Rounded to the nearest half',
+  'pwhy.strip.a11y': 'Parts: {parts}.',
+  'pwhy.strip.part': '{part} {score}',
+  'pwhy.strip.partNa': '{part} not scored',
+  'pwhy.strip.most': 'the most to gain',
+  // The score on the card opens Why (#205, #209): VoiceOver says what the tap does.
+  'card.score.a11y': 'Score {score}, {word}.',
+  'card.score.hint': 'Shows the breakdown.',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

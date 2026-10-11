@@ -1,7 +1,9 @@
 // Row types for the app's data. @kitted/core owns the value types (Reading, Garment, Fix,
 // ClosetItem); these wrap them with what the app stores. Times are epoch ms.
 
-import type { ClosetItem, ConfirmedFields, DetectedStyle, Fix, Garment, Reading, Styles, TapOption, TapQuestion } from '@kitted/core';
+import type {
+  ClosetItem, ConfirmedFields, DetectedStyle, Fix, Garment, PartName, PartResult, PartsCondition, PartsOccasion, Reading, Styles, TapOption, TapQuestion,
+} from '@kitted/core';
 
 export type Role = 'user' | 'stylist';
 export type MessageKind = 'text' | 'photo' | 'card';
@@ -160,6 +162,29 @@ export interface CheckDetails {
   tap?: TapState;
   /** The look the outfit reads as (core styleLabel), on every re-score; null = none. Pre-v4 rows: absent. */
   readsAs?: StyleKey | null;
+  /** The card's tip line under the fixes: "Next level" (default) or the parts engine's "Smaller step" (#209). */
+  tipLead?: 'nextLevel' | 'smallerStep';
+  /** Parts-scored checks only (rubricVersion "parts-…", #209): what the Why sheet shows. Older checks: absent. */
+  parts?: StoredParts;
+}
+
+/** The parts engine's result as a check stores it (core PartsScored, trimmed) plus the part the card's move raises. */
+export interface StoredParts {
+  version: string;
+  overall: number;
+  average: number;
+  averageUnrounded: number;
+  rawUnrounded: number;
+  earnedBonus: number;
+  floored: boolean;
+  parts: Record<PartName, PartResult>;
+  naParts: PartName[];
+  weightsUsed: Partial<Record<PartName, number>>;
+  condition: PartsCondition;
+  occasion: PartsOccasion;
+  /** The part with the most to gain (copper in the strip): the top fix's first raised part, else the smaller step's, else
+   *  the next level's, else the lowest part under 7; null when nothing stands out. */
+  gainPart: PartName | null;
 }
 
 export interface FitCheckRow {

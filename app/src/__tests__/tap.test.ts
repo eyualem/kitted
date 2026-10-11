@@ -6,7 +6,7 @@ import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import type { KittedStore } from '@/data/store';
 import { lensInput, createFitCheckService, DEFAULT_TIMERS, type TimerConfig } from '@/features/fitcheck/service';
-import { scoreOptions } from '@/features/fitcheck/scoring';
+import { scoreOptions, setScoringEngine } from '@/features/fitcheck/scoring';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
 import { demoImagePrep } from '@/services/imagePrep/demo';
@@ -14,6 +14,11 @@ import { createQuota, isRecheckOpen, recheckDeadline } from '@/services/quota';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { demoReadingById } from '@/services/readingSource/demoReadings';
 import { realScheduler } from '@/services/scheduler';
+
+// These stories assert rubric v4.1's numbers (the seed, expected_scores.json, the v4 demo story), so they run on the
+// v4 path behind the switch (#209). The parts engine's flows are tested in partsService.test.ts.
+beforeAll(() => setScoringEngine('v4'));
+afterAll(() => setScoringEngine('parts'));
 
 const at = (iso: string) => Date.parse(iso);
 const STYLES = seed.scenarios.firstRun.onboardingAnswers.styles as unknown as [string, number][];

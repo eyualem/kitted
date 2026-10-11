@@ -1,12 +1,29 @@
-// One place that turns a reading into everything a check card shows: the rubric result, the
-// fixes, the partial label and the sentence. Pure; the service writes the result to the row.
+// One place that turns a reading into everything a check card shows: the score, the fixes, the partial label and
+// the sentence. Pure; the service writes the result to the row.
+//
+// Two engines (#209). New checks are scored by the parts engine (core scoreParts + suggestPartsFixes; rubricVersion
+// "parts-1.0.0"). v4.1 (core score + suggestFixes) stays behind SCORING_ENGINE so it can be switched back in one
+// place. A stored check is never re-scored by the switch: only new scores (a new check, or a re-score of a check
+// that is being changed: an answer, a correction, the occasion) use it.
 
 import {
-  partialLabel as corePartialLabel, score, suggestFixes, type ClosetItem, type FixSuggestions, type Reading, type RubricResult,
-  type ScoreOptions, type ScoredResult, type Styles,
+  PARTS_FIXES_DATA, PARTS_RUBRIC_VERSION, partialLabel as corePartialLabel, partsFixAsFix, RUBRIC_DATA, score, scoreParts, suggestFixes,
+  suggestPartsFixes, type ClosetItem, type Fix, type FixSuggestions, type PartName, type PartsFixSuggestions, type PartsScored, type Reading,
+  type RubricResult, type ScoreOptions, type ScoredResult, type Styles,
 } from '@kitted/core';
-import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey } from '@/data/types';
+import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey, type StoredParts } from '@/data/types';
 import { cardSummary } from './explain';
+
+export type ScoringEngine = 'parts' | 'v4';
+
+/** The one switch (#209): 'parts' (default) or 'v4' to roll back to rubric v4.1. */
+export const DEFAULT_SCORING_ENGINE: ScoringEngine = 'parts';
+let engineNow: ScoringEngine = DEFAULT_SCORING_ENGINE;
+export const scoringEngine = (): ScoringEngine => engineNow;
+/** Tests (and a future dev toggle) only. */
+export function setScoringEngine(e: ScoringEngine): void {
+  engineNow = e;
+}
 
 export interface EvaluateInput {
   reading: Reading;
@@ -19,20 +36,29 @@ export interface EvaluateInput {
   hiddenFixTargets?: readonly string[];
   /** A warm day: no "add a layer" or boots fix (#160). Never changes the score. */
   warm?: boolean;
+  /** Default: the switch. */
+  engine?: ScoringEngine;
 }
 
 export interface Evaluation {
   status: FitCheckStatus;
-  result: RubricResult;
+  engine: ScoringEngine;
+  /** v4 only. */
+  result: RubricResult | null;
   scored: ScoredResult | null;
-  fixes: FixSuggestions;
+  /** Parts only. */
+  parts: PartsScored | null;
+  /** The card's fixes and its tip lines (v4: core FixSuggestions; parts: the fixes as card rows, the Smaller step or
+   *  Next level line as nextLevel). */
+  fixes: { fixes: Fix[]; nextLevel: string[]; tips: string[] };
   partial: 'shoes' | 'topOnly' | null;
   summary: string | null;
   /** The fit_checks columns this evaluation sets. */
   row: Pick<
     FitCheckRow,
     'status' | 'score' | 'rawScore' | 'subscores' | 'occasionAdj' | 'rulesFired' | 'credits' | 'advice' | 'fixes' | 'isPartial' | 'notRated' | 'explanation'
-  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets' | 'readsAs' | 'warm'> };
+    | 'rubricVersion'
+  > & { details: Pick<CheckDetails, 'nextLevel' | 'tips' | 'dialedIn' | 'hiddenFixTargets' | 'readsAs' | 'warm' | 'tipLead' | 'parts'> };
 }
 
 /** The rubric options a check is scored with. The one place they're built, so the one quick tap's two scores
@@ -47,10 +73,19 @@ export function partialKind(notRated: readonly string[]): 'shoes' | 'topOnly' | 
   return null;
 }
 
+/** The score the engine in use gives a reading (no fixes): the one quick tap's option scores. */
+export function overallFor(reading: Reading, opts: ScoreOptions, engine: ScoringEngine = engineNow): number | null {
+  return engine === 'parts' ? scoreParts(reading, opts).overall : score(reading, opts).overall;
+}
+
 export function evaluateCheck(input: EvaluateInput): Evaluation {
+  return (input.engine ?? engineNow) === 'parts' ? evaluateParts(input) : evaluateV4(input);
+}
+
+function evaluateV4(input: EvaluateInput): Evaluation {
   const opts = scoreOptions(input);
   const result = score(input.reading, opts);
-  const fixes = suggestFixes(input.reading, {
+  const fixes: FixSuggestions = suggestFixes(input.reading, {
     ...opts,
     closet: input.closet,
     firstCheck: input.firstCheck,
@@ -60,30 +95,99 @@ export function evaluateCheck(input: EvaluateInput): Evaluation {
   if (result.overall === null) {
     const status: FitCheckStatus = result.reason === 'not_fully_clothed' ? 'notClothed' : 'unreadable';
     return {
-      status, result, scored: null, fixes, partial: null, summary: null,
+      status, engine: 'v4', result, scored: null, parts: null, fixes, partial: null, summary: null,
       row: {
         status, score: null, rawScore: null, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [], fixes: [],
-        isPartial: result.partial, notRated: [], explanation: null, details: { readsAs: null },
+        isPartial: result.partial, notRated: [], explanation: null, rubricVersion: RUBRIC_DATA.version, details: { readsAs: null, parts: undefined },
       },
     };
   }
   const partial = partialKind(result.notRated);
-  const summary = cardSummary({ reading: input.reading, result, fixes: fixes.fixes, partial });
+  const summary = cardSummary({ reading: input.reading, overall: result.overall, lounge: result.rulesFired.includes('O4_loungewear_out'), fixes: fixes.fixes, partial });
   return {
-    status: 'scored', result, scored: result, fixes, partial, summary,
+    status: 'scored', engine: 'v4', result, scored: result, parts: null, fixes, partial, summary,
     row: {
       status: 'scored', score: result.overall, rawScore: result.rawScore, subscores: result.subscores, occasionAdj: result.occasionAdj,
       rulesFired: [...result.rulesFired], credits: [...result.credits], advice: [...result.advice], fixes: fixes.fixes,
-      isPartial: result.partial, notRated: [...result.notRated], explanation: summary,
+      isPartial: result.partial, notRated: [...result.notRated], explanation: summary, rubricVersion: RUBRIC_DATA.version,
       details: {
         nextLevel: fixes.nextLevel, tips: fixes.tips, dialedIn: fixes.fixes.length === 0,
         hiddenFixTargets: input.hiddenFixTargets ? [...input.hiddenFixTargets] : [],
         warm: input.warm ?? false,
         readsAs: normStyleKey(result.styleLabel),
+        tipLead: 'nextLevel',
+        parts: undefined,
       },
     },
   };
 }
+
+/** The part the card's move raises (copper in the Why strip). */
+function gainPartOf(res: PartsScored, fx: PartsFixSuggestions): PartName | null {
+  const top = fx.fixes[0]?.raises[0]?.part;
+  if (top) return top;
+  if (fx.smallerStep) return fx.smallerStep.part;
+  if (fx.nextLevel) return fx.nextLevel.part;
+  const lowest = res.lowest.part;
+  return lowest && res.parts[lowest].display !== null && res.parts[lowest].display! < 7 ? lowest : null;
+}
+
+/** The parts result as a check stores it (enough for the Why sheet; the reading stays the source of truth). */
+export function storedParts(res: PartsScored, fx: PartsFixSuggestions): StoredParts {
+  return {
+    version: res.version, overall: res.overall, average: res.average, averageUnrounded: res.averageUnrounded, rawUnrounded: res.rawUnrounded,
+    earnedBonus: res.earnedBonus, floored: res.floored, parts: res.parts, naParts: [...res.naParts], weightsUsed: { ...res.weightsUsed },
+    condition: res.condition, occasion: res.occasion, gainPart: gainPartOf(res, fx),
+  };
+}
+
+/** The loungewear hold is what holds the score down ("Sweatpants read as loungewear outside the gym"). */
+export function loungeHolds(res: PartsScored): boolean {
+  const o = res.occasion;
+  return o.ceiling !== null && o.status.startsWith('loungewear') && res.overall < res.average + res.earnedBonus - res.condition.deduction;
+}
+
+function evaluateParts(input: EvaluateInput): Evaluation {
+  const opts = scoreOptions(input);
+  const r = scoreParts(input.reading, opts);
+  const hidden = input.hiddenFixTargets ? [...input.hiddenFixTargets] : [];
+  if (r.overall === null) {
+    const status: FitCheckStatus = r.reason === 'not_fully_clothed' ? 'notClothed' : 'unreadable';
+    return {
+      status, engine: 'parts', result: null, scored: null, parts: null, fixes: { fixes: [], nextLevel: [], tips: [] }, partial: null, summary: null,
+      row: {
+        status, score: null, rawScore: null, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [], fixes: [],
+        isPartial: false, notRated: [], explanation: null, rubricVersion: PARTS_RUBRIC_VERSION, details: { readsAs: null, parts: undefined },
+      },
+    };
+  }
+  const res = r as PartsScored;
+  const fx = suggestPartsFixes(input.reading, {
+    ...opts, closet: input.closet, firstCheck: input.firstCheck, exclude: hidden, warm: input.warm ?? false,
+  });
+  const fixes = fx.fixes.map(partsFixAsFix);
+  const partial = partialKind(res.notRated);
+  const summary = cardSummary({ reading: input.reading, overall: res.overall, lounge: loungeHolds(res), fixes, partial });
+  const tip = fx.smallerStep?.line ?? fx.nextLevel?.line ?? null;
+  const subscores: Record<string, number> = {};
+  for (const k of Object.keys(res.parts) as PartName[]) if (res.parts[k].display !== null) subscores[k] = res.parts[k].display!;
+  return {
+    status: 'scored', engine: 'parts', result: null, scored: null, parts: res, fixes: { fixes, nextLevel: tip ? [tip] : [], tips: [] }, partial, summary,
+    row: {
+      status: 'scored', score: res.overall, rawScore: res.rawScore, subscores, occasionAdj: -res.occasion.deduction,
+      rulesFired: [], credits: [], advice: [], fixes, isPartial: res.partial, notRated: [...res.notRated], explanation: summary,
+      rubricVersion: PARTS_RUBRIC_VERSION,
+      details: {
+        nextLevel: tip ? [tip] : [], tips: [], dialedIn: fixes.length === 0, hiddenFixTargets: hidden, warm: input.warm ?? false,
+        readsAs: normStyleKey(res.styleLabel), tipLead: fx.smallerStep ? 'smallerStep' : 'nextLevel', parts: storedParts(res, fx),
+      },
+    },
+  };
+}
+
+/** The card's tip lead for a stored check ("Next level" / "Smaller step"). */
+export const tipLeadText = (lead: CheckDetails['tipLead']): string | null =>
+  lead === 'smallerStep' ? PARTS_FIXES_DATA.copy.smallerStepLabel : null;
 
 /** The partial label text from the deck (core's partialLabel returns the same English; checked in tests). */
 export { corePartialLabel };

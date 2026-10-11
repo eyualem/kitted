@@ -22,6 +22,12 @@ import { demoReadingById } from '@/services/readingSource/demoReadings';
 import type { ReadingSource } from '@/services/readingSource/types';
 import { realScheduler } from '@/services/scheduler';
 import type { GarmentMeasurer } from '@/services/measure/garments';
+import { setScoringEngine } from '@/features/fitcheck/scoring';
+
+// These stories assert rubric v4.1's numbers (the seed, expected_scores.json, the v4 demo story), so they run on the
+// v4 path behind the switch (#209). The parts engine's flows are tested in partsService.test.ts.
+beforeAll(() => setScoringEngine('v4'));
+afterAll(() => setScoringEngine('parts'));
 
 const at = (iso: string) => Date.parse(iso);
 const STYLES = seed.scenarios.firstRun.onboardingAnswers.styles as unknown as [string, number][];

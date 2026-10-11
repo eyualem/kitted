@@ -11,7 +11,7 @@
 // (state 'fallback'); a late answer, or a one-time catch-up on the next foreground within 24 h, then enriches it
 // (re-matches only if he hasn't touched S11 for that check).
 import {
-  closetPlan, fixTargets, garmentName, identity, lessonsOfYes, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment,
+  cardFixTargets, closetPlan, garmentName, identity, lessonsOfYes, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment,
   type KnownPiece, type Observation, type Reading, type StoredProfile,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
@@ -442,7 +442,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const parentReading = (await readingOf(parent.readingId))?.reading;
     if (!merged) return;
     const fields = fieldsFor(merged.garments, 'recheck', stored?.reading ?? null);
-    const changed = changedCategories(fixTargets(parent.fixes));
+    const changed = changedCategories(cardFixTargets(parent.fixes));
     const ps = summaryOf(parent);
     const used = new Set<string>();
     const sightings: ClosetLink[] = [];
