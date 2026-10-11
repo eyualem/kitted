@@ -100,7 +100,7 @@ def main():
             "bigLogo": r.ADVICE["big_logo"], "belt": r.ADVICE["belt"], "nextLevel": r.ADVICE["next_level"],
             "nextLevelMinimal": r.ADVICE["next_level_minimal"],
         },
-        "fixes": K.FIXES,
+        "fixes": {k: v for k, v in K.FIXES.items() if k != "parts"},   # the parts engine's catalog ships in partsFixesData.ts (#208)
     }
     with open(os.path.join(HERE, "rubric.json"), "w") as f:
         json.dump(out, f, indent=1, ensure_ascii=False); f.write("\n")

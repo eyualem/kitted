@@ -37,6 +37,13 @@ export {
   type PartName, type PartResult, type PartReason, type PartTip, type PartsCondition, type PartsOccasion, type PartsLowest,
   type SecondLook, type SecondLookInput,
 } from "./parts";
+// The parts engine's fix engine (parts_fixes.py, catalog fixes.json -> "parts" 1.0.0; #208): ported with parity, not wired in.
+export { PARTS_FIXES_DATA } from "./partsFixesData";
+export {
+  suggestPartsFixes,
+  type PartsFixCatalog, type PartsFixCandidate, type PartsNextLevel, type PartsFixEdit, type PartsFixClass, type PartsFix,
+  type PartRaise, type PartsSmallerStep, type PartsFixSuggestions, type PartsFixOptions, type PartsFixEngines,
+} from "./partsFixes";
 export {
   US_EASTERN, fixedZone, localParts, parseRollover, DEFAULT_ROLLOVER, dayKey, addDays, weekdayOf, daysBetween, wallToUtc, nextRolloverMs,
   type ZoneOffset, type LocalParts,
