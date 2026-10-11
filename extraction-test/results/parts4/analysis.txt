@@ -1,6 +1,6 @@
 STYLE FAIRNESS PAPER TEST · v3 = parts-proto-3 (Oct 10, 2026) (default) · v4 = parts-proto-4 (Oct 11, 2026; style fairness, opt-in)
   test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age. Rule 7: founder profile pending; friends profile unknown; 703a8b and ebe23f unknown (ask the founder); stock/web profile unknown; council cases are made-up readings with no person.
-  v4's changes from v3: {'pr5': 1.0, 'pr5_layers': ['chore_coat'], 'pr5_bottoms': ['cargos', 'jeans', 'work_pants'], 'pr5_shoes': ['suede_chukka', 'work_boot'], 'pr6': 0.5, 'pr6_layers': ['fleece', 'rain_jacket', 'shell_jacket'], 'pr6_shoes': ['trail_shoe'], 'short_layers_extra': ['track_jacket']}
+  v4's changes from v3: {'pr5': 1.0, 'pr5_layers': ['chore_coat'], 'pr5_bottoms': ['cargos', 'jeans', 'work_pants'], 'pr5_shoes': ['chelsea_boot', 'suede_chukka', 'work_boot'], 'pr6': 0.5, 'pr6_layers': ['fleece', 'rain_jacket', 'shell_jacket'], 'pr6_shoes': ['trail_shoe'], 'short_layers_extra': ['track_jacket']}
 
 (1) THE STYLE COUNCIL'S OUTFITS BY STYLE (cases.json anchors + look-alikes; made-up readings, no person; each case's own occasion, picks and boldness). adv = the advocate's rating (RULEBOOK Part 7 bands; a range's middle). target = adv with 9+ held to 8.5. tier: mistake <= 6, plain 6.5-7.5, deliberate 8+.
   -- streetwear
@@ -142,7 +142,7 @@ STYLE FAIRNESS PAPER TEST · v3 = parts-proto-3 (Oct 10, 2026) (default) · v4 =
     zoom1-stock A    photos 39 · readings 115 · fires on 0 · flips 0
     zoom1-stock B    photos 39 · readings 117 · fires on 0 · flips 0
   shoe types read across runs on photos whose shoes read as any boot in any run (b1 A, zoom1/zoom1-stock B):
-    21 photos; PR5's shoe set (work boot, chukka) holds all runs on 8, some runs on 15
+    21 photos; PR5's shoe set (the boots kind) holds all runs on 14, some runs on 21
       b1 A phone-5a9049              ['other', 'suede_chukka', 'suede_chukka']
       b1 A phone-8bc29d              ['suede_chukka', 'derby', 'suede_chukka']
       b1 A phone-b0f0c8              ['other', 'other', 'work_boot']
@@ -242,7 +242,8 @@ STYLE FAIRNESS PAPER TEST · v3 = parts-proto-3 (Oct 10, 2026) (default) · v4 =
   PR5 + field jacket                       8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
   PR5 + overshirt                          8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
   PR5 shoes + low-profile/canvas sneakers  8+ 5 (6%) · b1 49/49 · all +0.03/51 · held +0.12/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.5/8.0
-  PR5 shoes + Chelsea/derby                8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
+  PR5 shoes: work boot + chukka only (no Chelsea) 8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
+  PR5 shoes + derby (his boots' misread)   8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
   PR5 bottoms + chinos                     8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
   PR6 off                                  8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
   PR6 +1.0                                 8+ 5 (6%) · b1 49/49 · all +0.01/51 · held +0.09/26 · deliberate 8+ {'classic prep': 1, 'outdoor': 1, 'smart casual': 1, 'streetwear': 2, 'vintage sport': 2, 'workwear': 2} · chore 7.0/8.0
@@ -267,3 +268,10 @@ STYLE FAIRNESS PAPER TEST · v3 = parts-proto-3 (Oct 10, 2026) (default) · v4 =
     stock-s22-before_phone   detected classic_prep/smart_casual      label if picked: {'classic_prep': 'classic_prep', 'smart_casual': 'classic_prep'}
     stock-s25-before_mirror  detected minimalist/smart_casual        label if picked: {'minimalist': 'minimalist', 'smart_casual': 'smart_casual'}
   council outfits with 2+ detected styles (v4): 27/72
+
+(9) PROPOSAL CHECK: 'a fix toward his picked look comes first, on a tie' (handoff/fixtures/parts_fixes.py, the v3 parts fix engine, empty closet, own occasion). The proposed key puts 'the fixed outfit reads as one of his picks' right after the shown gain: it can reorder fixes that show the same gain, never beat a bigger one. Each real reading is run once per single pick (7 styles).
+  (reading, pick) pairs with at least one fix: 329 · a shown fix makes the outfit read as the pick: 51 · the lead fix would change: 4
+    oct7-ph1 pick streetwear: pants_navy_chinos -> shoes_chunky (gain +1)
+    stock-p02-after_studio pick workwear: layer_short -> pants_dark_jeans (gain +0.5)
+    stock-s05-before_studio pick workwear: pants_navy_chinos -> shoes_boots (gain +0.5)
+    stock-s16-before_street pick workwear: pants_navy_chinos -> shoes_boots (gain +0.5)

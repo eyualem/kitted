@@ -15,6 +15,7 @@
    "work_pants"
   ],
   "pr5_shoes": [
+   "chelsea_boot",
    "suede_chukka",
    "work_boot"
   ],
@@ -2660,7 +2661,40 @@
    "e438d4": 7.5,
    "e438d4_boots": 8.0
   },
-  "PR5 shoes + Chelsea/derby": {
+  "PR5 shoes: work boot + chukka only (no Chelsea)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_deliberate_8": {
+    "streetwear": 2,
+    "vintage sport": 2,
+    "workwear": 2,
+    "smart casual": 1,
+    "classic prep": 1
+   },
+   "e438d4": 7.0,
+   "e438d4_boots": 8.0
+  },
+  "PR5 shoes + derby (his boots' misread)": {
    "8+": 5,
    "pct8": 6,
    "b1": [
@@ -3093,5 +3127,16 @@
    },
    "score_same": true
   }
- ]
+ ],
+ "picks_fix_tiebreak": {
+  "cards_with_fixes": 329,
+  "a_shown_fix_reads_as_pick": 51,
+  "lead_fix_changes": 4,
+  "examples": [
+   "oct7-ph1 pick streetwear: pants_navy_chinos -> shoes_chunky (gain +1)",
+   "stock-p02-after_studio pick workwear: layer_short -> pants_dark_jeans (gain +0.5)",
+   "stock-s05-before_studio pick workwear: pants_navy_chinos -> shoes_boots (gain +0.5)",
+   "stock-s16-before_street pick workwear: pants_navy_chinos -> shoes_boots (gain +0.5)"
+  ]
+ }
 }

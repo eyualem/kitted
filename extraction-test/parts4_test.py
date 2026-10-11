@@ -314,7 +314,7 @@ def main():
                 res["boot_types"][f"{nm} {k}"] = subs
     inset = sum(1 for v in res["boot_types"].values() if all(s in P.TUNE["v4"]["pr5_shoes"] for s in v))
     anyin = sum(1 for v in res["boot_types"].values() if any(s in P.TUNE["v4"]["pr5_shoes"] for s in v))
-    say(f"    {len(res['boot_types'])} photos; PR5's shoe set (work boot, chukka) holds all runs on {inset}, some runs on "
+    say(f"    {len(res['boot_types'])} photos; PR5's shoe set (the boots kind) holds all runs on {inset}, some runs on "
         f"{anyin}")
     for k, v in res["boot_types"].items():
         say(f"      {k:30s} {v}")
@@ -459,9 +459,10 @@ def main():
         "PR5 +1.5": {"pr5": 1.5},
         "PR5 + field jacket": {"pr5_layers": frozenset({"chore_coat", "field_jacket"})},
         "PR5 + overshirt": {"pr5_layers": frozenset({"chore_coat", "overshirt"})},
-        "PR5 shoes + low-profile/canvas sneakers": {"pr5_shoes": frozenset({"work_boot", "suede_chukka",
-                                                                             "low_profile_sneaker", "canvas_sneaker"})},
-        "PR5 shoes + Chelsea/derby": {"pr5_shoes": frozenset({"work_boot", "suede_chukka", "chelsea_boot", "derby"})},
+        "PR5 shoes + low-profile/canvas sneakers": {"pr5_shoes": frozenset(R.FOOT_KIND["boots"]) | {
+            "low_profile_sneaker", "canvas_sneaker"}},
+        "PR5 shoes: work boot + chukka only (no Chelsea)": {"pr5_shoes": frozenset({"work_boot", "suede_chukka"})},
+        "PR5 shoes + derby (his boots' misread)": {"pr5_shoes": frozenset(R.FOOT_KIND["boots"]) | {"derby"}},
         "PR5 bottoms + chinos": {"pr5_bottoms": frozenset({"jeans", "work_pants", "cargos", "chinos"})},
         "PR6 off": {"pr6": 0.0},
         "PR6 +1.0": {"pr6": 1.0},
@@ -529,6 +530,50 @@ def main():
     say(f"  council outfits with 2+ detected styles (v4): "
         f"{sum(1 for x in cases if len(score(x['reading'], x['occasion'], None, 'v4', styles={})['detected_styles']) >= 2)}"
         f"/{len(cases)}")
+
+    # ======================== (9) the picks tie-break for fixes (proposal; measured with the v3 fix engine)
+    say("\n(9) PROPOSAL CHECK: 'a fix toward his picked look comes first, on a tie' (handoff/fixtures/parts_fixes.py, "
+        "the v3 parts fix engine, empty closet, own occasion). The proposed key puts 'the fixed outfit reads as one of his "
+        "picks' right after the shown gain: it can reorder fixes that show the same gain, never beat a bigger one. "
+        "Each real reading is run once per single pick (7 styles).")
+    sys.path.insert(0, str(K / "handoff/fixtures"))
+    import parts_fixes as F  # noqa: E402
+    seen = {}
+    orig_eval = F._evaluate
+
+    def spy(cand, *a, **kw):
+        ev = orig_eval(cand, *a, **kw)
+        if ev is not None:
+            seen[cand["id"]] = set(ev[0]["detected_styles"])
+        return ev
+    F._evaluate = spy
+    keys7 = ["streetwear", "workwear", "vintage_sport", "outdoor", "minimalist", "classic_prep", "smart_casual"]
+    tot = changed = toward_any = 0
+    examples = []
+    for k in sorted(sel):
+        for stl in keys7:
+            seen.clear()
+            out = F.suggest_parts_fixes(prim[k]["reading"], prim[k]["occ"], {stl: 0.5}, "a_little",
+                                        T.second_look_for(k, U, L))
+            fx = out["fixes"]
+            if not fx:
+                continue
+            tot += 1
+            toward = [x for x in fx if stl in seen.get(x["id"], set())]
+            toward_any += bool(toward)
+            alt = sorted(fx, key=lambda x: (F.CATALOG["classes"][x["class"]]["rank"], -x["gain"], stl not in seen.get(x["id"], set()), -x["raw_gain"],
+                                            x["effort"]))
+            if alt[0]["id"] != fx[0]["id"]:
+                changed += 1
+                if len(examples) < 10:
+                    examples.append(f"{k} pick {stl}: {fx[0]['id']} -> {alt[0]['id']} (gain {alt[0]['gain']:+g})")
+    F._evaluate = orig_eval
+    res["picks_fix_tiebreak"] = {"cards_with_fixes": tot, "a_shown_fix_reads_as_pick": toward_any,
+                                 "lead_fix_changes": changed, "examples": examples}
+    say(f"  (reading, pick) pairs with at least one fix: {tot} · a shown fix makes the outfit read as the pick: "
+        f"{toward_any} · the lead fix would change: {changed}")
+    for e_ in examples:
+        say(f"    {e_}")
 
     (OUT / "analysis.txt").write_text("\n".join(LINES) + "\n")
     json.dump(res, open(OUT / "analysis.json", "w"), indent=1,

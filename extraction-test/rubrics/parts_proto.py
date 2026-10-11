@@ -139,7 +139,7 @@ TUNE["v2"].update(_OFF)
 # shoe kind 77% with the set spanning the boot family so a type flip inside "boots" doesn't switch it), each gated
 # on its style's detection and its own shoe, like PR4. Sized by evidence, like PR4: medium-strong -> +1.0, weak -> +0.5.
 #   PR5 "the workwear silhouette" (+1.0): a chore coat over straight-or-fuller jeans, work pants or cargos, finished by
-#   work boots or chukkas, in an outfit that reads as workwear. v5-silhouette §5 workwear (1) "chore coat or trucker at
+#   boots (work boots, chukkas, Chelsea boots: the whole kind), in an outfit that reads as workwear. v5-silhouette §5 workwear (1) "chore coat or trucker at
 #   the hip + tee + straight/relaxed dark jeans or double-knees, cuffed, boots" (GQ Apr 2025, GQ Sep 2026, Mr Porter
 #   2025, Stridewise 2026, Man of Many 2023; medium-strong) and §3: 6 sources pair a chore coat with a straight or fuller
 #   leg (GQ Sep 2026: "something sturdy to sit on"); style_archetypes workwear done well "1 hero workwear piece + basics,
@@ -159,7 +159,9 @@ TUNE["v2"].update(_OFF)
 TUNE["v4"] = dict(TUNE["v3"],
                   pr5=1.0, pr5_layers=frozenset({"chore_coat"}),
                   pr5_bottoms=frozenset({"jeans", "work_pants", "cargos"}),
-                  pr5_shoes=frozenset({"work_boot", "suede_chukka"}),
+                  # the whole boots kind (rubric.py FOOT_KIND): kind is the steady grouping (77% right with close-ups),
+                  # type is not (53%), so no line may sit inside "boots" (his suede boots read work boot / chukka)
+                  pr5_shoes=frozenset(R.FOOT_KIND["boots"]),
                   pr6=0.5, pr6_layers=frozenset({"fleece", "shell_jacket", "rain_jacket"}),
                   pr6_shoes=frozenset({"trail_shoe"}),
                   short_layers_extra=frozenset({"track_jacket"}),
