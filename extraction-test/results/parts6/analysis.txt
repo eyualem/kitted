@@ -1,0 +1,276 @@
+PARTS ENGINE v6 PAPER TEST · v5 = parts-proto-5 (Oct 11, 2026) · v6 = parts-proto-6 (Oct 11, 2026) (default)
+  test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age. Rule 7: founder profile pending; friends profile unknown; 703a8b and ebe23f unknown (ask the founder); stock/web profile unknown; council and test outfits are made-up readings with no person.
+  v6's changes from v5: {'pb': 1.5, 'pb_roomy_full': ['minimalist', 'outdoor', 'streetwear', 'vintage_sport', 'workwear'], 'pb_roomy_narrow': ['outdoor'], 'pb_wide_ok': ['minimalist', 'outdoor', 'streetwear', 'vintage_sport', 'workwear'], 'h2_any': True, 'occ_target': {'event': (3, 4)}}
+
+(1) KD-5: A PREP MARKER NO LONGER COSTS 'TOP TO TOE' (made-up readings, Everyday; no picks, then each pick)
+  oxford         white oxford + khaki chinos + loafers (no marker: smart casual)                              [smart casual] v5 7.5 (Style 8.5) -> v6 7.5 (Style 8.5) · with picks {'classic_prep': 7.5, 'smart_casual': 7.5, 'minimalist': 7.5}
+  cardigan       + a navy cardigan over it (marker: prep)                                                     [classic prep] v5 7.0 (Style 7.5) -> v6 7.5 (Style 8.5) · with picks {'classic_prep': 7.5, 'smart_casual': 7.5, 'minimalist': 7.5}
+  color-oxford   a light-blue oxford instead (light blue is a neutral: no marker)                             [smart casual] v5 7.5 (Style 8.5) -> v6 7.5 (Style 8.5) · with picks {'classic_prep': 7.5, 'smart_casual': 7.5, 'minimalist': 7.5}
+  pink-oxford    a pink oxford instead (a colored collar: prep)                                               [classic prep] v5 7.5 (Style 7.5) -> v6 8.0 (Style 8.5) · with picks {'classic_prep': 8.0, 'smart_casual': 8.0, 'minimalist': 8.0}
+  striped-oxford a medium-striped white oxford (a patterned collar: prep)                                     [classic prep] v5 7.5 (Style 8.25) -> v6 7.5 (Style 9.25) · with picks {'classic_prep': 7.5, 'smart_casual': 7.5, 'minimalist': 7.5}
+  polo           navy polo + chinos + white leather sneakers (smart casual)                                   [smart casual] v5 7.5 (Style 8.5) -> v6 7.5 (Style 8.5) · with picks {'classic_prep': 7.5, 'smart_casual': 7.5, 'minimalist': 7.5}
+  polo-green     a green polo instead (prep)                                                                  [classic prep] v5 7.5 (Style 7.5) -> v6 7.5 (Style 8.5) · with picks {'classic_prep': 7.5, 'smart_casual': 7.5, 'minimalist': 7.5}
+  cardigan-wide  black cardigan + wide black trousers + black loafers (minimal label; smart casual top to toe) [minimal] v5 7.0 (Style 7.5) -> v6 7.5 (Style 8.5) · with picks {'classic_prep': 7.5, 'smart_casual': 7.5, 'minimalist': 7.5}
+
+(2) KD-16: EVENT'S SOFTER BAND (made-up readings, no picks). Interview · Event v5 (interview band) · Event v6 (3-4) · Date
+  hoodie     hoodie + dark jeans + white leather sneakers                       dress 2.5   interview 6.0 · event v5 6.0 (too casual for event: held to 6.0) -> v6 7.0 (a bit casual for event) · date 7.0
+  tee        plain tee + dark jeans + low-profile sneakers                      dress 2.333 interview 5.5 · event v5 5.5 (too casual for event: held to 5.5) -> v6 6.5 (a bit casual for event) · date 7.0
+  overshirt  overshirt over a tee + dark jeans + Chelsea boots (smart going-out) dress 2.75  interview 6.5 · event v5 6.5 (a bit casual for event) -> v6 7.0 (right for it) · date 7.0
+  oxford     oxford + chinos + loafers                                          dress 3.167 interview 7.5 · event v5 7.5 (a bit casual for event) -> v6 7.5 (right for it) · date 7.5
+  polo       knit polo tucked into trousers + loafers                           dress 3.667 interview 8.0 · event v5 8.0 (right for it) -> v6 8.0 (right for it) · date 8.0
+  blazer     blazer over a tucked oxford + trousers + derbies                   dress 3.75  interview 7.5 · event v5 7.5 (right for it) -> v6 7.5 (right for it) · date 7.5
+  slides     oxford + chinos + slides (still held to 4.0)                       dress 2.333 interview 4.0 · event v5 4.0 (slides at a dressy occasion: held to 4.0) -> v6 4.0 (slides at a dressy occasion: held to 4.0) · date 6.5
+  sweats     hoodie + sweatpants + canvas sneakers (still held to 4.0)          dress 1.667 interview 4.0 · event v5 4.0 (athletic bottoms at a dressy occasion: held to 4.0) -> v6 4.0 (athletic bottoms at a dressy occasion: held to 4.0) · date 6.5
+  the Event ceiling by the clothes' mean dressiness (O1 + its deduction; slides and loungewear unchanged):
+    mean  3.5: v5 -0.0 held to None · v6 -0.0 held to None
+    mean 3.25: v5 -0.0 held to None · v6 -0.0 held to None
+    mean  3.0: v5 -0.25 held to None · v6 -0.0 held to None
+    mean 2.75: v5 -0.5 held to None · v6 -0.0 held to None
+    mean  2.5: v5 -0.5 held to 6.0 · v6 -0.25 held to None
+    mean 2.25: v5 -0.5 held to 5.5 · v6 -0.5 held to None
+    mean  2.0: v5 -0.5 held to 5.0 · v6 -0.5 held to 6.0
+    mean 1.75: v5 -0.5 held to 4.5 · v6 -0.5 held to 5.5
+    mean  1.5: v5 -0.5 held to 4.0 · v6 -0.5 held to 5.0
+    mean  1.0: v5 -0.5 held to 3.5 · v6 -0.5 held to 4.0
+    mean  0.5: v5 -0.5 held to 3.5 · v6 -0.5 held to 3.5
+
+(3) KD-3: THE BANDS (PB1, made-up readings, Everyday, no picks). fault = PB1 must fire; keep = it mustn't
+  [ok] B1   oversized tee + slim black jeans + white leather sneakers (no style)                                 [no style] v5 7.0 -> v6 6.5 (fault) | Proportions 5.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7 · "a roomy tee over slim legs: an oversized top wants a fuller leg"
+  [ok] B2   oversized hoodie + slim black jeans + chunky sneakers (streetwear; its volume needs a fuller leg)    [streetwear] v5 7.0 -> v6 6.5 (fault) | Proportions 5.5 · Fit 7 · Color 7 · Shoes 5.5 · Style 7.5 · "a roomy hoodie over slim legs: an oversized top wants a fuller leg"
+  [ok] B3   oversized graphic tee + slim black jeans + canvas sneakers                                           [no style] v5 7.0 -> v6 6.5 (fault) | Proportions 5.5 · Fit 7 · Color 7 · Shoes 7 · Style 7 · "a roomy graphic tee over slim legs: an oversized top wants a fuller leg"
+  [ok] B4   oversized tee + dark straight jeans + white leather sneakers (no style)                              [no style] v5 7.0 -> v6 6.5 (fault) | Proportions 5.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7 · "the roomy tee is roomier than the rest of the outfit calls for"
+  [ok] B5   oversized oxford + slim chinos + loafers (smart casual's band stops at 3)                            [smart casual] v5 7.5 -> v6 7.0 (fault) | Proportions 5.5 · Fit 7 · Color 7 · Shoes 8 · Style 8.5 · "a roomy oxford shirt over slim legs: an oversized top wants a fuller leg"
+  [ok] B6   oversized sweater + slim black jeans + Chelsea boots                                                 [smart casual] v5 7.0 -> v6 6.5 (fault) | Proportions 5.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 · "a roomy sweater over slim legs: an oversized top wants a fuller leg"
+  [ok] K1   oversized tee + wide jeans + white leather sneakers (streetwear)                                     [streetwear] v5 7.0 -> v6 7.0 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  [ok] K2   oversized hoodie + wide jeans + chunky sneakers (streetwear)                                         [streetwear] v5 8.0 -> v6 8.0 (keep) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  [ok] K3   oversized tee + wide black trousers + loafers (city boy)                                             [minimal] v5 7.0 -> v6 7.0 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  [ok] K4   roomy knit + straight chinos + loafers (pressed trousers: city boy)                                  [minimal] v5 7.0 -> v6 7.0 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  [ok] K5   boxy tee at the belt + dark straight jeans + white sneakers (a deliberate waist)                     [minimal] v5 8.0 -> v6 8.0 (keep) | Proportions 8.5 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  [ok] K6   oversized tee tucked into straight jeans (a deliberate waist)                                        [no style] v5 7.5 -> v6 7.5 (keep) | Proportions 8.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+  [ok] K7   oversized hoodie under a chore coat + slim jeans + boots (the layer sets the line)                   [workwear] v5 7.0 -> v6 7.0 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  [ok] K8   oversized hoodie + slim joggers + canvas sneakers (loungewear: its ladder)                           [streetwear] v5 6.5 -> v6 6.5 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  [ok] K9   oversized tee + skinny jeans (PF5 already charges it)                                                [no style] v5 6.5 -> v6 6.5 (keep) | Proportions 5.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+  [ok] K10  oversized hoodie + slim chinos + loafers (SX1 already charges it)                                    [no style] v5 6.5 -> v6 6.5 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 4
+  [ok] K11  oversized oxford with sleeves over the hands + straight jeans (FF5 already calls it a size big)      [smart casual] v5 6.5 -> v6 6.5 (keep) | Proportions 7 · Fit 5 · Color 7 · Shoes 8 · Style 7.5
+  [ok] K12  regular tee + slim black jeans + white leather sneakers (inside the default band)                    [no style] v5 7.0 -> v6 7.0 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+  [ok] K13  chore coat over a tee + slim jeans + boots (workwear; a regular top under a layer)                   [workwear] v5 7.0 -> v6 7.0 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  [ok] K14  oversized tee + straight cargos + chunky sneakers (streetwear)                                       [streetwear] v5 7.0 -> v6 7.0 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  [ok] K15  a volume-5 boxy tee + wide black trousers + loafers (SX1 already charges it: above minimal's band)   [minimal] v5 6.5 -> v6 6.5 (keep) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 4
+  v5's crossing outfits (parts5_test.CROSSING) under v6: SX1 must behave exactly as in v5
+    [ok] K9 v5 7.5 -> v6 7.0 (keep) PB1
+    [ok] K17 v5 7.0 -> v6 6.5 (keep) PB1
+    29/29 as expected; moved 2; founder cases A/B/C [6.5, 6.5, 6.5]
+
+(4) THE STYLE COUNCIL'S OUTFITS BY STYLE (cases.json; made-up readings, no person; each case's own occasion, picks and boldness). adv = the advocate's rating; target = adv with 9+ held to 8.5
+  -- streetwear
+    st-4-stained-lounge                mistake    adv 3.5   v5 5.0          | v6 Proportions 7 · Fit 6.5 · Color 7 · Shoes 4.5 · Style 7
+    st-5.5-done-badly                  mistake    adv 5.5   v5 6.5          | v6 Proportions 5.5 · Fit 6.5 · Color 7 · Shoes 5.5 · Style 7.5  [PB1_roomier_than_look]
+    st-7.5-graphic-wide-dunks          plain      adv 7.5   v5 8.0          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    st-8.5-bomber-hoodie               deliberate adv 8.5   v5 8.0          | v6 Proportions 8.5 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    st-9-chore-red-hoodie              deliberate adv 9.0   v5 8.0          | v6 Proportions 7 · Fit 7 · Color 8 · Shoes 8 · Style 8.5
+  -- workwear
+    ww-4-careless                      mistake    adv 4.0   v5 5.0          | v6 Proportions 7 · Fit 5.5 · Color 8 · Shoes 6 · Style 7.5
+    ww-5.5-flannel-cargos-boots        mistake    adv 5.75  v5 6.5          | v6 Proportions 7 · Fit 5.5 · Color 8 · Shoes 8 · Style 7.5
+    ww-6.5-two-faults                  plain      adv 6.5   v5 6.5          | v6 Proportions 7 · Fit 5.5 · Color 8 · Shoes 8 · Style 7.5
+    ww-7.5-tee-jeans-boots             plain      adv 7.5   v5 7.5          | v6 Proportions 7.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    ww-8-chore-canvas                  deliberate adv 8.0   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    ww-8.5-chore-boots                 deliberate adv 8.5   v5 8.0          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    ww-9-full                          deliberate adv 9.0   v5 8.0          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    ww-chore-skinny-chunky             plain      adv 6.75  v5 6.5          | v6 Proportions 6.5 · Fit 7 · Color 7 · Shoes 5.5 · Style 7
+  -- vintage sport
+    vs-4-pilled-sweats                 mistake    adv 4.0   v5 5.5          | v6 Proportions 7 · Fit 6.5 · Color 7 · Shoes 5 · Style 7
+    vs-5.5-full-kit                    mistake    adv 5.75  v5 5.5          | v6 Fit 7 · Color 8 · Shoes 4.5 · Style 7
+    vs-6.5-jersey-joggers-runners      plain      adv 6.5   v5 6.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7
+    vs-7-sweatshirt-trackpants         plain      adv 7.0   v5 6.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    vs-7.5-tracksuit                   plain      adv 7.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    vs-7.5-blokecore-plain             plain      adv 7.5   v5 8.0          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    vs-8-red-jersey-wide-jeans         deliberate adv 8.0   v5 8.0          | v6 Proportions 8 · Fit 7 · Color 8 · Shoes 8 · Style 7.5
+    vs-8.5-track-jacket-jeans          deliberate adv 8.5   v5 8.0          | v6 Proportions 8.5 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+    vs-8-sport-off-duty                deliberate adv 8.0   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+    vs-9-jersey-blazer                 deliberate adv 9.0   v5 7.5          | v6 Proportions 7 · Fit 7 · Color 8 · Shoes 8 · Style 7.5
+    vs-rugby-overcoat                  deliberate adv 8.75  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 8 · Shoes 8 · Style 7.5
+  -- outdoor
+    out-4                              mistake    adv 4.25  v5 5.5          | v6 Proportions 7 · Fit 5.5 · Color 7 · Shoes 5.5 · Style 7.5
+    out-5-volume-clash                 mistake    adv 5.0   v5 6.0          | v6 Proportions 5.5 · Fit 5 · Color 7 · Shoes 7 · Style 7
+    out-6.5-shell-slim                 plain      adv 6.5   v5 7.0          | v6 Proportions 7 · Fit 6.5 · Color 7 · Shoes 7.5 · Style 7.5
+    out-7.5-city-uniform               plain      adv 7.5   v5 7.5          | v6 Proportions 7.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    out-8.5-shell-sweater-chinos       deliberate adv 8.5   v5 7.0          | v6 Proportions 7.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    out-9.5-orange-shell-mix           deliberate adv 9.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7
+    out-9-same-trail                   deliberate adv 9.0   v5 7.5          | v6 Proportions 7.5 · Fit 7 · Color 8 · Shoes 7 · Style 7.5
+  -- minimal
+    min-4-faults                       mistake    adv 4.0   v5 5.0          | v6 Proportions 7 · Fit 4.5 · Color 7 · Shoes 6.5 · Style 7
+    min-5.5-long-tee-pooling           mistake    adv 5.75  v5 6.5          | v6 Proportions 7 · Fit 5.5 · Color 7 · Shoes 7.5 · Style 7
+    min-6.5-long-tee                   plain      adv 6.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+    min-7.5-uniform                    plain      adv 7.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+    min-8.5-knit-wide-trousers         deliberate adv 8.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    min-9-tonal-layered                deliberate adv 9.0   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    min-city-boy                       plain      adv 7.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    min-grey-sweater-black-jeans       deliberate adv 8.25  v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  -- classic prep
+    prep-4                             mistake    adv 4.0   v5 5.0          | v6 Proportions 7 · Fit 5 · Color 7 · Shoes 5.5 · Style 7.5
+    prep-5.5                           mistake    adv 5.25  v5 6.5          | v6 Proportions 7 · Fit 5 · Color 7 · Shoes 5.5 · Style 7.5
+    prep-6.5                           plain      adv 6.5   v5 6.0          | v6 Proportions 7 · Fit 5 · Color 7 · Shoes 6 · Style 7
+    prep-7.5-polo-chinos-canvas        plain      adv 7.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    prep-8-polo-chinos-wls             deliberate adv 8.0   v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    prep-sweater-oxford-loafer         deliberate adv 8.75  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    prep-quiet-luxury                  deliberate adv 9.0   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    prep-9-blazer-tucked               deliberate adv 9.0   v5 8.0          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    prep-pink-green                    plain      adv 6.5   v5 7.0          | v6 Fit 7 · Color 5 · Shoes 8 · Style 7
+    prep-pink-green-bold               plain      adv 7.0   v5 7.0          | v6 Fit 7 · Color 6 · Shoes 8 · Style 7.5
+    prep-costume                       deliberate adv 8.75  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  -- smart casual
+    sc-4-every-fault                   mistake    adv 4.0   v5 4.5          | v6 Proportions 7 · Fit 4 · Color 7 · Shoes 5 · Style 7
+    sc-5.5-done-wrong                  mistake    adv 5.5   v5 5.5          | v6 Proportions 7 · Fit 5 · Color 5.5 · Shoes 4.5 · Style 7.5
+    sc-6.5-oxford-chinos-loafer        plain      adv 6.5   v5 7.0          | v6 Proportions 7 · Fit 5 · Color 7 · Shoes 8 · Style 8.5
+    sc-7.5-tee-dark-jeans-wls          plain      adv 7.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+    sc-8.5-quarter-zip                 deliberate adv 8.5   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    sc-9-blazer-oxford-chinos-chukka   deliberate adv 9.0   v5 8.0          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5  [H2_clear_top_to_toe]
+    sc-tee-chinos-wls                  deliberate adv 7.75  v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  -- look-alike
+    la-jersey-chunky                   -          adv None  v5 8.0          | v6 Proportions 8 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+    la-rugby-jeans                     -          adv None  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    la-rugby-chinos-samba              -          adv None  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+    la-rugby-chinos-loafer             deliberate adv 8.0   v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    la-chore-tee-boots                 -          adv None  v5 8.0          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    la-shell-cargos-chunky             -          adv None  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    la-field-cargos-trail              -          adv None  v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+    la-flannel-wide-chunky             -          adv None  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+    la-boxy-tee-wide-trousers          deliberate adv 7.75  v5 7.5          | v6 Proportions 7.5 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+    la-boxy-tee-wide-jeans-chunky      -          adv None  v5 7.5          | v6 Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+    la-polo-chinos-loafer              -          adv None  v5 7.5          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+    la-quarter-zip-sweats              -          adv None  v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+    la-overshirt-chinos-wls            deliberate adv 8.75  v5 7.0 -> v6 7.5 | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5  [H2_clear_top_to_toe]
+    la-tee-mid-jeans-canvas            plain      adv 7.0   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+    la-hoodie-straight-retro           plain      adv 7.0   v5 7.0          | v6 Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+
+  PER STYLE (anchors; error = engine - target): (a) plain at 6.5-7.5, (b) deliberate reaches 8, (c) mistakes <= 6
+    streetwear    v5 n= 5 mean 7.10 err +0.40 · (a) 0/1 · (b) 2/2 · (c) 1/2 · best 8.0
+    streetwear    v6 n= 5 mean 7.10 err +0.40 · (a) 0/1 · (b) 2/2 · (c) 1/2 · best 8.0
+    workwear      v5 n= 8 mean 6.88 err -0.06 · (a) 3/3 · (b) 2/3 · (c) 1/2 · best 8.0
+    workwear      v6 n= 8 mean 6.88 err -0.06 · (a) 3/3 · (b) 2/3 · (c) 1/2 · best 8.0
+    vintage sport v5 n=11 mean 7.00 err -0.25 · (a) 3/4 · (b) 2/5 · (c) 2/2 · best 8.0
+    vintage sport v6 n=11 mean 7.00 err -0.25 · (a) 3/4 · (b) 2/5 · (c) 2/2 · best 8.0
+    outdoor       v5 n= 7 mean 6.79 err -0.18 · (a) 2/2 · (b) 0/3 · (c) 2/2 · best 7.5
+    outdoor       v6 n= 7 mean 6.79 err -0.18 · (a) 2/2 · (b) 0/3 · (c) 2/2 · best 7.5
+    minimal       v5 n= 8 mean 6.69 err -0.38 · (a) 3/3 · (b) 0/3 · (c) 1/2 · best 7.0
+    minimal       v6 n= 8 mean 6.69 err -0.38 · (a) 3/3 · (b) 0/3 · (c) 1/2 · best 7.0
+    classic prep  v5 n=11 mean 6.91 err -0.25 · (a) 3/4 · (b) 1/5 · (c) 1/2 · best 8.0
+    classic prep  v6 n=11 mean 6.91 err -0.25 · (a) 3/4 · (b) 1/5 · (c) 1/2 · best 8.0
+    smart casual  v5 n= 7 mean 6.57 err -0.32 · (a) 2/2 · (b) 1/3 · (c) 2/2 · best 8.0
+    smart casual  v6 n= 7 mean 6.57 err -0.32 · (a) 2/2 · (b) 1/3 · (c) 2/2 · best 8.0
+  council style outfits moved: 1: la-overshirt-chinos-wls
+  the other 39 council cases (founder group, edge cases): v6 moves 0
+
+(5) REAL PHOTOS (one reading per photo, its own occasion; the corpus + the newest pull)
+  78 photos ({'class': 16, 'everyday': 62}); shown score moves on 0; raw moves on 0; PB2's tip on 0
+  all photos · v5                    n= 78 median 7.0  mean 6.95  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 55 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 45, 7.5: 10, 8.0: 5}
+  all photos · v6                    n= 78 median 7.0  mean 6.95  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 55 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 45, 7.5: 10, 8.0: 5}
+  per 'Reads as' (v6's label), mean v5 -> v6 and how many moved:
+    no style       n=37  v5 6.82 -> v6 6.82  moved 0
+    smart casual   n=15  v5 7.27 -> v6 7.27  moved 0
+    streetwear     n= 9  v5 6.78 -> v6 6.78  moved 0
+    workwear       n= 9  v5 7.11 -> v6 7.11  moved 0
+    minimal        n= 6  v5 6.92 -> v6 6.92  moved 0
+    classic prep   n= 2  v5 7.00 -> v6 7.00  moved 0
+  real photos with a roomy top (volume >= 4) worn on its own, and why PB1 does or doesn't fire:
+    mirror-m01                 web photo (profile unknown)    graphic_tee v4 mid_fly       jeans straight     reads streetwear              
+    phone-403ade               the founder (profile pending)  tee v4 mid_fly               jeans wide         reads streetwear              
+    phone-8ad378               the founder (profile pending)  tee v4 mid_fly               jeans wide         reads streetwear              
+    phone-968016               the founder (profile pending)  sweatshirt v4 mid_fly        jeans wide         reads streetwear              
+    stock-p02-after_studio     stock photo (profile unknown)  hoodie v4 at_belt            sweatpants relaxed reads streetwear              
+    stock-p02-before_studio    stock photo (profile unknown)  hoodie v4 at_belt            sweatpants relaxed reads streetwear              
+    stock-s25-before_mirror    stock photo (profile unknown)  camp_collar_shirt v4 mid_fly drawstring_trousers straight reads minimalist/smart_casual 
+  every real photo at Event (v5 -> v6), the KD-16 change on real clothes:
+    {'n': 78, 'moved': 42, 'up': 42, 'mean_v5': 5.89, 'mean_v6': 6.35, 'by_v5': {'5.0->6.0': 7, '5.5->6.0': 1, '5.5->6.5': 11, '6.0->6.5': 3, '6.0->7.0': 9, '6.0->7.5': 1, '6.5->7.0': 9, '7.0->7.5': 1}}
+
+(6) 3-RUN STEADINESS (Everyday, the test profile)
+  batch 1 arm A (validation), second look run i paired
+    v5 within 0.5 of median 49/49 · exact 41/49
+    v6 within 0.5 of median 49/49 · exact 40/49
+    photos where any v6 run differs from v5: 1: mirror-m03 v5 [7.0, 7.0, 7.0] v6 [7.0, 6.5, 7.0]
+  zoom1 + zoom1-stock arm B (design set)
+    v5 within 0.5 of median 66/66 · exact 57/66
+    v6 within 0.5 of median 66/66 · exact 57/66
+    photos where any v6 run differs from v5: 0
+  batch 1 arm A + lightness from arm B1 run i
+    v5 within 0.5 of median 49/49 · exact 39/49
+    v6 within 0.5 of median 49/49 · exact 38/49
+    photos where any v6 run differs from v5: 1: mirror-m03 v5 [7.0, 7.0, 7.0] v6 [7.0, 6.5, 7.0]
+  PB1 and v6's H2 on every multi-run reading set (photos where they fire in any run / in some but not all runs):
+    b1 A             photos 50 · readings 150 · PB1 fires on 1 (flips 1: mirror-m03) · new H2 on 0 (flips 0)
+    b1 B1            photos 50 · readings 150 · PB1 fires on 1 (flips 1: mirror-m03) · new H2 on 0 (flips 0)
+    zoom1 A          photos 27 · readings  81 · PB1 fires on 0 (flips 0) · new H2 on 0 (flips 0)
+    zoom1 B          photos 27 · readings  81 · PB1 fires on 0 (flips 0) · new H2 on 0 (flips 0)
+    zoom1 C          photos 27 · readings  81 · PB1 fires on 1 (flips 1: mirror-m01) · new H2 on 0 (flips 0)
+    zoom1 D          photos 27 · readings  81 · PB1 fires on 0 (flips 0) · new H2 on 0 (flips 0)
+    zoom1-stock A    photos 39 · readings 117 · PB1 fires on 0 (flips 0) · new H2 on 0 (flips 0)
+    zoom1-stock B    photos 39 · readings 117 · PB1 fires on 0 (flips 0) · new H2 on 0 (flips 0)
+
+(7) AGAINST THE JUDGE PILOT (panel = median of 5 judges' weighted totals), the v2 split
+  all            v5 n 59 · mean diff +0.01 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+  all            v6 n 59 · mean diff +0.01 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+  TUNING half    v5 n 30 · mean diff -0.07 · MAE 0.4 · within 0.5 25 · off 1.5+ 2 · r 0.69
+  TUNING half    v6 n 30 · mean diff -0.07 · MAE 0.4 · within 0.5 25 · off 1.5+ 2 · r 0.69
+  HELD-OUT half  v5 n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+  HELD-OUT half  v6 n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+
+(8) EVERY CHECK OF THE FOUNDER, HIS FRIENDS AND THE TWO UNKNOWNS (own occasion): v5 -> v6
+  phone-d1967f     [a friend (profile unknown); class; smart casual] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 6
+  phone-e438d4     [a friend (profile unknown); class; workwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-f4870b     [a friend (profile unknown); class; workwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-fb0b17     [a friend (profile unknown); class; workwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  oct7-ph1         [the founder (profile pending); everyday; no style] v5 5.5 -> v6 5.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  oct7-ph2         [the founder (profile pending); everyday; smart casual] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  oct7-ph3         [the founder (profile pending); everyday; smart casual] v5 7.5 -> v6 7.5 | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  oct7-ph4         [the founder (profile pending); everyday; workwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  phone-0d39d6     [the founder (profile pending); everyday; streetwear] v5 6.5 -> v6 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-1f1997     [the founder (profile pending); class; streetwear] v5 6.5 -> v6 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-403ade     [the founder (profile pending); class; streetwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-5a9049     [the founder (profile pending); everyday; workwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  phone-6b14db     [the founder (profile pending); everyday; no style] v5 5.5 -> v6 5.5 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-7de605     [the founder (profile pending); everyday; no style] v5 5.5 -> v6 5.5 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-7f14a4     [the founder (profile pending); everyday; workwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7.5
+  phone-8ad378     [the founder (profile pending); class; streetwear] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-8bc29d     [the founder (profile pending); class; minimal] v5 6.5 -> v6 6.5 | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  phone-968016     [the founder (profile pending); class; streetwear] v5 7.5 -> v6 7.5 | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  phone-a765e8     [the founder (profile pending); everyday; no style] v5 5.5 -> v6 5.5 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-b0f0c8     [the founder (profile pending); everyday; workwear] v5 7.0 -> v6 7.0 | Proportions 6.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  phone-d58b14     [the founder (profile pending); class; no style] v5 6.5 -> v6 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-d6559a     [the founder (profile pending); class; no style] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Style 7
+  phone-d918c0     [the founder (profile pending); class; workwear] v5 7.5 -> v6 7.5 | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  phone-e026de     [the founder (profile pending); class; streetwear] v5 6.5 -> v6 6.5 | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-f07193     [the founder (profile pending); class; no style] v5 6.5 -> v6 6.5 | Proportions 7 · Fit 5.5 · Color 7 · Style 7
+  phone-703a8b     [unknown, ask the founder; class; no style] v5 7.5 -> v6 7.5 | Proportions 8.5 · Fit 7 · Color 7.5 · Style 7
+  phone-ebe23f     [unknown, ask the founder; class; no style] v5 7.0 -> v6 7.0 | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+
+(9) PICKS NEVER MOVE A NUMBER: every test outfit, council case and real photo under no picks, each single style and three picks
+  readings whose score changed with the picks: 0 of 226
+
+  targets:
+    [met] KD-5: the oxford + chinos + loafers scores the same with any prep marker
+    [met] KD-3: every band outfit behaves as expected (fault / keep)
+    [met] v5's crossing outfits behave as in v5 (SX1, one fact one charge); founder cases A/B/C at 6.5
+    [met] KD-16: no Event score drops, and slides and loungewear stay held to 4.0 at Event
+    [met] the friend's blazer d1967f at 7 or below
+    [met] the chore coat (e438d4, f4870b, fb0b17) at 7-7.5
+    [met] his gingham fits as now (5a9049, 7f14a4, f07193)
+    [met] his black tee + wide jeans + white leather sneakers (8ad378, 403ade) at 7
+    [met] council deliberate fits that reached 8 under v5 still do (8 under v5)
+    [met] council plain fits that sat at 6.5-7.5 under v5 still do
+    [met] batch 1 arm A steady 49/49 (49/49)
+    [met] panel gap within +-0.2 (+0.01)
+    [met] no loss on the held-out half (within 0.5: v5 26 -> v6 26; MAE 0.43 -> 0.43)
+    [met] 8+ at 5-12% on the real photos (6%)
+    [met] picks never change a score
+
+(10) THE SIZE AND THE WHAT-IFS (real 8+ and how many photos move vs v5; b1 A steady; judge all / held mean diff and within 0.5; band outfits B1 / B4 / B5; band misses)
+  v5 (none of the three)                                  8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [7.0, 7.0, 7.5]
+  PB1 -0.75 (half a step)                                 8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [7.0, 7.0, 7.0]
+  PB1 -1.0                                                8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [7.0, 7.0, 7.0]
+  v6 as built (PB1 -1.5)                                  8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [6.5, 6.5, 7.0]
+  PB1 -2.0                                                8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [6.5, 6.5, 7.0]
+  PB1 -3.0 (SX1's size)                                   8+ 5 (6%) · moved 0 · b1 48/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [6.0, 6.0, 6.5]
+  PB1 off (H2 + Event only)                               8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [7.0, 7.0, 7.5] · band misses 6
+  H2 on the label only (KD-5 not fixed)                   8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [6.5, 6.5, 7.0]
+  Event on the interview band (KD-16 not fixed)           8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [6.5, 6.5, 7.0]
+  PB1 never over slim legs in streetwear, minimal, workwear, vintage sport (council's union per side) 8+ 5 (6%) · moved 0 · b1 49/49 · all +0.01/51 · held +0.09/26 · B1/B4/B5 [6.5, 6.5, 7.0] · band misses 1

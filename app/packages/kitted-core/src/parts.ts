@@ -1,7 +1,9 @@
-// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v5" (parts-proto-5, the
-// default since Oct 11; DECISIONS-LOG #195-214: v3 plus the workwear and outdoor shapes, the track jacket as a short
-// layer, H2 judged on the pick-free label so picks never move a number (v4), and SX1 "a piece from another look", the
-// style-crossing fault on Style (v5)). The app scores new checks with it (features/fitcheck/scoring.ts).
+// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v6" (parts-proto-6, the
+// default since Oct 11; DECISIONS-LOG #195-217: v3 plus the workwear and outdoor shapes, the track jacket as a short
+// layer, H2 judged on the pick-free label so picks never move a number (v4), SX1 "a piece from another look", the
+// style-crossing fault on Style (v5), and v6: PB1 "roomier than the look" (the style council's per-style bands as one
+// Proportions fault, with PB2 its leg-side tip), H2 judged on every style the outfit reads as, and Event's softer
+// band). The app scores new checks with it (features/fitcheck/scoring.ts).
 //
 // "The AI sees, the code judges": it reads only the garment description (plus the optional second look's two yes/no
 // answers). It never reads a face, body or skin, and never his profile (picks only choose the "Reads as" label).
@@ -16,7 +18,7 @@
 //  - Python `x in (…)` on a missing key is `None in (…)`: undefined and null both mean None (nv)
 //  - one garment, one credit: "already credited" is object identity on our own copies (Python's id(g))
 //  - where Python would raise (a garment without a subcategory reaching a reason line), this throws the same error
-// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.2.0); the v4.1
+// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.3.0); the v4.1
 // helpers it shares (formality, colors, style detection, prepare/normalize) come from the rubric engine.
 
 import { PARTS_DATA } from "./partsData";
@@ -81,6 +83,18 @@ export interface PartsTune {
   sx_min_dressy: number;
   /** The quiet looks and the top of each one's volume band. */
   sx_quiet: Record<string, number>;
+  /** v6: PB1 "roomier than the look" on Proportions (0 = off in v1-v5; also gates PB2's tip). */
+  pb: number;
+  /** Styles whose (top, leg) band box holds a roomy top over a full leg. */
+  pb_roomy_full: string[];
+  /** Styles whose band box holds a roomy top over a slim leg (outdoor). */
+  pb_roomy_narrow: string[];
+  /** Styles whose leg band reaches wide (PB2's tip is for the others and for no style). */
+  pb_wide_ok: string[];
+  /** v6: H2 is judged on every style the outfit reads as, not only the label (KD-5). */
+  h2_any: boolean;
+  /** v6: occasion bands that replace the rubric's OCCASION_TARGET ({event: [3, 4]}). */
+  occ_target: Record<string, [number, number]>;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -88,7 +102,7 @@ interface Range { points: number; from: number; to: number }
 /** fixtures/parts.json (make_parts_json.py). */
 export interface PartsData {
   version: string;
-  /** "v5" for the bundled data; "v1" - "v4" reproduce the earlier prototypes. */
+  /** "v6" for the bundled data; "v1" - "v5" reproduce the earlier prototypes. */
   engine: string;
   label: string;
   source: string;
@@ -353,6 +367,8 @@ interface PartsOutfit {
   credited: Set<Garment>;
   colorFault: boolean;
   mirror: boolean;
+  /** v5's SX1 result [points, line, tip], computed once (Style reads it; v6's PB1 stands down when it fires). */
+  sx: [number, string | null, string | null];
 }
 
 // ================================================================= the engine
@@ -387,6 +403,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const SHORT_LAYERS_ALL = new Set<unknown>([...SHORT_LAYERS, ...t.short_layers_extra]);
   const SX_STREET_TOPS = tset(t.sx_street_tops), SX_DRESSY = tset(t.sx_dressy);
   const SX_QUIET = new Map<unknown, number>(Object.entries(t.sx_quiet));
+  const PB_ROOMY_FULL = tset(t.pb_roomy_full), PB_ROOMY_NARROW = tset(t.pb_roomy_narrow), PB_WIDE_OK = tset(t.pb_wide_ok);
 
   const FAMILY = new Map<unknown, string>(Object.entries(RT.FAMILY));
   const NEUTRALS = tset(RT.NEUTRALS), LOUNGE_BOTTOMS = tset(RT.LOUNGE_BOTTOMS), SEPARATE_JACKETS = tset(RT.SEPARATE_JACKETS);
@@ -464,8 +481,26 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       tops, outers, top: tops[0] ?? null, outer: outers[0] ?? null,
       bottom: gs.find((g) => g.category === "bottom") ?? null, shoes: gs.find((g) => g.category === "footwear") ?? null,
       main, det: d.detected, label: d.label, labelNoPick: d0.label, detNoShoe: nd.detected, slots: new Set(main.map((g) => SLOT[g.category as string]!)),
-      credited: new Set(), colorFault: false, mirror: false,
+      credited: new Set(), colorFault: false, mirror: false, sx: [0.0, null, null],
     };
+  }
+
+  /** v6's PB1: a roomy top worn on its own outside every (top, leg) band box the outfit reads as. [points, line] or null. */
+  function bandFault(o: PartsOutfit): [number, string] | null {
+    if (!truthy(t.pb)) return null;
+    const T = o.top, O = o.outer, B = o.bottom;
+    if (T === null || O !== null || B === null || vol3(T) < BOXY) return null;
+    const leg = nv(B.leg_shape), bsub = nv(B.subcategory), sub = or(T.subcategory, "") as string;
+    const narrow = NARROW.has(leg) && leg !== "skinny", full = FULL_LEG.has(leg); // skinny: PF5 owns it
+    if (!(narrow || full) || LOUNGE_BOTTOMS.has(bsub) || truthy(o.sx[0])) return null; // loungewear: its ladder; SX1: one fact, one charge
+    if (T.sleeve_end === "covers_hand" && !SHORT_SLEEVE_TYPES.has(sub) && !TAILORED_FIT.has(sub) && !RIBBED.has(sub)) return null; // FF5 owns it
+    if (full && (T.tucked === "full" || SHORT_TOP_LENGTHS.has(nv(T.length)) || PRESSED.has(bsub))) return null; // a waist; city boy
+    const ok = narrow ? PB_ROOMY_NARROW : PB_ROOMY_FULL;
+    if (o.det.some((s) => ok.has(s))) return null; // a look the outfit reads as holds it
+    const what = rep(or(sub, "top"));
+    if (narrow) return [t.pb, `a roomy ${what} over slim legs: an oversized top wants a fuller leg`];
+    const look = o.label ? `a ${STYLE_NAMES[o.label]} outfit` : "the rest of the outfit";
+    return [t.pb, `the roomy ${what} is roomier than ${look} calls for`];
   }
 
   // ---------------------------------------------------------------- PROPORTIONS (30%)
@@ -500,6 +535,11 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.add(-D.peek, "the top underneath shows below the outer piece", "PF10_peek");
       faults += D.peek;
     }
+    const pb = bandFault(o); // v6: PB1, the council's bands (null in v1-v5)
+    if (pb !== null) {
+      p.add(-pb[0], pb[1], "PB1_roomier_than_look");
+      faults += pb[0];
+    }
 
     // tips: real rules whose readings haven't passed (they never move the number)
     if (T !== null && O === null && tuckedNone(T) && T.length === "below_crotch") {
@@ -511,9 +551,16 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (oTailored && (B.hem === "pooling" || B.hem === "full_break")) {
       p.tip("check the hem: trousers that bunch on the shoes fight a tailored jacket", "PF1_heavy_hem_tailored", D.tips.heavyHemTailored);
     }
+    let pf4 = false;
     if (T !== null && O === null && LONG_SHIRTS.has(nv(T.subcategory)) && tuckedNone(T) && leg === "wide"
         && vol3(T) <= D.tips.longShirtMaxVolume) {
       p.tip("an untucked shirt over wide legs can hang long; a front tuck gives it shape", "PF4_long_shirt_wide_leg", D.tips.longShirtWideLeg);
+      pf4 = true;
+    }
+    // v6: PB2, the leg side of the bands that stop at relaxed (wide vs relaxed isn't steady: a tip)
+    if (truthy(t.pb) && !pf4 && leg === "wide" && O === null && T !== null && !lounge && !H.legExcused(B, T, [])
+        && !o.det.some((s) => PB_WIDE_OK.has(s))) {
+      p.tip("wide trousers under a regular untucked top can swamp it; a tuck or a shorter top balances them", "PB2_wide_leg_band", -t.pb);
     }
 
     // rewards: a deliberate shape, blocked by any fault of 1+, a pooling hem or loungewear
@@ -882,23 +929,29 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const h2Label = truthy(t.h2_pick_free) ? o.labelNoPick : label; // v4: picks never move a number
     const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
     const suit = subs.has("suit_jacket") && subs.has("suit_trousers");
-    const [sx, sxLine, sxTip] = styleClash(o); // v5 (0 in v1-v4)
+    const [sx, sxLine, sxTip] = o.sx; // v5 (0 in v1-v4); computed once in scoreParts
     if ((det.length > 0 || suit) && !truthy(sx)) p.add(t.h1, label ? `reads as ${STYLE_NAMES[label]}` : "a matching suit", "H1_reads_as_style");
     // H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
     if (truthy(sx)) {
       // v5: a piece from another look: no "reads as"
     } else if (h2Label && o.slots.size === 3) {
+      // v6 (h2_any): judged on every style the outfit reads as, so the name a prep marker picks can't take the credit
+      // away (KD-5); the line names the pick-free label
       const c = H.outfit(o.main);
-      const best = new Map<string, number>();
-      let against = 0;
-      for (const g of o.main) {
-        const [pos, neg] = H.role(h2Label, g, c);
-        const s = SLOT[g.category as string]!;
-        best.set(s, pyMax(best.get(s) ?? 0, pos));
-        against += neg;
-      }
-      if (["upper", "bottom", "shoes"].every((s) => (best.get(s) ?? 0) >= 2) && against === 0) {
-        p.add(t.h2, `clearly ${STYLE_NAMES[h2Label]} top to toe`, "H2_clear_top_to_toe");
+      const cands = [h2Label, ...(truthy(t.h2_any) ? det.filter((s) => s !== h2Label) : [])];
+      for (const st of cands) {
+        const best = new Map<string, number>();
+        let against = 0;
+        for (const g of o.main) {
+          const [pos, neg] = H.role(st, g, c);
+          const s = SLOT[g.category as string]!;
+          best.set(s, pyMax(best.get(s) ?? 0, pos));
+          against += neg;
+        }
+        if (["upper", "bottom", "shoes"].every((s) => (best.get(s) ?? 0) >= 2) && against === 0) {
+          p.add(t.h2, `clearly ${STYLE_NAMES[h2Label]} top to toe`, "H2_clear_top_to_toe");
+          break;
+        }
       }
     } else if (suit && o.tops.length > 0) {
       p.add(t.h2_suit, "a suit worn properly over a top", "H2_suit");
@@ -1015,7 +1068,9 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (core.length === 0) return out;
     const occName = rep(occasion);
     const avg = sum(core) / core.length;
-    const target = OCCASION_TARGET.has(occasion) ? OCCASION_TARGET.get(occasion)! : OC.default;
+    // v6: Event's softer band replaces the rubric's (occ_target)
+    const target = has(t.occ_target, occasion) && truthy(t.occ_target[occasion]) ? t.occ_target[occasion]!
+      : OCCASION_TARGET.has(occasion) ? OCCASION_TARGET.get(occasion)! : OC.default;
     const lo = target[0]!, hi = target[1]!;
     const gap = lo - avg;
     let ded = OC.casual.points * ramp(gap, OC.casual.from, OC.casual.to);
@@ -1107,6 +1162,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const garments = refile(prep.garments);
     const o = outfit(garments, picks);
     o.mirror = truthy(scene.mirror_selfie);
+    o.sx = styleClash(o); // v5's SX1, read by Style and (v6) Proportions
 
     const col = color(o, boldness);
     o.colorFault = col.reasons.length > 0 && col.reasons.some((r) => r.points < 0);
@@ -1164,7 +1220,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 /** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
 export const defaultParts: PartsEngine = createParts(PARTS_DATA);
 
-/** parts_proto.score_parts() (engine v5) with the bundled data. Never mutates `reading`. */
+/** parts_proto.score_parts() (engine v6) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
 }

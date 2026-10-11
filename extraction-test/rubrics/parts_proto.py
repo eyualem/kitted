@@ -29,7 +29,9 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Five engines (engine="v5" is THE DEFAULT since Oct 11: v4 plus SX1 "a piece from another look", the style-crossing
+Six engines (engine="v6" is THE DEFAULT since Oct 11: v5 plus PB1 "roomier than the look" (the council's per-style
+bands, back as one Proportions fault), H2 judged on every style the outfit reads as, and Event's softer band; see
+TUNE["v6"], ../parts6_test.py, report ../../rubric/research/parts/v6.md. engine="v5" is v4 plus SX1 "a piece from another look", the style-crossing
 fault on Style; see TUNE["v5"], ../parts5_test.py, report ../../rubric/research/parts/style-clash.md). engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
 whose readings passed, and adds one step after the average (see TUNE below). engine="v3" (the streetwear pass) is v2
 plus one Proportions reward, PR4 "the streetwear shape" (see TUNE["v3"]; ../parts3_test.py, report
@@ -51,10 +53,10 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-5 (Oct 11, 2026)"
+VERSION = "parts-proto-6 (Oct 11, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
-            "v5": "parts-proto-5 (Oct 11, 2026)"}
+            "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)"}
 
 # ---- Reward tuning (Oct 10, founder-approved). engine="v1" reproduces parts-proto-1 exactly (paper test results/parts1/); engine="v2" is
 # the tuned engine (paper test parts2_test.py, report rubric/research/parts/tuning-results.md). Only rewards built on
@@ -223,6 +225,43 @@ TUNE["v5"] = dict(TUNE["v4"], sx=3.0,
 _OFF5 = dict(sx=0.0, sx_street_tops=frozenset(), sx_dressy=frozenset(), sx_min_dressy=2, sx_quiet={})
 for _e in ("v1", "v2", "v3", "v4"):
     TUNE[_e].update(_OFF5)
+# v6 (Oct 11, three known differences fixed; THE DEFAULT; report rubric/research/parts/v6.md, test ../parts6_test.py).
+# The founder (Oct 11, "go ahead") on rubric/v5-styles.md's KD-3, KD-5 and KD-16:
+#   KD-5 (a bug): H2 "clearly X top to toe" was judged on the label only, so a prep marker (a cardigan, a colored
+#   oxford) renamed an oxford + chinos + loafers classic prep, whose tables have no signature bottoms or shoes, and the
+#   same outfit lost the +1.0 it earned as smart casual. v6 judges H2 on EVERY style the outfit reads as (the detected
+#   set, which never depends on his picks) and names the pick-free label in the line (h2_any).
+#   KD-16: Event (career fairs, parties) took the interview band (3.5-4.5). The founder approved a softer band (#197):
+#   v6 gives it the casual wedding's band, 3-4 (occ_target), between Class (2-3) and Interview (3.5-4.5). Only the
+#   too-casual deduction and ceiling (O1) move, by half a level; slides, loungewear, the untucked dress shirt and the
+#   no-floor rule at Event are unchanged.
+#   KD-3: the style council's per-style bands (RULEBOOK Part 4; rubric.py STYLE_BANDS, joined to DEFAULT_BAND, widen
+#   only) come back as ONE Proportions fault, PB1 "roomier than the look", read only on steady groupings: a top at
+#   volume >= 4 (97-100% steady; 4 vs 5 and 1 vs 2 aren't, so a band edge inside them can't carry points) and a leg
+#   narrow (skinny/slim) vs straight-or-fuller (94%; slim vs straight alone is 40-53%). The council's bands are
+#   (top, leg) boxes: the default box holds every regular or close top over any leg, so only a ROOMY top can sit
+#   outside every box the outfit reads as. Over a full leg, streetwear, minimal, workwear, vintage sport and outdoor
+#   hold it (their volume band reaches 4); over a slim leg only outdoor's box does (slim -> wide): streetwear's volume
+#   "never excuses an oversized top over a slim leg" (RULEBOOK). Exempt: a roomy top that's tucked or ends at the belt
+#   over a full leg (a deliberate waist: PR1, minimal's boxy anchor), over full-leg pressed trousers (city boy), over
+#   loungewear (its ladder), under a layer (the layer sets the line), over skinny legs (PF5 owns it), when FF5 already
+#   calls it a size big, and whenever SX1 fires (one fact, one charge). Size -1.5: one band step, the council's own
+#   price (v4.1 P1: 0.75 units x 0.6 = 0.45 on the score; here 1.5 x 30% = 0.45). The leg side of the default,
+#   smart casual and prep bands (they stop at relaxed) sits on relaxed vs wide, which isn't steady: a tip (PB2).
+_LEG_I = {leg: i for i, leg in enumerate(R.LEG_ORDER)}
+TUNE["v6"] = dict(TUNE["v5"], pb=1.5,
+                  # styles whose (top, leg) box holds a roomy top over a full leg / over a narrow (slim) leg
+                  pb_roomy_full=frozenset(s for s, (v, _) in R.STYLE_BANDS.items() if v[1] >= 4),
+                  pb_roomy_narrow=frozenset(s for s, (v, lg) in R.STYLE_BANDS.items()
+                                            if v[1] >= 4 and _LEG_I[lg[0]] <= _LEG_I["slim"]),
+                  # styles whose leg band reaches wide (PB2's tip is for the others and for no style)
+                  pb_wide_ok=frozenset(s for s, (_, lg) in R.STYLE_BANDS.items() if lg[1] == "wide"),
+                  h2_any=True,
+                  occ_target={"event": (3, 4)})
+_OFF6 = dict(pb=0.0, pb_roomy_full=frozenset(), pb_roomy_narrow=frozenset(), pb_wide_ok=frozenset(), h2_any=False,
+             occ_target={})
+for _e in ("v1", "v2", "v3", "v4", "v5"):
+    TUNE[_e].update(_OFF6)
 WEIGHTS = {"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -359,6 +398,31 @@ class _Part:
         return {"score": round(s, 3), "display": round_half(s), "na": None, "reasons": self.reasons, "tips": self.tips}
 
 
+def _band_fault(o, t):
+    """v6's PB1 (see TUNE["v6"]): a roomy top worn on its own that sits outside every (top, leg) box of the council's
+    bands the outfit reads as. Returns (points, line) or None."""
+    if not t["pb"]:
+        return None
+    T, O, B = o["top"], o["outer"], o["bottom"]
+    if T is None or O is not None or B is None or (T.get("volume") or 3) < 4:
+        return None
+    leg, bsub, sub = B.get("leg_shape"), B.get("subcategory"), T.get("subcategory") or ""
+    narrow, full = leg in NARROW and leg != "skinny", leg in FULL_LEG       # skinny: PF5 owns it
+    if not (narrow or full) or bsub in R.LOUNGE_BOTTOMS or o["sx"][0]:
+        return None                                                   # loungewear: its ladder; SX1: one fact, one charge
+    if T.get("sleeve_end") == "covers_hand" and sub not in SHORT_SLEEVE_TYPES | TAILORED_FIT | RIBBED:
+        return None                                                   # FF5 already calls it a size big
+    if full and (T.get("tucked") == "full" or T.get("length") in ("cropped", "at_belt") or bsub in PRESSED):
+        return None                                                   # a deliberate waist; city boy over trousers
+    if any(s in (t["pb_roomy_narrow"] if narrow else t["pb_roomy_full"]) for s in o["det"]):
+        return None                                                   # a look the outfit reads as holds it
+    what = (sub or "top").replace("_", " ")
+    if narrow:
+        return t["pb"], f"a roomy {what} over slim legs: an oversized top wants a fuller leg"
+    look = f"a {R.STYLE_NAMES[o['label']]} outfit" if o["label"] else "the rest of the outfit"
+    return t["pb"], f"the roomy {what} is roomier than {look} calls for"
+
+
 # =====================================================================================================
 # PROPORTIONS (30%): length against length, weight against weight. Never a width against his body.
 # =====================================================================================================
@@ -385,6 +449,10 @@ def _proportions(o, sl, t):
     if sl["peek"]:                                                    # F10/F11 via the second look; -0.5 at most (look1)
         p.add(-0.5, "the top underneath shows below the outer piece", "PF10_peek")
         faults += 0.5
+    pb = _band_fault(o, t)                                            # v6: PB1, the council's bands (0 in v1-v5)
+    if pb:
+        p.add(-pb[0], pb[1], "PB1_roomier_than_look")
+        faults += pb[0]
 
     # ---- tips: real rules whose readings haven't passed (they never move the number)
     if T is not None and O is None and T.get("tucked") in (None, "none", "na") and T.get("length") == "below_crotch":
@@ -394,11 +462,20 @@ def _proportions(o, sl, t):
     if o_tailored and B.get("hem") in ("pooling", "full_break"):
         p.tip("check the hem: trousers that bunch on the shoes fight a tailored jacket", "PF1_heavy_hem_tailored",
               would=-2.0)
+    pf4 = False
     if T is not None and O is None and T.get("subcategory") in ("oxford_shirt", "flannel_shirt", "camp_collar_shirt",
                                                                "dress_shirt") \
             and T.get("tucked") in (None, "none", "na") and leg == "wide" and (T.get("volume") or 3) <= 3:
         p.tip("an untucked shirt over wide legs can hang long; a front tuck gives it shape", "PF4_long_shirt_wide_leg",
               would=-1.0)
+        pf4 = True
+    # v6: PB2, the leg side of the bands that stop at relaxed (the general standard, smart casual, prep). Wide vs
+    # relaxed isn't a steady reading, so it's a tip. Jeans and cargos and a close, short or tucked top are excused
+    # (v4.1's leg_excused, #186); loungewear has its own ladder; PF4 already says it for a long shirt.
+    if (t["pb"] and not pf4 and leg == "wide" and O is None and T is not None and not lounge
+            and not R.leg_excused(B, T, []) and not any(s in t["pb_wide_ok"] for s in o["det"])):
+        p.tip("wide trousers under a regular untucked top can swamp it; a tuck or a shorter top balances them",
+              "PB2_wide_leg_band", would=-t["pb"])
 
     # ---- rewards: a deliberate shape. Blocked by any fault of 1+ and by a pooling hem (a shape needs a clean finish).
     # (Heavy-vs-light hem is 83% steady and finds 45% of heavy hems, so it can't block; pooling is 98% steady.)
@@ -776,23 +853,27 @@ def _cohesion(o, boldness, t):
     h2_label = o["label_nopick"] if t["h2_pick_free"] else label     # v4: picks never move a number
     subs = {g.get("subcategory") for g in o["main"]}
     suit = "suit_jacket" in subs and "suit_trousers" in subs
-    sx, sx_line, sx_tip = _style_clash(o, t)                         # v5 (0 in v1-v4)
+    sx, sx_line, sx_tip = o["sx"]                                     # v5 (0 in v1-v4); computed once in score_parts
     if (det or suit) and not sx:
         p.add(t["h1"], f"reads as {R.STYLE_NAMES[label]}" if label else "a matching suit", "H1_reads_as_style")
     # H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
     if sx:
         pass                                                          # v5: a piece from another look: no "reads as"
     elif h2_label and len(o["slots"]) == 3:
-        role = R.STYLES[h2_label][0]
+        # v6 (h2_any): judged on every style the outfit reads as, not only the named one, so the name a prep marker
+        # picks can't take the credit away (KD-5); the line names the pick-free label
         c = R.Outfit(o["main"])
-        best, against = {}, 0
-        for g in o["main"]:
-            pos, neg = role(g, c)
-            sl = R.SLOT[g["category"]]
-            best[sl] = max(best.get(sl, 0), pos)
-            against += neg
-        if all(best.get(s, 0) >= 2 for s in ("upper", "bottom", "shoes")) and against == 0:
-            p.add(t["h2"], f"clearly {R.STYLE_NAMES[h2_label]} top to toe", "H2_clear_top_to_toe")
+        for st in [h2_label] + ([s for s in det if s != h2_label] if t["h2_any"] else []):
+            role = R.STYLES[st][0]
+            best, against = {}, 0
+            for g in o["main"]:
+                pos, neg = role(g, c)
+                sl = R.SLOT[g["category"]]
+                best[sl] = max(best.get(sl, 0), pos)
+                against += neg
+            if all(best.get(s, 0) >= 2 for s in ("upper", "bottom", "shoes")) and against == 0:
+                p.add(t["h2"], f"clearly {R.STYLE_NAMES[h2_label]} top to toe", "H2_clear_top_to_toe")
+                break
     elif suit and o["tops"]:
         p.add(t["h2_suit"], "a suit worn properly over a top", "H2_suit")
     # H3: a piece from another world (the larger of the jacket rule and the spread rule, never both)
@@ -890,7 +971,7 @@ def _o1_ceiling(gap):
     return O1_CURVE[-1][1]
 
 
-def _occasion(o, occasion):
+def _occasion(o, occasion, t):
     core = []
     for g in o["main"]:
         f = R.formality(g)
@@ -901,7 +982,7 @@ def _occasion(o, occasion):
     if not core:
         return out
     avg = sum(core) / len(core)
-    lo, hi = R.OCCASION_TARGET.get(occasion, (2, 3))
+    lo, hi = t["occ_target"].get(occasion) or R.OCCASION_TARGET.get(occasion, (2, 3))   # v6: Event's softer band
     gap = lo - avg
     ded = 0.5 * ramp(gap, 0.25, 0.75)
     ceilings = []
@@ -949,13 +1030,13 @@ def _occasion(o, occasion):
     return out
 
 
-def _tune(engine="v5", tune=None):
+def _tune(engine="v6", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v5", tune=None):
+def earned_bonus(part_scores, engine="v6", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -969,7 +1050,7 @@ def earned_bonus(part_scores, engine="v5", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v5", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v6", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1006,10 +1087,10 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v5", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v6", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v5" (the style-crossing pass, default), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v6" (KD-3/5/16 fixed, default), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
@@ -1023,6 +1104,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     garments = _refile(R._normalize(garments))
     o = _outfit(garments, styles)
     o["mirror"] = bool(scene.get("mirror_selfie"))
+    o["sx"] = _style_clash(o, t)                                      # v5's SX1, read by Style and (v6) Proportions
 
     color = _color(o, boldness, t)
     o["color_fault"] = bool(color.reasons) and any(r["points"] < 0 for r in color.reasons)
@@ -1033,7 +1115,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     if not live:
         return {"overall": None, "reason": "no_part_readable", "parts": res, "na_parts": PART_ORDER[:]}
     cond = _condition(o, scene, occasion)
-    occ = _occasion(o, occasion)
+    occ = _occasion(o, occasion, t)
     care_or_strain = any(_care_fault(g) for g in o["main"]) or any(g.get("strain") == "clear" for g in o["main"])
     ps = {k: r["score"] for k, r in live.items()}
     avg, x, floored, wsum = combine(ps, cond, occ, occasion, care_or_strain, engine, tune)

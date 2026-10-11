@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216). One or more made-up outfits per rule ID in
-../rubric/v5-styles.md, each asserting that the rule works in the parts engine (parts_proto.py, default v5): the
+"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216, v6 rules #217). One or more made-up outfits per rule ID in
+../rubric/v5-styles.md, each asserting that the rule works in the parts engine (parts_proto.py, default v6): the
 right check fires (or doesn't), the right part moves by the right amount, and the final score lands in the right band.
 
   /usr/bin/python3 rules_conformance.py          -> runs every case against parts_proto.py; exits 1 on any failure;
@@ -244,6 +244,55 @@ case("PRO-10-shirt", "PRO-10", "an untucked oxford over wide jeans: a tip, no po
      Rd(top("oxford_shirt", "light_blue"), WJEANS, WLS), {"tips": [F("PF4_long_shirt_wide_leg", "proportions")],
                                                           "part": {"proportions": {"score": 7.0}}, "band": "Put together"})
 
+PB1 = "PB1_roomier_than_look"
+BIGTEE = top("tee", "white", 4)
+case("PRO-11-none", "PRO-11", "an oversized tee over dark straight jeans with white leather sneakers (no look holds the room): -1.5",
+     Rd(BIGTEE, DJEANS, WLS), {"label": None, "fired": [F(PB1, "proportions", -1.5)], "overall": 6.5, "band": "Getting there"})
+case("PRO-11-slim", "PRO-11", "an oversized tee over slim jeans: -1.5 (oversized wants a fuller leg)",
+     Rd(BIGTEE, SLJEANS, WLS), {"fired": [F(PB1, "proportions", -1.5)], "band": "Getting there"})
+case("PRO-11-base", "PRO-11", "a regular tee over the same slim jeans: inside the general band, no charge",
+     Rd(TEE, SLJEANS, WLS), {"not_fired": [F(PB1)], "band": "Put together"},
+     vs={"case": "PRO-11-slim", "parts": {"proportions": 1.5}, "overall": "up"})
+case("PRO-11-picks", "PRO-11", "the oversized tee over straight jeans with Streetwear picked: picks never hold the room",
+     Rd(BIGTEE, DJEANS, WLS), {"fired": [F(PB1, "proportions", -1.5)], "band": "Getting there"}, styles=[("streetwear", 1.0)],
+     vs={"case": "PRO-11-none", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": 0.0})
+case("PRO-11-waist", "PRO-11", "a boxy tee that ends at the belt over straight jeans: a deliberate waist, no charge",
+     Rd(top("tee", "white", 4, length="at_belt"), DJEANS, WLS), {"not_fired": [F(PB1)], "fired": [F("PR1_waist_break")],
+                                                                  "band_in": ["Put together", "Sharp"]})
+case("PRO-11-tuck", "PRO-11", "the oversized tee tucked into straight jeans: no charge",
+     Rd(top("tee", "white", 4, tucked="full"), DJEANS, WLS), {"not_fired": [F(PB1)], "fired": [F("PR1_waist_break")],
+                                                               "band": "Put together"})
+case("PRO-11-halftuck", "PRO-11", "the oversized tee front-tucked: still charged (only a full tuck excuses it), and the front tuck earns nothing",
+     Rd(top("tee", "white", 4, tucked="half"), DJEANS, WLS), {"fired": [F(PB1, "proportions", -1.5)], "not_fired": [F("PR1b_half_tuck")],
+                                                               "band": "Getting there"})
+case("PRO-11-cityboy", "PRO-11", "a roomy knit over straight chinos with loafers: full-leg pressed trousers carry it (city boy)",
+     Rd(top("sweater", "navy", 4), CHINOS, LOAFER), {"not_fired": [F(PB1)], "band": "Put together"})
+case("PRO-11-layer", "PRO-11", "an oversized hoodie under a chore coat over slim jeans: the layer sets the line, no charge",
+     Rd(top("hoodie", "grey", 4), outer("chore_coat", "tan_camel"), SLJEANS, BOOTS), {"not_fired": [F(PB1)], "band": "Put together"})
+case("PRO-11-lounge", "PRO-11", "an oversized hoodie over slim joggers: loungewear has its own ladder, no band charge",
+     Rd(top("hoodie", "grey", 4), bottom("joggers", "grey", "slim", "cuffed"), CANVAS), {"not_fired": [F(PB1)],
+                                                                                       "band_in": ["Getting there", "Put together"]})
+case("PRO-11-skinny", "PRO-11", "an oversized tee over skinny jeans: [PRO-2] charges it, not this rule",
+     Rd(BIGTEE, SKJEANS, WLS), {"fired": [F("PF5_big_top_skinny_leg", "proportions", -1.5)], "not_fired": [F(PB1)],
+                                "band": "Getting there"})
+case("PRO-11-sx1", "PRO-11", "an oversized hoodie over slim chinos with loafers: [STY-5] charges the top, so this rule doesn't (one fact, one charge)",
+     Rd(top("hoodie", "grey", 4), SLCHINOS, LOAFER), {"fired": [F("SX1_another_look", "cohesion", -3.0)], "not_fired": [F(PB1)],
+                                                     "overall": 6.5, "band": "Getting there"})
+case("PRO-11-ff5", "PRO-11", "a roomy oxford with the sleeves over the hands: Fit calls it a size big ([FIT-2]), so this rule doesn't",
+     Rd(top("oxford_shirt", "white", 4, sleeve_end="covers_hand"), DJEANS, WLS), {"fired": [F("FF5_too_big", "fit", -2.0)],
+                                                                                 "not_fired": [F(PB1)], "band": "Getting there"})
+case("PRO-12-tip", "PRO-12", "a red sweater over wide grey trousers with derbies (smart casual: its legs stop at relaxed): a tip, no points",
+     Rd(top("sweater", "red"), bottom("trousers", "grey", "wide"), DERBY),
+     {"label": "smart_casual", "tips": [F("PB2_wide_leg_band", "proportions")], "part": {"proportions": {"score": 7.0}},
+      "band_in": ["Put together", "Sharp"]})
+case("PRO-12-minimal", "PRO-12", "a black sweater over wide black trousers with loafers (minimal: its legs reach wide): no tip",
+     Rd(top("sweater", "black"), WTROUSERS, LOAFER_BK), {"tips_lacks": [F("PB2_wide_leg_band")], "band": "Put together"})
+case("PRO-12-jeans", "PRO-12", "a grey sweater over wide jeans: wide jeans are never charged, not even as a tip",
+     Rd(top("sweater", "grey"), WJEANS, WLS), {"tips_lacks": [F("PB2_wide_leg_band")], "band": "Put together"})
+case("PRO-12-close", "PRO-12", "a close tee over wide chinos ('big pants, little shirt'): no tip",
+     Rd(top("tee", "grey", 2), bottom("chinos", "khaki_beige", "wide"), WLS), {"tips_lacks": [F("PB2_wide_leg_band")],
+                                                                               "band": "Put together"})
+
 # ===== Fit (FIT) =====================================================================================================
 case("FIT-1-ceiling", "FIT-1", "a sharp tailored outfit still has Fit 7 (no reading can show a good fit)", TAILORED_OK,
      {"part": {"fit": {"score": 7.0}}, "band_in": ["Put together", "Sharp"]})
@@ -411,6 +460,9 @@ case("STY-1-none", "STY-1", "no clear style: no credit, no charge", Rd(TEE, DJEA
      {"not_fired": [F("H1_reads_as_style")], "part": {"cohesion": {"score": 7.0}}, "label": None, "band": "Put together"})
 case("STY-2-toe", "STY-2", "the same polo outfit: smart casual top to toe, +1.0", POLO,
      {"fired": [F("H2_clear_top_to_toe", "cohesion", 1.0)], "part": {"cohesion": {"score": 8.5}}, "band": "Put together"})
+case("STY-2-any", "STY-2", "a black cardigan over wide black trousers with loafers reads as minimal and smart casual: smart casual's top to toe still counts",
+     Rd(top("cardigan", "black"), WTROUSERS, LOAFER_BK), {"label": "minimalist", "fired": [F("H2_clear_top_to_toe", "cohesion", 1.0)],
+                                                          "band": "Put together"})
 SUIT = Rd(top("dress_shirt", "white", tucked="full"), outer("suit_jacket", "navy"),
           bottom("suit_trousers", "navy", "straight", "no_break"), DERBY)
 case("STY-2-suit", "STY-2", "a matching suit over a shirt: +0.5 and +1.0", SUIT,
@@ -552,6 +604,17 @@ case("OCC-5-logo", "OCC-5", "a big logo the AI is sure of at an interview: held 
      Rd(top("sweater", "navy", logo="large", tucked="full"), TROUSERS, DERBY),
      {"ceiling": 6.5, "overall_max": 6.5, "band": "Getting there"}, occasion="interview")
 
+case("OCC-6-hoodie", "OCC-6", "the hoodie, dark jeans and white sneakers at an event: half a level under its band, -0.25, no ceiling",
+     HOODIE_FIT, {"ceiling": None, "occ_deduction": 0.25, "occ_lines_has": ["a bit casual for event"], "band": "Put together"},
+     occasion="event", vs={"case": "OCC-1-interview", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": "up"})
+case("OCC-6-oxford", "OCC-6", "an oxford, chinos and loafers at an event: right for it",
+     Rd(top("oxford_shirt", "white"), CHINOS, LOAFER), {"ceiling": None, "occ_deduction": 0.0, "band": "Put together"}, occasion="event")
+case("OCC-6-tank", "OCC-6", "a tank top, shorts and canvas sneakers at an event: still too casual, held to about 5.3",
+     Rd(top("tank_top", "white"), bottom("shorts", "khaki_beige", "straight", "na"), CANVAS),
+     {"ceiling": 5.333, "occ_deduction": 0.5, "band": "Needs a fix"}, occasion="event")
+case("OCC-6-slides", "OCC-6", "slides at an event: still held to 4.0 ([OCC-3])",
+     Rd(top("oxford_shirt", "white"), CHINOS, SLIDES), {"ceiling": 4.0, "overall": 4.0, "band": "Needs a fix"}, occasion="event")
+
 # ===== Loungewear (LNG) ==============================================================================================
 JOG = bottom("joggers", "grey", "straight", "cuffed")
 case("LNG-1-interview", "LNG-1", "joggers at an interview: held to 4.0",
@@ -635,6 +698,9 @@ case("STR-10-nostreet", "STR-10", "the same two statements in a sweater outfit t
 case("STR-11-baggy", "STR-11", "an oversized tee over wide jeans: no charge for the volume (for anyone)",
      Rd(top("tee", "black", 4), bottom("jeans", "black", "wide", "cuffed"), WLS),
      {"part": {"proportions": {"score": 7.0}, "fit": {"score": 7.0}}, "band": "Put together"})
+case("STR-11-slim", "STR-11", "an oversized hoodie over slim jeans with chunky sneakers: streetwear's room needs a fuller leg ([PRO-11])",
+     Rd(top("hoodie", "grey", 4), SLJEANS, CHUNKY), {"detected_has": ["streetwear"], "fired": [F(PB1, "proportions", -1.5),
+                                                     F("SW1_chunky_narrow", "shoes", -1.5)], "band": "Getting there"})
 case("STR-12-stack", "STR-12", "wide jeans read as pooling under the shape: Fit -1.5 and no shape or carry credit",
      Rd(top("graphic_tee", "white", 4), mod(WJEANS, hem="pooling"), CHUNKY),
      {"fired": [F("FF7_pooling", "fit", -1.5)], "not_fired": [F("PR4_street_shape"), F("SW2_weight_carries_leg")],
@@ -694,6 +760,13 @@ case("WRK-8-skinny", "WRK-8", "a chore coat over skinny jeans: -0.5 (nothing stu
 case("WRK-9-notoe", "WRK-9", "the chore coat outfit gets no top-to-toe credit: jeans are only a home piece", WW,
      {"fired": [F("H1_reads_as_style", "cohesion", 0.5)], "not_fired": [F("H2_clear_top_to_toe")], "band": "Sharp"}, kd="KD-4")
 
+case("WRK-10-roomy", "WRK-10", "a roomy flannel over straight dark jeans with work boots: workwear's band holds the room",
+     Rd(top("flannel_shirt", "red", 4, pattern="checks_plaid", saturation="muted"), DJEANS, BOOTS),
+     {"detected_has": ["workwear"], "not_fired": [F(PB1)], "band_in": ["Put together", "Sharp"]})
+case("WRK-10-slim", "WRK-10", "the same flannel over slim black jeans: workwear's legs start at straight, so it's charged",
+     Rd(top("flannel_shirt", "red", 4, pattern="checks_plaid", saturation="muted"), SLJEANS, BOOTS),
+     {"detected_has": ["workwear"], "fired": [F(PB1, "proportions", -1.5)], "band_in": ["Getting there", "Put together"]})
+
 # ===== Vintage sport (VSP) ===========================================================================================
 VS = Rd(top("jersey", "green"), DJEANS, RETRO)
 case("VSP-1-reads", "VSP-1", "a green football jersey, dark straight jeans, retro runners: vintage sport", VS,
@@ -724,6 +797,13 @@ case("VSP-7-track", "VSP-7", "a track jacket over jeans (a future reading value)
      {"fired": [F("PR2_short_layer", "proportions", 1.5)], "detected_has": ["vintage_sport"], "band_in": ["Put together", "Sharp"]},
      future=["track_jacket"])
 
+case("VSP-8-slim", "VSP-8", "a roomy jersey over slim black jeans with retro runners: vintage sport's legs start at straight, -1.5",
+     Rd(top("jersey", "green", 4), SLJEANS, RETRO), {"detected_has": ["vintage_sport"], "fired": [F(PB1, "proportions", -1.5)],
+                                                     "band_in": ["Getting there", "Put together"]})
+case("VSP-8-straight", "VSP-8", "the same jersey over dark straight jeans: inside its band, no charge",
+     Rd(top("jersey", "green", 4), DJEANS, RETRO), {"detected_has": ["vintage_sport"], "not_fired": [F(PB1)],
+                                                    "band_in": ["Put together", "Sharp"]})
+
 # ===== Outdoor (OUT) =================================================================================================
 OD = Rd(TEE, outer("shell_jacket", "orange"), bottom("cargos", "olive", "straight"), LOWP)
 case("OUT-1-reads", "OUT-1", "an orange shell over a tee, olive cargos, low-profile sneakers: outdoor", OD,
@@ -749,6 +829,13 @@ case("OUT-6-workwear", "OUT-6", "a shell over a flannel with cargos and suede ch
      Rd(top("flannel_shirt", "navy", pattern="checks_plaid"), outer("shell_jacket", "black"),
         bottom("cargos", "olive", "straight"), CHUKKA),
      {"detected_has": ["outdoor", "workwear"], "label": "outdoor", "band_in": ["Put together", "Sharp"]})
+
+case("OUT-7-slim", "OUT-7", "a roomy fleece over slim olive cargos with low-profile sneakers: outdoor's band runs slim to wide, no charge",
+     Rd(top("fleece", "green", 4), bottom("cargos", "olive", "slim"), LOWP), {"detected_has": ["outdoor"], "not_fired": [F(PB1)],
+                                                                            "band_in": ["Put together", "Sharp"]})
+case("OUT-7-jeans", "OUT-7", "the same fleece over slim black jeans: nothing outdoor below the waist, so no look holds the room, -1.5",
+     Rd(top("fleece", "green", 4), SLJEANS, LOWP), {"detected_lacks": ["outdoor"], "fired": [F(PB1, "proportions", -1.5)],
+                                                    "band_in": ["Getting there", "Put together"]})
 
 # ===== Minimal (MIN) =================================================================================================
 MN = Rd(top("sweater", "black"), WTROUSERS, LOAFER_BK)
@@ -780,6 +867,9 @@ case("MIN-5-shoe", "MIN-5", "the minimal outfit: loafers are the look's shoe, +0
 case("MIN-6-cityboy", "MIN-6", "a boxy tee over wide black trousers with loafers: allowed, and it earns the waist",
      Rd(top("tee", "white", 4, length="at_belt"), mod(WTROUSERS, color_family="black"), LOAFER_BK),
      {"not_fired": [F("SX1_another_look")], "fired": [F("PR1_waist_break", "proportions", 1.5)], "band": "Sharp"})
+case("MIN-6-trousers", "MIN-6", "an oversized tee at mid-fly over straight charcoal trousers with loafers: city boy, no charge",
+     Rd(BIGTEE, CTROUSERS, LOAFER_BK), {"detected_has": ["minimalist"], "not_fired": [F(PB1), F("SX1_another_look")],
+                                         "band": "Put together"})
 case("MIN-7-crossing", "MIN-7", "a graphic tee with wide trousers and loafers: a piece from another look, -3.0",
      Rd(top("graphic_tee", "black"), WTROUSERS, LOAFER_BK), {"fired": [F("SX1_another_look", "cohesion", -3.0)],
                                                              "band": "Getting there"})
@@ -807,13 +897,16 @@ case("PRP-2-boxy", "PRP-2", "a roomy polo with chinos and loafers: never prep",
 case("PRP-3-tailored", "PRP-3", "a navy blazer over a tucked oxford with grey trousers and loafers: the tailored line, +1.0",
      Rd(top("oxford_shirt", "light_blue", tucked="full"), outer("blazer", "navy"), TROUSERS, LOAFER),
      {"fired": [F("PR3_tailored_line", "proportions", 1.0)], "band_in": ["Put together", "Sharp"]})
-case("PRP-4-marker", "PRP-4", "the cardigan outfit: reads as prep (+0.5) but can't be prep top to toe", PREP,
-     {"fired": [F("H1_reads_as_style", "cohesion", 0.5)], "not_fired": [F("H2_clear_top_to_toe")],
-      "part": {"cohesion": {"score": 7.5}}, "band": "Put together"}, kd="KD-5")
-case("PRP-4-nomarker", "PRP-4", "the plain oxford outfit (labelled smart casual): top to toe, +1.0",
-     Rd(top("oxford_shirt", "white"), CHINOS, LOAFER), {"fired": [F("H2_clear_top_to_toe", "cohesion", 1.0)],
+case("PRP-4-marker", "PRP-4", "the cardigan outfit: reads as prep (+0.5) and is still top to toe (+1.0): its pieces are smart casual's signature pieces",
+     PREP, {"label": "classic_prep", "fired": [F("H1_reads_as_style", "cohesion", 0.5), F("H2_clear_top_to_toe", "cohesion", 1.0)],
+            "part": {"cohesion": {"score": 8.5}}, "band": "Put together"})
+case("PRP-4-nomarker", "PRP-4", "the plain oxford outfit (labelled smart casual): the same Style and score as with the cardigan",
+     Rd(top("oxford_shirt", "white"), CHINOS, LOAFER), {"label": "smart_casual", "fired": [F("H2_clear_top_to_toe", "cohesion", 1.0)],
                                                         "part": {"cohesion": {"score": 8.5}}, "band": "Put together"},
-     kd="KD-5", vs={"case": "PRP-4-marker", "parts": {"cohesion": 1.0}})
+     vs={"case": "PRP-4-marker", "parts": {"cohesion": 0.0}, "overall": 0.0})
+case("PRP-4-pink", "PRP-4", "a pink oxford (a colored collar: prep) with chinos and loafers: top to toe too, plus the standout color",
+     Rd(top("oxford_shirt", "pink"), CHINOS, LOAFER), {"label": "classic_prep", "fired": [F("H2_clear_top_to_toe", "cohesion", 1.0),
+                                                       F("CP1_standout_color", "color", 1.0)], "band": "Sharp"})
 case("PRP-5-crossing", "PRP-5", "an oversized hoodie with slim chinos and loafers: a piece from another look, -3.0",
      Rd(top("hoodie", "navy", 4), SLCHINOS, LOAFER), {"fired": [F("SX1_another_look", "cohesion", -3.0)], "band": "Getting there"})
 case("PRP-5-jeans", "PRP-5", "a blazer over an oxford with light-wash jeans: another world, -1.5",
@@ -843,6 +936,13 @@ case("SMC-5-interview", "SMC-5", "white sneakers under a blazer at an interview:
      Rd(top("oxford_shirt", "white", tucked="full"), outer("blazer", "navy"), TROUSERS, WLS),
      {"ceiling": 7.0, "band_in": ["Getting there", "Put together"]}, occasion="interview")
 
+case("SMC-6-slim", "SMC-6", "a roomy oxford over slim chinos with loafers: smart casual's band stops at regular, -1.5",
+     Rd(top("oxford_shirt", "light_blue", 4), SLCHINOS, LOAFER), {"detected_has": ["smart_casual"], "fired": [F(PB1, "proportions", -1.5)],
+                                                                 "overall": 7.0, "band": "Put together"})
+case("SMC-6-chinos", "SMC-6", "the same oxford over straight chinos: full-leg pressed trousers carry it, no charge",
+     Rd(top("oxford_shirt", "light_blue", 4), CHINOS, LOAFER), {"not_fired": [F(PB1)], "band": "Put together"},
+     vs={"case": "SMC-6-slim", "parts": {"proportions": 1.5}})
+
 # ===== No clear style (GEN) ==========================================================================================
 case("GEN-1-none", "GEN-1", "a grey sweater, wide light-wash jeans and white leather sneakers: no style, judged by the shared rules",
      Rd(top("sweater", "grey"), bottom("jeans", "denim_light", "wide", "cuffed"), WLS),
@@ -850,13 +950,16 @@ case("GEN-1-none", "GEN-1", "a grey sweater, wide light-wash jeans and white lea
       "band": "Put together"})
 case("GEN-2-wide", "GEN-2", "the same outfit: wide legs cost nothing without a style",
      Rd(top("sweater", "grey"), bottom("jeans", "denim_light", "wide", "cuffed"), WLS),
-     {"not_fired": [F("PF5_big_top_skinny_leg")], "overall": 7.0, "band": "Put together"}, kd="KD-3")
+     {"not_fired": [F("PF5_big_top_skinny_leg"), F(PB1)], "overall": 7.0, "band": "Put together"})
 case("GEN-3-shapes", "GEN-3", "a leather jacket over a sweater with light-wash straight jeans and white sneakers (no style): the shape credits still apply",
      Rd(top("sweater", "grey"), outer("leather_jacket", "black"), bottom("jeans", "denim_light", "straight"), WLS),
      {"label": None, "fired": [F("PR2_short_layer", "proportions", 1.5)], "band_in": ["Put together", "Sharp"]})
-case("GEN-2-slim", "GEN-2", "an oversized tee over slim jeans: no shape charge (only skinny legs are charged)",
+case("GEN-2-roomy", "GEN-2", "an oversized tee over wide black jeans with white leather sneakers: the room reads as streetwear, no charge",
+     Rd(top("tee", "white", 4), bottom("jeans", "black", "wide", "cuffed"), WLS),
+     {"detected_has": ["streetwear"], "not_fired": [F(PB1)], "part": {"proportions": {"score": 7.0}}, "band": "Put together"})
+case("GEN-2-slim", "GEN-2", "an oversized tee over slim jeans with no style: the general band charges the room ([PRO-11])",
      Rd(top("tee", "white", 4), SLJEANS, WLS),
-     {"not_fired": [F("PF5_big_top_skinny_leg")], "part": {"proportions": {"score": 7.0}}, "band": "Put together"}, kd="KD-3")
+     {"label": None, "fired": [F(PB1, "proportions", -1.5)], "not_fired": [F("PF5_big_top_skinny_leg")], "band": "Getting there"})
 
 
 # --------------------------------------------------------------------------------------------- checking
@@ -929,6 +1032,9 @@ def check(c, r, results):
     for f in e.get("tips", []):
         if not any(x["check"] == f["check"] for _, x in tips(r, f.get("part"))):
             bad.append(f"tip {f['check']} missing")
+    for f in e.get("tips_lacks", []):
+        if any(x["check"] == f["check"] for _, x in tips(r, f.get("part"))):
+            bad.append(f"tip {f['check']} present")
     for k, want in e.get("part", {}).items():
         p = (r.get("parts") or {}).get(k) or {}
         if want.get("na"):

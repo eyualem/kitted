@@ -5,7 +5,7 @@ fixtures: make_parts_fixes.py -> parts_fixes.json.
 How it works ("a fix row never shows a gain that doesn't happen", #204):
   1. Every candidate in fixes.json -> "parts" -> "candidates" is an edit to a COPY of the scored garments (free
      actions, his closet's pieces, generic swaps, adds, a tailor). Each copy is re-scored with the parts engine
-     (parts_proto.score_parts, v4) with the same occasion, picks, boldness and second look (plus the candidate's
+     (parts_proto.score_parts, the default engine: v6) with the same occasion, picks, boldness and second look (plus the candidate's
      `look` override: a tuck hides a peek, a cuff lifts the hem off the shoe).
   2. A candidate is a FIX only when the ROUNDED score rises (gain >= 0.5). Its number is the engine's own.
   3. A candidate that raises a part's half-point display but leaves the rounded score where it is (and lowers no

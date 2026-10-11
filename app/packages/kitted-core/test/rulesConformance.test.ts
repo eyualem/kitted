@@ -11,7 +11,7 @@ import { loadJSON } from "./helpers";
 interface CheckRef { check: string; part?: string; points?: number }
 interface Expect {
   overall?: number; overall_max?: number; band?: string; band_in?: string[]; unscored?: string;
-  fired?: CheckRef[]; not_fired?: CheckRef[]; tips?: CheckRef[];
+  fired?: CheckRef[]; not_fired?: CheckRef[]; tips?: CheckRef[]; tips_lacks?: CheckRef[];
   part?: Record<string, { score?: number; na?: boolean }>;
   detected_has?: string[]; detected_lacks?: string[]; label?: string | null; label_in?: (string | null)[];
   ceiling?: number | null; occ_deduction?: number; occ_lines_has?: string[]; occ_lines_lacks?: string[];
@@ -66,6 +66,7 @@ function check(c: Case, r: PartsResult): string[] {
   }
   for (const f of e.not_fired ?? []) if (reasons(r, f.part).some((x) => x.check === f.check)) bad.push(`${f.check} fired`);
   for (const f of e.tips ?? []) if (!tips(r, f.part).some((x) => x.check === f.check)) bad.push(`tip ${f.check} missing`);
+  for (const f of e.tips_lacks ?? []) if (tips(r, f.part).some((x) => x.check === f.check)) bad.push(`tip ${f.check} present`);
   for (const [k, want] of Object.entries(e.part ?? {})) {
     const s = scoreOf(r, k);
     if (want.na) { if (s !== null) bad.push(`${k} scored ${s}, want NA`); }

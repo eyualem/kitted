@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.2.0",
- "engine": "v5",
- "label": "parts-proto-5 (Oct 11, 2026)",
+ "version": "1.3.0",
+ "engine": "v6",
+ "label": "parts-proto-6 (Oct 11, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "54824cc91bf6142254a2e2d2f986038bf1b5db8c5ea5c16169ceb1e549732fa1",
+ "sourceSha256": "59681450ffee8a5e93a320cc835570953a6dd98241c40b0bfc690940b24cf13e",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -139,6 +139,31 @@ export const PARTS_DATA: PartsData = {
    "minimalist": 4,
    "smart_casual": 3,
    "classic_prep": 3
+  },
+  "pb": 1.5,
+  "pb_roomy_full": [
+   "minimalist",
+   "outdoor",
+   "streetwear",
+   "vintage_sport",
+   "workwear"
+  ],
+  "pb_roomy_narrow": [
+   "outdoor"
+  ],
+  "pb_wide_ok": [
+   "minimalist",
+   "outdoor",
+   "streetwear",
+   "vintage_sport",
+   "workwear"
+  ],
+  "h2_any": true,
+  "occ_target": {
+   "event": [
+    3,
+    4
+   ]
   }
  },
  "sets": {

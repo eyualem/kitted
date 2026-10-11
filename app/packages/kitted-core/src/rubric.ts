@@ -99,6 +99,8 @@ export interface RubricHelpers {
   tapDoubt(reading: Reading, g: Garment, a: string, b: string): string | null;
   /** rubric._kind_pick: the type a shoe-kind answer scores as. For partsTap.ts. */
   kindPick(reading: Reading, i: number, kind: ShoeKind): string;
+  /** rubric.leg_excused (v4.1, #186): wide legs that aren't "too wide". For parts v6's PB2 tip. */
+  legExcused(bottom: Garment, top: Garment | undefined, outer: readonly Garment[]): boolean;
 }
 
 /** Python `dict(pairs)`: later duplicates overwrite the value but keep the first position. */
@@ -1149,6 +1151,7 @@ export function createRubric(data: RubricData): RubricEngine {
     role: (style, g, c) => STYLES[style].role(g, c),
     tapDoubt: (reading, g, a, b) => doubtOf(reading, (truthy(reading.scene) ? reading.scene : {}) as Scene, g, a, b),
     kindPick,
+    legExcused,
     halfAccent,
     isDenim,
   };

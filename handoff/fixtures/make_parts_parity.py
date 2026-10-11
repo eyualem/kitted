@@ -1,5 +1,5 @@
 """Writes fixtures/parts_parity.json: the parts engine's exact Python output (extraction-test/rubrics/parts_proto.py,
-v5 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
+v6 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
 
 Run (after make_parity.py, whose readings it reuses by id):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_parity.py
@@ -15,12 +15,13 @@ Readings and configs:
      and arm A with B1's lightness copied on (parts2_test.with_lightness); zoom1 / zoom1-stock arm B
   4. second-look variants (both input forms) on rubric_parity's hand-written edge readings
   5. hand-written parts edge cases that force every check, tip, NA reason, ceiling and early return
-  6. tune variants: engines v1 to v4 (TUNE["v1"..."v4"]), the v4 what-if knobs and a v5 what-if (SX1 smaller, one
-     dressy piece enough), on the corpus, the pull and the edge cases, so a tuning change is proven to be a data change
+  6. tune variants: engines v1 to v5 (TUNE["v1"..."v5"]), the v4 what-if knobs, a v5 what-if (SX1 smaller, one
+     dressy piece enough) and a v6 what-if (PB1 smaller, H2 on the label only, Event on the interview band), on the
+     corpus, the pull and the edge cases, so a tuning change is proven to be a data change
   7. picks variants: the corpus and the pull at their own occasion, and the parts edge cases, with no picks, one pick
      and three picks. Picks never move a number: the generator asserts every reading x occasion x boldness x second
      look scores the same under every picks it ran (the TS test checks it again)
-The run also re-scores every default case with engine v4 and stores which cases v5 changed (`v5_vs_v4`).
+The run also re-scores every default case with engine v5 and stores which cases v6 changed (`v6_vs_v5`).
 Profile (CLAUDE.md rule 7): real readings use the paper tests' one stated test profile (picks Minimal + Smart casual
 0.5 each, boldness a little, no age); picks only choose the "Reads as" label and never move a number.
 
@@ -52,6 +53,8 @@ WHATIF = {"h4_graphic_street": True, "pr4_signature_v3": True, "sw2": 1.0, "pr4_
           "sc_pair": True, "pr6": 1.0, "pr5_shoes": frozenset(R.FOOT_KIND["boots"]) | {"low_profile_sneaker", "canvas_sneaker"},
           "h2_pick_free": False}
 WHATIF5 = {"sx": 1.5, "sx_min_dressy": 1}       # v5's what-ifs (style-clash.md): the jacket rule's size, one dressy piece
+WHATIF6 = {"pb": 1.0, "h2_any": False, "occ_target": {"event": (3.5, 4.5)},   # v6's what-ifs (v6.md): a smaller PB1, KD-5
+           "pb_roomy_narrow": frozenset({"outdoor", "streetwear"})}             # and KD-16 not fixed, streetwear over slim
 PICKS_VARIANTS = {"none": [], "one": [["workwear", 1.0]],
                   "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]}
 
@@ -64,7 +67,7 @@ def rid_of(r):
     return "r" + hashlib.sha256(canon(r).encode()).hexdigest()[:12]
 
 
-def run(reading, occ, styles, sl, bold, engine="v5", tune=None):
+def run(reading, occ, styles, sl, bold, engine="v6", tune=None):
     try:
         res = P.score_parts(copy.deepcopy(reading), occ, {k: w for k, w in styles}, copy.deepcopy(sl), bold, engine, tune)
     except Exception as e:  # a prototype bug: recorded, the TS must throw too
@@ -271,6 +274,46 @@ def parts_edges():
     add("SX1_h3_bigger", Rd(G("top", "tank_top", "white", tucked="none", volume=4), G("bottom", "suit_trousers", "black", leg_shape="straight"), SHOE(sub="dress_shoe", color="black")))
     add("SX1_two_tops", Rd(TEE(color="white"), TEE(sub="hoodie", color="grey", volume=4), SLIMCH(), SHOE(sub="loafer", color="brown")))
     add("SX1_suit_spread", Rd(TEE(sub="graphic_tee", color="white", pattern="graphic"), G("bottom", "suit_trousers", "navy", leg_shape="straight"), SHOE(sub="dress_shoe", color="black")))
+    # v6: PB1 "roomier than the look" (the council's bands), PB2's tip, H2 on every detected style, Event's band
+    SLJ = lambda **kw: JEANS(**{"color": "black", "leg_shape": "slim", **kw})  # noqa: E731
+    add("PB1_slim_no_style", Rd(TEE(volume=4), SLJ(), SHOE()), styles=[])
+    add("PB1_slim_streetwear", Rd(TEE(sub="hoodie", color="grey", volume=4), SLJ(), SHOE(sub="chunky_sneaker", color="white")))
+    add("PB1_full_no_style", Rd(TEE(volume=5), JEANS(color="denim_dark"), SHOE()), styles=[["streetwear", 1.0]])
+    add("PB1_slim_smart_casual", Rd(TEE(sub="sweater", color="grey", volume=4), SLJ(), SHOE(sub="chelsea_boot", color="black")))
+    add("PB1_oxford_slim_chinos", Rd(TEE(sub="oxford_shirt", color="light_blue", volume=4), SLIMCH(), SHOE(sub="loafer", color="brown")))
+    add("PB1_no_subcategory", Rd(G("top", None, "white", volume=4, tucked="none", length="mid_fly"), SLJ(), SHOE()))
+    add("PB1_outdoor_holds", Rd(TEE(sub="fleece", color="green", volume=4), JEANS(sub="cargos", color="olive", leg_shape="slim"), SHOE(sub="trail_shoe", color="grey")))
+    add("PB1_street_holds", Rd(TEE(volume=4), JEANS(color="black", leg_shape="wide", hem="cuffed"), SHOE()))
+    add("PB1_city_boy", Rd(TEE(sub="sweater", color="navy", volume=4), G("bottom", "chinos", "khaki_beige", leg_shape="straight"), SHOE(sub="loafer", color="brown")))
+    add("PB1_short_ok", Rd(TEE(volume=4, length="at_belt"), JEANS(color="denim_dark"), SHOE()))
+    add("PB1_tucked_ok", Rd(TEE(volume=4, tucked="full"), JEANS(color="denim_dark"), SHOE()))
+    add("PB1_short_slim_fires", Rd(TEE(volume=4, length="cropped"), SLJ(), SHOE()))
+    add("PB1_layer_ok", Rd(TEE(sub="hoodie", color="grey", volume=4), G("outerwear", "chore_coat", "tan_camel"), SLJ(), SHOE(sub="work_boot", color="brown")))
+    add("PB1_lounge_ok", Rd(TEE(sub="hoodie", color="grey", volume=4), G("bottom", "joggers", "grey", leg_shape="slim", hem="cuffed"), SHOE(sub="canvas_sneaker")))
+    add("PB1_skinny_is_PF5", Rd(TEE(volume=4), JEANS(color="black", leg_shape="skinny"), SHOE()))
+    add("PB1_sx1_owns", Rd(TEE(sub="hoodie", color="grey", volume=4), SLIMCH(), SHOE(sub="loafer", color="brown")), styles=[])
+    add("PB1_ff5_owns", Rd(TEE(sub="oxford_shirt", color="white", volume=4, sleeve_end="covers_hand"), JEANS(color="denim_dark"), SHOE()))
+    add("PB1_ribbed_cuffs_fire", Rd(TEE(sub="hoodie", color="grey", volume=4, sleeve_end="covers_hand"), SLJ(), SHOE()))
+    add("PB1_leg_unread", Rd(TEE(volume=4), JEANS(color="black", leg_shape="na"), SHOE()))
+    add("PB1_mirror", Rd(TEE(sub="graphic_tee", color="black", volume=4, pattern="graphic"), SLJ(), SHOE(sub="canvas_sneaker", color="black"), mirror_selfie=True))
+    add("PB2_tip", Rd(TEE(sub="sweater", color="grey"), G("bottom", "trousers", "grey", leg_shape="wide", hem="slight_break"), SHOE(sub="derby", color="black")))
+    add("PB2_minimal_ok", Rd(TEE(sub="sweater", color="black"), G("bottom", "trousers", "black", leg_shape="wide", hem="slight_break"), SHOE(sub="loafer", color="black")))
+    add("PB2_jeans_ok", Rd(TEE(sub="sweater", color="grey"), JEANS(leg_shape="wide", hem="cuffed"), SHOE()))
+    add("PB2_close_top_ok", Rd(TEE(color="grey", volume=2), G("bottom", "chinos", "khaki_beige", leg_shape="wide"), SHOE()))
+    add("PB2_pf4_first", Rd(TEE(sub="oxford_shirt", color="white"), G("bottom", "chinos", "khaki_beige", leg_shape="wide"), SHOE(sub="loafer", color="brown")))
+    CARD = lambda: G("top", "cardigan", "navy", tucked="none", length="mid_fly")  # noqa: E731
+    OXF = lambda c="white": G("top", "oxford_shirt", c, tucked="none", length="mid_fly")  # noqa: E731
+    CH = lambda: G("bottom", "chinos", "khaki_beige", leg_shape="straight", hem="slight_break")  # noqa: E731
+    for nm, st in (("none", []), ("prep", [["classic_prep", 1.0]]), ("smart", [["smart_casual", 1.0]])):
+        add("H2_any_cardigan_" + nm, Rd(CARD(), OXF(), CH(), SHOE(sub="loafer", color="brown")), styles=st)
+    add("H2_any_pink_oxford", Rd(OXF("pink"), CH(), SHOE(sub="loafer", color="brown")))
+    add("H2_any_minimal_label", Rd(G("top", "cardigan", "black", tucked="none"), G("bottom", "trousers", "black", leg_shape="wide", hem="slight_break"),
+                                   SHOE(sub="loafer", color="black")))
+    add("H2_any_rugby_no", Rd(G("top", "rugby_shirt", "navy", tucked="none", pattern="stripes", pattern_scale="large"), CH(), SHOE(sub="loafer", color="brown")))
+    for occ in ("event", "interview", "wedding_casual"):
+        add("event_band_hoodie@" + occ, Rd(TEE(sub="hoodie", color="grey"), JEANS(color="denim_dark"), SHOE()), occ=occ)
+        add("event_band_tee@" + occ, Rd(TEE(color="black"), JEANS(color="denim_dark"), SHOE(sub="low_profile_sneaker", color="black")), occ=occ)
+        add("event_band_tank@" + occ, Rd(G("top", "tank_top", "white", tucked="none"), JEANS(sub="shorts", color="khaki_beige"), SHOE(sub="canvas_sneaker")), occ=occ)
     add("refile_vest", Rd(G("top", "oxford_shirt", "white", tucked="full"), G("top", "tank_top", "navy"), G("bottom", "chinos", "grey", leg_shape="straight"), SHOE(sub="loafer", color="brown")))
     add("refile_suit_jacket", Rd(TEE(), G("outerwear", "suit_jacket", "navy"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"), SHOE(sub="loafer", color="brown")))
     # condition
@@ -342,7 +385,7 @@ def main():
 
     def add(src, r, occ, styles, bold, sl=None, tune=None):
         rid = ref(r)
-        eng, tn = ("v5", None) if tune is None else TUNES[tune]["call"]
+        eng, tn = ("v6", None) if tune is None else TUNES[tune]["call"]
         exp = run(r, occ, styles, sl, bold, eng, tn)
         case = {"src": src, "reading": rid, "occasion": occ, "styles": styles, "boldness": bold, "second_look": sl, "expected": exp}
         if tune is not None:
@@ -381,7 +424,9 @@ def main():
         "v3": {"call": ("v3", None), "data": {"engine": "v3", "label": P.VERSIONS["v3"], "tune": MJ.tune_json(P.TUNE["v3"])}},
         "v4": {"call": ("v4", None), "data": {"engine": "v4", "label": P.VERSIONS["v4"], "tune": MJ.tune_json(P.TUNE["v4"])}},
         "v4_whatif": {"call": ("v4", WHATIF), "data": {"engine": "v4", "label": P.VERSIONS["v4"], "tune": MJ.tune_json(P._tune("v4", WHATIF))}},
+        "v5": {"call": ("v5", None), "data": {"engine": "v5", "label": P.VERSIONS["v5"], "tune": MJ.tune_json(P.TUNE["v5"])}},
         "v5_whatif": {"call": ("v5", WHATIF5), "data": {"engine": "v5", "label": P.VERSIONS["v5"], "tune": MJ.tune_json(P._tune("v5", WHATIF5))}},
+        "v6_whatif": {"call": ("v6", WHATIF6), "data": {"engine": "v6", "label": P.VERSIONS["v6"], "tune": MJ.tune_json(P._tune("v6", WHATIF6))}},
     }
 
     # 1. every rubric_parity case
@@ -473,22 +518,22 @@ def main():
     bad = [g for g, v in groups.items() if len(v) > 1]
     assert not bad, f"picks moved a score: {bad[:3]}"
 
-    # what v5 changed against v4 (default cases only)
+    # what v6 changed against v5 (default cases only)
     changed = []
     for c in cases:
         if "tune" in c or "error" in c["expected"]:
             continue
         r = rp["readings"].get(c["reading"]) or readings[c["reading"]]
-        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v4")
+        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v5")
         e5 = c["expected"]
         if e4.get("overall") != e5.get("overall") or e4.get("raw_score") != e5.get("raw_score"):
             r4 = {rr["check"] for p in e4.get("parts", {}).values() for rr in p["reasons"]}
             r5 = {rr["check"] for p in e5.get("parts", {}).values() for rr in p["reasons"]}
-            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v4": e4.get("overall"),
-                            "v5": e5.get("overall"), "v4_raw": e4.get("raw_score"), "v5_raw": e5.get("raw_score"),
+            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v5": e4.get("overall"),
+                            "v6": e5.get("overall"), "v5_raw": e4.get("raw_score"), "v6_raw": e5.get("raw_score"),
                             "added": sorted(r5 - r4), "removed": sorted(r4 - r5)})
 
-    must = ["SX1_another_look", "tip SX1_tip", "PR5_workwear_shape", "PR6_outdoor_shape", "PF5_big_top_skinny_leg", "PF6_layer_over_skinny", "PF10_peek", "PR1_waist_break", "PR1b_half_tuck", "PR4_street_shape",
+    must = ["PB1_roomier_than_look", "tip PB2_wide_leg_band", "SX1_another_look", "tip SX1_tip", "PR5_workwear_shape", "PR6_outdoor_shape", "PF5_big_top_skinny_leg", "PF6_layer_over_skinny", "PF10_peek", "PR1_waist_break", "PR1b_half_tuck", "PR4_street_shape",
             "PR2_short_layer", "PR3_tailored_line", "FF1_sleeves_tailored", "FF1_cuffs_ribbed", "FF5_too_big", "FF1_sleeves_long",
             "FF6_strain", "FF7_pooling", "CC1_too_many_accents", "CC1_busy", "CC2_bright_clash", "CC4_near_match",
             "CC6_same_pattern_scale", "CC6_same_pattern", "CC6_three_patterns", "CP1_standout_color", "CP2_quiet_accent", "CP5_tie_in",
@@ -524,7 +569,7 @@ def main():
     tunes = {k: v["data"] for k, v in TUNES.items()}
     base = MJ.data()
     out = {
-        "_doc": "Parts engine parity fixtures (parts_proto.py, v5 unless `tune` names a variant in `tunes`). For each case, "
+        "_doc": "Parts engine parity fixtures (parts_proto.py, v6 unless `tune` names a variant in `tunes`). For each case, "
                 "scoreParts(reading, {occasion, styles, boldness, secondLook}) in TypeScript must equal `expected` after mapping "
                 "camelCase to these keys: overall, reason, parts (score, display, na, reasons in order, tips in order), na_parts, "
                 "weights_used, condition, occasion, lowest, second_look, detected_styles, style_label, not_rated, partial, floored, "
@@ -544,7 +589,7 @@ def main():
                    "fp_boundary_cases": dict(Counter(c["fp_boundary"] for c in cases if c.get("fp_boundary")))},
         "coverage": dict(sorted(cov.items())),
         "overall_histogram": dict(sorted(Counter(str(c["expected"].get("overall")) for c in cases if "tune" not in c).items())),
-        "v5_vs_v4": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v4"] != x["v5"]),
+        "v6_vs_v5": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v5"] != x["v6"]),
                      "changed": changed},
         "tunes": tunes,
         "pool": pool,
@@ -556,10 +601,10 @@ def main():
         json.dump(out, f, separators=(",", ":"), ensure_ascii=False)
     print(json.dumps(out["counts"]))
     print("file size MB:", round(os.path.getsize(path) / 1e6, 2))
-    print("overall histogram (v5):", out["overall_histogram"])
-    print("v5 vs v4:", out["v5_vs_v4"]["cases_changed"], "cases changed,", out["v5_vs_v4"]["overall_changed"], "with a new overall")
+    print("overall histogram (v6):", out["overall_histogram"])
+    print("v6 vs v5:", out["v6_vs_v5"]["cases_changed"], "cases changed,", out["v6_vs_v5"]["overall_changed"], "with a new overall")
     for x in changed:
-        print("   ", x["src"], x["occasion"], x["styles"], x["v4"], "->", x["v5"], f'({x["v4_raw"]} -> {x["v5_raw"]})', "+", x["added"], "-", x["removed"])
+        print("   ", x["src"], x["occasion"], x["styles"], x["v5"], "->", x["v6"], f'({x["v5_raw"]} -> {x["v6_raw"]})', "+", x["added"], "-", x["removed"])
     for k, v in sorted(cov.items()):
         print(f"   {v:6d}  {k}")
 
