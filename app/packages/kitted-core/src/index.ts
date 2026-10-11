@@ -29,7 +29,7 @@ export {
 export { styleEffects, type StyleEffect, type StyleLens } from "./lens";
 export { explainScore, type ScoreLedger, type LedgerCredit, type LedgerRule, type Explained } from "./ledger";
 export type { CreditReason, ScoreTrace, RubricHelpers, Outfit as StyleOutfit } from "./rubric";
-// The parts engine (parts_proto.py v3, parts data 1.0.0): ported with parity, not wired into the app yet.
+// The parts engine (parts_proto.py v4, parts data 1.1.0): ported with parity.
 export { PARTS_DATA } from "./partsData";
 export {
   createParts, defaultParts, scoreParts, partsCardRow,

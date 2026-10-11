@@ -5,7 +5,7 @@ fixtures: make_parts_fixes.py -> parts_fixes.json.
 How it works ("a fix row never shows a gain that doesn't happen", #204):
   1. Every candidate in fixes.json -> "parts" -> "candidates" is an edit to a COPY of the scored garments (free
      actions, his closet's pieces, generic swaps, adds, a tailor). Each copy is re-scored with the parts engine
-     (parts_proto.score_parts, v3) with the same occasion, picks, boldness and second look (plus the candidate's
+     (parts_proto.score_parts, v4) with the same occasion, picks, boldness and second look (plus the candidate's
      `look` override: a tuck hides a peek, a cuff lifts the hem off the shoe).
   2. A candidate is a FIX only when the ROUNDED score rises (gain >= 0.5). Its number is the engine's own.
   3. A candidate that raises a part's half-point display but leaves the rounded score where it is (and lowers no
@@ -13,10 +13,14 @@ How it works ("a fix row never shows a gain that doesn't happen", #204):
      to 7.5, but the score stays 7.0."). One is shown: a smaller version of a shown fix's move (same group) first,
      then the largest raw gain.
   4. Order: free first, then closet, then "free if you own one", then tailor; the larger gain first inside a class.
+     On the same rounded gain, the fix whose fixed outfit reads as his earliest pick goes first (picks shape the
+     fixes, never the score; style-fairness.md §4), then the larger raw gain.
      One fix per group; a later class in the same group shows only when its gain is strictly larger. At most 3.
   5. #162's rules stay: no layer (anything that adds outerwear) and no boots on warm days, no boots with shorts,
      never one everyday sneaker for another; at the gym or at home only the `lounge` free actions (sleeves, care).
-  6. With no fix and no smaller step, a "Next level" line (no number) when its edit would lift the named part.
+  6. A "Next level" line (no number) when its edit would lift the named part. His first pick's path to 8 (entries
+     with `style`) comes first: shown when there's no fix and the edited outfit reads as that style, unless the
+     Smaller step shown is the same kind of move (same `group`). The generic lines need no fix and no Smaller step.
 
 Rounding: rubric.round_half for every shown number (via parts_proto), Python round(x, 6) for raw gains; the TS uses
 the same helpers (roundHalf, pyRound). Never mutates its inputs.
@@ -333,12 +337,24 @@ def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm):
     return best
 
 
+def _picks(styles):
+    """His picks in order (the 1st pick first), from [name, weight] pairs or a dict; weight 0 is not a pick."""
+    return [k for k, wt in styles.items() if wt and wt > 0]
+
+
+def _pick_rank(res, picks):
+    """The index of his earliest pick the fixed outfit reads as; len(picks) when none (or no picks)."""
+    det = res.get("detected_styles") or []
+    return next((i for i, k in enumerate(picks) if k in det), len(picks))
+
+
 def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_little", second_look=None, closet=(),
                         warm=False, first_check=False, exclude=()):
     """Up to 3 parts-engine fixes, a Smaller step and a Next level line. styles: [name, weight] pairs or a dict."""
     if isinstance(styles, list):
         styles = {k: wt for k, wt in styles}
     styles = dict(styles or {})
+    picks = _picks(styles)
     c = CATALOG["copy"]
     classes = CATALOG["classes"]
     base = _score(reading, occasion, styles, second_look, boldness)
@@ -368,7 +384,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x = {"id": cand["id"], "group": cand["group"], "class": cand["class"], "rank": cl["rank"], "effort": cand["effort"],
              "free": cl["free"], "to": res["overall"], "to_raw": round(res["raw_unrounded"], 6),
              "gain": res["overall"] - base["overall"], "raw_gain": round(res["raw_unrounded"] - base["raw_unrounded"], 6),
-             "item_id": info.get("item_id"), "order": order, "shift": _shift(w, r)}
+             "item_id": info.get("item_id"), "order": order, "shift": _shift(w, r), "pick_rank": _pick_rank(res, picks)}
         x["copy"] = _fill(cand["copy"], info)
         x["tag"] = cl["tag"] + (f" · {cand['detail']}" if cand.get("detail") else "")
         x["raises"] = _raises(base, res)
@@ -378,7 +394,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x["lifts_display"] = any(d1 > d0 for _, _, _, d0, d1 in _changes(base, res))
         cands.append(x)
 
-    key = lambda x: (x["rank"], -x["gain"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
+    key = lambda x: (x["rank"], -x["gain"], x["pick_rank"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
 
     def pick(allowed_classes):
         fixes = [x for x in cands if x["gain"] >= 0.5 and x["class"] in allowed_classes]
@@ -417,21 +433,31 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                                "line": c["smallerStep"].replace("{step}", s["step"]).replace("{part}", P.PART_NAMES[top["part"]])
                                .replace("{to}", f"{top['to']:g}").replace("{score}", f"{base['overall']:.1f}")}
 
-    if not picked and out["smaller_step"] is None and not lounge:
+    if not picked and not lounge:
+        step = out["smaller_step"]
+        step_group = next((x["group"] for x in cands if step and x["id"] == step["id"]), None)
         for nl in CATALOG["nextLevel"]:
+            st = nl.get("style")
+            if st is not None:                    # his first pick's path to 8
+                if not picks or st != picks[0] or nl.get("group") == step_group:
+                    continue
+            elif step is not None:                # the generic lines: no fix and no Smaller step
+                continue
             if not _when_ok(nl.get("when"), w, occasion, warm):
                 continue
             ev = _evaluate(nl, w, (), occasion, styles, boldness, bsl, warm)
             if ev is None:
                 continue
+            if st is not None and st not in (ev[0].get("detected_styles") or []):
+                continue
             part = ev[0]["parts"].get(nl["part"])
             if part and part["display"] is not None and base["parts"][nl["part"]]["display"] is not None \
                     and part["display"] > base["parts"][nl["part"]]["display"]:
-                out["next_level"] = {"id": nl["id"], "part": nl["part"], "line": nl["copy"]}
+                out["next_level"] = {"id": nl["id"], "part": nl["part"], "line": _fill(nl["copy"], ev[2]), "style": st}
                 break
 
     for x in picked:
-        for k in ("order", "rank", "step", "drops", "lifts_display", "shift"):
+        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank"):
             x.pop(k, None)
     out["fixes"] = picked
     if not picked:

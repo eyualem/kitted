@@ -547,6 +547,12 @@ const addedInBuild = {
   'pfix.hem_tailor': 'Hem the {name} to a slight break',
   'pfix.hem_tailor.detail': '~$15 at a tailor',
   'pfix.hem_tailor.step': 'A slight break lifts',
+  // His first pick's path to 8 (#NEXT): shown only when the card has no fix and he picked that style first
+  'pfix.next_street_jacket': 'A short jacket, like a bomber, gives it the streetwear shape and lifts Proportions. The score may not move yet.',
+  'pfix.next_workwear_coat': 'A chore coat and boots give it the workwear shape and lift Proportions. The score may not move yet.',
+  'pfix.next_minimal_tuck': 'Tucking in the {name} gives it the minimal shape and lifts Proportions. The score may not move yet.',
+  'pfix.next_prep_blazer': 'A tucked shirt under a navy blazer gives it the classic prep line and lifts Proportions. The score may not move yet.',
+  'pfix.next_smart_tuck': 'Tucked into chinos, it takes the smart casual shape and lifts Proportions. The score may not move yet.',
   'pfix.next_color': 'One standout color, like a rust knit, lifts Color. The score may not move yet.',
   'pfix.next_style': 'One standout piece, like a plaid overshirt, lifts Style. The score may not move yet.',
   // The Why sheet on the parts engine (#205, #209; wording from mockups/parts-card.html). Part names and the reason lines

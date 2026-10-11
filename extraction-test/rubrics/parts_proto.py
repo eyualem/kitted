@@ -29,12 +29,13 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Three engines (Oct 10): engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
-whose readings passed, and adds one step after the average (see TUNE below). engine="v3" (the default, the streetwear
-pass) is v2 plus one Proportions reward, PR4 "the streetwear shape" (see TUNE["v3"]; ../parts3_test.py, report
-../../rubric/research/parts/streetwear-pass.md). engine="v4" (opt-in, Oct 11, the style fairness pass) is v3 plus the workwear and outdoor
-silhouettes (PR5, PR6) and the track jacket as a short layer (see TUNE["v4"]; ../parts4_test.py, report
-../../rubric/research/parts/style-fairness.md); v3 stays the default so the TS port's parity holds. v2's step after the average:
+Four engines: engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
+whose readings passed, and adds one step after the average (see TUNE below). engine="v3" (the streetwear pass) is v2
+plus one Proportions reward, PR4 "the streetwear shape" (see TUNE["v3"]; ../parts3_test.py, report
+../../rubric/research/parts/streetwear-pass.md). engine="v4" (THE DEFAULT since Oct 11, approved by the main session;
+the style fairness pass) is v3 plus the workwear and outdoor silhouettes (PR5, PR6), the track jacket as a short layer,
+and H2 judged on the pick-free label so his picks can never move a number (see TUNE["v4"]; ../parts4_test.py, report
+../../rubric/research/parts/style-fairness.md). v1-v3 stay reachable by name. v2's step after the average:
   2b. EARNED BONUS (v2): +0.25 when a second part reaches 8 and no part is under 7, so excellence in two parts adds
       up instead of being averaged away. Paper test: ../parts2_test.py, report: ../../rubric/research/parts/
       tuning-results.md.
@@ -49,9 +50,9 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-3 (Oct 10, 2026)"
+VERSION = "parts-proto-4 (Oct 11, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
-            "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026; style fairness, opt-in)"}
+            "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)"}
 
 # ---- Reward tuning (Oct 10, founder-approved). engine="v1" reproduces parts-proto-1 exactly (paper test results/parts1/); engine="v2" is
 # the tuned engine (paper test parts2_test.py, report rubric/research/parts/tuning-results.md). Only rewards built on
@@ -132,8 +133,8 @@ TUNE["v3"] = dict(TUNE["v2"], pr4=1.0,
 _OFF = dict(pr4=0.0, pr4_shoes=frozenset(), h4_graphic_street=False, sw2=0.5, pr4_legs=R.LOOSE, pr4_signature_v3=False)
 TUNE["v1"].update(_OFF)
 TUNE["v2"].update(_OFF)
-# v4 (Oct 11, the style fairness pass; OPT-IN: engine="v4". v3 stays the default, so the TS port's parity and the fix
-# engine built on v3 are untouched; report rubric/research/parts/style-fairness.md, test ../parts4_test.py). v3 plus
+# v4 (Oct 11, the style fairness pass; THE DEFAULT since the main session approved it, outdoor kept at +0.5; the TS
+# port and the fix engine moved with it; report rubric/research/parts/style-fairness.md, test ../parts4_test.py). v3 plus
 # the defining silhouettes of the two styles that had no path to 8 (v5-silhouette.md §5; style_archetypes.md Q2
 # "done well"), each built only from readings that passed (garment type 100%, leg loose/full 94-97%, pooling 98%,
 # shoe kind 77% with the set spanning the boot family so a type flip inside "boots" doesn't switch it), each gated
@@ -168,9 +169,15 @@ TUNE["v4"] = dict(TUNE["v3"],
                   # tested and NOT adopted (see the report): "the look's own shoe" also when the shoe is an anchor of a
                   # style detected WITH the shoe and a non-shoe anchor of that style is worn (sc_pair: outdoor's trail
                   # shoe under a shell over regular basics can't pass the detect-without-the-shoe guard)
-                  sc_pair=False)
+                  sc_pair=False,
+                  # picks never move a number: H2 ("clearly X top to toe") was judged on the "Reads as" label, which
+                  # his picks choose on a tie, so a pick could add H2 (5 of 25,048 reading x pick runs in v3, e.g. a
+                  # minimal + smart casual tie picked as smart casual: 7.3 -> 7.7). v4 judges H2 on the label the
+                  # outfit gets with no picks (look-alike rules, then the fixed order); the line names that style.
+                  h2_pick_free=True)
 _OFF4 = dict(pr5=0.0, pr5_layers=frozenset(), pr5_bottoms=frozenset(), pr5_shoes=frozenset(), pr6=0.0,
-             pr6_layers=frozenset(), pr6_shoes=frozenset(), short_layers_extra=frozenset(), sc_pair=False)
+             pr6_layers=frozenset(), pr6_shoes=frozenset(), short_layers_extra=frozenset(), sc_pair=False,
+             h2_pick_free=False)
 for _e in ("v1", "v2", "v3"):
     TUNE[_e].update(_OFF4)
 WEIGHTS = {"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
@@ -685,13 +692,14 @@ def _cohesion(o, boldness, t):
     if len(o["slots"]) < 2:
         p.na = "fewer than two of top, bottoms and shoes in view"; return p
     det, label = o["det"], o["label"]
+    h2_label = o["label_nopick"] if t["h2_pick_free"] else label     # v4: picks never move a number
     subs = {g.get("subcategory") for g in o["main"]}
     suit = "suit_jacket" in subs and "suit_trousers" in subs
     if det or suit:
         p.add(t["h1"], f"reads as {R.STYLE_NAMES[label]}" if label else "a matching suit", "H1_reads_as_style")
     # H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
-    if label and len(o["slots"]) == 3:
-        role = R.STYLES[label][0]
+    if h2_label and len(o["slots"]) == 3:
+        role = R.STYLES[h2_label][0]
         c = R.Outfit(o["main"])
         best, against = {}, 0
         for g in o["main"]:
@@ -700,7 +708,7 @@ def _cohesion(o, boldness, t):
             best[sl] = max(best.get(sl, 0), pos)
             against += neg
         if all(best.get(s, 0) >= 2 for s in ("upper", "bottom", "shoes")) and against == 0:
-            p.add(t["h2"], f"clearly {R.STYLE_NAMES[label]} top to toe", "H2_clear_top_to_toe")
+            p.add(t["h2"], f"clearly {R.STYLE_NAMES[h2_label]} top to toe", "H2_clear_top_to_toe")
     elif suit and o["tops"]:
         p.add(t["h2_suit"], "a suit worn properly over a top", "H2_suit")
     # H3: a piece from another world (the larger of the jacket rule and the spread rule, never both)
@@ -853,13 +861,13 @@ def _occasion(o, occasion):
     return out
 
 
-def _tune(engine="v3", tune=None):
+def _tune(engine="v4", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v3", tune=None):
+def earned_bonus(part_scores, engine="v4", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -873,7 +881,7 @@ def earned_bonus(part_scores, engine="v3", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v3", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v4", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -902,17 +910,19 @@ def _outfit(garments, styles):
     main = [g for g in gs if g.get("category") in R.SLOT]
     d = R.detect_styles(gs, styles)
     nd = R.detect_styles([g for g in gs if g.get("category") != "footwear"], styles)
+    d0 = R.detect_styles(gs, {}) if styles else d                    # the label with no picks (v4's H2)
     return {"tops": tops, "outers": outers, "top": tops[0] if tops else None, "outer": outers[0] if outers else None,
             "bottom": bottom, "shoes": shoes, "main": main, "det": d["detected"], "label": d["label"],
+            "label_nopick": d0["label"],
             "det_noshoe": nd["detected"], "slots": {R.SLOT[g["category"]] for g in main}, "credited": set(),
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v3", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v4", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v3" (the streetwear pass, default), "v2" (parts-proto-2, exactly) or "v1" (parts-proto-1,
-    exactly); tune: optional overrides of TUNE[engine]
+    _second_look). engine: "v4" (the style fairness pass, default), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
     styles = styles or {}

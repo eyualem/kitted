@@ -59,6 +59,12 @@ export interface PartsNextLevel {
   copy: string;
   when?: Record<string, unknown>;
   edits: PartsFixEdit[];
+  /** His first pick's path to 8: tried first, only when this is his first pick and the edited outfit reads as it. */
+  style?: string;
+  /** With `style`: not shown when the Smaller step on the card is in this group (the same move said twice). */
+  group?: string;
+  /** Second-look overrides after the edit. */
+  look?: Record<string, unknown>;
 }
 
 /** fixes.json -> "parts" (bundled as partsFixesData.ts). */
@@ -142,7 +148,8 @@ export interface PartsFixSuggestions {
   baseRaw: number | null;
   fixes: PartsFix[];
   smallerStep: PartsSmallerStep | null;
-  nextLevel: { id: string; part: PartName; line: string } | null;
+  /** `style`: the pick whose path this line names (null for the generic lines). */
+  nextLevel: { id: string; part: PartName; line: string; style: string | null } | null;
   /** When there's no fix: "No quick fixes for this one." (or "Dialed in. Nothing to fix." at 9+). */
   noneLine: string | null;
 }
@@ -180,7 +187,7 @@ type Expanded = { kind: "one"; reading: Reading; info: Info } | { kind: "alts"; 
 interface Scored { res: PartsScored; reading: Reading; info: Info }
 interface Cand {
   id: string; group: string; cls: PartsFixClass; rank: number; effort: number; free: boolean; to: number; toRaw: number;
-  gain: number; rawGain: number; itemId: string | null; order: number; shift: number; copy: string; tag: string;
+  gain: number; rawGain: number; itemId: string | null; order: number; shift: number; pickRank: number; copy: string; tag: string;
   raises: PartRaise[]; raisesLine: string; step: string; drops: boolean; liftsDisplay: boolean; edits: PartsFixEdit[];
 }
 
@@ -214,6 +221,12 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   const occasion = opts.occasion ?? "everyday";
   const boldness = opts.boldness ?? "a_little";
   const styles = opts.styles ?? null;
+  // his picks in order (the 1st pick first); a weight of 0 is not a pick. They shape the fixes, never the score.
+  const picks = (styles ?? []).filter(([, wt]) => truthy(wt) && wt > 0).map(([st]) => st as string);
+  const pickRank = (res: PartsScored): number => {
+    const i = picks.findIndex((st) => (res.detectedStyles as readonly string[]).includes(st));
+    return i < 0 ? picks.length : i;
+  };
   const closet = opts.closet ?? [];
   const warm = opts.warm ?? false;
   const firstCheck = opts.firstCheck ?? false;
@@ -500,14 +513,15 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
     cands.push({
       id: cand.id, group: cand.group, cls: cand.class, rank: cl.rank, effort: cand.effort, free: cl.free,
       to: res.overall, toRaw: pyRound(res.rawUnrounded, 6), gain: res.overall - base.overall,
-      rawGain: pyRound(res.rawUnrounded - base.rawUnrounded, 6), itemId: info.item_id ?? null, order, shift: shiftOf(r),
+      rawGain: pyRound(res.rawUnrounded - base.rawUnrounded, 6), itemId: info.item_id ?? null, order, shift: shiftOf(r), pickRank: pickRank(res),
       copy: fill(cand.copy, info), tag: cl.tag + (cand.detail ? ` · ${cand.detail}` : ""), raises, raisesLine: raisesLine(res, raises),
       step: fill(cand.step, info), drops: ch.some(([, , , d0, d1]) => d1 < d0), liftsDisplay: ch.some(([, , , d0, d1]) => d1 > d0),
       edits: clone(cand.edits),
     });
   });
 
-  const keyOf = (x: Cand): number[] => [x.rank, -x.gain, -x.rawGain, x.effort, x.shift, x.order];
+  // on the same rounded gain, the fix that makes the outfit read as his earliest pick goes first
+  const keyOf = (x: Cand): number[] => [x.rank, -x.gain, x.pickRank, -x.rawGain, x.effort, x.shift, x.order];
   const cmp = (a: number[], bb: number[]): number => {
     for (let i = 0; i < a.length; i++) if (a[i] !== bb[i]) return a[i]! < bb[i]! ? -1 : 1;
     return 0;
@@ -561,15 +575,25 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
     out.smallerStep = { id: s.id, class: s.cls, itemId: s.itemId, part: top.part, from: top.from, to: top.to, rawGain: s.rawGain, line };
   }
 
-  if (picked.length === 0 && out.smallerStep === null && !lounge) {
+  if (picked.length === 0 && !lounge) {
+    const step = out.smallerStep;
+    const stepGroup = step ? (cands.find((x) => x.id === step.id)?.group ?? null) : null;
     for (const nl of CAT.nextLevel) {
+      const st = nl.style ?? null;
+      if (st !== null) {
+        // his first pick's path to 8
+        if (picks.length === 0 || st !== picks[0] || (nl.group ?? null) === stepGroup) continue;
+      } else if (step !== null) {
+        continue; // the generic lines: no fix and no Smaller step
+      }
       if (!whenOk(nl.when, w)) continue;
-      const ev = evaluate(nl.edits, undefined);
+      const ev = evaluate(nl.edits, nl.look);
       if (ev === null) continue;
+      if (st !== null && !(ev.res.detectedStyles as readonly string[]).includes(st)) continue;
       const after = ev.res.parts[nl.part];
       const before = base.parts[nl.part];
       if (after && !isNone(after.display) && !isNone(before.display) && after.display! > before.display!) {
-        out.nextLevel = { id: nl.id, part: nl.part, line: nl.copy };
+        out.nextLevel = { id: nl.id, part: nl.part, line: fill(nl.copy, ev.info), style: st };
         break;
       }
     }

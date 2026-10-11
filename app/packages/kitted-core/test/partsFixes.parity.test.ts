@@ -17,6 +17,8 @@ interface FixCase {
   warm: boolean;
   closet: "seed" | "empty";
   first_check: boolean;
+  /** His picks for this case (else the fixture's profile). */
+  styles?: [string, number][];
   expected: Record<string, unknown> & { fixes: number[]; smaller_step: number | null };
 }
 interface FixParity {
@@ -42,7 +44,7 @@ const readingOf = (id: string): Reading => {
 
 function run(c: FixCase): PartsFixSuggestions {
   return suggestPartsFixes(readingOf(c.reading), {
-    occasion: c.occasion, styles: F.profile as Styles, boldness: F.boldness, secondLook: c.second_look,
+    occasion: c.occasion, styles: (c.styles ?? F.profile) as Styles, boldness: F.boldness, secondLook: c.second_look,
     closet: c.closet === "seed" ? F.closet : [], warm: c.warm, firstCheck: c.first_check,
   });
 }
@@ -108,6 +110,39 @@ describe("parts fix engine parity (parts_fixes.py)", () => {
     expect(r.baseOverall).toBe(7.0);
     expect(r.fixes.map((f) => [f.copy, f.to])).toContainEqual(["Swap the jeans for navy chinos", 8.0]);
     expect(r.smallerStep?.line).toBe("Dark straight jeans lift Style to 7.5, but the score stays 7.0.");
+  });
+
+  it("picks shape the fixes, never the score: same base score and the same gains with no picks", () => {
+    const pc = F.cases.filter((c) => c.styles !== undefined && c.styles.length > 0);
+    expect(pc.length).toBeGreaterThan(3000);
+    const bad: string[] = [];
+    for (const c of pc) {
+      const a = run(c);
+      const b = run({ ...c, styles: [] });
+      const sa = JSON.stringify([a.baseOverall, a.baseRaw, a.fixes.map((f) => [f.class, f.gain])]);
+      const sb = JSON.stringify([b.baseOverall, b.baseRaw, b.fixes.map((f) => [f.class, f.gain])]);
+      if (sa !== sb) bad.push(`${c.src}: ${sa} vs ${sb}`);
+      if (bad.length > 10) break;
+    }
+    expect(bad).toEqual([]);
+  }, 120_000);
+
+  it("on a tie, the fix toward his first pick leads (oct7-ph1, Streetwear: chunky sneakers before navy chinos)", () => {
+    const c = F.cases.find((x) => x.src.startsWith("picks:one:streetwear:corpus:zoom1:oct7-ph1|"));
+    expect(c).toBeDefined();
+    const withPick = run(c!);
+    const without = run({ ...c!, styles: [] });
+    expect(without.fixes[0]?.id).toBe("pants_navy_chinos");
+    expect(withPick.fixes[0]?.id).toBe("shoes_chunky");
+    expect(withPick.fixes[0]?.gain).toBe(without.fixes[0]?.gain);
+  });
+
+  it("the Next level line names his first pick's path, only for that pick", () => {
+    for (const nl of PARTS_FIXES_DATA.nextLevel.filter((n) => n.style)) {
+      const hits = F.cases.filter((c) => (c.expected["next_level"] as { id?: string } | null)?.id === nl.id);
+      expect(hits.length, nl.id).toBeGreaterThan(0);
+      for (const c of hits) expect((c.styles ?? F.profile)[0]?.[0]).toBe(nl.style);
+    }
   });
 
   it("never shows a gain that doesn't happen, and never mutates its input", () => {

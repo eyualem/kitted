@@ -1,5 +1,6 @@
-// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v3" (parts-proto-3,
-// DECISIONS-LOG #195-205). NOT wired into the app: rubric.ts (v4.1) stays the live score until the parts-aware fix
+// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v4" (parts-proto-4, the
+// default since Oct 11; DECISIONS-LOG #195-210: v3 plus the workwear and outdoor shapes, the track jacket as a short
+// layer, and H2 judged on the pick-free label so picks never move a number). NOT wired into the app: rubric.ts (v4.1) stays the live score until the parts-aware fix
 // engine and the Why sheet are built.
 //
 // "The AI sees, the code judges": it reads only the garment description (plus the optional second look's two yes/no
@@ -15,7 +16,7 @@
 //  - Python `x in (…)` on a missing key is `None in (…)`: undefined and null both mean None (nv)
 //  - one garment, one credit: "already credited" is object identity on our own copies (Python's id(g))
 //  - where Python would raise (a garment without a subcategory reaching a reason line), this throws the same error
-// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.0.0); the v4.1
+// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.1.0); the v4.1
 // helpers it shares (formality, colors, style detection, prepare/normalize) come from the rubric engine.
 
 import { PARTS_DATA } from "./partsData";
@@ -55,6 +56,21 @@ export interface PartsTune {
   sw2: number;
   pr4_legs: string[];
   pr4_signature_v3: boolean;
+  /** v4: PR5 "the workwear shape" (0 = off in v1-v3) and what it needs. */
+  pr5: number;
+  pr5_layers: string[];
+  pr5_bottoms: string[];
+  pr5_shoes: string[];
+  /** v4: PR6 "the outdoor shape" (0 = off in v1-v3) and what it needs. */
+  pr6: number;
+  pr6_layers: string[];
+  pr6_shoes: string[];
+  /** v4: layers that count as PR2's short layers on top of SHORT_LAYERS (the track jacket). */
+  short_layers_extra: string[];
+  /** What-if (off in every engine): "the look's own shoe" also for a style detected with the shoe. */
+  sc_pair: boolean;
+  /** v4: H2 reads the label the outfit gets with no picks, so picks never move a number. */
+  h2_pick_free: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -62,7 +78,7 @@ interface Range { points: number; from: number; to: number }
 /** fixtures/parts.json (make_parts_json.py). */
 export interface PartsData {
   version: string;
-  /** "v3" for the bundled data; "v1" / "v2" reproduce the earlier prototypes. */
+  /** "v4" for the bundled data; "v1" / "v2" / "v3" reproduce the earlier prototypes. */
   engine: string;
   label: string;
   source: string;
@@ -320,6 +336,8 @@ interface PartsOutfit {
   main: Garment[];
   det: DetectedStyle[];
   label: DetectedStyle | null;
+  /** The label with no picks (v4's H2). */
+  labelNoPick: DetectedStyle | null;
   detNoShoe: DetectedStyle[];
   slots: Set<string>;
   credited: Set<Garment>;
@@ -354,6 +372,9 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const STREET_SHAPE_BOTTOMS = PS("STREET_SHAPE_BOTTOMS"), LOOSE_DENIM = PS("LOOSE_DENIM"), WORN_HALF_SHOES = PS("WORN_HALF_SHOES");
   const DAINTY_SHOES = PS("DAINTY_SHOES"), LONG_SHIRTS = PS("LONG_SHIRTS"), DRESSY_ROOM = PS("DRESSY_ROOM");
   const PR4_SHOES = tset(t.pr4_shoes), PR4_LEGS = tset(t.pr4_legs);
+  const PR5_LAYERS = tset(t.pr5_layers), PR5_BOTTOMS = tset(t.pr5_bottoms), PR5_SHOES = tset(t.pr5_shoes);
+  const PR6_LAYERS = tset(t.pr6_layers), PR6_SHOES = tset(t.pr6_shoes);
+  const SHORT_LAYERS_ALL = new Set<unknown>([...SHORT_LAYERS, ...t.short_layers_extra]);
 
   const FAMILY = new Map<unknown, string>(Object.entries(RT.FAMILY));
   const NEUTRALS = tset(RT.NEUTRALS), LOUNGE_BOTTOMS = tset(RT.LOUNGE_BOTTOMS), SEPARATE_JACKETS = tset(RT.SEPARATE_JACKETS);
@@ -426,10 +447,11 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const main = gs.filter((g) => has(SLOT, g.category as string));
     const d = rubric.detectStyles(gs, picks);
     const nd = rubric.detectStyles(gs.filter((g) => g.category !== "footwear"), picks);
+    const d0 = picks && picks.length > 0 ? rubric.detectStyles(gs, []) : d;
     return {
       tops, outers, top: tops[0] ?? null, outer: outers[0] ?? null,
       bottom: gs.find((g) => g.category === "bottom") ?? null, shoes: gs.find((g) => g.category === "footwear") ?? null,
-      main, det: d.detected, label: d.label, detNoShoe: nd.detected, slots: new Set(main.map((g) => SLOT[g.category as string]!)),
+      main, det: d.detected, label: d.label, labelNoPick: d0.label, detNoShoe: nd.detected, slots: new Set(main.map((g) => SLOT[g.category as string]!)),
       credited: new Set(), colorFault: false, mirror: false,
     };
   }
@@ -509,7 +531,16 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         rewards.push([t.pr4, "a boxy top over wide legs, finished by street sneakers: the streetwear shape", "PR4_street_shape"]);
       }
     }
-    if (!blocked && full && O !== null && SHORT_LAYERS.has(oSub) && earns(O) && !truthy(sl.peek)) {
+    // v4 (off in v1-v3): the workwear and outdoor shapes (PR5, PR6). Their layers are never PR2's short layers, so
+    // one layer earns one shape credit. trail_shoe and track_jacket aren't values of the live v3 reading yet.
+    if (!blocked && full && O !== null && earns(O) && !truthy(sl.peek) && S !== null && earns(S)) {
+      if (truthy(t.pr5) && PR5_LAYERS.has(oSub) && PR5_BOTTOMS.has(nv(B.subcategory)) && PR5_SHOES.has(sSub) && o.det.includes("workwear")) {
+        rewards.push([t.pr5, `a ${rep(oSub)} over a sturdy leg, finished by boots: the workwear shape`, "PR5_workwear_shape"]);
+      } else if (truthy(t.pr6) && PR6_LAYERS.has(oSub) && PR6_SHOES.has(sSub) && o.det.includes("outdoor")) {
+        rewards.push([t.pr6, `a ${rep(oSub)} over a full leg, finished by trail shoes: the outdoor shape`, "PR6_outdoor_shape"]);
+      }
+    }
+    if (!blocked && full && O !== null && SHORT_LAYERS_ALL.has(oSub) && earns(O) && !truthy(sl.peek)) {
       rewards.push([t.pr2, `a short ${rep(oSub)} over full legs: a clean, strong shape`, "PR2_short_layer"]);
     }
     if (!blocked && oTailored && T !== null && T.tucked === "full" && PRESSED.has(nv(B.subcategory)) && leg !== "skinny" && earns(O)) {
@@ -759,6 +790,10 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       if (truthy(role) && earns(S)) {
         const d0 = o.detNoShoe[0]!;
         p.add(SH.chosen * up, o.detNoShoe.length === 1 ? `a ${STYLE_NAMES[d0]} shoe for a ${STYLE_NAMES[d0]} outfit` : "the shoes belong to the look", "SC_chosen_for_look");
+      } else if (truthy(t.sc_pair) && earns(S) && o.det.some((st) => H.role(st, S, c)[0] >= 2
+          && o.main.some((g) => g.category !== "footwear" && H.role(st, g, c)[0] >= 2))) {
+        // v4 what-if (off): the look's anchor shoe with the look's anchor piece on the body (detected with the shoe)
+        p.add(SH.chosen * up, "the shoes belong to the look", "SC_chosen_for_look");
       } else if (truthy(t.suit_shoe) && suit && SUIT_SHOES.has(sub) && earns(S)) {
         p.add(SH.chosen * up, "the right shoes for a suit", "SC_chosen_for_look");
       }
@@ -799,22 +834,23 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       return p;
     }
     const det = o.det, label = o.label;
+    const h2Label = truthy(t.h2_pick_free) ? o.labelNoPick : label; // v4: picks never move a number
     const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
     const suit = subs.has("suit_jacket") && subs.has("suit_trousers");
     if (det.length > 0 || suit) p.add(t.h1, label ? `reads as ${STYLE_NAMES[label]}` : "a matching suit", "H1_reads_as_style");
     // H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
-    if (label && o.slots.size === 3) {
+    if (h2Label && o.slots.size === 3) {
       const c = H.outfit(o.main);
       const best = new Map<string, number>();
       let against = 0;
       for (const g of o.main) {
-        const [pos, neg] = H.role(label, g, c);
+        const [pos, neg] = H.role(h2Label, g, c);
         const s = SLOT[g.category as string]!;
         best.set(s, pyMax(best.get(s) ?? 0, pos));
         against += neg;
       }
       if (["upper", "bottom", "shoes"].every((s) => (best.get(s) ?? 0) >= 2) && against === 0) {
-        p.add(t.h2, `clearly ${STYLE_NAMES[label]} top to toe`, "H2_clear_top_to_toe");
+        p.add(t.h2, `clearly ${STYLE_NAMES[h2Label]} top to toe`, "H2_clear_top_to_toe");
       }
     } else if (suit && o.tops.length > 0) {
       p.add(t.h2_suit, "a suit worn properly over a top", "H2_suit");
@@ -1078,7 +1114,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 /** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
 export const defaultParts: PartsEngine = createParts(PARTS_DATA);
 
-/** parts_proto.score_parts() (engine v3) with the bundled data. Never mutates `reading`. Not wired into the app yet. */
+/** parts_proto.score_parts() (engine v4) with the bundled data. Never mutates `reading`. Not wired into the app yet. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
 }
