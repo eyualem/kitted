@@ -12,7 +12,9 @@ export { suggestFixes, applyFix, fixTargets, type Fix, type FixSuggestions, type
 export { recheckMerge, recheckOutcome, STATE_FIELDS, type RecheckMerge, type RecheckOutcome } from "./recheck";
 export { applyCorrection, removeGarment, correctionLine } from "./corrections";
 export { applyTapAnswer, tapOrdinal, tapOrder, tapSpan, isShoeQuestion, carryTapAnswer, type TapCarry } from "./tap";
-export { askWithCloset, KNOWN_SWING } from "./known";
+export { askWithCloset, askWithClosetBy, KNOWN_SWING } from "./known";
+// The one quick tap for parts-scored checks (#212): the same questions, judged by the parts score swing.
+export { askQuestionParts, askWithClosetParts, partsOverall } from "./partsTap";
 export { matchClosetItem, closetPlan, type ClosetPlan, type ClosetPlanEntry } from "./closetMatch";
 export { partialLabel, mergeShoeSnap, mergeBottomSnap, pickShoesFromCloset } from "./partial";
 export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type RotationResult, type ItemKey, type ComboKey } from "./rotation";

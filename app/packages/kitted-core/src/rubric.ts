@@ -95,6 +95,10 @@ export interface RubricHelpers {
   role(style: DetectedStyle, g: Garment, c: Outfit): readonly [number, number];
   halfAccent(g: Garment): boolean;
   isDenim(g: Garment): boolean;
+  /** The one quick tap's doubt test (rubric._doubt) for a look-alike pair: why the read may be wrong, or null. For partsTap.ts. */
+  tapDoubt(reading: Reading, g: Garment, a: string, b: string): string | null;
+  /** rubric._kind_pick: the type a shoe-kind answer scores as. For partsTap.ts. */
+  kindPick(reading: Reading, i: number, kind: ShoeKind): string;
 }
 
 /** Python `dict(pairs)`: later duplicates overwrite the value but keep the first position. */
@@ -1143,6 +1147,8 @@ export function createRubric(data: RubricData): RubricEngine {
     },
     outfit: outfitOf,
     role: (style, g, c) => STYLES[style].role(g, c),
+    tapDoubt: (reading, g, a, b) => doubtOf(reading, (truthy(reading.scene) ? reading.scene : {}) as Scene, g, a, b),
+    kindPick,
     halfAccent,
     isDenim,
   };

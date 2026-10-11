@@ -40,7 +40,16 @@ const better = (q: TapQuestion, best: TapQuestion | null): boolean => {
  * the result on the check so the same photo never gets a different question later.
  */
 export function askWithCloset(reading: Reading, opts: ScoreOptions = {}, known: readonly KnownPiece[] = []): TapQuestion | null {
-  const q = askQuestion(reading, opts);
+  return askWithClosetBy(reading, opts, known, askQuestion, (r, o) => score(r, o).overall);
+}
+
+/** askWithCloset with a given engine: `ask` is that engine's own question, `overall` its rounded score. v4 passes
+ *  rubric.askQuestion + score (unchanged behaviour); parts checks pass partsTap's (#212). */
+export function askWithClosetBy<O extends ScoreOptions>(
+  reading: Reading, opts: O, known: readonly KnownPiece[],
+  ask: (r: Reading, o: O) => TapQuestion | null, overall: (r: Reading, o: O) => number | null,
+): TapQuestion | null {
+  const q = ask(reading, opts);
   if (known.length === 0) return q;
   const scene: Scene = (reading.scene ?? {}) as Scene;
   const occ = opts.occasion ?? "everyday";
@@ -63,8 +72,8 @@ export function askWithCloset(reading: Reading, opts: ScoreOptions = {}, known: 
     }
     if (g.certainty === "clear" && read !== "other") return; // a sure read that disagrees: trust the photo
     const at = { garmentIndex: i, field: "subcategory" as const };
-    const sYes = score(applyTapAnswer(reading, at, yes), opts).overall;
-    const sNo = score(applyTapAnswer(reading, at, read), opts).overall;
+    const sYes = overall(applyTapAnswer(reading, at, yes), opts);
+    const sNo = overall(applyTapAnswer(reading, at, read), opts);
     if (sYes === null || sNo === null || Math.abs(sYes - sNo) < KNOWN_SWING) return;
     const lost = read === "other";
     candidates.push({

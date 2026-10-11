@@ -6,7 +6,7 @@
 // before, and this file never writes a check's closetSummary or itemIds (patchRow keeps them).
 
 import {
-  applyCorrection, applyFix, applyPartsFix, applyTapAnswer, askWithCloset, cardFixTargets, carryTapAnswer, dayKey, garmentName, isPartsFix,
+  applyCorrection, applyFix, applyPartsFix, applyTapAnswer, askWithCloset, askWithClosetParts, cardFixTargets, carryTapAnswer, dayKey, garmentName, isPartsFix,
   localParts, mergeShoeSnap, PARTS_RUBRIC_VERSION, partsRecheckOutcome, pickShoesFromCloset, RUBRIC_DATA, recheckMerge, recheckOutcome, removeGarment,
   seasonNeeds, tapOrder, tapOrdinal, weatherNeeds, weekdayOf, type ClosetItem, type DayWeather, type Fix, type Garment, type Reading,
   type ScoreOptions, type Styles,
@@ -26,7 +26,7 @@ import { createClosetService, type ClosetService, type DuplicateAnswer } from '@
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
-import { evaluateCheck, overallFor, scoreOptions, scoringEngine, type ScoringEngine } from './scoring';
+import { evaluateCheck, scoreOptions, scoringEngine, type ScoringEngine } from './scoring';
 
 /** The engine a stored check is scored with (#209): the one its rubricVersion names, so editing an old check (a
  *  correction, the occasion, its re-check) never moves it to another engine. New rows take the switch's. */
@@ -247,17 +247,10 @@ export function createFitCheckService(deps: ServiceDeps) {
     // With what he owned before this photo (#126): "Your green work boots?" about a piece he confirmed, or none when
     // his closet agrees with the read. The question (and so the snapshot's effect) is stored on the row.
     const tapOpts = scoreOptions(lensInput(row.occasion, row.style, await profile()));
-    const asked = deps.tap?.() && !row.details.tap ? askWithCloset(reading, tapOpts, await closet.knownPieces([row.id])) : null;
-    // Which question to ask is still v4.1's (parity-tested against rubric.py; its swing decides whether to ask). The
-    // two answers' scores are the engine's this check uses, so "Jeans → 6.5" is what the card then shows (#209).
-    const q = asked && engineOf(row) === 'parts'
-      ? (() => {
-          const options = asked.options.map((o) => ({
-            ...o, score: overallFor(applyTapAnswer(reading, { garmentIndex: asked.garmentIndex, field: 'subcategory' }, o.value), tapOpts, 'parts') ?? o.score,
-          }));
-          return { ...asked, options, swing: (options[0]?.score ?? 0) - (options[1]?.score ?? 0) };
-        })()
-      : asked;
+    // Parts checks pick the question with the parts score's swing (#212; same rules and bars as v4), so the options'
+    // scores are what the card then shows. v4 checks keep v4.1's question (parity-tested against rubric.py).
+    const ask = engineOf(row) === 'parts' ? askWithClosetParts : askWithCloset;
+    const q = deps.tap?.() && !row.details.tap ? ask(reading, tapOpts, await closet.knownPieces([row.id])) : null;
     if (!q) return finalizeCheck(row, reading, readingRow, cached);
     const tap: TapState = {
       pair: q.pair, slot: q.slot, garmentIndex: q.garmentIndex, ordinal: tapOrdinal(reading, q.garmentIndex), question: q.question,

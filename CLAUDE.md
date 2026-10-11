@@ -141,7 +141,7 @@
 - **Your picked styles shape the fixes, never the score** (#211). When two fixes are equally good, the one toward your look goes first. With nothing to fix, the "Next level" line names your look's way to 8. A test proves a pick can't change a score. It also closed one small leak where a pick could add 0.5. **Your call:** should a picked style ever move points? Claude's default: no, until the gold set shows raters judge that way.
 - **Known gaps:**
   - Demo screen 10's re-check story broke (with the overshirt on, a long layer hides the tuck, so it drops 8.0 → 7.5). It needs a new before/after demo pair.
-  - The quick tap still picks its question with the old engine.
+  - ~~The quick tap still picks its question with the old engine.~~ Fixed (#212): parts checks ask by the parts score's swing, with v4's bars. On your 11 Oct 8 checks it asks on 5 instead of 7 (the boots question drops where boots wouldn't change the score); v4 checks keep v4's questions.
   - Fit can't go above 7 until the AI can read the shoulder seam.
   - The hem stack and jacket length still can't be read.
 - **Not on your phone yet:** the JS reaches it through the dev server (if Metro is running), but the face-hiding fix needs `tools/phone/install.sh`.

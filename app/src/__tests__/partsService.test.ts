@@ -2,7 +2,7 @@
 // check, the re-check and the one quick tap all score with core scoreParts, and the fixes come from suggestPartsFixes.
 // An old check (rubric v4.1) keeps its engine when it's edited. Numbers are checked against core directly, plus the
 // demo story's own values.
-import { applyTapAnswer, PARTS_RUBRIC_VERSION, RUBRIC_DATA, score, scoreParts, US_EASTERN, type Reading } from '@kitted/core';
+import { applyTapAnswer, askQuestionParts, PARTS_RUBRIC_VERSION, RUBRIC_DATA, score, scoreParts, US_EASTERN, type Reading } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
@@ -138,7 +138,7 @@ describe('parts engine is the default (#209)', () => {
     expect(row.details.recheck!.delta).toBe(row.score! - 8);
   });
 
-  it('the one quick tap: the question is v4.1\'s, the two answers\' scores are the parts engine\'s', async () => {
+  it('the one quick tap: the question and its swing are the parts engine\'s (#212), and so are the answers\' scores', async () => {
     const { store, svc } = await setup({ tap: true });
     const r = await svc.start({ mode: 'check', photoId: 'ph1', occasion: 'everyday' });
     expect(r.outcome).toBe('asking');
@@ -149,8 +149,23 @@ describe('parts engine is the default (#209)', () => {
     for (const o of tap.options) {
       expect(o.score).toBe(parts(applyTapAnswer(raw, { garmentIndex: tap.garmentIndex, field: 'subcategory' }, o.value), 'everyday'));
     }
+    const q = askQuestionParts(raw, { occasion: 'everyday', styles: smart, boldness: 'a_little' })!;
+    expect([tap.pair, tap.swing, tap.default]).toEqual([q.pair, q.swing, q.default]);
     const answered = (await svc.answerTap(id, tap.options[0]!.value))!;
     expect([answered.score, answered.rubricVersion]).toEqual([tap.options[0]!.score, PARTS_RUBRIC_VERSION]);
+  });
+
+  it('Skip on a parts check keeps what was read, at its parts score, and the stored answer stays', async () => {
+    const { store, svc } = await setup({ tap: true });
+    const r = await svc.start({ mode: 'check', photoId: 'ph1', occasion: 'everyday' });
+    const id = (r as { checkId: string }).checkId;
+    const tap = (await store.fitChecks.get(id))!.details.tap!;
+    const skipped = (await svc.answerTap(id, 'skip'))!;
+    const kept = tap.options.find((o) => o.value === tap.default)!;
+    expect([skipped.score, skipped.rubricVersion, skipped.details.tap!.skipped, skipped.details.tap!.answer]).toEqual([
+      kept.score, PARTS_RUBRIC_VERSION, true, tap.default,
+    ]);
+    expect(skipped.score).toBe(parts(await readingOf(store, id), 'everyday'));
   });
 
   it('v4 rows still carry the v4 version string', () => expect(RUBRIC_DATA.version.startsWith('parts-')).toBe(false));
