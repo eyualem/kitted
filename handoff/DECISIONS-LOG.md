@@ -1001,3 +1001,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Shipped:** v5 is the default (`parts_proto.py`; v4 by `engine="v4"`); parts data 1.2.0; `parts.ts` `styleClash`; `parts_parity.json` 13,027 cases (17 SX1 edges, v4 and a v5 what-if as tune variants, `v5_vs_v4`: 39 hand-written cases changed, 0 real); `parts_fixes.json` 18,131 cases. TypeScript equal on every case of both; `npm run check` green. New checks store `parts-1.2.0`; an older parts check edited later is re-scored by v5, which changes no saved reading.
     - **A council ruling partly reversed, on the founder's word:** RULEBOOK Part 3 ("mixing styles is never a mistake") and ruling 2 ("detection never adds a penalty") now have one narrow exception, this one. Every other mix still costs nothing.
     - **Founder calls:** the size (above); an oversized graphic tee under a blazer (kept as no fault; FashionBeans 2025 dissents); the one-dressy-piece graphic tee (tip only, or a fault?).
+215. **"Going for" is asked during the wait (founder, Oct 11: "I like the during-the-wait question").** His notes on v1:
+    - it doesn't look like it pops up during a wait
+    - two picks (the look and the occasion) in about 7 s is tight
+
+    **v2 is being mocked** (the same file, `mockups/going-for.html`). The question sits inside the reading card under the progress and slides in with its own "While I read it" treatment. The look is the main question, and the occasion is one line ("Headed: Everyday ⌄"). Both are pre-picked. The score never waits: if it lands first, the question collapses into "Going for minimal · Everyday · Change" at the top of the result. A change of look updates the advice instantly; a change of occasion uses the existing re-score confirm.
+
+    **His third point, "the app should follow the rules that are listed, it shouldn't just guess":** after the style-clash fix lands, Claude writes a plain-words rule list per style (`rubric/v5-styles.md`), plus a conformance test per written rule (an outfit that must pass or fail), so a broken rule fails the tests. The AI only names garments; code applies the written rules.
