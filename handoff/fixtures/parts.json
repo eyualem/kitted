@@ -3,7 +3,7 @@
  "engine": "v3",
  "label": "parts-proto-3 (Oct 10, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "2c57911d4ef9de508f15fd28263895293868533bfa8d094da5efc9fc572667fd",
+ "sourceSha256": "cf00ee3f9cc3056e96cccd1eaee22de96b252c353cb1d5d70440b24af1d79d2d",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,

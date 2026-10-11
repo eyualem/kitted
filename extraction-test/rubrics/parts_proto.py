@@ -470,12 +470,12 @@ def _color(o, boldness, t):
     pos = []                                                          # (points, line, check); capped below (v2)
     if len(bright) == 1 and len(non_neutral) == 1 and _earns(bright[0]):
         g = bright[0]
-        pos.append((t["cp1"], f"the {g.get('color_family').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is the one standout",
+        pos.append((t["cp1"], f"the {(g.get('color_family') or 'colour').replace('_', ' ')} {(g.get('subcategory') or 'piece').replace('_', ' ')} is the one standout",
                     "CP1_standout_color"))
         o["credited"].add(id(g))
     elif not bright and len(non_neutral) == 1 and _earns(non_neutral[0]):
         g = non_neutral[0]
-        pos.append((t["cp2"], f"the {g.get('color_family').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is a quiet accent",
+        pos.append((t["cp2"], f"the {(g.get('color_family') or 'colour').replace('_', ' ')} {(g.get('subcategory') or 'piece').replace('_', ' ')} is a quiet accent",
                     "CP2_quiet_accent"))
     S = o["shoes"]
     upper = [g for g in main if g.get("category") in ("top", "outerwear")]
@@ -681,7 +681,7 @@ def _cohesion(o, boldness, t):
             pat = [g for g in o["main"] if g.get("category") in ("top", "outerwear") and g.get("pattern") == "graphic"]
         if len(pat) == 1 and _earns(pat[0]) and id(pat[0]) not in o["credited"]:
             g = pat[0]
-            p.add(t["h4"], f"the {g.get('pattern').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is the one standout",
+            p.add(t["h4"], f"the {(g.get('pattern') or 'patterned').replace('_', ' ')} {(g.get('subcategory') or 'piece').replace('_', ' ')} is the one standout",
                   "H4_standout_piece")
     return p
 

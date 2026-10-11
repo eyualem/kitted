@@ -643,11 +643,11 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const pos: [number, string, string][] = [];
     if (bright.length === 1 && nonNeutral.length === 1 && earns(bright[0]!)) {
       const g = bright[0]!;
-      pos.push([t.cp1, `the ${rep(g.color_family)} ${rep(g.subcategory)} is the one standout`, "CP1_standout_color"]);
+      pos.push([t.cp1, `the ${rep(or(g.color_family, "colour"))} ${rep(or(g.subcategory, "piece"))} is the one standout`, "CP1_standout_color"]);
       o.credited.add(g);
     } else if (bright.length === 0 && nonNeutral.length === 1 && earns(nonNeutral[0]!)) {
       const g = nonNeutral[0]!;
-      pos.push([t.cp2, `the ${rep(g.color_family)} ${rep(g.subcategory)} is a quiet accent`, "CP2_quiet_accent"]);
+      pos.push([t.cp2, `the ${rep(or(g.color_family, "colour"))} ${rep(or(g.subcategory, "piece"))} is a quiet accent`, "CP2_quiet_accent"]);
     }
     const S = o.shoes;
     const upper = main.filter((g) => g.category === "top" || g.category === "outerwear");
@@ -865,7 +865,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       }
       if (pat.length === 1 && earns(pat[0]!) && !o.credited.has(pat[0]!)) {
         const g = pat[0]!;
-        p.add(t.h4, `the ${rep(g.pattern)} ${rep(g.subcategory)} is the one standout`, "H4_standout_piece");
+        p.add(t.h4, `the ${rep(or(g.pattern, "patterned"))} ${rep(or(g.subcategory, "piece"))} is the one standout`, "H4_standout_piece");
       }
     }
     return p;
