@@ -935,3 +935,13 @@ Contradictions settled and decisions changed during the build. Newest last.
         - the Occasion line shows only when it holds the score down, with what the parts alone would make
         - the separate "Reads as" line moves into Style's reasons (default: drop it from the card)
     - **A fix row must never show a gain that doesn't happen.** On the friend's blazer, "dark straight jeans" lifts Style to 7.5 but the score stays 7.0, so the fix becomes "Swap the jeans for navy chinos → 8.0", with the jeans as a "Smaller step" tip.
+205. **The parts live in a sheet, not on the card (founder, Oct 11: "displayed when they press the number… some UI clue… something that pops up like an overlay… instead of making that card so detailed").** The card stays as today (score and word, summary, fixes, next level). Tapping the score opens the Why sheet, which leads with the five-part strip and holds the reasons per part, Condition, Occasion and "Reads as" (moved off the card). The score gets a visible tap cue (a small chevron or "Why" affordance by "/10"; to be checked against the HIG when built). The mockup's options 1–3 become the sheet's layout question; the strip (option 1) is the default.
+    - **His worry, and Claude's answer (Oct 11: "rating fits is hard… people have different styles and expectations… we're going men's, top level"):**
+        - disagreement concentrates at the top (8 vs 9); beginner faults are broadly agreed, so score those with confidence
+        - the niche is skill level (beginners), not a style
+        - judge against the look the outfit is going for (the style read)
+        - taste-level advice goes in tips, not points
+        - show the reasons and keep "Not quite right?"
+        - calibrate on many opinions (the gold set)
+    - **His reaction to mockup B** ("too fitted, pants too low, not a 7") was to a drawn figure, not a scored outfit; drawings can't show fit.
+    - **Next:** port the v3 parts engine into `@kitted/core` with parity tests against `parts_proto.py`, then the parts-aware fix engine, then the sheet.
