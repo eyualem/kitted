@@ -196,11 +196,15 @@
   - **"Ask your stylist…" lives in the tab bar's glass** (iOS 26 accessory). Scroll down and the tab bar shrinks to a circle with "📷 Ask…" beside it; scroll up and it grows back. Tapping it opens the real text box over it, which rides the keyboard and goes away when it's empty.
   - **Scrolling** goes to the real bottom now (plain list; one day is short).
   - **Real on the Simulator** (screenshots `screenshots/stylist-oct9/`, git-ignored). Not yet seen with a real on-screen keyboard (the Simulator uses the Mac's keyboard): check typing on the phone.
+- **Scoring by parts is live in the app (Oct 11, DECISIONS-LOG #209).** What you'll see:
+  - **New fit checks score with the parts engine** (Proportions, Fit, Color, Shoes, Style averaged, then condition and occasion). Fix rows say what they raise ("Raises Shoes and Style · free if you own one"), and a "Smaller step" tip appears when a move lifts a part but not the score. Old checks keep their old scores.
+  - **Tap the score** (a small › after "/10") or "Why 8.0?": the Why sheet shows the five parts in a strip (the one with the most to gain in copper), then each part with its reasons, then Average of the parts, the bonus, Condition, Occasion, Reads as and the score. The "Reads as" line left the card.
+  - **Demo stories that changed:** screen 7 is still 8.0 but has no fix now; **screen 10's re-check story broke** (wearing the overshirt reads 7.5, so it shows 8.0 → 7.5); screen 11 is 7.0. Still on the old rules: which quick-tap question gets asked, and the re-check's "new problem" test. One switch in `scoring.ts` rolls everything back. Screenshots: `screenshots/parts-app/` (git-ignored).
 - **Mocked in the demo:**
   - The AI reading: saved readings replayed with the real timing.
   - The camera: a sample-photo sheet stands in until P3.
   - Purchases: the paywall runs on a mock store (P6).
-- **Tests:** `npm run check` in `app/` runs the typecheck, lint, 151 core tests and 266 app tests (incl. automated copy checks). All green (Oct 8).
+- **Tests:** `npm run check` in `app/` runs the typecheck, lint, the core tests and 345 app tests (incl. automated copy checks). All green (Oct 11).
 
 ### Other workstreams
 - **Extraction test PASSED (Oct 6).** Log: `extraction-test/results/INDEX.md`.
