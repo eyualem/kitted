@@ -923,3 +923,15 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **New fix candidates** (the copy is the founder's call): white leather → chunky sneakers; slides → chunky sneakers.
     - **Rejected:** a graphic as the standout (the read flips), a shoe-carries-the-leg credit at +1.0, straight legs, reading hoodies as boxy, a tonal streetwear credit (needs lightness).
     - **What still can't be seen, and the gold set must include:** boxiness on hoodies, a deliberate stack, leg width, the exact sneaker type, graphics, and accessories. Its pairs: white leather vs chunky; boxy vs regular tee; stacked vs cropped hem.
+204. **The parts card mockup (`mockups/parts-card.html`; screenshots in `screenshots/parts-card/`, git-ignored). Waiting on the founder's pick.** Three options, each keeping today's card (score and word, summary, fixes, next level):
+    - **(1)** a five-part strip under the score, about +95 pt, that turns into a list at accessibility sizes
+    - **(2)** a meter row per part, +205 pt; the clearest, but tall and stat-sheet-like
+    - **(3)** only the weakest and the strongest part, +125 pt
+    - **Claude's recommendation: (1).**
+    - **Rules found while mocking:**
+        - parts show whole and half points only; the score keeps one decimal
+        - the lead line names the lowest part only when it's under 7, otherwise the strongest, or "Every part is solid" (Fit can't go above 7 today, so "lowest part" alone would make every good fit say "Fit 7")
+        - the Condition line shows only when it costs points
+        - the Occasion line shows only when it holds the score down, with what the parts alone would make
+        - the separate "Reads as" line moves into Style's reasons (default: drop it from the card)
+    - **A fix row must never show a gain that doesn't happen.** On the friend's blazer, "dark straight jeans" lifts Style to 7.5 but the score stays 7.0, so the fix becomes "Swap the jeans for navy chinos → 8.0", with the jeans as a "Smaller step" tip.
