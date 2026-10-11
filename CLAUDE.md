@@ -39,6 +39,8 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
+- [ ] **P2** · **Look at the new card and sheet** on the Simulator or your phone (5 min): `screenshots/parts-app/`. Is the chevron after "/10" a clear enough cue? Default: keep it.
 - [ ] **P3** · **Skim the closet question wording** (built Oct 8 with the recommended words, #117): "Is this your grey Nike hoodie?" / "Are these your khaki chinos?", the reason lines ("I could only see part of it under your overshirt."), "Your score stays the same either way.", "To confirm". Change any word you don't like (`app/src/i18n/en.ts`, keys `closet.q.*`). See it on the Simulator: demo screens 70 (score card) and 38 (Closet).
 - [ ] **P3** · **Skim the parts engine's fix lines (#208):** `app/src/i18n/en.ts`, keys `pfix.*` ("Tuck in your {name}", "Swap the {name} for navy chinos", "Add a short jacket: a bomber or a denim jacket", the "Smaller step" line, "Raises Proportions and Style"). 5 min; change any word in both `fixes.json` → `parts` and `en.ts` (a test keeps them equal). *Unblocks: the parts card's fix rows.*
 - [ ] **P3** · **Skim the new fix lines (#162):** "Add a jacket over it: denim, bomber or chore coat", "Swap the {shoes} for chunky sneakers / boots / low-profile sneakers / white leather sneakers / loafers" (in `handoff/fixtures/fixes.json`). Built with these words; change any you don't like.
@@ -127,6 +129,22 @@
   - Clean and premium, per the mockups: chalk/night backgrounds, indigo ink, a copper accent, Archivo numerals, iOS 26 Liquid Glass tab bar.
   - Mockups: `mockups/kitted-mockups.html` (20 screens). Inside each phone 1 CSS px = 1 pt.
 - **Name: KITTED.** Handles @kitted.app and @trykitted are free on TikTok/IG; trykitted.com and trykitted.app are free. Never use "getkitted" (an Australian shop).
+
+## Overnight, Oct 11: what changed while you slept (read this first)
+- **The app now scores with the parts engine** (#209). New fit checks get the parts score and parts fixes. Your old checks keep their old scores. One switch rolls back (`app/src/features/fitcheck/scoring.ts`, `DEFAULT_SCORING_ENGINE`).
+- **What you'll see:**
+  - The card looks almost the same, with a small chevron after "/10". Tap the score (or "Why 8.0?") for the sheet: the five-part strip (Proportions · Fit · Color · Shoes · Style), each part with its share and the reasons that moved it, then condition, occasion, "Reads as" and rows that add up to the score.
+  - Fix rows say which parts they raise. A move that lifts a part but not the score shows as a "Smaller step" with no number.
+  - Screenshots: `screenshots/parts-app/` (s7, s8 light/dark, s10, s11, s35).
+- **Your friends' fits under it:** blazer 8.5 → 7.0 ("Swap the jeans for navy chinos → 8.0"), chore coat 8.5 → 7.0, your tee + wide jeans 7.0, your gingham shirt 6.5. About 6% of fits reach 8, and only deliberate ones.
+- **Every style now has a path to 8 except outdoor** (#210–211): workwear (a chore coat with jeans and boots), streetwear (a boxy top over wide jeans with street sneakers), vintage sport, minimal, prep, smart casual. None of your saved photos happens to use those shapes, so no real score moved.
+- **Your picked styles shape the fixes, never the score** (#211). When two fixes are equally good, the one toward your look goes first. With nothing to fix, the "Next level" line names your look's way to 8. A test proves a pick can't change a score. It also closed one small leak where a pick could add 0.5. **Your call:** should a picked style ever move points? Claude's default: no, until the gold set shows raters judge that way.
+- **Known gaps:**
+  - Demo screen 10's re-check story broke (with the overshirt on, a long layer hides the tuck, so it drops 8.0 → 7.5). It needs a new before/after demo pair.
+  - The quick tap still picks its question with the old engine.
+  - Fit can't go above 7 until the AI can read the shoulder seam.
+  - The hem stack and jacket length still can't be read.
+- **Not on your phone yet:** the JS reaches it through the dev server (if Metro is running), but the face-hiding fix needs `tools/phone/install.sh`.
 
 ## Where things stand (Oct 8, 2026)
 
