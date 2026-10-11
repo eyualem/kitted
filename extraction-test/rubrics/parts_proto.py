@@ -32,7 +32,9 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
 Three engines (Oct 10): engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
 whose readings passed, and adds one step after the average (see TUNE below). engine="v3" (the default, the streetwear
 pass) is v2 plus one Proportions reward, PR4 "the streetwear shape" (see TUNE["v3"]; ../parts3_test.py, report
-../../rubric/research/parts/streetwear-pass.md). v2's step after the average:
+../../rubric/research/parts/streetwear-pass.md). engine="v4" (opt-in, Oct 11, the style fairness pass) is v3 plus the workwear and outdoor
+silhouettes (PR5, PR6) and the track jacket as a short layer (see TUNE["v4"]; ../parts4_test.py, report
+../../rubric/research/parts/style-fairness.md); v3 stays the default so the TS port's parity holds. v2's step after the average:
   2b. EARNED BONUS (v2): +0.25 when a second part reaches 8 and no part is under 7, so excellence in two parts adds
       up instead of being averaged away. Paper test: ../parts2_test.py, report: ../../rubric/research/parts/
       tuning-results.md.
@@ -49,7 +51,7 @@ import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
 VERSION = "parts-proto-3 (Oct 10, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
-            "v3": "parts-proto-3 (Oct 10, 2026)"}
+            "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026; style fairness, opt-in)"}
 
 # ---- Reward tuning (Oct 10, founder-approved). engine="v1" reproduces parts-proto-1 exactly (paper test results/parts1/); engine="v2" is
 # the tuned engine (paper test parts2_test.py, report rubric/research/parts/tuning-results.md). Only rewards built on
@@ -130,6 +132,45 @@ TUNE["v3"] = dict(TUNE["v2"], pr4=1.0,
 _OFF = dict(pr4=0.0, pr4_shoes=frozenset(), h4_graphic_street=False, sw2=0.5, pr4_legs=R.LOOSE, pr4_signature_v3=False)
 TUNE["v1"].update(_OFF)
 TUNE["v2"].update(_OFF)
+# v4 (Oct 11, the style fairness pass; OPT-IN: engine="v4". v3 stays the default, so the TS port's parity and the fix
+# engine built on v3 are untouched; report rubric/research/parts/style-fairness.md, test ../parts4_test.py). v3 plus
+# the defining silhouettes of the two styles that had no path to 8 (v5-silhouette.md §5; style_archetypes.md Q2
+# "done well"), each built only from readings that passed (garment type 100%, leg loose/full 94-97%, pooling 98%,
+# shoe kind 77% with the set spanning the boot family so a type flip inside "boots" doesn't switch it), each gated
+# on its style's detection and its own shoe, like PR4. Sized by evidence, like PR4: medium-strong -> +1.0, weak -> +0.5.
+#   PR5 "the workwear silhouette" (+1.0): a chore coat over straight-or-fuller jeans, work pants or cargos, finished by
+#   work boots or chukkas, in an outfit that reads as workwear. v5-silhouette §5 workwear (1) "chore coat or trucker at
+#   the hip + tee + straight/relaxed dark jeans or double-knees, cuffed, boots" (GQ Apr 2025, GQ Sep 2026, Mr Porter
+#   2025, Stridewise 2026, Man of Many 2023; medium-strong) and §3: 6 sources pair a chore coat with a straight or fuller
+#   leg (GQ Sep 2026: "something sturdy to sit on"); style_archetypes workwear done well "1 hero workwear piece + basics,
+#   boots or a heritage sneaker, straight or relaxed leg". The trucker (denim jacket) already earns PR2 (+1.5).
+#   Over sneakers it doesn't fire: the founder's call on his friend's chore coat + jeans + low-profile sneakers was
+#   ~7 ("this shape didn't earn the points", v5-silhouette §2), and a boot is what the sources name.
+#   PR6 "the outdoor silhouette" (+0.5): a fleece, shell or rain jacket over a straight-or-fuller leg, finished by trail
+#   shoes, in an outfit that reads as outdoor. v5-silhouette §5 outdoor (1) "relaxed fleece or shell + straight or wide
+#   cargo/trail pants + trail shoes" (retailer summaries only: WEAK, so half of PR5) and style_archetypes outdoor done
+#   well "1-2 technical pieces + regular basics, trail shoe". The council's own outdoor uniform is a plain fit (RULEBOOK
+#   ruling 5), so this is +0.5: it nudges, and the path to 8 still needs a second strong part (a standout color, the
+#   look's own shoe).
+#   PR2 + track jacket: a track jacket ends at the waist on a ribbed band by type, like a bomber (the PR2 stand-in is
+#   the layer's type, because layer length reads 63%). Vintage sport's hero layer over full legs: v5-silhouette §1
+#   family (c) "a short layer over a full leg" (GQ Apr 2025, H&M 2026, Mr Porter 2025, Put This On 2018: 4 for, 0
+#   against); style_archetypes vintage sport done well "one sport hero piece (jersey or track top) + denim".
+TUNE["v4"] = dict(TUNE["v3"],
+                  pr5=1.0, pr5_layers=frozenset({"chore_coat"}),
+                  pr5_bottoms=frozenset({"jeans", "work_pants", "cargos"}),
+                  pr5_shoes=frozenset({"work_boot", "suede_chukka"}),
+                  pr6=0.5, pr6_layers=frozenset({"fleece", "shell_jacket", "rain_jacket"}),
+                  pr6_shoes=frozenset({"trail_shoe"}),
+                  short_layers_extra=frozenset({"track_jacket"}),
+                  # tested and NOT adopted (see the report): "the look's own shoe" also when the shoe is an anchor of a
+                  # style detected WITH the shoe and a non-shoe anchor of that style is worn (sc_pair: outdoor's trail
+                  # shoe under a shell over regular basics can't pass the detect-without-the-shoe guard)
+                  sc_pair=False)
+_OFF4 = dict(pr5=0.0, pr5_layers=frozenset(), pr5_bottoms=frozenset(), pr5_shoes=frozenset(), pr6=0.0,
+             pr6_layers=frozenset(), pr6_shoes=frozenset(), short_layers_extra=frozenset(), sc_pair=False)
+for _e in ("v1", "v2", "v3"):
+    TUNE[_e].update(_OFF4)
 WEIGHTS = {"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -335,7 +376,19 @@ def _proportions(o, sl, t):
                 rewards.remove(pr1)
             rewards.append((t["pr4"], "a boxy top over wide legs, finished by street sneakers: the streetwear shape",
                             "PR4_street_shape"))
-    if not blocked and full and O is not None and o_sub in SHORT_LAYERS and _earns(O) and not sl["peek"]:
+    # v4 (off in v1-v3): the workwear and outdoor silhouettes (PR5, PR6). Their layers are never PR2's short layers,
+    # so one layer earns one shape credit. NOTE: trail_shoe (PR6) and track_jacket (below) aren't values of the live
+    # v3 reading yet (schema.json); they fire only on readings that carry them (the council's cases, the next batch).
+    if not blocked and full and O is not None and _earns(O) and not sl["peek"] and S is not None and _earns(S):
+        if (t["pr5"] and o_sub in t["pr5_layers"] and B.get("subcategory") in t["pr5_bottoms"]
+                and S_sub in t["pr5_shoes"] and "workwear" in o["det"]):
+            rewards.append((t["pr5"], f"a {o_sub.replace('_', ' ')} over a sturdy leg, finished by boots: the workwear shape",
+                            "PR5_workwear_shape"))
+        elif t["pr6"] and o_sub in t["pr6_layers"] and S_sub in t["pr6_shoes"] and "outdoor" in o["det"]:
+            rewards.append((t["pr6"], f"a {o_sub.replace('_', ' ')} over a full leg, finished by trail shoes: the outdoor shape",
+                            "PR6_outdoor_shape"))
+    if not blocked and full and O is not None and o_sub in (SHORT_LAYERS | t["short_layers_extra"]) and _earns(O) \
+            and not sl["peek"]:
         rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
     if (not blocked and o_tailored and T is not None and T.get("tucked") == "full" and B.get("subcategory") in PRESSED
             and leg != "skinny" and _earns(O)):
@@ -585,6 +638,12 @@ def _shoes(o, occasion, sl, t):
         if role and _earns(S):
             p.add(0.5 * up, f"a {R.STYLE_NAMES[o['det_noshoe'][0]]} shoe for a {R.STYLE_NAMES[o['det_noshoe'][0]]} outfit"
                   if len(o["det_noshoe"]) == 1 else "the shoes belong to the look", "SC_chosen_for_look")
+        elif t["sc_pair"] and _earns(S) and any(
+                R.STYLES[st][0](S, c)[0] >= 2 and any(R.STYLES[st][0](g, c)[0] >= 2 for g in o["main"]
+                                                       if g.get("category") != "footwear")
+                for st in o["det"]):
+            # v4 what-if (off): the look's anchor shoe with the look's anchor piece on the body (detected with the shoe)
+            p.add(0.5 * up, "the shoes belong to the look", "SC_chosen_for_look")
         elif t["suit_shoe"] and suit and sub in SUIT_SHOES and _earns(S):
             # v2: a matching suit is a look of its own (style detection names none), and these are its shoes
             p.add(0.5 * up, "the right shoes for a suit", "SC_chosen_for_look")
