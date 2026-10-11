@@ -39,6 +39,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P2** · **"Going for: X" on the card (your Oct 11 idea):** shown pre-filled, it changes the advice ("For a minimal look, the graphic tee pulls the other way"), not the score. Should it ever lower the score when the outfit clearly misses that style? Default: advice only.
 - [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
 - [ ] **P2** · **Look at the new card and sheet** on the Simulator or your phone (5 min): `screenshots/parts-app/`. Is the chevron after "/10" a clear enough cue? Default: keep it.
 - [ ] **P3** · **Skim the closet question wording** (built Oct 8 with the recommended words, #117): "Is this your grey Nike hoodie?" / "Are these your khaki chinos?", the reason lines ("I could only see part of it under your overshirt."), "Your score stays the same either way.", "To confirm". Change any word you don't like (`app/src/i18n/en.ts`, keys `closet.q.*`). See it on the Simulator: demo screens 70 (score card) and 38 (Closet).
