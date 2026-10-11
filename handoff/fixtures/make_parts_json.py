@@ -1,5 +1,5 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v4 = parts-proto-4, the default since Oct 11) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
+engine v5 = parts-proto-5, the default since Oct 11: v4 plus the style-crossing fault SX1) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
 Then: cd /Users/eyu/Desktop/files/Kitted/app/packages/kitted-core && node scripts/gen-rubric-data.mjs
@@ -20,8 +20,8 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.1.0"
-ENGINE = "v4"
+VERSION = "1.2.0"
+ENGINE = "v5"
 
 
 def sl(s):

@@ -1,5 +1,5 @@
 """Writes fixtures/parts_fixes.json: the parts fix engine's exact Python output (parts_fixes.suggest_parts_fixes on
-parts_proto.py v4) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
+parts_proto.py v5) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
 
 Run (after make_parts_parity.py, whose loaders and edge cases it reuses):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_fixes.py
@@ -91,6 +91,13 @@ def fix_edges():
     add("no_shoes", Rd(TEE(), JEANS(), SHOE(), shoes_visible=False))
     add("upper_only", Rd(TEE(), G("outerwear", "overshirt", "olive"), framing="upper_only", shoes_visible=False))
     add("not_scored", Rd(TEE(), JEANS(), SHOE(), clothed="partial"))
+    # v5's style-crossing swaps: a street-coded top in a quiet outfit (SX1)
+    add("clash_graphic_trousers", Rd(TEE(sub="graphic_tee", color="white", volume=4, pattern="graphic"),
+                                     G("bottom", "trousers", "charcoal", leg_shape="straight", hem="slight_break"), SHOE(sub="loafer", color="black")))
+    add("clash_hoodie_chinos", Rd(TEE(sub="hoodie", color="grey", volume=4), G("bottom", "chinos", "khaki_beige", leg_shape="slim", hem="slight_break"),
+                                  SHOE(sub="loafer", color="brown")), occ="class")
+    add("clash_tee_chinos", Rd(TEE(color="white", volume=4), G("bottom", "chinos", "khaki_beige", leg_shape="slim", hem="slight_break"),
+                               SHOE(sub="derby", color="brown")), occ="date")
     # his first pick's path to 8 (the Next level lines with a style)
     CHORE = G("outerwear", "chore_coat", "tan_camel")
     add("pick_chore_sneakers", Rd(TEE(), CHORE, JEANS(color="black"), SHOE(sub="canvas_sneaker", color="white")))
@@ -247,7 +254,7 @@ def main():
     assert sum(v for k, v in cov.items() if k.startswith("step ")) > 0
 
     out = {
-        "_doc": "Parts fix engine parity fixtures (handoff/fixtures/parts_fixes.py on parts_proto.py v4, catalog fixes.json -> "
+        "_doc": "Parts fix engine parity fixtures (handoff/fixtures/parts_fixes.py on parts_proto.py v5, catalog fixes.json -> "
                 "parts). For each case, suggestPartsFixes(reading, {occasion, styles: the case's styles, else profile, boldness, secondLook, closet, warm, "
                 "firstCheck}) must equal `expected` after mapping camelCase to these keys, exactly. closet 'seed' = `closet` here, "
                 "'empty' = []. A case's reading is readings[id] here, else rubric_parity.json's readings[id]. expected.fixes[i] and "

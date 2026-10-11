@@ -1,0 +1,2339 @@
+{
+ "profile": "test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age",
+ "engines": {
+  "v4": "parts-proto-4 (Oct 11, 2026)",
+  "v5": "parts-proto-5 (Oct 11, 2026)"
+ },
+ "tune_v5_added": {
+  "sx": 3.0,
+  "sx_street_tops": [
+   "graphic_tee"
+  ],
+  "sx_dressy": [
+   "blazer",
+   "cardigan",
+   "chinos",
+   "derby",
+   "dress_shirt",
+   "dress_shoe",
+   "knit_polo",
+   "loafer",
+   "overcoat",
+   "oxford_shirt",
+   "polo",
+   "rugby_shirt",
+   "sport_coat",
+   "suit_jacket",
+   "suit_trousers",
+   "trousers",
+   "unstructured_blazer"
+  ],
+  "sx_quiet": {
+   "minimalist": 4,
+   "smart_casual": 3,
+   "classic_prep": 3
+  }
+ },
+ "crossing": [
+  {
+   "id": "A",
+   "what": "oversized graphic tee + pleated trousers + loafers (founder case 1)",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "B",
+   "what": "oversized hoodie + slim chinos + loafers (founder case 2)",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "C",
+   "what": "oversized plain tee + slim chinos + loafers (founder case 3)",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "smart casual"
+  },
+  {
+   "id": "A3",
+   "what": "graphic tee (regular) + trousers + loafers",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "A-wide",
+   "what": "graphic tee + wide trousers + loafers (a minimal rest)",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "A-flip",
+   "what": "the same, with the print read as solid (the flip-prone `pattern`)",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 4",
+   "label": "minimal"
+  },
+  {
+   "id": "A-derby",
+   "what": "graphic tee + chinos + derbies",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "A-suit",
+   "what": "graphic tee + suit trousers + dress shoes (H3's spread also fires)",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "A-bomber",
+   "what": "graphic tee under a bomber + pleated trousers + loafers (a street layer doesn't bridge)",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.5,
+   "v5": 7.0,
+   "v5_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "B-sweat",
+   "what": "oversized sweatshirt + slim chinos + loafers",
+   "want": "fault",
+   "got": "fault",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 4",
+   "label": "no style"
+  },
+  {
+   "id": "K-sweat",
+   "what": "oversized sweatshirt + straight chinos + loafers (the rest reads minimal; its band allows 4)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K1",
+   "what": "tee under an unstructured blazer + trousers + loafers (endorsed)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 5.5 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "label": "smart casual"
+  },
+  {
+   "id": "K2",
+   "what": "hoodie under a topcoat + trousers + loafers (debatable: kept, the layer bridges)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K3",
+   "what": "oversized graphic tee under a blazer + trousers + loafers (kept: the layer bridges; a call)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 5.5 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "id": "K3b",
+   "what": "graphic tee under a chore coat + chinos + loafers (the chore coat is smart casual's home piece)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "id": "K4",
+   "what": "grey sweatshirt + navy chinos + loafers (Ivy; council edge-tap-sweater 7.5)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K5",
+   "what": "regular hoodie + chinos + loafers (hoodie vs sweatshirt flips, so not street-coded)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K6",
+   "what": "boxy tee at the belt + wide trousers + loafers (city boy)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K7",
+   "what": "oversized tee + wide trousers + loafers (reads minimal; its band allows 4)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K8",
+   "what": "roomy knit + chinos + loafers (the look's own piece)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K9",
+   "what": "oversized oxford + slim chinos + loafers (the look's own piece)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "label": "smart casual"
+  },
+  {
+   "id": "K10",
+   "what": "graphic tee + wide jeans + loafers (one dressy piece; loafers with wide jeans are endorsed)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "id": "K11",
+   "what": "graphic tee + khaki chinos + white leather sneakers (one dressy piece; tip only)",
+   "want": "tip",
+   "got": "tip",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "id": "K12",
+   "what": "graphic tee + black trousers + white leather sneakers (one dressy piece; tip only)",
+   "want": "tip",
+   "got": "tip",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "id": "K13",
+   "what": "oversized graphic tee + wide jeans + chunky sneakers (streetwear done right)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "label": "streetwear"
+  },
+  {
+   "id": "K14",
+   "what": "graphic tee + dark jeans + low-profile sneakers",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "id": "K15",
+   "what": "jersey under an unstructured blazer + dark jeans + low-profile (council vs-9)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "vintage sport"
+  },
+  {
+   "id": "K16",
+   "what": "plain tee + chinos + loafers",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "id": "K17",
+   "what": "oversized hoodie + slim dark jeans + loafers (one dressy piece)",
+   "want": "keep",
+   "got": "keep",
+   "ok": true,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  }
+ ],
+ "crossing_ok": true,
+ "council": [
+  {
+   "id": "st-4-stained-lounge",
+   "style": "streetwear",
+   "adv": 3.5,
+   "tier": "mistake",
+   "target": 3.5,
+   "v4": 5.0,
+   "v5": 5.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "st-5.5-done-badly",
+   "style": "streetwear",
+   "adv": 5.5,
+   "tier": "mistake",
+   "target": 5.5,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "st-7.5-graphic-wide-dunks",
+   "style": "streetwear",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "st-8.5-bomber-hoodie",
+   "style": "streetwear",
+   "adv": 8.5,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "st-9-chore-red-hoodie",
+   "style": "streetwear",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "vs-4-pilled-sweats",
+   "style": "vintage sport",
+   "adv": 4.0,
+   "tier": "mistake",
+   "target": 4.0,
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "vs-5.5-full-kit",
+   "style": "vintage sport",
+   "adv": 5.75,
+   "tier": "mistake",
+   "target": 5.75,
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Fit 7 \u00b7 Color 8 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "vs-6.5-jersey-joggers-runners",
+   "style": "vintage sport",
+   "adv": 6.5,
+   "tier": "plain",
+   "target": 6.5,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "vs-7-sweatshirt-trackpants",
+   "style": "vintage sport",
+   "adv": 7.0,
+   "tier": "plain",
+   "target": 7.0,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "vs-7.5-tracksuit",
+   "style": "vintage sport",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "vs-7.5-blokecore-plain",
+   "style": "vintage sport",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "vs-8-red-jersey-wide-jeans",
+   "style": "vintage sport",
+   "adv": 8.0,
+   "tier": "deliberate",
+   "target": 8.0,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "vs-8.5-track-jacket-jeans",
+   "style": "vintage sport",
+   "adv": 8.5,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "vs-8-sport-off-duty",
+   "style": "vintage sport",
+   "adv": 8.0,
+   "tier": "deliberate",
+   "target": 8.0,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "vs-9-jersey-blazer",
+   "style": "vintage sport",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "vs-rugby-overcoat",
+   "style": "vintage sport",
+   "adv": 8.75,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-4-careless",
+   "style": "workwear",
+   "adv": 4.0,
+   "tier": "mistake",
+   "target": 4.0,
+   "v4": 5.0,
+   "v5": 5.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 8 \u00b7 Shoes 6 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-5.5-flannel-cargos-boots",
+   "style": "workwear",
+   "adv": 5.75,
+   "tier": "mistake",
+   "target": 5.75,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-6.5-two-faults",
+   "style": "workwear",
+   "adv": 6.5,
+   "tier": "plain",
+   "target": 6.5,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-7.5-tee-jeans-boots",
+   "style": "workwear",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-8-chore-canvas",
+   "style": "workwear",
+   "adv": 8.0,
+   "tier": "deliberate",
+   "target": 8.0,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-8.5-chore-boots",
+   "style": "workwear",
+   "adv": 8.5,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-9-full",
+   "style": "workwear",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "ww-chore-skinny-chunky",
+   "style": "workwear",
+   "adv": 6.75,
+   "tier": "plain",
+   "target": 6.75,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "sc-4-every-fault",
+   "style": "smart casual",
+   "adv": 4.0,
+   "tier": "mistake",
+   "target": 4.0,
+   "v4": 4.5,
+   "v5": 4.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 4 \u00b7 Color 7 \u00b7 Shoes 5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "sc-5.5-done-wrong",
+   "style": "smart casual",
+   "adv": 5.5,
+   "tier": "mistake",
+   "target": 5.5,
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 5.5 \u00b7 Shoes 4.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "sc-6.5-oxford-chinos-loafer",
+   "style": "smart casual",
+   "adv": 6.5,
+   "tier": "plain",
+   "target": 6.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "sc-7.5-tee-dark-jeans-wls",
+   "style": "smart casual",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "sc-8.5-quarter-zip",
+   "style": "smart casual",
+   "adv": 8.5,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "sc-9-blazer-oxford-chinos-chukka",
+   "style": "smart casual",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "sc-tee-chinos-wls",
+   "style": "smart casual",
+   "adv": 7.75,
+   "tier": "deliberate",
+   "target": 7.75,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "min-4-faults",
+   "style": "minimal",
+   "adv": 4.0,
+   "tier": "mistake",
+   "target": 4.0,
+   "v4": 5.0,
+   "v5": 5.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 4.5 \u00b7 Color 7 \u00b7 Shoes 6.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "min-5.5-long-tee-pooling",
+   "style": "minimal",
+   "adv": 5.75,
+   "tier": "mistake",
+   "target": 5.75,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "min-6.5-long-tee",
+   "style": "minimal",
+   "adv": 6.5,
+   "tier": "plain",
+   "target": 6.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "min-7.5-uniform",
+   "style": "minimal",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "min-8.5-knit-wide-trousers",
+   "style": "minimal",
+   "adv": 8.5,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "min-9-tonal-layered",
+   "style": "minimal",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "min-city-boy",
+   "style": "minimal",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "min-grey-sweater-black-jeans",
+   "style": "minimal",
+   "adv": 8.25,
+   "tier": "deliberate",
+   "target": 8.25,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-4",
+   "style": "classic prep",
+   "adv": 4.0,
+   "tier": "mistake",
+   "target": 4.0,
+   "v4": 5.0,
+   "v5": 5.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-5.5",
+   "style": "classic prep",
+   "adv": 5.25,
+   "tier": "mistake",
+   "target": 5.25,
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-6.5",
+   "style": "classic prep",
+   "adv": 6.5,
+   "tier": "plain",
+   "target": 6.5,
+   "v4": 6.0,
+   "v5": 6.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "prep-7.5-polo-chinos-canvas",
+   "style": "classic prep",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-8-polo-chinos-wls",
+   "style": "classic prep",
+   "adv": 8.0,
+   "tier": "deliberate",
+   "target": 8.0,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-sweater-oxford-loafer",
+   "style": "classic prep",
+   "adv": 8.75,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-quiet-luxury",
+   "style": "classic prep",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-9-blazer-tucked",
+   "style": "classic prep",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-pink-green",
+   "style": "classic prep",
+   "adv": 6.5,
+   "tier": "plain",
+   "target": 6.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Fit 7 \u00b7 Color 5 \u00b7 Shoes 8 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "prep-pink-green-bold",
+   "style": "classic prep",
+   "adv": 7.0,
+   "tier": "plain",
+   "target": 7.0,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Fit 7 \u00b7 Color 6 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "prep-costume",
+   "style": "classic prep",
+   "adv": 8.75,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "out-4",
+   "style": "outdoor",
+   "adv": 4.25,
+   "tier": "mistake",
+   "target": 4.25,
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "out-5-volume-clash",
+   "style": "outdoor",
+   "adv": 5.0,
+   "tier": "mistake",
+   "target": 5.0,
+   "v4": 6.0,
+   "v5": 6.0,
+   "v5_row": "Proportions 5.5 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "out-6.5-shell-slim",
+   "style": "outdoor",
+   "adv": 6.5,
+   "tier": "plain",
+   "target": 6.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "out-7.5-city-uniform",
+   "style": "outdoor",
+   "adv": 7.5,
+   "tier": "plain",
+   "target": 7.5,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "out-8.5-shell-sweater-chinos",
+   "style": "outdoor",
+   "adv": 8.5,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "out-9.5-orange-shell-mix",
+   "style": "outdoor",
+   "adv": 9.5,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "out-9-same-trail",
+   "style": "outdoor",
+   "adv": 9.0,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-jersey-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-rugby-jeans",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-rugby-chinos-samba",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-rugby-chinos-loafer",
+   "style": "look-alike",
+   "adv": 8.0,
+   "tier": "deliberate",
+   "target": 8.0,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-chore-tee-boots",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 8.0,
+   "v5": 8.0,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-shell-cargos-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-field-cargos-trail",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-flannel-wide-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-boxy-tee-wide-trousers",
+   "style": "look-alike",
+   "adv": 7.75,
+   "tier": "deliberate",
+   "target": 7.75,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-boxy-tee-wide-jeans-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-polo-chinos-loafer",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-quarter-zip-sweats",
+   "style": "look-alike",
+   "adv": null,
+   "tier": null,
+   "target": null,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "la-overshirt-chinos-wls",
+   "style": "look-alike",
+   "adv": 8.75,
+   "tier": "deliberate",
+   "target": 8.5,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v5_new": []
+  },
+  {
+   "id": "la-tee-mid-jeans-canvas",
+   "style": "look-alike",
+   "adv": 7.0,
+   "tier": "plain",
+   "target": 7.0,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v5_new": []
+  },
+  {
+   "id": "la-hoodie-straight-retro",
+   "style": "look-alike",
+   "adv": 7.0,
+   "tier": "plain",
+   "target": 7.0,
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v5_new": []
+  }
+ ],
+ "by_style": {
+  "streetwear": {
+   "v4": {
+    "n": 5,
+    "mean_err": 0.4,
+    "a": [
+     0,
+     1
+    ],
+    "b": [
+     2,
+     2
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 8.0
+   },
+   "v5": {
+    "n": 5,
+    "mean_err": 0.4,
+    "a": [
+     0,
+     1
+    ],
+    "b": [
+     2,
+     2
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 8.0
+   }
+  },
+  "workwear": {
+   "v4": {
+    "n": 8,
+    "mean_err": -0.06,
+    "a": [
+     3,
+     3
+    ],
+    "b": [
+     2,
+     3
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 8.0
+   },
+   "v5": {
+    "n": 8,
+    "mean_err": -0.06,
+    "a": [
+     3,
+     3
+    ],
+    "b": [
+     2,
+     3
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 8.0
+   }
+  },
+  "vintage sport": {
+   "v4": {
+    "n": 11,
+    "mean_err": -0.25,
+    "a": [
+     3,
+     4
+    ],
+    "b": [
+     2,
+     5
+    ],
+    "c": [
+     2,
+     2
+    ],
+    "best": 8.0
+   },
+   "v5": {
+    "n": 11,
+    "mean_err": -0.25,
+    "a": [
+     3,
+     4
+    ],
+    "b": [
+     2,
+     5
+    ],
+    "c": [
+     2,
+     2
+    ],
+    "best": 8.0
+   }
+  },
+  "outdoor": {
+   "v4": {
+    "n": 7,
+    "mean_err": -0.18,
+    "a": [
+     2,
+     2
+    ],
+    "b": [
+     0,
+     3
+    ],
+    "c": [
+     2,
+     2
+    ],
+    "best": 7.5
+   },
+   "v5": {
+    "n": 7,
+    "mean_err": -0.18,
+    "a": [
+     2,
+     2
+    ],
+    "b": [
+     0,
+     3
+    ],
+    "c": [
+     2,
+     2
+    ],
+    "best": 7.5
+   }
+  },
+  "minimal": {
+   "v4": {
+    "n": 8,
+    "mean_err": -0.38,
+    "a": [
+     3,
+     3
+    ],
+    "b": [
+     0,
+     3
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 7.0
+   },
+   "v5": {
+    "n": 8,
+    "mean_err": -0.38,
+    "a": [
+     3,
+     3
+    ],
+    "b": [
+     0,
+     3
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 7.0
+   }
+  },
+  "classic prep": {
+   "v4": {
+    "n": 11,
+    "mean_err": -0.25,
+    "a": [
+     3,
+     4
+    ],
+    "b": [
+     1,
+     5
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 8.0
+   },
+   "v5": {
+    "n": 11,
+    "mean_err": -0.25,
+    "a": [
+     3,
+     4
+    ],
+    "b": [
+     1,
+     5
+    ],
+    "c": [
+     1,
+     2
+    ],
+    "best": 8.0
+   }
+  },
+  "smart casual": {
+   "v4": {
+    "n": 7,
+    "mean_err": -0.32,
+    "a": [
+     2,
+     2
+    ],
+    "b": [
+     1,
+     3
+    ],
+    "c": [
+     2,
+     2
+    ],
+    "best": 8.0
+   },
+   "v5": {
+    "n": 7,
+    "mean_err": -0.32,
+    "a": [
+     2,
+     2
+    ],
+    "b": [
+     1,
+     3
+    ],
+    "c": [
+     2,
+     2
+    ],
+    "best": 8.0
+   }
+  }
+ },
+ "council_moved": [],
+ "other_cases_moved": [],
+ "real_moved": [],
+ "real_fired": {},
+ "real_tips": [],
+ "spread": {
+  "v4": {
+   "n": 78,
+   "median": 7.0,
+   "mean": 6.95,
+   "le5.5": 5,
+   "6-6.5": 13,
+   "7-7.5": 55,
+   "8+": 5,
+   "9+": 0,
+   "values": {
+    "5.5": 5,
+    "6.5": 13,
+    "7.0": 45,
+    "7.5": 10,
+    "8.0": 5
+   },
+   "pct8": 6
+  },
+  "v5": {
+   "n": 78,
+   "median": 7.0,
+   "mean": 6.95,
+   "le5.5": 5,
+   "6-6.5": 13,
+   "7-7.5": 55,
+   "8+": 5,
+   "9+": 0,
+   "values": {
+    "5.5": 5,
+    "6.5": 13,
+    "7.0": 45,
+    "7.5": 10,
+    "8.0": 5
+   },
+   "pct8": 6
+  }
+ },
+ "near": [
+  {
+   "key": "mirror-m01",
+   "who": "web photo (profile unknown)",
+   "top": "graphic_tee v4",
+   "rest": [
+    "jeans",
+    "basketball_sneaker"
+   ],
+   "dressy": [],
+   "rest_reads": [],
+   "fired": []
+  },
+  {
+   "key": "mirror-m04",
+   "who": "web photo (profile unknown)",
+   "top": "graphic_tee v3",
+   "rest": [
+    "shorts"
+   ],
+   "dressy": [],
+   "rest_reads": [],
+   "fired": []
+  },
+  {
+   "key": "phone-403ade",
+   "who": "the founder (profile pending)",
+   "top": "tee v4",
+   "rest": [
+    "jeans",
+    "white_leather_sneaker"
+   ],
+   "dressy": [],
+   "rest_reads": [],
+   "fired": []
+  },
+  {
+   "key": "phone-8ad378",
+   "who": "the founder (profile pending)",
+   "top": "tee v4",
+   "rest": [
+    "jeans",
+    "white_leather_sneaker"
+   ],
+   "dressy": [],
+   "rest_reads": [],
+   "fired": []
+  },
+  {
+   "key": "phone-968016",
+   "who": "the founder (profile pending)",
+   "top": "sweatshirt v4",
+   "rest": [
+    "jeans",
+    "white_leather_sneaker"
+   ],
+   "dressy": [],
+   "rest_reads": [
+    "minimalist"
+   ],
+   "fired": []
+  },
+  {
+   "key": "stock-p02-after_studio",
+   "who": "stock photo (profile unknown)",
+   "top": "hoodie v4",
+   "rest": [
+    "sweatpants",
+    "work_boot"
+   ],
+   "dressy": [],
+   "rest_reads": [],
+   "fired": []
+  },
+  {
+   "key": "stock-p02-before_studio",
+   "who": "stock photo (profile unknown)",
+   "top": "hoodie v4",
+   "rest": [
+    "sweatpants",
+    "chunky_sneaker"
+   ],
+   "dressy": [],
+   "rest_reads": [],
+   "fired": []
+  },
+  {
+   "key": "stock-s20-before_phone",
+   "who": "stock photo (profile unknown)",
+   "top": "graphic_tee v2",
+   "rest": [
+    "jeans",
+    "work_boot"
+   ],
+   "dressy": [],
+   "rest_reads": [
+    "workwear"
+   ],
+   "fired": []
+  },
+  {
+   "key": "stock-s23-before_mirror",
+   "who": "stock photo (profile unknown)",
+   "top": "graphic_tee v3",
+   "rest": [
+    "chinos"
+   ],
+   "dressy": [
+    "chinos"
+   ],
+   "rest_reads": [],
+   "fired": []
+  },
+  {
+   "key": "stock-s25-before_mirror",
+   "who": "stock photo (profile unknown)",
+   "top": "camp_collar_shirt v4",
+   "rest": [
+    "drawstring_trousers",
+    "chelsea_boot"
+   ],
+   "dressy": [],
+   "rest_reads": [
+    "minimalist"
+   ],
+   "fired": []
+  },
+  {
+   "key": "stock-s28-before_mirror",
+   "who": "stock photo (profile unknown)",
+   "top": "graphic_tee v3",
+   "rest": [
+    "jeans"
+   ],
+   "dressy": [],
+   "rest_reads": [],
+   "fired": []
+  }
+ ],
+ "steady": {
+  "b1_A": {
+   "v4": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "exact": [
+     41,
+     49
+    ]
+   },
+   "v5": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "exact": [
+     41,
+     49
+    ]
+   },
+   "v5_differs_from_v4_on": {}
+  },
+  "zoom1_B": {
+   "v4": {
+    "within_0.5_of_median": [
+     66,
+     66
+    ],
+    "exact": [
+     57,
+     66
+    ]
+   },
+   "v5": {
+    "within_0.5_of_median": [
+     66,
+     66
+    ],
+    "exact": [
+     57,
+     66
+    ]
+   },
+   "v5_differs_from_v4_on": {}
+  },
+  "b1_A_lightness": {
+   "v4": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "exact": [
+     39,
+     49
+    ]
+   },
+   "v5": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "exact": [
+     39,
+     49
+    ]
+   },
+   "v5_differs_from_v4_on": {}
+  }
+ },
+ "fire": {
+  "b1 A": {
+   "photos": 50,
+   "readings": 148,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 6,
+   "graphic_tee_flips": 1,
+   "volume4_flips": 2
+  },
+  "b1 B1": {
+   "photos": 50,
+   "readings": 149,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 6,
+   "graphic_tee_flips": 0,
+   "volume4_flips": 1
+  },
+  "zoom1 A": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 3,
+   "graphic_tee_flips": 0,
+   "volume4_flips": 0
+  },
+  "zoom1 B": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 2,
+   "graphic_tee_flips": 0,
+   "volume4_flips": 0
+  },
+  "zoom1 C": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 2,
+   "graphic_tee_flips": 1,
+   "volume4_flips": 0
+  },
+  "zoom1 D": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 3,
+   "graphic_tee_flips": 0,
+   "volume4_flips": 1
+  },
+  "zoom1-stock A": {
+   "photos": 39,
+   "readings": 115,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 6,
+   "graphic_tee_flips": 1,
+   "volume4_flips": 1
+  },
+  "zoom1-stock B": {
+   "photos": 39,
+   "readings": 117,
+   "fires": [],
+   "flips": [],
+   "street_top_photos": 7,
+   "graphic_tee_flips": 2,
+   "volume4_flips": 0
+  }
+ },
+ "judge": {
+  "all": {
+   "v4": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "v5": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   }
+  },
+  "tune": {
+   "v4": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "v5": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   }
+  },
+  "held": {
+   "v4": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "v5": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   }
+  }
+ },
+ "checks": [
+  {
+   "key": "phone-d1967f",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 6",
+   "label": "smart casual"
+  },
+  {
+   "key": "phone-e438d4",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "phone-f4870b",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "phone-fb0b17",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "oct7-ph1",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "oct7-ph2",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+   "label": "smart casual"
+  },
+  {
+   "key": "oct7-ph3",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "label": "smart casual"
+  },
+  {
+   "key": "oct7-ph4",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "phone-0d39d6",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4 \u00b7 Style 7.5",
+   "label": "streetwear"
+  },
+  {
+   "key": "phone-1f1997",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4 \u00b7 Style 7.5",
+   "label": "streetwear"
+  },
+  {
+   "key": "phone-403ade",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "label": "streetwear"
+  },
+  {
+   "key": "phone-5a9049",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "phone-6b14db",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "phone-7de605",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "phone-7f14a4",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "phone-8ad378",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "label": "streetwear"
+  },
+  {
+   "key": "phone-8bc29d",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+   "label": "minimal"
+  },
+  {
+   "key": "phone-968016",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "streetwear"
+  },
+  {
+   "key": "phone-a765e8",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 5.5,
+   "v5": 5.5,
+   "v5_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "phone-b0f0c8",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "phone-d58b14",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "phone-d6559a",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "phone-d918c0",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "label": "workwear"
+  },
+  {
+   "key": "phone-e026de",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4 \u00b7 Style 7.5",
+   "label": "streetwear"
+  },
+  {
+   "key": "phone-f07193",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v4": 6.5,
+   "v5": 6.5,
+   "v5_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "phone-703a8b",
+   "who": "unknown, ask the founder",
+   "occ": "class",
+   "v4": 7.5,
+   "v5": 7.5,
+   "v5_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Style 7",
+   "label": "no style"
+  },
+  {
+   "key": "phone-ebe23f",
+   "who": "unknown, ask the founder",
+   "occ": "class",
+   "v4": 7.0,
+   "v5": 7.0,
+   "v5_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "label": "no style"
+  }
+ ],
+ "picks_moved": [],
+ "targets": [
+  {
+   "target": "the three founder cases land at 5.5-6.5",
+   "met": true
+  },
+  {
+   "target": "every crossing outfit behaves as expected (fault / keep / tip)",
+   "met": true
+  },
+  {
+   "target": "the friend's blazer d1967f at 7 or below",
+   "met": true
+  },
+  {
+   "target": "the chore coat (e438d4, f4870b, fb0b17) at 7-7.5",
+   "met": true
+  },
+  {
+   "target": "his gingham fits as now (5a9049, 7f14a4, f07193)",
+   "met": true
+  },
+  {
+   "target": "his black tee + wide jeans + white leather sneakers (8ad378, 403ade) at 7",
+   "met": true
+  },
+  {
+   "target": "council deliberate fits that reached 8 under v4 still do (8 under v4)",
+   "met": true
+  },
+  {
+   "target": "council plain fits that sat at 6.5-7.5 under v4 still do",
+   "met": true
+  },
+  {
+   "target": "batch 1 arm A steady 49/49 (49/49)",
+   "met": true
+  },
+  {
+   "target": "panel gap within +-0.2 (+0.01)",
+   "met": true
+  },
+  {
+   "target": "no loss on the held-out half (within 0.5: v4 26 -> v5 26; MAE 0.43 -> 0.43)",
+   "met": true
+  },
+  {
+   "target": "8+ at 5-12% on the real photos (6%)",
+   "met": true
+  },
+  {
+   "target": "picks never change a score",
+   "met": true
+  }
+ ],
+ "ablations": {
+  "v4 (no SX1)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    7.0,
+    7.0,
+    7.0
+   ],
+   "miss": []
+  },
+  "SX1 -1.5 (the jacket rule's size)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    7.0,
+    7.0,
+    7.0
+   ],
+   "miss": []
+  },
+  "SX1 -2.0": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    7.0,
+    7.0,
+    7.0
+   ],
+   "miss": []
+  },
+  "SX1 -2.5": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    6.5,
+    6.5,
+    6.5
+   ],
+   "miss": []
+  },
+  "v5 as built (-3.0)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    6.5,
+    6.5,
+    6.5
+   ],
+   "miss": []
+  },
+  "SX1 -4.0 (the spread rule's big size)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    6.5,
+    6.5,
+    6.5
+   ],
+   "miss": []
+  },
+  "one dressy piece is enough": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    6.5,
+    6.5,
+    6.5
+   ],
+   "miss": [
+    "K11 fault",
+    "K12 fault"
+   ]
+  },
+  "regular hoodies and sweatshirts count as street tops": {
+   "8+": 5,
+   "pct8": 6,
+   "b1": [
+    49,
+    49
+   ],
+   "all": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "ABC": [
+    6.5,
+    6.5,
+    6.5
+   ],
+   "miss": [
+    "K-sweat fault",
+    "K4 fault",
+    "K5 fault"
+   ]
+  }
+ }
+}

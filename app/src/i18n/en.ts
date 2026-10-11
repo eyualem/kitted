@@ -541,6 +541,12 @@ const addedInBuild = {
   'pfix.color_neutral.step': 'A neutral color lifts',
   'pfix.color_plain': 'Swap the patterned {name} for a solid color',
   'pfix.color_plain.step': 'A solid color lifts',
+  // Oct 11 (#214, parts v5): the style-crossing swaps, for a graphic or oversized top worn with trousers or chinos and
+  // dressy shoes (the shoe side, "Swap the loafers for white leather sneakers", is the existing shoes_white line)
+  'pfix.top_plain_tee': 'Swap the {name} for a plain tee',
+  'pfix.top_plain_tee.step': 'A plain tee lifts',
+  'pfix.top_regular_fit': 'Swap the {name} for a regular fit',
+  'pfix.top_regular_fit.step': 'A regular fit lifts',
   'pfix.layer_short': 'Add a short jacket: a bomber or a denim jacket',
   'pfix.layer_short.detail': 'worn open',
   'pfix.layer_short.step': 'A short jacket lifts',

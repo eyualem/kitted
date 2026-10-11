@@ -1,7 +1,7 @@
-// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v4" (parts-proto-4, the
-// default since Oct 11; DECISIONS-LOG #195-210: v3 plus the workwear and outdoor shapes, the track jacket as a short
-// layer, and H2 judged on the pick-free label so picks never move a number). NOT wired into the app: rubric.ts (v4.1) stays the live score until the parts-aware fix
-// engine and the Why sheet are built.
+// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v5" (parts-proto-5, the
+// default since Oct 11; DECISIONS-LOG #195-214: v3 plus the workwear and outdoor shapes, the track jacket as a short
+// layer, H2 judged on the pick-free label so picks never move a number (v4), and SX1 "a piece from another look", the
+// style-crossing fault on Style (v5)). The app scores new checks with it (features/fitcheck/scoring.ts).
 //
 // "The AI sees, the code judges": it reads only the garment description (plus the optional second look's two yes/no
 // answers). It never reads a face, body or skin, and never his profile (picks only choose the "Reads as" label).
@@ -16,7 +16,7 @@
 //  - Python `x in (…)` on a missing key is `None in (…)`: undefined and null both mean None (nv)
 //  - one garment, one credit: "already credited" is object identity on our own copies (Python's id(g))
 //  - where Python would raise (a garment without a subcategory reaching a reason line), this throws the same error
-// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.1.0); the v4.1
+// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.2.0); the v4.1
 // helpers it shares (formality, colors, style detection, prepare/normalize) come from the rubric engine.
 
 import { PARTS_DATA } from "./partsData";
@@ -71,6 +71,16 @@ export interface PartsTune {
   sc_pair: boolean;
   /** v4: H2 reads the label the outfit gets with no picks, so picks never move a number. */
   h2_pick_free: boolean;
+  /** v5: SX1 "a piece from another look" on Style (0 = off in v1-v4) and what it reads. */
+  sx: number;
+  /** Tops that are street-coded by type (the graphic tee); any top at boxyVolume+ is too. */
+  sx_street_tops: string[];
+  /** The dressy looks' pieces streetwear rules out (its vetoes plus chinos). */
+  sx_dressy: string[];
+  /** How many of them the rest of the outfit needs. */
+  sx_min_dressy: number;
+  /** The quiet looks and the top of each one's volume band. */
+  sx_quiet: Record<string, number>;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -78,7 +88,7 @@ interface Range { points: number; from: number; to: number }
 /** fixtures/parts.json (make_parts_json.py). */
 export interface PartsData {
   version: string;
-  /** "v4" for the bundled data; "v1" / "v2" / "v3" reproduce the earlier prototypes. */
+  /** "v5" for the bundled data; "v1" - "v4" reproduce the earlier prototypes. */
   engine: string;
   label: string;
   source: string;
@@ -375,6 +385,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const PR5_LAYERS = tset(t.pr5_layers), PR5_BOTTOMS = tset(t.pr5_bottoms), PR5_SHOES = tset(t.pr5_shoes);
   const PR6_LAYERS = tset(t.pr6_layers), PR6_SHOES = tset(t.pr6_shoes);
   const SHORT_LAYERS_ALL = new Set<unknown>([...SHORT_LAYERS, ...t.short_layers_extra]);
+  const SX_STREET_TOPS = tset(t.sx_street_tops), SX_DRESSY = tset(t.sx_dressy);
+  const SX_QUIET = new Map<unknown, number>(Object.entries(t.sx_quiet));
 
   const FAMILY = new Map<unknown, string>(Object.entries(RT.FAMILY));
   const NEUTRALS = tset(RT.NEUTRALS), LOUNGE_BOTTOMS = tset(RT.LOUNGE_BOTTOMS), SEPARATE_JACKETS = tset(RT.SEPARATE_JACKETS);
@@ -825,6 +837,39 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     return p;
   }
 
+  /** v5's SX1: a top (not under a dressy layer) that breaks the quiet look the rest of the outfit reads as.
+   *  [points, line, tip]; points 0 when it doesn't fire; tip is the one-dressy-piece minimal case's line. */
+  function styleClash(o: PartsOutfit): [number, string | null, string | null] {
+    if (!truthy(t.sx)) return [0.0, null, null];
+    let c: ReturnType<typeof H.outfit> | null = null;
+    let tip: string | null = null;
+    for (const T of o.tops) {
+      const sub = nv(T.subcategory), vol = vol3(T);
+      if (!(SX_STREET_TOPS.has(sub) || vol >= BOXY)) continue;
+      const others = o.main.filter((g) => g !== T);
+      const dressy = others.filter((g) => SX_DRESSY.has(nv(g.subcategory)));
+      const rest = rubric.detectStyles(others, []).detected;
+      const quiet = rest.filter((s) => SX_QUIET.has(s));
+      if (quiet.length === 0) continue;
+      if (o.outers.length > 0) {
+        const co = H.outfit(others);
+        if (o.outers.some((L) => quiet.some((s) => H.role(s, L, co)[0] >= 1))) continue; // a dressy layer bridges the two looks
+      }
+      // every quiet look vetoes the graphic tee; a roomy top breaks a look the whole outfit no longer reads as, or
+      // whose volume band it's above
+      if (!SX_STREET_TOPS.has(sub) && quiet.some((s) => o.det.includes(s) && vol <= SX_QUIET.get(s)!)) continue;
+      if (c === null) c = H.outfit(o.main);
+      const cc = c;
+      if (o.det.some((st) => H.role(st, T, cc)[0] >= 1)) continue; // the top is the look's own piece
+      const what = sub === "graphic_tee" ? "graphic tee" : `oversized ${rep(or(sub, "top"))}`;
+      if (dressy.length >= t.sx_min_dressy) return [t.sx, `the ${what} and the dressier pieces with it come from different looks`, null];
+      if (tip === null && quiet.includes("minimalist") && SX_STREET_TOPS.has(sub)) {
+        tip = `the ${what} pulls against the quiet, minimal pieces with it; a plain tee keeps the look`;
+      }
+    }
+    return [0.0, null, tip];
+  }
+
   // ---------------------------------------------------------------- COHESION / STYLE (15%)
   function cohesion(o: PartsOutfit, boldness: string): Part {
     const p = new Part(BASE);
@@ -837,9 +882,12 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const h2Label = truthy(t.h2_pick_free) ? o.labelNoPick : label; // v4: picks never move a number
     const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
     const suit = subs.has("suit_jacket") && subs.has("suit_trousers");
-    if (det.length > 0 || suit) p.add(t.h1, label ? `reads as ${STYLE_NAMES[label]}` : "a matching suit", "H1_reads_as_style");
+    const [sx, sxLine, sxTip] = styleClash(o); // v5 (0 in v1-v4)
+    if ((det.length > 0 || suit) && !truthy(sx)) p.add(t.h1, label ? `reads as ${STYLE_NAMES[label]}` : "a matching suit", "H1_reads_as_style");
     // H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
-    if (h2Label && o.slots.size === 3) {
+    if (truthy(sx)) {
+      // v5: a piece from another look: no "reads as"
+    } else if (h2Label && o.slots.size === 3) {
       const c = H.outfit(o.main);
       const best = new Map<string, number>();
       let against = 0;
@@ -877,7 +925,9 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         }
       }
     }
-    if (truthy(h3)) p.add(-h3, h3Line, "H3_another_world");
+    if (truthy(sx) && sx >= h3) p.add(-sx, sxLine!, "SX1_another_look"); // v5: the larger of SX1 and H3, never both
+    else if (truthy(h3)) p.add(-h3, h3Line, "H3_another_world");
+    if (sxTip !== null) p.tip(sxTip, "SX1_tip", -t.sx);
     // H5: too many statements (v4 B1's focal count, his boldness allowance)
     const ST = CO.statements;
     let focal = 0.0;
@@ -1114,7 +1164,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 /** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
 export const defaultParts: PartsEngine = createParts(PARTS_DATA);
 
-/** parts_proto.score_parts() (engine v4) with the bundled data. Never mutates `reading`. Not wired into the app yet. */
+/** parts_proto.score_parts() (engine v5) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
 }

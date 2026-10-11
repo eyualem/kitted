@@ -1,9 +1,9 @@
 {
- "version": "1.1.0",
- "engine": "v4",
- "label": "parts-proto-4 (Oct 11, 2026)",
+ "version": "1.2.0",
+ "engine": "v5",
+ "label": "parts-proto-5 (Oct 11, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "70dacbda86953a6859f8062bd1b0b7c1dab49696f9e4748a53ffca7d32b21347",
+ "sourceSha256": "04a9504f4a038925dd51d207ad64df246f9b66dd40cc1b7551c4581930df3073",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -106,7 +106,36 @@
    "track_jacket"
   ],
   "sc_pair": false,
-  "h2_pick_free": true
+  "h2_pick_free": true,
+  "sx": 3.0,
+  "sx_street_tops": [
+   "graphic_tee"
+  ],
+  "sx_dressy": [
+   "blazer",
+   "cardigan",
+   "chinos",
+   "derby",
+   "dress_shirt",
+   "dress_shoe",
+   "knit_polo",
+   "loafer",
+   "overcoat",
+   "oxford_shirt",
+   "polo",
+   "rugby_shirt",
+   "sport_coat",
+   "suit_jacket",
+   "suit_trousers",
+   "trousers",
+   "unstructured_blazer"
+  ],
+  "sx_min_dressy": 2,
+  "sx_quiet": {
+   "minimalist": 4,
+   "smart_casual": 3,
+   "classic_prep": 3
+  }
  },
  "sets": {
   "TAILORED": [

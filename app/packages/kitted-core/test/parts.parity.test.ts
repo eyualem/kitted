@@ -1,4 +1,4 @@
-// Parts engine parity: every case in fixtures/parts_parity.json must equal parts_proto.py (v4, or the named tune
+// Parts engine parity: every case in fixtures/parts_parity.json must equal parts_proto.py (v5, or the named tune
 // variant) exactly: parts, reasons and tips in order, NA, condition, occasion, the lowest-part line, the bonus, the
 // final score, and the unrounded average / final within 1e-9. If TS and Python disagree, TS is wrong: never edit
 // parts_proto.py or the fixtures to make this pass (regenerate with make_parts_parity.py after a Python change).
@@ -99,7 +99,7 @@ function mismatch(c: PartsCase): string | null {
   return out.length ? `${label}: ${out.join(" | ")}` : null;
 }
 
-describe("parts engine parity (parts_proto.py v4)", () => {
+describe("parts engine parity (parts_proto.py v5)", () => {
   it("has every case, from the same prototype and data version", () => {
     expect(P.cases.length).toBe(P.counts.cases);
     expect(P.cases.length).toBeGreaterThan(10000);
@@ -108,7 +108,7 @@ describe("parts engine parity (parts_proto.py v4)", () => {
     expect(P.parts_proto_sha256).toBe(PARTS_DATA.sourceSha256);
   });
 
-  it("matches every v4 case exactly", () => {
+  it("matches every v5 case exactly", () => {
     const bad: string[] = [];
     for (const c of P.cases) {
       if (c.tune) continue;
@@ -119,7 +119,7 @@ describe("parts engine parity (parts_proto.py v4)", () => {
     expect(bad).toEqual([]);
   });
 
-  it("matches the tune variants (v1, v2, v3, the v4 what-ifs): tuning is a data change", () => {
+  it("matches the tune variants (v1 to v4, the v4 and v5 what-ifs): tuning is a data change", () => {
     const tuned = P.cases.filter((c) => c.tune);
     expect(new Set(tuned.map((c) => c.tune))).toEqual(new Set(Object.keys(P.tunes)));
     const bad: string[] = [];

@@ -50,9 +50,10 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-4 (Oct 11, 2026)"
+VERSION = "parts-proto-5 (Oct 11, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
-            "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)"}
+            "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
+            "v5": "parts-proto-5 (Oct 11, 2026)"}
 
 # ---- Reward tuning (Oct 10, founder-approved). engine="v1" reproduces parts-proto-1 exactly (paper test results/parts1/); engine="v2" is
 # the tuned engine (paper test parts2_test.py, report rubric/research/parts/tuning-results.md). Only rewards built on
@@ -180,6 +181,47 @@ _OFF4 = dict(pr5=0.0, pr5_layers=frozenset(), pr5_bottoms=frozenset(), pr5_shoes
              h2_pick_free=False)
 for _e in ("v1", "v2", "v3"):
     TUNE[_e].update(_OFF4)
+# v5 (Oct 11, the style-crossing pass; THE DEFAULT; report rubric/research/parts/style-clash.md, test ../parts5_test.py).
+# The founder (Oct 11): "oversized shirts and graphics are good in streetwear, but in minimal or classy they wouldn't
+# stand." v4 had no fault for a piece that breaks the rules of the look the REST of the outfit belongs to: an oversized
+# graphic tee + pleated trousers + loafers, an oversized hoodie + slim chinos + loafers and an oversized plain tee +
+# slim chinos + loafers all scored 7.0. v4.1's style bands (P1) never carried over into the parts.
+#   SX1 "a piece from another look" (Cohesion): built only from the style council's own tables (RULEBOOK Part 4), so
+#   it isn't new taste: smart casual and classic prep veto the graphic tee and the hoodie (prep: any boxy top), smart
+#   casual's band stops at volume 3, minimal vetoes graphics. It fires on a TOP (not under a dressy layer) when
+#     (a) the top is street-coded: a graphic tee (the subcategory, never the flip-prone `pattern`), or any top at
+#         volume >= 4 (a steady extreme: 97-100%);
+#     (b) the rest of the outfit (the top taken out) has at least two of the dressy styles' pieces that streetwear
+#         rules out (its vetoes, plus chinos, its one "against" piece): pressed trousers or chinos, loafers / derbies /
+#         dress shoes, a collared prep top, tailoring;
+#     (c) the rest reads as one of the quiet looks (minimal, smart casual, classic prep: detect_styles on the rest,
+#         no picks), and the top breaks EVERY one of them. A graphic tee breaks all three (smart casual and prep veto
+#         it by name, minimal by its print; read by the subcategory, so a flip of `pattern` can't switch it). A roomy
+#         top breaks a look when the whole outfit no longer reads as it, or its volume is above that look's band
+#         (smart casual and prep stop at 3, minimal at 4: an oversized top over straight or wide trousers still reads
+#         minimal, the city-boy shape);
+#     (d) the top isn't the look's own piece: no style the whole outfit reads as counts it as an anchor or home piece
+#         (a roomy knit or oxford in smart casual, a boxy cropped top in minimal).
+#   Exempt by design (research-endorsed mixes; cohesion.md H3b, v5-tailoring.md "Hoodie: works with conditions"):
+#   a top under a layer that belongs to the quiet look (an anchor or home piece of it in the council's tables: a tee or
+#   hoodie under a blazer or a topcoat, a graphic tee under a chore coat or a leather jacket), and every outer layer
+#   (the one place a high-low mix works; RULEBOOK ruling 24). A street layer (a bomber, a denim jacket, a puffer)
+#   doesn't bridge: the graphic tee under a bomber with pleated trousers and loafers still fires. Shoes are never the
+#   odd piece here: loafers with wide jeans are endorsed (RMRS 2026, notes/proportions.md), and Shoes already owns a
+#   much-too-dressy shoe (SD3). Athletic bottoms stay the occasion ladder's (one fact, one owner).
+#   Size: -3.0 on Style, twice the jacket rule. At Style's 15% weight the existing -1.5 moves the total only 0.225,
+#   which leaves all three founder cases at 7.0; -3.0 lands them at 6.5 ("Getting there"). It replaces H1/H2 (an
+#   outfit with a piece from another look doesn't "read as" the look) and takes the larger of itself and H3, never both.
+#   A graphic tee with only ONE dressy piece in a rest that reads minimal (graphic tee + trousers + white sneakers) is
+#   a tip only (SX1_tip): a very common outfit, and the gold set should say how raters judge it.
+TUNE["v5"] = dict(TUNE["v4"], sx=3.0,
+                  sx_street_tops=frozenset({"graphic_tee"}),
+                  sx_dressy=frozenset(R.ST_VETO | R.DRESS_SHOES | R.PREP_TOPS | {"chinos"}),
+                  sx_min_dressy=2,
+                  sx_quiet={s: R.STYLE_BANDS[s][0][1] for s in ("minimalist", "smart_casual", "classic_prep")})
+_OFF5 = dict(sx=0.0, sx_street_tops=frozenset(), sx_dressy=frozenset(), sx_min_dressy=2, sx_quiet={})
+for _e in ("v1", "v2", "v3", "v4"):
+    TUNE[_e].update(_OFF5)
 WEIGHTS = {"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -684,6 +726,44 @@ def _shoes(o, occasion, sl, t):
     return p
 
 
+def _style_clash(o, t):
+    """v5's SX1 (see TUNE["v5"]): a top (not under a dressy layer) that breaks the quiet look the rest of the outfit
+    reads as. Returns (points, line, tip): points 0 when it doesn't fire; tip is the one-dressy-piece minimal case's line."""
+    if not t["sx"]:
+        return 0.0, None, None
+    c = None
+    tip = None
+    for T in o["tops"]:
+        sub, vol = T.get("subcategory"), T.get("volume") or 3
+        if not (sub in t["sx_street_tops"] or vol >= 4):
+            continue
+        others = [g for g in o["main"] if g is not T]
+        dressy = [g for g in others if g.get("subcategory") in t["sx_dressy"]]
+        rest = R.detect_styles(others)["detected"]
+        quiet = [s for s in rest if s in t["sx_quiet"]]
+        if not quiet:
+            continue
+        if o["outers"]:
+            co = R.Outfit(others)
+            if any(R.STYLES[s][0](L, co)[0] >= 1 for L in o["outers"] for s in quiet):
+                continue                                              # a dressy layer over it bridges the two looks
+        # every quiet look vetoes the graphic tee (smart casual and prep by name, minimal by its print; read by the
+        # subcategory, never the flip-prone `pattern`); a roomy top breaks a look when the whole outfit no longer
+        # reads as it or the volume is above that look's band
+        if sub not in t["sx_street_tops"] and any(s in o["det"] and vol <= t["sx_quiet"][s] for s in quiet):
+            continue                                                  # the rest still reads as a look the top fits
+        if c is None:
+            c = R.Outfit(o["main"])
+        if any(R.STYLES[st][0](T, c)[0] >= 1 for st in o["det"]):
+            continue                                                  # the top is the look's own piece
+        what = "graphic tee" if sub == "graphic_tee" else f"oversized {(sub or 'top').replace('_', ' ')}"
+        if len(dressy) >= t["sx_min_dressy"]:
+            return t["sx"], f"the {what} and the dressier pieces with it come from different looks", None
+        if tip is None and "minimalist" in quiet and sub in t["sx_street_tops"]:
+            tip = f"the {what} pulls against the quiet, minimal pieces with it; a plain tee keeps the look"
+    return 0.0, None, tip
+
+
 # =====================================================================================================
 # COHESION / STYLE (15%): a narrow, written-down version (the council's tables). "Is the mix deliberate?" stays out.
 # =====================================================================================================
@@ -695,10 +775,13 @@ def _cohesion(o, boldness, t):
     h2_label = o["label_nopick"] if t["h2_pick_free"] else label     # v4: picks never move a number
     subs = {g.get("subcategory") for g in o["main"]}
     suit = "suit_jacket" in subs and "suit_trousers" in subs
-    if det or suit:
+    sx, sx_line, sx_tip = _style_clash(o, t)                         # v5 (0 in v1-v4)
+    if (det or suit) and not sx:
         p.add(t["h1"], f"reads as {R.STYLE_NAMES[label]}" if label else "a matching suit", "H1_reads_as_style")
     # H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
-    if h2_label and len(o["slots"]) == 3:
+    if sx:
+        pass                                                          # v5: a piece from another look: no "reads as"
+    elif h2_label and len(o["slots"]) == 3:
         role = R.STYLES[h2_label][0]
         c = R.Outfit(o["main"])
         best, against = {}, 0
@@ -728,8 +811,12 @@ def _cohesion(o, boldness, t):
             amt = 4.0 if max(f) - min(f) >= 3.5 else 1.5
             if amt > h3:
                 h3, h3_line = amt, "formal and very casual pieces fight"
-    if h3:
+    if sx and sx >= h3:                                               # v5: the larger of SX1 and H3, never both
+        p.add(-sx, sx_line, "SX1_another_look")
+    elif h3:
         p.add(-h3, h3_line, "H3_another_world")
+    if sx_tip:
+        p.tip(sx_tip, "SX1_tip", would=-t["sx"])
     # H5: too many statements (v4 B1's focal count, his boldness allowance)
     focal = 0.0
     for g in [x for x in o["main"] if x.get("category") in ("top", "bottom", "outerwear")]:
@@ -861,13 +948,13 @@ def _occasion(o, occasion):
     return out
 
 
-def _tune(engine="v4", tune=None):
+def _tune(engine="v5", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v4", tune=None):
+def earned_bonus(part_scores, engine="v5", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -881,7 +968,7 @@ def earned_bonus(part_scores, engine="v4", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v4", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v5", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -918,10 +1005,10 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v4", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v5", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v4" (the style fairness pass, default), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v5" (the style-crossing pass, default), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
