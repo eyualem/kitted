@@ -17,6 +17,7 @@
    - Stock and web photos have no profile: mark them "profile unknown", run them with one stated test profile, and say so in the report. Until Oct 9 every test used an invented "Minimal + Smart casual" profile; treat older results that way.
    - Age and picked looks never change a score today (v4: picks only change "Reads as", tips, the morning card). Age moves points only if the gold set shows raters really judge by age, and then it's my call.
    - Profiles stay in `inputs/` (git-ignored): first names or codes, birth year, no faces or contact details, and only with the person's OK.
+9. **Keep the Mac under 10 GB of RAM** (founder, Oct 11, after an overload paused a session). Run one heavy job at a time: one background agent, and no iOS build, Simulator, `npm run check` or big Python run alongside another. Shut the Simulator down when done. Taking longer is fine.
 8. **Keep "My to-do list" (below) current, and remind me** (founder, Oct 8). Whenever something needs me (a test on my phone, photos to shoot, an account, a decision), add it there in plain words with a priority (P1 this week / P2 before the beta / P3 before launch): what to do, how long, and what it unblocks. Check it off or remove it when it's done. When you report a result, now and then (not every message) end with one line like "Still on your list: the phone test and the clothes photos", picking the 1–3 items that unblock the most.
 
 ## My to-do list (founder; every chat keeps this current, rule 8)
