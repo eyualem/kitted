@@ -1,0 +1,446 @@
+{
+ "version": "1.0.0",
+ "engine": "v3",
+ "label": "parts-proto-3 (Oct 10, 2026)",
+ "source": "extraction-test/rubrics/parts_proto.py",
+ "sourceSha256": "2c57911d4ef9de508f15fd28263895293868533bfa8d094da5efc9fc572667fd",
+ "rubricVersion": "4.1.0",
+ "weights": {
+  "proportions": 0.3,
+  "fit": 0.25,
+  "color": 0.15,
+  "shoes": 0.15,
+  "cohesion": 0.15
+ },
+ "partOrder": [
+  "proportions",
+  "fit",
+  "color",
+  "shoes",
+  "cohesion"
+ ],
+ "partNames": {
+  "proportions": "Proportions",
+  "fit": "Fit",
+  "color": "Color",
+  "shoes": "Shoes",
+  "cohesion": "Style"
+ },
+ "base": 7.0,
+ "partRange": {
+  "default": [
+   2.0,
+   10.0
+  ],
+  "cohesion": [
+   1.0,
+   10.0
+  ]
+ },
+ "tune": {
+  "pr1": 1.5,
+  "pr1_mirror_short": 0.5,
+  "pr1b": 0.5,
+  "pr2": 1.5,
+  "pr3": 1.0,
+  "prop_cap": 2.5,
+  "h1": 0.5,
+  "h2": 1.0,
+  "h2_suit": 1.0,
+  "h4": 0.75,
+  "cp1": 1.0,
+  "cp2": 0.5,
+  "cp5": 0.5,
+  "lightness": true,
+  "color_cap": 2.0,
+  "suit_shoe": true,
+  "earned": {
+   "over": 7.5,
+   "rate": 0.5,
+   "cap": 0.25,
+   "gate": [
+    6.5,
+    7.0
+   ]
+  },
+  "solid_line": true,
+  "pr4": 1.0,
+  "pr4_shoes": [
+   "basketball_sneaker",
+   "canvas_sneaker",
+   "chunky_sneaker",
+   "low_profile_sneaker",
+   "retro_runner"
+  ],
+  "h4_graphic_street": false,
+  "sw2": 0.5,
+  "pr4_legs": [
+   "relaxed",
+   "wide"
+  ],
+  "pr4_signature_v3": false
+ },
+ "sets": {
+  "TAILORED": [
+   "blazer",
+   "sport_coat",
+   "suit_jacket",
+   "unstructured_blazer"
+  ],
+  "TAILORED_FIT": [
+   "blazer",
+   "overcoat",
+   "sport_coat",
+   "suit_jacket",
+   "unstructured_blazer"
+  ],
+  "RIBBED": [
+   "cardigan",
+   "fleece",
+   "hoodie",
+   "quarter_zip",
+   "sweater",
+   "sweatshirt"
+  ],
+  "SHORT_SLEEVE_TYPES": [
+   "graphic_tee",
+   "tank_top",
+   "tee"
+  ],
+  "PRESSED": [
+   "chinos",
+   "drawstring_trousers",
+   "suit_trousers",
+   "trousers"
+  ],
+  "NARROW": [
+   "skinny",
+   "slim"
+  ],
+  "FULL_LEG": [
+   "relaxed",
+   "straight",
+   "wide"
+  ],
+  "SHORT_LAYERS": [
+   "bomber",
+   "denim_jacket",
+   "leather_jacket"
+  ],
+  "BULKY": [
+   "basketball_sneaker",
+   "chunky_sneaker"
+  ],
+  "SUIT_SHOES": [
+   "chelsea_boot",
+   "derby",
+   "dress_shoe",
+   "loafer"
+  ],
+  "RUNNER": [
+   "performance_runner"
+  ],
+  "SLIDES": [
+   "slides_sandals"
+  ],
+  "SHORTS": [
+   "athletic_shorts",
+   "shorts"
+  ],
+  "LOUNGE_OK": [
+   "gym",
+   "home"
+  ],
+  "INTERVIEWISH": [
+   "interview",
+   "interview_corporate",
+   "interview_tech"
+  ],
+  "LINEN_LIKELY": [
+   "camp_collar_shirt",
+   "drawstring_trousers"
+  ],
+  "NO_TIE_IN": [
+   null,
+   "black",
+   "denim",
+   "grey",
+   "multicolor",
+   "navy",
+   "white"
+  ],
+  "LOOSE": [
+   "relaxed",
+   "wide"
+  ],
+  "SHORT_TOP_LENGTHS": [
+   "at_belt",
+   "cropped"
+  ],
+  "STREET_SHAPE_LENGTHS": [
+   "at_belt",
+   "cropped",
+   "mid_fly"
+  ],
+  "STREET_SHAPE_BOTTOMS": [
+   "cargos",
+   "jeans"
+  ],
+  "LOOSE_DENIM": [
+   "cargos",
+   "jeans"
+  ],
+  "WORN_HALF_SHOES": [
+   "suede_chukka",
+   "work_boot"
+  ],
+  "DAINTY_SHOES": [
+   "derby",
+   "dress_shoe",
+   "loafer"
+  ],
+  "LONG_SHIRTS": [
+   "camp_collar_shirt",
+   "dress_shirt",
+   "flannel_shirt",
+   "oxford_shirt"
+  ],
+  "DRESSY_ROOM": [
+   "event",
+   "interview",
+   "interview_corporate",
+   "interview_tech"
+  ]
+ },
+ "boxyVolume": 4,
+ "proportions": {
+  "bigTopSkinny": 1.5,
+  "layerOverSkinny": 0.5,
+  "peek": 0.5,
+  "blockAt": 1.0,
+  "tips": {
+   "longTopLoose": -2.0,
+   "longTop": -1.5,
+   "longLayerLooseLeg": -1.5,
+   "heavyHemTailored": -2.0,
+   "longShirtWideLeg": -1.0,
+   "longShirtMaxVolume": 3
+  }
+ },
+ "fit": {
+  "severity": {
+   "minor": 0.5,
+   "moderate": 1.5,
+   "clear": 2.0,
+   "severe": 4.0
+  },
+  "pieceOthersRate": 0.5,
+  "othersRate": 0.5,
+  "tips": {
+   "fullBreakNarrow": -0.5
+  }
+ },
+ "color": {
+  "accent": {
+   "full": 1.0,
+   "half": 0.5
+  },
+  "tooManyAccents": {
+   "atLeast": 3,
+   "points": 2.5
+  },
+  "busy": {
+   "familiesAtLeast": 5,
+   "accentsAtLeast": 2,
+   "points": 1.0
+  },
+  "brightClash": {
+   "boldOrStreet": 1.0,
+   "points": 2.0,
+   "familiesAtLeast": 2
+  },
+  "nearMatch": 1.5,
+  "samePatternScale": 1.5,
+  "samePattern": 0.75,
+  "threePatterns": {
+   "atLeast": 3,
+   "points": 1.5
+  },
+  "lightness": {
+   "tonalRange": 1.0,
+   "tonalShoes": 0.5,
+   "lightMidDark": 0.5
+  },
+  "tips": {
+   "doubleDenim": -1.0
+  }
+ },
+ "shoes": {
+  "range": [
+   2.0,
+   9.5
+  ],
+  "slides": {
+   "tailored": 2.5,
+   "points": 4.5
+  },
+  "hemDrags": 0.5,
+  "dragHems": [
+   "full_break",
+   "pooling"
+  ],
+  "runners": {
+   "tailored": 4.5,
+   "points": 6.0
+  },
+  "chunkyUnderTailoring": 2.0,
+  "tooCasual": [
+   {
+    "points": 1.5,
+    "from": 1.0,
+    "to": 2.0
+   },
+   {
+    "points": 1.0,
+    "from": 2.0,
+    "to": 3.0
+   }
+  ],
+  "tooDressy": {
+   "points": 0.5,
+   "from": 2.0,
+   "to": 2.5
+  },
+  "matches": {
+   "points": 0.5,
+   "realFrom": 2.0,
+   "realTo": 2.5
+  },
+  "window": {
+   "dressier": [
+    1.5,
+    2.25
+   ],
+   "casual": [
+    0.75,
+    1.5
+   ]
+  },
+  "chosen": 0.5,
+  "chunkyNarrow": 1.5,
+  "runnerNarrow": 0.5,
+  "loudVsLoud": 0.75,
+  "accent": 0.5,
+  "worn": {
+   "points": 1.0,
+   "half": 0.5
+  },
+  "tips": {
+   "daintyWide": -1.0
+  }
+ },
+ "cohesion": {
+  "jacketJeans": 1.5,
+  "spread": {
+   "atLeast": 2.5,
+   "bigAtLeast": 3.5,
+   "points": 1.5,
+   "bigPoints": 4.0
+  },
+  "statements": {
+   "allowance": {
+    "subtle": 1,
+    "a_little": 1.5,
+    "bold": 2.5
+   },
+   "allowanceDefault": 1.5,
+   "streetBonus": 1,
+   "perExtra": 0.5,
+   "max": 1.0,
+   "bright": 1,
+   "half": 0.5,
+   "pattern": 1
+  }
+ },
+ "condition": {
+  "stain": 1.2,
+  "wrinkled": 0.4,
+  "wrinkledLinen": 0.2,
+  "worn": 0.4,
+  "cap": 1.6,
+  "untuckedDressShirt": 0.6,
+  "partRate": 2.5,
+  "partFloor": 2.0
+ },
+ "occasion": {
+  "o1Curve": [
+   [
+    0.75,
+    7.0
+   ],
+   [
+    1.0,
+    6.0
+   ],
+   [
+    1.5,
+    5.0
+   ],
+   [
+    2.0,
+    4.0
+   ],
+   [
+    2.5,
+    3.5
+   ]
+  ],
+  "casual": {
+   "points": 0.5,
+   "from": 0.25,
+   "to": 0.75
+  },
+  "overdressed": {
+   "points": 0.5,
+   "from": 1.5,
+   "to": 2.0
+  },
+  "loungeAsCasual": 2,
+  "ceilings": {
+   "loungeDressy": 4.0,
+   "loungeLadder": [
+    5.5,
+    6.5,
+    7.5
+   ],
+   "slidesDressy": 4.0,
+   "sneakersBlazer": 7.0,
+   "bigLogo": 6.5
+  },
+  "default": [
+   2,
+   3
+  ]
+ },
+ "final": {
+  "floor": 5.0,
+  "floorOccasions": [
+   "class",
+   "everyday",
+   "gym",
+   "home"
+  ],
+  "min": 3.0,
+  "max": 10.0
+ },
+ "copy": {
+  "lowestFallback": {
+   "fit": "nothing looks the wrong size",
+   "proportions": "a balanced, classic shape",
+   "color": "clean neutrals, nothing fighting",
+   "shoes": "clean and easy with this",
+   "cohesion": "the pieces go together; nothing ties them to one look yet"
+  },
+  "solidLine": "Every part is solid: nothing off, nothing standing out yet."
+ }
+}

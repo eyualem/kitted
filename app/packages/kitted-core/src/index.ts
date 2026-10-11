@@ -28,7 +28,15 @@ export {
 } from "./ideas";
 export { styleEffects, type StyleEffect, type StyleLens } from "./lens";
 export { explainScore, type ScoreLedger, type LedgerCredit, type LedgerRule, type Explained } from "./ledger";
-export type { CreditReason, ScoreTrace } from "./rubric";
+export type { CreditReason, ScoreTrace, RubricHelpers, Outfit as StyleOutfit } from "./rubric";
+// The parts engine (parts_proto.py v3, parts data 1.0.0): ported with parity, not wired into the app yet.
+export { PARTS_DATA } from "./partsData";
+export {
+  createParts, defaultParts, scoreParts, partsCardRow,
+  type PartsEngine, type PartsData, type PartsTune, type PartsOptions, type PartsResult, type PartsScored, type PartsUnscored,
+  type PartName, type PartResult, type PartReason, type PartTip, type PartsCondition, type PartsOccasion, type PartsLowest,
+  type SecondLook, type SecondLookInput,
+} from "./parts";
 export {
   US_EASTERN, fixedZone, localParts, parseRollover, DEFAULT_ROLLOVER, dayKey, addDays, weekdayOf, daysBetween, wallToUtc, nextRolloverMs,
   type ZoneOffset, type LocalParts,

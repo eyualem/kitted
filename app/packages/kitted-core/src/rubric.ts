@@ -81,6 +81,20 @@ export interface RubricEngine {
   occasionTarget(occasion: string): readonly [number, number];
   readonly neutrals: ReadonlySet<unknown>;
   readonly loungeOk: ReadonlySet<unknown>;
+  /** v4.1's shared helpers, for the parts engine (parts.ts). score() doesn't go through these; exposing them changes nothing. */
+  readonly helpers: RubricHelpers;
+}
+
+/** The v4.1 helpers the parts engine reuses (parts_proto.py imports them from rubric.py). */
+export interface RubricHelpers {
+  /** rubric._prepare + rubric._normalize on a deep copy: the scene, the scored garments (our own copies), what isn't rated. */
+  prepare(reading: Reading): { scene: Scene; garments: Garment[]; notRated: NotRated[] };
+  /** rubric.Outfit(garments). */
+  outfit(garments: readonly Garment[]): Outfit;
+  /** rubric.STYLES[style][0](g, c): (positive, negative) for one garment. */
+  role(style: DetectedStyle, g: Garment, c: Outfit): readonly [number, number];
+  halfAccent(g: Garment): boolean;
+  isDenim(g: Garment): boolean;
 }
 
 /** Python `dict(pairs)`: later duplicates overwrite the value but keep the first position. */
@@ -106,7 +120,7 @@ const clamp01 = (x: number): number => Math.max(0.0, Math.min(1.0, x));
 const pyStr = (v: unknown): string => (isNone(v) ? "None" : v === true ? "True" : v === false ? "False" : String(v));
 
 /** The scored garments, split into slots, with the facts the style tables share (rubric.Outfit). */
-interface Outfit {
+export interface Outfit {
   tops: Garment[];
   outer: Garment[];
   bottom: Garment | undefined;
@@ -1121,9 +1135,21 @@ export function createRubric(data: RubricData): RubricEngine {
     return best;
   }
 
+  const helpers: RubricHelpers = {
+    prepare(reading) {
+      const p = prepare(clone(reading));
+      normalize(p.garments);
+      return p;
+    },
+    outfit: outfitOf,
+    role: (style, g, c) => STYLES[style].role(g, c),
+    halfAccent,
+    isDenim,
+  };
+
   return {
     data, score, askQuestion, detectStyles, scoredGarments, bandsFor, bandSteps, formality, fam, isBright, legIndex,
-    legOrder: LEG_ORDER, occasionTarget, neutrals: NEUTRALS, loungeOk: LOUNGE_OK,
+    legOrder: LEG_ORDER, occasionTarget, neutrals: NEUTRALS, loungeOk: LOUNGE_OK, helpers,
   };
 }
 
