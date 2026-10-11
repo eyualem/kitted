@@ -29,8 +29,10 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Two engines (Oct 10): engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" (the default) tunes only
-the rewards whose readings passed, and adds one step after the average (see TUNE below):
+Three engines (Oct 10): engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
+whose readings passed, and adds one step after the average (see TUNE below). engine="v3" (the default, the streetwear
+pass) is v2 plus one Proportions reward, PR4 "the streetwear shape" (see TUNE["v3"]; ../parts3_test.py, report
+../../rubric/research/parts/streetwear-pass.md). v2's step after the average:
   2b. EARNED BONUS (v2): +0.25 when a second part reaches 8 and no part is under 7, so excellence in two parts adds
       up instead of being averaged away. Paper test: ../parts2_test.py, report: ../../rubric/research/parts/
       tuning-results.md.
@@ -45,8 +47,9 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-2 (Oct 10, 2026)"
-VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)"}
+VERSION = "parts-proto-3 (Oct 10, 2026)"
+VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
+            "v3": "parts-proto-3 (Oct 10, 2026)"}
 
 # ---- Reward tuning (Oct 10, founder-approved). engine="v1" reproduces parts-proto-1 exactly (paper test results/parts1/); engine="v2" is
 # the tuned engine (paper test parts2_test.py, report rubric/research/parts/tuning-results.md). Only rewards built on
@@ -95,6 +98,38 @@ TUNE = {
         "solid_line": True,
     },
 }
+# v3 (Oct 10, the streetwear pass; report rubric/research/parts/streetwear-pass.md, test ../parts3_test.py): v2 plus ONE
+# reward, so the defining streetwear shape can earn what the tailored shapes earn. Everything else is v2's.
+#   PR4 "the streetwear shape": a boxy top (volume >= 4) worn untucked and ending at or above the fly (cropped /
+#   at_belt / mid_fly) over relaxed or wide jeans or cargos, no layer, in an outfit that reads as streetwear and is
+#   finished by a street shoe (chunky, basketball, canvas, retro runner, low-profile). Sources: v5-silhouette.md §1
+#   "boxy/cropped top + straight or loose leg" (GQ Jun 2023, Mr Porter 2025, H&M 2026: 3 for, 0 against) and §5
+#   streetwear's defining silhouette "boxy tee or hoodie + baggy/wide jeans + chunky or basketball sneakers"
+#   (Highsnobiety ~2023, H&M, GQ Apr 2025, FashionBeans 2026; medium); proportions.md F4 ("hoodies, sweatshirts and
+#   boxy tees are exempt: that's the defining street shape"); style_archetypes.md streetwear "done well" (deliberate
+#   volume; a chunky or skate shoe that matches the leg width). "Both loose" is split outside streetwear (GQ 2025
+#   "probably not", H&M "goes wrong"), so it's gated on the streetwear read and its shoe, and it is +1.0 (part 8,
+#   "a good shape"), below the waist break's +1.5 (6 sources, 0 against). The white leather sneaker is left out on
+#   purpose: it's the one sneaker every style shares (smart casual's anchor; minimal, prep and streetwear home), not
+#   a street shoe in any source's streetwear silhouette, and the founder's black tee + wide jeans + white leather
+#   sneakers is "clean but plain" (his call, Oct 10). A short top that already earns the waist break (PR1) takes the
+#   larger of the two, never both: one top, one shape credit.
+#   The shoe set flips inside itself between runs (canvas/chunky, low-profile/retro runner) without changing the
+#   reward; "street shoe yes/no" held on 50/61 photos where it appears in any run (b1, zoom1, zoom1-stock), and his
+#   white leather sneakers read white leather on 3 of 3 runs on all 3 of his photos.
+TUNE["v3"] = dict(TUNE["v2"], pr4=1.0,
+                  pr4_shoes=frozenset({"chunky_sneaker", "basketball_sneaker", "canvas_sneaker", "retro_runner",
+                                       "low_profile_sneaker"}),
+                  # what-ifs tested and NOT adopted (see the report): a graphic print as the one standout in
+                  # streetwear (graphic vs plain flips on 4 of 12 photos where it's read), and a bigger SW2 (the
+                  # chunky split is 3-2, so it stays +0.5)
+                  h4_graphic_street=False, sw2=0.5,
+                  # also tested and not adopted: a straight leg (pr4_legs), and a hoodie/sweatshirt/graphic tee read
+                  # at volume 3 over chunky or basketball sneakers (pr4_signature_v3)
+                  pr4_legs=R.LOOSE, pr4_signature_v3=False)
+_OFF = dict(pr4=0.0, pr4_shoes=frozenset(), h4_graphic_street=False, sw2=0.5, pr4_legs=R.LOOSE, pr4_signature_v3=False)
+TUNE["v1"].update(_OFF)
+TUNE["v2"].update(_OFF)
 WEIGHTS = {"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -286,6 +321,20 @@ def _proportions(o, sl, t):
             rewards.append((pts, "a tucked or short top over a full leg gives it a waist", "PR1_waist_break"))
         elif O is None and _earns(T) and T.get("tucked") == "half" and T.get("subcategory") not in RIBBED:
             rewards.append((t["pr1b"], "the front tuck gives it a waist", "PR1b_half_tuck"))
+    # v3: the streetwear shape (PR4). Same top as the waist break, so it replaces PR1 when larger, never adds to it.
+    S_sub = S.get("subcategory") if S is not None else None
+    boxy = T is not None and ((T.get("volume") or 3) >= 4 or (                     # what-if knob, off: a hoodie,
+        t["pr4_signature_v3"] and T.get("subcategory") in R.ST_TOP_A and S_sub in BULKY))   # sweatshirt or graphic tee at 3
+    if (t["pr4"] and not blocked and O is None and T is not None and _earns(T) and boxy
+            and T.get("tucked") in (None, "none", "na") and T.get("length") in ("cropped", "at_belt", "mid_fly")
+            and leg in t["pr4_legs"] and B.get("subcategory") in ("jeans", "cargos") and "streetwear" in o["det"]
+            and S_sub in t["pr4_shoes"]):
+        pr1 = next((x for x in rewards if x[2] in ("PR1_waist_break", "PR1b_half_tuck")), None)
+        if pr1 is None or pr1[0] < t["pr4"]:
+            if pr1 is not None:
+                rewards.remove(pr1)
+            rewards.append((t["pr4"], "a boxy top over wide legs, finished by street sneakers: the streetwear shape",
+                            "PR4_street_shape"))
     if not blocked and full and O is not None and o_sub in SHORT_LAYERS and _earns(O) and not sl["peek"]:
         rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
     if (not blocked and o_tailored and T is not None and T.get("tucked") == "full" and B.get("subcategory") in PRESSED
@@ -545,7 +594,7 @@ def _shoes(o, occasion, sl, t):
     elif sub in RUNNER and leg in NARROW:
         p.add(-0.5, "runners look heavy under narrow legs", "SW1_runner_narrow")
     if sub in BULKY and loose_denim and "streetwear" in o["det"] and B.get("hem") != "pooling" and up > 0:
-        p.add(0.5 * up, "chunky sneakers carry the wide jeans", "SW2_weight_carries_leg")
+        p.add(t["sw2"] * up, "chunky sneakers carry the wide jeans", "SW2_weight_carries_leg")
     # color (not for slides: their stripes read multicolor in some runs)
     if sub not in SLIDES:
         loud = R.is_bright(S) or S.get("color_family") == "multicolor"
@@ -626,6 +675,10 @@ def _cohesion(o, boldness, t):
     if not o["color_fault"] and focal <= base_allow:
         pat = [g for g in o["main"] if g.get("category") in ("top", "bottom", "outerwear")
                and g.get("pattern") not in (None, "solid", "graphic", "other") and g.get("pattern_scale") not in ("small", "na", None)]
+        if t["h4_graphic_street"] and not pat and "streetwear" in det and o["shoes"] is not None \
+                and o["shoes"].get("subcategory") in t["pr4_shoes"]:
+            # what-if (off in every engine): a graphic print as streetwear's one standout (cohesion.md H4: Modest Man)
+            pat = [g for g in o["main"] if g.get("category") in ("top", "outerwear") and g.get("pattern") == "graphic"]
         if len(pat) == 1 and _earns(pat[0]) and id(pat[0]) not in o["credited"]:
             g = pat[0]
             p.add(t["h4"], f"the {g.get('pattern').replace('_', ' ')} {g.get('subcategory').replace('_', ' ')} is the one standout",
@@ -739,13 +792,13 @@ def _occasion(o, occasion):
     return out
 
 
-def _tune(engine="v2", tune=None):
+def _tune(engine="v3", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v2", tune=None):
+def earned_bonus(part_scores, engine="v3", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -759,7 +812,7 @@ def earned_bonus(part_scores, engine="v2", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v2", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v3", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -794,10 +847,11 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v2", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v3", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v2" (tuned) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
+    _second_look). engine: "v3" (the streetwear pass, default), "v2" (parts-proto-2, exactly) or "v1" (parts-proto-1,
+    exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
     styles = styles or {}

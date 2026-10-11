@@ -1,0 +1,4303 @@
+{
+ "profile": "test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age",
+ "engines": {
+  "v2": "parts-proto-2 (Oct 10, 2026)",
+  "v3": "parts-proto-3 (Oct 10, 2026)"
+ },
+ "tune_v3_added": {
+  "pr4": 1.0,
+  "pr4_shoes": [
+   "basketball_sneaker",
+   "canvas_sneaker",
+   "chunky_sneaker",
+   "low_profile_sneaker",
+   "retro_runner"
+  ]
+ },
+ "moved": [],
+ "pr4_corpus": [],
+ "street_photos": [
+  {
+   "key": "mirror-m01",
+   "who": "web photo (profile unknown)",
+   "v2": 7.0,
+   "v3": 7.0,
+   "lacks": [
+    "leg read straight"
+   ]
+  },
+  {
+   "key": "phone-0d39d6",
+   "who": "the founder (profile pending)",
+   "v2": 6.5,
+   "v3": 6.5,
+   "lacks": [
+    "top read volume 3",
+    "shoe slides_sandals"
+   ]
+  },
+  {
+   "key": "phone-1f1997",
+   "who": "the founder (profile pending)",
+   "v2": 6.5,
+   "v3": 6.5,
+   "lacks": [
+    "top read volume 3",
+    "shoe slides_sandals"
+   ]
+  },
+  {
+   "key": "phone-403ade",
+   "who": "the founder (profile pending)",
+   "v2": 7.0,
+   "v3": 7.0,
+   "lacks": [
+    "shoe white_leather_sneaker"
+   ]
+  },
+  {
+   "key": "phone-8ad378",
+   "who": "the founder (profile pending)",
+   "v2": 7.0,
+   "v3": 7.0,
+   "lacks": [
+    "shoe white_leather_sneaker"
+   ]
+  },
+  {
+   "key": "phone-8bc29d",
+   "who": "the founder (profile pending)",
+   "v2": 6.5,
+   "v3": 6.5,
+   "lacks": [
+    "a layer (overshirt)",
+    "top read volume 3",
+    "shoe other"
+   ]
+  },
+  {
+   "key": "phone-968016",
+   "who": "the founder (profile pending)",
+   "v2": 7.5,
+   "v3": 7.5,
+   "lacks": [
+    "shoe white_leather_sneaker"
+   ]
+  },
+  {
+   "key": "phone-b0f0c8",
+   "who": "the founder (profile pending)",
+   "v2": 7.0,
+   "v3": 7.0,
+   "lacks": [
+    "top read volume 3",
+    "shoe work_boot"
+   ]
+  },
+  {
+   "key": "phone-e026de",
+   "who": "the founder (profile pending)",
+   "v2": 6.5,
+   "v3": 6.5,
+   "lacks": [
+    "a layer (overshirt)",
+    "top read volume 3",
+    "shoe slides_sandals"
+   ]
+  },
+  {
+   "key": "stock-p02-after_studio",
+   "who": "stock photo (profile unknown)",
+   "v2": 6.5,
+   "v3": 6.5,
+   "lacks": [
+    "sweatpants (lounge)",
+    "pooling hem",
+    "shoe work_boot"
+   ]
+  },
+  {
+   "key": "stock-p02-before_studio",
+   "who": "stock photo (profile unknown)",
+   "v2": 6.5,
+   "v3": 6.5,
+   "lacks": [
+    "sweatpants (lounge)"
+   ]
+  }
+ ],
+ "spread": {
+  "all photos": {
+   "v2": {
+    "n": 78,
+    "median": 7.0,
+    "mean": 6.95,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 55,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 45,
+     "7.5": 10,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "v3": {
+    "n": 78,
+    "median": 7.0,
+    "mean": 6.95,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 55,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 45,
+     "7.5": 10,
+     "8.0": 5
+    },
+    "pct8": 6
+   }
+  },
+  "founder (profile pending)": {
+   "v2": {
+    "n": 21,
+    "median": 7.0,
+    "mean": 6.64,
+    "le5.5": 4,
+    "6-6.5": 6,
+    "7-7.5": 11,
+    "8+": 0,
+    "9+": 0,
+    "values": {
+     "5.5": 4,
+     "6.5": 6,
+     "7.0": 8,
+     "7.5": 3
+    },
+    "pct8": 0
+   },
+   "v3": {
+    "n": 21,
+    "median": 7.0,
+    "mean": 6.64,
+    "le5.5": 4,
+    "6-6.5": 6,
+    "7-7.5": 11,
+    "8+": 0,
+    "9+": 0,
+    "values": {
+     "5.5": 4,
+     "6.5": 6,
+     "7.0": 8,
+     "7.5": 3
+    },
+    "pct8": 0
+   }
+  },
+  "friends (profile unknown)": {
+   "v2": {
+    "n": 4,
+    "median": 7.0,
+    "mean": 7.0,
+    "le5.5": 0,
+    "6-6.5": 0,
+    "7-7.5": 4,
+    "8+": 0,
+    "9+": 0,
+    "values": {
+     "7.0": 4
+    },
+    "pct8": 0
+   },
+   "v3": {
+    "n": 4,
+    "median": 7.0,
+    "mean": 7.0,
+    "le5.5": 0,
+    "6-6.5": 0,
+    "7-7.5": 4,
+    "8+": 0,
+    "9+": 0,
+    "values": {
+     "7.0": 4
+    },
+    "pct8": 0
+   }
+  },
+  "unknown (ask)": {
+   "v2": {
+    "n": 2,
+    "median": 7.25,
+    "mean": 7.25,
+    "le5.5": 0,
+    "6-6.5": 0,
+    "7-7.5": 2,
+    "8+": 0,
+    "9+": 0,
+    "values": {
+     "7.0": 1,
+     "7.5": 1
+    },
+    "pct8": 0
+   },
+   "v3": {
+    "n": 2,
+    "median": 7.25,
+    "mean": 7.25,
+    "le5.5": 0,
+    "6-6.5": 0,
+    "7-7.5": 2,
+    "8+": 0,
+    "9+": 0,
+    "values": {
+     "7.0": 1,
+     "7.5": 1
+    },
+    "pct8": 0
+   }
+  },
+  "web mirror (profile unknown)": {
+   "v2": {
+    "n": 12,
+    "median": 7.25,
+    "mean": 7.33,
+    "le5.5": 0,
+    "6-6.5": 1,
+    "7-7.5": 8,
+    "8+": 3,
+    "9+": 0,
+    "values": {
+     "6.5": 1,
+     "7.0": 5,
+     "7.5": 3,
+     "8.0": 3
+    },
+    "pct8": 25
+   },
+   "v3": {
+    "n": 12,
+    "median": 7.25,
+    "mean": 7.33,
+    "le5.5": 0,
+    "6-6.5": 1,
+    "7-7.5": 8,
+    "8+": 3,
+    "9+": 0,
+    "values": {
+     "6.5": 1,
+     "7.0": 5,
+     "7.5": 3,
+     "8.0": 3
+    },
+    "pct8": 25
+   }
+  },
+  "stock (profile unknown)": {
+   "v2": {
+    "n": 39,
+    "median": 7.0,
+    "mean": 6.97,
+    "le5.5": 1,
+    "6-6.5": 6,
+    "7-7.5": 30,
+    "8+": 2,
+    "9+": 0,
+    "values": {
+     "5.5": 1,
+     "6.5": 6,
+     "7.0": 27,
+     "7.5": 3,
+     "8.0": 2
+    },
+    "pct8": 5
+   },
+   "v3": {
+    "n": 39,
+    "median": 7.0,
+    "mean": 6.97,
+    "le5.5": 1,
+    "6-6.5": 6,
+    "7-7.5": 30,
+    "8+": 2,
+    "9+": 0,
+    "values": {
+     "5.5": 1,
+     "6.5": 6,
+     "7.0": 27,
+     "7.5": 3,
+     "8.0": 2
+    },
+    "pct8": 5
+   }
+  }
+ },
+ "by_style": {
+  "classic prep": {
+   "v2": {
+    "n": 2,
+    "median": 7.0,
+    "8+": 0,
+    "max": 7.0,
+    "eights": []
+   },
+   "v3": {
+    "n": 2,
+    "median": 7.0,
+    "8+": 0,
+    "max": 7.0,
+    "eights": []
+   }
+  },
+  "minimal": {
+   "v2": {
+    "n": 6,
+    "median": 7.0,
+    "8+": 0,
+    "max": 7.0,
+    "eights": []
+   },
+   "v3": {
+    "n": 6,
+    "median": 7.0,
+    "8+": 0,
+    "max": 7.0,
+    "eights": []
+   }
+  },
+  "no style": {
+   "v2": {
+    "n": 37,
+    "median": 7.0,
+    "8+": 2,
+    "max": 8.0,
+    "eights": [
+     "mirror-m09",
+     "stock-s07-before_studio"
+    ]
+   },
+   "v3": {
+    "n": 37,
+    "median": 7.0,
+    "8+": 2,
+    "max": 8.0,
+    "eights": [
+     "mirror-m09",
+     "stock-s07-before_studio"
+    ]
+   }
+  },
+  "smart casual": {
+   "v2": {
+    "n": 15,
+    "median": 7.0,
+    "8+": 3,
+    "max": 8.0,
+    "eights": [
+     "mirror-m02",
+     "mirror-m05",
+     "stock-s01-before_studio"
+    ]
+   },
+   "v3": {
+    "n": 15,
+    "median": 7.0,
+    "8+": 3,
+    "max": 8.0,
+    "eights": [
+     "mirror-m02",
+     "mirror-m05",
+     "stock-s01-before_studio"
+    ]
+   }
+  },
+  "streetwear": {
+   "v2": {
+    "n": 9,
+    "median": 6.5,
+    "8+": 0,
+    "max": 7.5,
+    "eights": []
+   },
+   "v3": {
+    "n": 9,
+    "median": 6.5,
+    "8+": 0,
+    "max": 7.5,
+    "eights": []
+   }
+  },
+  "workwear": {
+   "v2": {
+    "n": 9,
+    "median": 7.0,
+    "8+": 0,
+    "max": 7.5,
+    "eights": []
+   },
+   "v3": {
+    "n": 9,
+    "median": 7.0,
+    "8+": 0,
+    "max": 7.5,
+    "eights": []
+   }
+  },
+  "streetwear detected": {
+   "v2": {
+    "n": 11,
+    "median": 6.5,
+    "8+": 0,
+    "max": 7.5,
+    "eights": []
+   },
+   "v3": {
+    "n": 11,
+    "median": 6.5,
+    "8+": 0,
+    "max": 7.5,
+    "eights": []
+   }
+  }
+ },
+ "steady": {
+  "b1_A": {
+   "v2": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "range_le_0.5": [
+     49,
+     49
+    ],
+    "exact": [
+     41,
+     49
+    ],
+    "mean_spread": 0.082,
+    "worst": 0.5
+   },
+   "v3": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "range_le_0.5": [
+     49,
+     49
+    ],
+    "exact": [
+     41,
+     49
+    ],
+    "mean_spread": 0.082,
+    "worst": 0.5
+   },
+   "v3_differs_from_v2_on": {}
+  },
+  "zoom1_B": {
+   "v2": {
+    "within_0.5_of_median": [
+     66,
+     66
+    ],
+    "range_le_0.5": [
+     66,
+     66
+    ],
+    "exact": [
+     57,
+     66
+    ],
+    "mean_spread": 0.068,
+    "worst": 0.5
+   },
+   "v3": {
+    "within_0.5_of_median": [
+     66,
+     66
+    ],
+    "range_le_0.5": [
+     66,
+     66
+    ],
+    "exact": [
+     57,
+     66
+    ],
+    "mean_spread": 0.068,
+    "worst": 0.5
+   },
+   "v3_differs_from_v2_on": {}
+  },
+  "b1_A_lightness": {
+   "v2": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "range_le_0.5": [
+     49,
+     49
+    ],
+    "exact": [
+     39,
+     49
+    ],
+    "mean_spread": 0.102,
+    "worst": 0.5
+   },
+   "v3": {
+    "within_0.5_of_median": [
+     49,
+     49
+    ],
+    "range_le_0.5": [
+     49,
+     49
+    ],
+    "exact": [
+     39,
+     49
+    ],
+    "mean_spread": 0.102,
+    "worst": 0.5
+   },
+   "v3_differs_from_v2_on": {}
+  }
+ },
+ "pr4_fire": {
+  "b1 A": {
+   "photos": 50,
+   "readings": 148,
+   "fires": [],
+   "flips": []
+  },
+  "b1 B1": {
+   "photos": 50,
+   "readings": 149,
+   "fires": [],
+   "flips": []
+  },
+  "zoom1 A": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": []
+  },
+  "zoom1 B": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": []
+  },
+  "zoom1 C": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": []
+  },
+  "zoom1 D": {
+   "photos": 27,
+   "readings": 81,
+   "fires": [],
+   "flips": []
+  },
+  "zoom1-stock A": {
+   "photos": 39,
+   "readings": 115,
+   "fires": [],
+   "flips": []
+  },
+  "zoom1-stock B": {
+   "photos": 39,
+   "readings": 117,
+   "fires": [],
+   "flips": []
+  }
+ },
+ "judge": {
+  "all": {
+   "v2": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   },
+   "v3": {
+    "n": 59,
+    "mean_diff": 0.01,
+    "mae": 0.42,
+    "within_0.5": 51,
+    "off_1.5": 3,
+    "r": 0.63
+   }
+  },
+  "tune": {
+   "v2": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "v3": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   }
+  },
+  "held": {
+   "v2": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "v3": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   }
+  },
+  "moved": []
+ },
+ "checks": [
+  {
+   "key": "phone-d1967f",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 6",
+   "v3_raw": 6.925,
+   "label": "smart casual",
+   "v3_lowest": "Style 6: the tailored jacket and the loose or washed jeans come from different worlds"
+  },
+  {
+   "key": "phone-e438d4",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_raw": 7.15,
+   "label": "workwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-f4870b",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_raw": 7.15,
+   "label": "workwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-fb0b17",
+   "who": "a friend (profile unknown)",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_raw": 7.15,
+   "label": "workwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "oct7-ph1",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v3_raw": 5.5,
+   "label": "no style",
+   "v3_lowest": "Shoes 4.5: slides read as staying in"
+  },
+  {
+   "key": "oct7-ph2",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+   "v3_raw": 7.088,
+   "label": "smart casual",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "oct7-ph3",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_raw": 7.517,
+   "label": "smart casual",
+   "v3_lowest": "Fit 7: nothing looks the wrong size"
+  },
+  {
+   "key": "oct7-ph4",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+   "v3_raw": 7.088,
+   "label": "workwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-0d39d6",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4 \u00b7 Style 7.5",
+   "v3_raw": 6.625,
+   "label": "streetwear",
+   "v3_lowest": "Shoes 4: slides read as staying in"
+  },
+  {
+   "key": "phone-1f1997",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4 \u00b7 Style 7.5",
+   "v3_raw": 6.625,
+   "label": "streetwear",
+   "v3_lowest": "Shoes 4: slides read as staying in"
+  },
+  {
+   "key": "phone-403ade",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_raw": 7.15,
+   "label": "streetwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-5a9049",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_raw": 7.075,
+   "label": "workwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-6b14db",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v3_raw": 5.5,
+   "label": "no style",
+   "v3_lowest": "Shoes 4.5: slides read as staying in"
+  },
+  {
+   "key": "phone-7de605",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v3_raw": 5.5,
+   "label": "no style",
+   "v3_lowest": "Shoes 4.5: slides read as staying in"
+  },
+  {
+   "key": "phone-7f14a4",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 7.5",
+   "v3_raw": 6.95,
+   "label": "workwear",
+   "v3_lowest": "Shoes 6: the shoes look worn"
+  },
+  {
+   "key": "phone-8ad378",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_raw": 7.15,
+   "label": "streetwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-8bc29d",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+   "v3_raw": 6.688,
+   "label": "minimal",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-968016",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_raw": 7.3,
+   "label": "streetwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-a765e8",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v3_raw": 5.5,
+   "label": "no style",
+   "v3_lowest": "Shoes 4.5: slides read as staying in"
+  },
+  {
+   "key": "phone-b0f0c8",
+   "who": "the founder (profile pending)",
+   "occ": "everyday",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_raw": 6.925,
+   "label": "workwear",
+   "v3_lowest": "Proportions 6.5: the top underneath shows below the outer piece"
+  },
+  {
+   "key": "phone-d58b14",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v3_raw": 6.625,
+   "label": "no style",
+   "v3_lowest": "Shoes 4.5: slides read as staying in"
+  },
+  {
+   "key": "phone-d6559a",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7",
+   "v3_raw": 7.0,
+   "label": "no style",
+   "v3_lowest": "Every part is solid: nothing off, nothing standing out yet."
+  },
+  {
+   "key": "phone-d918c0",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_raw": 7.3,
+   "label": "workwear",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  },
+  {
+   "key": "phone-e026de",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4 \u00b7 Style 7.5",
+   "v3_raw": 6.625,
+   "label": "streetwear",
+   "v3_lowest": "Shoes 4: slides read as staying in"
+  },
+  {
+   "key": "phone-f07193",
+   "who": "the founder (profile pending)",
+   "occ": "class",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Style 7",
+   "v3_raw": 6.559,
+   "label": "no style",
+   "v3_lowest": "Fit 5.5: the overshirt's sleeves run past the wrists"
+  },
+  {
+   "key": "phone-703a8b",
+   "who": "unknown, ask the founder",
+   "occ": "class",
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Style 7",
+   "v3_raw": 7.618,
+   "label": "no style",
+   "v3_lowest": "Fit 7: nothing looks the wrong size"
+  },
+  {
+   "key": "phone-ebe23f",
+   "who": "unknown, ask the founder",
+   "occ": "class",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v3_raw": 7.075,
+   "label": "no style",
+   "v3_lowest": "Proportions 7: a balanced, classic shape"
+  }
+ ],
+ "targets": [
+  {
+   "target": "the friend's blazer d1967f at 7 or below",
+   "met": true
+  },
+  {
+   "target": "the chore coat (e438d4, f4870b, fb0b17) at 7-7.5",
+   "met": true
+  },
+  {
+   "target": "his gingham fits at or below v2 (5a9049, 7f14a4, f07193)",
+   "met": true
+  },
+  {
+   "target": "his black tee + wide jeans + white leather sneakers (8ad378, 403ade) at 7",
+   "met": true
+  }
+ ],
+ "fixes": {
+  "tuck the top": [
+   {
+    "key": "mirror-m01",
+    "who": "web",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "mirror-m03",
+    "who": "web",
+    "v2": [
+     7.0,
+     8.0
+    ],
+    "v3": [
+     7.0,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "mirror-m04",
+    "who": "web",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Fit 7 \u00b7 Color 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "mirror-m06",
+    "who": "web",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph4",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-403ade",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-5a9049",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-7f14a4",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-8ad378",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-e438d4",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-f07193",
+    "who": "founder",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-f4870b",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-fb0b17",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p01-after_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p01-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p06-after_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p06-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s02-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s06-before_studio",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 5.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s11-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s13-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s17-before_phone",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s19-before_phone",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s20-before_phone",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s22-before_phone",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s23-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 6.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s25-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     8.0
+    ],
+    "v3": [
+     7.0,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s26-before_mirror",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s27-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Fit 7 \u00b7 Color 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s28-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7",
+    "v3_pr4": false
+   }
+  ],
+  "slides -> white leather sneakers": [
+   {
+    "key": "mirror-m12",
+    "who": "web",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph1",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-0d39d6",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-1f1997",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-6b14db",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-7de605",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-a765e8",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-d58b14",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-e026de",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   }
+  ],
+  "a better-fitting piece": [
+   {
+    "key": "phone-f07193",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s09-before_street",
+    "who": "stock",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   }
+  ],
+  "add a standout color": [
+   {
+    "key": "mirror-m02",
+    "who": "web",
+    "v2": [
+     8.0,
+     8.0
+    ],
+    "v3": [
+     8.0,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "mirror-m11",
+    "who": "web",
+    "v2": [
+     7.5,
+     7.5
+    ],
+    "v3": [
+     7.5,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph1",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 4.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph3",
+    "who": "founder",
+    "v2": [
+     7.5,
+     7.5
+    ],
+    "v3": [
+     7.5,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph4",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-0d39d6",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 4 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-403ade",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-6b14db",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 4.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-7de605",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 4.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-8ad378",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-a765e8",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 4.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-b0f0c8",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-d1967f",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 6",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-d6559a",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-e438d4",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-f4870b",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-fb0b17",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p01-after_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p01-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p02-after_studio",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 8 \u00b7 Shoes 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p02-before_studio",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 6 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p03-after_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p03-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p04-after_street",
+    "who": "stock",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p04-before_street",
+    "who": "stock",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p05-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p06-after_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p06-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s02-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Fit 7 \u00b7 Color 8 \u00b7 Shoes 6.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s03-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s07-before_studio",
+    "who": "stock",
+    "v2": [
+     8.0,
+     8.0
+    ],
+    "v3": [
+     8.0,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s08-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s09-before_street",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 5.5 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s12-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 6.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s14-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 6 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s16-before_street",
+    "who": "stock",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s21-before_phone",
+    "who": "stock",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 6 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s25-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s27-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Fit 7 \u00b7 Color 8 \u00b7 Style 7",
+    "v3_pr4": false
+   }
+  ],
+  "add a standout pattern": [
+   {
+    "key": "mirror-m02",
+    "who": "web",
+    "v2": [
+     8.0,
+     8.0
+    ],
+    "v3": [
+     8.0,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "mirror-m11",
+    "who": "web",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph1",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph3",
+    "who": "founder",
+    "v2": [
+     7.5,
+     7.5
+    ],
+    "v3": [
+     7.5,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph4",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-0d39d6",
+    "who": "founder",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-403ade",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-6b14db",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-7de605",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-8ad378",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-a765e8",
+    "who": "founder",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-b0f0c8",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-d1967f",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-d6559a",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-e438d4",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-f4870b",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-fb0b17",
+    "who": "friend",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p01-after_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p01-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p02-after_studio",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p02-before_studio",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p03-after_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p03-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p04-after_street",
+    "who": "stock",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p04-before_street",
+    "who": "stock",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p05-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p06-after_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-p06-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s02-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Fit 7 \u00b7 Color 7 \u00b7 Shoes 6.5 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s03-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s07-before_studio",
+    "who": "stock",
+    "v2": [
+     8.0,
+     8.0
+    ],
+    "v3": [
+     8.0,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s08-before_studio",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s09-before_street",
+    "who": "stock",
+    "v2": [
+     6.5,
+     6.5
+    ],
+    "v3": [
+     6.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 9.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s12-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6.5 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s14-before_street",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s16-before_street",
+    "who": "stock",
+    "v2": [
+     7.5,
+     8.0
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s21-before_phone",
+    "who": "stock",
+    "v2": [
+     5.5,
+     5.5
+    ],
+    "v3": [
+     5.5,
+     5.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 8",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s25-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.5
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "stock-s27-before_mirror",
+    "who": "stock",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Fit 7 \u00b7 Color 7 \u00b7 Style 8",
+    "v3_pr4": false
+   }
+  ],
+  "slides -> chunky sneakers": [
+   {
+    "key": "mirror-m12",
+    "who": "web",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "oct7-ph1",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-0d39d6",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.5
+    ],
+    "v3": [
+     6.5,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-1f1997",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.5
+    ],
+    "v3": [
+     6.5,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-6b14db",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-7de605",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-a765e8",
+    "who": "founder",
+    "v2": [
+     5.5,
+     6.5
+    ],
+    "v3": [
+     5.5,
+     6.5
+    ],
+    "v3_after_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-d58b14",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.0
+    ],
+    "v3": [
+     6.5,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-e026de",
+    "who": "founder",
+    "v2": [
+     6.5,
+     7.5
+    ],
+    "v3": [
+     6.5,
+     7.5
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": false
+   }
+  ],
+  "white leather -> chunky sneakers (street shoe)": [
+   {
+    "key": "mirror-m03",
+    "who": "web",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6.5 \u00b7 Style 7",
+    "v3_pr4": false
+   },
+   {
+    "key": "phone-403ade",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": true
+   },
+   {
+    "key": "phone-8ad378",
+    "who": "founder",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.5
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+    "v3_pr4": true
+   },
+   {
+    "key": "phone-968016",
+    "who": "founder",
+    "v2": [
+     7.5,
+     7.5
+    ],
+    "v3": [
+     7.5,
+     8.0
+    ],
+    "v3_after_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 8.5",
+    "v3_pr4": true
+   },
+   {
+    "key": "phone-ebe23f",
+    "who": "unknown",
+    "v2": [
+     7.0,
+     7.0
+    ],
+    "v3": [
+     7.0,
+     7.0
+    ],
+    "v3_after_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+    "v3_pr4": false
+   }
+  ]
+ },
+ "council": [
+  {
+   "id": "st-4-stained-lounge",
+   "style": "streetwear",
+   "adv": [
+    3.0,
+    4.0
+   ],
+   "v2": 5.0,
+   "v3": 5.0,
+   "v3_raw": 5.217,
+   "v3_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "st-5.5-done-badly",
+   "style": "streetwear",
+   "adv": 5.5,
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.725,
+   "v3_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v3_label": "streetwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "st-7.5-graphic-wide-dunks",
+   "style": "streetwear",
+   "adv": 7.5,
+   "v2": 7.5,
+   "v3": 8.0,
+   "v3_raw": 7.925,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "streetwear",
+   "v3_pr4": true
+  },
+  {
+   "id": "st-8.5-bomber-hoodie",
+   "style": "streetwear",
+   "adv": 8.5,
+   "v2": 8.0,
+   "v3": 8.0,
+   "v3_raw": 8.075,
+   "v3_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "streetwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "st-9-chore-red-hoodie",
+   "style": "streetwear",
+   "adv": 9.0,
+   "v2": 8.0,
+   "v3": 8.0,
+   "v3_raw": 7.775,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "streetwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-4-pilled-sweats",
+   "style": "vintage sport",
+   "adv": [
+    3.5,
+    4.5
+   ],
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_raw": 5.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-5.5-full-kit",
+   "style": "vintage sport",
+   "adv": [
+    5.5,
+    6.0
+   ],
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_raw": 5.5,
+   "v3_row": "Fit 7 \u00b7 Color 8 \u00b7 Shoes 4.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-6.5-jersey-joggers-runners",
+   "style": "vintage sport",
+   "adv": 6.5,
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-7-sweatshirt-trackpants",
+   "style": "vintage sport",
+   "adv": 7.0,
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.5,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-7.5-tracksuit",
+   "style": "vintage sport",
+   "adv": 7.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-7.5-blokecore-plain",
+   "style": "vintage sport",
+   "adv": 7.5,
+   "v2": 7.0,
+   "v3": 8.0,
+   "v3_raw": 7.775,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": true
+  },
+  {
+   "id": "vs-8-red-jersey-wide-jeans",
+   "style": "vintage sport",
+   "adv": 8.0,
+   "v2": 7.5,
+   "v3": 8.0,
+   "v3_raw": 7.925,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": true
+  },
+  {
+   "id": "vs-8.5-track-jacket-jeans",
+   "style": "vintage sport",
+   "adv": 8.5,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.3,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7.5 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-8-sport-off-duty",
+   "style": "vintage sport",
+   "adv": 8.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-9-jersey-blazer",
+   "style": "vintage sport",
+   "adv": 9.0,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.625,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": false
+  },
+  {
+   "id": "vs-rugby-overcoat",
+   "style": "vintage sport",
+   "adv": [
+    8.5,
+    9.0
+   ],
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.625,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-4-careless",
+   "style": "workwear",
+   "adv": [
+    3.5,
+    4.5
+   ],
+   "v2": 5.0,
+   "v3": 5.0,
+   "v3_raw": 5.1,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 8 \u00b7 Shoes 6 \u00b7 Style 7.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-5.5-flannel-cargos-boots",
+   "style": "workwear",
+   "adv": [
+    5.5,
+    6.0
+   ],
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.6,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-6.5-two-faults",
+   "style": "workwear",
+   "adv": 6.5,
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.6,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 8 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-7.5-tee-jeans-boots",
+   "style": "workwear",
+   "adv": 7.5,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.3,
+   "v3_row": "Proportions 7.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-8-chore-canvas",
+   "style": "workwear",
+   "adv": 8.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-8.5-chore-boots",
+   "style": "workwear",
+   "adv": 8.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-9-full",
+   "style": "workwear",
+   "adv": 9.0,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.588,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "ww-chore-skinny-chunky",
+   "style": "workwear",
+   "adv": [
+    6.5,
+    7.0
+   ],
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.625,
+   "v3_row": "Proportions 6.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "sc-4-every-fault",
+   "style": "smart casual",
+   "adv": [
+    3.5,
+    4.5
+   ],
+   "v2": 4.5,
+   "v3": 4.5,
+   "v3_raw": 4.713,
+   "v3_row": "Proportions 7 \u00b7 Fit 4 \u00b7 Color 7 \u00b7 Shoes 5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "sc-5.5-done-wrong",
+   "style": "smart casual",
+   "adv": 5.5,
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_raw": 5.375,
+   "v3_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 5.5 \u00b7 Shoes 4.5 \u00b7 Style 7.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "sc-6.5-oxford-chinos-loafer",
+   "style": "smart casual",
+   "adv": 6.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 6.875,
+   "v3_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "sc-7.5-tee-dark-jeans-wls",
+   "style": "smart casual",
+   "adv": 7.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "sc-8.5-quarter-zip",
+   "style": "smart casual",
+   "adv": 8.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "sc-9-blazer-oxford-chinos-chukka",
+   "style": "smart casual",
+   "adv": 9.0,
+   "v2": 8.0,
+   "v3": 8.0,
+   "v3_raw": 7.775,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "classic prep",
+   "v3_pr4": false
+  },
+  {
+   "id": "sc-tee-chinos-wls",
+   "style": "smart casual",
+   "adv": [
+    7.5,
+    8.0
+   ],
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "minimal",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-4-faults",
+   "style": "minimal",
+   "adv": [
+    3.5,
+    4.5
+   ],
+   "v2": 5.0,
+   "v3": 5.0,
+   "v3_raw": 5.037,
+   "v3_row": "Proportions 7 \u00b7 Fit 4.5 \u00b7 Color 7 \u00b7 Shoes 6.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-5.5-long-tee-pooling",
+   "style": "minimal",
+   "adv": [
+    5.5,
+    6.0
+   ],
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.7,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-6.5-long-tee",
+   "style": "minimal",
+   "adv": 6.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-7.5-uniform",
+   "style": "minimal",
+   "adv": 7.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-8.5-knit-wide-trousers",
+   "style": "minimal",
+   "adv": 8.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.2,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "minimal",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-9-tonal-layered",
+   "style": "minimal",
+   "adv": 9.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "minimal",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-city-boy",
+   "style": "minimal",
+   "adv": 7.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_label": "minimal",
+   "v3_pr4": false
+  },
+  {
+   "id": "min-grey-sweater-black-jeans",
+   "style": "minimal",
+   "adv": [
+    8.0,
+    8.5
+   ],
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-4",
+   "style": "classic prep",
+   "adv": [
+    3.5,
+    4.5
+   ],
+   "v2": 5.0,
+   "v3": 5.0,
+   "v3_raw": 5.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-5.5",
+   "style": "classic prep",
+   "adv": [
+    5.0,
+    5.5
+   ],
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.35,
+   "v3_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-6.5",
+   "style": "classic prep",
+   "adv": 6.5,
+   "v2": 6.0,
+   "v3": 6.0,
+   "v3_raw": 5.95,
+   "v3_row": "Proportions 7 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 6 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-7.5-polo-chinos-canvas",
+   "style": "classic prep",
+   "adv": 7.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-8-polo-chinos-wls",
+   "style": "classic prep",
+   "adv": 8.0,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.625,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-sweater-oxford-loafer",
+   "style": "classic prep",
+   "adv": [
+    8.5,
+    9.0
+   ],
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.625,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-quiet-luxury",
+   "style": "classic prep",
+   "adv": 9.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "minimal",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-9-blazer-tucked",
+   "style": "classic prep",
+   "adv": 9.0,
+   "v2": 8.0,
+   "v3": 8.0,
+   "v3_raw": 7.925,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-pink-green",
+   "style": "classic prep",
+   "adv": 6.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 6.786,
+   "v3_row": "Fit 7 \u00b7 Color 5 \u00b7 Shoes 8 \u00b7 Style 7",
+   "v3_label": "classic prep",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-pink-green-bold",
+   "style": "classic prep",
+   "adv": 7.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.107,
+   "v3_row": "Fit 7 \u00b7 Color 6 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "classic prep",
+   "v3_pr4": false
+  },
+  {
+   "id": "prep-costume",
+   "style": "classic prep",
+   "adv": [
+    8.5,
+    9.0
+   ],
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.625,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "out-4",
+   "style": "outdoor",
+   "adv": [
+    4.0,
+    4.5
+   ],
+   "v2": 5.5,
+   "v3": 5.5,
+   "v3_raw": 5.575,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Shoes 5.5 \u00b7 Style 7.5",
+   "v3_label": "outdoor",
+   "v3_pr4": false
+  },
+  {
+   "id": "out-5-volume-clash",
+   "style": "outdoor",
+   "adv": [
+    4.5,
+    5.5
+   ],
+   "v2": 6.0,
+   "v3": 6.0,
+   "v3_raw": 6.05,
+   "v3_row": "Proportions 5.5 \u00b7 Fit 5 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "out-6.5-shell-slim",
+   "style": "outdoor",
+   "adv": 6.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.025,
+   "v3_row": "Proportions 7 \u00b7 Fit 6.5 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "outdoor",
+   "v3_pr4": false
+  },
+  {
+   "id": "out-7.5-city-uniform",
+   "style": "outdoor",
+   "adv": 7.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "outdoor",
+   "v3_pr4": false
+  },
+  {
+   "id": "out-8.5-shell-sweater-chinos",
+   "style": "outdoor",
+   "adv": 8.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_label": "outdoor",
+   "v3_pr4": false
+  },
+  {
+   "id": "out-9.5-orange-shell-mix",
+   "style": "outdoor",
+   "adv": 9.5,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "out-9-same-trail",
+   "style": "outdoor",
+   "adv": 9.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_label": "outdoor",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-jersey-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.5,
+   "v3": 8.0,
+   "v3_raw": 7.85,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "streetwear",
+   "v3_pr4": true
+  },
+  {
+   "id": "la-rugby-jeans",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.588,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "vintage sport",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-rugby-chinos-samba",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.263,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5",
+   "v3_label": "classic prep",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-rugby-chinos-loafer",
+   "style": "look-alike",
+   "adv": 8.0,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.588,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "classic prep",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-chore-tee-boots",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "workwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-shell-cargos-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.625,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "streetwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-field-cargos-trail",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.075,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5",
+   "v3_label": "outdoor",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-flannel-wide-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.3,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 8 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "streetwear",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-boxy-tee-wide-trousers",
+   "style": "look-alike",
+   "adv": [
+    7.5,
+    8.0
+   ],
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.375,
+   "v3_row": "Proportions 7.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "minimal",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-boxy-tee-wide-jeans-chunky",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.45,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5",
+   "v3_label": "streetwear",
+   "v3_pr4": true
+  },
+  {
+   "id": "la-polo-chinos-loafer",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.625,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5",
+   "v3_label": "smart casual",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-quarter-zip-sweats",
+   "style": "look-alike",
+   "adv": null,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-overshirt-chinos-wls",
+   "style": "look-alike",
+   "adv": [
+    8.5,
+    9.0
+   ],
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5",
+   "v3_label": "minimal",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-tee-mid-jeans-canvas",
+   "style": "look-alike",
+   "adv": 7.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  },
+  {
+   "id": "la-hoodie-straight-retro",
+   "style": "look-alike",
+   "adv": 7.0,
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.0,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7",
+   "v3_label": "no style",
+   "v3_pr4": false
+  }
+ ],
+ "council_by_style": {
+  "streetwear": {
+   "n": 5,
+   "best_v2": 8.0,
+   "best_v3": 8.0,
+   "8+_v2": 2,
+   "8+_v3": 3
+  },
+  "vintage sport": {
+   "n": 11,
+   "best_v2": 7.5,
+   "best_v3": 8.0,
+   "8+_v2": 0,
+   "8+_v3": 2
+  },
+  "workwear": {
+   "n": 8,
+   "best_v2": 7.5,
+   "best_v3": 7.5,
+   "8+_v2": 0,
+   "8+_v3": 0
+  },
+  "smart casual": {
+   "n": 7,
+   "best_v2": 8.0,
+   "best_v3": 8.0,
+   "8+_v2": 1,
+   "8+_v3": 1
+  },
+  "minimal": {
+   "n": 8,
+   "best_v2": 7.0,
+   "best_v3": 7.0,
+   "8+_v2": 0,
+   "8+_v3": 0
+  },
+  "classic prep": {
+   "n": 11,
+   "best_v2": 8.0,
+   "best_v3": 8.0,
+   "8+_v2": 1,
+   "8+_v3": 1
+  },
+  "outdoor": {
+   "n": 7,
+   "best_v2": 7.0,
+   "best_v3": 7.0,
+   "8+_v2": 0,
+   "8+_v3": 0
+  },
+  "look-alike": {
+   "n": 15,
+   "best_v2": 7.5,
+   "best_v3": 8.0,
+   "8+_v2": 0,
+   "8+_v3": 1
+  }
+ },
+ "ladder": [
+  {
+   "key": "phone-8ad378",
+   "variant": "as read: black tee (boxy, to the fly), black wide jeans, white leather sneakers",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "tee tucked",
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.6,
+   "v3_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "shoes -> white chunky sneakers",
+   "v2": 7.0,
+   "v3": 7.5,
+   "v3_raw": 7.45,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "shoes -> basketball sneakers (white)",
+   "v2": 7.0,
+   "v3": 7.5,
+   "v3_raw": 7.45,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "shoes -> canvas (skate) sneakers (black)",
+   "v2": 7.0,
+   "v3": 7.5,
+   "v3_raw": 7.375,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "tee -> graphic tee",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "graphic tee + chunky sneakers",
+   "v2": 7.5,
+   "v3": 8.0,
+   "v3_raw": 7.925,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "tee read regular (volume 3) + chunky sneakers",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "tee read below the fly (long) + chunky sneakers",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-8ad378",
+   "variant": "jeans pooling + chunky sneakers",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.7,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "as read: black tee (boxy, to the fly), black wide jeans, white leather sneakers",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "tee tucked",
+   "v2": 7.5,
+   "v3": 7.5,
+   "v3_raw": 7.6,
+   "v3_row": "Proportions 8.5 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "shoes -> white chunky sneakers",
+   "v2": 7.0,
+   "v3": 7.5,
+   "v3_raw": 7.45,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "shoes -> basketball sneakers (white)",
+   "v2": 7.0,
+   "v3": 7.5,
+   "v3_raw": 7.45,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "shoes -> canvas (skate) sneakers (black)",
+   "v2": 7.0,
+   "v3": 7.5,
+   "v3_raw": 7.375,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "tee -> graphic tee",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.225,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "graphic tee + chunky sneakers",
+   "v2": 7.5,
+   "v3": 8.0,
+   "v3_raw": 7.925,
+   "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 8 \u00b7 Style 8.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "tee read regular (volume 3) + chunky sneakers",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "tee read below the fly (long) + chunky sneakers",
+   "v2": 7.0,
+   "v3": 7.0,
+   "v3_raw": 7.15,
+   "v3_row": "Proportions 7 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 7.5"
+  },
+  {
+   "key": "phone-403ade",
+   "variant": "jeans pooling + chunky sneakers",
+   "v2": 6.5,
+   "v3": 6.5,
+   "v3_raw": 6.7,
+   "v3_row": "Proportions 7 \u00b7 Fit 5.5 \u00b7 Color 7 \u00b7 Shoes 7 \u00b7 Style 7.5"
+  }
+ ],
+ "m01_true_leg": {
+  "v2": 7.5,
+  "v3": 8.0,
+  "v3_row": "Proportions 8 \u00b7 Fit 7 \u00b7 Color 7 \u00b7 Shoes 7.5 \u00b7 Style 8.5"
+ },
+ "ablations": {
+  "v2 (no PR4)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 2,
+    "smart casual": 1,
+    "classic prep": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.0
+  },
+  "v3 as built (PR4 +1.0, 5 street shoes)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 2,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.5
+  },
+  "PR4 +0.5": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 1,
+    "smart casual": 1,
+    "classic prep": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.5
+  },
+  "PR4 +1.5": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 2,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.5
+  },
+  "shoes: chunky/basketball only": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.5
+  },
+  "shoes: + white leather": {
+   "8+": 6,
+   "pct8": 8,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.03,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.68
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.1,
+    "mae": 0.45,
+    "within_0.5": 25,
+    "off_1.5": 1,
+    "r": 0.54
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 2,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 1
+   },
+   "8ad378": 7.5,
+   "8ad378_chunky": 7.5
+  },
+  "+ graphic print as streetwear's standout (H4)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 2,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.5
+  },
+  "SW2 (chunky carries the wide leg) +1.0": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 2,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 2
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 8.0
+  },
+  "legs: straight too": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 2,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.5
+  },
+  "tops: hoodie/sweatshirt/graphic tee at volume 3 (chunky/basketball)": {
+   "8+": 5,
+   "pct8": 6,
+   "b1_steady": [
+    49,
+    49
+   ],
+   "tune": {
+    "n": 30,
+    "mean_diff": -0.07,
+    "mae": 0.4,
+    "within_0.5": 25,
+    "off_1.5": 2,
+    "r": 0.69
+   },
+   "held": {
+    "n": 29,
+    "mean_diff": 0.09,
+    "mae": 0.43,
+    "within_0.5": 26,
+    "off_1.5": 1,
+    "r": 0.56
+   },
+   "council_8plus": {
+    "streetwear": 3,
+    "vintage sport": 2,
+    "smart casual": 1,
+    "classic prep": 1,
+    "look-alike": 1
+   },
+   "8ad378": 7.0,
+   "8ad378_chunky": 7.5
+  }
+ },
+ "ablation_moves": {
+  "v2 (no PR4)": [],
+  "v3 as built (PR4 +1.0, 5 street shoes)": [],
+  "PR4 +0.5": [],
+  "PR4 +1.5": [],
+  "shoes: chunky/basketball only": [],
+  "shoes: + white leather": [
+   "phone-968016 7.5->8.0 (panel 7.0)",
+   "phone-403ade 7.0->7.5 (panel 7.0)",
+   "phone-8ad378 7.0->7.5 (panel 7.5)"
+  ],
+  "+ graphic print as streetwear's standout (H4)": [],
+  "SW2 (chunky carries the wide leg) +1.0": [],
+  "legs: straight too": [
+   "mirror-m01 7.0->7.5"
+  ],
+  "tops: hoodie/sweatshirt/graphic tee at volume 3 (chunky/basketball)": []
+ }
+}

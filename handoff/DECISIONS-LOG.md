@@ -915,3 +915,11 @@ Contradictions settled and decisions changed during the build. Newest last.
         - **the lift went mostly to tailoring:** streetwear has almost no reward the readings can see (volume, stacking on purpose, texture), a bias against the core audience
         - good fit (Fit ≤ 7), lengths, hems against the shoe, texture, fading and accessories stay invisible
     - **Claude's call:** before the port, a short streetwear pass that uses readable facts (a boxy top over a wide leg with a street shoe; the look's own shoe; the style read) so 8s aren't tailoring-only. Then the port, the parts-based fix engine and the card.
+203. **Streetwear pass, v3 (`rubric/research/parts/streetwear-pass.md`; `extraction-test/parts3_test.py`, `results/parts3/`; v3 is now the prototype's default).**
+    - **One new reward, "the streetwear shape":** +1.0 on Proportions for a boxy top (volume ≥4, untucked, ending at the fly or higher) over relaxed or wide jeans or cargos, with no layer, reading as streetwear, in chunky, basketball, canvas, retro-runner or low-profile sneakers. It replaces the waist-break reward when it's larger. White leather sneakers are excluded: counting them sent his green sweatshirt fit to 8.0 against the panel's 7.0.
+    - **Real photos: 0 of 78 move.** No saved reading shows that shape (his hoodies read volume 3; his shoes are slides, white leather or boots; web m01's jeans read straight).
+    - **Council outfits:** the graphic tee + wide jeans + Dunks goes 7.5 → 8.0, and vintage sport gets a path to 8. Two outfits their advocates rated 7.5 now score 8.0, for the gold set to settle. Workwear and outdoor still have no path to 8.
+    - **Unchanged from v2:** steadiness, the panel numbers and every keep target.
+    - **New fix candidates** (the copy is the founder's call): white leather → chunky sneakers; slides → chunky sneakers.
+    - **Rejected:** a graphic as the standout (the read flips), a shoe-carries-the-leg credit at +1.0, straight legs, reading hoodies as boxy, a tonal streetwear credit (needs lightness).
+    - **What still can't be seen, and the gold set must include:** boxiness on hoodies, a deliberate stack, leg width, the exact sneaker type, graphics, and accessories. Its pairs: white leather vs chunky; boxy vs regular tee; stacked vs cropped hem.

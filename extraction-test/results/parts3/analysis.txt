@@ -1,0 +1,316 @@
+STREETWEAR PASS PAPER TEST · v2 = parts-proto-2 (Oct 10, 2026) · v3 = parts-proto-3 (Oct 10, 2026) (v2 + PR4 the streetwear shape)
+  test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age. Rule 7: founder profile pending; friends profile unknown; 703a8b and ebe23f unknown (ask the founder); stock/web profile unknown; council cases are made-up readings with no person.
+  v3's changes from v2: {'pr4': 1.0, 'pr4_shoes': ['basketball_sneaker', 'canvas_sneaker', 'chunky_sneaker', 'low_profile_sneaker', 'retro_runner']}
+
+(0) JUDGE-PILOT SPLIT: the same as v2 (results/parts2/split.json, seed 20261010; re-made and checked identical): tuning 30 · held-out 29
+
+(1) PHOTOS THAT MOVE v2 -> v3 (one reading per photo, its own occasion)
+  shown score moves on 0/78; raw score moves on 0; PR4 fires on 0: none
+  photos that read as streetwear (any detected) and what PR4 needs that they lack:
+    mirror-m01                 web photo (profile unknown)    v3 7.0 · lacks: leg read straight
+    phone-0d39d6               the founder (profile pending)  v3 6.5 · lacks: top read volume 3; shoe slides_sandals
+    phone-1f1997               the founder (profile pending)  v3 6.5 · lacks: top read volume 3; shoe slides_sandals
+    phone-403ade               the founder (profile pending)  v3 7.0 · lacks: shoe white_leather_sneaker
+    phone-8ad378               the founder (profile pending)  v3 7.0 · lacks: shoe white_leather_sneaker
+    phone-8bc29d               the founder (profile pending)  v3 6.5 · lacks: a layer (overshirt); top read volume 3; shoe other
+    phone-968016               the founder (profile pending)  v3 7.5 · lacks: shoe white_leather_sneaker
+    phone-b0f0c8               the founder (profile pending)  v3 7.0 · lacks: top read volume 3; shoe work_boot
+    phone-e026de               the founder (profile pending)  v3 6.5 · lacks: a layer (overshirt); top read volume 3; shoe slides_sandals
+    stock-p02-after_studio     stock photo (profile unknown)  v3 6.5 · lacks: sweatpants (lounge); pooling hem; shoe work_boot
+    stock-p02-before_studio    stock photo (profile unknown)  v3 6.5 · lacks: sweatpants (lounge)
+
+(2) SCORE SPREAD (one reading per photo, its own occasion)
+  all photos · v2                    n= 78 median 7.0  mean 6.95  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 55 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 45, 7.5: 10, 8.0: 5}
+  all photos · v3                    n= 78 median 7.0  mean 6.95  <=5.5 5 (6%)  6-6.5 13 (17%)  7-7.5 55 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 45, 7.5: 10, 8.0: 5}
+  founder (profile pending) · v2     n= 21 median 7.0  mean 6.64  <=5.5 4 (19%)  6-6.5 6 (29%)  7-7.5 11 (52%)  8+ 0 (0%)  9+ 0 (0%)  values {5.5: 4, 6.5: 6, 7.0: 8, 7.5: 3}
+  founder (profile pending) · v3     n= 21 median 7.0  mean 6.64  <=5.5 4 (19%)  6-6.5 6 (29%)  7-7.5 11 (52%)  8+ 0 (0%)  9+ 0 (0%)  values {5.5: 4, 6.5: 6, 7.0: 8, 7.5: 3}
+  friends (profile unknown) · v2     n=  4 median 7.0  mean 7.0  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 4 (100%)  8+ 0 (0%)  9+ 0 (0%)  values {7.0: 4}
+  friends (profile unknown) · v3     n=  4 median 7.0  mean 7.0  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 4 (100%)  8+ 0 (0%)  9+ 0 (0%)  values {7.0: 4}
+  unknown (ask) · v2                 n=  2 median 7.25  mean 7.25  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 2 (100%)  8+ 0 (0%)  9+ 0 (0%)  values {7.0: 1, 7.5: 1}
+  unknown (ask) · v3                 n=  2 median 7.25  mean 7.25  <=5.5 0 (0%)  6-6.5 0 (0%)  7-7.5 2 (100%)  8+ 0 (0%)  9+ 0 (0%)  values {7.0: 1, 7.5: 1}
+  web mirror (profile unknown) · v2  n= 12 median 7.25  mean 7.33  <=5.5 0 (0%)  6-6.5 1 (8%)  7-7.5 8 (67%)  8+ 3 (25%)  9+ 0 (0%)  values {6.5: 1, 7.0: 5, 7.5: 3, 8.0: 3}
+  web mirror (profile unknown) · v3  n= 12 median 7.25  mean 7.33  <=5.5 0 (0%)  6-6.5 1 (8%)  7-7.5 8 (67%)  8+ 3 (25%)  9+ 0 (0%)  values {6.5: 1, 7.0: 5, 7.5: 3, 8.0: 3}
+  stock (profile unknown) · v2       n= 39 median 7.0  mean 6.97  <=5.5 1 (3%)  6-6.5 6 (15%)  7-7.5 30 (77%)  8+ 2 (5%)  9+ 0 (0%)  values {5.5: 1, 6.5: 6, 7.0: 27, 7.5: 3, 8.0: 2}
+  stock (profile unknown) · v3       n= 39 median 7.0  mean 6.97  <=5.5 1 (3%)  6-6.5 6 (15%)  7-7.5 30 (77%)  8+ 2 (5%)  9+ 0 (0%)  values {5.5: 1, 6.5: 6, 7.0: 27, 7.5: 3, 8.0: 2}
+  by the card's style label (v3's label; 'streetwear detected' counts any photo where streetwear is among the detected styles):
+    classic prep         v2 n= 2 median 7.0 max 7.0 8+ 0
+    classic prep         v3 n= 2 median 7.0 max 7.0 8+ 0
+    minimal              v2 n= 6 median 7.0 max 7.0 8+ 0
+    minimal              v3 n= 6 median 7.0 max 7.0 8+ 0
+    no style             v2 n=37 median 7.0 max 8.0 8+ 2 (mirror-m09, stock-s07-before_studio)
+    no style             v3 n=37 median 7.0 max 8.0 8+ 2 (mirror-m09, stock-s07-before_studio)
+    smart casual         v2 n=15 median 7.0 max 8.0 8+ 3 (mirror-m02, mirror-m05, stock-s01-before_studio)
+    smart casual         v3 n=15 median 7.0 max 8.0 8+ 3 (mirror-m02, mirror-m05, stock-s01-before_studio)
+    streetwear           v2 n= 9 median 6.5 max 7.5 8+ 0
+    streetwear           v3 n= 9 median 6.5 max 7.5 8+ 0
+    workwear             v2 n= 9 median 7.0 max 7.5 8+ 0
+    workwear             v3 n= 9 median 7.0 max 7.5 8+ 0
+    streetwear detected  v2 n=11 median 6.5 max 7.5 8+ 0
+    streetwear detected  v3 n=11 median 6.5 max 7.5 8+ 0
+
+(3) 3-RUN STEADINESS (Everyday, the test profile)
+  batch 1 arm A (validation), second look run i paired
+    v2 within 0.5 of median 49/49 · max-min <= 0.5 49/49 · exact 41/49 · mean spread 0.082 · worst 0.5
+    v3 within 0.5 of median 49/49 · max-min <= 0.5 49/49 · exact 41/49 · mean spread 0.082 · worst 0.5
+    photos where any v3 run differs from v2: 0
+  zoom1 + zoom1-stock arm B (design set)
+    v2 within 0.5 of median 66/66 · max-min <= 0.5 66/66 · exact 57/66 · mean spread 0.068 · worst 0.5
+    v3 within 0.5 of median 66/66 · max-min <= 0.5 66/66 · exact 57/66 · mean spread 0.068 · worst 0.5
+    photos where any v3 run differs from v2: 0
+  batch 1 arm A + lightness from arm B1 run i
+    v2 within 0.5 of median 49/49 · max-min <= 0.5 49/49 · exact 39/49 · mean spread 0.102 · worst 0.5
+    v3 within 0.5 of median 49/49 · max-min <= 0.5 49/49 · exact 39/49 · mean spread 0.102 · worst 0.5
+    photos where any v3 run differs from v2: 0
+  PR4 on every multi-run reading set (photos where it fires in any run / photos where it fires in some but not all runs):
+    b1 A             photos 50 · readings 148 · fires on 0 · flips 0
+    b1 B1            photos 50 · readings 149 · fires on 0 · flips 0
+    zoom1 A          photos 27 · readings  81 · fires on 0 · flips 0
+    zoom1 B          photos 27 · readings  81 · fires on 0 · flips 0
+    zoom1 C          photos 27 · readings  81 · fires on 0 · flips 0
+    zoom1 D          photos 27 · readings  81 · fires on 0 · flips 0
+    zoom1-stock A    photos 39 · readings 115 · fires on 0 · flips 0
+    zoom1-stock B    photos 39 · readings 117 · fires on 0 · flips 0
+
+(4) AGAINST THE JUDGE PILOT (panel = median of the 5 judges' weighted totals), same split as v2
+  all 59         v2 n 59 · mean diff +0.01 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+  all 59         v3 n 59 · mean diff +0.01 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+  TUNING half    v2 n 30 · mean diff -0.07 · MAE 0.4 · within 0.5 25 · off 1.5+ 2 · r 0.69
+  TUNING half    v3 n 30 · mean diff -0.07 · MAE 0.4 · within 0.5 25 · off 1.5+ 2 · r 0.69
+  HELD-OUT half  v2 n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+  HELD-OUT half  v3 n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+  panel photos v3 moved: 0
+  streetwear-detected panel photos (v3 label, panel, v2, v3):
+    P002 held phone-b0f0c8             workwear     panel 6.5 · v2 7.0 · v3 7.0
+    P004 held phone-0d39d6             streetwear   panel 5.5 · v2 6.5 · v3 6.5
+    P016 held phone-1f1997             streetwear   panel 5.5 · v2 6.5 · v3 6.5
+    P020 held phone-8bc29d             minimal      panel 6.5 · v2 6.5 · v3 6.5
+    P026 tune phone-8ad378             streetwear   panel 7.5 · v2 7.0 · v3 7.0
+    P028 tune phone-e026de             streetwear   panel 6.5 · v2 6.5 · v3 6.5
+    P033 tune phone-403ade             streetwear   panel 7.0 · v2 7.0 · v3 7.0
+    P042 held phone-968016             streetwear   panel 7.0 · v2 7.5 · v3 7.5
+    P046 held stock-p02-after_studio   streetwear   panel 7.0 · v2 6.5 · v3 6.5
+    P056 held stock-p02-before_studio  streetwear   panel 7.0 · v2 6.5 · v3 6.5
+
+(5) EVERY CHECK OF THE FOUNDER, HIS FRIENDS AND THE TWO UNKNOWNS (own occasion): v2 -> v3
+  phone-d1967f     [a friend (profile unknown); class; smart casual] v2 7.0 -> v3 7.0 (raw 6.925) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 6
+  phone-e438d4     [a friend (profile unknown); class; workwear] v2 7.0 -> v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-f4870b     [a friend (profile unknown); class; workwear] v2 7.0 -> v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-fb0b17     [a friend (profile unknown); class; workwear] v2 7.0 -> v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  oct7-ph1         [the founder (profile pending); everyday; no style] v2 5.5 -> v3 5.5 (raw 5.5) | Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  oct7-ph2         [the founder (profile pending); everyday; smart casual] v2 7.0 -> v3 7.0 (raw 7.088) | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  oct7-ph3         [the founder (profile pending); everyday; smart casual] v2 7.5 -> v3 7.5 (raw 7.517) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  oct7-ph4         [the founder (profile pending); everyday; workwear] v2 7.0 -> v3 7.0 (raw 7.088) | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  phone-0d39d6     [the founder (profile pending); everyday; streetwear] v2 6.5 -> v3 6.5 (raw 6.625) | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-1f1997     [the founder (profile pending); class; streetwear] v2 6.5 -> v3 6.5 (raw 6.625) | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-403ade     [the founder (profile pending); class; streetwear] v2 7.0 -> v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-5a9049     [the founder (profile pending); everyday; workwear] v2 7.0 -> v3 7.0 (raw 7.075) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  phone-6b14db     [the founder (profile pending); everyday; no style] v2 5.5 -> v3 5.5 (raw 5.5) | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-7de605     [the founder (profile pending); everyday; no style] v2 5.5 -> v3 5.5 (raw 5.5) | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-7f14a4     [the founder (profile pending); everyday; workwear] v2 7.0 -> v3 7.0 (raw 6.95) | Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7.5
+  phone-8ad378     [the founder (profile pending); class; streetwear] v2 7.0 -> v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  phone-8bc29d     [the founder (profile pending); class; minimal] v2 6.5 -> v3 6.5 (raw 6.688) | Proportions 7 · Fit 7 · Color 7 · Style 7.5
+  phone-968016     [the founder (profile pending); class; streetwear] v2 7.5 -> v3 7.5 (raw 7.3) | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  phone-a765e8     [the founder (profile pending); everyday; no style] v2 5.5 -> v3 5.5 (raw 5.5) | Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-b0f0c8     [the founder (profile pending); everyday; workwear] v2 7.0 -> v3 7.0 (raw 6.925) | Proportions 6.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  phone-d58b14     [the founder (profile pending); class; no style] v2 6.5 -> v3 6.5 (raw 6.625) | Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7
+  phone-d6559a     [the founder (profile pending); class; no style] v2 7.0 -> v3 7.0 (raw 7.0) | Proportions 7 · Fit 7 · Color 7 · Style 7
+  phone-d918c0     [the founder (profile pending); class; workwear] v2 7.5 -> v3 7.5 (raw 7.3) | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  phone-e026de     [the founder (profile pending); class; streetwear] v2 6.5 -> v3 6.5 (raw 6.625) | Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 7.5
+  phone-f07193     [the founder (profile pending); class; no style] v2 6.5 -> v3 6.5 (raw 6.559) | Proportions 7 · Fit 5.5 · Color 7 · Style 7
+  phone-703a8b     [unknown, ask the founder; class; no style] v2 7.5 -> v3 7.5 (raw 7.618) | Proportions 8.5 · Fit 7 · Color 7.5 · Style 7
+  phone-ebe23f     [unknown, ask the founder; class; no style] v2 7.0 -> v3 7.0 (raw 7.075) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+  targets:
+    [met] the friend's blazer d1967f at 7 or below
+    [met] the chore coat (e438d4, f4870b, fb0b17) at 7-7.5
+    [met] his gingham fits at or below v2 (5a9049, 7f14a4, f07193)
+    [met] his black tee + wide jeans + white leather sneakers (8ad378, 403ade) at 7
+
+(6) CAN A FIX LIFT A FIT? The engine's own edits on every reading where the fix applies (v2 vs v3)
+  tuck the top: applies to 30 · shown score up v2 11/30 · v3 11/30 · down v2 0 · v3 0 · mean lift v2 +0.22 · v3 +0.22 · PR4 fires after the fix on 0
+      oct7-ph4                 the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Style 7.5
+      phone-403ade             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 8.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+      phone-5a9049             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 8.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+      phone-7f14a4             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 8.5 · Fit 7 · Color 7 · Shoes 6 · Style 7.5
+      phone-8ad378             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 8.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+      phone-e438d4             a friend (profile unknown)     v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+      phone-f07193             the founder (profile pending)  v2 6.5 -> 6.5 · v3 6.5 -> 6.5 · Proportions 7 · Fit 5.5 · Color 7 · Style 7
+      phone-f4870b             a friend (profile unknown)     v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+      phone-fb0b17             a friend (profile unknown)     v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  slides -> white leather sneakers: applies to 9 · shown score up v2 9/9 · v3 9/9 · down v2 0 · v3 0 · mean lift v2 +0.72 · v3 +0.72 · PR4 fires after the fix on 0
+      oct7-ph1                 the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+      phone-0d39d6             the founder (profile pending)  v2 6.5 -> 7.0 · v3 6.5 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+      phone-1f1997             the founder (profile pending)  v2 6.5 -> 7.0 · v3 6.5 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+      phone-6b14db             the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+      phone-7de605             the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+      phone-a765e8             the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+      phone-d58b14             the founder (profile pending)  v2 6.5 -> 7.0 · v3 6.5 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+      phone-e026de             the founder (profile pending)  v2 6.5 -> 7.0 · v3 6.5 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  a better-fitting piece: applies to 2 · shown score up v2 2/2 · v3 2/2 · down v2 0 · v3 0 · mean lift v2 +0.5 · v3 +0.5 · PR4 fires after the fix on 0
+      phone-f07193             the founder (profile pending)  v2 6.5 -> 7.0 · v3 6.5 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Style 7
+  add a standout color: applies to 39 · shown score up v2 18/39 · v3 18/39 · down v2 0 · v3 0 · mean lift v2 +0.23 · v3 +0.23 · PR4 fires after the fix on 0
+      oct7-ph1                 the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 7 · Fit 7 · Color 8 · Shoes 4.5 · Style 7
+      oct7-ph3                 the founder (profile pending)  v2 7.5 -> 7.5 · v3 7.5 -> 7.5 · Proportions 8 · Fit 7 · Color 8 · Shoes 8 · Style 8.5
+      oct7-ph4                 the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 8 · Style 7
+      phone-0d39d6             the founder (profile pending)  v2 6.5 -> 7.0 · v3 6.5 -> 7.0 · Proportions 7 · Fit 7 · Color 8 · Shoes 4 · Style 7.5
+      phone-403ade             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+      phone-6b14db             the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 6.5 · Fit 7 · Color 8 · Shoes 4.5 · Style 7
+      phone-7de605             the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 6.5 · Fit 7 · Color 8 · Shoes 4.5 · Style 7
+      phone-8ad378             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+      phone-a765e8             the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 6.5 · Fit 7 · Color 8 · Shoes 4.5 · Style 7
+      phone-b0f0c8             the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 6.5 · Fit 7 · Color 8 · Shoes 7 · Style 7.5
+      phone-d1967f             a friend (profile unknown)     v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 6
+      phone-d6559a             the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 8 · Style 7
+      phone-e438d4             a friend (profile unknown)     v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+      phone-f4870b             a friend (profile unknown)     v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+      phone-fb0b17             a friend (profile unknown)     v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+  add a standout pattern: applies to 39 · shown score up v2 13/39 · v3 13/39 · down v2 0 · v3 0 · mean lift v2 +0.17 · v3 +0.17 · PR4 fires after the fix on 0
+      oct7-ph1                 the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 8
+      oct7-ph3                 the founder (profile pending)  v2 7.5 -> 7.5 · v3 7.5 -> 7.5 · Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 9.5
+      oct7-ph4                 the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Style 8.5
+      phone-0d39d6             the founder (profile pending)  v2 6.5 -> 6.5 · v3 6.5 -> 6.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 4 · Style 8.5
+      phone-403ade             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+      phone-6b14db             the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 8
+      phone-7de605             the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 8
+      phone-8ad378             the founder (profile pending)  v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+      phone-a765e8             the founder (profile pending)  v2 5.5 -> 5.5 · v3 5.5 -> 5.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 8
+      phone-b0f0c8             the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 7 · Style 8.5
+      phone-d1967f             a friend (profile unknown)     v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+      phone-d6559a             the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Style 8
+      phone-e438d4             a friend (profile unknown)     v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+      phone-f4870b             a friend (profile unknown)     v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+      phone-fb0b17             a friend (profile unknown)     v2 7.0 -> 7.5 · v3 7.0 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+  slides -> chunky sneakers: applies to 9 · shown score up v2 9/9 · v3 9/9 · down v2 0 · v3 0 · mean lift v2 +0.89 · v3 +0.89 · PR4 fires after the fix on 0
+      oct7-ph1                 the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+      phone-0d39d6             the founder (profile pending)  v2 6.5 -> 7.5 · v3 6.5 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+      phone-1f1997             the founder (profile pending)  v2 6.5 -> 7.5 · v3 6.5 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+      phone-6b14db             the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 5.5 · Style 7
+      phone-7de605             the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+      phone-a765e8             the founder (profile pending)  v2 5.5 -> 6.5 · v3 5.5 -> 6.5 · Proportions 6.5 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+      phone-d58b14             the founder (profile pending)  v2 6.5 -> 7.0 · v3 6.5 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+      phone-e026de             the founder (profile pending)  v2 6.5 -> 7.5 · v3 6.5 -> 7.5 · Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  white leather -> chunky sneakers (street shoe): applies to 5 · shown score up v2 0/5 · v3 3/5 · down v2 0 · v3 0 · mean lift v2 +0.0 · v3 +0.3 · PR4 fires after the fix on 3
+      phone-403ade             the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.5 · Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+      phone-8ad378             the founder (profile pending)  v2 7.0 -> 7.0 · v3 7.0 -> 7.5 · Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+      phone-968016             the founder (profile pending)  v2 7.5 -> 7.5 · v3 7.5 -> 8.0 · Proportions 8 · Fit 7 · Color 7.5 · Shoes 8 · Style 8.5
+      phone-ebe23f             unknown, ask the founder       v2 7.0 -> 7.0 · v3 7.0 -> 7.0 · Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+
+(7) THE STYLE COUNCIL'S OUTFITS (cases.json; made-up readings, no person; each case's own occasion, picks and boldness). 'adv' = the advocate's expected score on the v4 scale, where a plain fit was 7.5
+  streetwear   st-4-stained-lounge                  adv [3.0, 4.0]  v2 5.0 v3 5.0 (no style) | Proportions 7 · Fit 6.5 · Color 7 · Shoes 4.5 · Style 7
+  streetwear   st-5.5-done-badly                    adv 5.5         v2 6.5 v3 6.5 (streetwear) | Proportions 7 · Fit 6.5 · Color 7 · Shoes 5.5 · Style 7.5
+  streetwear   st-7.5-graphic-wide-dunks            adv 7.5         v2 7.5 v3 8.0 (streetwear) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5 <- PR4
+  streetwear   st-8.5-bomber-hoodie                 adv 8.5         v2 8.0 v3 8.0 (streetwear) | Proportions 8.5 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  streetwear   st-9-chore-red-hoodie                adv 9.0         v2 8.0 v3 8.0 (streetwear) | Proportions 7 · Fit 7 · Color 8 · Shoes 8 · Style 8.5
+  vintage spor vs-4-pilled-sweats                   adv [3.5, 4.5]  v2 5.5 v3 5.5 (no style) | Proportions 7 · Fit 6.5 · Color 7 · Shoes 5 · Style 7
+  vintage spor vs-5.5-full-kit                      adv [5.5, 6.0]  v2 5.5 v3 5.5 (no style) | Fit 7 · Color 8 · Shoes 4.5 · Style 7
+  vintage spor vs-6.5-jersey-joggers-runners        adv 6.5         v2 6.5 v3 6.5 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 6 · Style 7
+  vintage spor vs-7-sweatshirt-trackpants           adv 7.0         v2 6.5 v3 6.5 (vintage sport) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  vintage spor vs-7.5-tracksuit                     adv 7.5         v2 7.0 v3 7.0 (vintage sport) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  vintage spor vs-7.5-blokecore-plain               adv 7.5         v2 7.0 v3 8.0 (vintage sport) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 7.5 <- PR4
+  vintage spor vs-8-red-jersey-wide-jeans           adv 8.0         v2 7.5 v3 8.0 (vintage sport) | Proportions 8 · Fit 7 · Color 8 · Shoes 8 · Style 7.5 <- PR4
+  vintage spor vs-8.5-track-jacket-jeans            adv 8.5         v2 7.5 v3 7.5 (vintage sport) | Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5
+  vintage spor vs-8-sport-off-duty                  adv 8.0         v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+  vintage spor vs-9-jersey-blazer                   adv 9.0         v2 7.5 v3 7.5 (vintage sport) | Proportions 7 · Fit 7 · Color 8 · Shoes 8 · Style 7.5
+  vintage spor vs-rugby-overcoat                    adv [8.5, 9.0]  v2 7.5 v3 7.5 (vintage sport) | Proportions 7 · Fit 7 · Color 8 · Shoes 8 · Style 7.5
+  workwear     ww-4-careless                        adv [3.5, 4.5]  v2 5.0 v3 5.0 (workwear) | Proportions 7 · Fit 5.5 · Color 8 · Shoes 6 · Style 7.5
+  workwear     ww-5.5-flannel-cargos-boots          adv [5.5, 6.0]  v2 6.5 v3 6.5 (workwear) | Proportions 7 · Fit 5.5 · Color 8 · Shoes 8 · Style 7.5
+  workwear     ww-6.5-two-faults                    adv 6.5         v2 6.5 v3 6.5 (workwear) | Proportions 7 · Fit 5.5 · Color 8 · Shoes 8 · Style 7.5
+  workwear     ww-7.5-tee-jeans-boots               adv 7.5         v2 7.5 v3 7.5 (workwear) | Proportions 7.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  workwear     ww-8-chore-canvas                    adv 8.0         v2 7.0 v3 7.0 (workwear) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  workwear     ww-8.5-chore-boots                   adv 8.5         v2 7.0 v3 7.0 (workwear) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  workwear     ww-9-full                            adv 9.0         v2 7.5 v3 7.5 (workwear) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  workwear     ww-chore-skinny-chunky               adv [6.5, 7.0]  v2 6.5 v3 6.5 (no style) | Proportions 6.5 · Fit 7 · Color 7 · Shoes 5.5 · Style 7
+  smart casual sc-4-every-fault                     adv [3.5, 4.5]  v2 4.5 v3 4.5 (no style) | Proportions 7 · Fit 4 · Color 7 · Shoes 5 · Style 7
+  smart casual sc-5.5-done-wrong                    adv 5.5         v2 5.5 v3 5.5 (smart casual) | Proportions 7 · Fit 5 · Color 5.5 · Shoes 4.5 · Style 7.5
+  smart casual sc-6.5-oxford-chinos-loafer          adv 6.5         v2 7.0 v3 7.0 (smart casual) | Proportions 7 · Fit 5 · Color 7 · Shoes 8 · Style 8.5
+  smart casual sc-7.5-tee-dark-jeans-wls            adv 7.5         v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+  smart casual sc-8.5-quarter-zip                   adv 8.5         v2 7.0 v3 7.0 (smart casual) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  smart casual sc-9-blazer-oxford-chinos-chukka     adv 9.0         v2 8.0 v3 8.0 (classic prep) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  smart casual sc-tee-chinos-wls                    adv [7.5, 8.0]  v2 7.0 v3 7.0 (minimal) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  minimal      min-4-faults                         adv [3.5, 4.5]  v2 5.0 v3 5.0 (no style) | Proportions 7 · Fit 4.5 · Color 7 · Shoes 6.5 · Style 7
+  minimal      min-5.5-long-tee-pooling             adv [5.5, 6.0]  v2 6.5 v3 6.5 (no style) | Proportions 7 · Fit 5.5 · Color 7 · Shoes 7.5 · Style 7
+  minimal      min-6.5-long-tee                     adv 6.5         v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+  minimal      min-7.5-uniform                      adv 7.5         v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7
+  minimal      min-8.5-knit-wide-trousers           adv 8.5         v2 7.0 v3 7.0 (minimal) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  minimal      min-9-tonal-layered                  adv 9.0         v2 7.0 v3 7.0 (minimal) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  minimal      min-city-boy                         adv 7.5         v2 7.0 v3 7.0 (minimal) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  minimal      min-grey-sweater-black-jeans         adv [8.0, 8.5]  v2 7.0 v3 7.0 (smart casual) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  classic prep prep-4                               adv [3.5, 4.5]  v2 5.0 v3 5.0 (smart casual) | Proportions 7 · Fit 5 · Color 7 · Shoes 5.5 · Style 7.5
+  classic prep prep-5.5                             adv [5.0, 5.5]  v2 6.5 v3 6.5 (smart casual) | Proportions 7 · Fit 5 · Color 7 · Shoes 5.5 · Style 7.5
+  classic prep prep-6.5                             adv 6.5         v2 6.0 v3 6.0 (no style) | Proportions 7 · Fit 5 · Color 7 · Shoes 6 · Style 7
+  classic prep prep-7.5-polo-chinos-canvas          adv 7.5         v2 7.0 v3 7.0 (smart casual) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  classic prep prep-8-polo-chinos-wls               adv 8.0         v2 7.5 v3 7.5 (smart casual) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  classic prep prep-sweater-oxford-loafer           adv [8.5, 9.0]  v2 7.5 v3 7.5 (smart casual) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  classic prep prep-quiet-luxury                    adv 9.0         v2 7.0 v3 7.0 (minimal) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  classic prep prep-9-blazer-tucked                 adv 9.0         v2 8.0 v3 8.0 (smart casual) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  classic prep prep-pink-green                      adv 6.5         v2 7.0 v3 7.0 (classic prep) | Fit 7 · Color 5 · Shoes 8 · Style 7
+  classic prep prep-pink-green-bold                 adv 7.0         v2 7.0 v3 7.0 (classic prep) | Fit 7 · Color 6 · Shoes 8 · Style 7.5
+  classic prep prep-costume                         adv [8.5, 9.0]  v2 7.5 v3 7.5 (smart casual) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  outdoor      out-4                                adv [4.0, 4.5]  v2 5.5 v3 5.5 (outdoor) | Proportions 7 · Fit 5.5 · Color 7 · Shoes 5.5 · Style 7.5
+  outdoor      out-5-volume-clash                   adv [4.5, 5.5]  v2 6.0 v3 6.0 (no style) | Proportions 5.5 · Fit 5 · Color 7 · Shoes 7 · Style 7
+  outdoor      out-6.5-shell-slim                   adv 6.5         v2 7.0 v3 7.0 (outdoor) | Proportions 7 · Fit 6.5 · Color 7 · Shoes 7.5 · Style 7.5
+  outdoor      out-7.5-city-uniform                 adv 7.5         v2 7.0 v3 7.0 (outdoor) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  outdoor      out-8.5-shell-sweater-chinos         adv 8.5         v2 7.0 v3 7.0 (outdoor) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  outdoor      out-9.5-orange-shell-mix             adv 9.5         v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7
+  outdoor      out-9-same-trail                     adv 9.0         v2 7.0 v3 7.0 (outdoor) | Proportions 7 · Fit 7 · Color 8 · Shoes 7 · Style 7.5
+  look-alike   la-jersey-chunky                     adv None        v2 7.5 v3 8.0 (streetwear) | Proportions 8 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5 <- PR4
+  look-alike   la-rugby-jeans                       adv None        v2 7.5 v3 7.5 (vintage sport) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  look-alike   la-rugby-chinos-samba                adv None        v2 7.5 v3 7.5 (classic prep) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+  look-alike   la-rugby-chinos-loafer               adv 8.0         v2 7.5 v3 7.5 (classic prep) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  look-alike   la-chore-tee-boots                   adv None        v2 7.0 v3 7.0 (workwear) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  look-alike   la-shell-cargos-chunky               adv None        v2 7.5 v3 7.5 (streetwear) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  look-alike   la-field-cargos-trail                adv None        v2 7.0 v3 7.0 (outdoor) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  look-alike   la-flannel-wide-chunky               adv None        v2 7.5 v3 7.5 (streetwear) | Proportions 7 · Fit 7 · Color 8 · Shoes 7.5 · Style 7.5
+  look-alike   la-boxy-tee-wide-trousers            adv [7.5, 8.0]  v2 7.5 v3 7.5 (minimal) | Proportions 7.5 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  look-alike   la-boxy-tee-wide-jeans-chunky        adv None        v2 7.5 v3 7.5 (streetwear) | Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 <- PR4
+  look-alike   la-polo-chinos-loafer                adv None        v2 7.5 v3 7.5 (smart casual) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  look-alike   la-quarter-zip-sweats                adv None        v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+  look-alike   la-overshirt-chinos-wls              adv [8.5, 9.0]  v2 7.0 v3 7.0 (minimal) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  look-alike   la-tee-mid-jeans-canvas              adv 7.0         v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+  look-alike   la-hoodie-straight-retro             adv 7.0         v2 7.0 v3 7.0 (no style) | Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7
+  per style: n · best v2 / v3 · 8+ v2 / v3 · Spearman-free check: the advocate's top fit vs v3's top
+    streetwear     n= 5 best 8.0 / 8.0 · 8+ 2 / 3
+    vintage sport  n=11 best 7.5 / 8.0 · 8+ 0 / 2
+    workwear       n= 8 best 7.5 / 7.5 · 8+ 0 / 0
+    smart casual   n= 7 best 8.0 / 8.0 · 8+ 1 / 1
+    minimal        n= 8 best 7.0 / 7.0 · 8+ 0 / 0
+    classic prep   n=11 best 8.0 / 8.0 · 8+ 1 / 1
+    outdoor        n= 7 best 7.0 / 7.0 · 8+ 0 / 0
+    look-alike     n=15 best 7.5 / 8.0 · 8+ 0 / 1
+
+(8) HIS BLACK TEE + WIDE JEANS + WHITE LEATHER SNEAKERS (8ad378; the founder, profile pending; class): what-if edits of his own reading
+  8ad378 as read: black tee (boxy, to the fly), black wide jeans, white leather sneakers v2 7.0 · v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  8ad378 tee tucked                                                           v2 7.5 · v3 7.5 (raw 7.6) | Proportions 8.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  8ad378 shoes -> white chunky sneakers                                       v2 7.0 · v3 7.5 (raw 7.45) | Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  8ad378 shoes -> basketball sneakers (white)                                 v2 7.0 · v3 7.5 (raw 7.45) | Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  8ad378 shoes -> canvas (skate) sneakers (black)                             v2 7.0 · v3 7.5 (raw 7.375) | Proportions 8 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  8ad378 tee -> graphic tee                                                   v2 7.0 · v3 7.0 (raw 7.225) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  8ad378 graphic tee + chunky sneakers                                        v2 7.5 · v3 8.0 (raw 7.925) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  8ad378 tee read regular (volume 3) + chunky sneakers                        v2 7.0 · v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  8ad378 tee read below the fly (long) + chunky sneakers                      v2 7.0 · v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  8ad378 jeans pooling + chunky sneakers                                      v2 6.5 · v3 6.5 (raw 6.7) | Proportions 7 · Fit 5.5 · Color 7 · Shoes 7 · Style 7.5
+  403ade as read: black tee (boxy, to the fly), black wide jeans, white leather sneakers v2 7.0 · v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  403ade tee tucked                                                           v2 7.5 · v3 7.5 (raw 7.6) | Proportions 8.5 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  403ade shoes -> white chunky sneakers                                       v2 7.0 · v3 7.5 (raw 7.45) | Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  403ade shoes -> basketball sneakers (white)                                 v2 7.0 · v3 7.5 (raw 7.45) | Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  403ade shoes -> canvas (skate) sneakers (black)                             v2 7.0 · v3 7.5 (raw 7.375) | Proportions 8 · Fit 7 · Color 7 · Shoes 7 · Style 7.5
+  403ade tee -> graphic tee                                                   v2 7.0 · v3 7.0 (raw 7.225) | Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5
+  403ade graphic tee + chunky sneakers                                        v2 7.5 · v3 8.0 (raw 7.925) | Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8.5
+  403ade tee read regular (volume 3) + chunky sneakers                        v2 7.0 · v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  403ade tee read below the fly (long) + chunky sneakers                      v2 7.0 · v3 7.0 (raw 7.15) | Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5
+  403ade jeans pooling + chunky sneakers                                      v2 6.5 · v3 6.5 (raw 6.7) | Proportions 7 · Fit 5.5 · Color 7 · Shoes 7 · Style 7.5
+  web m01 (graphic tee, Dunks; profile unknown; stylist estimate 7.5) as read (straight jeans): v2 7.0 · v3 7.0; with the relaxed leg its description gives: v2 7.5 · v3 8.0 | Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 8.5
+
+(9) ABLATIONS on v3 (corpus 8+; b1 A steadiness; judge within 0.5 tune / held; council 8+ by style; his black tee 8ad378 / its chunky-sneaker swap)
+  v2 (no PR4)                                      corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 2} · 8ad378 7.0 / chunky 7.0
+  v3 as built (PR4 +1.0, 5 street shoes)           corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'look-alike': 1, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 2} · 8ad378 7.0 / chunky 7.5
+  PR4 +0.5                                         corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 1} · 8ad378 7.0 / chunky 7.5
+  PR4 +1.5                                         corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'look-alike': 1, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 2} · 8ad378 7.0 / chunky 7.5
+  shoes: chunky/basketball only                    corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'look-alike': 1, 'smart casual': 1, 'streetwear': 3} · 8ad378 7.0 / chunky 7.5
+  shoes: + white leather                           corpus 8+ 6 (8%) · b1 49/49 · tune -0.03/25 · held +0.10/25 · council 8+ {'classic prep': 1, 'look-alike': 1, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 2} · 8ad378 7.5 / chunky 7.5
+  + graphic print as streetwear's standout (H4)    corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'look-alike': 1, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 2} · 8ad378 7.0 / chunky 7.5
+  SW2 (chunky carries the wide leg) +1.0           corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'look-alike': 2, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 2} · 8ad378 7.0 / chunky 8.0
+  legs: straight too                               corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'look-alike': 1, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 2} · 8ad378 7.0 / chunky 7.5
+  tops: hoodie/sweatshirt/graphic tee at volume 3 (chunky/basketball) corpus 8+ 5 (6%) · b1 49/49 · tune -0.07/25 · held +0.09/26 · council 8+ {'classic prep': 1, 'look-alike': 1, 'smart casual': 1, 'streetwear': 3, 'vintage sport': 2} · 8ad378 7.0 / chunky 7.5
+  photos each variant moves against v3 as built (one reading per photo):
+    shoes: + white leather: phone-968016 7.5->8.0 (panel 7.0); phone-403ade 7.0->7.5 (panel 7.0); phone-8ad378 7.0->7.5 (panel 7.5)
+    legs: straight too: mirror-m01 7.0->7.5
