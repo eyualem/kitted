@@ -29,13 +29,14 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Four engines: engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
+Five engines (engine="v5" is THE DEFAULT since Oct 11: v4 plus SX1 "a piece from another look", the style-crossing
+fault on Style; see TUNE["v5"], ../parts5_test.py, report ../../rubric/research/parts/style-clash.md). engine="v1" is parts-proto-1 exactly (results/parts1/). engine="v2" tunes only the rewards
 whose readings passed, and adds one step after the average (see TUNE below). engine="v3" (the streetwear pass) is v2
 plus one Proportions reward, PR4 "the streetwear shape" (see TUNE["v3"]; ../parts3_test.py, report
-../../rubric/research/parts/streetwear-pass.md). engine="v4" (THE DEFAULT since Oct 11, approved by the main session;
+../../rubric/research/parts/streetwear-pass.md). engine="v4" (the default from Oct 11 until v5, approved by the main session;
 the style fairness pass) is v3 plus the workwear and outdoor silhouettes (PR5, PR6), the track jacket as a short layer,
 and H2 judged on the pick-free label so his picks can never move a number (see TUNE["v4"]; ../parts4_test.py, report
-../../rubric/research/parts/style-fairness.md). v1-v3 stay reachable by name. v2's step after the average:
+../../rubric/research/parts/style-fairness.md). v1-v4 stay reachable by name. v2's step after the average:
   2b. EARNED BONUS (v2): +0.25 when a second part reaches 8 and no part is under 7, so excellence in two parts adds
       up instead of being averaged away. Paper test: ../parts2_test.py, report: ../../rubric/research/parts/
       tuning-results.md.

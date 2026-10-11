@@ -2,6 +2,8 @@
 
 *Parts research, Oct 10, 2026 (brief: `parts/BRIEF.md`, DECISIONS-LOG #195). Claude. Builds on the style council (`style-council/RULEBOOK.md`), v4 credits K2 and K3 and rule B1 (`extraction-test/rubric.py`), the v5 "finished" credit (`v5-brief.md`), `notes/v5-editorial.md` §2, §4, §5 and `notes/style_archetypes.md` Q3. A scratch prototype (in this session's scratchpad, not committed; it imports `extraction-test/rubric.py`) was run on the judge pilot's saved readings: the stock and mirror photos' 3 saved runs each (`test3-stock-40-v3`, `test4-mirror-12-v3`) and the app's own reading for each phone check (`screenshots/phone/*/SQLite/kitted.db`). Profiles (rule 7): his photos are the founder's (profile pending), his friends' and every stock photo are "profile unknown"; the code and the judges used no profile, so no split by age band or picked look is possible. Under v5 rules a profile would only change the "Reads as" label on a tie, never this part's number.*
 
+
+> **Update (Oct 11, DECISIONS-LOG #214): a style-crossing fault, SX1, now lives in this part.** A graphic tee or any top at volume 4+, worn with two dressy pieces in an outfit whose rest reads minimal, smart casual or classic prep, costs −3.0 here and replaces "reads as". It's built from the council's vetoes and bands. A dressy layer over the top bridges the two looks (H3b's idea). The larger of SX1 and H3 counts, never both. This narrows "mixing aesthetics is never a fault" (the table below) by one case, on the founder's word. Details: `style-clash.md`.
 ## The short answer: can cohesion be scored from facts, by code, without becoming "the AI's taste"?
 
 **Yes, but only a narrow version, and it's our taste written down, not the AI's.**

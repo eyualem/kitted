@@ -51,6 +51,7 @@
 - [ ] **P2** · **OK the Archivo font download** (3 free files, about 185 KB each). Default: the system font.
 - [ ] **P2** · **The rubric's open questions** (`rubric/v3.md`, and #57's proposed changes).
 - [ ] **P3** · **"Reads as" when two looks fit** (#86). Default: my first pick breaks the tie.
+- [ ] **P3** · **Style-crossing faults (#214), 3 quick calls:** a graphic or oversized top with trousers and loafers lands at 6.5 (make it 6.0?); an oversized graphic tee under a blazer costs nothing (should it?); a graphic tee with chinos and white sneakers is a tip, no points (make it a fault?). Defaults: as built, until the gold set.
 
 **Skim when I have 10 minutes:**
 - [ ] **P3** · The copy Claude wrote (`app/src/i18n/en.ts` → `addedInBuild`), and the 3 "already built; just confirm" items in "Waiting on the founder".
@@ -139,6 +140,7 @@
   - Screenshots: `screenshots/parts-app/` (s7, s8 light/dark, s10, s11, s35).
 - **Your friends' fits under it:** blazer 8.5 → 7.0 ("Swap the jeans for navy chinos → 8.0"), chore coat 8.5 → 7.0, your tee + wide jeans 7.0, your gingham shirt 6.5. About 6% of fits reach 8, and only deliberate ones.
 - **Every style now has a path to 8 except outdoor** (#210–211): workwear (a chore coat with jeans and boots), streetwear (a boxy top over wide jeans with street sneakers), vintage sport, minimal, prep, smart casual. None of your saved photos happens to use those shapes, so no real score moved.
+- **Styles now have rules against crossing them** (#214, parts v5, live). A graphic tee, or any oversized top, worn with two dressy pieces (trousers or chinos plus loafers, derbies or dress shoes) in an outfit that otherwise reads minimal, smart casual or prep loses 3 points on Style: your three examples go 7.0 → 6.5 "Getting there", and the card offers "Swap the graphic tee for a plain tee", "Swap the hoodie for a regular fit" or "Swap the loafers for white leather sneakers". Still fine: a tee or hoodie under a blazer or topcoat, an oversized top over straight or wide trousers (city boy), a grey sweatshirt with chinos and loafers, any streetwear outfit. No saved photo or council outfit moved. **Your calls:** 6.5 or 6.0 for these (6.0 needs a second charge on Proportions, with thin evidence); an oversized graphic tee under a blazer (no fault today); a graphic tee with chinos and white sneakers (a tip today, no points). Report: `rubric/research/parts/style-clash.md`.
 - **Your picked styles shape the fixes, never the score** (#211). When two fixes are equally good, the one toward your look goes first. With nothing to fix, the "Next level" line names your look's way to 8. A test proves a pick can't change a score. It also closed one small leak where a pick could add 0.5. **Your call:** should a picked style ever move points? Claude's default: no, until the gold set shows raters judge that way.
 - **Known gaps:**
   - Demo screen 10's re-check story broke (with the overshirt on, a long layer hides the tuck, so it drops 8.0 → 7.5). It needs a new before/after demo pair.
