@@ -40,7 +40,6 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
-- [ ] **P1** · **Should bunched / stacked hems on loose jeans cost points?** (#220) This is the biggest reason your fits score higher on Proportions than the judges think (they dock your wide jeans pooling on the shoes). The style research says stacking on purpose is fine for baggy jeans (streetwear), while GQ says "gentle pooling, not bunching". Default: no points until the gold set's hem pairs; it stays a tip.
 - [ ] **P2** · **"Going for" (built Oct 11, #218; demo screens 71–78):** it changes the advice, never the score. Should it ever lower the score when the outfit clearly misses that look? Default: advice only. Also skim its words (`app/src/i18n/en.ts`, keys `gf.*`), 5 min.
 - [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
 - [ ] **P2** · **Look at the new card and sheet** on the Simulator or your phone (5 min): `screenshots/parts-app/`. Is the chevron after "/10" a clear enough cue? Default: keep it.
@@ -300,6 +299,29 @@
 - **Timeline:** beta Nov 3, submit about Nov 14, launch about Nov 17–20.
 
 ## Next steps, in order
+
+### Proportion scripts (new chat, founder, Oct 12): start here
+**Goal:** phone-side scripts (Apple Vision on the face-hidden photo and close-ups) that measure proportion directly, so Proportions stops sitting at 7.0 on most fits (#220): where the top ends, where the outer layer ends, whether the shirt underneath shows below it, where sleeves and cuffs end, how the pant hem meets the shoe (clean / break / stack), and the shoe's bulk against the leg. They take over only where they beat the AI on labeled truth (the bar from #187: clearly better, ≤30% unsure, repeatable, works on mirror and propped shots, garment against garment, never against the body).
+
+**Read first. These were tried and lost, and the new chat should beat them, not repeat them:**
+- the fit ruler: `rubric/research/notes/fit-ruler.md` (#170). Top length tied the AI overall and was better on his photos (71% vs 43%); sleeves and hems lost; 30–54% unsure (hands in pockets, dark on dark).
+- the leg probe: `notes/leg-probe.md` (#189). Slim vs straight looked promising but there was too little truth.
+- the hem probe: `notes/hem-probe.md` (#190). Fold counting fails on black jeans; where the pant color ends along the shin was 20/22 but too often unsure.
+- the agreement test: `rubric/research/parts/agreement-test.md` (#220). The readers rarely raise false alarms but miss a lot.
+- the harness: `extraction-test/vision/` (`kmeasure` modes: ruler, legs, hems, locate, zoom), run with `fit_ruler.py`, `leg_probe.py`, `hem_probe.py`.
+- labels: `extraction-test/*_labels.csv` and `inputs/phone-oct8/truth.csv`.
+
+**Ideas worth trying:**
+- edges and color changes inside the person outline, along the limb axes, instead of outline width
+- the 2048 px face-hidden close-ups (`Caches/detail`)
+- per-garment boxes from the closet call
+- the shoe's top edge as a reference for the hem
+- combining a script with the AI's field as a veto (a script that can only stop a fault, never create one)
+
+**Truth is the blocker:** the gold set (`inputs/gold-set/me/`, your one-outfit variants: cuffed vs not, tucked vs not, jacket on and off) and the size-ladder shoot. Until they exist, label blind on the saved photos as before.
+
+**Rules:** CLAUDE.md rule 7 (profiles) and rule 9 (memory). No app change until a script passes and the founder sees the before/after.
+
 
 ### Next: two workstreams from the founder's Oct 8 phone test (start each in its own chat)
 - **A. Reading accuracy and uncertainty: shoe question built Oct 8 (#120–124).** What I measured on my 11 labeled Oct 8 checks (`inputs/phone-oct8/truth.csv`): **my boots were the only misread that moved my score** (fixing them alone: +0.5 to +1.0 on 6 of 11). My jeans *were* read as wide (6/8); "Swap to relaxed-leg pants" is the rule docking wide legs when the outfit doesn't read as streetwear/workwear. "Cream vs tan" was two different shirts, both read right. Hoodie/sweatshirt and the colour flips cost 0.
