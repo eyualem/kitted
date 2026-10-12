@@ -1,0 +1,4 @@
+Standing only (both legs bent under the gate), slim (tight fit) vs straight, Fashionpedia; frozen cut 0.765 from our photos
+ bend<= 25: n=41 (slim 15, straight 26) of 90 · frozen 24/41 · LOO 26/41 · slim median 0.69 straight median 0.83
+ bend<= 15: n=38 (slim 15, straight 23) of 90 · frozen 23/38 · LOO 24/38 · slim median 0.69 straight median 0.83
+ bend<= 10: n=33 (slim 13, straight 20) of 90 · frozen 20/33 · LOO 20/33 · slim median 0.69 straight median 0.84

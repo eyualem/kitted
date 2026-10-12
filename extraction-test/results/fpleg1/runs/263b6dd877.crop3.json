@@ -1,0 +1,186 @@
+{
+  "bottom" : "jeans",
+  "box" : true,
+  "crop" : 0.029999999999999999,
+  "h" : 964,
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.51000000000000001,
+      "x" : 355,
+      "y" : 833
+    },
+    "lElbow" : {
+      "c" : 0.88,
+      "x" : 432,
+      "y" : 400
+    },
+    "lHip" : {
+      "c" : 0.63,
+      "x" : 377,
+      "y" : 488
+    },
+    "lKnee" : {
+      "c" : 0.65000000000000002,
+      "x" : 374,
+      "y" : 680
+    },
+    "lShoulder" : {
+      "c" : 0.65000000000000002,
+      "x" : 421,
+      "y" : 275
+    },
+    "lWrist" : {
+      "c" : 0.78000000000000003,
+      "x" : 454,
+      "y" : 506
+    },
+    "neck" : {
+      "c" : 0.67000000000000004,
+      "x" : 350,
+      "y" : 278
+    },
+    "rAnkle" : {
+      "c" : 0.51000000000000001,
+      "x" : 339,
+      "y" : 871
+    },
+    "rElbow" : {
+      "c" : 0.81000000000000005,
+      "x" : 257,
+      "y" : 403
+    },
+    "rHip" : {
+      "c" : 0.55000000000000004,
+      "x" : 281,
+      "y" : 486
+    },
+    "rKnee" : {
+      "c" : 0.72999999999999998,
+      "x" : 317,
+      "y" : 661
+    },
+    "root" : {
+      "c" : 0.58999999999999997,
+      "x" : 329,
+      "y" : 487
+    },
+    "rShoulder" : {
+      "c" : 0.69999999999999996,
+      "x" : 280,
+      "y" : 281
+    },
+    "rWrist" : {
+      "c" : 0.62,
+      "x" : 244,
+      "y" : 503
+    }
+  },
+  "legs" : [
+    {
+      "bend" : 6,
+      "conf" : 0.51000000000000001,
+      "shoe" : {
+        "w" : 13,
+        "why" : "shoe fills its half of the box"
+      },
+      "side" : "l",
+      "split" : {
+        "hem" : {
+          "split" : true,
+          "t" : 0.87,
+          "w" : 30
+        },
+        "hemToKnee" : 0.52700000000000002,
+        "knee" : {
+          "split" : true,
+          "t" : 0.040000000000000001,
+          "w" : 57
+        },
+        "kneeToThigh" : 0.65200000000000002,
+        "opening" : {
+          "split" : true,
+          "t" : 0.94999999999999996,
+          "w" : 29.600000000000001
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "split" : true,
+          "t" : 0.25,
+          "w" : 87.5
+        }
+      },
+      "strict" : {
+        "hem" : {
+          "why" : "legs merged"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "legs merged"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "legs merged"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "legs merged"
+        }
+      }
+    },
+    {
+      "bend" : 5,
+      "conf" : 0.51000000000000001,
+      "shoe" : {
+        "w" : 30,
+        "why" : "shoe fills its half of the box"
+      },
+      "side" : "r",
+      "split" : {
+        "hem" : {
+          "split" : true,
+          "t" : 0.87,
+          "w" : 34.700000000000003
+        },
+        "hemToKnee" : 0.63500000000000001,
+        "knee" : {
+          "split" : true,
+          "t" : 0.040000000000000001,
+          "w" : 54.600000000000001
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "split" : true,
+          "t" : 0.94999999999999996,
+          "w" : 33.5
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "arm or hand on the leg"
+        }
+      },
+      "strict" : {
+        "hem" : {
+          "why" : "legs merged"
+        },
+        "hemToKnee" : null,
+        "knee" : {
+          "why" : "legs merged"
+        },
+        "kneeToThigh" : null,
+        "opening" : {
+          "why" : "legs merged"
+        },
+        "openToShoe" : null,
+        "thigh" : {
+          "why" : "legs merged"
+        }
+      }
+    }
+  ],
+  "max" : 2048,
+  "ms" : 318,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fashionpedia\/images\/test\/263b6dd877a80699f43aef905d7ea37e.jpg",
+  "sideView" : false,
+  "status" : "ok",
+  "w" : 642
+}

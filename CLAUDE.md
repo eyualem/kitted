@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 11, 2026.**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026.**
 
 ## How we keep context (rules for every chat)
 
@@ -40,6 +40,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P2** · **Pause the proportion scripts until the gold set? (#222–223)** Even perfect measuring would change 4 of 79 scores under today's rules, and the best candidate (slim vs straight legs) failed on 90 public labelled pants. Default: pause; the gold set then decides which shape rules earn or cost points.
 - [ ] **P2** · **"Going for" (built Oct 11, #218; demo screens 71–78):** it changes the advice, never the score. Should it ever lower the score when the outfit clearly misses that look? Default: advice only. Also skim its words (`app/src/i18n/en.ts`, keys `gf.*`), 5 min.
 - [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
 - [ ] **P2** · **Look at the new card and sheet** on the Simulator or your phone (5 min): `screenshots/parts-app/`. Is the chevron after "/10" a clear enough cue? Default: keep it.
@@ -329,7 +330,9 @@ All of them skew female and studio/street, not mirror selfies, so confirm on his
 
 **Rules:** CLAUDE.md rule 7 (profiles) and rule 9 (memory). No app change until a script passes and the founder sees the before/after.
 
-**Step 1 done Oct 12 (#222, `rubric/research/parts/proportion-headroom.md`):** under today's rules even perfect proportion facts move only 4 of 79 shown scores; Proportions sits at 7.0 because of the rules, not the readings. Worth a script, in order: slim vs straight legs, a boxy-short-top measure (length + roominess), veto guards for "pooling" and "sleeves cover the hands". Only Fashionpedia's labels are commercial-safe; SAM 2.1 Tiny (Apache 2.0) is the one usable segmenter, deferred. Next: Fashionpedia val (250 MB) as slim-vs-straight truth, waiting on the founder's OK.
+**Step 1 done Oct 12 (#222, `rubric/research/parts/proportion-headroom.md`):** under today's rules even perfect proportion facts move only 4 of 79 shown scores; Proportions sits at 7.0 because of the rules, not the readings. Worth a script, in order: slim vs straight legs, a boxy-short-top measure (length + roominess), veto guards for "pooling" and "sleeves cover the hands". Only Fashionpedia's labels are commercial-safe; SAM 2.1 Tiny (Apache 2.0) is the one usable segmenter, deferred. Fashionpedia val downloaded (your OK, Oct 12).
+
+**Step 2 done Oct 12 (#223, `rubric/research/notes/fp-leg-test.md`): the leg script fails on public truth.** On 90 labelled pants it tells slim from straight 56% of the time (the AI: 75%), so the old 92% was luck; leg shape stays the AI's reading. **Proportion scripts are paused until the gold set exists** (your call on the list). The lever for Proportions sitting at 7.0 is the rules, set by the gold set, not better measuring.
 
 
 ### Next: two workstreams from the founder's Oct 8 phone test (start each in its own chat)
@@ -539,6 +542,7 @@ Exceptions:
 | `rubric/v4.md` (v3.md superseded), `extraction-test/` | The old v4 rules in plain words (v4.1 still scores old checks); the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
 | `rubric/research/v5-brief.md` | Rubric v5 plan (Oct 9): what "meticulous" means, the 8 steps, research questions, the Codex/Gemini prompts | **Live** until v5 locks |
+| `rubric/research/parts/proportion-headroom.md`, `rubric/research/notes/fp-leg-test.md` | Proportion scripts (Oct 12, #222–223): which facts can move a score; the leg probe on Fashionpedia (fails) | Reference |
 | `rubric/research/notes/fit-ruler.md` | The fit ruler test (Oct 9, #170): phone-measured sleeve, top and hem vs. the AI; not adopted; how to re-test | Reference |
 | `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |
 | `mockups/closet-concepts.html` | Closet tab research (Oct 8): where combinations live, avatar verdict, wireframes, sources | Approved (#84); the UI brief for the Closet tab |

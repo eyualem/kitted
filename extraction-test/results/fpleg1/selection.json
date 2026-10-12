@@ -1,0 +1,6849 @@
+[
+ {
+  "id": "5fc499c60f",
+  "file": "5fc499c60fc95671180347cf63b6f31a.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     446.2890625,
+     346.99853587115666,
+     862.3046875,
+     617.8623718887262
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     868.1640625,
+     430.4538799414349,
+     943.359375,
+     503.66032210834555
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     817.3828125,
+     489.0190336749634,
+     899.4140625,
+     547.5841874084919
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     209.9609375,
+     346.99853587115666,
+     483.3984375,
+     619.3265007320645
+    ]
+   }
+  ]
+ },
+ {
+  "id": "330629f6ea",
+  "file": "330629f6ea12a084fa484a2ae181d1ab.jpg",
+  "cls": "wide",
+  "attrs": [
+   "loose (fit)",
+   "maxi (length)",
+   "no non-textile material",
+   "perforated",
+   "plain (pattern)",
+   "symmetrical",
+   "wide leg"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     611.328125,
+     380.6734992679356,
+     869.140625,
+     692.5329428989752
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     778.3203125,
+     543.1918008784772,
+     874.0234375,
+     616.3982430453881
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     861.328125,
+     443.63103953147873,
+     927.734375,
+     540.263543191801
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "coat",
+    "box": [
+     154.296875,
+     297.2181551976574,
+     625.0,
+     777.4524158125915
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     167.96875,
+     461.2005856515373,
+     291.9921875,
+     563.6896046852123
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c49c54015b",
+  "file": "c49c54015b966bc7220c18569088e5ea.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 8,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     478.515625,
+     206.74486803519062,
+     783.203125,
+     760.9970674486804
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     692.3828125,
+     322.5806451612903,
+     805.6640625,
+     479.47214076246337
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     774.4140625,
+     26.392961876832846,
+     839.84375,
+     240.4692082111437
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     386.71875,
+     514.6627565982404,
+     631.8359375,
+     765.3958944281525
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d36482dcef",
+  "file": "d36482dcef46afcfcb7d96013c0715c2.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     506.8359375,
+     401.75953079178885,
+     736.328125,
+     590.909090909091
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     676.7578125,
+     441.34897360703815,
+     754.8828125,
+     500.0
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     721.6796875,
+     502.9325513196481,
+     791.015625,
+     576.2463343108504
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     205.078125,
+     381.2316715542522,
+     517.578125,
+     607.0381231671554
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b57c1abdc5",
+  "file": "b57c1abdc520418a85d2c94514304670.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   677,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     464.84375,
+     301.32939438700146,
+     861.328125,
+     542.0974889217134
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     856.4453125,
+     394.3870014771049,
+     940.4296875,
+     472.6735598227474
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     797.8515625,
+     456.42540620384045,
+     885.7421875,
+     485.9675036927622
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     188.4765625,
+     285.0812407680946,
+     554.6875,
+     595.2732644017725
+    ]
+   }
+  ]
+ },
+ {
+  "id": "02916664cd",
+  "file": "02916664cd606bb5486353f200a475a3.jpg",
+  "cls": "wide",
+  "attrs": [
+   "floor (length)",
+   "fly (opening)",
+   "high waist",
+   "jeans",
+   "loose (fit)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "washed",
+   "wide leg"
+  ],
+  "jeans": true,
+  "size": [
+   678,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     428.7109375,
+     497.0501474926254,
+     948.2421875,
+     867.2566371681417
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     901.3671875,
+     519.1740412979351,
+     935.546875,
+     650.4424778761062
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     917.96875,
+     718.2890855457226,
+     978.515625,
+     862.8318584070796
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     222.65625,
+     488.2005899705015,
+     408.203125,
+     659.2920353982302
+    ]
+   }
+  ]
+ },
+ {
+  "id": "2782426d99",
+  "file": "2782426d99e5e0ab2555378e29953c9e.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     521.484375,
+     187.683284457478,
+     810.546875,
+     445.74780058651027
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     805.6640625,
+     278.5923753665689,
+     866.2109375,
+     373.90029325513194
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     646.484375,
+     417.8885630498534,
+     758.7890625,
+     507.3313782991202
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     287.109375,
+     215.5425219941349,
+     544.921875,
+     502.9325513196481
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d941732e5b",
+  "file": "d941732e5b6c817f7981cf6831c103a0.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   683
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     579.7950219619327,
+     638.671875,
+     928.2576866764275,
+     730.46875
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     926.7935578330894,
+     646.484375,
+     963.3967789165446,
+     728.515625
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     901.9033674963397,
+     645.5078125,
+     957.5402635431918,
+     717.7734375
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     297.2181551976574,
+     632.8125,
+     604.6852122986824,
+     733.3984375
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     317.71595900439235,
+     591.796875,
+     588.5797950219619,
+     774.4140625
+    ]
+   },
+   {
+    "index": 15,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     304.5387994143485,
+     644.53125,
+     585.6515373352855,
+     731.4453125
+    ]
+   }
+  ]
+ },
+ {
+  "id": "9606b2f071",
+  "file": "9606b2f07120decea19e5cfc6e003585.jpg",
+  "cls": "straight",
+  "attrs": [
+   "camo (pants)",
+   "camouflage",
+   "fly (opening)",
+   "loose (fit)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     491.2109375,
+     363.103953147877,
+     863.28125,
+     635.4319180087847
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     816.40625,
+     411.42020497803804,
+     925.78125,
+     513.909224011713
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     817.3828125,
+     499.2679355783309,
+     917.96875,
+     565.1537335285504
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     196.2890625,
+     351.39092240117134,
+     522.4609375,
+     636.8960468521229
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     163.0859375,
+     248.90190336749635,
+     497.0703125,
+     752.5622254758418
+    ]
+   }
+  ]
+ },
+ {
+  "id": "bd9c22e3a7",
+  "file": "bd9c22e3a70ec0d7b77d3c4d10551241.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "printed",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   681,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     459.9609375,
+     397.94419970631424,
+     786.1328125,
+     674.0088105726873
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     751.953125,
+     390.60205580029367,
+     841.796875,
+     474.30249632892804
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     773.4375,
+     512.4816446402349,
+     847.65625,
+     560.9397944199707
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     307.6171875,
+     522.7606461086637,
+     466.796875,
+     691.6299559471366
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c67f567b2b",
+  "file": "c67f567b2bcd6a7204842d1019a0287d.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     516.6015625,
+     244.5095168374817,
+     893.5546875,
+     551.9765739385066
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     839.84375,
+     382.1376281112738,
+     937.5,
+     477.3060029282577
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     886.71875,
+     243.04538799414348,
+     965.8203125,
+     323.5724743777452
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     244.140625,
+     303.07467057101024,
+     580.078125,
+     565.1537335285504
+    ]
+   }
+  ]
+ },
+ {
+  "id": "0617757485",
+  "file": "0617757485dad98ded988c6e101c8bf2.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     512.6953125,
+     385.63049853372434,
+     814.453125,
+     837.2434017595308
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     784.1796875,
+     354.8387096774194,
+     903.3203125,
+     548.3870967741935
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     815.4296875,
+     470.6744868035191,
+     964.84375,
+     661.2903225806451
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     237.3046875,
+     548.3870967741935,
+     566.40625,
+     950.1466275659825
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     142.578125,
+     643.6950146627565,
+     455.078125,
+     878.2991202346041
+    ]
+   }
+  ]
+ },
+ {
+  "id": "afb8182ab6",
+  "file": "afb8182ab6475db9830b0afafb442f55.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   1024
+  ],
+  "license": 3,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     496.09375,
+     372.0703125,
+     803.7109375,
+     553.7109375
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     797.8515625,
+     375.0,
+     889.6484375,
+     434.5703125
+    ]
+   },
+   {
+    "index": 12,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     248.046875,
+     431.640625,
+     504.8828125,
+     533.203125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     183.59375,
+     329.1015625,
+     547.8515625,
+     606.4453125
+    ]
+   }
+  ]
+ },
+ {
+  "id": "320e649737",
+  "file": "320e6497373a2f91a108044407c69a9e.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": false,
+  "size": [
+   633,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     472.65625,
+     368.08846761453395,
+     899.4140625,
+     668.2464454976304
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     932.6171875,
+     516.5876777251185,
+     959.9609375,
+     597.1563981042653
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     873.046875,
+     484.99210110584517,
+     919.921875,
+     524.4865718799368
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     204.1015625,
+     295.4186413902053,
+     521.484375,
+     753.5545023696683
+    ]
+   }
+  ]
+ },
+ {
+  "id": "263b6dd877",
+  "file": "263b6dd877a80699f43aef905d7ea37e.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "low waist",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     481.4453125,
+     395.89442815249265,
+     914.0625,
+     646.6275659824047
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     898.4375,
+     495.6011730205279,
+     948.2421875,
+     555.7184750733137
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     847.65625,
+     554.2521994134897,
+     887.6953125,
+     576.2463343108504
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     265.625,
+     395.89442815249265,
+     493.1640625,
+     686.2170087976539
+    ]
+   }
+  ]
+ },
+ {
+  "id": "fa8cbbf127",
+  "file": "fa8cbbf127e163a2f512399049509d90.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "rivet(a)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     487.3046875,
+     324.0469208211144,
+     627.9296875,
+     482.40469208211147
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     607.421875,
+     291.78885630498536,
+     663.0859375,
+     401.75953079178885
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     625.9765625,
+     343.10850439882694,
+     659.1796875,
+     461.8768328445748
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "coat",
+    "box": [
+     250.0,
+     309.3841642228739,
+     513.671875,
+     631.9648093841643
+    ]
+   }
+  ]
+ },
+ {
+  "id": "8c54a0c4b1",
+  "file": "8c54a0c4b1c47d32a13f2bcc0f4c24bb.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "printed",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   681,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     355.46875,
+     396.4757709251101,
+     757.8125,
+     619.6769456681351
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     751.953125,
+     406.75477239353893,
+     827.1484375,
+     486.0499265785609
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     747.0703125,
+     547.7239353891337,
+     815.4296875,
+     602.0558002936858
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     199.21875,
+     408.22320117474305,
+     371.09375,
+     594.7136563876652
+    ]
+   }
+  ]
+ },
+ {
+  "id": "9c740b226f",
+  "file": "9c740b226f9ffe7eca197ade2f554fe9.jpg",
+  "cls": "straight",
+  "attrs": [
+   "applique(a)",
+   "floor (length)",
+   "fly (opening)",
+   "jeans",
+   "loose (fit)",
+   "no non-textile material",
+   "plain (pattern)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   679,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     581.0546875,
+     215.0220913107511,
+     927.734375,
+     559.6465390279824
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     910.15625,
+     425.6259204712813,
+     961.9140625,
+     544.9189985272459
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     909.1796875,
+     147.2754050073638,
+     956.0546875,
+     303.38733431516937
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     233.3984375,
+     175.25773195876286,
+     590.8203125,
+     559.6465390279824
+    ]
+   }
+  ]
+ },
+ {
+  "id": "77435fc234",
+  "file": "77435fc234059dcb9e0bb3d73382bcc7.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   813
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     570.7257072570726,
+     457.03125,
+     842.5584255842558,
+     664.0625
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     810.5781057810578,
+     634.765625,
+     867.1586715867159,
+     709.9609375
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     835.1783517835179,
+     446.2890625,
+     876.9987699876999,
+     524.4140625
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     369.00369003690037,
+     531.25,
+     605.1660516605166,
+     652.34375
+    ]
+   }
+  ]
+ },
+ {
+  "id": "28cc102553",
+  "file": "28cc10255347d209843aa9a595eaed69.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 1,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     489.2578125,
+     472.14076246334315,
+     819.3359375,
+     699.4134897360705
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     749.0234375,
+     479.47214076246337,
+     834.9609375,
+     545.4545454545454
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     816.40625,
+     574.7800586510265,
+     874.0234375,
+     651.0263929618768
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     222.65625,
+     419.35483870967744,
+     500.0,
+     755.1319648093842
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c0e497b92b",
+  "file": "c0e497b92b65779f0c2491827d3e0060.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     602.6392961876833,
+     492.1875,
+     777.1260997067449,
+     549.8046875
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     774.1935483870967,
+     512.6953125,
+     796.1876832844574,
+     532.2265625
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     759.5307917888563,
+     531.25,
+     763.9296187683284,
+     533.203125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     466.2756598240469,
+     474.609375,
+     620.2346041055719,
+     559.5703125
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     596.7741935483871,
+     497.0703125,
+     614.3695014662757,
+     549.8046875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b5c8c768b2",
+  "file": "b5c8c768b2bc55ca312ffcbdabbc4acd.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 8,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     674.4868035190616,
+     479.4921875,
+     866.5689149560118,
+     724.609375
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     841.6422287390029,
+     456.0546875,
+     892.9618768328446,
+     501.953125
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     841.6422287390029,
+     492.1875,
+     904.6920821114369,
+     531.25
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     552.7859237536657,
+     510.7421875,
+     853.3724340175953,
+     731.4453125
+    ]
+   }
+  ]
+ },
+ {
+  "id": "e9e47b85d5",
+  "file": "e9e47b85d533b0dd11b3a383444cad18.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 1,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     586.9140625,
+     337.2434017595308,
+     922.8515625,
+     680.3519061583577
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     897.4609375,
+     288.85630498533726,
+     999.0234375,
+     412.0234604105572
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     867.1875,
+     526.3929618768328,
+     958.984375,
+     677.4193548387096
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "coat",
+    "box": [
+     189.453125,
+     230.20527859237535,
+     608.3984375,
+     775.6598240469208
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     193.359375,
+     526.3929618768328,
+     612.3046875,
+     741.9354838709678
+    ]
+   }
+  ]
+ },
+ {
+  "id": "6b4ee84a44",
+  "file": "6b4ee84a44b076120d58c0ebb74f313a.jpg",
+  "cls": "slim",
+  "attrs": [
+   "applique(a)",
+   "camo (pants)",
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": false,
+  "size": [
+   694,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     680.6640625,
+     302.5936599423631,
+     872.0703125,
+     433.71757925072046
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     798.828125,
+     376.0806916426513,
+     904.296875,
+     445.24495677233426
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     844.7265625,
+     322.7665706051873,
+     933.59375,
+     394.81268011527374
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "dress",
+    "box": [
+     358.3984375,
+     204.61095100864554,
+     749.0234375,
+     528.8184438040346
+    ]
+   }
+  ]
+ },
+ {
+  "id": "0a45b6b033",
+  "file": "0a45b6b033bf0077a15f484e98f3dbfe.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   621,
+   1024
+  ],
+  "license": 1,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     487.3046875,
+     373.59098228663447,
+     939.453125,
+     764.8953301127214
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     934.5703125,
+     689.2109500805152,
+     999.0234375,
+     801.9323671497584
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     884.765625,
+     391.304347826087,
+     963.8671875,
+     545.8937198067632
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     204.1015625,
+     273.7520128824477,
+     573.2421875,
+     801.9323671497584
+    ]
+   }
+  ]
+ },
+ {
+  "id": "9f8e805a62",
+  "file": "9f8e805a62be868379e13cfa24658106.jpg",
+  "cls": "slim",
+  "attrs": [
+   "applique(a)",
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     454.1015625,
+     329.9120234604105,
+     926.7578125,
+     659.824046920821
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     824.21875,
+     464.8093841642229,
+     880.859375,
+     488.2697947214076
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     858.3984375,
+     461.8768328445748,
+     957.03125,
+     546.9208211143695
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     145.5078125,
+     350.4398826979472,
+     513.671875,
+     744.8680351906158
+    ]
+   }
+  ]
+ },
+ {
+  "id": "3a251a0d83",
+  "file": "3a251a0d83018173d9eb85dd2f7c64f1.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "high waist",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   678
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     368.73156342182887,
+     464.84375,
+     848.0825958702065,
+     816.40625
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     827.433628318584,
+     513.671875,
+     998.5250737463127,
+     595.703125
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     834.8082595870206,
+     786.1328125,
+     986.7256637168141,
+     897.4609375
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     194.69026548672565,
+     293.9453125,
+     547.1976401179941,
+     645.5078125
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     230.08849557522123,
+     405.2734375,
+     426.25368731563424,
+     500.9765625
+    ]
+   }
+  ]
+ },
+ {
+  "id": "f06777ee04",
+  "file": "f06777ee045a0762aad3a7ec3111b864.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   680,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     595.703125,
+     498.5294117647059,
+     786.1328125,
+     654.4117647058823
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     776.3671875,
+     570.5882352941176,
+     807.6171875,
+     627.9411764705882
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     784.1796875,
+     504.4117647058823,
+     814.453125,
+     560.2941176470588
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     441.40625,
+     464.7058823529412,
+     619.140625,
+     648.5294117647059
+    ]
+   }
+  ]
+ },
+ {
+  "id": "12bf6fb74b",
+  "file": "12bf6fb74bf3a422429b71f23210d5fa.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "herringbone (pattern)",
+   "loose (fit)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   633,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     519.53125,
+     298.5781990521327,
+     824.21875,
+     565.5608214849921
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     819.3359375,
+     338.0726698262243,
+     908.203125,
+     417.06161137440756
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     770.5078125,
+     424.96050552922594,
+     873.046875,
+     505.5292259083728
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     227.5390625,
+     203.79146919431278,
+     553.7109375,
+     646.129541864139
+    ]
+   }
+  ]
+ },
+ {
+  "id": "218f45327e",
+  "file": "218f45327eead3c64b19e3ddee2ec238.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     558.6510263929619,
+     431.640625,
+     859.2375366568915,
+     551.7578125
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     850.4398826979473,
+     500.9765625,
+     942.8152492668622,
+     545.8984375
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     841.6422287390029,
+     435.546875,
+     932.5513196480938,
+     492.1875
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     90.9090909090909,
+     364.2578125,
+     592.375366568915,
+     605.46875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "537ecc29cb",
+  "file": "537ecc29cbe6e09d8eb0038a0dc7edbe.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "geometric",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   680,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     562.5,
+     325.0,
+     855.46875,
+     675.0
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     852.5390625,
+     538.2352941176471,
+     915.0390625,
+     689.7058823529412
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     845.703125,
+     323.5294117647059,
+     901.3671875,
+     395.5882352941176
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "coat",
+    "box": [
+     203.125,
+     322.05882352941177,
+     574.21875,
+     710.2941176470589
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     216.796875,
+     336.764705882353,
+     537.109375,
+     573.5294117647059
+    ]
+   }
+  ]
+ },
+ {
+  "id": "22cdabf1fc",
+  "file": "22cdabf1fc70b949b8bd3a37d93ecf05.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     562.5,
+     380.6734992679356,
+     889.6484375,
+     708.6383601756954
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     885.7421875,
+     632.5036603221083,
+     939.453125,
+     790.6295754026355
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     837.890625,
+     325.03660322108345,
+     940.4296875,
+     424.597364568082
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     306.640625,
+     487.55490483162515,
+     575.1953125,
+     672.0351390922401
+    ]
+   }
+  ]
+ },
+ {
+  "id": "f9c5f3efda",
+  "file": "f9c5f3efdae7ce33986891e0ba2f0a9c.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   680,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     442.3828125,
+     304.4117647058823,
+     841.796875,
+     563.2352941176471
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     799.8046875,
+     357.3529411764706,
+     861.328125,
+     441.1764705882353
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     822.265625,
+     444.1176470588235,
+     884.765625,
+     560.2941176470588
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     176.7578125,
+     244.11764705882354,
+     453.125,
+     610.2941176470589
+    ]
+   }
+  ]
+ },
+ {
+  "id": "6096b12d8f",
+  "file": "6096b12d8fc996b65b4b9947b18502ca.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   633,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     451.171875,
+     240.1263823064771,
+     886.71875,
+     522.9067930489731
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     793.9453125,
+     426.5402843601896,
+     891.6015625,
+     503.94944707740916
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     878.90625,
+     293.8388625592417,
+     930.6640625,
+     410.7424960505529
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "vest",
+    "box": [
+     188.4765625,
+     248.02527646129542,
+     480.46875,
+     532.3854660347552
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     170.8984375,
+     203.79146919431278,
+     434.5703125,
+     635.0710900473933
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d286a435e6",
+  "file": "d286a435e6e15637c797d692d07fd385.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 2,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     854.8387096774194,
+     443.359375,
+     910.5571847507331,
+     547.8515625
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     904.6920821114369,
+     535.15625,
+     947.2140762463343,
+     576.171875
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     898.8269794721407,
+     428.7109375,
+     950.1466275659825,
+     465.8203125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "coat",
+    "box": [
+     630.4985337243402,
+     455.078125,
+     863.6363636363636,
+     549.8046875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "6385040ca9",
+  "file": "6385040ca90ec396e37c2a25c2aafc31.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   768,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     435.546875,
+     365.8854166666667,
+     819.3359375,
+     557.2916666666666
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     791.9921875,
+     429.6875,
+     891.6015625,
+     559.8958333333334
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     813.4765625,
+     358.0729166666667,
+     912.109375,
+     503.90625
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     252.9296875,
+     479.1666666666667,
+     437.5,
+     553.3854166666666
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     243.1640625,
+     397.1354166666667,
+     547.8515625,
+     569.0104166666666
+    ]
+   },
+   {
+    "index": 15,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     232.421875,
+     283.8541666666667,
+     530.2734375,
+     609.375
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c4495c86c1",
+  "file": "c4495c86c19fedfdf2fefb74d43fdd6d.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   594,
+   1024
+  ],
+  "license": 1,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     476.5625,
+     262.62626262626264,
+     776.3671875,
+     776.0942760942761
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     782.2265625,
+     533.6700336700336,
+     893.5546875,
+     803.030303030303
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     693.359375,
+     661.6161616161617,
+     769.53125,
+     791.2457912457912
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     304.6875,
+     355.2188552188552,
+     489.2578125,
+     543.7710437710438
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     291.9921875,
+     79.12457912457913,
+     586.9140625,
+     722.2222222222222
+    ]
+   }
+  ]
+ },
+ {
+  "id": "1b8c03a610",
+  "file": "1b8c03a610d653da2492f3c8235e36a5.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "loose (fit)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     458.0078125,
+     334.3108504398827,
+     818.359375,
+     592.375366568915
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     811.5234375,
+     369.5014662756598,
+     871.09375,
+     460.4105571847507
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     691.40625,
+     461.8768328445748,
+     814.453125,
+     538.1231671554252
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     224.609375,
+     341.6422287390029,
+     497.0703125,
+     587.9765395894428
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     188.4765625,
+     274.19354838709677,
+     505.859375,
+     680.3519061583577
+    ]
+   }
+  ]
+ },
+ {
+  "id": "17e3e8454e",
+  "file": "17e3e8454e1addcf98b2449ccb96d3a9.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     465.8203125,
+     351.39092240117134,
+     846.6796875,
+     600.2928257686676
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     754.8828125,
+     407.0278184480234,
+     848.6328125,
+     472.91361639824305
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     837.890625,
+     475.8418740849195,
+     892.578125,
+     549.0483162518301
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     208.984375,
+     304.5387994143485,
+     484.375,
+     644.216691068814
+    ]
+   }
+  ]
+ },
+ {
+  "id": "5fc2853754",
+  "file": "5fc2853754a2d370b75869fe467672a5.jpg",
+  "cls": "wide",
+  "attrs": [
+   "culottes",
+   "floor (length)",
+   "floral",
+   "loose (fit)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "symmetrical",
+   "wide leg",
+   "zip-up"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 1,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     519.53125,
+     420.82111436950146,
+     936.5234375,
+     640.7624633431085
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     871.09375,
+     429.61876832844575,
+     895.5078125,
+     441.34897360703815
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     915.0390625,
+     501.466275659824,
+     952.1484375,
+     567.4486803519062
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     333.0078125,
+     486.8035190615836,
+     458.984375,
+     561.5835777126099
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     292.96875,
+     387.09677419354836,
+     609.375,
+     709.6774193548388
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b95dae1ed0",
+  "file": "b95dae1ed0c598a38d17906e9b27dabe.jpg",
+  "cls": "straight",
+  "attrs": [
+   "cargo (pants)",
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "pleat",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     541.015625,
+     399.7071742313323,
+     820.3125,
+     638.3601756954612
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     857.421875,
+     503.66032210834555,
+     919.921875,
+     585.6515373352855
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     760.7421875,
+     439.2386530014641,
+     877.9296875,
+     515.3733528550513
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     83.984375,
+     319.1800878477306,
+     582.03125,
+     723.2796486090775
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     207.03125,
+     404.099560761347,
+     583.984375,
+     626.6471449487555
+    ]
+   }
+  ]
+ },
+ {
+  "id": "552abb540d",
+  "file": "552abb540dabe8fabad26affaf1e7916.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     428.7109375,
+     202.34604105571847,
+     607.421875,
+     423.75366568914956
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     606.4453125,
+     341.6422287390029,
+     662.109375,
+     450.1466275659824
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     585.9375,
+     390.02932551319645,
+     623.046875,
+     486.8035190615836
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     285.15625,
+     127.56598240469208,
+     472.65625,
+     338.7096774193548
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     309.5703125,
+     218.47507331378299,
+     441.40625,
+     269.7947214076246
+    ]
+   }
+  ]
+ },
+ {
+  "id": "70e000fc74",
+  "file": "70e000fc740fd51671f257453e5d4ef1.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     481.4453125,
+     348.4626647144949,
+     863.28125,
+     849.194729136164
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     871.09375,
+     235.72474377745243,
+     982.421875,
+     443.63103953147873
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     830.078125,
+     234.26061493411422,
+     922.8515625,
+     389.4582723279649
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     293.9453125,
+     497.8038067349927,
+     580.078125,
+     860.9077598828698
+    ]
+   }
+  ]
+ },
+ {
+  "id": "33a3fc04da",
+  "file": "33a3fc04da3b454d27f5fdc5e8bb0f53.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "frayed",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   1024
+  ],
+  "license": 1,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     449.21875,
+     326.171875,
+     789.0625,
+     696.2890625
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     785.15625,
+     457.03125,
+     966.796875,
+     552.734375
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     785.15625,
+     527.34375,
+     951.171875,
+     606.4453125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     227.5390625,
+     452.1484375,
+     276.3671875,
+     487.3046875
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "cardigan",
+    "box": [
+     67.3828125,
+     287.109375,
+     548.828125,
+     643.5546875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "8d1d4b14e5",
+  "file": "8d1d4b14e598bafb3d718fa8c096e95e.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     696.2890625,
+     272.7272727272727,
+     945.3125,
+     627.5659824046921
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     927.734375,
+     258.06451612903226,
+     999.0234375,
+     313.78299120234607
+    ]
+   },
+   {
+    "index": 12,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     483.3984375,
+     387.09677419354836,
+     731.4453125,
+     629.0322580645161
+    ]
+   }
+  ]
+ },
+ {
+  "id": "025c44ff30",
+  "file": "025c44ff30ea619abd1b1bb2df58bb8b.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   632,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     395.5078125,
+     232.59493670886076,
+     857.421875,
+     514.2405063291139
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     799.8046875,
+     400.3164556962026,
+     891.6015625,
+     447.7848101265823
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     852.5390625,
+     335.44303797468353,
+     929.6875,
+     405.0632911392405
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     200.1953125,
+     175.63291139240505,
+     529.296875,
+     613.9240506329114
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     184.5703125,
+     257.9113924050633,
+     399.4140625,
+     436.7088607594937
+    ]
+   }
+  ]
+ },
+ {
+  "id": "2df8a3cbaf",
+  "file": "2df8a3cbaf17a7e8441cf3f4bc73824c.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 10,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     759.5307917888563,
+     491.2109375,
+     862.1700879765395,
+     538.0859375
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     860.7038123167156,
+     493.1640625,
+     878.2991202346041,
+     516.6015625
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     857.7712609970674,
+     528.3203125,
+     878.2991202346041,
+     540.0390625
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     636.3636363636364,
+     476.5625,
+     765.3958944281525,
+     534.1796875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a2d2041ec8",
+  "file": "a2d2041ec86da596439a8fd74575ce0b.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "high waist",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     397.4609375,
+     360.1756954612006,
+     757.8125,
+     604.6852122986824
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     785.15625,
+     455.34407027818446,
+     871.09375,
+     522.6939970717424
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     715.8203125,
+     363.103953147877,
+     828.125,
+     426.0614934114202
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     237.3046875,
+     352.8550512445095,
+     428.7109375,
+     601.7569546120059
+    ]
+   }
+  ]
+ },
+ {
+  "id": "3847d09a2d",
+  "file": "3847d09a2d4cd130c008c60fdd7832a1.jpg",
+  "cls": "wide",
+  "attrs": [
+   "dot",
+   "loose (fit)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "symmetrical",
+   "wide leg"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     485.3515625,
+     397.3607038123167,
+     823.2421875,
+     630.4985337243402
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     813.4765625,
+     482.40469208211147,
+     895.5078125,
+     555.7184750733137
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     758.7890625,
+     436.95014662756597,
+     846.6796875,
+     486.8035190615836
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     218.75,
+     309.3841642228739,
+     579.1015625,
+     681.8181818181818
+    ]
+   }
+  ]
+ },
+ {
+  "id": "0e9775fcd1",
+  "file": "0e9775fcd1a3b1d95aed773e684b3f49.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   681,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     470.703125,
+     356.82819383259914,
+     905.2734375,
+     624.0822320117474
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     894.53125,
+     465.4919236417034,
+     946.2890625,
+     544.7870778267254
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     863.28125,
+     372.98091042584434,
+     945.3125,
+     459.61820851688697
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     204.1015625,
+     465.4919236417034,
+     472.65625,
+     549.1923641703378
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     166.015625,
+     270.1908957415565,
+     543.9453125,
+     731.2775330396476
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20cce77f20",
+  "file": "20cce77f20aada8462856157a7957d8f.jpg",
+  "cls": "straight",
+  "attrs": [
+   "dot",
+   "geometric",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     431.640625,
+     341.6422287390029,
+     866.2109375,
+     599.7067448680352
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     824.21875,
+     400.29325513196477,
+     891.6015625,
+     451.61290322580646
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     877.9296875,
+     435.48387096774195,
+     953.125,
+     507.3313782991202
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "cardigan",
+    "box": [
+     201.171875,
+     262.4633431085044,
+     566.40625,
+     668.6217008797654
+    ]
+   }
+  ]
+ },
+ {
+  "id": "e8a9349ee5",
+  "file": "e8a9349ee53c9e5bfd21102e8b6b52f9.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "low waist",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     445.3125,
+     414.3484626647145,
+     799.8046875,
+     638.3601756954612
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     803.7109375,
+     387.99414348462665,
+     901.3671875,
+     510.98096632503666
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     816.40625,
+     458.2723279648609,
+     899.4140625,
+     530.0146412884334
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     232.421875,
+     162.51830161054173,
+     439.453125,
+     874.0849194729137
+    ]
+   }
+  ]
+ },
+ {
+  "id": "5c02879d04",
+  "file": "5c02879d04dacef50fe83f81243788df.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   608,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     411.1328125,
+     485.19736842105266,
+     802.734375,
+     751.6447368421053
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     812.5,
+     659.5394736842105,
+     889.6484375,
+     733.5526315789474
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     810.546875,
+     610.1973684210526,
+     848.6328125,
+     667.7631578947369
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     183.59375,
+     376.64473684210526,
+     446.2890625,
+     786.1842105263158
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     179.6875,
+     365.13157894736844,
+     427.734375,
+     781.25
+    ]
+   }
+  ]
+ },
+ {
+  "id": "5a45019f91",
+  "file": "5a45019f91a09b34caad0730b77f281d.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   1024
+  ],
+  "license": 3,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     456.0546875,
+     532.2265625,
+     907.2265625,
+     714.84375
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     879.8828125,
+     611.328125,
+     976.5625,
+     659.1796875
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     885.7421875,
+     531.25,
+     978.515625,
+     619.140625
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     199.21875,
+     496.09375,
+     491.2109375,
+     738.28125
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     166.9921875,
+     500.0,
+     482.421875,
+     696.2890625
+    ]
+   }
+  ]
+ },
+ {
+  "id": "6c5f2d5942",
+  "file": "6c5f2d5942192613d0e6e6340859e326.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     416.9921875,
+     349.9267935578331,
+     858.3984375,
+     620.7906295754027
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     856.4453125,
+     448.0234260614934,
+     920.8984375,
+     516.8374816983895
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     810.546875,
+     503.66032210834555,
+     877.9296875,
+     521.2298682284041
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     255.859375,
+     370.42459736456806,
+     422.8515625,
+     556.3689604685212
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     211.9140625,
+     303.07467057101024,
+     496.09375,
+     667.6427525622255
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a4f8de5592",
+  "file": "a4f8de55929c1ccdfa38c3091f9ea800.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   683
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     332.3572474377745,
+     714.84375,
+     821.376281112738,
+     891.6015625
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     806.7349926793557,
+     820.3125,
+     935.5783308931186,
+     869.140625
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     506.58857979502193,
+     826.171875,
+     591.5080527086384,
+     902.34375
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     304.5387994143485,
+     666.9921875,
+     585.6515373352855,
+     899.4140625
+    ]
+   }
+  ]
+ },
+ {
+  "id": "e2da13e890",
+  "file": "e2da13e8901b9733a8af384bf519762c.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   576
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     618.0555555555555,
+     254.8828125,
+     930.5555555555555,
+     420.8984375
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     904.5138888888888,
+     379.8828125,
+     970.4861111111112,
+     454.1015625
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     717.0138888888888,
+     406.25,
+     798.6111111111112,
+     457.03125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     454.8611111111111,
+     253.90625,
+     654.5138888888888,
+     388.671875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "33cfdcbd48",
+  "file": "33cfdcbd48019b09e36a78c428bbae1d.jpg",
+  "cls": "straight",
+  "attrs": [
+   "floor (length)",
+   "fly (opening)",
+   "jeans",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   679,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     478.515625,
+     397.64359351988213,
+     930.6640625,
+     723.1222385861561
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     914.0625,
+     353.46097201767304,
+     983.3984375,
+     493.37260677466867
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     916.9921875,
+     634.7569955817378,
+     982.421875,
+     721.6494845360825
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     189.453125,
+     344.6244477172312,
+     491.2109375,
+     779.0868924889544
+    ]
+   }
+  ]
+ },
+ {
+  "id": "75850809ca",
+  "file": "75850809cabb412eb28ff5b9c732cc5e.jpg",
+  "cls": "straight",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 5,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     518.5546875,
+     425.21994134897363,
+     864.2578125,
+     630.4985337243402
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     862.3046875,
+     441.34897360703815,
+     933.59375,
+     558.6510263929619
+    ]
+   },
+   {
+    "index": 12,
+    "category": "outerwear",
+    "subcategory": "coat",
+    "box": [
+     393.5546875,
+     260.99706744868035,
+     684.5703125,
+     473.6070381231672
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     270.5078125,
+     360.7038123167155,
+     526.3671875,
+     658.3577712609971
+    ]
+   }
+  ]
+ },
+ {
+  "id": "efbbe5ebcc",
+  "file": "efbbe5ebcc3c3ab9c8cea01fbeefded5.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     517.578125,
+     412.8843338213763,
+     870.1171875,
+     628.1112737920937
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     861.328125,
+     477.3060029282577,
+     924.8046875,
+     540.263543191801
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     822.265625,
+     465.592972181552,
+     875.9765625,
+     487.55490483162515
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "dress",
+    "box": [
+     242.1875,
+     393.8506588579795,
+     575.1953125,
+     647.1449487554904
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     191.40625,
+     325.03660322108345,
+     530.2734375,
+     696.9253294289898
+    ]
+   }
+  ]
+ },
+ {
+  "id": "4d3fd642c9",
+  "file": "4d3fd642c9d08290f6262759a51d252f.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "low waist",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     467.7734375,
+     373.3528550512445,
+     904.296875,
+     641.2884333821376
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     905.2734375,
+     465.592972181552,
+     971.6796875,
+     550.5124450951683
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     799.8046875,
+     543.1918008784772,
+     903.3203125,
+     610.5417276720352
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     207.03125,
+     256.2225475841874,
+     491.2109375,
+     727.6720351390923
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     364.2578125,
+     370.42459736456806,
+     501.953125,
+     654.4655929721815
+    ]
+   }
+  ]
+ },
+ {
+  "id": "35eb7f5fb7",
+  "file": "35eb7f5fb76a9ed5aec684be53761cff.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     523.4604105571848,
+     418.9453125,
+     829.9120234604106,
+     542.96875
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     813.7829912023461,
+     422.8515625,
+     895.8944281524927,
+     451.171875
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     812.3167155425219,
+     509.765625,
+     901.7595307917888,
+     551.7578125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     263.92961876832845,
+     456.0546875,
+     530.791788856305,
+     499.0234375
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     255.13196480938416,
+     334.9609375,
+     570.3812316715542,
+     639.6484375
+    ]
+   }
+  ]
+ },
+ {
+  "id": "aa2b2c6923",
+  "file": "aa2b2c6923621af9d2ba884f02006cd6.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1011,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     566.40625,
+     595.4500494559841,
+     793.9453125,
+     754.6983184965381
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     775.390625,
+     614.2433234421366,
+     886.71875,
+     742.8288822947576
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     681.640625,
+     480.71216617210683,
+     789.0625,
+     636.9930761622156
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     416.015625,
+     717.1117705242335,
+     750.9765625,
+     964.3916913946588
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c20cd495ae",
+  "file": "c20cd495aea72107c49299e4f957ef2b.jpg",
+  "cls": "straight",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "loose (fit)",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   933
+  ],
+  "license": 8,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     572.347266881029,
+     489.2578125,
+     888.5316184351553,
+     674.8046875
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     873.5262593783493,
+     589.84375,
+     997.8563772775991,
+     636.71875
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     879.957127545552,
+     500.9765625,
+     989.2818863879958,
+     589.84375
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     375.1339764201501,
+     531.25,
+     590.5680600214363,
+     656.25
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     282.9581993569132,
+     496.09375,
+     578.7781350482315,
+     723.6328125
+    ]
+   }
+  ]
+ },
+ {
+  "id": "6b6582dc90",
+  "file": "6b6582dc900f463d0fc31a95c3fbeb49.jpg",
+  "cls": "straight",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   768,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     533.203125,
+     406.25,
+     824.21875,
+     605.46875
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     708.0078125,
+     598.9583333333334,
+     811.5234375,
+     649.7395833333334
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     805.6640625,
+     471.3541666666667,
+     891.6015625,
+     563.8020833333334
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     338.8671875,
+     407.5520833333333,
+     538.0859375,
+     548.1770833333334
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     303.7109375,
+     360.6770833333333,
+     568.359375,
+     639.3229166666666
+    ]
+   }
+  ]
+ },
+ {
+  "id": "5e9318c2b2",
+  "file": "5e9318c2b27f4b6894a5f98f92845bd8.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 1,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     539.0625,
+     354.3191800878477,
+     883.7890625,
+     622.254758418741
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     875.9765625,
+     445.095168374817,
+     947.265625,
+     582.723279648609
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     829.1015625,
+     304.5387994143485,
+     879.8828125,
+     494.87554904831626
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     205.078125,
+     310.39531478770135,
+     521.484375,
+     531.4787701317716
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     204.1015625,
+     259.1508052708638,
+     599.609375,
+     680.8199121522695
+    ]
+   }
+  ]
+ },
+ {
+  "id": "ab23d0c1cc",
+  "file": "ab23d0c1ccdadcac2da79af78298ea8d.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "high waist",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     502.9325513196481,
+     474.609375,
+     837.2434017595308,
+     586.9140625
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     828.4457478005866,
+     555.6640625,
+     891.4956011730205,
+     603.515625
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     828.4457478005866,
+     442.3828125,
+     917.8885630498534,
+     491.2109375
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     334.3108504398827,
+     492.1875,
+     567.4486803519062,
+     613.28125
+    ]
+   }
+  ]
+ },
+ {
+  "id": "8248793dfb",
+  "file": "8248793dfb50ff3c8209cd0e44ddf9bf.jpg",
+  "cls": "straight",
+  "attrs": [
+   "floor (length)",
+   "fly (opening)",
+   "jeans",
+   "low waist",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     416.9921875,
+     197.94721407624633,
+     969.7265625,
+     856.3049853372435
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     925.78125,
+     272.7272727272727,
+     999.0234375,
+     475.07331378299125
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     775.390625,
+     170.08797653958942,
+     864.2578125,
+     357.7712609970675
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     221.6796875,
+     417.8885630498534,
+     578.125,
+     851.9061583577712
+    ]
+   }
+  ]
+ },
+ {
+  "id": "5abd76c03b",
+  "file": "5abd76c03bfe9417a51ef66b920e6ad9.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   819
+  ],
+  "license": 5,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     660.5616605616606,
+     125.9765625,
+     912.0879120879121,
+     546.875
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     831.5018315018316,
+     426.7578125,
+     948.7179487179487,
+     532.2265625
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     811.965811965812,
+     204.1015625,
+     896.2148962148963,
+     284.1796875
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     192.91819291819291,
+     203.125,
+     702.075702075702,
+     567.3828125
+    ]
+   }
+  ]
+ },
+ {
+  "id": "300dcfff95",
+  "file": "300dcfff954898e161a61e37fca960b8.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     500.0,
+     364.5680819912152,
+     892.578125,
+     633.9677891654466
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     825.1953125,
+     503.66032210834555,
+     883.7890625,
+     581.2591508052709
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     861.328125,
+     377.74524158125917,
+     930.6640625,
+     475.8418740849195
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     171.875,
+     317.71595900439235,
+     532.2265625,
+     715.9590043923865
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b3ab1b8ce5",
+  "file": "b3ab1b8ce56ff0d4415ec0e85202d98e.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     602.5390625,
+     33.724340175953074,
+     990.234375,
+     794.7214076246333
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     968.75,
+     133.43108504398828,
+     999.0234375,
+     234.60410557184753
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     978.515625,
+     21.994134897360706,
+     999.0234375,
+     137.8299120234604
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     340.8203125,
+     255.13196480938416,
+     660.15625,
+     806.4516129032257
+    ]
+   }
+  ]
+ },
+ {
+  "id": "97cb9ef6e3",
+  "file": "97cb9ef6e3eb1e4870201eb60ea875ac.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "smocking",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     488.28125,
+     386.53001464128846,
+     850.5859375,
+     629.5754026354318
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     812.5,
+     440.7027818448023,
+     876.953125,
+     499.2679355783309
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     854.4921875,
+     487.55490483162515,
+     913.0859375,
+     565.1537335285504
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     185.546875,
+     417.2767203513909,
+     496.09375,
+     585.6515373352855
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     197.265625,
+     304.5387994143485,
+     522.4609375,
+     693.9970717423133
+    ]
+   }
+  ]
+ },
+ {
+  "id": "aa95964ff3",
+  "file": "aa95964ff3b249168fcda1504434d04b.jpg",
+  "cls": "straight",
+  "attrs": [
+   "floor (length)",
+   "fly (opening)",
+   "jeans",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   679,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     501.953125,
+     374.07952871870395,
+     868.1640625,
+     612.6656848306334
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     866.2109375,
+     483.06332842415316,
+     907.2265625,
+     555.2282768777615
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     783.203125,
+     402.0618556701031,
+     836.9140625,
+     468.3357879234168
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     230.46875,
+     338.73343151693666,
+     563.4765625,
+     617.0839469808542
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "cardigan",
+    "box": [
+     199.21875,
+     247.42268041237114,
+     495.1171875,
+     670.1030927835051
+    ]
+   }
+  ]
+ },
+ {
+  "id": "cbe421f0f5",
+  "file": "cbe421f0f567af8dc6dee22ae239e846.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     497.0703125,
+     387.99414348462665,
+     900.390625,
+     644.216691068814
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     887.6953125,
+     418.74084919472915,
+     943.359375,
+     519.7657393850659
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     814.453125,
+     510.98096632503666,
+     907.2265625,
+     584.1874084919473
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     182.6171875,
+     317.71595900439235,
+     511.71875,
+     707.1742313323573
+    ]
+   }
+  ]
+ },
+ {
+  "id": "dbbc57a65e",
+  "file": "dbbc57a65ecd459890dfd87b72288f70.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     397.4609375,
+     365.1026392961877,
+     772.4609375,
+     601.1730205278593
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     761.71875,
+     489.7360703812317,
+     867.1875,
+     593.841642228739
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     718.75,
+     417.8885630498534,
+     824.21875,
+     500.0
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     181.640625,
+     297.65395894428156,
+     414.0625,
+     653.9589442815249
+    ]
+   }
+  ]
+ },
+ {
+  "id": "f85cf6884f",
+  "file": "f85cf6884f138a76a79ee883372007a8.jpg",
+  "cls": "straight",
+  "attrs": [
+   "floor (length)",
+   "fly (opening)",
+   "jeans",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   679,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     675.78125,
+     505.1546391752577,
+     942.3828125,
+     743.7407952871871
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     923.828125,
+     686.3033873343152,
+     971.6796875,
+     796.759941089838
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     837.890625,
+     499.2636229749632,
+     919.921875,
+     589.1016200294551
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     369.140625,
+     416.7893961708395,
+     716.796875,
+     749.6318114874816
+    ]
+   }
+  ]
+ },
+ {
+  "id": "7be8af2ebb",
+  "file": "7be8af2ebbb6fa133131a2f42bdbe9f6.jpg",
+  "cls": "slim",
+  "attrs": [
+   "distressed",
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   680
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     517.6470588235295,
+     420.8984375,
+     911.7647058823529,
+     616.2109375
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     907.3529411764706,
+     481.4453125,
+     979.4117647058823,
+     562.5
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     788.2352941176471,
+     520.5078125,
+     879.4117647058823,
+     553.7109375
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     319.1176470588235,
+     423.828125,
+     604.4117647058823,
+     567.3828125
+    ]
+   }
+  ]
+ },
+ {
+  "id": "f79f1d0fc8",
+  "file": "f79f1d0fc8dfae388e8a1887623228ea.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   1024,
+   682
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     420.82111436950146,
+     457.03125,
+     824.0469208211144,
+     551.7578125
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     815.2492668621701,
+     485.3515625,
+     873.9002932551319,
+     514.6484375
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     821.1143695014663,
+     510.7421875,
+     887.0967741935484,
+     552.734375
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     219.94134897360703,
+     418.9453125,
+     520.5278592375366,
+     617.1875
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     219.94134897360703,
+     488.28125,
+     448.68035190615836,
+     604.4921875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "1ed3961d0e",
+  "file": "1ed3961d0e80c5b7b8b09f9c1ce0662c.jpg",
+  "cls": "slim",
+  "attrs": [
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   576
+  ],
+  "license": 8,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     439.2361111111111,
+     413.0859375,
+     864.5833333333334,
+     521.484375
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     864.5833333333334,
+     398.4375,
+     932.2916666666666,
+     432.6171875
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     862.8472222222222,
+     470.703125,
+     927.0833333333334,
+     504.8828125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     288.1944444444444,
+     452.1484375,
+     430.5555555555556,
+     518.5546875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "733128db0c",
+  "file": "733128db0ce4f09443fc561514458c7f.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     463.8671875,
+     291.3616398243045,
+     846.6796875,
+     714.4948755490483
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     847.65625,
+     322.108345534407,
+     897.4609375,
+     392.3865300146413
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     820.3125,
+     616.3982430453881,
+     895.5078125,
+     745.2415812591508
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     229.4921875,
+     291.3616398243045,
+     503.90625,
+     610.5417276720352
+    ]
+   }
+  ]
+ },
+ {
+  "id": "52df4fde94",
+  "file": "52df4fde942c5b69a757f82014af85e4.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   632,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     502.9296875,
+     272.1518987341772,
+     904.296875,
+     598.1012658227847
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     806.640625,
+     443.0379746835443,
+     907.2265625,
+     514.2405063291139
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     891.6015625,
+     346.5189873417722,
+     962.890625,
+     455.69620253164555
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     171.875,
+     180.37974683544303,
+     538.0859375,
+     686.7088607594936
+    ]
+   }
+  ]
+ },
+ {
+  "id": "f43143d980",
+  "file": "f43143d9807fbb2948474f68d8c6f550.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     309.5703125,
+     346.0410557184751,
+     806.640625,
+     838.7096774193549
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     402.34375,
+     661.2903225806451,
+     505.859375,
+     843.108504398827
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     772.4609375,
+     275.6598240469208,
+     894.53125,
+     519.0615835777126
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     252.9296875,
+     494.1348973607038,
+     296.875,
+     602.6392961876833
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     226.5625,
+     348.9736070381232,
+     487.3046875,
+     865.1026392961877
+    ]
+   }
+  ]
+ },
+ {
+  "id": "14ce620645",
+  "file": "14ce620645bc27f4710e2141432e7139.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "low waist",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   679,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     474.609375,
+     278.35051546391753,
+     786.1328125,
+     541.9734904270987
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     779.296875,
+     440.3534609720177,
+     886.71875,
+     550.8100147275405
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     699.21875,
+     266.5684830633284,
+     818.359375,
+     338.73343151693666
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     238.28125,
+     207.65832106038292,
+     496.09375,
+     592.0471281296024
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     223.6328125,
+     257.73195876288656,
+     519.53125,
+     552.2827687776141
+    ]
+   }
+  ]
+ },
+ {
+  "id": "f580bd3f0c",
+  "file": "f580bd3f0c42ec8305884c8a19c7a0d1.jpg",
+  "cls": "straight",
+  "attrs": [
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "regular (fit)",
+   "straight",
+   "stripe",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 5,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     447.265625,
+     373.90029325513194,
+     857.421875,
+     645.1612903225806
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     851.5625,
+     420.82111436950146,
+     902.34375,
+     607.0381231671554
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     662.109375,
+     586.5102639296188,
+     791.015625,
+     665.6891495601172
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     196.2890625,
+     392.96187683284455,
+     463.8671875,
+     611.4369501466276
+    ]
+   }
+  ]
+ },
+ {
+  "id": "6e2652e279",
+  "file": "6e2652e279a03035a8a0190ba461d247.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   721,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     464.84375,
+     230.2357836338419,
+     885.7421875,
+     557.5589459084605
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     867.1875,
+     393.89736477115116,
+     966.796875,
+     463.245492371706
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     707.03125,
+     506.2413314840499,
+     825.1953125,
+     576.9764216366158
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     223.6328125,
+     233.0097087378641,
+     470.703125,
+     482.6629680998613
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "vest",
+    "box": [
+     205.078125,
+     239.94452149791957,
+     452.1484375,
+     524.2718446601941
+    ]
+   }
+  ]
+ },
+ {
+  "id": "37428aefea",
+  "file": "37428aefea46fee89a2af9dc1ba086e1.jpg",
+  "cls": "straight",
+  "attrs": [
+   "check",
+   "floor (length)",
+   "fly (opening)",
+   "loose (fit)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": false,
+  "size": [
+   682,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     531.25,
+     324.0469208211144,
+     911.1328125,
+     598.2404692082112
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     884.765625,
+     454.5454545454545,
+     959.9609375,
+     535.1906158357771
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     814.453125,
+     395.89442815249265,
+     904.296875,
+     466.2756598240469
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     268.5546875,
+     274.19354838709677,
+     576.171875,
+     671.5542521994134
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     254.8828125,
+     439.88269794721407,
+     345.703125,
+     510.2639296187683
+    ]
+   }
+  ]
+ },
+ {
+  "id": "888ce4d159",
+  "file": "888ce4d1599f17c5b16537b13bad7fc3.jpg",
+  "cls": "wide",
+  "attrs": [
+   "culottes",
+   "fly (opening)",
+   "loose (fit)",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "washed",
+   "wide leg"
+  ],
+  "jeans": false,
+  "size": [
+   1024,
+   681
+  ],
+  "license": 5,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     362.7019089574155,
+     470.703125,
+     817.9148311306902,
+     770.5078125
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     725.403817914831,
+     751.953125,
+     861.9676945668135,
+     800.78125
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     759.1776798825257,
+     453.125,
+     842.87812041116,
+     550.78125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     76.3582966226138,
+     490.234375,
+     439.0602055800294,
+     690.4296875
+    ]
+   }
+  ]
+ },
+ {
+  "id": "67f807cdad",
+  "file": "67f807cdadb96ebc9e59beb2222e1d57.jpg",
+  "cls": "straight",
+  "attrs": [
+   "high waist",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "zip-up"
+  ],
+  "jeans": false,
+  "size": [
+   946,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "pants",
+    "box": [
+     361.328125,
+     385.8350951374207,
+     836.9140625,
+     588.7949260042284
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     829.1015625,
+     463.00211416490487,
+     906.25,
+     507.399577167019
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     791.9921875,
+     549.6828752642706,
+     860.3515625,
+     594.0803382663847
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     184.5703125,
+     384.77801268498945,
+     385.7421875,
+     495.77167019027485
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "coat",
+    "box": [
+     205.078125,
+     361.522198731501,
+     682.6171875,
+     650.1057082452431
+    ]
+   }
+  ]
+ },
+ {
+  "id": "e14733841b",
+  "file": "e14733841b04c64e75789a91fbe549b3.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "low waist",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "pleat",
+   "regular (fit)",
+   "straight",
+   "symmetrical"
+  ],
+  "jeans": true,
+  "size": [
+   771,
+   1024
+  ],
+  "license": 3,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     425.78125,
+     396.8871595330739,
+     893.5546875,
+     657.5875486381323
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     797.8515625,
+     527.8858625162127,
+     956.0546875,
+     657.5875486381323
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     899.4140625,
+     485.08430609597923,
+     954.1015625,
+     651.1024643320363
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d2f3f13a7a",
+  "file": "d2f3f13a7a3532cc905fe9f3bad10b8a.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 0,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     596.6796875,
+     307.4670571010249,
+     933.59375,
+     814.0556368960468
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     806.640625,
+     638.3601756954612,
+     882.8125,
+     814.0556368960468
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     928.7109375,
+     386.53001464128846,
+     998.046875,
+     471.44948755490486
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     412.109375,
+     310.39531478770135,
+     678.7109375,
+     765.7393850658858
+    ]
+   }
+  ]
+ },
+ {
+  "id": "458aec6dd8",
+  "file": "458aec6dd827b8585dbfeeb7bd4cf4c9.jpg",
+  "cls": "straight",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "regular (fit)",
+   "straight",
+   "symmetrical",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   819,
+   1024
+  ],
+  "license": 7,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     643.5546875,
+     398.046398046398,
+     791.9921875,
+     589.7435897435897
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     787.109375,
+     531.1355311355311,
+     837.890625,
+     605.6166056166056
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     781.25,
+     429.7924297924298,
+     830.078125,
+     507.9365079365079
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     517.578125,
+     418.8034188034188,
+     647.4609375,
+     589.7435897435897
+    ]
+   }
+  ]
+ },
+ {
+  "id": "2a2d4fb6f4",
+  "file": "2a2d4fb6f4a74ccbef9eb5410859cea8.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "normal waist",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   683,
+   1024
+  ],
+  "license": 4,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     447.265625,
+     374.81698389458273,
+     880.859375,
+     639.8243045387994
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     883.7890625,
+     464.12884333821376,
+     958.984375,
+     530.0146412884334
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     817.3828125,
+     518.3016105417277,
+     913.0859375,
+     579.7950219619327
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     269.53125,
+     373.3528550512445,
+     471.6796875,
+     642.7525622254758
+    ]
+   },
+   {
+    "index": 14,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     159.1796875,
+     301.61054172767206,
+     510.7421875,
+     710.1024890190337
+    ]
+   }
+  ]
+ },
+ {
+  "id": "bbb7c11a2a",
+  "file": "bbb7c11a2a4fe731a371cdf9e223c360.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)",
+   "washed"
+  ],
+  "jeans": true,
+  "size": [
+   678,
+   1024
+  ],
+  "license": 3,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     537.109375,
+     343.65781710914456,
+     858.3984375,
+     619.4690265486726
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     828.125,
+     415.929203539823,
+     908.203125,
+     494.1002949852507
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     828.125,
+     561.9469026548672,
+     905.2734375,
+     654.8672566371681
+    ]
+   },
+   {
+    "index": 13,
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "box": [
+     309.5703125,
+     290.5604719764012,
+     557.6171875,
+     623.8938053097345
+    ]
+   }
+  ]
+ },
+ {
+  "id": "7450a0ad43",
+  "file": "7450a0ad431b3446ab57608050095649.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "straight",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   1024
+  ],
+  "license": 3,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     501.953125,
+     244.140625,
+     880.859375,
+     502.9296875
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     850.5859375,
+     263.671875,
+     965.8203125,
+     364.2578125
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     835.9375,
+     454.1015625,
+     954.1015625,
+     601.5625
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "top, t-shirt, sweatshirt",
+    "box": [
+     282.2265625,
+     275.390625,
+     530.2734375,
+     426.7578125
+    ]
+   },
+   {
+    "index": 14,
+    "category": "top",
+    "subcategory": "shirt, blouse",
+    "box": [
+     196.2890625,
+     228.515625,
+     561.5234375,
+     446.2890625
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20f9819eaa",
+  "file": "20f9819eaa83ce17d76baf30880cd99f.jpg",
+  "cls": "slim",
+  "attrs": [
+   "fly (opening)",
+   "jeans",
+   "maxi (length)",
+   "no non-textile material",
+   "no special manufacturing technique",
+   "plain (pattern)",
+   "symmetrical",
+   "tight (fit)"
+  ],
+  "jeans": true,
+  "size": [
+   1024,
+   762
+  ],
+  "license": 5,
+  "boxes": [
+   {
+    "index": 0,
+    "category": "bottom",
+    "subcategory": "jeans",
+    "box": [
+     783.4645669291339,
+     684.5703125,
+     862.2047244094489,
+     884.765625
+    ]
+   },
+   {
+    "index": 1,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     849.0813648293963,
+     674.8046875,
+     976.3779527559055,
+     756.8359375
+    ]
+   },
+   {
+    "index": 2,
+    "category": "footwear",
+    "subcategory": "shoe",
+    "box": [
+     846.4566929133858,
+     831.0546875,
+     969.8162729658792,
+     925.78125
+    ]
+   },
+   {
+    "index": 13,
+    "category": "top",
+    "subcategory": "dress",
+    "box": [
+     170.60367454068242,
+     590.8203125,
+     809.7112860892388,
+     882.8125
+    ]
+   }
+  ]
+ }
+]

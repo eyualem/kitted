@@ -1,0 +1,20 @@
+Selected pants: 95 ({'slim': 41, 'wide': 5, 'straight': 49}); jeans 65
+Probe status: {'ok': 82, 'multiplePeople': 9, 'couldNotFrame': 4}  (not ok = photo prep refuses it: no face to hide, two people, …)
+
+## hem ÷ knee
+  slim      measured  22/ 41  median 0.7  range [0.35]–[2.08]
+  straight  measured  29/ 49  median 0.81  range [0.39]–[2.07]
+  wide      measured   5/  5  median 0.87  range [0.42]–[1.4]
+  unsure reasons: {'multiplePeople': 9, "not the pants' color": 6, 'side view': 6, 'couldNotFrame': 4, 'top hangs over it': 4, 'hip or knee': 3}
+  slim | straight or wide: LOO 37/56 (66%), unsure 39/95 (41%) · cut frozen on our photos (0.765, 34/41 there): 32/56 (57%)
+  slim | straight: LOO 35/51 (68%), unsure 39/90 (43%) · cut frozen on our photos (0.765, 34/41 there): 29/51 (56%)
+  3% crop: within ±0.05 on 41/55
+
+## opening ÷ shoe
+  slim      measured  25/ 41  median 0.99  range [0.36]–[5.27]
+  straight  measured  32/ 49  median 0.92  range [0.41]–[2.86]
+  wide      measured   5/  5  median 1.04  range [0.37]–[1.43]
+  unsure reasons: {'multiplePeople': 9, 'side view': 6, 'feet overlap': 5, 'shoe fills its half of the box': 5, 'couldNotFrame': 4, 'hip or knee': 2}
+  slim | straight or wide: LOO 36/62 (58%), unsure 33/95 (34%) · cut frozen on our photos (0.931, 33/37 there): 30/62 (48%)
+  slim | straight: LOO 32/57 (56%), unsure 33/90 (36%) · cut frozen on our photos (0.931, 33/37 there): 26/57 (45%)
+  3% crop: within ±0.05 on 30/57

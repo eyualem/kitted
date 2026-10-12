@@ -1,0 +1,24 @@
+{
+  "bottom" : "pants",
+  "box" : true,
+  "crop" : 0.029999999999999999,
+  "h" : 964,
+  "joints" : {
+
+  },
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "hip or knee"
+    },
+    {
+      "side" : "r",
+      "why" : "hip or knee"
+    }
+  ],
+  "max" : 2048,
+  "ms" : 316,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/fashionpedia\/images\/test\/a6507cc61e40a08435a5a210450a47c1.jpg",
+  "status" : "ok",
+  "w" : 771
+}
