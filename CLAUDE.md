@@ -318,6 +318,13 @@
 - the shoe's top edge as a reference for the hem
 - combining a script with the AI's field as a veto (a script that can only stop a fault, never create one)
 
+**Public labeled photos to try first (founder asked, Oct 12; Claude listed these from memory, so verify each license before downloading, and ask the founder before any download):**
+- **Fashionpedia** (~48k photos): garment outlines plus attributes for length, silhouette (slim/straight/wide leg) and waistline. Annotations are CC BY 4.0, so commercial use is OK with credit; the photos keep their Flickr licenses. Best first choice.
+- **DeepFashion / DeepFashion2:** landmark points for sleeve ends, hems, collar and waistline. Research use only, so internal experiments at most.
+- **ModaNet:** outlines on street photos; check the license.
+- **Fashion144k:** outfit votes (popularity, not quality).
+All of them skew female and studio/street, not mirror selfies, so confirm on his own photos.
+
 **Truth is the blocker:** the gold set (`inputs/gold-set/me/`, your one-outfit variants: cuffed vs not, tucked vs not, jacket on and off) and the size-ladder shoot. Until they exist, label blind on the saved photos as before.
 
 **Rules:** CLAUDE.md rule 7 (profiles) and rule 9 (memory). No app change until a script passes and the founder sees the before/after.
