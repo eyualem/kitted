@@ -1075,3 +1075,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Founder's calls (on the to-do list):** the App Store name and subtitle (default `Kitted: Outfit Rater for Men` / `Score your fit. Get the fix.`), and $5.99 vs $7.99 monthly (default keep).
     - **Founder's research tasks:** 10 interviews (Mom Test script in the report), a competitor teardown with the same photo twice in each app and in ChatGPT, a TikTok scan by hand, and a Codex Reddit prompt.
     - The handles and domain task moves from P2 to P1.
+
+226. **Niche, problem statement and differentiation written down; Fitted reviewed (Oct 12; founder: "the good thing about our app is the fit check, and you don't have to upload all your clothes… it picks it up as you rate and then gives you suggestions").** Added to `market/market-research.md` §5.1–5.3 and §4.2, and to `market/competitors-adjacent.md` → Fitted.
+    - **Niche:** a fit check for guys who want to dress better but don't know where to start (18–30; beachhead 18–25 at a "new chapter" moment).
+    - **Problem (short):** guys can't tell whether their outfit works or what to change, and there's no quick, honest, judgment-free way to find out.
+    - **Differentiation:** Claude's correction to the founder's framing: "no uploading" alone isn't unique (Fitted's Fit Pic Magic does it; Whering has announced it). The unique part is the joined loop: fit check → score + one fix → the closet fills as a side effect → suggestions from owned clothes → check that fit. One line: "the only fit check that learns your closet while it rates your fits". Lead with the fit check; the closet is the reason to stay.
+    - **Fitted facts** (lookup API, 180 reviews, the Superwall post re-read):
+      - 1,157 ratings, 4.5★; no outfit score
+      - 600K+ downloads and 500M views via $20 creator test videos, with a creator as co-founder (self-reported)
+      - 30% of recent reviews 1–2★ (billing, bugs, sign-in, bad cut-outs)
+      - ~1 rating per 500 downloads (one data point; small competitors are bigger than their ratings suggest)
+    - **Open, tested by the interviews:** how often the problem happens (daily vs only before events).

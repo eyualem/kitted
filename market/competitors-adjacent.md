@@ -171,6 +171,27 @@ Ratings are US App Store, Oct 12, 2026. "Closet from photos": **auto-from-outfit
 - **What it does:** **"Fit Pic Magic": upload a photo of yourself in an outfit and AI extracts each piece into flat-lays.** Also Gmail receipt import, "Ask Fitted" chat by weather and occasion, a digital-twin try-on, and public closets.
 - **Numbers:** **600K+ downloads**, growth from organic TikTok and about $20 creator videos (Superwall blog, Nov 22, 2025, [superwall.dev](https://superwall.dev/blog/how-reid-moncada-built-a-viral-ai-fashion-app-that-hit-600k)). The same post says paywalls were removed at that time, but the store lists subscriptions today. Funding: aggregators conflict, and Caplight's $13.15M figure is doubtful (snippet, unverified).
 - **Scores outfits:** No.
+- **Deep dive (Claude, Oct 12, after the founder asked):**
+  - **Listing:** Apple's lookup API says "Fitted — AI Closet. Digital Twin. Style Assistant." Lifestyle, 4+, released Feb 7, 2025, v11.8 on Aug 22, 2026. Features:
+    - Fit Pic Magic
+    - Gmail import
+    - "Ask Fitted" chat by weather and occasion
+    - a Smart Outfit Generator (shuffle, lock pieces)
+    - a trip planner
+    - a digital-twin try-on from a face and body photo
+  - **Founder story** (the Superwall post, re-read today):
+    - founder Reid Moncada (previously a dorm laundry service in 18 cities)
+    - "over 600,000 downloads", "500 million views", "over two million pieces" uploaded
+    - creators paid about $20 a video to test, winners boosted with ads, downloads at "1 to 15 cents each" (self-reported)
+    - the fashion creator Max Gomez went from paid creator to co-founder with equity
+    - a crypto token, "Fitcoin"
+    - "now free to use, with paywalls removed". Subscriptions are listed again today.
+  - **Reviews:** the 180 most recent US reviews (Feb 2025 – Aug 2026, Apple's review feed) are 57% 5★ and 30% 1–2★.
+    - Keyword counts: charges/subscriptions 41, bugs/sign-in/slow processing 48, closet/upload 53. "Fit Pic Magic" or extraction is never mentioned by name.
+    - Hand-read complaints: charged for over a year, sign-in timeouts, one photo processed at a time, graphic tees cut wrong ("cuts the graphic out and gets rid of the tee"), "doesn't know what a shirt is".
+    - The audience reads young and mixed-gender (college students, "bro").
+  - **Ratings vs downloads:** 600K+ downloads and ~1,150 ratings is roughly 1 rating per 500 downloads (one data point).
+  - *Judgement:* the closest grown competitor to Kitted's closet side, and medium threat. If it added a fit score, it would be the nearest rival.
 
 ### Gensmo
 - **Store:** Serendipity One Inc. · [id6636520663](https://apps.apple.com/us/app/gensmo-ai-stylist-try-on/id6636520663) · 1,757 ratings, 4.68 · 13+ · credits $5–$50.

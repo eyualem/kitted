@@ -103,13 +103,22 @@ The SOM assumes 20K / 75K / 250K downloads in year one with $0 marketing (judgem
 | **Men-only style apps** | Styled ($79.99/yr, 7 am outfit), Grayne ($5.99/mo), Twelve70 ("Men's Pocket Stylist"), Suited, Alice | 32 ratings | Low today | Tiny, none gives a score. Styled is almost your morning card. **Avoid "pocket stylist" in public copy: Twelve70 uses it** |
 | **Looksmax apps** | Umax (51,620), LooksMax AI (42,720), LooxUP, UCHAD, PSL | ~157K ratings combined | Indirect | Same guys, same "rate me" urge, but they rate faces. 81% of Umax's latest 250 reviews are 1–2★ |
 
-### 4.2 The five to know by name
+### 4.2 The six to know by name
 
 1. **ChatGPT.** Free, huge, now with try-on and shopping. One "rate my fit" feature with memory would hurt. *Your answer:* the same photo gets the same score, a closet that fills itself, a beginner flow (photo in, verdict and one fix out, no prompt writing), and a daily habit.
 2. **Looksee – Outfit Check** (10 ratings, Jan 2026). The closest pitch to yours: a verdict plus a score, clothes only, 18+. But the "First Fix" is paid ($4.99/wk or $39.99/yr) and there's no closet. *Your answer:* the fix is free.
 3. **DRPD – Rate My Outfit AI** (Mar 2026). "Honest Score & Specific Fixes", rescan to compare, $29.99/yr: your loop at your price. *Your answer:* consistency, a closet, made for guys, a free daily check.
 4. **GRWM – AI Stylist** (1,866 ratings). The largest pure rater, but you pay before you see tips; 69% of its latest 63 reviews are 1–2★, mostly about the paywall. *Lesson:* a hard paywall gets downloads and then gets hated.
 5. **Dressly** (31,865 ratings). Proof that a style app with a score can make money (estimated, unverified), with women and with weekly plans. Its latest reviews are full of surprise charges and cancelling trouble. *Lesson:* plain trial terms are a selling point.
+6. **Fitted – AI Closet** (1,157 ratings, 4.5★, Feb 2025). The closest *grown* app to Kitted's closet side.
+   - **What it does:** "Fit Pic Magic" cuts each piece out of a photo of you in an outfit and puts it in your closet. It also has a chat stylist by weather and occasion, an outfit shuffler, a trip packer and a "digital twin" try-on. **It never scores your outfit or tells you what to fix.**
+   - **Growth:** 600K+ downloads and 500M views, almost all from TikTok. Creators were paid about $20 a video to test ideas, and a fashion creator became co-founder (founder's own numbers, Superwall blog, Nov 2025).
+   - **Reviews:** 30% of its latest 180 are 1–2★: billing, bugs, sign-in failures, and pieces cut out wrong. The audience reads young and mixed-gender.
+   - **Lessons:**
+     - ratings undercount downloads by roughly 500× (one data point)
+     - the cheap-creator TikTok model works in this exact space
+     - cut-outs that fail are visible and annoying, which is why Kitted asks "Is this your grey hoodie?" and draws tiles in code
+   - **Threat: medium.** If it added a fit score, it would be your nearest rival.
 
 ### 4.3 What the reviews say (Claude pulled them today)
 
@@ -135,7 +144,52 @@ Claude downloaded the most recent public US reviews (Apple's review feed) for Dr
 
 ---
 
-## 5. Positioning: how Kitted should present itself
+## 5. Niche, problem and positioning
+
+### 5.1 The niche
+**A fit check for guys who want to dress better but don't know where to start.** That's narrower than "men's fashion app" or "AI stylist", which are crowded with shopping apps and women's closet apps.
+- **Who:** guys 18–30, style beginners, US. Start with 18–25 at a "new chapter" moment: college, a first internship or job, interviews, dates, a fresh start after a breakup.
+- **What they want:** to look put together and grown up, without trying too hard.
+- **What they fear:** looking off, or looking like they tried too hard.
+
+### 5.2 The problem statement
+**Short:** *Guys can't tell whether their outfit works or what to change, and there's no quick, honest, judgment-free way to find out.*
+
+**Full:** *Young guys want to look put together for class, a first job or a date, but most don't know where to start. Standing in front of the mirror, they can't tell if an outfit works or what to change. Friends are polite or not around. ChatGPT gives a different answer every time and only helps if you know what to ask. Most outfit apps charge before showing anything, and the popular "rate me" apps judge their face instead of their clothes. So they either wear the same safe outfit every day or overthink it and feel like they're trying too hard.*
+
+**Where it comes from:**
+- Oct 5 research (`research-context.md` C7):
+  - the #1 blocker is not knowing where to start; then fit, the fear of trying too hard, and putting outfits together
+  - the top motivations are confidence, dating, and work and first impressions
+- §3–4 here: how today's alternatives fall short.
+
+**The weak spot to test in the interviews:** how *often* guys feel this. Every morning supports a daily habit and a subscription. Only before an interview or a date means a few uses a year and few payers. Interview question 1 is there for this.
+
+### 5.3 What makes Kitted different
+Kitted's core, in the founder's words (Oct 12): **the fit check, plus a closet you never have to upload. It picks up your clothes as you rate fits, then uses them for suggestions later.**
+
+Both halves exist somewhere else. **What no one else offers is the two joined into one loop:**
+
+> **Send a fit pic → get a score and the one fix → your clothes are saved without extra work → tomorrow's outfit idea comes from the clothes you actually own → check that fit too.**
+
+| | Scores your fit + tells you the fix | Closet without uploading everything | Suggestions from your own clothes | Same photo, same score | Free daily result | Made for guys |
+|---|---|---|---|---|---|---|
+| **Kitted** | Yes, at least one fix free | Yes, from your fit checks | Yes, the morning card | Yes, by design | Yes | Yes |
+| ChatGPT | Kind of; you have to ask | No | Only if you describe your clothes | No | Yes (limited) | No |
+| Looksee, DRPD, GRWM (raters) | Yes, but the fix or tips are paid | No closet | No | Not promised | No | No |
+| Fitted | No score | Yes, Fit Pic Magic (you upload fit pics to fill it) | Yes, outfit generator and chat | n/a | Paid tiers | No (mixed) |
+| Alta, Whering (closets) | No | No, upload item by item (Whering has announced a photo scanner) | Yes | n/a | Yes (free) | No (women-first) |
+| Umax and other looksmax apps | Rate your face, not clothes | No | No | Users say no | No | Yes |
+
+**The honest version:**
+- **"No uploading" alone isn't unique.** Fitted already does it, and Whering has announced it. Kitted's difference is that you never set out to build a closet: it fills up as a side effect of checking your fits, then gets used for advice.
+- **The closet is the reason to stay, not the hook.** Lead with the fit check. Say "it learns your clothes" second.
+- **Every feature can be copied.** The moat is the loop working well, your daily videos, and each user's closet growing over weeks (which makes switching costly).
+
+**One sentence of differentiation:**
+> *Kitted is the only fit check that learns your closet while it rates your fits, so its fixes and outfit ideas use clothes you already own whenever it can.*
+
+### 5.4 Positioning: how Kitted should present itself
 
 Positioning means choosing which alternative you're compared with, what only you do, and for whom. This follows April Dunford's method (*Obviously Awesome*).
 
