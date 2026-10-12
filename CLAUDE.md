@@ -40,6 +40,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P1** · **Should bunched / stacked hems on loose jeans cost points?** (#220) This is the biggest reason your fits score higher on Proportions than the judges think (they dock your wide jeans pooling on the shoes). The style research says stacking on purpose is fine for baggy jeans (streetwear), while GQ says "gentle pooling, not bunching". Default: no points until the gold set's hem pairs; it stays a tip.
 - [ ] **P2** · **"Going for" (built Oct 11, #218; demo screens 71–78):** it changes the advice, never the score. Should it ever lower the score when the outfit clearly misses that look? Default: advice only. Also skim its words (`app/src/i18n/en.ts`, keys `gf.*`), 5 min.
 - [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
 - [ ] **P2** · **Look at the new card and sheet** on the Simulator or your phone (5 min): `screenshots/parts-app/`. Is the chevron after "/10" a clear enough cue? Default: keep it.
@@ -156,6 +157,8 @@
   - Fit can't go above 7 until the AI can read the shoulder seam.
   - The hem stack and jacket length still can't be read.
 - **Not on your phone yet:** the JS reaches it through the dev server (if Metro is running), but the face-hiding fix needs `tools/phone/install.sh`.
+
+- **Proportions barely moves on real photos (checked Oct 11, #220, `rubric/research/parts/agreement-test.md`):** it sits at 7.0 on 78% of saved fits. Letting two readers (the main reading, a second look, the phone's ruler) vote didn't help: when they fire they're right, but they miss too often and inconsistently, so scores got less steady. Even with perfect facts the current proportion rules move only 3 scores; the real gap on your photos is bunched hems on wide jeans (your call above). Next: a tight hem-and-shoe close-up test with one yes/no question (about $0.30), and the gold set.
 
 ## Where things stand (Oct 8, 2026)
 
