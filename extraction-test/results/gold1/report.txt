@@ -1,0 +1,6 @@
+photos read 225 of 226 · cost $2.69
+steady within 0.5: 218/225 · identical: 177/225
+score spread (run 0): 5.5: 4 · 6.0: 11 · 6.5: 33 · 7.0: 98 · 7.5: 47 · 8.0: 30
+  ig: n 130 · mean 7.12 · 8+ 20 · ≤6 6
+  pin: n 72 · mean 6.92 · 8+ 4 · ≤6 9
+  rd: n 21 · mean 7.50 · 8+ 6 · ≤6 0

@@ -1,0 +1,2031 @@
+{
+ "panel": {
+  "pin-045": 6.0,
+  "pin-053": 6.0,
+  "ig-072": 8.0,
+  "pin-011": 6.0,
+  "pin-066": 6.0,
+  "ig-015": 7.5,
+  "ig-038": 8.0,
+  "ig-031": 8.5,
+  "ig-004": 7.0,
+  "ig-130": 7.0,
+  "ig-066": 7.5,
+  "ig-119": 8.0,
+  "pin-067": 5.0,
+  "ig-124": 8.0,
+  "pin-022": 5.5,
+  "pin-033": 5.0,
+  "pin-013": 6.0,
+  "pin-063": 5.0,
+  "ig-116": 7.5,
+  "pin-032": 6.5,
+  "pin-049": 6.5,
+  "pin-031": 5.0,
+  "pin-065": 7.0,
+  "rd-006": 6.5,
+  "ig-110": 8.5,
+  "ig-096": 8.0,
+  "ig-129": 6.5,
+  "pin-024": 2.0,
+  "pin-046": 5.5,
+  "ig-010": 8.0,
+  "ig-103": 7.0,
+  "ig-078": 7.5,
+  "ig-023": 8.0,
+  "ig-107": 7.5,
+  "ig-106": 8.0,
+  "ig-054": 7.5,
+  "pin-029": 7.0,
+  "ig-012": 7.5,
+  "ig-052": 7.5,
+  "ig-121": 8.0,
+  "pin-048": 6.0,
+  "pin-038": 5.0,
+  "ig-064": 8.0,
+  "ig-021": 7.5,
+  "ig-109": 8.0,
+  "pin-004": 6.5,
+  "ig-097": 5.5,
+  "ig-008": 7.5,
+  "rd-002": 7.5,
+  "rd-003": 7.5,
+  "ig-061": 8.0,
+  "ig-113": 7.5,
+  "rd-015": 6.0,
+  "ig-037": 7.0,
+  "ig-132": 7.0,
+  "ig-006": 8.0,
+  "ig-084": 7.0,
+  "ig-030": 7.0,
+  "ig-080": 7.5,
+  "pin-060": 6.5,
+  "ig-098": 6.0,
+  "ig-122": 7.0,
+  "rd-012": 7.0,
+  "ig-005": 7.5,
+  "rd-014": 6.5,
+  "rd-001": 7.0,
+  "ig-017": 8.0,
+  "ig-086": 7.0,
+  "rd-016": 7.0,
+  "ig-077": 8.0,
+  "ig-081": 7.0,
+  "ig-007": 8.0,
+  "ig-099": 6.5,
+  "ig-083": 7.5,
+  "ig-035": 8.5,
+  "pin-040": 6.5,
+  "ig-112": 7.5,
+  "pin-020": 6.0,
+  "ig-069": 7.0,
+  "ig-033": 7.5,
+  "pin-062": 6.0,
+  "ig-056": 8.0,
+  "ig-036": 8.0,
+  "pin-015": 5.0,
+  "pin-007": 5.5,
+  "pin-023": 3.5,
+  "ig-067": 7.5,
+  "ig-091": 8.0,
+  "ig-011": 8.0,
+  "ig-089": 7.0,
+  "ig-127": 6.5,
+  "ig-040": 8.0,
+  "ig-073": 8.0,
+  "pin-028": 5.5,
+  "rd-011": 6.0,
+  "ig-123": 7.5,
+  "pin-068": 7.5,
+  "pin-017": 6.0,
+  "ig-111": 8.5,
+  "ig-085": 7.5,
+  "ig-090": 7.0,
+  "rd-018": 6.5,
+  "pin-016": 5.5,
+  "pin-044": 6.5,
+  "rd-004": 8.0,
+  "ig-043": 8.0,
+  "pin-043": 7.5,
+  "pin-058": 5.0,
+  "ig-063": 7.5,
+  "pin-025": 7.0,
+  "ig-057": 7.5,
+  "pin-047": 6.5,
+  "pin-021": 4.5,
+  "ig-022": 8.0,
+  "pin-051": 7.0,
+  "ig-024": 7.5,
+  "pin-059": 4.5,
+  "pin-018": 6.5,
+  "ig-020": 8.0,
+  "rd-019": 7.5,
+  "ig-018": 8.0,
+  "ig-088": 8.0,
+  "ig-092": 8.0,
+  "ig-045": 8.5,
+  "pin-012": 5.0,
+  "ig-117": 7.5,
+  "pin-041": 6.5,
+  "pin-050": 7.0,
+  "pin-071": 5.5,
+  "ig-115": 8.0,
+  "ig-076": 7.5,
+  "pin-061": 6.5,
+  "pin-069": 6.5,
+  "ig-050": 7.5,
+  "ig-079": 8.0,
+  "ig-042": 8.0,
+  "ig-128": 7.0,
+  "ig-074": 8.0,
+  "rd-013": 7.0,
+  "rd-017": 6.5,
+  "ig-102": 8.0,
+  "ig-082": 7.0,
+  "rd-010": 6.0,
+  "ig-100": 7.0,
+  "pin-019": 6.5,
+  "ig-027": 8.0,
+  "pin-074": 6.0,
+  "pin-037": 7.0,
+  "pin-052": 6.5,
+  "ig-003": 7.0,
+  "pin-003": 6.0,
+  "pin-056": 6.5,
+  "ig-070": 7.0,
+  "ig-068": 7.5,
+  "ig-009": 7.5,
+  "ig-032": 8.0,
+  "pin-072": 6.5,
+  "ig-060": 7.5,
+  "ig-039": 8.0,
+  "ig-065": 5.5,
+  "ig-051": 7.5,
+  "ig-048": 8.0,
+  "ig-014": 7.5,
+  "rd-021": 7.5,
+  "pin-006": 5.0,
+  "pin-030": 5.5,
+  "pin-039": 6.0,
+  "ig-093": 8.5,
+  "ig-025": 8.5,
+  "pin-035": 5.5,
+  "ig-105": 8.0,
+  "pin-008": 6.5,
+  "pin-002": 7.0,
+  "rd-009": 7.5,
+  "ig-087": 7.0,
+  "pin-042": 7.5,
+  "pin-010": 6.5,
+  "pin-073": 5.5,
+  "pin-005": 7.0,
+  "ig-062": 7.0,
+  "pin-026": 6.0,
+  "pin-070": 5.0,
+  "ig-049": 8.0,
+  "ig-016": 7.5,
+  "pin-064": 6.5,
+  "ig-058": 7.5,
+  "ig-053": 7.0,
+  "ig-095": 7.5,
+  "ig-046": 8.5,
+  "ig-131": 8.0,
+  "rd-020": 7.5,
+  "ig-013": 8.0,
+  "pin-001": 7.0,
+  "ig-019": 8.0,
+  "pin-054": 6.5,
+  "ig-071": 8.0,
+  "ig-001": 7.5,
+  "ig-047": 8.0,
+  "pin-057": 6.0,
+  "ig-029": 7.5,
+  "ig-055": 7.5,
+  "ig-075": 7.5,
+  "pin-009": 6.5,
+  "rd-008": 7.5,
+  "pin-034": 5.5,
+  "ig-034": 9.0,
+  "pin-014": 6.0,
+  "rd-005": 7.5,
+  "ig-044": 8.0,
+  "rd-007": 8.0,
+  "ig-094": 8.0,
+  "pin-055": 6.5,
+  "ig-126": 7.5,
+  "ig-101": 6.5,
+  "ig-059": 8.0,
+  "pin-027": 5.5,
+  "ig-125": 7.5,
+  "ig-028": 8.0,
+  "ig-118": 7.5,
+  "ig-104": 8.5,
+  "ig-002": 8.0,
+  "ig-108": 8.0,
+  "ig-114": 7.5,
+  "ig-041": 8.0,
+  "pin-036": 6.5
+ },
+ "app": {
+  "ig-001": 7.0,
+  "ig-002": 7.0,
+  "ig-003": 7.0,
+  "ig-004": 7.5,
+  "ig-005": 7.0,
+  "ig-006": 7.5,
+  "ig-007": 6.5,
+  "ig-008": 8.0,
+  "ig-009": 6.5,
+  "ig-010": 7.5,
+  "ig-011": 7.5,
+  "ig-012": 7.5,
+  "ig-013": 7.5,
+  "ig-014": 7.5,
+  "ig-015": 7.0,
+  "ig-016": 5.5,
+  "ig-017": 7.0,
+  "ig-018": 7.5,
+  "ig-019": 7.5,
+  "ig-020": 6.5,
+  "ig-021": 7.0,
+  "ig-022": 7.0,
+  "ig-023": 7.5,
+  "ig-024": 8.0,
+  "ig-025": 7.0,
+  "ig-027": 7.0,
+  "ig-028": 7.0,
+  "ig-029": 7.0,
+  "ig-030": 6.5,
+  "ig-031": 7.5,
+  "ig-032": 6.5,
+  "ig-033": 7.5,
+  "ig-034": 8.0,
+  "ig-035": 8.0,
+  "ig-036": 6.5,
+  "ig-037": 6.5,
+  "ig-038": 7.0,
+  "ig-039": 7.0,
+  "ig-040": 8.0,
+  "ig-041": 7.0,
+  "ig-042": 7.0,
+  "ig-043": 6.5,
+  "ig-044": 7.5,
+  "ig-045": 7.0,
+  "ig-046": 7.0,
+  "ig-047": 7.0,
+  "ig-048": 8.0,
+  "ig-049": 7.0,
+  "ig-050": 7.5,
+  "ig-051": 8.0,
+  "ig-052": 7.0,
+  "ig-053": 7.0,
+  "ig-054": 7.5,
+  "ig-055": 6.5,
+  "ig-056": 7.0,
+  "ig-057": 7.0,
+  "ig-058": 7.0,
+  "ig-059": 7.5,
+  "ig-060": 7.0,
+  "ig-061": 6.0,
+  "ig-062": 6.5,
+  "ig-063": 7.0,
+  "ig-064": 7.0,
+  "ig-065": 6.0,
+  "ig-066": 7.0,
+  "ig-067": 7.0,
+  "ig-068": 7.0,
+  "ig-069": 7.0,
+  "ig-070": 7.5,
+  "ig-071": 6.5,
+  "ig-072": 7.0,
+  "ig-073": 7.0,
+  "ig-074": 7.5,
+  "ig-075": 6.5,
+  "ig-076": 6.5,
+  "ig-077": 7.0,
+  "ig-078": 6.5,
+  "ig-079": 6.5,
+  "ig-080": 7.0,
+  "ig-081": 6.5,
+  "ig-082": 7.0,
+  "ig-083": 7.0,
+  "ig-084": 7.0,
+  "ig-085": 7.0,
+  "ig-086": 7.0,
+  "ig-087": 6.5,
+  "ig-088": 7.0,
+  "ig-089": 7.0,
+  "ig-090": 6.5,
+  "ig-091": 7.0,
+  "ig-092": 7.0,
+  "ig-093": 8.0,
+  "ig-094": 8.0,
+  "ig-095": 7.5,
+  "ig-096": 8.0,
+  "ig-097": 7.0,
+  "ig-098": 6.5,
+  "ig-099": 7.5,
+  "ig-100": 6.0,
+  "ig-101": 7.0,
+  "ig-102": 6.0,
+  "ig-103": 6.0,
+  "ig-104": 7.5,
+  "ig-105": 7.5,
+  "ig-106": 6.5,
+  "ig-107": 7.0,
+  "ig-108": 7.0,
+  "ig-109": 8.0,
+  "ig-110": 8.0,
+  "ig-111": 8.0,
+  "ig-112": 7.5,
+  "ig-113": 8.0,
+  "ig-114": 8.0,
+  "ig-115": 8.0,
+  "ig-116": 7.0,
+  "ig-117": 8.0,
+  "ig-118": 7.0,
+  "ig-119": 8.0,
+  "ig-121": 8.0,
+  "ig-122": 7.5,
+  "ig-123": 7.0,
+  "ig-124": 7.0,
+  "ig-125": 8.0,
+  "ig-126": 7.0,
+  "ig-127": 7.0,
+  "ig-128": 6.5,
+  "ig-129": 7.0,
+  "ig-130": 7.0,
+  "ig-131": 7.5,
+  "ig-132": 6.5,
+  "pin-001": 6.5,
+  "pin-002": 7.0,
+  "pin-003": 7.0,
+  "pin-004": 7.0,
+  "pin-005": 7.0,
+  "pin-006": 7.5,
+  "pin-007": 7.5,
+  "pin-008": 8.0,
+  "pin-009": 7.0,
+  "pin-010": 7.0,
+  "pin-011": 6.5,
+  "pin-012": 6.5,
+  "pin-013": 6.5,
+  "pin-014": 6.5,
+  "pin-015": 6.0,
+  "pin-016": 6.5,
+  "pin-017": 7.0,
+  "pin-018": 8.0,
+  "pin-019": 8.0,
+  "pin-020": 6.5,
+  "pin-021": 6.5,
+  "pin-022": 6.0,
+  "pin-023": 5.5,
+  "pin-025": 7.0,
+  "pin-026": 7.0,
+  "pin-027": 6.5,
+  "pin-028": 7.0,
+  "pin-029": 7.0,
+  "pin-030": 6.0,
+  "pin-031": 7.0,
+  "pin-032": 7.0,
+  "pin-033": 7.5,
+  "pin-034": 7.0,
+  "pin-035": 7.0,
+  "pin-036": 7.0,
+  "pin-037": 7.0,
+  "pin-038": 5.5,
+  "pin-039": 7.0,
+  "pin-040": 6.5,
+  "pin-041": 7.0,
+  "pin-042": 7.0,
+  "pin-043": 7.0,
+  "pin-044": 8.0,
+  "pin-046": 6.0,
+  "pin-047": 7.5,
+  "pin-048": 7.5,
+  "pin-049": 7.5,
+  "pin-050": 7.5,
+  "pin-051": 7.0,
+  "pin-052": 7.5,
+  "pin-053": 7.0,
+  "pin-054": 7.0,
+  "pin-055": 7.0,
+  "pin-056": 6.0,
+  "pin-057": 6.0,
+  "pin-058": 7.0,
+  "pin-059": 7.0,
+  "pin-060": 7.5,
+  "pin-061": 7.5,
+  "pin-062": 7.5,
+  "pin-063": 7.0,
+  "pin-064": 7.5,
+  "pin-065": 7.5,
+  "pin-066": 7.0,
+  "pin-067": 7.0,
+  "pin-068": 7.0,
+  "pin-069": 7.0,
+  "pin-070": 6.5,
+  "pin-071": 7.0,
+  "pin-072": 7.0,
+  "pin-073": 7.0,
+  "pin-074": 5.5,
+  "rd-001": 7.0,
+  "rd-002": 8.0,
+  "rd-003": 7.5,
+  "rd-004": 8.0,
+  "rd-005": 7.0,
+  "rd-006": 7.5,
+  "rd-007": 7.5,
+  "rd-008": 7.5,
+  "rd-009": 7.5,
+  "rd-010": 8.0,
+  "rd-011": 7.5,
+  "rd-012": 8.0,
+  "rd-013": 7.0,
+  "rd-014": 7.5,
+  "rd-015": 7.0,
+  "rd-016": 7.5,
+  "rd-017": 8.0,
+  "rd-018": 7.0,
+  "rd-019": 7.0,
+  "rd-020": 8.0,
+  "rd-021": 7.5
+ },
+ "per_judge": {
+  "pin-045": {
+   "minimal": 5.075,
+   "peer": 4.35,
+   "street": 6.075,
+   "tailoring": 6.475,
+   "workwear": 6.2
+  },
+  "pin-053": {
+   "minimal": 5.85,
+   "peer": 5.85,
+   "street": 5.45,
+   "tailoring": 5.125,
+   "workwear": 5.85
+  },
+  "ig-072": {
+   "minimal": 7.925,
+   "peer": 7.975,
+   "street": 8.075,
+   "tailoring": 8.05,
+   "workwear": 7.85
+  },
+  "pin-011": {
+   "minimal": 6.0,
+   "peer": 6.0,
+   "street": 5.85,
+   "tailoring": 5.875,
+   "workwear": 6.275
+  },
+  "pin-066": {
+   "minimal": 6.147058823529412,
+   "peer": 6.175,
+   "street": 6.294117647058823,
+   "tailoring": 6.117647058823529,
+   "workwear": 6.529411764705882
+  },
+  "ig-015": {
+   "minimal": 7.05,
+   "peer": 7.125,
+   "street": 7.6,
+   "tailoring": 7.375,
+   "workwear": 7.425
+  },
+  "ig-038": {
+   "minimal": 7.325,
+   "peer": 7.95,
+   "street": 8.525,
+   "tailoring": 8.125,
+   "workwear": 7.7
+  },
+  "ig-031": {
+   "minimal": 8.425,
+   "peer": 8.05,
+   "street": 8.325,
+   "tailoring": 8.55,
+   "workwear": 8.125
+  },
+  "ig-004": {
+   "minimal": 6.375,
+   "peer": 6.175,
+   "street": 7.275,
+   "tailoring": 7.125,
+   "workwear": 7.275
+  },
+  "ig-130": {
+   "minimal": 6.725,
+   "peer": 6.4,
+   "street": 7.175,
+   "tailoring": 7.45,
+   "workwear": 7.575
+  },
+  "ig-066": {
+   "minimal": 7.6,
+   "peer": 7.75,
+   "street": 8.25,
+   "tailoring": 7.675,
+   "workwear": 7.475
+  },
+  "ig-119": {
+   "minimal": 8.0,
+   "peer": 7.8,
+   "street": 8.075,
+   "tailoring": 8.025,
+   "workwear": 7.85
+  },
+  "pin-067": {
+   "minimal": 4.647058823529412,
+   "peer": 4.647058823529412,
+   "street": 5.529411764705882,
+   "tailoring": 5.176470588235294,
+   "workwear": 5.764705882352941
+  },
+  "ig-124": {
+   "minimal": 7.95,
+   "peer": 8.0,
+   "street": 8.125,
+   "tailoring": 8.2,
+   "workwear": 7.85
+  },
+  "pin-022": {
+   "minimal": 4.9875,
+   "peer": 5.3375,
+   "street": 5.112500000000001,
+   "tailoring": 5.425,
+   "workwear": 5.3625
+  },
+  "pin-033": {
+   "minimal": 5.175,
+   "peer": 4.25,
+   "street": 4.625,
+   "tailoring": 5.05,
+   "workwear": 5.8
+  },
+  "pin-013": {
+   "minimal": 5.85,
+   "peer": 6.1,
+   "street": 6.375,
+   "tailoring": 6.0,
+   "workwear": 6.475
+  },
+  "pin-063": {
+   "minimal": 5.15,
+   "peer": 5.1,
+   "street": 5.3,
+   "tailoring": 4.95,
+   "workwear": 5.4
+  },
+  "ig-116": {
+   "minimal": 7.6,
+   "peer": 7.325,
+   "street": 7.775,
+   "tailoring": 6.9,
+   "workwear": 7.425
+  },
+  "pin-032": {
+   "minimal": 6.55,
+   "peer": 6.475,
+   "street": 6.7,
+   "tailoring": 6.5,
+   "workwear": 7.05
+  },
+  "pin-049": {
+   "minimal": 5.85,
+   "peer": 6.575,
+   "street": 6.25,
+   "tailoring": 6.7,
+   "workwear": 6.725
+  },
+  "pin-031": {
+   "minimal": 4.794117647058823,
+   "peer": 4.852941176470588,
+   "street": 5.205882352941177,
+   "tailoring": 5.588235294117647,
+   "workwear": 6.235294117647059
+  },
+  "pin-065": {
+   "minimal": 7.175,
+   "peer": 7.3,
+   "street": 6.95,
+   "tailoring": 6.55,
+   "workwear": 6.725
+  },
+  "rd-006": {
+   "minimal": 6.175,
+   "peer": 6.75,
+   "street": 6.675,
+   "tailoring": 6.225,
+   "workwear": 6.5
+  },
+  "ig-110": {
+   "minimal": 8.4,
+   "peer": 8.55,
+   "street": 8.975,
+   "tailoring": 8.5,
+   "workwear": 8.5
+  },
+  "ig-096": {
+   "minimal": 7.675,
+   "peer": 7.85,
+   "street": 8.4,
+   "tailoring": 7.7,
+   "workwear": 7.775
+  },
+  "ig-129": {
+   "minimal": 6.525,
+   "peer": 7.0,
+   "street": 6.225,
+   "tailoring": 7.025,
+   "workwear": 6.575
+  },
+  "pin-024": {
+   "minimal": 2.05,
+   "peer": 2.0,
+   "street": 1.975,
+   "tailoring": 2.225,
+   "workwear": 3.225
+  },
+  "pin-046": {
+   "minimal": 4.8,
+   "peer": 5.75,
+   "street": 5.475,
+   "tailoring": 5.275,
+   "workwear": 5.975
+  },
+  "ig-010": {
+   "minimal": 7.95,
+   "peer": 8.1,
+   "street": 8.35,
+   "tailoring": 8.25,
+   "workwear": 8.2
+  },
+  "ig-103": {
+   "minimal": 7.1,
+   "peer": 7.025,
+   "street": 6.975,
+   "tailoring": 6.575,
+   "workwear": 6.775
+  },
+  "ig-078": {
+   "minimal": 7.675,
+   "peer": 7.675,
+   "street": 8.275,
+   "tailoring": 7.7,
+   "workwear": 7.775
+  },
+  "ig-023": {
+   "minimal": 7.975,
+   "peer": 7.975,
+   "street": 7.95,
+   "tailoring": 7.65,
+   "workwear": 7.525
+  },
+  "ig-107": {
+   "minimal": 7.475,
+   "peer": 7.0,
+   "street": 7.7,
+   "tailoring": 7.5,
+   "workwear": 7.5
+  },
+  "ig-106": {
+   "minimal": 8.1,
+   "peer": 7.325,
+   "street": 8.1,
+   "tailoring": 8.175,
+   "workwear": 7.475
+  },
+  "ig-054": {
+   "minimal": 7.875,
+   "peer": 7.675,
+   "street": 8.05,
+   "tailoring": 7.5,
+   "workwear": 7.575
+  },
+  "pin-029": {
+   "minimal": 6.85,
+   "peer": 6.65,
+   "street": 7.125,
+   "tailoring": 7.125,
+   "workwear": 7.425
+  },
+  "ig-012": {
+   "minimal": 7.85,
+   "peer": 7.35,
+   "street": 8.35,
+   "tailoring": 7.65,
+   "workwear": 7.7
+  },
+  "ig-052": {
+   "minimal": 7.65,
+   "peer": 7.6625,
+   "street": 7.6375,
+   "tailoring": 7.4125,
+   "workwear": 7.4375
+  },
+  "ig-121": {
+   "minimal": 7.925,
+   "peer": 7.825,
+   "street": 8.225,
+   "tailoring": 8.1,
+   "workwear": 7.925
+  },
+  "pin-048": {
+   "minimal": 5.925,
+   "peer": 5.55,
+   "street": 6.6,
+   "tailoring": 6.175,
+   "workwear": 6.075
+  },
+  "pin-038": {
+   "minimal": 4.05,
+   "peer": 4.4,
+   "street": 4.95,
+   "tailoring": 5.175,
+   "workwear": 5.2
+  },
+  "ig-064": {
+   "minimal": 7.6,
+   "peer": 7.8,
+   "street": 7.8,
+   "tailoring": 7.925,
+   "workwear": 7.95
+  },
+  "ig-021": {
+   "minimal": 7.275,
+   "peer": 7.225,
+   "street": 7.775,
+   "tailoring": 7.575,
+   "workwear": 7.7
+  },
+  "ig-109": {
+   "minimal": 7.675,
+   "peer": 7.525,
+   "street": 7.925,
+   "tailoring": 8.425,
+   "workwear": 7.925
+  },
+  "pin-004": {
+   "minimal": 6.675,
+   "peer": 6.2,
+   "street": 6.5,
+   "tailoring": 6.425,
+   "workwear": 6.275
+  },
+  "ig-097": {
+   "minimal": 5.75,
+   "peer": 5.475,
+   "street": 5.825,
+   "tailoring": 5.7,
+   "workwear": 5.45
+  },
+  "ig-008": {
+   "minimal": 7.4875,
+   "peer": 7.525,
+   "street": 7.925,
+   "tailoring": 7.575,
+   "workwear": 7.6
+  },
+  "rd-002": {
+   "minimal": 6.975,
+   "peer": 7.425,
+   "street": 7.35,
+   "tailoring": 7.575,
+   "workwear": 6.8
+  },
+  "rd-003": {
+   "minimal": 7.0,
+   "peer": 7.5,
+   "street": 7.425,
+   "tailoring": 7.425,
+   "workwear": 7.275
+  },
+  "ig-061": {
+   "minimal": 8.075,
+   "peer": 8.175,
+   "street": 7.975,
+   "tailoring": 7.975,
+   "workwear": 7.85
+  },
+  "ig-113": {
+   "minimal": 7.9,
+   "peer": 7.625,
+   "street": 7.575,
+   "tailoring": 7.725,
+   "workwear": 7.925
+  },
+  "rd-015": {
+   "minimal": 5.588235294117647,
+   "peer": 5.735294117647059,
+   "street": 6.411764705882353,
+   "tailoring": 6.411764705882353,
+   "workwear": 6.235294117647059
+  },
+  "ig-037": {
+   "minimal": 6.235294117647059,
+   "peer": 6.588235294117647,
+   "street": 6.911764705882353,
+   "tailoring": 7.205882352941177,
+   "workwear": 7.294117647058823
+  },
+  "ig-132": {
+   "minimal": 7.0,
+   "peer": 6.875,
+   "street": 6.8,
+   "tailoring": 7.275,
+   "workwear": 6.8
+  },
+  "ig-006": {
+   "minimal": 7.375,
+   "peer": 7.675,
+   "street": 8.075,
+   "tailoring": 8.15,
+   "workwear": 7.875
+  },
+  "ig-084": {
+   "minimal": 6.95,
+   "peer": 6.85,
+   "street": 7.475,
+   "tailoring": 7.825,
+   "workwear": 7.2
+  },
+  "ig-030": {
+   "minimal": 7.125,
+   "peer": 7.15,
+   "street": 7.1,
+   "tailoring": 7.85,
+   "workwear": 7.35
+  },
+  "ig-080": {
+   "minimal": 6.95,
+   "peer": 6.85,
+   "street": 7.7,
+   "tailoring": 8.025,
+   "workwear": 7.625
+  },
+  "pin-060": {
+   "minimal": 5.825,
+   "peer": 5.75,
+   "street": 6.325,
+   "tailoring": 6.4,
+   "workwear": 6.4
+  },
+  "ig-098": {
+   "minimal": 5.470588235294118,
+   "peer": 5.852941176470588,
+   "street": 6.294117647058823,
+   "tailoring": 5.911764705882353,
+   "workwear": 5.911764705882353
+  },
+  "ig-122": {
+   "minimal": 6.3,
+   "peer": 5.925,
+   "street": 7.425,
+   "tailoring": 7.5,
+   "workwear": 7.225
+  },
+  "rd-012": {
+   "minimal": 6.85,
+   "peer": 6.85,
+   "street": 6.8,
+   "tailoring": 6.575,
+   "workwear": 6.9
+  },
+  "ig-005": {
+   "minimal": 7.55,
+   "peer": 7.475,
+   "street": 8.0,
+   "tailoring": 7.925,
+   "workwear": 7.55
+  },
+  "rd-014": {
+   "minimal": 6.85,
+   "peer": 6.925,
+   "street": 6.7,
+   "tailoring": 6.7125,
+   "workwear": 6.675000000000001
+  },
+  "rd-001": {
+   "minimal": 6.6,
+   "peer": 6.725,
+   "street": 7.225,
+   "tailoring": 7.375,
+   "workwear": 7.225
+  },
+  "ig-017": {
+   "minimal": 7.6,
+   "peer": 7.625,
+   "street": 7.925,
+   "tailoring": 7.85,
+   "workwear": 7.85
+  },
+  "ig-086": {
+   "minimal": 6.525,
+   "peer": 6.275,
+   "street": 7.0,
+   "tailoring": 7.175,
+   "workwear": 6.925
+  },
+  "rd-016": {
+   "minimal": 6.575,
+   "peer": 7.0,
+   "street": 7.0,
+   "tailoring": 7.225,
+   "workwear": 7.225
+  },
+  "ig-077": {
+   "minimal": 7.75,
+   "peer": 7.775,
+   "street": 8.05,
+   "tailoring": 7.825,
+   "workwear": 7.925
+  },
+  "ig-081": {
+   "minimal": 6.55,
+   "peer": 6.45,
+   "street": 7.2,
+   "tailoring": 7.35,
+   "workwear": 7.125
+  },
+  "ig-007": {
+   "minimal": 8.125,
+   "peer": 8.125,
+   "street": 7.85,
+   "tailoring": 7.875,
+   "workwear": 7.85
+  },
+  "ig-099": {
+   "minimal": 6.025,
+   "peer": 6.225,
+   "street": 6.625,
+   "tailoring": 6.275,
+   "workwear": 6.35
+  },
+  "ig-083": {
+   "minimal": 6.7,
+   "peer": 6.625,
+   "street": 7.4,
+   "tailoring": 7.4,
+   "workwear": 7.4
+  },
+  "ig-035": {
+   "minimal": 8.25,
+   "peer": 8.275,
+   "street": 8.3,
+   "tailoring": 8.275,
+   "workwear": 8.05
+  },
+  "pin-040": {
+   "minimal": 5.8,
+   "peer": 5.825,
+   "street": 6.5,
+   "tailoring": 6.4,
+   "workwear": 6.525
+  },
+  "ig-112": {
+   "minimal": 7.9,
+   "peer": 7.5625,
+   "street": 7.75,
+   "tailoring": 7.65,
+   "workwear": 7.675
+  },
+  "pin-020": {
+   "minimal": 5.176470588235294,
+   "peer": 5.735294117647059,
+   "street": 6.176470588235294,
+   "tailoring": 5.764705882352941,
+   "workwear": 5.970588235294118
+  },
+  "ig-069": {
+   "minimal": 6.675,
+   "peer": 7.175,
+   "street": 7.2,
+   "tailoring": 7.475,
+   "workwear": 7.15
+  },
+  "ig-033": {
+   "minimal": 6.8,
+   "peer": 7.275,
+   "street": 7.825,
+   "tailoring": 7.9,
+   "workwear": 7.65
+  },
+  "pin-062": {
+   "minimal": 5.2,
+   "peer": 5.875,
+   "street": 6.375,
+   "tailoring": 6.25,
+   "workwear": 6.125
+  },
+  "ig-056": {
+   "minimal": 8.175,
+   "peer": 8.1,
+   "street": 7.55,
+   "tailoring": 7.975,
+   "workwear": 8.25
+  },
+  "ig-036": {
+   "minimal": 8.025,
+   "peer": 8.1,
+   "street": 8.025,
+   "tailoring": 8.2,
+   "workwear": 8.125
+  },
+  "pin-015": {
+   "minimal": 5.125,
+   "peer": 5.05,
+   "street": 5.275,
+   "tailoring": 5.8,
+   "workwear": 5.225
+  },
+  "pin-007": {
+   "minimal": 6.0625,
+   "peer": 6.0875,
+   "street": 5.4625,
+   "tailoring": 5.125,
+   "workwear": 5.25
+  },
+  "pin-023": {
+   "minimal": 3.15,
+   "peer": 2.9,
+   "street": 4.225,
+   "tailoring": 3.725,
+   "workwear": 4.05
+  },
+  "ig-067": {
+   "minimal": 7.475,
+   "peer": 7.2,
+   "street": 7.6,
+   "tailoring": 7.575,
+   "workwear": 7.55
+  },
+  "ig-091": {
+   "minimal": 8.5,
+   "peer": 8.0,
+   "street": 8.125,
+   "tailoring": 8.2,
+   "workwear": 7.925
+  },
+  "ig-011": {
+   "minimal": 8.225,
+   "peer": 8.425,
+   "street": 8.225,
+   "tailoring": 8.225,
+   "workwear": 8.85
+  },
+  "ig-089": {
+   "minimal": 6.825,
+   "peer": 6.65,
+   "street": 7.175,
+   "tailoring": 7.25,
+   "workwear": 6.7
+  },
+  "ig-127": {
+   "minimal": 6.35,
+   "peer": 6.35,
+   "street": 6.575,
+   "tailoring": 6.625,
+   "workwear": 6.575
+  },
+  "ig-040": {
+   "minimal": 8.2,
+   "peer": 8.2,
+   "street": 8.125,
+   "tailoring": 8.15,
+   "workwear": 8.425
+  },
+  "ig-073": {
+   "minimal": 7.9,
+   "peer": 7.825,
+   "street": 8.25,
+   "tailoring": 7.975,
+   "workwear": 8.125
+  },
+  "pin-028": {
+   "minimal": 6.05,
+   "peer": 5.4,
+   "street": 5.825,
+   "tailoring": 5.625,
+   "workwear": 5.625
+  },
+  "rd-011": {
+   "minimal": 6.1,
+   "peer": 5.925,
+   "street": 6.875,
+   "tailoring": 6.0,
+   "workwear": 6.375
+  },
+  "ig-123": {
+   "minimal": 7.55,
+   "peer": 7.325,
+   "street": 7.675,
+   "tailoring": 7.6,
+   "workwear": 7.625
+  },
+  "pin-068": {
+   "minimal": 7.55,
+   "peer": 7.475,
+   "street": 7.475,
+   "tailoring": 7.475,
+   "workwear": 7.65
+  },
+  "pin-017": {
+   "minimal": 5.705882352941177,
+   "peer": 5.794117647058823,
+   "street": 6.588235294117647,
+   "tailoring": 6.411764705882353,
+   "workwear": 6.088235294117647
+  },
+  "ig-111": {
+   "minimal": 8.35,
+   "peer": 8.2,
+   "street": 8.275,
+   "tailoring": 8.5,
+   "workwear": 8.425
+  },
+  "ig-085": {
+   "minimal": 7.4,
+   "peer": 7.425,
+   "street": 7.825,
+   "tailoring": 7.05,
+   "workwear": 7.575
+  },
+  "ig-090": {
+   "minimal": 6.575,
+   "peer": 7.0,
+   "street": 7.275,
+   "tailoring": 6.95,
+   "workwear": 6.95
+  },
+  "rd-018": {
+   "minimal": 6.45,
+   "peer": 6.525,
+   "street": 6.45,
+   "tailoring": 6.45,
+   "workwear": 6.7
+  },
+  "pin-016": {
+   "minimal": 5.725,
+   "peer": 5.225,
+   "street": 5.35,
+   "tailoring": 5.95,
+   "workwear": 5.6
+  },
+  "pin-044": {
+   "minimal": 6.5,
+   "peer": 6.1,
+   "street": 6.25,
+   "tailoring": 6.575,
+   "workwear": 6.6
+  },
+  "rd-004": {
+   "minimal": 8.175,
+   "peer": 7.8,
+   "street": 8.0,
+   "tailoring": 8.35,
+   "workwear": 8.35
+  },
+  "ig-043": {
+   "minimal": 7.45,
+   "peer": 8.025,
+   "street": 7.9,
+   "tailoring": 7.825,
+   "workwear": 8.05
+  },
+  "pin-043": {
+   "minimal": 7.175,
+   "peer": 7.4,
+   "street": 7.975,
+   "tailoring": 7.275,
+   "workwear": 7.775
+  },
+  "pin-058": {
+   "minimal": 4.411764705882353,
+   "peer": 4.647058823529412,
+   "street": 5.294117647058823,
+   "tailoring": 5.147058823529412,
+   "workwear": 5.705882352941177
+  },
+  "ig-063": {
+   "minimal": 7.4,
+   "peer": 7.2,
+   "street": 7.65,
+   "tailoring": 7.9,
+   "workwear": 7.9
+  },
+  "pin-025": {
+   "minimal": 6.975,
+   "peer": 7.15,
+   "street": 7.25,
+   "tailoring": 7.225,
+   "workwear": 7.325
+  },
+  "ig-057": {
+   "minimal": 7.5,
+   "peer": 7.325,
+   "street": 7.325,
+   "tailoring": 7.0,
+   "workwear": 7.125
+  },
+  "pin-047": {
+   "minimal": 6.5,
+   "peer": 6.55,
+   "street": 6.7,
+   "tailoring": 6.95,
+   "workwear": 6.95
+  },
+  "pin-021": {
+   "minimal": 4.175,
+   "peer": 4.55,
+   "street": 4.735294117647059,
+   "tailoring": 4.823529411764706,
+   "workwear": 4.764705882352941
+  },
+  "ig-022": {
+   "minimal": 7.8,
+   "peer": 7.8,
+   "street": 8.175,
+   "tailoring": 8.1,
+   "workwear": 8.5
+  },
+  "pin-051": {
+   "minimal": 7.05,
+   "peer": 6.875,
+   "street": 6.9,
+   "tailoring": 7.15,
+   "workwear": 7.15
+  },
+  "ig-024": {
+   "minimal": 7.325,
+   "peer": 7.45,
+   "street": 7.475,
+   "tailoring": 7.35,
+   "workwear": 7.225
+  },
+  "pin-059": {
+   "minimal": 3.9,
+   "peer": 4.2,
+   "street": 4.775,
+   "tailoring": 4.4,
+   "workwear": 4.575
+  },
+  "pin-018": {
+   "minimal": 6.175,
+   "peer": 6.625,
+   "street": 6.6,
+   "tailoring": 6.45,
+   "workwear": 6.6
+  },
+  "ig-020": {
+   "minimal": 8.125,
+   "peer": 8.075,
+   "street": 8.25,
+   "tailoring": 8.25,
+   "workwear": 7.825
+  },
+  "rd-019": {
+   "minimal": 7.425,
+   "peer": 7.45,
+   "street": 7.425,
+   "tailoring": 7.725,
+   "workwear": 7.55
+  },
+  "ig-018": {
+   "minimal": 7.825,
+   "peer": 7.95,
+   "street": 8.235294117647058,
+   "tailoring": 7.882352941176471,
+   "workwear": 7.588235294117647
+  },
+  "ig-088": {
+   "minimal": 7.525,
+   "peer": 7.9,
+   "street": 8.25,
+   "tailoring": 8.25,
+   "workwear": 8.05
+  },
+  "ig-092": {
+   "minimal": 8.1,
+   "peer": 8.025,
+   "street": 8.125,
+   "tailoring": 8.1,
+   "workwear": 8.125
+  },
+  "ig-045": {
+   "minimal": 8.35,
+   "peer": 8.25,
+   "street": 8.375,
+   "tailoring": 8.275,
+   "workwear": 8.275
+  },
+  "pin-012": {
+   "minimal": 5.075,
+   "peer": 5.075,
+   "street": 5.05,
+   "tailoring": 5.075,
+   "workwear": 5.0
+  },
+  "ig-117": {
+   "minimal": 7.4,
+   "peer": 7.625,
+   "street": 7.4,
+   "tailoring": 8.2,
+   "workwear": 8.2
+  },
+  "pin-041": {
+   "minimal": 6.3,
+   "peer": 6.45,
+   "street": 7.0,
+   "tailoring": 6.575,
+   "workwear": 7.075
+  },
+  "pin-050": {
+   "minimal": 7.0,
+   "peer": 6.8,
+   "street": 7.075,
+   "tailoring": 7.0,
+   "workwear": 6.95
+  },
+  "pin-071": {
+   "minimal": 5.4,
+   "peer": 5.425,
+   "street": 5.45,
+   "tailoring": 5.675,
+   "workwear": 5.675
+  },
+  "ig-115": {
+   "minimal": 8.05,
+   "peer": 7.925,
+   "street": 8.0,
+   "tailoring": 8.0,
+   "workwear": 7.925
+  },
+  "ig-076": {
+   "minimal": 6.8,
+   "peer": 7.375,
+   "street": 8.05,
+   "tailoring": 7.8,
+   "workwear": 7.675
+  },
+  "pin-061": {
+   "minimal": 6.55,
+   "peer": 6.35,
+   "street": 6.6,
+   "tailoring": 6.25,
+   "workwear": 6.975
+  },
+  "pin-069": {
+   "minimal": 6.225,
+   "peer": 6.525,
+   "street": 6.375,
+   "tailoring": 6.375,
+   "workwear": 6.725
+  },
+  "ig-050": {
+   "minimal": 7.475,
+   "peer": 7.725,
+   "street": 7.475,
+   "tailoring": 7.7,
+   "workwear": 7.5
+  },
+  "ig-079": {
+   "minimal": 7.675,
+   "peer": 7.675,
+   "street": 8.2,
+   "tailoring": 8.125,
+   "workwear": 8.125
+  },
+  "ig-042": {
+   "minimal": 7.9750000000000005,
+   "peer": 7.9625,
+   "street": 8.2,
+   "tailoring": 8.2375,
+   "workwear": 8.2
+  },
+  "ig-128": {
+   "minimal": 6.975,
+   "peer": 6.85,
+   "street": 7.45,
+   "tailoring": 7.05,
+   "workwear": 7.25
+  },
+  "ig-074": {
+   "minimal": 6.8,
+   "peer": 7.1,
+   "street": 8.15,
+   "tailoring": 7.9,
+   "workwear": 8.275
+  },
+  "rd-013": {
+   "minimal": 6.725,
+   "peer": 6.775,
+   "street": 6.775,
+   "tailoring": 6.55,
+   "workwear": 6.775
+  },
+  "rd-017": {
+   "minimal": 6.425,
+   "peer": 6.375,
+   "street": 6.6,
+   "tailoring": 6.675,
+   "workwear": 6.8
+  },
+  "ig-102": {
+   "minimal": 8.075,
+   "peer": 7.875,
+   "street": 7.65,
+   "tailoring": 7.8,
+   "workwear": 7.4
+  },
+  "ig-082": {
+   "minimal": 6.85,
+   "peer": 6.85,
+   "street": 6.775,
+   "tailoring": 7.4,
+   "workwear": 6.45
+  },
+  "rd-010": {
+   "minimal": 6.325,
+   "peer": 5.875,
+   "street": 6.225,
+   "tailoring": 6.425,
+   "workwear": 6.125
+  },
+  "ig-100": {
+   "minimal": 6.975,
+   "peer": 6.825,
+   "street": 7.025,
+   "tailoring": 6.95,
+   "workwear": 6.825
+  },
+  "pin-019": {
+   "minimal": 6.25,
+   "peer": 6.075,
+   "street": 6.425,
+   "tailoring": 6.9,
+   "workwear": 6.375
+  },
+  "ig-027": {
+   "minimal": 7.625,
+   "peer": 8.05,
+   "street": 7.8,
+   "tailoring": 7.8,
+   "workwear": 7.8
+  },
+  "pin-074": {
+   "minimal": 5.925,
+   "peer": 5.675,
+   "street": 5.625,
+   "tailoring": 5.95,
+   "workwear": 6.075
+  },
+  "pin-037": {
+   "minimal": 6.764705882352941,
+   "peer": 6.338235294117647,
+   "street": 7.205882352941177,
+   "tailoring": 7.088235294117647,
+   "workwear": 6.9264705882352935
+  },
+  "pin-052": {
+   "minimal": 6.75,
+   "peer": 6.625,
+   "street": 6.6,
+   "tailoring": 6.725,
+   "workwear": 6.575
+  },
+  "ig-003": {
+   "minimal": 6.95,
+   "peer": 7.175,
+   "street": 7.225,
+   "tailoring": 7.225,
+   "workwear": 7.15
+  },
+  "pin-003": {
+   "minimal": 5.925,
+   "peer": 5.875,
+   "street": 6.1,
+   "tailoring": 6.05,
+   "workwear": 6.475
+  },
+  "pin-056": {
+   "minimal": 5.125,
+   "peer": 5.925,
+   "street": 6.35,
+   "tailoring": 6.775,
+   "workwear": 6.725
+  },
+  "ig-070": {
+   "minimal": 6.5,
+   "peer": 6.925,
+   "street": 6.9,
+   "tailoring": 7.625,
+   "workwear": 7.05
+  },
+  "ig-068": {
+   "minimal": 6.075,
+   "peer": 6.925,
+   "street": 7.9,
+   "tailoring": 7.4,
+   "workwear": 7.5
+  },
+  "ig-009": {
+   "minimal": 7.2,
+   "peer": 7.575,
+   "street": 7.625,
+   "tailoring": 7.425,
+   "workwear": 7.3
+  },
+  "ig-032": {
+   "minimal": 7.725,
+   "peer": 8.025,
+   "street": 8.1,
+   "tailoring": 8.475,
+   "workwear": 8.475
+  },
+  "pin-072": {
+   "minimal": 6.125,
+   "peer": 6.125,
+   "street": 6.375,
+   "tailoring": 6.35,
+   "workwear": 6.425
+  },
+  "ig-060": {
+   "minimal": 7.575,
+   "peer": 7.65,
+   "street": 7.475,
+   "tailoring": 7.75,
+   "workwear": 7.775
+  },
+  "ig-039": {
+   "minimal": 7.825,
+   "peer": 7.9750000000000005,
+   "street": 8.2625,
+   "tailoring": 7.8375,
+   "workwear": 7.925
+  },
+  "ig-065": {
+   "minimal": 4.6,
+   "peer": 5.4,
+   "street": 6.175,
+   "tailoring": 6.1,
+   "workwear": 5.075
+  },
+  "ig-051": {
+   "minimal": 7.55,
+   "peer": 7.05,
+   "street": 7.475,
+   "tailoring": 7.65,
+   "workwear": 7.1
+  },
+  "ig-048": {
+   "minimal": 7.9,
+   "peer": 7.55,
+   "street": 7.825,
+   "tailoring": 7.825,
+   "workwear": 7.5
+  },
+  "ig-014": {
+   "minimal": 7.725,
+   "peer": 7.25,
+   "street": 7.625,
+   "tailoring": 7.35,
+   "workwear": 7.525
+  },
+  "rd-021": {
+   "minimal": 7.075,
+   "peer": 7.15,
+   "street": 7.9,
+   "tailoring": 7.625,
+   "workwear": 7.575
+  },
+  "pin-006": {
+   "minimal": 4.625,
+   "peer": 5.1,
+   "street": 5.125,
+   "tailoring": 5.325,
+   "workwear": 4.775
+  },
+  "pin-030": {
+   "minimal": 4.925,
+   "peer": 5.825,
+   "street": 5.525,
+   "tailoring": 5.475,
+   "workwear": 5.475
+  },
+  "pin-039": {
+   "minimal": 6.15,
+   "peer": 6.075,
+   "street": 6.25,
+   "tailoring": 5.8,
+   "workwear": 5.725
+  },
+  "ig-093": {
+   "minimal": 8.575,
+   "peer": 8.35,
+   "street": 8.65,
+   "tailoring": 8.5,
+   "workwear": 8.5
+  },
+  "ig-025": {
+   "minimal": 7.925,
+   "peer": 8.075,
+   "street": 8.5,
+   "tailoring": 8.375,
+   "workwear": 8.375
+  },
+  "pin-035": {
+   "minimal": 4.9,
+   "peer": 4.6,
+   "street": 5.925,
+   "tailoring": 5.45,
+   "workwear": 5.45
+  },
+  "ig-105": {
+   "minimal": 7.875,
+   "peer": 8.025,
+   "street": 7.9875,
+   "tailoring": 7.825,
+   "workwear": 7.5625
+  },
+  "pin-008": {
+   "minimal": 5.925,
+   "peer": 6.5,
+   "street": 6.575,
+   "tailoring": 6.3,
+   "workwear": 6.225
+  },
+  "pin-002": {
+   "minimal": 6.65,
+   "peer": 6.375,
+   "street": 6.95,
+   "tailoring": 6.975,
+   "workwear": 6.95
+  },
+  "rd-009": {
+   "minimal": 7.725,
+   "peer": 7.725,
+   "street": 7.675,
+   "tailoring": 7.875,
+   "workwear": 8.1
+  },
+  "ig-087": {
+   "minimal": 6.925,
+   "peer": 6.875,
+   "street": 7.4,
+   "tailoring": 7.0,
+   "workwear": 6.764705882352941
+  },
+  "pin-042": {
+   "minimal": 7.2,
+   "peer": 7.275,
+   "street": 7.425,
+   "tailoring": 7.45,
+   "workwear": 7.4
+  },
+  "pin-010": {
+   "minimal": 6.85,
+   "peer": 6.575,
+   "street": 6.275,
+   "tailoring": 6.45,
+   "workwear": 6.6
+  },
+  "pin-073": {
+   "minimal": 5.375,
+   "peer": 5.525,
+   "street": 5.925,
+   "tailoring": 5.85,
+   "workwear": 5.625
+  },
+  "pin-005": {
+   "minimal": 6.1,
+   "peer": 6.1,
+   "street": 6.8,
+   "tailoring": 6.925,
+   "workwear": 6.75
+  },
+  "ig-062": {
+   "minimal": 6.675,
+   "peer": 6.375,
+   "street": 7.1,
+   "tailoring": 7.175,
+   "workwear": 7.05
+  },
+  "pin-026": {
+   "minimal": 5.2625,
+   "peer": 5.6625,
+   "street": 6.3875,
+   "tailoring": 6.112500000000001,
+   "workwear": 6.225
+  },
+  "pin-070": {
+   "minimal": 5.0,
+   "peer": 4.05,
+   "street": 5.475,
+   "tailoring": 4.975,
+   "workwear": 4.75
+  },
+  "ig-049": {
+   "minimal": 7.9,
+   "peer": 7.625,
+   "street": 8.15,
+   "tailoring": 7.875,
+   "workwear": 8.075
+  },
+  "ig-016": {
+   "minimal": 7.475,
+   "peer": 7.2,
+   "street": 7.975,
+   "tailoring": 7.325,
+   "workwear": 7.15
+  },
+  "pin-064": {
+   "minimal": 6.425,
+   "peer": 6.075,
+   "street": 6.875,
+   "tailoring": 6.725,
+   "workwear": 6.725
+  },
+  "ig-058": {
+   "minimal": 7.617647058823529,
+   "peer": 7.647058823529412,
+   "street": 7.794117647058823,
+   "tailoring": 7.5588235294117645,
+   "workwear": 7.588235294117647
+  },
+  "ig-053": {
+   "minimal": 7.0,
+   "peer": 7.075,
+   "street": 7.15,
+   "tailoring": 7.075,
+   "workwear": 7.0
+  },
+  "ig-095": {
+   "minimal": 7.475,
+   "peer": 7.825,
+   "street": 7.575,
+   "tailoring": 7.45,
+   "workwear": 8.0
+  },
+  "ig-046": {
+   "minimal": 8.2,
+   "peer": 8.275,
+   "street": 8.475,
+   "tailoring": 8.5,
+   "workwear": 8.5
+  },
+  "ig-131": {
+   "minimal": 8.0,
+   "peer": 7.725,
+   "street": 7.95,
+   "tailoring": 8.125,
+   "workwear": 7.925
+  },
+  "rd-020": {
+   "minimal": 7.05,
+   "peer": 7.225,
+   "street": 7.625,
+   "tailoring": 7.75,
+   "workwear": 7.65
+  },
+  "ig-013": {
+   "minimal": 7.85,
+   "peer": 7.925,
+   "street": 8.525,
+   "tailoring": 7.975,
+   "workwear": 8.475
+  },
+  "pin-001": {
+   "minimal": 6.85,
+   "peer": 7.0,
+   "street": 6.15,
+   "tailoring": 6.95,
+   "workwear": 6.425
+  },
+  "ig-019": {
+   "minimal": 8.025,
+   "peer": 8.0,
+   "street": 8.1,
+   "tailoring": 8.325,
+   "workwear": 7.925
+  },
+  "pin-054": {
+   "minimal": 6.225,
+   "peer": 6.275,
+   "street": 6.45,
+   "tailoring": 6.65,
+   "workwear": 6.375
+  },
+  "ig-071": {
+   "minimal": 7.925,
+   "peer": 8.425,
+   "street": 7.85,
+   "tailoring": 8.1,
+   "workwear": 7.95
+  },
+  "ig-001": {
+   "minimal": 7.5,
+   "peer": 7.5,
+   "street": 7.575,
+   "tailoring": 7.525,
+   "workwear": 7.45
+  },
+  "ig-047": {
+   "minimal": 7.882352941176471,
+   "peer": 7.882352941176471,
+   "street": 7.882352941176471,
+   "tailoring": 7.882352941176471,
+   "workwear": 8.0
+  },
+  "pin-057": {
+   "minimal": 5.15,
+   "peer": 5.7,
+   "street": 6.125,
+   "tailoring": 6.6,
+   "workwear": 6.75
+  },
+  "ig-029": {
+   "minimal": 7.525,
+   "peer": 7.7,
+   "street": 7.65,
+   "tailoring": 7.65,
+   "workwear": 7.925
+  },
+  "ig-055": {
+   "minimal": 6.925,
+   "peer": 7.325,
+   "street": 7.7,
+   "tailoring": 7.475,
+   "workwear": 7.5
+  },
+  "ig-075": {
+   "minimal": 7.55,
+   "peer": 7.475,
+   "street": 7.65,
+   "tailoring": 7.825,
+   "workwear": 7.9
+  },
+  "pin-009": {
+   "minimal": 6.625,
+   "peer": 6.425,
+   "street": 6.55,
+   "tailoring": 6.775,
+   "workwear": 6.375
+  },
+  "rd-008": {
+   "minimal": 7.794117647058823,
+   "peer": 7.5,
+   "street": 7.705882352941177,
+   "tailoring": 7.676470588235294,
+   "workwear": 7.794117647058823
+  },
+  "pin-034": {
+   "minimal": 5.35,
+   "peer": 5.575,
+   "street": 5.6,
+   "tailoring": 6.05,
+   "workwear": 5.85
+  },
+  "ig-034": {
+   "minimal": 8.9,
+   "peer": 8.775,
+   "street": 8.775,
+   "tailoring": 8.7,
+   "workwear": 8.425
+  },
+  "pin-014": {
+   "minimal": 6.075,
+   "peer": 5.9,
+   "street": 6.225,
+   "tailoring": 6.7,
+   "workwear": 6.2
+  },
+  "rd-005": {
+   "minimal": 6.875,
+   "peer": 6.9,
+   "street": 7.65,
+   "tailoring": 7.5,
+   "workwear": 7.65
+  },
+  "ig-044": {
+   "minimal": 7.9,
+   "peer": 7.975,
+   "street": 7.725,
+   "tailoring": 7.975,
+   "workwear": 8.15
+  },
+  "rd-007": {
+   "minimal": 8.075,
+   "peer": 8.15,
+   "street": 7.65,
+   "tailoring": 7.775,
+   "workwear": 7.65
+  },
+  "ig-094": {
+   "minimal": 8.0,
+   "peer": 8.5,
+   "street": 7.85,
+   "tailoring": 7.875,
+   "workwear": 7.975
+  },
+  "pin-055": {
+   "minimal": 6.425,
+   "peer": 6.125,
+   "street": 6.5,
+   "tailoring": 7.0,
+   "workwear": 6.5
+  },
+  "ig-126": {
+   "minimal": 7.55,
+   "peer": 7.5,
+   "street": 7.65,
+   "tailoring": 7.9,
+   "workwear": 7.8
+  },
+  "ig-101": {
+   "minimal": 6.65,
+   "peer": 6.575,
+   "street": 6.7,
+   "tailoring": 7.05,
+   "workwear": 7.125
+  },
+  "ig-059": {
+   "minimal": 8.0,
+   "peer": 8.075,
+   "street": 7.725,
+   "tailoring": 8.0,
+   "workwear": 7.875
+  },
+  "pin-027": {
+   "minimal": 4.85,
+   "peer": 4.875,
+   "street": 5.85,
+   "tailoring": 5.85,
+   "workwear": 5.525
+  },
+  "ig-125": {
+   "minimal": 7.15,
+   "peer": 7.475,
+   "street": 7.65,
+   "tailoring": 7.9,
+   "workwear": 7.575
+  },
+  "ig-028": {
+   "minimal": 7.475,
+   "peer": 7.65,
+   "street": 8.075,
+   "tailoring": 8.0,
+   "workwear": 8.15
+  },
+  "ig-118": {
+   "minimal": 7.5,
+   "peer": 7.975,
+   "street": 7.575,
+   "tailoring": 7.7,
+   "workwear": 7.8
+  },
+  "ig-104": {
+   "minimal": 8.525,
+   "peer": 8.525,
+   "street": 8.275,
+   "tailoring": 8.2,
+   "workwear": 8.2
+  },
+  "ig-002": {
+   "minimal": 7.95,
+   "peer": 7.95,
+   "street": 7.95,
+   "tailoring": 7.875,
+   "workwear": 7.75
+  },
+  "ig-108": {
+   "minimal": 7.975,
+   "peer": 7.875,
+   "street": 8.075,
+   "tailoring": 8.4,
+   "workwear": 8.2
+  },
+  "ig-114": {
+   "minimal": 7.5,
+   "peer": 7.725,
+   "street": 7.725,
+   "tailoring": 7.85,
+   "workwear": 7.65
+  },
+  "ig-041": {
+   "minimal": 8.325,
+   "peer": 8.425,
+   "street": 7.975,
+   "tailoring": 8.0,
+   "workwear": 8.125
+  },
+  "pin-036": {
+   "minimal": 6.575,
+   "peer": 6.225,
+   "street": 6.55,
+   "tailoring": 6.35,
+   "workwear": 6.475
+  }
+ }
+}

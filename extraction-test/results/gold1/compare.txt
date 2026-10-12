@@ -1,0 +1,47 @@
+judges: minimal (240 rows), peer (240 rows), street (240 rows), tailoring (240 rows), workwear (240 rows)
+
+## 1. Same photo twice (15 hidden repeats)
+  minimal    15 pairs · within 0.5: 13 · mean gap 0.18 · max 0.65
+  peer       15 pairs · within 0.5: 15 · mean gap 0.12 · max 0.45
+  street     15 pairs · within 0.5: 13 · mean gap 0.17 · max 0.83
+  tailoring  15 pairs · within 0.5: 13 · mean gap 0.23 · max 0.75
+  workwear   15 pairs · within 0.5: 15 · mean gap 0.13 · max 0.47
+
+## 2. The panel (225 photos rated by all 5 judges)
+  minimal    mean 6.86 sd 1.12 · ≤5.5 33 · 6–6.5 57 · 7–7.5 80 · 8–8.5 54 · 9+ 1
+  peer       mean 6.89 sd 1.11 · ≤5.5 31 · 6–6.5 56 · 7–7.5 82 · 8–8.5 55 · 9+ 1
+  street     mean 7.13 sd 1.02 · ≤5.5 23 · 6–6.5 51 · 7–7.5 76 · 8–8.5 73 · 9+ 2
+  tailoring  mean 7.12 sd 1.02 · ≤5.5 22 · 6–6.5 51 · 7–7.5 76 · 8–8.5 76 · 9+ 0
+  workwear   mean 7.10 sd 0.97 · ≤5.5 23 · 6–6.5 50 · 7–7.5 84 · 8–8.5 67 · 9+ 1
+  PANEL      mean 7.03 sd 1.02 · ≤5.5 27 · 6–6.5 49 · 7–7.5 86 · 8–8.5 62 · 9+ 1
+  judges' spread per photo: median 0.58 · >1.0 apart on 28 · >2.0 on 1
+  r(minimal,peer) = 0.96
+  r(minimal,street) = 0.93
+  r(minimal,tailoring) = 0.92
+  r(minimal,workwear) = 0.92
+  r(peer,street) = 0.93
+  r(peer,tailoring) = 0.93
+  r(peer,workwear) = 0.93
+  r(street,tailoring) = 0.95
+  r(street,workwear) = 0.95
+  r(tailoring,workwear) = 0.95
+
+## 3. The app (parts v7, run 0, test profile, Everyday) against the panel (223 photos)
+  app − panel: mean +0.03 · within 0.5 on 131 · off by 1.5+ on 41 · r 0.33
+  app spread: ≤5.5 4 · 6–6.5 44 · 7–7.5 145 · 8–8.5 30 · 9+ 0 · sd 0.55
+  ig   n 130 · app − panel -0.51 · panel mean 7.62 · app mean 7.12
+  pin  n 72 · app − panel +0.88 · panel mean 6.05 · app mean 6.92
+  rd   n 21 · app − panel +0.45 · panel mean 7.05 · app mean 7.50
+  app mean by panel band:
+    panel ≤5.5   n  26 · app mean 6.65
+    panel 6–6.5  n  48 · app mean 7.11
+    panel 7–7.5  n  86 · app mean 7.09
+    panel 8–8.5  n  62 · app mean 7.23
+    panel 9+     n   1 · app mean 8.00
+  parts, app vs panel median (mean app − panel):
+    fit          n 223 · app − panel -0.44 · app sd 0.70 vs panel sd 0.92 · r 0.04
+    proportions  n 200 · app − panel +0.23 · app sd 0.66 vs panel sd 0.98 · r 0.18
+    color        n 223 · app − panel +0.11 · app sd 0.37 vs panel sd 0.93 · r -0.18
+    shoes        n 203 · app − panel +0.21 · app sd 0.93 vs panel sd 1.08 · r 0.61
+    cohesion     n 223 · app − panel +0.34 · app sd 0.64 vs panel sd 1.13 · r 0.21
+  biggest disagreements: pin-033 app 7.5 / panel 5.0, pin-059 app 7.0 / panel 4.5, pin-006 app 7.5 / panel 5.0, pin-067 app 7.0 / panel 5.0, pin-063 app 7.0 / panel 5.0, pin-031 app 7.0 / panel 5.0, ig-061 app 6.0 / panel 8.0, pin-007 app 7.5 / panel 5.5, pin-023 app 5.5 / panel 3.5, pin-058 app 7.0 / panel 5.0, pin-021 app 6.5 / panel 4.5, ig-102 app 6.0 / panel 8.0, rd-010 app 8.0 / panel 6.0, ig-016 app 5.5 / panel 7.5, ig-106 app 6.5 / panel 8.0

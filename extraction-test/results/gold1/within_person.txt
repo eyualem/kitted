@@ -1,0 +1,15 @@
+Same person, different outfits (13 Instagram series; body and room held fixed):
+  ig 1-6: n 6 · panel range 7.0–8.0 · app range 7.0–7.5
+  ig 33-36: n 4 · panel range 7.5–9.0 · app range 6.5–8.0
+  ig 50-55: n 6 · panel range 7.0–7.5 · app range 6.5–8.0
+  ig 60-66: n 7 · panel range 5.5–8.0 · app range 6.0–7.0
+  ig 73-79: n 7 · panel range 7.5–8.0 · app range 6.5–7.5
+  ig 80-86: n 7 · panel range 7.0–7.5 · app range 6.5–7.0
+  ig 91-95: n 5 · panel range 7.5–8.5 · app range 7.0–8.0
+  ig 102-106: n 5 · panel range 7.0–8.5 · app range 6.0–7.5
+  ig 108-111: n 4 · panel range 8.0–8.5 · app range 7.0–8.0
+  ig 113-116: n 4 · panel range 7.5–8.0 · app range 7.0–8.0
+  ig 118-121: n 3 · panel range 7.5–8.0 · app range 7.0–8.0
+  ig 122-125: n 4 · panel range 7.0–8.0 · app range 7.0–8.0
+  ig 126-130: n 5 · panel range 6.5–7.5 · app range 6.5–7.0
+  within-person: n 67 · panel spread sd 0.41 · app spread sd 0.42 · r(app, panel) 0.38
