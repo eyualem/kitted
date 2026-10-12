@@ -309,6 +309,9 @@
   - **So:** lead with "send a fit pic, get a score and the one fix", then "same photo, same score", "it rates the outfit, never you", and "your daily check is free". The closet is why people stay, not the headline.
   - **Don't claim "accurate"** until the gold set backs it (r 0.33, #224), and don't use "pocket stylist" in public copy (a rival's subtitle).
   - **Expect** about 2% of downloads to pay and about 25% of yearly subscribers to renew.
+  - **Niche, problem statement and differentiation are written down** (§5.1–5.3, #226).
+    - **The one line:** "the only fit check that learns your closet while it rates your fits."
+    - **What's unique:** the loop, not "no uploading" (Fitted already does that).
 - **Research:**
   - Gemini creator research: I still need to export the Google Sheet as `.xlsx` into `inputs/`. Only rules backed by 2024+ videos count.
   - Codex sneaker deep-dive (sneakers with jeans/chinos, 2025+): results pending.
