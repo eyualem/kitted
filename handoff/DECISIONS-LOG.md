@@ -1056,3 +1056,22 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **App vs panel:** r 0.33; app sd 0.55; the panel's ≤5.5 fits get 6.65 from the app, its 8–8.5 fits 7.23; Pinterest bad fits +0.88 too generous, Instagram creators −0.51 too harsh. Same person, different outfits (13 series, 67 photos): r 0.38. Parts: shoes r 0.61, cohesion 0.21, proportions 0.18, fit 0.04, color −0.18.
     - **Claude's read:** the readings name the garments; the rules miss what makes them good or bad (size faults, loud patterns, pieces from different worlds, a mismatched near-suit) and over-punish slides and sweats under a deliberate outfit. Next is rules tuned against the panel (fit, color, cohesion first), not phone scripts.
     - **Privacy:** ig-098 (head off the top edge) was sent with mouth and chin unhidden; the app does the same today (fix offered as its own task). rd-021: the blur covers most of the shirt.
+
+225. **Market research and positioning (Oct 12; founder: "figure out how I'm supposed to do market research… how this app should get positioned"). Report: `market/market-research.md`, with 4 detail files in `market/`.** Four research agents ran (direct raters, closet and AI-stylist apps, market size and free substitutes, benchmarks and App Store search). App Store counts come from Apple's pages and API. Claude also pulled 813 recent public reviews (Dressly, Umax, Pureple, GRWM) from Apple's review feed and spot-checked the key claims: Twelve70's subtitle, Looksee's paid First Fix, ChatGPT try-on on Oct 1, 2026, Whering's $7M round (Jul 7, 2026) and its planned photo scanner, and Fitted's photo-to-closet feature.
+    - **Findings:**
+      - No leader: GRWM, the biggest pure outfit rater, has 1,866 US ratings, and 64 of 107 name-matched raters launched in 2026, mostly with 0 ratings.
+      - Free ChatGPT is the main substitute.
+      - Young men already pay for face-rating looksmax apps (~157K ratings).
+      - Competitors' bad reviews are mostly paywall and billing complaints (charges, paywalls or cancelling in 42% of Dressly's, 58% of Umax's and 67% of GRWM's reviews pulled).
+      - "Score + fix + re-check" is already sold (DRPD, Looksee), and the closet from outfit photos is live at Fitted (Whering plans it).
+      - $29.99/yr is below the North America median of $39.99; plan on ~2% of downloads paying and ~25% of yearly subscribers renewing (RevenueCat 2026).
+    - **Claude's calls (marketing wording, not product):**
+      - **Lead order:** score + one fix → same photo, same score → it rates the outfit, never you → the daily check is free → it learns your closet (retention, not headline).
+      - Say "fit check" in videos.
+      - No "pocket stylist" in public copy (Twelve70's subtitle).
+      - No "accurate" / "expert" claims until the gold set backs the score (r 0.33, #224).
+      - Don't compete on try-on.
+      - Beachhead: college guys and new grads at a "new chapter" moment.
+    - **Founder's calls (on the to-do list):** the App Store name and subtitle (default `Kitted: Outfit Rater for Men` / `Score your fit. Get the fix.`), and $5.99 vs $7.99 monthly (default keep).
+    - **Founder's research tasks:** 10 interviews (Mom Test script in the report), a competitor teardown with the same photo twice in each app and in ChatGPT, a TikTok scan by hand, and a Codex Reddit prompt.
+    - The handles and domain task moves from P2 to P1.

@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026.**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026 (market research added).**
 
 ## How we keep context (rules for every chat)
 
@@ -36,12 +36,16 @@
 - [ ] **P1** · **Rate 20 gold-set photos yourself, 10 min (#224).** The 5 AI judges agree with each other but nobody human has checked them; your 20 ratings decide whether their scores become the app's targets. Claude will hand you the 20 photos and a simple sheet. *Unblocks: tuning the scoring rules on the 225-photo gold set.*
 - [ ] **P1** · **Face-hiding gap (#224): start the fix task** (the chip "Hide partial faces cut off at the photo's top edge"). A mirror selfie with the head cut off at the top is sent with the mouth and chin showing. Needs a reinstall afterwards.
 - [ ] **P1** · **The gold set, the rest (#191).** Done Oct 12: 226 screenshots (Instagram, Pinterest, Reddit), read and judged (#224). Still to do: (2) **~15 photos of you, about 30 min**, changing one outfit on purpose: the same jeans worn normally, cuffed, rolled and hitched; tee tucked and untucked; jacket on and off; boots vs sneakers. Each as a mirror selfie and a propped shot, into `inputs/gold-set/me/`. (3) Optional, 15 min: ~15 slim + ~15 straight shop product photos where the brand names the fit (Levi's 511 / 501), into `inputs/gold-set/shop/`. Optional later: a friend rates 20 of the screenshots (10 min). Screenshots stay on the Mac, internal only. *Unblocks: the scoring points, the slim-vs-straight and hem tests, the focused AI look ($1–2), every v5 rule.*
-- [ ] **P2** · **Claim @kitted.app / @trykitted and register trykitted.com.** About 10 minutes, and the names could be taken any time. *Unblocks: the waitlist page and the TikTok account.*
+- [ ] **P1** · **Talk to 10 guys 18–30 who aren't into fashion, 15 min each (#225).** Script in `market/market-research.md` §8 task 1: ask what they did the last time they worried about an outfit (ChatGPT? a friend?), then show Kitted and watch. Notes, in their exact words, go in `inputs/market/interviews/`. Tell Claude at 5. *Unblocks: which pain the videos and App Store page lead with, and whether "same photo, same score" matters to them.*
+- [ ] **P1** · **Try the 4 closest competitors, 45 min (#225):** Looksee, DRPD, GRWM and Dressly (free downloads, no trials), plus free ChatGPT and Gemini. Send the same photo of you (face covered) twice to each and screenshot every screen into `inputs/market/teardown/`. *Unblocks: the "same photo, same score" video, and paywall ideas.*
+- [ ] **P1** · **Claim @kitted.app / @trykitted and register trykitted.com** (was P2; beta is in 3 weeks and no video can point anywhere yet). About 10 minutes, and the names could be taken any time. *Unblocks: the waitlist page and the TikTok account.*
+- [ ] **P2** · **TikTok scan by hand, 20 min, plus the Codex Reddit prompt, 5 min** (both in `market/market-research.md` §8 tasks 4–5). *Unblocks: this month's video hooks.*
 - [ ] **P2** · **Size-ladder shoot (#164), about 45 min with a friend:** the same tee, hoodie and jeans in 2–3 sizes each (trade clothes), plus one piece that's oversized on purpose; mirror and propped, ~30 photos into `inputs/size-ladder/` (name each file with the piece and size, e.g. `tee-grey-M.jpg`). *Unblocks: judging fit (fitted vs oversized vs too big) and storing each piece's fit in the closet.* Optional: run R3c (YouTube fit guides) in Gemini, prompt in `rubric/research/v5-brief.md`.
 - [ ] **P2** · **Shoot ~20 photos of my clothes** into `inputs/item-photos/` (shot list in "Waiting on the founder"). *Unblocks: scanning clothes into the closet.*
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P2** · **The App Store name and subtitle (#225, outward-facing).** Default: `Kitted: Outfit Rater for Men` (people search "outfit rater"; the "rate my outfit" results are weak apps) with the subtitle `Score your fit. Get the fix.` Alternatives in `market/market-research.md` §7. Also: keep the $5.99 monthly at launch (default) or make it $7.99 so the yearly plan looks like a bigger saving?
 - [ ] **P2** · **Pause the proportion scripts until the gold set? (#222–223)** Even perfect measuring would change 4 of 79 scores under today's rules, and the best candidate (slim vs straight legs) failed on 90 public labelled pants. Default: pause; the gold set then decides which shape rules earn or cost points.
 - [ ] **P2** · **"Going for" (built Oct 11, #218; demo screens 71–78):** it changes the advice, never the score. Should it ever lower the score when the outfit clearly misses that look? Default: advice only. Also skim its words (`app/src/i18n/en.ts`, keys `gf.*`), 5 min.
 - [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
@@ -296,6 +300,15 @@
     - The camera captured video-size frames (`sessionPreset = .high`); fixed Oct 8 (#83).
     - Closet matching merged light grey, grey and charcoal into one color; fixed Oct 8 (#91).
     - Raw closet crops aren't clean enough yet; they need full-res capture plus a cut-out.
+- **Market research and positioning: done Oct 12 (#225, `market/market-research.md`).**
+  - **No leader in the niche.** The biggest pure outfit rater (GRWM) has 1,866 US ratings; 64 of 107 rater apps launched in 2026, mostly with 0 ratings.
+  - **The real rival is free ChatGPT**, which added try-on on Oct 1, 2026.
+  - **The guys pay today for looksmax apps** that rate faces (~157K ratings).
+  - **Competitors' bad reviews are mostly about paywalls and billing** (Claude's review pull).
+  - **Two features are no longer unique:** "score + fix + re-check" (DRPD, Looksee) and the closet from photos (Fitted; Whering announced it).
+  - **So:** lead with "send a fit pic, get a score and the one fix", then "same photo, same score", "it rates the outfit, never you", and "your daily check is free". The closet is why people stay, not the headline.
+  - **Don't claim "accurate"** until the gold set backs it (r 0.33, #224), and don't use "pocket stylist" in public copy (a rival's subtitle).
+  - **Expect** about 2% of downloads to pay and about 25% of yearly subscribers to renew.
 - **Research:**
   - Gemini creator research: I still need to export the Google Sheet as `.xlsx` into `inputs/`. Only rules backed by 2024+ videos count.
   - Codex sneaker deep-dive (sneakers with jeans/chinos, 2025+): results pending.
@@ -545,6 +558,7 @@ Exceptions:
 | `rubric/v5-styles.md` | **The current plain-words rules of the parts engine** (v5), per style and shared, each rule with an ID and test outfits (`extraction-test/rules_conformance.py`, `rulesConformance.test.ts`); "Known differences" from the research at the end | **Live**; edit with every rule change |
 | `rubric/v4.md` (v3.md superseded), `extraction-test/` | The old v4 rules in plain words (v4.1 still scores old checks); the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
+| `market/market-research.md` (+ 4 detail files in `market/`) | Market research and positioning (Oct 12, #225): competitors, market size, free substitutes, pricing benchmarks, App Store search, the founder's research tasks | **Live**; update when positioning or pricing changes |
 | `rubric/research/v5-brief.md` | Rubric v5 plan (Oct 9): what "meticulous" means, the 8 steps, research questions, the Codex/Gemini prompts | **Live** until v5 locks |
 | `rubric/research/parts/proportion-headroom.md`, `rubric/research/notes/fp-leg-test.md` | Proportion scripts (Oct 12, #222–223): which facts can move a score; the leg probe on Fashionpedia (fails) | Reference |
 | `rubric/research/notes/fit-ruler.md` | The fit ruler test (Oct 9, #170): phone-measured sleeve, top and hem vs. the AI; not adopted; how to re-test | Reference |
