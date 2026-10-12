@@ -1,0 +1,105 @@
+test,field,direction,photo,who,occ,today,after,prop_today,prop_after,checks_added,checks_removed
+flip,top_length,shorter,phone-403ade,founder,class,7.0,7.5,7.0,7.5,PR1_waist_break SC_chosen_for_look,
+flip,top_length,shorter,phone-8ad378,founder,class,7.0,7.5,7.0,7.5,PR1_waist_break SC_chosen_for_look,
+flip,top_length,shorter,phone-5a9049,founder,everyday,7.0,7.5,7.0,7.5,PR1_waist_break,
+flip,top_length,shorter,mirror-m03,web,everyday,7.0,7.5,7.0,7.5,PR1_waist_break,
+flip,top_length,shorter,stock-s13-before_street,stock,everyday,7.0,7.5,7.0,8.5,PR1_waist_break,
+flip,top_length,shorter,stock-s25-before_mirror,stock,everyday,7.0,7.5,7.0,7.5,PR1_waist_break,
+flip,top_length,shorter,phone-7f14a4,founder,everyday,7.0,7.5,7.0,7.5,PR1_waist_break,
+flip,top_length,longer,mirror-m06,web,everyday,7.5,7.0,7.5,7.0,,PR1_waist_break
+flip,tuck,less tucked,oct7-ph3,founder,everyday,7.5,7.0,8.0,7.0,,PR3_tailored_line
+flip,tuck,less tucked,mirror-m05,web,everyday,8.0,7.5,8.5,7.5,PR1b_half_tuck,PR1_waist_break
+flip,tuck,less tucked,mirror-m08,web,everyday,7.5,7.0,8.0,7.0,,PR3_tailored_line
+flip,tuck,less tucked,mirror-m09,web,everyday,8.0,7.0,8.0,7.0,,PR3_tailored_line
+flip,tuck,less tucked,stock-p04-after_street,stock,everyday,7.5,7.0,8.0,7.0,,PR3_tailored_line
+flip,tuck,less tucked,stock-p04-before_street,stock,everyday,7.5,7.0,8.0,7.0,,PR3_tailored_line
+flip,tuck,less tucked,stock-s01-before_studio,stock,everyday,8.0,7.5,8.5,7.5,PR1b_half_tuck,PR1_waist_break
+flip,tuck,less tucked,stock-s07-before_studio,stock,everyday,8.0,7.5,8.0,7.0,,PR3_tailored_line
+flip,tuck,more tucked,phone-403ade,founder,class,7.0,7.5,7.0,7.5,PR1b_half_tuck,
+flip,tuck,more tucked,phone-8ad378,founder,class,7.0,7.5,7.0,7.5,PR1b_half_tuck,
+flip,tuck,more tucked,phone-5a9049,founder,everyday,7.0,7.5,7.0,7.5,PR1b_half_tuck,
+flip,tuck,more tucked,mirror-m03,web,everyday,7.0,7.5,7.0,7.5,PR1b_half_tuck,
+flip,tuck,more tucked,stock-s25-before_mirror,stock,everyday,7.0,7.5,7.0,7.5,PR1b_half_tuck,
+flip,tuck,more tucked,phone-7f14a4,founder,everyday,7.0,7.5,7.0,7.5,PR1b_half_tuck,
+flip,leg_shape,narrower,phone-703a8b,unknown,class,7.5,7.0,8.5,7.0,,PR1_waist_break
+flip,leg_shape,narrower,mirror-m01,web,everyday,7.0,6.5,7.0,5.5,PB1_roomier_than_look SW1_chunky_narrow,
+flip,leg_shape,narrower,mirror-m02,web,everyday,8.0,7.5,8.5,7.0,,PR2_short_layer
+flip,leg_shape,narrower,mirror-m05,web,everyday,8.0,7.0,8.5,7.0,,PR1_waist_break
+flip,leg_shape,narrower,mirror-m06,web,everyday,7.5,7.0,7.5,7.0,,PR1_waist_break
+flip,leg_shape,narrower,mirror-m08,web,everyday,7.5,7.0,8.0,6.5,PF6_layer_over_skinny,PR3_tailored_line
+flip,leg_shape,narrower,mirror-m11,web,everyday,7.5,7.0,8.0,6.5,PF6_layer_over_skinny,PR3_tailored_line
+flip,leg_shape,narrower,stock-p04-after_street,stock,everyday,7.5,7.0,8.0,6.5,PF6_layer_over_skinny,PR3_tailored_line
+flip,leg_shape,narrower,stock-p04-before_street,stock,everyday,7.5,7.0,8.0,6.5,PF6_layer_over_skinny,PR3_tailored_line
+flip,leg_shape,narrower,stock-s02-before_studio,stock,everyday,7.0,6.5,,,SW1_chunky_narrow,SCol2_shoe_accent
+flip,leg_shape,narrower,stock-s07-before_studio,stock,everyday,8.0,7.0,8.0,6.5,PF6_layer_over_skinny,PR3_tailored_line
+flip,leg_shape,narrower,stock-s14-before_street,stock,everyday,7.5,6.5,8.5,7.0,SW1_chunky_narrow,PR2_short_layer
+flip,leg_shape,narrower,stock-s25-before_mirror,stock,everyday,7.0,6.5,7.0,5.5,PB1_roomier_than_look,SC_chosen_for_look
+flip,leg_shape,wider,oct7-ph2,founder,everyday,7.0,7.5,7.0,8.5,PR1_waist_break,
+flip,leg_shape,wider,mirror-m01,web,everyday,7.0,8.0,7.0,8.0,PR4_street_shape SC_chosen_for_look SW2_weight_carries_leg H2_clear_top_to_toe,
+flip,leg_shape,wider,stock-p03-before_street,stock,everyday,7.0,8.0,6.5,8.0,PR3_tailored_line,PF6_layer_over_skinny
+flip,leg_shape,wider,stock-p05-before_street,stock,everyday,7.0,7.5,7.0,8.5,PR1_waist_break,
+flip,leg_shape,wider,stock-s03-before_studio,stock,everyday,7.0,8.0,7.0,8.5,PR1_waist_break,
+flip,leg_shape,wider,stock-s09-before_street,stock,everyday,6.5,7.0,6.5,8.0,PR3_tailored_line,PF6_layer_over_skinny
+flip,leg_shape,wider,stock-s10-before_street,stock,everyday,7.0,7.5,7.0,8.5,PR2_short_layer,
+flip,leg_shape,wider,stock-s17-before_phone,stock,everyday,6.5,7.0,6.5,7.0,,PF6_layer_over_skinny
+flip,hem,shorter / cleaner,stock-s26-before_mirror,stock,everyday,6.5,7.0,7.0,7.0,,FF7_pooling
+flip,hem,longer / heavier,phone-d6559a,founder,class,7.0,6.5,7.0,7.0,FF7_pooling,
+flip,hem,longer / heavier,phone-ebe23f,unknown,class,7.0,6.5,7.0,7.0,FF7_pooling,
+flip,hem,longer / heavier,oct7-ph4,founder,everyday,7.0,6.5,7.0,7.0,FF7_pooling,
+flip,hem,longer / heavier,mirror-m03,web,everyday,7.0,6.5,7.0,7.0,FF7_pooling,
+flip,hem,longer / heavier,stock-s12-before_street,stock,everyday,7.0,6.5,7.0,7.0,FF7_pooling,
+flip,hem,longer / heavier,stock-s14-before_street,stock,everyday,7.5,6.5,8.5,7.0,FF7_pooling,PR2_short_layer
+flip,hem,longer / heavier,stock-s15-before_street,stock,everyday,7.0,6.5,7.0,7.0,FF7_pooling,
+flip,hem,longer / heavier,stock-s25-before_mirror,stock,everyday,7.0,6.5,7.0,7.0,FF7_pooling,
+flip,hem,longer / heavier,phone-af7e93,founder,class,7.5,7.0,7.0,7.0,FF7_pooling,SW2_weight_carries_leg
+flip,sleeve_top,longer,phone-968016,founder,class,7.5,7.0,7.0,7.0,FF1_cuffs_ribbed,
+flip,sleeve_top,longer,oct7-ph2,founder,everyday,7.0,6.5,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_top,longer,oct7-ph3,founder,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_long,
+flip,sleeve_top,longer,mirror-m02,web,everyday,8.0,7.5,8.5,8.5,FF1_sleeves_long,
+flip,sleeve_top,longer,mirror-m05,web,everyday,8.0,7.5,8.5,8.5,FF1_sleeves_long,
+flip,sleeve_top,longer,mirror-m11,web,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_long,
+flip,sleeve_top,longer,stock-p04-after_street,stock,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_long,
+flip,sleeve_top,longer,stock-p04-before_street,stock,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_long,
+flip,sleeve_top,longer,stock-p05-before_street,stock,everyday,7.0,6.5,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_top,longer,stock-s01-before_studio,stock,everyday,8.0,7.5,8.5,8.5,FF1_sleeves_long,
+flip,sleeve_top,longer,stock-s06-before_studio,stock,everyday,6.5,6.0,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_top,longer,stock-s13-before_street,stock,everyday,7.0,6.5,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_top,longer,phone-7f14a4,founder,everyday,7.0,6.5,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_outer,shorter,phone-f07193,founder,class,6.5,7.0,7.0,7.0,,FF1_sleeves_long
+flip,sleeve_outer,longer,phone-8bc29d,founder,class,6.5,6.0,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_outer,longer,phone-d918c0,founder,class,7.5,7.0,7.0,7.0,FF1_cuffs_ribbed,
+flip,sleeve_outer,longer,phone-d1967f,friend,class,7.0,6.5,7.0,7.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,phone-ebe23f,unknown,class,7.0,6.5,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_outer,longer,oct7-ph3,founder,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,oct7-ph4,founder,everyday,7.0,6.5,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_outer,longer,mirror-m02,web,everyday,8.0,7.5,8.5,8.5,FF1_sleeves_long,
+flip,sleeve_outer,longer,mirror-m08,web,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,mirror-m09,web,everyday,8.0,7.0,8.0,8.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,mirror-m11,web,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,stock-p03-after_street,stock,everyday,7.0,6.5,7.0,7.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,stock-p03-before_street,stock,everyday,7.0,6.5,6.5,6.5,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,stock-p04-after_street,stock,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,stock-p04-before_street,stock,everyday,7.5,7.0,8.0,8.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,stock-p06-before_studio,stock,everyday,7.0,6.5,7.0,7.0,FF1_sleeves_long,
+flip,sleeve_outer,longer,stock-s07-before_studio,stock,everyday,8.0,7.0,8.0,8.0,FF1_sleeves_tailored,
+flip,sleeve_outer,longer,stock-s08-before_studio,stock,everyday,7.0,6.5,7.0,7.0,FF5_too_big,
+flip,sleeve_outer,longer,stock-s14-before_street,stock,everyday,7.5,7.0,8.5,8.5,FF1_sleeves_long,
+flip,sleeve_outer,longer,stock-s16-before_street,stock,everyday,7.5,7.0,8.5,8.5,FF1_sleeves_long,
+flip,volume_top,roomier,phone-d6559a,founder,class,7.0,6.5,7.0,5.5,PB1_roomier_than_look,
+flip,volume_top,roomier,phone-d58b14,founder,class,6.5,6.0,7.0,5.5,PB1_roomier_than_look,
+flip,volume_top,roomier,phone-0d39d6,founder,everyday,6.5,7.0,7.0,7.5,PR1_waist_break,
+flip,volume_top,roomier,mirror-m07,web,everyday,7.0,6.5,7.0,5.5,PB1_roomier_than_look,
+flip,volume_top,roomier,stock-s04-before_studio,stock,everyday,7.0,7.5,7.0,8.5,PR1_waist_break,
+flip,volume_top,roomier,stock-s05-before_studio,stock,everyday,7.0,6.5,7.0,5.5,PB1_roomier_than_look,
+flip,volume_top,roomier,stock-s12-before_street,stock,everyday,7.0,7.5,7.0,8.5,PR1_waist_break,
+flip,volume_top,roomier,stock-s19-before_phone,stock,everyday,7.0,6.5,7.0,5.5,PB1_roomier_than_look,
+flip,volume_top,roomier,stock-s28-before_mirror,stock,everyday,7.0,6.5,7.0,5.5,PB1_roomier_than_look,
+flip,peek,yes,phone-d918c0,founder,class,7.5,7.0,7.0,6.5,PF10_peek,
+flip,peek,yes,mirror-m02,web,everyday,8.0,7.0,8.5,6.5,PF10_peek,PR2_short_layer
+flip,peek,yes,mirror-m09,web,everyday,8.0,7.5,8.0,7.5,PF10_peek,
+flip,peek,yes,stock-s14-before_street,stock,everyday,7.5,6.5,8.5,6.5,PF10_peek,PR2_short_layer
+flip,peek,yes,stock-s16-before_street,stock,everyday,7.5,7.0,8.5,6.5,PF10_peek,PR2_short_layer
+label,tuck,full->none,phone-703a8b,unknown,class,7.5,7.0,8.5,7.0,,PR1_waist_break
+label,leg_shape,straight->slim,mirror-m05,web,everyday,8.0,7.0,8.5,7.0,,PR1_waist_break
+label,hem,pooling->full_break,stock-s26-before_mirror,stock,everyday,6.5,7.0,7.0,7.0,,FF7_pooling
+label,sleeve_outer,covers_hand->at_wrist,phone-f07193,founder,class,6.5,7.0,7.0,7.0,,FF1_sleeves_long

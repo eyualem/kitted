@@ -1,0 +1,293 @@
+HEADROOM TEST (Oct 12): which proportion facts can move the score a man sees? (parts engine v7, unchanged)
+  corpus 79 photos (+1 from the Oct 11 pull), 79 scored, 74 with a Proportions part; by whose: founder 22, friend 4, unknown 2, web 12, stock 39
+  Rule 7: founder profile pending; friends profile unknown; 703a8b/ebe23f unknown (ask the founder); stock/web profile unknown. One test profile (Minimal + Smart casual 0.5 each, boldness a little, no age), each photo at its own occasion; picks never move a number, so no age-band or picked-look split.
+  today: Proportions 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+
+(1) ONE-STEP FLIP of each field, every scored photo where the field is there
+
+  Top length (where the top ends, no tuck): on 53 photos (skipped: {'na': 23}); AI values {'at_belt': 17, 'mid_fly': 36}
+    shorter            tried 53 · shown score moves on  7 (7 up, 0 down; +0.5: 7) · Proportions moves on 11 · by whose: founder 4, web 1, stock 2
+      phone-403ade               [founder; class] 7.0 -> 7.5 · + PR1_waist_break,SC_chosen_for_look
+      phone-8ad378               [founder; class] 7.0 -> 7.5 · + PR1_waist_break,SC_chosen_for_look
+      phone-5a9049               [founder; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      mirror-m03                 [web; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      stock-s13-before_street    [stock; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      stock-s25-before_mirror    [stock; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      phone-7f14a4               [founder; everyday] 7.0 -> 7.5 · + PR1_waist_break
+    longer             tried 53 · shown score moves on  1 (0 up, 1 down; -0.5: 1) · Proportions moves on 1 · by whose: web 1
+      mirror-m06                 [web; everyday] 7.5 -> 7.0 · - PR1_waist_break
+    either direction: 8 of 53 photos' shown score moves (by whose: founder 4, web 2, stock 2)
+
+  Tuck (none / half / full): on 76 photos; AI values {'none': 53, 'full': 23}
+    less tucked        tried 23 · shown score moves on  8 (0 up, 8 down; -0.5: 7 -1: 1) · Proportions moves on 10 · by whose: founder 1, web 3, stock 4
+      oct7-ph3                   [founder; everyday] 7.5 -> 7.0 · - PR3_tailored_line
+      mirror-m05                 [web; everyday] 8.0 -> 7.5 · + PR1b_half_tuck · - PR1_waist_break
+      mirror-m08                 [web; everyday] 7.5 -> 7.0 · - PR3_tailored_line
+      mirror-m09                 [web; everyday] 8.0 -> 7.0 · - PR3_tailored_line
+      stock-p04-after_street     [stock; everyday] 7.5 -> 7.0 · - PR3_tailored_line
+      stock-p04-before_street    [stock; everyday] 7.5 -> 7.0 · - PR3_tailored_line
+      stock-s01-before_studio    [stock; everyday] 8.0 -> 7.5 · + PR1b_half_tuck · - PR1_waist_break
+      stock-s07-before_studio    [stock; everyday] 8.0 -> 7.5 · - PR3_tailored_line
+    more tucked        tried 53 · shown score moves on  6 (6 up, 0 down; +0.5: 6) · Proportions moves on 10 · by whose: founder 4, web 1, stock 1
+      phone-403ade               [founder; class] 7.0 -> 7.5 · + PR1b_half_tuck
+      phone-8ad378               [founder; class] 7.0 -> 7.5 · + PR1b_half_tuck
+      phone-5a9049               [founder; everyday] 7.0 -> 7.5 · + PR1b_half_tuck
+      mirror-m03                 [web; everyday] 7.0 -> 7.5 · + PR1b_half_tuck
+      stock-s25-before_mirror    [stock; everyday] 7.0 -> 7.5 · + PR1b_half_tuck
+      phone-7f14a4               [founder; everyday] 7.0 -> 7.5 · + PR1b_half_tuck
+    either direction: 14 of 76 photos' shown score moves (by whose: founder 5, web 4, stock 5)
+
+  Outer layer length: on 24 photos (skipped: {'na': 12}); AI values {'mid_fly': 14, 'below_crotch': 9, 'at_belt': 1}
+    shorter            tried 24 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 0 · by whose: -
+    longer             tried 15 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 0 · by whose: -
+    either direction: 0 of 24 photos' shown score moves (by whose: -)
+
+  Leg shape (skinny ... wide): on 77 photos (skipped: {'flare_bootcut': 2}); AI values {'wide': 14, 'straight': 32, 'relaxed': 9, 'slim': 19, 'skinny': 3}
+    narrower           tried 74 · shown score moves on 13 (0 up, 13 down; -0.5: 10 -1: 3) · Proportions moves on 15 · by whose: unknown 1, web 6, stock 6
+      phone-703a8b               [unknown; class] 7.5 -> 7.0 · - PR1_waist_break
+      mirror-m01                 [web; everyday] 7.0 -> 6.5 · + PB1_roomier_than_look,SW1_chunky_narrow
+      mirror-m02                 [web; everyday] 8.0 -> 7.5 · - PR2_short_layer
+      mirror-m05                 [web; everyday] 8.0 -> 7.0 · - PR1_waist_break
+      mirror-m06                 [web; everyday] 7.5 -> 7.0 · - PR1_waist_break
+      mirror-m08                 [web; everyday] 7.5 -> 7.0 · + PF6_layer_over_skinny · - PR3_tailored_line
+      mirror-m11                 [web; everyday] 7.5 -> 7.0 · + PF6_layer_over_skinny · - PR3_tailored_line
+      stock-p04-after_street     [stock; everyday] 7.5 -> 7.0 · + PF6_layer_over_skinny · - PR3_tailored_line
+      stock-p04-before_street    [stock; everyday] 7.5 -> 7.0 · + PF6_layer_over_skinny · - PR3_tailored_line
+      stock-s02-before_studio    [stock; everyday] 7.0 -> 6.5 · + SW1_chunky_narrow · - SCol2_shoe_accent
+      stock-s07-before_studio    [stock; everyday] 8.0 -> 7.0 · + PF6_layer_over_skinny · - PR3_tailored_line
+      stock-s14-before_street    [stock; everyday] 7.5 -> 6.5 · + SW1_chunky_narrow · - PR2_short_layer
+      stock-s25-before_mirror    [stock; everyday] 7.0 -> 6.5 · + PB1_roomier_than_look · - SC_chosen_for_look
+    wider              tried 63 · shown score moves on  8 (8 up, 0 down; +0.5: 5 +1: 3) · Proportions moves on 8 · by whose: founder 1, web 1, stock 6
+      oct7-ph2                   [founder; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      mirror-m01                 [web; everyday] 7.0 -> 8.0 · + PR4_street_shape,SC_chosen_for_look,SW2_weight_carries_leg,H2_clear_top_to_toe
+      stock-p03-before_street    [stock; everyday] 7.0 -> 8.0 · + PR3_tailored_line · - PF6_layer_over_skinny
+      stock-p05-before_street    [stock; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      stock-s03-before_studio    [stock; everyday] 7.0 -> 8.0 · + PR1_waist_break
+      stock-s09-before_street    [stock; everyday] 6.5 -> 7.0 · + PR3_tailored_line · - PF6_layer_over_skinny
+      stock-s10-before_street    [stock; everyday] 7.0 -> 7.5 · + PR2_short_layer
+      stock-s17-before_phone     [stock; everyday] 6.5 -> 7.0 · - PF6_layer_over_skinny
+    either direction: 20 of 77 photos' shown score moves (by whose: founder 1, unknown 1, web 6, stock 12)
+
+  Hem (how the pant meets the shoe): on 69 photos (skipped: {'na': 10}); AI values {'slight_break': 35, 'full_break': 16, 'cuffed': 6, 'cropped': 7, 'no_break': 3, 'pooling': 2}
+    shorter / cleaner  tried 62 · shown score moves on  1 (1 up, 0 down; +0.5: 1) · Proportions moves on 0 · by whose: stock 1
+      stock-s26-before_mirror    [stock; everyday] 6.5 -> 7.0 · - FF7_pooling
+    longer / heavier   tried 67 · shown score moves on  9 (0 up, 9 down; -0.5: 8 -1: 1) · Proportions moves on 1 · by whose: founder 3, unknown 1, web 1, stock 4
+      phone-d6559a               [founder; class] 7.0 -> 6.5 · + FF7_pooling
+      phone-ebe23f               [unknown; class] 7.0 -> 6.5 · + FF7_pooling
+      oct7-ph4                   [founder; everyday] 7.0 -> 6.5 · + FF7_pooling
+      mirror-m03                 [web; everyday] 7.0 -> 6.5 · + FF7_pooling
+      stock-s12-before_street    [stock; everyday] 7.0 -> 6.5 · + FF7_pooling
+      stock-s14-before_street    [stock; everyday] 7.5 -> 6.5 · + FF7_pooling · - PR2_short_layer
+      stock-s15-before_street    [stock; everyday] 7.0 -> 6.5 · + FF7_pooling
+      stock-s25-before_mirror    [stock; everyday] 7.0 -> 6.5 · + FF7_pooling
+      phone-af7e93               [founder; class] 7.5 -> 7.0 · + FF7_pooling · - SW2_weight_carries_leg
+    either direction: 10 of 69 photos' shown score moves (by whose: founder 3, unknown 1, web 1, stock 5)
+
+  Sleeve end, the top: on 43 photos (skipped: {'na': 33}); AI values {'at_wrist': 40, 'covers_hand': 1, 'above_wrist': 2}
+    shorter            tried 41 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 0 · by whose: -
+    longer             tried 42 · shown score moves on 13 (0 up, 13 down; -0.5: 13) · Proportions moves on 0 · by whose: founder 4, web 3, stock 6
+      phone-968016               [founder; class] 7.5 -> 7.0 · + FF1_cuffs_ribbed
+      oct7-ph2                   [founder; everyday] 7.0 -> 6.5 · + FF1_sleeves_long
+      oct7-ph3                   [founder; everyday] 7.5 -> 7.0 · + FF1_sleeves_long
+      mirror-m02                 [web; everyday] 8.0 -> 7.5 · + FF1_sleeves_long
+      mirror-m05                 [web; everyday] 8.0 -> 7.5 · + FF1_sleeves_long
+      mirror-m11                 [web; everyday] 7.5 -> 7.0 · + FF1_sleeves_long
+      stock-p04-after_street     [stock; everyday] 7.5 -> 7.0 · + FF1_sleeves_long
+      stock-p04-before_street    [stock; everyday] 7.5 -> 7.0 · + FF1_sleeves_long
+      stock-p05-before_street    [stock; everyday] 7.0 -> 6.5 · + FF1_sleeves_long
+      stock-s01-before_studio    [stock; everyday] 8.0 -> 7.5 · + FF1_sleeves_long
+      stock-s06-before_studio    [stock; everyday] 6.5 -> 6.0 · + FF1_sleeves_long
+      stock-s13-before_street    [stock; everyday] 7.0 -> 6.5 · + FF1_sleeves_long
+      phone-7f14a4               [founder; everyday] 7.0 -> 6.5 · + FF1_sleeves_long
+    either direction: 13 of 43 photos' shown score moves (by whose: founder 4, web 3, stock 6)
+
+  Sleeve end, the outer layer: on 33 photos (skipped: {'na': 3}); AI values {'at_wrist': 27, 'covers_hand': 1, 'above_wrist': 5}
+    shorter            tried 28 · shown score moves on  1 (1 up, 0 down; +0.5: 1) · Proportions moves on 0 · by whose: founder 1
+      phone-f07193               [founder; class] 6.5 -> 7.0 · - FF1_sleeves_long
+    longer             tried 32 · shown score moves on 19 (0 up, 19 down; -0.5: 17 -1: 2) · Proportions moves on 0 · by whose: founder 4, friend 1, unknown 1, web 4, stock 9
+      phone-8bc29d               [founder; class] 6.5 -> 6.0 · + FF1_sleeves_long
+      phone-d918c0               [founder; class] 7.5 -> 7.0 · + FF1_cuffs_ribbed
+      phone-d1967f               [friend; class] 7.0 -> 6.5 · + FF1_sleeves_tailored
+      phone-ebe23f               [unknown; class] 7.0 -> 6.5 · + FF1_sleeves_long
+      oct7-ph3                   [founder; everyday] 7.5 -> 7.0 · + FF1_sleeves_tailored
+      oct7-ph4                   [founder; everyday] 7.0 -> 6.5 · + FF1_sleeves_long
+      mirror-m02                 [web; everyday] 8.0 -> 7.5 · + FF1_sleeves_long
+      mirror-m08                 [web; everyday] 7.5 -> 7.0 · + FF1_sleeves_tailored
+      mirror-m09                 [web; everyday] 8.0 -> 7.0 · + FF1_sleeves_tailored
+      mirror-m11                 [web; everyday] 7.5 -> 7.0 · + FF1_sleeves_tailored
+      stock-p03-after_street     [stock; everyday] 7.0 -> 6.5 · + FF1_sleeves_tailored
+      stock-p03-before_street    [stock; everyday] 7.0 -> 6.5 · + FF1_sleeves_tailored
+      stock-p04-after_street     [stock; everyday] 7.5 -> 7.0 · + FF1_sleeves_tailored
+      stock-p04-before_street    [stock; everyday] 7.5 -> 7.0 · + FF1_sleeves_tailored
+      stock-p06-before_studio    [stock; everyday] 7.0 -> 6.5 · + FF1_sleeves_long
+      stock-s07-before_studio    [stock; everyday] 8.0 -> 7.0 · + FF1_sleeves_tailored
+      stock-s08-before_studio    [stock; everyday] 7.0 -> 6.5 · + FF5_too_big
+      stock-s14-before_street    [stock; everyday] 7.5 -> 7.0 · + FF1_sleeves_long
+      stock-s16-before_street    [stock; everyday] 7.5 -> 7.0 · + FF1_sleeves_long
+    either direction: 20 of 33 photos' shown score moves (by whose: founder 5, friend 1, unknown 1, web 4, stock 9)
+
+  Roominess of the top (1-5): on 76 photos; AI values {'3': 42, '4': 7, '2': 26, '1': 1}
+    closer             tried 75 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 0 · by whose: -
+    roomier            tried 76 · shown score moves on  9 (3 up, 6 down; +0.5: 3 -0.5: 6) · Proportions moves on 9 · by whose: founder 3, web 1, stock 5
+      phone-d6559a               [founder; class] 7.0 -> 6.5 · + PB1_roomier_than_look
+      phone-d58b14               [founder; class] 6.5 -> 6.0 · + PB1_roomier_than_look
+      phone-0d39d6               [founder; everyday] 6.5 -> 7.0 · + PR1_waist_break
+      mirror-m07                 [web; everyday] 7.0 -> 6.5 · + PB1_roomier_than_look
+      stock-s04-before_studio    [stock; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      stock-s05-before_studio    [stock; everyday] 7.0 -> 6.5 · + PB1_roomier_than_look
+      stock-s12-before_street    [stock; everyday] 7.0 -> 7.5 · + PR1_waist_break
+      stock-s19-before_phone     [stock; everyday] 7.0 -> 6.5 · + PB1_roomier_than_look
+      stock-s28-before_mirror    [stock; everyday] 7.0 -> 6.5 · + PB1_roomier_than_look
+    either direction: 9 of 76 photos' shown score moves (by whose: founder 3, web 1, stock 5)
+
+  Roominess of the outer layer (1-5): on 36 photos; AI values {'3': 27, '2': 7, '4': 2}
+    closer             tried 36 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 0 · by whose: -
+    roomier            tried 36 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 1 · by whose: -
+    either direction: 0 of 36 photos' shown score moves (by whose: -)
+
+  Shirt showing below the layer (second look): on 39 photos
+    yes                tried 39 · shown score moves on  5 (0 up, 5 down; -0.5: 3 -1: 2) · Proportions moves on 39 · by whose: founder 1, web 2, stock 2
+      phone-d918c0               [founder; class] 7.5 -> 7.0 · + PF10_peek
+      mirror-m02                 [web; everyday] 8.0 -> 7.0 · + PF10_peek · - PR2_short_layer
+      mirror-m09                 [web; everyday] 8.0 -> 7.5 · + PF10_peek
+      stock-s14-before_street    [stock; everyday] 7.5 -> 6.5 · + PF10_peek · - PR2_short_layer
+      stock-s16-before_street    [stock; everyday] 7.5 -> 7.0 · + PF10_peek · - PR2_short_layer
+    either direction: 5 of 39 photos' shown score moves (by whose: founder 1, web 2, stock 2)
+
+  Pant rests on the shoe (second look): on 57 photos
+    no                 tried 15 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 0 · by whose: -
+    yes                tried 42 · shown score moves on  0 (0 up, 0 down; -) · Proportions moves on 0 · by whose: -
+    either direction: 0 of 57 photos' shown score moves (by whose: -)
+
+(2) LABEL SWAP and (3) AI-vs-label DISAGREEMENT, per field (labels: Claude's blind labels, not truth)
+
+  Top length (where the top ends, no tuck): labelled on 44 photos where the engine reads it (AI = the engine's own value)
+    AI outside the label: 11/44 (25%); firm labels only: 11/28 (39%)
+    swapped 11 · shown score moves on 0 (0 up, 0 down) · Proportions moves on 1 · by whose: -
+      differs phone-d6559a               [founder] AI mid_fly · label at_belt
+      differs phone-1f1997               [founder] AI mid_fly · label at_belt
+      differs phone-d58b14               [founder] AI mid_fly · label at_belt
+      differs phone-968016               [founder] AI mid_fly · label at_belt
+      differs phone-a765e8               [founder] AI mid_fly · label at_belt
+      differs phone-7de605               [founder] AI mid_fly · label at_belt
+      differs phone-b0f0c8               [founder] AI mid_fly · label at_belt
+      differs phone-6b14db               [founder] AI mid_fly · label at_belt
+      differs oct7-ph1                   [founder] AI mid_fly · label at_belt
+      differs mirror-m07                 [web] AI mid_fly · label at_belt
+      differs stock-s22-before_phone     [stock] AI mid_fly · label at_belt
+
+  Tuck (none / half / full): labelled on 58 photos where the engine reads it (AI = the engine's own value)
+    AI outside the label: 2/58 (3%); firm labels only: 2/46 (4%)
+    swapped 2 · shown score moves on 1 (0 up, 1 down) · Proportions moves on 1 · by whose: unknown 1
+      differs phone-703a8b               [unknown] AI full · label none
+      differs stock-s15-before_street    [stock] AI full · label none
+      MOVES   phone-703a8b               [unknown; class] full -> none: 7.5 -> 7.0 · - PR1_waist_break
+
+  Outer layer length: labelled on 16 photos where the engine reads it (AI = the engine's own value)
+    AI outside the label: 1/16 (6%); firm labels only: 0/3 (0%)
+    swapped 1 · shown score moves on 0 (0 up, 0 down) · Proportions moves on 0 · by whose: -
+      differs stock-s08-before_studio    [stock] AI mid_fly · label cropped|at_belt
+
+  Leg shape (skinny ... wide): labelled on 63 photos where the engine reads it (AI = the engine's own value)
+    AI outside the label: 14/63 (22%); firm labels only: 12/47 (26%)
+    swapped 14 · shown score moves on 1 (0 up, 1 down) · Proportions moves on 3 · by whose: web 1
+      differs phone-d6559a               [founder] AI straight · label wide
+      differs phone-d58b14               [founder] AI straight · label wide
+      differs phone-a765e8               [founder] AI relaxed · label slim
+      differs phone-7de605               [founder] AI relaxed · label slim
+      differs phone-b0f0c8               [founder] AI relaxed · label wide
+      differs mirror-m05                 [web] AI straight · label slim
+      differs mirror-m08                 [web] AI slim · label straight|relaxed
+      differs stock-p01-after_studio     [stock] AI straight · label slim
+      differs stock-p03-after_street     [stock] AI slim · label skinny
+      differs stock-s04-before_studio    [stock] AI straight · label relaxed
+      differs stock-s10-before_street    [stock] AI slim · label skinny
+      differs stock-s14-before_street    [stock] AI straight · label relaxed
+      differs stock-s21-before_phone     [stock] AI straight · label slim
+      differs stock-s26-before_mirror    [stock] AI straight · label relaxed|wide
+      MOVES   mirror-m05                 [web; everyday] straight -> slim: 8.0 -> 7.0 · - PR1_waist_break
+
+  Hem (how the pant meets the shoe): labelled on 59 photos where the engine reads it (AI = the engine's own value)
+    AI outside the label: 23/59 (39%); firm labels only: 21/34 (62%)
+    swapped 23 · shown score moves on 1 (1 up, 0 down) · Proportions moves on 0 · by whose: stock 1
+      differs phone-8bc29d               [founder] AI slight_break · label full_break
+      differs phone-1f1997               [founder] AI slight_break · label full_break
+      differs phone-d58b14               [founder] AI slight_break · label full_break
+      differs phone-d918c0               [founder] AI cuffed · label full_break
+      differs phone-968016               [founder] AI slight_break · label full_break
+      differs phone-d1967f               [friend] AI slight_break · label full_break
+      differs phone-a765e8               [founder] AI cuffed · label cropped
+      differs phone-7de605               [founder] AI cuffed · label cropped
+      differs phone-6b14db               [founder] AI cuffed · label cropped
+      differs phone-5a9049               [founder] AI slight_break · label full_break
+      differs mirror-m01                 [web] AI slight_break · label cropped|no_break
+      differs mirror-m12                 [web] AI slight_break · label cropped|no_break
+      differs stock-p02-after_studio     [stock] AI pooling · label cropped
+      differs stock-p02-before_studio    [stock] AI slight_break · label cropped
+      differs stock-p03-before_street    [stock] AI slight_break · label no_break
+      differs stock-s01-before_studio    [stock] AI slight_break · label full_break
+      differs stock-s05-before_studio    [stock] AI cuffed · label cropped
+      differs stock-s06-before_studio    [stock] AI cuffed · label cropped
+      differs stock-s08-before_studio    [stock] AI slight_break · label full_break
+      differs stock-s10-before_street    [stock] AI slight_break · label full_break
+      differs stock-s16-before_street    [stock] AI slight_break · label full_break
+      differs stock-s26-before_mirror    [stock] AI pooling · label full_break
+      differs phone-7f14a4               [founder] AI slight_break · label full_break
+      MOVES   stock-s26-before_mirror    [stock; everyday] pooling -> full_break: 6.5 -> 7.0 · - FF7_pooling
+
+  Sleeve end, the top: labelled on 38 photos where the engine reads it (AI = the engine's own value)
+    AI outside the label: 0/38 (0%); firm labels only: 0/38 (0%)
+    swapped 0 · shown score moves on 0 (0 up, 0 down) · Proportions moves on 0 · by whose: -
+
+  Sleeve end, the outer layer: labelled on 26 photos where the engine reads it (AI = the engine's own value)
+    AI outside the label: 3/26 (12%); firm labels only: 3/25 (12%)
+    swapped 3 · shown score moves on 1 (1 up, 0 down) · Proportions moves on 0 · by whose: founder 1
+      differs phone-f07193               [founder] AI covers_hand · label at_wrist
+      differs phone-e026de               [founder] AI at_wrist · label above_wrist
+      differs stock-s10-before_street    [stock] AI above_wrist · label at_wrist
+      MOVES   phone-f07193               [founder; class] covers_hand -> at_wrist: 6.5 -> 7.0 · - FF1_sleeves_long
+
+  Roominess of the top (1-5): no labels exist
+
+  Roominess of the outer layer (1-5): no labels exist
+
+  Shirt showing below the layer (second look): labelled on 36 photos where the engine reads it (AI = the second look (look1, 3-run majority) where it ran; today the app uses 'no')
+    AI outside the label: 0/28 (0%); firm labels only: 0/23 (0%)
+    swapped 2 · shown score moves on 0 (0 up, 0 down) · Proportions moves on 2 · by whose: -
+
+  Pant rests on the shoe (second look): labelled on 53 photos where the engine reads it (AI = today's fallback from the hem (pooling/full break = rests))
+    AI outside the label: 13/53 (25%); firm labels only: 13/44 (30%)
+    swapped 13 · shown score moves on 0 (0 up, 0 down) · Proportions moves on 0 · by whose: -
+      differs phone-8bc29d               [founder] AI no · label yes
+      differs phone-1f1997               [founder] AI no · label yes
+      differs phone-d58b14               [founder] AI no · label yes
+      differs phone-d918c0               [founder] AI no · label yes
+      differs phone-968016               [founder] AI no · label yes
+      differs phone-d1967f               [friend] AI no · label yes
+      differs phone-5a9049               [founder] AI no · label yes
+      differs stock-p02-after_studio     [stock] AI yes · label no
+      differs stock-s01-before_studio    [stock] AI no · label yes
+      differs stock-s08-before_studio    [stock] AI no · label yes
+      differs stock-s16-before_street    [stock] AI no · label yes
+      differs stock-s25-before_mirror    [stock] AI yes · label no
+      differs phone-7f14a4               [founder] AI no · label yes
+
+  ALL LABEL SWAPS AT ONCE (the label ceiling for these fields)
+    photos with any swap 40 · shown score moves on 4 (2 up) · by whose: founder 1, unknown 1, web 1, stock 1
+      phone-703a8b               [unknown] 7.5 -> 7.0 (Proportions 8.5 -> 7.0)
+      mirror-m05                 [web] 8.0 -> 7.0 (Proportions 8.5 -> 7.0)
+      stock-s26-before_mirror    [stock] 6.5 -> 7.0 (Proportions 7.0 -> 7.0)
+      phone-f07193               [founder] 6.5 -> 7.0 (Proportions 7.0 -> 7.0)
+
+(4) RANKED: photos whose shown score moves (either one-step flip) · label swap moves · AI outside the label
+    Leg shape (skinny ... wide)                    flip moves 20/77 · label swap moves 1 (of 14 swapped) · AI outside label 14/63
+    Sleeve end, the outer layer                    flip moves 20/33 · label swap moves 1 (of 3 swapped) · AI outside label 3/26
+    Tuck (none / half / full)                      flip moves 14/76 · label swap moves 1 (of 2 swapped) · AI outside label 2/58
+    Sleeve end, the top                            flip moves 13/43 · label swap moves 0 (of 0 swapped) · AI outside label 0/38
+    Hem (how the pant meets the shoe)              flip moves 10/69 · label swap moves 1 (of 23 swapped) · AI outside label 23/59
+    Roominess of the top (1-5)                     flip moves  9/76 · label swap moves - · AI outside label -
+    Top length (where the top ends, no tuck)       flip moves  8/53 · label swap moves 0 (of 11 swapped) · AI outside label 11/44
+    Shirt showing below the layer (second look)    flip moves  5/39 · label swap moves 0 (of 2 swapped) · AI outside label 0/28
+    Outer layer length                             flip moves  0/24 · label swap moves 0 (of 1 swapped) · AI outside label 1/16
+    Pant rests on the shoe (second look)           flip moves  0/57 · label swap moves 0 (of 13 swapped) · AI outside label 13/53
+    Roominess of the outer layer (1-5)             flip moves  0/36 · label swap moves - · AI outside label -

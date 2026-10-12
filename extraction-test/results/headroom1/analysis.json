@@ -1,0 +1,1634 @@
+{
+ "profile": "test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age",
+ "corpus": 79,
+ "scored": 79,
+ "with_proportions": 74,
+ "fields": {
+  "top_length": {
+   "flip": {
+    "name": "Top length (where the top ends, no tuck)",
+    "present": 53,
+    "skipped": {
+     "na": 23
+    },
+    "values": {
+     "at_belt": 17,
+     "mid_fly": 36
+    },
+    "dirs": {
+     "down": {
+      "word": "shorter",
+      "tried": 53,
+      "moved": 7,
+      "up": 7,
+      "down": 0,
+      "sizes": {
+       "+0.5": 7
+      },
+      "prop_moved": 11,
+      "by_group": {
+       "founder": 4,
+       "web": 1,
+       "stock": 2
+      },
+      "photos": [
+       [
+        "phone-403ade",
+        0.5
+       ],
+       [
+        "phone-8ad378",
+        0.5
+       ],
+       [
+        "phone-5a9049",
+        0.5
+       ],
+       [
+        "mirror-m03",
+        0.5
+       ],
+       [
+        "stock-s13-before_street",
+        0.5
+       ],
+       [
+        "stock-s25-before_mirror",
+        0.5
+       ],
+       [
+        "phone-7f14a4",
+        0.5
+       ]
+      ]
+     },
+     "up": {
+      "word": "longer",
+      "tried": 53,
+      "moved": 1,
+      "up": 0,
+      "down": 1,
+      "sizes": {
+       "-0.5": 1
+      },
+      "prop_moved": 1,
+      "by_group": {
+       "web": 1
+      },
+      "photos": [
+       [
+        "mirror-m06",
+        -0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 8,
+    "moved_any_by_group": {
+     "founder": 4,
+     "web": 2,
+     "stock": 2
+    }
+   },
+   "rules": "PRO-4 waist break +1.5 (cropped/at_belt, no jacket, full leg; +0.5 untucked in a mirror) [PR1]; STR-5 streetwear shape +1.0 (cropped/at_belt/mid_fly) [PR4]; PRO-11 excuse (cropped/at_belt over a full leg) [PB1]; MIN-2 minimal signature (roomy + at_belt/cropped); PRO-10 tip (below_crotch) [PF2]",
+   "label": {
+    "labelled": 44,
+    "agree": 33,
+    "agree_firm": [
+     17,
+     28
+    ],
+    "disagree": 11,
+    "ai_source": "the engine's own value",
+    "swapped": 11,
+    "moved": 0,
+    "up": 0,
+    "down": 0,
+    "prop_moved": 1,
+    "by_group": {},
+    "disagreements": [
+     [
+      "phone-d6559a",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "phone-1f1997",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "phone-d58b14",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "phone-968016",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "phone-a765e8",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "phone-7de605",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "phone-b0f0c8",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "phone-6b14db",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "oct7-ph1",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "mirror-m07",
+      "mid_fly",
+      "at_belt"
+     ],
+     [
+      "stock-s22-before_phone",
+      "mid_fly",
+      "at_belt"
+     ]
+    ],
+    "moves": []
+   }
+  },
+  "tuck": {
+   "flip": {
+    "name": "Tuck (none / half / full)",
+    "present": 76,
+    "skipped": {},
+    "values": {
+     "none": 53,
+     "full": 23
+    },
+    "dirs": {
+     "down": {
+      "word": "less tucked",
+      "tried": 23,
+      "moved": 8,
+      "up": 0,
+      "down": 8,
+      "sizes": {
+       "-0.5": 7,
+       "-1": 1
+      },
+      "prop_moved": 10,
+      "by_group": {
+       "founder": 1,
+       "web": 3,
+       "stock": 4
+      },
+      "photos": [
+       [
+        "oct7-ph3",
+        -0.5
+       ],
+       [
+        "mirror-m05",
+        -0.5
+       ],
+       [
+        "mirror-m08",
+        -0.5
+       ],
+       [
+        "mirror-m09",
+        -1.0
+       ],
+       [
+        "stock-p04-after_street",
+        -0.5
+       ],
+       [
+        "stock-p04-before_street",
+        -0.5
+       ],
+       [
+        "stock-s01-before_studio",
+        -0.5
+       ],
+       [
+        "stock-s07-before_studio",
+        -0.5
+       ]
+      ]
+     },
+     "up": {
+      "word": "more tucked",
+      "tried": 53,
+      "moved": 6,
+      "up": 6,
+      "down": 0,
+      "sizes": {
+       "+0.5": 6
+      },
+      "prop_moved": 10,
+      "by_group": {
+       "founder": 4,
+       "web": 1,
+       "stock": 1
+      },
+      "photos": [
+       [
+        "phone-403ade",
+        0.5
+       ],
+       [
+        "phone-8ad378",
+        0.5
+       ],
+       [
+        "phone-5a9049",
+        0.5
+       ],
+       [
+        "mirror-m03",
+        0.5
+       ],
+       [
+        "stock-s25-before_mirror",
+        0.5
+       ],
+       [
+        "phone-7f14a4",
+        0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 14,
+    "moved_any_by_group": {
+     "stock": 5,
+     "founder": 5,
+     "web": 4
+    }
+   },
+   "rules": "PRO-4 waist break (full) [PR1]; PRO-5 front tuck +0.5 (half) [PR1b]; PRO-7 tailored line +1.0 (full) [PR3]; PRO-11 excuse (full) [PB1]; STR-5 needs untucked [PR4]; CON-3 untucked dress shirt -0.6; PRO-10 tips [PF2, PF4]",
+   "label": {
+    "labelled": 58,
+    "agree": 56,
+    "agree_firm": [
+     44,
+     46
+    ],
+    "disagree": 2,
+    "ai_source": "the engine's own value",
+    "swapped": 2,
+    "moved": 1,
+    "up": 0,
+    "down": 1,
+    "prop_moved": 1,
+    "by_group": {
+     "unknown": 1
+    },
+    "disagreements": [
+     [
+      "phone-703a8b",
+      "full",
+      "none"
+     ],
+     [
+      "stock-s15-before_street",
+      "full",
+      "none"
+     ]
+    ],
+    "moves": [
+     [
+      "phone-703a8b",
+      "full",
+      "none",
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "outer_length": {
+   "flip": {
+    "name": "Outer layer length",
+    "present": 24,
+    "skipped": {
+     "na": 12
+    },
+    "values": {
+     "mid_fly": 14,
+     "below_crotch": 9,
+     "at_belt": 1
+    },
+    "dirs": {
+     "down": {
+      "word": "shorter",
+      "tried": 24,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 0,
+      "by_group": {},
+      "photos": []
+     },
+     "up": {
+      "word": "longer",
+      "tried": 15,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 0,
+      "by_group": {},
+      "photos": []
+     }
+    },
+    "moved_any": 0,
+    "moved_any_by_group": {}
+   },
+   "rules": "PRO-10 tip only (below_crotch over loose legs) [PF3]: no points",
+   "label": {
+    "labelled": 16,
+    "agree": 15,
+    "agree_firm": [
+     3,
+     3
+    ],
+    "disagree": 1,
+    "ai_source": "the engine's own value",
+    "swapped": 1,
+    "moved": 0,
+    "up": 0,
+    "down": 0,
+    "prop_moved": 0,
+    "by_group": {},
+    "disagreements": [
+     [
+      "stock-s08-before_studio",
+      "mid_fly",
+      "cropped|at_belt"
+     ]
+    ],
+    "moves": []
+   }
+  },
+  "leg_shape": {
+   "flip": {
+    "name": "Leg shape (skinny ... wide)",
+    "present": 77,
+    "skipped": {
+     "flare_bootcut": 2
+    },
+    "values": {
+     "wide": 14,
+     "straight": 32,
+     "relaxed": 9,
+     "slim": 19,
+     "skinny": 3
+    },
+    "dirs": {
+     "down": {
+      "word": "narrower",
+      "tried": 74,
+      "moved": 13,
+      "up": 0,
+      "down": 13,
+      "sizes": {
+       "-0.5": 10,
+       "-1": 3
+      },
+      "prop_moved": 15,
+      "by_group": {
+       "unknown": 1,
+       "web": 6,
+       "stock": 6
+      },
+      "photos": [
+       [
+        "phone-703a8b",
+        -0.5
+       ],
+       [
+        "mirror-m01",
+        -0.5
+       ],
+       [
+        "mirror-m02",
+        -0.5
+       ],
+       [
+        "mirror-m05",
+        -1.0
+       ],
+       [
+        "mirror-m06",
+        -0.5
+       ],
+       [
+        "mirror-m08",
+        -0.5
+       ],
+       [
+        "mirror-m11",
+        -0.5
+       ],
+       [
+        "stock-p04-after_street",
+        -0.5
+       ],
+       [
+        "stock-p04-before_street",
+        -0.5
+       ],
+       [
+        "stock-s02-before_studio",
+        -0.5
+       ],
+       [
+        "stock-s07-before_studio",
+        -1.0
+       ],
+       [
+        "stock-s14-before_street",
+        -1.0
+       ],
+       [
+        "stock-s25-before_mirror",
+        -0.5
+       ]
+      ]
+     },
+     "up": {
+      "word": "wider",
+      "tried": 63,
+      "moved": 8,
+      "up": 8,
+      "down": 0,
+      "sizes": {
+       "+0.5": 5,
+       "+1": 3
+      },
+      "prop_moved": 8,
+      "by_group": {
+       "founder": 1,
+       "web": 1,
+       "stock": 6
+      },
+      "photos": [
+       [
+        "oct7-ph2",
+        0.5
+       ],
+       [
+        "mirror-m01",
+        1.0
+       ],
+       [
+        "stock-p03-before_street",
+        1.0
+       ],
+       [
+        "stock-p05-before_street",
+        0.5
+       ],
+       [
+        "stock-s03-before_studio",
+        1.0
+       ],
+       [
+        "stock-s09-before_street",
+        0.5
+       ],
+       [
+        "stock-s10-before_street",
+        0.5
+       ],
+       [
+        "stock-s17-before_phone",
+        0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 20,
+    "moved_any_by_group": {
+     "stock": 12,
+     "unknown": 1,
+     "web": 6,
+     "founder": 1
+    }
+   },
+   "rules": "PRO-2/PRO-3 skinny [PF5, PF6]; PRO-4/6/7 need straight/relaxed/wide (PRO-7: not skinny) [PR1-3]; PRO-11 slim vs full [PB1]; STR-5 relaxed/wide [PR4]; WRK-4 [PR5]; SHO-9 chunky under slim/skinny -1.5 [SW1]; STR-6 +0.5 loose [SW2]; SHO-2 drag on slides (loose); STY-3 relaxed/wide jeans under a blazer -1.5; FIT-3 strain size; style detection (STR-1/3, MIN-2, WRK-1, VSP-1, PRP-2); tips PRO-12, FIT-6",
+   "label": {
+    "labelled": 63,
+    "agree": 49,
+    "agree_firm": [
+     35,
+     47
+    ],
+    "disagree": 14,
+    "ai_source": "the engine's own value",
+    "swapped": 14,
+    "moved": 1,
+    "up": 0,
+    "down": 1,
+    "prop_moved": 3,
+    "by_group": {
+     "web": 1
+    },
+    "disagreements": [
+     [
+      "phone-d6559a",
+      "straight",
+      "wide"
+     ],
+     [
+      "phone-d58b14",
+      "straight",
+      "wide"
+     ],
+     [
+      "phone-a765e8",
+      "relaxed",
+      "slim"
+     ],
+     [
+      "phone-7de605",
+      "relaxed",
+      "slim"
+     ],
+     [
+      "phone-b0f0c8",
+      "relaxed",
+      "wide"
+     ],
+     [
+      "mirror-m05",
+      "straight",
+      "slim"
+     ],
+     [
+      "mirror-m08",
+      "slim",
+      "straight|relaxed"
+     ],
+     [
+      "stock-p01-after_studio",
+      "straight",
+      "slim"
+     ],
+     [
+      "stock-p03-after_street",
+      "slim",
+      "skinny"
+     ],
+     [
+      "stock-s04-before_studio",
+      "straight",
+      "relaxed"
+     ],
+     [
+      "stock-s10-before_street",
+      "slim",
+      "skinny"
+     ],
+     [
+      "stock-s14-before_street",
+      "straight",
+      "relaxed"
+     ],
+     [
+      "stock-s21-before_phone",
+      "straight",
+      "slim"
+     ],
+     [
+      "stock-s26-before_mirror",
+      "straight",
+      "relaxed|wide"
+     ]
+    ],
+    "moves": [
+     [
+      "mirror-m05",
+      "straight",
+      "slim",
+      8.0,
+      7.0
+     ]
+    ]
+   }
+  },
+  "hem": {
+   "flip": {
+    "name": "Hem (how the pant meets the shoe)",
+    "present": 69,
+    "skipped": {
+     "na": 10
+    },
+    "values": {
+     "slight_break": 35,
+     "full_break": 16,
+     "cuffed": 6,
+     "cropped": 7,
+     "no_break": 3,
+     "pooling": 2
+    },
+    "dirs": {
+     "down": {
+      "word": "shorter / cleaner",
+      "tried": 62,
+      "moved": 1,
+      "up": 1,
+      "down": 0,
+      "sizes": {
+       "+0.5": 1
+      },
+      "prop_moved": 0,
+      "by_group": {
+       "stock": 1
+      },
+      "photos": [
+       [
+        "stock-s26-before_mirror",
+        0.5
+       ]
+      ]
+     },
+     "up": {
+      "word": "longer / heavier",
+      "tried": 67,
+      "moved": 9,
+      "up": 0,
+      "down": 9,
+      "sizes": {
+       "-0.5": 8,
+       "-1": 1
+      },
+      "prop_moved": 1,
+      "by_group": {
+       "founder": 3,
+       "unknown": 1,
+       "web": 1,
+       "stock": 4
+      },
+      "photos": [
+       [
+        "phone-d6559a",
+        -0.5
+       ],
+       [
+        "phone-ebe23f",
+        -0.5
+       ],
+       [
+        "oct7-ph4",
+        -0.5
+       ],
+       [
+        "mirror-m03",
+        -0.5
+       ],
+       [
+        "stock-s12-before_street",
+        -0.5
+       ],
+       [
+        "stock-s14-before_street",
+        -1.0
+       ],
+       [
+        "stock-s15-before_street",
+        -0.5
+       ],
+       [
+        "stock-s25-before_mirror",
+        -0.5
+       ],
+       [
+        "phone-af7e93",
+        -0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 10,
+    "moved_any_by_group": {
+     "stock": 5,
+     "unknown": 1,
+     "founder": 3,
+     "web": 1
+    }
+   },
+   "rules": "PRO-8 pooling blocks every shape credit; FIT-4 pooling -1.5/-2.0 [FF7]; STR-6/STR-12 pooling switches off the carry; SHO-2 drag fallback (pooling/full_break) on slides; MIN-2 minimal signature needs a clean hem (cropped/no/slight/cuffed); tips PRO-10 [PF1], FIT-6",
+   "label": {
+    "labelled": 59,
+    "agree": 36,
+    "agree_firm": [
+     13,
+     34
+    ],
+    "disagree": 23,
+    "ai_source": "the engine's own value",
+    "swapped": 23,
+    "moved": 1,
+    "up": 1,
+    "down": 0,
+    "prop_moved": 0,
+    "by_group": {
+     "stock": 1
+    },
+    "disagreements": [
+     [
+      "phone-8bc29d",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "phone-1f1997",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "phone-d58b14",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "phone-d918c0",
+      "cuffed",
+      "full_break"
+     ],
+     [
+      "phone-968016",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "phone-d1967f",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "phone-a765e8",
+      "cuffed",
+      "cropped"
+     ],
+     [
+      "phone-7de605",
+      "cuffed",
+      "cropped"
+     ],
+     [
+      "phone-6b14db",
+      "cuffed",
+      "cropped"
+     ],
+     [
+      "phone-5a9049",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "mirror-m01",
+      "slight_break",
+      "cropped|no_break"
+     ],
+     [
+      "mirror-m12",
+      "slight_break",
+      "cropped|no_break"
+     ],
+     [
+      "stock-p02-after_studio",
+      "pooling",
+      "cropped"
+     ],
+     [
+      "stock-p02-before_studio",
+      "slight_break",
+      "cropped"
+     ],
+     [
+      "stock-p03-before_street",
+      "slight_break",
+      "no_break"
+     ],
+     [
+      "stock-s01-before_studio",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "stock-s05-before_studio",
+      "cuffed",
+      "cropped"
+     ],
+     [
+      "stock-s06-before_studio",
+      "cuffed",
+      "cropped"
+     ],
+     [
+      "stock-s08-before_studio",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "stock-s10-before_street",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "stock-s16-before_street",
+      "slight_break",
+      "full_break"
+     ],
+     [
+      "stock-s26-before_mirror",
+      "pooling",
+      "full_break"
+     ],
+     [
+      "phone-7f14a4",
+      "slight_break",
+      "full_break"
+     ]
+    ],
+    "moves": [
+     [
+      "stock-s26-before_mirror",
+      "pooling",
+      "full_break",
+      6.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "sleeve_top": {
+   "flip": {
+    "name": "Sleeve end, the top",
+    "present": 43,
+    "skipped": {
+     "na": 33
+    },
+    "values": {
+     "at_wrist": 40,
+     "covers_hand": 1,
+     "above_wrist": 2
+    },
+    "dirs": {
+     "down": {
+      "word": "shorter",
+      "tried": 41,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 0,
+      "by_group": {},
+      "photos": []
+     },
+     "up": {
+      "word": "longer",
+      "tried": 42,
+      "moved": 13,
+      "up": 0,
+      "down": 13,
+      "sizes": {
+       "-0.5": 13
+      },
+      "prop_moved": 0,
+      "by_group": {
+       "founder": 4,
+       "web": 3,
+       "stock": 6
+      },
+      "photos": [
+       [
+        "phone-968016",
+        -0.5
+       ],
+       [
+        "oct7-ph2",
+        -0.5
+       ],
+       [
+        "oct7-ph3",
+        -0.5
+       ],
+       [
+        "mirror-m02",
+        -0.5
+       ],
+       [
+        "mirror-m05",
+        -0.5
+       ],
+       [
+        "mirror-m11",
+        -0.5
+       ],
+       [
+        "stock-p04-after_street",
+        -0.5
+       ],
+       [
+        "stock-p04-before_street",
+        -0.5
+       ],
+       [
+        "stock-p05-before_street",
+        -0.5
+       ],
+       [
+        "stock-s01-before_studio",
+        -0.5
+       ],
+       [
+        "stock-s06-before_studio",
+        -0.5
+       ],
+       [
+        "stock-s13-before_street",
+        -0.5
+       ],
+       [
+        "phone-7f14a4",
+        -0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 13,
+    "moved_any_by_group": {
+     "founder": 4,
+     "stock": 6,
+     "web": 3
+    }
+   },
+   "rules": "FIT-2 sleeves over the hands (covers_hand only) -0.5 to -2.0 [FF1, FF5]; PRO-11 excuse [PB1]",
+   "label": {
+    "labelled": 38,
+    "agree": 38,
+    "agree_firm": [
+     38,
+     38
+    ],
+    "disagree": 0,
+    "ai_source": "the engine's own value",
+    "swapped": 0,
+    "moved": 0,
+    "up": 0,
+    "down": 0,
+    "prop_moved": 0,
+    "by_group": {},
+    "disagreements": [],
+    "moves": []
+   }
+  },
+  "sleeve_outer": {
+   "flip": {
+    "name": "Sleeve end, the outer layer",
+    "present": 33,
+    "skipped": {
+     "na": 3
+    },
+    "values": {
+     "at_wrist": 27,
+     "covers_hand": 1,
+     "above_wrist": 5
+    },
+    "dirs": {
+     "down": {
+      "word": "shorter",
+      "tried": 28,
+      "moved": 1,
+      "up": 1,
+      "down": 0,
+      "sizes": {
+       "+0.5": 1
+      },
+      "prop_moved": 0,
+      "by_group": {
+       "founder": 1
+      },
+      "photos": [
+       [
+        "phone-f07193",
+        0.5
+       ]
+      ]
+     },
+     "up": {
+      "word": "longer",
+      "tried": 32,
+      "moved": 19,
+      "up": 0,
+      "down": 19,
+      "sizes": {
+       "-0.5": 17,
+       "-1": 2
+      },
+      "prop_moved": 0,
+      "by_group": {
+       "founder": 4,
+       "friend": 1,
+       "unknown": 1,
+       "web": 4,
+       "stock": 9
+      },
+      "photos": [
+       [
+        "phone-8bc29d",
+        -0.5
+       ],
+       [
+        "phone-d918c0",
+        -0.5
+       ],
+       [
+        "phone-d1967f",
+        -0.5
+       ],
+       [
+        "phone-ebe23f",
+        -0.5
+       ],
+       [
+        "oct7-ph3",
+        -0.5
+       ],
+       [
+        "oct7-ph4",
+        -0.5
+       ],
+       [
+        "mirror-m02",
+        -0.5
+       ],
+       [
+        "mirror-m08",
+        -0.5
+       ],
+       [
+        "mirror-m09",
+        -1.0
+       ],
+       [
+        "mirror-m11",
+        -0.5
+       ],
+       [
+        "stock-p03-after_street",
+        -0.5
+       ],
+       [
+        "stock-p03-before_street",
+        -0.5
+       ],
+       [
+        "stock-p04-after_street",
+        -0.5
+       ],
+       [
+        "stock-p04-before_street",
+        -0.5
+       ],
+       [
+        "stock-p06-before_studio",
+        -0.5
+       ],
+       [
+        "stock-s07-before_studio",
+        -1.0
+       ],
+       [
+        "stock-s08-before_studio",
+        -0.5
+       ],
+       [
+        "stock-s14-before_street",
+        -0.5
+       ],
+       [
+        "stock-s16-before_street",
+        -0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 20,
+    "moved_any_by_group": {
+     "friend": 1,
+     "stock": 9,
+     "web": 4,
+     "founder": 5,
+     "unknown": 1
+    }
+   },
+   "rules": "FIT-2 (covers_hand only) [FF1, FF5]",
+   "label": {
+    "labelled": 26,
+    "agree": 23,
+    "agree_firm": [
+     22,
+     25
+    ],
+    "disagree": 3,
+    "ai_source": "the engine's own value",
+    "swapped": 3,
+    "moved": 1,
+    "up": 1,
+    "down": 0,
+    "prop_moved": 0,
+    "by_group": {
+     "founder": 1
+    },
+    "disagreements": [
+     [
+      "phone-f07193",
+      "covers_hand",
+      "at_wrist"
+     ],
+     [
+      "phone-e026de",
+      "at_wrist",
+      "above_wrist"
+     ],
+     [
+      "stock-s10-before_street",
+      "above_wrist",
+      "at_wrist"
+     ]
+    ],
+    "moves": [
+     [
+      "phone-f07193",
+      "covers_hand",
+      "at_wrist",
+      6.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "volume_top": {
+   "flip": {
+    "name": "Roominess of the top (1-5)",
+    "present": 76,
+    "skipped": {},
+    "values": {
+     "3": 42,
+     "4": 7,
+     "2": 26,
+     "1": 1
+    },
+    "dirs": {
+     "down": {
+      "word": "closer",
+      "tried": 75,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 0,
+      "by_group": {},
+      "photos": []
+     },
+     "up": {
+      "word": "roomier",
+      "tried": 76,
+      "moved": 9,
+      "up": 3,
+      "down": 6,
+      "sizes": {
+       "-0.5": 6,
+       "+0.5": 3
+      },
+      "prop_moved": 9,
+      "by_group": {
+       "founder": 3,
+       "web": 1,
+       "stock": 5
+      },
+      "photos": [
+       [
+        "phone-d6559a",
+        -0.5
+       ],
+       [
+        "phone-d58b14",
+        -0.5
+       ],
+       [
+        "phone-0d39d6",
+        0.5
+       ],
+       [
+        "mirror-m07",
+        -0.5
+       ],
+       [
+        "stock-s04-before_studio",
+        0.5
+       ],
+       [
+        "stock-s05-before_studio",
+        -0.5
+       ],
+       [
+        "stock-s12-before_street",
+        0.5
+       ],
+       [
+        "stock-s19-before_phone",
+        -0.5
+       ],
+       [
+        "stock-s28-before_mirror",
+        -0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 9,
+    "moved_any_by_group": {
+     "stock": 5,
+     "web": 1,
+     "founder": 3
+    }
+   },
+   "rules": "PRO-2 roomy (4+) over skinny -1.5; PRO-11 roomy (4+) -1.5; STR-5 roomy (4+); PRO-4 ribbed tops need 4+; FIT-2 too big (4+, covers_hand); STY-5 roomy (4+) -3.0 Style; detection (STR-2/4, MIN-2, WRK-2 at 5, SMC-2 at 5, PRP-2); PF4 tip (3 or less)",
+   "label": null
+  },
+  "volume_outer": {
+   "flip": {
+    "name": "Roominess of the outer layer (1-5)",
+    "present": 36,
+    "skipped": {},
+    "values": {
+     "3": 27,
+     "2": 7,
+     "4": 2
+    },
+    "dirs": {
+     "down": {
+      "word": "closer",
+      "tried": 36,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 0,
+      "by_group": {},
+      "photos": []
+     },
+     "up": {
+      "word": "roomier",
+      "tried": 36,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 1,
+      "by_group": {},
+      "photos": []
+     }
+    },
+    "moved_any": 0,
+    "moved_any_by_group": {}
+   },
+   "rules": "PRO-2 roomy jacket over skinny; FIT-2 too big; STR-2/4 detection (roomy jacket); WRK-2/SMC-2 at 5",
+   "label": null
+  },
+  "peek": {
+   "flip": {
+    "name": "Shirt showing below the layer (second look)",
+    "present": 39,
+    "skipped": {},
+    "values": {},
+    "dirs": {
+     "up": {
+      "word": "yes",
+      "tried": 39,
+      "moved": 5,
+      "up": 0,
+      "down": 5,
+      "sizes": {
+       "-0.5": 3,
+       "-1": 2
+      },
+      "prop_moved": 39,
+      "by_group": {
+       "founder": 1,
+       "web": 2,
+       "stock": 2
+      },
+      "photos": [
+       [
+        "phone-d918c0",
+        -0.5
+       ],
+       [
+        "mirror-m02",
+        -1.0
+       ],
+       [
+        "mirror-m09",
+        -0.5
+       ],
+       [
+        "stock-s14-before_street",
+        -1.0
+       ],
+       [
+        "stock-s16-before_street",
+        -0.5
+       ]
+      ]
+     }
+    },
+    "moved_any": 5,
+    "moved_any_by_group": {
+     "web": 2,
+     "stock": 2,
+     "founder": 1
+    }
+   },
+   "rules": "PRO-9 shirt below the jacket -0.5 and no jacket shape credit (PR2, PR5) [PF10]; never fires today (KD-15)",
+   "label": {
+    "labelled": 36,
+    "agree": 28,
+    "agree_firm": [
+     23,
+     23
+    ],
+    "disagree": null,
+    "ai_source": "the second look (look1, 3-run majority) where it ran; today the app uses 'no'",
+    "swapped": 2,
+    "moved": 0,
+    "up": 0,
+    "down": 0,
+    "prop_moved": 2,
+    "by_group": {},
+    "disagreements": [],
+    "moves": []
+   }
+  },
+  "rests": {
+   "flip": {
+    "name": "Pant rests on the shoe (second look)",
+    "present": 57,
+    "skipped": {},
+    "values": {},
+    "dirs": {
+     "down": {
+      "word": "no",
+      "tried": 15,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 0,
+      "by_group": {},
+      "photos": []
+     },
+     "up": {
+      "word": "yes",
+      "tried": 42,
+      "moved": 0,
+      "up": 0,
+      "down": 0,
+      "sizes": {},
+      "prop_moved": 0,
+      "by_group": {},
+      "photos": []
+     }
+    },
+    "moved_any": 0,
+    "moved_any_by_group": {}
+   },
+   "rules": "SHO-2 loose jeans or cargos dragging on slides -0.5 [SK1b]; only with slides out of the house",
+   "label": {
+    "labelled": 53,
+    "agree": 40,
+    "agree_firm": [
+     31,
+     44
+    ],
+    "disagree": 13,
+    "ai_source": "today's fallback from the hem (pooling/full break = rests)",
+    "swapped": 13,
+    "moved": 0,
+    "up": 0,
+    "down": 0,
+    "prop_moved": 0,
+    "by_group": {},
+    "disagreements": [
+     [
+      "phone-8bc29d",
+      "no",
+      "yes"
+     ],
+     [
+      "phone-1f1997",
+      "no",
+      "yes"
+     ],
+     [
+      "phone-d58b14",
+      "no",
+      "yes"
+     ],
+     [
+      "phone-d918c0",
+      "no",
+      "yes"
+     ],
+     [
+      "phone-968016",
+      "no",
+      "yes"
+     ],
+     [
+      "phone-d1967f",
+      "no",
+      "yes"
+     ],
+     [
+      "phone-5a9049",
+      "no",
+      "yes"
+     ],
+     [
+      "stock-p02-after_studio",
+      "yes",
+      "no"
+     ],
+     [
+      "stock-s01-before_studio",
+      "no",
+      "yes"
+     ],
+     [
+      "stock-s08-before_studio",
+      "no",
+      "yes"
+     ],
+     [
+      "stock-s16-before_street",
+      "no",
+      "yes"
+     ],
+     [
+      "stock-s25-before_mirror",
+      "yes",
+      "no"
+     ],
+     [
+      "phone-7f14a4",
+      "no",
+      "yes"
+     ]
+    ],
+    "moves": []
+   }
+  }
+ },
+ "all_labels": {
+  "photos_swapped": 40,
+  "moved": [
+   [
+    "phone-703a8b",
+    7.5,
+    7.0,
+    8.5,
+    7.0
+   ],
+   [
+    "mirror-m05",
+    8.0,
+    7.0,
+    8.5,
+    7.0
+   ],
+   [
+    "stock-s26-before_mirror",
+    6.5,
+    7.0,
+    7.0,
+    7.0
+   ],
+   [
+    "phone-f07193",
+    6.5,
+    7.0,
+    7.0,
+    7.0
+   ]
+  ]
+ },
+ "ranked": [
+  [
+   20,
+   "leg_shape",
+   77,
+   1,
+   14,
+   "14/63"
+  ],
+  [
+   20,
+   "sleeve_outer",
+   33,
+   1,
+   3,
+   "3/26"
+  ],
+  [
+   14,
+   "tuck",
+   76,
+   1,
+   2,
+   "2/58"
+  ],
+  [
+   13,
+   "sleeve_top",
+   43,
+   0,
+   0,
+   "0/38"
+  ],
+  [
+   10,
+   "hem",
+   69,
+   1,
+   23,
+   "23/59"
+  ],
+  [
+   9,
+   "volume_top",
+   76,
+   null,
+   null,
+   "-"
+  ],
+  [
+   8,
+   "top_length",
+   53,
+   0,
+   11,
+   "11/44"
+  ],
+  [
+   5,
+   "peek",
+   39,
+   0,
+   2,
+   "0/28"
+  ],
+  [
+   0,
+   "outer_length",
+   24,
+   0,
+   1,
+   "1/16"
+  ],
+  [
+   0,
+   "rests",
+   57,
+   0,
+   13,
+   "13/53"
+  ],
+  [
+   0,
+   "volume_outer",
+   36,
+   null,
+   null,
+   "-"
+  ]
+ ]
+}

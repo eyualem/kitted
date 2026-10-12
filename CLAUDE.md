@@ -329,6 +329,8 @@ All of them skew female and studio/street, not mirror selfies, so confirm on his
 
 **Rules:** CLAUDE.md rule 7 (profiles) and rule 9 (memory). No app change until a script passes and the founder sees the before/after.
 
+**Step 1 done Oct 12 (#222, `rubric/research/parts/proportion-headroom.md`):** under today's rules even perfect proportion facts move only 4 of 79 shown scores; Proportions sits at 7.0 because of the rules, not the readings. Worth a script, in order: slim vs straight legs, a boxy-short-top measure (length + roominess), veto guards for "pooling" and "sleeves cover the hands". Only Fashionpedia's labels are commercial-safe; SAM 2.1 Tiny (Apache 2.0) is the one usable segmenter, deferred. Next: Fashionpedia val (250 MB) as slim-vs-straight truth, waiting on the founder's OK.
+
 
 ### Next: two workstreams from the founder's Oct 8 phone test (start each in its own chat)
 - **A. Reading accuracy and uncertainty: shoe question built Oct 8 (#120–124).** What I measured on my 11 labeled Oct 8 checks (`inputs/phone-oct8/truth.csv`): **my boots were the only misread that moved my score** (fixing them alone: +0.5 to +1.0 on 6 of 11). My jeans *were* read as wide (6/8); "Swap to relaxed-leg pants" is the rule docking wide legs when the outfit doesn't read as streetwear/workwear. "Cream vs tan" was two different shirts, both read right. Hoodie/sweatshirt and the colour flips cost 0.
