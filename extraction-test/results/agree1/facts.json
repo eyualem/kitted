@@ -1,0 +1,5468 @@
+{
+ "labels": {
+  "mirror-m01": {
+   "long_top": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "mirror-m02": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "mirror-m03": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": null
+  },
+  "mirror-m07": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "either",
+   "heavy_hem": null
+  },
+  "mirror-m08": {
+   "long_layer": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "either",
+   "heavy_hem": null
+  },
+  "mirror-m09": {
+   "long_layer": "yes",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": null
+  },
+  "mirror-m10": {
+   "long_layer": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": "no"
+  },
+  "mirror-m12": {
+   "long_layer": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "oct7-ph1": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "oct7-ph2": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": "no"
+  },
+  "oct7-ph3": {
+   "long_layer": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "oct7-ph4": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": null
+  },
+  "phone-0d39d6": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-1f1997": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-403ade": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-5a9049": {
+   "long_top": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-6b14db": {
+   "long_top": "no",
+   "peek": "yes",
+   "peek_clearly": "either",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "phone-703a8b": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": null
+  },
+  "phone-7de605": {
+   "long_top": "no",
+   "peek": "yes",
+   "peek_clearly": "either",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "phone-7f14a4": {
+   "long_top": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-8ad378": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-8bc29d": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-968016": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-a765e8": {
+   "long_top": "no",
+   "peek": "yes",
+   "peek_clearly": "either",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "phone-b0f0c8": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-d1967f": {
+   "long_layer": "yes",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-d58b14": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-d6559a": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-d918c0": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-e026de": {
+   "long_layer": "no",
+   "peek": "either",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-e438d4": {
+   "long_layer": "either",
+   "peek": "either",
+   "peek_clearly": "no",
+   "rests": "either",
+   "heavy_hem": "either"
+  },
+  "phone-ebe23f": {
+   "long_layer": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "either"
+  },
+  "phone-f07193": {
+   "long_top": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "phone-f4870b": {
+   "long_layer": "either",
+   "peek": "either",
+   "peek_clearly": "no",
+   "rests": "either",
+   "heavy_hem": null
+  },
+  "phone-fb0b17": {
+   "long_layer": "either",
+   "peek": "either",
+   "peek_clearly": "no",
+   "rests": "either",
+   "heavy_hem": null
+  },
+  "stock-p03-after_street": {
+   "long_layer": "yes",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "either",
+   "heavy_hem": "no"
+  },
+  "stock-p06-after_studio": {
+   "long_layer": null,
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": null
+  },
+  "stock-s01-before_studio": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "stock-s02-before_studio": {
+   "long_top": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": null
+  },
+  "stock-s04-before_studio": {
+   "long_top": "no",
+   "peek": "yes",
+   "peek_clearly": "yes",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "stock-s07-before_studio": {
+   "long_layer": "yes",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "stock-s08-before_studio": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "stock-s10-before_street": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "either",
+   "heavy_hem": "yes"
+  },
+  "stock-s11-before_street": {
+   "long_top": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "stock-s14-before_street": {
+   "long_layer": "no",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "stock-s15-before_street": {
+   "long_layer": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "yes",
+   "heavy_hem": "yes"
+  },
+  "stock-s19-before_phone": {
+   "long_top": null,
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": null
+  },
+  "stock-s21-before_phone": {
+   "long_layer": "either",
+   "peek": "no",
+   "peek_clearly": "no",
+   "rests": "no",
+   "heavy_hem": "no"
+  },
+  "stock-s24-before_mirror": {
+   "long_top": "no",
+   "peek": "yes",
+   "peek_clearly": "either",
+   "rests": null,
+   "heavy_hem": null
+  },
+  "stock-s26-before_mirror": {
+   "long_layer": "no",
+   "peek": "either",
+   "peek_clearly": "no",
+   "rests": null,
+   "heavy_hem": "yes"
+  }
+ },
+ "votes": {
+  "long_top": {
+   "mirror-m01": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m02": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "mirror-m03": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "mirror-m07": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m08": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "mirror-m09": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "mirror-m10": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "mirror-m12": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "oct7-ph1": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph2": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph3": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "oct7-ph4": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-0d39d6": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-1f1997": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-403ade": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-5a9049": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-6b14db": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-703a8b": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-7de605": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-7f14a4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "phone-8ad378": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-8bc29d": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-968016": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-a765e8": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-b0f0c8": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-d1967f": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-d58b14": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d6559a": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-d918c0": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-e026de": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-e438d4": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-ebe23f": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-f07193": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-f4870b": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-fb0b17": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-p03-after_street": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-p06-after_studio": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s01-before_studio": [
+    {
+     "a": "no",
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "stock-s02-before_studio": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s04-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s07-before_studio": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s08-before_studio": [
+    {
+     "a": null,
+     "b": null,
+     "c": "yes"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "yes"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "yes"
+    }
+   ],
+   "stock-s10-before_street": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "stock-s11-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s14-before_street": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "stock-s15-before_street": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "yes"
+    }
+   ],
+   "stock-s19-before_phone": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s21-before_phone": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s24-before_mirror": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s26-before_mirror": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ]
+  },
+  "long_layer": {
+   "mirror-m01": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "mirror-m02": [
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m03": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "mirror-m07": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "mirror-m08": [
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "mirror-m09": [
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "mirror-m10": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "mirror-m12": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "oct7-ph1": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "oct7-ph2": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "oct7-ph3": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "oct7-ph4": [
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-0d39d6": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-1f1997": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-403ade": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-5a9049": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-6b14db": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-703a8b": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-7de605": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-7f14a4": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-8ad378": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-8bc29d": [
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-968016": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-a765e8": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-b0f0c8": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-d1967f": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "phone-d58b14": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-d6559a": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "phone-d918c0": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-e026de": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-e438d4": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-ebe23f": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-f07193": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-f4870b": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-fb0b17": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-p03-after_street": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-p06-after_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s01-before_studio": [
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s02-before_studio": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s04-before_studio": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s07-before_studio": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s08-before_studio": [
+    {
+     "a": null,
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "stock-s10-before_street": [
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s11-before_street": [
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": "no"
+    }
+   ],
+   "stock-s14-before_street": [
+    {
+     "a": null,
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": null,
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "stock-s15-before_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "stock-s19-before_phone": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s21-before_phone": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s24-before_mirror": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s26-before_mirror": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ]
+  },
+  "peek": {
+   "mirror-m01": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m02": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m03": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m07": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m08": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m09": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m10": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m12": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "oct7-ph1": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph2": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph3": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-0d39d6": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-1f1997": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-403ade": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-5a9049": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-6b14db": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-703a8b": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-7de605": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-7f14a4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-8ad378": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-8bc29d": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-968016": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-a765e8": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-b0f0c8": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-d1967f": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-d58b14": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d6559a": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d918c0": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-e026de": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-e438d4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-ebe23f": [
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-f07193": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-f4870b": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-fb0b17": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-p03-after_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-p06-after_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s01-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s02-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s04-before_studio": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s07-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s08-before_studio": [
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s10-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s11-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s14-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s15-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s19-before_phone": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s21-before_phone": [
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s24-before_mirror": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s26-before_mirror": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    }
+   ]
+  },
+  "peek_clearly": {
+   "mirror-m01": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m02": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m03": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m07": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m08": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m09": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m10": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m12": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "oct7-ph1": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph2": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph3": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-0d39d6": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-1f1997": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-403ade": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-5a9049": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-6b14db": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-703a8b": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-7de605": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-7f14a4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-8ad378": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-8bc29d": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-968016": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-a765e8": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-b0f0c8": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d1967f": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-d58b14": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d6559a": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d918c0": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-e026de": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-e438d4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-ebe23f": [
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-f07193": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-f4870b": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "phone-fb0b17": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-p03-after_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-p06-after_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s01-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s02-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s04-before_studio": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s07-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s08-before_studio": [
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s10-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s11-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s14-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s15-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s19-before_phone": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s21-before_phone": [
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s24-before_mirror": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s26-before_mirror": [
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ]
+  },
+  "heavy_hem": {
+   "mirror-m01": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m02": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m03": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "mirror-m07": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "mirror-m08": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m09": [
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    }
+   ],
+   "mirror-m10": [
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    }
+   ],
+   "mirror-m12": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph1": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "oct7-ph2": [
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    }
+   ],
+   "oct7-ph3": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph4": [
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-0d39d6": [
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-1f1997": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-403ade": [
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "phone-5a9049": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-6b14db": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-703a8b": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-7de605": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-7f14a4": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-8ad378": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "phone-8bc29d": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "phone-968016": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "phone-a765e8": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-b0f0c8": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "phone-d1967f": [
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d58b14": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-d6559a": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-d918c0": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "phone-e026de": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "phone-e438d4": [
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-ebe23f": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "phone-f07193": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-f4870b": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-fb0b17": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-p03-after_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-p06-after_studio": [
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s01-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s02-before_studio": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s04-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s07-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s08-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "stock-s10-before_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s11-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s14-before_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s15-before_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "stock-s19-before_phone": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s21-before_phone": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s24-before_mirror": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s26-before_mirror": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": null,
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": null,
+     "c": null
+    }
+   ]
+  },
+  "rests": {
+   "mirror-m01": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "mirror-m02": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "mirror-m03": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "mirror-m07": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "mirror-m08": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "mirror-m09": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "mirror-m10": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "mirror-m12": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph1": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "oct7-ph2": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "oct7-ph3": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "oct7-ph4": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-0d39d6": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-1f1997": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-403ade": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "phone-5a9049": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-6b14db": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-703a8b": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "phone-7de605": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-7f14a4": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-8ad378": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "phone-8bc29d": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-968016": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "phone-a765e8": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": null
+    }
+   ],
+   "phone-b0f0c8": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "phone-d1967f": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "phone-d58b14": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-d6559a": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-d918c0": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "phone-e026de": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "phone-e438d4": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-ebe23f": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "phone-f07193": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "phone-f4870b": [
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "phone-fb0b17": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-p03-after_street": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    }
+   ],
+   "stock-p06-after_studio": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s01-before_studio": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    }
+   ],
+   "stock-s02-before_studio": [
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    },
+    {
+     "a": null,
+     "b": "no",
+     "c": null
+    }
+   ],
+   "stock-s04-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s07-before_studio": [
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "stock-s08-before_studio": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s10-before_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s11-before_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "no"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "no"
+    }
+   ],
+   "stock-s14-before_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s15-before_street": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    },
+    {
+     "a": "yes",
+     "b": "yes",
+     "c": null
+    }
+   ],
+   "stock-s19-before_phone": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s21-before_phone": [
+    {
+     "a": "no",
+     "b": "yes",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    },
+    {
+     "a": "no",
+     "b": "no",
+     "c": "yes"
+    }
+   ],
+   "stock-s24-before_mirror": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ],
+   "stock-s26-before_mirror": [
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    },
+    {
+     "a": null,
+     "b": null,
+     "c": null
+    }
+   ]
+  }
+ }
+}

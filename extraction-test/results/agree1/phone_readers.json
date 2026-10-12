@@ -1,0 +1,3122 @@
+{
+ "mirror-m01": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.51,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.395,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.51,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "mirror-m02": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "mirror-m03": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "too small"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no pants on the shin"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "too small"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "mirror-m04": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "mirror-m05": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.1,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   },
+   "max1600": {
+    "shoeVisToW": 1.1,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "mirror-m06": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "mirror-m07": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "too small"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "too small"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "too small"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "mirror-m08": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "mirror-m09": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "mirror-m10": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "too small"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "too small"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "too small"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "mirror-m11": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.31,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.3,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.31,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "mirror-m12": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "too small"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "too small"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "too small"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "cropped",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "cropped",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "cropped",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "oct7-ph1": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "oct7-ph2": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "oct7-ph3": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "oct7-ph4": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-0d39d6": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-1f1997": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-403ade": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.05,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.09,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.07,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-5a9049": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-6b14db": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-703a8b": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-7de605": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-7f14a4": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-8ad378": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.155,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.18,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.155,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-8bc29d": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 0.9550000000000001,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 0.96,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 0.95,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "phone-968016": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.165,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.185,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.175,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "phone-a765e8": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "phone-af7e93": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.28,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.16,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.2,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "gap",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "gap",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "gap",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-b0f0c8": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.0550000000000002,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.045,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.04,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-d1967f": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.9,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   },
+   "max1600": {
+    "shoeVisToW": 1.91,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-d58b14": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "phone-d6559a": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-d918c0": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.08,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.08,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.07,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "phone-e026de": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": 1.08,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.05,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-e438d4": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "cropped",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-ebe23f": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.095,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.115,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.095,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-f07193": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.115,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   },
+   "max1600": {
+    "shoeVisToW": 1.1099999999999999,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-f4870b": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "phone-fb0b17": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-p01-after_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "leg bent"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "leg bent"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "leg bent"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-p01-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "yes",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "yes",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "yes",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "stock-p02-after_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.95,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.96,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.9500000000000002,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-p02-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.04,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-p03-after_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "stock-p03-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-p04-after_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-p04-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-p05-after_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.96,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   },
+   "max1600": {
+    "shoeVisToW": 1.95,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": null,
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": null,
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": null,
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "stock-p05-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-p06-after_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-p06-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-s01-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "stock-s02-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": null,
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": null,
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": null,
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s03-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "stock-s04-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "gap",
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "gap",
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "max1600": {
+    "hem": "gap",
+    "hem_box": "gap",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "stock-s05-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.55,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "not measured"
+   },
+   "max1600": {
+    "shoeVisToW": 1.54,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "gap",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "gap",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "gap",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s06-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.285,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "feet cut off"
+   },
+   "max1600": {
+    "shoeVisToW": 1.285,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s07-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.49,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.47,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.49,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s08-before_studio": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 0.95,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 0.93,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 0.93,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "na",
+    "top_length": "below_crotch",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "stock-s09-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 2.15,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 2.13,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 2.01,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "stock-s10-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s11-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.195,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.205,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.185,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "meets",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s12-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "gap",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s13-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.03,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 0.98,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.0350000000000001,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "cropped",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "cropped",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "cropped",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s14-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s15-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 1.17,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 1.19,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 1.16,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "below_crotch",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s16-before_street": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": 0.74,
+    "why": ""
+   },
+   "crop3": {
+    "shoeVisToW": 0.71,
+    "why": ""
+   },
+   "max1600": {
+    "shoeVisToW": 0.7,
+    "why": ""
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "below_crotch",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "stock-s17-before_phone": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no hem edge"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "covers",
+    "layers": "unsure",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-s18-before_phone": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "multiplePeople"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "multiplePeople"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": null,
+    "hem_box": null,
+    "layers": null,
+    "top_length": null,
+    "top_length_box": null
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "covers",
+    "layers": "no",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "max1600": {
+    "hem": null,
+    "hem_box": null,
+    "layers": null,
+    "top_length": null,
+    "top_length_box": null
+   }
+  }
+ },
+ "stock-s19-before_phone": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-s20-before_phone": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "stock-s21-before_phone": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "dark on dark (pants and shoes match)"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "covers",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "stock-s22-before_phone": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "stock-s23-before_mirror": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "at_belt",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s24-before_mirror": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "crop3": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   },
+   "max1600": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "at_belt"
+   }
+  }
+ },
+ "stock-s25-before_mirror": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "meets",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   }
+  }
+ },
+ "stock-s26-before_mirror": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "no shoe box"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "no",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ },
+ "stock-s27-before_mirror": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "below_crotch"
+   },
+   "crop3": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "unsure",
+    "top_length_box": "unsure"
+   },
+   "max1600": {
+    "hem": null,
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "below_crotch"
+   }
+  }
+ },
+ "stock-s28-before_mirror": {
+  "hemprobe": {
+   "base": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "crop3": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   },
+   "max1600": {
+    "shoeVisToW": null,
+    "why": "knee or ankle not found"
+   }
+  },
+  "ruler": {
+   "base": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "crop3": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   },
+   "max1600": {
+    "hem": "unsure",
+    "hem_box": "unsure",
+    "layers": "na",
+    "top_length": "mid_fly",
+    "top_length_box": "mid_fly"
+   }
+  }
+ }
+}

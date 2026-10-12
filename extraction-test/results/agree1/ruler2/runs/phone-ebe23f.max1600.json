@@ -1,0 +1,163 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "legs" : [
+      {
+        "bend" : 1,
+        "class" : "meets",
+        "footEnd" : 1.6000000000000001,
+        "hem" : 1.1899999999999999,
+        "over" : 0.25,
+        "pantsL" : 4,
+        "shoeSep" : 58,
+        "shoeTop" : 1.05,
+        "side" : "l"
+      },
+      {
+        "bend" : 2,
+        "class" : "meets",
+        "footEnd" : 1.71,
+        "hem" : 1.1499999999999999,
+        "over" : 0.12,
+        "pantsL" : 10,
+        "shoeSep" : 59,
+        "shoeTop" : 1.0700000000000001,
+        "side" : "r"
+      }
+    ],
+    "pos" : 0.19,
+    "value" : "meets"
+  },
+  "hem_box" : {
+    "pos" : 0.25700000000000001,
+    "value" : "meets"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.76000000000000001,
+      "x" : 415,
+      "y" : 884
+    },
+    "lElbow" : {
+      "c" : 0.57999999999999996,
+      "x" : 462,
+      "y" : 477
+    },
+    "lHip" : {
+      "c" : 0.60999999999999999,
+      "x" : 385,
+      "y" : 616
+    },
+    "lKnee" : {
+      "c" : 0.69999999999999996,
+      "x" : 399,
+      "y" : 759
+    },
+    "lShoulder" : {
+      "c" : 0.70999999999999996,
+      "x" : 419,
+      "y" : 398
+    },
+    "lWrist" : {
+      "c" : 0.70999999999999996,
+      "x" : 449,
+      "y" : 498
+    },
+    "neck" : {
+      "c" : 0.72999999999999998,
+      "x" : 340,
+      "y" : 397
+    },
+    "rAnkle" : {
+      "c" : 0.77000000000000002,
+      "x" : 307,
+      "y" : 881
+    },
+    "rElbow" : {
+      "c" : 0.68000000000000005,
+      "x" : 223,
+      "y" : 501
+    },
+    "rHip" : {
+      "c" : 0.51000000000000001,
+      "x" : 299,
+      "y" : 625
+    },
+    "rKnee" : {
+      "c" : 0.67000000000000004,
+      "x" : 300,
+      "y" : 754
+    },
+    "root" : {
+      "c" : 0.56000000000000005,
+      "x" : 342,
+      "y" : 621
+    },
+    "rShoulder" : {
+      "c" : 0.75,
+      "x" : 260,
+      "y" : 397
+    },
+    "rWrist" : {
+      "c" : 0.81000000000000005,
+      "x" : 209,
+      "y" : 604
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 1600,
+  "ms" : 341,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261011-133011\/photos\/ebe23fb3a57a072e4882c0b94e888321c7fc999895bbf10e96e05caf7a945d75-photo.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm lengths"
+      },
+      {
+        "bend" : 11,
+        "pos" : 2.2400000000000002,
+        "refL" : 14,
+        "side" : "r",
+        "spread" : 0.80000000000000004,
+        "thr" : 10,
+        "value" : "at_wrist"
+      }
+    ],
+    "bend" : 11,
+    "pos" : 2.2400000000000002,
+    "refL" : 14,
+    "side" : "r",
+    "spread" : 0.80000000000000004,
+    "thr" : 10,
+    "value" : "at_wrist"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 8,
+    "sides" : [
+      {
+        "sep" : 6,
+        "side" : "l",
+        "why" : "top and bottoms look the same"
+      },
+      {
+        "sep" : 6,
+        "side" : "r",
+        "why" : "top and bottoms look the same"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "top and bottoms look the same"
+  },
+  "top_length_box" : {
+    "pos" : 0.23599999999999999,
+    "value" : "mid_fly"
+  },
+  "w" : 768
+}

@@ -1,0 +1,358 @@
+AGREEMENT TEST (Oct 11): a proportion fact moves points only when independent readers agree
+  readers: (a) scoring call, batch 1 arm A, 3 runs · (b) second look look1 U/L, 3 runs · (c) phone: fit ruler (hem: hem probe shoeVisToW < 1.2), variants base/max1600/crop3
+  50 photos; phone readings on 50; real corpus 79 (+1 from the Oct 11 pull: phone-af7e93)
+  Rule 7: founder profile pending; friends profile unknown; 703a8b/ebe23f unknown (ask the founder); stock/web profile unknown; one test profile (Minimal + Smart casual), so no age-band or picked-look split.
+
+(1) EACH FACT: precision when it fires (every run), 'no' precision, 3-run steadiness, coverage
+    bars: >= 90% right when it fires, >= 90% steady in the grouping the rule uses (fires or not), fires on >= 3 photos.
+    Steadiness = the same answer on all 3 paired runs (scoring call run i, second look run i, phone variant i).
+
+  long_top: the top, worn without a layer, ends at the crotch or lower
+    labels on 24 photos: yes 0 · either 5 · no 19
+    (a) scoring call alone      fires right    never fires (firm            -) · 'no' right   70/70 (100%) · steady: fires 24/24 (100%), says no  23/24 (96%) · fires on  0 photos (0 his/friends') · finds - of 'yes' labels · answers on 23/24 (96%)
+    (b) second look alone       fires right     6/13 (46%) (firm     0/7 (0%)) · 'no' right   56/56 (100%) · steady: fires  20/24 (83%), says no  20/24 (83%) · fires on  5 photos (2 his/friends') · finds - of 'yes' labels · answers on 23/24 (96%)
+    (c) phone alone             fires right    never fires (firm            -) · 'no' right   42/42 (100%) · steady: fires 24/24 (100%), says no 24/24 (100%) · fires on  0 photos (0 his/friends') · finds - of 'yes' labels · answers on 14/24 (58%)
+    (a)+(b) agree               fires right    never fires (firm            -) · 'no' right   56/56 (100%) · steady: fires 24/24 (100%), says no  20/24 (83%) · fires on  0 photos (0 his/friends') · finds - of 'yes' labels · answers on 18/24 (75%)
+    2 of 3 agree                fires right    never fires (firm            -) · 'no' right   65/65 (100%) · steady: fires 24/24 (100%), says no  22/24 (92%) · fires on  0 photos (0 his/friends') · finds - of 'yes' labels · answers on 21/24 (88%)
+    all available agree (>=2)   fires right    never fires (firm            -) · 'no' right   57/57 (100%) · steady: fires 24/24 (100%), says no  19/24 (79%) · fires on  0 photos (0 his/friends') · finds - of 'yes' labels · answers on 18/24 (75%)
+    one says yes, none says no  fires right    never fires (firm            -) · 'no' right   59/59 (100%) · steady: fires 24/24 (100%), says no  20/24 (83%) · fires on  0 photos (0 his/friends') · finds - of 'yes' labels · answers on 19/24 (79%)
+
+  long_layer: the outer layer is long (crotch or lower); 'no' = short (hip or higher)
+    labels on 24 photos: yes 4 · either 10 · no 10
+    (a) scoring call alone      fires right   10/10 (100%) (firm   5/5 (100%)) · 'no' right   30/30 (100%) · steady: fires  21/24 (88%), says no  19/24 (79%) · fires on  3 photos (1 his/friends') · finds 1/4 (25%) of 'yes' labels · answers on 12/24 (50%)
+    (b) second look alone       fires right    25/31 (81%) (firm   9/15 (60%)) · 'no' right   38/38 (100%) · steady: fires  21/24 (88%), says no  21/24 (88%) · fires on 10 photos (4 his/friends') · finds 3/4 (75%) of 'yes' labels · answers on 23/24 (96%)
+    (c) phone alone             fires right      1/4 (25%) (firm     0/3 (0%)) · 'no' right    35/38 (92%) · steady: fires  23/24 (96%), says no  21/24 (88%) · fires on  1 photos (0 his/friends') · finds 0/4 (0%) of 'yes' labels · answers on 14/24 (58%)
+    (a)+(b) agree               fires right   10/10 (100%) (firm   5/5 (100%)) · 'no' right   24/24 (100%) · steady: fires  21/24 (88%), says no  18/24 (75%) · fires on  3 photos (1 his/friends') · finds 1/4 (25%) of 'yes' labels · answers on 11/24 (46%)
+    2 of 3 agree                fires right   10/10 (100%) (firm   5/5 (100%)) · 'no' right   35/35 (100%) · steady: fires  21/24 (88%), says no  20/24 (83%) · fires on  3 photos (1 his/friends') · finds 1/4 (25%) of 'yes' labels · answers on 14/24 (58%)
+    all available agree (>=2)   fires right     4/4 (100%) (firm   4/4 (100%)) · 'no' right   32/32 (100%) · steady: fires  23/24 (96%), says no  20/24 (83%) · fires on  1 photos (0 his/friends') · finds 1/4 (25%) of 'yes' labels · answers on 11/24 (46%)
+    one says yes, none says no  fires right    11/14 (79%) (firm    6/9 (67%)) · 'no' right   34/34 (100%) · steady: fires  22/24 (92%), says no  21/24 (88%) · fires on  4 photos (1 his/friends') · finds 2/4 (50%) of 'yes' labels · answers on 15/24 (62%)
+      2of3 fires on: mirror-m10 [either], oct7-ph3 [either], stock-s07-before_studio [yes]
+      all fires on: stock-s07-before_studio [yes]
+
+  peek: the top underneath shows below the outer piece (a little or clearly)
+    labels on 50 photos: yes 5 · either 5 · no 40
+    (a) scoring call alone      fires right      3/4 (75%) (firm    1/2 (50%)) · 'no' right  124/138 (90%) · steady: fires  46/50 (92%), says no  45/50 (90%) · fires on  0 photos (0 his/friends') · finds 0/5 (0%) of 'yes' labels · answers on 47/50 (94%)
+    (b) second look alone       fires right    18/21 (86%) (firm  15/18 (83%)) · 'no' right 129/129 (100%) · steady: fires 50/50 (100%), says no 50/50 (100%) · fires on  7 photos (4 his/friends') · finds 5/5 (100%) of 'yes' labels · answers on 50/50 (100%)
+    (c) phone alone             fires right    never fires (firm            -) · 'no' right   55/55 (100%) · steady: fires 50/50 (100%), says no  48/50 (96%) · fires on  0 photos (0 his/friends') · finds 0/5 (0%) of 'yes' labels · answers on 19/50 (38%)
+    (a)+(b) agree               fires right     2/2 (100%) (firm   1/1 (100%)) · 'no' right 119/119 (100%) · steady: fires  48/50 (96%), says no  47/50 (94%) · fires on  0 photos (0 his/friends') · finds 0/5 (0%) of 'yes' labels · answers on 40/50 (80%)
+    2 of 3 agree                fires right     2/2 (100%) (firm   1/1 (100%)) · 'no' right 123/123 (100%) · steady: fires  48/50 (96%), says no  48/50 (96%) · fires on  0 photos (0 his/friends') · finds 0/5 (0%) of 'yes' labels · answers on 41/50 (82%)
+    all available agree (>=2)   fires right     1/1 (100%) (firm   1/1 (100%)) · 'no' right 119/119 (100%) · steady: fires  49/50 (98%), says no  47/50 (94%) · fires on  0 photos (0 his/friends') · finds 0/5 (0%) of 'yes' labels · answers on 40/50 (80%)
+    one says yes, none says no  fires right     1/1 (100%) (firm   1/1 (100%)) · 'no' right 127/127 (100%) · steady: fires  49/50 (98%), says no  48/50 (96%) · fires on  0 photos (0 his/friends') · finds 0/5 (0%) of 'yes' labels · answers on 43/50 (86%)
+
+  peek_clearly: the top underneath clearly hangs below the outer piece
+    labels on 50 photos: yes 1 · either 4 · no 45
+    (a) scoring call alone      fires right      1/4 (25%) (firm     0/3 (0%)) · 'no' right  135/138 (98%) · steady: fires  46/50 (92%), says no  45/50 (90%) · fires on  0 photos (0 his/friends') · finds 0/1 (0%) of 'yes' labels · answers on 47/50 (94%)
+    (b) second look alone       fires right     4/4 (100%) (firm   3/3 (100%)) · 'no' right 146/146 (100%) · steady: fires  49/50 (98%), says no  49/50 (98%) · fires on  1 photos (0 his/friends') · finds 1/1 (100%) of 'yes' labels · answers on 50/50 (100%)
+    (c) phone alone             fires right    never fires (firm            -) · 'no' right   55/55 (100%) · steady: fires 50/50 (100%), says no  48/50 (96%) · fires on  0 photos (0 his/friends') · finds 0/1 (0%) of 'yes' labels · answers on 19/50 (38%)
+    (a)+(b) agree               fires right    never fires (firm            -) · 'no' right 134/134 (100%) · steady: fires 50/50 (100%), says no  44/50 (88%) · fires on  0 photos (0 his/friends') · finds 0/1 (0%) of 'yes' labels · answers on 46/50 (92%)
+    2 of 3 agree                fires right    never fires (firm            -) · 'no' right 137/137 (100%) · steady: fires 50/50 (100%), says no  47/50 (94%) · fires on  0 photos (0 his/friends') · finds 0/1 (0%) of 'yes' labels · answers on 46/50 (92%)
+    all available agree (>=2)   fires right    never fires (firm            -) · 'no' right 134/134 (100%) · steady: fires 50/50 (100%), says no  44/50 (88%) · fires on  0 photos (0 his/friends') · finds 0/1 (0%) of 'yes' labels · answers on 46/50 (92%)
+    one says yes, none says no  fires right    never fires (firm            -) · 'no' right 142/142 (100%) · steady: fires 50/50 (100%), says no  45/50 (90%) · fires on  0 photos (0 his/friends') · finds 0/1 (0%) of 'yes' labels · answers on 49/50 (98%)
+
+  heavy_hem: heavy hem: full break, stack or pool ('no' = light: cropped, no or slight break)
+    labels on 38 photos: yes 22 · either 2 · no 14
+    (a) scoring call alone      fires right   30/30 (100%) (firm 26/26 (100%)) · 'no' right    44/84 (52%) · steady: fires  28/38 (74%), says no  28/38 (74%) · fires on 10 photos (8 his/friends') · finds 8/22 (36%) of 'yes' labels · answers on 38/38 (100%)
+    (b) second look alone       fires right    26/34 (76%) (firm  26/34 (76%)) · 'no' right    34/72 (47%) · steady: fires  29/38 (76%), says no  30/38 (79%) · fires on 11 photos (6 his/friends') · finds 8/22 (36%) of 'yes' labels · answers on 35/38 (92%)
+    (c) phone alone             fires right    31/33 (94%) (firm  28/30 (93%)) · 'no' right      7/9 (78%) · steady: fires  35/38 (92%), says no  36/38 (95%) · fires on 12 photos (9 his/friends') · finds 10/22 (45%) of 'yes' labels · answers on 15/38 (39%)  PASS
+    (a)+(b) agree               fires right   14/14 (100%) (firm 14/14 (100%)) · 'no' right    30/58 (52%) · steady: fires  30/38 (79%), says no  27/38 (71%) · fires on  4 photos (3 his/friends') · finds 4/22 (18%) of 'yes' labels · answers on 23/38 (61%)
+    2 of 3 agree                fires right   25/25 (100%) (firm 23/23 (100%)) · 'no' right    32/62 (52%) · steady: fires  29/38 (76%), says no  29/38 (76%) · fires on  8 photos (7 his/friends') · finds 7/22 (32%) of 'yes' labels · answers on 29/38 (76%)
+    all available agree (>=2)   fires right   14/14 (100%) (firm 14/14 (100%)) · 'no' right    27/42 (64%) · steady: fires  30/38 (79%), says no  29/38 (76%) · fires on  4 photos (3 his/friends') · finds 4/22 (18%) of 'yes' labels · answers on 17/38 (45%)
+    one says yes, none says no  fires right   16/16 (100%) (firm 16/16 (100%)) · 'no' right    33/48 (69%) · steady: fires  31/38 (82%), says no  29/38 (76%) · fires on  5 photos (3 his/friends') · finds 5/22 (23%) of 'yes' labels · answers on 20/38 (53%)
+      2of3 fires on: oct7-ph1 [yes], phone-1f1997 [yes], phone-403ade [yes], phone-8ad378 [yes], phone-8bc29d [yes], phone-b0f0c8 [yes], phone-ebe23f [either], stock-s15-before_street [yes]
+      all fires on: oct7-ph1 [yes], phone-1f1997 [yes], phone-8ad378 [yes], stock-s15-before_street [yes]
+
+  rests: the pant fabric rests on the shoe
+    labels on 40 photos: yes 21 · either 7 · no 12
+    (a) scoring call alone      fires right   30/30 (100%) (firm 25/25 (100%)) · 'no' right    49/87 (56%) · steady: fires  28/40 (70%), says no  28/40 (70%) · fires on 10 photos (9 his/friends') · finds 8/21 (38%) of 'yes' labels · answers on 39/40 (98%)
+    (b) second look alone       fires right    83/86 (97%) (firm  63/66 (95%)) · 'no' right   34/34 (100%) · steady: fires  37/40 (92%), says no  37/40 (92%) · fires on 29 photos (20 his/friends') · finds 21/21 (100%) of 'yes' labels · answers on 40/40 (100%)  PASS
+    (c) phone alone             fires right    14/20 (70%) (firm  11/17 (65%)) · 'no' right    12/27 (44%) · steady: fires  37/40 (92%), says no 40/40 (100%) · fires on  7 photos (3 his/friends') · finds 4/21 (19%) of 'yes' labels · answers on 16/40 (40%)
+    (a)+(b) agree               fires right   30/30 (100%) (firm 25/25 (100%)) · 'no' right   31/31 (100%) · steady: fires  28/40 (70%), says no  37/40 (92%) · fires on 10 photos (9 his/friends') · finds 8/21 (38%) of 'yes' labels · answers on 20/40 (50%)
+    2 of 3 agree                fires right    41/42 (98%) (firm  33/34 (97%)) · 'no' right    35/44 (80%) · steady: fires  28/40 (70%), says no  37/40 (92%) · fires on 14 photos (11 his/friends') · finds 11/21 (52%) of 'yes' labels · answers on 29/40 (72%)
+    all available agree (>=2)   fires right   24/24 (100%) (firm 19/19 (100%)) · 'no' right   26/26 (100%) · steady: fires  30/40 (75%), says no  38/40 (95%) · fires on  8 photos (7 his/friends') · finds 6/21 (29%) of 'yes' labels · answers on 16/40 (40%)
+    one says yes, none says no  fires right   24/24 (100%) (firm 19/19 (100%)) · 'no' right   29/29 (100%) · steady: fires  30/40 (75%), says no  38/40 (95%) · fires on  8 photos (7 his/friends') · finds 6/21 (29%) of 'yes' labels · answers on 17/40 (42%)
+      2of3 fires on: mirror-m07 [either], oct7-ph1 [yes], phone-0d39d6 [yes], phone-1f1997 [yes], phone-403ade [yes], phone-8ad378 [yes], phone-d1967f [yes], phone-e026de [yes], phone-e438d4 [either], phone-ebe23f [yes], phone-f07193 [yes], phone-f4870b [either], stock-s01-before_studio [yes], stock-s15-before_street [yes]
+      all fires on: oct7-ph1 [yes], phone-0d39d6 [yes], phone-1f1997 [yes], phone-403ade [yes], phone-d1967f [yes], phone-e438d4 [either], phone-f4870b [either], stock-s15-before_street [yes]
+
+  PASSED (fires): heavy_hem: ['c'], rests: ['b']
+  'no' side >= 90% right and steady: long_top: ['a', 'c', '2of3'], peek: ['b', 'c', 'ab', '2of3', 'all', 'any'], peek_clearly: ['a', 'b', 'c', '2of3', 'any'], rests: ['b', 'ab', 'all', 'any']
+
+(1b) THE HEM FACTS ON EVERY HEM-LABELLED PHOTO (not only the 50): (a) = batch 1 arm A where it exists, else zoom1 / zoom1-stock arm B (the app's config, 3 runs); (b) only on the 50; labels: hem_labels.csv (heavy), ruler_labels.csv hem_pos (rests: covers vs meets/gap)
+
+  heavy_hem on 50 photos (yes 24 · either 0 · no 26)
+    (a) scoring call alone      fires right    29/31 (94%) (firm  29/31 (94%)) · 'no' right   76/119 (64%) · steady: fires  41/50 (82%), says no  41/50 (82%) · fires on 10 photos (6 his/friends') · finds 9/24 (38%) of 'yes' labels · answers on 50/50 (100%)
+    (b) second look alone       fires right    26/34 (76%) (firm  26/34 (76%)) · 'no' right    28/66 (42%) · steady: fires  41/50 (82%), says no  42/50 (84%) · fires on 11 photos (6 his/friends') · finds 8/24 (33%) of 'yes' labels · answers on 33/50 (66%)
+    (c) phone alone             fires right    31/36 (86%) (firm  31/36 (86%)) · 'no' right    20/22 (91%) · steady: fires  45/50 (90%), says no  46/50 (92%) · fires on 13 photos (8 his/friends') · finds 11/24 (46%) of 'yes' labels · answers on 21/50 (42%)
+    (a)+(b) agree               fires right   14/14 (100%) (firm 14/14 (100%)) · 'no' right    28/56 (50%) · steady: fires  42/50 (84%), says no  41/50 (82%) · fires on  4 photos (3 his/friends') · finds 4/24 (17%) of 'yes' labels · answers on 23/50 (46%)
+    2 of 3 agree                fires right   23/23 (100%) (firm 23/23 (100%)) · 'no' right    41/71 (58%) · steady: fires  42/50 (84%), says no  40/50 (80%) · fires on  7 photos (6 his/friends') · finds 7/24 (29%) of 'yes' labels · answers on 32/50 (64%)
+    all available agree (>=2)   fires right   14/14 (100%) (firm 14/14 (100%)) · 'no' right    37/52 (71%) · steady: fires  42/50 (84%), says no  39/50 (78%) · fires on  4 photos (3 his/friends') · finds 4/24 (17%) of 'yes' labels · answers on 21/50 (42%)
+    one says yes, none says no  fires right   19/19 (100%) (firm 19/19 (100%)) · 'no' right    63/78 (81%) · steady: fires  43/50 (86%), says no  39/50 (78%) · fires on  6 photos (3 his/friends') · finds 6/24 (25%) of 'yes' labels · answers on 31/50 (62%)
+      the phone fires on a 'no' label: mirror-m05, stock-p02-before_studio, stock-s11-before_street
+
+  rests on 48 photos (yes 15 · either 6 · no 27)
+    (a) scoring call alone      fires right    21/28 (75%) (firm  13/20 (65%)) · 'no' right   84/116 (72%) · steady: fires  36/48 (75%), says no  36/48 (75%) · fires on  8 photos (4 his/friends') · finds 3/15 (20%) of 'yes' labels · answers on 48/48 (100%)
+    (b) second look alone       fires right    57/74 (77%) (firm  42/59 (71%)) · 'no' right   31/31 (100%) · steady: fires  45/48 (94%), says no  45/48 (94%) · fires on 25 photos (15 his/friends') · finds 14/15 (93%) of 'yes' labels · answers on 35/48 (73%)
+    (c) phone alone             fires right    11/23 (48%) (firm   5/17 (29%)) · 'no' right    22/31 (71%) · steady: fires  47/48 (98%), says no  47/48 (98%) · fires on  8 photos (2 his/friends') · finds 2/15 (13%) of 'yes' labels · answers on 18/48 (38%)
+    (a)+(b) agree               fires right    18/21 (86%) (firm  13/16 (81%)) · 'no' right   31/31 (100%) · steady: fires  39/48 (81%), says no  45/48 (94%) · fires on  6 photos (4 his/friends') · finds 3/15 (20%) of 'yes' labels · answers on 16/48 (33%)
+    2 of 3 agree                fires right    28/32 (88%) (firm  17/21 (81%)) · 'no' right    44/52 (85%) · steady: fires  38/48 (79%), says no  46/48 (96%) · fires on 10 photos (6 his/friends') · finds 5/15 (33%) of 'yes' labels · answers on 28/48 (58%)
+    all available agree (>=2)   fires right    17/20 (85%) (firm  12/15 (80%)) · 'no' right   35/35 (100%) · steady: fires  40/48 (83%), says no  46/48 (96%) · fires on  6 photos (4 his/friends') · finds 3/15 (20%) of 'yes' labels · answers on 17/48 (35%)
+    one says yes, none says no  fires right    19/26 (73%) (firm  12/19 (63%)) · 'no' right    49/52 (94%) · steady: fires  36/48 (75%), says no  43/48 (90%) · fires on  8 photos (4 his/friends') · finds 3/15 (20%) of 'yes' labels · answers on 25/48 (52%)
+      the phone fires on a 'no' label: stock-p03-before_street, stock-s07-before_studio, stock-s09-before_street, stock-s21-before_phone
+
+(2) RESCORING (scratch wrapper around parts v7; the engine file is unchanged)
+    F1: heavy hem under a tailored jacket -2.0
+    F2: a long top worn alone -1.5, -2.0 over a loose leg
+    F3: a long loose layer (not tailored) over a loose leg -1.5
+    F10: the under-top shows below the layer -0.5 (look1's size, as the engine has it)
+    HB: a heavy hem blocks the deliberate-shape rewards (and a slight/clean hem doesn't)
+    DRAG: Shoes: loose jeans drag on slides -0.5 only when 'rests on the shoe' is agreed
+    HH: WHAT-IF, not a proposed rule (RULEBOOK ruling 13 says 0): a heavy hem on loose jeans or cargos, no tailoring, not on slides -1.0
+
+  today (app: v7, no second look)
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    today (app: v7, no second look)    n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  v7 + look1 alone (the earlier paper tests)
+    Proportions on 74 photos with the part: exactly 7 on 51/74 (69%); spread 6.5: 9 · 7: 51 · 7.5: 1 · 8: 7 · 8.5: 6
+    v7 + look1 alone (the earlier pape n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 6, the shown score on 0 (vs today)
+      phone-a765e8               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      phone-7de605               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      phone-b0f0c8               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 7.0 -> 7.0 · + PF10_peek
+      phone-6b14db               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      stock-s04-before_studio    [stock photo (profile unknown); everyday] Proportions 7 -> 6.5, score 7.0 -> 7.0 · + PF10_peek
+      stock-s26-before_mirror    [stock photo (profile unknown); everyday] Proportions 7 -> 6.5, score 6.5 -> 6.5 · + PF10_peek
+
+  all-agree: F1 heavy hem under tailoring
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    all-agree: F1 heavy hem under tail n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  all-agree: F2 long top
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    all-agree: F2 long top             n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  all-agree: F3 long loose layer
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    all-agree: F3 long loose layer     n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  all-agree: F10 peek
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    all-agree: F10 peek                n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  all-agree: HB heavy hem blocks rewards
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    all-agree: HB heavy hem blocks rew n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  all-agree: DRAG rests on the shoe (slides)
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    all-agree: DRAG rests on the shoe  n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  2of3: F1+F2+F3+F10+HB+DRAG
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    2of3: F1+F2+F3+F10+HB+DRAG         n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  all-agree: F1+F2+F3+F10+HB+DRAG
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 6
+    all-agree: F1+F2+F3+F10+HB+DRAG    n= 79 median 7.0  mean 6.96  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 44, 7.5: 12, 8.0: 5}
+    Proportions moves on 0, the shown score on 0 (vs today)
+
+  one-yes-no-veto: F1+F2+F3+F10+HB+DRAG
+    Proportions on 74 photos with the part: exactly 7 on 57/74 (77%); spread 5.5: 1 · 6.5: 3 · 7: 57 · 7.5: 1 · 8: 7 · 8.5: 5
+    one-yes-no-veto: F1+F2+F3+F10+HB+D n= 79 median 7.0  mean 6.95  <=5.5 5 (6%)  6-6.5 14 (18%)  7-7.5 55 (70%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.5: 14, 7.0: 44, 7.5: 11, 8.0: 5}
+    Proportions moves on 1, the shown score on 1 (vs today)
+      stock-s16-before_street    [stock photo (profile unknown); everyday] Proportions 8.5 -> 5.5, score 7.5 -> 6.5 · + PF3_long_layer_loose_leg · - PR2_short_layer
+
+  passing readers: hem probe heavy (F1+HB), look rests (DRAG)
+    Proportions on 74 photos with the part: exactly 7 on 59/74 (80%); spread 6.5: 3 · 7: 59 · 7.5: 1 · 8: 7 · 8.5: 4
+    passing readers: hem probe heavy ( n= 79 median 7.0  mean 6.94  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 57 (72%)  8+ 4 (5%)  9+ 0 (0%)  values {5.5: 5, 6.5: 13, 7.0: 46, 7.5: 11, 8.0: 4}
+    Proportions moves on 2, the shown score on 2 (vs today)
+      mirror-m05                 [web photo (profile unknown); everyday] Proportions 8.5 -> 7, score 8.0 -> 7.0 · - PR1_waist_break
+      stock-s16-before_street    [stock photo (profile unknown); everyday] Proportions 8.5 -> 7, score 7.5 -> 7.0 · - PR2_short_layer
+
+  label ceiling: F1+F2+F3+F10+HB+DRAG
+    Proportions on 74 photos with the part: exactly 7 on 54/74 (73%); spread 5: 1 · 6.5: 7 · 7: 54 · 7.5: 1 · 8: 7 · 8.5: 4
+    label ceiling: F1+F2+F3+F10+HB+DRA n= 79 median 7.0  mean 6.94  <=5.5 5 (6%)  6-6.5 14 (18%)  7-7.5 56 (71%)  8+ 4 (5%)  9+ 0 (0%)  values {5.5: 5, 6.5: 14, 7.0: 44, 7.5: 12, 8.0: 4}
+    Proportions moves on 7, the shown score on 3 (vs today)
+      phone-d1967f               [a friend (profile unknown); class] Proportions 7 -> 5, score 7.0 -> 6.5 · + PF1_heavy_hem_tailored
+      phone-a765e8               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      phone-7de605               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      phone-6b14db               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      stock-s01-before_studio    [stock photo (profile unknown); everyday] Proportions 8.5 -> 7, score 8.0 -> 7.5 · - PR1_waist_break
+      stock-s04-before_studio    [stock photo (profile unknown); everyday] Proportions 7 -> 6.5, score 7.0 -> 7.0 · + PF10_peek
+      stock-s14-before_street    [stock photo (profile unknown); everyday] Proportions 8.5 -> 7, score 7.5 -> 7.0 · - PR2_short_layer
+
+  what-if HH, label facts
+    Proportions on 74 photos with the part: exactly 7 on 45/74 (61%); spread 5: 1 · 6: 9 · 6.5: 7 · 7: 45 · 7.5: 1 · 8: 7 · 8.5: 4
+    what-if HH, label facts            n= 79 median 7.0  mean 6.92  <=5.5 5 (6%)  6-6.5 14 (18%)  7-7.5 56 (71%)  8+ 4 (5%)  9+ 0 (0%)  values {5.5: 5, 6.0: 1, 6.5: 13, 7.0: 46, 7.5: 10, 8.0: 4}
+    Proportions moves on 16, the shown score on 6 (vs today)
+      phone-8bc29d               [the founder (profile pending); class] Proportions 7 -> 6, score 6.5 -> 6.5 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-f07193               [the founder (profile pending); class] Proportions 7 -> 6, score 6.5 -> 6.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-d918c0               [the founder (profile pending); class] Proportions 7 -> 6, score 7.5 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-968016               [the founder (profile pending); class] Proportions 7 -> 6, score 7.5 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-403ade               [the founder (profile pending); class] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-8ad378               [the founder (profile pending); class] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-d1967f               [a friend (profile unknown); class] Proportions 7 -> 5, score 7.0 -> 6.5 · + PF1_heavy_hem_tailored
+      phone-a765e8               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      phone-7de605               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      phone-b0f0c8               [the founder (profile pending); everyday] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-6b14db               [the founder (profile pending); everyday] Proportions 7 -> 6.5, score 5.5 -> 5.5 · + PF10_peek
+      phone-5a9049               [the founder (profile pending); everyday] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      stock-s01-before_studio    [stock photo (profile unknown); everyday] Proportions 8.5 -> 7, score 8.0 -> 7.5 · - PR1_waist_break
+      stock-s04-before_studio    [stock photo (profile unknown); everyday] Proportions 7 -> 6.5, score 7.0 -> 7.0 · + PF10_peek
+      stock-s14-before_street    [stock photo (profile unknown); everyday] Proportions 8.5 -> 7, score 7.5 -> 7.0 · - PR2_short_layer
+      phone-7f14a4               [the founder (profile pending); everyday] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+
+  what-if HH, (a) alone
+    Proportions on 74 photos with the part: exactly 7 on 53/74 (72%); spread 6: 5 · 6.5: 3 · 7: 53 · 7.5: 1 · 8: 7 · 8.5: 5
+    what-if HH, (a) alone              n= 79 median 7.0  mean 6.94  <=5.5 5 (6%)  6-6.5 13 (16%)  7-7.5 56 (71%)  8+ 5 (6%)  9+ 0 (0%)  values {5.5: 5, 6.0: 1, 6.5: 12, 7.0: 46, 7.5: 10, 8.0: 5}
+    Proportions moves on 6, the shown score on 3 (vs today)
+      phone-f07193               [the founder (profile pending); class] Proportions 7 -> 6, score 6.5 -> 6.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-403ade               [the founder (profile pending); class] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-8ad378               [the founder (profile pending); class] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      phone-b0f0c8               [the founder (profile pending); everyday] Proportions 7 -> 6, score 7.0 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+      stock-s14-before_street    [stock photo (profile unknown); everyday] Proportions 8.5 -> 7, score 7.5 -> 7.0 · - PR2_short_layer
+      phone-af7e93               [the founder (profile pending); class] Proportions 7 -> 6, score 7.5 -> 7.0 · + WHATIF_HH_heavy_hem_loose_jeans
+
+  THE FOUNDER, HIS FRIENDS AND THE TWO UNKNOWNS: Proportions / score per set
+    (Proportions/score) today | look1 | 2of3 | all | passing | labels | HH-labels | HH-a
+    oct7-ph1       [the founder (profile pendi; everyday ] today 7.0/5.5 | look1 7.0/5.5 | 2of3 7.0/5.5 | all 7.0/5.5 | passing 7.0/5.5 | labels 7.0/5.5 | HH-labels 7.0/5.5 | HH-a 7.0/5.5
+    oct7-ph2       [the founder (profile pendi; everyday ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 7.0/7.0 | HH-a 7.0/7.0
+    oct7-ph3       [the founder (profile pendi; everyday ] today 8.0/7.5 | look1 8.0/7.5 | 2of3 8.0/7.5 | all 8.0/7.5 | passing 8.0/7.5 | labels 8.0/7.5 | HH-labels 8.0/7.5 | HH-a 8.0/7.5
+    oct7-ph4       [the founder (profile pendi; everyday ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 7.0/7.0 | HH-a 7.0/7.0
+    phone-0d39d6   [the founder (profile pendi; everyday ] today 7.0/6.5 | look1 7.0/6.5 | 2of3 7.0/6.5 | all 7.0/6.5 | passing 7.0/6.5 | labels 7.0/6.5 | HH-labels 7.0/6.5 | HH-a 7.0/6.5
+    phone-1f1997   [the founder (profile pendi; class    ] today 7.0/6.5 | look1 7.0/6.5 | 2of3 7.0/6.5 | all 7.0/6.5 | passing 7.0/6.5 | labels 7.0/6.5 | HH-labels 7.0/6.5 | HH-a 7.0/6.5
+    phone-403ade   [the founder (profile pendi; class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 6.0/7.0 | HH-a 6.0/7.0
+    phone-5a9049   [the founder (profile pendi; everyday ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 6.0/7.0 | HH-a 7.0/7.0
+    phone-6b14db   [the founder (profile pendi; everyday ] today 7.0/5.5 | look1 6.5/5.5 | 2of3 7.0/5.5 | all 7.0/5.5 | passing 7.0/5.5 | labels 6.5/5.5 | HH-labels 6.5/5.5 | HH-a 7.0/5.5
+    phone-7de605   [the founder (profile pendi; everyday ] today 7.0/5.5 | look1 6.5/5.5 | 2of3 7.0/5.5 | all 7.0/5.5 | passing 7.0/5.5 | labels 6.5/5.5 | HH-labels 6.5/5.5 | HH-a 7.0/5.5
+    phone-7f14a4   [the founder (profile pendi; everyday ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 6.0/7.0 | HH-a 7.0/7.0
+    phone-8ad378   [the founder (profile pendi; class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 6.0/7.0 | HH-a 6.0/7.0
+    phone-8bc29d   [the founder (profile pendi; class    ] today 7.0/6.5 | look1 7.0/6.5 | 2of3 7.0/6.5 | all 7.0/6.5 | passing 7.0/6.5 | labels 7.0/6.5 | HH-labels 6.0/6.5 | HH-a 7.0/6.5
+    phone-968016   [the founder (profile pendi; class    ] today 7.0/7.5 | look1 7.0/7.5 | 2of3 7.0/7.5 | all 7.0/7.5 | passing 7.0/7.5 | labels 7.0/7.5 | HH-labels 6.0/7.0 | HH-a 7.0/7.5
+    phone-a765e8   [the founder (profile pendi; everyday ] today 7.0/5.5 | look1 6.5/5.5 | 2of3 7.0/5.5 | all 7.0/5.5 | passing 7.0/5.5 | labels 6.5/5.5 | HH-labels 6.5/5.5 | HH-a 7.0/5.5
+    phone-af7e93   [the founder (profile pendi; class    ] today 7.0/7.5 | look1 7.0/7.5 | 2of3 7.0/7.5 | all 7.0/7.5 | passing 7.0/7.5 | labels 7.0/7.5 | HH-labels 7.0/7.5 | HH-a 6.0/7.0
+    phone-b0f0c8   [the founder (profile pendi; everyday ] today 7.0/7.0 | look1 6.5/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 6.0/7.0 | HH-a 6.0/7.0
+    phone-d58b14   [the founder (profile pendi; class    ] today 7.0/6.5 | look1 7.0/6.5 | 2of3 7.0/6.5 | all 7.0/6.5 | passing 7.0/6.5 | labels 7.0/6.5 | HH-labels 7.0/6.5 | HH-a 7.0/6.5
+    phone-d6559a   [the founder (profile pendi; class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 7.0/7.0 | HH-a 7.0/7.0
+    phone-d918c0   [the founder (profile pendi; class    ] today 7.0/7.5 | look1 7.0/7.5 | 2of3 7.0/7.5 | all 7.0/7.5 | passing 7.0/7.5 | labels 7.0/7.5 | HH-labels 6.0/7.0 | HH-a 7.0/7.5
+    phone-e026de   [the founder (profile pendi; class    ] today 7.0/6.5 | look1 7.0/6.5 | 2of3 7.0/6.5 | all 7.0/6.5 | passing 7.0/6.5 | labels 7.0/6.5 | HH-labels 7.0/6.5 | HH-a 7.0/6.5
+    phone-f07193   [the founder (profile pendi; class    ] today 7.0/6.5 | look1 7.0/6.5 | 2of3 7.0/6.5 | all 7.0/6.5 | passing 7.0/6.5 | labels 7.0/6.5 | HH-labels 6.0/6.0 | HH-a 6.0/6.0
+    phone-d1967f   [a friend (profile unknown); class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 5.0/6.5 | HH-labels 5.0/6.5 | HH-a 7.0/7.0
+    phone-e438d4   [a friend (profile unknown); class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 7.0/7.0 | HH-a 7.0/7.0
+    phone-f4870b   [a friend (profile unknown); class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 7.0/7.0 | HH-a 7.0/7.0
+    phone-fb0b17   [a friend (profile unknown); class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 7.0/7.0 | HH-a 7.0/7.0
+    phone-703a8b   [unknown, ask the founder  ; class    ] today 8.5/7.5 | look1 8.5/7.5 | 2of3 8.5/7.5 | all 8.5/7.5 | passing 8.5/7.5 | labels 8.5/7.5 | HH-labels 8.5/7.5 | HH-a 8.5/7.5
+    phone-ebe23f   [unknown, ask the founder  ; class    ] today 7.0/7.0 | look1 7.0/7.0 | 2of3 7.0/7.0 | all 7.0/7.0 | passing 7.0/7.0 | labels 7.0/7.0 | HH-labels 7.0/7.0 | HH-a 7.0/7.0
+    facts phone-d1967f: long_layer={"a": "yes", "b": "yes", "c": "no"} · heavy_hem={"a": "no", "b": "no", "c": "no"} · rests={"a": "no", "b": "yes", "c": null} · peek={"a": "no", "b": "no", "c": "no"}
+    facts phone-e438d4: long_layer={"a": "no", "b": "yes", "c": null} · heavy_hem={"a": "no", "b": "no", "c": null} · rests={"a": "no", "b": "yes", "c": null} · peek={"a": "no", "b": "no", "c": "no"}
+    facts phone-f4870b: long_layer={"a": "no", "b": "no", "c": null} · heavy_hem={"a": "no", "b": "yes", "c": null} · rests={"a": "no", "b": "yes", "c": null} · peek={"a": "no", "b": "no", "c": "no"}
+    facts phone-fb0b17: long_layer={"a": null, "b": "no", "c": null} · heavy_hem={"a": "no", "b": "no", "c": null} · rests={"a": "no", "b": "yes", "c": null} · peek={"a": "no", "b": "no", "c": "no"}
+
+(3) 3-RUN STEADINESS (batch 1 arm A, Everyday; run i paired with look1 run i and phone variant i)
+  today (app: v7, no second look)              within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  v7 + look1 alone (the earlier paper tests)   within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  all-agree: F1 heavy hem under tailoring      within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  all-agree: F2 long top                       within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  all-agree: F3 long loose layer               within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  all-agree: F10 peek                          within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 47/49 (96%)
+      Proportions flips that today doesn't have: phone-7de605 [(5.5, 7.0), (5.5, 6.5), (5.5, 7.0)]
+  all-agree: HB heavy hem blocks rewards       within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  all-agree: DRAG rests on the shoe (slides)   within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  2of3: F1+F2+F3+F10+HB+DRAG                   within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 46/49 (94%)
+      Proportions flips that today doesn't have: phone-7de605 [(5.5, 7.0), (5.5, 6.5), (5.5, 7.0)]
+      Proportions flips that today doesn't have: stock-s26-before_mirror [(6.5, 6.5), (6.5, 7.0), (6.5, 7.0)]
+  all-agree: F1+F2+F3+F10+HB+DRAG              within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 47/49 (96%)
+      Proportions flips that today doesn't have: phone-7de605 [(5.5, 7.0), (5.5, 6.5), (5.5, 7.0)]
+  one-yes-no-veto: F1+F2+F3+F10+HB+DRAG        within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 47/49 (96%)
+      Proportions flips that today doesn't have: phone-7de605 [(5.5, 7.0), (5.5, 6.5), (5.5, 7.0)]
+  passing readers: hem probe heavy (F1+HB), look rests (DRAG) within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  label ceiling: F1+F2+F3+F10+HB+DRAG          within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 48/49 (98%)
+  what-if HH, label facts                      within 0.5 49/49 (100%) · score exact 39/49 (80%) · Proportions exact 46/49 (94%)
+      Proportions flips that today doesn't have: phone-b0f0c8 [(7.0, 7.0), (6.5, 6.0), (7.0, 7.0)]
+      Proportions flips that today doesn't have: phone-f07193 [(6.5, 6.0), (6.5, 7.0), (6.5, 6.0)]
+  what-if HH, (a) alone                        within 0.5 49/49 (100%) · score exact 37/49 (76%) · Proportions exact 44/49 (90%)
+      Proportions flips that today doesn't have: phone-5a9049 [(7.0, 7.0), (6.5, 6.0), (7.5, 7.0)]
+      Proportions flips that today doesn't have: phone-b0f0c8 [(7.0, 7.0), (6.5, 6.0), (7.0, 7.0)]
+      Proportions flips that today doesn't have: phone-d6559a [(7.0, 6.0), (7.0, 7.0), (7.0, 7.0)]
+      Proportions flips that today doesn't have: phone-e026de [(7.0, 7.0), (6.5, 6.0), (7.0, 7.0)]
+
+(4) AGAINST THE JUDGE PILOT (panel = median of 5 judges' weighted totals; split = results/parts2/split.json)
+  all           today (app: v7, no second look)              score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           v7 + look1 alone (the earlier paper tests)   score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.31 · MAE 0.55 · within 0.5 41 · off 1.5+ 8 · r 0.41
+  all           all-agree: F1 heavy hem under tailoring      score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           all-agree: F2 long top                       score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           all-agree: F3 long loose layer               score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           all-agree: F10 peek                          score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           all-agree: HB heavy hem blocks rewards       score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           all-agree: DRAG rests on the shoe (slides)   score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           2of3: F1+F2+F3+F10+HB+DRAG                   score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           all-agree: F1+F2+F3+F10+HB+DRAG              score: n 59 · mean diff +0.02 · MAE 0.42 · within 0.5 51 · off 1.5+ 3 · r 0.63
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.36 · MAE 0.56 · within 0.5 39 · off 1.5+ 8 · r 0.41
+  all           one-yes-no-veto: F1+F2+F3+F10+HB+DRAG        score: n 59 · mean diff +0.00 · MAE 0.44 · within 0.5 50 · off 1.5+ 3 · r 0.6
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.31 · MAE 0.58 · within 0.5 39 · off 1.5+ 9 · r 0.28
+  all           passing readers: hem probe heavy (F1+HB), look rests (DRAG) score: n 59 · mean diff +0.01 · MAE 0.43 · within 0.5 51 · off 1.5+ 3 · r 0.62
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.34 · MAE 0.55 · within 0.5 40 · off 1.5+ 8 · r 0.39
+  all           label ceiling: F1+F2+F3+F10+HB+DRAG          score: n 59 · mean diff -0.01 · MAE 0.42 · within 0.5 51 · off 1.5+ 2 · r 0.65
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.24 · MAE 0.51 · within 0.5 42 · off 1.5+ 7 · r 0.45
+  all           what-if HH, label facts                      score: n 59 · mean diff -0.03 · MAE 0.39 · within 0.5 51 · off 1.5+ 1 · r 0.7
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.07 · MAE 0.49 · within 0.5 43 · off 1.5+ 6 · r 0.49
+  all           what-if HH, (a) alone                        score: n 59 · mean diff +0.00 · MAE 0.41 · within 0.5 51 · off 1.5+ 3 · r 0.64
+                                                             Proportions vs the judges' proportion: n 55 · mean diff +0.26 · MAE 0.55 · within 0.5 39 · off 1.5+ 8 · r 0.35
+  held-out half today (app: v7, no second look)              score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half v7 + look1 alone (the earlier paper tests)   score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.38 · MAE 0.54 · within 0.5 19 · off 1.5+ 3 · r 0.41
+  held-out half all-agree: F1 heavy hem under tailoring      score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half all-agree: F2 long top                       score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half all-agree: F3 long loose layer               score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half all-agree: F10 peek                          score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half all-agree: HB heavy hem blocks rewards       score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half all-agree: DRAG rests on the shoe (slides)   score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half 2of3: F1+F2+F3+F10+HB+DRAG                   score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half all-agree: F1+F2+F3+F10+HB+DRAG              score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half one-yes-no-veto: F1+F2+F3+F10+HB+DRAG        score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half passing readers: hem probe heavy (F1+HB), look rests (DRAG) score: n 29 · mean diff +0.10 · MAE 0.45 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.42 · MAE 0.54 · within 0.5 20 · off 1.5+ 3 · r 0.48
+  held-out half label ceiling: F1+F2+F3+F10+HB+DRAG          score: n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.35 · MAE 0.5 · within 0.5 20 · off 1.5+ 2 · r 0.44
+  held-out half what-if HH, label facts                      score: n 29 · mean diff +0.05 · MAE 0.4 · within 0.5 26 · off 1.5+ 0 · r 0.64
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.19 · MAE 0.5 · within 0.5 20 · off 1.5+ 2 · r 0.41
+  held-out half what-if HH, (a) alone                        score: n 29 · mean diff +0.09 · MAE 0.43 · within 0.5 26 · off 1.5+ 1 · r 0.56
+                                                             Proportions vs the judges' proportion: n 26 · mean diff +0.33 · MAE 0.48 · within 0.5 21 · off 1.5+ 2 · r 0.49
+
+  Proportions vs the judges' proportion part, by whose photo (all pilot photos)
+    today (app: v7, no second look)          his + friends + unknowns  n 20 · mean diff +0.72 · MAE 0.88 · within 0.5 9 · off 1.5+ 5 · r nan
+    today (app: v7, no second look)          stock + web               n 35 · mean diff +0.16 · MAE 0.39 · within 0.5 30 · off 1.5+ 3 · r 0.48
+    v7 + look1 alone (the earlier paper test his + friends + unknowns  n 20 · mean diff +0.62 · MAE 0.78 · within 0.5 12 · off 1.5+ 5 · r 0.1
+    v7 + look1 alone (the earlier paper test stock + web               n 35 · mean diff +0.13 · MAE 0.41 · within 0.5 29 · off 1.5+ 3 · r 0.44
+    label ceiling: F1+F2+F3+F10+HB+DRAG      his + friends + unknowns  n 20 · mean diff +0.55 · MAE 0.7 · within 0.5 13 · off 1.5+ 4 · r 0.46
+    label ceiling: F1+F2+F3+F10+HB+DRAG      stock + web               n 35 · mean diff +0.06 · MAE 0.4 · within 0.5 29 · off 1.5+ 3 · r 0.34
+    what-if HH, label facts                  his + friends + unknowns  n 20 · mean diff +0.10 · MAE 0.65 · within 0.5 14 · off 1.5+ 3 · r 0.25
+    what-if HH, label facts                  stock + web               n 35 · mean diff +0.06 · MAE 0.4 · within 0.5 29 · off 1.5+ 3 · r 0.34
+    what-if HH, (a) alone                    his + friends + unknowns  n 20 · mean diff +0.53 · MAE 0.93 · within 0.5 8 · off 1.5+ 6 · r -0.33
+    what-if HH, (a) alone                    stock + web               n 35 · mean diff +0.11 · MAE 0.34 · within 0.5 31 · off 1.5+ 2 · r 0.53

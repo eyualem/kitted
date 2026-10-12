@@ -1,0 +1,93 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0.029999999999999999,
+  "h" : 1926,
+  "legs" : [
+    {
+      "bend" : 2,
+      "box" : {
+        "y0" : 1721,
+        "y1" : 1864
+      },
+      "conf" : 0.70999999999999996,
+      "coverBox" : 0.23000000000000001,
+      "edgeStep" : 60,
+      "foldL" : 5,
+      "foldRatio" : 4.9699999999999998,
+      "folds" : 2,
+      "foldsAbs" : 2,
+      "foldStd" : 1.49,
+      "gapT" : 0,
+      "midStd" : 0.22,
+      "orient" : 1.1100000000000001,
+      "orientMid" : 0.98999999999999999,
+      "orientRatio" : 1.1200000000000001,
+      "pantsL" : 2,
+      "sharp" : 13.1,
+      "shin" : 247,
+      "shoeColors" : [
+        "#C1A994",
+        "#927965",
+        "#ECDBCA"
+      ],
+      "shoeSep" : 69,
+      "shoeVisT" : 0.44,
+      "shoeVisToW" : 0.94999999999999996,
+      "shoeW" : 115,
+      "side" : "l",
+      "spread" : 1.3009999999999999,
+      "tHem" : 1.1839999999999999,
+      "tSole" : 1.6240000000000001,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    },
+    {
+      "bend" : 4,
+      "box" : {
+        "y0" : 1721,
+        "y1" : 1864
+      },
+      "conf" : 0.68000000000000005,
+      "coverBox" : 0.12,
+      "edgeStep" : 59,
+      "foldL" : 3,
+      "foldRatio" : 0.78000000000000003,
+      "folds" : 1,
+      "foldsAbs" : 1,
+      "foldStd" : 0.81000000000000005,
+      "gapT" : 0.0040000000000000001,
+      "midStd" : 1.04,
+      "orient" : 1.24,
+      "orientMid" : 1.02,
+      "orientRatio" : 1.22,
+      "pantsL" : 4,
+      "sharp" : 10.6,
+      "shin" : 250,
+      "shoeColors" : [
+        "#C7AC90",
+        "#E8E3DF",
+        "#9C7E5F"
+      ],
+      "shoeSep" : 69,
+      "shoeVisT" : 0.48599999999999999,
+      "shoeVisToW" : 1.28,
+      "shoeW" : 95,
+      "side" : "r",
+      "spread" : 0.88200000000000001,
+      "tHem" : 1.149,
+      "tSole" : 1.639,
+      "why" : "pants too dark to show folds",
+      "whys" : [
+        "pants too dark to show folds"
+      ]
+    }
+  ],
+  "max" : 2048,
+  "ms" : 326,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261011-133011\/photos\/ebe23fb3a57a072e4882c0b94e888321c7fc999895bbf10e96e05caf7a945d75-photo.jpg",
+  "shoeBoxes" : 1,
+  "status" : "ok",
+  "w" : 1444
+}

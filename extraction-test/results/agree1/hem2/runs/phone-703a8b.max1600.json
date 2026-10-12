@@ -1,0 +1,21 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 1200,
+  "legs" : [
+    {
+      "side" : "l",
+      "why" : "knee or ankle not found"
+    },
+    {
+      "side" : "r",
+      "why" : "knee or ankle not found"
+    }
+  ],
+  "max" : 1600,
+  "ms" : 308,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261011-133011\/photos\/703a8b1263fb31ad7a889c064d930f4cddabcce2afba730f27a9a37047c8097c-photo.jpg",
+  "shoeBoxes" : 0,
+  "status" : "ok",
+  "w" : 1600
+}

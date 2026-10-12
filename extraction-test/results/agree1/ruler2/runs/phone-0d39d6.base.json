@@ -1,0 +1,138 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.73999999999999999,
+      "x" : 409,
+      "y" : 879
+    },
+    "lElbow" : {
+      "c" : 0.82999999999999996,
+      "x" : 501,
+      "y" : 523
+    },
+    "lHip" : {
+      "c" : 0.66000000000000003,
+      "x" : 421,
+      "y" : 643
+    },
+    "lKnee" : {
+      "c" : 0.57999999999999996,
+      "x" : 412,
+      "y" : 775
+    },
+    "lShoulder" : {
+      "c" : 0.63,
+      "x" : 450,
+      "y" : 456
+    },
+    "lWrist" : {
+      "c" : 0.83999999999999997,
+      "x" : 462,
+      "y" : 450
+    },
+    "neck" : {
+      "c" : 0.70999999999999996,
+      "x" : 393,
+      "y" : 448
+    },
+    "rAnkle" : {
+      "c" : 0.75,
+      "x" : 342,
+      "y" : 921
+    },
+    "rElbow" : {
+      "c" : 0.72999999999999998,
+      "x" : 306,
+      "y" : 539
+    },
+    "rHip" : {
+      "c" : 0.60999999999999999,
+      "x" : 347,
+      "y" : 641
+    },
+    "rKnee" : {
+      "c" : 0.68999999999999995,
+      "x" : 344,
+      "y" : 788
+    },
+    "root" : {
+      "c" : 0.63,
+      "x" : 384,
+      "y" : 642
+    },
+    "rShoulder" : {
+      "c" : 0.79000000000000004,
+      "x" : 336,
+      "y" : 440
+    },
+    "rWrist" : {
+      "c" : 0.76000000000000001,
+      "x" : 311,
+      "y" : 622
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 6317,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261008-162946\/photos\/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 19,
+        "pocket" : true,
+        "pos" : 2.3399999999999999,
+        "refL" : 26,
+        "side" : "r",
+        "spread" : 1.7,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "hand in pocket"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ hand in pocket"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 3,
+    "pos" : -0.048000000000000001,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 31,
+        "side" : "l",
+        "u" : -0.048000000000000001
+      },
+      {
+        "score" : 1,
+        "sep" : 34,
+        "side" : "r",
+        "u" : -0.048000000000000001
+      }
+    ],
+    "value" : "at_belt"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "no top box"
+  },
+  "w" : 768
+}

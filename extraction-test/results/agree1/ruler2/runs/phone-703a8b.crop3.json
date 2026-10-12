@@ -1,0 +1,106 @@
+{
+  "crop" : 0.029999999999999999,
+  "h" : 768,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lElbow" : {
+      "c" : 0.69999999999999996,
+      "x" : 657,
+      "y" : 338
+    },
+    "lHip" : {
+      "c" : 0.33000000000000002,
+      "x" : 537,
+      "y" : 533
+    },
+    "lShoulder" : {
+      "c" : 0.53000000000000003,
+      "x" : 594,
+      "y" : 124
+    },
+    "lWrist" : {
+      "c" : 0.79000000000000004,
+      "x" : 662,
+      "y" : 134
+    },
+    "neck" : {
+      "c" : 0.55000000000000004,
+      "x" : 460,
+      "y" : 107
+    },
+    "rElbow" : {
+      "c" : 0.78000000000000003,
+      "x" : 279,
+      "y" : 311
+    },
+    "rHip" : {
+      "c" : 0.23000000000000001,
+      "x" : 372,
+      "y" : 533
+    },
+    "root" : {
+      "c" : 0.28000000000000003,
+      "x" : 454,
+      "y" : 533
+    },
+    "rShoulder" : {
+      "c" : 0.57999999999999996,
+      "x" : 327,
+      "y" : 90
+    },
+    "rWrist" : {
+      "c" : 0.80000000000000004,
+      "x" : 291,
+      "y" : 523
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 2048,
+  "ms" : 316,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261011-133011\/photos\/703a8b1263fb31ad7a889c064d930f4cddabcce2afba730f27a9a37047c8097c-photo.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 15,
+        "pos" : 0.73999999999999999,
+        "refL" : 40,
+        "side" : "r",
+        "spread" : 0.59999999999999998,
+        "thr" : 10,
+        "value" : "mid_bicep"
+      }
+    ],
+    "bend" : 15,
+    "pos" : 0.73999999999999999,
+    "refL" : 40,
+    "side" : "r",
+    "spread" : 0.59999999999999998,
+    "thr" : 10,
+    "value" : "mid_bicep"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "value" : "unsure",
+    "why" : "neck or hips"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "hips"
+  },
+  "w" : 1024
+}

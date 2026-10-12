@@ -1,0 +1,70 @@
+{
+  "bottom" : "jeans",
+  "crop" : 0,
+  "h" : 2048,
+  "legs" : [
+    {
+      "bend" : 1,
+      "box" : {
+        "y0" : 1660,
+        "y1" : 1767
+      },
+      "conf" : 0.72999999999999998,
+      "edgeStep" : 72,
+      "pantsL" : 44,
+      "sharp" : 22.800000000000001,
+      "shin" : 215,
+      "shoeColors" : [
+        "#25211E",
+        "#DBD1BD"
+      ],
+      "shoeSep" : 33,
+      "side" : "l",
+      "why" : "no hem edge",
+      "whys" : [
+        "no hem edge"
+      ]
+    },
+    {
+      "bend" : 3,
+      "box" : {
+        "y0" : 1660,
+        "y1" : 1767
+      },
+      "conf" : 0.72999999999999998,
+      "coverBox" : 0.16,
+      "edgeStep" : 17,
+      "foldL" : 35,
+      "foldRatio" : 3.7000000000000002,
+      "folds" : 3,
+      "foldsAbs" : 2,
+      "foldStd" : 2.5899999999999999,
+      "gapT" : 0.02,
+      "midStd" : 0.69999999999999996,
+      "orient" : 1.21,
+      "orientMid" : 1.0700000000000001,
+      "orientRatio" : 1.1299999999999999,
+      "pantsL" : 34,
+      "sharp" : 21.399999999999999,
+      "shin" : 197,
+      "shoeColors" : [
+        "#262220",
+        "#D3C5B2"
+      ],
+      "shoeSep" : 22,
+      "shoeVisT" : 0.44,
+      "shoeVisToW" : 1.28,
+      "shoeW" : 68,
+      "side" : "r",
+      "spread" : 0.69399999999999995,
+      "tHem" : 1.196,
+      "tSole" : 1.657
+    }
+  ],
+  "max" : 2048,
+  "ms" : 330,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261011-133011\/photos\/af7e93eb16143f9c6ff6854764b8fbc07b17905686c9fd254079e631c178a8f6-photo.jpg",
+  "shoeBoxes" : 2,
+  "status" : "ok",
+  "w" : 1536
+}

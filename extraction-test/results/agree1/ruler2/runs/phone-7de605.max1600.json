@@ -1,0 +1,136 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "value" : "unsure",
+    "why" : "no shoe box"
+  },
+  "hem_box" : {
+    "value" : "unsure",
+    "why" : "no boxes"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.72999999999999998,
+      "x" : 313,
+      "y" : 805
+    },
+    "lElbow" : {
+      "c" : 0.76000000000000001,
+      "x" : 323,
+      "y" : 449
+    },
+    "lHip" : {
+      "c" : 0.64000000000000001,
+      "x" : 282,
+      "y" : 558
+    },
+    "lKnee" : {
+      "c" : 0.68000000000000005,
+      "x" : 301,
+      "y" : 706
+    },
+    "lShoulder" : {
+      "c" : 0.73999999999999999,
+      "x" : 297,
+      "y" : 342
+    },
+    "lWrist" : {
+      "c" : 0.85999999999999999,
+      "x" : 292,
+      "y" : 377
+    },
+    "neck" : {
+      "c" : 0.76000000000000001,
+      "x" : 230,
+      "y" : 343
+    },
+    "rAnkle" : {
+      "c" : 0.79000000000000004,
+      "x" : 219,
+      "y" : 816
+    },
+    "rElbow" : {
+      "c" : 0.78000000000000003,
+      "x" : 148,
+      "y" : 448
+    },
+    "rHip" : {
+      "c" : 0.62,
+      "x" : 196,
+      "y" : 566
+    },
+    "rKnee" : {
+      "c" : 0.69999999999999996,
+      "x" : 206,
+      "y" : 708
+    },
+    "root" : {
+      "c" : 0.63,
+      "x" : 239,
+      "y" : 562
+    },
+    "rShoulder" : {
+      "c" : 0.77000000000000002,
+      "x" : 163,
+      "y" : 344
+    },
+    "rWrist" : {
+      "c" : 0.65000000000000002,
+      "x" : 156,
+      "y" : 536
+    }
+  },
+  "layers" : {
+    "value" : "na",
+    "why" : "one layer"
+  },
+  "max" : 1600,
+  "ms" : 310,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261008-162946\/photos\/7de605c9fbadfdb5ae68478f1cbf76266d076044c6d5013dd6b2d34a587ae6ea-photo.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "bend" : 13,
+        "refL" : 17,
+        "side" : "r",
+        "spread" : 0.69999999999999996,
+        "thr" : 10,
+        "value" : "unsure",
+        "why" : "no step (hand matches the sleeve, or the sleeve covers it)"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ no step (hand matches the sleeve, or the sleeve covers it)"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 3,
+    "pos" : 0.108,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 15,
+        "side" : "l",
+        "u" : 0.087999999999999995
+      },
+      {
+        "score" : 1,
+        "sep" : 16,
+        "side" : "r",
+        "u" : 0.127
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "value" : "unsure",
+    "why" : "no top box"
+  },
+  "w" : 576
+}

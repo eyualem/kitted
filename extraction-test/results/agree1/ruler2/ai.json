@@ -1,0 +1,1584 @@
+{
+ "phone-a765e8": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break"
+  }
+ ],
+ "phone-7de605": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  }
+ ],
+ "phone-b0f0c8": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "phone-6b14db": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  }
+ ],
+ "phone-5a9049": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "phone-d918c0": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed",
+   "layers": "no"
+  }
+ ],
+ "phone-0d39d6": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "phone-8bc29d": [
+  {
+   "sleeve_end": "covers_hand",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "yes"
+  },
+  {
+   "sleeve_end": "covers_hand",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "covers_hand",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "phone-d6559a": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "phone-f07193": [
+  {
+   "sleeve_end": "covers_hand",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "covers_hand",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "covers_hand",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "phone-e026de": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "yes"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "oct7-ph1": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "oct7-ph2": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break"
+  }
+ ],
+ "oct7-ph3": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  }
+ ],
+ "oct7-ph4": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "mirror-m01": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "mirror-m02": [
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  }
+ ],
+ "mirror-m03": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "mirror-m04": [
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": true,
+   "hem": "gap",
+   "hem5": "cropped"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  }
+ ],
+ "mirror-m05": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "mirror-m06": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "mirror-m07": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "mirror-m08": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "mirror-m09": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "mirror-m10": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "mirror-m11": [
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "mirror-m12": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "stock-p01-after_studio": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "stock-p01-before_studio": [
+  {
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  },
+  {
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  },
+  {
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  }
+ ],
+ "stock-p02-after_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "pooling"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "stock-p02-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "stock-p03-after_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "stock-p03-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "stock-p04-after_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "layers": "no"
+  }
+ ],
+ "stock-p04-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "layers": "no"
+  }
+ ],
+ "stock-p05-after_street": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "tucked",
+   "shorts": true
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "tucked",
+   "shorts": true
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "tucked",
+   "shorts": true
+  }
+ ],
+ "stock-p05-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false
+  }
+ ],
+ "stock-p06-after_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  }
+ ],
+ "stock-p06-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "layers": "no"
+  }
+ ],
+ "stock-s01-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "stock-s02-before_studio": [
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  }
+ ],
+ "stock-s03-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "stock-s04-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped"
+  }
+ ],
+ "stock-s05-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  }
+ ],
+ "stock-s06-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cuffed"
+  }
+ ],
+ "stock-s07-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "no_break",
+   "layers": "no"
+  }
+ ],
+ "stock-s08-before_studio": [
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "stock-s09-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  }
+ ],
+ "stock-s10-before_street": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "stock-s11-before_street": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "stock-s12-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "stock-s13-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "stock-s14-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  }
+ ],
+ "stock-s15-before_street": [
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "above_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "stock-s16-before_street": [
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "stock-s17-before_phone": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "gap",
+   "hem5": "cropped",
+   "layers": "no"
+  }
+ ],
+ "stock-s19-before_phone": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  }
+ ],
+ "stock-s20-before_phone": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "stock-s21-before_phone": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "stock-s22-before_phone": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  },
+  {
+   "top_length": "at_belt",
+   "shorts": false
+  }
+ ],
+ "stock-s23-before_mirror": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  }
+ ],
+ "stock-s24-before_mirror": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": true,
+   "hem": "gap",
+   "hem5": "cropped"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": true,
+   "hem": "gap",
+   "hem5": "cropped"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "at_belt",
+   "shorts": true
+  }
+ ],
+ "stock-s25-before_mirror": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "stock-s26-before_mirror": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "pooling",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "pooling",
+   "layers": "no"
+  },
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "pooling",
+   "layers": "no"
+  }
+ ],
+ "stock-s27-before_mirror": [
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": true
+  }
+ ],
+ "stock-s28-before_mirror": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  },
+  {
+   "top_length": "mid_fly",
+   "shorts": false
+  }
+ ],
+ "phone-1f1997": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "phone-403ade": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "phone-703a8b": [
+  {
+   "top_length": "tucked",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "phone-7f14a4": [],
+ "phone-8ad378": [
+  {
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "phone-968016": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "phone-af7e93": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break",
+   "layers": "yes"
+  }
+ ],
+ "phone-d1967f": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "below_crotch",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "phone-d58b14": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break"
+  }
+ ],
+ "phone-e438d4": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "phone-ebe23f": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "covers",
+   "hem5": "full_break"
+  }
+ ],
+ "phone-f4870b": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ],
+ "phone-fb0b17": [
+  {
+   "sleeve_end": "at_wrist",
+   "top_length": "mid_fly",
+   "shorts": false,
+   "hem": "meets",
+   "hem5": "slight_break",
+   "layers": "no"
+  }
+ ]
+}

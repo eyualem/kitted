@@ -1,0 +1,157 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hem" : {
+    "legs" : [
+      {
+        "bend" : 0,
+        "class" : "gap",
+        "footEnd" : 1.5900000000000001,
+        "hem" : 0.5,
+        "over" : -0.059999999999999998,
+        "pantsL" : 67,
+        "shoeSep" : 27,
+        "shoeTop" : 0.56999999999999995,
+        "side" : "l"
+      },
+      {
+        "bend" : 6,
+        "class" : "meets",
+        "footEnd" : 2,
+        "hem" : 1.1899999999999999,
+        "over" : 0.11,
+        "pantsL" : 23,
+        "shoeSep" : 15,
+        "shoeTop" : 1.0900000000000001,
+        "side" : "r"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "legs disagree"
+  },
+  "hem_box" : {
+    "pos" : 0.51500000000000001,
+    "value" : "covers"
+  },
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.68000000000000005,
+      "x" : 446,
+      "y" : 919
+    },
+    "lElbow" : {
+      "c" : 0.81999999999999995,
+      "x" : 533,
+      "y" : 359
+    },
+    "lHip" : {
+      "c" : 0.56000000000000005,
+      "x" : 430,
+      "y" : 560
+    },
+    "lKnee" : {
+      "c" : 0.56000000000000005,
+      "x" : 440,
+      "y" : 758
+    },
+    "lShoulder" : {
+      "c" : 0.69999999999999996,
+      "x" : 438,
+      "y" : 271
+    },
+    "lWrist" : {
+      "c" : 0.76000000000000001,
+      "x" : 645,
+      "y" : 414
+    },
+    "neck" : {
+      "c" : 0.73999999999999999,
+      "x" : 356,
+      "y" : 292
+    },
+    "rAnkle" : {
+      "c" : 0.76000000000000001,
+      "x" : 390,
+      "y" : 841
+    },
+    "rElbow" : {
+      "c" : 0.76000000000000001,
+      "x" : 220,
+      "y" : 402
+    },
+    "rHip" : {
+      "c" : 0.52000000000000002,
+      "x" : 343,
+      "y" : 576
+    },
+    "rKnee" : {
+      "c" : 0.51000000000000001,
+      "x" : 367,
+      "y" : 746
+    },
+    "root" : {
+      "c" : 0.54000000000000004,
+      "x" : 386,
+      "y" : 568
+    },
+    "rShoulder" : {
+      "c" : 0.78000000000000003,
+      "x" : 275,
+      "y" : 312
+    },
+    "rWrist" : {
+      "c" : 0.81000000000000005,
+      "x" : 116,
+      "y" : 454
+    }
+  },
+  "layers" : {
+    "outer" : "suit_jacket",
+    "pos" : -0.56699999999999995,
+    "under" : "tee",
+    "value" : "no"
+  },
+  "max" : 2048,
+  "ms" : 328,
+  "personMask" : true,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/screenshots\/phone\/20261011-133011\/photos\/d1967fabb97ffbf8f54a14dd3f17e7ebe7111d04c661b98e6eae185ff68f0d00-photo.jpg",
+  "sleeve_end" : {
+    "arms" : [
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      },
+      {
+        "value" : "unsure",
+        "why" : "arm not hanging"
+      }
+    ],
+    "value" : "unsure",
+    "why" : "arm not hanging \/ arm not hanging"
+  },
+  "status" : "ok",
+  "top_length" : {
+    "bottomsL" : 36,
+    "pos" : 0.091999999999999998,
+    "sides" : [
+      {
+        "score" : 1,
+        "sep" : 23,
+        "side" : "l",
+        "u" : 0.072999999999999995
+      },
+      {
+        "score" : 1,
+        "sep" : 30,
+        "side" : "r",
+        "u" : 0.112
+      }
+    ],
+    "value" : "mid_fly"
+  },
+  "top_length_box" : {
+    "pos" : 0.106,
+    "value" : "mid_fly"
+  },
+  "w" : 768
+}

@@ -1,0 +1,8109 @@
+{
+ "profile": "test profile: picks Minimal + Smart casual (0.5 each), boldness a little, no age",
+ "hem_cut": 1.2,
+ "phone_variants": [
+  "base",
+  "max1600",
+  "crop3"
+ ],
+ "facts": {
+  "long_top": {
+   "labels": {
+    "either": 5,
+    "no": 19
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 70,
+     "deny_right": 70,
+     "deny_prec": 1.0,
+     "steady": [
+      23,
+      24
+     ],
+     "steady_fire": [
+      24,
+      24
+     ],
+     "steady_deny": [
+      23,
+      24
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      0
+     ],
+     "answered": [
+      23,
+      24
+     ]
+    },
+    "b": {
+     "fire_runs": 13,
+     "fire_right": 6,
+     "fire_right_firm": [
+      0,
+      7
+     ],
+     "prec": 0.462,
+     "deny_runs": 56,
+     "deny_right": 56,
+     "deny_prec": 1.0,
+     "steady": [
+      20,
+      24
+     ],
+     "steady_fire": [
+      20,
+      24
+     ],
+     "steady_deny": [
+      20,
+      24
+     ],
+     "photos_fired": [
+      "mirror-m03",
+      "mirror-m07",
+      "phone-403ade",
+      "phone-7f14a4",
+      "stock-s02-before_studio"
+     ],
+     "his_fired": [
+      "phone-403ade",
+      "phone-7f14a4"
+     ],
+     "recall": [
+      0,
+      0
+     ],
+     "answered": [
+      23,
+      24
+     ]
+    },
+    "c": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 42,
+     "deny_right": 42,
+     "deny_prec": 1.0,
+     "steady": [
+      24,
+      24
+     ],
+     "steady_fire": [
+      24,
+      24
+     ],
+     "steady_deny": [
+      24,
+      24
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      0
+     ],
+     "answered": [
+      14,
+      24
+     ]
+    },
+    "ab": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 56,
+     "deny_right": 56,
+     "deny_prec": 1.0,
+     "steady": [
+      20,
+      24
+     ],
+     "steady_fire": [
+      24,
+      24
+     ],
+     "steady_deny": [
+      20,
+      24
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      0
+     ],
+     "answered": [
+      18,
+      24
+     ]
+    },
+    "2of3": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 65,
+     "deny_right": 65,
+     "deny_prec": 1.0,
+     "steady": [
+      22,
+      24
+     ],
+     "steady_fire": [
+      24,
+      24
+     ],
+     "steady_deny": [
+      22,
+      24
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      0
+     ],
+     "answered": [
+      21,
+      24
+     ]
+    },
+    "all": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 57,
+     "deny_right": 57,
+     "deny_prec": 1.0,
+     "steady": [
+      19,
+      24
+     ],
+     "steady_fire": [
+      24,
+      24
+     ],
+     "steady_deny": [
+      19,
+      24
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      0
+     ],
+     "answered": [
+      18,
+      24
+     ]
+    },
+    "any": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 59,
+     "deny_right": 59,
+     "deny_prec": 1.0,
+     "steady": [
+      20,
+      24
+     ],
+     "steady_fire": [
+      24,
+      24
+     ],
+     "steady_deny": [
+      20,
+      24
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      0
+     ],
+     "answered": [
+      19,
+      24
+     ]
+    }
+   }
+  },
+  "long_layer": {
+   "labels": {
+    "no": 10,
+    "either": 10,
+    "yes": 4
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 10,
+     "fire_right": 10,
+     "fire_right_firm": [
+      5,
+      5
+     ],
+     "prec": 1.0,
+     "deny_runs": 30,
+     "deny_right": 30,
+     "deny_prec": 1.0,
+     "steady": [
+      16,
+      24
+     ],
+     "steady_fire": [
+      21,
+      24
+     ],
+     "steady_deny": [
+      19,
+      24
+     ],
+     "photos_fired": [
+      "mirror-m10",
+      "oct7-ph3",
+      "stock-s07-before_studio"
+     ],
+     "his_fired": [
+      "oct7-ph3"
+     ],
+     "recall": [
+      1,
+      4
+     ],
+     "answered": [
+      12,
+      24
+     ]
+    },
+    "b": {
+     "fire_runs": 31,
+     "fire_right": 25,
+     "fire_right_firm": [
+      9,
+      15
+     ],
+     "prec": 0.806,
+     "deny_runs": 38,
+     "deny_right": 38,
+     "deny_prec": 1.0,
+     "steady": [
+      21,
+      24
+     ],
+     "steady_fire": [
+      21,
+      24
+     ],
+     "steady_deny": [
+      21,
+      24
+     ],
+     "photos_fired": [
+      "mirror-m08",
+      "mirror-m09",
+      "mirror-m10",
+      "oct7-ph3",
+      "oct7-ph4",
+      "phone-d1967f",
+      "phone-e438d4",
+      "stock-s07-before_studio",
+      "stock-s14-before_street",
+      "stock-s21-before_phone"
+     ],
+     "his_fired": [
+      "oct7-ph3",
+      "oct7-ph4",
+      "phone-d1967f",
+      "phone-e438d4"
+     ],
+     "recall": [
+      3,
+      4
+     ],
+     "answered": [
+      23,
+      24
+     ]
+    },
+    "c": {
+     "fire_runs": 4,
+     "fire_right": 1,
+     "fire_right_firm": [
+      0,
+      3
+     ],
+     "prec": 0.25,
+     "deny_runs": 38,
+     "deny_right": 35,
+     "deny_prec": 0.921,
+     "steady": [
+      21,
+      24
+     ],
+     "steady_fire": [
+      23,
+      24
+     ],
+     "steady_deny": [
+      21,
+      24
+     ],
+     "photos_fired": [
+      "stock-s08-before_studio"
+     ],
+     "his_fired": [],
+     "recall": [
+      0,
+      4
+     ],
+     "answered": [
+      14,
+      24
+     ]
+    },
+    "ab": {
+     "fire_runs": 10,
+     "fire_right": 10,
+     "fire_right_firm": [
+      5,
+      5
+     ],
+     "prec": 1.0,
+     "deny_runs": 24,
+     "deny_right": 24,
+     "deny_prec": 1.0,
+     "steady": [
+      15,
+      24
+     ],
+     "steady_fire": [
+      21,
+      24
+     ],
+     "steady_deny": [
+      18,
+      24
+     ],
+     "photos_fired": [
+      "mirror-m10",
+      "oct7-ph3",
+      "stock-s07-before_studio"
+     ],
+     "his_fired": [
+      "oct7-ph3"
+     ],
+     "recall": [
+      1,
+      4
+     ],
+     "answered": [
+      11,
+      24
+     ]
+    },
+    "2of3": {
+     "fire_runs": 10,
+     "fire_right": 10,
+     "fire_right_firm": [
+      5,
+      5
+     ],
+     "prec": 1.0,
+     "deny_runs": 35,
+     "deny_right": 35,
+     "deny_prec": 1.0,
+     "steady": [
+      17,
+      24
+     ],
+     "steady_fire": [
+      21,
+      24
+     ],
+     "steady_deny": [
+      20,
+      24
+     ],
+     "photos_fired": [
+      "mirror-m10",
+      "oct7-ph3",
+      "stock-s07-before_studio"
+     ],
+     "his_fired": [
+      "oct7-ph3"
+     ],
+     "recall": [
+      1,
+      4
+     ],
+     "answered": [
+      14,
+      24
+     ]
+    },
+    "all": {
+     "fire_runs": 4,
+     "fire_right": 4,
+     "fire_right_firm": [
+      4,
+      4
+     ],
+     "prec": 1.0,
+     "deny_runs": 32,
+     "deny_right": 32,
+     "deny_prec": 1.0,
+     "steady": [
+      19,
+      24
+     ],
+     "steady_fire": [
+      23,
+      24
+     ],
+     "steady_deny": [
+      20,
+      24
+     ],
+     "photos_fired": [
+      "stock-s07-before_studio"
+     ],
+     "his_fired": [],
+     "recall": [
+      1,
+      4
+     ],
+     "answered": [
+      11,
+      24
+     ]
+    },
+    "any": {
+     "fire_runs": 14,
+     "fire_right": 11,
+     "fire_right_firm": [
+      6,
+      9
+     ],
+     "prec": 0.786,
+     "deny_runs": 34,
+     "deny_right": 34,
+     "deny_prec": 1.0,
+     "steady": [
+      20,
+      24
+     ],
+     "steady_fire": [
+      22,
+      24
+     ],
+     "steady_deny": [
+      21,
+      24
+     ],
+     "photos_fired": [
+      "mirror-m08",
+      "mirror-m09",
+      "oct7-ph4",
+      "stock-s07-before_studio"
+     ],
+     "his_fired": [
+      "oct7-ph4"
+     ],
+     "recall": [
+      2,
+      4
+     ],
+     "answered": [
+      15,
+      24
+     ]
+    }
+   }
+  },
+  "peek": {
+   "labels": {
+    "no": 40,
+    "yes": 5,
+    "either": 5
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 4,
+     "fire_right": 3,
+     "fire_right_firm": [
+      1,
+      2
+     ],
+     "prec": 0.75,
+     "deny_runs": 138,
+     "deny_right": 124,
+     "deny_prec": 0.899,
+     "steady": [
+      45,
+      50
+     ],
+     "steady_fire": [
+      46,
+      50
+     ],
+     "steady_deny": [
+      45,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      5
+     ],
+     "answered": [
+      47,
+      50
+     ]
+    },
+    "b": {
+     "fire_runs": 21,
+     "fire_right": 18,
+     "fire_right_firm": [
+      15,
+      18
+     ],
+     "prec": 0.857,
+     "deny_runs": 129,
+     "deny_right": 129,
+     "deny_prec": 1.0,
+     "steady": [
+      50,
+      50
+     ],
+     "steady_fire": [
+      50,
+      50
+     ],
+     "steady_deny": [
+      50,
+      50
+     ],
+     "photos_fired": [
+      "phone-6b14db",
+      "phone-7de605",
+      "phone-a765e8",
+      "phone-b0f0c8",
+      "stock-s04-before_studio",
+      "stock-s24-before_mirror",
+      "stock-s26-before_mirror"
+     ],
+     "his_fired": [
+      "phone-6b14db",
+      "phone-7de605",
+      "phone-a765e8",
+      "phone-b0f0c8"
+     ],
+     "recall": [
+      5,
+      5
+     ],
+     "answered": [
+      50,
+      50
+     ]
+    },
+    "c": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 55,
+     "deny_right": 55,
+     "deny_prec": 1.0,
+     "steady": [
+      48,
+      50
+     ],
+     "steady_fire": [
+      50,
+      50
+     ],
+     "steady_deny": [
+      48,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      5
+     ],
+     "answered": [
+      19,
+      50
+     ]
+    },
+    "ab": {
+     "fire_runs": 2,
+     "fire_right": 2,
+     "fire_right_firm": [
+      1,
+      1
+     ],
+     "prec": 1.0,
+     "deny_runs": 119,
+     "deny_right": 119,
+     "deny_prec": 1.0,
+     "steady": [
+      45,
+      50
+     ],
+     "steady_fire": [
+      48,
+      50
+     ],
+     "steady_deny": [
+      47,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      5
+     ],
+     "answered": [
+      40,
+      50
+     ]
+    },
+    "2of3": {
+     "fire_runs": 2,
+     "fire_right": 2,
+     "fire_right_firm": [
+      1,
+      1
+     ],
+     "prec": 1.0,
+     "deny_runs": 123,
+     "deny_right": 123,
+     "deny_prec": 1.0,
+     "steady": [
+      47,
+      50
+     ],
+     "steady_fire": [
+      48,
+      50
+     ],
+     "steady_deny": [
+      48,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      5
+     ],
+     "answered": [
+      41,
+      50
+     ]
+    },
+    "all": {
+     "fire_runs": 1,
+     "fire_right": 1,
+     "fire_right_firm": [
+      1,
+      1
+     ],
+     "prec": 1.0,
+     "deny_runs": 119,
+     "deny_right": 119,
+     "deny_prec": 1.0,
+     "steady": [
+      46,
+      50
+     ],
+     "steady_fire": [
+      49,
+      50
+     ],
+     "steady_deny": [
+      47,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      5
+     ],
+     "answered": [
+      40,
+      50
+     ]
+    },
+    "any": {
+     "fire_runs": 1,
+     "fire_right": 1,
+     "fire_right_firm": [
+      1,
+      1
+     ],
+     "prec": 1.0,
+     "deny_runs": 127,
+     "deny_right": 127,
+     "deny_prec": 1.0,
+     "steady": [
+      47,
+      50
+     ],
+     "steady_fire": [
+      49,
+      50
+     ],
+     "steady_deny": [
+      48,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      5
+     ],
+     "answered": [
+      43,
+      50
+     ]
+    }
+   }
+  },
+  "peek_clearly": {
+   "labels": {
+    "no": 45,
+    "either": 4,
+    "yes": 1
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 4,
+     "fire_right": 1,
+     "fire_right_firm": [
+      0,
+      3
+     ],
+     "prec": 0.25,
+     "deny_runs": 138,
+     "deny_right": 135,
+     "deny_prec": 0.978,
+     "steady": [
+      45,
+      50
+     ],
+     "steady_fire": [
+      46,
+      50
+     ],
+     "steady_deny": [
+      45,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      1
+     ],
+     "answered": [
+      47,
+      50
+     ]
+    },
+    "b": {
+     "fire_runs": 4,
+     "fire_right": 4,
+     "fire_right_firm": [
+      3,
+      3
+     ],
+     "prec": 1.0,
+     "deny_runs": 146,
+     "deny_right": 146,
+     "deny_prec": 1.0,
+     "steady": [
+      49,
+      50
+     ],
+     "steady_fire": [
+      49,
+      50
+     ],
+     "steady_deny": [
+      49,
+      50
+     ],
+     "photos_fired": [
+      "stock-s04-before_studio"
+     ],
+     "his_fired": [],
+     "recall": [
+      1,
+      1
+     ],
+     "answered": [
+      50,
+      50
+     ]
+    },
+    "c": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 55,
+     "deny_right": 55,
+     "deny_prec": 1.0,
+     "steady": [
+      48,
+      50
+     ],
+     "steady_fire": [
+      50,
+      50
+     ],
+     "steady_deny": [
+      48,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      1
+     ],
+     "answered": [
+      19,
+      50
+     ]
+    },
+    "ab": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 134,
+     "deny_right": 134,
+     "deny_prec": 1.0,
+     "steady": [
+      44,
+      50
+     ],
+     "steady_fire": [
+      50,
+      50
+     ],
+     "steady_deny": [
+      44,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      1
+     ],
+     "answered": [
+      46,
+      50
+     ]
+    },
+    "2of3": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 137,
+     "deny_right": 137,
+     "deny_prec": 1.0,
+     "steady": [
+      47,
+      50
+     ],
+     "steady_fire": [
+      50,
+      50
+     ],
+     "steady_deny": [
+      47,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      1
+     ],
+     "answered": [
+      46,
+      50
+     ]
+    },
+    "all": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 134,
+     "deny_right": 134,
+     "deny_prec": 1.0,
+     "steady": [
+      44,
+      50
+     ],
+     "steady_fire": [
+      50,
+      50
+     ],
+     "steady_deny": [
+      44,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      1
+     ],
+     "answered": [
+      46,
+      50
+     ]
+    },
+    "any": {
+     "fire_runs": 0,
+     "fire_right": 0,
+     "fire_right_firm": [
+      0,
+      0
+     ],
+     "prec": null,
+     "deny_runs": 142,
+     "deny_right": 142,
+     "deny_prec": 1.0,
+     "steady": [
+      45,
+      50
+     ],
+     "steady_fire": [
+      50,
+      50
+     ],
+     "steady_deny": [
+      45,
+      50
+     ],
+     "photos_fired": [],
+     "his_fired": [],
+     "recall": [
+      0,
+      1
+     ],
+     "answered": [
+      49,
+      50
+     ]
+    }
+   }
+  },
+  "heavy_hem": {
+   "labels": {
+    "no": 14,
+    "yes": 22,
+    "either": 2
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 30,
+     "fire_right": 30,
+     "fire_right_firm": [
+      26,
+      26
+     ],
+     "prec": 1.0,
+     "deny_runs": 84,
+     "deny_right": 44,
+     "deny_prec": 0.524,
+     "steady": [
+      28,
+      38
+     ],
+     "steady_fire": [
+      28,
+      38
+     ],
+     "steady_deny": [
+      28,
+      38
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "stock-s15-before_street",
+      "stock-s26-before_mirror"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-ebe23f"
+     ],
+     "recall": [
+      8,
+      22
+     ],
+     "answered": [
+      38,
+      38
+     ]
+    },
+    "b": {
+     "fire_runs": 34,
+     "fire_right": 26,
+     "fire_right_firm": [
+      26,
+      34
+     ],
+     "prec": 0.765,
+     "deny_runs": 72,
+     "deny_right": 34,
+     "deny_prec": 0.472,
+     "steady": [
+      29,
+      38
+     ],
+     "steady_fire": [
+      29,
+      38
+     ],
+     "steady_deny": [
+      30,
+      38
+     ],
+     "photos_fired": [
+      "mirror-m01",
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8",
+      "phone-d6559a",
+      "stock-p03-after_street",
+      "stock-s10-before_street",
+      "stock-s15-before_street",
+      "stock-s21-before_phone"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8",
+      "phone-d6559a"
+     ],
+     "recall": [
+      8,
+      22
+     ],
+     "answered": [
+      35,
+      38
+     ]
+    },
+    "c": {
+     "fire_runs": 33,
+     "fire_right": 31,
+     "fire_right_firm": [
+      28,
+      30
+     ],
+     "prec": 0.939,
+     "deny_runs": 9,
+     "deny_right": 7,
+     "deny_prec": 0.778,
+     "steady": [
+      34,
+      38
+     ],
+     "steady_fire": [
+      35,
+      38
+     ],
+     "steady_deny": [
+      36,
+      38
+     ],
+     "photos_fired": [
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-ebe23f",
+      "phone-f07193",
+      "stock-s08-before_studio",
+      "stock-s11-before_street",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-ebe23f",
+      "phone-f07193"
+     ],
+     "recall": [
+      10,
+      22
+     ],
+     "answered": [
+      15,
+      38
+     ]
+    },
+    "ab": {
+     "fire_runs": 14,
+     "fire_right": 14,
+     "fire_right_firm": [
+      14,
+      14
+     ],
+     "prec": 1.0,
+     "deny_runs": 58,
+     "deny_right": 30,
+     "deny_prec": 0.517,
+     "steady": [
+      21,
+      38
+     ],
+     "steady_fire": [
+      30,
+      38
+     ],
+     "steady_deny": [
+      27,
+      38
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378"
+     ],
+     "recall": [
+      4,
+      22
+     ],
+     "answered": [
+      23,
+      38
+     ]
+    },
+    "2of3": {
+     "fire_runs": 25,
+     "fire_right": 25,
+     "fire_right_firm": [
+      23,
+      23
+     ],
+     "prec": 1.0,
+     "deny_runs": 62,
+     "deny_right": 32,
+     "deny_prec": 0.516,
+     "steady": [
+      26,
+      38
+     ],
+     "steady_fire": [
+      29,
+      38
+     ],
+     "steady_deny": [
+      29,
+      38
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8",
+      "phone-ebe23f",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8",
+      "phone-ebe23f"
+     ],
+     "recall": [
+      7,
+      22
+     ],
+     "answered": [
+      29,
+      38
+     ]
+    },
+    "all": {
+     "fire_runs": 14,
+     "fire_right": 14,
+     "fire_right_firm": [
+      14,
+      14
+     ],
+     "prec": 1.0,
+     "deny_runs": 42,
+     "deny_right": 27,
+     "deny_prec": 0.643,
+     "steady": [
+      22,
+      38
+     ],
+     "steady_fire": [
+      30,
+      38
+     ],
+     "steady_deny": [
+      29,
+      38
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378"
+     ],
+     "recall": [
+      4,
+      22
+     ],
+     "answered": [
+      17,
+      38
+     ]
+    },
+    "any": {
+     "fire_runs": 16,
+     "fire_right": 16,
+     "fire_right_firm": [
+      16,
+      16
+     ],
+     "prec": 1.0,
+     "deny_runs": 48,
+     "deny_right": 33,
+     "deny_prec": 0.688,
+     "steady": [
+      23,
+      38
+     ],
+     "steady_fire": [
+      31,
+      38
+     ],
+     "steady_deny": [
+      29,
+      38
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "stock-s15-before_street",
+      "stock-s26-before_mirror"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378"
+     ],
+     "recall": [
+      5,
+      22
+     ],
+     "answered": [
+      20,
+      38
+     ]
+    }
+   }
+  },
+  "rests": {
+   "labels": {
+    "no": 12,
+    "either": 7,
+    "yes": 21
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 30,
+     "fire_right": 30,
+     "fire_right_firm": [
+      25,
+      25
+     ],
+     "prec": 1.0,
+     "deny_runs": 87,
+     "deny_right": 49,
+     "deny_prec": 0.563,
+     "steady": [
+      28,
+      40
+     ],
+     "steady_fire": [
+      28,
+      40
+     ],
+     "steady_deny": [
+      28,
+      40
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f4870b",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f4870b"
+     ],
+     "recall": [
+      8,
+      21
+     ],
+     "answered": [
+      39,
+      40
+     ]
+    },
+    "b": {
+     "fire_runs": 86,
+     "fire_right": 83,
+     "fire_right_firm": [
+      63,
+      66
+     ],
+     "prec": 0.965,
+     "deny_runs": 34,
+     "deny_right": 34,
+     "deny_prec": 1.0,
+     "steady": [
+      37,
+      40
+     ],
+     "steady_fire": [
+      37,
+      40
+     ],
+     "steady_deny": [
+      37,
+      40
+     ],
+     "photos_fired": [
+      "mirror-m07",
+      "mirror-m08",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-5a9049",
+      "phone-7f14a4",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d1967f",
+      "phone-d58b14",
+      "phone-d6559a",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f07193",
+      "phone-f4870b",
+      "phone-fb0b17",
+      "stock-p03-after_street",
+      "stock-s01-before_studio",
+      "stock-s08-before_studio",
+      "stock-s10-before_street",
+      "stock-s11-before_street",
+      "stock-s14-before_street",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-5a9049",
+      "phone-7f14a4",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d1967f",
+      "phone-d58b14",
+      "phone-d6559a",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f07193",
+      "phone-f4870b",
+      "phone-fb0b17"
+     ],
+     "recall": [
+      21,
+      21
+     ],
+     "answered": [
+      40,
+      40
+     ]
+    },
+    "c": {
+     "fire_runs": 20,
+     "fire_right": 14,
+     "fire_right_firm": [
+      11,
+      17
+     ],
+     "prec": 0.7,
+     "deny_runs": 27,
+     "deny_right": 12,
+     "deny_prec": 0.444,
+     "steady": [
+      37,
+      40
+     ],
+     "steady_fire": [
+      37,
+      40
+     ],
+     "steady_deny": [
+      40,
+      40
+     ],
+     "photos_fired": [
+      "mirror-m07",
+      "phone-403ade",
+      "phone-e026de",
+      "phone-f07193",
+      "stock-s01-before_studio",
+      "stock-s07-before_studio",
+      "stock-s21-before_phone"
+     ],
+     "his_fired": [
+      "phone-403ade",
+      "phone-e026de",
+      "phone-f07193"
+     ],
+     "recall": [
+      4,
+      21
+     ],
+     "answered": [
+      16,
+      40
+     ]
+    },
+    "ab": {
+     "fire_runs": 30,
+     "fire_right": 30,
+     "fire_right_firm": [
+      25,
+      25
+     ],
+     "prec": 1.0,
+     "deny_runs": 31,
+     "deny_right": 31,
+     "deny_prec": 1.0,
+     "steady": [
+      25,
+      40
+     ],
+     "steady_fire": [
+      28,
+      40
+     ],
+     "steady_deny": [
+      37,
+      40
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f4870b",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f4870b"
+     ],
+     "recall": [
+      8,
+      21
+     ],
+     "answered": [
+      20,
+      40
+     ]
+    },
+    "2of3": {
+     "fire_runs": 42,
+     "fire_right": 41,
+     "fire_right_firm": [
+      33,
+      34
+     ],
+     "prec": 0.976,
+     "deny_runs": 44,
+     "deny_right": 35,
+     "deny_prec": 0.795,
+     "steady": [
+      28,
+      40
+     ],
+     "steady_fire": [
+      28,
+      40
+     ],
+     "steady_deny": [
+      37,
+      40
+     ],
+     "photos_fired": [
+      "mirror-m07",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e026de",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f07193",
+      "phone-f4870b",
+      "stock-s01-before_studio",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "phone-e026de",
+      "phone-e438d4",
+      "phone-ebe23f",
+      "phone-f07193",
+      "phone-f4870b"
+     ],
+     "recall": [
+      11,
+      21
+     ],
+     "answered": [
+      29,
+      40
+     ]
+    },
+    "all": {
+     "fire_runs": 24,
+     "fire_right": 24,
+     "fire_right_firm": [
+      19,
+      19
+     ],
+     "prec": 1.0,
+     "deny_runs": 26,
+     "deny_right": 26,
+     "deny_prec": 1.0,
+     "steady": [
+      28,
+      40
+     ],
+     "steady_fire": [
+      30,
+      40
+     ],
+     "steady_deny": [
+      38,
+      40
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-f4870b",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-f4870b"
+     ],
+     "recall": [
+      6,
+      21
+     ],
+     "answered": [
+      16,
+      40
+     ]
+    },
+    "any": {
+     "fire_runs": 24,
+     "fire_right": 24,
+     "fire_right_firm": [
+      19,
+      19
+     ],
+     "prec": 1.0,
+     "deny_runs": 29,
+     "deny_right": 29,
+     "deny_prec": 1.0,
+     "steady": [
+      28,
+      40
+     ],
+     "steady_fire": [
+      30,
+      40
+     ],
+     "steady_deny": [
+      38,
+      40
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-f4870b",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-d1967f",
+      "phone-e438d4",
+      "phone-f4870b"
+     ],
+     "recall": [
+      6,
+      21
+     ],
+     "answered": [
+      17,
+      40
+     ]
+    }
+   }
+  }
+ },
+ "passed": {
+  "heavy_hem": [
+   "c"
+  ],
+  "rests": [
+   "b"
+  ]
+ },
+ "deny_passed": {
+  "long_top": [
+   "a",
+   "c",
+   "2of3"
+  ],
+  "long_layer": [],
+  "peek": [
+   "b",
+   "c",
+   "ab",
+   "2of3",
+   "all",
+   "any"
+  ],
+  "peek_clearly": [
+   "a",
+   "b",
+   "c",
+   "2of3",
+   "any"
+  ],
+  "heavy_hem": [],
+  "rests": [
+   "b",
+   "ab",
+   "all",
+   "any"
+  ]
+ },
+ "wide": {
+  "heavy_hem": {
+   "labels": {
+    "no": 26,
+    "yes": 24
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 31,
+     "fire_right": 29,
+     "fire_right_firm": [
+      29,
+      31
+     ],
+     "prec": 0.935,
+     "deny_runs": 119,
+     "deny_right": 76,
+     "deny_prec": 0.639,
+     "steady": [
+      41,
+      50
+     ],
+     "steady_fire": [
+      41,
+      50
+     ],
+     "steady_deny": [
+      41,
+      50
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f",
+      "stock-p02-after_studio",
+      "stock-s12-before_street",
+      "stock-s15-before_street",
+      "stock-s26-before_mirror"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-d1967f"
+     ],
+     "recall": [
+      9,
+      24
+     ],
+     "answered": [
+      50,
+      50
+     ]
+    },
+    "b": {
+     "fire_runs": 34,
+     "fire_right": 26,
+     "fire_right_firm": [
+      26,
+      34
+     ],
+     "prec": 0.765,
+     "deny_runs": 66,
+     "deny_right": 28,
+     "deny_prec": 0.424,
+     "steady": [
+      41,
+      50
+     ],
+     "steady_fire": [
+      41,
+      50
+     ],
+     "steady_deny": [
+      42,
+      50
+     ],
+     "photos_fired": [
+      "mirror-m01",
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8",
+      "phone-d6559a",
+      "stock-p03-after_street",
+      "stock-s10-before_street",
+      "stock-s15-before_street",
+      "stock-s21-before_phone"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8",
+      "phone-d6559a"
+     ],
+     "recall": [
+      8,
+      24
+     ],
+     "answered": [
+      33,
+      50
+     ]
+    },
+    "c": {
+     "fire_runs": 36,
+     "fire_right": 31,
+     "fire_right_firm": [
+      31,
+      36
+     ],
+     "prec": 0.861,
+     "deny_runs": 22,
+     "deny_right": 20,
+     "deny_prec": 0.909,
+     "steady": [
+      42,
+      50
+     ],
+     "steady_fire": [
+      45,
+      50
+     ],
+     "steady_deny": [
+      46,
+      50
+     ],
+     "photos_fired": [
+      "mirror-m05",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-f07193",
+      "stock-s08-before_studio",
+      "stock-s11-before_street",
+      "stock-s15-before_street",
+      "stock-s16-before_street"
+     ],
+     "his_fired": [
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-f07193"
+     ],
+     "recall": [
+      11,
+      24
+     ],
+     "answered": [
+      21,
+      50
+     ]
+    },
+    "ab": {
+     "fire_runs": 14,
+     "fire_right": 14,
+     "fire_right_firm": [
+      14,
+      14
+     ],
+     "prec": 1.0,
+     "deny_runs": 56,
+     "deny_right": 28,
+     "deny_prec": 0.5,
+     "steady": [
+      35,
+      50
+     ],
+     "steady_fire": [
+      42,
+      50
+     ],
+     "steady_deny": [
+      41,
+      50
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378"
+     ],
+     "recall": [
+      4,
+      24
+     ],
+     "answered": [
+      23,
+      50
+     ]
+    },
+    "2of3": {
+     "fire_runs": 23,
+     "fire_right": 23,
+     "fire_right_firm": [
+      23,
+      23
+     ],
+     "prec": 1.0,
+     "deny_runs": 71,
+     "deny_right": 41,
+     "deny_prec": 0.577,
+     "steady": [
+      37,
+      50
+     ],
+     "steady_fire": [
+      42,
+      50
+     ],
+     "steady_deny": [
+      40,
+      50
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-403ade",
+      "phone-8ad378",
+      "phone-8bc29d",
+      "phone-b0f0c8"
+     ],
+     "recall": [
+      7,
+      24
+     ],
+     "answered": [
+      32,
+      50
+     ]
+    },
+    "all": {
+     "fire_runs": 14,
+     "fire_right": 14,
+     "fire_right_firm": [
+      14,
+      14
+     ],
+     "prec": 1.0,
+     "deny_runs": 52,
+     "deny_right": 37,
+     "deny_prec": 0.712,
+     "steady": [
+      32,
+      50
+     ],
+     "steady_fire": [
+      42,
+      50
+     ],
+     "steady_deny": [
+      39,
+      50
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378"
+     ],
+     "recall": [
+      4,
+      24
+     ],
+     "answered": [
+      21,
+      50
+     ]
+    },
+    "any": {
+     "fire_runs": 19,
+     "fire_right": 19,
+     "fire_right_firm": [
+      19,
+      19
+     ],
+     "prec": 1.0,
+     "deny_runs": 78,
+     "deny_right": 63,
+     "deny_prec": 0.808,
+     "steady": [
+      33,
+      50
+     ],
+     "steady_fire": [
+      43,
+      50
+     ],
+     "steady_deny": [
+      39,
+      50
+     ],
+     "photos_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378",
+      "stock-s12-before_street",
+      "stock-s15-before_street",
+      "stock-s26-before_mirror"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-1f1997",
+      "phone-8ad378"
+     ],
+     "recall": [
+      6,
+      24
+     ],
+     "answered": [
+      31,
+      50
+     ]
+    }
+   }
+  },
+  "rests": {
+   "labels": {
+    "no": 27,
+    "either": 6,
+    "yes": 15
+   },
+   "rules": {
+    "a": {
+     "fire_runs": 28,
+     "fire_right": 21,
+     "fire_right_firm": [
+      13,
+      20
+     ],
+     "prec": 0.75,
+     "deny_runs": 116,
+     "deny_right": 84,
+     "deny_prec": 0.724,
+     "steady": [
+      36,
+      48
+     ],
+     "steady_fire": [
+      36,
+      48
+     ],
+     "steady_deny": [
+      36,
+      48
+     ],
+     "photos_fired": [
+      "mirror-m03",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b",
+      "stock-p02-after_studio",
+      "stock-s12-before_street",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b"
+     ],
+     "recall": [
+      3,
+      15
+     ],
+     "answered": [
+      48,
+      48
+     ]
+    },
+    "b": {
+     "fire_runs": 74,
+     "fire_right": 57,
+     "fire_right_firm": [
+      42,
+      59
+     ],
+     "prec": 0.77,
+     "deny_runs": 31,
+     "deny_right": 31,
+     "deny_prec": 1.0,
+     "steady": [
+      45,
+      48
+     ],
+     "steady_fire": [
+      45,
+      48
+     ],
+     "steady_deny": [
+      45,
+      48
+     ],
+     "photos_fired": [
+      "mirror-m03",
+      "mirror-m07",
+      "mirror-m08",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-5a9049",
+      "phone-7f14a4",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d58b14",
+      "phone-d6559a",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-f07193",
+      "phone-f4870b",
+      "phone-fb0b17",
+      "stock-p03-after_street",
+      "stock-s01-before_studio",
+      "stock-s08-before_studio",
+      "stock-s10-before_street",
+      "stock-s11-before_street",
+      "stock-s14-before_street",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-5a9049",
+      "phone-7f14a4",
+      "phone-8bc29d",
+      "phone-968016",
+      "phone-b0f0c8",
+      "phone-d58b14",
+      "phone-d6559a",
+      "phone-d918c0",
+      "phone-e026de",
+      "phone-f07193",
+      "phone-f4870b",
+      "phone-fb0b17"
+     ],
+     "recall": [
+      14,
+      15
+     ],
+     "answered": [
+      35,
+      48
+     ]
+    },
+    "c": {
+     "fire_runs": 23,
+     "fire_right": 11,
+     "fire_right_firm": [
+      5,
+      17
+     ],
+     "prec": 0.478,
+     "deny_runs": 31,
+     "deny_right": 22,
+     "deny_prec": 0.71,
+     "steady": [
+      46,
+      48
+     ],
+     "steady_fire": [
+      47,
+      48
+     ],
+     "steady_deny": [
+      47,
+      48
+     ],
+     "photos_fired": [
+      "mirror-m07",
+      "phone-e026de",
+      "phone-f07193",
+      "stock-p03-before_street",
+      "stock-s01-before_studio",
+      "stock-s07-before_studio",
+      "stock-s09-before_street",
+      "stock-s21-before_phone"
+     ],
+     "his_fired": [
+      "phone-e026de",
+      "phone-f07193"
+     ],
+     "recall": [
+      2,
+      15
+     ],
+     "answered": [
+      18,
+      48
+     ]
+    },
+    "ab": {
+     "fire_runs": 21,
+     "fire_right": 18,
+     "fire_right_firm": [
+      13,
+      16
+     ],
+     "prec": 0.857,
+     "deny_runs": 31,
+     "deny_right": 31,
+     "deny_prec": 1.0,
+     "steady": [
+      36,
+      48
+     ],
+     "steady_fire": [
+      39,
+      48
+     ],
+     "steady_deny": [
+      45,
+      48
+     ],
+     "photos_fired": [
+      "mirror-m03",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b"
+     ],
+     "recall": [
+      3,
+      15
+     ],
+     "answered": [
+      16,
+      48
+     ]
+    },
+    "2of3": {
+     "fire_runs": 32,
+     "fire_right": 28,
+     "fire_right_firm": [
+      17,
+      21
+     ],
+     "prec": 0.875,
+     "deny_runs": 52,
+     "deny_right": 44,
+     "deny_prec": 0.846,
+     "steady": [
+      38,
+      48
+     ],
+     "steady_fire": [
+      38,
+      48
+     ],
+     "steady_deny": [
+      46,
+      48
+     ],
+     "photos_fired": [
+      "mirror-m03",
+      "mirror-m07",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-e026de",
+      "phone-f07193",
+      "phone-f4870b",
+      "stock-s01-before_studio",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-e026de",
+      "phone-f07193",
+      "phone-f4870b"
+     ],
+     "recall": [
+      5,
+      15
+     ],
+     "answered": [
+      28,
+      48
+     ]
+    },
+    "all": {
+     "fire_runs": 20,
+     "fire_right": 17,
+     "fire_right_firm": [
+      12,
+      15
+     ],
+     "prec": 0.85,
+     "deny_runs": 35,
+     "deny_right": 35,
+     "deny_prec": 1.0,
+     "steady": [
+      38,
+      48
+     ],
+     "steady_fire": [
+      40,
+      48
+     ],
+     "steady_deny": [
+      46,
+      48
+     ],
+     "photos_fired": [
+      "mirror-m03",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b"
+     ],
+     "recall": [
+      3,
+      15
+     ],
+     "answered": [
+      17,
+      48
+     ]
+    },
+    "any": {
+     "fire_runs": 26,
+     "fire_right": 19,
+     "fire_right_firm": [
+      12,
+      19
+     ],
+     "prec": 0.731,
+     "deny_runs": 52,
+     "deny_right": 49,
+     "deny_prec": 0.942,
+     "steady": [
+      34,
+      48
+     ],
+     "steady_fire": [
+      36,
+      48
+     ],
+     "steady_deny": [
+      43,
+      48
+     ],
+     "photos_fired": [
+      "mirror-m03",
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b",
+      "stock-p02-after_studio",
+      "stock-s12-before_street",
+      "stock-s15-before_street"
+     ],
+     "his_fired": [
+      "oct7-ph1",
+      "phone-0d39d6",
+      "phone-1f1997",
+      "phone-f4870b"
+     ],
+     "recall": [
+      3,
+      15
+     ],
+     "answered": [
+      25,
+      48
+     ]
+    }
+   }
+  }
+ },
+ "rescore": {
+  "today (app: v7, no second look)": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "v7 + look1 alone (the earlier paper tests)": {
+   "prop_spread": {
+    "6.5": 9,
+    "7.0": 51,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    51,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": [
+    "phone-a765e8",
+    "phone-7de605",
+    "phone-b0f0c8",
+    "phone-6b14db",
+    "stock-s04-before_studio",
+    "stock-s26-before_mirror"
+   ]
+  },
+  "all-agree: F1 heavy hem under tailoring": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "all-agree: F2 long top": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "all-agree: F3 long loose layer": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "all-agree: F10 peek": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "all-agree: HB heavy hem blocks rewards": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "all-agree: DRAG rests on the shoe (slides)": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "2of3: F1+F2+F3+F10+HB+DRAG": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "all-agree: F1+F2+F3+F10+HB+DRAG": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 6
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.96,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [],
+   "prop_moved": []
+  },
+  "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": {
+   "prop_spread": {
+    "5.5": 1,
+    "6.5": 3,
+    "7.0": 57,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 5
+   },
+   "prop_at_7": [
+    57,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.95,
+    "le5.5": 5,
+    "6-6.5": 14,
+    "7-7.5": 55,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 14,
+     "7.0": 44,
+     "7.5": 11,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [
+    "stock-s16-before_street"
+   ],
+   "prop_moved": [
+    "stock-s16-before_street"
+   ]
+  },
+  "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": {
+   "prop_spread": {
+    "6.5": 3,
+    "7.0": 59,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 4
+   },
+   "prop_at_7": [
+    59,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.94,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 57,
+    "8+": 4,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 13,
+     "7.0": 46,
+     "7.5": 11,
+     "8.0": 4
+    },
+    "pct8": 5
+   },
+   "score_moved": [
+    "mirror-m05",
+    "stock-s16-before_street"
+   ],
+   "prop_moved": [
+    "mirror-m05",
+    "stock-s16-before_street"
+   ]
+  },
+  "label ceiling: F1+F2+F3+F10+HB+DRAG": {
+   "prop_spread": {
+    "5.0": 1,
+    "6.5": 7,
+    "7.0": 54,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 4
+   },
+   "prop_at_7": [
+    54,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.94,
+    "le5.5": 5,
+    "6-6.5": 14,
+    "7-7.5": 56,
+    "8+": 4,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.5": 14,
+     "7.0": 44,
+     "7.5": 12,
+     "8.0": 4
+    },
+    "pct8": 5
+   },
+   "score_moved": [
+    "phone-d1967f",
+    "stock-s01-before_studio",
+    "stock-s14-before_street"
+   ],
+   "prop_moved": [
+    "phone-d1967f",
+    "phone-a765e8",
+    "phone-7de605",
+    "phone-6b14db",
+    "stock-s01-before_studio",
+    "stock-s04-before_studio",
+    "stock-s14-before_street"
+   ]
+  },
+  "what-if HH, label facts": {
+   "prop_spread": {
+    "5.0": 1,
+    "6.0": 9,
+    "6.5": 7,
+    "7.0": 45,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 4
+   },
+   "prop_at_7": [
+    45,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.92,
+    "le5.5": 5,
+    "6-6.5": 14,
+    "7-7.5": 56,
+    "8+": 4,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.0": 1,
+     "6.5": 13,
+     "7.0": 46,
+     "7.5": 10,
+     "8.0": 4
+    },
+    "pct8": 5
+   },
+   "score_moved": [
+    "phone-f07193",
+    "phone-d918c0",
+    "phone-968016",
+    "phone-d1967f",
+    "stock-s01-before_studio",
+    "stock-s14-before_street"
+   ],
+   "prop_moved": [
+    "phone-8bc29d",
+    "phone-f07193",
+    "phone-d918c0",
+    "phone-968016",
+    "phone-403ade",
+    "phone-8ad378",
+    "phone-d1967f",
+    "phone-a765e8",
+    "phone-7de605",
+    "phone-b0f0c8",
+    "phone-6b14db",
+    "phone-5a9049",
+    "stock-s01-before_studio",
+    "stock-s04-before_studio",
+    "stock-s14-before_street",
+    "phone-7f14a4"
+   ]
+  },
+  "what-if HH, (a) alone": {
+   "prop_spread": {
+    "6.0": 5,
+    "6.5": 3,
+    "7.0": 53,
+    "7.5": 1,
+    "8.0": 7,
+    "8.5": 5
+   },
+   "prop_at_7": [
+    53,
+    74
+   ],
+   "score_bands": {
+    "n": 79,
+    "median": 7.0,
+    "mean": 6.94,
+    "le5.5": 5,
+    "6-6.5": 13,
+    "7-7.5": 56,
+    "8+": 5,
+    "9+": 0,
+    "values": {
+     "5.5": 5,
+     "6.0": 1,
+     "6.5": 12,
+     "7.0": 46,
+     "7.5": 10,
+     "8.0": 5
+    },
+    "pct8": 6
+   },
+   "score_moved": [
+    "phone-f07193",
+    "stock-s14-before_street",
+    "phone-af7e93"
+   ],
+   "prop_moved": [
+    "phone-f07193",
+    "phone-403ade",
+    "phone-8ad378",
+    "phone-b0f0c8",
+    "stock-s14-before_street",
+    "phone-af7e93"
+   ]
+  }
+ },
+ "his": {
+  "oct7-ph1": {
+   "today (app: v7, no second look)": [
+    7.0,
+    5.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    5.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    5.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    5.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    5.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    5.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    5.5
+   ]
+  },
+  "oct7-ph2": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "oct7-ph3": {
+   "today (app: v7, no second look)": [
+    8.0,
+    7.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    8.0,
+    7.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    8.0,
+    7.5
+   ],
+   "all-agree: F2 long top": [
+    8.0,
+    7.5
+   ],
+   "all-agree: F3 long loose layer": [
+    8.0,
+    7.5
+   ],
+   "all-agree: F10 peek": [
+    8.0,
+    7.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    8.0,
+    7.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    8.0,
+    7.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    8.0,
+    7.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    8.0,
+    7.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    8.0,
+    7.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    8.0,
+    7.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    8.0,
+    7.5
+   ],
+   "what-if HH, label facts": [
+    8.0,
+    7.5
+   ],
+   "what-if HH, (a) alone": [
+    8.0,
+    7.5
+   ]
+  },
+  "oct7-ph4": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-0d39d6": {
+   "today (app: v7, no second look)": [
+    7.0,
+    6.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    6.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    6.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    6.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    6.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    6.5
+   ]
+  },
+  "phone-1f1997": {
+   "today (app: v7, no second look)": [
+    7.0,
+    6.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    6.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    6.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    6.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    6.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    6.5
+   ]
+  },
+  "phone-403ade": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    6.0,
+    7.0
+   ]
+  },
+  "phone-5a9049": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-6b14db": {
+   "today (app: v7, no second look)": [
+    7.0,
+    5.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    6.5,
+    5.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    5.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    5.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    5.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    5.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    6.5,
+    5.5
+   ],
+   "what-if HH, label facts": [
+    6.5,
+    5.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    5.5
+   ]
+  },
+  "phone-7de605": {
+   "today (app: v7, no second look)": [
+    7.0,
+    5.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    6.5,
+    5.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    5.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    5.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    5.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    5.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    6.5,
+    5.5
+   ],
+   "what-if HH, label facts": [
+    6.5,
+    5.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    5.5
+   ]
+  },
+  "phone-7f14a4": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-8ad378": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    6.0,
+    7.0
+   ]
+  },
+  "phone-8bc29d": {
+   "today (app: v7, no second look)": [
+    7.0,
+    6.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    6.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    6.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    6.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    6.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    6.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    6.5
+   ]
+  },
+  "phone-968016": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.5
+   ]
+  },
+  "phone-a765e8": {
+   "today (app: v7, no second look)": [
+    7.0,
+    5.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    6.5,
+    5.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    5.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    5.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    5.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    5.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    5.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    6.5,
+    5.5
+   ],
+   "what-if HH, label facts": [
+    6.5,
+    5.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    5.5
+   ]
+  },
+  "phone-af7e93": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.5
+   ],
+   "what-if HH, (a) alone": [
+    6.0,
+    7.0
+   ]
+  },
+  "phone-b0f0c8": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    6.5,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    6.0,
+    7.0
+   ]
+  },
+  "phone-d58b14": {
+   "today (app: v7, no second look)": [
+    7.0,
+    6.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    6.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    6.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    6.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    6.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    6.5
+   ]
+  },
+  "phone-d6559a": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-d918c0": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.5
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.5
+   ]
+  },
+  "phone-e026de": {
+   "today (app: v7, no second look)": [
+    7.0,
+    6.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    6.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    6.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    6.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    6.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    6.5
+   ]
+  },
+  "phone-f07193": {
+   "today (app: v7, no second look)": [
+    7.0,
+    6.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    6.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    6.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    6.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    6.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    6.5
+   ],
+   "what-if HH, label facts": [
+    6.0,
+    6.0
+   ],
+   "what-if HH, (a) alone": [
+    6.0,
+    6.0
+   ]
+  },
+  "phone-d1967f": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    5.0,
+    6.5
+   ],
+   "what-if HH, label facts": [
+    5.0,
+    6.5
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-e438d4": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-f4870b": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-fb0b17": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  },
+  "phone-703a8b": {
+   "today (app: v7, no second look)": [
+    8.5,
+    7.5
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    8.5,
+    7.5
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    8.5,
+    7.5
+   ],
+   "all-agree: F2 long top": [
+    8.5,
+    7.5
+   ],
+   "all-agree: F3 long loose layer": [
+    8.5,
+    7.5
+   ],
+   "all-agree: F10 peek": [
+    8.5,
+    7.5
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    8.5,
+    7.5
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    8.5,
+    7.5
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    8.5,
+    7.5
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    8.5,
+    7.5
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    8.5,
+    7.5
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    8.5,
+    7.5
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    8.5,
+    7.5
+   ],
+   "what-if HH, label facts": [
+    8.5,
+    7.5
+   ],
+   "what-if HH, (a) alone": [
+    8.5,
+    7.5
+   ]
+  },
+  "phone-ebe23f": {
+   "today (app: v7, no second look)": [
+    7.0,
+    7.0
+   ],
+   "v7 + look1 alone (the earlier paper tests)": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1 heavy hem under tailoring": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F2 long top": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F3 long loose layer": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F10 peek": [
+    7.0,
+    7.0
+   ],
+   "all-agree: HB heavy hem blocks rewards": [
+    7.0,
+    7.0
+   ],
+   "all-agree: DRAG rests on the shoe (slides)": [
+    7.0,
+    7.0
+   ],
+   "2of3: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "all-agree: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": [
+    7.0,
+    7.0
+   ],
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, label facts": [
+    7.0,
+    7.0
+   ],
+   "what-if HH, (a) alone": [
+    7.0,
+    7.0
+   ]
+  }
+ },
+ "steady": {
+  "today (app: v7, no second look)": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "v7 + look1 alone (the earlier paper tests)": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "all-agree: F1 heavy hem under tailoring": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "all-agree: F2 long top": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "all-agree: F3 long loose layer": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "all-agree: F10 peek": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    47,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "all-agree: HB heavy hem blocks rewards": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "all-agree: DRAG rests on the shoe (slides)": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "2of3: F1+F2+F3+F10+HB+DRAG": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    46,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "all-agree: F1+F2+F3+F10+HB+DRAG": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    47,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    47,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "label ceiling: F1+F2+F3+F10+HB+DRAG": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    48,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "what-if HH, label facts": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    39,
+    49
+   ],
+   "prop_exact": [
+    46,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      5.5
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      6.5,
+      6.0
+     ],
+     [
+      6.5,
+      6.0
+     ],
+     [
+      7.0,
+      6.0
+     ]
+    ],
+    "phone-7f14a4": [
+     [
+      7.0,
+      6.0
+     ],
+     [
+      6.5,
+      6.0
+     ],
+     [
+      6.5,
+      6.0
+     ]
+    ],
+    "phone-b0f0c8": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      6.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-e026de": [
+     [
+      7.0,
+      6.0
+     ],
+     [
+      6.5,
+      6.0
+     ],
+     [
+      6.5,
+      6.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  },
+  "what-if HH, (a) alone": {
+   "within_0.5": [
+    49,
+    49
+   ],
+   "exact": [
+    37,
+    49
+   ],
+   "prop_exact": [
+    44,
+    49
+   ],
+   "unsteady": {
+    "mirror-m03": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      4.5
+     ],
+     [
+      7.0,
+      6.0
+     ]
+    ],
+    "mirror-m08": [
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      8.0,
+      8.0
+     ]
+    ],
+    "mirror-m09": [
+     [
+      8.0,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ],
+     [
+      7.5,
+      8.0
+     ]
+    ],
+    "oct7-ph2": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ]
+    ],
+    "phone-5a9049": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      6.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-968016": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ],
+    "phone-b0f0c8": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      6.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-d918c0": [
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-e026de": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      6.5,
+      6.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "phone-f07193": [
+     [
+      6.5,
+      7.0
+     ],
+     [
+      6.5,
+      7.0
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s01-before_studio": [
+     [
+      7.5,
+      8.5
+     ],
+     [
+      8.0,
+      8.5
+     ],
+     [
+      7.5,
+      8.5
+     ]
+    ],
+    "stock-s08-before_studio": [
+     [
+      null,
+      null
+     ],
+     [
+      null,
+      null
+     ],
+     [
+      7.0,
+      7.0
+     ]
+    ],
+    "stock-s11-before_street": [
+     [
+      7.0,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ],
+     [
+      7.5,
+      7.0
+     ]
+    ]
+   }
+  }
+ },
+ "judge": {
+  "all": {
+   "today (app: v7, no second look)": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "v7 + look1 alone (the earlier paper tests)": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.31,
+     "mae": 0.55,
+     "within_0.5": 41,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "all-agree: F1 heavy hem under tailoring": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "all-agree: F2 long top": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "all-agree: F3 long loose layer": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "all-agree: F10 peek": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "all-agree: HB heavy hem blocks rewards": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "all-agree: DRAG rests on the shoe (slides)": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "2of3: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "all-agree: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.02,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.63
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.36,
+     "mae": 0.56,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.41
+    }
+   },
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.0,
+     "mae": 0.44,
+     "within_0.5": 50,
+     "off_1.5": 3,
+     "r": 0.6
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.31,
+     "mae": 0.58,
+     "within_0.5": 39,
+     "off_1.5": 9,
+     "r": 0.28
+    }
+   },
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.01,
+     "mae": 0.43,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.62
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.34,
+     "mae": 0.55,
+     "within_0.5": 40,
+     "off_1.5": 8,
+     "r": 0.39
+    }
+   },
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 59,
+     "mean_diff": -0.01,
+     "mae": 0.42,
+     "within_0.5": 51,
+     "off_1.5": 2,
+     "r": 0.65
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.24,
+     "mae": 0.51,
+     "within_0.5": 42,
+     "off_1.5": 7,
+     "r": 0.45
+    }
+   },
+   "what-if HH, label facts": {
+    "score": {
+     "n": 59,
+     "mean_diff": -0.03,
+     "mae": 0.39,
+     "within_0.5": 51,
+     "off_1.5": 1,
+     "r": 0.7
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.07,
+     "mae": 0.49,
+     "within_0.5": 43,
+     "off_1.5": 6,
+     "r": 0.49
+    }
+   },
+   "what-if HH, (a) alone": {
+    "score": {
+     "n": 59,
+     "mean_diff": 0.0,
+     "mae": 0.41,
+     "within_0.5": 51,
+     "off_1.5": 3,
+     "r": 0.64
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 55,
+     "mean_diff": 0.26,
+     "mae": 0.55,
+     "within_0.5": 39,
+     "off_1.5": 8,
+     "r": 0.35
+    }
+   }
+  },
+  "held": {
+   "today (app: v7, no second look)": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "v7 + look1 alone (the earlier paper tests)": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.38,
+     "mae": 0.54,
+     "within_0.5": 19,
+     "off_1.5": 3,
+     "r": 0.41
+    }
+   },
+   "all-agree: F1 heavy hem under tailoring": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "all-agree: F2 long top": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "all-agree: F3 long loose layer": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "all-agree: F10 peek": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "all-agree: HB heavy hem blocks rewards": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "all-agree: DRAG rests on the shoe (slides)": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "2of3: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "all-agree: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "one-yes-no-veto: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "passing readers: hem probe heavy (F1+HB), look rests (DRAG)": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.1,
+     "mae": 0.45,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.42,
+     "mae": 0.54,
+     "within_0.5": 20,
+     "off_1.5": 3,
+     "r": 0.48
+    }
+   },
+   "label ceiling: F1+F2+F3+F10+HB+DRAG": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.09,
+     "mae": 0.43,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.35,
+     "mae": 0.5,
+     "within_0.5": 20,
+     "off_1.5": 2,
+     "r": 0.44
+    }
+   },
+   "what-if HH, label facts": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.05,
+     "mae": 0.4,
+     "within_0.5": 26,
+     "off_1.5": 0,
+     "r": 0.64
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.19,
+     "mae": 0.5,
+     "within_0.5": 20,
+     "off_1.5": 2,
+     "r": 0.41
+    }
+   },
+   "what-if HH, (a) alone": {
+    "score": {
+     "n": 29,
+     "mean_diff": 0.09,
+     "mae": 0.43,
+     "within_0.5": 26,
+     "off_1.5": 1,
+     "r": 0.56
+    },
+    "proportions_vs_panel_proportion": {
+     "n": 26,
+     "mean_diff": 0.33,
+     "mae": 0.48,
+     "within_0.5": 21,
+     "off_1.5": 2,
+     "r": 0.49
+    }
+   }
+  }
+ },
+ "judge_by_group": {
+  "today (app: v7, no second look) \u00b7 his + friends + unknowns": {
+   "n": 20,
+   "mean_diff": 0.72,
+   "mae": 0.88,
+   "within_0.5": 9,
+   "off_1.5": 5,
+   "r": NaN
+  },
+  "today (app: v7, no second look) \u00b7 stock + web": {
+   "n": 35,
+   "mean_diff": 0.16,
+   "mae": 0.39,
+   "within_0.5": 30,
+   "off_1.5": 3,
+   "r": 0.48
+  },
+  "v7 + look1 alone (the earlier paper tests) \u00b7 his + friends + unknowns": {
+   "n": 20,
+   "mean_diff": 0.62,
+   "mae": 0.78,
+   "within_0.5": 12,
+   "off_1.5": 5,
+   "r": 0.1
+  },
+  "v7 + look1 alone (the earlier paper tests) \u00b7 stock + web": {
+   "n": 35,
+   "mean_diff": 0.13,
+   "mae": 0.41,
+   "within_0.5": 29,
+   "off_1.5": 3,
+   "r": 0.44
+  },
+  "label ceiling: F1+F2+F3+F10+HB+DRAG \u00b7 his + friends + unknowns": {
+   "n": 20,
+   "mean_diff": 0.55,
+   "mae": 0.7,
+   "within_0.5": 13,
+   "off_1.5": 4,
+   "r": 0.46
+  },
+  "label ceiling: F1+F2+F3+F10+HB+DRAG \u00b7 stock + web": {
+   "n": 35,
+   "mean_diff": 0.06,
+   "mae": 0.4,
+   "within_0.5": 29,
+   "off_1.5": 3,
+   "r": 0.34
+  },
+  "what-if HH, label facts \u00b7 his + friends + unknowns": {
+   "n": 20,
+   "mean_diff": 0.1,
+   "mae": 0.65,
+   "within_0.5": 14,
+   "off_1.5": 3,
+   "r": 0.25
+  },
+  "what-if HH, label facts \u00b7 stock + web": {
+   "n": 35,
+   "mean_diff": 0.06,
+   "mae": 0.4,
+   "within_0.5": 29,
+   "off_1.5": 3,
+   "r": 0.34
+  },
+  "what-if HH, (a) alone \u00b7 his + friends + unknowns": {
+   "n": 20,
+   "mean_diff": 0.53,
+   "mae": 0.93,
+   "within_0.5": 8,
+   "off_1.5": 6,
+   "r": -0.33
+  },
+  "what-if HH, (a) alone \u00b7 stock + web": {
+   "n": 35,
+   "mean_diff": 0.11,
+   "mae": 0.34,
+   "within_0.5": 31,
+   "off_1.5": 2,
+   "r": 0.53
+  }
+ }
+}
