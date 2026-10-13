@@ -19,7 +19,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import * as Speech from 'expo-speech';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icon, IconButton, KButton, KText, Numeral, cameraScrims, fixed, opacity, size, space } from '@/design-system';
+import { Icon, IconButton, KButton, KText, Numeral, cameraScrims, fixed, opacity, size, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { CheckMode } from '@/features/fitcheck/machine';
@@ -57,6 +57,7 @@ interface Review {
 }
 
 export function CameraScreen() {
+  const { isAccessibilitySize } = useTheme();
   const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string; guide?: string; review?: string; camMode?: string }>();
   // From the morning/evening card: the card's occasion and style (#61).
   const lens = lensFromParams(p);
@@ -366,7 +367,7 @@ export function CameraScreen() {
         ) : (
           <View style={styles.tip} accessibilityLiveRegion="polite">
             {tipView.icon ? <Icon name={tipView.icon} size="small" color={tipView.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
-            <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={2}>
+            <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={isAccessibilitySize ? 0 : 2}>
               {tipView.text}
             </KText>
           </View>
@@ -374,7 +375,7 @@ export function CameraScreen() {
         {mode === 'mirror' && !snap ? (
           <IconButton icon="timer" variant="glass" diameter={44} label={timer ? t('cam.timer.on') : t('cam.timer.off')} onPress={() => setTimer(!timer)} />
         ) : (
-          <IconButton icon={flash ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t('cam.a11y.flash')} onPress={() => setFlash(!flash)} />
+          <IconButton icon={flash ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t(flash ? 'cam.a11y.flashOn' : 'cam.a11y.flashOff')} onPress={() => setFlash(!flash)} />
         )}
       </View>
 
@@ -409,13 +410,16 @@ export function CameraScreen() {
       {/* Bottom controls */}
       <View style={[styles.bottom, { bottom: insets.bottom + 5 }]} onLayout={(e) => setControlsTop(e.nativeEvent.layout.y)}>
         {!snap ? (
-          <View style={styles.modeSwitch} accessibilityRole="tablist" accessibilityLabel={t('cam.mode.propped')}>
+          <View style={styles.modeSwitch} accessibilityRole="tablist" accessibilityLabel={t('cam.a11y.mode')}>
             {(['propped', 'mirror'] as const).map((m) => (
               <Pressable
                 key={m}
                 onPress={() => switchMode(m)}
                 accessibilityRole="tab"
+                accessibilityLabel={t(m === 'propped' ? 'cam.mode.propped' : 'cam.mode.mirror')}
                 accessibilityState={{ selected: mode === m }}
+                // 32 pt pill + the track's padding: the slop brings the target to 44 pt.
+                hitSlop={{ top: 6, bottom: 6 }}
                 style={[styles.modeSeg, mode === m && { backgroundColor: fixed.lightPill }]}
               >
                 <KText variant="subheadline" weight="600" color={mode === m ? fixed.indigo : fixed.modeSwitchLabel}>

@@ -128,6 +128,13 @@ export interface GeminiOptions {
 
 type Attempt = { reading: Reading; usage?: Record<string, number>; model?: string; finishReason?: string } | { fail: FailCode };
 
+/** The minimum a reply must have to be scored: an object with a garments list of objects. */
+export function isReadingShape(x: unknown): x is Reading {
+  if (!x || typeof x !== 'object' || Array.isArray(x)) return false;
+  const g = (x as { garments?: unknown }).garments;
+  return Array.isArray(g) && g.every((item) => !!item && typeof item === 'object' && !Array.isArray(item));
+}
+
 export function createGeminiSource(opts: GeminiOptions): ReadingSource {
   const now = opts.now ?? (() => Date.now());
   let hedgeRequested: (() => void) | null = null;
@@ -179,11 +186,15 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
       }
     }
     if (last?.finishReason && last.finishReason !== 'STOP') return { fail: 'ai' }; // MAX_TOKENS, SAFETY…
+    let parsed: unknown;
     try {
-      return { reading: JSON.parse(text) as Reading, usage: last?.usage, model: last?.modelVersion, finishReason: last?.finishReason };
+      parsed = JSON.parse(text);
     } catch {
       return { fail: 'ai' };
     }
+    // A reply that parses but isn't a reading (no garments list) is "couldn't score this one", never a crash later.
+    if (!isReadingShape(parsed)) return { fail: 'ai' };
+    return { reading: parsed, usage: last?.usage, model: last?.modelVersion, finishReason: last?.finishReason };
   }
 
   return {

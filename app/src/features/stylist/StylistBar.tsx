@@ -48,7 +48,8 @@ export function StylistBar() {
         accessibilityHint={t('composer.a11y.fieldHint')}
         style={styles.field}
       >
-        <KText variant="body" color="ink3" numberOfLines={1} maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
+        {/* ink2, not ink3: the tab bar's glass is clear, and the words sit over photos in the thread. */}
+        <KText variant="body" color="ink2" numberOfLines={1} maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
           {inline ? t('composer.placeholderIdle') : t('composer.placeholder')}
         </KText>
       </Pressable>

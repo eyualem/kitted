@@ -29,7 +29,11 @@ export default function YouScreen() {
             <View key={f.id}>
               {i > 0 ? <RowDivider /> : null}
               <View style={{ paddingVertical: space.rowY, paddingHorizontal: space.rowX, gap: 2 }}>
-                <KText variant="subheadline" weight="600" color={f.source === 'guess' ? 'ink2' : 'ink'} style={f.source === 'guess' ? { fontStyle: 'italic' } : undefined}>
+                <KText
+                  variant="subheadline" weight="600" color={f.source === 'guess' ? 'ink2' : 'ink'} style={f.source === 'guess' ? { fontStyle: 'italic' } : undefined}
+                  // Grey italic means a guess; VoiceOver says so in words.
+                  accessibilityLabel={f.source === 'guess' ? t('you.a11y.guess', { fact: f.value }) : undefined}
+                >
                   {f.value}
                 </KText>
               </View>

@@ -38,4 +38,10 @@ describe('reading session reducer', () => {
     expect(reduce(start, { t: 'end' })).toBe(IDLE);
     expect(reduce(IDLE, { t: 'tick', attempt: 1, which: 'slow' })).toBe(IDLE);
   });
+  it("an earlier attempt's end leaves a newer reading card alone; its own end closes it", () => {
+    const second = reduce(start, { t: 'start', checkId: 'FC-2', mode: 'check', occasion: 'everyday', attempt: 2 });
+    expect(reduce(second, { t: 'end', attempt: 1 })).toBe(second);
+    expect(reduce(second, { t: 'end', attempt: 2 })).toBe(IDLE);
+    expect(reduce(second, { t: 'end' })).toBe(IDLE);
+  });
 });

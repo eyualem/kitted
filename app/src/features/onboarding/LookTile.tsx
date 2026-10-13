@@ -48,18 +48,25 @@ export interface LookTileProps {
 }
 
 export function LookTile({ look, width, selected, shake, onPress }: LookTileProps) {
-  const { colors } = useTheme();
+  const { colors, a11y } = useTheme();
   const [x] = useState(() => new Animated.Value(0));
+  const [fade] = useState(() => new Animated.Value(1));
+  const reduceMotion = a11y.reduceMotion;
   useEffect(() => {
     if (!shake) return;
+    // Reduce Motion: a quick dim and back instead of the side-to-side shake.
+    if (reduceMotion) {
+      Animated.sequence([0.55, 1].map((v) => Animated.timing(fade, { toValue: v, duration: 120, useNativeDriver: true }))).start();
+      return;
+    }
     Animated.sequence([6, -6, 4, -4, 0].map((v) => Animated.timing(x, { toValue: v, duration: 50, useNativeDriver: true }))).start();
-  }, [shake, x]);
+  }, [shake, x, fade, reduceMotion]);
   const name = styleLabel(look.style);
   const line = lookLine(look);
   const inner = width - 2 * TILE_PAD;
   const outfitW = Math.min(90, (inner - 12) / 2);
   return (
-    <Animated.View style={{ transform: [{ translateX: x }] }}>
+    <Animated.View style={{ transform: [{ translateX: x }], opacity: fade }}>
       <Pressable
         onPress={onPress}
         accessibilityRole="button"

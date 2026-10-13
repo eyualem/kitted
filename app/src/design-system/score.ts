@@ -24,6 +24,14 @@ export function spokenScore(x: number): string {
   return Number.isInteger(r) ? String(r) : r.toFixed(1);
 }
 
+/** VoiceOver for a score with its word, or a re-check's change: "Score was 7.5, now 8 out of 10, Sharp." (never "7.5 right arrow 8.0"). */
+export function spokenScoreLine(now: number, was?: number | null): string {
+  const word = scoreWordLabel(now);
+  return was === undefined || was === null
+    ? t('a11y.score', { score: spokenScore(now), word })
+    : t('a11y.scoreChanged', { was: spokenScore(was), now: spokenScore(now), word });
+}
+
 /** The word comes from the ROUNDED score. */
 export function scoreWord(x: number): ScoreWord {
   const r = roundedToHalf(x);

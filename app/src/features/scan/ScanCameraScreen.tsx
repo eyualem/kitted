@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icon, IconButton, KButton, KText, fixed, opacity, size, space } from '@/design-system';
+import { Icon, IconButton, KButton, KText, fixed, opacity, size, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { t } from '@/i18n/en';
 import {
@@ -40,6 +40,7 @@ type Stage =
 
 export function ScanCameraScreen() {
   const p = useLocalSearchParams<{ guide?: string; review?: string; saved?: string; library?: string }>();
+  const { isAccessibilitySize } = useTheme();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   const sim = !KittedCameraView;
@@ -246,12 +247,12 @@ export function ScanCameraScreen() {
         ) : (
           <View style={styles.tip} accessibilityLiveRegion="polite">
             {tipView.icon ? <Icon name={tipView.icon} size="small" color={tipView.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
-            <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={2}>
+            <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={isAccessibilitySize ? 0 : 2}>
               {tipView.text}
             </KText>
           </View>
         )}
-        <IconButton icon={torch ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t('scan.a11y.torch')} onPress={() => setTorch(!torch)} />
+        <IconButton icon={torch ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t(torch ? 'scan.a11y.torchOn' : 'scan.a11y.torchOff')} onPress={() => setTorch(!torch)} />
       </View>
 
       {offerFlash && !torch && live ? (

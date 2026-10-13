@@ -7,7 +7,7 @@
 // On iOS it opens from the tab bar's "Ask your stylist…" accessory (StylistBar) and tells the
 // screen when it's done (empty, unfocused, not listening), so the accessory shows again.
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { AccessibilityInfo, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
@@ -72,14 +72,20 @@ export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle
     stopping.current = true;
     const heard = await mic.stop();
     stopping.current = false;
-    if (heard) setText((cur) => (cur ? `${cur} ${heard}` : heard));
+    if (heard) {
+      setText((cur) => (cur ? `${cur} ${heard}` : heard));
+      // iOS ignores live regions: say the final words once (never each partial while he talks).
+      AccessibilityInfo.announceForAccessibility?.(t('mic.a11yHeard', { text: heard }));
+    }
     else if (!focused && !text) onIdle?.();
   };
 
+  // A light wash of the surface color over the clear glass, so the words keep their contrast over photos in the thread.
+  const glassTint = /^#[0-9a-f]{6}$/i.test(colors.surface) ? `${colors.surface}59` : undefined;
   const shell = { borderRadius: H / 2, borderCurve: 'continuous' as const, borderWidth: 1, borderColor: colors.line };
   const background =
     hasGlass() && !a11y.reduceTransparency ? (
-      <GlassView glassEffectStyle="regular" style={[StyleSheet.absoluteFill, { borderRadius: H / 2 }]} />
+      <GlassView glassEffectStyle="regular" tintColor={glassTint} style={[StyleSheet.absoluteFill, { borderRadius: H / 2 }]} />
     ) : (
       <View style={[StyleSheet.absoluteFill, { borderRadius: H / 2, backgroundColor: scheme === 'dark' ? colors.surface : colors.surface }]} />
     );
@@ -101,7 +107,7 @@ export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle
             <Circle onPress={() => void mic.cancel()} label={t('mic.a11yCancel')} color={colors.surface2}>
               <Icon name="close" size={18} color="ink" weight="semibold" />
             </Circle>
-            <View style={styles.voice} accessibilityLiveRegion="polite">
+            <View style={styles.voice}>
               <Waveform level={mic.level} color={colors.ink} />
               <KText variant="body" color={mic.text ? 'ink' : 'ink3'} numberOfLines={1} style={{ flex: 1 }}>
                 {mic.text ? (mic.text.length > 34 ? `…${mic.text.slice(-33)}` : mic.text) : t('mic.listening')}
@@ -121,7 +127,7 @@ export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle
               onBlur={() => setFocused(false)}
               autoFocus={autoFocus}
               placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
-              placeholderTextColor={colors.ink3}
+              placeholderTextColor={colors.ink2}
               accessibilityLabel={t('composer.a11y.field')}
               multiline
               numberOfLines={1}

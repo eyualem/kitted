@@ -16,6 +16,7 @@ import { fitCheck, useFitCheckSession } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { isRecheckOpen } from '@/services/quota';
+import { retryCheck } from '@/features/camera/startCheck';
 import { sessionClock } from '@/state/session';
 import { setStylistAction } from '@/router/stylistAction';
 import { pickOccasion } from '../occasionPicker';
@@ -32,10 +33,13 @@ import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
 
 /** The share card (S12) isn't built yet: its button opened a placeholder. One switch brings the share actions back. */
 export const SHARE_CARD_BUILT = false;
+/** "Save this look" at 9+ has nowhere to save to yet (Lookbook saves come later): hidden until it does something. */
+export const SAVE_LOOK_BUILT = false;
 
 function useCheck(checkId: string) {
   return useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -100,7 +104,11 @@ export function FitCheckCard({ checkId }: { checkId: string }) {
   // Read, waiting for the one quick tap (02 "S5q"). From the row, so it survives the app closing.
   if (row.status === 'asking' && row.details.tap) return <TapCard row={row} />;
   if (row.status === 'failed') return <FailureCard row={row} />;
-  if (row.status === 'notClothed' || row.status === 'unreadable') return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} />;
+  if (row.status === 'notClothed' || row.status === 'unreadable') {
+    // Not a dead end: the camera is one tap away (for VoiceOver too, as the card's action).
+    const retake = () => router.push({ pathname: '/camera', params: { occasion: row.occasion } });
+    return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} action={{ title: t('recheck.samePhoto.button'), onPress: retake }} />;
+  }
   return <ScoredCard row={row} wxTip={wxTip} asked={asked} />;
 }
 
@@ -125,11 +133,16 @@ function useTapGarment(row: FitCheckRow | null | undefined): AskedGarment | null
   ) ?? null;
 }
 
-export function StatusCard({ text }: { text: string }) {
+export function StatusCard({ text, action }: { text: string; action?: { title: string; onPress: () => void } }) {
   return (
-    <KCard accessibilityLabel={text}>
-      <KCardSection>
+    <KCard
+      accessibilityLabel={text}
+      accessibilityActions={action ? [{ name: 'act', label: action.title }] : undefined}
+      onAccessibilityAction={action ? () => action.onPress() : undefined}
+    >
+      <KCardSection gap={action ? 6 : undefined}>
         <KText role="cardSummary">{text}</KText>
+        {action ? <KButton title={action.title} icon="camera" size="regular" kind="secondary" onPress={action.onPress} /> : null}
       </KCardSection>
     </KCard>
   );
@@ -143,7 +156,7 @@ function FailureCard({ row }: { row: FitCheckRow }) {
     <KCard accessibilityLabel={t(key)}>
       <KCardSection gap={6}>
         <KText role="cardSummary">{t(key)}</KText>
-        {code !== 'unknownPhoto' && code !== 'replaced' ? <KButton title={t('common.tryAgain')} size="regular" kind="secondary" onPress={() => void fitCheck.retry(row.id)} /> : null}
+        {code !== 'unknownPhoto' && code !== 'replaced' ? <KButton title={t('common.tryAgain')} size="regular" kind="secondary" onPress={() => void retryCheck(row.id)} /> : null}
       </KCardSection>
     </KCard>
   );
@@ -203,6 +216,15 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const askRunnerUp = firstAsk?.runnerUpId ? closet.find((c) => c.id === firstAsk.runnerUpId) ?? null : null;
   const moreAsks = firstAsk ? openAsks(cs).filter((a) => a.obsId !== firstAsk.obsId).length : 0;
   const finishing = partial && row.snapState === 'pending' && row.details.finish !== undefined;
+  const finish = finishing ? finishInfo(row, closet) : null;
+  // The closet question, for VoiceOver (the card is one element): the question and reason in the label, the answers as actions.
+  const askItem = askCandidate ? lowerFirst(askCandidate.name) : '';
+  const askLine = firstAsk && askPhoto && askCandidate
+    ? firstAsk.answer
+      ? firstAsk.answer === 'new' ? t('item.dup.saidNew') : t('item.dup.saidSame', { item: firstAsk.answer === 'runnerUp' && askRunnerUp ? lowerFirst(askRunnerUp.name) : askItem })
+      : `${askQuestionText(askItem, askCandidate.slot)} ${askReasonText(firstAsk, isPluralPiece(askCandidate.slot))}`
+    : '';
+  const answerAsk = (a: 'same' | 'new' | 'runnerUp') => { if (firstAsk) void fitCheck.answerDuplicate(row.id, firstAsk.obsId, a); };
   const scoreText = displayScore(score);
   // The Going-for move is already a fix on the card: say so instead of drawing it twice.
   const moveFix = advice?.move ? fixes.findIndex((f) => f.copy === advice.move!.copy) : -1;
@@ -217,6 +239,17 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
     ...(gf ? [{ name: 'look', label: t('card.a11y.changeLook') }] : []),
     ...(changeAnswer ? [{ name: 'changeAnswer', label: t('tap.a11y.change') }] : []),
+    ...(askLine ? [
+      { name: 'askSame', label: t('item.dup.yes') },
+      { name: 'askNew', label: t('item.dup.no') },
+      ...(askRunnerUp ? [{ name: 'askRunnerUp', label: t('item.dup.runnerUp', { item: lowerFirst(askRunnerUp.name) }) }] : []),
+      ...(moreAsks > 0 ? [{ name: 'moreAsks', label: moreAsks === 1 ? t('closet.q.more1') : t('closet.q.more', { n: moreAsks }) }] : []),
+    ] : []),
+    ...(finish ? [
+      ...(finish.remembered ? [{ name: 'finishSame', label: finish.remembered.label }] : finish.hasShoes ? [{ name: 'finishPick', label: t('partial.a11y.pick') }] : []),
+      { name: 'finishSnap', label: t('partial.a11y.snap') },
+      { name: 'finishSkip', label: t('partial.a11y.skip') },
+    ] : []),
   ];
   const go = {
     why: () => router.push(`/sheets/why/${row.id}`),
@@ -230,6 +263,14 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     occasion: () => pickOccasion(row.occasion, (o) => void confirmLens(row, { occasion: o })),
     look: () => pickLook(picks, gf?.style ?? null, (st) => void changeLook(st)),
     changeAnswer: () => changeAnswer?.(),
+    askSame: () => answerAsk('same'),
+    askNew: () => answerAsk('new'),
+    askRunnerUp: () => answerAsk('runnerUp'),
+    moreAsks: () => router.navigate('/closet'),
+    finishSame: () => { if (finish?.remembered) void fitCheck.pickShoes(row.id, finish.remembered.item.id); },
+    finishPick: () => router.push(`/sheets/pick-shoes/${row.id}`),
+    finishSnap: () => router.push(`/camera?mode=shoeSnap&parent=${row.id}`),
+    finishSkip: () => void fitCheck.skipFinish(row.id),
   };
   const label = [t('card.a11y.fitCheck', {
     occasion: occasionLabel(row.occasion),
@@ -239,7 +280,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     summary: row.explanation ?? '',
     fix: top?.copy ?? t('card.noFixes'),
     tag: top?.tag ?? '',
-  }), skippedAs ? t('tap.skipped', { choice: skippedAs }) : '', gf ? lineA11y(gf, occasionLabel(row.occasion)) : '', adviceA11y(advice, moveIsFix)].filter(Boolean).join(' ');
+  }), skippedAs ? t('tap.skipped', { choice: skippedAs }) : '', gf ? lineA11y(gf, occasionLabel(row.occasion)) : '', adviceA11y(advice, moveIsFix),
+    askLine, finish ? `${t('partial.finish.title')}. ${finish.second}` : ''].filter(Boolean).join(' ');
 
   // Just answered the one quick tap here: say the score, then put VoiceOver on the result.
   const focusRef = useRef<View>(null);
@@ -322,18 +364,17 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
           {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={go.review} /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
-              <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact
-                onAnswer={(a) => void fitCheck.answerDuplicate(row.id, firstAsk.obsId, a)} />
+              <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact onAnswer={answerAsk} />
               {moreAsks > 0 ? (
                 <TextLink title={moreAsks === 1 ? t('closet.q.more1') : t('closet.q.more', { n: moreAsks })} onPress={() => router.navigate('/closet')} compact />
               ) : null}
             </View>
           ) : null}
-          {finishing ? <FinishRow row={row} closet={closet} /> : null}
+          {finish ? <FinishRow row={row} info={finish} /> : null}
           {/* "Re-check after fixing" only when there's a fix to make: under "No quick fixes" it had nothing to check. */}
-          {(dialed && score >= 9) || (recheckOpen && !dialed) || SHARE_CARD_BUILT ? (
+          {(SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) || SHARE_CARD_BUILT ? (
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
-              {dialed && score >= 9 ? (
+              {SAVE_LOOK_BUILT && dialed && score >= 9 ? (
                 <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
               ) : recheckOpen && !dialed ? (
                 <KButton title={t('card.recheck')} icon="recheck" size="regular" style={{ flex: 1 }} onPress={() => void go.recheck()} />
@@ -410,17 +451,31 @@ function SkippedLine({ choice, onPress }: { choice: string; onPress: () => void 
   );
 }
 
-/** "Finish the check · Same shoes as Monday?" + the remembered pair, the camera, Skip (02 D11). */
-function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] }) {
-  const { colors, isAccessibilitySize } = useTheme();
+const lowerFirst = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
+
+interface FinishInfo {
+  remembered: { item: ClosetItemRow; weekday: string; label: string } | null;
+  hasShoes: boolean;
+  second: string;
+}
+
+/** What the partial check's finish row offers: shared by the row and the card's VoiceOver actions. */
+function finishInfo(row: FitCheckRow, closet: ClosetItemRow[]): FinishInfo {
   const f = row.details.finish;
   const item = f?.suggestedItemId ? closet.find((c) => c.id === f.suggestedItemId) : undefined;
   const weekday = f?.weekday !== null && f?.weekday !== undefined ? weekdayName(f.weekday) : null;
-  const remembered = item && weekday ? { item, weekday } : null;
+  const remembered = item && weekday ? { item, weekday, label: t('partial.a11y.useSame', { shoes: item.name.toLowerCase(), weekday }) } : null;
   const hasShoes = closet.some((c) => c.slot === 'shoes' && !c.isDeleted);
   const second = remembered
     ? t('partial.finish.same', { weekday: remembered.weekday })
     : hasShoes ? t('partial.finish.snapOrPick') : t('partial.finish.snapOnly');
+  return { remembered, hasShoes, second };
+}
+
+/** "Finish the check · Same shoes as Monday?" + the remembered pair, the camera, Skip (02 D11). */
+function FinishRow({ row, info }: { row: FitCheckRow; info: FinishInfo }) {
+  const { colors, isAccessibilitySize } = useTheme();
+  const { remembered, hasShoes, second } = info;
   return (
     // AX sizes: the text on its own line, the controls in a row under it (p2-design-spec 11 §5).
     <View style={isAccessibilitySize ? { gap: 8 } : { flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -434,7 +489,7 @@ function FinishRow({ row, closet }: { row: FitCheckRow; closet: ClosetItemRow[] 
         {remembered ? (
           <FinishTile
             filled
-            label={t('partial.a11y.useSame', { shoes: remembered.item.name.toLowerCase(), weekday: remembered.weekday })}
+            label={remembered.label}
             onPress={() => void fitCheck.pickShoes(row.id, remembered.item.id)}
           >
             <PieceArt item={remembered.item} size={40} />

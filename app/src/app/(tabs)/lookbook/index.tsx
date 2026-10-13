@@ -3,7 +3,7 @@
 // empty state. Tapping a look opens its photo. No dev placeholder text in a tab (DECISIONS-LOG #56).
 import { ActionSheetIOS, Pressable, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, useTheme } from '@/design-system';
+import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, spokenScoreLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { FitCheckRow } from '@/data/types';
@@ -55,7 +55,7 @@ export default function LookbookScreen() {
 }
 
 function LookRow({ look: { check, latest } }: { look: Look }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize: ax } = useTheme();
   const photo = shownPhoto(check.demoPhotoId, check.photoFile, undefined);
   const score = latest.score ?? 0;
   const rechecked = latest !== check && check.score !== null;
@@ -66,10 +66,11 @@ function LookRow({ look: { check, latest } }: { look: Look }) {
       onPress={() => router.push(`/photo/${check.id}`)}
       onLongPress={() => void lookMenu(check.id, title)}
       accessibilityRole="button"
-      accessibilityLabel={`${title}. ${scoreText}, ${scoreWordLabel(score)}.`}
+      accessibilityLabel={`${title}. ${spokenScoreLine(score, rechecked ? check.score : undefined)}`}
       accessibilityActions={[{ name: 'remove', label: t('lookbook.remove.action') }]}
       onAccessibilityAction={(e) => e.nativeEvent.actionName === 'remove' && void lookMenu(check.id, title)}
-      style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingVertical: space.rowY, paddingHorizontal: space.rowX, opacity: pressed ? opacity.pressed : 1 })}
+      // AX sizes: photo, title and score stack, so the title isn't squeezed to a word per line.
+      style={({ pressed }) => ({ flexDirection: ax ? 'column' : 'row', alignItems: ax ? 'flex-start' : 'center', gap: space.m, paddingVertical: space.rowY, paddingHorizontal: space.rowX, opacity: pressed ? opacity.pressed : 1 })}
     >
       {photo ? (
         <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={50} height={63} borderRadii={{ tl: radius.thumb, tr: radius.thumb, br: radius.thumb, bl: radius.thumb }} />
@@ -78,8 +79,8 @@ function LookRow({ look: { check, latest } }: { look: Look }) {
           <Icon name="photo" color="ink3" size="small" />
         </View>
       )}
-      <View style={{ flex: 1, gap: 2 }}>
-        <KText variant="subheadline" weight="600" numberOfLines={2}>
+      <View style={ax ? { gap: 2, alignSelf: 'stretch' } : { flex: 1, gap: 2 }}>
+        <KText variant="subheadline" weight="600" numberOfLines={ax ? 0 : 2}>
           {title}
         </KText>
         <KText variant="footnote" color="ink2">

@@ -3,7 +3,7 @@
 // the profile (onboarding.looks, onboarding.otherStyle).
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Keyboard, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
+import { AccessibilityInfo, Keyboard, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { KButton, KText, StylistMessage, TextLink, space, useTheme } from '@/design-system';
@@ -58,6 +58,8 @@ export function PickLooksScreen() {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       setShake((s) => ({ ...s, [style]: (s[style] ?? 0) + 1 }));
       setMaxNote(true);
+      // iOS ignores live regions and alert roles on a view that just appeared: say it.
+      AccessibilityInfo.announceForAccessibility?.(t('onb.looks.max'));
       if (timer.current) clearTimeout(timer.current);
       timer.current = setTimeout(() => setMaxNote(false), 2000);
       return;
@@ -124,7 +126,7 @@ export function PickLooksScreen() {
       <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l) }]}>
         {/* The grid runs past the screen, so the 4th-tap note sits by the button where he can see it. */}
         {maxNote ? (
-          <KText variant="footnote" color="ink2" accessibilityRole="alert" style={styles.center}>
+          <KText variant="footnote" color="ink2" style={styles.center}>
             {t('onb.looks.max')}
           </KText>
         ) : null}

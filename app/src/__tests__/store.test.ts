@@ -1,7 +1,7 @@
 import { onChange } from '@/data/changes';
 import { createMemoryStore } from '@/data/memoryStore';
 import { MIGRATIONS } from '@/data/migrations';
-import { SPECS, colName, decode, encode, type TableName } from '@/data/tables';
+import { SPECS, colName, decode, decodeRowSafely, encode, type TableName } from '@/data/tables';
 import type { ChatMessage } from '@/data/types';
 
 const msg = (id: string, createdAt: number): ChatMessage => ({
@@ -30,6 +30,16 @@ describe('table specs vs migrations', () => {
     expect(decode('bool', encode('bool', true))).toBe(true);
     expect(decode('json', encode('json', { a: [1] }))).toEqual({ a: [1] });
     expect(encode('text', null)).toBeNull();
+  });
+  it('a damaged JSON column skips that row (logged once), never the whole list', () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const fromRow = (r: Record<string, unknown>) => ({ id: String(r.id), chips: decode('json', r.chips) });
+    const rows = [{ id: 'a', chips: '[]' }, { id: 'b', chips: '{oops' }, { id: 'c', chips: '[1]' }];
+    const decoded = rows.map((r) => decodeRowSafely('chat_messages', r, fromRow, 'id')).filter((r) => r !== null);
+    expect(decoded).toEqual([{ id: 'a', chips: [] }, { id: 'c', chips: [1] }]);
+    expect(decodeRowSafely('chat_messages', rows[1]!, fromRow, 'id')).toBeNull();
+    expect(warn).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
   });
 });
 

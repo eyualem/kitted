@@ -50,6 +50,23 @@ export function decode(t: ColType, v: unknown): unknown {
   }
 }
 
+const loggedBadRows = new Set<string>();
+
+/** One stored row to its object, or null when it can't be decoded (a damaged JSON column): that row is skipped and
+ *  logged once, so one bad record never blanks a whole list or tab. */
+export function decodeRowSafely<T>(table: string, raw: Record<string, unknown>, fromRow: (r: Record<string, unknown>) => T, keyCol: string): T | null {
+  try {
+    return fromRow(raw);
+  } catch (e: unknown) {
+    const id = `${table}:${String(raw[keyCol])}`;
+    if (!loggedBadRows.has(id)) {
+      loggedBadRows.add(id);
+      console.warn(`[store] skipped a damaged row ${id}`, e);
+    }
+    return null;
+  }
+}
+
 /** The generic table both stores implement. Lists are small (tens to hundreds of rows). */
 export interface Table<T> {
   get(key: string): Promise<T | null>;

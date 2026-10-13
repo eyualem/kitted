@@ -2,7 +2,7 @@
 // stream parses into pills + the reading, the hedge wins when the first call stalls, and
 // failures never count.
 import lockedSchema from '../../../extraction-test/schema.json';
-import { buildRequest, completedGarments, createGeminiSource, parseSse, type GeminiOptions } from '@/services/readingSource/gemini';
+import { buildRequest, completedGarments, createGeminiSource, isReadingShape, parseSse, type GeminiOptions } from '@/services/readingSource/gemini';
 import { demoReadingById } from '@/services/readingSource/demoReadings';
 import type { ReadingEvent } from '@/services/readingSource/types';
 
@@ -130,5 +130,16 @@ describe('the source', () => {
     expect(await run(() => ({ throws: true }))).toEqual([{ type: 'failed', code: 'offline', counted: false }]);
     expect(await run(() => ({ events: sse(answer.slice(0, 200), 2, 'MAX_TOKENS') }))).toEqual([{ type: 'failed', code: 'ai', counted: false }]);
     expect(await run(() => ({}), { ...image, uploadBase64: undefined } as never)).toEqual([{ type: 'failed', code: 'unknownPhoto', counted: false }]);
+  });
+
+  it('a reply that parses but has no garments list → ai (never a reading)', async () => {
+    const run = async (text: string) =>
+      (await collect(createGeminiSource({ apiKey: 'k', fetch: fakeFetch(() => ({ events: sse(text, 2) })).f }).read(image, 'full')));
+    for (const text of ['{}', '[]', 'null', '{"garments": "a tee"}', '{"garments": [1, 2]}']) {
+      const events = await run(text);
+      expect(events.filter((e) => e.type === 'failed')).toEqual([{ type: 'failed', code: 'ai', counted: false }]);
+      expect(events.some((e) => e.type === 'reading')).toBe(false);
+    }
+    expect(isReadingShape(JSON.parse(answer))).toBe(true);
   });
 });

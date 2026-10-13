@@ -641,6 +641,15 @@ const addedInBuild = {
   'gf.adv.updated': 'Tips updated for {style}.',
   'gf.adv.updatedNone': 'Tips updated.',
   'card.a11y.changeLook': "Change what you're going for",
+  // Accessibility pass (Oct 12): VoiceOver-only lines.
+  'a11y.scoreChanged': 'Score was {was}, now {now} out of 10, {word}.',
+  'cam.a11y.flashOn': 'Flash on',
+  'cam.a11y.flashOff': 'Flash off',
+  'cam.a11y.mode': 'Camera mode',
+  'scan.a11y.torchOn': 'Flashlight on',
+  'scan.a11y.torchOff': 'Flashlight off',
+  'mic.a11yHeard': 'Heard: {text}',
+  'you.a11y.guess': '{fact}. My guess, not asked yet.',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

@@ -162,12 +162,14 @@ export interface CheckDetails {
   finish?: { suggestedItemId: string | null; weekday: number | null } | null;
   /** Why the card failed (S19); 'replaced' = a newer photo came in while it was asking. */
   failCode?: string;
+  /** "Try again" on a check that failed on an earlier day: the day whose free check its score uses (else its dayKey). */
+  chargeDay?: string;
   /** The one quick tap, when one was asked. */
   tap?: TapState;
   /** The look the outfit reads as (core styleLabel), on every re-score; null = none. Pre-v4 rows: absent. */
   readsAs?: StyleKey | null;
   /** The card's tip line under the fixes: "Next level" (default) or the parts engine's "Smaller step" (#209). */
-  tipLead?: 'nextLevel' | 'smallerStep';
+  tipLead?: 'nextLevel' | 'smallerStep' | 'tip';
   /** Parts-scored checks only (rubricVersion "parts-…", #209): what the Why sheet shows. Older checks: absent. */
   parts?: StoredParts;
   /** "Going for" (#215): the look he's going for on this check, asked during the wait. Absent on older checks. */

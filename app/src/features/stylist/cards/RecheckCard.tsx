@@ -30,7 +30,12 @@ export function RecheckCard({ checkId }: { checkId: string }) {
   // The same photo again (#219): nothing was re-read or counted; say so and ask for a new photo after the fix.
   if (rc.samePhoto) {
     return (
-      <KCard accessibilityLabel={t('card.a11y.recheckSame', { occasion: occasionWord, now: spokenScore(now), word: scoreWordLabel(now) })}>
+      <KCard
+        accessibilityLabel={t('card.a11y.recheckSame', { occasion: occasionWord, now: spokenScore(now), word: scoreWordLabel(now) })}
+        // The card is one VoiceOver element: its button is an action, or VoiceOver can't reach it.
+        accessibilityActions={[{ name: 'newPhoto', label: t('recheck.samePhoto.button') }]}
+        onAccessibilityAction={() => router.push(`/camera?mode=recheck&parent=${row.parentId}`)}
+      >
         <KCardSection gap={12}>
           <TagLine left={t('card.tag.recheck')} right={occasionWord} />
           <ScoreBlock score={now} />
@@ -51,14 +56,26 @@ export function RecheckCard({ checkId }: { checkId: string }) {
   const outcome = { after: now, doneFixes: rc.doneFixes.map((d) => ({ ...(parent?.row.fixes.find((f) => f.copy === d.copy) ?? { target: '' }), earned: d.earned })) };
   const summary = recheckSummary(outcome as never);
   const problem = parent?.reading ? notSeenProblem(parent.reading, parent.row.fixes) : '';
+  const iDidTitle = t('recheck.iDid', { fixPast: t(parent?.row.fixes.some((f) => f.edits.some((e) => e.op === 'add_held')) ? 'recheck.fixPast.held' : 'recheck.fixPast.generic') });
+  const tryAnother = () => router.push(`/camera?mode=recheck&parent=${row.parentId}`);
+  // One VoiceOver element: every button on it is also an action (the "not seen" card has its own two).
+  const actions = notSeen
+    ? [{ name: 'iDid', label: iDidTitle }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
+    : [...(SHARE_CARD_BUILT ? [{ name: 'share', label: t('recheck.share') }] : []), { name: 'tell', label: t('recheck.tellMe') }];
+  const go = {
+    iDid: () => void fitCheck.confirmFixes(row.id),
+    tryAnother,
+    share: () => router.push(`/share/${row.id}`),
+    tell: () => router.push(`/sheets/tell-me/${row.id}`),
+  };
   const label = notSeen
     ? `${t('card.tag.recheck')}, ${occasion}. ${t('recheck.notSeen', { problem })}`
     : t('card.a11y.recheck', { occasion, was: spokenScore(rc.parentScore), now: spokenScore(now), delta: rc.delta.toFixed(1), word: scoreWordLabel(now), fix: done?.copy ?? '' });
   return (
     <KCard
       accessibilityLabel={label}
-      accessibilityActions={[...(SHARE_CARD_BUILT ? [{ name: 'share', label: t('recheck.share') }] : []), { name: 'tell', label: t('recheck.tellMe') }]}
-      onAccessibilityAction={(e) => (e.nativeEvent.actionName === 'share' ? router.push(`/share/${row.id}`) : router.push(`/sheets/tell-me/${row.id}`))}
+      accessibilityActions={actions}
+      onAccessibilityAction={(e) => go[e.nativeEvent.actionName as keyof typeof go]?.()}
     >
       <KCardSection gap={12}>
         <TagLine left={t('card.tag.recheck')} right={occasion} />
@@ -94,13 +111,8 @@ export function RecheckCard({ checkId }: { checkId: string }) {
       <KCardSection gap={4} style={{ paddingTop: 4 }}>
         {notSeen ? (
           <View style={{ gap: 8 }}>
-            <KButton
-              title={t('recheck.iDid', { fixPast: t(parent?.row.fixes.some((f) => f.edits.some((e) => e.op === 'add_held')) ? 'recheck.fixPast.held' : 'recheck.fixPast.generic') })}
-              size="regular"
-              fullWidth
-              onPress={() => void fitCheck.confirmFixes(row.id)}
-            />
-            <KButton title={t('recheck.tryAnother')} size="regular" kind="secondary" fullWidth onPress={() => router.push(`/camera?mode=recheck&parent=${row.parentId}`)} />
+            <KButton title={iDidTitle} size="regular" fullWidth onPress={go.iDid} />
+            <KButton title={t('recheck.tryAnother')} size="regular" kind="secondary" fullWidth onPress={tryAnother} />
           </View>
         ) : (
           <>

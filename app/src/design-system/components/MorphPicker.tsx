@@ -61,7 +61,10 @@ interface Rect {
 export function MorphPicker<T extends string>({ label, value, sections, onPick, accessibilityLabel, plain: mono, inline: inlineProp, prefix }: MorphPickerProps<T>) {
   const inline = inlineProp || prefix !== undefined;
   const plain = mono || inline;
-  const { colors, scheme, a11y } = useTheme();
+  const { colors, scheme, a11y, isAccessibilitySize: ax } = useTheme();
+  // At accessibility sizes labels wrap instead of cutting off, so rows grow: plan the panel for taller rows (it scrolls).
+  const rowH = ax ? ROW * 2 : ROW;
+  const lines = ax ? 0 : 1;
   const win = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const anchor = useRef<View>(null);
@@ -69,7 +72,7 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
   const p = useSharedValue(0);
 
   // The panel: as wide as the pill or MIN_W, kept on screen; it grows down, or up if there's no room.
-  const contentH = PAD * 2 + sections.reduce((a, s) => a + (s.title ? SECTION : 0) + s.options.length * ROW, 0);
+  const contentH = PAD * 2 + sections.reduce((a, s) => a + (s.title ? (ax ? SECTION * 2 : SECTION) : 0) + s.options.length * rowH, 0);
   const to: Rect | null = from
     ? (() => {
         const w = Math.max(from.w, MIN_W);
@@ -85,7 +88,8 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
   const open = () => {
     anchor.current?.measureInWindow((x, y, w, h) => {
       // Plain text grows a row around itself (8 pt each side, 36 tall) so the label stays put.
-      setFrom(plain ? { x: x - PLAIN_PAD, y: y - (PLAIN_ROW - h) / 2, w: w + PLAIN_PAD * 2, h: PLAIN_ROW } : { x, y, w, h });
+      const ph = Math.max(PLAIN_ROW, h + 8); // a wrapped label (accessibility sizes) is taller than the row
+      setFrom(plain ? { x: x - PLAIN_PAD, y: y - (ph - h) / 2, w: w + PLAIN_PAD * 2, h: ph } : { x, y, w, h });
       p.set(0);
       p.set(withTiming(1, { duration: a11y.reduceMotion ? 0 : MS_OPEN, easing: Easing.out(Easing.cubic) }));
     });
@@ -114,24 +118,24 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
   const scrim = useAnimatedStyle(() => ({ opacity: interpolate(p.value, [0, 1], [0, 1]) }));
 
   const top = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: plain ? 3 : 5, height: from?.h ?? 32, paddingHorizontal: plain ? PLAIN_PAD - 1 : 11 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: plain ? 3 : 5, minHeight: from?.h ?? 32, paddingHorizontal: plain ? PLAIN_PAD - 1 : 11 }}>
       {prefix !== undefined ? (
-        <KText variant="callout" color="ink2" numberOfLines={1}>
+        <KText variant="callout" color="ink2" numberOfLines={lines} style={{ flexShrink: 1 }}>
           {`${prefix} `}
           <KText variant="callout" weight="600" color="ink">
             {label}
           </KText>
         </KText>
       ) : inline ? (
-        <KText variant="subheadline" weight="500" color="ink" numberOfLines={1}>
+        <KText variant="subheadline" weight="500" color="ink" numberOfLines={lines} style={{ flexShrink: 1 }}>
           {label}
         </KText>
       ) : plain ? (
-        <KText variant="subheadline" weight="500" color="ink" numberOfLines={1}>
+        <KText variant="subheadline" weight="500" color="ink" numberOfLines={lines} style={{ flexShrink: 1 }}>
           {label}
         </KText>
       ) : (
-        <KText variant="subheadline" weight="600" numberOfLines={1}>
+        <KText variant="subheadline" weight="600" numberOfLines={lines} style={{ flexShrink: 1 }}>
           {label}
         </KText>
       )}
@@ -148,7 +152,7 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
         accessibilityLabel={accessibilityLabel}
         accessibilityState={{ expanded: !!from }}
         hitSlop={plain ? { top: 10, bottom: 10, left: 6, right: 6 } : { top: 6, bottom: 6 }}
-        style={({ pressed }) => ({ opacity: from ? 0 : pressed ? opacity.pressed : 1 })}
+        style={({ pressed }) => ({ opacity: from ? 0 : pressed ? opacity.pressed : 1, flexShrink: 1 })}
       >
         {prefix !== undefined ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', alignContent: 'center', flexWrap: 'wrap', columnGap: 6, minHeight: 44 }}>
@@ -165,19 +169,19 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
         ) : plain ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
             {inline ? (
-              <KText variant="subheadline" weight="500" color="ink2" numberOfLines={1}>
+              <KText variant="subheadline" weight="500" color="ink2" numberOfLines={lines} style={{ flexShrink: 1 }}>
                 {label}
               </KText>
             ) : (
-              <KText variant="subheadline" weight="500" color="ink" numberOfLines={1}>
+              <KText variant="subheadline" weight="500" color="ink" numberOfLines={lines} style={{ flexShrink: 1 }}>
                 {label}
               </KText>
             )}
             <Icon name="chevronDown" size={10} color="ink2" weight="semibold" />
           </View>
         ) : (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, minHeight: 32, paddingHorizontal: 12, borderRadius: 16, borderCurve: 'continuous', backgroundColor: colors.surface2 }}>
-            <KText variant="subheadline" weight="600" numberOfLines={1}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, minHeight: 32, paddingHorizontal: 12, paddingVertical: ax ? 6 : 0, borderRadius: 16, borderCurve: 'continuous', backgroundColor: colors.surface2 }}>
+            <KText variant="subheadline" weight="600" numberOfLines={lines} style={{ flexShrink: 1 }}>
               {label}
             </KText>
             <Icon name="chevronDown" size={11} color="ink2" weight="semibold" />
@@ -209,7 +213,7 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
                 {sections.map((s, i) => (
                   <View key={s.title ?? `s${i}`}>
                     {s.title ? (
-                      <KText variant="footnote" color="ink3" mono="label" style={{ height: SECTION, paddingTop: 8, paddingHorizontal: 14 }}>
+                      <KText variant="footnote" color="ink3" mono="label" style={{ minHeight: SECTION, paddingTop: 8, paddingHorizontal: 14 }}>
                         {s.title}
                       </KText>
                     ) : null}
@@ -223,11 +227,11 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
                           accessibilityLabel={o.label}
                           accessibilityState={{ selected: on }}
                           style={({ pressed }) => ({
-                            height: ROW, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, gap: 10,
+                            ...(ax ? { minHeight: ROW, paddingVertical: 8 } : { height: ROW }), flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, gap: 10,
                             backgroundColor: pressed ? colors.line : 'transparent',
                           })}
                         >
-                          <KText variant="body" weight={on ? '600' : '400'} color={on ? 'ink' : 'ink2'} style={{ flex: 1 }} numberOfLines={1}>
+                          <KText variant="body" weight={on ? '600' : '400'} color={on ? 'ink' : 'ink2'} style={{ flex: 1 }} numberOfLines={lines}>
                             {o.label}
                           </KText>
                           {on ? <Icon name="check" size="small" color="ink" weight="semibold" /> : null}

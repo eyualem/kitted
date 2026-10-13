@@ -39,6 +39,17 @@ export function ConsentScreen({ mode }: { mode: 'onboarding' | 'sheet' }) {
   const finish = async (consent: boolean) => {
     if (busy) return;
     setBusy(true);
+    try {
+      await save(consent);
+    } catch (e: unknown) {
+      // A failed save leaves him on this screen with both buttons working again (the gate opens only after every write).
+      console.error('Consent save failed', e);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const save = async (consent: boolean) => {
     const now = sessionClock.nowMs();
     if (mode === 'sheet') {
       if (consent) await giveConsent(store, now);

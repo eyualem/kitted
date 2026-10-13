@@ -3,7 +3,7 @@
 import * as SQLite from 'expo-sqlite';
 import { emitChange } from './changes';
 import { LATEST_VERSION, TABLES, pendingMigrations } from './migrations';
-import { SPECS, colName, colType, decode, encode, type Table, type TableName, type Tables, type TableSpec } from './tables';
+import { SPECS, colName, colType, decode, decodeRowSafely, encode, type Table, type TableName, type Tables, type TableSpec } from './tables';
 import type { KittedStore } from './store';
 
 const DB_NAME = 'kitted.db';
@@ -56,12 +56,17 @@ function sqliteTable<T>(name: TableName, spec: TableSpec<T>): Table<T> {
     async get(key) {
       const db = await getDb();
       const r = await db.getFirstAsync<Record<string, unknown>>(`SELECT * FROM ${spec.table} WHERE ${keyCol} = ?`, key);
-      return r ? fromRow(r) : null;
+      return r ? decodeRowSafely(spec.table, r, fromRow, keyCol) : null;
     },
     async all() {
       const db = await getDb();
       const rows = await db.getAllAsync<Record<string, unknown>>(`SELECT * FROM ${spec.table}`);
-      return rows.map(fromRow);
+      const out: T[] = [];
+      for (const r of rows) {
+        const row = decodeRowSafely(spec.table, r, fromRow, keyCol);
+        if (row !== null) out.push(row);
+      }
+      return out;
     },
     async put(row) {
       const db = await getDb();

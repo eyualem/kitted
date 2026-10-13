@@ -31,9 +31,23 @@ export function lensQuery(lens: CheckLens): string {
 }
 
 export async function startCheck(mode: CheckMode, photo: PhotoInput, parentCheckId?: string, lens: CheckLens = {}): Promise<StartOutcome> {
-  const r = await fitCheck.start({ mode, parentCheckId, ...lens, ...photo });
+  // The service never throws (it fails the row instead); this catch is the last net for callers that `void` it.
+  const r = await fitCheck.start({ mode, parentCheckId, ...lens, ...photo }).catch((e: unknown): StartOutcome => {
+    console.error('[check] start threw', e);
+    return { outcome: 'error' };
+  });
   explain(r);
-  if (__DEV__) void logResult(mode, photo, r);
+  if (__DEV__) void logResult(mode, photo, r).catch(() => {});
+  return r;
+}
+
+/** S19 "Try again" with the same toasts as a new check (the daily limit, an error before the card). */
+export async function retryCheck(checkId: string): Promise<StartOutcome> {
+  const r = await fitCheck.retry(checkId).catch((e: unknown): StartOutcome => {
+    console.error('[check] retry threw', e);
+    return { outcome: 'error' };
+  });
+  explain(r);
   return r;
 }
 
@@ -63,5 +77,9 @@ export function explain(r: StartOutcome) {
     showToast(t('demo.unknownPhoto'));
   } else if (r.outcome === 'limit') {
     showToast(t('stylist.quota.used'));
+  } else if (r.outcome === 'error' && !('checkId' in r)) {
+    // No card was posted (prep or a write failed first): say it didn't count. With a card, the card says so.
+    showToast(t('fail.ai'));
   }
+  // 'busy' (another photo is still being read) has no words yet: the reading card on screen is the answer.
 }

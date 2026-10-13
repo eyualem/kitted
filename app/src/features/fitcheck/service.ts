@@ -17,7 +17,7 @@ import { normStyleKey, type ChatMessage, type CheckDetails, type FitCheckRow, ty
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
 import type { ImagePrep } from '@/services/imagePrep/demo';
-import type { QuotaService } from '@/services/quota';
+import { isRecheckOpen, recheckDeadline, type QuotaService } from '@/services/quota';
 import type { FailCode, PreparedImage, ReadingSource, ReadKind } from '@/services/readingSource/types';
 import type { Scheduler } from '@/services/scheduler';
 import { patchCheckKeepCloset } from '@/features/closet/checkWrites';
@@ -26,6 +26,7 @@ import { createClosetService, type ClosetService, type DuplicateAnswer } from '@
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
+export { failInterruptedChecks } from './interrupted';
 import { evaluateCheck, scoreOptions, scoringEngine, type ScoringEngine } from './scoring';
 
 /** The engine a stored check is scored with (#209): the one its rubricVersion names, so editing an old check (a
@@ -88,10 +89,12 @@ export interface CheckRequest {
 }
 
 export type StartOutcome =
-  | { outcome: 'scored' | 'failed' | 'notScored'; checkId: string }
+  /** 'error': something threw mid-check (prep, a write); the row, if any, is failed with Try again, nothing counted. */
+  | { outcome: 'scored' | 'failed' | 'notScored' | 'error'; checkId: string }
   /** Read; the one quick tap is waiting (nothing counted yet). */
   | { outcome: 'asking'; checkId: string }
-  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' }
+  /** 'busy': another check is still being read (one at a time); 'error': it threw before a card was posted. */
+  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' | 'busy' | 'error' }
   /** 02 S3: nothing was sent and nothing counts. */
   | { outcome: 'photoProblem'; reason: 'noPerson' | 'multiplePeople' | 'couldNotFrame' };
 
@@ -139,6 +142,10 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
   };
   let current: { abort: AbortController; done: Promise<unknown> } | null = null;
+  /** The one check (start or Try again) in flight: a second waits its turn by being refused ('busy'). */
+  let running: Promise<unknown> | null = null;
+  /** cancel() arrived before the in-flight check reached its read: that read is aborted as it starts. */
+  let cancelPending = false;
 
   const profile = async (): Promise<Profile> => {
     const p = await store.profile.get('me');
@@ -239,7 +246,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (ev.status !== 'scored') return scored;
     const finish = ev.partial === 'shoes' ? await rememberedShoes(scored) : null;
     await patchRow(row.id, { snapState: ev.partial ? 'pending' : 'none', details: { ...scored.details, finish } });
-    if (!cached) await deps.quota.consumeCheck(row.dayKey);
+    if (!cached) await deps.quota.consumeCheck(scored.details.chargeDay ?? row.dayKey);
     await store.setKv(KV.lastOccasion, row.occasion);
     const p = await store.profile.get('me');
     if (p) await store.profile.patch('me', { lastOccasion: row.occasion });
@@ -383,6 +390,10 @@ export function createFitCheckService(deps: ServiceDeps) {
     const my = attempt;
     dispatch({ t: 'start', checkId, mode, occasion, attempt: my, ...(look ? { look } : {}) });
     const abort = new AbortController();
+    if (cancelPending) {
+      cancelPending = false;
+      abort.abort();
+    }
     const cfg = deps.timers();
     const handles: unknown[] = [];
     let timedOut = false;
@@ -433,10 +444,42 @@ export function createFitCheckService(deps: ServiceDeps) {
     return { reading: reading as Reading | null, fail: fail as FailCode | null, attempt: my, model, promptVersion, latencyMs };
   }
 
-  async function failRow(checkId: string, code: FailCode) {
+  async function failRow(checkId: string, code: FailCode, attemptNo?: number) {
     const row = await store.fitChecks.get(checkId);
     if (row) await patchRow(checkId, { status: 'failed', details: { ...row.details, failCode: code } });
-    dispatch({ t: 'end' });
+    dispatch({ t: 'end', attempt: attemptNo });
+  }
+
+  /** One check at a time, and nothing it throws is lost: the row (if one was posted) becomes a failed check with Try
+   *  again, the reading card ends, and the caller gets 'error' (its toast says it didn't count). */
+  async function exclusive(run: (ctx: { checkId: string | null }) => Promise<StartOutcome>): Promise<StartOutcome> {
+    if (running) return { outcome: 'busy' };
+    const ctx: { checkId: string | null } = { checkId: null };
+    const job = (async (): Promise<StartOutcome> => {
+      try {
+        return await run(ctx);
+      } catch (e: unknown) {
+        console.error('[check] failed with an error', e);
+        const id = ctx.checkId;
+        if (id) {
+          try {
+            const row = await store.fitChecks.get(id);
+            if (row?.status === 'scoring') await patchRow(id, { status: 'failed', details: { ...row.details, failCode: 'ai' } });
+          } catch (e2: unknown) {
+            console.error('[check] could not mark the check failed', e2);
+          }
+        }
+        dispatch({ t: 'end' });
+        return id ? { outcome: 'error', checkId: id } : { outcome: 'error' };
+      }
+    })();
+    running = job;
+    try {
+      return await job;
+    } finally {
+      running = null;
+      cancelPending = false;
+    }
   }
 
   /** The wait's pre-pick (02 "Going for"): the morning card's look when he opened the camera from it, else his last
@@ -460,11 +503,24 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (style) await store.setKv(GOING_FOR_LAST_KV, JSON.stringify({ style, at: clock.nowMs() }));
   }
 
-  async function start(req: CheckRequest): Promise<StartOutcome> {
+  /** "Try another photo" after a re-check that didn't see the change doesn't use another re-check (02 "Change not
+   *  seen"), once: every try is a paid read. True when the only re-check so far missed the change. */
+  async function triesAfterNotSeen(parentId: string): Promise<boolean> {
+    const kids = (await store.fitChecks.all()).filter((c) => c.parentId === parentId && c.status === 'scored');
+    return kids.length === 1 && kids[0]!.details.recheck?.notSeen === true;
+  }
+
+  function start(req: CheckRequest): Promise<StartOutcome> {
+    return exclusive((ctx) => startInner(req, ctx));
+  }
+
+  async function startInner(req: CheckRequest, ctx: { checkId: string | null }): Promise<StartOutcome> {
     const now = clock.nowMs();
     const parent = req.parentCheckId ? await store.fitChecks.get(req.parentCheckId) : null;
     if ((req.mode === 'recheck' || req.mode === 'shoeSnap') && !parent) return { outcome: 'noParent' };
     if (req.mode === 'check' && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
+    // One re-check per check, while its window is open (05 §3.1, ruling 22): each one is a paid read.
+    if (req.mode === 'recheck' && parent && !isRecheckOpen(parent, now, clock) && !(now < recheckDeadline(parent, clock) && (await triesAfterNotSeen(parent.id)))) return { outcome: 'limit' };
     const prep = await deps.prep.prepare(req.photoUri ? { kind: 'file', uri: req.photoUri } : { kind: 'demo', photoId: req.photoId ?? '' });
     if (prep.status === 'noPerson' || prep.status === 'multiplePeople' || prep.status === 'couldNotFrame') return { outcome: 'photoProblem', reason: prep.status };
     if (prep.status !== 'ok') return { outcome: prep.status === 'unknownPhoto' ? 'unknownPhoto' : 'notImplemented' };
@@ -481,7 +537,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (req.mode === 'shoeSnap' && parent) {
       await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { ...photoPayload, snap: true } });
       const r = await runRead(parent.id, image, 'shoeSnap', 'shoeSnap', occasion);
-      dispatch({ t: 'end' });
+      dispatch({ t: 'end', attempt: r.attempt });
       if (!r.reading) return { outcome: 'failed', checkId: parent.id };
       await finalizeSnap(parent, r.reading, image);
       return { outcome: 'scored', checkId: parent.id };
@@ -499,6 +555,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       ...(req.mode === 'recheck' && parent ? { rubricVersion: parent.rubricVersion } : {}),
     });
     await store.fitChecks.put(row);
+    ctx.checkId = checkId;
     images.set(checkId, image);
     await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: checkId, payload: photoPayload });
     await message({ createdAt: now + 1, role: 'stylist', kind: 'card', cardType: req.mode === 'recheck' ? 'recheck' : 'fitCheck', fitCheckId: checkId });
@@ -530,9 +587,13 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
 
     const r = await runRead(checkId, image, req.mode === 'recheck' ? 'recheck' : 'full', req.mode, occasion, going ?? undefined);
-    if ('cancelled' in r && r.cancelled) return { outcome: 'failed', checkId };
+    if ('cancelled' in r && r.cancelled) {
+      // Stopped (a screen change, a demo reset): the card shows Try again rather than nothing.
+      await failRow(checkId, 'ai', r.attempt);
+      return { outcome: 'failed', checkId };
+    }
     if (!r.reading) {
-      await failRow(checkId, r.fail ?? 'ai');
+      await failRow(checkId, r.fail ?? 'ai', r.attempt);
       return { outcome: 'failed', checkId };
     }
     // The occasion he tapped while it read (ignored for re-checks), and the look (#215).
@@ -549,7 +610,42 @@ export function createFitCheckService(deps: ServiceDeps) {
       const readingRow = await insertReading(r.reading, 'full', image.sha256, null, r.latencyMs, r.model, r.promptVersion);
       done = await afterRead(fresh, r.reading, readingRow, false);
     }
-    dispatch({ t: 'end' });
+    dispatch({ t: 'end', attempt: r.attempt });
+    return outcomeOf(done);
+  }
+
+  /** S19 "Try again": re-reads the same photo; nothing was counted the first time. It's a new read, so it uses
+   *  today's check (or the first check's re-check) like any other, and its score is charged to today. */
+  async function retryInner(checkId: string, ctx: { checkId: string | null }): Promise<StartOutcome> {
+    const row = await store.fitChecks.get(checkId);
+    if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
+    const now = clock.nowMs();
+    const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
+    if (row.parentId && !parent) return { outcome: 'noParent' };
+    if (parent ? !isRecheckOpen(parent, now, clock) : !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
+    // The photo first: if its copy is gone the row stays failed, so the card stays on screen.
+    const prep = await deps.prep.prepare(
+      row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
+    );
+    if (prep.status !== 'ok') return { outcome: 'unknownPhoto' };
+    const today = dayKey(now, clock.offset);
+    const details = { ...row.details, failCode: undefined, ...(row.dayKey !== today ? { chargeDay: today } : {}) };
+    await patchRow(checkId, { status: 'scoring', details });
+    ctx.checkId = checkId;
+    images.set(checkId, prep.image);
+    const gf = !parent ? row.details.goingFor : undefined;
+    const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion, gf ? { ...gf } : undefined);
+    if (!r.reading) {
+      await failRow(checkId, r.fail ?? 'ai', r.attempt);
+      return { outcome: 'failed', checkId };
+    }
+    if (gf && state.kind === 'reading' && state.checkId === checkId && state.lookTouched) await saveLookAnswer(checkId, state.look, state.lookOther);
+    dispatch({ t: 'scored', attempt: r.attempt });
+    const fresh = (await store.fitChecks.get(checkId))!;
+    const done = parent
+      ? await finalizeRecheck(fresh, parent, r.reading, prep.image, r.model, r.promptVersion, r.latencyMs)
+      : await afterRead(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
+    dispatch({ t: 'end', attempt: r.attempt });
     return outcomeOf(done);
   }
 
@@ -623,37 +719,17 @@ export function createFitCheckService(deps: ServiceDeps) {
     /** Stop the current read (screen changes, demo resets). */
     async cancel() {
       const c = current;
-      if (c) {
-        c.abort.abort();
-        await c.done.catch(() => {});
-      }
+      if (c) c.abort.abort();
+      else if (running) cancelPending = true; // still preparing: its read stops as it starts
+      if (c) await c.done.catch(() => {});
+      // Wait for the check itself to settle (its row marked), so a demo reset can't race its last writes.
+      const job = running;
+      if (job) await job.catch(() => {});
       dispatch({ t: 'end' });
     },
-    /** S19 "Try again": re-reads the same photo; nothing was counted the first time. */
-    async retry(checkId: string): Promise<StartOutcome> {
-      const row = await store.fitChecks.get(checkId);
-      if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
-      await patchRow(checkId, { status: 'scoring', details: { ...row.details, failCode: undefined } });
-      const prep = await deps.prep.prepare(
-        row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
-      );
-      if (prep.status !== 'ok') return { outcome: 'unknownPhoto' };
-      images.set(checkId, prep.image);
-      const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
-      const gf = !parent ? row.details.goingFor : undefined;
-      const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion, gf ? { ...gf } : undefined);
-      if (!r.reading) {
-        await failRow(checkId, r.fail ?? 'ai');
-        return { outcome: 'failed', checkId };
-      }
-      if (gf && state.kind === 'reading' && state.checkId === checkId && state.lookTouched) await saveLookAnswer(checkId, state.look, state.lookOther);
-      dispatch({ t: 'scored', attempt: r.attempt });
-      const fresh = (await store.fitChecks.get(checkId))!;
-      const done = parent
-        ? await finalizeRecheck(fresh, parent, r.reading, prep.image, r.model, r.promptVersion, r.latencyMs)
-        : await afterRead(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
-      dispatch({ t: 'end' });
-      return outcomeOf(done);
+    /** S19 "Try again" (retryInner): one at a time with any other check, limited like a new read. */
+    retry(checkId: string): Promise<StartOutcome> {
+      return exclusive((ctx) => retryInner(checkId, ctx));
     },
     /** What the card would score for another occasion or style, without saving (the confirm alert's preview, #62). */
     async previewLens(checkId: string, lens: { occasion?: OccasionKey; style?: StyleKey | null }) {

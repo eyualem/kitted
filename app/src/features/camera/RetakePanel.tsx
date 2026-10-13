@@ -3,9 +3,9 @@
 // buttons stacked. Shared by the fit-check camera and the clothes scan (and its "Saved" state).
 import { useEffect, type ReactNode } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CONTROL_TEXT_MAX_SCALE, Icon, KText, fixed, opacity, size, space } from '@/design-system';
+import { CONTROL_TEXT_MAX_SCALE, Icon, KText, fixed, opacity, size, space, useTheme } from '@/design-system';
 
 export interface PanelAction {
   title: string;
@@ -25,11 +25,15 @@ export function RetakePanel({
   children?: ReactNode;
 }) {
   const insets = useSafeAreaInsets();
+  const { a11y } = useTheme();
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility?.(title);
   }, [title]);
+  // Reduce Motion: a plain fade, no slide up (like the toasts).
   return (
-    <Animated.View entering={FadeInDown.duration(220)} exiting={FadeOutDown.duration(160)} style={[styles.panel, { bottom: Math.max(insets.bottom, 8) }]}>
+    <Animated.View
+      entering={a11y.reduceMotion ? FadeIn.duration(150) : FadeInDown.duration(220)}
+      exiting={a11y.reduceMotion ? FadeOut.duration(120) : FadeOutDown.duration(160)} style={[styles.panel, { bottom: Math.max(insets.bottom, 8) }]}>
       <Icon name={tone === 'done' ? 'checkFilled' : 'warning'} size={26} color={tone === 'done' ? fixed.goodOnDark : fixed.white} />
       <KText variant="headline" color={fixed.white} accessibilityRole="header">
         {title}

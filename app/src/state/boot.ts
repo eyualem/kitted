@@ -12,13 +12,31 @@ import { loadScenario } from '@/data/seedLoader';
 import { US_EASTERN } from '@kitted/core';
 import * as Device from 'expo-device';
 import seed from '../../assets/seed.json';
-import { markGateReady } from './appGate';
+import { failInterruptedChecks } from '@/features/fitcheck/interrupted';
+import { getGate, markGateReady } from './appGate';
 import { setDemoArgs, startClock } from './session';
 
 /** The scenarios' `now` (seed.json): firstRun 07:38, full 12:20, Thu Oct 22 2026, New York. */
 export const SCENARIO_NOW = { firstRun: '2026-10-22T07:38:00', full: '2026-10-22T12:20:00' } as const;
 
 export async function boot(): Promise<DemoArgs> {
+  try {
+    return await bootSteps();
+  } catch (e: unknown) {
+    // Never a blank screen: open the gate with what can still be read (safe defaults otherwise), then let the caller
+    // log the error. Onboarding is the default, and it asks the birth year again.
+    if (!getGate().ready) await openGateAfterError();
+    throw e;
+  }
+}
+
+async function openGateAfterError(): Promise<void> {
+  const ageBlocked = await getAgeBlocked().catch(() => false);
+  const onboarded = await store.getKv(KV.onboardingDone).then((v) => v === '1', () => false);
+  markGateReady({ ageBlocked, onboarded });
+}
+
+async function bootSteps(): Promise<DemoArgs> {
   const args = DEMO_ENABLED
     ? resolveDemoArgs({ deepLink: queryToRaw(await readInitialQuery()), launch: readLaunchArgs() })
     : resolveDemoArgs({});
@@ -44,6 +62,8 @@ export async function boot(): Promise<DemoArgs> {
   // On a real iPhone the clock is real time: the scenario's fixed Thursday 7:38 restarted on every
   // launch, so checks taken later sorted above newer ones and the chat read out of order (#94).
   startClock(args.now ?? (Device.isDevice ? 'real' : SCENARIO_NOW[scenario]));
+  // A check cut off by the app closing mid-read shows Try again, not an empty slot (no check of this run exists yet).
+  await failInterruptedChecks(store).catch((e: unknown) => console.error('[boot] interrupted checks', e));
 
   markGateReady({
     ageBlocked: await getAgeBlocked(),

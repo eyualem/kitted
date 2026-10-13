@@ -26,7 +26,7 @@ export interface ChipProps {
 }
 
 export function Chip({ title, state = 'normal', small, icon, disabled, onPress, accessibilityHint }: ChipProps) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const h = small ? size.chipSmall : size.chip;
   const fg = state === 'selected' ? colors.surface : state === 'accent' ? colors.accent : colors.ink;
   const bg = state === 'selected' ? colors.ink : state === 'accent' ? colors.accentSoft : colors.surface;
@@ -35,7 +35,8 @@ export function Chip({ title, state = 'normal', small, icon, disabled, onPress, 
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      accessibilityRole="button"
+      // A chip with nothing to do (a stylist message's suggestion) is a label, not a button.
+      accessibilityRole={onPress ? 'button' : 'text'}
       accessibilityLabel={title}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ selected: state === 'selected', disabled: !!disabled }}
@@ -49,6 +50,8 @@ export function Chip({ title, state = 'normal', small, icon, disabled, onPress, 
         style={{
           minHeight: h,
           paddingHorizontal: small ? 10 : 14,
+          // At accessibility sizes the label wraps instead of cutting off: give the lines room.
+          paddingVertical: isAccessibilitySize ? 6 : 0,
           borderRadius: h / 2,
           borderCurve: 'continuous',
           borderWidth: 1,
@@ -60,7 +63,7 @@ export function Chip({ title, state = 'normal', small, icon, disabled, onPress, 
         }}
       >
         {icon ? <Icon name={icon} size="small" color={fg} scalesWithText /> : null}
-        <KText role="chip" variant={small ? 'subheadline' : undefined} weight={small ? '400' : undefined} color={fg} numberOfLines={1}>
+        <KText role="chip" variant={small ? 'subheadline' : undefined} weight={small ? '400' : undefined} color={fg} numberOfLines={isAccessibilitySize ? 0 : 1} style={{ flexShrink: 1 }}>
           {title}
         </KText>
       </View>
@@ -106,7 +109,7 @@ export type PillTone = 'gray' | 'accent' | 'ok' | 'pending';
  * `pending` only changes the color: pass the text from t('read.pending', { slot }) (it has the "…").
  */
 export function Pill({ title, tone = 'gray', inline }: { title: string; tone?: PillTone; inline?: boolean }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const h = inline ? size.pillInline : size.pill;
   const fg = tone === 'accent' ? colors.accent : tone === 'ok' ? colors.good : tone === 'pending' ? colors.ink3 : colors.ink2;
   const bg = tone === 'accent' ? colors.accentSoft : tone === 'ok' ? 'transparent' : colors.surface2;
@@ -115,6 +118,8 @@ export function Pill({ title, tone = 'gray', inline }: { title: string; tone?: P
       style={{
         minHeight: h,
         paddingHorizontal: 10,
+        paddingVertical: isAccessibilitySize ? 4 : 0,
+        maxWidth: '100%',
         borderRadius: h / 2,
         borderCurve: 'continuous',
         backgroundColor: bg,
@@ -127,7 +132,7 @@ export function Pill({ title, tone = 'gray', inline }: { title: string; tone?: P
       }}
     >
       {tone === 'ok' ? <Icon name="check" size={13} color={fg} weight="semibold" scalesWithText /> : null}
-      <KText role="pill" variant={inline ? 'caption' : 'footnote'} color={fg} numberOfLines={1}>
+      <KText role="pill" variant={inline ? 'caption' : 'footnote'} color={fg} numberOfLines={isAccessibilitySize ? 0 : 1} style={{ flexShrink: 1 }}>
         {title}
       </KText>
     </View>

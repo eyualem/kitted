@@ -54,7 +54,8 @@ export type SessionEvent =
   | { t: 'occasion'; occasion: OccasionKey }
   | { t: 'look'; style: StyleKey | null; other?: string | null }
   | { t: 'scored'; attempt: number }
-  | { t: 'end' };
+  /** `attempt`: the read it closes; a stale end (an earlier attempt's) leaves a newer reading card alone. */
+  | { t: 'end'; attempt?: number };
 
 export const IDLE: SessionState = { kind: 'idle' };
 
@@ -67,7 +68,7 @@ export function reduce(s: SessionState, ev: SessionEvent): SessionState {
         look: ev.look?.style ?? null, lookSource: ev.look?.source ?? 'none', bothFromCard: ev.look?.bothFromCard ?? false, lookTouched: false, lookOther: null,
       };
     case 'end':
-      return IDLE;
+      return ev.attempt !== undefined && s.kind === 'reading' && s.attempt !== ev.attempt ? s : IDLE;
     default:
       break;
   }

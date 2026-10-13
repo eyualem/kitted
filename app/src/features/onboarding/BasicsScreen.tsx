@@ -20,7 +20,7 @@ import { Segmented } from './Segmented';
 import { Silhouette } from './Silhouette';
 
 export function BasicsScreen() {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const insets = useSafeAreaInsets();
   const [looks, setLooks] = useState<StyleKey[]>([]);
   const [b, setB] = useState<BasicsDraft>(EMPTY_BASICS);
@@ -64,7 +64,8 @@ export function BasicsScreen() {
         <UserBubble onPress={back}>{looksEcho(looks)}</UserBubble>
         <StylistMessage showHeader>{looksReply(looks)}</StylistMessage>
         <KCard>
-          <View style={[styles.grid, styles.card]}>
+          {/* AX sizes: the fields take the full width and the figure moves under them. */}
+          <View style={[styles.grid, styles.card, isAccessibilitySize && { flexDirection: 'column' }]}>
             <View style={styles.fields}>
               <Field label={t('onb.basics.height')}>
                 <Stepper
@@ -102,7 +103,7 @@ export function BasicsScreen() {
                 )}
               </Field>
             </View>
-            <View style={styles.silCol}>
+            <View style={[styles.silCol, isAccessibilitySize && { alignSelf: 'center' }]}>
               <Silhouette basics={b} width={75.5} />
             </View>
           </View>
@@ -161,7 +162,8 @@ const styles = StyleSheet.create({
   grid: { flexDirection: 'row', gap: 13 },
   fields: { flex: 1, gap: 13 },
   silCol: { width: 75.5, justifyContent: 'center' },
-  stepper: { height: 36, borderRadius: 18, paddingHorizontal: 4, flexDirection: 'row', alignItems: 'center' },
+  // minHeight, not height: at the largest text sizes the value grows and the stepper grows with it.
+  stepper: { minHeight: 36, paddingVertical: 3, borderRadius: 18, paddingHorizontal: 4, flexDirection: 'row', alignItems: 'center' },
   circle: { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
   dock: { paddingHorizontal: space.gutter, paddingTop: space.s },
 });
