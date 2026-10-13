@@ -60,9 +60,9 @@ describe('known pieces never cross a pattern or a collar (#219)', () => {
 });
 
 describe('the Why sheet names the unsure wrinkles, with no points (#219)', () => {
-  it('Condition: the tip line, ±0, and the score is 7.5', () => {
+  it('Condition: the tip line, ±0, and the score is 8.0 (parts v8, #228; v7 7.5)', () => {
     const res = scoreParts(reading, { occasion: 'class', styles: [['streetwear', 1]] as never }) as PartsScored;
-    expect(res.overall).toBe(7.5);
+    expect(res.overall).toBe(8);
     const row = whyParts(res, { occasion: 'class', readsAs: 'streetwear', gainPart: null }).after.find((x) => x.key === 'condition')!;
     expect([row.item, row.amount]).toEqual(["the oxford shirt might be wrinkled; not counted, it isn't clear enough in the photo", 0]);
   });

@@ -549,6 +549,8 @@ const addedInBuild = {
   // dressy shoes (the shoe side, "Swap the loafers for white leather sneakers", is the existing shoes_white line)
   'pfix.top_plain_tee': 'Swap the {name} for a plain tee',
   'pfix.top_plain_tee.step': 'A plain tee lifts',
+  'pfix.top_tee': 'Swap the {name} for a tee',
+  'pfix.top_tee.step': 'A tee lifts',
   'pfix.top_regular_fit': 'Swap the {name} for a regular fit',
   'pfix.top_regular_fit.step': 'A regular fit lifts',
   'pfix.layer_short': 'Add a short jacket: a bomber or a denim jacket',
@@ -563,8 +565,7 @@ const addedInBuild = {
   'pfix.next_minimal_tuck': 'Tucking in the {name} gives it the minimal shape and lifts Proportions. The score may not move yet.',
   'pfix.next_prep_blazer': 'A tucked shirt under a navy blazer gives it the classic prep line and lifts Proportions. The score may not move yet.',
   'pfix.next_smart_tuck': 'Tucked into chinos, it takes the smart casual shape and lifts Proportions. The score may not move yet.',
-  'pfix.next_color': 'One standout color, like a rust knit, lifts Color. The score may not move yet.',
-  'pfix.next_style': 'One standout piece, like a plaid overshirt, lifts Style. The score may not move yet.',
+  'pfix.next_color': 'One quiet color, like a rust or olive knit, lifts Color. The score may not move yet.',
   // The Why sheet on the parts engine (#205, #209; wording from mockups/parts-card.html). Part names and the reason lines
   // are core's (parts data partNames, the engine's own lines).
   'pwhy.sub': 'Same photo, same score. Every part starts at 7.',
@@ -577,6 +578,7 @@ const addedInBuild = {
   'pwhy.naNote': 'The other parts share its weight.',
   'pwhy.average': 'Average of the parts',
   'pwhy.bonus': 'Strong in more than one part',
+  'pwhy.piled': 'Problems in more than one part',
   'pwhy.condition': 'Condition',
   'pwhy.conditionClean': 'looks clean',
   'pwhy.partsAlone': 'the parts alone make {score}',

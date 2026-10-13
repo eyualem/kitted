@@ -1,6 +1,8 @@
 # Retuning the parts engine against the gold-set panel (v8 candidate)
 
-*Oct 12, 2026. Claude. DECISIONS-LOG #227. Paper test only: no API calls, no money, **no app change**. The app still scores with parts v7. Scripts `extraction-test/gold_tune.py` (split, metrics, dump) and `extraction-test/gold_features.py` (which reading facts the panel cares about); engine `extraction-test/rubrics/parts_proto.py`, `engine="v8"`; numbers `extraction-test/results/gold-tune/` (`v7_report.txt`, `v8_report.txt`, `saved_checks.txt`, `split.json`).*
+**Adopted by the founder Oct 12 and ported to the app the same day (DECISIONS-LOG #228): v8 is now the default in Python and `@kitted/core`.** Two small changes came with the port: the unused "stretch" switch was removed, and a tie for "the lowest part" now goes to the heavier part by v8's own weights (no score moved). One saved check missed by the table below: the founder's Oct 11 green zip hoodie (af7e93) goes 7.5 → 8.0 (the hoodie, read as a layer ending at the belt over wide jeans, earns the short-jacket shape).
+
+*Oct 12, 2026. Claude. DECISIONS-LOG #227. Written as a paper test (no API calls, no money); at the time the app still scored with parts v7. Scripts `extraction-test/gold_tune.py` (split, metrics, dump) and `extraction-test/gold_features.py` (which reading facts the panel cares about); engine `extraction-test/rubrics/parts_proto.py`, `engine="v8"`; numbers `extraction-test/results/gold-tune/` (`v7_report.txt`, `v8_report.txt`, `saved_checks.txt`, `split.json`).*
 
 ## Bottom line
 

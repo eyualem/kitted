@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.4.0",
- "engine": "v7",
- "label": "parts-proto-7 (Oct 11, 2026)",
+ "version": "1.5.0",
+ "engine": "v8",
+ "label": "parts-proto-8 (Oct 12, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "b4e63e6df50f8ff05360f43e0e009b0f8de448a0aab26a3a34b1534cdbf5ba0b",
+ "sourceSha256": "5da122640c1842cc31f215a911ee58706f413b4aa0420afe93cab3bdf3a5283c",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -49,10 +49,10 @@ export const PARTS_DATA: PartsData = {
   "pr3": 1,
   "prop_cap": 2.5,
   "h1": 0.5,
-  "h2": 1,
-  "h2_suit": 1,
-  "h4": 0.75,
-  "cp1": 1,
+  "h2": 0.5,
+  "h2_suit": 0.5,
+  "h4": 0,
+  "cp1": 0,
   "cp2": 0.5,
   "cp5": 0.5,
   "lightness": true,
@@ -165,7 +165,35 @@ export const PARTS_DATA: PartsData = {
     4
    ]
   },
-  "cond_clear_only": true
+  "cond_clear_only": true,
+  "sk1_soft": 0.5,
+  "lounge_style": 0.5,
+  "weights": {
+   "proportions": 0.3,
+   "fit": 0.15,
+   "color": 0.2,
+   "shoes": 0.15,
+   "cohesion": 0.2
+  },
+  "pr1_ribbed_loose": true,
+  "pr2b": 1,
+  "penalty": {
+   "under": 6.5,
+   "rate": 0.5,
+   "cap": 1
+  },
+  "ff5_roomy": true,
+  "ff7_loose": true,
+  "pn_narrow": 1,
+  "pn_skinny": 1,
+  "pn_rip": 0.5,
+  "pr1_loose": 1.5,
+  "pr1_straight": 0.5,
+  "sd3_off": true,
+  "sw3_off": true,
+  "sk2_runner": 5,
+  "cl1": 1.5,
+  "tk1": 2
  },
  "sets": {
   "TAILORED": [
@@ -297,6 +325,16 @@ export const PARTS_DATA: PartsData = {
    "interview",
    "interview_corporate",
    "interview_tech"
+  ],
+  "LOUD_PATTERNS": [
+   "camo",
+   "checks_plaid",
+   "floral",
+   "other"
+  ],
+  "LOUD_LOGO_TOPS": [
+   "graphic_tee",
+   "tee"
   ]
  },
  "boxyVolume": 4,

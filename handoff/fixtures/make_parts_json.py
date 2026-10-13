@@ -1,6 +1,6 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v7 = parts-proto-7, the default since Oct 11: v6 (PB1 "roomier than the look", H2 on every detected style,
-Event's softer band, #217) plus "a condition read counts only on a garment read clear", DECISIONS-LOG #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
+engine v8 = parts-proto-8, the default since Oct 12: v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
+rubric/research/parts/gold-retune.md; v7 was v6 plus "a condition read counts only on a garment read clear", #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
 Then: cd /Users/eyu/Desktop/files/Kitted/app/packages/kitted-core && node scripts/gen-rubric-data.mjs
@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.4.0"
-ENGINE = "v7"
+VERSION = "1.5.0"
+ENGINE = "v8"
 
 
 def sl(s):
@@ -68,6 +68,8 @@ def data(engine=ENGINE):
             "DAINTY_SHOES": ["derby", "dress_shoe", "loafer"],                 # SW3 tip
             "LONG_SHIRTS": ["camp_collar_shirt", "dress_shirt", "flannel_shirt", "oxford_shirt"],   # PF4 tip
             "DRESSY_ROOM": ["event", "interview", "interview_corporate", "interview_tech"],         # occasion ceilings
+            "LOUD_PATTERNS": ["camo", "checks_plaid", "floral", "other"],      # v8 CL1: loud at a large scale
+            "LOUD_LOGO_TOPS": ["graphic_tee", "tee"],                          # v8 CL1: a big logo is loud on these
         },
         "boxyVolume": 4,                     # volume >= this is a roomy / boxy piece (every part)
         "proportions": {

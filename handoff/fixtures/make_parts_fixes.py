@@ -1,5 +1,5 @@
 """Writes fixtures/parts_fixes.json: the parts fix engine's exact Python output (parts_fixes.suggest_parts_fixes on
-parts_proto.py v7) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
+parts_proto.py v8) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
 
 Run (after make_parts_parity.py, whose loaders and edge cases it reuses):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_fixes.py
@@ -113,6 +113,9 @@ def fix_edges():
                                  SHOE(sub="loafer", color="brown")))
     add("pick_oxford_half", Rd(G("top", "oxford_shirt", "light_blue", tucked="half"), G("bottom", "chinos", "navy", leg_shape="straight"),
                                SHOE(sub="loafer", color="brown")))
+    # v8: a half-tucked oxford over wide chinos (the prep blazer line, now that a short jacket is the Smaller step on straight legs)
+    add("pick_oxford_half_wide", Rd(G("top", "oxford_shirt", "light_blue", tucked="half"), G("bottom", "chinos", "navy", leg_shape="wide"),
+                                    SHOE(sub="loafer", color="brown")))
     add("pick_polo_jeans",Rd(G("top", "polo", "navy", tucked="none", length="mid_fly"), JEANS(color="denim_dark"), SHOE(sub="white_leather_sneaker")))
     return E
 
@@ -254,7 +257,7 @@ def main():
     assert sum(v for k, v in cov.items() if k.startswith("step ")) > 0
 
     out = {
-        "_doc": "Parts fix engine parity fixtures (handoff/fixtures/parts_fixes.py on parts_proto.py v7, catalog fixes.json -> "
+        "_doc": "Parts fix engine parity fixtures (handoff/fixtures/parts_fixes.py on parts_proto.py v8, catalog fixes.json -> "
                 "parts). For each case, suggestPartsFixes(reading, {occasion, styles: the case's styles, else profile, boldness, secondLook, closet, warm, "
                 "firstCheck}) must equal `expected` after mapping camelCase to these keys, exactly. closet 'seed' = `closet` here, "
                 "'empty' = []. A case's reading is readings[id] here, else rubric_parity.json's readings[id]. expected.fixes[i] and "

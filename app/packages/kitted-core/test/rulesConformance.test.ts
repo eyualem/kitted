@@ -15,7 +15,7 @@ interface Expect {
   part?: Record<string, { score?: number; na?: boolean }>;
   detected_has?: string[]; detected_lacks?: string[]; label?: string | null; label_in?: (string | null)[];
   ceiling?: number | null; occ_deduction?: number; occ_lines_has?: string[]; occ_lines_lacks?: string[];
-  cond_deduction?: number; cond_tips?: string[]; floored?: boolean; bonus?: number;
+  cond_deduction?: number; cond_tips?: string[]; floored?: boolean; bonus?: number; penalty?: number;
 }
 interface Case {
   id: string; rule: string; what: string; reading: Reading; occasion: string; styles: [string, number][];
@@ -93,6 +93,7 @@ function check(c: Case, r: PartsResult): string[] {
     bad.push(`condition tips ${JSON.stringify(r.condition.tips.map((x) => x.check))} != ${JSON.stringify(e.cond_tips)}`);
   if (e.floored !== undefined && r.floored !== e.floored) bad.push(`floored ${r.floored} != ${e.floored}`);
   if (e.bonus !== undefined && Math.abs(r.earnedBonus - e.bonus) > EPS) bad.push(`bonus ${r.earnedBonus} != ${e.bonus}`);
+  if (e.penalty !== undefined && Math.abs(r.piledPenalty - e.penalty) > EPS) bad.push(`penalty ${r.piledPenalty} != ${e.penalty}`);
   if (c.vs) {
     const b = results.get(c.vs.case)!;
     for (const [k, d] of Object.entries(c.vs.parts ?? {})) {

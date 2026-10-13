@@ -29,7 +29,8 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Seven engines (engine="v7" is THE DEFAULT since Oct 11: v6 plus "a condition read moves points only on a garment
+Eight engines. engine="v8" is THE DEFAULT since Oct 12 (the gold-set retune, DECISIONS-LOG #227-228: TUNE["v8"]
+below, ../gold_tune.py, report ../../rubric/research/parts/gold-retune.md). engine="v7" (the default Oct 11-12: v6 plus "a condition read moves points only on a garment
 read clear" (TUNE["v7"], ../parts7_test.py, DECISIONS-LOG #219). engine="v6" (the default before it: v5 plus PB1 "roomier than the look" (the council's per-style
 bands, back as one Proportions fault), H2 judged on every style the outfit reads as, and Event's softer band; see
 TUNE["v6"], ../parts6_test.py, report ../../rubric/research/parts/v6.md. engine="v5" is v4 plus SX1 "a piece from another look", the style-crossing
@@ -54,7 +55,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-7 (Oct 11, 2026)"
+VERSION = "parts-proto-8 (Oct 12, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
             "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
@@ -273,7 +274,7 @@ for _e in ("v1", "v2", "v3", "v4", "v5"):
 TUNE["v7"] = dict(TUNE["v6"], cond_clear_only=True)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6"):
     TUNE[_e].update(cond_clear_only=False)
-# v8 CANDIDATE (Oct 12, paper only, NOT the default; DECISIONS-LOG #227, test ../gold_tune.py, report
+# v8 (Oct 12, THE DEFAULT since the founder adopted it, #227-228; test ../gold_tune.py, report
 # ../../rubric/research/parts/gold-retune.md). The gold set (#224) showed the parts engine barely follows a 5-judge
 # panel (r 0.33), and the founder's 20 blind ratings agree with the panel (r 0.69), not the app (-0.09; #225). Every
 # change below reads only fields the live reading already has, and was chosen on the TUNE half of the gold photos
@@ -307,7 +308,7 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6"):
 #     h4: the one standout pattern earns this (v7 +0.75; the 17 photos it fired on: panel 6.6).
 #     h2 / h2_suit: "clearly X top to toe" / "a suit worn properly" (v7 +1.0 each; panel 7.4 where they fired).
 #     tk1: a tank top worn as the only top, out of the house, costs this on Style ("reads gym or undershirt").
-_OFF8 = dict(sk1_soft=0.0, lounge_style=0.0, weights=None, stretch=1.0, pr1_ribbed_loose=False, pr2b=0.0, penalty=None, ff5_roomy=False, ff7_loose=False, pn_narrow=0.0, pn_skinny=0.0, pn_rip=0.0, pr1_loose=None,
+_OFF8 = dict(sk1_soft=0.0, lounge_style=0.0, weights=None, pr1_ribbed_loose=False, pr2b=0.0, penalty=None, ff5_roomy=False, ff7_loose=False, pn_narrow=0.0, pn_skinny=0.0, pn_rip=0.0, pr1_loose=None,
              pr1_straight=None, sd3_off=False, sw3_off=False, sk2_runner=None, cl1=0.0, tk1=0.0)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7"):
     TUNE[_e].update(_OFF8)
@@ -317,7 +318,7 @@ TUNE["v8"] = dict(TUNE["v7"], ff5_roomy=True, ff7_loose=True, pn_narrow=1.0, pn_
                   pr1_ribbed_loose=True, pr2b=1.0, sk1_soft=0.5, lounge_style=0.5,
                   weights={"proportions": 0.30, "fit": 0.15, "color": 0.20, "shoes": 0.15, "cohesion": 0.20},
                   penalty={"under": 6.5, "rate": 0.5, "cap": 1.0})
-VERSIONS["v8"] = "parts-proto-8 candidate (Oct 12, 2026)"
+VERSIONS["v8"] = "parts-proto-8 (Oct 12, 2026)"
 WEIGHTS ={"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -1153,13 +1154,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v7", tune=None):
+def _tune(engine="v8", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v7", tune=None):
+def earned_bonus(part_scores, engine="v8", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1173,7 +1174,7 @@ def earned_bonus(part_scores, engine="v7", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v7", tune=None):
+def piled_penalty(part_scores, engine="v8", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1184,7 +1185,7 @@ def piled_penalty(part_scores, engine="v7", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v7", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v8", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1194,7 +1195,6 @@ def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v7", tune=
     Wt = t["weights"] or WEIGHTS                                      # v8 candidate: tuned weights (None = WEIGHTS)
     wsum = sum(Wt[k] for k in part_scores)
     avg = sum(Wt[k] * v for k, v in part_scores.items()) / wsum
-    avg = BASE + t["stretch"] * (avg - BASE)                         # v8 candidate: spread (1.0 = none)
     x = avg + earned_bonus(part_scores, engine, tune) - piled_penalty(part_scores, engine, tune) - cond["deduction"] - occ["deduction"]
     if occ["ceiling"] is not None:
         x = min(x, occ["ceiling"])
@@ -1224,10 +1224,10 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v7", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v8", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v7" (condition reads count only on "clear" garments, default), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v8" (the gold-set retune, default), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
@@ -1264,10 +1264,11 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     ps = {k: r["score"] for k, r in live.items()}
     avg, x, floored, wsum = combine(ps, cond, occ, occasion, care_or_strain, engine, tune)
     bonus = earned_bonus(ps, engine, tune)
+    penalty = piled_penalty(ps, engine, tune)                        # v8 (0 in v1-v7): problems in several parts add up
     overall = round_half(x)
 
     # the lowest part leads the card, with its one-line reason (ties: the heavier part)
-    low_k = min(live, key=lambda k: (live[k]["score"], -WEIGHTS[k]))
+    low_k = min(live, key=lambda k: (live[k]["score"], -(t["weights"] or WEIGHTS)[k]))
     lr = live[low_k]
     neg = [r for r in lr["reasons"] if r["points"] < 0]
     line = (neg[0]["line"] if neg else lr["reasons"][0]["line"] if lr["reasons"] else
@@ -1279,7 +1280,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
         # the founder's call (Oct 10): when every part is 7, don't name a "weakest" part
         lowest = {"part": None, "score": BASE, "line": "Every part is solid: nothing off, nothing standing out yet."}
     return {
-        "overall": overall, "raw_score": round(x, 3), "average": round(avg, 3), "earned_bonus": bonus,
+        "overall": overall, "raw_score": round(x, 3), "average": round(avg, 3), "earned_bonus": bonus, "piled_penalty": penalty,
         "version": VERSIONS[engine], "engine": engine,
         "parts": res, "na_parts": [k for k in PART_ORDER if res[k]["score"] is None],
         "weights_used": {k: round((t["weights"] or WEIGHTS)[k] / wsum, 3) for k in live},

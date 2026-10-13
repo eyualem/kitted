@@ -48,9 +48,10 @@ describe("goingForAdvice", () => {
     expect([a.kind, a.readsAs, a.piece, a.move?.copy]).toEqual(["mismatch", "minimalist", null, "Swap the chunky sneakers for white leather sneakers"]);
   });
 
-  it("s15 going minimal: the plaid overshirt pulls the other way (plain, it would read minimal); no move that keeps the score", () => {
+  it("s15 going minimal: the plaid overshirt pulls the other way; plain, it reads minimal and keeps the score (v8: no standout-pattern credit to lose)", () => {
     const a = goingForAdvice(loadReading("s15"), "minimalist")!;
-    expect([a.readsAs, a.piece?.name, a.piece?.why, a.piece?.plural, a.move]).toEqual(["smart_casual", "overshirt", "loud", false, null]);
+    expect([a.readsAs, a.piece?.name, a.piece?.why, a.piece?.plural, a.move?.id, a.move?.copy]).toEqual(
+      ["smart_casual", "overshirt", "loud", false, "color_plain", "Swap the patterned overshirt for a solid color"]);
   });
 
   it("SX1's clashing top is the piece, and the catalog's own line for it is the move (made-up #213 outfit)", () => {

@@ -20,13 +20,14 @@ const sum = (q: TapQuestion | null) => (q ? [q.kind ?? "pair", q.swing] : null);
 describe("askQuestionParts: which questions ask, and each swing (parts score)", () => {
   // photo → [v4's question + swing, the parts question + swing]
   const want: Record<string, [unknown, unknown]> = {
-    "a765e8": [["pair", 1.5], ["pair", 1.0]], // jeans read as sweatpants: 5.5 → 6.5 with parts (7.0 with v4)
-    "6b14db": [["pair", 1.5], ["pair", 1.0]],
-    "b0f0c8": [["shoes", 0.5], null], // boots lost at Everyday: no parts swing, so no question now
+    // parts v8 (#228): jeans earn the short top's shape over wide legs, so the jeans answer is 7.5 (v7 6.5)
+    "a765e8": [["pair", 1.5], ["pair", 2.0]], // jeans read as sweatpants: 5.5 → 7.5 with parts (7.0 with v4)
+    "6b14db": [["pair", 1.5], null], // v8: the jeans answer moves it less than v4's bar, so no question
+    "b0f0c8": [["shoes", 0.5], ["shoes", 0.5]], // boots lost at Everyday: v8 boots 8.0 vs slides 7.5 (v7: no swing)
     "d6559a": [["shoes", 0.5], null],
     "8bc29d": [["shoes", 0.5], ["shoes", 0.5]],
     "f07193": [["shoes", 0.5], ["shoes", 0.5]],
-    "e026de": [["shoes", 1.0], ["shoes", 0.5]],
+    "e026de": [["shoes", 1.0], ["shoes", 1.0]], // v8: slides 6.5, boots 7.5
     "5a9049": [null, null], "d918c0": [null, null], "0d39d6": [null, null],
   };
   for (const [photo, [v4, parts]] of Object.entries(want)) {
@@ -82,9 +83,9 @@ describe("askWithClosetParts: 'Your green work boots?' by the parts swing", () =
     const got = Object.fromEntries(checks.map((c) => [c.photo, [sum(askWithCloset(c.reading, at(c), [BOOTS])), sum(askWithClosetParts(c.reading, at(c), [BOOTS]))]]));
     expect(got.f07193).toEqual([["known", 0.5], ["known", 0.5]]); // 6.5 → 7.0 with parts
     expect(got["8bc29d"]).toEqual([["known", 0.5], ["known", 0.5]]);
-    expect(got.b0f0c8).toEqual([["known", 0.5], null]); // boots or not, parts gives 7.0
+    expect(got.b0f0c8).toEqual([["known", 0.5], ["known", 0.5]]); // v8: his boots 8.0, slides 7.5
     expect(got.d6559a).toEqual([["known", 0.5], null]);
-    expect(got.e026de).toEqual([["shoes", 1.0], ["shoes", 0.5]]); // slides: a different kind, the shoe question stands
+    expect(got.e026de).toEqual([["shoes", 1.0], ["shoes", 1.0]]); // slides: a different kind, the shoe question stands
   });
 
   it("Yes is his piece at the parts score; a lost shoe skips to his piece", () => {

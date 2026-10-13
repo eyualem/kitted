@@ -14,6 +14,8 @@ export interface PartsInput {
   overall: number;
   averageUnrounded: number;
   earnedBonus: number;
+  /** Parts v8: "problems add up" (absent on older checks = 0). */
+  piledPenalty?: number;
   floored: boolean;
   parts: Partial<Record<PartName, PartResult>>;
   weightsUsed: Partial<Record<PartName, number>>;
@@ -87,17 +89,19 @@ export function whyParts(
     };
   });
 
-  // After the parts: one row per step of the engine's combine (average + bonus − condition − occasion, the floor).
+  // After the parts: one row per step of the engine's combine (average + bonus − problems − condition − occasion, the floor).
   const average = Math.round(res.averageUnrounded * 10) / 10;
   const after: WhyRow[] = [];
   if (res.earnedBonus > 0) after.push({ key: 'bonus', rule: t('pwhy.bonus'), amount: r2(res.earnedBonus) });
+  const piled = res.piledPenalty ?? 0;
+  if (piled > 0) after.push({ key: 'piled', rule: t('pwhy.piled'), amount: -r2(piled) });
   const cond = res.condition;
   // v7 (#219): a condition read on a piece the AI wasn't clear about is a tip with no points; it's named, never counted.
   const unsure = (cond.tips ?? []).map((x) => x.line).join('; ');
   after.push(cond.deduction > 0
     ? { key: 'condition', rule: t('pwhy.condition'), item: unsure ? `${cond.display}; ${unsure}` : cond.display, amount: -r2(cond.deduction) }
     : { key: 'condition', rule: t('pwhy.condition'), item: unsure || t('pwhy.conditionClean'), amount: 0, zero: 'plusMinus' });
-  const pre = res.averageUnrounded + res.earnedBonus - cond.deduction;
+  const pre = res.averageUnrounded + res.earnedBonus - piled - cond.deduction;
   let post = pre - res.occasion.deduction;
   if (res.occasion.ceiling !== null) post = Math.min(post, res.occasion.ceiling);
   if (post < pre - 1e-9) {

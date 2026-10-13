@@ -201,6 +201,8 @@ export interface StoredParts {
   averageUnrounded: number;
   rawUnrounded: number;
   earnedBonus: number;
+  /** Parts v8 (#228): "problems add up", already inside the score. Absent on checks scored before v8 (= 0). */
+  piledPenalty?: number;
   floored: boolean;
   parts: Record<PartName, PartResult>;
   naParts: PartName[];

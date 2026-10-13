@@ -153,7 +153,9 @@ describe('what the answer says', () => {
     const { store, svc } = await setup();
     const { checkId } = (await svc.start({ mode: 'check', photoId: 's15', occasion: 'everyday', style: 'minimalist' })) as { checkId: string };
     const a = adviceText((await store.fitChecks.get(checkId))!.details.goingForAdvice!);
-    expect(a).toEqual({ kind: 'mismatch', lead: 'Reads as smart casual.', rest: 'For a minimal look, the overshirt pulls the other way.', move: null });
+    // parts v8 (#228): plain, the overshirt reads minimal and keeps the score (no standout-pattern credit to lose), so a move shows
+    expect(a).toEqual({ kind: 'mismatch', lead: 'Reads as smart casual.', rest: 'For a minimal look, the overshirt pulls the other way.',
+      move: { title: 'Swap the patterned overshirt for a solid color', detail: 'Toward minimal' } });
   });
 
   it('the folded line says where a pre-pick came from in words', () => {

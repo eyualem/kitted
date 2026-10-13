@@ -24,12 +24,13 @@ describe("#219 his Oct 11 green hoodie fit", () => {
     expect(r.styleLabel).toBe("streetwear");
   });
 
-  it("(2) both reads of the identical photo score 7.5: the 'likely' oxford's wrinkles are a tip, not 0.4", () => {
+  // parts v8 (#228): 8.0 (v7 7.5); what this guards is unchanged: both reads land on the same score
+  it("(2) both reads of the identical photo score 8.0: the 'likely' oxford's wrinkles are a tip, not 0.4", () => {
     for (const styles of [TEST_PROFILE, [["streetwear", 1.0]]]) {
       const a = scoreParts(D.first, opts(styles)) as PartsScored;
       const b = scoreParts(D.recheckRaw, opts(styles)) as PartsScored;
-      expect(a.overall).toBe(7.5);
-      expect(b.overall).toBe(7.5);
+      expect(a.overall).toBe(8.0);
+      expect(b.overall).toBe(8.0);
       expect(a.rawScore).toBe(b.rawScore);
       expect(a.condition.deduction).toBe(0);
       expect(a.condition.display).toBe("clean");

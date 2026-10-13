@@ -139,7 +139,7 @@ function gainPartOf(res: PartsScored, fx: PartsFixSuggestions): PartName | null 
 export function storedParts(res: PartsScored, fx: PartsFixSuggestions): StoredParts {
   return {
     version: res.version, overall: res.overall, average: res.average, averageUnrounded: res.averageUnrounded, rawUnrounded: res.rawUnrounded,
-    earnedBonus: res.earnedBonus, floored: res.floored, parts: res.parts, naParts: [...res.naParts], weightsUsed: { ...res.weightsUsed },
+    earnedBonus: res.earnedBonus, piledPenalty: res.piledPenalty, floored: res.floored, parts: res.parts, naParts: [...res.naParts], weightsUsed: { ...res.weightsUsed },
     condition: res.condition, occasion: res.occasion, gainPart: gainPartOf(res, fx),
   };
 }
@@ -147,7 +147,7 @@ export function storedParts(res: PartsScored, fx: PartsFixSuggestions): StoredPa
 /** The loungewear hold is what holds the score down ("Sweatpants read as loungewear outside the gym"). */
 export function loungeHolds(res: PartsScored): boolean {
   const o = res.occasion;
-  return o.ceiling !== null && o.status.startsWith('loungewear') && res.overall < res.average + res.earnedBonus - res.condition.deduction;
+  return o.ceiling !== null && o.status.startsWith('loungewear') && res.overall < res.average + res.earnedBonus - res.piledPenalty - res.condition.deduction;
 }
 
 function evaluateParts(input: EvaluateInput): Evaluation {

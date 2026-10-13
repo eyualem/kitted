@@ -1,5 +1,6 @@
-// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v7" (parts-proto-7, the
-// default since Oct 11; DECISIONS-LOG #195-219: v3 plus the workwear and outdoor shapes, the track jacket as a short
+// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v8" (parts-proto-8, the
+// default since Oct 12: v7 retuned against the gold-set panel, #227-228, rubric/research/parts/gold-retune.md; v7 was the
+// default from Oct 11; DECISIONS-LOG #195-219: v3 plus the workwear and outdoor shapes, the track jacket as a short
 // layer, H2 judged on the pick-free label so picks never move a number (v4), SX1 "a piece from another look", the
 // style-crossing fault on Style (v5), and v6: PB1 "roomier than the look" (the style council's per-style bands as one
 // Proportions fault, with PB2 its leg-side tip), H2 judged on every style the outfit reads as, and Event's softer
@@ -9,8 +10,8 @@
 // "The AI sees, the code judges": it reads only the garment description (plus the optional second look's two yes/no
 // answers). It never reads a face, body or skin, and never his profile (picks only choose the "Reads as" label).
 //
-// How a score is made: five PARTS (Proportions 30 · Fit 25 · Color 15 · Shoes 15 · Style 15), each 1-10 from its
-// own checks, NA parts dropping out; their weighted average; the earned bonus; minus Condition; minus the occasion's
+// How a score is made: five PARTS (v8: Proportions 30 · Fit 15 · Color 20 · Shoes 15 · Style 20), each 1-10 from
+// its own checks, NA parts dropping out; their weighted average; the earned bonus; minus "problems add up" (v8); minus Condition; minus the occasion's
 // small deduction, held under its ceiling; the 5.0 floor at ordinary occasions, the 3.0 floor; round to the half.
 //
 // Parity rules (verified against fixtures/parts_parity.json, every case, bit for bit):
@@ -19,7 +20,7 @@
 //  - Python `x in (…)` on a missing key is `None in (…)`: undefined and null both mean None (nv)
 //  - one garment, one credit: "already credited" is object identity on our own copies (Python's id(g))
 //  - where Python would raise (a garment without a subcategory reaching a reason line), this throws the same error
-// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.4.0); the v4.1
+// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.5.0); the v4.1
 // helpers it shares (formality, colors, style detection, prepare/normalize) come from the rubric engine.
 
 import { PARTS_DATA } from "./partsData";
@@ -98,6 +99,39 @@ export interface PartsTune {
   occ_target: Record<string, [number, number]>;
   /** v7: a condition read moves points only on a garment read "clear"; otherwise a no-points Condition tip. */
   cond_clear_only: boolean;
+  // ---- v8 (the gold-set retune, #227-228; every knob off / null in v1-v7)
+  /** The part weights (null = PartsData.weights). Also break the "lowest part" tie and fill weightsUsed. */
+  weights: Record<PartName, number> | null;
+  /** "Problems add up": each part's shortfall under `under`, the largest dropped, `rate` of the rest off, at most `cap`. */
+  penalty: { under: number; rate: number; cap: number } | null;
+  /** A roomy non-tailored piece with long sleeves is the cut (minor), not "a size big". */
+  ff5_roomy: boolean;
+  /** Pooling on a loose leg: nothing on jeans / cargos, minor otherwise, and no block on the shape rewards. */
+  ff7_loose: boolean;
+  /** PN1 a narrow leg on Proportions, skinny extra, ripped jeans extra (not under tailoring, not suit trousers). */
+  pn_narrow: number;
+  pn_skinny: number;
+  pn_rip: number;
+  /** PR1 over a loose leg / over a straight one (null = v7's pr1 and mirror guard). */
+  pr1_loose: number | null;
+  pr1_straight: number | null;
+  /** A knit (ribbed hem) at the belt over a loose leg earns PR1. */
+  pr1_ribbed_loose: boolean;
+  /** PR2b: a layer read ending at the belt over a loose leg (not a short layer by type). */
+  pr2b: number;
+  /** No "much dressier than the clothes" (except with sweats); no "dainty under wide legs" tip. */
+  sd3_off: boolean;
+  sw3_off: boolean;
+  /** Running shoes off the gym (null = PartsData.shoes.runners.points). */
+  sk2_runner: number | null;
+  /** Slides cost this much less when no other part has a fault of 1 or more. */
+  sk1_soft: number;
+  /** CL1 a loud print on Color. */
+  cl1: number;
+  /** TK1 a tank top as the only top, out of the house, on Style. */
+  tk1: number;
+  /** The loungewear ceiling rises this much when the outfit reads as a style. */
+  lounge_style: number;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -272,6 +306,8 @@ export interface PartsScored {
   average: number;
   averageUnrounded: number;
   earnedBonus: number;
+  /** v8: "problems add up" (0 in v1-v7), already inside rawScore. */
+  piledPenalty: number;
   version: string;
   engine: string;
   parts: Record<PartName, PartResult>;
@@ -374,6 +410,8 @@ interface PartsOutfit {
   mirror: boolean;
   /** v5's SX1 result [points, line, tip], computed once (Style reads it; v6's PB1 stands down when it fires). */
   sx: [number, string | null, string | null];
+  /** The occasion key (v8's TK1 reads it). */
+  occasion: string;
 }
 
 // ================================================================= the engine
@@ -402,6 +440,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const SHORT_TOP_LENGTHS = PS("SHORT_TOP_LENGTHS"), STREET_SHAPE_LENGTHS = PS("STREET_SHAPE_LENGTHS");
   const STREET_SHAPE_BOTTOMS = PS("STREET_SHAPE_BOTTOMS"), LOOSE_DENIM = PS("LOOSE_DENIM"), WORN_HALF_SHOES = PS("WORN_HALF_SHOES");
   const DAINTY_SHOES = PS("DAINTY_SHOES"), LONG_SHIRTS = PS("LONG_SHIRTS"), DRESSY_ROOM = PS("DRESSY_ROOM");
+  const LOUD_PATTERNS = PS("LOUD_PATTERNS"), LOUD_LOGO_TOPS = PS("LOUD_LOGO_TOPS");
+  const WT: Record<PartName, number> = t.weights ?? W; // v8: the tuned weights (combine, weightsUsed, the lowest tie)
   const PR4_SHOES = tset(t.pr4_shoes), PR4_LEGS = tset(t.pr4_legs);
   const PR5_LAYERS = tset(t.pr5_layers), PR5_BOTTOMS = tset(t.pr5_bottoms), PR5_SHOES = tset(t.pr5_shoes);
   const PR6_LAYERS = tset(t.pr6_layers), PR6_SHOES = tset(t.pr6_shoes);
@@ -508,7 +548,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       tops, outers, top: tops[0] ?? null, outer: outers[0] ?? null,
       bottom: gs.find((g) => g.category === "bottom") ?? null, shoes: gs.find((g) => g.category === "footwear") ?? null,
       main, det: d.detected, label: d.label, labelNoPick: d0.label, detNoShoe: nd.detected, slots: new Set(main.map((g) => SLOT[g.category as string]!)),
-      credited: new Set(), colorFault: false, mirror: false, sx: [0.0, null, null],
+      credited: new Set(), colorFault: false, mirror: false, sx: [0.0, null, null], occasion: "everyday",
     };
   }
 
@@ -567,6 +607,16 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.add(-pb[0], pb[1], "PB1_roomier_than_look");
       faults += pb[0];
     }
+    // v8: PN1 a narrow leg (0 in v1-v7). Not a suit's trousers; loungewear has its own ladder; under a tailored
+    // jacket a slim trouser is the norm.
+    const bSub = nv(B.subcategory);
+    if (truthy(t.pn_narrow) && NARROW.has(leg) && !LOUNGE_BOTTOMS.has(bSub) && bSub !== "suit_trousers" && !oTailored) {
+      const what = rep(or(bSub, "pants"));
+      const ripped = bSub === "jeans" && truthy(B.distressed_by_design);
+      const pts = t.pn_narrow + (leg === "skinny" ? t.pn_skinny : 0.0) + (ripped ? t.pn_rip : 0.0);
+      p.add(-pts, `the ${leg === "skinny" ? "skinny" : "slim"}${ripped ? " ripped" : ""} ${what} read dated; a straight leg balances the outfit`, "PN1_narrow_leg");
+      faults += pts;
+    }
 
     // tips: real rules whose readings haven't passed (they never move the number)
     if (T !== null && O === null && tuckedNone(T) && T.length === "below_crotch") {
@@ -591,15 +641,18 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
 
     // rewards: a deliberate shape, blocked by any fault of 1+, a pooling hem or loungewear
-    const blocked = faults >= D.blockAt || B.hem === "pooling" || lounge;
+    const blocked = faults >= D.blockAt || (B.hem === "pooling" && !(truthy(t.ff7_loose) && LOOSE.has(leg))) || lounge;
     const full = FULL_LEG.has(leg);
     const rewards: [number, string, string][] = [];
     if (!blocked && full && T !== null) {
       const tuck = T.tucked === "full";
       const short = SHORT_TOP_LENGTHS.has(nv(T.length));
-      const ribbedOk = !RIBBED.has(nv(T.subcategory)) || vol3(T) >= BOXY;
+      const ribbedOk = !RIBBED.has(nv(T.subcategory)) || vol3(T) >= BOXY || (truthy(t.pr1_ribbed_loose) && LOOSE.has(leg));
       if (O === null && earns(T) && (tuck || (short && ribbedOk))) {
-        const pts = tuck || !o.mirror ? t.pr1 : t.pr1_mirror_short;
+        let pts = tuck || !o.mirror ? t.pr1 : t.pr1_mirror_short;
+        if (t.pr1_loose !== null && t.pr1_loose !== undefined) { // v8: the leg sets the size, not the mirror
+          pts = LOOSE.has(leg) ? t.pr1_loose : tuck || !o.mirror ? t.pr1_straight! : pyMin(t.pr1_straight!, t.pr1_mirror_short);
+        }
         rewards.push([pts, "a tucked or short top over a full leg gives it a waist", "PR1_waist_break"]);
       } else if (O === null && earns(T) && T.tucked === "half" && !RIBBED.has(nv(T.subcategory))) {
         rewards.push([t.pr1b, "the front tuck gives it a waist", "PR1b_half_tuck"]);
@@ -628,6 +681,12 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
     if (!blocked && full && O !== null && SHORT_LAYERS_ALL.has(oSub) && earns(O) && !truthy(sl.peek)) {
       rewards.push([t.pr2, `a short ${rep(oSub)} over full legs: a clean, strong shape`, "PR2_short_layer"]);
+    }
+    // v8: PR2b, a layer read ending at the belt over a loose leg (91% the same on 2 runs); one layer, one shape credit
+    if (truthy(t.pr2b) && !blocked && LOOSE.has(leg) && O !== null && !oTailored && !SHORT_LAYERS_ALL.has(oSub)
+        && SHORT_TOP_LENGTHS.has(nv(O.length)) && earns(O) && !truthy(sl.peek)
+        && !rewards.some((x) => x[2] === "PR5_workwear_shape" || x[2] === "PR6_outdoor_shape")) {
+      rewards.push([t.pr2b, `a short ${rep(or(oSub, "layer"))} over a loose leg: a clean, strong shape`, "PR2b_short_layer_read"]);
     }
     if (!blocked && oTailored && T !== null && T.tucked === "full" && PRESSED.has(nv(B.subcategory)) && leg !== "skinny" && earns(O)) {
       rewards.push([t.pr3, "a complete tailored line", "PR3_tailored_line"]);
@@ -658,6 +717,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         const v = vol3(g);
         if (TAILORED_FIT.has(sub)) out.push([SEV.clear, `the ${rep(sub)}'s sleeves cover the hands`, "FF1_sleeves_tailored"]);
         else if (RIBBED.has(sub)) out.push([SEV.minor, `the ${rep(sub)} cuffs bunch over the hands`, "FF1_cuffs_ribbed"]);
+        else if (v >= BOXY && truthy(t.ff5_roomy)) out.push([SEV.minor, `the roomy ${rep(sub)}'s sleeves run past the wrists`, "FF5_roomy_sleeves"]); // v8: the cut
         else if (v >= BOXY) out.push([SEV.clear, `the ${rep(sub)} looks a size big: roomy, sleeves over the hands`, "FF5_too_big"]);
         else out.push([SEV.moderate, `the ${rep(sub)}'s sleeves run past the wrists`, "FF1_sleeves_long"]);
       }
@@ -666,8 +726,9 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       const leg = nv(g.leg_shape);
       const dragsOnSlides = LOOSE_DENIM.has(sub) && LOOSE.has(leg) && o.shoes !== null && SLIDES.has(nv(o.shoes.subcategory));
       if (g.hem === "pooling" && !dragsOnSlides) { // loose jeans on slides: Shoes owns that hem
-        const sev = PRESSED.has(sub) ? SEV.clear : LOUNGE_BOTTOMS.has(sub) ? SEV.minor : SEV.moderate;
-        out.push([sev, `the ${rep(sub)} pile up on the shoes`, "FF7_pooling"]);
+        let sev = PRESSED.has(sub) ? SEV.clear : LOUNGE_BOTTOMS.has(sub) ? SEV.minor : SEV.moderate;
+        if (truthy(t.ff7_loose) && LOOSE.has(leg)) sev = LOOSE_DENIM.has(sub) ? 0.0 : SEV.minor; // v8 (#221): a stack on a loose leg
+        if (truthy(sev)) out.push([sev, `the ${rep(sub)} pile up on the shoes`, "FF7_pooling"]);
       }
       if (g.strain === "clear") out.push([NARROW.has(leg) ? SEV.moderate : SEV.clear, `the ${rep(sub)} pull`, "FF6_strain"]);
     }
@@ -750,6 +811,16 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.add(-C.samePattern, "the same pattern twice", "CC6_same_pattern");
     }
     if (pats.length >= C.threePatterns.atLeast && !street) p.add(-C.threePatterns.points, "three patterns at once", "CC6_three_patterns");
+    if (truthy(t.cl1)) { // v8: CL1 a loud print on a top or layer (0 in v1-v7)
+      const loud = main.find((g) => (g.category === "top" || g.category === "outerwear") && (
+        (g.pattern === "graphic" && (isBright(g) || (g.logo === "large" && LOUD_LOGO_TOPS.has(nv(g.subcategory)))))
+        || (LOUD_PATTERNS.has(nv(g.pattern)) && g.pattern_scale === "large")));
+      if (loud !== undefined) {
+        const what = rep(or(loud.subcategory, "piece"));
+        const kind = loud.pattern === "graphic" ? "print" : replaceAll(rep(or(loud.pattern, "pattern")), "checks plaid", "check");
+        p.add(-t.cl1, `the big, loud ${kind} on the ${what} takes over the outfit`, "CL1_loud_print");
+      }
+    }
     const fault = p.reasons.length > 0;
     if (families.size === 1) p.tip("all one color: a lighter or darker piece would add depth", "CP3_tonal_flat");
     if (main.filter((g) => H.isDenim(g)).length >= 2) p.tip("double denim: make the washes clearly different", "CC5_denim_near_match", C.tips.doubleDenim);
@@ -758,7 +829,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     // positives (only when no fault)
     const nonNeutral = colored.filter((g) => !NEUTRALS.has(g.color_family));
     const pos: [number, string, string][] = [];
-    if (bright.length === 1 && nonNeutral.length === 1 && earns(bright[0]!)) {
+    if (bright.length === 1 && nonNeutral.length === 1 && earns(bright[0]!) && truthy(t.cp1)) {
       const g = bright[0]!;
       pos.push([t.cp1, `the ${rep(or(g.color_family, "colour"))} ${rep(or(g.subcategory, "piece"))} is the one standout`, "CP1_standout_color"]);
       o.credited.add(g);
@@ -850,7 +921,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       if (looseDenim && truthy(drag)) p.add(-SH.hemDrags, "the loose jeans drag on the slides: the hem has nothing to sit on", "SK1b_hem_drags");
       up = 0.0;
     } else if (RUNNER.has(sub) && !loungeOk && !o.det.includes("outdoor")) {
-      p.score = tailored ? SH.runners.tailored : SH.runners.points;
+      p.score = tailored ? SH.runners.tailored : t.sk2_runner !== null && t.sk2_runner !== undefined ? t.sk2_runner : SH.runners.points;
       p.reasons.push({ check: "SK2_runners", points: pyRound(p.score - BASE, 3), line: "running shoes read gym" + (tailored ? " under a tailored jacket" : " with these clothes") });
       up = 0.0;
     } else {
@@ -861,7 +932,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       if (loungeOk && (SLIDES.has(sub) || RUNNER.has(sub))) tooCasual = 0.0; // at the gym or at home they're the right shoe
       p.add(-tooCasual, "the shoes are more casual than the clothes", "SD2_too_casual");
       // much dressier than the clothes: a ramp, and it fades the upward moves out
-      const tooDressy = ramp(-gap, SH.tooDressy.from, SH.tooDressy.to);
+      let tooDressy = ramp(-gap, SH.tooDressy.from, SH.tooDressy.to);
+      if (truthy(t.sd3_off) && !athleticBottom) tooDressy = 0.0; // v8: loafers or derbies with jeans and a tee
       p.add(-SH.tooDressy.points * tooDressy, "the shoes are much dressier than the clothes", "SD3_too_dressy");
       up = 1.0 - tooDressy;
       // matches the clothes' dressiness (a real shoe; with sweats only a sneaker matches)
@@ -905,7 +977,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.add(half ? -SH.worn.half : -SH.worn.points, cf === "worn" ? "the shoes look worn" : "the shoes look dirty", "SQ_worn");
     }
     p.score = clamp(p.score, SH.range[0], SH.range[1]);
-    if (leg === "wide" && DAINTY_SHOES.has(sub)) {
+    if (leg === "wide" && DAINTY_SHOES.has(sub) && !truthy(t.sw3_off)) {
       p.tip("check the shoe isn't swallowed by the wide legs (a slim shoe can look dainty)", "SW3_dainty_wide", SH.tips.daintyWide);
     }
     return p;
@@ -1008,6 +1080,10 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (truthy(sx) && sx >= h3) p.add(-sx, sxLine!, "SX1_another_look"); // v5: the larger of SX1 and H3, never both
     else if (truthy(h3)) p.add(-h3, h3Line, "H3_another_world");
     if (sxTip !== null) p.tip(sxTip, "SX1_tip", -t.sx);
+    // v8: TK1 a tank top as the only top, out of the house (under a collared shirt it's refiled a vest)
+    if (truthy(t.tk1) && o.outers.length === 0 && o.tops.length === 1 && o.tops[0]!.subcategory === "tank_top" && !LOUNGE_OK.has(o.occasion)) {
+      p.add(-t.tk1, "a tank top on its own reads gym or undershirt", "TK1_tank_alone");
+    }
     // H5: too many statements (v4 B1's focal count, his boldness allowance)
     const ST = CO.statements;
     let focal = 0.0;
@@ -1125,7 +1201,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         const signs = kit ? 0 : (dressed ? 1 : 0) + (realShoe ? 1 : 0);
         const hero = signs === 2 && H.outfit(o.main).hero.length > 0;
         const gymShortsOk = B.subcategory === "athletic_shorts" && !kit && realShoe;
-        if (!hero && !gymShortsOk) ceilings.push([CE.loungeLadder[signs]!, "loungewear out of the house"]);
+        const lift = o.det.length > 0 ? t.lounge_style : 0.0; // v8: a clear style around the sweats
+        if (!hero && !gymShortsOk) ceilings.push([CE.loungeLadder[signs]! + lift, "loungewear out of the house"]);
       }
     }
     if (dressyRoom && S !== null && SLIDES.has(nv(S.subcategory))) ceilings.push([CE.slidesDressy, "slides at a dressy occasion"]);
@@ -1159,13 +1236,21 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     return pyRound(pyMin(e.cap, raw) * gate, 4);
   }
 
+  /** v8: the mirror of the earned bonus. Separate problems in different parts add up instead of averaging away. */
+  function piledPenalty(ps: Map<PartName, number>): number {
+    const e = t.penalty;
+    if (!e || ps.size === 0) return 0.0;
+    const sh = Array.from(ps.values()).map((v) => pyMax(0.0, e.under - v)).sort((a, b) => b - a);
+    return pyRound(pyMin(e.cap, e.rate * sum(sh.slice(1))), 4);
+  }
+
   function combine(ps: Map<PartName, number>, cond: PartsCondition, occ: PartsOccasion, occasion: string, careOrStrain: boolean) {
     let wsum = 0;
-    for (const k of ps.keys()) wsum += W[k];
+    for (const k of ps.keys()) wsum += WT[k];
     let num = 0;
-    for (const [k, v] of ps) num += W[k] * v;
+    for (const [k, v] of ps) num += WT[k] * v;
     const avg = num / wsum;
-    let x = avg + earnedBonus(ps) - cond.deduction - occ.deduction;
+    let x = avg + earnedBonus(ps) - piledPenalty(ps) - cond.deduction - occ.deduction;
     if (occ.ceiling !== null) x = pyMin(x, occ.ceiling);
     let floored = false;
     if (FLOOR_OCCASIONS.has(occasion) && !careOrStrain && x < data.final.floor) {
@@ -1191,12 +1276,18 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const o = outfit(garments, picks);
     o.mirror = truthy(scene.mirror_selfie);
     o.sx = styleClash(o); // v5's SX1, read by Style and (v6) Proportions
+    o.occasion = occasion;
 
     const col = color(o, boldness);
     o.colorFault = col.reasons.length > 0 && col.reasons.some((r) => r.points < 0);
     const parts: Record<PartName, Part> = {
       proportions: proportions(o, sl), fit: fit(o), color: col, shoes: shoes(o, occasion, sl), cohesion: cohesion(o, boldness),
     };
+    // v8: slides under an otherwise clean outfit (no other part has a fault of 1 or more) cost less
+    if (truthy(t.sk1_soft) && parts.shoes.reasons.some((r) => r.check === "SK1_slides_out")
+        && !ORDER.some((k) => k !== "shoes" && parts[k].reasons.some((r) => r.points <= -1.0))) {
+      parts.shoes.add(t.sk1_soft, "the rest of the outfit is clean, so the slides cost less", "SK1s_slides_soft");
+    }
     const res = {} as Record<PartName, PartResult>;
     for (const k of ORDER) {
       const r = k === "cohesion" ? data.partRange.cohesion : data.partRange.default;
@@ -1212,6 +1303,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     for (const [k, r] of live) ps.set(k, r.score!);
     const { avg, x, floored, wsum } = combine(ps, cond, occ, occasion, careOrStrain);
     const bonus = earnedBonus(ps);
+    const penalty = piledPenalty(ps);
 
     // the lowest part leads the card, with its one-line reason (ties: the heavier part)
     let lowK: PartName | null = null;
@@ -1221,7 +1313,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         continue;
       }
       const a = live.get(k)!.score!, b = live.get(lowK)!.score!;
-      if (a < b || (a === b && -W[k] < -W[lowK])) lowK = k;
+      if (a < b || (a === b && -WT[k] < -WT[lowK])) lowK = k;
     }
     const lr = live.get(lowK!)!;
     const neg = lr.reasons.filter((r) => r.points < 0);
@@ -1232,9 +1324,9 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       lowest = { part: null, score: BASE, line: data.copy.solidLine };
     }
     const weightsUsed: Partial<Record<PartName, number>> = {};
-    for (const k of live.keys()) weightsUsed[k] = pyRound(W[k] / wsum, 3);
+    for (const k of live.keys()) weightsUsed[k] = pyRound(WT[k] / wsum, 3);
     return {
-      overall: roundHalf(x), rawScore: pyRound(x, 3), rawUnrounded: x, average: pyRound(avg, 3), averageUnrounded: avg, earnedBonus: bonus,
+      overall: roundHalf(x), rawScore: pyRound(x, 3), rawUnrounded: x, average: pyRound(avg, 3), averageUnrounded: avg, earnedBonus: bonus, piledPenalty: penalty,
       version: data.label, engine: data.engine,
       parts: res, naParts: ORDER.filter((k) => res[k].score === null), weightsUsed,
       condition: cond, occasion: occ, floored, careOrStrain, lowest, secondLook: sl,
@@ -1248,7 +1340,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 /** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
 export const defaultParts: PartsEngine = createParts(PARTS_DATA);
 
-/** parts_proto.score_parts() (engine v7) with the bundled data. Never mutates `reading`. */
+/** parts_proto.score_parts() (engine v8) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
 }
