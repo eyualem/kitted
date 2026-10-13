@@ -29,8 +29,10 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Ten engines. engine="v10" is THE DEFAULT since Oct 13 (v9 plus the creators' rules, TUNE["v10"]; report
-../../rubric/research/parts/v10.md); engine="v9" (the default Oct 12-13: v8 plus four consensus fixes, TUNE["v9"], #232);
+Eleven engines. engine="v11" is THE DEFAULT since Oct 13 (v10 plus two fixes from the creators' own outfits: a tank or
+tee under another top layer is judged by the layer over it in STY-4, and skinny joggers or sweats pay the skinny charge out
+of the gym and home; TUNE["v11"], report ../../rubric/research/parts/v11.md); engine="v10" (the default earlier on Oct 13:
+v9 plus the creators' rules, TUNE["v10"]; report ../../rubric/research/parts/v10.md); engine="v9" (the default Oct 12-13: v8 plus four consensus fixes, TUNE["v9"], #232);
 engine="v8" (the default earlier on Oct 12 (the gold-set retune, DECISIONS-LOG #227-228: TUNE["v8"]
 below, ../gold_tune.py, report ../../rubric/research/parts/gold-retune.md). engine="v7" (the default Oct 11-12: v6 plus "a condition read moves points only on a garment
 read clear" (TUNE["v7"], ../parts7_test.py, DECISIONS-LOG #219). engine="v6" (the default before it: v5 plus PB1 "roomier than the look" (the council's per-style
@@ -57,7 +59,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-10 (Oct 13, 2026)"
+VERSION = "parts-proto-11 (Oct 13, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
             "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
@@ -341,7 +343,7 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8"):
     TUNE[_e].update(_OFF9)
 TUNE["v9"] = dict(TUNE["v8"], int_top=6.0, int_hoodie=5.0, dd_same=1.0, gt1=1.5, cl1_own=True)
 VERSIONS["v9"] = "parts-proto-9 (Oct 12, 2026)"
-# v10 (Oct 13, THE DEFAULT; "the creators' rules": the founder approved using how his taste sources judge, Tim
+# v10 (Oct 13, the default until v11; "the creators' rules": the founder approved using how his taste sources judge, Tim
 # Dessaint, Wanhee Kim, Jaye Alexander, plus Frugal Aesthetic as a fourth voice; rubric/research/creators/
 # creators-rules.md, report rubric/research/parts/v10.md). Each reads only fields the live reading has; each knob is
 # 0/False in v1-v9.
@@ -356,6 +358,25 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9"):
     TUNE[_e].update(_OFF10)
 TUNE["v10"] = dict(TUNE["v9"], pn_narrow=0.5, pn_skinny=1.5, pn_slim_soft=True, cp1_dark=0.5)
 VERSIONS["v10"] = "parts-proto-10 (Oct 13, 2026)"
+# v11 (Oct 13, THE DEFAULT; the founder: "yes build both fixes as v11"; creators-rules.md §8, report
+# rubric/research/parts/v11.md). Two fixes from the app on the creators' own outfits; each reads only fields the live
+# reading has; each knob is 0/False in v1-v10.
+#   h3_base_covered (STY-4): a plain base top (a tank or a tee) worn under another top layer (a flannel, overshirt,
+#     camp shirt, denim shirt, oxford or dress shirt, cardigan, or anything read as outerwear) is left out of H3's
+#     level gap; the layer over it stands for the top half. Tim's white tank under a black flannel with pleated
+#     trousers and loafers is the deliberate smart/casual mix all four creators praise (creators-rules A9). The
+#     reading has no open/closed field for the outer layer, so it isn't required.
+#   pn_lounge_skinny (PRO-13): joggers or sweatpants read skinny (not slim) cost this on Proportions out of the gym
+#     and home, on top of the loungewear holds (Tim: "skinny, leather and jogger: three words that should never be in
+#     the same sentence"). Skinny is 3 of 73 jogger/sweat readings (4%, all Tim's skinny leather joggers), so ordinary
+#     cuffed joggers don't get it and the full skinny total (2.0) is used.
+_OFF11 = dict(h3_base_covered=False, pn_lounge_skinny=0.0)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"):
+    TUNE[_e].update(_OFF11)
+TUNE["v11"] = dict(TUNE["v10"], h3_base_covered=True, pn_lounge_skinny=2.0)
+VERSIONS["v11"] = "parts-proto-11 (Oct 13, 2026)"
+BASE_TOPS = {"tank_top", "tee"}                               # v11 STY-4: plain base tops judged by the layer over them
+COVER_TOPS = {"flannel_shirt", "overshirt", "camp_collar_shirt", "denim_shirt", "oxford_shirt", "dress_shirt", "cardigan"}
 DARK_NEUTRALS = {"black", "charcoal", "navy", "denim_dark"}   # v10 COL-11: the dark base that tones a bright piece down
 LOUD_PRINTS = {"checks_plaid", "floral", "camo", "other"}      # CL1's patterns that are loud at a large scale
 INT_TOPS = R.COLLARED | {"sweater", "cardigan", "quarter_zip", "camp_collar_shirt", "flannel_shirt", "overshirt", "denim_shirt"}
@@ -572,6 +593,12 @@ def _proportions(o, sl, t):
         else:
             p.add(-pts, f"{subj} read dated; a straight leg balances the outfit", "PN1_narrow_leg")
         faults += pts
+    # v11: skinny joggers or sweatpants out of the gym and home (0 in v1-v10), on top of the loungewear holds
+    if (t["pn_lounge_skinny"] and leg == "skinny" and b_sub in R.LOUNGE_BOTTOMS
+            and o.get("occasion") not in LOUNGE_OK):
+        p.add(-t["pn_lounge_skinny"], f"the skinny {b_sub.replace('_', ' ')} read dated; a relaxed leg balances the outfit",
+              "PN1_narrow_leg")
+        faults += t["pn_lounge_skinny"]
 
     # ---- tips: real rules whose readings haven't passed (they never move the number)
     if T is not None and O is None and T.get("tucked") in (None, "none", "na") and T.get("length") == "below_crotch":
@@ -1045,6 +1072,9 @@ def _cohesion(o, boldness, t):
         h3, h3_line = 1.5, "the tailored jacket and the loose or washed jeans come from different worlds"
     nonshoe = [g for g in o["main"] if g.get("category") != "footwear"
                and not (g.get("category") == "bottom" and g.get("subcategory") in R.LOUNGE_BOTTOMS)]
+    if t["h3_base_covered"] and (o["outers"] or any(g.get("subcategory") in COVER_TOPS for g in o["tops"])):
+        # v11: a tank or tee under another top layer is judged by the layer over it (0 in v1-v10)
+        nonshoe = [g for g in nonshoe if not (g.get("category") == "top" and g.get("subcategory") in BASE_TOPS)]
     f = [R.formality(g) for g in nonshoe]
     if len(f) >= 2 and max(f) - min(f) >= 2.5:
         inner = [R.formality(g) for g in nonshoe if g.get("category") != "outerwear"]
@@ -1235,13 +1265,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v10", tune=None):
+def _tune(engine="v11", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v10", tune=None):
+def earned_bonus(part_scores, engine="v11", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1255,7 +1285,7 @@ def earned_bonus(part_scores, engine="v10", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v10", tune=None):
+def piled_penalty(part_scores, engine="v11", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1266,7 +1296,7 @@ def piled_penalty(part_scores, engine="v10", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v10", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v11", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1305,10 +1335,10 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v10", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v11", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v10" (v9 + the creators' rules, default), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v11" (v10 + the covered base top and skinny joggers, default), "v10" (v9 + the creators' rules), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)

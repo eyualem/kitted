@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.7.0",
- "engine": "v10",
- "label": "parts-proto-10 (Oct 13, 2026)",
+ "version": "1.8.0",
+ "engine": "v11",
+ "label": "parts-proto-11 (Oct 13, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "1d3b63355a38c56dfc48a62721ffc9f628f1b8074aa8e3c600dfb69d4a8401cf",
+ "sourceSha256": "001446442940b6846b406ce3444b97df5098be748c2c76e873befa4786e5476c",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -200,7 +200,9 @@ export const PARTS_DATA: PartsData = {
   "gt1": 1.5,
   "cl1_own": true,
   "pn_slim_soft": true,
-  "cp1_dark": 0.5
+  "cp1_dark": 0.5,
+  "h3_base_covered": true,
+  "pn_lounge_skinny": 2
  },
  "sets": {
   "TAILORED": [
@@ -388,6 +390,19 @@ export const PARTS_DATA: PartsData = {
    "charcoal",
    "denim_dark",
    "navy"
+  ],
+  "BASE_TOPS": [
+   "tank_top",
+   "tee"
+  ],
+  "COVER_TOPS": [
+   "camp_collar_shirt",
+   "cardigan",
+   "denim_shirt",
+   "dress_shirt",
+   "flannel_shirt",
+   "overshirt",
+   "oxford_shirt"
   ]
  },
  "boxyVolume": 4,

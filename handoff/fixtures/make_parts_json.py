@@ -1,5 +1,5 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v10 = parts-proto-10, the default since Oct 13: v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
+engine v11 = parts-proto-11, the default since Oct 13: v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
 rubric/research/parts/gold-retune.md; v7 was v6 plus "a condition read counts only on a garment read clear", #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.7.0"
-ENGINE = "v10"
+VERSION = "1.8.0"
+ENGINE = "v11"
 
 
 def sl(s):
@@ -73,6 +73,7 @@ def data(engine=ENGINE):
             "INT_TOPS": sl(P.INT_TOPS), "INT_OUTERS": sl(P.INT_OUTERS), "HOODIES": sl(P.HOODIES),   # v9 the interview top
             "LOUD_NATIVE": sl(P.LOUD_NATIVE),                                  # v9 CL1: looks whose own pieces are loud
             "DARK_NEUTRALS": sl(P.DARK_NEUTRALS),                              # v10 COL-11: the dark base
+            "BASE_TOPS": sl(P.BASE_TOPS), "COVER_TOPS": sl(P.COVER_TOPS),      # v11 STY-4: a base top under a layer
         },
         "boxyVolume": 4,                     # volume >= this is a roomy / boxy piece (every part)
         "proportions": {

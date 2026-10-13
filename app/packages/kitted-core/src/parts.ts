@@ -1,5 +1,6 @@
-// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v10" (parts-proto-10, the
-// default since Oct 13: v9 plus the creators' rules, rubric/research/parts/v10.md; v9: v8 plus four consensus fixes, #232; v8: v7 retuned against the gold-set panel, #227-228, rubric/research/parts/gold-retune.md; v7 was the
+// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v11" (parts-proto-11, the
+// default since Oct 13: v10 plus a covered base top judged by the layer over it and skinny joggers charged, rubric/research/parts/v11.md;
+// v10: v9 plus the creators' rules, rubric/research/parts/v10.md; v9: v8 plus four consensus fixes, #232; v8: v7 retuned against the gold-set panel, #227-228, rubric/research/parts/gold-retune.md; v7 was the
 // default from Oct 11; DECISIONS-LOG #195-219: v3 plus the workwear and outdoor shapes, the track jacket as a short
 // layer, H2 judged on the pick-free label so picks never move a number (v4), SX1 "a piece from another look", the
 // style-crossing fault on Style (v5), and v6: PB1 "roomier than the look" (the style council's per-style bands as one
@@ -20,7 +21,7 @@
 //  - Python `x in (…)` on a missing key is `None in (…)`: undefined and null both mean None (nv)
 //  - one garment, one credit: "already credited" is object identity on our own copies (Python's id(g))
 //  - where Python would raise (a garment without a subcategory reaching a reason line), this throws the same error
-// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.7.0); the v4.1
+// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.8.0); the v4.1
 // helpers it shares (formality, colors, style detection, prepare/normalize) come from the rubric engine.
 
 import { PARTS_DATA } from "./partsData";
@@ -147,6 +148,11 @@ export interface PartsTune {
   pn_slim_soft: boolean;
   /** COL-11: one bright piece, the only accent, toned down by a dark neutral beside it, earns this on Color. */
   cp1_dark: number;
+  // ---- v11 (two fixes from the creators' own outfits; off in v1-v10)
+  /** STY-4 (H3's level gap) leaves out a base top (BASE_TOPS) worn under another top layer (COVER_TOPS or any outer). */
+  h3_base_covered: boolean;
+  /** PRO-13: skinny joggers or sweatpants cost this on Proportions out of the gym and home (on top of the loungewear holds). */
+  pn_lounge_skinny: number;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -458,6 +464,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const LOUD_PATTERNS = PS("LOUD_PATTERNS"), LOUD_LOGO_TOPS = PS("LOUD_LOGO_TOPS");
   const INT_TOPS = PS("INT_TOPS"), INT_OUTERS = PS("INT_OUTERS"), HOODIES = PS("HOODIES"), LOUD_NATIVE = PS("LOUD_NATIVE");
   const DARK_NEUTRALS = PS("DARK_NEUTRALS");
+  const BASE_TOPS = PS("BASE_TOPS"), COVER_TOPS = PS("COVER_TOPS"); // v11 STY-4: a base top under a layer
   /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print. */
   const loudPrint = (g: Garment): boolean => g.pattern === "graphic" || (LOUD_PATTERNS.has(nv(g.pattern)) && g.pattern_scale === "large");
   const WT: Record<PartName, number> = t.weights ?? W; // v8: the tuned weights (combine, weightsUsed, the lowest tie)
@@ -637,6 +644,11 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       if (truthy(t.pn_slim_soft) && leg !== "skinny") p.add(-pts, `${subj} would balance better with a straight leg`, "PN1_narrow_leg"); // v10
       else p.add(-pts, `${subj} read dated; a straight leg balances the outfit`, "PN1_narrow_leg");
       faults += pts;
+    }
+    // v11: skinny joggers or sweatpants out of the gym and home (0 in v1-v10), on top of the loungewear holds
+    if (truthy(t.pn_lounge_skinny) && leg === "skinny" && LOUNGE_BOTTOMS.has(bSub) && !LOUNGE_OK.has(o.occasion)) {
+      p.add(-t.pn_lounge_skinny, `the skinny ${rep(bSub)} read dated; a relaxed leg balances the outfit`, "PN1_narrow_leg");
+      faults += t.pn_lounge_skinny;
     }
 
     // tips: real rules whose readings haven't passed (they never move the number)
@@ -1099,7 +1111,11 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       h3 = CO.jacketJeans;
       h3Line = "the tailored jacket and the loose or washed jeans come from different worlds";
     }
-    const nonshoe = o.main.filter((g) => g.category !== "footwear" && !(g.category === "bottom" && LOUNGE_BOTTOMS.has(g.subcategory)));
+    let nonshoe = o.main.filter((g) => g.category !== "footwear" && !(g.category === "bottom" && LOUNGE_BOTTOMS.has(g.subcategory)));
+    if (truthy(t.h3_base_covered) && (o.outers.length > 0 || o.tops.some((g) => COVER_TOPS.has(g.subcategory)))) {
+      // v11: a tank or tee under another top layer is judged by the layer over it (0 in v1-v10)
+      nonshoe = nonshoe.filter((g) => !(g.category === "top" && BASE_TOPS.has(g.subcategory)));
+    }
     const f = nonshoe.map((g) => formality(g));
     if (f.length >= 2 && maxOf(f) - minOf(f) >= CO.spread.atLeast) {
       const inner = nonshoe.filter((g) => g.category !== "outerwear").map((g) => formality(g));
@@ -1387,7 +1403,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 /** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
 export const defaultParts: PartsEngine = createParts(PARTS_DATA);
 
-/** parts_proto.score_parts() (engine v10) with the bundled data. Never mutates `reading`. */
+/** parts_proto.score_parts() (engine v11) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
 }

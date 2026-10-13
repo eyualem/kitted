@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216, v6 rules #217; v8 rules Oct 12, #228; v9 rules Oct 12, #232). One or
+"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216, v6 rules #217; v8 rules Oct 12, #228; v9 rules Oct 12, #232; v10 and v11 rules Oct 13). One or
 more made-up outfits per rule ID in ../rubric/v5-styles.md, each asserting that the rule works in the parts engine
-(parts_proto.py, default v9): the
+(parts_proto.py, default v11): the
 right check fires (or doesn't), the right part moves by the right amount, and the final score lands in the right band.
 
   /usr/bin/python3 rules_conformance.py          -> runs every case against parts_proto.py; exits 1 on any failure;
@@ -342,6 +342,24 @@ case("PRO-13-suit", "PRO-13", "slim suit trousers with an oxford and derbies: a 
      {"not_fired": [F(PN1)], "part": {"proportions": {"score": 7.0}}, "band": "Put together"})
 case("PRO-13-joggers", "PRO-13", "slim joggers: loungewear has its own rules, no charge",
      Rd(TEE, bottom("joggers", "grey", "slim", "cuffed"), WLS), {"not_fired": [F(PN1)], "band": "Getting there"})
+SKJOG = Rd(top("sweater", "black"), bottom("joggers", "black", "skinny", "cuffed"), WLS)
+case("PRO-13-skinny-joggers", "PRO-13", "a black sweater over skinny black joggers with white leather sneakers at Everyday: -2.0, 'read dated' (v11)",
+     SKJOG, {"fired": [F(PN1, "proportions", -2.0, line="the skinny joggers read dated; a relaxed leg balances the outfit")],
+             "part": {"proportions": {"score": 5.0}}, "ceiling": 7.5, "overall": 6.5, "band": "Getting there"})
+case("PRO-13-skinny-joggers-gym", "PRO-13", "the same skinny joggers at the gym: no charge", SKJOG,
+     {"not_fired": [F(PN1)], "part": {"proportions": {"score": 7.0}}, "overall": 7.0, "band": "Put together"}, occasion="gym",
+     vs={"case": "PRO-13-skinny-joggers", "parts": {"proportions": 2.0}})
+case("PRO-13-skinny-joggers-home", "PRO-13", "the same skinny joggers at home: no charge", SKJOG,
+     {"not_fired": [F(PN1)], "band": "Put together"}, occasion="home")
+case("PRO-13-slim-joggers", "PRO-13", "the same sweater over slim black joggers: slim joggers are never charged",
+     Rd(top("sweater", "black"), bottom("joggers", "black", "slim", "cuffed"), WLS),
+     {"not_fired": [F(PN1)], "overall": 7.0, "band": "Put together"}, vs={"case": "PRO-13-skinny-joggers", "overall": "up"})
+case("PRO-13-skinny-sweats-class", "PRO-13", "a tee over skinny grey sweatpants at Class: charged on Proportions, and the loungewear hold (6.5) still applies",
+     Rd(TEE, bottom("sweatpants", "grey", "skinny", "cuffed"), WLS),
+     {"fired": [F(PN1, "proportions", -2.0, line="the skinny sweatpants read dated")], "ceiling": 6.5, "band": "Getting there"},
+     occasion="class")
+case("PRO-13-skinny-joggers-interview", "PRO-13", "the skinny joggers at an interview: charged, on top of the 4.0 hold", SKJOG,
+     {"fired": [F(PN1, "proportions", -2.0)], "ceiling": 4.0, "overall": 4.0, "band": "Needs a fix"}, occasion="interview")
 PR2B = "PR2b_short_layer_read"
 case("PRO-14-overshirt", "PRO-14", "an olive overshirt read as ending at the belt, over a tee and wide jeans: +1.0",
      Rd(TEE, outer("overshirt", "olive", length="at_belt"), WJEANS, WLS),
@@ -677,6 +695,28 @@ case("STY-4-big", "STY-4", "a tank top with suit trousers: a very big spread, -4
 case("STY-4-bridged", "STY-4", "a tank top under a blazer with dark jeans: the jacket is the one place a high-low mix works",
      Rd(top("tank_top", "white"), outer("blazer", "navy"), DJEANS, LOAFER),
      {"not_fired": [F("H3_another_world")], "band_in": ["Put together", "Sharp"]})
+# v11: a plain base top (a tank or a tee) under another top layer is judged by the layer over it
+TIM3 = Rd(top("tank_top", "white", 2, tucked="full", length="na"), outer("flannel_shirt", "black", 4, length="mid_fly"),
+          bottom("trousers", "black", "wide"), LOAFER_BK)
+case("STY-4-covered-flannel", "STY-4", "a white tank under a roomy black flannel with wide black trousers and black loafers (Tim's 'after'): the flannel stands for the top half, no charge (v11)",
+     TIM3, {"not_fired": [F("H3_another_world"), F("TK1_tank_alone")], "part": {"cohesion": {"score": 7.5}}, "overall": 7.5,
+            "band": "Put together"})
+case("STY-4-covered-shirt-top", "STY-4", "the same tank under the flannel read as a second top, with dress shoes: no charge (v11)",
+     Rd(top("tank_top", "white", tucked="full", length="na"), top("flannel_shirt", "black", 4), bottom("trousers", "black", "wide"), DRESS),
+     {"not_fired": [F("H3_another_world")], "part": {"cohesion": {"score": 7.5}}, "band": "Put together"})
+case("STY-4-covered-cardigan", "STY-4", "a tank under a navy cardigan with grey trousers and derbies: no charge (v11)",
+     Rd(top("tank_top", "white"), top("cardigan", "navy"), TROUSERS, DERBY),
+     {"not_fired": [F("H3_another_world")], "part": {"cohesion": {"score": 7.0}}, "band": "Put together"})
+case("STY-4-covered-suit", "STY-4", "a white tee under a navy suit with dress shoes: the jacket stands for the top half, no charge (v11)",
+     Rd(TEE, outer("suit_jacket", "navy"), bottom("suit_trousers", "navy", "straight", "no_break"), DRESS),
+     {"not_fired": [F("H3_another_world")], "band_in": ["Put together", "Sharp"]})
+case("STY-4-tank-alone", "STY-4", "the tank with nothing over it, wide black trousers and black loafers: still charged, and [STY-9] too",
+     Rd(top("tank_top", "white"), bottom("trousers", "black", "wide"), LOAFER_BK),
+     {"fired": [F("H3_another_world", "cohesion", -1.5), F("TK1_tank_alone", "cohesion", -2.0)], "part": {"cohesion": {"score": 4.0}},
+      "overall": 6.5, "band": "Getting there"}, vs={"case": "STY-4-covered-flannel", "overall": "down"})
+case("STY-4-hoodie-not-cover", "STY-4", "a tank under a grey hoodie with grey trousers and loafers: a hoodie isn't a layer that covers it, still charged",
+     Rd(top("tank_top", "white"), top("hoodie", "grey"), TROUSERS, LOAFER), {"fired": [F("H3_another_world", "cohesion", -1.5)],
+                                                                             "band": "Put together"})
 # STY-5: a piece from another look (the founder's three outfits, then the exemptions)
 GT_TROUSERS = Rd(top("graphic_tee", "white", 4), mod(TROUSERS, color_family="charcoal"), LOAFER_BK)
 case("STY-5-graphic", "STY-5", "oversized graphic tee, pleated trousers, loafers (founder case 1): Style -3.0, 6.5", GT_TROUSERS,
