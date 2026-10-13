@@ -55,3 +55,6 @@ __pycache__/
 # mockup renders and build scratch (regenerate with tools/mockshots/preview.sh)
 screenshots/
 build/
+
+# gold-set retune dumps quote the judges’ reasons (judge files are internal)
+extraction-test/results/gold-tune/dump_*.txt

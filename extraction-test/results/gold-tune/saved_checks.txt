@@ -1,0 +1,34 @@
+saved photos by who: {'founder': 21, 'friend': 4, 'unknown': 2, 'web': 12, 'stock': 39}
+  founder  oct7-ph1                 everyday   v7 5.5 -> v8 5.5   Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 7 | SK1_slides_out-2.5 SK1s_slides_soft+0.5
+  founder  oct7-ph2                 everyday   v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Style 7.5 | 
+  founder  oct7-ph3                 everyday   v7 7.5 -> v8 7.5   Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 8 | PR3_tailored_line+1.0 SC_chosen_for_look+0.5 H2_clear_top_to_toe+0.5
+  founder  oct7-ph4                 everyday   v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Style 7.5 | 
+  founder  phone-0d39d6             everyday   v7 6.5 -> v8 7.0   Proportions 8.5 · Fit 7 · Color 7 · Shoes 4.5 · Style 7.5 | PR1_waist_break+1.5 SK1_slides_out-2.5 SK1b_hem_drags-0.5 SK1s_slides_soft+0.5
+  founder  phone-1f1997             class      v7 6.5 -> v8 6.5   Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7.5 | SK1_slides_out-2.5 SK1b_hem_drags-0.5 SK1s_slides_soft+0.5
+  founder  phone-403ade             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | 
+  founder  phone-5a9049             everyday   v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | 
+  founder  phone-6b14db             everyday   v7 5.5 -> v8 5.5   Proportions 6.5 · Fit 7 · Color 7 · Shoes 5 · Style 7 | PF10_peek-0.5 SK1_slides_out-2.5 SK1s_slides_soft+0.5
+  founder  phone-7de605             everyday   v7 5.5 -> v8 5.5   Proportions 6.5 · Fit 7 · Color 7 · Shoes 5 · Style 7 | PF10_peek-0.5 SK1_slides_out-2.5 SK1s_slides_soft+0.5
+  founder  phone-7f14a4             everyday   v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7.5 | 
+  founder  phone-8ad378             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | 
+  founder  phone-8bc29d             class      v7 6.5 -> v8 6.5   Proportions 7 · Fit 7 · Color 7 · Style 7.5 | 
+  founder  phone-968016             class      v7 7.5 -> v8 7.5   Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5 | CP2_quiet_accent+0.5 SC_chosen_for_look+0.5
+  founder  phone-a765e8             everyday   v7 5.5 -> v8 5.5   Proportions 6.5 · Fit 7 · Color 7 · Shoes 5 · Style 7 | PF10_peek-0.5 SK1_slides_out-2.5 SK1s_slides_soft+0.5
+  founder  phone-b0f0c8             everyday   v7 7.0 -> v8 7.0   Proportions 6.5 · Fit 7 · Color 7 · Shoes 8 · Style 7.5 | PF10_peek-0.5 SC_chosen_for_look+0.5
+  founder  phone-d58b14             class      v7 6.5 -> v8 6.5   Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 7 | SK1_slides_out-2.5 SK1s_slides_soft+0.5
+  founder  phone-d6559a             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Style 7 | 
+  founder  phone-d918c0             class      v7 7.5 -> v8 7.5   Proportions 7 · Fit 7 · Color 7.5 · Shoes 8 · Style 7.5 | CP2_quiet_accent+0.5 SC_chosen_for_look+0.5
+  founder  phone-e026de             class      v7 6.5 -> v8 6.5   Proportions 7 · Fit 7 · Color 7 · Shoes 4.5 · Style 7.5 | SK1_slides_out-2.5 SK1b_hem_drags-0.5 SK1s_slides_soft+0.5
+  founder  phone-f07193             class      v7 6.5 -> v8 6.5   Proportions 7 · Fit 5.5 · Color 7 · Style 7 | FF1_sleeves_long-1.5
+  friend   phone-d1967f             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 6 | H3_another_world-1.5
+  friend   phone-e438d4             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | 
+  friend   phone-f4870b             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | 
+  friend   phone-fb0b17             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5 | 
+  unknown  phone-703a8b             class      v7 7.5 -> v8 7.5   Proportions 7.5 · Fit 7 · Color 7.5 · Style 7 | PR1_waist_break+0.5 CP2_quiet_accent+0.5
+  unknown  phone-ebe23f             class      v7 7.0 -> v8 7.0   Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7 | 
+all saved: n 78 · v7 mean 6.96 8+ 6% · v8 mean 6.92 8+ 4% · moved 14
+stock/web: n 51 · v7 mean 7.07 8+ 10% · v8 mean 7.01 8+ 6% · moved 13
+  steadiness b1 arm A v7: within 0.5 of median 49/49 · exact 39
+  steadiness b1 arm A v8: within 0.5 of median 49/49 · exact 35
+  steadiness zoom1 B v7: within 0.5 of median 66/66 · exact 57
+  steadiness zoom1 B v8: within 0.5 of median 66/66 · exact 52

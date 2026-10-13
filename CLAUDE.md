@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026 (market research added).**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026 (scoring retuned on paper against the gold set: v8 candidate, #227).**
 
 ## How we keep context (rules for every chat)
 
@@ -44,6 +44,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P1** · **Adopt the retuned scoring (v8) and port it to the app? (#227, 5 min to read `rubric/research/parts/gold-retune.md` → "What changes")** On photos it was never tuned on it follows the judge panel about twice as well (r 0.32 → 0.54) and your 20 blind ratings go from −0.09 to 0.41; your friends' fits stay 7.0, one of your saved checks moves (6.5 → 7.0), same photo still gets the same score. Default: yes. Also OK two new card lines (outward-facing): "the slim jeans read dated; a straight leg balances the outfit" and "the big, loud print on the tee takes over the outfit". *Unblocks: the port (Python + `@kitted/core` parity, fix lines, `rubric/v5-styles.md`).*
 - [ ] **P2** · **The App Store name and subtitle (#225, outward-facing).** Default: `Kitted: Outfit Rater for Men` (people search "outfit rater"; the "rate my outfit" results are weak apps) with the subtitle `Score your fit. Get the fix.` Alternatives in `market/market-research.md` §7. Also: keep the $5.99 monthly at launch (default) or make it $7.99 so the yearly plan looks like a bigger saving?
 - [ ] **P2** · **Pause the proportion scripts until the gold set? (#222–223)** Even perfect measuring would change 4 of 79 scores under today's rules, and the best candidate (slim vs straight legs) failed on 90 public labelled pants. Default: pause; the gold set then decides which shape rules earn or cost points.
 - [ ] **P2** · **"Going for" (built Oct 11, #218; demo screens 71–78):** it changes the advice, never the score. Should it ever lower the score when the outfit clearly misses that look? Default: advice only. Also skim its words (`app/src/i18n/en.ts`, keys `gf.*`), 5 min.
@@ -318,8 +319,10 @@
 
 ## Next steps, in order
 
-### Retune the scoring rules against the gold-set panel (new chat, Oct 12): start here
-**Why:** on 224 public photos the app's score barely follows a 5-judge panel (r 0.33; #224), and the founder's blind ratings agree with the panel (r 0.69) but not with the app (r −0.09; #225). So the panel is the target. Fit, Color and Cohesion don't track it at all (r 0.04, −0.18, 0.21); Shoes does (0.61).
+### Retune the scoring rules against the gold-set panel: done on paper Oct 12 (#227); next is the port, after the founder's OK
+**Result (report `rubric/research/parts/gold-retune.md`):** parts engine v8 candidate (`parts_proto.py`, `engine="v8"`; v7 stays the default and the app is unchanged). Held-out test photos r 0.32 → 0.54, the founder's 20 −0.09 → 0.41, steadiness unchanged within 0.5, friends' fits still 7.0, one founder check 6.5 → 7.0. Rules: narrow legs cost, loud prints cost, a tank top alone costs; a short or tucked top over wide legs earns more, over straight legs less; boxy long sleeves and stacked baggy jeans no longer cost (closes KD-2, #221); no credit for one bright piece or one standout pattern; weights 30/15/20/15/20; "problems add up". Not built: size faults, the near-suit, a shirt too long (the reading can't see them). **Next, on a yes:** port v8 to `@kitted/core` with parity (`make_parts_json.py`, `parts.ts`), add fix lines for the new faults (`fixes.json` → `parts`, `en.ts` `pfix.*`), rewrite `rubric/v5-styles.md` and the conformance cases, re-run the fix engine's paper test, then screenshots of the changed demo cards.
+
+**The original brief, kept for reference.** **Why:** on 224 public photos the app's score barely follows a 5-judge panel (r 0.33; #224), and the founder's blind ratings agree with the panel (r 0.69) but not with the app (r −0.09; #225). So the panel is the target. Fit, Color and Cohesion don't track it at all (r 0.04, −0.18, 0.21); Shoes does (0.61).
 **Read first:**
 - `rubric/research/notes/gold-set-1.md`
 - `extraction-test/results/gold1/` (`compare.txt`, `compare.json` = panel, app and per-judge scores; `scores.json` = the app's parts per run; `raw.json` = the readings, git-ignored)
@@ -370,6 +373,8 @@ All of them skew female and studio/street, not mirror selfies, so confirm on his
 **Rules:** CLAUDE.md rule 7 (profiles) and rule 9 (memory). No app change until a script passes and the founder sees the before/after.
 
 **Step 1 done Oct 12 (#222, `rubric/research/parts/proportion-headroom.md`):** under today's rules even perfect proportion facts move only 4 of 79 shown scores; Proportions sits at 7.0 because of the rules, not the readings. Worth a script, in order: slim vs straight legs, a boxy-short-top measure (length + roominess), veto guards for "pooling" and "sleeves cover the hands". Only Fashionpedia's labels are commercial-safe; SAM 2.1 Tiny (Apache 2.0) is the one usable segmenter, deferred. Fashionpedia val downloaded (your OK, Oct 12).
+
+**Retune on paper, Oct 12 (#227):** the v8 candidate follows the panel about twice as well on held-out photos (r 0.54); waiting on the founder's OK to port (to-do list).
 
 **Gold set, first run, Oct 12 (#224, `rubric/research/notes/gold-set-1.md`): the app barely tells good fits from bad.** On 225 public photos rated by a 5-judge panel (3 models, repeatable, full scale), the app's score follows the panel only weakly (r 0.33): the panel's worst fits get 6.65 from the app, its best 7.23. Only Shoes tracks the panel (r 0.61); Fit, Color and Cohesion don't (0.04, −0.18, 0.21). Your blind check of 20 agreed with the panel (r 0.69) and not the app (r −0.09; #225), so the panel is the target. Next: retune the rules against it (a new chat; brief in "Next steps"), starting with (size faults, loud patterns, pieces from different worlds, softer slides/sweats under a deliberate outfit).
 
@@ -583,6 +588,7 @@ Exceptions:
 | `rubric/v4.md` (v3.md superseded), `extraction-test/` | The old v4 rules in plain words (v4.1 still scores old checks); the vision test tools and results | Reference |
 | `research-context.md`, `brainstorm/`, `inputs/*.md` | Research, competitors, legal, UX checklist §C14 | Reference |
 | `market/market-research.md` (+ 4 detail files in `market/`) | Market research and positioning (Oct 12, #225): competitors, market size, free substitutes, pricing benchmarks, App Store search, the founder's research tasks | **Live**; update when positioning or pricing changes |
+| `rubric/research/parts/gold-retune.md` | The v8 retune against the gold-set panel (Oct 12, #227): what changes on the card, before/after numbers, what's still wrong; scripts `extraction-test/gold_tune.py`, `gold_features.py` | **Live** until v8 is ported or dropped |
 | `rubric/research/v5-brief.md` | Rubric v5 plan (Oct 9): what "meticulous" means, the 8 steps, research questions, the Codex/Gemini prompts | **Live** until v5 locks |
 | `rubric/research/parts/proportion-headroom.md`, `rubric/research/notes/fp-leg-test.md` | Proportion scripts (Oct 12, #222–223): which facts can move a score; the leg probe on Fashionpedia (fails) | Reference |
 | `rubric/research/notes/fit-ruler.md` | The fit ruler test (Oct 9, #170): phone-measured sleeve, top and hem vs. the AI; not adopted; how to re-test | Reference |

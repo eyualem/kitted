@@ -2,6 +2,8 @@
 
 *Oct 11, 2026. DECISIONS-LOG #216; v6's three fixes #217; v7's condition rule and the hoodie as a streetwear jacket #219. The founder: "be sure the app is following streetwear rules, smart casual rules and so on… it should follow the rules that are listed, it shouldn't just guess."*
 
+*A retuned candidate, parts v8, exists on paper only (Oct 12, #227, `rubric/research/parts/gold-retune.md`). It is not live: everything below is still v7 until the founder OKs the port.*
+
 This is the rulebook the app **actually follows today** on every new fit check. It was written from the engine's code and data (`extraction-test/rubrics/parts_proto.py`, engine v7, and its TypeScript twin in the app, parts data 1.4.0), not from the research. Where the research says something the engine doesn't do, or the other way round, it's listed at the end under **Known differences**.
 
 **Every rule has an ID in brackets, like [STR-5].** Each ID has one or more made-up test outfits that must behave exactly as the line says: 298 outfits for 129 rules. They run in Python (`extraction-test/rules_conformance.py`) and in the app's tests (`rulesConformance.test.ts`), and a test's name starts with its rule ID. So if a change ever breaks a rule written here, the test named after that rule fails.

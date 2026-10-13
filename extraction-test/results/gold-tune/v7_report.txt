@@ -1,0 +1,14 @@
+  tune       n 132 · r 0.33 (raw 0.34, rank 0.26, 2-run mean 0.36) · bias +0.02 · MAE 0.72 · within 0.5 76 · sd 0.55 vs 0.92 · 8+ 14% · steady 130/132 (exact 102)
+             by panel band: ≤5.5 n12 → 6.58 · 6–6.5 n29 → 7.16 · 7–7.5 n52 → 7.15 · 8–8.5 n39 → 7.27
+             by source: ig n77 bias -0.51 r 0.28 · pin n43 bias +0.80 r 0.34 · rd n12 bias +0.62 r 0.32
+             parts r: fit 0.02 (sd 0.66, -0.43) · proportions 0.22 (sd 0.66, +0.27) · color -0.09 (sd 0.39, +0.05) · shoes 0.61 (sd 0.93, +0.23) · cohesion 0.26 (sd 0.69, +0.28)
+  test       n  91 · r 0.32 (raw 0.35, rank 0.27, 2-run mean 0.31) · bias +0.04 · MAE 0.80 · within 0.5 55 · sd 0.55 vs 1.03 · 8+ 12% · steady 88/91 (exact 75)
+             by panel band: ≤5.5 n14 → 6.71 · 6–6.5 n19 → 7.05 · 7–7.5 n34 → 7.00 · 8–8.5 n23 → 7.17 · 9+ n1 → 8.00
+             by source: ig n53 bias -0.50 r 0.36 · pin n29 bias +0.98 r 0.47 · rd n9 bias +0.22 r -0.12
+             parts r: fit 0.04 (sd 0.82, -0.48) · proportions 0.11 (sd 0.66, +0.16) · color -0.31 (sd 0.34, +0.19) · shoes 0.61 (sd 0.96, +0.16) · cohesion 0.27 (sd 0.45, +0.36)
+             the founder's 20: r -0.09 · within 0.5 9/20
+  all        n 223 · r 0.33 (raw 0.35, rank 0.27, 2-run mean 0.34) · bias +0.03 · MAE 0.75 · within 0.5 131 · sd 0.55 vs 0.97 · 8+ 13% · steady 218/223 (exact 177)
+             by panel band: ≤5.5 n26 → 6.65 · 6–6.5 n48 → 7.11 · 7–7.5 n86 → 7.09 · 8–8.5 n62 → 7.23 · 9+ n1 → 8.00
+             by source: ig n130 bias -0.51 r 0.33 · pin n72 bias +0.88 r 0.39 · rd n21 bias +0.45 r 0.10
+             parts r: fit 0.03 (sd 0.73, -0.45) · proportions 0.18 (sd 0.66, +0.23) · color -0.18 (sd 0.37, +0.11) · shoes 0.61 (sd 0.94, +0.20) · cohesion 0.26 (sd 0.60, +0.31)
+             the founder's 20: r -0.09 · within 0.5 9/20
