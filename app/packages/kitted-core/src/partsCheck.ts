@@ -192,10 +192,14 @@ function partsFixDone(fix: Fix, first: Reading, merged: Reading): boolean {
 }
 
 /** recheckOutcome with the parts engine. `merged` comes from recheckMerge(first, next, cardFixTargets(fixes)).
- *  newProblems: the parts checks that cost points now and didn't before ("cohesion:ST2", "condition"). */
-export function partsRecheckOutcome(first: Reading, fixes: readonly Fix[], merged: Reading, opts: PartsOptions = {}): RecheckOutcome | null {
+ *  newProblems: the parts checks that cost points now and didn't before ("cohesion:ST2", "condition").
+ *  `mergedOpts`: the options for the merged side when they differ from the first's (the app: the re-check photo's own
+ *  second look); default `opts`, so both sides score alike. */
+export function partsRecheckOutcome(
+  first: Reading, fixes: readonly Fix[], merged: Reading, opts: PartsOptions = {}, mergedOpts?: PartsOptions,
+): RecheckOutcome | null {
   const a = scoreParts(first, opts);
-  const b = scoreParts(merged, opts);
+  const b = scoreParts(merged, mergedOpts ?? opts);
   if (a.overall === null || b.overall === null) return null;
   const A = a as PartsScored;
   const B = b as PartsScored;

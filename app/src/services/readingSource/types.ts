@@ -1,6 +1,7 @@
 // The vision step behind one interface (05 §3.2). Demo: MockReadingSource replays bundled
 // readings with the real timing. Later: DirectGemini (dev only) and the proxy (M4).
 import type { Garment, Reading } from '@kitted/core';
+import type { LookAnswerL, LookAnswerU } from '@/data/types';
 
 export type ReadKind = 'full' | 'recheck' | 'shoeSnap' | 'bottomSnap';
 
@@ -34,10 +35,24 @@ export type ReadingEvent =
   | { type: 'meta'; latencySeconds: number }
   | { type: 'failed'; code: FailCode; counted: false };
 
+/** Why one look didn't answer. 'aborted': the check stopped waiting for it (the grace ran out, or the check ended). */
+export type LookFail = 'offline' | 'ai' | 'invalid' | 'timeout' | 'aborted' | 'noConsent';
+export type LookResult<A> = { ok: true; answer: A; ms: number; cents: number | null } | { ok: false; fail: LookFail; ms: number };
+
+/** The second look (look1, #199) in flight: U on the upper close-up, L on the lower one, each its own call. The
+ *  promises never reject. */
+export interface SecondLookCall {
+  u: Promise<LookResult<LookAnswerU>>;
+  l: Promise<LookResult<LookAnswerL>>;
+}
+
 export interface ReadingSource {
   read(image: PreparedImage, kind: ReadKind, opts?: { signal?: AbortSignal }): AsyncIterable<ReadingEvent>;
   /** Send a hedge request (live source only; the mock records the call). */
   hedge?(): void;
+  /** The second look, started next to read() (live source only; null when it can't run: a demo photo, no close-ups,
+   *  no key). The demo replays without one. */
+  secondLook?(image: PreparedImage, kind: ReadKind, opts?: { signal?: AbortSignal }): SecondLookCall | null;
 }
 
 /** Debug toggles (04 §11) for the demo: `fault=unreadable|notClothed|offline|ai|paused`. */

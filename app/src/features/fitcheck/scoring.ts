@@ -9,7 +9,7 @@
 import {
   goingForAdvice, PARTS_FIXES_DATA, PARTS_RUBRIC_VERSION, partialLabel as corePartialLabel, partsFixAsFix, RUBRIC_DATA, score, scoreParts, suggestFixes,
   suggestPartsFixes, type ClosetItem, type Fix, type FixSuggestions, type PartName, type PartsFixSuggestions, type PartsScored, type Reading,
-  type RubricResult, type ScoreOptions, type ScoredResult, type Styles,
+  type RubricResult, type ScoreOptions, type ScoredResult, type SecondLookInput, type Styles,
 } from '@kitted/core';
 import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey, type StoredParts, type StyleKey } from '@/data/types';
 import { cardSummary } from './explain';
@@ -41,7 +41,13 @@ export interface EvaluateInput {
   /** "Going for" (#215): the look he's going for (null = Not sure). Undefined = a check from before the question, so no
    *  advice is written. Advice only: it's computed with no picks and can't reach the score. */
   goingFor?: StyleKey | null;
+  /** The check's stored second look (#199) as the engine reads it (secondLook.lookInput); null/absent = without. The
+   *  parts engine only: the card, the fixes, the one quick tap and Going for all see the same one. */
+  secondLook?: SecondLookInput | null;
 }
+
+/** The options a check is scored with: v4.1's, plus the second look for the parts engine (v4.1 never reads it). */
+export type CheckScoreOptions = ScoreOptions & { secondLook?: SecondLookInput };
 
 export interface Evaluation {
   status: FitCheckStatus;
@@ -66,8 +72,8 @@ export interface Evaluation {
 
 /** The rubric options a check is scored with. The one place they're built, so the one quick tap's two scores
  *  (askQuestion) are exactly what the card then shows. */
-export function scoreOptions(input: Pick<EvaluateInput, 'occasion' | 'styles' | 'boldness'>): ScoreOptions {
-  return { occasion: input.occasion, styles: input.styles, boldness: input.boldness ?? 'a_little' };
+export function scoreOptions(input: Pick<EvaluateInput, 'occasion' | 'styles' | 'boldness' | 'secondLook'>): CheckScoreOptions {
+  return { occasion: input.occasion, styles: input.styles, boldness: input.boldness ?? 'a_little', ...(input.secondLook ? { secondLook: input.secondLook } : {}) };
 }
 
 export function partialKind(notRated: readonly string[]): 'shoes' | 'topOnly' | null {
@@ -86,7 +92,7 @@ export function evaluateCheck(input: EvaluateInput): Evaluation {
 }
 
 function evaluateV4(input: EvaluateInput): Evaluation {
-  const opts = scoreOptions(input);
+  const opts = scoreOptions({ ...input, secondLook: null });
   const result = score(input.reading, opts);
   const fixes: FixSuggestions = suggestFixes(input.reading, {
     ...opts,
@@ -184,7 +190,11 @@ function evaluateParts(input: EvaluateInput): Evaluation {
         nextLevel: tip ? [tip] : [], tips: [], dialedIn: fixes.length === 0, hiddenFixTargets: hidden, warm: input.warm ?? false,
         readsAs: normStyleKey(res.styleLabel), tipLead: fx.smallerStep ? 'smallerStep' : fx.nextLevel?.id.startsWith('tip_') ? 'tip' : 'nextLevel', parts: storedParts(res, fx),
         ...(input.goingFor !== undefined
-          ? { goingForAdvice: goingForAdvice(input.reading, input.goingFor, { occasion: input.occasion, boldness: opts.boldness, closet: input.closet, warm: input.warm ?? false }) }
+          ? {
+              goingForAdvice: goingForAdvice(input.reading, input.goingFor, {
+                occasion: input.occasion, boldness: opts.boldness, closet: input.closet, warm: input.warm ?? false, secondLook: input.secondLook ?? null,
+              }),
+            }
           : {}),
       },
     },

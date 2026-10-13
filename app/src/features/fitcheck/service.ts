@@ -9,16 +9,19 @@ import {
   applyCorrection, applyFix, applyPartsFix, applyTapAnswer, askWithCloset, askWithClosetParts, cardFixTargets, carryTapAnswer, dayKey, garmentName, isPartsFix,
   localParts, mergeShoeSnap, PARTS_RUBRIC_VERSION, partsRecheckOutcome, pickShoesFromCloset, RUBRIC_DATA, recheckMerge, recheckOutcome, removeGarment,
   seasonNeeds, tapOrder, tapOrdinal, weatherNeeds, weekdayOf, type ClosetItem, type DayWeather, type Fix, type Garment, type Reading,
-  type ScoreOptions, type Styles,
+  type Styles,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
-import { normStyleKey, type ChatMessage, type CheckDetails, type FitCheckRow, type GoingForSource, type GoingForState, type OccasionKey, type ReadingRow, type ReadingSourceKind, type StyleKey, type TapState } from '@/data/types';
+import {
+  normStyleKey, type ChatMessage, type CheckDetails, type FitCheckRow, type GoingForSource, type GoingForState, type OccasionKey, type ReadingRow, type ReadingSourceKind,
+  type StoredSecondLook, type StyleKey, type TapState,
+} from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
 import type { ImagePrep } from '@/services/imagePrep/demo';
 import { isRecheckOpen, recheckDeadline, type QuotaService } from '@/services/quota';
-import type { FailCode, PreparedImage, ReadingSource, ReadKind } from '@/services/readingSource/types';
+import type { FailCode, PreparedImage, ReadingSource, ReadKind, SecondLookCall } from '@/services/readingSource/types';
 import type { Scheduler } from '@/services/scheduler';
 import { patchCheckKeepCloset } from '@/features/closet/checkWrites';
 import { isOwned } from '@/features/closet/profile';
@@ -26,8 +29,9 @@ import { createClosetService, type ClosetService, type DuplicateAnswer } from '@
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
+import { evaluateCheck, scoreOptions, scoringEngine, type CheckScoreOptions, type ScoringEngine } from './scoring';
+import { anchorRecheckLook, copiedLook, hasLook, LOOK_GRACE_MS, lookInput, settledLine, settleSecondLook } from './secondLook';
 export { failInterruptedChecks } from './interrupted';
-import { evaluateCheck, scoreOptions, scoringEngine, type ScoringEngine } from './scoring';
 
 /** The engine a stored check is scored with (#209): the one its rubricVersion names, so editing an old check (a
  *  correction, the occasion, its re-check) never moves it to another engine. New rows take the switch's. */
@@ -41,9 +45,14 @@ export const GOING_FOR_LAST_KV = 'goingFor.last';
 export const LAST_LOOK_MS = 7 * 24 * 3600 * 1000;
 
 
-/** The re-check card's numbers, with the engine the first check was scored with. */
-function outcomeFor(engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: ScoreOptions) {
-  return engine === 'parts' ? partsRecheckOutcome(first, fixes, merged, opts) : recheckOutcome(first, fixes, merged, opts);
+/** The re-check card's numbers, with the engine the first check was scored with. `opts` carry the first check's second
+ *  look; `mergedLook` is the re-check's own (anchored, secondLook.anchorRecheckLook), so each side scores as its card did. */
+function outcomeFor(engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: CheckScoreOptions, mergedLook?: StoredSecondLook | null) {
+  if (engine !== 'parts') return recheckOutcome(first, fixes, merged, opts);
+  const { secondLook: _first, ...rest } = opts;
+  void _first;
+  const sl = lookInput(mergedLook);
+  return partsRecheckOutcome(first, fixes, merged, opts, sl ? { ...rest, secondLook: sl } : rest);
 }
 
 export interface TimerConfig {
@@ -54,9 +63,11 @@ export interface TimerConfig {
   abortMs: number;
   /** "Same photo, same reading" pause (≤ 0.3 s; 0 for screenshots). */
   cacheHitMs: number;
+  /** How long after the reading the card waits for the second look (#199); default LOOK_GRACE_MS (1.5 s). */
+  lookGraceMs?: number;
 }
 
-export const DEFAULT_TIMERS: TimerConfig = { enabled: true, hedgeMs: 5_000, slowMs: 9_000, abortMs: 14_000, cacheHitMs: 300 };
+export const DEFAULT_TIMERS: TimerConfig = { enabled: true, hedgeMs: 5_000, slowMs: 9_000, abortMs: 14_000, cacheHitMs: 300, lookGraceMs: LOOK_GRACE_MS };
 
 export interface ServiceDeps {
   store: KittedStore;
@@ -106,10 +117,10 @@ export interface CorrectionDraft {
 
 type Profile = { styles: Styles; boldness: string | null };
 
-/** What a row is scored with: its occasion and one style, his boldness (#61). The one builder for both the
- *  card (evaluateCheck) and the one quick tap (askQuestion), so the tap's scores are the card's. */
-export function lensInput(occasion: OccasionKey, style: StyleKey | null, p: Profile) {
-  return { occasion, styles: stylesFor(style, p.styles), boldness: p.boldness };
+/** What a row is scored with: its occasion and one style, his boldness (#61), and its stored second look (#199). The
+ *  one builder for both the card (evaluateCheck) and the one quick tap (askQuestion), so the tap's scores are the card's. */
+export function lensInput(occasion: OccasionKey, style: StyleKey | null, p: Profile, look?: StoredSecondLook | null) {
+  return { occasion, styles: stylesFor(style, p.styles), boldness: p.boldness, secondLook: lookInput(look) };
 }
 
 /** The answer to the one quick tap: one of its two values, or a skip (scores the default). */
@@ -197,7 +208,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const details = { ...row.details, ...(patch.details ?? {}) };
     const style = patch.style !== undefined ? patch.style : row.style;
     const ev = evaluateCheck({
-      reading, ...lensInput(occasion, style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+      reading, ...lensInput(occasion, style, p, details.secondLook), closet: await closetFor(row), firstCheck: row.isFirstCheck,
       hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row),
       goingFor: details.goingFor ? details.goingFor.style : undefined,
     });
@@ -215,17 +226,18 @@ export function createFitCheckService(deps: ServiceDeps) {
     const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
     const first = parent && (await readingOf(parent));
     if (!row || !parent || !first) return null;
-    const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile()));
+    const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile(), parent.details.secondLook));
     const seen = await readingOf(row);
     const engine = engineOf(parent);
-    const caught = new Set(seen ? (outcomeFor(engine, first, parent.fixes, seen, opts)?.doneFixes ?? []).map((f) => f.target) : []);
+    const look = row.details.secondLook;
+    const caught = new Set(seen ? (outcomeFor(engine, first, parent.fixes, seen, opts, look)?.doneFixes ?? []).map((f) => f.target) : []);
     const closet = await closetFor(parent);
     let reading: Reading | null = first;
     for (const f of parent.fixes.filter((x) => !targets || targets.includes(x.target) || caught.has(x.target))) {
       reading = reading ? (isPartsFix(f) ? applyPartsFix(reading, f, { closet }) : applyFix(reading, f, { closet, occasion: parent.occasion })) : null;
     }
     if (!reading) return null;
-    return { row, parent, reading, outcome: outcomeFor(engine, first, parent.fixes, reading, opts) };
+    return { row, parent, reading, outcome: outcomeFor(engine, first, parent.fixes, reading, opts, look) };
   };
 
   /** "Same shoes as Monday?": the shoes from the last logged day before this check. */
@@ -260,7 +272,7 @@ export function createFitCheckService(deps: ServiceDeps) {
   async function afterRead(row: FitCheckRow, reading: Reading, readingRow: ReadingRow, cached: boolean): Promise<FitCheckRow> {
     // With what he owned before this photo (#126): "Your green work boots?" about a piece he confirmed, or none when
     // his closet agrees with the read. The question (and so the snapshot's effect) is stored on the row.
-    const tapOpts = scoreOptions(lensInput(row.occasion, row.style, await profile()));
+    const tapOpts = scoreOptions(lensInput(row.occasion, row.style, await profile(), row.details.secondLook));
     // Parts checks pick the question with the parts score's swing (#212; same rules and bars as v4), so the options'
     // scores are what the card then shows. v4 checks keep v4.1's question (parity-tested against rubric.py).
     const ask = engineOf(row) === 'parts' ? askWithClosetParts : askWithCloset;
@@ -319,7 +331,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (ms > 0) await deps.scheduler.sleep(ms);
     const reading = (await store.readings.get(match.readingId!))?.reading;
     if (!reading) return row;
-    const base = (await patchRow(row.id, { readingId: match.readingId }))!;
+    // ...and its second look (#199), so nothing about the score can move.
+    const sl = copiedLook(match);
+    const base = (await patchRow(row.id, { readingId: match.readingId, ...(sl !== undefined ? { details: { ...row.details, secondLook: sl } } : {}) }))!;
     const { row: scored } = await rescore(base, reading);
     const before = parent.score ?? scored.score ?? 0;
     const now = scored.score ?? before;
@@ -335,10 +349,15 @@ export function createFitCheckService(deps: ServiceDeps) {
     return (await store.fitChecks.get(row.id)) ?? scored;
   }
 
-  async function finalizeRecheck(row: FitCheckRow, parent: FitCheckRow, next: Reading, image: PreparedImage, model?: string, promptVersion?: string, latencyMs = 0) {
+  async function finalizeRecheck(
+    row: FitCheckRow, parent: FitCheckRow, next: Reading, image: PreparedImage, model?: string, promptVersion?: string, latencyMs = 0,
+    ownLook: StoredSecondLook | null = null,
+  ) {
     const parentReading = await readingOf(parent);
     if (!parentReading) throw new Error(`re-check parent ${parent.id} has no reading`);
-    const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile()));
+    const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile(), parent.details.secondLook));
+    // The re-check's second look, anchored to the first check's (#199): only the arms the first check had.
+    const look = anchorRecheckLook(ownLook, parent.details.secondLook, parent.id);
     const raw = await insertReading(next, 'recheckRaw', image.sha256, null, latencyMs, model, promptVersion);
     // His answer to the one quick tap holds on the re-check (a second misread can't undo it), unless a fix
     // replaces that whole piece. Re-checks never ask.
@@ -348,11 +367,12 @@ export function createFitCheckService(deps: ServiceDeps) {
     // The anchored merge is engine-free except its "new problem" test, which still asks v4.1's rules (#209).
     const { merged, notes } = recheckMerge(parentReading, carried, targets, opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
-    const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts);
+    const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts, look);
     await patchRow(row.id, { readingId: mergedRow.id });
     const fresh = (await store.fitChecks.get(row.id))!;
     const { row: scored } = await rescore(fresh, merged, {
       details: {
+        ...(hasLook(parent.details.secondLook) ? { secondLook: look } : {}),
         recheck: outcome
           ? {
               parentScore: outcome.before, delta: outcome.delta, rawDelta: outcome.rawDelta, notes,
@@ -381,10 +401,11 @@ export function createFitCheckService(deps: ServiceDeps) {
     return (await store.fitChecks.get(parent.id)) ?? row;
   }
 
-  /** Streams one read into the session, with the ruling 19 timers. */
+  /** Streams one read into the session, with the ruling 19 timers. `withLook`: also run the second look (#199) next
+   *  to it; `secondLook` in the result is then what the check stores (null = nothing back in time), else undefined. */
   async function runRead(
     checkId: string, image: PreparedImage, kind: ReadKind, mode: CheckMode, occasion: OccasionKey,
-    look?: { style: StyleKey | null; source: GoingForSource; bothFromCard?: boolean },
+    look?: { style: StyleKey | null; source: GoingForSource; bothFromCard?: boolean }, withLook = false,
   ) {
     attempt += 1;
     const my = attempt;
@@ -418,6 +439,19 @@ export function createFitCheckService(deps: ServiceDeps) {
     let model = 'demo-bundled';
     let promptVersion = 'v3';
     let latencyMs = 0;
+    // The second look starts with the read, in parallel (#199). It can never fail or hold up the check: a throw here
+    // just means no second look.
+    const lookAbort = new AbortController();
+    if (abort.signal.aborted) lookAbort.abort();
+    else abort.signal.addEventListener('abort', () => lookAbort.abort(), { once: true });
+    let lookCall: SecondLookCall | null = null;
+    if (withLook) {
+      try {
+        lookCall = deps.source.secondLook?.(image, kind, { signal: lookAbort.signal }) ?? null;
+      } catch (e: unknown) {
+        console.log('[look] could not start', e);
+      }
+    }
     const work = (async () => {
       for await (const e of deps.source.read(image, kind, { signal: abort.signal })) {
         if (timedOut) break;
@@ -439,9 +473,19 @@ export function createFitCheckService(deps: ServiceDeps) {
       handles.forEach((h) => deps.scheduler.clearTimer(h));
       if (current?.abort === abort) current = null;
     }
+    const got = reading as Reading | null; // set inside the loop above
+    if (timedOut || abort.signal.aborted || !got) lookAbort.abort();
     if (timedOut) return { reading: null, fail: 'timeout' as FailCode, attempt: my, model, promptVersion, latencyMs };
     if (abort.signal.aborted) return { reading: null, fail: null, attempt: my, cancelled: true, model, promptVersion, latencyMs };
-    return { reading: reading as Reading | null, fail: fail as FailCode | null, attempt: my, model, promptVersion, latencyMs };
+    // The reading is in: each look arm gets the rest of the grace, then the card is scored with what came back.
+    let secondLook: StoredSecondLook | null | undefined;
+    if (lookCall && got) {
+      const settled = await settleSecondLook(lookCall, deps.timers().lookGraceMs ?? LOOK_GRACE_MS, deps.scheduler);
+      lookAbort.abort();
+      console.log(settledLine(settled));
+      secondLook = settled.look;
+    }
+    return { reading: got, fail: fail as FailCode | null, attempt: my, model, promptVersion, latencyMs, secondLook };
   }
 
   async function failRow(checkId: string, code: FailCode, attemptNo?: number) {
@@ -571,12 +615,17 @@ export function createFitCheckService(deps: ServiceDeps) {
         // Same photo, same score: his earlier answer to the one quick tap is reused, never asked again. Free only
         // if that photo was scored before (one replaced while asking never counted, so this one does).
         const answered = readings.filter((r) => r.source === 'tapAnswer' && r.derivedFrom === cached.id).sort((a, b) => b.createdAt - a.createdAt)[0];
-        const free = (await store.fitChecks.all()).some((c) => c.id !== checkId && c.imageHash === image.sha256 && !c.parentId && c.status === 'scored');
+        const others = (await store.fitChecks.all()).filter((c) => c.id !== checkId && c.imageHash === image.sha256 && !c.parentId);
+        const free = others.some((c) => c.status === 'scored');
+        // ...and the second look the photo was scored with (#199): never asked again (none then = none now).
+        const prior = others.filter((c) => c.readingId).sort((a, b) => b.createdAt - a.createdAt)[0];
+        const sl = prior ? copiedLook(prior) : undefined;
+        const base = sl !== undefined ? (await patchRow(row.id, { details: { ...row.details, secondLook: sl } }))! : row;
         // Scored before without a question (none qualified, or his closet agreed): score it the same way again, so
         // a closet that changed since can't make the same photo ask, or score, differently (#126).
-        const done = answered ? await finalizeCheck(row, answered.reading, answered, free)
-          : free ? await finalizeCheck(row, cached.reading, cached, free)
-          : await afterRead(row, cached.reading, cached, free);
+        const done = answered ? await finalizeCheck(base, answered.reading, answered, free)
+          : free ? await finalizeCheck(base, cached.reading, cached, free)
+          : await afterRead(base, cached.reading, cached, free);
         return outcomeOf(done);
       }
     }
@@ -586,7 +635,9 @@ export function createFitCheckService(deps: ServiceDeps) {
       if (match) return outcomeOf(await finalizeSamePhoto(row, parent, match));
     }
 
-    const r = await runRead(checkId, image, req.mode === 'recheck' ? 'recheck' : 'full', req.mode, occasion, going ?? undefined);
+    // The second look (#199): on every new parts check; on a re-check only when its first check had one.
+    const withLook = req.mode === 'recheck' && parent ? hasLook(parent.details.secondLook) : engineOf(row) === 'parts';
+    const r = await runRead(checkId, image, req.mode === 'recheck' ? 'recheck' : 'full', req.mode, occasion, going ?? undefined, withLook);
     if ('cancelled' in r && r.cancelled) {
       // Stopped (a screen change, a demo reset): the card shows Try again rather than nothing.
       await failRow(checkId, 'ai', r.attempt);
@@ -601,11 +652,12 @@ export function createFitCheckService(deps: ServiceDeps) {
     const chosen = live ? live.occasion : occasion;
     if (chosen !== occasion) await patchRow(checkId, { occasion: chosen });
     if (going && live?.lookTouched) await saveLookAnswer(checkId, live.look, live.lookOther);
+    if (req.mode !== 'recheck') await storeLook(checkId, r.secondLook);
     dispatch({ t: 'scored', attempt: r.attempt });
     const fresh = (await store.fitChecks.get(checkId))!;
     let done: FitCheckRow;
     if (req.mode === 'recheck' && parent) {
-      done = await finalizeRecheck(fresh, parent, r.reading, image, r.model, r.promptVersion, r.latencyMs);
+      done = await finalizeRecheck(fresh, parent, r.reading, image, r.model, r.promptVersion, r.latencyMs, r.secondLook ?? null);
     } else {
       const readingRow = await insertReading(r.reading, 'full', image.sha256, null, r.latencyMs, r.model, r.promptVersion);
       done = await afterRead(fresh, r.reading, readingRow, false);
@@ -634,19 +686,29 @@ export function createFitCheckService(deps: ServiceDeps) {
     ctx.checkId = checkId;
     images.set(checkId, prep.image);
     const gf = !parent ? row.details.goingFor : undefined;
-    const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion, gf ? { ...gf } : undefined);
+    const withLook = parent ? hasLook(parent.details.secondLook) : engineOf(row) === 'parts';
+    const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion, gf ? { ...gf } : undefined, withLook);
     if (!r.reading) {
       await failRow(checkId, r.fail ?? 'ai', r.attempt);
       return { outcome: 'failed', checkId };
     }
     if (gf && state.kind === 'reading' && state.checkId === checkId && state.lookTouched) await saveLookAnswer(checkId, state.look, state.lookOther);
+    if (!parent) await storeLook(checkId, r.secondLook);
     dispatch({ t: 'scored', attempt: r.attempt });
     const fresh = (await store.fitChecks.get(checkId))!;
     const done = parent
-      ? await finalizeRecheck(fresh, parent, r.reading, prep.image, r.model, r.promptVersion, r.latencyMs)
+      ? await finalizeRecheck(fresh, parent, r.reading, prep.image, r.model, r.promptVersion, r.latencyMs, r.secondLook ?? null)
       : await afterRead(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
     dispatch({ t: 'end', attempt: r.attempt });
     return outcomeOf(done);
+  }
+
+  /** The second look this read came back with, on the row before it's scored or asks (#199). Undefined = it didn't run
+   *  (nothing stored, so the check scores without, like every check before it). */
+  async function storeLook(checkId: string, sl: StoredSecondLook | null | undefined) {
+    if (sl === undefined) return;
+    const row = await store.fitChecks.get(checkId);
+    if (row) await patchRow(checkId, { details: { ...row.details, secondLook: sl } });
   }
 
   /** His answer during the wait: on the row (style + goingFor, confirmed) before it's scored. */
@@ -700,7 +762,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       if (!row || !reading || row.parentId || row.status !== 'scored' || !row.details.goingFor) return null;
       const p = await profile();
       const ev = evaluateCheck({
-        reading, ...lensInput(row.occasion, style, p), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+        reading, ...lensInput(row.occasion, style, p, row.details.secondLook), closet: await closetFor(row), firstCheck: row.isFirstCheck,
         hiddenFixTargets: row.details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row), goingFor: style,
       });
       const d = ev.row.details;
@@ -740,7 +802,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       const ev = evaluateCheck({
         reading, occasion: lens.occasion ?? row.occasion, styles: stylesFor(lens.style !== undefined ? lens.style : row.style, p.styles),
         boldness: p.boldness, closet: await closetFor(row), firstCheck: row.isFirstCheck, hiddenFixTargets: row.details.hiddenFixTargets ?? [],
-        warm: await warmFor(row), engine: engineOf(row),
+        warm: await warmFor(row), engine: engineOf(row), secondLook: lookInput(row.details.secondLook),
       });
       return { before: row.score, after: ev.row.score ?? null };
     },

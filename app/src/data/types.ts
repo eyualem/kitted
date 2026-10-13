@@ -177,6 +177,40 @@ export interface CheckDetails {
   /** What the answer changes on the card (core goingForAdvice): a match, or the look it reads as with a piece and a
    *  move. null: Not sure, the gym or home. Advice only; it never changes the score. */
   goingForAdvice?: GoingForAdvice | null;
+  /** The second look (look1, #199): two narrow calls on the close-ups next to the scoring call (the peek below the
+   *  outer piece; the pants resting on the shoe). Every re-score of this check reuses it, so the same photo keeps its
+   *  score. Absent: a check from before it, a demo photo, or a check it never ran for (scored without). null: it ran
+   *  but nothing came back in time (scored without). */
+  secondLook?: StoredSecondLook | null;
+}
+
+/** Look U's answer (extraction-test/schema_look_u.json), every field checked against its enum. */
+export interface LookAnswerU {
+  outer_kind: string;
+  outer_hem_at: string;
+  under_present: 'yes' | 'no';
+  under_kind: string;
+  under_hem_at: string;
+  under_shows: 'no' | 'a_little' | 'clearly';
+}
+
+/** Look L's answer (extraction-test/schema_look_l.json). */
+export interface LookAnswerL {
+  pant_end: string;
+  covers_shoe: 'no' | 'partly' | 'mostly' | 'no_shoes_visible';
+}
+
+export type LookArm = 'U' | 'L';
+
+/** The second look as a check stores it: the raw answers (the engine reads only under_present + under_shows and
+ *  covers_shoe; the rest failed look1's bars and never scores). An arm that was late, failed or not asked is null. */
+export interface StoredSecondLook {
+  version: string;
+  u: LookAnswerU | null;
+  l: LookAnswerL | null;
+  /** Taken from another check rather than read for this one: the same photo checked earlier ('samePhoto'), or a
+   *  re-check arm that didn't come back carrying its first check's answer ('firstCheck'). */
+  copied?: { from: string; why: 'samePhoto' | 'firstCheck'; arms: LookArm[] };
 }
 
 /** Where a pre-picked look came from (02 "Going for"): today's card, his last confirmed look (7 days), his first pick
