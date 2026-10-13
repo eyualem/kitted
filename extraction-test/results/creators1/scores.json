@@ -1,0 +1,2218 @@
+{
+ "-V2bE8nDsdo/outfit01-02-44": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit02-02-58": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit03-03-08": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 6.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 6.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit04-03-23": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 5.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 5.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit05-03-37": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit06-04-04": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit07-04-20": {
+  "v9": [
+   {
+    "score": 8.0,
+    "styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 8.0,
+    "styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit08-04-32": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit09-04-51": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 5.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 5.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "-V2bE8nDsdo/outfit10-05-08": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 6.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "Pxeeh-caTJg/perfect-all-black-19-38": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "k6Gig6r7BSQ/after-shorter-tee-10-47": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "k6Gig6r7BSQ/before-longer-tee-10-47": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "tNVdA_arEa8/blue-hoodie-dark-jacket-01-25": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": null,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": null
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": null,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": null,
+     "cohesion": null
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": null,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "tNVdA_arEa8/purple-under-dark-coat-00-33": {
+  "v9": [
+   {
+    "score": 7.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.5,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 8.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": null,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "tNVdA_arEa8/red-jacket-dark-pants-01-21": {
+  "v9": [
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o1-after-04-52": {
+  "v9": [
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o1-before-04-10": {
+  "v9": [
+   {
+    "score": 5.5,
+    "styles": [],
+    "parts": {
+     "proportions": 4.0,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 5.5,
+    "styles": [],
+    "parts": {
+     "proportions": 4.0,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 5.5,
+    "styles": [],
+    "parts": {
+     "proportions": 4.0,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 5.5,
+    "styles": [],
+    "parts": {
+     "proportions": 4.0,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 5.5,
+    "styles": [],
+    "parts": {
+     "proportions": 4.0,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 5.5,
+    "styles": [],
+    "parts": {
+     "proportions": 4.0,
+     "fit": 5.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o2-after-06-14": {
+  "v9": [
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 5.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [],
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o2-before-05-30": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o3-after-09-07": {
+  "v9": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 5.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 5.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 5.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 5.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 5.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 6.5,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 5.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o3-before-07-26": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "workwear"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o4-after-10-02": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o4-before-09-30": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 6.5,
+    "styles": [
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o5-after-11-22": {
+  "v9": [
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.5,
+     "cohesion": 7.5
+    },
+    "checks": []
+   },
+   {
+    "score": 7.5,
+    "styles": [
+     "minimalist"
+    ],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "checks": []
+   }
+  ]
+ },
+ "wIib9hzVUuw/o5-before-10-18": {
+  "v9": [
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ],
+  "v10": [
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   },
+   {
+    "score": 7.0,
+    "styles": [],
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.0
+    },
+    "checks": []
+   }
+  ]
+ }
+}

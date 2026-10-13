@@ -121,3 +121,19 @@ Wanhee judges many outfits but mostly by description (52 of 73 aren't on screen)
 ## 7. What changed in this session
 - New: `tools/youtube/clean_vtt.py`; `inputs/youtube/clean/` (transcripts, `index.tsv`, `manifest.tsv`, `channels.txt`; git-ignored); `rubric/research/creators/notes/` (brief + 5 notes); this file.
 - No app or engine change.
+
+## 8. The app on the creators' own outfits (run Oct 13, 2026, engine v10; `extraction-test/creator_read.py`, `results/creators1/report.txt`)
+
+26 frames from their videos (gallery: `screenshots/creator-frames/index.html`, local), 3 readings each, $0.45. All "profile unknown", scored with the stated test profile at Everyday. Median of 3 runs.
+
+- **Before → after, the app agrees on 3 of 6.** Tim's skinny-jeans pair (5.5 → 7.0), his tight beige pair (6.5 → 7.5), Frugal's shorter tee (6.5 → 7.0). A tie on Tim's skinny leather joggers (7.0 → 7.0). **Wrong way on two:** Tim's knit-on-knit pair (7.0 → 6.5) and his all-navy pair (7.0 → 6.5).
+- **Why, from the readings:**
+  1. **Tim's best "after" loses 1.5 on Style for "formal and very casual pieces fight"** [STY-4]: a white tank under an open black flannel with wide pleated trousers and loafers. The tank is under a layer, and this is exactly the deliberate smart/casual mix all four creators praise (A9). The rule only excuses a high-low mix when a *jacket* is the dressy piece.
+  2. **Skinny joggers escape the skinny charge:** [PRO-13] skips sweats and joggers (loungewear has its own rules), so Tim's "skinny, leather and jogger: never" outfit scores a clean 7.0.
+  3. **What made his "befores" bad isn't scored:** a multicolor scarf (accessories never count), knit on knit (a tip only), "basic and predictable" (no rule).
+  4. **His favorite outfit** (blazer, oversized tee tucked into tailored trousers) is held to 7.0 by "the blazer's sleeves cover the hands" (−2.0 Fit); it's a deliberately relaxed blazer. Same gap as KD-19 (cut vs size), which v8 fixed for shirts and overshirts but not for tailoring.
+  5. **Jaye's "perfect" all-black outfit** reads as suit jacket + wide trousers + dress shoes, 7.0: flares, the pendant and the boots aren't readable.
+- **Wanhee's toned-down examples** score 7.5 / 7.0 / 7.0; the new one-accent credit [COL-11] fires on the blue hoodie under the dark chore coat in all 3 runs, on the red bomber in 1 (the other runs read a second color in the plaid sweater under it) and on the purple cardigan in 1 (the other runs read the pants as green). It lifts Color to 7.5, but half a Color point is worth about 0.1 on the score, so no median moved.
+- **Tim's 10 outfits** span 6.5–8.0; the one at 8.0 is the white tee with black trousers and loafers.
+
+**Proposed fixes (free, today's readings; need the founder's OK):** (1) [STY-4] judges a covered base layer (a tank or tee under an open shirt, overshirt or flannel) by the layer over it, like the jacket exemption; (2) the skinny charge applies to skinny joggers out of the gym; (3) maybe: a roomy blazer's long sleeves cost −1.0, not −2.0 (one photo, so wait for more).

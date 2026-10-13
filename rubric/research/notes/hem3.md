@@ -89,3 +89,17 @@ read -s GEMINI_API_KEY && export GEMINI_API_KEY
 - **His phone photos are mostly one pair of black wide jeans,** 14 of 22.
 - **The crops use the close-ups that were already sent** (1024 px; close to the 2048 working size for most photos), not a fresh 2048 crop. `kmeasure` has no hem-crop mode, and adding one needs a Swift rebuild, which was skipped for memory. Image size doesn't change the cost.
 - **A macOS `sips` quirk:** it silently skips some crops that end on the image's bottom edge. The script keeps 1 px off the edge and checks every crop's size.
+
+## Results (run Oct 13, 2026: 78 photos × 3 runs, $0.27; full tables in `extraction-test/results/hem3/report.md`)
+
+| Question | Steady | Right when it answers | Finds the real yeses | Verdict |
+|---|---|---|---|---|
+| (a) the hem touches the shoe | 96% | 94% | 93% | **passes** |
+| (b1) fabric folds above the shoe | 86% | 69% | 60% | **fails** |
+| (b2) it drags at the heel | 94% | 91% | 25% | passes the bar, but only says yes on 6 photos (always right) and misses most drags |
+| (c) ankle or sock shows | 95% | 97% | 100% | **passes** |
+
+- **The question that matters most fails.** Whether fabric piles above the shoe, the stack the creators call make-or-break, is still not readable (69%, no better than the old hem reading). So the pooling charge stays on the old reading, and the founder's cuffed / rolled / hitched variants are the next truth for it.
+- **What it can read:** whether the hem reaches the shoe, and whether ankle shows, both near-perfectly, in mirror and propped shots and on dark-on-dark outfits.
+- **Paper estimate on v10:** the rules whose questions passed (dragging costs on every leg, "rests on the shoe" for slides, ankle under wide trousers as a tip) move **0** scores across 22 phone checks, 31 other saved photos and 25 gold photos, and add the ankle tip on 3. With the failing folds question too, 8 photos would drop half a point.
+- **Claude's call:** don't add a third call (+0.12¢ a check) to the app for this; it moves nothing today. Keep the prompt and crops; re-run when the founder's hem variants exist, and use (a) and (c) as tie-breakers if a hem rule is ever built.
