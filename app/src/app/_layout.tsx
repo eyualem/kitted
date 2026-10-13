@@ -6,7 +6,7 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavThemeProvider, rout
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaFrameContext, SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { ThemeProvider, setAppAppearance, useTheme } from '@/design-system';
+import { ThemeProvider, setAppAppearance, useKittedFonts, useTheme } from '@/design-system';
 import { DEMO_ENABLED } from '@/demo/config';
 import { ToastHost } from '@/features/toast/ToastHost';
 import { useDemoState } from '@/demo/demoState';
@@ -32,6 +32,10 @@ export default function RootLayout() {
         SplashScreen.hideAsync().catch(() => {});
       });
   }, []);
+
+  // Native builds embed Archivo (expo-font plugin); the web preview loads it here. The re-render
+  // when it lands lets ThemeProvider pick it up.
+  useKittedFonts();
 
   const { theme: forcedTheme } = useDemoState();
   useEffect(() => {

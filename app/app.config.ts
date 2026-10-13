@@ -58,8 +58,8 @@ const config: ExpoConfig = {
       'expo-splash-screen',
       { backgroundColor: '#F3F4F6', dark: { backgroundColor: '#0C0E14' }, image: './assets/images/splash-icon.png', imageWidth: 76 },
     ],
-    // ['expo-font', { fonts: ['./assets/fonts/ArchivoCondensed-SemiBold.ttf', './assets/fonts/ArchivoCondensed-Medium.ttf', './assets/fonts/ArchivoExpanded-Bold.ttf'] }],
-    //   ↑ uncomment once the founder OKs the download and the files exist (a missing file fails prebuild).
+    // Archivo (OFL 1.1, assets/fonts/OFL.txt): score numerals + wordmark only (03 §3.4). Founder OK Oct 12.
+    ['expo-font', { fonts: ['./assets/fonts/ArchivoCondensed-SemiBold.ttf', './assets/fonts/ArchivoCondensed-Medium.ttf', './assets/fonts/ArchivoExpanded-Bold.ttf'] }],
     'expo-sqlite',
     ['expo-secure-store', { faceIDPermission: false }], // no Face ID in Kitted; keeps NSFaceIDUsageDescription out (05 T29)
     // PHPicker needs no Photos permission (09 §3). cameraPermission must be the SAME string as

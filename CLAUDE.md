@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026 (scoring v8 adopted and ported to the app, #228).**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026 (scoring v8 adopted and ported, #228; Archivo in the app and a theme review, #230).**
 
 ## How we keep context (rules for every chat)
 
@@ -44,6 +44,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P1** · **The theme's taste calls (#230), 5 min.** Three critics agreed the look is calm but generic ("a banking app with a chat in it"; in light mode it looks most like ChatGPT). Pick yes/no on each; defaults in brackets: (1) **a real app icon**, the "K" woven label on indigo in a copper stitch; it's still Expo's default icon [yes, Claude draws 2–3 options]; (2) **copper only when the score moves** ("→ 8.0", "+1.0"); links like "Why 7.5?" go to ink [yes]; (3) **spaced capitals back on card labels** ("FIT CHECK · FULL", like the mockup and a clothing tag) [yes]; (4) **a slightly bluer indigo** so buttons read as denim, not black [try it, you see before/after]; (5) **dark first** in videos, App Store shots and the share card [yes]; (6) **pull the share card forward** from P6, 1–2 days [yes, after onboarding]. *Unblocks: the theme fix batch.*
 - [ ] **P3** · **Skim the new scoring lines (v8, #228), 3 min** (`app/src/i18n/en.ts` → `pfix.*`, `pwhy.piled`; card reasons in `extraction-test/rubrics/parts_proto.py`): "the slim jeans read dated; a straight leg balances the outfit", "the big, loud check on the sweater takes over the outfit", "a tank top on its own reads gym or undershirt", "Swap the tank top for a tee", "One quiet color, like a rust or olive knit, lifts Color", "Problems in more than one part" (a Why row). Built with these words; "dated" is the bluntest, "a straight leg would balance it" is the softer option.
 - [ ] **P2** · **The App Store name and subtitle (#225, outward-facing).** Default: `Kitted: Outfit Rater for Men` (people search "outfit rater"; the "rate my outfit" results are weak apps) with the subtitle `Score your fit. Get the fix.` Alternatives in `market/market-research.md` §7. Also: keep the $5.99 monthly at launch (default) or make it $7.99 so the yearly plan looks like a bigger saving?
 - [ ] **P2** · **Pause the proportion scripts until the gold set? (#222–223)** Even perfect measuring would change 4 of 79 scores under today's rules, and the best candidate (slim vs straight legs) failed on 90 public labelled pants. Default: pause; the gold set then decides which shape rules earn or cost points.
@@ -56,7 +57,6 @@
 - [ ] **P2** · **Test the style step with 5 guys aged 18–30** (10 min, before onboarding ships; built Oct 9, #174, demo screen 2): which would they wear, and what would they call each tile? Note any outfit that looks wrong for its style. *Unblocks: locking the 7 styles and their pictures.*
 - [ ] **P1** · **Who's in which photo (rule 7), 1 min:** your two friends (the chore coat + white tee person, the navy blazer person) and the person in today's 4:07 pm check (black quilted jacket, black jeans, white sneakers): their birth year and 3 picked looks, or "unknown".
 - [ ] **P2** · **OK the mic permission text** (in "Waiting on the founder"; it ships with the TestFlight build).
-- [ ] **P2** · **OK the Archivo font download** (3 free files, about 185 KB each). Default: the system font.
 - [ ] **P2** · **The rubric's open questions** (`rubric/v3.md`, and #57's proposed changes).
 - [ ] **P3** · **"Reads as" when two looks fit** (#86). Default: my first pick breaks the tie.
 - [ ] **P3** · **"Roomier than the look" (#217):** an oversized tee over straight jeans with white sneakers (no look calls for the room) now scores 6.5, the same tee over wide jeans 7.0. Keep it, or charge only over slim legs? Default: keep until the gold set.
@@ -318,6 +318,12 @@
 - **Timeline:** beta Nov 3, submit about Nov 14, launch about Nov 17–20.
 
 ## Next steps, in order
+
+### Theme fix batch (#230; the review is in DECISIONS-LOG #230)
+**Done Oct 12:** Archivo is in the app (score numerals, wordmark; `app/assets/fonts/`, screenshots `screenshots/archivo/`). On the founder's phone after the next `tools/phone/install.sh`.
+**Next, no taste involved (Claude builds):** the camera's lost contrast fixes (`CameraScreen.tsx`), hide buttons that open placeholders and wire "Swap one", header buttons in ink, no green text without a sign / no red / no iOS blue, a fade under the Stylist header, hide "Re-check after fixing" when there's no fix, one gutter and card inset, radius tokens, Welcome's fixed line heights, the dark segmented control, 44 pt targets, outlines on dark clothes in dark mode, drop the camera's face ring. Full list in #230.
+**Then, after the founder's taste calls (to-do list):** icon, copper discipline, label capitals, indigo, share card, score reveal.
+
 
 ### Retune the scoring rules against the gold-set panel: done Oct 12 (#227), adopted and ported to the app the same day (#228)
 **Result (report `rubric/research/parts/gold-retune.md`):** parts engine v8 candidate (`parts_proto.py`, `engine="v8"`; v7 stays the default and the app is unchanged). Held-out test photos r 0.32 → 0.54, the founder's 20 −0.09 → 0.41, steadiness unchanged within 0.5, friends' fits still 7.0, one founder check 6.5 → 7.0. Rules: narrow legs cost, loud prints cost, a tank top alone costs; a short or tucked top over wide legs earns more, over straight legs less; boxy long sleeves and stacked baggy jeans no longer cost (closes KD-2, #221); no credit for one bright piece or one standout pattern; weights 30/15/20/15/20; "problems add up". Not built: size faults, the near-suit, a shirt too long (the reading can't see them). **Ported Oct 12 (#228):** v8 is the default in Python and `@kitted/core` (parts data 1.5.0, fix catalog 1.3.0), 16,231 scoring and every fix-engine parity case exact; the Why sheet has a "Problems in more than one part" row; a new fix "Swap the tank top for a tee"; the colour Next level line now says "One quiet color, like a rust or olive knit"; the "one standout piece, like a plaid overshirt" line is retired (v8 doesn't reward it). New checks score with v8; a check stored earlier keeps its score until it's edited (correction, occasion, re-check), then it re-scores on v8, as with every earlier parts update. **What you'll see:** the demo hero (screen 7) is 7.5 "Put together" with the colour tip (was 8.0 "Sharp"); your Oct 11 green-hoodie check reads 8.0 on a new check (was 7.5); ph8 (slides) leads with "Cuff your jeans once → 7.0".
