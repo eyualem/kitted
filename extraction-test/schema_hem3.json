@@ -1,0 +1,11 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "hem_touches_shoe": {"type": "STRING", "enum": ["yes", "no", "cant_see"]},
+  "folds_above_shoe": {"type": "STRING", "enum": ["yes", "no", "cant_see"]},
+  "drags_at_heel": {"type": "STRING", "enum": ["yes", "no", "cant_see"]},
+  "ankle_shows": {"type": "STRING", "enum": ["yes", "no", "cant_see"]}
+ },
+ "required": ["hem_touches_shoe", "folds_above_shoe", "drags_at_heel", "ankle_shows"],
+ "propertyOrdering": ["hem_touches_shoe", "folds_above_shoe", "drags_at_heel", "ankle_shows"]
+}

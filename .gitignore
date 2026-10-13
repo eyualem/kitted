@@ -58,3 +58,7 @@ build/
 
 # gold-set retune dumps quote the judges’ reasons (judge files are internal)
 extraction-test/results/gold-tune/dump_*.txt
+
+# Photo crops for the creator and hem tests (people in them; internal only, #235, #237)
+extraction-test/results/creators1/images/
+extraction-test/results/hem3/crops/

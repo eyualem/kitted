@@ -1,0 +1,9 @@
+This is a tight close-up of one person's lower legs and shoes, cut from an outfit photo. Look only at where each pant leg ends and how it meets the shoe. Describe what you see; don't judge it.
+
+Answer each question with "yes", "no" or "cant_see". Use "cant_see" only when that spot is hidden: out of frame, covered by a hand, a bag or an object, too dark to tell the pants from the shoe, or too blurry. If the two legs differ, answer for the leg with more fabric at the hem.
+
+hem_touches_shoe: does the bottom edge of the pant leg touch or rest on the shoe (its top, tongue, laces or collar)? "no" when skin, sock or a gap shows between the hem and the shoe, or when the legs end in shorts.
+folds_above_shoe: does the pant fabric gather in two or more soft folds or ripples on the lower leg, just above the shoe? One dent or crease at the front of the hem is "no".
+drags_at_heel: does the hem reach down to the floor, fold under the heel, or hang over the back of the shoe down to the sole?
+ankle_shows: is bare skin or sock visible between the hem and the shoe?
+Return only JSON that matches the schema.

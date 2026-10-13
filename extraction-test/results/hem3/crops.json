@@ -1,0 +1,6854 @@
+{
+ "ig-001": {
+  "ankle_near_bottom": false,
+  "box": [
+   71,
+   477,
+   433,
+   233
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   581,
+   754
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 229,
+  "size": [
+   433,
+   233
+  ],
+  "source": "ig-001.lower.jpg",
+  "status": "ok"
+ },
+ "ig-002": {
+  "ankle_near_bottom": false,
+  "box": [
+   136,
+   477,
+   507,
+   302
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   670,
+   785
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 299,
+  "size": [
+   507,
+   302
+  ],
+  "source": "ig-002.lower.jpg",
+  "status": "ok"
+ },
+ "ig-003": {
+  "ankle_near_bottom": false,
+  "box": [
+   36,
+   440,
+   478,
+   356
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   573,
+   799
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 287,
+  "size": [
+   478,
+   356
+  ],
+  "source": "ig-003.lower.jpg",
+  "status": "ok"
+ },
+ "ig-004": {
+  "ankle_near_bottom": false,
+  "box": [
+   152,
+   416,
+   386,
+   278
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   634,
+   709
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 225,
+  "size": [
+   386,
+   278
+  ],
+  "source": "ig-004.lower.jpg",
+  "status": "ok"
+ },
+ "ig-005": {
+  "ankle_near_bottom": false,
+  "box": [
+   82,
+   478,
+   363,
+   210
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   545,
+   757
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 209,
+  "size": [
+   363,
+   210
+  ],
+  "source": "ig-005.lower.jpg",
+  "status": "ok"
+ },
+ "ig-006": {
+  "ankle_near_bottom": false,
+  "box": [
+   67,
+   453,
+   429,
+   272
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   597,
+   744
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 233,
+  "size": [
+   429,
+   272
+  ],
+  "source": "ig-006.lower.jpg",
+  "status": "ok"
+ },
+ "ig-007": {
+  "ankle_near_bottom": false,
+  "box": [
+   61,
+   264,
+   258,
+   155
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   326,
+   443
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 140,
+  "size": [
+   258,
+   155
+  ],
+  "source": "ig-007.lower.jpg",
+  "status": "ok"
+ },
+ "ig-008": {
+  "ankle_near_bottom": false,
+  "box": [
+   174,
+   173,
+   327,
+   237
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   502,
+   455
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 186,
+  "size": [
+   327,
+   237
+  ],
+  "source": "ig-008.lower.jpg",
+  "status": "ok"
+ },
+ "ig-009": {
+  "ankle_near_bottom": false,
+  "box": [
+   328,
+   200,
+   277,
+   255
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   606,
+   456
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 309,
+  "size": [
+   277,
+   255
+  ],
+  "source": "ig-009.lower.jpg",
+  "status": "ok"
+ },
+ "ig-010": {
+  "ankle_near_bottom": false,
+  "box": [
+   3,
+   249,
+   185,
+   136
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   271,
+   428
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 120,
+  "size": [
+   185,
+   136
+  ],
+  "source": "ig-010.lower.jpg",
+  "status": "ok"
+ },
+ "ig-011": {
+  "ankle_near_bottom": false,
+  "box": [
+   55,
+   232,
+   221,
+   149
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   277,
+   422
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 137,
+  "size": [
+   221,
+   149
+  ],
+  "source": "ig-011.lower.jpg",
+  "status": "ok"
+ },
+ "ig-012": {
+  "ankle_near_bottom": false,
+  "box": [
+   62,
+   234,
+   249,
+   144
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   343,
+   399
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 122,
+  "size": [
+   249,
+   144
+  ],
+  "source": "ig-012.lower.jpg",
+  "status": "ok"
+ },
+ "ig-013": {
+  "ankle_near_bottom": false,
+  "box": [
+   59,
+   234,
+   224,
+   146
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   373,
+   398
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 122,
+  "size": [
+   224,
+   146
+  ],
+  "source": "ig-013.lower.jpg",
+  "status": "ok"
+ },
+ "ig-014": {
+  "ankle_near_bottom": false,
+  "box": [
+   19,
+   221,
+   237,
+   192
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   257,
+   442
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 145,
+  "size": [
+   237,
+   192
+  ],
+  "source": "ig-014.lower.jpg",
+  "status": "ok"
+ },
+ "ig-015": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   258,
+   302,
+   200
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   408,
+   459
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 170,
+  "size": [
+   302,
+   200
+  ],
+  "source": "ig-015.lower.jpg",
+  "status": "ok"
+ },
+ "ig-016": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   186,
+   304,
+   251
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   339,
+   438
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 118,
+  "size": [
+   304,
+   251
+  ],
+  "source": "ig-016.lower.jpg",
+  "status": "ok"
+ },
+ "ig-017": {
+  "ankle_near_bottom": false,
+  "box": [
+   121,
+   237,
+   122,
+   101
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   377,
+   374
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 101,
+  "size": [
+   122,
+   101
+  ],
+  "source": "ig-017.lower.jpg",
+  "status": "ok"
+ },
+ "ig-018": {
+  "box": [
+   0,
+   275,
+   314,
+   148
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   315,
+   424
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   314,
+   148
+  ],
+  "source": "ig-018.lower.jpg",
+  "status": "ok"
+ },
+ "ig-019": {
+  "ankle_near_bottom": false,
+  "box": [
+   162,
+   399,
+   357,
+   253
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   527,
+   710
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 221,
+  "size": [
+   357,
+   253
+  ],
+  "source": "ig-019.lower.jpg",
+  "status": "ok"
+ },
+ "ig-020": {
+  "ankle_near_bottom": false,
+  "box": [
+   133,
+   449,
+   357,
+   236
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   568,
+   755
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 232,
+  "size": [
+   357,
+   236
+  ],
+  "source": "ig-020.lower.jpg",
+  "status": "ok"
+ },
+ "ig-021": {
+  "ankle_near_bottom": false,
+  "box": [
+   113,
+   445,
+   352,
+   242
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   610,
+   774
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 237,
+  "size": [
+   352,
+   242
+  ],
+  "source": "ig-021.lower.jpg",
+  "status": "ok"
+ },
+ "ig-022": {
+  "ankle_near_bottom": false,
+  "box": [
+   77,
+   511,
+   541,
+   379
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   670,
+   891
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 357,
+  "size": [
+   541,
+   379
+  ],
+  "source": "ig-022.lower.jpg",
+  "status": "ok"
+ },
+ "ig-023": {
+  "ankle_near_bottom": false,
+  "box": [
+   238,
+   367,
+   257,
+   271
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   698,
+   733
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 142,
+  "size": [
+   257,
+   271
+  ],
+  "source": "ig-023.lower.jpg",
+  "status": "ok"
+ },
+ "ig-024": {
+  "ankle_near_bottom": false,
+  "box": [
+   16,
+   382,
+   439,
+   297
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   515,
+   698
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 245,
+  "size": [
+   439,
+   297
+  ],
+  "source": "ig-024.lower.jpg",
+  "status": "ok"
+ },
+ "ig-025": {
+  "ankle_near_bottom": false,
+  "box": [
+   47,
+   504,
+   582,
+   418
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   690,
+   923
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 327,
+  "size": [
+   582,
+   418
+  ],
+  "source": "ig-025.lower.jpg",
+  "status": "ok"
+ },
+ "ig-026": {
+  "status": "prep refused (multiplePeople)"
+ },
+ "ig-027": {
+  "ankle_near_bottom": false,
+  "box": [
+   75,
+   426,
+   552,
+   455
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   636,
+   929
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 289,
+  "size": [
+   552,
+   455
+  ],
+  "source": "ig-027.lower.jpg",
+  "status": "ok"
+ },
+ "ig-028": {
+  "ankle_near_bottom": false,
+  "box": [
+   3,
+   422,
+   731,
+   516
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   790,
+   939
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 343,
+  "size": [
+   731,
+   516
+  ],
+  "source": "ig-028.lower.jpg",
+  "status": "ok"
+ },
+ "ig-029": {
+  "ankle_near_bottom": false,
+  "box": [
+   152,
+   440,
+   381,
+   436
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   723,
+   877
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 264,
+  "size": [
+   381,
+   436
+  ],
+  "source": "ig-029.lower.jpg",
+  "status": "ok"
+ },
+ "ig-030": {
+  "ankle_near_bottom": false,
+  "box": [
+   48,
+   353,
+   349,
+   254
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   398,
+   613
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 229,
+  "size": [
+   349,
+   254
+  ],
+  "source": "ig-030.lower.jpg",
+  "status": "ok"
+ },
+ "ig-031": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   429,
+   399,
+   273
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   495,
+   706
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 260,
+  "size": [
+   399,
+   273
+  ],
+  "source": "ig-031.lower.jpg",
+  "status": "ok"
+ },
+ "ig-032": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   471,
+   506,
+   333
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   556,
+   823
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 296,
+  "size": [
+   506,
+   333
+  ],
+  "source": "ig-032.lower.jpg",
+  "status": "ok"
+ },
+ "ig-033": {
+  "ankle_near_bottom": false,
+  "box": [
+   72,
+   451,
+   340,
+   281
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   423,
+   733
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 282,
+  "size": [
+   340,
+   281
+  ],
+  "source": "ig-033.lower.jpg",
+  "status": "ok"
+ },
+ "ig-034": {
+  "ankle_near_bottom": false,
+  "box": [
+   12,
+   534,
+   332,
+   277
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   532,
+   873
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 276,
+  "size": [
+   332,
+   277
+  ],
+  "source": "ig-034.lower.jpg",
+  "status": "ok"
+ },
+ "ig-035": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   517,
+   339,
+   340
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   415,
+   924
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 340,
+  "size": [
+   339,
+   340
+  ],
+  "source": "ig-035.lower.jpg",
+  "status": "ok"
+ },
+ "ig-036": {
+  "box": [
+   0,
+   665,
+   284,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.669,
+  "close_up_size": [
+   285,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   284,
+   358
+  ],
+  "source": "ig-036.body.jpg",
+  "status": "ok"
+ },
+ "ig-037": {
+  "ankle_near_bottom": false,
+  "box": [
+   53,
+   559,
+   569,
+   327
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   626,
+   899
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 301,
+  "size": [
+   569,
+   327
+  ],
+  "source": "ig-037.lower.jpg",
+  "status": "ok"
+ },
+ "ig-038": {
+  "ankle_near_bottom": false,
+  "box": [
+   129,
+   559,
+   356,
+   218
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   635,
+   778
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 296,
+  "size": [
+   356,
+   218
+  ],
+  "source": "ig-038.lower.jpg",
+  "status": "ok"
+ },
+ "ig-039": {
+  "ankle_near_bottom": false,
+  "box": [
+   39,
+   516,
+   508,
+   294
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   573,
+   826
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 285,
+  "size": [
+   508,
+   294
+  ],
+  "source": "ig-039.lower.jpg",
+  "status": "ok"
+ },
+ "ig-040": {
+  "ankle_near_bottom": false,
+  "box": [
+   105,
+   634,
+   649,
+   387
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   755,
+   1022
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 423,
+  "size": [
+   649,
+   387
+  ],
+  "source": "ig-040.lower.jpg",
+  "status": "ok"
+ },
+ "ig-041": {
+  "ankle_near_bottom": false,
+  "box": [
+   51,
+   525,
+   358,
+   287
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   533,
+   813
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 297,
+  "size": [
+   358,
+   287
+  ],
+  "source": "ig-041.lower.jpg",
+  "status": "ok"
+ },
+ "ig-042": {
+  "box": [
+   0,
+   464,
+   578,
+   250
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   579,
+   715
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   578,
+   250
+  ],
+  "source": "ig-042.lower.jpg",
+  "status": "ok"
+ },
+ "ig-043": {
+  "ankle_near_bottom": false,
+  "box": [
+   61,
+   491,
+   341,
+   284
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   461,
+   786
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 283,
+  "size": [
+   341,
+   284
+  ],
+  "source": "ig-043.lower.jpg",
+  "status": "ok"
+ },
+ "ig-044": {
+  "ankle_near_bottom": false,
+  "box": [
+   89,
+   531,
+   486,
+   305
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   592,
+   842
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 278,
+  "size": [
+   486,
+   305
+  ],
+  "source": "ig-044.lower.jpg",
+  "status": "ok"
+ },
+ "ig-045": {
+  "ankle_near_bottom": false,
+  "box": [
+   31,
+   448,
+   426,
+   306
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   458,
+   758
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 285,
+  "size": [
+   426,
+   306
+  ],
+  "source": "ig-045.lower.jpg",
+  "status": "ok"
+ },
+ "ig-046": {
+  "ankle_near_bottom": false,
+  "box": [
+   99,
+   480,
+   433,
+   350
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   620,
+   846
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 324,
+  "size": [
+   433,
+   350
+  ],
+  "source": "ig-046.lower.jpg",
+  "status": "ok"
+ },
+ "ig-047": {
+  "box": [
+   0,
+   343,
+   795,
+   184
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   796,
+   528
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   795,
+   184
+  ],
+  "source": "ig-047.lower.jpg",
+  "status": "ok"
+ },
+ "ig-048": {
+  "ankle_near_bottom": false,
+  "box": [
+   231,
+   477,
+   345,
+   320
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   577,
+   798
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 335,
+  "size": [
+   345,
+   320
+  ],
+  "source": "ig-048.lower.jpg",
+  "status": "ok"
+ },
+ "ig-049": {
+  "ankle_near_bottom": false,
+  "box": [
+   69,
+   264,
+   475,
+   299
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   586,
+   613
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 245,
+  "size": [
+   475,
+   299
+  ],
+  "source": "ig-049.lower.jpg",
+  "status": "ok"
+ },
+ "ig-050": {
+  "ankle_near_bottom": false,
+  "box": [
+   76,
+   455,
+   468,
+   353
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   548,
+   829
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 292,
+  "size": [
+   468,
+   353
+  ],
+  "source": "ig-050.lower.jpg",
+  "status": "ok"
+ },
+ "ig-051": {
+  "ankle_near_bottom": false,
+  "box": [
+   4,
+   477,
+   493,
+   401
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   537,
+   879
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 310,
+  "size": [
+   493,
+   401
+  ],
+  "source": "ig-051.lower.jpg",
+  "status": "ok"
+ },
+ "ig-052": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   486,
+   413,
+   381
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   443,
+   907
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 298,
+  "size": [
+   413,
+   381
+  ],
+  "source": "ig-052.lower.jpg",
+  "status": "ok"
+ },
+ "ig-053": {
+  "ankle_near_bottom": false,
+  "box": [
+   21,
+   459,
+   349,
+   405
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   474,
+   924
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 274,
+  "size": [
+   349,
+   405
+  ],
+  "source": "ig-053.lower.jpg",
+  "status": "ok"
+ },
+ "ig-054": {
+  "box": [
+   0,
+   665,
+   333,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.753,
+  "close_up_size": [
+   334,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   333,
+   358
+  ],
+  "source": "ig-054.body.jpg",
+  "status": "ok"
+ },
+ "ig-055": {
+  "ankle_near_bottom": false,
+  "box": [
+   19,
+   464,
+   392,
+   417
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   476,
+   931
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 307,
+  "size": [
+   392,
+   417
+  ],
+  "source": "ig-055.lower.jpg",
+  "status": "ok"
+ },
+ "ig-056": {
+  "ankle_near_bottom": false,
+  "box": [
+   2,
+   525,
+   616,
+   274
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   619,
+   800
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 300,
+  "size": [
+   616,
+   274
+  ],
+  "source": "ig-056.lower.jpg",
+  "status": "ok"
+ },
+ "ig-057": {
+  "box": [
+   0,
+   401,
+   428,
+   216
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   429,
+   618
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   428,
+   216
+  ],
+  "source": "ig-057.lower.jpg",
+  "status": "ok"
+ },
+ "ig-058": {
+  "box": [
+   0,
+   332,
+   732,
+   179
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   733,
+   512
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   732,
+   179
+  ],
+  "source": "ig-058.lower.jpg",
+  "status": "ok"
+ },
+ "ig-059": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   461,
+   511,
+   415
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   548,
+   879
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 322,
+  "size": [
+   511,
+   415
+  ],
+  "source": "ig-059.lower.jpg",
+  "status": "ok"
+ },
+ "ig-060": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   307,
+   649,
+   552
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   650,
+   860
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 580,
+  "size": [
+   649,
+   552
+  ],
+  "source": "ig-060.lower.jpg",
+  "status": "ok"
+ },
+ "ig-061": {
+  "ankle_near_bottom": false,
+  "box": [
+   23,
+   495,
+   443,
+   299
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   533,
+   854
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 232,
+  "size": [
+   443,
+   299
+  ],
+  "source": "ig-061.lower.jpg",
+  "status": "ok"
+ },
+ "ig-062": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   406,
+   502,
+   458
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   503,
+   870
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 380,
+  "size": [
+   502,
+   458
+  ],
+  "source": "ig-062.lower.jpg",
+  "status": "ok"
+ },
+ "ig-063": {
+  "ankle_near_bottom": false,
+  "box": [
+   34,
+   471,
+   420,
+   255
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   508,
+   859
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 250,
+  "size": [
+   420,
+   255
+  ],
+  "source": "ig-063.lower.jpg",
+  "status": "ok"
+ },
+ "ig-064": {
+  "box": [
+   0,
+   547,
+   543,
+   295
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   544,
+   843
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   543,
+   295
+  ],
+  "source": "ig-064.lower.jpg",
+  "status": "ok"
+ },
+ "ig-065": {
+  "ankle_near_bottom": false,
+  "box": [
+   14,
+   463,
+   519,
+   363
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   544,
+   827
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 347,
+  "size": [
+   519,
+   363
+  ],
+  "source": "ig-065.lower.jpg",
+  "status": "ok"
+ },
+ "ig-066": {
+  "ankle_near_bottom": false,
+  "box": [
+   44,
+   777,
+   295,
+   246
+  ],
+  "close_up_px_per_photo_px": 0.652,
+  "close_up_size": [
+   364,
+   1024
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   295,
+   246
+  ],
+  "source": "ig-066.body.jpg",
+  "status": "ok"
+ },
+ "ig-067": {
+  "ankle_near_bottom": false,
+  "box": [
+   15,
+   421,
+   354,
+   251
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   423,
+   724
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 215,
+  "size": [
+   354,
+   251
+  ],
+  "source": "ig-067.lower.jpg",
+  "status": "ok"
+ },
+ "ig-068": {
+  "ankle_near_bottom": false,
+  "box": [
+   31,
+   403,
+   460,
+   292
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   569,
+   746
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 256,
+  "size": [
+   460,
+   292
+  ],
+  "source": "ig-068.lower.jpg",
+  "status": "ok"
+ },
+ "ig-069": {
+  "ankle_near_bottom": false,
+  "box": [
+   38,
+   287,
+   380,
+   264
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   419,
+   556
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 234,
+  "size": [
+   380,
+   264
+  ],
+  "source": "ig-069.lower.jpg",
+  "status": "ok"
+ },
+ "ig-070": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   416,
+   399,
+   270
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   427,
+   723
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 234,
+  "size": [
+   399,
+   270
+  ],
+  "source": "ig-070.lower.jpg",
+  "status": "ok"
+ },
+ "ig-071": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   473,
+   426,
+   262
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   489,
+   751
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   426,
+   262
+  ],
+  "source": "ig-071.lower.jpg",
+  "status": "ok"
+ },
+ "ig-072": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   460,
+   484,
+   256
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   540,
+   717
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 291,
+  "size": [
+   484,
+   256
+  ],
+  "source": "ig-072.lower.jpg",
+  "status": "ok"
+ },
+ "ig-073": {
+  "ankle_near_bottom": false,
+  "box": [
+   18,
+   423,
+   495,
+   370
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   581,
+   866
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 287,
+  "size": [
+   495,
+   370
+  ],
+  "source": "ig-073.lower.jpg",
+  "status": "ok"
+ },
+ "ig-074": {
+  "ankle_near_bottom": false,
+  "box": [
+   238,
+   464,
+   246,
+   204
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   603,
+   810
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 204,
+  "size": [
+   246,
+   204
+  ],
+  "source": "ig-074.lower.jpg",
+  "status": "ok"
+ },
+ "ig-075": {
+  "ankle_near_bottom": false,
+  "box": [
+   10,
+   483,
+   430,
+   242
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   546,
+   806
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 186,
+  "size": [
+   430,
+   242
+  ],
+  "source": "ig-075.lower.jpg",
+  "status": "ok"
+ },
+ "ig-076": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   397,
+   512,
+   313
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   532,
+   735
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 309,
+  "size": [
+   512,
+   313
+  ],
+  "source": "ig-076.lower.jpg",
+  "status": "ok"
+ },
+ "ig-077": {
+  "ankle_near_bottom": false,
+  "box": [
+   65,
+   437,
+   525,
+   363
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   626,
+   854
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 256,
+  "size": [
+   525,
+   363
+  ],
+  "source": "ig-077.lower.jpg",
+  "status": "ok"
+ },
+ "ig-078": {
+  "ankle_near_bottom": false,
+  "box": [
+   56,
+   440,
+   522,
+   274
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   606,
+   772
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 225,
+  "size": [
+   522,
+   274
+  ],
+  "source": "ig-078.lower.jpg",
+  "status": "ok"
+ },
+ "ig-079": {
+  "ankle_near_bottom": false,
+  "box": [
+   96,
+   758,
+   294,
+   246
+  ],
+  "close_up_px_per_photo_px": 0.706,
+  "close_up_size": [
+   432,
+   1024
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   294,
+   246
+  ],
+  "source": "ig-079.body.jpg",
+  "status": "ok"
+ },
+ "ig-080": {
+  "ankle_near_bottom": false,
+  "box": [
+   90,
+   408,
+   263,
+   219
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   657,
+   730
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 219,
+  "size": [
+   263,
+   219
+  ],
+  "source": "ig-080.lower.jpg",
+  "status": "ok"
+ },
+ "ig-081": {
+  "ankle_near_bottom": false,
+  "box": [
+   231,
+   412,
+   258,
+   216
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   588,
+   724
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 216,
+  "size": [
+   258,
+   216
+  ],
+  "source": "ig-081.lower.jpg",
+  "status": "ok"
+ },
+ "ig-082": {
+  "box": [
+   0,
+   665,
+   479,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.753,
+  "close_up_size": [
+   480,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   479,
+   358
+  ],
+  "source": "ig-082.body.jpg",
+  "status": "ok"
+ },
+ "ig-083": {
+  "box": [
+   0,
+   460,
+   712,
+   248
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   713,
+   709
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   712,
+   248
+  ],
+  "source": "ig-083.lower.jpg",
+  "status": "ok"
+ },
+ "ig-084": {
+  "box": [
+   0,
+   478,
+   702,
+   257
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   703,
+   736
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   702,
+   257
+  ],
+  "source": "ig-084.lower.jpg",
+  "status": "ok"
+ },
+ "ig-085": {
+  "ankle_near_bottom": false,
+  "box": [
+   116,
+   379,
+   513,
+   319
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   714,
+   699
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 294,
+  "size": [
+   513,
+   319
+  ],
+  "source": "ig-085.lower.jpg",
+  "status": "ok"
+ },
+ "ig-086": {
+  "ankle_near_bottom": false,
+  "box": [
+   41,
+   421,
+   346,
+   288
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   627,
+   751
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 288,
+  "size": [
+   346,
+   288
+  ],
+  "source": "ig-086.lower.jpg",
+  "status": "ok"
+ },
+ "ig-087": {
+  "ankle_near_bottom": false,
+  "box": [
+   29,
+   485,
+   252,
+   210
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   491,
+   736
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 210,
+  "size": [
+   252,
+   210
+  ],
+  "source": "ig-087.lower.jpg",
+  "status": "ok"
+ },
+ "ig-088": {
+  "ankle_near_bottom": false,
+  "box": [
+   93,
+   562,
+   486,
+   250
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   614,
+   913
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   486,
+   250
+  ],
+  "source": "ig-088.lower.jpg",
+  "status": "ok"
+ },
+ "ig-089": {
+  "ankle_near_bottom": false,
+  "box": [
+   25,
+   524,
+   485,
+   301
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   511,
+   912
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 298,
+  "size": [
+   485,
+   301
+  ],
+  "source": "ig-089.lower.jpg",
+  "status": "ok"
+ },
+ "ig-090": {
+  "ankle_near_bottom": false,
+  "box": [
+   5,
+   473,
+   485,
+   302
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   491,
+   815
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 276,
+  "size": [
+   485,
+   302
+  ],
+  "source": "ig-090.lower.jpg",
+  "status": "ok"
+ },
+ "ig-091": {
+  "ankle_near_bottom": false,
+  "box": [
+   277,
+   491,
+   302,
+   244
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   653,
+   736
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 251,
+  "size": [
+   302,
+   244
+  ],
+  "source": "ig-091.lower.jpg",
+  "status": "ok"
+ },
+ "ig-092": {
+  "ankle_near_bottom": false,
+  "box": [
+   96,
+   441,
+   410,
+   234
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   608,
+   736
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 222,
+  "size": [
+   410,
+   234
+  ],
+  "source": "ig-092.lower.jpg",
+  "status": "ok"
+ },
+ "ig-093": {
+  "ankle_near_bottom": false,
+  "box": [
+   78,
+   490,
+   444,
+   261
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   582,
+   784
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 253,
+  "size": [
+   444,
+   261
+  ],
+  "source": "ig-093.lower.jpg",
+  "status": "ok"
+ },
+ "ig-094": {
+  "ankle_near_bottom": false,
+  "box": [
+   43,
+   478,
+   481,
+   265
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   657,
+   744
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 264,
+  "size": [
+   481,
+   265
+  ],
+  "source": "ig-094.lower.jpg",
+  "status": "ok"
+ },
+ "ig-095": {
+  "box": [
+   0,
+   468,
+   612,
+   251
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   613,
+   720
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   612,
+   251
+  ],
+  "source": "ig-095.lower.jpg",
+  "status": "ok"
+ },
+ "ig-096": {
+  "box": [
+   0,
+   523,
+   581,
+   281
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   582,
+   805
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   581,
+   281
+  ],
+  "source": "ig-096.lower.jpg",
+  "status": "ok"
+ },
+ "ig-097": {
+  "ankle_near_bottom": false,
+  "box": [
+   166,
+   521,
+   492,
+   309
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   804,
+   899
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 267,
+  "size": [
+   492,
+   309
+  ],
+  "source": "ig-097.lower.jpg",
+  "status": "ok"
+ },
+ "ig-098": {
+  "ankle_near_bottom": false,
+  "box": [
+   152,
+   740,
+   419,
+   283
+  ],
+  "close_up_px_per_photo_px": 0.647,
+  "close_up_size": [
+   695,
+   1024
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   419,
+   283
+  ],
+  "source": "ig-098.body.jpg",
+  "status": "ok"
+ },
+ "ig-099": {
+  "ankle_near_bottom": false,
+  "box": [
+   170,
+   418,
+   393,
+   260
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   649,
+   706
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 230,
+  "size": [
+   393,
+   260
+  ],
+  "source": "ig-099.lower.jpg",
+  "status": "ok"
+ },
+ "ig-100": {
+  "ankle_near_bottom": false,
+  "box": [
+   56,
+   394,
+   321,
+   188
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   455,
+   675
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 183,
+  "size": [
+   321,
+   188
+  ],
+  "source": "ig-100.lower.jpg",
+  "status": "ok"
+ },
+ "ig-101": {
+  "ankle_near_bottom": false,
+  "box": [
+   202,
+   465,
+   324,
+   225
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   789,
+   767
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 183,
+  "size": [
+   324,
+   225
+  ],
+  "source": "ig-101.lower.jpg",
+  "status": "ok"
+ },
+ "ig-102": {
+  "ankle_near_bottom": false,
+  "box": [
+   6,
+   467,
+   484,
+   292
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   698,
+   760
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 294,
+  "size": [
+   484,
+   292
+  ],
+  "source": "ig-102.lower.jpg",
+  "status": "ok"
+ },
+ "ig-103": {
+  "ankle_near_bottom": false,
+  "box": [
+   6,
+   437,
+   335,
+   279
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   483,
+   756
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 278,
+  "size": [
+   335,
+   279
+  ],
+  "source": "ig-103.lower.jpg",
+  "status": "ok"
+ },
+ "ig-104": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   480,
+   458,
+   342
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   459,
+   823
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 346,
+  "size": [
+   458,
+   342
+  ],
+  "source": "ig-104.lower.jpg",
+  "status": "ok"
+ },
+ "ig-105": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   501,
+   483,
+   327
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   601,
+   829
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 307,
+  "size": [
+   483,
+   327
+  ],
+  "source": "ig-105.lower.jpg",
+  "status": "ok"
+ },
+ "ig-106": {
+  "ankle_near_bottom": false,
+  "box": [
+   10,
+   457,
+   483,
+   269
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   686,
+   727
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 281,
+  "size": [
+   483,
+   269
+  ],
+  "source": "ig-106.lower.jpg",
+  "status": "ok"
+ },
+ "ig-107": {
+  "ankle_near_bottom": false,
+  "box": [
+   224,
+   487,
+   292,
+   248
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   517,
+   772
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 247,
+  "size": [
+   292,
+   248
+  ],
+  "source": "ig-107.lower.jpg",
+  "status": "ok"
+ },
+ "ig-108": {
+  "ankle_near_bottom": false,
+  "box": [
+   51,
+   263,
+   231,
+   159
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   289,
+   462
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 132,
+  "size": [
+   231,
+   159
+  ],
+  "source": "ig-108.lower.jpg",
+  "status": "ok"
+ },
+ "ig-109": {
+  "ankle_near_bottom": false,
+  "box": [
+   62,
+   322,
+   327,
+   219
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   390,
+   566
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 209,
+  "size": [
+   327,
+   219
+  ],
+  "source": "ig-109.lower.jpg",
+  "status": "ok"
+ },
+ "ig-110": {
+  "ankle_near_bottom": false,
+  "box": [
+   140,
+   317,
+   171,
+   142
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   331,
+   532
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 142,
+  "size": [
+   171,
+   142
+  ],
+  "source": "ig-110.lower.jpg",
+  "status": "ok"
+ },
+ "ig-111": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   328,
+   296,
+   197
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   297,
+   550
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 197,
+  "size": [
+   296,
+   197
+  ],
+  "source": "ig-111.lower.jpg",
+  "status": "ok"
+ },
+ "ig-112": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   583,
+   591,
+   344
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   646,
+   928
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 389,
+  "size": [
+   591,
+   344
+  ],
+  "source": "ig-112.lower.jpg",
+  "status": "ok"
+ },
+ "ig-113": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   606,
+   576,
+   373
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   615,
+   980
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 400,
+  "size": [
+   576,
+   373
+  ],
+  "source": "ig-113.lower.jpg",
+  "status": "ok"
+ },
+ "ig-114": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   602,
+   570,
+   388
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   596,
+   991
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 416,
+  "size": [
+   570,
+   388
+  ],
+  "source": "ig-114.lower.jpg",
+  "status": "ok"
+ },
+ "ig-115": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   627,
+   562,
+   353
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   641,
+   981
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 388,
+  "size": [
+   562,
+   353
+  ],
+  "source": "ig-115.lower.jpg",
+  "status": "ok"
+ },
+ "ig-116": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   601,
+   605,
+   375
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   618,
+   977
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 420,
+  "size": [
+   605,
+   375
+  ],
+  "source": "ig-116.lower.jpg",
+  "status": "ok"
+ },
+ "ig-117": {
+  "ankle_near_bottom": false,
+  "box": [
+   256,
+   518,
+   327,
+   291
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   584,
+   856
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 291,
+  "size": [
+   327,
+   291
+  ],
+  "source": "ig-117.lower.jpg",
+  "status": "ok"
+ },
+ "ig-118": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   460,
+   456,
+   280
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   483,
+   764
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 268,
+  "size": [
+   456,
+   280
+  ],
+  "source": "ig-118.lower.jpg",
+  "status": "ok"
+ },
+ "ig-119": {
+  "ankle_near_bottom": false,
+  "box": [
+   9,
+   438,
+   470,
+   277
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   483,
+   716
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 272,
+  "size": [
+   470,
+   277
+  ],
+  "source": "ig-119.lower.jpg",
+  "status": "ok"
+ },
+ "ig-121": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   496,
+   473,
+   285
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   520,
+   782
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 272,
+  "size": [
+   473,
+   285
+  ],
+  "source": "ig-121.lower.jpg",
+  "status": "ok"
+ },
+ "ig-122": {
+  "ankle_near_bottom": false,
+  "box": [
+   32,
+   428,
+   403,
+   302
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   437,
+   738
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 269,
+  "size": [
+   403,
+   302
+  ],
+  "source": "ig-122.lower.jpg",
+  "status": "ok"
+ },
+ "ig-123": {
+  "ankle_near_bottom": false,
+  "box": [
+   21,
+   502,
+   492,
+   328
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   523,
+   831
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 304,
+  "size": [
+   492,
+   328
+  ],
+  "source": "ig-123.lower.jpg",
+  "status": "ok"
+ },
+ "ig-124": {
+  "ankle_near_bottom": false,
+  "box": [
+   96,
+   494,
+   415,
+   280
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   512,
+   801
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 275,
+  "size": [
+   415,
+   280
+  ],
+  "source": "ig-124.lower.jpg",
+  "status": "ok"
+ },
+ "ig-125": {
+  "ankle_near_bottom": false,
+  "box": [
+   144,
+   463,
+   430,
+   292
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   575,
+   776
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 281,
+  "size": [
+   430,
+   292
+  ],
+  "source": "ig-125.lower.jpg",
+  "status": "ok"
+ },
+ "ig-126": {
+  "ankle_near_bottom": false,
+  "box": [
+   108,
+   465,
+   388,
+   231
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   643,
+   750
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 224,
+  "size": [
+   388,
+   231
+  ],
+  "source": "ig-126.lower.jpg",
+  "status": "ok"
+ },
+ "ig-127": {
+  "ankle_near_bottom": false,
+  "box": [
+   138,
+   448,
+   363,
+   217
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   655,
+   722
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 203,
+  "size": [
+   363,
+   217
+  ],
+  "source": "ig-127.lower.jpg",
+  "status": "ok"
+ },
+ "ig-128": {
+  "ankle_near_bottom": false,
+  "box": [
+   45,
+   819,
+   303,
+   201
+  ],
+  "close_up_px_per_photo_px": 0.653,
+  "close_up_size": [
+   422,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 188,
+  "size": [
+   303,
+   201
+  ],
+  "source": "ig-128.body.jpg",
+  "status": "ok"
+ },
+ "ig-129": {
+  "ankle_near_bottom": false,
+  "box": [
+   83,
+   476,
+   373,
+   219
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   668,
+   749
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 206,
+  "size": [
+   373,
+   219
+  ],
+  "source": "ig-129.lower.jpg",
+  "status": "ok"
+ },
+ "ig-130": {
+  "ankle_near_bottom": false,
+  "box": [
+   205,
+   501,
+   454,
+   263
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   743,
+   818
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 242,
+  "size": [
+   454,
+   263
+  ],
+  "source": "ig-130.lower.jpg",
+  "status": "ok"
+ },
+ "ig-131": {
+  "ankle_near_bottom": false,
+  "box": [
+   19,
+   288,
+   489,
+   512
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   609,
+   886
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 297,
+  "size": [
+   489,
+   512
+  ],
+  "source": "ig-131.lower.jpg",
+  "status": "ok"
+ },
+ "ig-132": {
+  "ankle_near_bottom": false,
+  "box": [
+   120,
+   419,
+   525,
+   321
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   646,
+   741
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 289,
+  "size": [
+   525,
+   321
+  ],
+  "source": "ig-132.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m01": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   169,
+   190,
+   111
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   211,
+   308
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 96,
+  "size": [
+   190,
+   111
+  ],
+  "source": "mirror-m01.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m02": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   186,
+   203,
+   127
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   221,
+   331
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 115,
+  "size": [
+   203,
+   127
+  ],
+  "source": "mirror-m02.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m03": {
+  "ankle_near_bottom": false,
+  "box": [
+   2,
+   53,
+   56,
+   34
+  ],
+  "close_up_px_per_photo_px": 1.011,
+  "close_up_size": [
+   65,
+   94
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 32,
+  "size": [
+   56,
+   34
+  ],
+  "source": "mirror-m03.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m04": {
+  "box": [
+   0,
+   44,
+   103,
+   24
+  ],
+  "close_up_px_per_photo_px": 1.03,
+  "close_up_size": [
+   104,
+   69
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   103,
+   24
+  ],
+  "source": "mirror-m04.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m05": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   230,
+   212,
+   150
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   234,
+   388
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 137,
+  "size": [
+   212,
+   150
+  ],
+  "source": "mirror-m05.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m06": {
+  "ankle_near_bottom": false,
+  "box": [
+   14,
+   216,
+   282,
+   136
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   297,
+   362
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 124,
+  "size": [
+   282,
+   136
+  ],
+  "source": "mirror-m06.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m07": {
+  "ankle_near_bottom": false,
+  "box": [
+   18,
+   126,
+   147,
+   102
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   169,
+   265
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 75,
+  "size": [
+   147,
+   102
+  ],
+  "source": "mirror-m07.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m08": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   236,
+   268,
+   176
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   371,
+   450
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 145,
+  "size": [
+   268,
+   176
+  ],
+  "source": "mirror-m08.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m09": {
+  "box": [
+   0,
+   140,
+   233,
+   75
+  ],
+  "close_up_px_per_photo_px": 1.005,
+  "close_up_size": [
+   234,
+   216
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   233,
+   75
+  ],
+  "source": "mirror-m09.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m10": {
+  "ankle_near_bottom": false,
+  "box": [
+   1,
+   187,
+   234,
+   93
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   352,
+   281
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 96,
+  "size": [
+   234,
+   93
+  ],
+  "source": "mirror-m10.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m11": {
+  "ankle_near_bottom": false,
+  "box": [
+   199,
+   222,
+   216,
+   124
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   424,
+   376
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 120,
+  "size": [
+   216,
+   124
+  ],
+  "source": "mirror-m11.lower.jpg",
+  "status": "ok"
+ },
+ "mirror-m12": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   121,
+   156,
+   107
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   168,
+   239
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 86,
+  "size": [
+   156,
+   107
+  ],
+  "source": "mirror-m12.lower.jpg",
+  "status": "ok"
+ },
+ "oct7-ph1": {
+  "ankle_near_bottom": false,
+  "box": [
+   70,
+   587,
+   248,
+   206
+  ],
+  "close_up_px_per_photo_px": 1.0,
+  "close_up_size": [
+   383,
+   860
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 206,
+  "size": [
+   248,
+   206
+  ],
+  "source": "oct7-ph1.body.jpg",
+  "status": "ok"
+ },
+ "oct7-ph2": {
+  "box": [
+   0,
+   476,
+   601,
+   256
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   602,
+   733
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   601,
+   256
+  ],
+  "source": "oct7-ph2.lower.jpg",
+  "status": "ok"
+ },
+ "oct7-ph3": {
+  "ankle_near_bottom": false,
+  "box": [
+   80,
+   365,
+   441,
+   300
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   522,
+   666
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 276,
+  "size": [
+   441,
+   300
+  ],
+  "source": "oct7-ph3.lower.jpg",
+  "status": "ok"
+ },
+ "oct7-ph4": {
+  "ankle_near_bottom": false,
+  "box": [
+   160,
+   739,
+   406,
+   268
+  ],
+  "close_up_px_per_photo_px": 0.905,
+  "close_up_size": [
+   567,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 210,
+  "size": [
+   406,
+   268
+  ],
+  "source": "oct7-ph4.body.jpg",
+  "status": "ok"
+ },
+ "phone-0d39d6": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   403,
+   417,
+   321
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   546,
+   823
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 237,
+  "size": [
+   417,
+   321
+  ],
+  "source": "phone-0d39d6.lower.jpg",
+  "status": "ok"
+ },
+ "phone-1f1997": {
+  "ankle_near_bottom": false,
+  "box": [
+   48,
+   458,
+   436,
+   207
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   503,
+   875
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 188,
+  "size": [
+   436,
+   207
+  ],
+  "source": "phone-1f1997.lower.jpg",
+  "status": "ok"
+ },
+ "phone-403ade": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   382,
+   378,
+   308
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   460,
+   835
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 210,
+  "size": [
+   378,
+   308
+  ],
+  "source": "phone-403ade.lower.jpg",
+  "status": "ok"
+ },
+ "phone-5a9049": {
+  "ankle_near_bottom": false,
+  "box": [
+   19,
+   401,
+   433,
+   211
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   468,
+   660
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 207,
+  "size": [
+   433,
+   211
+  ],
+  "source": "phone-5a9049.lower.jpg",
+  "status": "ok"
+ },
+ "phone-6b14db": {
+  "ankle_near_bottom": false,
+  "box": [
+   30,
+   419,
+   436,
+   225
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   494,
+   746
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 218,
+  "size": [
+   436,
+   225
+  ],
+  "source": "phone-6b14db.lower.jpg",
+  "status": "ok"
+ },
+ "phone-703a8b": {
+  "box": [
+   0,
+   352,
+   1006,
+   189
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   1007,
+   542
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   1006,
+   189
+  ],
+  "source": "phone-703a8b.lower.jpg",
+  "status": "ok"
+ },
+ "phone-7de605": {
+  "ankle_near_bottom": false,
+  "box": [
+   82,
+   408,
+   412,
+   215
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   498,
+   767
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 197,
+  "size": [
+   412,
+   215
+  ],
+  "source": "phone-7de605.lower.jpg",
+  "status": "ok"
+ },
+ "phone-7f14a4": {
+  "ankle_near_bottom": false,
+  "box": [
+   12,
+   333,
+   368,
+   183
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   389,
+   553
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 179,
+  "size": [
+   368,
+   183
+  ],
+  "source": "phone-7f14a4.lower.jpg",
+  "status": "ok"
+ },
+ "phone-8ad378": {
+  "ankle_near_bottom": false,
+  "box": [
+   43,
+   442,
+   461,
+   223
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   590,
+   768
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 222,
+  "size": [
+   461,
+   223
+  ],
+  "source": "phone-8ad378.lower.jpg",
+  "status": "ok"
+ },
+ "phone-8bc29d": {
+  "ankle_near_bottom": false,
+  "box": [
+   37,
+   405,
+   435,
+   227
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   473,
+   702
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 207,
+  "size": [
+   435,
+   227
+  ],
+  "source": "phone-8bc29d.lower.jpg",
+  "status": "ok"
+ },
+ "phone-968016": {
+  "ankle_near_bottom": false,
+  "box": [
+   13,
+   438,
+   516,
+   235
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   530,
+   750
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 234,
+  "size": [
+   516,
+   235
+  ],
+  "source": "phone-968016.lower.jpg",
+  "status": "ok"
+ },
+ "phone-a765e8": {
+  "ankle_near_bottom": false,
+  "box": [
+   85,
+   419,
+   410,
+   202
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   501,
+   758
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 193,
+  "size": [
+   410,
+   202
+  ],
+  "source": "phone-a765e8.lower.jpg",
+  "status": "ok"
+ },
+ "phone-b0f0c8": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   448,
+   490,
+   252
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   532,
+   766
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 239,
+  "size": [
+   490,
+   252
+  ],
+  "source": "phone-b0f0c8.lower.jpg",
+  "status": "ok"
+ },
+ "phone-d1967f": {
+  "ankle_near_bottom": false,
+  "box": [
+   417,
+   321,
+   280,
+   276
+  ],
+  "close_up_px_per_photo_px": 0.668,
+  "close_up_size": [
+   1024,
+   659
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 171,
+  "size": [
+   280,
+   276
+  ],
+  "source": "phone-d1967f.lower.jpg",
+  "status": "ok"
+ },
+ "phone-d58b14": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   541,
+   543,
+   339
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   544,
+   936
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 334,
+  "size": [
+   543,
+   339
+  ],
+  "source": "phone-d58b14.lower.jpg",
+  "status": "ok"
+ },
+ "phone-d6559a": {
+  "ankle_near_bottom": false,
+  "box": [
+   9,
+   418,
+   461,
+   256
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   471,
+   721
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 224,
+  "size": [
+   461,
+   256
+  ],
+  "source": "phone-d6559a.lower.jpg",
+  "status": "ok"
+ },
+ "phone-d918c0": {
+  "ankle_near_bottom": false,
+  "box": [
+   26,
+   417,
+   458,
+   253
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   512,
+   708
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 226,
+  "size": [
+   458,
+   253
+  ],
+  "source": "phone-d918c0.lower.jpg",
+  "status": "ok"
+ },
+ "phone-e026de": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   355,
+   340,
+   262
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   398,
+   749
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 206,
+  "size": [
+   340,
+   262
+  ],
+  "source": "phone-e026de.lower.jpg",
+  "status": "ok"
+ },
+ "phone-e438d4": {
+  "ankle_near_bottom": false,
+  "box": [
+   43,
+   261,
+   289,
+   144
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   338,
+   454
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 133,
+  "size": [
+   289,
+   144
+  ],
+  "source": "phone-e438d4.lower.jpg",
+  "status": "ok"
+ },
+ "phone-ebe23f": {
+  "ankle_near_bottom": false,
+  "box": [
+   135,
+   446,
+   521,
+   255
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   681,
+   815
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 254,
+  "size": [
+   521,
+   255
+  ],
+  "source": "phone-ebe23f.lower.jpg",
+  "status": "ok"
+ },
+ "phone-f07193": {
+  "ankle_near_bottom": false,
+  "box": [
+   68,
+   466,
+   499,
+   248
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   582,
+   811
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 225,
+  "size": [
+   499,
+   248
+  ],
+  "source": "phone-f07193.lower.jpg",
+  "status": "ok"
+ },
+ "phone-f4870b": {
+  "ankle_near_bottom": false,
+  "box": [
+   60,
+   291,
+   339,
+   201
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   403,
+   545
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 156,
+  "size": [
+   339,
+   201
+  ],
+  "source": "phone-f4870b.lower.jpg",
+  "status": "ok"
+ },
+ "phone-fb0b17": {
+  "ankle_near_bottom": false,
+  "box": [
+   84,
+   341,
+   381,
+   194
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   472,
+   606
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 183,
+  "size": [
+   381,
+   194
+  ],
+  "source": "phone-fb0b17.lower.jpg",
+  "status": "ok"
+ },
+ "pin-001": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   376,
+   354,
+   227
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   392,
+   634
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 207,
+  "size": [
+   354,
+   227
+  ],
+  "source": "pin-001.lower.jpg",
+  "status": "ok"
+ },
+ "pin-002": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   249,
+   238,
+   170
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   245,
+   428
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 156,
+  "size": [
+   238,
+   170
+  ],
+  "source": "pin-002.lower.jpg",
+  "status": "ok"
+ },
+ "pin-003": {
+  "ankle_near_bottom": false,
+  "box": [
+   170,
+   74,
+   357,
+   499
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   551,
+   633
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 185,
+  "size": [
+   357,
+   499
+  ],
+  "source": "pin-003.lower.jpg",
+  "status": "ok"
+ },
+ "pin-004": {
+  "ankle_near_bottom": false,
+  "box": [
+   160,
+   408,
+   415,
+   292
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   576,
+   701
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 240,
+  "size": [
+   415,
+   292
+  ],
+  "source": "pin-004.lower.jpg",
+  "status": "ok"
+ },
+ "pin-005": {
+  "ankle_near_bottom": false,
+  "box": [
+   35,
+   397,
+   298,
+   248
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   492,
+   701
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 248,
+  "size": [
+   298,
+   248
+  ],
+  "source": "pin-005.lower.jpg",
+  "status": "ok"
+ },
+ "pin-006": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   430,
+   507,
+   267
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   513,
+   754
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 252,
+  "size": [
+   507,
+   267
+  ],
+  "source": "pin-006.lower.jpg",
+  "status": "ok"
+ },
+ "pin-007": {
+  "ankle_near_bottom": false,
+  "box": [
+   79,
+   506,
+   449,
+   225
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   585,
+   748
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 217,
+  "size": [
+   449,
+   225
+  ],
+  "source": "pin-007.lower.jpg",
+  "status": "ok"
+ },
+ "pin-008": {
+  "ankle_near_bottom": false,
+  "box": [
+   3,
+   323,
+   288,
+   245
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   292,
+   572
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 187,
+  "size": [
+   288,
+   245
+  ],
+  "source": "pin-008.lower.jpg",
+  "status": "ok"
+ },
+ "pin-009": {
+  "ankle_near_bottom": false,
+  "box": [
+   19,
+   115,
+   357,
+   444
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   377,
+   585
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 252,
+  "size": [
+   357,
+   444
+  ],
+  "source": "pin-009.lower.jpg",
+  "status": "ok"
+ },
+ "pin-010": {
+  "ankle_near_bottom": false,
+  "box": [
+   54,
+   317,
+   357,
+   175
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   412,
+   518
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 170,
+  "size": [
+   357,
+   175
+  ],
+  "source": "pin-010.lower.jpg",
+  "status": "ok"
+ },
+ "pin-011": {
+  "ankle_near_bottom": false,
+  "box": [
+   105,
+   280,
+   274,
+   149
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   382,
+   510
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 144,
+  "size": [
+   274,
+   149
+  ],
+  "source": "pin-011.lower.jpg",
+  "status": "ok"
+ },
+ "pin-012": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   319,
+   459,
+   232
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   460,
+   593
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 220,
+  "size": [
+   459,
+   232
+  ],
+  "source": "pin-012.lower.jpg",
+  "status": "ok"
+ },
+ "pin-013": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   287,
+   365,
+   333
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   534,
+   649
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 219,
+  "size": [
+   365,
+   333
+  ],
+  "source": "pin-013.lower.jpg",
+  "status": "ok"
+ },
+ "pin-014": {
+  "ankle_near_bottom": false,
+  "box": [
+   25,
+   271,
+   272,
+   230
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   360,
+   583
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 161,
+  "size": [
+   272,
+   230
+  ],
+  "source": "pin-014.lower.jpg",
+  "status": "ok"
+ },
+ "pin-015": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   401,
+   634,
+   431
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   635,
+   860
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 326,
+  "size": [
+   634,
+   431
+  ],
+  "source": "pin-015.lower.jpg",
+  "status": "ok"
+ },
+ "pin-016": {
+  "ankle_near_bottom": false,
+  "box": [
+   70,
+   355,
+   369,
+   256
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   440,
+   646
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 228,
+  "size": [
+   369,
+   256
+  ],
+  "source": "pin-016.lower.jpg",
+  "status": "ok"
+ },
+ "pin-017": {
+  "box": [
+   0,
+   397,
+   684,
+   214
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   685,
+   612
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   684,
+   214
+  ],
+  "source": "pin-017.lower.jpg",
+  "status": "ok"
+ },
+ "pin-018": {
+  "ankle_near_bottom": false,
+  "box": [
+   23,
+   355,
+   307,
+   275
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   383,
+   669
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 207,
+  "size": [
+   307,
+   275
+  ],
+  "source": "pin-018.lower.jpg",
+  "status": "ok"
+ },
+ "pin-019": {
+  "ankle_near_bottom": false,
+  "box": [
+   62,
+   361,
+   402,
+   259
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   465,
+   672
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 202,
+  "size": [
+   402,
+   259
+  ],
+  "source": "pin-019.lower.jpg",
+  "status": "ok"
+ },
+ "pin-020": {
+  "box": [
+   0,
+   431,
+   557,
+   232
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   558,
+   664
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   557,
+   232
+  ],
+  "source": "pin-020.lower.jpg",
+  "status": "ok"
+ },
+ "pin-021": {
+  "ankle_near_bottom": false,
+  "box": [
+   159,
+   405,
+   467,
+   230
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   628,
+   657
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 224,
+  "size": [
+   467,
+   230
+  ],
+  "source": "pin-021.lower.jpg",
+  "status": "ok"
+ },
+ "pin-022": {
+  "ankle_near_bottom": false,
+  "box": [
+   88,
+   423,
+   508,
+   246
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   636,
+   670
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 258,
+  "size": [
+   508,
+   246
+  ],
+  "source": "pin-022.lower.jpg",
+  "status": "ok"
+ },
+ "pin-023": {
+  "ankle_near_bottom": false,
+  "box": [
+   103,
+   318,
+   315,
+   262
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   474,
+   581
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 206,
+  "size": [
+   315,
+   262
+  ],
+  "source": "pin-023.lower.jpg",
+  "status": "ok"
+ },
+ "pin-024": {
+  "ankle_near_bottom": false,
+  "box": [
+   108,
+   263,
+   339,
+   251
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   471,
+   515
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 178,
+  "size": [
+   339,
+   251
+  ],
+  "source": "pin-024.lower.jpg",
+  "status": "ok"
+ },
+ "pin-025": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   343,
+   325,
+   212
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   326,
+   556
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 211,
+  "size": [
+   325,
+   212
+  ],
+  "source": "pin-025.lower.jpg",
+  "status": "ok"
+ },
+ "pin-026": {
+  "ankle_near_bottom": false,
+  "box": [
+   103,
+   399,
+   383,
+   257
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   535,
+   657
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 227,
+  "size": [
+   383,
+   257
+  ],
+  "source": "pin-026.lower.jpg",
+  "status": "ok"
+ },
+ "pin-027": {
+  "ankle_near_bottom": false,
+  "box": [
+   82,
+   296,
+   319,
+   254
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   469,
+   557
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 218,
+  "size": [
+   319,
+   254
+  ],
+  "source": "pin-027.lower.jpg",
+  "status": "ok"
+ },
+ "pin-028": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   364,
+   617,
+   365
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   618,
+   737
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 258,
+  "size": [
+   617,
+   365
+  ],
+  "source": "pin-028.lower.jpg",
+  "status": "ok"
+ },
+ "pin-029": {
+  "ankle_near_bottom": false,
+  "box": [
+   65,
+   431,
+   437,
+   273
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   540,
+   714
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 251,
+  "size": [
+   437,
+   273
+  ],
+  "source": "pin-029.lower.jpg",
+  "status": "ok"
+ },
+ "pin-030": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   370,
+   451,
+   299
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   452,
+   676
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 279,
+  "size": [
+   451,
+   299
+  ],
+  "source": "pin-030.lower.jpg",
+  "status": "ok"
+ },
+ "pin-031": {
+  "box": [
+   0,
+   364,
+   627,
+   195
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   628,
+   560
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   627,
+   195
+  ],
+  "source": "pin-031.lower.jpg",
+  "status": "ok"
+ },
+ "pin-032": {
+  "ankle_near_bottom": false,
+  "box": [
+   12,
+   377,
+   387,
+   247
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   447,
+   653
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 204,
+  "size": [
+   387,
+   247
+  ],
+  "source": "pin-032.lower.jpg",
+  "status": "ok"
+ },
+ "pin-033": {
+  "ankle_near_bottom": false,
+  "box": [
+   107,
+   377,
+   408,
+   251
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   567,
+   631
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 226,
+  "size": [
+   408,
+   251
+  ],
+  "source": "pin-033.lower.jpg",
+  "status": "ok"
+ },
+ "pin-034": {
+  "ankle_near_bottom": false,
+  "box": [
+   50,
+   452,
+   443,
+   261
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   494,
+   714
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 218,
+  "size": [
+   443,
+   261
+  ],
+  "source": "pin-034.lower.jpg",
+  "status": "ok"
+ },
+ "pin-035": {
+  "box": [
+   0,
+   665,
+   418,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.811,
+  "close_up_size": [
+   419,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   418,
+   358
+  ],
+  "source": "pin-035.body.jpg",
+  "status": "ok"
+ },
+ "pin-036": {
+  "ankle_near_bottom": false,
+  "box": [
+   98,
+   325,
+   313,
+   198
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   446,
+   524
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 141,
+  "size": [
+   313,
+   198
+  ],
+  "source": "pin-036.lower.jpg",
+  "status": "ok"
+ },
+ "pin-037": {
+  "box": [
+   0,
+   360,
+   508,
+   193
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   509,
+   554
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   508,
+   193
+  ],
+  "source": "pin-037.lower.jpg",
+  "status": "ok"
+ },
+ "pin-038": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   434,
+   547,
+   286
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   548,
+   722
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 281,
+  "size": [
+   547,
+   286
+  ],
+  "source": "pin-038.lower.jpg",
+  "status": "ok"
+ },
+ "pin-039": {
+  "ankle_near_bottom": false,
+  "box": [
+   89,
+   426,
+   360,
+   233
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   472,
+   692
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 230,
+  "size": [
+   360,
+   233
+  ],
+  "source": "pin-039.lower.jpg",
+  "status": "ok"
+ },
+ "pin-040": {
+  "ankle_near_bottom": false,
+  "box": [
+   321,
+   435,
+   234,
+   210
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   556,
+   658
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 210,
+  "size": [
+   234,
+   210
+  ],
+  "source": "pin-040.lower.jpg",
+  "status": "ok"
+ },
+ "pin-041": {
+  "ankle_near_bottom": false,
+  "box": [
+   40,
+   464,
+   429,
+   293
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   582,
+   780
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 257,
+  "size": [
+   429,
+   293
+  ],
+  "source": "pin-041.lower.jpg",
+  "status": "ok"
+ },
+ "pin-042": {
+  "box": [
+   0,
+   665,
+   303,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.791,
+  "close_up_size": [
+   304,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   303,
+   358
+  ],
+  "source": "pin-042.body.jpg",
+  "status": "ok"
+ },
+ "pin-043": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   411,
+   198,
+   190
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   461,
+   631
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 190,
+  "size": [
+   198,
+   190
+  ],
+  "source": "pin-043.lower.jpg",
+  "status": "ok"
+ },
+ "pin-044": {
+  "ankle_near_bottom": false,
+  "box": [
+   77,
+   440,
+   470,
+   359
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   548,
+   834
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 298,
+  "size": [
+   470,
+   359
+  ],
+  "source": "pin-044.lower.jpg",
+  "status": "ok"
+ },
+ "pin-045": {
+  "ankle_near_bottom": false,
+  "box": [
+   149,
+   344,
+   348,
+   213
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   608,
+   563
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 203,
+  "size": [
+   348,
+   213
+  ],
+  "source": "pin-045.lower.jpg",
+  "status": "ok"
+ },
+ "pin-046": {
+  "box": [
+   0,
+   665,
+   393,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.759,
+  "close_up_size": [
+   394,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   393,
+   358
+  ],
+  "source": "pin-046.body.jpg",
+  "status": "ok"
+ },
+ "pin-047": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   356,
+   444,
+   198
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   522,
+   555
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 205,
+  "size": [
+   444,
+   198
+  ],
+  "source": "pin-047.lower.jpg",
+  "status": "ok"
+ },
+ "pin-048": {
+  "ankle_near_bottom": false,
+  "box": [
+   46,
+   809,
+   289,
+   194
+  ],
+  "close_up_px_per_photo_px": 0.918,
+  "close_up_size": [
+   361,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 159,
+  "size": [
+   289,
+   194
+  ],
+  "source": "pin-048.body.jpg",
+  "status": "ok"
+ },
+ "pin-049": {
+  "ankle_near_bottom": false,
+  "box": [
+   16,
+   328,
+   410,
+   231
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   492,
+   560
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 188,
+  "size": [
+   410,
+   231
+  ],
+  "source": "pin-049.lower.jpg",
+  "status": "ok"
+ },
+ "pin-050": {
+  "ankle_near_bottom": false,
+  "box": [
+   4,
+   336,
+   371,
+   201
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   385,
+   582
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 190,
+  "size": [
+   371,
+   201
+  ],
+  "source": "pin-050.lower.jpg",
+  "status": "ok"
+ },
+ "pin-051": {
+  "ankle_near_bottom": false,
+  "box": [
+   61,
+   314,
+   255,
+   158
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   436,
+   519
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 122,
+  "size": [
+   255,
+   158
+  ],
+  "source": "pin-051.lower.jpg",
+  "status": "ok"
+ },
+ "pin-052": {
+  "ankle_near_bottom": false,
+  "box": [
+   21,
+   312,
+   354,
+   162
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   399,
+   547
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 155,
+  "size": [
+   354,
+   162
+  ],
+  "source": "pin-052.lower.jpg",
+  "status": "ok"
+ },
+ "pin-053": {
+  "ankle_near_bottom": false,
+  "box": [
+   32,
+   279,
+   285,
+   200
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   328,
+   538
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 157,
+  "size": [
+   285,
+   200
+  ],
+  "source": "pin-053.lower.jpg",
+  "status": "ok"
+ },
+ "pin-054": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   265,
+   262,
+   219
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   341,
+   521
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 219,
+  "size": [
+   262,
+   219
+  ],
+  "source": "pin-054.lower.jpg",
+  "status": "ok"
+ },
+ "pin-055": {
+  "ankle_near_bottom": false,
+  "box": [
+   37,
+   403,
+   458,
+   242
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   508,
+   650
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 218,
+  "size": [
+   458,
+   242
+  ],
+  "source": "pin-055.lower.jpg",
+  "status": "ok"
+ },
+ "pin-056": {
+  "ankle_near_bottom": false,
+  "box": [
+   182,
+   372,
+   370,
+   261
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   834,
+   661
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 195,
+  "size": [
+   370,
+   261
+  ],
+  "source": "pin-056.lower.jpg",
+  "status": "ok"
+ },
+ "pin-057": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   473,
+   583,
+   278
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   586,
+   752
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 287,
+  "size": [
+   583,
+   278
+  ],
+  "source": "pin-057.lower.jpg",
+  "status": "ok"
+ },
+ "pin-058": {
+  "box": [
+   0,
+   309,
+   737,
+   166
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   738,
+   476
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   737,
+   166
+  ],
+  "source": "pin-058.lower.jpg",
+  "status": "ok"
+ },
+ "pin-059": {
+  "ankle_near_bottom": false,
+  "box": [
+   107,
+   293,
+   354,
+   183
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   492,
+   477
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 170,
+  "size": [
+   354,
+   183
+  ],
+  "source": "pin-059.lower.jpg",
+  "status": "ok"
+ },
+ "pin-060": {
+  "ankle_near_bottom": false,
+  "box": [
+   83,
+   258,
+   248,
+   171
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   358,
+   478
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 142,
+  "size": [
+   248,
+   171
+  ],
+  "source": "pin-060.lower.jpg",
+  "status": "ok"
+ },
+ "pin-061": {
+  "ankle_near_bottom": false,
+  "box": [
+   29,
+   324,
+   315,
+   226
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   426,
+   557
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 203,
+  "size": [
+   315,
+   226
+  ],
+  "source": "pin-061.lower.jpg",
+  "status": "ok"
+ },
+ "pin-062": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   394,
+   434,
+   315
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   454,
+   725
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 304,
+  "size": [
+   434,
+   315
+  ],
+  "source": "pin-062.lower.jpg",
+  "status": "ok"
+ },
+ "pin-063": {
+  "ankle_near_bottom": false,
+  "box": [
+   13,
+   420,
+   555,
+   267
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   569,
+   712
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 261,
+  "size": [
+   555,
+   267
+  ],
+  "source": "pin-063.lower.jpg",
+  "status": "ok"
+ },
+ "pin-064": {
+  "ankle_near_bottom": false,
+  "box": [
+   74,
+   386,
+   401,
+   285
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   476,
+   713
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 235,
+  "size": [
+   401,
+   285
+  ],
+  "source": "pin-064.lower.jpg",
+  "status": "ok"
+ },
+ "pin-065": {
+  "ankle_near_bottom": false,
+  "box": [
+   48,
+   234,
+   226,
+   112
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   296,
+   431
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 107,
+  "size": [
+   226,
+   112
+  ],
+  "source": "pin-065.lower.jpg",
+  "status": "ok"
+ },
+ "pin-066": {
+  "ankle_near_bottom": true,
+  "box": [
+   82,
+   218,
+   216,
+   85
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   299,
+   304
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 124,
+  "size": [
+   216,
+   85
+  ],
+  "source": "pin-066.lower.jpg",
+  "status": "ok"
+ },
+ "pin-067": {
+  "box": [
+   0,
+   665,
+   480,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.588,
+  "close_up_size": [
+   481,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   480,
+   358
+  ],
+  "source": "pin-067.body.jpg",
+  "status": "ok"
+ },
+ "pin-068": {
+  "box": [
+   0,
+   665,
+   527,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.583,
+  "close_up_size": [
+   528,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   527,
+   358
+  ],
+  "source": "pin-068.body.jpg",
+  "status": "ok"
+ },
+ "pin-069": {
+  "ankle_near_bottom": false,
+  "box": [
+   70,
+   458,
+   488,
+   405
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   609,
+   933
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 301,
+  "size": [
+   488,
+   405
+  ],
+  "source": "pin-069.lower.jpg",
+  "status": "ok"
+ },
+ "pin-070": {
+  "ankle_near_bottom": false,
+  "box": [
+   114,
+   393,
+   515,
+   208
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   658,
+   712
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 204,
+  "size": [
+   515,
+   208
+  ],
+  "source": "pin-070.lower.jpg",
+  "status": "ok"
+ },
+ "pin-071": {
+  "ankle_near_bottom": false,
+  "box": [
+   155,
+   420,
+   481,
+   225
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   713,
+   743
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 216,
+  "size": [
+   481,
+   225
+  ],
+  "source": "pin-071.lower.jpg",
+  "status": "ok"
+ },
+ "pin-072": {
+  "ankle_near_bottom": false,
+  "box": [
+   90,
+   345,
+   411,
+   310
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   1022,
+   656
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 343,
+  "size": [
+   411,
+   310
+  ],
+  "source": "pin-072.lower.jpg",
+  "status": "ok"
+ },
+ "pin-073": {
+  "ankle_near_bottom": false,
+  "box": [
+   121,
+   339,
+   360,
+   262
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   534,
+   673
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 214,
+  "size": [
+   360,
+   262
+  ],
+  "source": "pin-073.lower.jpg",
+  "status": "ok"
+ },
+ "pin-074": {
+  "ankle_near_bottom": false,
+  "box": [
+   179,
+   440,
+   483,
+   237
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   703,
+   819
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 230,
+  "size": [
+   483,
+   237
+  ],
+  "source": "pin-074.lower.jpg",
+  "status": "ok"
+ },
+ "rd-001": {
+  "ankle_near_bottom": false,
+  "box": [
+   104,
+   421,
+   469,
+   353
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   609,
+   833
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 282,
+  "size": [
+   469,
+   353
+  ],
+  "source": "rd-001.lower.jpg",
+  "status": "ok"
+ },
+ "rd-002": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   720,
+   379,
+   275
+  ],
+  "close_up_px_per_photo_px": 0.579,
+  "close_up_size": [
+   388,
+   1024
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   379,
+   275
+  ],
+  "source": "rd-002.body.jpg",
+  "status": "ok"
+ },
+ "rd-003": {
+  "ankle_near_bottom": false,
+  "box": [
+   286,
+   543,
+   329,
+   275
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   738,
+   884
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 274,
+  "size": [
+   329,
+   275
+  ],
+  "source": "rd-003.lower.jpg",
+  "status": "ok"
+ },
+ "rd-004": {
+  "ankle_near_bottom": false,
+  "box": [
+   3,
+   534,
+   547,
+   282
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   551,
+   867
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 276,
+  "size": [
+   547,
+   282
+  ],
+  "source": "rd-004.lower.jpg",
+  "status": "ok"
+ },
+ "rd-005": {
+  "ankle_near_bottom": false,
+  "box": [
+   51,
+   408,
+   369,
+   266
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   474,
+   718
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   369,
+   266
+  ],
+  "source": "rd-005.lower.jpg",
+  "status": "ok"
+ },
+ "rd-006": {
+  "ankle_near_bottom": true,
+  "box": [
+   0,
+   809,
+   385,
+   214
+  ],
+  "close_up_px_per_photo_px": 0.798,
+  "close_up_size": [
+   386,
+   1024
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   385,
+   214
+  ],
+  "source": "rd-006.body.jpg",
+  "status": "ok"
+ },
+ "rd-007": {
+  "ankle_near_bottom": false,
+  "box": [
+   135,
+   463,
+   518,
+   430
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   670,
+   965
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 304,
+  "size": [
+   518,
+   430
+  ],
+  "source": "rd-007.lower.jpg",
+  "status": "ok"
+ },
+ "rd-008": {
+  "box": [
+   0,
+   665,
+   475,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.583,
+  "close_up_size": [
+   476,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   475,
+   358
+  ],
+  "source": "rd-008.body.jpg",
+  "status": "ok"
+ },
+ "rd-009": {
+  "ankle_near_bottom": false,
+  "box": [
+   126,
+   374,
+   359,
+   406
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   599,
+   902
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 203,
+  "size": [
+   359,
+   406
+  ],
+  "source": "rd-009.lower.jpg",
+  "status": "ok"
+ },
+ "rd-010": {
+  "ankle_near_bottom": false,
+  "box": [
+   20,
+   788,
+   324,
+   206
+  ],
+  "close_up_px_per_photo_px": 0.581,
+  "close_up_size": [
+   349,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 169,
+  "size": [
+   324,
+   206
+  ],
+  "source": "rd-010.body.jpg",
+  "status": "ok"
+ },
+ "rd-011": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   694,
+   346,
+   329
+  ],
+  "close_up_px_per_photo_px": 0.656,
+  "close_up_size": [
+   368,
+   1024
+  ],
+  "knees": false,
+  "method": "ankles",
+  "shin_px": 246,
+  "size": [
+   346,
+   329
+  ],
+  "source": "rd-011.body.jpg",
+  "status": "ok"
+ },
+ "rd-012": {
+  "ankle_near_bottom": false,
+  "box": [
+   168,
+   413,
+   406,
+   281
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   714,
+   785
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 196,
+  "size": [
+   406,
+   281
+  ],
+  "source": "rd-012.lower.jpg",
+  "status": "ok"
+ },
+ "rd-013": {
+  "ankle_near_bottom": false,
+  "box": [
+   156,
+   465,
+   452,
+   380
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   609,
+   846
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 272,
+  "size": [
+   452,
+   380
+  ],
+  "source": "rd-013.lower.jpg",
+  "status": "ok"
+ },
+ "rd-014": {
+  "ankle_near_bottom": false,
+  "box": [
+   85,
+   576,
+   636,
+   447
+  ],
+  "close_up_px_per_photo_px": 0.846,
+  "close_up_size": [
+   722,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 396,
+  "size": [
+   636,
+   447
+  ],
+  "source": "rd-014.lower.jpg",
+  "status": "ok"
+ },
+ "rd-015": {
+  "box": [
+   0,
+   386,
+   533,
+   208
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   534,
+   595
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   533,
+   208
+  ],
+  "source": "rd-015.lower.jpg",
+  "status": "ok"
+ },
+ "rd-016": {
+  "ankle_near_bottom": false,
+  "box": [
+   122,
+   443,
+   450,
+   286
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   630,
+   814
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 252,
+  "size": [
+   450,
+   286
+  ],
+  "source": "rd-016.lower.jpg",
+  "status": "ok"
+ },
+ "rd-017": {
+  "ankle_near_bottom": false,
+  "box": [
+   8,
+   372,
+   507,
+   280
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   657,
+   685
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 270,
+  "size": [
+   507,
+   280
+  ],
+  "source": "rd-017.lower.jpg",
+  "status": "ok"
+ },
+ "rd-018": {
+  "ankle_near_bottom": false,
+  "box": [
+   39,
+   405,
+   420,
+   361
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   460,
+   774
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 247,
+  "size": [
+   420,
+   361
+  ],
+  "source": "rd-018.lower.jpg",
+  "status": "ok"
+ },
+ "rd-019": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   461,
+   466,
+   311
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   603,
+   875
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 255,
+  "size": [
+   466,
+   311
+  ],
+  "source": "rd-019.lower.jpg",
+  "status": "ok"
+ },
+ "rd-020": {
+  "ankle_near_bottom": false,
+  "box": [
+   125,
+   467,
+   519,
+   424
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   645,
+   912
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 315,
+  "size": [
+   519,
+   424
+  ],
+  "source": "rd-020.lower.jpg",
+  "status": "ok"
+ },
+ "rd-021": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   642,
+   530,
+   381
+  ],
+  "close_up_px_per_photo_px": 0.953,
+  "close_up_size": [
+   636,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 400,
+  "size": [
+   530,
+   381
+  ],
+  "source": "rd-021.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p01-after_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   96,
+   528,
+   402,
+   300
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   804,
+   968
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 297,
+  "size": [
+   402,
+   300
+  ],
+  "source": "stock-p01-after_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p01-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   372,
+   506,
+   394,
+   364
+  ],
+  "close_up_px_per_photo_px": 0.951,
+  "close_up_size": [
+   1024,
+   936
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 286,
+  "size": [
+   394,
+   364
+  ],
+  "source": "stock-p01-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p02-after_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   508,
+   544,
+   391
+  ],
+  "close_up_px_per_photo_px": 0.938,
+  "close_up_size": [
+   630,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 304,
+  "size": [
+   544,
+   391
+  ],
+  "source": "stock-p02-after_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p02-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   27,
+   565,
+   645,
+   330
+  ],
+  "close_up_px_per_photo_px": 0.951,
+  "close_up_size": [
+   673,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 323,
+  "size": [
+   645,
+   330
+  ],
+  "source": "stock-p02-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p03-after_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   70,
+   390,
+   356,
+   233
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   475,
+   666
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 227,
+  "size": [
+   356,
+   233
+  ],
+  "source": "stock-p03-after_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p03-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   97,
+   456,
+   445,
+   425
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   600,
+   949
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 282,
+  "size": [
+   445,
+   425
+  ],
+  "source": "stock-p03-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p04-after_street": {
+  "box": [
+   0,
+   252,
+   1023,
+   136
+  ],
+  "close_up_px_per_photo_px": 0.944,
+  "close_up_size": [
+   1024,
+   389
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   1023,
+   136
+  ],
+  "source": "stock-p04-after_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p04-before_street": {
+  "box": [
+   0,
+   665,
+   581,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.607,
+  "close_up_size": [
+   582,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   581,
+   358
+  ],
+  "source": "stock-p04-before_street.body.jpg",
+  "status": "ok"
+ },
+ "stock-p05-after_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   27,
+   475,
+   596,
+   455
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   624,
+   947
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 290,
+  "size": [
+   596,
+   455
+  ],
+  "source": "stock-p05-after_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-p05-before_street": {
+  "box": [
+   0,
+   665,
+   604,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.683,
+  "close_up_size": [
+   605,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   604,
+   358
+  ],
+  "source": "stock-p05-before_street.body.jpg",
+  "status": "ok"
+ },
+ "stock-p06-after_studio": {
+  "box": [
+   0,
+   665,
+   661,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.518,
+  "close_up_size": [
+   662,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   661,
+   358
+  ],
+  "source": "stock-p06-after_studio.body.jpg",
+  "status": "ok"
+ },
+ "stock-p06-before_studio": {
+  "box": [
+   0,
+   586,
+   1023,
+   315
+  ],
+  "close_up_px_per_photo_px": 0.845,
+  "close_up_size": [
+   1024,
+   902
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   1023,
+   315
+  ],
+  "source": "stock-p06-before_studio.body.jpg",
+  "status": "ok"
+ },
+ "stock-s01-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   26,
+   429,
+   443,
+   297
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   700,
+   755
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 269,
+  "size": [
+   443,
+   297
+  ],
+  "source": "stock-s01-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s02-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   394,
+   526,
+   261
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   527,
+   717
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 261,
+  "size": [
+   526,
+   261
+  ],
+  "source": "stock-s02-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s03-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   107,
+   520,
+   440,
+   309
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   562,
+   917
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 297,
+  "size": [
+   440,
+   309
+  ],
+  "source": "stock-s03-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s04-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   515,
+   618,
+   468,
+   383
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   984,
+   1002
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 388,
+  "size": [
+   468,
+   383
+  ],
+  "source": "stock-s04-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s05-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   32,
+   519,
+   526,
+   360
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   648,
+   911
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 332,
+  "size": [
+   526,
+   360
+  ],
+  "source": "stock-s05-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s06-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   325,
+   488,
+   227
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   500,
+   563
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 210,
+  "size": [
+   488,
+   227
+  ],
+  "source": "stock-s06-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s07-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   70,
+   515,
+   557,
+   372
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   628,
+   940
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 316,
+  "size": [
+   557,
+   372
+  ],
+  "source": "stock-s07-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s08-before_studio": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   521,
+   528,
+   414
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   567,
+   945
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 365,
+  "size": [
+   528,
+   414
+  ],
+  "source": "stock-s08-before_studio.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s09-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   89,
+   461,
+   430,
+   379
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   580,
+   875
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 291,
+  "size": [
+   430,
+   379
+  ],
+  "source": "stock-s09-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s10-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   367,
+   535,
+   395
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   537,
+   829
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 273,
+  "size": [
+   535,
+   395
+  ],
+  "source": "stock-s10-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s11-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   454,
+   473,
+   297
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   525,
+   799
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 273,
+  "size": [
+   473,
+   297
+  ],
+  "source": "stock-s11-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s12-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   28,
+   452,
+   426,
+   338
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   455,
+   819
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 300,
+  "size": [
+   426,
+   338
+  ],
+  "source": "stock-s12-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s13-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   78,
+   426,
+   468,
+   302
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   547,
+   790
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 253,
+  "size": [
+   468,
+   302
+  ],
+  "source": "stock-s13-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s14-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   112,
+   479,
+   486,
+   320
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   677,
+   931
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 308,
+  "size": [
+   486,
+   320
+  ],
+  "source": "stock-s14-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s15-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   20,
+   386,
+   474,
+   388
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   578,
+   827
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 278,
+  "size": [
+   474,
+   388
+  ],
+  "source": "stock-s15-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s16-before_street": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   470,
+   385,
+   289
+  ],
+  "close_up_px_per_photo_px": 1.001,
+  "close_up_size": [
+   426,
+   775
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 283,
+  "size": [
+   385,
+   289
+  ],
+  "source": "stock-s16-before_street.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s17-before_phone": {
+  "ankle_near_bottom": false,
+  "box": [
+   0,
+   530,
+   557,
+   451
+  ],
+  "close_up_px_per_photo_px": 0.571,
+  "close_up_size": [
+   558,
+   1024
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 320,
+  "size": [
+   557,
+   451
+  ],
+  "source": "stock-s17-before_phone.body.jpg",
+  "status": "ok"
+ },
+ "stock-s18-before_phone": {
+  "status": "prep refused (multiplePeople)"
+ },
+ "stock-s19-before_phone": {
+  "box": [
+   0,
+   665,
+   859,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.718,
+  "close_up_size": [
+   860,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   859,
+   358
+  ],
+  "source": "stock-s19-before_phone.body.jpg",
+  "status": "ok"
+ },
+ "stock-s20-before_phone": {
+  "box": [
+   0,
+   183,
+   952,
+   98
+  ],
+  "close_up_px_per_photo_px": 1.004,
+  "close_up_size": [
+   953,
+   282
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   952,
+   98
+  ],
+  "source": "stock-s20-before_phone.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s21-before_phone": {
+  "ankle_near_bottom": false,
+  "box": [
+   121,
+   402,
+   513,
+   270
+  ],
+  "close_up_px_per_photo_px": 1.003,
+  "close_up_size": [
+   635,
+   699
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 262,
+  "size": [
+   513,
+   270
+  ],
+  "source": "stock-s21-before_phone.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s22-before_phone": {
+  "box": [
+   0,
+   418,
+   569,
+   225
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   570,
+   644
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   569,
+   225
+  ],
+  "source": "stock-s22-before_phone.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s23-before_mirror": {
+  "ankle_near_bottom": false,
+  "box": [
+   156,
+   419,
+   254,
+   152
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   509,
+   572
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 211,
+  "size": [
+   254,
+   152
+  ],
+  "source": "stock-s23-before_mirror.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s24-before_mirror": {
+  "box": [
+   0,
+   405,
+   750,
+   218
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   751,
+   624
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   750,
+   218
+  ],
+  "source": "stock-s24-before_mirror.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s25-before_mirror": {
+  "box": [
+   0,
+   665,
+   575,
+   358
+  ],
+  "close_up_px_per_photo_px": 0.681,
+  "close_up_size": [
+   576,
+   1024
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   575,
+   358
+  ],
+  "source": "stock-s25-before_mirror.body.jpg",
+  "status": "ok"
+ },
+ "stock-s26-before_mirror": {
+  "ankle_near_bottom": false,
+  "box": [
+   14,
+   293,
+   266,
+   187
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   287,
+   490
+  ],
+  "knees": true,
+  "method": "ankles",
+  "shin_px": 183,
+  "size": [
+   266,
+   187
+  ],
+  "source": "stock-s26-before_mirror.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s27-before_mirror": {
+  "box": [
+   0,
+   314,
+   622,
+   169
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   623,
+   484
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   622,
+   169
+  ],
+  "source": "stock-s27-before_mirror.lower.jpg",
+  "status": "ok"
+ },
+ "stock-s28-before_mirror": {
+  "box": [
+   0,
+   365,
+   408,
+   196
+  ],
+  "close_up_px_per_photo_px": 1.002,
+  "close_up_size": [
+   409,
+   562
+  ],
+  "method": "fallback_bottom35",
+  "size": [
+   408,
+   196
+  ],
+  "source": "stock-s28-before_mirror.lower.jpg",
+  "status": "ok"
+ }
+}
