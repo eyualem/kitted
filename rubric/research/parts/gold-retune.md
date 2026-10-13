@@ -4,6 +4,8 @@
 
 *Oct 12, 2026. Claude. DECISIONS-LOG #227. Written as a paper test (no API calls, no money); at the time the app still scored with parts v7. Scripts `extraction-test/gold_tune.py` (split, metrics, dump) and `extraction-test/gold_features.py` (which reading facts the panel cares about); engine `extraction-test/rubrics/parts_proto.py`, `engine="v8"`; numbers `extraction-test/results/gold-tune/` (`v7_report.txt`, `v8_report.txt`, `saved_checks.txt`, `split.json`).*
 
+> **Correction, Oct 12 (#229, `v8-critique.md`):** inside one source, on held-out photos, v8 follows the panel no better than v7 (r 0.37 vs 0.38). The overall gain below comes from telling the sources apart (the source label alone predicts the panel at r 0.71). v8 stays (a stylist's blind check of 90 outfits backs its rules), but this gold set can't prove it.
+
 ## Bottom line
 
 1. **v8 follows the panel about twice as well, on photos it was never tuned on.**
