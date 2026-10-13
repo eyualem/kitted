@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import {
-  FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, MonoLabel, PartialLabel, RowDivider, ScoreBlock, Seam,
+  FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, PartialLabel, RowDivider, ScoreBlock, Seam,
   MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
@@ -33,9 +33,6 @@ import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { PieceArt } from '@/features/closet/GarmentArt';
-
-/** The share card (S12) isn't built yet: its button opened a placeholder. One switch brings the share actions back. */
-export const SHARE_CARD_BUILT = false;
 
 function useCheck(checkId: string) {
   return useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -211,8 +208,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const actions = [
     { name: 'why', label: t('card.why', { score: scoreText }) },
     { name: 'nqr', label: t('card.nqr') },
-    ...(recheckOpen && !dialed ? [{ name: 'recheck', label: t('card.recheck') }] : []),
-    ...(SHARE_CARD_BUILT ? [{ name: 'share', label: t('card.share.a11y') }] : []),
+    ...(recheckOpen ? [{ name: 'recheck', label: t('card.recheck') }] : []),
+    { name: 'share', label: t('card.share.a11y') },
     ...(showCloset ? [{ name: 'review', label: t('card.a11y.review') }] : []),
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
     ...(gf ? [{ name: 'look', label: t('card.a11y.changeLook') }] : []),
@@ -330,17 +327,14 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
             </View>
           ) : null}
           {finishing ? <FinishRow row={row} closet={closet} /> : null}
-          {/* "Re-check after fixing" only when there's a fix to make: under "No quick fixes" it had nothing to check. */}
-          {(dialed && score >= 9) || (recheckOpen && !dialed) || SHARE_CARD_BUILT ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
-              {dialed && score >= 9 ? (
-                <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
-              ) : recheckOpen && !dialed ? (
-                <KButton title={t('card.recheck')} icon="recheck" size="regular" style={{ flex: 1 }} onPress={() => void go.recheck()} />
-              ) : null}
-              {SHARE_CARD_BUILT ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
-            </View>
-          ) : null}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
+            {dialed && score >= 9 ? (
+              <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
+            ) : recheckOpen ? (
+              <KButton title={t('card.recheck')} icon="recheck" size="regular" style={{ flex: 1 }} onPress={() => void go.recheck()} />
+            ) : null}
+            <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} />
+          </View>
           <TextLinkRow>
             <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
             <TextLink title={t('card.nqr')} onPress={go.nqr} compact />
@@ -368,10 +362,18 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
  *  #62). No style here: a style never changes the score (rubric v4); the card says "Reads as …" (#85). On a check with
  *  the Going-for line (#215) the occasion lives in that line instead, so it's in one place. */
 function LensTagline({ row, left, occasionHere = true }: { row: FitCheckRow; left: string; occasionHere?: boolean }) {
-  if (!occasionHere) return <MonoLabel>{left}</MonoLabel>;
+  if (!occasionHere) {
+    return (
+      <KText variant="footnote" color="ink2" mono="label">
+        {left}
+      </KText>
+    );
+  }
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
-      <MonoLabel>{left}</MonoLabel>
+      <KText variant="footnote" color="ink2" mono="label">
+        {left}
+      </KText>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
         <MorphPicker
           plain
@@ -401,8 +403,7 @@ function SkippedLine({ choice, onPress }: { choice: string; onPress: () => void 
     >
       <KText variant="footnote" color="ink2">
         {`${t('tap.skipped', { choice })} `}
-        {/* Ink, like every text link now (#231): copper is only for score movement. */}
-        <KText variant="footnote" weight="600" color="ink">
+        <KText variant="footnote" weight="600" color="accent">
           {t('tap.skipped.fix')}
         </KText>
       </KText>
