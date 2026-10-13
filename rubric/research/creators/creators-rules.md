@@ -9,11 +9,11 @@
 | Tim Dessaint | 5 of 5 | Jun–Dec 2025 | `notes/tim-dessaint.md` (93 rules, 26 judged outfits, 25 on screen) |
 | Wanhee Kim | 7 of 8 | Jul 2024 – Jun 2026 | `notes/wanhee-kim.md` (96 rules, 73 judged, 21 on screen) |
 | Jaye Alexander | 13 of 25 | Dec 2024 – Aug 2026 | `notes/jaye-alexander-a.md` (styling, 126 rules, 22 judged), `-b.md` (wardrobes, jackets, aesthetics, accessories, 157 rules, 28 judged) |
-| Frugal Aesthetic | 7 of 7 | Feb 2023 – Aug 2024 | `notes/frugal-aesthetic.md` (95 rules, 23 judged, 20 on screen) |
+| Frugal Aesthetic (the founder's fourth source) | 7 of 7 | Feb 2023 – Aug 2024 | `notes/frugal-aesthetic.md` (95 rules, 23 judged, 20 on screen) |
 
 **Dropped (13):** bodies ("Body vs Style" graph), attractiveness (2), confidence and mindset talks (4), a channel update, a trailer, a sewing-gear promo, skin care, hair, and "How to take fire pictures of yourself" (camera tips, kept aside for the camera guidance). The full list with reasons is in the manifest.
 
-**Weighting.** Frugal Aesthetic wasn't on the founder's list (Tim, Wanhee, Jaye), but his videos were in the folder, so he is counted as a fourth voice, not as a taste source: a rule only he holds is marked as such. Four of his seven videos are from 2023 (the earlier Gemini rule was "only 2024+ counts"); his 2024 pants and essentials videos repeat the core of the 2023 ones, so his rules stand, but the 2023 trend claims ("cropped is a cheat code right now") are treated as dated. **Jaye changed his mind on skinny jeans:** "do not wear skinny jeans at all" (Dec 2024, Feb 2025) became "jean cut doesn't matter" (Dec 2025) and "nobody dissing skinny jeans no more" (May 2026). His latest view is used.
+**Weighting.** Frugal Aesthetic is the founder's fourth taste source (he confirmed Oct 13: "he's on my list, I just forgot to mention him"), so all four count equally. Four of his seven videos are from 2023 (the earlier Gemini rule was "only 2024+ counts"); his 2024 pants and essentials videos repeat the core of the 2023 ones, so his rules stand, but the 2023 trend claims ("cropped is a cheat code right now") are treated as dated. **Jaye changed his mind on skinny jeans:** "do not wear skinny jeans at all" (Dec 2024, Feb 2025) became "jean cut doesn't matter" (Dec 2025) and "nobody dissing skinny jeans no more" (May 2026). His latest view is used.
 
 **Caveats.** Auto-captions garble names and slang (the Korean terms in Wanhee's videos especially); the readers marked guesses "(caption unclear)". Everything about bodies, faces, skin, hair or attractiveness was ignored at reading time. Most of what these creators call "great" (fabric, drape, how clothes move, "character", worn-in softness) can't be seen in one photo; this file says so rule by rule.
 

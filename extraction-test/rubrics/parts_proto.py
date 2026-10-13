@@ -29,7 +29,8 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Nine engines. engine="v9" is THE DEFAULT since Oct 12 (v8 plus four consensus fixes, TUNE["v9"], #232);
+Ten engines. engine="v10" is THE DEFAULT since Oct 13 (v9 plus the creators' rules, TUNE["v10"]; report
+../../rubric/research/parts/v10.md); engine="v9" (the default Oct 12-13: v8 plus four consensus fixes, TUNE["v9"], #232);
 engine="v8" (the default earlier on Oct 12 (the gold-set retune, DECISIONS-LOG #227-228: TUNE["v8"]
 below, ../gold_tune.py, report ../../rubric/research/parts/gold-retune.md). engine="v7" (the default Oct 11-12: v6 plus "a condition read moves points only on a garment
 read clear" (TUNE["v7"], ../parts7_test.py, DECISIONS-LOG #219). engine="v6" (the default before it: v5 plus PB1 "roomier than the look" (the council's per-style
@@ -56,7 +57,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-9 (Oct 12, 2026)"
+VERSION = "parts-proto-10 (Oct 13, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
             "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
@@ -320,7 +321,7 @@ TUNE["v8"] = dict(TUNE["v7"], ff5_roomy=True, ff7_loose=True, pn_narrow=1.0, pn_
                   weights={"proportions": 0.30, "fit": 0.15, "color": 0.20, "shoes": 0.15, "cohesion": 0.20},
                   penalty={"under": 6.5, "rate": 0.5, "cap": 1.0})
 VERSIONS["v8"] = "parts-proto-8 (Oct 12, 2026)"
-# v9 (Oct 12, THE DEFAULT; DECISIONS-LOG #232; the founder: "Proceed" on #229's consensus fixes). Four rules most
+# v9 (Oct 12, the default until v10; DECISIONS-LOG #232; the founder: "Proceed" on #229's consensus fixes). Four rules most
 # stylists agree on, from the stylist critic's 90-outfit check (rubric/research/parts/v8-critique.md, C1-C4). Each
 # reads only fields the live reading has; each knob is 0/False in v1-v8.
 #   int_top / int_hoodie: an interview needs a collared top, a knit or a jacket. Without one the score is held to
@@ -340,6 +341,23 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8"):
     TUNE[_e].update(_OFF9)
 TUNE["v9"] = dict(TUNE["v8"], int_top=6.0, int_hoodie=5.0, dd_same=1.0, gt1=1.5, cl1_own=True)
 VERSIONS["v9"] = "parts-proto-9 (Oct 12, 2026)"
+# v10 (Oct 13, THE DEFAULT; "the creators' rules": the founder approved using how his taste sources judge, Tim
+# Dessaint, Wanhee Kim, Jaye Alexander, plus Frugal Aesthetic as a fourth voice; rubric/research/creators/
+# creators-rules.md, report rubric/research/parts/v10.md). Each reads only fields the live reading has; each knob is
+# 0/False in v1-v9.
+#   pn_narrow / pn_skinny (moved, B5-B6): slim costs 0.5, skinny 2.0 in all (ripped narrow jeans +0.5 as before). None
+#     of the four calls slim "dated"; two are fine with it, two prefer straight; three of four reject skinny.
+#   pn_slim_soft: the slim line says "would balance better with a straight leg"; only skinny keeps "read dated".
+#   cp1_dark (COL-11, A6/B8): the one-standout credit back in a narrow form: exactly one bright piece, the only
+#     non-neutral, earning, no color fault, not a loud print, and at least one other main piece a dark neutral (black,
+#     charcoal, navy, dark denim): Wanhee's "tone down: surround a bright piece with black, dark brown or navy".
+_OFF10 = dict(pn_slim_soft=False, cp1_dark=0.0)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9"):
+    TUNE[_e].update(_OFF10)
+TUNE["v10"] = dict(TUNE["v9"], pn_narrow=0.5, pn_skinny=1.5, pn_slim_soft=True, cp1_dark=0.5)
+VERSIONS["v10"] = "parts-proto-10 (Oct 13, 2026)"
+DARK_NEUTRALS = {"black", "charcoal", "navy", "denim_dark"}   # v10 COL-11: the dark base that tones a bright piece down
+LOUD_PRINTS = {"checks_plaid", "floral", "camo", "other"}      # CL1's patterns that are loud at a large scale
 INT_TOPS = R.COLLARED | {"sweater", "cardigan", "quarter_zip", "camp_collar_shirt", "flannel_shirt", "overshirt", "denim_shirt"}
 INT_OUTERS = (R.DRESSED_OUTER | R.TAILORED_OUTER) - {"track_jacket"}   # any tailored jacket counts (a suit jacket too)
 HOODIES = {"hoodie", "sweatshirt"}
@@ -417,6 +435,12 @@ def _care_fault(g):
     if c == "pilled_or_worn" and not (g.get("distressed_by_design") and g.get("category") != "footwear"):
         return "worn"           # designed distress excuses wear on clothes only, never scuffs on shoes (condition.md C2)
     return None
+
+
+def _loud_print(g):
+    """v10 COL-11's guard: a bright graphic print, or a large check, floral, camo or other print (CL1's loud pieces, on
+    any garment)."""
+    return g.get("pattern") == "graphic" or (g.get("pattern") in LOUD_PRINTS and g.get("pattern_scale") == "large")
 
 
 def _earns(g):
@@ -542,8 +566,11 @@ def _proportions(o, sl, t):
         what = (b_sub or "pants").replace("_", " ")
         pts = t["pn_narrow"] + (t["pn_skinny"] if leg == "skinny" else 0.0) + (
             t["pn_rip"] if b_sub == "jeans" and B.get("distressed_by_design") else 0.0)
-        p.add(-pts, f"the {'skinny' if leg == 'skinny' else 'slim'}{' ripped' if b_sub == 'jeans' and B.get('distressed_by_design') else ''} "
-              f"{what} read dated; a straight leg balances the outfit", "PN1_narrow_leg")
+        subj = f"the {'skinny' if leg == 'skinny' else 'slim'}{' ripped' if b_sub == 'jeans' and B.get('distressed_by_design') else ''} {what}"
+        if t["pn_slim_soft"] and leg != "skinny":                     # v10: slim isn't "dated" (creators-rules B6)
+            p.add(-pts, f"{subj} would balance better with a straight leg", "PN1_narrow_leg")
+        else:
+            p.add(-pts, f"{subj} read dated; a straight leg balances the outfit", "PN1_narrow_leg")
         faults += pts
 
     # ---- tips: real rules whose readings haven't passed (they never move the number)
@@ -778,6 +805,13 @@ def _color(o, boldness, t):
         g = bright[0]
         pos.append((t["cp1"], f"the {(g.get('color_family') or 'colour').replace('_', ' ')} {(g.get('subcategory') or 'piece').replace('_', ' ')} is the one standout",
                     "CP1_standout_color"))
+        o["credited"].add(id(g))
+    elif (t["cp1_dark"] and len(bright) == 1 and len(non_neutral) == 1 and _earns(bright[0])
+          and not _loud_print(bright[0])
+          and any(x is not bright[0] and x.get("color_family") in DARK_NEUTRALS for x in main)):
+        g = bright[0]                                                 # v10 COL-11: one accent toned down by dark pieces
+        pos.append((t["cp1_dark"], f"the {(g.get('color_family') or 'colour').replace('_', ' ')} {(g.get('subcategory') or 'piece').replace('_', ' ')} "
+                    "is the one accent, toned down by the dark pieces around it", "CP1_toned_down"))
         o["credited"].add(id(g))
     elif not bright and len(non_neutral) == 1 and _earns(non_neutral[0]):
         g = non_neutral[0]
@@ -1201,13 +1235,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v9", tune=None):
+def _tune(engine="v10", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v9", tune=None):
+def earned_bonus(part_scores, engine="v10", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1221,7 +1255,7 @@ def earned_bonus(part_scores, engine="v9", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v9", tune=None):
+def piled_penalty(part_scores, engine="v10", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1232,7 +1266,7 @@ def piled_penalty(part_scores, engine="v9", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v9", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v10", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1271,10 +1305,10 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v9", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v10", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v9" (v8 + four consensus fixes, default), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v10" (v9 + the creators' rules, default), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)

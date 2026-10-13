@@ -4,7 +4,7 @@ import type { PartsFixCatalog } from "./partsFixes";
 
 export const PARTS_FIXES_DATA: PartsFixCatalog = {
  "_doc": "Fix catalog for the PARTS engine (parts_proto.py v5; DECISIONS-LOG #208, picks #211, the style-crossing swaps #214). Not used by the v4 fix engine above (make_rubric_json.py leaves this block out of rubric.json). Reference: handoff/fixtures/parts_fixes.py; port: @kitted/core src/partsFixes.ts (data: src/partsFixesData.ts, generated from this block). Every candidate is an edit to a COPY of the reading, re-scored by the parts engine. A candidate becomes a fix only when the ROUNDED score rises; an edit that raises a part's half-point but not the rounded score becomes the 'Smaller step' line (no number). Classes rank the card: free (adjust) first, then closet, then own ('Free if you own one'), then tailor; within a class the larger gain first. group: one fix per group; a later class in the same group shows only when its gain is strictly larger. when: '<slot>.<field>_in' / '_not_in' test the first top / outerwear / bottom / footwear of the scored garments (a missing slot reads as null); not_warm, no_outer, occasion_in, quiet are flags. lounge: allowed at gym and home (everything else isn't). look: overrides of the second look after the edit. step: the Smaller-step subject, ending in its verb. The Smaller step prefers an edit in the same group as a shown fix (a smaller version of that move), then the largest raw gain. {name} = the edited garment's plain name, {item} = the closet item's name. His picks shape the fixes, never the score: when two fixes give the same rounded gain (same class), the one whose fixed outfit reads as his earliest pick goes first. nextLevel: an entry with `style` is his first pick's path to 8, tried first and only for that pick; it shows when the card has no fix, the edit really lifts `part` and the edited outfit reads as that style, unless the Smaller step shown is in the same `group`. Entries without `style` keep the old gate (no fix and no Smaller step).",
- "version": "1.4.0",
+ "version": "1.5.0",
  "classes": {
   "free": {
    "rank": 0,
@@ -924,7 +924,7 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "always": true,
    "group": "hem",
    "part": "fit",
-   "copy": "Cuff the {name} once so they sit on your shoes instead of piling up: a cleaner finish.",
+   "copy": "Have the {name} hemmed to just touch your shoes (about $15 at a tailor), or cuff them once: a cleaner finish.",
    "when": {
     "bottom.hem_in": [
      "pooling",
@@ -964,6 +964,16 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "copy": "Tuck in the layer underneath, or wear one that ends with the {name}: the line looks cleaner.",
    "when": {
     "peek_under": true
+   }
+  },
+  {
+   "id": "tip_knit",
+   "always": true,
+   "group": "layer",
+   "part": "cohesion",
+   "copy": "Two knits together blur: try a smooth layer over the knit, like an overshirt or a jacket.",
+   "when": {
+    "knit_on_knit": true
    }
   },
   {

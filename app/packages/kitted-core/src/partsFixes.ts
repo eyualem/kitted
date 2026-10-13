@@ -183,6 +183,8 @@ export interface PartsFixEngines {
 
 const nv = (v: unknown): unknown => (v === undefined ? null : v);
 const inList = (v: unknown, xs: readonly unknown[]): boolean => xs.includes(nv(v));
+/** v10 tip_knit: knit tops (not a tee or a woven shirt), parts_fixes.KNITS. */
+const KNITS: readonly string[] = ["sweater", "cardigan", "quarter_zip", "knit_polo"];
 /** Python f"{x:g}" for a half-point value. */
 const pyG = (x: number): string => String(x);
 const PART_KEYS: readonly PartName[] = ["proportions", "fit", "color", "shoes", "cohesion"];
@@ -277,6 +279,9 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
     }
     return null;
   };
+  /** v10 tip_knit (parts_fixes._knit_on_knit): two knit pieces in the upper half, tops and outer layers alike. */
+  const knitOnKnit = (r: Reading): boolean =>
+    r.garments.filter((g) => (g.category === "top" || g.category === "outerwear") && inList(g.subcategory, KNITS)).length >= 2;
   /** The styles the outfit reads as, pick-free (parts_fixes._reads_as). */
   const readsAs = (r: Reading): readonly string[] => RE.detectStyles(r.garments, []).detected as readonly string[];
 
@@ -286,6 +291,8 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
         if (truthy(v) && !readsAs(r).some((st) => (v as unknown[]).includes(st))) return false;
       } else if (k === "peek_under") {
         if (truthy(v) && peekUnder(r) === null) return false;
+      } else if (k === "knit_on_knit") {
+        if (truthy(v) && !knitOnKnit(r)) return false;
       } else if (k === "not_street_stack") {
         // #221: a stack on wide jeans is the streetwear look, not a fault
         const bot = first(r, "bottom");

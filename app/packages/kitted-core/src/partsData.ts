@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.6.0",
- "engine": "v9",
- "label": "parts-proto-9 (Oct 12, 2026)",
+ "version": "1.7.0",
+ "engine": "v10",
+ "label": "parts-proto-10 (Oct 13, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "38c221534c8993a20b4aeb5f31ebd11efb1027288f00c950d879720248d4928c",
+ "sourceSha256": "1d3b63355a38c56dfc48a62721ffc9f628f1b8074aa8e3c600dfb69d4a8401cf",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -184,8 +184,8 @@ export const PARTS_DATA: PartsData = {
   },
   "ff5_roomy": true,
   "ff7_loose": true,
-  "pn_narrow": 1,
-  "pn_skinny": 1,
+  "pn_narrow": 0.5,
+  "pn_skinny": 1.5,
   "pn_rip": 0.5,
   "pr1_loose": 1.5,
   "pr1_straight": 0.5,
@@ -198,7 +198,9 @@ export const PARTS_DATA: PartsData = {
   "int_hoodie": 5,
   "dd_same": 1,
   "gt1": 1.5,
-  "cl1_own": true
+  "cl1_own": true,
+  "pn_slim_soft": true,
+  "cp1_dark": 0.5
  },
  "sets": {
   "TAILORED": [
@@ -380,6 +382,12 @@ export const PARTS_DATA: PartsData = {
    "streetwear",
    "vintage_sport",
    "workwear"
+  ],
+  "DARK_NEUTRALS": [
+   "black",
+   "charcoal",
+   "denim_dark",
+   "navy"
   ]
  },
  "boxyVolume": 4,

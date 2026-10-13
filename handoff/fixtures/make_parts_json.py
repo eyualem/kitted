@@ -1,5 +1,5 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v9 = parts-proto-9, the default since Oct 12: v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
+engine v10 = parts-proto-10, the default since Oct 13: v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
 rubric/research/parts/gold-retune.md; v7 was v6 plus "a condition read counts only on a garment read clear", #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.6.0"
-ENGINE = "v9"
+VERSION = "1.7.0"
+ENGINE = "v10"
 
 
 def sl(s):
@@ -68,10 +68,11 @@ def data(engine=ENGINE):
             "DAINTY_SHOES": ["derby", "dress_shoe", "loafer"],                 # SW3 tip
             "LONG_SHIRTS": ["camp_collar_shirt", "dress_shirt", "flannel_shirt", "oxford_shirt"],   # PF4 tip
             "DRESSY_ROOM": ["event", "interview", "interview_corporate", "interview_tech"],         # occasion ceilings
-            "LOUD_PATTERNS": ["camo", "checks_plaid", "floral", "other"],      # v8 CL1: loud at a large scale
+            "LOUD_PATTERNS": sl(P.LOUD_PRINTS),                                # v8 CL1: loud at a large scale (also v10 COL-11)
             "LOUD_LOGO_TOPS": ["graphic_tee", "tee"],                          # v8 CL1: a big logo is loud on these
             "INT_TOPS": sl(P.INT_TOPS), "INT_OUTERS": sl(P.INT_OUTERS), "HOODIES": sl(P.HOODIES),   # v9 the interview top
             "LOUD_NATIVE": sl(P.LOUD_NATIVE),                                  # v9 CL1: looks whose own pieces are loud
+            "DARK_NEUTRALS": sl(P.DARK_NEUTRALS),                              # v10 COL-11: the dark base
         },
         "boxyVolume": 4,                     # volume >= this is a roomy / boxy piece (every part)
         "proportions": {

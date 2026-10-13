@@ -5,10 +5,10 @@
 // line. Each test name starts with its rule ID, so a broken rule names itself. If a case fails, the engine broke a
 // written rule: fix the engine (or, after a decision, the doc and the case), never the fixture by hand.
 import { describe, expect, it } from "vitest";
-import { scoreParts, type PartResult, type PartsResult, type Reading, type SecondLookInput, type Styles } from "../src/index";
+import { scoreParts, suggestPartsFixes, type PartResult, type PartsResult, type Reading, type SecondLookInput, type Styles } from "../src/index";
 import { loadJSON } from "./helpers";
 
-interface CheckRef { check: string; part?: string; points?: number }
+interface CheckRef { check: string; part?: string; points?: number; line?: string }
 interface Expect {
   overall?: number; overall_max?: number; band?: string; band_in?: string[]; unscored?: string;
   fired?: CheckRef[]; not_fired?: CheckRef[]; tips?: CheckRef[]; tips_lacks?: CheckRef[];
@@ -16,6 +16,8 @@ interface Expect {
   detected_has?: string[]; detected_lacks?: string[]; label?: string | null; label_in?: (string | null)[];
   ceiling?: number | null; occ_deduction?: number; occ_lines_has?: string[]; occ_lines_lacks?: string[];
   cond_deduction?: number; cond_tips?: string[]; floored?: boolean; bonus?: number; penalty?: number;
+  /** v10: the fix engine's Next level / tip line (no points): its id, a substring of its line, or an id it must not be. */
+  fix_tip?: string; fix_tip_line?: string; fix_tip_lacks?: string;
 }
 interface Case {
   id: string; rule: string; what: string; reading: Reading; occasion: string; styles: [string, number][];
@@ -23,7 +25,7 @@ interface Case {
   vs: { case: string; parts?: Record<string, number>; overall?: number | "up" | "down" | "same" } | null;
   future: string[]; kd: string | null;
   python: { overall: number | null; reason?: string; raw_score?: number; parts?: Record<string, number | null>;
-    detected_styles?: string[]; style_label?: string | null };
+    detected_styles?: string[]; style_label?: string | null; next_level?: { id: string; line: string } | null };
 }
 interface Conformance { parts_version: string; engine: string; bands: [number, string][]; counts: { cases: number; rules: number };
   rules: string[]; cases: Case[] }
@@ -36,6 +38,10 @@ function run(c: Case): PartsResult {
   return scoreParts(c.reading, { occasion: c.occasion, styles: c.styles as Styles, boldness: c.boldness, secondLook: c.second_look });
 }
 const results = new Map<string, PartsResult>(D.cases.map((c) => [c.id, run(c)]));
+
+/** The fix engine's Next level / tip line for a case (no closet, not a warm day, not the first check). */
+const fixNextLevel = (c: Case) =>
+  suggestPartsFixes(c.reading, { occasion: c.occasion, styles: c.styles as Styles, boldness: c.boldness, secondLook: c.second_look }).nextLevel;
 
 const partsOf = (r: PartsResult): [string, PartResult][] => Object.entries(r.parts ?? {}) as [string, PartResult][];
 const reasons = (r: PartsResult, part?: string) =>
@@ -63,6 +69,8 @@ function check(c: Case, r: PartsResult): string[] {
     if (!hits.length) bad.push(`${f.check} didn't fire${f.part ? " on " + f.part : ""}`);
     else if (f.points !== undefined && !hits.some((x) => Math.abs(x.points - f.points!) < EPS))
       bad.push(`${f.check} moved ${hits.map((x) => x.points)}, want ${f.points}`);
+    else if (f.line !== undefined && !hits.some((x) => x.line.includes(f.line!)))
+      bad.push(`${f.check} line ${JSON.stringify(hits.map((x) => x.line))} lacks '${f.line}'`);
   }
   for (const f of e.not_fired ?? []) if (reasons(r, f.part).some((x) => x.check === f.check)) bad.push(`${f.check} fired`);
   for (const f of e.tips ?? []) if (!tips(r, f.part).some((x) => x.check === f.check)) bad.push(`tip ${f.check} missing`);
@@ -94,6 +102,13 @@ function check(c: Case, r: PartsResult): string[] {
   if (e.floored !== undefined && r.floored !== e.floored) bad.push(`floored ${r.floored} != ${e.floored}`);
   if (e.bonus !== undefined && Math.abs(r.earnedBonus - e.bonus) > EPS) bad.push(`bonus ${r.earnedBonus} != ${e.bonus}`);
   if (e.penalty !== undefined && Math.abs(r.piledPenalty - e.penalty) > EPS) bad.push(`penalty ${r.piledPenalty} != ${e.penalty}`);
+  if (e.fix_tip !== undefined || e.fix_tip_lacks !== undefined) {
+    const nl = fixNextLevel(c);
+    if (e.fix_tip !== undefined && nl?.id !== e.fix_tip) bad.push(`fix tip ${nl?.id} != ${e.fix_tip}`);
+    if (e.fix_tip !== undefined && e.fix_tip_line !== undefined && !(nl?.line ?? "").includes(e.fix_tip_line))
+      bad.push(`fix tip line ${nl?.line} lacks '${e.fix_tip_line}'`);
+    if (e.fix_tip_lacks !== undefined && nl?.id === e.fix_tip_lacks) bad.push(`fix tip ${e.fix_tip_lacks} shown`);
+  }
   if (c.vs) {
     const b = results.get(c.vs.case)!;
     for (const [k, d] of Object.entries(c.vs.parts ?? {})) {
@@ -131,6 +146,10 @@ describe("rules conformance (rubric/v5-styles.md)", () => {
         for (const [k, v] of Object.entries(c.python.parts ?? {})) expect(scoreOf(r, k)).toBe(v);
         expect(r.detectedStyles).toEqual(c.python.detected_styles);
         expect(r.styleLabel).toBe(c.python.style_label);
+        if (c.python.next_level !== undefined) {
+          const nl = fixNextLevel(c);
+          expect(nl === null ? null : { id: nl.id, line: nl.line }).toEqual(c.python.next_level === null ? null : { id: c.python.next_level.id, line: c.python.next_level.line });
+        }
       }
     });
   }

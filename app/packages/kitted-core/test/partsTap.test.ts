@@ -22,7 +22,9 @@ describe("askQuestionParts: which questions ask, and each swing (parts score)", 
   const want: Record<string, [unknown, unknown]> = {
     // parts v8 (#228): jeans earn the short top's shape over wide legs, so the jeans answer is 7.5 (v7 6.5)
     "a765e8": [["pair", 1.5], ["pair", 2.0]], // jeans read as sweatpants: 5.5 → 7.5 with parts (7.0 with v4)
-    "6b14db": [["pair", 1.5], null], // v8: the jeans answer moves it less than v4's bar, so no question
+    // v10: slim jeans cost 0.5 (not 1.0), and with no other fault of 1+ the slides get their half point back (SHO-13):
+    // the jeans answer is 6.5 vs sweatpants 5.5, so the question asks again (v8-v9: 6.0, under v4's bar)
+    "6b14db": [["pair", 1.5], ["pair", 1.0]],
     "b0f0c8": [["shoes", 0.5], ["shoes", 0.5]], // boots lost at Everyday: v8 boots 8.0 vs slides 7.5 (v7: no swing)
     "d6559a": [["shoes", 0.5], null],
     "8bc29d": [["shoes", 0.5], ["shoes", 0.5]],
@@ -50,7 +52,7 @@ describe("askQuestionParts: which questions ask, and each swing (parts score)", 
       else expect(Math.abs(q.swing)).toBeGreaterThanOrEqual(1.0);
       expect(q.swing).toBe(Math.max(...q.options.map((o) => o.score)) - base);
     }
-    expect(asked).toBe(5); // v4 asks on 7 of the 11
+    expect(asked).toBe(6); // v4 asks on 7 of the 11 (v10: 6b14db asks again)
   });
 
   it("Skip keeps what was read; a lost type (other) skips to the best kind", () => {

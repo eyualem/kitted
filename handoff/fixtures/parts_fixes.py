@@ -5,7 +5,7 @@ fixtures: make_parts_fixes.py -> parts_fixes.json.
 How it works ("a fix row never shows a gain that doesn't happen", #204):
   1. Every candidate in fixes.json -> "parts" -> "candidates" is an edit to a COPY of the scored garments (free
      actions, his closet's pieces, generic swaps, adds, a tailor). Each copy is re-scored with the parts engine
-     (parts_proto.score_parts, the default engine: v9) with the same occasion, picks, boldness and second look (plus the candidate's
+     (parts_proto.score_parts, the default engine: v10) with the same occasion, picks, boldness and second look (plus the candidate's
      `look` override: a tuck hides a peek, a cuff lifts the hem off the shoe).
   2. A candidate is a FIX only when the ROUNDED score rises (gain >= 0.5). Its number is the engine's own.
   3. A candidate that raises a part's half-point display but leaves the rounded score where it is (and lowers no
@@ -111,6 +111,15 @@ def _peek_under(r):
     return None
 
 
+KNITS = {"sweater", "cardigan", "quarter_zip", "knit_polo"}   # v10 tip_knit: knit tops (not a tee or a woven shirt)
+
+
+def _knit_on_knit(r):
+    """v10 (creators-rules B13, Tim: "contrast the textures"): two knit pieces in the upper half (a cardigan, sweater,
+    quarter-zip or knit polo worn over another), tops and outer layers alike."""
+    return sum(1 for g in r["garments"] if g.get("category") in ("top", "outerwear") and g.get("subcategory") in KNITS) >= 2
+
+
 def _reads_as(r):
     """The styles the working outfit reads as, pick-free (picks never move a fix's gain or whether it shows)."""
     return R.detect_styles(r["garments"], {})["detected"]
@@ -123,6 +132,9 @@ def _when_ok(when, r, occasion, warm):
                 return False
         elif k == "peek_under":
             if v and _peek_under(r) is None:
+                return False
+        elif k == "knit_on_knit":
+            if v and not _knit_on_knit(r):
                 return False
         elif k == "not_street_stack":            # #221: a stack on wide jeans is the streetwear look, not a fault
             b = _first(r, "bottom")

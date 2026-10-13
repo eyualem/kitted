@@ -562,9 +562,10 @@ const addedInBuild = {
   'pfix.hem_tailor.detail': '~$15 at a tailor',
   'pfix.hem_tailor.step': 'A slight break lifts',
   // His first pick's path to 8 (#NEXT): shown only when the card has no fix and he picked that style first
-  'pfix.tip_cuff': 'Cuff the {name} once so they sit on your shoes instead of piling up: a cleaner finish.',
+  'pfix.tip_cuff': 'Have the {name} hemmed to just touch your shoes (about $15 at a tailor), or cuff them once: a cleaner finish.',
   'pfix.tip_hem': 'Have the {name} hemmed to just touch your shoes (about $15 at a tailor): a cleaner finish.',
   'pfix.tip_peek': 'Tuck in the layer underneath, or wear one that ends with the {name}: the line looks cleaner.',
+  'pfix.tip_knit': 'Two knits together blur: try a smooth layer over the knit, like an overshirt or a jacket.',
   'pfix.next_street_jacket': 'A short jacket, like a bomber, gives it the streetwear shape and lifts Proportions.',
   'pfix.next_workwear_coat': 'A chore coat and boots give it the workwear shape and lift Proportions.',
   'pfix.next_minimal_tuck': 'Tucking in the {name} gives it the minimal shape and lifts Proportions.',
