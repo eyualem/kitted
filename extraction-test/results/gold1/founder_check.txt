@@ -1,0 +1,30 @@
+Founder's 20 ratings vs the panel and the app (blind; profile: the founder's, pending; photos profile unknown)
+  founder mean 6.60 sd 0.93 · panel mean 6.50 sd 1.16 · app mean 6.92 sd 0.51
+  r(founder, panel) 0.69 · r(founder, app) -0.09 · r(panel, app) on these 20 0.06
+  founder within 0.5 of panel: 16/20 · within 1.0: 16/20 · of app within 0.5: 9/20
+  r(founder, minimal) 0.68
+  r(founder, peer) 0.75
+  r(founder, street) 0.71
+  r(founder, tailoring) 0.72
+  r(founder, workwear) 0.61
+  id      photo    founder panel app
+  F01  pin-058    5.0    5.0  7.0
+  F02  ig-010     8.0    8.0  7.5
+  F03  ig-116     7.0    7.5  7.0
+  F04  ig-117     7.5    7.5  8.0
+  F05  ig-061     8.0    8.0  6.0
+  F06  ig-065     7.0    5.5  6.0
+  F07  pin-073    5.5    5.5  7.0
+  F08  ig-020     7.5    8.0  6.5
+  F09  pin-033    5.5    5.0  7.5
+  F10  pin-002    5.0    7.0  7.0
+  F11  pin-007    6.0    5.5  7.5
+  F12  ig-032     7.5    8.0  6.5
+  F13  ig-098     6.5    6.0  6.5
+  F14  rd-001     7.0    7.0  7.0
+  F15  pin-013    5.5    6.0  6.5
+  F16  ig-127     6.5    6.5  7.0
+  F17  rd-015     6.0    6.0  7.0
+  F18  pin-021    6.5    4.5  6.5
+  F19  ig-097     7.0    5.5  7.0
+  F20  rd-007     7.5    8.0  7.5

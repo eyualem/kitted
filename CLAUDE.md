@@ -33,7 +33,6 @@
 - [ ] **P1** · **Export the old Gemini creator-research Google Sheet as `.xlsx`** into `inputs/rubric-research/` (2 min). *Unblocks: the same v5 rules ledger.*
 - [ ] **P2** · **Run R5 in Codex: Instagram + Pinterest fits by style** (prompt in the Oct 9 chat and `rubric/research/v5-brief.md` → R5; about 5 min to start; let it use your logged-in browser if it asks). *Unblocks: checking that known-good fits score 8+ per style, and how often good fits really use a layer.*
 - [ ] **P1** · **Set up a Cloudflare account** for the server. *Unblocks: scoring in release builds, so outside testers can use it.*
-- [ ] **P1** · **Rate 20 gold-set photos yourself, 10 min (#224).** The 5 AI judges agree with each other but nobody human has checked them; your 20 ratings decide whether their scores become the app's targets. Claude will hand you the 20 photos and a simple sheet. *Unblocks: tuning the scoring rules on the 225-photo gold set.*
 - [ ] **P1** · **Face-hiding gap (#224): start the fix task** (the chip "Hide partial faces cut off at the photo's top edge"). A mirror selfie with the head cut off at the top is sent with the mouth and chin showing. Needs a reinstall afterwards.
 - [ ] **P1** · **The gold set, the rest (#191).** Done Oct 12: 226 screenshots (Instagram, Pinterest, Reddit), read and judged (#224). Still to do: (2) **~15 photos of you, about 30 min**, changing one outfit on purpose: the same jeans worn normally, cuffed, rolled and hitched; tee tucked and untucked; jacket on and off; boots vs sneakers. Each as a mirror selfie and a propped shot, into `inputs/gold-set/me/`. (3) Optional, 15 min: ~15 slim + ~15 straight shop product photos where the brand names the fit (Levi's 511 / 501), into `inputs/gold-set/shop/`. Optional later: a friend rates 20 of the screenshots (10 min). Screenshots stay on the Mac, internal only. *Unblocks: the scoring points, the slim-vs-straight and hem tests, the focused AI look ($1–2), every v5 rule.*
 - [ ] **P1** · **Talk to 10 guys 18–30 who aren't into fashion, 15 min each (#225).** Script in `market/market-research.md` §8 task 1: ask what they did the last time they worried about an outfit (ChatGPT? a friend?), then show Kitted and watch. Notes, in their exact words, go in `inputs/market/interviews/`. Tell Claude at 5. *Unblocks: which pain the videos and App Store page lead with, and whether "same photo, same score" matters to them.*
@@ -319,6 +318,28 @@
 
 ## Next steps, in order
 
+### Retune the scoring rules against the gold-set panel (new chat, Oct 12): start here
+**Why:** on 224 public photos the app's score barely follows a 5-judge panel (r 0.33; #224), and the founder's blind ratings agree with the panel (r 0.69) but not with the app (r −0.09; #225). So the panel is the target. Fit, Color and Cohesion don't track it at all (r 0.04, −0.18, 0.21); Shoes does (0.61).
+**Read first:**
+- `rubric/research/notes/gold-set-1.md`
+- `extraction-test/results/gold1/` (`compare.txt`, `compare.json` = panel, app and per-judge scores; `scores.json` = the app's parts per run; `raw.json` = the readings, git-ignored)
+- the judges' part scores and reasons: `inputs/gold-judge/judge-*-b*.csv` (map G### to the photo with `inputs/gold-judge/manifest.json`)
+- the founder's ratings and notes: `inputs/gold-judge/founder/ratings.csv`
+- the live rules: `rubric/v5-styles.md`, engine `extraction-test/rubrics/parts_proto.py` (v7)
+**Do, on paper first (no app change until the founder sees the before/after):**
+- **Hold out a test set.** Split the photos into a part to tune on and a part to test on, and never tune on the test part.
+- **Find the missing rules** from the biggest disagreements and the judges' reasons:
+  - size faults (a jacket or shirt a size big or small);
+  - loud or busy patterns that swamp the outfit;
+  - pieces from different worlds, and a mismatched near-suit;
+  - a shirt too long untucked;
+  - skinny or too-fitted pants (the founder docks them hard);
+  - softer slides and sweats penalties under a deliberate outfit.
+- **Only build a rule the reading can see.** Check the existing reading fields first. A new reading field needs the founder's OK and a steadiness test.
+- **Set the 7.0 starting point** and the part weights against the panel.
+- **Report:** correlation with the panel and with the founder's 20; steadiness (same photo, same score); the friends' and the founder's saved checks; the 8+ share; and a split by source.
+**Rules:** rule 7 (all gold photos are profile unknown, one stated test profile); rule 9 (memory); never rate bodies; Python and `@kitted/core` stay in parity when ported.
+
 ### Proportion scripts (new chat, founder, Oct 12): start here
 **Goal:** phone-side scripts (Apple Vision on the face-hidden photo and close-ups) that measure proportion directly, so Proportions stops sitting at 7.0 on most fits (#220): where the top ends, where the outer layer ends, whether the shirt underneath shows below it, where sleeves and cuffs end, how the pant hem meets the shoe (clean / break / stack), and the shoe's bulk against the leg. They take over only where they beat the AI on labeled truth (the bar from #187: clearly better, ≤30% unsure, repeatable, works on mirror and propped shots, garment against garment, never against the body).
 
@@ -350,7 +371,7 @@ All of them skew female and studio/street, not mirror selfies, so confirm on his
 
 **Step 1 done Oct 12 (#222, `rubric/research/parts/proportion-headroom.md`):** under today's rules even perfect proportion facts move only 4 of 79 shown scores; Proportions sits at 7.0 because of the rules, not the readings. Worth a script, in order: slim vs straight legs, a boxy-short-top measure (length + roominess), veto guards for "pooling" and "sleeves cover the hands". Only Fashionpedia's labels are commercial-safe; SAM 2.1 Tiny (Apache 2.0) is the one usable segmenter, deferred. Fashionpedia val downloaded (your OK, Oct 12).
 
-**Gold set, first run, Oct 12 (#224, `rubric/research/notes/gold-set-1.md`): the app barely tells good fits from bad.** On 225 public photos rated by a 5-judge panel (3 models, repeatable, full scale), the app's score follows the panel only weakly (r 0.33): the panel's worst fits get 6.65 from the app, its best 7.23. Only Shoes tracks the panel (r 0.61); Fit, Color and Cohesion don't (0.04, −0.18, 0.21). Next: your 20-photo check of the panel, then rules tuned against it (size faults, loud patterns, pieces from different worlds, softer slides/sweats under a deliberate outfit).
+**Gold set, first run, Oct 12 (#224, `rubric/research/notes/gold-set-1.md`): the app barely tells good fits from bad.** On 225 public photos rated by a 5-judge panel (3 models, repeatable, full scale), the app's score follows the panel only weakly (r 0.33): the panel's worst fits get 6.65 from the app, its best 7.23. Only Shoes tracks the panel (r 0.61); Fit, Color and Cohesion don't (0.04, −0.18, 0.21). Your blind check of 20 agreed with the panel (r 0.69) and not the app (r −0.09; #225), so the panel is the target. Next: retune the rules against it (a new chat; brief in "Next steps"), starting with (size faults, loud patterns, pieces from different worlds, softer slides/sweats under a deliberate outfit).
 
 **Step 2 done Oct 12 (#223, `rubric/research/notes/fp-leg-test.md`): the leg script fails on public truth.** On 90 labelled pants it tells slim from straight 56% of the time (the AI: 75%), so the old 92% was luck; leg shape stays the AI's reading. **Proportion scripts are paused until the gold set exists** (your call on the list). The lever for Proportions sitting at 7.0 is the rules, set by the gold set, not better measuring.
 
