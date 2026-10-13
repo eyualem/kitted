@@ -3,7 +3,7 @@
 // empty state. Tapping a look opens its photo. No dev placeholder text in a tab (DECISIONS-LOG #56).
 import { ActionSheetIOS, Pressable, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, RowDivider, displayScore, opacity, scoreWordLabel, useTheme } from '@/design-system';
+import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { FitCheckRow } from '@/data/types';
@@ -35,7 +35,7 @@ export default function LookbookScreen() {
   }, []);
   if (!looks) return null;
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: 18, gap: 13 }}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
       {looks.length === 0 ? (
         <EmptyState art={<GhostLook />} body={t('lookbook.empty')}>
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />
@@ -69,12 +69,12 @@ function LookRow({ look: { check, latest } }: { look: Look }) {
       accessibilityLabel={`${title}. ${scoreText}, ${scoreWordLabel(score)}.`}
       accessibilityActions={[{ name: 'remove', label: t('lookbook.remove.action') }]}
       onAccessibilityAction={(e) => e.nativeEvent.actionName === 'remove' && void lookMenu(check.id, title)}
-      style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 13, paddingVertical: 10, paddingHorizontal: 14, opacity: pressed ? opacity.pressed : 1 })}
+      style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingVertical: space.rowY, paddingHorizontal: space.rowX, opacity: pressed ? opacity.pressed : 1 })}
     >
       {photo ? (
-        <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={50} height={63} borderRadii={{ tl: 10, tr: 10, br: 10, bl: 10 }} />
+        <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={50} height={63} borderRadii={{ tl: radius.thumb, tr: radius.thumb, br: radius.thumb, bl: radius.thumb }} />
       ) : (
-        <View style={{ width: 50, height: 63, borderRadius: 10, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ width: 50, height: 63, borderRadius: radius.thumb, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="photo" color="ink3" size="small" />
         </View>
       )}

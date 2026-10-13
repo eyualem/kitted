@@ -67,7 +67,7 @@ export function LookTile({ look, width, selected, shake, onPress }: LookTileProp
         accessibilityLabel={t('onb.looks.tileA11y', { style: name, line })}
         style={[
           styles.tile,
-          { width, backgroundColor: colors.surface, borderColor: selected ? colors.ink : colors.line, borderWidth: selected ? 2.5 : StyleSheet.hairlineWidth * 2 },
+          { width, backgroundColor: colors.surface, borderColor: selected ? colors.ink : colors.line, borderWidth: selected ? 2.5 : 1 },
         ]}
       >
         <View style={[styles.art, { backgroundColor: colors.surface2 }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">

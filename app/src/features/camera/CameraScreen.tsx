@@ -19,7 +19,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import * as Speech from 'expo-speech';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icon, IconButton, KButton, KText, Numeral, cameraScrims, fixed, opacity } from '@/design-system';
+import { Icon, IconButton, KButton, KText, Numeral, cameraScrims, fixed, opacity, size, space } from '@/design-system';
 import { store } from '@/data/db';
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { CheckMode } from '@/features/fitcheck/machine';
@@ -84,6 +84,8 @@ export function CameraScreen() {
   const [whiteout, setWhiteout] = useState(false);
   const [review, setReview] = useState<Review | null>(null);
   const [checking, setChecking] = useState(false);
+  // Where the bottom controls start (measured), so the body guide ends above them.
+  const [controlsTop, setControlsTop] = useState<number | null>(null);
   const cam = useRef<CameraHandle>(null);
   const busy = useRef(false);
   const filter = useRef(createTipFilter<FitTip>());
@@ -163,8 +165,8 @@ export function CameraScreen() {
       setWhiteout(false);
       if (!shot) throw new Error('no photo');
       if (__DEV__) {
-        const size = shot.width ? ` · ${shot.width}×${shot.height} · ${(shot.bytes / 1e6).toFixed(1)} MB · ${shot.ms} ms` : '';
-        console.log(`[camera] captured (${mode}, ${facing} camera${flash ? ', flash' : ''})${size}`);
+        const dims = shot.width ? ` · ${shot.width}×${shot.height} · ${(shot.bytes / 1e6).toFixed(1)} MB · ${shot.ms} ms` : '';
+        console.log(`[camera] captured (${mode}, ${facing} camera${flash ? ', flash' : ''})${dims}`);
       }
       await reviewPhoto({ photoUri: shot.uri }, 'camera');
     } catch {
@@ -304,6 +306,11 @@ export function CameraScreen() {
   const tipView = review ? { icon: null, text: t('cam.checking') } : snap ? { icon: null, text: t('cam.shoe.tip') } : fitTipCopy(tip);
   const reviewUri = review && 'photoUri' in review.photo ? review.photo.photoUri : null;
   const panel = review?.issue ? reviewPanel(review.issue) : null;
+  // The S3 panel says what's wrong; the "Checking the photo…" pill goes while it shows.
+  const panelShown = !!(review && !checking && panel);
+  // The free band for the body guide: under the top bar, above the mode switch and shutter.
+  const guideTop = insets.top + 3 + size.navCircle + space.s;
+  const guideBottom = (controlsTop ?? height - insets.bottom - 190) - space.s;
   function reviewPanel(issue: Issue) {
     const lib = review?.source === 'library';
     const withFlash = issue.reason === 'dark' && !flash && !lib;
@@ -336,7 +343,7 @@ export function CameraScreen() {
         <>
           <Image source={sim.source} style={StyleSheet.absoluteFill} contentFit="cover" transition={0} />
           {/* DEMO: the bundled photo stays bright; the dark demo states dim it like a dark room would. */}
-          {simTip === 'dark' || simTip === 'darkFlash' || p.review === 'dark' ? <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.72)' }]} /> : null}
+          {simTip === 'dark' || simTip === 'darkFlash' || p.review === 'dark' ? <View style={[StyleSheet.absoluteFill, { backgroundColor: fixed.demoDim }]} /> : null}
         </>
       )}
 
@@ -348,18 +355,22 @@ export function CameraScreen() {
       {snap ? (
         <LowerGuide share={0.4} label={t('cam.shoe.guide')} width={width} height={height} />
       ) : guide.body && !review ? (
-        <BodyOutline box={guide.body} solid={isGoodTip(tip)} width={width} height={height} />
+        <BodyOutline box={guide.body} solid={isGoodTip(tip)} width={width} height={height} minY={guideTop} maxY={guideBottom} />
       ) : null}
 
       {/* Top bar */}
       <View style={[styles.topBar, { top: insets.top + 3 }]}>
         <IconButton icon="close" variant="glass" diameter={44} label={t('cam.a11y.close')} onPress={() => router.back()} />
-        <View style={[styles.tip, review?.issue && { opacity: 0 }]} accessibilityLiveRegion="polite" accessibilityElementsHidden={!!review?.issue}>
-          {tipView.icon ? <Icon name={tipView.icon} size="small" color={tipView.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
-          <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={2}>
-            {tipView.text}
-          </KText>
-        </View>
+        {panelShown ? (
+          <View style={styles.tipSpacer} />
+        ) : (
+          <View style={styles.tip} accessibilityLiveRegion="polite">
+            {tipView.icon ? <Icon name={tipView.icon} size="small" color={tipView.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
+            <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={2}>
+              {tipView.text}
+            </KText>
+          </View>
+        )}
         {mode === 'mirror' && !snap ? (
           <IconButton icon="timer" variant="glass" diameter={44} label={timer ? t('cam.timer.on') : t('cam.timer.off')} onPress={() => setTimer(!timer)} />
         ) : (
@@ -383,18 +394,20 @@ export function CameraScreen() {
           <View style={styles.countCircle}>
             <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
             <View style={styles.countInner} />
-            <Numeral size={75.5} color={fixed.white}>
+            <Numeral size={76} color={fixed.white}>
               {String(phase.n)}
             </Numeral>
           </View>
-          <KText variant="callout" weight="600" color={fixed.white} style={styles.textShadow}>
-            {t('cam.countdown.hold')}
-          </KText>
+          <View style={styles.holdTag}>
+            <KText variant="callout" weight="600" color={fixed.white}>
+              {t('cam.countdown.hold')}
+            </KText>
+          </View>
         </View>
       ) : null}
 
       {/* Bottom controls */}
-      <View style={[styles.bottom, { bottom: insets.bottom + 5 }]}>
+      <View style={[styles.bottom, { bottom: insets.bottom + 5 }]} onLayout={(e) => setControlsTop(e.nativeEvent.layout.y)}>
         {!snap ? (
           <View style={styles.modeSwitch} accessibilityRole="tablist" accessibilityLabel={t('cam.mode.propped')}>
             {(['propped', 'mirror'] as const).map((m) => (
@@ -403,9 +416,9 @@ export function CameraScreen() {
                 onPress={() => switchMode(m)}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: mode === m }}
-                style={[styles.modeSeg, mode === m && { backgroundColor: 'rgba(255,255,255,0.95)' }]}
+                style={[styles.modeSeg, mode === m && { backgroundColor: fixed.lightPill }]}
               >
-                <KText variant="subheadline" weight="600" color={mode === m ? fixed.indigo : 'rgba(255,255,255,0.75)'}>
+                <KText variant="subheadline" weight="600" color={mode === m ? fixed.indigo : fixed.modeSwitchLabel}>
                   {t(m === 'propped' ? 'cam.mode.propped' : 'cam.mode.mirror')}
                 </KText>
               </Pressable>
@@ -489,25 +502,30 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: fixed.black },
   topBar: { position: 'absolute', left: 18, right: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   tip: {
-    flexShrink: 1, minHeight: 36.5, borderRadius: 18, paddingHorizontal: 14.5, paddingVertical: 6, backgroundColor: 'rgba(255,255,255,0.92)',
-    flexDirection: 'row', alignItems: 'center', gap: 6.5,
+    flexShrink: 1, minHeight: size.button, borderRadius: size.button / 2, paddingHorizontal: 14, paddingVertical: 6, backgroundColor: fixed.lightPill,
+    flexDirection: 'row', alignItems: 'center', gap: 6,
   },
+  tipSpacer: { flex: 1 },
   countWrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: 8 },
   countCircle: {
-    width: 119.5, height: 119.5, borderRadius: 60, borderWidth: 3, borderColor: 'rgba(255,255,255,0.9)', backgroundColor: 'rgba(10,12,20,0.35)',
+    width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: fixed.countdownRing, backgroundColor: fixed.countdownBacking,
     alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
   },
-  countInner: { position: 'absolute', top: 5, left: 5, right: 5, bottom: 5, borderRadius: 60, borderWidth: 8, borderColor: 'rgba(255,255,255,0.12)' },
-  textShadow: { textShadowColor: 'rgba(0,0,0,0.4)', textShadowRadius: 6 },
+  countInner: { position: 'absolute', top: 5, left: 5, right: 5, bottom: 5, borderRadius: 60, borderWidth: 8, borderColor: fixed.countdownInnerRing },
+  // "Hold still" on a photo tag (03 §2.3: a text shadow alone was 1.0 over white).
+  holdTag: {
+    minHeight: size.detectionTag, borderRadius: size.detectionTag / 2, paddingHorizontal: space.m, paddingVertical: space.xs, justifyContent: 'center',
+    backgroundColor: fixed.photoTag, borderWidth: 1, borderColor: fixed.photoTagBorder,
+  },
   offerWrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
   offer: {
-    flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 36, paddingHorizontal: 14, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.6)',
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)',
+    flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: size.button, paddingHorizontal: 14, borderRadius: size.button / 2, backgroundColor: fixed.offerPill,
+    borderWidth: 1, borderColor: fixed.offerPillBorder,
   },
-  bottom: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: 21, paddingBottom: 34 },
-  modeSwitch: { flexDirection: 'row', padding: 4, borderRadius: 21, backgroundColor: 'rgba(0,0,0,0.4)' },
-  modeSeg: { paddingVertical: 6.5, paddingHorizontal: 15.5, borderRadius: 17, minHeight: 32, justifyContent: 'center' },
+  bottom: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: space.xl, paddingBottom: 34 },
+  modeSwitch: { flexDirection: 'row', padding: space.xs, borderRadius: 20, backgroundColor: fixed.modeSwitchBacking },
+  modeSeg: { paddingVertical: 6, paddingHorizontal: space.l, borderRadius: 16, minHeight: 32, justifyContent: 'center' },
   controls: { alignSelf: 'stretch', paddingHorizontal: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  shutter: { width: 88.5, height: 88.5, borderRadius: 44.25, borderWidth: 4.5, borderColor: fixed.white, alignItems: 'center', justifyContent: 'center' },
+  shutter: { width: 88, height: 88, borderRadius: 44, borderWidth: 4, borderColor: fixed.white, alignItems: 'center', justifyContent: 'center' },
   shutterDisc: { width: 70, height: 70, borderRadius: 35, backgroundColor: fixed.white },
 });

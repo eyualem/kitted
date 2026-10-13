@@ -72,7 +72,7 @@ export function ConsentScreen({ mode }: { mode: 'onboarding' | 'sheet' }) {
       {ROWS.map((r, i) => (
         <View
           key={r.title}
-          style={[styles.row, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.line }]}
+          style={[styles.row, i > 0 && { borderTopWidth: 1, borderTopColor: colors.line }]}
           accessible
           accessibilityLabel={[t(r.title), r.body ? t(r.body, { provider }) : '', ...(r.bullets ?? []).map((b) => t(b))].filter(Boolean).join(' ')}
         >

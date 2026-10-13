@@ -45,14 +45,16 @@ export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutO
     <>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
         <Numeral size={numeralSize}>{displayScore(score)}</Numeral>
-        {showOutOf ? (
-          <KText mono="value" variant="subheadline" color="ink3">
-            {t('card.outOf')}
-          </KText>
-        ) : null}
-        {onPress ? (
-          <View style={{ alignSelf: 'center', marginLeft: 2 }}>
-            <Icon name="next" size="small" color="ink3" weight="semibold" scalesWithText />
+        {/* The tap cue (#205) rides on the "/10" line, tight after it, so it reads as part of the score and not as a
+            mark floating between the numeral and the word. The row's baseline comes from the "/10" text. */}
+        {showOutOf || onPress ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+            {showOutOf ? (
+              <KText mono="value" variant="subheadline" color="ink3">
+                {t('card.outOf')}
+              </KText>
+            ) : null}
+            {onPress ? <Icon name="next" size={12} color="ink3" weight="semibold" scalesWithText /> : null}
           </View>
         ) : null}
       </View>

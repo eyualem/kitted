@@ -135,11 +135,12 @@ export const monoValue = { fontSize: 15, lineHeight: 20, fontWeight: '500' as We
 export const monoSmall = { fontSize: 13, lineHeight: 18, fontWeight: '500' as Weight, ramp: 'footnote' as DynamicTypeRamp };
 
 /**
- * FOUNDER DECIDES (README open decision #7). Default: sentence case everywhere (ruling 29).
+ * DECIDED (founder, Oct 12, DECISIONS-LOG #231): spaced capitals on card labels ("FIT CHECK · FULL").
  * true = the mockup's uppercase + 1 pt tracking at normal sizes, display-only (VoiceOver gets
- * the sentence-case string via accessibilityLabel), and still sentence case at AX sizes.
+ * the sentence-case string via accessibilityLabel), and still sentence case at AX sizes
+ * (KText checks theme.isAccessibilitySize). false = sentence case everywhere (ruling 29).
  */
-export const MONO_UPPERCASE_AT_NORMAL_SIZES = false;
+export const MONO_UPPERCASE_AT_NORMAL_SIZES = true;
 
 /**
  * FOUNDER DECIDES (README open decision #8). Default true: stat numerals (Rotation "37",
@@ -244,7 +245,8 @@ export const roles = {
   tipLead: { variant: 'footnote', weight: '600', color: 'accent' },
   buttonLarge: { variant: 'headline', color: 'ink' },
   button: { variant: 'subheadline', weight: '600', color: 'ink' },
-  textLink: { variant: 'subheadline', weight: '600', color: 'accent' },
+  /** Ink semibold (#231: copper is only for score movement). */
+  textLink: { variant: 'subheadline', weight: '600', color: 'ink' },
   chip: { variant: 'subheadline', weight: '500', color: 'ink' },
   quickStart: { variant: 'subheadline', weight: '600', color: 'ink' },
   pill: { variant: 'footnote', weight: '600', color: 'ink2' },

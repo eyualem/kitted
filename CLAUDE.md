@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026 (scoring v8 adopted and ported, #228; Archivo in the app and a theme review, #230).**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 12, 2026 (scoring v8 adopted and ported, #228; Archivo, the theme review and fix batch, #230–231).**
 
 ## How we keep context (rules for every chat)
 
@@ -44,7 +44,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
-- [ ] **P1** · **The theme's taste calls (#230), 5 min.** Three critics agreed the look is calm but generic ("a banking app with a chat in it"; in light mode it looks most like ChatGPT). Pick yes/no on each; defaults in brackets: (1) **a real app icon**, the "K" woven label on indigo in a copper stitch; it's still Expo's default icon [yes, Claude draws 2–3 options]; (2) **copper only when the score moves** ("→ 8.0", "+1.0"); links like "Why 7.5?" go to ink [yes]; (3) **spaced capitals back on card labels** ("FIT CHECK · FULL", like the mockup and a clothing tag) [yes]; (4) **a slightly bluer indigo** so buttons read as denim, not black [try it, you see before/after]; (5) **dark first** in videos, App Store shots and the share card [yes]; (6) **pull the share card forward** from P6, 1–2 days [yes, after onboarding]. *Unblocks: the theme fix batch.*
+- [ ] **P1** · **Pick the app icon, 1 min (#231):** open `screenshots/icon-options/index.html` and say A (stitched K, the spec), B (neck label on chalk) or C (K with a copper rivet). Default: A. Today the app still shows Expo's default icon. *Unblocks: the icon in the beta build.*
 - [ ] **P3** · **Skim the new scoring lines (v8, #228), 3 min** (`app/src/i18n/en.ts` → `pfix.*`, `pwhy.piled`; card reasons in `extraction-test/rubrics/parts_proto.py`): "the slim jeans read dated; a straight leg balances the outfit", "the big, loud check on the sweater takes over the outfit", "a tank top on its own reads gym or undershirt", "Swap the tank top for a tee", "One quiet color, like a rust or olive knit, lifts Color", "Problems in more than one part" (a Why row). Built with these words; "dated" is the bluntest, "a straight leg would balance it" is the softer option.
 - [ ] **P2** · **The App Store name and subtitle (#225, outward-facing).** Default: `Kitted: Outfit Rater for Men` (people search "outfit rater"; the "rate my outfit" results are weak apps) with the subtitle `Score your fit. Get the fix.` Alternatives in `market/market-research.md` §7. Also: keep the $5.99 monthly at launch (default) or make it $7.99 so the yearly plan looks like a bigger saving?
 - [ ] **P2** · **Pause the proportion scripts until the gold set? (#222–223)** Even perfect measuring would change 4 of 79 scores under today's rules, and the best candidate (slim vs straight legs) failed on 90 public labelled pants. Default: pause; the gold set then decides which shape rules earn or cost points.
@@ -321,8 +321,8 @@
 
 ### Theme fix batch (#230; the review is in DECISIONS-LOG #230)
 **Done Oct 12:** Archivo is in the app (score numerals, wordmark; `app/assets/fonts/`, screenshots `screenshots/archivo/`). On the founder's phone after the next `tools/phone/install.sh`.
-**Next, no taste involved (Claude builds):** the camera's lost contrast fixes (`CameraScreen.tsx`), hide buttons that open placeholders and wire "Swap one", header buttons in ink, no green text without a sign / no red / no iOS blue, a fade under the Stylist header, hide "Re-check after fixing" when there's no fix, one gutter and card inset, radius tokens, Welcome's fixed line heights, the dark segmented control, 44 pt targets, outlines on dark clothes in dark mode, drop the camera's face ring. Full list in #230.
-**Then, after the founder's taste calls (to-do list):** icon, copper discipline, label capitals, indigo, share card, score reveal.
+**Built Oct 12 (#231):** the whole no-taste list plus your defaults (copper only when the score moves, spaced capitals, bluer indigo). Screenshots `screenshots/theme-batch/`. On your phone through Metro; no reinstall needed for these.
+**Next:** the icon (your pick), then the share card right after onboarding (#231), then a score reveal (count-up + haptic).
 
 
 ### Retune the scoring rules against the gold-set panel: done Oct 12 (#227), adopted and ported to the app the same day (#228)

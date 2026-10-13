@@ -7,7 +7,8 @@ import { Keyboard, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimens
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { KButton, KText, StylistMessage, TextLink, space, useTheme } from '@/design-system';
-import { radius } from '@/design-system/tokens';
+import { CONTROL_TEXT_MAX_SCALE, radius, size } from '@/design-system/tokens';
+import { textStyles } from '@/design-system/typography';
 import { store } from '@/data/db';
 import type { StyleKey } from '@/data/types';
 import { normStyleKey } from '@/data/types';
@@ -88,12 +89,13 @@ export function PickLooksScreen() {
             onPress={() => setEditing(true)}
             accessibilityRole="button"
             accessibilityLabel={t('onb.looks.else.a11y')}
-            style={[styles.other, { width: tileW, minHeight: columns === 2 ? 120 : undefined, backgroundColor: colors.surface, borderColor: other ? colors.ink : colors.line, borderWidth: other ? 2.5 : StyleSheet.hairlineWidth * 2 }]}
+            style={[styles.other, { width: tileW, minHeight: columns === 2 ? 120 : undefined, backgroundColor: colors.surface, borderColor: other ? colors.ink : colors.line, borderWidth: other ? 2.5 : 1 }]}
           >
             <KText variant="subheadline" color="ink3" style={styles.center}>
               {t('onb.looks.else.title')}
             </KText>
-            <KText variant="subheadline" weight="600" color={other ? 'ink' : 'accent'} style={styles.center} numberOfLines={3}>
+            {/* Styled like a TextLink (ink semibold, #231); a real TextLink would nest a button inside the tile's button. */}
+            <KText role="textLink" style={styles.center} numberOfLines={3}>
               {other ? t('onb.looks.else.saved', { words: other }) : t('onb.looks.else.cta')}
             </KText>
           </Pressable>
@@ -110,6 +112,8 @@ export function PickLooksScreen() {
             onSubmitEditing={() => { setEditing(false); Keyboard.dismiss(); }}
             onBlur={() => setEditing(false)}
             accessibilityLabel={t('onb.looks.else.a11y')}
+            allowFontScaling
+            maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
             style={[styles.input, { color: colors.ink, backgroundColor: colors.surface, borderColor: colors.line }]}
           />
         ) : null}
@@ -140,7 +144,8 @@ const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   other: { borderRadius: radius.look + 1, padding: space.m, alignItems: 'center', justifyContent: 'center', gap: space.xs },
   center: { textAlign: 'center' },
-  input: { borderWidth: StyleSheet.hairlineWidth * 2, borderRadius: 22, height: 44, paddingHorizontal: space.l, fontSize: 17 },
+  // Body size; scales with Dynamic Type up to the control cap, and grows instead of clipping.
+  input: { borderWidth: 1, borderRadius: 22, borderCurve: 'continuous', minHeight: size.hit, paddingHorizontal: space.l, paddingVertical: space.s, fontSize: textStyles.body.fontSize },
   links: { flexDirection: 'row', justifyContent: 'flex-start' },
   dock: { paddingHorizontal: space.gutter, paddingTop: space.s, gap: space.s },
 });

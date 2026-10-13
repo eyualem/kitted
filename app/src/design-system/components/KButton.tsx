@@ -130,12 +130,13 @@ export interface TextLinkProps {
   accessibilityHint?: string;
   /** Inside cards: no 44 pt layout height (hitSlop reaches 44 instead), so rows keep the mockup's spacing. */
   compact?: boolean;
-  /** "Later" is ink2; everything else copper. */
-  color?: 'accent' | 'ink2';
+  /** "Later" is ink2; everything else ink. `accent` stays for score movement only (#231). */
+  color?: 'ink' | 'ink2' | 'accent';
 }
 
-/** Copper text link ("Why 8.0?", "Not quite right?", "Review"). 44 pt hit target; 24 pt between links. */
-export function TextLink({ title, onPress, accessibilityHint, compact, color = 'accent' }: TextLinkProps) {
+/** Ink semibold text link ("Why 8.0?", "Not quite right?", "Review"): copper is kept for score
+ *  movement only (founder, Oct 12, DECISIONS-LOG #231). 44 pt hit target; 24 pt between links. */
+export function TextLink({ title, onPress, accessibilityHint, compact, color = 'ink' }: TextLinkProps) {
   return (
     <Pressable
       onPress={onPress}

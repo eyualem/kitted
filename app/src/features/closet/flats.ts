@@ -94,6 +94,15 @@ function edgeFor(c: string, scheme: FlatScheme): string {
   if (y > 0.75) return mix(c, -0.36);
   return mix(c, -0.42);
 }
+/** Below this relative luminance a piece counts as "very dark" (black tee, black Chelsea boots). */
+const HALO_LUM = 0.05;
+/** Dark mode only (#231): a faint light rim outside a very dark piece's silhouette, so it doesn't vanish into
+ *  a dark tile. Drawn before the fills: the fill hides the inner half of the 5-unit stroke, leaving about 2 units
+ *  (≈1 pt on a 95 pt tile; the viewBox is 200) of white at 22%. Light mode and lighter pieces draw nothing. */
+function halo(ctx: Ctx, c: string, paths: string[]): string {
+  if (ctx.scheme !== 'dark' || lum(c) >= HALO_LUM || !paths.length) return '';
+  return `<g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="5" stroke-linejoin="round">${paths.map((d) => `<path d="${d}"/>`).join('')}</g>`;
+}
 /** A pattern line that reads on this base: darker on light pieces, lighter on dark ones. */
 export function contrastLine(c: string): string {
   return lum(c) < 0.12 ? mix(c, 0.45) : mix(c, -0.5);
@@ -223,9 +232,11 @@ function top(s: TopFlat, ctx: Ctx): string {
   let out = '';
   // ground shadow: an offset silhouette (no blur, so it maps 1:1 to react-native-svg)
   out += `<g transform="translate(1,2.5)" fill="#000" opacity="${ctx.scheme === 'dark' ? 0.2 : 0.07}">${sleeves.map((sl) => `<path d="${sl.d}"/>`).join('')}<path d="${bodyD}"/></g>`;
+  out += halo(ctx, c, [...sleeves.map((sl) => sl.d), bodyD]);
 
   if (hood) {
     const hd = `M${cx - 30},50 C${cx - 38},22 ${cx - 24},6 ${cx},6 C${cx + 24},6 ${cx + 38},22 ${cx + 30},50 Z`;
+    out += halo(ctx, c, [hd]);
     out += `<path d="${hd}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${hd}" fill="url(#${id}sx)"/>`;
   }
   // the inside of the back neck for collared and tailored pieces
@@ -476,6 +487,7 @@ function bottom(s: BottomFlat, ctx: Ctx): string {
   const d = `M${cx - wH},${top0} L${cx + wH},${top0} L${cx + hipH},${hipY} Q${f((cx + hipH + oRh) / 2 + bow)},${f((hipY + hemY) / 2)} ${oRh},${hemY} ${hemWave(oRh, iR)} L${cx},${crotchY} L${iL},${hemY} ${hemWave(iL, oLh)} Q${f((cx - hipH + oLh) / 2 - bow)},${f((hipY + hemY) / 2)} ${cx - hipH},${hipY} Z`;
   let out = '';
   out += `<path d="${d}" fill="#000" opacity="${ctx.scheme === 'dark' ? 0.2 : 0.07}" transform="translate(1,2.5)"/>`;
+  out += halo(ctx, c, [d]);
   out += `<path d="${d}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${d}" fill="url(#${id}sx)"/><path d="${d}" fill="url(#${id}ty)"/>`;
   out += `<path d="M${cx},${crotchY} L${iL},${hemY} M${cx},${crotchY} L${iR},${hemY}" stroke="#000" stroke-opacity=".16" stroke-width="5" stroke-linecap="round"/>`;
   // denim wash: lighter thighs and knees, whiskers
@@ -596,10 +608,14 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
   const ty = gy - sh;
   let out = `<ellipse cx="102" cy="${gy + 1}" rx="88" ry="7" fill="url(#${id}gs)"/>`;
   const lace = s.laceColor ?? (sneaker ? '#FAFAF7' : '#5A4636');
+  const outsole = `M24,${ty + 1} L186,${ty + 1} Q190,${ty + 1} 190,${ty + 6} L190,${gy - 2} Q190,${gy} 187,${gy} L25,${gy} Q21,${gy} 21,${gy - 3} L21,${ty + 4} Q21,${ty + 1} 24,${ty + 1} Z`;
+  if (!sneaker) out += halo(ctx, sole, [outsole]);
 
   if (sneaker) {
     const upper = `M28,${ty + 1} C24,${ty - 22} 24,${ty - 38} 30,${ty - 48} C34,${ty - 53} 43,${ty - 53} 49,${ty - 49} C60,${ty - 43} 70,${ty - 40} 80,${ty - 40} C97,${ty - 38} 113,${ty - 34} 129,${ty - 29} C152,${ty - 24} 172,${ty - 22} 181,${ty - 13} C186,${ty - 7} 185,${ty} 181,${ty + 1} Z`;
     const tongue = `M77,${ty - 38} C77,${ty - 50} 82,${ty - 57} 92,${ty - 57} C97,${ty - 57} 99,${ty - 53} 99,${ty - 49} L102,${ty - 34} Z`;
+    const cup0 = `M22,${ty - 1} L184,${ty - 1} Q189,${ty - 1} 189,${ty + 5} L189,${gy - 4} Q189,${gy} 184,${gy} L27,${gy} Q20,${gy} 20,${gy - 5} L20,${ty + 3} Q20,${ty - 1} 22,${ty - 1} Z`;
+    out += halo(ctx, sole, [cup0]) + halo(ctx, c, [tongue, upper]);
     out += `<path d="${tongue}" fill="${fill}" stroke="${edge}" stroke-width="1.1"/><path d="${tongue}" fill="#000" opacity=".08"/>`;
     out += `<path d="${upper}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${upper}" fill="url(#${id}ty)"/>`;
     out += `<path d="M30,${ty - 48} C34,${ty - 53} 43,${ty - 53} 49,${ty - 49} C60,${ty - 43} 70,${ty - 40} 80,${ty - 40}" fill="none" stroke="${mix(c, -0.3)}" stroke-width="2.6" stroke-linecap="round"/>`;
@@ -615,7 +631,7 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
     if (t === 'runner') out += `<path d="M62,${ty - 6} C80,${ty - 26} 104,${ty - 30} 128,${ty - 22}" fill="none" stroke="${contrastLine(c)}" stroke-width="4" stroke-linecap="round" opacity=".8"/>`;
     out += `<path d="M27,${ty - 30} C26,${ty - 40} 28,${ty - 47} 31,${ty - 50} L41,${ty - 51} C38,${ty - 44} 37,${ty - 36} 38,${ty - 28} Z" fill="${mix(c, -0.08)}" stroke="${edge}" stroke-width=".9"/>`;
     out += fold(ctx, `M98,${ty - 24} q10,4 18,3`, 1.6, 0.7);
-    const cup = `M22,${ty - 1} L184,${ty - 1} Q189,${ty - 1} 189,${ty + 5} L189,${gy - 4} Q189,${gy} 184,${gy} L27,${gy} Q20,${gy} 20,${gy - 5} L20,${ty + 3} Q20,${ty - 1} 22,${ty - 1} Z`;
+    const cup = cup0;
     out += `<path d="${cup}" fill="${sole}" stroke="${soleEdge}" stroke-width="1.1"/><path d="M24,${ty + 4} H186" ${stitch(mix(sole, -0.35), 0.6)}/><path d="M21,${gy - 3.5} H188" stroke="${mix(sole, -0.12)}" stroke-width="3"/><path d="M22,${ty + 8} H187" stroke="#000" stroke-opacity=".05" stroke-width="5"/>`;
     if (s.brand) out += brandText(t === 'runner' ? 46 : 66, t === 'runner' ? ty - 24 : ty - 14, s.brand.length > 6 ? 5.2 : 7, s.brand, c);
     return out;
@@ -624,9 +640,10 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
   if (boot) {
     const shaftTop = t === 'chukka' ? ty - 66 : ty - 82;
     const shaft = `M30,${ty + 1} C24,${ty - 14} 24,${ty - 40} 29,${shaftTop + 12} C30,${shaftTop + 4} 33,${shaftTop} 40,${shaftTop} L80,${shaftTop} C85,${shaftTop} 87,${shaftTop + 3} 87,${shaftTop + 8} L95,${ty - 46} C112,${ty - 40} 138,${ty - 37} 160,${ty - 31} C176,${ty - 26} 185,${ty - 17} 185,${ty - 7} C185,${ty - 2} 184,${ty + 1} 180,${ty + 1} Z`;
+    out += halo(ctx, c, [shaft]);
     if (t !== 'chelsea') {
       const tongue = `M77,${shaftTop + 1} C77,${shaftTop - 8} 83,${shaftTop - 12} 91,${shaftTop - 10} C95,${shaftTop - 8} 96,${shaftTop - 3} 94,${shaftTop + 4} L96,${ty - 56} Z`;
-      out += `<path d="${tongue}" fill="${fill}" stroke="${edge}" stroke-width="1.1"/><path d="${tongue}" fill="#000" opacity=".14"/>`;
+      out += halo(ctx, c, [tongue]) + `<path d="${tongue}" fill="${fill}" stroke="${edge}" stroke-width="1.1"/><path d="${tongue}" fill="#000" opacity=".14"/>`;
     }
     out += `<path d="${shaft}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${shaft}" fill="url(#${id}ty)"/><path d="${shaft}" fill="url(#${id}sx)" opacity=".7"/>`;
     out += `<ellipse cx="150" cy="${ty - 22}" rx="26" ry="9" fill="url(#${id}wg)" opacity=".8" transform="rotate(12 150 ${ty - 22})"/>`;
@@ -655,6 +672,7 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
   } else if (low) {
     // loafer and derby: a low upper, the opening, a saddle (loafer) or three lace pairs (derby)
     const upper = `M30,${ty + 1} C23,${ty - 14} 25,${ty - 36} 33,${ty - 46} C42,${ty - 51} 56,${ty - 47} 72,${ty - 42} C94,${ty - 41} 114,${ty - 39} 136,${ty - 32} C160,${ty - 25} 180,${ty - 17} 184,${ty - 8} C186,${ty - 2} 183,${ty + 1} 179,${ty + 1} Z`;
+    out += halo(ctx, c, [upper]);
     out += `<path d="${upper}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${upper}" fill="url(#${id}ty)"/><path d="${upper}" fill="url(#${id}sx)" opacity=".6"/>`;
     out += `<ellipse cx="156" cy="${ty - 16}" rx="22" ry="7" fill="url(#${id}wg)" opacity=".9" transform="rotate(14 156 ${ty - 16})"/>`;
     // the opening, with the lining showing
@@ -679,14 +697,15 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
     out += fold(ctx, `M110,${ty - 26} q10,3 18,3`, 1.4, 0.7);
   } else {
     // slides: a footbed and one wide strap
-    out += `<path d="M24,${ty - 4} C40,${ty - 9} 150,${ty - 9} 182,${ty - 4} L184,${ty + 1} L24,${ty + 1} Z" fill="${mix(c, -0.1)}" stroke="${edge}" stroke-width="1"/>`;
+    const footbed = `M24,${ty - 4} C40,${ty - 9} 150,${ty - 9} 182,${ty - 4} L184,${ty + 1} L24,${ty + 1} Z`;
     const strap = `M92,${ty - 4} C94,${ty - 34} 150,${ty - 40} 166,${ty - 5} Z`;
+    out += halo(ctx, c, [footbed, strap]);
+    out += `<path d="${footbed}" fill="${mix(c, -0.1)}" stroke="${edge}" stroke-width="1"/>`;
     out += `<path d="${strap}" fill="#000" opacity=".14" transform="translate(1,2)"/><path d="${strap}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${strap}" fill="url(#${id}ty)"/>`;
     out += `<path d="M102,${ty - 8} C106,${ty - 28} 146,${ty - 32} 158,${ty - 8}" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="5"/>`;
     if (s.brand) out += brandText(128, ty - 16, 8, s.brand, c);
   }
-  // the outsole (crepe dots on boots)
-  const outsole = `M24,${ty + 1} L186,${ty + 1} Q190,${ty + 1} 190,${ty + 6} L190,${gy - 2} Q190,${gy} 187,${gy} L25,${gy} Q21,${gy} 21,${gy - 3} L21,${ty + 4} Q21,${ty + 1} 24,${ty + 1} Z`;
+  // the outsole (crepe dots on boots); its path is built above, for the dark-mode halo
   out += `<path d="${outsole}" fill="${sole}" stroke="${soleEdge}" stroke-width="1.1"/>`;
   // a stacked heel block on loafers and derbies
   if (low) out += `<path d="M24,${ty - 1} H62 V${gy + 0.5} H25 Q21,${gy + 0.5} 21,${gy - 3} V${ty + 2} Q21,${ty - 1} 24,${ty - 1} Z" fill="${mix(sole, -0.12)}" stroke="${soleEdge}" stroke-width="1"/><path d="M24,${gy - 4} H61" stroke="${mix(sole, -0.35)}" stroke-width="1.6"/>`;

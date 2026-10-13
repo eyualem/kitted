@@ -32,7 +32,8 @@ export interface MorphPickerProps<T extends string> {
   sections: readonly MorphSection<T>[];
   onPick: (value: T) => void;
   accessibilityLabel: string;
-  /** Plain mono text with a chevron (the result card's tagline) instead of the capsule. */
+  /** Plain text with a chevron (the result card's tagline) instead of the capsule. Subheadline 500, not mono:
+   *  mono reads as a label, and this is a control (founder review, Oct 12). */
   plain?: boolean;
   /** Plain subheadline text with a chevron (the morning card's context line, #70). */
   inline?: boolean;
@@ -126,7 +127,7 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
           {label}
         </KText>
       ) : plain ? (
-        <KText variant="footnote" color="ink" mono="label" numberOfLines={1}>
+        <KText variant="subheadline" weight="500" color="ink" numberOfLines={1}>
           {label}
         </KText>
       ) : (
@@ -168,7 +169,7 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
                 {label}
               </KText>
             ) : (
-              <KText variant="footnote" color="ink2" mono="label" numberOfLines={1}>
+              <KText variant="subheadline" weight="500" color="ink" numberOfLines={1}>
                 {label}
               </KText>
             )}
@@ -192,7 +193,8 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
             style={[
               {
                 position: 'absolute', overflow: 'hidden', borderCurve: 'continuous', backgroundColor: plain ? colors.surface : colors.surface2,
-                borderWidth: 1, borderColor: colors.line, boxShadow: scheme === 'dark' ? '0px 12px 32px rgba(0,0,0,0.45)' : shadow.card,
+                borderWidth: 1, borderColor: colors.line,
+                boxShadow: scheme === 'dark' ? '0px 12px 32px rgba(0,0,0,0.45)' : shadow.card,
               },
               panel,
             ]}

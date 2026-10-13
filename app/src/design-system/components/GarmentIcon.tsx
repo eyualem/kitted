@@ -48,6 +48,36 @@ export function garmentEdge(hex: string, scheme: 'light' | 'dark'): string {
   return shade(hex, -0.3);
 }
 
+/** Very dark fills (black tee, black boots) also get a faint light halo outside the silhouette in dark mode (#231). */
+const HALO_LUM = 0.05;
+
+/** The outer outline of each drawing (the same paths as below), for the halo. */
+function silhouette(t: GarmentIconType): string[] {
+  switch (t) {
+    case 'tee':
+      return ['M21,9 L13,12 L5,20 L10,27 L16,24.5 L16,52 L44,52 L44,24.5 L50,27 L55,20 L47,12 L39,9 Q30,16 21,9 Z'];
+    case 'hoodie':
+      return [LS, 'M22,11 Q30,22 38,11 Q37,3 30,3 Q23,3 22,11 Z'];
+    case 'oxford':
+    case 'overshirt':
+    case 'jacket':
+    case 'sweater':
+      return [LS];
+    case 'chino':
+    case 'jeans':
+    case 'trouser':
+    case 'cargo':
+      return ['M17,6 L43,6 L45,55 L34,55 L30,21 L26,55 L15,55 Z'];
+    case 'sneaker':
+    case 'runner':
+      return ['M5,42 Q6,32 15,30 L27,27 Q31,33 41,35 Q53,37 55,43 L55,45 L5,45 Z'];
+    case 'boot':
+      return ['M13,12 L30,12 L31,33 Q46,35 53,40 L54,45 L11,45 L11,30 Z', 'M10,45 H55 V49.5 H10 Z'];
+    default:
+      return ['M5,41 Q8,32 20,32 L33,32 Q47,33 53,38 L55,45 L5,45 Z', 'M4,45 H56 V47.5 H4 Z'];
+  }
+}
+
 export interface GarmentIconProps {
   type: GarmentIconType;
   color: string;
@@ -62,6 +92,10 @@ export function GarmentIcon({ type: t, color: c, size }: GarmentIconProps) {
   return (
     <View style={{ width: size, height: size }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" pointerEvents="none">
     <Svg width={size} height={size} viewBox="0 0 60 60">
+      {/* Halo first: the fill hides its inner half, leaving ~1.25 units (≈1 pt at 44 pt) of white at 22% outside the edge. */}
+      {scheme === 'dark' && luminance(c) < HALO_LUM
+        ? silhouette(t).map((p) => <Path key={p} d={p} fill="none" stroke="#FFFFFF" strokeOpacity={0.22} strokeWidth={3.6} strokeLinejoin="round" />)
+        : null}
       {t === 'tee' ? (
         <>
           <Path d="M21,9 L13,12 L5,20 L10,27 L16,24.5 L16,52 L44,52 L44,24.5 L50,27 L55,20 L47,12 L39,9 Q30,16 21,9 Z" fill={c} {...st} />

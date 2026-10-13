@@ -16,6 +16,8 @@ import {
   KText,
   MonoLabel,
   Numeral,
+  radius,
+  space,
   useTheme,
   WovenLabel,
 } from "@/design-system";
@@ -92,7 +94,7 @@ export function WelcomeScreen() {
           accessible
           accessibilityLabel={`Example fit check. ${t("onb.welcome.cardOccasion")}. 8.5 out of 10, ${t("onb.welcome.cardWord")}. ${t("onb.welcome.cardDetail")}.`}
         >
-          <KCard radius={21}>
+          <KCard radius={radius.cardSmall}>
             <View style={styles.miniCard}>
               <View style={styles.tagRow}>
                 <MonoLabel>{t("onb.welcome.cardTag")}</MonoLabel>
@@ -135,11 +137,10 @@ export function WelcomeScreen() {
             variant="largeTitle"
             weight="700"
             accessibilityRole="header"
-            style={styles.title}
           >
             {t("onb.welcome.title")}
           </KText>
-          <KText variant="body" color="ink2" style={{ lineHeight: 24 }}>
+          <KText variant="body" color="ink2">
             {t("onb.welcome.body")}
           </KText>
           <View style={{ marginTop: 8 }}>
@@ -153,10 +154,10 @@ export function WelcomeScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  mini: { position: "absolute", right: 21, width: 171.5 },
-  miniCard: { paddingVertical: 13, paddingHorizontal: 14.5, gap: 8 },
-  tagRow: { flexDirection: "row", justifyContent: "space-between" },
-  scoreRow: { flexDirection: "row", alignItems: "flex-end", gap: 10.5 },
-  bottom: { paddingHorizontal: 28.5, gap: 15.5 },
-  title: { letterSpacing: -0.8, lineHeight: 38 },
+  mini: { position: "absolute", right: space.xl, width: 172 },
+  miniCard: { paddingVertical: space.m, paddingHorizontal: space.m, gap: space.s },
+  tagRow: { flexDirection: "row", justifyContent: "space-between", gap: space.s },
+  scoreRow: { flexDirection: "row", alignItems: "flex-end", gap: space.m },
+  // No fixed lineHeight/letterSpacing on SF text (03 §3.1): Dynamic Type sets both, so lines can't overlap.
+  bottom: { paddingHorizontal: space.heroGutter, gap: space.l },
 });

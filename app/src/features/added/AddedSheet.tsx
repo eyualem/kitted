@@ -22,6 +22,10 @@ import { addedDetail } from './addedDetail';
 
 const CLOSET_CATEGORIES = ['top', 'outerwear', 'bottom', 'footwear'];
 
+/** The edit-item sheet (C3) is still a placeholder: until it's built, rows here don't open it. One switch turns it back on.
+ *  The sheet closes with the round X like Why and Which shoes (no "Done"). */
+const EDIT_ITEM_BUILT = false;
+
 export function AddedSheet() {
   const { checkId } = useLocalSearchParams<{ checkId: string }>();
   const data = useLive(['fitChecks', 'closet', 'closetObs', 'readings'], async () => {
@@ -42,7 +46,7 @@ export function AddedSheet() {
     return () => clearTimeout(h);
   }, [pending, data?.cs.startedAt]);
 
-  if (!data) return <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} doneLabel={t('common.done')} />;
+  if (!data) return <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} />;
   const { cs, byId, obs, reading } = data;
   const undone = new Set(cs.undone);
   const asks = cs.asks ?? [];
@@ -55,7 +59,7 @@ export function AddedSheet() {
       ...(reading?.held_items ?? []),
     ];
     return (
-      <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} doneLabel={t('common.done')}>
+      <SheetScaffold title={t('added.title')} subtitle={t('added.sub')}>
         <SheetList>
           {pieces.map((g, i) => {
             const name = garmentLabel(g);
@@ -90,7 +94,7 @@ export function AddedSheet() {
   }
 
   return (
-    <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} doneLabel={t('common.done')}>
+    <SheetScaffold title={t('added.title')} subtitle={t('added.sub')}>
       <View style={{ gap: 18 }}>
         {added.length > 0 ? (
           <SheetList>
@@ -177,17 +181,17 @@ function AddedItemRow({ item, removed, onEdit, onToggle }: { item: ClosetItemRow
       style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 16, paddingRight: 8, minHeight: 64 }}
       accessible
       accessibilityLabel={removed ? t('added.a11y.removed', { name }) : t('added.a11y.row', { name, detail: detail.replace(' · ', ', ').toLowerCase() })}
-      accessibilityActions={removed ? [{ name: 'addBack', label: t('added.addBack') }] : [{ name: 'edit', label: t('common.edit') }, { name: 'undo', label: t('common.undo') }]}
+      accessibilityActions={removed ? [{ name: 'addBack', label: t('added.addBack') }] : [...(EDIT_ITEM_BUILT ? [{ name: 'edit', label: t('common.edit') }] : []), { name: 'undo', label: t('common.undo') }]}
       onAccessibilityAction={(e) => {
         const a = e.nativeEvent.actionName;
-        if (a === 'edit') onEdit();
+        if (a === 'edit' && EDIT_ITEM_BUILT) onEdit();
         else if (a === 'undo') onToggle(true);
         else if (a === 'addBack') onToggle(false);
       }}
     >
       <Pressable
-        onPress={removed ? undefined : onEdit}
-        disabled={removed}
+        onPress={removed || !EDIT_ITEM_BUILT ? undefined : onEdit}
+        disabled={removed || !EDIT_ITEM_BUILT}
         style={({ pressed }) => ({ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, opacity: pressed ? opacity.pressed : 1 })}
       >
         <ClosetTile item={item} size={44} radius={12} scale={0.82} dim={removed} decorative />

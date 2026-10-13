@@ -59,9 +59,12 @@ export const lightColors: ColorTokens = {
   line: '#E0E3E8',
   accent: '#9C5326',
   accentSoft: 'rgba(156, 83, 38, 0.09)',
-  primary: '#121628',
+  // Bluer indigo, denim not black (founder, Oct 12, DECISIONS-LOG #231). Body text `ink` stays
+  // #121628. WCAG: onPrimary #FFFFFF on #1A2448 = 15.11 (was 17.93); onMe #F2F3F7 on #22305C = 11.51
+  // (was 13.91). REVERT: primary '#121628', me '#1B2340'.
+  primary: '#1A2448',
   onPrimary: '#FFFFFF',
-  me: '#1B2340',
+  me: '#22305C',
   onMe: '#F2F3F7',
   good: '#2B7651',
   caution: '#8A5A00',
@@ -81,7 +84,8 @@ export const darkColors: ColorTokens = {
   accentSoft: 'rgba(222, 151, 98, 0.15)',
   primary: '#ECEEF3',
   onPrimary: '#0C0E14',
-  me: '#2A3150',
+  // Bluer (#231): onMe #EEF0F6 on #2B3860 = 10.03 (was 11.15). REVERT: me '#2A3150'.
+  me: '#2B3860',
   onMe: '#EEF0F6',
   good: '#5DC08F',
   caution: '#E2B356',
@@ -112,8 +116,9 @@ export const fixed = {
   night: '#08090D',
   /** Share-card band; ink on white camera pills. */
   indigo: '#121628',
-  /** Woven label, stylist avatar "K", app icon base. */
-  label: '#1B2340',
+  /** Woven label, stylist avatar "K", app icon base. Bluer (#231): onDark #EEF0F5 on #22305C = 11.19
+   *  (was 13.53). REVERT: '#1B2340'. */
+  label: '#22305C',
   /** Woven-label text. */
   onDark: '#EEF0F5',
   /** Copper on dark: share-band delta, stitches, camera scan line. */
@@ -144,6 +149,24 @@ export const fixed = {
   white: '#FFFFFF',
   /** The photo viewer's cover (S13). */
   black: '#000000',
+  /** Countdown circle's ring (white @ 90%) and its faint inner ring (white @ 12%). */
+  countdownRing: 'rgba(255, 255, 255, 0.90)',
+  countdownInnerRing: 'rgba(255, 255, 255, 0.12)',
+  /** The "Turn on flash" offer under the camera tip pill: black @ 60%, white @ 35% border. */
+  offerPill: 'rgba(0, 0, 0, 0.60)',
+  offerPillBorder: 'rgba(255, 255, 255, 0.35)',
+  /** The S3 after-shot panel (the dark set's surface) and its quiet button (white @ 16%). */
+  panel: '#171A23',
+  panelButton: 'rgba(255, 255, 255, 0.16)',
+  /** Secondary text on the fixed-dark surfaces: white @ 85% (hints, list rows) and @ 75% (bodies). */
+  textSoft: 'rgba(255, 255, 255, 0.85)',
+  textDim: 'rgba(255, 255, 255, 0.75)',
+  /** The good green on a dark surface (the dark set's `good`), e.g. S3's "Saved" check. */
+  goodOnDark: '#5DC08F',
+  /** Behind the scan preview before the camera's first frame. */
+  previewBlank: '#111111',
+  /** DEMO (Simulator): dims the bundled photo for the dark-room demo states. */
+  demoDim: 'rgba(0, 0, 0, 0.72)',
 } as const;
 
 /**
@@ -190,6 +213,9 @@ export const space = {
   stack: 16,
   /** Between chips, buttons, quick-starts. */
   rowGap: 8,
+  /** List-row inset on tab pages and sheets (You, Lookbook rows): 16 × 12. */
+  rowX: 16,
+  rowY: 12,
 } as const;
 
 /** Always pair a radius with `borderCurve: 'continuous'` (iOS squircle corners). */

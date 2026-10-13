@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icon, IconButton, KButton, KText, fixed, opacity } from '@/design-system';
+import { Icon, IconButton, KButton, KText, fixed, opacity, size, space } from '@/design-system';
 import { store } from '@/data/db';
 import { t } from '@/i18n/en';
 import {
@@ -223,7 +223,7 @@ export function ScanCameraScreen() {
     <View style={styles.root}>
       <StatusBar style="light" />
 
-      <View style={{ position: 'absolute', top, left, width: pw, height: ph, borderRadius: 22, overflow: 'hidden', backgroundColor: '#111' }}>
+      <View style={{ position: 'absolute', top, left, width: pw, height: ph, borderRadius: 22, overflow: 'hidden', backgroundColor: fixed.previewBlank }}>
         {KittedCameraView ? (
           permission === 'granted' ? (
             <KittedCameraView ref={cam} style={StyleSheet.absoluteFill} facing="back" kind="scan" torch={torch} onGuide={(e) => onGuide(e.nativeEvent)} />
@@ -240,12 +240,17 @@ export function ScanCameraScreen() {
       {/* Top bar */}
       <View style={[styles.topBar, { top: insets.top + 3 }]}>
         <IconButton icon="close" variant="glass" diameter={44} label={t('cam.a11y.close')} onPress={() => router.back()} />
-        <View style={[styles.tip, (stage.kind === 'issue' || stage.kind === 'batch' || stage.kind === 'saved') && { opacity: 0 }]} accessibilityLiveRegion="polite">
-          {tipView.icon ? <Icon name={tipView.icon} size="small" color={tipView.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
-          <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={2}>
-            {tipView.text}
-          </KText>
-        </View>
+        {/* The pill goes while a panel shows (the panel says what's wrong). */}
+        {stage.kind === 'issue' || stage.kind === 'batch' || stage.kind === 'saved' ? (
+          <View style={styles.tipSpacer} />
+        ) : (
+          <View style={styles.tip} accessibilityLiveRegion="polite">
+            {tipView.icon ? <Icon name={tipView.icon} size="small" color={tipView.icon === 'checkFilled' ? fixed.good : fixed.indigo} /> : null}
+            <KText variant="subheadline" weight="600" color={fixed.indigo} style={{ flexShrink: 1 }} numberOfLines={2}>
+              {tipView.text}
+            </KText>
+          </View>
+        )}
         <IconButton icon={torch ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t('scan.a11y.torch')} onPress={() => setTorch(!torch)} />
       </View>
 
@@ -262,7 +267,7 @@ export function ScanCameraScreen() {
 
       {/* The standing hint, then the controls */}
       <View style={[styles.bottom, { top: top + ph + 14, bottom: insets.bottom + 8 }]}>
-        <KText variant="footnote" weight="600" color="rgba(255,255,255,0.8)" style={{ textAlign: 'center', paddingHorizontal: 24 }}>
+        <KText variant="footnote" weight="600" color={fixed.textSoft} style={{ textAlign: 'center', paddingHorizontal: space.xxl }}>
           {t('scan.hint')}
         </KText>
         <View style={styles.controls}>
@@ -339,7 +344,7 @@ function BatchPanel({ items, onSave, onChooseOthers }: { items: { uri: string; i
         {bad.slice(0, 4).map((i) => (
           <View key={i.uri} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Image source={{ uri: i.uri }} style={{ width: 40, height: 40, borderRadius: 8 }} contentFit="cover" />
-            <KText variant="footnote" color="rgba(255,255,255,0.85)" style={{ flex: 1 }} numberOfLines={2}>
+            <KText variant="footnote" color={fixed.textSoft} style={{ flex: 1 }} numberOfLines={2}>
               {issueTitle(i.issue!, 'scan')}
             </KText>
           </View>
@@ -372,16 +377,17 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: fixed.black },
   topBar: { position: 'absolute', left: 18, right: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   tip: {
-    flexShrink: 1, minHeight: 36.5, borderRadius: 18, paddingHorizontal: 14.5, paddingVertical: 6, backgroundColor: fixed.lightPill,
-    flexDirection: 'row', alignItems: 'center', gap: 6.5,
+    flexShrink: 1, minHeight: size.button, borderRadius: size.button / 2, paddingHorizontal: 14, paddingVertical: 6, backgroundColor: fixed.lightPill,
+    flexDirection: 'row', alignItems: 'center', gap: 6,
   },
+  tipSpacer: { flex: 1 },
   offerWrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center', zIndex: 2 },
   offer: {
-    flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 36, paddingHorizontal: 14, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.6)',
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)',
+    flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: size.button, paddingHorizontal: 14, borderRadius: size.button / 2, backgroundColor: fixed.offerPill,
+    borderWidth: 1, borderColor: fixed.offerPillBorder,
   },
   bottom: { position: 'absolute', left: 0, right: 0, alignItems: 'center', justifyContent: 'space-between' },
   controls: { alignSelf: 'stretch', paddingHorizontal: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  shutter: { width: 80, height: 80, borderRadius: 40, borderWidth: 4.5, borderColor: fixed.white, alignItems: 'center', justifyContent: 'center' },
-  shutterDisc: { width: 63, height: 63, borderRadius: 31.5, backgroundColor: fixed.white },
+  shutter: { width: 80, height: 80, borderRadius: 40, borderWidth: 4, borderColor: fixed.white, alignItems: 'center', justifyContent: 'center' },
+  shutterDisc: { width: 64, height: 64, borderRadius: 32, backgroundColor: fixed.white },
 });

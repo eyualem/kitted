@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Icon, KText, opacity, useTheme } from '@/design-system';
+import { Icon, KText, opacity, radius, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ClosetItemRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -82,7 +82,7 @@ function ShoeTile({ size, label, lastWorn, dashed, onPress, children }: {
     >
       <View
         style={{
-          width: size, height: size, borderRadius: 18, borderCurve: 'continuous', alignItems: 'center', justifyContent: 'center',
+          width: size, height: size, borderRadius: radius.tile, borderCurve: 'continuous', alignItems: 'center', justifyContent: 'center',
           backgroundColor: dashed ? 'transparent' : colors.surface2,
           borderWidth: dashed ? 1.5 : 0, borderStyle: dashed ? 'dashed' : 'solid', borderColor: colors.inkFaint,
         }}
@@ -95,7 +95,7 @@ function ShoeTile({ size, label, lastWorn, dashed, onPress, children }: {
       {/* A caption, not 02's pill: a pill can't wrap, and "Last worn Wednesday" is wider than a
           third of the sheet (DECISIONS-LOG #33). */}
       {lastWorn ? (
-        <KText variant="caption" weight="600" color="accent" numberOfLines={2}>
+        <KText variant="caption" weight="600" color="ink2" numberOfLines={2}>
           {lastWorn}
         </KText>
       ) : null}

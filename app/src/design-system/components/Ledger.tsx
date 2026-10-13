@@ -1,7 +1,8 @@
 // Ledger rows for "Why this score" (`.ledger`, sheet 8) — 03 §5.
 // Row: label (subheadline ink2, rule name ink semibold: "Elevated piece · tan chinos") | value
 // (mono, trailing). 9 pt vertical padding, 1 pt line bottom border. First row: "Everyone starts
-// at 7.0". Values: "+0.5" good, "−0.5" accent (copper, never red), "+0"/"±0" ink.
+// at 7.0". Values: "+0.5" good, "−0.5" ink2 (the "−" carries it; copper is only score movement, #231;
+// never red), "+0"/"±0" ink.
 // Total: "Your score" (headline) + footnote ink3 note | 52 pt Archivo numeral + "/10".
 // VoiceOver speaks the sign ("plus 0.5"), so color is never the only cue.
 
@@ -43,7 +44,7 @@ function spokenAmount(n: number): string {
 export function LedgerRow({ rule, item, amount, valueText, zero = 'plus', plain }: LedgerRowProps) {
   const { colors, isAccessibilitySize } = useTheme();
   const value = valueText ?? (amount !== undefined ? formatAmount(amount, zero) : '');
-  const valueColor = amount === undefined || amount === 0 ? 'ink' : amount > 0 ? 'good' : 'accent';
+  const valueColor = amount === undefined || amount === 0 ? 'ink' : amount > 0 ? 'good' : 'ink2';
   const said = valueText === '—' ? t('a11y.notRated') : (valueText ?? (amount !== undefined ? spokenAmount(amount) : undefined));
   const spoken = [rule, item, said].filter(Boolean).join(', ') + '.';
   return (

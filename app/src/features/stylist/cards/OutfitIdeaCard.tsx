@@ -1,8 +1,10 @@
 // Outfit idea card (02 D12 / D13): four closet tiles with labels, "Wear this" and "Swap one".
 // Built from closet items in code (no AI). P2 renders the seeded ideas; the generator is P5.
+// No "Swap one" here: a seeded idea has no daily-idea row to re-pick (morning.swap needs one), so the
+// button did nothing. The morning card (MorningCard) adopts this card on its day and has a working Swap.
 import { useState } from 'react';
 import { View } from 'react-native';
-import { KButton, KCard, KCardSection, KText, TagLine, useTheme } from '@/design-system';
+import { KButton, KCard, KCardSection, KText, TagLine, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { showToast } from '@/features/toast/toast';
@@ -23,7 +25,7 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
   if (!data) return null;
   const { o, items, wearing } = data;
   const cols = isAccessibilitySize ? 2 : 4;
-  const tile = width > 0 ? Math.floor((width - 8 * (cols - 1)) / cols) : 78;
+  const tile = width > 0 ? Math.floor((width - space.s * (cols - 1)) / cols) : 78;
   const names = items.map((i) => i!.name.toLowerCase()).join(', ');
   // "Logged for today." with Undo, which puts back whatever today's log held before (02 S1).
   const wear = async () => {
@@ -39,17 +41,17 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
   return (
     <KCard
       accessibilityLabel={`${t('idea.tag')}, ${t('idea.fromCloset')}: ${o.title ? `${o.title}. ` : ''}${names}.`}
-      accessibilityActions={[{ name: 'wear', label: t('idea.wear') }, { name: 'swap', label: t('idea.swap') }]}
+      accessibilityActions={[{ name: 'wear', label: t('idea.wear') }]}
       onAccessibilityAction={(e) => (e.nativeEvent.actionName === 'wear' ? void wear() : undefined)}
     >
-      <KCardSection gap={9}>
+      <KCardSection gap={space.s}>
         <TagLine left={t('idea.tag')} right={t('idea.fromCloset')} />
         {o.title ? (
           <KText variant="headline">{o.title}</KText>
         ) : null}
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.s }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
           {items.map((it) => (
-            <View key={it!.id} style={{ width: tile, gap: 6 }}>
+            <View key={it!.id} style={{ width: tile, gap: space.xs }}>
               <TileBox size={tile}>
                 <PieceArt item={it!} size={Math.round(tile * 0.8)} />
               </TileBox>
@@ -64,9 +66,8 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
             {o.summary}
           </KText>
         ) : null}
-        <View style={isAccessibilitySize ? { gap: 8 } : { flexDirection: 'row', gap: 8 }}>
+        <View style={isAccessibilitySize ? undefined : { flexDirection: 'row' }}>
           <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} icon={wearing ? 'check' : undefined} size="regular" fullWidth={isAccessibilitySize} disabled={wearing} onPress={() => void wear()} />
-          <KButton title={t('idea.swap')} size="regular" kind="secondary" fullWidth={isAccessibilitySize} />
         </View>
       </KCardSection>
     </KCard>
@@ -76,7 +77,7 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
 function TileBox({ size, children }: { size: number; children: React.ReactNode }) {
   const { colors } = useTheme();
   return (
-    <View style={{ width: size, height: size, borderRadius: 18, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ width: size, height: size, borderRadius: radius.tile, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
       {children}
     </View>
   );

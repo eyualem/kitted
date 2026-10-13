@@ -62,7 +62,7 @@ export function ToastHost() {
             accessibilityLabel={t('common.undo')}
             style={({ pressed }) => ({ minHeight: size.hit, paddingHorizontal: 8, justifyContent: 'center', opacity: pressed ? opacity.pressed : 1 })}
           >
-            <KText variant="subheadline" weight="600" color="accent">
+            <KText role="textLink">
               {t('common.undo')}
             </KText>
           </Pressable>

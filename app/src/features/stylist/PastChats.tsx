@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { dayKey } from '@kitted/core';
-import { EmptyState, Icon, KCard, KText, NeckDownPhoto, RowDivider, displayScore, opacity, scoreWordLabel, space, useTheme } from '@/design-system';
+import { EmptyState, Icon, KCard, KText, NeckDownPhoto, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage, FitCheckRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -57,7 +57,7 @@ export function PastChatsScreen() {
   const days = usePastDays();
   if (!days) return null;
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: 18, gap: 13 }}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
       {days.length === 0 ? (
         <EmptyState art={<Icon name="tabStylist" size={44} color="inkFaint" />} body={t('history.empty')} />
       ) : (
@@ -82,12 +82,12 @@ function PastDayRow({ row: { day, title, subtitle, best } }: { row: DayRow }) {
       onPress={() => router.push(`/stylist/day/${day.key}`)}
       accessibilityRole="button"
       accessibilityLabel={`${title}. ${subtitle}.`}
-      style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 13, paddingVertical: 10, paddingHorizontal: 14, opacity: pressed ? opacity.pressed : 1 })}
+      style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingVertical: space.m, paddingHorizontal: space.l, opacity: pressed ? opacity.pressed : 1 })}
     >
       {photo ? (
-        <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={44} height={55} borderRadii={{ tl: 9, tr: 9, br: 9, bl: 9 }} />
+        <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={44} height={55} borderRadii={{ tl: radius.thumb, tr: radius.thumb, br: radius.thumb, bl: radius.thumb }} />
       ) : (
-        <View style={{ width: 44, height: 55, borderRadius: 9, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ width: 44, height: 55, borderRadius: radius.thumb, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="tabStylist" color="ink3" size="small" />
         </View>
       )}
@@ -117,7 +117,7 @@ export function PastDayScreen({ dayKey: key }: { dayKey: string }) {
   );
   const title = day ? chatDayTitle(day.firstAt, now, sessionClock.offset) : '';
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 4, paddingBottom: 32 }}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xxxl }}>
       <Stack.Screen options={{ title }} />
       {items.map((item, i) => (
         <View key={item.key} style={i > 0 ? { marginTop: space.stack } : undefined}>

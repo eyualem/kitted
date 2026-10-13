@@ -13,7 +13,7 @@ import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { signed } from '@/i18n/format';
 import { occasionLabel } from '../thread';
-import { FitCheckCard } from './FitCheckCard';
+import { FitCheckCard, SHARE_CARD_BUILT } from './FitCheckCard';
 
 export function RecheckCard({ checkId }: { checkId: string }) {
   const row = useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -57,7 +57,7 @@ export function RecheckCard({ checkId }: { checkId: string }) {
   return (
     <KCard
       accessibilityLabel={label}
-      accessibilityActions={[{ name: 'share', label: t('recheck.share') }, { name: 'tell', label: t('recheck.tellMe') }]}
+      accessibilityActions={[...(SHARE_CARD_BUILT ? [{ name: 'share', label: t('recheck.share') }] : []), { name: 'tell', label: t('recheck.tellMe') }]}
       onAccessibilityAction={(e) => (e.nativeEvent.actionName === 'share' ? router.push(`/share/${row.id}`) : router.push(`/sheets/tell-me/${row.id}`))}
     >
       <KCardSection gap={12}>
@@ -104,7 +104,9 @@ export function RecheckCard({ checkId }: { checkId: string }) {
           </View>
         ) : (
           <>
-            <KButton title={t('recheck.share')} icon="share" size="regular" fullWidth onPress={() => router.push(`/share/${row.id}`)} />
+            {SHARE_CARD_BUILT ? (
+              <KButton title={t('recheck.share')} icon="share" size="regular" fullWidth onPress={() => router.push(`/share/${row.id}`)} />
+            ) : null}
             <TextLinkRow justify="center">
               <TextLink title={t('recheck.tellMe')} compact onPress={() => router.push(`/sheets/tell-me/${row.id}`)} />
             </TextLinkRow>

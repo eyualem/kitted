@@ -4,7 +4,7 @@
 import { Pressable, View } from 'react-native';
 import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
-import { CONTROL_TEXT_MAX_SCALE, opacity, size } from '../tokens';
+import { CONTROL_TEXT_MAX_SCALE, opacity, radius, size } from '../tokens';
 import { displayScore } from '../score';
 import { GarmentIcon, type GarmentIconType } from './GarmentIcon';
 import { Icon } from './Icon';
@@ -25,7 +25,7 @@ export function AddedRow({ items, count, onReview }: { items: { type: GarmentIco
           <View
             key={i}
             style={{
-              width: 28, height: 28, borderRadius: 8, borderCurve: 'continuous', backgroundColor: colors.surface2, borderWidth: 1.5,
+              width: 28, height: 28, borderRadius: radius.thumb, borderCurve: 'continuous', backgroundColor: colors.surface2, borderWidth: 1.5,
               borderColor: colors.surface, marginLeft: i === 0 ? 0 : -8, zIndex: i, alignItems: 'center', justifyContent: 'center',
             }}
           >
@@ -47,7 +47,8 @@ export function AddedRow({ items, count, onReview }: { items: { type: GarmentIco
 
 /**
  * Re-check delta (`.delta`): the old score (Archivo Medium 44, ink3, struck with a 1.5 pt bar),
- * a copper chevron, the new score (76) + "/10", and the "+1.0" pill pushed right.
+ * a copper arrow (score movement, #231; a chevron read as "greater than"), the new score (76) + "/10", and the "+1.0"
+ * pill pushed right.
  */
 export function DeltaRow({ was, now }: { was: number; now: number }) {
   const { colors } = useTheme();
@@ -61,7 +62,7 @@ export function DeltaRow({ was, now }: { was: number; now: number }) {
         <View style={{ position: 'absolute', left: 0, right: 0, bottom: 12, height: 1.5, backgroundColor: colors.ink3 }} />
       </View>
       <View style={{ width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 7 }}>
-        <Icon name="next" size={20} color="accent" />
+        <Icon name="arrow.right" size={20} color="accent" weight="semibold" />
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
         <Numeral size={76}>{displayScore(now)}</Numeral>
@@ -108,7 +109,7 @@ export function FinishTile({ children, label, onPress, filled }: { children: Rea
       accessibilityRole="button"
       accessibilityLabel={label}
       style={({ pressed }) => ({
-        width: size.hit, height: size.hit, borderRadius: 12, borderCurve: 'continuous', borderWidth: 1, borderColor: colors.line,
+        width: size.hit, height: size.hit, borderRadius: radius.thumb, borderCurve: 'continuous', borderWidth: 1, borderColor: colors.line,
         backgroundColor: filled ? colors.surface2 : colors.surface, alignItems: 'center', justifyContent: 'center',
         opacity: pressed ? opacity.pressed : 1,
       })}

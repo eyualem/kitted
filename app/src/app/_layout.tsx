@@ -125,7 +125,8 @@ function NavThemeFromTokens({ children }: { children: ReactNode }) {
       dark: scheme === 'dark',
       colors: {
         ...base.colors,
-        primary: colors.accent,
+        // Native header buttons are ink; copper is for score movement only (#231).
+        primary: colors.ink,
         background: colors.bg,
         card: colors.bg,
         text: colors.ink,

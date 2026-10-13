@@ -32,7 +32,7 @@ export function SightingCrop({ source, aspect = 0.75, box, width, height, radius
       <View style={{ position: 'absolute', left: piece.right, right: 0, top: piece.top, height: piece.bottom - piece.top, backgroundColor: dim }} />
       <View style={{
         position: 'absolute', left: piece.left, top: piece.top, width: piece.right - piece.left, height: piece.bottom - piece.top,
-        borderWidth: 2, borderColor: colors.accent, borderRadius: 6,
+        borderWidth: 2, borderColor: colors.ink2, borderRadius: 6,
       }} />
     </View>
   );

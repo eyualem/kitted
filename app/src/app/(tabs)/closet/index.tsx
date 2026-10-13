@@ -5,7 +5,7 @@
 // minimize behavior).
 import { useState } from 'react';
 import { ActionSheetIOS, ScrollView, View } from 'react-native';
-import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, useTheme } from '@/design-system';
+import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { ClosetItemRow } from '@/data/types';
@@ -56,7 +56,7 @@ export default function ClosetScreen() {
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: 18, gap: 13 }}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
       {items.length === 0 ? (
         <EmptyState icon="closet" title={t('closet.empty.title')} body={t('closet.empty.body')}>
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />
@@ -77,9 +77,9 @@ export default function ClosetScreen() {
               </KCardSection>
             </KCard>
           ) : null}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: 10.5 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
             {tile > 0 ? items.map((it) => (
-              <ClosetTile key={it.id} item={it} size={tile} aspect={0.92} radius={18} label={it.name} onLongPress={() => pieceMenu(it)} longPressLabel={t('closet.remove.action')} />
+              <ClosetTile key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} label={it.name} onLongPress={() => pieceMenu(it)} longPressLabel={t('closet.remove.action')} />
             )) : null}
           </View>
         </>

@@ -3,7 +3,7 @@
 // Rows don't push anywhere yet, so they carry no chevrons. No dev placeholder text in a tab
 // (DECISIONS-LOG #56).
 import { ScrollView, View } from 'react-native';
-import { Icon, KCard, KText, RowDivider, TagLine, useTheme } from '@/design-system';
+import { Icon, KCard, KText, RowDivider, TagLine, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
@@ -17,18 +17,18 @@ export default function YouScreen() {
   const usage = useLive(['usage', 'fitChecks'], () => quota.snapshot(), []);
   if (!facts || !usage) return null;
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: 18, gap: 13 }}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
       <TagLine left={t('you.knows')} right={facts.length > FACTS_SHOWN ? t('you.knowsAll', { n: facts.length }) : undefined} />
       <KCard>
         {facts.length === 0 ? (
-          <KText variant="subheadline" color="ink2" style={{ padding: 16 }}>
+          <KText variant="subheadline" color="ink2" style={{ paddingVertical: space.rowY, paddingHorizontal: space.rowX }}>
             {t('you.facts.empty')}
           </KText>
         ) : (
           facts.slice(0, FACTS_SHOWN).map((f, i) => (
             <View key={f.id}>
               {i > 0 ? <RowDivider /> : null}
-              <View style={{ paddingVertical: 10.5, paddingHorizontal: 17, gap: 2 }}>
+              <View style={{ paddingVertical: space.rowY, paddingHorizontal: space.rowX, gap: 2 }}>
                 <KText variant="subheadline" weight="600" color={f.source === 'guess' ? 'ink2' : 'ink'} style={f.source === 'guess' ? { fontStyle: 'italic' } : undefined}>
                   {f.value}
                 </KText>
@@ -38,7 +38,7 @@ export default function YouScreen() {
         )}
       </KCard>
       <KCard>
-        <View style={{ padding: 16, gap: 3 }}>
+        <View style={{ paddingVertical: space.rowY, paddingHorizontal: space.rowX, gap: 2 }}>
           <KText variant="callout" weight="600">
             {usage.pro ? t('you.plan.pro') : t('you.plan.free')}
           </KText>
@@ -47,7 +47,7 @@ export default function YouScreen() {
           </KText>
         </View>
       </KCard>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 11.5, padding: 5 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs, paddingVertical: space.xs }}>
         <Icon name="lock" color="ink3" />
         <KText variant="subheadline" weight="500" style={{ flex: 1 }}>
           {t('you.privacyRow')}

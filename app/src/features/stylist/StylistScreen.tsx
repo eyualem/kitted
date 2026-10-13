@@ -237,6 +237,9 @@ export function StylistScreen() {
         {/* A footer, not paddingBottom: it animates with the dock and the keyboard. */}
         <Animated.View style={footerStyle} />
       </Animated.ScrollView>
+      {/* The scroll-edge fade under the header (as Closet's native one): rows soften into the bar
+          instead of being cut in half. A sibling after the ScrollView, so the tab bar still shrinks. */}
+      <View pointerEvents="none" style={[styles.edgeFade, { experimental_backgroundImage: edgeFade(colors.bg) }]} />
       {docked ? (
         <Animated.View
           style={[styles.dock, dockStyle]}
@@ -271,6 +274,8 @@ function EarlierChats() {
       onPress={() => router.push('/stylist/history')}
       accessibilityRole="button"
       accessibilityLabel={t('history.open.a11y')}
+      // 30 pt pill; the slop makes the target 44 without making it look bigger.
+      hitSlop={{ top: 7, bottom: 7, left: 4, right: 4 }}
       style={({ pressed }) => [styles.earlier, { backgroundColor: colors.surface2, opacity: pressed ? opacity.pressed : 1 }]}
     >
       <KText variant="footnote" weight="500" color="ink2">
@@ -281,8 +286,20 @@ function EarlierChats() {
   );
 }
 
+/** Height of the soft edge under the Stylist header (the thread's top padding matches it, so the
+ *  first row isn't faded when the thread is scrolled all the way up). */
+const EDGE_FADE = space.xl;
+
+/** bg → clear, top to bottom. `bg` is a #RRGGBB token. */
+function edgeFade(bg: string): string {
+  const n = parseInt(bg.slice(1, 7), 16);
+  const rgb = `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
+  return `linear-gradient(180deg, rgba(${rgb}, 1) 0%, rgba(${rgb}, 0.85) 35%, rgba(${rgb}, 0) 100%)`;
+}
+
 const styles = StyleSheet.create({
-  thread: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 4 },
+  thread: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: space.gutter, paddingTop: EDGE_FADE },
+  edgeFade: { position: 'absolute', top: 0, left: 0, right: 0, height: EDGE_FADE },
   dock: { position: 'absolute', left: 0, right: 0, paddingBottom: 0 },
   earlier: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, marginBottom: space.stack },
 });

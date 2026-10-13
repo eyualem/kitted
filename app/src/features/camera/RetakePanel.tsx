@@ -5,7 +5,7 @@ import { useEffect, type ReactNode } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CONTROL_TEXT_MAX_SCALE, Icon, KText, fixed, opacity, size } from '@/design-system';
+import { CONTROL_TEXT_MAX_SCALE, Icon, KText, fixed, opacity, size, space } from '@/design-system';
 
 export interface PanelAction {
   title: string;
@@ -30,20 +30,20 @@ export function RetakePanel({
   }, [title]);
   return (
     <Animated.View entering={FadeInDown.duration(220)} exiting={FadeOutDown.duration(160)} style={[styles.panel, { bottom: Math.max(insets.bottom, 8) }]}>
-      <Icon name={tone === 'done' ? 'checkFilled' : 'warning'} size={26} color={tone === 'done' ? '#5BC08A' : fixed.white} />
+      <Icon name={tone === 'done' ? 'checkFilled' : 'warning'} size={26} color={tone === 'done' ? fixed.goodOnDark : fixed.white} />
       <KText variant="headline" color={fixed.white} accessibilityRole="header">
         {title}
       </KText>
       {body ? (
-        <KText variant="subheadline" color="rgba(255,255,255,0.75)">
+        <KText variant="subheadline" color={fixed.textDim}>
           {body}
         </KText>
       ) : null}
       {children}
       <View style={styles.buttons}>
         <PanelButton action={primary} bg={fixed.white} fg={fixed.indigo} />
-        {secondary ? <PanelButton action={secondary} bg="rgba(255,255,255,0.16)" fg={fixed.white} /> : null}
-        {tertiary ? <PanelButton action={tertiary} bg="transparent" fg="rgba(255,255,255,0.85)" /> : null}
+        {secondary ? <PanelButton action={secondary} bg={fixed.panelButton} fg={fixed.white} /> : null}
+        {tertiary ? <PanelButton action={tertiary} bg="transparent" fg={fixed.textSoft} /> : null}
       </View>
     </Animated.View>
   );
@@ -67,10 +67,10 @@ function PanelButton({ action, bg, fg }: { action: PanelAction; bg: string; fg: 
 }
 
 const styles = StyleSheet.create({
-  panel: { position: 'absolute', left: 8, right: 8, backgroundColor: '#171A23', borderRadius: 38, padding: 20, gap: 12 },
-  buttons: { gap: 10, marginTop: 4 },
+  panel: { position: 'absolute', left: 8, right: 8, backgroundColor: fixed.panel, borderRadius: 38, padding: space.xl, gap: space.m },
+  buttons: { gap: 10, marginTop: space.xs },
   button: {
-    minHeight: size.buttonLarge, borderRadius: size.buttonLarge / 2, paddingHorizontal: 20, paddingVertical: 8,
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    minHeight: size.buttonLarge, borderRadius: size.buttonLarge / 2, paddingHorizontal: space.xl, paddingVertical: space.s,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space.s,
   },
 });

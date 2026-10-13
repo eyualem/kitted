@@ -1,6 +1,7 @@
 // MonoLabel (`.tagline` text, `.intent-l`, `.sub .k`) + TagLine (the card header row).
-// SF Mono (RN 'ui-monospace') 12 pt medium, scales, SENTENCE CASE by default (ruling 29;
-// typography.MONO_UPPERCASE_AT_NORMAL_SIZES brings back the mockup's uppercase), ink3.
+// SF Mono (RN 'ui-monospace') 12 pt medium, scales, ink3. Spaced capitals at normal sizes
+// (typography.MONO_UPPERCASE_AT_NORMAL_SIZES = true since #231; display-only, VoiceOver reads the
+// sentence-case string) and sentence case at accessibility sizes (ruling 29).
 // Nothing in mono is below 12 pt.
 
 import { Pressable, View } from 'react-native';
@@ -25,8 +26,9 @@ export interface TagLineProps {
   right?: string;
   /** Makes the right side a button with a chevron.down (the occasion picker, 02 D7). */
   onPressRight?: () => void;
-  /** Right side color: ink2 (occasion) or accent ("How I score ›" link). */
-  rightColor?: 'ink2' | 'accent';
+  /** Right side color: ink2 (occasion) or a link ("How I score ›"). Links draw in ink (#231: copper is
+   *  only for score movement); 'accent' is kept as an alias so callers needn't change. */
+  rightColor?: 'ink2' | 'ink' | 'accent';
   /** Hint for the pressable right side. */
   rightHint?: string;
   /** Spoken form, e.g. "Fit check, full. Occasion: Date. Double-tap to change." */
@@ -39,7 +41,7 @@ export function TagLine({ left, right, onPressRight, rightColor = 'ink2', rightH
   const chevron = onPressRight && rightColor === 'ink2';
   const rightText = right ? (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-      <MonoLabel color={rightColor}>{right}</MonoLabel>
+      <MonoLabel color={rightColor === 'accent' ? 'ink' : rightColor}>{right}</MonoLabel>
       {chevron ? <Icon name="chevronDown" size={10} weight="semibold" color="ink2" scalesWithText /> : null}
     </View>
   ) : null;

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { AccessibilityInfo, Platform, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { KButton, KCard, KCardSection, KText, Seam, TagLine, opacity, size, space, useTheme } from '@/design-system';
+import { KButton, KCard, KCardSection, KText, Seam, TagLine, opacity, radius, size, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { ClosetTile } from '@/features/closet/ClosetTile';
@@ -50,7 +50,7 @@ export function tapAs(value: string): string {
 
 export function TapCard({ row }: { row: FitCheckRow }) {
   const tap = row.details.tap!;
-  const { colors, a11y, isAccessibilitySize } = useTheme();
+  const { a11y, isAccessibilitySize } = useTheme();
   const [busy, setBusy] = useState(tap.answer !== null);
   const question = tapQuestion(tap);
   const choice = tapChoice(tap, tap.default);
@@ -80,16 +80,9 @@ export function TapCard({ row }: { row: FitCheckRow }) {
         <KCardSection>
           <TagLine left={t(row.isPartial ? 'card.tag.partial' : 'card.tag.full')} right={occasionLabel(tap.occasion)} />
           <View style={styles.qRow}>
-            {isAccessibilitySize ? null : known && piece ? (
-              // His piece, as his closet draws it, where the score will land.
-              <ClosetTile item={piece} size={76} aspect={62 / 76} radius={12} decorative />
-            ) : (
-              <View
-                style={[styles.placeholder, { backgroundColor: colors.surface2 }]}
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-              />
-            )}
+            {/* His piece, as his closet draws it, where the score will land. No piece to show: no slot (an empty grey
+                square read as a missing photo). */}
+            {!isAccessibilitySize && known && piece ? <ClosetTile item={piece} size={76} aspect={62 / 76} radius={radius.thumb} decorative /> : null}
             <View style={styles.qText}>
               <KText variant="headline" accessibilityRole="header">
                 {question}
@@ -140,7 +133,6 @@ export function TapCard({ row }: { row: FitCheckRow }) {
 
 const styles = StyleSheet.create({
   qRow: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  placeholder: { width: 76, height: 62, borderRadius: 12 },
   qText: { flex: 1, gap: 4 },
   pair: { flexDirection: 'row', gap: 8 },
   half: { flex: 1 },

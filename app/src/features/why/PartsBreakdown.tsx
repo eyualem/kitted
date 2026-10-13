@@ -61,11 +61,12 @@ function PartsStrip({ cells, label }: { cells: StripCell[]; label: string }) {
         <View
           key={c.part}
           style={{
-            flex: 1, minWidth: 0, alignItems: 'center', gap: 4, paddingHorizontal: 2,
+            // 6 pt each side so the longest label ("Proportions") shrinks to fit instead of touching the hairline.
+            flex: 1, minWidth: 0, alignItems: 'center', gap: 4, paddingHorizontal: 6,
             borderLeftWidth: i === 0 ? 0 : 1, borderLeftColor: colors.line,
           }}
         >
-          <KText variant="caption" weight="600" color={c.gain ? 'accent' : 'ink2'} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+          <KText variant="caption" weight="600" color={c.gain ? 'accent' : 'ink2'} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
             {c.label}
           </KText>
           <View style={c.gain ? { backgroundColor: colors.accentSoft, borderRadius: 8, paddingHorizontal: 6 } : { paddingHorizontal: 6 }}>

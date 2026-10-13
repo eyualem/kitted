@@ -31,12 +31,12 @@ export function BirthYearSheet() {
             onPress={() => void choose(y)}
             accessibilityRole="button"
             accessibilityState={{ selected: y === picked }}
-            style={({ pressed }) => [styles.row, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.line }, pressed && { backgroundColor: colors.surface2 }]}
+            style={({ pressed }) => [styles.row, i > 0 && { borderTopWidth: 1, borderTopColor: colors.line }, pressed && { backgroundColor: colors.surface2 }]}
           >
             <KText variant="body" weight={y === picked ? '600' : '400'} tabular>
               {String(y)}
             </KText>
-            {y === picked ? <Icon name="check" size="small" color="accent" /> : null}
+            {y === picked ? <Icon name="check" size="small" color="ink" /> : null}
           </Pressable>
         ))}
       </View>
@@ -45,6 +45,6 @@ export function BirthYearSheet() {
 }
 
 const styles = StyleSheet.create({
-  list: { borderWidth: StyleSheet.hairlineWidth, borderRadius: 20, overflow: 'hidden' },
+  list: { borderWidth: 1, borderRadius: 20, borderCurve: 'continuous', overflow: 'hidden' },
   row: { minHeight: 44, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
 });

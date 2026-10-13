@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
-import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, useTheme } from '@/design-system';
+import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 import { useDictation } from './useDictation';
 
@@ -125,6 +125,9 @@ export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle
               accessibilityLabel={t('composer.a11y.field')}
               multiline
               numberOfLines={1}
+              // The body style's size and leading, scaling with Dynamic Type up to the controls' 2× cap
+              // (TextInput takes no dynamicTypeRamp, so it scales linearly like the other controls).
+              allowFontScaling
               maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
               style={[styles.input, { color: colors.ink, paddingLeft: camera ? 4 : 12 }]}
             />
@@ -175,10 +178,10 @@ function Bar({ k, level, color }: { k: number; level: SharedValue<number>; color
 }
 
 const styles = StyleSheet.create({
-  wrap: { paddingHorizontal: 16, paddingTop: 8 },
+  wrap: { paddingHorizontal: space.gutter, paddingTop: space.s },
   capsule: { minHeight: H, flexDirection: 'row', alignItems: 'center', gap: 4, padding: 6, overflow: 'hidden' },
   circle: { width: BTN, height: BTN, borderRadius: BTN / 2, alignItems: 'center', justifyContent: 'center' },
-  input: { flex: 1, fontSize: 17, lineHeight: 22, paddingTop: 9, paddingBottom: 9, paddingRight: 4, maxHeight: 120 },
-  voice: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 6 },
+  input: { flex: 1, fontSize: textStyles.body.fontSize, lineHeight: textStyles.body.lineHeight, paddingTop: 9, paddingBottom: 9, paddingRight: space.xs, maxHeight: 120 },
+  voice: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: space.s, paddingHorizontal: space.s },
   wave: { flexDirection: 'row', alignItems: 'center', gap: 3, height: 24 },
 });

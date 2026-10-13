@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { localParts, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
-  Icon, KButton, KCard, KText, MorphPicker, NeckDownPhoto, TextLink, displayScore, opacity, scoreWordLabel, useTheme,
+  Icon, KButton, KCard, KCardSection, KText, MonoLabel, MorphPicker, NeckDownPhoto, TextLink, displayScore, opacity, radius, scoreWordLabel, space, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -135,15 +135,15 @@ function FullCard({ m }: { m: Model }) {
   return (
     <KCard>
       <HeroStrip items={enough ? m.items : m.known} needs={needs} />
-      <View style={{ paddingHorizontal: 18, paddingTop: 14, paddingBottom: 12, gap: 10 }}>
-        <View style={{ gap: 4 }}>
-          <View style={isAccessibilitySize ? { gap: 4 } : { flexDirection: 'row', alignItems: 'baseline', gap: 10 }}>
+      <KCardSection>
+        <View style={{ gap: space.xs }}>
+          <View style={isAccessibilitySize ? { gap: space.xs } : { flexDirection: 'row', alignItems: 'baseline', gap: space.s }}>
             <KText variant="title3" weight="600" style={{ flex: isAccessibilitySize ? undefined : 1 }} accessibilityRole="header">
               {title}
             </KText>
             {weather ? <WeatherBadge w={weather} /> : null}
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: space.s }}>
             <MorphPicker
               inline
               label={cardOccasionLabel(row.occasion)}
@@ -178,7 +178,7 @@ function FullCard({ m }: { m: Model }) {
           {why}
         </KText>
         {wearing ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s }}>
             <Icon name="check" size="small" color="ink2" weight="semibold" />
             <KText variant="footnote" color="ink2">
               {t('idea.logged')}
@@ -186,7 +186,7 @@ function FullCard({ m }: { m: Model }) {
           </View>
         ) : null}
         {enough && !wearing ? (
-          <View style={isAccessibilitySize ? { gap: 8 } : { flexDirection: 'row', gap: 8 }}>
+          <View style={isAccessibilitySize ? { gap: space.rowGap } : { flexDirection: 'row', gap: space.rowGap }}>
             <KButton title={t('idea.wear')} size="regular" fullWidth={isAccessibilitySize} style={isAccessibilitySize ? undefined : { flex: 1 }} onPress={() => void wear()} />
             <KButton title={t('idea.swapShort')} size="regular" kind="secondary" fullWidth={isAccessibilitySize} onPress={swap} accessibilityLabel={t('idea.swap')} />
           </View>
@@ -204,7 +204,7 @@ function FullCard({ m }: { m: Model }) {
             </View>
           )
         ) : null}
-      </View>
+      </KCardSection>
     </KCard>
   );
 }
@@ -222,7 +222,7 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
   return (
     <View
       onLayout={(e) => setW(e.nativeEvent.layout.width)}
-      style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 1, backgroundColor: colors.line, borderTopLeftRadius: 26, borderTopRightRadius: 26, overflow: 'hidden' }}
+      style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 1, backgroundColor: colors.line, borderTopLeftRadius: radius.card, borderTopRightRadius: radius.card, overflow: 'hidden' }}
     >
       {tileW > 0
         ? [
@@ -232,8 +232,8 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
               </View>
             )),
             ...needs.map((n) => (
-              <View key={`need-${n}`} accessible accessibilityLabel={missingLabel(n)} style={{ width: tileW, height: tileH, backgroundColor: colors.surface2, padding: 8 }}>
-                <View style={{ flex: 1, borderRadius: 14, borderCurve: 'continuous', borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.inkFaint, alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+              <View key={`need-${n}`} accessible accessibilityLabel={missingLabel(n)} style={{ width: tileW, height: tileH, backgroundColor: colors.surface2, padding: space.s }}>
+                <View style={{ flex: 1, borderRadius: 14, borderCurve: 'continuous', borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.inkFaint, alignItems: 'center', justifyContent: 'center', gap: space.xs }}>
                   <Icon name="plus" size="small" color="ink3" />
                   <KText variant="caption" color="ink3" numberOfLines={1}>
                     {missingLabel(n)}
@@ -251,7 +251,7 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
 function WeatherBadge({ w }: { w: DayWeather }) {
   const { now, later } = badgeTemps(w);
   return (
-    <View accessible accessibilityLabel={t('idea.badge.a11y', { now, later })} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+    <View accessible accessibilityLabel={t('idea.badge.a11y', { now, later })} style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}>
       <Icon name={weatherSymbol(w) as never} size={15} color="ink2" />
       <KText variant="subheadline" weight="500" color="ink2" style={{ fontVariant: ['tabular-nums'] }}>
         {`${now}°→${later}°`}
@@ -263,7 +263,7 @@ function WeatherBadge({ w }: { w: DayWeather }) {
 function LocationAsk({ onAllow }: { onAllow: () => void }) {
   const { colors } = useTheme();
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface2, borderRadius: 12, borderCurve: 'continuous', paddingVertical: 8, paddingLeft: 10, paddingRight: 6 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s, backgroundColor: colors.surface2, borderRadius: radius.thumb, borderCurve: 'continuous', paddingVertical: space.s, paddingLeft: space.m, paddingRight: space.s }}>
       <Icon name="location" color="ink2" />
       <View style={{ flex: 1 }}>
         <KText variant="subheadline" weight="600">
@@ -293,7 +293,7 @@ function CheckedRow({ m }: { m: Model }) {
     <CollapsedShell
       onPress={messageId ? () => setStylistAction({ kind: 'scrollTo', messageId }) : undefined}
       a11y={t('idea.a11y.collapsed', { when: whenLabel(m.row), occasion, what, score: displayScore(score), word: scoreWordLabel(score) })}
-      left={photo ? <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={44} height={56} borderRadii={{ tl: 8, tr: 8, br: 8, bl: 8 }} /> : null}
+      left={photo ? <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={44} height={56} borderRadii={{ tl: radius.thumb, tr: radius.thumb, br: radius.thumb, bl: radius.thumb }} /> : null}
       tag={`${whenLabel(m.row)} · ${occasion}`}
       title={what}
       right={
@@ -344,12 +344,10 @@ function PastRow({ m }: { m: Model }) {
 
 function CollapsedShell({ tag, title, left, right, body, onPress, a11y }: { tag: string; title?: string; left?: React.ReactNode; right?: React.ReactNode; body?: React.ReactNode; onPress?: () => void; a11y: string }) {
   const content = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, paddingHorizontal: 14 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.cardPadH, paddingVertical: space.cardPadV }}>
       {left}
-      <View style={{ flex: 1, gap: 4 }}>
-        <KText variant="footnote" color="ink2" mono="label">
-          {tag}
-        </KText>
+      <View style={{ flex: 1, gap: space.xs }}>
+        <MonoLabel>{tag}</MonoLabel>
         {title ? (
           <KText variant="subheadline" weight="600">
             {title}

@@ -35,7 +35,8 @@ export function StylistBar() {
         onPress={() => router.push('/camera')}
         accessibilityRole="button"
         accessibilityLabel={t('composer.a11y.camera')}
-        hitSlop={4}
+        // 38 pt circle (+4 = 46) or the 30 pt inline glyph (+7 = 44): always a 44 pt target.
+        hitSlop={inline ? 7 : 4}
         style={({ pressed }) => [inline ? styles.cameraInline : [styles.camera, { backgroundColor: colors.primary }], { opacity: pressed ? opacity.pressed : 1 }]}
       >
         <Icon name="camera" size={inline ? 20 : 19} color={inline ? colors.ink : colors.onPrimary} />

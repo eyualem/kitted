@@ -1,33 +1,40 @@
-// FramingOverlay (02 D5, 03 camera): a head ellipse + body outline over the detected body box,
-// white 2 pt; dashed 7/5 while searching, solid when good. Shoe snap: a dashed rectangle over
-// the lower part of the preview, labeled. Decorative (the tip pill carries the words).
+// FramingOverlay (02 D5, 03 camera): a head outline + body outline over the detected body box,
+// white 2 pt; dashed 7/5 while searching, solid when good. The head is drawn exactly like the
+// body (same stroke, same dash, no fill): Kitted never judges the face, so the guide mustn't
+// spotlight it. The outline stays inside the band between the top bar and the bottom controls.
+// Shoe snap: a dashed rectangle over the lower part of the preview, labeled. Decorative (the tip
+// pill carries the words).
 import { StyleSheet, View } from 'react-native';
 import Svg, { Ellipse, Rect } from 'react-native-svg';
 import { KText, fixed } from '@/design-system';
 import type { ViewBox } from '../../../modules/kitted-vision';
 
-export function BodyOutline({ box, solid, width, height }: { box: ViewBox; solid: boolean; width: number; height: number }) {
+export function BodyOutline({
+  box, solid, width, height, minY = 0, maxY = height,
+}: { box: ViewBox; solid: boolean; width: number; height: number; minY?: number; maxY?: number }) {
   const dash = solid ? undefined : '7 5';
+  // Clamp the detected box into the free band, so the guide never runs behind the controls.
+  const y0 = Math.max(box.y, minY);
+  const y1 = Math.max(y0, Math.min(box.y + box.height, maxY));
+  const h = y1 - y0;
   // Mockup 5: a tall head oval (≈ 1.55 : 1) over a narrow, rounded body outline.
   const headW = box.width * 0.33;
-  const headH = Math.min(box.height * 0.16, headW * 1.55);
-  const bodyTop = box.y + headH * 1.05;
+  const headH = Math.min(h * 0.16, headW * 1.55);
+  const bodyTop = y0 + headH * 1.05;
+  const stroke = { stroke: fixed.white, strokeWidth: 2, strokeDasharray: dash, fill: 'none' } as const;
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-      <Svg width={width} height={height} style={{ shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 3, shadowOffset: { width: 0, height: 0 } }}>
-        <Ellipse cx={box.x + box.width / 2} cy={box.y + headH / 2} rx={headW / 2} ry={headH / 2} stroke={fixed.white} strokeWidth={2} fill="none" />
+      <Svg width={width} height={height} style={{ shadowColor: fixed.black, shadowOpacity: 0.35, shadowRadius: 3, shadowOffset: { width: 0, height: 0 } }}>
         {/* Keyed by state: react-native-svg keeps an old dash pattern when the prop is removed. */}
+        <Ellipse key={solid ? 'head-solid' : 'head-dashed'} cx={box.x + box.width / 2} cy={y0 + headH / 2} rx={headW / 2} ry={headH / 2} {...stroke} />
         <Rect
           key={solid ? 'solid' : 'dashed'}
           x={box.x}
           y={bodyTop}
           width={box.width}
-          height={Math.max(0, box.y + box.height - bodyTop)}
+          height={Math.max(0, y1 - bodyTop)}
           rx={box.width * 0.22}
-          stroke={fixed.white}
-          strokeWidth={2}
-          strokeDasharray={dash}
-          fill="none"
+          {...stroke}
         />
       </Svg>
     </View>
