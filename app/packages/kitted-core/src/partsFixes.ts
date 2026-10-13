@@ -58,7 +58,10 @@ export interface PartsNextLevel {
   part: PartName;
   copy: string;
   when?: Record<string, unknown>;
-  edits: PartsFixEdit[];
+  /** v9 (#232): a stylist's tip with no number (a cuff, a hem, the layer underneath): shown whenever there's no fix and
+   *  no free Smaller step, ahead of the other lines; no edit is scored. */
+  always?: boolean;
+  edits?: PartsFixEdit[];
   /** His first pick's path to 8: tried first, only when this is his first pick and the edited outfit reads as it. */
   style?: string;
   /** With `style`: not shown when the Smaller step on the card is in this group (the same move said twice). */
@@ -93,6 +96,8 @@ export interface PartsFixCatalog {
     raisesCondition: string;
     raisesOccasion: string;
     smallerStepLabel: string;
+    /** #232: the label over a stylist's tip (a cuff, a hem, the layer underneath). */
+    tipLabel: string;
     smallerStep: string;
     nextLevelLabel: string;
     noFixes: string;
@@ -261,9 +266,31 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
     return true;
   };
 
+  /** The piece a longer, untucked layer hangs out under (parts_fixes._peek_under): outer layers first, then tops. */
+  const peekUnder = (r: Reading): Garment | null => {
+    const upper = [...r.garments.filter((g) => g.category === "outerwear"), ...r.garments.filter((g) => g.category === "top")];
+    for (let i = 0; i < upper.length; i++) {
+      if (!inList(upper[i]!.length, ["cropped", "at_belt"])) continue;
+      for (const b2 of upper.slice(i + 1)) {
+        if (inList(b2.length, ["mid_fly", "below_crotch"]) && !inList(b2.tucked, ["full", "half"])) return upper[i]!;
+      }
+    }
+    return null;
+  };
+  /** The styles the outfit reads as, pick-free (parts_fixes._reads_as). */
+  const readsAs = (r: Reading): readonly string[] => RE.detectStyles(r.garments, []).detected as readonly string[];
+
   const whenOk = (when: Record<string, unknown> | undefined, r: Reading): boolean => {
     for (const [k, v] of Object.entries(when ?? {})) {
-      if (k === "not_warm") {
+      if (k === "reads_as_in") {
+        if (truthy(v) && !readsAs(r).some((st) => (v as unknown[]).includes(st))) return false;
+      } else if (k === "peek_under") {
+        if (truthy(v) && peekUnder(r) === null) return false;
+      } else if (k === "not_street_stack") {
+        // #221: a stack on wide jeans is the streetwear look, not a fault
+        const bot = first(r, "bottom");
+        if (truthy(v) && bot !== null && inList(bot.leg_shape, ["relaxed", "wide"]) && readsAs(r).includes("streetwear")) return false;
+      } else if (k === "not_warm") {
         if (truthy(v) && warm) return false;
       } else if (k === "no_outer") {
         if (truthy(v) && first(r, "outerwear") !== null) return false;
@@ -575,10 +602,27 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
     out.smallerStep = { id: s.id, class: s.cls, itemId: s.itemId, part: top.part, from: top.from, to: top.to, rawGain: s.rawGain, line };
   }
 
+  // v9 (#232): a stylist's tip with no number, ahead of a Smaller step that means buying something
+  let tipShown = false;
   if (picked.length === 0 && !lounge) {
+    const step = out.smallerStep;
+    if (step === null || !CAT.classes[step.class]!.free || step.class === "own") {
+      for (const nl of CAT.nextLevel) {
+        if (!truthy(nl.always) || !whenOk(nl.when, w)) continue;
+        const piece = truthy(nl.when?.["peek_under"]) ? peekUnder(w) : first(w, "bottom");
+        out.nextLevel = { id: nl.id, part: nl.part, line: fill(nl.copy, { name: garmentName(piece) }), style: null };
+        out.smallerStep = null;
+        tipShown = true;
+        break;
+      }
+    }
+  }
+
+  if (picked.length === 0 && !lounge && !tipShown) {
     const step = out.smallerStep;
     const stepGroup = step ? (cands.find((x) => x.id === step.id)?.group ?? null) : null;
     for (const nl of CAT.nextLevel) {
+      if (truthy(nl.always)) continue;
       const st = nl.style ?? null;
       if (st !== null) {
         // his first pick's path to 8
@@ -587,7 +631,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
         continue; // the generic lines: no fix and no Smaller step
       }
       if (!whenOk(nl.when, w)) continue;
-      const ev = evaluate(nl.edits, nl.look);
+      const ev = evaluate(nl.edits ?? [], nl.look);
       if (ev === null) continue;
       if (st !== null && !(ev.res.detectedStyles as readonly string[]).includes(st)) continue;
       const after = ev.res.parts[nl.part];

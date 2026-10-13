@@ -29,7 +29,8 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Eight engines. engine="v8" is THE DEFAULT since Oct 12 (the gold-set retune, DECISIONS-LOG #227-228: TUNE["v8"]
+Nine engines. engine="v9" is THE DEFAULT since Oct 12 (v8 plus four consensus fixes, TUNE["v9"], #232);
+engine="v8" (the default earlier on Oct 12 (the gold-set retune, DECISIONS-LOG #227-228: TUNE["v8"]
 below, ../gold_tune.py, report ../../rubric/research/parts/gold-retune.md). engine="v7" (the default Oct 11-12: v6 plus "a condition read moves points only on a garment
 read clear" (TUNE["v7"], ../parts7_test.py, DECISIONS-LOG #219). engine="v6" (the default before it: v5 plus PB1 "roomier than the look" (the council's per-style
 bands, back as one Proportions fault), H2 judged on every style the outfit reads as, and Event's softer band; see
@@ -55,7 +56,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-8 (Oct 12, 2026)"
+VERSION = "parts-proto-9 (Oct 12, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
             "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
@@ -274,7 +275,7 @@ for _e in ("v1", "v2", "v3", "v4", "v5"):
 TUNE["v7"] = dict(TUNE["v6"], cond_clear_only=True)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6"):
     TUNE[_e].update(cond_clear_only=False)
-# v8 (Oct 12, THE DEFAULT since the founder adopted it, #227-228; test ../gold_tune.py, report
+# v8 (Oct 12, the default until v9, #227-228; test ../gold_tune.py, report
 # ../../rubric/research/parts/gold-retune.md). The gold set (#224) showed the parts engine barely follows a 5-judge
 # panel (r 0.33), and the founder's 20 blind ratings agree with the panel (r 0.69), not the app (-0.09; #225). Every
 # change below reads only fields the live reading already has, and was chosen on the TUNE half of the gold photos
@@ -319,6 +320,30 @@ TUNE["v8"] = dict(TUNE["v7"], ff5_roomy=True, ff7_loose=True, pn_narrow=1.0, pn_
                   weights={"proportions": 0.30, "fit": 0.15, "color": 0.20, "shoes": 0.15, "cohesion": 0.20},
                   penalty={"under": 6.5, "rate": 0.5, "cap": 1.0})
 VERSIONS["v8"] = "parts-proto-8 (Oct 12, 2026)"
+# v9 (Oct 12, THE DEFAULT; DECISIONS-LOG #232; the founder: "Proceed" on #229's consensus fixes). Four rules most
+# stylists agree on, from the stylist critic's 90-outfit check (rubric/research/parts/v8-critique.md, C1-C4). Each
+# reads only fields the live reading has; each knob is 0/False in v1-v8.
+#   int_top / int_hoodie: an interview needs a collared top, a knit or a jacket. Without one the score is held to
+#     int_top (6.0); a hoodie or sweatshirt with nothing over it is held to int_hoodie (5.0). Business-casual guidance
+#     is near-universal here, and v8 gave a tucked boxy tee + wide trousers + loafers 8.0 at an interview.
+#   dd_same: two denim pieces in the same light or mid wash cost this on Color (the CC5 tip, now a fault); contrasting
+#     washes cost nothing and lose the tip. Put This On / GQ: double denim works when the washes differ. Dark raw denim
+#     on dark is a deliberate tonal heritage look and stays free (gold ig-040 panel 8.0, rd-009 7.5: judges praise it).
+#   gt1: an oversized graphic tee (volume >= 4) under a tailored jacket costs this on Style (KD-9: a blazer excused any
+#     top under it). A fitted graphic or plain tee under a blazer stays free.
+#   cl1_own: the loud-print fault (CL1) skips a piece that is an anchor or home piece of a style the outfit reads as
+#     where loud prints are native (streetwear, workwear, vintage sport, outdoor: a box-logo tee, a buffalo flannel),
+#     unless it is bright; never in the quiet looks (an argyle sweater stays loud in smart casual). On v8 a textbook fit led its card
+#     with "the big, loud print takes over the outfit".
+_OFF9 = dict(int_top=None, int_hoodie=None, dd_same=0.0, gt1=0.0, cl1_own=False)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8"):
+    TUNE[_e].update(_OFF9)
+TUNE["v9"] = dict(TUNE["v8"], int_top=6.0, int_hoodie=5.0, dd_same=1.0, gt1=1.5, cl1_own=True)
+VERSIONS["v9"] = "parts-proto-9 (Oct 12, 2026)"
+INT_TOPS = R.COLLARED | {"sweater", "cardigan", "quarter_zip", "camp_collar_shirt", "flannel_shirt", "overshirt", "denim_shirt"}
+INT_OUTERS = (R.DRESSED_OUTER | R.TAILORED_OUTER) - {"track_jacket"}   # any tailored jacket counts (a suit jacket too)
+HOODIES = {"hoodie", "sweatshirt"}
+LOUD_NATIVE = {"streetwear", "workwear", "vintage_sport", "outdoor"}   # looks whose own pieces are loud by design
 WEIGHTS ={"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
 PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
@@ -721,10 +746,19 @@ def _color(o, boldness, t):
         p.add(-0.75, "the same pattern twice", "CC6_same_pattern")
     if len(pats) >= 3 and not street:
         p.add(-1.5, "three patterns at once", "CC6_three_patterns")
+    denims = [g for g in main if R.is_denim(g)]
+    if t["dd_same"] and any(sum(1 for x in denims if x.get("color_family") == g.get("color_family")) >= 2
+                            for g in denims if g.get("color_family") in ("denim_light", "denim_mid")):
+        p.add(-t["dd_same"], "double denim in the same wash blurs together; make the washes clearly different",
+              "CC5_same_wash_denim")                                   # v9: same light or mid wash is a fault
     if t["cl1"]:                                                      # v8 candidate: a loud print (0 in v1-v7)
+        co = R.Outfit(o["main"]) if t["cl1_own"] else None
+        own = lambda g: bool(co) and not R.is_bright(g) and any(R.STYLES[st][0](g, co)[0] >= 1 for st in o["det"]  # noqa: E731
+                                                                if st in LOUD_NATIVE)
         loud = next((g for g in main if g.get("category") in ("top", "outerwear") and (
             (g.get("pattern") == "graphic" and (R.is_bright(g) or (g.get("logo") == "large" and g.get("subcategory") in ("tee", "graphic_tee"))))
-            or (g.get("pattern") in ("checks_plaid", "floral", "camo", "other") and g.get("pattern_scale") == "large"))), None)
+            or (g.get("pattern") in ("checks_plaid", "floral", "camo", "other") and g.get("pattern_scale") == "large"))
+            and not own(g)), None)                                    # v9: a look's own loud piece isn't "loud"
         if loud is not None:
             what = (loud.get("subcategory") or "piece").replace("_", " ")
             kind = "print" if loud.get("pattern") == "graphic" else (loud.get("pattern") or "pattern").replace("_", " ").replace("checks plaid", "check")
@@ -733,7 +767,7 @@ def _color(o, boldness, t):
     # tips that need readings we don't have (lightness for muddy/tonal, measured wash for double denim)
     if len(families) == 1:
         p.tip("all one color: a lighter or darker piece would add depth", "CP3_tonal_flat")
-    if sum(1 for g in main if R.is_denim(g)) >= 2:
+    if len(denims) >= 2 and not t["dd_same"]:
         p.tip("double denim: make the washes clearly different", "CC5_denim_near_match", would=-1.0)
     if fault:
         return p
@@ -991,6 +1025,11 @@ def _cohesion(o, boldness, t):
         p.add(-h3, h3_line, "H3_another_world")
     if sx_tip:
         p.tip(sx_tip, "SX1_tip", would=-t["sx"])
+    # v9: GT1 an oversized graphic tee under a tailored jacket (0 in v1-v8; a fitted one stays free)
+    if t["gt1"] and any(x.get("subcategory") in TAILORED for x in o["outers"]) and any(
+            g.get("subcategory") == "graphic_tee" and (g.get("volume") or 3) >= 4 for g in o["tops"]):
+        p.add(-t["gt1"], "an oversized graphic tee fights the tailored jacket; a fitted plain tee works under it",
+              "GT1_graphic_under_tailoring")
     # v8 candidate: a tank top as the only top, out of the house (0 in v1-v7; under a collared shirt it's refiled a vest)
     if (t["tk1"] and not o["outers"] and len(o["tops"]) == 1 and o["tops"][0].get("subcategory") == "tank_top"
             and o.get("occasion") not in LOUNGE_OK):
@@ -1140,6 +1179,14 @@ def _occasion(o, occasion, t):
     if occasion in INTERVIEWISH and S is not None and S.get("subcategory") in R.FOOT_KIND["sneakers"] \
             and any(x.get("subcategory") in TAILORED for x in o["outers"]):
         ceilings.append((7.0, "sneakers under a blazer at an interview"))
+    if t["int_top"] is not None and occasion in INTERVIEWISH:          # v9: an interview wants a collar, a knit or a jacket
+        jacket = any(x.get("subcategory") in INT_OUTERS for x in o["outers"])
+        dressed_top = any(x.get("subcategory") in INT_TOPS for x in o["tops"])
+        if not jacket and not dressed_top:
+            if any(x.get("subcategory") in HOODIES for x in o["tops"] + o["outers"]):
+                ceilings.append((t["int_hoodie"], "a hoodie at an interview"))
+            else:
+                ceilings.append((t["int_top"], "an interview wants a collared shirt, a knit or a jacket"))
     if occasion in INTERVIEWISH and any(g.get("logo") == "large" and g.get("certainty") == "clear" for g in o["main"]):
         ceilings.append((6.5, "a big logo at an interview"))
     out["deduction"] = round(ded, 3)
@@ -1154,13 +1201,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v8", tune=None):
+def _tune(engine="v9", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v8", tune=None):
+def earned_bonus(part_scores, engine="v9", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1174,7 +1221,7 @@ def earned_bonus(part_scores, engine="v8", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v8", tune=None):
+def piled_penalty(part_scores, engine="v9", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1185,7 +1232,7 @@ def piled_penalty(part_scores, engine="v8", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v8", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v9", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1224,10 +1271,10 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v8", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v9", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v8" (the gold-set retune, default), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v9" (v8 + four consensus fixes, default), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)

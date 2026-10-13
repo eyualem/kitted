@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216, v6 rules #217; v8 rules Oct 12, #228). One or more made-up
-outfits per rule ID in ../rubric/v5-styles.md, each asserting that the rule works in the parts engine (parts_proto.py,
-default v8): the
+"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216, v6 rules #217; v8 rules Oct 12, #228; v9 rules Oct 12, #232). One or
+more made-up outfits per rule ID in ../rubric/v5-styles.md, each asserting that the rule works in the parts engine
+(parts_proto.py, default v9): the
 right check fires (or doesn't), the right part moves by the right amount, and the final score lands in the right band.
 
   /usr/bin/python3 rules_conformance.py          -> runs every case against parts_proto.py; exits 1 on any failure;
@@ -450,9 +450,10 @@ case("COL-6-na", "COL-6", "only one piece of clothing in view: Color isn't score
 case("COL-7-tonal", "COL-7", "all black: a tip to add depth, no points",
      Rd(top("tee", "black"), bottom("jeans", "black", "straight"), shoe("chelsea_boot", "black")),
      {"tips": [F("CP3_tonal_flat", "color")], "part": {"color": {"score": 7.0}}, "band_in": ["Put together", "Sharp"]})
-case("COL-7-denim", "COL-7", "a denim jacket over jeans: a tip about the washes, no points",
+case("COL-7-denim", "COL-7", "a dark denim jacket over dark jeans: no double-denim tip any more, and no points ([COL-10])",
      Rd(TEE, outer("denim_jacket", "denim_dark"), DJEANS, WLS),
-     {"tips": [F("CC5_denim_near_match", "color")], "part": {"color": {"score": 7.0}}, "band_in": ["Put together", "Sharp"]})
+     {"tips_lacks": [F("CC5_denim_near_match", "color")], "not_fired": [F("CC5_same_wash_denim")],
+      "part": {"color": {"score": 7.0}}, "band_in": ["Put together", "Sharp"]})
 
 CL1 = "CL1_loud_print"
 case("COL-8-bright", "COL-8", "a bright red graphic tee with dark jeans and white leather sneakers: -1.5",
@@ -462,12 +463,13 @@ case("COL-8-logo", "COL-8", "a black graphic tee whose print is a large logo: -1
      Rd(top("graphic_tee", "black", logo="large"), DJEANS, WLS), {"fired": [F(CL1, "color", -1.5)], "band": "Put together"})
 case("COL-8-tee-logo", "COL-8", "a white tee printed with a large logo: -1.5",
      Rd(top("tee", "white", pattern="graphic", logo="large"), DJEANS, WLS), {"fired": [F(CL1, "color", -1.5)], "band": "Put together"})
-case("COL-8-plaid", "COL-8", "a large-check navy flannel over a tee with jeans and work boots: -1.5",
-     Rd(TEE, top("flannel_shirt", "navy", pattern="checks_plaid", pattern_scale="large"), DJEANS, BOOTS),
-     {"fired": [F(CL1, "color", -1.5)], "band": "Put together"})
+FLANNEL_L = top("flannel_shirt", "navy", pattern="checks_plaid", pattern_scale="large")
+case("COL-8-plaid", "COL-8", "a large-check navy flannel over a tee with khaki chinos and loafers (no look): -1.5",
+     Rd(TEE, FLANNEL_L, CHINOS, LOAFER), {"fired": [F(CL1, "color", -1.5)], "detected_lacks": ["workwear", "streetwear"],
+                                          "part": {"color": {"score": 5.5}}, "band": "Put together"})
 case("COL-8-medium", "COL-8", "the same flannel in a medium check: fine",
-     Rd(TEE, top("flannel_shirt", "navy", pattern="checks_plaid"), DJEANS, BOOTS), {"not_fired": [F(CL1)], "band": "Put together"},
-     vs={"case": "COL-8-plaid", "parts": {"color": 1.5}, "overall": "up"})
+     Rd(TEE, top("flannel_shirt", "navy", pattern="checks_plaid"), CHINOS, LOAFER), {"not_fired": [F(CL1)], "band": "Put together"},
+     vs={"case": "COL-8-plaid", "parts": {"color": 1.5}, "overall": "same"})
 case("COL-8-stripes", "COL-8", "a white oxford with large stripes: stripes are never loud",
      Rd(top("oxford_shirt", "white", pattern="stripes", pattern_scale="large"), CHINOS, LOAFER),
      {"not_fired": [F(CL1)], "band": "Put together"})
@@ -475,6 +477,54 @@ case("COL-8-plain", "COL-8", "a black graphic tee with a small print: fine", Rd(
      {"not_fired": [F(CL1)], "part": {"color": {"score": 7.0}}, "band": "Put together"})
 case("COL-8-hoodie", "COL-8", "a black hoodie with a large logo over wide jeans and chunky sneakers: streetwear's own piece, fine",
      Rd(top("hoodie", "black", pattern="graphic", logo="large"), WJEANS, CHUNKY), {"not_fired": [F(CL1)], "band": "Put together"})
+# COL-9 (v9): a loud look's own loud piece isn't "loud"
+case("COL-9-flannel", "COL-9", "the large-check flannel over a tee with dark jeans and work boots reads as workwear: its own piece, no charge",
+     Rd(TEE, FLANNEL_L, DJEANS, BOOTS),
+     {"not_fired": [F(CL1)], "detected_has": ["workwear"], "part": {"color": {"score": 7.0}}, "overall": 7.5, "band": "Put together"})
+case("COL-9-bright", "COL-9", "the same flannel in bright red: a bright piece is always charged",
+     Rd(TEE, mod(FLANNEL_L, color_family="red"), DJEANS, BOOTS),
+     {"fired": [F(CL1, "color", -1.5)], "detected_has": ["workwear"], "band": "Put together"},
+     vs={"case": "COL-9-flannel", "parts": {"color": -1.5}, "overall": "down"})
+case("COL-9-boxlogo", "COL-9", "a black graphic tee with a large logo over wide jeans and chunky sneakers reads as streetwear: no charge",
+     Rd(top("graphic_tee", "black", logo="large"), WJEANS, CHUNKY),
+     {"not_fired": [F(CL1)], "detected_has": ["streetwear"], "part": {"color": {"score": 7.0}}, "band": "Put together"})
+case("COL-9-nolook", "COL-9", "the same tee with dark straight jeans and white leather sneakers reads as nothing: charged",
+     Rd(top("graphic_tee", "black", logo="large"), DJEANS, WLS),
+     {"fired": [F(CL1, "color", -1.5)], "detected_lacks": ["streetwear"], "band": "Put together"})
+case("COL-9-streetbright", "COL-9", "a bright red graphic tee in a streetwear outfit: still charged",
+     Rd(top("graphic_tee", "red"), WJEANS, CHUNKY),
+     {"fired": [F(CL1, "color", -1.5)], "detected_has": ["streetwear"], "band": "Put together"})
+case("COL-9-argyle", "COL-9", "a large-print navy sweater with chinos and loafers (a quiet look): still charged",
+     Rd(top("sweater", "navy", pattern="other", pattern_scale="large"), CHINOS, LOAFER),
+     {"fired": [F(CL1, "color", -1.5)], "detected_has": ["smart_casual"], "band": "Put together"})
+# COL-10 (v9): double denim in the same light or mid wash
+MIDJ = bottom("jeans", "denim_mid", "straight")
+case("COL-10-mid", "COL-10", "a mid-wash denim jacket over mid-wash straight jeans: -1.0 on Color",
+     Rd(TEE, outer("denim_jacket", "denim_mid"), MIDJ, WLS),
+     {"fired": [F("CC5_same_wash_denim", "color", -1.0)], "part": {"color": {"score": 6.0}}, "band": "Put together"})
+case("COL-10-light", "COL-10", "the same in light wash: -1.0",
+     Rd(TEE, outer("denim_jacket", "denim_light"), bottom("jeans", "denim_light", "straight"), WLS),
+     {"fired": [F("CC5_same_wash_denim", "color", -1.0)], "band": "Put together"})
+case("COL-10-shirt", "COL-10", "a mid-wash denim shirt over mid-wash jeans with work boots: -1.0 (any two denim pieces)",
+     Rd(TEE, top("oxford_shirt", "denim_mid"), MIDJ, BOOTS),
+     {"fired": [F("CC5_same_wash_denim", "color", -1.0)], "band": "Put together"})
+case("COL-10-dark", "COL-10", "dark denim on dark denim: a deliberate tonal look, free",
+     Rd(TEE, outer("denim_jacket", "denim_dark"), DJEANS, WLS),
+     {"not_fired": [F("CC5_same_wash_denim")], "part": {"color": {"score": 7.0}}, "band": "Put together"},
+     vs={"case": "COL-10-mid", "parts": {"color": 1.0}})
+case("COL-10-black", "COL-10", "a black denim jacket over black jeans: black denim is free",
+     Rd(TEE, outer("denim_jacket", "black"), bottom("jeans", "black", "straight"), WLS),
+     {"not_fired": [F("CC5_same_wash_denim")], "part": {"color": {"score": 7.0}}, "band_in": ["Put together", "Sharp"]})
+case("COL-10-contrast", "COL-10", "a light-wash jacket over dark jeans: different washes, free, and no tip",
+     Rd(TEE, outer("denim_jacket", "denim_light"), DJEANS, WLS),
+     {"not_fired": [F("CC5_same_wash_denim")], "tips_lacks": [F("CC5_denim_near_match")], "part": {"color": {"score": 7.0}},
+      "band": "Put together"})
+case("COL-10-lightmid", "COL-10", "a light-wash jacket over mid-wash jeans: counts as different washes, free",
+     Rd(TEE, outer("denim_jacket", "denim_light"), MIDJ, WLS),
+     {"not_fired": [F("CC5_same_wash_denim")], "band": "Put together"})
+case("COL-10-blocks", "COL-10", "it's a color fault: a green sweater's quiet-accent reward goes",
+     Rd(top("sweater", "green"), outer("denim_jacket", "denim_mid"), MIDJ, WLS),
+     {"fired": [F("CC5_same_wash_denim", "color", -1.0)], "not_fired": [F("CP2_quiet_accent")], "band": "Put together"})
 
 # ===== Shoes (SHO) ===================================================================================================
 case("SHO-1-other", "SHO-1", "shoe type lost: Shoes isn't scored", Rd(TEE, DJEANS, shoe("other", "black")),
@@ -608,9 +658,10 @@ case("STY-5-blazer", "STY-5", "a tee under an unstructured blazer with trousers 
 case("STY-5-topcoat", "STY-5", "a hoodie under an overcoat with trousers and loafers: no charge",
      Rd(top("hoodie", "grey"), outer("overcoat", "navy"), mod(TROUSERS, color_family="charcoal"), LOAFER_BK),
      {"not_fired": [F("SX1_another_look")], "band_in": ["Put together", "Sharp"]})
-case("STY-5-gtblazer", "STY-5", "an oversized graphic tee under a blazer: no charge (the founder's open call)",
-     Rd(top("graphic_tee", "white", 4), outer("blazer", "navy"), mod(TROUSERS, color_family="charcoal"), LOAFER_BK),
-     {"not_fired": [F("SX1_another_look")], "band_in": ["Put together", "Sharp"]}, kd="KD-9")
+case("STY-5-gtblazer", "STY-5", "an oversized graphic tee under a blazer: the blazer still bridges this rule, but [STY-10] charges it",
+     Rd(top("graphic_tee", "white", 4), outer("blazer", "navy"), TROUSERS, LOAFER_BK),
+     {"not_fired": [F("SX1_another_look")], "fired": [F("GT1_graphic_under_tailoring", "cohesion", -1.5)],
+      "band_in": ["Getting there", "Put together"]})
 case("STY-5-sweatshirt", "STY-5", "a regular grey sweatshirt with navy chinos and loafers (Ivy): no charge",
      Rd(top("sweatshirt", "grey"), NCHINOS, LOAFER), {"not_fired": [F("SX1_another_look")], "band": "Put together"})
 case("STY-5-cityboy", "STY-5", "a boxy tee at the belt over wide trousers with loafers: minimal's own shape, no charge",
@@ -653,6 +704,25 @@ case("STY-9-shirt", "STY-9", "the tank under an open camp-collar shirt: not on i
 case("STY-9-gym", "STY-9", "a tank top with gym shorts and running shoes at the gym: fine",
      Rd(top("tank_top", "white"), bottom("athletic_shorts", "black", "straight", "na"), RUNNER),
      {"not_fired": [F(TK1)], "band": "Put together"}, occasion="gym")
+
+# STY-10 (v9): an oversized graphic tee under tailoring (closes KD-9)
+GT_BLAZER = Rd(top("graphic_tee", "black", 4), outer("unstructured_blazer", "navy"), DJEANS, LOAFER)
+case("STY-10-oversized", "STY-10", "an oversized graphic tee under an unstructured blazer with dark jeans and loafers: -1.5 Style",
+     GT_BLAZER, {"fired": [F("GT1_graphic_under_tailoring", "cohesion", -1.5)], "not_fired": [F("SX1_another_look")],
+                 "part": {"cohesion": {"score": 5.5}}, "overall": 7.0, "band": "Put together"})
+case("STY-10-fitted", "STY-10", "the same graphic tee at regular roominess: free",
+     Rd(top("graphic_tee", "black"), outer("unstructured_blazer", "navy"), DJEANS, LOAFER),
+     {"not_fired": [F("GT1_graphic_under_tailoring")], "band_in": ["Put together", "Sharp"]})
+case("STY-10-plain", "STY-10", "an oversized plain tee under a blazer: only a graphic tee is charged",
+     Rd(top("tee", "white", 4), outer("blazer", "navy"), TROUSERS, LOAFER_BK),
+     {"not_fired": [F("GT1_graphic_under_tailoring")], "band_in": ["Put together", "Sharp"]})
+case("STY-10-overcoat", "STY-10", "the oversized graphic tee under an overcoat: an overcoat isn't tailoring, free",
+     Rd(top("graphic_tee", "white", 4), outer("overcoat", "navy"), TROUSERS, LOAFER_BK),
+     {"not_fired": [F("GT1_graphic_under_tailoring")], "band_in": ["Put together", "Sharp"]})
+case("STY-10-stack", "STY-10", "with wide mid-wash jeans: adds to the blazer-with-jeans charge ([STY-3]), Style 4.0",
+     Rd(top("graphic_tee", "black", 4), outer("blazer", "navy"), WJEANS, LOAFER),
+     {"fired": [F("GT1_graphic_under_tailoring", "cohesion", -1.5), F("H3_another_world", "cohesion", -1.5)],
+      "part": {"cohesion": {"score": 4.0}}, "band": "Getting there"})
 
 # ===== Condition (CON) ===============================================================================================
 case("CON-1-stain", "CON-1", "a sure stain on the tee: -1.2", Rd(top("tee", "white", condition="stained"), DJEANS, WLS),
@@ -712,9 +782,12 @@ case("CON-5-dim", "CON-5", "in a dim photo nothing is checked, so no tip either"
 HOODIE_FIT = Rd(top("hoodie", "grey"), DJEANS, WLS)
 case("OCC-1-everyday", "OCC-1", "a hoodie, dark jeans and white sneakers at Everyday: right for it", HOODIE_FIT,
      {"ceiling": None, "occ_deduction": 0.0, "band": "Put together"})
-case("OCC-1-interview", "OCC-1", "the same at an interview (a level under its band): held to 6.0 and -0.5", HOODIE_FIT,
-     {"ceiling": 6.0, "occ_deduction": 0.5, "band": "Getting there"}, occasion="interview",
-     vs={"case": "OCC-1-everyday", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": "down"})
+OXFORD_FIT = Rd(top("oxford_shirt", "white"), DJEANS, CANVAS)
+case("OCC-1-oxford", "OCC-1", "an oxford, dark jeans and canvas sneakers at Everyday: right for it", OXFORD_FIT,
+     {"ceiling": None, "occ_deduction": 0.0, "band": "Put together"})
+case("OCC-1-interview", "OCC-1", "the same at an interview (a level under its band): held to 6.0 and -0.5", OXFORD_FIT,
+     {"ceiling": 6.0, "occ_deduction": 0.5, "occ_lines_has": ["too casual for interview"], "band": "Getting there"},
+     occasion="interview", vs={"case": "OCC-1-oxford", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": "down"})
 case("OCC-1-date", "OCC-1", "a hoodie, light-wash jeans and canvas sneakers on a date: half a level under, -0.25",
      Rd(top("hoodie", "grey"), bottom("jeans", "denim_light", "straight"), CANVAS),
      {"ceiling": None, "occ_deduction": 0.25, "occ_lines_has": ["a bit casual for date"], "band_in": ["Getting there", "Put together"]},
@@ -738,9 +811,42 @@ case("OCC-5-logo", "OCC-5", "a big logo the AI is sure of at an interview: held 
      Rd(top("sweater", "navy", logo="large", tucked="full"), TROUSERS, DERBY),
      {"ceiling": 6.5, "overall_max": 6.5, "band": "Getting there"}, occasion="interview")
 
+# OCC-7 (v9): an interview wants a collared top, a knit or a jacket
+case("OCC-7-hoodie", "OCC-7", "a hoodie, dark jeans and white sneakers at an interview: held to 5.0", HOODIE_FIT,
+     {"ceiling": 5.0, "overall": 5.0, "occ_lines_has": ["a hoodie at an interview"], "band": "Needs a fix"}, occasion="interview",
+     vs={"case": "OCC-1-everyday", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": "down"})
+case("OCC-7-openhoodie", "OCC-7", "a tee under an open zip hoodie at an interview: the hoodie as the jacket counts too, 5.0",
+     Rd(TEE, outer("hoodie", "grey"), DJEANS, WLS),
+     {"ceiling": 5.0, "occ_lines_has": ["a hoodie at an interview"], "band": "Needs a fix"}, occasion="interview")
+case("OCC-7-puffer", "OCC-7", "a hoodie under a puffer at an interview: a puffer isn't a jacket here, 5.0",
+     Rd(top("hoodie", "grey"), outer("puffer"), DJEANS, WLS),
+     {"ceiling": 5.0, "occ_lines_has": ["a hoodie at an interview"], "band": "Needs a fix"}, occasion="interview")
+case("OCC-7-boxytee", "OCC-7", "a tucked boxy tee, wide trousers and loafers at an interview (v8 gave 8.0): held to 6.0",
+     Rd(top("tee", "white", 4, tucked="full"), WTROUSERS, LOAFER_BK),
+     {"ceiling": 6.0, "overall": 6.0, "occ_lines_has": ["an interview wants a collared shirt, a knit or a jacket"],
+      "band": "Getting there"}, occasion="interview")
+case("OCC-7-teepuffer", "OCC-7", "a tee under a puffer at an interview: no collar, knit or jacket, held to 6.0 or lower",
+     Rd(TEE, outer("puffer"), DJEANS, WLS),
+     {"overall_max": 6.0, "occ_lines_lacks": ["a hoodie at an interview"], "band": "Getting there"}, occasion="interview")
+case("OCC-7-sweater", "OCC-7", "a sweater with trousers and derbies at an interview: a knit is enough, no hold",
+     Rd(top("sweater", "navy"), TROUSERS, DERBY),
+     {"ceiling": None, "band": "Put together"}, occasion="interview")
+case("OCC-7-bomber", "OCC-7", "a hoodie under a bomber at an interview: the bomber is a jacket, so only the too-casual hold ([OCC-1])",
+     Rd(top("hoodie", "grey"), outer("bomber"), DJEANS, WLS),
+     {"occ_lines_lacks": ["a hoodie at an interview", "an interview wants"], "band": "Getting there"}, occasion="interview")
+case("OCC-7-blazer", "OCC-7", "a plain tee under a blazer with trousers and loafers at an interview: no hold",
+     Rd(TEE, outer("blazer", "navy"), TROUSERS, LOAFER),
+     {"ceiling": None, "band_in": ["Put together", "Sharp"]}, occasion="interview")
+case("OCC-7-suitjacket", "OCC-7", "a tee under a suit jacket at an interview: the suit jacket counts as a jacket, no hold",
+     Rd(TEE, outer("suit_jacket", "navy"), bottom("suit_trousers", "navy", "straight", "no_break"), DRESS),
+     {"occ_lines_lacks": ["a hoodie at an interview", "an interview wants"], "ceiling": None, "band": "Put together"},
+     occasion="interview")
+case("OCC-7-everyday", "OCC-7", "the hoodie fit at Everyday: the rule is only for interviews", HOODIE_FIT,
+     {"occ_lines_lacks": ["a hoodie at an interview"], "band": "Put together"})
+
 case("OCC-6-hoodie", "OCC-6", "the hoodie, dark jeans and white sneakers at an event: half a level under its band, -0.25, no ceiling",
      HOODIE_FIT, {"ceiling": None, "occ_deduction": 0.25, "occ_lines_has": ["a bit casual for event"], "band": "Put together"},
-     occasion="event", vs={"case": "OCC-1-interview", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": "up"})
+     occasion="event", vs={"case": "OCC-7-hoodie", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": "up"})
 case("OCC-6-oxford", "OCC-6", "an oxford, chinos and loafers at an event: right for it",
      Rd(top("oxford_shirt", "white"), CHINOS, LOAFER), {"ceiling": None, "occ_deduction": 0.0, "band": "Put together"}, occasion="event")
 case("OCC-6-tank", "OCC-6", "a tank top, shorts and canvas sneakers at an event: still too casual, held to about 5.3",

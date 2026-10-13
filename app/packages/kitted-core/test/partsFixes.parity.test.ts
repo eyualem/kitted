@@ -103,13 +103,13 @@ describe("parts fix engine parity (parts_fixes.py)", () => {
     for (const c of F.cases.slice(0, 2000)) for (const f of run(c).fixes) expect(f.edits).toEqual(byId.get(f.id));
   });
 
-  it("the friend's blazer (d1967f): navy chinos to 8.0 (v8: no Smaller step; Style no longer pays for the jeans swap alone)", () => {
+  it("the friend's navy jacket (d1967f): dark straight jeans to 7.5, never navy chinos (a mismatched near-suit; #232)", () => {
     const c = F.cases.find((x) => x.src.includes("|phone-d1967f@class") && !x.warm && x.closet === "empty" && !x.first_check);
     expect(c).toBeDefined();
     const r = run(c!);
     expect(r.baseOverall).toBe(7.0);
-    expect(r.fixes.map((f) => [f.copy, f.to])).toContainEqual(["Swap the jeans for navy chinos", 8.0]);
-    expect(r.smallerStep).toBeNull();
+    expect(r.fixes.map((f) => [f.copy, f.to])).toEqual([["Swap the jeans for dark straight jeans", 7.5]]);
+    expect(r.fixes.some((f) => f.id === "pants_navy_chinos")).toBe(false);
   });
 
   it("picks shape the fixes, never the score: same base score and the same gains with no picks", () => {
@@ -127,14 +127,14 @@ describe("parts fix engine parity (parts_fixes.py)", () => {
     expect(bad).toEqual([]);
   }, 120_000);
 
-  it("on a tie, the fix toward his first pick leads (stock s16, Workwear: boots before navy chinos; profile unknown)", () => {
-    // v8 (#228): the founder's oct7-ph1 no longer ties (chunky sneakers 7.0 beat navy chinos 6.5), so a stock photo shows it
-    const c = F.cases.find((x) => x.src.startsWith("picks:one:workwear:corpus:stock:stock-s16-before_street|"));
+  it("on a tie, the fix toward his first pick leads (stock s13, Smart casual: loafers before a plain overshirt; profile unknown)", () => {
+    // #232: navy chinos no longer replace jeans, so the s16 tie is gone; s13 shows the same tie-break
+    const c = F.cases.find((x) => x.src.startsWith("picks:one:smart_casual:corpus:stock:stock-s13-before_street|"));
     expect(c).toBeDefined();
     const withPick = run(c!);
     const without = run({ ...c!, styles: [] });
-    expect(without.fixes[0]?.id).toBe("pants_navy_chinos");
-    expect(withPick.fixes[0]?.id).toBe("shoes_boots");
+    expect(without.fixes[0]?.id).toBe("color_plain");
+    expect(withPick.fixes[0]?.id).toBe("shoes_loafers");
     expect(withPick.fixes[0]?.gain).toBe(without.fixes[0]?.gain);
   });
 

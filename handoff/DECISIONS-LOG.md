@@ -1135,3 +1135,38 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Reviews:** copy and voice (40 items), accessibility (15 + Apple's Nutrition Labels), what breaks (no network, permissions, app killed, limits, storage), navigation and flow, and a first session as a 20-year-old from TikTok. The shared verdict: the pipeline works, but the first result often gives nothing to do ("No quick fixes", since fixed by the scoring session), the share card and notifications (the growth and return loops) aren't built, and You has no settings, privacy switch or delete-my-data that the consent screen promises.
     - **Fixed now (no taste involved):** a check cut off by the app closing no longer stays stuck (`fitcheck/interrupted.ts`, run at boot); errors during a check fail the card visibly; a boot error no longer leaves a blank screen; Try again keeps the card if the photo is gone; one check at a time; Try again and re-checks count against the limit (each is a paid read), with one extra "Try another photo" after a re-check that missed the change (02 "Change not seen": it doesn't use another re-check; once only); a damaged saved record is skipped instead of blanking a tab; consent's buttons can't lock; a malformed AI reply takes the "didn't use your check" path. Accessibility: VoiceOver reaches the closet question, the partial check's shoe choices and the re-check buttons; "Save this look" hidden until it saves (`SAVE_LOOK_BUILT`); "Take a new photo" on the unreadable / not-clothed cards (they were dead ends); Basics, chips, menus, Lookbook rows and camera tips reflow at large text; flash and camera-mode labels; Reduce Motion for the tile shake and the panel slide; a non-color marker on the part with most to gain; text on the composer's glass. App tests 379/379, tsc and lint clean (the core's own tests were mid-edit in the scoring session).
     - **Waiting on the founder (outward-facing copy):** the copy fixes (to-do list), the "still reading" message for a second photo (dropped silently today), and a limit card before the camera opens.
+
+232. **Step 1 of the critique (#229): better card advice and four consensus scoring fixes, parts v9 (Oct 12; founder: "Proceed" on Claude's plain-words plan: "improve the advice on the card… fix a few obvious mistakes").** New fit checks score with v9 (parts data 1.6.0, fix catalog 1.4.0); Python and `@kitted/core` exact on 17,405 scoring and every fix-engine parity case. Numbered #232 because #230–231 are the theme session's.
+    - **Scoring (v9 = v8 + four rules, `TUNE["v9"]`):**
+      - **An interview needs a collared shirt, a knit or a jacket:** without one, the score is held to 6.0; a hoodie or sweatshirt with nothing over it, 5.0.
+      - **Same-wash double denim** in a light or mid wash costs −1.0 on Color. Dark raw denim on dark stays free (gold ig-040 panel 8.0 and rd-009 7.5 praised it, so the first version was narrowed).
+      - **An oversized graphic tee under a tailored jacket** costs −1.5 on Style (closes KD-9).
+      - **The loud-print fault skips a look's own loud piece,** only in looks where loud prints are native (streetwear, workwear, vintage sport, outdoor) and never when the piece is bright. The first version also exempted quiet looks; gold pin-048 and pin-062 (argyle sweaters, panel 6.0) went up, so it was narrowed.
+    - **Effect on scores:**
+      - **Gold set:** test r 0.54 and within-source 0.36 (v8 0.54 / 0.37); no shown gold score moved after the two narrowings.
+      - **The stylist critic's 90 outfits:** within 0.5 on 81 (was 79), r 0.84 (was 0.80). In-sample: these outfits suggested three of the rules.
+      - **Saved checks:** none of the founder's or friends' scores moved.
+    - **Advice (fix engine and copy, no score change):**
+      - **New "Finishing touch" tips with no number**, shown when there's no fix, ahead of a Smaller step that means buying something:
+        - cuff jeans or cargos that pool or break, except wide jeans in a streetwear outfit (#221);
+        - hem trousers (about $15);
+        - tuck in a layer that hangs below a shorter one.
+      - **"Swap for navy chinos"** never replaces jeans and never goes under a navy jacket. The friend's d1967f now gets "Swap the jeans for dark straight jeans → 7.5".
+      - **"Add a short jacket"** only when the outfit reads as streetwear, workwear or vintage sport; not on warm days, not over sweats, joggers or gym shorts, not with slides.
+      - **No "Swap the dress shoes for loafers" under a suit.**
+      - **Wording:**
+        - The summary says "Good base. Swapping one piece gets you to 7.5." when the move means another piece; "One easy change" stays for free moves.
+        - The Smaller step reads "… to 7.5. Not enough to move the score yet." (no second number).
+        - "The score may not move yet." is gone from every Next level line.
+        - "Clears the condition point" became "Looks crisper".
+    - **Measured with the fixes critic's own scripts (v8 → v9):**
+      - **Gold set:**
+        - the lead fix matches the judges' advice 63/131 → 65/113 (48% → 58%);
+        - fixes of a kind no judge mentions 45 → 28;
+        - some advice matching the judges 94 → 100 of 223;
+        - navy chinos lead 26 → 5, the short jacket lead 14 → 0, tips on 32 cards.
+      - **Saved checks:**
+        - navy chinos lead 11 → 4, the jacket lead 13 → 3;
+        - the jacket shown on the founder's and friends' cards 11 → 6 of 25 (all streetwear reads).
+      - **The cost:** "No quick fixes" cards rise (gold 92 → 110, saved 23 → 34). The wrong swaps are gone, and the hem tip can only fire when the reading notices the hem, which it misses on most photos (#229 B; the hem close-up test is next).
+    - **Tests:** core test stories updated to the new advice (the friend's jeans, the pick tie-break now on stock s13). The rulebook `rubric/v5-styles.md` and its conformance cases were updated for v9 by a helper agent.

@@ -30,6 +30,9 @@ export function cardSummary({ reading, overall, lounge, fixes, partial }: Summar
     parts.push(overall >= 9 ? t('sum.dialed') : t('sum.noQuickFix'));
   } else if (top.itemId) {
     parts.push(t('sum.closetMove', { to: displayScore(top.to) }));
+  } else if (top.tier === 'changeInto' || top.tier === 'tailor') {
+    // #232: "easy" only for a free move; a swap he may have to buy says so
+    parts.push(t('sum.ownMove', { to: displayScore(top.to) }));
   } else {
     parts.push(t('sum.oneMove', { to: displayScore(top.to) }));
   }

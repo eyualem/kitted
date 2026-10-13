@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.5.0",
- "engine": "v8",
- "label": "parts-proto-8 (Oct 12, 2026)",
+ "version": "1.6.0",
+ "engine": "v9",
+ "label": "parts-proto-9 (Oct 12, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "5da122640c1842cc31f215a911ee58706f413b4aa0420afe93cab3bdf3a5283c",
+ "sourceSha256": "38c221534c8993a20b4aeb5f31ebd11efb1027288f00c950d879720248d4928c",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -193,7 +193,12 @@ export const PARTS_DATA: PartsData = {
   "sw3_off": true,
   "sk2_runner": 5,
   "cl1": 1.5,
-  "tk1": 2
+  "tk1": 2,
+  "int_top": 6,
+  "int_hoodie": 5,
+  "dd_same": 1,
+  "gt1": 1.5,
+  "cl1_own": true
  },
  "sets": {
   "TAILORED": [
@@ -335,6 +340,46 @@ export const PARTS_DATA: PartsData = {
   "LOUD_LOGO_TOPS": [
    "graphic_tee",
    "tee"
+  ],
+  "INT_TOPS": [
+   "camp_collar_shirt",
+   "cardigan",
+   "denim_shirt",
+   "dress_shirt",
+   "flannel_shirt",
+   "knit_polo",
+   "overshirt",
+   "oxford_shirt",
+   "polo",
+   "quarter_zip",
+   "rugby_shirt",
+   "sweater"
+  ],
+  "INT_OUTERS": [
+   "blazer",
+   "bomber",
+   "camp_collar_shirt",
+   "chore_coat",
+   "denim_jacket",
+   "denim_shirt",
+   "field_jacket",
+   "flannel_shirt",
+   "leather_jacket",
+   "overcoat",
+   "overshirt",
+   "sport_coat",
+   "suit_jacket",
+   "unstructured_blazer"
+  ],
+  "HOODIES": [
+   "hoodie",
+   "sweatshirt"
+  ],
+  "LOUD_NATIVE": [
+   "outdoor",
+   "streetwear",
+   "vintage_sport",
+   "workwear"
   ]
  },
  "boxyVolume": 4,

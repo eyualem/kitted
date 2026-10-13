@@ -1,5 +1,5 @@
 """Writes fixtures/parts_parity.json: the parts engine's exact Python output (extraction-test/rubrics/parts_proto.py,
-v8 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
+v9 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
 
 Run (after make_parity.py, whose readings it reuses by id):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_parity.py
@@ -15,13 +15,13 @@ Readings and configs:
      and arm A with B1's lightness copied on (parts2_test.with_lightness); zoom1 / zoom1-stock arm B
   4. second-look variants (both input forms) on rubric_parity's hand-written edge readings
   5. hand-written parts edge cases that force every check, tip, NA reason, ceiling and early return
-  6. tune variants: engines v1 to v7 (TUNE["v1"..."v7"]), a v8 what-if (the retune's knobs moved or off), the v4 what-if knobs, a v5 what-if (SX1 smaller, one
+  6. tune variants: engines v1 to v8 (TUNE["v1"..."v8"]), a v9 what-if, a v8 what-if (the retune's knobs moved or off), the v4 what-if knobs, a v5 what-if (SX1 smaller, one
      dressy piece enough) and a v6 what-if (PB1 smaller, H2 on the label only, Event on the interview band), on the
      corpus, the pull and the edge cases, so a tuning change is proven to be a data change
   7. picks variants: the corpus and the pull at their own occasion, and the parts edge cases, with no picks, one pick
      and three picks. Picks never move a number: the generator asserts every reading x occasion x boldness x second
      look scores the same under every picks it ran (the TS test checks it again)
-The run also re-scores every default case with engine v7 and stores which cases v8 changed (`v8_vs_v7`). The checks v8
+The run also re-scores every default case with engine v8 and stores which cases v9 changed (`v9_vs_v8`). The checks v8
 retired (CP1, H4, FF5_too_big, the SW3 tip) must still fire somewhere in the v7 cases, so v7 stays proven.
 Profile (CLAUDE.md rule 7): real readings use the paper tests' one stated test profile (picks Minimal + Smart casual
 0.5 each, boldness a little, no age); picks only choose the "Reads as" label and never move a number.
@@ -60,6 +60,8 @@ WHATIF6 = {"pb": 1.0, "h2_any": False, "occ_target": {"event": (3.5, 4.5)},   # 
 WHATIF8 = {"cl1": 1.0, "pn_narrow": 0.5, "pn_skinny": 0.0, "pn_rip": 1.0, "pr1_loose": None, "pr1_straight": None,
            "sk2_runner": None, "penalty": {"under": 7.0, "rate": 1.0, "cap": 0.5}, "weights": None, "pr2b": 0.5,
            "sk1_soft": 1.0, "lounge_style": 1.0, "tk1": 1.0, "cp1": 0.5, "h4": 0.25, "ff7_loose": False}
+# v9's what-ifs: other sizes for the four consensus fixes, and the loud-print exemption off
+WHATIF9 = {"int_top": 6.5, "int_hoodie": 5.5, "dd_same": 0.5, "gt1": 1.0, "cl1_own": False}
 PICKS_VARIANTS = {"none": [], "one": [["workwear", 1.0]],
                   "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]}
 
@@ -72,7 +74,7 @@ def rid_of(r):
     return "r" + hashlib.sha256(canon(r).encode()).hexdigest()[:12]
 
 
-def run(reading, occ, styles, sl, bold, engine="v8", tune=None):
+def run(reading, occ, styles, sl, bold, engine="v9", tune=None):
     try:
         res = P.score_parts(copy.deepcopy(reading), occ, {k: w for k, w in styles}, copy.deepcopy(sl), bold, engine, tune)
     except Exception as e:  # a prototype bug: recorded, the TS must throw too
@@ -417,6 +419,21 @@ def parts_edges():
     add("v8_lounge_no_style", Rd(G("top", "hoodie", "navy", tucked="none", length="at_belt", volume=4), G("bottom", "sweatpants", "light_grey", leg_shape="wide", volume=5)))
     add("v8_penalty_piles", Rd(TEE(sub="graphic_tee", color="orange", pattern="graphic", pattern_scale="large", saturation="bright", logo="large", strain="clear"), JEANS(leg_shape="skinny", distressed_by_design=True, strain="clear"), SHOE(sub="performance_runner", color="black")))
     add("v8_bright_one", Rd(TEE(sub="sweater", color="blue", saturation="bright", length="at_belt"), JEANS(color="white", leg_shape="wide"), SHOE(sub="loafer", color="brown")))
+    # v9 (four consensus fixes, #232)
+    add("v9_int_tee", Rd(TEE(volume=4, tucked="full", length="na"), JEANS(sub="trousers", color="black", leg_shape="wide"), SHOE(sub="loafer", color="black")), occ="interview")
+    add("v9_int_hoodie", Rd(G("top", "hoodie", "grey", tucked="none", length="mid_fly"), JEANS(color="denim_dark"), SHOE()), occ="interview")
+    add("v9_int_hoodie_blazer", Rd(G("outerwear", "blazer", "navy"), G("top", "hoodie", "grey", tucked="none", length="mid_fly"), JEANS(sub="trousers", color="grey"), SHOE(sub="loafer", color="black")), occ="interview")
+    add("v9_int_oxford", Rd(G("top", "oxford_shirt", "white", tucked="full", length="na"), JEANS(sub="chinos", color="navy"), SHOE(sub="loafer", color="brown")), occ="interview_corporate")
+    add("v9_int_knit", Rd(TEE(sub="sweater", color="navy", length="at_belt"), JEANS(sub="trousers", color="grey"), SHOE(sub="derby", color="black")), occ="interview_tech")
+    add("v9_denim_mid_mid", Rd(G("outerwear", "denim_jacket", "denim_mid"), TEE(), JEANS(color="denim_mid"), SHOE()))
+    add("v9_denim_dark_dark", Rd(G("outerwear", "denim_jacket", "denim_dark"), TEE(), JEANS(color="denim_dark", leg_shape="wide"), SHOE(sub="loafer", color="black")))
+    add("v9_denim_light_dark", Rd(G("outerwear", "denim_jacket", "denim_light"), TEE(), JEANS(color="denim_dark"), SHOE()))
+    add("v9_graphic_blazer_big", Rd(G("outerwear", "blazer", "navy"), TEE(sub="graphic_tee", pattern="graphic", pattern_scale="large", volume=4), JEANS(color="denim_dark"), SHOE(sub="loafer", color="brown")))
+    add("v9_graphic_blazer_fitted", Rd(G("outerwear", "blazer", "navy"), TEE(sub="graphic_tee", pattern="graphic", pattern_scale="medium", volume=3), JEANS(color="denim_dark"), SHOE(sub="loafer", color="brown")))
+    add("v9_street_logo_tee", Rd(TEE(sub="graphic_tee", color="black", pattern="graphic", pattern_scale="large", logo="large", volume=4), JEANS(color="black", leg_shape="wide"), SHOE(sub="chunky_sneaker", color="white")))
+    add("v9_workwear_flannel", Rd(G("outerwear", "flannel_shirt", "red", pattern="checks_plaid", pattern_scale="large"), TEE(color="grey"), JEANS(color="denim_dark"), SHOE(sub="work_boot", color="brown")))
+    add("v9_argyle_smart", Rd(TEE(sub="sweater", color="navy", pattern="checks_plaid", pattern_scale="large", length="at_belt"), JEANS(sub="chinos", color="grey"), SHOE(sub="loafer", color="brown")))
+    add("v9_bright_street_graphic", Rd(TEE(sub="graphic_tee", color="orange", pattern="graphic", pattern_scale="large", saturation="bright", volume=4), JEANS(color="black", leg_shape="wide"), SHOE(sub="chunky_sneaker", color="black")))
     add("v8_standout_pattern", Rd(G("outerwear", "overshirt", "green", pattern="checks_plaid", pattern_scale="medium"), TEE(), JEANS(), SHOE(sub="work_boot", color="brown")))
     return E
 
@@ -442,7 +459,7 @@ def main():
 
     def add(src, r, occ, styles, bold, sl=None, tune=None):
         rid = ref(r)
-        eng, tn = ("v8", None) if tune is None else TUNES[tune]["call"]
+        eng, tn = ("v9", None) if tune is None else TUNES[tune]["call"]
         exp = run(r, occ, styles, sl, bold, eng, tn)
         case = {"src": src, "reading": rid, "occasion": occ, "styles": styles, "boldness": bold, "second_look": sl, "expected": exp}
         if tune is not None:
@@ -495,6 +512,8 @@ def main():
         "v6": {"call": ("v6", None), "data": {"engine": "v6", "label": P.VERSIONS["v6"], "tune": MJ.tune_json(P.TUNE["v6"])}},
         "v6_whatif": {"call": ("v6", WHATIF6), "data": {"engine": "v6", "label": P.VERSIONS["v6"], "tune": MJ.tune_json(P._tune("v6", WHATIF6))}},
         "v7": {"call": ("v7", None), "data": {"engine": "v7", "label": P.VERSIONS["v7"], "tune": MJ.tune_json(P.TUNE["v7"])}},
+        "v8": {"call": ("v8", None), "data": {"engine": "v8", "label": P.VERSIONS["v8"], "tune": MJ.tune_json(P.TUNE["v8"])}},
+        "v9_whatif": {"call": ("v9", WHATIF9), "data": {"engine": "v9", "label": P.VERSIONS["v9"], "tune": MJ.tune_json(P._tune("v9", WHATIF9))}},
         "v8_whatif": {"call": ("v8", WHATIF8), "data": {"engine": "v8", "label": P.VERSIONS["v8"], "tune": MJ.tune_json(P._tune("v8", WHATIF8))}},
     }
 
@@ -587,19 +606,19 @@ def main():
     bad = [g for g, v in groups.items() if len(v) > 1]
     assert not bad, f"picks moved a score: {bad[:3]}"
 
-    # what v8 changed against v7 (default cases only)
+    # what v9 changed against v8 (default cases only)
     changed = []
     for c in cases:
         if "tune" in c or "error" in c["expected"]:
             continue
         r = rp["readings"].get(c["reading"]) or readings[c["reading"]]
-        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v7")
+        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v8")
         e5 = c["expected"]
         if e4.get("overall") != e5.get("overall") or e4.get("raw_score") != e5.get("raw_score"):
             r4 = {rr["check"] for p in e4.get("parts", {}).values() for rr in p["reasons"]}
             r5 = {rr["check"] for p in e5.get("parts", {}).values() for rr in p["reasons"]}
-            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v7": e4.get("overall"),
-                            "v8": e5.get("overall"), "v7_raw": e4.get("raw_score"), "v8_raw": e5.get("raw_score"),
+            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v8": e4.get("overall"),
+                            "v9": e5.get("overall"), "v8_raw": e4.get("raw_score"), "v9_raw": e5.get("raw_score"),
                             "added": sorted(r5 - r4), "removed": sorted(r4 - r5)})
 
     must = ["PB1_roomier_than_look", "tip PB2_wide_leg_band", "SX1_another_look", "tip SX1_tip", "PR5_workwear_shape", "PR6_outdoor_shape", "PF5_big_top_skinny_leg", "PF6_layer_over_skinny", "PF10_peek", "PR1_waist_break", "PR1b_half_tuck", "PR4_street_shape",
@@ -617,8 +636,12 @@ def main():
             "condition tip C_unsure_stain",
             # v8
             "PN1_narrow_leg", "CL1_loud_print", "TK1_tank_alone", "PR2b_short_layer_read", "SK1s_slides_soft", "FF5_roomy_sleeves",
-            "piled_penalty>0"]
-    retired = {"CP1_standout_color", "H4_standout_piece", "FF5_too_big", "tip SW3_dainty_wide"}   # v7 only (cov7)
+            "piled_penalty>0",
+            # v9
+            "CC5_same_wash_denim", "GT1_graphic_under_tailoring", "occasion: a hoodie at an interview",
+            "occasion: an interview wants a collared shirt, a knit or a jacket"]
+    retired = {"CP1_standout_color", "H4_standout_piece", "FF5_too_big", "tip SW3_dainty_wide",   # v8 retired them; v7 only
+               "tip CC5_denim_near_match"}                                                       # v9: a fault now (cov7)
     missing = [m for m in must if not (cov7[m] if m in retired else cov[m])]
     assert not missing, f"never fired: {missing}"
 
@@ -663,7 +686,7 @@ def main():
                    "fp_boundary_cases": dict(Counter(c["fp_boundary"] for c in cases if c.get("fp_boundary")))},
         "coverage": dict(sorted(cov.items())),
         "overall_histogram": dict(sorted(Counter(str(c["expected"].get("overall")) for c in cases if "tune" not in c).items())),
-        "v8_vs_v7": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v7"] != x["v8"]),
+        "v9_vs_v8": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v8"] != x["v9"]),
                      "changed": changed},
         "tunes": tunes,
         "pool": pool,
@@ -675,8 +698,8 @@ def main():
         json.dump(out, f, separators=(",", ":"), ensure_ascii=False)
     print(json.dumps(out["counts"]))
     print("file size MB:", round(os.path.getsize(path) / 1e6, 2))
-    print("overall histogram (v8):", out["overall_histogram"])
-    print("v8 vs v7:", out["v8_vs_v7"]["cases_changed"], "cases changed,", out["v8_vs_v7"]["overall_changed"], "with a new overall")
+    print("overall histogram (v9):", out["overall_histogram"])
+    print("v9 vs v8:", out["v9_vs_v8"]["cases_changed"], "cases changed,", out["v9_vs_v8"]["overall_changed"], "with a new overall")
     for k, v in sorted(cov.items()):
         print(f"   {v:6d}  {k}")
 

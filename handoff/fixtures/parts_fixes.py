@@ -5,7 +5,7 @@ fixtures: make_parts_fixes.py -> parts_fixes.json.
 How it works ("a fix row never shows a gain that doesn't happen", #204):
   1. Every candidate in fixes.json -> "parts" -> "candidates" is an edit to a COPY of the scored garments (free
      actions, his closet's pieces, generic swaps, adds, a tailor). Each copy is re-scored with the parts engine
-     (parts_proto.score_parts, the default engine: v8) with the same occasion, picks, boldness and second look (plus the candidate's
+     (parts_proto.score_parts, the default engine: v9) with the same occasion, picks, boldness and second look (plus the candidate's
      `look` override: a tuck hides a peek, a cuff lifts the hem off the shoe).
   2. A candidate is a FIX only when the ROUNDED score rises (gain >= 0.5). Its number is the engine's own.
   3. A candidate that raises a part's half-point display but leaves the rounded score where it is (and lowers no
@@ -98,9 +98,37 @@ def _quiet(r):
     return True
 
 
+def _peek_under(r):
+    """The piece a longer, untucked layer hangs out under (v9 fixes, #232): the first upper piece that ends at the belt
+    or above with a later one ending below it. Outer layers come first, then tops in reading order. None if none."""
+    gs = r["garments"]
+    upper = [g for g in gs if g.get("category") == "outerwear"] + [g for g in gs if g.get("category") == "top"]
+    for i, a in enumerate(upper):
+        if a.get("length") in ("cropped", "at_belt"):
+            for b in upper[i + 1:]:
+                if b.get("length") in ("mid_fly", "below_crotch") and b.get("tucked") not in ("full", "half"):
+                    return a
+    return None
+
+
+def _reads_as(r):
+    """The styles the working outfit reads as, pick-free (picks never move a fix's gain or whether it shows)."""
+    return R.detect_styles(r["garments"], {})["detected"]
+
+
 def _when_ok(when, r, occasion, warm):
     for k, v in (when or {}).items():
-        if k == "not_warm":
+        if k == "reads_as_in":
+            if v and not any(s in v for s in _reads_as(r)):
+                return False
+        elif k == "peek_under":
+            if v and _peek_under(r) is None:
+                return False
+        elif k == "not_street_stack":            # #221: a stack on wide jeans is the streetwear look, not a fault
+            b = _first(r, "bottom")
+            if v and b is not None and b.get("leg_shape") in R.LOOSE and "streetwear" in _reads_as(r):
+                return False
+        elif k == "not_warm":
             if v and warm:
                 return False
         elif k == "no_outer":
@@ -433,10 +461,27 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                                "line": c["smallerStep"].replace("{step}", s["step"]).replace("{part}", P.PART_NAMES[top["part"]])
                                .replace("{to}", f"{top['to']:g}").replace("{score}", f"{base['overall']:.1f}")}
 
+    # v9 (#232): the stylist's tips (a cuff, a hem, the layer underneath) show with no number when there's no fix,
+    # ahead of a Smaller step that means buying something and ahead of the generic Next level lines
+    tip_shown = False
     if not picked and not lounge:
+        step = out["smaller_step"]
+        if step is None or not classes[step["class"]]["free"] or step["class"] == "own":
+            for nl in CATALOG["nextLevel"]:
+                if not nl.get("always") or not _when_ok(nl.get("when"), w, occasion, warm):
+                    continue
+                piece = _peek_under(w) if nl["when"].get("peek_under") else _first(w, "bottom")
+                out["next_level"] = {"id": nl["id"], "part": nl["part"], "line": _fill(nl["copy"], {"name": K.name(piece)}), "style": None}
+                out["smaller_step"] = None
+                tip_shown = True
+                break
+
+    if not picked and not lounge and not tip_shown:
         step = out["smaller_step"]
         step_group = next((x["group"] for x in cands if step and x["id"] == step["id"]), None)
         for nl in CATALOG["nextLevel"]:
+            if nl.get("always"):
+                continue
             st = nl.get("style")
             if st is not None:                    # his first pick's path to 8
                 if not picks or st != picks[0] or nl.get("group") == step_group:

@@ -182,7 +182,7 @@ function evaluateParts(input: EvaluateInput): Evaluation {
       rubricVersion: PARTS_RUBRIC_VERSION,
       details: {
         nextLevel: tip ? [tip] : [], tips: [], dialedIn: fixes.length === 0, hiddenFixTargets: hidden, warm: input.warm ?? false,
-        readsAs: normStyleKey(res.styleLabel), tipLead: fx.smallerStep ? 'smallerStep' : 'nextLevel', parts: storedParts(res, fx),
+        readsAs: normStyleKey(res.styleLabel), tipLead: fx.smallerStep ? 'smallerStep' : fx.nextLevel?.id.startsWith('tip_') ? 'tip' : 'nextLevel', parts: storedParts(res, fx),
         ...(input.goingFor !== undefined
           ? { goingForAdvice: goingForAdvice(input.reading, input.goingFor, { occasion: input.occasion, boldness: opts.boldness, closet: input.closet, warm: input.warm ?? false }) }
           : {}),
@@ -193,7 +193,7 @@ function evaluateParts(input: EvaluateInput): Evaluation {
 
 /** The card's tip lead for a stored check ("Next level" / "Smaller step"). */
 export const tipLeadText = (lead: CheckDetails['tipLead']): string | null =>
-  lead === 'smallerStep' ? PARTS_FIXES_DATA.copy.smallerStepLabel : null;
+  lead === 'smallerStep' ? PARTS_FIXES_DATA.copy.smallerStepLabel : lead === 'tip' ? PARTS_FIXES_DATA.copy.tipLabel : null;
 
 /** The partial label text from the deck (core's partialLabel returns the same English; checked in tests). */
 export { corePartialLabel };

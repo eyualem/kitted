@@ -1,5 +1,5 @@
-// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v8" (parts-proto-8, the
-// default since Oct 12: v7 retuned against the gold-set panel, #227-228, rubric/research/parts/gold-retune.md; v7 was the
+// Exact TypeScript port of the parts engine, extraction-test/rubrics/parts_proto.py engine "v9" (parts-proto-9, the
+// default since Oct 12: v8 plus four consensus fixes, #232; v8: v7 retuned against the gold-set panel, #227-228, rubric/research/parts/gold-retune.md; v7 was the
 // default from Oct 11; DECISIONS-LOG #195-219: v3 plus the workwear and outdoor shapes, the track jacket as a short
 // layer, H2 judged on the pick-free label so picks never move a number (v4), SX1 "a piece from another look", the
 // style-crossing fault on Style (v5), and v6: PB1 "roomier than the look" (the style council's per-style bands as one
@@ -20,7 +20,7 @@
 //  - Python `x in (…)` on a missing key is `None in (…)`: undefined and null both mean None (nv)
 //  - one garment, one credit: "already credited" is object identity on our own copies (Python's id(g))
 //  - where Python would raise (a garment without a subcategory reaching a reason line), this throws the same error
-// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.5.0); the v4.1
+// Numbers and tables come from PartsData (bundled partsData.ts = fixtures/parts.json, version 1.6.0); the v4.1
 // helpers it shares (formality, colors, style detection, prepare/normalize) come from the rubric engine.
 
 import { PARTS_DATA } from "./partsData";
@@ -132,6 +132,16 @@ export interface PartsTune {
   tk1: number;
   /** The loungewear ceiling rises this much when the outfit reads as a style. */
   lounge_style: number;
+  // ---- v9 (four consensus fixes, #232; off / null in v1-v8)
+  /** An interview with no collared top, knit or jacket is held to int_top; a hoodie or sweatshirt to int_hoodie. */
+  int_top: number | null;
+  int_hoodie: number | null;
+  /** Two denim pieces in the same light or mid wash cost this on Color. */
+  dd_same: number;
+  /** An oversized graphic tee under a tailored jacket costs this on Style. */
+  gt1: number;
+  /** CL1 skips a non-bright piece that is an anchor or home piece of a loud-native look the outfit reads as. */
+  cl1_own: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -441,6 +451,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const STREET_SHAPE_BOTTOMS = PS("STREET_SHAPE_BOTTOMS"), LOOSE_DENIM = PS("LOOSE_DENIM"), WORN_HALF_SHOES = PS("WORN_HALF_SHOES");
   const DAINTY_SHOES = PS("DAINTY_SHOES"), LONG_SHIRTS = PS("LONG_SHIRTS"), DRESSY_ROOM = PS("DRESSY_ROOM");
   const LOUD_PATTERNS = PS("LOUD_PATTERNS"), LOUD_LOGO_TOPS = PS("LOUD_LOGO_TOPS");
+  const INT_TOPS = PS("INT_TOPS"), INT_OUTERS = PS("INT_OUTERS"), HOODIES = PS("HOODIES"), LOUD_NATIVE = PS("LOUD_NATIVE");
   const WT: Record<PartName, number> = t.weights ?? W; // v8: the tuned weights (combine, weightsUsed, the lowest tie)
   const PR4_SHOES = tset(t.pr4_shoes), PR4_LEGS = tset(t.pr4_legs);
   const PR5_LAYERS = tset(t.pr5_layers), PR5_BOTTOMS = tset(t.pr5_bottoms), PR5_SHOES = tset(t.pr5_shoes);
@@ -811,10 +822,19 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.add(-C.samePattern, "the same pattern twice", "CC6_same_pattern");
     }
     if (pats.length >= C.threePatterns.atLeast && !street) p.add(-C.threePatterns.points, "three patterns at once", "CC6_three_patterns");
+    // v9: two denim pieces in the same light or mid wash (0 in v1-v8)
+    const denims = main.filter((g) => H.isDenim(g));
+    if (truthy(t.dd_same) && denims.some((g) => (g.color_family === "denim_light" || g.color_family === "denim_mid")
+        && denims.filter((x) => nv(x.color_family) === nv(g.color_family)).length >= 2)) {
+      p.add(-t.dd_same, "double denim in the same wash blurs together; make the washes clearly different", "CC5_same_wash_denim");
+    }
     if (truthy(t.cl1)) { // v8: CL1 a loud print on a top or layer (0 in v1-v7)
+      // v9: a loud-native look's own piece (not bright) isn't "loud"
+      const co = truthy(t.cl1_own) ? H.outfit(o.main) : null;
+      const own = (g: Garment): boolean => co !== null && !isBright(g) && o.det.some((st) => LOUD_NATIVE.has(st) && H.role(st, g, co)[0] >= 1);
       const loud = main.find((g) => (g.category === "top" || g.category === "outerwear") && (
         (g.pattern === "graphic" && (isBright(g) || (g.logo === "large" && LOUD_LOGO_TOPS.has(nv(g.subcategory)))))
-        || (LOUD_PATTERNS.has(nv(g.pattern)) && g.pattern_scale === "large")));
+        || (LOUD_PATTERNS.has(nv(g.pattern)) && g.pattern_scale === "large")) && !own(g));
       if (loud !== undefined) {
         const what = rep(or(loud.subcategory, "piece"));
         const kind = loud.pattern === "graphic" ? "print" : replaceAll(rep(or(loud.pattern, "pattern")), "checks plaid", "check");
@@ -823,7 +843,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
     const fault = p.reasons.length > 0;
     if (families.size === 1) p.tip("all one color: a lighter or darker piece would add depth", "CP3_tonal_flat");
-    if (main.filter((g) => H.isDenim(g)).length >= 2) p.tip("double denim: make the washes clearly different", "CC5_denim_near_match", C.tips.doubleDenim);
+    if (denims.length >= 2 && !truthy(t.dd_same)) p.tip("double denim: make the washes clearly different", "CC5_denim_near_match", C.tips.doubleDenim);
     if (fault) return p;
 
     // positives (only when no fault)
@@ -1080,6 +1100,10 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (truthy(sx) && sx >= h3) p.add(-sx, sxLine!, "SX1_another_look"); // v5: the larger of SX1 and H3, never both
     else if (truthy(h3)) p.add(-h3, h3Line, "H3_another_world");
     if (sxTip !== null) p.tip(sxTip, "SX1_tip", -t.sx);
+    // v9: GT1 an oversized graphic tee under a tailored jacket (0 in v1-v8; a fitted one stays free)
+    if (truthy(t.gt1) && o.outers.some((x) => TAILORED.has(x.subcategory)) && o.tops.some((g) => g.subcategory === "graphic_tee" && vol3(g) >= BOXY)) {
+      p.add(-t.gt1, "an oversized graphic tee fights the tailored jacket; a fitted plain tee works under it", "GT1_graphic_under_tailoring");
+    }
     // v8: TK1 a tank top as the only top, out of the house (under a collared shirt it's refiled a vest)
     if (truthy(t.tk1) && o.outers.length === 0 && o.tops.length === 1 && o.tops[0]!.subcategory === "tank_top" && !LOUNGE_OK.has(o.occasion)) {
       p.add(-t.tk1, "a tank top on its own reads gym or undershirt", "TK1_tank_alone");
@@ -1208,6 +1232,14 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (dressyRoom && S !== null && SLIDES.has(nv(S.subcategory))) ceilings.push([CE.slidesDressy, "slides at a dressy occasion"]);
     if (INTERVIEWISH.has(occasion) && S !== null && SNEAKERS.has(S.subcategory) && o.outers.some((x) => TAILORED.has(x.subcategory))) {
       ceilings.push([CE.sneakersBlazer, "sneakers under a blazer at an interview"]);
+    }
+    if (t.int_top !== null && t.int_top !== undefined && INTERVIEWISH.has(occasion)) { // v9: a collar, a knit or a jacket
+      const jacket = o.outers.some((x) => INT_OUTERS.has(x.subcategory));
+      const dressedTop = o.tops.some((x) => INT_TOPS.has(x.subcategory));
+      if (!jacket && !dressedTop) {
+        if ([...o.tops, ...o.outers].some((x) => HOODIES.has(x.subcategory))) ceilings.push([t.int_hoodie!, "a hoodie at an interview"]);
+        else ceilings.push([t.int_top, "an interview wants a collared shirt, a knit or a jacket"]);
+      }
     }
     if (INTERVIEWISH.has(occasion) && o.main.some((g) => g.logo === "large" && g.certainty === "clear")) ceilings.push([CE.bigLogo, "a big logo at an interview"]);
     out.deduction = pyRound(ded, 3);
@@ -1340,7 +1372,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 /** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
 export const defaultParts: PartsEngine = createParts(PARTS_DATA);
 
-/** parts_proto.score_parts() (engine v8) with the bundled data. Never mutates `reading`. */
+/** parts_proto.score_parts() (engine v9) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
 }
