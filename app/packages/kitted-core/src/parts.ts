@@ -162,6 +162,13 @@ export interface PartsTune {
   ll1: number;
   /** CON-6: the wrinkle charge by garment and look. */
   wr_look: boolean;
+  // ---- v13 (wrinkled knit tops by look; v12's two fixed amounts became knobs: 0.2 in v12, 0 in v1-v11)
+  /** CON-6: the half charge (casual wovens off a loud-native look, an oxford with jeans at Everyday or Class). */
+  wr_half: number;
+  /** CON-6: a tee or graphic tee under a tailored jacket. */
+  wr_knit_tailored: number;
+  /** CON-6: a knit top on a minimal, smart casual or classic prep look (none of the loud-native looks); 0 in v1-v12. */
+  wr_knit_clean: number;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -245,8 +252,6 @@ export interface PartsData {
     stain: number;
     wrinkled: number;
     wrinkledLinen: number;
-    /** v12 CON-6: the half charge (a tee under tailoring, casual wovens off a loud look, an oxford with jeans). */
-    wrinkledHalf: number;
     worn: number;
     cap: number;
     untuckedDressShirt: number;
@@ -478,6 +483,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const BASE_TOPS = PS("BASE_TOPS"), COVER_TOPS = PS("COVER_TOPS"); // v11 STY-4: a base top under a layer
   const LIGHT_NEUTRALS = PS("LIGHT_NEUTRALS"), LL_DARK = PS("LL_DARK"); // v12 COL-12: light on light
   const WR_KNITS = PS("WR_KNITS"), WR_TEES = PS("WR_TEES"), WR_CASUAL = PS("WR_CASUAL"), WR_DRESSY_OCC = PS("WR_DRESSY_OCC"); // v12 CON-6
+  const WR_CLEAN = PS("WR_CLEAN"); // v13 CON-6: looks where a crisp tee is part of the look
   /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print.
    *  v12 (cl1_scale): a graphic print only at a medium or large print size, or with a large logo. */
   const loudPrint = (g: Garment): boolean => {
@@ -1206,20 +1212,23 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   }
 
   // ---------------------------------------------------------------- CONDITION (after the average)
-  /** CON-1's wrinkle charge for one piece; v12 (wr_look, CON-6): by garment and look (parts_proto._wrinkle_cost). */
+  /** CON-1's wrinkle charge for one piece; v12 (wr_look, CON-6): by garment and look; v13: a knit top on a clean
+   *  look (minimal, smart casual, classic prep) costs wr_knit_clean (parts_proto._wrinkle_cost). */
   function wrinkleCost(g: Garment, o: PartsOutfit, occasion: string): number {
     const CD = data.condition;
     const sub = nv(g.subcategory);
     const base = LINEN_LIKELY.has(sub) ? CD.wrinkledLinen : CD.wrinkled;
     if (!truthy(t.wr_look)) return base;
+    const loud = o.det.some((st) => LOUD_NATIVE.has(st));
     if (WR_KNITS.has(sub)) {
-      const tailored = o.outers.some((x) => TAILORED.has(nv(x.subcategory)));
-      return WR_TEES.has(sub) && tailored ? CD.wrinkledHalf : 0.0;
+      if (WR_TEES.has(sub) && o.outers.some((x) => TAILORED.has(nv(x.subcategory)))) return t.wr_knit_tailored;
+      if (!loud && o.det.some((st) => WR_CLEAN.has(st))) return t.wr_knit_clean; // v13
+      return 0.0;
     }
     if (WR_DRESSY_OCC.has(occasion)) return base;
-    if (WR_CASUAL.has(sub)) return o.det.some((st) => LOUD_NATIVE.has(st)) ? 0.0 : pyMin(base, CD.wrinkledHalf);
+    if (WR_CASUAL.has(sub)) return loud ? 0.0 : pyMin(base, t.wr_half);
     if (sub === "oxford_shirt" && o.bottom !== null && o.bottom.subcategory === "jeans" && (occasion === "everyday" || occasion === "class")) {
-      return CD.wrinkledHalf;
+      return t.wr_half;
     }
     return base;
   }

@@ -1,10 +1,10 @@
 photos read 26 of 26 · cost $0.45 · profile unknown, test profile, Everyday
 
-== engine v11 ==
+== engine v12 ==
   Tim pair: 5.5 → 7.5 AGREES · oversized tee + baggy denim jacket over skinny jeans → relaxed jeans, cropped jacket
   Tim pair: 7.0 → 7.5 AGREES · knit on knit, multicolor scarf, slim dark jeans → one knit, plain scarf, relaxed light jeans
   Tim pair: 7.0 → 7.0 TIE · all-navy flannel + jeans, 'basic and predictable' → black flannel, white tank, pleated trousers, loafers
-  Tim pair: 6.5 → 7.0 AGREES · tight beige monochrome pulling at the thighs → wider trousers, tucked tee, relaxed overshirt, loafers
+  Tim pair: 6.0 → 7.0 AGREES · tight beige monochrome pulling at the thighs → wider trousers, tucked tee, relaxed overshirt, loafers
   Tim pair: 6.5 → 7.5 AGREES · skinny faux-leather joggers, yellow trims → straight leather trousers, plain black sweater
   Frugal pair: 6.5 → 7.0 AGREES · the same tee 4 in shorter, ending at the waist
   pairs where the app agrees (after scores higher): 5/6
@@ -16,7 +16,7 @@ photos read 26 of 26 · cost $0.45 · profile unknown, test profile, Everyday
   Pxeeh-caTJg/perfect-all-black-19-38: 7.0 · Jaye: 'perfect' (open blazer, pendant, flares, heavy boots)
   Tim's 10 outfits: outfit01 6.5 · outfit02 6.5 · outfit03 7.0 · outfit04 7.0 · outfit05 7.0 · outfit06 6.5 · outfit07 7.5 · outfit08 6.5 · outfit09 6.5 · outfit10 7.0
 
-== engine v12 ==
+== engine v13 ==
   Tim pair: 5.5 → 7.5 AGREES · oversized tee + baggy denim jacket over skinny jeans → relaxed jeans, cropped jacket
   Tim pair: 7.0 → 7.5 AGREES · knit on knit, multicolor scarf, slim dark jeans → one knit, plain scarf, relaxed light jeans
   Tim pair: 7.0 → 7.0 TIE · all-navy flannel + jeans, 'basic and predictable' → black flannel, white tank, pleated trousers, loafers

@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.9.0",
- "engine": "v12",
- "label": "parts-proto-12 (Oct 14, 2026)",
+ "version": "1.10.0",
+ "engine": "v13",
+ "label": "parts-proto-13 (Oct 14, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "53fbc11ca49c1b54128ebd89d722b31985d4f807fddbc4743d17bcbb1b79a66c",
+ "sourceSha256": "de439e993717fbc1157b7660fc41c3f84e5438a4f9498001bb05c44f3ba878cd",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -206,7 +206,10 @@ export const PARTS_DATA: PartsData = {
   "cl1_scale": true,
   "pn_fitted_vol": 2,
   "ll1": 1,
-  "wr_look": true
+  "wr_look": true,
+  "wr_half": 0.2,
+  "wr_knit_tailored": 0.2,
+  "wr_knit_clean": 0.2
  },
  "sets": {
   "TAILORED": [
@@ -449,6 +452,11 @@ export const PARTS_DATA: PartsData = {
    "interview",
    "interview_corporate",
    "interview_tech"
+  ],
+  "WR_CLEAN": [
+   "classic_prep",
+   "minimalist",
+   "smart_casual"
   ]
  },
  "boxyVolume": 4,
@@ -605,7 +613,6 @@ export const PARTS_DATA: PartsData = {
   "stain": 1.2,
   "wrinkled": 0.4,
   "wrinkledLinen": 0.2,
-  "wrinkledHalf": 0.2,
   "worn": 0.4,
   "cap": 1.6,
   "untuckedDressShirt": 0.6,

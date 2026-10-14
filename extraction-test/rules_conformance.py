@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216, v6 rules #217; v8 rules Oct 12, #228; v9 rules Oct 12, #232; v10 and v11 rules Oct 13; v12 rules Oct 14). One or
+"""Rules conformance (Oct 11, 2026; DECISIONS-LOG #216, v6 rules #217; v8 rules Oct 12, #228; v9 rules Oct 12, #232; v10 and v11 rules Oct 13; v12 and v13 rules Oct 14). One or
 more made-up outfits per rule ID in ../rubric/v5-styles.md, each asserting that the rule works in the parts engine
-(parts_proto.py, default v12): the
+(parts_proto.py, default v13): the
 right check fires (or doesn't), the right part moves by the right amount, and the final score lands in the right band.
 
   /usr/bin/python3 rules_conformance.py          -> runs every case against parts_proto.py; exits 1 on any failure;
@@ -949,17 +949,39 @@ case("CON-5-dim", "CON-5", "in a dim photo nothing is checked, so no tip either"
      Rd(top("tee", "white", condition="wrinkled", certainty="likely"), DJEANS, WLS, lighting="dim"),
      {"cond_deduction": 0.0, "cond_tips": [], "band": "Put together"})
 
-# CON-6 (v12): wrinkles by garment and look
-case("CON-6-tee", "CON-6", "a wrinkled white tee with dark jeans and white leather sneakers: a knit top, no charge and no line",
+# CON-6 (v12; v13): wrinkles by garment and look
+case("CON-6-tee", "CON-6", "a wrinkled white tee with dark jeans and white leather sneakers (no clear style): a knit top, no charge and no line",
      Rd(top("tee", "white", condition="wrinkled"), DJEANS, WLS), {"cond_deduction": 0.0, "cond_tips": [], "band": "Put together"})
 case("CON-6-graphic", "CON-6", "a wrinkled bright red graphic tee with a small print over black wide jeans: no charge",
      Rd(top("graphic_tee", "red", pattern_scale="small", condition="wrinkled"), bottom("jeans", "black", "wide"), CHUNKY),
      {"cond_deduction": 0.0, "band": "Put together"})
 case("CON-6-hoodie", "CON-6", "a wrinkled grey hoodie: no charge", Rd(top("hoodie", "grey", condition="wrinkled"), DJEANS, WLS),
      {"cond_deduction": 0.0, "band": "Put together"})
-case("CON-6-tee-interview", "CON-6", "a wrinkled tee at an interview: still a knit top, no wrinkle charge",
-     Rd(top("tee", "white", condition="wrinkled"), outer("chore_coat", "navy"), NCHINOS, LOAFER), {"cond_deduction": 0.0, "band": "Put together"},
-     occasion="interview")
+case("CON-6-tee-interview", "CON-6", "a wrinkled tee under a navy chore coat with navy chinos and loafers at an interview: it reads as smart casual, so -0.2 like any day (v13; the occasion doesn't change the knit rule)",
+     Rd(top("tee", "white", condition="wrinkled"), outer("chore_coat", "navy"), NCHINOS, LOAFER),
+     {"detected_has": ["smart_casual"], "cond_deduction": 0.2, "band": "Getting there"}, occasion="interview")
+# v13: knit tops on a clean look (minimal, smart casual, classic prep) cost 0.2; nothing on a loud-native look or no clear style
+case("CON-6-tee-smart-clean", "CON-6", "a clean white tee with navy chinos and loafers (smart casual): 7.5", Rd(TEE, NCHINOS, LOAFER), {"cond_deduction": 0.0, "overall": 7.5, "band": "Put together"})
+case("CON-6-tee-smart", "CON-6", "a wrinkled white tee with navy chinos and loafers (smart casual): -0.2, 7.0 (7.5 in v12)",
+     Rd(top("tee", "white", condition="wrinkled"), NCHINOS, LOAFER),
+     {"detected_has": ["smart_casual"], "cond_deduction": 0.2, "overall": 7.0, "band": "Put together"},
+     vs={"case": "CON-6-tee-smart-clean", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": "down"})
+case("CON-6-sweatshirt-minimal", "CON-6", "a wrinkled grey sweatshirt with navy chinos and loafers (minimal): -0.2",
+     Rd(top("sweatshirt", "grey", condition="wrinkled"), NCHINOS, LOAFER),
+     {"detected_has": ["minimalist"], "detected_lacks": ["streetwear", "workwear", "vintage_sport", "outdoor"], "cond_deduction": 0.2,
+      "band": "Put together"})
+case("CON-6-tee-prep", "CON-6", "a wrinkled white tee under a navy cardigan with khaki chinos and loafers (classic prep): -0.2",
+     Rd(outer("cardigan", "navy"), top("tee", "white", condition="wrinkled"), bottom("chinos", "khaki_beige", "straight"), LOAFER),
+     {"detected_has": ["classic_prep"], "cond_deduction": 0.2, "band": "Put together"})
+case("CON-6-tee-smart-likely", "CON-6", "the smart casual tee read only 'likely' wrinkled: no points, but the 'might be wrinkled' tip shows (the charge isn't waived on this look)",
+     Rd(top("tee", "white", condition="wrinkled", certainty="likely"), NCHINOS, LOAFER),
+     {"cond_deduction": 0.0, "cond_tips": ["C_unsure_wrinkled"], "overall": 7.5, "band": "Put together"})
+case("CON-6-tee-mixed", "CON-6", "a wrinkled cream tee with black jeans and chunky sneakers, roomy and at the belt over wide black jeans, read as streetwear and minimal: a loud-native look, no charge",
+     Rd(top("tee", "off_white_cream", 4, length="at_belt", condition="wrinkled"), bottom("jeans", "black", "wide"), CHUNKY),
+     {"detected_has": ["streetwear", "minimalist"], "cond_deduction": 0.0, "cond_tips": [], "band": "Put together"})
+case("CON-6-tee-workwear", "CON-6", "a wrinkled tee under a clean brown chore coat with dark jeans and work boots (workwear): no charge",
+     Rd(top("tee", "white", condition="wrinkled"), outer("chore_coat", "brown"), DJEANS, BOOTS),
+     {"detected_has": ["workwear"], "cond_deduction": 0.0, "cond_tips": [], "band": "Sharp"})
 case("CON-6-tee-blazer", "CON-6", "a wrinkled tee under a navy blazer with grey trousers and loafers: -0.2 (part of a tailored outfit)",
      Rd(top("tee", "white", condition="wrinkled"), outer("blazer", "navy"), TROUSERS, LOAFER), {"cond_deduction": 0.2,
                                                                                             "band_in": ["Put together", "Sharp"]})

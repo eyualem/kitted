@@ -1,5 +1,5 @@
 """Writes fixtures/parts_parity.json: the parts engine's exact Python output (extraction-test/rubrics/parts_proto.py,
-v12 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
+v13 by default) over many readings x configs, for @kitted/core's scoreParts() parity test (test/parts.parity.test.ts).
 
 Run (after make_parity.py, whose readings it reuses by id):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_parity.py
@@ -15,13 +15,13 @@ Readings and configs:
      and arm A with B1's lightness copied on (parts2_test.with_lightness); zoom1 / zoom1-stock arm B
   4. second-look variants (both input forms) on rubric_parity's hand-written edge readings
   5. hand-written parts edge cases that force every check, tip, NA reason, ceiling and early return
-  6. tune variants: engines v1 to v11 (TUNE["v1"..."v11"]), a v12 what-if, a v11 what-if, a v10 what-if, a v9 what-if, a v8 what-if (the retune's knobs moved or off), the v4 what-if knobs, a v5 what-if (SX1 smaller, one
+  6. tune variants: engines v1 to v12 (TUNE["v1"..."v12"]), a v13 what-if, a v12 what-if, a v11 what-if, a v10 what-if, a v9 what-if, a v8 what-if (the retune's knobs moved or off), the v4 what-if knobs, a v5 what-if (SX1 smaller, one
      dressy piece enough) and a v6 what-if (PB1 smaller, H2 on the label only, Event on the interview band), on the
      corpus, the pull and the edge cases, so a tuning change is proven to be a data change
   7. picks variants: the corpus and the pull at their own occasion, and the parts edge cases, with no picks, one pick
      and three picks. Picks never move a number: the generator asserts every reading x occasion x boldness x second
      look scores the same under every picks it ran (the TS test checks it again)
-The run also re-scores every default case with engine v11 and stores which cases v12 changed (`v12_vs_v11`). The checks v8
+The run also re-scores every default case with engine v12 and stores which cases v13 changed (`v13_vs_v12`). The checks v8
 retired (CP1, H4, FF5_too_big, the SW3 tip) must still fire somewhere in the v7 cases, so v7 stays proven.
 Profile (CLAUDE.md rule 7): real readings use the paper tests' one stated test profile (picks Minimal + Smart casual
 0.5 each, boldness a little, no age); picks only choose the "Reads as" label and never move a number.
@@ -68,6 +68,8 @@ WHATIF10 = {"pn_narrow": 1.0, "pn_skinny": 1.0, "pn_slim_soft": False, "cp1_dark
 WHATIF11 = {"h3_base_covered": False, "pn_lounge_skinny": 1.0}
 # v12's what-ifs: the old loud-print test, v11's slim size, a roominess-3 cut, a smaller light-on-light, the old wrinkles
 WHATIF12 = {"cl1_scale": False, "pn_narrow": 0.5, "pn_skinny": 1.5, "pn_fitted_vol": 3, "ll1": 0.5, "wr_look": False}
+# v13's what-ifs: every wrinkle amount moved (a bigger clean-look knit charge, no tailored-tee charge, a bigger half)
+WHATIF13 = {"wr_knit_clean": 0.4, "wr_knit_tailored": 0.0, "wr_half": 0.3}
 PICKS_VARIANTS = {"none": [], "one": [["workwear", 1.0]],
                   "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]}
 
@@ -80,7 +82,7 @@ def rid_of(r):
     return "r" + hashlib.sha256(canon(r).encode()).hexdigest()[:12]
 
 
-def run(reading, occ, styles, sl, bold, engine="v12", tune=None):
+def run(reading, occ, styles, sl, bold, engine="v13", tune=None):
     try:
         res = P.score_parts(copy.deepcopy(reading), occ, {k: w for k, w in styles}, copy.deepcopy(sl), bold, engine, tune)
     except Exception as e:  # a prototype bug: recorded, the TS must throw too
@@ -507,6 +509,19 @@ def parts_edges():
     add("v12_wr_oxford_chinos", Rd(TEE(sub="oxford_shirt", color="light_blue", condition="wrinkled"), JEANS(sub="chinos", color="navy"), SHOE(sub="loafer", color="brown")))
     add("v12_wr_two_tees_likely", Rd(TEE(condition="wrinkled", certainty="likely"), G("outerwear", "blazer", "navy"), TEE(condition="wrinkled", certainty="likely"), JEANS(sub="trousers", color="grey"), SHOE(sub="loafer", color="brown")))
     add("v12_wr_cargos_street", Rd(TEE(sub="hoodie", color="black", volume=4), JEANS(sub="cargos", color="olive", leg_shape="wide", condition="wrinkled"), SHOE(sub="chunky_sneaker")))
+    # v13 (wrinkled knit tops by look)
+    add("v13_wr_tee_smart", Rd(TEE(condition="wrinkled"), JEANS(sub="chinos", color="navy"), SHOE(sub="loafer", color="brown")))
+    add("v13_wr_tee_smart_likely", Rd(TEE(condition="wrinkled", certainty="likely"), JEANS(sub="chinos", color="navy"), SHOE(sub="loafer", color="brown")))
+    add("v13_wr_sweatshirt_minimal", Rd(TEE(sub="sweatshirt", color="grey", condition="wrinkled"), JEANS(sub="chinos", color="navy"), SHOE(sub="loafer", color="brown")))
+    add("v13_wr_tee_prep", Rd(G("outerwear", "cardigan", "navy"), TEE(condition="wrinkled"), JEANS(sub="chinos", color="khaki_beige"), SHOE(sub="loafer", color="brown")))
+    add("v13_wr_tee_overshirt_smart", Rd(TEE(color="black", condition="wrinkled"), G("outerwear", "overshirt", "olive"), JEANS(sub="chinos", color="navy"), SHOE(sub="suede_chukka", color="brown")))
+    add("v13_wr_hoodie_blazer", Rd(TEE(sub="hoodie", color="grey", condition="wrinkled"), G("outerwear", "blazer", "navy"), JEANS(sub="trousers", color="grey"), SHOE(sub="loafer", color="brown")))
+    add("v13_wr_sweatshirt_interview", Rd(TEE(sub="sweatshirt", color="grey", condition="wrinkled"), JEANS(sub="chinos", color="navy"), SHOE(sub="loafer", color="brown")), occ="interview")
+    add("v13_wr_tee_mixed_street", Rd(TEE(color="off_white_cream", volume=4, length="at_belt", condition="wrinkled"), JEANS(color="black", leg_shape="wide"), SHOE(sub="chunky_sneaker")))
+    add("v13_wr_tee_workwear", Rd(TEE(condition="wrinkled"), G("outerwear", "chore_coat", "brown"), JEANS(sub="chinos", color="navy"), SHOE(sub="work_boot", color="brown")))
+    add("v13_wr_hoodie_street", Rd(TEE(sub="hoodie", color="black", volume=4, condition="wrinkled"), JEANS(color="black", leg_shape="wide", volume=4), SHOE(sub="chunky_sneaker")))
+    add("v13_wr_tee_nostyle", Rd(TEE(color="red", condition="wrinkled"), G("bottom", "shorts", "olive"), SHOE(sub="slides_sandals", color="black")))
+    add("v13_wr_tee_nostyle_likely", Rd(TEE(condition="wrinkled", certainty="likely"), JEANS(color="denim_dark"), SHOE()))
     add("v10_knit_on_knit", Rd(G("outerwear", "cardigan", "navy"), TEE(sub="sweater", color="grey", length="at_belt"), JEANS(color="denim_dark"), SHOE(sub="suede_chukka", color="brown")))
     add("v8_standout_pattern", Rd(G("outerwear", "overshirt", "green", pattern="checks_plaid", pattern_scale="medium"), TEE(), JEANS(), SHOE(sub="work_boot", color="brown")))
     return E
@@ -533,7 +548,7 @@ def main():
 
     def add(src, r, occ, styles, bold, sl=None, tune=None):
         rid = ref(r)
-        eng, tn = ("v12", None) if tune is None else TUNES[tune]["call"]
+        eng, tn = ("v13", None) if tune is None else TUNES[tune]["call"]
         exp = run(r, occ, styles, sl, bold, eng, tn)
         case = {"src": src, "reading": rid, "occasion": occ, "styles": styles, "boldness": bold, "second_look": sl, "expected": exp}
         if tune is not None:
@@ -590,6 +605,8 @@ def main():
         "v9": {"call": ("v9", None), "data": {"engine": "v9", "label": P.VERSIONS["v9"], "tune": MJ.tune_json(P.TUNE["v9"])}},
         "v10": {"call": ("v10", None), "data": {"engine": "v10", "label": P.VERSIONS["v10"], "tune": MJ.tune_json(P.TUNE["v10"])}},
         "v11": {"call": ("v11", None), "data": {"engine": "v11", "label": P.VERSIONS["v11"], "tune": MJ.tune_json(P.TUNE["v11"])}},
+        "v12": {"call": ("v12", None), "data": {"engine": "v12", "label": P.VERSIONS["v12"], "tune": MJ.tune_json(P.TUNE["v12"])}},
+        "v13_whatif": {"call": ("v13", WHATIF13), "data": {"engine": "v13", "label": P.VERSIONS["v13"], "tune": MJ.tune_json(P._tune("v13", WHATIF13))}},
         "v12_whatif": {"call": ("v12", WHATIF12), "data": {"engine": "v12", "label": P.VERSIONS["v12"], "tune": MJ.tune_json(P._tune("v12", WHATIF12))}},
         "v11_whatif": {"call": ("v11", WHATIF11), "data": {"engine": "v11", "label": P.VERSIONS["v11"], "tune": MJ.tune_json(P._tune("v11", WHATIF11))}},
         "v10_whatif": {"call": ("v10", WHATIF10), "data": {"engine": "v10", "label": P.VERSIONS["v10"], "tune": MJ.tune_json(P._tune("v10", WHATIF10))}},
@@ -686,19 +703,19 @@ def main():
     bad = [g for g, v in groups.items() if len(v) > 1]
     assert not bad, f"picks moved a score: {bad[:3]}"
 
-    # what v12 changed against v11 (default cases only)
+    # what v13 changed against v12 (default cases only)
     changed = []
     for c in cases:
         if "tune" in c or "error" in c["expected"]:
             continue
         r = rp["readings"].get(c["reading"]) or readings[c["reading"]]
-        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v11")
+        e4 = run(r, c["occasion"], c["styles"], c["second_look"], c["boldness"], "v12")
         e5 = c["expected"]
         if e4.get("overall") != e5.get("overall") or e4.get("raw_score") != e5.get("raw_score"):
             r4 = {rr["check"] for p in e4.get("parts", {}).values() for rr in p["reasons"]}
             r5 = {rr["check"] for p in e5.get("parts", {}).values() for rr in p["reasons"]}
-            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v11": e4.get("overall"),
-                            "v12": e5.get("overall"), "v11_raw": e4.get("raw_score"), "v12_raw": e5.get("raw_score"),
+            changed.append({"src": c["src"], "occasion": c["occasion"], "styles": c["styles"], "v12": e4.get("overall"),
+                            "v13": e5.get("overall"), "v12_raw": e4.get("raw_score"), "v13_raw": e5.get("raw_score"),
                             "added": sorted(r5 - r4), "removed": sorted(r4 - r5)})
 
     must = ["PB1_roomier_than_look", "tip PB2_wide_leg_band", "SX1_another_look", "tip SX1_tip", "PR5_workwear_shape", "PR6_outdoor_shape", "PF5_big_top_skinny_leg", "PF6_layer_over_skinny", "PF10_peek", "PR1_waist_break", "PR1b_half_tuck", "PR4_street_shape",
@@ -723,7 +740,7 @@ def main():
             # v10
             "CP1_toned_down",
             # v12
-            "CL2_light_on_light"]  # v11 adds no new check id (PN1 and H3 fire in new places; see the v11 edge cases)
+            "CL2_light_on_light"]  # v13 adds no new check id (CON-6's knit charge fires in new places; v13 edge cases); v11 adds no new check id (PN1 and H3 fire in new places; see the v11 edge cases)
     retired = {"CP1_standout_color", "H4_standout_piece", "FF5_too_big", "tip SW3_dainty_wide",   # v8 retired them; v7 only
                "tip CC5_denim_near_match"}                                                       # v9: a fault now (cov7)
     missing = [m for m in must if not (cov7[m] if m in retired else cov[m])]
@@ -770,7 +787,7 @@ def main():
                    "fp_boundary_cases": dict(Counter(c["fp_boundary"] for c in cases if c.get("fp_boundary")))},
         "coverage": dict(sorted(cov.items())),
         "overall_histogram": dict(sorted(Counter(str(c["expected"].get("overall")) for c in cases if "tune" not in c).items())),
-        "v12_vs_v11": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v11"] != x["v12"]),
+        "v13_vs_v12": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v12"] != x["v13"]),
                      "changed": changed},
         "tunes": tunes,
         "pool": pool,
@@ -782,8 +799,8 @@ def main():
         json.dump(out, f, separators=(",", ":"), ensure_ascii=False)
     print(json.dumps(out["counts"]))
     print("file size MB:", round(os.path.getsize(path) / 1e6, 2))
-    print("overall histogram (v12):", out["overall_histogram"])
-    print("v12 vs v11:", out["v12_vs_v11"]["cases_changed"], "cases changed,", out["v12_vs_v11"]["overall_changed"], "with a new overall")
+    print("overall histogram (v13):", out["overall_histogram"])
+    print("v13 vs v12:", out["v13_vs_v12"]["cases_changed"], "cases changed,", out["v13_vs_v12"]["overall_changed"], "with a new overall")
     for k, v in sorted(cov.items()):
         print(f"   {v:6d}  {k}")
 

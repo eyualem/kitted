@@ -29,7 +29,10 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Twelve engines. engine="v12" is THE DEFAULT since Oct 14 (v11 plus the founder's calls on his Oct 14 checks: a small graphic
+Thirteen engines. engine="v13" is THE DEFAULT since Oct 14 (v12 plus the founder's call on wrinkled knit tops: a tee,
+hoodie, sweatshirt or tank read clearly wrinkled costs 0.2 when the outfit reads as minimal, smart casual or classic prep
+and none of the loud-native looks; nothing on streetwear, workwear, vintage sport, outdoor or no clear style; the
+amounts are knobs; TUNE["v13"], report ../../rubric/research/parts/v12.md -> "v13"); engine="v12" (the default earlier on Oct 14: v11 plus the founder's calls on his Oct 14 checks: a small graphic
 on a bright tee isn't a loud print, fitted legs (slim, or "straight" at roominess 2 or less) cost 1.0 again, light on
 light costs 1.0 on Color, and wrinkles are charged by garment and look; TUNE["v12"], report ../../rubric/research/parts/v12.md);
 engine="v11" (the default Oct 13-14: v10 plus two fixes from the creators' own outfits: a tank or
@@ -411,7 +414,19 @@ WR_TEES = {"tee", "graphic_tee"}                                       # ... exc
 WR_CASUAL = {"overshirt", "flannel_shirt", "chore_coat", "field_jacket", "camp_collar_shirt", "denim_shirt",
              "denim_jacket", "cargos", "shorts", "drawstring_trousers"}   # v12 CON-6: casual wovens
 WR_DRESSY_OCC = {"interview", "interview_corporate", "interview_tech", "event"}   # every woven keeps its charge
-WR_HALF = 0.2
+WR_CLEAN = {"minimalist", "smart_casual", "classic_prep"}             # v13 CON-6: looks where a crisp tee is part of the look
+# v13 (Oct 14, THE DEFAULT; the founder's call on wrinkled knit tops, report rubric/research/parts/v12.md -> "v13").
+# v12's two fixed amounts are knobs now (v12: 0.2 each, so v12 is unchanged), plus one new knob (0 in v1-v12):
+#   wr_half (CON-6): the half charge (casual wovens off a loud-native look, an oxford with jeans at Everyday or Class).
+#   wr_knit_tailored (CON-6): a tee or graphic tee under a tailored jacket.
+#   wr_knit_clean (CON-6, new): a knit top (WR_KNITS) when the outfit reads as minimal, smart casual or classic prep and
+#     as none of the loud-native looks (streetwear, workwear, vintage sport, outdoor); nothing on those looks or on no
+#     clear style. The founder: a crisp tee is part of the minimal and smart casual look.
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11"):
+    TUNE[_e].update(wr_half=0.0, wr_knit_tailored=0.0, wr_knit_clean=0.0)   # unused there (wr_look is off)
+TUNE["v12"].update(wr_half=0.2, wr_knit_tailored=0.2, wr_knit_clean=0.0)
+TUNE["v13"] = dict(TUNE["v12"], wr_knit_clean=0.2)
+VERSIONS["v13"] = "parts-proto-13 (Oct 14, 2026)"
 BASE_TOPS = {"tank_top", "tee"}                               # v11 STY-4: plain base tops judged by the layer over them
 COVER_TOPS = {"flannel_shirt", "overshirt", "camp_collar_shirt", "denim_shirt", "oxford_shirt", "dress_shirt", "cardigan"}
 DARK_NEUTRALS = {"black", "charcoal", "navy", "denim_dark"}   # v10 COL-11: the dark base that tones a bright piece down
@@ -1218,18 +1233,23 @@ def _wrinkle_cost(g, o, occasion):
     pieces, else 0.4."""
     sub = g.get("subcategory")
     base = 0.2 if sub in LINEN_LIKELY else 0.4
-    if not o["t"]["wr_look"]:
+    t = o["t"]
+    if not t["wr_look"]:
         return base
-    if sub in WR_KNITS:                                               # knit tops: lived-in, never charged...
-        tailored = any(x.get("subcategory") in TAILORED for x in o["outers"])
-        return WR_HALF if (sub in WR_TEES and tailored) else 0.0      # ...except a tee under tailoring
+    loud = any(st in LOUD_NATIVE for st in o["det"])
+    if sub in WR_KNITS:                                               # knit tops: lived-in...
+        if sub in WR_TEES and any(x.get("subcategory") in TAILORED for x in o["outers"]):
+            return t["wr_knit_tailored"]                              # ...except a tee under tailoring
+        if not loud and any(st in WR_CLEAN for st in o["det"]):
+            return t["wr_knit_clean"]                                 # v13: ...and on a minimal, smart casual or prep look
+        return 0.0
     if occasion in WR_DRESSY_OCC:                                     # interview or event: every woven keeps its charge
         return base
     if sub in WR_CASUAL:
-        return 0.0 if any(st in LOUD_NATIVE for st in o["det"]) else min(base, WR_HALF)
+        return 0.0 if loud else min(base, t["wr_half"])
     if sub == "oxford_shirt" and o["bottom"] is not None and o["bottom"].get("subcategory") == "jeans" \
             and occasion in ("everyday", "class"):
-        return WR_HALF
+        return t["wr_half"]
     return base
 
 
@@ -1354,13 +1374,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v12", tune=None):
+def _tune(engine="v13", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v12", tune=None):
+def earned_bonus(part_scores, engine="v13", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1374,7 +1394,7 @@ def earned_bonus(part_scores, engine="v12", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v12", tune=None):
+def piled_penalty(part_scores, engine="v13", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1385,7 +1405,7 @@ def piled_penalty(part_scores, engine="v12", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v12", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v13", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1424,11 +1444,12 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v12", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v13", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v12" (v11 + the founder's Oct 14 calls: small bright graphics aren't loud, fitted legs are
-    slim and cost 1.0, light on light, wrinkles by garment and look; default), "v11" (v10 + the covered base top and skinny joggers), "v10" (v9 + the creators' rules), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v13" (v12 + wrinkled knit tops cost 0.2 on a minimal, smart casual or prep look; default),
+    "v12" (v11 + the founder's Oct 14 calls: small bright graphics aren't loud, fitted legs are
+    slim and cost 1.0, light on light, wrinkles by garment and look), "v11" (v10 + the covered base top and skinny joggers), "v10" (v9 + the creators' rules), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
