@@ -100,7 +100,7 @@ function mismatch(c: PartsCase): string | null {
   return out.length ? `${label}: ${out.join(" | ")}` : null;
 }
 
-describe("parts engine parity (parts_proto.py v11)", () => {
+describe("parts engine parity (parts_proto.py v12)", () => {
   it("has every case, from the same prototype and data version", () => {
     expect(P.cases.length).toBe(P.counts.cases);
     expect(P.cases.length).toBeGreaterThan(10000);
@@ -109,7 +109,7 @@ describe("parts engine parity (parts_proto.py v11)", () => {
     expect(P.parts_proto_sha256).toBe(PARTS_DATA.sourceSha256);
   });
 
-  it("matches every v11 case exactly", () => {
+  it("matches every v12 case exactly", () => {
     const bad: string[] = [];
     for (const c of P.cases) {
       if (c.tune) continue;
@@ -120,7 +120,7 @@ describe("parts engine parity (parts_proto.py v11)", () => {
     expect(bad).toEqual([]);
   });
 
-  it("matches the tune variants (v1 to v10, the v4, v5, v6, v8, v9, v10 and v11 what-ifs): tuning is a data change", () => {
+  it("matches the tune variants (v1 to v11, the v4, v5, v6, v8, v9, v10, v11 and v12 what-ifs): tuning is a data change", () => {
     const tuned = P.cases.filter((c) => c.tune);
     expect(new Set(tuned.map((c) => c.tune))).toEqual(new Set(Object.keys(P.tunes)));
     const bad: string[] = [];

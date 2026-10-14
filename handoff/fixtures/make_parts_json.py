@@ -1,5 +1,5 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v11 = parts-proto-11, the default since Oct 13: v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
+engine v12 = parts-proto-12, the default since Oct 14: v11 plus the founder's Oct 14 calls (small bright graphics aren't loud, fitted legs cost 1.0 and a "straight" leg at roominess 2 or less is slim, light on light, wrinkles by garment and look; rubric/research/parts/v12.md); v11 was v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
 rubric/research/parts/gold-retune.md; v7 was v6 plus "a condition read counts only on a garment read clear", #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.8.0"
-ENGINE = "v11"
+VERSION = "1.9.0"
+ENGINE = "v12"
 
 
 def sl(s):
@@ -74,6 +74,9 @@ def data(engine=ENGINE):
             "LOUD_NATIVE": sl(P.LOUD_NATIVE),                                  # v9 CL1: looks whose own pieces are loud
             "DARK_NEUTRALS": sl(P.DARK_NEUTRALS),                              # v10 COL-11: the dark base
             "BASE_TOPS": sl(P.BASE_TOPS), "COVER_TOPS": sl(P.COVER_TOPS),      # v11 STY-4: a base top under a layer
+            "LIGHT_NEUTRALS": sl(P.LIGHT_NEUTRALS), "LL_DARK": sl(P.LL_DARK),  # v12 COL-12: light on light
+            "WR_KNITS": sl(P.WR_KNITS), "WR_TEES": sl(P.WR_TEES), "WR_CASUAL": sl(P.WR_CASUAL),   # v12 CON-6
+            "WR_DRESSY_OCC": sl(P.WR_DRESSY_OCC),
         },
         "boxyVolume": 4,                     # volume >= this is a roomy / boxy piece (every part)
         "proportions": {
@@ -117,7 +120,7 @@ def data(engine=ENGINE):
             "statements": {"allowance": {"subtle": 1, "a_little": 1.5, "bold": 2.5}, "allowanceDefault": 1.5, "streetBonus": 1,
                            "perExtra": 0.5, "max": 1.0, "bright": 1, "half": 0.5, "pattern": 1},
         },
-        "condition": {"stain": 1.2, "wrinkled": 0.4, "wrinkledLinen": 0.2, "worn": 0.4, "cap": 1.6, "untuckedDressShirt": 0.6,
+        "condition": {"stain": 1.2, "wrinkled": 0.4, "wrinkledLinen": 0.2, "wrinkledHalf": P.WR_HALF, "worn": 0.4, "cap": 1.6, "untuckedDressShirt": 0.6,
                       "partRate": 2.5, "partFloor": 2.0},
         "occasion": {
             "o1Curve": [list(x) for x in P.O1_CURVE],

@@ -29,7 +29,10 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Eleven engines. engine="v11" is THE DEFAULT since Oct 13 (v10 plus two fixes from the creators' own outfits: a tank or
+Twelve engines. engine="v12" is THE DEFAULT since Oct 14 (v11 plus the founder's calls on his Oct 14 checks: a small graphic
+on a bright tee isn't a loud print, fitted legs (slim, or "straight" at roominess 2 or less) cost 1.0 again, light on
+light costs 1.0 on Color, and wrinkles are charged by garment and look; TUNE["v12"], report ../../rubric/research/parts/v12.md);
+engine="v11" (the default Oct 13-14: v10 plus two fixes from the creators' own outfits: a tank or
 tee under another top layer is judged by the layer over it in STY-4, and skinny joggers or sweats pay the skinny charge out
 of the gym and home; TUNE["v11"], report ../../rubric/research/parts/v11.md); engine="v10" (the default earlier on Oct 13:
 v9 plus the creators' rules, TUNE["v10"]; report ../../rubric/research/parts/v10.md); engine="v9" (the default Oct 12-13: v8 plus four consensus fixes, TUNE["v9"], #232);
@@ -375,6 +378,40 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"):
     TUNE[_e].update(_OFF11)
 TUNE["v11"] = dict(TUNE["v10"], h3_base_covered=True, pn_lounge_skinny=2.0)
 VERSIONS["v11"] = "parts-proto-11 (Oct 13, 2026)"
+# v12 (Oct 14, THE DEFAULT; the founder's calls on his 12 real checks of Oct 14, report rubric/research/parts/v12.md).
+# Each reads only fields the live reading has; each knob is 0/False/None in v1-v11.
+#   cl1_scale (COL-8): a bright graphic print is loud only at a medium or large scale (or with a large logo). His red tee
+#     with a small chest print (pattern_scale small) was charged "the big, loud print" -1.5 for its colour alone. The tee
+#     still counts as a bright piece for every colour rule, and the COL-11 guard (_loud_print) uses the same test.
+#   pn_narrow / pn_skinny (moved back, PRO-13): slim costs 1.0 again (v10: 0.5), skinny 2.0 in all as before (ripped
+#     narrow jeans +0.5 as before). The founder: "all of these jeans were fitted... the silhouettes were bad".
+#   pn_fitted_vol (PRO-13 and every rule that groups slim/skinny legs): a bottom read straight at roominess <= this is
+#     judged as slim (the AI often calls fitted jeans "straight"; relaxed or wide at 2 or less never occurs in any reading,
+#     and leaving them out lets "Not quite right?" escape it by picking relaxed or wide). Not sweats or joggers (their own
+#     rules), not a suit's trousers, not under a tailored jacket. Proportions, Fit and Shoes read the judged leg (_leg);
+#     style detection ("Reads as") keeps the reading's own leg.
+#   ll1 (COL-12): the top (the outer layer when there is one) and the bottoms both in a light neutral (white, cream,
+#     khaki), with no dark piece among the clothes (shoes don't count), cost this on Color (not a suit: suit trousers; not a
+#     crisp white top over khaki, which is contrast). A colour fault, so it switches
+#     off the colour rewards. The founder's taste call (Tim and Wanhee like tonal outfits with a range of shade, which the
+#     reading can't see without lightness).
+#   wr_look (CON-6): wrinkles by garment and look (rubric/research/notes/wrinkles-streetwear.md): knit tops never (a tee
+#     under tailoring 0.2); casual wovens nothing when the outfit reads as a loud-native look, 0.2 otherwise; an oxford
+#     with jeans at Everyday or Class 0.2; dressy pieces 0.4 as before; at an interview or event every woven piece keeps
+#     its old charge. A waived charge shows nothing, not even the "might be wrinkled" tip.
+_OFF12 = dict(cl1_scale=False, pn_fitted_vol=None, ll1=0.0, wr_look=False)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11"):
+    TUNE[_e].update(_OFF12)
+TUNE["v12"] = dict(TUNE["v11"], cl1_scale=True, pn_narrow=1.0, pn_skinny=1.0, pn_fitted_vol=2, ll1=1.0, wr_look=True)
+VERSIONS["v12"] = "parts-proto-12 (Oct 14, 2026)"
+LIGHT_NEUTRALS = {"white", "off_white_cream", "khaki_beige"}   # v12 COL-12 (light_grey left out: it flips with grey)
+LL_DARK = {"black", "charcoal", "navy", "denim_dark", "brown", "burgundy"}   # v12 COL-12: a dark piece anchors it
+WR_KNITS = {"tee", "graphic_tee", "hoodie", "sweatshirt", "tank_top"}   # v12 CON-6: knit tops, made to look lived-in
+WR_TEES = {"tee", "graphic_tee"}                                       # ... except a tee under tailoring
+WR_CASUAL = {"overshirt", "flannel_shirt", "chore_coat", "field_jacket", "camp_collar_shirt", "denim_shirt",
+             "denim_jacket", "cargos", "shorts", "drawstring_trousers"}   # v12 CON-6: casual wovens
+WR_DRESSY_OCC = {"interview", "interview_corporate", "interview_tech", "event"}   # every woven keeps its charge
+WR_HALF = 0.2
 BASE_TOPS = {"tank_top", "tee"}                               # v11 STY-4: plain base tops judged by the layer over them
 COVER_TOPS = {"flannel_shirt", "overshirt", "camp_collar_shirt", "denim_shirt", "oxford_shirt", "dress_shirt", "cardigan"}
 DARK_NEUTRALS = {"black", "charcoal", "navy", "denim_dark"}   # v10 COL-11: the dark base that tones a bright piece down
@@ -458,15 +495,30 @@ def _care_fault(g):
     return None
 
 
-def _loud_print(g):
+def _loud_print(g, t=None):
     """v10 COL-11's guard: a bright graphic print, or a large check, floral, camo or other print (CL1's loud pieces, on
     any garment)."""
+    if g.get("pattern") == "graphic" and t is not None and t["cl1_scale"]:     # v12: a small graphic isn't loud
+        return g.get("pattern_scale") in ("medium", "large") or g.get("logo") == "large"
     return g.get("pattern") == "graphic" or (g.get("pattern") in LOUD_PRINTS and g.get("pattern_scale") == "large")
 
 
 def _earns(g):
     """Ruling 46: a stained or worn piece earns no credit in any part."""
     return g is not None and _care_fault(g) is None
+
+
+def _leg(B, o):
+    """v12 (pn_fitted_vol): the leg the Proportions, Fit and Shoes rules judge. A bottom read straight at roominess
+    <= pn_fitted_vol is judged slim (the AI often calls fitted jeans "straight"); not sweats or joggers, not a
+    suit's trousers, not under a tailored jacket. Style detection keeps the reading's own leg. None in v1-v11."""
+    leg = B.get("leg_shape") if B else None
+    cut = o["t"]["pn_fitted_vol"]
+    if (cut is not None and leg == "straight" and (B.get("volume") or 3) <= cut
+            and B.get("subcategory") not in R.LOUNGE_BOTTOMS and B.get("subcategory") != "suit_trousers"
+            and not (o["outer"] is not None and o["outer"].get("subcategory") in TAILORED)):
+        return "slim"
+    return leg
 
 
 def _refile(garments):
@@ -533,7 +585,7 @@ def _band_fault(o, t):
     T, O, B = o["top"], o["outer"], o["bottom"]
     if T is None or O is not None or B is None or (T.get("volume") or 3) < 4:
         return None
-    leg, bsub, sub = B.get("leg_shape"), B.get("subcategory"), T.get("subcategory") or ""
+    leg, bsub, sub = _leg(B, o), B.get("subcategory"), T.get("subcategory") or ""
     narrow, full = leg in NARROW and leg != "skinny", leg in FULL_LEG       # skinny: PF5 owns it
     if not (narrow or full) or bsub in R.LOUNGE_BOTTOMS or o["sx"][0]:
         return None                                                   # loungewear: its ladder; SX1: one fact, one charge
@@ -560,7 +612,7 @@ def _proportions(o, sl, t):
         p.na = "legs not in the photo"; return p
     if B.get("subcategory") in SHORTS:
         p.na = "shorts (no shorts-length reading yet)"; return p
-    leg = B.get("leg_shape")
+    leg = _leg(B, o)                                                  # v12: a fitted "straight" leg is judged slim
     lounge = B.get("subcategory") in R.LOUNGE_BOTTOMS
     o_sub = O.get("subcategory") if O else None
     o_tailored = o_sub in TAILORED
@@ -715,7 +767,7 @@ def _piece_faults(g, o):
         if g.get("strain") == "clear":
             out.append((CLEAR, f"the {sub.replace('_', ' ')} pulls", "FF6_strain"))
     elif cat == "bottom":
-        hem, leg = g.get("hem"), g.get("leg_shape")
+        hem, leg = g.get("hem"), _leg(g, o)
         drags_on_slides = (sub in ("jeans", "cargos") and leg in R.LOOSE and o["shoes"] is not None
                            and o["shoes"].get("subcategory") in SLIDES)
         if hem == "pooling" and not drags_on_slides:          # loose jeans on slides: Shoes owns that hem
@@ -741,7 +793,7 @@ def _fit(o):
         drop = min(SEVERE, fs[0][0] + 0.5 * sum(f[0] for f in fs[1:])) if fs else 0.0
         scored.append((drop, g, fs))
         # tip: a full break on a narrow leg (the 6-class hem is 64-68% steady, so it can't move points)
-        if g.get("category") == "bottom" and g.get("hem") == "full_break" and g.get("leg_shape") in NARROW \
+        if g.get("category") == "bottom" and g.get("hem") == "full_break" and _leg(g, o) in NARROW \
                 and g.get("certainty") == "clear":
             p.tip("slim pants with a full break run a little long; a hem to just touch the shoe", "FF7b_full_break_narrow",
                   would=-0.5)
@@ -810,13 +862,21 @@ def _color(o, boldness, t):
         own = lambda g: bool(co) and not R.is_bright(g) and any(R.STYLES[st][0](g, co)[0] >= 1 for st in o["det"]  # noqa: E731
                                                                 if st in LOUD_NATIVE)
         loud = next((g for g in main if g.get("category") in ("top", "outerwear") and (
-            (g.get("pattern") == "graphic" and (R.is_bright(g) or (g.get("logo") == "large" and g.get("subcategory") in ("tee", "graphic_tee"))))
+            (g.get("pattern") == "graphic" and ((R.is_bright(g) and (not t["cl1_scale"] or _loud_print(g, t)))
+                                                or (g.get("logo") == "large" and g.get("subcategory") in ("tee", "graphic_tee"))))
             or (g.get("pattern") in ("checks_plaid", "floral", "camo", "other") and g.get("pattern_scale") == "large"))
             and not own(g)), None)                                    # v9: a look's own loud piece isn't "loud"
         if loud is not None:
             what = (loud.get("subcategory") or "piece").replace("_", " ")
             kind = "print" if loud.get("pattern") == "graphic" else (loud.get("pattern") or "pattern").replace("_", " ").replace("checks plaid", "check")
             p.add(-t["cl1"], f"the big, loud {kind} on the {what} takes over the outfit", "CL1_loud_print")
+    if t["ll1"]:                                                      # v12 COL-12: light on light (0 in v1-v11)
+        up = o["outers"][0] if o["outers"] else o["top"]
+        if (up is not None and B is not None and up.get("color_family") in LIGHT_NEUTRALS
+                and B.get("color_family") in LIGHT_NEUTRALS and B.get("subcategory") != "suit_trousers"   # a suit is one colour
+                and not (up.get("color_family") == "white" and B.get("color_family") == "khaki_beige")   # crisp white over khaki: contrast
+                and not any(g.get("color_family") in LL_DARK for g in main)):
+            p.add(-t["ll1"], "light on light washes out; a darker pant would anchor it", "CL2_light_on_light")
     fault = bool(p.reasons)
     # tips that need readings we don't have (lightness for muddy/tonal, measured wash for double denim)
     if len(families) == 1:
@@ -834,7 +894,7 @@ def _color(o, boldness, t):
                     "CP1_standout_color"))
         o["credited"].add(id(g))
     elif (t["cp1_dark"] and len(bright) == 1 and len(non_neutral) == 1 and _earns(bright[0])
-          and not _loud_print(bright[0])
+          and not _loud_print(bright[0], t)
           and any(x is not bright[0] and x.get("color_family") in DARK_NEUTRALS for x in main)):
         g = bright[0]                                                 # v10 COL-11: one accent toned down by dark pieces
         pos.append((t["cp1_dark"], f"the {(g.get('color_family') or 'colour').replace('_', ' ')} {(g.get('subcategory') or 'piece').replace('_', ' ')} "
@@ -908,7 +968,7 @@ def _shoes(o, occasion, sl, t):
     gap = mean - fs
     tailored = any(g.get("subcategory") in TAILORED for g in o["outers"])
     lounge_ok = occasion in LOUNGE_OK
-    leg = B.get("leg_shape") if B else None
+    leg = _leg(B, o) if B else None                                   # v12: a fitted "straight" leg is judged slim
     loose_denim = bool(B and B.get("subcategory") in ("jeans", "cargos") and leg in R.LOOSE)
     athletic_bottom = bool(B and B.get("subcategory") in R.LOUNGE_BOTTOMS)
     up = 1.0                               # how much of the upward moves still apply (shrinks smoothly, never a switch)
@@ -1153,7 +1213,34 @@ def _unsure_care(garments, t):
     return tips
 
 
+def _wrinkle_cost(g, o, occasion):
+    """CON-1's wrinkle charge for one piece. v12 (wr_look, CON-6): by garment and look; v1-v11: 0.2 on likely-linen
+    pieces, else 0.4."""
+    sub = g.get("subcategory")
+    base = 0.2 if sub in LINEN_LIKELY else 0.4
+    if not o["t"]["wr_look"]:
+        return base
+    if sub in WR_KNITS:                                               # knit tops: lived-in, never charged...
+        tailored = any(x.get("subcategory") in TAILORED for x in o["outers"])
+        return WR_HALF if (sub in WR_TEES and tailored) else 0.0      # ...except a tee under tailoring
+    if occasion in WR_DRESSY_OCC:                                     # interview or event: every woven keeps its charge
+        return base
+    if sub in WR_CASUAL:
+        return 0.0 if any(st in LOUD_NATIVE for st in o["det"]) else min(base, WR_HALF)
+    if sub == "oxford_shirt" and o["bottom"] is not None and o["bottom"].get("subcategory") == "jeans" \
+            and occasion in ("everyday", "class"):
+        return WR_HALF
+    return base
+
+
 def _condition(o, scene, occasion, tips=()):
+    if o["t"]["wr_look"]:                                             # v12 CON-6: a waived wrinkle shows no tip either
+        drop, keep = set(), set()
+        for g in o["main"]:
+            if g.get("category") != "footwear" and g.get("condition_raw") == "wrinkled":
+                line = f"the {(g.get('subcategory') or 'piece').replace('_', ' ')} might be wrinkled; not counted, it isn't clear enough in the photo"
+                (keep if _wrinkle_cost(g, o, occasion) else drop).add(line)
+        tips = [x for x in tips if not (x["check"] == "C_unsure_wrinkled" and x["line"] in drop - keep)]
     if scene.get("lighting") == "dim":
         return {"deduction": 0.0, "faults": [], "display": "couldn't check in this light", "part": None, "tips": []}
     care, faults = 0.0, []
@@ -1165,7 +1252,9 @@ def _condition(o, scene, occasion, tips=()):
         if c == "stained" and g.get("certainty") == "clear":
             care += 1.2; faults.append(f"a stain on the {name}")
         elif c == "wrinkled":
-            care += 0.2 if g.get("subcategory") in LINEN_LIKELY else 0.4; faults.append(f"the {name} looks wrinkled")
+            w = _wrinkle_cost(g, o, occasion)                         # v12 CON-6: by garment and look
+            if w:
+                care += w; faults.append(f"the {name} looks wrinkled")
         elif c == "pilled_or_worn" and not g.get("distressed_by_design"):
             care += 0.4; faults.append(f"the {name} looks worn")
     care = min(care, 1.6)
@@ -1265,13 +1354,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v11", tune=None):
+def _tune(engine="v12", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v11", tune=None):
+def earned_bonus(part_scores, engine="v12", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1285,7 +1374,7 @@ def earned_bonus(part_scores, engine="v11", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v11", tune=None):
+def piled_penalty(part_scores, engine="v12", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1296,7 +1385,7 @@ def piled_penalty(part_scores, engine="v11", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v11", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v12", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1335,10 +1424,11 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v11", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v12", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v11" (v10 + the covered base top and skinny joggers, default), "v10" (v9 + the creators' rules), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
+    _second_look). engine: "v12" (v11 + the founder's Oct 14 calls: small bright graphics aren't loud, fitted legs are
+    slim and cost 1.0, light on light, wrinkles by garment and look; default), "v11" (v10 + the covered base top and skinny joggers), "v10" (v9 + the creators' rules), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)

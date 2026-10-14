@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.8.0",
- "engine": "v11",
- "label": "parts-proto-11 (Oct 13, 2026)",
+ "version": "1.9.0",
+ "engine": "v12",
+ "label": "parts-proto-12 (Oct 14, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "001446442940b6846b406ce3444b97df5098be748c2c76e873befa4786e5476c",
+ "sourceSha256": "53fbc11ca49c1b54128ebd89d722b31985d4f807fddbc4743d17bcbb1b79a66c",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -184,8 +184,8 @@ export const PARTS_DATA: PartsData = {
   },
   "ff5_roomy": true,
   "ff7_loose": true,
-  "pn_narrow": 0.5,
-  "pn_skinny": 1.5,
+  "pn_narrow": 1,
+  "pn_skinny": 1,
   "pn_rip": 0.5,
   "pr1_loose": 1.5,
   "pr1_straight": 0.5,
@@ -202,7 +202,11 @@ export const PARTS_DATA: PartsData = {
   "pn_slim_soft": true,
   "cp1_dark": 0.5,
   "h3_base_covered": true,
-  "pn_lounge_skinny": 2
+  "pn_lounge_skinny": 2,
+  "cl1_scale": true,
+  "pn_fitted_vol": 2,
+  "ll1": 1,
+  "wr_look": true
  },
  "sets": {
   "TAILORED": [
@@ -403,6 +407,48 @@ export const PARTS_DATA: PartsData = {
    "flannel_shirt",
    "overshirt",
    "oxford_shirt"
+  ],
+  "LIGHT_NEUTRALS": [
+   "khaki_beige",
+   "off_white_cream",
+   "white"
+  ],
+  "LL_DARK": [
+   "black",
+   "brown",
+   "burgundy",
+   "charcoal",
+   "denim_dark",
+   "navy"
+  ],
+  "WR_KNITS": [
+   "graphic_tee",
+   "hoodie",
+   "sweatshirt",
+   "tank_top",
+   "tee"
+  ],
+  "WR_TEES": [
+   "graphic_tee",
+   "tee"
+  ],
+  "WR_CASUAL": [
+   "camp_collar_shirt",
+   "cargos",
+   "chore_coat",
+   "denim_jacket",
+   "denim_shirt",
+   "drawstring_trousers",
+   "field_jacket",
+   "flannel_shirt",
+   "overshirt",
+   "shorts"
+  ],
+  "WR_DRESSY_OCC": [
+   "event",
+   "interview",
+   "interview_corporate",
+   "interview_tech"
   ]
  },
  "boxyVolume": 4,
@@ -559,6 +605,7 @@ export const PARTS_DATA: PartsData = {
   "stain": 1.2,
   "wrinkled": 0.4,
   "wrinkledLinen": 0.2,
+  "wrinkledHalf": 0.2,
   "worn": 0.4,
   "cap": 1.6,
   "untuckedDressShirt": 0.6,

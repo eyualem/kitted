@@ -40,10 +40,10 @@ describe("#219 his Oct 11 green hoodie fit", () => {
     }
   });
 
-  it("(2) a wrinkle read on a 'clear' garment still costs 0.4", () => {
+  it("(2) a wrinkle read on a 'clear' garment still costs points (v12 CON-6: an oxford with jeans at Class, 0.2)", () => {
     const sure: Reading = { ...D.first, garments: D.first.garments.map((g, i) => (i === 0 ? { ...g, certainty: "clear" } : g)) };
     const r = scoreParts(sure, opts()) as PartsScored;
-    expect(r.condition.deduction).toBe(0.4);
+    expect(r.condition.deduction).toBe(0.2);
     expect(r.condition.tips).toEqual([]);
   });
 

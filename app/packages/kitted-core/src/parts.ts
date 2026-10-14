@@ -153,6 +153,15 @@ export interface PartsTune {
   h3_base_covered: boolean;
   /** PRO-13: skinny joggers or sweatpants cost this on Proportions out of the gym and home (on top of the loungewear holds). */
   pn_lounge_skinny: number;
+  // ---- v12 (the founder's calls on his Oct 14 checks; off in v1-v11)
+  /** COL-8: a bright graphic print is loud only at a medium or large print size, or with a large logo (also the COL-11 guard). */
+  cl1_scale: boolean;
+  /** PRO-13 and every rule that groups slim/skinny legs: a leg read straight at roominess <= this is judged slim (null: off). */
+  pn_fitted_vol: number | null;
+  /** COL-12: light on light (top or outer layer and bottoms in LIGHT_NEUTRALS, no LL_DARK piece) costs this on Color. */
+  ll1: number;
+  /** CON-6: the wrinkle charge by garment and look. */
+  wr_look: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -236,6 +245,8 @@ export interface PartsData {
     stain: number;
     wrinkled: number;
     wrinkledLinen: number;
+    /** v12 CON-6: the half charge (a tee under tailoring, casual wovens off a loud look, an oxford with jeans). */
+    wrinkledHalf: number;
     worn: number;
     cap: number;
     untuckedDressShirt: number;
@@ -465,8 +476,14 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const INT_TOPS = PS("INT_TOPS"), INT_OUTERS = PS("INT_OUTERS"), HOODIES = PS("HOODIES"), LOUD_NATIVE = PS("LOUD_NATIVE");
   const DARK_NEUTRALS = PS("DARK_NEUTRALS");
   const BASE_TOPS = PS("BASE_TOPS"), COVER_TOPS = PS("COVER_TOPS"); // v11 STY-4: a base top under a layer
-  /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print. */
-  const loudPrint = (g: Garment): boolean => g.pattern === "graphic" || (LOUD_PATTERNS.has(nv(g.pattern)) && g.pattern_scale === "large");
+  const LIGHT_NEUTRALS = PS("LIGHT_NEUTRALS"), LL_DARK = PS("LL_DARK"); // v12 COL-12: light on light
+  const WR_KNITS = PS("WR_KNITS"), WR_TEES = PS("WR_TEES"), WR_CASUAL = PS("WR_CASUAL"), WR_DRESSY_OCC = PS("WR_DRESSY_OCC"); // v12 CON-6
+  /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print.
+   *  v12 (cl1_scale): a graphic print only at a medium or large print size, or with a large logo. */
+  const loudPrint = (g: Garment): boolean => {
+    if (g.pattern === "graphic" && truthy(t.cl1_scale)) return g.pattern_scale === "medium" || g.pattern_scale === "large" || g.logo === "large";
+    return g.pattern === "graphic" || (LOUD_PATTERNS.has(nv(g.pattern)) && g.pattern_scale === "large");
+  };
   const WT: Record<PartName, number> = t.weights ?? W; // v8: the tuned weights (combine, weightsUsed, the lowest tie)
   const PR4_SHOES = tset(t.pr4_shoes), PR4_LEGS = tset(t.pr4_legs);
   const PR5_LAYERS = tset(t.pr5_layers), PR5_BOTTOMS = tset(t.pr5_bottoms), PR5_SHOES = tset(t.pr5_shoes);
@@ -489,6 +506,16 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const formality = rubric.formality;
   const isBright = rubric.isBright;
   const vol3 = (g: Garment): number => or(g.volume, 3) as number;
+  /** v12 (pn_fitted_vol; parts_proto._leg): the leg Proportions, Fit and Shoes judge. A leg read straight at roominess
+   *  <= pn_fitted_vol is judged slim; not sweats or joggers, a suit's trousers, or under a tailored jacket. */
+  const legOf = (B: Garment | null, o: PartsOutfit): unknown => {
+    const leg = B ? nv(B.leg_shape) : null;
+    const cut = t.pn_fitted_vol;
+    if (B !== null && cut !== null && cut !== undefined && leg === "straight" && vol3(B) <= cut
+        && !LOUNGE_BOTTOMS.has(nv(B.subcategory)) && B.subcategory !== "suit_trousers"
+        && !(o.outer !== null && TAILORED.has(nv(o.outer.subcategory)))) return "slim";
+    return leg;
+  };
   const fam = (g: Garment | null): unknown => {
     if (!g) return null;
     const c = nv(g.color_family);
@@ -583,7 +610,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (!truthy(t.pb)) return null;
     const T = o.top, O = o.outer, B = o.bottom;
     if (T === null || O !== null || B === null || vol3(T) < BOXY) return null;
-    const leg = nv(B.leg_shape), bsub = nv(B.subcategory), sub = or(T.subcategory, "") as string;
+    const leg = legOf(B, o), bsub = nv(B.subcategory), sub = or(T.subcategory, "") as string;
     const narrow = NARROW.has(leg) && leg !== "skinny", full = FULL_LEG.has(leg); // skinny: PF5 owns it
     if (!(narrow || full) || LOUNGE_BOTTOMS.has(bsub) || truthy(o.sx[0])) return null; // loungewear: its ladder; SX1: one fact, one charge
     if (T.sleeve_end === "covers_hand" && !SHORT_SLEEVE_TYPES.has(sub) && !TAILORED_FIT.has(sub) && !RIBBED.has(sub)) return null; // FF5 owns it
@@ -609,7 +636,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.na = "shorts (no shorts-length reading yet)";
       return p;
     }
-    const leg = nv(B.leg_shape);
+    const leg = legOf(B, o); // v12: a fitted "straight" leg is judged slim
     const lounge = LOUNGE_BOTTOMS.has(nv(B.subcategory));
     const oSub = O ? nv(O.subcategory) : null;
     const oTailored = TAILORED.has(oSub);
@@ -756,7 +783,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       }
       if (g.strain === "clear") out.push([SEV.clear, `the ${rep(sub)} pulls`, "FF6_strain"]);
     } else if (cat === "bottom") {
-      const leg = nv(g.leg_shape);
+      const leg = legOf(g, o);
       const dragsOnSlides = LOOSE_DENIM.has(sub) && LOOSE.has(leg) && o.shoes !== null && SLIDES.has(nv(o.shoes.subcategory));
       if (g.hem === "pooling" && !dragsOnSlides) { // loose jeans on slides: Shoes owns that hem
         let sev = PRESSED.has(sub) ? SEV.clear : LOUNGE_BOTTOMS.has(sub) ? SEV.minor : SEV.moderate;
@@ -780,7 +807,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       const fs = pieceFaults(g, o).sort((a, b) => b[0] - a[0]); // stable, like Python's sorted(key=-severity)
       const drop = fs.length > 0 ? pyMin(SEV.severe, fs[0]![0] + data.fit.pieceOthersRate * sum(fs.slice(1).map((f) => f[0]))) : 0.0;
       scored.push([drop, g, fs]);
-      if (g.category === "bottom" && g.hem === "full_break" && NARROW.has(nv(g.leg_shape)) && g.certainty === "clear") {
+      if (g.category === "bottom" && g.hem === "full_break" && NARROW.has(legOf(g, o)) && g.certainty === "clear") {
         p.tip("slim pants with a full break run a little long; a hem to just touch the shoe", "FF7b_full_break_narrow", data.fit.tips.fullBreakNarrow);
       }
     }
@@ -855,12 +882,22 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       const co = truthy(t.cl1_own) ? H.outfit(o.main) : null;
       const own = (g: Garment): boolean => co !== null && !isBright(g) && o.det.some((st) => LOUD_NATIVE.has(st) && H.role(st, g, co)[0] >= 1);
       const loud = main.find((g) => (g.category === "top" || g.category === "outerwear") && (
-        (g.pattern === "graphic" && (isBright(g) || (g.logo === "large" && LOUD_LOGO_TOPS.has(nv(g.subcategory)))))
+        (g.pattern === "graphic" && ((isBright(g) && (!truthy(t.cl1_scale) || loudPrint(g))) || (g.logo === "large" && LOUD_LOGO_TOPS.has(nv(g.subcategory)))))
         || (LOUD_PATTERNS.has(nv(g.pattern)) && g.pattern_scale === "large")) && !own(g));
       if (loud !== undefined) {
         const what = rep(or(loud.subcategory, "piece"));
         const kind = loud.pattern === "graphic" ? "print" : replaceAll(rep(or(loud.pattern, "pattern")), "checks plaid", "check");
         p.add(-t.cl1, `the big, loud ${kind} on the ${what} takes over the outfit`, "CL1_loud_print");
+      }
+    }
+    if (truthy(t.ll1)) { // v12 COL-12: light on light (0 in v1-v11)
+      const up = o.outers.length > 0 ? o.outers[0]! : o.top;
+      const Bc = o.bottom;
+      if (up !== null && Bc !== null && LIGHT_NEUTRALS.has(nv(up.color_family)) && LIGHT_NEUTRALS.has(nv(Bc.color_family))
+          && Bc.subcategory !== "suit_trousers" // a suit is one colour by design
+          && !(up.color_family === "white" && Bc.color_family === "khaki_beige") // crisp white over khaki is contrast
+          && !main.some((g) => LL_DARK.has(nv(g.color_family)))) {
+        p.add(-t.ll1, "light on light washes out; a darker pant would anchor it", "CL2_light_on_light");
       }
     }
     const fault = p.reasons.length > 0;
@@ -956,7 +993,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const gap = mean - fs;
     const tailored = o.outers.some((g) => TAILORED.has(g.subcategory));
     const loungeOk = LOUNGE_OK.has(occasion);
-    const leg = B ? nv(B.leg_shape) : null;
+    const leg = B ? legOf(B, o) : null; // v12: a fitted "straight" leg is judged slim
     const looseDenim = B !== null && LOOSE_DENIM.has(nv(B.subcategory)) && LOOSE.has(leg);
     const athleticBottom = B !== null && LOUNGE_BOTTOMS.has(nv(B.subcategory));
     let up = 1.0;
@@ -1169,8 +1206,37 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   }
 
   // ---------------------------------------------------------------- CONDITION (after the average)
-  function condition(o: PartsOutfit, scene: Scene, occasion: string, tips: readonly PartTip[]): PartsCondition {
+  /** CON-1's wrinkle charge for one piece; v12 (wr_look, CON-6): by garment and look (parts_proto._wrinkle_cost). */
+  function wrinkleCost(g: Garment, o: PartsOutfit, occasion: string): number {
     const CD = data.condition;
+    const sub = nv(g.subcategory);
+    const base = LINEN_LIKELY.has(sub) ? CD.wrinkledLinen : CD.wrinkled;
+    if (!truthy(t.wr_look)) return base;
+    if (WR_KNITS.has(sub)) {
+      const tailored = o.outers.some((x) => TAILORED.has(nv(x.subcategory)));
+      return WR_TEES.has(sub) && tailored ? CD.wrinkledHalf : 0.0;
+    }
+    if (WR_DRESSY_OCC.has(occasion)) return base;
+    if (WR_CASUAL.has(sub)) return o.det.some((st) => LOUD_NATIVE.has(st)) ? 0.0 : pyMin(base, CD.wrinkledHalf);
+    if (sub === "oxford_shirt" && o.bottom !== null && o.bottom.subcategory === "jeans" && (occasion === "everyday" || occasion === "class")) {
+      return CD.wrinkledHalf;
+    }
+    return base;
+  }
+
+  function condition(o: PartsOutfit, scene: Scene, occasion: string, tipsIn: readonly PartTip[]): PartsCondition {
+    const CD = data.condition;
+    let tips: readonly PartTip[] = tipsIn;
+    if (truthy(t.wr_look)) { // v12 CON-6: a waived wrinkle shows no tip either
+      const drop = new Set<string>(), keep = new Set<string>();
+      for (const g of o.main) {
+        if (g.category !== "footwear" && g["condition_raw"] === "wrinkled") {
+          const line = `the ${rep(or(g.subcategory, "piece"))} might be wrinkled; not counted, it isn't clear enough in the photo`;
+          (wrinkleCost(g, o, occasion) ? keep : drop).add(line);
+        }
+      }
+      tips = tips.filter((x) => !(x.check === "C_unsure_wrinkled" && drop.has(x.line) && !keep.has(x.line)));
+    }
     if (scene.lighting === "dim") return { deduction: 0.0, faults: [], display: "couldn't check in this light", part: null, tips: [] };
     let care = 0.0;
     const faults: string[] = [];
@@ -1182,8 +1248,11 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         care += CD.stain;
         faults.push(`a stain on the ${name}`);
       } else if (c === "wrinkled") {
-        care += LINEN_LIKELY.has(nv(g.subcategory)) ? CD.wrinkledLinen : CD.wrinkled;
-        faults.push(`the ${name} looks wrinkled`);
+        const w = wrinkleCost(g, o, occasion); // v12 CON-6: by garment and look
+        if (truthy(w)) {
+          care += w;
+          faults.push(`the ${name} looks wrinkled`);
+        }
       } else if (c === "pilled_or_worn" && !truthy(g.distressed_by_design)) {
         care += CD.worn;
         faults.push(`the ${name} looks worn`);

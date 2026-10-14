@@ -556,6 +556,8 @@ const addedInBuild = {
   'pfix.pants_grey_trousers.step': 'Grey trousers lift',
   'pfix.pants_straight': 'Swap to straight-leg {name}',
   'pfix.pants_straight.step': 'Straight-leg {name} lift',
+  'pfix.pants_straight_fitted': 'Swap to straight-leg {name}',
+  'pfix.pants_straight_fitted.step': 'Straight-leg {name} lift',
   'pfix.fit_better': 'Swap the {name} for a better fit',
   'pfix.fit_better.step': 'A better fit lifts',
   'pfix.color_neutral': 'Swap the {name} for a neutral color',
