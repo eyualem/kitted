@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Woven label round 2</title>
+<style>
+body{margin:0;padding:24px;background:#EDEEF2;font:13px -apple-system,system-ui,sans-serif;color:#121628}
+h1{font-size:20px;margin:0 0 4px} p{margin:0 0 16px;color:#585E70}
+.row{display:flex;gap:18px;align-items:flex-end;background:#fff;border-radius:14px;padding:16px;margin-bottom:14px}
+.row b{width:150px;align-self:center}
+.ic{display:flex;flex-direction:column;align-items:center;gap:4px;color:#646A7A;font-size:11px}
+img{display:block}
+.dk{background:#0C0E14;border-radius:12px;padding:10px;display:flex;gap:10px;align-items:flex-end}
+.tn{background:#2A2622;border-radius:12px;padding:10px;display:flex;gap:10px;align-items:flex-end}
+.tn img{filter:sepia(1) saturate(2.2) brightness(.95) hue-rotate(-8deg)}
+.wall{background:linear-gradient(160deg,#6F7F96,#3E4A5E);border-radius:12px;padding:10px;display:flex;gap:10px;align-items:flex-end}
+</style></head><body>
+<h1>Kitted icon · woven label, round 2</h1>
+<p>a1 Quiet flat · a2 Tone-on-tone · a3 Loop label · a4 Woven texture. Sizes in pt (rendered at 2x). Tinted preview approximates iOS 26 tinted mode.</p>
+<div id="rows"></div>
+<script>
+const R=(n,s,v='')=>`<div class="ic"><img src="${n}${v}.svg" width="${s}" height="${s}" style="border-radius:${s*0.2237}px">${s}</div>`;
+const names={a1:'a1 · Quiet flat',a2:'a2 · Tone-on-tone',a3:'a3 · Loop label',a4:'a4 · Woven texture'};
+let h='';
+for(const n of ['a1','a2','a3','a4']){
+ h+=`<div class="row"><b>${names[n]}</b>${R(n,180)}<div class="wall">${R(n,60)}${R(n,40)}${R(n,29)}</div>${R(n,60)}${R(n,29)}
+ <div class="dk">${R(n,60,'-dark')}${R(n,29,'-dark')}</div><div class="tn">${R(n,60,'-tint')}${R(n,29,'-tint')}</div></div>`;
+}
+document.getElementById('rows').innerHTML=h;
+</script></body></html>

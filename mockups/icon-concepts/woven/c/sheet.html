@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Woven label blends</title>
+<style>
+body{margin:0;padding:28px;background:#EDEEF2;font:13px -apple-system,system-ui,sans-serif;color:#121628;width:1544px}
+h1{font-size:22px;margin:0 0 4px} p{margin:0 0 18px;color:#585E70}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:#fff;border-radius:16px;padding:16px 14px 14px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.card h2{font-size:14px;margin:0} .card small{color:#7A8090;margin-top:-8px}
+.big{border-radius:40.3px}
+.wall{width:100%;box-sizing:border-box;border-radius:12px;padding:14px 12px;display:flex;gap:16px;align-items:flex-end;justify-content:center}
+.ic{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px}
+.lt{background:linear-gradient(150deg,#C9D4E6,#E8DCCB);color:#333}
+.dk{background:linear-gradient(150deg,#141518,#2E2622);color:#bbb}
+.tn{background:linear-gradient(150deg,#2B2118,#4A3826);color:#d8c7a8}
+.tn img{background:#2b2b2d;filter:sepia(1) saturate(2.4) brightness(.92) hue-rotate(-10deg)}
+.lab{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7A8090;align-self:flex-start;margin:0 0 -6px 2px}
+</style></head><body>
+<h1>Kitted icon · woven label, the blends (round c)</h1>
+<p>c1 and c2 are new; a1 and b2 are the two they blend, for comparison. Each at 180, 60 and 29 pt (rendered 2x) on light, dark and tinted (iOS 26, simulated) wallpapers.</p>
+<div class="grid" id="g"></div>
+<script>
+const set=[['c1','c1 · Quiet label, scaled up','new',''],['c2','c2 · Band with the refined K','new',''],
+ ['a1','a1 · Quiet flat','round a','../a/'],['b2','b2 · Tag edge','round b','../b/']];
+const I=(src,s)=>`<div class="ic"><img src="${src}" width="${s}" height="${s}" style="border-radius:${(s*0.2237).toFixed(1)}px">${s} pt</div>`;
+let h='';
+for(const [n,t,tag,d] of set){
+ const f=v=>`${d}${n}${v}.svg`;
+ h+=`<div class="card"><h2>${t}</h2><small>${tag}</small><img class="big" src="${f('')}" width="180" height="180">
+ <div class="lab">Light</div><div class="wall lt">${I(f(''),60)}${I(f(''),29)}</div>
+ <div class="lab">Dark</div><div class="wall dk">${I(f('-dark'),180)}</div><div class="wall dk" style="margin-top:-8px">${I(f('-dark'),60)}${I(f('-dark'),29)}</div>
+ <div class="lab">Tinted</div><div class="wall tn">${I(f('-tint'),180)}</div><div class="wall tn" style="margin-top:-8px">${I(f('-tint'),60)}${I(f('-tint'),29)}</div></div>`;
+}
+document.getElementById('g').innerHTML=h;
+</script></body></html>

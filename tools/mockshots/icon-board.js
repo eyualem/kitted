@@ -5,7 +5,12 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const DIR = path.join(ROOT, 'mockups', 'icon-concepts');
-const GROUPS = [
+// WOVEN=1 builds a board of just the woven-label round (woven/a quiet, woven/b bold) plus the first woven finalist.
+const GROUPS = process.env.WOVEN ? [
+  ['woven/a', 'Woven · quiet'],
+  ['woven/b', 'Woven · bold'],
+  ['finalists', 'Earlier finalist'],
+] : [
   ['brand', 'Brand mark'],
   ['object', 'Object / metaphor'],
   ['score', 'Score / measure'],
@@ -25,6 +30,8 @@ const NAMES = {
   'brand-1': 'Shank Button', 'brand-2': 'Folded Label', 'brand-3': 'The Seam', 'brand-4': 'Bar Tack',
   'object-1': 'Hang Tag', 'object-2': 'Tape Coil', 'object-3': 'Pocket Rivet', 'object-4': 'Chalk Check',
   'score-1': 'Tape Slash', 'score-2': 'Tape K', 'score-3': 'Up-step', 'score-4': 'Tape at 8',
+  'a1': 'Quiet flat', 'a2': 'Tone-on-tone', 'a3': 'Loop label', 'a4': 'Woven texture',
+  'b1': 'Label is the icon', 'b2': 'Tag edge', 'b3': 'Copper thread', 'b4': 'Wordmark crop', 'final-2': 'Previous woven finalist',
   'earlier-A': 'A · Stitched K', 'earlier-B': 'B · Neck label', 'earlier-C': 'C · Rivet K',
 };
 
@@ -46,7 +53,7 @@ for (const [group, label] of GROUPS) {
   const d = path.join(DIR, group);
   if (!fs.existsSync(d)) continue;
   const notes = notesFor(group);
-  const files = fs.readdirSync(d).filter((f) => /^[a-z]+-[0-9A-Z]+\.svg$/.test(f)).sort();
+  const files = fs.readdirSync(d).filter((f) => /^[a-z]+-?[0-9A-Z]+\.svg$/.test(f) && !f.includes('-tint') && !f.includes('-dark') && (group !== 'finalists' || f === 'final-2.svg')).sort();
   for (const f of files) {
     const id = f.replace('.svg', '');
     const tint = fs.existsSync(path.join(d, `${id}-tint.svg`)) ? `${group}/${id}-tint.svg` : null;
@@ -88,5 +95,5 @@ h1{font-size:28px;margin:0 0 4px} h2{font-size:20px;margin:34px 0 10px} p{color:
 <h2>Tinted home screen (iOS 26)</h2>${home('linear-gradient(160deg,#1a1410,#2d2218)', '#f0d9c0', (it) => tintIcon(it, 60))}
 </div></body></html>`;
 
-fs.writeFileSync(path.join(DIR, 'index.html'), html);
+fs.writeFileSync(path.join(DIR, process.env.WOVEN ? 'woven.html' : 'index.html'), html);
 console.log(`${items.length} concepts → mockups/icon-concepts/index.html`);
