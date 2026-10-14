@@ -1,5 +1,6 @@
-// O5 · Consent (02 D4; text from inputs/app-store-and-age-rules.md §3, ruling 16). Two ways in: step 4 of
-// onboarding, and later as a sheet with an X (from the camera when he said "Not now"). Nothing is pre-checked:
+// O5 · Consent (02 D4; text from inputs/app-store-and-age-rules.md §3, ruling 16). Three ways in: step 4 of
+// onboarding; inside the camera, the first time he opens it without having agreed ("Agree" turns the same screen
+// into the camera); and as a sheet with an X (You › Privacy, or a photo that was held back). Nothing is pre-checked:
 // only "Agree" counts, and "Not now" is the same size. The example and privacy-policy links aren't shown yet
 // (O1e and the policy page aren't built), rather than leading nowhere.
 import { router } from 'expo-router';
@@ -13,6 +14,7 @@ import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { setOnboarded } from '@/state/appGate';
 import { basicsEcho, BASICS_KEY, EMPTY_BASICS, inchesToCm, loadDraft, LOOKS_KEY, type BasicsDraft } from './basics';
+import { dropAfterConsent, resumeAfterConsent } from '@/features/camera/startCheck';
 import { completeOnboarding, giveConsent } from './complete';
 import { picksToStyles } from './looks';
 import { OnboardingNav } from './OnboardingNav';
@@ -25,8 +27,11 @@ const ROWS: Row[] = [
   { icon: 'info.circle', title: 'onb.consent.aiTitle', body: 'onb.consent.aiBody' },
 ];
 
-/** `thenCamera` (sheet only): open the camera after "Agree" (from the camera, the default); You › Privacy just closes it. */
-export function ConsentScreen({ mode, thenCamera = true }: { mode: 'onboarding' | 'sheet'; thenCamera?: boolean }) {
+/** After "Agree" (sheet only): 'camera' opens it; 'close' just closes (You › Privacy); 'resume' closes and scores the
+ *  photo that was waiting for the agreement (startCheck). In the camera (`onAgreed`), the camera takes over in place. */
+export type AfterAgree = 'camera' | 'close' | 'resume';
+
+export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onboarding' | 'sheet' | 'camera'; after?: AfterAgree; onAgreed?: () => void }) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [basics, setBasics] = useState<BasicsDraft>(EMPTY_BASICS);
@@ -36,6 +41,8 @@ export function ConsentScreen({ mode, thenCamera = true }: { mode: 'onboarding' 
   useEffect(() => {
     if (mode === 'onboarding') void loadDraft(store).then((d) => setBasics(d.basics));
   }, [mode]);
+  // A photo held for the agreement is dropped however the sheet closes without "Agree" (X, Not now, a swipe down).
+  useEffect(() => (after === 'resume' ? dropAfterConsent : undefined), [after]);
 
   const finish = async (consent: boolean) => {
     if (busy) return;
@@ -52,10 +59,16 @@ export function ConsentScreen({ mode, thenCamera = true }: { mode: 'onboarding' 
 
   const save = async (consent: boolean) => {
     const now = sessionClock.nowMs();
+    if (mode === 'camera') {
+      if (!consent) return router.back();
+      await giveConsent(store, now);
+      return onAgreed?.();
+    }
     if (mode === 'sheet') {
       if (consent) await giveConsent(store, now);
       router.back();
-      if (consent && thenCamera) setTimeout(() => router.push('/camera'), 350);
+      if (consent && after === 'resume') resumeAfterConsent();
+      if (consent && after === 'camera') setTimeout(() => router.push('/camera'), 350);
       return;
     }
     const d = await loadDraft(store);
@@ -107,7 +120,7 @@ export function ConsentScreen({ mode, thenCamera = true }: { mode: 'onboarding' 
   );
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: mode === 'onboarding' ? insets.top : space.l }]}>
+    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: mode === 'sheet' ? space.l : insets.top }]}>
       {mode === 'onboarding' ? (
         <OnboardingNav step={4} onBack={() => (router.canGoBack() ? router.back() : router.replace('/onboarding/basics'))} />
       ) : (

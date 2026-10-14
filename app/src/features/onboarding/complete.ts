@@ -27,14 +27,26 @@ export async function completeOnboarding(store: KittedStore, a: OnboardingAnswer
   await store.chat.put(textMessage(ids('M'), nowMs, 'stylist', null, { aiNote: true }));
 }
 
-/** Consent given later (the sheet from the camera or You → Privacy): only the two consent fields change. */
+/** Consent given later (the camera's first open, the sheet, You → Privacy): only the two consent fields change.
+ *  With no profile yet (a dev or demo install that skipped onboarding) one is made with blank basics, so the
+ *  agreement is always kept: before, "Agree" saved nothing there and the camera asked again on every photo. */
 export async function giveConsent(store: KittedStore, nowMs: number): Promise<void> {
   const p = await store.profile.get('me');
-  if (p) await store.profile.put({ ...p, consentVersion: CONSENT_VERSION, consentAt: nowMs });
+  if (p) {
+    await store.profile.put({ ...p, consentVersion: CONSENT_VERSION, consentAt: nowMs });
+    return;
+  }
+  await store.profile.put({
+    id: 'me', birthYear: null, heightCm: null, build: '', fitPreference: '', styles: [],
+    boldness: null, budget: null, lastOccasion: 'everyday',
+    consentVersion: CONSENT_VERSION, consentAt: nowMs, onboardingDone: true,
+    ideaTime: null, units: 'imperial', createdAt: nowMs,
+  });
 }
 
-/** Whether a photo may be sent: onboarded without consent = never (the same rule as the closet call). */
+/** Whether a photo of his may be sent: a saved agreement. The same rule as the upload's own guard (privacy/wipe.ts
+ *  mayUpload), so the camera asks exactly when a photo would be refused, once, before he takes it. */
 export async function hasConsent(store: KittedStore): Promise<boolean> {
   const p = await store.profile.get('me');
-  return !(p && p.onboardingDone && !p.consentVersion);
+  return !!p && !!p.consentVersion;
 }

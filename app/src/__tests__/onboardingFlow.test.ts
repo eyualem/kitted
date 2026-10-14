@@ -2,7 +2,8 @@ import { createMemoryStore } from '@/data/memoryStore';
 import {
   basicsEcho, BASICS_KEY, birthYears, heightLabel, inchesToCm, isUnderAge, loadDraft, looksEcho, looksReply, LOOKS_KEY, parseBasics, stepHeight,
 } from '@/features/onboarding/basics';
-import { completeOnboarding, giveConsent, hasConsent } from '@/features/onboarding/complete';
+import { completeOnboarding, CONSENT_VERSION, giveConsent, hasConsent } from '@/features/onboarding/complete';
+import { mayUpload, withdrawConsent } from '@/features/privacy/wipe';
 import { routedSource } from '@/services/readingSource/live';
 import type { ReadingSource } from '@/services/readingSource/types';
 
@@ -52,7 +53,7 @@ describe('consent (02 D4)', () => {
   it('"Not now" saves the profile without consent; agreeing later turns it on', async () => {
     const store = createMemoryStore();
     await store.init();
-    expect(await hasConsent(store)).toBe(true); // not onboarded yet: the demo's bundled photos only
+    expect(await hasConsent(store)).toBe(false); // nothing agreed yet: the camera asks first
     await completeOnboarding(store, { ...answers, consent: false }, 1000, ids);
     const p = await store.profile.get('me');
     expect(p?.onboardingDone).toBe(true);
@@ -61,6 +62,25 @@ describe('consent (02 D4)', () => {
     await giveConsent(store, 2000);
     expect((await store.profile.get('me'))?.consentAt).toBe(2000);
     expect(await hasConsent(store)).toBe(true);
+  });
+
+  it('agreeing with no profile yet (an install that skipped onboarding) is kept, so the camera never asks again', async () => {
+    // Oct 14 loop: "Agree" saved nothing without a profile, so the camera asked after every photo, forever.
+    const store = createMemoryStore();
+    await store.init();
+    expect(await hasConsent(store)).toBe(false);
+    expect(await mayUpload(store)).toBe(false);
+    await giveConsent(store, 3000);
+    const p = await store.profile.get('me');
+    expect(p?.consentVersion).toBe(CONSENT_VERSION);
+    expect(p?.consentAt).toBe(3000);
+    expect(p?.styles).toEqual([]);
+    // The camera's ask and the upload's guard are one rule: both open now.
+    expect(await hasConsent(store)).toBe(true);
+    expect(await mayUpload(store)).toBe(true);
+    await withdrawConsent(store);
+    expect(await hasConsent(store)).toBe(false);
+    expect(await mayUpload(store)).toBe(false);
   });
 
   it('a real photo never reaches the live source without consent', async () => {

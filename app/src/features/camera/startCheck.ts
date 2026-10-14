@@ -7,6 +7,7 @@ import { fitCheck } from '@/features/fitcheck/session';
 import type { CheckMode } from '@/features/fitcheck/machine';
 import type { StartOutcome } from '@/features/fitcheck/service';
 import { showToast } from '@/features/toast/toast';
+import { discardTempPhoto } from '@/services/tempPhoto';
 import { t } from '@/i18n/en';
 
 export type PhotoInput = { photoId: string } | { photoUri: string };
@@ -37,6 +38,14 @@ export async function startCheck(mode: CheckMode, photo: PhotoInput, parentCheck
     console.error('[check] start threw', e);
     return { outcome: 'error' };
   });
+  if (r.outcome === 'noConsent') {
+    // His photo waits for the agreement instead of being dropped: "Agree" scores this same photo (no trip back
+    // to the camera); closing the sheet discards it. The camera asks before a photo, so this is the rare path.
+    askConsentThen(() => startCheck(mode, photo, parentCheckId, lens), () => {
+      if ('photoUri' in photo) discardTempPhoto(photo.photoUri);
+    });
+    return r;
+  }
   explain(r);
   if (__DEV__) void logResult(mode, photo, r).catch(() => {});
   return r;
@@ -48,8 +57,37 @@ export async function retryCheck(checkId: string): Promise<StartOutcome> {
     console.error('[check] retry threw', e);
     return { outcome: 'error' };
   });
+  if (r.outcome === 'noConsent') {
+    askConsentThen(() => retryCheck(checkId), () => {});
+    return r;
+  }
   explain(r);
   return r;
+}
+
+/** What runs once he agrees on the consent sheet (a photo he already picked, or a Try again), and what to do if he
+ *  doesn't. One at a time: a newer one replaces (and drops) the older. */
+let pending: { run: () => Promise<unknown>; drop: () => void } | null = null;
+
+function askConsentThen(run: () => Promise<unknown>, drop: () => void): void {
+  pending?.drop();
+  pending = { run, drop };
+  router.push('/sheets/consent?resume=1');
+}
+
+/** The consent sheet's "Agree": starts what was waiting. False when nothing was. */
+export function resumeAfterConsent(): boolean {
+  const p = pending;
+  pending = null;
+  if (!p) return false;
+  void p.run();
+  return true;
+}
+
+/** The consent sheet closed without agreeing: what was waiting is dropped (his temporary photo goes). */
+export function dropAfterConsent(): void {
+  pending?.drop();
+  pending = null;
 }
 
 /** DEV: one readable line per check in the Metro log, so a test on his phone can be followed
@@ -96,8 +134,9 @@ export function explain(r: StartOutcome) {
   } else if (r.outcome === 'limit') {
     showToast(t('stylist.quota.used'));
   } else if (r.outcome === 'noConsent') {
-    // "Score my fits" is off (Y7): nothing was prepped or sent. He re-agrees on the consent sheet, never silently.
-    router.push('/sheets/consent');
+    // "Score my fits" went off mid-way ("Which one is you?"): nothing was sent. He re-agrees, never silently; agreeing
+    // just closes the sheet (`resume` with nothing waiting), and he taps his photo again.
+    router.push('/sheets/consent?resume=1');
   } else if (r.outcome === 'error' && !('checkId' in r)) {
     // No card was posted (prep or a write failed first): say it didn't count. With a card, the card says so.
     showToast(t('fail.ai'));
