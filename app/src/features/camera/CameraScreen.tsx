@@ -23,6 +23,7 @@ import { Icon, IconButton, KButton, KText, Numeral, cameraScrims, fixed, opacity
 import { store } from '@/data/db';
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { CheckMode } from '@/features/fitcheck/machine';
+import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import {
   KittedCameraView, assess, hasCamera, requestCameraPermission, takePhotoFrom, type CameraHandle, type CameraReadyEvent, type GuideEvent,
@@ -63,6 +64,21 @@ export function CameraScreen() {
   const lens = lensFromParams(p);
   const checkMode: CheckMode = p.mode === 'recheck' || p.mode === 'shoeSnap' ? p.mode : 'check';
   const snap = checkMode === 'shoeSnap';
+  // Re-check: say which piece is read again (founder, Oct 14: this used to be a plain chat line).
+  const [focus, setFocus] = useState<'outerwear' | 'top' | 'bottom' | 'footwear' | null | undefined>(undefined);
+  useEffect(() => {
+    if (checkMode !== 'recheck' || !p.parent) return;
+    let live = true;
+    fitCheck.recheckFocus(p.parent).then((f) => live && setFocus(f)).catch(() => live && setFocus(null));
+    return () => { live = false; };
+  }, [checkMode, p.parent]);
+  const recheckNote = checkMode !== 'recheck' || focus === undefined ? null : focus === null
+    ? { title: t('cam.recheck.titleAny'), body: t('cam.recheck.bodyAny') }
+    : (() => {
+        const slot = t(`recheck.slot.${focus}` as 'recheck.slot.top');
+        const many = focus === 'bottom' || focus === 'footwear';
+        return { title: t('cam.recheck.title', { slot }), body: t(many ? 'cam.recheck.bodyMany' : 'cam.recheck.bodyOne', { slot }) };
+      })();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
@@ -409,6 +425,16 @@ export function CameraScreen() {
 
       {/* Bottom controls */}
       <View style={[styles.bottom, { bottom: insets.bottom + 5 }]} onLayout={(e) => setControlsTop(e.nativeEvent.layout.y)}>
+        {recheckNote && !panelShown ? (
+          <View style={styles.recheckNote} accessible accessibilityLabel={`${recheckNote.title}. ${recheckNote.body}`}>
+            <KText variant="subheadline" weight="600" color={fixed.white}>
+              {recheckNote.title}
+            </KText>
+            <KText variant="footnote" color={fixed.white} style={{ opacity: 0.85, textAlign: 'center' }}>
+              {recheckNote.body}
+            </KText>
+          </View>
+        ) : null}
         {!snap ? (
           <View style={styles.modeSwitch} accessibilityRole="tablist" accessibilityLabel={t('cam.a11y.mode')}>
             {(['propped', 'mirror'] as const).map((m) => (
@@ -527,6 +553,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: fixed.offerPillBorder,
   },
   bottom: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: space.xl, paddingBottom: 34 },
+  recheckNote: { alignItems: 'center', gap: 2, maxWidth: 320, paddingHorizontal: space.l, paddingVertical: space.s, borderRadius: 16, backgroundColor: fixed.modeSwitchBacking, marginBottom: -space.m },
   modeSwitch: { flexDirection: 'row', padding: space.xs, borderRadius: 20, backgroundColor: fixed.modeSwitchBacking },
   modeSeg: { paddingVertical: 6, paddingHorizontal: space.l, borderRadius: 16, minHeight: 32, justifyContent: 'center' },
   controls: { alignSelf: 'stretch', paddingHorizontal: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },

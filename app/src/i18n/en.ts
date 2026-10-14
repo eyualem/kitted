@@ -94,6 +94,12 @@ const addedInBuild = {
   'recheck.slot.bottom': 'pants',
   'recheck.slot.footwear': 'shoes',
   'recheck.slot.any': 'change',
+  // The camera in re-check mode (founder, Oct 14: moved out of the chat): what's read again.
+  'cam.recheck.title': 'Re-check · {slot}',
+  'cam.recheck.titleAny': 'Re-check',
+  'cam.recheck.bodyOne': 'Only your {slot} is read again. The rest keeps its score.',
+  'cam.recheck.bodyMany': 'Only your {slot} are read again. The rest keeps its score.',
+  'cam.recheck.bodyAny': 'Only what you changed is read again. The rest keeps its score.',
   'recheck.fixPast.held': 'wear it',
   'recheck.fixPast.generic': 'make the change',
   // A re-check of the same photo (#219): no new read, nothing counted, the re-check stays open

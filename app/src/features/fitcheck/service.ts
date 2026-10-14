@@ -997,7 +997,16 @@ export function createFitCheckService(deps: ServiceDeps) {
         },
       })).row;
     },
-    /** "Overshirt on? Send it. I'll only re-read the layer." (02 D10). */
+    /** Which slot a re-check of this check reads again (its top fix's slot), or null when it's not one slot. The
+     *  camera says it ("Re-check · pants"); the founder moved it out of the chat (Oct 14). */
+    async recheckFocus(checkId: string): Promise<'outerwear' | 'top' | 'bottom' | 'footwear' | null> {
+      const row = await store.fitChecks.get(checkId);
+      const top = row?.fixes[0];
+      const cat = top ? cardFixTargets([top])[0]?.split('.')[0] ?? '' : '';
+      return cat === 'outerwear' || cat === 'top' || cat === 'bottom' || cat === 'footwear' ? cat : null;
+    },
+    /** The old chat line ("Overshirt on? Send it. I'll only re-read the layer.", 02 D10). Not posted since Oct 14: the
+     *  camera carries it. Kept for older demo stories. */
     async postRecheckPrompt(checkId: string) {
       const row = await store.fitChecks.get(checkId);
       const reading = row && (await readingOf(row));
@@ -1006,8 +1015,8 @@ export function createFitCheckService(deps: ServiceDeps) {
       const held = top?.edits.some((e) => e.op === 'add_held') ? (reading.held_items ?? []).find((g) => g.category === 'outerwear') : undefined;
       const heldName = held ? garmentName(held) : '';
       const fixQuestion = held ? t('recheck.q.held', { held: heldName.charAt(0).toUpperCase() + heldName.slice(1) }) : t('recheck.q.generic');
-      const cat = top ? cardFixTargets([top])[0]?.split('.')[0] ?? '' : '';
-      const slotKey = (['outerwear', 'top', 'bottom', 'footwear'].includes(cat) ? `recheck.slot.${cat}` : 'recheck.slot.any') as
+      const cat = await api.recheckFocus(checkId);
+      const slotKey = (cat ? `recheck.slot.${cat}` : 'recheck.slot.any') as
         'recheck.slot.outerwear' | 'recheck.slot.top' | 'recheck.slot.bottom' | 'recheck.slot.footwear' | 'recheck.slot.any';
       return message({ createdAt: clock.nowMs(), role: 'stylist', kind: 'text', text: t('recheck.prompt', { fixQuestion, slotWord: t(slotKey) }) });
     },

@@ -266,10 +266,8 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const go = {
     why: () => router.push(`/sheets/why/${row.id}`),
     nqr: () => router.push(`/sheets/correct/${row.id}`),
-    recheck: async () => {
-      await fitCheck.postRecheckPrompt(row.id);
-      router.push(`/camera?mode=recheck&parent=${row.id}`);
-    },
+    // The re-check's "only the pants are read again" lives in the camera now, not as a chat line (founder, Oct 14).
+    recheck: () => router.push(`/camera?mode=recheck&parent=${row.id}`),
     share: () => router.push(`/share/${row.id}`),
     review: () => router.push(`/sheets/added/${row.id}`),
     occasion: () => pickOccasion(row.occasion, (o) => void confirmLens(row, { occasion: o })),

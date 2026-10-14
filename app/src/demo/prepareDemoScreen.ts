@@ -183,7 +183,7 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       continue;
     }
     if (step.do === 'recheckPrompt') {
-      await fitCheck.postRecheckPrompt(STORY_FIRST_CHECK);
+      // No chat line since Oct 14 (the camera says what a re-check reads); the step stays so old stories keep their timing.
     } else if (step.do === 'recheck') {
       await fitCheck.start({ mode: 'recheck', photoId: step.photoId, parentCheckId: STORY_FIRST_CHECK, checkId: STORY_RECHECK });
     } else if (step.hold !== undefined) {
