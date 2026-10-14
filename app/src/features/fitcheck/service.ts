@@ -1064,13 +1064,20 @@ export function createFitCheckService(deps: ServiceDeps) {
         },
       })).row;
     },
-    /** Which slot a re-check of this check reads again (its top fix's slot), or null when it's not one slot. The
-     *  camera says it ("Re-check · pants"); the founder moved it out of the chat (Oct 14). */
-    async recheckFocus(checkId: string): Promise<'outerwear' | 'top' | 'bottom' | 'footwear' | null> {
+    /** Every slot a re-check of this check reads again, top to toe: each piece any of the card's fixes touches
+     *  (recheckMerge re-reads all of cardFixTargets, not just the first fix's). null when a fix touches every piece
+     *  ("*.sleeve_end") or the card has no fix: the camera then says "what you changed". */
+    async recheckSlots(checkId: string): Promise<RecheckSlot[] | null> {
       const row = await store.fitChecks.get(checkId);
-      const top = row?.fixes[0];
-      const cat = top ? cardFixTargets([top])[0]?.split('.')[0] ?? '' : '';
-      return cat === 'outerwear' || cat === 'top' || cat === 'bottom' || cat === 'footwear' ? cat : null;
+      const cats = new Set(cardFixTargets(row?.fixes ?? []).map((x) => x.split('.')[0] ?? ''));
+      if (cats.has('*')) return null;
+      const slots = RECHECK_SLOTS.filter((c) => cats.has(c));
+      return slots.length > 0 ? slots : null;
+    },
+    /** The one slot a re-check reads again, or null when it's several or none (the old chat line names one). */
+    async recheckFocus(checkId: string): Promise<RecheckSlot | null> {
+      const slots = await api.recheckSlots(checkId);
+      return slots?.length === 1 ? slots[0]! : null;
     },
     /** The old chat line ("Overshirt on? Send it. I'll only re-read the layer.", 02 D10). Not posted since Oct 14: the
      *  camera carries it. Kept for older demo stories. */
@@ -1092,3 +1099,7 @@ export function createFitCheckService(deps: ServiceDeps) {
 }
 
 export type FitCheckService = ReturnType<typeof createFitCheckService>;
+
+/** The pieces a re-check can name, top to toe (the camera lists them in this order). */
+export const RECHECK_SLOTS = ['outerwear', 'top', 'bottom', 'footwear'] as const;
+export type RecheckSlot = (typeof RECHECK_SLOTS)[number];

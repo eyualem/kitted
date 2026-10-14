@@ -1,6 +1,6 @@
 // The fit check end to end on the memory store: the firstRun story, corrections, re-check,
 // partial (pick / snap / skip), occasion re-score, cache, timers and failures.
-import { US_EASTERN } from '@kitted/core';
+import { cardFixTargets, US_EASTERN } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
@@ -279,5 +279,27 @@ describe('warm days (#160)', () => {
     expect(jul.warm).toBe(true);
     expect(jul.copies.some((c) => c.startsWith('Add a jacket') || c.startsWith('Add a layer') || c.endsWith('for boots'))).toBe(false);
     expect(jul.score).toBe(oct.score);
+  });
+});
+
+describe('re-check note in the camera (Oct 14: "Re-check · pants" on a card with pants, top and layer fixes)', () => {
+  // The founder's Oct 14 11:20 card: three closet fixes, one per piece.
+  const fix = (slot: string, op: string) => ({ target: `closet_${slot}`, tier: 'swapFromCloset', effort: 2, free: true, to: 7, gain: 0.5, edits: [{ op, slot }], copy: slot, tag: '', engine: 'parts' });
+  const three = [fix('bottom', 'swap_closet'), fix('top', 'swap_closet'), fix('outerwear', 'add_closet')];
+
+  it('names every piece the fixes touch, top to toe; one piece keeps the single-slot note', async () => {
+    const { store, svc } = await setup();
+    const r = await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' });
+    const id = (r as { checkId: string }).checkId;
+    // The re-check's merge re-reads all of these (cardFixTargets), so the note must name all of them.
+    expect(cardFixTargets(three as never)).toEqual(['bottom', 'outerwear', 'top']);
+    await store.fitChecks.patch(id, { fixes: three as never });
+    expect(await svc.recheckSlots(id)).toEqual(['outerwear', 'top', 'bottom']);
+    expect(await svc.recheckFocus(id)).toBeNull();
+    await store.fitChecks.patch(id, { fixes: [three[0]] as never });
+    expect(await svc.recheckSlots(id)).toEqual(['bottom']);
+    expect(await svc.recheckFocus(id)).toBe('bottom');
+    await store.fitChecks.patch(id, { fixes: [] });
+    expect(await svc.recheckSlots(id)).toBeNull();
   });
 });

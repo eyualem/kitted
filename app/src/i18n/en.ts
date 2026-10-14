@@ -105,6 +105,9 @@ const addedInBuild = {
   'cam.recheck.bodyOne': 'Only your {slot} is read again. The rest keeps its score.',
   'cam.recheck.bodyMany': 'Only your {slot} are read again. The rest keeps its score.',
   'cam.recheck.bodyAny': 'Only what you changed is read again. The rest keeps its score.',
+  // A card whose fixes touch several pieces (Oct 14: "Re-check · pants" showed when the fixes were for pants, top and layer).
+  'cam.recheck.bodyList': 'Your {slots} are read again. The rest keeps its score.',
+  'cam.recheck.and': '{rest} and {last}',
   'recheck.fixPast.held': 'wear it',
   'recheck.fixPast.generic': 'make the change',
   // A re-check of the same photo (#219): no new read, nothing counted, the re-check stays open
