@@ -4,8 +4,21 @@
     {
       "name": "kitted-web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "app", "run", "web"],
+      "runtimeArgs": [
+        "--prefix",
+        "app",
+        "run",
+        "web"
+      ],
       "port": 8081
+    },
+    {
+      "name": "mockups",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "/Users/eyu/Desktop/files/Kitted/tools/mockshots/serve.js"
+      ],
+      "port": 8095
     }
   ]
 }
