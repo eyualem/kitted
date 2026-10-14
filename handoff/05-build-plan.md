@@ -568,6 +568,7 @@ Built after the quick-fix batch and before Closet (it creates the outfit picker 
      - Push down items worn in the last 2 days.
      - Break ties deterministically by a hash of dayKey + combo.
      - Prune to the top 4 per slot before combining, so it stays under 50 ms on Hermes.
+     > **Update Oct 14 (rotation; founder: no same outfit or same top again and again):** `recentWear` became `history` (`pickHistory`: every earlier card shown, day and evening, plus Wear this and fit checks, each with days ago; the service looks back 14 days and never counts the card's own outfit, so a re-pick sees the same history). Among outfits that pass the weather, occasion and layer filters the order is: no wrong-weather piece (a warm piece on a no-layer day, boots or long sleeves on a hot day, fair-weather shoes on a wet day) → not the exact same top + bottom + shoes within 7 days → the top he has gone longest without (shown or worn; 7+ days counts as fresh) → predicted score → hash. Bottoms, shoes and layers keep the mild −0.75 for 2 days. The evening card counts that day's card, so it never repeats its top while another works. Pin and exclude still win. Tests: `ideas.test.ts` and `morningService.test.ts` "rotation" (14-day runs).
    - *Check:* on the seed closet, cold + rain gives a layer + boots, never suede; hot gives no layer; a closet with no shoes gives missing = shoes; the same input gives the same output; a 40-item closet runs in under 50 ms in Jest.
 3. **MC3 · Data** (0.25 d)
    - **Migration V4:** a `daily_ideas` table with these columns:

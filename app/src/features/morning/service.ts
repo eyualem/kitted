@@ -5,11 +5,16 @@
 // One per day key and slot, locked: the outfit doesn't change on later opens, so the card and
 // the notification agree. Changing the occasion or style, or Swap one, re-picks on purpose.
 //
+// Rotation (Oct 14): each pick sees what came before its own card: the cards shown on the 14
+// days before (and, for the evening card, that day's card) and what he wore. So the top moves
+// on even when he ignores every card, the evening never repeats the day's top, and a re-pick of
+// the same card sees the same history as its first pick.
+//
 // Whether the card is "checked" (collapsed with his score) is derived, not stored: any scored
 // check in that day's window collapses it, whether it started from the card or the composer.
 import {
-  addDays, dayKey, localParts, pickOutfit, seasonNeeds, weatherNeeds,
-  type ClosetItem, type DayWeather, type IdeaResult, type Styles, type WeatherWindow, type ZoneOffset,
+  addDays, dayKey, daysBetween, localParts, pickHistory, pickOutfit, seasonNeeds, weatherNeeds,
+  type ClosetItem, type DayWeather, type IdeaResult, type PastUse, type PickHistory, type Styles, type WeatherWindow, type ZoneOffset,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
@@ -35,6 +40,8 @@ export const EVENING_FROM_HOUR = 17;
 const ROLLOVER_HOUR = 4;
 const WEATHER_TIMEOUT_MS = 2_000;
 const EVENING_IGNORE_LIMIT = 3;
+/** How far back the picker looks (its rules reach 7 days). */
+const HISTORY_DAYS = 14;
 const KV = {
   eveningIgnored: 'idea.evening.ignored',
   style: (slot: IdeaSlot) => `idea.style.${slot}`,
@@ -90,21 +97,35 @@ export function createMorningService(deps: MorningDeps) {
     return (await store.closet.all()).filter((c) => !c.isDeleted);
   }
 
-  /** Items worn on the 2 days before `day` (from Wear this and from checks). */
-  async function recentlyWorn(day: string): Promise<Set<string>> {
-    const out = new Set<string>();
-    const days = new Set<string>();
-    for (const back of [1, 2]) days.add(addDays(day, -back));
-    for (const w of await store.wearLog.all()) {
-      if (!days.has(w.day)) continue;
-      if (w.outfitId) (await store.outfits.get(w.outfitId))?.itemIds.forEach((id) => out.add(id));
-      if (w.fitCheckId) (await store.fitChecks.get(w.fitCheckId))?.itemIds.forEach((id) => out.add(id));
+  /**
+   * What came before this card: other cards shown (and still showing) and what he wore (Wear
+   * this, fit checks), each with how many days ago. Only earlier days count, plus, for the
+   * evening card, the same day's card and morning checks. The card's own outfit never counts.
+   */
+  async function history(row: Pick<DailyIdeaRow, 'id' | 'slot'> & { outfitId?: string | null }): Promise<PickHistory> {
+    const day = row.id.split('|')[0] ?? '';
+    const from = addDays(day, -HISTORY_DAYS);
+    const evening = row.slot === 'evening';
+    const before = (d: string, sameDay: boolean) => d >= from && (d < day || (evening && sameDay && d === day));
+    const itemsOf = async (outfitId: string) => (await store.outfits.get(outfitId))?.itemIds ?? [];
+    const uses: PastUse[] = [];
+    for (const r of await store.dailyIdeas.all()) {
+      if (r.id === row.id || !r.outfitId || !before(r.dayKey, r.slot === 'day')) continue;
+      uses.push({ daysAgo: daysBetween(r.dayKey, day), itemIds: await itemsOf(r.outfitId) });
     }
-    for (const c of await store.fitChecks.all()) if (days.has(c.dayKey)) c.itemIds.forEach((id) => out.add(id));
-    return out;
+    // Checks come from the fit-check rows below; the wear log adds what he wore from a card.
+    for (const w of await store.wearLog.all()) {
+      if (!w.outfitId || w.outfitId === row.outfitId || !before(w.day, true)) continue;
+      uses.push({ daysAgo: daysBetween(w.day, day), itemIds: await itemsOf(w.outfitId) });
+    }
+    for (const c of await store.fitChecks.all()) {
+      if (!before(c.dayKey, slotAt(c.createdAt, zone).slot === 'day')) continue;
+      uses.push({ daysAgo: daysBetween(c.dayKey, day), itemIds: c.itemIds });
+    }
+    return pickHistory(uses, (await store.closet.all()) as ClosetItem[]);
   }
 
-  async function pick(row: Pick<DailyIdeaRow, 'id' | 'slot' | 'occasion' | 'style' | 'weather'>, extra: { exclude?: Set<string> } = {}): Promise<IdeaResult> {
+  async function pick(row: Pick<DailyIdeaRow, 'id' | 'slot' | 'occasion' | 'style' | 'weather'> & { outfitId?: string | null }, extra: { exclude?: Set<string> } = {}): Promise<IdeaResult> {
     const p = await store.profile.get('me');
     const w = row.weather as unknown as DayWeather | null;
     const month = localParts(clock.nowMs(), zone).m;
@@ -115,7 +136,7 @@ export function createMorningService(deps: MorningDeps) {
       boldness: p?.boldness ?? 'a_little',
       needs: w ? weatherNeeds(w) : seasonNeeds(month),
       evening: row.slot === 'evening',
-      recentlyWorn: await recentlyWorn(row.id.split('|')[0] ?? ''),
+      history: await history(row),
       seed: row.id,
       exclude: extra.exclude,
     });

@@ -504,6 +504,15 @@ P5's real size is about 6.5 days, not 05's 2.
 4. Claim @kitted.app / @trykitted and register trykitted.com. Then the waitlist page and the TikTok account.
 5. Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement. They block TestFlight, purchases and the age check, not the demo.
 
+### 4c. Closet ideas from the founder (Oct 14)
+- **Long-press a piece → its photo:** the native iOS long-press preview (via `@expo/ui`, already installed) shows his own photo of that piece, cropped to it with nothing above (no face), with actions under it: **Rename** and **Remove from Closet** (today's long-press action moves in). Waiting on his go.
+- **Rename** closet pieces (was planned for the piece page; brought forward into the same menu).
+- **Later (v1.1, with "Should I buy this?"):** a lookup of where a piece is from and whether it's worth the price. Caveats: exact product ID from one photo is unreliable (brand only when a logo shows, which the closet call already reads); "worth it" needs a priced web search, which costs per lookup.
+
+### 4b. Weather: move to Apple WeatherKit (founder, Oct 14)
+- **Now (building Oct 14, #240):** real weather from the US National Weather Service (free, no key, US-only) with approximate location from our own native module; the location goes only to the weather service and is never stored.
+- **Later, after the $99 Apple program:** switch the card to Apple WeatherKit (the `WeatherSource` interface stays, so it's a swap), keep the weather service as the fallback if WeatherKit fails, and update the privacy line and the location permission text back to Apple.
+
 ### 5. After launch: v1.1 (December)
 - **"Should I buy this?"** In Stylist, he snaps an item in the store and gets what it goes with in his closet, "+N fits", a duplicate warning, then Buy it / Skip it. No barcodes or prices; Google Lens owns those. With a thin closet the card says what it's based on. Before building: a Codex check of Reddit and TikTok on demand. Details: DECISIONS-LOG #40.
 - **"Should I buy this?" online (v1.2, #88):** while browsing a shop app or site, share the product page or a screenshot to Kitted (iOS share sheet) and get the same answer: what it goes with, "+N outfits", duplicates, Buy it / Skip it. Needs a Share Extension.

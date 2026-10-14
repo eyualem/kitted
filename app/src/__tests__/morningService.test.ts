@@ -149,3 +149,68 @@ describe('checkInSlot', () => {
     expect(checkInSlot({ dayKey: '2026-10-22', createdAt: at('2026-10-22T07:00:00-04:00') }, idea, US_EASTERN)).toBe(false);
   });
 });
+
+// Rotation (Oct 14): two weeks of cards on a normal closet (5 tops, 3 bottoms, 3 shoes), with
+// no weather permission (November: "bring a layer"). The evening card stops after 3 ignored nights.
+const NORMAL = ['T1', 'T2', 'T3', 'T4', 'T5', 'B1', 'B2', 'B3', 'S1', 'S2', 'S3'];
+
+async function twoWeeks(o: { wear: boolean }) {
+  const store = createMemoryStore();
+  await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at('2026-10-20T07:00:00-04:00') });
+  for (const c of await store.closet.all()) if (!NORMAL.includes(c.id)) await store.closet.put({ ...c, isDeleted: true });
+  const clock = manualClock(at('2026-11-02T08:00:00-05:00'));
+  const svc = createMorningService({ store, clock, weather: fakeWeather(null, 'unknown'), ids: counterIds() });
+  const days = Array.from({ length: 14 }, (_, i) => `2026-11-${String(2 + i).padStart(2, '0')}`);
+  for (const d of days) {
+    clock.set(at(`${d}T08:00:00-05:00`));
+    const id = await svc.ensureCard();
+    if (o.wear && id) await svc.wear(id);
+    clock.set(at(`${d}T19:00:00-05:00`));
+    await svc.ensureCard();
+  }
+  const slotOf = new Map((await store.closet.all()).map((c) => [c.id, c.slot]));
+  const cards = [];
+  for (const r of (await store.dailyIdeas.all()).sort((a, b) => a.id.localeCompare(b.id))) {
+    const ids = (await store.outfits.get(r.outfitId!))!.itemIds;
+    cards.push({ day: r.dayKey, slot: r.slot, top: ids.find((x) => slotOf.get(x) === 'top')!, key: ids.filter((x) => slotOf.get(x) !== 'outer').sort().join('+') });
+  }
+  return { store, clock, svc, cards };
+}
+
+const gap = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+
+describe('rotation over two weeks', () => {
+  for (const wear of [false, true]) {
+    it(wear ? 'he taps Wear this every morning' : 'he ignores every card', async () => {
+      const { cards } = await twoWeeks({ wear });
+      expect(cards.filter((c) => c.slot === 'day')).toHaveLength(14);
+      expect(cards.filter((c) => c.slot === 'evening')).toHaveLength(3);
+      expect(new Set(cards.map((c) => c.top)).size).toBe(5);
+      const tops = ['T1', 'T2', 'T3', 'T4', 'T5'];
+      cards.forEach((c, k) => {
+        const before = cards.slice(0, k);
+        const recent = (t: string) => before.some((p) => gap(p.day, c.day) <= 3 && p.top === t);
+        if (recent(c.top)) expect(tops.every(recent)).toBe(true);
+        expect(before.some((p) => gap(p.day, c.day) < 7 && p.key === c.key)).toBe(false);
+        if (c.slot === 'evening') expect(c.top).not.toBe(cards.find((p) => p.day === c.day && p.slot === 'day')!.top);
+      });
+      // Once the evening card has stopped, day cards never bring a top back within 3 days.
+      const later = cards.filter((c) => c.slot === 'day' && c.day >= '2026-11-08');
+      later.forEach((c, k) => later.slice(0, k).filter((p) => p.top === c.top).forEach((p) => expect(gap(p.day, c.day)).toBeGreaterThan(3)));
+    });
+  }
+
+  it('a locked card stays put when later history changes; swap one still works', async () => {
+    const { store, clock, svc } = await twoWeeks({ wear: false });
+    const id = '2026-11-15|day';
+    const before = (await store.outfits.get((await store.dailyIdeas.get(id))!.outfitId!))!.itemIds;
+    clock.set(at('2026-11-15T12:00:00-05:00'));
+    await svc.wear(id);
+    expect(await svc.ensureCard()).toBeNull();
+    expect((await store.outfits.get((await store.dailyIdeas.get(id))!.outfitId!))!.itemIds).toEqual(before);
+    const shoe = before[before.length - 1]!;
+    await svc.swap(id, [shoe]);
+    const after = (await store.outfits.get((await store.dailyIdeas.get(id))!.outfitId!))!.itemIds;
+    expect(after).not.toContain(shoe);
+  });
+});
