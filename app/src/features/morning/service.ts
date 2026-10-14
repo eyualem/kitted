@@ -39,6 +39,8 @@ export interface MorningDeps {
 export const EVENING_FROM_HOUR = 17;
 const ROLLOVER_HOUR = 4;
 const WEATHER_TIMEOUT_MS = 2_000;
+/** Live weather (NWS) needs a location fix and two requests; its own budget is 6 s. */
+const LIVE_WEATHER_TIMEOUT_MS = 7_000;
 const EVENING_IGNORE_LIMIT = 3;
 /** How far back the picker looks (its rules reach 7 days). */
 const HISTORY_DAYS = 14;
@@ -84,7 +86,7 @@ export function createMorningService(deps: MorningDeps) {
   async function forecast(window: WeatherWindow): Promise<DayWeather | null> {
     let timer: ReturnType<typeof setTimeout> | undefined;
     const timeout = new Promise<null>((resolve) => {
-      timer = setTimeout(() => resolve(null), WEATHER_TIMEOUT_MS);
+      timer = setTimeout(() => resolve(null), deps.weather.kind === 'live' ? LIVE_WEATHER_TIMEOUT_MS : WEATHER_TIMEOUT_MS);
     });
     try {
       return await Promise.race([deps.weather.forecast(window).catch(() => null), timeout]);

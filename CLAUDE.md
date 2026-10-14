@@ -205,7 +205,7 @@
     - (the "Scored for" line was replaced Oct 8 by "Reads as …", below.)
   - **Composer:** the suggestion-chip row is gone.
   - **Demo screens:** 25 morning · 26 thin closet · 27 new user · 28 wearing it · 29 after his own check · 30 evening · 31 weather ask · 32 hot day · 33 "Reads as smart casual". Screen 12 now shows the new card.
-  - **Mocked:** all weather is **sample weather**, labelled on the card. Real WeatherKit + location (MC9) waits on the $99 program.
+  - **Weather (Oct 14, #240):** real, from the US National Weather Service with approximate location (our own `kitted-location` module, CoreLocation reduced accuracy); asked inside the card; the coordinate is rounded and never stored. Demo screens keep sample weather. Apple WeatherKit later (plan §4b).
   - **#66 resolved by #68:** he picks the style before the photo; it can't be changed after. When the style-council rulebook is ported, "Scored for" gives way to "Reads as …".
 - **The one quick tap, "Reads as …", and the new style names: built Oct 8** (DECISIONS-LOG #85–86; 02 "S5q", "S6s"). On the Simulator:
   - **When the photo leaves a look-alike in doubt** (my Oct 7 black jeans read as sweatpants), the card asks "Jeans or sweatpants?" before the score, with two buttons and Skip, which keeps what was read ("I'll score it as sweatpants."; since #125, was the generous answer). Jeans → 6.5, Sweatpants → 5.0. Nothing counts until I answer. After a Skip the card says "Scored as sweatpants. Not right? Tap." A re-check can't undo the answer.
@@ -510,7 +510,7 @@ P5's real size is about 6.5 days, not 05's 2.
 - **Later (v1.1, with "Should I buy this?"):** a lookup of where a piece is from and whether it's worth the price. Caveats: exact product ID from one photo is unreliable (brand only when a logo shows, which the closet call already reads); "worth it" needs a priced web search, which costs per lookup.
 
 ### 4b. Weather: move to Apple WeatherKit (founder, Oct 14)
-- **Now (building Oct 14, #240):** real weather from the US National Weather Service (free, no key, US-only) with approximate location from our own native module; the location goes only to the weather service and is never stored.
+- **Now (built Oct 14, #240; on his phone after a reinstall):** real weather from the US National Weather Service (free, no key, US-only) with approximate location from our own native module; the location goes only to the weather service and is never stored.
 - **Later, after the $99 Apple program:** switch the card to Apple WeatherKit (the `WeatherSource` interface stays, so it's a swap), keep the weather service as the fallback if WeatherKit fails, and update the privacy line and the location permission text back to Apple.
 
 ### 5. After launch: v1.1 (December)

@@ -19,7 +19,7 @@ import { quota } from '@/features/fitcheck/session';
 import { OutfitTiles } from '@/features/stylist/cards/OutfitTiles';
 import { showToast } from '@/features/toast/toast';
 import { setStylistAction } from '@/router/stylistAction';
-import { weatherSource } from '@/services/weather';
+import { isNwsWeather, weatherSource } from '@/services/weather';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
@@ -166,9 +166,10 @@ function FullCard({ m }: { m: Model }) {
               onPick={(s) => s !== 'none' && void changeStyle(s as StyleKey)}
               accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
             />
-            {weather && weatherSource.kind === 'sample' ? (
+            {weather ? (
+              // Where the weather came from: live NWS, or sample weather (never passed off as real).
               <KText variant="caption" color="ink3" style={{ marginLeft: 'auto' }}>
-                {t('wx.sample')}
+                {isNwsWeather(weather) ? t('wx.nws') : t('wx.sample')}
               </KText>
             ) : null}
           </View>

@@ -196,6 +196,7 @@ const addedInBuild = {
   'wx.attribution': 'Weather',
   'wx.sources': 'Data sources',
   'wx.sample': 'Sample weather',
+  'wx.nws': 'Weather: National Weather Service',
   'wx.ask.title': 'Use your local weather?',
   'wx.ask.body': "Your rough location only. It isn't stored.",
   'wx.ask.allow': 'Allow',

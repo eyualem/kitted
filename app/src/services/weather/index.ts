@@ -1,22 +1,18 @@
-// Where the morning/evening card's weather comes from (02 "S1d", 05 §MC).
-// Live: Apple WeatherKit + approximate location, once the paid developer program is active (MC9).
-// Until then: sample weather, always labelled "Sample weather" on the card (never passed off as real).
+// Where the morning/evening card's weather comes from (02 "S1d", 05 §MC9).
+// Live: the US National Weather Service with approximate location (nws.ts), in dev and release
+// builds. Apple WeatherKit replaces NWS after the paid developer program, behind the same
+// WeatherSource. Demo screens keep sample weather, always labelled "Sample weather" on the card.
 import type { DayWeather, WeatherWindow } from '@kitted/core';
+import * as location from '../../../modules/kitted-location';
 import { store } from '@/data/db';
 import { DEMO_ENABLED } from '@/demo/config';
 import type { DemoWeather } from '@/demo/demoArgs';
 import { getDemoArgs } from '@/state/session';
+import { createNwsSource } from './nws';
+import type { WeatherSource } from './types';
 
-export type WeatherPermission = 'granted' | 'denied' | 'unknown';
-
-export interface WeatherSource {
-  /** 'live' = WeatherKit; 'sample' = the fixtures below; 'none' = no weather at all (season only). */
-  kind: 'live' | 'sample' | 'none';
-  permission(): Promise<WeatherPermission>;
-  requestPermission(): Promise<WeatherPermission>;
-  /** The window the card plans for, or null (no permission, offline, or no source). */
-  forecast(window: WeatherWindow): Promise<DayWeather | null>;
-}
+export type { WeatherPermission, WeatherSource } from './types';
+export { isNwsWeather, type SourcedWeather } from './nws';
 
 const PERMISSION_KV = 'weather.permission';
 
@@ -64,7 +60,45 @@ const noSource: WeatherSource = {
   forecast: async () => null,
 };
 
-/** Sample weather in demo and dev builds; no weather in a release build until WeatherKit lands (MC9). */
-export const weatherSource: WeatherSource = DEMO_ENABLED || __DEV__ ? sampleSource : noSource;
+/** Live weather: approximate location (kitted-location) → api.weather.gov. Memory-only caches. */
+const liveSource = createNwsSource({
+  location,
+  log: __DEV__ ? (line) => console.log(line) : undefined,
+});
+
+/**
+ * Which source answers right now. Demo screens (and a `-demoWeather` launch argument) keep sample
+ * weather, so screenshots never change; everything else is live. A build without the location
+ * module (web, or a phone that hasn't been reinstalled since it was added) has no weather: the card
+ * then plans by the season and never asks for location.
+ */
+export function chooseWeatherKind(o: {
+  demoEnabled: boolean;
+  demoScreen: number | null;
+  demoWeather: DemoWeather | null;
+  locationAvailable: boolean;
+}): WeatherSource['kind'] {
+  if (o.demoEnabled && (o.demoScreen !== null || o.demoWeather !== null)) return 'sample';
+  return o.locationAvailable ? 'live' : 'none';
+}
+
+function current(): WeatherSource {
+  const args = getDemoArgs();
+  const kind = chooseWeatherKind({ demoEnabled: DEMO_ENABLED, demoScreen: args.demoScreen, demoWeather: args.weather, locationAvailable: location.isAvailable });
+  return kind === 'sample' ? sampleSource : kind === 'live' ? liveSource : noSource;
+}
+
+/** The app's weather source. Chosen per call, because a demo link can arrive while the app runs. */
+export const weatherSource: WeatherSource = {
+  get kind() {
+    return current().kind;
+  },
+  permission: () => current().permission(),
+  requestPermission: () => current().requestPermission(),
+  forecast: (window: WeatherWindow): Promise<DayWeather | null> => current().forecast(window),
+  prefetch: async () => {
+    await current().prefetch?.();
+  },
+};
 
 export { PERMISSION_KV as WEATHER_PERMISSION_KV };

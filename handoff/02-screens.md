@@ -813,6 +813,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 - **As built (Oct 8, #67):**
   - **Header:** two rows: the mono tagline (`Today` / `Tonight` · `From your closet`), then the two pills.
   - **Sample weather:** the strip's footer reads `Sample weather` until WeatherKit is live; Apple's mark replaces it then.
+    > **Update Oct 14 (founder): the weather is real now, from the US National Weather Service** (api.weather.gov, free, public domain, US only; 05 §MC9). `Allow` shows the real iOS location prompt (When In Use, approximate by default); after it, the card plans with live weather and the label beside the pills reads `Weather: National Weather Service` (key `wx.nws`). `Sample weather` now shows only on sample weather (demo screens, which keep their sample days). Declined, offline, outside the US, or a build without the location module: no weather, the season as before. **Privacy:** only the approximate location, rounded to about 1 km, goes to the National Weather Service; never to Google, never stored by us. Apple WeatherKit (with its mark and `Data sources`) replaces NWS after the paid program.
   - **Allow:** the copper text link (`TextLink`).
   - **Thin closet:** shows only `Check my fit` until Starter essentials (C5) exists; `Add basics` is hidden.
   - **Swap one:** the iOS action sheet (`The navy chinos`, …), not S28's sheet yet.

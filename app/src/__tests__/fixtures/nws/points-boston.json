@@ -1,0 +1,45 @@
+{
+ "@context": [
+  "https://geojson.org/geojson-ld/geojson-context.jsonld"
+ ],
+ "id": "https://api.weather.gov/points/42.36,-71.06",
+ "type": "Feature",
+ "geometry": {
+  "type": "Point",
+  "coordinates": [
+   -71.06,
+   42.36
+  ]
+ },
+ "properties": {
+  "@id": "https://api.weather.gov/points/42.36,-71.06",
+  "@type": "wx:Point",
+  "cwa": "BOX",
+  "forecastOffice": "https://api.weather.gov/offices/BOX",
+  "gridId": "BOX",
+  "gridX": 71,
+  "gridY": 90,
+  "forecast": "https://api.weather.gov/gridpoints/BOX/71,90/forecast",
+  "forecastHourly": "https://api.weather.gov/gridpoints/BOX/71,90/forecast/hourly",
+  "forecastGridData": "https://api.weather.gov/gridpoints/BOX/71,90",
+  "observationStations": "https://api.weather.gov/gridpoints/BOX/71,90/stations",
+  "relativeLocation": {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -71.0596,
+     42.3581
+    ]
+   },
+   "properties": {
+    "city": "Boston",
+    "state": "MA"
+   }
+  },
+  "forecastZone": "https://api.weather.gov/zones/forecast/MAZ015",
+  "county": "https://api.weather.gov/zones/county/MAC025",
+  "timeZone": "America/New_York",
+  "radarStation": "KBOX"
+ }
+}

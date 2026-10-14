@@ -8,6 +8,8 @@ const CAMERA_USAGE = 'Kitted uses the camera to check your outfit. Faces are blu
 /** The composer's mic (DECISIONS-LOG #70). Used for the plist AND the picker plugin: `false` there deletes the key (#53). */
 const MIC_USAGE = 'Kitted uses the microphone so you can ask your stylist out loud. Your voice is turned into text on your phone.';
 const SPEECH_USAGE = 'Kitted turns what you say into text on your phone, so you can ask your stylist out loud.';
+/** The morning card's weather (02 "S1d", DECISIONS-LOG #58): approximate location, asked only from the card. */
+const LOCATION_USAGE = "Kitted uses your approximate location to get today's weather for your outfit idea. It goes only to the US National Weather Service and is never stored.";
 
 const config: ExpoConfig = {
   name: 'Kitted',
@@ -28,6 +30,9 @@ const config: ExpoConfig = {
       NSCameraUsageDescription: CAMERA_USAGE,
       NSMicrophoneUsageDescription: MIC_USAGE,
       NSSpeechRecognitionUsageDescription: SPEECH_USAGE,
+      // When-in-use only, and approximate by default (iOS shows "Precise: Off"); no background location.
+      NSLocationWhenInUseUsageDescription: LOCATION_USAGE,
+      NSLocationDefaultAccuracyReduced: true,
       ITSAppUsesNonExemptEncryption: false,
     },
     privacyManifests: {
