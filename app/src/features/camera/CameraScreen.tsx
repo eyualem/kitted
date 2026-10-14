@@ -23,8 +23,6 @@ import { Icon, IconButton, KButton, KText, Numeral, cameraScrims, fixed, opacity
 import { store } from '@/data/db';
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { CheckMode } from '@/features/fitcheck/machine';
-import { fitCheck } from '@/features/fitcheck/session';
-import type { RecheckSlot } from '@/features/fitcheck/service';
 import { t } from '@/i18n/en';
 import {
   KittedCameraView, assess, hasCamera, requestCameraPermission, takePhotoFrom, type CameraHandle, type CameraReadyEvent, type GuideEvent,
@@ -65,24 +63,9 @@ export function CameraScreen() {
   const lens = lensFromParams(p);
   const checkMode: CheckMode = p.mode === 'recheck' || p.mode === 'shoeSnap' ? p.mode : 'check';
   const snap = checkMode === 'shoeSnap';
-  // Re-check: say which pieces are read again (founder, Oct 14: this used to be a plain chat line). Every piece the
-  // card's fixes touch is read again, so a card with pants, top and layer fixes names all three.
-  const [focus, setFocus] = useState<RecheckSlot[] | null | undefined>(undefined);
-  useEffect(() => {
-    if (checkMode !== 'recheck' || !p.parent) return;
-    let live = true;
-    fitCheck.recheckSlots(p.parent).then((f) => live && setFocus(f)).catch(() => live && setFocus(null));
-    return () => { live = false; };
-  }, [checkMode, p.parent]);
-  const recheckNote = checkMode !== 'recheck' || focus === undefined ? null : focus === null
-    ? { title: t('cam.recheck.titleAny'), body: t('cam.recheck.bodyAny') }
-    : (() => {
-        const words = focus.map((f) => t(`recheck.slot.${f}` as 'recheck.slot.top'));
-        const slots = words.length === 1 ? words[0]! : t('cam.recheck.and', { rest: words.slice(0, -1).join(', '), last: words[words.length - 1]! });
-        if (words.length > 1) return { title: t('cam.recheck.title', { slot: slots }), body: t('cam.recheck.bodyList', { slots }) };
-        const many = focus[0] === 'bottom' || focus[0] === 'footwear';
-        return { title: t('cam.recheck.title', { slot: slots }), body: t(many ? 'cam.recheck.bodyMany' : 'cam.recheck.bodyOne', { slot: slots }) };
-      })();
+  // Re-check: one plain note (founder, Oct 14: naming one piece, "Re-check · pants", read as if the rest were ignored).
+  // The whole photo is read again; the fixed pieces and any swapped piece count, the rest keeps its first reading.
+  const recheckNote = checkMode === 'recheck' ? { title: t('cam.recheck.title'), body: t('cam.recheck.body') } : null;
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
