@@ -4,50 +4,50 @@
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useState } from 'react';
-import { ActionSheetIOS, ScrollView, View } from 'react-native';
+import { File } from 'expo-file-system';
+import { ScrollView, View } from 'react-native';
 import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import type { ClosetItemRow } from '@/data/types';
-import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
-import { ClosetTile } from '@/features/closet/ClosetTile';
+import { PieceMenu } from '@/features/closet/PieceMenu';
+import { checksById, piecePreviewSource } from '@/features/closet/piecePreview';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { fitCheck } from '@/features/fitcheck/session';
 import { goToStylist } from '@/router/stylistAction';
+import { resolveStoredPath } from '@/services/photoFiles';
 import { t } from '@/i18n/en';
 
 const GAP = 10;
 
-const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
-
-/** Long-press a piece (#118): its name, "Remove from Closet" (red), Cancel; then a toast with Undo. */
-function pieceMenu(item: ClosetItemRow) {
-  ActionSheetIOS.showActionSheetWithOptions(
-    { title: item.name, options: [t('closet.remove.action'), t('common.cancel')], destructiveButtonIndex: 0, cancelButtonIndex: 1 },
-    (i) => {
-      if (i !== 0) return;
-      void fitCheck.closet.removeItem(item.id).then((it) => {
-        if (it) showToast(t('closet.removed', { item: lower(it.name) }), () => fitCheck.closet.restoreItem(it.id), { ms: TOAST_MS_REMOVAL });
-      });
-    },
-  );
+/** Whether a stored file is still on the phone (a cut-out or kept photo can be gone); never throws. */
+function fileExists(uri: string): boolean {
+  try {
+    return new File(uri).exists;
+  } catch {
+    return false;
+  }
 }
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
-  const data = useLive(['closet', 'fitChecks'], async () => {
+  const data = useLive(['closet', 'fitChecks', 'closetObs'], async () => {
     const all = await store.closet.all();
     const byId = new Map(all.map((c) => [c.id, c]));
     // Newest first (a row's place in the store moves when it's updated). A piece still waiting on his answer shows in
     // its question card only, not as a tile of its own (#116).
     const owned = all.filter(isOwned);
     const items = owned.filter((c) => !isAwaitingAnswer(c, owned)).sort((a, b) => b.addedAt - a.addedAt || (a.id < b.id ? -1 : 1));
-    return { items, byId, asks: await fitCheck.closet.openAsks() };
+    // Long-press preview (founder, Oct 14): his own photo of each piece, else its drawing.
+    const obs = await store.closetObs.all();
+    const checks = checksById(await store.fitChecks.all());
+    const deps = { resolve: resolveStoredPath, exists: fileExists };
+    const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it.id, obs, checks, deps)]));
+    return { items, byId, previews, asks: await fitCheck.closet.openAsks() };
   }, []);
   const [width, setWidth] = useState(0);
   if (!data) return null;
-  const { items, byId, asks } = data;
+  const { items, byId, previews, asks } = data;
   const open = asks.flatMap(({ checkId, ask }) => {
     const photo = byId.get(ask.itemId), candidate = byId.get(ask.candidateId);
     if (!photo || !candidate) return [];
@@ -79,7 +79,7 @@ export default function ClosetScreen() {
           ) : null}
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
             {tile > 0 ? items.map((it) => (
-              <ClosetTile key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} label={it.name} onLongPress={() => pieceMenu(it)} longPressLabel={t('closet.remove.action')} />
+              <PieceMenu key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} preview={previews.get(it.id) ?? { kind: 'drawn' }} />
             )) : null}
           </View>
         </>

@@ -30,6 +30,13 @@ import { assignNames, baseName, isAutoNamed } from './itemName';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
 export const CLOSET_DEADLINE_MS = 12_000;
+/** The longest name he can give a piece (Rename). */
+export const NAME_MAX = 40;
+
+/** His typed name, cleaned: whitespace collapsed and trimmed, cut at NAME_MAX. Empty: he cleared it. */
+export function cleanPieceName(typed: string | null | undefined): string {
+  return (typed ?? '').replace(/\s+/g, ' ').trim().slice(0, NAME_MAX).trim();
+}
 export const CATCH_UP_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 export interface ClosetServiceDeps {
@@ -968,6 +975,36 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await store.closet.patch(itemId, { isDeleted: true, updatedAt: clock.nowMs() });
       await renameAll();
       return it;
+    }),
+    /**
+     * Long-press → Rename (founder, Oct 14): his name for the piece, shown wherever its name shows. Whitespace is
+     * collapsed and trimmed, and it's cut at NAME_MAX characters. Empty (or the original name) puts the original back:
+     * the name it had before his first rename, or for a piece the app names, today's generated name. A name he set is
+     * never auto-renamed; other pieces' names step around it. Only the name changes: the garment, its sightings and
+     * how new sightings match stay exactly as they were. Returns the piece as it is now, or null.
+     */
+    renameItem: (itemId: string, typed: string) => serial(async (): Promise<ClosetItemRow | null> => {
+      const it = await store.closet.get(itemId);
+      if (!it || !isOwned(it)) return null;
+      const p = profileOfItem(it);
+      const name = cleanPieceName(typed);
+      const original = p.nameLocked ? p.originalName ?? it.name : it.name;
+      if (!name || name === original) {
+        if (!p.nameLocked) return it;
+        const { originalName: _o, nameLocked: _l, ...rest } = p;
+        void _o;
+        void _l;
+        await store.closet.patch(itemId, { name: original, profile: rest, updatedAt: clock.nowMs() });
+      } else {
+        if (name === it.name) return it;
+        // A pre-V6 auto name keeps being the app's to change once he resets it.
+        const auto = p.nameLocked ? p.autoName : isAutoNamed(it) || p.autoName;
+        await store.closet.patch(itemId, {
+          name, profile: { ...p, nameLocked: true, originalName: original, ...(auto ? { autoName: true } : {}) }, updatedAt: clock.nowMs(),
+        });
+      }
+      await renameAll();
+      return store.closet.get(itemId);
     }),
     /** Undo for removeItem. */
     restoreItem: (itemId: string) => serial(async () => {

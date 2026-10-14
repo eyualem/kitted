@@ -400,6 +400,8 @@ export interface ClosetProfile {
   fieldAliases?: Record<string, string[]>;
   /** He named it himself: never auto-renamed. */
   nameLocked?: boolean;
+  /** The name it had before his first rename (Closet long-press → Rename), so an empty name can put it back. */
+  originalName?: string | null;
   /** The app named it (closet names, #91), so it may rename it when a detail is needed or the look settles. */
   autoName?: boolean;
   /** The detail word the name carries to tell it from another of his pieces ("zip"), sticky. */

@@ -402,6 +402,11 @@ const addedInBuild = {
   // Removing a piece or a look (#118, founder Oct 9): long-press → an action sheet → a toast with Undo.
   'closet.remove.action': 'Remove from Closet',
   'closet.removed': 'Removed your {item}.',
+  // Long-press a piece in Closet (founder, Oct 14): the native menu with his photo of it; Rename, then Remove.
+  'closet.rename.action': 'Rename',
+  'closet.rename.title': 'Rename piece',
+  'closet.rename.reset': 'Reset to the original name',
+  'closet.renamed': 'Renamed to {name}.',
   'lookbook.remove.action': 'Remove from Lookbook',
   'lookbook.remove.withPiece': 'Remove look and the new piece',
   'lookbook.remove.withPieces': 'Remove look and its {n} new pieces',

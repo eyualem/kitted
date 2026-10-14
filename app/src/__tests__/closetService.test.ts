@@ -8,6 +8,7 @@ import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import type { KittedStore } from '@/data/store';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
+import { isAutoNamed } from '@/features/closet/itemName';
 import { profileOfItem } from '@/features/closet/profile';
 import { createClosetService } from '@/features/closet/service';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
@@ -707,5 +708,80 @@ describe('removing a piece or a look (#118)', () => {
     const before = (await env.owned()).length;
     await env.closet.removeLook(id, false);
     expect((await env.owned()).length).toBe(before);
+  });
+
+  it('Rename (Oct 14): his name is stored on the piece and shows wherever its name does; scores never change', async () => {
+    const env = await story();
+    const id = await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const score = (await env.row(id)).score;
+    const hoodie = (await env.owned()).find((c) => c.garment.subcategory === 'hoodie')!;
+    const renamed = (await env.closet.renameItem(hoodie.id, '   My   green  zip  '))!;
+    expect(renamed.name).toBe('My green zip');
+    expect(profileOfItem(renamed)).toMatchObject({ nameLocked: true, originalName: hoodie.name });
+    expect((await env.store.closet.get(hoodie.id))!.name).toBe('My green zip');
+    expect((await env.closet.knownPieces()).find((k) => k.id === hoodie.id)!.name).toBe('My green zip');
+    expect((await env.row(id)).score).toBe(score);
+    // capped at 40 characters, trimmed again after the cut
+    expect((await env.closet.renameItem(hoodie.id, `${'a'.repeat(39)} tail`))!.name).toBe('a'.repeat(39));
+    // a later check never renames it back
+    await env.check('s05', 'everyday');
+    await env.closet.settle();
+    expect((await env.store.closet.get(hoodie.id))!.name).toBe('a'.repeat(39));
+  });
+
+  it('Rename: an empty name (or "Reset to the original name") puts the generated name back', async () => {
+    const env = await story();
+    await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const hoodie = (await env.owned()).find((c) => c.garment.subcategory === 'hoodie')!;
+    await env.closet.renameItem(hoodie.id, 'Gym hoodie');
+    const back = (await env.closet.renameItem(hoodie.id, '  '))!;
+    expect(back.name).toBe(hoodie.name);
+    expect(profileOfItem(back).nameLocked ?? false).toBe(false);
+    expect(profileOfItem(back).originalName ?? null).toBeNull();
+    expect(profileOfItem(back).autoName).toBe(true); // the app may name it again
+    // typing the original name is the same as a reset; an empty name on a piece he never renamed changes nothing
+    await env.closet.renameItem(hoodie.id, 'Gym hoodie');
+    expect(profileOfItem((await env.closet.renameItem(hoodie.id, hoodie.name))!).nameLocked ?? false).toBe(false);
+    expect((await env.closet.renameItem(hoodie.id, ''))!.name).toBe(hoodie.name);
+  });
+
+  it("Rename: a seed piece's own name comes back on reset", async () => {
+    const env = await setup({ scenario: 'full' });
+    const seedItem = (await env.owned()).find((c) => !isAutoNamed(c))!;
+    expect(seedItem).toBeTruthy();
+    expect((await env.closet.renameItem(seedItem.id, 'Sunday chinos'))!.name).toBe('Sunday chinos');
+    expect((await env.closet.renameItem(seedItem.id, ''))!.name).toBe(seedItem.name);
+  });
+
+  it('Rename never changes how later sightings match', async () => {
+    const run = async (rename: boolean) => {
+      const env = await story();
+      await env.check('ph1', 'everyday');
+      await env.closet.settle();
+      if (rename) {
+        for (const c of await env.owned()) await env.closet.renameItem(c.id, `Mine ${c.id}`);
+      }
+      const id = await env.check('s05', 'everyday');
+      await env.closet.settle();
+      const obs = (await env.store.closetObs.all()).map((o) => [o.id, o.itemId, o.decision, o.identityScore, o.askItemId]);
+      const items = (await env.owned()).map((c) => [c.id, c.wornCount, c.garment.subcategory]).sort();
+      return { obs, items, score: (await env.row(id)).score, links: (await env.row(id)).details.closetSummary?.links };
+    };
+    expect(await run(true)).toEqual(await run(false));
+  });
+
+  it('Rename then Remove: still undoable, and the name he gave it comes back with it', async () => {
+    const env = await story();
+    await env.check('ph1', 'everyday');
+    await env.closet.settle();
+    const hoodie = (await env.owned()).find((c) => c.garment.subcategory === 'hoodie')!;
+    await env.closet.renameItem(hoodie.id, 'Gym hoodie');
+    expect((await env.closet.removeItem(hoodie.id))?.name).toBe('Gym hoodie');
+    expect((await env.owned()).map((c) => c.id)).not.toContain(hoodie.id);
+    await env.closet.restoreItem(hoodie.id);
+    expect((await env.owned()).find((c) => c.id === hoodie.id)?.name).toBe('Gym hoodie');
+    expect(await env.closet.renameItem('C-nope', 'x')).toBeNull();
   });
 });
