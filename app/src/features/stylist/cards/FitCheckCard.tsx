@@ -15,7 +15,7 @@ import { useLive } from '@/data/useLive';
 import { fitCheck, useFitCheckSession } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
-import { isRecheckOpen } from '@/services/quota';
+import { isRecheckOpen, recheckDeadline } from '@/services/quota';
 import { retryCheck } from '@/features/camera/startCheck';
 import { sessionClock } from '@/state/session';
 import { setStylistAction } from '@/router/stylistAction';
@@ -170,6 +170,18 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   const advice = row.details.goingForAdvice ?? null;
   const [changing, setChanging] = useState(false);
   const [flash, setFlash] = useState(0);
+  // The Re-check button goes when its window closes (30 min, or 4 am after the first check), not at the next re-render:
+  // a button left on screen past it only led to the "Check used today" toast (Oct 14).
+  const [, setWindowTick] = useState(0);
+  const answeredAt = row.details.tap?.answeredAt;
+  useEffect(() => {
+    if (row.recheckUsed || row.status !== 'scored' || row.parentId) return;
+    const left = recheckDeadline(row, sessionClock) - sessionClock.nowMs();
+    if (left <= 0) return;
+    const h = setTimeout(() => setWindowTick((n) => n + 1), Math.min(left + 50, 2_000_000_000));
+    return () => clearTimeout(h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [row.id, row.recheckUsed, row.status, row.parentId, row.createdAt, row.isFirstCheck, answeredAt]);
   const changeLook = async (style: StyleKey | null, other?: string | null) => {
     if (!gf) return;
     const same = style === gf.style && (other ?? null) === (gf.other ?? null);

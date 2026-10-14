@@ -135,6 +135,22 @@ export function isReadingShape(x: unknown): x is Reading {
   return Array.isArray(g) && g.every((item) => !!item && typeof item === 'object' && !Array.isArray(item));
 }
 
+/** "[gemini] refused · HTTP 429 · RESOURCE_EXHAUSTED · You exceeded your current quota…" (DEV log, ≤ 2 s for the body). */
+async function logRefusal(res: { status: number; text(): Promise<string> }): Promise<void> {
+  let detail = '';
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const body = await Promise.race([res.text(), new Promise<string>((r) => (timer = setTimeout(() => r(''), 2_000)))]);
+    const err = (JSON.parse(body || '{}') as { error?: { status?: string; message?: string } }).error;
+    detail = [err?.status, err?.message?.slice(0, 160)].filter(Boolean).join(' · ');
+  } catch {
+    // not JSON: the status is enough
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+  }
+  console.log(`[gemini] refused · HTTP ${res.status}${detail ? ` · ${detail}` : ''}`);
+}
+
 export function createGeminiSource(opts: GeminiOptions): ReadingSource {
   const now = opts.now ?? (() => Date.now());
   let hedgeRequested: (() => void) | null = null;
@@ -153,7 +169,12 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
       void e;
       return { fail: 'offline' };
     }
-    if (!res.ok || !res.body) return { fail: 'ai' };
+    if (!res.ok || !res.body) {
+      // DEV: why Gemini said no (429 = quota or rate limit, 403 = key or billing, 400 = the request), so a test on his
+      // phone can tell a refused call from a slow one in the Metro log. The key is never printed.
+      if (__DEV__) void logRefusal(res);
+      return { fail: 'ai' };
+    }
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let buf = '';
@@ -260,6 +281,9 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
         );
       settle(attempts[0]!);
       let watched = 1;
+      // An abort (the service's 14 s give-up, cancel) wakes the wait at once, whatever the fetch does with it.
+      const onAbort = () => wake?.();
+      outer?.addEventListener('abort', onAbort, { once: true });
       try {
         // The request is already on its way (and the hedge hook set) before the first event.
         yield { type: 'stage', stage: 'photoOK' };
@@ -275,6 +299,7 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
         }
         while (queue.length) yield queue.shift()!;
       } finally {
+        outer?.removeEventListener('abort', onAbort);
         hedgeRequested = null;
         controllers.forEach((c) => c.abort());
       }

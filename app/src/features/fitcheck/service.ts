@@ -65,9 +65,16 @@ export interface TimerConfig {
   cacheHitMs: number;
   /** How long after the reading the card waits for the second look (#199); default LOOK_GRACE_MS (1.5 s). */
   lookGraceMs?: number;
+  /** The longest one check may hold the one-check slot (prep, the read, the score, the writes); past it the slot is
+   *  freed and a check still reading fails with Try again, so no step that never settles can block every later photo.
+   *  Default SLOT_MS. */
+  slotMs?: number;
 }
 
-export const DEFAULT_TIMERS: TimerConfig = { enabled: true, hedgeMs: 5_000, slowMs: 9_000, abortMs: 14_000, cacheHitMs: 300, lookGraceMs: LOOK_GRACE_MS };
+/** The slot's cap: well past the read's own 14 s give-up, the 1.5 s look grace and photo prep. */
+export const SLOT_MS = 40_000;
+
+export const DEFAULT_TIMERS: TimerConfig = { enabled: true, hedgeMs: 5_000, slowMs: 9_000, abortMs: 14_000, cacheHitMs: 300, lookGraceMs: LOOK_GRACE_MS, slotMs: SLOT_MS };
 
 export interface ServiceDeps {
   store: KittedStore;
@@ -116,6 +123,8 @@ export interface CorrectionDraft {
 }
 
 type Profile = { styles: Styles; boldness: string | null };
+/** One check in the slot: its row once posted, and whether the slot's cap already gave it up (freeSlot). */
+type CheckCtx = { checkId: string | null; abandoned: boolean };
 
 /** What a row is scored with: its occasion and one style, his boldness (#61), and its stored second look (#199). The
  *  one builder for both the card (evaluateCheck) and the one quick tap (askQuestion), so the tap's scores are the card's. */
@@ -452,8 +461,28 @@ export function createFitCheckService(deps: ServiceDeps) {
         console.log('[look] could not start', e);
       }
     }
+    // The read is stepped by hand so its abort (the 14 s timer, cancel) always ends the wait, even when the source
+    // ignores the signal (a stalled stream that never sees it): a read that never settles would hold the one-check
+    // slot, and every later photo and re-check would be refused as "busy" until the app restarts (Oct 14).
+    const stopped = new Promise<'stopped'>((resolve) => {
+      if (abort.signal.aborted) resolve('stopped');
+      else abort.signal.addEventListener('abort', () => resolve('stopped'), { once: true });
+    });
     const work = (async () => {
-      for await (const e of deps.source.read(image, kind, { signal: abort.signal })) {
+      const it = deps.source.read(image, kind, { signal: abort.signal })[Symbol.asyncIterator]();
+      for (;;) {
+        const step = await Promise.race([it.next(), stopped]);
+        if (step === 'stopped') {
+          // Ask the source to stop too, without waiting for it (a stuck one never answers).
+          try {
+            void Promise.resolve(it.return?.()).catch(() => {});
+          } catch {
+            // nothing more to stop
+          }
+          break;
+        }
+        if (step.done) break;
+        const e = step.value;
         if (timedOut) break;
         if (e.type === 'slotFound') gotSlot = true;
         if (e.type === 'reading') {
@@ -475,7 +504,10 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
     const got = reading as Reading | null; // set inside the loop above
     if (timedOut || abort.signal.aborted || !got) lookAbort.abort();
-    if (timedOut) return { reading: null, fail: 'timeout' as FailCode, attempt: my, model, promptVersion, latencyMs };
+    if (timedOut) {
+      console.log(`[check] the read took longer than ${Math.round(cfg.abortMs / 1000)} s: stopped (nothing counted)`);
+      return { reading: null, fail: 'timeout' as FailCode, attempt: my, model, promptVersion, latencyMs };
+    }
     if (abort.signal.aborted) return { reading: null, fail: null, attempt: my, cancelled: true, model, promptVersion, latencyMs };
     // The reading is in: each look arm gets the rest of the grace, then the card is scored with what came back.
     let secondLook: StoredSecondLook | null | undefined;
@@ -496,9 +528,9 @@ export function createFitCheckService(deps: ServiceDeps) {
 
   /** One check at a time, and nothing it throws is lost: the row (if one was posted) becomes a failed check with Try
    *  again, the reading card ends, and the caller gets 'error' (its toast says it didn't count). */
-  async function exclusive(run: (ctx: { checkId: string | null }) => Promise<StartOutcome>): Promise<StartOutcome> {
+  async function exclusive(run: (ctx: CheckCtx) => Promise<StartOutcome>): Promise<StartOutcome> {
     if (running) return { outcome: 'busy' };
-    const ctx: { checkId: string | null } = { checkId: null };
+    const ctx: CheckCtx = { checkId: null, abandoned: false };
     const job = (async (): Promise<StartOutcome> => {
       try {
         return await run(ctx);
@@ -513,17 +545,51 @@ export function createFitCheckService(deps: ServiceDeps) {
             console.error('[check] could not mark the check failed', e2);
           }
         }
-        dispatch({ t: 'end' });
+        // A check whose slot was already freed (freeSlot) leaves the reading card of the next one alone.
+        if (!ctx.abandoned) dispatch({ t: 'end' });
         return id ? { outcome: 'error', checkId: id } : { outcome: 'error' };
       }
     })();
     running = job;
+    // The cap (TimerConfig.slotMs): a finished check always frees the slot; one that hangs frees it here.
+    const cfg = deps.timers();
+    const capMs = cfg.slotMs ?? SLOT_MS;
+    let cap: unknown = null;
+    const capped = cfg.enabled && capMs > 0
+      ? new Promise<StartOutcome>((resolve) => {
+          cap = deps.scheduler.setTimer(() => resolve(freeSlot(job, ctx, capMs)), capMs);
+        })
+      : null;
     try {
-      return await job;
+      return await (capped ? Promise.race([job, capped]) : job);
     } finally {
+      if (cap !== null) deps.scheduler.clearTimer(cap);
+      if (running === job) {
+        running = null;
+        cancelPending = false;
+      }
+    }
+  }
+
+  /** A check that held the slot past its cap: stop its read, free the slot, end the reading card, and fail its row
+   *  (Try again; nothing counted) if it never got a score. Whatever it still finishes later lands on its own row. */
+  async function freeSlot(job: Promise<StartOutcome>, ctx: CheckCtx, capMs: number): Promise<StartOutcome> {
+    console.log(`[check] still not finished after ${Math.round(capMs / 1000)} s: freed the slot for the next photo`);
+    ctx.abandoned = true;
+    current?.abort.abort();
+    if (running === job) {
       running = null;
       cancelPending = false;
     }
+    const id = ctx.checkId;
+    if (state.kind === 'reading' && (!id || state.checkId === id)) dispatch({ t: 'end' });
+    if (!id) return { outcome: 'error' };
+    const row = await store.fitChecks.get(id).catch(() => null);
+    if (row && row.status !== 'scoring') return outcomeOf(row); // its score is in; only a later step hung
+    // Queued behind the closet's writes (patchRow), so it isn't awaited: the slot is already free.
+    void patchRow(id, { status: 'failed', details: { ...(row?.details ?? {}), failCode: 'timeout' } })
+      .catch((e: unknown) => console.error('[check] could not mark the check failed', e));
+    return { outcome: 'failed', checkId: id };
   }
 
   /** The wait's pre-pick (02 "Going for"): the morning card's look when he opened the camera from it, else his last
@@ -558,7 +624,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     return exclusive((ctx) => startInner(req, ctx));
   }
 
-  async function startInner(req: CheckRequest, ctx: { checkId: string | null }): Promise<StartOutcome> {
+  async function startInner(req: CheckRequest, ctx: CheckCtx): Promise<StartOutcome> {
     const now = clock.nowMs();
     const parent = req.parentCheckId ? await store.fitChecks.get(req.parentCheckId) : null;
     if ((req.mode === 'recheck' || req.mode === 'shoeSnap') && !parent) return { outcome: 'noParent' };
@@ -568,6 +634,8 @@ export function createFitCheckService(deps: ServiceDeps) {
     const prep = await deps.prep.prepare(req.photoUri ? { kind: 'file', uri: req.photoUri } : { kind: 'demo', photoId: req.photoId ?? '' });
     if (prep.status === 'noPerson' || prep.status === 'multiplePeople' || prep.status === 'couldNotFrame') return { outcome: 'photoProblem', reason: prep.status };
     if (prep.status !== 'ok') return { outcome: prep.status === 'unknownPhoto' ? 'unknownPhoto' : 'notImplemented' };
+    // Prep outlived the slot's cap: the slot went to a newer photo, so this one posts nothing.
+    if (ctx.abandoned) return { outcome: 'error' };
     const image = prep.image;
     // His photo in the thread: the bundled id, or his own copy kept on the phone (unblurred; only the upload is blurred).
     const photoPayload = image.photoId ? { photoId: image.photoId } : { photoUri: image.keptUri ?? null, aspect: image.aspect ?? null };
@@ -668,7 +736,7 @@ export function createFitCheckService(deps: ServiceDeps) {
 
   /** S19 "Try again": re-reads the same photo; nothing was counted the first time. It's a new read, so it uses
    *  today's check (or the first check's re-check) like any other, and its score is charged to today. */
-  async function retryInner(checkId: string, ctx: { checkId: string | null }): Promise<StartOutcome> {
+  async function retryInner(checkId: string, ctx: CheckCtx): Promise<StartOutcome> {
     const row = await store.fitChecks.get(checkId);
     if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
     const now = clock.nowMs();
@@ -680,6 +748,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
     );
     if (prep.status !== 'ok') return { outcome: 'unknownPhoto' };
+    if (ctx.abandoned) return { outcome: 'error' };
     const today = dayKey(now, clock.offset);
     const details = { ...row.details, failCode: undefined, ...(row.dayKey !== today ? { chargeDay: today } : {}) };
     await patchRow(checkId, { status: 'scoring', details });

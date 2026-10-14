@@ -123,6 +123,34 @@ describe('the source', () => {
     expect([calls(), firstAborted, rest.some((e) => e.type === 'reading')]).toEqual([2, true, true]);
   });
 
+  it('a stream that ignores the abort still ends the read when the check gives up (Oct 14: the slot stayed busy)', async () => {
+    const deaf: GeminiOptions['fetch'] = async () => ({
+      ok: true, status: 200, text: async () => '',
+      body: { getReader: () => ({ read: () => new Promise<never>(() => {}) }) }, // never answers, never sees the signal
+    });
+    const ac = new AbortController();
+    const it = createGeminiSource({ apiKey: 'k', fetch: deaf }).read(image, 'full', { signal: ac.signal })[Symbol.asyncIterator]();
+    await it.next(); // photoOK
+    await it.next(); // sending
+    const rest = it.next();
+    ac.abort();
+    expect(await rest).toEqual({ done: true, value: undefined });
+  });
+
+  it('a refused call logs its HTTP status and Gemini\'s reason (DEV), never the key', async () => {
+    const log = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const refused: GeminiOptions['fetch'] = async () => ({
+      ok: false, status: 429, body: null,
+      text: async () => JSON.stringify({ error: { code: 429, status: 'RESOURCE_EXHAUSTED', message: 'You exceeded your current quota.' } }),
+    });
+    const ev = await collect(createGeminiSource({ apiKey: 'secret-key', fetch: refused }).read(image, 'full'));
+    expect(ev.filter((e) => e.type === 'failed')).toEqual([{ type: 'failed', code: 'ai', counted: false }]);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(log).toHaveBeenCalledWith('[gemini] refused · HTTP 429 · RESOURCE_EXHAUSTED · You exceeded your current quota.');
+    expect(log.mock.calls.flat().join(' ')).not.toContain('secret-key');
+    log.mockRestore();
+  });
+
   it('failures: HTTP 500 → ai, no network → offline, MAX_TOKENS → ai, no photo → unknownPhoto', async () => {
     const run = async (plan: Parameters<typeof fakeFetch>[0], img = image) =>
       (await collect(createGeminiSource({ apiKey: 'k', fetch: fakeFetch(plan).f }).read(img, 'full'))).filter((e) => e.type === 'failed');
