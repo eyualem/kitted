@@ -133,6 +133,36 @@ h2{font-size:22px;margin:56px 0 4px}
 .roll{display:inline-block;height:66px;overflow:hidden;vertical-align:bottom}
 .roll span{display:block;line-height:66px;transform:translateY(-22px)}
 .roll{-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
+
+/* round 2b overrides (after the critique) */
+.woven.pro{background:var(--label);color:#EEF0F5}
+.woven.pro::before,.woven.pro::after{border-color:var(--copperFixed);border-left-width:1.5px}
+.mono{font-size:12px}
+.meta{font:13px/18px var(--sf);color:var(--ink3)}
+.tname{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg{height:40px;padding:3px}
+.seg span{line-height:34px}
+.seg span.on{font-weight:700;box-shadow:0 0 0 1px var(--line),0 1px 3px rgba(0,0,0,.08)}
+.dark .tile{background:var(--surface2);border-color:#3A4260}
+.lightpiece{filter:drop-shadow(0 0 .7px rgba(0,0,0,.6))}
+.danger{color:#C9302C}
+.dark .danger{color:#FF6961}
+.toggle{width:51px;height:31px;border-radius:16px;background:var(--good);position:relative;flex:none;margin-left:auto}
+.toggle::after{content:"";position:absolute;right:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.off{background:var(--surface2)}
+.toggle.off::after{right:auto;left:2px}
+.num1{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:9px;font:700 11px var(--sf);margin-right:6px;background:var(--surface2);color:var(--ink)}
+.pill.fill .num1{background:var(--bg);color:var(--ink)}
+.chg{max-width:980px;background:#fff;border:1px solid #D6D9E0;border-radius:16px;padding:16px 20px;margin:12px 0 8px}
+.chg li{margin:3px 0}
+.tapeS{position:relative;height:70px;margin-top:6px;overflow:hidden;border-radius:8px;background:#F3F4F6;border:1px solid #E0E3E8}
+.tapeS .ticks{position:absolute;left:-30px;right:-30px;top:0;height:22px;background-image:repeating-linear-gradient(90deg,#848A99 0 1px,transparent 1px 10px);opacity:.7}
+.tapeS .nums{position:absolute;top:22px;left:0;right:0;display:flex;justify-content:space-around;font:26px var(--num);color:#646A7A}
+.tapeS .nums b{color:#121628;font-weight:400;font-size:40px;line-height:44px}
+.tapeS .mk{position:absolute;left:50%;top:0;bottom:0;width:2px;background:#121628}
+.breakdown{display:flex;gap:10px;margin-top:12px}
+.breakdown div{display:flex;align-items:center;gap:6px;font:500 11.5px var(--sf);color:rgba(255,255,255,.8)}
+.breakdown svg{width:22px;height:22px}
 </style></head>
 <body><div class="wrap">
 
@@ -152,7 +182,7 @@ h2{font-size:22px;margin:56px 0 4px}
   <symbol id="i-hanger" viewBox="0 0 24 24"><path d="M12 7a2 2 0 1 1 2-2M12 7v2L3 16h18l-9-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
   <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
-  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M10.3 2.5h3.4l.5 2.6 1.6.9 2.5-.9 1.7 2.9-2 1.7v1.9l2 1.7-1.7 2.9-2.5-.9-1.6.9-.5 2.6h-3.4l-.5-2.6-1.6-.9-2.5.9-1.7-2.9 2-1.7v-1.9l-2-1.7 1.7-2.9 2.5.9 1.6-.9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M7.5 7.5L12 3l4.5 4.5M6 11v9h12v-9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" stroke-width="1.6"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
@@ -162,13 +192,26 @@ h2{font-size:22px;margin:56px 0 4px}
  </defs>
 </svg>
 
-<h1>Kitted theme, round 2</h1>
-<p class="lede">You, Lookbook, Closet, the share card and the score reveal, drawn in today's theme (the bluer indigo, Archivo numbers, copper only when a score moves). Clothing drawings here are rough stand-ins for the app's real drawn flats; photos are the demo set, shown below the neck.</p>
+<h1>Kitted theme, round 2 (revised after the critique)</h1>
+<p class="lede">You, Lookbook, Closet, the share card and the score reveal, in today's theme. Revised Oct 14 after four critics (visual design, usability, user psychology, accessibility). Clothing drawings are rough stand-ins for the app's real drawn flats; photos are the demo set, cut at the neck.</p>
 <p class="lede"><span class="tag beta">Beta</span> = worth building before Nov 3 · <span class="tag">Later</span> = after the beta.</p>
+<div class="chg"><b>What changed from the first version</b>
+<ul style="margin:6px 0 0;padding-left:20px;font-size:14px;color:#3D4352">
+ <li><b>Honest privacy line:</b> it now says a face-blurred copy goes to Google for scoring, plus "See what I send".</li>
+ <li><b>Facts talk to you, not about you</b> ("You wear tees untucked"); no money guesses; a guess is asked as a question.</li>
+ <li><b>No body on the profile:</b> the tape-measure figure and the big copper height are gone; basics are one quiet line.</li>
+ <li><b>Copper means one thing again:</b> Pro is the indigo label with copper stitches; no copper height, no rivet dots.</li>
+ <li><b>Fewer small capital labels</b> (one per section); dates and details are normal text. Nothing under 12 pt.</li>
+ <li><b>Lookbook:</b> no "best" stat or "Most fits" line competing with the hero; an "Up next" card (the career fair) pulls you forward; past months show only a count.</li>
+ <li><b>Closet:</b> open questions are one row, not a card in the way; light and dark pieces get an outline; the next buy is something you don't own.</li>
+ <li><b>Settings:</b> a real gear icon, Restore purchases, Privacy policy and Terms, all three notifications with switches, delete actions in red.</li>
+ <li><b>Share:</b> a share button on every look; the card shows the pieces and the look instead of the occasion; the before/after names the fix.</li>
+ <li><b>Score reveal:</b> a tape slides to the number (no random digits); full show only for the first checks and re-check wins; low scores land quietly with the fix.</li>
+</ul></div>
 
 <!-- ============ YOU ============ -->
 <h2>You: "how your stylist sees you"</h2>
-<p class="why"><b>The idea:</b> a style card instead of an avatar (the faceless tape-measure figure, your looks, your basics), then what your stylist has learned with where each fact came from, then your plan. Settings move behind a gear. <b>No stats here</b>: an average score on a profile turns it into a report card on you. The woven label is the plan badge: KITTED, or copper KITTED PRO.</p>
+<p class="why">Your style card (your three looks, in order, and your basics in one line), what your stylist has learned and where each fact came from, today's check, and your plan. Settings sit behind the gear. No stats and no body here.</p>
 <div class="row">
  <div>
   <div class="phone"><div class="screen light">
@@ -176,39 +219,28 @@ h2{font-size:22px;margin:56px 0 4px}
    <div class="content">
     <div class="navtop"><div class="circ"><svg width="22" height="22"><use href="#i-gear"/></svg></div></div>
     <div class="big">You</div>
-    <div class="card" style="position:relative">
-     <div class="sec" style="display:flex;gap:16px;align-items:center">
-      <svg width="64" height="92"><use href="#figure"/></svg>
-      <div style="flex:1;min-width:0">
-       <div style="font:500 12px var(--mono);color:var(--accent);letter-spacing:.06em">5′10″</div>
-       <div style="font:600 17px/22px var(--sf);margin:2px 0 10px">Average build · Regular fit</div>
-       <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill fill">Streetwear</span><span class="pill">Minimal</span><span class="pill">Workwear</span></div>
-      </div>
-     </div>
-     <div style="position:absolute;top:14px;right:16px" class="link">Edit</div>
-     <hr class="seam">
-     <div class="sec" style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:12px">
-      <span class="woven">KITTED</span><span style="font:13px var(--sf);color:var(--ink3)">Free plan</span>
+    <div class="card">
+     <div class="sec">
+      <div style="display:flex;justify-content:space-between;align-items:center;height:28px"><span class="mono">Your style</span><span class="link" style="padding:10px 0 10px 16px">Edit</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><span class="pill fill"><span class="num1">1</span>Streetwear</span><span class="pill"><span class="num1">2</span>Minimal</span><span class="pill"><span class="num1">3</span>Workwear</span></div>
+      <div class="meta" style="margin-top:10px">5′10″ · Average build · Regular fit</div>
      </div>
     </div>
-    <hr class="pageseam">
-    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="mono">What your stylist knows</span><span class="mono" style="color:var(--ink)">All 9 ›</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:22px 0 8px"><span class="mono">What your stylist knows</span><span class="link" style="font-size:14px">See all 9</span></div>
     <div class="card">
      <div class="rowi"><div><div class="t">Career fair on Oct 29</div><div class="s">You told me · Oct 12</div></div><span class="chev">›</span></div>
-     <div class="rowi"><div><div class="t">Likes straight-leg pants</div><div class="s">From 3 fit checks</div></div><span class="chev">›</span></div>
-     <div class="rowi"><div><div class="t">Doesn't tuck his tees</div><div class="s">From a fit check · Oct 8</div></div><span class="chev">›</span></div>
-     <div class="rowi"><div><div class="t" style="font-style:italic;color:var(--ink2)">Spends $30–60 an item</div><div class="s">My guess · not asked yet</div></div><span class="chev">›</span></div>
+     <div class="rowi"><div><div class="t">You like straight-leg pants</div><div class="s">From 3 fit checks</div></div><span class="chev">›</span></div>
+     <div class="rowi"><div><div class="t">You wear tees untucked</div><div class="s">From a fit check · Oct 8</div></div><span class="chev">›</span></div>
+     <div class="rowi" style="flex-wrap:wrap"><div style="flex:1"><div class="t" style="font-weight:500">Do you like muted colors more than bright ones?</div><div class="s">My guess from your fits</div></div><div style="display:flex;gap:8px;width:100%;margin-top:8px"><span class="btn sec2" style="flex:1;height:36px;font-size:14px">Yes</span><span class="btn sec2" style="flex:1;height:36px;font-size:14px">Not really</span></div></div>
     </div>
-    <hr class="pageseam">
-    <div class="card"><div class="sec">
-     <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 17px var(--sf)">Today</div><div style="font:13px var(--sf);color:var(--ink3)">resets 4 am</div></div>
-     <div style="display:flex;gap:22px;margin:8px 0 12px;font:15px var(--sf);color:var(--ink2)"><span><b style="color:var(--ink);font-variant-numeric:tabular-nums">1/1</b> fit check</span><span><b style="color:var(--ink);font-variant-numeric:tabular-nums">2/5</b> questions</span></div>
-     <div class="btn" style="border:1px solid var(--line);color:var(--ink)">Try Pro · up to 10 checks a day</div>
+    <div class="card" style="margin-top:16px"><div class="sec" style="padding:14px 16px">
+     <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 16px var(--sf)">Today's check: done</div><div class="meta">next at 4 am</div></div>
+     <div class="meta" style="margin-top:2px">1 re-check left · 3 questions left</div>
     </div></div>
    </div>
    <div class="tabbar"><span><svg><use href="#i-chat"/></svg>Stylist</span><span><svg><use href="#i-hanger"/></svg>Closet</span><span><svg><use href="#i-grid"/></svg>Lookbook</span><span class="on"><svg><use href="#i-person"/></svg>You</span></div>
   </div></div>
-  <div class="cap"><span class="tag beta">Beta</span>You, light. Every fact opens a sheet: "That's right", "Change it", swipe to forget.</div>
+  <div class="cap"><span class="tag beta">Beta</span>Free plan. The whole style card opens the editor; picks are numbered because the first one breaks ties. A guess is asked, never stated.</div>
  </div>
 
  <div>
@@ -217,37 +249,28 @@ h2{font-size:22px;margin:56px 0 4px}
    <div class="content">
     <div class="navtop"><div class="circ"><svg width="22" height="22"><use href="#i-gear"/></svg></div></div>
     <div class="big">You</div>
-    <div class="card" style="position:relative">
-     <div class="sec" style="display:flex;gap:16px;align-items:center">
-      <svg width="64" height="92"><use href="#figure"/></svg>
-      <div style="flex:1;min-width:0">
-       <div style="font:500 12px var(--mono);color:var(--accent);letter-spacing:.06em">5′10″</div>
-       <div style="font:600 17px/22px var(--sf);margin:2px 0 10px">Average build · Regular fit</div>
-       <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill fill">Streetwear</span><span class="pill">Minimal</span><span class="pill">Workwear</span></div>
-      </div>
-     </div>
-     <div style="position:absolute;top:14px;right:16px" class="link">Edit</div>
-     <hr class="seam">
-     <div class="sec" style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:12px">
-      <span class="woven pro">KITTED PRO</span><span style="font:13px var(--sf);color:var(--ink3)">Trial · 9 days left</span>
+    <div class="card">
+     <div class="sec">
+      <div style="display:flex;justify-content:space-between;align-items:center;height:28px"><span class="mono">Your style</span><span class="link" style="padding:10px 0 10px 16px">Edit</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><span class="pill fill"><span class="num1">1</span>Streetwear</span><span class="pill"><span class="num1">2</span>Minimal</span><span class="pill"><span class="num1">3</span>Workwear</span></div>
+      <div class="meta" style="margin-top:10px">Average build · Regular fit</div>
      </div>
     </div>
-    <hr class="pageseam">
-    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="mono">What your stylist knows</span><span class="mono" style="color:var(--ink)">All 9 ›</span></div>
+    <div class="card" style="margin-top:12px"><div class="rowi" style="padding:12px 16px"><span class="woven pro">KITTED PRO</span><div style="flex:1;font:15px var(--sf);color:var(--ink2)">Trial · 9 days left</div><span class="chev">›</span></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:22px 0 8px"><span class="mono">What your stylist knows</span><span class="link" style="font-size:14px">See all 9</span></div>
     <div class="card">
      <div class="rowi"><div><div class="t">Career fair on Oct 29</div><div class="s">You told me · Oct 12</div></div><span class="chev">›</span></div>
-     <div class="rowi"><div><div class="t">Likes straight-leg pants</div><div class="s">From 3 fit checks</div></div><span class="chev">›</span></div>
-     <div class="rowi"><div><div class="t">Doesn't tuck his tees</div><div class="s">From a fit check · Oct 8</div></div><span class="chev">›</span></div>
+     <div class="rowi"><div><div class="t">You like straight-leg pants</div><div class="s">From 3 fit checks</div></div><span class="chev">›</span></div>
+     <div class="rowi"><div><div class="t">You wear tees untucked</div><div class="s">From a fit check · Oct 8</div></div><span class="chev">›</span></div>
     </div>
-    <hr class="pageseam">
-    <div class="card"><div class="sec">
-     <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 17px var(--sf)">Today</div><div style="font:13px var(--sf);color:var(--ink3)">resets 4 am</div></div>
-     <div style="display:flex;gap:22px;margin:8px 0 2px;font:15px var(--sf);color:var(--ink2)"><span><b style="color:var(--ink)">3/10</b> fit checks</span><span><b style="color:var(--ink)">12/50</b> questions</span></div>
+    <div class="card" style="margin-top:16px"><div class="sec" style="padding:14px 16px">
+     <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 16px var(--sf)">Today</div><div class="meta">resets 4 am</div></div>
+     <div class="meta" style="margin-top:2px">7 of 10 fit checks left · 38 of 50 questions left</div>
     </div></div>
    </div>
    <div class="tabbar"><span><svg><use href="#i-chat"/></svg>Stylist</span><span><svg><use href="#i-hanger"/></svg>Closet</span><span><svg><use href="#i-grid"/></svg>Lookbook</span><span class="on"><svg><use href="#i-person"/></svg>You</span></div>
   </div></div>
-  <div class="cap">Dark, on Pro: the woven label turns copper, so the page needs no other "Pro" text.</div>
+  <div class="cap">Dark, on Pro (no height entered, so none shown). Pro is the indigo label with copper stitches, on its own row, so copper still only means "your score moved".</div>
  </div>
 
  <div>
@@ -255,66 +278,68 @@ h2{font-size:22px;margin:56px 0 4px}
    <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
    <div class="content">
     <div style="display:flex;align-items:center;height:44px;margin-top:6px"><div class="circ"><svg width="20" height="20"><use href="#i-back"/></svg></div><div style="flex:1;text-align:center;font:600 17px var(--sf);margin-right:44px">Settings</div></div>
-    <div style="margin:18px 0 6px" class="mono">Privacy &amp; data</div>
+    <div style="margin:14px 0 6px" class="mono">Privacy</div>
     <div class="card">
-     <div class="sec" style="display:flex;gap:12px;align-items:flex-start"><svg width="22" height="22" style="color:var(--ink2);flex:none"><use href="#i-lock"/></svg><div style="font:15px/20px var(--sf)">Faces are blurred before anything leaves your phone. Your photos stay on this iPhone.</div></div>
-     <div class="rowi"><div style="flex:1"><div class="t">Send to Google for fit checks</div><div class="s">Off: Closet, Lookbook and outfit ideas still work.</div></div><span style="width:51px;height:31px;border-radius:16px;background:var(--good);position:relative;flex:none"><span style="position:absolute;right:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)"></span></span></div>
+     <div class="sec" style="font:14px/19px var(--sf);color:var(--ink2);padding:12px 16px">Your photos are saved only on this iPhone. To score a fit, a copy with your face blurred goes to Google's Gemini. It isn't used for training and is deleted within 55 days.</div>
+     <div class="rowi"><svg width="20" height="20" style="color:var(--ink2)"><use href="#i-eye"/></svg><div class="t">See what I send</div><span class="chev">›</span></div>
+     <div class="rowi"><div class="t">Score my fits</div><span class="toggle"></span></div>
      <div class="rowi"><div class="t">Photos on this iPhone</div><span class="chev" style="font-size:15px">186 MB ›</span></div>
-     <div class="rowi"><div class="t">Forget what your stylist knows</div><span class="chev">›</span></div>
-     <div class="rowi"><div class="t">Delete all my data</div><span class="chev">›</span></div>
     </div>
-    <div style="margin:22px 0 6px" class="mono">Notifications</div>
+    <div style="margin:16px 0 6px" class="mono">Notifications</div>
     <div class="card">
-     <div class="rowi"><svg width="20" height="20" style="color:var(--ink2)"><use href="#i-bell"/></svg><div class="t">Daily outfit idea</div><span class="chev" style="font-size:15px">8:00 am ›</span></div>
-     <div class="rowi"><div class="t" style="padding-left:32px">Fit check ready</div><span class="chev" style="font-size:15px">On</span></div>
+     <div class="rowi"><div><div class="t">Daily outfit idea</div><div class="s">8:00 am</div></div><span class="toggle"></span></div>
+     <div class="rowi"><div class="t">Fit check ready</div><span class="toggle"></span></div>
+     <div class="rowi"><div class="t">Trial ending</div><span class="toggle"></span></div>
     </div>
-    <div style="font:13px var(--sf);color:var(--ink3);margin:6px 4px 0">That's all I send. No reminders to open the app.</div>
-    <div style="margin:22px 0 6px" class="mono">Plan · Help · About</div>
+    <div class="meta" style="margin:5px 4px 0">That's all I send. No reminders to open the app.</div>
+    <div style="margin:16px 0 6px" class="mono">Plan and help</div>
     <div class="card">
      <div class="rowi"><div class="t">Manage subscription</div><span class="chev">›</span></div>
-     <div class="rowi"><svg width="20" height="20" style="color:var(--ink2)"><use href="#i-help"/></svg><div class="t">Report a wrong score</div><span class="chev">›</span></div>
-     <div class="rowi"><div class="t">Acknowledgements</div><span class="chev">›</span></div>
+     <div class="rowi"><div class="t">Restore purchases</div></div>
+     <div class="rowi"><div class="t">Report a wrong score</div><span class="chev">›</span></div>
+     <div class="rowi"><div class="t">Privacy policy · Terms</div><span class="chev">›</span></div>
     </div>
-    <div style="text-align:center;margin-top:18px"><span class="woven">KITTED</span><div style="font:12px var(--mono);color:var(--ink3);margin-top:8px">1.0 (12) · scoring v11</div></div>
+    <div class="card" style="margin-top:16px">
+     <div class="rowi"><div class="t danger" style="font-weight:500">Forget what your stylist knows</div></div>
+     <div class="rowi"><div class="t danger" style="font-weight:500">Delete all my data</div></div>
+    </div>
    </div>
   </div></div>
-  <div class="cap"><span class="tag beta">Beta</span>Settings behind the gear. The privacy switch is the one the consent screen promises; it has to exist before outside testers.</div>
+  <div class="cap"><span class="tag beta">Beta</span>Settings behind a real gear. "See what I send" opens the blurred copy from your last check. Both delete rows confirm first and say exactly what goes.</div>
  </div>
 </div>
 
 <!-- ============ LOOKBOOK ============ -->
 <h2>Lookbook: "how you're doing"</h2>
-<p class="why"><b>The idea:</b> each month is "sewn in" with a woven label and three numbers that only go up (looks, days you checked, your best). Then the best look of the month, then a 2-column grid of looks below the neck. Copper rivets mark only the looks that improved after a fix. <b>No average score and no chart</b>: a dip would read as failing, and old and new checks use different scoring.</p>
+<p class="why">What's next first (your career fair), then the month: two counts that only go up, your best look as the hero, and the looks below. Re-checks show the before and after in words; nothing relies on a colored dot. No average, no chart.</p>
 <div class="row">
  <div>
   <div class="phone"><div class="screen light">
    <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
    <div class="content">
-    <div class="navtop"><div class="circ"><svg width="22" height="22"><use href="#i-cal"/></svg></div></div>
-    <div class="big">Lookbook</div>
-    <span class="woven lg">OCTOBER</span>
-    <div class="stats">
-     <div><div class="n num">11</div><div class="l">looks</div></div>
-     <div><div class="n num">9</div><div class="l">days checked</div></div>
-     <div><div class="n num">9.0</div><div class="l">best · Dialed in</div></div>
+    <div class="big" style="margin-top:50px">Lookbook</div>
+    <div class="card"><div class="rowi" style="padding:12px 16px"><div><div class="mono" style="font-size:12px">Up next</div><div class="t" style="margin-top:2px">Career fair · Oct 29</div></div><span class="btn primary" style="margin-left:auto;height:36px;padding:0 14px;font-size:14px">Plan the fit</span></div></div>
+    <div style="font:600 22px var(--sf);margin:20px 0 6px">October</div>
+    <div style="display:flex;gap:28px;align-items:baseline">
+     <div><span class="num" style="font-size:30px">11</span> <span class="meta" style="font-size:15px">looks</span></div>
+     <div><span class="num" style="font-size:30px">9</span> <span class="meta" style="font-size:15px">days you checked a fit</span></div>
     </div>
-    <div style="font:13px var(--sf);color:var(--ink3);margin:8px 0 14px">Most fits: Put together</div>
-    <div class="card hero" style="overflow:hidden">
+    <div class="card hero" style="overflow:hidden;margin-top:14px">
      <div class="photo"><img src="../app/assets/demo-photos/p01a.jpg" alt="" style="--neck:0.315"></div>
-     <div class="sec" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px">
-      <div><div class="mono" style="font-size:11px">Best of October · Date · Oct 22</div><div style="display:flex;align-items:baseline;gap:8px;margin-top:4px"><span class="num" style="font-size:22px;color:var(--ink3);text-decoration:line-through">8.0</span><span class="copper" style="font-weight:700">→</span><span class="num" style="font-size:30px">9.0</span><span style="font:600 15px var(--sf)">Dialed in</span></div></div>
-      <span style="font:600 13px var(--sf);color:var(--accent);background:var(--accentSoft);padding:4px 9px;border-radius:12px">+1.0</span>
+     <div class="sec" style="padding:12px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div class="meta">Best of October · a date, Oct 22</div><div class="circ" style="width:36px;height:36px;box-shadow:none;background:var(--surface2)"><svg width="18" height="18"><use href="#i-share"/></svg></div></div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:2px"><span class="num" style="font-size:22px;color:var(--ink3)">8.0</span><span class="copper" style="font-weight:700">→</span><span class="num" style="font-size:36px">9.0</span><span style="font:600 16px var(--sf)">Dialed in</span><span class="copper" style="font:600 14px var(--sf);margin-left:auto">+1.0 after one fix</span></div>
      </div>
     </div>
     <hr class="pageseam">
     <div class="lgrid">
-     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s12.jpg" alt="" style="--neck:0.235"></div><div class="sc"><span class="num">7.5</span><span class="w">Put together</span></div><div class="d">Class · Oct 20</div></div>
-     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s22.jpg" alt="" style="--neck:0.32"><span class="rivet"></span></div><div class="sc"><span class="num">8.0</span><span class="w">Sharp</span></div><div class="d">Everyday · Oct 18</div></div>
+     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s12.jpg" alt="" style="--neck:0.235"></div><div class="sc"><span class="num">7.5</span><span class="w">Put together</span></div><div class="meta">Class · Oct 20</div></div>
+     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s22.jpg" alt="" style="--neck:0.32"></div><div class="sc"><span class="num">8.0</span><span class="w">Sharp</span></div><div class="meta">Everyday · Oct 18</div></div>
     </div>
    </div>
    <div class="tabbar"><span><svg><use href="#i-chat"/></svg>Stylist</span><span><svg><use href="#i-hanger"/></svg>Closet</span><span class="on"><svg><use href="#i-grid"/></svg>Lookbook</span><span><svg><use href="#i-person"/></svg>You</span></div>
   </div></div>
-  <div class="cap"><span class="tag beta">Beta</span>The month view. The calendar button (top right) switches to a calendar for "what did I wear Tuesday?" (later).</div>
+  <div class="cap"><span class="tag beta">Beta</span>The month. "Up next" turns a fact you told your stylist into a plan. The calendar button waits until the calendar exists.</div>
  </div>
 
  <div>
@@ -322,48 +347,47 @@ h2{font-size:22px;margin:56px 0 4px}
    <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
    <div class="content" style="padding-top:8px">
     <div class="lgrid">
-     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s13.jpg" alt="" style="--neck:0.3"></div><div class="sc"><span class="num">8.5</span><span class="w">Sharp</span></div><div class="d">Date · Oct 14</div></div>
-     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s24.jpg" alt="" style="--neck:0.31"><span class="rivet"></span></div><div class="sc"><span class="num" style="font-size:18px;color:var(--ink3);text-decoration:line-through">6.5</span><span class="copper">→</span><span class="num">7.5</span></div><div class="d">Everyday · Oct 11</div></div>
-     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s09.jpg" alt="" style="--neck:0.22"></div><div class="sc"><span class="num">7.0</span><span class="w">Put together</span></div><div class="d">Class · Oct 9</div></div>
-     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s15.jpg" alt="" style="--neck:0.235"></div><div class="sc"><span class="num">6.5</span><span class="w">Getting there</span></div><div class="d">Everyday · Oct 6</div></div>
+     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s13.jpg" alt="" style="--neck:0.3"></div><div class="sc"><span class="num">8.5</span><span class="w">Sharp</span></div><div class="meta">Date · Oct 14</div></div>
+     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s24.jpg" alt="" style="--neck:0.31"></div><div class="sc"><span class="num" style="font-size:18px;color:var(--ink3)">6.5</span><span class="copper">→</span><span class="num">7.5</span><span class="w">after a fix</span></div><div class="meta">Everyday · Oct 11</div></div>
+     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s09.jpg" alt="" style="--neck:0.22"></div><div class="sc"><span class="num">7.0</span><span class="w">Put together</span></div><div class="meta">Class · Oct 9</div></div>
+     <div class="ltile"><div class="photo"><img src="../app/assets/demo-photos/s15.jpg" alt="" style="--neck:0.235"></div><div class="sc"><span class="num">6.5</span><span class="w">Getting there</span></div><div class="meta">Everyday · Oct 6</div></div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;margin:22px 0 12px"><span class="woven">SEPTEMBER</span><hr style="flex:1;border:0;border-top:1px dashed var(--faint);opacity:.55"></div>
-    <div style="display:flex;gap:28px"><span style="font:15px var(--sf);color:var(--ink2)"><b class="num" style="font-size:22px;color:var(--ink)">4</b> looks</span><span style="font:15px var(--sf);color:var(--ink2)">best <b class="num" style="font-size:22px;color:var(--ink)">8.0</b></span></div>
+    <div style="display:flex;align-items:center;gap:10px;margin:24px 0 4px"><span style="font:600 20px var(--sf)">September</span><span class="meta" style="font-size:15px">4 looks</span><hr style="flex:1;border:0;border-top:1px dashed var(--faint);opacity:.55"></div>
    </div>
    <div class="tabbar"><span><svg><use href="#i-chat"/></svg>Stylist</span><span><svg><use href="#i-hanger"/></svg>Closet</span><span class="on"><svg><use href="#i-grid"/></svg>Lookbook</span><span><svg><use href="#i-person"/></svg>You</span></div>
   </div></div>
-  <div class="cap"><span class="tag beta">Beta</span>Scrolled, dark. Scores sit under the photo (never on it). Re-checks show old → new, with a copper rivet on the tile.</div>
+  <div class="cap"><span class="tag beta">Beta</span>Scrolled, dark. The score sits under the photo; an improved look says "after a fix" in words. Past months show only how many looks, never a "best" to beat.</div>
  </div>
 
  <div>
   <div class="phone"><div class="screen light">
    <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
    <div class="content">
-    <div style="display:flex;align-items:center;height:44px;margin-top:6px"><div class="circ"><svg width="20" height="20"><use href="#i-back"/></svg></div><div style="flex:1;text-align:center;font:600 17px var(--sf);margin-right:44px">Oct 22</div></div>
-    <div class="photo" style="aspect-ratio:4/4.4;border-radius:20px;margin-top:12px"><img src="../app/assets/demo-photos/p01a.jpg" alt="" style="--neck:0.315"></div>
+    <div style="display:flex;align-items:center;height:44px;margin-top:6px"><div class="circ"><svg width="20" height="20"><use href="#i-back"/></svg></div><div style="flex:1;text-align:center;font:600 17px var(--sf)">Oct 22</div><div class="circ"><svg width="20" height="20"><use href="#i-share"/></svg></div></div>
+    <div class="photo" style="aspect-ratio:4/4.2;border-radius:20px;margin-top:12px"><img src="../app/assets/demo-photos/p01a.jpg" alt="" style="--neck:0.315"></div>
     <div class="card" style="margin-top:14px"><div class="sec">
-     <div class="mono" style="font-size:11px">Re-check · Date</div>
-     <div style="display:flex;align-items:flex-end;gap:10px;margin-top:6px"><span class="num" style="font-size:34px;color:var(--ink3);text-decoration:line-through">8.0</span><span class="copper" style="font:700 22px var(--sf);margin-bottom:6px">→</span><span class="num" style="font-size:58px;line-height:.9">9.0</span><span style="font:15px var(--mono);color:var(--ink3)">/10</span><span style="font:700 17px var(--sf);margin-left:auto;margin-bottom:6px">Dialed in</span></div>
-     <div style="display:flex;gap:10px;align-items:center;margin-top:12px;font:15px var(--sf)"><span style="width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:12px">✓</span><span style="text-decoration:line-through;color:var(--ink2)">Wear the overshirt, open</span><span class="copper num" style="margin-left:auto;font-size:17px">+0.75</span></div>
+     <div class="meta">Re-check · a date</div>
+     <div style="display:flex;align-items:flex-end;gap:10px;margin-top:4px"><span class="num" style="font-size:30px;color:var(--ink3)">8.0</span><span class="copper" style="font:700 22px var(--sf);margin-bottom:5px">→</span><span class="num" style="font-size:56px;line-height:.9">9.0</span><span style="font:15px var(--mono);color:var(--ink3)">/10</span><span style="font:700 17px var(--sf);margin-left:auto;margin-bottom:5px">Dialed in</span></div>
+     <div style="display:flex;gap:10px;align-items:center;margin-top:12px;font:15px var(--sf)"><span style="width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center"><svg width="13" height="13"><use href="#i-check"/></svg></span><span>Done: wore the overshirt open</span><span class="copper" style="margin-left:auto;font-weight:600">+1.0</span></div>
     </div>
     <hr class="seam">
-    <div class="sec" style="display:flex;gap:8px;align-items:center">
-     <div class="tile" style="width:44px;border-radius:10px"><svg style="color:#EDEBE4"><use href="#tee"/></svg></div>
+    <div class="sec" style="display:flex;gap:8px;align-items:center;padding-top:12px;padding-bottom:12px">
+     <div class="tile" style="width:44px;border-radius:10px"><svg class="lightpiece" style="color:#EDEBE4"><use href="#tee"/></svg></div>
      <div class="tile" style="width:44px;border-radius:10px"><svg style="color:#B8875A"><use href="#jeans"/></svg></div>
-     <div class="tile" style="width:44px;border-radius:10px"><svg style="color:#D9CDB4"><use href="#over"/></svg></div>
-     <div class="tile shoe" style="width:44px;border-radius:10px"><svg style="color:#F4F4F0"><use href="#sneak"/></svg></div>
-     <span style="margin-left:auto;font:13px var(--sf);color:var(--ink3)">Worn 3× · last Oct 2</span>
+     <div class="tile" style="width:44px;border-radius:10px"><svg class="lightpiece" style="color:#D9CDB4"><use href="#over"/></svg></div>
+     <div class="tile shoe" style="width:44px;border-radius:10px"><svg class="lightpiece" style="color:#F4F4F0"><use href="#sneak"/></svg></div>
+     <span class="meta" style="margin-left:auto;white-space:nowrap">Worn 3 times</span>
     </div></div>
-    <div class="btn primary" style="margin-top:14px">Wear this again</div>
+    <div class="btn primary" style="margin-top:14px">Wear this tomorrow</div>
    </div>
   </div></div>
-  <div class="cap"><span class="tag beta">Beta</span>Tapping a look opens its page: the card, the fix it took, the pieces, "Wear this again". Today a tap only opens the photo.</div>
+  <div class="cap"><span class="tag beta">Beta</span>The look page: share at the top, the fix shown as done (no strike-through), one gain number, and "Wear this tomorrow" sets the morning card.</div>
  </div>
 </div>
 
 <!-- ============ CLOSET ============ -->
 <h2>Closet: shelves, not a pile</h2>
-<p class="why"><b>The idea:</b> one line of counts that only go up, open questions as a single stacked card instead of a wall, then shelves in body order (Layers, Tops, Bottoms, Shoes) split by seams and sorted by color, so five greys read as a gradient instead of noise. White tiles with each kind drawn at its own scale; shoes stand on a floor shadow. Every tile opens a piece page with a hang-tag name plate.</p>
+<p class="why">One line of counts, open questions as a single row, then shelves in body order sorted dark to light. Every tile opens the piece's page. Light and dark pieces get a fine outline so a white tee shows on a white tile.</p>
 <div class="row">
  <div>
   <div class="phone"><div class="screen light">
@@ -371,66 +395,58 @@ h2{font-size:22px;margin:56px 0 4px}
    <div class="content">
     <div class="navtop"><div class="circ"><svg width="22" height="22"><use href="#i-plus"/></svg></div></div>
     <div class="big" style="margin-bottom:2px">Closet</div>
-    <div style="font:15px var(--sf);color:var(--ink2);margin-bottom:12px"><b class="num" style="font-size:22px;color:var(--ink)">16</b> pieces · <b class="num" style="font-size:22px;color:var(--ink)">24</b> outfits you can make</div>
+    <div style="font:15px var(--sf);color:var(--ink2);margin-bottom:12px"><b style="color:var(--ink)">16</b> pieces · <b style="color:var(--ink)">24</b> outfits you can make</div>
     <div class="seg"><span class="on">Pieces</span><span>Outfits</span></div>
-    <div class="stack">
-     <div class="card" style="position:relative;z-index:2"><div class="sec" style="padding:14px 16px">
-      <div style="display:flex;justify-content:space-between"><span class="mono">To confirm</span><span class="mono">2 more</span></div>
-      <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
-       <div class="photo" style="width:52px;height:64px;border-radius:10px;flex:none"><img src="../app/assets/demo-photos/p01b.jpg" alt="" style="--neck:0.315"></div>
-       <div style="flex:1;font:600 16px/21px var(--sf)">Are these your khaki chinos?</div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:12px"><span class="btn sec2" style="flex:1;height:38px;font-size:15px">Yes, same</span><span class="btn sec2" style="flex:1;height:38px;font-size:15px">No, new</span></div>
-     </div></div>
-     <div class="peek"></div><div class="peek peek2"></div>
-    </div>
+    <div class="card"><div class="rowi" style="padding:10px 14px;min-height:52px">
+     <div class="photo" style="width:34px;height:44px;border-radius:8px;flex:none"><img src="../app/assets/demo-photos/p01b.jpg" alt="" style="--neck:0.315"></div>
+     <div class="t">2 pieces to confirm</div><span class="chev">›</span>
+    </div></div>
     <div class="shelf"><span class="mono">Layers · 3</span><hr></div>
     <div class="grid3">
      <div><div class="tile"><svg style="color:#2D3B5E"><use href="#over"/></svg></div><div class="tname">Navy overshirt</div><div class="tmeta">In 6 outfits</div></div>
      <div><div class="tile"><svg style="color:#5F6F45"><use href="#over"/></svg></div><div class="tname">Olive overshirt</div><div class="tmeta">In 4 outfits</div></div>
-     <div><div class="tile ghost"><svg style="color:#9DB0CA;opacity:.7"><use href="#over"/></svg></div><div class="tname">Denim jacket</div><div class="tmeta">Only described</div></div>
+     <div><div class="tile ghost"><svg style="color:#9DB0CA;opacity:.7"><use href="#over"/></svg></div><div class="tname">Denim jacket</div><div class="tmeta">No photo yet</div></div>
     </div>
     <div class="shelf"><span class="mono">Tops · 5</span><hr></div>
     <div class="grid3">
-     <div><div class="tile"><svg style="color:#1D1F24"><use href="#tee"/></svg></div><div class="tname">Black tee</div></div>
-     <div><div class="tile"><svg style="color:#5A5E66"><use href="#hoodie"/></svg></div><div class="tname">Grey Nike hoodie</div></div>
-     <div><div class="tile"><svg style="color:#ECEAE3"><use href="#tee"/></svg></div><div class="tname">White tee</div></div>
+     <div><div class="tile"><svg style="color:#1D1F24"><use href="#tee"/></svg></div><div class="tname">Black tee</div><div class="tmeta">In 7 outfits</div></div>
+     <div><div class="tile"><svg style="color:#5A5E66"><use href="#hoodie"/></svg></div><div class="tname">Grey Nike hoodie</div><div class="tmeta">In 5 outfits</div></div>
+     <div><div class="tile"><svg class="lightpiece" style="color:#ECEAE3"><use href="#tee"/></svg></div><div class="tname">White tee</div><div class="tmeta">In 8 outfits</div></div>
     </div>
    </div>
    <div class="tabbar"><span><svg><use href="#i-chat"/></svg>Stylist</span><span class="on"><svg><use href="#i-hanger"/></svg>Closet</span><span><svg><use href="#i-grid"/></svg>Lookbook</span><span><svg><use href="#i-person"/></svg>You</span></div>
   </div></div>
-  <div class="cap"><span class="tag beta">Beta</span>Shelves by body order, colors dark to light inside each. "Only described" keeps the dashed tile's one meaning.</div>
+  <div class="cap"><span class="tag beta">Beta</span>The questions are one row (each opens as a sheet), so your clothes come first. "No photo yet" replaces "Only described".</div>
  </div>
 
  <div>
   <div class="phone"><div class="screen light">
    <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
    <div class="content">
-    <div style="display:flex;align-items:center;height:44px;margin-top:6px"><div class="circ"><svg width="20" height="20"><use href="#i-back"/></svg></div><div style="flex:1"></div><div class="link">Edit</div></div>
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:24px;height:260px;display:grid;place-items:center;margin-top:10px;position:relative">
-     <svg width="190" height="190" style="color:#2B3B63"><use href="#jeans"/></svg>
+    <div style="display:flex;align-items:center;height:44px;margin-top:6px"><div class="circ"><svg width="20" height="20"><use href="#i-back"/></svg></div><div style="flex:1"></div><div class="link" style="padding:12px 4px">Edit</div></div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:24px;height:210px;display:grid;place-items:center;margin-top:10px">
+     <svg width="160" height="160" style="color:#2B3B63"><use href="#jeans"/></svg>
     </div>
-    <div style="margin-top:-22px;margin-left:16px;position:relative"><div class="hangtag"><div><div style="font:600 17px var(--sf)">Dark straight jeans</div><div style="font:500 11px var(--mono);letter-spacing:.08em;color:var(--ink3);text-transform:uppercase;margin-top:2px">Straight · Regular fit</div></div></div></div>
-    <div style="display:flex;gap:0;margin:16px 0 4px" class="stats">
-     <div><div class="n num" style="font-size:30px">4×</div><div class="l">worn</div></div>
-     <div><div class="n num" style="font-size:30px">9</div><div class="l">outfits</div></div>
-     <div><div class="n num" style="font-size:30px">Sep 28</div><div class="l">last worn</div></div>
+    <div style="font:700 22px/28px var(--sf);margin-top:14px">Dark straight jeans</div>
+    <div class="meta">Straight leg · Regular fit</div>
+    <div style="display:flex;gap:26px;margin:14px 0 4px">
+     <div><div class="num" style="font-size:28px">4</div><div class="meta">fit checks</div></div>
+     <div><div class="num" style="font-size:28px">9</div><div class="meta">outfits</div></div>
+     <div><div class="num" style="font-size:28px">Sep 28</div><div class="meta">last worn</div></div>
     </div>
-    <div style="margin:16px 0 6px" class="mono">Fit</div>
+    <div class="mono" style="margin:14px 0 6px">Fit</div>
     <div class="tape"><span class="mk" style="left:38%"></span></div>
-    <div class="tapelab"><span>Slim</span><b>Regular</b><span>Relaxed</span><span>Oversized</span></div>
-    <hr class="pageseam">
-    <div class="mono" style="margin-bottom:8px">Seen in · 3 fit checks</div>
+    <div class="tapelab" style="font-size:12px"><span>Slim</span><b>Regular</b><span>Relaxed</span><span>Oversized</span></div>
+    <div class="mono" style="margin:18px 0 8px">Seen in 3 fit checks</div>
     <div style="display:flex;gap:8px">
      <div class="photo" style="width:72px;height:96px;border-radius:12px"><img src="../app/assets/demo-photos/s12.jpg" alt="" style="--neck:0.235"></div>
      <div class="photo" style="width:72px;height:96px;border-radius:12px"><img src="../app/assets/demo-photos/s22.jpg" alt="" style="--neck:0.32"></div>
      <div class="photo" style="width:72px;height:96px;border-radius:12px"><img src="../app/assets/demo-photos/s24.jpg" alt="" style="--neck:0.31"></div>
     </div>
     <div class="btn primary" style="margin-top:16px">Style this</div>
-    <div style="text-align:center;margin-top:12px;font:15px var(--sf);color:var(--ink2)">Same as another piece? · Remove</div>
    </div>
   </div></div>
-  <div class="cap"><span class="tag beta">Beta</span>The piece page: hang-tag name plate, counts, "Seen in" (how you clean up duplicates). The fit tape describes the garment, never you <span class="tag">Later</span>.</div>
+  <div class="cap"><span class="tag beta">Beta</span>The piece page: name as a plain title, honest counts ("4 fit checks", not "worn 4×"). Edit holds rename, fit, "Merge with another piece" and Remove, each its own row.</div>
  </div>
 
  <div>
@@ -439,46 +455,50 @@ h2{font-size:22px;margin:56px 0 4px}
    <div class="content" style="padding-top:8px">
     <div class="shelf" style="margin-top:6px"><span class="mono">Bottoms · 4</span><hr></div>
     <div class="grid3">
-     <div><div class="tile"><svg style="color:#16181D;filter:drop-shadow(0 0 1px rgba(255,255,255,.35))"><use href="#wide"/></svg></div><div class="tname">Black wide jeans</div></div>
+     <div><div class="tile"><svg style="color:#16181D;filter:drop-shadow(0 0 1px rgba(255,255,255,.45))"><use href="#wide"/></svg></div><div class="tname">Black wide jeans</div></div>
      <div><div class="tile"><svg style="color:#2B3B63"><use href="#jeans"/></svg></div><div class="tname">Dark straight jeans</div></div>
      <div><div class="tile"><svg style="color:#C8B38A"><use href="#jeans"/></svg></div><div class="tname">Khaki chinos</div></div>
     </div>
     <div class="shelf"><span class="mono">Shoes · 3</span><hr></div>
     <div class="grid3">
-     <div><div class="tile shoe"><svg style="color:#1E1612;filter:drop-shadow(0 0 1px rgba(255,255,255,.35))"><use href="#boot"/></svg></div><div class="tname">Black Chelsea boots</div></div>
-     <div><div class="tile shoe"><svg style="color:#F4F4F0"><use href="#sneak"/></svg></div><div class="tname">White leather sneakers</div></div>
+     <div><div class="tile shoe"><svg style="color:#1E1612;filter:drop-shadow(0 0 1px rgba(255,255,255,.45))"><use href="#boot"/></svg></div><div class="tname">Black Chelsea boots</div></div>
+     <div><div class="tile shoe"><svg style="color:#F4F4F0"><use href="#sneak"/></svg></div><div class="tname">White sneakers</div></div>
      <div><div class="tile shoe"><svg style="color:#6B3B20"><use href="#loafer"/></svg></div><div class="tname">Brown loafers</div></div>
     </div>
     <hr class="pageseam">
     <div class="card"><div class="sec" style="display:flex;gap:14px;align-items:center">
-     <div class="tile shoe ghost" style="width:70px;flex:none"><svg style="color:#E8E6DF;opacity:.6"><use href="#sneak"/></svg></div>
-     <div style="flex:1"><div class="mono" style="font-size:11px">Next best buy</div><div style="font:600 16px/21px var(--sf);margin-top:3px">White leather sneakers, low and plain</div></div>
-     <div style="text-align:right"><div class="num copper" style="font-size:28px">+9</div><div style="font:12px var(--sf);color:var(--ink3)">outfits</div></div>
+     <div class="tile" style="width:70px;flex:none;position:relative"><svg style="color:#E9EEF6"><use href="#over"/></svg><span style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:11px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 15px var(--sf)">+</span></div>
+     <div style="flex:1"><div class="meta">Next best buy</div><div style="font:600 16px/21px var(--sf);margin-top:2px">A white oxford shirt</div></div>
+     <div style="text-align:right"><div class="num copper" style="font-size:28px">+9</div><div class="meta" style="font-size:12px">new outfits</div></div>
     </div></div>
    </div>
    <div class="tabbar"><span><svg><use href="#i-chat"/></svg>Stylist</span><span class="on"><svg><use href="#i-hanger"/></svg>Closet</span><span><svg><use href="#i-grid"/></svg>Lookbook</span><span><svg><use href="#i-person"/></svg>You</span></div>
   </div></div>
-  <div class="cap">Dark: black pieces keep a faint rim (built Oct 12). The next-best-buy card names a kind, never a brand or shop, and its "+9" is a gain, so it's copper <span class="tag">Later</span>.</div>
+  <div class="cap">Dark: tiles one step lighter than the page with a border, so black pieces stand out. The next buy is a kind you don't own, marked with "+" (dashed stays "no photo yet") <span class="tag">Later</span>.</div>
  </div>
 </div>
 
 <!-- ============ SHARE + REVEAL ============ -->
 <h2>The share card and the score reveal</h2>
-<p class="why"><b>Share card:</b> the free ad. The photo below the neck, a copper stitched seam, the indigo band with the score in big Archivo and the woven label. It shows what you got right (the score, the word, "Reads as streetwear"), <b>never the fix you still need</b>. The before/after version is the TikTok format. <b>Score reveal:</b> about 1.3 seconds, tap to skip, played once per check, with a plain fade when Reduce Motion is on.</p>
+<p class="why"><b>Share card:</b> leads with your look and the pieces (something useful to the viewer), the score beside it, never the occasion and never the fix you still need. Offered at 7.0 and up, or after a re-check win. <b>Score reveal:</b> a tape slides to the number and locks.</p>
 <div class="row" style="align-items:flex-end">
  <div>
   <div class="share">
    <div class="photo"><img src="../app/assets/demo-photos/s22.jpg" alt="" style="--neck:0.32"></div>
    <div class="band">
-    <div style="position:absolute;top:18px;right:20px"><span class="woven" style="--label:#22305C;box-shadow:0 0 0 1px #3A4260">KITTED</span></div>
-    <div style="display:flex;align-items:flex-end;gap:10px;margin-top:18px"><span class="big96 num">8.0</span><span class="ten" style="margin-bottom:10px">/10</span></div>
-    <div class="word" style="margin-top:6px">Sharp</div>
-    <div class="line">READS AS STREETWEAR · DATE</div>
-    <div class="url">trykitted.com</div>
+    <div style="position:absolute;top:18px;right:20px"><span class="woven" style="box-shadow:0 0 0 1px #3A4260">KITTED</span></div>
+    <div style="display:flex;align-items:flex-end;gap:10px;margin-top:14px"><span class="num" style="font-size:80px;line-height:.9">8.0</span><span class="ten" style="margin-bottom:8px">/10</span><span class="word" style="margin:0 0 6px 6px">Sharp</span></div>
+    <div class="line" style="color:#fff;font:600 14px var(--sf);letter-spacing:0;margin-top:8px">Reads as smart casual</div>
+    <div class="breakdown">
+     <div><svg style="color:#9C7A4E"><use href="#tee"/></svg>Knit polo</div>
+     <div><svg style="color:#C8B38A"><use href="#jeans"/></svg>Khaki chinos</div>
+     <div><svg style="color:#F4F4F0"><use href="#sneak"/></svg>White sneakers</div>
+    </div>
+    <div class="url" style="font-size:13px;color:rgba(255,255,255,.8)">trykitted.com</div>
    </div>
    <div class="frame"></div>
   </div>
-  <div class="cap" style="max-width:300px"><span class="tag beta">Beta</span>Story size (9:16), dark first. A 4:5 version for the feed.</div>
+  <div class="cap" style="max-width:300px"><span class="tag beta">Beta</span>Story size (9:16). The fit breakdown gives viewers something useful and shows off the drawings.</div>
  </div>
  <div>
   <div class="share">
@@ -488,32 +508,33 @@ h2{font-size:22px;margin:56px 0 4px}
    <div style="position:absolute;top:378px;left:192px;font:600 12px var(--mono);color:#fff;background:rgba(14,17,28,.8);padding:4px 8px;border-radius:6px">AFTER 9.0</div>
    <div class="band">
     <div style="position:absolute;top:18px;right:20px"><span class="woven" style="box-shadow:0 0 0 1px #3A4260">KITTED</span></div>
-    <div style="display:flex;align-items:flex-end;gap:12px;margin-top:18px"><span class="num" style="font-size:44px;color:rgba(255,255,255,.45);margin-bottom:8px">8.0</span><span style="color:#DE9762;font:700 28px var(--sf);margin-bottom:16px">→</span><span class="big96 num">9.0</span></div>
-    <div class="word" style="margin-top:6px">Dialed in</div>
-    <div class="line" style="color:#DE9762">+1.0 AFTER ONE FIX</div>
-    <div class="url">trykitted.com</div>
+    <div style="display:flex;align-items:flex-end;gap:12px;margin-top:14px"><span class="num" style="font-size:40px;color:rgba(255,255,255,.55);margin-bottom:8px">8.0</span><span style="color:#DE9762;font:700 26px var(--sf);margin-bottom:14px">→</span><span class="num" style="font-size:80px;line-height:.9">9.0</span><span class="word" style="margin:0 0 6px 4px">Dialed in</span></div>
+    <div style="font:600 15px var(--sf);margin-top:10px;color:#fff">One fix: wore the overshirt open</div>
+    <div style="font:600 13px var(--sf);margin-top:4px;color:#DE9762">+1.0</div>
+    <div class="url" style="font-size:13px;color:rgba(255,255,255,.8)">trykitted.com</div>
    </div>
    <div class="frame"></div>
   </div>
-  <div class="cap" style="max-width:300px"><span class="tag beta">Beta</span>Before/after, offered after an upward re-check.</div>
+  <div class="cap" style="max-width:300px"><span class="tag beta">Beta</span>Before/after names the fix: the brag is "I improved", not "rate me".</div>
  </div>
  <div style="flex:1;min-width:300px">
   <div class="frames">
-   <div class="fr"><div class="t">0 ms · waiting</div><div class="sc"><span class="num" style="color:#9096A5">–.–</span><span style="font:14px var(--mono);color:#9096A5;margin-bottom:8px">/10</span></div><div class="note">"Writing your fixes" ticks done. The score row scrolls fully into view first, so a screen recording catches it.</div></div>
-   <div class="fr"><div class="t">400–920 ms · roll</div><div class="sc"><span class="num"><span class="roll"><span>6</span><span class="cur">7</span><span>8</span></span>.<span class="roll"><span>4</span><span class="cur">5</span><span>6</span></span></span></div><div class="note">Each digit rolls like a tape-measure counter and settles. It never counts up from 0 (no slot machine).</div></div>
-   <div class="fr"><div class="t">920 ms · lock</div><div class="sc"><span class="num">8.0</span><span style="font:14px var(--mono);color:#646A7A;margin-bottom:8px">/10</span><span style="font:700 19px var(--sf);margin:0 0 10px 6px">Sharp</span></div><div class="note">A firm "rivet" haptic as the number locks; the word rises in 120 ms later; the seam below stitches left to right.</div></div>
-   <div class="fr"><div class="t">1300 ms · the fix</div><div class="sc" style="align-items:center;height:82px"><span style="font:15px var(--sf);color:#121628">Tuck the tee</span><span class="num" style="font-size:24px;color:#9C5326;margin-left:auto">→ 8.5</span></div><div class="note">The first copper on the card is the gain on the fix. A re-check win adds the only "success" haptic in the app.</div></div>
+   <div class="fr"><div class="t">0 ms · waiting</div><div class="sc"><span class="num" style="color:#646A7A">–.–</span><span style="font:14px var(--mono);color:#646A7A;margin-bottom:8px">/10</span></div><div class="note">"Writing your fixes" ticks done; the score row scrolls fully into view first.</div></div>
+   <div class="fr"><div class="t">400–900 ms · the tape slides</div><div class="tapeS"><div class="ticks"></div><div class="nums"><span>7.0</span><span>7.5</span><b>8.0</b><span>8.5</span></div><div class="mk"></div></div><div class="note">A tape measure slides under a fixed marker and slows to a stop. Measured, not luck (no random digits).</div></div>
+   <div class="fr"><div class="t">900 ms · lock</div><div class="sc"><span class="num">8.0</span><span style="font:14px var(--mono);color:#646A7A;margin-bottom:8px">/10</span><span style="font:700 19px var(--sf);margin:0 0 10px 6px">Sharp</span></div><div class="note">One firm haptic as it locks; the word rises in; VoiceOver hears the score once, here.</div></div>
+   <div class="fr"><div class="t">Below 6.0 · quiet</div><div class="sc" style="align-items:center;height:82px"><span class="num" style="font-size:44px">5.5</span><span style="font:15px var(--sf);color:#121628;margin-left:10px;line-height:1.2">Swap the slides<br><span style="color:#9C5326;font-weight:600">→ 6.5</span></span></div><div class="note">No tape, no haptic: the score and its fix appear together, so a low score lands as "here's the move".</div></div>
   </div>
-  <p class="cap" style="text-align:left;max-width:none;margin-top:14px"><span class="tag beta">Beta</span>Also in the same pass: the reading wait becomes a stitch line that sews along the seam as the four steps finish, and found pieces pop in with their drawings; the camera countdown gets an Archivo number inside a copper stitch ring.</p>
+  <p class="cap" style="text-align:left;max-width:none;margin-top:14px"><span class="tag beta">Beta</span>The full slide plays for your first 5 checks and every re-check win; after that a short 0.5 s lock. Reduce Motion: a plain fade. VoiceOver skips the animation. The capture flash becomes a soft 40% dip, and none with Reduce Motion.</p>
  </div>
 </div>
 
 <h2>What I'd build first</h2>
 <ol class="why" style="padding-left:20px;max-width:900px">
- <li><b>Score reveal + re-check win</b> (about 1 day). The moment every video shows; no new packages.</li>
- <li><b>You: style card, editable facts, Settings with Privacy &amp; data and Delete all my data</b> (about 2–3 days). Required before outside testers.</li>
- <li><b>Share card + before/after</b> (1–2 days). Needs one new package to save the card as an image (your OK).</li>
- <li><b>Lookbook month view + look page</b> (3–4 days). Also fixes faces showing in today's Lookbook thumbnails.</li>
- <li><b>Closet shelves, stacked questions, piece page</b> (3–4 days). The piece page is also how you clean up duplicates.</li>
+ <li><b>You with Settings, the honest privacy screen and Delete all my data</b> (2–3 days). Needed before outside testers (App Store 5.1.2, 3.1.1).</li>
+ <li><b>Score reveal and re-check win</b> (about 1 day). No new packages.</li>
+ <li><b>Share card, before/after and the share buttons</b> (1–2 days). Needs one package to save the card as an image (your OK).</li>
+ <li><b>Lookbook month view, Up next and the look page</b> (3–4 days). Also stops faces showing in today's Lookbook thumbnails.</li>
+ <li><b>Closet shelves, the question row and the piece page</b> (3–4 days). The piece page is how you clean up duplicates.</li>
 </ol>
+<p class="why" style="font-size:13px">Every layout here also needs its large-text version (stats and grids turn into lists, two columns become one) and full VoiceOver labels; the accessibility critic's checklist is in the decision log (#246).</p>
 </div></body></html>
