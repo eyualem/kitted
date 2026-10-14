@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitted figure for advice</title>
+<style>
+@font-face{font-family:"ArchivoC";src:url("../app/assets/fonts/ArchivoCondensed-SemiBold.ttf")}
+@font-face{font-family:"ArchivoX";src:url("../app/assets/fonts/ArchivoExpanded-Bold.ttf")}
+:root{--page:#E7E9ED;--page-ink:#131726;--page-ink2:#565C6B;--sf:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;--mono:"SF Mono",Menlo,Consolas,monospace;--num:"ArchivoC","Arial Narrow",sans-serif;--label:#22305C;--copperFixed:#DE9762}
+body{margin:0;background:var(--page);color:var(--page-ink);font:15px/1.45 var(--sf)}
+.wrap{max-width:1500px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:30px;margin:0 0 6px}
+h2{font-size:22px;margin:48px 0 4px}
+.lede,.why{color:var(--page-ink2);max-width:900px;margin:0 0 14px}
+.why b,.lede b{color:var(--page-ink)}
+.row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.cap{font-size:13px;color:var(--page-ink2);text-align:center;margin-top:10px;max-width:300px}
+.tag{display:inline-block;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:#fff;border:1px solid #CDD1D9;color:#3D4352;margin-right:6px}
+.tag.beta{background:#1A2448;color:#fff;border-color:#1A2448}
+.rules{max-width:980px;background:#fff;border:1px solid #D6D9E0;border-radius:16px;padding:16px 20px}
+.rules li{margin:4px 0}
+.phone{width:402px;height:874px;border-radius:56px;background:#1B1D22;padding:11px;box-shadow:0 30px 60px -24px rgba(16,20,36,.4);zoom:.72;flex:none}
+.screen{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sf)}
+.light{--bg:#F3F4F6;--surface:#FFF;--surface2:#ECEEF1;--ink:#121628;--ink2:#585E70;--ink3:#646A7A;--faint:#848A99;--line:#E0E3E8;--accent:#9C5326;--accentSoft:rgba(156,83,38,.09);--primary:#1A2448;--onPrimary:#FFF;--fig:#CDD1D9;--figLine:#9AA0AD;--glass:rgba(250,250,252,.82)}
+.dark{--bg:#0C0E14;--surface:#171A23;--surface2:#21252F;--ink:#ECEEF3;--ink2:#A1A7B5;--ink3:#9096A5;--faint:#6E7484;--line:#2A2F3B;--accent:#DE9762;--accentSoft:rgba(222,151,98,.15);--primary:#ECEEF3;--onPrimary:#0C0E14;--fig:#4A5060;--figLine:#6E7484;--glass:rgba(32,35,46,.8)}
+.status{height:54px;display:flex;justify-content:space-between;align-items:center;padding:0 34px 0 40px;font:600 17px var(--sf)}
+.status i{font-style:normal;letter-spacing:2px;font-size:12px}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:124px;height:36px;border-radius:20px;background:#000}
+.content{position:absolute;top:54px;left:0;right:0;bottom:0;overflow:hidden;padding:0 16px}
+.big{font:700 34px/41px var(--sf);margin:56px 0 12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px}
+.sec{padding:16px 18px}
+.mono{font:500 12px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--ink3)}
+.meta{font:13px/18px var(--sf);color:var(--ink3)}
+.num{font-family:var(--num);letter-spacing:-.02em}
+.pill{display:inline-flex;align-items:center;height:32px;padding:0 13px;border-radius:16px;border:1px solid var(--line);font:500 14px var(--sf);color:var(--ink);background:var(--surface)}
+.pill.fill{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.num1{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:9px;font:700 11px var(--sf);margin-right:6px;background:var(--surface2);color:var(--ink)}
+.pill.fill .num1{background:var(--bg);color:var(--ink)}
+.btn{display:flex;align-items:center;justify-content:center;height:50px;border-radius:25px;font:600 17px var(--sf)}
+.btn.primary{background:var(--primary);color:var(--onPrimary)}
+.btn.sm{height:36px;font-size:14px;padding:0 14px;border-radius:18px}
+.btn.sec2{background:var(--surface2);color:var(--ink)}
+.link{font:600 15px var(--sf);color:var(--ink)}
+.tabbar{position:absolute;left:16px;right:16px;bottom:20px;height:62px;border-radius:31px;background:var(--glass);box-shadow:0 0 0 1px var(--line);display:flex;align-items:center;justify-content:space-around;font:500 10px var(--sf);color:var(--ink)}
+.tabbar span{padding:8px 14px;border-radius:24px}
+.tabbar span.on{color:var(--accent);background:var(--surface2)}
+.progress{display:flex;gap:6px;margin:14px 0 0 54px}
+.progress i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.progress i.on{background:var(--ink)}
+.builds{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}
+.bt{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:8px 2px 8px;text-align:center;font:500 12.5px var(--sf);color:var(--ink)}
+.bt.on{border:2px solid var(--ink);padding:7px 1px 7px}
+.bt svg{width:100%;height:92px;display:block}
+.seg{display:flex;background:var(--surface2);border-radius:12px;padding:3px;margin-top:8px}
+.seg span{flex:1;text-align:center;font:500 15px/38px var(--sf);border-radius:9px;color:var(--ink2)}
+.seg span.on{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 0 0 1px var(--line)}
+.ofit{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px 10px 12px}
+.ofit svg{width:100%;height:210px;display:block}
+.ofit .r{font:13px/17px var(--sf);color:var(--ink2);margin-top:6px}
+.ofit .n{font:600 14px var(--sf);margin-top:2px}
+.chips{display:flex;gap:8px;margin:2px 0 12px;overflow:hidden}
+.oseg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;margin:0 0 12px}
+.oseg span{flex:1;text-align:center;font:600 13px/34px var(--sf);border-radius:8px;color:var(--ink2)}
+.oseg span.on{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 0 0 1px var(--line)}
+.dark .oseg span.on{background:#3A3F4C}
+.photo{position:relative;overflow:hidden;background:#ccc}
+.photo img{position:absolute;left:0;width:100%;height:calc(100% / (1 - var(--neck,.32) - .02));object-fit:cover;object-position:50% 100%;bottom:0}
+.woven{display:inline-flex;align-items:center;height:22px;padding:0 16px;border-radius:2px;background:var(--label);color:#EEF0F5;font:12px/1 "ArchivoX",Arial Black,sans-serif;letter-spacing:.34em;position:relative}
+.woven::before,.woven::after{content:"";position:absolute;top:4px;bottom:4px;border-left:1.5px dashed var(--copperFixed)}
+.woven::before{left:6px}.woven::after{right:6px}
+.helper{display:flex;gap:10px;align-items:flex-start;background:var(--surface2);border-radius:14px;padding:10px 12px;font:13.5px/19px var(--sf);color:var(--ink2);margin-top:12px}
+</style></head>
+<body><div class="wrap">
+
+<h1>The figure, for advice</h1>
+<p class="lede">The founder's call (Oct 14): bring the figure back as an avatar <b>for advice</b>: it wears his own pieces in Closet → Outfits, on the morning card and on his You card. It is a simple drawn figure in the same style as the clothes, with no face, never his photo and never AI. His build is asked politely in onboarding, only to shape advice.</p>
+<div class="rules"><b>The guardrails that keep it on the right side of "we rate the outfit, never you"</b>
+<ul style="margin:6px 0 0;padding-left:20px;font-size:14px;color:#3D4352">
+ <li><b>Advice only:</b> the figure never appears on a score card, next to a score, or in the Why sheet. Build never changes a score (as today).</li>
+ <li><b>A drawing, not a body:</b> a plain, faceless, flat figure in one neutral grey (no skin tones, no muscles or abs, no realistic proportions), drawn by code from the same pieces as Closet. Never AI, never a photo of him.</li>
+ <li><b>Five gentle shapes:</b> Slim · Average · Athletic · Broad · Bigger, plus "Rather not say" (then a neutral average figure). No weight, no measurements, no numbers on the figure.</li>
+ <li><b>Advice about clothes, never about hiding:</b> "a straight leg balances a roomy top", never "slimming" or "hides your stomach". Changeable any time in You.</li>
+</ul></div>
+
+<!-- ============ ONBOARDING ============ -->
+<h2>Onboarding: Basics, asked politely</h2>
+<p class="why">One screen, clear about why it asks: "so my advice fits you". The build tiles show the figure in each shape wearing the same plain outfit, so it reads as "which one is closer to you" rather than a body label. Height stays optional.</p>
+<div class="row">
+ <div>
+  <div class="phone"><div class="screen light">
+   <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
+   <div class="content">
+    <div style="display:flex;align-items:center;margin-top:6px"><div style="width:44px;height:44px;border-radius:22px;background:var(--surface2);display:grid;place-items:center;font-size:20px">‹</div><div class="progress" style="flex:1;margin:0 0 0 12px"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></div>
+    <div style="font:700 26px/32px var(--sf);margin:20px 0 4px">A bit about you</div>
+    <div style="font:15px/21px var(--sf);color:var(--ink2)">So the cuts and fits I suggest work for you. This never changes your score, and you can change it any time.</div>
+    <div class="mono" style="margin-top:20px">Which is closest to your build?</div>
+    <div class="builds" id="builds"></div>
+    <div style="text-align:center;margin-top:10px" class="link">Rather not say</div>
+    <div class="mono" style="margin-top:18px">How do you like clothes to fit?</div>
+    <div class="seg"><span>Fitted</span><span class="on">Regular</span><span>Relaxed</span></div>
+    <div class="mono" style="margin-top:18px">Height <span style="text-transform:none;letter-spacing:0">(optional)</span></div>
+    <div class="seg" style="justify-content:space-between;padding:3px 3px"><span style="flex:none;width:44px">−</span><span class="on" style="flex:1">5′10″</span><span style="flex:none;width:44px">+</span></div>
+    <div style="position:absolute;left:16px;right:16px;bottom:34px"><div class="btn primary">Looks right</div></div>
+   </div>
+  </div></div>
+  <div class="cap"><span class="tag beta">Beta</span>Basics. "Average" picked; the figure in each tile wears the same plain tee and jeans. Birth year moves to its own step.</div>
+ </div>
+
+ <div>
+  <div class="phone"><div class="screen light">
+   <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
+   <div class="content">
+    <div style="display:flex;align-items:center;margin-top:6px"><div style="width:44px;height:44px;border-radius:22px;background:var(--surface2);display:grid;place-items:center;font-size:20px">‹</div><div class="progress" style="flex:1;margin:0 0 0 12px"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:20px"><div style="width:26px;height:26px;border-radius:6px;background:var(--label);color:#EEF0F5;display:grid;place-items:center;font:13px ArchivoX">K</div><span style="font:600 13px var(--sf);color:var(--ink3)">Your stylist</span></div>
+    <div style="font:17px/23px var(--sf);margin-top:6px">Got it. This is you for outfit ideas: your clothes will show up on it as I learn your closet.</div>
+    <div class="card" style="margin-top:16px;display:flex;align-items:center;gap:8px;padding:14px">
+     <div id="meFig" style="width:150px;flex:none"></div>
+     <div style="flex:1">
+      <div style="font:600 17px/22px var(--sf)">Average build · Regular fit</div>
+      <div class="meta" style="margin-top:4px">5′10″</div>
+      <div class="helper" style="margin-top:12px">It's only for advice. I score the clothes, never you.</div>
+     </div>
+    </div>
+    <div style="position:absolute;left:16px;right:16px;bottom:34px"><div class="btn primary">Continue</div></div>
+   </div>
+  </div></div>
+  <div class="cap"><span class="tag beta">Beta</span>The moment the figure is introduced, said plainly: it's for outfit ideas, and it will wear his clothes.</div>
+ </div>
+</div>
+
+<!-- ============ CLOSET OUTFITS ============ -->
+<h2>Closet → Outfits: his clothes on the figure</h2>
+<p class="why">Outfits he can make from what he owns, drawn on his figure in the right fits, each with a plain reason. Outfits he has worn keep his real photo (cut at the neck), which beats any drawing. No predicted score on an outfit he hasn't worn.</p>
+<div class="row">
+ <div>
+  <div class="phone"><div class="screen light">
+   <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
+   <div class="content">
+    <div class="big" style="margin-bottom:2px">Closet</div>
+    <div style="font:15px var(--sf);color:var(--ink2);margin-bottom:12px"><b style="color:var(--ink)">16</b> pieces · <b style="color:var(--ink)">24</b> outfits you can make</div>
+    <div class="oseg"><span>Pieces</span><span class="on">Outfits</span></div>
+    <div class="chips"><span class="pill fill">Everyday</span><span class="pill">Class</span><span class="pill">Date</span><span class="pill">Interview</span></div>
+    <div class="mono" style="margin-bottom:8px">Try next</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="outfitsL"></div>
+   </div>
+   <div class="tabbar"><span>Stylist</span><span class="on">Closet</span><span>Lookbook</span><span>You</span></div>
+  </div></div>
+  <div class="cap"><span class="tag beta">Beta</span>"Try next": outfits on his figure with a reason line. Tapping one opens "Wear this tomorrow" or "Swap a piece".</div>
+ </div>
+
+ <div>
+  <div class="phone"><div class="screen dark">
+   <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
+   <div class="content" style="padding-top:8px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="outfitsD"></div>
+    <div class="mono" style="margin:18px 0 8px">Your go-tos</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+     <div class="ofit" style="padding:0;overflow:hidden"><div class="photo" style="height:170px"><img src="../app/assets/demo-photos/p01a.jpg" alt="" style="--neck:0.315"></div><div style="padding:8px 10px 10px"><div class="n">Overshirt, tee, chinos</div><div class="meta">Worn 3 times · scored 9.0</div></div></div>
+     <div class="ofit" style="padding:0;overflow:hidden"><div class="photo" style="height:170px"><img src="../app/assets/demo-photos/s12.jpg" alt="" style="--neck:0.235"></div><div style="padding:8px 10px 10px"><div class="n">Crewneck, jeans</div><div class="meta">Worn twice · scored 7.5</div></div></div>
+    </div>
+   </div>
+   <div class="tabbar"><span>Stylist</span><span class="on">Closet</span><span>Lookbook</span><span>You</span></div>
+  </div></div>
+  <div class="cap">Dark, scrolled. Go-tos are outfits he has actually worn: his own photo and its real score. Drawings never carry a score.</div>
+ </div>
+
+ <div>
+  <div class="phone"><div class="screen light">
+   <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
+   <div class="content">
+    <div style="display:flex;align-items:center;height:44px;margin-top:6px"><div style="width:44px;height:44px;border-radius:22px;background:var(--surface2);display:grid;place-items:center;font-size:20px">‹</div></div>
+    <div class="card" style="margin-top:10px;display:grid;place-items:center;padding:10px 0"><div id="bigOutfit" style="width:230px"></div></div>
+    <div style="font:700 22px/28px var(--sf);margin-top:14px">Overshirt over a white tee</div>
+    <div class="meta" style="margin-top:2px">Navy overshirt · White tee · Khaki chinos · White sneakers</div>
+    <div class="helper"><b style="color:var(--ink);font-weight:600">Why it works:</b> the dark layer frames a light tee, and the chinos sit between them, light to dark from top to toe.</div>
+    <div style="display:flex;gap:10px;margin-top:16px"><div class="btn primary" style="flex:1">Wear this tomorrow</div></div>
+    <div style="display:flex;gap:10px;margin-top:10px"><div class="btn sec2" style="flex:1;height:44px;font-size:15px">Swap a piece</div><div class="btn sec2" style="flex:1;height:44px;font-size:15px">Ask about it</div></div>
+   </div>
+  </div></div>
+  <div class="cap"><span class="tag beta">Beta</span>An outfit page: the figure in his pieces, the reason in plain words, and the next step. "Wear this tomorrow" sets the morning card.</div>
+ </div>
+</div>
+
+<!-- ============ YOU + MORNING ============ -->
+<h2>You and the morning card</h2>
+<p class="why">On You, the figure replaces the measured silhouette: it wears his best recent outfit, beside his looks. On the morning card, today's idea is drawn on his figure instead of loose tiles.</p>
+<div class="row">
+ <div>
+  <div class="phone"><div class="screen light">
+   <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
+   <div class="content">
+    <div class="big">You</div>
+    <div class="card"><div class="sec" style="display:flex;gap:6px;align-items:center;padding:12px 14px">
+     <div id="youFig" style="width:118px;flex:none"></div>
+     <div style="flex:1">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span class="mono">Your style</span><span class="link">Edit</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"><span class="pill fill"><span class="num1">1</span>Streetwear</span><span class="pill"><span class="num1">2</span>Minimal</span><span class="pill"><span class="num1">3</span>Workwear</span></div>
+      <div class="meta" style="margin-top:10px">Average build · Regular fit</div>
+     </div>
+    </div></div>
+    <div class="meta" style="margin:8px 4px 0">Wearing your best look this month. Your figure is for advice; it's never scored.</div>
+   </div>
+   <div class="tabbar"><span>Stylist</span><span>Closet</span><span>Lookbook</span><span class="on">You</span></div>
+  </div></div>
+  <div class="cap"><span class="tag beta">Beta</span>The You card (top of the page; the rest stays as in round 2).</div>
+ </div>
+
+ <div>
+  <div class="phone"><div class="screen dark">
+   <div class="island"></div><div class="status"><span>9:41</span><i>●●● ▮</i></div>
+   <div class="content">
+    <div style="display:flex;gap:10px;align-items:center;margin-top:24px"><div style="width:26px;height:26px;border-radius:6px;background:var(--label);color:#EEF0F5;display:grid;place-items:center;font:13px ArchivoX">K</div><span style="font:600 13px var(--sf);color:var(--ink3)">Your stylist</span></div>
+    <div style="font:17px/23px var(--sf);margin-top:6px">Morning. 46° now, 63° by afternoon. Rain likely after 5 pm.</div>
+    <div class="card" style="margin-top:14px;overflow:hidden">
+     <div style="display:grid;grid-template-columns:150px 1fr;align-items:center;background:var(--surface2)"><div id="mornFig"></div><div style="padding:12px 14px 12px 0"><div style="font:700 19px/24px var(--sf)">Layer for the cold start</div><div class="meta" style="margin-top:4px">☂ 46° → 63°</div><div style="font:14px/19px var(--sf);color:var(--ink2);margin-top:8px">The overshirt comes off by noon; the boots handle the rain.</div></div></div>
+     <div class="sec" style="display:flex;gap:10px;padding:12px 14px"><div class="btn primary sm" style="flex:1;height:44px">Wear this</div><div class="btn sec2 sm" style="flex:1;height:44px">Swap one</div></div>
+    </div>
+   </div>
+   <div class="tabbar"><span class="on">Stylist</span><span>Closet</span><span>Lookbook</span><span>You</span></div>
+  </div></div>
+  <div class="cap">The morning card's idea on his figure (dark). "Swap one" redraws it with one piece changed.</div>
+ </div>
+</div>
+
+<h2>Honest notes</h2>
+<ul class="why" style="padding-left:20px">
+ <li><b>This reverses part of #84</b> (Closet: "no avatar"). That research was about AI avatars and try-on, which reviewers say distort bodies and garments. A code-drawn figure wearing his drawn pieces avoids both, so the reasons don't carry over; the photo of outfits he has worn still wins where it exists.</li>
+ <li><b>The real work is the drawing:</b> each piece needs a "worn" version that fits the figure in 5 builds and 3 fits (about 30 garment types). Roughly 3–4 days on top of the drawn flats, more for layering edge cases (a hoodie under a jacket).</li>
+ <li><b>Test before shipping:</b> show the build step to 5 guys (it's already on the to-do list as the style-step test) and watch the "Bigger" and "Slim" choices: if anyone hesitates or looks uncomfortable, change the words.</li>
+</ul>
+</div>
+
+<script>
+// A plain faceless figure in five gentle builds, wearing simple drawn pieces. Not a body model: just enough shape for advice.
+const B = { slim:{sh:19,wa:14,hi:15,le:7.2}, average:{sh:22,wa:17,hi:17.5,le:8}, athletic:{sh:25,wa:17,hi:18,le:8.6}, broad:{sh:26,wa:21,hi:20,le:9.2}, bigger:{sh:26,wa:25,hi:23,le:10} };
+function fig(o){
+  const b=B[o.build||'average'], cx=50, sh=b.sh, wa=b.wa, hi=b.hi, le=b.le;
+  const fitW={fitted:0, regular:1.5, relaxed:3.5}[o.fit||'regular'];
+  const top=o.top||{c:'#EDEBE4'}, bot=o.bottom||{c:'#2B3B63'}, shoe=o.shoe||{c:'#F4F4F0'}, layer=o.layer;
+  const line='stroke="rgba(0,0,0,.28)" stroke-width="1"';
+  let s=`<svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">`;
+  // head, neck, hands: neutral grey, no face
+  s+=`<circle cx="50" cy="17" r="10.5" fill="var(--fig)" stroke="var(--figLine)" stroke-width="1"/>`;
+  s+=`<rect x="46" y="26" width="8" height="9" fill="var(--fig)"/>`;
+  const handY = layer ? 119 : top.long ? 117 : 112;
+  s+=`<ellipse cx="${layer?cx-sh-8:cx-sh-4}" cy="${handY}" rx="3.6" ry="4.6" fill="var(--fig)" stroke="var(--figLine)" stroke-width=".8"/><ellipse cx="${layer?cx+sh+8:cx+sh+4}" cy="${handY}" rx="3.6" ry="4.6" fill="var(--fig)" stroke="var(--figLine)" stroke-width=".8"/>`;
+  // bare arms for a tee
+  if(!(layer||top.long)) s+=`<path d="M${cx-sh-1} 60 L${cx-sh-6} 108 L${cx-sh-1.5} 109 L${cx-sh+4} 64Z M${cx+sh+1} 60 L${cx+sh+6} 108 L${cx+sh+1.5} 109 L${cx+sh-4} 64Z" fill="var(--fig)" stroke="var(--figLine)" stroke-width=".8"/>`;
+  // legs: bottoms
+  const lw=le+fitW, gap=1.6, hipY=96, ank=198;
+  const legL=`M${cx-hi-fitW*.4} ${hipY} L${cx-gap} ${hipY+8} L${cx-gap-.5} ${ank} L${cx-gap-lw*2} ${ank} Z`;
+  const legR=`M${cx+hi+fitW*.4} ${hipY} L${cx+gap} ${hipY+8} L${cx+gap+.5} ${ank} L${cx+gap+lw*2} ${ank} Z`;
+  s+=`<path d="M${cx-hi-fitW*.4} ${hipY} L${cx+hi+fitW*.4} ${hipY} L${cx+hi+fitW*.4} ${hipY+10} L${cx-hi-fitW*.4} ${hipY+10}Z" fill="${bot.c}"/>`;
+  s+=`<path d="${legL}" fill="${bot.c}" ${line}/><path d="${legR}" fill="${bot.c}" ${line}/>`;
+  // shoes
+  const sw=Math.max(lw*2+3,15);
+  s+=`<path d="M${cx-gap-sw-1} 204 Q${cx-gap-sw} 195 ${cx-gap-sw/2} 196 L${cx-gap+1} 197 L${cx-gap+1} 205Z" fill="${shoe.c}" ${line}/>`;
+  s+=`<path d="M${cx+gap+sw+1} 204 Q${cx+gap+sw} 195 ${cx+gap+sw/2} 196 L${cx+gap-1} 197 L${cx+gap-1} 205Z" fill="${shoe.c}" ${line}/>`;
+  if(shoe.sole) s+=`<rect x="${cx-gap-sw-1}" y="203" width="${sw+2}" height="3" fill="${shoe.sole}"/><rect x="${cx+gap-1}" y="203" width="${sw+2}" height="3" fill="${shoe.sole}"/>`;
+  // top
+  const tl= top.tucked ? 98 : 104, tw = fitW*.8;
+  const torso=`M${cx-6} 33 Q${cx} 38 ${cx+6} 33 L${cx+sh} 38 L${cx+sh+2} 52 L${cx+Math.max(wa,hi)+tw} ${tl} L${cx-Math.max(wa,hi)-tw} ${tl} L${cx-sh-2} 52 L${cx-sh} 38Z`;
+  const sleeves = top.long
+    ? `M${cx-sh} 38 L${cx-sh-7} 113 L${cx-sh-1} 114 L${cx-sh+4} 58Z M${cx+sh} 38 L${cx+sh+7} 113 L${cx+sh+1} 114 L${cx+sh-4} 58Z`
+    : `M${cx-sh} 38 L${cx-sh-8} 62 L${cx-sh-1} 65 L${cx-sh+3} 54Z M${cx+sh} 38 L${cx+sh+8} 62 L${cx+sh+1} 65 L${cx+sh-3} 54Z`;
+  s+=`${layer?'':`<path d="${sleeves}" fill="${top.c}" ${line}/>`}<path d="${torso}" fill="${top.c}" ${line}/>`;
+  if(top.hood) s+=`<path d="M${cx-9} 34 Q${cx} 47 ${cx+9} 34" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.2"/><path d="M${cx-10} 74 L${cx+10} 74 L${cx+8} 88 L${cx-8} 88Z" fill="none" stroke="rgba(0,0,0,.2)"/>`;
+  // open layer
+  if(layer){
+    const L=layer.c, lsh=sh+1.5, ll=110, lw2=Math.max(wa,hi)+tw+3;
+    s+=`<path d="M${cx-lsh+1} 36 L${cx-lsh-4} 40 L${cx-lsh-11} 113 L${cx-lsh-1} 116 L${cx-lsh+5} 58Z M${cx+lsh-1} 36 L${cx+lsh+4} 40 L${cx+lsh+11} 113 L${cx+lsh+1} 116 L${cx+lsh-5} 58Z" fill="${L}" ${line}/>`;
+    s+=`<path d="M${cx-7} 32 L${cx-lsh} 37 L${cx-lsh-2} 54 L${cx-lw2} ${ll} L${cx-6} ${ll} L${cx-5} 46Z" fill="${L}" ${line}/>`;
+    s+=`<path d="M${cx+7} 32 L${cx+lsh} 37 L${cx+lsh+2} 54 L${cx+lw2} ${ll} L${cx+6} ${ll} L${cx+5} 46Z" fill="${L}" ${line}/>`;
+    s+=`<rect x="${cx-lsh+5}" y="54" width="8" height="6" fill="none" stroke="rgba(0,0,0,.25)" stroke-width=".8"/><rect x="${cx+lsh-13}" y="54" width="8" height="6" fill="none" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>`;
+  }
+  return s+`</svg>`;
+}
+const plain={top:{c:'#E3E1DA'}, bottom:{c:'#3A4A70'}, shoe:{c:'#F4F4F0'}};
+document.getElementById('builds').innerHTML=['slim','average','athletic','broad','bigger'].map(k=>`<div class="bt${k==='average'?' on':''}">${fig({...plain,build:k})}${k[0].toUpperCase()+k.slice(1)}</div>`).join('');
+document.getElementById('meFig').innerHTML=fig({...plain,build:'average'});
+const outfits=[
+  {o:{layer:{c:'#2D3B5E'},top:{c:'#ECEAE3'},bottom:{c:'#C8B38A'},shoe:{c:'#F4F4F0'}},n:'Overshirt, tee, chinos',r:'Light to dark, top to toe.'},
+  {o:{top:{c:'#1D1F24'},bottom:{c:'#2B3B63'},shoe:{c:'#1E1612',sole:'#4A2E1C'},fit:'regular'},n:'Black tee, dark jeans, boots',r:'One dark base, nothing fighting.'},
+  {o:{top:{c:'#5A5E66',long:true,hood:true},bottom:{c:'#16181D'},shoe:{c:'#F4F4F0'},fit:'relaxed'},n:'Grey hoodie, wide black jeans',r:'Relaxed on purpose, clean shoes.'},
+  {o:{top:{c:'#2D3B5E',long:true},bottom:{c:'#C8B38A'},shoe:{c:'#6B3B20',sole:'#2C1A10'},fit:'fitted'},n:'Navy crewneck, chinos, loafers',r:'Smart enough for class or a date.'},
+];
+const card=x=>`<div class="ofit">${fig({...x.o,build:'average'})}<div class="n">${x.n}</div><div class="r">${x.r}</div></div>`;
+document.getElementById('outfitsL').innerHTML=outfits.slice(0,4).map(card).join('');
+document.getElementById('outfitsD').innerHTML=outfits.slice(0,2).map(card).join('');
+document.getElementById('bigOutfit').innerHTML=fig({...outfits[0].o,build:'average'});
+document.getElementById('youFig').innerHTML=fig({...outfits[0].o,build:'average'});
+document.getElementById('mornFig').innerHTML=fig({layer:{c:'#5F6F45'},top:{c:'#ECEAE3'},bottom:{c:'#2B3B63'},shoe:{c:'#1E1612',sole:'#4A2E1C'},build:'average'});
+</script>
+</body></html>
