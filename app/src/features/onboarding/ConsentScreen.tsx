@@ -25,7 +25,8 @@ const ROWS: Row[] = [
   { icon: 'info.circle', title: 'onb.consent.aiTitle', body: 'onb.consent.aiBody' },
 ];
 
-export function ConsentScreen({ mode }: { mode: 'onboarding' | 'sheet' }) {
+/** `thenCamera` (sheet only): open the camera after "Agree" (from the camera, the default); You › Privacy just closes it. */
+export function ConsentScreen({ mode, thenCamera = true }: { mode: 'onboarding' | 'sheet'; thenCamera?: boolean }) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [basics, setBasics] = useState<BasicsDraft>(EMPTY_BASICS);
@@ -54,7 +55,7 @@ export function ConsentScreen({ mode }: { mode: 'onboarding' | 'sheet' }) {
     if (mode === 'sheet') {
       if (consent) await giveConsent(store, now);
       router.back();
-      if (consent) setTimeout(() => router.push('/camera'), 350);
+      if (consent && thenCamera) setTimeout(() => router.push('/camera'), 350);
       return;
     }
     const d = await loadDraft(store);

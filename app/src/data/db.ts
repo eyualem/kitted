@@ -124,6 +124,14 @@ export const store: KittedStore = {
     await db.withExclusiveTransactionAsync(async (txn) => {
       for (const t of TABLES) await txn.execAsync(`DELETE FROM ${t}`);
     });
+    // "Delete all my data" (Y7): deleted rows can linger in free pages and the WAL until they're reused; rewrite the
+    // file and empty the WAL so nothing of them stays on disk. Best effort (a busy reader only delays it).
+    try {
+      await db.execAsync('VACUUM');
+      await db.execAsync('PRAGMA wal_checkpoint(TRUNCATE)');
+    } catch (e: unknown) {
+      console.error('[db] vacuum after wipe failed', e);
+    }
     for (const n of Object.keys(SPECS) as TableName[]) emitChange(n);
     emitChange('kv');
   },

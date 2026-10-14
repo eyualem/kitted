@@ -23,4 +23,8 @@ export const KV = {
   ideaTime: 'idea.time',
   scenario: 'demo.scenario',
   seedLoaded: 'seed.loaded',
+  /** You › Notifications (Y6): '1' on, '0' off; unset = on. P6 (expo-notifications) schedules from these. */
+  notifyIdea: 'notify.idea',
+  notifyReady: 'notify.ready',
+  notifyTrial: 'notify.trial',
 } as const;

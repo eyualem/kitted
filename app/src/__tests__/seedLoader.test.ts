@@ -37,7 +37,7 @@ describe('seed loader: full', () => {
     expect([fc2.isPartial, fc2.snapState, fc2.details.finish?.suggestedItemId]).toEqual([true, 'skipped', 'S1']);
 
     expect(await s.usage.get('2026-10-22')).toEqual({ dayKey: '2026-10-22', checks: 1, rechecks: 1, questions: 2, items: 0 });
-    expect((await s.facts.all()).length).toBe(9);
+    expect((await s.facts.all()).length).toBe(8); // the money fact (F2) left the seed: budget is only ever asked (#246)
     expect((await s.wearLog.all()).length).toBe(19);
     const chat = await s.chat.all();
     expect(chat.find((m) => m.id === 'M00')!.payload).toEqual({ aiNote: true });

@@ -377,7 +377,7 @@
    "facts": [
     {
      "id": "F1",
-     "text": "Likes straight-leg pants",
+     "text": "You like straight-leg pants",
      "key": "leg_preference",
      "value": "straight",
      "source": "fitCheck",
@@ -386,17 +386,6 @@
      "isDeleted": false,
      "shownInMockup": true,
      "ref": "FC1"
-    },
-    {
-     "id": "F2",
-     "text": "Spends $30–60 an item",
-     "key": "budget",
-     "value": "30_60",
-     "source": "told",
-     "sourceLabel": "You told me",
-     "createdAt": "2026-10-14T18:31:00-04:00",
-     "isDeleted": false,
-     "shownInMockup": true
     },
     {
      "id": "F3",
@@ -411,18 +400,18 @@
     },
     {
      "id": "F4",
-     "text": "Boldness: a little",
+     "text": "You like a little boldness, nothing loud",
      "key": "boldness",
      "value": "a_little",
      "source": "guess",
-     "sourceLabel": "My guess · not asked yet",
+     "sourceLabel": "My guess from your fits",
      "createdAt": "2026-09-24T19:11:00-04:00",
      "isDeleted": false,
      "shownInMockup": true
     },
     {
      "id": "F5",
-     "text": "Has class most weekdays",
+     "text": "You have class most weekdays",
      "key": "routine",
      "value": "class_weekdays",
      "source": "told",
@@ -433,7 +422,7 @@
     },
     {
      "id": "F6",
-     "text": "Owns a denim jacket (no photo yet)",
+     "text": "You own a denim jacket (no photo yet)",
      "key": "owns",
      "value": "L3",
      "source": "told",
@@ -444,7 +433,7 @@
     },
     {
      "id": "F7",
-     "text": "Wears white sneakers most days",
+     "text": "You wear white sneakers most days",
      "key": "habit",
      "value": "S1",
      "source": "fitCheck",
@@ -455,7 +444,7 @@
     },
     {
      "id": "F8",
-     "text": "Doesn't tuck his tees",
+     "text": "You wear tees untucked",
      "key": "tuck",
      "value": "never_tees",
      "source": "told",
@@ -466,12 +455,12 @@
     },
     {
      "id": "F9",
-     "text": "Mostly neutral colors",
+     "text": "You like muted colors more than bright ones",
      "key": "palette",
-     "value": "neutrals",
+     "value": "muted",
      "source": "guess",
-     "sourceLabel": "My guess",
-     "createdAt": "2026-10-07T08:05:00-04:00",
+     "sourceLabel": "My guess from your fits",
+     "createdAt": "2026-10-12T08:05:00-04:00",
      "isDeleted": false,
      "shownInMockup": false
     }

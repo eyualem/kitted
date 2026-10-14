@@ -9,13 +9,11 @@ import { routedClosetSource } from '@/services/closetSource/live';
 import { createMockClosetSource } from '@/services/closetSource/mock';
 import { liveMeasurer } from '@/services/measure/garments';
 import { getDemoArgs, sessionClock } from '@/state/session';
+import { mayUpload } from '@/features/privacy/wipe';
 import { createClosetService } from './service';
 
-/** The same "Send to Google" gate as everywhere: onboarded without consent = nothing is sent. */
-async function consentOn(): Promise<boolean> {
-  const p = await store.profile.get('me');
-  return !(p && p.onboardingDone && !p.consentVersion);
-}
+/** The same "Score my fits" gate as everywhere (Y7): no consent on the profile = nothing is sent. */
+const consentOn = () => mayUpload(store);
 
 export const closetSource = createMockClosetSource({ latency: () => getDemoArgs().latency, scheduler: realScheduler });
 

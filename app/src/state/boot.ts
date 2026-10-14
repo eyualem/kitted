@@ -14,6 +14,7 @@ import * as Device from 'expo-device';
 import seed from '../../assets/seed.json';
 import { failInterruptedChecks } from '@/features/fitcheck/interrupted';
 import { dropWhichOne } from '@/features/fitcheck/whichOne';
+import { applySavedAppearance } from '@/features/settings/prefs';
 import { discardTempPhoto } from '@/services/tempPhoto';
 import { getGate, markGateReady } from './appGate';
 import { setDemoArgs, startClock } from './session';
@@ -61,6 +62,8 @@ async function bootSteps(): Promise<DemoArgs> {
     await loadScenario(store, seed, { scenario, zone: US_EASTERN });
     await store.setKv(KV.seedLoaded, scenario);
   }
+  // You › Settings › Appearance (Y4): his saved choice, unless the demo forces a theme.
+  if (!args.theme) await applySavedAppearance(store).catch((e: unknown) => console.error('[boot] appearance', e));
   // On a real iPhone the clock is real time: the scenario's fixed Thursday 7:38 restarted on every
   // launch, so checks taken later sorted above newer ones and the chat read out of order (#94).
   startClock(args.now ?? (Device.isDevice ? 'real' : SCENARIO_NOW[scenario]));

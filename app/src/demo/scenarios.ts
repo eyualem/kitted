@@ -115,6 +115,18 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 78, name: 'Going for · the wait at large text', id: 'S5g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
   // "Which one is you?" (02 S23, Oct 14): a bundled photo, with a second person's box drawn for the demo.
   { n: 79, name: 'Which one is you?', id: 'S23', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
+  // You tab (Oct 14): Y2 Style profile, Y3 What your stylist knows, and the fact sheet on a guess (screen 17 is Y1).
+  { n: 80, name: 'Style profile', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you' },
+  { n: 81, name: 'What your stylist knows', id: 'Y3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/knows', under: '/you' },
+  { n: 82, name: 'Fact sheet · a guess', id: 'Y3f', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/fact/F9', under: '/you/knows' },
+  // You tab (Oct 14): Settings, Plan & usage (one check used) and Notifications during a Pro trial (the demo plan link).
+  { n: 84, name: 'Settings', id: 'Y4', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you' },
+  { n: 85, name: 'Plan & usage', id: 'Y5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 1, href: '/you/plan', under: '/you' },
+  { n: 86, name: 'Notifications · Pro trial', id: 'Y6', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/notifications?demoPlan=trial', under: '/you' },
+  // Y7 · Privacy & data (#246). The demo's photos are bundled (nothing is ever sent), so 89 shows "Nothing sent yet."
+  { n: 87, name: 'Privacy & data', id: 'Y7', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you' },
+  { n: 88, name: 'Privacy & data · Pro warning', id: 'Y7', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy?demoPlan=pro', under: '/you' },
+  { n: 89, name: 'See what I send · nothing yet', id: 'Y7s', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/sent', under: '/you/privacy' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

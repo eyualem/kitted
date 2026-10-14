@@ -12,7 +12,7 @@ import { realScheduler } from '@/services/scheduler';
 import { discardTempPhoto } from '@/services/tempPhoto';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { closetService, startClosetCatchUp } from '@/features/closet/session';
-import { hasConsent } from '@/features/onboarding/complete';
+import { mayUpload } from '@/features/privacy/wipe';
 import { createFitCheckService, DEFAULT_TIMERS, type TimerConfig } from './service';
 import type { SessionState } from './machine';
 
@@ -38,8 +38,10 @@ export function setTimerOverride(o: Partial<TimerConfig>): void {
 
 export const fitCheck = createFitCheckService({
   store,
-  // The same consent rule as the closet call: "Not now" means no photo is ever sent (02 D4).
-  source: routedSource(readingSource, () => hasConsent(store)),
+  // The same consent rule as the closet call: "Not now" or "Score my fits" off means no photo is ever sent (02 D4, Y7).
+  source: routedSource(readingSource, () => mayUpload(store)),
+  // …and his own photo isn't even prepped: the check stops before it starts ('noConsent').
+  consent: () => mayUpload(store),
   prep: imagePrep,
   quota,
   clock: sessionClock,

@@ -1,6 +1,234 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+// Y2 · Style profile (02 §3.6 Y2; revised #246): Basics (height, build, fit; birth year read-only), Styles (up to 3,
+// numbered in pick order) and Budget per piece (only ever asked; "Prefer not to say" is an answer). `Save` in the
+// header is on once something changed. It writes the profile row the way onboarding does; none of this moves a
+// score (picks only order tips and break "Reads as" ties, #211).
+// How bold (02 Y2) is left out on purpose: `profile.boldness` feeds the scoring engine today (parts.ts color and the
+// focal allowance) and the Why sheet re-explains old checks with it, so editing it here would change scores.
+import { useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
+import { Stack, router } from 'expo-router';
+import { Chip, ChipFlow, KCard, KText, MonoLabel, RowDivider, opacity, space, useTheme } from '@/design-system';
+import { store } from '@/data/db';
+import { useLive } from '@/data/useLive';
+import { styleLabel } from '@/features/morning/copy';
+import { BUILDS, buildLabel, FITS, fitLabel, heightSpoken, stepHeight, type Build, type FitPref } from '@/features/onboarding/basics';
+import { LOOKS, MAX_PICKS, togglePick } from '@/features/onboarding/looks';
+import { Segmented } from '@/features/onboarding/Segmented';
+import { NumberedPill } from '@/features/you/NumberedPill';
+import { applyDraft, BUDGETS, budgetLabel, draftOf, heightText, isDirty, type ProfileDraft } from '@/features/you/profile';
+import { t } from '@/i18n/en';
 
-// Y2 · Style profile (02-screens.md). Built in P5.
 export default function StyleProfileScreen() {
-  return <Placeholder id="Y2" name="Style profile" phase="P5" kind="push" />;
+  const { colors } = useTheme();
+  const profile = useLive(['profile'], () => store.profile.get('me'), []);
+  // His edits; until the first one the draft is the stored profile.
+  const [edits, setEdits] = useState<ProfileDraft | null>(null);
+  const [saving, setSaving] = useState(false);
+  const draft = edits ?? (profile ? draftOf(profile) : null);
+
+  const dirty = !!profile && !!draft && isDirty(profile, draft);
+  const update = (patch: Partial<ProfileDraft>) => {
+    if (draft) setEdits({ ...draft, ...patch });
+  };
+
+  const save = async () => {
+    if (!draft || saving) return;
+    setSaving(true);
+    try {
+      const fresh = await store.profile.get('me');
+      if (fresh && isDirty(fresh, draft)) await store.profile.put(applyDraft(fresh, draft));
+      if (router.canGoBack()) router.back();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const units = profile?.units ?? 'imperial';
+  return (
+    <>
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={{ backgroundColor: colors.bg }}
+        contentContainerStyle={{ padding: space.gutter, gap: space.s, paddingBottom: space.xxxl }}
+      >
+        {profile && draft ? (
+          <>
+            <Section title={t('profile.basics')}>
+              <KCard>
+                <Row label={t('onb.basics.height')}>
+                  <HeightStepper
+                    value={draft.heightIn !== null ? heightText(draft.heightIn, units) : null}
+                    spoken={draft.heightIn !== null ? (units === 'metric' ? heightText(draft.heightIn, units) : heightSpoken(draft.heightIn)) : t('onb.basics.heightAdd')}
+                    onStep={(d) => update({ heightIn: stepHeight(draft.heightIn, d) })}
+                  />
+                </Row>
+                <RowDivider inset={space.rowX} />
+                <Field label={t('onb.basics.build')}>
+                  <Segmented<Build> label={t('onb.basics.build')} value={draft.build} onChange={(v) => update({ build: v })} options={BUILDS.map((v) => ({ value: v, label: buildLabel(v) }))} />
+                </Field>
+                <RowDivider inset={space.rowX} />
+                <Field label={t('onb.basics.fit')}>
+                  <Segmented<FitPref> label={t('onb.basics.fit')} value={draft.fit} onChange={(v) => update({ fit: v })} options={FITS.map((v) => ({ value: v, label: fitLabel(v) }))} />
+                </Field>
+                <RowDivider inset={space.rowX} />
+                <Row label={t('onb.basics.birthYear')}>
+                  <KText variant="callout" color="ink2" tabular>
+                    {profile.birthYear !== null ? String(profile.birthYear) : t('profile.birthYearNone')}
+                  </KText>
+                </Row>
+              </KCard>
+              <Footer>{t('profile.birthYearNote')}</Footer>
+            </Section>
+
+            <Section title={t('profile.styles')} right={t('profile.stylesMax')}>
+              <KCard>
+                <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.xs }}>
+                  <ChipFlow accessibilityLabel={t('profile.styles')}>
+                    {LOOKS.map(({ style }) => {
+                      const at = draft.picks.indexOf(style);
+                      const picked = at >= 0;
+                      return (
+                        <NumberedPill
+                          key={style}
+                          n={picked ? at + 1 : undefined}
+                          title={styleLabel(style)}
+                          filled={picked}
+                          accessibilityLabel={picked ? t('profile.a11y.pick', { style: styleLabel(style), n: at + 1 }) : styleLabel(style)}
+                          onPress={() => {
+                            const r = togglePick(draft.picks, style);
+                            if (!r.full) update({ picks: r.picks });
+                          }}
+                        />
+                      );
+                    })}
+                  </ChipFlow>
+                </View>
+              </KCard>
+              <Footer>{draft.picks.length >= MAX_PICKS ? t('profile.stylesFull') : t('profile.stylesOrder')}</Footer>
+            </Section>
+
+            <Section title={t('profile.budget')}>
+              <KCard>
+                <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.xs }}>
+                  <ChipFlow accessibilityLabel={t('profile.budget')}>
+                    {BUDGETS.map((b) => (
+                      <Chip key={b} title={budgetLabel(b)} state={draft.budget === b ? 'selected' : 'normal'} onPress={() => update({ budget: draft.budget === b ? null : b })} />
+                    ))}
+                  </ChipFlow>
+                </View>
+              </KCard>
+              <Footer>{t('profile.budgetNote')}</Footer>
+            </Section>
+          </>
+        ) : null}
+      </ScrollView>
+      <Stack.Screen options={{ headerRight: () => <SaveButton enabled={dirty && !saving} onPress={() => void save()} /> }} />
+    </>
+  );
+}
+
+function SaveButton({ enabled, onPress }: { enabled: boolean; onPress: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={!enabled}
+      accessibilityRole="button"
+      accessibilityLabel={t('common.save')}
+      accessibilityState={{ disabled: !enabled }}
+      hitSlop={8}
+      style={({ pressed }) => ({ opacity: !enabled ? opacity.disabled : pressed ? opacity.pressed : 1, paddingHorizontal: 6, minHeight: 28, justifyContent: 'center' })}
+    >
+      <KText variant="body" weight="600" color="ink" maxFontSizeMultiplier={1.4}>
+        {t('common.save')}
+      </KText>
+    </Pressable>
+  );
+}
+
+function Section({ title, right, children }: { title: string; right?: string; children: React.ReactNode }) {
+  return (
+    <View style={{ gap: space.s, marginTop: space.m }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs }} accessibilityRole="header">
+        <MonoLabel>{title}</MonoLabel>
+        {right ? (
+          <KText variant="footnote" color="ink3">
+            {right}
+          </KText>
+        ) : null}
+      </View>
+      {children}
+    </View>
+  );
+}
+
+function Footer({ children }: { children: string }) {
+  return (
+    <KText variant="footnote" color="ink3" style={{ paddingHorizontal: space.xs }}>
+      {children}
+    </KText>
+  );
+}
+
+/** A 52 pt row: label left, control right (stacked at accessibility sizes). */
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  const { isAccessibilitySize } = useTheme();
+  return (
+    <View
+      style={[
+        { minHeight: 52, paddingHorizontal: space.rowX, paddingVertical: space.s },
+        isAccessibilitySize ? { gap: space.xs } : { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.m },
+      ]}
+    >
+      <KText variant="callout" weight="500" accessibilityElementsHidden importantForAccessibility="no">
+        {label}
+      </KText>
+      {children}
+    </View>
+  );
+}
+
+/** A label above its full-width control (the segmented build and fit). */
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.m, gap: space.s }}>
+      <KText variant="callout" weight="500" accessibilityElementsHidden importantForAccessibility="no">
+        {label}
+      </KText>
+      {children}
+    </View>
+  );
+}
+
+function HeightStepper({ value, spoken, onStep }: { value: string | null; spoken: string; onStep: (d: 1 | -1) => void }) {
+  const { colors } = useTheme();
+  const circle = (d: 1 | -1) => (
+    <Pressable
+      onPress={() => onStep(d)}
+      hitSlop={7}
+      style={({ pressed }) => ({ width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface, opacity: pressed ? opacity.pressed : 1 })}
+      accessibilityElementsHidden
+      importantForAccessibility="no"
+    >
+      <KText variant="title3" weight="500">
+        {d === 1 ? '+' : '−'}
+      </KText>
+    </Pressable>
+  );
+  return (
+    <View
+      style={{ minHeight: 36, minWidth: 150, paddingVertical: 3, paddingHorizontal: 4, borderRadius: 18, borderCurve: 'continuous', flexDirection: 'row', alignItems: 'center', gap: space.s, backgroundColor: colors.surface2 }}
+      accessible
+      accessibilityRole="adjustable"
+      accessibilityLabel={t('onb.basics.height')}
+      accessibilityValue={{ text: spoken }}
+      accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+      onAccessibilityAction={(e) => onStep(e.nativeEvent.actionName === 'increment' ? 1 : -1)}
+    >
+      {circle(-1)}
+      <KText variant="callout" weight={value ? '600' : '500'} color={value ? 'ink' : 'ink3'} tabular style={{ flex: 1, textAlign: 'center' }}>
+        {value ?? t('onb.basics.heightAdd')}
+      </KText>
+      {circle(1)}
+    </View>
+  );
 }

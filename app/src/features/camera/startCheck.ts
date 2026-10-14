@@ -1,5 +1,6 @@
 // One way into a check from any photo source (camera, library, sample sheet): start it and,
 // when nothing was sent, say why in a toast (02 S3 copy). A check that started shows its card.
+import { router } from 'expo-router';
 import { store } from '@/data/db';
 import { normStyleKey, OCCASIONS, type OccasionKey, type StyleKey } from '@/data/types';
 import { fitCheck } from '@/features/fitcheck/session';
@@ -94,6 +95,9 @@ export function explain(r: StartOutcome) {
     showToast(t('demo.unknownPhoto'));
   } else if (r.outcome === 'limit') {
     showToast(t('stylist.quota.used'));
+  } else if (r.outcome === 'noConsent') {
+    // "Score my fits" is off (Y7): nothing was prepped or sent. He re-agrees on the consent sheet, never silently.
+    router.push('/sheets/consent');
   } else if (r.outcome === 'error' && !('checkId' in r)) {
     // No card was posted (prep or a write failed first): say it didn't count. With a card, the card says so.
     showToast(t('fail.ai'));

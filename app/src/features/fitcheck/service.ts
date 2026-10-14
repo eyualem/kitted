@@ -92,6 +92,10 @@ export interface ServiceDeps {
   closet?: ClosetService;
   /** Deletes a temporary original that will never be prepped ("Which one is you?" cancelled or replaced). */
   discardPhoto?: (uri: string) => void;
+  /** Whether his own photo may be prepped and sent (Y7 "Score my fits", 02 D4). Checked before every real photo's prep
+   *  and Try again; false = 'noConsent', nothing prepped, sent or counted. Bundled demo photos never leave the phone.
+   *  Default: allowed (tests). The app passes privacy/wipe.ts mayUpload. */
+  consent?: () => Promise<boolean>;
 }
 
 export interface CheckRequest {
@@ -117,7 +121,8 @@ export type StartOutcome =
   /** Read; the one quick tap is waiting (nothing counted yet). */
   | { outcome: 'asking'; checkId: string }
   /** 'busy': another check is still being read (one at a time); 'error': it threw before a card was posted. */
-  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' | 'busy' | 'error' }
+  /** 'noConsent': "Score my fits" is off (Y7) or he never agreed; nothing was prepped, sent or counted. */
+  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' | 'busy' | 'error' | 'noConsent' }
   /** 02 S3: nothing was sent and nothing counts. */
   | { outcome: 'photoProblem'; reason: 'noPerson' | 'multiplePeople' | 'couldNotFrame' }
   /** 02 S23: two people of comparable size; the "Which one is you?" card is in the thread. Nothing sent or counted. */
@@ -637,6 +642,8 @@ export function createFitCheckService(deps: ServiceDeps) {
     const now = clock.nowMs();
     const parent = req.parentCheckId ? await store.fitChecks.get(req.parentCheckId) : null;
     if ((req.mode === 'recheck' || req.mode === 'shoeSnap') && !parent) return { outcome: 'noParent' };
+    // His own photo is never prepped without his consent (it's read and sent right after): checked first, every time.
+    if (req.photoUri && deps.consent && !(await deps.consent())) return { outcome: 'noConsent' };
     if (req.mode === 'check' && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
     // One re-check per check, while its window is open (05 §3.1, ruling 22): each one is a paid read.
     if (req.mode === 'recheck' && parent && !isRecheckOpen(parent, now, clock) && !(now < recheckDeadline(parent, clock) && (await triesAfterNotSeen(parent.id)))) return { outcome: 'limit' };
@@ -761,6 +768,7 @@ export function createFitCheckService(deps: ServiceDeps) {
   async function retryInner(checkId: string, ctx: CheckCtx): Promise<StartOutcome> {
     const row = await store.fitChecks.get(checkId);
     if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
+    if (!row.demoPhotoId && deps.consent && !(await deps.consent())) return { outcome: 'noConsent' };
     const now = clock.nowMs();
     const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
     if (row.parentId && !parent) return { outcome: 'noParent' };
