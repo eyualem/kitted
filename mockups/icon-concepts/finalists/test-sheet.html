@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Icon Finalists Test</title>
+<style>
+  :root { --bg:#ECEEF2; --card:#FFFFFF; --ink:#14182A; --mute:#6B7080; --line:#DADDE4; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:22px 28px; background:var(--bg); color:var(--ink);
+         font:13px/1.35 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; }
+  h1 { font-size:22px; margin:0 0 2px; }
+  h2 { font-size:15px; margin:18px 0 8px; }
+  .sub { color:var(--mute); margin:0 0 6px; }
+  .card { background:var(--card); border-radius:14px; padding:14px 16px; }
+  .ic { border-radius:22.37%; display:block; }
+  .tag { font:600 10px/1 ui-monospace, Menlo, monospace; letter-spacing:.06em; color:var(--mute); text-transform:uppercase; }
+  /* (a) sizes */
+  .sizes { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .sz { display:flex; align-items:flex-end; gap:12px; margin-top:8px; }
+  .sz figure { margin:0; text-align:center; }
+  .sz figcaption { color:var(--mute); font-size:10px; margin-top:3px; }
+  .tintbox { background:linear-gradient(160deg,#2A2219,#141210); border-radius:10px; padding:8px; display:flex; gap:10px; align-items:flex-end; }
+  .tintbox img { filter:sepia(1) saturate(1.7) brightness(.97); background:#211B15; border-radius:22.37%; }
+  .darkbox { background:#0B0C10; border-radius:10px; padding:8px; display:flex; gap:10px; align-items:flex-end; }
+  .nm { font-weight:650; font-size:14px; }
+  /* (b) App Store */
+  .stores { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .phone { background:#fff; border-radius:14px; padding:12px 14px 4px; border:1px solid var(--line); }
+  .search { background:#EEEEF0; border-radius:10px; padding:7px 10px; color:#3C3C43; margin-bottom:6px; }
+  .row { display:flex; align-items:center; gap:10px; padding:8px 0; border-top:1px solid #EFEFF2; }
+  .row:first-of-type { border-top:0; }
+  .row .t { flex:1; min-width:0; }
+  .row .n { font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row .s { color:#8A8A8E; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row .r { color:#8A8A8E; font-size:11px; margin-top:2px; }
+  .get { background:#EEEEF3; color:#0A66E8; font-weight:700; font-size:13px; border-radius:14px; padding:5px 15px; }
+  .rival svg { border-radius:22.37%; display:block; }
+  /* (c) avatars and (d) crowded K */
+  .bottom { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .av { display:flex; gap:22px; align-items:center; flex-wrap:wrap; }
+  .av .one { display:flex; align-items:center; gap:10px; }
+  .circ { border-radius:50%; display:block; }
+  .tt { background:#121212; color:#fff; border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px; }
+  .kk { display:flex; gap:22px; flex-wrap:wrap; }
+  .kk .set { display:flex; gap:10px; align-items:flex-start; background:#F4F4F6; border-radius:10px; padding:8px; }
+  .kk figure { margin:0; width:60px; text-align:center; }
+  .kk figcaption { font-size:9.5px; color:var(--mute); margin-top:3px; line-height:1.2; }
+</style>
+</head>
+<body>
+<h1>Kitted icon finalists: test sheet</h1>
+<p class="sub">1 Button on the pocket · 2 Woven label · 3 Label + check. Sizes are in points as on the phone; the tinted preview simulates iOS 26 tinted mode. Rival and K icons are generic stand-ins, not real logos.</p>
+
+<h2>(a) Sizes, dark mode and tinted</h2>
+<div class="sizes" id="sizes"></div>
+
+<h2>(b) App Store search: "rate my outfit"</h2>
+<div class="stores" id="stores"></div>
+
+<div class="bottom">
+  <div>
+    <h2>(c) Round TikTok avatar (100 px and 40 px)</h2>
+    <div class="card"><div class="av" id="avatars"></div></div>
+  </div>
+  <div>
+    <h2>(d) The crowded-K check at 60 pt</h2>
+    <div class="card"><div class="kk" id="kk"></div></div>
+  </div>
+</div>
+
+<script>
+const F = [
+  { id: 'final-1', name: 'Button on the pocket' },
+  { id: 'final-2', name: 'Woven label' },
+  { id: 'final-3', name: 'Label + check' },
+];
+const img = (src, s, cls = 'ic') => `<img class="${cls}" src="${src}" width="${s}" height="${s}" alt="">`;
+
+// Generic stand-ins (simple placeholder shapes, not anyone's logo).
+const rivals = {
+  tee: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 100 100"><rect width="100" height="100" fill="#111"/>
+     <path d="M34 24 L22 30 L14 44 L25 50 L30 43 L30 78 L70 78 L70 43 L75 50 L86 44 L78 30 L66 24 Q50 36 34 24Z" fill="#fff"/></svg>`,
+  brush: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/>
+     <path d="M22 66 C34 30 58 26 78 36" stroke="#2F6BFF" stroke-width="15" fill="none" stroke-linecap="round"/></svg>`,
+  badge: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 100 100"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+     <stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#5B21B6"/></linearGradient></defs>
+     <rect width="100" height="100" fill="url(#pg)"/><path d="M50 18 L76 30 L76 52 Q76 72 50 84 Q24 72 24 52 L24 30Z" fill="#fff"/>
+     <circle cx="50" cy="50" r="11" fill="#7C3AED"/></svg>`,
+  korange: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 100 100"><defs><linearGradient id="og" x1="0" y1="0" x2="0" y2="1">
+     <stop offset="0" stop-color="#FF9A3C"/><stop offset="1" stop-color="#E8642A"/></linearGradient></defs>
+     <rect width="100" height="100" fill="url(#og)"/><path d="M30 22h14v22l18-22h17L59 46l21 32H63L49 55l-5 6v17H30Z" fill="#fff"/></svg>`,
+  kpixel: (s) => { const px = [[0,0],[0,1],[0,2],[0,3],[0,4],[1,2],[2,1],[2,3],[3,0],[3,4]];
+     return `<svg width="${s}" height="${s}" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0B0B0B"/>` +
+       px.map(([x, y]) => `<rect x="${27 + x * 12}" y="${21 + y * 12}" width="12" height="12" fill="#3BE36B"/>`).join('') + '</svg>'; },
+};
+
+document.getElementById('sizes').innerHTML = F.map((f) => `
+  <div class="card">
+    <div class="tag">${f.id}</div><div class="nm">${f.name}</div>
+    <div class="sz">
+      <figure>${img(f.id + '.svg', 180)}<figcaption>180</figcaption></figure>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-end">
+          <figure>${img(f.id + '.svg', 60)}<figcaption>60</figcaption></figure>
+          <figure>${img(f.id + '.svg', 40)}<figcaption>40</figcaption></figure>
+          <figure>${img(f.id + '.svg', 29)}<figcaption>29</figcaption></figure>
+        </div>
+        <div class="darkbox">${img(f.id + '-dark.svg', 60)}${img(f.id + '-dark.svg', 29)}</div>
+      </div>
+    </div>
+    <div class="tintbox" style="margin-top:10px">${img(f.id + '-tint.svg', 120)}${img(f.id + '-tint.svg', 60)}${img(f.id + '-tint.svg', 40)}${img(f.id + '-tint.svg', 29)}
+      <span style="color:#B9A88F;font-size:10px;align-self:center">tinted</span></div>
+  </div>`).join('');
+
+const row = (icon, name, sub, rating) => `
+  <div class="row">${icon}<div class="t"><div class="n">${name}</div><div class="s">${sub}</div>
+  <div class="r">${rating}</div></div><span class="get">Get</span></div>`;
+document.getElementById('stores').innerHTML = F.map((f) => `
+  <div class="phone">
+    <div class="search">&#x1F50D;&#xFE0E; rate my outfit</div>
+    ${row(img(f.id + '.svg', 62), 'Kitted: Outfit Rater for Men', 'Score your fit. Get the fix.', '★★★★★ 4.8 · 212 (mock)')}
+    ${row(`<span class="rival">${rivals.tee(62)}</span>`, 'Rival stand-in A', 'White tee on black', '★★★★☆ 4.3 · 1.8K')}
+    ${row(`<span class="rival">${rivals.brush(62)}</span>`, 'Rival stand-in B', 'Blue brushstroke on white', '★★★★☆ 4.1 · 640')}
+    ${row(`<span class="rival">${rivals.badge(62)}</span>`, 'Rival stand-in C', 'Purple badge', '★★★★☆ 4.4 · 3.1K')}
+  </div>`).join('');
+
+document.getElementById('avatars').innerHTML = F.map((f) => `
+  <div class="one">${img(f.id + '.svg', 100, 'circ')}
+    <div class="tt">${img(f.id + '.svg', 40, 'circ')}<div><div style="font-weight:600">trykitted</div>
+    <div style="color:#aaa;font-size:11px">${f.name}</div></div></div></div>`).join('');
+
+document.getElementById('kk').innerHTML = F.map((f) => `
+  <div class="set">
+    <figure>${img(f.id + '.svg', 60)}<figcaption>${f.id}</figcaption></figure>
+    <figure><span class="rival">${rivals.korange(60)}</span><figcaption>white K, orange</figcaption></figure>
+    <figure><span class="rival">${rivals.kpixel(60)}</span><figcaption>green pixel K</figcaption></figure>
+  </div>`).join('');
+</script>
+</body>
+</html>

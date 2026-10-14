@@ -1,0 +1,18 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><defs>
+    <linearGradient id="ind" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#26335F"/><stop offset="1" stop-color="#141B36"/>
+    </linearGradient>
+    <radialGradient id="riv" cx="0.38" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#F3C49C"/><stop offset="0.55" stop-color="#DE9762"/><stop offset="1" stop-color="#9C5326"/>
+    </radialGradient>
+  </defs>
+    <rect width="1024" height="1024" fill="#F3F4F6"/>
+    <rect x="162" y="326" width="700" height="400" rx="18" fill="#0C0E14" opacity="0.10"/>
+    <rect x="162" y="312" width="700" height="400" rx="18" fill="url(#ind)"/>
+    <line x1="232" y1="352" x2="232" y2="672" stroke="#DE9762" stroke-width="14" stroke-dasharray="34 24" stroke-linecap="round"/>
+    <line x1="792" y1="352" x2="792" y2="672" stroke="#DE9762" stroke-width="14" stroke-dasharray="34 24" stroke-linecap="round"/>
+    
+    <rect x="391.6" y="377.6" width="73.92" height="268.8" fill="#EEF0F5"/>
+    <polygon points="465.52000000000004,465.52000000000004 544.1999999999999,377.6 635.76,377.6 511.72,552.88 465.52000000000004,552.88" fill="#EEF0F5"/>
+    <polygon points="482.32000000000005,513.4 553.72,465.52000000000004 638,646.4 546.7199999999999,646.4" fill="#EEF0F5"/>
+  </svg>
