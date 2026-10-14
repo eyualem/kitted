@@ -48,7 +48,7 @@ const config: ExpoConfig = {
   android: {
     package: 'com.trykitted.kitted',
     adaptiveIcon: {
-      backgroundColor: '#F3F4F6',
+      backgroundColor: '#1D2851', // the K icon's navy (DECISIONS-LOG #263)
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
