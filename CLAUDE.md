@@ -570,8 +570,9 @@ P5's real size is about 6.5 days, not 05's 2.
   cd app && LANG=en_US.UTF-8 npx expo prebuild --platform ios --no-install
   ```
   ```bash
-  cd app && LANG=en_US.UTF-8 npx expo run:ios --device "iPhone 17 Pro" --no-bundler
+  cd app && LANG=en_US.UTF-8 npx expo run:ios --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D --no-bundler
   ```
+  Use the UDID, not the name: "iPhone 17 Pro" also matches a broken duplicate Simulator (EF7ADF2A, runtime missing; Oct 14).
 - **Open a demo screen on the Simulator, then take a screenshot:**
   ```bash
   xcrun simctl launch 111D0A09-C2CA-4F72-BF3C-44019A05C89D com.trykitted.kitted -demoScreen 7 -theme light -demoLatency 0
