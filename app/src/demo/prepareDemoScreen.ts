@@ -16,6 +16,7 @@ import { picksToStyles } from '@/features/onboarding/looks';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
+import type { WhichOnePayload } from '@/features/fitcheck/whichOne';
 import { STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
@@ -34,7 +35,9 @@ type Step =
   | { at: string; do: 'closet'; ids: string[] }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
-  | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string };
+  | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string }
+  /** "Which one is you?" (02 S23) on a bundled photo; the second person's box is drawn for the demo. */
+  | { at: string; do: 'whichOne'; photoId: string };
 
 const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
 
@@ -119,6 +122,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   76: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:42:30', do: 'goingFor', style: 'minimalist' }] },
   77: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's15', occasion: 'everyday' }, { at: '2026-10-22T07:42:30', do: 'goingFor', style: 'minimalist' }] },
   78: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', hold: 0.86 }] },
+  79: { steps: [{ at: '2026-10-22T07:42:00', do: 'whichOne', photoId: 'p01b' }] },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
@@ -164,6 +168,18 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
       await loadScenario(tmp, sub, { scenario: 'full', zone: US_EASTERN });
       for (const c of await tmp.closet.all()) if (step.ids.includes(c.id)) await store.closet.put(c);
       for (const o of await tmp.closetObs.all()) if (step.ids.includes(o.itemId)) await store.closetObs.put(o);
+      continue;
+    }
+    if (step.do === 'whichOne') {
+      // Boxes on the card's neck-down frame of the bundled photo.
+      const payload: WhichOnePayload = {
+        question: 'whichOne', state: 'open', photoUri: '', photoId: step.photoId, aspect: null, mode: 'check', parentCheckId: null,
+        people: [{ x: 0.2, y: 0.01, width: 0.6, height: 0.97 }, { x: 0.76, y: 0.12, width: 0.23, height: 0.66 }],
+      };
+      await store.chat.put({
+        id: newId('M'), createdAt: at(step.at), role: 'stylist', kind: 'card', text: null, cardType: 'question', fitCheckId: null, outfitId: null, itemId: null,
+        chips: [], payload: payload as unknown as Record<string, unknown>,
+      });
       continue;
     }
     if (step.do === 'tap') {

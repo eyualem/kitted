@@ -13,6 +13,8 @@ import { US_EASTERN } from '@kitted/core';
 import * as Device from 'expo-device';
 import seed from '../../assets/seed.json';
 import { failInterruptedChecks } from '@/features/fitcheck/interrupted';
+import { dropWhichOne } from '@/features/fitcheck/whichOne';
+import { discardTempPhoto } from '@/services/tempPhoto';
 import { getGate, markGateReady } from './appGate';
 import { setDemoArgs, startClock } from './session';
 
@@ -64,6 +66,8 @@ async function bootSteps(): Promise<DemoArgs> {
   startClock(args.now ?? (Device.isDevice ? 'real' : SCENARIO_NOW[scenario]));
   // A check cut off by the app closing mid-read shows Try again, not an empty slot (no check of this run exists yet).
   await failInterruptedChecks(store).catch((e: unknown) => console.error('[boot] interrupted checks', e));
+  // A "Which one is you?" left from the last run: its temporary photo may be gone, and nothing was counted (02 S23).
+  await dropWhichOne(store, discardTempPhoto, { onlyOpen: false }).catch((e: unknown) => console.error('[boot] which one', e));
 
   markGateReady({
     ageBlocked: await getAgeBlocked(),

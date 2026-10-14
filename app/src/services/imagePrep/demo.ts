@@ -3,11 +3,26 @@
 import { demoPhoto } from '@/demo/demoPhotos';
 import type { PreparedImage } from '../readingSource/types';
 
-export type PhotoRef = { kind: 'demo'; photoId: string } | { kind: 'file'; uri: string } | { kind: 'retry'; sha256: string; keptUri: string | null; thumbUri: string | null };
+/** One person in a photo, normalized (0–1, origin top-left, on the upright photo). */
+export interface PersonBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export type PhotoRef =
+  | { kind: 'demo'; photoId: string }
+  /** `person`: the one he tapped on "Which one is you?" (02 S23); everyone else is covered in what's sent. */
+  | { kind: 'file'; uri: string; person?: PersonBox }
+  | { kind: 'retry'; sha256: string; keptUri: string | null; thumbUri: string | null };
 
 export type PrepResult =
   | { status: 'ok'; image: PreparedImage }
-  | { status: 'noPerson' | 'multiplePeople' | 'couldNotFrame' | 'notImplemented' | 'unknownPhoto' };
+  /** Two people of comparable size: `people` (the biggest first) for "Which one is you?", and the photo's width / height.
+   *  No `people` from native builds before Oct 14. */
+  | { status: 'multiplePeople'; people?: PersonBox[]; aspect?: number }
+  | { status: 'noPerson' | 'couldNotFrame' | 'notImplemented' | 'unknownPhoto' };
 
 export interface ImagePrep {
   prepare(photo: PhotoRef): Promise<PrepResult>;

@@ -31,8 +31,21 @@ enum Prep {
   /// closet crops later. Never uploaded by itself.
   static let detailPx: CGFloat = 2048
   static let detailDays: Double = 7
-  /// A second person counts when their box is at least this share of the main person's area.
+  /// Another person is "comparable" (so we ask "Which one is you?") when their box is at least this share of the main
+  /// person's area. Below it (the main person at least 4× bigger) he's clearly the subject: he's picked automatically
+  /// and everyone else is masked out of what's sent (Oct 14).
   static let otherPersonShare: CGFloat = 0.25
+  /// Another detection whose person pixels (the instance mask) are at least this share his is him found twice (his
+  /// torso inside his whole-body box), not a second person.
+  static let samePersonShare: CGFloat = 0.8
+  /// A detection with person pixels on under this share of its box is no one the segmentation sees (a poster, a
+  /// coat on a door): it's still covered, but never asked about.
+  static let emptyBoxShare: CGFloat = 0.1
+  /// The person he tapped must overlap a detected one by at least this (the same photo gives the same boxes).
+  static let pickIoU: CGFloat = 0.5
+  /// The cover over everyone else in the copy sent: a flat mid grey (blur would leave colors the reading could
+  /// name as clothes).
+  static let coverGray: CGFloat = 0.5
   /// One context for every prep (creating one per photo costs tens of ms).
   static let ciContext = CIContext()
   /// nil in the app (Documents and Caches); the Mac test harness points it at a scratch folder.
@@ -52,6 +65,204 @@ enum Prep {
     var errors: [String] = []
     /// The main person's body joints (confidence > 0.3), in pixels, origin top-left (KittedMeasure).
     var joints: [String: CGPoint] = [:]
+    /// "multiplePeople": everyone he could be (largest first; the index he picks names the photo's hash), pixels.
+    var candidates: [CGRect] = []
+    /// Everyone else, covered in every copy sent (auto-picked or chosen); boxes in pixels.
+    var others: [CGRect] = []
+    /// The candidate he chose ("Which one is you?"), or nil.
+    var picked: Int?
+    /// Where the others are covered (> 127 = cover), at its own resolution; nil when there's no one else.
+    var cover: Guide.Gray?
+  }
+
+  /// A person mask with the cover's pixels taken out (another person's outline is never his), any two resolutions.
+  static func excluding(_ m: Guide.Gray, _ cover: Guide.Gray?) -> Guide.Gray {
+    guard let c = cover else { return m }
+    var px = m.px
+    for y in 0..<m.h {
+      let cy = min(c.h - 1, (y * c.h) / m.h)
+      for x in 0..<m.w where px[y * m.w + x] != 0 {
+        let cx = min(c.w - 1, (x * c.w) / m.w)
+        if c.px[cy * c.w + cx] > 127 { px[y * m.w + x] = 0 }
+      }
+    }
+    return Guide.Gray(w: m.w, h: m.h, px: px)
+  }
+
+  static func area(_ r: CGRect) -> CGFloat { r.isNull ? 0 : r.width * r.height }
+  static func iou(_ a: CGRect, _ b: CGRect) -> CGFloat {
+    let i = area(a.intersection(b))
+    let u = area(a) + area(b) - i
+    return u > 0 ? i / u : 0
+  }
+
+  /// Vision's person instance mask (up to 4 people): each pixel's person (0 = no one), top row first.
+  struct Instances {
+    let w: Int
+    let h: Int
+    let px: [UInt8]
+    /// Pixels per person label inside a pixel rect (origin top-left) of a W×H image.
+    func counts(_ r: CGRect, W: CGFloat, H: CGFloat) -> (labels: [UInt8: Int], all: Int) {
+      let sx = CGFloat(w) / W, sy = CGFloat(h) / H
+      let x0 = max(0, Int(r.minX * sx)), x1 = min(w - 1, Int(r.maxX * sx)), y0 = max(0, Int(r.minY * sy)), y1 = min(h - 1, Int(r.maxY * sy))
+      guard x1 >= x0, y1 >= y0 else { return ([:], 0) }
+      var out: [UInt8: Int] = [:]
+      for y in y0...y1 { for x in x0...x1 { let l = px[y * w + x]; if l != 0 { out[l, default: 0] += 1 } } }
+      return (out, (x1 - x0 + 1) * (y1 - y0 + 1))
+    }
+    /// Each person label's bounding box in a W×H image's pixels (origin top-left), and its pixel count on the grid.
+    func boxes(W: CGFloat, H: CGFloat) -> [UInt8: (box: CGRect, n: Int)] {
+      var lo: [UInt8: (Int, Int, Int, Int, Int)] = [:]
+      for y in 0..<h { for x in 0..<w {
+        let l = px[y * w + x]
+        guard l != 0 else { continue }
+        if let b = lo[l] { lo[l] = (min(b.0, x), min(b.1, y), max(b.2, x), max(b.3, y), b.4 + 1) } else { lo[l] = (x, y, x, y, 1) }
+      } }
+      let sx = W / CGFloat(w), sy = H / CGFloat(h)
+      return lo.mapValues { b in (CGRect(x: CGFloat(b.0) * sx, y: CGFloat(b.1) * sy, width: CGFloat(b.2 - b.0 + 1) * sx, height: CGFloat(b.3 - b.1 + 1) * sy), b.4) }
+    }
+  }
+
+  /// The instance mask's grid width (its height follows the photo).
+  static let instanceW = 384
+
+  /// Each person's mask scaled to the photo by Vision itself (its raw instance mask is a fixed 384×512 that doesn't
+  /// keep the photo's shape), sampled on a grid `instanceW` wide. Nil when it can't run or finds no one.
+  static func personInstances(_ full: CGImage) -> Instances? {
+    // Run on a small copy: the model works at 384×512 anyway, and each scaled mask is then small (−0.3 s on the Mac).
+    let s = min(1, 768 / CGFloat(max(full.width, full.height)))
+    let sw = max(1, Int((CGFloat(full.width) * s).rounded())), sh = max(1, Int((CGFloat(full.height) * s).rounded()))
+    var img = full
+    if s < 1, let ctx = CGContext(data: nil, width: sw, height: sh, bitsPerComponent: 8, bytesPerRow: 0, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                  bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue) {
+      ctx.interpolationQuality = .medium
+      ctx.draw(full, in: CGRect(x: 0, y: 0, width: sw, height: sh))
+      if let small = ctx.makeImage() { img = small }
+    }
+    let req = VNGeneratePersonInstanceMaskRequest()
+    cpuOnSimulator([req])
+    let handler = VNImageRequestHandler(cgImage: img, orientation: .up)
+    do { try handler.perform([req]) } catch { return nil }
+    guard let obs = req.results?.first, !obs.allInstances.isEmpty else { return nil }
+    let W = img.width, H = img.height
+    let w = min(instanceW, W), h = max(1, Int((CGFloat(w) * CGFloat(H) / CGFloat(W)).rounded()))
+    var px = [UInt8](repeating: 0, count: w * h)
+    for i in obs.allInstances where i > 0 && i < 256 {
+      guard let pb = try? obs.generateScaledMaskForImage(forInstances: IndexSet(integer: i), from: handler) else { continue }
+      CVPixelBufferLockBaseAddress(pb, .readOnly)
+      defer { CVPixelBufferUnlockBaseAddress(pb, .readOnly) }
+      let mw = CVPixelBufferGetWidth(pb), mh = CVPixelBufferGetHeight(pb), row = CVPixelBufferGetBytesPerRow(pb)
+      guard mw > 0, mh > 0, let base = CVPixelBufferGetBaseAddress(pb) else { continue }
+      let format = CVPixelBufferGetPixelFormatType(pb)
+      for y in 0..<h {
+        let my = min(mh - 1, Int((CGFloat(y) + 0.5) * CGFloat(mh) / CGFloat(h)))
+        for x in 0..<w {
+          let mx = min(mw - 1, Int((CGFloat(x) + 0.5) * CGFloat(mw) / CGFloat(w)))
+          let on: Bool
+          switch format {
+          case kCVPixelFormatType_OneComponent32Float: on = base.advanced(by: my * row + mx * 4).assumingMemoryBound(to: Float32.self).pointee > 0.5
+          case kCVPixelFormatType_OneComponent8: on = base.advanced(by: my * row + mx).assumingMemoryBound(to: UInt8.self).pointee > 127
+          default: return nil
+          }
+          if on { px[y * w + x] = UInt8(i) }
+        }
+      }
+    }
+    return Instances(w: w, h: h, px: px)
+  }
+
+  /// Who else is in a fit photo besides `main` (Oct 14). With the instance mask: a detection whose person pixels are
+  /// mostly his is him found twice (dropped); one with almost no person pixels is covered but never asked about; the
+  /// rest are other people, and those at least `otherPersonShare` of his size are comparable (we ask). Without it
+  /// (it can't run), every other detection is someone else, as before.
+  static func sortPeople(main: CGRect, rest: [CGRect], inst: Instances?, W: CGFloat, H: CGFloat) -> (his: UInt8?, others: [CGRect], comparable: [CGRect]) {
+    var his: UInt8?
+    if let inst {
+      let c = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels
+      his = c.max { $0.value < $1.value }?.key
+    }
+    var others: [CGRect] = [], comparable: [CGRect] = []
+    for o in rest {
+      if let inst, let his {
+        let c = inst.counts(o, W: W, H: H)
+        let personPx = c.labels.values.reduce(0, +)
+        if personPx > 0, CGFloat(c.labels[his] ?? 0) >= samePersonShare * CGFloat(personPx) { continue }
+        others.append(o)
+        if CGFloat(personPx) >= emptyBoxShare * CGFloat(max(1, c.all)), area(o) >= otherPersonShare * area(main) { comparable.append(o) }
+      } else {
+        others.append(o)
+        if area(o) >= otherPersonShare * area(main) { comparable.append(o) }
+      }
+    }
+    return (his, others, comparable)
+  }
+
+  /// Where to cover everyone else. With the instance mask: their boxes (grown a little) wherever it isn't him, and
+  /// their own outlines (the person labels inside their boxes) a little further out, for an arm or a foot past the box;
+  /// grown 2 px, never onto him. Only near their boxes: a stray label elsewhere (his bag, Oct 14) stays. Without the
+  /// instance mask: their boxes outside his, and the top 30% of their boxes (their heads) everywhere.
+  static func coverMasks(main: CGRect, others: [CGRect], inst: Instances?, his: UInt8?, W: CGFloat, H: CGFloat) -> Guide.Gray {
+    let w = inst?.w ?? maskW, h = inst?.h ?? max(1, Int((CGFloat(maskW) * H / W).rounded()))
+    let sx = CGFloat(w) / W, sy = CGFloat(h) / H
+    let boxes = others.map { o in o.insetBy(dx: -o.width * 0.06, dy: -o.height * 0.04) }
+      .map { CGRect(x: $0.minX * sx, y: $0.minY * sy, width: $0.width * sx, height: $0.height * sy) }
+    let mainM = CGRect(x: main.minX * sx, y: main.minY * sy, width: main.width * sx, height: main.height * sy)
+    // Without the instance mask, the top of each other box (where their head is) is covered even over his box.
+    let heads = boxes.map { CGRect(x: $0.minX, y: $0.minY, width: $0.width, height: $0.height * 0.3) }
+    let near = boxes.map { $0.insetBy(dx: -$0.width * 0.25, dy: -$0.height * 0.12) }
+    // Their labels: any person label (not his) on at least 3% of one of their boxes.
+    var theirs = Set<UInt8>()
+    if let inst, let his {
+      for o in others {
+        let c = inst.counts(o, W: W, H: H)
+        for (l, n) in c.labels where l != his && CGFloat(n) >= 0.03 * CGFloat(max(1, c.all)) { theirs.insert(l) }
+      }
+    }
+    var cover = [UInt8](repeating: 0, count: w * h)
+    var own = [UInt8](repeating: 0, count: w * h)
+    for y in 0..<h {
+      for x in 0..<w {
+        let p = CGPoint(x: CGFloat(x) + 0.5, y: CGFloat(y) + 0.5)
+        let inBox = boxes.contains { $0.contains(p) }
+        if let inst, let his {
+          let l = inst.px[y * w + x]
+          if l == his { own[y * w + x] = 255; continue }
+          if inBox || (theirs.contains(l) && near.contains { $0.contains(p) }) { cover[y * w + x] = 255 }
+        } else if inBox, !mainM.contains(p) || heads.contains(where: { $0.contains(p) }) {
+          cover[y * w + x] = 255
+        }
+      }
+    }
+    // Grow the cover 2 px (segmentation edges are soft), never onto him.
+    var grown = cover
+    for y in 0..<h {
+      for x in 0..<w where cover[y * w + x] == 0 && own[y * w + x] == 0 {
+        search: for dy in -2...2 {
+          for dx in -2...2 {
+            let xx = x + dx, yy = y + dy
+            if xx >= 0, yy >= 0, xx < w, yy < h, cover[yy * w + xx] != 0 { grown[y * w + x] = 255; break search }
+          }
+        }
+      }
+    }
+    return Guide.Gray(w: w, h: h, px: grown)
+  }
+
+  /// The image with the cover (> 127) filled flat grey, at the image's size.
+  static func coverOthers(_ image: CGImage, _ m: Guide.Gray) -> CGImage? {
+    guard m.px.contains(where: { $0 > 127 }) else { return image }
+    let data = Data(m.px)
+    guard let provider = CGDataProvider(data: data as CFData),
+          let maskCG = CGImage(width: m.w, height: m.h, bitsPerComponent: 8, bitsPerPixel: 8, bytesPerRow: m.w, space: CGColorSpaceCreateDeviceGray(),
+                               bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue), provider: provider, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
+    else { return nil }
+    let ci = CIImage(cgImage: image)
+    let whole = ci.extent
+    let mask = CIImage(cgImage: maskCG).samplingNearest()
+      .transformed(by: CGAffineTransform(scaleX: whole.width / CGFloat(m.w), y: whole.height / CGFloat(m.h)))
+    let gray = CIImage(color: CIColor(red: coverGray, green: coverGray, blue: coverGray)).cropped(to: whole)
+    let out = gray.applyingFilter("CIBlendWithMask", parameters: [kCIInputBackgroundImageKey: ci, kCIInputMaskImageKey: mask]).cropped(to: whole)
+    return ciContext.createCGImage(out, from: whole)
   }
 
   /// The original's SHA-256, its upright size, and an upright image at most `maxPx` on the long edge.
@@ -84,8 +295,10 @@ enum Prep {
     #endif
   }
 
-  /// Finds the people and faces and decides what must be hidden (DECISIONS-LOG #54, ruling 10).
-  static func locate(_ image: CGImage, kind: Kind = .fit) -> Located {
+  /// Finds the people and faces and decides what must be hidden (DECISIONS-LOG #54, ruling 10). A fit photo with
+  /// someone else in it: when he's clearly the subject he's picked and the others are covered; when two people are
+  /// comparable it's "multiplePeople" with the candidates, until `pick` (pixels: the candidate he tapped) says which.
+  static func locate(_ image: CGImage, kind: Kind = .fit, pick: CGRect? = nil) -> Located {
     let W = CGFloat(image.width), H = CGFloat(image.height)
     let humans = VNDetectHumanRectanglesRequest()
     humans.upperBodyOnly = false
@@ -101,7 +314,7 @@ enum Prep {
 
     // Vision boxes are normalized with the origin bottom-left; convert to pixels, origin top-left.
     func px(_ r: CGRect) -> CGRect { CGRect(x: r.minX * W, y: (1 - r.maxY) * H, width: r.width * W, height: r.height * H) }
-    let people = (humans.results ?? []).filter { $0.confidence > 0.3 }.map { px($0.boundingBox) }
+    var people = (humans.results ?? []).filter { $0.confidence > 0.3 }.map { px($0.boundingBox) }
       .sorted { $0.width * $0.height > $1.width * $1.height }
     let faceBoxes = (faces.results ?? []).map { px($0.boundingBox) }
     let bodies = pose.results ?? []
@@ -109,7 +322,7 @@ enum Prep {
     out.hide = faceBoxes.map { headBox(around: $0) }
     out.people = people.count
 
-    guard let main = people.first ?? bodyBox(bodies.first, W, H) else {
+    guard var main = people.first ?? bodyBox(bodies.first, W, H) else {
       // A clothes scan needs no person; any face found (a mirror, a poster) is still hidden.
       if kind == .items { return out }
       out.status = "noPerson"
@@ -118,9 +331,50 @@ enum Prep {
     out.main = main
     out.people = max(1, people.count)
     let others = people.dropFirst().filter { $0.width * $0.height >= otherPersonShare * main.width * main.height }
-    if kind == .fit, !others.isEmpty {
-      out.status = "multiplePeople"
-      return out
+    // A fit photo with more than one detection (Oct 14): sort out who's who with the person instance mask.
+    var inst: Instances?
+    var his: UInt8?
+    if kind == .fit, people.count >= 2 {
+      inst = personInstances(image)
+      // A person the outline sees but the person detector missed (pin-026: only two people far behind him were
+      // found) joins the people, so the biggest one is really the biggest.
+      if let inst {
+        let found = people
+        for (_, b) in inst.boxes(W: W, H: H).sorted(by: { $0.key < $1.key })
+        where CGFloat(b.n) >= 0.25 * area(b.box) * CGFloat(inst.w * inst.h) / (W * H) && area(b.box) > area(found[0])
+          && !found.contains(where: { iou($0, b.box) >= 0.3 || area($0.intersection(b.box)) >= 0.5 * area(b.box) }) {
+          people.append(b.box)
+        }
+        people.sort { area($0) > area($1) }
+        main = people[0]
+        out.main = main
+      }
+      var sorted = sortPeople(main: main, rest: Array(people.dropFirst()), inst: inst, W: W, H: H)
+      out.people = 1 + sorted.others.count
+      if !sorted.comparable.isEmpty {
+        out.candidates = [main] + sorted.comparable
+        guard let pick else {
+          out.status = "multiplePeople"
+          return out
+        }
+        guard let best = out.candidates.indices.max(by: { iou(out.candidates[$0], pick) < iou(out.candidates[$1], pick) }),
+              iou(out.candidates[best], pick) >= pickIoU else {
+          out.status = "couldNotFrame"
+          return out
+        }
+        if best != 0 {
+          // He isn't the biggest: everyone but him (the biggest included) is someone else.
+          main = out.candidates[best]
+          out.main = main
+          sorted = sortPeople(main: main, rest: people.filter { $0 != main }, inst: inst, W: W, H: H)
+        }
+        out.picked = best
+      }
+      his = sorted.his
+      out.others = sorted.others
+    }
+    if kind == .fit, !out.others.isEmpty {
+      out.cover = coverMasks(main: main, others: out.others, inst: inst, his: his, W: W, H: H)
     }
     // A clothes scan with someone else in it (#100): their face must have been found too (or
     // their body runs off the top edge), or it can't be sent.
@@ -148,7 +402,8 @@ enum Prep {
     // #188: the top of his own outline (person segmentation) is always hidden too, and a face only counts as his when
     // it sits on that outline. A stock mirror selfie (camera over his face, T-shirts with a printed face on the wall)
     // had the face detector find the print, the body pose land on the shirts, and his real face sent unhidden.
-    let mask = kind == .fit ? Measure.personMask(image, w: maskW, h: Int((CGFloat(maskW) * H / W).rounded()), quality: .balanced) : nil
+    // With someone else in the photo, their covered outline is taken out, so their head is never taken for his.
+    let mask = kind == .fit ? Measure.personMask(image, w: maskW, h: Int((CGFloat(maskW) * H / W).rounded()), quality: .balanced).map { excluding($0, out.cover) } : nil
     let band = mask.flatMap { headBand($0, main: main, W: W, H: H) }
     if let band { out.hide.append(band) }
     func onOutline(_ r: CGRect) -> Bool {
@@ -208,25 +463,44 @@ enum Prep {
     return ciContext.createCGImage(ci, from: whole)
   }
 
-  static func run(uri: String, kind: Kind = .fit) throws -> [String: Any] {
+  /// `pick`: the person he tapped on "Which one is you?" (normalized 0–1, origin top-left, [x, y, w, h]).
+  static func run(uri: String, kind: Kind = .fit, pick: [Double]? = nil) throws -> [String: Any] {
     let t0 = CFAbsoluteTimeGetCurrent()
     func ms(since t: CFAbsoluteTime) -> Int { Int(((CFAbsoluteTimeGetCurrent() - t) * 1000).rounded()) }
     let url = uri.hasPrefix("file://") ? URL(string: uri)! : URL(fileURLWithPath: uri)
     let data = try Data(contentsOf: url)
-    let (sha, sourceW, sourceH, decoded) = decode(data, maxPx: workPx)
+    let (originalSha, sourceW, sourceH, decoded) = decode(data, maxPx: workPx)
+    var sha = originalSha
     let source: [String: Any] = ["sourceWidth": sourceW, "sourceHeight": sourceH]
     guard let image = decoded else { return ["status": "couldNotFrame", "sha256": sha].merging(source) { a, _ in a } }
+    let W = CGFloat(image.width), H = CGFloat(image.height)
+    let pickRect = pick.flatMap { p in p.count == 4 ? CGRect(x: p[0] * W, y: p[1] * H, width: p[2] * W, height: p[3] * H) : nil }
 
     let tVision = CFAbsoluteTimeGetCurrent()
-    let found = locate(image, kind: kind)
+    let found = locate(image, kind: kind, pick: pickRect)
     let visionMs = ms(since: tVision)
     if found.status != "ok" {
       var r: [String: Any] = ["status": found.status, "sha256": sha]
       if found.status == "noPerson" { r["errors"] = found.errors }
-      if found.status == "multiplePeople" { r["people"] = found.people }
+      if found.status == "multiplePeople" {
+        // "Which one is you?" (02 S23): everyone he could be, normalized, origin top-left, on the upright photo.
+        r["people"] = found.people
+        r["candidates"] = found.candidates.map { [Double($0.minX / W), Double($0.minY / H), Double($0.width / W), Double($0.height / H)] }
+        r["width"] = image.width
+        r["height"] = image.height
+      }
       return r.merging(source) { a, _ in a }
     }
-    guard let hidden = hideRegions(image, found.hide) else { return ["status": "couldNotFrame", "sha256": sha].merging(source) { a, _ in a } }
+    // He picked someone on "Which one is you?": the same photo with another person picked is another photo, so it
+    // gets its own hash (its own reading, files and score). Auto-picked photos keep the photo's own hash.
+    if let i = found.picked {
+      sha = SHA256.hash(data: Data("\(sha)|person \(i)".utf8)).map { String(format: "%02x", $0) }.joined()
+    }
+    // Everyone else covered first, then every face hidden (theirs too, under the cover).
+    // A cover that can't be drawn means nothing is sent.
+    let covered: CGImage? = found.cover == nil ? image : coverOthers(image, found.cover!)
+    guard let covered, let hidden = hideRegions(covered, found.hide)
+    else { return ["status": "couldNotFrame", "sha256": sha].merging(source) { a, _ in a } }
 
     let fm = FileManager.default
     let caches = rootOverride?.appendingPathComponent("Caches", isDirectory: true) ?? fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
@@ -235,7 +509,10 @@ enum Prep {
       "status": "ok", "sha256": sha, "width": image.width, "height": image.height,
       "sourceWidth": sourceW, "sourceHeight": sourceH, "visionMs": visionMs,
       "people": kind == .fit ? max(1, found.people) : found.people, "faceBoxes": found.hide.count, "pose": found.pose,
+      // Everyone else covered (Oct 14): how many, and whether he was picked automatically or chose himself.
+      "masked": found.others.count, "autoPicked": found.picked == nil && !found.others.isEmpty,
     ]
+    if let i = found.picked { result["picked"] = i }
 
     if kind == .items {
       // A clothes scan: everything stays in Documents/scans until the item reading exists (#100).
@@ -307,7 +584,8 @@ enum Prep {
   static func zoomCrops(image: CGImage, hidden: CGImage, found: Located, sha: String, in dir: URL) throws -> [(kind: String, data: Data, width: Int, height: Int)] {
     let W = CGFloat(image.width), H = CGFloat(image.height)
     let s = min(1, CGFloat(Measure.statPx) / max(W, H))
-    let person = Measure.personMask(image, w: max(1, Int((W * s).rounded())), h: max(1, Int((H * s).rounded())))
+    // With someone else in the photo, only his outline sizes the close-ups (theirs is covered).
+    let person = Measure.personMask(image, w: max(1, Int((W * s).rounded())), h: max(1, Int((H * s).rounded()))).map { excluding($0, found.cover) }
     let rects = Measure.zoomRects(located: found, person: person, W: W, H: H)
     guard let kinds = zoomKindsTried.first(where: { $0.allSatisfy { rects[$0] != nil } }) else { return [] }
     var out: [(kind: String, data: Data, width: Int, height: Int)] = []

@@ -9,6 +9,7 @@ import { createQuota } from '@/services/quota';
 import { LIVE_READING, routedSource } from '@/services/readingSource/live';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
+import { discardTempPhoto } from '@/services/tempPhoto';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { closetService, startClosetCatchUp } from '@/features/closet/session';
 import { hasConsent } from '@/features/onboarding/complete';
@@ -48,6 +49,8 @@ export const fitCheck = createFitCheckService({
   tap: () => true,
   // The closet call after the score card (#91).
   closet: closetService,
+  // "Which one is you?" cancelled or replaced: his temporary photo goes (02 S23).
+  discardPhoto: discardTempPhoto,
   timers: () => {
     const lat = getDemoArgs().latency;
     return { ...DEFAULT_TIMERS, cacheHitMs: lat === 0 ? 0 : DEFAULT_TIMERS.cacheHitMs, ...timerOverride };

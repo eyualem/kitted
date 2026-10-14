@@ -21,6 +21,11 @@ const plurals: Partial<Record<keyof typeof enGenerated, { one: string }>> = {
  * VoiceOver labels. All are "N" (new); listed in handoff/DECISIONS-LOG.md for the founder.
  */
 const addedInBuild = {
+  // "Which one is you?" (02 S23, Oct 14): the hint under the question, and VoiceOver on the photo's tap targets.
+  'whichOne.hint': "Tap yourself. Everyone else is hidden before it's sent.",
+  'whichOne.a11y.person': 'Person {n} of {count}, from the left',
+  'whichOne.a11y.personHint': "Scores this person's outfit",
+  'whichOne.a11y.cancelHint': 'Nothing is sent or counted',
   'a11y.stylistSays': '{who}: {text}',
   'a11y.photo': 'Your outfit photo, {time}.',
   'a11y.photoOccasion': 'Your outfit photo, {time}, {occasion}.',

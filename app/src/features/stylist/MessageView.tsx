@@ -14,6 +14,7 @@ import { sessionClock } from '@/state/session';
 import { FitCheckCard } from './cards/FitCheckCard';
 import { OutfitIdeaCard } from './cards/OutfitIdeaCard';
 import { RecheckCard } from './cards/RecheckCard';
+import { WhichOneCard } from '@/features/whichOne/WhichOneCard';
 import { occasionLabel, type ThreadItem } from './thread';
 
 export function ThreadRow({ item }: { item: ThreadItem }) {
@@ -25,6 +26,7 @@ export function ThreadRow({ item }: { item: ThreadItem }) {
     if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} />;
     if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} />;
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} />;
+    if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;
     return null;
   }
   const text = m.payload.aiNote ? t('stylist.aiNote') : m.text ?? '';

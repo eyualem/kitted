@@ -70,6 +70,23 @@ async function logResult(mode: CheckMode, photo: PhotoInput, r: StartOutcome) {
   );
 }
 
+/** "Which one is you?" (02 S23): he tapped himself; the check starts with everyone else covered in what's sent. */
+export async function pickPerson(messageId: string, index: number): Promise<StartOutcome | null> {
+  const r = await fitCheck.pickPerson(messageId, index).catch((e: unknown): StartOutcome => {
+    console.error('[check] pick threw', e);
+    return { outcome: 'error' };
+  });
+  if (r) explain(r);
+  if (__DEV__ && r) console.log(`[check] which one is you → person ${index + 1} · ${r.outcome}`);
+  return r;
+}
+
+/** "Which one is you?" → Cancel: nothing was sent and nothing counts. */
+export async function cancelWhichOne(messageId: string): Promise<void> {
+  const done = await fitCheck.dismissWhichOne(messageId).catch(() => false);
+  if (__DEV__ && done) console.log('[check] which one is you → cancelled · nothing sent');
+}
+
 export function explain(r: StartOutcome) {
   if (r.outcome === 'photoProblem') {
     showToast(r.reason === 'noPerson' ? t('cam.retake.noPerson') : r.reason === 'multiplePeople' ? t('whichOne.q') : t('cam.retake.cantFrame'));
@@ -82,4 +99,5 @@ export function explain(r: StartOutcome) {
     showToast(t('fail.ai'));
   }
   // 'busy' (another photo is still being read) has no words yet: the reading card on screen is the answer.
+  // 'whichOne': the question card in the thread is the answer.
 }

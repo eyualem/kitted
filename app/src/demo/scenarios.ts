@@ -113,6 +113,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 76, name: 'Going for · a match', id: 'S6g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 77, name: 'Going for · a mismatch', id: 'S6g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 78, name: 'Going for · the wait at large text', id: 'S5g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
+  // "Which one is you?" (02 S23, Oct 14): a bundled photo, with a second person's box drawn for the demo.
+  { n: 79, name: 'Which one is you?', id: 'S23', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

@@ -39,9 +39,27 @@ export type PrepareResult =
       zoomKinds?: string[];
       zoomSizes?: [number, number][];
       zoomMs?: number;
+      // Added Oct 14 (absent from older native builds): everyone else covered in every copy sent.
+      /** How many other people were covered; whether he was picked automatically (clearly the subject) … */
+      masked?: number;
+      autoPicked?: boolean;
+      /** … or the candidate he tapped on "Which one is you?" (the photo's hash then names that person too). */
+      picked?: number;
     }
   | {
-      status: 'noPerson' | 'multiplePeople' | 'couldNotFrame' | 'notImplemented';
+      status: 'multiplePeople';
+      sha256?: string;
+      sourceWidth?: number;
+      sourceHeight?: number;
+      /** "Which one is you?" (Oct 14; absent from older native builds): everyone he could be, [x, y, w, h] 0–1, origin
+       *  top-left on the upright photo, the biggest first; and the upright photo's size. */
+      candidates?: number[][];
+      width?: number;
+      height?: number;
+      people?: number;
+    }
+  | {
+      status: 'noPerson' | 'couldNotFrame' | 'notImplemented';
       sha256?: string;
       sourceWidth?: number;
       sourceHeight?: number;
@@ -148,6 +166,7 @@ export type MeasureResult =
 
 interface KittedVisionNative {
   prepare(originalUri: string): Promise<PrepareResult>;
+  preparePerson?(originalUri: string, pick: number[]): Promise<PrepareResult>;
   measureGarments?(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[], mirrored?: boolean): Promise<MeasureResult>;
   printDistance?(a: string, b: string): Promise<number | null>;
   prepareItems?(originalUri: string): Promise<PrepareItemsResult>;
@@ -167,6 +186,13 @@ const native = requireOptionalNativeModule<KittedVisionNative>('KittedVision');
 export async function prepare(originalUri: string): Promise<PrepareResult> {
   if (!native) return { status: 'notImplemented' };
   return native.prepare(originalUri);
+}
+
+/** "Which one is you?" (02 S23): the same prep with the person he tapped (one of `candidates`); everyone else is
+ *  covered in every copy sent. notImplemented on web and in native builds from before Oct 14. */
+export async function preparePerson(originalUri: string, pick: NormBox): Promise<PrepareResult> {
+  if (!native || typeof native.preparePerson !== 'function') return { status: 'notImplemented' };
+  return native.preparePerson(originalUri, [pick.x, pick.y, pick.width, pick.height]);
 }
 
 /** A clothes scan's prep (#100). notImplemented on web and in older native builds. */

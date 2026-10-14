@@ -17,6 +17,7 @@
 import CoreImage
 import Foundation
 import ImageIO
+import Vision
 
 func load(_ path: String) -> CGImage? {
   guard let data = FileManager.default.contents(atPath: path) else { return nil }
@@ -246,6 +247,73 @@ case "hems":
     "\(leg["side"] ?? "?"): hem=\(leg["tHem"] ?? "-") gap=\(leg["gapT"] ?? "-") vis/w=\(leg["shoeVisToW"] ?? "-") folds=\(leg["folds"] ?? "-") fr=\(leg["foldRatio"] ?? "-") spread=\(leg["spread"] ?? "-") \(leg["why"] ?? "")"
   }
   print(hsum.joined(separator: " · "))
+
+case "people":
+  // kmeasure people [--out dir] <photo.jpg>...: who's in each fit photo (Oct 14, "Which one is you?"). One JSON line per
+  // photo: the old rule (any other box at least 25% of the biggest → multiplePeople) and today's Prep.locate. With --out,
+  // the copy that would be sent (everyone else covered, faces hidden) for every photo with someone else, as
+  // <stem>.sent.jpg; a "multiplePeople" photo is written once per candidate picked (<stem>.pick<i>.jpg).
+  var outDir: String? = nil
+  var files = Array(args.dropFirst(2))
+  if files.first == "--out", files.count >= 2 { outDir = files[1]; files = Array(files.dropFirst(2)) }
+  for path in files {
+    guard let img = load(path) else { print("{\"photo\":\"\(path)\",\"error\":\"unreadable\"}"); continue }
+    let W = CGFloat(img.width), H = CGFloat(img.height)
+    let req = VNDetectHumanRectanglesRequest()
+    req.upperBodyOnly = false
+    try? VNImageRequestHandler(cgImage: img, orientation: .up).perform([req])
+    let det = (req.results ?? []).filter { $0.confidence > 0.3 }
+      .map { (CGRect(x: $0.boundingBox.minX * W, y: (1 - $0.boundingBox.maxY) * H, width: $0.boundingBox.width * W, height: $0.boundingBox.height * H), $0.confidence) }
+      .sorted { Prep.area($0.0) > Prep.area($1.0) }
+    let oldMulti = det.count >= 2 && det.dropFirst().contains { Prep.area($0.0) >= Prep.otherPersonShare * Prep.area(det[0].0) }
+    let f = Prep.locate(img)
+    let inst = det.count >= 2 ? Prep.personInstances(img) : nil
+    var row: [String: Any] = [
+      "photo": path, "old": oldMulti ? "multiplePeople" : "-", "new": f.status, "others": f.others.count, "candidates": f.candidates.count,
+      "boxes": det.map { d -> [String: Any] in
+        var b: [String: Any] = ["share": Double((Prep.area(d.0) / Prep.area(det[0].0) * 100).rounded() / 100), "conf": Double((d.1 * 100).rounded() / 100),
+          "inside": Double((Prep.area(d.0.intersection(det[0].0)) / max(1, Prep.area(d.0)) * 100).rounded() / 100),
+          "box": [Int(d.0.minX / W * 100), Int(d.0.minY / H * 100), Int(d.0.width / W * 100), Int(d.0.height / H * 100)]]
+        if let inst { let c = inst.counts(d.0, W: W, H: H); b["labels"] = Dictionary(uniqueKeysWithValues: c.labels.map { ("\($0.key)", Double((CGFloat($0.value) / CGFloat(max(1, c.all)) * 100).rounded() / 100)) }) }
+        return b
+      },
+    ]
+    if let inst { row["instanceMask"] = [inst.w, inst.h] }
+    // The guarantees: every other person's box is covered (or is his own box), and picking candidate i makes i him.
+    func coveredShare(_ found: Prep.Located, _ o: CGRect) -> Double {
+      guard let c = found.cover, let main = found.main else { return 0 }
+      var on = 0, all = 0
+      let sx = CGFloat(c.w) / W, sy = CGFloat(c.h) / H
+      for y in max(0, Int(o.minY * sy))..<min(c.h, Int(o.maxY * sy) + 1) {
+        for x in max(0, Int(o.minX * sx))..<min(c.w, Int(o.maxX * sx) + 1) {
+          all += 1
+          if c.px[y * c.w + x] > 127 || main.contains(CGPoint(x: (CGFloat(x) + 0.5) / sx, y: (CGFloat(y) + 0.5) / sy)) { on += 1 }
+        }
+      }
+      return all > 0 ? Double(on) / Double(all) : 1
+    }
+    if f.status == "ok", !f.others.isEmpty { row["coverMin"] = f.others.map { (coveredShare(f, $0) * 100).rounded() / 100 }.min() ?? 1 }
+    if f.status == "multiplePeople" {
+      row["picks"] = f.candidates.enumerated().map { i, c -> String in
+        let p = Prep.locate(img, pick: c)
+        return "\(p.status)\(p.status == "ok" ? (p.picked == i && p.main == c ? " him" : " WRONG") : "")\(p.status == "ok" ? " cover \(p.others.map { (coveredShare(p, $0) * 100).rounded() / 100 }.min() ?? 1)" : "")"
+      }
+    }
+    let d = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+    print(String(data: d, encoding: .utf8)!)
+    if let outDir {
+      let stem = URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent
+      func write(_ found: Prep.Located, _ name: String) throws {
+        guard found.status == "ok" else { return }
+        let covered = found.cover.map { Prep.coverOthers(img, $0) } ?? img
+        guard let c = covered, let hidden = Prep.hideRegions(c, found.hide) else { return }
+        _ = try Prep.writeJPEG(hidden, longEdge: 1024, quality: 0.8, to: URL(fileURLWithPath: outDir).appendingPathComponent(name))
+      }
+      if f.status == "multiplePeople" {
+        for (i, c) in f.candidates.enumerated() { try write(Prep.locate(img, pick: c), "\(stem).pick\(i).jpg") }
+      } else if !f.others.isEmpty { try write(f, "\(stem).sent.jpg") }
+    }
+  }
 
 default:
   print("unknown command"); exit(2)

@@ -19,7 +19,7 @@ import {
 } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
-import type { ImagePrep } from '@/services/imagePrep/demo';
+import type { ImagePrep, PersonBox } from '@/services/imagePrep/demo';
 import { isRecheckOpen, recheckDeadline, type QuotaService } from '@/services/quota';
 import type { FailCode, PreparedImage, ReadingSource, ReadKind, SecondLookCall } from '@/services/readingSource/types';
 import type { Scheduler } from '@/services/scheduler';
@@ -31,6 +31,7 @@ import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
 import { evaluateCheck, scoreOptions, scoringEngine, type CheckScoreOptions, type ScoringEngine } from './scoring';
 import { anchorRecheckLook, copiedLook, hasLook, LOOK_GRACE_MS, lookInput, settledLine, settleSecondLook } from './secondLook';
+import { dropWhichOne, whichOneOf, type WhichOnePayload } from './whichOne';
 export { failInterruptedChecks } from './interrupted';
 
 /** The engine a stored check is scored with (#209): the one its rubricVersion names, so editing an old check (a
@@ -89,6 +90,8 @@ export interface ServiceDeps {
   tap?: () => boolean;
   /** The closet write path (#91). Default: no closet call (written from the v3 fields). */
   closet?: ClosetService;
+  /** Deletes a temporary original that will never be prepped ("Which one is you?" cancelled or replaced). */
+  discardPhoto?: (uri: string) => void;
 }
 
 export interface CheckRequest {
@@ -104,6 +107,8 @@ export interface CheckRequest {
   style?: StyleKey | null;
   /** A fixed id (demo story: "story-first", "story-recheck"); otherwise one is made. */
   checkId?: string;
+  /** "Which one is you?" (02 S23): the person he tapped; everyone else is covered in what's sent. */
+  person?: PersonBox;
 }
 
 export type StartOutcome =
@@ -114,7 +119,9 @@ export type StartOutcome =
   /** 'busy': another check is still being read (one at a time); 'error': it threw before a card was posted. */
   | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' | 'busy' | 'error' }
   /** 02 S3: nothing was sent and nothing counts. */
-  | { outcome: 'photoProblem'; reason: 'noPerson' | 'multiplePeople' | 'couldNotFrame' };
+  | { outcome: 'photoProblem'; reason: 'noPerson' | 'multiplePeople' | 'couldNotFrame' }
+  /** 02 S23: two people of comparable size; the "Which one is you?" card is in the thread. Nothing sent or counted. */
+  | { outcome: 'whichOne'; messageId: string };
 
 export interface CorrectionDraft {
   garmentIndex: number;
@@ -166,6 +173,8 @@ export function createFitCheckService(deps: ServiceDeps) {
   let running: Promise<unknown> | null = null;
   /** cancel() arrived before the in-flight check reached its read: that read is aborted as it starts. */
   let cancelPending = false;
+  /** "Which one is you?" questions he just answered (a double tap starts one check). */
+  const picking = new Set<string>();
 
   const profile = async (): Promise<Profile> => {
     const p = await store.profile.get('me');
@@ -631,7 +640,20 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (req.mode === 'check' && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
     // One re-check per check, while its window is open (05 §3.1, ruling 22): each one is a paid read.
     if (req.mode === 'recheck' && parent && !isRecheckOpen(parent, now, clock) && !(now < recheckDeadline(parent, clock) && (await triesAfterNotSeen(parent.id)))) return { outcome: 'limit' };
-    const prep = await deps.prep.prepare(req.photoUri ? { kind: 'file', uri: req.photoUri } : { kind: 'demo', photoId: req.photoId ?? '' });
+    // A new photo replaces a "Which one is you?" still waiting (never its own photo, which is being prepped now).
+    if (req.photoUri && !req.person) await dropWhichOne(store, (uri) => uri !== req.photoUri && deps.discardPhoto?.(uri), { onlyOpen: true });
+    const prep = await deps.prep.prepare(
+      req.photoUri ? { kind: 'file', uri: req.photoUri, ...(req.person ? { person: req.person } : {}) } : { kind: 'demo', photoId: req.photoId ?? '' },
+    );
+    // Two people of comparable size (02 S23): ask which one is him; nothing is sent until he taps.
+    if (prep.status === 'multiplePeople' && prep.people && prep.people.length >= 2 && req.photoUri && !req.person && !ctx.abandoned) {
+      const payload: WhichOnePayload = {
+        question: 'whichOne', state: 'open', photoUri: req.photoUri, aspect: prep.aspect ?? null, people: prep.people, mode: req.mode,
+        parentCheckId: req.parentCheckId ?? null, ...(req.occasion ? { occasion: req.occasion } : {}), ...(req.style !== undefined ? { style: req.style } : {}),
+      };
+      const m = await message({ createdAt: now, role: 'stylist', kind: 'card', cardType: 'question', payload: payload as unknown as Record<string, unknown> });
+      return { outcome: 'whichOne', messageId: m.id };
+    }
     if (prep.status === 'noPerson' || prep.status === 'multiplePeople' || prep.status === 'couldNotFrame') return { outcome: 'photoProblem', reason: prep.status };
     if (prep.status !== 'ok') return { outcome: prep.status === 'unknownPhoto' ? 'unknownPhoto' : 'notImplemented' };
     // Prep outlived the slot's cap: the slot went to a newer photo, so this one posts nothing.
@@ -846,6 +868,43 @@ export function createFitCheckService(deps: ServiceDeps) {
       });
       await rememberLook(style);
       return next;
+    },
+    /** "Which one is you?" (02 S23): he tapped `people[index]`. The check runs as the mode it was asked in (a re-check
+     *  keeps its first check and its re-check rules), with everyone else covered in what's sent. The question goes once
+     *  the check has started; a busy slot (another photo still reading) leaves it waiting. null when it isn't open. */
+    async pickPerson(messageId: string, index: number): Promise<StartOutcome | null> {
+      // Claimed before the first await, so a second tap can't slip in while the first reads the question.
+      if (picking.has(messageId)) return null;
+      picking.add(messageId);
+      try {
+        const m = await store.chat.get(messageId);
+        const q = whichOneOf(m);
+        const person = q?.people[index];
+        if (!m || !q || q.state !== 'open' || !person) return null;
+        await store.chat.patch(messageId, { payload: { ...m.payload, state: 'picked' } });
+        const r = await start({
+          mode: q.mode, ...(q.photoId ? { photoId: q.photoId } : { photoUri: q.photoUri, person }), ...(q.parentCheckId ? { parentCheckId: q.parentCheckId } : {}),
+          ...(q.occasion ? { occasion: q.occasion } : {}), ...(q.style !== undefined ? { style: q.style } : {}),
+        });
+        if (r.outcome === 'busy') {
+          await store.chat.patch(messageId, { payload: { ...m.payload, state: 'open' } });
+          return r;
+        }
+        await store.chat.delete(messageId);
+        // Photo prep deletes the photo once it's used; when it never got that far (the limit, can't frame him), now.
+        if (!('checkId' in r) && !q.photoId) deps.discardPhoto?.(q.photoUri);
+        return r;
+      } finally {
+        picking.delete(messageId);
+      }
+    },
+    /** "Which one is you?" → Cancel: the question goes, its photo is deleted, nothing was sent or counted. */
+    async dismissWhichOne(messageId: string): Promise<boolean> {
+      const q = whichOneOf(await store.chat.get(messageId));
+      if (!q || q.state !== 'open' || picking.has(messageId)) return false;
+      await store.chat.delete(messageId);
+      if (!q.photoId) deps.discardPhoto?.(q.photoUri);
+      return true;
     },
     /** Stop the current read (screen changes, demo resets). */
     async cancel() {

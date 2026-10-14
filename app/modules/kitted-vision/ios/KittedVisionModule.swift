@@ -14,6 +14,12 @@ public class KittedVisionModule: Module {
       return try Prep.run(uri: uri)
     }
 
+    /// "Which one is you?" (02 S23): the same prep with the person he tapped ([x, y, w, h], 0–1, origin top-left);
+    /// everyone else is covered in every copy sent.
+    AsyncFunction("preparePerson") { (uri: String, pick: [Double]) -> [String: Any] in
+      return try Prep.run(uri: uri, pick: pick)
+    }
+
     /// A clothes scan (#88, #100): no person needed; any face is still hidden.
     AsyncFunction("prepareItems") { (uri: String) -> [String: Any] in
       return try Prep.run(uri: uri, kind: .items)
