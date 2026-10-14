@@ -27,4 +27,6 @@ export const KV = {
   notifyIdea: 'notify.idea',
   notifyReady: 'notify.ready',
   notifyTrial: 'notify.trial',
+  /** How many new checks played the full score reveal (features/fitcheck/reveal.ts): the tape shows for the first 5. */
+  revealFullShown: 'reveal.fullShown',
 } as const;

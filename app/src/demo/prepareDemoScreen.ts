@@ -17,6 +17,7 @@ import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
 import type { WhichOnePayload } from '@/features/fitcheck/whichOne';
+import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
 import { STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
@@ -126,6 +127,18 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
+  // The story's checks open on their final card (stable screenshots); -demoReveal re-arms screens 7, 10 and 11's
+  // reveal afterwards (features/fitcheck/reveal.ts).
+  setDemoPreparing(true);
+  try {
+    await playStory(sc);
+  } finally {
+    setDemoPreparing(false);
+  }
+  await armDemoReveal(store, sc.n, getDemoArgs().reveal);
+}
+
+async function playStory(sc: ScreenScenario): Promise<void> {
   await fitCheck.cancel();
   await fitCheck.closet.settle();
   readingSource.holdAt = null;

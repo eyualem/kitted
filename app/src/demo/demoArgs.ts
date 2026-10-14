@@ -28,6 +28,10 @@ export interface DemoArgs {
   fault: DemoFault | null;
   /** Sample weather for the morning/evening card until WeatherKit is live (02 "S1d"). */
   weather: DemoWeather | null;
+  /** -demoReveal 1: demo screens 7, 10 and 11 play the score reveal from fresh (features/fitcheck/reveal.ts). */
+  reveal: boolean;
+  /** -demoRevealSlow 4: every score-reveal timing × this (1–10), for frame-by-frame checks. */
+  revealSlow: number;
 }
 
 export type DemoWeather = 'coldRain' | 'mild' | 'hot' | 'freezing' | 'none';
@@ -53,6 +57,8 @@ export const defaultDemoArgs: DemoArgs = {
   frame: false,
   fault: null,
   weather: null,
+  reveal: false,
+  revealSlow: 1,
 };
 
 /** Raw key → value pairs from one source. Keys use the deep-link names (no leading dash). */
@@ -63,6 +69,8 @@ const LAUNCH_ALIASES: Readonly<Record<string, keyof DemoArgs>> = {
   demoLatency: 'latency',
   demoNow: 'now',
   demoWeather: 'weather',
+  demoReveal: 'reveal',
+  demoRevealSlow: 'revealSlow',
 };
 
 const ISO_LOCAL = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+-]\d{2}:\d{2})?$/;
@@ -100,6 +108,7 @@ export function parseArgs(raw: RawArgs): Partial<DemoArgs> {
       case 'skipOnboarding':
       case 'pro':
       case 'uiTesting':
+      case 'reveal':
       case 'frame': {
         const b = bool(value);
         if (b !== null) out[key] = b;
@@ -124,6 +133,11 @@ export function parseArgs(raw: RawArgs): Partial<DemoArgs> {
       case 'now': {
         const s = str(value);
         if (s === 'real' || (s !== null && ISO_LOCAL.test(s))) out.now = s;
+        break;
+      }
+      case 'revealSlow': {
+        const n = int(value, 1, 10);
+        if (n !== null) out.revealSlow = n;
         break;
       }
       case 'freeChecksUsed': {
@@ -198,4 +212,6 @@ export const LAUNCH_ARG_KEYS = [
   'uiTesting',
   'fault',
   'demoWeather',
+  'demoReveal',
+  'demoRevealSlow',
 ] as const;

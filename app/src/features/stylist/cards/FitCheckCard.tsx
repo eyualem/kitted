@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import {
   FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, MonoLabel, PartialLabel, RowDivider, ScoreBlock, Seam,
-  MorphPicker, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
+  MorphPicker, RevealStepView, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
@@ -35,6 +35,8 @@ import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
+import { noteLive } from '@/features/fitcheck/reveal';
+import { useCheckReveal } from './useReveal';
 
 /** The share card (S12) isn't built yet: its button opened a placeholder. One switch brings the share actions back. */
 export const SHARE_CARD_BUILT = false;
@@ -94,6 +96,11 @@ export function FitCheckCard({ checkId }: { checkId: string }) {
   const wxTip = useWeatherTip(row);
   const asked = useTapGarment(row);
   const session = useFitCheckSession();
+  // Seen still reading (or asking the quick tap): its result will be new to him, so the score reveal may play once.
+  const status = row?.status;
+  useEffect(() => {
+    if (status === 'scoring' || status === 'asking') noteLive(checkId);
+  }, [status, checkId]);
   if (!row) return null;
   if (row.status === 'scoring') {
     if (session.kind === 'reading' && session.checkId === checkId) {
@@ -241,6 +248,14 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   // The Going-for move is already a fix on the card: say so instead of drawing it twice.
   const moveFix = advice?.move ? fixes.findIndex((f) => f.copy === advice.move!.copy) : -1;
   const moveIsFix = moveFix >= 0 ? moveFix + 1 : null;
+  // The score reveal (#242, #246 (16)): once per new check; the quick tap's own announcement already says the score.
+  const [viaTap] = useState(() => justAnswered.has(row.id));
+  const { t: revealT, plan, values: tapeVals, attachScore, onScoreLayout, touch } = useCheckReveal(row, dialed ? 0 : fixes.length, { announce: !viaTap });
+  const rt = plan ? revealT : undefined;
+  const afterFixes = plan ? plan.fixes[plan.fixes.length - 1] ?? plan.summary : null;
+  const blockReveal = plan
+    ? { t: revealT, values: tapeVals, tape: plan.tape, swap: plan.swap, lock: plan.lock, blankStart: plan.blankStart, word: plan.word, summary: plan.summary }
+    : undefined;
 
   const actions = [
     { name: 'why', label: t('card.why', { score: scoreText }) },
@@ -306,7 +321,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   }, [row.id, score]);
 
   return (
-    <View ref={focusRef} collapsable={false}>
+    <View ref={focusRef} collapsable={false} onTouchStart={touch.onTouchStart} onTouchEnd={touch.onTouchEnd}>
       <KCard
         // While Change is open the card isn't one VoiceOver element, so the looks can be reached one by one.
         accessibilityLabel={changing ? undefined : label}
@@ -338,38 +353,66 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
           <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} occasionHere={!gf} />
           {partial || finished ? (
             <>
-              <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} onPress={go.why} />
-              {row.explanation ? <KText variant="subheadline" color="ink2">{row.explanation}</KText> : null}
+              <View ref={attachScore} onLayout={onScoreLayout} collapsable={false}>
+                <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} onPress={go.why} reveal={blockReveal} />
+              </View>
+              {row.explanation ? (
+                <RevealStepView t={rt} step={plan?.summary}>
+                  <KText variant="subheadline" color="ink2">{row.explanation}</KText>
+                </RevealStepView>
+              ) : null}
             </>
           ) : (
-            <ScoreBlock score={score} verdict={row.explanation ?? undefined} onPress={go.why} />
+            <View ref={attachScore} onLayout={onScoreLayout} collapsable={false}>
+              <ScoreBlock score={score} verdict={row.explanation ?? undefined} onPress={go.why} reveal={blockReveal} />
+            </View>
           )}
           {/* "Reads as …" moved into the Why sheet (#205, #209). */}
-          {skippedAs && changeAnswer ? <SkippedLine choice={skippedAs} onPress={changeAnswer} /> : null}
+          {skippedAs && changeAnswer ? (
+            <RevealStepView t={rt} step={plan?.summary}>
+              <SkippedLine choice={skippedAs} onPress={changeAnswer} />
+            </RevealStepView>
+          ) : null}
         </KCardSection>
         {dialed && quietNoFix && !advice && !nextLevel && !wxTip ? null : (<>
         <Seam />
         <KCardSection paddingVertical={4} gap={0}>
-          {advice ? <GoingForAdviceBlock advice={advice} flash={flash} moveIsFix={moveIsFix} /> : null}
+          {advice ? (
+            <RevealStepView t={rt} step={plan ? plan.fixes[0] ?? plan.summary : null}>
+              <GoingForAdviceBlock advice={advice} flash={flash} moveIsFix={moveIsFix} />
+            </RevealStepView>
+          ) : null}
           {advice && !(dialed && quietNoFix) ? <RowDivider /> : null}
           {/* Below 9 with no fixes the summary already says "No quick fixes for this one."; don't say it twice (#183). */}
           {dialed && quietNoFix ? null : dialed ? (
-            <View style={{ paddingVertical: space.fixRowV }}>
+            <RevealStepView t={rt} step={plan?.summary} style={{ paddingVertical: space.fixRowV }}>
               <KText role="fixTitle">{score >= 9 ? t('dialed.title') : t('card.noFixes')}</KText>
-            </View>
+            </RevealStepView>
           ) : (
             fixes.map((f, i) => (
-              <View key={f.target + i}>
+              <RevealStepView key={f.target + i} t={rt} step={plan?.fixes[i]} style={{}}>
                 {i > 0 ? <RowDivider /> : null}
-                <FixRow number={i + 1} title={f.copy} detail={f.tag} gain={t('card.gainTo', { score: displayScore(f.to) })} />
-              </View>
+                <FixRow
+                  number={i + 1} title={f.copy} detail={f.tag} gain={t('card.gainTo', { score: displayScore(f.to) })}
+                  reveal={plan && i === 0 ? { t: revealT, gain: plan.gain } : undefined}
+                />
+              </RevealStepView>
             ))
           )}
-          {nextLevel ? <TipLine lead={tipLeadText(row.details.tipLead) ?? t('card.nextLevel')} text={nextLevel} first={dialed && quietNoFix && !advice} /> : null}
-          {wxTip ? <TipLine lead={t('tip.wx.lead')} text={wxTip} first={dialed && quietNoFix && !nextLevel && !advice} /> : null}
+          {nextLevel ? (
+            <RevealStepView t={rt} step={afterFixes}>
+              <TipLine lead={tipLeadText(row.details.tipLead) ?? t('card.nextLevel')} text={nextLevel} first={dialed && quietNoFix && !advice} />
+            </RevealStepView>
+          ) : null}
+          {wxTip ? (
+            <RevealStepView t={rt} step={afterFixes}>
+              <TipLine lead={t('tip.wx.lead')} text={wxTip} first={dialed && quietNoFix && !nextLevel && !advice} />
+            </RevealStepView>
+          ) : null}
         </KCardSection>
         </>)}
         <Seam />
+        <RevealStepView t={rt} step={afterFixes}>
         <KCardSection gap={6}>
           {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={go.review} /> : null}
           {firstAsk && askPhoto && askCandidate ? (
@@ -410,6 +453,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
             </KText>
           ) : null}
         </KCardSection>
+        </RevealStepView>
       </KCard>
     </View>
   );

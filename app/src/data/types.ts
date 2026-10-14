@@ -135,6 +135,8 @@ export interface TapState {
 
 /** What a check card needs beyond the score columns (fit_checks.details, V2). */
 export interface CheckDetails {
+  /** When the score reveal played (or was skipped past) for this check (features/fitcheck/reveal.ts): never again. */
+  revealedAt?: number;
   /** He removed this look from the Lookbook (#118): hidden there, and its pieces don't count it as a wear. The chat card stays. */
   removedFromLookbook?: number | null;
   /** Re-scored for another occasion or style after it landed (#62): what it was before. */

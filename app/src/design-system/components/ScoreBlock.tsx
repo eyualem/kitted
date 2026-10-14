@@ -4,6 +4,7 @@
 // Layout: numeral + "/10" | 16 gap | word + verdict-or-partial. At AX sizes they stack.
 
 import { Pressable, View } from 'react-native';
+import Animated, { type SharedValue } from 'react-native-reanimated';
 import { useTheme } from '../theme';
 import { displayScore, scoreWordLabel, spokenScore } from '../score';
 import { t } from '@/i18n/en';
@@ -12,6 +13,21 @@ import { opacity } from '../tokens';
 import { Icon } from './Icon';
 import { KText } from './KText';
 import { Numeral } from './Numeral';
+import { RevealStepView, TapeNumeral, useOutOfStyle, type RevealStep } from './ScoreReveal';
+
+/** The score reveal on this block (ScoreReveal.tsx): the tape in the numeral slot, then "/10", the word and the
+ *  verdict (or partial label). Past its end the block is exactly the plain one. */
+export interface ScoreBlockReveal {
+  t: SharedValue<number>;
+  values: readonly number[];
+  tape: RevealStep | null;
+  swap: RevealStep | null;
+  lock: RevealStep;
+  /** Quiet: nothing shows until the one fade. */
+  blankStart: boolean;
+  word: RevealStep;
+  summary: RevealStep;
+}
 
 export interface ScoreBlockProps {
   score: number;
@@ -28,9 +44,10 @@ export interface ScoreBlockProps {
   numeralSize?: number;
   /** The card's score opens "Why" (#205): the block becomes a button with a small chevron after "/10". */
   onPress?: () => void;
+  reveal?: ScoreBlockReveal;
 }
 
-export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutOf = true, word, numeralSize = numeralSizes.hero, onPress }: ScoreBlockProps) {
+export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutOf = true, word, numeralSize = numeralSizes.hero, onPress, reveal }: ScoreBlockProps) {
   const { isAccessibilitySize } = useTheme();
   const resolvedWord = word ?? scoreWordLabel(score);
 
@@ -38,32 +55,44 @@ export function ScoreBlock({ score, verdict, partialLabel, partialDone, showOutO
   if (partialLabel) label += ` ${partialLabel}.`;
   else if (verdict) label += ` ${verdict}`;
 
+  const rv = reveal;
+  const outOfStyle = useOutOfStyle(rv?.t, rv ? (rv.tape ? rv.lock : rv.swap ?? rv.lock) : null, rv?.blankStart ? 0 : 0.35);
   const layout = isAccessibilitySize
     ? ({ flexDirection: 'column', alignItems: 'flex-start', gap: 8 } as const)
     : ({ flexDirection: 'row', alignItems: 'flex-end', gap: 16 } as const);
   const body = (
     <>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
-        <Numeral size={numeralSize}>{displayScore(score)}</Numeral>
+        {rv ? (
+          <TapeNumeral t={rv.t} score={score} values={rv.values} size={numeralSize} tape={rv.tape} swap={rv.swap} lock={rv.lock} noDash={rv.blankStart} />
+        ) : (
+          <Numeral size={numeralSize}>{displayScore(score)}</Numeral>
+        )}
         {/* The tap cue (#205) rides on the "/10" line, tight after it, so it reads as part of the score and not as a
             mark floating between the numeral and the word. The row's baseline comes from the "/10" text. */}
         {showOutOf || onPress ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+          <Animated.View style={[{ flexDirection: 'row', alignItems: 'center', gap: 2 }, rv ? outOfStyle : null]}>
             {showOutOf ? (
               <KText mono="value" variant="subheadline" color="ink3">
                 {t('card.outOf')}
               </KText>
             ) : null}
             {onPress ? <Icon name="next" size={12} color="ink3" weight="semibold" scalesWithText /> : null}
-          </View>
+          </Animated.View>
         ) : null}
       </View>
       <View style={{ flexShrink: 1, gap: 4, paddingBottom: isAccessibilitySize ? 0 : 4 }}>
-        <KText role="scoreWord">{resolvedWord}</KText>
+        <RevealStepView t={rv?.t} step={rv?.word}>
+          <KText role="scoreWord">{resolvedWord}</KText>
+        </RevealStepView>
         {partialLabel ? (
-          <PartialLabel label={partialLabel} done={partialDone} />
+          <RevealStepView t={rv?.t} step={rv?.summary}>
+            <PartialLabel label={partialLabel} done={partialDone} />
+          </RevealStepView>
         ) : verdict ? (
-          <KText role="verdict">{verdict}</KText>
+          <RevealStepView t={rv?.t} step={rv?.summary}>
+            <KText role="verdict">{verdict}</KText>
+          </RevealStepView>
         ) : null}
       </View>
     </>

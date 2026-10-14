@@ -4,7 +4,7 @@ export { KCard, KCardSection, type KCardProps, type KCardSectionProps } from './
 export { Seam, RowDivider, type SeamProps } from './Seam';
 export { WovenLabel, type WovenLabelProps } from './WovenLabel';
 export { Numeral, type NumeralProps } from './Numeral';
-export { ScoreBlock, PartialLabel, ScoreWordText, type ScoreBlockProps } from './ScoreBlock';
+export { ScoreBlock, PartialLabel, ScoreWordText, type ScoreBlockProps, type ScoreBlockReveal } from './ScoreBlock';
 export { Chip, ChipFlow, Pill, type ChipProps, type ChipState, type ChipFlowProps, type PillTone } from './Chip';
 export { KButton, TextLink, TextLinkRow, type KButtonProps, type ButtonKind, type ButtonSize, type TextLinkProps } from './KButton';
 export { IconButton, type IconButtonProps } from './IconButton';
@@ -26,6 +26,7 @@ export {
   type PhotoCrop,
 } from './Chat';
 export { GarmentIcon, shade, type GarmentIconType, type GarmentIconProps } from './GarmentIcon';
-export { AddedRow, DeltaRow, QuickStartChip, FinishTile } from './CardParts';
+export { AddedRow, DeltaRow, QuickStartChip, FinishTile, type DeltaReveal } from './CardParts';
+export { RevealStepView, TapeNumeral, REVEAL_END, stepP, type RevealStep, type TapeNumeralProps } from './ScoreReveal';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
 export { MorphPicker, type MorphOption, type MorphSection, type MorphPickerProps } from './MorphPicker';

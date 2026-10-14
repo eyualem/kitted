@@ -3,7 +3,7 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import {
-  DeltaRow, FixRow, KButton, KCard, KCardSection, KText, ScoreBlock, Seam, TagLine, TextLink, TextLinkRow, spokenScore,
+  DeltaRow, FixRow, KButton, KCard, KCardSection, KText, RevealStepView, ScoreBlock, Seam, TagLine, TextLink, TextLinkRow, spokenScore,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
@@ -14,6 +14,8 @@ import { t } from '@/i18n/en';
 import { signed } from '@/i18n/format';
 import { occasionLabel } from '../thread';
 import { FitCheckCard, SHARE_CARD_BUILT } from './FitCheckCard';
+import { useWinReveal } from './useReveal';
+import type { FitCheckRow } from '@/data/types';
 
 export function RecheckCard({ checkId }: { checkId: string }) {
   const row = useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
@@ -24,7 +26,16 @@ export function RecheckCard({ checkId }: { checkId: string }) {
   }, [row?.parentId]);
   if (!row) return null;
   if (row.status !== 'scored' || !row.details.recheck) return <FitCheckCard checkId={checkId} />;
-  const rc = row.details.recheck;
+  return <ScoredRecheck row={row} parent={parent} />;
+}
+
+function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCheckRow; reading: Parameters<typeof notSeenProblem>[0] | null } | null | undefined }) {
+  const rc = row.details.recheck!;
+  // The re-check win (#242, #246 (16)): once, only when the score went up and the card shows the change (not the
+  // "same photo" or "change not seen" cards, which land as they are).
+  const { t: winT, plan, values: winValues, pill, attachScore, onScoreLayout, touch } = useWinReveal(
+    row, rc.parentScore, { announce: true, enabled: !rc.samePhoto && !(rc.notSeen && !row.details.confirmed) },
+  );
   const now = row.score ?? 0;
   const occasionWord = occasionLabel(row.occasion);
   // The same photo again (#219): nothing was re-read or counted; say so and ask for a new photo after the fix.
@@ -72,6 +83,7 @@ export function RecheckCard({ checkId }: { checkId: string }) {
     ? `${t('card.tag.recheck')}, ${occasion}. ${t('recheck.notSeen', { problem })}`
     : t('card.a11y.recheck', { occasion, was: spokenScore(rc.parentScore), now: spokenScore(now), delta: rc.delta.toFixed(1), word: scoreWordLabel(now), fix: done?.copy ?? '' });
   return (
+    <View collapsable={false} onTouchStart={touch.onTouchStart} onTouchEnd={touch.onTouchEnd}>
     <KCard
       accessibilityLabel={label}
       accessibilityActions={actions}
@@ -86,15 +98,26 @@ export function RecheckCard({ checkId }: { checkId: string }) {
           </>
         ) : (
           <>
-            <DeltaRow was={rc.parentScore} now={now} />
-            <KText role="cardSummary">
-              {`${summary.lead} `}
-              <KText role="cardSummary" weight="600">
-                {summary.word}
+            <View ref={attachScore} onLayout={onScoreLayout} collapsable={false}>
+              <DeltaRow
+                was={rc.parentScore} now={now}
+                reveal={plan ? {
+                  t: winT, values: winValues, shrink: plan.shrink, strike: plan.strike, arrow: plan.arrow, tape: plan.tape, swap: plan.swap,
+                  lock: plan.lock, pillSpring: plan.pillSpring, pill: pill,
+                } : undefined}
+              />
+            </View>
+            {/* The new word arrives with its line (it sits inside the sentence, so the line rises in, not the word alone). */}
+            <RevealStepView t={plan ? winT : undefined} step={plan?.word}>
+              <KText role="cardSummary">
+                {`${summary.lead} `}
+                <KText role="cardSummary" weight="600">
+                  {summary.word}
+                </KText>
+                {` ${summary.tail}`}
+                {row.details.confirmed ? ` ${t('recheck.tell.confirmed')}` : ''}
               </KText>
-              {` ${summary.tail}`}
-              {row.details.confirmed ? ` ${t('recheck.tell.confirmed')}` : ''}
-            </KText>
+            </RevealStepView>
           </>
         )}
       </KCardSection>
@@ -103,7 +126,7 @@ export function RecheckCard({ checkId }: { checkId: string }) {
           <Seam />
           <KCardSection paddingVertical={4} gap={0}>
             {rc.doneFixes.map((d, i) => (
-              <FixRow key={i} number={i + 1} title={d.copy} gain={signed(d.earned)} done />
+              <FixRow key={i} number={i + 1} title={d.copy} gain={signed(d.earned)} done reveal={plan ? { t: winT, badge: plan.badge } : undefined} />
             ))}
           </KCardSection>
         </>
@@ -126,5 +149,6 @@ export function RecheckCard({ checkId }: { checkId: string }) {
         )}
       </KCardSection>
     </KCard>
+    </View>
   );
 }
