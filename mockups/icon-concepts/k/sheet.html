@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Kitted K icon</title>
+<style>
+body{margin:0;padding:26px 28px;background:#EDEEF2;font:13px -apple-system,system-ui,sans-serif;color:#121628;width:1544px}
+h1{font-size:22px;margin:0 0 4px} p{margin:0 0 16px;color:#585E70}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.card{background:#fff;border-radius:16px;padding:14px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.card h2{font-size:14px;margin:0} .card small{color:#7A8090;margin-top:-7px;text-align:center}
+.wall{width:100%;box-sizing:border-box;border-radius:12px;padding:12px 10px;display:flex;gap:14px;align-items:flex-end;justify-content:center}
+.ic{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px}
+.lt{background:linear-gradient(150deg,#C9D4E6,#E8DCCB);color:#333}
+.dk{background:linear-gradient(150deg,#141518,#2E2622);color:#bbb}
+.tn{background:linear-gradient(150deg,#2B2118,#4A3826);color:#d8c7a8}
+.tn img{background:#262628;filter:sepia(1) saturate(2.4) brightness(.92) hue-rotate(-10deg)}
+.lab{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7A8090;align-self:flex-start;margin:0 0 -6px 2px}
+.row{margin-top:14px;background:#fff;border-radius:16px;padding:14px 16px}
+.row h2{font-size:14px;margin:0 0 10px}
+.strip{border-radius:12px;padding:14px 18px;display:flex;gap:22px;align-items:flex-end}
+.sep{width:1px;align-self:stretch;background:rgba(128,128,128,.35)}
+</style></head><body>
+<h1>Kitted icon · a single K on navy (round k)</h1>
+<p>Each at 180, 60, 40 and 29 pt (rendered 2x) on light, dark and tinted (iOS 26, simulated) wallpapers. Shapes only; the K is constructed on Archivo Expanded Bold's skeleton.</p>
+<div class="grid" id="g"></div>
+<div class="row"><h2>Distinctiveness at 60 pt · generic stand-ins (not the real logos) for a green pixel K on black, a white K on an orange gradient, a black K on pink; then c2-dark for reference</h2>
+<div class="strip lt" id="d1"></div><div class="strip dk" id="d2" style="margin-top:8px"></div></div>
+<script>
+const set=[['k1','k1 · Pure','the base K, soft navy grade'],['k2','k2 · Copper gusset','copper fills the joint'],
+ ['k3','k3 · Two-tone navy','c2-dark band, no stitches'],['k4','k4 · Stencil cut','34 px cut, stem from arms'],
+ ['k5','k5 · Tailored','diagonals taper to their ends']];
+const R=s=>(s*0.2237).toFixed(1);
+const I=(src,s,lab=true)=>`<div class="ic"><img src="${src}" width="${s}" height="${s}" style="border-radius:${R(s)}px">${lab?s+' pt':''}</div>`;
+let h='';
+for(const [n,t,sub] of set){
+ h+=`<div class="card"><h2>${t}</h2><small>${sub}</small>${I(n+'.svg',180,false)}
+ <div class="lab">Light</div><div class="wall lt">${I(n+'.svg',60)}${I(n+'.svg',40)}${I(n+'.svg',29)}</div>
+ <div class="lab">Dark</div><div class="wall dk">${I(n+'-dark.svg',180,false)}</div><div class="wall dk" style="margin-top:-6px">${I(n+'-dark.svg',60)}${I(n+'-dark.svg',40)}${I(n+'-dark.svg',29)}</div>
+ <div class="lab">Tinted</div><div class="wall tn">${I(n+'-tint.svg',180,false)}</div><div class="wall tn" style="margin-top:-6px">${I(n+'-tint.svg',60)}${I(n+'-tint.svg',40)}${I(n+'-tint.svg',29)}</div></div>`;
+}
+document.getElementById('g').innerHTML=h;
+const st=['standin-green','standin-orange','standin-pink'];
+const row=v=>st.map(s=>I(s+'.svg',60,false)).join('')+'<div class="sep"></div>'+set.map(([n])=>`<div class="ic"><img src="${n}${v}.svg" width="60" height="60" style="border-radius:${R(60)}px">${n}</div>`).join('')
+ +'<div class="sep"></div>'+`<div class="ic"><img src="../woven/c/c2-dark.svg" width="60" height="60" style="border-radius:${R(60)}px">c2-dark</div>`
+ +'<div class="sep"></div>'+['standin-green','k1','standin-orange','k4','standin-pink','k3'].map(s=>I(s+(s.startsWith('k')?v:'')+'.svg',60,false)).join('');
+document.getElementById('d1').innerHTML=row('');
+document.getElementById('d2').innerHTML=row('-dark');
+</script></body></html>
