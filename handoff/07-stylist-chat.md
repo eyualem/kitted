@@ -276,11 +276,18 @@ The server keeps device ID, route, ms, tokens, model, error code, the router's k
 
 **Provider: Gemini, same as scoring.** Consent already names Google, the 18+ setup exists, one key, one proxy. Switching the chat to Anthropic or another provider means a second processor in consent and the privacy label for no shown gain; revisit only for 16+ in 2027 (CLAUDE.md).
 
-**Model: decided by a test, not by name.** Candidates: `gemini-3.8-flash` (already locked for vision) and Google's cheaper Flash-Lite tier. Step C5 runs both on the same 80 questions; the judges and you pick on voice and correctness, then cost breaks a tie.
+**Model: decided by a test, not by name.** Candidates: `gemini-3.5-flash-lite` (the starting default, #269: $0.30 / $2.50 per million tokens, no price rise announced) and `gemini-3.8-flash` (locked for vision; $0.75 / $3.75, doubling on Jan 1, 2027). Step C5 runs both on the same 80 questions; the judges and you pick on voice and correctness, then cost breaks a tie.
 
-**Cost, estimated (to be measured in step C2; prices are not looked up here):** brainstorm 02 estimated about 0.08–0.15¢ a question on a Lite model with a cached prefix. Using that:
-| Who | Questions a month | Cost a month | Revenue a month (after Apple's 15%) |
-|---|---|---|---|
+**Cost, priced Oct 15 (#269; full list `market/ai-costs.md`).** The brainstorm's 0.08–0.15¢ assumed a 2,500-token prompt; the real prompt is about 8,700 tokens, because the rules plus the guide alone are ~5,600 (the guide is 3,476 words). Per question:
+| Model | Now | From Jan 1, 2027 |
+|---|---|---|
+| 3.8 Flash, prefix cached / not cached | 0.34¢ / 0.72¢ | 0.68¢ / 1.44¢ |
+| 3.5 Flash-Lite, prefix cached | 0.16¢ | 0.16¢ (no rise announced) |
+| 3.5 Flash-Lite, guide trimmed to the question's sections (~4,000 in) | 0.10¢ | 0.10¢ |
+
+A Pro user at 50 questions every day costs $10.26 a month on 3.8 Flash from 2027, or about $1.50 on trimmed Flash-Lite, against $2.12 (yearly). **So the chat's starting model is 3.5 Flash-Lite with the guide trimmed by kind:** §0 always, plus the 2–4 sections the router names, mapped in code. 3.8 Flash wins only if the C5 test shows Flash-Lite clearly worse (D1). Guards as before: the cached prefix, a ≤200-token answer, today-only history, the spend stop, and a per-device token budget on the server.
+
+---|---|---|---|
 | Free, typical (2 a day on half the days) | ~30 | ~3–5¢ | 0 |
 | Pro, typical (4 a day) | ~120 | ~10–18¢ | ~$2.12 (yearly) / ~$5.09 (monthly) |
 | Pro, at the cap every day (50) | ~1,500 | **~$1.20–2.25** | ~$2.12 (yearly) |
@@ -355,7 +362,7 @@ Cost of the whole test: about $1–2 of Gemini calls (your OK needed, on the lis
 - The buy list is free (code only); see "Changes to 02" below.
 
 **Yours (each has a default; the chat is built with the default meanwhile):**
-- **D1 · The model's voice (taste, in C5):** your blind pick between the two models on 20 answers. Default: the cheaper one unless you or the judges clearly prefer the other.
+- **D1 · The model's voice (taste, in C5):** your blind pick between the two models on 20 answers. Default: 3.5 Flash-Lite (a quarter of the cost from 2027, #269) unless you or the judges clearly prefer 3.8 Flash.
 - **D2 · Consent wording (outward-facing):** add "your style picks, your height and build if you gave them" to what's sent with questions (§3.3), which shows the agreement once more to anyone who agreed before. Default: yes.
 - **D3 · Numbers for "what if" on a check he has:** may the stylist say "swapping to the straight jeans takes that check to 8.0" (the fix engine's number on that same photo), the way the card's fix rows already do? Guide §0 says "never give a score in chat"; this would allow only numbers the code computed for a photo already scored. Default: yes, worded "on that photo".
 - **D4 · The paused line (outward-facing):** `Questions are paused for a bit. Nothing was counted. Try again later.` Default: as written.

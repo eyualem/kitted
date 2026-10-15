@@ -1389,3 +1389,29 @@ Contradictions settled and decisions changed during the build. Newest last.
         - the Worker's limits keyed on an account ID;
         - the policy written with optional backup in mind.
     - **Build:** ~10–12 days (A1 accounts 2, A2 sync 4–5, A3 rules 1, A4 Worker 0.5, A5 deletion 1.5, A6 privacy 1, A7 ops 0.5), as v1.1. Android itself is a separate 3–5 weeks (native modules: face blur, body tracking, dictation, location, camera guidance).
+
+## Oct 15 · Accounts decided; the Gemini bill priced per user (founder: "All right, add these to the common files … how much would it cost for Gemini calls per user? Check that")
+269. **E1–E3 of #268 are decided as recommended** (the founder's "All right"): Firebase for accounts, data and photos, with the Worker staying the AI proxy; the ~1-day prep before the beta and the build as v1.1; "Back up photos" on by default once signed in. E4 (creating the Firebase project) stays on his list.
+    **The Gemini bill, priced from the app's own token logs and Google's pricing page (Oct 15): `market/ai-costs.md`.**
+    - **Per call** (`gemini-3.8-flash`: $0.75 in / $3.75 out per million tokens, doubling on Jan 1, 2027):
+      - scoring read with close-ups: 4,118 / 764 tokens, 0.60¢;
+      - second look: 0.23¢;
+      - closet call: 1,567 / 364 tokens, 0.25¢;
+      - **= 1.08¢ a check now, 2.16¢ from 2027.** #268 used only the read (0.83¢), which was too low.
+    - **Chat question** (estimate; the prompt is ~8,700 tokens because the rules plus the guide are ~5,600):
+      - 0.34¢ cached on 3.8 Flash (0.68¢ in 2027);
+      - 0.16¢ on 3.5 Flash-Lite ($0.30 / $2.50, no rise announced);
+      - ~0.10¢ with the guide trimmed to the question's sections.
+    - **Per user, per month, in 2027:**
+      - free light $0.28;
+      - free every day $1.27;
+      - Pro typical $2.12 (his yearly plan pays $2.12 after Apple's 15%);
+      - Pro at the caps $23.
+    - **Per 100 monthly users** at 2% paying: about $31 of AI against about $6 of revenue; free users are ~85% of it.
+    - **Settled by Claude:**
+      - The chat starts on 3.5 Flash-Lite with the guide trimmed by kind (§0 always plus the router's 2–4 sections). 3.8 Flash only if the C5 test shows Flash-Lite clearly worse (`07-stylist-chat.md` §9, D1 default updated).
+      - Try the closet call on the Flex tier (half price; nobody waits on it).
+      - Log the hedge rate. The 5 s backup request may double the scoring read's cost when no garment has streamed yet; it's probably rare (garments stream early), but unmeasured.
+    - **The founder's calls:**
+      - (a) ~$1–2 to test the scoring read on 3.5 Flash-Lite (≈0.32¢ vs 1.19¢ in 2027), against the gold set and steadiness;
+      - (b) the free tier and the Pro caps, after (a). Everything on Flash-Lite would be ~0.48¢ a check and ~0.10¢ a question: break-even at 2% paying, so it still needs better conversion or a lighter free tier.

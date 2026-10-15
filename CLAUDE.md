@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 14, 2026 (the Stylist chat planned: `handoff/07-stylist-chat.md`, nothing built yet, #265; the waistline from the body: the ruler doesn't beat the AI, nothing changed in the app, #264; the re-check camera says the whole fit is read again, #253–254; the consent loop fixed, #252; scoring v11, the second look in the app, the hem and creator-outfit tests, #236–239; scoring v10 from the creators' rules and the stylist guide for the chat, #235; how the founder's taste sources judge outfits, from 32 YouTube transcripts, #234; before that: scoring v8 adopted and ported, #228; Archivo and the theme batch, #230–231; the app review fixes, #233).**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 15, 2026 (the waistline from the body, round 2: a shoulder–knee body ruler good to ±2–3 cm, and the measured waistline tracks the judges' proportion scores better than the AI's reading; one tape shoot decides it, #269; the Stylist chat planned: `handoff/07-stylist-chat.md`, nothing built yet, #265; the waistline from the body: the ruler doesn't beat the AI, nothing changed in the app, #264; the re-check camera says the whole fit is read again, #253–254; the consent loop fixed, #252; scoring v11, the second look in the app, the hem and creator-outfit tests, #236–239; scoring v10 from the creators' rules and the stylist guide for the chat, #235; how the founder's taste sources judge outfits, from 32 YouTube transcripts, #234; before that: scoring v8 adopted and ported, #228; Archivo and the theme batch, #230–231; the app review fixes, #233).**
 
 ## How we keep context (rules for every chat)
 
@@ -25,6 +25,15 @@
 
 **Do (things only I can do):**
 - [ ] **P1** · **Try a fit check, then the card's re-check with a new photo, then a brand-new check (5 min, #245).** The agreement loop is fixed too (#252): the agreement now shows once, when you first open the camera, and never again; check that with Metro running. Fully close Kitted first (swipe it away) so an already-stuck check is dropped. If anything fails, tell Claude the exact words on screen, or plug in the phone so Claude can pull the log (`tools/phone/pull.sh`). *Unblocks: confirming the lock-up fix on the live path.*
+- [ ] **P1** · **The tape shoot, 10 min (#269): the one test that decides whether the phone can measure your waistline.**
+  - **Wear:** a plain shirt or tee that isn't blue, and dark or black pants.
+  - **Tape:** stick a 15 cm strip of blue painter's tape straight across the front of the shirt at your navel height (feel for the navel).
+  - **Shoot about 12 photos, standing straight:**
+    - mirror selfies with the phone at face, chest and waist height, plus one tilted down;
+    - propped on the floor leaning up, on a chair at waist height, on a shelf at chest height, and one from about 3 m away;
+    - two with a hand in a pocket.
+  - **Name** each file by how you took it (`mirror-chest.jpg`, `propped-floor.jpg`) and put them in `inputs/gold-set/me/tape/`.
+  - *Unblocks:* each ruler's error in cm against your real navel. If it's within ~3 cm on both mirror and propped shots, the waist credit and a "top runs long" charge can follow the measured waistline (on paper so far: 8 of your checks would move down). A friend doing the same would separate your own proportions from the ruler's.
 - [ ] **P2** · **Reinstall Kitted by Oct 21** (reinstalled Oct 14 with real weather, the closet long-press, the lock-up fix; the free 7-day signing permit runs out a week later; ask Claude, ~1 min with the phone unlocked). Joining the $99 program ends the weekly reinstall.
 - [ ] **P1** · **Tell Claude your own profile, 1 min:** your birth year, the 3 looks you'd pick in onboarding in order (Streetwear, Minimal, Smart casual, Classic prep, Workwear, Outdoor, Vintage sport), and height, build and fit if you want. *Unblocks: re-scoring your saved checks the way the app will see you (rule 7); today they use a made-up profile.*
 - [ ] **P1** · **Phone test, about 10 min left** (reinstalled again Oct 9 and connected to the dev server; close-ups and measuring confirmed Oct 8 on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it changes with the Wi-Fi: `10.0.0.33:8081` on Oct 8, `10.110.115.70:8081` on Oct 9). Tell Claude when you start. Also type one question in Stylist (does the text box ride the keyboard?) and scroll the chat (does the tab bar shrink with "Ask…" beside it?). Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
@@ -58,7 +67,7 @@
 - [ ] **P3** · **Skim the new advice lines (#232), 3 min** (`app/src/i18n/en.ts` → `pfix.tip_*`, `pfix.copy.tipLabel`, `sum.ownMove`): "Finishing touch: Have the jeans hemmed to just touch your shoes (about $15 at a tailor), or cuff them once: a cleaner finish." (reworded in v10), "Have the trousers hemmed to just touch your shoes (about $15 at a tailor)", "Tuck in the layer underneath, or wear one that ends with the sweater", "Good base. Swapping one piece gets you to 7.5.", and the interview line "an interview wants a collared shirt, a knit or a jacket". Built with these words.
 - [ ] **P3** · **Skim the new scoring lines (v8, #228), 3 min** (`app/src/i18n/en.ts` → `pfix.*`, `pwhy.piled`; card reasons in `extraction-test/rubrics/parts_proto.py`): "the skinny jeans read dated; a straight leg balances the outfit" (slim says "would balance better with a straight leg" since v10), "the big, loud check on the sweater takes over the outfit", "a tank top on its own reads gym or undershirt", "Swap the tank top for a tee", "One quiet color, like a rust or olive knit, lifts Color", "Problems in more than one part" (a Why row). Built with these words; "dated" is the bluntest, "a straight leg would balance it" is the softer option.
 - [ ] **P2** · **The App Store name and subtitle (#225, outward-facing).** Default: `Kitted: Outfit Rater for Men` (people search "outfit rater"; the "rate my outfit" results are weak apps) with the subtitle `Score your fit. Get the fix.` Alternatives in `market/market-research.md` §7. Also: keep the $5.99 monthly at launch (default) or make it $7.99 so the yearly plan looks like a bigger saving?
-- [ ] **P2** · **Stop the proportion scripts (#222–223, #264, #266)?** Claude now recommends stopping, not pausing: five tries (sleeve, top length ×3, legs, hems, waist) all lost to the AI. Keep only one test: comparing two photos of the same outfit (tucked vs untucked) once your variants exist. Was: **Pause the proportion scripts until the gold set? (#222–223)** Even perfect measuring would change 4 of 79 scores under today's rules, and the best candidate (slim vs straight legs) failed on 90 public labelled pants. Default: pause; the gold set then decides which shape rules earn or cost points.
+- [ ] **P2** · **Proportion scripts: keep one alive, the waistline (#269, revises #266's "stop").** Sleeves, hems, legs and "does the waistband show" stay stopped. But the body ruler (shoulders + knees, ±2–3 cm) puts the visual waistline your clothes make on a body scale, and on the gold set that line tracks the judges' proportion scores better than the AI's reading (rank correlation −0.46 vs −0.29). Default: keep it, and decide after the tape shoot (P1 below).
 - [ ] **P2** · **"Going for" (built Oct 11, #218; demo screens 71–78):** it changes the advice, never the score. Should it ever lower the score when the outfit clearly misses that look? Default: advice only. Also skim its words (`app/src/i18n/en.ts`, keys `gf.*`), 5 min.
 - [ ] **P2** · **Should your picked style ever move points?** (#211) Today it only orders the fixes and the "Next level" line. Default: no, until the gold set shows raters judge that way.
 - [ ] **P2** · **Look at the new card and sheet** on the Simulator or your phone (5 min): `screenshots/parts-app/`. Is the chevron after "/10" a clear enough cue? Default: keep it.
@@ -356,7 +365,24 @@
 **Next:** the icon (your pick), then the share card right after onboarding (#231), then a score reveal (count-up + haptic).
 
 
-### Waistline and proportions from the body: done Oct 14 (#264), nothing changed in the app
+### Waistline and proportions from the body: round 2 done Oct 15 (#269), nothing changed in the app; the tape shoot decides
+**Round 2 (founder: "there must be a way to measure the body and estimate the waistline"; report `rubric/research/notes/waistline.md` top section; `vision/BodyRuler.swift`, `waist_rulers.py`, `waist_mediapipe.py`, `waist_paper2.py`, `waist_tape.py`; ANSUR II data in `inputs/ansur2/` and MediaPipe in `extraction-test/.venv-mp`, both OK'd):**
+- **The body side works now.**
+  - On 4,082 men, shoulders + knees predict the navel to ±2.1 cm. The hips aren't needed (they were the problem).
+  - In the photos, Apple's and Google's trackers put the same clothes edge within ~2 cm of each other.
+  - Different photos of his same outfit read within ~1 cm.
+  - The random error is ~2.5–3 cm in all. The systematic offset (pose "shoulder" vs the shoulder bone, knees placed low) needs truth: the tape shoot.
+- **His idea is in the data.** The measured visual waistline tracks the 5 judges' Proportions scores at −0.46, against −0.29 for the AI's top length, and it still works inside the AI's "at the belt" group.
+  - At or below the hip joint, Proportions drops ~0.5–1.5.
+- **In the score, on paper:**
+  - The measured line replacing the AI's top length, plus a measured "top runs long" costing 1.5: held-out panel r 0.49 → 0.51, Proportions 0.50 → 0.58, his 20 unchanged.
+  - 8 of his saved checks move down.
+  - Small: within the noise on 91 photos, but every new ruler points the same way.
+- **Apple's 3D pose is too noisy** (4–6 cm).
+- **Still unsure on ~35% of photos** (dark on dark, joints out of frame). The AI's reading stays there.
+
+**Round 1 (Oct 14, #264):**
+
 **Result: `rubric/research/notes/waistline.md`** (research with sources: `rubric/research/notes/waist-research.md`; harness `kmeasure waist`, `extraction-test/waist_test.py`, `waist_paper.py`; labels `extraction-test/waist_labels/`).
 - **The body ruler doesn't beat the AI** at "the waist shows" (a tuck, a short top, a visible waistband). Held out: 80% right when it answers vs the AI's 82%; unsure 41% (bar 30%); 100% repeatable. On his photos it was 77% vs 64%, but on only 13 answers.
 - **Why:** the clothes edge is found well, but the hip joints are 3–7 cm off (in mirror selfies often at the waistband itself), and that's the whole gap between "at the belt" and "covers it".
@@ -671,7 +697,7 @@ Exceptions:
 | `rubric/research/parts/gold-retune.md` | The v8 retune against the gold-set panel (Oct 12, #227): what changes on the card, before/after numbers, what's still wrong; scripts `extraction-test/gold_tune.py`, `gold_features.py` | **Live** until v8 is ported or dropped |
 | `rubric/research/v5-brief.md` | Rubric v5 plan (Oct 9): what "meticulous" means, the 8 steps, research questions, the Codex/Gemini prompts | **Live** until v5 locks |
 | `rubric/research/parts/proportion-headroom.md`, `rubric/research/notes/fp-leg-test.md` | Proportion scripts (Oct 12, #222–223): which facts can move a score; the leg probe on Fashionpedia (fails) | Reference |
-| `rubric/research/notes/waistline.md`, `notes/waist-research.md` | The waist ruler (Oct 14, #264): the visual waistline against a body ruler vs. the AI; not adopted; the research on body landmarks, menswear hem rules and mirror-selfie perspective, with sources | Reference |
+| `rubric/research/notes/waistline.md`, `notes/waist-research.md` | The waist ruler (Oct 14, #264; round 2 Oct 15, #269: the shoulder–knee body ruler, the measured waistline vs the judges, the tape shoot): the visual waistline against a body ruler vs. the AI; not adopted; the research on body landmarks, menswear hem rules and mirror-selfie perspective, with sources | Reference |
 | `rubric/research/notes/fit-ruler.md` | The fit ruler test (Oct 9, #170): phone-measured sleeve, top and hem vs. the AI; not adopted; how to re-test | Reference |
 | `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |
 | `mockups/closet-concepts.html` | Closet tab research (Oct 8): where combinations live, avatar verdict, wireframes, sources | Approved (#84); the UI brief for the Closet tab |
