@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 15, 2026 (the AI bill priced per user: a check is 2.16¢ from 2027, and free users cost more than Pro brings in, #270; accounts and sync on Firebase decided, #268, #270; the chat's first steps C0–C1 being built; the waistline from the body, round 2: a shoulder–knee body ruler good to ±2–3 cm, and the measured waistline tracks the judges' proportion scores better than the AI's reading; one tape shoot decides it, #269; the Stylist chat planned: `handoff/07-stylist-chat.md`, nothing built yet, #265; the waistline from the body: the ruler doesn't beat the AI, nothing changed in the app, #264; the re-check camera says the whole fit is read again, #253–254; the consent loop fixed, #252; scoring v11, the second look in the app, the hem and creator-outfit tests, #236–239; scoring v10 from the creators' rules and the stylist guide for the chat, #235; how the founder's taste sources judge outfits, from 32 YouTube transcripts, #234; before that: scoring v8 adopted and ported, #228; Archivo and the theme batch, #230–231; the app review fixes, #233).**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 15, 2026 (the hem from the body: the ruler finds the hem steadily, but no idea reads the stack better than the AI, nothing changed in the app, #273; the AI bill priced per user: a check is 2.16¢ from 2027, and free users cost more than Pro brings in, #270; accounts and sync on Firebase decided, #268, #270; the chat's first steps C0–C1 being built; the waistline from the body, round 2: a shoulder–knee body ruler good to ±2–3 cm, and the measured waistline tracks the judges' proportion scores better than the AI's reading; one tape shoot decides it, #269; the Stylist chat planned: `handoff/07-stylist-chat.md`, nothing built yet, #265; the waistline from the body: the ruler doesn't beat the AI, nothing changed in the app, #264; the re-check camera says the whole fit is read again, #253–254; the consent loop fixed, #252; scoring v11, the second look in the app, the hem and creator-outfit tests, #236–239; scoring v10 from the creators' rules and the stylist guide for the chat, #235; how the founder's taste sources judge outfits, from 32 YouTube transcripts, #234; before that: scoring v8 adopted and ported, #228; Archivo and the theme batch, #230–231; the app review fixes, #233).**
 
 ## How we keep context (rules for every chat)
 
@@ -56,6 +56,7 @@
 - [ ] **P1** · **Try the 4 closest competitors, 45 min (#225):** Looksee, DRPD, GRWM and Dressly (free downloads, no trials), plus free ChatGPT and Gemini. Send the same photo of you (face covered) twice to each and screenshot every screen into `inputs/market/teardown/`. *Unblocks: the "same photo, same score" video, and paywall ideas.*
 - [ ] **P1** · **Claim @kitted.app / @trykitted and register trykitted.com** (was P2; beta is in 3 weeks and no video can point anywhere yet). About 10 minutes, and the names could be taken any time. *Unblocks: the waitlist page and the TikTok account.*
 - [ ] **P2** · **TikTok scan by hand, 20 min, plus the Codex Reddit prompt, 5 min** (both in `market/market-research.md` §8 tasks 4–5). *Unblocks: this month's video hooks.*
+- [ ] **P3** · Optional, 10 min, with the hem variants shoot: **measure the inseam of the jeans you'll shoot and your own** (crotch to floor, shoes on), with a tape measure, and write them in `inputs/gold-set/me/inseams.txt`. *Unblocks: the only direct measure of a stack (pants minus leg = the extra length, #273).*
 - [ ] **P2** · **Size-ladder shoot (#164), about 45 min with a friend:** the same tee, hoodie and jeans in 2–3 sizes each (trade clothes), plus one piece that's oversized on purpose; mirror and propped, ~30 photos into `inputs/size-ladder/` (name each file with the piece and size, e.g. `tee-grey-M.jpg`). *Unblocks: judging fit (fitted vs oversized vs too big) and storing each piece's fit in the closet.* Optional: run R3c (YouTube fit guides) in Gemini, prompt in `rubric/research/v5-brief.md`.
 - [ ] **P2** · **Shoot ~20 photos of my clothes** into `inputs/item-photos/` (shot list in "Waiting on the founder"). *Unblocks: scanning clothes into the closet.*
 - [ ] **P3** · Later, before launch: replace the Gemini key.
@@ -376,29 +377,24 @@
 **Next:** the icon (your pick), then the share card right after onboarding (#231), then a score reveal (count-up + haptic).
 
 
-### The hem from the body (new chat, founder, Oct 15): START HERE
-**Why:** where the pants meet the shoe is what all four of his creators call make-or-break (`rubric/research/creators/creators-rules.md`), and it's the one proportion fact nothing reads yet. The AI's close-up reads "the hem touches the shoe" (94%) and "ankle shows" (97%), but not the stack, the folds piling above the shoe (69%, `rubric/research/notes/hem3.md`, #237–238). The phone probes lost too (#190 fold counting, #170 hem position). The waistline work (#264, #269) found the trick that worked there: **use the body as a ruler, and measure the clothes against it, not against the AI's words.** Do the same for the hem.
-**What already exists:**
-- `kmeasure waist` (`extraction-test/vision/WaistRuler.swift`, `BodyRuler.swift`): a body ruler from shoulders, knees, ankles and hanging arms (ANSUR II proportions, `inputs/ansur2/male.csv`).
-  - It's good to ±2–3 cm and corrects camera tilt with a projective fit.
-  - `fits()` gives height in cm at any point down the body (`Fit.height`). `silhouette()` turns outline widths into cm with that local scale.
-  - On ANSUR II men: the ankle bone (lateral malleolus) is 7.3 cm up, the knee 48.0, the crotch 84.6.
-- MediaPipe pose is installed in `extraction-test/.venv-mp` (its heel and foot-index points; `waist_mediapipe.py`).
-**Ideas in the same spirit, to try and test (garment against garment or against the skeleton; never against the body's own size):**
-1. **The hem against the predicted ankle bone:** cm above or below it, from the ruler (a cropped hem is above it, a full break covers it, a pooled hem reaches the floor).
-2. **The extra length:** the stack is pants longer than the leg. Two ways to read it:
-   - the width profile in the last ~15 cm (a stack widens and bunches against the knee or shin width, in ruler cm);
-   - horizontal fold lines there (the lightness-edge profile, on the 2048-px face-hidden lower close-up in `Caches/detail`).
-3. **The shoe as a second ruler:** shoe length (MediaPipe heel to toe) and how much of the shoe the fabric covers, in shoe lengths.
-4. **The hem's outline shape:** a straight hem (no break) vs one that dips at the back (break) vs a ragged, bunched one.
-5. **Left vs right leg:** a stack is rarely identical on both legs, and a clean hem usually is.
-6. **Hard truth with a tape measure:** he measures each pair's inseam and his own inseam (crotch to floor, shoes on). Pants minus leg = the real extra length, which sets the stack in cm for every photo of those pants.
-**Truth and data:**
-- `extraction-test/hem3_labels.csv` (78 photos, blind), `hem_labels.csv`;
-- his hem variants (normal, cuffed, rolled, hitched: `inputs/gold-set/me/`, still to shoot);
-- the tape-measure inseams (idea 6).
-**The bar (#187):** clearly better than the AI's hem reading, ≤ 30% unsure, repeatable (the same photo tilted ±10°: `kmeasure waist --pitch`), works on mirror and propped shots and dark-on-dark.
-**Rules:** CLAUDE.md rule 7 (profiles), rule 9 (memory), faces hidden, never rate bodies. Tune on part of the data and test once on the rest. No app change until the founder sees a before/after. Write results to `rubric/research/notes/hem-ruler.md` and a DECISIONS-LOG entry.
+### The hem from the body: done Oct 15 (#273), nothing changed in the app; the stack stays a tip
+**Result: `rubric/research/notes/hem-ruler.md`** (code `extraction-test/hem_ruler.py`, results `extraction-test/results/hem4/`).
+- **Built:** the waistline's body ruler, turned to the hem.
+  - **The ruler:** knee → floor (ANSUR knee 48 cm + a stated 3 cm sole), from Vision's joints plus MediaPipe's heels, toes and outline.
+  - **The hem:** where the pants' color ends.
+  - **The ideas tested:** the brief's ideas 1–5 (the hem vs the ankle bone, widening and fold bands in the last 12–14 cm, the shoe as a ruler, the hem line's tilt and raggedness, left vs right).
+  - **The test:** the 78 hem3 photos, with cuts set on the tuning half and tested once.
+- **The ruler works, the question doesn't:**
+  - The hem height is steady: his same pants on different days read within 0.1–1.7 cm, and a ±10° tilt moves it ~1 cm.
+  - But it doesn't track the stack (test AUC 0.35): the pants end where the shoe starts, with a break or with a stack.
+- **No idea reads the stack (folds above the shoe) better than the AI.**
+  - All of them combined: test AUC 0.51, against the AI's 57–59% on those photos.
+  - The one that looked good (left/right fold contrast) found 2 of 5 stacks on test and can't measure 12 of 19.
+  - Drags: the AI's 91% isn't approached.
+- **No app change, so no before/after.**
+- **Next for the stack:**
+  - his hem variants (cuffed, rolled, hitched; on his list);
+  - the direct measure, idea 6: the pants' inseam minus his own, a closet fact entered once per piece. That's a possible field on the piece page later; on his list as optional.
 
 ### Waistline and proportions from the body: round 2 done Oct 15 (#269), nothing changed in the app; the tape shoot decides
 **Round 2 (founder: "there must be a way to measure the body and estimate the waistline"; report `rubric/research/notes/waistline.md` top section; `vision/BodyRuler.swift`, `waist_rulers.py`, `waist_mediapipe.py`, `waist_paper2.py`, `waist_tape.py`; ANSUR II data in `inputs/ansur2/` and MediaPipe in `extraction-test/.venv-mp`, both OK'd):**
@@ -745,6 +741,7 @@ Exceptions:
 | `rubric/research/parts/gold-retune.md` | The v8 retune against the gold-set panel (Oct 12, #227): what changes on the card, before/after numbers, what's still wrong; scripts `extraction-test/gold_tune.py`, `gold_features.py` | **Live** until v8 is ported or dropped |
 | `rubric/research/v5-brief.md` | Rubric v5 plan (Oct 9): what "meticulous" means, the 8 steps, research questions, the Codex/Gemini prompts | **Live** until v5 locks |
 | `rubric/research/parts/proportion-headroom.md`, `rubric/research/notes/fp-leg-test.md` | Proportion scripts (Oct 12, #222–223): which facts can move a score; the leg probe on Fashionpedia (fails) | Reference |
+| `rubric/research/notes/hem-ruler.md` | The hem from the body (Oct 15, #273): the knee → floor ruler, the six hem ideas vs the AI's hem crop; not adopted; how to re-run with the hem variants | Reference |
 | `rubric/research/notes/waistline.md`, `notes/waist-research.md` | The waist ruler (Oct 14, #264; round 2 Oct 15, #269: the shoulder–knee body ruler, the measured waistline vs the judges, the tape shoot): the visual waistline against a body ruler vs. the AI; not adopted; the research on body landmarks, menswear hem rules and mirror-selfie perspective, with sources | Reference |
 | `rubric/research/notes/fit-ruler.md` | The fit ruler test (Oct 9, #170): phone-measured sleeve, top and hem vs. the AI; not adopted; how to re-test | Reference |
 | `rubric/research/proportions-color-style.md` | Rubric research (Oct 7): proportions, color, style types; ranked changes; Gemini/Codex prompts | Reference |

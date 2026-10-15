@@ -1499,3 +1499,28 @@ Contradictions settled and decisions changed during the build. Newest last.
       - the hem's outline;
       - left vs right;
       - inseam minus leg length with a tape measure as hard truth.
+
+## Oct 15 · The hem from the body (founder: "start 'The hem from the body' … use the body ruler we built for the waistline … try the creative ideas … don't change the app until I've seen the before/after")
+273. **The body ruler measures where the hem sits, and does it steadily. But none of the six ideas reads the stack better than the AI, alone or combined. Nothing in the app changed, so there is no before/after** (report: `rubric/research/notes/hem-ruler.md`; code `extraction-test/hem_ruler.py`; results `extraction-test/results/hem4/`).
+    - **Built (Mac harness only):**
+      - The joints: Vision's joints from the waist runs, plus MediaPipe's knees, ankles, heels, toes and outline.
+      - The ruler: knee → floor (ANSUR knee 48.0 cm plus a stated 3 cm sole), because shoulders + knees extrapolated to the floor miss by −10 to +9 cm.
+      - The hem: where the pants' color ends.
+      - The ideas: 1, 2a, 2b, 3, 4 and 5 from the brief. Idea 6 needs a tape measure.
+      - The test: the 78 hem3 photos, with cuts chosen on the tuning half and tested once.
+    - **The ruler works:** the same pants on different days read within 0.1–1.7 cm, and tilting the photo ±10° moves the hem a median 1.0 cm.
+    - **Hem height doesn't track the stack:** test AUC 0.35. The pants end where the shoe starts, whether there's a break or a stack.
+    - **No idea beats the AI on folds above the shoe:**
+      - The best AUCs on the test half are 0.57–0.69, and none holds on both halves except left/right fold contrast.
+      - Left/right fold contrast is noise: 1 of 2 stacks found on tuning with 4 false alarms, 2 of 5 found on test, unsure on 12 of 19 stacks.
+      - All of them combined: test AUC 0.51, against the AI's 57–59% on the same photos.
+      - Drags: the AI is at 91%, and no idea comes close.
+    - **Also learned:**
+      - Finding the hem by the outline narrowing disagrees with the color finder by a median 9 cm.
+      - Heel → toe as a shoe ruler is foreshortened in front-on photos (9–19 cm for ~29 cm shoes).
+      - Black denim and jogger cuffs defeat the fold bands, as in #190.
+    - **Decided (Claude):**
+      - The stack stays a tip.
+      - The hem height stays in the harness as a possible veto (a hem far above the shoe can't be a stack).
+      - The direct measure is length, not position: the pants' inseam minus his leg's inseam. That's a closet fact, entered once per piece, not a photo fact. It's worth a field on the piece page later; added to the founder's list as optional.
+      - His hem variants remain the truth any reader needs.

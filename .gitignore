@@ -62,6 +62,7 @@ extraction-test/results/gold-tune/dump_*.txt
 # Photo crops for the creator and hem tests (people in them; internal only, #235, #237)
 extraction-test/results/creators1/images/
 extraction-test/results/hem3/crops/
+extraction-test/results/hem4/mp/
 
 # MediaPipe sandbox for the waist ruler test (#269)
 extraction-test/.venv-mp/
