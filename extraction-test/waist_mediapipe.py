@@ -19,7 +19,7 @@ import mediapipe as mp
 
 HERE = Path(__file__).resolve().parent
 MODEL = HERE.parent / "inputs" / "mediapipe" / "pose_landmarker_heavy.task"
-H_S, H_K, H_A, RIDGE = 144.07, 48.0, 7.29, 0.2
+H_S, H_K, H_A, RIDGE = 144.07, 48.0, 7.29, 0.02
 EDGES = ["top_end_s", "pants_start_s", "visual_s"]
 
 

@@ -73,7 +73,7 @@ def ai_readings(ps):
     zoom = FR.ai_readings()
     for p in ps:
         if p["group"] == "phone":
-            out[p["id"]] = zoom.get(p["id"]) or FR.pull_readings(Path(p["pull"]), p["hash"])
+            out[p["id"]] = zoom.get(p["id"]) or (FR.pull_readings(Path(p["pull"]), p["hash"]) if p.get("pull") else [])
         elif not p["group"].startswith("gold"):
             out[p["id"]] = zoom.get(p["id"], [])
     for r in json.loads((GOLD / "raw.json").read_text()):

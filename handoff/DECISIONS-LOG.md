@@ -1477,3 +1477,25 @@ Contradictions settled and decisions changed during the build. Newest last.
       - **Not drawn on the web preview:** the support card's heart icon (SF Symbols); iOS should show it.
       - **Web preview only:** the composer field can't be tapped there (a layer sits over it). iOS isn't affected; it predates this work.
     - **Next:** C2. A real answer through the dev key on 3.5 Flash-Lite, with the sentence gate. First measured cost and speed (~$0.50 of tries; the founder's OK is on the list).
+
+## Oct 15 · The waistline, round 3: arms as a backup, the pants silhouette, the hem brief (founder: "add the arms as a backup"; "the lower part … close to as wide as the top"; "a prompt for another chat for the hem")
+272. **Arms work as a backup only when they hang dead straight. The pants silhouette loses to the AI at naming the cut, but confirms the balance rule, which goes into the stylist's advice. The hem gets its own brief. Nothing in the app changed** (report: `rubric/research/notes/waistline.md`, round 3).
+    - **Arms (ANSUR II):** a hanging elbow is at 110.5 cm, a wrist at 84.8. Shoulders + arms place the navel to ±2.2–2.3 cm.
+      - In photos a loose "hanging arm" check spreads tucked shirts over 39 cm.
+      - A strict one (elbow bend < 10°, within 12° of the body line; the default now) matches the knee ruler (spread 17.4 cm; AUC 0.89 / 0.86), but qualifies on ~1 photo in 5 and rescues only ~4 knee-less photos.
+      - Built into `body_fit`, with a hip fallback (gold measured 147 → 152).
+    - **Tilt prior lightened 0.2 → 0.02** (offline sweep, then a clean rerun, `results/waist4`). `body_fit` now moves a median 1.5 cm per 10° of camera tilt (no one-sided lean), but is noisier across photos of one outfit (2.6 vs 0.9 cm).
+      - Judges: equal to `sk_linear` (−0.48 vs −0.47).
+      - Paper: `sk_linear` held-out 0.51 / Proportions 0.58; `body_fit` 0.50 / 0.53.
+      - **The tape shoot picks between them.**
+    - **The pants silhouette** (`BodyRuler.silhouette`, widths in ruler-cm; `waist_silhouette.py`, `results/waist3/silhouette.md`):
+      - Naming slim / straight / wide: 67% held out vs the AI's 75% on the same photos (the hem width runs slim 10.0, straight 12.4, wide 15.7 cm). Width alone can't name the cut (#189, #223 again).
+      - Pants width against the top tracks the judges' Proportions (+0.42), but the AI's leg reading tracks it better (+0.56) and is already scored.
+      - Decided (Claude): the cut stays on the AI. The balance rule and the measured waistline go into `rubric/stylist-guide.md` §4 as advice ("this tee ends at your hips, so your legs look shorter: tuck the front or pick a shorter, boxier tee"), never about his body.
+    - **The hem:** a brief for a separate chat is in CLAUDE.md ("The hem from the body (new chat): START HERE"). Ideas:
+      - the hem against the ruler's ankle bone;
+      - the stack as width and fold lines in the last 15 cm;
+      - the shoe as a second ruler;
+      - the hem's outline;
+      - left vs right;
+      - inseam minus leg length with a tape measure as hard truth.

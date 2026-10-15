@@ -27,7 +27,7 @@ RULER = sys.argv[1] if len(sys.argv) > 1 else "sk_linear"
 
 
 def measured():
-    ps, R = WR.load(HERE / "results" / "waist2")
+    ps, R = WR.load(HERE / "results" / __import__("os").environ.get("WAIST_RUNS", "waist2"))
     return {p["id"]: WR.t_of(R[p["id"]].get(0), RULER, "visual_s") for p in ps}
 
 

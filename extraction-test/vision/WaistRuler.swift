@@ -74,6 +74,7 @@ enum Waist {
 
   struct Geo {
     let H: CGPoint, S: CGPoint, up: CGVector, across: CGVector, T: CGFloat, thigh: CGFloat, half: CGFloat
+    var hipsEstimated = false
     func at(_ s: Double, _ x: CGFloat) -> CGPoint {
       CGPoint(x: H.x + up.dx * CGFloat(s) * T + across.dx * x, y: H.y + up.dy * CGFloat(s) * T + across.dy * x)
     }
@@ -81,21 +82,48 @@ enum Waist {
 
   static func geometry(_ j: [String: Ruler.Joint]) -> (Geo?, String) {
     guard let ls = Ruler.ok(j["lShoulder"]), let rs = Ruler.ok(j["rShoulder"]) else { return (nil, "shoulders") }
-    guard let lh = Ruler.ok(j["lHip"], Ruler.hipMin), let rh = Ruler.ok(j["rHip"], Ruler.hipMin) else { return (nil, "hips") }
+    let S = Ruler.lerp(ls, rs, 0.5)
     let knees = [Ruler.ok(j["lKnee"]), Ruler.ok(j["rKnee"])].compactMap { $0 }
-    guard !knees.isEmpty else { return (nil, "knees") }
-    let H = Ruler.lerp(lh, rh, 0.5), S = Ruler.lerp(ls, rs, 0.5)
-    let K = CGPoint(x: knees.map(\.x).reduce(0, +) / CGFloat(knees.count), y: knees.map(\.y).reduce(0, +) / CGFloat(knees.count))
+    let ankles = [Ruler.ok(j["lAnkle"]), Ruler.ok(j["rAnkle"])].compactMap { $0 }
+    func meanPt(_ v: [CGPoint]) -> CGPoint? { v.isEmpty ? nil : CGPoint(x: v.map(\.x).reduce(0, +) / CGFloat(v.count), y: v.map(\.y).reduce(0, +) / CGFloat(v.count)) }
+    let K = meanPt(knees)
+    var H: CGPoint, half: CGFloat, estimated = false
+    if let lh = Ruler.ok(j["lHip"], Ruler.hipMin), let rh = Ruler.ok(j["rHip"], Ruler.hipMin) {
+      H = Ruler.lerp(lh, rh, 0.5)
+      half = Ruler.dist(lh, rh) / 2 * CGFloat(stripShare)
+    } else {
+      // The hips weren't found (#269): place the hip joints with the body ruler instead (t 0.562 of the way from the
+      // shoulders to the knees, or from the hanging arms), along the line down to the knees or ankles (else straight down).
+      let lower = K ?? meanPt(ankles)
+      var dn = CGVector(dx: 0, dy: 1)
+      if let lower { let L = Ruler.dist(S, lower); if L > 20 { dn = CGVector(dx: (lower.x - S.x) / L, dy: (lower.y - S.y) / L) } }
+      func along(_ p: CGPoint) -> Double { Double((p.x - S.x) * dn.dx + (p.y - S.y) * dn.dy) }
+      var pts: [(d: Double, h: Double)] = [(0, BodyRuler.hShoulder)]
+      if let K { pts.append((along(K), BodyRuler.hKnee)) }
+      if K == nil, let A = meanPt(ankles) { pts.append((along(A), BodyRuler.hAnkle)) }
+      pts += BodyRuler.hangingArms(j, down: dn).map { (along($0.p), $0.h) }
+      guard pts.count >= 2, let f = BodyRuler.line(pts) else { return (nil, "hips") }
+      // h(d) is straight: solve for the hip joint's height.
+      let h0 = f(0), h1 = f(100), slope = (h1 - h0) / 100
+      guard slope < -0.01 else { return (nil, "hips") }
+      let dH = (BodyRuler.hHip - h0) / slope
+      H = CGPoint(x: S.x + dn.dx * CGFloat(dH), y: S.y + dn.dy * CGFloat(dH))
+      half = Ruler.dist(ls, rs) * 0.225 * CGFloat(stripShare / 0.9) // the hip joints sit about half as far apart as the shoulders
+      estimated = true
+    }
     let T = Ruler.dist(S, H)
     guard T > 20 else { return (nil, "torso too small") }
     let up = CGVector(dx: (S.x - H.x) / T, dy: (S.y - H.y) / T)
     // The axis should be near vertical in a standing photo; a lying or very tilted body is unsure.
     guard up.dy < -0.8 else { return (nil, "torso not upright") }
-    let thigh = Ruler.dist(H, K)
+    // Knees not found (a long coat, the photo cut off): the thigh from the average proportions (hip→knee ÷ shoulder→hip).
+    let thigh = K.map { Ruler.dist(H, $0) } ?? T * CGFloat((BodyRuler.hHip - BodyRuler.hKnee) / (BodyRuler.hShoulder - BodyRuler.hHip))
     guard thigh / T > 0.45, thigh / T < 1.6 else { return (nil, "torso/thigh lengths") }
     let across = CGVector(dx: -up.dy, dy: up.dx)
-    let half = max(CGFloat(stripMin) * T, Ruler.dist(lh, rh) / 2 * CGFloat(stripShare))
-    return (Geo(H: H, S: S, up: up, across: across, T: T, thigh: thigh, half: half), "")
+    half = max(CGFloat(stripMin) * T, half)
+    var g = Geo(H: H, S: S, up: up, across: across, T: T, thigh: thigh, half: half)
+    g.hipsEstimated = estimated
+    return (g, "")
   }
 
   static func labAt(_ rgb: Measure.RGB, _ x: Int, _ y: Int) -> Lab {
@@ -318,7 +346,10 @@ enum Waist {
       let p3 = ProcessInfo.processInfo.environment["WAIST_NO3D"] == nil ? BodyRuler.pose3D(img, main: located.main, statW: rgb.w, statH: rgb.h) : nil
       var edges: [String: Double] = [:]
       for k in ["top_end_s", "pants_start_s", "visual_s", "tape_s"] { if let v = w[k] as? Double { edges[k] = v } }
-      json["rulers"] = BodyRuler.readings(BodyRuler.fits(joints, g, p3), g: g, edges: edges)
+      let fits = BodyRuler.fits(joints, g, p3)
+      json["rulers"] = BodyRuler.readings(fits, g: g, edges: edges)
+      json["silhouette"] = BodyRuler.silhouette(Ruler.Ctx(rgb: rgb, mask: mask), joints, g, fits.first { $0.name == "body_fit" } ?? fits.first { $0.name == "sk_linear" }, visualS: w["visual_s"] as? Double)
+      json["hips_estimated"] = g.hipsEstimated
       // For the overlay: where the shoulder–knee ruler puts the navel and the hip joint (s, torsos from the hip points).
       if let S = BodyRuler.mid(Ruler.ok(joints["lShoulder"]), Ruler.ok(joints["rShoulder"])), let K = BodyRuler.mid(Ruler.ok(joints["lKnee"]), Ruler.ok(joints["rKnee"])) {
         let dS = BodyRuler.down(S, g), dK = BodyRuler.down(K, g)

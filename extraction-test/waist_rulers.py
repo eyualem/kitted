@@ -28,7 +28,7 @@ import waist_test as WT  # noqa: E402
 
 TOOL = HERE / "vision" / "bin" / "kmeasure"
 PITCHES = [0, 10, -10]
-RULERS = ["hips", "sk_linear", "ska_proj", "ska_proj_r", "a3d_proj", "a3d_ansur", "mp_proj", "mp_ansur"]
+RULERS = ["hips", "sk_linear", "arm_linear", "body_fit", "ska_proj", "ska_proj_r", "a3d_proj", "a3d_ansur", "mp_proj", "mp_ansur"]
 EDGE = "pants_start_s"
 CM = 96.1  # shoulder → knee on ANSUR II men
 PICKS = ["phone-602c13", "phone-729b22", "phone-1f1b29", "phone-6bf356"]
@@ -50,11 +50,11 @@ def photos():
     return ps
 
 
-def run_all(out):
+def run_all(out, pitches=None):
     (out / "runs").mkdir(parents=True, exist_ok=True)
     ps = photos()
     for i, p in enumerate(ps):
-        for pt in PITCHES:
+        for pt in pitches or PITCHES:
             dst = out / "runs" / f"{p['id']}.p{pt}.json"
             if dst.exists():
                 continue
@@ -124,7 +124,10 @@ def report(out):
                 if tv is not None:
                     sh.append(abs(tv - t0) * CM); acc.append((tv - t0) * CM); got += 1
             both += got == 2
-        L.append(f"| {ru} | {len(base)} | {both} | {q(sh, 0.5):.1f} | {q(sh, 0.8):.1f} | {st.mean(sp):+.1f} / {st.mean(sm):+.1f} |")
+        if sh:
+            L.append(f"| {ru} | {len(base)} | {both} | {q(sh, 0.5):.1f} | {q(sh, 0.8):.1f} | {st.mean(sp or [0]):+.1f} / {st.mean(sm or [0]):+.1f} |")
+        else:
+            L.append(f"| {ru} | {len(base)} | (no tilt runs) | | | |")
     # 2. same outfit
     L += ["", "## 2. Same outfit, another photo (his)", "", "| Outfit | Shots | " + " | ".join(RULERS) + " |", "|---|---|" + "---|" * len(RULERS)]
     spreads = defaultdict(list)
@@ -198,9 +201,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(HERE / "results" / "waist2"))
     ap.add_argument("--report")
+    ap.add_argument("--pitches", help="e.g. 0 (default 0,10,-10)")
     a = ap.parse_args()
     if a.report:
         report(Path(a.report))
     else:
-        run_all(Path(a.out))
+        run_all(Path(a.out), [int(x) for x in a.pitches.split(",")] if a.pitches else None)
         report(Path(a.out))

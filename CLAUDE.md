@@ -376,6 +376,30 @@
 **Next:** the icon (your pick), then the share card right after onboarding (#231), then a score reveal (count-up + haptic).
 
 
+### The hem from the body (new chat, founder, Oct 15): START HERE
+**Why:** where the pants meet the shoe is what all four of his creators call make-or-break (`rubric/research/creators/creators-rules.md`), and it's the one proportion fact nothing reads yet. The AI's close-up reads "the hem touches the shoe" (94%) and "ankle shows" (97%), but not the stack, the folds piling above the shoe (69%, `rubric/research/notes/hem3.md`, #237–238). The phone probes lost too (#190 fold counting, #170 hem position). The waistline work (#264, #269) found the trick that worked there: **use the body as a ruler, and measure the clothes against it, not against the AI's words.** Do the same for the hem.
+**What already exists:**
+- `kmeasure waist` (`extraction-test/vision/WaistRuler.swift`, `BodyRuler.swift`): a body ruler from shoulders, knees, ankles and hanging arms (ANSUR II proportions, `inputs/ansur2/male.csv`).
+  - It's good to ±2–3 cm and corrects camera tilt with a projective fit.
+  - `fits()` gives height in cm at any point down the body (`Fit.height`). `silhouette()` turns outline widths into cm with that local scale.
+  - On ANSUR II men: the ankle bone (lateral malleolus) is 7.3 cm up, the knee 48.0, the crotch 84.6.
+- MediaPipe pose is installed in `extraction-test/.venv-mp` (its heel and foot-index points; `waist_mediapipe.py`).
+**Ideas in the same spirit, to try and test (garment against garment or against the skeleton; never against the body's own size):**
+1. **The hem against the predicted ankle bone:** cm above or below it, from the ruler (a cropped hem is above it, a full break covers it, a pooled hem reaches the floor).
+2. **The extra length:** the stack is pants longer than the leg. Two ways to read it:
+   - the width profile in the last ~15 cm (a stack widens and bunches against the knee or shin width, in ruler cm);
+   - horizontal fold lines there (the lightness-edge profile, on the 2048-px face-hidden lower close-up in `Caches/detail`).
+3. **The shoe as a second ruler:** shoe length (MediaPipe heel to toe) and how much of the shoe the fabric covers, in shoe lengths.
+4. **The hem's outline shape:** a straight hem (no break) vs one that dips at the back (break) vs a ragged, bunched one.
+5. **Left vs right leg:** a stack is rarely identical on both legs, and a clean hem usually is.
+6. **Hard truth with a tape measure:** he measures each pair's inseam and his own inseam (crotch to floor, shoes on). Pants minus leg = the real extra length, which sets the stack in cm for every photo of those pants.
+**Truth and data:**
+- `extraction-test/hem3_labels.csv` (78 photos, blind), `hem_labels.csv`;
+- his hem variants (normal, cuffed, rolled, hitched: `inputs/gold-set/me/`, still to shoot);
+- the tape-measure inseams (idea 6).
+**The bar (#187):** clearly better than the AI's hem reading, ≤ 30% unsure, repeatable (the same photo tilted ±10°: `kmeasure waist --pitch`), works on mirror and propped shots and dark-on-dark.
+**Rules:** CLAUDE.md rule 7 (profiles), rule 9 (memory), faces hidden, never rate bodies. Tune on part of the data and test once on the rest. No app change until the founder sees a before/after. Write results to `rubric/research/notes/hem-ruler.md` and a DECISIONS-LOG entry.
+
 ### Waistline and proportions from the body: round 2 done Oct 15 (#269), nothing changed in the app; the tape shoot decides
 **Round 2 (founder: "there must be a way to measure the body and estimate the waistline"; report `rubric/research/notes/waistline.md` top section; `vision/BodyRuler.swift`, `waist_rulers.py`, `waist_mediapipe.py`, `waist_paper2.py`, `waist_tape.py`; ANSUR II data in `inputs/ansur2/` and MediaPipe in `extraction-test/.venv-mp`, both OK'd):**
 - **The body side works now.**
@@ -391,6 +415,18 @@
   - Small: within the noise on 91 photos, but every new ruler points the same way.
 - **Apple's 3D pose is too noisy** (4–6 cm).
 - **Still unsure on ~35% of photos** (dark on dark, joints out of frame). The AI's reading stays there.
+
+**Round 3 (Oct 15, founder: "add the arms as a backup"; "the lower part … close to as wide as the top"):**
+- **Arms work as a backup only with a strict "hangs straight" check** (elbow bent < 10°, within 12° of the body line; the loose check spread 39 cm).
+  - They're built into `body_fit`, the ruler to use: shoulders, knees, ankles and qualifying arms, with a hip fallback.
+  - They rescue few photos (gold measured 147 → 152).
+- **Two rulers are left, and the tape shoot picks one:**
+  - `sk_linear` (shoulders + knees, straight) is steadier across photos of the same outfit and a bit better on paper (held-out 0.51, Proportions 0.58).
+  - `body_fit` (camera-corrected; tilt prior lightened to 0.02) holds up better when the phone tilts (1.5 cm per 10°).
+- **The pants silhouette** (widths in ruler-cm): naming slim / straight / wide loses to the AI (67% vs 75% held out).
+  - Your balance rule is real: wider pants against the top track the judges' Proportions (+0.42). But the AI's leg reading tracks it better (+0.56) and the app already scores it.
+  - So it went into the stylist's advice (`rubric/stylist-guide.md` §4), with the measured waistline finding.
+- **The hem now has its own brief** (above) for a separate chat.
 
 **Round 1 (Oct 14, #264):**
 

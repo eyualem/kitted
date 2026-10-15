@@ -1,0 +1,112 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hands" : 1,
+  "hips_estimated" : true,
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.14999999999999999,
+      "x" : 230,
+      "y" : 909
+    },
+    "lElbow" : {
+      "c" : 0.41999999999999998,
+      "x" : 284,
+      "y" : 403
+    },
+    "lHip" : {
+      "c" : 0.26000000000000001,
+      "x" : 220,
+      "y" : 570
+    },
+    "lKnee" : {
+      "c" : 0.12,
+      "x" : 231,
+      "y" : 757
+    },
+    "lShoulder" : {
+      "c" : 0.52000000000000002,
+      "x" : 247,
+      "y" : 216
+    },
+    "lWrist" : {
+      "c" : 0.11,
+      "x" : 226,
+      "y" : 522
+    },
+    "neck" : {
+      "c" : 0.53000000000000003,
+      "x" : 186,
+      "y" : 226
+    },
+    "rElbow" : {
+      "c" : 0.33000000000000002,
+      "x" : 100,
+      "y" : 368
+    },
+    "rHip" : {
+      "c" : 0.28000000000000003,
+      "x" : 118,
+      "y" : 522
+    },
+    "rKnee" : {
+      "c" : 0.11,
+      "x" : 143,
+      "y" : 808
+    },
+    "root" : {
+      "c" : 0.27000000000000002,
+      "x" : 169,
+      "y" : 546
+    },
+    "rShoulder" : {
+      "c" : 0.53000000000000003,
+      "x" : 125,
+      "y" : 235
+    },
+    "rWrist" : {
+      "c" : 0.39000000000000001,
+      "x" : 89,
+      "y" : 443
+    }
+  },
+  "legs" : {
+    "legs" : [
+
+    ],
+    "why" : "legs not separable"
+  },
+  "max" : 2048,
+  "ms" : 334,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/pinterest\/Screenshot 2026-10-12 at 3.01.20 PM.png",
+  "pitch" : 0,
+  "rulers" : {
+    "arm_linear" : {
+      "arms" : 1,
+      "hips_at" : 0.56999999999999995
+    },
+    "body_fit" : {
+      "anchors" : 3,
+      "from" : "arms",
+      "hips_at" : 0.56999999999999995
+    }
+  },
+  "silhouette" : {
+    "ruler" : "body_fit",
+    "shoulder_cm" : 54.299999999999997
+  },
+  "status" : "ok",
+  "w" : 337,
+  "waist" : {
+    "ruler" : {
+      "crotch" : -0.151,
+      "iliac_crest" : 0.27000000000000002,
+      "natural_waist" : 0.33000000000000002
+    },
+    "strip_half_T" : 0.13300000000000001,
+    "T" : 209,
+    "thigh_over_T" : 0.754,
+    "value" : "unsure",
+    "why" : "pants not visible"
+  }
+}

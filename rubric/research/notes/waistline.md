@@ -1,12 +1,43 @@
 # The waistline from the body: does a body ruler beat the AI at "the waist shows"?
 
-*Round 2 (Oct 15, #269) is first; round 1 (Oct 14, #264) follows.*
+*Round 3 (Oct 15, arms and the pants silhouette) is first, then round 2 (Oct 15, #269), then round 1 (Oct 14, #264).*
 
 *Oct 14, 2026. Claude. DECISIONS-LOG #264. Mac harness only, no app change, no API calls. Code:
 `extraction-test/vision/WaistRuler.swift` (`kmeasure waist`), runner `extraction-test/waist_test.py`, paper test
 `extraction-test/waist_paper.py`. Results: `extraction-test/results/waist1/` (`report.md`, `rows.json`, `paper.txt`;
 overlays and face-hidden copies are git-ignored). Research: `rubric/research/notes/waist-research.md`. Labels and
 their guides: `extraction-test/waist_labels/`.*
+
+## Round 3 (Oct 15, #269 cont.): arms as a backup, and the pants silhouette
+
+**The arms as a backup ruler** (founder: "we can estimate using a person's elbows and stuff like that too").
+- **The body data:** in ANSUR II a hanging elbow sits at 110.5 cm (t 0.349, about 5 cm above the navel) and a hanging wrist at 84.8 cm (t 0.618, crotch height). Shoulders + arms place the navel to ±2.2–2.3 cm (shoulders + knees ±2.0; everything ±1.9). It's ratios, not height.
+- **In the photos, a loose "hanging arm" check fails** (elbow bend < 25°, within 25° of the body line). Tucked shirts land ~8 cm lower than with the knee ruler, with a 10–90% spread of 39 cm (knees: 17). In fit photos the arms rarely hang straight: one holds the phone, hands drift forward or into pockets.
+- **A strict check works** (elbow bend < 10°, within 12° of the body line; now the default):
+  - tucked spread 17.4 cm;
+  - tucked vs a hem at the waistband, AUC 0.89 / 0.86;
+  - it qualifies on ~1 photo in 5.
+- **The tilt prior, tuned (offline, from the saved joints, then rerun in `results/waist4`):** the prior that kept the camera fit stable (0.2) was also damping it. At 0.02:
+  - a ±10° camera tilt moves `body_fit` by a median 1.5 cm (80%: 4.0), with almost no one-sided lean (+0.9 / −1.5 cm), against 2.5 cm at 0.2 and 3.1 cm for the straight shoulder–knee ruler;
+  - but `body_fit` is then noisier from photo to photo (same outfit: 2.6 cm range vs 0.9 for `sk_linear`), because it leans on the ankles.
+  - Against the judges both rulers are equal (rank correlation −0.48 vs −0.47).
+  - On paper, `sk_linear` is a bit better: held-out panel r 0.51 vs 0.50, Proportions 0.58 vs 0.53. His checks move differently under each: 8 vs 4, and the red tee moves only under `body_fit`.
+  - **So which ruler ships depends on how much real photos tilt, which is exactly what the tape shoot measures** (mirror and propped at several heights).
+- **Built into `body_fit`, the camera-corrected ruler:** shoulders + knees + ankles + qualifying arms, projective with the tilt prior. Arms only when the legs aren't found; a hip fallback when the hip points are missing.
+  - Gold photos measured 147 → 152; only ~4 photos are rescued by the arms alone.
+  - On paper `body_fit` scores like `sk_linear`: held-out r 0.49 → 0.51 with C2, his 20 at 0.46, 5 of his checks moved.
+
+**The pants silhouette** (founder: "the lower part of the body has to be in some way as wide or close to as wide as the top part"). `BodyRuler.silhouette()` gives:
+- the outline width across each leg at the thigh, knee, shin and just above the shoe;
+- the width across the shoulders and the top's hem;
+- all in cm on the body ruler's local scale, so a mirror selfie's smaller legs aren't read as narrower pants. `waist_silhouette.py`, `results/waist3/silhouette.md`.
+
+- **Naming the cut (slim / straight / wide): it loses to the AI.** The best single measure, the width just above the shoe (median slim 10.0 · straight 12.4 · wide 15.7 cm), is 67% right on held-out photos against the AI's 75% on the same photos. Shoulder width swings with arm position (a raised phone arm). This repeats #189 and #223: width alone can't name the cut.
+- **The balance principle is in the data,** but the AI already carries it:
+  - Pants width against the top tracks the judges' Proportions: knee ÷ top hem +0.42, hem ÷ shoulders +0.39, hem width +0.38.
+  - The AI's own leg reading tracks them better (+0.49 to +0.56), and the app already scores it (narrow legs cost).
+  - Only among pants the AI already calls wide does the measured width add anything (+0.36 to +0.41: wider still scores better).
+- **Decided:** keep the cut on the AI. The balance principle goes into the stylist's advice (`rubric/stylist-guide.md` §4), with the measured waistline finding.
 
 ## Round 2 (Oct 15, #269): a better body ruler, and the waistline his idea is about
 
