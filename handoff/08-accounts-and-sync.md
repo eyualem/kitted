@@ -109,7 +109,7 @@
 Firebase prices used: Firestore in us-central1 $0.03 per 100,000 reads and $0.09 per 100,000 writes, about $0.15/GB-month stored, with a free 50,000 reads and 20,000 writes a day; Cloud Storage about $0.020/GB-month and $0.12/GB downloaded beyond 100 GB a month free; Auth free to 50,000 monthly users. Supabase: Pro $25 with 8 GB of database, 100 GB of files and 250 GB of downloads, then $0.125/GB of database and $0.0213/GB of files. Cloudflare: Workers Paid $5; D1 5 GB included then $0.75/GB-month; R2 $0.015/GB-month with no download fees.
 
 ### 4.3 The cost that matters isn't storage
-**Corrected Oct 15 (#269; full list `market/ai-costs.md`).** A full fit check is three calls (the scoring read, the second look, the closet call): **1.08¢ now and 2.16¢ from Jan 1, 2027**, not the 0.83¢ used here first. At 5 checks per monthly user that's about $108, $1,080 and $5,400 a month at 1k, 10k and 50k users, against about $60, $600 and $3,000 of revenue, before any chat. Storage stays under 2% of revenue at every scale. **The AI calls are the money problem, with or without accounts.** The levers are in `market/ai-costs.md` §5.
+**Corrected Oct 15 (#270; full list `market/ai-costs.md`).** A full fit check is three calls (the scoring read, the second look, the closet call): **1.08¢ now and 2.16¢ from Jan 1, 2027**, not the 0.83¢ used here first. At 5 checks per monthly user that's about $108, $1,080 and $5,400 a month at 1k, 10k and 50k users, against about $60, $600 and $3,000 of revenue, before any chat. Storage stays under 2% of revenue at every scale. **The AI calls are the money problem, with or without accounts.** The levers are in `market/ai-costs.md` §5.
 
 ### 4.4 One-time and yearly
 - **Apple Developer Program:** $99/yr (needed anyway).
@@ -170,7 +170,7 @@ Cheap now, expensive after people have data:
 - The full photo stays on the phone that took it; other devices get a 1600 px copy.
 - The settle-now items in §7.
 
-**Decided by the founder, Oct 15 ("All right", #269): E1–E3 as recommended.** E4 stays on his to-do list.
+**Decided by the founder, Oct 15 ("All right", #270): E1–E3 as recommended.** E4 stays on his to-do list.
 
 **Were (each with a default):**
 - **E1 · Provider (money, new dependency):** Firebase for accounts, data and photos, and the Worker stays the AI proxy. Default: yes.

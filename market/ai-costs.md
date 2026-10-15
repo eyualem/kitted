@@ -1,6 +1,6 @@
 # What the Gemini calls cost, per call and per user
 
-*Oct 15, 2026. DECISIONS-LOG #269. Token counts are measured from the app's own calls (`extraction-test/results/gold1`, `creators1`, `closet1`, `hem3`/look1 raw logs; the founder's phone data `screenshots/phone/20261014-180424`). Chat numbers are estimates until step C2 measures a real answer. Prices are from Google's Gemini API pricing page, read Oct 15, 2026; Apple's cut is 15% (Small Business Program).*
+*Oct 15, 2026. DECISIONS-LOG #270. Token counts are measured from the app's own calls (`extraction-test/results/gold1`, `creators1`, `closet1`, `hem3`/look1 raw logs; the founder's phone data `screenshots/phone/20261014-180424`). Chat numbers are estimates until step C2 measures a real answer. Prices are from Google's Gemini API pricing page, read Oct 15, 2026; Apple's cut is 15% (Small Business Program).*
 
 ## 1. Prices (per million tokens, paid tier)
 | Model | Input | Output | Cached input | Change |
