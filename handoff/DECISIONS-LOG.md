@@ -1354,3 +1354,38 @@ Contradictions settled and decisions changed during the build. Newest last.
       - **Open:** whether data in a user's private CloudKit database counts as "collected" for the privacy label. Apple doesn't say. Apple's definition is data sent off the device that the developer or partners can access, and data collected only by Apple needn't be declared. Ask App Review at a Meet with Apple session before submitting.
       - **Accepted:** free limits stay per device (two devices get two free checks a day).
     - **The founder's call (to-do list):** iCloud sync vs accounts. Default: iCloud.
+
+## Oct 15 · Our own database for accounts and sync (founder: "If the app does good, we're definitely moving to Android … I'd rather settle things right now … What if we use Firebase or Supabase?")
+268. **Plan: `handoff/08-accounts-and-sync.md`. It replaces #267's iCloud sync, which can't reach Android.**
+    - **Recommended (the founder's call, E1):** Firebase for accounts, the synced rows and photos. The Cloudflare Worker stays the AI proxy (no cold starts) and checks Firebase's sign-in and App Check tokens.
+    - **Why Firebase:**
+      - Google is already named in consent as the AI processor.
+      - It has the least code to write: guest accounts that upgrade with Apple or Google, live listeners for the changes-down half, resumable uploads.
+      - App Check covers App Attest and Play Integrity for free, which replaces our own attestation work.
+      - Android is first-class.
+    - **Ranked below it:**
+      - Supabase: $25/mo from day one (the free tier pauses after a week idle), no offline sync without PowerSync ($49/mo), adds a company, but the easiest exit.
+      - Cloudflare-only: the cheapest at scale, but the most security code written by us.
+      - iCloud: no Android.
+    - **Cost:** ~$0, ~$8, ~$42 a month at 1k, 10k, 50k monthly users. Assumptions: 60% sign in, ~40 MB of photos per signed-in user after a year, prices from the providers' pages on Oct 15.
+    - **The real margin risk is Gemini, not storage:** ~$42, $415, $2,075 a month at the Jan 2027 price, against ~$60, $600, $3,000 revenue. Flagged for its own review.
+    - **Duties our own database adds:**
+      - in-app account deletion (App Review 5.1.1(v)) plus a web deletion page (Google Play);
+      - a privacy label of "Data linked to you" (Photos, User content, User ID);
+      - the Play Data safety form;
+      - a consent and policy rewrite (the "our server stores no photos" promise ends for people who sign in);
+      - per-account access rules;
+      - a breach plan;
+      - a lawyer review.
+    - **BIPA:** it excludes photographs, and the 2025 Seventh Circuit Samsung Gallery ruling turned on face data that stayed on the device. So: never run face detection or recognition on our servers.
+    - **Settled by Claude:**
+      - The phone's SQLite stays the real copy, with background sync and newest-edit-wins per row; chat only appends.
+      - Sign-in is optional and never in onboarding. It's offered after the 3rd check and in Settings.
+      - The full photo stays on the phone that took it; other devices get 1600 px.
+      - Synced data of accounts unused for 18 months is deleted after a warning.
+      - **Settle-now prep before the beta (~1 day):**
+        - migration V7: `updated_at` on every table and soft deletes;
+        - IDs stay UUIDs (already true);
+        - the Worker's limits keyed on an account ID;
+        - the policy written with optional backup in mind.
+    - **Build:** ~10–12 days (A1 accounts 2, A2 sync 4–5, A3 rules 1, A4 Worker 0.5, A5 deletion 1.5, A6 privacy 1, A7 ops 0.5), as v1.1. Android itself is a separate 3–5 weeks (native modules: face blur, body tracking, dictation, location, camera guidance).

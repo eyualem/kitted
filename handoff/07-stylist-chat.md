@@ -309,6 +309,8 @@ Cost of the whole test: about $1–2 of Gemini calls (your OK needed, on the lis
 
 ## 10b. Where the chats live, and a new phone (#267)
 
+> **Superseded Oct 15 (#268):** Android is planned, so the iCloud sync below is replaced by our own accounts and sync, recommended on Firebase: `handoff/08-accounts-and-sync.md`. Step 1 (iCloud Backup today) still holds for iPhone users who never sign in. Chats sync with the rest of his data; the server's **logs** still never keep chat text (§7.5).
+
 **Today everything is on the phone only:** the chats, closet, checks, facts and photos, in one SQLite file and the photo folders under `Documents/`. The server will keep no chat text and no photos (§7.5). So the question is how his data follows him to another device.
 
 **The plan, in three steps:**
