@@ -1,0 +1,178 @@
+# UI review, Oct 15: the problem list and the redesign ideas
+
+**What this is.** A running list of UI problems and redesign ideas from 4 read-only agents (Oct 15, DECISIONS-LOG #274), founder: "look for UI problems and just keep a list of them … how to make the UI beautiful, interactive, and instinctive", plus how the real photo behind each drawn closet tile could live inside the card. Nothing was built or changed. Every item was found in the current code (file:line, paths under `app/src/` unless they start elsewhere). Screenshots are older than some code, so the code decides. I re-checked six of the High items by hand (marked ✔).
+
+**How to use it.** Check items off here as they're fixed, and add new ones. Severity: **H** breaks trust or is a dead end, **M** confusing or unpolished, **L** polish. Effort: S under half a day, M 1–2 days, L more. "(#233)" = already on the Oct 12 review list and still open.
+
+---
+
+## 1. Fix first: 14 items that break trust (most are small)
+
+1. ✔ **One stray tap can lock an adult out for good.** The birth-year −/+ stepper moves one year per tap; picking 2008 then tapping + gives 2009, and "Looks right" sets the permanent under-18 block with no confirmation (it survives "Delete all my data"). Fix: no stepper on birth year (the value only opens the list), plus one confirm: "Born in 2009? Kitted is for 18 and up." `features/onboarding/BasicsScreen.tsx:46-53, 96-101` · H · S
+2. ✔ **"Not quite right?" previews a score from the old rules.** The live "7.5 → 8.0" uses the v4 `score()`/`suggestFixes()`, but Save re-scores with the parts engine, so he can be shown one number and get another, and "before → after" can move when nothing changed. Fix: a preview that runs `evaluateCheck` with the check's engine, like `previewLens` (`fitcheck/service.ts:933`). `features/correct/CorrectSheet.tsx:57, 64` · H · S–M
+3. ✔ **A re-check whose score dropped says "Nothing else changed."** The line is always "{word}. Nothing else changed." and starts "Layered and clean." even on a drop; the arrow is copper; the new problem is saved but never shown (the copy "New: {problem}" exists, unused); the "not seen" case hides the old score. Fix: branch on up / same / down; on a drop a neutral arrow and "New: the overshirt hides the tuck". `fitcheck/explain.ts:44-51`, `RecheckCard.tsx:111-120`, `CardParts.tsx:86-107`, `i18n/en.ts:82` · H · M
+4. ✔ **The Welcome card says 8.5 "Sharp" for a photo the app scores 8.0**, and the s15 photo shows the man's mouth and beard (#48). The first screen breaks "same photo, same score" and "faces hidden". Fix: take the number from the engine and crop lower, or use our own photo (stock is also a licensing question, research-context §C15). `features/onboarding/WelcomeScreen.tsx:41, 95, 104` · H · S
+5. ✔ **The closet long-press preview can show his face.** When no clean cut-out exists it crops his *unblurred* kept photo to the piece's box and shows nothing above the box, but never checks where his head is: a hood up, a scarf, or a box drawn too high shows the face. Mirror selfies also show logos backwards there and on the question card (cut-outs are flipped back; crops aren't). Fix: clamp every crop's top edge below the head prep found, and flip mirror crops. `features/closet/piecePreview.ts:44-62`, `SightingCrop.tsx`, `cropLayout.ts:13-15` · H · S
+6. **The daily limit shows only after he has posed and shot.** The camera opens whatever the quota; a used check surfaces as a 5 s toast after the camera closes. The morning card's "Check my fit" button ignores `checkUsed`. Fix: gate the camera route with a limit card (resets at 4 am, the open re-check, Pro). `camera/startCheck.ts:134-135`, `app/camera.tsx:12-18`, `morning/MorningCard.tsx:195` (#233) · H · S–M
+7. **A second photo while one is reading vanishes.** `busy` shows no words: the camera closes, nothing happens (the #245 symptom). The copy is ready: "Still reading your last photo. Send this one when it's done." `camera/startCheck.ts:144` (#233 item 8) · H · S
+8. **"How I score" explains the old scoring** (credits, "an elevated piece") while every check is scored by five parts, and its X acts as Back. `en.generated.ts:250-255`, `why/WhySheet.tsx:34-44` (#233 item 1) · H · S
+9. **Tapping a closet tile does nothing.** No tap action, no pressed state; the piece page is a placeholder. The grid looks tappable. `app/(tabs)/closet/index.tsx:82`, `closet/item/[id].tsx:3-5` · H · M (see §3)
+10. **Old duplicates and misreads can't be fixed.** No merge, no "this isn't mine", no "it's boots, not slides"; his real duplicates ("Washed black jeans 2", "Grey tee", "Grey slides") wait on the piece page. `added/AddedSheet.tsx:27` (`EDIT_ITEM_BUILT = false`) · H · M
+11. **Scans go into a box nothing opens.** After "Saved for your closet" nothing appears anywhere: no count, no "3 photos waiting", no delete. The "+" is the tab's biggest button. Fix: show a "Waiting to be read · 3 photos" row, or hide "+" until reading clothes works. `features/scan/inbox.ts:53` · H · S
+12. **A Lookbook row opens only the bare photo** (no score card, fixes, pieces, "Show in chat"), and a look with no photo opens an empty black viewer. `app/(tabs)/lookbook/index.tsx:66, 75-81`, `look/[id].tsx:5`, `PhotoViewer.tsx:34-37` · H · M
+13. **Beta testers have no way to report anything.** Support, Report a wrong score, privacy policy and terms are all hidden until the 3 links exist. Fix: a temporary support email now (on the to-do list). `you/settings.tsx:61-76`, `config/links.ts` · H for the beta · S
+14. **Build and fit are saved as answers he never gave.** "Average" and "Regular" are preselected, then shown on You and sent to the chat as fact ("Build: average"). Height was left blank on purpose to avoid this. Fix: start empty, add "Rather not say" (#247), send build only when he tapped it. `onboarding/basics.ts:25`, `ask/context.ts:136`, `you/profile.ts:45-50` · M–H · S
+
+---
+
+## 2. The full list, by screen
+
+### Stylist and the fit check
+- [ ] **The result card crowds the score.** Before the number: the Going-for line and "FIT CHECK · FULL"; below it up to ~10 blocks (advice, fixes, Next level, weather tip, closet row, closet question, finish the check, Re-check, Why / Not quite right, a re-score footnote). Dashed and solid dividers are mixed. Fix: Going-for under the score or folded into the tagline, drop "· Full", at most one tip, one divider style. `fitcheck/FitCheckCard.tsx:331-456` · M · M
+- [ ] **"No quick fixes for this one." reads as a shrug** next to "Put together", and with no fix the Re-check button hides too, so the only next step is a tip. Fix: a positive verdict ("Clean base. Nothing off.") and a Next-level row he can act on. Copy is yours. `explain.ts:30`, `FitCheckCard.tsx:223, 428` · M · S
+- [ ] **Copper on tips that don't move the score** ("Next level", "Smaller step", "Weather" leads, and the Why strip's highlight), against #231's "copper only when the score moves". `design-system/typography.ts:245`, `why/PartsBreakdown.tsx:52, 79` · M · S
+- [ ] **A re-check win still offers "Didn't catch the change? Tell me"** right under the caught fix, and the re-check card has no Why / Not quite right. `RecheckCard.tsx:145-147` · M · S
+- [ ] **Two numbers for one re-check:** the fix row says +0.75, the pill +1.0. `RecheckCard.tsx:129`, `CardParts.tsx:109` · M · S
+- [ ] **The "not seen" re-check puts his own claim first:** "I did make the change" is the filled button, "Try another photo" secondary. Swap them and show was → now. `RecheckCard.tsx:135-139` · M · S
+- [ ] **The five-part strip:** prints "7" next to "7.5"; "Proportions" shrinks smaller than the rest (rename "Shape", #233 item 6); the copper cell has no legend; "Nothing moved it ±0" rows are filler; cells aren't tappable. `why/partsRows.ts:60`, `PartsBreakdown.tsx:79` · M · S
+- [ ] **The Why sheet loads as an empty sheet titled "How I score".** `WhySheet.tsx:31` · M · S
+- [ ] **Past chats aren't read-only:** yesterday's card can still change the occasion (re-scoring an old check), answer closet questions, change Going-for. `stylist/PastChats.tsx:111-128`, `FitCheckCard.tsx:471-478` · M · S–M
+- [ ] **Problems after the shot are 5 s toasts with no way forward** ("I can't find you in this photo.", "Couldn't frame this one" (#233 item 7)), in the same capsule as "Logged for today", no warning haptic, no Retake. Fix: send them back to the camera's retake panel, which already does this well. `camera/startCheck.ts:129-143`, `toast/ToastHost.tsx` · M · M
+- [ ] **In Propped, the controls cover his feet:** mode switch, 88 pt shutter and side buttons take the bottom ~260 pt, so he can't see his shoes are in frame; the guide also rings the head. Fix: a thin control bar in Propped (he's 3 m away), the guide down to the bottom edge, no head ring. `camera/CameraScreen.tsx:316-317, 542-548` · M · M
+- [ ] **The camera can keep talking after it closes** (no `Speech.stop` anywhere). `CameraScreen.tsx:196, 227` · M · S
+- [ ] **Two flash controls at once** when it's dark (the toggle and the "Turn on flash" pill). `CameraScreen.tsx:381, 385-394` · L · S
+- [ ] **The collapsed morning row doesn't look tappable** (no chevron) and its score isn't in Archivo. `morning/MorningCard.tsx:302, 346-376` · M · S
+- [ ] **The full morning card has ~7 controls** (two pickers, a weather-source caption, a location row, Wear this + Swap, the link). Fold the source into the badge's VoiceOver label; one "Class · Smart casual ⌄" control. `MorningCard.tsx:136-205` · M · M
+- [ ] **Chat answers:** send is disabled while streaming with no Stop; the voice line is cut to its last 34 characters; answers can't be copied. `stylist/Composer.tsx:120, 147-149`, `Chat.tsx:52` · M · S–M
+- [ ] **Closet names keep a capital mid-sentence** ("Wearing your Khaki chinos lifts Style"). `packages/kitted-core/src/partsFixes.ts:412, 527` · M · S
+- [ ] **Consent still says "face cropped out or blurred"** (#233 item 3). `en.generated.ts:91` · M · S
+- [ ] Two names for one place: the "Earlier chats" pill and the clock ("Past chats"). `StylistScreen.tsx:289-306` · L · S
+- [ ] At 3 questions left, "3 questions left today" replaces the check status in the header. `services/quota.ts:63-69` · L · S
+- [ ] The reading card grows taller than the screen (pills + 4 stages + Going-for), so his photo scrolls off. `stylist/cards/ReadingCard.tsx:68-100` · L · S
+- [ ] Blank flashes while the camera opens (consent loading, permission "asking"). `app/camera.tsx:17`, `CameraScreen.tsx:336-345` · L · S
+- [ ] The camera-off screen sits left-aligned. `CameraScreen.tsx:466-482` · L · S
+- [ ] VoiceOver reads "Top fix: No quick fixes for this one, ." `FitCheckCard.tsx:300-307` · L · S
+- [ ] The photo bubble repeats the occasion the card shows. `MessageView.tsx:97` · L · S
+- [ ] Error toasts look like success toasts (no icon, no warning haptic, no swipe away). `toast/ToastHost.tsx` · L · S
+
+### Closet
+- [ ] **The approved Outfits half isn't built** (Pieces | Outfits, "Try next", "Your go-tos", "16 pieces · 24 outfits"). The core counter `rotation()` exists but nothing calls it, and it uses the old v4 rules and counts layers (against #84). Rebuild it on the parts engine with layers off before showing a count. `closet/index.tsx`, `packages/kitted-core/src/rotation.ts:9-13, 82-86` · H · L
+- [ ] **No "Goes with", no outfit count per piece, no next buy** (all specced, #87). Start with Goes with on the piece page. · M · M
+- [ ] **The grid has no order:** shirts, boots, jeans and sneakers mixed, newest first. Fix: shelves in body order (Layers · Tops · Bottoms · Shoes) with counts, dark to light inside each, filter chips at 12+ (the Oct 14 mockup `screenshots/theme-round2/v2-3-closet.png`). `closet/index.tsx:40` · M · S
+- [ ] **Open questions bury the clothes:** each is ~400 pt and they all stack on top; the cap of 3 (#111) isn't enforced. Fix: one row "2 pieces to confirm ›" opening a one-at-a-time sheet. `closet/index.tsx:67-79`, `closet/service.ts:1060-1071` · M · S
+- [ ] **An answered question vanishes with no confirmation or Undo**, and a merged tile disappears without animation. Fix: "Saved as your khaki chinos." with Undo, a success haptic, a layout animation. `service.ts:1066` · M · S
+- [ ] **Tiles don't use the measured color,** so two grey hoodies, or charcoal and grey, draw the same (the agreed answer to #141's look-alike caveat). `closet/profile.ts:222-225` · M · S
+- [ ] **Look-alike drawings:** navy chinos vs dark jeans, black sweatshirt vs navy crewneck share one shape; the brand word ("NEW BALANCE") is unreadable at tile size. Stronger cues per type (chino slant pockets, sweatshirt ribbing); brand word only on big tiles and the piece page. `closet/flats.ts` · M · M
+- [ ] **Long-press is the only way to act, and Closet and Lookbook do it differently** (a native menu with preview vs a bottom action sheet). HIG: a context menu shouldn't be the only path. `closet/PieceMenu.ios.tsx:55-77`, `lookbook/index.tsx:99-118` · M · S
+- [ ] **The empty and thin Closet:** empty offers only "Check my fit" while "+" offers scanning; with 2 pieces nothing says what's next. Build #88's checklist ("Add shoes and you'd have 4 outfits"). `closet/index.tsx:60-63` · M · S
+- [ ] **The "Added to your closet" sheet promises fixes it can't make** ("Fix anything I got wrong."), and its only action is an unlabeled curved-arrow icon. Until editing exists: "Remove anything that isn't yours." and a text button "Not mine". `en.generated.ts:468`, `AddedSheet.tsx:191-221` · M · S
+- [ ] Shoes look small next to tops (one 0.8 scale for every type). `ClosetTile.tsx:46` · L · S
+- [ ] White pieces fade into light tiles (the halo is dark mode only). `flats.ts:91-103` · L · S
+- [ ] Dashed tiles don't say "No photo yet". `PieceMenu.ios.tsx:60` · L · S
+- [ ] No haptics or motion anywhere in Closet or Lookbook. · L · S
+- [ ] The "+" menu slides up from the bottom; iOS 26 uses a pull-down from the button. `closet/_layout.tsx:11-18` · L · S
+- [ ] The Closet question: "This photo" has no date; Yes/No are small chips while the Stylist quick question uses two equal buttons. `DuplicateQuestion.tsx:76` · L · S
+- [ ] Three words for removing ("Undo" / "Add back" with a line-through, "Remove from Closet", "Remove from Lookbook"). Settle on Remove / Add back. · L · S
+- [ ] At the largest text sizes long names cut off and 2-line names break the row rhythm. `closet/index.tsx:56`, `ClosetTile.tsx:50` · L · S
+- [ ] The grid will slow at 100+ pieces (every change re-reads all sightings and checks a file per tile; shows nothing while loading). `closet/index.tsx:42-49` · L · M
+
+### Lookbook
+- [ ] The score isn't in Archivo. `lookbook/index.tsx:90` · L · S
+- [ ] No chevron, no "Partial" label, no month headers; one long card. `lookbook/index.tsx:57-92` · L · S
+- [ ] A removed look is gone once the toast ends. `lookbook/index.tsx:114` · L · S
+
+### Onboarding
+- [ ] **The progress bar never fills:** 6 segments, the walk ends at 4 and jumps into Stylist. Show 4 until the rest exist. `onboarding/OnboardingNav.tsx:7` · M · S
+- [ ] **Pick order isn't shown** on the style tiles (a check mark only), though order matters and You numbers 1·2·3. `LookTile.tsx:90-96` · M · S
+- [ ] **Basics:** "Looks right" is disabled with no reason; "so the advice fits your frame" is body talk; the tape-measure figure with his height in copper is the measured-body look #246–247 dropped; "This never changes your score" is missing. `BasicsScreen.tsx:113`, `Silhouette.tsx:24-34` · M · M
+- [ ] The "Something else?" box may open under the keyboard. `PickLooksScreen.tsx:84, 105-120` · M · S (check on the phone)
+- [ ] Consent shown from the Privacy switch or a typed question still says "Last thing before your first check" / "Agree & check my fit". `ConsentScreen.tsx:133, 140` · M · S
+- [ ] Consent's footer points to "You → Privacy" (it's You → gear → Privacy & data), and the questions bullet leaves out the style picks, height and build (D2). `en.generated.ts:93, 102` · M · S
+- [ ] Style tiles are uneven heights and shift when selected (border 1 → 2.5 pt). `LookTile.tsx:75` · L · S
+- [ ] Height can't be cleared once set. `basics.ts:32-35` · L · S
+- [ ] The birth-year list starts at 2016 and opens at the top (scroll ~16 rows). Open near 2004, nothing preselected. `basics.ts:56-58` · L · S
+- [ ] Welcome: a white status bar over the light photo in dark mode; "FIT CHECK" and "EVERYDAY" run together. `app/_layout.tsx:140`, `WelcomeScreen.tsx:99-102` · L · S
+- [ ] Consent's text is cut hard under the buttons (no fade), buttons 5 pt apart. `ConsentScreen.tsx:139, 153` · L · S
+
+### You and Settings
+- [ ] **Style profile drops edits on a Back swipe** with no prompt, while Settings saves instantly. Autosave it. `you/profile.tsx:125` · M · S
+- [ ] **Privacy is three taps deep;** "See what I send", the best trust feature, sits under You → gear → Privacy & data. The approved mockup puts Privacy first. `you/settings.tsx:44-48` · M · M
+- [ ] **Notification switches look live but do nothing** (nothing is scheduled until P6), under "That's all I send." Hide or say "arrives in the next update". `you/notifications.tsx:34-41` · M · S
+- [ ] **You's "Today" card can't be acted on** ("1 free check today", no button). Add "Check my fit". `you/index.tsx:112-156` · M · S
+- [ ] VoiceOver reads the birth-year row as just "2005". `you/profile.tsx:74-78, 182` · M · S
+- [ ] A 4th style tap in the editor does nothing (onboarding buzzes and shakes). `you/profile.tsx:97-100` · L · S
+- [ ] With no profile You has no way into the editor. `you/index.tsx:32` · L · S
+- [ ] "Manage subscription" appears 3 times, also for free users. `you/settings.tsx:55-58`, `plan.tsx:49-53`, `privacy.tsx:129-137` · L · S
+- [ ] "Score my fits" has VoiceOver hints written but never passed. `you/privacy.tsx:118` · L · S
+- [ ] The paywall is a placeholder (correctly hidden) and its drafted title reads as unlimited (#233 item 4). `app/paywall/index.tsx`, `en.generated.ts:659` · M · L
+
+### App-wide
+- [ ] **Four menu patterns:** native context menu (Closet), bottom action sheets (Lookbook, facts, Closet +), and the custom MorphPicker (Settings). One system: native context menus for every long-press, native menus for pickers; MorphPicker only on the morning card. · M · M
+- [ ] **Grouped lists don't match:** You's cards radius 26 with full dividers, Settings 20 with inset dividers, Style profile its own 52 pt rows. One GroupedList component. `you/FactRows.tsx:82`, `SettingsList.tsx:40-43`, `you/profile.tsx:148-200` · M · S
+- [ ] **Every press is just a fade to 0.82**, no spring, no haptic on commit actions (Agree, save, delete). A small press scale plus light haptics. `design-system/tokens.ts:278`, `KButton.tsx:72` · L · M
+- [ ] Delete buttons look different everywhere (a local `DANGER`, a grey "Delete", system red). A `danger` token. `you/privacy.tsx:21`, `sheets/fact/[id].tsx:105` · L · S
+- [ ] A hairline under pushed nav bars (Stylist removed its own). `you/_layout.tsx:26-32` · L · S
+- [ ] The selected tab is copper, the most-seen copper in the app. Ink instead? (your taste call) `(tabs)/_layout.tsx:21` · L · S
+- [ ] Two text greys are nearly the same (ink2 #585E70, ink3 #646A7A); outline button borders are ~1.2:1, under 3:1 (WCAG 1.4.11). `design-system/tokens.ts:56-59` · L · S
+- [ ] The rest of your 8 copy fixes (#233): "two or three moves", "Couldn't frame this one.", "resets 4 am" vs "Resets 4 am". · M · S
+
+---
+
+## 3. Your real photo inside the closet card
+
+### What exists today
+- **The drawing** comes from the closet call's words (type, shade, details, brand word, pattern) and is drawn by code, the same every time (#141, #143).
+- **The photos live on each sighting**, not on the piece: which check it came from (and that check's kept photo, unblurred, `Documents/photos/`), the piece's box in the photo, the measured color, and a cut-out (`Documents/closet/<sha>-garment-<i>.png`, made on the phone from the face-hidden copy, heads removed, mirror flipped back) with a quality score (`data/types.ts:417-443`; `KittedMeasure.swift:439-444`). The piece's own `photoFile` / `cropFile` columns are never filled.
+- **What he sees:** tap does nothing. Long-press (#244) shows a preview, picking the best cut-out (quality ≥ 0.6), else his photo cropped to the box, else a bigger drawing, with Rename and Remove from Closet (`piecePreview.ts:44-62`). Note this already shows cut-outs, which #141 said he wouldn't see.
+- **Gaps:** no piece page; no choosing, hiding or adding a photo; the face risk in item 5 above; and **no removal deletes any file:** removed pieces, removed looks and undone pieces keep their photos and cut-outs on the phone until "Delete all photos" (`service.ts:972-976, 1024-1044`). The face-hidden detail copies are deleted after a week, so a cut-out can't be re-made later. The two privacy wipes do work (`privacy/wipe.ts:50-101`).
+
+### Three ways to do it (ranked)
+**A. A piece page: the drawing on top, his photos underneath (recommended; M–L, about 3–4 days, JS only, no migration).**
+1. **Tap a tile** and it grows into the piece page (the iOS zoom transition). Long-press stays as the shortcut.
+2. **The hero is a swipe gallery:** page 1 is the drawing, then his cover photo and other photos, page dots, a light tick per page. Tap a photo for the full-screen viewer on that check, the piece outlined, with a "Whole photo" toggle. No photos = no dots, the drawing alone.
+3. **Under it:** the name (tap to rename), "Layer · Grey · Regular fit", worn n×, last worn, added from which check.
+4. **"Your photos · 4":** square crops, best first, the cover marked. Long-press one: **Use as cover · Open the look · Not this piece** (a correction: splits it off) · **Remove photo** (red; toast "Photo removed. It's still in your Lookbook." with Undo). Half-hidden photos fold into "2 more, partly hidden"; the same photo re-checked shows once.
+5. **Add a photo of it** (step 2, +1–2 days, needs a reinstall): the scan camera, "Lay it flat or hang it up"; the phone cuts it out (Apple's on-device subject mask), nothing is sent, it becomes the cover; the drawing doesn't change.
+6. Then Goes with / Style this, and Remove from Closet at the bottom.
+- **Privacy:** every crop's top clamped below his head, mirror crops flipped, nothing leaves the phone. If Firebase photo backup ships (#268, on by default), every removal needs a delete marker so it reaches the backup too.
+- **Storage:** the cover and hidden photos fit in the piece's existing `profile` field; "Add a photo" is a new sighting kind.
+- Files: `app/(tabs)/closet/item/[id].tsx`, `closet/index.tsx`, a photo-strip component, `piecePreview.ts`, `SightingCrop.tsx`, `cropLayout.ts`, `PieceMenu.ios.tsx`, `closet/service.ts`, `privacy/files.ts`, `i18n/en.ts`, tests; for step 5 `KittedMeasure.swift` and `features/scan/`.
+
+**B. Grow the long-press menu only (S, about 1 day):** add "See all photos (4)", "Use a different photo", "Hide photo". Quick, but long-press is hard to find and VoiceOver users only get it as a custom action. Good as a stopgap or as A's shortcut.
+
+**C. A "Drawings | Photos" switch on the grid (S–M):** what Whering and Indyx users expect (their own photo, background removed; Whering lets you replace an item's photo: whering.co.uk/faq/replace-item-photo). But it goes against #141 (you called the cut-outs ugly), and half-seen pieces have no clean photo, so the grid would mix styles. If ever, per piece, not the whole grid.
+
+### What each removal does (proposed; today in brackets)
+| Action | What goes | What stays | Undo | Files deleted from the phone |
+|---|---|---|---|---|
+| Remove one photo from a piece (new) | That photo from the piece's page, preview and cover | The sighting (scores, wear count, matching), the look and its photo in Lookbook and chat | 8 s toast | That sighting's cut-out and fingerprint, after Undo ends; never the kept photo (it belongs to the check) |
+| Remove a piece [hidden; files stay forever] | The piece from the grid, outfits, the morning card, matching | Its sightings and every score; wearing it again adds it as new | 8 s toast | Proposed: all its cut-outs and fingerprints after Undo ends |
+| Remove a look [hidden, wears subtracted, chat card stays] | The look from Lookbook (and with "and its new pieces", those pieces) | The chat card, the score, the day's used check | 8 s toast | [nothing] Proposed: nothing by default, plus a new "Delete photo" on the look that removes the kept photo, thumbnail, cut-outs and detail copy; the chat shows its existing missing-photo state |
+| Delete all photos [built] | Every photo file and every path to one | Scores, readings, the closet, every drawing | Confirm, no Undo | All six photo folders |
+| Delete all my data [built] | Everything, back to Welcome | Only the under-18 block | Confirm, no Undo | Everything, plus logs and the device ID |
+
+---
+
+## 4. Redesign ideas (bigger moves, merged from the four reports)
+
+1. **One "result stack" on the score card.** The score owns the top (number, word, a one-line verdict), then one main action chosen by state (Re-check after fixing / Finish the check / Ask your stylist), and everything else folds into "More about this fit". Fixes the crowding, "No quick fixes" and the 7-control morning card together.
+2. **Fix rows that do something.** Tap a fix for a one-line "how" with the drawn piece ("in your closet: your navy crewneck") and a "Try it" button that opens the re-check camera with that fix named.
+3. **Re-check as a before/after moment.** The two photos side by side, neck down, the fix ticking off between them, the score rolling; honest when it drops (grey arrow, "New: …"). It's also the before/after share card for videos.
+4. **Why as a story, not a ledger.** Start with "What held it at 7.5" (the one or two reasons that matter), then the strip (cells tap to jump), the full ledger folded below.
+5. **A tighter Propped camera.** Full-bleed preview, a thin control strip, a full-height guide that fills in from the feet up as each part is found, the copper stitch-ring countdown (#242), a shutter flash and haptic so the shot feels taken.
+6. **Closet as shelves, with a piece page** (the Oct 14 mockup v2-3): "16 pieces · 24 outfits you can make", one "2 pieces to confirm ›" row, shelves by slot, "In 6 outfits" under each name; the tile zooms into its page (§3, option A).
+7. **"To confirm" as a 10-second game.** One comparison at a time, Yes/No advances with a haptic and "2 of 3", closing says "All set".
+8. **Build an outfit by dragging.** Long-press a piece and drop it on an outfit tray; as bottoms and shoes join, the reason line updates live ("One dark base, nothing fighting"). No predicted score (#84). Plus "Style this": pin one piece, swipe through outfits built around it; the most shareable Closet moment.
+9. **Next best buy as a ghost tile** on the right shelf ("White oxford shirt · +9 outfits"); tap to see the outfits it would unlock, the new piece dashed in. No brands, no links (#87).
+10. **Lookbook as a month:** "October · 11 looks", the month's best look as the hero, a 2-column photo grid with the score under each; a look page with the stored card, its pieces (linking to Closet) and "Wear this again".
+11. **Onboarding that feels like the product.** The Welcome card plays the real score reveal with its buzz; style tiles spring and show 1/2/3; Basics uses the #247 figure tiles with "This never changes your score".
+12. **One Settings page, Privacy first** (as approved in v2-1), and a **privacy receipt** on every check: a small lock on the score card that opens the exact blurred copy that was sent. "It rates the outfit, never you", made visible.
+13. **One menu system and one GroupedList component** across the app, and **one quota language** (a small header capsule that opens a sheet with resets and Pro; the camera gate, limit card and subtitle read from it).
+14. **Chat answers that feel alive:** cards rising in after the text, a Stop button while streaming, long-press to copy or "Save as tip".
+
+---
+
+## 5. Your calls (each has a default)
+- **Closet photos:** (1) where a photo shows, your real photo with the piece outlined, or the cut-out alone? Default: the outlined real photo; cut-outs only for photos you take of the piece by itself. (2) Should a tile hint that it has a photo, or stay pure drawings? Default: pure drawings; photos on the piece page. (3) Should "Add a photo of it" ever change the drawing (its color)? Default: no for now.
+- **Copper on the selected tab:** keep, or ink? Default: ink (matches "copper only when the score moves").
+- **"No quick fixes for this one." replacement lines** (outward-facing). Default: "Clean base. Nothing off."
