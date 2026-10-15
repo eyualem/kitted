@@ -1,12 +1,95 @@
 # The waistline from the body: does a body ruler beat the AI at "the waist shows"?
 
+*Round 2 (Oct 15, #270) is first; round 1 (Oct 14, #264) follows.*
+
 *Oct 14, 2026. Claude. DECISIONS-LOG #264. Mac harness only, no app change, no API calls. Code:
 `extraction-test/vision/WaistRuler.swift` (`kmeasure waist`), runner `extraction-test/waist_test.py`, paper test
 `extraction-test/waist_paper.py`. Results: `extraction-test/results/waist1/` (`report.md`, `rows.json`, `paper.txt`;
 overlays and face-hidden copies are git-ignored). Research: `rubric/research/notes/waist-research.md`. Labels and
 their guides: `extraction-test/waist_labels/`.*
 
-## Bottom line
+## Round 2 (Oct 15, #270): a better body ruler, and the waistline his idea is about
+
+**Short version:**
+- **The body side now works.** Across 4,082 men, shoulders and knees alone predict the navel to ±2.1 cm (1 SD), as well as the true hip joint does. In the photos, Apple's and Google's trackers place the same clothes edge to within ~2 cm of each other.
+- **The visual waistline carries the signal his idea predicts.** On the gold set it tracks the judges' proportion scores twice as well as the AI's top-length reading (rank correlation −0.46 vs −0.29), and it still works inside the AI's own "at the belt" group.
+- **In the score it helps only a little.** Held-out panel r 0.49 → 0.51; Proportions 0.50 → 0.58.
+- **What decides it is truth for the ruler's absolute offset:** his tape shoot (below).
+
+### The body data (ANSUR II men, n = 4,082, `inputs/ansur2/`, public domain; founder OK'd the download)
+
+| Landmark | Mean height | Fraction of the way shoulder (acromion) → knee | Person-to-person error from shoulders + knees | …adding the ankle | from the true hip joint + shoulder |
+|---|---|---|---|---|---|
+| Navel | 105.6 cm | 0.400 | 2.1 cm | 1.9 | 2.0 |
+| Top of the hip bone | 106.2 | 0.394 | 1.9 | 1.8 | 1.7 |
+| Hip joint (trochanter) | 90.1 | 0.562 | 2.2 | 2.0 | – |
+| Crotch | 84.6 | 0.619 | 2.0 | 1.7 | 1.7 |
+
+So the hips aren't needed at all. They're the least reliable points on a photo, and the ones the clothes pull around.
+
+### The rulers (`vision/BodyRuler.swift`; MediaPipe in `waist_mediapipe.py`, sandboxed in `extraction-test/.venv-mp`, Apache 2.0, founder OK'd)
+
+- `hips`: the old one.
+- `sk_linear`: Apple Vision's 2D shoulders and knees, straight.
+- `ska_proj` / `ska_proj_r`: shoulders, knees and ankles with a projective fit, which corrects camera tilt and height (`_r` with a gentle prior that the tilt is modest).
+- `a3d_proj` / `a3d_ansur`: Apple's 3D body pose.
+- `mp_proj` / `mp_ansur`: Google MediaPipe's 3D and 2D pose.
+
+Positions are t, the share of the way from the shoulders (0) to the knees (1): the navel is 0.40 and the hip joint 0.56.
+
+**Tests that need no labels** (`results/waist2/report.md`; 318 photos × 3 camera tilts):
+
+| Ruler | Photo turned as a camera pitched ±10°: median shift | Same outfit, another photo (his 6 sets): median range | Agrees with an independent tracker (SD of the difference) |
+|---|---|---|---|
+| hips | 1.6 cm | 0.5 cm | 2.8 cm vs MediaPipe |
+| sk_linear | 3.1 cm | 0.9 cm | **1.9 cm vs MediaPipe's 2D** |
+| ska_proj_r | 2.8 cm | 1.0 cm | 2.1 cm |
+| a3d_proj (Apple 3D) | 3.1 cm (80%: 10 cm) | 0.3 cm | 5–6 cm: noisy, dropped |
+| mp_proj | 2.3 cm | 0.9 cm | 0.9 cm vs mp_ansur |
+
+- Two independent trackers agree to ~2 cm, which puts each at ~1.5 cm of random error.
+- The ruler's random error is then ~2.5–3 cm in all (with the ±2 cm between people).
+- The systematic offset is still unknown. Pose models put the "shoulder" at the joint, a few cm below the top of the shoulder bone the ANSUR heights use, and put the knee 2–3 cm low. Between rulers it runs 1–4 cm. Only a photo with a known true line can fix it.
+
+**Against the labels:**
+- **"Does the waistband show" barely moves** (AUC 0.80–0.92 for every ruler, the old one included). That label depends on how high the pants sit, not on the body.
+- **What does move is the waistline itself.** On the 105 gold photos with no outer layer that both can read, the measured line (`sk_linear`) tracks the 5 judges' Proportions scores at rank correlation **−0.46** (the higher the line, the better), against **−0.29** for the AI's top length.
+- **It isn't repeating the AI:** inside the AI's own "at the belt" group (n 53) it still tracks them at −0.48.
+
+| Measured waistline (t) | Photos | Judges' Proportions | Panel score |
+|---|---|---|---|
+| above 0.45 (near the navel) | 13 | 7.52 | 7.46 |
+| 0.45–0.55 (between navel and hip joint) | 33 | 7.44 | 7.36 |
+| 0.55–0.65 (at or just below the hip joint) | 35 | 6.91 | 6.95 |
+| 0.65–0.75 (well below) | 18 | 5.97 | 6.08 |
+
+That's his idea in numbers. The anatomical waist is the ruler, and the visual waistline the clothes make counts against it: tops that put it at or below the hip joint lose ~0.5–1.5 on Proportions.
+
+**In the score, on paper** (`waist_paper2.py`, gold tune half to pick, test half once; `results/waist2/paper2-*.txt`):
+- **C1:** the measured line replaces the AI's top length (untucked, no outer layer).
+- **C2:** C1, plus a measured long top costs points (the PF2 tip made live; what-if switch `pf2_measured`, off).
+
+| Ruler | C2 cuts picked on tune | Held-out panel r (v13: 0.49) | Held-out Proportions r (0.50) | His 20 (0.46) | His saved checks moved |
+|---|---|---|---|---|---|
+| sk_linear | at belt ≤ 0.58, long > 0.65, −1.5 | **0.51** | **0.58** | 0.46 | 8, all down (the hoodie 8.0 → 7.5, the untucked brown shirt 7.0 → 6.0, black tee + light wide jeans 7.5 → 6.5) |
+| ska_proj_r | 0.56 / 0.65 / −0.5 | 0.51 | 0.56 | 0.49 | 5 |
+| mp_proj | 0.58 / 0.68 / −1.5 | 0.50 | 0.54 | 0.50 | 3 |
+| hips (old) | 0.56 / 0.68 / −1.5 | 0.48 | 0.51 | 0.45 | 5 |
+| C1 alone (sk_linear) | 0.58 / 0.72 | 0.49 | 0.52 | 0.41 | 4 |
+
+The direction is the same for every new ruler, but on 91 photos +0.02 is within the noise (the standard error of r is about 0.08). The Proportions gain is clearer. Still unsure: about 35% of photos (dark on dark, joints out of frame), where the AI's reading stays.
+
+### What would make it a game changer: truth for the ruler
+
+The random error is small enough. The unknown is the offset: where the ruler's "navel" line is against his real navel, on mirror and propped shots. One 10-minute shoot settles it:
+- a strip of blue painter's tape across his shirt at navel height;
+- 12 photos at different camera heights and tilts.
+
+`kmeasure waist` finds the tape by its color (`WAIST_TAPE=1`) and reports each ruler's error in cm.
+- **If the projective rulers land within ~3 cm on both kinds of shot:** C2 becomes a real proposal for his OK. The waist credit and the long-top charge would follow the measured waistline, the AI's reading would be the fallback, and the 8 moves above would be his before/after.
+- **If they don't:** the offset is calibrated once from his photos (pose-model offsets are the same for everyone) and checked on a friend.
+
+## Bottom line (round 1, Oct 14)
 
 1. **It doesn't pass the bar, so nothing changes in the app.** On held-out photos the ruler is right 80% of the time
    when it answers, and the AI 82% on the same photos. The ruler is unsure on 41% (the bar is 30% at most). It is

@@ -210,6 +210,26 @@ enum Waist {
       rows.append(Row(s: s, n: n, on: Double(n) / Double(max(1, px.total)), top: n > 0 ? Double(t) / Double(n) : 0,
                       bot: n > 0 ? Double(b) / Double(n) : 0, edge: px.dLs.isEmpty ? 0 : Ruler.median(px.dLs)))
     }
+    // The truth shoot (#270): a strip of blue painter's tape on his shirt at navel height. Found by its color only
+    // (blue well above red and green), in the torso strip; its middle row is the true navel line.
+    if ProcessInfo.processInfo.environment["WAIST_TAPE"] != nil {
+      var tapeRows: [Double] = []
+      for s in Swift.stride(from: 0.7, through: lowest, by: -0.005) {
+        let steps = max(6, Int(g.half / 1.5))
+        var n = 0, blue = 0
+        for k in -steps...steps {
+          let p = g.at(s, g.half * CGFloat(k) / CGFloat(steps))
+          let xi = Int(p.x.rounded()), yi = Int(p.y.rounded())
+          guard xi >= 0, yi >= 0, xi < c.rgb.w, yi < c.rgb.h else { continue }
+          n += 1
+          let i = (yi * c.rgb.w + xi) * 4
+          let r = Int(c.rgb.px[i]), gg = Int(c.rgb.px[i + 1]), b = Int(c.rgb.px[i + 2])
+          if b > r + 45, b > gg + 15, b > 90 { blue += 1 }
+        }
+        if n > 0, Double(blue) / Double(n) > 0.25 { tapeRows.append(s) }
+      }
+      if tapeRows.count >= 2 { d["tape_s"] = r3(Ruler.median(tapeRows)); d["tape_rows"] = tapeRows.count }
+    }
     let live = rows.filter { $0.on >= rowOn }
     d["profile"] = rows.enumerated().filter { $0.offset % 3 == 0 }.map { ["s": r3($0.element.s), "on": r3($0.element.on), "top": r3($0.element.top), "bot": r3($0.element.bot), "edge": r3($0.element.edge)] }
     guard live.count >= rows.count / 2 else { d["value"] = "unsure"; d["why"] = "torso hidden (arm, hand or bag)"; return d }
@@ -292,7 +312,23 @@ enum Waist {
                                "joints": joints.mapValues { ["x": Int($0.p.x), "y": Int($0.p.y), "c": ($0.c * 100).rounded() / 100] }]
     let (g, why) = geometry(joints)
     if let g {
-      json["waist"] = measure(ctx, joints, g: g)
+      let w = measure(ctx, joints, g: g)
+      json["waist"] = w
+      // The body rulers (#270): the same clothes edges read against shoulders/knees/ankles and Apple's 3D pose.
+      let p3 = ProcessInfo.processInfo.environment["WAIST_NO3D"] == nil ? BodyRuler.pose3D(img, main: located.main, statW: rgb.w, statH: rgb.h) : nil
+      var edges: [String: Double] = [:]
+      for k in ["top_end_s", "pants_start_s", "visual_s", "tape_s"] { if let v = w[k] as? Double { edges[k] = v } }
+      json["rulers"] = BodyRuler.readings(BodyRuler.fits(joints, g, p3), g: g, edges: edges)
+      // For the overlay: where the shoulder–knee ruler puts the navel and the hip joint (s, torsos from the hip points).
+      if let S = BodyRuler.mid(Ruler.ok(joints["lShoulder"]), Ruler.ok(joints["rShoulder"])), let K = BodyRuler.mid(Ruler.ok(joints["lKnee"]), Ruler.ok(joints["rKnee"])) {
+        let dS = BodyRuler.down(S, g), dK = BodyRuler.down(K, g)
+        func sOf(_ t: Double) -> Double { -(dS + t * (dK - dS)) / Double(g.T) }
+        json["sk_lines"] = ["navel": r3(sOf(BodyRuler.tNavel)), "hip_joint": r3(sOf(BodyRuler.tHip)), "crotch": r3(sOf(BodyRuler.tCrotch))]
+      }
+      if let p3 {
+        json["pose3d"] = ["bodyHeight": (p3.bodyHeight * 100).rounded() / 100, "measured": p3.measured,
+                          "heights": p3.height.mapValues { ($0 * 1000).rounded() / 1000 }]
+      }
     } else {
       json["waist"] = ["value": "unsure", "why": why]
     }
@@ -320,10 +356,12 @@ enum Waist {
       ctx.setStrokeColor(CGColor(srgbRed: 0.2, green: 1, blue: 0.2, alpha: 0.8)); ctx.setLineWidth(1)
       ctx.move(to: g.at(0.45, -g.half)); ctx.addLine(to: g.at(-0.5, -g.half)); ctx.strokePath()
       ctx.move(to: g.at(0.45, g.half)); ctx.addLine(to: g.at(-0.5, g.half)); ctx.strokePath()
-      if let r = w["ruler"] as? [String: Double] { for (_, s) in r { line(s, grey, 1, 1.1) } }
-      line(0, grey, 1, 1.1)
-      if let s = w["top_end_s"] as? Double { line(s, CGColor(srgbRed: 0, green: 0.8, blue: 1, alpha: 1), 1.5) }
-      if let s = w["pants_start_s"] as? Double { line(s, CGColor(srgbRed: 1, green: 0.1, blue: 0.6, alpha: 1), 1.5) }
+      if let sk = json["sk_lines"] as? [String: Double] {
+        // The body ruler from his shoulders and knees: navel (white), hip joint (grey), crotch (dark grey).
+        if let v = sk["navel"] { line(v, CGColor(srgbRed: 1, green: 1, blue: 1, alpha: 1), 2, 2.2) }
+        if let v = sk["hip_joint"] { line(v, grey, 2, 2.2) }
+        if let v = sk["crotch"] { line(v, CGColor(srgbRed: 0.4, green: 0.4, blue: 0.4, alpha: 1), 2, 2.2) }
+      }
       if let s = w["visual_s"] as? Double { line(s, CGColor(srgbRed: 1, green: 0.55, blue: 0, alpha: 1), 3, 1.8) }
       if let s = w["edge_s"] as? Double { line(s, CGColor(srgbRed: 1, green: 1, blue: 0, alpha: 1), 2, 1.6) }
     }

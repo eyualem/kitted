@@ -1391,7 +1391,7 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Build:** ~10–12 days (A1 accounts 2, A2 sync 4–5, A3 rules 1, A4 Worker 0.5, A5 deletion 1.5, A6 privacy 1, A7 ops 0.5), as v1.1. Android itself is a separate 3–5 weeks (native modules: face blur, body tracking, dictation, location, camera guidance).
 
 ## Oct 15 · Accounts decided; the Gemini bill priced per user (founder: "All right, add these to the common files … how much would it cost for Gemini calls per user? Check that")
-269. **E1–E3 of #268 are decided as recommended** (the founder's "All right"): Firebase for accounts, data and photos, with the Worker staying the AI proxy; the ~1-day prep before the beta and the build as v1.1; "Back up photos" on by default once signed in. E4 (creating the Firebase project) stays on his list.
+270. **E1–E3 of #268 are decided as recommended** (numbered 270: a parallel waistline session took 269 the same morning) (the founder's "All right"): Firebase for accounts, data and photos, with the Worker staying the AI proxy; the ~1-day prep before the beta and the build as v1.1; "Back up photos" on by default once signed in. E4 (creating the Firebase project) stays on his list.
     **The Gemini bill, priced from the app's own token logs and Google's pricing page (Oct 15): `market/ai-costs.md`.**
     - **Per call** (`gemini-3.8-flash`: $0.75 in / $3.75 out per million tokens, doubling on Jan 1, 2027):
       - scoring read with close-ups: 4,118 / 764 tokens, 0.60¢;
@@ -1415,3 +1415,37 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The founder's calls:**
       - (a) ~$1–2 to test the scoring read on 3.5 Flash-Lite (≈0.32¢ vs 1.19¢ in 2027), against the gold set and steadiness;
       - (b) the free tier and the Pro caps, after (a). Everything on Flash-Lite would be ~0.48¢ a check and ~0.10¢ a question: break-even at 2% paying, so it still needs better conversion or a lighter free tier.
+
+## Oct 15 · The waistline from the body, round 2 (founder: "there must be a way to measure a person's body and estimate where their waistline is … put some effort into this")
+270. **A body ruler good to ±2–3 cm, and the measured waistline carries signal the AI misses. It revises #266(a): keep the waistline measure alive; the tape shoot decides it. Nothing in the app changed** (report: `rubric/research/notes/waistline.md`, top section).
+    - **Downloads (founder OK'd, Oct 15):**
+      - ANSUR II men (public domain CSV, `inputs/ansur2/`, git-ignored);
+      - MediaPipe Pose Landmarker heavy (Apache 2.0; venv `extraction-test/.venv-mp`, 331 MB; model `inputs/mediapipe/`).
+    - **Body data:** shoulders + knees predict the navel to ±2.1 cm (1 SD) and the hip bone to ±1.9, as well as the true hip joint does. So the ruler drops the hip points, the least reliable ones and the ones the clothes move.
+    - **Built (harness only):**
+      - `vision/BodyRuler.swift`: rulers from 2D shoulders/knees (straight), shoulders/knees/ankles (projective, which corrects camera tilt and height, with and without a tilt prior), and Apple's 3D body pose;
+      - `kmeasure waist --pitch` (the photo as a camera tilted ±10°, an exact homography);
+      - `waist_mediapipe.py` (MediaPipe's 2D and 3D rulers);
+      - `waist_rulers.py` (tests);
+      - `waist_paper2.py` (the score on paper);
+      - `WAIST_TAPE=1` and `waist_tape.py` (the tape shoot; the detector was checked on a painted strip, within 0.004 of the true line).
+    - **Precision, no labels needed:**
+      - Apple's 2D and MediaPipe's 2D agree to SD 1.9 cm.
+      - The same outfit across his photos reads within ~1 cm.
+      - A ±10° tilt shifts a reading by a median 1.6–3.1 cm.
+      - Apple's 3D pose is too noisy (4–6 cm) and is dropped.
+      - The systematic offset is unknown (1–4 cm between rulers).
+    - **The labels:** "does the waistband show" still doesn't improve (AUC 0.80–0.92 for every ruler, the old one included). It depends on the pants' rise.
+    - **The waistline itself:**
+      - On 105 gold photos the measured line (`sk_linear`) tracks the judges' Proportions at rank correlation −0.46, against −0.29 for the AI's length.
+      - Inside the AI's "at the belt" group it's −0.48.
+      - Proportions by measured line: near the navel 7.5, between the navel and the hip joint 7.4, at or just below the hip joint 6.9, well below 6.0.
+    - **On paper:**
+      - C1 (the line replaces the AI's length): no gain.
+      - C2 (C1 + a measured long top costs 1.5, what-if `pf2_measured`, off): held-out panel r 0.49 → 0.51, Proportions 0.50 → 0.58, his 20 unchanged at 0.46. Every new ruler points the same way; the old hip ruler doesn't.
+      - 8 of his saved checks would move down, e.g. the hoodie 8.0 → 7.5, the untucked brown shirt 7.0 → 6.0.
+      - Within the noise of 91 photos, so not a proposal yet.
+    - **Decided (Claude):**
+      - Adopt nothing yet.
+      - Keep the waistline measure (sleeves, hems, legs, "waistband shows" stay stopped).
+      - Ask the founder for the 10-minute tape shoot (P1 on his list). If the projective rulers land within ~3 cm of the tape on both mirror and propped shots, C2 goes to him as a before/after. If not, the offset is calibrated once from his photos and checked on a friend.

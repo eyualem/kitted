@@ -1,0 +1,25 @@
+ruler mp_ansur; measured on 136 of 225 gold photos
+v13 (live)
+  tune       n 132 · r 0.65 (raw 0.68, rank 0.56, 2-run mean 0.67) · bias +0.01 · MAE 0.55 · within 0.5 95 · sd 0.73 vs 0.92 · 8+ 17% · steady 130/132 (exact 102)
+             parts r: fit 0.23 (sd 0.37, -0.24) · proportions 0.60 (sd 1.00, +0.38) · color 0.42 (sd 0.49, -0.17) · shoes 0.67 (sd 0.96, +0.23) · cohesion 0.43 (sd 0.63, +0.08)
+  test       n  91 · r 0.49 (raw 0.52, rank 0.54, 2-run mean 0.50) · bias +0.11 · MAE 0.67 · within 0.5 62 · sd 0.69 vs 1.03 · 8+ 15% · steady 88/91 (exact 72)
+             parts r: fit 0.20 (sd 0.51, -0.23) · proportions 0.50 (sd 1.15, +0.19) · color 0.08 (sd 0.44, +0.04) · shoes 0.55 (sd 0.92, +0.19) · cohesion 0.45 (sd 0.40, +0.23)
+             the founder's 20: r 0.46 · within 0.5 13/20
+
+C1: picked on tune τ1 0.58 τ2 0.72 pf2 0 (tune r 0.655)
+  tune       n 132 · r 0.65 (raw 0.69, rank 0.57, 2-run mean 0.67) · bias +0.01 · MAE 0.55 · within 0.5 96 · sd 0.72 vs 0.92 · 8+ 16% · steady 131/132 (exact 103)
+             parts r: fit 0.23 (sd 0.37, -0.24) · proportions 0.61 (sd 1.00, +0.37) · color 0.42 (sd 0.49, -0.17) · shoes 0.67 (sd 0.96, +0.23) · cohesion 0.43 (sd 0.63, +0.08)
+  test       n  91 · r 0.49 (raw 0.53, rank 0.54, 2-run mean 0.51) · bias +0.11 · MAE 0.66 · within 0.5 62 · sd 0.69 vs 1.03 · 8+ 15% · steady 88/91 (exact 72)
+             parts r: fit 0.20 (sd 0.51, -0.23) · proportions 0.51 (sd 1.13, +0.15) · color 0.08 (sd 0.44, +0.04) · shoes 0.55 (sd 0.92, +0.19) · cohesion 0.45 (sd 0.40, +0.23)
+             the founder's 20: r 0.43 · within 0.5 13/20
+
+C2: picked on tune τ1 0.58 τ2 0.72 pf2 1.5 (tune r 0.664)
+  tune       n 132 · r 0.66 (raw 0.70, rank 0.57, 2-run mean 0.68) · bias -0.01 · MAE 0.54 · within 0.5 96 · sd 0.75 vs 0.92 · 8+ 16% · steady 131/132 (exact 103)
+             parts r: fit 0.23 (sd 0.37, -0.24) · proportions 0.63 (sd 1.07, +0.33) · color 0.42 (sd 0.49, -0.17) · shoes 0.67 (sd 0.96, +0.23) · cohesion 0.43 (sd 0.63, +0.08)
+  test       n  91 · r 0.50 (raw 0.53, rank 0.54, 2-run mean 0.51) · bias +0.10 · MAE 0.66 · within 0.5 62 · sd 0.71 vs 1.03 · 8+ 15% · steady 88/91 (exact 72)
+             parts r: fit 0.20 (sd 0.51, -0.23) · proportions 0.53 (sd 1.16, +0.11) · color 0.08 (sd 0.44, +0.04) · shoes 0.55 (sd 0.92, +0.19) · cohesion 0.45 (sd 0.40, +0.23)
+             the founder's 20: r 0.43 · within 0.5 13/20
+
+his saved checks (Everyday, the stated test profile; rule 7: his profile is still pending)
+  C1: 2 moved: phone-6bf356 8.0 → 7.5 (t 0.593); phone-b17b22 7.5 → 7.0 (t 0.629)
+  C2: 3 moved: phone-3239a6 7.0 → 6.5 (t 0.721); phone-6bf356 8.0 → 7.5 (t 0.593); phone-b17b22 7.5 → 7.0 (t 0.629)

@@ -33,6 +33,35 @@ func writeJSON(_ obj: Any, _ path: String) throws {
   try d.write(to: URL(fileURLWithPath: path))
 }
 
+/// The photo as the same camera would have taken it pitched by `degrees` (positive = tilted down), turning about its
+/// own center: exactly a homography K·R·K⁻¹ (a phone's main lens, ~26 mm equivalent, ≈ 69° across the long side).
+/// Waist test only (#270): a ruler that corrects for the camera should read the same clothes edge at the same t.
+func tiltCamera(_ img: CGImage, degrees: Double) -> CGImage? {
+  let W = Double(img.width), H = Double(img.height)
+  let f = max(W, H) / 2 / tan(34.5 * .pi / 180)
+  let a = degrees * .pi / 180
+  // Map a source pixel (x, y; origin top-left) to the tilted image: rotate the ray about the x axis.
+  func map(_ x: Double, _ y: Double) -> CGPoint {
+    let X = x - W / 2, Y = y - H / 2, Z = f
+    let Y2 = Y * cos(a) - Z * sin(a), Z2 = Y * sin(a) + Z * cos(a)
+    return CGPoint(x: X * f / Z2 + W / 2, y: Y2 * f / Z2 + H / 2)
+  }
+  let ci = CIImage(cgImage: img)
+  // CoreImage's origin is bottom-left.
+  func v(_ p: CGPoint) -> CIVector { CIVector(x: p.x, y: CGFloat(H) - p.y) }
+  guard let flt = CIFilter(name: "CIPerspectiveTransform") else { return nil }
+  flt.setValue(ci, forKey: kCIInputImageKey)
+  flt.setValue(v(map(0, 0)), forKey: "inputTopLeft")
+  flt.setValue(v(map(W, 0)), forKey: "inputTopRight")
+  flt.setValue(v(map(0, H)), forKey: "inputBottomLeft")
+  flt.setValue(v(map(W, H)), forKey: "inputBottomRight")
+  guard let out = flt.outputImage else { return nil }
+  // Keep the original frame size, filled white outside (a background, so his outline stays his).
+  let bg = CIImage(color: .white).cropped(to: CGRect(x: 0, y: 0, width: W, height: H))
+  let comp = out.composited(over: bg).cropped(to: CGRect(x: 0, y: 0, width: W, height: H))
+  return CIContext().createCGImage(comp, from: comp.extent)
+}
+
 let args = CommandLine.arguments
 guard args.count >= 2 else { print("usage: kmeasure crops|zoom ..."); exit(2) }
 
@@ -254,13 +283,14 @@ case "waist":
   // kmeasure waist <photo.jpg> <out.json> [--overlay out.jpg] [--max px] [--crop share]
   //   The waist ruler (WaistRuler.swift, DECISIONS-LOG #264): the visual waistline the clothes make, against a ruler from his joints.
   guard args.count >= 4 else { print("bad args"); exit(2) }
-  var wover: String?, wmax = Prep.workPx, wcrop: CGFloat = 0
+  var wover: String?, wmax = Prep.workPx, wcrop: CGFloat = 0, wpitch = 0.0
   var wi = 4
   while wi < args.count {
     switch args[wi] {
     case "--overlay": wover = args[wi + 1]; wi += 2
     case "--max": wmax = CGFloat(Double(args[wi + 1]) ?? 2048); wi += 2
     case "--crop": wcrop = CGFloat(Double(args[wi + 1]) ?? 0); wi += 2
+    case "--pitch": wpitch = Double(args[wi + 1]) ?? 0; wi += 2
     default: print("unknown option \(args[wi])"); exit(2)
     }
   }
@@ -270,9 +300,10 @@ case "waist":
     guard let c = wimg.cropping(to: CGRect(x: W * wcrop, y: H * wcrop, width: W * (1 - 2 * wcrop), height: H * (1 - 2 * wcrop)).integral) else { exit(1) }
     wimg = c
   }
+  if wpitch != 0, let t = tiltCamera(wimg, degrees: wpitch) { wimg = t }
   let wres = Waist.run(wimg)
   var wout = wres.json
-  wout["photo"] = args[2]; wout["max"] = Int(wmax); wout["crop"] = Double(wcrop)
+  wout["photo"] = args[2]; wout["max"] = Int(wmax); wout["crop"] = Double(wcrop); wout["pitch"] = wpitch
   try writeJSON(wout, args[3])
   if let o = wover, wres.rgb != nil, let hidden = Prep.hideRegions(wimg, wres.hide), let rgb = Measure.rgb(hidden, maxSide: Measure.statPx) {
     Waist.overlay(rgb, wout, wres.geo, to: URL(fileURLWithPath: o))
