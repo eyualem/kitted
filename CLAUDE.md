@@ -65,7 +65,11 @@
 - [x] **The UI review calls (#274), decided Oct 15 (#276):** outlined real photos (never cut-outs alone), tiles stay pure drawings, an added photo never changes the drawing, the selected tab in ink. Being built: the piece page and the fix-first batch (`handoff/09-ui-review.md` §1).
 - [ ] **P1** · **The AI bill (#270, `market/ai-costs.md`), 5 min to read, then 2 calls.**
   - **The problem:** a fit check is three Gemini calls, 1.08¢ now and 2.16¢ from Jan 1, 2027 (the price doubles). With 2% paying, 100 monthly users would cost about $31 a month in AI against about $6 of revenue, and free users are ~85% of that bill.
-  - **(a) OK ~$1–2 to test the scoring read on the cheaper 3.5 Flash-Lite** (about a quarter of the cost), against the gold set and the "same photo, same score" bar. Default: yes.
+  - **(a) OK ~$2–3 to test the scoring read on cheaper models** against the gold set, your saved checks and the "same photo, same score" bar, with today's Gemini 3.8 Flash as the control:
+    - Gemini 3.5 Flash-Lite, about a quarter of the cost;
+    - OpenAI's GPT-6 Luna, about 1/20th of the cost (`inputs/ai-provider-research.md`, Oct 6; never tested on our photos). The app being 18+ removes OpenAI's parental-consent catch.
+    - It needs an OpenAI API account with $5 prepaid and a key in `app/.env.development.local`, about 5 min.
+    - Default: yes.
   - **(b) The free tier** (1 check + 1 re-check + 5 questions a day) and the Pro caps (10 checks, 50 questions a day): keep for now and decide after (a)? Default: keep until (a) is in.
   - *Unblocks: knowing whether Kitted can make money at 2%.*
 - [x] **Accounts and sync (#268), decided Oct 15 ("All right"):** Firebase for accounts, synced data and photos, with the Worker staying the AI proxy; the ~1-day prep before the beta, the build as v1.1; "Back up photos" on by default. Still yours later (E4, ~30 min after the $99 program): create the Firebase project with a $10 budget alert.
