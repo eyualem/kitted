@@ -165,11 +165,14 @@ his question
 | **can I wear** | can I wear, is it OK, does X work with Y | The named pieces' facts (leg shape, color, shoe kind, formality), the occasion's rules (`OCC-*`) | None, or "Check it" |
 | **buy next** | what should I buy, missing, next piece | `rotation` gain per candidate kind (the Starter list), budget | Buy card |
 | **fit / how-to** | how should, how do I, hem, cuff, tuck, size | Guide section only | None |
+| **shape** (proportions) | too long, baggy, tuck, crop, how should it sit, does it look off | The check's Proportions reasons, plus what the photo **couldn't** show (the stack at the shoe, where a jacket ends, a top running long are tips only, [PRO-10]); his pieces' leg shapes | None, or "Check it" |
 | **remember** | I'm a…, I have…, my budget, I hate | None | Saved chip |
 | **feedback** | wrong, unfair, should be higher | The named check | Opens "Not quite right?" |
 | **general** | anything else about clothes | None (guide only) | None |
 
 If the router isn't sure, it sends the pack with no evidence, and the model may ask for **one** lookup (`need: goes_with P7` etc.); the phone computes it and makes a second call. At most one extra round, so the slow path is about 2× the fast one. The plan is to make the router good enough that this is rare (measured in the test, §10).
+
+**Shape is where the chat earns its keep** (#266). The score can only use the few shape facts a photo shows reliably (a tuck or short top, leg shape, a short jacket, a shirt showing below a layer). The guide's §3–4 covers the rest. The stylist may ask him what the photo can't show ("Do the jeans bunch up at the shoe?"); that's for advice only and never moves a score. It never claims to have seen a detail its evidence marks as unreadable.
 
 ### 5.2 What the model sends back
 A stream of plain text, then one closing block (Gemini function-calling, or a fenced JSON line the client strips; picked in step C2 by what streams cleanly):

@@ -1323,3 +1323,17 @@ Contradictions settled and decisions changed during the build. Newest last.
       - D3, numbers for a "what if" on a check he already has (yes, "on that photo");
       - D4, the paused line.
     - **Build order:** C0 plumbing → C1 the pack → C2 one real answer (dev key) → C3 router, evidence and cards → C4 memory → C5 the test → C6 the server route → C7 polish. About 6–7 days of building; C0–C4 reach his phone through Metro, with no server needed.
+
+## Oct 14 · Where proportions stand (founder: "but what are we going to do about the proportions")
+266. **Measured on paper, at no cost: Proportions is no longer stuck at 7.0.** v13 on the 200 scored gold photos (run 0): exactly 7.0 on 32% (v6: 60%); spread 4.0–8.5; it follows the panel's overall score at r 0.52 (v6: 0.22).
+    - **What fires:** the waist break on 74 photos (+1.5), a narrow leg on 24, the short layer on 29, the tailored line on 6.
+    - **The weak spot:** the biggest single rule in the score sits on the softest reading. The waist break fires on 37% of photos, and two blind labelers agree on "the waist shows" only 79% (#264).
+    - **Still unreadable:**
+      - the stack at the shoe (69%, #238), which all four creators call make-or-break;
+      - where a jacket ends, and a top running long;
+      - the top's width against the pants.
+    - **Decided (Claude):**
+      - (a) No more absolute phone measuring. Recommend stopping the scripts, not pausing them (the founder's to-do item).
+      - (b) The founder's one-outfit variants are the next truth for all of it: the stack (cuffed, rolled, hitched), the waist break's +1.5 on real tucked/untucked pairs, slim vs straight, jacket on/off. Also the one script test left: the change between paired photos.
+      - (c) In the chat, "shape" is its own kind of question (`07-stylist-chat.md` §5.1). The evidence says what the photo couldn't show, and the stylist may ask about it for advice only, never points.
+    - **Re-checks:** a fix the photo can't confirm (a cuff) is already handled by the "What changed?" sheet (S21).
