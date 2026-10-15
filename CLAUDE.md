@@ -349,7 +349,12 @@
 
 ## Next steps, in order
 
-### The Stylist chat: planned Oct 14 (#265), nothing built yet. Start here for the chat
+### The Stylist chat: planned Oct 14 (#265); C0–C1 built Oct 15 (#271). Start here for the chat
+**What you'll see now (#271; screenshots `screenshots/chat-c0/`, git-ignored):**
+- **On your phone:** a question still gets "Questions are coming soon…" and doesn't count.
+- **On the demo screens (90–95):** typing dots, then the answer streaming in, "3 questions left today", the free limit line, the 988 support card, and "I rate outfits, never people." for "Rate my face". The draft survives closing the composer.
+- **Built underneath:** the context pack (what the stylist will get with each question), with a privacy test that fails if age, name, location or a photo path ever appears.
+- **Next, C2:** real answers through the dev key on Flash-Lite. Needs your OK on ~$0.50 of tries; it's on your to-do list.
 **The plan: `handoff/07-stylist-chat.md`** (what he'll see, what the stylist knows and never gets, memory, the engine, screen states, safety, the server route, money, the test, the build order, decisions).
 - **The shape:** "the code knows, the AI talks". `@kitted/core` on the phone computes every fact and number an answer uses: outfits from his closet, "+N outfits", a check's Why rows and fix targets. Gemini words the answer and may attach one card (outfit, start a check, one tap question, buy, link, saved fact). It never sees a photo, never makes up a score, never talks about his body, never names a brand.
 - **Sent with each question:** today's chat, his picked looks, fit preference, budget, live facts, the closet as one line per piece, today's checks in full plus 7 days in short, today's idea, the weather in words.

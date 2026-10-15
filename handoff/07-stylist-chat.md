@@ -331,8 +331,8 @@ Cost of the whole test: about $1–2 of Gemini calls (your OK needed, on the lis
 
 | Step | What | Size | Needs you? |
 |---|---|---|---|
-| **C0 · Plumbing** | `canAskQuestion` / `consumeQuestion` wired, the `payload.counts` rename, draft kept, consent / offline / limit states, the distress list + S27 support card, the dots, the scroll rule. No AI; "coming soon" stays until C2. | 0.5 day | No |
-| **C1 · The pack** | `buildStylistContext` + tests, incl. a privacy test that fails if birth year, height, build, location or any photo path ever appears in it. | 1 day | No |
+| **C0 · Plumbing** | `canAskQuestion` / `consumeQuestion` wired, the `payload.counts` rename, draft kept, consent / offline / limit states, the distress list + S27 support card, the dots, the scroll rule. No AI; "coming soon" stays until C2. **Built Oct 15 (#271).** | 0.5 day | No |
+| **C1 · The pack** | `buildStylistContext` + tests, incl. a privacy test that fails if birth year, name, location or any photo path ever appears in it (height and build are sent when given, #267). **Built Oct 15 (#271).** | 1 day | No |
 | **C2 · One real answer** | `AnswerSource` interface: dev Gemini client (dev key, streaming, injected fetch, tests like `geminiSource.test.ts`), the mock source for demo screens (seeded M15–M18 answers + `ask.demoOnly`), the streaming overlay, the sentence gate. First cost and speed numbers. | 1 day | OK to spend ~$0.50 on tries |
 | **C3 · Router, evidence, cards** | The kinds table (§5.1), the one-lookup fallback, the outfit / check / ask / buy / link cards (reusing `OutfitIdeaCard` and the drawn tiles), the starter chips. | 1.5 days | No |
 | **C4 · Memory** | `remember` with the key list, "Saved · Undo", chat-sourced closet pieces with dashed tiles. | 0.5 day | No |

@@ -1449,3 +1449,31 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Adopt nothing yet.
       - Keep the waistline measure (sleeves, hems, legs, "waistband shows" stay stopped).
       - Ask the founder for the 10-minute tape shoot (P1 on his list). If the projective rulers land within ~3 cm of the tape on both mirror and propped shots, C2 goes to him as a before/after. If not, the offset is calibrated once from his photos and checked on a friend.
+
+## Oct 15 · Stylist chat C0 + C1 built (commit 4ca2f4b)
+271. **The plumbing and the context pack are built; real answers aren't yet (C2).** `npm run check` green (55 suites, 621 tests). Checked end to end in the web preview; nothing run on the Simulator.
+    - **What he'll see:**
+      - **On his phone and in real builds,** a question still gets "Questions are coming soon…", and it doesn't count.
+      - **On the demo screens,** the seeded questions are answered with three typing dots, then the text streams in, and they count. The header shows "{n} questions left today" at 3 or fewer.
+      - Limit, refusal and the 988 card work everywhere.
+      - The draft survives the composer closing.
+    - **Demo screens:**
+      - 90: dots
+      - 91: half streamed
+      - 92: two answers, "3 questions left today"
+      - 93: free limit reached (no Try Pro until the paywall exists)
+      - 94: the support card
+      - 95: "Rate my face" → "I rate outfits, never people."
+      - **Side effect:** screen 19's subtitle now reads "3 questions left today", by the spec's rule.
+    - **Settled by the builder, accepted by Claude:**
+      - The on-phone checks run first: distress, then body rating, then consent, offline and limit. Someone at his limit or without consent who types a distress message still gets the 988 card.
+      - The body-rating list catches only whole-message asks ("Am I ugly?", "Rate my face"). Mixed questions ("am I too skinny for oversized stuff?") go to the model as §2.2 expects.
+      - At the limit his bubble stays and the draft clears.
+      - `done` events gain an optional `uncounted`.
+      - The pack sends height and build per #267; 07's C1 row was stale and is fixed.
+    - **Not done:**
+      - **Offline:** an `online()` hook that always says yes; the app has no connectivity signal yet.
+      - **Moved to C2:** the 6 s "Taking longer", the 20 s timeout and the send progress ring.
+      - **Not drawn on the web preview:** the support card's heart icon (SF Symbols); iOS should show it.
+      - **Web preview only:** the composer field can't be tapped there (a layer sits over it). iOS isn't affected; it predates this work.
+    - **Next:** C2. A real answer through the dev key on 3.5 Flash-Lite, with the sentence gate. First measured cost and speed (~$0.50 of tries; the founder's OK is on the list).
