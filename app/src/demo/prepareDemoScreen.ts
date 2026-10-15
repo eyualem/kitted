@@ -19,6 +19,7 @@ import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
 import type { WhichOnePayload } from '@/features/fitcheck/whichOne';
 import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
 import { askService } from '@/features/ask/session';
+import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
 import { STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
@@ -38,6 +39,15 @@ type Step =
   | { at: string; do: 'closet'; ids: string[] }
   /** "Yes, same one" to every open closet question (after the closet calls land). */
   | { at: string; do: 'closetYes' }
+  /** "No, a new one" to every open closet question; the first piece kept that way is the `{dup}` in the screen's link (#280). */
+  | { at: string; do: 'closetNo' }
+  /** Clothes scans saved on the Simulator (the sample flat lay, no file), a minute apart (#280). */
+  | { at: string; do: 'scans'; n: number }
+  /** A photo taken after the free check was used (02 D19 S17, #280): held under the Limit card; `saved` taps "Save for
+   *  tomorrow" (S17h). */
+  | { at: string; do: 'hold'; photoId: string; saved?: boolean; spend?: boolean }
+  /** The app opened after 4 am (#281): "Ready to score last night's photo?" for the held photo. */
+  | { at: string; do: 'openApp' }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
   | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string }
@@ -55,6 +65,14 @@ const ASK_OLIVE = 'Can I wear the olive overshirt with the navy chinos?';
 const ASK_BELT = 'What belt goes with brown loafers?';
 /** Before M15 (12:05), so the seeded Q&A isn't loaded and the pipeline writes it. */
 const ASK_AS_OF = '2026-10-22T12:04:00';
+
+const CLOSET_3: Step = { at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] };
+const DUP_STORY: Step[] = [
+  CLOSET_3,
+  { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
+  { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 'p01a' },
+  { at: '2026-10-22T07:51:00', do: 'closetNo' },
+];
 
 const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
 
@@ -93,7 +111,12 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
       { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 'p01a' },
     ],
   },
-  19: { asOf: '2026-10-22T21:12:00', steps: [] },
+  // The Limit card (02 D19 S17, #280): the free check is used (the screen's freeChecksUsed), so a 9:12 pm photo is held;
+  // 120 is the same after "Save for tomorrow" (S17h).
+  19: { asOf: '2026-10-22T21:12:00', steps: [{ at: '2026-10-22T21:12:00', do: 'hold', photoId: 's14' }] },
+  120: { asOf: '2026-10-22T21:12:00', steps: [{ at: '2026-10-22T21:12:00', do: 'hold', photoId: 's14', saved: true }] },
+  // The next morning (#281): the app opens at 7:30 and asks "Ready to score last night's photo?" (nothing sent yet).
+  121: { asOf: '2026-10-22T21:12:00', steps: [{ at: '2026-10-22T21:12:00', do: 'hold', photoId: 's14', saved: true, spend: true }, { at: '2026-10-23T07:30:00', do: 'openApp' }] },
   // Morning/evening card: posted by the real service at the screen's time.
   12: { asOf: '2026-10-22T08:01:00', steps: [{ at: '2026-10-22T08:01:00', do: 'morning' }] },
   25: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
@@ -158,7 +181,17 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
       { at: '2026-10-22T07:51:00', do: 'closetYes' },
     ],
   },
+  // The scan inbox made visible (#280): two clothes scans waiting, the Closet row and its sheet.
+  110: { steps: [CLOSET_3, { at: '2026-10-22T07:44:00', do: 'scans', n: 2 }] },
+  111: { steps: [CLOSET_3, { at: '2026-10-22T07:44:00', do: 'scans', n: 2 }] },
+  // Merging a duplicate (#280): screen 96's story with "No, a new one", so the chinos are two pieces; the copy's page
+  // offers "Same as another piece…", and its picker lists the khaki chinos.
+  112: { steps: DUP_STORY },
+  113: { steps: DUP_STORY },
 };
+
+/** Ids a story made that its screen's link names (`{dup}`): applyDemoScreen fills them in (#280). */
+export const demoLinkIds: Record<string, string> = {};
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
   // The story's checks open on their final card (stable screenshots); -demoReveal re-arms screens 7, 10 and 11's
@@ -179,6 +212,7 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   setTimerOverride({});
   liveAnswer.clear();
   await store.wipe();
+  for (const k of Object.keys(demoLinkIds)) delete demoLinkIds[k];
   const story = STORY[sc.n] ?? { steps: [] };
   const args = getDemoArgs();
   setDemoArgs({ ...args, latency: 0 });
@@ -223,6 +257,26 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       for (const { checkId, ask } of await fitCheck.closet.openAsks()) await fitCheck.answerDuplicate(checkId, ask.obsId, 'same');
       continue;
     }
+    if (step.do === 'closetNo') {
+      await fitCheck.closet.settle();
+      for (const { checkId, ask } of await fitCheck.closet.openAsks()) {
+        await fitCheck.answerDuplicate(checkId, ask.obsId, 'new');
+        demoLinkIds.dup ??= ask.itemId;
+      }
+      // The matcher may link the re-check's chinos on its own (no question to say No to): then the newest photo of a
+      // piece seen in two checks is split off, as "Not this piece" on its page would, so the duplicate still exists.
+      if (!demoLinkIds.dup) {
+        const obs = (await store.closetObs.all()).filter((o) => o.fitCheckId).sort((a, b) => b.createdAt - a.createdAt);
+        const twice = obs.find((o) => obs.some((x) => x.itemId === o.itemId && x.fitCheckId !== o.fitCheckId));
+        const piece = twice ? await fitCheck.closet.notThisPiece(twice.id) : null;
+        if (piece) demoLinkIds.dup = piece.id;
+      }
+      continue;
+    }
+    if (step.do === 'scans') {
+      for (let i = 0; i < step.n; i++) await saveDemoScan(store, at(step.at) + i * 60_000);
+      continue;
+    }
     if (step.do === 'whichOne') {
       // Boxes on the card's neck-down frame of the bundled photo.
       const payload: WhichOnePayload = {
@@ -252,6 +306,30 @@ async function playStory(sc: ScreenScenario): Promise<void> {
         id, createdAt: at(step.at), role: 'user', kind: 'text', text: step.text, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {},
       });
       liveAnswer.hold(step.partial ? { phase: 'streaming', questionId: id, replaces: null, text: step.partial } : { phase: 'waiting', questionId: id, replaces: null });
+      continue;
+    }
+    if (step.do === 'hold') {
+      // Without the screen's freeChecksUsed (it would hold the next day too), that day's free check is spent here.
+      if (step.spend) {
+        const day = dayKey(at(step.at), US_EASTERN);
+        const u = (await store.usage.get(day)) ?? { dayKey: day, checks: 0, rechecks: 0, questions: 0, items: 0 };
+        await store.usage.put({ ...u, checks: Math.max(u.checks, 1) });
+      }
+      // A dev build with a live key counts no checks (session.ts checksUsedOverride → 0), so a spent day is also spent
+      // for that override, for this step only: the next morning stays free (screen 121, #281).
+      const before = getDemoArgs();
+      if (step.spend && before.freeChecksUsed === null) setDemoArgs({ ...before, freeChecksUsed: 1 });
+      let r;
+      try {
+        r = await fitCheck.start({ mode: 'check', photoId: step.photoId, occasion: 'everyday', checkId: STORY_PARTIAL });
+      } finally {
+        if (step.spend && before.freeChecksUsed === null) setDemoArgs({ ...getDemoArgs(), freeChecksUsed: null });
+      }
+      if (step.saved && r.outcome === 'held') await fitCheck.saveHeld(r.checkId);
+      continue;
+    }
+    if (step.do === 'openApp') {
+      await fitCheck.onAppOpen();
       continue;
     }
     if (step.do === 'tap') {

@@ -49,6 +49,11 @@ export function signed(n: number, zero: '+0' | '±0' = '+0'): string {
   return `${n > 0 ? '+' : '−'}${abs}`;
 }
 
+/** The re-check's move as its pill and its caught fix's row say it (#280): always one decimal, "+1.0", "+0.5", "−0.5". */
+export function deltaPill(n: number): string {
+  return `${n < 0 ? '−' : '+'}${Math.abs(n).toFixed(1)}`;
+}
+
 /** "5 pm" (a local hour 0–23; the weather lines). */
 export function hourText(h: number): string {
   const hh = ((h % 24) + 24) % 24;

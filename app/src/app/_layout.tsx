@@ -105,6 +105,8 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/consent" options={sheet([1])} />
         <Stack.Screen name="sheets/swap/[ideaId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
+        <Stack.Screen name="sheets/scan-inbox" options={sheet([0.6, 1])} />
+        <Stack.Screen name="sheets/merge/[id]" options={sheet([0.6, 1])} />
       </Stack.Protected>
       <Stack.Protected guard={DEMO_ENABLED}>
         <Stack.Screen name="demo/screen/[n]" />

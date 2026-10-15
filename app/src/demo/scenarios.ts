@@ -137,6 +137,21 @@ export const SCREENS: readonly ScreenScenario[] = [
   // The piece page (02 C2, #276): the seed's khaki chinos after p01b, its re-check p01a and "Yes, same one", so they
   // have 2 photos (outlined, cropped below the chin line). Pushed over the Closet grid.
   { n: 96, name: 'Closet · a piece and its photos', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/closet/item/B1', under: '/closet' },
+  // The look page (02 L2, #280), pushed over the Lookbook: 97 the seed's re-checked date look (p01b 8.0 → p01a 9.0, the
+  // caught fix done, its pieces, Show in chat); 98 the Sep 24 look whose photo was deleted (drawn pieces, no viewer).
+  { n: 97, name: 'Lookbook · a look', id: 'L2', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/lookbook/look/FC3', under: '/lookbook' },
+  { n: 98, name: 'Lookbook · a look, photo deleted', id: 'L2', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/lookbook/look/FC0', under: '/lookbook' },
+  // The scan inbox made visible (#280): 110 Closet with two scans waiting ("Waiting to be read · 2 photos"), 111 its sheet.
+  { n: 110, name: 'Closet · scans waiting', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/closet' },
+  { n: 111, name: 'Scan inbox', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/sheets/scan-inbox', under: '/closet' },
+  // Merging a duplicate (#280): the copy of the khaki chinos he kept with "No, a new one" ({dup}, filled in by the
+  // story): 112 its page with "Same as another piece…", 113 the picker over it.
+  { n: 112, name: 'Closet · a duplicate piece', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/closet/item/{dup}', under: '/closet' },
+  { n: 113, name: 'Same as which piece?', id: 'C2m', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/sheets/merge/{dup}', under: '/closet/item/{dup}' },
+  // S17h (#280; numbered from 120 so parallel sessions' screens don't collide): screen 19 after "Save for tomorrow".
+  { n: 120, name: 'Limit card · saved for tomorrow', id: 'S17h', scenario: 'full', onboarded: true, now: '2026-10-22T21:13:00', freeChecksUsed: 1, href: '/stylist' },
+  // S17h the next morning (#281): "Ready to score last night's photo?" with Score it / Not this one.
+  { n: 121, name: 'Ready to score last night\'s photo?', id: 'S17h', scenario: 'full', onboarded: true, now: '2026-10-23T07:31:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

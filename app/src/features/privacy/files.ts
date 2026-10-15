@@ -154,6 +154,38 @@ export function closetRelPath(stored: string | null | undefined): string | null 
   return rel;
 }
 
+/**
+ * Deletes one clothes scan's files (Documents/scans/<sha>-photo.jpg, -thumb.jpg, -send.jpg) by their stored paths
+ * (#280: the scan inbox's Delete). Only paths inside scans/ are touched. Missing files are fine. Returns how many
+ * files were deleted. Never throws.
+ */
+export function deleteScanFiles(stored: readonly string[]): number {
+  let n = 0;
+  for (const raw of new Set(stored)) {
+    const rel = scanRelPath(raw);
+    if (!rel) continue;
+    try {
+      const f = new File(Paths.document, rel);
+      if (f.exists) {
+        f.delete();
+        n += 1;
+      }
+    } catch (e: unknown) {
+      console.error('[privacy] could not delete', rel, e);
+    }
+  }
+  return n;
+}
+
+/** A stored scan path, relative to Documents and inside scans/ (an absolute URL is re-rooted), else null. */
+export function scanRelPath(stored: string | null | undefined): string | null {
+  if (!stored) return null;
+  const at = stored.indexOf('/Documents/');
+  const rel = stored.startsWith('file://') ? (at >= 0 ? decodeURI(stored.slice(at + '/Documents/'.length)) : null) : stored.includes('://') ? null : stored;
+  if (!rel || !rel.startsWith('scans/') || rel.includes('..') || !/\.jpe?g$/.test(rel)) return null;
+  return rel;
+}
+
 /** "42 MB" / "860 KB" / "1.2 GB" (no Intl: Hermes, see CLAUDE.md lessons). */
 export function bytesParts(bytes: number): { n: string; unit: 'kb' | 'mb' | 'gb' } {
   const kb = bytes / 1024;

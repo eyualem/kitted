@@ -3,12 +3,12 @@
 // Undo). A removal's pictures are deleted from the phone once Undo is over (fileCleanup).
 import { Alert, Platform } from 'react-native';
 import { router } from 'expo-router';
-import { store } from '@/data/db';
+import { openLookPage } from '@/features/lookbook/lookPage';
 import type { ClosetItemRow } from '@/data/types';
 import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { fitCheck } from '@/features/fitcheck/session';
-import { goToStylist } from '@/router/stylistAction';
 import { DELETE_AFTER_MS } from './fileCleanup';
+import { runMerge } from './merge';
 import { profileOfItem } from './profile';
 import { closetCleanup, runClosetCleanup } from './session';
 import { t } from '@/i18n/en';
@@ -90,16 +90,33 @@ export function notThisPiece(obsId: string) {
   });
 }
 
-/** "Open the look": the check's card in the chat (its day's chat when it's an earlier day); else its photo. */
+/** "Open the look": that look's page in the Lookbook (#282). */
 export function openLook(checkId: string) {
-  void (async () => {
-    const msg = (await store.chat.all()).filter((m) => m.kind === 'card' && m.fitCheckId === checkId).sort((a, b) => b.createdAt - a.createdAt)[0];
-    if (msg) goToStylist({ kind: 'scrollTo', messageId: msg.id });
-    else openPhoto(checkId);
-  })();
+  openLookPage(checkId);
 }
 
 /** A photo on the piece page: the full-screen viewer on that check. */
 export function openPhoto(checkId: string) {
   router.push(`/photo/${checkId}`);
+}
+
+/**
+ * "Same as another piece…" → a pick (#280): asks once ("Same as your khaki chinos?"), then folds `from` into `into`,
+ * with a toast that can undo it. `onMerged` runs once it's done (the picker closes; the page moves to the kept piece).
+ */
+export async function mergePiece(
+  from: Pick<ClosetItemRow, 'id' | 'name'>, into: Pick<ClosetItemRow, 'id' | 'name'>, o: { onMerged?: () => void } = {},
+): Promise<void> {
+  const done = await runMerge(from, into, {
+    confirm: (title, body, yes) => new Promise<boolean>((resolve) => {
+      Alert.alert(title, body, [
+        { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
+        { text: yes, isPreferred: true, onPress: () => resolve(true) },
+      ], { cancelable: true, onDismiss: () => resolve(false) });
+    }),
+    merge: (a, b) => fitCheck.closet.merge(a, b),
+    unmerge: (u) => fitCheck.closet.unmerge(u),
+    toast: (text, undo) => void showToast(text, undo, { ms: TOAST_MS_REMOVAL }),
+  });
+  if (done) o.onMerged?.();
 }

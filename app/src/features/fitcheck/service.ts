@@ -96,6 +96,9 @@ export interface ServiceDeps {
    *  and Try again; false = 'noConsent', nothing prepped, sent or counted. Bundled demo photos never leave the phone.
    *  Default: allowed (tests). The app passes privacy/wipe.ts mayUpload. */
   consent?: () => Promise<boolean>;
+  /** "Don't score it" on a held photo (02 S17h, #280): deletes his kept copy and thumb (it was never sent). The app
+   *  passes features/held/files.ts deleteHeldPhoto; default: nothing on disk (tests, the web preview). */
+  deleteHeldFiles?: (row: Pick<FitCheckRow, 'photoFile' | 'thumbFile' | 'imageHash'>) => void;
 }
 
 export interface CheckRequest {
@@ -120,6 +123,10 @@ export type StartOutcome =
   | { outcome: 'scored' | 'failed' | 'notScored' | 'error'; checkId: string }
   /** Read; the one quick tap is waiting (nothing counted yet). */
   | { outcome: 'asking'; checkId: string }
+  /** The free check (and its re-check) is used (02 D19 S17, #280): the photo is kept and held, nothing read or counted;
+   *  the Limit card is in the thread. After 4 am he's asked "Ready to score last night's photo?" (offerHeld); only his
+   *  "Score it" sends it (scoreHeldNow, ruling 27). */
+  | { outcome: 'held'; checkId: string }
   /** 'busy': another check is still being read (one at a time); 'error': it threw before a card was posted. */
   /** 'noConsent': "Score my fits" is off (Y7) or he never agreed; nothing was prepped, sent or counted. */
   | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' | 'busy' | 'error' | 'noConsent' }
@@ -651,7 +658,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     if ((req.mode === 'recheck' || req.mode === 'shoeSnap') && !parent) return { outcome: 'noParent' };
     // His own photo is never prepped without his consent (it's read and sent right after): checked first, every time.
     if (req.photoUri && deps.consent && !(await deps.consent())) return { outcome: 'noConsent' };
-    if (req.mode === 'check' && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
+    // Over the daily limit: a free user's photo is kept and held for tomorrow (S17), never read; Pro's cap is a plain no.
+    const hold = req.mode === 'check' && !(await deps.quota.canStartCheck());
+    if (hold && (await deps.quota.snapshot()).pro) return { outcome: 'limit' };
     // One re-check per check, while its window is open (05 §3.1, ruling 22): each one is a paid read.
     if (req.mode === 'recheck' && parent && !isRecheckOpen(parent, now, clock) && !(now < recheckDeadline(parent, clock) && (await triesAfterNotSeen(parent.id)))) return { outcome: 'limit' };
     // A new photo replaces a "Which one is you?" still waiting (never its own photo, which is being prepped now).
@@ -692,6 +701,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
 
     const checkId = req.checkId ?? deps.ids('FC');
+    if (hold) return holdPhoto(checkId, now, image, photoPayload, occasion, style, going);
     if (req.mode === 'check') await replaceAsking(checkId);
     const priorChecks = (await store.fitChecks.all()).filter((c) => !c.parentId && c.status === 'scored');
     const row = emptyRow({
@@ -769,6 +779,74 @@ export function createFitCheckService(deps: ServiceDeps) {
     dispatch({ t: 'end', attempt: r.attempt });
     return outcomeOf(done);
   }
+
+  /** S17: his photo is kept on the phone (prep made his copy and the face-hidden send copy; nothing left the phone) and
+   *  held: the photo in the thread and the Limit card under it. Nothing is read or counted. */
+  async function holdPhoto(
+    checkId: string, now: number, image: PreparedImage, photoPayload: Record<string, unknown>, occasion: OccasionKey,
+    style: StyleKey | null, going: GoingForState | null,
+  ): Promise<StartOutcome> {
+    const row = emptyRow({
+      id: checkId, createdAt: now, dayKey: dayKey(now, clock.offset), occasion, style, demoPhotoId: image.photoId, imageHash: image.sha256,
+      status: 'held', photoFile: image.keptUri ?? null, thumbFile: image.thumbUri ?? null,
+      details: { ...(going ? { goingFor: going } : {}), held: { saved: false, takenAt: now } },
+    });
+    await store.fitChecks.put(row);
+    await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: checkId, payload: photoPayload });
+    await message({ createdAt: now + 1, role: 'stylist', kind: 'card', cardType: 'held', fitCheckId: checkId });
+    return { outcome: 'held', checkId };
+  }
+
+  /** "Score it" on a held photo (scoreHeldNow): scored like a new check made now, on today's free check. The row, its
+   *  photo and its card move to now, so the score lands in today's thread (the card becomes the fit-check card) and the
+   *  "Ready to score" question goes; when he took it stays in details.held.takenAt. */
+  async function scoreHeldInner(checkId: string, ctx: CheckCtx): Promise<StartOutcome> {
+    const row = await store.fitChecks.get(checkId);
+    if (!row || row.status !== 'held') return { outcome: 'noParent' };
+    if (!row.demoPhotoId && deps.consent && !(await deps.consent())) return { outcome: 'noConsent' };
+    if (!(await deps.quota.canStartCheck())) return { outcome: 'limit' };
+    // A check waiting on the one quick tap hasn't counted yet: scoring this too could go past what today allows.
+    if ((await store.fitChecks.all()).some((c) => c.id !== checkId && c.status === 'asking')) return { outcome: 'busy' };
+    const prep = await deps.prep.prepare(
+      row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
+    );
+    if (ctx.abandoned) return { outcome: 'error' };
+    const now = clock.nowMs();
+    const priorChecks = (await store.fitChecks.all()).filter((c) => c.id !== checkId && !c.parentId && c.status === 'scored');
+    const held = { ...(row.details.held ?? { saved: false, takenAt: row.createdAt }), scoredAt: now };
+    const moved = await patchRow(checkId, {
+      status: 'scoring', createdAt: now, dayKey: dayKey(now, clock.offset), isFirstCheck: priorChecks.length === 0, details: { ...row.details, held },
+    });
+    for (const m of (await store.chat.all()).filter((x) => x.fitCheckId === checkId)) {
+      if (m.payload.ready === true) await store.chat.delete(m.id);
+      else await store.chat.patch(m.id, m.kind === 'card' ? { createdAt: now + 1, cardType: 'fitCheck' } : { createdAt: now });
+    }
+    ctx.checkId = checkId;
+    if (prep.status !== 'ok') {
+      // Its face-hidden copy is gone (iOS cleared Caches): the card says it couldn't score it; his photo stays.
+      await patchRow(checkId, { status: 'failed', details: { ...moved!.details, failCode: 'ai' } });
+      return { outcome: 'failed', checkId };
+    }
+    images.set(checkId, prep.image);
+    const gf = moved!.details.goingFor;
+    const r = await runRead(checkId, prep.image, 'full', 'check', moved!.occasion, gf ? { ...gf } : undefined, engineOf(moved!) === 'parts');
+    if (!r.reading) {
+      await failRow(checkId, r.fail ?? 'ai', r.attempt);
+      return { outcome: 'failed', checkId };
+    }
+    if (gf && state.kind === 'reading' && state.checkId === checkId && state.lookTouched) await saveLookAnswer(checkId, state.look, state.lookOther);
+    await storeLook(checkId, r.secondLook);
+    dispatch({ t: 'scored', attempt: r.attempt });
+    const fresh = (await store.fitChecks.get(checkId))!;
+    const done = await afterRead(fresh, r.reading, await insertReading(r.reading, 'full', prep.image.sha256, null, r.latencyMs, r.model, r.promptVersion), false);
+    dispatch({ t: 'end', attempt: r.attempt });
+    return outcomeOf(done);
+  }
+
+  /** The "Ready to score" run in flight: a launch and a foreground at once post one question. */
+  let heldOffer: Promise<string | null> | null = null;
+  /** Held photos whose "Score it" is running: a double tap scores once. */
+  const scoringHeld = new Set<string>();
 
   /** S19 "Try again": re-reads the same photo; nothing was counted the first time. It's a new read, so it uses
    *  today's check (or the first check's re-check) like any other, and its score is charged to today. */
@@ -931,6 +1009,63 @@ export function createFitCheckService(deps: ServiceDeps) {
       const job = running;
       if (job) await job.catch(() => {});
       dispatch({ t: 'end' });
+    },
+    /** S17h, at launch and on every return to the foreground (features/held/catchUp.ts): when today's check is free and
+     *  a photo is held from an earlier day (any day for Pro), the stylist asks "Ready to score last night's photo?" with
+     *  Score it / Not this one, once. Nothing is read or sent until he taps (ruling 27). One photo at a time, oldest
+     *  first; a question he left on an earlier day moves to today (one per photo, never a second). Returns the check
+     *  asked about, or null. */
+    offerHeld(): Promise<string | null> {
+      heldOffer ??= (async () => {
+        const s = await deps.quota.snapshot();
+        if (s.checksUsed >= s.checkLimit) return null;
+        const all = await store.fitChecks.all();
+        const due = all.filter((c) => c.status === 'held' && (s.pro || c.dayKey < s.dayKey)).sort((a, b) => a.createdAt - b.createdAt);
+        if (due.some((c) => c.details.held?.offeredAt !== undefined && dayKey(c.details.held.offeredAt, clock.offset) === s.dayKey)) return null;
+        const next = due[0];
+        if (!next) return null;
+        const now = clock.nowMs();
+        const asked = (await store.chat.all()).filter((m) => m.fitCheckId === next.id && m.payload.ready === true);
+        if (asked[0]) await store.chat.patch(asked[0].id, { createdAt: now });
+        else await message({ createdAt: now, role: 'stylist', kind: 'card', cardType: 'held', fitCheckId: next.id, payload: { ready: true } });
+        await patchRow(next.id, { details: { ...next.details, held: { ...(next.details.held ?? { saved: false, takenAt: next.createdAt }), offeredAt: now } } });
+        return next.id;
+      })().finally(() => {
+        heldOffer = null;
+      });
+      return heldOffer;
+    },
+    /** What launch and every return to the foreground run for held photos (features/held/catchUp.ts). */
+    onAppOpen(): Promise<unknown> {
+      return api.offerHeld();
+    },
+    /** S17h "Score it": that held photo, read and scored once, on today's free check (refused past what today allows). */
+    async scoreHeldNow(checkId: string): Promise<StartOutcome> {
+      if (scoringHeld.has(checkId)) return { outcome: 'busy' };
+      scoringHeld.add(checkId);
+      try {
+        return await exclusive((ctx) => scoreHeldInner(checkId, ctx));
+      } finally {
+        scoringHeld.delete(checkId);
+      }
+    },
+    /** S17 "Save for tomorrow": the card becomes S17h. The photo is held either way. */
+    async saveHeld(checkId: string) {
+      const row = await store.fitChecks.get(checkId);
+      if (!row || row.status !== 'held') return null;
+      return patchRow(checkId, { details: { ...row.details, held: { ...(row.details.held ?? { takenAt: row.createdAt }), saved: true } } });
+    },
+    /** S17h "Don't score it" and "Not this one": the photo is deleted (it was never sent), with its card, its question
+     *  and its row. Never scored, never asked about. */
+    async dropHeld(checkId: string): Promise<boolean> {
+      const row = await store.fitChecks.get(checkId);
+      if (!row || row.status !== 'held') return false;
+      for (const m of (await store.chat.all()).filter((x) => x.fitCheckId === checkId)) await store.chat.delete(m.id);
+      await store.fitChecks.delete(checkId);
+      // His files go, unless another check holds the same photo (same SHA, same files).
+      const shared = (await store.fitChecks.all()).some((c) => c.imageHash === row.imageHash || (!!row.photoFile && c.photoFile === row.photoFile));
+      if (!row.demoPhotoId && !shared) deps.deleteHeldFiles?.(row);
+      return true;
     },
     /** S19 "Try again" (retryInner): one at a time with any other check, limited like a new read. */
     retry(checkId: string): Promise<StartOutcome> {

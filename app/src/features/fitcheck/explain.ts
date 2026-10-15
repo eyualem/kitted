@@ -5,6 +5,7 @@ import { garmentName, type Fix, type Reading, type RecheckOutcome } from '@kitte
 import { displayScore, scoreWordLabel } from '@/design-system/score';
 import type { CheckDetails } from '@/data/types';
 import { en, t, type StringKey } from '@/i18n/en';
+import { deltaPill } from '@/i18n/format';
 
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
@@ -44,6 +45,12 @@ export function cardSummary({ reading, overall, lounge, fixes, partial }: Summar
 /** Which way a re-check moved, by the scores the card shows (was → now). */
 export type RecheckMove = 'up' | 'same' | 'down';
 export const recheckMove = (was: number, now: number): RecheckMove => (now > was ? 'up' : now < was ? 'down' : 'same');
+
+/** The caught fix's number on a re-check (02 D10): one caught fix carries the whole move, so its row says the pill's
+ *  number; with several (each its own raw points, which don't add up to the rounded pill) or no win, ''. */
+export function caughtFixGain(rc: { parentScore: number; doneFixes: readonly unknown[] }, now: number): string {
+  return recheckMove(rc.parentScore, now) === 'up' && rc.doneFixes.length === 1 ? deltaPill(now - rc.parentScore) : '';
+}
 
 /** The re-check's summary (02 D10), honest about the direction (#276): "Layered and clean. Dialed in. Nothing else
  *  changed." only on a real win with no new problem; a win with a new problem, a score that held and a drop say just

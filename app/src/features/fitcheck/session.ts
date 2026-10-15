@@ -1,6 +1,7 @@
 // The app's one fit-check service, wired to the demo implementations, and the hook the
 // Stylist screen uses for the live reading state.
 import { useSyncExternalStore } from 'react';
+import { AppState } from 'react-native';
 import { store } from '@/data/db';
 import { demoEntitlements } from '@/services/entitlements';
 import { newId } from '@/services/ids';
@@ -13,6 +14,8 @@ import { discardTempPhoto } from '@/services/tempPhoto';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { closetService, startClosetCatchUp } from '@/features/closet/session';
 import { mayUpload } from '@/features/privacy/wipe';
+import { createHeldCatchUp } from '@/features/held/catchUp';
+import { deleteHeldPhoto } from '@/features/held/files';
 import { createFitCheckService, DEFAULT_TIMERS, type TimerConfig } from './service';
 import type { SessionState } from './machine';
 
@@ -53,13 +56,33 @@ export const fitCheck = createFitCheckService({
   closet: closetService,
   // "Which one is you?" cancelled or replaced: his temporary photo goes (02 S23).
   discardPhoto: discardTempPhoto,
+  // "Don't score it" on a held photo (02 S17h, #280): it was never sent; his copy goes.
+  deleteHeldFiles: deleteHeldPhoto,
   timers: () => {
     const lat = getDemoArgs().latency;
     return { ...DEFAULT_TIMERS, cacheHitMs: lat === 0 ? 0 : DEFAULT_TIMERS.cacheHitMs, ...timerOverride };
   },
 });
 
-startClosetCatchUp();
+// Not under jest: these run on timers, and a test's stubbed store would be gone by then ("Cannot log after tests").
+const UNDER_TEST = typeof process !== 'undefined' && process.env?.JEST_WORKER_ID !== undefined;
+if (!UNDER_TEST) startClosetCatchUp();
+
+// A photo held by the Limit card (02 S17h, #280): when he opens Kitted after 4 am, the stylist asks "Ready to score last
+// night's photo?" (#281; only his Score it sends it): at launch (after the first render's writes settle) and on every
+// return to the foreground. Demo screens skip it (their clock is scripted).
+let heldStarted = false;
+export function startHeldCatchUp(): void {
+  if (heldStarted) return;
+  heldStarted = true;
+  setTimeout(() => {
+    createHeldCatchUp(
+      () => (getDemoArgs().demoScreen ? Promise.resolve() : fitCheck.onAppOpen()),
+      (cb) => AppState.addEventListener('change', cb),
+    );
+  }, 3_000);
+}
+if (!UNDER_TEST) startHeldCatchUp();
 
 export function useFitCheckSession(): SessionState {
   return useSyncExternalStore(fitCheck.subscribe, fitCheck.getState, fitCheck.getState);

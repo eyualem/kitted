@@ -65,6 +65,21 @@ export async function retryCheck(checkId: string): Promise<StartOutcome> {
   return r;
 }
 
+/** S17h "Score it" on a held photo (#281): read and scored now, on today's free check, with the same toasts as a new
+ *  check (consent, an error before the card). */
+export async function scoreHeldPhoto(checkId: string): Promise<StartOutcome> {
+  const r = await fitCheck.scoreHeldNow(checkId).catch((e: unknown): StartOutcome => {
+    console.error('[check] held score threw', e);
+    return { outcome: 'error' };
+  });
+  if (r.outcome === 'noConsent') {
+    askConsentThen(() => scoreHeldPhoto(checkId), () => {});
+    return r;
+  }
+  explain(r);
+  return r;
+}
+
 /** What runs once he agrees on the consent sheet (a photo he already picked, or a Try again), and what to do if he
  *  doesn't. One at a time: a newer one replaces (and drops) the older. */
 let pending: { run: () => Promise<unknown>; drop: () => void } | null = null;
@@ -132,6 +147,8 @@ export function explain(r: StartOutcome) {
   } else if (r.outcome === 'unknownPhoto' || r.outcome === 'notImplemented') {
     showToast(t('demo.unknownPhoto'));
   } else if (r.outcome === 'limit') {
+    // A re-check or Try again past its limit, or Pro's daily cap. A new photo over the free limit is held instead
+    // ('held'): its Limit card in the thread is the answer (02 D19 S17, #280), no toast.
     showToast(t('stylist.quota.used'));
   } else if (r.outcome === 'noConsent') {
     // "Score my fits" went off mid-way ("Which one is you?"): nothing was sent. He re-agrees, never silently; agreeing
@@ -142,5 +159,5 @@ export function explain(r: StartOutcome) {
     showToast(t('fail.ai'));
   }
   // 'busy' (another photo is still being read) has no words yet: the reading card on screen is the answer.
-  // 'whichOne': the question card in the thread is the answer.
+  // 'whichOne': the question card in the thread is the answer. 'held': the Limit card is.
 }

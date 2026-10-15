@@ -10,10 +10,9 @@ import {
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { newProblemLines, notSeenProblem, recheckMove, recheckSummary } from '@/features/fitcheck/explain';
+import { caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSummary } from '@/features/fitcheck/explain';
 import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
-import { signed } from '@/i18n/format';
 import { occasionLabel } from '../thread';
 import { FitCheckCard, SHARE_CARD_BUILT } from './FitCheckCard';
 import { useWinReveal } from './useReveal';
@@ -73,9 +72,9 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const move = recheckMove(rc.parentScore, now);
   const problems = newProblemLines(rc.newProblems ?? [], row.details);
   const summary = recheckSummary(outcome as never, move, problems);
-  // One caught fix carries the whole move, so its row says the pill's number; with several (each its own raw
-  // points, which don't add up to the rounded pill) or no win, the rows carry no number.
-  const doneGain = move === 'up' && rc.doneFixes.length === 1 ? signed(now - rc.parentScore) : '';
+  // One caught fix carries the whole move, so its row says the pill's number, as the pill prints it ("+1.0"); with
+  // several or no win, the rows carry no number.
+  const doneGain = caughtFixGain(rc, now);
   // "Didn't catch the change? Tell me" only when a fix wasn't caught (none were, or some of the card's weren't).
   const missed = rc.doneFixes.length < (parent?.row.fixes.length ?? 0) || rc.doneFixes.length === 0;
   const problem = parent?.reading ? notSeenProblem(parent.reading, parent.row.fixes) : '';

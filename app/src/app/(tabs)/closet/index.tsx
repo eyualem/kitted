@@ -1,11 +1,13 @@
 // C1 · Closet (02 D15). Until P5 builds the full screen (Rotation, Starter essentials, filters),
 // it shows what the closet really holds: the C1e empty state, or a grid of his pieces drawn with their
 // details (#91), with a "Same as your …?" card on top for each question the stylist still has. A tap on a piece
-// opens its page (#276); a long-press is the shortcut menu.
+// opens its page (#276); a long-press is the shortcut menu. While clothes scans wait to be read, one row on top
+// ("Waiting to be read · 2 photos", #280) opens the scan inbox.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import { router, type Href } from 'expo-router';
 import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -13,7 +15,9 @@ import { PieceMenu } from '@/features/closet/PieceMenu';
 import { piecePreviewSource } from '@/features/closet/piecePreview';
 import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
-import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
+import { closetGridItems } from '@/features/closet/merge';
+import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
+import { LinkRow, Section } from '@/features/settings/SettingsList';
 import { fitCheck } from '@/features/fitcheck/session';
 import { goToStylist } from '@/router/stylistAction';
 import { t } from '@/i18n/en';
@@ -27,14 +31,15 @@ export default function ClosetScreen() {
     const byId = new Map(all.map((c) => [c.id, c]));
     // Newest first (a row's place in the store moves when it's updated). A piece still waiting on his answer shows in
     // its question card only, not as a tile of its own (#116).
-    const owned = all.filter(isOwned);
-    const items = owned.filter((c) => !isAwaitingAnswer(c, owned)).sort((a, b) => b.addedAt - a.addedAt || (a.id < b.id ? -1 : 1));
+    const items = closetGridItems(all);
     // Long-press preview (founder, Oct 14; #276): his real photo of each piece, outlined, else its drawing.
     const obs = await store.closetObs.all();
     const checks = await loadPhotoChecks(store);
     const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it, obs, checks, livePhotoDeps)]));
     return { items, byId, previews, asks: await fitCheck.closet.openAsks() };
   }, []);
+  // Clothes scans waiting to be read (#280): one row on top while any wait.
+  const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
   if (!data) return null;
   const { items, byId, previews, asks } = data;
@@ -47,6 +52,11 @@ export default function ClosetScreen() {
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
+      {inbox ? (
+        <Section>
+          <LinkRow title={inbox.title} hint={t('scan.inbox.a11y.rowHint')} onPress={() => router.push(inbox.href as Href)} />
+        </Section>
+      ) : null}
       {items.length === 0 ? (
         <EmptyState icon="closet" title={t('closet.empty.title')} body={t('closet.empty.body')}>
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />

@@ -184,6 +184,12 @@ export interface CheckDetails {
    *  score. Absent: a check from before it, a demo photo, or a check it never ran for (scored without). null: it ran
    *  but nothing came back in time (scored without). */
   secondLook?: StoredSecondLook | null;
+  /** A photo taken after the free check (and its re-check) was used (02 D19 S17, #280): kept on the phone, never read
+   *  until a later day's free check scores it (status 'held' until then). `saved`: he tapped "Save for tomorrow" (the
+   *  card shows S17h); ignoring the card holds it all the same. `takenAt`: when he took it, kept once it's scored on a
+   *  later day (the row then moves to that day). `offeredAt`: when "Ready to score last night's photo?" was posted
+   *  (S17h; once per photo, nothing is sent until "Score it"). */
+  held?: { saved: boolean; takenAt: number; offeredAt?: number; scoredAt?: number };
 }
 
 /** Look U's answer (extraction-test/schema_look_u.json), every field checked against its enum. */

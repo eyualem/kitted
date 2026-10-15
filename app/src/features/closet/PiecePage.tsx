@@ -9,23 +9,26 @@
 //      "N more, partly hidden"; the same photo re-checked shows once.
 //   4. Remove from Closet (with Undo), back to the grid.
 // Every crop starts below his head and a mirror selfie reads true-view (cropSafety). Nothing here is sent anywhere.
-// Not built yet (no dead buttons): Add a photo of it, Goes with, Style this, Merge.
-import { useState } from 'react';
+//   5. "Same as another piece…" (#280) when another piece in its slot could be it: a picker, one confirm, then this
+//      piece folds into that one (Undo in the toast); the page then moves to the kept piece.
+// Not built yet (no dead buttons): Add a photo of it, Goes with, Style this.
+import { useCallback, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack, router, useFocusEffect, type Href } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Icon, KText, TagLine, TextLink, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ClosetItemRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { addedDetail } from '@/features/added/addedDetail';
-import { Section, ValueRow } from '@/features/settings/SettingsList';
+import { LinkRow, Section, ValueRow } from '@/features/settings/SettingsList';
 import { t } from '@/i18n/en';
 import { longDate } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
 import { artSpec } from './artSpec';
 import { ClosetTile } from './ClosetTile';
 import { colorPhrase } from './itemName';
+import { mergeOffer } from './merge';
 import { openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
 import { piecePhotos, type PiecePhoto } from './piecePhotos';
 import { livePhotoDeps, loadPhotoChecks } from './photoChecks';
@@ -66,22 +69,28 @@ export function PiecePage({ id }: { id: string }) {
   const [colW, setColW] = useState(0);
   const [showFolded, setShowFolded] = useState(false);
   const data = useLive(['closet', 'closetObs', 'fitChecks'], async () => {
-    const item = await store.closet.get(id);
-    if (!item || !isOwned(item)) return { item: null };
+    const all = await store.closet.all();
+    const item = all.find((c) => c.id === id) ?? null;
+    if (!item || !isOwned(item)) return { item: null, mergedInto: item?.mergedInto ?? null };
     const obs = await store.closetObs.all();
     const checks = await loadPhotoChecks(store);
     const photos = piecePhotos(item, obs, checks, livePhotoDeps);
     const rows = new Map((await store.fitChecks.all()).map((r) => [r.id, r]));
     const inLookbook = new Set([...rows.values()].filter((r) => !r.details.removedFromLookbook).map((r) => r.id));
     const splittable = new Set(obs.filter((o) => o.itemId === id && canSplitOff(o)).map((o) => o.id));
-    return { item, photos, inLookbook, splittable };
+    return { item, photos, inLookbook, splittable, merge: mergeOffer(item, all) };
   }, [id]);
+  // Folded into another piece (#280): back on this page after the picker closes, it shows the kept piece instead.
+  const mergedInto = data && !data.item ? data.mergedInto : null;
+  useFocusEffect(useCallback(() => {
+    if (mergedInto) router.replace(`/closet/item/${mergedInto}` as Href);
+  }, [mergedInto]));
   if (!data) return null;
   const W = colW || Math.max(0, Math.round(screenW - space.gutter * 2));
   if (!data.item) {
     return <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} />;
   }
-  const { item, photos, inLookbook, splittable } = data;
+  const { item, photos, inLookbook, splittable, merge } = data;
   const spec = artSpec(item);
   const hero = photos.shown;
   const all = hero.length + photos.folded.length;
@@ -211,6 +220,12 @@ export function PiecePage({ id }: { id: string }) {
           {t('closet.piece.noPhotos')}
         </KText>
       )}
+
+      {merge ? (
+        <Section>
+          <LinkRow title={merge.label} hint={t('closet.merge.a11y.hint')} onPress={() => router.push(merge.href as Href)} />
+        </Section>
+      ) : null}
 
       <Pressable
         onPress={() => removePiece(item, { onRemoved: () => router.back() })}

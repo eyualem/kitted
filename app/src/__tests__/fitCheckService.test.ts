@@ -176,10 +176,12 @@ describe('first-run story', () => {
     expect((await quota.snapshot()).checksUsed).toBe(1);
   });
 
-  it('the free check is gone: the second check hits the limit and reads nothing', async () => {
-    const { svc } = await setup();
+  it('the free check is gone: the second check hits the limit and reads nothing (held for tomorrow since #280)', async () => {
+    const { svc, store } = await setup();
     await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' });
-    expect(await svc.start({ mode: 'check', photoId: 's15' })).toEqual({ outcome: 'limit' });
+    const n = (await store.readings.all()).length;
+    expect((await svc.start({ mode: 'check', photoId: 's15' })).outcome).toBe('held');
+    expect((await store.readings.all()).length).toBe(n);
   });
 });
 

@@ -1,14 +1,14 @@
 // L1 · Lookbook (02 D16). Until P5 builds the calendar and look grid, it shows the real list of
 // his scored checks (newest first; a re-check folds into its check as "8.0 → 9.0"), or the L1e
-// empty state. Tapping a look opens its photo. No dev placeholder text in a tab (DECISIONS-LOG #56).
+// empty state. Tapping a look opens its page (L2, #280). No dev placeholder text in a tab (DECISIONS-LOG #56).
 import { ActionSheetIOS, Pressable, ScrollView, View } from 'react-native';
-import { router } from 'expo-router';
 import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, Numeral, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, spokenScoreLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { FitCheckRow } from '@/data/types';
 import { shownPhoto } from '@/demo/demoPhotos';
 import { fitCheck } from '@/features/fitcheck/session';
+import { openLookPage } from '@/features/lookbook/lookPage';
 import { occasionLabel } from '@/features/stylist/thread';
 import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { goToStylist } from '@/router/stylistAction';
@@ -63,7 +63,7 @@ function LookRow({ look: { check, latest } }: { look: Look }) {
   const title = `${occasionLabel(check.occasion)} · ${longDate(check.createdAt, sessionClock.offset)}`;
   return (
     <Pressable
-      onPress={() => router.push(`/photo/${check.id}`)}
+      onPress={() => openLookPage(check.id)}
       onLongPress={() => void lookMenu(check.id, title)}
       accessibilityRole="button"
       accessibilityLabel={`${title}. ${spokenScoreLine(score, rechecked ? check.score : undefined)}`}

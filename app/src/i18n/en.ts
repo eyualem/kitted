@@ -791,6 +791,23 @@ const addedInBuild = {
   'card.a11y.recheckHeld': 'Score stays {now}.',
   'card.a11y.fitCheckNoFix': 'Fit check, {occasion}. Score {score} out of 10, {word}. {partial}{summary}',
   'onb.progress.a11y': 'Step {n} of {total}',
+  // Scan inbox + merge (#280): the Closet row and sheet for scans waiting to be read (the sheet's line is the existing
+  // scan.saved.body), and "Same as another piece…" on the piece page (its confirm reuses item.q.duplicate and
+  // item.dup.yes, its toast item.dup.saidSame).
+  'scan.inbox.row': 'Waiting to be read · {n} photos',
+  'scan.inbox.row1': 'Waiting to be read · 1 photo',
+  'scan.inbox.title': 'Waiting to be read',
+  'scan.inbox.deleteTitle': 'Delete this photo?',
+  'scan.inbox.deleteBody': "It's removed from your phone.",
+  'scan.inbox.a11y.rowHint': 'Shows the photos',
+  'scan.inbox.a11y.photo': 'Clothes photo, {date}',
+  'scan.inbox.a11y.delete': 'Delete the photo from {date}',
+  'closet.merge.action': 'Same as another piece…',
+  'closet.merge.title': 'Same as which piece?',
+  'closet.merge.sub': 'Its photos and wears move to the one you pick.',
+  'closet.merge.confirmBody': 'Its photos and wears move to your {item}. Your scores stay the same.',
+  'closet.merge.a11y.hint': 'Pick the piece this one is the same as',
+  'closet.merge.a11y.pickHint': 'Asks before moving it',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

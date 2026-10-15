@@ -224,3 +224,24 @@ Founder: "proceed with the plan. make sure that you test the things that you imp
 
 **5. The re-check fix row (§2 nit):**
 - N1 (T) A caught fix's row on a re-check shows the same number, formatted the same way, as the pill ("+1.0", not "+1").
+
+### §6 results (Oct 15, #286): checked against the list above, unchanged except L5 (amended before its fix, #281)
+| Check | Result | How |
+|---|---|---|
+| G1 | Pass | app tsc, core tsc, lint clean; core 755/755, app 689/689 in 63 suites, jest exit 0 |
+| G2 | Pass | core parity suites green; M4 asserts every stored score before, after and after Undo |
+| G3 | Pass | Simulator at the largest text size, light and dark: screens 19, 98, 111, 113, 121; text wraps, nothing clipped or overlapping |
+| G4 | Pass | new strings listed in DECISIONS-LOG #286 |
+| L1–L4, L6–L8 | Pass | `limitCard.test.ts`, failed first, then green |
+| L5 | Struck | wrong against ruling 27; replaced by L5′ before the change (#281) |
+| L5′ | Pass | `limitCard.test.ts` L5′ tests, failed against the auto-scoring build first |
+| L9 | Pass | Simulator screens 19 (limit card), 120 (saved), 121 ("Ready to score last night's photo?") |
+| S1–S4 | Pass | `scanInboxRow.test.ts`, failed first |
+| S5 | Pass | Simulator screens 110–111: "Waiting to be read · 2 photos", the sheet with dates and delete |
+| M1–M4 | Pass | `pieceMerge.test.ts`, failed first |
+| M5 | Pass | Simulator: from the duplicate's page, "Same as another piece…" → the khaki chinos → "Yes, same one": the page moves to the kept piece with both photos, the duplicate's tile leaves the grid; Undo brings it back |
+| K1–K5, K7, K8 | Pass | `lookPage.test.ts`, failed first |
+| K6 | Pass | Simulator screens 97 (re-checked look, dark) and 98 (photo deleted, drawn pieces) |
+| N1 | Pass | `recheckFixRow.test.ts`, failed first |
+
+**Found while testing, fixed:** the held-photo catch-up timer threw after tests and made jest exit 1 (it now never throws, and the startup jobs don't start under jest); demo screen 121 scored its 9:12 pm photo instead of holding it (a dev build with a live key counts no checks; the story now spends the day for that step only); demo screens 112–113 opened a blank page (the matcher linked the second chinos photo by itself, so no duplicate existed; the story now splits one off as "Not this piece" would). **Small, left open:** after a merge's Undo the page stays on the kept piece instead of returning to the restored one; on screen 111 at the largest text size the inbox row's chevron is hidden.

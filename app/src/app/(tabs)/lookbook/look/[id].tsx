@@ -1,6 +1,8 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { useLocalSearchParams } from 'expo-router';
+import { LookPage } from '@/features/lookbook/LookPageScreen';
 
-// L2 · Look detail (02-screens.md). Built in P5.
+// L2 · A look's page (02 L2; #280), pushed from a Lookbook row: the photo, the score as stored, its fixes and pieces.
 export default function LookDetailScreen() {
-  return <Placeholder id="L2" name="Look detail" phase="P5" kind="push" />;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <LookPage id={String(id ?? '')} />;
 }

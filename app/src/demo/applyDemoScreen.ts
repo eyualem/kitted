@@ -3,7 +3,7 @@
 import type { Href } from 'expo-router';
 import { setOnboarded } from '@/state/appGate';
 import { getDemoArgs, setDemoArgs } from '@/state/session';
-import { prepareDemoScreen } from './prepareDemoScreen';
+import { demoLinkIds, prepareDemoScreen } from './prepareDemoScreen';
 import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
 import { screenScenario } from './scenarios';
@@ -36,5 +36,7 @@ export async function applyDemoScreen(params: RawArgs): Promise<DemoTarget | nul
 
   // Let the root layout re-render with the new gate before navigating into a guarded route.
   await new Promise((resolve) => setTimeout(resolve, 0));
-  return { href: scenario.href as Href, ...(scenario.under ? { under: scenario.under as Href } : {}) };
+  // Ids the story made ("{dup}", #280) filled into the link.
+  const fill = (h: string) => h.replace(/\{(\w+)\}/g, (m, k: string) => demoLinkIds[k] ?? m);
+  return { href: fill(scenario.href) as Href, ...(scenario.under ? { under: fill(scenario.under) as Href } : {}) };
 }

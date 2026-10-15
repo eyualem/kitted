@@ -26,6 +26,7 @@ import type { ClosetKind, ClosetSource, StoredClosetReading } from '@/services/c
 import type { GarmentMeasurer, Measured } from '@/services/measure/garments';
 import { garmentHex } from '@/features/fitcheck/labels';
 import { serial } from './checkWrites';
+import type { MergeUndo } from './merge';
 import { assignNames, baseName, isAutoNamed } from './itemName';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
@@ -1090,6 +1091,86 @@ export function createClosetService(deps: ClosetServiceDeps) {
       }
       const now = await store.closetObs.get(obsId);
       return now ? store.closet.get(now.itemId) : null;
+    }),
+    /**
+     * "Same as another piece…" on the piece page (#280): `fromId` folds into `intoId` (same slot, both his, neither
+     * waiting on an answer). Every sighting moves to the kept piece (a sighting that made or asked about the copy
+     * becomes one he linked, so "Not this piece" can split it off again); the worn counts add, a look both were seen in
+     * counted once; the copy's removed photos stay removed; and the copy leaves the grid, matching and every question
+     * (merged, like a "Yes, same one"). The checks that saw it point at the kept piece. Scores never change: only closet
+     * rows and the checks' closet summaries move. Returns what Undo needs to put every changed row back, or null.
+     */
+    merge: (fromId: string, intoId: string) => serial(async (): Promise<MergeUndo | null> => {
+      if (fromId === intoId) return null;
+      const all = await store.closet.all();
+      const owned = all.filter(isOwned);
+      const from = owned.find((c) => c.id === fromId), into = owned.find((c) => c.id === intoId);
+      if (!from || !into || from.slot !== into.slot || isAwaitingAnswer(into, owned)) return null;
+      const now = clock.nowMs();
+      const before = new Map(all.map((c) => [c.id, clone(c)]));
+      const obsAll = await store.closetObs.all();
+      const moved = obsAll.filter((o) => o.itemId === fromId);
+      const checks = await store.fitChecks.all();
+      // Worn: each piece's count, minus the looks (a check and its re-checks) both were seen in, still in the Lookbook.
+      const lookOf = new Map(checks.map((r) => [r.id, r.parentId ?? r.id]));
+      const gone = new Set(checks.filter((r) => r.details.removedFromLookbook).map((r) => r.parentId ?? r.id));
+      const looksOf = (id: string) => new Set(obsAll.filter((o) => o.itemId === id && isLive(o) && o.fitCheckId && lookOf.has(o.fitCheckId))
+        .map((o) => lookOf.get(o.fitCheckId!)!).filter((l) => !gone.has(l)));
+      const intoLooks = looksOf(intoId);
+      const shared = [...looksOf(fromId)].filter((l) => intoLooks.has(l)).length;
+      const wornCount = Math.max(into.wornCount, from.wornCount, into.wornCount + from.wornCount - shared);
+      for (const o of moved) {
+        const linked = isLive(o) && (o.decision === 'new' || o.decision === 'ask' || o.decision === 'answeredNew');
+        await store.closetObs.patch(o.id, { itemId: intoId, ...(linked ? { decision: 'answeredSame' as const, answeredAt: now } : {}) });
+      }
+      const pi = profileOfItem(into), pf = profileOfItem(from);
+      const sub = typeof from.garment.subcategory === 'string' ? from.garment.subcategory : null;
+      const hidden = uniq([...(pi.hiddenObsIds ?? []), ...(pf.hiddenObsIds ?? [])]);
+      const lastWornAt = Math.max(into.lastWornAt ?? 0, from.lastWornAt ?? 0);
+      await store.closet.patch(intoId, {
+        wornCount, lastWornAt: lastWornAt > 0 ? lastWornAt : null, updatedAt: now,
+        profile: {
+          ...pi, distinctFrom: pi.distinctFrom.filter((x) => x !== fromId),
+          aliases: uniq([...pi.aliases, ...pf.aliases, ...(sub && sub !== into.garment.subcategory ? [sub] : [])]).sort(),
+          ...(hidden.length > 0 ? { hiddenObsIds: hidden } : {}),
+        },
+      });
+      await store.closet.patch(fromId, { isDeleted: true, mergedInto: intoId, maybeSameAs: null, updatedAt: now });
+      const touched: MergeUndo['checks'] = [];
+      for (const r of checks) {
+        const cs = r.details.closetSummary;
+        const names = !!cs && ([...(cs.matched ?? []), ...(cs.added ?? [])].includes(fromId) || (cs.links ?? []).some((l) => l.itemId === fromId));
+        if (!names && !r.itemIds.includes(fromId)) continue;
+        touched.push({ id: r.id, closetSummary: cs ? clone(cs) : undefined, itemIds: [...r.itemIds] });
+        if (!cs) {
+          await store.fitChecks.patch(r.id, { itemIds: uniq(r.itemIds.map((x) => (x === fromId ? intoId : x))) });
+          continue;
+        }
+        const s = summaryOf(r);
+        s.links = s.links.map((l) => (l.itemId === fromId ? { ...l, itemId: intoId } : l));
+        const wasAdded = s.added.includes(fromId);
+        s.added = s.added.filter((x) => x !== fromId);
+        s.matched = uniq([...s.matched.map((x) => (x === fromId ? intoId : x)), ...(wasAdded && !s.added.includes(intoId) ? [intoId] : [])]);
+        s.touched = true;
+        await saveSummary(r.id, s);
+      }
+      await refreshItem(intoId);
+      await renameAll();
+      const after = new Map((await store.closet.all()).map((c) => [c.id, c]));
+      const items = [...before.values()].filter((b) => JSON.stringify(b) !== JSON.stringify(after.get(b.id)));
+      return { fromId, intoId, items, obs: moved.map(clone), checks: touched };
+    }),
+    /** Undo for merge: every row it changed, back as it was (both pieces' ids, sightings, cover and removed photos). */
+    unmerge: (u: MergeUndo) => serial(async () => {
+      for (const it of u.items) await store.closet.put(clone(it));
+      for (const o of u.obs) await store.closetObs.put(clone(o));
+      for (const c of u.checks) {
+        const cur = await store.fitChecks.get(c.id);
+        if (!cur) continue;
+        const { closetSummary: _cs, ...rest } = cur.details;
+        void _cs;
+        await store.fitChecks.patch(c.id, { itemIds: [...c.itemIds], details: c.closetSummary ? { ...rest, closetSummary: clone(c.closetSummary) } : rest });
+      }
     }),
     /** The pieces a look added that no other check has seen: what "Remove look and its new pieces" would remove. */
     async onlyInLook(checkId: string): Promise<ClosetItemRow[]> {

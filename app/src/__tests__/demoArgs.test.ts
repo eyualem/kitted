@@ -33,7 +33,7 @@ describe('demoArgs', () => {
   });
 
   it('ignores invalid values instead of throwing', () => {
-    expect(parseArgs({ demoScreen: '99', theme: 'blue', latency: '-1', now: 'tomorrow', seed: 'half', unknown: 'x' })).toEqual({});
+    expect(parseArgs({ demoScreen: '9999', theme: 'blue', latency: '-1', now: 'tomorrow', seed: 'half', unknown: 'x' })).toEqual({});
   });
 
   it('treats a bare flag as true', () => {
