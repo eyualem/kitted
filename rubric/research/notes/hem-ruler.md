@@ -111,3 +111,26 @@ extraction-test/.venv-mp/bin/python -I extraction-test/hem_ruler.py measure   # 
 extraction-test/.venv-mp/bin/python -I extraction-test/hem_ruler.py report
 ```
 New photos (the hem variants) need a Vision run first (`waist_rulers.py`, which writes `results/waist4/runs/<id>.p<pitch>.json`) and a row in `hem3_labels.csv`.
+
+## The founder's cuffed pair (Oct 15, pulled from his phone)
+
+- **The pair:** his red tee with the black wide jeans on black slides with white socks, two mirror selfies 18 seconds apart on Oct 14:
+  - `phone-e16ac6`, 5:59:46 pm, uncuffed;
+  - `phone-6f1aee`, 6:00:04 pm, cuffed (he named the red-shirt pair; which shot is cuffed is read from the photos: the second one's hems sit higher on the slides).
+  - Rule 7: the founder, profile pending.
+- **The ruler:**
+
+  | Shot | Left hem | Right hem |
+  |---|---|---|
+  | Uncuffed | 13.0 cm | 13.9 cm |
+  | Cuffed | 12.4 cm | 13.3 cm |
+
+  That's −0.6 cm on both legs, inside its ~1 cm tilt noise and the wrong way round. Widen, folds and raggedness don't separate them either.
+- **The AI:** the scoring read called both shots "full break", not "cuffed".
+- **By eye on the overlays:** from the front, both hems rest on the slide strap. The cuff mostly changes the back of the heel, which a front mirror selfie doesn't show, and it's black on black.
+- **So this pair can't test anything.** Neither the ruler nor the AI (nor a person, from the front) sees the change.
+- **For the hem variants to be a usable test:**
+  - **lighter trousers** (the khakis or the blue jeans) on sneakers, not black on black;
+  - **one full cuff** (about 4 cm), not a small turn;
+  - **both views:** a propped shot at shin height and one from the side;
+  - the uncuffed shot first, then only the hem changes.

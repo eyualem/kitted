@@ -1558,3 +1558,12 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **(3) A photo he adds never changes the drawing.**
     - **(4) The selected tab is ink, not copper** (copper only when a score moves, #231).
     - **Started the same day:** the piece page (tap a tile → drawing first, then his outlined photos; cover, remove photo, not this piece, rename, remove piece; removals delete cut-out files after Undo), and the fix-first batch from `handoff/09-ui-review.md` §1 that needs no new copy approval. The #233 copy items stay waiting on his OK.
+
+## Oct 15 · The founder's cuffed pair, run through the hem ruler (founder: "it is the picture where I wear a red shirt")
+277. **His cuffed / uncuffed pair can't be told apart by the hem ruler, by the AI, or by eye from the front, so it doesn't test the hem ideas. The hem variants need lighter trousers, a full cuff and a side view.**
+    - **The photos:** pulled from his phone (`screenshots/phone/20261015-103853`; nothing on the phone is newer than Oct 14, 6:00 pm).
+    - **The pair:** black wide jeans on black slides, mirror. `phone-e16ac6` uncuffed, `phone-6f1aee` cuffed. Which one is cuffed was read from the photos; he named the pair.
+    - **The ruler:** hem 13.0/13.9 cm uncuffed against 12.4/13.3 cm cuffed (−0.6 cm, noise).
+    - **The AI:** the scoring read said "full break" for both.
+    - **Why:** from the front both hems sit on the slide strap. The cuff changes the back of the heel, and it's dark on dark.
+    - **Decided (Claude):** the hem-variants shoot spec in CLAUDE.md now asks for lighter trousers on sneakers, one ~4 cm cuff, and a propped shin-height shot plus a side shot, uncuffed first. No app change. Note: `rubric/research/notes/hem-ruler.md`, last section.
