@@ -1658,3 +1658,16 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Why:** after #278, #280 and #283 it's the best value: it names clothes better than every cheaper model, and Claude Sonnet 5.5's small edge costs ~3×.
     - **What stays ready:** GPT-6 Luna (0.054¢, scores as well, ~2× the naming errors) stays wired as the fallback in `extraction-test/openai_read.py`, if the bill ever forces a switch. The same tests rerun in minutes (`model_test.py`, `waist_labels/names2/`, `names3/`).
     - **No app change.** The cost work moves to the other levers in `market/ai-costs.md` §5.
+
+## Oct 15 · Pricing direction (founder: "in the beginning, we are only going to do 9.99 a month … only give a 1 week free trial"; "log the business and cost side of things as p2")
+285. **Pro is $9.99 a month with a 1-week free trial. The rest of the business and cost questions are one P2 item on the to-do list.**
+    - **What it replaces:** $29.99/yr with a 14-day trial, or $5.99/mo.
+    - **Why it helps:** $8.49 kept per subscriber per month after Apple's 15%, against ~$2.12 of AI for a typical Pro user from Jan 2027, so ~$6.37 left over. That's the Social & Lifestyle median monthly price. The 1-week trial costs half the AI of a 14-day one, and 5–9 day trials convert nearly as well (37% vs 42%).
+    - **Still not enough on its own:** per 100 monthly users at 2% paying, ~$17 in against ~$31 of AI from January. Covering the AI needs ~4% paying, or a cheaper free tier.
+    - **Open (Claude's defaults):**
+      - a yearly plan (default: add ~$39.99 after ~1,000 paywall views; monthly renewals in this category are the weakest);
+      - the Pro cap (default: 5 checks and 30 questions a day; the current cap can cost ~$23 a month);
+      - the free tier (default: keep for the beta);
+      - the founding offer (default: first month $4.99).
+    - **Updated:** CLAUDE.md "Free and Pro" and the to-do list (P2, replacing the P1 "AI bill" item); `market/ai-costs.md` §6; `market/market-research.md` (note at the pricing section).
+    - **Not yet changed:** the paywall code and copy (`app/src/i18n/en.ts`, the mock store's products). They change once the open items are settled.

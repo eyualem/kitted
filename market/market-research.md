@@ -234,6 +234,7 @@ Positioning means choosing which alternative you're compared with, what only you
 | Free | 1 check + 5 questions a day, score always visible | Most raters show nothing free |
 
 **Claude's view:**
+- **Update Oct 15 (#285): the founder's direction is $9.99 a month with a 1-week trial** (the Social & Lifestyle median monthly price). The yearly plan, the caps and the founding offer are open (CLAUDE.md to-do, P2). The two lines below are the earlier plan.
 - **$29.99/yr is right for launch:** cheap for a student, equal to DRPD, below Looksee.
 - **Test $39.99 after about 1,000 people have seen the paywall,** not before.
 - **The monthly price is mostly there to make the yearly plan look good;** $7.99 would make the yearly saving look bigger. Keep $5.99 at launch (your call; it's on your list).

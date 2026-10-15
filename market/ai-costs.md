@@ -90,3 +90,17 @@ The cheap Lunas score outfits as well as Gemini. So the model lever is real mone
 - Claude counts the photos at ~5,400 tokens, against ~3,300 for Gemini and OpenAI.
 
 **Decided Oct 15 (#284, the founder): the reading stays on Gemini 3.8 Flash.** The model lever is closed. The bill is cut by the other levers in §5 (the free tier, the cheaper closet call, caching and Batch for calls nobody waits on).
+
+## 6. At $9.99 a month (the founder's direction, Oct 15, #285)
+| | Per Pro subscriber per month |
+|---|---|
+| He pays, after Apple's 15% | $8.49 |
+| AI, typical Pro (45 checks, 15 re-checks, 120 questions), from Jan 2027 | $2.12 |
+| Left over | **$6.37** |
+| AI at the current cap (10 checks + re-checks and 50 questions every day), from Jan 2027 | $23.21: a loss |
+
+- **Per 100 monthly users at 2% paying (Jan 2027):** ~$17 in vs ~$31 of AI (was ~$6 in under $29.99/yr and $5.99/mo).
+- **Break-even share paying, AI only:** ~1.8% at today's prices, ~4.1% from Jan 2027 (free users ~$0.27 a month each).
+- **A 1-week trial** costs ~$0.53 of AI per trial user who doesn't convert (half the 14-day trial). 5–9 day trials convert 37% vs 42% for longer ones (RevenueCat 2026).
+- **Open (CLAUDE.md to-do, P2):** a yearly plan, the Pro cap, the free tier, the founding offer.
+
