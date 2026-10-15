@@ -32,7 +32,7 @@ describe('onboarding basics (02 D3)', () => {
   it('echoes the looks and replies with the template', () => {
     expect(looksEcho([])).toBe('Not sure yet');
     expect(looksEcho(['streetwear', 'workwear'])).toBe('Streetwear · Workwear');
-    expect(looksReply(['smart_casual', 'workwear'])).toBe('Smart casual with some workwear. Good mix. Now your basics, so the advice fits your frame.');
+    expect(looksReply(['smart_casual', 'workwear'])).toBe('Smart casual with some workwear. Good mix. Now a few basics, so the advice fits you.');
     expect(looksReply(['minimalist'])).toMatch(/^Minimal\. Good pick\./);
     expect(basicsEcho({ heightIn: null, build: 'average', fit: 'regular', birthYear: 2005 })).toBe('Average · Regular · 2005');
     expect(basicsEcho({ heightIn: 70, build: 'slim', fit: 'relaxed', birthYear: 2005 })).toBe('5′ 10″ · Slim · Relaxed · 2005');

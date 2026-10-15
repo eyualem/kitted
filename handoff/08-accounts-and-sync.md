@@ -15,7 +15,7 @@
 - **Cost:** about $0 a month at 1,000 monthly users, ~$8 at 10,000, ~$45 at 50,000 (§4). **Storage is never the money problem; the AI calls are** (§4.3).
 - **Work:** about 10–12 days of building (§6). That's more than the 3–4 days for iCloud, but iCloud can't reach Android, so the work would only be postponed.
 - **When:** settle the design now and do the cheap preparation before the beta (about 1 day, §7). Build accounts and sync after the App Store submission, as v1.1 (December), before Android.
-- **Sign-in is optional:** the app works signed out exactly as today (data on the phone, plus iCloud Backup on iPhone). Signing in ("Back up and use on other devices") is offered later, never in onboarding. The 6 taps to the first check stay.
+- **Sign-in is optional:** the app works signed out exactly as today (data on the phone, plus iCloud Backup on iPhone). Signing in ("Back up and use on other devices") is never required and never comes before the first score; it's offered on Welcome ("I already have an account"), once after the first fit ("Keep your fits"), and in You → Settings (revised Oct 15, `10-onboarding.md`, #289). The taps to the first check stay.
 
 ---
 
@@ -123,7 +123,7 @@ Firebase prices used: Firestore in us-central1 $0.03 per 100,000 reads and $0.09
 ## 5. What he'll see
 
 - **Signed out (the default):** the app works the same as today. In You → Privacy: "On this iPhone only. Back up and use on other devices ›".
-- **The offer** appears after his 3rd fit check (once), and in You → Settings: "Keep your closet and fits safe. Sign in to back up and use Kitted on other phones." Buttons: Sign in with Apple · Not now. On Android: Google, and Apple too.
+- **The offer** (revised by #289, `10-onboarding.md` §3): an inline "Keep your fits" card after he's seen his first fit, a second and last one after 3 more checks if he said Not now, and in You → Settings. Was: after his 3rd fit check (once), and in You → Settings: "Keep your closet and fits safe. Sign in to back up and use Kitted on other phones." Buttons: Sign in with Apple · Not now. On Android: Google, and Apple too.
 - **Signed in:** You → Privacy shows "Backed up · just now", a "Back up photos" switch (on by default, outward-facing), "Download my data" and "Delete account and all data".
 - **A new phone:** Welcome → "I've used Kitted before" → sign in → his closet, Lookbook, chats and facts come back. Onboarding is skipped. If this phone's birth year was never entered, the age gate still runs.
 - **Deleting:** "Delete account and all data" removes the server copy, the photos and the account, then wipes the phone. A web page (trykitted.com/delete) does the same after he signs in there, as Google Play requires.
@@ -165,7 +165,7 @@ Cheap now, expensive after people have data:
 
 **Settled by Claude:**
 - The phone's SQLite stays the real copy, with background sync.
-- Sign-in is optional and never in onboarding.
+- Sign-in is optional and never before the first score (where it's offered: `10-onboarding.md`, #289).
 - Faces are never processed on our servers.
 - The full photo stays on the phone that took it; other devices get a 1600 px copy.
 - The settle-now items in §7.

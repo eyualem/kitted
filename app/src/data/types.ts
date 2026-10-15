@@ -18,7 +18,9 @@ export type CardType =
   | 'held'
   | 'plan'
   | 'question'
-  | 'item';
+  | 'item'
+  /** "Keep your fits", the save offer (A3, 10-onboarding.md §3). */
+  | 'account';
 
 /** The seven occasion chips (02 D6); stored as rubric occasion ids. */
 export type OccasionKey = 'everyday' | 'class' | 'date' | 'going_out' | 'interview' | 'event' | 'gym' | 'home';

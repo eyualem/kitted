@@ -1,5 +1,6 @@
-// O1 · Welcome (02 D1): the hero photo (s14 since #278, neck down), a mini score card, the wordmark, the headline and
-// Get started. "See an example check" (O1e) isn't built yet, so its link is hidden rather than leading nowhere.
+// O1 · Welcome (02 D1): the hero photo (s14 since #278, neck down), a mini score card, the wordmark, the headline,
+// Get started, "See an example check" (O1e, #289) and, once accounts exist, "I already have an account" (A1 from
+// Welcome, 10-onboarding.md §2; hidden in real builds until Firebase, ACCOUNTS_BUILT).
 // The card's score and word come from the engine (welcomeExample, #276), and the hero starts below the collar.
 import { router, useFocusEffect } from "expo-router";
 import { setStatusBarStyle } from "expo-status-bar";
@@ -15,6 +16,7 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 import {
   KButton,
   KCard,
+  TextLink,
   KText,
   MonoLabel,
   Numeral,
@@ -27,9 +29,10 @@ import { NeckDownPhoto } from "@/design-system/components/Chat";
 import { demoPhoto } from "@/demo/demoPhotos";
 import { displayScore } from "@/design-system/score";
 import { store } from "@/data/db";
-import { KV } from "@/data/store";
 import { t } from "@/i18n/en";
+import { useAccountsOn } from "@/features/account/account";
 import { WELCOME_PHOTO, welcomeExample } from "./welcomeExample";
+import { ONBOARDING_STEP_KEY } from "./resume";
 
 const HERO_H = 455;
 /** s14's stored neck line (0.21 of the photo) sits at his chin; the hero starts at the turtleneck, so nothing of the
@@ -56,8 +59,9 @@ export function WelcomeScreen() {
   const { width, height } = box ?? window;
   const hero = demoPhoto(WELCOME_PHOTO);
   const heroH = isAccessibilitySize ? Math.round(height * 0.4) : HERO_H;
+  const accounts = useAccountsOn();
   const start = () => {
-    void store.setKv(KV.onboardingStep, "1");
+    void store.setKv(ONBOARDING_STEP_KEY, "looks");
     router.push("/onboarding/looks");
   };
   return (
@@ -159,8 +163,22 @@ export function WelcomeScreen() {
           <KText variant="body" color="ink2">
             {t("onb.welcome.body")}
           </KText>
-          <View style={{ marginTop: 8 }}>
+          <View style={{ marginTop: 8, gap: 2 }}>
             <KButton title={t("onb.welcome.start")} onPress={start} />
+            <KButton
+              title={t("onb.welcome.example")}
+              kind="ghost"
+              onPress={() => router.push("/onboarding/example")}
+            />
+            {accounts ? (
+              <View style={{ alignItems: "center" }}>
+                <TextLink
+                  title={t("onb.welcome.haveAccount")}
+                  color="ink2"
+                  onPress={() => router.push({ pathname: "/sheets/sign-in", params: { from: "welcome" } })}
+                />
+              </View>
+            ) : null}
           </View>
         </View>
       </ScrollView>

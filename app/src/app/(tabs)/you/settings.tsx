@@ -15,6 +15,7 @@ import { LinkRow, PickerRow, Section, SettingsScroll } from '@/features/settings
 import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
+import { AccountSection } from '@/features/account/AccountRows';
 
 const APPEARANCE_OPTIONS = APPEARANCES.map((a) => ({ value: a, label: appearanceLabel(a) }));
 const UNIT_OPTIONS = UNITS.map((u) => ({ value: u, label: unitsLabel(u) }));
@@ -41,6 +42,8 @@ export default function SettingsScreen() {
 
   return (
     <SettingsScroll>
+      {/* Accounts (#289): first, once Firebase exists; hidden until then. */}
+      <AccountSection />
       <Section>
         <LinkRow title={t('settings.notifications')} onPress={() => router.push('/you/notifications')} />
         <LinkRow title={t('settings.plan')} value={planShortName(plan)} onPress={() => router.push('/you/plan')} />

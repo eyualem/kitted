@@ -32,6 +32,7 @@ import { ThreadRow } from './MessageView';
 import { buildThreadItems, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
 import { t } from '@/i18n/en';
+import { useAccountOffer } from '@/features/account/offerSession';
 
 /** No tab-bar accessory off iOS (the web preview): the composer stays docked. */
 const DOCK_ALWAYS = Platform.OS !== 'ios';
@@ -152,6 +153,9 @@ export function StylistScreen() {
       return () => clearTimeout(timer);
     }, [toEnd]),
   );
+
+  // "Keep your fits" (A3, #289): the save offer, posted when offer.ts says it's due.
+  useAccountOffer();
 
   // The morning/evening card (02 "S1d"): posted the first time Stylist is shown in its window,
   // including when the app comes back to the front the next morning (focus doesn't fire then).

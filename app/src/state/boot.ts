@@ -16,6 +16,7 @@ import { failInterruptedChecks } from '@/features/fitcheck/interrupted';
 import { dropWhichOne } from '@/features/fitcheck/whichOne';
 import { applySavedAppearance } from '@/features/settings/prefs';
 import { discardTempPhoto } from '@/services/tempPhoto';
+import { loadResumeStep } from '@/features/onboarding/resume';
 import { getGate, markGateReady } from './appGate';
 import { setDemoArgs, startClock } from './session';
 
@@ -72,6 +73,8 @@ async function bootSteps(): Promise<DemoArgs> {
   // A "Which one is you?" left from the last run: its temporary photo may be gone, and nothing was counted (02 S23).
   await dropWhichOne(store, discardTempPhoto, { onlyOpen: false }).catch((e: unknown) => console.error('[boot] which one', e));
 
+  // Mid-setup when the app closed: "/" reopens that step (10-onboarding.md F4).
+  await loadResumeStep(store).catch((e: unknown) => console.error('[boot] resume step', e));
   markGateReady({
     ageBlocked: await getAgeBlocked(),
     onboarded: (await store.getKv(KV.onboardingDone)) === '1',

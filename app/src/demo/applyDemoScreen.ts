@@ -2,11 +2,13 @@
 // (theme, now, latency, freeChecksUsed, resetData…) override the scenario's defaults.
 import type { Href } from 'expo-router';
 import { setOnboarded } from '@/state/appGate';
-import { getDemoArgs, setDemoArgs } from '@/state/session';
+import { getDemoArgs, sessionClock, setDemoArgs } from '@/state/session';
 import { demoLinkIds, prepareDemoScreen } from './prepareDemoScreen';
 import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
 import { screenScenario } from './scenarios';
+import { prepareAccountDemo } from '@/features/account/demo';
+import { store } from '@/data/db';
 
 export interface DemoTarget {
   href: Href;
@@ -28,6 +30,8 @@ export async function applyDemoScreen(params: RawArgs): Promise<DemoTarget | nul
 
   await prepareDemoScreen(scenario);
   await setOnboarded(scenario.onboarded);
+  // Account screens (#289): on with their scripted sign-in, off everywhere else.
+  await prepareAccountDemo(store, scenario, sessionClock.nowMs());
   setDemoState({
     screen: n,
     ...(overrides.theme !== undefined ? { theme: overrides.theme } : {}),

@@ -17,6 +17,7 @@ import { LOOKS_KEY, OTHER_STYLE_KEY } from './basics';
 import { LookTile } from './LookTile';
 import { cleanOtherWords, LOOKS, togglePick } from './looks';
 import { OnboardingNav } from './OnboardingNav';
+import { setResumeStep } from './resume';
 
 
 const GAP = 10;
@@ -72,6 +73,7 @@ export function PickLooksScreen() {
     await store.setKv(LOOKS_KEY, JSON.stringify(chosen));
     if (otherWords) await store.setKv(OTHER_STYLE_KEY, otherWords);
     else await store.deleteKv(OTHER_STYLE_KEY);
+    await setResumeStep(store, 'basics');
     router.push('/onboarding/basics');
   };
 

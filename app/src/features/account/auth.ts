@@ -20,8 +20,6 @@ export interface AccountHoldings {
   fits: number;
   pieces: number;
   chats: number;
-  /** From the synced profile; null when the account never had one (the age gate then runs on this phone). */
-  birthYear: number | null;
 }
 
 export type SignInResult =
@@ -45,15 +43,14 @@ export interface AuthService {
   deleteAccount(): Promise<DeleteResult>;
 }
 
-/** The scripted outcomes (demo screens 130–143). `ok`: a new, empty account; `existing`: one that already holds fits;
- *  `minor`: one whose saved birth year is under 18. */
-export type MockScript = 'ok' | 'existing' | 'minor' | 'cancel' | 'error' | 'offline';
+/** The scripted outcomes (demo screens 130–143). `ok`: a new, empty account; `existing`: one that already holds fits. */
+export type MockScript = 'ok' | 'existing' | 'cancel' | 'error' | 'offline';
 
 /** The mock account's holdings for `existing` (A4's "214 fits · 38 pieces · 61 chats"). */
-export const MOCK_HOLDINGS: AccountHoldings = { fits: 214, pieces: 38, chats: 61, birthYear: 2003 };
+export const MOCK_HOLDINGS: AccountHoldings = { fits: 214, pieces: 38, chats: 61 };
 /** The code the mock accepts (any other 6 digits is "didn't match"; `000000` is "expired"). */
 export const MOCK_CODE = '123456';
-const MOCK_EMAILS: Record<'apple' | 'google', string> = { apple: 'k7p2xq9wmd@privaterelay.appleid.com', google: 'demo.kitted@gmail.com' };
+export const MOCK_EMAILS: Record<'apple' | 'google', string> = { apple: 'k7p2xq9wmd@privaterelay.appleid.com', google: 'demo.kitted@gmail.com' };
 
 export function createMockAuth(o: { script?: () => MockScript; now?: () => number; latencyMs?: number; uid?: () => string } = {}): AuthService {
   const script = o.script ?? (() => 'ok');
@@ -67,7 +64,7 @@ export function createMockAuth(o: { script?: () => MockScript; now?: () => numbe
     if (s === 'cancel' && provider !== 'email') return { kind: 'cancelled' };
     if (s === 'error') return { kind: 'failed' };
     if (s === 'offline') return { kind: 'offline' };
-    const holdings = s === 'existing' ? MOCK_HOLDINGS : s === 'minor' ? { ...MOCK_HOLDINGS, birthYear: 2010 } : null;
+    const holdings = s === 'existing' ? MOCK_HOLDINGS : null;
     return { kind: 'ok', user: { uid: uid(), provider, email, signedInAt: now() }, holdings };
   };
   return {

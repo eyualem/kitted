@@ -12,6 +12,8 @@ import { DEMO_ENABLED } from '@/demo/config';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
 import { realPrivacyFiles, bytesParts, type PhotoUsage } from '@/features/privacy/files';
+import { ACCOUNT_KEY, getAccount } from '@/features/account/account';
+import { deleteAccountAndData } from '@/features/account/actions';
 import { runDeleteAllData, runDeleteAllPhotos, runForgetFacts, turnScoringOff, turnScoringOn } from '@/features/privacy/actions';
 import { LinkRow, Section, SettingsScroll, ToggleRow, ValueRow } from '@/features/settings/SettingsList';
 import { showToast } from '@/features/toast/toast';
@@ -72,6 +74,7 @@ function DangerRow({ title, onPress, disabled }: { title: string; onPress: () =>
 
 export default function PrivacyDataScreen() {
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
+  const account = useLive(['kv'], () => getAccount(store), [], ACCOUNT_KEY);
   const plan = useLive(['usage', 'fitChecks'], () => quota.snapshot(), []);
   const [usage, refreshUsage] = usePhotoUsage();
   const [busy, setBusy] = useState(false);
@@ -159,12 +162,22 @@ export default function PrivacyDataScreen() {
               }))
             }
           />
-          <DangerRow
-            key="all"
-            title={t('privacy.deleteAll')}
-            disabled={busy}
-            onPress={() => askFirst(t('privacy.deleteAll.title'), t('privacy.deleteAll.msg'), t('privacy.deleteAll.cta'), run(runDeleteAllData))}
-          />
+          {/* Signed in (#289, Apple 5.1.1(v)): the account and its backup go too. */}
+          {account ? (
+            <DangerRow
+              key="all"
+              title={t('acct.delete.row')}
+              disabled={busy}
+              onPress={() => askFirst(t('acct.delete.title'), t(plan?.pro ? 'acct.delete.bodyPro' : 'acct.delete.body'), t('acct.delete.yes'), run(deleteAccountAndData))}
+            />
+          ) : (
+            <DangerRow
+              key="all"
+              title={t('privacy.deleteAll')}
+              disabled={busy}
+              onPress={() => askFirst(t('privacy.deleteAll.title'), t('privacy.deleteAll.msg'), t('privacy.deleteAll.cta'), run(runDeleteAllData))}
+            />
+          )}
         </Section>
       </View>
     </SettingsScroll>

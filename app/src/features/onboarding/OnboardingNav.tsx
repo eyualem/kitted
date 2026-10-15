@@ -6,18 +6,25 @@ import { IconButton, useTheme } from '@/design-system';
 import { size } from '@/design-system/tokens';
 import { t } from '@/i18n/en';
 
-export const ONBOARDING_STEPS = 4;
+import { ONBOARDING_STEPS } from './resume';
 
-export function OnboardingNav({ step, onBack }: { step: number; onBack: () => void }) {
+export { ONBOARDING_STEPS };
+
+/** `step` undefined: Back only (O1e, the example check, isn't a step). */
+export function OnboardingNav({ step, onBack }: { step?: number; onBack: () => void }) {
   const { colors } = useTheme();
   return (
     <View style={styles.row}>
       <IconButton icon="back" label={t('common.back')} variant="solid" onPress={onBack} />
-      <View style={styles.bar} accessible accessibilityRole="progressbar" accessibilityLabel={t('onb.progress.a11y', { n: step, total: ONBOARDING_STEPS })}>
-        {Array.from({ length: ONBOARDING_STEPS }, (_, i) => (
-          <View key={i} style={[styles.seg, { backgroundColor: i < step ? colors.ink : colors.line }]} />
-        ))}
-      </View>
+      {step === undefined ? (
+        <View style={styles.bar} />
+      ) : (
+        <View style={styles.bar} accessible accessibilityRole="progressbar" accessibilityLabel={t('onb.progress.a11y', { n: step, total: ONBOARDING_STEPS })}>
+          {Array.from({ length: ONBOARDING_STEPS }, (_, i) => (
+            <View key={i} style={[styles.seg, { backgroundColor: i < step ? colors.ink : colors.line }]} />
+          ))}
+        </View>
+      )}
       <View style={{ width: size.navCircle }} />
     </View>
   );

@@ -285,6 +285,8 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **Differs from mockup:** none. (The mockup already has no "I've used Kitted before" button, per ruling 8.)
 
+> **Update Oct 15 (DECISIONS-LOG #289, `10-onboarding.md`; built):** `See an example check` is live (O1e). Under it, once accounts exist (`ACCOUNTS_BUILT`), a text link `I already have an account` opens A1 (sign-in); hidden in real builds until Firebase. The hero is s14 (#278).
+
 ---
 
 ### D2 · O2 Pick looks
@@ -393,6 +395,8 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 - The 4 rows now carry the §3 text above. The mockup's titles `Faces are blurred first`, `Read securely by Google Gemini`, `We don't keep your photos`, `Delete anytime` and their bodies are **not used**.
 - The mockup's footer `Your stylist is an AI. It reads clothes, never faces.` is replaced by `You can turn this off anytime in You → Privacy.` (the AI line is now row 4).
 - The secondary button is `Not now` (same width), per §3 rule 2; the mockup's `See an example first` becomes a link.
+
+> **Update Oct 15 (#289; built):** `See an example first` shows in onboarding (O1e, back to consent with `Check my own fit`); `Privacy policy` waits for `PRIVACY_URL`. Opened from the camera or as a sheet, the intro is `Before I score a photo, here's what happens to it.` and the button `Agree`. The footer reads `You can turn this off anytime in You → Settings → Privacy & data.` A hairline sits over the dock; the buttons are 8 pt apart.
 
 ---
 
@@ -1071,6 +1075,8 @@ Same visual language as §2: chalk `bg`, white `KCard`s with radius 26 and dashe
 - **Layout:** onboarding nav with Back (no progress bar). Stylist message `Here's a real check. This is what you'll get.` Then a full **S6 card** for the bundled example photo `s15` (crop `neck`): tagline `Example · Full` / `Everyday`, `8.5` `Sharp`, the bundled reading's fixes and explanation, `Why 8.5?` works (S7 opens read-only), `Not quite right?`, `Re-check` and `Share` are hidden. Dock: PrimaryButton large `Get started` (from O1) or `Check my own fit` (from O5 / S26, which returns to consent).
 - **Rules:** no API call, no consent needed (this is also the App Review demo). Nothing is added to his closet.
 - **VoiceOver:** card label starts with "Example fit check."
+
+> **Update Oct 15 (#289; built):** the photo is s14 (the Welcome photo), the score is the engine's (7.5 "Put together", the same as Welcome's mini card), his photo bubble shows above the card, `Why 7.5?` opens the math in place under the card (onboarding has no sheet stack of its own), and a fine-print line says `A real photo, scored by the same code as yours. Nothing was sent.` The tagline is `Example · Full` / `Everyday`.
 
 #### O2n · Pick by name (sheet)
 - Medium detent, grabber, title `Pick by name` (`.title2.bold()`) + Done.

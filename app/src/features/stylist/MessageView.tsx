@@ -18,6 +18,7 @@ import { WhichOneCard } from '@/features/whichOne/WhichOneCard';
 import { SupportCard } from '@/features/ask/SupportCard';
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
+import { AccountOfferCard } from '@/features/account/AccountOfferCard';
 import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
 
@@ -33,6 +34,8 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} />;
     if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;
     if (m.cardType === 'support') return <SupportCard />;
+    // "Keep your fits" (A3, #289): after his first score, at most twice.
+    if (m.cardType === 'account') return <AccountOfferCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     // The check limit (02 D19 S17 → S17h, #280): under the photo he took after the free check was used.
     // …and after 4 am, "Ready to score last night's photo?" (S17h, #281).
     if (m.cardType === 'held' && m.fitCheckId && m.payload.ready === true) return <HeldReadyCard checkId={m.fitCheckId} showHeader={item.showWho} readOnly={readOnly} />;

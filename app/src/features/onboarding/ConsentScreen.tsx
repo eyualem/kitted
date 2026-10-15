@@ -1,13 +1,17 @@
 // O5 · Consent (02 D4; text from inputs/app-store-and-age-rules.md §3, ruling 16). Three ways in: step 4 of
 // onboarding; inside the camera, the first time he opens it without having agreed ("Agree" turns the same screen
 // into the camera); and as a sheet with an X (You › Privacy, or a photo that was held back). Nothing is pre-checked:
-// only "Agree" counts, and "Not now" is the same size. The example and privacy-policy links aren't shown yet
-// (O1e and the policy page aren't built), rather than leading nowhere.
+// only "Agree" counts, and "Not now" is the same size. "See an example first" (O1e, #289) shows in onboarding; the
+// privacy-policy link waits for PRIVACY_URL (config/links.ts) rather than leading nowhere. Outside onboarding the intro
+// and the button don't talk about "your first check" (09 UI review).
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icon, IconButton, KButton, KCard, KText, StylistMessage, UserBubble, space, useTheme } from '@/design-system';
+import { Icon, IconButton, KButton, KCard, KText, StylistMessage, TextLink, UserBubble, space, useTheme } from '@/design-system';
+import * as WebBrowser from 'expo-web-browser';
+import { PRIVACY_URL } from '@/config/links';
+import { clearResumeStep } from './resume';
 import { store } from '@/data/db';
 import { t, type StringKey } from '@/i18n/en';
 import { newId } from '@/services/ids';
@@ -84,6 +88,7 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onb
     // His own words from "Something else?" stay in kv for later; the step drafts are done.
     await store.deleteKv(LOOKS_KEY);
     await store.deleteKv(BASICS_KEY);
+    await clearResumeStep(store);
     await setOnboarded(true);
     // The gate swaps the onboarding stack for the tabs; "/" sends him through it to Stylist.
     router.replace('/');
@@ -131,14 +136,22 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onb
       )}
       <ScrollView contentContainerStyle={styles.thread}>
         {mode === 'onboarding' ? <UserBubble>{basicsEcho(basics)}</UserBubble> : null}
-        <StylistMessage>{t('onb.consent.intro')}</StylistMessage>
+        <StylistMessage>{t(mode === 'onboarding' ? 'onb.consent.intro' : 'onb.consent.introLater')}</StylistMessage>
         {rows}
         <KText variant="footnote" color="ink3" style={{ paddingHorizontal: 4 }}>
-          {t('onb.consent.footer')}
+          {t('onb.consent.footerPath')}
         </KText>
+        {mode === 'onboarding' || PRIVACY_URL ? (
+          <View style={styles.links}>
+            {mode === 'onboarding' ? (
+              <TextLink title={t('onb.consent.example')} color="ink2" onPress={() => router.push({ pathname: '/onboarding/example', params: { from: 'consent' } })} />
+            ) : null}
+            {PRIVACY_URL ? <TextLink title={t('acct.privacy')} color="ink2" onPress={() => void WebBrowser.openBrowserAsync(PRIVACY_URL!)} /> : null}
+          </View>
+        ) : null}
       </ScrollView>
-      <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l) }]}>
-        <KButton title={t('onb.consent.agree')} onPress={() => void finish(true)} disabled={busy} />
+      <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l), borderTopColor: colors.line }]}>
+        <KButton title={t(mode === 'onboarding' ? 'onb.consent.agree' : 'onb.consent.agreeLater')} onPress={() => void finish(true)} disabled={busy} />
         <KButton title={t('onb.consent.notNow')} kind="secondary" onPress={() => void finish(false)} disabled={busy} />
       </View>
     </View>
@@ -151,5 +164,7 @@ const styles = StyleSheet.create({
   thread: { paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xl, gap: space.m },
   cardHeader: { paddingTop: 13, paddingHorizontal: 17 },
   row: { flexDirection: 'row', gap: 13, paddingVertical: 13, paddingHorizontal: 17 },
-  dock: { paddingHorizontal: space.gutter, paddingTop: space.s, gap: 5 },
+  // A hairline over the dock so the scrolling text doesn't end in a hard cut under the buttons (09 UI review).
+  dock: { paddingHorizontal: space.gutter, paddingTop: space.s, gap: 8, borderTopWidth: StyleSheet.hairlineWidth },
+  links: { flexDirection: 'row', flexWrap: 'wrap', gap: 18, paddingHorizontal: 4 },
 });
