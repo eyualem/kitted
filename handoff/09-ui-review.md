@@ -245,3 +245,17 @@ Founder: "proceed with the plan. make sure that you test the things that you imp
 | N1 | Pass | `recheckFixRow.test.ts`, failed first |
 
 **Found while testing, fixed:** the held-photo catch-up timer threw after tests and made jest exit 1 (it now never throws, and the startup jobs don't start under jest); demo screen 121 scored its 9:12 pm photo instead of holding it (a dev build with a live key counts no checks; the story now spends the day for that step only); demo screens 112–113 opened a blank page (the matcher linked the second chinos photo by itself, so no duplicate existed; the story now splits one off as "Not this piece" would). **Small, left open:** after a merge's Undo the page stays on the kept piece instead of returning to the restored one; on screen 111 at the largest text size the inbox row's chevron is hidden.
+
+---
+
+## 7. Next batch: pass/fail checks, set before building (Oct 15, #287)
+Same rules as §6 (founder: "continue working while testing using parameters u set before implementation"): written and committed before the code, never edited to fit; a wrong check is struck and replaced openly. Only settled items with no new words (none needs his OK). Global checks G1–G3 from §6 apply again.
+- **C1 (T) Tiles in his measured color** (#141, #143's "still to do"): a piece with a measured color from his photos draws in it, kept inside its color family (a grey hoodie never draws blue); a piece without a measurement draws exactly as today; two pieces with the same color words but measured shades far apart draw in visibly different colors (ΔE ≥ 10). No score changes (G2).
+- **C2 (T) "To confirm" shows at most 3 questions** (#111): with 5 open, Closet shows 3; answering one brings the 4th in. No new words.
+- **C3 (T) Undo after a merge returns the page:** when the piece page that ran the merge is still on screen, Undo puts it back on the restored piece; from anywhere else Undo changes no screen.
+- **C4 (T) Shoes are drawn as large as other pieces:** in a tile, a drawn shoe spans at least 80% of the tile's drawing width, like a top or pants (measured from the drawing's own bounds).
+- **C5 (T) Light pieces keep an edge in light mode:** a white or very light piece (lightness ≥ 90) gets a thin outline at about 12% ink in light mode; dark mode and other pieces are unchanged.
+- **C6 (T) One flash control at a time:** while the camera shows the "Turn on flash" pill, the separate flash toggle is hidden; when the pill goes, the toggle is back.
+- **C7 (T) No blank flash opening the camera:** while consent or the camera permission loads, the screen is the camera's dark background with its close button, never an empty white or black frame without controls.
+- **C8 (T, S) The Closet "+" is a pull-down menu:** it opens from the button (the native menu) with the same two actions, not an action sheet from the bottom of the screen.
+- **C9 (S)** on the Simulator: the Closet grid (light and dark) with measured colors, full-size shoes and outlined white pieces; the "+" menu; the camera opening.
