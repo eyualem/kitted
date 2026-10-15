@@ -1337,3 +1337,20 @@ Contradictions settled and decisions changed during the build. Newest last.
       - (b) The founder's one-outfit variants are the next truth for all of it: the stack (cuffed, rolled, hitched), the waist break's +1.5 on real tucked/untucked pairs, slim vs straight, jacket on/off. Also the one script test left: the change between paired photos.
       - (c) In the chat, "shape" is its own kind of question (`07-stylist-chat.md` §5.1). The evidence says what the photo couldn't show, and the stylist may ask about it for advice only, never points.
     - **Re-checks:** a fix the photo can't confirm (a cuff) is already handled by the "What changed?" sheet (S21).
+
+## Oct 15 · Chats on every device; height and build to the stylist (founder: "if the user signs into a different device, they shouldn't lose all their data"; "I doubt sending … build … without … their name would be a bad thing. Check")
+267. **Two changes to the chat plan (`07-stylist-chat.md` §3, §7.1, §10, new §10b).**
+    - **Height and build are sent to the model when he gave them** (reverses #265's "never"). He was right.
+      - **Not identifying:** no name, no photo, and requests go through our proxy with our key, so Google can't tie them to a person.
+      - **Not health data:** a coarse clothing-build word and a height aren't "health status" under the strictest US law, Washington's My Health My Data Act (RCW 19.373.010). Weight and body composition likely would be, so weight is never asked for, stored or sent.
+      - **Gemini's paid terms:** no training on it, abuse logs up to 55 days, as for questions.
+      - **The real risk is the output:** the stylist talking about his body. Hence "use it, never say it": the build changes which advice it gives (size for the shoulders, the inseam), the answer names only clothes, the sentence gate drops any sentence that names his build or height back to him, and the red-team set gains build-profile body questions.
+      - **Consent:** D2's wording now names height and build.
+      - **Still never sent:** birth year or age (no gain, and it invites talking down to him), name, location.
+    - **His data on another device:**
+      - **Today:** everything is in `Documents/` (SQLite, photos, scans, cut-outs) with no backup opt-outs, so iCloud Backup and Quick Start already carry it to a new iPhone. Untested.
+      - **Recommended after the $99 program:** sync every table to his own private iCloud database through Apple's CKSyncEngine (WWDC23 10188, iOS 17+, built for apps with their own SQLite store). No account, no sign-in, we never hold the data, so the "our server stores no photos" promise holds. About 3–4 days.
+      - **Not recommended:** our own accounts. We'd hold photos and chats, App Review 5.1.1(v) would require in-app account deletion, onboarding would gain a sign-in step, plus storage costs and the security burden.
+      - **Open:** whether data in a user's private CloudKit database counts as "collected" for the privacy label. Apple doesn't say. Apple's definition is data sent off the device that the developer or partners can access, and data collected only by Apple needn't be declared. Ask App Review at a Meet with Apple session before submitting.
+      - **Accepted:** free limits stay per device (two devices get two free checks a day).
+    - **The founder's call (to-do list):** iCloud sync vs accounts. Default: iCloud.
