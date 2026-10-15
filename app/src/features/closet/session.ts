@@ -38,11 +38,17 @@ export function runClosetCleanup(): void {
 }
 
 let started = false;
+let colorsDone = false;
 /** Catch-up once at launch and on every return to the foreground (each check is tried once per launch). */
 export function startClosetCatchUp(): void {
   if (started) return;
   started = true;
   const run = () => {
+    if (!colorsDone) {
+      // Once per launch: tiles of pieces measured before they drew in his color (09-ui-review §7 C1).
+      colorsDone = true;
+      void closetService.refreshColors().catch((e: unknown) => console.log('[closet] colors failed', String(e)));
+    }
     void closetService.catchUp().catch((e: unknown) => console.log('[closet] catch-up failed', String(e)));
     runClosetCleanup();
   };

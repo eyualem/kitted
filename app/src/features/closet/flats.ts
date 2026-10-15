@@ -6,6 +6,9 @@
 // defs, linear/radial gradients, pattern); no filters, masks or CSS. Deterministic: the same piece draws the
 // same every time. The brand is a word in plain type, never a logo shape.
 
+import { lightnessOf } from '@kitted/core';
+import { lightColors } from '@/design-system/tokens';
+
 export type FlatScheme = 'light' | 'dark';
 
 export type TopType =
@@ -100,8 +103,18 @@ const HALO_LUM = 0.05;
  *  a dark tile. Drawn before the fills: the fill hides the inner half of the 5-unit stroke, leaving about 2 units
  *  (≈1 pt on a 95 pt tile; the viewBox is 200) of white at 22%. Light mode and lighter pieces draw nothing. */
 function halo(ctx: Ctx, c: string, paths: string[]): string {
-  if (ctx.scheme !== 'dark' || lum(c) >= HALO_LUM || !paths.length) return '';
+  if (!paths.length) return '';
+  if (ctx.rim) return rim(paths);
+  if (ctx.scheme !== 'dark' || lum(c) >= HALO_LUM) return '';
   return `<g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="5" stroke-linejoin="round">${paths.map((d) => `<path d="${d}"/>`).join('')}</g>`;
+}
+/** At or above this CIE L* a piece counts as white or very light (white tee, cream knit, white sneakers). */
+export const RIM_L = 90;
+/** Light mode only (09-ui-review §7 C5): a thin outline in 12% ink around a white or very light piece, so it keeps an
+ *  edge on the light tile (the dark-mode halo's counterpart). Drawn before the fills like the halo: the fill hides the
+ *  inner half of the 2.4-unit stroke, leaving about 1.2 units (≈0.6 pt on a 95 pt tile) outside the silhouette. */
+function rim(paths: string[]): string {
+  return `<g fill="none" stroke="${lightColors.ink}" stroke-opacity=".12" stroke-width="2.4" stroke-linejoin="round">${paths.map((d) => `<path d="${d}"/>`).join('')}</g>`;
 }
 /** A pattern line that reads on this base: darker on light pieces, lighter on dark ones. */
 export function contrastLine(c: string): string {
@@ -162,6 +175,8 @@ interface Ctx {
   scheme: FlatScheme;
   /** Fold strength (light pieces fold softer). */
   foldK: number;
+  /** Light mode and a white or very light piece: its silhouette gets the thin ink outline (§7 C5). */
+  rim: boolean;
 }
 
 /** A fold: a soft shadow stroke with a highlight beside it (the classic flat-illustration crease). */
@@ -721,7 +736,7 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
 export function renderFlat(spec: FlatSpec, opts: { scheme?: FlatScheme; id?: string } = {}): string {
   const scheme = opts.scheme ?? 'light';
   const id = (opts.id ?? 'k').replace(/[^a-zA-Z0-9]/g, '') || 'k';
-  const ctx: Ctx = { id, scheme, foldK: lum(spec.color) > 0.6 ? 0.5 : 1 };
+  const ctx: Ctx = { id, scheme, foldK: lum(spec.color) > 0.6 ? 0.5 : 1, rim: scheme === 'light' && (lightnessOf(spec.color) ?? 0) >= RIM_L };
   const defs = shadeDefs(id, scheme) + patternDefs(`${id}p`, spec.pattern, spec.color);
   const body = spec.kind === 'top' ? top(spec, ctx) : spec.kind === 'bottom' ? bottom(spec, ctx) : shoe(spec, ctx);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs>${defs}</defs>${body}</svg>`;

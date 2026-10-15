@@ -103,6 +103,7 @@ export function openPhoto(checkId: string) {
 /**
  * "Same as another piece…" → a pick (#280): asks once ("Same as your khaki chinos?"), then folds `from` into `into`,
  * with a toast that can undo it. `onMerged` runs once it's done (the picker closes; the page moves to the kept piece).
+ * An Undo moves that page back to the restored piece if it's still on screen; from anywhere else it moves nothing.
  */
 export async function mergePiece(
   from: Pick<ClosetItemRow, 'id' | 'name'>, into: Pick<ClosetItemRow, 'id' | 'name'>, o: { onMerged?: () => void } = {},
@@ -117,6 +118,8 @@ export async function mergePiece(
     merge: (a, b) => fitCheck.closet.merge(a, b),
     unmerge: (u) => fitCheck.closet.unmerge(u),
     toast: (text, undo) => void showToast(text, undo, { ms: TOAST_MS_REMOVAL }),
+    // Undo while the page that ran the merge is still on screen: it shows the restored piece again (§7 C3).
+    returnTo: (pieceId) => router.replace(`/closet/item/${pieceId}`),
   });
   if (done) o.onMerged?.();
 }

@@ -29,6 +29,7 @@ import {
   type ViewBox,
 } from '../../../modules/kitted-vision';
 import { createAutoCapture, type Phase } from './autoCapture';
+import { CAMERA_BACKGROUND, cameraFrame, flashControls } from './cameraControls';
 import { BodyOutline, LowerGuide } from './FramingOverlay';
 import { createTipFilter, fitIssue, fitTip, type FitTip, type Issue } from './guidance';
 import { fitTipCopy, isSpokenTip, issueTitle } from './guidanceCopy';
@@ -318,6 +319,9 @@ export function CameraScreen() {
   const panel = review?.issue ? reviewPanel(review.issue) : null;
   // The S3 panel says what's wrong; the "Checking the photo…" pill goes while it shows.
   const panelShown = !!(review && !checking && panel);
+  // One flash control at a time (C6, #287): the pill offers it in the dark; the toggle steps aside until the pill goes.
+  const timerSlot = mode === 'mirror' && !snap;
+  const flashUi = flashControls({ offered: offerFlash, flash, canOffer: !review && !snap, timerSlot });
   // The free band for the body guide: under the top bar, above the mode switch and shutter.
   const guideTop = insets.top + 3 + size.navCircle + space.s;
   const guideBottom = (controlsTop ?? height - insets.bottom - 190) - space.s;
@@ -333,7 +337,7 @@ export function CameraScreen() {
     return <RetakePanel title={issueTitle(issue, 'fit')} body={t('cam.retake.noCount')} primary={primary} secondary={use} />;
   }
 
-  if (permission === 'denied') return <CameraOff onPick={() => void pickFromLibrary()} />;
+  if (cameraFrame(true, permission) === 'off') return <CameraOff onPick={() => void pickFromLibrary()} />;
 
   return (
     <View style={styles.root}>
@@ -381,14 +385,16 @@ export function CameraScreen() {
             </KText>
           </View>
         )}
-        {mode === 'mirror' && !snap ? (
+        {timerSlot ? (
           <IconButton icon="timer" variant="glass" diameter={44} label={timer ? t('cam.timer.on') : t('cam.timer.off')} onPress={() => setTimer(!timer)} />
-        ) : (
+        ) : flashUi.toggle ? (
           <IconButton icon={flash ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t(flash ? 'cam.a11y.flashOn' : 'cam.a11y.flashOff')} onPress={() => setFlash(!flash)} />
+        ) : (
+          <View style={styles.slot} />
         )}
       </View>
 
-      {offerFlash && !flash && !review && !snap ? (
+      {flashUi.offer ? (
         <View style={[styles.offerWrap, { top: insets.top + 3 + 52 }]}>
           <Pressable onPress={() => setFlash(true)} accessibilityRole="button" style={({ pressed }) => [styles.offer, { opacity: pressed ? opacity.pressed : 1 }]}>
             <Icon name="flash" size="small" color={fixed.white} />
@@ -468,6 +474,20 @@ export function CameraScreen() {
   );
 }
 
+/** C7 (#287): the camera's dark background with its close button, while consent is read (camera.tsx), so opening the
+ *  camera never shows an empty white or black frame. The close button sits where the camera's own does. */
+export function CameraShell() {
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={styles.root}>
+      <StatusBar style="light" />
+      <View style={[styles.topBar, { top: insets.top + 3 }]}>
+        <IconButton icon="close" variant="glass" diameter={44} label={t('cam.a11y.close')} onPress={() => router.back()} />
+      </View>
+    </View>
+  );
+}
+
 /** S18 inside the cover: the camera is off; he can still choose a photo. */
 function CameraOff({ onPick }: { onPick: () => void }) {
   const insets = useSafeAreaInsets();
@@ -522,13 +542,15 @@ function simulatedBody(photo: NonNullable<ReturnType<typeof demoPhoto>>, W: numb
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: fixed.black },
+  root: { flex: 1, backgroundColor: CAMERA_BACKGROUND },
   topBar: { position: 'absolute', left: 18, right: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   tip: {
     flexShrink: 1, minHeight: size.button, borderRadius: size.button / 2, paddingHorizontal: 14, paddingVertical: 6, backgroundColor: fixed.lightPill,
     flexDirection: 'row', alignItems: 'center', gap: 6,
   },
   tipSpacer: { flex: 1 },
+  /** The right slot kept while the flash toggle steps aside, so the tip pill doesn't move. */
+  slot: { width: 44, height: 44 },
   countWrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: 8 },
   countCircle: {
     width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: fixed.countdownRing, backgroundColor: fixed.countdownBacking,

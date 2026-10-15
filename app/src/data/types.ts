@@ -401,6 +401,9 @@ export interface ClosetArt {
   pattern?: string | null;
   shoeProfile: 'sleek' | 'regular' | 'chunky' | null;
   denimWear: 'none' | 'faded' | 'ripped' | null;
+  /** His measured color (the median of the sightings' sampled colors that read as this family or a neighbor), as
+   *  measured: hexOfArt keeps it inside the family for the tile. Only on pieces the phone measured (09-ui-review §7 C1). */
+  measured?: string;
 }
 
 /** closet_items.profile: what the matcher and the namer remember beyond the sightings. */

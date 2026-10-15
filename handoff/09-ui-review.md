@@ -259,3 +259,19 @@ Same rules as §6 (founder: "continue working while testing using parameters u s
 - **C7 (T) No blank flash opening the camera:** while consent or the camera permission loads, the screen is the camera's dark background with its close button, never an empty white or black frame without controls.
 - **C8 (T, S) The Closet "+" is a pull-down menu:** it opens from the button (the native menu) with the same two actions, not an action sheet from the bottom of the screen.
 - **C9 (S)** on the Simulator: the Closet grid (light and dark) with measured colors, full-size shoes and outlined white pieces; the "+" menu; the camera opening.
+
+### §7 results (Oct 15, #288): checked against the list above, no check changed
+| Check | Result | How |
+|---|---|---|
+| C1 | Pass (T) | `closetBatch287.test.ts`: measured color used, kept in family (every family × 175 Lab samples), unmeasured unchanged, ΔE76 ≥ 10 between far-apart shades, no score moves. Not visible on demo screens (demo photos carry no measurements); shows on real checks. |
+| C2 | Pass (T) | 3 shown of 5; answering one brings the 4th. The "To confirm" count still shows the total waiting. |
+| C3 | Pass (T, S) | Simulator: merge → Undo moved the open page back to the restored Tan chinos (worn 1 time). Undo took a few seconds there; tapping Back before it finishes leaves the page where it is (by design: the page is no longer on screen). |
+| C4 | Pass (T, S) | shoes span ≥ 80% of the tile; seen full-size in the grid, light and dark |
+| C5 | Pass (T, S) | white soles and pieces outlined in light mode; dark unchanged |
+| C6 | Pass (T, S) | Simulator screen 41: "Turn on flash" pill with no second flash toggle |
+| C7 | Pass (T) | `cameraBatch287.test.ts`: a dark shell with its close button while consent or permission loads |
+| C8 | Pass (T, S) | the native pull-down from "+" with Take photo / Choose photos |
+| C9 | Pass | `screenshots/sim-oct15c/` |
+| G1 | Pass | this batch alone on HEAD in a clean worktree: app tsc and lint clean, 763 app tests in 68 suites, exit 0. (The live folder also holds another session's unfinished account work, not part of this commit.) |
+| G2 | Pass | no fit-check score moves (C1 service tests) |
+| G3 | Pass for what was seen | light and dark on the grid; the largest text size was checked for §6's screens, not re-run here |

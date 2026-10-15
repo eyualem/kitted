@@ -1,6 +1,6 @@
 // C1 · Closet (02 D15). Until P5 builds the full screen (Rotation, Starter essentials, filters),
 // it shows what the closet really holds: the C1e empty state, or a grid of his pieces drawn with their
-// details (#91), with a "Same as your …?" card on top for each question the stylist still has. A tap on a piece
+// details (#91), with the "Same as your …?" questions the stylist still has on top, 3 at a time (#111). A tap on a piece
 // opens its page (#276); a long-press is the shortcut menu. While clothes scans wait to be read, one row on top
 // ("Waiting to be read · 2 photos", #280) opens the scan inbox.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
@@ -16,6 +16,7 @@ import { piecePreviewSource } from '@/features/closet/piecePreview';
 import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { closetGridItems } from '@/features/closet/merge';
+import { toConfirm } from '@/features/closet/toConfirm';
 import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
 import { LinkRow, Section } from '@/features/settings/SettingsList';
 import { fitCheck } from '@/features/fitcheck/session';
@@ -48,6 +49,8 @@ export default function ClosetScreen() {
     if (!photo || !candidate) return [];
     return [{ checkId, ask, photo, candidate, runnerUp: ask.runnerUpId ? byId.get(ask.runnerUpId) ?? null : null }];
   });
+  // At most 3 questions at a time (#111); answering one brings the next in.
+  const queue = toConfirm(open);
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
@@ -63,12 +66,12 @@ export default function ClosetScreen() {
         </EmptyState>
       ) : (
         <>
-          {/* "To confirm · 2" (#117): every open question in one quiet card on top; no badge, no push. */}
-          {open.length > 0 ? (
+          {/* "To confirm · 2" (#117): the open questions in one quiet card on top, 3 at a time (#111); no badge, no push. */}
+          {queue.total > 0 ? (
             <KCard>
               <KCardSection gap={12}>
-                <TagLine left={t('closet.confirm.tag')} right={String(open.length)} />
-                {open.map(({ checkId, ask, photo, candidate, runnerUp }, i) => (
+                <TagLine left={t('closet.confirm.tag')} right={String(queue.total)} />
+                {queue.shown.map(({ checkId, ask, photo, candidate, runnerUp }, i) => (
                   <View key={ask.obsId} style={{ gap: 12 }}>
                     {i > 0 ? <RowDivider /> : null}
                     <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void fitCheck.answerDuplicate(checkId, ask.obsId, a)} />

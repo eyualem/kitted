@@ -5,6 +5,7 @@ import { KText, opacity, useTheme } from '@/design-system';
 import type { ClosetItemRow } from '@/data/types';
 import { artSpec } from './artSpec';
 import { GarmentArt } from './GarmentArt';
+import { tileArtBox } from './tileArt';
 
 export interface ClosetTileProps {
   item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'name' | 'isPhotographed'>;
@@ -12,7 +13,8 @@ export interface ClosetTileProps {
   size: number;
   aspect?: number;
   radius?: number;
-  /** Share of the tile the drawing takes (the flats carry their own margin; 02 C1's 62% was for the old icons). */
+  /** Share of the tile the drawing takes (the flats carry their own margin; 02 C1's 62% was for the old icons). Shoes
+   *  get more, on the tile's width (tileArt, §7 C4). */
   scale?: number;
   dim?: boolean;
   /** Draw the name under it. */
@@ -33,6 +35,8 @@ export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, l
   const spec = artSpec(item);
   const ghost = item.isPhotographed === false;
   const h = Math.round(size * aspect);
+  // Shoes get a bigger box than tops and pants, so they look as large (§7 C4).
+  const art = tileArtBox(spec.shape, size, h, scale);
   const body = (
     <View style={{ width: size, gap: label ? 6 : 0 }}>
       <View
@@ -42,8 +46,8 @@ export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, l
           borderColor: colors.inkFaint, opacity: dim ? 0.4 : 1,
         }}
       >
-        <View style={{ opacity: ghost ? 0.5 : 1 }}>
-          <GarmentArt spec={spec} size={Math.round(Math.min(size, h) * scale)} />
+        <View style={{ opacity: ghost ? 0.5 : 1, transform: [{ translateY: art.dy }] }}>
+          <GarmentArt spec={spec} size={art.size} />
         </View>
       </View>
       {label ? (

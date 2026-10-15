@@ -20,6 +20,7 @@ import { t } from '@/i18n/en';
 import {
   KittedCameraView, assess, hasCamera, requestCameraPermission, takePhotoFrom, type CameraHandle, type GuideEvent, type ScanPiece,
 } from '../../../modules/kitted-vision';
+import { flashControls } from '@/features/camera/cameraControls';
 import { guideLog } from '@/features/camera/devLog';
 import { createTipFilter, scanIssue, scanPieces, scanTip, type Issue, type ScanTip } from '@/features/camera/guidance';
 import { issueTitle, scanTipCopy } from '@/features/camera/guidanceCopy';
@@ -214,6 +215,8 @@ export function ScanCameraScreen() {
 
   const frozen = stage.kind === 'issue' || stage.kind === 'checking' ? stage.uri : null;
   const live = stage.kind === 'live';
+  // One flash control at a time (C6, #287), as in the fit-check camera.
+  const flashUi = flashControls({ offered: offerFlash, flash: torch, canOffer: live, timerSlot: false });
   const tipView = stage.kind === 'checking' ? { text: t('cam.checking'), icon: null } : scanTipCopy(tip.tip, tip.count);
   const pieces = live ? scanPieces(guide.scan?.pieces) : [];
   // DEMO: the drawn flat lay matches the state (the after-shot panel shows the photo with the problem).
@@ -252,10 +255,14 @@ export function ScanCameraScreen() {
             </KText>
           </View>
         )}
-        <IconButton icon={torch ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t(torch ? 'scan.a11y.torchOn' : 'scan.a11y.torchOff')} onPress={() => setTorch(!torch)} />
+        {flashUi.toggle ? (
+          <IconButton icon={torch ? 'flash' : 'flashOff'} variant="glass" diameter={44} label={t(torch ? 'scan.a11y.torchOn' : 'scan.a11y.torchOff')} onPress={() => setTorch(!torch)} />
+        ) : (
+          <View style={styles.slot} />
+        )}
       </View>
 
-      {offerFlash && !torch && live ? (
+      {flashUi.offer ? (
         <View style={[styles.offerWrap, { top: insets.top + 3 + 52 }]}>
           <Pressable onPress={() => setTorch(true)} accessibilityRole="button" style={({ pressed }) => [styles.offer, { opacity: pressed ? opacity.pressed : 1 }]}>
             <Icon name="flash" size="small" color={fixed.white} />
@@ -376,6 +383,8 @@ function ScanCameraOff({ onPick }: { onPick: () => void }) {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: fixed.black },
+  /** The right slot kept while the torch toggle steps aside, so the tip pill doesn't move. */
+  slot: { width: 44, height: 44 },
   topBar: { position: 'absolute', left: 18, right: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   tip: {
     flexShrink: 1, minHeight: size.button, borderRadius: size.button / 2, paddingHorizontal: 14, paddingVertical: 6, backgroundColor: fixed.lightPill,

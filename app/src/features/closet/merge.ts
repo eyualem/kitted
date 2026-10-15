@@ -2,8 +2,8 @@
 // piece…" opens a picker of his other pieces in the same slot (top, bottom, shoes or layer; never itself, never one
 // still waiting on his "Same as your …?" answer); picking one asks once, then the closet service folds this piece into
 // the chosen one (every sighting moves, the worn counts combine with a shared look counted once, the two are never
-// asked about again) and a toast offers Undo, which puts both back exactly. Scores never change: a merge only moves
-// closet rows. Pure helpers plus the flow, with its confirm, merge and toast injected (pieceActions wires the real ones).
+// asked about again) and a toast offers Undo, which puts both back exactly, and moves the page back to the restored
+// piece when that page is still on screen (§7 C3). Scores never change: a merge only moves closet rows. Pure helpers plus the flow, with its confirm, merge and toast injected (pieceActions wires the real ones).
 import type { ClosetItemRow, ClosetObservationRow, ClosetSummary } from '@/data/types';
 import { t } from '@/i18n/en';
 import { isAwaitingAnswer, isOwned } from './profile';
@@ -46,6 +46,35 @@ export interface MergeFlowDeps {
   unmerge: (u: MergeUndo) => Promise<void>;
   /** The toast with Undo. */
   toast: (text: string, undo: () => Promise<void> | void) => void;
+  /** After an Undo, when the page that ran the merge is still on screen: show it the restored piece (§7 C3). */
+  returnTo?: (pieceId: string) => void;
+}
+
+// ---------------------------------------------------------------- which piece page is on screen (09-ui-review §7 C3)
+/** A piece page on screen: its own key, the piece it shows, and, when it got there by a merge, the piece merged away. */
+export interface PieceFocus {
+  key: string;
+  pieceId: string;
+  mergedFrom: string | null;
+}
+let focused: PieceFocus | null = null;
+
+/** A piece page came on screen (its focus effect). */
+export function notePieceFocus(page: PieceFocus): void {
+  focused = { ...page };
+}
+
+/** A piece page left the screen (blurred or closed); only that page's own key clears it. */
+export function notePieceBlur(key: string): void {
+  if (focused?.key === key) focused = null;
+}
+
+/**
+ * Where an Undo should take the screen: back to the restored piece only when the page that ran the merge (it moved to
+ * the kept piece, carrying the merged piece's id) is the one on screen; anywhere else, nowhere (null).
+ */
+export function mergeUndoTarget(u: Pick<MergeUndo, 'fromId' | 'intoId'>): string | null {
+  return focused && focused.pieceId === u.intoId && focused.mergedFrom === u.fromId ? u.fromId : null;
 }
 
 /** Asks once, then merges `from` into `into` and shows the Undo toast. Returns what Undo would restore, or null. */
@@ -57,6 +86,10 @@ export async function runMerge(
   if (!ok) return null;
   const undo = await deps.merge(from.id, into.id);
   if (!undo) return null;
-  deps.toast(t('item.dup.saidSame', { item: name }), () => deps.unmerge(undo));
+  deps.toast(t('item.dup.saidSame', { item: name }), async () => {
+    await deps.unmerge(undo);
+    const back = mergeUndoTarget(undo);
+    if (back) deps.returnTo?.(back);
+  });
   return undo;
 }

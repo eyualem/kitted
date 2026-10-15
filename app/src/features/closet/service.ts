@@ -162,14 +162,15 @@ export function createClosetService(deps: ClosetServiceDeps) {
     return item;
   }
 
-  /** Re-derive what an item shows from its sightings (drift guard); the hex moves only when the look did. */
+  /** Re-derive what an item shows from its sightings (drift guard); the hex moves only when the look (or his measured
+   *  color, 09-ui-review §7 C1) did. */
   async function refreshItem(itemId: string) {
     const item = await store.closet.get(itemId);
     if (!item) return;
     const sights = sightingsOf(itemId, await store.closetObs.all());
     const art = artOf(item, sights.map(observationOfRow));
     const before = item.art;
-    const moved = !before || before.family !== art.family || before.shade !== art.shade;
+    const moved = !before || before.family !== art.family || before.shade !== art.shade || (before.measured ?? null) !== (art.measured ?? null);
     await store.closet.patch(itemId, {
       art, shade: art.shade, ...(moved && (item.source !== 'seed' || before) ? { hex: hexOfArt(art, item.hex) } : {}), updatedAt: clock.nowMs(),
     });
@@ -966,6 +967,17 @@ export function createClosetService(deps: ClosetServiceDeps) {
       }
       return n;
     },
+    /**
+     * Pieces whose sightings carry a measured color their tile doesn't use yet (measured before tiles drew in it,
+     * 09-ui-review §7 C1) get it once; every other row is left exactly as it is. Never changes a score.
+     */
+    refreshColors: () => serial(async () => {
+      const obs = await store.closetObs.all();
+      for (const it of (await store.closet.all()).filter(isOwned)) {
+        const art = artOf(it, sightingsOf(it.id, obs).map(observationOfRow));
+        if ((art.measured ?? null) !== (it.art?.measured ?? null)) await refreshItem(it.id);
+      }
+    }),
     /** Resolves when every closet call in flight has been written (demo screens, tests). */
     async settle(): Promise<void> {
       while (jobs.size > 0) await Promise.allSettled([...jobs]);

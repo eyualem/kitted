@@ -10,9 +10,10 @@
 //   4. Remove from Closet (with Undo), back to the grid.
 // Every crop starts below his head and a mirror selfie reads true-view (cropSafety). Nothing here is sent anywhere.
 //   5. "Same as another piece…" (#280) when another piece in its slot could be it: a picker, one confirm, then this
-//      piece folds into that one (Undo in the toast); the page then moves to the kept piece.
+//      piece folds into that one (Undo in the toast); the page then moves to the kept piece, and an Undo while this
+//      page is still on screen moves it back to the restored piece (§7 C3).
 // Not built yet (no dead buttons): Add a photo of it, Goes with, Style this.
-import { useCallback, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { Stack, router, useFocusEffect, type Href } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -28,7 +29,7 @@ import { sessionClock } from '@/state/session';
 import { artSpec } from './artSpec';
 import { ClosetTile } from './ClosetTile';
 import { colorPhrase } from './itemName';
-import { mergeOffer } from './merge';
+import { mergeOffer, notePieceBlur, notePieceFocus } from './merge';
 import { openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
 import { piecePhotos, type PiecePhoto } from './piecePhotos';
 import { livePhotoDeps, loadPhotoChecks } from './photoChecks';
@@ -59,7 +60,7 @@ function addedLine(item: ClosetItemRow): string {
   return item.source === 'fitCheck' ? t('item.source.fitCheck', { date }) : t('item.source.added', { date });
 }
 
-export function PiecePage({ id }: { id: string }) {
+export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: string | null }) {
   const { colors, scheme, isAccessibilitySize } = useTheme();
   const { width: screenW } = useWindowDimensions();
   // The hero page, with the page count it was read at: when a photo is removed or comes back, the gallery remounts at
@@ -83,8 +84,14 @@ export function PiecePage({ id }: { id: string }) {
   // Folded into another piece (#280): back on this page after the picker closes, it shows the kept piece instead.
   const mergedInto = data && !data.item ? data.mergedInto : null;
   useFocusEffect(useCallback(() => {
-    if (mergedInto) router.replace(`/closet/item/${mergedInto}` as Href);
-  }, [mergedInto]));
+    if (mergedInto) router.replace(`/closet/item/${mergedInto}?mergedFrom=${encodeURIComponent(id)}` as Href);
+  }, [mergedInto, id]));
+  // Which piece page is on screen, so a merge's Undo moves only the page that ran it back (§7 C3).
+  const pageKey = useId();
+  useFocusEffect(useCallback(() => {
+    notePieceFocus({ key: pageKey, pieceId: id, mergedFrom });
+    return () => notePieceBlur(pageKey);
+  }, [pageKey, id, mergedFrom]));
   if (!data) return null;
   const W = colW || Math.max(0, Math.round(screenW - space.gutter * 2));
   if (!data.item) {

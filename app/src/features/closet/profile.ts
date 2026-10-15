@@ -3,8 +3,8 @@
 // the drift guard: what a piece looks like changes only when 2 newer sightings agree, or he confirms it. No UI or
 // store imports, so the seed loader and tests use it directly.
 import {
-  colorDistance, displayHex, normalizeBrand, parseShade, shadeFromId, shadeId, shoeKindOf, type ConfirmedFields, type Garment,
-  type KnownPiece, type Observation, type StoredProfile,
+  colorDistance, displayHex, FAMILY_HEX, hexToLab, labToHex, nearestFamily, normalizeBrand, parseShade, shadeFromId, shadeId, shoeKindOf,
+  type ConfirmedFields, type Garment, type KnownPiece, type Lab, type Observation, type StoredProfile,
 } from '@kitted/core';
 import type { ClosetArt, ClosetFields, ClosetItemRow, ClosetObservationRow, ClosetProfile } from '@/data/types';
 
@@ -165,6 +165,29 @@ export function guarded<T extends string>(values: readonly (T | null | undefined
 
 const DENIM = new Set(['denim_light', 'denim_mid', 'denim_dark']);
 
+/** His measured color for a piece: the median (per L*a*b* channel) of the sightings' sampled colors that read as
+ *  this family or a neighbor; null when none was measured. */
+function measuredOf(family: string | null, sightings: readonly Observation[]): string | null {
+  if (!family || family === 'multicolor' || !FAMILY_HEX[family]) return null;
+  const labs: Lab[] = [];
+  for (const o of sightings) {
+    const h = o.sampled_hex;
+    if (typeof h !== 'string') continue;
+    const near = nearestFamily(h);
+    // A measurement that reads as another color (a shadow, the shirt over it) says nothing about this piece.
+    if (!near || (near !== family && colorDistance(near, family, { jeans: true }) !== 1)) continue;
+    const lab = hexToLab(h);
+    if (lab) labs.push(lab);
+  }
+  if (labs.length === 0) return null;
+  const median = (i: 0 | 1 | 2) => {
+    const v = labs.map((l) => l[i]).sort((a, b) => a - b);
+    const m = v.length >> 1;
+    return v.length % 2 ? v[m]! : (v[m - 1]! + v[m]!) / 2;
+  };
+  return labToHex([median(0), median(1), median(2)]);
+}
+
 /** What the tile and the name show for an item, from its sightings (or its own garment + closet fields). */
 export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 'profile'>, sightings: readonly Observation[]): ClosetArt {
   const conf = profileOfItem(item).confirmed;
@@ -207,6 +230,7 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
   const pick = <T extends string>(f: 'shoe_profile' | 'denim_wear', allowed: readonly string[], c?: string) =>
     guarded(hist.map((o) => (typeof o[f] === 'string' && allowed.includes(o[f] as string) ? (o[f] as T) : null)), (c as T) ?? null);
   const pattern = guarded(hist.map((o) => (typeof o.pattern === 'string' && o.pattern !== 'na' ? o.pattern : null)), conf.pattern ?? null);
+  const measured = measuredOf(family, sightings);
   return {
     family,
     shade,
@@ -215,11 +239,38 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
     pattern,
     shoeProfile: pick<'sleek' | 'regular' | 'chunky'>('shoe_profile', ['sleek', 'regular', 'chunky'], conf.shoe_profile),
     denimWear: pick<'none' | 'faded' | 'ripped'>('denim_wear', ['none', 'faded', 'ripped'], conf.denim_wear),
+    // Only on a piece the phone measured: art written for the others stays exactly as before.
+    ...(measured ? { measured } : {}),
   };
 }
 
-/** The tile color for an art: the exact shade inside its family band (core displayHex). */
-export function hexOfArt(art: Pick<ClosetArt, 'family' | 'shade'>, fallback: string): string {
+/** How far (in a*b*) a measured color may stray from its family's swatch: neutrals stay neutral, colors keep their hue. */
+const NEUTRAL_CHROMA = 10;
+const NEUTRAL_REACH = 5;
+const COLOR_REACH = 12;
+
+/**
+ * The tile color for an art (#141, #143; 09-ui-review §7 C1): his measured color when the phone measured the piece,
+ * else the exact shade inside its family band (core displayHex). A measured color is kept inside its family: its hue
+ * is pulled toward the family's swatch (a grey hoodie never draws blue), its lightness clamped into the family's band
+ * (displayHex), and the result must still read as that family, or the piece draws as it would unmeasured.
+ */
+export function hexOfArt(art: Pick<ClosetArt, 'family' | 'shade' | 'measured'>, fallback: string): string {
   if (!art.family) return fallback;
-  return displayHex(art.family, art.shade ? shadeFromId(art.shade) : null);
+  const shade = art.shade ? shadeFromId(art.shade) : null;
+  const plain = displayHex(art.family, shade);
+  const swatchHex = FAMILY_HEX[art.family];
+  if (!art.measured || !swatchHex || art.family === 'multicolor') return plain;
+  const m = hexToLab(art.measured);
+  const sw = hexToLab(swatchHex);
+  if (!m || !sw) return plain;
+  const reach = Math.hypot(sw[1], sw[2]) < NEUTRAL_CHROMA ? NEUTRAL_REACH : COLOR_REACH;
+  const da = m[1] - sw[1], db = m[2] - sw[2];
+  const k = Math.min(1, reach / (Math.hypot(da, db) || 1));
+  const pulled = labToHex([m[0], sw[1] + da * k, sw[2] + db * k]);
+  const shown = displayHex(art.family, shade, pulled);
+  if (nearestFamily(shown) === art.family) return shown;
+  // Still reads as a neighbor: the family's own hue at the measured lightness.
+  const flat = labToHex([hexToLab(shown)![0], sw[1], sw[2]]);
+  return nearestFamily(flat) === art.family ? flat : plain;
 }
