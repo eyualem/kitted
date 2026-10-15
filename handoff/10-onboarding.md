@@ -205,3 +205,100 @@ Unit tests: `app/src/__tests__/onboardingAccount.test.ts` (25 tests) plus the up
 **Found and fixed while testing:** the example card's math clipped its amounts inside the card (moved under it); its photo caption truncated; a wrong email code had to be deleted digit by digit (now clears); "Back" above the email field read oddly (now `Other ways to sign in` under the button); restore re-asked height, build and fit (now only the birth year); the Google logo warned on web (wrapped, per the SVG lesson); the restore screen's wordmark sat left.
 
 **Not done here (needs the founder or later work):** real Firebase sign-in (the founder's Firebase project and the $99 program, then new packages); the system Apple button (`expo-apple-authentication`); the email-code route on the Worker; the paywall (P6) and the notification ask (S15) that ruling 23 puts after the first check; trying all of it on his phone.
+
+---
+
+## 9. The end of onboarding: Later, the first 3 moves, the paywall, the notification ask (Oct 15, #290)
+
+*Ruling 23: **Result → Re-check or Later → "Your first 3 moves" → the 2-page paywall → the notification ask.** §2 listed it as "Later"; this section builds it. 02 S14, D18, P1b, P1s and S15 own each screen's layout; this section owns the order, the triggers, what's real, and the checks (written before the code, like §6).*
+
+### 9.1 The sequence, exactly when
+
+One sequence per phone, for his **first** fit only, stored in kv `onboard.finish`. Each step happens once; quitting mid-step counts as done (ruling 23: "quitting here counts as shown").
+
+1. **The first 3 moves card (S14)** posts when **all** hold:
+   - his first full check is scored (not failed, held, unreadable or partial-and-waiting), and it's still his **only** scored full check (someone who already has several fits, like the founder's phone, never gets the onboarding sequence: it's marked skipped);
+   - **one** of: he tapped `Later` on it · its re-check was scored · it has no fix to re-check (dialed in or "No quick fixes") · its re-check window closed, or this is a later visit than the one that scored it;
+   - nothing is reading or waiting for the one quick tap, and the card's score reveal has had time to finish (the same 4 s settle as the save offer).
+   The stylist line `Here's where to start. Three moves, in order.` and the card post together.
+2. **The paywall (P1)** is presented once, over Stylist, **2.5 s after the moves card lands** (so the card is seen first), only if: the paywall is on (`PAYWALL_BUILT`, or a demo screen), he isn't Pro, Stylist is the screen in front (no sheet, camera or other tab), and nothing is reading, asking or revealing. If any of these is false at that moment, it waits for the next time Stylist comes to the front, the same visit or a later one. Off or Pro: the step is skipped. Marked shown **before** it opens.
+3. **The notification ask (S15)** posts right after the paywall closes (bought or not), or right after the moves card when the paywall step was skipped. Only if notifications are on (`NOTIFICATIONS_BUILT`, or a demo screen) and the system permission was never asked; otherwise skipped. Then the sequence is done.
+
+**The save offer ("Keep your fits", §3) and this sequence never meet in one moment.** The sequence goes first: while it's due or under way, and for the rest of the visit in which it posted anything, the offer waits; it can come on his next visit. The paywall never opens while the sign-in sheet is up (Stylist isn't in front), and the offer card never posts while the paywall is up (same rule). *Why this order:* the moves and the paywall are ruling 23's onboarding and convert best right after the first score (RevenueCat: most trials start on install day, #289); the account offer is about not losing fits, which only matters from the next visit; two asks in one moment read as pressure (HIG: one request at a time).
+
+### 9.2 Later and the moves card
+
+- **`Later`** (TextLink, in the card's link row after `Not quite right?`) shows only on his first-ever full check, while the sequence hasn't started and the check is still the newest card, not read-only. Tap: the sequence starts (the moves card follows at once, no settle wait). The Re-check button stays while its window is open; Later doesn't close it.
+- **The card (S14):** tagline `Your plan` / `3 moves`; title `Your first 3 moves`; three numbered rows (FixRow shape, no gain on the right; a done row: filled circle and strikethrough):
+  1. `Tap the basics you own` / `30 seconds · in Closet`. Done once he's marked one piece in Starter essentials.
+  2. His first check's top fix, word for word, with its tag (`Tuck in your tee` / `Free`). Done if his re-check made it (the re-check's done fixes). No fix: the card's next-level line with `Free · next time you get dressed`. Neither: `Check tomorrow's fit` / `Free · 1 a day`.
+  3. The Starter essential he's missing that adds the most outfits to his closet: `Add a grey quarter-zip` / `$40–50 · +3 fits` (budget price; no `+N` when it adds none). Done when Closet gets one.
+  - **One button, for the first move not done:** `Start move 1` → the Closet tab, then Starter essentials. `Start move 2` → the camera (a check like any other). `Start move 3` → Starter essentials (C7, the next-buy sheet, isn't built; that's where he marks it once he has it). All done: no button, and the card's title reads `All 3 done. Nice work.`
+- **Where it lives:** in today's chat, and read-only in Past chats. L3 (`Your moves`) and the pinned `Your moves · 1 of 3` rows in Lookbook and You are **not built** here (a follow-up).
+
+### 9.3 C5 · Starter essentials (move 1's destination, 02 C5)
+
+Built to 02 C5 because move 1 has nowhere else to go: the header (`You probably own a few already. Tap the ones you have.` + `n of 12` + the 12-slot bar), the 12 rows with `Budget {a} · Mid {b}`, a toggle circle per row, `In your closet` (detected from his checks) or `Marked as owned`, the `Next step` footer card (`Unstructured navy blazer`). Tap to own: a not-photographed closet piece (source `added`, the row's `starterId`), toast `+{n} fits` (or `Marked as owned.` when it adds none); untap one he marked: removed, with Undo. A detected piece can't be untapped here (its own page removes it). The belt has no closet slot yet, so marking it is kept in kv only. The closet's `Starter essentials` row (C1) isn't added here.
+
+### 9.4 The paywall (P1, P1b, P1s) on the mock store, monthly only
+
+- **The store** is an interface (`services/store.ts`: products, purchase, restore, the trial eligibility), filled by a mock store until RevenueCat. One product, `kitted.pro.monthly`: **$9.99 a month with a 1-week free trial** (#285). The yearly plan, the cap and the founding offer are open, so nothing else is offered.
+- **P1 (page 1):** X and `Restore` in the nav; `KITTED PRO`; headline `Up to {checks} checks a day.` / `Ask as you go.` (#233 item 4's default, never "unlimited"); the Today card (his first check: `Today: 6.5` / `Two free fixes to 8.0.`, after a re-check `Today: 6.5 → 7.5` / `One free fix. Nothing new to buy.`, dialed in `Dialed in on your first check.`; elsewhere his latest check, or no card); perks `Up to {checks} fit checks a day` · `Up to {questions} questions a day` (from the quota's real limits) and **no** "full next-buy list" perk (C7 isn't built, so it would promise a feature that doesn't exist); `See plans`; `Continue free`; `Terms` · `Privacy` when their URLs exist.
+- **P1b (page 2):** Back and X; `KITTED PRO`; `Pick your plan`; `Up to {checks} fit checks and {questions} questions a day.`; one plan card, selected: `Monthly` / `1 week free` / **`$9.99`** `/mo` (the billed price is the biggest number, 3.1.2); fine print `Free for 1 week, then $9.99 a month. Renews every month until you cancel. Cancel anytime in Settings › Apple ID › Subscriptions, at least 24 hours before it renews.`; the button `Start 1-week free trial` (no trial left: `Subscribe for $9.99/month`, and the fine print starts `$9.99 a month.`); `Restore purchases`; `Continue free`; `Terms` · `Privacy`; on the mock store, `Demo: no real purchase`.
+- **States (P1s):** loading (the plan card's skeleton, the button off), failed to load (`Plans didn't load.` + `Try again`), pending (`Waiting for approval.`), a cancel (nothing), a failure (one line: `That didn't go through. Nothing was charged.`), success (the paywall closes, toast `Pro is on.`, and a photo held under the Limit card is scored), already Pro (`You're Pro.` + the limits line + `Manage subscription`), offline (`Plans need a connection.` + `Continue free`).
+- **Every entry point** (the onboarding step, the Limit card's `Try Pro · 1 week free`, the question limit's `Try Pro`, You's `Try Pro`) opens the same two pages. **`PAYWALL_BUILT` stays `false`**: until the Terms and Privacy URLs exist (App Review 3.1.2) and the real store is in, his phone shows no paywall and no `Try Pro`; demo screens turn it on.
+
+### 9.5 The notification ask (S15)
+
+- Stylist `Want a daily outfit idea at a time you choose?` + `Yes, pick a time` · `No thanks`.
+- **Yes:** the card grows in place: `Daily idea at` + a time menu (the Settings list, 5:00–11:00 am in half hours, default 8:00 am or the time he already set) + `Set 8:00 am`. Set → the permission call (the system prompt, the only place it's asked). Allowed: the time and the daily-idea switch are saved, `Done. Your first idea lands tomorrow at 8:00 am.` Denied: `No problem. You can turn it on later in You → Settings → Notifications.`
+- **No thanks:** the same line; the system prompt is never shown, and the daily-idea switch is saved off.
+- **No new package yet:** the permission call sits behind an interface (`services/notifications.ts`: `permission()`, `request()`). `expo-notifications` is a new dependency, so it waits for the founder's OK; until then `NOTIFICATIONS_BUILT = false` and his phone gets no ask (an ask that can't ask would lie), and nothing is scheduled. Demo screens run a scripted permission (allow or deny). The time menu reuses Settings' own list, so **no date-time picker package** is needed.
+
+### 9.6 The pass/fail checks (written before building, Oct 15)
+
+Tested by unit tests (`onboardingFinish.test.ts`) or by looking (web preview, light and dark; the Simulator if memory allows, rule 9). Results in §9.8.
+
+**Sequence**
+- **E1** · The moves card never posts before his first full check is scored, never while reading or asking, and never twice.
+- **E2** · It posts after each trigger: Later (at once), the first re-check scored, no fix to re-check, the re-check window closed or a later visit; it waits the settle time after a scored check (the reveal), but not after Later.
+- **E3** · A phone with 2+ scored full checks and no sequence yet is marked skipped: no Later, no moves card, no onboarding paywall, no ask.
+- **E4** · The paywall step opens only with the paywall on, not Pro, Stylist in front and nothing reading or revealing, ≥ 2.5 s after the moves card; it's marked shown before it opens, opens at most once, and is skipped when off or Pro.
+- **E5** · The notification ask posts once, after the paywall closes, or after the moves card when the paywall step was skipped; skipped when notifications are off or the permission was already asked.
+- **E6** · Quitting at any step resumes at the next one (the paywall counts as shown).
+- **E7** · The save offer waits while the sequence is due or under way, and for the rest of the visit it posted in; on the next visit it can post. The paywall never opens with a sheet up, and the offer never posts while the paywall is up.
+
+**Later and the moves card**
+- **L1** · `Later` shows only on the first-ever full check, scored, not read-only, before the sequence starts; tapping it posts the moves card and leaves the Re-check button as it was.
+- **M1** · The card has 3 numbered moves in this order: the basics, the first check's top fix (word for word, with its tag), the missing Starter piece that adds the most outfits (with its budget price and `+N fits` when N > 0).
+- **M2** · Fallbacks: no fix → the next-level line; neither → `Check tomorrow's fit`; a piece that adds no outfits → no `+N`; a full Starter list → the Next step (the navy blazer).
+- **M3** · Done states: move 1 after a Starter piece is marked, move 2 when the re-check made that fix, move 3 when Closet gets that piece; only the first not-done move has a Start button; all done → `All 3 done. Nice work.` and no button.
+- **M4** · Start move 1 opens Closet then Starter essentials; move 2 the camera; move 3 Starter essentials. No Start points at a placeholder.
+
+**Starter essentials (C5)**
+- **B1** · 12 rows in 02's order with `Budget {a} · Mid {b}`; pieces already in his closet show as owned with `In your closet`, and the count and bar match.
+- **B2** · Tapping a row he doesn't own adds a not-photographed piece and toasts `+{n} fits` (or `Marked as owned.`); untapping a marked one removes it with Undo; a detected one can't be untapped here.
+
+**Paywall**
+- **P1** · X and `Continue free` are on screen from the first frame of both pages and close the paywall; Back returns to page 1.
+- **P2** · No "unlimited" anywhere; the limits in the copy are the quota's real limits.
+- **P3** · Page 2 carries Apple 3.1.2's list: the plan's name and length, the price per period as the biggest price, the trial length and the price after it, that it renews automatically and how to cancel, Restore, and Terms and Privacy (hidden only while their URLs are null, and `PAYWALL_BUILT` can't be on while they're null).
+- **P4** · Only the monthly plan at $9.99 with a 1-week trial is offered; no trial left → `Subscribe for $9.99/month`.
+- **P5** · States: loading, failed to load with Try again, pending, a silent cancel, a failure line, offline, already Pro; success closes, toasts `Pro is on.`, makes him Pro, and scores a held photo.
+- **P6** · Restore: Pro → `Pro is on.`-style restored toast and close; nothing to restore → the existing `nothing to restore` toast.
+- **P7** · With `PAYWALL_BUILT` off, no paywall entry point renders outside demo screens (the sequence's step too).
+- **P8** · The Today card follows D18's variants (re-check, fixes to a target, dialed in, none).
+
+**Notification ask**
+- **N1** · `Yes, pick a time` grows the card in place with the time menu (default 8:00 am, or his saved time) and `Set {time}`; the permission is asked only on Set.
+- **N2** · Allowed → the time and the daily-idea switch saved, `Done. Your first idea lands tomorrow at {time}.`; denied → the Settings line; `No thanks` → the same line, the switch off, the permission never asked.
+- **N3** · Answered, the card stays answered after a relaunch and in Past chats (read-only), and the ask never posts again.
+
+**Quality** (as §6)
+- **Q5** · `npm run check` green. **Q6** · Every new screen and card fits at 402 pt in light and dark. **Q7** · VoiceOver labels on every new control; titles are headers. **Q8** · Copy rules: no "AI stylist", no "unlimited", no emoji; the new outward copy listed for the founder (§9.7).
+
+### 9.7 For the founder (to-do list)
+- **PW1 · The paywall's words and the monthly-only plan** (outward-facing): the headline `Up to 10 checks a day. / Ask as you go.`, the perks, `1 week free`, the fine print, `Start 1-week free trial`. Default: as written.
+- **PW2 · The "full next-buy list" perk is left out** until C7 exists. Default: yes.
+- **PW3 · The Terms link:** Apple's standard EULA (apple.com/legal/internet-services/itunes/dev/stdeula) is enough for 3.1.2 if we don't write our own. Default: your own page on trykitted.com, with Apple's EULA as the fallback.
+- **NT1 · OK `expo-notifications`** (Expo's own package; a reinstall on the phone) to make the ask real and send the daily idea. Default: yes, with the TestFlight build.
