@@ -275,3 +275,15 @@ Same rules as §6 (founder: "continue working while testing using parameters u s
 | G1 | Pass | this batch alone on HEAD in a clean worktree: app tsc and lint clean, 763 app tests in 68 suites, exit 0. (The live folder also holds another session's unfinished account work, not part of this commit.) |
 | G2 | Pass | no fit-check score moves (C1 service tests) |
 | G3 | Pass for what was seen | light and dark on the grid; the largest text size was checked for §6's screens, not re-run here |
+
+---
+
+## 8. A photo on the wrong card: pass/fail checks, set before building (Oct 15, #289)
+Founder: "long pressing that clothes is going to bring up a small … menu … not this cloth or new one … so that the user wouldn't get annoyed"; then "go with it's another piece, build both". Same rules as §6–§7. Global checks G1–G3 apply. The only new words: the menu label "It's another piece…".
+- **W1 (T) Undo on "Not this piece":** the toast "Saved as its own piece: {item}." now has Undo. Undo inside the window puts everything back exactly: the photo's sighting on its old piece, the new piece gone, the "never the same" mark between them removed, the old piece's cover and hidden photos as before, and the check's closet summary as before.
+- **W2 (T) "It's another piece…" is offered only when it can work:** on a photo that "Not this piece" can split off, and only when he owns at least one other piece of the same kind (top, bottom, shoes or layer) besides this one.
+- **W3 (T) Its picker lists only his own pieces of the same kind,** never this piece and never another kind, titled with the existing "Same as which piece?".
+- **W4 (T) Picking one moves only that photo:** its sighting (and the same photo re-checked) moves to the chosen piece; every other photo stays; worn counts follow (each check counted once); the moved photo is never matched back to the old piece. The toast is the existing "Saved as your {item}." with Undo.
+- **W5 (T) Undo of a move restores exactly** what W4 changed.
+- **W6 (T) No fit-check score changes** after W1, W4 or either Undo.
+- **W7 (S)** on the Simulator: the long-press menu shows both options; "It's another piece…" → a piece → the photo shows on that piece's page and leaves this one; Undo brings it back; "Not this piece" → Undo removes the new card.
