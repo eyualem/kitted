@@ -30,11 +30,26 @@ export interface MeasurePiece {
   box: readonly number[];
 }
 
+/** Each piece's values by key; `heads`: every head the phone found on the kept photo ([ymin, xmin, ymax, xmax]
+ *  0–1000; [] = none), so crops of his photo stay below the neck (#276). Absent: an older native build. */
+export type MeasuredPieces = Map<string, Measured> & { heads?: number[][] | null };
+
 /** Measures a check's pieces. Resolves to an empty map whenever it can't run; never throws. */
 export type GarmentMeasurer = (
   check: { imageHash: string; photoFile: string | null; demoPhotoId: string | null; mirrored?: boolean },
   pieces: readonly MeasurePiece[],
-) => Promise<Map<string, Measured>>;
+) => Promise<MeasuredPieces>;
+
+/** The measurer's head boxes, checked (4 numbers each, clamped to 0–1000); null when absent or malformed. */
+export function headsOf(raw: unknown): number[][] | null {
+  if (!Array.isArray(raw)) return null;
+  const out: number[][] = [];
+  for (const h of raw) {
+    if (!Array.isArray(h) || h.length !== 4 || !h.every((v) => typeof v === 'number' && Number.isFinite(v))) return null;
+    out.push(h.map((v: number) => Math.min(1000, Math.max(0, Math.round(v)))));
+  }
+  return out;
+}
 
 /** Fewer of his pixels than this (at 1024 px) and the color isn't trusted. */
 export const MIN_COLOR_PX = 400;
@@ -71,7 +86,7 @@ function detailUri(sha: string): string | null {
 }
 
 export const liveMeasurer: GarmentMeasurer = async (check, pieces) => {
-  const out = new Map<string, Measured>();
+  const out: MeasuredPieces = new Map<string, Measured>();
   if (check.demoPhotoId || !check.photoFile || pieces.length === 0) return out;
   const kept = resolveStoredPath(check.photoFile);
   const detail = detailUri(check.imageHash);
@@ -83,6 +98,7 @@ export const liveMeasurer: GarmentMeasurer = async (check, pieces) => {
     return out;
   }
   for (const g of r.garments) out.set(g.key, measuredOf(g));
+  out.heads = headsOf(r.heads);
   if (__DEV__) {
     const parts = r.garments.map((g) => `${g.key} ${g.hex ?? '-'} L${g.L ?? '-'} px${g.ownedPx} q${g.cropUri ? cropQuality(g) : '-'}`);
     console.log(`[measure] ${r.ms ?? '?'} ms${check.mirrored ? ' · mirrored' : ''} · ${parts.join(' · ')}`);

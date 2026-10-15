@@ -242,7 +242,8 @@ export const roles = {
   fixBadge: { variant: 'footnote', weight: '700', color: 'ink' },
   gain: { variant: 'subheadline', color: 'accent', mono: 'value', tabular: true },
   tipLine: { variant: 'footnote', color: 'ink2' },
-  tipLead: { variant: 'footnote', weight: '600', color: 'accent' },
+  /** Ink semibold (#276): a tip never moves the score, and copper is only for score movement (#231). */
+  tipLead: { variant: 'footnote', weight: '600', color: 'ink' },
   buttonLarge: { variant: 'headline', color: 'ink' },
   button: { variant: 'subheadline', weight: '600', color: 'ink' },
   /** Ink semibold (#231: copper is only for score movement). */

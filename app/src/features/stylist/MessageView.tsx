@@ -19,13 +19,14 @@ import { SupportCard } from '@/features/ask/SupportCard';
 import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
 
-export function ThreadRow({ item }: { item: ThreadItem }) {
+/** `readOnly`: Past chats (#276): an earlier day's check cards can't be changed, only read (Why, the photo). */
+export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOnly?: boolean }) {
   if (item.type === 'stamp') return <DayStamp>{item.text}</DayStamp>;
   const m = item.message;
   if (m.kind === 'photo') return <PhotoMessage m={m} />;
   if (m.kind === 'card') {
-    if (m.cardType === 'fitCheck' && m.fitCheckId) return <FitCheckCard checkId={m.fitCheckId} />;
-    if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} />;
+    if (m.cardType === 'fitCheck' && m.fitCheckId) return <FitCheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
+    if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
     if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} />;
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} />;
     if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;

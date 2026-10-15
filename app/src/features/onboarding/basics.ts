@@ -1,5 +1,6 @@
 // O3 Basics and O5 Consent logic (02 D3–D4), pure: the draft his answers wait in until consent saves the
-// profile, the 18+ rule, and the echo lines. Height is optional and starts blank (02 D3 "differs from mockup").
+// profile, the 18+ rule, and the echo lines. Height, build and fit are optional and start blank (02 D3 "differs from
+// mockup"; build and fit since #276: a preselected "Average · Regular" was saved and sent as an answer he never gave).
 import type { KittedStore } from '@/data/store';
 import { normStyleKey, type StyleKey } from '@/data/types';
 import { styleLabel } from '@/features/morning/copy';
@@ -17,12 +18,13 @@ export const FITS: readonly FitPref[] = ['fitted', 'regular', 'relaxed'];
 export interface BasicsDraft {
   /** Total inches; null until the first − / + tap (which seeds 5′10″). */
   heightIn: number | null;
-  build: Build;
-  fit: FitPref;
+  /** null until he taps one; saved as '' (not given). */
+  build: Build | null;
+  fit: FitPref | null;
   birthYear: number | null;
 }
 
-export const EMPTY_BASICS: BasicsDraft = { heightIn: null, build: 'average', fit: 'regular', birthYear: null };
+export const EMPTY_BASICS: BasicsDraft = { heightIn: null, build: null, fit: null, birthYear: null };
 
 /** 02 D3: 4′10″–7′0″, the first tap seeds 5′10″. */
 export const HEIGHT_MIN_IN = 58, HEIGHT_MAX_IN = 84, HEIGHT_SEED_IN = 70;
@@ -57,14 +59,19 @@ export function birthYears(currentYear: number): number[] {
   return Array.from({ length: 91 }, (_, i) => currentYear - 10 - i);
 }
 
+/** The year the list opens on when none is picked: a 22-year-old's (2004 in 2026), mid-audience, never selected. */
+export function birthYearAnchor(currentYear: number): number {
+  return currentYear - 22;
+}
+
 export function parseBasics(raw: string | null): BasicsDraft {
   if (!raw) return { ...EMPTY_BASICS };
   try {
     const v = JSON.parse(raw) as Partial<BasicsDraft>;
     return {
       heightIn: typeof v.heightIn === 'number' ? v.heightIn : null,
-      build: BUILDS.includes(v.build as Build) ? (v.build as Build) : 'average',
-      fit: FITS.includes(v.fit as FitPref) ? (v.fit as FitPref) : 'regular',
+      build: BUILDS.includes(v.build as Build) ? (v.build as Build) : null,
+      fit: FITS.includes(v.fit as FitPref) ? (v.fit as FitPref) : null,
       birthYear: typeof v.birthYear === 'number' ? v.birthYear : null,
     };
   } catch {
@@ -105,8 +112,13 @@ export function looksReply(looks: readonly StyleKey[]): string {
 export const buildLabel = (b: Build) => t(`build.${b}` as StringKey);
 export const fitLabel = (f: FitPref) => t(`fitpref.${f}` as StringKey);
 
-/** His echo bubble on O5: "5′ 10″ · Average · Regular · 2005" (height left out when blank). */
+/** His echo bubble on O5: "5′ 10″ · Average · Regular · 2005" (anything he left blank is left out). */
 export function basicsEcho(b: BasicsDraft): string {
-  const parts = [b.heightIn !== null ? heightLabel(b.heightIn) : null, buildLabel(b.build), fitLabel(b.fit), b.birthYear !== null ? String(b.birthYear) : null];
+  const parts = [
+    b.heightIn !== null ? heightLabel(b.heightIn) : null,
+    b.build !== null ? buildLabel(b.build) : null,
+    b.fit !== null ? fitLabel(b.fit) : null,
+    b.birthYear !== null ? String(b.birthYear) : null,
+  ];
   return parts.filter((p): p is string => p !== null).join(' · ');
 }

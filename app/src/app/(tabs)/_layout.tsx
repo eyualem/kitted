@@ -18,7 +18,8 @@ export default function TabsLayout() {
   const segments = useSegments() as string[];
   const onThread = segments[segments.length - 1] === 'stylist' || (segments.includes('stylist') && segments[segments.length - 1] === 'index');
   return (
-    <NativeTabs tintColor={colors.accent} minimizeBehavior="onScrollDown">
+    // The selected tab is ink, not copper (founder, #276): copper is for score movement only.
+    <NativeTabs tintColor={colors.ink} minimizeBehavior="onScrollDown">
       {onThread ? (
         <NativeTabs.BottomAccessory>
           <StylistBar />

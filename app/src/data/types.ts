@@ -356,6 +356,10 @@ export interface ClosetSummary {
   touched?: boolean;
   /** A late closet answer was folded in (catch-up or after a slow call). */
   enrichedAt?: number;
+  /** Every head the phone found on the kept photo when it measured the pieces (#276), [ymin, xmin, ymax, xmax] 0–1000,
+   *  so a crop of his photo never shows anything above the neck. [] = measured, no head in the photo. Absent: not
+   *  measured (an older check, a demo photo, the web): crops then use a conservative line (features/closet/cropSafety). */
+  heads?: number[][];
 }
 
 export type ClosetSource = 'fitCheck' | 'added' | 'chat' | 'seed';
@@ -408,6 +412,11 @@ export interface ClosetProfile {
   autoName?: boolean;
   /** The detail word the name carries to tell it from another of his pieces ("zip"), sticky. */
   nameDetail?: string | null;
+  /** The sighting whose photo he picked as the piece's cover (piece page, #276). Absent: the best photo leads. */
+  coverObsId?: string | null;
+  /** Sightings whose photo he removed from the piece (#276): never shown for it. The sighting still counts (wears,
+   *  matching, scores); only its picture is gone from the piece. */
+  hiddenObsIds?: string[];
 }
 
 export type ObservationOrigin = 'garment' | 'held' | 'snap' | 'seed' | 'describe';

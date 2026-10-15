@@ -19,9 +19,11 @@ export interface SheetScaffoldProps {
   onClose?: () => void;
   /** A text button (e.g. "Done") in place of the X. */
   doneLabel?: string;
+  /** Where the list opens, in points from the top of the body (iOS `contentOffset`, read once on mount). */
+  initialScrollY?: number;
 }
 
-export function SheetScaffold({ title, subtitle, children, onClose, doneLabel }: SheetScaffoldProps) {
+export function SheetScaffold({ title, subtitle, children, onClose, doneLabel, initialScrollY }: SheetScaffoldProps) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   return (
@@ -33,6 +35,7 @@ export function SheetScaffold({ title, subtitle, children, onClose, doneLabel }:
       automaticallyAdjustKeyboardInsets
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="interactive"
+      contentOffset={initialScrollY ? { x: 0, y: initialScrollY } : undefined}
     >
       {/* Sticky headers: RN moves this child's style onto its own wrapper and gives the child
           `flex: 1`, so the row layout lives one level down. */}

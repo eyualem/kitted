@@ -29,7 +29,8 @@ export function WhySheet() {
     }
     return { row, reading, parts: null, rows: whyRows(reading, row.occasion, stylesFor(row.style, p?.styles ?? []), p?.boldness ?? null, row.details.readsAs ?? null) };
   }, [checkId]);
-  if (!data || (!data.rows && !data.parts)) return <SheetScaffold title={t('why.how.title')} />;
+  // While it loads: the Why title without its number (it said "How I score", #276).
+  if (!data || (!data.rows && !data.parts)) return <SheetScaffold title={t('why.title', { score: '' }).trim()} />;
   const { row, reading, rows, parts } = data;
   const score = row.score ?? 0;
 

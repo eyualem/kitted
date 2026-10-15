@@ -238,11 +238,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
   }
 
   /** Measures the worn pieces that have a closet box on this check's photo (#104); empty when it can't. */
-  async function measurePieces(row: FitCheckRow, pieces: readonly Piece[]): Promise<Map<Piece, Measured>> {
+  async function measurePieces(row: FitCheckRow, pieces: readonly Piece[]): Promise<{ pieces: Map<Piece, Measured>; heads: number[][] | null }> {
     const out = new Map<Piece, Measured>();
+    let heads: number[][] | null = null;
     const measure = deps.measure;
     const boxed = pieces.filter((p) => p.origin === 'garment' && p.fields?.visible && p.fields.box.length === 4);
-    if (!measure || boxed.length === 0) return out;
+    if (!measure || boxed.length === 0) return { pieces: out, heads };
     const key = (p: Piece) => `${p.origin}-${p.index}`;
     // A mirror selfie's photo is the reflection: its cut-outs are flipped back to true view (#109).
     const mirrored = (await readingOf(row.readingId))?.reading.scene?.mirror_selfie === true;
@@ -255,10 +256,11 @@ export function createClosetService(deps: ClosetServiceDeps) {
         const m = got.get(key(p));
         if (m) out.set(p, m);
       }
+      heads = got.heads ?? null;
     } catch (e) {
       console.log('[measure] failed', String(e));
     }
-    return out;
+    return { pieces: out, heads };
   }
 
   /** A look's check and its re-checks (a re-check folds into its look in the Lookbook). */
@@ -307,8 +309,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
   ) {
     const owned = (await store.closet.all()).filter((c) => isOwned(c) && !o.exclude?.has(c.id));
     const obsAll = await store.closetObs.all();
-    const measured = await measurePieces(row, allPieces);
-    const out = { matched: [] as string[], added: [] as string[], links: [] as ClosetLink[], asks: [] as ClosetAsk[] };
+    const { pieces: measured, heads } = await measurePieces(row, allPieces);
+    const out = {
+      matched: [] as string[], added: [] as string[], links: [] as ClosetLink[], asks: [] as ClosetAsk[],
+      /** The heads the phone found on this photo (#276), when it measured it. */
+      heads: heads ?? undefined,
+    };
     const touched = new Set<string>();
     // He already said which piece it is: link it, and keep that piece out of the engine's reach for this check.
     const linked = new Set<string>();
@@ -435,6 +441,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       added: uniq([...res.added, ...prev.added.filter((id) => snapIds.has(id))]),
       undone: prev.undone, links: [...res.links, ...snaps], asks: [...res.asks, ...prev.asks.filter((a) => snapIds.has(a.itemId))],
       state, startedAt: prev.startedAt ?? clock.nowMs(), touched: prev.touched ?? false,
+      ...(res.heads ? { heads: res.heads } : prev.heads ? { heads: prev.heads } : {}),
     };
     await saveSummary(checkId, cs);
   }
@@ -478,6 +485,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const cs: ClosetSummary = {
       matched: uniq([...sightings.map((s) => s.itemId), ...res.matched]), added: res.added, undone: prev.undone,
       links: [...links, ...res.links], asks: res.asks, state, startedAt: prev.startedAt ?? clock.nowMs(), touched: prev.touched ?? false,
+      ...(res.heads ? { heads: res.heads } : prev.heads ? { heads: prev.heads } : {}),
     };
     await saveSummary(recheckId, cs);
   }
@@ -739,7 +747,8 @@ export function createClosetService(deps: ClosetServiceDeps) {
   async function applySplit(checkId: string, obsId: string) {
     const row = await store.fitChecks.get(checkId);
     const obs = await store.closetObs.get(obsId);
-    if (!row || !obs || obs.decision !== 'same') return null;
+    // A match the engine made, or one he linked from a question that has no "Is this your …?" card to re-answer.
+    if (!row || !obs || (obs.decision !== 'same' && obs.decision !== 'answeredSame')) return null;
     const cs = summaryOf(row);
     const link = cs.links.find((l) => l.obsId === obsId);
     const old = await store.closet.get(obs.itemId);
@@ -1011,6 +1020,77 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await store.closet.patch(itemId, { isDeleted: false, updatedAt: clock.nowMs() });
       await renameAll();
     }),
+    /**
+     * The piece page's "Use as cover" (#276): this sighting's photo leads the piece's photos and its preview. null puts
+     * the best photo back in front. Only a live sighting of this piece can be its cover. Pictures only: the drawing,
+     * the name, matching and scores never change (#276 call 3).
+     */
+    setCover: (itemId: string, obsId: string | null) => serial(async (): Promise<ClosetItemRow | null> => {
+      const it = await store.closet.get(itemId);
+      if (!it || !isOwned(it)) return null;
+      if (obsId) {
+        const o = await store.closetObs.get(obsId);
+        if (!o || o.itemId !== itemId || !isLive(o)) return null;
+      }
+      const p = profileOfItem(it);
+      if ((p.coverObsId ?? null) === obsId) return it;
+      const { coverObsId: _c, ...rest } = p;
+      void _c;
+      await store.closet.patch(itemId, { profile: obsId ? { ...rest, coverObsId: obsId } : rest, updatedAt: clock.nowMs() });
+      return store.closet.get(itemId);
+    }),
+    /**
+     * "Remove photo" (#276): this sighting's photo (and the same photo re-checked) is no longer shown for the piece,
+     * nor as its cover. The sighting stays: its wear, matching and every score are unchanged, and the look keeps its
+     * photo in the Lookbook and the chat. Returns whether it was the cover (for Undo), or null.
+     */
+    hidePhoto: (itemId: string, obsId: string) => serial(async (): Promise<{ wasCover: boolean } | null> => {
+      const it = await store.closet.get(itemId);
+      const o = await store.closetObs.get(obsId);
+      if (!it || !isOwned(it) || !o || o.itemId !== itemId) return null;
+      const p = profileOfItem(it);
+      const wasCover = p.coverObsId === obsId;
+      const { coverObsId: _c, ...rest } = p;
+      void _c;
+      await store.closet.patch(itemId, {
+        profile: { ...(wasCover ? rest : p), hiddenObsIds: uniq([...(p.hiddenObsIds ?? []), obsId]) }, updatedAt: clock.nowMs(),
+      });
+      return { wasCover };
+    }),
+    /** Undo for hidePhoto: shown again (and the cover again, if it was). */
+    unhidePhoto: (itemId: string, obsId: string, wasCover = false) => serial(async () => {
+      const it = await store.closet.get(itemId);
+      if (!it) return;
+      const p = profileOfItem(it);
+      await store.closet.patch(itemId, {
+        profile: { ...p, hiddenObsIds: (p.hiddenObsIds ?? []).filter((x) => x !== obsId), ...(wasCover ? { coverObsId: obsId } : {}) },
+        updatedAt: clock.nowMs(),
+      });
+    }),
+    /**
+     * "Not this piece" on a photo (#276): a correction. A sighting he linked by answering "Is this your …?" re-answers
+     * it ("No, a new one", #117); any other match is split off as its own piece ("Not the same", S11), and the two are
+     * never matched again. A photo that made the piece (its first sighting) can't be split off it. Returns the piece
+     * the photo belongs to now, or null when nothing changed.
+     */
+    notThisPiece: (obsId: string) => serial(async (): Promise<ClosetItemRow | null> => {
+      const o = await store.closetObs.get(obsId);
+      if (!o || !o.fitCheckId || !canSplitOff(o)) return null;
+      const from = await store.closet.get(o.itemId);
+      const row = await store.fitChecks.get(o.fitCheckId);
+      if (!row || !from) return null;
+      const ask = o.decision === 'answeredSame' ? summaryOf(row).asks.find((a) => a.obsId === obsId && (a.answer === 'same' || a.answer === 'runnerUp')) : undefined;
+      const done = ask ? await applyAnswer(o.fitCheckId, obsId, 'new') : await applySplit(o.fitCheckId, obsId);
+      if (!done) return null;
+      const p = profileOfItem((await store.closet.get(from.id)) ?? from);
+      if (p.coverObsId === obsId) {
+        const { coverObsId: _c, ...rest } = p;
+        void _c;
+        await store.closet.patch(from.id, { profile: rest });
+      }
+      const now = await store.closetObs.get(obsId);
+      return now ? store.closet.get(now.itemId) : null;
+    }),
     /** The pieces a look added that no other check has seen: what "Remove look and its new pieces" would remove. */
     async onlyInLook(checkId: string): Promise<ClosetItemRow[]> {
       const ids = new Set(await onlyInLookIds(await lookCheckIds(checkId)));
@@ -1070,6 +1150,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
       return out.sort((a, b) => b.at - a.at).map(({ checkId, ask }) => ({ checkId, ask }));
     },
   };
+}
+
+/** Whether "Not this piece" can split a sighting off its piece: a match (the engine's, or his "Yes"), never the
+ *  sighting that made the piece. */
+export function canSplitOff(o: Pick<ClosetObservationRow, 'decision' | 'origin' | 'fitCheckId'>): boolean {
+  return !!o.fitCheckId && o.origin === 'garment' && (o.decision === 'same' || o.decision === 'answeredSame');
 }
 
 export type ClosetService = ReturnType<typeof createClosetService>;

@@ -19,7 +19,8 @@ function HistoryButton() {
 
 export default function StylistStack() {
   return (
-    <Stack>
+    // No hairline under pushed nav bars (#276), like Stylist's own header.
+    <Stack screenOptions={{ headerShadowVisible: false }}>
       <Stack.Screen name="index" options={{ title: t('tab.stylist'), headerTitle: () => <StylistHeaderTitle />, headerTitleAlign: 'center', headerShadowVisible: false, headerLeft: () => <HistoryButton /> }} />
       <Stack.Screen name="history" options={{ title: t('history.title'), headerLargeTitleEnabled: true }} />
       <Stack.Screen name="day/[key]" options={{ title: '' }} />

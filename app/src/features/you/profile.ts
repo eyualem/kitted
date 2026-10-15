@@ -31,8 +31,9 @@ export function heightInOf(cm: number | null): number | null {
   return cm === null ? null : Math.round(cm / 2.54);
 }
 
-const asBuild = (b: string): Build => (BUILDS.includes(b as Build) ? (b as Build) : 'average');
-const asFit = (f: string): FitPref => (FITS.includes(f as FitPref) ? (f as FitPref) : 'regular');
+/** null = he didn't give it ('' since #276): shown and sent only when he tapped one. */
+const asBuild = (b: string): Build | null => (BUILDS.includes(b as Build) ? (b as Build) : null);
+const asFit = (f: string): FitPref | null => (FITS.includes(f as FitPref) ? (f as FitPref) : null);
 
 /** "5′ 10″" or, in metric, "178 cm". */
 export function heightText(inches: number, units: ProfileRow['units']): string {
@@ -41,12 +42,16 @@ export function heightText(inches: number, units: ProfileRow['units']): string {
 
 type Basics = Pick<ProfileRow, 'heightCm' | 'build' | 'fitPreference' | 'units'>;
 
-/** "5′ 10″ · Average build · Regular fit"; height left out when he didn't give it (#246). */
+/** "5′ 10″ · Average build · Regular fit"; whatever he didn't give is left out (#246, #276); '' when none. */
 export function basicsLine(p: Basics): string {
   const h = heightInOf(p.heightCm);
-  const build = buildLabel(asBuild(p.build));
-  const fit = fitLabel(asFit(p.fitPreference));
-  return h === null ? t('you.basics.noHeight', { build, fit }) : t('you.basics.height', { height: heightText(h, p.units), build, fit });
+  const build = asBuild(p.build);
+  const fit = asFit(p.fitPreference);
+  return [
+    h !== null ? heightText(h, p.units) : null,
+    build ? t('you.basics.build', { build: buildLabel(build) }) : null,
+    fit ? t('you.basics.fit', { fit: fitLabel(fit) }) : null,
+  ].filter((x): x is string => x !== null).join(' · ');
 }
 
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
@@ -59,9 +64,14 @@ export function styleCardSpoken(p: Basics & Pick<ProfileRow, 'styles'>): string 
     ? picks.map((s, i) => (i === 0 && picks.length > 1 ? t('you.a11y.firstPick', { style: styleLabel(s) }) : styleLabel(s))).join('; ')
     : t('you.style.none');
   const h = heightInOf(p.heightCm);
-  const rest = t('you.a11y.basics', { build: lower(buildLabel(asBuild(p.build))), fit: lower(fitLabel(asFit(p.fitPreference))) });
-  const basics = h === null ? rest : `${p.units === 'metric' ? t('you.heightCm', { n: inchesToCm(h) }) : heightSpoken(h)}, ${rest}`;
-  return t('you.a11y.styleCard', { styles, basics });
+  const build = asBuild(p.build);
+  const fit = asFit(p.fitPreference);
+  const parts = [
+    h !== null ? (p.units === 'metric' ? t('you.heightCm', { n: inchesToCm(h) }) : heightSpoken(h)) : null,
+    build ? t('you.basics.build', { build: lower(buildLabel(build)) }) : null,
+    fit ? t('you.basics.fit', { fit: lower(fitLabel(fit)) }) : null,
+  ].filter((x): x is string => x !== null);
+  return parts.length ? t('you.a11y.styleCard', { styles, basics: parts.join(', ') }) : t('you.a11y.styleCardNoBasics', { styles });
 }
 
 /** Budget per piece (Y2): only ever asked, never guessed (#246). `prefer_not` = he chose not to say. */
@@ -75,8 +85,8 @@ export const asBudget = (b: string | null): Budget | null => (b !== null && (BUD
 
 export interface ProfileDraft {
   heightIn: number | null;
-  build: Build;
-  fit: FitPref;
+  build: Build | null;
+  fit: FitPref | null;
   picks: StyleKey[];
   budget: Budget | null;
 }
@@ -97,8 +107,8 @@ export function applyDraft(p: ProfileRow, d: ProfileDraft): ProfileRow {
   return {
     ...p,
     heightCm: d.heightIn === o.heightIn ? p.heightCm : d.heightIn === null ? null : inchesToCm(d.heightIn),
-    build: d.build === o.build ? p.build : d.build,
-    fitPreference: d.fit === o.fit ? p.fitPreference : d.fit,
+    build: d.build === o.build ? p.build : (d.build ?? ''),
+    fitPreference: d.fit === o.fit ? p.fitPreference : (d.fit ?? ''),
     styles: stylesToSave(p.styles, d.picks),
     budget: d.budget === o.budget ? p.budget : d.budget,
   };

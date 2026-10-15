@@ -134,6 +134,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 93, name: 'Ask · questions used up', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist' },
   { n: 94, name: 'Ask · support card', id: 'S27', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist' },
   { n: 95, name: 'Ask · rating him, not the outfit', id: 'S27', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist' },
+  // The piece page (02 C2, #276): the seed's khaki chinos after p01b, its re-check p01a and "Yes, same one", so they
+  // have 2 photos (outlined, cropped below the chin line). Pushed over the Closet grid.
+  { n: 96, name: 'Closet · a piece and its photos', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/closet/item/B1', under: '/closet' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

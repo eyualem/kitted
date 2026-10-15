@@ -207,7 +207,8 @@ function LookChip({ look, selected, chosen, ax, onPress }: { look: StyleKey | nu
 }
 
 /** The folded line at the top of the result: "Going for minimal · Everyday" and Change (44 × 44). */
-export function GoingForLine({ g, occasion, onChange }: { g: GoingForState; occasion: OccasionKey; onChange: () => void }) {
+/** `onChange` absent: the line only reads (Past chats, #276), with no Change. */
+export function GoingForLine({ g, occasion, onChange }: { g: GoingForState; occasion: OccasionKey; onChange?: () => void }) {
   const { isAccessibilitySize: ax } = useTheme();
   const occ = occasionLabel(occasion);
   const lounge = !asksLook(occasion);
@@ -241,16 +242,18 @@ export function GoingForLine({ g, occasion, onChange }: { g: GoingForState; occa
           </KText>
         </View>
         {/* TextLink's look (ink, #231) by hand: TextLink can't take the longer VoiceOver label. */}
-        <Pressable
-          onPress={onChange}
-          accessibilityRole="button"
-          accessibilityLabel={t('gf.change.a11y')}
-          style={({ pressed }) => [styles.change, ax ? { alignSelf: 'flex-end' } : null, { opacity: pressed ? opacity.pressed : 1 }]}
-        >
-          <KText role="textLink" color="ink">
-            {t('gf.change')}
-          </KText>
-        </Pressable>
+        {onChange ? (
+          <Pressable
+            onPress={onChange}
+            accessibilityRole="button"
+            accessibilityLabel={t('gf.change.a11y')}
+            style={({ pressed }) => [styles.change, ax ? { alignSelf: 'flex-end' } : null, { opacity: pressed ? opacity.pressed : 1 }]}
+          >
+            <KText role="textLink" color="ink">
+              {t('gf.change')}
+            </KText>
+          </Pressable>
+        ) : null}
       </View>
       <Seam />
     </Animated.View>

@@ -161,7 +161,12 @@ export interface MeasuredGarment {
 }
 
 export type MeasureResult =
-  | { status: 'ok'; garments: MeasuredGarment[]; ms?: number }
+  | {
+      status: 'ok'; garments: MeasuredGarment[]; ms?: number;
+      /** Every head found on the kept photo, grown to the whole head and chin, [ymin, xmin, ymax, xmax] 0–1000 (#276).
+       *  Absent from native builds before it. */
+      heads?: number[][];
+    }
   | { status: 'missing' | 'mismatch' | 'notImplemented' };
 
 interface KittedVisionNative {

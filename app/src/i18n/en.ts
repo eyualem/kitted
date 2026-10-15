@@ -417,6 +417,29 @@ const addedInBuild = {
   'closet.rename.title': 'Rename piece',
   'closet.rename.reset': 'Reset to the original name',
   'closet.renamed': 'Renamed to {name}.',
+  // Piece page (#276): tap a Closet tile → the drawing, then his photos of it with the piece outlined (never the
+  // cut-out alone). Each photo's menu: Use as cover, Open the look, Not this piece, Remove photo (with Undo).
+  'closet.piece.detail': '{slot} · {color} · {fit}',
+  'closet.piece.detailNoFit': '{slot} · {color}',
+  'closet.piece.photos': 'Your photos',
+  'closet.piece.cover': 'Cover',
+  'closet.piece.more': '{n} more, partly hidden',
+  'closet.piece.fewer': 'Show fewer',
+  'closet.piece.noPhotos': "No photos of it yet. Wear it in a fit check and they'll show here.",
+  'closet.piece.useCover': 'Use as cover',
+  'closet.piece.openLook': 'Open the look',
+  'closet.piece.notThis': 'Not this piece',
+  'closet.piece.removePhoto': 'Remove photo',
+  'closet.piece.coverSet': 'Cover photo set.',
+  'closet.piece.photoRemoved': "Photo removed. It's still in your Lookbook.",
+  'closet.piece.photoRemovedOnly': 'Photo removed.',
+  'closet.piece.splitOff': 'Saved as its own piece: {item}.',
+  'closet.piece.a11y.tileHint': 'Opens the piece',
+  'closet.piece.a11y.drawing': 'Drawing: {art}.',
+  'closet.piece.a11y.photo': 'Your photo from {date}, the piece outlined',
+  'closet.piece.a11y.coverPhoto': '{photo}. Cover',
+  'closet.piece.a11y.photoHint': 'Opens the photo',
+  'closet.piece.a11y.renameHint': 'Renames the piece',
   'lookbook.remove.action': 'Remove from Lookbook',
   'lookbook.remove.withPiece': 'Remove look and the new piece',
   'lookbook.remove.withPieces': 'Remove look and its {n} new pieces',
@@ -700,8 +723,6 @@ const addedInBuild = {
   // You tab (Oct 14): Y1–Y3. The style card, facts in the second person (a guess is asked), today's check, the editor.
   'you.style.label': 'Your style',
   'you.style.none': 'No looks picked yet',
-  'you.basics.height': '{height} · {build} build · {fit} fit',
-  'you.basics.noHeight': '{build} build · {fit} fit',
   'you.heightCm': '{n} cm',
   'you.seeAll': 'See all {n}',
   'you.guess.q': '{fact}?',
@@ -720,7 +741,6 @@ const addedInBuild = {
   'you.today.pro': '{checks} of {checkLimit} fit checks left · {questions} of {questionLimit} questions left',
   'you.a11y.styleCard': 'Your style: {styles}. {basics}. Edit.',
   'you.a11y.firstPick': '{style}, first pick',
-  'you.a11y.basics': '{build} build, {fit} fit',
   'you.a11y.fact': '{fact}. {source}.',
   'you.a11y.told': 'You told me, {date}',
   'you.a11y.fromCheck': 'From a fit check, {date}',
@@ -757,6 +777,20 @@ const addedInBuild = {
   'privacy.a11y.consentOnHint': 'Shows what is sent before you agree',
   'privacy.a11y.consentOffHint': 'Stops sending photos to Google',
   'privacy.a11y.storage': '{label}, {value}',
+  // UI fix batch (#276): the birth-year confirm before the 18+ stop, the basics line with only what he gave, the
+  // re-check card's VoiceOver on a drop or a held score, the card without a "Top fix" clause, and the progress bar's
+  // real step count (overrides the deck's "Step {n} of 6").
+  'onb.age.confirm.title': 'Born in {year}?',
+  'onb.age.confirm.change': 'Change',
+  'onb.age.confirm.yes': "That's right",
+  'you.basics.build': '{build} build',
+  'you.basics.fit': '{fit} fit',
+  'you.a11y.styleCardNoBasics': 'Your style: {styles}. Edit.',
+  'card.a11y.recheckDown': 'Re-check, {occasion}. Score went from {was} to {now}. {word}.',
+  'card.a11y.recheckFlat': 'Re-check, {occasion}. Score stays {now}. {word}.',
+  'card.a11y.recheckHeld': 'Score stays {now}.',
+  'card.a11y.fitCheckNoFix': 'Fit check, {occasion}. Score {score} out of 10, {word}. {partial}{summary}',
+  'onb.progress.a11y': 'Step {n} of {total}',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

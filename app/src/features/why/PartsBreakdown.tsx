@@ -1,5 +1,6 @@
 // The parts in "Why 7.0" (#205, #209; mockups/parts-card.html option 1): the five-part strip (label over the number,
-// hairlines between, the part with the most to gain in copper), then one group per part and the rows after the
+// hairlines between, the part with the most to gain marked in ink: an up arrow and a raised cell, never copper, which
+// is only for a score that moves, #231, #276), then one group per part and the rows after the
 // parts, ending in the score. At accessibility sizes the strip becomes a list (label leading, number trailing).
 import { View } from 'react-native';
 import { Icon, KText, LedgerRow, LedgerTotal, Numeral, useTheme } from '@/design-system';
@@ -9,10 +10,10 @@ import { partText, type PartGroup, type StripCell, type WhyParts } from './parts
 const STRIP_NUMERAL = 26;
 const GROUP_NUMERAL = 24;
 
-/** The most-to-gain part isn't marked by copper alone: a small up arrow sits by its label (the strip's VoiceOver label says it in words). */
+/** The most-to-gain part: a small ink up arrow by its label (the strip's VoiceOver label says it in words). */
 function GainMark({ size }: { size: number }) {
   const { colors } = useTheme();
-  return <Icon name="arrow.up" size={size} color={colors.accent} weight="bold" scalesWithText />;
+  return <Icon name="arrow.up" size={size} color={colors.ink} weight="bold" scalesWithText />;
 }
 
 export function PartsBreakdown({ parts, score }: { parts: WhyParts; score: number }) {
@@ -49,12 +50,12 @@ function PartsStrip({ cells, label }: { cells: StripCell[]; label: string }) {
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 }}>
-              <KText variant="body" weight="600" color={c.gain ? 'accent' : 'ink'} style={{ flexShrink: 1 }}>
+              <KText variant="body" weight="600" color="ink" style={{ flexShrink: 1 }}>
                 {c.label}
               </KText>
               {c.gain ? <GainMark size={14} /> : null}
             </View>
-            <Numeral size={STRIP_NUMERAL} color={c.gain ? colors.accent : c.display === null ? colors.ink3 : undefined}>{partText(c.display)}</Numeral>
+            <Numeral size={STRIP_NUMERAL} color={c.display === null ? colors.ink3 : undefined}>{partText(c.display)}</Numeral>
           </View>
         ))}
       </View>
@@ -76,13 +77,13 @@ function PartsStrip({ cells, label }: { cells: StripCell[]; label: string }) {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2, maxWidth: '100%' }}>
-            <KText variant="caption" weight="600" color={c.gain ? 'accent' : 'ink2'} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7} style={{ flexShrink: 1 }}>
+            <KText variant="caption" weight="600" color={c.gain ? 'ink' : 'ink2'} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7} style={{ flexShrink: 1 }}>
               {c.label}
             </KText>
             {c.gain ? <GainMark size={10} /> : null}
           </View>
-          <View style={c.gain ? { backgroundColor: colors.accentSoft, borderRadius: 8, paddingHorizontal: 6 } : { paddingHorizontal: 6 }}>
-            <Numeral size={STRIP_NUMERAL} color={c.gain ? colors.accent : c.display === null ? colors.ink3 : undefined}>{partText(c.display)}</Numeral>
+          <View style={c.gain ? { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, borderRadius: 8, paddingHorizontal: 5 } : { paddingHorizontal: 6 }}>
+            <Numeral size={STRIP_NUMERAL} color={c.display === null ? colors.ink3 : undefined}>{partText(c.display)}</Numeral>
           </View>
         </View>
       ))}

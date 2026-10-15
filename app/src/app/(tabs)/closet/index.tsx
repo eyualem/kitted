@@ -1,33 +1,24 @@
 // C1 · Closet (02 D15). Until P5 builds the full screen (Rotation, Starter essentials, filters),
 // it shows what the closet really holds: the C1e empty state, or a grid of his pieces drawn with their
-// details (#91), with a "Same as your …?" card on top for each question the stylist still has.
+// details (#91), with a "Same as your …?" card on top for each question the stylist still has. A tap on a piece
+// opens its page (#276); a long-press is the shortcut menu.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useState } from 'react';
-import { File } from 'expo-file-system';
 import { ScrollView, View } from 'react-native';
 import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { PieceMenu } from '@/features/closet/PieceMenu';
-import { checksById, piecePreviewSource } from '@/features/closet/piecePreview';
+import { piecePreviewSource } from '@/features/closet/piecePreview';
+import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { fitCheck } from '@/features/fitcheck/session';
 import { goToStylist } from '@/router/stylistAction';
-import { resolveStoredPath } from '@/services/photoFiles';
 import { t } from '@/i18n/en';
 
 const GAP = 10;
-
-/** Whether a stored file is still on the phone (a cut-out or kept photo can be gone); never throws. */
-function fileExists(uri: string): boolean {
-  try {
-    return new File(uri).exists;
-  } catch {
-    return false;
-  }
-}
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
@@ -38,11 +29,10 @@ export default function ClosetScreen() {
     // its question card only, not as a tile of its own (#116).
     const owned = all.filter(isOwned);
     const items = owned.filter((c) => !isAwaitingAnswer(c, owned)).sort((a, b) => b.addedAt - a.addedAt || (a.id < b.id ? -1 : 1));
-    // Long-press preview (founder, Oct 14): his own photo of each piece, else its drawing.
+    // Long-press preview (founder, Oct 14; #276): his real photo of each piece, outlined, else its drawing.
     const obs = await store.closetObs.all();
-    const checks = checksById(await store.fitChecks.all());
-    const deps = { resolve: resolveStoredPath, exists: fileExists };
-    const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it.id, obs, checks, deps)]));
+    const checks = await loadPhotoChecks(store);
+    const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it, obs, checks, livePhotoDeps)]));
     return { items, byId, previews, asks: await fitCheck.closet.openAsks() };
   }, []);
   const [width, setWidth] = useState(0);

@@ -1,5 +1,7 @@
 // O2's style tile (02 D2, #173): two drawn outfits, the style's name and one plain line. Never a person.
 // The tile is one button for VoiceOver ("Streetwear: Hoodies, graphic tees…", selected trait); the drawings are hidden.
+// A picked tile shows its pick order (1 · 2 · 3, like You's style card; the first pick breaks ties, #86), every tile in
+// a row is as tall as the tallest, and the selected ring is drawn over the border so nothing inside moves (#276).
 import { useEffect, useId, useMemo, useState } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
@@ -42,12 +44,14 @@ export interface LookTileProps {
   look: Look;
   width: number;
   selected: boolean;
+  /** 1-based pick order when selected. */
+  order?: number;
   /** Bumped on a 4th tap: the tile shakes once. */
   shake: number;
   onPress: () => void;
 }
 
-export function LookTile({ look, width, selected, shake, onPress }: LookTileProps) {
+export function LookTile({ look, width, selected, order, shake, onPress }: LookTileProps) {
   const { colors, a11y } = useTheme();
   const [x] = useState(() => new Animated.Value(0));
   const [fade] = useState(() => new Animated.Value(1));
@@ -71,12 +75,10 @@ export function LookTile({ look, width, selected, shake, onPress }: LookTileProp
         onPress={onPress}
         accessibilityRole="button"
         accessibilityState={{ selected }}
-        accessibilityLabel={t('onb.looks.tileA11y', { style: name, line })}
-        style={[
-          styles.tile,
-          { width, backgroundColor: colors.surface, borderColor: selected ? colors.ink : colors.line, borderWidth: selected ? 2.5 : 1 },
-        ]}
+        accessibilityLabel={selected && order ? `${t('profile.a11y.pick', { style: name, n: order })}: ${line}` : t('onb.looks.tileA11y', { style: name, line })}
+        style={[styles.tile, { width, backgroundColor: colors.surface, borderColor: colors.line }]}
       >
+        {selected ? <View pointerEvents="none" style={[styles.ring, { borderColor: colors.ink }]} /> : null}
         <View style={[styles.art, { backgroundColor: colors.surface2 }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
           {look.outfits.map((o, i) => (
             <Outfit key={i} outfit={o} w={outfitW} />
@@ -88,7 +90,11 @@ export function LookTile({ look, width, selected, shake, onPress }: LookTileProp
           </KText>
           {selected ? (
             <View style={[styles.check, { backgroundColor: colors.ink }]}>
-              <Icon name="check" size={13} color={colors.bg} weight="bold" />
+              {order ? (
+                <KText variant="caption" weight="700" color="onPrimary" tabular maxFontSizeMultiplier={1.3}>{String(order)}</KText>
+              ) : (
+                <Icon name="check" size={13} color={colors.bg} weight="bold" />
+              )}
             </View>
           ) : null}
         </View>
@@ -103,7 +109,9 @@ export function LookTile({ look, width, selected, shake, onPress }: LookTileProp
 const TILE_PAD = 10;
 
 const styles = StyleSheet.create({
-  tile: { borderRadius: radius.look + 1, padding: TILE_PAD, paddingBottom: space.m, gap: space.xxs },
+  // flexGrow: as tall as the tallest tile in its row. The border stays 1 pt; the selected ring sits over it.
+  tile: { flexGrow: 1, borderWidth: 1, borderRadius: radius.look + 1, padding: TILE_PAD, paddingBottom: space.m, gap: space.xxs },
+  ring: { position: 'absolute', top: -1, left: -1, right: -1, bottom: -1, borderWidth: 2.5, borderRadius: radius.look + 1 },
   art: { flexDirection: 'row', justifyContent: 'center', gap: space.xs, borderRadius: radius.look - 3, paddingTop: space.s, paddingBottom: space.xs, marginBottom: space.s },
   nameRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.xs, minHeight: 22 },
   check: { width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },

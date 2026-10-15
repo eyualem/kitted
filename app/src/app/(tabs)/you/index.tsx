@@ -70,9 +70,11 @@ function StyleCard({ p }: { p: ProfileRow }) {
               {t('you.style.none')}
             </KText>
           )}
-          <KText variant="footnote" color="ink3" style={{ marginTop: 2 }}>
-            {basicsLine(p)}
-          </KText>
+          {basicsLine(p) ? (
+            <KText variant="footnote" color="ink3" style={{ marginTop: 2 }}>
+              {basicsLine(p)}
+            </KText>
+          ) : null}
           {/* The drawn figure for advice (#247) goes here later: a faceless, code-drawn figure in his own pieces,
               no ruler and no numbers. Not built yet. */}
         </View>

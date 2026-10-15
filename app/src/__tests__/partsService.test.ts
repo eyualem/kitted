@@ -149,6 +149,39 @@ describe('parts engine is the default (#209)', () => {
     expect(after.score).toBe(score(await readingOf(store, old.id), { occasion: after.occasion, styles: [[STYLES[0]![0], 1]], boldness: 'a_little' }).overall);
   });
 
+  // #276: the "Not quite right?" preview runs the save's own evaluation, so the number shown is the number saved.
+  it('the correction preview equals what Save gives, on a parts check and on an old v4 check', async () => {
+    const { store, svc } = await setup();
+    const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };
+    const draft = { garmentIndex: 1, field: 'leg_shape' as const, value: 'wide' };
+    const shown = (await svc.previewCorrection(checkId, { draft }))!;
+    const unchanged = (await store.fitChecks.get(checkId))!;
+    expect(shown.before).toBe(unchanged.score);
+    const saved = (await svc.saveCorrection(checkId, draft))!;
+    expect(shown.after).toBe(saved.after);
+    expect(shown.nextFix?.copy ?? null).toBe((await store.fitChecks.get(checkId))!.fixes[0]?.copy ?? null);
+
+    const store2 = createMemoryStore();
+    await loadScenario(store2, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at('2026-10-20T08:09:00-04:00') });
+    const { svc: svc2 } = await setup({ store: store2, now: '2026-10-20T08:10:00-04:00' });
+    const old = (await store2.fitChecks.all()).find((c) => c.status === 'scored' && c.readingId && !c.parentId)!;
+    expect(engineOf(old)).toBe('v4');
+    const i = (await readingOf(store2, old.id)).garments.findIndex((g) => g.category === 'top');
+    const d2 = { garmentIndex: i, field: 'color_family' as const, value: 'navy' };
+    const shown2 = (await svc2.previewCorrection(old.id, { draft: d2 }))!;
+    expect(engineOf((await store2.fitChecks.get(old.id))!)).toBe('v4');
+    expect(shown2.after).toBe((await svc2.saveCorrection(old.id, d2))!.after);
+  });
+
+  it('the "this fix doesn\'t apply" preview names the fix Save leaves on the card', async () => {
+    const { store, svc } = await setup();
+    const { checkId } = (await svc.start({ mode: 'check', photoId: 'ph8', occasion: 'everyday' })) as { checkId: string };
+    const target = (await store.fitChecks.get(checkId))!.fixes[0]!.target;
+    const shown = (await svc.previewCorrection(checkId, { hideTarget: target }))!;
+    const after = (await svc.hideFix(checkId, target))!;
+    expect([shown.after, shown.nextFix?.copy ?? null]).toEqual([after.score, after.fixes[0]?.copy ?? null]);
+  });
+
   it('a re-check compares parts with parts (p01b, then p01a with the overshirt on)', async () => {
     const { store, svc } = await setup();
     const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };

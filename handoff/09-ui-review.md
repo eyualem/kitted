@@ -2,6 +2,8 @@
 
 **What this is.** A running list of UI problems and redesign ideas from 4 read-only agents (Oct 15, DECISIONS-LOG #274), founder: "look for UI problems and just keep a list of them … how to make the UI beautiful, interactive, and instinctive", plus how the real photo behind each drawn closet tile could live inside the card. Nothing was built or changed. Every item was found in the current code (file:line, paths under `app/src/` unless they start elsewhere). Screenshots are older than some code, so the code decides. I re-checked six of the High items by hand (marked ✔).
 
+**Built Oct 15 (#277):** §1 items 1, 2, 3, 4, 5, 9 (the piece page) and 14, the crop-privacy part of 10, and these from §2: the re-check "Tell me", the two numbers, the not-seen button order, copper on tips and the Why strip, one decimal in the strip, the Why loading title, Past chats read-only, camera speech, the morning row's chevron and Archivo, closet names mid-sentence, the VoiceOver "Top fix", the onboarding progress bar, pick-order badges and even tiles, the header hairlines, the Welcome status bar, the Lookbook score in Archivo, the ink tab. Item 10 (merge, wrong type) is still open; "Not this piece" now exists on the piece page.
+
 **How to use it.** Check items off here as they're fixed, and add new ones. Severity: **H** breaks trust or is a dead end, **M** confusing or unpolished, **L** polish. Effort: S under half a day, M 1–2 days, L more. "(#233)" = already on the Oct 12 review list and still open.
 
 ---

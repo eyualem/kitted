@@ -85,7 +85,7 @@ export function PickLooksScreen() {
         <StylistMessage showHeader>{t('onb.looks.prompt')}</StylistMessage>
         <View style={[styles.grid, { gap: GAP }]} onLayout={(e) => setGridW(e.nativeEvent.layout.width)}>
           {LOOKS.map((look) => (
-            <LookTile key={look.style} look={look} width={tileW} selected={picks.includes(look.style)} shake={shake[look.style] ?? 0} onPress={() => tap(look.style)} />
+            <LookTile key={look.style} look={look} width={tileW} selected={picks.includes(look.style)} order={picks.indexOf(look.style) + 1 || undefined} shake={shake[look.style] ?? 0} onPress={() => tap(look.style)} />
           ))}
           <Pressable
             onPress={() => setEditing(true)}

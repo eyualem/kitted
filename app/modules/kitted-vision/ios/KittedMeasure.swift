@@ -489,7 +489,11 @@ enum Measure {
       }
       rows.append(row)
     }
-    return ["status": "ok", "garments": rows, "ms": Int((CFAbsoluteTimeGetCurrent() - t0) * 1000)]
+    // Every head found on the kept photo (Prep's boxes, grown to the whole head and chin), [ymin, xmin, ymax, xmax]
+    // 0–1000: the app clamps crops of his unblurred photo below them (#276). Empty: no head in the photo.
+    func per1000(_ v: CGFloat, _ side: CGFloat) -> Double { Double((min(max(v / side, 0), 1) * 1000).rounded()) }
+    let heads: [[Double]] = located.hide.map { h in [per1000(h.minY, H), per1000(h.minX, W), per1000(h.maxY, H), per1000(h.maxX, W)] }
+    return ["status": "ok", "garments": rows, "heads": heads, "ms": Int((CFAbsoluteTimeGetCurrent() - t0) * 1000)]
   }
 
   /// Distance between two stored prints (.print files); nil when either is missing or they differ in length.

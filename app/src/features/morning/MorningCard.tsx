@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { localParts, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
-  Icon, KButton, KCard, KCardSection, KText, MonoLabel, MorphPicker, NeckDownPhoto, TextLink, displayScore, opacity, radius, scoreWordLabel, space, useTheme,
+  Icon, KButton, KCard, KCardSection, KText, MonoLabel, MorphPicker, NeckDownPhoto, Numeral, TextLink, displayScore, opacity, radius, scoreWordLabel, space, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -299,9 +299,8 @@ function CheckedRow({ m }: { m: Model }) {
       title={what}
       right={
         <View style={{ alignItems: 'flex-end' }}>
-          <KText variant="title2" weight="700">
-            {displayScore(score)}
-          </KText>
+          {/* Archivo, like every score (#276). */}
+          <Numeral size={24} trimDescender={false}>{displayScore(score)}</Numeral>
           <KText variant="footnote" color="ink2">
             {scoreWordLabel(score)}
           </KText>
@@ -357,6 +356,8 @@ function CollapsedShell({ tag, title, left, right, body, onPress, a11y }: { tag:
         {body}
       </View>
       {right}
+      {/* A tappable row says so (#276): it scrolls to the check it summarizes. */}
+      {onPress ? <Icon name="next" size={13} color="ink3" weight="semibold" /> : null}
     </View>
   );
   return (

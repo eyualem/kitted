@@ -75,8 +75,9 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onb
     await completeOnboarding(store, {
       styles: picksToStyles(d.looks),
       heightCm: d.basics.heightIn !== null ? inchesToCm(d.basics.heightIn) : null,
-      build: d.basics.build,
-      fitPreference: d.basics.fit,
+      // '' = not given (#276): the You card and the chat leave it out.
+      build: d.basics.build ?? '',
+      fitPreference: d.basics.fit ?? '',
       birthYear: d.basics.birthYear,
       consent,
     }, now, newId);

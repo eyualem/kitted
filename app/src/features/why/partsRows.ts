@@ -50,14 +50,14 @@ export interface WhyParts {
   average: number;
   after: WhyRow[];
   total: number;
-  /** VoiceOver for the strip: "Parts: Proportions 7, Fit 7, … Style 6, the most to gain." */
+  /** VoiceOver for the strip: "Parts: Proportions 7.0, Fit 7.0, … Style 6.0, the most to gain." */
   stripLabel: string;
 }
 
 const r2 = (x: number) => Math.round(x * 100) / 100;
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
-/** 7 → "7", 7.5 → "7.5" (parts show whole and half points only). */
-export const partText = (x: number | null) => (x === null ? '—' : String(x));
+/** 7 → "7.0", 7.5 → "7.5": one decimal always, like every score (#276; "7" beside "7.5" read as a different scale). */
+export const partText = (x: number | null) => (x === null ? '—' : x.toFixed(1));
 
 export function whyParts(
   res: PartsInput, opts: { occasion: OccasionKey; readsAs: StyleKey | null; gainPart: PartName | null },

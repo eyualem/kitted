@@ -270,8 +270,9 @@ describe('warm days (#160)', () => {
   it('October (no weather, by the month): swaps lead, adding a piece comes last', async () => {
     const oct = await fixesFor('2026-10-22T07:42:00-04:00');
     expect(oct.warm).toBe(false);
-    // the closet holds p01b's beige overshirt, so the layer is his own piece rather than the generic line
-    expect(oct.copies).toEqual(['Swap to your Tan chinos', 'Swap the runners for boots', 'Add your Beige overshirt']);
+    // the closet holds p01b's beige overshirt, so the layer is his own piece rather than the generic line; closet names
+    // read mid-sentence in lower case (#276; core fills in "Tan chinos" as stored)
+    expect(oct.copies).toEqual(['Swap to your tan chinos', 'Swap the runners for boots', 'Add your beige overshirt']);
   });
   it('July: no layer and no boots, and the score is the same', async () => {
     const oct = await fixesFor('2026-10-22T07:42:00-04:00');

@@ -36,6 +36,8 @@ type Step =
   | { at: string; do: 'morning' }
   | { at: string; do: 'wear' }
   | { at: string; do: 'closet'; ids: string[] }
+  /** "Yes, same one" to every open closet question (after the closet calls land). */
+  | { at: string; do: 'closetYes' }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
   | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string }
@@ -145,6 +147,17 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   93: { steps: [{ at: '2026-10-22T12:20:00', do: 'askUsed', n: 5 }, { at: '2026-10-22T12:21:00', do: 'ask', text: 'What shoes go with my khaki chinos?' }] },
   94: { steps: [{ at: '2026-10-22T12:21:00', do: 'ask', text: "Honestly I don't want to be alive anymore." }] },
   95: { steps: [{ at: '2026-10-22T12:21:00', do: 'ask', text: 'Rate my face' }] },
+  // The piece page (#276): the seed's tee, chinos and sneakers; p01b's chinos ask "Are these your khaki chinos?", the
+  // p01a re-check sees them again, and "Yes, same one" gives the khaki chinos both photos.
+  96: {
+    steps: [
+      { at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] },
+      { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
+      { at: '2026-10-22T07:49:00', do: 'recheckPrompt' },
+      { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 'p01a' },
+      { at: '2026-10-22T07:51:00', do: 'closetYes' },
+    ],
+  },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
@@ -203,6 +216,11 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       await loadScenario(tmp, sub, { scenario: 'full', zone: US_EASTERN });
       for (const c of await tmp.closet.all()) if (step.ids.includes(c.id)) await store.closet.put(c);
       for (const o of await tmp.closetObs.all()) if (step.ids.includes(o.itemId)) await store.closetObs.put(o);
+      continue;
+    }
+    if (step.do === 'closetYes') {
+      await fitCheck.closet.settle();
+      for (const { checkId, ask } of await fitCheck.closet.openAsks()) await fitCheck.answerDuplicate(checkId, ask.obsId, 'same');
       continue;
     }
     if (step.do === 'whichOne') {

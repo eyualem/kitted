@@ -1,9 +1,10 @@
-// O3 · Basics (02 D3): his looks echoed back, the stylist's reply, then height (optional, starts blank), build,
-// fit and birth year (blank until he picks one on the O3w wheel). "Looks right" is off until a year is picked;
-// under 18 sets the age flag and replaces everything with O4. Answers wait in kv until consent saves them.
+// O3 · Basics (02 D3): his looks echoed back, the stylist's reply, then height, build and fit (all optional, all
+// blank until he taps) and birth year (blank until he picks one on the O3w list; no −/+ on it, since one stray tap
+// could turn 18 into 17, #276). "Looks right" is off until a year is picked; under 18 asks once ("Born in 2009?"),
+// then sets the age flag and replaces everything with O4. Answers wait in kv until consent saves them.
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KButton, KCard, KText, StylistMessage, UserBubble, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
@@ -47,9 +48,16 @@ export function BasicsScreen() {
     if (b.birthYear === null) return;
     const year = sessionClock.now().getFullYear();
     if (isUnderAge(b.birthYear, year)) {
-      await setAgeBlocked(true);
-      // The gate swaps the stacks; "/" sends him through it to O4.
-      router.replace('/');
+      // The block is for good (it outlives "Delete all my data"), so a mis-pick gets one chance to change (#276).
+      const block = async () => {
+        await setAgeBlocked(true);
+        // The gate swaps the stacks; "/" sends him through it to O4.
+        router.replace('/');
+      };
+      Alert.alert(t('onb.age.confirm.title', { year: b.birthYear }), t('onb.age.title'), [
+        { text: t('onb.age.confirm.change'), style: 'cancel' },
+        { text: t('onb.age.confirm.yes'), style: 'destructive', onPress: () => void block() },
+      ]);
       return;
     }
     router.push('/onboarding/consent');
@@ -83,24 +91,18 @@ export function BasicsScreen() {
                 <Segmented<FitPref> label={t('onb.basics.fit')} value={b.fit} onChange={(v) => update({ fit: v })} options={FITS.map((v) => ({ value: v, label: fitLabel(v) }))} />
               </Field>
               <Field label={t('onb.basics.birthYear')}>
-                {b.birthYear === null ? (
-                  <Pressable
-                    onPress={() => router.push('/sheets/birth-year')}
-                    accessibilityRole="button"
-                    accessibilityLabel={`${t('onb.basics.birthYear')}, not chosen`}
-                    style={[styles.stepper, { backgroundColor: colors.surface2, justifyContent: 'center' }]}
-                  >
+                <Pressable
+                  onPress={() => router.push(b.birthYear === null ? '/sheets/birth-year' : { pathname: '/sheets/birth-year', params: { year: String(b.birthYear) } })}
+                  accessibilityRole="button"
+                  accessibilityLabel={b.birthYear === null ? `${t('onb.basics.birthYear')}, not chosen` : `${t('onb.basics.birthYear')}, ${b.birthYear}`}
+                  style={[styles.stepper, { backgroundColor: colors.surface2, justifyContent: 'center' }]}
+                >
+                  {b.birthYear === null ? (
                     <KText variant="subheadline" weight="500" color="ink3">{t('onb.basics.choose')}</KText>
-                  </Pressable>
-                ) : (
-                  <Stepper
-                    value={String(b.birthYear)}
-                    label={t('onb.basics.birthYear')}
-                    spoken={String(b.birthYear)}
-                    onStep={(d) => update({ birthYear: (b.birthYear ?? 0) + d })}
-                    onPressValue={() => router.push('/sheets/birth-year')}
-                  />
-                )}
+                  ) : (
+                    <KText variant="title3" weight="600" tabular>{String(b.birthYear)}</KText>
+                  )}
+                </Pressable>
               </Field>
             </View>
             <View style={[styles.silCol, isAccessibilitySize && { alignSelf: 'center' }]}>
@@ -127,7 +129,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function Stepper({ value, placeholder, label, spoken, onStep, onPressValue }: { value: string | null; placeholder?: string; label: string; spoken: string; onStep: (d: 1 | -1) => void; onPressValue?: () => void }) {
+function Stepper({ value, placeholder, label, spoken, onStep }: { value: string | null; placeholder?: string; label: string; spoken: string; onStep: (d: 1 | -1) => void }) {
   const { colors } = useTheme();
   const circle = (d: 1 | -1) => (
     <Pressable onPress={() => onStep(d)} hitSlop={6} style={[styles.circle, { backgroundColor: colors.surface }]} accessibilityElementsHidden importantForAccessibility="no">
@@ -145,11 +147,11 @@ function Stepper({ value, placeholder, label, spoken, onStep, onPressValue }: { 
       onAccessibilityAction={(e) => onStep(e.nativeEvent.actionName === 'increment' ? 1 : -1)}
     >
       {circle(-1)}
-      <Pressable onPress={onPressValue} disabled={!onPressValue} style={{ flex: 1, alignItems: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
         <KText variant="title3" weight={value ? '600' : '500'} color={value ? 'ink' : 'ink3'} tabular>
           {value ?? placeholder ?? ''}
         </KText>
-      </Pressable>
+      </View>
       {circle(1)}
     </View>
   );

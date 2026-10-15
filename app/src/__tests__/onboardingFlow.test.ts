@@ -1,6 +1,6 @@
 import { createMemoryStore } from '@/data/memoryStore';
 import {
-  basicsEcho, BASICS_KEY, birthYears, heightLabel, inchesToCm, isUnderAge, loadDraft, looksEcho, looksReply, LOOKS_KEY, parseBasics, stepHeight,
+  basicsEcho, BASICS_KEY, birthYearAnchor, birthYears, EMPTY_BASICS, heightLabel, inchesToCm, isUnderAge, loadDraft, looksEcho, looksReply, LOOKS_KEY, parseBasics, stepHeight,
 } from '@/features/onboarding/basics';
 import { completeOnboarding, CONSENT_VERSION, giveConsent, hasConsent } from '@/features/onboarding/complete';
 import { mayUpload, withdrawConsent } from '@/features/privacy/wipe';
@@ -36,6 +36,17 @@ describe('onboarding basics (02 D3)', () => {
     expect(looksReply(['minimalist'])).toMatch(/^Minimal\. Good pick\./);
     expect(basicsEcho({ heightIn: null, build: 'average', fit: 'regular', birthYear: 2005 })).toBe('Average · Regular · 2005');
     expect(basicsEcho({ heightIn: 70, build: 'slim', fit: 'relaxed', birthYear: 2005 })).toBe('5′ 10″ · Slim · Relaxed · 2005');
+  });
+
+  // #276: build and fit start blank (a preselected "Average · Regular" was saved as an answer he never gave), and the
+  // year list opens near a 22-year-old's year without picking it.
+  it('build and fit start blank and stay out of the echo until he taps one', () => {
+    expect([EMPTY_BASICS.build, EMPTY_BASICS.fit, parseBasics(null).build, parseBasics(null).fit]).toEqual([null, null, null, null]);
+    expect(parseBasics(JSON.stringify({ build: 'average', fit: 'nonsense', birthYear: 2005 }))).toMatchObject({ build: 'average', fit: null });
+    expect(basicsEcho({ heightIn: null, build: null, fit: null, birthYear: 2005 })).toBe('2005');
+    expect(basicsEcho({ heightIn: null, build: 'slim', fit: null, birthYear: 2005 })).toBe('Slim · 2005');
+    expect(birthYearAnchor(2026)).toBe(2004);
+    expect(birthYears(2026)).toContain(birthYearAnchor(2026));
   });
 
   it('keeps the drafts between steps', async () => {

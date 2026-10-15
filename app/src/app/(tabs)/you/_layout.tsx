@@ -21,7 +21,8 @@ function SettingsButton() {
 
 export default function YouStack() {
   return (
-    <Stack>
+    // No hairline under pushed nav bars (#276), like Stylist's own header.
+    <Stack screenOptions={{ headerShadowVisible: false }}>
       <Stack.Screen name="index" options={{ title: t('tab.you'), headerLargeTitleEnabled: true, headerRight: () => <SettingsButton /> }} />
       <Stack.Screen name="profile" options={{ title: t('profile.title') }} />
       <Stack.Screen name="knows" options={{ title: t('knows.title') }} />

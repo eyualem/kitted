@@ -3,7 +3,7 @@
 // empty state. Tapping a look opens its photo. No dev placeholder text in a tab (DECISIONS-LOG #56).
 import { ActionSheetIOS, Pressable, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, spokenScoreLine, useTheme } from '@/design-system';
+import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, Numeral, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, spokenScoreLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { FitCheckRow } from '@/data/types';
@@ -87,7 +87,8 @@ function LookRow({ look: { check, latest } }: { look: Look }) {
           {scoreWordLabel(score)}
         </KText>
       </View>
-      <KText variant="headline">{scoreText}</KText>
+      {/* Archivo, like every score (#276). */}
+      <Numeral size={20} trimDescender={false}>{scoreText}</Numeral>
     </Pressable>
   );
 }

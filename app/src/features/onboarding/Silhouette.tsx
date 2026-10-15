@@ -1,5 +1,6 @@
 // The basics silhouette with a tailor's tape (03 "TapeMeasureSilhouette", the mockup's sil()): a neutral figure,
-// no face, ever. Build scales the shoulders and hips (0.9 / 1 / 1.12) and the fit eases the outline a little.
+// no face, ever. Build scales the shoulders and hips (0.9 / 1 / 1.12) and the fit eases the outline a little; left
+// blank, the figure stays at the middle shape and VoiceOver says nothing about it.
 import { View } from 'react-native';
 import Svg, { Circle, G, Path, Rect } from 'react-native-svg';
 import { KText, useTheme } from '@/design-system';
@@ -12,10 +13,13 @@ const BODY = 'M34,25 C25,25 19,28 17,34 L13,68 L19,69 L23,42 L24,76 L26,125 L33,
 
 export function Silhouette({ basics, width }: { basics: BasicsDraft; width: number }) {
   const { colors } = useTheme();
-  const sx = BUILD_SCALE[basics.build] * FIT_EASE[basics.fit];
+  const sx = (basics.build ? BUILD_SCALE[basics.build] : 1) * (basics.fit ? FIT_EASE[basics.fit] : 1);
+  const spoken = basics.build && basics.fit
+    ? t('onb.basics.silhouetteA11y', { build: buildLabel(basics.build).toLowerCase(), fit: fitLabel(basics.fit).toLowerCase() })
+    : undefined;
   const height = (width * 132) / 92;
   return (
-    <View style={{ alignItems: 'center', gap: 4 }} accessible accessibilityLabel={t('onb.basics.silhouetteA11y', { build: buildLabel(basics.build).toLowerCase(), fit: fitLabel(basics.fit).toLowerCase() })}>
+    <View style={{ alignItems: 'center', gap: 4 }} accessible={spoken !== undefined} accessibilityLabel={spoken}>
       <Svg width={width} height={height} viewBox="0 0 92 132">
         <G fill={colors.accentSoft} stroke={colors.ink2} strokeWidth={1.2} strokeLinejoin="round">
           <Circle cx={34} cy={14.5} r={8.5} />

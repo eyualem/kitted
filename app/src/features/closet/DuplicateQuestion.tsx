@@ -27,7 +27,7 @@ export interface DuplicateQuestionProps {
 const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
 
 function Frame({ shot, item, w, h }: { shot: Shot | null; item: ClosetItemRow; w: number; h: number }) {
-  if (shot) return <SightingCrop source={shot.photo.source} aspect={shot.photo.aspect} box={shot.box} width={w} height={h} radius={14} />;
+  if (shot) return <SightingCrop source={shot.photo.source} aspect={shot.photo.aspect} box={shot.box} top={shot.top} mirrored={shot.mirrored} width={w} height={h} radius={14} />;
   return <ClosetTile item={item} size={w} aspect={h / w} radius={14} scale={0.7} decorative />;
 }
 

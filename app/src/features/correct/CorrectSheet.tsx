@@ -1,13 +1,12 @@
 // S8 Not quite right? (02 D9): fix a detail the app got wrong and see the score live; Save
 // makes a NEW corrected reading (the original is never edited). Four reasons; P2 edits fit
-// (tops) and leg shape (bottoms) in "Wrong color or fit".
-import { stylesFor } from '@/features/fitcheck/lens';
-import { useMemo, useState } from 'react';
+// (tops) and leg shape (bottoms) in "Wrong color or fit". The live score and next fix come from the fit-check
+// service's previewCorrection, the same evaluation Save runs with the check's own engine (#276; it used core's
+// v4 score() before, so a parts check could show one number and save another).
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import {
-  applyCorrection, garmentName, matchClosetItem, removeGarment, score, suggestFixes, type Garment, type Reading,
-} from '@kitted/core';
+import { garmentName, matchClosetItem, type Fix, type Garment } from '@kitted/core';
 import {
   Chip, ChipFlow, Icon, KButton, KText, Pill, RowDivider, displayScore, opacity, useTheme,
 } from '@/design-system';
@@ -47,23 +46,36 @@ export function CorrectSheet() {
   const [skipTarget, setSkipTarget] = useState<string | null>(null);
   const [feel, setFeel] = useState<'higher' | 'lower' | null>(null);
 
+  // What Save would give for the change on screen; a reply is used only while it still matches the request.
+  const change = draft && reason !== 'fix' && reason !== 'score' ? draft : null;
+  const hideTarget = reason === 'fix' ? skipTarget : null;
+  const request = JSON.stringify([change, hideTarget]);
+  const [scored, setScored] = useState<{ request: string; after: number | null; nextFix: Fix | null } | null>(null);
+  useEffect(() => {
+    let live = true;
+    const d = change ? ('remove' in change ? { garmentIndex: change.index, remove: true as const } : { garmentIndex: change.index, field: change.field, value: change.value }) : undefined;
+    void fitCheck.previewCorrection(p.checkId, { draft: d, hideTarget: hideTarget ?? undefined }).then((r) => {
+      if (live && r) setScored({ request, after: r.after, nextFix: r.nextFix });
+    });
+    return () => {
+      live = false;
+    };
+    // `request` stands for change + hideTarget; `data` re-runs it when the check or closet changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [p.checkId, request, data]);
+
   const preview = useMemo(() => {
     if (!data) return null;
-    const opts = { occasion: data.row.occasion, styles: stylesFor(data.row.style, data.profile?.styles ?? []), boldness: data.profile?.boldness ?? 'a_little' };
-    let next: Reading = data.reading;
-    if (draft && reason !== 'fix' && reason !== 'score') {
-      next = 'remove' in draft ? removeGarment(data.reading, draft.index) : applyCorrection(data.reading, draft.index, draft.field, draft.value);
-    }
-    const after = score(next, opts).overall;
+    const fresh = scored?.request === request ? scored : null;
     const original = draft ? data.reading.garments[draft.index] : undefined;
     // The piece the change goes to: the stored garment → item link (#91); pre-V6 checks: one of its own pieces.
     const linked = draft ? (data.row.details.closetSummary?.links ?? []).find((l) => l.origin === 'garment' && l.index === draft.index) : undefined;
     const closetHit = original && !('remove' in (draft ?? {}))
       ? (linked ? data.closet.find((c) => c.id === linked.itemId) : matchClosetItem(original, data.closet.filter((c) => data.row.itemIds.includes(c.id)))) ?? null
       : null;
-    const nextFix = skipTarget ? suggestFixes(data.reading, { ...opts, closet: data.closet, excludeTargets: [skipTarget, ...(data.row.details.hiddenFixTargets ?? [])], warm: data.row.details.warm }).fixes[0] : undefined;
-    return { before: data.row.score ?? 0, after: after ?? data.row.score ?? 0, closetHit, nextFix };
-  }, [data, draft, reason, skipTarget]);
+    const before = data.row.score ?? 0;
+    return { before, after: fresh?.after ?? before, closetHit, nextFix: hideTarget ? fresh?.nextFix ?? undefined : undefined };
+  }, [data, draft, scored, request, hideTarget]);
 
   if (!data || !preview) return <SheetScaffold title={t('nqr.title')} subtitle={t('nqr.sub')} />;
   const { row, reading } = data;

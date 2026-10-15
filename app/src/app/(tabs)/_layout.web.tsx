@@ -1,5 +1,5 @@
 // WEB PREVIEW ONLY: a stand-in for the iOS 26 tab bar, drawn to the mockup's numbers
-// (62 pt capsule, 21 pt from the sides and bottom, accent text on accentSoft when selected).
+// (62 pt capsule, 21 pt from the sides and bottom, ink text on surface2 when selected; ink, not copper, #276).
 // Never shipped to iOS, where NativeTabs draws the real one (05 T21: judge it on the Simulator).
 import { StyleSheet, View } from 'react-native';
 import { TabList, TabSlot, TabTrigger, Tabs, type TabTriggerSlotProps } from 'expo-router/ui';
@@ -37,14 +37,14 @@ export default function WebTabsLayout() {
 
 function WebTab({ label, icon, isFocused, ...props }: TabTriggerSlotProps & { label: string; icon: SymKey }) {
   const { colors } = useTheme();
-  const color = isFocused ? 'accent' : 'ink2';
+  const color = isFocused ? 'ink' : 'ink2';
   return (
     <View
       {...props}
       accessibilityRole="tab"
       accessibilityState={{ selected: isFocused }}
       accessibilityLabel={label}
-      style={[styles.tab, isFocused && { backgroundColor: colors.accentSoft }]}
+      style={[styles.tab, isFocused && { backgroundColor: colors.surface2 }]}
     >
       <Icon name={icon} size="large" color={color} />
       <KText variant="caption" weight="600" color={color}>

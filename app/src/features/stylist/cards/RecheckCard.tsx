@@ -1,5 +1,7 @@
 // S6r Re-check card (02 D10) and S21 "change not seen". The delta is like for like: the new
-// photo is merged onto the first reading at the first check's occasion.
+// photo is merged onto the first reading at the first check's occasion. Honest about the direction (#276): only a win
+// says "Nothing else changed." and gets copper; a drop shows was → now with an ink arrow and its new problems
+// ("New: …"); "Didn't catch the change?" shows only when no fix was caught; "not seen" leads with "Try another photo".
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import {
@@ -8,7 +10,7 @@ import {
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { notSeenProblem, recheckSummary } from '@/features/fitcheck/explain';
+import { newProblemLines, notSeenProblem, recheckMove, recheckSummary } from '@/features/fitcheck/explain';
 import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { signed } from '@/i18n/format';
@@ -17,7 +19,8 @@ import { FitCheckCard, SHARE_CARD_BUILT } from './FitCheckCard';
 import { useWinReveal } from './useReveal';
 import type { FitCheckRow } from '@/data/types';
 
-export function RecheckCard({ checkId }: { checkId: string }) {
+/** `readOnly`: Past chats (#276): the result as it was, with no buttons (a new photo, "I did make the change", Tell me). */
+export function RecheckCard({ checkId, readOnly = false }: { checkId: string; readOnly?: boolean }) {
   const row = useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
   const parent = useLive(['fitChecks', 'readings'], async () => {
     const p = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
@@ -25,11 +28,11 @@ export function RecheckCard({ checkId }: { checkId: string }) {
     return p ? { row: p, reading } : null;
   }, [row?.parentId]);
   if (!row) return null;
-  if (row.status !== 'scored' || !row.details.recheck) return <FitCheckCard checkId={checkId} />;
-  return <ScoredRecheck row={row} parent={parent} />;
+  if (row.status !== 'scored' || !row.details.recheck) return <FitCheckCard checkId={checkId} readOnly={readOnly} />;
+  return <ScoredRecheck row={row} parent={parent} readOnly={readOnly} />;
 }
 
-function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCheckRow; reading: Parameters<typeof notSeenProblem>[0] | null } | null | undefined }) {
+function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { row: FitCheckRow; reading: Parameters<typeof notSeenProblem>[0] | null } | null | undefined; readOnly: boolean }) {
   const rc = row.details.recheck!;
   // The re-check win (#242, #246 (16)): once, only when the score went up and the card shows the change (not the
   // "same photo" or "change not seen" cards, which land as they are).
@@ -44,7 +47,7 @@ function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCh
       <KCard
         accessibilityLabel={t('card.a11y.recheckSame', { occasion: occasionWord, now: spokenScore(now), word: scoreWordLabel(now) })}
         // The card is one VoiceOver element: its button is an action, or VoiceOver can't reach it.
-        accessibilityActions={[{ name: 'newPhoto', label: t('recheck.samePhoto.button') }]}
+        accessibilityActions={readOnly ? undefined : [{ name: 'newPhoto', label: t('recheck.samePhoto.button') }]}
         onAccessibilityAction={() => router.push(`/camera?mode=recheck&parent=${row.parentId}`)}
       >
         <KCardSection gap={12}>
@@ -52,12 +55,14 @@ function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCh
           <ScoreBlock score={now} />
           <KText role="cardSummary">{t('recheck.samePhoto')}</KText>
         </KCardSection>
-        <KCardSection gap={4} style={{ paddingTop: 4 }}>
-          <KButton
-            title={t('recheck.samePhoto.button')} icon="camera" size="regular" fullWidth
-            onPress={() => router.push(`/camera?mode=recheck&parent=${row.parentId}`)}
-          />
-        </KCardSection>
+        {readOnly ? null : (
+          <KCardSection gap={4} style={{ paddingTop: 4 }}>
+            <KButton
+              title={t('recheck.samePhoto.button')} icon="camera" size="regular" fullWidth
+              onPress={() => router.push(`/camera?mode=recheck&parent=${row.parentId}`)}
+            />
+          </KCardSection>
+        )}
       </KCard>
     );
   }
@@ -65,23 +70,38 @@ function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCh
   const done = rc.doneFixes[0];
   const occasion = occasionLabel(row.occasion);
   const outcome = { after: now, doneFixes: rc.doneFixes.map((d) => ({ ...(parent?.row.fixes.find((f) => f.copy === d.copy) ?? { target: '' }), earned: d.earned })) };
-  const summary = recheckSummary(outcome as never);
+  const move = recheckMove(rc.parentScore, now);
+  const problems = newProblemLines(rc.newProblems ?? [], row.details);
+  const summary = recheckSummary(outcome as never, move, problems);
+  // One caught fix carries the whole move, so its row says the pill's number; with several (each its own raw
+  // points, which don't add up to the rounded pill) or no win, the rows carry no number.
+  const doneGain = move === 'up' && rc.doneFixes.length === 1 ? signed(now - rc.parentScore) : '';
+  // "Didn't catch the change? Tell me" only when a fix wasn't caught (none were, or some of the card's weren't).
+  const missed = rc.doneFixes.length < (parent?.row.fixes.length ?? 0) || rc.doneFixes.length === 0;
   const problem = parent?.reading ? notSeenProblem(parent.reading, parent.row.fixes) : '';
   const iDidTitle = t('recheck.iDid', { fixPast: t(parent?.row.fixes.some((f) => f.edits.some((e) => e.op === 'add_held')) ? 'recheck.fixPast.held' : 'recheck.fixPast.generic') });
   const tryAnother = () => router.push(`/camera?mode=recheck&parent=${row.parentId}`);
   // One VoiceOver element: every button on it is also an action (the "not seen" card has its own two).
-  const actions = notSeen
+  const actions = readOnly ? [] : notSeen
     ? [{ name: 'iDid', label: iDidTitle }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
-    : [...(SHARE_CARD_BUILT ? [{ name: 'share', label: t('recheck.share') }] : []), { name: 'tell', label: t('recheck.tellMe') }];
+    : [...(SHARE_CARD_BUILT && move === 'up' ? [{ name: 'share', label: t('recheck.share') }] : []), ...(missed ? [{ name: 'tell', label: t('recheck.tellMe') }] : [])];
   const go = {
     iDid: () => void fitCheck.confirmFixes(row.id),
     tryAnother,
     share: () => router.push(`/share/${row.id}`),
     tell: () => router.push(`/sheets/tell-me/${row.id}`),
   };
+  const newLines = problems.map((x) => t('recheck.newProblem', { problem: x }));
   const label = notSeen
-    ? `${t('card.tag.recheck')}, ${occasion}. ${t('recheck.notSeen', { problem })}`
-    : t('card.a11y.recheck', { occasion, was: spokenScore(rc.parentScore), now: spokenScore(now), delta: rc.delta.toFixed(1), word: scoreWordLabel(now), fix: done?.copy ?? '' });
+    ? `${t('card.tag.recheck')}, ${occasion}. ${t('recheck.notSeen', { problem })} ${t('card.a11y.recheckHeld', { now: spokenScore(now) })}`
+    : [
+        move === 'up'
+          ? t('card.a11y.recheck', { occasion, was: spokenScore(rc.parentScore), now: spokenScore(now), delta: (now - rc.parentScore).toFixed(1), word: scoreWordLabel(now), fix: done?.copy ?? '' })
+          : move === 'down'
+            ? t('card.a11y.recheckDown', { occasion, was: spokenScore(rc.parentScore), now: spokenScore(now), word: scoreWordLabel(now) })
+            : t('card.a11y.recheckFlat', { occasion, now: spokenScore(now), word: scoreWordLabel(now) }),
+        ...newLines.map((x) => `${x}.`),
+      ].join(' ');
   return (
     <View collapsable={false} onTouchStart={touch.onTouchStart} onTouchEnd={touch.onTouchEnd}>
     <KCard
@@ -93,7 +113,8 @@ function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCh
         <TagLine left={t('card.tag.recheck')} right={occasion} />
         {notSeen ? (
           <>
-            <ScoreBlock score={now} />
+            {/* was → now, the same number: the old score shows, so it's plain nothing moved. */}
+            <DeltaRow was={rc.parentScore} now={now} />
             <KText role="cardSummary">{t('recheck.notSeen', { problem })}</KText>
           </>
         ) : (
@@ -110,13 +131,16 @@ function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCh
             {/* The new word arrives with its line (it sits inside the sentence, so the line rises in, not the word alone). */}
             <RevealStepView t={plan ? winT : undefined} step={plan?.word}>
               <KText role="cardSummary">
-                {`${summary.lead} `}
+                {summary.lead ? `${summary.lead} ` : ''}
                 <KText role="cardSummary" weight="600">
                   {summary.word}
                 </KText>
-                {` ${summary.tail}`}
+                {summary.tail ? ` ${summary.tail}` : ''}
                 {row.details.confirmed ? ` ${t('recheck.tell.confirmed')}` : ''}
               </KText>
+              {newLines.map((x) => (
+                <KText key={x} role="cardSummary">{x}</KText>
+              ))}
             </RevealStepView>
           </>
         )}
@@ -126,28 +150,33 @@ function ScoredRecheck({ row, parent }: { row: FitCheckRow; parent: { row: FitCh
           <Seam />
           <KCardSection paddingVertical={4} gap={0}>
             {rc.doneFixes.map((d, i) => (
-              <FixRow key={i} number={i + 1} title={d.copy} gain={signed(d.earned)} done reveal={plan ? { t: winT, badge: plan.badge } : undefined} />
+              <FixRow key={i} number={i + 1} title={d.copy} gain={doneGain} done reveal={plan ? { t: winT, badge: plan.badge } : undefined} />
             ))}
           </KCardSection>
         </>
       ) : null}
+      {readOnly ? null : (
       <KCardSection gap={4} style={{ paddingTop: 4 }}>
         {notSeen ? (
           <View style={{ gap: 8 }}>
-            <KButton title={iDidTitle} size="regular" fullWidth onPress={go.iDid} />
-            <KButton title={t('recheck.tryAnother')} size="regular" kind="secondary" fullWidth onPress={tryAnother} />
+            {/* A new photo first; his own word that he made the change second (#276). */}
+            <KButton title={t('recheck.tryAnother')} icon="camera" size="regular" fullWidth onPress={tryAnother} />
+            <KButton title={iDidTitle} size="regular" kind="secondary" fullWidth onPress={go.iDid} />
           </View>
         ) : (
           <>
-            {SHARE_CARD_BUILT ? (
+            {SHARE_CARD_BUILT && move === 'up' ? (
               <KButton title={t('recheck.share')} icon="share" size="regular" fullWidth onPress={() => router.push(`/share/${row.id}`)} />
             ) : null}
-            <TextLinkRow justify="center">
-              <TextLink title={t('recheck.tellMe')} compact onPress={() => router.push(`/sheets/tell-me/${row.id}`)} />
-            </TextLinkRow>
+            {missed ? (
+              <TextLinkRow justify="center">
+                <TextLink title={t('recheck.tellMe')} compact onPress={() => router.push(`/sheets/tell-me/${row.id}`)} />
+              </TextLinkRow>
+            ) : null}
           </>
         )}
       </KCardSection>
+      )}
     </KCard>
     </View>
   );

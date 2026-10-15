@@ -4,15 +4,19 @@
  * A region wider than the frame (a pair of shoes: two feet with floor between them) is fitted to the frame's width
  * instead of covering it, or the frame's middle would be only the floor (#183). Then the frame can reach above the
  * piece's top; `hideAbove` is how many points from the frame's top must be painted solid, so nothing above the piece
- * (a face, for a top) ever shows. It is 0 when the region covers the frame.
+ * (a face, for a top) ever shows. It is 0 when the region covers the frame. With `minTop`, "the piece's top" is
+ * the lower of the box's top and that line.
  */
-export function cropLayout(box: readonly number[], aspect: number, width: number, height: number) {
+export function cropLayout(box: readonly number[], aspect: number, width: number, height: number, minTop?: number | null) {
   const clamp = (v: number) => Math.min(1, Math.max(0, v));
   const [y0, x0, y1, x1] = box.map((v) => v / 1000) as [number, number, number, number];
   const bw = x1 - x0, bh = y1 - y0;
-  // A margin at the sides and below; none above (and a little inset), so nothing over the piece shows.
+  // A margin at the sides and below; none above (and a little inset), so nothing over the piece shows. `minTop`
+  // (0–1000, cropSafety.cropTop): the first row allowed, below his head; nothing above it shows either.
+  const limit = typeof minTop === 'number' ? clamp(minTop / 1000) : 0;
+  const cut = Math.max(y0, limit);
   const rx0 = clamp(x0 - 0.25 * bw), rx1 = clamp(x1 + 0.25 * bw);
-  const ry0 = clamp(y0 + 0.03 * bh), ry1 = clamp(y1 + 0.08 * bh);
+  const ry0 = Math.max(clamp(y0 + 0.03 * bh), limit), ry1 = Math.max(clamp(y1 + 0.08 * bh), Math.min(1, limit + 0.01));
   const fitW = width / ((rx1 - rx0) * aspect), coverH = height / (ry1 - ry0);
   // Cover: the region fills the frame in its tighter direction, so what shows is always inside the region.
   // Wide: the region's full width fills the frame; the rest of the height shows what's below it, or the background.
@@ -21,9 +25,9 @@ export function cropLayout(box: readonly number[], aspect: number, width: number
   const imgW = aspect * k, imgH = k;
   const left = width / 2 - ((rx0 + rx1) / 2) * imgW;
   const top = height / 2 - ((ry0 + ry1) / 2) * imgH;
-  const hideAbove = Math.max(0, top + y0 * imgH);
+  const hideAbove = Math.max(0, top + cut * imgH);
   const piece = {
-    left: Math.max(0, left + x0 * imgW), top: Math.max(0, top + y0 * imgH),
+    left: Math.max(0, left + x0 * imgW), top: Math.max(0, top + cut * imgH),
     right: Math.min(width, left + x1 * imgW), bottom: Math.min(height, top + y1 * imgH),
   };
   return { imgW, imgH, left, top, piece, hideAbove };

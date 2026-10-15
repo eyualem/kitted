@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import {
   FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, MonoLabel, PartialLabel, RowDivider, ScoreBlock, Seam,
-  MorphPicker, RevealStepView, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
+  MorphPicker, RevealStepView, TagLine, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
@@ -91,7 +91,9 @@ function pickLook(picks: readonly StyleKey[], current: StyleKey | null, onPick: 
   });
 }
 
-export function FitCheckCard({ checkId }: { checkId: string }) {
+/** `readOnly`: an earlier day's card in Past chats (#276). It shows what happened and keeps Why and the photo, but can't
+ *  change the occasion or Going for, answer a closet question, correct a detail, finish a partial check or re-check. */
+export function FitCheckCard({ checkId, readOnly = false }: { checkId: string; readOnly?: boolean }) {
   const row = useCheck(checkId);
   const wxTip = useWeatherTip(row);
   const asked = useTapGarment(row);
@@ -116,7 +118,7 @@ export function FitCheckCard({ checkId }: { checkId: string }) {
     const retake = () => router.push({ pathname: '/camera', params: { occasion: row.occasion } });
     return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} action={{ title: t('recheck.samePhoto.button'), onPress: retake }} />;
   }
-  return <ScoredCard row={row} wxTip={wxTip} asked={asked} />;
+  return <ScoredCard row={row} wxTip={wxTip} asked={asked} readOnly={readOnly} />;
 }
 
 /** Where the one quick tap's garment is in the CURRENT reading (a correction makes a new one), and its type now. */
@@ -169,7 +171,7 @@ function FailureCard({ row }: { row: FitCheckRow }) {
   );
 }
 
-function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | null; asked: AskedGarment | null }) {
+function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: string | null; asked: AskedGarment | null; readOnly: boolean }) {
   const closet = useCloset() ?? [];
   const picks = usePicks();
   // "Going for" (#215): the folded line at the top; Change grows it back into the question, in place.
@@ -201,7 +203,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   // After the one quick tap: S8 prefilled with the other answer (the pair's other half; for the shoe question, the
   // next kind in the question's order, and the sheet lists every shoe type).
   const otherAnswer = tap?.answer ? tap.order.find((v) => v !== tap.answer) : undefined;
-  const changeAnswer = tap?.answer && asked && asked.value === tap.answer && otherAnswer
+  const changeAnswer = !readOnly && tap?.answer && asked && asked.value === tap.answer && otherAnswer
     ? () => router.push(`/sheets/correct/${row.id}?reason=item&garment=${asked.index}&field=subcategory&value=${otherAnswer}`)
     : null;
   // "Scored as jeans. Not right? Tap." only after a Skip, while the piece still has the value it was scored as.
@@ -221,7 +223,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   // The fix area skips its "No quick fixes" row whenever the summary already says it (#183); with no tip and no
   // Going-for line either, the whole section and its seam go, so the card never says it twice (v8 makes that common).
   const quietNoFix = score < 9 && !!row.explanation?.includes(t('sum.noQuickFix'));
-  const recheckOpen = isRecheckOpen(row, sessionClock.nowMs(), sessionClock);
+  const recheckOpen = !readOnly && isRecheckOpen(row, sessionClock.nowMs(), sessionClock);
   // "Added 3 to Closet · 1 question" / "Checking the details…" (#91): from the closet summary.
   const closetLine = closetSummaryText(row.details.closetSummary, sessionClock.nowMs());
   const addedItems = (closetLine?.itemIds ?? []).map((id) => closet.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
@@ -229,12 +231,12 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
   // The closet question rides on the card right after the score (#117): the check's first question (answered: its
   // one line and Change); any others wait in Closet's "To confirm".
   const cs = row.details.closetSummary;
-  const firstAsk = showCloset && !closetLine?.pending ? (cs?.asks ?? []).find((a) => !(cs?.undone ?? []).includes(a.itemId)) : undefined;
+  const firstAsk = showCloset && !readOnly && !closetLine?.pending ? (cs?.asks ?? []).find((a) => !(cs?.undone ?? []).includes(a.itemId)) : undefined;
   const askPhoto = firstAsk ? closet.find((c) => c.id === firstAsk.itemId) : undefined;
   const askCandidate = firstAsk ? closet.find((c) => c.id === firstAsk.candidateId) : undefined;
   const askRunnerUp = firstAsk?.runnerUpId ? closet.find((c) => c.id === firstAsk.runnerUpId) ?? null : null;
   const moreAsks = firstAsk ? openAsks(cs).filter((a) => a.obsId !== firstAsk.obsId).length : 0;
-  const finishing = partial && row.snapState === 'pending' && row.details.finish !== undefined;
+  const finishing = !readOnly && partial && row.snapState === 'pending' && row.details.finish !== undefined;
   const finish = finishing ? finishInfo(row, closet) : null;
   // The closet question, for VoiceOver (the card is one element): the question and reason in the label, the answers as actions.
   const askItem = askCandidate ? lowerFirst(askCandidate.name) : '';
@@ -257,7 +259,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     ? { t: revealT, values: tapeVals, tape: plan.tape, swap: plan.swap, lock: plan.lock, blankStart: plan.blankStart, word: plan.word, summary: plan.summary }
     : undefined;
 
-  const actions = [
+  const actions = readOnly ? [{ name: 'why', label: t('card.why', { score: scoreText }) }] : [
     { name: 'why', label: t('card.why', { score: scoreText }) },
     { name: 'nqr', label: t('card.nqr') },
     ...(recheckOpen && !dialed ? [{ name: 'recheck', label: t('card.recheck') }] : []),
@@ -297,15 +299,19 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
     finishSnap: () => router.push(`/camera?mode=shoeSnap&parent=${row.id}`),
     finishSkip: () => void fitCheck.skipFinish(row.id),
   };
-  const label = [t('card.a11y.fitCheck', {
+  const spokenHead = {
     occasion: occasionLabel(row.occasion),
     score: spokenScore(score),
     word: scoreWordLabel(score),
     partial: partial || finished ? `${partialText}. ` : '',
     summary: row.explanation ?? '',
-    fix: top?.copy ?? t('card.noFixes'),
-    tag: top?.tag ?? '',
-  }), skippedAs ? t('tap.skipped', { choice: skippedAs }) : '', gf ? lineA11y(gf, occasionLabel(row.occasion)) : '', adviceA11y(advice, moveIsFix),
+  };
+  // No fix: the summary already says so, so there's no "Top fix: …" clause (#276; it read "Top fix: No quick fixes
+  // for this one, .").
+  const spokenCard = top
+    ? t('card.a11y.fitCheck', { ...spokenHead, fix: top.copy, tag: top.tag ?? '' }).replace(', .', '.')
+    : t('card.a11y.fitCheckNoFix', spokenHead);
+  const label = [spokenCard, skippedAs ? t('tap.skipped', { choice: skippedAs }) : '', gf ? lineA11y(gf, occasionLabel(row.occasion)) : '', adviceA11y(advice, moveIsFix),
     askLine, finish ? `${t('partial.finish.title')}. ${finish.second}` : ''].filter(Boolean).join(' ');
 
   // Just answered the one quick tap here: say the score, then put VoiceOver on the result.
@@ -339,7 +345,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
               }}
             />
           ) : (
-            <GoingForLine g={gf} occasion={row.occasion} onChange={() => {
+            <GoingForLine g={gf} occasion={row.occasion} onChange={readOnly ? undefined : () => {
               setChanging(true);
               // It grows in place: keep the card's top in view (the thread otherwise stays pinned to the bottom).
               void store.chat.all().then((ms) => {
@@ -350,7 +356,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
           )
         ) : null}
         <KCardSection>
-          <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} occasionHere={!gf} />
+          <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} occasionHere={!gf} readOnly={readOnly} />
           {partial || finished ? (
             <>
               <View ref={attachScore} onLayout={onScoreLayout} collapsable={false}>
@@ -414,7 +420,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
         <Seam />
         <RevealStepView t={rt} step={afterFixes}>
         <KCardSection gap={6}>
-          {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={go.review} /> : null}
+          {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review} /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
               <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact onAnswer={answerAsk} />
@@ -437,7 +443,7 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
           ) : null}
           <TextLinkRow>
             <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
-            <TextLink title={t('card.nqr')} onPress={go.nqr} compact />
+            {readOnly ? null : <TextLink title={t('card.nqr')} onPress={go.nqr} compact />}
             {/* `Later` (ruling 23) comes back in P4 with the "first 3 moves" card it leads to;
                 until then a link that does nothing is worse than none. */}
           </TextLinkRow>
@@ -462,8 +468,10 @@ function ScoredCard({ row, wxTip, asked }: { row: FitCheckRow; wxTip: string | n
 /** "Fit check · Full" + the occasion (02 "S6s"). The occasion opens an in-card tray (a change asks first,
  *  #62). No style here: a style never changes the score (rubric v4); the card says "Reads as …" (#85). On a check with
  *  the Going-for line (#215) the occasion lives in that line instead, so it's in one place. */
-function LensTagline({ row, left, occasionHere = true }: { row: FitCheckRow; left: string; occasionHere?: boolean }) {
+function LensTagline({ row, left, occasionHere = true, readOnly = false }: { row: FitCheckRow; left: string; occasionHere?: boolean; readOnly?: boolean }) {
   if (!occasionHere) return <MonoLabel>{left}</MonoLabel>;
+  // Past chats: the occasion it was scored for, as a plain label (no tray, so an old check can't be re-scored).
+  if (readOnly) return <TagLine left={left} right={occasionLabel(row.occasion)} />;
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
       <MonoLabel>{left}</MonoLabel>

@@ -104,7 +104,7 @@ function PastDayRow({ row: { day, title, subtitle, best } }: { row: DayRow }) {
   );
 }
 
-/** One earlier day, oldest message first, opened at the top. */
+/** One earlier day, oldest message first, opened at the top. Read-only (#276): its cards show what happened. */
 export function PastDayScreen({ dayKey: key }: { dayKey: string }) {
   const { colors } = useTheme();
   const loaded = useLive(['chat'], () => store.chat.all(), []);
@@ -121,7 +121,7 @@ export function PastDayScreen({ dayKey: key }: { dayKey: string }) {
       <Stack.Screen options={{ title }} />
       {items.map((item, i) => (
         <View key={item.key} style={i > 0 ? { marginTop: space.stack } : undefined}>
-          <ThreadRow item={item} />
+          <ThreadRow item={item} readOnly />
         </View>
       ))}
     </ScrollView>

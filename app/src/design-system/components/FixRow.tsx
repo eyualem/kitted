@@ -2,7 +2,7 @@
 // FixRow: 26 pt badge (1.3 pt ink ring, number footnote bold) | title (callout semibold) +
 // detail (footnote ink2) | gain (mono, accent: "→ 9.0"). space.fixRowV vertical padding, 12 pt gap.
 // Done: badge filled ink with a surface checkmark, title ink2 (no strike-through: it read as cancelled, #246 (14)),
-// detail hidden, gain shows the raw delta ("+0.75"). `reveal` (the score reveal, ScoreReveal.tsx) fades the gain in
+// detail hidden, gain shows the re-check's move ("+1.0", the pill's number) or nothing (#276). `reveal` (the score reveal, ScoreReveal.tsx) fades the gain in
 // and, on a done row, fills the badge and draws its check; past its window the row is exactly the plain one. AX sizes: gain moves under the text, badge to top.
 // Rule (ruling 20): at least one free fix whenever any fix exists, and the free one comes first.
 
@@ -20,7 +20,7 @@ export interface FixRowProps {
   title: string;
   /** "Free · it's already in your hand" */
   detail?: string;
-  /** "→ 9.0" (pending) or "+0.75" (done) */
+  /** "→ 9.0" (pending) or "+1.0" (done); '' on a done row shows no number (the re-check's pill carries it, #276). */
   gain: string;
   done?: boolean;
   /** The score reveal's timeline: `gain` fades the gain text in; `badge` fills a done row's badge and draws its check. */
@@ -32,16 +32,16 @@ export function FixRow({ number, title, detail, gain, done, reveal }: FixRowProp
   const badge = Math.round(size.fixBadge * Math.min(fontScale, 2));
 
   const spoken = done
-    ? `${t('a11y.fixDone', { title })} ${t('a11y.plus', { n: gain.replace('+', '') })}.`
+    ? gain ? `${t('a11y.fixDone', { title })} ${t('a11y.plus', { n: gain.replace('+', '') })}.` : t('a11y.fixDone', { title })
     : `${t('a11y.fix', { n: number, title, detail: detail ? detail.replace(/ · /g, ', ') : '' }).replace(' .', '')} ${t('a11y.fixGain', { score: gain.replace('→ ', '') })}`;
 
-  const gainText = (
+  const gainText = gain ? (
     <KText role="gain" numberOfLines={1}>
       {gain}
     </KText>
-  );
+  ) : null;
   const gainStep = reveal?.gain ?? (done ? reveal?.badge : null);
-  const gainView = reveal && gainStep ? <FadeIn t={reveal.t} step={gainStep}>{gainText}</FadeIn> : gainText;
+  const gainView = reveal && gainStep && gainText ? <FadeIn t={reveal.t} step={gainStep}>{gainText}</FadeIn> : gainText;
 
   return (
     <View
@@ -102,7 +102,7 @@ function DrawnBadge({ t, step, badge }: { t: SharedValue<number>; step: RevealSt
   );
 }
 
-/** TipLine: 1 pt line on top (none when it opens its section), footnote ink2 text with a copper semibold lead-in ("Next level"). */
+/** TipLine: 1 pt line on top (none when it opens its section), footnote ink2 text with an ink semibold lead-in ("Next level"; was copper until #276). */
 export function TipLine({ lead, text, first }: { lead: string; text: string; first?: boolean }) {
   const { colors } = useTheme();
   return (

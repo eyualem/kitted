@@ -49,14 +49,16 @@ export function AddedRow({ items, count, onReview }: { items: { type: GarmentIco
 
 /**
  * Re-check delta (`.delta`): the old score (Archivo Medium 44, ink3, struck with a 1.5 pt bar),
- * a copper arrow (score movement, #231; a chevron read as "greater than"), the new score (76) + "/10", and the "+1.0"
+ * a copper arrow on a win (score movement, #231; a chevron read as "greater than"), the new score (76) + "/10", and the "+1.0"
  * pill pushed right. `reveal` plays the re-check win (ScoreReveal.tsx, features/fitcheck/reveal.ts winPlan): the old
  * score starts at the full numeral size in ink and shrinks into place, the arrow slides in, the new score arrives on
- * the tape, and the pill springs in. Past its end it is exactly the plain row.
+ * the tape, and the pill springs in. Past its end it is exactly the plain row. Copper only when the score went up
+ * (#231, #276): a drop or a score that held gets an ink arrow and no pill, and a score that held isn't struck.
  */
 export function DeltaRow({ was, now, reveal }: { was: number; now: number; reveal?: DeltaReveal }) {
   const { colors } = useTheme();
   const delta = now - was;
+  const changed = delta !== 0;
   const rv = reveal;
   const arrowStyle = useAnimatedStyle(() => {
     if (!rv) return {};
@@ -81,10 +83,12 @@ export function DeltaRow({ was, now, reveal }: { was: number; now: number; revea
             {displayScore(was)}
           </Numeral>
         )}
-        <Animated.View style={[{ position: 'absolute', left: 0, right: 0, bottom: 12, height: 1.5, backgroundColor: colors.ink3 }, rv ? strikeStyle : null]} />
+        {changed ? (
+          <Animated.View style={[{ position: 'absolute', left: 0, right: 0, bottom: 12, height: 1.5, backgroundColor: colors.ink3 }, rv ? strikeStyle : null]} />
+        ) : null}
       </View>
       <Animated.View style={[{ width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 7 }, rv ? arrowStyle : null]}>
-        <Icon name="arrow.right" size={20} color="accent" weight="semibold" />
+        <Icon name="arrow.right" size={20} color={delta > 0 ? 'accent' : 'ink2'} weight="semibold" />
       </Animated.View>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
         {rv ? (

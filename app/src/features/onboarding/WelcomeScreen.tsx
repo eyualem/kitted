@@ -1,7 +1,9 @@
 // O1 · Welcome (02 D1): the hero photo (s15, neck down), a mini score card, the wordmark, the headline and
 // Get started. "See an example check" (O1e) isn't built yet, so its link is hidden rather than leading nowhere.
-import { router } from "expo-router";
-import { useState } from "react";
+// The card's score and word come from the engine (welcomeExample, #276), and the hero starts below the collar.
+import { router, useFocusEffect } from "expo-router";
+import { setStatusBarStyle } from "expo-status-bar";
+import { useCallback, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -23,22 +25,36 @@ import {
 } from "@/design-system";
 import { NeckDownPhoto } from "@/design-system/components/Chat";
 import { demoPhoto } from "@/demo/demoPhotos";
+import { displayScore } from "@/design-system/score";
 import { store } from "@/data/db";
 import { KV } from "@/data/store";
 import { t } from "@/i18n/en";
+import { WELCOME_PHOTO, welcomeExample } from "./welcomeExample";
 
 const HERO_H = 455;
+/** s15's stored neck line (0.235 of the photo) sits on his beard; the hero starts below the collar, so nothing of
+ *  the face shows (#276). Judged on the bundled 656 × 820 file: the beard ends near 0.28. */
+const HERO_NECK = 0.3;
+const EXAMPLE = welcomeExample();
 
 export function WelcomeScreen() {
-  const { colors, isAccessibilitySize } = useTheme();
+  const { colors, isAccessibilitySize, scheme } = useTheme();
   const insets = useSafeAreaInsets();
+  // The hero is a light photo in either theme, so the clock and battery go dark while Welcome is on screen; the
+  // theme's style comes back when he moves on (#276).
+  useFocusEffect(
+    useCallback(() => {
+      setStatusBarStyle("dark", true);
+      return () => setStatusBarStyle(scheme === "dark" ? "light" : "dark", true);
+    }, [scheme]),
+  );
   const window = useWindowDimensions();
   // His screen's own size (the web preview's phone frame is smaller than the window).
   const [box, setBox] = useState<{ width: number; height: number } | null>(
     null,
   );
   const { width, height } = box ?? window;
-  const hero = demoPhoto("s15");
+  const hero = demoPhoto(WELCOME_PHOTO);
   const heroH = isAccessibilitySize ? Math.round(height * 0.4) : HERO_H;
   const start = () => {
     void store.setKv(KV.onboardingStep, "1");
@@ -69,7 +85,7 @@ export function WelcomeScreen() {
           <NeckDownPhoto
             source={hero.source}
             aspect={hero.aspect}
-            crop={hero.crop}
+            crop={hero.crop ? { ...hero.crop, neck: Math.max(hero.crop.neck, HERO_NECK) } : hero.crop}
             width={width}
             height={heroH}
           />
@@ -88,11 +104,11 @@ export function WelcomeScreen() {
           <Rect x={0} y={0} width={width} height={heroH} fill="url(#fade)" />
         </Svg>
       </View>
-      {!isAccessibilitySize ? (
+      {!isAccessibilitySize && EXAMPLE ? (
         <View
           style={[styles.mini, { top: 125 }]}
           accessible
-          accessibilityLabel={`Example fit check. ${t("onb.welcome.cardOccasion")}. 8.5 out of 10, ${t("onb.welcome.cardWord")}. ${t("onb.welcome.cardDetail")}.`}
+          accessibilityLabel={`Example fit check. ${t("onb.welcome.cardOccasion")}. ${displayScore(EXAMPLE.score)} out of 10, ${EXAMPLE.word}. ${t("onb.welcome.cardDetail")}.`}
         >
           <KCard radius={radius.cardSmall}>
             <View style={styles.miniCard}>
@@ -101,10 +117,10 @@ export function WelcomeScreen() {
                 <MonoLabel>{t("onb.welcome.cardOccasion")}</MonoLabel>
               </View>
               <View style={styles.scoreRow}>
-                <Numeral size={52}>8.5</Numeral>
+                <Numeral size={52}>{displayScore(EXAMPLE.score)}</Numeral>
                 <View>
                   <KText variant="subheadline" weight="600">
-                    {t("onb.welcome.cardWord")}
+                    {EXAMPLE.word}
                   </KText>
                   <KText variant="caption" color="ink2">
                     {t("onb.welcome.cardDetail")}
@@ -154,7 +170,8 @@ export function WelcomeScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  mini: { position: "absolute", right: space.xl, width: 172 },
+  // Sized by its content: "Put together" is wider than "Sharp", and a fixed width clipped the score (#276).
+  mini: { position: "absolute", right: space.xl, minWidth: 172 },
   miniCard: { paddingVertical: space.m, paddingHorizontal: space.m, gap: space.s },
   tagRow: { flexDirection: "row", justifyContent: "space-between", gap: space.s },
   scoreRow: { flexDirection: "row", alignItems: "flex-end", gap: space.m },

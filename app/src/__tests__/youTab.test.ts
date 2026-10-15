@@ -100,6 +100,17 @@ describe('style card and Y2', () => {
     expect(styleCardSpoken(p)).toBe('Your style: Streetwear, first pick; Minimal; Workwear. 5 feet 10 inches, average build, regular fit. Edit.');
   });
 
+  it('build and fit he never gave (#276: saved as \'\') are left out, never shown as Average or Regular', () => {
+    const p = { ...profile(), build: '', fitPreference: '' };
+    expect(basicsLine(p)).toBe('5′ 10″');
+    expect(basicsLine({ ...p, heightCm: null })).toBe('');
+    expect(basicsLine({ ...p, fitPreference: 'relaxed' })).toBe('5′ 10″ · Relaxed fit');
+    expect(styleCardSpoken({ ...p, heightCm: null })).toBe('Your style: Streetwear, first pick; Minimal; Workwear. Edit.');
+    expect([draftOf(p).build, draftOf(p).fit]).toEqual([null, null]);
+    // Saving an unrelated change keeps them unset.
+    expect(applyDraft(p, { ...draftOf(p), budget: 'prefer_not' })).toMatchObject({ build: '', fitPreference: '' });
+  });
+
   it('saving with the same picks keeps the stored pairs; new picks use onboarding weights', () => {
     const odd: Styles = [['smart_casual', 0.6], ['workwear', 0.4]];
     expect(stylesToSave(odd, ['smart_casual', 'workwear'])).toBe(odd);

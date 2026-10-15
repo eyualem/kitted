@@ -1,10 +1,11 @@
 // A small segmented control (02 D3: surface2 track, radius 13, the selected segment on surface).
 // Dark mode: surface (#171A23) is darker than the surface2 track, so the selected segment looked pressed in;
 // it takes the selected-chip treatment instead (ink fill, onPrimary text, 16.6:1). 32 pt visual, 44 pt hit.
+// `value` null = nothing picked yet (build and fit start blank, #276).
 import { Pressable, StyleSheet, View } from 'react-native';
 import { KText, useTheme } from '@/design-system';
 
-export function Segmented<T extends string>({ options, value, label, onChange }: { options: readonly { value: T; label: string }[]; value: T; label: string; onChange: (v: T) => void }) {
+export function Segmented<T extends string>({ options, value, label, onChange }: { options: readonly { value: T; label: string }[]; value: T | null; label: string; onChange: (v: T) => void }) {
   const { colors, scheme, isAccessibilitySize: ax } = useTheme();
   const dark = scheme === 'dark';
   // At accessibility sizes the segments stack into a list (one per row, full words), so nothing shrinks or truncates.

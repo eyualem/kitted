@@ -1,6 +1,8 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { useLocalSearchParams } from 'expo-router';
+import { PiecePage } from '@/features/closet/PiecePage';
 
-// C2 · Item detail (02-screens.md). Built in P5.
+// C2 · A piece's page (02 C2; #276): the drawing, then his photos of it with the piece outlined.
 export default function ItemDetailScreen() {
-  return <Placeholder id="C2" name="Item detail" phase="P5" kind="push" />;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <PiecePage id={String(id ?? '')} />;
 }

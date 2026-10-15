@@ -1,9 +1,16 @@
-// What a Closet piece's long-press menu does (founder, Oct 14; #118): Rename, and Remove from Closet with Undo.
+// What a Closet piece's menus and its page do (founder, Oct 14; #118, #276): open its page, Rename, Remove from
+// Closet with Undo; on the page, each photo's Use as cover, Open the look, Not this piece and Remove photo (with
+// Undo). A removal's pictures are deleted from the phone once Undo is over (fileCleanup).
 import { Alert, Platform } from 'react-native';
+import { router } from 'expo-router';
+import { store } from '@/data/db';
 import type { ClosetItemRow } from '@/data/types';
 import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { fitCheck } from '@/features/fitcheck/session';
+import { goToStylist } from '@/router/stylistAction';
+import { DELETE_AFTER_MS } from './fileCleanup';
 import { profileOfItem } from './profile';
+import { closetCleanup, runClosetCleanup } from './session';
 import { t } from '@/i18n/en';
 
 /** An alert raised while a native menu closes is dropped; wait for it (CLAUDE.md lessons, lensUi). */
@@ -11,10 +18,24 @@ export const MENU_DISMISS_MS = 450;
 
 const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
 
-/** "Remove from Closet": out of the grid, then a toast with Undo. */
-export function removePiece(item: Pick<ClosetItemRow, 'id'>) {
-  void fitCheck.closet.removeItem(item.id).then((it) => {
-    if (it) showToast(t('closet.removed', { item: lower(it.name) }), () => fitCheck.closet.restoreItem(it.id), { ms: TOAST_MS_REMOVAL });
+/** The pending deletions run just after the Undo window (and again at the next launch, if the app closes first). */
+function cleanupLater() {
+  setTimeout(runClosetCleanup, DELETE_AFTER_MS + 500);
+}
+
+/** A tap on a tile: the piece's page (#276). */
+export function openPiece(item: Pick<ClosetItemRow, 'id'>) {
+  router.push(`/closet/item/${item.id}`);
+}
+
+/** "Remove from Closet": out of the grid, then a toast with Undo. Its cut-outs go once Undo is over. */
+export function removePiece(item: Pick<ClosetItemRow, 'id'>, o: { onRemoved?: () => void } = {}) {
+  void fitCheck.closet.removeItem(item.id).then(async (it) => {
+    if (!it) return;
+    showToast(t('closet.removed', { item: lower(it.name) }), () => fitCheck.closet.restoreItem(it.id), { ms: TOAST_MS_REMOVAL });
+    o.onRemoved?.();
+    await closetCleanup.schedule({ kind: 'piece', itemId: it.id });
+    cleanupLater();
   });
 }
 
@@ -40,4 +61,45 @@ export function renamePiece(item: Pick<ClosetItemRow, 'id' | 'name' | 'profile'>
     ], 'plain-text', item.name);
   if (o.fromMenu) setTimeout(ask, MENU_DISMISS_MS);
   else ask();
+}
+
+/** "Use as cover": the photo leads the piece's photos and its long-press preview. */
+export function setAsCover(itemId: string, obsId: string) {
+  void fitCheck.closet.setCover(itemId, obsId).then((it) => {
+    if (it) showToast(t('closet.piece.coverSet'));
+  });
+}
+
+/**
+ * "Remove photo": gone from the piece (its page, cover and preview); the look keeps its photo. Undo brings it back.
+ * Once Undo is over, that sighting's cut-out and fingerprint are deleted from the phone.
+ */
+export function removePhoto(itemId: string, obsId: string, o: { inLookbook: boolean }) {
+  void fitCheck.closet.hidePhoto(itemId, obsId).then(async (r) => {
+    if (!r) return;
+    showToast(t(o.inLookbook ? 'closet.piece.photoRemoved' : 'closet.piece.photoRemovedOnly'), () => fitCheck.closet.unhidePhoto(itemId, obsId, r.wasCover), { ms: TOAST_MS_REMOVAL });
+    await closetCleanup.schedule({ kind: 'photo', itemId, obsId });
+    cleanupLater();
+  });
+}
+
+/** "Not this piece": a correction; the photo's piece becomes its own (or his "Yes" is re-answered "No"). */
+export function notThisPiece(obsId: string) {
+  void fitCheck.closet.notThisPiece(obsId).then((it) => {
+    if (it) showToast(t('closet.piece.splitOff', { item: lower(it.name) }));
+  });
+}
+
+/** "Open the look": the check's card in the chat (its day's chat when it's an earlier day); else its photo. */
+export function openLook(checkId: string) {
+  void (async () => {
+    const msg = (await store.chat.all()).filter((m) => m.kind === 'card' && m.fitCheckId === checkId).sort((a, b) => b.createdAt - a.createdAt)[0];
+    if (msg) goToStylist({ kind: 'scrollTo', messageId: msg.id });
+    else openPhoto(checkId);
+  })();
+}
+
+/** A photo on the piece page: the full-screen viewer on that check. */
+export function openPhoto(checkId: string) {
+  router.push(`/photo/${checkId}`);
 }

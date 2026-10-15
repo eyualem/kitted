@@ -91,16 +91,39 @@ export function evaluateCheck(input: EvaluateInput): Evaluation {
   return (input.engine ?? engineNow) === 'parts' ? evaluateParts(input) : evaluateV4(input);
 }
 
+/** Closet names keep their capital in Closet ("Khaki chinos") but sit mid-sentence in a fix line ("Swap to your khaki
+ *  chinos"). Core fills them in as stored (it stays in parity with Python), so the app lowers the first letter of the
+ *  name after "your" here, the way the closet's own lines do (#276). */
+export function midSentenceNames(text: string, closet: readonly ClosetItem[]): string {
+  let out = text;
+  for (const c of closet) {
+    const name = typeof c.name === 'string' ? c.name : '';
+    const low = name.charAt(0).toLowerCase() + name.slice(1);
+    if (name && low !== name && out.includes(`your ${name}`)) out = out.split(`your ${name}`).join(`your ${low}`);
+  }
+  return out;
+}
+const fixesMidSentence = (fixes: readonly Fix[], closet: readonly ClosetItem[]): Fix[] =>
+  fixes.map((f) => (f.itemId ? { ...f, copy: midSentenceNames(f.copy, closet) } : f));
+/** The Going-for move in the same words as the card's fix (the card matches them by copy). */
+function adviceMidSentence(a: ReturnType<typeof goingForAdvice>, closet: readonly ClosetItem[]): ReturnType<typeof goingForAdvice> {
+  return a?.move ? { ...a, move: { ...a.move, copy: midSentenceNames(a.move.copy, closet) } } : a;
+}
+
 function evaluateV4(input: EvaluateInput): Evaluation {
   const opts = scoreOptions({ ...input, secondLook: null });
   const result = score(input.reading, opts);
-  const fixes: FixSuggestions = suggestFixes(input.reading, {
+  const raw: FixSuggestions = suggestFixes(input.reading, {
     ...opts,
     closet: input.closet,
     firstCheck: input.firstCheck,
     excludeTargets: input.hiddenFixTargets ? [...input.hiddenFixTargets] : [],
     warm: input.warm ?? false,
   });
+  // `fixes` stays core's (the parity checks read it); the row, which the card shows, gets the mid-sentence names.
+  const fixes = raw;
+  const shownFixes = fixesMidSentence(raw.fixes, input.closet);
+  const shownNext = raw.nextLevel.map((l) => midSentenceNames(l, input.closet));
   if (result.overall === null) {
     const status: FitCheckStatus = result.reason === 'not_fully_clothed' ? 'notClothed' : 'unreadable';
     return {
@@ -117,10 +140,10 @@ function evaluateV4(input: EvaluateInput): Evaluation {
     status: 'scored', engine: 'v4', result, scored: result, parts: null, fixes, partial, summary,
     row: {
       status: 'scored', score: result.overall, rawScore: result.rawScore, subscores: result.subscores, occasionAdj: result.occasionAdj,
-      rulesFired: [...result.rulesFired], credits: [...result.credits], advice: [...result.advice], fixes: fixes.fixes,
+      rulesFired: [...result.rulesFired], credits: [...result.credits], advice: [...result.advice], fixes: shownFixes,
       isPartial: result.partial, notRated: [...result.notRated], explanation: summary, rubricVersion: RUBRIC_DATA.version,
       details: {
-        nextLevel: fixes.nextLevel, tips: fixes.tips, dialedIn: fixes.fixes.length === 0,
+        nextLevel: shownNext, tips: fixes.tips, dialedIn: fixes.fixes.length === 0,
         hiddenFixTargets: input.hiddenFixTargets ? [...input.hiddenFixTargets] : [],
         warm: input.warm ?? false,
         readsAs: normStyleKey(result.styleLabel),
@@ -175,25 +198,28 @@ function evaluateParts(input: EvaluateInput): Evaluation {
     ...opts, closet: input.closet, firstCheck: input.firstCheck, exclude: hidden, warm: input.warm ?? false,
   });
   const fixes = fx.fixes.map(partsFixAsFix);
+  // As in v4: `fixes` stays core's, the row gets the mid-sentence names.
+  const shownFixes = fixesMidSentence(fixes, input.closet);
   const partial = partialKind(res.notRated);
   const summary = cardSummary({ reading: input.reading, overall: res.overall, lounge: loungeHolds(res), fixes, partial });
   const tip = fx.smallerStep?.line ?? fx.nextLevel?.line ?? null;
+  const shownTip = tip === null ? null : midSentenceNames(tip, input.closet);
   const subscores: Record<string, number> = {};
   for (const k of Object.keys(res.parts) as PartName[]) if (res.parts[k].display !== null) subscores[k] = res.parts[k].display!;
   return {
     status: 'scored', engine: 'parts', result: null, scored: null, parts: res, fixes: { fixes, nextLevel: tip ? [tip] : [], tips: [] }, partial, summary,
     row: {
       status: 'scored', score: res.overall, rawScore: res.rawScore, subscores, occasionAdj: -res.occasion.deduction,
-      rulesFired: [], credits: [], advice: [], fixes, isPartial: res.partial, notRated: [...res.notRated], explanation: summary,
+      rulesFired: [], credits: [], advice: [], fixes: shownFixes, isPartial: res.partial, notRated: [...res.notRated], explanation: summary,
       rubricVersion: PARTS_RUBRIC_VERSION,
       details: {
-        nextLevel: tip ? [tip] : [], tips: [], dialedIn: fixes.length === 0, hiddenFixTargets: hidden, warm: input.warm ?? false,
+        nextLevel: shownTip ? [shownTip] : [], tips: [], dialedIn: fixes.length === 0, hiddenFixTargets: hidden, warm: input.warm ?? false,
         readsAs: normStyleKey(res.styleLabel), tipLead: fx.smallerStep ? 'smallerStep' : fx.nextLevel?.id.startsWith('tip_') ? 'tip' : 'nextLevel', parts: storedParts(res, fx),
         ...(input.goingFor !== undefined
           ? {
-              goingForAdvice: goingForAdvice(input.reading, input.goingFor, {
+              goingForAdvice: adviceMidSentence(goingForAdvice(input.reading, input.goingFor, {
                 occasion: input.occasion, boldness: opts.boldness, closet: input.closet, warm: input.warm ?? false, secondLook: input.secondLook ?? null,
-              }),
+              }), input.closet),
             }
           : {}),
       },

@@ -65,12 +65,21 @@ export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, l
       </View>
     );
   }
-  const actions = onLongPress && longPressLabel ? [{ name: 'longpress', label: longPressLabel }] : undefined;
+  // A tap (the piece page, #276) can come with the tile's own custom actions (Rename, Remove).
+  const actions = [
+    ...(onLongPress && longPressLabel ? [{ name: 'longpress', label: longPressLabel }] : []),
+    ...(own ?? []).map(({ name, label: l }) => ({ name, label: l })),
+  ];
+  const onAction = (name: string) => {
+    if (name === 'longpress') onLongPress?.();
+    else if (name === 'activate') onPress?.();
+    else own?.find((a) => a.name === name)?.onAction();
+  };
   return (
     <Pressable
       onPress={onPress} onLongPress={onLongPress} accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={spec.a11y}
-      accessibilityHint={accessibilityHint} accessibilityActions={actions} onAccessibilityAction={(e) => e.nativeEvent.actionName === 'longpress' && onLongPress?.()}
-      style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
+      accessibilityHint={accessibilityHint} accessibilityActions={actions.length > 0 ? actions : undefined} onAccessibilityAction={(e) => onAction(e.nativeEvent.actionName)}
+      style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1, transform: [{ scale: pressed ? 0.97 : 1 }] })}
     >
       {body}
     </Pressable>

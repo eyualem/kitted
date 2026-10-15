@@ -224,8 +224,9 @@ export function createFitCheckService(deps: ServiceDeps) {
 
   const readingOf = async (row: FitCheckRow): Promise<Reading | null> => (row.readingId ? (await store.readings.get(row.readingId))?.reading ?? null : null);
 
-  /** Re-scores a row from a (possibly new) reading, keeping its closet summary and finish row. */
-  const rescore = async (row: FitCheckRow, reading: Reading, patch: Partial<FitCheckRow> = {}) => {
+  /** What rescore would score, without saving: the one evaluation both rescore and the "Not quite right?" preview
+   *  run, so the preview's number is the saved one (#276). */
+  const evaluateRow = async (row: FitCheckRow, reading: Reading, patch: Partial<FitCheckRow> = {}) => {
     const p = await profile();
     const occasion = patch.occasion ?? row.occasion;
     const details = { ...row.details, ...(patch.details ?? {}) };
@@ -235,6 +236,12 @@ export function createFitCheckService(deps: ServiceDeps) {
       hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row),
       goingFor: details.goingFor ? details.goingFor.style : undefined,
     });
+    return { ev, details };
+  };
+
+  /** Re-scores a row from a (possibly new) reading, keeping its closet summary and finish row. */
+  const rescore = async (row: FitCheckRow, reading: Reading, patch: Partial<FitCheckRow> = {}) => {
+    const { ev, details } = await evaluateRow(row, reading, patch);
     const next = await patchRow(row.id, {
       ...ev.row, ...patch, details: { ...details, ...ev.row.details, hiddenFixTargets: details.hiddenFixTargets ?? [] },
     });
@@ -980,6 +987,18 @@ export function createFitCheckService(deps: ServiceDeps) {
         sentAt: null, createdAt: clock.nowMs(),
       });
       return { before, after: after.score, itemName };
+    },
+    /** "Not quite right?" live preview (S8): what Save would give, from the same evaluation saveCorrection and hideFix
+     *  run (the check's own engine), so "before → after" and the next fix are the saved ones (#276). Saves nothing. */
+    async previewCorrection(checkId: string, change: { draft?: CorrectionDraft | { garmentIndex: number; remove: true }; hideTarget?: string }) {
+      const row = await store.fitChecks.get(checkId);
+      const reading = row && (await readingOf(row));
+      if (!row || !reading) return null;
+      const d = change.draft;
+      const next = !d ? reading : 'remove' in d ? removeGarment(reading, d.garmentIndex) : applyCorrection(reading, d.garmentIndex, d.field, d.value);
+      const hidden = change.hideTarget ? Array.from(new Set([...(row.details.hiddenFixTargets ?? []), change.hideTarget])) : row.details.hiddenFixTargets ?? [];
+      const { ev } = await evaluateRow(row, next, { details: { ...row.details, hiddenFixTargets: hidden } });
+      return { before: row.score, after: ev.row.score ?? null, nextFix: ev.row.fixes[0] ?? null };
     },
     /** "Fix doesn't apply": hide that fix; the next candidate shows. */
     async hideFix(checkId: string, target: string) {

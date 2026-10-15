@@ -149,6 +149,8 @@ export function CameraScreen() {
   const capture = async () => {
     if (busy.current) return;
     busy.current = true;
+    // The shot is taken: a tip or count still being spoken is stale (#276).
+    void Speech.stop();
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     if (!KittedCameraView) {
       // Simulator: the bundled photo. A demo screen can ask for the panel (?review=).
@@ -200,7 +202,11 @@ export function CameraScreen() {
         onCapture: () => void captureRef.current(),
     });
     auto.current = a;
-    return () => a.dispose();
+    return () => {
+      a.dispose();
+      // Closing the camera stops anything it was saying (#276).
+      void Speech.stop();
+    };
   }, []);
 
   const autoOn = mode === 'propped' && !snap && p.freeze !== '1' && !simTip && !review;
