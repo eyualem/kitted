@@ -153,7 +153,7 @@ Firebase prices used: Firestore in us-central1 $0.03 per 100,000 reads and $0.09
 ## 7. Settle now, before the beta (about 1 day, no new dependencies)
 
 Cheap now, expensive after people have data:
-1. **Migration V7:** `updated_at` on every table (only `closet_items` has it), and soft deletes everywhere rows are hard-deleted today (except "Delete all my data", which stays a real wipe). Every write sets `updated_at`.
+1. **Migration V7:** `updated_at` on every table (only `closet_items` has it), and soft deletes everywhere rows are hard-deleted today (except "Delete all my data", which stays a real wipe). Every write sets `updated_at`. **Revised Oct 15 (#288):** done differently: V7 adds one shadow table (`sync_rows`) that records each row's last change and deletes, so the domain tables and what a delete means to the screens stay as they are. The full schema is `11-firestore-schema.md`.
 2. **IDs are already safe across devices:** they're UUIDs (`services/ids.ts`). Keep it that way; no counters outside tests.
 3. **The Worker's limits are keyed on an account ID from the start** (today's design keys on the device), so guest → signed-in needs no server change.
 4. **The privacy policy and consent are written with optional backup in mind.** The beta's version says "on your phone only" and gains the backup section when A6 ships. No re-consent is needed for people who never sign in; signing in shows what's backed up at that moment.

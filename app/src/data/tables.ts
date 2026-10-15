@@ -5,6 +5,7 @@
 import type {
   ChatMessage, ClosetItemRow, ClosetObservationRow, CorrectionRow, DailyIdeaRow, FactRow, FitCheckRow, OutfitRow, ProfileRow, ReadingRow, UsageDay, WearLogRow,
 } from './types';
+import type { SyncFile, SyncRow } from '@/sync/types';
 
 export type ColType = 'text' | 'int' | 'real' | 'bool' | 'json';
 type FieldSpec = ColType | readonly [ColType, string];
@@ -182,6 +183,19 @@ export const dailyIdeaSpec: TableSpec<DailyIdeaRow> = {
   },
 };
 
+// The sync engine's bookkeeping (V7, handoff/11-firestore-schema.md §4): never synced, never shown.
+export const syncRowSpec: TableSpec<SyncRow> = {
+  table: 'sync_rows',
+  key: 'id',
+  fields: { id: 'text', coll: 'text', rowKey: 'text', localAt: 'int', pushedAt: 'int', deleted: 'bool', by: ['text', 'by_device'], files: 'json' },
+};
+
+export const syncFileSpec: TableSpec<SyncFile> = {
+  table: 'sync_files',
+  key: 'path',
+  fields: { path: 'text', op: 'text', tries: 'int', nextAt: 'int', queuedAt: 'int' },
+};
+
 export const SPECS = {
   chat: chatSpec,
   fitChecks: fitCheckSpec,
@@ -195,6 +209,8 @@ export const SPECS = {
   wearLog: wearLogSpec,
   facts: factSpec,
   dailyIdeas: dailyIdeaSpec,
+  syncRows: syncRowSpec,
+  syncFiles: syncFileSpec,
 } as const;
 
 export type TableName = keyof typeof SPECS;

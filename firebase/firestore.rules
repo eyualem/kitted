@@ -1,0 +1,88 @@
+rules_version = '2';
+
+// Kitted's Firestore rules (handoff/11-firestore-schema.md §2, checks R1–R10).
+// Everything a person owns lives under users/{uid}; only that signed-in person can read or write it.
+// Clients never hard-delete: a deletion is a tombstone (deleted: true, no data). Only the server jobs
+// (firebase/functions) delete documents, with the Admin SDK, which these rules don't apply to.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    // Whole numbers. React Native Firebase may send a JS number as a double, so `is int` alone would refuse it.
+    function isWhole(n) {
+      return n is int || (n is float && n == math.floor(n));
+    }
+
+    // Keep in step with app/src/sync/schema.ts (SYNCED_COLLECTIONS).
+    function syncedCollection(coll) {
+      return coll in ['profile', 'prefs', 'fitChecks', 'readings', 'closetItems', 'closetObservations',
+        'outfits', 'wearLog', 'corrections', 'chatMessages', 'dailyIdeas', 'facts'];
+    }
+
+    // The envelope every synced document carries (§2.1).
+    function validEnvelope(docId) {
+      let d = request.resource.data;
+      return d.keys().hasAll(['id', 'v', 'updatedAt', 'serverAt', 'deleted', 'by'])
+        && d.keys().hasOnly(['id', 'v', 'updatedAt', 'serverAt', 'deleted', 'by', 'data'])
+        && d.id == docId
+        && isWhole(d.v) && d.v >= 1 && d.v <= 1000
+        && isWhole(d.updatedAt) && d.updatedAt > 1700000000000
+        && d.updatedAt < request.time.toMillis() + 86400000
+        && d.serverAt == request.time
+        && d.deleted is bool
+        && d.by is string && d.by.size() >= 1 && d.by.size() <= 64
+        && (d.deleted ? !('data' in d) : (d.data is map && d.data.size() <= 48));
+    }
+
+    // Newest wins on the server too: an older edit can't overwrite a newer one (R5).
+    function notStale() {
+      return resource == null || request.resource.data.updatedAt >= resource.data.updatedAt;
+    }
+
+    // Readings are never changed after they're written; a tombstone is allowed (R7).
+    function immutableIfReading(coll) {
+      return coll != 'readings' || resource == null || request.resource.data.deleted == true
+        || (resource.data.deleted == false && request.resource.data.data == resource.data.data);
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid)
+        && request.resource.data.keys().hasOnly(['createdAt', 'lastActiveAt', 'v', 'appVersion'])
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.lastActiveAt == request.time
+        && isWhole(request.resource.data.v)
+        && request.resource.data.appVersion is string && request.resource.data.appVersion.size() <= 32;
+      allow update: if isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastActiveAt', 'v', 'appVersion'])
+        && request.resource.data.lastActiveAt == request.time
+        && isWhole(request.resource.data.v)
+        && request.resource.data.appVersion is string && request.resource.data.appVersion.size() <= 32
+        && !('deleteRequestedAt' in resource.data);
+      allow delete: if false;
+
+      match /devices/{deviceId} {
+        allow read: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+          && deviceId.size() <= 64
+          && request.resource.data.keys().hasOnly(['platform', 'appVersion', 'createdAt', 'lastSyncAt'])
+          && request.resource.data.platform in ['ios', 'android']
+          && request.resource.data.appVersion is string && request.resource.data.appVersion.size() <= 32
+          && request.resource.data.createdAt is timestamp
+          && request.resource.data.lastSyncAt == request.time;
+        allow delete: if isOwner(uid);
+      }
+
+      match /{coll}/{docId} {
+        allow read: if isOwner(uid) && syncedCollection(coll);
+        allow create, update: if isOwner(uid) && syncedCollection(coll)
+          && docId.size() <= 128
+          && validEnvelope(docId) && notStale() && immutableIfReading(coll);
+        allow delete: if false;
+      }
+    }
+  }
+}

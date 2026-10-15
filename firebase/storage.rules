@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// Kitted's Cloud Storage rules (handoff/11-firestore-schema.md §3, check R9).
+// His files mirror the phone's Documents folder: users/{uid}/files/{photos|closet|scans}/{name}.
+// Only he can read or write them. Face-hidden send copies and caches are never uploaded (the app's
+// sync/schema.ts decides that); these rules only bound what can land here.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /users/{uid}/files/{kind}/{name} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == uid;
+      }
+      function goodPlace() {
+        return kind in ['photos', 'closet', 'scans'] && name.matches('[A-Za-z0-9][A-Za-z0-9._-]{0,127}');
+      }
+      function goodImage() {
+        return request.resource.size < 3 * 1024 * 1024
+          && request.resource.contentType.matches('image/(jpeg|png)');
+      }
+      function goodPrint() {
+        return name.matches('.*[.]print') && request.resource.size < 64 * 1024
+          && request.resource.contentType == 'application/octet-stream';
+      }
+
+      allow read: if isOwner() && goodPlace();
+      // A write with no resource is a delete: he may remove his own files.
+      allow write: if isOwner() && goodPlace() && (request.resource == null || goodImage() || goodPrint());
+    }
+  }
+}

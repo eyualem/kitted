@@ -285,7 +285,33 @@ const V6: Migration = {
   ],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5, V6];
+// V7 (Oct 15, #288): the sync engine's bookkeeping (handoff/11-firestore-schema.md §4). A shadow row per synced row
+// says when it last changed here and whether that reached the server, so the 14 domain tables stay as they are
+// (replaces 08 §7.1's "updated_at on every table"). Empty until he signs in; "Delete all my data" wipes them too.
+const V7: Migration = {
+  version: 7,
+  statements: [
+    `CREATE TABLE IF NOT EXISTS sync_rows (
+      id TEXT PRIMARY KEY NOT NULL,
+      coll TEXT NOT NULL DEFAULT '',
+      row_key TEXT NOT NULL DEFAULT '',
+      local_at INTEGER NOT NULL DEFAULT 0,
+      pushed_at INTEGER,
+      deleted INTEGER NOT NULL DEFAULT 0,
+      by_device TEXT NOT NULL DEFAULT '',
+      files TEXT NOT NULL DEFAULT '[]'
+    )`,
+    `CREATE TABLE IF NOT EXISTS sync_files (
+      path TEXT PRIMARY KEY NOT NULL,
+      op TEXT NOT NULL DEFAULT 'up',
+      tries INTEGER NOT NULL DEFAULT 0,
+      next_at INTEGER NOT NULL DEFAULT 0,
+      queued_at INTEGER NOT NULL DEFAULT 0
+    )`,
+  ],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5, V6, V7];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 
@@ -305,6 +331,8 @@ export const TABLES = [
   'event_queue',
   'daily_ideas',
   'closet_observations',
+  'sync_rows',
+  'sync_files',
 ] as const;
 
 /** The migrations still to run from `current` (sorted, strictly newer). */

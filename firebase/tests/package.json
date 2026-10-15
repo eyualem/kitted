@@ -1,0 +1,13 @@
+{
+  "name": "kitted-firebase-tests",
+  "private": true,
+  "description": "Rules and server-job checks R1-R10, F1-F3 (handoff/11-firestore-schema.md §9). Run on the emulator: npx firebase emulators:exec --project demo-kitted 'npm --prefix tests test'. Not installed yet: needs the founder's OK for firebase-tools, Java and these packages (dev only).",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.0",
+    "firebase": "^11.0.0",
+    "vitest": "^3.0.0"
+  }
+}
