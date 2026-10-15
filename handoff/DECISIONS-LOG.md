@@ -1551,3 +1551,10 @@ Contradictions settled and decisions changed during the build. Newest last.
       - judges −0.45;
       - on paper unchanged (0.51 / Proportions 0.58).
     - **Still waiting on the founder's tape shoot,** which picks the ruler (shoulders + knees vs camera-corrected) and decides whether the measured waistline goes to him as a scoring before/after.
+
+276. **Founder's four calls on the UI review (#274), Oct 15 ("You may start"):**
+    - **(1) Where a piece's photo shows, it's his real photo with the piece outlined, never the cut-out alone** ("it may be visually displeasing to just see the cutouts"). The long-press preview stops showing cut-outs (it ranked them first since #244, against #141); cut-outs stay on disk only for matching and measured color.
+    - **(2) Closet tiles stay pure drawings.** Photos live on the new piece page. (He also noted the drawings can later give way to "the best product photos" for a piece; not planned, noted.)
+    - **(3) A photo he adds never changes the drawing.**
+    - **(4) The selected tab is ink, not copper** (copper only when a score moves, #231).
+    - **Started the same day:** the piece page (tap a tile → drawing first, then his outlined photos; cover, remove photo, not this piece, rename, remove piece; removals delete cut-out files after Undo), and the fix-first batch from `handoff/09-ui-review.md` §1 that needs no new copy approval. The #233 copy items stay waiting on his OK.

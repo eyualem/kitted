@@ -172,7 +172,7 @@
 
 ---
 
-## 5. Your calls (each has a default)
-- **Closet photos:** (1) where a photo shows, your real photo with the piece outlined, or the cut-out alone? Default: the outlined real photo; cut-outs only for photos you take of the piece by itself. (2) Should a tile hint that it has a photo, or stay pure drawings? Default: pure drawings; photos on the piece page. (3) Should "Add a photo of it" ever change the drawing (its color)? Default: no for now.
-- **Copper on the selected tab:** keep, or ink? Default: ink (matches "copper only when the score moves").
-- **"No quick fixes for this one." replacement lines** (outward-facing). Default: "Clean base. Nothing off."
+## 5. Your calls: decided Oct 15 (#276)
+- **Closet photos:** (1) his real photo with the piece outlined, never the cut-out alone; (2) tiles stay pure drawings, photos on the piece page; (3) an added photo never changes the drawing.
+- **The selected tab:** ink, not copper.
+- **Still open (outward-facing copy):** the "No quick fixes for this one." replacement lines (default "Clean base. Nothing off."), and the #233 copy items on the to-do list.
