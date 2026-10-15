@@ -18,9 +18,7 @@ import { basicsLine, picksOf, styleCardSpoken } from '@/features/you/profile';
 import { t } from '@/i18n/en';
 import type { QuotaSnapshot } from '@/services/quota';
 import { useIsPro } from '@/services/entitlements';
-
-/** The paywall (P1) is still a placeholder: no "Try Pro" button points at it until P6 builds it. */
-const PAYWALL_BUILT = false;
+import { PAYWALL_BUILT } from '@/config/features';
 
 export default function YouScreen() {
   const { colors } = useTheme();

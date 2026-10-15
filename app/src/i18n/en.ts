@@ -14,6 +14,7 @@ const plurals: Partial<Record<keyof typeof enGenerated, { one: string }>> = {
   'pay.today.toTarget': { one: 'One free fix to {target}.' },
   'share.delta': { one: '{before} → {after} after 1 fix' },
   'push.ready': { one: 'Your fit check is ready. 1 quick fix inside.' },
+  'stylist.quota.questions': { one: '1 question left today' },
 };
 
 /**

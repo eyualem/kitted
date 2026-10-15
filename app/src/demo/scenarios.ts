@@ -127,6 +127,13 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 87, name: 'Privacy & data', id: 'Y7', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you' },
   { n: 88, name: 'Privacy & data · Pro warning', id: 'Y7', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy?demoPlan=pro', under: '/you' },
   { n: 89, name: 'See what I send · nothing yet', id: 'Y7s', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/sent', under: '/you/privacy' },
+  // Ask a question (02 S25–S27, 07; Oct 15): the seeded Q&A asked through the real pipeline and the demo answers.
+  { n: 90, name: 'Ask · typing', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:05:00', href: '/stylist' },
+  { n: 91, name: 'Ask · the answer streaming in', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:05:00', href: '/stylist' },
+  { n: 92, name: 'Ask · two answers', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 93, name: 'Ask · questions used up', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist' },
+  { n: 94, name: 'Ask · support card', id: 'S27', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist' },
+  { n: 95, name: 'Ask · rating him, not the outfit', id: 'S27', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

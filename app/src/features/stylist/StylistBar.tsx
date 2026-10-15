@@ -12,12 +12,14 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 import { dictationAvailable, dictationSupported } from '../../../modules/kitted-vision';
-import { composerState, useComposerOpen } from './composerState';
+import { composerState, useComposerDraft, useComposerOpen } from './composerState';
 
 export function StylistBar() {
   const { colors } = useTheme();
   const inline = NativeTabs.BottomAccessory.usePlacement() === 'inline';
   const open = useComposerOpen();
+  // A draft he left (07 §6.1) shows here, so the words he typed are clearly still waiting.
+  const draft = useComposerDraft().trim();
   const [mic, setMic] = useState(false);
   useEffect(() => {
     let live = true;
@@ -49,8 +51,8 @@ export function StylistBar() {
         style={styles.field}
       >
         {/* ink2, not ink3: the tab bar's glass is clear, and the words sit over photos in the thread. */}
-        <KText variant="body" color="ink2" numberOfLines={1} maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
-          {inline ? t('composer.placeholderIdle') : t('composer.placeholder')}
+        <KText variant="body" color={draft ? 'ink' : 'ink2'} numberOfLines={1} maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
+          {draft || (inline ? t('composer.placeholderIdle') : t('composer.placeholder'))}
         </KText>
       </Pressable>
       {mic && !inline ? (

@@ -1,0 +1,58 @@
+// The app's one ask service (07), wired like the fit check's: the real store, the session clock, the same quota.
+// Answers: demo builds showing seeded data (a demo screen, or the full scenario) get the seeded answers (02 S25);
+// everything else, his phone included, keeps "coming soon" until the real model lands (C2).
+import { AccessibilityInfo } from 'react-native';
+import { router } from 'expo-router';
+import seed from '../../../assets/seed.json';
+import { PAYWALL_BUILT } from '@/config/features';
+import { store } from '@/data/db';
+import { KV } from '@/data/store';
+import { DEMO_ENABLED } from '@/demo/config';
+import { quota } from '@/features/fitcheck/session';
+import { mayUpload } from '@/features/privacy/wipe';
+import { newId } from '@/services/ids';
+import { realScheduler } from '@/services/scheduler';
+import { getDemoArgs, sessionClock } from '@/state/session';
+import { createAsk, keepsDraft } from './pipeline';
+import { comingSoonSource, createDemoSource, seededAnswers, type AnswerSource } from './source';
+
+const demoSource = createDemoSource({
+  answers: seededAnswers(seed as unknown as { scenarios: Record<string, unknown> }),
+  scheduler: realScheduler,
+  timed: () => getDemoArgs().latency !== 0,
+});
+
+async function pickSource(): Promise<AnswerSource> {
+  if (!DEMO_ENABLED) return comingSoonSource;
+  if (getDemoArgs().demoScreen !== null) return demoSource;
+  return (await store.getKv(KV.seedLoaded)) === 'full' ? demoSource : comingSoonSource;
+}
+
+export const askService = createAsk({
+  store,
+  quota,
+  clock: sessionClock,
+  ids: newId,
+  source: pickSource,
+  consent: () => mayUpload(store),
+  // The agreement as a sheet; agreeing just closes it, and his words are still in the composer.
+  openConsent: () => router.push('/sheets/consent?from=ask'),
+  tryPro: () => PAYWALL_BUILT,
+  log: (e) => {
+    if (__DEV__) console.log(`[ask] ${e}`);
+  },
+  onAnswered: (text) => AccessibilityInfo.announceForAccessibility?.(text),
+});
+
+/** The composer's send: true when the question made it into the thread (its draft can go). */
+export async function sendQuestion(text: string): Promise<boolean> {
+  const o = await askService.ask(text).catch((e: unknown) => {
+    console.error('[ask] threw', e);
+    return { kind: 'busy' as const };
+  });
+  return !keepsDraft(o);
+}
+
+export function retryQuestion(failedId: string): void {
+  void askService.retry(failedId).catch((e: unknown) => console.error('[ask] retry threw', e));
+}

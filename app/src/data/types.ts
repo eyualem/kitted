@@ -94,7 +94,7 @@ export interface ChatMessage {
   itemId: string | null;
   /** Tap answers under a stylist question (shown only while it's the newest message). */
   chips: string[];
-  /** Small extras: { stamp: true } forces a day stamp, { question: true } counts toward the limit, … */
+  /** Small extras: { stamp: true } forces a day stamp, { counts: true } on his question = counted toward the limit (07 §6.2), … */
   payload: Record<string, unknown>;
 }
 

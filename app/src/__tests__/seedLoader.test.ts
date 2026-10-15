@@ -41,7 +41,9 @@ describe('seed loader: full', () => {
     expect((await s.wearLog.all()).length).toBe(19);
     const chat = await s.chat.all();
     expect(chat.find((m) => m.id === 'M00')!.payload).toEqual({ aiNote: true });
-    expect(chat.filter((m) => m.payload.question).length).toBe(2);
+    expect(chat.filter((m) => m.payload.counts === true).length).toBe(2);
+    // The counter flag isn't `question` any more: that key is the which-one card's (payload.question = 'whichOne').
+    expect(chat.filter((m) => m.payload.question !== undefined).length).toBe(0);
     expect(chat.length).toBe(19); // M00 + M01–M18
     expect((await s.outfits.get('O_INTERVIEW'))!.title).toBe('Sharp, not stiff');
   });

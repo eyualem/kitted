@@ -1,7 +1,7 @@
 // Puts the app in screen n's state (04 §10.3) by running the REAL code at latency 0:
 // wipe → load the scenario (as of the screen's time) → play the story through the fit-check
 // service → set the clock. So /demo/screen/7 shows what the code really produces.
-import { US_EASTERN, type Styles } from '@kitted/core';
+import { dayKey, US_EASTERN, type Styles } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { store } from '@/data/db';
 import { KV } from '@/data/store';
@@ -18,6 +18,8 @@ import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
 import type { WhichOnePayload } from '@/features/fitcheck/whichOne';
 import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
+import { askService } from '@/features/ask/session';
+import { liveAnswer } from '@/features/ask/live';
 import { STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
@@ -38,7 +40,19 @@ type Step =
   | { at: string; do: 'recheck'; photoId: string }
   | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string }
   /** "Which one is you?" (02 S23) on a bundled photo; the second person's box is drawn for the demo. */
-  | { at: string; do: 'whichOne'; photoId: string };
+  | { at: string; do: 'whichOne'; photoId: string }
+  /** A question through the real ask pipeline (the demo source answers at latency 0). */
+  | { at: string; do: 'ask'; text: string }
+  /** Questions already used today (the limit state without five demo answers in the thread). */
+  | { at: string; do: 'askUsed'; n: number }
+  /** His question in the thread, its answer held mid-way: the dots (no text) or the first words (07 §6.1). */
+  | { at: string; do: 'askHold'; text: string; partial?: string };
+
+/** Seeded questions (seed.json M15, M17), asked again through the pipeline. */
+const ASK_OLIVE = 'Can I wear the olive overshirt with the navy chinos?';
+const ASK_BELT = 'What belt goes with brown loafers?';
+/** Before M15 (12:05), so the seeded Q&A isn't loaded and the pipeline writes it. */
+const ASK_AS_OF = '2026-10-22T12:04:00';
 
 const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
 
@@ -124,6 +138,13 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   77: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's15', occasion: 'everyday' }, { at: '2026-10-22T07:42:30', do: 'goingFor', style: 'minimalist' }] },
   78: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', hold: 0.86 }] },
   79: { steps: [{ at: '2026-10-22T07:42:00', do: 'whichOne', photoId: 'p01b' }] },
+  90: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE }] },
+  91: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE, partial: 'Yes. Olive and navy is an easy pair. Add the' }] },
+  92: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: ASK_OLIVE }, { at: '2026-10-22T12:09:00', do: 'ask', text: ASK_BELT }] },
+  // The seed's two questions plus three more used: the sixth gets the free limit line (no Try Pro until P6).
+  93: { steps: [{ at: '2026-10-22T12:20:00', do: 'askUsed', n: 5 }, { at: '2026-10-22T12:21:00', do: 'ask', text: 'What shoes go with my khaki chinos?' }] },
+  94: { steps: [{ at: '2026-10-22T12:21:00', do: 'ask', text: "Honestly I don't want to be alive anymore." }] },
+  95: { steps: [{ at: '2026-10-22T12:21:00', do: 'ask', text: 'Rate my face' }] },
 };
 
 export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
@@ -143,6 +164,7 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   await fitCheck.closet.settle();
   readingSource.holdAt = null;
   setTimerOverride({});
+  liveAnswer.clear();
   await store.wipe();
   const story = STORY[sc.n] ?? { steps: [] };
   const args = getDemoArgs();
@@ -193,6 +215,25 @@ async function playStory(sc: ScreenScenario): Promise<void> {
         id: newId('M'), createdAt: at(step.at), role: 'stylist', kind: 'card', text: null, cardType: 'question', fitCheckId: null, outfitId: null, itemId: null,
         chips: [], payload: payload as unknown as Record<string, unknown>,
       });
+      continue;
+    }
+    if (step.do === 'ask') {
+      const o = await askService.ask(step.text);
+      if (o.kind === 'sent') await o.done;
+      continue;
+    }
+    if (step.do === 'askUsed') {
+      const day = dayKey(at(step.at), US_EASTERN);
+      const u = (await store.usage.get(day)) ?? { dayKey: day, checks: 0, rechecks: 0, questions: 0, items: 0 };
+      await store.usage.put({ ...u, questions: step.n });
+      continue;
+    }
+    if (step.do === 'askHold') {
+      const id = newId('M');
+      await store.chat.put({
+        id, createdAt: at(step.at), role: 'user', kind: 'text', text: step.text, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {},
+      });
+      liveAnswer.hold(step.partial ? { phase: 'streaming', questionId: id, replaces: null, text: step.partial } : { phase: 'waiting', questionId: id, replaces: null });
       continue;
     }
     if (step.do === 'tap') {

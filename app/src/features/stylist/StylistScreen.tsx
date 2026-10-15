@@ -8,6 +8,8 @@
 // here, which rides the keyboard. No KeyboardAvoidingView: its padding stacked on the dock's fixed
 // bottom. The thread's footer grows with the dock instead, the scroll offset following, so the
 // newest message stays in view.
+// A question's answer streams into an in-memory row drawn after the thread (features/ask/live.ts), so the chat
+// table is written once per answer, not per word.
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { AppState, Keyboard, Platform, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -21,6 +23,8 @@ import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAct
 import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
+import { useAskInFlight, useLiveAnswer } from '@/features/ask/live';
+import { LiveAnswerRow, liveRowShows } from '@/features/ask/LiveAnswerRow';
 import { Composer } from './Composer';
 import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
@@ -43,7 +47,14 @@ export function StylistScreen() {
   const all = useMemo(() => loaded ?? [], [loaded]);
   const now = sessionClock.nowMs();
   const { today: messages, hasEarlier } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
-  const items = useMemo(() => buildThreadItems(messages, now, sessionClock.offset), [messages, now]);
+  const live = useLiveAnswer();
+  const askInFlight = useAskInFlight();
+  // While Retry streams, the failed line it replaces steps aside for the live row.
+  const replaced = live?.replaces ?? null;
+  const shown = useMemo(() => (replaced ? messages.filter((m) => m.id !== replaced) : messages), [messages, replaced]);
+  const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
+  const shownIds = useMemo(() => new Set(shown.map((m) => m.id)), [shown]);
+  const showLive = liveRowShows(live, shownIds);
   const open = useComposerOpen();
   const docked = DOCK_ALWAYS || open !== null;
   // Leaving the tab closes an empty composer; the accessory comes back with the thread.
@@ -154,24 +165,26 @@ export function StylistScreen() {
     }, []),
   );
 
-  // A new check (his photo lands in the thread) always brings the thread down to it, even if he'd
-  // scrolled up to an older card: from here it follows the reading and then the score as they grow.
-  // The first load only records where things stand; the camera cover closes before we scroll.
-  const newestPhoto =
+  // A new check (his photo lands in the thread) or a question he sent always brings the thread down to it, even if
+  // he'd scrolled up to an older card: from here it follows the reading, the score or the answer as they grow.
+  // The first load only records where things stand; for a photo, the camera cover closes before we scroll.
+  const newestMine =
     loaded === undefined
       ? undefined
-      : messages.reduce<ChatMessage | null>((a, m) => (m.role === 'user' && m.kind === 'photo' && (!a || m.createdAt >= a.createdAt) ? m : a), null)?.id ?? '';
-  const seenPhoto = useRef<string | undefined>(undefined);
+      : messages.reduce<ChatMessage | null>((a, m) => (m.role === 'user' && (!a || m.createdAt >= a.createdAt) ? m : a), null) ?? null;
+  const newestMineId = newestMine === undefined ? undefined : newestMine?.id ?? '';
+  const newestMineIsPhoto = newestMine?.kind === 'photo';
+  const seenMine = useRef<string | undefined>(undefined);
   useEffect(() => {
-    if (newestPhoto === undefined) return;
-    const before = seenPhoto.current;
-    seenPhoto.current = newestPhoto;
-    if (before === undefined || before === newestPhoto) return;
+    if (newestMineId === undefined) return;
+    const before = seenMine.current;
+    seenMine.current = newestMineId;
+    if (before === undefined || before === newestMineId) return;
     atBottom.current = true;
     follow.set(1);
-    const timer = setTimeout(() => toEnd(true), SHEET_DISMISS_MS);
+    const timer = setTimeout(() => toEnd(true), newestMineIsPhoto ? SHEET_DISMISS_MS : 50);
     return () => clearTimeout(timer);
-  }, [newestPhoto, toEnd, follow]);
+  }, [newestMineId, newestMineIsPhoto, toEnd, follow]);
 
   // Each row's top, for "scroll to this card" (the morning card's one-line score).
   const rowY = useRef(new Map<string, number>());
@@ -234,6 +247,11 @@ export function StylistScreen() {
             <ThreadRow item={item} />
           </View>
         ))}
+        {live && showLive ? (
+          <View style={items.length > 0 ? { marginTop: space.stack } : undefined}>
+            <LiveAnswerRow live={live} />
+          </View>
+        ) : null}
         {/* A footer, not paddingBottom: it animates with the dock and the keyboard. */}
         <Animated.View style={footerStyle} />
       </Animated.ScrollView>
@@ -255,7 +273,8 @@ export function StylistScreen() {
           <Composer
             mode={mode}
             onCamera={openCamera}
-            onSend={(q) => void sendQuestion(q)}
+            onSend={sendQuestion}
+            sendDisabled={askInFlight}
             autoFocus={open === 'type'}
             startVoice={open === 'voice'}
             onIdle={DOCK_ALWAYS ? undefined : composerState.close}

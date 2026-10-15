@@ -214,7 +214,8 @@ export async function loadScenario(store: KittedStore, seed: unknown, opts: Load
     if (!keep(created)) continue;
     const payload: Record<string, unknown> = {};
     if (o.stamp) payload.stamp = true;
-    if (o.countsAsQuestion) payload.question = true;
+    // `counts`, not `question`: the which-one card's payload.question = 'whichOne' is a different thing (07 §6.2).
+    if (o.countsAsQuestion) payload.counts = true;
     if (o.photoID) payload.photoId = o.photoID;
     const msg: ChatMessage = {
       id: String(o.id), createdAt: created, role: o.role === 'user' ? 'user' : 'stylist',
@@ -228,7 +229,7 @@ export async function loadScenario(store: KittedStore, seed: unknown, opts: Load
 
   // Usage for the as-of day, from the rows (so `asOf` can't disagree with the thread).
   const checks = (await store.fitChecks.all()).filter((c) => c.dayKey === asOfDay && c.status === 'scored');
-  const questions = (await store.chat.all()).filter((c) => c.payload.question === true && dayKey(c.createdAt, opts.zone) === asOfDay);
+  const questions = (await store.chat.all()).filter((c) => c.payload.counts === true && dayKey(c.createdAt, opts.zone) === asOfDay);
   await store.usage.put({
     dayKey: asOfDay,
     checks: checks.filter((c) => !c.parentId).length,

@@ -53,6 +53,21 @@ export function quotaLine(s: QuotaSnapshot): StringKey | null {
   return s.recheckOpen ? 'stylist.quota.recheck' : 'stylist.quota.used';
 }
 
+/** Questions left today shows in the subtitle at this many or fewer (02 S25), free and Pro. */
+export const QUESTIONS_SHOWN_AT = 3;
+
+export const questionsLeft = (s: Pick<QuotaSnapshot, 'questionsUsed' | 'questionLimit'>): number => Math.max(0, s.questionLimit - s.questionsUsed);
+
+/** The Stylist subtitle with its one argument: a photo waiting to score first (it's his), then "{n} questions left
+ *  today" once 3 or fewer are left (07 §6.2), else the check line. One line: the nav title has room for one. */
+export function stylistSubtitle(s: QuotaSnapshot): { key: StringKey; n?: number } | null {
+  if (!s.pro && s.heldCount > 0) return { key: 'stylist.quota.held' };
+  const left = questionsLeft(s);
+  if (left <= QUESTIONS_SHOWN_AT) return { key: 'stylist.quota.questions', n: left };
+  const line = quotaLine(s);
+  return line ? { key: line } : null;
+}
+
 export interface QuotaDeps {
   store: KittedStore;
   clock: Clock;
@@ -102,6 +117,11 @@ export function createQuota(deps: QuotaDeps) {
     /** `day`: the check's own day key (an answer to the one quick tap after 4 am still counts for its day). */
     consumeCheck: (day?: string) => bump('checks', day),
     consumeRecheck: () => bump('rechecks'),
+    /** A question may be sent (07 §6.2): one is counted only when its answer arrives (consumeQuestion). */
+    async canAskQuestion(): Promise<boolean> {
+      const s = await snapshot();
+      return s.questionsUsed < s.questionLimit;
+    },
     consumeQuestion: () => bump('questions'),
   };
 }

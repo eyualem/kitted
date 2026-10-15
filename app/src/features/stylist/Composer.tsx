@@ -6,6 +6,8 @@
 // Never sends by itself: he reads what was heard, then taps send.
 // On iOS it opens from the tab bar's "Ask your stylist…" accessory (StylistBar) and tells the
 // screen when it's done (empty, unfocused, not listening), so the accessory shows again.
+// The draft lives in composerState (07 §6.1): closing the composer keeps his words; only a question that made it
+// into the thread clears them. While an answer streams he can type on, but send waits (one question at a time).
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
@@ -13,11 +15,15 @@ import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 import { useDictation } from './useDictation';
+import { composerState, useComposerDraft } from './composerState';
 
 export interface ComposerProps {
   mode: 'compact' | 'idle';
   onCamera: () => void;
-  onSend?: (text: string) => void;
+  /** Resolves true when the question made it into the thread (the draft is cleared then). */
+  onSend?: (text: string) => Promise<boolean> | boolean;
+  /** An answer is still streaming: send waits. */
+  sendDisabled?: boolean;
   /** Focus the field on mount (opened from the accessory's field). */
   autoFocus?: boolean;
   /** Start listening on mount (opened from the accessory's mic). */
@@ -41,9 +47,10 @@ function hasGlass(): boolean {
 const H = 52;
 const BTN = 40;
 
-export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle }: ComposerProps) {
+export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, startVoice, onIdle }: ComposerProps) {
   const { colors, scheme, a11y } = useTheme();
-  const [text, setText] = useState('');
+  const text = useComposerDraft();
+  const setText = composerState.setDraft;
   const [focused, setFocused] = useState(false);
   const mic = useDictation();
   const typing = focused || text.length > 0;
@@ -62,18 +69,18 @@ export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle
     else if (used.current && !stopping.current && text.length === 0) onIdle?.();
   }, [focused, recording, text, onIdle]);
 
-  const send = () => {
+  const send = async () => {
     const v = text.trim();
-    if (!v) return;
-    onSend?.(v);
-    setText('');
+    if (!v || sendDisabled) return;
+    if (await onSend?.(v)) composerState.clearDraftIf(v);
   };
   const stopMic = async () => {
     stopping.current = true;
     const heard = await mic.stop();
     stopping.current = false;
     if (heard) {
-      setText((cur) => (cur ? `${cur} ${heard}` : heard));
+      const cur = composerState.draft();
+      setText(cur ? `${cur} ${heard}` : heard);
       // iOS ignores live regions: say the final words once (never each partial while he talks).
       AccessibilityInfo.announceForAccessibility?.(t('mic.a11yHeard', { text: heard }));
     }
@@ -138,7 +145,7 @@ export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle
               style={[styles.input, { color: colors.ink, paddingLeft: camera ? 4 : 12 }]}
             />
             {text.trim().length > 0 ? (
-              <Circle onPress={send} label={t('composer.a11y.send')} filled color={colors.primary}>
+              <Circle onPress={() => void send()} label={t('composer.a11y.send')} filled color={colors.primary} disabled={sendDisabled}>
                 <Icon name="arrow.up" size={18} color={colors.onPrimary} weight="bold" />
               </Circle>
             ) : mic.available ? (
@@ -153,14 +160,16 @@ export function Composer({ mode, onCamera, onSend, autoFocus, startVoice, onIdle
   );
 }
 
-function Circle({ children, onPress, label, filled, color }: { children: React.ReactNode; onPress: () => void; label: string; filled?: boolean; color: string }) {
+function Circle({ children, onPress, label, filled, color, disabled }: { children: React.ReactNode; onPress: () => void; label: string; filled?: boolean; color: string; disabled?: boolean }) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityState={disabled ? { disabled: true } : undefined}
       hitSlop={2}
-      style={({ pressed }) => [styles.circle, { backgroundColor: filled || color !== 'transparent' ? color : 'transparent', opacity: pressed ? opacity.pressed : 1 }]}
+      style={({ pressed }) => [styles.circle, { backgroundColor: filled || color !== 'transparent' ? color : 'transparent', opacity: disabled ? opacity.disabled : pressed ? opacity.pressed : 1 }]}
     >
       {children}
     </Pressable>

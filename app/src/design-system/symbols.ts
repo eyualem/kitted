@@ -52,6 +52,8 @@ export const sym = {
   latest: 'arrow.down',
   closet: 'hanger',
   history: 'clock.arrow.circlepath',
+  /** S27's support card. */
+  support: 'heart',
 } as const;
 
 export type SymKey = keyof typeof sym;
