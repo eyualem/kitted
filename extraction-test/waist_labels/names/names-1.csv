@@ -1,0 +1,135 @@
+photo,slot,reading,type,color,notes
+pin-060,top,A,close,close,"striped long-sleeve tee under overalls, not plain cream"
+pin-060,top,B,close,close,striped long-sleeve tee; two-tone stripes
+pin-060,bottom,A,close,right,light denim overalls read as jeans
+pin-060,bottom,B,close,right,light denim overalls read as jeans
+pin-060,footwear,A,close,right,brown lace-up low shoe with chunky sole
+pin-060,footwear,B,right,right,brown lace-up derby
+pin-053,top,A,right,right,light grey hoodie under jacket
+pin-053,top,B,right,right,
+pin-053,outerwear,A,close,right,four flap-pocket utility jacket; field jacket fits better
+pin-053,outerwear,B,right,close,khaki tan field jacket
+pin-053,bottom,A,right,right,mid-wash denim cargos
+pin-053,bottom,B,right,right,
+pin-053,footwear,A,right,right,blue runners
+pin-053,footwear,B,right,right,
+pin-047,top,A,right,right,
+pin-047,top,B,right,right,
+pin-047,outerwear,A,right,close,yellow-tan plaid flannel worn open
+pin-047,outerwear,B,close,close,plaid flannel shirt worn open; beige misses the plaid
+pin-047,bottom,A,right,right,
+pin-047,bottom,B,right,right,
+pin-047,footwear,A,right,right,brown moc-toe work boots
+pin-047,footwear,B,right,right,
+pin-024,top,A,close,right,white henley
+pin-024,top,B,close,right,white henley
+pin-024,outerwear,A,wrong,close,navy and grey plaid bathrobe
+pin-024,outerwear,B,wrong,close,"plaid fleece bathrobe, not a fleece jacket"
+pin-024,bottom,A,right,right,grey shorts
+pin-024,bottom,B,right,right,grey shorts
+pin-024,footwear,A,right,close,novelty tiger-paw slippers; other is fair
+pin-024,footwear,B,close,close,slippers read as slides
+ig-004,top,A,right,right,red knit
+ig-004,top,B,right,right,
+ig-004,outerwear,A,right,close,bright sky-blue zip knit cardigan
+ig-004,outerwear,B,right,right,
+ig-004,bottom,A,right,right,black pleated wide trousers
+ig-004,bottom,B,right,right,
+ig-004,footwear,A,right,right,
+ig-004,footwear,B,right,right,
+pin-056,top,A,close,right,"grey-blue vest layer over pale green shirt and tie"
+pin-056,top,B,right,close,pale green-yellow shirt with tie
+pin-056,outerwear,A,right,right,olive waxed chore coat
+pin-056,outerwear,B,right,right,
+pin-056,bottom,A,right,right,dark pinstripe trousers
+pin-056,bottom,B,right,right,dark pinstripe trousers
+pin-056,footwear,A,close,close,oxblood lace-up boots
+pin-056,footwear,B,close,right,oxblood lace-up boots (Docs-like)
+pin-025,top,A,right,close,slate-blue cable knit
+pin-025,top,B,right,right,
+pin-025,bottom,A,close,right,charcoal 5-pocket cords
+pin-025,bottom,B,close,right,charcoal 5-pocket cords
+pin-025,footwear,A,right,right,brown lace-up boots
+pin-025,footwear,B,right,right,
+pin-054,top,A,right,right,
+pin-054,top,B,right,right,
+pin-054,outerwear,A,right,right,black zip hoodie
+pin-054,outerwear,B,right,right,
+pin-054,bottom,A,right,right,camo cargos
+pin-054,bottom,B,right,right,
+pin-054,footwear,A,right,right,
+pin-054,footwear,B,right,right,
+ig-075,top,A,right,right,tan sherpa fleece
+ig-075,top,B,right,right,
+ig-075,bottom,A,right,right,washed black wide jeans
+ig-075,bottom,B,right,right,
+ig-075,footwear,A,right,right,
+ig-075,footwear,B,right,right,
+pin-033,top,A,close,close,"navy paisley print shirt, not a plain blue oxford"
+pin-033,top,B,close,close,"paisley shirt with a regular collar, not camp collar"
+pin-033,bottom,A,right,right,
+pin-033,bottom,B,right,right,
+pin-033,footwear,A,close,right,black slip-on loafers; other is too vague
+pin-033,footwear,B,right,right,
+pin-013,top,A,right,right,
+pin-013,top,B,right,right,
+pin-013,bottom,A,right,right,distressed dark jeans
+pin-013,bottom,B,right,right,
+pin-013,footwear,A,right,right,red high-top basketball sneakers
+pin-013,footwear,B,right,right,
+pin-050,top,A,right,right,purple V-neck
+pin-050,top,B,right,right,
+pin-050,bottom,A,right,right,
+pin-050,bottom,B,right,right,
+pin-050,footwear,A,right,right,tan suede desert boots
+pin-050,footwear,B,right,right,
+ig-085,top,A,missing,,cropped zip hoodie is the top
+ig-085,top,B,right,right,cropped washed charcoal zip hoodie
+ig-085,outerwear,A,wrong,right,"the zip hoodie, not a leather jacket"
+ig-085,outerwear,B,right,,no outerwear; correctly none
+ig-085,bottom,A,right,right,washed dark baggy jeans
+ig-085,bottom,B,right,right,
+ig-085,footwear,A,right,right,black lace-up boots
+ig-085,footwear,B,wrong,right,"black boots, not sneakers"
+ig-034,top,A,right,right,
+ig-034,top,B,right,right,
+ig-034,bottom,A,right,right,cream curved trousers with belt
+ig-034,bottom,B,close,right,"belted, no drawstring seen"
+ig-034,footwear,A,right,right,
+ig-034,footwear,B,right,right,
+ig-078,top,A,right,right,blue plaid flannel
+ig-078,top,B,right,right,
+ig-078,bottom,A,right,right,raw dark wide jeans
+ig-078,bottom,B,right,right,
+ig-078,footwear,A,right,right,wheat work boots
+ig-078,footwear,B,right,right,
+pin-004,top,A,right,right,navy button shirt with tiny print
+pin-004,top,B,close,right,
+pin-004,bottom,A,right,right,
+pin-004,bottom,B,right,right,
+pin-004,footwear,A,right,right,brown polished dress shoes
+pin-004,footwear,B,wrong,right,"low dress shoes, not boots"
+ig-116,top,A,right,right,
+ig-116,top,B,right,right,
+ig-116,bottom,A,right,right,mid-wash wide jeans
+ig-116,bottom,B,right,right,
+ig-116,footwear,A,close,right,black polished shoes; lace or slip-on unclear
+ig-116,footwear,B,close,right,black polished shoes; lace or slip-on unclear
+pin-036,top,A,right,right,
+pin-036,top,B,right,right,
+pin-036,bottom,A,right,right,
+pin-036,bottom,B,right,right,
+pin-036,footwear,A,right,right,black sneakers mostly cut off
+pin-036,footwear,B,close,right,black sneakers mostly cut off
+ig-035,top,A,close,right,olive long-sleeve henley; other is vague
+ig-035,top,B,close,right,"long-sleeve henley, not a tee"
+ig-035,bottom,A,right,right,
+ig-035,bottom,B,right,right,
+ig-035,footwear,A,right,right,
+ig-035,footwear,B,right,right,
+ig-011,top,A,right,right,green ribbed half-zip
+ig-011,top,B,right,right,
+ig-011,bottom,A,right,right,
+ig-011,bottom,B,right,right,
+ig-011,footwear,A,right,right,
+ig-011,footwear,B,right,right,

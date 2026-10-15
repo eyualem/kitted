@@ -40,6 +40,13 @@ A slow scoring read can send a backup request at 5 s if no garment has streamed 
 - **The cap is a promise we can't afford if many people use it:** "up to 10 fit checks and 50 questions a day" costs ~$23 a month at the cap. Few will reach it, but heavy users are exactly who'd stay.
 - **#268's AI line was too low:** it counted only the scoring read (0.83¢ in 2027); a full check is 2.16¢.
 
+## 4b. Measured Oct 15 (#278, `rubric/research/notes/model-test.md`)
+- **OpenAI GPT-6 Luna** for the scoring read: 0.054¢ a read (about 3,300 tokens in, 400 out at $0.10/$0.50 per million), against Gemini 3.8 Flash's 0.59¢.
+  - Its scores match the judges as well, but it names clothes worse (garment types right 75% vs 85%).
+  - A whole check on Luna would be ≈ 0.15¢ (the second look and the closet call untested on it), against 1.08¢ now and 2.16¢ from Jan 2027.
+- **Gemini 3.5 Flash-Lite:** 0.32¢ a read (it needs "minimal" thinking, not off). Its scores are worse, so it's dropped as a lever.
+- **Voting / cascades on Luna:** 0.13–0.16¢ a read, no quality gain.
+
 ## 5. The levers, biggest first (none changes a score until tested)
 | Lever | Saves per check (2027) | Cost to find out | Who decides |
 |---|---|---|---|

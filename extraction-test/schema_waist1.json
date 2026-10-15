@@ -1,0 +1,5 @@
+{"type": "OBJECT", "properties": {
+  "tucked": {"type": "STRING", "enum": ["full", "half", "none"]},
+  "top_end": {"type": "STRING", "enum": ["above_waistband", "at_waistband", "covers_waistband", "below_crotch", "tucked", "cant_see"]},
+  "waistband_visible": {"type": "STRING", "enum": ["yes", "partly", "no", "cant_see"]}},
+ "required": ["tucked", "top_end", "waistband_visible"]}

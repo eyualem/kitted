@@ -1,0 +1,288 @@
+[
+ {
+  "photo": "ig-098",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-098.full.jpg",
+  "A": {
+   "top": "white oxford shirt",
+   "bottom": "denim mid jeans"
+  },
+  "B": {
+   "top": "white dress shirt",
+   "bottom": "denim dark jeans"
+  }
+ },
+ {
+  "photo": "pin-042",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-042.full.jpg",
+  "A": {
+   "top": "light blue graphic tee",
+   "outerwear": "burgundy cardigan",
+   "bottom": "olive cargos",
+   "footwear": "white low profile sneaker"
+  },
+  "B": {
+   "top": "light blue graphic tee",
+   "outerwear": "burgundy cardigan",
+   "bottom": "olive cargos",
+   "footwear": "white low profile sneaker"
+  }
+ },
+ {
+  "photo": "ig-036",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-036.full.jpg",
+  "A": {
+   "top": "white oxford shirt",
+   "bottom": "denim mid jeans",
+   "footwear": "black loafer"
+  },
+  "B": {
+   "top": "off white cream oxford shirt",
+   "bottom": "denim mid jeans",
+   "footwear": "black loafer"
+  }
+ },
+ {
+  "photo": "ig-024",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-024.full.jpg",
+  "A": {
+   "top": "green flannel shirt",
+   "bottom": "black trousers",
+   "footwear": "black low profile sneaker"
+  },
+  "B": {
+   "top": "green camp collar shirt",
+   "bottom": "black trousers",
+   "footwear": "black loafer"
+  }
+ },
+ {
+  "photo": "pin-029",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-029.full.jpg",
+  "A": {
+   "outerwear": "olive field jacket",
+   "bottom": "denim mid jeans",
+   "footwear": "brown work boot"
+  },
+  "B": {
+   "outerwear": "olive field jacket",
+   "bottom": "denim mid jeans",
+   "footwear": "brown work boot"
+  }
+ },
+ {
+  "photo": "ig-001",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-001.full.jpg",
+  "A": {
+   "top": "brown sweater",
+   "bottom": "denim mid jeans",
+   "footwear": "brown work boot"
+  },
+  "B": {
+   "top": "brown sweater",
+   "bottom": "denim mid jeans",
+   "footwear": "brown loafer"
+  }
+ },
+ {
+  "photo": "rd-006",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-006.full.jpg",
+  "A": {
+   "top": "light grey dress shirt",
+   "bottom": "black suit trousers",
+   "footwear": "black dress shoe"
+  },
+  "B": {
+   "top": "light grey dress shirt",
+   "bottom": "black trousers",
+   "footwear": "black dress shoe"
+  }
+ },
+ {
+  "photo": "rd-007",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-007.full.jpg",
+  "A": {
+   "top": "black sweater",
+   "outerwear": "black overcoat",
+   "bottom": "brown trousers",
+   "footwear": "black derby"
+  },
+  "B": {
+   "top": "black sweater",
+   "outerwear": "black overcoat",
+   "bottom": "burgundy trousers",
+   "footwear": "black derby"
+  }
+ },
+ {
+  "photo": "ig-070",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-070.full.jpg",
+  "A": {
+   "top": "white polo",
+   "bottom": "denim mid jeans",
+   "footwear": "black derby"
+  },
+  "B": {
+   "top": "white knit polo",
+   "bottom": "denim mid jeans",
+   "footwear": "black work boot"
+  }
+ },
+ {
+  "photo": "rd-013",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-013.full.jpg",
+  "A": {
+   "top": "navy tee",
+   "bottom": "charcoal chinos",
+   "footwear": "light grey retro runner"
+  },
+  "B": {
+   "top": "navy polo",
+   "bottom": "charcoal chinos",
+   "footwear": "grey retro runner"
+  }
+ },
+ {
+  "photo": "ig-056",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-056.full.jpg",
+  "A": {
+   "top": "white tee",
+   "outerwear": "black chore coat",
+   "bottom": "black jeans",
+   "footwear": "black derby"
+  },
+  "B": {
+   "top": "white tee",
+   "outerwear": "black chore coat",
+   "bottom": "black jeans",
+   "footwear": "black work boot"
+  }
+ },
+ {
+  "photo": "ig-021",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-021.full.jpg",
+  "A": {
+   "top": "white graphic tee",
+   "bottom": "khaki beige shorts",
+   "footwear": "black loafer"
+  },
+  "B": {
+   "top": "white graphic tee",
+   "bottom": "khaki beige shorts",
+   "footwear": "black loafer"
+  }
+ },
+ {
+  "photo": "pin-041",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-041.full.jpg",
+  "A": {
+   "top": "brown quarter zip",
+   "bottom": "denim mid jeans",
+   "footwear": "brown work boot"
+  },
+  "B": {
+   "top": "brown sweatshirt",
+   "bottom": "denim mid jeans",
+   "footwear": "brown work boot"
+  }
+ },
+ {
+  "photo": "ig-065",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-065.full.jpg",
+  "A": {
+   "top": "purple graphic tee",
+   "bottom": "brown cargos",
+   "footwear": "black slides sandals"
+  },
+  "B": {
+   "top": "purple graphic tee",
+   "bottom": "brown shorts",
+   "footwear": "black slides sandals"
+  }
+ },
+ {
+  "photo": "rd-017",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-017.full.jpg",
+  "A": {
+   "top": "off white cream tee",
+   "outerwear": "navy bomber",
+   "bottom": "brown trousers",
+   "footwear": "black other"
+  },
+  "B": {
+   "top": "off white cream polo",
+   "outerwear": "navy bomber",
+   "bottom": "brown chinos",
+   "footwear": "black loafer"
+  }
+ },
+ {
+  "photo": "ig-096",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-096.full.jpg",
+  "A": {
+   "top": "off white cream tee",
+   "bottom": "black trousers",
+   "footwear": "black dress shoe"
+  },
+  "B": {
+   "top": "white polo",
+   "bottom": "charcoal trousers",
+   "footwear": "black dress shoe"
+  }
+ },
+ {
+  "photo": "pin-017",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-017.full.jpg",
+  "A": {
+   "top": "white graphic tee",
+   "bottom": "denim mid jeans"
+  },
+  "B": {
+   "top": "white graphic tee",
+   "bottom": "denim mid jeans"
+  }
+ },
+ {
+  "photo": "ig-091",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-091.full.jpg",
+  "A": {
+   "top": "charcoal sweater",
+   "bottom": "charcoal trousers",
+   "footwear": "black loafer"
+  },
+  "B": {
+   "top": "black sweater",
+   "bottom": "black trousers",
+   "footwear": "black loafer"
+  }
+ },
+ {
+  "photo": "pin-037",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-037.full.jpg",
+  "A": {
+   "top": "off white cream tee",
+   "outerwear": "charcoal cardigan",
+   "bottom": "brown trousers"
+  },
+  "B": {
+   "top": "light grey tee",
+   "outerwear": "charcoal cardigan",
+   "bottom": "brown trousers"
+  }
+ },
+ {
+  "photo": "ig-066",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-066.full.jpg",
+  "A": {
+   "top": "black tee",
+   "outerwear": "charcoal other",
+   "bottom": "off white cream shorts",
+   "footwear": "brown chunky sneaker"
+  },
+  "B": {
+   "top": "black tee",
+   "outerwear": "charcoal bomber",
+   "bottom": "off white cream shorts",
+   "footwear": "brown chunky sneaker"
+  }
+ }
+]

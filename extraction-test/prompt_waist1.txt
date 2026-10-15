@@ -1,0 +1,17 @@
+You look at an outfit photo (faces are hidden) and answer only about where the top meets the pants, at the front.
+Image 1 is the whole outfit; later images, if any, are close-ups of the upper and lower body.
+
+Judge the top the pants meet: the innermost top that reaches lowest at the front. Ignore an open jacket, overshirt or
+cardigan hanging over it, unless it is closed and is the only top.
+
+- tucked: "full" if the top goes inside the pants all around the front, "half" if only the front is tucked, "none" if it hangs loose.
+- top_end: where that top stops, at the front:
+  "above_waistband" = a gap, skin or another layer shows between the top and the pants;
+  "at_waistband" = the hem sits on the waistband or belt and the waistband or belt is visible;
+  "covers_waistband" = the hem hangs over the waistband so the waistband can't be seen, ending on the fly;
+  "below_crotch" = the hem reaches the crotch or lower;
+  "tucked" = it's tucked in;
+  "cant_see" = an arm, bag, phone or a closed long coat hides it.
+- waistband_visible: can you see the pants' waistband or belt at the front? "yes", "partly", "no" or "cant_see".
+Look closely at the hem's edge: a hoodie's or sweatshirt's ribbed band, a tee's stitched hem, a shirt's curved tails.
+Return only JSON that matches the schema.

@@ -1574,3 +1574,27 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Removals delete files:** a removed photo's or piece's cut-out and fingerprint are deleted 20 s after the removal (a pending list, re-checked against the data at run time, also processed at launch and foreground); never a kept photo.
     - **Fix batch:** no birth-year stepper, and an under-18 year asks "Born in {year}?" before the permanent block; build and fit start blank; "Not quite right?" previews with the check's own engine (preview = saved, tested on parts and v4 checks); re-checks branch up / same / down ("Nothing else changed." only on a clean win; "New: …" lines on a drop; ink arrow; "Try another photo" first when nothing was seen); the Welcome score from the live engine; the selected tab, tip leads and the Why strip's highlight in ink; Past chats read-only; camera speech stops on close; Archivo on the morning row and Lookbook; one decimal in the parts strip; closet names lower case mid-sentence (app layer, core untouched); 4-step onboarding progress; pick-order badges on the style tiles; no hairline under pushed headers.
     - **Found while checking:** the live parts engine scores the Welcome photo s15 at **7.0 "Put together"** (the 8.0 was v4's), so the Welcome card now says 7.0; a different hero photo is the founder's call. The Welcome card's fixed 172 pt width clipped "7.0" to "7." beside the longer word; it now sizes to its content. The piece page's hero sized from the window, which overflowed the web preview's box; it now measures its column.
+
+## Oct 15 · Which model reads the outfit: Gemini vs OpenAI, and multi-call systems (founder: "run the test, here is the key … build a system, look into that as well")
+278. **GPT-6 Luna scores outfits as well as Gemini 3.8 Flash at about 1/11 of the cost, but names the clothes worse. Flash-Lite and every multi-call design lose. Nothing in the app changed** (report: `rubric/research/notes/model-test.md`).
+    - **The key:** the founder's OpenAI key is stored only in the git-ignored `app/.env.development.local` (`OPENAI_API_KEY`), never in code or git. Spent about $3.33 (OpenAI ~$1.4, Gemini Flash-Lite ~$1.85).
+    - **Same request for every model:** the app's prompt, the face-hidden photo + close-ups, the v3 format (converted to OpenAI's strict schema by `openai_read.py`). The photos: 225 gold, his 27, 39 stock.
+    - **GPT-6 Luna (reasoning none) vs today's Gemini:**
+      - panel r 0.59 vs 0.58 (all) and 0.60 vs 0.49 (held out);
+      - his 20 blind ratings r 0.61 vs 0.46;
+      - same photo within 0.5: 96% vs 98%;
+      - 5.4 s vs 6.8 s;
+      - 0.054¢ vs 0.59¢ a read.
+    - **But the names:** the blind name check (60 photos, A/B hidden) has garment types right 75% vs 85% (shoes 69% vs 83%, tops 72% vs 83%); colors are equal (87% vs 86%). His hoodies read as "sweatshirt"; "the waist shows" 72% vs 88%.
+    - **Gemini 3.5 Flash-Lite:** panel 0.51, his 20 0.29, 8+ 4%. It costs half, not a quarter (it refuses thinking off; run on "minimal"). Dropped.
+    - **Multi-call systems, all from the same reads:**
+      - 3-vote medoid (0.16¢): panel 0.55;
+      - a cascade (2.3 reads): 0.55;
+      - Luna + a waist specialist call (`waist_specialist.py`; the waist read 87%, scored with the labels' definition, chosen after seeing its answers): panel 0.55.
+      - None beats one plain read: the same model repeats its mistakes, and a "more correct" waist didn't score closer to the judges (like #264).
+      - The hem specialist on Luna: stack 57% vs Gemini's 69%.
+    - **Recommended next** (founder's money):
+      - ~$1–2 to run the same test on one stronger OpenAI model (`gpt-6-sol` or `gpt-6-astra`, both on his key). The bar: garment types ≥ 83% right in the blind check, panel agreement no worse, cost well under Gemini.
+      - Then the founder picks: all-OpenAI, OpenAI read + Gemini closet call, or stay on Gemini.
+      - Switching changes the consent screen (it names Google today; outward-facing).
+    - **Not recommended:** different models for free and Pro (breaks "same photo, same score"); voting or cascades.
