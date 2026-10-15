@@ -1722,3 +1722,5 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Numbering:** #288 was used twice on Oct 15 (this session's schema, then the UI §7 batch), and #289 is onboarding's, so this is #290.
 
 289. **A photo on the wrong card (founder, Oct 15): "It's another piece…" plus Undo on "Not this piece".** The piece page's long-press menu already had "Not this piece" (a new card, never matched again, #277); he OK'd a second option, "It's another piece…", to move one photo to one of his other pieces of the same kind, and Undo on both. Checks W1–W7 in `handoff/09-ui-review.md` §8, committed before the build.
+
+290. **The first-photo gap too (founder: "you can close the other gaps as well").** Checks W8–W9 added to §8 before building: with 2+ photos the first photo can be split off or moved like any other; a piece's only photo offers "It's another piece…" as a merge, not "Not this piece".

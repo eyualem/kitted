@@ -287,3 +287,5 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 - **W5 (T) Undo of a move restores exactly** what W4 changed.
 - **W6 (T) No fit-check score changes** after W1, W4 or either Undo.
 - **W7 (S)** on the Simulator: the long-press menu shows both options; "It's another piece…" → a piece → the photo shows on that piece's page and leaves this one; Undo brings it back; "Not this piece" → Undo removes the new card.
+- **W8 (T) (added after "you can close the other gaps as well", before building) The first photo too:** when a piece has 2 or more photos, "Not this piece" and "It's another piece…" work on its first photo as on any other; the piece keeps its name and drawing, and its other photos stay. Seed and "you added it" pieces with no fit-check photo are unaffected.
+- **W9 (T) (same) A piece's only photo:** "Not this piece" isn't offered (there's nothing to split it from; Remove from Closet covers a wrong card); "It's another piece…" is offered and merges this piece into the chosen one exactly as "Same as another piece…" does, with its Undo.
