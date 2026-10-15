@@ -88,3 +88,5 @@ The cheap Lunas score outfits as well as Gemini. So the model lever is real mone
 - **Claude Sonnet 5.5** names clothes best in the blind check (83% vs Gemini's 79% that round), at 1.73¢ a read: ~3× Gemini now, ~1.5× from Jan 2027.
 - **Claude Haiku 5.5** (0.086¢) names clothes worst (64%) and matches the judges worst. Out.
 - Claude counts the photos at ~5,400 tokens, against ~3,300 for Gemini and OpenAI.
+
+**Decided Oct 15 (#284, the founder): the reading stays on Gemini 3.8 Flash.** The model lever is closed. The bill is cut by the other levers in §5 (the free tier, the cheaper closet call, caching and Batch for calls nobody waits on).

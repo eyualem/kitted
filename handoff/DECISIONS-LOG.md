@@ -1652,3 +1652,9 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Gemini 3.8 Flash is the best value. Sonnet 5.5's naming edge is small (3 vs 5 errors on 60 photos) for about 3× the read cost.
       - The cheap models from every company name clothes clearly worse.
       - Qwen (Alibaba) and Grok (xAI) remain untested. Their published vision scores sit below Gemini's, so they aren't worth the setup unless the bill forces it.
+
+## Oct 15 · The reading model decided (founder: "let us stay with gemini")
+284. **The outfit reading stays on Gemini 3.8 Flash.**
+    - **Why:** after #278, #280 and #283 it's the best value: it names clothes better than every cheaper model, and Claude Sonnet 5.5's small edge costs ~3×.
+    - **What stays ready:** GPT-6 Luna (0.054¢, scores as well, ~2× the naming errors) stays wired as the fallback in `extraction-test/openai_read.py`, if the bill ever forces a switch. The same tests rerun in minutes (`model_test.py`, `waist_labels/names2/`, `names3/`).
+    - **No app change.** The cost work moves to the other levers in `market/ai-costs.md` §5.
