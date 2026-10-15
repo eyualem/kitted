@@ -1221,6 +1221,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 - **VoiceOver:** "Added grey quarter-zip. Adds 12 fits. Rotation 21 to 33." Actions Undo, Edit.
 
 #### S25 · Ask a question
+- **Update Oct 14 (#265):** the full chat plan is `handoff/07-stylist-chat.md`; it adds the states below S25 doesn't cover (taking longer, paused, one question in flight, draft kept, what counts) and keeps the starter chips inside the opened composer.
 - **Entry:** quick-start chip or typing in the field.
 - **Starter chips** (above the composer while the field is focused and empty; one scrolling row, chip style as quick-starts, no icons): 3 from templates using his closet, e.g. `What goes with my navy crewneck?` · `How should chinos fit?` · `Can I wear white sneakers to an interview?`
 - **Sending:** his text bubble; a typing indicator (three 6 pt `ink3` dots pulsing; static "…" with Reduce Motion) in the stylist's position; the answer streams in as plain stylist text, VoiceOver announces it once complete. At most one follow-up question per reply (as a Question card with tap answers).
@@ -1250,6 +1251,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 
 #### S30 · Buy suggestion card
 - **When:** he asks what to buy, or a move says so. Card: tagline `Next best buy` / `+9 fits`; tile 60 + `Grey quarter-zip` / `$40–70 · Plain, no big logo.`; text `Layers over every tee you own.`; SecondaryButton `What to look for` (→ C7). Free users see the top pick; `See the full list` → P1 (a Pro feature).
+- **Update Oct 14 (#265):** the full list is free too (it comes from code, and everything that runs on code is free, CLAUDE.md); `See the full list` opens it for everyone. In chat, the `+N` and the kind come from code; the stylist only words it (`07-stylist-chat.md` §5).
 
 ### 3.4 Closet
 

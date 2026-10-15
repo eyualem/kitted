@@ -1,6 +1,6 @@
 # Kitted: a men's pocket-stylist iOS app
 
-**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 14, 2026 (the waistline from the body: the ruler doesn't beat the AI, nothing changed in the app, #264; the re-check camera says the whole fit is read again, #253–254; the consent loop fixed, #252; scoring v11, the second look in the app, the hem and creator-outfit tests, #236–239; scoring v10 from the creators' rules and the stylist guide for the chat, #235; how the founder's taste sources judge outfits, from 32 YouTube transcripts, #234; before that: scoring v8 adopted and ported, #228; Archivo and the theme batch, #230–231; the app review fixes, #233).**
+**This file is the one place for current status and instructions.** Read it first in every new chat, then open only the reference docs the task needs (the "Docs map" below). **Last updated: Oct 14, 2026 (the Stylist chat planned: `handoff/07-stylist-chat.md`, nothing built yet, #265; the waistline from the body: the ruler doesn't beat the AI, nothing changed in the app, #264; the re-check camera says the whole fit is read again, #253–254; the consent loop fixed, #252; scoring v11, the second look in the app, the hem and creator-outfit tests, #236–239; scoring v10 from the creators' rules and the stylist guide for the chat, #235; how the founder's taste sources judge outfits, from 32 YouTube transcripts, #234; before that: scoring v8 adopted and ported, #228; Archivo and the theme batch, #230–231; the app review fixes, #233).**
 
 ## How we keep context (rules for every chat)
 
@@ -32,6 +32,7 @@
 - [ ] **P2** · **"How bold" in your style profile (#250):** today your boldness setting quietly changes scores (how much bright color an outfit gets away with). Default: keep it out of the editor and make it advice-only (never moves a score), like your picked looks. *Unblocks: the Style profile's last section.*
 - [ ] **P2** · **The figure for advice (#247): OK the build-step words** "Slim · Average · Athletic · Broad · Bigger · Rather not say" (`mockups/figure-avatar.html`). Default: as written; test them on the 5 guys with the style step.
 - [ ] **P1** · **Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement.** Enrollment can take a few days. *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check.*
+- [ ] **P2** · **The chat test (#265), when Claude reaches step C5:** OK about $1–2 of Gemini calls, then 5–10 min picking the better of two answers on 20 pairs, blind (D1, the stylist's voice). *Unblocks: choosing the chat's model.*
 - [ ] **P3** · Optional, 5 min: ask Gemini to log the second Brandon Balfour video (`Y71miKP8yJE`) with the R3b honesty rules. Online research is otherwise done (#166); the gold set is what sets the scores.
 - [ ] **P1** · **Export the old Gemini creator-research Google Sheet as `.xlsx`** into `inputs/rubric-research/` (2 min). *Unblocks: the same v5 rules ledger.*
 - [ ] **P2** · **Run R5 in Codex: Instagram + Pinterest fits by style** (prompt in the Oct 9 chat and `rubric/research/v5-brief.md` → R5; about 5 min to start; let it use your logged-in browser if it asks). *Unblocks: checking that known-good fits score 8+ per style, and how often good fits really use a layer.*
@@ -50,6 +51,7 @@
 - [ ] **P3** · Later, before launch: replace the Gemini key.
 
 **Decide (quick taste calls; Claude has a default for each):**
+- [ ] **P2** · **The Stylist chat, 3 quick calls (#265, `handoff/07-stylist-chat.md` §12), 5 min:** (D2) consent says questions go with "your style picks and the clothes in your closet" (adds "your style picks"; anyone who agreed before sees the agreement once more). Default: yes. (D3) may the stylist quote a fix's number on a check you already have ("swapping to the straight jeans takes that check to 8.0", like the card's fix rows)? Default: yes. (D4) the paused line "Questions are paused for a bit. Nothing was counted. Try again later." Default: as written. *Unblocks: the chat's build steps C1–C4.*
 - [ ] **P1** · **OK the copy fixes from the app review (#233), 5 min.** Claude's defaults, all outward-facing: (1) the "How I score" sheet still explains the old scoring: rewrite it for the five parts; (2) reason lines say "legs" where they mean pants ("a roomy top over skinny legs"): say "pants" everywhere, so it never sounds like it rates bodies; (3) consent says "face cropped out or blurred": faces are blurred, never cropped: say "face blurred" everywhere; (4) the paywall's "Check every fit. Ask anything." reads as unlimited: "Up to 10 checks a day. Ask as you go."; (5) the welcome's "the two or three moves that raise it" → "the fix that raises it"; (6) "Proportions" → "Shape"; (7) "Couldn't frame this one." → "I couldn't find your face to blur it, so I didn't send it. Get your head in the shot and try again."; (8) a second photo while one is reading: "Still reading your last photo. Send this one when it's done." The full list of 40 is in DECISIONS-LOG #233's review notes. Default: yes to all 8. *Unblocks: the copy pass.*
 - [ ] **P3** · **The waist credit on a tee or hoodie that just reaches the waistband (#264), 1 min.** Your navy hoodie over wide jeans got "+1.5 a tucked or short top gives it a waist" (8.0). The hem really does end at a waistband that shows, and both the judge panel and your 20 blind ratings prefer keeping the credit for it (making it "tuck or crop only" fits them worse and drops 8+ fits from 15% to 5%). Default: keep it as is. Say so if you'd rather only a tuck or a short boxy top earn it.
 - [ ] **P3** · **Skim the new advice lines (#232), 3 min** (`app/src/i18n/en.ts` → `pfix.tip_*`, `pfix.copy.tipLabel`, `sum.ownMove`): "Finishing touch: Have the jeans hemmed to just touch your shoes (about $15 at a tailor), or cuff them once: a cleaner finish." (reworded in v10), "Have the trousers hemmed to just touch your shoes (about $15 at a tailor)", "Tuck in the layer underneath, or wear one that ends with the sweater", "Good base. Swapping one piece gets you to 7.5.", and the interview line "an interview wants a collared shirt, a knit or a jacket". Built with these words.
@@ -330,6 +332,16 @@
 - **Timeline:** beta Nov 3, submit about Nov 14, launch about Nov 17–20.
 
 ## Next steps, in order
+
+### The Stylist chat: planned Oct 14 (#265), nothing built yet. Start here for the chat
+**The plan: `handoff/07-stylist-chat.md`** (what he'll see, what the stylist knows and never gets, memory, the engine, screen states, safety, the server route, money, the test, the build order, decisions).
+- **The shape:** "the code knows, the AI talks". `@kitted/core` on the phone computes every fact and number an answer uses: outfits from his closet, "+N outfits", a check's Why rows and fix targets. Gemini words the answer and may attach one card (outfit, start a check, one tap question, buy, link, saved fact). It never sees a photo, never makes up a score, never talks about his body, never names a brand.
+- **Sent with each question:** today's chat, his picked looks, fit preference, budget, live facts, the closet as one line per piece, today's checks in full plus 7 days in short, today's idea, the weather in words.
+- **Never sent:** age, height, build, location or photos.
+- **Build order:** C0 plumbing (limits wired, consent/offline/distress states) → C1 the context pack → C2 one real answer with the dev key → C3 router, evidence and cards → C4 memory ("Saved · Undo") → C5 the test (80 questions + 40 red-team, judges, a blind A/B; ~$1–2) → C6 `/v1/ask` on the Worker → C7 polish.
+  - About 6–7 days.
+  - C0–C4 reach the phone through Metro, with no server needed.
+- **Waiting on the founder:** D2–D4 (to-do list) and the test spend; the default is built meanwhile.
 
 ### Theme fix batch (#230; the review is in DECISIONS-LOG #230)
 **Done Oct 12:** Archivo is in the app (score numerals, wordmark; `app/assets/fonts/`, screenshots `screenshots/archivo/`). On the founder's phone after the next `tools/phone/install.sh`.
@@ -635,6 +647,7 @@ Exceptions:
 | `handoff/03-design-system.md` | Tokens, type, components, SF Symbols | Reference |
 | `handoff/04-logic-and-demo-data.md` + `handoff/fixtures/` | Rubric port, fixes, re-check, seed data, expected scores | Reference |
 | `handoff/05-build-plan.md` | Stack (§1.1), phases P0–P8 with acceptance checks, traps (§7) | Reference; its Oct 6 environment notes are outdated (see "How to run things") |
+| `handoff/07-stylist-chat.md` | **The Stylist chat's plan and spec** (Oct 14, #265): the context pack, memory, the engine, states, safety, `/v1/ask`, cost, tests, build order C0–C7 | **Live** until the chat ships; edit with every chat decision |
 | `handoff/06-react-native-mapping.md` | How the SwiftUI terms in 02/03 map to React Native | Reference |
 | `handoff/p2-design-spec.md` | Measured spec for the chat and cards (screens 6–12) | Reference |
 | `mockups/kitted-mockups.html` | The visual source of truth | Reference |

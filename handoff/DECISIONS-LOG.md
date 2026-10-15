@@ -1305,3 +1305,21 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Open:**
       - His taste call: should a plain tee or hoodie that just reaches a visible waistband earn "gives it a waist"? Default: yes, as now, since the panel and his ratings agree.
       - Worth one test when his one-outfit variants exist: the change in the visual waistline between two photos of the same outfit (tucked vs untucked), where the joint error cancels. That's what a re-check needs.
+
+## Oct 14 · The Stylist chat planned (founder: "plan out the chat, the chat system and stylist… an in-depth plan")
+265. **The chat's plan is written: `handoff/07-stylist-chat.md` (new reference doc; 02 S25 and S30 point to it). Nothing in the app changed.** Built from three surveys: the chat code today (send replies "Questions are coming soon…", `consumeQuestion` never called, no answer source, no server), every earlier chat spec (02 S25–S27/S30, app-build-spec `/v1/ask`, brainstorm 02 and 11, the age and consent rules), and every piece of user data the app stores (profile, facts, closet, checks, ideas, weather, usage).
+    - **Shape, decided by Claude (no taste involved):** "the code knows, the AI talks". Every fact and number an answer stands on is computed on the phone by `@kitted/core` (outfits via `pickOutfit` with a piece pinned, "+N outfits" via `rotation`, a check's Why rows and fix targets) and sent as evidence. The model words it and may attach one card from a fixed list (outfit, start a check, one tap question, buy, link, saved fact); code builds every card from validated handles. **Why:** the only thing this chat can do that free ChatGPT can't is answer about his clothes and checks with numbers that agree with the card (`market/market-research.md`).
+    - **What's sent with a question:** today's chat only, picked looks, fit preference, budget, live facts, the closet as one line per piece with a handle, today's checks in full, 7 days short, today's idea, the weather in words, the date. **Never:** birth year or age, height, build, name, location, photos or readings, deleted facts, earlier days' chats. Memory is the facts list he can see, not transcripts.
+    - **Memory:** a `remember` action with a fixed key list (sizes, budget, dress code, owned-not-photographed pieces, color and fit likes); always shown with "Saved to what I know · Undo"; body, health, age and the like are never stored. Chat-mentioned pieces join the closet as unphotographed and stay out of "+N" claims until a check sees them.
+    - **Provider:** Gemini (consent already names Google; one processor and one key). The model, `gemini-3.8-flash` or a Lite tier, is picked by a test, not by name.
+    - **Counting:** only an answer that arrives counts. Refusals, failures, distress and the stylist's own follow-up taps don't.
+    - **Starter chips:** they stay, inside the opened composer while it's empty (closes the open question from #180).
+    - **One question in flight;** the message is stored once, when complete (`useLive` reloads the whole chat table on every patch).
+    - **The buy list:** free for everyone. 02 S30's "full list is Pro" broke "everything that runs on code is free" (CLAUDE.md wins).
+    - **Money:** an estimated 0.08–0.15¢ per question (brainstorm 02; to be measured in step C2). A yearly Pro user at the 50-a-day cap every day could cost about what he pays (~$1.20–2.25 vs ~$2.12 a month after Apple's cut), before Gemini's Jan 2027 price rise. Guards: the cached prefix, short answers, today-only history, the spend stop, a per-device token budget.
+    - **Founder calls, each with a default:**
+      - D1, the model's voice (a blind pick on 20 pairs);
+      - D2, consent adds "your style picks" (bumps CONSENT_VERSION to 2);
+      - D3, numbers for a "what if" on a check he already has (yes, "on that photo");
+      - D4, the paused line.
+    - **Build order:** C0 plumbing → C1 the pack → C2 one real answer (dev key) → C3 router, evidence and cards → C4 memory → C5 the test → C6 the server route → C7 polish. About 6–7 days of building; C0–C4 reach his phone through Metro, with no server needed.
