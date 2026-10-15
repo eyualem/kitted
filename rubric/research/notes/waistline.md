@@ -1,12 +1,40 @@
 # The waistline from the body: does a body ruler beat the AI at "the waist shows"?
 
-*Round 3 (Oct 15, arms and the pants silhouette) is first, then round 2 (Oct 15, #269), then round 1 (Oct 14, #264).*
+*Round 4 (Oct 15, the clothes edge checked and fixed) is first, then round 3 (arms and the pants silhouette), then round 2 (Oct 15, #269), then round 1 (Oct 14, #264).*
 
 *Oct 14, 2026. Claude. DECISIONS-LOG #264. Mac harness only, no app change, no API calls. Code:
 `extraction-test/vision/WaistRuler.swift` (`kmeasure waist`), runner `extraction-test/waist_test.py`, paper test
 `extraction-test/waist_paper.py`. Results: `extraction-test/results/waist1/` (`report.md`, `rows.json`, `paper.txt`;
 overlays and face-hidden copies are git-ignored). Research: `rubric/research/notes/waist-research.md`. Labels and
 their guides: `extraction-test/waist_labels/`.*
+
+## Round 4 (Oct 15, #275): checking the clothes edge itself, and fixing it
+
+**The line check:** the rulers had been tested hard, but not whether the orange line (where the top meets the pants) lands on the right place.
+- Every measured photo (197) was drawn with its line, faces hidden (`results/waist4/overlays/`), and four blind reviewers judged each one (`waist_labels/qa/`, guide `GUIDE.md`).
+- **On target** (within ~2 cm): 144 of 197 (73%). **Off by 2–6 cm:** 24. **Off by more, or on the wrong thing** (a pocket, a hand, a jacket hem): 27. **Can't tell:** 3. Misses leaned low (31) over high (12).
+- **The patterns:** hands at the waist (the most common), open jackets, matching sweatsuits.
+
+**Fixed: hands at the waist** (`WaistRuler.swift`, the hidden-band rule, on by default).
+- **The cause:** his hands (hands in pockets, a watch at the belt) are left out of the strip, so those rows drop out, and the first readable row lay below the real edge.
+- **The fix:** when the switch from top to pants happens across such a hidden band, the edge goes a third of the way down the band. Its top is the wrists, 3–7 cm above the edge on the four checked by eye.
+- **Scored with the reviewers' verdicts as truth** (`waist_qa.py`): it fixes 7 of the 42 misplaced lines (moving them up 8–13 cm) and moves none of the 144 good ones.
+
+**Tried and dropped:**
+- **A narrower strip:** fixes 6, breaks 7.
+- **An open-layer rule** (the strip narrows when the middle of the chest differs in color from the sides): at best fixes 8 and breaks 3.
+- **A lower color cutoff for dark outfits:** 23 more photos read, but only 9 of 16 right, leaning "waist shows".
+- About half the black-on-black photos are near-pure black, with no boundary in the pixels at all. Those keep the AI's reading.
+
+**After the fix** (all photos rerun, `results/waist5`):
+- **Tucked shirts' spread:** 16.9 → 12.7 cm.
+- **AUC, waist shows vs covered:** 0.90 · 0.88 (dev · test).
+- **"The waist shows", with the cut set on dev (t 0.62) and scored once on test:**
+  - the ruler 81% vs the AI's 82% (no outer layer: 83% vs 82%);
+  - his photos 92% vs 63% (13 answers);
+  - unsure still 41%, against the bar of 30%: dark on dark and joints out of frame.
+- **Against the judges:** −0.45 / −0.46.
+- **On paper:** unchanged (held-out 0.51 / Proportions 0.58 for `sk_linear`). The fix mostly helps hands-at-the-waist photos, common in his shots and rarer in the gold set.
 
 ## Round 3 (Oct 15, #269 cont.): arms as a backup, and the pants silhouette
 

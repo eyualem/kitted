@@ -413,6 +413,13 @@
 - **Apple's 3D pose is too noisy** (4–6 cm).
 - **Still unsure on ~35% of photos** (dark on dark, joints out of frame). The AI's reading stays there.
 
+**Round 4 (Oct 15, #273): the clothes edge itself, checked and fixed.**
+- **Checked:** blind reviewers judged the measured waistline on 197 photos: 73% on target, 12% a little off, 14% well off.
+- **Fixed:** hands at the waist hid the edge and pushed the line low. The hidden-band rule fixes 7 and breaks none.
+  - Tucked shirts' spread 16.9 → 12.7 cm.
+  - "The waist shows" now ties the AI (81% vs 82% held out; his photos 92% vs 63% on 13). Still unsure on 41%, against the bar of 30%: black on black.
+- **Dropped:** a narrower strip, an open-jacket rule, a lower color cutoff for dark outfits (each broke as much as it fixed).
+
 **Round 3 (Oct 15, founder: "add the arms as a backup"; "the lower part … close to as wide as the top"):**
 - **Arms work as a backup only with a strict "hangs straight" check** (elbow bent < 10°, within 12° of the body line; the loose check spread 39 cm).
   - They're built into `body_fit`, the ruler to use: shoulders, knees, ankles and qualifying arms, with a hip fallback.

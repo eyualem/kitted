@@ -43,6 +43,14 @@ enum Waist {
   static var rowOn = 0.35
   static var hold = 0.06 // torsos a change must last
   static var edgeK = 2.2 // an edge peak must be this many times the strip's median edge strength
+  /// The hidden-band rule (#275): on/off and the shortest band (torsos) it acts on.
+  static var gapRule = ProcessInfo.processInfo.environment["WAIST_GAP"] != "0" // on by default since the line check (#275)
+  static var gapMin = Double(ProcessInfo.processInfo.environment["WAIST_GAP_MIN"] ?? "") ?? 0.03
+  /// The open-layer rule (#275): on/off, how much of the strip the middle is, and how different it must be from the sides.
+  static var openRule = ProcessInfo.processInfo.environment["WAIST_OPEN"] == "1"
+  static var openMid = Double(ProcessInfo.processInfo.environment["WAIST_OPEN_MID"] ?? "") ?? 0.4
+  static var openSep = Double(ProcessInfo.processInfo.environment["WAIST_OPEN_SEP"] ?? "") ?? 20
+  static var gapAt = Double(ProcessInfo.processInfo.environment["WAIST_GAP_AT"] ?? "") ?? 0.33
 
   static func applyOverrides() {
     let env = ProcessInfo.processInfo.environment
@@ -217,7 +225,30 @@ enum Waist {
     }
     if let cf = crotchFound { d["crotch_mask_s"] = r3(cf) }
     // References: the top from the chest/upper belly, the pants from the shins (or the lower thigh).
-    let chest = Ruler.stride(0.3, 0.55, 0.01).flatMap { stripPixels(c, g, $0).labs }
+    var g = g
+    var chest = Ruler.stride(0.3, 0.55, 0.01).flatMap { stripPixels(c, g, $0).labs }
+    // An open layer (#275): the middle of the chest strip a different color from its sides (a jacket's panels over a
+    // tee). Then the strip narrows to the middle, so the inner top is what meets the pants.
+    if openRule {
+      let mid = Geo(H: g.H, S: g.S, up: g.up, across: g.across, T: g.T, thigh: g.thigh, half: g.half * CGFloat(openMid))
+      let centre = Ruler.stride(0.3, 0.55, 0.01).flatMap { stripPixels(c, mid, $0).labs }
+      let sides = Ruler.stride(0.3, 0.55, 0.01).flatMap { stripPixels(c, g, $0).labs }
+      if centre.count >= 10, let cr = Ruler.medianLab(centre), let all = Ruler.medianLab(sides) {
+        // The sides alone: the full strip's pixels minus the middle's, approximated by the outer columns.
+        let outer = Ruler.stride(0.3, 0.55, 0.01).flatMap { s0 -> [Lab] in
+          [-1.0, -0.85, 0.85, 1.0].compactMap { k -> Lab? in
+            let p = g.at(s0, g.half * CGFloat(k)); let xi = Int(p.x.rounded()), yi = Int(p.y.rounded())
+            guard Ruler.onMask(c, xi, yi) else { return nil }
+            return labAt(c.rgb, xi, yi)
+          }
+        }
+        if outer.count >= 6, let orf = Ruler.medianLab(outer), Ruler.de(cr, orf) > openSep {
+          d["open_layer"] = ["sep": Int(Ruler.de(cr, orf)), "all": Int(Ruler.de(cr, all))]
+          g = mid
+          chest = centre
+        }
+      }
+    }
     guard chest.count >= 20, let topRef = Ruler.medianLab(chest) else { d["value"] = "unsure"; d["why"] = "chest not on body"; return d }
     guard let bot = Ruler.bottomsRef(c, j, shorts: false) else { d["value"] = "unsure"; d["why"] = "pants not visible"; return d }
     let sep = Ruler.de(topRef, bot.lab)
@@ -285,8 +316,25 @@ enum Waist {
       let ahead = live[i..<min(live.count, i + holdN)]
       return ahead.count >= 2 && Double(ahead.filter(ok).count) >= 0.7 * Double(ahead.count)
     }
-    let topEnd = live.indices.first { i in live[i].top < 0.5 && lasting(i) { $0.top < 0.5 } }.map { live[$0].s }
-    let pantsStart = live.indices.first { i in live[i].bot >= 0.5 && lasting(i) { $0.bot >= 0.5 } }.map { live[$0].s }
+    let topEnd0 = live.indices.first { i in live[i].top < 0.5 && lasting(i) { $0.top < 0.5 } }.map { live[$0].s }
+    let pantsStart0 = live.indices.first { i in live[i].bot >= 0.5 && lasting(i) { $0.bot >= 0.5 } }.map { live[$0].s }
+    // Hands at the waist (#275): the rows his hands cover drop out, so the first readable row can sit below the real
+    // edge. When the switch from top to pants happens across such a hidden band, put the edge at the band's top.
+    var pantsStart = pantsStart0, topEnd = topEnd0
+    if gapRule, let ps = pantsStart {
+      // The readable row just above where the pants start, and the hidden rows between.
+      if let above = live.last(where: { $0.s > ps + 1e-9 }), above.top >= 0.5 {
+        let hidden = rows.filter { $0.s < above.s - 1e-9 && $0.s > ps + 1e-9 && $0.on < rowOn }
+        if Double(hidden.count) * 0.01 >= gapMin, let first = hidden.map(\.s).max() {
+          // The band starts at his wrists, just above the real edge: on the four checked by eye the edge sat about a
+          // third of the way down it (the old line was 8–18 cm low; the band's top 3–7 cm high).
+          let edge = first - gapAt * (first - ps)
+          d["gap"] = ["from": r3(first), "to": r3(ps), "edge": r3(edge)]
+          pantsStart = edge
+          if let te = topEnd, te <= ps + 1e-9 { topEnd = edge }
+        }
+      }
+    }
     if let topEnd { d["top_end_s"] = r3(topEnd) }
     if let pantsStart { d["pants_start_s"] = r3(pantsStart) }
     guard let ps = pantsStart else { d["value"] = "unsure"; d["why"] = "pants never start in the window (a long top or a coat)"; d["visual_s"] = lowest; d["class4"] = "below_crotch"; return d }

@@ -1,0 +1,48 @@
+photo,verdict,dark_on_dark,shot,notes
+pin-050,on,no,propped,sweater hem
+pin-051,on,no,propped,"sweater rib hem, hands in pockets"
+pin-052,high_big,no,propped,"open bomber, inner shirt ends well below the line; line at pocket level"
+pin-053,wrong_thing,no,propped,"open jacket; line near the jacket hem, grey hoodie ends lower"
+pin-056,high_small,no,propped,"open chore coat over vest and tie; line on the tie, trousers start lower"
+pin-057,low_small,no,other,"open jacket, shirt meets pants above the line"
+pin-061,low_big,yes,other,"tucked denim shirt, line below the belt"
+pin-063,on,no,other,"open blazer, inner shirt hem"
+pin-064,on,no,other,vest hem meets jeans
+pin-065,on,no,mirror,knit polo hem
+pin-066,on,no,other,front-tucked polo at waistband
+pin-069,on,no,propped,denim vest hem at waistband
+pin-070,on,yes,mirror,red tee over red pants
+pin-071,on,no,mirror,black tee hem
+pin-072,on,yes,mirror,"slanted henley hem, line roughly follows"
+pin-073,low_big,no,propped,"open jacket; inner sweatshirt ends well above; line at hands"
+pin-074,on,no,mirror,grey tee hem
+rd-001,on,no,propped,camp shirt hem
+rd-003,on,no,other,tucked shirt at belt top
+rd-010,wrong_thing,no,other,"buttoned blazer; line across the clasped hands"
+rd-012,on,no,mirror,"tucked shirt, line on the belt"
+rd-014,on,no,other,untucked shirt hem
+rd-015,high_big,no,propped,"untucked plaid shirt, line mid-shirt"
+rd-016,low_small,no,mirror,camp shirt hem sits above the line
+rd-017,low_big,no,other,"open bomber, tee tucked at belt; line below belt, borderline"
+rd-018,on,no,mirror,untucked shirt hem
+rd-019,on,no,mirror,front-tucked tee at waistband
+rd-020,on,no,mirror,"tucked shirt, belt top"
+rd-021,low_big,no,other,"high-rise trousers, belt well above the line"
+stock-p01-after_studio,cant_tell,no,other,"open overshirt and plate hide the inner tee end"
+stock-p01-before_studio,on,no,other,white tee hem
+stock-p02-after_studio,low_big,yes,other,"matching sweatsuit, line below the hoodie band"
+stock-p02-before_studio,low_big,yes,other,"matching sweatsuit, line far below the hoodie hem"
+stock-s01-before_studio,on,no,other,"vest tucked, belt top"
+stock-s04-before_studio,on,yes,other,sweatshirt band hem on tilted body
+stock-s05-before_studio,low_big,no,other,hoodie hem well above the line
+stock-s06-before_studio,on,no,other,untucked shirt hem
+stock-s08-before_studio,wrong_thing,yes,other,"cropped open jacket, no inner top; line at jacket hem, trousers start higher"
+stock-s09-before_street,low_big,no,other,"open blazer, tucked shirt; line below the belt"
+stock-s11-before_street,on,no,other,untucked shirt hem
+stock-s12-before_street,low_big,no,other,"tee shows below hoodie; line lower at the pocket and hand"
+stock-s14-before_street,wrong_thing,no,other,"open denim vest; line at vest hem, white top ends higher"
+stock-s15-before_street,on,no,other,overshirt hem
+stock-s17-before_phone,cant_tell,no,other,"seated, top hidden by arms and crop; line on the arm"
+stock-s22-before_phone,on,no,other,knit polo hem band
+stock-s23-before_mirror,on,no,mirror,red tee hem
+stock-s28-before_mirror,on,no,mirror,"slanted tee hem, line roughly follows"

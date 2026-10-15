@@ -1530,3 +1530,24 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The worst, all small:** the birth-year stepper can set the permanent under-18 block with one stray tap and no confirmation (`BasicsScreen.tsx:96-101`); "Not quite right?" previews with the v4 `score()` while Save re-scores with the parts engine (`CorrectSheet.tsx:57`); a re-check that dropped still says "Nothing else changed." (`en.ts:82`); the Welcome card hardcodes 8.5 for s15, which scores 8.0 (`WelcomeScreen.tsx:104`); the closet long-press preview crops the unblurred kept photo to the piece box without a head check, and mirror crops aren't flipped (`piecePreview.ts:56-60`).
     - **Closet:** tapping a tile does nothing, nothing can be merged or corrected, scans go to an inbox nothing reads, and the approved Outfits half isn't built (core `rotation()` still uses v4 rules and counts layers, against #84).
     - **Closet photos:** photos live on sightings (cut-outs in `Documents/closet/`, kept photos per check); the piece's own photo columns are never filled; the #244 preview already shows cut-outs, which #141 said he wouldn't see. No removal deletes any file except the two privacy wipes. Recommended: a piece page with the drawing as the hero and his photos underneath (cover, remove photo, not this piece), with head clamping and mirror flips, and removals that delete cut-outs after Undo. Three taste calls on the founder's list.
+
+## Oct 15 · The waistline, round 4: the clothes edge checked by blind reviewers, and fixed (founder: "continue"; "test things out … to know if things are done right")
+275. **The measured waistline line was checked photo by photo; one miss pattern is fixed; nothing in the app changed** (report: `rubric/research/notes/waistline.md`, round 4).
+    - **The check:** the 197 measured photos drawn with their line (faces hidden) and judged by four blind reviewers (`extraction-test/waist_labels/qa/`):
+      - 73% on target (within ~2 cm);
+      - 12% off by 2–6 cm;
+      - 14% well off or on the wrong thing;
+      - misses lean low (31 vs 12).
+    - **Fixed:** hands at the waist. The hand rows drop out of the strip and the edge landed below them. The hidden-band rule puts it a third of the way down the band (`WaistRuler.swift`, on by default; `WAIST_GAP=0` turns it off).
+      - Scored with the reviewers' verdicts as truth (`waist_qa.py`): fixes 7 of 42 misplaced lines and moves none of the 144 good ones.
+    - **Dropped:**
+      - a narrower strip (fixes 6, breaks 7);
+      - an open-jacket rule (fixes 8, breaks 3; `WAIST_OPEN=1`, off);
+      - a lower color cutoff for dark outfits (9 of 16 right).
+      - Near-pure-black outfits have no boundary to find and keep the AI.
+    - **After the fix** (`results/waist5`):
+      - tucked shirts' spread 16.9 → 12.7 cm;
+      - "the waist shows" ties the AI (81% vs 82% held out; his photos 92% vs 63% on 13 answers), still unsure on 41% (bar 30%);
+      - judges −0.45;
+      - on paper unchanged (0.51 / Proportions 0.58).
+    - **Still waiting on the founder's tape shoot,** which picks the ruler (shoulders + knees vs camera-corrected) and decides whether the measured waistline goes to him as a scoring before/after.

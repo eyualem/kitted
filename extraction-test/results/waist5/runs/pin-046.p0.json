@@ -1,0 +1,63 @@
+{
+  "crop" : 0,
+  "h" : 1024,
+  "hands" : 2,
+  "joints" : {
+    "lAnkle" : {
+      "c" : 0.14999999999999999,
+      "x" : 154,
+      "y" : 904
+    },
+    "lElbow" : {
+      "c" : 0.10000000000000001,
+      "x" : 220,
+      "y" : 455
+    },
+    "lHip" : {
+      "c" : 0.13,
+      "x" : 223,
+      "y" : 623
+    },
+    "lShoulder" : {
+      "c" : 0.35999999999999999,
+      "x" : 291,
+      "y" : 240
+    },
+    "neck" : {
+      "c" : 0.17999999999999999,
+      "x" : 145,
+      "y" : 120
+    },
+    "rElbow" : {
+      "c" : 0.31,
+      "x" : 337,
+      "y" : 472
+    },
+    "rHip" : {
+      "c" : 0.16,
+      "x" : 288,
+      "y" : 608
+    },
+    "root" : {
+      "c" : 0.14999999999999999,
+      "x" : 256,
+      "y" : 615
+    }
+  },
+  "legs" : {
+    "legs" : [
+
+    ],
+    "why" : "legs not separable"
+  },
+  "max" : 2048,
+  "ms" : 341,
+  "photo" : "\/Users\/eyu\/Desktop\/files\/Kitted\/inputs\/pinterest\/Screenshot 2026-10-12 at 3.02.28 PM.png",
+  "pitch" : 0,
+  "status" : "ok",
+  "w" : 394,
+  "waist" : {
+    "value" : "unsure",
+    "why" : "shoulders"
+  }
+}
