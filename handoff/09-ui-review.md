@@ -191,7 +191,8 @@ Founder: "proceed with the plan. make sure that you test the things that you imp
 - L2 (T) The photo is kept on the phone (the file exists) and the check is held; ignoring the card leaves it held.
 - L3 (T) "Save for tomorrow" turns the card into S17h: "Waiting to score" / "After 4 am", "Saved. I'll score it when you open Kitted after 4 am. It uses tomorrow's free check.", link "Don't score it".
 - L4 (T) "Don't score it": the held photo is never scored, now or after 4 am.
-- L5 (T) With the clock moved past the next 4 am, opening or returning to the app scores the held photo exactly once; it uses that day's free check, and never more photos are scored than that day allows.
+- ~~L5 (T) With the clock moved past the next 4 am, opening or returning to the app scores the held photo exactly once; it uses that day's free check, and never more photos are scored than that day allows.~~ **Wrong as written; amended Oct 15 (#281), before the fix was built:** it contradicts ruling 27 and spec S17h (a held photo is never sent on its own; one tap scores it). The build followed L5 and was caught by its agent.
+- L5′ (T) With the clock past the next 4 am, opening or returning to the app posts once the stylist message "Ready to score last night's photo?" with "Score it" and "Not this one"; nothing is read or sent before he taps. "Score it" scores that photo exactly once, on that day's free check, and never more photos than that day allows. "Not this one" deletes the photo and its files (it was never sent). A photo he chose "Don't score it" for never gets the message.
 - L6 (T) When today's re-check is still open, the card shows "Today's re-check still works."
 - L7 (T) A Pro user under 10 checks a day never sees the card.
 - L8 (T) The old "Check used today" toast no longer appears on this path.
