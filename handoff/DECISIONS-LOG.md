@@ -1628,3 +1628,5 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Colors are all 80–85%. Gemini and Luna repeated their first-check results, so the reviewers are consistent.
     - **GPT-5.6 Luna in full:** as steady as Gemini (284/290), panel 0.57 (Gemini 0.58), his 20 0.61, 8+ 13%, 0.116¢, 4.6 s. It scores as well, with Luna-level names.
     - **Decided (Claude's default, the founder's call on the to-do list):** keep Gemini; switching to GPT-6 Luna would cut the read 0.59¢ → 0.054¢ for about 2× the naming errors.
+
+280. **The next UI batch is planned with pass/fail checks written first (founder, Oct 15: "proceed with the plan. make sure that you test the things that you implement with parameters that are set before implementation").** The checks are `handoff/09-ui-review.md` §6, committed before any code: the limit card per spec D19/S17h (replacing the "Check used today" toast), the scan inbox made visible in Closet, merging duplicates from the piece page, the Lookbook look page, and the re-check row number. A wrong check gets reported, not edited. The #233 copy fixes stay out until he OKs them.

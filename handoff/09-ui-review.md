@@ -178,3 +178,46 @@
 - **Closet photos:** (1) his real photo with the piece outlined, never the cut-out alone; (2) tiles stay pure drawings, photos on the piece page; (3) an added photo never changes the drawing.
 - **The selected tab:** ink, not copper.
 - **Still open (outward-facing copy):** the "No quick fixes for this one." replacement lines (default "Clean base. Nothing off."), and the #233 copy items on the to-do list.
+
+---
+
+## 6. Next batch: pass/fail checks, set before building (Oct 15, #280)
+Founder: "proceed with the plan. make sure that you test the things that you implement with parameters that are set before implementation." These checks were written and committed before any of this batch's code. The build must not edit them; a check that turns out wrong is reported, not quietly changed. Every check becomes an automated test where it can (T), and the ones that need eyes are done on the Simulator (S). The #233 copy fixes are not in this batch (still waiting on his OK).
+
+**Global (all items):** G1 every existing test stays green (app tsc, core tsc, lint, core tests, app tests). G2 no score changes: the parity suites and every demo check's stored score are unchanged (T). G3 light and dark, and the largest text size, show no clipped or overlapping text on each new screen (S). G4 every new string is listed in the report for the founder to skim.
+
+**1. The limit card (§1 item 6; spec `handoff/02-screens.md` D19 S17 and S17h, copy already in the deck):**
+- L1 (T) A free user whose check and re-check for today are used takes a photo (camera or library): the reading service is never called, today's count doesn't change, and an inline Limit card is posted in the thread: tag "Daily limit", "Resets 4 am", title "That's today's free check.", the body with the questions left (or the no-questions body), button "Save for tomorrow". "Try Pro" shows only when the paywall is built (`PAYWALL_BUILT`).
+- L2 (T) The photo is kept on the phone (the file exists) and the check is held; ignoring the card leaves it held.
+- L3 (T) "Save for tomorrow" turns the card into S17h: "Waiting to score" / "After 4 am", "Saved. I'll score it when you open Kitted after 4 am. It uses tomorrow's free check.", link "Don't score it".
+- L4 (T) "Don't score it": the held photo is never scored, now or after 4 am.
+- L5 (T) With the clock moved past the next 4 am, opening or returning to the app scores the held photo exactly once; it uses that day's free check, and never more photos are scored than that day allows.
+- L6 (T) When today's re-check is still open, the card shows "Today's re-check still works."
+- L7 (T) A Pro user under 10 checks a day never sees the card.
+- L8 (T) The old "Check used today" toast no longer appears on this path.
+- L9 (S) A demo screen shows the card and its saved state.
+
+**2. The scan inbox made visible (§1 item 11):**
+- S1 (T) With 1 or more scans waiting, Closet shows one row at the top, "Waiting to be read · N photos" ("1 photo" for one); with none, no row.
+- S2 (T) Tapping it opens a sheet with each scan's thumbnail and date and the existing line "Reading clothes from photos is coming soon."
+- S3 (T) Deleting a scan removes its entry, and its kept, thumbnail and face-hidden files are gone from disk; the count updates.
+- S4 (T) "Delete all photos" still empties the inbox (the existing test stays green).
+- S5 (S) A demo screen with 2 waiting scans shows the row and the sheet.
+
+**3. Merging duplicates on the piece page (§1 item 10):**
+- M1 (T) The piece page offers "Same as another piece…", which lists only his own pieces in the same slot (top, bottom, shoes or layer), never the piece itself, and never across slots.
+- M2 (T) Picking one asks once to confirm; then every sighting moves to the chosen piece, the merged piece leaves the grid, the kept piece's worn count is the two combined (a check counted once), and the two are never asked "same as?" again.
+- M3 (T) Undo within the toast puts both pieces back exactly: ids, sightings, cover and hidden photos.
+- M4 (T) Every fit check's score is the same before and after a merge and after its Undo.
+- M5 (S) On the Simulator a merge empties the duplicate tile and the kept piece's photos include both.
+
+**4. The Lookbook look page (§1 item 12):**
+- K1 (T) Tapping a Lookbook row opens the look's page, not the bare photo viewer.
+- K2 (T) The page shows the photo neck-down (tap → the full viewer), the score in Archivo with its word, the date and occasion, the stored fixes in the card's words, the pieces as drawn tiles that open their piece pages, and "Show in chat".
+- K3 (T) A look with no photo shows its drawn pieces and never opens the empty viewer.
+- K4 (T) The page is read-only: no re-score, no occasion change, no re-check.
+- K5 (T) The score shown equals the stored check's score.
+- K6 (S) The page in light and dark on a demo look.
+
+**5. The re-check fix row (§2 nit):**
+- N1 (T) A caught fix's row on a re-check shows the same number, formatted the same way, as the pill ("+1.0", not "+1").
