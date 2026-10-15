@@ -697,7 +697,9 @@ def _proportions(o, sl, t):
     rewards = []
     if not blocked and full and T is not None:
         tuck = T.get("tucked") == "full"
-        short = T.get("length") in ("cropped", "at_belt")
+        short = T.get("length") in t.get("pr1_short", ("cropped", "at_belt"))
+        if short and t.get("pr1_ruler_veto") and T.get("length") == "at_belt" and T.get("_waist_ruler") == "low":
+            short = False                                              # what-if (#264, off): the phone sees a low waistline
         ribbed_ok = T.get("subcategory") not in RIBBED or (T.get("volume") or 3) >= 4 or (
             t["pr1_ribbed_loose"] and leg in R.LOOSE)                 # v8: a knit at the belt over a loose leg
         if O is None and _earns(T) and (tuck or (short and ribbed_ok)):

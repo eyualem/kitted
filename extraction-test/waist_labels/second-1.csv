@@ -1,0 +1,90 @@
+photo,waist,confidence,why
+mirror-m01,yes,low,boxy tee ends at the waistband
+mirror-m02,yes,high,shirt tucked into trousers
+mirror-m03,ns,low,photo too small to tell
+mirror-m04,ns,high,shorts
+mirror-m05,yes,high,shirt tucked with belt
+mirror-m06,yes,high,tee ends at waistband; waistband visible
+mirror-m07,no,low,sweater hem sits over waistband
+mirror-m08,yes,high,shirt tucked with belt; blazer open
+mirror-m09,yes,low,belt visible under jacket
+mirror-m10,yes,high,tee tucked with belt
+mirror-m11,yes,high,shirt tucked into suit trousers
+mirror-m12,yes,high,tank tucked; waistband visible
+oct7-ph1,yes,high,hoodie ends above belt
+oct7-ph2,yes,high,shirt tucked
+oct7-ph3,yes,high,shirt tucked; belt visible
+oct7-ph4,yes,low,tee ends at waistband; drawstring visible
+phone-0a864e,no,high,shirt untucked over fly
+phone-0d39d6,yes,high,hoodie ends above belt
+phone-1f1997,no,low,hoodie hem over waistband; dark on dark
+phone-3239a6,no,high,shirt untucked over fly
+phone-403ade,no,low,tee hangs over waistband; dark on dark
+phone-4c21bb,yes,high,shirt tucked into jeans
+phone-5a9049,no,high,shirt untucked to the hip
+phone-6b14db,no,high,tee under hoodie hangs over waistband
+phone-6f1aee,yes,high,tee ends at waistband; waistband visible
+phone-703a8b,yes,high,polo ends at belt
+phone-7de605,no,high,tee under hoodie hangs over waistband
+phone-7f14a4,no,high,shirt untucked to the hip
+phone-7f3c60,yes,high,shirt tucked; waistband visible
+phone-8ad378,yes,low,tee ends near the waistband; dark on dark
+phone-8bc29d,yes,low,inner top ends at waistband; open shirt
+phone-968016,no,low,sweatshirt hem sits over waistband
+phone-9a2e71,yes,high,polo ends above waistband
+phone-9d3ef4,no,low,sweater hem sits over waistband
+phone-a765e8,no,high,tee under hoodie hangs over waistband
+phone-af7e93,no,high,shirt under hoodie hangs over waistband
+phone-b0f0c8,yes,low,hoodie ends at a visible waistband
+phone-b17b22,yes,low,tee ends at waistband
+phone-d1967f,ns,low,buttoned blazer covers waist
+phone-d58b14,no,low,hoodie over waistband; dark on dark
+phone-d6559a,no,low,hoodie hem sits over waistband
+phone-d918c0,ns,low,closed jacket covers waist
+phone-e026de,yes,low,inner sweatshirt ends at waistband
+phone-e16ac6,yes,high,tee ends at waistband; waistband visible
+phone-e438d4,yes,low,tee ends at waistband under open jacket
+phone-ebe23f,ns,low,closed jacket covers waist
+phone-f07193,no,high,shirt untucked over fly
+phone-f4870b,yes,low,tee ends at waistband under open jacket
+phone-fb0b17,yes,low,tee ends at waistband under open jacket
+stock-p01-after_studio,ns,low,overshirt and hands hide the tee hem
+stock-p01-before_studio,yes,high,tee ends at waistband; waistband visible
+stock-p02-after_studio,no,high,sweatshirt band covers waistband
+stock-p02-before_studio,no,low,hoodie band sits over waistband
+stock-p03-after_street,ns,low,coat and dark on dark
+stock-p03-before_street,yes,high,belt visible under buttoned blazer
+stock-p04-after_street,yes,high,shirt tucked; waistband tabs visible
+stock-p04-before_street,ns,low,jacket and hands hide waist
+stock-p05-after_street,ns,high,shorts
+stock-p05-before_street,yes,high,shirt tucked into trousers
+stock-p06-after_studio,ns,low,seated; overshirt and arm hide waist
+stock-p06-before_studio,yes,low,tee ends at waistband; photo cut off
+stock-s01-before_studio,yes,high,shirt tucked with belt
+stock-s02-before_studio,ns,high,shorts
+stock-s03-before_studio,yes,high,sweater ends above belt
+stock-s04-before_studio,no,low,under layer hangs over waistband
+stock-s05-before_studio,no,low,hoodie band sits over waistband
+stock-s06-before_studio,no,high,shirt untucked over fly
+stock-s07-before_studio,yes,high,knit tucked into suit trousers
+stock-s08-before_studio,yes,low,cropped jacket; high waistband visible
+stock-s09-before_street,yes,high,shirt tucked with belt
+stock-s10-before_street,no,low,tee ends over waistband under jacket
+stock-s11-before_street,no,high,shirt untucked over waistband
+stock-s12-before_street,no,low,hoodie over waistband; dark
+stock-s13-before_street,no,high,shirt untucked over fly
+stock-s14-before_street,no,low,knit hem sits over waistband
+stock-s15-before_street,no,low,overshirt hangs past waistband
+stock-s16-before_street,ns,low,buttoned jacket and hands hide waist
+stock-s17-before_phone,ns,high,seated; photo cut off
+stock-s18-before_phone,ns,high,side view; jacket and arm hide waist
+stock-s19-before_phone,ns,low,seated; waist hidden
+stock-s20-before_phone,ns,low,hands and bat hide waist
+stock-s21-before_phone,ns,low,closed jacket covers waist
+stock-s22-before_phone,no,low,knit polo band sits over waistband
+stock-s23-before_mirror,no,low,tee hangs over waistband
+stock-s24-before_mirror,ns,high,shorts
+stock-s25-before_mirror,no,high,shirt untucked over waistband
+stock-s26-before_mirror,ns,low,camera and hands hide waist
+stock-s27-before_mirror,ns,high,shorts
+stock-s28-before_mirror,no,high,tee hangs over waistband

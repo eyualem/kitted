@@ -1,0 +1,46 @@
+photo,waist,confidence,why
+pin-051,no,low,sweater rib sits over the waistband
+pin-052,no,high,plaid shirt untucked over the jeans
+pin-053,no,low,inner layer hangs to the waistband
+pin-054,no,high,zipped hoodie covers the waistband
+pin-055,no,low,sweater hem covers the jeans top
+pin-056,yes,low,shirt looks tucked under the tie
+pin-057,no,low,printed shirt hangs over the waist
+pin-058,ns,high,shorts
+pin-059,ns,high,shorts
+pin-060,yes,low,shirt inside overalls; waistband visible
+pin-061,yes,high,denim shirt tucked; belt visible
+pin-062,no,low,sweater vest covers the waistband
+pin-063,no,low,untucked shirt ends on the waistband
+pin-064,no,low,knit vest hangs over the jeans top
+pin-065,yes,low,knit polo ends at the waistband
+pin-066,no,low,polo untucked over the waistband
+pin-067,no,high,dark undershirt hangs below the sweater
+pin-068,yes,low,sweatshirt ends at high trouser waist
+pin-069,yes,low,closed vest ends above the waistband
+pin-070,no,high,tee hangs over the pants
+pin-071,no,high,tee hangs over the jeans
+pin-072,no,high,henley hangs over the fly
+pin-073,no,low,sweatshirt band covers the jeans top
+pin-074,no,high,tee hangs over the joggers
+rd-001,no,low,boxy shirt covers the waistband
+rd-002,yes,high,shirt tucked; belt visible
+rd-003,yes,high,henley tucked; belt visible
+rd-004,yes,high,tee tucked; belt visible
+rd-005,ns,high,shorts
+rd-006,yes,high,dress shirt tucked; belt visible
+rd-007,yes,high,top tucked; belt visible under open coat
+rd-008,yes,high,top tucked; waistband tab visible
+rd-009,yes,high,denim shirt tucked; waistband visible
+rd-010,ns,high,closed jacket and hands hide the waist
+rd-011,ns,high,buttoned blazer hides the waist
+rd-012,yes,high,shirt tucked; belt visible
+rd-013,yes,high,polo tucked; belt visible
+rd-014,no,high,shirt untucked over the chinos
+rd-015,no,high,shirt untucked over the pants
+rd-016,no,low,camp shirt hangs over the waistband
+rd-017,yes,high,striped tee tucked; belt visible
+rd-018,no,high,shirt untucked over the jeans
+rd-019,yes,high,tee tucked at front; belt visible
+rd-020,yes,high,flannel tucked; belt visible
+rd-021,yes,low,shirt tucked into high trousers; belt visible

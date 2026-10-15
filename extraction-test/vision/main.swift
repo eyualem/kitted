@@ -12,6 +12,8 @@
 //       the fit ruler (FitRuler.swift): sleeve end, top hem, pant hem, shorts length, layers, from his own joints
 //   kmeasure legs <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
 //       the leg probe (LegTaper.swift): pant widths at thigh, knee, hem and the shoe, as garment-to-garment ratios
+//   kmeasure waist <photo.jpg> <out.json> [--overlay out.jpg] [--max px] [--crop share]
+//       the waist ruler (WaistRuler.swift): the visual waistline against a ruler from his joints, and the pants' shin/thigh width
 //   kmeasure hems <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
 //       the hem probe (HemProbe.swift): folds above the hem, fabric over the shoe, hem spread (M2)
 import CoreImage
@@ -247,6 +249,35 @@ case "hems":
     "\(leg["side"] ?? "?"): hem=\(leg["tHem"] ?? "-") gap=\(leg["gapT"] ?? "-") vis/w=\(leg["shoeVisToW"] ?? "-") folds=\(leg["folds"] ?? "-") fr=\(leg["foldRatio"] ?? "-") spread=\(leg["spread"] ?? "-") \(leg["why"] ?? "")"
   }
   print(hsum.joined(separator: " · "))
+
+case "waist":
+  // kmeasure waist <photo.jpg> <out.json> [--overlay out.jpg] [--max px] [--crop share]
+  //   The waist ruler (WaistRuler.swift, DECISIONS-LOG #264): the visual waistline the clothes make, against a ruler from his joints.
+  guard args.count >= 4 else { print("bad args"); exit(2) }
+  var wover: String?, wmax = Prep.workPx, wcrop: CGFloat = 0
+  var wi = 4
+  while wi < args.count {
+    switch args[wi] {
+    case "--overlay": wover = args[wi + 1]; wi += 2
+    case "--max": wmax = CGFloat(Double(args[wi + 1]) ?? 2048); wi += 2
+    case "--crop": wcrop = CGFloat(Double(args[wi + 1]) ?? 0); wi += 2
+    default: print("unknown option \(args[wi])"); exit(2)
+    }
+  }
+  guard let wdata = FileManager.default.contents(atPath: args[2]), var wimg = Prep.decode(wdata, maxPx: wmax).image else { print("unreadable"); exit(1) }
+  if wcrop > 0 {
+    let W = CGFloat(wimg.width), H = CGFloat(wimg.height)
+    guard let c = wimg.cropping(to: CGRect(x: W * wcrop, y: H * wcrop, width: W * (1 - 2 * wcrop), height: H * (1 - 2 * wcrop)).integral) else { exit(1) }
+    wimg = c
+  }
+  let wres = Waist.run(wimg)
+  var wout = wres.json
+  wout["photo"] = args[2]; wout["max"] = Int(wmax); wout["crop"] = Double(wcrop)
+  try writeJSON(wout, args[3])
+  if let o = wover, wres.rgb != nil, let hidden = Prep.hideRegions(wimg, wres.hide), let rgb = Measure.rgb(hidden, maxSide: Measure.statPx) {
+    Waist.overlay(rgb, wout, wres.geo, to: URL(fileURLWithPath: o))
+  }
+  print(((wout["waist"] as? [String: Any])?["value"] as? String) ?? (wout["status"] as? String ?? "?"))
 
 case "people":
   // kmeasure people [--out dir] <photo.jpg>...: who's in each fit photo (Oct 14, "Which one is you?"). One JSON line per
