@@ -1707,3 +1707,16 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Numbering:** #286–#288 were taken by parallel sessions the same afternoon; the spec and the code first said #286 and were renumbered to #289.
 
 288. **The §7 batch is built and passes its checks, written before the build** (`handoff/09-ui-review.md` §7 results). What he'll see: closet drawings in the color measured from his photos (on real checks; kept inside the color family), at most 3 "To confirm" questions at a time, Undo after a merge returning the open page, shoes drawn full size, an outline on white pieces in light mode, one flash control at a time in the camera, no blank frame while the camera opens, and the Closet "+" as a native pull-down menu. No new words, no score changes. Committed alone (another session's account work in the same folder was left out). Note: a merge's Undo took a few seconds on the Simulator.
+
+290. **The database rules and server jobs pass on the Firebase emulator (founder's OK, Oct 15: "Yes, install firebase-tools and Java (dev-only) and run the rule checks R1-R10 and the server jobs F1-F3").**
+    - **Installed (dev-only, on the Mac, never in the app):** `firebase-tools` 14.27 plus the test packages (`@firebase/rules-unit-testing`, `firebase`, `firebase-admin`, `vitest`) in `firebase/tests/`, and the jobs' own packages (`firebase-functions`, `firebase-admin`, `typescript`) in `firebase/functions/`. No Java install was needed: Temurin 25 was already on the Mac.
+    - **Result: 16 of 16 pass.** That's R1–R10 as 13 tests (`rules.test.ts`) and F1–F3 as 3 tests (`functions.test.ts`, written today; they were placeholders). The server jobs type-check.
+    - **Proof the tests bite:** with the newest-wins rule removed, R5 fails; with the photo delete removed from `deleteEverything`, F1 fails. Each refused write in the rule tests differs by one field from a write the same test shows is accepted, so it's refused for the intended reason.
+    - **Fixed while testing:**
+      - The two test files share one emulator and each clears it between tests, so they interfered when run in parallel. They now run one at a time (`tests/vitest.config.ts`).
+      - The purge jobs' core is now plain functions (`purgeTombstonesBefore`, `purgeInactiveBefore`) that the scheduled jobs call, so the tests run them directly.
+    - **Run it:** `npm --prefix firebase/tests run emulate` (about 10 s; starts and stops the auth, Firestore and Storage emulators on the demo project, no real Firebase).
+    - **Still open, needs the founder:**
+      - D1–D6, the checks on the phone: they need the Firebase project and the React Native Firebase packages.
+      - A1–A7, the App Store checks: before submitting the version with sync.
+    - **Numbering:** #288 was used twice on Oct 15 (this session's schema, then the UI §7 batch), and #289 is onboarding's, so this is #290.

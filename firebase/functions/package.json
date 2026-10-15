@@ -1,9 +1,11 @@
 {
   "name": "kitted-functions",
   "private": true,
-  "description": "Kitted's server jobs: account deletion and purges (handoff/11-firestore-schema.md §5). Not installed yet: needs the founder's OK for firebase-functions and firebase-admin.",
+  "description": "Kitted's server jobs: account deletion and purges (handoff/11-firestore-schema.md \u00a75). Checked by firebase/tests/functions.test.ts on the emulator.",
   "main": "lib/index.js",
-  "engines": { "node": "22" },
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },

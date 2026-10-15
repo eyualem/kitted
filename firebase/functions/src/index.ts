@@ -59,10 +59,10 @@ export const cleanUpDeletedUser = functionsV1.region(REGION).auth.user().onDelet
   logger.info('cleanUpDeletedUser', { uid: user.uid, files });
 });
 
-/** Tombstones older than 180 days. */
-export const purgeTombstones = onSchedule({ region: REGION, schedule: 'every day 04:00', timeZone: 'America/New_York' }, async () => {
+/** Deletes tombstones whose serverAt is before the cutoff, in every synced collection. Returns how many. */
+export async function purgeTombstonesBefore(cutoffMs: number): Promise<number> {
   const db = getFirestore();
-  const cutoff = Timestamp.fromMillis(Date.now() - TOMBSTONE_DAYS * DAY_MS);
+  const cutoff = Timestamp.fromMillis(cutoffMs);
   let removed = 0;
   for (const coll of SYNCED_COLLECTIONS) {
     for (;;) {
@@ -75,14 +75,25 @@ export const purgeTombstones = onSchedule({ region: REGION, schedule: 'every day
       if (page.size < 400) break;
     }
   }
+  return removed;
+}
+
+/** Deletes every account whose lastActiveAt is before the cutoff. Returns how many. */
+export async function purgeInactiveBefore(cutoffMs: number): Promise<number> {
+  const db = getFirestore();
+  const idle = await db.collection('users').where('lastActiveAt', '<', Timestamp.fromMillis(cutoffMs)).limit(200).get();
+  for (const d of idle.docs) await deleteEverything(d.id);
+  return idle.size;
+}
+
+/** Tombstones older than 180 days. */
+export const purgeTombstones = onSchedule({ region: REGION, schedule: 'every day 04:00', timeZone: 'America/New_York' }, async () => {
+  const removed = await purgeTombstonesBefore(Date.now() - TOMBSTONE_DAYS * DAY_MS);
   logger.info('purgeTombstones', { removed });
 });
 
 /** Accounts with no activity in 18 months. */
 export const purgeInactive = onSchedule({ region: REGION, schedule: 'every day 04:30', timeZone: 'America/New_York' }, async () => {
-  const db = getFirestore();
-  const cutoff = Timestamp.fromMillis(Date.now() - INACTIVE_DAYS * DAY_MS);
-  const idle = await db.collection('users').where('lastActiveAt', '<', cutoff).limit(200).get();
-  for (const d of idle.docs) await deleteEverything(d.id);
-  logger.info('purgeInactive', { deleted: idle.size });
+  const deleted = await purgeInactiveBefore(Date.now() - INACTIVE_DAYS * DAY_MS);
+  logger.info('purgeInactive', { deleted });
 });

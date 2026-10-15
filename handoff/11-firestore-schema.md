@@ -240,7 +240,7 @@ About 300 writes a month per active signed-in user, as 08 assumed. Within Firest
 
 ## 9. The acceptance checks (set before building)
 
-Each check has an ID; the test or step that proves it is named. **Status Oct 15:** groups S and E run in Jest today on the in-memory stand-in for Firestore. R and F are written in `firebase/tests/` and wait for the Firebase emulator (needs your OK to install `firebase-tools` and Java, dev-only). D and A need the real project and the phone.
+Each check has an ID; the test or step that proves it is named. **Status Oct 15 (#290):** S and E pass in Jest on the in-memory stand-in for Firestore (31 tests). R and F pass on the Firebase emulator (16 tests; `npm --prefix firebase/tests run emulate`). Each group fails when its code is broken on purpose. D and A need the real project and the phone.
 
 ### S · Schema and codec (Jest, `syncSchema.test.ts`)
 - **S1** Every synced table round-trips: row → doc → row is equal (minus the fields never sent), for a real row of each table from the seed fixtures.
@@ -318,10 +318,10 @@ Each check has an ID; the test or step that proves it is named. **Status Oct 15:
 | `firebase/firestore.rules`, `firebase/storage.rules` | The security rules |
 | `firebase/firestore.indexes.json` | The indexes and exemptions |
 | `firebase/functions/src/index.ts` | `deleteAccount`, `cleanUpDeletedUser`, `purgeTombstones`, `purgeInactive` |
-| `firebase/tests/` | The R and F checks for the emulator |
+| `firebase/tests/` | The R and F checks on the emulator (`npm --prefix firebase/tests run emulate`) |
 
 **Next, in order (each needs you first):**
-1. OK `firebase-tools` + Java (dev only) so R and F can run on the emulator.
+1. ~~OK `firebase-tools` + Java so R and F can run on the emulator.~~ Done Oct 15 (#290): 16 of 16 pass.
 2. The $99 program, then the Firebase project (E4, ~30 min; region `us-central1`).
 3. OK the React Native Firebase packages (app, auth, firestore, storage, app-check, functions).
 
