@@ -219,6 +219,8 @@ Founder: "proceed with the plan. make sure that you test the things that you imp
 - K4 (T) The page is read-only: no re-score, no occasion change, no re-check.
 - K5 (T) The score shown equals the stored check's score.
 - K6 (S) The page in light and dark on a demo look.
+- K7 (T) (added Oct 15, #282, before building) "Open the look" on a piece-page photo opens that look's page, not the chat card or the bare photo.
+- K8 (T) (added Oct 15, #282, before building) The read-only look page never shows a line that asks him to do something the page can't do (e.g. "Change the occasion.").
 
 **5. The re-check fix row (§2 nit):**
 - N1 (T) A caught fix's row on a re-check shows the same number, formatted the same way, as the pill ("+1.0", not "+1").
