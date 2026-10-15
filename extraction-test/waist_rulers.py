@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Which body ruler places the clothes' waistline best? (DECISIONS-LOG #270). No labels needed for the first two tests.
+"""Which body ruler places the clothes' waistline best? (DECISIONS-LOG #269). No labels needed for the first two tests.
 
   /usr/bin/python3 waist_rulers.py --out results/waist2            (runs every photo at pitch 0, +10°, −10°; then the report)
   /usr/bin/python3 waist_rulers.py --report results/waist2

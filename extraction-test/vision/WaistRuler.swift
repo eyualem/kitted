@@ -210,7 +210,7 @@ enum Waist {
       rows.append(Row(s: s, n: n, on: Double(n) / Double(max(1, px.total)), top: n > 0 ? Double(t) / Double(n) : 0,
                       bot: n > 0 ? Double(b) / Double(n) : 0, edge: px.dLs.isEmpty ? 0 : Ruler.median(px.dLs)))
     }
-    // The truth shoot (#270): a strip of blue painter's tape on his shirt at navel height. Found by its color only
+    // The truth shoot (#269): a strip of blue painter's tape on his shirt at navel height. Found by its color only
     // (blue well above red and green), in the torso strip; its middle row is the true navel line.
     if ProcessInfo.processInfo.environment["WAIST_TAPE"] != nil {
       var tapeRows: [Double] = []
@@ -314,7 +314,7 @@ enum Waist {
     if let g {
       let w = measure(ctx, joints, g: g)
       json["waist"] = w
-      // The body rulers (#270): the same clothes edges read against shoulders/knees/ankles and Apple's 3D pose.
+      // The body rulers (#269): the same clothes edges read against shoulders/knees/ankles and Apple's 3D pose.
       let p3 = ProcessInfo.processInfo.environment["WAIST_NO3D"] == nil ? BodyRuler.pose3D(img, main: located.main, statW: rgb.w, statH: rgb.h) : nil
       var edges: [String: Double] = [:]
       for k in ["top_end_s", "pants_start_s", "visual_s", "tape_s"] { if let v = w[k] as? Double { edges[k] = v } }

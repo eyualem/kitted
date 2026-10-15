@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MediaPipe's pose as two more body rulers for the waist test (DECISIONS-LOG #270). Run with the sandboxed env:
+"""MediaPipe's pose as two more body rulers for the waist test (DECISIONS-LOG #269). Run with the sandboxed env:
 
   extraction-test/.venv-mp/bin/python -I extraction-test/waist_mediapipe.py results/waist2
 

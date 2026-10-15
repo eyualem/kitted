@@ -669,7 +669,7 @@ def _proportions(o, sl, t):
     if (t.get("pf2_measured") and T is not None and O is None and T.get("tucked") in (None, "none", "na")
             and T.get("_len_measured") == "below_crotch"):
         p.add(-t["pf2_measured"], "the top runs long, past the hip: it shortens the legs", "PF2m_long_top_measured")
-        faults += t["pf2_measured"]                                   # what-if (#270, off): the phone measured it
+        faults += t["pf2_measured"]                                   # what-if (#269, off): the phone measured it
 
     # ---- tips: real rules whose readings haven't passed (they never move the number)
     if T is not None and O is None and T.get("tucked") in (None, "none", "na") and T.get("length") == "below_crotch":

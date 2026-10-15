@@ -1,4 +1,4 @@
-// Body rulers for the waist test (DECISIONS-LOG #270, Mac harness only). Each ruler maps a position down the body
+// Body rulers for the waist test (DECISIONS-LOG #269, Mac harness only). Each ruler maps a position down the body
 // axis in the photo to a height on the body (cm, on the ANSUR II men's mean scale), correcting for the camera where
 // it can, so a clothes edge can be placed against where the waist is on an average body of his proportions.
 //

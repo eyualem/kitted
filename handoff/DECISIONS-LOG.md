@@ -1417,7 +1417,7 @@ Contradictions settled and decisions changed during the build. Newest last.
       - (b) the free tier and the Pro caps, after (a). Everything on Flash-Lite would be ~0.48¢ a check and ~0.10¢ a question: break-even at 2% paying, so it still needs better conversion or a lighter free tier.
 
 ## Oct 15 · The waistline from the body, round 2 (founder: "there must be a way to measure a person's body and estimate where their waistline is … put some effort into this")
-270. **A body ruler good to ±2–3 cm, and the measured waistline carries signal the AI misses. It revises #266(a): keep the waistline measure alive; the tape shoot decides it. Nothing in the app changed** (report: `rubric/research/notes/waistline.md`, top section).
+269. **A body ruler good to ±2–3 cm, and the measured waistline carries signal the AI misses. It revises #266(a): keep the waistline measure alive; the tape shoot decides it. Nothing in the app changed** (report: `rubric/research/notes/waistline.md`, top section).
     - **Downloads (founder OK'd, Oct 15):**
       - ANSUR II men (public domain CSV, `inputs/ansur2/`, git-ignored);
       - MediaPipe Pose Landmarker heavy (Apache 2.0; venv `extraction-test/.venv-mp`, 331 MB; model `inputs/mediapipe/`).

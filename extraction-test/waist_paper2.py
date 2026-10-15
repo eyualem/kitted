@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The measured waistline in the score, on paper (DECISIONS-LOG #270). No app change, no API calls.
+"""The measured waistline in the score, on paper (DECISIONS-LOG #269). No app change, no API calls.
 
 The phone's body ruler (sk_linear: Apple Vision's 2D shoulders and knees with the ANSUR II proportions, results/waist2)
 gives t, where the clothes' visual waistline sits between the shoulders (0) and the knees (1); the navel is t 0.40,

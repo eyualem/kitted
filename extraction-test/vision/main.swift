@@ -35,7 +35,7 @@ func writeJSON(_ obj: Any, _ path: String) throws {
 
 /// The photo as the same camera would have taken it pitched by `degrees` (positive = tilted down), turning about its
 /// own center: exactly a homography K·R·K⁻¹ (a phone's main lens, ~26 mm equivalent, ≈ 69° across the long side).
-/// Waist test only (#270): a ruler that corrects for the camera should read the same clothes edge at the same t.
+/// Waist test only (#269): a ruler that corrects for the camera should read the same clothes edge at the same t.
 func tiltCamera(_ img: CGImage, degrees: Double) -> CGImage? {
   let W = Double(img.width), H = Double(img.height)
   let f = max(W, H) / 2 / tan(34.5 * .pi / 180)

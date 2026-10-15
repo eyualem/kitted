@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The tape shoot (DECISIONS-LOG #270): how far each body ruler's navel line is from his real navel.
+"""The tape shoot (DECISIONS-LOG #269): how far each body ruler's navel line is from his real navel.
 
 He wears a plain shirt that isn't blue and dark pants, with a strip of blue painter's tape straight across the shirt
 at navel height, and takes ~12 photos (mirror at face / chest / waist height and tilted, propped low / waist / chest /

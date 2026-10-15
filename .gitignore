@@ -63,7 +63,7 @@ extraction-test/results/gold-tune/dump_*.txt
 extraction-test/results/creators1/images/
 extraction-test/results/hem3/crops/
 
-# MediaPipe sandbox for the waist ruler test (#270)
+# MediaPipe sandbox for the waist ruler test (#269)
 extraction-test/.venv-mp/
 inputs/mediapipe/
 inputs/ansur2/

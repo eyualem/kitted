@@ -1,6 +1,6 @@
 # The waistline from the body: does a body ruler beat the AI at "the waist shows"?
 
-*Round 2 (Oct 15, #270) is first; round 1 (Oct 14, #264) follows.*
+*Round 2 (Oct 15, #269) is first; round 1 (Oct 14, #264) follows.*
 
 *Oct 14, 2026. Claude. DECISIONS-LOG #264. Mac harness only, no app change, no API calls. Code:
 `extraction-test/vision/WaistRuler.swift` (`kmeasure waist`), runner `extraction-test/waist_test.py`, paper test
@@ -8,7 +8,7 @@
 overlays and face-hidden copies are git-ignored). Research: `rubric/research/notes/waist-research.md`. Labels and
 their guides: `extraction-test/waist_labels/`.*
 
-## Round 2 (Oct 15, #270): a better body ruler, and the waistline his idea is about
+## Round 2 (Oct 15, #269): a better body ruler, and the waistline his idea is about
 
 **Short version:**
 - **The body side now works.** Across 4,082 men, shoulders and knees alone predict the navel to ±2.1 cm (1 SD), as well as the true hip joint does. In the photos, Apple's and Google's trackers place the same clothes edge to within ~2 cm of each other.
