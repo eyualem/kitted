@@ -1,0 +1,403 @@
+[
+ {
+  "photo": "ig-063",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-063.full.jpg",
+  "readings": {
+   "A": {
+    "top": "black graphic tee",
+    "bottom": "olive cargos",
+    "footwear": "brown chunky sneaker"
+   },
+   "B": {
+    "top": "black graphic tee",
+    "bottom": "olive shorts",
+    "footwear": "brown work boot"
+   },
+   "C": {
+    "top": "black graphic tee",
+    "bottom": "olive cargos",
+    "footwear": "brown work boot"
+   },
+   "D": {
+    "top": "black graphic tee",
+    "bottom": "olive cargos",
+    "footwear": "brown chunky sneaker"
+   }
+  }
+ },
+ {
+  "photo": "ig-101",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-101.full.jpg",
+  "readings": {
+   "A": {
+    "top": "light grey tank top",
+    "bottom": "khaki beige chinos",
+    "footwear": "navy canvas sneaker"
+   },
+   "B": {
+    "top": "light grey tank top",
+    "bottom": "khaki beige shorts",
+    "footwear": "black canvas sneaker"
+   },
+   "C": {
+    "top": "light grey tank top",
+    "bottom": "khaki beige shorts",
+    "footwear": "navy canvas sneaker"
+   },
+   "D": {
+    "top": "light grey tank top",
+    "bottom": "khaki beige shorts",
+    "footwear": "black canvas sneaker"
+   }
+  }
+ },
+ {
+  "photo": "ig-106",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-106.full.jpg",
+  "readings": {
+   "A": {
+    "top": "light blue dress shirt",
+    "bottom": "black jeans",
+    "footwear": "black dress shoe"
+   },
+   "B": {
+    "top": "light blue dress shirt",
+    "bottom": "charcoal trousers",
+    "footwear": "black dress shoe"
+   },
+   "C": {
+    "top": "light blue oxford shirt",
+    "bottom": "charcoal trousers",
+    "footwear": "black derby"
+   },
+   "D": {
+    "top": "light blue oxford shirt",
+    "bottom": "black jeans",
+    "footwear": "black dress shoe"
+   }
+  }
+ },
+ {
+  "photo": "ig-040",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-040.full.jpg",
+  "readings": {
+   "A": {
+    "top": "off white cream tee",
+    "outerwear": "denim dark denim jacket",
+    "bottom": "denim dark jeans",
+    "footwear": "black loafer"
+   },
+   "B": {
+    "top": "off white cream sweater",
+    "outerwear": "navy denim jacket",
+    "bottom": "denim dark jeans",
+    "footwear": "black slides sandals"
+   },
+   "C": {
+    "top": "off white cream tee",
+    "outerwear": "denim dark denim jacket",
+    "bottom": "denim dark jeans",
+    "footwear": "black other"
+   },
+   "D": {
+    "top": "off white cream tee",
+    "outerwear": "denim dark denim jacket",
+    "bottom": "denim dark jeans",
+    "footwear": "black loafer"
+   }
+  }
+ },
+ {
+  "photo": "ig-047",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-047.full.jpg",
+  "readings": {
+   "A": {
+    "top": "off white cream tee",
+    "outerwear": "denim mid chore coat",
+    "bottom": "denim dark jeans"
+   },
+   "B": {
+    "top": "white tee",
+    "outerwear": "denim mid chore coat",
+    "bottom": "denim dark jeans"
+   },
+   "C": {
+    "top": "white tee",
+    "outerwear": "blue chore coat",
+    "bottom": "denim dark jeans"
+   },
+   "D": {
+    "outerwear": "blue chore coat",
+    "bottom": "denim dark jeans"
+   }
+  }
+ },
+ {
+  "photo": "ig-107",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-107.full.jpg",
+  "readings": {
+   "A": {
+    "top": "black sweatshirt",
+    "bottom": "denim light jeans",
+    "footwear": "black loafer"
+   },
+   "B": {
+    "top": "black sweater",
+    "bottom": "denim light jeans",
+    "footwear": "black loafer"
+   },
+   "C": {
+    "top": "black sweatshirt",
+    "bottom": "denim light jeans",
+    "footwear": "black loafer"
+   },
+   "D": {
+    "top": "black sweater",
+    "bottom": "denim light jeans",
+    "footwear": "black loafer"
+   }
+  }
+ },
+ {
+  "photo": "ig-089",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-089.full.jpg",
+  "readings": {
+   "A": {
+    "top": "blue sweater",
+    "bottom": "light grey sweatpants",
+    "footwear": "white white leather sneaker"
+   },
+   "B": {
+    "top": "blue sweater",
+    "bottom": "light grey joggers",
+    "footwear": "white canvas sneaker"
+   },
+   "C": {
+    "top": "blue sweater",
+    "bottom": "grey sweatpants",
+    "footwear": "white white leather sneaker"
+   },
+   "D": {
+    "top": "blue sweater",
+    "bottom": "grey sweatpants",
+    "footwear": "white white leather sneaker"
+   }
+  }
+ },
+ {
+  "photo": "ig-082",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-082.full.jpg",
+  "readings": {
+   "A": {
+    "top": "white graphic tee",
+    "outerwear": "red overshirt",
+    "bottom": "black jeans",
+    "footwear": "white low profile sneaker"
+   },
+   "B": {
+    "top": "multicolor graphic tee",
+    "outerwear": "multicolor other",
+    "bottom": "charcoal jeans",
+    "footwear": "black canvas sneaker"
+   },
+   "C": {
+    "top": "white graphic tee",
+    "outerwear": "red flannel shirt",
+    "bottom": "black jeans",
+    "footwear": "white canvas sneaker"
+   },
+   "D": {
+    "top": "white graphic tee",
+    "outerwear": "red overshirt",
+    "bottom": "black jeans",
+    "footwear": "black canvas sneaker"
+   }
+  }
+ },
+ {
+  "photo": "pin-073",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-073.full.jpg",
+  "readings": {
+   "A": {
+    "top": "multicolor sweater",
+    "outerwear": "multicolor bomber",
+    "bottom": "denim mid jeans",
+    "footwear": "blue low profile sneaker"
+   },
+   "B": {
+    "top": "multicolor tee",
+    "outerwear": "black bomber",
+    "bottom": "blue jeans",
+    "footwear": "blue canvas sneaker"
+   },
+   "C": {
+    "top": "multicolor sweater",
+    "outerwear": "navy bomber",
+    "bottom": "blue jeans",
+    "footwear": "blue canvas sneaker"
+   },
+   "D": {
+    "top": "off white cream sweatshirt",
+    "outerwear": "navy bomber",
+    "bottom": "blue jeans",
+    "footwear": "blue canvas sneaker"
+   }
+  }
+ },
+ {
+  "photo": "pin-016",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-016.full.jpg",
+  "readings": {
+   "A": {
+    "top": "black tee",
+    "bottom": "denim mid jeans",
+    "footwear": "white white leather sneaker"
+   },
+   "B": {
+    "top": "green tee",
+    "bottom": "denim mid jeans",
+    "footwear": "white white leather sneaker"
+   },
+   "C": {
+    "top": "black tee",
+    "bottom": "denim mid jeans",
+    "footwear": "white white leather sneaker"
+   },
+   "D": {
+    "top": "black tee",
+    "bottom": "denim mid jeans",
+    "footwear": "white low profile sneaker"
+   }
+  }
+ },
+ {
+  "photo": "ig-098",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-098.full.jpg",
+  "readings": {
+   "A": {
+    "top": "white dress shirt",
+    "bottom": "denim dark jeans"
+   },
+   "B": {
+    "top": "white oxford shirt",
+    "bottom": "denim mid jeans"
+   },
+   "C": {
+    "top": "white oxford shirt",
+    "bottom": "denim dark jeans"
+   },
+   "D": {
+    "top": "white dress shirt",
+    "bottom": "denim dark jeans"
+   }
+  }
+ },
+ {
+  "photo": "pin-042",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-042.full.jpg",
+  "readings": {
+   "A": {
+    "top": "light blue graphic tee",
+    "outerwear": "burgundy cardigan",
+    "bottom": "olive cargos",
+    "footwear": "white low profile sneaker"
+   },
+   "B": {
+    "top": "light blue graphic tee",
+    "outerwear": "burgundy cardigan",
+    "bottom": "olive cargos",
+    "footwear": "white low profile sneaker"
+   },
+   "C": {
+    "top": "light blue graphic tee",
+    "outerwear": "burgundy cardigan",
+    "bottom": "olive cargos",
+    "footwear": "white low profile sneaker"
+   },
+   "D": {
+    "top": "light blue graphic tee",
+    "outerwear": "burgundy cardigan",
+    "bottom": "olive cargos",
+    "footwear": "white low profile sneaker"
+   }
+  }
+ },
+ {
+  "photo": "ig-036",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-036.full.jpg",
+  "readings": {
+   "A": {
+    "top": "white camp collar shirt",
+    "bottom": "denim mid jeans",
+    "footwear": "black loafer"
+   },
+   "B": {
+    "top": "white oxford shirt",
+    "bottom": "denim mid jeans",
+    "footwear": "black loafer"
+   },
+   "C": {
+    "top": "light grey oxford shirt",
+    "bottom": "denim mid jeans",
+    "footwear": "black loafer"
+   },
+   "D": {
+    "top": "off white cream oxford shirt",
+    "bottom": "denim mid jeans",
+    "footwear": "black loafer"
+   }
+  }
+ },
+ {
+  "photo": "ig-024",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-024.full.jpg",
+  "readings": {
+   "A": {
+    "top": "green flannel shirt",
+    "bottom": "black trousers",
+    "footwear": "black loafer"
+   },
+   "B": {
+    "top": "green camp collar shirt",
+    "bottom": "black trousers",
+    "footwear": "black loafer"
+   },
+   "C": {
+    "top": "green flannel shirt",
+    "bottom": "black trousers",
+    "footwear": "black dress shoe"
+   },
+   "D": {
+    "top": "green oxford shirt",
+    "bottom": "black trousers",
+    "footwear": "black derby"
+   }
+  }
+ },
+ {
+  "photo": "pin-029",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-029.full.jpg",
+  "readings": {
+   "A": {
+    "outerwear": "olive field jacket",
+    "bottom": "denim mid jeans",
+    "footwear": "brown chelsea boot"
+   },
+   "B": {
+    "outerwear": "olive field jacket",
+    "bottom": "denim mid jeans",
+    "footwear": "brown other"
+   },
+   "C": {
+    "outerwear": "olive field jacket",
+    "bottom": "denim mid jeans",
+    "footwear": "brown work boot"
+   },
+   "D": {
+    "outerwear": "olive field jacket",
+    "bottom": "denim mid jeans",
+    "footwear": "brown work boot"
+   }
+  }
+ }
+]

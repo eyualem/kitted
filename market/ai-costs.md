@@ -83,3 +83,8 @@ The cheap Lunas score outfits as well as Gemini. So the model lever is real mone
 | **The free tier** (1 check + 1 re-check + 5 questions a day) | — | — | Founder (product and money) |
 
 **Everything combined** (scoring and second look on Flash-Lite, the closet call on Flash-Lite Flex, the chat on Flash-Lite trimmed) is about **0.48¢ a check and 0.10¢ a question**: per 100 users ≈ $6 a month of AI against ≈ $6 of revenue. That's break-even only if the cheaper model reads as well, and it still needs better than 2% paying, or a lighter free tier, to make money.
+
+**Anthropic, tested Oct 15 (#283):**
+- **Claude Sonnet 5.5** names clothes best in the blind check (83% vs Gemini's 79% that round), at 1.73¢ a read: ~3× Gemini now, ~1.5× from Jan 2027.
+- **Claude Haiku 5.5** (0.086¢) names clothes worst (64%) and matches the judges worst. Out.
+- Claude counts the photos at ~5,400 tokens, against ~3,300 for Gemini and OpenAI.

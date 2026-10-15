@@ -94,6 +94,9 @@ def read_one(arm, pid, cache):
     prompt = Z.prompt_for(False) + {1: "", 2: "\n" + Z.ZOOM_LINE_BODY, 3: "\n" + Z.ZOOM_LINE}[len(imgs)]
     if arm in OA:
         return O.call(prompt, imgs, model=OA[arm], effort="none")
+    if arm in ("haiku55", "sonnet55"):         # #283: Claude Haiku 5.5 / Sonnet 5.5, thinking off (no temperature control)
+        import anthropic_read as A
+        return A.call(prompt, imgs, model="claude-haiku-5-5" if arm == "haiku55" else "claude-sonnet-5-5")
     if arm.startswith("luna"):
         return O.call(prompt, imgs, model="gpt-6-luna", effort="low" if arm == "luna_low" else "none")
     if arm == "fl35":

@@ -1,0 +1,217 @@
+photo,slot,reading,type,color,notes
+pin-060,top,A,close,close,"striped long-sleeve tee, grey and white stripes"
+pin-060,top,B,close,close,striped long-sleeve read as plain white tee
+pin-060,top,C,wrong,close,other named for a striped long-sleeve tee
+pin-060,top,D,close,close,stripes read as multicolor
+pin-060,bottom,A,close,right,denim overalls read as jeans
+pin-060,bottom,B,close,right,denim overalls read as jeans
+pin-060,bottom,C,missing,,overalls not named
+pin-060,bottom,D,close,right,denim overalls read as jeans
+pin-060,footwear,A,right,right,brown lace-up derby
+pin-060,footwear,B,right,close,brown read as tan
+pin-060,footwear,C,wrong,right,low derby not a boot
+pin-060,footwear,D,right,right,
+pin-053,top,A,right,right,light grey zip hoodie
+pin-053,top,B,wrong,right,hoodie read as flannel shirt
+pin-053,top,C,right,right,
+pin-053,top,D,right,right,
+pin-053,outerwear,A,right,right,khaki field jacket
+pin-053,outerwear,B,right,right,
+pin-053,outerwear,C,right,close,khaki read as brown
+pin-053,outerwear,D,right,close,khaki read as brown
+pin-053,bottom,A,right,right,light wash cargo jeans
+pin-053,bottom,B,right,right,
+pin-053,bottom,C,right,close,light wash read as mid
+pin-053,bottom,D,right,close,light wash read as mid
+pin-053,footwear,A,right,right,blue running shoes
+pin-053,footwear,B,right,right,
+pin-053,footwear,C,right,right,
+pin-053,footwear,D,right,right,
+pin-047,top,A,right,right,light grey tee
+pin-047,top,B,right,right,
+pin-047,top,C,right,right,
+pin-047,top,D,right,right,
+pin-047,outerwear,A,right,close,"yellow-tan plaid flannel, worn open"
+pin-047,outerwear,B,right,close,yellow-tan plaid
+pin-047,outerwear,C,right,close,yellow-tan plaid
+pin-047,outerwear,D,right,close,yellow-tan plaid
+pin-047,bottom,A,right,right,mid wash wide jeans
+pin-047,bottom,B,right,right,
+pin-047,bottom,C,right,right,
+pin-047,bottom,D,right,right,
+pin-047,footwear,A,right,right,dark brown moc-toe work boots
+pin-047,footwear,B,right,right,
+pin-047,footwear,C,right,right,
+pin-047,footwear,D,right,right,
+pin-024,top,A,close,right,white henley read as tee
+pin-024,top,B,close,right,white henley read as dress shirt
+pin-024,top,C,close,right,white henley read as tee
+pin-024,top,D,close,right,other named for a white henley
+pin-024,outerwear,A,wrong,close,plaid bathrobe read as overcoat
+pin-024,outerwear,B,right,close,"bathrobe, other fits; navy and grey plaid"
+pin-024,outerwear,C,close,close,fleece bathrobe read as fleece
+pin-024,outerwear,D,wrong,close,plaid bathrobe read as overcoat
+pin-024,bottom,A,right,right,grey shorts
+pin-024,bottom,B,right,right,
+pin-024,bottom,C,right,right,
+pin-024,bottom,D,right,right,
+pin-024,footwear,A,close,close,tiger-paw novelty slippers read as slides
+pin-024,footwear,B,close,close,tiger-paw novelty slippers read as slides
+pin-024,footwear,C,close,close,tiger-paw novelty slippers read as slides
+pin-024,footwear,D,right,close,"novelty slippers, other fits"
+ig-004,top,A,right,right,red sweater
+ig-004,top,B,right,right,
+ig-004,top,C,right,right,
+ig-004,top,D,right,right,
+ig-004,outerwear,A,right,right,sky blue zip knit cardigan
+ig-004,outerwear,B,right,right,
+ig-004,outerwear,C,right,right,
+ig-004,outerwear,D,right,right,
+ig-004,bottom,A,right,close,black pleated trousers read as charcoal
+ig-004,bottom,B,right,right,
+ig-004,bottom,C,right,right,
+ig-004,bottom,D,right,right,
+ig-004,footwear,A,right,right,black loafers
+ig-004,footwear,B,right,right,
+ig-004,footwear,C,right,right,
+ig-004,footwear,D,right,right,
+pin-056,top,A,close,wrong,pale yellow-green shirt with tie; blue is the inner layer
+pin-056,top,B,right,close,pale yellow-green dress shirt
+pin-056,top,C,right,close,pale yellow-green dress shirt
+pin-056,top,D,right,right,pale yellow dress shirt
+pin-056,outerwear,A,right,right,olive waxed chore coat
+pin-056,outerwear,B,wrong,wrong,names the blue-grey inner layer not the chore coat
+pin-056,outerwear,C,right,right,
+pin-056,outerwear,D,wrong,wrong,chore coat read as grey other
+pin-056,bottom,A,right,close,dark brown pinstripe trousers
+pin-056,bottom,B,right,close,dark brown pinstripe trousers
+pin-056,bottom,C,close,close,pinstripe trousers read as suit trousers
+pin-056,bottom,D,right,close,dark brown pinstripe trousers
+pin-056,footwear,A,right,close,oxblood chunky derby
+pin-056,footwear,B,right,right,
+pin-056,footwear,C,close,right,chunky derby read as boot
+pin-056,footwear,D,close,close,chunky derby read as dress shoe
+pin-025,top,A,right,right,blue cable-knit sweater
+pin-025,top,B,close,right,only a white hem shows under the sweater
+pin-025,top,C,right,right,
+pin-025,top,D,right,close,mid blue read as navy
+pin-025,outerwear,A,right,,"no outer layer, none named"
+pin-025,outerwear,B,right,right,sweater filed as the layer over a white shirt
+pin-025,outerwear,C,right,,"no outer layer, none named"
+pin-025,outerwear,D,right,,"no outer layer, none named"
+pin-025,bottom,A,close,right,charcoal five-pocket cords read as trousers
+pin-025,bottom,B,close,right,charcoal five-pocket cords read as jeans
+pin-025,bottom,C,close,right,charcoal five-pocket cords read as jeans
+pin-025,bottom,D,close,right,charcoal five-pocket cords read as trousers
+pin-025,footwear,A,right,right,brown lace-up leather boots
+pin-025,footwear,B,right,right,
+pin-025,footwear,C,right,right,
+pin-025,footwear,D,right,right,
+pin-054,top,A,right,close,white graphic tee read as light grey
+pin-054,top,B,right,right,
+pin-054,top,C,right,right,
+pin-054,top,D,right,right,
+pin-054,outerwear,A,right,right,black zip hoodie
+pin-054,outerwear,B,right,right,
+pin-054,outerwear,C,right,right,
+pin-054,outerwear,D,right,right,
+pin-054,bottom,A,right,right,camo cargos
+pin-054,bottom,B,right,right,
+pin-054,bottom,C,right,right,
+pin-054,bottom,D,right,right,
+pin-054,footwear,A,right,right,black sneakers with white sole
+pin-054,footwear,B,right,right,
+pin-054,footwear,C,close,right,low black trainers read as basketball sneaker
+pin-054,footwear,D,right,right,
+ig-075,top,A,right,right,tan sherpa fleece pullover
+ig-075,top,B,close,right,sherpa fleece read as sweater
+ig-075,top,C,close,right,sherpa fleece read as sweatshirt
+ig-075,top,D,right,right,
+ig-075,bottom,A,right,right,washed black wide jeans
+ig-075,bottom,B,right,close,washed black read as dark denim
+ig-075,bottom,C,right,right,
+ig-075,bottom,D,right,right,
+ig-075,footwear,A,wrong,right,other named for black boots
+ig-075,footwear,B,wrong,right,black leather boots not sneakers
+ig-075,footwear,C,right,right,black boots
+ig-075,footwear,D,right,right,
+pin-033,top,A,close,close,long-sleeve paisley button-up read as camp collar; mostly blue
+pin-033,top,B,right,right,multicolor paisley dress shirt
+pin-033,top,C,right,right,
+pin-033,top,D,close,close,long-sleeve paisley button-up read as camp collar; navy base
+pin-033,bottom,A,right,right,dark denim jeans
+pin-033,bottom,B,right,right,
+pin-033,bottom,C,right,right,
+pin-033,bottom,D,right,right,
+pin-033,footwear,A,right,right,black slip-on loafers
+pin-033,footwear,B,right,right,
+pin-033,footwear,C,right,right,
+pin-033,footwear,D,right,right,
+pin-013,top,A,right,right,black graphic tee
+pin-013,top,B,right,right,
+pin-013,top,C,right,right,
+pin-013,top,D,right,right,
+pin-013,bottom,A,right,right,dark distressed biker jeans
+pin-013,bottom,B,right,right,
+pin-013,bottom,C,right,right,
+pin-013,bottom,D,right,right,
+pin-013,footwear,A,right,right,red basketball sneakers
+pin-013,footwear,B,wrong,right,basketball sneakers read as retro runner
+pin-013,footwear,C,right,right,
+pin-013,footwear,D,right,right,
+pin-050,top,A,right,right,lavender V-neck sweater over plaid shirt
+pin-050,top,B,right,right,
+pin-050,top,C,wrong,right,V-neck sweater read as knit polo
+pin-050,top,D,wrong,wrong,names the plaid collar underneath not the sweater
+pin-050,bottom,A,right,right,dark raw denim jeans
+pin-050,bottom,B,right,right,
+pin-050,bottom,C,right,right,
+pin-050,bottom,D,right,right,
+pin-050,footwear,A,right,right,tan suede chukka boots
+pin-050,footwear,B,close,right,chukka read as derby
+pin-050,footwear,C,right,right,
+pin-050,footwear,D,right,right,
+ig-085,top,A,missing,,zip hoodie filed under outerwear instead
+ig-085,top,B,right,right,charcoal cropped zip hoodie
+ig-085,top,C,right,right,
+ig-085,top,D,right,right,
+ig-085,outerwear,A,close,right,the zip hoodie is the only top layer
+ig-085,outerwear,B,right,,"no outer layer, none named"
+ig-085,outerwear,C,right,,"no outer layer, none named"
+ig-085,outerwear,D,right,,"no outer layer, none named"
+ig-085,bottom,A,right,close,washed black-grey baggy jeans
+ig-085,bottom,B,right,right,
+ig-085,bottom,C,right,right,
+ig-085,bottom,D,right,right,
+ig-085,footwear,A,wrong,right,look like black boots not sneakers
+ig-085,footwear,B,wrong,right,look like black boots not sneakers
+ig-085,footwear,C,right,right,black lace-up boots
+ig-085,footwear,D,wrong,right,look like black boots not sneakers
+ig-034,top,A,right,right,burgundy tee
+ig-034,top,B,right,right,
+ig-034,top,C,right,right,
+ig-034,top,D,right,right,
+ig-034,bottom,A,right,right,cream wide trousers
+ig-034,bottom,B,right,right,
+ig-034,bottom,C,right,right,
+ig-034,bottom,D,close,right,trousers read as chinos
+ig-034,footwear,A,right,right,black loafers
+ig-034,footwear,B,right,right,
+ig-034,footwear,C,right,right,
+ig-034,footwear,D,right,right,
+ig-078,top,A,right,right,blue plaid flannel shirt worn as the only top
+ig-078,top,B,missing,,shirt filed under outerwear instead
+ig-078,top,C,right,right,
+ig-078,top,D,right,right,
+ig-078,outerwear,A,right,,"no separate outer layer, none named"
+ig-078,outerwear,B,close,right,padded flannel read as overshirt layer
+ig-078,outerwear,C,right,,"no separate outer layer, none named"
+ig-078,outerwear,D,right,,"no separate outer layer, none named"
+ig-078,bottom,A,right,right,raw dark denim baggy jeans
+ig-078,bottom,B,right,right,
+ig-078,bottom,C,right,right,
+ig-078,bottom,D,right,right,
+ig-078,footwear,A,right,right,wheat work boots
+ig-078,footwear,B,right,right,
+ig-078,footwear,C,right,right,
+ig-078,footwear,D,right,right,

@@ -1634,3 +1634,21 @@ Contradictions settled and decisions changed during the build. Newest last.
 281. **Check L5 of #280 was wrong, and is amended before its fix.** L5 said opening the app after 4 am scores a held photo by itself. Ruling 27 (`brainstorm/13_setup-decisions.md`) and spec S17h say a held photo is never auto-sent: after 4 am the app asks "Ready to score last night's photo?" (Score it / Not this one) and one tap scores it. The ruling ranks above a test plan, and it is a privacy line (nothing leaves the phone without his tap). The limit-card build followed L5 as written; its agent flagged the clash. L5 is struck through in `handoff/09-ui-review.md` §6 with the reason, and L5′ (the ruling's behavior) was written and committed before the change, per #280.
 
 282. **Two look-page checks added before building (K7, K8 in `handoff/09-ui-review.md` §6),** from the look-page build's notes: the piece page's "Open the look" should open the new look page, and the read-only page shouldn't show the card's "Change the occasion." line.
+
+## Oct 15 · Anthropic's models tested (founder: "use this for haiku testing … you can run the $1.00 one")
+283. **Claude Sonnet 5.5 names clothes best of every model tested, but at ~3× Gemini's cost. Claude Haiku 5.5 is out. Gemini 3.8 Flash stays the reading model** (report: `rubric/research/notes/model-test.md`, round 3).
+    - **The key:** the founder's short-lived Anthropic key, used from the git-ignored settings file and removed after the test. ~$1.58.
+    - **The calls:** raw HTTP on the standard library (`anthropic_read.py`), so nothing was installed. Thinking off ("disabled" on Haiku, "between_tools" on Sonnet); neither takes temperature 0. Claude counts the three photos at ~5,400 tokens.
+    - **Haiku 5.5** (every photo, twice; 0.086¢, 3.0 s):
+      - same photo within 0.5 on 272/289, the least steady;
+      - panel 0.48 (all) and 0.38 (held out);
+      - his 20 at 0.48;
+      - blind name check 64% (tops 45%).
+    - **Sonnet 5.5** (60 name-check photos, 1.73¢, 6.1 s):
+      - blind name check 83% with 3 errors, vs Gemini 79% / 5, GPT-6 Sol 76% / 17;
+      - tops 86%, shoes 78%, colors 87%.
+      - Its steadiness and panel agreement are untested: a full run is ~$10.
+    - **Decided (Claude's default; the founder's call stays on his list):**
+      - Gemini 3.8 Flash is the best value. Sonnet 5.5's naming edge is small (3 vs 5 errors on 60 photos) for about 3× the read cost.
+      - The cheap models from every company name clothes clearly worse.
+      - Qwen (Alibaba) and Grok (xAI) remain untested. Their published vision scores sit below Gemini's, so they aren't worth the setup unless the bill forces it.

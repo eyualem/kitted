@@ -1,0 +1,193 @@
+photo,slot,reading,type,color,notes
+ig-063,top,A,right,right,black graphic tee
+ig-063,top,B,right,right,black graphic tee
+ig-063,top,C,right,right,black graphic tee
+ig-063,top,D,right,right,black graphic tee
+ig-063,bottom,A,close,close,"camo cargo shorts, not full pants"
+ig-063,bottom,B,close,close,"cargo shorts; camo olive/brown"
+ig-063,bottom,C,close,close,"camo cargo shorts, not full pants"
+ig-063,bottom,D,close,close,"camo cargo shorts, not full pants"
+ig-063,footwear,A,right,right,dark brown chunky high-top sneaker
+ig-063,footwear,B,close,right,boot-like chunky sneaker
+ig-063,footwear,C,close,right,boot-like chunky sneaker
+ig-063,footwear,D,right,right,dark brown chunky high-top sneaker
+ig-101,top,A,right,right,grey knit tank
+ig-101,top,B,right,right,grey knit tank
+ig-101,top,C,right,right,grey knit tank
+ig-101,top,D,right,right,grey knit tank
+ig-101,bottom,A,close,right,"pleated chino shorts, not long chinos"
+ig-101,bottom,B,right,right,pleated beige shorts
+ig-101,bottom,C,right,right,pleated beige shorts
+ig-101,bottom,D,right,right,pleated beige shorts
+ig-101,footwear,A,right,right,navy canvas high-tops
+ig-101,footwear,B,right,close,navy not black
+ig-101,footwear,C,right,right,navy canvas high-tops
+ig-101,footwear,D,right,close,navy not black
+ig-106,top,A,right,right,pale blue button shirt
+ig-106,top,B,right,right,pale blue button shirt
+ig-106,top,C,close,right,more dress shirt than oxford
+ig-106,top,D,close,right,more dress shirt than oxford
+ig-106,bottom,A,wrong,close,wide pleated trousers not jeans
+ig-106,bottom,B,right,right,charcoal wide trousers
+ig-106,bottom,C,right,right,charcoal wide trousers
+ig-106,bottom,D,wrong,close,wide pleated trousers not jeans
+ig-106,footwear,A,right,right,black leather shoes
+ig-106,footwear,B,right,right,black leather shoes
+ig-106,footwear,C,right,right,black derby-like shoes
+ig-106,footwear,D,right,right,black leather shoes
+ig-040,top,A,right,right,cream ribbed tee
+ig-040,top,B,close,right,ribbed tee read as sweater
+ig-040,top,C,right,right,cream ribbed tee
+ig-040,top,D,right,right,cream ribbed tee
+ig-040,outerwear,A,right,right,raw denim trucker jacket
+ig-040,outerwear,B,right,close,dark raw denim read as navy
+ig-040,outerwear,C,right,right,raw denim trucker jacket
+ig-040,outerwear,D,right,right,raw denim trucker jacket
+ig-040,bottom,A,right,right,dark raw jeans
+ig-040,bottom,B,right,right,dark raw jeans
+ig-040,bottom,C,right,right,dark raw jeans
+ig-040,bottom,D,right,right,dark raw jeans
+ig-040,footwear,A,right,right,black woven moc loafers
+ig-040,footwear,B,wrong,right,closed moc shoes not slides
+ig-040,footwear,C,wrong,right,vague other
+ig-040,footwear,D,right,right,black woven moc loafers
+ig-047,top,A,right,close,white tee at neck
+ig-047,top,B,right,right,white tee at neck
+ig-047,top,C,right,right,white tee at neck
+ig-047,top,D,missing,wrong,white tee visible at collar
+ig-047,outerwear,A,right,right,mid-wash denim chore coat
+ig-047,outerwear,B,right,right,mid-wash denim chore coat
+ig-047,outerwear,C,right,right,blue denim chore coat
+ig-047,outerwear,D,right,right,blue denim chore coat
+ig-047,bottom,A,right,right,dark raw jeans
+ig-047,bottom,B,right,right,dark raw jeans
+ig-047,bottom,C,right,right,dark raw jeans
+ig-047,bottom,D,right,right,dark raw jeans
+ig-107,top,A,close,right,knit sweater not sweatshirt
+ig-107,top,B,right,right,black knit sweater
+ig-107,top,C,close,right,knit sweater not sweatshirt
+ig-107,top,D,right,right,black knit sweater
+ig-107,bottom,A,right,right,light wash jeans
+ig-107,bottom,B,right,right,light wash jeans
+ig-107,bottom,C,right,right,light wash jeans
+ig-107,bottom,D,right,right,light wash jeans
+ig-107,footwear,A,right,right,black chunky loafers
+ig-107,footwear,B,right,right,black chunky loafers
+ig-107,footwear,C,right,right,black chunky loafers
+ig-107,footwear,D,right,right,black chunky loafers
+ig-089,top,A,right,right,blue knit sweater
+ig-089,top,B,right,right,blue knit sweater
+ig-089,top,C,right,right,blue knit sweater
+ig-089,top,D,right,right,blue knit sweater
+ig-089,bottom,A,right,right,light grey wide sweatpants
+ig-089,bottom,B,close,right,straight open hem not joggers
+ig-089,bottom,C,right,close,light grey
+ig-089,bottom,D,right,close,light grey
+ig-089,footwear,A,right,right,white leather sneakers
+ig-089,footwear,B,close,right,leather not canvas
+ig-089,footwear,C,right,right,white leather sneakers
+ig-089,footwear,D,right,right,white leather sneakers
+ig-082,top,A,right,right,white graphic tee
+ig-082,top,B,right,close,mostly white with black print
+ig-082,top,C,right,right,white graphic tee
+ig-082,top,D,right,right,white graphic tee
+ig-082,outerwear,A,right,right,red plaid flannel worn open
+ig-082,outerwear,B,wrong,close,"vague other; red/black plaid"
+ig-082,outerwear,C,right,right,red plaid flannel worn open
+ig-082,outerwear,D,right,right,red plaid flannel worn open
+ig-082,bottom,A,right,right,washed black baggy jeans
+ig-082,bottom,B,right,close,washed black read as charcoal
+ig-082,bottom,C,right,right,washed black baggy jeans
+ig-082,bottom,D,right,right,washed black baggy jeans
+ig-082,footwear,A,close,close,"low canvas-type sneaker, black and white"
+ig-082,footwear,B,right,close,black and white low sneaker
+ig-082,footwear,C,right,close,black and white low sneaker
+ig-082,footwear,D,right,close,black and white low sneaker
+pin-073,top,A,close,right,striped crew sweatshirt-like top
+pin-073,top,B,close,right,striped crew sweatshirt-like top
+pin-073,top,C,close,right,striped crew sweatshirt-like top
+pin-073,top,D,right,close,"navy/pink/cream stripes, not plain cream"
+pin-073,outerwear,A,right,right,souvenir bomber navy with pink sleeves
+pin-073,outerwear,B,right,close,navy body read as black
+pin-073,outerwear,C,right,right,navy souvenir bomber
+pin-073,outerwear,D,right,right,navy souvenir bomber
+pin-073,bottom,A,right,close,bright blue slim jeans
+pin-073,bottom,B,right,right,bright blue slim jeans
+pin-073,bottom,C,right,right,bright blue slim jeans
+pin-073,bottom,D,right,right,bright blue slim jeans
+pin-073,footwear,A,right,right,blue suede low sneakers
+pin-073,footwear,B,close,right,suede not canvas
+pin-073,footwear,C,close,right,suede not canvas
+pin-073,footwear,D,close,right,suede not canvas
+pin-016,top,A,right,close,dark green read as black at night
+pin-016,top,B,right,right,dark green tee
+pin-016,top,C,right,close,dark green read as black at night
+pin-016,top,D,right,close,dark green read as black at night
+pin-016,bottom,A,right,close,light wash ripped skinny jeans
+pin-016,bottom,B,right,close,light wash ripped skinny jeans
+pin-016,bottom,C,right,close,light wash ripped skinny jeans
+pin-016,bottom,D,right,close,light wash ripped skinny jeans
+pin-016,footwear,A,right,right,white leather sneakers
+pin-016,footwear,B,right,right,white leather sneakers
+pin-016,footwear,C,right,right,white leather sneakers
+pin-016,footwear,D,close,right,chunkier white leather sneaker
+ig-098,top,A,right,right,white striped button-down shirt with tie
+ig-098,top,B,close,right,striped dress shirt
+ig-098,top,C,close,right,striped dress shirt
+ig-098,top,D,right,right,white striped button-down shirt with tie
+ig-098,bottom,A,right,close,mid-dark wash
+ig-098,bottom,B,right,right,mid-dark wash jeans
+ig-098,bottom,C,right,close,mid-dark wash
+ig-098,bottom,D,right,close,mid-dark wash
+pin-042,top,A,right,right,light blue graphic tee
+pin-042,top,B,right,right,light blue graphic tee
+pin-042,top,C,right,right,light blue graphic tee
+pin-042,top,D,right,right,light blue graphic tee
+pin-042,outerwear,A,right,right,burgundy paisley cardigan
+pin-042,outerwear,B,right,right,burgundy paisley cardigan
+pin-042,outerwear,C,right,right,burgundy paisley cardigan
+pin-042,outerwear,D,right,right,burgundy paisley cardigan
+pin-042,bottom,A,right,right,olive wide cargos
+pin-042,bottom,B,right,right,olive wide cargos
+pin-042,bottom,C,right,right,olive wide cargos
+pin-042,bottom,D,right,right,olive wide cargos
+pin-042,footwear,A,right,right,white low gum-sole sneakers
+pin-042,footwear,B,right,right,white low gum-sole sneakers
+pin-042,footwear,C,right,right,white low gum-sole sneakers
+pin-042,footwear,D,right,right,white low gum-sole sneakers
+ig-036,top,A,close,right,pinstripe shirt with point collar
+ig-036,top,B,close,right,pinstripe shirt not oxford cloth
+ig-036,top,C,close,close,white with grey pinstripe
+ig-036,top,D,close,close,white with grey pinstripe
+ig-036,bottom,A,right,right,mid-wash barrel jeans
+ig-036,bottom,B,right,right,mid-wash barrel jeans
+ig-036,bottom,C,right,right,mid-wash barrel jeans
+ig-036,bottom,D,right,right,mid-wash barrel jeans
+ig-036,footwear,A,right,right,black loafers
+ig-036,footwear,B,right,right,black loafers
+ig-036,footwear,C,right,right,black loafers
+ig-036,footwear,D,right,right,black loafers
+ig-024,top,A,close,right,green check shirt not flannel
+ig-024,top,B,close,right,point collar check shirt
+ig-024,top,C,close,right,green check shirt not flannel
+ig-024,top,D,close,right,green check button shirt
+ig-024,bottom,A,right,right,black wide trousers
+ig-024,bottom,B,right,right,black wide trousers
+ig-024,bottom,C,right,right,black wide trousers
+ig-024,bottom,D,right,right,black wide trousers
+ig-024,footwear,A,close,right,black leather shoes hard to tell
+ig-024,footwear,B,close,right,black leather shoes hard to tell
+ig-024,footwear,C,right,right,black leather dress shoes
+ig-024,footwear,D,close,right,black leather shoes hard to tell
+pin-029,outerwear,A,right,right,olive M-65 field jacket
+pin-029,outerwear,B,right,right,olive M-65 field jacket
+pin-029,outerwear,C,right,right,olive M-65 field jacket
+pin-029,outerwear,D,right,right,olive M-65 field jacket
+pin-029,bottom,A,right,right,mid-wash jeans
+pin-029,bottom,B,right,right,mid-wash jeans
+pin-029,bottom,C,right,right,mid-wash jeans
+pin-029,bottom,D,right,right,mid-wash jeans
+pin-029,footwear,A,close,right,brown leather boots partly seen
+pin-029,footwear,B,wrong,right,vague other
+pin-029,footwear,C,close,right,brown leather boots partly seen
+pin-029,footwear,D,close,right,brown leather boots partly seen

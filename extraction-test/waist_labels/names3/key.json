@@ -1,0 +1,362 @@
+{
+ "pin-060": {
+  "A": "sonnet55",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "gem38"
+ },
+ "pin-053": {
+  "A": "sonnet55",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "gem38"
+ },
+ "pin-047": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "pin-024": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "ig-004": {
+  "A": "sol6",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "gem38"
+ },
+ "pin-056": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "pin-025": {
+  "A": "sonnet55",
+  "B": "sol6",
+  "C": "gem38",
+  "D": "haiku55"
+ },
+ "pin-054": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "haiku55",
+  "D": "sonnet55"
+ },
+ "ig-075": {
+  "A": "sol6",
+  "B": "haiku55",
+  "C": "sonnet55",
+  "D": "gem38"
+ },
+ "pin-033": {
+  "A": "gem38",
+  "B": "sol6",
+  "C": "sonnet55",
+  "D": "haiku55"
+ },
+ "pin-013": {
+  "A": "sonnet55",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "gem38"
+ },
+ "pin-050": {
+  "A": "gem38",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "sol6"
+ },
+ "ig-085": {
+  "A": "haiku55",
+  "B": "gem38",
+  "C": "sonnet55",
+  "D": "sol6"
+ },
+ "ig-034": {
+  "A": "haiku55",
+  "B": "sol6",
+  "C": "gem38",
+  "D": "sonnet55"
+ },
+ "ig-078": {
+  "A": "gem38",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "pin-004": {
+  "A": "sol6",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "gem38"
+ },
+ "ig-116": {
+  "A": "gem38",
+  "B": "sol6",
+  "C": "haiku55",
+  "D": "sonnet55"
+ },
+ "pin-036": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "sonnet55",
+  "D": "haiku55"
+ },
+ "ig-035": {
+  "A": "haiku55",
+  "B": "gem38",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "ig-011": {
+  "A": "gem38",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "ig-102": {
+  "A": "sol6",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sonnet55"
+ },
+ "ig-050": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "haiku55",
+  "D": "sonnet55"
+ },
+ "pin-039": {
+  "A": "gem38",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "ig-132": {
+  "A": "sonnet55",
+  "B": "gem38",
+  "C": "haiku55",
+  "D": "sol6"
+ },
+ "ig-014": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "pin-026": {
+  "A": "sol6",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "haiku55"
+ },
+ "pin-015": {
+  "A": "gem38",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "sol6"
+ },
+ "rd-008": {
+  "A": "gem38",
+  "B": "sol6",
+  "C": "haiku55",
+  "D": "sonnet55"
+ },
+ "rd-004": {
+  "A": "haiku55",
+  "B": "gem38",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "ig-104": {
+  "A": "gem38",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "ig-063": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "sonnet55",
+  "D": "haiku55"
+ },
+ "ig-101": {
+  "A": "haiku55",
+  "B": "sol6",
+  "C": "sonnet55",
+  "D": "gem38"
+ },
+ "ig-106": {
+  "A": "sol6",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "gem38"
+ },
+ "ig-040": {
+  "A": "sonnet55",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "gem38"
+ },
+ "ig-047": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "sonnet55",
+  "D": "haiku55"
+ },
+ "ig-107": {
+  "A": "sol6",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sonnet55"
+ },
+ "ig-089": {
+  "A": "sol6",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sonnet55"
+ },
+ "ig-082": {
+  "A": "haiku55",
+  "B": "sol6",
+  "C": "sonnet55",
+  "D": "gem38"
+ },
+ "pin-073": {
+  "A": "haiku55",
+  "B": "gem38",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "pin-016": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "sonnet55",
+  "D": "haiku55"
+ },
+ "ig-098": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "haiku55",
+  "D": "sonnet55"
+ },
+ "pin-042": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "ig-036": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "sol6",
+  "D": "gem38"
+ },
+ "ig-024": {
+  "A": "sonnet55",
+  "B": "gem38",
+  "C": "sol6",
+  "D": "haiku55"
+ },
+ "pin-029": {
+  "A": "sol6",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "gem38"
+ },
+ "ig-001": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "sol6",
+  "D": "gem38"
+ },
+ "rd-006": {
+  "A": "sol6",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sonnet55"
+ },
+ "rd-007": {
+  "A": "sonnet55",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "ig-070": {
+  "A": "sol6",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sonnet55"
+ },
+ "rd-013": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "ig-056": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "ig-021": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "pin-041": {
+  "A": "gem38",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "sol6"
+ },
+ "ig-065": {
+  "A": "sol6",
+  "B": "sonnet55",
+  "C": "haiku55",
+  "D": "gem38"
+ },
+ "rd-017": {
+  "A": "sol6",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sonnet55"
+ },
+ "ig-096": {
+  "A": "gem38",
+  "B": "haiku55",
+  "C": "sol6",
+  "D": "sonnet55"
+ },
+ "pin-017": {
+  "A": "gem38",
+  "B": "sol6",
+  "C": "haiku55",
+  "D": "sonnet55"
+ },
+ "ig-091": {
+  "A": "sonnet55",
+  "B": "haiku55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "pin-037": {
+  "A": "haiku55",
+  "B": "sonnet55",
+  "C": "gem38",
+  "D": "sol6"
+ },
+ "ig-066": {
+  "A": "sonnet55",
+  "B": "gem38",
+  "C": "haiku55",
+  "D": "sol6"
+ }
+}

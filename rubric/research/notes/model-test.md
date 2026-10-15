@@ -1,6 +1,6 @@
 # Which model should read the outfit? Gemini vs OpenAI, and multi-call systems
 
-*Round 2 (more OpenAI models, #280) is first; round 1 (#278) follows.*
+*Round 3 (Anthropic, #283) is first, then round 2 (more OpenAI models, #280), then round 1 (#278).*
 
 *Oct 15, 2026. Claude. DECISIONS-LOG #278. The founder's OK and his own OpenAI key (limited balance, expiring; stored
 only in the git-ignored `app/.env.development.local`). Spent about $3.33 in all: OpenAI ~$1.4, Gemini Flash-Lite
@@ -9,6 +9,40 @@ format), `model_test.py` (the runs), `model_report.py` (the report), `waist_spec
 Results: `extraction-test/results/models1/report.md`, `results/waist-specialist/report.md`,
 `results/hem-models/report.md`; the blind name check in `extraction-test/waist_labels/names/`. Nothing in the app
 changed.*
+
+## Round 3 (Oct 15, #283): Anthropic's Claude Haiku 5.5 and Sonnet 5.5
+
+**The founder's short-lived Anthropic key** (removed from the settings file afterwards). About $1.58: Haiku 5.5 on every photo twice ($0.50), Sonnet 5.5 on the 60 name-check photos once ($1.06; his "you can run the $1.00 one").
+- **Thinking off:** "disabled" on Haiku; "between_tools" on Sonnet, which rejects "disabled".
+- **Neither model takes temperature 0.**
+- **Raw HTTP on the standard library** (`anthropic_read.py`), like the other callers, so no package was installed.
+- **Claude counts the three photos as about 5,400 input tokens** (Gemini and OpenAI: about 3,300).
+
+**Blind name check, four ways** (`waist_labels/names3/`, `results/models1/names3.txt`): 60 gold photos, Gemini and GPT-6 Sol included again as anchors.
+
+| Model | Garment named right | Wrong / extra / missing | Tops | Bottoms | Shoes | Jackets | Colors right | ¢ a read | Median s |
+|---|---|---|---|---|---|---|---|---|---|
+| **Claude Sonnet 5.5** | **83%** | **3** | **86%** | 85% | **78%** | 83% | **87%** | 1.73 | 6.1 |
+| Gemini 3.8 Flash (today) | 79% | 5 | 77% | 88% | 73% | 79% | 82% | 0.59 | 6.8 |
+| GPT-6 Sol | 76% | 17 | 72% | 86% | 69% | 75% | 79% | 1.07 | 4.6 |
+| Claude Haiku 5.5 | 64% | 19 | 45% | 83% | 62% | 70% | 80% | 0.086 | 3.0 |
+
+The anchors came out close to round 2 (Gemini 82 → 79%, Sol 78 → 76%), so the reviewers are consistent, a few points stricter this time.
+
+**Claude Haiku 5.5 in full** (every photo, twice):
+- the fastest read so far (3.0 s);
+- the least steady (272/289 within 0.5, vs Gemini 284/289);
+- the weakest agreement with the panel (0.48 on all photos, 0.38 held out; Gemini 0.58 / 0.49), his 20 at 0.48;
+- tops named right only 45% in the blind check. Out.
+
+**Claude Sonnet 5.5** names clothes best of every model tested, but only a little better than Gemini (3 vs 5 errors on 60 photos, within the noise). It costs about 3× Gemini's read today and about 1.5× Gemini's from January.
+- It wasn't run on the full gold set, so its steadiness and panel agreement are unknown.
+- A full run would cost about $10.
+
+**Verdict:**
+- Gemini 3.8 Flash stays the best value.
+- Claude Sonnet 5.5 is the one model that names clothes at least as well, at about 3× the read cost.
+- The cheap models from every company (GPT-6 Luna, GPT-5.6 Luna, Claude Haiku 5.5, Gemini Flash-Lite) name clothes clearly worse.
 
 ## Round 2 (Oct 15, #280): GPT-6 Sol, GPT-5.6 Luna and GPT-5.4 mini
 
