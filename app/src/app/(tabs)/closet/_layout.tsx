@@ -26,7 +26,7 @@ function AddButton() {
 
 export default function ClosetStack() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShadowVisible: false }}>
       <Stack.Screen name="index" options={{ title: t('tab.closet'), headerLargeTitleEnabled: true, headerRight: () => <AddButton /> }} />
       <Stack.Screen name="item/[id]" options={{ title: '' }} />
       <Stack.Screen name="starter" options={{ title: t('starter.title') }} />

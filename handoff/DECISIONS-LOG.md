@@ -1599,8 +1599,15 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Switching changes the consent screen (it names Google today; outward-facing).
     - **Not recommended:** different models for free and Pro (breaks "same photo, same score"); voting or cascades.
 
+278. **Founder, Oct 15: "go ahead with the recommendations" and test on the Simulator, mindful of the Mac.** The recommendation on the table was #277's Welcome photo: swap the hero for a demo photo the live engine scores 8+ (s15 scores 7.0). Then one native build (for #277's Swift change) and a Simulator pass, nothing heavy stacked. The #233 copy fixes are still waiting on his explicit OK.
+
 ## Oct 15 · OpenAI's larger models priced (founder: "what are the costs of the more expensive OpenAI models?")
 279. **Correction to #278's next step: GPT-6 Sol and Astra are no cost fix.**
     - At OpenAI's list prices (read Oct 15; table in `market/ai-costs.md` §4b), an outfit read costs GPT-6 Sol ≈ 1.07¢ (1.8× Gemini 3.8 today, about Gemini's Jan 2027 price) and GPT-6 Astra ≈ 5.35¢ (9×).
     - #278 had said a stronger OpenAI model would stay "far under Gemini" without pricing it.
     - **The proposed test is now the mid-priced pair (~$1.10, the founder's OK pending):** GPT-5.6 Luna (0.12¢ a read) on every photo and GPT-5.4 mini (0.43¢) on ~100. The bar: garment types ≥ 85% right in the blind check, panel agreement no worse.
+
+279. **Simulator pass, Oct 15 (#277–278).** One native build (0 errors; the #277 Swift head-line change compiles), then on the iPhone 17 Pro Simulator: the piece page in light and dark (hero paging with dots and haptic, outlined photo crops, the native photo menu, Remove photo with an Undo toast that restores the cover), the Closet long-press (drawing preview with Rename / Remove, no cut-out; demo photos are skipped by the preview, so real photos are needed to see the outlined photo there), Welcome on s14 at 7.5 "Put together" with nothing above the neck, Basics with build and fit blank and the "Born in 2013?" confirmation, the Why sheet's ink highlight and one-decimal strip, "Not quite right?" previewing 7.5 → 7.0 on the parts engine, a re-check win in dark with the ink tab. Screenshots `screenshots/sim-oct15/` (git-ignored).
+    - **Welcome:** no demo photo reaches 8 under the live engine (p01a, p01b and s14 are 7.5, the rest 6.5–7.0), so the hero is s14 at 7.5 (p01a has socks and no shoes); a real "Sharp" needs one of the founder's own photos, which the demo README already asks for before any marketing use.
+    - **Fixed on the way:** the hero gallery's page dots kept the old page after a photo was removed or restored (it now resets with the count); the Closet stack had the header hairline the other tabs lost.
+    - **Still small:** a done fix row reads "+1" next to the "+1.0" pill; menu items in the Simulator need a second tap now and then (the Simulator's taps, not seen as an app bug).

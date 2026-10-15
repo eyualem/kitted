@@ -1,4 +1,4 @@
-// O1 · Welcome (02 D1): the hero photo (s15, neck down), a mini score card, the wordmark, the headline and
+// O1 · Welcome (02 D1): the hero photo (s14 since #278, neck down), a mini score card, the wordmark, the headline and
 // Get started. "See an example check" (O1e) isn't built yet, so its link is hidden rather than leading nowhere.
 // The card's score and word come from the engine (welcomeExample, #276), and the hero starts below the collar.
 import { router, useFocusEffect } from "expo-router";
@@ -32,9 +32,9 @@ import { t } from "@/i18n/en";
 import { WELCOME_PHOTO, welcomeExample } from "./welcomeExample";
 
 const HERO_H = 455;
-/** s15's stored neck line (0.235 of the photo) sits on his beard; the hero starts below the collar, so nothing of
- *  the face shows (#276). Judged on the bundled 656 × 820 file: the beard ends near 0.28. */
-const HERO_NECK = 0.3;
+/** s14's stored neck line (0.21 of the photo) sits at his chin; the hero starts at the turtleneck, so nothing of the
+ *  face shows (#276, #278). Judged on the bundled 656 × 820 file: the beard ends near 0.21. */
+const HERO_NECK = 0.235;
 const EXAMPLE = welcomeExample();
 
 export function WelcomeScreen() {

@@ -59,7 +59,9 @@ function addedLine(item: ClosetItemRow): string {
 export function PiecePage({ id }: { id: string }) {
   const { colors, scheme, isAccessibilitySize } = useTheme();
   const { width: screenW } = useWindowDimensions();
-  const [page, setPage] = useState(0);
+  // The hero page, with the page count it was read at: when a photo is removed or comes back, the gallery remounts at
+  // the drawing, so a page from the old count no longer applies.
+  const [paged, setPaged] = useState({ n: 0, of: 0 });
   // The column's real width (the web preview boxes the app narrower than the window).
   const [colW, setColW] = useState(0);
   const [showFolded, setShowFolded] = useState(false);
@@ -99,12 +101,13 @@ export function PiecePage({ id }: { id: string }) {
   const onPage = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const n = Math.round(e.nativeEvent.contentOffset.x / Math.max(1, W));
     if (n === page) return;
-    setPage(n);
+    setPaged({ n, of: pages });
     if (Platform.OS === 'ios') void Haptics.selectionAsync();
   };
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = Math.floor((W - GRID_GAP * (cols - 1)) / cols);
   const pages = hero.length + 1;
+  const page = paged.of === pages ? paged.n : 0;
   const pageLabel = (n: number) => (pages > 1 ? ` ${t('viewer.a11y.page', { n, total: pages })}` : '');
   const grid = (list: readonly PiecePhoto[]) => (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: GRID_GAP }}>
@@ -125,6 +128,7 @@ export function PiecePage({ id }: { id: string }) {
       {W > 0 ? (
         <View style={{ gap: space.s }} onLayout={(e) => setColW(Math.round(e.nativeEvent.layout.width))}>
           <ScrollView
+            key={pages}
             horizontal pagingEnabled showsHorizontalScrollIndicator={false} scrollEnabled={pages > 1} onMomentumScrollEnd={onPage}
             style={{ width: W, height: W, borderRadius: radius.card, borderCurve: 'continuous', overflow: 'hidden' }}
           >
