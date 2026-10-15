@@ -1598,3 +1598,9 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Then the founder picks: all-OpenAI, OpenAI read + Gemini closet call, or stay on Gemini.
       - Switching changes the consent screen (it names Google today; outward-facing).
     - **Not recommended:** different models for free and Pro (breaks "same photo, same score"); voting or cascades.
+
+## Oct 15 · OpenAI's larger models priced (founder: "what are the costs of the more expensive OpenAI models?")
+279. **Correction to #278's next step: GPT-6 Sol and Astra are no cost fix.**
+    - At OpenAI's list prices (read Oct 15; table in `market/ai-costs.md` §4b), an outfit read costs GPT-6 Sol ≈ 1.07¢ (1.8× Gemini 3.8 today, about Gemini's Jan 2027 price) and GPT-6 Astra ≈ 5.35¢ (9×).
+    - #278 had said a stronger OpenAI model would stay "far under Gemini" without pricing it.
+    - **The proposed test is now the mid-priced pair (~$1.10, the founder's OK pending):** GPT-5.6 Luna (0.12¢ a read) on every photo and GPT-5.4 mini (0.43¢) on ~100. The bar: garment types ≥ 85% right in the blind check, panel agreement no worse.

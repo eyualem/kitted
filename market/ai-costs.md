@@ -47,6 +47,24 @@ A slow scoring read can send a backup request at 5 s if no garment has streamed 
 - **Gemini 3.5 Flash-Lite:** 0.32¢ a read (it needs "minimal" thinking, not off). Its scores are worse, so it's dropped as a lever.
 - **Voting / cascades on Luna:** 0.13–0.16¢ a read, no quality gain.
 
+**OpenAI's list prices (standard tier, developers.openai.com/api/docs/pricing, read Oct 15), per outfit read** at the measured ~3,300 tokens in and ~400 out (the larger models may count image tokens a little differently; confirm on a first call):
+
+| Model | $ per million (in / out) | ¢ a read | vs Gemini 3.8 today (0.59¢) | 10,000 reads a month |
+|---|---|---|---|---|
+| GPT-6 Astra | 10 / 50 | 5.35 | 9× | $535 |
+| GPT-5.5 | 5 / 30 | 2.88 | 4.9× | $288 |
+| GPT-5.6 Sol | 4 / 20 | 2.14 | 3.6× | $214 |
+| GPT-5.6 Terra | 2 / 12 | 1.15 | 2× | $115 |
+| GPT-6 Sol / 6.1 Sol | 2 / 10 | 1.07 | 1.8× | $107 |
+| Gemini 3.8 Flash from Jan 2027 | (doubles) | ≈1.18 | 2× | ≈$118 |
+| GPT-5.4 mini | 0.75 / 4.50 | 0.43 | 0.73× | $43 |
+| Gemini 3.5 Flash-Lite (measured) | 0.30 / 2.50 | 0.32 | 0.54× | $32 |
+| GPT-5.4 nano | 0.20 / 1.25 | 0.12 | 0.2× | $12 |
+| GPT-5.6 Luna | 0.20 / 1.20 | 0.12 | 0.2× | $12 |
+| GPT-6 Luna (measured) | 0.10 / 0.50 | 0.054 | 0.09× | $5 |
+
+Batch is about half price but too slow for a live check.
+
 ## 5. The levers, biggest first (none changes a score until tested)
 | Lever | Saves per check (2027) | Cost to find out | Who decides |
 |---|---|---|---|

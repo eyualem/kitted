@@ -89,7 +89,10 @@ changed.*
 
 ## Options, ranked (Claude's recommendation first)
 
-1. **Test one stronger OpenAI model before deciding** (~$1–2 of the same test). OpenAI's larger 2026 models (`gpt-6-sol`, `gpt-6-astra`, both on his key) may close the naming gap at a few times Luna's price, still far under Gemini. The shoe and top naming is the bar to clear: ≥ 83% right in the blind check, with panel agreement no worse.
+1. **Test the mid-priced OpenAI models before deciding** (~$1.10; corrected Oct 15, #279).
+   - GPT-5.6 Luna (0.12¢ a read) on every photo; GPT-5.4 mini (0.43¢) on ~100, including the 60 of the blind name check.
+   - The bar: garment types ≥ 85% right in the blind check, panel agreement no worse, cost under Gemini's.
+   - **Not Sol or Astra:** at OpenAI's list prices GPT-6 Sol is ≈1.07¢ a read (1.8× today's Gemini, about Gemini's Jan 2027 price) and Astra ≈5.35¢ (9×), so they're no cost fix. The price table is in `market/ai-costs.md` §4b.
 2. **Luna for the scoring read, Gemini kept for the closet call.** The card's names and the closet's pieces come from the closet call's names and the read. This halves the bill but leaves the card's garment words on Luna, so it's worse than option 1 if a stronger model works.
 3. **All Luna now.** The cheapest by far, and the scores are as good, but about 1 garment in 20 would be named wrong, against about 1 in 65 today. "Not quite right?" can fix those, but every wrong name costs trust.
 4. **Keep Gemini 3.8** and solve the bill elsewhere (#270's other levers).
