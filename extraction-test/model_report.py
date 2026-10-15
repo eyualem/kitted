@@ -175,7 +175,7 @@ def main():
     L += ["## The headline", "", "| System | ¢ per check (read only) | Median s · p90 | Same photo, same score (within 0.5 · identical) | Gold test r with the panel | Proportions r (test) | His 20 | 8+ share (test) |",
           "|---|---|---|---|---|---|---|---|"]
     detail = []
-    for arm in ["gem38", "fl35", "luna", "luna_low", "luna_waist", "luna_vote3", "luna_cascade"]:
+    for arm in ["gem38", "fl35", "luna", "luna_low", "luna56", "mini54", "sol6", "luna_waist", "luna_vote3", "luna_cascade"]:
         if arm not in systems:
             continue
         S = systems[arm]

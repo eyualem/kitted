@@ -31,6 +31,9 @@ SETS = {"gold": HERE / "results" / "gold1" / "images", "phone": HERE / "results"
         "stock": HERE / "results" / "zoom1-stock" / "images"}
 FL_PRICE = (0.30 / 1e6, 2.50 / 1e6)
 LOCK = threading.Lock()
+# More OpenAI arms (founder, Oct 15, #280): reasoning none, temperature 0, as luna. gpt-6.1-sol refuses "none" and took 12 s
+# at "low", so gpt-6-sol (same price) stands in for Sol.
+OA = {"luna56": "gpt-5.6-luna", "mini54": "gpt-5.4-mini", "sol6": "gpt-6-sol"}
 
 
 def photos(which):
@@ -89,6 +92,8 @@ def gemini_call(model, prompt, images):
 def read_one(arm, pid, cache):
     imgs = Z.images_for(pid, True, cache)
     prompt = Z.prompt_for(False) + {1: "", 2: "\n" + Z.ZOOM_LINE_BODY, 3: "\n" + Z.ZOOM_LINE}[len(imgs)]
+    if arm in OA:
+        return O.call(prompt, imgs, model=OA[arm], effort="none")
     if arm.startswith("luna"):
         return O.call(prompt, imgs, model="gpt-6-luna", effort="low" if arm == "luna_low" else "none")
     if arm == "fl35":
@@ -105,7 +110,11 @@ def run(arm, runs, sets, workers):
     raw = d / "raw.json"
     results = [r for r in (json.loads(raw.read_text()) if raw.exists() else []) if r.get("json")]
     done = {(r["set"], r["photo"], r["run"]) for r in results}
-    jobs = [(s, p, i) for i in range(runs) for s in sets for p in photos(s) if (s, p, i) not in done]
+    only = None
+    if os.environ.get("MODEL_TEST_ONLY"):   # a file of "set:photo" lines: run just those (the staged arms)
+        only = {tuple(l.strip().split(":", 1)) for l in Path(os.environ["MODEL_TEST_ONLY"]).read_text().splitlines() if l.strip()}
+    jobs = [(s, p, i) for i in range(runs) for s in sets for p in photos(s)
+            if (s, p, i) not in done and (only is None or (s, p) in only)]
     base = spent()
     print(f"{arm}: {len(jobs)} calls; spent so far ${base:.2f} (cap ${CAP})")
     stop = threading.Event()

@@ -1,0 +1,498 @@
+[
+ {
+  "photo": "pin-060",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-060.full.jpg",
+  "readings": {
+   "A": {
+    "top": "off white cream tee",
+    "bottom": "denim light jeans",
+    "footwear": "brown work boot"
+   },
+   "B": {
+    "top": "multicolor tee",
+    "bottom": "denim light jeans",
+    "footwear": "brown derby"
+   },
+   "C": {
+    "top": "grey other",
+    "footwear": "brown work boot"
+   },
+   "D": {
+    "top": "white sweater",
+    "bottom": "denim light drawstring trousers",
+    "footwear": "brown work boot"
+   },
+   "E": {
+    "top": "multicolor other",
+    "bottom": "denim light cargos",
+    "footwear": "brown work boot"
+   }
+  }
+ },
+ {
+  "photo": "pin-053",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-053.full.jpg",
+  "readings": {
+   "A": {
+    "top": "grey hoodie",
+    "outerwear": "brown field jacket",
+    "bottom": "denim mid cargos",
+    "footwear": "blue performance runner"
+   },
+   "B": {
+    "top": "light grey hoodie",
+    "outerwear": "tan camel chore coat",
+    "bottom": "denim mid cargos",
+    "footwear": "blue performance runner"
+   },
+   "C": {
+    "top": "grey hoodie",
+    "outerwear": "brown field jacket",
+    "bottom": "denim mid cargos",
+    "footwear": "blue performance runner"
+   },
+   "D": {
+    "top": "light grey hoodie",
+    "outerwear": "tan camel field jacket",
+    "bottom": "denim light jeans",
+    "footwear": "blue performance runner"
+   },
+   "E": {
+    "top": "grey hoodie",
+    "outerwear": "tan camel field jacket",
+    "bottom": "denim mid cargos",
+    "footwear": "blue performance runner"
+   }
+  }
+ },
+ {
+  "photo": "pin-047",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-047.full.jpg",
+  "readings": {
+   "A": {
+    "top": "light grey tee",
+    "outerwear": "khaki beige flannel shirt",
+    "bottom": "denim mid jeans",
+    "footwear": "brown work boot"
+   },
+   "B": {
+    "top": "light grey tee",
+    "outerwear": "multicolor overshirt",
+    "bottom": "blue jeans",
+    "footwear": "brown work boot"
+   },
+   "C": {
+    "top": "light grey tee",
+    "outerwear": "khaki beige overshirt",
+    "bottom": "denim mid jeans",
+    "footwear": "brown work boot"
+   },
+   "D": {
+    "top": "light grey tee",
+    "outerwear": "tan camel flannel shirt",
+    "bottom": "denim mid jeans",
+    "footwear": "brown work boot"
+   },
+   "E": {
+    "top": "light grey tee",
+    "outerwear": "khaki beige flannel shirt",
+    "bottom": "denim mid jeans",
+    "footwear": "brown work boot"
+   }
+  }
+ },
+ {
+  "photo": "pin-024",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-024.full.jpg",
+  "readings": {
+   "A": {
+    "top": "white tee",
+    "outerwear": "blue fleece",
+    "bottom": "grey shorts",
+    "footwear": "tan camel slides sandals"
+   },
+   "B": {
+    "top": "white dress shirt",
+    "outerwear": "navy overcoat",
+    "bottom": "grey shorts",
+    "footwear": "brown other"
+   },
+   "C": {
+    "top": "white tee",
+    "outerwear": "blue cardigan",
+    "bottom": "grey shorts",
+    "footwear": "brown other"
+   },
+   "D": {
+    "top": "white tee",
+    "outerwear": "navy overcoat",
+    "bottom": "light grey shorts",
+    "footwear": "tan camel other"
+   },
+   "E": {
+    "top": "white other",
+    "outerwear": "multicolor overcoat",
+    "bottom": "grey shorts",
+    "footwear": "tan camel other"
+   }
+  }
+ },
+ {
+  "photo": "ig-004",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-004.full.jpg",
+  "readings": {
+   "A": {
+    "top": "red sweater",
+    "outerwear": "light blue cardigan",
+    "bottom": "black trousers",
+    "footwear": "black loafer"
+   },
+   "B": {
+    "top": "red sweater",
+    "outerwear": "light blue cardigan",
+    "bottom": "charcoal trousers",
+    "footwear": "black loafer"
+   },
+   "C": {
+    "top": "red sweater",
+    "outerwear": "blue cardigan",
+    "bottom": "black trousers",
+    "footwear": "black loafer"
+   },
+   "D": {
+    "top": "red sweater",
+    "outerwear": "blue cardigan",
+    "bottom": "black trousers",
+    "footwear": "black loafer"
+   },
+   "E": {
+    "top": "red sweater",
+    "outerwear": "blue cardigan",
+    "bottom": "black trousers",
+    "footwear": "black loafer"
+   }
+  }
+ },
+ {
+  "photo": "pin-056",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-056.full.jpg",
+  "readings": {
+   "A": {
+    "top": "green dress shirt",
+    "outerwear": "olive chore coat",
+    "bottom": "charcoal suit trousers",
+    "footwear": "burgundy work boot"
+   },
+   "B": {
+    "top": "light blue dress shirt",
+    "outerwear": "olive field jacket",
+    "bottom": "charcoal trousers",
+    "footwear": "brown dress shoe"
+   },
+   "C": {
+    "top": "grey sweater",
+    "outerwear": "olive chore coat",
+    "bottom": "charcoal trousers",
+    "footwear": "brown derby"
+   },
+   "D": {
+    "top": "yellow dress shirt",
+    "outerwear": "grey other",
+    "bottom": "charcoal trousers",
+    "footwear": "brown dress shoe"
+   },
+   "E": {
+    "top": "grey cardigan",
+    "outerwear": "olive field jacket",
+    "bottom": "charcoal trousers",
+    "footwear": "brown derby"
+   }
+  }
+ },
+ {
+  "photo": "pin-025",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-025.full.jpg",
+  "readings": {
+   "A": {
+    "top": "navy sweater",
+    "bottom": "charcoal jeans",
+    "footwear": "brown work boot"
+   },
+   "B": {
+    "top": "blue sweater",
+    "bottom": "charcoal jeans",
+    "footwear": "brown work boot"
+   },
+   "C": {
+    "top": "blue sweater",
+    "bottom": "charcoal jeans",
+    "footwear": "brown work boot"
+   },
+   "D": {
+    "top": "navy sweater",
+    "bottom": "charcoal jeans",
+    "footwear": "brown work boot"
+   },
+   "E": {
+    "top": "white oxford shirt",
+    "outerwear": "blue sweater",
+    "bottom": "charcoal jeans",
+    "footwear": "brown work boot"
+   }
+  }
+ },
+ {
+  "photo": "pin-054",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-054.full.jpg",
+  "readings": {
+   "A": {
+    "top": "light grey graphic tee",
+    "outerwear": "black hoodie",
+    "bottom": "multicolor cargos",
+    "footwear": "black performance runner"
+   },
+   "B": {
+    "top": "white graphic tee",
+    "outerwear": "black hoodie",
+    "bottom": "multicolor cargos",
+    "footwear": "black performance runner"
+   },
+   "C": {
+    "top": "white graphic tee",
+    "outerwear": "black hoodie",
+    "bottom": "multicolor cargos",
+    "footwear": "black performance runner"
+   },
+   "D": {
+    "top": "white graphic tee",
+    "outerwear": "black hoodie",
+    "bottom": "multicolor cargos",
+    "footwear": "black performance runner"
+   },
+   "E": {
+    "top": "white graphic tee",
+    "outerwear": "black hoodie",
+    "bottom": "multicolor cargos",
+    "footwear": "black performance runner"
+   }
+  }
+ },
+ {
+  "photo": "ig-075",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-075.full.jpg",
+  "readings": {
+   "A": {
+    "top": "tan camel fleece",
+    "bottom": "charcoal jeans",
+    "footwear": "black work boot"
+   },
+   "B": {
+    "top": "tan camel fleece",
+    "bottom": "charcoal jeans",
+    "footwear": "black work boot"
+   },
+   "C": {
+    "top": "tan camel fleece",
+    "bottom": "charcoal jeans",
+    "footwear": "black other"
+   },
+   "D": {
+    "top": "tan camel sweater",
+    "bottom": "charcoal jeans",
+    "footwear": "black work boot"
+   },
+   "E": {
+    "top": "tan camel fleece",
+    "bottom": "charcoal jeans",
+    "footwear": "black work boot"
+   }
+  }
+ },
+ {
+  "photo": "pin-033",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-033.full.jpg",
+  "readings": {
+   "A": {
+    "top": "blue camp collar shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "black loafer"
+   },
+   "B": {
+    "top": "blue camp collar shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "black loafer"
+   },
+   "C": {
+    "top": "blue oxford shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "black other"
+   },
+   "D": {
+    "top": "multicolor dress shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "black loafer"
+   },
+   "E": {
+    "top": "blue other",
+    "bottom": "denim dark jeans",
+    "footwear": "black loafer"
+   }
+  }
+ },
+ {
+  "photo": "pin-013",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-013.full.jpg",
+  "readings": {
+   "A": {
+    "top": "black graphic tee",
+    "bottom": "denim dark jeans",
+    "footwear": "red basketball sneaker"
+   },
+   "B": {
+    "top": "black graphic tee",
+    "bottom": "denim dark jeans",
+    "footwear": "red basketball sneaker"
+   },
+   "C": {
+    "top": "black graphic tee",
+    "bottom": "denim dark jeans",
+    "footwear": "red basketball sneaker"
+   },
+   "D": {
+    "top": "black graphic tee",
+    "bottom": "denim dark jeans",
+    "footwear": "red basketball sneaker"
+   },
+   "E": {
+    "top": "black graphic tee",
+    "bottom": "denim dark jeans",
+    "footwear": "red chunky sneaker"
+   }
+  }
+ },
+ {
+  "photo": "pin-050",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-050.full.jpg",
+  "readings": {
+   "A": {
+    "top": "purple sweater",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel suede chukka"
+   },
+   "B": {
+    "top": "purple sweater",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel suede chukka"
+   },
+   "C": {
+    "top": "purple sweater",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel suede chukka"
+   },
+   "D": {
+    "top": "purple sweater",
+    "bottom": "black jeans",
+    "footwear": "tan camel suede chukka"
+   },
+   "E": {
+    "top": "multicolor flannel shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel suede chukka"
+   }
+  }
+ },
+ {
+  "photo": "ig-085",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-085.full.jpg",
+  "readings": {
+   "A": {
+    "top": "charcoal hoodie",
+    "outerwear": "black leather jacket",
+    "bottom": "brown jeans",
+    "footwear": "black work boot"
+   },
+   "B": {
+    "top": "black hoodie",
+    "bottom": "charcoal jeans",
+    "footwear": "black performance runner"
+   },
+   "C": {
+    "top": "charcoal hoodie",
+    "bottom": "charcoal jeans",
+    "footwear": "black chunky sneaker"
+   },
+   "D": {
+    "outerwear": "charcoal leather jacket",
+    "bottom": "charcoal jeans",
+    "footwear": "black work boot"
+   },
+   "E": {
+    "top": "charcoal hoodie",
+    "bottom": "charcoal jeans",
+    "footwear": "black basketball sneaker"
+   }
+  }
+ },
+ {
+  "photo": "ig-034",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-034.full.jpg",
+  "readings": {
+   "A": {
+    "top": "burgundy tee",
+    "bottom": "off white cream trousers",
+    "footwear": "black loafer"
+   },
+   "B": {
+    "top": "burgundy tee",
+    "bottom": "off white cream trousers",
+    "footwear": "black loafer"
+   },
+   "C": {
+    "top": "burgundy tee",
+    "bottom": "off white cream trousers",
+    "footwear": "black loafer"
+   },
+   "D": {
+    "top": "burgundy tee",
+    "bottom": "off white cream trousers",
+    "footwear": "black loafer"
+   },
+   "E": {
+    "top": "burgundy tee",
+    "bottom": "off white cream drawstring trousers",
+    "footwear": "black loafer"
+   }
+  }
+ },
+ {
+  "photo": "ig-078",
+  "image": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-078.full.jpg",
+  "readings": {
+   "A": {
+    "top": "blue flannel shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel work boot"
+   },
+   "B": {
+    "top": "blue flannel shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel work boot"
+   },
+   "C": {
+    "top": "blue flannel shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel work boot"
+   },
+   "D": {
+    "top": "blue flannel shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel work boot"
+   },
+   "E": {
+    "top": "blue flannel shirt",
+    "bottom": "denim dark jeans",
+    "footwear": "tan camel work boot"
+   }
+  }
+ }
+]

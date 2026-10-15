@@ -13,8 +13,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ENV = HERE.parent / "app" / ".env.development.local"
 GEMINI_SCHEMA = json.loads((HERE / "schema.json").read_text())
-# $ per token (OpenAI pricing page, read Oct 6 in inputs/ai-provider-research.md; confirm with usage on the first call)
-PRICES = {"gpt-6-luna": (0.10 / 1e6, 0.50 / 1e6), "gpt-5.6-luna": (0.20 / 1e6, 1.20 / 1e6), "gpt-5.4-mini": (0.75 / 1e6, 4.50 / 1e6),
+# $ per token (developers.openai.com/api/docs/pricing, read Oct 15; the usage counts confirm the token side)
+PRICES = {"gpt-6-luna": (0.10 / 1e6, 0.50 / 1e6), "gpt-6.1-sol": (2.00 / 1e6, 10.00 / 1e6), "gpt-6-sol": (2.00 / 1e6, 10.00 / 1e6), "gpt-5.6-luna": (0.20 / 1e6, 1.20 / 1e6), "gpt-5.4-mini": (0.75 / 1e6, 4.50 / 1e6),
           "gpt-5.4-nano": (0.20 / 1e6, 1.25 / 1e6)}
 
 

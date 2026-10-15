@@ -1,0 +1,422 @@
+{
+ "pin-060": {
+  "A": "luna",
+  "B": "gem38",
+  "C": "sol6",
+  "D": "mini54",
+  "E": "luna56"
+ },
+ "pin-053": {
+  "A": "gem38",
+  "B": "luna",
+  "C": "sol6",
+  "D": "mini54",
+  "E": "luna56"
+ },
+ "pin-047": {
+  "A": "luna56",
+  "B": "mini54",
+  "C": "luna",
+  "D": "gem38",
+  "E": "sol6"
+ },
+ "pin-024": {
+  "A": "gem38",
+  "B": "luna56",
+  "C": "mini54",
+  "D": "luna",
+  "E": "sol6"
+ },
+ "ig-004": {
+  "A": "gem38",
+  "B": "sol6",
+  "C": "luna56",
+  "D": "mini54",
+  "E": "luna"
+ },
+ "pin-056": {
+  "A": "gem38",
+  "B": "mini54",
+  "C": "luna",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "pin-025": {
+  "A": "luna",
+  "B": "mini54",
+  "C": "gem38",
+  "D": "luna56",
+  "E": "sol6"
+ },
+ "pin-054": {
+  "A": "sol6",
+  "B": "luna56",
+  "C": "luna",
+  "D": "mini54",
+  "E": "gem38"
+ },
+ "ig-075": {
+  "A": "gem38",
+  "B": "luna56",
+  "C": "sol6",
+  "D": "mini54",
+  "E": "luna"
+ },
+ "pin-033": {
+  "A": "gem38",
+  "B": "mini54",
+  "C": "luna",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "pin-013": {
+  "A": "luna56",
+  "B": "sol6",
+  "C": "luna",
+  "D": "gem38",
+  "E": "mini54"
+ },
+ "pin-050": {
+  "A": "luna",
+  "B": "gem38",
+  "C": "luna56",
+  "D": "mini54",
+  "E": "sol6"
+ },
+ "ig-085": {
+  "A": "luna56",
+  "B": "mini54",
+  "C": "sol6",
+  "D": "luna",
+  "E": "gem38"
+ },
+ "ig-034": {
+  "A": "mini54",
+  "B": "luna56",
+  "C": "sol6",
+  "D": "gem38",
+  "E": "luna"
+ },
+ "ig-078": {
+  "A": "sol6",
+  "B": "luna56",
+  "C": "mini54",
+  "D": "luna",
+  "E": "gem38"
+ },
+ "pin-004": {
+  "A": "gem38",
+  "B": "luna56",
+  "C": "luna",
+  "D": "mini54",
+  "E": "sol6"
+ },
+ "ig-116": {
+  "A": "mini54",
+  "B": "sol6",
+  "C": "luna",
+  "D": "luna56",
+  "E": "gem38"
+ },
+ "pin-036": {
+  "A": "luna56",
+  "B": "luna",
+  "C": "sol6",
+  "D": "gem38",
+  "E": "mini54"
+ },
+ "ig-035": {
+  "A": "mini54",
+  "B": "sol6",
+  "C": "luna",
+  "D": "gem38",
+  "E": "luna56"
+ },
+ "ig-011": {
+  "A": "luna",
+  "B": "mini54",
+  "C": "luna56",
+  "D": "sol6",
+  "E": "gem38"
+ },
+ "ig-102": {
+  "A": "luna56",
+  "B": "sol6",
+  "C": "luna",
+  "D": "mini54",
+  "E": "gem38"
+ },
+ "ig-050": {
+  "A": "luna",
+  "B": "mini54",
+  "C": "sol6",
+  "D": "luna56",
+  "E": "gem38"
+ },
+ "pin-039": {
+  "A": "luna56",
+  "B": "gem38",
+  "C": "sol6",
+  "D": "luna",
+  "E": "mini54"
+ },
+ "ig-132": {
+  "A": "mini54",
+  "B": "luna56",
+  "C": "luna",
+  "D": "gem38",
+  "E": "sol6"
+ },
+ "ig-014": {
+  "A": "luna",
+  "B": "gem38",
+  "C": "mini54",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "pin-026": {
+  "A": "luna",
+  "B": "mini54",
+  "C": "sol6",
+  "D": "luna56",
+  "E": "gem38"
+ },
+ "pin-015": {
+  "A": "gem38",
+  "B": "mini54",
+  "C": "sol6",
+  "D": "luna",
+  "E": "luna56"
+ },
+ "rd-008": {
+  "A": "mini54",
+  "B": "luna",
+  "C": "sol6",
+  "D": "gem38",
+  "E": "luna56"
+ },
+ "rd-004": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "luna56",
+  "D": "mini54",
+  "E": "luna"
+ },
+ "ig-104": {
+  "A": "sol6",
+  "B": "luna",
+  "C": "mini54",
+  "D": "gem38",
+  "E": "luna56"
+ },
+ "ig-063": {
+  "A": "sol6",
+  "B": "luna56",
+  "C": "luna",
+  "D": "gem38",
+  "E": "mini54"
+ },
+ "ig-101": {
+  "A": "gem38",
+  "B": "luna",
+  "C": "mini54",
+  "D": "luna56",
+  "E": "sol6"
+ },
+ "ig-106": {
+  "A": "mini54",
+  "B": "gem38",
+  "C": "luna",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "ig-040": {
+  "A": "luna56",
+  "B": "mini54",
+  "C": "sol6",
+  "D": "gem38",
+  "E": "luna"
+ },
+ "ig-047": {
+  "A": "sol6",
+  "B": "luna56",
+  "C": "gem38",
+  "D": "luna",
+  "E": "mini54"
+ },
+ "ig-107": {
+  "A": "mini54",
+  "B": "luna56",
+  "C": "luna",
+  "D": "gem38",
+  "E": "sol6"
+ },
+ "ig-089": {
+  "A": "luna",
+  "B": "sol6",
+  "C": "luna56",
+  "D": "gem38",
+  "E": "mini54"
+ },
+ "ig-082": {
+  "A": "gem38",
+  "B": "luna",
+  "C": "mini54",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "pin-073": {
+  "A": "luna",
+  "B": "sol6",
+  "C": "luna56",
+  "D": "mini54",
+  "E": "gem38"
+ },
+ "pin-016": {
+  "A": "sol6",
+  "B": "luna",
+  "C": "gem38",
+  "D": "mini54",
+  "E": "luna56"
+ },
+ "ig-098": {
+  "A": "sol6",
+  "B": "luna56",
+  "C": "gem38",
+  "D": "mini54",
+  "E": "luna"
+ },
+ "pin-042": {
+  "A": "gem38",
+  "B": "luna",
+  "C": "mini54",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "ig-036": {
+  "A": "luna56",
+  "B": "sol6",
+  "C": "mini54",
+  "D": "luna",
+  "E": "gem38"
+ },
+ "ig-024": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "luna56",
+  "D": "mini54",
+  "E": "luna"
+ },
+ "pin-029": {
+  "A": "mini54",
+  "B": "luna56",
+  "C": "luna",
+  "D": "gem38",
+  "E": "sol6"
+ },
+ "ig-001": {
+  "A": "luna56",
+  "B": "gem38",
+  "C": "mini54",
+  "D": "luna",
+  "E": "sol6"
+ },
+ "rd-006": {
+  "A": "luna56",
+  "B": "mini54",
+  "C": "luna",
+  "D": "sol6",
+  "E": "gem38"
+ },
+ "rd-007": {
+  "A": "sol6",
+  "B": "gem38",
+  "C": "mini54",
+  "D": "luna",
+  "E": "luna56"
+ },
+ "ig-070": {
+  "A": "gem38",
+  "B": "luna",
+  "C": "mini54",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "rd-013": {
+  "A": "gem38",
+  "B": "mini54",
+  "C": "sol6",
+  "D": "luna56",
+  "E": "luna"
+ },
+ "ig-056": {
+  "A": "gem38",
+  "B": "luna56",
+  "C": "luna",
+  "D": "mini54",
+  "E": "sol6"
+ },
+ "ig-021": {
+  "A": "gem38",
+  "B": "luna56",
+  "C": "sol6",
+  "D": "mini54",
+  "E": "luna"
+ },
+ "pin-041": {
+  "A": "luna56",
+  "B": "luna",
+  "C": "sol6",
+  "D": "gem38",
+  "E": "mini54"
+ },
+ "ig-065": {
+  "A": "luna56",
+  "B": "mini54",
+  "C": "luna",
+  "D": "gem38",
+  "E": "sol6"
+ },
+ "rd-017": {
+  "A": "mini54",
+  "B": "luna56",
+  "C": "sol6",
+  "D": "gem38",
+  "E": "luna"
+ },
+ "ig-096": {
+  "A": "sol6",
+  "B": "luna56",
+  "C": "mini54",
+  "D": "gem38",
+  "E": "luna"
+ },
+ "pin-017": {
+  "A": "gem38",
+  "B": "luna",
+  "C": "mini54",
+  "D": "sol6",
+  "E": "luna56"
+ },
+ "ig-091": {
+  "A": "mini54",
+  "B": "luna56",
+  "C": "gem38",
+  "D": "sol6",
+  "E": "luna"
+ },
+ "pin-037": {
+  "A": "luna56",
+  "B": "gem38",
+  "C": "sol6",
+  "D": "luna",
+  "E": "mini54"
+ },
+ "ig-066": {
+  "A": "luna56",
+  "B": "luna",
+  "C": "sol6",
+  "D": "gem38",
+  "E": "mini54"
+ }
+}

@@ -1,0 +1,251 @@
+photo,slot,reading,type,color,notes
+ig-001,top,A,right,right,white tee under the knit
+ig-001,top,B,right,right,brown waffle knit as top
+ig-001,top,C,right,right,white tee under; knit missed
+ig-001,top,D,right,right,brown waffle knit as top
+ig-001,top,E,right,right,white tee under the knit
+ig-001,outerwear,A,wrong,right,pullover knit not an overshirt
+ig-001,outerwear,B,right,,none; knit read as top
+ig-001,outerwear,C,missing,,brown knit layer not named
+ig-001,outerwear,D,right,,none; knit read as top
+ig-001,outerwear,E,right,right,brown knit layer
+ig-001,bottom,A,right,close,light faded wash
+ig-001,bottom,B,right,close,light faded wash
+ig-001,bottom,C,right,right,light distressed wide jeans
+ig-001,bottom,D,right,close,light faded wash
+ig-001,bottom,E,right,right,light distressed wide jeans
+ig-001,footwear,A,wrong,right,suede loafers not boots
+ig-001,footwear,B,right,right,brown suede loafers
+ig-001,footwear,C,right,right,brown suede loafers
+ig-001,footwear,D,wrong,right,suede loafers not boots
+ig-001,footwear,E,right,right,brown suede loafers
+rd-006,top,A,right,close,pale grey shirt read as white
+rd-006,top,B,right,right,
+rd-006,top,C,right,right,
+rd-006,top,D,right,right,
+rd-006,top,E,right,right,
+rd-006,bottom,A,right,right,
+rd-006,bottom,B,right,right,
+rd-006,bottom,C,right,right,
+rd-006,bottom,D,right,right,
+rd-006,bottom,E,right,right,
+rd-006,footwear,A,right,right,
+rd-006,footwear,B,right,right,
+rd-006,footwear,C,right,right,
+rd-006,footwear,D,right,right,
+rd-006,footwear,E,right,right,
+rd-007,top,A,close,right,black knit polo with placket
+rd-007,top,B,close,right,black knit polo with placket
+rd-007,top,C,close,right,black knit polo with placket
+rd-007,top,D,close,right,black knit polo with placket
+rd-007,top,E,close,right,black knit polo with placket
+rd-007,outerwear,A,right,right,double-breasted overcoat
+rd-007,outerwear,B,right,right,
+rd-007,outerwear,C,right,right,
+rd-007,outerwear,D,right,right,
+rd-007,outerwear,E,right,right,
+rd-007,bottom,A,right,close,dark burgundy-brown
+rd-007,bottom,B,right,right,
+rd-007,bottom,C,right,right,
+rd-007,bottom,D,right,close,dark burgundy-brown
+rd-007,bottom,E,right,close,dark burgundy-brown
+rd-007,footwear,A,close,right,laced derby
+rd-007,footwear,B,right,right,
+rd-007,footwear,C,close,right,laced derby
+rd-007,footwear,D,right,right,
+rd-007,footwear,E,right,right,
+ig-070,top,A,right,right,zip-neck polo
+ig-070,top,B,close,right,jersey zip polo not knit
+ig-070,top,C,right,right,
+ig-070,top,D,close,right,jersey zip polo not knit
+ig-070,top,E,close,right,jersey zip polo not knit
+ig-070,bottom,A,right,close,dark indigo wide jeans
+ig-070,bottom,B,right,close,dark indigo wide jeans
+ig-070,bottom,C,right,right,
+ig-070,bottom,D,right,right,
+ig-070,bottom,E,right,right,
+ig-070,footwear,A,right,right,black leather lace-ups mostly hidden
+ig-070,footwear,B,close,right,ankle hidden; looks low
+ig-070,footwear,C,close,right,laces unclear
+ig-070,footwear,D,close,right,
+ig-070,footwear,E,close,right,ankle hidden; looks low
+rd-013,top,A,right,right,very dark navy-teal polo
+rd-013,top,B,right,close,dark navy-teal read black
+rd-013,top,C,close,close,collared polo not tee
+rd-013,top,D,close,close,collared polo not tee
+rd-013,top,E,close,right,collared polo not tee
+rd-013,bottom,A,right,right,
+rd-013,bottom,B,close,right,chino-like
+rd-013,bottom,C,close,right,chino-like
+rd-013,bottom,D,close,right,chino-like
+rd-013,bottom,E,right,right,
+rd-013,footwear,A,right,close,light grey-white runner
+rd-013,footwear,B,right,close,light grey-white runner
+rd-013,footwear,C,right,close,light grey-white runner
+rd-013,footwear,D,right,right,
+rd-013,footwear,E,right,right,
+ig-056,top,A,right,right,white tee glimpse under coat
+ig-056,top,B,missing,,white tee shows under coat
+ig-056,top,C,right,right,
+ig-056,top,D,right,right,
+ig-056,top,E,right,right,
+ig-056,outerwear,A,right,right,cropped chore coat
+ig-056,outerwear,B,right,right,
+ig-056,outerwear,C,right,right,
+ig-056,outerwear,D,close,right,chore coat read overshirt
+ig-056,outerwear,E,right,right,
+ig-056,bottom,A,close,right,wide textured trousers
+ig-056,bottom,B,close,right,wide textured trousers
+ig-056,bottom,C,close,right,wide textured trousers
+ig-056,bottom,D,right,right,
+ig-056,bottom,E,close,right,wide textured trousers
+ig-056,footwear,A,right,right,chunky lug derby
+ig-056,footwear,B,close,right,ankle hidden; looks low
+ig-056,footwear,C,close,right,ankle hidden; looks low
+ig-056,footwear,D,close,right,chunky not a dress shoe
+ig-056,footwear,E,close,right,chunky not a dress shoe
+ig-021,top,A,right,right,
+ig-021,top,B,right,right,
+ig-021,top,C,right,right,
+ig-021,top,D,right,right,
+ig-021,top,E,right,right,
+ig-021,bottom,A,right,right,
+ig-021,bottom,B,right,right,
+ig-021,bottom,C,right,right,
+ig-021,bottom,D,right,right,
+ig-021,bottom,E,right,right,
+ig-021,footwear,A,right,right,tassel loafers
+ig-021,footwear,B,right,right,
+ig-021,footwear,C,right,right,
+ig-021,footwear,D,right,right,
+ig-021,footwear,E,right,right,
+pin-041,top,A,close,right,half-zip sweatshirt
+pin-041,top,B,close,right,half-zip sweatshirt
+pin-041,top,C,right,right,
+pin-041,top,D,right,right,
+pin-041,top,E,close,right,fleece half-zip not knit
+pin-041,bottom,A,right,right,
+pin-041,bottom,B,right,right,
+pin-041,bottom,C,right,right,
+pin-041,bottom,D,right,right,
+pin-041,bottom,E,right,right,
+pin-041,footwear,A,right,right,rugged leather lace-ups
+pin-041,footwear,B,right,right,
+pin-041,footwear,C,close,right,rugged not dressy
+pin-041,footwear,D,right,right,
+pin-041,footwear,E,close,right,rugged not dressy
+ig-065,top,A,right,right,pocket graphic tee
+ig-065,top,B,right,right,
+ig-065,top,C,right,right,
+ig-065,top,D,right,right,
+ig-065,top,E,right,right,
+ig-065,bottom,A,close,right,long cargo shorts
+ig-065,bottom,B,right,right,
+ig-065,bottom,C,close,right,long cargo shorts
+ig-065,bottom,D,right,right,
+ig-065,bottom,E,right,close,olive-brown
+ig-065,footwear,A,right,right,flip-flops
+ig-065,footwear,B,right,right,
+ig-065,footwear,C,right,right,
+ig-065,footwear,D,right,right,
+ig-065,footwear,E,right,right,
+rd-017,top,A,close,close,cream with black stripes; collared knit
+rd-017,top,B,close,close,stripes missed; has collar
+rd-017,top,C,right,close,stripes missed
+rd-017,top,D,right,close,stripes missed
+rd-017,top,E,close,close,stripes missed; has collar
+rd-017,outerwear,A,right,right,
+rd-017,outerwear,B,right,right,
+rd-017,outerwear,C,right,right,
+rd-017,outerwear,D,right,right,
+rd-017,outerwear,E,right,right,
+rd-017,bottom,A,right,right,
+rd-017,bottom,B,right,right,
+rd-017,bottom,C,right,right,
+rd-017,bottom,D,close,right,
+rd-017,bottom,E,right,right,
+rd-017,footwear,A,right,right,penny loafers
+rd-017,footwear,B,right,right,
+rd-017,footwear,C,right,right,
+rd-017,footwear,D,right,right,
+rd-017,footwear,E,wrong,right,clear loafers read as other
+ig-096,top,A,right,right,fitted polo
+ig-096,top,B,close,right,collared polo not tee
+ig-096,top,C,close,right,collared polo not tee
+ig-096,top,D,right,right,
+ig-096,top,E,close,right,collared polo not tee
+ig-096,bottom,A,right,right,pinstripe not named
+ig-096,bottom,B,right,right,pinstripe not named
+ig-096,bottom,C,right,right,pinstripe not named
+ig-096,bottom,D,right,close,near-black pinstripe
+ig-096,bottom,E,right,right,pinstripe not named
+ig-096,footwear,A,close,right,mostly hidden
+ig-096,footwear,B,right,right,
+ig-096,footwear,C,right,right,
+ig-096,footwear,D,right,right,
+ig-096,footwear,E,right,right,
+pin-017,top,A,right,right,small chest graphic
+pin-017,top,B,right,right,
+pin-017,top,C,close,right,small graphic missed
+pin-017,top,D,right,right,
+pin-017,top,E,right,right,
+pin-017,bottom,A,right,right,
+pin-017,bottom,B,right,right,
+pin-017,bottom,C,right,right,
+pin-017,bottom,D,right,right,
+pin-017,bottom,E,right,right,
+ig-091,top,A,right,right,black sweater over white shirt
+ig-091,top,B,wrong,wrong,names the shirt underneath; sweater missed
+ig-091,top,C,right,close,
+ig-091,top,D,wrong,wrong,names the shirt underneath; sweater missed
+ig-091,top,E,right,right,
+ig-091,bottom,A,right,close,dark charcoal-navy pleated
+ig-091,bottom,B,right,close,dark charcoal-navy pleated
+ig-091,bottom,C,right,right,
+ig-091,bottom,D,right,right,
+ig-091,bottom,E,right,close,dark charcoal-navy pleated
+ig-091,footwear,A,right,right,
+ig-091,footwear,B,right,right,
+ig-091,footwear,C,right,right,
+ig-091,footwear,D,right,right,
+ig-091,footwear,E,right,right,
+pin-037,top,A,right,close,light grey tee
+pin-037,top,B,right,right,
+pin-037,top,C,right,right,
+pin-037,top,D,right,close,light grey tee
+pin-037,top,E,right,close,light grey tee
+pin-037,outerwear,A,close,right,flecked knit zip hoodie
+pin-037,outerwear,B,close,right,flecked knit zip hoodie
+pin-037,outerwear,C,right,right,
+pin-037,outerwear,D,close,right,flecked knit zip hoodie
+pin-037,outerwear,E,right,close,charcoal fleck
+pin-037,bottom,A,right,right,brown tweed trousers
+pin-037,bottom,B,right,right,
+pin-037,bottom,C,right,right,
+pin-037,bottom,D,right,right,
+pin-037,bottom,E,right,right,
+pin-037,footwear,A,missing,,shoe barely visible at bottom edge
+pin-037,footwear,B,missing,,shoe barely visible at bottom edge
+pin-037,footwear,C,missing,,shoe barely visible at bottom edge
+pin-037,footwear,D,missing,,shoe barely visible at bottom edge
+pin-037,footwear,E,close,close,dark shoe barely visible
+ig-066,top,A,close,right,black layer under jacket; likely tee
+ig-066,top,B,right,right,
+ig-066,top,C,right,right,
+ig-066,top,D,right,right,
+ig-066,top,E,right,right,
+ig-066,outerwear,A,right,right,faded cropped zip jacket
+ig-066,outerwear,B,close,right,zip jacket read as other
+ig-066,outerwear,C,right,right,
+ig-066,outerwear,D,right,right,
+ig-066,outerwear,E,wrong,close,zip jacket not a hoodie
+ig-066,bottom,A,right,right,cream carpenter jorts
+ig-066,bottom,B,right,right,
+ig-066,bottom,C,close,right,shorts read as other
+ig-066,bottom,D,right,right,
+ig-066,bottom,E,wrong,right,below-knee shorts not trousers
+ig-066,footwear,A,right,right,chunky brown sneakers
+ig-066,footwear,B,right,right,
+ig-066,footwear,C,right,right,
+ig-066,footwear,D,right,right,
+ig-066,footwear,E,close,right,chunky sneaker not runner

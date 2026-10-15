@@ -1,5 +1,7 @@
 # Which model should read the outfit? Gemini vs OpenAI, and multi-call systems
 
+*Round 2 (more OpenAI models, #280) is first; round 1 (#278) follows.*
+
 *Oct 15, 2026. Claude. DECISIONS-LOG #278. The founder's OK and his own OpenAI key (limited balance, expiring; stored
 only in the git-ignored `app/.env.development.local`). Spent about $3.33 in all: OpenAI ~$1.4, Gemini Flash-Lite
 ~$1.85. Code: `extraction-test/openai_read.py` (the OpenAI call; the app's schema converted to OpenAI's strict
@@ -8,7 +10,36 @@ Results: `extraction-test/results/models1/report.md`, `results/waist-specialist/
 `results/hem-models/report.md`; the blind name check in `extraction-test/waist_labels/names/`. Nothing in the app
 changed.*
 
-## Bottom line
+## Round 2 (Oct 15, #280): GPT-6 Sol, GPT-5.6 Luna and GPT-5.4 mini
+
+**The founder's OK; about $2.30 on his key** (≈ $3.76 in all on it). The same request as round 1, reasoning none and temperature 0.
+- GPT-6.1 Sol refuses "none" and took 12 s at "low", so GPT-6 Sol (same price) stood in.
+- GPT-5.6 Luna ran on every photo twice.
+- Sol and 5.4 mini ran first on the 60 name-check photos plus his 27 (his twice). A full run was planned only for a model that named clothes as well as Gemini. None did, so it wasn't spent.
+
+**The blind name check, five ways** (`waist_labels/names2/`): 60 gold photos, five readings each (A–E, models hidden, order shuffled per photo), four reviewers (`results/models1/names2.txt`).
+
+| Model | Garment named right | Wrong / extra / missing | Tops | Bottoms | Shoes | Jackets | Colors right | ¢ a read | Median s |
+|---|---|---|---|---|---|---|---|---|---|
+| **Gemini 3.8 Flash (today)** | **82%** | **7** | 81% | 93% | 73% | 82% | 83% | 0.59 | 6.8 |
+| GPT-6 Sol | 78% | 14 | 77% | 88% | 66% | 86% | 83% | 1.00 | 4.6 |
+| GPT-6 Luna | 75% | 14 | 72% | 88% | 68% | 65% | 85% | 0.054 | 5.4 |
+| GPT-5.6 Luna | 74% | 19 | 66% | 88% | 71% | 69% | 83% | 0.116 | 4.6 |
+| GPT-5.4 mini | 71% | 15 | 71% | 86% | 61% | 60% | 80% | 0.41 | 2.9 |
+
+The first check's Gemini and GPT-6 Luna came out the same here (85% → 82%, 75% → 75%), so the reviewers are consistent.
+
+**GPT-5.6 Luna in full** (every photo, 2 runs):
+- the same photo within 0.5: 284/290 (Gemini 284/289), identical 237 vs 228;
+- panel r 0.57 on all photos (Gemini 0.58), 0.60 on the test half (0.49);
+- his 20: 0.61; 8+ share 13% (Gemini 15%).
+- It agrees with the judges and is as steady as Gemini, but names clothes like GPT-6 Luna, for twice its price.
+
+**Sol and 5.4 mini** were read only on 60 gold photos, so their panel numbers aren't reliable. Sol's shoes (66%) and mini's bottoms and shoes are below Gemini.
+
+**Verdict:** no OpenAI model names clothes as well as Gemini 3.8 Flash. The closest, GPT-6 Sol, costs 1.8× as much. The cheap ones (GPT-6 Luna, GPT-5.6 Luna) score outfits as well, at 1/11 to 1/5 of the cost, with about twice as many naming errors.
+
+## Bottom line (round 1)
 
 1. **GPT-6 Luna scores outfits about as well as today's Gemini, at about 1/11 of the cost.**
    - It agrees with the 5-judge panel as well (r 0.59 vs 0.58 on all 223 gold photos; 0.60 vs 0.49 on the held-out half).
@@ -87,7 +118,24 @@ changed.*
 - **With Luna for the read alone:** about 0.53¢.
 - **With Luna for all three calls:** about 0.15¢. That's an estimate: the second look and the closet call weren't tested on Luna.
 
-## Options, ranked (Claude's recommendation first)
+## Options, ranked (Claude's recommendation first; updated after round 2, #280)
+
+1. **Stay on Gemini 3.8 Flash for the reading now.** It names clothes best, and the names are what he sees on the card and in his closet.
+   - Keep GPT-6 Luna wired up as the fallback (`openai_read.py`; ready since round 1).
+   - Revisit if the bill bites after the beta, or when a new OpenAI model appears. The same test reruns in minutes (`model_test.py`, `waist_labels/names2/`).
+2. **If money has to win before then: GPT-6 Luna for the read** (0.054¢, 91% cheaper), accepting about 2× the naming errors (75% vs 82% right).
+   - "Not quite right?" lets him fix a name.
+   - GPT-5.6 Luna isn't better at names, for twice the price.
+3. **Not:**
+   - GPT-6 Sol: closest on names, but 1.8× Gemini;
+   - GPT-5.4 mini;
+   - Flash-Lite;
+   - different models by tier;
+   - voting or cascades.
+
+*(Round 1's list, kept for the record:)*
+
+
 
 1. **Test the mid-priced OpenAI models before deciding** (~$1.10; corrected Oct 15, #279).
    - GPT-5.6 Luna (0.12¢ a read) on every photo; GPT-5.4 mini (0.43¢) on ~100, including the 60 of the blind name check.

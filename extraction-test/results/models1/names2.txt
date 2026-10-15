@@ -1,0 +1,7 @@
+Blind name check, 60 gold photos, five readings each (A–E, models hidden; waist_labels/names2/)
+model    | type right · wrong/extra/missing · n | color right | top · bottom · shoes · outer (type right)
+gem38    | 82% · 7 · 199 | 83% | 81% · 93% · 73% · 82%
+luna     | 75% · 14 · 199 | 85% | 72% · 88% · 68% · 65%
+luna56   | 74% · 19 · 199 | 83% | 66% · 88% · 71% · 69%
+mini54   | 71% · 15 · 199 | 80% | 71% · 86% · 61% · 60%
+sol6     | 78% · 14 · 199 | 83% | 77% · 88% · 66% · 86%

@@ -1,0 +1,236 @@
+photo,slot,reading,type,color,notes
+pin-004,top,A,right,right,navy button shirt with small pattern
+pin-004,top,B,right,right,navy button shirt with small pattern
+pin-004,top,C,close,right,button shirt; oxford a near look-alike
+pin-004,top,D,right,close,navy read as blue
+pin-004,bottom,A,right,right,dark wash jeans
+pin-004,bottom,B,right,right,dark wash jeans
+pin-004,bottom,C,right,right,dark wash jeans
+pin-004,bottom,D,right,close,dark wash read as blue
+pin-004,bottom,E,right,right,dark wash jeans
+pin-004,footwear,A,right,right,brown dress shoes
+pin-004,footwear,B,right,right,brown dress shoes
+pin-004,footwear,C,wrong,right,dress shoes not work boots
+pin-004,footwear,D,right,right,brown dress shoes
+pin-004,footwear,E,right,right,brown dress shoes
+pin-004,top,E,right,right,navy button shirt with small pattern
+ig-116,top,A,right,right,dark knit quarter zip
+ig-116,top,B,right,right,dark knit quarter zip
+ig-116,top,C,right,right,dark knit quarter zip
+ig-116,top,D,right,right,dark knit quarter zip
+ig-116,top,E,right,right,dark knit quarter zip
+ig-116,bottom,A,right,right,mid wash wide jeans
+ig-116,bottom,B,right,right,mid wash wide jeans
+ig-116,bottom,C,right,right,mid wash wide jeans
+ig-116,bottom,D,right,right,mid wash wide jeans
+ig-116,bottom,E,right,right,mid wash wide jeans
+ig-116,footwear,A,right,right,shiny black shoes mostly hidden
+ig-116,footwear,B,right,right,shiny black shoes mostly hidden
+ig-116,footwear,C,right,right,shiny black shoes mostly hidden
+ig-116,footwear,D,right,right,shiny black shoes mostly hidden
+ig-116,footwear,E,close,right,could be loafers; mostly hidden
+pin-036,top,A,right,right,black tee
+pin-036,top,B,right,right,black tee
+pin-036,top,C,right,right,black tee
+pin-036,top,D,right,right,black tee
+pin-036,top,E,right,right,black tee
+pin-036,bottom,A,right,right,black cargo pants
+pin-036,bottom,B,right,right,black cargo pants
+pin-036,bottom,C,right,right,black cargo pants
+pin-036,bottom,D,right,right,black cargo pants
+pin-036,bottom,E,right,right,black cargo pants
+pin-036,footwear,A,wrong,right,sneakers not boots
+pin-036,footwear,B,right,right,black runner sneakers
+pin-036,footwear,C,right,right,black runner sneakers
+pin-036,footwear,D,close,right,runner with a thick sole
+pin-036,footwear,E,right,right,black runner sneakers
+ig-035,top,A,close,right,ribbed long-sleeve henley not a polo
+ig-035,top,B,right,right,henley fits other
+ig-035,top,C,right,right,henley fits other
+ig-035,top,D,close,right,long-sleeve henley read as tee
+ig-035,top,E,right,right,henley fits other
+ig-035,bottom,A,right,right,brown wide trousers
+ig-035,bottom,B,right,right,brown wide trousers
+ig-035,bottom,C,right,right,brown wide trousers
+ig-035,bottom,D,right,right,brown wide trousers
+ig-035,bottom,E,right,right,brown wide trousers
+ig-035,footwear,A,right,right,black loafers
+ig-035,footwear,B,right,right,black loafers
+ig-035,footwear,C,right,right,black loafers
+ig-035,footwear,D,right,right,black loafers
+ig-035,footwear,E,right,right,black loafers
+ig-011,top,A,right,right,green ribbed half zip
+ig-011,top,B,close,right,half zip knit read as sweater
+ig-011,top,C,right,right,green ribbed half zip
+ig-011,top,D,wrong,wrong,names the white tee underneath; misses the green half zip
+ig-011,top,E,right,right,green ribbed half zip
+ig-011,bottom,A,right,right,black pleated trousers
+ig-011,bottom,B,right,right,black pleated trousers
+ig-011,bottom,C,right,right,black pleated trousers
+ig-011,bottom,D,right,close,black read as charcoal
+ig-011,bottom,E,right,right,black pleated trousers
+ig-011,footwear,A,right,right,burgundy penny loafers
+ig-011,footwear,B,right,right,burgundy penny loafers
+ig-011,footwear,C,close,right,loafers read as dress shoes
+ig-011,footwear,D,right,right,burgundy penny loafers
+ig-011,footwear,E,right,right,burgundy penny loafers
+ig-102,top,A,right,right,light blue striped button shirt
+ig-102,top,B,right,right,light blue striped button shirt
+ig-102,top,C,right,right,light blue striped button shirt
+ig-102,top,D,right,right,light blue striped button shirt
+ig-102,top,E,right,right,light blue striped button shirt
+ig-102,bottom,A,close,right,cream pleated wide trousers; no drawstring visible
+ig-102,bottom,B,close,right,cream pleated wide trousers; no drawstring visible
+ig-102,bottom,C,close,right,cream pleated wide trousers; no drawstring visible
+ig-102,bottom,D,close,right,cream pleated wide trousers; no drawstring visible
+ig-102,bottom,E,right,right,cream pleated wide trousers
+ig-102,footwear,A,close,right,black flip-flops not slides
+ig-102,footwear,B,close,right,black flip-flops not slides
+ig-102,footwear,C,close,right,black flip-flops not slides
+ig-102,footwear,D,close,right,black flip-flops not slides
+ig-102,footwear,E,close,right,black flip-flops not slides
+ig-050,top,A,right,right,black tee
+ig-050,top,B,right,right,black tee
+ig-050,top,C,right,right,black tee
+ig-050,top,D,right,right,black tee
+ig-050,top,E,right,right,black tee
+ig-050,bottom,A,right,close,grey-taupe pleated trousers read as khaki
+ig-050,bottom,B,right,close,grey-taupe pleated trousers read as khaki
+ig-050,bottom,C,right,right,grey-taupe pleated trousers
+ig-050,bottom,D,right,close,grey-taupe pleated trousers read as khaki
+ig-050,bottom,E,right,right,grey-taupe pleated trousers
+ig-050,footwear,A,right,close,two-tone black and white loafers
+ig-050,footwear,B,right,close,two-tone black and white loafers
+ig-050,footwear,C,right,right,two-tone black and white loafers
+ig-050,footwear,D,right,close,two-tone black and white loafers
+ig-050,footwear,E,right,right,two-tone black and white loafers
+pin-039,top,A,right,right,heather grey graphic tee
+pin-039,top,B,right,right,heather grey graphic tee
+pin-039,top,C,right,right,heather grey graphic tee
+pin-039,top,D,right,right,heather grey graphic tee
+pin-039,top,E,right,right,heather grey graphic tee
+pin-039,bottom,A,right,right,mid wash jeans
+pin-039,bottom,B,right,right,mid wash jeans
+pin-039,bottom,C,right,right,mid wash jeans
+pin-039,bottom,D,right,right,mid wash jeans
+pin-039,bottom,E,right,right,mid wash jeans
+pin-039,footwear,A,right,right,white running sneakers
+pin-039,footwear,B,close,right,white running sneakers
+pin-039,footwear,C,right,close,mostly white with grey accents
+pin-039,footwear,D,close,right,white running sneakers
+pin-039,footwear,E,close,right,runner not a low profile sneaker
+ig-132,top,A,right,right,black button shirt
+ig-132,top,B,right,right,black button shirt
+ig-132,top,C,right,right,black button shirt
+ig-132,top,D,right,right,black button shirt
+ig-132,top,E,right,right,black button shirt
+ig-132,bottom,A,right,right,black flared trousers
+ig-132,bottom,B,right,right,black flared trousers
+ig-132,bottom,C,right,right,black flared trousers
+ig-132,bottom,D,right,right,black flared trousers
+ig-132,bottom,E,right,right,black flared trousers
+ig-132,footwear,A,right,right,shiny black dress shoes
+ig-132,footwear,B,right,right,shiny black dress shoes
+ig-132,footwear,C,right,right,shiny black dress shoes
+ig-132,footwear,D,close,right,could be loafers; lacing not clear
+ig-132,footwear,E,close,right,could be loafers; lacing not clear
+ig-014,top,A,right,right,white tee under the zip hoodie
+ig-014,top,B,close,right,zip hoodie named as top; tee underneath missed
+ig-014,top,C,close,right,zip hoodie named as top; tee underneath missed
+ig-014,top,D,right,right,white tee under the zip hoodie
+ig-014,top,E,close,right,zip hoodie named as top; tee underneath missed
+ig-014,outerwear,A,right,right,yellow zip hoodie worn open-front layer
+ig-014,outerwear,B,missing,,hoodie given as top instead
+ig-014,outerwear,C,missing,,hoodie given as top instead
+ig-014,outerwear,D,right,right,yellow zip hoodie worn open-front layer
+ig-014,outerwear,E,missing,,hoodie given as top instead
+ig-014,bottom,A,right,right,light wash wide jeans
+ig-014,bottom,B,right,right,light wash wide jeans
+ig-014,bottom,C,right,right,light wash wide jeans
+ig-014,bottom,D,right,right,light wash wide jeans
+ig-014,bottom,E,right,right,light wash wide jeans
+ig-014,footwear,A,right,right,white leather sneakers
+ig-014,footwear,B,right,right,white leather sneakers
+ig-014,footwear,C,right,right,white low sneakers
+ig-014,footwear,D,right,right,white low sneakers
+ig-014,footwear,E,right,right,white leather sneakers
+pin-026,top,A,right,right,green blue and white plaid flannel
+pin-026,top,B,right,right,green blue and white plaid flannel
+pin-026,top,C,right,right,green blue and white plaid flannel
+pin-026,top,D,right,right,green blue and white plaid flannel
+pin-026,top,E,right,close,plaid is multicolor; green leads
+pin-026,outerwear,A,right,right,charcoal pinstripe soft blazer
+pin-026,outerwear,B,right,right,charcoal pinstripe soft blazer
+pin-026,outerwear,C,right,right,charcoal pinstripe soft blazer
+pin-026,outerwear,D,right,right,charcoal pinstripe soft blazer
+pin-026,outerwear,E,right,right,charcoal pinstripe soft blazer
+pin-026,bottom,A,right,right,faded grey jeans
+pin-026,bottom,B,wrong,right,faded worn jeans not trousers
+pin-026,bottom,C,right,close,faded grey jeans
+pin-026,bottom,D,right,right,faded grey jeans
+pin-026,bottom,E,right,right,faded grey jeans
+pin-026,footwear,A,close,right,black three-stripe terrace sneakers
+pin-026,footwear,B,right,right,black three-stripe terrace sneakers
+pin-026,footwear,C,right,right,black three-stripe terrace sneakers
+pin-026,footwear,D,close,right,black three-stripe terrace sneakers
+pin-026,footwear,E,right,right,black three-stripe terrace sneakers
+pin-015,top,A,right,right,white graphic tee with black print
+pin-015,top,B,right,right,white graphic tee with black print
+pin-015,top,C,right,right,white graphic tee with black print
+pin-015,top,D,right,right,white graphic tee with black print
+pin-015,top,E,right,wrong,tee is white not light blue
+pin-015,bottom,A,right,right,mid-light wash skinny jeans
+pin-015,bottom,B,right,right,mid-light wash skinny jeans
+pin-015,bottom,C,right,close,mid-light wash skinny jeans
+pin-015,bottom,D,right,right,mid-light wash skinny jeans
+pin-015,bottom,E,right,close,mid-light wash skinny jeans
+pin-015,footwear,A,right,right,black knit runners white sole
+pin-015,footwear,B,close,right,knit runner read as low profile
+pin-015,footwear,C,close,right,knit runner read as low profile
+pin-015,footwear,D,right,right,black knit runners white sole
+pin-015,footwear,E,right,right,black knit runners white sole
+rd-008,top,A,wrong,right,crew neck navy top; no collar visible
+rd-008,top,B,right,right,navy crew neck tee
+rd-008,top,C,close,right,could be a fine knit
+rd-008,top,D,right,right,navy crew neck tee
+rd-008,top,E,right,right,navy crew neck tee
+rd-008,outerwear,A,right,close,navy blazer with gold buttons read as black
+rd-008,outerwear,B,close,close,structured navy blazer read as black unstructured
+rd-008,outerwear,C,right,right,navy blazer with gold buttons
+rd-008,outerwear,D,right,right,navy blazer with gold buttons
+rd-008,outerwear,E,right,right,navy blazer with gold buttons
+rd-008,bottom,A,right,close,stone cream trousers read as khaki
+rd-008,bottom,B,right,right,stone cream trousers
+rd-008,bottom,C,right,close,stone cream trousers read as khaki
+rd-008,bottom,D,right,close,stone cream trousers read as khaki
+rd-008,bottom,E,right,right,stone cream trousers
+rd-004,top,A,right,right,black tee
+rd-004,top,B,right,right,black tee
+rd-004,top,C,right,right,black tee
+rd-004,top,D,right,right,black tee
+rd-004,top,E,right,right,black tee
+rd-004,bottom,A,right,right,charcoal pleated trousers
+rd-004,bottom,B,right,right,charcoal pleated trousers
+rd-004,bottom,C,right,right,charcoal pleated trousers
+rd-004,bottom,D,right,right,charcoal pleated trousers
+rd-004,bottom,E,right,right,charcoal pleated trousers
+rd-004,footwear,A,right,right,black penny loafers
+rd-004,footwear,B,right,right,black penny loafers
+rd-004,footwear,C,right,right,black penny loafers
+rd-004,footwear,D,right,right,black penny loafers
+rd-004,footwear,E,right,right,black penny loafers
+ig-104,top,A,right,right,black tee
+ig-104,top,B,right,right,black tee
+ig-104,top,C,right,right,black tee
+ig-104,top,D,right,close,black read as charcoal
+ig-104,top,E,right,right,black tee
+ig-104,bottom,A,right,right,cream pleated wide trousers
+ig-104,bottom,B,right,right,cream pleated wide trousers
+ig-104,bottom,C,right,right,cream pleated wide trousers
+ig-104,bottom,D,right,right,cream pleated wide trousers
+ig-104,bottom,E,right,right,cream pleated wide trousers
+ig-104,footwear,A,close,right,split-toe black slip-ons; loafer-like
+ig-104,footwear,B,close,right,split-toe black slip-ons; loafer-like
+ig-104,footwear,C,close,right,split-toe black slip-ons; loafer-like
+ig-104,footwear,D,close,right,split-toe black slip-ons; loafer-like
+ig-104,footwear,E,right,right,split-toe black slip-ons; loafer-like

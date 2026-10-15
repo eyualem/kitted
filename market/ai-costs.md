@@ -65,6 +65,13 @@ A slow scoring read can send a backup request at 5 s if no garment has streamed 
 
 Batch is about half price but too slow for a live check.
 
+**Tested Oct 15 (#280):** no OpenAI model names clothes as well as Gemini 3.8 Flash in a blind check (82% right):
+- GPT-6 Sol 78% (1.8× the cost);
+- GPT-6 Luna 75% (1/11);
+- GPT-5.6 Luna 74% (1/5);
+- GPT-5.4 mini 71%.
+The cheap Lunas score outfits as well as Gemini. So the model lever is real money (about −0.5¢ a check) at the price of about 2× the naming errors; it's the founder's call (`rubric/research/notes/model-test.md`).
+
 ## 5. The levers, biggest first (none changes a score until tested)
 | Lever | Saves per check (2027) | Cost to find out | Who decides |
 |---|---|---|---|

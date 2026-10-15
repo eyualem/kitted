@@ -1611,3 +1611,20 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Welcome:** no demo photo reaches 8 under the live engine (p01a, p01b and s14 are 7.5, the rest 6.5–7.0), so the hero is s14 at 7.5 (p01a has socks and no shoes); a real "Sharp" needs one of the founder's own photos, which the demo README already asks for before any marketing use.
     - **Fixed on the way:** the hero gallery's page dots kept the old page after a photo was removed or restored (it now resets with the count); the Closet stack had the header hairline the other tabs lost.
     - **Still small:** a done fix row reads "+1" next to the "+1.0" pill; menu items in the Simulator need a second tap now and then (the Simulator's taps, not seen as an app bug).
+
+## Oct 15 · More OpenAI models tested (founder: "u can test out gpt 6 sol … and the 2 others")
+280. **No OpenAI model names clothes as well as Gemini 3.8 Flash. Gemini stays the reading model by default; GPT-6 Luna is the wired-up fallback if money has to win** (report: `rubric/research/notes/model-test.md`, round 2).
+    - **Spend:** ~$2.30 on his key (~$3.76 in all).
+    - **The runs:**
+      - GPT-6 Sol stood in for 6.1 Sol: same price; 6.1 Sol refuses reasoning "none" and took 12 s at "low".
+      - GPT-5.6 Luna ran on every photo.
+      - Sol and 5.4 mini ran on the 60 name-check photos plus his 27. Their full run was gated on passing the name check, and was skipped.
+    - **Blind five-way name check** (60 gold photos, models hidden; `waist_labels/names2/`). Garment type right:
+      - Gemini 82% (7 errors);
+      - Sol 78% (14);
+      - GPT-6 Luna 75% (14);
+      - GPT-5.6 Luna 74% (19);
+      - 5.4 mini 71% (15).
+      - Colors are all 80–85%. Gemini and Luna repeated their first-check results, so the reviewers are consistent.
+    - **GPT-5.6 Luna in full:** as steady as Gemini (284/290), panel 0.57 (Gemini 0.58), his 20 0.61, 8+ 13%, 0.116¢, 4.6 s. It scores as well, with Luna-level names.
+    - **Decided (Claude's default, the founder's call on the to-do list):** keep Gemini; switching to GPT-6 Luna would cut the read 0.59¢ → 0.054¢ for about 2× the naming errors.
