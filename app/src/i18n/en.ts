@@ -1030,6 +1030,14 @@ const addedInBuild = {
   'closet.edit.a11y.leg': '{leg} leg',
   'closet.edit.a11y.fit': '{fit} fit',
   'closet.edit.a11y.more': 'Shows {n} more kinds',
+  // How baggy a piece is (09-ui-review §18, #315; the founder's OK on the words, Oct 16): a Fit or Leg its own photos
+  // disagree on, on the piece page and as one card in Closet's To confirm. {a}, {b}: the leg and fit words, lowercase.
+  'closet.unsure.value': 'Not sure',
+  'closet.unsure.seen': 'Seen as {a} and as {b}.',
+  'closet.unsure.which': 'Which is it?',
+  'closet.unsure.askLeg': 'How do your {item} fit?',
+  'closet.unsure.askFit': 'How does your {item} fit?',
+  'closet.unsure.a11y.hint': 'Opens the choices. Your scores stay the same.',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

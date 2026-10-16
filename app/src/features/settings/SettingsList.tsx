@@ -70,20 +70,26 @@ function Title({ children, color = 'ink', hidden }: { children: string; color?: 
   );
 }
 
-/** A tappable row: a push (chevron) or an action (none). `value` sits on the right in ink3 ("Free plan"). */
-export function LinkRow({ title, value, onPress, hint, chevron = true }: { title: string; value?: string; onPress: () => void; hint?: string; chevron?: boolean }) {
+/** A tappable row: a push (chevron) or an action (none). `value` sits on the right in ink3 ("Free plan"); `detail` is
+ *  one quiet line under the title ("Seen as slim and as wide. Which is it?"), read after the value. */
+export function LinkRow({ title, value, onPress, hint, chevron = true, detail }: { title: string; value?: string; onPress: () => void; hint?: string; chevron?: boolean; detail?: string }) {
   const { colors, isAccessibilitySize: ax } = useTheme();
   const row = useRowStyle();
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={value ? t('settings.a11y.value', { label: title, value }) : title}
+      accessibilityLabel={`${value ? t('settings.a11y.value', { label: title, value }) : title}${detail ? `. ${detail}` : ''}`}
       accessibilityHint={hint}
       style={({ pressed }) => [row, pressed && { backgroundColor: colors.surface2 }]}
     >
-      <View style={ax ? { gap: 2 } : { flex: 1 }}>
+      <View style={ax ? { gap: 2 } : { flex: 1, gap: 2 }}>
         <Title>{title}</Title>
+        {detail ? (
+          <KText variant="footnote" color="ink3">
+            {detail}
+          </KText>
+        ) : null}
       </View>
       {value || chevron ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s, alignSelf: ax ? 'flex-start' : 'auto' }}>

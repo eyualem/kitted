@@ -59,6 +59,8 @@ type Step =
   | { at: string; do: 'askTap'; option: string }
   /** A stored setting (Closet's remembered Pieces | Outfits tap, #307). */
   | { at: string; do: 'kv'; key: string; value: string }
+  /** Earlier sightings of a closet piece, read with these legs or fits (09-ui-review §18): a day apart, no photo. */
+  | { at: string; do: 'sightings'; itemId: string; legs?: string[]; volumes?: number[] }
   /** Questions already used today (the limit state without five demo answers in the thread). */
   | { at: string; do: 'askUsed'; n: number }
   /** His question in the thread, its answer held mid-way: the dots (no text) or the first words (07 §6.1). */
@@ -217,6 +219,10 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
   // The Closet's Outfits (09-ui-review §13, #307). Screen 15 keeps showing the Pieces grid it always did.
   15: { steps: [{ at: '2026-10-22T07:00:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  // How baggy a piece is (09-ui-review §18, #315): the dark jeans read slim, wide, wide and straight in four checks.
+  194: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  195: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
+  196: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
   183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
@@ -341,6 +347,21 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     }
     if (step.do === 'kv') {
       await store.setKv(step.key, step.value);
+      continue;
+    }
+    if (step.do === 'sightings') {
+      const it = await store.closet.get(step.itemId);
+      if (!it) continue;
+      const reads: Partial<typeof it.garment>[] = [...(step.legs ?? []).map((l) => ({ leg_shape: l })), ...(step.volumes ?? []).map((v) => ({ volume: v }))];
+      const t0 = at(step.at);
+      for (const [i, r] of reads.entries()) {
+        await store.closetObs.put({
+          id: `O-demo-${step.itemId}-${i}`, itemId: step.itemId, fitCheckId: null, readingId: null, closetReadingId: null, garmentIndex: null,
+          origin: 'garment', garment: { ...it.garment, ...r }, closet: null, sampledHex: null, sampledL: null, cropFile: null, cropQuality: null,
+          decision: 'same', identityScore: null, candidates: [], askItemId: null, answeredAt: null, userConfirmed: null,
+          createdAt: t0 - (reads.length - i) * 86_400_000, isDeleted: false,
+        });
+      }
       continue;
     }
     if (step.do === 'askTap') {

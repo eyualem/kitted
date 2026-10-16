@@ -116,6 +116,9 @@ examples [('zoom1', 'oct8-8bc29d', 6.5, 7.0), ('zoom1', 'oct8-d6559a', 7.5, 7.0)
 top 20 {'vol_same': '18/20', 'roomy_same': '19/20'}
 bottom 6 {'vol_same': '4/6', 'roomy_same': '5/6', 'leg_same': '5/6', 'leg_narrow_same': '5/6', 'leg_group_same': '5/6'}
 
+# BG6: the reading against the Fit and Leg he set (his phone; age band profile unknown; looks: no looks picked)
+  none set yet
+
 # Leg reading vs labels (leg_labels.csv, Claude's blind labels; every run)
 his photos   n=45 exact 56% narrow-vs-not 80% loose-vs-not 67%
 mirror       n=30 exact 77% narrow-vs-not 60% loose-vs-not 83%

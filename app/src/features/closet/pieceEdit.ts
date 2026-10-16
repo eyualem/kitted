@@ -14,6 +14,7 @@ import type { Garment, Observation } from '@kitted/core';
 import type { ClosetArt, ClosetItemRow, ClosetProfile } from '@/data/types';
 import { STARTER } from '@/features/finish/starter';
 import { t, type StringKey } from '@/i18n/en';
+import { doubtLine, type FitDoubt } from './fitDoubt';
 import { hexOfArt, profileOfItem } from './profile';
 
 export type EditField = 'kind' | 'color' | 'leg' | 'fit' | 'pattern';
@@ -88,8 +89,10 @@ export interface EditRow {
   field: EditField;
   /** "Leg" */
   label: string;
-  /** "Slim" */
+  /** "Slim"; "Not sure" when its photos disagree (§18) */
   value: string;
+  /** Under a "Not sure" row: "Seen as slim and as wide. Which is it?" */
+  detail?: string;
 }
 export interface EditOption {
   value: EditValue;
@@ -121,14 +124,17 @@ function valueWord(field: EditField, v: EditValue | null): string {
   return PATTERN_WORD[String(v)] ? t(PATTERN_WORD[String(v)]!) : String(v);
 }
 
-/** The rows a piece shows: Kind, Color, then Fit + Pattern (tops, layers) or Leg (bottoms but shorts). */
-export function editRows(item: Pick<ClosetItemRow, 'slot' | 'garment'>): EditRow[] {
+/** The rows a piece shows: Kind, Color, then Fit + Pattern (tops, layers) or Leg (bottoms but shorts). A Fit or Leg
+ *  its photos disagree on (fitDoubt, §18) reads "Not sure" with the line that says what it was seen as. */
+export function editRows(item: Pick<ClosetItemRow, 'slot' | 'garment'>, doubt: FitDoubt | null = null): EditRow[] {
   const slot = slotOf(item);
   if (!slot) return [];
   const fields: EditField[] = ['kind', 'color'];
   if (slot === 'top' || slot === 'outer') fields.push('fit', 'pattern');
   if (slot === 'bottom' && !NO_LEG.includes(String(item.garment.subcategory))) fields.push('leg');
-  return fields.map((field) => ({ field, label: t(FIELD_LABEL[field]), value: valueWord(field, currentValue(item, field)) }));
+  return fields.map((field) => (doubt && doubt.field === field
+    ? { field, label: t(FIELD_LABEL[field]), value: t('closet.unsure.value'), detail: doubtLine(doubt) }
+    : { field, label: t(FIELD_LABEL[field]), value: valueWord(field, currentValue(item, field)) }));
 }
 
 const lookAlikesOf = (sub: string, category: string): string[] => [
@@ -136,9 +142,10 @@ const lookAlikesOf = (sub: string, category: string): string[] => [
   ...(RUBRIC_DATA.tap.pairs[category] ?? []).flatMap(([a, b]) => (a === sub ? [b] : b === sub ? [a] : [])),
 ];
 
-/** What a row's sheet offers. */
-export function editOptions(item: Pick<ClosetItemRow, 'slot' | 'garment'>, field: EditField): EditOptions {
-  const cur = currentValue(item, field);
+/** What a row's sheet offers. `unsure` (a "Not sure" row, §18): no option is marked current, since the app doesn't
+ *  know which it is, and any pick, the one it read most included, settles it. */
+export function editOptions(item: Pick<ClosetItemRow, 'slot' | 'garment'>, field: EditField, o: { unsure?: boolean } = {}): EditOptions {
+  const cur = o.unsure ? null : currentValue(item, field);
   const opt = (v: EditValue): EditOption => ({ value: v, label: valueWord(field, v), current: v === cur });
   if (field === 'kind') {
     const slot = slotOf(item);
@@ -236,6 +243,9 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
   };
   const cf = CONFIRM_FIELD[field];
   if (cf) confirm(cf, String(value));
+  // Fit has no matcher field, but he said so: listed like "Not quite right?" lists it, so "Not sure" goes for good
+  // (§18; core reads only its matcher fields from confirmedFields).
+  if (field === 'fit' && !fields.includes('volume')) fields.push('volume');
   if (remapped) confirm('color_family', remapped);
   if (field === 'color' || remapped) {
     // a shade he confirmed belongs to the old color

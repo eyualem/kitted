@@ -17,7 +17,10 @@ import { PieceMenu } from '@/features/closet/PieceMenu';
 import { piecePreviewSource } from '@/features/closet/piecePreview';
 import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { FitQuestion } from '@/features/closet/FitQuestion';
+import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
 import { closetGridItems } from '@/features/closet/merge';
+import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { toConfirm } from '@/features/closet/toConfirm';
 import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
 import { LinkRow, Section } from '@/features/settings/SettingsList';
@@ -33,6 +36,8 @@ const GAP = 10;
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
+  // His Skips on the fit card (§18), watched on their own key so other kv writes don't reload the closet.
+  const fitSkips = useLive(['kv'], () => store.getKv(FIT_SKIP_KEY), [], FIT_SKIP_KEY);
   const data = useLive(['closet', 'fitChecks', 'closetObs'], async () => {
     const all = await store.closet.all();
     const byId = new Map(all.map((c) => [c.id, c]));
@@ -45,14 +50,17 @@ export default function ClosetScreen() {
     const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it, obs, checks, livePhotoDeps)]));
     const fitChecks = await store.fitChecks.all();
     const styles = (await store.profile.get('me'))?.styles ?? null;
-    return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count: outfitCount(all, fitChecks, styles) };
-  }, []);
+    // One "How do your … fit?" at most (§18, #315): the piece whose own photos disagree most, unless he skipped it.
+    const owned = all.filter(isOwned);
+    const fit = fitCard(owned.filter((c) => !isAwaitingAnswer(c, owned)), obs, parseSkips(fitSkips));
+    return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count: outfitCount(all, fitChecks, styles), fit };
+  }, [fitSkips]);
   const remembered = useLive(['kv'], () => store.getKv(SEGMENT_KEY), [], SEGMENT_KEY);
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
   if (!data) return null;
-  const { items, byId, previews, asks, all, fitChecks, styles, count } = data;
+  const { items, byId, previews, asks, all, fitChecks, styles, count, fit } = data;
   const segment = openingSegment(count, remembered ?? null);
   const pick = (v: 'pieces' | 'outfits') => void store.setKv(SEGMENT_KEY, v);
   const open = asks.flatMap(({ checkId, ask }) => {
@@ -87,17 +95,24 @@ export default function ClosetScreen() {
           {segment === 'outfits' ? <OutfitsView closet={all} checks={fitChecks} count={count} styles={styles} /> : null}
           {segment === 'pieces' ? (
           <>
-          {/* "To confirm · 2" (#117): the open questions in one quiet card on top, 3 at a time (#111); no badge, no push. */}
-          {queue.total > 0 ? (
+          {/* "To confirm · 2" (#117): the open questions in one quiet card on top, 3 at a time (#111), then at most one
+              "How do your … fit?" (§18); no badge, no push. */}
+          {queue.total > 0 || fit ? (
             <KCard>
               <KCardSection gap={12}>
-                <TagLine left={t('closet.confirm.tag')} right={String(queue.total)} />
+                <TagLine left={t('closet.confirm.tag')} right={String(queue.total + (fit ? 1 : 0))} />
                 {queue.shown.map(({ checkId, ask, photo, candidate, runnerUp }, i) => (
                   <View key={ask.obsId} style={{ gap: 12 }}>
                     {i > 0 ? <RowDivider /> : null}
                     <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void fitCheck.answerDuplicate(checkId, ask.obsId, a)} />
                   </View>
                 ))}
+                {fit ? (
+                  <View style={{ gap: 12 }}>
+                    {queue.shown.length > 0 ? <RowDivider /> : null}
+                    <FitQuestion item={fit.item} doubt={fit.doubt} />
+                  </View>
+                ) : null}
               </KCardSection>
             </KCard>
           ) : null}

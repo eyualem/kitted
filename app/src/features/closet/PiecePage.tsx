@@ -4,7 +4,8 @@
 //   1. The hero: a swipe gallery, the drawing, then his cover photo and his other photos; page dots only when there
 //      are photos, a light tick per page. A tap on a photo opens it full screen on that check.
 //   2. The name (tap to rename), the slot, then "What it is" (§17, #314): Kind · Color · Leg or Fit · Pattern, each
-//      opening its picker; then what the data says: worn, last worn, added.
+//      opening its picker (a Fit or Leg its photos disagree on reads "Not sure", §18, #315); then what the data says:
+//      worn, last worn, added.
 //   3. "Your photos · N": square crops, best first, the cover marked. Long-press (or VoiceOver actions): Use as cover ·
 //      Open the look · Not this piece (a correction, with Undo) · It's another piece… (move just this photo to another
 //      piece of its kind, with Undo; on the piece's only photo, merge the piece; §8, #289) · Remove photo (with Undo). Mostly hidden ones fold into
@@ -33,6 +34,7 @@ import { ClosetTile } from './ClosetTile';
 import { colorPhrase } from './itemName';
 import { mergeOffer, notePieceBlur, notePieceFocus } from './merge';
 import { anotherPiece, editHref, openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
+import { fitDoubt } from './fitDoubt';
 import { editRows } from './pieceEdit';
 import { piecePhotos, type PiecePhoto } from './piecePhotos';
 import { livePhotoDeps, loadPhotoChecks } from './photoChecks';
@@ -97,7 +99,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
     const styles = (await store.profile.get('me'))?.styles ?? null;
     const around = buildOutfits({ closet: all, checks: fitRows, styles, occasion: 'everyday', ...(item.slot === 'outer' ? { withLayer: item.id } : {}) });
     const outfitsWith = around.filter((o) => o.itemIds.includes(item.id));
-    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all), all, goes: goesWith(item.id, around), outfitsWith: outfitsWith.length };
+    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all), all, goes: goesWith(item.id, around), outfitsWith: outfitsWith.length, doubt: fitDoubt(item, obs) };
   }, [id]);
   // Folded into another piece (#280): back on this page after the picker closes, it shows the kept piece instead.
   const mergedInto = data && !data.item ? data.mergedInto : null;
@@ -115,9 +117,9 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
   if (!data.item) {
     return <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} />;
   }
-  const { item, photos, inLookbook, offers, merge, goes, outfitsWith, all: closetAll } = data;
+  const { item, photos, inLookbook, offers, merge, goes, outfitsWith, all: closetAll, doubt } = data;
   const spec = artSpec(item);
-  const rows = editRows(item);
+  const rows = editRows(item, doubt);
   const hero = photos.shown;
   const all = hero.length + photos.folded.length;
   const date = (ph: PiecePhoto) => longDate(ph.createdAt, sessionClock.offset);
@@ -218,7 +220,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
       {rows.length > 0 ? (
         <Section label={t('closet.edit.title')} footer={t('closet.edit.foot')}>
           {rows.map((r) => (
-            <LinkRow key={r.field} title={r.label} value={r.value} hint={t('closet.edit.a11y.rowHint')} onPress={() => router.push(editHref(item, r.field) as Href)} />
+            <LinkRow key={r.field} title={r.label} value={r.value} detail={r.detail} hint={t('closet.edit.a11y.rowHint')} onPress={() => router.push(editHref(item, r.field) as Href)} />
           ))}
         </Section>
       ) : null}

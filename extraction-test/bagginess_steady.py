@@ -8,7 +8,10 @@ Every photo is "profile unknown" (rule 7): scored with no picks at Everyday, the
 Run from anywhere: /usr/bin/python3 extraction-test/bagginess_steady.py <checkout with the git-ignored results and inputs>"""
 import re, collections, csv, glob, json, os, sqlite3, sys, copy
 
-ROOT = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ARGS = [a for a in sys.argv[1:] if not a.startswith("--db=")]
+ROOT = ARGS[0] if ARGS else os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# --db=<kitted.db>: a phone pull to read instead of the newest under screenshots/phone (BG6's test uses a copy)
+DB_ARG = next((a[5:] for a in sys.argv[1:] if a.startswith("--db=")), None)
 ET = os.path.join(ROOT, "extraction-test")
 RES = os.path.join(ET, "results")
 sys.path.insert(0, ET)
@@ -18,6 +21,7 @@ import parts_proto as P  # noqa: E402
 NARROW = {"skinny", "slim"}
 LOOSE = {"relaxed", "wide", "barrel"}
 CATS = ("top", "outerwear", "bottom")
+LEG_ORDER5 = ("skinny", "slim", "straight", "relaxed", "wide")
 
 
 def leg_group(v):
@@ -191,7 +195,7 @@ for src in sorted({k[0] for k in score_moves}):
 print("examples", examples)
 
 # ---- across photos of the same piece: his phone closet
-DB = sorted(glob.glob(os.path.join(ROOT, "screenshots/phone/*/SQLite/kitted.db")))[-1]
+DB = DB_ARG or sorted(glob.glob(os.path.join(ROOT, "screenshots/phone/*/SQLite/kitted.db")))[-1]
 con = sqlite3.connect(DB)
 items = {r[0]: (r[1], r[2], r[3], json.loads(r[4] or "[]")) for r in con.execute(
     "select id, name, slot, merged_into, confirmed_fields from closet_items")}
@@ -231,6 +235,42 @@ for cat in ("top", "bottom"):
     n = agg[(cat, "n")]
     if n:
         print(cat, n, {k[1]: f"{v}/{n}" for k, v in agg.items() if k[0] == cat and k[1] != "n"})
+
+# ---- BG6 (#315): the reading against what he set on the piece page (or "Not quite right?"): each Fit or Leg he set
+# labels every photo of that piece. Split by his age band and picked looks once his profile has them (rule 7).
+prof = con.execute("select birth_year, styles from profile where id='me'").fetchone()
+by, looks = (prof[0], json.loads(prof[1] or "[]")) if prof else (None, [])
+age = (2026 - by) if by else None
+band = ("18-21" if age <= 21 else "22-25" if age <= 25 else "26-30" if age <= 30 else "31+") if age else "profile unknown"
+picked = ", ".join(str(x[0] if isinstance(x, list) else x) for x in looks) or "no looks picked"
+truth = collections.Counter()
+rows = []
+for iid, name, slot, gj, cf, pj in con.execute(
+        "select id, name, slot, garment_json, confirmed_fields, profile from closet_items where is_deleted=0 and merged_into is null"):
+    g, cf, pr = json.loads(gj or "{}"), json.loads(cf or "[]"), json.loads(pj or "{}")
+    leg_set = "leg_shape" in cf or isinstance((pr.get("confirmed") or {}).get("leg_shape"), str)
+    fit_set = "volume" in cf
+    if slot == "bottom" and leg_set and g.get("leg_shape") in LEG_ORDER5:
+        his = g["leg_shape"]
+        reads = [o[0].get("leg_shape") for o in groups.get(iid, []) if o[0].get("leg_shape") not in (None, "na")]
+        for r in reads:
+            truth[("leg", "n")] += 1; truth[("leg", "exact")] += r == his; truth[("leg", "group")] += leg_group(r) == leg_group(his)
+        rows.append(f"  {name:30s} leg {his:9s} reads {reads}")
+    if slot in ("top", "outer") and fit_set and isinstance(g.get("volume"), (int, float)):
+        his = g["volume"]
+        reads = [o[0].get("volume") for o in groups.get(iid, []) if isinstance(o[0].get("volume"), (int, float))]
+        for r in reads:
+            truth[("fit", "n")] += 1; truth[("fit", "exact")] += r == his; truth[("fit", "group")] += (r >= 4) == (his >= 4)
+        rows.append(f"  {name:30s} fit {his!s:9s} reads {reads}")
+print(f"\n# BG6: the reading against the Fit and Leg he set (his phone; age band {band}; looks: {picked})")
+if not rows:
+    print("  none set yet")
+for r in rows:
+    print(r)
+for f, grp in (("leg", "narrow/straight/loose"), ("fit", "roomy or not")):
+    n = truth[(f, "n")]
+    if n:
+        print(f"  {f}: {n} photos · exact {truth[(f, 'exact')]/n:.0%} · {grp} {truth[(f, 'group')]/n:.0%}")
 
 # ---- accuracy vs labels (leg_labels.csv; every run counts)
 lab = {}
