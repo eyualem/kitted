@@ -4,7 +4,8 @@
 import type { Styles } from '@kitted/core';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import { t } from '@/i18n/en';
-import { bestMissing, fitsGain, NEXT_STEP, ownership, STARTER, type Ownership } from './starter';
+import { bestMissing, starterGain } from './gains';
+import { NEXT_STEP, ownership, STARTER, type Ownership } from './starter';
 
 export type MoveKind = 'basics' | 'fix' | 'buy';
 /** Where a move's Start goes (M4): never a placeholder. */
@@ -89,8 +90,7 @@ function buyMove(i: MovesInput, own: Record<string, Ownership>): Move {
 
 function bestGainFor(i: MovesInput, id: string): number {
   const e = STARTER.find((x) => x.id === id);
-  if (!e?.pick || !e.slot) return 0;
-  return fitsGain(i.closet, i.styles, e.pick.garment, e.slot) ?? 0;
+  return e ? starterGain(i.closet, i.styles, e) : 0;
 }
 
 const buyDetail = (price: string, gain: number): string => (gain > 0 ? t('plan.move3Sub', { price, n: gain }) : price);

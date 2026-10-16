@@ -12,7 +12,8 @@ import {
   type FinishCheck, type FinishState,
 } from '@/features/finish/sequence';
 import { createFinishService, FINISH_KEY, getFinish, type FinishDeps } from '@/features/finish/service';
-import { bestMissing, fitsGain, markedPiece, ownedCount, ownership, STARTER } from '@/features/finish/starter';
+import { bestMissing, starterGain } from '@/features/finish/gains';
+import { markedPiece, ownedCount, ownership, STARTER } from '@/features/finish/starter';
 import { ctaTitle, finePrint, paywallPerks, paywallTitle, planDetail, plansReminder, todayCard } from '@/features/paywall/content';
 import { loadNotificationPrefs } from '@/features/settings/prefs';
 import { en, t } from '@/i18n/en';
@@ -361,7 +362,7 @@ describe('M1–M4 · the 3 moves', () => {
     // The most outfits: no other missing row adds more.
     for (const e of STARTER) {
       if (!e.pick || !e.slot || ownership(closet, [])[e.id]?.owned) continue;
-      expect(fitsGain(closet, null, e.pick.garment, e.slot)).toBeLessThanOrEqual(best.gain);
+      expect(starterGain(closet, null, e)).toBeLessThanOrEqual(best.gain);
     }
   });
 
@@ -435,8 +436,8 @@ describe('B1–B2 · Starter essentials', () => {
     expect(ownership([], ['s12']).s12).toEqual({ owned: true, how: 'marked', itemId: null });
     // +N: adding the third slot makes outfits; nothing to pair with makes none.
     const two = [piece('T', 'top', 'tee', 'white'), piece('B', 'bottom', 'chinos', 'khaki_beige')];
-    expect(fitsGain(two, null, STARTER[8]!.pick!.garment, 'shoes')).toBeGreaterThan(0);
-    expect(fitsGain([], null, STARTER[0]!.pick!.garment, 'top')).toBe(0);
+    expect(starterGain(two, null, STARTER[8]!)).toBeGreaterThan(0);
+    expect(starterGain([], null, STARTER[0]!)).toBe(0);
   });
 });
 

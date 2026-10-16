@@ -4,11 +4,12 @@
 // count. The count is the trios rated Put together (7.0+) at Everyday, leaving out pieces he only mentioned in chat.
 // Worn = a scored fit check whose pieces include the whole trio: those are "Your go-tos" (his photo, the check's real
 // score); the rest are "Try next", best first, never showing a score. No AI: free on every plan, and no score moves.
-import { defaultRubric, displayHex, outfitReading, outfitValid, scoreParts, type ClosetItem, type Styles } from '@kitted/core';
+// Every "+N outfits" in the app is this count with a piece minus without it (`outfitGain`, #309); the Starter pieces'
+// gains and the next best buy are in finish/gains.ts, so this file and finish/starter.ts don't import each other.
+import { defaultRubric, outfitReading, outfitValid, scoreParts, type ClosetItem, type Styles } from '@kitted/core';
 import type { ClosetItemRow, FitCheckRow, OccasionKey } from '@/data/types';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { scoreOptions } from '@/features/fitcheck/scoring';
-import { ownership, STARTER, type StarterEntry } from '@/features/finish/starter';
 import { t } from '@/i18n/en';
 
 /** Put together and up (02 score words). */
@@ -76,6 +77,8 @@ export interface OutfitInput {
   withLayer?: string;
   /** Count only: no layers tried (they never change the count). */
   countOnly?: boolean;
+  /** Only the trios with this piece (what adding it adds: the other trios don't change). */
+  withPiece?: string;
 }
 
 /** Every outfit at this occasion, best first (worn ones carry their check). Trios below Put together are left out. */
@@ -88,6 +91,7 @@ export function buildOutfits(i: OutfitInput): Outfit[] {
   const trios: { trio: ClosetItemRow[]; r: NonNullable<ReturnType<typeof scoreOf>> }[] = [];
   for (const top of tops) for (const bottom of bottoms) for (const shoe of shoes) {
     const trio = [top, bottom, shoe];
+    if (i.withPiece && !trio.some((c) => c.id === i.withPiece)) continue;
     if (!outfitValid(trio.map(asItem), i.styles)) continue;
     const r = scoreOf(trio, i.occasion, i.styles);
     if (r && r.overall >= PUT_TOGETHER) trios.push({ trio, r });
@@ -143,6 +147,17 @@ export function outfitCount(closet: readonly ClosetItemRow[], checks: readonly F
   return buildOutfits({ closet: closet.filter((c) => c.source !== 'chat'), checks, styles, occasion: 'everyday', countOnly: true }).length;
 }
 
+/**
+ * "+N outfits" for adding `piece` (#309): the count with it minus the count without it, which is the trios at 7.0+
+ * that use it (a new piece changes no other trio). Pieces he only mentioned in chat aren't counted (07 §4), and a layer
+ * adds none (#84.3). The one rule behind every "+N": the chat's buy card, Starter, the moves card, the next best buy.
+ */
+export function outfitGain(closet: readonly ClosetItemRow[], styles: Styles | null, piece: ClosetItemRow): number {
+  if (piece.source === 'chat' || closet.some((c) => c.id === piece.id)) return 0;
+  const pool = closet.filter((c) => c.source !== 'chat');
+  return buildOutfits({ closet: [...pool, piece], checks: [], styles, occasion: 'everyday', countOnly: true, withPiece: piece.id }).length;
+}
+
 /** The two lists the Outfits view shows (#84): Try next (unworn, best first) and Your go-tos (worn, best first). */
 export function outfitLists(all: readonly Outfit[]): { tryNext: Outfit[]; goTos: Outfit[] } {
   return { tryNext: all.filter((o) => !o.worn).slice(0, MAX_LIST), goTos: all.filter((o) => !!o.worn).slice(0, MAX_LIST) };
@@ -189,61 +204,4 @@ export type SlotState = { slot: 'top' | 'bottom' | 'shoes'; have: boolean };
 export function slotChecklist(closet: readonly ClosetItemRow[]): SlotState[] {
   const pieces = outfitPieces(closet);
   return (['top', 'bottom', 'shoes'] as const).map((slot) => ({ slot, have: pieces.some((c) => c.slot === slot) }));
-}
-
-/**
- * "Add shoes and you'd have {n} outfits" (#88): the count with the Starter piece for that slot added (the one that adds
- * the most). 0 when no Starter piece for it would make one.
- */
-export function gainForSlot(closet: readonly ClosetItemRow[], checks: readonly FitCheckRow[], styles: Styles | null, slot: SlotState['slot']): number {
-  const own = closet.filter((c) => c.source !== 'chat');
-  let best = 0;
-  for (const e of STARTER) {
-    if (e.slot !== slot || !e.pick) continue;
-    const ghost = { id: `__starter-${e.id}`, name: e.pick.name, slot, garment: e.pick.garment, isDeleted: false, mergedInto: null, maybeSameAs: null, source: 'added', profile: { aliases: [], distinctFrom: [], confirmed: {} } } as unknown as ClosetItemRow;
-    best = Math.max(best, outfitCount([...own, ghost], checks, styles));
-  }
-  return best;
-}
-
-/** A Starter piece he doesn't own yet, as a closet row (drawn like his own; never stored). */
-export function ghostPiece(e: StarterEntry): ClosetItemRow | null {
-  if (!e.pick || !e.slot) return null;
-  return {
-    id: `__starter-${e.id}`, name: e.pick.name, slot: e.slot, garment: e.pick.garment, confirmedFields: [], hex: displayHex(e.pick.garment.color_family),
-    photoFile: null, demoPhotoId: null, isPhotographed: false, source: 'added', starterId: e.id, wornCount: 0, lastWornAt: null, addedAt: 0,
-    isDeleted: false, mergedInto: null, maybeSameAs: null, cropFile: null, cropScore: null, updatedAt: 0, profile: { aliases: [], distinctFrom: [], confirmed: {} },
-  } as ClosetItemRow;
-}
-
-export interface NextBuy {
-  entry: StarterEntry;
-  /** The new piece, drawn dashed in what it unlocks. */
-  ghost: ClosetItemRow;
-  /** Outfits it adds under the Closet's count (7.0+ at Everyday). */
-  gain: number;
-  /** The new outfits it makes, best first. */
-  unlocks: Outfit[];
-}
-
-/**
- * The next best buy (09-ui-review §14, #308; #87): the Starter piece he doesn't own (in the closet or tapped) that adds
- * the most outfits under the Closet's count; ties keep the Starter order. Null when nothing would add one.
- */
-export function nextBestBuy(i: { closet: readonly ClosetItemRow[]; checks: readonly FitCheckRow[]; styles: Styles | null; marks: readonly string[] }): NextBuy | null {
-  const own = ownership(i.closet, i.marks);
-  const before = outfitCount(i.closet, i.checks, i.styles);
-  let best: { entry: StarterEntry; ghost: ClosetItemRow; gain: number } | null = null;
-  for (const e of STARTER) {
-    if (own[e.id]?.owned) continue;
-    const ghost = ghostPiece(e);
-    if (!ghost) continue;
-    const gain = outfitCount([...i.closet, ghost], i.checks, i.styles) - before;
-    if (gain > 0 && (!best || gain > best.gain)) best = { entry: e, ghost, gain };
-  }
-  if (!best) return null;
-  const pool = i.closet.filter((c) => c.source !== 'chat');
-  const unlocks = buildOutfits({ closet: [...pool, best.ghost], checks: i.checks, styles: i.styles, occasion: 'everyday', countOnly: true })
-    .filter((o) => o.itemIds.includes(best!.ghost.id));
-  return { ...best, unlocks };
 }

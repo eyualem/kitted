@@ -20,7 +20,8 @@ import { goToStylist } from '@/router/stylistAction';
 import { wearOutfit } from './outfitActions';
 import { gainLine, loadNextBuy } from './nextBuyData';
 import { StandingOutfit } from './StandingOutfit';
-import { buildOutfits, gainForSlot, OUTFIT_OCCASIONS, outfitLists, outfitPieces, slotChecklist, type Outfit } from './outfits';
+import { gainForSlot } from '@/features/finish/gains';
+import { buildOutfits, OUTFIT_OCCASIONS, outfitLists, outfitPieces, slotChecklist, type Outfit } from './outfits';
 
 /** How many outfits a list shows before "Show {n} more". */
 const FIRST = 5;

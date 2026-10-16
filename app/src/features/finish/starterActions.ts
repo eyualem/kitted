@@ -3,9 +3,10 @@
 // isn't removed here (its own page does that).
 import type { KittedStore } from '@/data/store';
 import type { Styles } from '@kitted/core';
+import { outfitGain } from '@/features/closet/outfits';
 import { t } from '@/i18n/en';
 import { getStarterMarks, STARTER_MARKS_KEY } from './service';
-import { fitsGain, markedPiece, ownership, type StarterEntry } from './starter';
+import { markedPiece, ownership, type StarterEntry } from './starter';
 
 export interface StarterToast {
   text: string;
@@ -24,7 +25,7 @@ export async function toggleStarter(store: KittedStore, e: StarterEntry, ids: (p
       await saveMarks(store, [...marks, e.id]);
       return { text: t('starter.markedToast') };
     }
-    const gain = fitsGain(closet, styles, piece.garment, String(piece.slot)) ?? 0;
+    const gain = outfitGain(closet, styles, piece);
     await store.closet.put(piece);
     return { text: gain > 0 ? t('toast.fits', { n: gain }) : t('starter.markedToast') };
   }

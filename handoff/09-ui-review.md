@@ -446,3 +446,17 @@ Found in §14: two counts live side by side. The Closet's Outfits and its next b
 - **G7 (T)** always a number, fast: the old 40-piece cap ("count not available") goes; on a 60-piece closet every Starter row's "+N" is counted in under a second in the test run.
 - **G8 (T)** the demo's "What should I buy next?" (screen 171) suggests the piece the Closet suggests, with the same "+N", and its words pass the sentence gate.
 - **G9** `npm run check` green; tests whose expected numbers came from the old rule are updated and named in #309.
+
+### §15 results (Oct 16, #309): checked against G1–G9, none changed
+| Check | Result | How |
+|---|---|---|
+| G1 | Pass (T) | `oneCount.test.ts`: for each Starter row the demo closet lacks (dark straight jeans, navy polo, grey quarter-zip), the chat card, the evidence line, move 3's detail, the toast and the next best buy all equal the Closet's count with it minus without it |
+| G2 | Pass (T) | the evidence now reads straight jeans +16, polo +11, quarter-zip +11 (was polo +12, quarter-zip +12, jeans +0) |
+| G3 | Pass (T) | move 3 picks the next best buy; an empty closet still gets the white tee with its price alone |
+| G4 | Pass (T) | two chat-only pieces change no number and no evidence line |
+| G5 | Pass (T) | the Starter-piece functions live in the new `finish/gains.ts`; `fitsGain` and the `rotation` import are gone from `starter.ts` |
+| G6 | Pass | the diff touches nothing under `packages/kitted-core` or `features/fitcheck`; the core suite (23 files) and every scoring test pass unchanged |
+| G7 | Pass (T) | 11 rows on a 60-piece closet in ~0.3 s (only the trios with the new piece are scored) |
+| G8 | Pass (T) | the demo answer and its card now name the dark straight jeans, +16, and pass the gate |
+| G9 | Pass | `npm run check`: 1050 app tests. Tests changed for the old rule's numbers: `askC3` R2, R3, R5 (#309) |
+| Not done | | Not looked at on the Simulator or the web preview (the Mac was low on memory and another session had the Simulator up); the screens only take the new number, no layout changed |

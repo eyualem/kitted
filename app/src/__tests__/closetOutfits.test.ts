@@ -5,8 +5,9 @@ import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import type { ClosetItemRow } from '@/data/types';
 import {
-  buildOutfits, gainForSlot, goesWith, LAYER_GAIN, openingSegment, outfitCount, outfitLists, outfitPieces, PUT_TOGETHER, slotChecklist,
+  buildOutfits, goesWith, LAYER_GAIN, openingSegment, outfitCount, outfitLists, outfitPieces, PUT_TOGETHER, slotChecklist,
 } from '@/features/closet/outfits';
+import { gainForSlot } from '@/features/finish/gains';
 import { scoreOptions } from '@/features/fitcheck/scoring';
 import { outfitReading, scoreParts } from '@kitted/core';
 import { wearOutfit } from '@/features/closet/outfitActions';
