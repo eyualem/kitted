@@ -366,3 +366,10 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 | K2 | Pass (T) | the temporary original is deleted after the line shows; a sample photo has nothing to delete. Found while building: before this, a busy photo's unblurred temporary file was never deleted |
 | K3 | Pass (T) | Which one is you? and held stay silent; limit and error keep their toasts |
 | K4 | Pass | `npm run check`: 933 app tests |
+
+## 12. The Style profile keeps edits on Back: pass/fail checks, set before building (Oct 16, #305)
+§2 You: "Style profile drops edits on a Back swipe … Autosave it." Leaving the screen any way (Back, swipe) now saves what he changed, like Settings; Save stays and still saves and goes back. No new words.
+- **Q1 (T)** leaving with unsaved edits writes them to his profile, exactly as Save would (`applyDraft`).
+- **Q2 (T)** leaving with nothing changed writes nothing (no write, no change notice).
+- **Q3 (T)** an edit and then Save, then leaving, writes once.
+- **Q4 (S)** web preview: change a look, go Back, open the Style profile again: the change is there.
