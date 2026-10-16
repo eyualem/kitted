@@ -395,6 +395,8 @@ const addedInBuild = {
   'ask.saved': 'Saved to what I know',
   'ask.saved.a11y': 'Saved to what your stylist knows. Undo.',
   'ask.saved.undone': 'Removed from what I know.',
+  // D4 (07 §6.4), the default: the server's spend stop (C6).
+  'ask.paused': 'Questions are paused for a bit. Nothing was counted. Try again later.',
   'ask.chip.why': 'Why a {score}?',
   'ask.chip.wearToday': 'What should I wear today?',
   'ask.chip.goesWith': 'What goes with my {item}?',

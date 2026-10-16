@@ -6,7 +6,10 @@ import type { KittedStore } from '@/data/store';
 import type { FitCheckRow } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import { getStarterMarks } from '@/features/finish/service';
-import { buildCard } from './cards';
+import { buildCard, cardSpoken } from './cards';
+import { displayScore } from '@/design-system/score';
+import { weekdayName } from '@/i18n/format';
+import { t } from '@/i18n/en';
 import { buildStylistContext } from './context';
 import { allowedScores, buildEvidence, parseLookup, routeOfLookup, type EvidenceDeps } from './evidence';
 import { applyRemember } from './memory';
@@ -59,6 +62,15 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
         handles: ctx.handles, closet: snap.closet, checks: snap.checks, styles: snap.profile?.styles ?? null, starterMarks: marks, gate,
       }),
       remember: (raw, at) => applyRemember(raw, at, { store, clock, ids: deps.ids }),
+      speak: (card) => cardSpoken(card, {
+        nameOf: (id) => snap.closet.find((c) => c.id === id && !c.isDeleted)?.name ?? null,
+        checkLabel: (id) => {
+          const c = snap.checks.find((x) => x.id === id);
+          if (!c) return null;
+          const label = c.dayKey === today ? t('ask.card.link.today') : t('ask.card.link.day', { day: weekdayName(localParts(c.createdAt, snap.zone).dow) });
+          return c.score === null ? label : `${label}, ${displayScore(c.score)}`;
+        },
+      }),
     };
   };
 }

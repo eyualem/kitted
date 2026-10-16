@@ -211,6 +211,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 172, name: 'Ask · a link to a piece', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 173, name: 'Ask · saved to what I know', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 174, name: 'Ask · a piece from chat', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 175, name: 'Past chats · yesterday\'s answers, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
   // All 3 moves done (#292 Y5): the first check's top fix made by a re-check, a basic marked, the move-3 piece owned.
   { n: 180, name: 'Your moves · All 3 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
   { n: 181, name: 'Lookbook · no Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
