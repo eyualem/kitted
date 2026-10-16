@@ -55,9 +55,12 @@ const s12 = BUNDLED.find((p) => p.id === 's12')!;
 /** "p01b2": a second shot of p01b's outfit (the same reading, its own hash): S21's re-check that doesn't see the change.
  *  The identical photo again no longer re-reads at all (#219), so the story needs a new photo. */
 const p01b = BUNDLED.find((p) => p.id === 'p01b')!;
+/** "s14b": the Welcome photo again after its fix (a new hash), for the first-3-moves story where the re-check makes move 2. */
+const s14 = BUNDLED.find((p) => p.id === 's14')!;
 export const DEMO_PHOTOS: readonly DemoPhoto[] = [
   ...BUNDLED,
   { ...p01b, id: 'p01b2', sha256: 'demo-p01b-second-shot' },
+  { ...s14, id: 's14b', sha256: 'demo-s14-after-fix' },
   { ...s12, id: 'ph1', sha256: 'demo-ph1-oct7', latencySeconds: 6.6 },
   { ...s12, id: 'ph8', sha256: 'demo-ph8-oct8', latencySeconds: 9.4 },
   { ...s12, id: 'ph9', sha256: 'demo-ph9-oct8', latencySeconds: 5.7 },

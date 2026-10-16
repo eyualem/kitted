@@ -51,7 +51,7 @@ function useTodayCard(onboarding: boolean): { card: TodayCard; photo: ReturnType
 }
 
 export function PaywallScreen() {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize: ax } = useTheme();
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ from?: string }>();
   const from = parseFrom(params.from);
@@ -64,6 +64,20 @@ export function PaywallScreen() {
     showToast(restoreToast(r));
     if (r === 'restored') done();
   };
+
+  const footer = (
+    <View style={ax ? { gap: 6.5 } : { paddingHorizontal: space.heroGutter, gap: 6.5 }}>
+      {isPro ? (
+        <KButton title={t('settings.manage')} kind="secondary" onPress={() => void Linking.openURL(MANAGE_SUBSCRIPTIONS_URL)} />
+      ) : (
+        <>
+          <KButton title={t('pay.seePlans')} onPress={() => router.push({ pathname: '/paywall/plans', params: { from } })} />
+          <KButton title={t('pay.continueFree')} kind="ghost" inkLabel onPress={() => done()} />
+        </>
+      )}
+      <LegalLinks />
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, space.l) }}>
@@ -100,18 +114,10 @@ export function PaywallScreen() {
             </View>
           </>
         )}
+        {/* At the largest text sizes the buttons would fill the screen and squeeze the page out, so they scroll with it. */}
+        {ax ? footer : null}
       </ScrollView>
-      <View style={{ paddingHorizontal: space.heroGutter, gap: 6.5 }}>
-        {isPro ? (
-          <KButton title={t('settings.manage')} kind="secondary" onPress={() => void Linking.openURL(MANAGE_SUBSCRIPTIONS_URL)} />
-        ) : (
-          <>
-            <KButton title={t('pay.seePlans')} onPress={() => router.push({ pathname: '/paywall/plans', params: { from } })} />
-            <KButton title={t('pay.continueFree')} kind="ghost" inkLabel onPress={() => done()} />
-          </>
-        )}
-        <LegalLinks />
-      </View>
+      {ax ? null : footer}
     </View>
   );
 }

@@ -224,6 +224,9 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // The end of onboarding (#291; L3 and the pinned rows 163–166, #292): his first check on the Welcome photo (7.5, with a
   // fix to re-check); the taps after it (Later, a Starter piece, the notification ask) are the screen's `finish` steps
   // (features/finish/demo.ts).
+  // All 3 moves done (#292, §9.9 Y5): the re-check made move 2's fix, the first check's top fix (s14b wears the white leather sneakers).
+  180: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
+  181: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 

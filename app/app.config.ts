@@ -66,6 +66,9 @@ const config: ExpoConfig = {
     // Archivo (OFL 1.1, assets/fonts/OFL.txt): score numerals + wordmark only (03 §3.4). Founder OK Oct 12.
     ['expo-font', { fonts: ['./assets/fonts/ArchivoCondensed-SemiBold.ttf', './assets/fonts/ArchivoCondensed-Medium.ttf', './assets/fonts/ArchivoExpanded-Bold.ttf'] }],
     'expo-sqlite',
+    // Continue with Google (#295): Google's sign-in sheet returns to the app through this URL scheme, the reversed iOS
+    // client ID (src/config/firebase.ts GOOGLE_IOS_CLIENT_ID).
+    ['@react-native-google-signin/google-signin', { iosUrlScheme: 'com.googleusercontent.apps.1069635510987-h35362quu682rbpvvsdhqdkp4ic295v9' }],
     ['expo-secure-store', { faceIDPermission: false }], // no Face ID in Kitted; keeps NSFaceIDUsageDescription out (05 T29)
     // PHPicker needs no Photos permission (09 §3). cameraPermission must be the SAME string as
     // NSCameraUsageDescription above: `false` deletes that key, and iOS then kills the app the

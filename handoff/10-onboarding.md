@@ -306,7 +306,7 @@ Tested by unit tests (`onboardingFinish.test.ts`) or by looking (web preview, li
 
 ### 9.8 Results (Oct 15, tested against §9.6)
 
-Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check below that logic can prove) plus the updated `limitCard` (1 week) and `syncSchema` (the two new kv keys classified) tests; `npm run check` is green (app and core typecheck, lint, core 755 tests, app 809). Screens: the web preview, demo screens **150–162**, light and dark; screenshots `screenshots/finish-oct15/` (git-ignored). **Not on the Simulator:** the Mac had under 300 MB free the whole session (rule 9), so the iOS pass waits for a quieter moment. SF Symbols (the X, the check marks) don't draw on web; they do on iOS.
+Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check below that logic can prove) plus the updated `limitCard` (1 week) and `syncSchema` (the two new kv keys classified) tests; `npm run check` is green (app and core typecheck, lint, core 755 tests, app 809). Screens: the web preview, demo screens **150–162**, light and dark; screenshots `screenshots/finish-oct15/` (git-ignored). **Not on the Simulator that day:** the Mac had under 300 MB free the whole session (rule 9). The iOS pass was done Oct 16 (§9.10): every screen in both themes and at the largest text size. SF Symbols (the X, the check marks) don't draw on web; they do on iOS.
 
 | Check | Result | How |
 |---|---|---|
@@ -336,13 +336,13 @@ Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check 
 | N2 · allowed / denied / No thanks | Pass | Tests; preview 160 "Done. Your first idea lands tomorrow at 8:00 am." |
 | N3 · answered stays answered, never again | Pass | Tests |
 | Q5 · `npm run check` | Pass | Green |
-| Q6 · 402 pt, light and dark | Pass | Preview. **Not checked at the largest text size** |
+| Q6 · 402 pt, light and dark | Pass | Preview; **iOS and the largest text size Oct 16 (§9.10): 3 fixes** |
 | Q7 · VoiceOver | Pass (by code) | Labels, headers, a checkbox role per Starter row, a radio role on the plan, `Later` as a card action; not walked with VoiceOver |
 | Q8 · copy rules | Pass | Tests; the new words are listed in §9.7 and DECISIONS-LOG #291 |
 
 **Found and fixed while testing:** demo set-ups could run twice at once and wipe each other's later steps (now one at a time); move 1 stayed undone when the piece he marked was also seen in his photo; `ensure()` returned before a run in flight finished (a tap right after could miss the card); the plans page set state inside an effect (lint); `Later` showed on demo screens without the sequence and after a re-check; Stylist's header didn't follow a purchase.
 
-**Not done (needs the founder or later work):** `expo-notifications` (his OK) to make the ask real and send the daily idea; the real store (RevenueCat) and the Terms and Privacy pages before `PAYWALL_BUILT` can go on; ~~L3 `Your moves` and the pinned rows~~ (built, §9.9); C7 (the next-buy sheet) for move 3; the iOS Simulator pass and the largest text size.
+**Not done (needs the founder or later work):** `expo-notifications` (his OK) to make the ask real and send the daily idea; the real store (RevenueCat) and the Terms and Privacy pages before `PAYWALL_BUILT` can go on; ~~L3 `Your moves` and the pinned rows~~ (built, §9.9); C7 (the next-buy sheet) for move 3; ~~the iOS Simulator pass and the largest text size~~ (done Oct 16, §9.10).
 
 ### 9.9 L3 `Your moves` and the pinned rows (Oct 15, #292)
 
@@ -374,8 +374,25 @@ Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check 
 | Y2 · the card's own 3 moves, live | Pass | Tests (equal to the card's plan, the card's `buyId` wins, a Starter mark turns move 1 done); preview 151 and 164 show the same three lines |
 | Y3 · `{n} of 3 done`, the bar, `{n} of 3` | Pass | Tests; preview 163 "0 of 3", 165/166 "1 of 3" with one slot filled |
 | Y4 · a Start on every move left, where the card's goes | Pass | Tests; preview: L3 Start on move 1 → Closet → Starter essentials |
-| Y5 · all done: the line, no Start, no row | Pass (by test) | Tests; **not seen on screen**: no demo story makes move 2 done (that needs a re-check that makes the fix) |
+| Y5 · all done: the line, no Start, no row | Pass | Tests; **seen on iOS Oct 16**: demo 180 (L3, light and dark) and 181 (no row in Lookbook) |
 | Y6 · first row in Lookbook and You; Back returns | Pass | Preview: Lookbook → L3 (`/lookbook/moves`), You → L3 (`/you/moves`) → Back to You |
 | Y7 · VoiceOver | Pass (by code) | Labels tested; not walked with VoiceOver |
 | Y8 · the chat card unchanged | Pass | §9.6's tests pass; preview 151 unchanged |
 | Q5–Q8 | Pass | `npm run check` green; 402 pt light and dark; no new outward copy |
+
+### 9.10 The iOS Simulator pass (Oct 16, #299)
+
+*The pass #291 and #292 skipped for lack of memory (the Mac had ~5 GB reclaimable this time, `memory_pressure` 36% free; one thing at a time: Simulator first, `npm run check` after it was shut down). iPhone 17 Pro, iOS 26.5, the dev build through Metro, `-demoScreen <n>` in light and dark; screenshots `screenshots/sim-oct15c/` (git-ignored: `s<n>-<theme>.png`, `-ax` = the largest text size, Accessibility XXXL).*
+
+| What | Result |
+|---|---|
+| Demo screens 150–166, light and dark (34 frames) | **Pass.** The SF Symbols all draw: the X, back chevron, perk checks and the checklist glyph on Your moves, the Starter toggle checks, the done badges, the row chevron. Layouts match §9.1–9.5 and §9.9. |
+| M4 / Y4 · Start goes somewhere real | **Pass.** Start 1 (from L3 in Lookbook and in You) → the Closet tab, Starter essentials; Start 2 → the camera (the Simulator's stand-in photo); Start 3 → Starter essentials. |
+| Y6 · Back | **Pass.** Starter essentials → Back → Closet; L3 → Back → Lookbook (from Lookbook) or You (from You); the row opens `/lookbook/moves` or `/you/moves`. |
+| Y2 · live | **Pass.** The camera's 3-2-1 took a photo on its own: Lookbook gained a second look, and L3's move 3 turned done and "1 of 3" updated with no reload. Marking the white tee in Starter showed "Marked as owned" and the "+1 fit" toast, and the count went 3 → 4 of 12. |
+| Y5 · All 3 done | **Pass.** New demo screens **180** (L3: "All 3 done. Nice work.", the bar full, 3 filled badges, no Start) and **181** (Lookbook with no Your moves row, the look "7.5 → 8.0 Sharp"). Story: the first check (s14, top fix "Swap the chunky sneakers for white leather sneakers"), a re-check photo `s14b` that wears them, the belt marked, the white tee marked. |
+| Q6/Q7 · the largest text size (151, 153, 161, 163, 164, 165, then 152/153/161/163 again after the fixes) | **3 problems, fixed:** (1) the paywall's plan page: the pinned buttons filled the screen and covered the plan card, and the card squeezed "Monthly" to "Mo/nthl/y" → at AX sizes the buttons scroll with the page and the plan card stacks (page 1 too); (2) Starter essentials: titles broke mid-word ("heavyweigh/t tee") and the toggle was squeezed out → at AX sizes the picture and the toggle share a top line and the words get the full width; (3) the pinned row broke "Your moves" to "move/s" → at AX sizes the count goes under the title. Also at normal size: "Marked as owned" and "In your closet" now sit on their own line instead of wrapping an orphan word. 164 (L3) and 151 (the card) read well at AX with no change. |
+| Seen, not fixed (not part of this build) | You's style chips: the numbered badge is clipped at AX sizes (`app/(tabs)/you/index.tsx`); the toast "+1 fit" sits over the row text (as every toast); "Done. Your first idea lands tomorrow at 8:00 / am." wraps "am." alone (the line is in `en.generated.ts`; a non-breaking space would fix it). |
+| Not checked | VoiceOver on a device; the paywall at the largest size in dark; the notification ask at AX sizes (158–160 not re-shot at AX). |
+
+Screens 180–181 use only existing copy. Sequence step 'later' after a scored re-check is harmless: the card posts either way.

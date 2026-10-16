@@ -1797,11 +1797,58 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Not done, and why:** the live tries (C2's last step: his OK on ~$0.50); C5's test (his blind pick and ~$1–2); C6's `/v1/ask` on the Worker (his Cloudflare account); the largest text size on the new cards.
     - **Numbering:** the Google sign-in session used #295 in its code the same evening, so the Undo fix is #296 and this is #297.
 
+295. **Continue with Google is wired to the real Firebase project (founder, Oct 15–16: "let us set up continue with google for now").**
+    - **The approach, settled by Claude:** Firebase's JavaScript SDK (`firebase` 12.19.0) plus Google's sign-in package (`@react-native-google-signin/google-signin` 16.1.5), not the native React Native Firebase packages.
+      - Why: the native packages force static frameworks on every native module, and SQLite stays the phone's real copy (11 §4), so Firebase's native offline cache isn't needed.
+      - Skipped `firebase` 13.0.0: it was 8 days old.
+      - Cost: App Check later needs a custom provider over our own App Attest module, instead of the packaged one.
+    - **Project setup, by CLI on the founder's login:**
+      - Two apps registered: "Kitted iOS" (`com.trykitted.kitted`) and "Kitted app (JS SDK)" (web config).
+      - The founder enabled Google in Authentication (public name "Kitted", his Gmail as support email). That created the iOS OAuth client `1069635510987-h35362…`; its reversed form is the URL scheme in `app.config.ts`.
+      - The web config's API key is in `app/.env.local` (`EXPO_PUBLIC_FIREBASE_API_KEY`). It's public by design, but the repo's pre-commit hook refuses anything shaped like a Google key, so it stays out of git, like the Gemini dev key.
+    - **What's live where:**
+      - The sign-in sheet offers only the providers that really work (`SIGN_IN_LIVE`): Google, on dev builds. Demo screens keep the scripted MockAuth with all three.
+      - You → Settings → Account appears on dev builds for testing. The save offer, Welcome's "I already have an account" and the restore stay off (`ACCOUNTS_BUILT`): signing in backs nothing up until sync is wired, and they'd promise it.
+      - The sign-in is kept in the Keychain (`kitted.fb.*`).
+      - "Delete account" for now deletes only the Auth user and revokes Google's access, since nothing is on the server. It switches to the `deleteAccount` job when sync is wired.
+    - **Checked:**
+      - Type check and the 89 account and onboarding tests pass.
+      - The Simulator build with the new native module succeeds, and Metro was restarted to load the key.
+      - The app runs (schema V7 on iOS).
+    - **Not checked yet:**
+      - Google's sheet opening on the Simulator: a parallel Simulator session was driving the same device.
+      - A full sign-in: it needs the founder's own Google password, which Claude never types.
+    - **Numbering:** #295 was claimed by this commit's message (other sessions skipped it, #296–297).
+
+298. **#295's Simulator check passed (Oct 16, after the parallel Simulator session freed the device).** On the Simulator, You → Settings → Account → Back up and sync opens the sheet with only Continue with Google.
+    - **Tapping it:** iOS asks "Kitted Wants to Use accounts.google.com to Sign In". Continue opens Google's own page, "Sign in to continue to Kitted". So the client ID, the URL scheme and the public name are right.
+    - **Closing Google's page:** it returns to the sheet with no error line, the cancel path.
+    - **Not done:** a full sign-in, which needs the founder's own Google password. It's on his to-do list.
+    - **Seen, not changed:** the sheet's title and body ("Back up your fits", "Back up your closet, Lookbook and chats, and get them back on a new phone.") promise a backup that doesn't run yet. That's acceptable only because this path is dev-only (`SIGN_IN_LIVE`). It must not reach a release build before sync is wired.
+    - **Numbering:** #296–297 were taken by other sessions, so this is #298.
+
+## Oct 16 · The iOS Simulator pass for the end of onboarding and Your moves (a follow-up session of #291 and #292)
+
+299. **The end of onboarding (#291) and L3 Your moves with its pinned rows (#292) have now been seen on iOS, in light and dark and at the largest text size; 3 layout problems found and fixed, and "All 3 done" got demo screens 180–181 (results in `handoff/10-onboarding.md` §9.10).**
+    - **Run:** iPhone 17 Pro, iOS 26.5, the dev build through Metro, `-demoScreen 150–166` in both themes (34 frames), then 151, 153, 161, 163, 164, 165 at Accessibility XXXL (`xcrun simctl ui … content_size accessibility-extra-extra-extra-large`). Memory: `top`'s "unused" was ~100–300 MB, but `memory_pressure` said 36% free (macOS keeps the compressor full), so the rule-9 bar (~2 GB) was read as reclaimable memory; one heavy thing at a time (the Simulator first, `npm run check` only after it was shut down).
+    - **Passes with no change:** the SF Symbols all draw (the checklist glyph, the chevrons, the X, the perk checks, the Starter toggles, the done badges); Start 1 → Closet → Starter essentials, Start 2 → the camera, Start 3 → Starter essentials; Back from Starter → Closet, from L3 → Lookbook or You (the row opens `/lookbook/moves` or `/you/moves`); a move turns done live (the camera's auto-capture added a look and the "1 of 3" and move 3 followed with no reload; marking a Starter row showed the toast and the count).
+    - **Fixed (all at the largest text size, `useTheme().isAccessibilitySize`):**
+      1. **The paywall's two pages** (`PaywallScreen`, `PlansScreen`): the pinned buttons filled the screen and covered the plan card, and the card squeezed "Monthly" into "Mo/nthl/y". Now the buttons scroll with the page at AX sizes (still pinned otherwise) and the plan card stacks. This was a real App Review risk: on page 2 the price and the 3.1.2 fine print could be unreachable.
+      2. **Starter essentials rows** (`StarterScreen`): titles broke mid-word and the toggle was squeezed out. Now the picture and the toggle share a top line and the words get the full width. At every size the status ("Marked as owned", "In your closet") sits on its own line instead of wrapping an orphan word.
+      3. **The pinned `Your moves` row** (`YourMovesRow`): "move / s". Now the count sits under the title.
+    - **New demo screens 180 and 181:** the first check (s14, 7.5, top fix "Swap the chunky sneakers for white leather sneakers"), a re-check on a new demo photo `s14b` (the same outfit in white leather sneakers: `demoReadings.ts` derives its reading from s14, `demoPhotos.ts` gives it its own hash) which scores 8.0 "Sharp" and makes the fix, the belt and the white tee marked. 180 is L3 reading "All 3 done. Nice work." (bar full, no Start); 181 is Lookbook with no `Your moves` row. Numbered 180+ because the closet-Undo session was already using 175 in its own worktree. Y5 is now seen on screen, not only tested.
+    - **Seen and left alone:** You's style chips clip the numbered badge at AX sizes; the toast covers row text; "Done. Your first idea lands tomorrow at 8:00 am." wraps "am." alone (`en.generated.ts`, a non-breaking space would fix it).
+    - **Not checked:** VoiceOver on a device; the paywall at AX in dark; the notification ask (158–160) at AX.
+    - **A slip, fixed:** `npx prettier` (not a project dependency) was run on four files and reformatted them with its defaults; they were restored from git and the edits reapplied by hand. Don't run `npx prettier` in this repo.
+    - **Lesson:** a demo screenshot taken ~8 s after launch is sometimes the splash screen or the previous state (the Metro bundle was reloading, or the story's set-ups hadn't finished); wait 12–14 s and recheck any frame that doesn't match its story.
+
+
 ## Oct 16 · The chat's C7 polish (founder: "go on")
 
-298. **The chat's cards read well with VoiceOver, the paused state exists, and Past chats are read-only, against checks written first (`handoff/07-stylist-chat.md` §14, P1–P6; all pass except P5, not checked).**
+300. **The chat's cards read well with VoiceOver, the paused state exists, and Past chats are read-only, against checks written first (`handoff/07-stylist-chat.md` §14, P1–P6; all pass except P5, not checked).**
     - **One source for what a card says and shows:** `cardSpoken` (its VoiceOver line, also read after the answer) and `cardControls` (which buttons show today and in Past chats), used by the view and the tests alike.
     - **The paused line** is D4's default, shown when the server (C6, not built) answers `paused`: no Retry, nothing counted.
     - **Demo 175:** yesterday's answers in Past chats. Its first question is the buy one because the demo closet has no olive overshirt until the 22nd; the code rightly drops an outfit card with a piece he doesn't own yet.
     - **Not checked:** the largest text size (P5). The Simulator was in use by another session ("Simulator pass: end of onboarding and Your moves"); I launched Kitted on it once before noticing, told that session, and left the Simulator to it.
+    - **Numbering:** #298 and #299 were taken by the Google and Simulator sessions the same night, so this is #300.
     - **Also merged:** PR [eyualem/kitted#1](https://github.com/eyualem/kitted/pull/1) (#296, #297) on the founder's go; the main folder was fast-forwarded so his phone gets it through Metro.
