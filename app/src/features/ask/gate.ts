@@ -7,7 +7,7 @@
 // words ("elevate", "drip", "vibe") drop their sentence; an opener before a comma ("Absolutely, …") is cut off the first
 // sentence. Markup (**, #, bullets, backticks) never shows: the answer's look is drawn by code (L3).
 
-export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned' | 'handle';
+export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned' | 'handle' | 'fact';
 
 export interface GateContext {
   /** Every score that may be said: the one-decimal numbers in the pack and the evidence ("7.0", "7.5"). */
@@ -16,6 +16,64 @@ export interface GateContext {
   hasBody?: boolean;
   /** His closet's piece names ("Navy overshirt"): mid-sentence they lose their capital ("your navy overshirt", #310). */
   pieceNames?: readonly string[];
+  /** His owned pieces' facts, for the fact rule (#311): "your straight jeans" when his jeans are slim is dropped. */
+  pieces?: readonly GatePiece[];
+}
+
+export interface GatePiece {
+  name: string;
+  category: string;
+  subcategory: string;
+  color: string;
+  leg: string;
+}
+
+// The fact rule (07 §16.3): "your/the <color or leg words> <kind of piece>" must fit one of his pieces of that kind.
+const PIECE_NOUN = /\b(your|the|those|these|that)\s+((?:[a-z][a-z-]*\s+){1,3}?)(jeans|chinos|trousers|pants|cargos|joggers|sweatpants|tees?|t-shirts?|shirts?|oxfords?|crewnecks?|sweaters?|sweatshirts?|hoodies?|overshirts?|jackets?|coats?|sneakers|runners|loafers|boots|shoes)\b/gi;
+const LEG_GROUP: Record<string, string> = { skinny: 'narrow', slim: 'narrow', tapered: 'narrow', straight: 'straight', wide: 'wide', baggy: 'wide', relaxed: 'wide', bootcut: 'bootcut' };
+const COLOR_FAMILIES: Record<string, readonly string[]> = {
+  black: ['black'], white: ['white', 'cream', 'off_white'], cream: ['cream', 'white', 'off_white'], grey: ['grey', 'gray', 'charcoal', 'light_grey'], gray: ['grey', 'gray', 'charcoal', 'light_grey'],
+  charcoal: ['charcoal', 'grey'], navy: ['navy'], blue: ['blue', 'light_blue', 'navy', 'denim_mid', 'denim_light', 'denim_dark'], 'light-blue': ['light_blue', 'blue'],
+  brown: ['brown', 'tan'], tan: ['tan', 'khaki_beige', 'brown', 'beige'], khaki: ['khaki_beige', 'tan', 'beige'], beige: ['khaki_beige', 'beige', 'tan'],
+  olive: ['olive', 'green'], green: ['green', 'olive'], red: ['red', 'burgundy'], burgundy: ['burgundy', 'red'], orange: ['orange', 'rust'], rust: ['rust', 'orange'],
+  yellow: ['yellow'], pink: ['pink'], purple: ['purple'], dark: ['denim_dark', 'black', 'navy', 'charcoal'], light: ['denim_light', 'light_blue', 'light_grey', 'white', 'cream', 'khaki_beige'],
+};
+const NOUN_KIND: Record<string, { category: string; sub?: RegExp }> = {
+  jeans: { category: 'bottom', sub: /jean/ }, chinos: { category: 'bottom', sub: /chino/ }, trousers: { category: 'bottom' }, pants: { category: 'bottom' },
+  cargos: { category: 'bottom', sub: /cargo/ }, joggers: { category: 'bottom', sub: /jogger|sweat/ }, sweatpants: { category: 'bottom', sub: /sweat|jogger/ },
+  tee: { category: 'top', sub: /tee|t_shirt/ }, 't-shirt': { category: 'top', sub: /tee|t_shirt/ }, shirt: { category: 'top', sub: /shirt|oxford/ }, oxford: { category: 'top', sub: /oxford/ },
+  crewneck: { category: 'top', sub: /sweater|crew/ }, sweater: { category: 'top', sub: /sweater|knit|crew/ }, sweatshirt: { category: 'top', sub: /sweatshirt/ }, hoodie: { category: 'top', sub: /hood/ },
+  overshirt: { category: 'outerwear', sub: /overshirt/ }, jacket: { category: 'outerwear' }, coat: { category: 'outerwear' },
+  sneakers: { category: 'footwear', sub: /sneaker|runner/ }, runners: { category: 'footwear', sub: /runner/ }, loafers: { category: 'footwear', sub: /loafer/ },
+  boots: { category: 'footwear', sub: /boot/ }, shoes: { category: 'footwear' },
+};
+const FILLER_WORDS = new Set(['pair', 'of', 'leg', 'wash', 'denim', 'leather', 'suede']);
+
+/** "your straight jeans" when none of his jeans is straight: a fact about his piece the closet contradicts (#311). */
+export function pieceFactClash(sentence: string, pieces: readonly GatePiece[] = []): boolean {
+  if (pieces.length === 0) return false;
+  for (const m of allMatches(PIECE_NOUN, sentence)) {
+    const words = m[2]!.toLowerCase().trim().split(/\s+/);
+    const legs = words.filter((w) => LEG_GROUP[w]);
+    const colors = words.filter((w) => COLOR_FAMILIES[w]);
+    if (legs.length === 0 && colors.length === 0) continue;
+    // Only describing words may sit between "your" and the noun ("the jeans with the boots" isn't one).
+    if (words.some((w) => !LEG_GROUP[w] && !COLOR_FAMILIES[w] && !FILLER_WORDS.has(w))) continue;
+    let noun = m[3]!.toLowerCase();
+    if (!NOUN_KIND[noun]) noun = noun.replace(/s$/, '');
+    const kind = NOUN_KIND[noun];
+    if (!kind) continue;
+    const mine = pieces.filter((p) => p.category === kind.category && (!kind.sub || kind.sub.test(p.subcategory) || kind.sub.test(p.name.toLowerCase())));
+    if (mine.length === 0) continue; // not a piece he owns: buying advice, or nothing to check against
+    const fits = (p: GatePiece) => {
+      const name = p.name.toLowerCase();
+      const legOk = legs.every((w) => LEG_GROUP[p.leg] === LEG_GROUP[w] || name.includes(w));
+      const colorOk = colors.every((w) => COLOR_FAMILIES[w]!.includes(p.color) || name.includes(w));
+      return legOk && colorOk;
+    };
+    if (!mine.some(fits)) return true;
+  }
+  return false;
 }
 
 /** The pack's handles never show ("your olive overshirt (P13)" → "your olive overshirt"; seen live, #310). */
@@ -144,6 +202,7 @@ export function checkSentence(sentence: string, ctx: GateContext): GateRule | nu
   if (YOUR_BODY.test(sentence) || YOU_ARE_BODY.test(sentence) || (MENTIONS_HIM.test(sentence) && BODY_WORD.test(sentence))) return 'body';
   if (HEIGHT.test(sentence)) return 'height';
   if (scoresSaid(sentence).some((s) => !ctx.allowedScores.has(s))) return 'score';
+  if (pieceFactClash(sentence, ctx.pieces)) return 'fact';
   return null;
 }
 

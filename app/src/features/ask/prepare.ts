@@ -5,6 +5,7 @@ import { dayKey, localParts } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type { FitCheckRow } from '@/data/types';
 import type { Clock } from '@/services/clock';
+import { isOwned } from '@/features/closet/profile';
 import { getStarterMarks } from '@/features/finish/service';
 import { buildCard, cardSpoken } from './cards';
 import { displayScore } from '@/design-system/score';
@@ -42,12 +43,18 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
     // An unsure route sends the pack alone; the model may ask for one lookup (R3).
     const ev = route.sure ? await buildEvidence(route, snap, ctx, evDeps) : { text: '', kind: route.kind };
     deps.log?.(`route · ${route.kind}${route.sure ? '' : ' (unsure)'} · ${route.pieces.length} pieces${route.check ? ' · a check' : ''}${ev.text ? ' · evidence' : ''}`);
+    const owned = snap.closet.filter((c) => isOwned(c) && !c.isDeleted && !c.mergedInto);
+    const gatePieces = owned.map((c) => {
+      const g = c.garment as Record<string, unknown>;
+      const str = (k: string) => (typeof g[k] === 'string' ? String(g[k]) : '');
+      return { name: c.name, category: str('category'), subcategory: str('subcategory'), color: str('color_family'), leg: str('leg_shape') };
+    });
     const hasBody = snap.profile !== null && (snap.profile.heightCm !== null || ['slim', 'average', 'athletic', 'broad', 'bigger'].includes(snap.profile.build));
     return {
       kind: route.kind,
       ...(ev.verdict ? { verdict: ev.verdict } : {}),
       prompt: { system: systemPrompt(route.kind), user: userPrompt(ctx.text, ev.text, question) },
-      gate: { allowedScores: allowedScores(ctx.text, ev.text), hasBody, pieceNames: snap.closet.map((c) => c.name) },
+      gate: { allowedScores: allowedScores(ctx.text, ev.text), hasBody, pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
       lookup: async (need) => {
         const l = parseLookup(need, ctx.handles);
         if (!l) return null;
@@ -56,7 +63,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
         if (!ev2.text) return null;
         return {
           prompt: { system: systemPrompt(r.kind), user: userPrompt(ctx.text, ev2.text, question) },
-          gate: { allowedScores: allowedScores(ctx.text, ev2.text), hasBody, pieceNames: snap.closet.map((c) => c.name) },
+          gate: { allowedScores: allowedScores(ctx.text, ev2.text), hasBody, pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
         };
       },
       card: async (raw, gate) => buildCard(raw, {
