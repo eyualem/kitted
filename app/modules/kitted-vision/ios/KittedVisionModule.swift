@@ -7,6 +7,20 @@ import ExpoModulesCore
 public class KittedVisionModule: Module {
   private var dictation: KittedDictation?
 
+  private func dictationEngine() -> KittedDictation {
+    if let d = dictation { return d }
+    let d = KittedDictation { [weak self] event in
+      switch event {
+      case let .text(text, isFinal): self?.sendEvent("onDictation", ["type": "text", "text": text, "final": isFinal])
+      case let .level(level): self?.sendEvent("onDictation", ["type": "level", "level": level])
+      case let .ended(error): self?.sendEvent("onDictation", ["type": "end", "error": error as Any])
+      case let .log(line): self?.sendEvent("onDictation", ["type": "log", "line": line])
+      }
+    }
+    dictation = d
+    return d
+  }
+
   public func definition() -> ModuleDefinition {
     Name("KittedVision")
 
@@ -74,20 +88,25 @@ public class KittedVisionModule: Module {
     }
 
     AsyncFunction("startDictation") { () async throws in
-      if self.dictation == nil {
-        self.dictation = KittedDictation { [weak self] event in
-          switch event {
-          case let .text(text, isFinal): self?.sendEvent("onDictation", ["type": "text", "text": text, "final": isFinal])
-          case let .level(level): self?.sendEvent("onDictation", ["type": "level", "level": level])
-          case let .ended(error): self?.sendEvent("onDictation", ["type": "end", "error": error as Any])
-          }
-        }
-      }
-      try await self.dictation?.start()
+      try await self.dictationEngine().start(contextWords: [])
+    }
+
+    // Round 2 (#302): the closet's piece names as context words, the final words handed back on stop, and the
+    // speech model installed ahead of time. New names, so an older JS bundle and an older build keep working.
+    AsyncFunction("startDictationWith") { (words: [String]) async throws in
+      try await self.dictationEngine().start(contextWords: words)
     }
 
     AsyncFunction("stopDictation") { () async in
-      await self.dictation?.stop()
+      _ = await self.dictation?.stop()
+    }
+
+    AsyncFunction("stopDictationText") { () async -> String in
+      await self.dictation?.stop() ?? ""
+    }
+
+    AsyncFunction("prepareDictation") { () async -> String in
+      await KittedDictation.prepare()
     }
 
     /// "Try again" after a failed read: the upload copy from the first prep (Caches/upload).

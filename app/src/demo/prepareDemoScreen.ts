@@ -57,7 +57,7 @@ type Step =
   | { at: string; do: 'ask'; text: string }
   /** Tap an answer on the newest ask card (07 §13 R6). */
   | { at: string; do: 'askTap'; option: string }
-  /** A stored setting (Closet's remembered Pieces | Outfits tap, #306). */
+  /** A stored setting (Closet's remembered Pieces | Outfits tap, #307). */
   | { at: string; do: 'kv'; key: string; value: string }
   /** Questions already used today (the limit state without five demo answers in the thread). */
   | { at: string; do: 'askUsed'; n: number }
@@ -170,7 +170,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   78: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', hold: 0.86 }] },
   79: { steps: [{ at: '2026-10-22T07:42:00', do: 'whichOne', photoId: 'p01b' }] },
   90: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE }] },
-  91: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE, partial: 'Yes. Olive and navy is an easy pair. Add the' }] },
+  91: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE, partial: 'Yes, olive and navy get along easily. Wear the' }] },
   92: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: ASK_OLIVE }, { at: '2026-10-22T12:09:00', do: 'ask', text: ASK_BELT }] },
   // The seed's two questions plus three more used: the sixth gets the free limit line (no Try Pro until P6).
   93: { steps: [{ at: '2026-10-22T12:20:00', do: 'askUsed', n: 5 }, { at: '2026-10-22T12:21:00', do: 'ask', text: 'What shoes go with my khaki chinos?' }] },
@@ -215,7 +215,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   172: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'Which shoes are my dressiest?' }] },
   173: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: "I'm a 32 waist." }] },
   174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
-  // The Closet's Outfits (09-ui-review §13, #306). Screen 15 keeps showing the Pieces grid it always did.
+  // The Closet's Outfits (09-ui-review §13, #307). Screen 15 keeps showing the Pieces grid it always did.
   15: { steps: [{ at: '2026-10-22T07:00:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only

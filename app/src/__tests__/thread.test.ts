@@ -15,7 +15,10 @@ describe('thread rows', () => {
     const stamps = items.filter((i) => i.type === 'stamp').map((i) => (i.type === 'stamp' ? i.text : ''));
     expect(stamps).toEqual(['Sep 24, 7:05 pm', 'Tuesday 8:10 am', 'Thursday 7:42 am', 'Thursday 8:00 am', 'Thursday 12:05 pm']);
     const who = items.filter((i) => i.type === 'msg' && i.showWho).map((i) => (i.type === 'msg' ? i.message.id : ''));
-    expect(who).toEqual(['M00', 'M08']); // a reply right after his message has no header (mockup 13)
+    // Look C (#302): the mark on the first stylist line of every run (after his message, a card or a stamp).
+    expect(who).toEqual(['M00', 'M05', 'M08', 'M11', 'M13', 'M16', 'M18']);
+    const answers = items.filter((i) => i.type === 'msg' && i.answer).map((i) => (i.type === 'msg' ? i.message.id : ''));
+    expect(answers).toEqual(['M11', 'M13', 'M16', 'M18']); // a line right after his typed message
     const last = items[items.length - 1]!;
     expect(last.type === 'msg' && [last.message.id, last.newest]).toEqual(['M18', true]);
   });

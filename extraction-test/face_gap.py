@@ -1,4 +1,4 @@
-"""The face-hiding gap (09-ui-review §10, #303): what photo prep hides, before and after the fix, on every photo set.
+"""The face-hiding gap (09-ui-review §10, #304): what photo prep hides, before and after the fix, on every photo set.
 
   /usr/bin/python3 face_gap.py run before      # kmeasure-before locate on every photo -> results/facegap/before.json
   /usr/bin/python3 face_gap.py run after       # kmeasure locate (the fixed Swift)     -> results/facegap/after.json

@@ -3,7 +3,7 @@
 // details (#91), with the "Same as your …?" questions the stylist still has on top, 3 at a time (#111). A tap on a piece
 // opens its page (#276); a long-press is the shortcut menu. While clothes scans wait to be read, one row on top
 // ("Waiting to be read · 2 photos", #280) opens the scan inbox.
-// Pieces | Outfits (09-ui-review §13, #306; #84, #87): opens on Outfits once he can make 3+, else Pieces, then
+// Pieces | Outfits (09-ui-review §13, #307; #84, #87): opens on Outfits once he can make 3+, else Pieces, then
 // remembers his tap.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).

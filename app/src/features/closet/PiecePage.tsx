@@ -85,7 +85,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
     // What each photo's menu offers: Not this piece and It's another piece… (§8, #289).
     const ctx = { all, obs, checks };
     const offers = new Map([...photos.shown, ...photos.folded].map((ph) => [ph.obsId, photoOffer(item, ph.obsId, ctx)]));
-    // Goes with (09-ui-review §13 O9, #306): the outfits with this piece; a layer gets the list built around it.
+    // Goes with (09-ui-review §13 O9, #307): the outfits with this piece; a layer gets the list built around it.
     const fitRows = [...rows.values()];
     const styles = (await store.profile.get('me'))?.styles ?? null;
     const around = buildOutfits({ closet: all, checks: fitRows, styles, occasion: 'everyday', ...(item.slot === 'outer' ? { withLayer: item.id } : {}) });

@@ -1,16 +1,19 @@
-// The composer's mic (DECISIONS-LOG #70): tap to start, tap stop to drop the words into the field,
-// ✕ to throw them away. Never sends by itself. On-device (kitted-vision → SpeechAnalyzer).
-import { useEffect, useRef, useState } from 'react';
+// The composer's mic (DECISIONS-LOG #70; round 2 #302): tap to start; it stops on a tap, after a pause once he's
+// talked, or after a minute, and the words land in the field (onHeard). ✕ throws them away. Never sends by itself.
+// On-device (kitted-vision → SpeechAnalyzer). The logic lives in dictation.ts (tested); this wraps it for React.
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Linking } from 'react-native';
 import { useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
-import { dictationAvailable, dictationSupported, onDictation, requestMicrophone, startDictation, stopDictation } from '../../../modules/kitted-vision';
+import { dictationAvailable, dictationSupported, onDictation, prepareDictation, requestMicrophone, startDictation, stopDictation } from '../../../modules/kitted-vision';
+import { store } from '@/data/db';
+import { useLive } from '@/data/useLive';
+import { chipPieces } from '@/features/ask/answerText';
+import { micLog } from '@/features/camera/devLog';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
+import { createDictationController, type DictationController, type DictationState } from './dictation';
 
-/** He can't talk forever into a chat box; stop after a minute. */
-const MAX_MS = 60_000;
-
-export type DictationState = 'idle' | 'starting' | 'listening';
+export type { DictationState } from './dictation';
 
 export interface Dictation {
   available: boolean;
@@ -20,90 +23,74 @@ export interface Dictation {
   /** 0…1 loudness for the waveform. */
   level: SharedValue<number>;
   start: () => Promise<void>;
-  /** Stops and returns everything heard (the caller puts it in the field). */
+  /** Stops; the words go to onHeard (and are returned). */
   stop: () => Promise<string>;
   cancel: () => Promise<void>;
 }
 
-export function useDictation(): Dictation {
+export function useDictation(onHeard: (text: string) => void): Dictation {
   const [state, setState] = useState<DictationState>('idle');
   const [text, setText] = useState('');
-  const textRef = useRef('');
   const level = useSharedValue(0);
-  const cap = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const heardRef = useRef(onHeard);
+  const closet = useLive(['closet'], () => store.closet.all(), []);
+  const names = useRef<string[]>([]);
+  const ctl = useRef<DictationController | null>(null);
+  useEffect(() => {
+    heardRef.current = onHeard;
+  }, [onHeard]);
+  useEffect(() => {
+    names.current = closet ? chipPieces(closet).map((p) => p.name) : [];
+  }, [closet]);
+
   // The mic shows only where dictation runs on the phone (checked once; false on the Simulator).
   const [supported, setSupported] = useState(false);
   useEffect(() => {
     let live = true;
-    if (dictationAvailable) void dictationSupported().then((ok) => live && setSupported(ok));
+    if (dictationAvailable) {
+      void dictationSupported().then((ok) => {
+        if (!live) return;
+        setSupported(ok);
+        // Install the speech model now, not on his first tap (#302).
+        if (ok) void prepareDictation().then((r) => micLog(`prepare · ${r}`));
+      });
+    }
     return () => {
       live = false;
     };
   }, []);
 
-  useEffect(
-    () =>
-      onDictation((e) => {
-        if (e.type === 'text') {
-          textRef.current = e.text;
-          setText(e.text);
-        } else if (e.type === 'level') {
-          level.set(withTiming(e.level, { duration: 90 }));
-        } else {
-          setState('idle');
-          level.set(withTiming(0, { duration: 150 }));
-          if (e.error) {
-            if (__DEV__) console.log('[mic] ended with error:', e.error);
-            showToast(t('mic.error'));
-          }
-        }
-      }),
-    [level],
-  );
+  useEffect(() => {
+    const c = createDictationController({
+      native: { requestMicrophone, prepare: prepareDictation, start: startDictation, stop: stopDictation, onEvent: onDictation },
+      now: () => Date.now(),
+      setTimer: (fn, ms) => setTimeout(fn, ms),
+      clearTimer: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
+      words: () => names.current,
+      onHeard: (h) => heardRef.current(h),
+      onToast: (key) => showToast(t(key)),
+      onMicOff: () =>
+        Alert.alert(t('mic.off.title'), t('mic.off.body'), [
+          { text: t('common.cancel'), style: 'cancel' },
+          { text: t('mic.off.settings'), isPreferred: true, onPress: () => void Linking.openSettings() },
+        ]),
+      log: micLog,
+    });
+    ctl.current = c;
+    const off = c.subscribe((s) => {
+      setState(s.state);
+      setText(s.text);
+      level.set(withTiming(s.state === 'listening' ? s.level : 0, { duration: s.state === 'listening' ? 90 : 150 }));
+    });
+    return () => {
+      off();
+      c.dispose();
+      ctl.current = null;
+    };
+  }, [level]);
 
-  useEffect(() => () => void stopDictation(), []);
-
-  const clearCap = () => {
-    if (cap.current) clearTimeout(cap.current);
-    cap.current = null;
-  };
-
-  const stop = async (): Promise<string> => {
-    clearCap();
-    await stopDictation();
-    setState('idle');
-    const heard = textRef.current.trim();
-    textRef.current = '';
-    setText('');
-    return heard;
-  };
-
-  const start = async () => {
-    if (state !== 'idle') return;
-    if ((await requestMicrophone()) !== 'granted') {
-      Alert.alert(t('mic.off.title'), t('mic.off.body'), [
-        { text: t('common.cancel'), style: 'cancel' },
-        { text: t('mic.off.settings'), isPreferred: true, onPress: () => void Linking.openSettings() },
-      ]);
-      return;
-    }
-    textRef.current = '';
-    setText('');
-    setState('starting');
-    try {
-      await startDictation();
-      setState('listening');
-      cap.current = setTimeout(() => void stop(), MAX_MS);
-    } catch (e) {
-      if (__DEV__) console.log('[mic] start failed:', e instanceof Error ? e.message : String(e));
-      setState('idle');
-      showToast(t('mic.error'));
-    }
-  };
-
-  const cancel = async () => {
-    await stop();
-  };
-
+  const start = useCallback(async () => ctl.current?.start(), []);
+  const stop = useCallback(async () => (ctl.current ? ctl.current.stop() : ''), []);
+  const cancel = useCallback(async () => ctl.current?.cancel(), []);
   return { available: supported, state, text, level, start, stop, cancel };
 }

@@ -109,7 +109,7 @@ export const KV_LOCAL: readonly string[] = [
   'idea.evening.ignored', 'camera.mode', 'weather.permission', 'closet.pendingDeletes',
   // The end of onboarding's progress (#291): this phone's first-fit sequence, like onboarding.step.
   'onboard.finish',
-  // Closet's last Pieces | Outfits tap (#306): a view setting on this phone, like camera.mode.
+  // Closet's last Pieces | Outfits tap (#307): a view setting on this phone, like camera.mode.
   'closet.segment',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.

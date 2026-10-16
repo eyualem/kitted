@@ -282,9 +282,9 @@ def main():
         {"id": "M13", "createdAt": ts("2026-10-22", "08:04"), "role": "stylist", "kind": "text", "text": "Career fair on the 29th, right? Business casual, and you can build it from what you own."},
         {"id": "M14", "createdAt": ts("2026-10-22", "08:04"), "role": "stylist", "kind": "card", "cardType": "outfitIdea", "outfitID": "O_INTERVIEW", "chips": ["Wear this", "Swap one", "Save"]},
         {"id": "M15", "createdAt": ts("2026-10-22", "12:05"), "role": "user", "kind": "text", "text": "Can I wear the olive overshirt with the navy chinos?", "countsAsQuestion": True},
-        {"id": "M16", "createdAt": ts("2026-10-22", "12:05"), "role": "stylist", "kind": "text", "text": "Yes. Olive and navy is an easy pair. Add the white tee and white sneakers, and wear the overshirt open."},
+        {"id": "M16", "createdAt": ts("2026-10-22", "12:05"), "role": "stylist", "kind": "text", "text": "Yes, olive and navy get along easily. Wear the overshirt open over the white tee, with the white sneakers."},
         {"id": "M17", "createdAt": ts("2026-10-22", "12:09"), "role": "user", "kind": "text", "text": "What belt goes with brown loafers?", "countsAsQuestion": True},
-        {"id": "M18", "createdAt": ts("2026-10-22", "12:09"), "role": "stylist", "kind": "text", "text": "A brown leather belt, close to the loafers' shade. It's also the last piece on your Starter 12."},
+        {"id": "M18", "createdAt": ts("2026-10-22", "12:09"), "role": "stylist", "kind": "text", "text": "A brown leather belt, close to the loafers' shade. It's the one basic you're still missing."},
     ]
 
     photos = [{"id": e["id"], "file": e["photo_file"], "sha256": e["photo_sha256"], "readingID": e["id"], "license": e["license"],

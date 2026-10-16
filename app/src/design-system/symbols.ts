@@ -17,7 +17,7 @@ export const sym = {
   settings: 'gearshape',
   check: 'checkmark',
   checkFilled: 'checkmark.circle.fill',
-  /** An open slot in a checklist (Closet's No outfits yet, #306). */
+  /** An open slot in a checklist (Closet's No outfits yet, #307). */
   circle: 'circle',
   tee: 'tshirt',
   bag: 'bag',

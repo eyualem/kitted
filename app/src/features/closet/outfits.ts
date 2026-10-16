@@ -1,4 +1,4 @@
-// The Closet's Outfits (09-ui-review §13, #306; approved #84, #87; 02 D15). Pure: every top + bottoms + shoes he owns
+// The Closet's Outfits (09-ui-review §13, #307; approved #84, #87; 02 D15). Pure: every top + bottoms + shoes he owns
 // that core's `outfitValid` lets through, each scored by the parts engine (today's scoring) on `outfitReading`, at an
 // occasion. A layer joins a trio only when it raises that score by LAYER_GAIN or more, so layers never multiply the
 // count. The count is the trios rated Put together (7.0+) at Everyday, leaving out pieces he only mentioned in chat.

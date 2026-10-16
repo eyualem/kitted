@@ -2,7 +2,9 @@
 // Chats are kept by day (founder, Oct 9): Stylist shows today's (the 4 am day key), and each
 // earlier day is its own page under "Past chats".
 // A stamp goes before the first message of a day, after a 60-minute gap, or where the message
-// asks for one (seed M08). The header shows on the first stylist message after a stamp.
+// asks for one (seed M08). Look C (#302): the stylist's mark shows on the first stylist line of a run (after his
+// message, a card, a photo or a stamp); `answer` marks a stylist line that answers his typed question (its first
+// sentence is drawn as the lead).
 import { dayKey, type ZoneOffset } from '@kitted/core';
 import type { ChatMessage, OccasionKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
@@ -10,7 +12,7 @@ import { stampText } from '@/i18n/format';
 
 export type ThreadItem =
   | { type: 'stamp'; key: string; text: string }
-  | { type: 'msg'; key: string; message: ChatMessage; showWho: boolean; newest: boolean };
+  | { type: 'msg'; key: string; message: ChatMessage; showWho: boolean; answer: boolean; newest: boolean };
 
 const GAP_MS = 60 * 60_000;
 
@@ -22,18 +24,16 @@ export function buildThreadItems(messages: readonly ChatMessage[], nowMs: number
   const out: ThreadItem[] = [];
   const sorted = sortMessages(messages);
   let prev: ChatMessage | null = null;
-  let afterStamp = false;
   sorted.forEach((m, i) => {
     const newDay = !prev || dayKey(prev.createdAt, zone) !== dayKey(m.createdAt, zone);
     const gap = !!prev && m.createdAt - prev.createdAt >= GAP_MS;
-    if (newDay || gap || m.payload.stamp === true) {
-      out.push({ type: 'stamp', key: `stamp-${m.id}`, text: stampText(m.createdAt, nowMs, zone) });
-      afterStamp = true;
-    }
-    const showWho = m.role === 'stylist' && m.kind === 'text' && afterStamp;
-    if (m.role === 'stylist' && m.kind === 'text') afterStamp = false;
-    if (m.role === 'user') afterStamp = false;
-    out.push({ type: 'msg', key: m.id, message: m, showWho, newest: i === sorted.length - 1 });
+    const stamped = newDay || gap || m.payload.stamp === true;
+    if (stamped) out.push({ type: 'stamp', key: `stamp-${m.id}`, text: stampText(m.createdAt, nowMs, zone) });
+    const isText = (x: ChatMessage | null) => !!x && x.kind === 'text';
+    const stylistText = m.role === 'stylist' && m.kind === 'text';
+    const showWho = stylistText && (stamped || !(prev && prev.role === 'stylist' && isText(prev)));
+    const answer = stylistText && (typeof m.payload.answerTo === 'string' || (!stamped && !!prev && prev.role === 'user' && isText(prev)));
+    out.push({ type: 'msg', key: m.id, message: m, showWho, answer, newest: i === sorted.length - 1 });
     prev = m;
   });
   return out;

@@ -611,5 +611,35 @@ Each sentence appears whole once it passes the gate, rising in over 180 ms (no m
   Results go in §15.8.
 - **E2 (his blind pick, 5–10 min):** 20 pairs, Flash-Lite vs 3.8 Flash (D1). If he can't choose the voice from the mockup, the same pairs run voice 1 vs voice 2.
 
-### 15.8 Results
-*(filled in as each check runs)*
+### 15.8 Results (Oct 16–17, #303): look C and voice 1 built, with J and V; E waits for the spend
+The founder picked look C and voice 1 ("Go with look C (stylist note) and voice 1 … Start building."), then went to sleep and left the calls to Claude. `npm run check`: 1,019 app tests in 79 suites and 755 core tests, typecheck and lint clean. Screenshots: `screenshots/chat-round2/` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| K1 | Pass (T) | `askVoice.test.ts`: 12 opener/closer cases ("Great question!", "Absolutely, …", "Let me know if…", "Hope this helps", "Any other questions?"); a plain "Yes." and a mid-answer "make sure" stay |
+| K2 | Pass (T) | "elevate", "drip", "vibe(s)", "game-changer", "goes hard" drop their sentence; "drape", "dripping", "elevator", "level" stay |
+| K3 | Pass (T) | every demo answer, seeded answer and prompt example passes the gate and `voiceProblems` (lead ≤ 20 words, ≤ 70 words, ≤ 3 sentences, one question at most and last, no list, no internal word). Rewritten to the voice: the olive overshirt, work, buy-next and both seeded answers ("…the last piece on your Starter 12" → "It's the one basic you're still missing.") |
+| K4 | Pass (T) | the system part is pure per kind, carries the 9 examples and the voice line; `PROMPT_VERSION` 2 |
+| K5 | Not run | needs E1 (the live test) |
+| L1 | Pass (T) | the lead is the first sentence, or the first two when the first has 1–3 words ("Got it."); "vs.", "e.g.", "7.5", "5′10″", "$15" don't split (the gate's sentence cutter learned the abbreviations too) |
+| L2 | Pass (T) | exact names, longest first, whole words, each piece once, at most 3, owned and not removed or merged; a name two pieces share is skipped |
+| L3 | Pass (T) | `**`, `__`, backticks, headings and bullets are stripped before the gate |
+| L4 | Pass (T) | the whole answer is one VoiceOver element; each chip is an "Open {piece}" action |
+| L5 | Pass (T) | A5 unchanged: the live row draws only gated text; the first words fade in once (180 ms, none with Reduce Motion) |
+| L6 | Pass after 3 fixes (S) | iOS Simulator, a new dev build: demos 91, 92, 167, 173 in light, dark and AX5. **Found and fixed:** (1) the indigo mark sank into the night background: a faint rim in dark mode (`fixed.labelRimDark`); (2) at AX5 the mark's column cost width: at accessibility sizes the mark goes above the text, full width; (3) the colour swatch sat low and could wrap away from its name: lifted 1 pt, joined by a narrow no-break space, and dropped at accessibility sizes. Onboarding's stylist lines checked on the web preview |
+| J1 | Pass (T) | `askJudge.test.ts`: on 48 outfits from the demo closet (top + pants + shoes, + a layer, pants + shoes), at Everyday and Interview, the judgement is exactly the parts engine's reasons, minus the ones that read what the closet can't know (the waist break, a tuck, the hem: `outfitReading` sets them neutral, which had earned a fake "gives it a waist" credit). Verdicts: oxford + khaki chinos + Chelsea boots + navy overshirt **yes**; white tee + slim dark jeans **depends** ("the slim jeans would balance better with a straight leg"); a tee to an interview **no** (the collar hold); skinny jeans **no** |
+| J2 | Pass (T) | no score-like number in any chat evidence for an outfit without a photo (an occasion line's ": held to 6.0" is cut, found by the test) |
+| J3 | Pass (T) | "You avoid navy" takes every navy piece out of outfits and the buy list; "slim pants" rules out slim legs; a deleted or guessed fact rules nothing out; a piece he names himself is still used |
+| J4 | Pass (T) | all 18 "(scored…)" lines in the guide name rule IDs that exist in `rubric/v5-styles.md` (two stale ones fixed: "slim −0.5" and "scored once the second look ships"); the model never sees the marks or an ID |
+| J5 | Pass (T) | the closing block gained `verdict`; yes against the rules' no (or no against yes) drops the card and logs `gate · verdict`; depends never clashes |
+| J6 | Pass (T) | G4's tests unchanged and green |
+| V1 | Pass (T) | `dictation.test.ts`: start → listening; stop hands every word to the field once; **a final that lands while stop waits still reaches the field** (the likely "empty after stop" bug); older builds use the live text; cancel drops the words; late events never refill the field; error → toast; mic off → the Settings alert; offline model → "Voice needs a connection the first time."; the minute cap |
+| V2 | Pass (T) | a 1.6 s pause after words stops it and fills the field (a new word or a loud level resets it); no words in 8 s → "I didn't catch that." |
+| V3 | Pass (T) | the hook never sends; the composer shows every word, wrapping to 4 lines (the 33-character cut is gone) |
+| V4 | Pass (T) | his piece names, one line each, no repeats, at most 100, plus a fixed clothing list on the native side |
+| V5 | Pass (T) | the Swift side uses only DictationTranscriber; no SFSpeechRecognizer, no audio file |
+| V6 | Not run | the Mac bench needs the founder's OK for Apple's speech model on the Mac |
+| V7–V8 | Not run | on his phone, after a reinstall (the native fixes); the JS checks which native calls exist, so the current build keeps working until then. The new native code compiled (Simulator build, Oct 16) |
+| E0–E2 | Not run | the $0.50 and the ~$1–2 are still on his list |
+
+**Left out, on purpose:** long-press Copy on an answer (needs a new package, `expo-clipboard`: the founder's OK); a rise-in per sentence (one fade on the first words instead); "Going for" as a tie-break in outfit picking (his picked looks already break ties). **Changed in passing:** on the Simulator the mic now shows (the support check needs only the language now, not an installed model), so tapping it there tries Apple's model.

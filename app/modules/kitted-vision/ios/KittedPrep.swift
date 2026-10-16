@@ -430,7 +430,7 @@ enum Prep {
         out.status = "couldNotFrame"
         return out
       } else if band == nil, let top = topEdgeBand(mask, main: main, W: W, H: H, shoulderY: shoulders.map(\.y).min()) {
-        // His body runs off the top edge with no face or head found (09-ui-review §10, #303). That used to mean "the
+        // His body runs off the top edge with no face or head found (09-ui-review §10, #304). That used to mean "the
         // head is outside the photo", but a head cut off mid-face (ig-098: chin and mouth in, eyes out) looks the same
         // to the face detector. So the top of him is hidden down to just above his shoulders, unless his shoulders sit
         // at the very top (a true chest-down shot: nothing of the head is in the photo).
@@ -669,7 +669,7 @@ enum Prep {
     return CGRect(x: x, y: y, width: headW * 1.3, height: bandH + headW * 0.1).intersection(CGRect(x: 0, y: 0, width: W, height: H))
   }
 
-  /// The top of him when his outline runs off the top edge and no head was found (#303), in pixels: from the top edge
+  /// The top of him when his outline runs off the top edge and no head was found (#304), in pixels: from the top edge
   /// down to a little above his highest shoulder (or, with no shoulder found, the top 18% of his outline), across the
   /// part of his outline in those rows (a raised phone arm included). Nil when his shoulders are at the very top (the
   /// head is outside the photo) or the band would be too thin to hold a face.

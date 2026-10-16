@@ -45,6 +45,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
     const hasBody = snap.profile !== null && (snap.profile.heightCm !== null || ['slim', 'average', 'athletic', 'broad', 'bigger'].includes(snap.profile.build));
     return {
       kind: route.kind,
+      ...(ev.verdict ? { verdict: ev.verdict } : {}),
       prompt: { system: systemPrompt(route.kind), user: userPrompt(ctx.text, ev.text, question) },
       gate: { allowedScores: allowedScores(ctx.text, ev.text), hasBody },
       lookup: async (need) => {

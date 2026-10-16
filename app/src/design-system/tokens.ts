@@ -119,6 +119,8 @@ export const fixed = {
   /** Woven label, stylist avatar "K", app icon base. Bluer (#231): onDark #EEF0F5 on #22305C = 11.19
    *  (was 13.53). REVERT: '#1B2340'. */
   label: '#22305C',
+  /** The rim on the stylist's mark in dark mode, so the indigo keeps its edge on night (#302). */
+  labelRimDark: 'rgba(255, 255, 255, 0.16)',
   /** Woven-label text. */
   onDark: '#EEF0F5',
   /** Copper on dark: share-band delta, stitches, camera scan line. */
@@ -238,6 +240,8 @@ export const radius = {
   photoBubbleInner: 17,
   photoBubbleInnerTail: 4,
   avatar: 5,
+  /** The stylist's mark beside each answer (look C, #302). */
+  mark: 8,
   label: 2,
   notification: 26,
   /** Buttons, chips, pills, composer and fields are capsules: radius = height / 2. */
@@ -260,6 +264,9 @@ export const size = {
   /** Card padding + 2, as in the mockup (16 → 18). */
   seamInset: 22,
   avatar: 18,
+  /** The stylist's mark beside each answer (look C, #302): 28 pt, then a 10 pt gap to the text. */
+  mark: 28,
+  markGap: 10,
   detectionTag: 28,
   photoBubbleWidth: 135,
   photoBubbleHeight: 172,

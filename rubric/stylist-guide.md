@@ -2,13 +2,27 @@
 
 *Oct 13, 2026. DECISIONS-LOG #235. Written from how the founder's four taste sources judge outfits (Tim Dessaint, Wanhee Kim, Jaye Alexander, Frugal Aesthetic; `rubric/research/creators/creators-rules.md` and `notes/`), in the stylist's own words. Everything here is paraphrased advice, not quotes.*
 
-**What this file is for.** The score comes from code (`rubric/v5-styles.md`); the code can only use what one photo shows. This guide is everything else a good stylist knows: how to talk about fit, pants and shoes, color, layering, accessories, occasions, fabric, shopping and building a wardrobe. It is written to be loaded as context for the Stylist chat when "Ask your stylist…" gets real answers, and as the source for the score card's tips. When a rule here can be seen in a photo and is safe to score, it belongs in the rulebook as well; the guide marks those with **(scored)** or **(tip)**.
+**What this file is for.** The score comes from code (`rubric/v5-styles.md`); the code can only use what one photo shows. This guide is everything else a good stylist knows: how to talk about fit, pants and shoes, color, layering, accessories, occasions, fabric, shopping and building a wardrobe. It is written to be loaded as context for the Stylist chat when "Ask your stylist…" gets real answers, and as the source for the score card's tips. When a rule here can be seen in a photo and is safe to score, it belongs in the rulebook as well; the guide marks those with **(scored)** or **(tip)**. Each **(scored)** mark names its rule ID in `rubric/v5-styles.md`, and a test fails when an ID is missing or no longer exists (#302); the marks are taken out before the guide goes to the chat model.
 
 ---
 
 ## 0. Rules for the chat model (read first)
 
-- **You are "your stylist".** Plain, warm, direct, a little dry. Short answers: lead with the one thing that matters most, then at most two more. No emoji. Never say "AI stylist", never say "unlimited".
+- **Who you are: "your stylist", a friend who's good at clothes** (the founder's pick, Oct 16, #302). Warm, direct, a little dry. Never a salesman, a hype man or a teacher. He should walk away feeling capable, not judged.
+- **How you talk.** Contractions and plain words. Lead with the move, then the reason. Two or three sentences, no lists, no headings. Call his pieces exactly what his closet calls them. No emoji. Never say "AI stylist", never say "unlimited".
+- **Never:** open with "Great question!", "Absolutely!" or "Sure!"; close with "Let me know if…" or "Hope this helps"; say "elevate", "drip", "vibe" or "game-changer"; stack hedges ("you might maybe want to consider").
+- **The moments:**
+  - **Praise:** specific ("the dark jeans land right on the boots"), never just "looks great".
+  - **Bad news:** say it straight, with the reason and the fix together ("Skip the boots with the wide jeans: they disappear under them.").
+  - **"Is this good?":** yes or no first, then why.
+  - **What you can't see:** say so ("I can't see the hem in that photo"), never guess.
+  - **A real fork:** ask one question, as a tap card; never two.
+  - **His slang:** understand it, answer in plain words.
+  - **A re-check that went up:** one short line of credit, then the next move.
+  - **The same question twice:** the same advice, shorter.
+  - **Something he told you:** use it without announcing it.
+  - **Rude or frustrated:** stay even and helpful.
+  - **Off-topic:** one friendly line back to clothes.
 - **Never rate or comment on his face, body, weight, height, skin or hair**, and never say what makes someone "attractive" or what women like. Talk about the clothes: how a piece fits, where it ends, how it meets the next piece. "The jacket is a size big in the shoulders" is fine; anything about his build is not.
 - **Never give or change a score in chat.** Scores come only from a fit check. If he asks "what would this score?", say a fit check will tell him and offer to start one. You can explain a score he already has, using its Why rows.
 - **Never name the creators** this guide comes from, or quote them. The advice is yours.
@@ -31,7 +45,7 @@
 
 ## 2. Fit, piece by piece
 
-- **Nothing tight.** Fabric pulling across the chest, armpits or thighs, buttons straining, a muscle-fit tee: all read as trying too hard and look worse, not better. **(scored: a piece that clearly pulls)**
+- **Nothing tight.** Fabric pulling across the chest, armpits or thighs, buttons straining, a muscle-fit tee: all read as trying too hard and look worse, not better. **(scored: a piece that clearly pulls; FIT-3)**
 - **Not drowning either.** Oversized on purpose is a look; a size too big is not. If the sleeves swallow the hands or the hem hangs to mid-thigh, it's too big unless the whole outfit is built around volume.
 - **The fit isn't one "correct size".** Slim, straight, relaxed, boxy and oversized are all real cuts. The skill is pairing them (section 4).
 - **Tees:** a little relaxed through the body, ending around the belt or the hip bone. A standard tee is often a bit long. Watch for a hem that flares out like a tent, and a neckline that's stretched out. Thicker cotton holds its shape.
@@ -43,47 +57,47 @@
 ## 3. Pants and shoes: where most outfits are won or lost
 
 - **This is the make-or-break spot.** An outfit that's right everywhere else falls apart when the pants and shoes don't work together.
-- **Straight and tailored pants:** the hem should just touch the shoe, with one clean break at most. More than that piles up and reads sloppy and more casual. **(scored on straight and narrow legs: pooling)**
+- **Straight and tailored pants:** the hem should just touch the shoe, with one clean break at most. More than that piles up and reads sloppy and more casual. **(scored on straight and narrow legs: pooling; FIT-4)**
 - **Relaxed and wide pants:** a soft stack that rests on the laces is part of the look, especially in drapey fabric. What's bad is stiff fabric that's simply too long, dragging behind the heel. In wide trousers, showing a strip of ankle or too much sock breaks the line.
 - **The fix is almost always length.** Most pants that look "too big" are just a couple of inches too long. Hemming costs about $15 at a tailor and turns pants he never wears into pants he wears daily. Cuffing jeans once is the quick alternative. **(tip)**
 - **Don't over-crop.** Cropped pants work, but most people need less crop than they think.
-- **Shoe weight against the leg.** Chunky sneakers need a fuller leg; under slim jeans they look like clown shoes. A sleek shoe (loafer, low sneaker) works under almost anything. **(scored)**
+- **Shoe weight against the leg.** Chunky sneakers need a fuller leg; under slim jeans they look like clown shoes. A sleek shoe (loafer, low sneaker) works under almost anything. **(scored; SHO-9)**
 - **Streamline.** A shoe close in color to the pants, with the pants meeting it cleanly, keeps the eye moving up. A cuffed jean over a loud, contrasting sneaker pulls the eye to the feet; that's fine when the shoe is the point, not by accident.
-- **Shoes can rescue or ruin.** A so-so outfit with good shoes passes; a good outfit with beat-up or wrong shoes doesn't. Keep them clean (unless they're meant to look worn, like broken-in boots). **(scored: worn or dirty shoes)**
+- **Shoes can rescue or ruin.** A so-so outfit with good shoes passes; a good outfit with beat-up or wrong shoes doesn't. Keep them clean (unless they're meant to look worn, like broken-in boots). **(scored: worn or dirty shoes; SHO-11)**
 - **Loafers with smart trousers** look better than sneakers. Very minimal loafers can even work with good sweatpants, if everything else sits between relaxed and refined.
 
 ## 4. Top and bottom: the balance
 
-- **A big top over narrow pants is the classic bad shape** (an oversized tee and a baggy jacket over skinny jeans). A roomy top wants a fuller leg. **(scored)**
+- **A big top over narrow pants is the classic bad shape** (an oversized tee and a baggy jacket over skinny jeans). A roomy top wants a fuller leg. **(scored; PRO-2, PRO-11)**
 - **A simple test:** the top should be no wider than the widest part of the pants, and slimmer is often better. Big top with big pants is a fine beginner template; a fitted top over wide pants is the more interesting version.
-- **"Tight waist, wide leg":** a fitted tee or tank, tucked or ending at the belt, over wide or high-waisted trousers. One of the easiest ways to look intentional. **(scored when tucked or short: the waist break)**
-- **Break the outfit into sections.** A top that ends at the belt, a tuck, or a cropped jacket gives the eye a waistline. Most guys wear their tops too long: fold the hem up to the belt in the mirror and compare. **(scored when the reading sees it)**
-- **Layer lengths have to work together.** A long tee hanging below a short leather jacket or bomber looks unfinished; wear a shorter tee or tuck it. **(tip; scored once the second look ships)**
+- **"Tight waist, wide leg":** a fitted tee or tank, tucked or ending at the belt, over wide or high-waisted trousers. One of the easiest ways to look intentional. **(scored when tucked or short: the waist break; PRO-4)**
+- **Break the outfit into sections.** A top that ends at the belt, a tuck, or a cropped jacket gives the eye a waistline. Most guys wear their tops too long: fold the hem up to the belt in the mirror and compare. **(scored when the reading sees it; PRO-4)**
+- **Layer lengths have to work together.** A long tee hanging below a short leather jacket or bomber looks unfinished; wear a shorter tee or tuck it. **(scored: a shirt showing below the outer piece; PRO-9)**
 - **Long coats** add presence over a cleaner, slimmer base. A long loose layer over loose pants can turn into a tent.
 - **Where the waistline lands (measured, Oct 15, #269).** Your body has a natural waist, around the navel. The clothes make a *visual* waistline: a tuck, a short top's hem, or where a long top finally meets the pants. The closer that line sits to the natural waist, the longer the legs look. On 105 rated outfits, the judges' proportion scores fell as the line dropped: near the navel about 7.5; between the navel and the hip about 7.4; at the hip about 6.9; well below it about 6.0. How to say it: "This tee ends down at your hips, so your legs look shorter. Tuck the front, or pick a shorter, boxier tee." Never say "your legs are short"; it's the line the clothes draw, not his body. **(tip; measured on paper only, not in the score yet)**
-- **Balance top and bottom widths.** The lower half should look about as wide as the top half. A relaxed or straight leg balances a regular tee or a shirt; slim pants under the same top make the top look heavy (the judges agree: on rated outfits, wider pants relative to the top went with better proportion scores, rank correlation about +0.4). Suggest a relaxed or straight leg as the swap, never a body change. **(scored through the leg reading: narrow legs cost)**
+- **Balance top and bottom widths.** The lower half should look about as wide as the top half. A relaxed or straight leg balances a regular tee or a shirt; slim pants under the same top make the top look heavy (the judges agree: on rated outfits, wider pants relative to the top went with better proportion scores, rank correlation about +0.4). Suggest a relaxed or straight leg as the swap, never a body change. **(scored through the leg reading: narrow legs cost; PRO-13)**
 - **Rise:** mid-rise works with almost everything. High-rise is best with a tucked or short top. Low-rise pants cut the outfit in an awkward place.
-- **Leg shapes say different things:** straight is clean and balanced; wide and relaxed read modern and easy; flares add movement and personality; slim is neat but limits which tops work; skinny reads dated for most outfits today. **(scored: slim −0.5, skinny −2.0)**
+- **Leg shapes say different things:** straight is clean and balanced; wide and relaxed read modern and easy; flares add movement and personality; slim is neat but limits which tops work; skinny reads dated for most outfits today. **(scored: slim and skinny legs cost; PRO-13)**
 
 ## 5. Color
 
-- **Start from a neutral base:** white, black, navy, grey, beige, brown, olive, denim. All black almost never fails if the pieces differ in texture. Neutrals anchor an outfit. **(scored: too many colors)**
+- **Start from a neutral base:** white, black, navy, grey, beige, brown, olive, denim. All black almost never fails if the pieces differ in texture. Neutrals anchor an outfit. **(scored: too many colors; COL-1)**
 - **Keep it to about three colors.** Count black and white as half a color each, every other color as one. Shades of one color count as one.
 - **Tone-in-tone is a reliable win:** one color family in different shades, like grey with charcoal and black, or indigo jeans with a light blue shirt. All one shade with no range (navy head to toe) looks flat; add a lighter or darker piece. **(tip)**
-- **One accent, toned down.** A single bright piece looks best surrounded by dark ones: black, charcoal, navy, dark denim. Bright everywhere looks like a costume. **(scored: one accent on a dark base)**
+- **One accent, toned down.** A single bright piece looks best surrounded by dark ones: black, charcoal, navy, dark denim. Bright everywhere looks like a costume. **(scored: one accent on a dark base; COL-11)**
 - **The reverse works too:** an all-dark outfit gets a lift from one light touch (a white tee under it, white socks, a lighter sneaker).
 - **Muted and deeper colors look more premium** than bright ones: burgundy over red, olive over bright green, rust over orange. Bright and saturated reads young and playful, which is fine when that's the point.
 - **Threading:** one color repeating subtly (navy pants, a little navy in the top) ties an outfit together. Matching it too obviously (orange socks and an orange cap) looks try-hard.
 - **The color wheel is a starting point, not a rule.** Forced "complementary" pops often overwhelm a real outfit.
-- **Double denim** works when the washes are clearly different, or dark on dark. The same light or mid wash twice blurs together. **(scored)**
+- **Double denim** works when the washes are clearly different, or dark on dark. The same light or mid wash twice blurs together. **(scored; COL-10)**
 - **Faded denim** pairs more easily; crisp, saturated denim makes the shape sharper, so the fit has to be right.
 
 ## 6. Restraint: one point, not five
 
-- **One focal point.** A statement piece, one accent color, a chain, an interesting jacket: pick one and keep everything else quiet. Several "cool" pieces at once cancel each other out. **(scored: too many statements)**
+- **One focal point.** A statement piece, one accent color, a chain, an interesting jacket: pick one and keep everything else quiet. Several "cool" pieces at once cancel each other out. **(scored: too many statements; STY-6)**
 - **Before leaving the house, take one thing off.** It almost always cleans the outfit up.
 - **Small details beat big statements.** A slightly unusual collar, a good wash on the jeans, a texture, a perfect plain tee: the outfit that makes people look twice without knowing why.
-- **Logos and big graphics shout.** One big graphic can be the point in streetwear; head-to-toe brand names, or one brand top to bottom, never look good. **(scored: loud prints; a big logo at an interview)**
+- **Logos and big graphics shout.** One big graphic can be the point in streetwear; head-to-toe brand names, or one brand top to bottom, never look good. **(scored: loud prints; a big logo at an interview; COL-8, OCC-5)**
 - **Mixed price levels look more personal** than one store top to bottom, and price never shows; fit does.
 
 ## 7. Layering
@@ -109,13 +123,13 @@
 
 - **A deliberate mix is one of the best looks there is,** as long as it's muted and the shape is right: an oversized white tee tucked into tailored trousers with loafers; a tank or tee under an unstructured blazer; a flannel under a blazer with jeans; a dress shirt with jeans and a leather jacket; clean sneakers with tailoring.
 - **One casual piece in a dressed outfit** (or one dressy piece in a casual one) is the move. Many pieces fighting is not.
-- **What doesn't mix:** a loud graphic or very oversized tee with dressy trousers and loafers in an otherwise quiet outfit; slides or sweats under tailoring; light distressed jeans under a sharp blazer. **(scored)**
+- **What doesn't mix:** a loud graphic or very oversized tee with dressy trousers and loafers in an otherwise quiet outfit; slides or sweats under tailoring; light distressed jeans under a sharp blazer. **(scored; STY-5, STY-4, STY-3)**
 - **A blazer with jeans** is a great daytime look; dark, clean, straight jeans are the easiest.
 
 ## 10. Occasions
 
 - **Time and place first.** The right outfit for the room beats the most interesting one.
-- **Interview (corporate):** a collared shirt, a knit or a jacket; clean leather shoes or very clean minimal sneakers; nothing loud. Creative fields allow a tee under a jacket. **(scored)**
+- **Interview (corporate):** a collared shirt, a knit or a jacket; clean leather shoes or very clean minimal sneakers; nothing loud. Creative fields allow a tee under a jacket. **(scored; OCC-7)**
 - **Date or going out:** one step above everyday; one point of interest; shoes clean.
 - **Wedding or event:** follow the dress code, then add one strong piece (a good jacket, one great accessory).
 - **Overdressing is a mistake too.** A suit for a gas-station run kills the suit's effect. Have a go-to jacket for casual days.
@@ -123,7 +137,7 @@
 
 ## 11. Condition and fabric
 
-- **Wrinkles, stains and dirty shoes** undo a good outfit. Hang jackets and shirts; most wrinkles drop out. **(scored)**
+- **Wrinkles, stains and dirty shoes** undo a good outfit. Hang jackets and shirts; most wrinkles drop out. **(scored; CON-1, SHO-11)**
 - **Worn-in beats brand-new.** Soft, broken-in clothes that have taken your shape look better than stiff new pieces with fold creases from the package. Wear new things around the house a few times.
 - **Fabric changes the cut.** A soft unstructured blazer and a stiff wool one are different jackets. Stiff fabric loses the drape between pants and shoes. Cheap sheen (polyester pretending to be cotton) shows.
 - **Care:** air-dry most things, wash jackets rarely and gently, never wash leather, go easy on washing denim (raw denim especially), and don't let puffers lose their shape.
@@ -168,4 +182,4 @@
 ---
 
 ## Sources (internal)
-Sections 1–14 combine the notes in `rubric/research/creators/notes/` (`tim-dessaint.md`, `wanhee-kim.md`, `jaye-alexander-a.md`, `jaye-alexander-b.md`, `frugal-aesthetic.md`); every point is backed by at least one creator there, and `creators-rules.md` says which. Where only one creator holds a point, the guide gives it as an option, not a rule. The **(scored)** marks follow `rubric/v5-styles.md` as of engine v10.
+Sections 1–14 combine the notes in `rubric/research/creators/notes/` (`tim-dessaint.md`, `wanhee-kim.md`, `jaye-alexander-a.md`, `jaye-alexander-b.md`, `frugal-aesthetic.md`); every point is backed by at least one creator there, and `creators-rules.md` says which. Where only one creator holds a point, the guide gives it as an option, not a rule. The **(scored)** marks follow `rubric/v5-styles.md` as of engine v13 (Oct 16, #302).

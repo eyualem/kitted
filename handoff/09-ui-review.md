@@ -16,7 +16,7 @@
 4. ✔ **The Welcome card says 8.5 "Sharp" for a photo the app scores 8.0**, and the s15 photo shows the man's mouth and beard (#48). The first screen breaks "same photo, same score" and "faces hidden". Fix: take the number from the engine and crop lower, or use our own photo (stock is also a licensing question, research-context §C15). `features/onboarding/WelcomeScreen.tsx:41, 95, 104` · H · S
 5. ✔ **The closet long-press preview can show his face.** When no clean cut-out exists it crops his *unblurred* kept photo to the piece's box and shows nothing above the box, but never checks where his head is: a hood up, a scarf, or a box drawn too high shows the face. Mirror selfies also show logos backwards there and on the question card (cut-outs are flipped back; crops aren't). Fix: clamp every crop's top edge below the head prep found, and flip mirror crops. `features/closet/piecePreview.ts:44-62`, `SightingCrop.tsx`, `cropLayout.ts:13-15` · H · S
 6. ✔ (#280, the Limit card (the photo is kept, "Save for tomorrow")) **The daily limit shows only after he has posed and shot.** The camera opens whatever the quota; a used check surfaces as a 5 s toast after the camera closes. The morning card's "Check my fit" button ignores `checkUsed`. Fix: gate the camera route with a limit card (resets at 4 am, the open re-check, Pro). `camera/startCheck.ts:134-135`, `app/camera.tsx:12-18`, `morning/MorningCard.tsx:195` (#233) · H · S–M
-7. ✔ (#304) **A second photo while one is reading vanishes.** `busy` shows no words: the camera closes, nothing happens (the #245 symptom). The copy is ready: "Still reading your last photo. Send this one when it's done." `camera/startCheck.ts:144` (#233 item 8) · H · S
+7. ✔ (#305) **A second photo while one is reading vanishes.** `busy` shows no words: the camera closes, nothing happens (the #245 symptom). The copy is ready: "Still reading your last photo. Send this one when it's done." `camera/startCheck.ts:144` (#233 item 8) · H · S
 8. **"How I score" explains the old scoring** (credits, "an elevated piece") while every check is scored by five parts, and its X acts as Back. `en.generated.ts:250-255`, `why/WhySheet.tsx:34-44` (#233 item 1) · H · S
 9. ✔ (#276–277) **Tapping a closet tile does nothing.** No tap action, no pressed state; the piece page is a placeholder. The grid looks tappable. `app/(tabs)/closet/index.tsx:82`, `closet/item/[id].tsx:3-5` · H · M (see §3)
 10. ✔ (#280–286, #289) **Old duplicates and misreads can't be fixed.** No merge, no "this isn't mine", no "it's boots, not slides"; his real duplicates ("Washed black jeans 2", "Grey tee", "Grey slides") wait on the piece page. `added/AddedSheet.tsx:27` (`EDIT_ITEM_BUILT = false`) · H · M
@@ -58,8 +58,8 @@
 - [ ] Error toasts look like success toasts (no icon, no warning haptic, no swipe away). `toast/ToastHost.tsx` · L · S
 
 ### Closet
-- [x] (#306) **The approved Outfits half isn't built** (Pieces | Outfits, "Try next", "Your go-tos", "16 pieces · 24 outfits"). The core counter `rotation()` exists but nothing calls it, and it uses the old v4 rules and counts layers (against #84). Rebuild it on the parts engine with layers off before showing a count. `closet/index.tsx`, `packages/kitted-core/src/rotation.ts:9-13, 82-86` · H · L
-- [x] (#306, Goes with and the count; next buy still to do) **No "Goes with", no outfit count per piece, no next buy** (all specced, #87). Start with Goes with on the piece page. · M · M
+- [x] (#307) **The approved Outfits half isn't built** (Pieces | Outfits, "Try next", "Your go-tos", "16 pieces · 24 outfits"). The core counter `rotation()` exists but nothing calls it, and it uses the old v4 rules and counts layers (against #84). Rebuild it on the parts engine with layers off before showing a count. `closet/index.tsx`, `packages/kitted-core/src/rotation.ts:9-13, 82-86` · H · L
+- [x] (#307, Goes with and the count; next buy still to do) **No "Goes with", no outfit count per piece, no next buy** (all specced, #87). Start with Goes with on the piece page. · M · M
 - [ ] **The grid has no order:** shirts, boots, jeans and sneakers mixed, newest first. Fix: shelves in body order (Layers · Tops · Bottoms · Shoes) with counts, dark to light inside each, filter chips at 12+ (the Oct 14 mockup `screenshots/theme-round2/v2-3-closet.png`). `closet/index.tsx:40` · M · S
 - [ ] **Open questions bury the clothes:** each is ~400 pt and they all stack on top; the cap of 3 (#111) isn't enforced. Fix: one row "2 pieces to confirm ›" opening a one-at-a-time sheet. `closet/index.tsx:67-79`, `closet/service.ts:1060-1071` · M · S
 - [ ] **An answered question vanishes with no confirmation or Undo**, and a merged tile disappears without animation. Fix: "Saved as your khaki chinos." with Undo, a success haptic, a layout animation. `service.ts:1066` · M · S
@@ -97,7 +97,7 @@
 - [ ] Consent's text is cut hard under the buttons (no fade), buttons 5 pt apart. `ConsentScreen.tsx:139, 153` · L · S
 
 ### You and Settings
-- [x] (#305) **Style profile drops edits on a Back swipe** with no prompt, while Settings saves instantly. Autosave it. `you/profile.tsx:125` · M · S
+- [x] (#306) **Style profile drops edits on a Back swipe** with no prompt, while Settings saves instantly. Autosave it. `you/profile.tsx:125` · M · S
 - [ ] **Privacy is three taps deep;** "See what I send", the best trust feature, sits under You → gear → Privacy & data. The approved mockup puts Privacy first. `you/settings.tsx:44-48` · M · M
 - [ ] **Notification switches look live but do nothing** (nothing is scheduled until P6), under "That's all I send." Hide or say "arrives in the next update". `you/notifications.tsx:34-41` · M · S
 - [ ] **You's "Today" card can't be acted on** ("1 free check today", no button). Add "Check my fit". `you/index.tsx:112-156` · M · S
@@ -331,7 +331,7 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 
 ---
 
-## 10. Face hiding: a head cut off at the top edge (Oct 16, #303)
+## 10. Face hiding: a head cut off at the top edge (Oct 16, #304)
 The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mirror selfie whose head runs off the top of the photo, was sent with his chin, mouth and part of his nose uncovered. Why: the face detector misses a face cut off mid-way; with no head joints and only one shoulder found, prep took "his outline touches the top edge" to mean "the head is outside the photo" and hid nothing. Ruling 10 stays the rule: if we can't be sure his face is hidden, nothing is sent. No new words. Checks set before building; (M) = the Mac harness (`kmeasure`, the app's own Swift), on the gold set (226 screenshots), his and his friends' fit photos (`inputs/fitcheck-photos`, `mirror-fit-check-1`, `phone-oct7`) and the 14 demo photos.
 - **H1 (M) ig-098 is covered:** in the copy sent, the region of his chin, mouth and nose (marked by eye before the fix) is entirely inside what prep hides.
 - **H2 (M) Nothing that was hidden comes uncovered:** on every photo, every pixel hidden before the fix is still hidden after it.
@@ -340,7 +340,7 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 - **H5 (M) Same photo, same result:** run twice, the same regions.
 - **H6 (T)** `npm run check` green; the Swift compiles for the Simulator (a native change: it reaches his phone with the next reinstall, which is already on his list for Oct 21).
 
-### §10 results (Oct 16, #303): checked against H1–H6, none changed
+### §10 results (Oct 16, #304): checked against H1–H6, none changed
 | Check | Result | How |
 |---|---|---|
 | H1 | Pass (M) | ig-098: the chin, mouth and nose region (x 300–540, y 0–175, marked by eye before the fix) is entirely hidden in the copy sent and in its close-up |
@@ -352,14 +352,14 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 
 ---
 
-## 11. A second photo while one is reading: pass/fail checks, set before building (Oct 16, #304)
+## 11. A second photo while one is reading: pass/fail checks, set before building (Oct 16, #305)
 §1 item 7 (#245's symptom): a photo sent while another is still being read is dropped with no word. The words are the founder's listed default (#233 item 8), built with them and listed for his skim.
 - **K1 (T)** a check refused as busy shows `Still reading your last photo. Send this one when it's done.`; nothing is sent and nothing is counted.
 - **K2 (T)** the photo he just took is thrown away only after the line shows (the temporary file, as every refused photo is today).
 - **K3 (T)** the other outcomes keep their own answer: "Which one is you?" and the held photo's Limit card still show no toast, and every existing outcome's toast is unchanged.
 - **K4 (T)** `npm run check` green.
 
-### §11 results (Oct 16, #304): checked against K1–K4, none changed
+### §11 results (Oct 16, #305): checked against K1–K4, none changed
 | Check | Result | How |
 |---|---|---|
 | K1 | Pass (T) | `busyPhoto.test.ts`: a busy refusal shows the line; failed first, then green |
@@ -367,14 +367,14 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 | K3 | Pass (T) | Which one is you? and held stay silent; limit and error keep their toasts |
 | K4 | Pass | `npm run check`: 933 app tests |
 
-## 12. The Style profile keeps edits on Back: pass/fail checks, set before building (Oct 16, #305)
+## 12. The Style profile keeps edits on Back: pass/fail checks, set before building (Oct 16, #306)
 §2 You: "Style profile drops edits on a Back swipe … Autosave it." Leaving the screen any way (Back, swipe) now saves what he changed, like Settings; Save stays and still saves and goes back. No new words.
 - **Q1 (T)** leaving with unsaved edits writes them to his profile, exactly as Save would (`applyDraft`).
 - **Q2 (T)** leaving with nothing changed writes nothing (no write, no change notice).
 - **Q3 (T)** an edit and then Save, then leaving, writes once.
 - **Q4 (S)** web preview: change a look, go Back, open the Style profile again: the change is there.
 
-### §12 results (Oct 16, #305): checked against Q1–Q4, none changed
+### §12 results (Oct 16, #306): checked against Q1–Q4, none changed
 | Check | Result | How |
 |---|---|---|
 | Q1–Q3 | Pass (T) | `profileLeave.test.ts` (`saveDraft`), failed first, then green |
@@ -383,7 +383,7 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 
 ---
 
-## 13. The Closet's Outfits half: plan and pass/fail checks, set before building (Oct 16, #306)
+## 13. The Closet's Outfits half: plan and pass/fail checks, set before building (Oct 16, #307)
 Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never built (§2 Closet: "The approved Outfits half isn't built"; "No Goes with"). All words are D15's approved labels; the only new ones are a reason fallback and the go-to caption, listed for his skim. Everything runs on code (no AI, free on every plan); no score moves.
 
 **The plan**
@@ -410,7 +410,7 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 - **O13 (S)** web preview and, if free, the Simulator: demo screens for Outfits (full closet), No outfits yet, and the piece page's Goes with; light and dark; the largest text size.
 - **O14** `npm run check` green.
 
-### §13 results (Oct 16, #306): checked against O1–O14, none changed
+### §13 results (Oct 16, #307): checked against O1–O14, none changed
 | Check | Result | How |
 |---|---|---|
 | O1–O12 | Pass (T) | `closetOutfits.test.ts`, 12 tests on the full demo closet (16 pieces): 37 outfits at Everyday (the mockup's own number), 41 ms; a 40-piece closet under 300 ms (best of 3) |

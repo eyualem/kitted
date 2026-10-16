@@ -69,7 +69,12 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
   useEffect(() => () => {
     if (chipsTimer.current) clearTimeout(chipsTimer.current);
   }, []);
-  const mic = useDictation();
+  const mic = useDictation((heard) => {
+    const cur = composerState.draft();
+    setText(cur ? `${cur} ${heard}` : heard);
+    // iOS ignores live regions: say the final words once (never each partial while he talks).
+    AccessibilityInfo.announceForAccessibility?.(t('mic.a11yHeard', { text: heard }));
+  });
   const typing = focused || text.length > 0;
   const recording = mic.state !== 'idle';
   const idle = mode === 'idle' && !typing;
@@ -93,15 +98,9 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
   };
   const stopMic = async () => {
     stopping.current = true;
-    const heard = await mic.stop();
+    const heard = await mic.stop(); // the words land through useDictation's onHeard
     stopping.current = false;
-    if (heard) {
-      const cur = composerState.draft();
-      setText(cur ? `${cur} ${heard}` : heard);
-      // iOS ignores live regions: say the final words once (never each partial while he talks).
-      AccessibilityInfo.announceForAccessibility?.(t('mic.a11yHeard', { text: heard }));
-    }
-    else if (!focused && !text) onIdle?.();
+    if (!heard && !focused && !text) onIdle?.();
   };
 
   // A light wash of the surface color over the clear glass, so the words keep their contrast over photos in the thread.
@@ -143,8 +142,9 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
             </Circle>
             <View style={styles.voice}>
               <Waveform level={mic.level} color={colors.ink} />
-              <KText variant="body" color={mic.text ? 'ink' : 'ink3'} numberOfLines={1} style={{ flex: 1 }}>
-                {mic.text ? (mic.text.length > 34 ? `…${mic.text.slice(-33)}` : mic.text) : t('mic.listening')}
+              {/* Every word he's said so far, wrapping (was one line cut to the last 33 characters, #302). */}
+              <KText variant="body" color={mic.text ? 'ink' : 'ink3'} numberOfLines={4} style={{ flex: 1 }}>
+                {mic.text ? mic.text : mic.state === 'preparing' ? t('mic.preparing') : t('mic.listening')}
               </KText>
             </View>
             <Circle onPress={() => void stopMic()} label={t('mic.a11yStop')} filled color={colors.primary}>

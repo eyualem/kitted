@@ -374,13 +374,17 @@ const addedInBuild = {
   'mic.a11yStop': 'Stop and use these words',
   'mic.a11yCancel': 'Cancel',
   'mic.listening': 'Listening…',
+  // Round 2 (#302): the speech model's first install, offline, and a mic that heard nothing.
+  'mic.preparing': 'Getting voice ready…',
+  'mic.needsNetwork': 'Voice needs a connection the first time.',
+  'mic.noWords': "I didn't catch that.",
   'mic.error': "Couldn't hear that. Try again.",
   'mic.off.title': 'Microphone is off',
   'mic.off.body': 'Turn it on in Settings to ask your stylist out loud.',
   'mic.off.settings': 'Open Settings',
-  // A second photo while one is reading (09-ui-review §11, #304): the founder's listed default (#233 item 8).
+  // A second photo while one is reading (09-ui-review §11, #305): the founder's listed default (#233 item 8).
   'cam.busy': "Still reading your last photo. Send this one when it's done.",
-  // The Closet's Outfits half (09-ui-review §13, #306): D15's approved labels; the reason fallback and the go-to
+  // The Closet's Outfits half (09-ui-review §13, #307): D15's approved labels; the reason fallback and the go-to
   // caption are new (listed for the founder's skim).
   'closet.seg.pieces': 'Pieces',
   'closet.seg.outfits': 'Outfits',
@@ -415,6 +419,8 @@ const addedInBuild = {
   'ask.comingSoon': "Questions are coming soon. For now I can check your fit and plan your outfit.",
   // The stylist's answers, C2–C4 (07 §1, §4, §6; #297): the slow line, the cards, the saved chip, the starter chips.
   'ask.slow': 'Taking longer…',
+  // Look C (#302): a piece chip in an answer, for VoiceOver.
+  'a11y.openPiece': 'Open {name}',
   'ask.card.startCheck': 'Start a fit check',
   'ask.card.checkIt': 'Check it',
   'ask.card.gone': 'No longer in your closet',

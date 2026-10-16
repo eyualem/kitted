@@ -1,4 +1,4 @@
-// The Closet's Outfits (09-ui-review §13, #306; 02 D15; mockups/closet-concepts.html): the count, occasion chips, then
+// The Closet's Outfits (09-ui-review §13, #307; 02 D15; mockups/closet-concepts.html): the count, occasion chips, then
 // "Try next" (never worn, best first, no score) and "Your go-tos" (worn: his photo and that check's real score). Each
 // outfit is a standing outfit (his pieces drawn top / bottoms / shoes, a layer at the side) with its reason line,
 // Wear this (logs today, Undo) and Check it (the camera with the occasion). With no full outfit yet: what's missing.

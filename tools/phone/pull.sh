@@ -25,6 +25,9 @@ sqlite3 -separator ' · ' "$DB" "
 # Camera guidance (DECISIONS-LOG #100): the last tips and after-shot checks with their raw measures.
 LOG=$(find "$OUT" -name guide.log | head -1)
 if [[ -n "$LOG" ]]; then echo "\nCamera guidance (last 40 lines of $LOG):"; tail -40 "$LOG"; fi
+# The mic (#302): every stage of each voice question, counts only (never the words).
+MIC=$(find "$OUT" -name mic.log | head -1)
+if [[ -n "$MIC" ]]; then echo "\nMic (last 40 lines of $MIC):"; tail -40 "$MIC"; fi
 SCANS=$(find "$OUT" -path '*scans*' -name '*-photo.jpg' | wc -l | tr -d ' ')
 [[ "$SCANS" != "0" ]] && echo "\n$SCANS clothes scan(s) saved (Documents/scans)."
 true
