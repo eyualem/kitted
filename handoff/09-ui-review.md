@@ -298,3 +298,15 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 | G1 | Pass | this batch alone on HEAD in a clean worktree: tsc clean, 809 app tests in 70 suites, lint clean |
 | G2 | Pass | W6 compares every check's score, raw score and part scores |
 | G3 | Partly | light mode seen; dark and the largest text not re-run |
+
+---
+
+## 9. Undo that shows late: pass/fail checks, set before building (Oct 15, #293)
+§7 and §8 W7 left one open item: on the Simulator the Undo of a merge ("Same as another piece…") and of a moved or split photo ("It's another piece…", "Not this piece") put the rows back exactly (M3, W1, W5) but took several seconds to show. The fix is timing only: nothing about what Undo restores changes, and no new words. Same rules as §6–§8; G1–G3 apply.
+- **U1 (T) Undo isn't stuck behind slow closet work:** with a slow closet job already waiting in the closet queue (a late closet answer being written, a launch catch-up, the color refresh, or the photo measuring inside them), the merge Undo and the photo Undo start and finish without waiting for that job. Measured in a jest test with a job that takes 5 s on fake timers: Undo is done before it.
+- **U2 (T) The queue stays safe:** a job that was already running when Undo was tapped finishes first (Undo never interleaves with another closet write), and nothing queued after Undo runs before it. A closet answer that lands after the Undo reads the restored rows, so no stale closet summary is written over them. The existing ordering tests (`patchCheckKeepCloset`, the closet call vs Undo on the score card) still pass.
+- **U3 (T) Undo is restored exactly,** as today: M3, W1 and W5 pass unchanged.
+- **U4 (T) The piece page shows the restored piece with one reload, not one per row:** a burst of writes from one Undo leads to at most 2 page reloads, and the last one shows the restored rows.
+- **U5 (logs)** every Undo logs `[closet] undo queued`, `started +N ms` and `done +N ms` (and what it waited behind), so a slow one on his phone can be read from Metro or `pull.sh`.
+- **U6 (S) On the Simulator:** demo 112 (Same as another piece… → pick → Yes → Undo) and demo 114 (long-press a photo → It's another piece… → Grey tee → Undo): the restored page shows within ~300 ms of the tap on Undo, read from the U5 log lines (tap to done) and a screenshot.
+- **U7 (T) No fit-check score changes** after any of these Undos (as W6).
