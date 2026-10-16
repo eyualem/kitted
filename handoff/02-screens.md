@@ -983,6 +983,8 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 ---
 
 ### D18 · P1 Paywall, page 1 of 2
+> **Update Oct 15 (#285, #291; `10-onboarding.md` §9.4):** built on a mock store, behind `PAYWALL_BUILT` (off on his phone). Headline `Up to {checks} checks a day.` / `Ask as you go.` (#233 item 4); perks from the quota's limits, without `Your full next-buy list` until C7 exists; the onboarding placement opens 2.5 s after the S14 card, only with Stylist in front and nothing reading; checkmarks in ink (copper only for a moving score, #231).
+
 - **Presentation:** `fullScreenCover` with its own NavigationStack (page 2 is a push). **Entry (placements):** after S14 in onboarding (once; quitting here counts as shown), S17 "Try Pro · 14 days free", Y1/Y5 "Try Pro", a Pro-only feature (the full next-buy list, the 6th question). Never inside a progress moment. **Exit:** X or Continue free → back where he was; See plans → P1b.
 
 **Layout**
@@ -1149,6 +1151,8 @@ Same visual language as §2: chalk `bg`, white `KCard`s with radius 26 and dashe
 ### 3.3 Stylist: cards and states
 
 #### S14 · Your first 3 moves (Plan card)
+> **Update Oct 15 (#291; `10-onboarding.md` §9 owns the order and triggers):** built. Move 2 is the first check's top fix word for word with its tag (the habit wording below needed new copy per fix); move 3 is the Starter piece that adds the most outfits (`Add {item}`, budget price, `+N fits` only when N > 0); Start move 2 opens the camera with no extra line; Start move 3 opens C5 (C7 isn't built); a done row is the filled circle and grey title (no strikethrough, #246 (14)); L3 and the pinned rows aren't built yet.
+
 - **When:** after his first re-check card, or right after he taps `Later` on the first check (ruling 23). Then P1 is presented.
 - **Thread:** stylist message `Here's where to start. Three moves, in order.` then the card.
 - **Card** (`KCard`, pad 14 / 16, gap 12): tagline `Your plan` / `3 moves`; title `.headline` `Your first 3 moves`; three rows in the FixRow shape (number circle, title `.callout.weight(.semibold)`, subtitle `.footnote` `ink2`, no gain on the right; a done row uses the filled circle + strikethrough):
@@ -1431,6 +1435,8 @@ Grouped list, inline title `Settings`:
 ### 3.7 Paywall
 
 #### P1b · Paywall page 2 (plans)
+> **Update Oct 15 (#285, #291):** one plan only, `Monthly` / `1 week free` / `$9.99` `/mo` (the store's price string), selected; the button `Start 1-week free trial` (trial used: `Subscribe for {price}/month`); the fine print `pay.fine.trial` / `pay.fine.monthly` (renewal and how to cancel, 3.1.2); `Restore purchases`; X from this page closes the whole cover. The yearly card, the badge and the 14-day trial below are kept for when a yearly plan is decided.
+
 - **Presentation:** push inside the paywall's own `Stack` (`src/app/paywall/plans.tsx`). **Nav:** leading Back (`chevron.left`), trailing X (both 44). Back-swipe returns to page 1.
 - **Build:** our own page (React Native has no `SubscriptionStoreView`): the marketing header, two `PlanCard`s as a radio group, our purchase button, `Restore purchases`, and `Terms` · `Privacy` links, fed by the `Entitlements` interface (`05` P6, `06` §7). The demo's `DemoStore` returns `kitted.pro.annual` ($29.99/year, 14-day free trial) and `kitted.pro.monthly` ($5.99/month) and shows `Demo: no real purchase`; v1 swaps in RevenueCat (`05` S8). It must carry everything Apple's view did (Guideline 3.1.2): plan name and length, price per period, the billed amount as the most prominent price, trial length and post-trial price, auto-renewal, Restore, Terms and Privacy, X and `Continue free` from the first frame.
 - **Marketing header** (pad 0 23.5, gap 12): woven `KITTED PRO`; title `.title2.bold()` `Pick your plan`; a one-line reminder `.subheadline` `ink2` `Up to 10 fit checks and 50 questions a day.` (ruling 25).
@@ -1899,12 +1905,16 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `plan.move1Sub` | 30 seconds · in Closet | N |
 | `plan.move2.layer` | Wear a layer open over a tee | N |
 | `plan.move2Sub` | Free · you own one now | N |
-| `plan.move3` | Add a {item} | N |
-| `plan.move3Sub` | {price} · +{n} fits | N |
+| `plan.move3` | Add {item} | N (#291: the item carries its article: "a grey quarter-zip", "dark straight jeans") |
+| `plan.move3Sub` | {price} · +{n} fits | N (plural "+1 fit"; with no gain, the price alone) |
+| `plan.move3.nextStepSub` | For interviews and weddings · {price} | N (#291: every essential owned, move 3 is the Next step) |
+| `plan.move.checkNext` | Check tomorrow's fit | N (#291: no fix and no next-level line) |
+| `plan.move.checkNextSub` | Free · 1 a day | N (#291) |
 | `plan.move.nextLevel` | Try one standout color | N |
 | `plan.move.nextLevelSub` | Free · next time you get dressed | N |
 | `plan.start1` | Start move 1 | R |
 | `plan.start` | Start | N |
+| `plan.startN` | Start move {n} | N (#291: moves 2 and 3 on the card) |
 | `plan.move2Prompt` | Show me the layer and I'll check it. | N |
 | `notif.ask` | Want a daily outfit idea at a time you choose? | R |
 | `notif.ask.yes` | Yes, pick a time | R |
@@ -1936,7 +1946,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `limit.bodyNoQuestions` | I'll save this photo and score it when you open Kitted after 4 am. | M (prefix) |
 | `limit.recheckStill` | Today's re-check still works. | R |
 | `limit.save` | Save for tomorrow | M |
-| `limit.pro` | Try Pro · 14 days free | R (mockup: "Go unlimited · 14 days free") |
+| `limit.pro` | Try Pro · 1 week free | R (mockup: "Go unlimited · 14 days free"; 1 week since #285) |
 | `limit.proNoTrial` | Try Pro | N |
 | `held.tag` | Waiting to score | R |
 | `held.tagWhen` | After 4 am | N |
@@ -2194,36 +2204,40 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | Key | String | Src |
 |---|---|---|
 | `pay.restore` | Restore | M |
-| `pay.title` | Check every fit.\nAsk anything. | M |
+| `pay.title` | Up to {checks} checks a day.\nAsk as you go. | R (#233 item 4, #291: the mockup's "Check every fit. Ask anything." reads as unlimited) |
 | `pay.today` | Today: {before} → {after} | M |
 | `pay.today.oneFix` | One free fix. Nothing new to buy. | M |
 | `pay.today.nFixes` | {n} free fixes. Nothing new to buy. | N |
 | `pay.today.score` | Today: {score} | R |
 | `pay.today.toTarget` | {n} free fixes to {target}. | R (10 §5.13; plural "One free fix to {target}.") |
 | `pay.today.dialed` | Dialed in on your first check. | N |
-| `pay.perk.checks` | Up to 10 fit checks a day | M |
-| `pay.perk.questions` | Up to 50 questions a day | R (mockup: "Unlimited questions") |
-| `pay.perk.nextBuy` | Your full next-buy list, ranked | M |
+| `pay.perk.checks` | Up to {n} fit checks a day | M (the quota's real limit) |
+| `pay.perk.questions` | Up to {n} questions a day | R (mockup: "Unlimited questions") |
+| `pay.perk.nextBuy` | Your full next-buy list, ranked | M (not shown until C7 exists, #291) |
 | `pay.seePlans` | See plans | N |
 | `pay.continueFree` | Continue free | M |
 | `pay.p2.title` | Pick your plan | N |
-| `pay.p2.reminder` | Up to 10 fit checks and 50 questions a day. | R |
-| `pay.plan.yearly` | Yearly | M |
+| `pay.p2.reminder` | Up to {checks} fit checks and {questions} questions a day. | R |
+| `pay.plan.yearly` | Yearly | M (not offered since #285: monthly only) |
 | `pay.plan.yearlyDetail` | 14 days free · $2.50 a month | M |
 | `pay.plan.yearlyPrice` | $29.99 | M |
 | `pay.plan.perYear` | /yr | M |
 | `pay.plan.monthly` | Monthly | M |
-| `pay.plan.monthlyDetail` | No trial | M |
-| `pay.plan.monthlyPrice` | $5.99 | M |
+| `pay.plan.monthlyDetail` | 1 week free | R (#285) |
+| `pay.plan.noTrial` | No trial | M (the trial already used) |
+| `pay.plan.monthlyPrice` | $9.99 | R (#285; the store's own price string is shown, this is the fallback) |
 | `pay.plan.perMonth` | /mo | M |
 | `pay.plan.badge` | Best value | M |
-| `pay.cta.trial` | Start 14-day free trial | M (P1b's purchase button with Yearly selected; React Native has no Apple paywall view, so we draw it) |
-| `pay.cta.monthly` | Subscribe for $5.99/month | N (P1b's purchase button with Monthly selected) |
+| `pay.cta.trial` | Start 1-week free trial | R (#285; P1b's purchase button; React Native has no Apple paywall view, so we draw it) |
+| `pay.cta.monthly` | Subscribe for {price}/month | N (P1b's purchase button when the trial is used) |
 | `pay.loadFailed` | Plans didn't load. | N |
 | `pay.retry` | Try again | N |
 | `pay.demoNote` | Demo: no real purchase | N (demo builds only; `DemoStore`) |
 | `pay.fine.yearly` | Free for 14 days, then $29.99 a year. I'll remind you 2 days before. Cancel anytime. | M |
-| `pay.fine.monthly` | $5.99 a month. Cancel anytime. | N |
+| `pay.fine.monthly` | {price} a month. It renews every month until you cancel. Cancel at least 24 hours before it renews (Settings › your Apple ID › Subscriptions). | N (#291, 3.1.2) |
+| `pay.fine.trial` | Free for 1 week, then {price} a month. It renews every month until you cancel. Cancel at least 24 hours before the trial ends and you won't be charged (Settings › your Apple ID › Subscriptions). | N (#291, 3.1.2) |
+| `pay.failed` | That didn't go through. Nothing was charged. | N (#291) |
+| `pay.restorePurchases` | Restore purchases | N (#291, P1b) |
 | `pay.pending` | Waiting for approval. | R |
 | `pay.alreadyPro` | You're Pro. | R |
 | `pay.offline` | Plans need a connection. | N |

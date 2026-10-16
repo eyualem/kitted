@@ -99,12 +99,16 @@ export const KV_SYNCED: Readonly<Record<string, KvPolicy>> = {
   'idea.style.day': {},
   'idea.style.evening': {},
   'scan.inbox': {},
+  // Starter essentials marked without a closet piece (the belt, #291): part of his closet.
+  'starter.marked': {},
 };
 
 /** Per-device kv keys, never sent. Exact keys, then prefixes. */
 export const KV_LOCAL: readonly string[] = [
   KV.onboardingStep, KV.scenario, KV.seedLoaded, KV.ideaTime, KV.notifyIdea, KV.notifyReady, KV.notifyTrial, KV.revealFullShown,
   'idea.evening.ignored', 'camera.mode', 'weather.permission', 'closet.pendingDeletes',
+  // The end of onboarding's progress (#291): this phone's first-fit sequence, like onboarding.step.
+  'onboard.finish',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
 export const KV_LOCAL_PREFIXES: readonly string[] = ['sync.', 'demo.', 'notify.', 'account.'];

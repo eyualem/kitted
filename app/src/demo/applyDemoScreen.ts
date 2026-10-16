@@ -8,6 +8,7 @@ import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
 import { screenScenario } from './scenarios';
 import { prepareAccountDemo } from '@/features/account/demo';
+import { pauseFinishDemo, prepareFinishDemo } from '@/features/finish/demo';
 import { store } from '@/data/db';
 
 export interface DemoTarget {
@@ -15,7 +16,17 @@ export interface DemoTarget {
   under?: Href;
 }
 
-export async function applyDemoScreen(params: RawArgs): Promise<DemoTarget | null> {
+/** One set-up at a time: the route's effect can start a second run while the first is still playing its story
+ *  (a re-render, React's dev double effect), and two interleaved runs wiped each other's later steps (#291). */
+let queue: Promise<unknown> = Promise.resolve();
+
+export function applyDemoScreen(params: RawArgs): Promise<DemoTarget | null> {
+  const run = queue.then(() => applyDemoScreenNow(params));
+  queue = run.catch(() => undefined);
+  return run;
+}
+
+async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
   const n = Number(params.n);
   const scenario = Number.isInteger(n) ? screenScenario(n) : undefined;
   if (!scenario) return null;
@@ -28,10 +39,13 @@ export async function applyDemoScreen(params: RawArgs): Promise<DemoTarget | nul
   args.weather = overrides.weather ?? scenario.weather ?? null;
   setDemoArgs(args);
 
+  pauseFinishDemo();
   await prepareDemoScreen(scenario);
   await setOnboarded(scenario.onboarded);
   // Account screens (#289): on with their scripted sign-in, off everywhere else.
   await prepareAccountDemo(store, scenario, sessionClock.nowMs());
+  // The end of onboarding's screens (#291): on with their scripted store and answers, off everywhere else.
+  await prepareFinishDemo(store, scenario, sessionClock.nowMs());
   setDemoState({
     screen: n,
     ...(overrides.theme !== undefined ? { theme: overrides.theme } : {}),

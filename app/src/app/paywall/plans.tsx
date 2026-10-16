@@ -1,6 +1,6 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { PlansScreen } from '@/features/paywall/PlansScreen';
 
-// P1b · Paywall plans (02-screens.md). Built in P6.
-export default function PaywallPlansScreen() {
-  return <Placeholder id="P1b" name="Paywall plans" phase="P6" kind="push" />;
+// P1b · Paywall page 2, the plan (02 P1b; 10-onboarding.md §9.4).
+export default function PaywallPlans() {
+  return <PlansScreen />;
 }

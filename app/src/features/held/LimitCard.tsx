@@ -20,7 +20,7 @@ export function LimitCard({ checkId, readOnly = false }: { checkId: string; read
     : [{ name: 'drop', label: c.dontScore ?? '' }];
   const go = {
     save: () => void fitCheck.saveHeld(checkId),
-    pro: () => router.push('/paywall'),
+    pro: () => router.push('/paywall?from=limit'),
     drop: () => void fitCheck.dropHeld(checkId),
   };
   return (

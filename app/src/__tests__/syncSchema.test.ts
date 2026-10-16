@@ -10,6 +10,7 @@ import { GOING_FOR_LAST_KV } from '@/features/fitcheck/service';
 import { BASICS_KEY, LOOKS_KEY, OTHER_STYLE_KEY } from '@/features/onboarding/basics';
 import { PENDING_DELETES_KV } from '@/features/closet/fileCleanup';
 import { INBOX_KEY } from '@/features/scan/inbox';
+import { FINISH_KEY, STARTER_MARKS_KEY } from '@/features/finish/service';
 import { WEATHER_PERMISSION_KV } from '@/services/weather';
 import { dataToRow, rowToData } from '@/sync/codec';
 import {
@@ -133,6 +134,7 @@ describe('S5 and S6 everything is classified', () => {
       LOOKS_KEY, OTHER_STYLE_KEY, BASICS_KEY, INBOX_KEY, GOING_FOR_LAST_KV, PENDING_DELETES_KV, WEATHER_PERMISSION_KV,
       PERMISSION_KV: WEATHER_PERMISSION_KV, MODE_KEY: 'camera.mode', REVEAL_KV: KV.revealFullShown,
       ACCOUNT_KEY: 'account.user', OFFER_KEY: 'account.offer', ONBOARDING_STEP_KEY: KV.onboardingStep,
+      FINISH_KEY, STARTER_MARKS_KEY,
     };
     const resolve = (expr: string): string[] | null => {
       const e = expr.trim();

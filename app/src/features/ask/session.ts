@@ -4,7 +4,7 @@
 import { AccessibilityInfo } from 'react-native';
 import { router } from 'expo-router';
 import seed from '../../../assets/seed.json';
-import { PAYWALL_BUILT } from '@/config/features';
+import { paywallOn } from '@/features/paywall/switch';
 import { store } from '@/data/db';
 import { KV } from '@/data/store';
 import { DEMO_ENABLED } from '@/demo/config';
@@ -37,7 +37,7 @@ export const askService = createAsk({
   consent: () => mayUpload(store),
   // The agreement as a sheet; agreeing just closes it, and his words are still in the composer.
   openConsent: () => router.push('/sheets/consent?from=ask'),
-  tryPro: () => PAYWALL_BUILT,
+  tryPro: () => paywallOn(),
   log: (e) => {
     if (__DEV__) console.log(`[ask] ${e}`);
   },

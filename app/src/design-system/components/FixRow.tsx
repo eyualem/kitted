@@ -33,7 +33,7 @@ export function FixRow({ number, title, detail, gain, done, reveal }: FixRowProp
 
   const spoken = done
     ? gain ? `${t('a11y.fixDone', { title })} ${t('a11y.plus', { n: gain.replace('+', '') })}.` : t('a11y.fixDone', { title })
-    : `${t('a11y.fix', { n: number, title, detail: detail ? detail.replace(/ · /g, ', ') : '' }).replace(' .', '')} ${t('a11y.fixGain', { score: gain.replace('→ ', '') })}`;
+    : `${t('a11y.fix', { n: number, title, detail: detail ? detail.replace(/ · /g, ', ') : '' }).replace(' .', '')}${gain ? ` ${t('a11y.fixGain', { score: gain.replace('→ ', '') })}` : ''}`;
 
   const gainText = gain ? (
     <KText role="gain" numberOfLines={1}>

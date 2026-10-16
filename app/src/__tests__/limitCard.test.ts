@@ -140,7 +140,7 @@ describe('the Limit card (§6.1)', () => {
     const row = (await env.store.fitChecks.get(id))!;
     const s = await env.quota.snapshot();
     expect(limitCardContent(row, s, { paywallBuilt: false })!.body).toBe("I'll save this photo and score it when you open Kitted after 4 am.");
-    expect(limitCardContent(row, s, { paywallBuilt: true })!.tryPro).toBe('Try Pro · 14 days free');
+    expect(limitCardContent(row, s, { paywallBuilt: true })!.tryPro).toBe('Try Pro · 1 week free'); // 1 week since #285
     expect(limitCardContent(row, s, { paywallBuilt: true, trialUsed: true })!.tryPro).toBe('Try Pro');
     // The app's default follows the PAYWALL_BUILT switch.
     expect(limitCardContent(row, s)!.tryPro !== null).toBe(PAYWALL_BUILT);

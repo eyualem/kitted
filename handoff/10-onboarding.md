@@ -50,7 +50,8 @@ O1 Welcome ──Get started──▶ O2 Looks ──▶ O3 Basics ──▶ O5 
 
 After the first score (once he's seen it, §3):
    S6 card ─▶ [next visit, or his first re-check scored] ─▶ A3 "Keep your fits" card ─▶ A1 ─▶ signed in
-   Later (when built): ruling 23's 3 moves (S14) ─▶ paywall (P1) ─▶ notification ask (S15)
+   S6 card ─▶ [Later, re-check scored, nothing to re-check, or a later visit] ─▶ S14 "Your first 3 moves" ─▶ P1/P1b paywall ─▶ S15 ask (§9, #291)
+   (the save offer waits for that sequence: §9.1)
 ```
 
 **Why this order (revises ruling 8 and 08 §8):** ruling 8 cut accounts because nothing synced. Firebase changes that (#268), and the founder now wants sign-in designed in. 08 said "never in onboarding"; the compromise keeps the first score account-free (the thing 08 protected) and puts the first offer right after it, when there's something to lose. 08's "after his 3rd check" becomes the *second* offer.
@@ -204,11 +205,11 @@ Unit tests: `app/src/__tests__/onboardingAccount.test.ts` (25 tests) plus the up
 
 **Found and fixed while testing:** the example card's math clipped its amounts inside the card (moved under it); its photo caption truncated; a wrong email code had to be deleted digit by digit (now clears); "Back" above the email field read oddly (now `Other ways to sign in` under the button); restore re-asked height, build and fit (now only the birth year); the Google logo warned on web (wrapped, per the SVG lesson); the restore screen's wordmark sat left.
 
-**Not done here (needs the founder or later work):** real Firebase sign-in (the founder's Firebase project and the $99 program, then new packages); the system Apple button (`expo-apple-authentication`); the email-code route on the Worker; the paywall (P6) and the notification ask (S15) that ruling 23 puts after the first check; trying all of it on his phone.
+**Not done here (needs the founder or later work):** real Firebase sign-in (the founder's Firebase project and the $99 program, then new packages); the system Apple button (`expo-apple-authentication`); the email-code route on the Worker; trying all of it on his phone. (The paywall and the notification ask that ruling 23 puts after the first check were built next, §9.)
 
 ---
 
-## 9. The end of onboarding: Later, the first 3 moves, the paywall, the notification ask (Oct 15, #290)
+## 9. The end of onboarding: Later, the first 3 moves, the paywall, the notification ask (Oct 15, #291)
 
 *Ruling 23: **Result → Re-check or Later → "Your first 3 moves" → the 2-page paywall → the notification ask.** §2 listed it as "Later"; this section builds it. 02 S14, D18, P1b, P1s and S15 own each screen's layout; this section owns the order, the triggers, what's real, and the checks (written before the code, like §6).*
 
@@ -228,8 +229,8 @@ One sequence per phone, for his **first** fit only, stored in kv `onboard.finish
 
 ### 9.2 Later and the moves card
 
-- **`Later`** (TextLink, in the card's link row after `Not quite right?`) shows only on his first-ever full check, while the sequence hasn't started and the check is still the newest card, not read-only. Tap: the sequence starts (the moves card follows at once, no settle wait). The Re-check button stays while its window is open; Later doesn't close it.
-- **The card (S14):** tagline `Your plan` / `3 moves`; title `Your first 3 moves`; three numbered rows (FixRow shape, no gain on the right; a done row: filled circle and strikethrough):
+- **`Later`** (TextLink, in the card's link row after `Not quite right?`) shows only on his first-ever full check, while the sequence hasn't started, before he re-checks it, not read-only. Tap: the sequence starts (the moves card follows at once, no settle wait). The Re-check button stays while its window is open; Later doesn't close it.
+- **The card (S14):** tagline `Your plan` / `3 moves`; title `Your first 3 moves`; three numbered rows (FixRow shape, no gain on the right; a done row: the filled circle and grey title, no strikethrough, as on the card since #246 (14)):
   1. `Tap the basics you own` / `30 seconds · in Closet`. Done once he's marked one piece in Starter essentials.
   2. His first check's top fix, word for word, with its tag (`Tuck in your tee` / `Free`). Done if his re-check made it (the re-check's done fixes). No fix: the card's next-level line with `Free · next time you get dressed`. Neither: `Check tomorrow's fit` / `Free · 1 a day`.
   3. The Starter essential he's missing that adds the most outfits to his closet: `Add a grey quarter-zip` / `$40–50 · +3 fits` (budget price; no `+N` when it adds none). Done when Closet gets one.
@@ -302,3 +303,43 @@ Tested by unit tests (`onboardingFinish.test.ts`) or by looking (web preview, li
 - **PW2 · The "full next-buy list" perk is left out** until C7 exists. Default: yes.
 - **PW3 · The Terms link:** Apple's standard EULA (apple.com/legal/internet-services/itunes/dev/stdeula) is enough for 3.1.2 if we don't write our own. Default: your own page on trykitted.com, with Apple's EULA as the fallback.
 - **NT1 · OK `expo-notifications`** (Expo's own package; a reinstall on the phone) to make the ask real and send the daily idea. Default: yes, with the TestFlight build.
+
+### 9.8 Results (Oct 15, tested against §9.6)
+
+Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check below that logic can prove) plus the updated `limitCard` (1 week) and `syncSchema` (the two new kv keys classified) tests; `npm run check` is green (app and core typecheck, lint, core 755 tests, app 809). Screens: the web preview, demo screens **150–162**, light and dark; screenshots `screenshots/finish-oct15/` (git-ignored). **Not on the Simulator:** the Mac had under 300 MB free the whole session (rule 9), so the iOS pass waits for a quieter moment. SF Symbols (the X, the check marks) don't draw on web; they do on iOS.
+
+| Check | Result | How |
+|---|---|---|
+| E1 · never early, never while busy, never twice | Pass | Tests (incl. two runs at once) |
+| E2 · each trigger; the settle after a score, none after Later | Pass | Tests; preview: Later → the card at once (150) |
+| E3 · 2+ fits: skipped, no Later | Pass | Tests (the founder's phone case) |
+| E4 · paywall: on, not Pro, Stylist in front, idle, 2.5 s, once | Pass | Tests (a sheet up, a check reading, then it opens) |
+| E5 · the ask after the paywall closes, or after the card | Pass | Tests; preview 158 |
+| E6 · quitting resumes at the next step | Pass | Tests (quit on the paywall → the ask; quit after the card → the paywall) |
+| E7 · the save offer and the sequence never meet | Pass | Test with both services (moves first, offer the next visit); demo 138's offer unchanged |
+| L1 · Later only on the first check, before a re-check | Pass | Tests; preview 150 (shown), 10 (not shown) |
+| M1 · the 3 moves in order | Pass | Tests; preview 151: tap the basics · the card's fix word for word · "Add a white heavyweight tee · $15–20 · +1 fit" |
+| M2 · fallbacks | Pass | Tests (next-level line, Check tomorrow's fit, no "+0", the blazer) |
+| M3 · done states, one Start | Pass | Tests; preview 162: move 1 done, "Start move 2" |
+| M4 · Start goes somewhere real | Pass | Preview: Start move 1 → Closet → Starter essentials, Back to Closet |
+| B1 · 12 rows, prices, detected pieces | Pass | Tests; preview 161: "2 of 12", the knit and the jacket "In your closet" |
+| B2 · tap to own, +N, Undo | Pass | Tests; preview: tap → "3 of 12", "Marked as owned", toast "+1 fit" |
+| P1 · X and Continue free from the first frame | Pass | Preview 152–157; X from page 2 closes the whole cover |
+| P2 · never "unlimited", the quota's limits | Pass | Tests; copy check |
+| P3 · Apple 3.1.2's list on page 2 | Pass | Preview 153; Terms and Privacy hidden while their URLs are null, and a test keeps `PAYWALL_BUILT` off until they exist |
+| P4 · monthly $9.99, 1 week | Pass | Tests; preview 153, 154 (trial used: "Subscribe for $9.99/month") |
+| P5 · states | Pass | Tests (mock store); preview 155 (didn't load), 156 (offline), 157 (already Pro), 153 → buy → "Pro is on." and the header's line follows (fixed: it didn't re-read the plan) |
+| P6 · Restore | Pass | Tests (restored / nothing to restore) |
+| P7 · off on his phone | Pass | `PAYWALL_BUILT = false`; every "Try Pro" reads the same switch |
+| P8 · the Today card | Pass | Tests; preview 152: "Today: 7.5 · One free fix to 8.0." |
+| N1 · Yes grows the card, asks only on Set | Pass | Tests; preview 159 |
+| N2 · allowed / denied / No thanks | Pass | Tests; preview 160 "Done. Your first idea lands tomorrow at 8:00 am." |
+| N3 · answered stays answered, never again | Pass | Tests |
+| Q5 · `npm run check` | Pass | Green |
+| Q6 · 402 pt, light and dark | Pass | Preview. **Not checked at the largest text size** |
+| Q7 · VoiceOver | Pass (by code) | Labels, headers, a checkbox role per Starter row, a radio role on the plan, `Later` as a card action; not walked with VoiceOver |
+| Q8 · copy rules | Pass | Tests; the new words are listed in §9.7 and DECISIONS-LOG #291 |
+
+**Found and fixed while testing:** demo set-ups could run twice at once and wipe each other's later steps (now one at a time); move 1 stayed undone when the piece he marked was also seen in his photo; `ensure()` returned before a run in flight finished (a tap right after could miss the card); the plans page set state inside an effect (lint); `Later` showed on demo screens without the sequence and after a re-check; Stylist's header didn't follow a purchase.
+
+**Not done (needs the founder or later work):** `expo-notifications` (his OK) to make the ask real and send the daily idea; the real store (RevenueCat) and the Terms and Privacy pages before `PAYWALL_BUILT` can go on; L3 `Your moves` and the pinned `Your moves · 1 of 3` rows (today the card lives in that day's chat, then in Past chats); C7 (the next-buy sheet) for move 3; the iOS Simulator pass and the largest text size.

@@ -18,7 +18,7 @@ import { basicsLine, picksOf, styleCardSpoken } from '@/features/you/profile';
 import { t } from '@/i18n/en';
 import type { QuotaSnapshot } from '@/services/quota';
 import { useIsPro } from '@/services/entitlements';
-import { PAYWALL_BUILT } from '@/config/features';
+import { usePaywallOn } from '@/features/paywall/switch';
 
 export default function YouScreen() {
   const { colors } = useTheme();
@@ -113,6 +113,7 @@ function questionsLeft(n: number): string {
 /** Today's check and questions (the mockup's last card). Free: done / next at 4 am, the re-check, questions left. */
 function TodayCard({ s }: { s: QuotaSnapshot }) {
   const { isAccessibilitySize } = useTheme();
+  const paywallShown = usePaywallOn();
   const qLeft = Math.max(0, s.questionLimit - s.questionsUsed);
   const cLeft = Math.max(0, s.checkLimit - s.checksUsed);
   let title: string;
@@ -149,9 +150,9 @@ function TodayCard({ s }: { s: QuotaSnapshot }) {
         </KText>
       </View>
       {/* Free: a quiet outlined "Try Pro" (02 D17), only once the paywall exists. */}
-      {PAYWALL_BUILT && !s.pro ? (
+      {paywallShown && !s.pro ? (
         <View style={{ paddingHorizontal: space.rowX, paddingBottom: space.m }}>
-          <KButton kind="outline" size="regular" title={t('you.plan.tryPro')} onPress={() => router.push('/paywall')} />
+          <KButton kind="outline" size="regular" title={t('you.plan.tryPro')} onPress={() => router.push('/paywall?from=you')} />
         </View>
       ) : null}
     </KCard>

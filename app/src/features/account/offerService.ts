@@ -14,6 +14,9 @@ export interface OfferDeps {
   /** A check is reading or waiting for the one quick tap. */
   busy: () => boolean;
   enabled?: () => boolean;
+  /** The end of onboarding goes first (10-onboarding.md §9.1): while it's due or under way, and for the rest of the visit
+   *  it posted in, the offer waits. */
+  holds?: () => Promise<boolean>;
 }
 
 export function createOfferService(deps: OfferDeps) {
@@ -41,7 +44,7 @@ export function createOfferService(deps: OfferDeps) {
       running = true;
       try {
         const [account, state, all] = await Promise.all([getAccount(deps.store), getOffer(deps.store), checks()]);
-        const busy = deps.busy() || all.some((c) => c.status === 'scoring' || c.status === 'asking');
+        const busy = deps.busy() || all.some((c) => c.status === 'scoring' || c.status === 'asking') || (deps.holds ? await deps.holds() : false);
         if (!offerDue({ enabled: true, signedIn: account !== null, busy, state, checks: all, visitStartMs: visitStart })) return null;
         const pieces = (await deps.store.closet.all()).length;
         const id = deps.ids('M');

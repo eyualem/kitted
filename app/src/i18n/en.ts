@@ -12,6 +12,7 @@ const plurals: Partial<Record<keyof typeof enGenerated, { one: string }>> = {
   'item.wornCount': { one: '1 time' },
   'lookbook.row.full': { one: '{date} · Full check · 1 fix' },
   'pay.today.toTarget': { one: 'One free fix to {target}.' },
+  'plan.move3Sub': { one: '{price} · +1 fit' },
   'share.delta': { one: '{before} → {after} after 1 fix' },
   'push.ready': { one: 'Your fit check is ready. 1 quick fix inside.' },
   'stylist.quota.questions': { one: '1 question left today' },
@@ -61,6 +62,15 @@ const addedInBuild = {
   'cam.shoe.bubbleCap': 'Shoe snap',
   'card.a11y.changeOccasion': 'Change occasion',
   'card.a11y.review': 'Review added items',
+  // The end of onboarding (#291, 10-onboarding.md §9).
+  'card.a11y.laterHint': 'Shows your first 3 moves',
+  'starter.a11y.toggleHint': 'Marks it as one you own',
+  'starter.a11y.detected': 'In your closet from your fit checks',
+  'starter.removed': 'Removed {item}.',
+  'starter.markedToast': 'Marked as owned.',
+  'starter.a11y.count': '{n} of 12 starter essentials',
+  'pay.a11y.loading': 'Loading the plan',
+  'pay.a11y.plan': '{plan}, {price} a month, {detail}.',
   'card.a11y.recheck': 'Re-check, {occasion}. Score went from {was} to {now}, up {delta}. {word}. Done: {fix}.',
   'why.a11y.pill': '{garment}. Correct it',
   // Garment labels (pills, "What I read", ledger items)

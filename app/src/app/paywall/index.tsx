@@ -1,6 +1,6 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { PaywallScreen } from '@/features/paywall/PaywallScreen';
 
-// P1 · Paywall (02-screens.md). Built in P6.
-export default function PaywallScreen() {
-  return <Placeholder id="P1" name="Paywall" phase="P6" kind="cover" />;
+// P1 · Paywall, page 1 of 2 (02 D18; 10-onboarding.md §9.4). Behind PAYWALL_BUILT: nothing on his phone points here yet.
+export default function PaywallIndex() {
+  return <PaywallScreen />;
 }

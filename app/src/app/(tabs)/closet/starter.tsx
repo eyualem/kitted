@@ -1,6 +1,6 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { StarterScreen } from '@/features/finish/StarterScreen';
 
-// C5 · Starter essentials (02-screens.md). Built in P5.
+// C5 · Starter essentials (02 C5; 10-onboarding.md §9.3): move 1 of "Your first 3 moves" opens it.
 export default function StarterEssentialsScreen() {
-  return <Placeholder id="C5" name="Starter essentials" phase="P5" kind="push" />;
+  return <StarterScreen />;
 }

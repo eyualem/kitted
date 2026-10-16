@@ -1,6 +1,6 @@
 // What the Limit card (02 D19 S17), its saved state (S17h) and the after-4-am question say, from the held check and today's quota. Pure, so the
 // card's words are tested without rendering it (#280). Copy from the deck (limit.*, held.*).
-import { PAYWALL_BUILT } from '@/config/features';
+import { paywallOn } from '@/features/paywall/switch';
 import type { FitCheckRow } from '@/data/types';
 import { t } from '@/i18n/en';
 import { questionsLeft, type QuotaSnapshot } from '@/services/quota';
@@ -15,7 +15,7 @@ export interface LimitCardContent {
   body: string;
   /** "Save for tomorrow" (S17 only). */
   save: string | null;
-  /** "Try Pro · 14 days free" / "Try Pro" (S17 only, once the paywall exists). */
+  /** "Try Pro · 1 week free" / "Try Pro" (S17 only, once the paywall exists). */
   tryPro: string | null;
   /** "Don't score it" (S17h only). */
   dontScore: string | null;
@@ -40,7 +40,7 @@ export function limitCardContent(
   const left = questionsLeft(quota);
   const base = left > 0 ? t('limit.body', { n: left }) : t('limit.bodyNoQuestions');
   const body = quota.recheckOpen ? `${base} ${t('limit.recheckStill')}` : base;
-  const tryPro = (o.paywallBuilt ?? PAYWALL_BUILT) ? t(o.trialUsed ? 'limit.proNoTrial' : 'limit.pro') : null;
+  const tryPro = (o.paywallBuilt ?? paywallOn()) ? t(o.trialUsed ? 'limit.proNoTrial' : 'limit.pro') : null;
   return {
     state: 'limit', tag: t('limit.tag'), tagRight: t('limit.resets'), title: t('limit.title'), body, save: t('limit.save'), tryPro, dontScore: null,
     a11y: `${t('limit.tag')}. ${t('limit.title')} ${body}`,

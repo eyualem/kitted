@@ -74,6 +74,8 @@ const DUP_STORY: Step[] = [
   { at: '2026-10-22T07:51:00', do: 'closetNo' },
 ];
 
+const FIRST_CHECK: Step = { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' };
+
 const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
 
 const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
@@ -188,6 +190,9 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // offers "Same as another piece…", and its picker lists the khaki chinos.
   112: { steps: DUP_STORY },
   113: { steps: DUP_STORY },
+  // The end of onboarding (#291): his first check on the Welcome photo (7.5, with a fix to re-check); the taps after it
+  // (Later, a Starter piece, the notification ask) are the screen's `finish` steps (features/finish/demo.ts).
+  ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 
 /** Ids a story made that its screen's link names (`{dup}`): applyDemoScreen fills them in (#280). */

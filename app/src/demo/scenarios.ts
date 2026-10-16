@@ -3,6 +3,7 @@
 // phase that builds each screen (P2 Stylist cards, P5 tabs, P6 paywall/limit/share).
 
 import type { AuthProvider, MockScript } from '@/features/account/auth';
+import type { FinishDemo } from '@/features/finish/demo';
 
 export type ScenarioName = 'firstRun' | 'full';
 
@@ -28,10 +29,15 @@ export interface ScreenScenario {
   /** Account screens (10-onboarding.md, #289): turns them on with MockAuth's scripted outcome; `signedIn` starts signed
    *  in with that provider; `offer` posts "Keep your fits" (open, or after Not now). */
   accounts?: { script: MockScript; signedIn?: AuthProvider; offer?: 'open' | 'declined' };
+  /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
+   *  answer, and plays its taps (features/finish/demo.ts). */
+  finish?: FinishDemo;
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
 const FULL_NOW = '2026-10-22T12:20:00';
+/** The end of onboarding's screens (150–162): a minute after his first check. */
+const FIRST_CHECK_NOW = '2026-10-22T07:43:00';
 
 /** The scripted first-run story's check ids (seed.json's story has none; these are ours). */
 export const STORY_FIRST_CHECK = 'story-first';
@@ -173,6 +179,21 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 141, name: 'Settings · Account, signed out', id: 'Y4a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', accounts: { script: 'ok' } },
   { n: 142, name: 'Settings · Account, signed in', id: 'Y4a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
   { n: 143, name: 'Privacy · delete account', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
+  // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
+  // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
+  { n: 150, name: 'First check · Later', id: 'S6', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: {} },
+  { n: 151, name: 'Your first 3 moves', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later'] } },
+  { n: 152, name: 'Paywall · after the moves', id: 'P1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall?from=onboarding', under: '/stylist', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
+  { n: 153, name: 'Paywall · the plan', id: 'P1b', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans?from=onboarding', under: '/paywall?from=onboarding', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
+  { n: 154, name: 'Paywall · the plan, trial used', id: 'P1b', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'noTrial' } },
+  { n: 155, name: 'Paywall · plans didn\'t load', id: 'P1s', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'loadFailed' } },
+  { n: 156, name: 'Paywall · offline', id: 'P1s', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'offline' } },
+  { n: 157, name: 'Paywall · already Pro', id: 'P1s', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall', under: '/stylist', finish: { paywall: 'ok', pro: true } },
+  { n: 158, name: 'Notification ask', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later'] } },
+  { n: 159, name: 'Notification ask · pick a time', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyYes'] } },
+  { n: 160, name: 'Notification ask · done', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyAllow'] } },
+  { n: 161, name: 'Starter essentials', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
+  { n: 162, name: 'Your first 3 moves · move 1 done', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

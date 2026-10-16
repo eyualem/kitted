@@ -139,7 +139,8 @@ Every table and every kv key is classified in `app/src/sync/schema.ts`. A test f
 | `occasion.last`, `goingFor.last` | yes | the card's memory |
 | `idea.style.day`, `idea.style.evening` | yes | the morning card's style |
 | `scan.inbox` | yes | the waiting clothes scans (whole list, newest wins; it's a holding area until the item reading ships) |
-| `onboarding.step`, `notify.*`, `camera.mode`, `weather.permission`, `reveal.fullShown`, `idea.evening.ignored`, `closet.pendingDeletes` | no | per device |
+| `starter.marked` | yes | Starter essentials he marked that have no closet piece (the belt; #291) |
+| `onboarding.step`, `onboard.finish`, `notify.*`, `camera.mode`, `weather.permission`, `reveal.fullShown`, `idea.evening.ignored`, `closet.pendingDeletes` | no | per device (`onboard.finish`: this phone's first-fit sequence, #291) |
 | `account.user`, `account.offer` (`10-onboarding.md`) | no | who is signed in on this phone (with the email) and the save offer: per device |
 | `demo.scenario`, `seed.loaded`, `sync.*` | no | demo and sync bookkeeping |
 

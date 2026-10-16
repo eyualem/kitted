@@ -37,6 +37,8 @@ import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet
 import { PieceArt } from '@/features/closet/GarmentArt';
 import { noteLive } from '@/features/fitcheck/reveal';
 import { useCheckReveal } from './useReveal';
+import { useLaterShows } from '@/features/finish/hooks';
+import { finish as finishSequence } from '@/features/finish/session';
 
 /** The share card (S12) isn't built yet: its button opened a placeholder. One switch brings the share actions back. */
 export const SHARE_CARD_BUILT = false;
@@ -174,6 +176,7 @@ function FailureCard({ row }: { row: FitCheckRow }) {
 function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: string | null; asked: AskedGarment | null; readOnly: boolean }) {
   const closet = useCloset() ?? [];
   const picks = usePicks();
+  const later = useLaterShows(row, readOnly);
   // "Going for" (#215): the folded line at the top; Change grows it back into the question, in place.
   const gf = row.details.goingFor;
   const advice = row.details.goingForAdvice ?? null;
@@ -263,6 +266,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     { name: 'why', label: t('card.why', { score: scoreText }) },
     { name: 'nqr', label: t('card.nqr') },
     ...(recheckOpen && !dialed ? [{ name: 'recheck', label: t('card.recheck') }] : []),
+    ...(later ? [{ name: 'later', label: t('card.later') }] : []),
     ...(SHARE_CARD_BUILT ? [{ name: 'share', label: t('card.share.a11y') }] : []),
     ...(showCloset ? [{ name: 'review', label: t('card.a11y.review') }] : []),
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
@@ -286,6 +290,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     // The re-check's "only the pants are read again" lives in the camera now, not as a chat line (founder, Oct 14).
     recheck: () => router.push(`/camera?mode=recheck&parent=${row.id}`),
     share: () => router.push(`/share/${row.id}`),
+    later: () => void finishSequence.later(row.id),
     review: () => router.push(`/sheets/added/${row.id}`),
     occasion: () => pickOccasion(row.occasion, (o) => void confirmLens(row, { occasion: o })),
     look: () => pickLook(picks, gf?.style ?? null, (st) => void changeLook(st)),
@@ -444,8 +449,8 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
           <TextLinkRow>
             <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
             {readOnly ? null : <TextLink title={t('card.nqr')} onPress={go.nqr} compact />}
-            {/* `Later` (ruling 23) comes back in P4 with the "first 3 moves" card it leads to;
-                until then a link that does nothing is worse than none. */}
+            {/* `Later` (ruling 23, #291): his first-ever check only; the first 3 moves follow at once. */}
+            {later ? <TextLink title={t('card.later')} onPress={() => void finishSequence.later(row.id)} compact accessibilityHint={t('card.a11y.laterHint')} /> : null}
           </TextLinkRow>
           {row.details.rescoredFrom ? (
             <KText variant="footnote" color="ink3">

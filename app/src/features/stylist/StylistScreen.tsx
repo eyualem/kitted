@@ -33,6 +33,7 @@ import { buildThreadItems, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
 import { t } from '@/i18n/en';
 import { useAccountOffer } from '@/features/account/offerSession';
+import { useFinishSequence } from '@/features/finish/session';
 
 /** No tab-bar accessory off iOS (the web preview): the composer stays docked. */
 const DOCK_ALWAYS = Platform.OS !== 'ios';
@@ -154,6 +155,9 @@ export function StylistScreen() {
     }, [toEnd]),
   );
 
+  // The end of onboarding (ruling 23, #291): the first 3 moves, the paywall, the notification ask. It goes first; the
+  // save offer waits for it (10-onboarding.md §9.1).
+  useFinishSequence();
   // "Keep your fits" (A3, #289): the save offer, posted when offer.ts says it's due.
   useAccountOffer();
 

@@ -6,9 +6,12 @@ import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { stylistSubtitle } from '@/services/quota';
+import { useIsPro } from '@/services/entitlements';
 
 export function StylistHeaderTitle() {
-  const sub = useLive(['usage', 'fitChecks'], async () => stylistSubtitle(await quota.snapshot()), []);
+  // Re-read when the plan changes too (a purchase on the paywall, #291): Pro has its own line.
+  const pro = useIsPro();
+  const sub = useLive(['usage', 'fitChecks'], async () => stylistSubtitle(await quota.snapshot()), [pro]);
   const line = sub ? t(sub.key, sub.n !== undefined ? { n: sub.n } : undefined) : null;
   return (
     <View style={{ alignItems: 'center' }} accessible accessibilityRole="header" accessibilityLabel={line ? `${t('stylist.title')}, ${line}` : t('stylist.title')}>

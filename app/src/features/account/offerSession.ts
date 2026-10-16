@@ -7,6 +7,7 @@ import { onChange } from '@/data/changes';
 import { fitCheck } from '@/features/fitcheck/session';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
+import { finish } from '@/features/finish/session';
 import { createOfferService } from './offerService';
 
 /** After a check changes, wait this long: the card never lands on top of a score reveal. */
@@ -17,6 +18,7 @@ export const accountOffer = createOfferService({
   now: () => sessionClock.nowMs(),
   ids: newId,
   busy: () => fitCheck.getState().kind !== 'idle',
+  holds: () => finish.holdsOffer(),
 });
 
 export function useAccountOffer(): void {

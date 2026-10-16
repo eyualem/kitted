@@ -19,6 +19,8 @@ import { SupportCard } from '@/features/ask/SupportCard';
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
+import { MovesCard } from '@/features/finish/MovesCard';
+import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
 import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
 
@@ -33,6 +35,9 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} />;
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} />;
     if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;
+    // The end of onboarding (ruling 23, 10-onboarding.md §9): "Your first 3 moves", then the notification ask.
+    if (m.cardType === 'plan' && m.fitCheckId) return <MovesCard m={m} readOnly={readOnly} />;
+    if (m.cardType === 'question' && m.payload.question === 'notify') return <NotifyAskCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     if (m.cardType === 'support') return <SupportCard />;
     // "Keep your fits" (A3, #289): after his first score, at most twice.
     if (m.cardType === 'account') return <AccountOfferCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
@@ -40,12 +45,12 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     // …and after 4 am, "Ready to score last night's photo?" (S17h, #281).
     if (m.cardType === 'held' && m.fitCheckId && m.payload.ready === true) return <HeldReadyCard checkId={m.fitCheckId} showHeader={item.showWho} readOnly={readOnly} />;
     if (m.cardType === 'held' && m.fitCheckId) return <LimitCard checkId={m.fitCheckId} readOnly={readOnly} />;
-    // The question limit (02 S25): stylist text, with "Try Pro" once the paywall exists.
+    // The question limit (02 S25): stylist text, with "Try Pro" once the paywall exists (paywallOn when it was posted).
     if (m.cardType === 'limit') {
       return (
         <StylistMessage
           showHeader={item.showWho}
-          footer={m.payload.tryPro === true ? <ActionRow title={t('limit.proNoTrial')} onPress={() => router.push('/paywall')} /> : null}
+          footer={m.payload.tryPro === true ? <ActionRow title={t('limit.proNoTrial')} onPress={() => router.push('/paywall?from=ask')} /> : null}
         >
           {m.text ?? ''}
         </StylistMessage>
