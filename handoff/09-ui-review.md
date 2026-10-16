@@ -339,3 +339,13 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 - **H4 (M) The extra cover stays small and only where a head could be:** a new cover is only added when his outline touches the top edge; it's never more than 25% of the frame; and on photos where both shoulders sit at the very top (a true chest-down shot) nothing new is hidden. Every photo that gains a cover is looked at by eye: none may have a face left showing, and the cost to the clothes (a collar, a tie knot) is listed.
 - **H5 (M) Same photo, same result:** run twice, the same regions.
 - **H6 (T)** `npm run check` green; the Swift compiles for the Simulator (a native change: it reaches his phone with the next reinstall, which is already on his list for Oct 21).
+
+### §10 results (Oct 16, #303): checked against H1–H6, none changed
+| Check | Result | How |
+|---|---|---|
+| H1 | Pass (M) | ig-098: the chin, mouth and nose region (x 300–540, y 0–175, marked by eye before the fix) is entirely hidden in the copy sent and in its close-up |
+| H2 | Pass (M) | 296 photos: every pixel hidden before is still hidden (`extraction-test/face_gap.py compare`, `results/facegap/report.txt`) |
+| H3 | Pass (M) | 295 "ok" before, the same 295 after; no new "couldNotFrame" |
+| H4 | Pass (M) | 4 photos gain a cover, all with his outline at the top edge, the largest 18% of the frame. Seen by eye: ig-098 (a face, now hidden), ig-040 (a sliver of chin under the phone, a 5% strip). pin-068 and m06 show no face: there prep found no shoulder joints, so it can't tell. The cost there is the top of the jacket collar and neckline (pin-068) and the phone hands and shirt top (m06); the clothes still read |
+| H5 | Pass (M) | the 4 plus 3 unchanged photos run twice: identical |
+| H6 | Pass | the Swift typechecks for the iOS Simulator SDK; `npm run check` green (930). It reaches his phone with the next reinstall |

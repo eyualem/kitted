@@ -429,9 +429,13 @@ enum Prep {
         // tell where the face is, so nothing is sent.
         out.status = "couldNotFrame"
         return out
+      } else if band == nil, let top = topEdgeBand(mask, main: main, W: W, H: H, shoulderY: shoulders.map(\.y).min()) {
+        // His body runs off the top edge with no face or head found (09-ui-review §10, #303). That used to mean "the
+        // head is outside the photo", but a head cut off mid-face (ig-098: chin and mouth in, eyes out) looks the same
+        // to the face detector. So the top of him is hidden down to just above his shoulders, unless his shoulders sit
+        // at the very top (a true chest-down shot: nothing of the head is in the photo).
+        out.hide.append(top)
       }
-      // Otherwise his body runs off the top edge with no face or head found: the head is outside
-      // the photo (a chest-down mirror shot), so there's nothing to hide.
     }
     let named: [(String, VNHumanBodyPoseObservation.JointName)] = [
       ("neck", .neck), ("lShoulder", .leftShoulder), ("rShoulder", .rightShoulder), ("lElbow", .leftElbow), ("rElbow", .rightElbow),
@@ -663,6 +667,40 @@ enum Prep {
     let bandH = min(max(1.5 * headW, 0.12 * CGFloat(height) / sy), 0.30 * CGFloat(height) / sy)
     let x = CGFloat(lo) / sx - headW * 0.15, y = CGFloat(top) / sy - headW * 0.1
     return CGRect(x: x, y: y, width: headW * 1.3, height: bandH + headW * 0.1).intersection(CGRect(x: 0, y: 0, width: W, height: H))
+  }
+
+  /// The top of him when his outline runs off the top edge and no head was found (#303), in pixels: from the top edge
+  /// down to a little above his highest shoulder (or, with no shoulder found, the top 18% of his outline), across the
+  /// part of his outline in those rows (a raised phone arm included). Nil when his shoulders are at the very top (the
+  /// head is outside the photo) or the band would be too thin to hold a face.
+  static func topEdgeBand(_ m: Guide.Gray?, main: CGRect, W: CGFloat, H: CGFloat, shoulderY: CGFloat?) -> CGRect? {
+    if let sy = shoulderY, sy < H * 0.06 { return nil }
+    // His outline's height in pixels (the person box when there's no outline).
+    var x0 = main.minX, x1 = main.maxX, outlineH = main.height
+    var rowsOf: ((CGFloat) -> (CGFloat, CGFloat)?)? = nil
+    if let m {
+      let sx = CGFloat(m.w) / W, sy = CGFloat(m.h) / H
+      let cx0 = max(0, Int((main.minX - main.width * 0.1) * sx)), cx1 = min(m.w - 1, Int((main.maxX + main.width * 0.1) * sx))
+      guard cx1 > cx0 else { return nil }
+      let rows = (0..<m.h).filter { y in (cx0...cx1).contains { m.px[y * m.w + $0] > 127 } }
+      guard let first = rows.first, let last = rows.last, first <= 1 else { return nil }
+      outlineH = CGFloat(last - first) / sy
+      rowsOf = { depth in
+        var lo = Int.max, hi = -1
+        for y in 0...min(m.h - 1, Int(depth * sy)) {
+          for x in cx0...cx1 where m.px[y * m.w + x] > 127 { lo = min(lo, x); hi = max(hi, x) }
+        }
+        return hi >= lo ? (CGFloat(lo) / sx, CGFloat(hi + 1) / sx) : nil
+      }
+    }
+    let depth = shoulderY.map { $0 - 0.04 * outlineH } ?? 0.18 * outlineH
+    guard depth >= H * 0.02 else { return nil }
+    if let rowsOf {
+      guard let (lo, hi) = rowsOf(depth) else { return nil }
+      x0 = lo; x1 = hi
+    }
+    let pad = (x1 - x0) * 0.08
+    return CGRect(x: x0 - pad, y: 0, width: x1 - x0 + 2 * pad, height: depth + outlineH * 0.02).intersection(CGRect(x: 0, y: 0, width: W, height: H))
   }
 
   /// A face box grown to the whole head (hair, ears, chin): 1.6× wide, 1.9× tall, centered a little high.
