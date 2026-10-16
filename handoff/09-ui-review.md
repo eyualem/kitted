@@ -434,3 +434,10 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 | N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **Not yet on the Simulator** (the Mac was low on memory) |
 | N6 | Pass | `npm run check`: 1041 app tests |
 | Found | | **Two "+N" rules in the app:** the chat's buy card, the Starter list and the first-3-moves card count with `fitsGain` (core `rotation`: any combination without a hard clash, v4), while the Closet now counts outfits rated Put together (#84.3). So on the demo closet the chat suggests a navy polo (+12) and the Closet dark straight jeans (+16). Proposed as a follow-up: one count everywhere |
+
+## 15. Next best buy on the Simulator: two fixes, pass/fail checks set before building (Oct 17, #312)
+Found on the iOS Simulator (iPhone 17 Pro Max, demo 182; first time the sheet ran on iOS, since N5 had passed only on the web): in dark mode the sheet's big "+16" is near-black on the dark sheet, and the sheet says "What it unlocks · 16" but shows 6 outfits with no way to see the other 10.
+- **N7 (S)** The "+16" reads in both themes: it takes a real theme color. `Numeral`'s `color` is a color value, not a token name, so `color="accent"` was an invalid color (black on iOS). It becomes ink, the default: copper is kept for a score that moves (#231).
+- **N8 (T)** No `<Numeral … color="…">` in the app passes a string literal (a token name is never a color); a test scans the source.
+- **N9 (S)** The sheet shows the first 6 outfits, then "Show {n} more" (the Outfits list's own words), which shows all 16 and becomes "Show fewer". 6 or fewer: no link.
+- **N10** `npm run check` green.
