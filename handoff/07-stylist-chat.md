@@ -445,3 +445,17 @@ Founder: "plan the things on your side out, with tests planned out in advance as
 | M4 | Pass (T) | "grey hoodie" → a closet piece from chat (not photographed, a dashed tile, "From chat"), usable in an outfit card, never in a "+N"; Undo removes it; a later fit check asks or links, never a silent duplicate |
 | G4 | Pass (T) | every demo question asked: no check's score moves |
 | G5 | Pass | `npm run check`: 925 app tests in 75 suites, lint and typecheck clean. Not checked: the largest text size |
+
+## 14. C7 polish: pass/fail checks, set before building (Oct 16, #298)
+The chat's polish step (§11 C7), on the demo screens. Nothing here spends money or changes a score. The one new line is D4's default, `Questions are paused for a bit. Nothing was counted. Try again later.`
+- **P1 (T) VoiceOver reads each card as one thing:**
+  - outfit: "An outfit from your closet: olive overshirt, white tee, dark jeans, white sneakers.", with Wear this and Check it as actions;
+  - buy: "Next buy. Navy polo. +12 outfits with what you own. $30–40.";
+  - an ask card's answers are buttons ("Answer: Business casual"), and the one he picked is marked selected;
+  - "Saved to what I know" with its Undo; a link says where it goes.
+- **P2 (T) The answer is announced once, when it's complete, together with its card** ("… An outfit from your closet: …"; "… Saved to what I know.").
+- **P3 (T) The paused state (§6.4, D4):** when the source says questions are paused (the server's spend stop, C6), he gets the paused line instead of the fail line. It has no Retry and nothing is counted.
+- **P4 (T, S) Past chats are read-only:** an earlier day's answer shows its card with no Wear this, Check it or Undo, its ask answers can't be tapped, and the picked one still shows.
+- **P5 (S) The largest text size** (AX5) on demo screens 167, 169, 171 and 173: nothing clipped, the outfit card's buttons stack, its tiles go 2 across, and the chips wrap.
+- **P6 (S) Dark mode** on 167, 169, 171 and 173.
+- **G6** `npm run check` green.
