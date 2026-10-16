@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo/ui": "~57.0.22",
     "@kitted/core": "*",
+    "@react-native-google-signin/google-signin": "^16.1.5",
     "expo": "~57.0.27",
     "expo-blur": "~57.0.3",
     "expo-build-properties": "~57.0.22",
@@ -28,6 +29,7 @@
     "expo-symbols": "~57.0.3",
     "expo-system-ui": "~57.0.4",
     "expo-web-browser": "~57.0.3",
+    "firebase": "^12.19.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.3",

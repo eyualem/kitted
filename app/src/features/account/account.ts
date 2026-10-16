@@ -3,7 +3,9 @@
 // happens after a sign-in (restore, set up, ask which fits to keep, or the age stop). Firebase takes over the sign-in
 // itself (auth.ts); these rules stay.
 import { useSyncExternalStore } from 'react';
-import { ACCOUNTS_BUILT } from '@/config/features';
+import { Platform } from 'react-native';
+import { ACCOUNTS_BUILT, SIGN_IN_LIVE } from '@/config/features';
+import { FIREBASE_CONFIG, GOOGLE_IOS_CLIENT_ID } from '@/config/firebase';
 import type { KittedStore } from '@/data/store';
 import { createMockAuth, type AccountHoldings, type AccountUser, type AuthService, type MockScript, type SignInResult } from './auth';
 import { parseOffer, type OfferState } from './offer';
@@ -40,7 +42,40 @@ export function useAccountsOn(): boolean {
 }
 
 /** The sign-in in use. MockAuth until FirebaseAuth is written (08 §6 A1). */
-export const auth: AuthService = createMockAuth({ script: () => demoScript ?? 'ok' });
+const mockAuth: AuthService = createMockAuth({ script: () => demoScript ?? 'ok' });
+let realAuth: AuthService | null = null;
+
+/** Sign-in methods that really work here: every one on a demo screen (scripted), else the live ones on iPhone. */
+export function liveProviders(): readonly ('apple' | 'google' | 'email')[] {
+  if (demoScript !== null) return ['apple', 'google', 'email'];
+  if (Platform.OS !== 'ios') return [];
+  // Google needs its iOS client ID (set once Google is enabled in the console) and a build with its native module.
+  return FIREBASE_CONFIG.apiKey ? SIGN_IN_LIVE.filter((p) => p !== 'google' || GOOGLE_IOS_CLIENT_ID !== '') : [];
+}
+
+/** You → Settings → Account shows when accounts are on, or when a real sign-in exists to test (#295). */
+export function settingsAccountOn(): boolean {
+  return accountsOn() || liveProviders().length > 0;
+}
+
+/** The sign-in in use: MockAuth on demo screens, Firebase (Google) when a live provider exists, MockAuth otherwise
+ *  (nothing points at it then). Firebase loads lazily so the web preview and tests never touch the native module. */
+export const auth: AuthService = {
+  signIn: (p) => current().signIn(p),
+  sendEmailCode: (e) => current().sendEmailCode(e),
+  verifyEmailCode: (e, c) => current().verifyEmailCode(e, c),
+  signOut: () => current().signOut(),
+  deleteAccount: () => current().deleteAccount(),
+};
+
+function current(): AuthService {
+  if (demoScript !== null || liveProviders().length === 0) return mockAuth;
+  if (!realAuth) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    realAuth = (require('./firebaseAuth') as typeof import('./firebaseAuth')).createFirebaseAuth();
+  }
+  return realAuth;
+}
 
 // ── Stored state ──────────────────────────────────────────────────────────────────────────────────────────────────
 export function parseAccount(raw: string | null): AccountUser | null {

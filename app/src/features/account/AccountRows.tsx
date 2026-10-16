@@ -8,11 +8,11 @@ import { useLive } from '@/data/useLive';
 import { LinkRow, Section, ValueRow } from '@/features/settings/SettingsList';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
-import { ACCOUNT_KEY, getAccount, signOut, useAccountsOn } from './account';
+import { ACCOUNT_KEY, getAccount, settingsAccountOn, signOut, useAccountsOn } from './account';
 import { isRelayEmail } from './email';
 
 export function AccountSection() {
-  const on = useAccountsOn();
+  const on = useAccountsOn() || settingsAccountOn();
   const account = useLive(['kv'], () => getAccount(store), [], ACCOUNT_KEY);
   if (!on || account === undefined) return null;
   if (!account) {
