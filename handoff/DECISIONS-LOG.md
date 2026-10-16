@@ -1945,3 +1945,11 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Trail-style sneakers (read as running shoes) cost 2 on Shoes outside an outdoor outfit; outdoor's own list makes 18 counted outfits, 2 of them outdoor (KD-7; its shell and fleece make the look, and a layer isn't in a counted outfit).
       - Jackets add no outfits under the one count (#84.3), so a look's jackets are listed but never the next best buy; the fleece and the flannel are tops, so they can be.
     - **His calls (on his list):** the 7 lists, the 26 new names and their prices (outward-facing), and the new C5 line `Picked for your looks: streetwear and minimal.` Defaults: as drafted.
+
+## Oct 17 · Next best buy on iOS
+
+312. **The next best buy sheet, first run on iOS, two fixes (09-ui-review §15, N7–N10, checks committed first; all pass).** The founder allowed a second Simulator for this ("you can start a simulator. im giving u an exception pass"), so the shared one wasn't touched.
+    - **Dark mode:** the sheet's "+16" was near-black on the dark sheet. `Numeral`'s `color` takes a color value, and `color="accent"` (a token name) was an invalid color, black on iOS; the web had hidden it. It's ink now, not copper: copper is for a score that moves (#231). A test refuses any string-literal Numeral color.
+    - **All 16 outfits:** the sheet said "What it unlocks · 16" but showed 6 with no way to the rest. Now "Show {n} more" / "Show fewer", the Outfits list's own words (no new copy).
+    - **Found, not fixed:** on a cold load the card lands about a second after the list, so the list moves down once.
+

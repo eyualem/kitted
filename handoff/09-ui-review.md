@@ -431,7 +431,7 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 | Check | Result | How |
 |---|---|---|
 | N1–N4 | Pass (T) | `nextBuy.test.ts` (written right after the engine; the checks were committed first): on the demo closet the pick is dark straight jeans, +16 |
-| N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **Not yet on the Simulator** (the Mac was low on memory) |
+| N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **On the Simulator Oct 17 (§15):** two fixes, then pass |
 | N6 | Pass | `npm run check`: 1041 app tests |
 | Found | | **Two "+N" rules in the app:** the chat's buy card, the Starter list and the first-3-moves card count with `fitsGain` (core `rotation`: any combination without a hard clash, v4), while the Closet now counts outfits rated Put together (#84.3). So on the demo closet the chat suggests a navy polo (+12) and the Closet dark straight jeans (+16). Proposed as a follow-up: one count everywhere |
 
@@ -534,3 +534,20 @@ Shaky prices, said in the review: the overcoat (widest spread), the three retro 
 - **K12 (T, at build)** changing his looks changes the list at once; a marked piece from a row no longer shown stays in Closet and comes back marked.
 - **K13 (S, at build)** web preview and, when the Mac has memory, the Simulator: C5 for a streetwear pick, a minimal + smart casual pick and no picks; light, dark, the largest text size.
 - **K14** `npm run check` green.
+
+## 17. Next best buy on the Simulator (numbered §15 on main; §15–16 were taken by #309 and #313): two fixes, pass/fail checks set before building (Oct 17, #312)
+Found on the iOS Simulator (iPhone 17 Pro Max, demo 182; first time the sheet ran on iOS, since N5 had passed only on the web): in dark mode the sheet's big "+16" is near-black on the dark sheet, and the sheet says "What it unlocks · 16" but shows 6 outfits with no way to see the other 10.
+- **N7 (S)** The "+16" reads in both themes: it takes a real theme color. `Numeral`'s `color` is a color value, not a token name, so `color="accent"` was an invalid color (black on iOS). It becomes ink, the default: copper is kept for a score that moves (#231).
+- **N8 (T)** No `<Numeral … color="…">` in the app passes a string literal (a token name is never a color); a test scans the source.
+- **N9 (S)** The sheet shows the first 6 outfits, then "Show {n} more" (the Outfits list's own words), which shows all 16 and becomes "Show fewer". 6 or fewer: no link.
+- **N10** `npm run check` green.
+
+### §17 results (Oct 17, #312): checked against N7–N10, none changed
+On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared iPhone 17 Pro left alone), demo 182, light, dark and the largest text size; screenshots `screenshots/nextbuy-oct17/` (git-ignored).
+| Check | Result | How |
+|---|---|---|
+| N7 | Pass (S) | "+16" in ink, clear on the dark sheet (was near-black on it) |
+| N8 | Pass (T) | `numeralColor.test.ts` failed on `NextBuySheet.tsx` before the fix, passes after; it was the app's only string-literal Numeral color |
+| N9 | Pass (S) | 6 outfits, "Show 10 more" shows all 16 (4 rows), then "Show fewer"; Got it below; at the largest size the title, number and line stack and the link reads |
+| N10 | Pass | `npm run check`'s typecheck, lint and 1053 app tests (core untouched) |
+| Found | | The card appears about a second after the outfit list on a cold load, so the list moves down once (`loadNextBuy` scores each Starter candidate). Not fixed: a reserved-height placeholder or computing it with the list is the follow-up if it bothers him. |
