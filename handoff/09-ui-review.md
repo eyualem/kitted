@@ -426,3 +426,11 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 - **N4 (T)** no brand or shop anywhere in it (the sentence gate's brand rule on every line), and no link out.
 - **N5 (S)** Outfits shows the card under the count; a tap opens the sheet: the piece, "+n outfits with what you own", its price, the unlocked outfits with the new piece dashed, and Got it. Light, dark, the largest size where the Simulator is free.
 - **N6** `npm run check` green.
+
+### §14 results (Oct 16, #308): checked against N1–N6, none changed
+| Check | Result | How |
+|---|---|---|
+| N1–N4 | Pass (T) | `nextBuy.test.ts` (written right after the engine; the checks were committed first): on the demo closet the pick is dark straight jeans, +16 |
+| N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **Not yet on the Simulator** (the Mac was low on memory) |
+| N6 | Pass | `npm run check`: 1041 app tests |
+| Found | | **Two "+N" rules in the app:** the chat's buy card, the Starter list and the first-3-moves card count with `fitsGain` (core `rotation`: any combination without a hard clash, v4), while the Closet now counts outfits rated Put together (#84.3). So on the demo closet the chat suggests a navy polo (+12) and the Closet dark straight jeans (+16). Proposed as a follow-up: one count everywhere |

@@ -1903,3 +1903,7 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **New words, listed for his skim:** "Clean basics that work together.", "Show {n} more", "Worn {date}" (not used yet), and the slot lines ("Add a top", "Add bottoms", "Add shoes"). The rest are D15's approved labels.
     - **Checked on the Simulator afterwards** (light, dark, the largest size), with two fixes: the Pieces / Outfits labels (the shared Segmented's shrink-to-fit made them tiny in a wide bar; now off there, onboarding unchanged) and bigger shoes in the standing outfit.
     - **Not done:** C7's next best buy screen.
+
+308. **The next best buy is built (#87, 02 C7; checks 09-ui-review §14, N1–N6; N5 checked on the web preview, not yet the Simulator).** A card under the Outfits count names the Starter piece that adds the most outfits ("Dark straight jeans · +16 outfits with what you own · $50–60"); its sheet shows the outfits it unlocks with the new piece dashed. No brand, no shop link, free.
+    - **Decided by Claude:** C7's per-piece "What to look for" bullets are left out (the deck has them for one example only; writing 12 sets is outward copy for the founder). The only new words: "What it unlocks".
+    - **Found:** two "+N" rules now live side by side (the older `fitsGain` in the chat's buy card, Starter and the moves card; the Closet's Put-together count, #84.3). Unifying them changes numbers in the chat and onboarding sessions' screens, so it's proposed as its own session.

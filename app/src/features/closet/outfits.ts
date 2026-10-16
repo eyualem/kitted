@@ -4,11 +4,11 @@
 // count. The count is the trios rated Put together (7.0+) at Everyday, leaving out pieces he only mentioned in chat.
 // Worn = a scored fit check whose pieces include the whole trio: those are "Your go-tos" (his photo, the check's real
 // score); the rest are "Try next", best first, never showing a score. No AI: free on every plan, and no score moves.
-import { defaultRubric, outfitReading, outfitValid, scoreParts, type ClosetItem, type Styles } from '@kitted/core';
+import { defaultRubric, displayHex, outfitReading, outfitValid, scoreParts, type ClosetItem, type Styles } from '@kitted/core';
 import type { ClosetItemRow, FitCheckRow, OccasionKey } from '@/data/types';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { scoreOptions } from '@/features/fitcheck/scoring';
-import { STARTER } from '@/features/finish/starter';
+import { ownership, STARTER, type StarterEntry } from '@/features/finish/starter';
 import { t } from '@/i18n/en';
 
 /** Put together and up (02 score words). */
@@ -204,4 +204,46 @@ export function gainForSlot(closet: readonly ClosetItemRow[], checks: readonly F
     best = Math.max(best, outfitCount([...own, ghost], checks, styles));
   }
   return best;
+}
+
+/** A Starter piece he doesn't own yet, as a closet row (drawn like his own; never stored). */
+export function ghostPiece(e: StarterEntry): ClosetItemRow | null {
+  if (!e.pick || !e.slot) return null;
+  return {
+    id: `__starter-${e.id}`, name: e.pick.name, slot: e.slot, garment: e.pick.garment, confirmedFields: [], hex: displayHex(e.pick.garment.color_family),
+    photoFile: null, demoPhotoId: null, isPhotographed: false, source: 'added', starterId: e.id, wornCount: 0, lastWornAt: null, addedAt: 0,
+    isDeleted: false, mergedInto: null, maybeSameAs: null, cropFile: null, cropScore: null, updatedAt: 0, profile: { aliases: [], distinctFrom: [], confirmed: {} },
+  } as ClosetItemRow;
+}
+
+export interface NextBuy {
+  entry: StarterEntry;
+  /** The new piece, drawn dashed in what it unlocks. */
+  ghost: ClosetItemRow;
+  /** Outfits it adds under the Closet's count (7.0+ at Everyday). */
+  gain: number;
+  /** The new outfits it makes, best first. */
+  unlocks: Outfit[];
+}
+
+/**
+ * The next best buy (09-ui-review §14, #308; #87): the Starter piece he doesn't own (in the closet or tapped) that adds
+ * the most outfits under the Closet's count; ties keep the Starter order. Null when nothing would add one.
+ */
+export function nextBestBuy(i: { closet: readonly ClosetItemRow[]; checks: readonly FitCheckRow[]; styles: Styles | null; marks: readonly string[] }): NextBuy | null {
+  const own = ownership(i.closet, i.marks);
+  const before = outfitCount(i.closet, i.checks, i.styles);
+  let best: { entry: StarterEntry; ghost: ClosetItemRow; gain: number } | null = null;
+  for (const e of STARTER) {
+    if (own[e.id]?.owned) continue;
+    const ghost = ghostPiece(e);
+    if (!ghost) continue;
+    const gain = outfitCount([...i.closet, ghost], i.checks, i.styles) - before;
+    if (gain > 0 && (!best || gain > best.gain)) best = { entry: e, ghost, gain };
+  }
+  if (!best) return null;
+  const pool = i.closet.filter((c) => c.source !== 'chat');
+  const unlocks = buildOutfits({ closet: [...pool, best.ghost], checks: i.checks, styles: i.styles, occasion: 'everyday', countOnly: true })
+    .filter((o) => o.itemIds.includes(best!.ghost.id));
+  return { ...best, unlocks };
 }

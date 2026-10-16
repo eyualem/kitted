@@ -11,7 +11,6 @@ import type { ClosetItemRow, FitCheckRow, OccasionKey } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { shownPhoto } from '@/demo/demoPhotos';
 import { scoreWordLabel, displayScore } from '@/design-system/score';
-import { PieceArt } from '@/features/closet/GarmentArt';
 import { showToast } from '@/features/toast/toast';
 import { occasionLabel } from '@/features/stylist/thread';
 import { t } from '@/i18n/en';
@@ -19,6 +18,8 @@ import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { goToStylist } from '@/router/stylistAction';
 import { wearOutfit } from './outfitActions';
+import { gainLine, loadNextBuy } from './nextBuyData';
+import { StandingOutfit } from './StandingOutfit';
 import { buildOutfits, gainForSlot, OUTFIT_OCCASIONS, outfitLists, outfitPieces, slotChecklist, type Outfit } from './outfits';
 
 /** How many outfits a list shows before "Show {n} more". */
@@ -35,6 +36,7 @@ export function OutfitsView({ closet, checks, count, styles }: { closet: readonl
         {count === 1 ? t('closet.outfits.countOne', { p: pieces }) : t('closet.outfits.count', { p: pieces, n: count })}
         {count < 3 ? ` · ${count === 1 ? t('closet.outfits.soFarOne') : t('closet.outfits.soFar', { n: count })}` : ''}
       </KText>
+      <NextBuyRow />
       <ChipFlow>
         {OUTFIT_OCCASIONS.map((o) => (
           <Chip key={o} title={occasionLabel(o)} small state={o === occasion ? 'selected' : 'normal'} onPress={() => setOccasion(o)} />
@@ -113,34 +115,6 @@ export function OutfitCard({ outfit, closet, occasion, label }: { outfit: Outfit
   );
 }
 
-/** The standing outfit (#84.2): his pieces stacked in body order on one 3:4 tile, a layer at the side. */
-export function StandingOutfit({ items, layerId, width = 96 }: { items: readonly ClosetItemRow[]; layerId: string | null; width?: number }) {
-  const { colors } = useTheme();
-  const layer = items.find((i) => i.id === layerId) ?? null;
-  const core = (['top', 'bottom', 'shoes'] as const).map((s) => items.find((i) => i.slot === s && i.id !== layerId)).filter((c): c is ClosetItemRow => !!c);
-  const h = Math.round(width * 4 / 3);
-  const piece = Math.round(h / 3.2);
-  return (
-    <View
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-      style={{ width, height: h, borderRadius: radius.tile, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}
-    >
-      {core.map((c) => (
-        <View key={c.id} style={{ height: c.slot === 'shoes' ? piece * 0.75 : piece, alignItems: 'center', justifyContent: 'center' }}>
-          {/* Shoes are wide and short: drawn at the tile's full piece size so they don't look tiny next to the top. */}
-          <PieceArt item={c} size={c.slot === 'shoes' ? Math.round(piece * 1.15) : piece} />
-        </View>
-      ))}
-      {layer ? (
-        <View style={{ position: 'absolute', left: 2, top: piece * 0.15 }}>
-          <PieceArt item={layer} size={Math.round(piece * 0.8)} />
-        </View>
-      ) : null}
-    </View>
-  );
-}
-
 function WornPhoto({ worn, width = 96 }: { worn: NonNullable<Outfit['worn']>; width?: number }) {
   const { colors } = useTheme();
   const photo = shownPhoto(worn.demoPhotoId, worn.photoFile, undefined);
@@ -186,3 +160,24 @@ function NoOutfits({ closet, checks, styles }: { closet: readonly ClosetItemRow[
   );
 }
 
+
+/** The next best buy (C7, #308): one row under the count; a tap opens its sheet. */
+function NextBuyRow() {
+  const nb = useLive(['closet', 'fitChecks', 'kv'], loadNextBuy, []);
+  if (!nb) return null;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${t('closet.nextBuy.tag')}: ${nb.entry.pick!.name}. ${gainLine(nb.gain)}. ${nb.entry.budget}`}
+      onPress={() => router.push('/sheets/next-buy' as Href)}
+    >
+      <KCard>
+        <KCardSection gap={4}>
+          <TagLine left={t('closet.nextBuy.tag')} right={nb.entry.budget} />
+          <KText variant="headline">{nb.entry.pick!.name}</KText>
+          <KText variant="subheadline" color="ink2">{gainLine(nb.gain)}</KText>
+        </KCardSection>
+      </KCard>
+    </Pressable>
+  );
+}

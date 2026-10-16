@@ -410,6 +410,7 @@ const addedInBuild = {
   'closet.outfits.none.need.bottom': 'Add bottoms',
   'closet.outfits.none.need.shoes': 'Add shoes',
   'closet.outfits.a11y': 'Outfit: {names}. {reason}',
+  'closet.nextBuy.unlocks': 'What it unlocks',
   'closet.goesWith.title': 'Goes with',
   'closet.goesWith.best': 'Best match',
   'closet.goesWith.dressier': 'Dressier',
