@@ -9,9 +9,11 @@ export interface ClosingBlock {
   remember: unknown;
   need: unknown;
   refused: boolean;
+  /** "Can I wear…": the model's own yes / no / depends (J5), checked against the rules' verdict. */
+  verdict: 'yes' | 'no' | 'depends' | null;
 }
 
-export const EMPTY_BLOCK: ClosingBlock = { card: null, remember: null, need: null, refused: false };
+export const EMPTY_BLOCK: ClosingBlock = { card: null, remember: null, need: null, refused: false, verdict: null };
 
 /** The JSON of a block, or null when it isn't one (not JSON, not an object, none of the four keys). */
 export function parseClosing(raw: string): ClosingBlock | null {
@@ -26,7 +28,8 @@ export function parseClosing(raw: string): ClosingBlock | null {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
   const o = v as Record<string, unknown>;
   if (!['card', 'remember', 'need', 'refused'].some((k) => k in o)) return null;
-  return { card: o.card ?? null, remember: o.remember ?? null, need: o.need ?? null, refused: o.refused === true };
+  const verdict = o.verdict === 'yes' || o.verdict === 'no' || o.verdict === 'depends' ? o.verdict : null;
+  return { card: o.card ?? null, remember: o.remember ?? null, need: o.need ?? null, refused: o.refused === true, verdict };
 }
 
 /**

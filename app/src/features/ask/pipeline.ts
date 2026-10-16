@@ -38,11 +38,19 @@ export interface Prepared {
   remember?: (raw: unknown, answerAt: number) => Promise<{ factId: string; itemId?: string } | null>;
   /** For the log: the router's kind (never his words). */
   kind?: string;
+  /** The rules' verdict on the outfit he asked about (J5); an answer whose own verdict says the opposite loses its
+   *  card and is logged (measured before anything stricter). */
+  verdict?: 'yes' | 'depends' | 'no';
   /** What VoiceOver reads after the answer (P2): the card's words, or null. */
   speak?: (card: AskCard | null) => string | null;
 }
 
 const NO_PREP: Prepared = { gate: { allowedScores: new Set() } };
+
+/** The model said yes where the rules find a problem, or no where they find none (J5). "depends" never clashes. */
+export function verdictClash(rules: 'yes' | 'depends' | 'no' | undefined, model: unknown): boolean {
+  return (rules === 'yes' && model === 'no') || (rules === 'no' && model === 'yes');
+}
 
 export interface AskDeps {
   store: Pick<KittedStore, 'chat'>;
@@ -252,7 +260,9 @@ export function createAsk(deps: AskDeps) {
       }
       const counted = done.refused !== true && done.uncounted !== true && !o.tap;
       const id = ids('M');
-      const card = done.refused || !prep.card ? null : await prep.card(done.card, gate).catch(() => null);
+      const clash = verdictClash(prep.verdict, done.verdict);
+      if (clash) log('gate · verdict');
+      const card = done.refused || clash || !prep.card ? null : await prep.card(done.card, gate).catch(() => null);
       const saved = done.refused || !prep.remember ? null : await prep.remember(done.remember, at).catch(() => null);
       // The live row keeps showing the words until the thread has this row (live.ts).
       live.finish(id, answer);

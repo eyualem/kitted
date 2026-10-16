@@ -99,7 +99,7 @@ export function createAskGemini(opts: AskGeminiOptions): AnswerSource {
       }
       const { rest, block } = split.end();
       if (rest) yield { type: 'delta', text: rest };
-      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused };
+      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused, verdict: block.verdict };
     },
   };
 }

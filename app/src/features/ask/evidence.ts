@@ -15,6 +15,7 @@ import { whyLine } from '@/features/morning/copy';
 import { occasionLabel } from '@/features/stylist/thread';
 import { asBudget } from '@/features/you/profile';
 import { fullCheckLines, oneLine, type StylistContext, type StylistSnapshot } from './context';
+import { avoidedIds, avoidsPhrase, judgeOutfit, judgementLines } from './judge';
 import { scoresIn } from './gate';
 import type { AskKind } from './prompt';
 import type { Route } from './router';
@@ -24,6 +25,8 @@ export interface Evidence {
   text: string;
   /** Kinds of lookup the model may still ask for (none once evidence was computed for the kind). */
   kind: AskKind;
+  /** The rules' verdict on the outfit he asked about ("can I wear…", shape; J5), or absent. */
+  verdict?: 'yes' | 'depends' | 'no';
 }
 
 export interface EvidenceDeps {
@@ -87,6 +90,9 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
   const checkOf = (h: string | null) => (h ? s.checks.find((c) => c.id === ctx.handles[h]) ?? null : null);
   const out: string[] = [];
   const styles = s.profile?.styles ?? null;
+  // What he said he avoids leaves outfits and buys (J3); a piece he names himself is still used.
+  const avoided = avoidedIds(pieces, s.facts);
+  let verdict: 'yes' | 'depends' | 'no' | undefined;
 
   /** One outfit line from the picker: its pieces by handle and its reasons (no predicted score). */
   const outfitLine = (label: string, occasion: OccasionKey, pin?: string, exclude?: Set<string>): string[] | null => {
@@ -94,14 +100,18 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
     const w = todaysWeather(s);
     const r = pickOutfit({
       closet: pieces as unknown as ClosetItem[], occasion, styles, needs: w ? weatherNeeds(w) : seasonNeeds(month),
-      seed: `${dayKey(s.nowMs, s.zone)}|ask|${label}|${pin ?? ''}`, ...(pin ? { pin } : {}), ...(exclude ? { exclude } : {}),
+      seed: `${dayKey(s.nowMs, s.zone)}|ask|${label}|${pin ?? ''}`, ...(pin ? { pin } : {}),
+      ...(exclude || avoided.size ? { exclude: new Set([...(exclude ?? []), ...[...avoided].filter((id) => id !== pin)]) } : {}),
     });
     // A pinned piece the picker couldn't fit in is no answer to "what goes with it".
     if (!r.outfit || (pin && !r.outfit.itemIds.includes(pin))) return null;
     const items = r.outfit.itemIds.map((id) => pieces.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
     const card: CardOccasion = occasion === 'gym' || occasion === 'home' ? 'everyday' : occasion;
     const why = oneLine(whyLine(r.outfit.reasons, items, card), 160);
-    return [`${label} (${lower(occasionLabel(occasion))}): ${items.map(nameOf).join(' + ')}${why ? ` · why: ${why}` : ''}`, r.outfit.itemIds.join('+')];
+    // The rules' own words on the same outfit (J2): a problem they'd find is said, never hidden.
+    const j = judgeOutfit(items, occasion, styles);
+    const careful = j?.problems.length ? ` · careful: ${oneLine(j.problems[0], 140)}` : '';
+    return [`${label} (${lower(occasionLabel(occasion))}): ${items.map(nameOf).join(' + ')}${why ? ` · why: ${why}` : ''}${careful}`, r.outfit.itemIds.join('+')];
   };
 
   switch (route.kind) {
@@ -171,13 +181,28 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
         out.push(`${nameOf(it)}: ${facts}`);
       }
       if (route.occasion) out.push(`Occasion: ${lower(occasionLabel(route.occasion))}`);
+      // The pieces he named, judged by the same rules a fit check uses (J1).
+      const items = route.pieces.map(named).filter((c): c is ClosetItemRow => !!c);
+      const j = judgeOutfit(items, route.occasion ?? 'everyday', styles);
+      if (j) {
+        out.push(...judgementLines(j));
+        verdict = j.verdict;
+      }
+      break;
+    }
+    case 'shape': {
+      const items = route.pieces.map(named).filter((c): c is ClosetItemRow => !!c);
+      if (items.length === 0) break;
+      out.push(`The pieces he means: ${items.map(nameOf).join(' + ')}`);
+      const j = judgeOutfit(items, route.occasion ?? 'everyday', styles);
+      if (j) out.push(...judgementLines(j));
       break;
     }
     case 'buyNext': {
       const own = ownership(s.closet, deps.starterMarks);
       const budget = asBudget(s.profile?.budget ?? null);
       const cap = budget === 'under_30' ? 30 : budget === '30_60' ? 60 : budget === '60_100' ? 100 : Infinity;
-      const rows = STARTER.filter((e) => !own[e.id]?.owned && e.pick && e.slot).map((e) => {
+      const rows = STARTER.filter((e) => !own[e.id]?.owned && e.pick && e.slot && !avoidsPhrase(e.pick.phrase, s.facts)).map((e) => {
         const gain = fitsGain(countable(s.closet), styles, e.pick!.garment, e.slot!);
         const low = Number(/\$(\d+)/.exec(e.budget)?.[1] ?? NaN);
         return { e, gain, over: low > cap };
@@ -192,7 +217,7 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
     default:
       break;
   }
-  return { text: out.join('\n'), kind: route.kind };
+  return { text: out.join('\n'), kind: route.kind, ...(verdict ? { verdict } : {}) };
 }
 
 /** Every score the model may say: the pack's and the evidence's (gate.ts). */

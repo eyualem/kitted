@@ -29,9 +29,12 @@ export const GUIDE_FOR: Readonly<Record<AskKind, readonly number[]>> = {
   buyNext: [13, 12], fitHowTo: [2, 3, 11], shape: [3, 4, 2], remember: [], feedback: [1, 6], general: [1, 10, 14],
 };
 
+/** The guide's "(scored…; PRO-4)" and "(tip)" marks are for us (J4): the model never sees rule IDs. */
+export const stripMarks = (md: string): string => md.replace(/\s*\*\*\((?:scored|tip)\b[^)]*\)\*\*/g, '');
+
 export function guideFor(kind: AskKind): string {
   const sec = guideSections();
-  return [0, ...GUIDE_FOR[kind]].map((n) => sec.get(n)).filter((x): x is string => !!x).join('\n\n');
+  return stripMarks([0, ...GUIDE_FOR[kind]].map((n) => sec.get(n)).filter((x): x is string => !!x).join('\n\n'));
 }
 
 /** Bumped whenever the system part's words change (rules, examples, the guide), so a cached prefix is never mixed. */
@@ -53,7 +56,7 @@ export const ANSWER_RULES = [
 export const CLOSING_FORMAT = [
   'After your answer, on new lines, write exactly one fenced JSON block, nothing after it:',
   '```json',
-  '{"card": null, "remember": null, "need": null, "refused": false}',
+  '{"card": null, "remember": null, "need": null, "refused": false, "verdict": null}',
   '```',
   'card (at most one, or null):',
   '  {"type":"outfit","pieces":["P7","P2","P5","P9"],"occasion":"date"}  an outfit from his pieces, only from <evidence> outfits',
@@ -63,6 +66,7 @@ export const CLOSING_FORMAT = [
   '  {"type":"link","to":"check:FC1"} or {"type":"link","to":"piece:P7"}  a check or piece you talked about',
   'occasion is one of: everyday, class, date, going_out, interview, event, gym, home (a wedding is an event; work is everyday).',
   'remember (or null): {"key":"waist_size","value":"32"} when he told you a lasting fact about his clothes or plans. Keys: waist_size, inseam, top_size, shoe_size, budget, work_dress_code, school_or_work, occasions_coming, color_avoid, color_like, fit_like, fit_avoid, look_now, owns_unphotographed. Never anything about his body, health, age, money beyond a clothes budget, or other people.',
+  'verdict (or null): for "can I wear X with Y" or "does this work", "yes", "no" or "depends", and it must match <evidence>\'s verdict when it has one.',
   'need (or null): {"lookup":"goes_with","piece":"P7"} or {"lookup":"outfit","occasion":"date"} or {"lookup":"explain","check":"FC1"} or {"lookup":"buy_next"} when you need that evidence to answer well and <evidence> doesn\'t have it. Then keep the answer to one short line; you will be asked again with it.',
 ].join('\n');
 
@@ -71,15 +75,15 @@ export const CLOSING_FORMAT = [
  * closing block. Numbers in them come from the made-up evidence; the voice checks (voice.ts) hold for every answer.
  */
 export const EXAMPLES: readonly { q: string; a: string; block: string }[] = [
-  { q: 'What goes with my grey hoodie?', a: "Your black jeans and the white sneakers. Grey and black never clash, and the white shoes keep it from going heavy.", block: '{"card":{"type":"outfit","pieces":["P2","P5","P8"],"occasion":"everyday"},"remember":null,"need":null,"refused":false}' },
-  { q: 'Why did I only get a 6.5?', a: "It's the slides. Everything above them works, but slides read like you're headed to the pool. Swap them for the white sneakers and that check goes to 7.5.", block: '{"card":{"type":"link","to":"check:FC1"},"remember":null,"need":null,"refused":false}' },
-  { q: 'Can I wear my boots with the wide jeans?', a: "I'd skip that pair: the boots disappear under a wide leg. They look right with your straight jeans, where the hem sits on the boot.", block: '{"card":null,"remember":null,"need":null,"refused":false}' },
-  { q: 'Is my outfit today good?', a: "Yes, it's solid: clean, and nothing's off. If you want more, tuck the front of the tee so the outfit gets a waist.", block: '{"card":null,"remember":null,"need":null,"refused":false}' },
-  { q: 'I hate skinny jeans', a: "Fair, they read dated now anyway. I'll stick to straight and wide legs for you.", block: '{"card":null,"remember":{"key":"fit_avoid","value":"skinny jeans"},"need":null,"refused":false}' },
-  { q: 'What should I buy next?', a: "A pair of dark brown loafers. They'd dress up your chinos and both jeans, and they're the one shoe you're missing for a dinner.", block: '{"card":{"type":"buy","kind":"loafers","shade":"dark brown"},"remember":null,"need":null,"refused":false}' },
-  { q: 'Do I look fat in this hoodie?', a: "I rate outfits, never people. If you want the hoodie to sit easier, go up a size so it hangs instead of clinging.", block: '{"card":null,"remember":null,"need":null,"refused":false}' },
-  { q: 'is this fit fire or nah', a: "Send me a photo and I'll score it. I only score what I can see.", block: '{"card":{"type":"check","occasion":"everyday"},"remember":null,"need":null,"refused":false}' },
-  { q: 'Can you help with my essay?', a: "I'm only good with clothes. Ask me about an outfit, a fit or what to buy next.", block: '{"card":null,"remember":null,"need":null,"refused":true}' },
+  { q: 'What goes with my grey hoodie?', a: "Your black jeans and the white sneakers. Grey and black never clash, and the white shoes keep it from going heavy.", block: '{"card":{"type":"outfit","pieces":["P2","P5","P8"],"occasion":"everyday"},"remember":null,"need":null,"refused":false,"verdict":null}' },
+  { q: 'Why did I only get a 6.5?', a: "It's the slides. Everything above them works, but slides read like you're headed to the pool. Swap them for the white sneakers and that check goes to 7.5.", block: '{"card":{"type":"link","to":"check:FC1"},"remember":null,"need":null,"refused":false,"verdict":null}' },
+  { q: 'Can I wear my boots with the wide jeans?', a: "I'd skip that pair: the boots disappear under a wide leg. They look right with your straight jeans, where the hem sits on the boot.", block: '{"card":null,"remember":null,"need":null,"refused":false,"verdict":"no"}' },
+  { q: 'Is my outfit today good?', a: "Yes, it's solid: clean, and nothing's off. If you want more, tuck the front of the tee so the outfit gets a waist.", block: '{"card":null,"remember":null,"need":null,"refused":false,"verdict":null}' },
+  { q: 'I hate skinny jeans', a: "Fair, they read dated now anyway. I'll stick to straight and wide legs for you.", block: '{"card":null,"remember":{"key":"fit_avoid","value":"skinny jeans"},"need":null,"refused":false,"verdict":null}' },
+  { q: 'What should I buy next?', a: "A pair of dark brown loafers. They'd dress up your chinos and both jeans, and they're the one shoe you're missing for a dinner.", block: '{"card":{"type":"buy","kind":"loafers","shade":"dark brown"},"remember":null,"need":null,"refused":false,"verdict":null}' },
+  { q: 'Do I look fat in this hoodie?', a: "I rate outfits, never people. If you want the hoodie to sit easier, go up a size so it hangs instead of clinging.", block: '{"card":null,"remember":null,"need":null,"refused":false,"verdict":null}' },
+  { q: 'is this fit fire or nah', a: "Send me a photo and I'll score it. I only score what I can see.", block: '{"card":{"type":"check","occasion":"everyday"},"remember":null,"need":null,"refused":false,"verdict":null}' },
+  { q: 'Can you help with my essay?', a: "I'm only good with clothes. Ask me about an outfit, a fit or what to buy next.", block: '{"card":null,"remember":null,"need":null,"refused":true,"verdict":null}' },
 ];
 
 function examplesBlock(): string {
