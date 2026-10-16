@@ -380,7 +380,7 @@ Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check 
 | Y8 · the chat card unchanged | Pass | §9.6's tests pass; preview 151 unchanged |
 | Q5–Q8 | Pass | `npm run check` green; 402 pt light and dark; no new outward copy |
 
-### 9.10 The iOS Simulator pass (Oct 16, #298)
+### 9.10 The iOS Simulator pass (Oct 16, #299)
 
 *The pass #291 and #292 skipped for lack of memory (the Mac had ~5 GB reclaimable this time, `memory_pressure` 36% free; one thing at a time: Simulator first, `npm run check` after it was shut down). iPhone 17 Pro, iOS 26.5, the dev build through Metro, `-demoScreen <n>` in light and dark; screenshots `screenshots/sim-oct15c/` (git-ignored: `s<n>-<theme>.png`, `-ax` = the largest text size, Accessibility XXXL).*
 
