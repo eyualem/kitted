@@ -97,7 +97,7 @@
 - [ ] Consent's text is cut hard under the buttons (no fade), buttons 5 pt apart. `ConsentScreen.tsx:139, 153` · L · S
 
 ### You and Settings
-- [ ] **Style profile drops edits on a Back swipe** with no prompt, while Settings saves instantly. Autosave it. `you/profile.tsx:125` · M · S
+- [x] (#305) **Style profile drops edits on a Back swipe** with no prompt, while Settings saves instantly. Autosave it. `you/profile.tsx:125` · M · S
 - [ ] **Privacy is three taps deep;** "See what I send", the best trust feature, sits under You → gear → Privacy & data. The approved mockup puts Privacy first. `you/settings.tsx:44-48` · M · M
 - [ ] **Notification switches look live but do nothing** (nothing is scheduled until P6), under "That's all I send." Hide or say "arrives in the next update". `you/notifications.tsx:34-41` · M · S
 - [ ] **You's "Today" card can't be acted on** ("1 free check today", no button). Add "Check my fit". `you/index.tsx:112-156` · M · S
@@ -373,3 +373,10 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 - **Q2 (T)** leaving with nothing changed writes nothing (no write, no change notice).
 - **Q3 (T)** an edit and then Save, then leaving, writes once.
 - **Q4 (S)** web preview: change a look, go Back, open the Style profile again: the change is there.
+
+### §12 results (Oct 16, #305): checked against Q1–Q4, none changed
+| Check | Result | How |
+|---|---|---|
+| Q1–Q3 | Pass (T) | `profileLeave.test.ts` (`saveDraft`), failed first, then green |
+| Q4 | Pass (S) | web preview demo 80: picked $100+, went Back without Save, reopened: still $100+ |
+| Seen, not changed | | on web the You tab's style card nests its Edit button inside the tappable card (a web-only "button inside button" warning; iOS is fine). Logged here for a later pass |
