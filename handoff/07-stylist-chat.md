@@ -467,6 +467,6 @@ The chat's polish step (§11 C7), on the demo screens. Nothing here spends money
 | P2 | Pass (T) | the outfit answer is read once, with "An outfit from your closet: …"; the saved fact ends "Saved to what I know." |
 | P3 | Pass (T) | a source failing with `paused` writes D4's line, no Retry, nothing counted |
 | P4 | Pass (T, S) | `cardControls`: Past chats show no Wear this, Check it, Undo or tappable answer, and his pick stays. Web preview demo 175 (yesterday's buy card, answered tap, saved fact) |
-| P5 | **Not checked** | the largest text size needs the Simulator, which another session was using; the layout rules (2-across tiles, stacked buttons) are the ones the morning card already uses at AX sizes |
+| P5 | Pass after one fix (S) | Simulator at the largest size (AX5), demos 167, 169, 171, 173: tiles 2 across and stacked buttons on the outfit card, tap answers one per row, the buy card stacked. **Found and fixed:** the saved line's Undo ran off the right edge; the row now wraps and Undo goes under the label (`screenshots/chat-cards-oct15/*-ax5*.png`) |
 | P6 | Pass (S) | dark: 171 on the Simulator, 169 and 173 on the web preview |
 | G6 | Pass | `npm run check`: 930 app tests in 76 suites |

@@ -179,8 +179,9 @@ function SavedLine({ factId, itemId, readOnly }: { factId: string; itemId: strin
     );
   }
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }} accessible={readOnly} accessibilityLabel={readOnly ? t('ask.saved') : undefined}>
-      <KText role="miniLabel" color="ink2">
+    // Wraps, so at the largest text sizes Undo goes under the label instead of off the edge (07 §14 P5).
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8, rowGap: 2 }} accessible={readOnly} accessibilityLabel={readOnly ? t('ask.saved') : undefined}>
+      <KText role="miniLabel" color="ink2" style={{ flexShrink: 1 }}>
         {t('ask.saved')}
       </KText>
       {!savedUndoShows(readOnly) ? null : (
