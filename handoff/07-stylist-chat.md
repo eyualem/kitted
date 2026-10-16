@@ -470,3 +470,146 @@ The chat's polish step (§11 C7), on the demo screens. Nothing here spends money
 | P5 | Pass after one fix (S) | Simulator at the largest size (AX5), demos 167, 169, 171, 173: tiles 2 across and stacked buttons on the outfit card, tap answers one per row, the buy card stacked. **Found and fixed:** the saved line's Undo ran off the right edge; the row now wraps and Undo goes under the label (`screenshots/chat-cards-oct15/*-ax5*.png`) |
 | P6 | Pass (S) | dark: 171 on the Simulator, 169 and 173 on the web preview |
 | G6 | Pass | `npm run check`: 930 app tests in 76 suites |
+
+---
+
+## 15. Round 2: how answers look, the stylist's personality, the rules in answers, voice input (Oct 16, #302)
+
+Founder, Oct 16: "the cards look right … the thing that I'm not very proud of right now is the way the responses from the stylist look. And … we haven't yet started working on the personality of the stylist and also how to pass data from the rules and the user's preferences … to respond to the user's questions. And also how the voice input doesn't really work right now. … Plan it out and plan out tests as well in advance." Nothing in this section is built yet. Mockup for the two taste calls: `mockups/chat-answers.html`.
+
+### 15.1 What's wrong today (seen Oct 16 on the web preview, demo screens 92 and 167, and in the code)
+1. **How answers look.** An answer is plain body text with no bubble (it matches the mockup's `.say`). The "Your stylist" header shows only on the first message of a run, so after a card or the morning idea the answers float with no owner. The one move sits mid-paragraph with the same weight as the reason. Answers run straight into his next question (12 pt). Demo answers leak internal words ("the last piece on your Starter 12").
+2. **Personality.** The stylist's whole character is one line in the guide ("Plain, warm, direct, a little dry") and one in the prompt ("You are 'your stylist'…"). No examples, no banned phrases, nothing about how it gives bad news, praise, a follow-up or a joke. The demo answers were written one at a time, so they don't share a voice either.
+3. **The rules and his preferences in answers.** Built: his looks, fit preference, budget, facts, closet, checks go in the pack; the check's parts and fixes go in for "why"; outfits from `pickOutfit` for "what goes with" and "what to wear"; buy gains from `rotation`. Missing:
+   - **"Can I wear X with Y?" and shape questions get no judgment from the rules,** only the pieces' facts, so the model decides on its own whether boots work with wide jeans. It can disagree with the score the same outfit would get.
+   - **Outfit cards carry no reason from the rules,** so the "why" in the answer is the model's guess, not the engine's.
+   - **His preferences live only in the prompt's words.** "Hates skinny jeans" or "no yellow" is a fact line the model may ignore; `pickOutfit` and the buy list don't filter by it.
+   - **The guide and the rulebook can drift:** 20 guide lines say "(scored)" with no rule ID, so a rule change in `rubric/v5-styles.md` doesn't flag the guide.
+   - **Nothing has been answered live yet** (`CHAT_LIVE` is off until the founder's $0.50 OK), so none of this has been measured on the real model.
+4. **Voice input** (from reading `KittedDictation.swift` and `useDictation.ts`; the founder hasn't said yet what he sees, and the phone logs hold no `[mic]` lines because they go only to Metro). Suspects, most likely first:
+   1. **Stopping loses the words.** `stop()` ends the audio and clears the results task right after `finalizeAndFinishThroughEndOfInput()`, while the JS side reads its text as soon as the call returns. The last result can arrive after that, so the field gets the start of the sentence, or nothing.
+   2. **The first tap downloads Apple's speech model inside `start()`** with no feedback: the mic sits in "starting" for many seconds, or fails offline with the generic "mic.error" toast.
+   3. **The audio session:** `.measurement` mode turns off the mic's voice processing (quiet speech in a room reads poorly), and it is set after the analyzer starts.
+   4. **The mic can be hidden:** it shows only when `dictationSupported()` says yes, which needs an audio format that may not exist until the model is installed.
+   5. **What he sees while talking:** one line, cut to the last 33 characters; no stop on silence (only a 60 s cap); three taps (mic, stop, send). Piece words like "chinos", "overshirt", "Chelsea" get no help from his closet's names.
+
+### 15.2 The plan: five parts, in this order
+| Part | What | Needs the founder | Size |
+|---|---|---|---|
+| **V · Voice** | V0 diagnose (log every stage, a Mac test bench), V1 fix the suspects, V2 the listening UX | 3 min on the phone; OK the Mac speech-model download; a reinstall (native) | 1–1.5 days |
+| **L · Look** | L0 his pick from the mockup, L1 build it | The pick (A, B or C) | 1 day |
+| **K · Personality** | K0 the voice spec, K1 the prompt with examples, K2 code checks, K3 rewrite the demo answers | The pick (voice 1 or 2) | 1 day |
+| **J · The rules judge** | J1 rule outcomes as evidence, J2 outfit reasons, J3 preferences in code, J4 guide ↔ rules IDs, J5 contradiction check | Nothing | 1.5–2 days |
+| **E · Live and the test** | E0 the $0.50 of tries, E1 the full test (C5, extended), E2 his blind pick | The two spends already on the list | 1 day |
+
+V0, J and every test below are written first and can start now. L1 and K1–K3 wait for the two picks. Each step's tests are written to fail before its code exists (same practice as §13). Rule 7: tests use the founder's real profile once he sends it (on the list); until then the stated test profile, marked "profile unknown".
+
+### 15.3 V · Voice
+**What he'll see (default UX, V2):** tap the mic; the words appear live inside the text field itself, wrapping up to 4 lines; it stops by itself after about 1.5 s of quiet (or on a tap); the words stay in the field, editable, with send lit. It never sends by itself (the Oct 8 promise, and it lets him fix a misheard word). First use on a phone without the speech model: "Getting voice ready…" under the field, then it listens; offline: "Voice needs a connection the first time." The audio never leaves the phone, as today.
+
+**Build:**
+- **V0 · Diagnose.** `[mic]` lines at every stage (supported, permission, model install start/end with ms, analyzer started, audio route, first buffer, first words, each final, stop asked, finalize done, words count; never the words themselves), in Metro and in `Documents/logs/mic.log`, which `tools/phone/pull.sh` already copies. A Mac test bench in `tools/dictation/`: the same Swift pipeline fed from audio files made with macOS `say` (30 questions with clothing words), reporting word accuracy, time to first words, and whether a quick stop loses the end. It needs Apple's on-device speech model on the Mac (Apple's own download; the founder's OK).
+- **V1 · Fix.** Stop waits for the last result (finalize, then wait for the results to end, capped at 1.5 s) before handing the text over. The speech model is installed ahead of time (when the composer opens, on any connection) with the "Getting voice ready…" line. The audio session is set before the analyzer starts, in `.default` mode. The mic shows whenever the language is supported, installing on first tap if needed. His closet's piece names and a fixed clothing word list go to the analyzer as context words (SpeechAnalyzer's contextual strings; to confirm in V0 that the iOS 26 API takes them).
+- **V2 · UX** as above: live words in the field, stop on silence, "I didn't catch that." after 8 s with no words.
+
+**Tests, set before building:**
+- **V1 (T)** `useDictation` against a fake native module: start → listening; a final result arriving 300 ms after stop still lands in the field; cancel drops it; a late event after stop never refills the field; an error → the toast and idle; permission denied → the Settings alert and no start; the 60 s cap stops it.
+- **V2 (T)** Stop on silence: 1.5 s of quiet after words stops it; with no words, 8 s → "I didn't catch that." and idle; a word in the middle resets the timer.
+- **V3 (T)** The field: live words shown in full (no 33-character cut), the field editable after stop, send lit, nothing sent without a tap.
+- **V4 (T)** Context words: the closet names sent are owned, not removed, one line each, at most 100; nothing else from the pack (no facts, no checks).
+- **V5 (T)** Privacy: the dictation code uses only DictationTranscriber (a test fails if `SFSpeechRecognizer` appears) and writes no audio file.
+- **V6 (Mac bench)** 30 spoken questions: ≥90% of the clothing words right with the context words (and the number without them, to show they help); the ending kept on 30 of 30 when stopped 0.2 s after the last word; first words within 1 s.
+- **V7 (phone, the founder, 3 min)** three questions: one in a quiet room, one right after a fit check's spoken countdown, one with music playing. Words appear live, nothing is lost on stop, the full text is in the field; `mic.log` shows every stage.
+- **V8 (phone)** first use with the model missing, then offline: the right line each time, never a frozen mic.
+
+### 15.4 L · How an answer looks
+**L0, the founder's pick** (`mockups/chat-answers.html`, light and dark):
+- **A · Clean text:** today's look, plus "Your stylist" over every answer, the first sentence semibold, his pieces underlined and tappable, more room above.
+- **B · Soft bubble:** a white bubble on the left, like texting a person.
+- **C · Stylist note (default):** the K mark beside every answer, the move on its own larger line, the reason under it in grey, his pieces as small chips in their own colors.
+
+**L1, the build (for any pick):** a new `StylistAnswer` in `design-system/components/Chat.tsx` for answers only; other stylist lines (greetings, the limit line) get the same mark and spacing. All formatting is done by code, never by model markup:
+- the lead is the first sentence, split by code;
+- piece chips are his owned pieces' exact names found in the text, longest first, at most 3, each opening the piece page;
+- any `**`, `#`, bullet or backtick from the model is stripped.
+Each sentence appears whole once it passes the gate, rising in over 180 ms (no motion with Reduce Motion); the dots stay until the closing block. 20 pt above an answer, 8 pt to its card, the card lined up with the text. Long-press an answer: Copy.
+
+**Tests:**
+- **L1 (T)** The lead split: "Yes, with the dark jeans. The leg…" → the lead is the first sentence; a one-sentence answer is all lead; "vs.", "e.g.", "7.5", "5′10″", "$15" never split a sentence.
+- **L2 (T)** Piece chips: exact names only, longest first ("dark straight jeans" before "jeans"); only owned, not removed; never inside another word; at most 3; a piece removed later shows as plain text in Past chats.
+- **L3 (T)** Markup from the model never renders: `**`, `#`, `- ` and backticks are stripped before the gate.
+- **L4 (T)** VoiceOver reads "Your stylist: …" once, the whole answer; each chip is a button "Open {piece}".
+- **L5 (T)** A5 still holds with the rise-in: no sentence is on screen before it passes the gate.
+- **L6 (S)** Demo screens 90–95 and 167–174 on the iOS Simulator in light, dark and the largest text size: chips wrap, nothing clips, the card lines up; before/after screenshots in `screenshots/chat-look/` (git-ignored).
+
+### 15.5 K · The stylist's personality
+**K0, the voice spec (the founder picks 1 or 2 in the mockup; default 1, "the friend who's good at clothes").** Written into `rubric/stylist-guide.md` §0 as "Who your stylist is":
+- **The character:** a friend who's good at clothes. Warm, direct, a little dry; never a salesman, never a hype man, never a teacher.
+- **How it talks:** contractions and plain words; second person; the move first, then the reason; his pieces by their Closet names; at most three sentences unless he asks for more; no lists.
+- **Never:** "Great question!", "Absolutely!", "Let me know if…", "elevate", "drip", "vibe", stacked hedges ("you might maybe consider").
+- **How it handles each moment:**
+  - **praise:** specific, never generic ("the dark jeans land right on the boots", not "looks great");
+  - **bad news:** honest, with the reason and the fix in the same breath;
+  - **unsure:** says what it can't see ("I can't tell the hem from the photo");
+  - **a follow-up question:** at most one, as a tap card;
+  - **his slang:** it understands it and answers in plain words;
+  - **a re-check win:** one short line of credit, then the next move;
+  - **"is this good?":** a straight yes or no first;
+  - **a repeated question:** the same advice, said shorter;
+  - **a fact he told it:** used without announcing it;
+  - **rudeness:** stays even and helpful;
+  - **off-topic:** one friendly line.
+
+**Build:**
+- **K1 · The prompt.** The spec plus 8 short example exchanges (one per main kind, on a fixed demo closet with handles) go into the cached system prefix. That's about 700 more tokens, cached, so cents barely move (measured in E0). The prefix gets a version (`PROMPT_VERSION`).
+- **K2 · Code checks.** The gate strips a leading "Great question!" / "Absolutely!" / "Sure!" and a trailing "Let me know if…" sentence. It drops a sentence with a banned word.
+- **K3 · The demo answers** are rewritten in the picked voice (they double as the examples' source), with no internal words ("Starter 12" → "the basics").
+
+**Tests:**
+- **K1 (T)** Openers and closers stripped on 12 cases; the rest of the answer kept as is.
+- **K2 (T)** The banned-word list drops its sentences, matching whole words only, so a word that merely contains one stays.
+- **K3 (T)** Every demo answer and every example passes the gate and the voice checks: lead ≤ 20 words, the answer ≤ 70 words and ≤ 3 sentences, no banned phrase, no internal word (a list: "Starter 12", "parts engine", "rubric", rule IDs, "handle", "P7").
+- **K4 (T)** The prefix is the same bytes for two different users on the same kind (so it stays cacheable), and it changes only with `PROMPT_VERSION`.
+- **K5 (live, in E1)** the judges score "sounds like the spec" on every answer; the founder's blind pick (E2) decides if the voice is off.
+
+### 15.6 J · The rules judge the chat's outfits too ("the code knows, the AI talks")
+**What he'll see:** the stylist never disagrees with what a fit check would say about the same pieces, and an outfit card's reason is the engine's own reason. "Can I wear the work boots with the wide jeans?" gets "Skip that pair…" because the rules say so, not because the model guessed.
+
+**Build:**
+- **J1 · Rule outcomes as evidence.** For "can I wear", shape, "what to wear" and "what goes with", code builds each outfit from his closet pieces' stored facts (kind, color, cut, leg shape, shoe type), runs the parts engine's rules on it, and puts the outcome in words into the evidence: "Works: …" / "Problem: … (the rule's plain reason)" / "Can't tell: … (a fact the closet doesn't have, like the hem)". No number for an outfit no photo has scored (the locked rule); D3 numbers only for a real check.
+- **J2 · Reasons on outfits.** Each outfit in the evidence carries 1–2 reason lines in the card's own words, and the outfit card shows the first one.
+- **J3 · Preferences in code.** His facts become filters and tie-breaks in `pickOutfit` and the buy list: `fit_avoid` ("skinny"), `color_avoid`, `fit_like`, `look_now`, his picked looks in order, the check's Going for, and the budget (already). The prompt still gets them as words.
+- **J4 · Guide ↔ rules.** Each "(scored…)" line in the guide names its rule ID from `rubric/v5-styles.md`; a test fails if an ID is missing or no longer exists, so a rule change flags the guide line.
+- **J5 · Contradiction check.** "Can I wear" answers return `verdict` (yes / no / depends) in the closing block; code compares it with J1's outcome, logs a mismatch by rule name, and the test counts them (target 0). On a mismatch the card is dropped and the answer is kept (measured before anything stricter).
+
+**Tests:**
+- **J1 (T)** On 40 outfits built from the demo closet and the founder's closet copy, the rule outcomes in the evidence equal the rule hits the parts engine gives the same facts, 40 of 40; facts the closet lacks come out as "Can't tell", never a guess.
+- **J2 (T)** No number appears in the evidence for an outfit without a photo; the D3 number appears only for a stored check.
+- **J3 (T)** "Hates skinny jeans" → no outfit or buy uses skinny jeans; "no yellow" → no yellow piece; with two equal outfits, the one toward his first picked look wins; a buy over his budget is marked or left out, as today.
+- **J4 (T)** Every "(scored…)" guide line has a rule ID that exists in the rulebook.
+- **J5 (T)** A recorded "yes" against a "Problem" outcome is logged and drops the card; a matching verdict keeps it.
+- **J6 (T)** G4 still holds: no fit-check score moves because of anything here.
+
+### 15.7 E · Live and the test
+- **E0 (needs his $0.50 OK, already on the list):** `CHAT_LIVE` on in the dev build, about 20 questions through Metro on his closet copy: cost and speed per kind, and the first look at the voice. Off again after.
+- **E1 (C5, extended; ~$1–2, already on the list):** the 80 questions and 40 red-team ones from §10, plus 20 voice probes ("is my outfit good?", "you're useless", slang, a joke, the same question twice, a fact told earlier). Five judges, blind to the model, rate each answer:
+  - correct by the guide;
+  - agrees with the rules (against J1's evidence);
+  - uses his clothes;
+  - one clear move;
+  - sounds like the voice spec;
+  - never about his body.
+
+  Targets:
+  - ≥80% good overall;
+  - the grounded kinds name his pieces ≥90% of the time;
+  - **0 contradictions with the rules;**
+  - ≥80% "sounds like the spec";
+  - the advice is the same on ≥90% of repeats;
+  - first words ≤2 s median.
+
+  Results go in §15.8.
+- **E2 (his blind pick, 5–10 min):** 20 pairs, Flash-Lite vs 3.8 Flash (D1). If he can't choose the voice from the mockup, the same pairs run voice 1 vs voice 2.
+
+### 15.8 Results
+*(filled in as each check runs)*

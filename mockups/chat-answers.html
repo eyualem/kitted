@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stylist Answers</title>
+<!-- The stylist's answers: three looks (A, B, C) and two voices (1, 2), on the same questions. Oct 16, 2026,
+     DECISIONS-LOG #302, handoff/07-stylist-chat.md §15. Inside each phone 1 CSS px = 1 pt. Tokens copied from
+     mockups/kitted-mockups.html. -->
+<style>
+:root{
+  --page:#E5E7EB; --page-ink:#131726; --page-ink-2:#565C6B; --page-line:#C8CCD4;
+  --bg:#F3F4F6; --surface:#FFFFFF; --surface-2:#ECEEF1; --ink:#121628; --ink-2:#585E70; --ink-3:#848A99;
+  --line:#E0E3E8; --accent:#9C5326; --accent-soft:rgba(156,83,38,.11); --primary:#121628; --on-primary:#FFFFFF;
+  --me:#1B2340; --on-me:#F2F3F7; --shadow:0 1px 2px rgba(18,22,40,.05),0 6px 18px rgba(18,22,40,.06);
+  --ios:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --page:#0A0C11; --page-ink:#E8EAF0; --page-ink-2:#9198A7; --page-line:#252A37;
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222,151,98,.15); --primary:#ECEEF3; --on-primary:#0C0E14;
+  --me:#2A3150; --on-me:#EEF0F6; --shadow:0 0 0 1px rgba(255,255,255,.03); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --page:#0A0C11; --page-ink:#E8EAF0; --page-ink-2:#9198A7; --page-line:#252A37;
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222,151,98,.15); --primary:#ECEEF3; --on-primary:#0C0E14;
+  --me:#2A3150; --on-me:#EEF0F6; --shadow:0 0 0 1px rgba(255,255,255,.03); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--page);color:var(--page-ink)}
+body{font-family:var(--ios);-webkit-font-smoothing:antialiased;padding:32px 16px 80px}
+header.top{max-width:1300px;margin:0 auto 28px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:end}
+h1{font-family:var(--display);font-size:34px;line-height:1;margin:0;letter-spacing:-.02em}
+.lede{color:var(--page-ink-2);max-width:640px;font-size:15px;line-height:1.45;margin:8px 0 0}
+.toggle{font:600 13px var(--ios);border:1px solid var(--page-line);background:transparent;color:var(--page-ink);padding:8px 14px;border-radius:99px;cursor:pointer}
+h2{font-family:var(--display);font-size:22px;margin:40px auto 6px;max-width:1300px}
+.sub{color:var(--page-ink-2);max-width:1300px;margin:0 auto 18px;font-size:14px;line-height:1.45}
+.row{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;max-width:1300px;margin:0 auto}
+.col{width:min(402px,100%)}
+.col h3{font:700 15px var(--ios);margin:0 0 4px}
+.col p.note{font-size:13px;color:var(--page-ink-2);margin:0 0 12px;line-height:1.4;min-height:54px}
+.rec{display:inline-block;font:700 11px var(--ios);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-left:6px}
+.phone{background:var(--bg);border-radius:36px;padding:18px 16px 24px;box-shadow:0 0 0 8px #1B1D22, var(--shadow);display:flex;flex-direction:column;gap:12px;font-size:17px;line-height:1.42;color:var(--ink)}
+.stamp{text-align:center;font-size:12px;color:var(--ink-3);margin:2px 0}
+.me{align-self:flex-end;max-width:78%;background:var(--me);color:var(--on-me);padding:10px 16px;border-radius:24px 24px 6px 24px;font-size:17px;line-height:1.35}
+.av{width:18px;height:18px;border-radius:5px;background:#1B2340;display:inline-grid;place-items:center;font:760 10.5px var(--display);color:#EEF0F5;flex:none}
+.who{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink-3)}
+.piece{font-weight:600;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--ink-3);text-underline-offset:3px}
+/* the one card used in every look */
+.card{background:var(--surface);border-radius:20px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.tag{display:flex;justify-content:space-between;font:600 10.5px ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--ink-3)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tile{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--ink-2);line-height:1.2}
+.tile i{display:block;aspect-ratio:1;border-radius:10px;background:var(--surface-2);position:relative}
+.tile i::after{content:"";position:absolute;inset:22%;border-radius:6px;background:var(--c)}
+.btns{display:flex;gap:8px}
+.btn{font:600 14px var(--ios);padding:8px 14px;border-radius:99px;background:var(--surface-2);color:var(--ink)}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.link{font-size:15px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px}
+.link::after{content:"›";color:var(--ink-3);font-size:18px}
+/* A · clean text */
+.A .say{max-width:92%;display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.A .say b{font-weight:600}
+/* B · soft bubble */
+.B .say{align-self:flex-start;max-width:86%;background:var(--surface);box-shadow:var(--shadow);padding:10px 16px;border-radius:24px 24px 24px 6px;line-height:1.38}
+.B .say + .att{margin-left:0;max-width:92%}
+/* C · stylist note */
+.C .say{display:grid;grid-template-columns:28px 1fr;gap:10px;margin-top:8px}
+.C .say .av{width:28px;height:28px;border-radius:8px;font-size:14px}
+.C .say .body{display:flex;flex-direction:column;gap:4px}
+.C .lead{font-size:18px;font-weight:600;line-height:1.32}
+.C .rest{font-size:16px;color:var(--ink-2);line-height:1.42}
+.C .att{margin-left:38px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:0 7px 0 5px;border-radius:7px;background:var(--surface-2);font-weight:600;color:var(--ink);white-space:nowrap}
+.chip::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c);box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+/* voices */
+.voice .phone{gap:10px}
+.voice .say{max-width:92%;display:flex;flex-direction:column;gap:4px}
+.cmp{max-width:1300px;margin:24px auto 0;border-collapse:collapse;width:100%;font-size:14px}
+.cmp th,.cmp td{border-top:1px solid var(--page-line);padding:10px 8px;text-align:left;vertical-align:top;line-height:1.4}
+.cmp th{color:var(--page-ink-2);font-weight:600;width:22%}
+@media (max-width:700px){ h1{font-size:28px} .col p.note{min-height:0} }
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>The stylist's answers</h1>
+    <p class="lede">Same three questions, three looks. Then the same answers in two voices. Pick one look (A, B or C) and one voice (1 or 2). The cards stay as they are. Data is real-shaped: your closet and a 7.0 check with "Tuck in your tee → 7.5".</p>
+  </div>
+  <button class="toggle" id="t">Switch light / dark</button>
+</header>
+
+<h2>1 · How an answer looks</h2>
+<p class="sub">Today's look is A without the bold lead and the piece names. What's off today: after the first answer, lines float with no owner; the one move is buried in the middle; answers run straight into the next question.</p>
+<div class="row">
+
+  <div class="col A">
+    <h3>A · Clean text</h3>
+    <p class="note">Smallest change. "Your stylist" over every answer, the first sentence in semibold (the move), your pieces underlined and tappable, more room above each answer.</p>
+    <div class="phone">
+      <div class="me">What goes with my olive overshirt?</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>
+        <div><b>Wear it open over your <span class="piece">white tee</span> with the <span class="piece">dark straight jeans</span>.</b> Finish with the <span class="piece">white sneakers</span>. Olive and denim always get along, and the white keeps it light.</div></div>
+      <div class="card"><div class="tag"><span>OUTFIT IDEA</span><span>FROM YOUR CLOSET</span></div>
+        <div class="tiles"><div class="tile"><i style="--c:#66683C"></i>Olive overshirt</div><div class="tile"><i style="--c:#F2F1EC"></i>White tee</div><div class="tile"><i style="--c:#1E2A47"></i>Dark jeans</div><div class="tile"><i style="--c:#E6E6E3"></i>White sneakers</div></div>
+        <div class="btns"><span class="btn p">Wear this</span><span class="btn">Check it</span></div></div>
+      <div class="me">Why did I only get a 7?</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>
+        <div><b>Tuck the front of the tee in and it's a 7.5.</b> Nothing's wrong with the outfit; it just has no waist. The tee hangs over the wide jeans, so it reads as one long block.</div></div>
+      <div class="link">Today's check</div>
+      <div class="me">Can I wear the work boots to a date?</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>
+        <div><b>Yes, with the <span class="piece">dark straight jeans</span>.</b> The leg sits on the boots cleanly. Skip them with the <span class="piece">black wide jeans</span>: the boots disappear under them.</div></div>
+    </div>
+  </div>
+
+  <div class="col B">
+    <h3>B · Soft bubble</h3>
+    <p class="note">Reads like texting a person. A white bubble on the left, yours stays dark on the right. Cards sit under the bubble. Less room for long answers.</p>
+    <div class="phone">
+      <div class="me">What goes with my olive overshirt?</div>
+      <div class="who"><span class="av">K</span>Your stylist</div>
+      <div class="say">Wear it open over your <span class="piece">white tee</span> with the <span class="piece">dark straight jeans</span> and the <span class="piece">white sneakers</span>. Olive and denim always get along, and the white keeps it light.</div>
+      <div class="card att"><div class="tag"><span>OUTFIT IDEA</span><span>FROM YOUR CLOSET</span></div>
+        <div class="tiles"><div class="tile"><i style="--c:#66683C"></i>Olive overshirt</div><div class="tile"><i style="--c:#F2F1EC"></i>White tee</div><div class="tile"><i style="--c:#1E2A47"></i>Dark jeans</div><div class="tile"><i style="--c:#E6E6E3"></i>White sneakers</div></div>
+        <div class="btns"><span class="btn p">Wear this</span><span class="btn">Check it</span></div></div>
+      <div class="me">Why did I only get a 7?</div>
+      <div class="say">Tuck the front of the tee in and it's a 7.5. Nothing's wrong with the outfit; it just has no waist. The tee hangs over the wide jeans, so it reads as one long block.</div>
+      <div class="link">Today's check</div>
+      <div class="me">Can I wear the work boots to a date?</div>
+      <div class="say">Yes, with the <span class="piece">dark straight jeans</span>: the leg sits on the boots cleanly. Skip them with the <span class="piece">black wide jeans</span>, where the boots disappear.</div>
+    </div>
+  </div>
+
+  <div class="col C">
+    <h3>C · Stylist note <span class="rec">Recommended</span></h3>
+    <p class="note">The mark beside every answer, so it's always clear who's talking. The move on its own larger line, the why under it in grey. Your pieces as small chips in their own colors.</p>
+    <div class="phone">
+      <div class="me">What goes with my olive overshirt?</div>
+      <div class="say"><span class="av">K</span><div class="body">
+        <div class="lead">Wear it open over your white tee and dark straight jeans.</div>
+        <div class="rest">Finish with the <span class="chip" style="--c:#E6E6E3">white sneakers</span>. Olive and denim always get along, and the white keeps it light.</div></div></div>
+      <div class="card att"><div class="tag"><span>OUTFIT IDEA</span><span>FROM YOUR CLOSET</span></div>
+        <div class="tiles"><div class="tile"><i style="--c:#66683C"></i>Olive overshirt</div><div class="tile"><i style="--c:#F2F1EC"></i>White tee</div><div class="tile"><i style="--c:#1E2A47"></i>Dark jeans</div><div class="tile"><i style="--c:#E6E6E3"></i>White sneakers</div></div>
+        <div class="btns"><span class="btn p">Wear this</span><span class="btn">Check it</span></div></div>
+      <div class="me">Why did I only get a 7?</div>
+      <div class="say"><span class="av">K</span><div class="body">
+        <div class="lead">Tuck the front of the tee in and it's a 7.5.</div>
+        <div class="rest">Nothing's wrong with the outfit; it just has no waist. The tee hangs over the wide jeans, so it reads as one long block.</div></div></div>
+      <div class="link att">Today's check</div>
+      <div class="me">Can I wear the work boots to a date?</div>
+      <div class="say"><span class="av">K</span><div class="body">
+        <div class="lead">Yes, with the dark straight jeans.</div>
+        <div class="rest">The leg sits on the boots cleanly. Skip them with the <span class="chip" style="--c:#16171B">black wide jeans</span>: the boots disappear under them.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<h2>2 · How the stylist talks</h2>
+<p class="sub">Both voices follow the same rules (one move first, his own pieces by name, no brands, no emoji, never about his body). The difference is the personality. A third voice, the hype friend ("Yo, that overshirt goes hard!"), was left out on purpose: it reads fake fast and clashes with "Look put together. Without trying too hard."</p>
+<div class="row voice">
+  <div class="col">
+    <h3>1 · The friend who's good at clothes <span class="rec">Recommended</span></h3>
+    <p class="note">Casual, warm, a little dry. Contractions, plain words, an honest "that doesn't work" with the reason. Sounds like a friend who knows clothes, not a store.</p>
+    <div class="phone">
+      <div class="me">Is it weird to wear my hoodie under the overshirt?</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>Not weird at all, it's a good fall layer. Keep the overshirt open so the hood sits on top, and wear the dark straight jeans so the bottom half isn't as bulky as the top.</div>
+      <div class="me">I hate skinny jeans btw</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>Fair. Skinny jeans read dated now anyway. I'll stick to straight and wide legs for you.</div>
+      <div class="me">Is my outfit today good?</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>It's solid: a 7.0, clean and nothing wrong. The one thing that'd lift it is tucking the front of the tee, so the outfit gets a waist.</div>
+    </div>
+  </div>
+  <div class="col">
+    <h3>2 · The calm pro</h3>
+    <p class="note">Precise and measured, like a good tailor. Fewer jokes, more "why". Feels expert, a bit more distant.</p>
+    <div class="phone">
+      <div class="me">Is it weird to wear my hoodie under the overshirt?</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>It works well. Wear the overshirt open with the hood out over the collar, and balance the extra volume up top with the dark straight jeans.</div>
+      <div class="me">I hate skinny jeans btw</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>Noted. I'll suggest straight and wide legs only. They sit better on most shoes, too.</div>
+      <div class="me">Is my outfit today good?</div>
+      <div class="say"><div class="who"><span class="av">K</span>Your stylist</div>Yes: 7.0, "Put together". The clearest improvement is a front tuck, which gives the outfit a waistline.</div>
+    </div>
+  </div>
+</div>
+
+<table class="cmp">
+  <tr><th>Both voices never</th><td>open with "Great question!" or "Absolutely!", close with "Let me know if…", say "elevate", "drip" or "vibe", stack hedges ("you might maybe consider"), list more than three things, or talk about his body.</td></tr>
+  <tr><th>Both voices always</th><td>lead with the one move; name his pieces exactly as they're called in Closet; give the reason in plain words; say so when something doesn't work; give numbers only when the app computed them.</td></tr>
+</table>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('t').addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+  });
+</script>
+</body>
+</html>
