@@ -655,3 +655,20 @@ Truth, most useful first:
 2. **(b) Decided:** the "Not sure" row and at most one To confirm card; never a fit question before the score (not chosen: the row only · neither).
 3. **(a) Decided:** "on purpose vs too big" stays judged by the outfit around the piece; size faults wait for the size-ladder shoot (not chosen: the ~$2 cue test now).
 4. **The new words (18.4) decided:** as written.
+
+### §18 results, Group 1 (Oct 16, #315): checked against BG1–BG6, none changed
+Built on PR eyualem/kitted#5's branch (the piece page's rows), so this PR goes in after #5. On the iOS Simulator (iPhone 17 Pro, a turn handed over by the chat session) on demo screens **194** (Closet, "How do your dark jeans fit?"), **195** (the dark jeans' page, Leg · Not sure) and **196** (the Leg picker): the demo jeans read slim, wide, wide and straight in four checks. Screenshots `screenshots/bagginess-oct16/` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| BG1 | Pass (T) | `fitDoubt.test.ts`: his mid-wash jeans' 9 reads give "Seen as slim and as wide."; his black tee's 4, 4, 2, 4, 4 gives "slim and relaxed"; one group never (all narrow, all loose, 4 vs 5, flare = straight); never under 3 checks, a re-check of one photo counts once, seed and undone sightings never; never once set (piece page, "Not quite right?", a confirmed leg), never on shoes or shorts |
+| BG2 | Pass (T, S) | one card, the piece in the most checks (then the newest photo, then the id); "do" for a pair, "does" for a top; Skip hides it and the next piece comes in; a newer photo that disagrees brings it back, an agreeing or older one doesn't; bad skip data reads as none; the skips stay on this phone (`closet.fitSkip`, local); only the Closet screen uses the card (a source scan). On the Simulator: the card, tap → the Leg picker, Straight → the card goes and the toast says "Changed to straight leg. Your scores stay the same.", Undo brings it back, Skip hides it (the web preview, the same code) |
+| BG3 | Pass (T) | a pick writes what §17's pick writes (`editPlan`), and every fit check's score, raw score, parts, reading, sighting and closet summary are deep-equal before, after and after Undo. **Two changes to §17, said openly:** (1) on a Not sure row the value it read most is a real answer, so picking it writes (elsewhere picking the current value still writes nothing, X12 passes), and its sheet rings no option; (2) a Fit pick now lists `volume` in `confirmedFields`, as a "Not quite right?" fit correction already did, so a Not sure Fit goes for good; core reads only its matcher fields there. X3's fit test was amended for (2), with the reason in the test |
+| BG4 | Pass (T) | no digit or "+" in any Fit or Leg option, the sheet's subtitle or a Not sure line; `EditSheet.tsx` draws no score, Numeral or outfit count |
+| BG5 | Pass (T) | the six new strings are the OK'd words; each passes the chat's sentence gate and the body-words rule; `copyChecks` green |
+| BG6 | Pass (T) | `bagginess_steady.py --db=<pull>` reports the reading against the Fit and Leg he set, with his age band and looks when set. On a copy of his Oct 15 pull with test picks (mid-wash jeans straight, black tee relaxed, born 2004, minimal + streetwear): legs 22% right on 9 photos, fit 80% on 5. The real pull has no picks yet ("none set yet") |
+| G1 | Pass | `npm run check` steps: tsc, core tsc, lint clean, core tests, 1105 app tests in 87 suites |
+| G2 | Pass | no file under `packages/kitted-core` changed; BG3's deep-equal |
+| G3 | Pass (S) | 194–196 in light, dark and the largest text size. **Fixed:** at the largest size a row's "Seen as…" line sat between "Leg" and "Not sure"; it now comes after the value. Skip lines up with the question, not the drawing |
+| G4 | | New words: "Not sure", "Seen as {a} and as {b}.", "Which is it?", "How do your {item} fit?", "How does your {item} fit?", and VoiceOver's "Opens the choices. Your scores stay the same." |
+| Found | | `stylistContext.test.ts` failed on main: #311 added the weekday to the chat pack's "Earlier this week" lines and the test still expected the bare date. Fixed the test (its own commit) |

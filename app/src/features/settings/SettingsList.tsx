@@ -85,11 +85,7 @@ export function LinkRow({ title, value, onPress, hint, chevron = true, detail }:
     >
       <View style={ax ? { gap: 2 } : { flex: 1, gap: 2 }}>
         <Title>{title}</Title>
-        {detail ? (
-          <KText variant="footnote" color="ink3">
-            {detail}
-          </KText>
-        ) : null}
+        {detail && !ax ? <Detail>{detail}</Detail> : null}
       </View>
       {value || chevron ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s, alignSelf: ax ? 'flex-start' : 'auto' }}>
@@ -101,7 +97,17 @@ export function LinkRow({ title, value, onPress, hint, chevron = true, detail }:
           {chevron && !ax ? <Icon name="next" size={13} weight="semibold" color="ink3" /> : null}
         </View>
       ) : null}
+      {/* stacked at the largest sizes: label, value, then the line */}
+      {detail && ax ? <Detail>{detail}</Detail> : null}
     </Pressable>
+  );
+}
+
+function Detail({ children }: { children: string }) {
+  return (
+    <KText variant="footnote" color="ink3">
+      {children}
+    </KText>
   );
 }
 

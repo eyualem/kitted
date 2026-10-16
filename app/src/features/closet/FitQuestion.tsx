@@ -43,7 +43,8 @@ export function FitQuestion({ item, doubt }: { item: ClosetItemRow; doubt: FitDo
         </View>
         {ax ? null : <Icon name="next" size={13} weight="semibold" color="ink3" />}
       </Pressable>
-      <View style={{ alignSelf: 'flex-start' }}>
+      {/* under the question, not the drawing (stacked at the largest sizes) */}
+      <View style={{ alignSelf: 'flex-start', marginLeft: ax ? 0 : THUMB + space.m }}>
         <TextLink compact title={t('tap.skip')} onPress={() => void skip()} />
       </View>
     </View>
