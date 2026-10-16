@@ -1819,3 +1819,10 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Google's sheet opening on the Simulator: a parallel Simulator session was driving the same device.
       - A full sign-in: it needs the founder's own Google password, which Claude never types.
     - **Numbering:** #295 was claimed by this commit's message (other sessions skipped it, #296–297).
+
+298. **#295's Simulator check passed (Oct 16, after the parallel Simulator session freed the device).** On the Simulator, You → Settings → Account → Back up and sync opens the sheet with only Continue with Google.
+    - **Tapping it:** iOS asks "Kitted Wants to Use accounts.google.com to Sign In". Continue opens Google's own page, "Sign in to continue to Kitted". So the client ID, the URL scheme and the public name are right.
+    - **Closing Google's page:** it returns to the sheet with no error line, the cancel path.
+    - **Not done:** a full sign-in, which needs the founder's own Google password. It's on his to-do list.
+    - **Seen, not changed:** the sheet's title and body ("Back up your fits", "Back up your closet, Lookbook and chats, and get them back on a new phone.") promise a backup that doesn't run yet. That's acceptable only because this path is dev-only (`SIGN_IN_LIVE`). It must not reach a release build before sync is wired.
+    - **Numbering:** #296–297 were taken by other sessions, so this is #298.
