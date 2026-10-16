@@ -27,6 +27,12 @@ const demoSource = createDemoSource({
 
 const realSource = liveAnswerSource();
 
+/** Queued, so iOS doesn't drop it while VoiceOver is still reading (07 §17, U14). */
+function announce(text: string): void {
+  if (AccessibilityInfo.announceForAccessibilityWithOptions) AccessibilityInfo.announceForAccessibilityWithOptions(text, { queue: true });
+  else AccessibilityInfo.announceForAccessibility?.(text);
+}
+
 async function pickSource(): Promise<AnswerSource> {
   if (getDemoArgs().demoScreen !== null && DEMO_ENABLED) return demoSource;
   if (realSource) return realSource;
@@ -50,7 +56,8 @@ export const askService = createAsk({
   log: (e) => {
     if (__DEV__) console.log(`[ask] ${e}`);
   },
-  onAnswered: (text) => AccessibilityInfo.announceForAccessibility?.(text),
+  onAnswered: (text) => announce(text),
+  onPosted: (text) => announce(text),
 });
 
 /** The composer's send: true when the question made it into the thread (its draft can go). */

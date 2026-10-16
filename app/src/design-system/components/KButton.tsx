@@ -128,6 +128,8 @@ export interface TextLinkProps {
   title: string;
   onPress?: () => void;
   accessibilityHint?: string;
+  /** When the spoken name differs from the title (a trailing "›"). */
+  accessibilityLabel?: string;
   /** Inside cards: no 44 pt layout height (hitSlop reaches 44 instead), so rows keep the mockup's spacing. */
   compact?: boolean;
   /** "Later" is ink2; everything else ink. `accent` stays for score movement only (#231). */
@@ -136,12 +138,12 @@ export interface TextLinkProps {
 
 /** Ink semibold text link ("Why 8.0?", "Not quite right?", "Review"): copper is kept for score
  *  movement only (founder, Oct 12, DECISIONS-LOG #231). 44 pt hit target; 24 pt between links. */
-export function TextLink({ title, onPress, accessibilityHint, compact, color = 'ink' }: TextLinkProps) {
+export function TextLink({ title, onPress, accessibilityHint, accessibilityLabel, compact, color = 'ink' }: TextLinkProps) {
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={title}
+      accessibilityLabel={accessibilityLabel ?? title}
       accessibilityHint={accessibilityHint}
       hitSlop={compact ? { top: 12, bottom: 12, left: 8, right: 8 } : undefined}
       style={({ pressed }) => ({ minHeight: compact ? undefined : size.hit, justifyContent: 'center', opacity: pressed ? opacity.pressed : 1 })}

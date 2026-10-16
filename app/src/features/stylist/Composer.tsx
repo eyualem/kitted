@@ -9,7 +9,7 @@
 // The draft lives in composerState (07 §6.1): closing the composer keeps his words; only a question that made it
 // into the thread clears them. While an answer streams he can type on, but send waits (one question at a time).
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Chip, ChipFlow, CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
@@ -50,7 +50,7 @@ const H = 52;
 const BTN = 40;
 
 export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, startVoice, onIdle, chips = [] }: ComposerProps) {
-  const { colors, scheme, a11y } = useTheme();
+  const { colors, scheme, a11y, isAccessibilitySize } = useTheme();
   const text = useComposerDraft();
   const setText = composerState.setDraft;
   const [focused, setFocused] = useState(false);
@@ -125,13 +125,23 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
   return (
     <View style={styles.wrap}>
       {showChips ? (
-        <View style={{ paddingBottom: space.s }}>
-          <ChipFlow>
+        isAccessibilitySize ? (
+          // At the accessibility sizes a wrapping flow stacked three tall chips over the field and the keyboard, off the
+          // top of a short screen: one row that scrolls sideways instead (07 §17, U13).
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ marginHorizontal: -space.gutter, paddingBottom: space.s }} contentContainerStyle={{ paddingHorizontal: space.gutter, gap: space.s }}>
             {chips.map((c) => (
               <Chip key={c} title={c} small disabled={sendDisabled} onPress={() => void onSend?.(c)} />
             ))}
-          </ChipFlow>
-        </View>
+          </ScrollView>
+        ) : (
+          <View style={{ paddingBottom: space.s }}>
+            <ChipFlow>
+              {chips.map((c) => (
+                <Chip key={c} title={c} small disabled={sendDisabled} onPress={() => void onSend?.(c)} />
+              ))}
+            </ChipFlow>
+          </View>
+        )
       ) : null}
       <View style={[styles.capsule, shell]}>
         {background}
