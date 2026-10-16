@@ -175,3 +175,20 @@ describe('E0 fix (#310): handles never show', () => {
     expect(g.dropped).toEqual(['handle']);
   });
 });
+
+describe('Score check fixes from the model test (#311)', () => {
+  const ctx = { allowedScores: new Set(['7.5', '9.0']) };
+  it('"score 7.5 on the photo" is a 7.5, not a 7', () => {
+    expect(checkSentence('Both swaps score 7.5 on the photo, so stick with the sneakers.', ctx)).toBeNull();
+    expect(checkSentence('The boots drop that score to 7.5 because they run heavy.', ctx)).toBeNull();
+    expect(checkSentence('It gets a 7.', ctx)).toBe('score');
+  });
+  it('a score in words counts as a score', () => {
+    expect(checkSentence('A ten needs that extra layer.', ctx)).toBe('score');
+    expect(checkSentence('That gets you to an eight.', ctx)).toBe('score');
+    expect(checkSentence('That takes you to a nine, the same as this morning.', ctx)).toBeNull();
+    expect(checkSentence('It adds ten outfits to your rotation.', ctx)).toBeNull();
+    expect(checkSentence('Give it a ten-minute steam.', ctx)).toBeNull();
+    expect(checkSentence('You have one or two options.', ctx)).toBeNull();
+  });
+});

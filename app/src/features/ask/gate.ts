@@ -155,14 +155,20 @@ const HEIGHT = /\b\d\s*(?:'|’|ft|foot|feet)\s*\d{0,2}\s*(?:"|”|in\b|inches)?
 const SCORE_PATTERNS: readonly RegExp[] = [
   /(?:^|[^\d.$])(10|\d)(?:\.(\d))?\s*(?:\/|out of)\s*10\b/gi,
   /(?:^|[^\d.$])(10|\d)\.(\d)(?![\d%])(?!\s*(?:cm|mm|in\b|inch|inches|"|”|oz|lbs?|kg|m\b|feet|ft|percent))/g,
-  /\b(?:an?|to|at|of|got|get|gets|scored?|scores?)\s+(10|[1-9])(?:\.(\d))?(?=\s*(?:[.,!?;:)]|$|instead|or|and|with|→))/gi,
+  // (?!\.\d): "score 7.5 on the photo" is a 7.5, never "score 7" followed by a full stop (a false 7.0, #311).
+  /\b(?:an?|to|at|of|got|get|gets|scored?|scores?)\s+(10|[1-9])(?:\.(\d))?(?!\.?\d)(?=\s*(?:[.,!?;:)]|$|instead|or|and|with|→))/gi,
 ];
+
+// A score in words ("a ten needs that layer", "gets you to an eight"): seen live from Flash-Lite (#311).
+const WORD_SCORES: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+const WORD_SCORE = /\b(?:an?|to an?|to|got an?|get an?|gets an?|scored an?|scores an?|score an?)\s+(one|two|three|four|five|six|seven|eight|nine|ten)\b(?![-\s]+(?:minutes?|seconds?|hours?|days?|weeks?|months?|years?|outfits?|pieces?|times?|inch(?:es)?|dollars?|bucks?|percent|pairs?|of|or|more|new|other|looks?|things?|ways?))(?=\s*(?:[.,!?;:)]|$|needs|takes|would|is|instead|with|on|for))/gi;
 
 function scoresSaid(sentence: string): string[] {
   const out: string[] = [];
   for (const re of SCORE_PATTERNS) {
     for (const m of allMatches(re, sentence)) out.push(scoreKey(Number(`${m[1]}.${m[2] ?? '0'}`)));
   }
+  for (const m of allMatches(WORD_SCORE, sentence)) out.push(scoreKey(WORD_SCORES[m[1]!.toLowerCase()]!));
   return out;
 }
 
