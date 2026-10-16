@@ -17,7 +17,7 @@ import type { QuotaService } from '@/services/quota';
 import type { Scheduler } from '@/services/scheduler';
 import type { AskCard } from './cards';
 import { createSentenceStream, type GateContext, type GateRule } from './gate';
-import { isBodyRating, isDistress } from './guards';
+import { isBodyRating, isDistress, isUnderage } from './guards';
 import { liveAnswer as defaultLive } from './live';
 import type { AnswerEvent, AnswerSource } from './source';
 
@@ -308,6 +308,14 @@ export function createAsk(deps: AskDeps) {
         await store.chat.put(q);
         await store.chat.put(row(ids('M'), now + 1, 'stylist', t('ask.refuseFace'), {}, { askRefused: true }));
         log('refused · on the phone');
+        return { kind: 'refused', questionId: q.id };
+      }
+      // Under 18 (#311): the onboarding's own line, nothing sent, not counted. The app never stores his age.
+      if (isUnderage(text)) {
+        const q = bubble();
+        await store.chat.put(q);
+        await store.chat.put(row(ids('M'), now + 1, 'stylist', t('onb.age.title'), {}, { askRefused: true }));
+        log('refused · under 18, on the phone');
         return { kind: 'refused', questionId: q.id };
       }
       if (busy || live.inFlight()) return { kind: 'busy' };

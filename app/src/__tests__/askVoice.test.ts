@@ -5,6 +5,7 @@ import { checkSentence, createSentenceStream, scoresIn, sentences, stripMarkup, 
 import { EXAMPLES, PROMPT_VERSION, systemPrompt, type AskKind } from '@/features/ask/prompt';
 import { DEMO_CARD_ANSWERS, seededAnswers } from '@/features/ask/source';
 import { voiceProblems } from '@/features/ask/voice';
+import { isUnderage } from '@/features/ask/guards';
 import type { ClosetItemRow } from '@/data/types';
 
 const NO_SCORES: GateContext = { allowedScores: new Set() };
@@ -190,5 +191,14 @@ describe('Score check fixes from the model test (#311)', () => {
     expect(checkSentence('It adds ten outfits to your rotation.', ctx)).toBeNull();
     expect(checkSentence('Give it a ten-minute steam.', ctx)).toBeNull();
     expect(checkSentence('You have one or two options.', ctx)).toBeNull();
+  });
+});
+
+describe('Under 18, on the phone (#311)', () => {
+  it('first person, 10–17, never a size or a height', () => {
+    for (const s of ["I'm 16, is that ok?", 'im 15', 'I am 17 years old', "I'm only 14 lol", 'what should i wear im 16'])
+      expect([s, isUnderage(s)]).toEqual([s, true]);
+    for (const s of ["I'm 5'10", "I'm a 32 waist", "I'm 18", "I'm 21", 'My brother is 16', 'I wear a 16 neck', "I'm 13 inches around the calf", "I'm 16 in shoe size"])
+      expect([s, isUnderage(s)]).toEqual([s, false]);
   });
 });
