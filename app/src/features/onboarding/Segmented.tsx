@@ -5,7 +5,9 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { KText, useTheme } from '@/design-system';
 
-export function Segmented<T extends string>({ options, value, label, onChange }: { options: readonly { value: T; label: string }[]; value: T | null; label: string; onChange: (v: T) => void }) {
+/** `shrinkToFit` (default on): long labels shrink a little to stay on one line. Off for short labels in a wide bar
+ *  (Closet's Pieces | Outfits): there iOS shrank them to a few points (#307). */
+export function Segmented<T extends string>({ options, value, label, onChange, shrinkToFit = true }: { options: readonly { value: T; label: string }[]; value: T | null; label: string; onChange: (v: T) => void; shrinkToFit?: boolean }) {
   const { colors, scheme, isAccessibilitySize: ax } = useTheme();
   const dark = scheme === 'dark';
   // At accessibility sizes the segments stack into a list (one per row, full words), so nothing shrinks or truncates.
@@ -29,7 +31,7 @@ export function Segmented<T extends string>({ options, value, label, onChange }:
           >
             <KText
               variant="footnote" weight={on ? '600' : '400'} color={on && dark ? 'onPrimary' : 'ink'}
-              {...(ax ? {} : { numberOfLines: 1, adjustsFontSizeToFit: true, minimumFontScale: 0.8 })}
+              {...(ax ? {} : shrinkToFit ? { numberOfLines: 1, adjustsFontSizeToFit: true, minimumFontScale: 0.8 } : { numberOfLines: 1 })}
             >
               {o.label}
             </KText>

@@ -176,7 +176,7 @@ describe('J5 · the contradiction check', () => {
   });
 });
 
-describe('E0 fixes (#304): routes and evidence the live tries showed missing', () => {
+describe('E0 fixes (#310): routes and evidence the live tries showed missing', () => {
   it('"Is my outfit today good?" explains today\'s check', async () => {
     const { store, clock } = await setup();
     for (const q of ['Is my outfit today good?', 'Is my fit ok?', 'How does my outfit look?']) {

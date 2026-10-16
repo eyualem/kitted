@@ -155,7 +155,7 @@ describe('L4 · VoiceOver', () => {
   });
 });
 
-describe('E0 fixes (#304): what the first live tries found', () => {
+describe('E0 fixes (#310): what the first live tries found', () => {
   it('piece names lose their capital mid-sentence, keep it at the start', () => {
     const names = ['Navy overshirt', 'White tee', 'Black Chelsea boots'];
     const g = createSentenceStream({ allowedScores: new Set(), pieceNames: names });
@@ -167,7 +167,7 @@ describe('E0 fixes (#304): what the first live tries found', () => {
   });
 });
 
-describe('E0 fix (#304): handles never show', () => {
+describe('E0 fix (#310): handles never show', () => {
   it('cuts "(P13)" and "[P3]"; a sentence with a bare P7 or FC2 is dropped', () => {
     const g = createSentenceStream({ allowedScores: new Set() });
     const out = g.push('Layer the olive overshirt (P13) over your navy crewneck (P11) and dark jeans [P3]. Wear P7 with it, like FC2 showed. ') + g.end();

@@ -14,11 +14,11 @@ export interface GateContext {
   allowedScores: ReadonlySet<string>;
   /** He gave a height or a build (so saying it back is possible; the rule runs either way). */
   hasBody?: boolean;
-  /** His closet's piece names ("Navy overshirt"): mid-sentence they lose their capital ("your navy overshirt", #304). */
+  /** His closet's piece names ("Navy overshirt"): mid-sentence they lose their capital ("your navy overshirt", #310). */
   pieceNames?: readonly string[];
 }
 
-/** The pack's handles never show ("your olive overshirt (P13)" → "your olive overshirt"; seen live, #304). */
+/** The pack's handles never show ("your olive overshirt (P13)" → "your olive overshirt"; seen live, #310). */
 export function stripHandles(sentence: string): string {
   return sentence.replace(/\s*[([](?:P|FC)\d+(?:\s*[,/]\s*(?:P|FC)\d+)*[)\]]/g, '');
 }

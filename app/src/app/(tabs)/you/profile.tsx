@@ -4,9 +4,9 @@
 // score (picks only order tips and break "Reads as" ties, #211).
 // How bold (02 Y2) is left out on purpose: `profile.boldness` feeds the scoring engine today (parts.ts color and the
 // focal allowance) and the Why sheet re-explains old checks with it, so editing it here would change scores.
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack, router, useNavigation } from 'expo-router';
 import { Chip, ChipFlow, KCard, KText, MonoLabel, RowDivider, opacity, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -15,7 +15,7 @@ import { BUILDS, buildLabel, FITS, fitLabel, heightSpoken, stepHeight, type Buil
 import { LOOKS, MAX_PICKS, togglePick } from '@/features/onboarding/looks';
 import { Segmented } from '@/features/onboarding/Segmented';
 import { NumberedPill } from '@/features/you/NumberedPill';
-import { applyDraft, BUDGETS, budgetLabel, draftOf, heightText, isDirty, type ProfileDraft } from '@/features/you/profile';
+import { BUDGETS, budgetLabel, draftOf, heightText, isDirty, saveDraft, type ProfileDraft } from '@/features/you/profile';
 import { t } from '@/i18n/en';
 
 export default function StyleProfileScreen() {
@@ -35,13 +35,23 @@ export default function StyleProfileScreen() {
     if (!draft || saving) return;
     setSaving(true);
     try {
-      const fresh = await store.profile.get('me');
-      if (fresh && isDirty(fresh, draft)) await store.profile.put(applyDraft(fresh, draft));
+      await saveDraft(store, draft);
       if (router.canGoBack()) router.back();
     } finally {
       setSaving(false);
     }
   };
+
+  // Leaving any way (Back, a swipe) keeps what he changed, like Settings (09-ui-review §12). saveDraft writes only a
+  // real change, so leaving after Save writes nothing more.
+  const latest = useRef<ProfileDraft | null>(null);
+  useEffect(() => {
+    latest.current = edits;
+  }, [edits]);
+  const navigation = useNavigation();
+  useEffect(() => navigation.addListener('beforeRemove', () => {
+    if (latest.current) void saveDraft(store, latest.current).catch((e: unknown) => console.error('[profile] save on leave failed', e));
+  }), [navigation]);
 
   const units = profile?.units ?? 'imperial';
   return (

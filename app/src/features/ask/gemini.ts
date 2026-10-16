@@ -32,7 +32,7 @@ export function buildAskRequest(system: string, user: string) {
   return {
     systemInstruction: { parts: [{ text: system }] },
     contents: [{ role: 'user', parts: [{ text: user }] }],
-    // Flash-Lite 3.5 refuses thinkingBudget 0 (HTTP 400, found in the first live try, #304); its lowest is the
+    // Flash-Lite 3.5 refuses thinkingBudget 0 (HTTP 400, found in the first live try, #310); its lowest is the
     // "minimal" thinking level.
     generationConfig: { temperature: ASK_TEMPERATURE, maxOutputTokens: ASK_MAX_TOKENS, thinkingConfig: { thinkingLevel: 'minimal' } },
   };

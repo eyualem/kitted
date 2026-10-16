@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { NextBuySheet } from '@/features/closet/NextBuySheet';
 
-// C7 · Next best buy (02-screens.md). Built in P5.
-export default function NextBestBuyScreen() {
-  return <Placeholder id="C7" name="Next best buy" phase="P5" kind="sheet" />;
-}
+// C7 · Next best buy (02-screens.md; 09-ui-review §14, #308).
+export default NextBuySheet;

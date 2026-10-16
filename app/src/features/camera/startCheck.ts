@@ -47,6 +47,9 @@ export async function startCheck(mode: CheckMode, photo: PhotoInput, parentCheck
     return r;
   }
   explain(r);
+  // Refused because another photo is still being read (09-ui-review §11 K2): prep never ran, so nothing else would
+  // delete his temporary original.
+  if (r.outcome === 'busy' && 'photoUri' in photo) discardTempPhoto(photo.photoUri);
   if (__DEV__) void logResult(mode, photo, r).catch(() => {});
   return r;
 }
@@ -158,6 +161,9 @@ export function explain(r: StartOutcome) {
     // No card was posted (prep or a write failed first): say it didn't count. With a card, the card says so.
     showToast(t('fail.ai'));
   }
-  // 'busy' (another photo is still being read) has no words yet: the reading card on screen is the answer.
+  else if (r.outcome === 'busy') {
+    // Another photo is still being read (§1 item 7, #233 item 8): this one isn't sent or counted, and he's told.
+    showToast(t('cam.busy'));
+  }
   // 'whichOne': the question card in the thread is the answer. 'held': the Limit card is.
 }

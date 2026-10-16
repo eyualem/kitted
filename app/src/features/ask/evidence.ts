@@ -128,7 +128,7 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
       const c = checkOf(route.check);
       if (!c || c.score === null) break;
       out.push(`The check he means: ${route.check} · ${displayScore(c.score)} now · ${occasionLabel(c.occasion)}`);
-      // What that photo shows, so a swap "instead of" a piece he wasn't wearing is answered from the truth (#304).
+      // What that photo shows, so a swap "instead of" a piece he wasn't wearing is answered from the truth (#310).
       const worn = c.itemIds.map((id) => pieces.find((p) => p.id === id)).filter((p): p is ClosetItemRow => !!p);
       if (worn.length) out.push(`On that photo he wore: ${worn.map(nameOf).join(' + ')}`);
       const fixes = c.fixes.filter((f, i, all) => all.findIndex((g) => g.copy === f.copy) === i);
@@ -195,7 +195,7 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
     }
     case 'shape': {
       const items = route.pieces.map(named).filter((c): c is ClosetItemRow => !!c);
-      // How a piece sits on him only shows in a photo (#304): say so rather than guess.
+      // How a piece sits on him only shows in a photo (#310): say so rather than guess.
       out.push('How a piece fits him (baggy, long, tight) only shows in a fit check photo: don\'t claim it, offer a fit check.');
       if (items.length === 0) break;
       out.push(`The pieces he means: ${items.map(nameOf).join(' + ')}`);

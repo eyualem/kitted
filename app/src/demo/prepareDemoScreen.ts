@@ -57,6 +57,8 @@ type Step =
   | { at: string; do: 'ask'; text: string }
   /** Tap an answer on the newest ask card (07 §13 R6). */
   | { at: string; do: 'askTap'; option: string }
+  /** A stored setting (Closet's remembered Pieces | Outfits tap, #307). */
+  | { at: string; do: 'kv'; key: string; value: string }
   /** Questions already used today (the limit state without five demo answers in the thread). */
   | { at: string; do: 'askUsed'; n: number }
   /** His question in the thread, its answer held mid-way: the dots (no text) or the first words (07 §6.1). */
@@ -213,6 +215,9 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   172: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'Which shoes are my dressiest?' }] },
   173: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: "I'm a 32 waist." }] },
   174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
+  // The Closet's Outfits (09-ui-review §13, #307). Screen 15 keeps showing the Pieces grid it always did.
+  15: { steps: [{ at: '2026-10-22T07:00:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
   175: { asOf: '2026-10-21T12:00:00', steps: [
@@ -332,6 +337,10 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     if (step.do === 'ask') {
       const o = await askService.ask(step.text);
       if (o.kind === 'sent') await o.done;
+      continue;
+    }
+    if (step.do === 'kv') {
+      await store.setKv(step.key, step.value);
       continue;
     }
     if (step.do === 'askTap') {

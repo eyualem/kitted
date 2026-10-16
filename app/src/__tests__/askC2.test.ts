@@ -85,7 +85,7 @@ describe('A1 · one request, the right shape', () => {
     expect(STYLIST_GUIDE).toBe(readFileSync(join(__dirname, '../../../rubric/stylist-guide.md'), 'utf8'));
   });
 
-  it('buildAskRequest asks for the least thinking the model takes (Flash-Lite refuses a budget of 0, #304)', () => {
+  it('buildAskRequest asks for the least thinking the model takes (Flash-Lite refuses a budget of 0, #310)', () => {
     expect(buildAskRequest('s', 'u').generationConfig.thinkingConfig).toEqual({ thinkingLevel: 'minimal' });
   });
 });
@@ -270,7 +270,7 @@ describe('A6 · never sent', () => {
 
 describe('A7 · off on his phone', () => {
   it('no real source while CHAT_LIVE is off, or without a key', () => {
-    // Jest has no dev key, so even with the switch on (#304) the default source is null here, as in a release build.
+    // Jest has no dev key, so even with the switch on (#310) the default source is null here, as in a release build.
     expect(liveAnswerSource()).toBeNull();
     expect(liveAnswerSource(true, undefined)).toBeNull();
     expect(liveAnswerSource(false, 'KEY')).toBeNull();

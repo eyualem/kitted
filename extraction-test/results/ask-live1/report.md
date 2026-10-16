@@ -1,4 +1,4 @@
-# E0 · the stylist's first live answers (Oct 17, 2026, #304)
+# E0 · the stylist's first live answers (Oct 17, 2026, #310)
 
 **What ran:** 22 questions × 2 runs, twice (round 1 as built in #303; round 2 after the fixes it showed), through the app's own pipeline (router → evidence → prompt → `gemini-3.5-flash-lite` → sentence gate → card), on the full demo scenario. Harness: `app/src/__tests__/askLive.manual.test.ts` (`ASK_LIVE=1`). Raw answers: `raw-round1.json`, `raw-round2.json`. Plus 3 questions typed in the web preview with `CHAT_LIVE` on.
 

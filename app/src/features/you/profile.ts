@@ -2,6 +2,7 @@
 // and the draft Y2 edits. Pure. His picks never change a score (rubric v4+, #211); the editor writes them exactly the
 // way onboarding does (looks.picksToStyles), and keeps the stored pairs untouched when the picks didn't change.
 import type { Styles } from '@kitted/core';
+import type { KittedStore } from '@/data/store';
 import { normStyleKey, type ProfileRow, type StyleKey } from '@/data/types';
 import { styleLabel } from '@/features/morning/copy';
 import {
@@ -112,4 +113,13 @@ export function applyDraft(p: ProfileRow, d: ProfileDraft): ProfileRow {
     styles: stylesToSave(p.styles, d.picks),
     budget: d.budget === o.budget ? p.budget : d.budget,
   };
+}
+
+/** Writes his draft when it differs from the stored profile (Save, and leaving the screen: 09-ui-review §12). True when
+ *  it wrote. */
+export async function saveDraft(store: Pick<KittedStore, 'profile'>, d: ProfileDraft): Promise<boolean> {
+  const fresh = await store.profile.get('me');
+  if (!fresh || !isDirty(fresh, d)) return false;
+  await store.profile.put(applyDraft(fresh, d));
+  return true;
 }
