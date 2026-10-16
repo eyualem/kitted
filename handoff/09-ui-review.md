@@ -453,7 +453,7 @@ On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared 
 | Found | | The card appears about a second after the outfit list on a cold load, so the list moves down once (`loadNextBuy` scores each Starter candidate). Not fixed: a reserved-height placeholder or computing it with the list is the follow-up if it bothers him. |
 
 ## 18. How baggy a piece is: how the app knows, how sure it is, how he corrects it (plan and pass/fail checks, set before building; Oct 16, #315)
-Founder (Oct 16): "what are we gonna do about how baggy anything is? how will we know and let the user correct?" **Plan only: nothing is built or re-scored.** Numbered §18 and #315 because §15–§17 and #309–#314 are held by main and the open PRs (eyualem/kitted#4, #5, #7). It builds on §17, the piece page's "What it is" rows (PR eyualem/kitted#5, #314). Global checks G1–G4 (§6) apply.
+Founder (Oct 16): "what are we gonna do about how baggy anything is? how will we know and let the user correct?" **Plan only: nothing is built or re-scored. His four calls were decided Oct 16 with the defaults (§18.6).** Numbered §18 and #315 because §15–§17 and #309–#314 are held by main and the open PRs (eyualem/kitted#4, #5, #7). It builds on §17, the piece page's "What it is" rows (PR eyualem/kitted#5, #314). Global checks G1–G4 (§6) apply.
 
 ### 18.1 What exists today (from the code)
 - **The reading** (`extraction-test/schema.json`, the live v3 format): `volume` 1–5 on every garment ("1 = fitted close to body, 3 = regular, 5 = very oversized. Garment cut, not the person's body.") and `leg_shape` on bottoms (skinny · slim · straight · relaxed · wide · flare/bootcut · barrel). For tops one number mixes two things: how the piece is cut, and whether it's his size (#164).
@@ -555,8 +555,10 @@ Truth, most useful first:
 - **BG12** `shoulder_seam` and `ribbed_hem` each read the same on 90%+ over 3 runs and right on 80%+ of the ladder, or they stay tips.
 - **BG13 (T)** No rule reads a garment's width against the body (a test checks the engine takes no pose widths).
 
-### 18.6 His calls (Claude's default first)
-1. **(c)** His setting feeds new scores through the "Your …?" question (default) · never · silently.
-2. **(b)** The "Not sure" row and one To confirm card (default) · the row only · neither.
-3. **(a)** Size faults wait for the size-ladder shoot (default) · try the two cues now on public photos (~$2 flip test, but without the ladder nothing says if they're right).
-4. **The new words** (18.4): as written (default).
+**Order from here:** Group 1 once PR eyualem/kitted#5 (the piece page's rows) is merged; then BG7's paper test, which needs a few of his own piece-page picks first; Group 2 only after he has seen that before/after; Group 3 after the size-ladder shoot.
+
+### 18.6 His calls: decided Oct 16 (founder: "i agree with you recommendations"), all four defaults
+1. **(c) Decided:** his setting feeds new scores only through the "Your …?" question, behind `CLOSET_FIT_FEEDS_SCORE`, built only after BG7's paper test is shown to him (not chosen: never · silently).
+2. **(b) Decided:** the "Not sure" row and at most one To confirm card; never a fit question before the score (not chosen: the row only · neither).
+3. **(a) Decided:** "on purpose vs too big" stays judged by the outfit around the piece; size faults wait for the size-ladder shoot (not chosen: the ~$2 cue test now).
+4. **The new words (18.4) decided:** as written.
