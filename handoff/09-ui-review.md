@@ -289,3 +289,12 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 - **W7 (S)** on the Simulator: the long-press menu shows both options; "It's another piece…" → a piece → the photo shows on that piece's page and leaves this one; Undo brings it back; "Not this piece" → Undo removes the new card.
 - **W8 (T) (added after "you can close the other gaps as well", before building) The first photo too:** when a piece has 2 or more photos, "Not this piece" and "It's another piece…" work on its first photo as on any other; the piece keeps its name and drawing, and its other photos stay. Seed and "you added it" pieces with no fit-check photo are unaffected.
 - **W9 (T) (same) A piece's only photo:** "Not this piece" isn't offered (there's nothing to split it from; Remove from Closet covers a wrong card); "It's another piece…" is offered and merges this piece into the chosen one exactly as "Same as another piece…" does, with its Undo.
+
+### §8 results (Oct 15, #291): checked against W1–W9, none changed
+| Check | Result | How |
+|---|---|---|
+| W1–W6, W8, W9 | Pass (T) | `wrongCard.test.ts`, 13 tests, failed first (12 of 13), then green; "exactly" = every piece, sighting and check deep-equal to the snapshot after Undo |
+| W7 | Pass, one open item | Simulator demo 114: the long-press menu shows Use as cover · Open the look · Not this piece · It's another piece… · Remove photo; the picker "Same as which piece?" lists only the grey tee; picking it moves the photo off the white tee with "Saved as your grey tee." and Undo. **Open:** Undo took several seconds to show on the device (as merge Undo did in §7); the other session's hot reloads kept resetting the demo, so the delay wasn't pinned down. Data correctness is proven by W1/W5. |
+| G1 | Pass | this batch alone on HEAD in a clean worktree: tsc clean, 809 app tests in 70 suites, lint clean |
+| G2 | Pass | W6 compares every check's score, raw score and part scores |
+| G3 | Partly | light mode seen; dark and the largest text not re-run |

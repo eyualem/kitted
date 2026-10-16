@@ -912,6 +912,9 @@ const addedInBuild = {
   'closet.merge.confirmBody': 'Its photos and wears move to your {item}. Your scores stay the same.',
   'closet.merge.a11y.hint': 'Pick the piece this one is the same as',
   'closet.merge.a11y.pickHint': 'Asks before moving it',
+  // Wrong card (#289): a photo's long-press menu on the piece page; its picker reuses closet.merge.title (no
+  // subtitle), its toast item.dup.saidSame, and "Not this piece" keeps closet.piece.splitOff, now with Undo.
+  'closet.piece.another': "It's another piece…",
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

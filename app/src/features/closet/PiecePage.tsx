@@ -5,7 +5,8 @@
 //      are photos, a light tick per page. A tap on a photo opens it full screen on that check.
 //   2. The name (tap to rename), "Layer · Grey · Regular fit", and what the data says: worn, last worn, added.
 //   3. "Your photos · N": square crops, best first, the cover marked. Long-press (or VoiceOver actions): Use as cover ·
-//      Open the look · Not this piece (a correction) · Remove photo (with Undo). Mostly hidden ones fold into
+//      Open the look · Not this piece (a correction, with Undo) · It's another piece… (move just this photo to another
+//      piece of its kind, with Undo; on the piece's only photo, merge the piece; §8, #289) · Remove photo (with Undo). Mostly hidden ones fold into
 //      "N more, partly hidden"; the same photo re-checked shows once.
 //   4. Remove from Closet (with Undo), back to the grid.
 // Every crop starts below his head and a mirror selfie reads true-view (cropSafety). Nothing here is sent anywhere.
@@ -30,14 +31,14 @@ import { artSpec } from './artSpec';
 import { ClosetTile } from './ClosetTile';
 import { colorPhrase } from './itemName';
 import { mergeOffer, notePieceBlur, notePieceFocus } from './merge';
-import { openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
+import { anotherPiece, openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
 import { piecePhotos, type PiecePhoto } from './piecePhotos';
 import { livePhotoDeps, loadPhotoChecks } from './photoChecks';
 import type { PhotoAction } from './PiecePhotoTile';
 import { PhotoMenu } from './PhotoMenu';
 import { isOwned } from './profile';
 import { SightingCrop } from './SightingCrop';
-import { canSplitOff } from './service';
+import { photoMenuItems, photoOffer, type PhotoMenuItem } from './wrongCard';
 
 /** iOS destructive red at the mockup's values (as Y7's red rows): systemRed is under 4.5:1 on white. */
 const DANGER = { light: '#C9302C', dark: '#FF6961' } as const;
@@ -78,8 +79,10 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
     const photos = piecePhotos(item, obs, checks, livePhotoDeps);
     const rows = new Map((await store.fitChecks.all()).map((r) => [r.id, r]));
     const inLookbook = new Set([...rows.values()].filter((r) => !r.details.removedFromLookbook).map((r) => r.id));
-    const splittable = new Set(obs.filter((o) => o.itemId === id && canSplitOff(o)).map((o) => o.id));
-    return { item, photos, inLookbook, splittable, merge: mergeOffer(item, all) };
+    // What each photo's menu offers: Not this piece and It's another piece… (§8, #289).
+    const ctx = { all, obs, checks };
+    const offers = new Map([...photos.shown, ...photos.folded].map((ph) => [ph.obsId, photoOffer(item, ph.obsId, ctx)]));
+    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all) };
   }, [id]);
   // Folded into another piece (#280): back on this page after the picker closes, it shows the kept piece instead.
   const mergedInto = data && !data.item ? data.mergedInto : null;
@@ -97,23 +100,25 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
   if (!data.item) {
     return <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} />;
   }
-  const { item, photos, inLookbook, splittable, merge } = data;
+  const { item, photos, inLookbook, offers, merge } = data;
   const spec = artSpec(item);
   const hero = photos.shown;
   const all = hero.length + photos.folded.length;
   const date = (ph: PiecePhoto) => longDate(ph.createdAt, sessionClock.offset);
   const photoLabel = (ph: PiecePhoto) => t('closet.piece.a11y.photo', { date: date(ph) });
-  const actionsFor = (ph: PiecePhoto): PhotoAction[] => [
-    ...(ph.cover ? [] : [{ name: 'cover', label: t('closet.piece.useCover'), systemImage: 'star' as const, onAction: () => setAsCover(item.id, ph.obsId) }]),
-    { name: 'look', label: t('closet.piece.openLook'), systemImage: 'bubble.left' as const, onAction: () => openLook(ph.checkId) },
-    ...(splittable.has(ph.obsId)
-      ? [{ name: 'notThis', label: t('closet.piece.notThis'), systemImage: 'arrow.triangle.branch' as const, onAction: () => notThisPiece(ph.obsId) }]
-      : []),
-    {
-      name: 'remove', label: t('closet.piece.removePhoto'), systemImage: 'trash' as const, destructive: true,
-      onAction: () => removePhoto(item.id, ph.obsId, { inLookbook: inLookbook.has(ph.checkId) }),
-    },
-  ];
+  const actionsFor = (ph: PiecePhoto): PhotoAction[] => {
+    const menu: Record<PhotoMenuItem, PhotoAction> = {
+      cover: { name: 'cover', label: t('closet.piece.useCover'), systemImage: 'star', onAction: () => setAsCover(item.id, ph.obsId) },
+      look: { name: 'look', label: t('closet.piece.openLook'), systemImage: 'bubble.left', onAction: () => openLook(ph.checkId) },
+      notThis: { name: 'notThis', label: t('closet.piece.notThis'), systemImage: 'arrow.triangle.branch', onAction: () => notThisPiece(ph.obsId) },
+      another: { name: 'another', label: t('closet.piece.another'), systemImage: 'arrow.right.square', onAction: () => anotherPiece(item.id, ph.obsId) },
+      remove: {
+        name: 'remove', label: t('closet.piece.removePhoto'), systemImage: 'trash', destructive: true,
+        onAction: () => removePhoto(item.id, ph.obsId, { inLookbook: inLookbook.has(ph.checkId) }),
+      },
+    };
+    return photoMenuItems(ph, offers.get(ph.obsId) ?? { notThis: false, another: null }).map((n) => menu[n]);
+  };
   const onPage = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const n = Math.round(e.nativeEvent.contentOffset.x / Math.max(1, W));
     if (n === page) return;

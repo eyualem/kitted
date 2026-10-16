@@ -26,7 +26,8 @@ import type { ClosetKind, ClosetSource, StoredClosetReading } from '@/services/c
 import type { GarmentMeasurer, Measured } from '@/services/measure/garments';
 import { garmentHex } from '@/features/fitcheck/labels';
 import { serial } from './checkWrites';
-import type { MergeUndo } from './merge';
+import { mergeCandidates, type MergeUndo } from './merge';
+import { isFirstPhoto, photoOffer, photoSightings, type PhotoUndo } from './wrongCard';
 import { assignNames, baseName, isAutoNamed } from './itemName';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
@@ -775,6 +776,197 @@ export function createClosetService(deps: ClosetServiceDeps) {
     return saveSummary(checkId, cs);
   }
 
+  // ------------------------------------------------------------------ a photo on the wrong card (09-ui-review §8, #289)
+  interface Snapshot {
+    items: Map<string, ClosetItemRow>;
+    obs: Map<string, ClosetObservationRow>;
+    checks: Map<string, PhotoUndo['checks'][number]>;
+  }
+  const checkPart = (r: FitCheckRow): PhotoUndo['checks'][number] => ({
+    id: r.id, closetSummary: r.details.closetSummary ? clone(r.details.closetSummary) : undefined, itemIds: [...r.itemIds],
+  });
+  const sameJson = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+
+  /** Every row a photo's correction can change, as it is now. */
+  async function snapshot(): Promise<Snapshot> {
+    return {
+      items: new Map((await store.closet.all()).map((c) => [c.id, clone(c)])),
+      obs: new Map((await store.closetObs.all()).map((o) => [o.id, clone(o)])),
+      checks: new Map((await store.fitChecks.all()).map((r) => [r.id, checkPart(r)])),
+    };
+  }
+
+  /** What changed since `b`: the changed rows as they were, and the rows made since (Undo removes them). */
+  async function changesSince(b: Snapshot): Promise<PhotoUndo> {
+    const items = new Map((await store.closet.all()).map((c) => [c.id, c]));
+    const obs = new Map((await store.closetObs.all()).map((o) => [o.id, o]));
+    const checks = await store.fitChecks.all();
+    return {
+      items: [...b.items.values()].filter((was) => !sameJson(was, items.get(was.id))),
+      newItemIds: [...items.keys()].filter((id) => !b.items.has(id)),
+      obs: [...b.obs.values()].filter((was) => !sameJson(was, obs.get(was.id))),
+      newObsIds: [...obs.keys()].filter((id) => !b.obs.has(id)),
+      checks: checks.filter((r) => b.checks.has(r.id) && !sameJson(b.checks.get(r.id), checkPart(r))).map((r) => b.checks.get(r.id)!),
+    };
+  }
+
+  /** Undo: every row back exactly as it was, and the rows the correction made gone. */
+  async function restoreRows(u: PhotoUndo) {
+    for (const id of u.newObsIds) await store.closetObs.delete(id);
+    for (const id of u.newItemIds) await store.closet.delete(id);
+    for (const it of u.items) await store.closet.put(clone(it));
+    for (const o of u.obs) await store.closetObs.put(clone(o));
+    for (const c of u.checks) {
+      const cur = await store.fitChecks.get(c.id);
+      if (!cur) continue;
+      const { closetSummary: _cs, ...rest } = cur.details;
+      void _cs;
+      await store.fitChecks.patch(c.id, { itemIds: [...c.itemIds], details: c.closetSummary ? { ...rest, closetSummary: clone(c.closetSummary) } : rest });
+    }
+  }
+
+  /** The looks (a check and its re-checks) still in the Lookbook that these sightings were seen in: each counts once. */
+  function looksOf(list: readonly ClosetObservationRow[], checks: readonly FitCheckRow[]): Set<string> {
+    const lookOf = new Map(checks.map((r) => [r.id, r.parentId ?? r.id]));
+    const gone = new Set(checks.filter((r) => r.details.removedFromLookbook).map((r) => r.parentId ?? r.id));
+    return new Set(list.filter((o) => isLive(o) && !!o.fitCheckId && lookOf.has(o.fitCheckId))
+      .map((o) => lookOf.get(o.fitCheckId!)!).filter((l) => !gone.has(l)));
+  }
+
+  /** A photo on piece `obsId`'s card: its sightings (the same photo checked again too) and what its menu offers. */
+  async function photoAt(obsId: string) {
+    const o = await store.closetObs.get(obsId);
+    if (!o) return null;
+    const all = await store.closet.all();
+    const obs = await store.closetObs.all();
+    const checks = await store.fitChecks.all();
+    const hashes = new Map(checks.map((r) => [r.id, { imageHash: r.imageHash }]));
+    const from = all.find((c) => c.id === o.itemId);
+    if (!from) return null;
+    const photo = photoSightings(from.id, obsId, obs, hashes);
+    return { o, from, all, checks, photo, offer: photoOffer(from, obsId, { all, obs, checks: hashes }) };
+  }
+
+  /**
+   * One photo's sightings leave piece `fromId` for `toId`: their checks point at it (and are marked touched, so a late
+   * closet answer never re-matches them to the old piece), a question about them is settled by this correction, and the
+   * worn counts follow, each look counted once. Pictures only: no score depends on any of it.
+   */
+  async function shiftSightings(
+    list: readonly ClosetObservationRow[], fromId: string, toId: string, decisionOf: (o: ClosetObservationRow) => ObservationDecision,
+    o: { addedIn?: string; newPiece: boolean },
+  ) {
+    const now = clock.nowMs();
+    const checks = await store.fitChecks.all();
+    const obsAll = await store.closetObs.all();
+    const ids = new Set(list.map((x) => x.id));
+    const moved = looksOf(list, checks);
+    const fromLeft = looksOf(obsAll.filter((x) => x.itemId === fromId && !ids.has(x.id)), checks);
+    const toHad = o.newPiece ? new Set<string>() : looksOf(obsAll.filter((x) => x.itemId === toId && !ids.has(x.id)), checks);
+    for (const s of list) {
+      const decision = decisionOf(s);
+      await store.closetObs.patch(s.id, { itemId: toId, decision, ...(['answeredSame', 'answeredNew', 'split'].includes(decision) ? { answeredAt: now } : {}) });
+    }
+    for (const checkId of uniq(list.map((x) => x.fitCheckId).filter((x): x is string => !!x))) {
+      const row = checks.find((r) => r.id === checkId);
+      if (!row) continue;
+      const cs = summaryOf(row);
+      cs.links = cs.links.map((l) => (ids.has(l.obsId) ? { ...l, itemId: toId } : l));
+      const stillFrom = cs.links.some((l) => l.itemId === fromId);
+      cs.matched = cs.matched.filter((x) => x !== fromId || stillFrom);
+      cs.added = cs.added.filter((x) => x !== fromId || stillFrom);
+      if (o.addedIn === checkId) cs.added = uniq([...cs.added, toId]);
+      else if (!cs.added.includes(toId)) cs.matched = uniq([...cs.matched, toId]);
+      // His correction settles an earlier "Same as your …?" about this photo (its Change would undo it the wrong way).
+      cs.asks = cs.asks.filter((a) => !ids.has(a.obsId) || !a.answer);
+      cs.touched = true;
+      await saveSummary(checkId, cs);
+    }
+    const from = await store.closet.get(fromId);
+    if (from) {
+      const lost = [...moved].filter((l) => !fromLeft.has(l)).length;
+      const p = profileOfItem(from);
+      const { coverObsId: _c, ...rest } = p;
+      void _c;
+      const keep = p.coverObsId && ids.has(p.coverObsId) ? rest : p;
+      await store.closet.patch(fromId, {
+        wornCount: Math.max(0, from.wornCount - lost), updatedAt: now,
+        profile: { ...keep, ...(p.hiddenObsIds ? { hiddenObsIds: p.hiddenObsIds.filter((x) => !ids.has(x)) } : {}) },
+      });
+    }
+    const to = await store.closet.get(toId);
+    if (to) {
+      const gained = [...moved].filter((l) => !toHad.has(l)).length;
+      const last = Math.max(to.lastWornAt ?? 0, ...list.map((x) => checks.find((r) => r.id === x.fitCheckId)?.createdAt ?? 0));
+      await store.closet.patch(toId, { wornCount: o.newPiece ? moved.size : to.wornCount + gained, lastWornAt: last > 0 ? last : to.lastWornAt, updatedAt: now });
+    }
+  }
+
+  /** The two are different pieces from now on (never matched, never asked "same as?"). */
+  async function markDistinct(a: string, b: string) {
+    for (const [x, y] of [[a, b], [b, a]] as const) {
+      const it = await store.closet.get(x);
+      if (it) await store.closet.patch(x, { profile: { ...profileOfItem(it), distinctFrom: uniq([...profileOfItem(it).distinctFrom, y]) } });
+    }
+  }
+
+  /** Re-derives the old piece's drawing after a photo left it, unless that photo made it (it keeps its drawing, §8 W8). */
+  async function settleFrom(fromId: string, keepDrawing: boolean) {
+    if (!keepDrawing) await refreshItem(fromId);
+  }
+
+  /** "Not this piece" (§8 W1, W8): the photo becomes its own piece, or his "Yes, same one" is re-answered "No". */
+  async function splitPhotoNow(obsId: string): Promise<{ piece: ClosetItemRow; undo: PhotoUndo } | null> {
+    const at = await photoAt(obsId);
+    if (!at || !at.offer.notThis) return null;
+    const [o, ...twins] = at.photo;
+    const row = o?.fitCheckId ? at.checks.find((r) => r.id === o.fitCheckId) : undefined;
+    if (!o || !row) return null;
+    const before = await snapshot();
+    const keepDrawing = isFirstPhoto(at.photo);
+    let pieceId: string;
+    const ask = o.decision === 'answeredSame' ? summaryOf(row).asks.find((a) => a.obsId === o.id && (a.answer === 'same' || a.answer === 'runnerUp')) : undefined;
+    if (ask) {
+      if (!(await applyAnswer(row.id, o.id, 'new'))) return null;
+      pieceId = (await store.closetObs.get(o.id))!.itemId;
+      if (twins.length > 0) await shiftSightings(twins, at.from.id, pieceId, () => 'same', { newPiece: false });
+      const from = await store.closet.get(at.from.id);
+      const p = from ? profileOfItem(from) : null;
+      if (from && p?.coverObsId === o.id) {
+        const { coverObsId: _c, ...rest } = p;
+        void _c;
+        await store.closet.patch(from.id, { profile: rest });
+      }
+    } else {
+      const item = newItem(row, o.garment, o, null);
+      if (!item) return null;
+      item.profile = { ...profileOfItem(item), distinctFrom: [at.from.id] };
+      await store.closet.put(item);
+      pieceId = item.id;
+      await shiftSightings(at.photo, at.from.id, item.id, (s) => (s.id === o.id ? 'split' : 'same'), { addedIn: row.id, newPiece: true });
+      await markDistinct(at.from.id, item.id);
+    }
+    await settleFrom(at.from.id, keepDrawing);
+    await refreshItem(pieceId);
+    await renameAll();
+    const piece = await store.closet.get(pieceId);
+    return piece ? { piece, undo: await changesSince(before) } : null;
+  }
+
+  /** "It's another piece…" → a pick (§8 W4): only this photo moves to `intoId`, a piece of the same kind he owns. */
+  async function movePhotoNow(obsId: string, intoId: string): Promise<{ piece: ClosetItemRow; undo: PhotoUndo } | null> {
+    const at = await photoAt(obsId);
+    if (!at || at.offer.another !== 'move' || !mergeCandidates(at.from, at.all).some((c) => c.id === intoId)) return null;
+    const before = await snapshot();
+    await shiftSightings(at.photo, at.from.id, intoId, () => 'answeredSame', { newPiece: false });
+    await markDistinct(at.from.id, intoId);
+    await settleFrom(at.from.id, isFirstPhoto(at.photo));
+    await refreshItem(intoId);
+    await renameAll();
+    const piece = await store.closet.get(intoId);
+    return piece ? { piece, undo: await changesSince(before) } : null;
+  }
+
   async function applyUndone(checkId: string, itemId: string, undone: boolean) {
     const row = await store.fitChecks.get(checkId);
     if (!row) return null;
@@ -1082,28 +1274,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
     }),
     /**
      * "Not this piece" on a photo (#276): a correction. A sighting he linked by answering "Is this your …?" re-answers
-     * it ("No, a new one", #117); any other match is split off as its own piece ("Not the same", S11), and the two are
-     * never matched again. A photo that made the piece (its first sighting) can't be split off it. Returns the piece
-     * the photo belongs to now, or null when nothing changed.
+     * it ("No, a new one", #117); any other photo is split off as its own piece ("Not the same", S11), and the two are
+     * never matched again. Since #289 the first photo of a piece with other photos can be split off too (the piece keeps
+     * its name and drawing); a piece's only photo can't. Returns the piece the photo belongs to now, or null when
+     * nothing changed. (splitPhoto is the same, with what its Undo restores.)
      */
-    notThisPiece: (obsId: string) => serial(async (): Promise<ClosetItemRow | null> => {
-      const o = await store.closetObs.get(obsId);
-      if (!o || !o.fitCheckId || !canSplitOff(o)) return null;
-      const from = await store.closet.get(o.itemId);
-      const row = await store.fitChecks.get(o.fitCheckId);
-      if (!row || !from) return null;
-      const ask = o.decision === 'answeredSame' ? summaryOf(row).asks.find((a) => a.obsId === obsId && (a.answer === 'same' || a.answer === 'runnerUp')) : undefined;
-      const done = ask ? await applyAnswer(o.fitCheckId, obsId, 'new') : await applySplit(o.fitCheckId, obsId);
-      if (!done) return null;
-      const p = profileOfItem((await store.closet.get(from.id)) ?? from);
-      if (p.coverObsId === obsId) {
-        const { coverObsId: _c, ...rest } = p;
-        void _c;
-        await store.closet.patch(from.id, { profile: rest });
-      }
-      const now = await store.closetObs.get(obsId);
-      return now ? store.closet.get(now.itemId) : null;
-    }),
+    notThisPiece: (obsId: string) => serial(async (): Promise<ClosetItemRow | null> => (await splitPhotoNow(obsId))?.piece ?? null),
     /**
      * "Same as another piece…" on the piece page (#280): `fromId` folds into `intoId` (same slot, both his, neither
      * waiting on an answer). Every sighting moves to the kept piece (a sighting that made or asked about the copy
@@ -1184,6 +1360,21 @@ export function createClosetService(deps: ClosetServiceDeps) {
         await store.fitChecks.patch(c.id, { itemIds: [...c.itemIds], details: c.closetSummary ? { ...rest, closetSummary: clone(c.closetSummary) } : rest });
       }
     }),
+    /**
+     * "Not this piece" with its Undo (09-ui-review §8 W1, W8): the photo (and the same photo checked again) becomes a
+     * piece of its own, never matched with this one again; a photo he linked with "Yes, same one" re-answers it "No".
+     * The first photo of a piece with other photos works the same, and the piece keeps its name and drawing. A piece's
+     * only photo can't be split off (null). Returns the piece the photo is on now and what Undo restores.
+     */
+    splitPhoto: (obsId: string) => serial(() => splitPhotoNow(obsId)),
+    /**
+     * "It's another piece…" → a pick (§8 W4): only this photo moves to `intoId` (his own piece of the same kind, not
+     * waiting on a question); the worn counts follow, each look once; it's never matched back to the old piece. null
+     * on a piece's only photo (the picker merges the piece instead, W9) or when nothing could move.
+     */
+    movePhoto: (obsId: string, intoId: string) => serial(() => movePhotoNow(obsId, intoId)),
+    /** Undo for splitPhoto and movePhoto: every row they changed, back exactly; the piece a split made, gone. */
+    restorePhoto: (u: PhotoUndo) => serial(() => restoreRows(u)),
     /** The pieces a look added that no other check has seen: what "Remove look and its new pieces" would remove. */
     async onlyInLook(checkId: string): Promise<ClosetItemRow[]> {
       const ids = new Set(await onlyInLookIds(await lookCheckIds(checkId)));

@@ -159,6 +159,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   // story): 112 its page with "Same as another piece…", 113 the picker over it.
   { n: 112, name: 'Closet · a duplicate piece', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/closet/item/{dup}', under: '/closet' },
   { n: 113, name: 'Same as which piece?', id: 'C2m', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/sheets/merge/{dup}', under: '/closet/item/{dup}' },
+  // A photo on the wrong card (#289): the white tee with two photos and the grey tee beside it; long-press a photo.
+  { n: 114, name: 'Closet · a photo on the wrong card', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:52:00', href: '/closet/item/T1', under: '/closet' },
   // S17h (#280; numbered from 120 so parallel sessions' screens don't collide): screen 19 after "Save for tomorrow".
   { n: 120, name: 'Limit card · saved for tomorrow', id: 'S17h', scenario: 'full', onboarded: true, now: '2026-10-22T21:13:00', freeChecksUsed: 1, href: '/stylist' },
   // S17h the next morning (#281): "Ready to score last night's photo?" with Score it / Not this one.

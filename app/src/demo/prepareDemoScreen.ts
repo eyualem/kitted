@@ -190,6 +190,18 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // offers "Same as another piece…", and its picker lists the khaki chinos.
   112: { steps: DUP_STORY },
   113: { steps: DUP_STORY },
+  // A photo on the wrong card (#289, 09-ui-review §8 W7): screen 96's story with the grey tee in the closet too, so the
+  // white tee's page has two photos (p01b, p01a) and another top; each photo's long-press offers Not this piece and
+  // It's another piece… (its picker lists the grey tee).
+  114: {
+    steps: [
+      { at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'S1'] },
+      { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
+      { at: '2026-10-22T07:49:00', do: 'recheckPrompt' },
+      { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 'p01a' },
+      { at: '2026-10-22T07:51:00', do: 'closetYes' },
+    ],
+  },
   // The end of onboarding (#291): his first check on the Welcome photo (7.5, with a fix to re-check); the taps after it
   // (Later, a Starter piece, the notification ask) are the screen's `finish` steps (features/finish/demo.ts).
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162].map((n) => [n, { steps: [FIRST_CHECK] }])),

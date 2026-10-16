@@ -1,16 +1,17 @@
-// What a Closet piece's menus and its page do (founder, Oct 14; #118, #276): open its page, Rename, Remove from
-// Closet with Undo; on the page, each photo's Use as cover, Open the look, Not this piece and Remove photo (with
-// Undo). A removal's pictures are deleted from the phone once Undo is over (fileCleanup).
+// What a Closet piece's menus and its page do (founder, Oct 14; #118, #276, #289): open its page, Rename, Remove from
+// Closet with Undo; on the page, each photo's Use as cover, Open the look, Not this piece and It's another piece…
+// (both with Undo) and Remove photo (with Undo). A removal's pictures are deleted from the phone once Undo is over (fileCleanup).
 import { Alert, Platform } from 'react-native';
-import { router } from 'expo-router';
+import { router, type Href } from 'expo-router';
 import { openLookPage } from '@/features/lookbook/lookPage';
 import type { ClosetItemRow } from '@/data/types';
 import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { fitCheck } from '@/features/fitcheck/session';
 import { DELETE_AFTER_MS } from './fileCleanup';
-import { runMerge } from './merge';
+import { runMerge, type MergeFlowDeps } from './merge';
 import { profileOfItem } from './profile';
 import { closetCleanup, runClosetCleanup } from './session';
+import { anotherHref, runAnotherPiece, runNotThis, type PhotoContext, type WrongCardDeps } from './wrongCard';
 import { t } from '@/i18n/en';
 
 /** An alert raised while a native menu closes is dropped; wait for it (CLAUDE.md lessons, lensUi). */
@@ -83,11 +84,33 @@ export function removePhoto(itemId: string, obsId: string, o: { inLookbook: bool
   });
 }
 
-/** "Not this piece": a correction; the photo's piece becomes its own (or his "Yes" is re-answered "No"). */
+/** A photo's corrections write through the closet service; their toasts can undo them (09-ui-review §8, #289). */
+const wrongCardDeps = (): WrongCardDeps => ({
+  split: (obsId) => fitCheck.closet.splitPhoto(obsId),
+  move: (obsId, intoId) => fitCheck.closet.movePhoto(obsId, intoId),
+  restore: (u) => fitCheck.closet.restorePhoto(u),
+  toast: (text, undo) => void showToast(text, undo, { ms: TOAST_MS_REMOVAL }),
+});
+
+/** "Not this piece": a correction; the photo becomes its own piece (or his "Yes" is re-answered "No"), with Undo (§8 W1). */
 export function notThisPiece(obsId: string) {
-  void fitCheck.closet.notThisPiece(obsId).then((it) => {
-    if (it) showToast(t('closet.piece.splitOff', { item: lower(it.name) }));
-  });
+  void runNotThis(obsId, wrongCardDeps());
+}
+
+/** "It's another piece…": the picker of his other pieces of the same kind, for this photo (§8 W2–W3). */
+export function anotherPiece(itemId: string, obsId: string) {
+  router.push(anotherHref(itemId, obsId) as Href);
+}
+
+/**
+ * A pick in "It's another piece…": only the photo moves there, with Undo (§8 W4–W5); on the piece's only photo the
+ * piece merges into the pick exactly as "Same as another piece…" (W9). `onDone` runs once something changed.
+ */
+export async function pickAnother(
+  item: ClosetItemRow, obsId: string, into: Pick<ClosetItemRow, 'id' | 'name'>, c: PhotoContext, o: { onDone?: () => void } = {},
+): Promise<void> {
+  const done = await runAnotherPiece(item, obsId, into, { ...mergeDeps(), ...wrongCardDeps() }, c);
+  if (done) o.onDone?.();
 }
 
 /** "Open the look": that look's page in the Lookbook (#282). */
@@ -100,15 +123,9 @@ export function openPhoto(checkId: string) {
   router.push(`/photo/${checkId}`);
 }
 
-/**
- * "Same as another piece…" → a pick (#280): asks once ("Same as your khaki chinos?"), then folds `from` into `into`,
- * with a toast that can undo it. `onMerged` runs once it's done (the picker closes; the page moves to the kept piece).
- * An Undo moves that page back to the restored piece if it's still on screen; from anywhere else it moves nothing.
- */
-export async function mergePiece(
-  from: Pick<ClosetItemRow, 'id' | 'name'>, into: Pick<ClosetItemRow, 'id' | 'name'>, o: { onMerged?: () => void } = {},
-): Promise<void> {
-  const done = await runMerge(from, into, {
+/** The merge flow's real confirm, writes, toast and page return (§7 C3). */
+function mergeDeps(): MergeFlowDeps {
+  return {
     confirm: (title, body, yes) => new Promise<boolean>((resolve) => {
       Alert.alert(title, body, [
         { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
@@ -120,6 +137,17 @@ export async function mergePiece(
     toast: (text, undo) => void showToast(text, undo, { ms: TOAST_MS_REMOVAL }),
     // Undo while the page that ran the merge is still on screen: it shows the restored piece again (§7 C3).
     returnTo: (pieceId) => router.replace(`/closet/item/${pieceId}`),
-  });
+  };
+}
+
+/**
+ * "Same as another piece…" → a pick (#280): asks once ("Same as your khaki chinos?"), then folds `from` into `into`,
+ * with a toast that can undo it. `onMerged` runs once it's done (the picker closes; the page moves to the kept piece).
+ * An Undo moves that page back to the restored piece if it's still on screen; from anywhere else it moves nothing.
+ */
+export async function mergePiece(
+  from: Pick<ClosetItemRow, 'id' | 'name'>, into: Pick<ClosetItemRow, 'id' | 'name'>, o: { onMerged?: () => void } = {},
+): Promise<void> {
+  const done = await runMerge(from, into, mergeDeps());
   if (done) o.onMerged?.();
 }
