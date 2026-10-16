@@ -1924,9 +1924,23 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **All 16 outfits:** the sheet said "What it unlocks · 16" but showed 6 with no way to the rest. Now "Show {n} more" / "Show fewer", the Outfits list's own words (no new copy).
     - **Found, not fixed:** on a cold load the card lands about a second after the list, so the list moves down once.
 
+
+311. **The chat model test: seven models, pass marks set first, and GPT-5.6 Luna wins (founder, Oct 17: "here is the antropic key … here is the open ai key … i think an open ai api may be good since it is cheaper, but test it first. Plan out the tests. And also set parameters for how good it performed … beforehand."). Plan `handoff/07-stylist-chat.md` §16 (committed before any answer was read); report `extraction-test/results/ask-models1/report.md`.**
+    - **The test:** Gemini 3.5 Flash-Lite (today), Gemini 3.8 Flash, GPT-6 Luna, GPT-5.6 Luna, GPT-5.4 mini, Claude Haiku 5.5, and Claude Sonnet 5.5 as the ceiling. 41 questions × 2 through the app's own pipeline, the same prompt for all. Hard gates G1–G7 (answered, unsafe in its own words before the gate, rules clashes, the block, refusals, speed, cost from Jan 2027) and quality targets Q1–Q5 from 3 blind Claude judges (stylist, beginner, fact-checker) plus a steadiness judge. $1.15.
+    - **Result:** only GPT-5.6 Luna passes every gate, and it is also the only model to clear every quality target (83% good, 4.58 mean, 4.9% invented, 93% steady, 10% voice flags) at 0.035¢ a question and 0.66 s to first words. Today's Flash-Lite: 54% good, 12% invented, fails G2. Neither Claude model won, so no sign of judge bias toward Claude.
+    - **Fixed along the way, for every model:**
+      - the gate's fact rule (a piece given a color or cut his closet contradicts; F1–F3);
+      - the number check's false "7.0" on "score 7.5 on the photo" (it would have deleted correct sentences);
+      - scores in words ("a ten");
+      - "I'm 16" answered on the phone with the onboarding's 18+ line;
+      - weekdays on older checks in the pack;
+      - per-model Gemini thinking settings;
+      - OpenAI and Anthropic answer sources for the test only (`providers.ts`, never wired into the app).
+    - **Not changed:** the app still asks Flash-Lite. Switching is outward-facing (consent and the App Store privacy label name OpenAI for questions, text only; his own OpenAI key on the server, C6) and waits on his blind pick (`blind-pick.html`: GPT-5.6 Luna vs Flash-Lite, 20 pairs; Flash-Lite stays if he prefers it on 13+).
+    - **Keys:** both were pasted in chat, so they're in the transcript. Stored only in the git-ignored `app/.env.development.local`; he should rotate them after the test.
 ## Oct 16 · Fix what a piece is: the plan (a side session of the "+N" work; plan, checks and mockup only)
 
-314. **Fix what a piece is, planned with its checks before any code (founder, Oct 16: "a way to change what the tile represents … from a limited choice … the drawing should change to match"; "this has to get planned well"). Plan and checks X1–X16: `handoff/09-ui-review.md` §16; mockup `mockups/piece-edit.html`. Numbered #314 and §17 (renumbered from #311 / §16 at the merge with main: main took #311–312 and §15, open PRs hold #309, #313 and §15–16).**
+314. **Fix what a piece is, planned with its checks before any code (founder, Oct 16: "a way to change what the tile represents … from a limited choice … the drawing should change to match"; "this has to get planned well"). Plan and checks X1–X16: `handoff/09-ui-review.md` §17; mockup `mockups/piece-edit.html`. Numbered #314 and §17 (renumbered from #311 / §16 at the merge with main: main took #311–312 and §15, open PRs hold #309, #313 and §15–16).**
     - **Proposed (his review):** a "What it is" section on a piece's page (Kind, Color, Leg or Fit, Pattern), each row opening a sheet of pictures of the piece with that one thing changed; one tap picks, the drawing redraws, a toast with Undo says the scores stay the same. Five taste calls and two scope calls in §16.6, each with a default.
     - **Decided by Claude (no taste, logged here):**
       - **Past fit checks are left alone.** A check is a reading of its photo ("same photo, same score"); the piece is the summary across photos, and a photo may really show a different piece the app merged in. Each check's "Not quite right?" stays the honest way to re-score one; a bulk re-score is a taste call (default no).

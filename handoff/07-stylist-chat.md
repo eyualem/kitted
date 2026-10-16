@@ -718,5 +718,22 @@ An answer is **good** when every judge gives it ≥ 4 on all five. Targets:
 4. **The founder's blind pick:** 20 pairs, the top two side by side, unlabeled (5–10 min). If he prefers the runner-up on 13 or more, it wins.
 5. **Outward-facing, his call:** a non-Google winner means consent and the App Store privacy label name OpenAI or Anthropic for questions (text only, never photos), and a second key on the server.
 
-### 16.6 Results
-*(filled in when the runs finish)*
+### 16.6 Results (Oct 17, #311; full report `extraction-test/results/ask-models1/report.md`)
+- **GPT-5.6 Luna is the only model that passes every hard gate** (100% answered, nothing unsafe in its own words, 0 rules clashes, every block parsed, 0.66 s first words, 0.035¢ a question), **and it clears every quality target:** 83% good, mean 4.58, invented 4.9%, the same advice twice 93% (judged), voice flags 10%.
+- **Today's Flash-Lite** fails G2: a promised "ten", "your waist", handles. Its quality is 54% good and 12% invented.
+- **3.8 Flash** fails G1, G6 and G7: hidden tokens, 23% of answers cut off, 3.9 s to first words, 0.81¢ from 2027.
+- **GPT-6 Luna** (68%) and **GPT-5.4 mini** (49%) fail G2; mini also fails G4.
+- **Claude:** Haiku (56%) fails G2 with handles in 8 answers. Sonnet (the ceiling, 71%) fails G4 and G7.
+- **Fixed during the test, for every model:**
+  - the fact rule (F1–F3);
+  - the number check's false 7.0 on "score 7.5 on…";
+  - scores in words;
+  - "I'm 16" → the 18+ line on the phone;
+  - weekdays on older checks;
+  - each Gemini model's thinking setting.
+- **Spent:** $1.15.
+- **Waiting on the founder:**
+  - his blind pick, GPT-5.6 Luna vs Flash-Lite, 20 pairs (`blind-pick.html`);
+  - then the outward-facing switch: consent and the privacy label name OpenAI for questions, his own OpenAI key on the server;
+  - rotating the two test keys (shared in chat).
+- **Nothing in the app's model choice has changed yet:** the phone still uses Flash-Lite.
