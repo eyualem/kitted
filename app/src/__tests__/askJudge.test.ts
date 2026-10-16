@@ -9,6 +9,7 @@ import { buildStylistContext } from '@/features/ask/context';
 import { buildEvidence } from '@/features/ask/evidence';
 import { avoidedIds, avoidsPhrase, CANT_TELL_ALWAYS, judgeOutfit } from '@/features/ask/judge';
 import { verdictClash } from '@/features/ask/pipeline';
+import { createSentenceStream, pieceFactClash } from '@/features/ask/gate';
 import { EXAMPLES, guideFor, stripMarks, type AskKind } from '@/features/ask/prompt';
 import { routeQuestion } from '@/features/ask/router';
 import { loadStylistSnapshot } from '@/features/ask/snapshot';
@@ -193,5 +194,34 @@ describe('E0 fixes (#310): routes and evidence the live tries showed missing', (
     const { store, clock } = await setup();
     const { ev } = await evidenceFor(store, clock, 'Is the overshirt too baggy?');
     expect(ev.text).toMatch(/only shows in a fit check photo/);
+  });
+});
+
+describe('F · invented piece facts (07 §16.3, #311)', () => {
+  const P = (name: string, category: string, subcategory: string, color: string, leg = 'na') => ({ name, category, subcategory, color, leg });
+  const closet = [
+    P('Dark jeans', 'bottom', 'jeans', 'denim_dark', 'slim'), P('Khaki chinos', 'bottom', 'chinos', 'khaki_beige', 'straight'), P('Navy chinos', 'bottom', 'chinos', 'navy', 'slim'),
+    P('Navy overshirt', 'outerwear', 'overshirt', 'navy'), P('White sneakers', 'footwear', 'white_leather_sneaker', 'white'), P('Light-blue oxford', 'top', 'oxford_shirt', 'light_blue'),
+    P('Black Chelsea boots', 'footwear', 'chelsea_boot', 'black'),
+  ];
+  it('F1: a fact his closet contradicts drops; true ones stay', () => {
+    for (const s of ['Let your straight jeans just touch the shoe.', 'Wear your black chinos.', 'Skip the brown boots here.', 'The wide chinos work.'])
+      expect([s, pieceFactClash(s, closet)]).toEqual([s, true]);
+    for (const s of ['Your dark jeans should just touch the shoe.', 'Wear the navy overshirt open.', 'Finish with the white sneakers.', 'Put on your light-blue oxford.', 'The slim jeans would balance better.', 'The straight chinos work.', 'The black boots work.'])
+      expect([s, pieceFactClash(s, closet)]).toEqual([s, false]);
+  });
+  it('F2: advice to buy, or a leg in general, is never his piece', () => {
+    for (const s of ['A straight leg would balance it.', 'Get a pair of dark straight jeans.', 'Straight jeans are the safer buy.', 'Grab some wide trousers next.', 'Your jeans with the boots work.'])
+      expect([s, pieceFactClash(s, closet)]).toEqual([s, false]);
+  });
+  it('F3: two pieces of one kind in different cuts: either cut is fine', () => {
+    expect(pieceFactClash('Your slim chinos work.', closet)).toBe(false);
+    expect(pieceFactClash('Your straight chinos work.', closet)).toBe(false);
+  });
+  it('the gate drops the sentence by rule "fact"', () => {
+    const g = createSentenceStream({ allowedScores: new Set(), pieces: closet });
+    const out = g.push('Aim for one clean break. Let your straight jeans just touch the shoe. ') + g.end();
+    expect(out.trim()).toBe('Aim for one clean break.');
+    expect(g.dropped).toEqual(['fact']);
   });
 });

@@ -51,6 +51,15 @@ export function isDistress(text: string): boolean {
   return DISTRESS.some((re) => re.test(n));
 }
 
+// He says he's under 18 (#311: told "I'm 16", six of seven models said "that's fine"; the app is 18+, CLAUDE.md).
+// First person only, 10–17, and never a size or a height ("I'm 5'10", "I'm 16 in shoe size" isn't a thing, but
+// "I'm a 32 waist" and "13 inch" are).
+const UNDERAGE = /\b(?:i'?m|i am|im)(?: only| just)? (1[0-7])(?!['\d])(?! ?(?:ft|feet|foot|inch|inches|in|waist|length|cm|kg|lbs?|pounds|shoe|size|us|eu|uk))(?: years? old| yo| y o)?(?=$| )/;
+
+export function isUnderage(text: string): boolean {
+  return UNDERAGE.test(normalizeQuestion(text));
+}
+
 export function isBodyRating(text: string): boolean {
   const n = normalizeQuestion(text);
   return BODY_RATING.some((re) => re.test(n));

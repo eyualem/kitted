@@ -1,4 +1,4 @@
-// What each Starter piece adds, under the Closet's own count (#84.3; one "+N" everywhere, 09-ui-review §15, #309):
+// What each Starter piece adds, under the Closet's own count (#84.3; one "+N" everywhere, 09-ui-review §15b, #309):
 // the chat's buy card and buy-next evidence, the Starter toast, move 3 of "Your first 3 moves", the Closet's next best
 // buy (§14, #308) and "Add shoes and you'd have n". Pure. It sits between closet/outfits.ts (the count) and
 // finish/starter.ts (the 12 basics) so neither imports the other.

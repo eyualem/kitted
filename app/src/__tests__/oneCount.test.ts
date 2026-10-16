@@ -1,4 +1,4 @@
-// One "+N outfits" everywhere (09-ui-review §15, G1–G8, #309): the chat's buy card and evidence, the Starter toast,
+// One "+N outfits" everywhere (09-ui-review §15b, G1–G8, #309): the chat's buy card and evidence, the Starter toast,
 // move 3 and the Closet's next best buy all count with the Closet's own rule (#84.3, closet/outfits.ts).
 import { US_EASTERN } from '@kitted/core';
 import seed from '../../assets/seed.json';

@@ -431,11 +431,28 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 | Check | Result | How |
 |---|---|---|
 | N1–N4 | Pass (T) | `nextBuy.test.ts` (written right after the engine; the checks were committed first): on the demo closet the pick is dark straight jeans, +16 |
-| N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **Not yet on the Simulator** (the Mac was low on memory) |
+| N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **On the Simulator Oct 17 (§15):** two fixes, then pass |
 | N6 | Pass | `npm run check`: 1041 app tests |
 | Found | | **Two "+N" rules in the app:** the chat's buy card, the Starter list and the first-3-moves card count with `fitsGain` (core `rotation`: any combination without a hard clash, v4), while the Closet now counts outfits rated Put together (#84.3). So on the demo closet the chat suggests a navy polo (+12) and the Closet dark straight jeans (+16). Proposed as a follow-up: one count everywhere |
 
-## 15. One "+N outfits" everywhere: pass/fail checks, set before building (Oct 16, #309)
+## 15. Next best buy on the Simulator: two fixes, pass/fail checks set before building (Oct 17, #312)
+Found on the iOS Simulator (iPhone 17 Pro Max, demo 182; first time the sheet ran on iOS, since N5 had passed only on the web): in dark mode the sheet's big "+16" is near-black on the dark sheet, and the sheet says "What it unlocks · 16" but shows 6 outfits with no way to see the other 10.
+- **N7 (S)** The "+16" reads in both themes: it takes a real theme color. `Numeral`'s `color` is a color value, not a token name, so `color="accent"` was an invalid color (black on iOS). It becomes ink, the default: copper is kept for a score that moves (#231).
+- **N8 (T)** No `<Numeral … color="…">` in the app passes a string literal (a token name is never a color); a test scans the source.
+- **N9 (S)** The sheet shows the first 6 outfits, then "Show {n} more" (the Outfits list's own words), which shows all 16 and becomes "Show fewer". 6 or fewer: no link.
+- **N10** `npm run check` green.
+
+### §15 results (Oct 17, #312): checked against N7–N10, none changed
+On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared iPhone 17 Pro left alone), demo 182, light, dark and the largest text size; screenshots `screenshots/nextbuy-oct17/` (git-ignored).
+| Check | Result | How |
+|---|---|---|
+| N7 | Pass (S) | "+16" in ink, clear on the dark sheet (was near-black on it) |
+| N8 | Pass (T) | `numeralColor.test.ts` failed on `NextBuySheet.tsx` before the fix, passes after; it was the app's only string-literal Numeral color |
+| N9 | Pass (S) | 6 outfits, "Show 10 more" shows all 16 (4 rows), then "Show fewer"; Got it below; at the largest size the title, number and line stack and the link reads |
+| N10 | Pass | `npm run check`'s typecheck, lint and 1053 app tests (core untouched) |
+| Found | | The card appears about a second after the outfit list on a cold load, so the list moves down once (`loadNextBuy` scores each Starter candidate). Not fixed: a reserved-height placeholder or computing it with the list is the follow-up if it bothers him. |
+
+## 15b. One "+N outfits" everywhere: pass/fail checks, set before building (Oct 16, #309)
 Found in §14: two counts live side by side. The Closet's Outfits and its next best buy count trios rated Put together (7.0+ at Everyday, the parts engine; layers never multiply; chat-only pieces never counted; #84.3, `closet/outfits.ts`). The chat's buy card and buy-next evidence, Starter essentials' "+1 fit" toast and move 3 of "Your first 3 moves" still use `fitsGain` (`finish/starter.ts`: core `rotation`, v4 `outfitValid`, no 7.0 bar, and a second piece of a kind he owns adds 0). On the demo closet the chat says navy polo +12 while Closet says dark straight jeans +16 (the old rule gives the straight jeans +0 because he owns slim dark jeans). The founder wants one honest number. Nothing about scoring changes.
 - **G1 (T)** every "+N" (the chat's buy card, the buy-next evidence lines, the Starter toast, move 3's detail, the Closet's next best buy, "Add shoes and you'd have n") equals the Closet's count with the piece minus without it, on the demo closet, for every Starter row he doesn't own.
 - **G2 (T)** with nothing he avoids, the chat's buy-next evidence lists the rows in the Closet's ranking (most outfits first, ties in Starter order), so its first row is the Closet's next best buy. On the demo closet: dark straight jeans, +16. (What he avoids, #303, may still drop a row from the chat's list: that's a filter, not a second count.)
@@ -447,7 +464,7 @@ Found in §14: two counts live side by side. The Closet's Outfits and its next b
 - **G8 (T)** the demo's "What should I buy next?" (screen 171) suggests the piece the Closet suggests, with the same "+N", and its words pass the sentence gate.
 - **G9** `npm run check` green; tests whose expected numbers came from the old rule are updated and named in #309.
 
-### §15 results (Oct 16, #309): checked against G1–G9, none changed
+### §15b results (Oct 16, #309): checked against G1–G9, none changed
 | Check | Result | How |
 |---|---|---|
 | G1 | Pass (T) | `oneCount.test.ts`: for each Starter row the demo closet lacks (dark straight jeans, navy polo, grey quarter-zip), the chat card, the evidence line, move 3's detail, the toast and the next best buy all equal the Closet's count with it minus without it |

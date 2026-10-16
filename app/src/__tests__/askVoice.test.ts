@@ -5,6 +5,7 @@ import { checkSentence, createSentenceStream, scoresIn, sentences, stripMarkup, 
 import { EXAMPLES, PROMPT_VERSION, systemPrompt, type AskKind } from '@/features/ask/prompt';
 import { DEMO_CARD_ANSWERS, seededAnswers } from '@/features/ask/source';
 import { voiceProblems } from '@/features/ask/voice';
+import { isUnderage } from '@/features/ask/guards';
 import type { ClosetItemRow } from '@/data/types';
 
 const NO_SCORES: GateContext = { allowedScores: new Set() };
@@ -173,5 +174,31 @@ describe('E0 fix (#310): handles never show', () => {
     const out = g.push('Layer the olive overshirt (P13) over your navy crewneck (P11) and dark jeans [P3]. Wear P7 with it, like FC2 showed. ') + g.end();
     expect(out.trim()).toBe('Layer the olive overshirt over your navy crewneck and dark jeans.');
     expect(g.dropped).toEqual(['handle']);
+  });
+});
+
+describe('Score check fixes from the model test (#311)', () => {
+  const ctx = { allowedScores: new Set(['7.5', '9.0']) };
+  it('"score 7.5 on the photo" is a 7.5, not a 7', () => {
+    expect(checkSentence('Both swaps score 7.5 on the photo, so stick with the sneakers.', ctx)).toBeNull();
+    expect(checkSentence('The boots drop that score to 7.5 because they run heavy.', ctx)).toBeNull();
+    expect(checkSentence('It gets a 7.', ctx)).toBe('score');
+  });
+  it('a score in words counts as a score', () => {
+    expect(checkSentence('A ten needs that extra layer.', ctx)).toBe('score');
+    expect(checkSentence('That gets you to an eight.', ctx)).toBe('score');
+    expect(checkSentence('That takes you to a nine, the same as this morning.', ctx)).toBeNull();
+    expect(checkSentence('It adds ten outfits to your rotation.', ctx)).toBeNull();
+    expect(checkSentence('Give it a ten-minute steam.', ctx)).toBeNull();
+    expect(checkSentence('You have one or two options.', ctx)).toBeNull();
+  });
+});
+
+describe('Under 18, on the phone (#311)', () => {
+  it('first person, 10–17, never a size or a height', () => {
+    for (const s of ["I'm 16, is that ok?", 'im 15', 'I am 17 years old', "I'm only 14 lol", 'what should i wear im 16'])
+      expect([s, isUnderage(s)]).toEqual([s, true]);
+    for (const s of ["I'm 5'10", "I'm a 32 waist", "I'm 18", "I'm 21", 'My brother is 16', 'I wear a 16 neck', "I'm 13 inches around the calf", "I'm 16 in shoe size"])
+      expect([s, isUnderage(s)]).toEqual([s, false]);
   });
 });

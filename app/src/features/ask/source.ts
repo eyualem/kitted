@@ -12,7 +12,7 @@ import { normalizeQuestion } from './guards';
 
 export type AnswerEvent =
   | { type: 'delta'; text: string }
-  | { type: 'done'; card?: unknown; remember?: unknown; need?: unknown; refused?: boolean; uncounted?: boolean; verdict?: 'yes' | 'no' | 'depends' | null }
+  | { type: 'done'; card?: unknown; remember?: unknown; need?: unknown; refused?: boolean; uncounted?: boolean; verdict?: 'yes' | 'no' | 'depends' | null; blockFound?: boolean }
   | { type: 'failed'; code: string };
 
 export interface AnswerRequest {
