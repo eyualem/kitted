@@ -417,3 +417,12 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 | O13 | Pass after two fixes (S) | web preview 182–184 light and dark; then the Simulator (`screenshots/outfits-oct16/`): Outfits, Pieces (the grid draws on iOS), the chinos' page in dark, Outfits at the largest size (chips one per row, the drawing above the text, nothing clipped). **Fixed:** the Pieces / Outfits labels shrank to a few points on iOS (the shared control's shrink-to-fit; off for this bar), and the standing outfit's shoes were drawn too small |
 | O14 | Pass | `npm run check`: 948 app tests |
 | Found, not mine | | on the web preview the Pieces grid draws nothing (main too, before this change); iOS is unaffected as far as earlier sessions saw. Worth a look |
+
+## 14. Next best buy: pass/fail checks, set before building (Oct 16, #308)
+§2 Closet: "no next buy"; approved #87 (named by kind and spec, never a brand; shows the outfits it unlocks with the new piece dashed; no shop links) and 02 C7. Built from the Starter basics (`finish/starter.ts`); words from the deck (`closet.nextBuy.tag`, `nextBuy.*`) and the chat's "+{n} outfits with what you own". 02 C7's per-piece "What to look for" bullets exist for one example only, so they wait for copy. The full list is free (07 §12: "everything that runs on code is free").
+- **N1 (T)** the pick is the Starter piece he doesn't own (by the closet or a tap) that adds the most outfits under the Closet's own count (7.0+ at Everyday); ties keep the Starter order; none when nothing adds an outfit.
+- **N2 (T)** its "+n" equals the count with it minus the count without it, and never counts chat-only pieces.
+- **N3 (T)** "what it unlocks" lists only outfits that contain the new piece, each new outfit once, best first.
+- **N4 (T)** no brand or shop anywhere in it (the sentence gate's brand rule on every line), and no link out.
+- **N5 (S)** Outfits shows the card under the count; a tap opens the sheet: the piece, "+n outfits with what you own", its price, the unlocked outfits with the new piece dashed, and Got it. Light, dark, the largest size where the Simulator is free.
+- **N6** `npm run check` green.
