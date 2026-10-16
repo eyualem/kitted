@@ -154,3 +154,24 @@ describe('L4 · VoiceOver', () => {
     expect(layout.chips.map(chipLabel)).toEqual(['Open white sneakers']);
   });
 });
+
+describe('E0 fixes (#310): what the first live tries found', () => {
+  it('piece names lose their capital mid-sentence, keep it at the start', () => {
+    const names = ['Navy overshirt', 'White tee', 'Black Chelsea boots'];
+    const g = createSentenceStream({ allowedScores: new Set(), pieceNames: names });
+    const out = g.push('Navy overshirt it is. Keep your Navy overshirt open over the White tee, with the Black Chelsea boots. ') + g.end();
+    expect(out.trim()).toBe('Navy overshirt it is. Keep your navy overshirt open over the white tee, with the black Chelsea boots.');
+  });
+  it('"handle" in plain English is not an internal word', () => {
+    expect(voiceProblems('The layers handle the fall chill.')).toEqual([]);
+  });
+});
+
+describe('E0 fix (#310): handles never show', () => {
+  it('cuts "(P13)" and "[P3]"; a sentence with a bare P7 or FC2 is dropped', () => {
+    const g = createSentenceStream({ allowedScores: new Set() });
+    const out = g.push('Layer the olive overshirt (P13) over your navy crewneck (P11) and dark jeans [P3]. Wear P7 with it, like FC2 showed. ') + g.end();
+    expect(out.trim()).toBe('Layer the olive overshirt over your navy crewneck and dark jeans.');
+    expect(g.dropped).toEqual(['handle']);
+  });
+});

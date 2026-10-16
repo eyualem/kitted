@@ -85,8 +85,8 @@ describe('A1 · one request, the right shape', () => {
     expect(STYLIST_GUIDE).toBe(readFileSync(join(__dirname, '../../../rubric/stylist-guide.md'), 'utf8'));
   });
 
-  it('buildAskRequest turns thinking off', () => {
-    expect(buildAskRequest('s', 'u').generationConfig.thinkingConfig).toEqual({ thinkingBudget: 0 });
+  it('buildAskRequest asks for the least thinking the model takes (Flash-Lite refuses a budget of 0, #310)', () => {
+    expect(buildAskRequest('s', 'u').generationConfig.thinkingConfig).toEqual({ thinkingLevel: 'minimal' });
   });
 });
 
@@ -270,14 +270,15 @@ describe('A6 · never sent', () => {
 
 describe('A7 · off on his phone', () => {
   it('no real source while CHAT_LIVE is off, or without a key', () => {
+    // Jest has no dev key, so even with the switch on (#310) the default source is null here, as in a release build.
     expect(liveAnswerSource()).toBeNull();
     expect(liveAnswerSource(true, undefined)).toBeNull();
     expect(liveAnswerSource(false, 'KEY')).toBeNull();
     expect(liveAnswerSource(true, 'KEY')?.name).toBe('gemini');
   });
-  it('the switch ships off', () => {
+  it('the key only ever comes from a dev build (__DEV__), so a release build can never pick the real source', () => {
     const src = readFileSync(join(__dirname, '../features/ask/liveSource.ts'), 'utf8');
-    expect(src).toMatch(/export const CHAT_LIVE = false;/);
+    expect(src).toMatch(/const KEY: string \| undefined = __DEV__ \? process\.env\.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined;/);
   });
   it('the gate passes every seeded demo answer (the demo screens keep their words)', () => {
     const s = seed as unknown as { scenarios: Record<string, { chatThread?: { role: string; kind: string; text?: string }[] }> };

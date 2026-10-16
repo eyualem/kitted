@@ -640,6 +640,7 @@ The founder picked look C and voice 1 ("Go with look C (stylist note) and voice 
 | V5 | Pass (T) | the Swift side uses only DictationTranscriber; no SFSpeechRecognizer, no audio file |
 | V6 | Not run | the Mac bench needs the founder's OK for Apple's speech model on the Mac |
 | V7–V8 | Not run | on his phone, after a reinstall (the native fixes); the JS checks which native calls exist, so the current build keeps working until then. The new native code compiled (Simulator build, Oct 16) |
-| E0–E2 | Not run | the $0.50 and the ~$1–2 are still on his list |
+| E0 | Done (Oct 17, #310) | 22 questions × 2, twice, on Flash-Lite through the app's pipeline: 88 of 88 answered, **0.12¢ a question**, first words 1.0 s median (p90 1.7–2.1 s), whole answer 1.2 s; about $0.12 spent of the $0.50. Round 1 found 8 code problems (the model refused `thinkingBudget: 0`; the what-if didn't say what he wore; "is my outfit good?" had no check; a no-photo fit claimed; capitals; copied examples; the rude reply; handles in the text on the web preview), all fixed with tests. Left: an invented detail now and then. Report: `extraction-test/results/ask-live1/report.md`. `CHAT_LIVE` is on: his dev build answers for real through Metro |
+| E1–E2 | Not run | the ~$1–2 test and his blind pick are still on his list |
 
 **Left out, on purpose:** long-press Copy on an answer (needs a new package, `expo-clipboard`: the founder's OK); a rise-in per sentence (one fade on the first words instead); "Going for" as a tie-break in outfit picking (his picked looks already break ties). **Changed in passing:** on the Simulator the mic now shows (the support check needs only the language now, not an installed model), so tapping it there tries Apple's model.
