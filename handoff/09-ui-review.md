@@ -532,3 +532,15 @@ A correction here changes the closet piece, not the checks it was seen in. The c
 - **X16** `npm run check` green (G1).
 
 **Estimate:** about 2 days: the action and its Undo (half a day), the section and sheets (half a day), the drawings apart (half a day), tests and the Simulator pass (half a day). JS only: on his phone through Metro, no reinstall.
+
+### §17 results (Oct 16, #314): built with every default (founder: "After the mockups, I agree with them. You may continue."), checked against X1–X16, none changed
+| Check | Result | How |
+|---|---|---|
+| X1–X14 | Pass (T) | `pieceEdit.test.ts`, 27 tests, run first against no code (the module didn't exist), then green. Two test fixes, not check changes: the demo hoodie's real name is "Heather grey Nike hoodie" (the closet call reads the shade and logo), not the "Grey hoodie" the test guessed, and the seed's "Grey tee" becomes "Heather grey striped tee"; `toHaveProperty` read the dotted string keys as paths |
+| X5 | Pass (T) | 5 drawings added: a skinny leg (narrower, tapered), an oversized top (dropped shoulders, longer and wider), a knit texture on sweaters, the print on every graphic tee, a canvas toe cap; and one more the test found: chinos and trousers drew the same in navy, so trousers are now smooth cloth with a sharper crease. #287's C5 render hashes still pass: every other drawing is byte for byte the same |
+| X9 | Pass (T) | 6 picks and their Undos across p01b and s12 checks: every score, raw score, part score, reading, sighting and closet summary unchanged; `packages/kitted-core` has no diff |
+| X15 | Pass (S), one note | iPhone 17 Pro Simulator, demo screens 185 (the jeans' page), 186 (Leg), 187 (Kind on the black sweatshirt), 188 (Color): Leg → Relaxed redraws the hero and shows "Changed to relaxed leg. Your scores stay the same." with Undo; Undo puts it back (log `undo edit … ran 5 ms`); light, dark and the largest size (rows stack, the sheet drops to 2 columns, nothing clipped). VoiceOver labels are checked by X14, not read aloud on the Simulator. **Note:** the Simulator tool's screenshots take seconds, so a timed Undo tap twice landed on the row under the toast after the toast had gone; with the toast up, Undo worked |
+| X16 | Pass | typecheck, lint, 755 core tests, 1088 app tests |
+| Fixed on the Simulator | | the selected swatch's check was drawn in the swatch's own color (white or ink now); the knit lines were too faint on black, then too strong (read as grey), now in between; the sheet now closes the moment he taps and the write lands just after (it waited for the write) |
+| Not built (defaults) | | no long-press entry (call 3), no re-scoring of past checks (call 2), no top ↔ layer (call 6), no long-sleeve tee (call 7) |
+

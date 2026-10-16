@@ -218,6 +218,11 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
+  // Fix what a piece is (09-ui-review §17, #314): "What it is" on the dark jeans' page and its pickers (185–188: PR #7 holds 190–193).
+  { n: 185, name: 'Closet · What it is', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B3', under: '/closet' },
+  { n: 186, name: 'What it is · Leg', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=leg', under: '/closet/item/B3' },
+  { n: 187, name: 'What it is · Kind', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/T6?field=kind', under: '/closet/item/T6' },
+  { n: 188, name: 'What it is · Color', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=color', under: '/closet/item/B3' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

@@ -3,7 +3,8 @@
 // with the piece outlined, never the cut-out alone (#276 call 1), and a photo never changes the drawing (call 3).
 //   1. The hero: a swipe gallery, the drawing, then his cover photo and his other photos; page dots only when there
 //      are photos, a light tick per page. A tap on a photo opens it full screen on that check.
-//   2. The name (tap to rename), "Layer · Grey · Regular fit", and what the data says: worn, last worn, added.
+//   2. The name (tap to rename), the slot, then "What it is" (§17, #314): Kind · Color · Leg or Fit · Pattern, each
+//      opening its picker; then what the data says: worn, last worn, added.
 //   3. "Your photos · N": square crops, best first, the cover marked. Long-press (or VoiceOver actions): Use as cover ·
 //      Open the look · Not this piece (a correction, with Undo) · It's another piece… (move just this photo to another
 //      piece of its kind, with Undo; on the piece's only photo, merge the piece; §8, #289) · Remove photo (with Undo). Mostly hidden ones fold into
@@ -31,7 +32,8 @@ import { artSpec } from './artSpec';
 import { ClosetTile } from './ClosetTile';
 import { colorPhrase } from './itemName';
 import { mergeOffer, notePieceBlur, notePieceFocus } from './merge';
-import { anotherPiece, openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
+import { anotherPiece, editHref, openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
+import { editRows } from './pieceEdit';
 import { piecePhotos, type PiecePhoto } from './piecePhotos';
 import { livePhotoDeps, loadPhotoChecks } from './photoChecks';
 import { OutfitCard } from './OutfitsView';
@@ -55,6 +57,11 @@ export function pieceDetail(item: Pick<ClosetItemRow, 'slot' | 'garment' | 'art'
   if (!color) return base;
   const [slot, ...rest] = base.split(' · ');
   return rest.length > 0 ? t('closet.piece.detail', { slot: slot ?? '', color, fit: rest.join(' · ') }) : t('closet.piece.detailNoFit', { slot: slot ?? '', color });
+}
+
+/** The line under the name: the slot ("Bottom", "Layer"); the rest lives in "What it is" (§17). */
+function slotWord(item: Pick<ClosetItemRow, 'slot' | 'garment'>): string {
+  return addedDetail({ slot: item.slot, garment: {} });
 }
 
 function addedLine(item: ClosetItemRow): string {
@@ -110,6 +117,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
   }
   const { item, photos, inLookbook, offers, merge, goes, outfitsWith, all: closetAll } = data;
   const spec = artSpec(item);
+  const rows = editRows(item);
   const hero = photos.shown;
   const all = hero.length + photos.folded.length;
   const date = (ph: PiecePhoto) => longDate(ph.createdAt, sessionClock.offset);
@@ -202,9 +210,18 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
           {Platform.OS === 'ios' ? <Icon name="edit" size="small" color="ink3" scalesWithText /> : null}
         </Pressable>
         <KText variant="subheadline" color="ink2">
-          {pieceDetail(item)}
+          {slotWord(item)}
         </KText>
       </View>
+
+      {/* What it is (§17, #314): the rest of the old detail line, each part a row he can fix. */}
+      {rows.length > 0 ? (
+        <Section label={t('closet.edit.title')} footer={t('closet.edit.foot')}>
+          {rows.map((r) => (
+            <LinkRow key={r.field} title={r.label} value={r.value} hint={t('closet.edit.a11y.rowHint')} onPress={() => router.push(editHref(item, r.field) as Href)} />
+          ))}
+        </Section>
+      ) : null}
 
       <Section>
         <ValueRow

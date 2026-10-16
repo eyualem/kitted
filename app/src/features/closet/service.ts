@@ -29,6 +29,7 @@ import { serial, type SerialOptions } from './checkWrites';
 import { mergeCandidates, type MergeUndo } from './merge';
 import { isFirstPhoto, photoOffer, photoSightings, type PhotoUndo } from './wrongCard';
 import { assignNames, baseName, isAutoNamed } from './itemName';
+import { currentValue, editPlan, isOffered, type EditField, type EditValue } from './pieceEdit';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
 export const CLOSET_DEADLINE_MS = 12_000;
@@ -1271,6 +1272,28 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await renameAll();
       return store.closet.get(itemId);
     }),
+    /**
+     * "What it is" on a piece's page (09-ui-review §17, #314): his pick for one row (kind, color, leg, fit, pattern)
+     * becomes the piece's own value, confirmed, and the reads he corrected away from are taught to the matcher
+     * (pieceEdit.editPlan); the drawing, its color and a name the app made follow (refreshItem, renameAll). Only closet
+     * rows change: no reading, sighting or fit-check score moves. null when the piece isn't his (or waits on "Same as
+     * your …?"), the value isn't offered, or it's already the value. Returns what Undo (restoreEdit) restores.
+     */
+    editPiece: (itemId: string, field: EditField, value: EditValue) => serial(async (): Promise<{ piece: ClosetItemRow; undo: PhotoUndo; remapped: string | null } | null> => {
+      const it = await store.closet.get(itemId);
+      if (!it || !isOwned(it)) return null;
+      const owned = (await store.closet.all()).filter(isOwned);
+      if (isAwaitingAnswer(it, owned)) return null;
+      if (!isOffered(it, field, value) || currentValue(it, field) === value) return null;
+      const before = await snapshot();
+      const plan = editPlan(it, field, value, sightingsOf(itemId, await store.closetObs.all()).map(observationOfRow));
+      await store.closet.patch(itemId, { ...plan.patch, updatedAt: clock.nowMs() });
+      await refreshItem(itemId);
+      await renameAll();
+      return { piece: (await store.closet.get(itemId))!, undo: await changesSince(before), remapped: plan.remapped };
+    }, { label: 'edit piece' }),
+    /** Undo for editPiece: every closet row it changed (the piece, a neighbor renamed around it), back exactly. */
+    restoreEdit: (u: PhotoUndo) => serial(() => restoreRows(u), UNDO('undo edit')),
     /** Undo for removeItem. */
     restoreItem: (itemId: string) => serial(async () => {
       await store.closet.patch(itemId, { isDeleted: false, updatedAt: clock.nowMs() });

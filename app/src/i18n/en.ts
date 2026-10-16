@@ -1002,6 +1002,34 @@ const addedInBuild = {
   // Wrong card (#289): a photo's long-press menu on the piece page; its picker reuses closet.merge.title (no
   // subtitle), its toast item.dup.saidSame, and "Not this piece" keeps closet.piece.splitOff, now with Undo.
   'closet.piece.another': "It's another piece…",
+  // Fix what a piece is (09-ui-review §17, #314): "What it is" on a piece's page, its picker sheets and the toast.
+  // Kind and color names reuse garmentName and FAMILY_WORD; Leg and Fit reuse value.leg.* and value.topFit.*.
+  'closet.edit.title': 'What it is',
+  'closet.edit.kind': 'Kind',
+  'closet.edit.color': 'Color',
+  'closet.edit.leg': 'Leg',
+  'closet.edit.fit': 'Fit',
+  'closet.edit.pattern': 'Pattern',
+  'closet.edit.more': 'More kinds',
+  'closet.edit.sub': 'Pick what it really is.',
+  'closet.edit.foot': 'Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same.',
+  'closet.edit.toast': 'Changed to {value}. Your scores stay the same.',
+  'closet.edit.toastRemap': 'Changed to {kind}, in {color}. Your scores stay the same.',
+  'closet.edit.pattern.solid': 'Plain',
+  'closet.edit.pattern.stripes': 'Stripes',
+  'closet.edit.pattern.checks_plaid': 'Checks',
+  'closet.edit.pattern.graphic': 'Graphic print',
+  'closet.edit.pattern.camo': 'Camo',
+  'closet.edit.pattern.floral': 'Floral',
+  'closet.edit.pattern.other': 'Other pattern',
+  'closet.edit.color.neutrals': 'Neutrals',
+  'closet.edit.color.blues': 'Blues and denim',
+  'closet.edit.color.earth': 'Earth tones',
+  'closet.edit.color.colors': 'Colors',
+  'closet.edit.a11y.rowHint': 'Double-tap to change.',
+  'closet.edit.a11y.leg': '{leg} leg',
+  'closet.edit.a11y.fit': '{fit} fit',
+  'closet.edit.a11y.more': 'Shows {n} more kinds',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */
