@@ -11,3 +11,9 @@ export const ACCOUNTS_BUILT = false;
 /** The notification ask (02 S15) and the scheduled daily idea. Off until expo-notifications is installed (a new
  *  package, the founder's OK): without it the ask can't ask, so it isn't shown (10-onboarding.md §9.5). */
 export const NOTIFICATIONS_BUILT = false;
+
+/** Sign-in methods wired to the real Firebase project (#295), shown in You → Settings → Account on dev builds while the
+ *  rest of accounts stays off (ACCOUNTS_BUILT): Google only. Apple waits for the $99 program, email for the Worker's
+ *  code route. Signing in backs nothing up yet (sync isn't wired), which is why the save offer and Welcome's "I already
+ *  have an account" stay hidden. */
+export const SIGN_IN_LIVE: readonly ('apple' | 'google' | 'email')[] = __DEV__ ? ['google'] : [];

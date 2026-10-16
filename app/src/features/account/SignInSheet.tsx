@@ -15,7 +15,7 @@ import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { showToast } from '@/features/toast/toast';
 import { setResumeStep } from '@/features/onboarding/resume';
 import { t } from '@/i18n/en';
-import { afterSignIn, auth, restoreParam, saveAccount, type SignInFrom } from './account';
+import { afterSignIn, auth, liveProviders, restoreParam, saveAccount, type SignInFrom } from './account';
 import type { AuthProvider, SignInResult } from './auth';
 import { cleanCode, cleanEmail, countdown, isCompleteCode, isValidEmail, resendLeft, CODE_LENGTH } from './email';
 import { ProviderButton } from './ProviderButton';
@@ -32,6 +32,7 @@ export function SignInSheet() {
   // `step` and `email` open the email steps directly (demo screens 134–135).
   const params = useLocalSearchParams<{ from?: string; step?: string; email?: string }>();
   const from: SignInFrom = params.from === 'welcome' || params.from === 'offer' ? params.from : 'settings';
+  const live = liveProviders();
   const [view, setView] = useState<View_>(params.step === 'email' ? 'email' : params.step === 'code' && params.email ? 'code' : 'options');
   const [busy, setBusy] = useState<AuthProvider | 'send' | 'verify' | null>(null);
   const [problem, setProblem] = useState<Problem>(null);
@@ -261,10 +262,10 @@ export function SignInSheet() {
         </KText>
         {problemLine}
         <View style={{ gap: 10 }}>
-          {(['apple', 'google'] as const).map((p) => (
+          {(['apple', 'google'] as const).filter((p) => live.includes(p)).map((p) => (
             <ProviderButton key={p} provider={p} busy={busy === p} disabled={busy !== null} onPress={() => void withProvider(p)} />
           ))}
-          <ProviderButton provider="email" busy={false} disabled={busy !== null} onPress={() => { setProblem(null); setView('email'); }} />
+          {live.includes('email') && <ProviderButton provider="email" busy={false} disabled={busy !== null} onPress={() => { setProblem(null); setView('email'); }} />}
         </View>
         <KText variant="footnote" color="ink3" style={{ paddingHorizontal: 4 }}>
           {t('acct.optional')}
