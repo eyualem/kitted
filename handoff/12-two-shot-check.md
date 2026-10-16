@@ -52,28 +52,34 @@ the score (a bug). Nothing in the app has changed yet. Next: step 0, then his sh
 1. **Agree with the feature.** A guided second shot inside the camera, before the score, is better than today's
    "finish it on the card after a partial score" (he sees one honest number instead of a partial one that
    changes).
-2. **Don't stitch the two photos or measure across them.** The mirror shot is straight on; the down shot looks
+2. **Founder, Oct 16 (agreed): the down shot's own facts count.** Whether the pants are baggy, slim or wide,
+   how they meet the shoes, and the shoes themselves are read from the down shot and scored like any check;
+   only measurements that need both photos (height, where things sit on the body) are dropped. T4 confirms each
+   fact against the full-body truth; shoes and how loose the pants are look the most readable from above.
+   **Priority lowered (founder: "I completely forgot about prop mode … we shouldn't focus too much on this"):**
+   step 0 stays worth doing; steps 1–3 and the shoot wait until after the beta or the interviews show the need.
+3. **Don't stitch the two photos or measure across them.** The mirror shot is straight on; the down shot looks
    from above, so the legs are foreshortened (thighs big, shoes small) and no height or proportion can be
    carried from one photo to the other. The app doesn't measure the body for scoring anyway (the waist and hem
    rulers weren't adopted, #264, #269, #273). Instead each fact comes from the photo that shows it, and the
    reading test (T4) decides which facts the down shot is trusted for. **The real risk is Proportions:** leg
    shape, the tuck and where the top ends move a shown score on 8–14 of 79 photos when read one step off
    (#222). If the down shot can't read leg shape, two-shot checks can't earn or lose those points.
-3. **Propped mode already needs no mirror.** The camera should offer it as the other way out, every time. But
+4. **Propped mode already needs no mirror.** The camera should offer it as the other way out, every time. But
    it needs floor space and something to lean the phone on, and many guys won't do it with roommates around,
    so the two-shot is worth building.
-4. **The 40% is a guess.** Add one question to the 10 interviews already on your list: "Where do you check your
+5. **The 40% is a guess.** Add one question to the 10 interviews already on your list: "Where do you check your
    outfit? Does that mirror show your shoes?" Not blocking: the step-0 fixes are worth doing anyway.
-5. **Two readings, merged by code (not one call with both photos), recommended,** because the top half can be
+6. **Two readings, merged by code (not one call with both photos), recommended,** because the top half can be
    read while he takes the down shot: the wait after the second photo is about the same as today. T4 compares
    both ways before it's built.
-6. **One check counts, not two,** and a two-shot check is never charged when he bails out halfway.
+7. **One check counts, not two,** and a two-shot check is never charged when he bails out halfway.
 
 ## 4. Copy (draft, outward-facing: for the founder's skim; built with these words)
 
 | Where | Words |
 |---|---|
-| Live tip, Mirror, no hips or feet | "Short mirror? Take your top half. I'll get the rest next." |
+| Live tip, Mirror, no hips or feet | Step 0 (before steps 1–3): "Short mirror? Prop your phone up to get your shoes in." Once step 1 is built: "Short mirror? Take your top half. I'll get the rest next." |
 | After the top shot | "Now your pants and shoes." · "Point the phone down at your feet." |
 | Down-shot tips | "Tilt down more" · "Both shoes in" · "Hold still" · "Too dark. Turn on the light." |
 | Down-shot quick check fails | "I can't see your shoes. Try again with both feet in the frame." |
