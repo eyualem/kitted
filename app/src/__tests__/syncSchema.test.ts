@@ -11,6 +11,7 @@ import { BASICS_KEY, LOOKS_KEY, OTHER_STYLE_KEY } from '@/features/onboarding/ba
 import { PENDING_DELETES_KV } from '@/features/closet/fileCleanup';
 import { INBOX_KEY } from '@/features/scan/inbox';
 import { FINISH_KEY, STARTER_MARKS_KEY } from '@/features/finish/service';
+import { SEGMENT_KEY } from '@/features/closet/outfits';
 import { WEATHER_PERMISSION_KV } from '@/services/weather';
 import { dataToRow, rowToData } from '@/sync/codec';
 import {
@@ -134,7 +135,7 @@ describe('S5 and S6 everything is classified', () => {
       LOOKS_KEY, OTHER_STYLE_KEY, BASICS_KEY, INBOX_KEY, GOING_FOR_LAST_KV, PENDING_DELETES_KV, WEATHER_PERMISSION_KV,
       PERMISSION_KV: WEATHER_PERMISSION_KV, MODE_KEY: 'camera.mode', REVEAL_KV: KV.revealFullShown,
       ACCOUNT_KEY: 'account.user', OFFER_KEY: 'account.offer', ONBOARDING_STEP_KEY: KV.onboardingStep,
-      FINISH_KEY, STARTER_MARKS_KEY,
+      FINISH_KEY, STARTER_MARKS_KEY, SEGMENT_KEY,
     };
     const resolve = (expr: string): string[] | null => {
       const e = expr.trim();
@@ -149,7 +150,7 @@ describe('S5 and S6 everything is classified', () => {
       if (/^KV\.style\(/.test(e)) return ['idea.style.day', 'idea.style.evening'];
       if (/^NOTIFY_KEY\[/.test(e)) return [KV.notifyIdea, KV.notifyReady, KV.notifyTrial];
       if (/^CURSOR_KV\(/.test(e)) return ['sync.cursor.x'];
-      if (e === 'key' || e === 'k') return []; // generic helpers (the store, the engine, tests)
+      if (e === 'key' || e === 'k' || e === 'step.key') return []; // generic helpers (the store, the engine, demo steps, tests)
       return KNOWN[e] !== undefined ? [KNOWN[e]!] : null;
     };
     const files: string[] = [];

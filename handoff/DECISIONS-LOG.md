@@ -1883,3 +1883,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Decided by Claude:** build with the default words now rather than wait on the copy OK, because losing a photo with no word is worse than a line he may reword. The other open §1 items need him: #8 ("How I score" rewrite, #233 item 1) and #13 (the support and policy links). §1 items 6, 9–12 and 14 were built in later sessions and are now ticked.
 
 305. **The Style profile keeps his edits when he leaves without tapping Save (09-ui-review §12, Q1–Q4, all pass).** Leaving any way saves a real change, like Settings; Save stays. Decided by Claude: autosave on leave (the review's own fix) rather than a "Discard changes?" prompt, since Settings already saves instantly and none of these fields moves a score.
+
+306. **The Closet's Outfits half is built (approved Oct 8, #84/#87/#88; plan and checks 09-ui-review §13, O1–O14; all pass but the Simulator and largest-text part of O13).** Pieces | Outfits in Closet (opens on Outfits at 3+, then remembers); the count; Try next and Your go-tos by occasion; No outfits yet with the missing slot's "+n"; Goes with on a piece's page.
+    - **Decided by Claude (no taste, logged here):**
+      - The engine scores with the parts engine (today's scoring) on core's `outfitReading`, so "Put together" means what a fit check would say; v4's `outfitValid` still rules out clashes. The demo closet makes 37, the mockup's number.
+      - A layer joins a trio only when it lifts the score by 0.5 (it never multiplies the count); layers are tried on the best 40 trios only (speed; the count never depends on them). A layer's own page lists the trios worn with it, since it otherwise rarely makes the general list.
+      - Goes with labels a filler by what it really is (a "Dressier" slot is never filled with something less dressy); one that's neither has no label.
+      - The reason line is the scoring's own best positive reason, so it can't contradict the score; a plain fallback otherwise.
+      - Worn = a scored check that wore the whole trio; its photo and real score show, never a score for an unworn one.
+      - Demo screen 15 is pinned to Pieces so it keeps showing the grid; new screens 182–184.
+    - **New words, listed for his skim:** "Clean basics that work together.", "Show {n} more", "Worn {date}" (not used yet), and the slot lines ("Add a top", "Add bottoms", "Add shoes"). The rest are D15's approved labels.
+    - **Not done:** C7's next best buy screen; the Simulator and largest-text check.

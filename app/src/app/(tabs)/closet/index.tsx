@@ -3,6 +3,8 @@
 // details (#91), with the "Same as your …?" questions the stylist still has on top, 3 at a time (#111). A tap on a piece
 // opens its page (#276); a long-press is the shortcut menu. While clothes scans wait to be read, one row on top
 // ("Waiting to be read · 2 photos", #280) opens the scan inbox.
+// Pieces | Outfits (09-ui-review §13, #306; #84, #87): opens on Outfits once he can make 3+, else Pieces, then
+// remembers his tap.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useState } from 'react';
@@ -21,7 +23,11 @@ import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
 import { LinkRow, Section } from '@/features/settings/SettingsList';
 import { fitCheck } from '@/features/fitcheck/session';
 import { goToStylist } from '@/router/stylistAction';
+import { OutfitsView } from '@/features/closet/OutfitsView';
+import { openingSegment, outfitCount, SEGMENT_KEY } from '@/features/closet/outfits';
+import { Segmented } from '@/features/onboarding/Segmented';
 import { t } from '@/i18n/en';
+
 
 const GAP = 10;
 
@@ -37,13 +43,18 @@ export default function ClosetScreen() {
     const obs = await store.closetObs.all();
     const checks = await loadPhotoChecks(store);
     const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it, obs, checks, livePhotoDeps)]));
-    return { items, byId, previews, asks: await fitCheck.closet.openAsks() };
+    const fitChecks = await store.fitChecks.all();
+    const styles = (await store.profile.get('me'))?.styles ?? null;
+    return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count: outfitCount(all, fitChecks, styles) };
   }, []);
+  const remembered = useLive(['kv'], () => store.getKv(SEGMENT_KEY), [], SEGMENT_KEY);
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
   if (!data) return null;
-  const { items, byId, previews, asks } = data;
+  const { items, byId, previews, asks, all, fitChecks, styles, count } = data;
+  const segment = openingSegment(count, remembered ?? null);
+  const pick = (v: 'pieces' | 'outfits') => void store.setKv(SEGMENT_KEY, v);
   const open = asks.flatMap(({ checkId, ask }) => {
     const photo = byId.get(ask.itemId), candidate = byId.get(ask.candidateId);
     if (!photo || !candidate) return [];
@@ -66,6 +77,15 @@ export default function ClosetScreen() {
         </EmptyState>
       ) : (
         <>
+          <Segmented<'pieces' | 'outfits'>
+            label={t('closet.title')}
+            value={segment}
+            onChange={pick}
+            options={[{ value: 'pieces', label: t('closet.seg.pieces') }, { value: 'outfits', label: t('closet.seg.outfits') }]}
+          />
+          {segment === 'outfits' ? <OutfitsView closet={all} checks={fitChecks} count={count} styles={styles} /> : null}
+          {segment === 'pieces' ? (
+          <>
           {/* "To confirm · 2" (#117): the open questions in one quiet card on top, 3 at a time (#111); no badge, no push. */}
           {queue.total > 0 ? (
             <KCard>
@@ -85,6 +105,8 @@ export default function ClosetScreen() {
               <PieceMenu key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} preview={previews.get(it.id) ?? { kind: 'drawn' }} />
             )) : null}
           </View>
+          </>
+          ) : null}
         </>
       )}
     </ScrollView>

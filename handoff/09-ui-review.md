@@ -58,8 +58,8 @@
 - [ ] Error toasts look like success toasts (no icon, no warning haptic, no swipe away). `toast/ToastHost.tsx` · L · S
 
 ### Closet
-- [ ] **The approved Outfits half isn't built** (Pieces | Outfits, "Try next", "Your go-tos", "16 pieces · 24 outfits"). The core counter `rotation()` exists but nothing calls it, and it uses the old v4 rules and counts layers (against #84). Rebuild it on the parts engine with layers off before showing a count. `closet/index.tsx`, `packages/kitted-core/src/rotation.ts:9-13, 82-86` · H · L
-- [ ] **No "Goes with", no outfit count per piece, no next buy** (all specced, #87). Start with Goes with on the piece page. · M · M
+- [x] (#306) **The approved Outfits half isn't built** (Pieces | Outfits, "Try next", "Your go-tos", "16 pieces · 24 outfits"). The core counter `rotation()` exists but nothing calls it, and it uses the old v4 rules and counts layers (against #84). Rebuild it on the parts engine with layers off before showing a count. `closet/index.tsx`, `packages/kitted-core/src/rotation.ts:9-13, 82-86` · H · L
+- [x] (#306, Goes with and the count; next buy still to do) **No "Goes with", no outfit count per piece, no next buy** (all specced, #87). Start with Goes with on the piece page. · M · M
 - [ ] **The grid has no order:** shirts, boots, jeans and sneakers mixed, newest first. Fix: shelves in body order (Layers · Tops · Bottoms · Shoes) with counts, dark to light inside each, filter chips at 12+ (the Oct 14 mockup `screenshots/theme-round2/v2-3-closet.png`). `closet/index.tsx:40` · M · S
 - [ ] **Open questions bury the clothes:** each is ~400 pt and they all stack on top; the cap of 3 (#111) isn't enforced. Fix: one row "2 pieces to confirm ›" opening a one-at-a-time sheet. `closet/index.tsx:67-79`, `closet/service.ts:1060-1071` · M · S
 - [ ] **An answered question vanishes with no confirmation or Undo**, and a merged tile disappears without animation. Fix: "Saved as your khaki chinos." with Undo, a success haptic, a layout animation. `service.ts:1066` · M · S
@@ -409,3 +409,11 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 - **O12 (T)** a 40-piece closet lists in under 300 ms on the Mac (the grid shows while it computes).
 - **O13 (S)** web preview and, if free, the Simulator: demo screens for Outfits (full closet), No outfits yet, and the piece page's Goes with; light and dark; the largest text size.
 - **O14** `npm run check` green.
+
+### §13 results (Oct 16, #306): checked against O1–O14, none changed
+| Check | Result | How |
+|---|---|---|
+| O1–O12 | Pass (T) | `closetOutfits.test.ts`, 12 tests on the full demo closet (16 pieces): 37 outfits at Everyday (the mockup's own number), 41 ms; a 40-piece closet under 300 ms (best of 3) |
+| O13 | Partly (S) | web preview: 182 Outfits (37, Try next with no scores, Your go-tos with his real 9.0s), 183 No outfits yet ("Add shoes and you'd have 4 outfits"), 184 the chinos' page (16 outfits, Goes with: Best match, Dressier, More relaxed), light and dark. **Not yet:** the Simulator (in use by another session) and the largest text size |
+| O14 | Pass | `npm run check`: 948 app tests |
+| Found, not mine | | on the web preview the Pieces grid draws nothing (main too, before this change); iOS is unaffected as far as earlier sessions saw. Worth a look |

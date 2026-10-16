@@ -215,6 +215,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   // All 3 moves done (#292 Y5): the first check's top fix made by a re-check, a basic marked, the move-3 piece owned.
   { n: 180, name: 'Your moves · All 3 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
   { n: 181, name: 'Lookbook · no Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
+  { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
+  { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

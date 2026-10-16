@@ -34,6 +34,8 @@ import { mergeOffer, notePieceBlur, notePieceFocus } from './merge';
 import { anotherPiece, openLook, openPhoto, notThisPiece, removePhoto, removePiece, renamePiece, setAsCover } from './pieceActions';
 import { piecePhotos, type PiecePhoto } from './piecePhotos';
 import { livePhotoDeps, loadPhotoChecks } from './photoChecks';
+import { OutfitCard } from './OutfitsView';
+import { buildOutfits, goesWith } from './outfits';
 import type { PhotoAction } from './PiecePhotoTile';
 import { PhotoMenu } from './PhotoMenu';
 import { isOwned } from './profile';
@@ -83,7 +85,12 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
     // What each photo's menu offers: Not this piece and It's another piece… (§8, #289).
     const ctx = { all, obs, checks };
     const offers = new Map([...photos.shown, ...photos.folded].map((ph) => [ph.obsId, photoOffer(item, ph.obsId, ctx)]));
-    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all) };
+    // Goes with (09-ui-review §13 O9, #306): the outfits with this piece; a layer gets the list built around it.
+    const fitRows = [...rows.values()];
+    const styles = (await store.profile.get('me'))?.styles ?? null;
+    const around = buildOutfits({ closet: all, checks: fitRows, styles, occasion: 'everyday', ...(item.slot === 'outer' ? { withLayer: item.id } : {}) });
+    const outfitsWith = around.filter((o) => o.itemIds.includes(item.id));
+    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all), all, goes: goesWith(item.id, around), outfitsWith: outfitsWith.length };
   }, [id]);
   // Folded into another piece (#280): back on this page after the picker closes, it shows the kept piece instead.
   const mergedInto = data && !data.item ? data.mergedInto : null;
@@ -101,7 +108,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
   if (!data.item) {
     return <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} />;
   }
-  const { item, photos, inLookbook, offers, merge } = data;
+  const { item, photos, inLookbook, offers, merge, goes, outfitsWith, all: closetAll } = data;
   const spec = artSpec(item);
   const hero = photos.shown;
   const all = hero.length + photos.folded.length;
@@ -211,7 +218,25 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
           />
         ) : null}
         <ValueRow label={t('item.addedLabel')} value={addedLine(item)} spoken={`${t('item.addedLabel')}, ${addedLine(item)}`} />
+        {outfitsWith > 0 ? (
+          <ValueRow
+            label={t('closet.seg.outfits')} value={outfitsWith === 1 ? t('closet.piece.outfitsOne') : t('closet.piece.outfits', { n: outfitsWith })}
+            spoken={`${t('closet.seg.outfits')}, ${outfitsWith === 1 ? t('closet.piece.outfitsOne') : t('closet.piece.outfits', { n: outfitsWith })}`}
+          />
+        ) : null}
       </Section>
+
+      {goes.length > 0 ? (
+        <View style={{ gap: space.s }}>
+          <TagLine left={t('closet.goesWith.title')} />
+          {goes.map((g) => (
+            <OutfitCard
+              key={g.outfit.key} outfit={g.outfit} closet={closetAll} occasion="everyday"
+              label={g.role === 'best' ? t('closet.goesWith.best') : g.role === 'dressier' ? t('closet.goesWith.dressier') : g.role === 'relaxed' ? t('closet.goesWith.relaxed') : undefined}
+            />
+          ))}
+        </View>
+      ) : null}
 
       {all > 0 ? (
         <View style={{ gap: space.m }}>
