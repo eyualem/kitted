@@ -2,7 +2,7 @@
 // SQLite and memory, which is why it's ours and not expo-sqlite's change listener (06 §6).
 //
 // A closet write that changes many rows (an Undo, a merge) holds its notices and sends them together when it ends
-// (holdChanges, #294), so every open screen re-reads once, not once per row. A hold never delays a notice by more than
+// (holdChanges, #295), so every open screen re-reads once, not once per row. A hold never delays a notice by more than
 // MAX_HOLD_MS: past it, what's held goes out and the rest keeps collecting.
 import type { TableName } from './tables';
 

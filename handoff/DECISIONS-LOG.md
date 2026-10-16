@@ -1764,9 +1764,15 @@ Contradictions settled and decisions changed during the build. Newest last.
       - The founder's idea was that if Gemini's price rises, Sonnet "will basically be the same". It isn't: a Sonnet 5.5 read costs 1.73¢, against Gemini's 0.59¢ now and about 1.18¢ from January.
       - So Sonnet stays the quality upgrade, gated on a ~$10 steadiness run, consent and policy changes, and a Sonnet version of the app's reading code. GPT-6 Luna stays the cost fallback. Gemini stays the default.
 
+294. **Storage is set up and its rules are live (founder, Oct 15: Blaze turned on, then Storage created).**
+    - **The bucket:** `kitted-a5b45.firebasestorage.app`, the new-style default; there's no `appspot.com` bucket.
+    - **Deployed:** `storage.rules`, the file that passed R9.
+    - **Checked from outside, signed out:** listing `users/` and uploading to `users/someone/files/photos/` both return 403 Permission denied.
+    - **Not verified:** the bucket's location. The CLI can't read it without Claude handling the founder's token. Claude advised us-central1 and asked him to confirm it in the console.
+
 ## Oct 15 · Undo that showed late on the Simulator (09-ui-review §7 C3 and §8 W7's open item)
 
-294. **Undo for closet corrections now jumps the closet queue, and one Undo wakes each open screen once, built against checks written first (`handoff/09-ui-review.md` §9, U1–U7; all pass). On the Simulator, tap → restored page is +26 ms (photo, demo 114) and +76 ms (merge, demo 113).**
+295. **Undo for closet corrections now jumps the closet queue, and one Undo wakes each open screen once, built against checks written first (`handoff/09-ui-review.md` §9, U1–U7; all pass). On the Simulator, tap → restored page is +26 ms (photo, demo 114) and +76 ms (merge, demo 113).**
     - **What the timing showed, honestly:** the old code was fast on the demo too: tap → restored page +110 ms, after 7 reloads of the page (6 with the old bus in the jest story). So the "several seconds" seen in §7 and §8 W7 doesn't reproduce in the app. Most likely it came from the test tooling, which hit me three times today: an instant simulated tap on the toast's Undo doesn't register (a 0.15 s press does, the same lesson as the glass header buttons, #181), and with each screenshot taking ~4 s the 8 s toast often ran out before the tap, so the restore only showed on a later attempt.
     - **Two real causes, fixed anyway, because on his phone they can bite:**
       1. **The queue:** every closet write waited in one line (`checkWrites.ts` `serial`). On a real photo the closet call's write measures the photo inside the queue (1–1.5 s), and the launch catch-up, the color refresh and late closet answers queue there too, so an Undo tapped then waited behind them. Now an Undo is `urgent`: it runs as soon as the job running now ends, ahead of the waiting ones (Undos keep their order among themselves). Safety is kept: nothing ever interleaves, and every job reads the rows when it starts, so a closet answer that waited behind an Undo reads the restored rows (U2). Urgent: the merge, photo, remove-piece, remove-photo and remove-look Undos only; every other write keeps its place.

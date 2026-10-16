@@ -2,7 +2,7 @@
 // the closet tables. The closet call lands seconds after the score card, while he may be tapping Undo or fixing a
 // detail; without the queue a fit-check patch built from an older copy of the row would put back a stale summary.
 //
-// Undo goes first (09-ui-review §9, #294): an `urgent` job runs as soon as the job running now is done, ahead of the
+// Undo goes first (09-ui-review §9, #295): an `urgent` job runs as soon as the job running now is done, ahead of the
 // jobs still waiting (a late closet answer, the launch catch-up, the color refresh), so Undo shows at once. It never
 // interleaves with another write, and every job reads the rows when it starts, so a job that waited behind an Undo
 // sees the restored rows. Each job's change notices go out together when it ends (data/changes holdChanges), so the
