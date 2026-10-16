@@ -1,0 +1,276 @@
+// Starter basics that follow his looks (09-ui-review §16, K1–K12, #313). The draft lists in finish/packs.ts, checked
+// before the founder reviews them: every look's 12 against its own "never with" rules (rubric/v5-styles.md), the blend
+// of up to 3 picks, the stored ids, and that no list changes a score or a "+N". The wiring checks (K9–K12) wait for the
+// build, after his OK on the lists.
+import { detectStyles, outfitReading, outfitValid, scoreParts, US_EASTERN, type ClosetItem, type Garment, type Styles } from '@kitted/core';
+import seed from '../../assets/seed.json';
+import { createMemoryStore } from '@/data/memoryStore';
+import { loadScenario } from '@/data/seedLoader';
+import { STYLES, type ClosetItemRow, type StyleKey } from '@/data/types';
+import { checkSentence } from '@/features/ask/gate';
+import { scoreOptions } from '@/features/fitcheck/scoring';
+import { ghostPiece, starterGain } from '@/features/finish/gains';
+import {
+  CATALOG, catalogRow, COMMON_IDS, CORE_IDS, LIST_SIZE, LOOK_ROWS, overlaps, PACKS, picksOf, QUOTAS, starterList,
+} from '@/features/finish/packs';
+import { STARTER, type StarterEntry } from '@/features/finish/starter';
+
+const row = (id: string): StarterEntry => catalogRow(id)!;
+const one = (look: StyleKey): Styles => [[look, 1]];
+const picks = (...looks: string[]): Styles => looks.map((l, i) => [l, i === 0 ? 0.5 : 0.25] as const);
+const ghost = (id: string) => ghostPiece(row(id))!;
+const asItems = (rows: readonly ClosetItemRow[]) => rows as unknown as ClosetItem[];
+
+/** The look's anchor outfit with `id` swapped into its slot (an outer piece goes over the anchor's top). */
+function anchorWith(look: StyleKey, id?: string): ClosetItemRow[] {
+  const a = PACKS[look].anchor;
+  const slots: Record<string, string | undefined> = { top: a.top, bottom: a.bottom, shoes: a.shoes, outer: a.outer };
+  if (id) {
+    const slot = row(id).slot;
+    if (slot) slots[slot] = id;
+  }
+  return (['outer', 'top', 'bottom', 'shoes'] as const).filter((s) => slots[s]).map((s) => ghost(slots[s]!));
+}
+const readsAs = (items: readonly ClosetItemRow[]) => detectStyles(outfitReading(asItems(items))).detected;
+const everyday = (items: readonly ClosetItemRow[], styles: Styles = []) =>
+  scoreParts(outfitReading(asItems(items)), scoreOptions({ occasion: 'everyday', styles, boldness: null, secondLook: null })).overall;
+
+const wearable = (e: StarterEntry) => !!e.pick && !!e.slot;
+
+/** Every top + bottoms + shoes the look's own list makes, each alone and under each of its layers. */
+function packOutfits(look: StyleKey): ClosetItemRow[][] {
+  const rows = PACKS[look].ids.map(row).filter(wearable);
+  const of = (slot: string) => rows.filter((e) => e.slot === slot).map((e) => ghost(e.id));
+  const out: ClosetItemRow[][] = [];
+  for (const t of of('top')) for (const b of of('bottom')) for (const s of of('shoes')) {
+    out.push([t, b, s]);
+    for (const o of of('outer')) out.push([o, t, b, s]);
+  }
+  return out;
+}
+/** The Closet's count's own test (#84.3): the hard rules let it through and it's Put together at Everyday. */
+const counts = (items: readonly ClosetItemRow[]) => outfitValid(asItems(items), []) && (everyday(items) ?? 0) >= 7.0;
+const subOf = (x: Garment) => String(x.subcategory);
+
+// v5-styles' "never with" rules, as the pieces each one names (a plain outfit: no jacket over a top).
+const NEVER: Record<StyleKey, { rule: string; bad(x: Garment): boolean }[]> = {
+  streetwear: [
+    { rule: 'STR-3 tailoring', bad: (x) => ['blazer', 'sport_coat', 'unstructured_blazer', 'suit_jacket', 'suit_trousers', 'overcoat', 'trousers', 'dress_shirt'].includes(subOf(x)) },
+    { rule: 'STR-3 dress shoes', bad: (x) => ['loafer', 'derby', 'dress_shoe'].includes(subOf(x)) },
+    { rule: 'STR-3 skinny legs', bad: (x) => x.leg_shape === 'skinny' },
+    { rule: 'STR-3 collared tops with no jacket', bad: (x) => ['polo', 'oxford_shirt', 'knit_polo', 'cardigan', 'rugby_shirt'].includes(subOf(x)) },
+  ],
+  workwear: [
+    { rule: 'WRK-3', bad: (x) => ['sweatpants', 'joggers', 'athletic_shorts', 'jersey', 'tank_top', 'suit_jacket', 'suit_trousers', 'dress_shoe', 'slides_sandals'].includes(subOf(x)) },
+    { rule: 'WRK-3 bright', bad: (x) => x.saturation === 'bright' },
+    { rule: 'WRK-2 against', bad: (x) => ['graphic_tee', 'chunky_sneaker', 'basketball_sneaker', 'performance_runner', 'puffer', 'shell_jacket', 'rain_jacket', 'fleece', 'blazer', 'sport_coat'].includes(subOf(x)) || x.logo === 'large' || x.volume === 5 },
+  ],
+  vintage_sport: [
+    { rule: 'VSP-3', bad: (x) => ['athletic_shorts', 'tank_top'].includes(subOf(x)) },
+    { rule: 'VSP-2 against', bad: (x) => ['chunky_sneaker', 'basketball_sneaker', 'slides_sandals'].includes(subOf(x)) },
+    { rule: 'VSP-1 not skinny', bad: (x) => x.leg_shape === 'skinny' },
+  ],
+  outdoor: [
+    { rule: 'OUT-2', bad: (x) => ['blazer', 'sport_coat', 'unstructured_blazer', 'suit_jacket', 'dress_shirt', 'trousers', 'suit_trousers', 'dress_shoe', 'derby', 'loafer', 'sweatpants', 'joggers', 'athletic_shorts', 'jersey'].includes(subOf(x)) },
+    { rule: 'OUT-1 against', bad: (x) => ['work_boot', 'chore_coat', 'denim_jacket'].includes(subOf(x)) },
+  ],
+  minimalist: [
+    { rule: 'MIN-3 patterns', bad: (x) => ['graphic', 'camo', 'floral', 'checks_plaid'].includes(String(x.pattern)) || subOf(x) === 'graphic_tee' },
+    { rule: 'MIN-3 logo, bright, sweats, tailoring', bad: (x) => x.logo === 'large' || x.saturation === 'bright' || ['sweatpants', 'joggers', 'blazer', 'sport_coat', 'suit_jacket'].includes(subOf(x)) },
+    { rule: 'MIN-1 palette', bad: (x) => !['white', 'off_white_cream', 'light_grey', 'grey', 'charcoal', 'black', 'navy', 'khaki_beige', 'tan_camel', 'brown', 'olive', 'light_blue', 'denim_dark', 'burgundy', 'sage'].includes(String(x.color_family)) },
+    { rule: 'MIN-2 against', bad: (x) => ['chunky_sneaker', 'basketball_sneaker', 'performance_runner', 'slides_sandals'].includes(subOf(x)) },
+    { rule: 'MIN-3 a regular collared or zip-neck top (over straight legs: the pack has straight chinos)', bad: (x) => ['polo', 'oxford_shirt', 'knit_polo', 'quarter_zip', 'dress_shirt', 'camp_collar_shirt'].includes(subOf(x)) },
+  ],
+  classic_prep: [
+    { rule: 'PRP-2 bottoms', bad: (x) => ['sweatpants', 'joggers', 'athletic_shorts', 'cargos'].includes(subOf(x)) || (subOf(x) === 'jeans' && ['relaxed', 'wide'].includes(String(x.leg_shape))) },
+    { rule: 'PRP-2 shoes', bad: (x) => ['chunky_sneaker', 'basketball_sneaker', 'performance_runner', 'slides_sandals', 'work_boot'].includes(subOf(x)) },
+    { rule: 'PRP-2 street tops with no blazer, any roomy top', bad: (x) => ['hoodie', 'sweatshirt', 'graphic_tee', 'tank_top', 'jersey', 'fleece'].includes(subOf(x)) || (x.category === 'top' && Number(x.volume) >= 4) },
+  ],
+  smart_casual: [
+    { rule: 'SMC-2 tops', bad: (x) => ['hoodie', 'sweatshirt', 'graphic_tee', 'jersey', 'rugby_shirt', 'flannel_shirt', 'fleece', 'puffer', 'shell_jacket', 'rain_jacket', 'tank_top'].includes(subOf(x)) },
+    { rule: 'SMC-2 bottoms and shoes', bad: (x) => ['sweatpants', 'joggers', 'athletic_shorts', 'cargos', 'slides_sandals'].includes(subOf(x)) },
+    { rule: 'SMC-2 logo, camo, roominess 5', bad: (x) => x.logo === 'large' || x.pattern === 'camo' || x.volume === 5 },
+  ],
+};
+
+/** Every ordered blend of 2 and 3 different looks. */
+const BLENDS: StyleKey[][] = [];
+for (const a of STYLES) for (const b of STYLES) {
+  if (a === b) continue;
+  BLENDS.push([a, b]);
+  for (const c of STYLES) if (c !== a && c !== b) BLENDS.push([a, b, c]);
+}
+
+describe('K1 · every list is 12 rows with the core', () => {
+  it('each look and today\'s list', () => {
+    for (const look of STYLES) {
+      const ids = PACKS[look].ids;
+      expect(ids).toHaveLength(LIST_SIZE);
+      expect(new Set(ids).size).toBe(LIST_SIZE);
+      for (const c of CORE_IDS) expect(ids).toContain(c);
+      for (const id of ids) expect(catalogRow(id)).toBeDefined();
+    }
+    expect(COMMON_IDS).toHaveLength(LIST_SIZE);
+  });
+  it(`every blend of 2 and 3 picks (${BLENDS.length})`, () => {
+    for (const looks of BLENDS) {
+      const ids = starterList(picks(...looks)).map((e) => e.id);
+      expect(ids).toHaveLength(LIST_SIZE);
+      expect(new Set(ids).size).toBe(LIST_SIZE);
+      for (const c of CORE_IDS) expect(ids).toContain(c);
+    }
+  });
+});
+
+describe('K2 · no piece breaks its look\'s "never with" rules', () => {
+  it.each(STYLES)('%s', (look) => {
+    const broken: string[] = [];
+    for (const id of PACKS[look].ids) {
+      const e = row(id);
+      if (!e.pick) continue;
+      for (const r of NEVER[look]) if (r.bad(e.pick.garment)) broken.push(`${id} ${e.name}: ${r.rule}`);
+    }
+    expect(broken).toEqual([]);
+  });
+});
+
+describe('K3 · each look\'s pieces make that look', () => {
+  it.each(STYLES)('%s: the anchor reads as the look, passes the closet\'s hard rules and is Put together', (look) => {
+    const items = anchorWith(look);
+    expect(readsAs(items)).toContain(look);
+    expect(outfitValid(asItems(items), [])).toBe(true);
+    expect(everyday(items)).toBeGreaterThanOrEqual(7.0);
+  });
+  it.each(STYLES)('%s: each of its own pieces is in an outfit from the list that reads as the look and counts', (look) => {
+    const outfits = packOutfits(look).filter(counts);
+    const off = PACKS[look].own.filter((id) => !outfits.some((o) => o.some((c) => c.starterId === id) && readsAs(o).includes(look)));
+    expect(off).toEqual([]);
+  });
+  it.each(STYLES)('%s: every wearable piece is in an outfit from the list that counts (no dead suggestion)', (look) => {
+    const outfits = packOutfits(look).filter(counts);
+    const dead = PACKS[look].ids.filter((id) => wearable(row(id)) && !outfits.some((o) => o.some((c) => c.starterId === id)));
+    expect(dead).toEqual([]);
+  });
+  it('the pick names the piece its row is for (each row fills its own pick)', () => {
+    for (const e of CATALOG.filter(wearable)) expect(e.fills(e.pick!.garment, e.slot!)).toBe(true);
+  });
+});
+
+describe('K4 · one piece never fills two rows of one list', () => {
+  const pairs = (rows: readonly StarterEntry[]) => {
+    const out: string[] = [];
+    rows.forEach((a, i) => rows.slice(i + 1).forEach((b) => overlaps(a, b) && out.push(`${a.id}+${b.id}`)));
+    return out;
+  };
+  it('each look and today\'s list', () => {
+    for (const look of STYLES) expect(pairs(PACKS[look].ids.map(row))).toEqual([]);
+    expect(pairs(COMMON_IDS.map(row))).toEqual([]);
+  });
+  it('every blend', () => {
+    for (const looks of BLENDS) expect(pairs(starterList(picks(...looks)))).toEqual([]);
+  });
+});
+
+describe('K5 · his picks blend in his order', () => {
+  const nonCore = (look: StyleKey) => PACKS[look].ids.filter((id) => !(CORE_IDS as readonly string[]).includes(id));
+  it('no picks, "Not sure" (no picks stored) or only unknown keys: today\'s 12 in today\'s order', () => {
+    expect(starterList(null).map((e) => e.id)).toEqual(STARTER.map((e) => e.id));
+    expect(starterList([]).map((e) => e.id)).toEqual(STARTER.map((e) => e.id));
+    expect(starterList(picks('something_else')).map((e) => e.id)).toEqual(STARTER.map((e) => e.id));
+  });
+  it('one pick: that look\'s 12 in its order; old keys map (preppy, old_money, gorpcore)', () => {
+    for (const look of STYLES) expect(starterList(one(look)).map((e) => e.id)).toEqual([...PACKS[look].ids]);
+    expect(starterList(picks('preppy')).map((e) => e.id)).toEqual([...PACKS.classic_prep.ids]);
+    expect(starterList(picks('gorpcore')).map((e) => e.id)).toEqual([...PACKS.outdoor.ids]);
+  });
+  it('the first pick gets its full share, first, and leads the list', () => {
+    for (const looks of BLENDS) {
+      const ids = starterList(picks(...looks)).map((e) => e.id);
+      const share = QUOTAS[looks.length as 2 | 3][0]!;
+      for (const id of nonCore(looks[0]!).slice(0, share)) expect(ids).toContain(id);
+      expect(ids[0]).toBe(PACKS[looks[0]!].ids[0]);
+    }
+  });
+  it('every row comes from one of his picks or the core; today\'s list only refills', () => {
+    for (const looks of BLENDS) {
+      const mine = new Set([...CORE_IDS, ...looks.flatMap((l) => PACKS[l].ids)]);
+      const extra = starterList(picks(...looks)).filter((e) => !mine.has(e.id)).map((e) => e.id);
+      for (const id of extra) expect(COMMON_IDS).toContain(id);
+    }
+  });
+  it('a later pick gets its share unless its rows clash with an earlier pick\'s', () => {
+    for (const looks of BLENDS) {
+      const list = starterList(picks(...looks));
+      looks.slice(1).forEach((look, j) => {
+        const share = QUOTAS[looks.length as 2 | 3][j + 1]!;
+        const got = nonCore(look).filter((id) => list.some((e) => e.id === id)).length;
+        expect(got).toBeGreaterThanOrEqual(Math.min(share, 1));
+      });
+    }
+  });
+  it('order matters: streetwear then minimal is not minimal then streetwear', () => {
+    const a = starterList(picks('streetwear', 'minimalist')).map((e) => e.id);
+    const b = starterList(picks('minimalist', 'streetwear')).map((e) => e.id);
+    expect(a).not.toEqual(b);
+    expect(picksOf(picks('streetwear', 'streetwear', 'minimalist', 'outdoor', 'workwear'))).toEqual(['streetwear', 'minimalist', 'outdoor']);
+  });
+});
+
+describe('K6 · stored ids stay valid', () => {
+  it('s01–s12 are today\'s rows, unchanged, first in the catalog', () => {
+    expect(CATALOG.slice(0, 12)).toEqual([...STARTER]);
+  });
+  it('new ids follow on (s13…), unique, never reused', () => {
+    expect(LOOK_ROWS.map((e) => e.id)).toEqual(LOOK_ROWS.map((_, i) => `s${String(13 + i).padStart(2, '0')}`));
+    expect(new Set(CATALOG.map((e) => e.id)).size).toBe(CATALOG.length);
+  });
+  it('every id any list can show is in the catalog, so any stored id still finds its row', () => {
+    for (const looks of [...STYLES.map((l) => [l]), ...BLENDS]) for (const e of starterList(picks(...looks))) expect(catalogRow(e.id)).toBe(e);
+  });
+});
+
+describe('K7 · the list never changes a score or a "+N" (#211, #309)', () => {
+  it('each anchor outfit scores the same under every pick and none', () => {
+    for (const look of STYLES) {
+      const items = anchorWith(look);
+      const base = everyday(items);
+      for (const p of STYLES) expect(everyday(items, one(p))).toBe(base);
+    }
+  });
+  it('on the demo closet, every row\'s "+N" is the same whichever looks he picked', async () => {
+    const store = createMemoryStore();
+    await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: Date.parse('2026-10-22T12:00:00-04:00') });
+    const closet = await store.closet.all();
+    const diff: string[] = [];
+    for (const e of CATALOG.filter(wearable)) {
+      const base = starterGain(closet, null, e);
+      for (const p of [one('streetwear'), one('classic_prep'), picks('outdoor', 'minimalist', 'workwear')]) {
+        if (starterGain(closet, p, e) !== base) diff.push(e.id);
+      }
+    }
+    expect(diff).toEqual([]);
+  });
+});
+
+describe('K8 · the words', () => {
+  const PRICE = /^(\$\d+–\d+|About \$\d+)$/;
+  const low = (s: string) => Number(/\$(\d+)/.exec(s)?.[1]);
+  it('every new row: a name, a phrase and a short name that pass the sentence gate (no brand, no shop)', () => {
+    const ctx = { allowedScores: new Set<number>() } as unknown as Parameters<typeof checkSentence>[1];
+    for (const e of LOOK_ROWS) for (const s of [e.name, e.pick!.phrase, e.pick!.name]) expect([s, checkSentence(s, ctx)]).toEqual([s, null]);
+  });
+  it('prices read "$a–b", budget below mid', () => {
+    for (const e of LOOK_ROWS) {
+      expect(e.budget).toMatch(PRICE);
+      expect(e.mid).toMatch(PRICE);
+      expect(low(e.budget)).toBeLessThan(low(e.mid));
+    }
+  });
+});
+
+describe('K9–K12 · wired in (after the founder\'s OK on the lists)', () => {
+  it.todo('K9: Starter essentials shows starterList(his picks), "n of 12" and the 12-slot bar unchanged, with the line naming his looks');
+  it.todo('K10: the Closet\'s next best buy, "Add shoes and you\'d have n", the chat\'s buy-next evidence and move 3\'s pick at posting choose only from his list; ties go to his first pick\'s rows');
+  it.todo('K11: a stored id outside his list still works: move 3\'s buyId, an old chat buy card, a marked piece\'s starterId, a belt kv mark; the chat\'s starterFor prefers his list, then the catalog');
+  it.todo('K12: changing his looks in You → Style profile changes the list at once; a piece he marked from a row no longer shown stays in Closet, and the row comes back marked if he picks that look again');
+});

@@ -460,3 +460,77 @@ Found in §14: two counts live side by side. The Closet's Outfits and its next b
 | G8 | Pass (T) | the demo answer and its card now name the dark straight jeans, +16, and pass the gate |
 | G9 | Pass | `npm run check`: 1050 app tests. Tests changed for the old rule's numbers: `askC3` R2, R3, R5 (#309) |
 | Not done | | Not looked at on the Simulator or the web preview (the Mac was low on memory and another session had the Simulator up); the screens only take the new number, no layout changed |
+
+## 16. Starter basics that follow his looks: plan and pass/fail checks, set before building (Oct 16, #313)
+The founder (Oct 16): a streetwear pick should see things like baggy jeans, a minimal pick pieces that fit minimal, and so on. Today Starter essentials is one list of 12 (`finish/starter.ts`, from `rubric/v3.md`), mostly smart casual: a streetwear pick is offered a polo, an oxford and loafers, which [STR-3] rules out. That list feeds Starter essentials (C5), the Closet's next best buy (§14), "Add shoes and you'd have n" (§13), the chat's buy card and buy-next evidence, and move 3 of "Your first 3 moves". **Status: planned, checks written, draft lists in code but not wired in (`finish/packs.ts`, `__tests__/lookPacks.test.ts`). Nothing on screen changes until the founder OKs the lists (names and prices are outward-facing).**
+
+**The plan**
+- **One catalog, ids never removed.** Today's s01–s12 stay exactly as they are (closet rows' `starterId`, the belt's kv mark `starter.marked`, the chat's buy cards and move 3's `buyId` store them; sync carries them). New pieces are s13–s38, appended. Any stored id always finds its row in the catalog, whichever list he sees.
+- **One ranked list of 12 per look**, from `rubric/v5-styles.md` (each look's signature and home pieces and its own example outfits) and `rubric/stylist-guide.md` §12–13. Every list has the same core: the white heavyweight tee, white leather sneakers and the belt. Smart casual keeps today's 12 unchanged (it was already a smart casual list). Draft lists, prices and sources: the table below.
+- **His picks blend in his order.** No picks, "Not sure" or "Something else": today's 12, today's order. One pick: that look's 12. Two picks: the core, then 6 rows from the first look's list and 3 from the second; three picks: 4, 3 and 2. A row already in, or one that the same piece would fill (his one pair of wide jeans would show as both "Baggy jeans" and "Dark straight jeans"), is skipped and the next one taken; any slot left is refilled from his picks in order, then today's list. Always 12 rows, so "{n} of 12" and the 12-slot bar don't change. Order: his first look's order first, so a tie in "+N" goes to his first pick.
+- **The "+N" stays the one count (#309).** The list only chooses which pieces are candidates; `starterGain` / `outfitGain` (the Closet's count with the piece minus without it) is unchanged, and picks never change a score (#211). A layer still adds no outfits (#84.3), so a look's jackets (the chore coat, the bomber, the shell) are listed but are never the next best buy or move 3; a fleece and a flannel are tops, so they can be.
+- **What it touches when built:** C5 lists `starterList(profile.styles)`; `ownership` runs over the catalog; `bestMissing`, `nextBestBuy` and `gainForSlot` (gains.ts), the chat's buy-next evidence (evidence.ts) and move 3's pick at posting (moves.ts `pickBuy`) choose from his list; `buyMove`, `AskCardView`, the toast and `toggleStarter` look ids up in the catalog; the chat's `starterFor` (a kind the model names) prefers his list, then the catalog. New copy goes to `en.ts` (the 26 names; the C5 line naming his looks).
+- **Changing his looks** in You → Style profile changes the list the next time it's drawn. Nothing is deleted: a piece he marked from a row no longer shown stays in his Closet (it's a closet piece), and if he picks that look again the row comes back marked. Move 3 keeps the piece it named when the card posted (its `buyId`), even if it's no longer in his list.
+- **One new line on C5 (outward-facing, his OK):** under the header, `Picked for your looks: streetwear and minimal.` (one look: `Picked for streetwear.`; no picks: no line).
+- **Known limits, said in the review:** outdoor has no path to 8 today (KD-7), and of the 18 outfits its own list makes only 2 read as outdoor (its shell and fleece are what make it outdoor, and a layer isn't part of a counted outfit); trail shoes aren't in the reading, so its shoe is "trail-style sneakers" (read as running shoes, which cost 2 on Shoes outside an outdoor outfit). Prep's knit and quarter-zip, worn as the one top, read smart casual. Vintage sport's track jacket isn't in the reading ([VSP-7]), so it isn't listed.
+
+**Draft lists (outward-facing; the founder's review; review page: https://claude.ai/artifact/5MnfBqHZ6HdPLbGYtvKjzv).** Most useful first; *new rows in italics*; the three core rows are in every list. Counts: the counted outfits (7.0+ at Everyday, the closet's hard rules) its own 12 make, and how many read as the look.
+
+| Look | The 12, in order | Outfits from its 12 |
+|---|---|---|
+| Streetwear | *Plain hoodie* · *Baggy or wide-leg jeans* · *Chunky sneakers* · *Black boxy tee* · *Cargo pants* · *Crewneck sweatshirt* · *Bomber jacket* · White heavyweight tee · White leather sneakers · *Flannel shirt* · *Puffer jacket* · Leather belt | 20 (20 read as streetwear) |
+| Minimal | Crewneck knit · *Wide-leg trousers* · *Loafers or Chelsea boots* · *Black boxy tee* · Chinos, straight or relaxed · White heavyweight tee · White leather sneakers · *Grey heavyweight tee* · *Wool overcoat* · Dark straight jeans · Overshirt or chore coat · Leather belt | 12 (8 read as minimal) |
+| Workwear | *Chore coat* · *Work boots* · Dark straight jeans · *Flannel shirt* · White heavyweight tee · *Denim jacket* · *Cargo pants* · *Suede chukka boots* · *Grey heavyweight tee* · Crewneck knit · White leather sneakers · Leather belt | 24 (12 read as workwear) |
+| Smart casual | White heavyweight tee · Polo or knit polo · Light-blue or white oxford shirt · Crewneck knit · Dark straight jeans · Chinos, straight or relaxed · Overshirt or chore coat · Casual jacket · White leather sneakers · Loafers or boots · Quarter-zip or plain hoodie · Leather belt | 18 (17 read as smart casual) |
+| Classic prep | Light-blue or white oxford shirt · Polo or knit polo · Chinos, straight or relaxed · Loafers or boots · *Cardigan* · Crewneck knit · *Rugby shirt* · Quarter-zip or plain hoodie · White heavyweight tee · Dark straight jeans · White leather sneakers · Leather belt | 24 (13 read as classic prep) |
+| Vintage sport | *Retro soccer jersey* · *Rugby shirt* · *Retro runners* · *Low-profile suede sneakers* · Dark straight jeans · *Light-wash straight jeans* · *Crewneck sweatshirt* · Chinos, straight or relaxed · White heavyweight tee · White leather sneakers · *Bomber jacket* · Leather belt | 36 (15 read as vintage sport) |
+| Outdoor | *Fleece* · *Shell jacket* · *Cargo pants* · *Trail-style sneakers* · White heavyweight tee · *Grey heavyweight tee* · *Flannel shirt* · Dark straight jeans · *Crewneck sweatshirt* · *Puffer jacket* · White leather sneakers · Leather belt | 18 (2 read as outdoor) |
+
+**The 26 new rows and their prices** (US list prices seen Oct 16, 2026; budget = the mass retailers, mid = the next step up; sources per piece in `market/starter-prices-2026.md`; snapshot-based prices are good to about ±10–15%; the app shows no brand):
+
+| Id | Row | Budget | Mid | In the lists of |
+|---|---|---|---|---|
+| s13 | Baggy or wide-leg jeans | $40–60 | $80–130 | Streetwear |
+| s14 | Black boxy tee | $15–25 | $45–65 | Streetwear, Minimal |
+| s15 | Plain hoodie | $25–50 | $90–150 | Streetwear |
+| s16 | Crewneck sweatshirt | $20–40 | $85–145 | Streetwear, Vintage sport, Outdoor |
+| s17 | Cargo pants | $35–55 | $65–120 | Streetwear, Workwear, Outdoor |
+| s18 | Chunky sneakers | $45–80 | $110–170 | Streetwear |
+| s19 | Bomber jacket | $40–80 | $140–220 | Streetwear, Vintage sport |
+| s20 | Puffer jacket | $45–90 | $130–240 | Streetwear, Outdoor |
+| s21 | Flannel shirt | $25–45 | $55–130 | Streetwear, Workwear, Outdoor |
+| s22 | Grey heavyweight tee | $15–25 | $45–65 | Minimal, Workwear, Outdoor |
+| s23 | Wide-leg trousers | $40–80 | $95–200 | Minimal |
+| s24 | Loafers or Chelsea boots | $40–90 | $150–250 | Minimal |
+| s25 | Wool overcoat | $70–150 | $240–450 | Minimal |
+| s26 | Chore coat | $45–80 | $110–190 | Workwear |
+| s27 | Work boots | $50–70 | $135–200 | Workwear |
+| s28 | Denim jacket | $40–75 | $95–130 | Workwear |
+| s29 | Suede chukka boots | $40–70 | $110–200 | Workwear |
+| s30 | Cardigan | $40–60 | $75–130 | Classic prep |
+| s31 | Rugby shirt | $35–50 | $95–140 | Classic prep, Vintage sport |
+| s32 | Retro soccer jersey | $20–40 | $85–120 | Vintage sport |
+| s33 | Retro runners | $40–70 | $90–150 | Vintage sport |
+| s34 | Low-profile suede sneakers | $40–70 | $75–130 | Vintage sport |
+| s35 | Light-wash straight jeans | $40–60 | $85–125 | Vintage sport |
+| s36 | Fleece | $30–50 | $65–170 | Outdoor |
+| s37 | Shell jacket | $35–80 | $100–190 | Outdoor |
+| s38 | Trail-style sneakers | $60–120 | $140–200 | Outdoor |
+
+Shaky prices, said in the review: the overcoat (widest spread), the three retro and trail sneakers (brand pages blocked; snapshots), the rugby shirt (one budget shop), and the fleece and trail-style sneakers (two kinds of product in the mid range). Today's white tee row ($15–20 / $35–60) is a little under what heavyweight tees list at now ($15–25 / $45–65); today's rows are left as they are.
+
+**Checks** (T = a test in `lookPacks.test.ts`; K1–K8 pass on the draft today, K9–K12 are `it.todo` until the build)
+- **K1 (T)** every look's list and every blend of 2 or 3 picks (252) is 12 different rows and includes the core.
+- **K2 (T)** no row in a look's list breaks that look's own "never with" rules for a plain outfit: [STR-3], [WRK-2]/[WRK-3], [VSP-2]/[VSP-3], [OUT-1]/[OUT-2], [MIN-1]–[MIN-3], [PRP-2], [SMC-2] (each rule as the pieces it names).
+- **K3 (T)** each look's anchor outfit (its own example in v5-styles) reads as the look, passes the closet's hard rules and is Put together; each of the look's own pieces is in an outfit from its list that reads as the look and counts; every wearable row is in at least one counted outfit from its list (no dead suggestion); every row's piece fills its own row.
+- **K4 (T)** no two rows in any list (each look, today's, every blend) can be filled by the same piece.
+- **K5 (T)** the blend: no picks / unknown keys → today's 12 in order; one pick → its list; old keys map (preppy, old money → classic prep, gorpcore → outdoor); the first pick gets its full share and leads; every row is from his picks or the core (today's list only refills); order matters; repeats dropped, at most 3.
+- **K6 (T)** stored ids stay valid: s01–s12 are today's rows, unchanged and first; new ids run s13 on, unique; every id a list can show is in the catalog.
+- **K7 (T)** the list never changes a score or a "+N": each anchor scores the same under every pick and none; on the demo closet every row's "+N" is the same whichever looks he picked.
+- **K8 (T)** the words: every new name and phrase passes the sentence gate (no brand, no shop); prices read `$a–b`, budget below mid.
+- **K9 (T, at build)** Starter essentials shows his list; "{n} of 12" and the bar unchanged; the new line names his looks.
+- **K10 (T, at build)** the next best buy, "Add shoes and you'd have n", the chat's buy-next evidence and move 3's pick choose only from his list; ties go to his first pick's rows.
+- **K11 (T, at build)** a stored id outside his list still works: move 3's `buyId`, an old chat buy card, a marked piece's `starterId`, a belt kv mark; `starterFor` prefers his list.
+- **K12 (T, at build)** changing his looks changes the list at once; a marked piece from a row no longer shown stays in Closet and comes back marked.
+- **K13 (S, at build)** web preview and, when the Mac has memory, the Simulator: C5 for a streetwear pick, a minimal + smart casual pick and no picks; light, dark, the largest text size.
+- **K14** `npm run check` green.
