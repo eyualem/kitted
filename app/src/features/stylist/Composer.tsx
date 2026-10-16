@@ -54,6 +54,21 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
   const text = useComposerDraft();
   const setText = composerState.setDraft;
   const [focused, setFocused] = useState(false);
+  // The chips stay a moment after the field blurs, so a tap on one (which blurs the field first) still lands.
+  const [chipsUp, setChipsUp] = useState(false);
+  const chipsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onFocus = () => {
+    if (chipsTimer.current) clearTimeout(chipsTimer.current);
+    setFocused(true);
+    setChipsUp(true);
+  };
+  const onBlur = () => {
+    setFocused(false);
+    chipsTimer.current = setTimeout(() => setChipsUp(false), 400);
+  };
+  useEffect(() => () => {
+    if (chipsTimer.current) clearTimeout(chipsTimer.current);
+  }, []);
   const mic = useDictation();
   const typing = focused || text.length > 0;
   const recording = mic.state !== 'idle';
@@ -107,7 +122,7 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
     </Circle>
   );
 
-  const showChips = chips.length > 0 && text.length === 0 && !recording && (focused || mode === 'compact');
+  const showChips = chips.length > 0 && text.length === 0 && !recording && chipsUp;
   return (
     <View style={styles.wrap}>
       {showChips ? (
@@ -142,8 +157,8 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
             <TextInput
               value={text}
               onChangeText={setText}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
+              onFocus={onFocus}
+              onBlur={onBlur}
               autoFocus={autoFocus}
               placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
               placeholderTextColor={colors.ink2}

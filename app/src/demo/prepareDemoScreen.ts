@@ -55,6 +55,8 @@ type Step =
   | { at: string; do: 'whichOne'; photoId: string }
   /** A question through the real ask pipeline (the demo source answers at latency 0). */
   | { at: string; do: 'ask'; text: string }
+  /** Tap an answer on the newest ask card (07 §13 R6). */
+  | { at: string; do: 'askTap'; option: string }
   /** Questions already used today (the limit state without five demo answers in the thread). */
   | { at: string; do: 'askUsed'; n: number }
   /** His question in the thread, its answer held mid-way: the dots (no text) or the first words (07 §6.1). */
@@ -202,6 +204,15 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
       { at: '2026-10-22T07:51:00', do: 'closetYes' },
     ],
   },
+  // The stylist's cards (07 §13 R9, #296): the demo's answers with an attachment, on the full scenario's closet.
+  167: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What goes with my olive overshirt?' }] },
+  168: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What would this outfit score?' }] },
+  169: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What should I wear to work?' }] },
+  170: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What should I wear to work?' }, { at: '2026-10-22T12:06:00', do: 'askTap', option: 'Business casual' }] },
+  171: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What should I buy next?' }] },
+  172: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'Which shoes are my dressiest?' }] },
+  173: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: "I'm a 32 waist." }] },
+  174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
   // The end of onboarding (#291; L3 and the pinned rows 163–166, #292): his first check on the Welcome photo (7.5, with a
   // fix to re-check); the taps after it (Later, a Starter piece, the notification ask) are the screen's `finish` steps
   // (features/finish/demo.ts).
@@ -310,6 +321,14 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     if (step.do === 'ask') {
       const o = await askService.ask(step.text);
       if (o.kind === 'sent') await o.done;
+      continue;
+    }
+    if (step.do === 'askTap') {
+      const card = (await store.chat.all()).filter((m) => m.payload.askCard && (m.payload.askCard as { type?: string }).type === 'ask').sort((x, y) => y.createdAt - x.createdAt)[0];
+      if (card) {
+        const o = await askService.tap(card.id, step.option);
+        if (o.kind === 'sent') await o.done;
+      }
       continue;
     }
     if (step.do === 'askUsed') {

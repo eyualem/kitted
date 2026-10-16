@@ -111,9 +111,10 @@ function AskQuestion({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskC
             key={o}
             title={o}
             state={tapped === o ? 'selected' : 'normal'}
-            disabled={readOnly || tapped !== null}
+            // His pick stays solid; the others go quiet once one is picked.
+            disabled={tapped === o ? false : readOnly || tapped !== null}
             accessibilityHint={t('ask.card.a11y.option', { option: o })}
-            onPress={() => tapAnswer(m.id, o)}
+            onPress={tapped === null && !readOnly ? () => tapAnswer(m.id, o) : undefined}
           />
         ))}
       </ChipFlow>
@@ -126,10 +127,10 @@ function BuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }> }) {
   if (!row) return null;
   const gain = card.gain === null || card.gain <= 0 ? null : card.gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: card.gain });
   return (
-    <KCard accessibilityLabel={[t('ask.card.buy.tag'), row.name, gain, row.budget].filter(Boolean).join('. ')}>
+    <KCard accessibilityLabel={[t('ask.card.buy.tag'), row.pick?.name ?? row.name, gain, row.budget].filter(Boolean).join('. ')}>
       <KCardSection gap={4}>
         <TagLine left={t('ask.card.buy.tag')} right={row.budget} />
-        <KText variant="headline">{row.name}</KText>
+        <KText variant="headline">{row.pick?.name ?? row.name}</KText>
         {gain ? (
           <KText variant="subheadline" color="ink2">
             {gain}

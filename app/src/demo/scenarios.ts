@@ -201,6 +201,14 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 164, name: 'Your moves', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later'] } },
   { n: 165, name: 'You · Your moves row', id: 'Y1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you', finish: { steps: ['later', { mark: 's12' }] } },
   { n: 166, name: 'Your moves · move 1 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you/moves', under: '/you', finish: { steps: ['later', { mark: 's12' }] } },
+  { n: 167, name: 'Ask · an outfit from his closet', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 168, name: 'Ask · start a fit check', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 169, name: 'Ask · one tap question', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 170, name: 'Ask · the tap answered', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 171, name: 'Ask · a buy suggestion', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 172, name: 'Ask · a link to a piece', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 173, name: 'Ask · saved to what I know', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 174, name: 'Ask · a piece from chat', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
