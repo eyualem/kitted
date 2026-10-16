@@ -8,6 +8,7 @@ import { buildMoves, type MovesPlan } from './moves';
 import { laterShows } from './sequence';
 import { sequenceOn } from './session';
 import { FINISH_KEY, getFinish, getStarterMarks, STARTER_MARKS_KEY, toFinishChecks } from './service';
+import { loadYourMoves } from './yourMoves';
 
 /** L1: `Later` on his first-ever full check. Only that card loads anything. */
 export function useLaterShows(row: Pick<FitCheckRow, 'id' | 'status' | 'parentId' | 'isFirstCheck'>, readOnly: boolean): boolean {
@@ -32,4 +33,9 @@ export function useMoves(checkId: string, buyId: string | null): MovesPlan | nul
     },
     [checkId, buyId, marks?.join()],
   );
+}
+
+/** L3 and the pinned rows (10-onboarding.md §9.9): the moves card's plan, or null before the card is posted. */
+export function useYourMoves(): MovesPlan | null | undefined {
+  return useLive(['kv', 'chat', 'fitChecks', 'closet', 'profile'], () => loadYourMoves(store), []);
 }

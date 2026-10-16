@@ -1151,7 +1151,7 @@ Same visual language as §2: chalk `bg`, white `KCard`s with radius 26 and dashe
 ### 3.3 Stylist: cards and states
 
 #### S14 · Your first 3 moves (Plan card)
-> **Update Oct 15 (#291; `10-onboarding.md` §9 owns the order and triggers):** built. Move 2 is the first check's top fix word for word with its tag (the habit wording below needed new copy per fix); move 3 is the Starter piece that adds the most outfits (`Add {item}`, budget price, `+N fits` only when N > 0); Start move 2 opens the camera with no extra line; Start move 3 opens C5 (C7 isn't built); a done row is the filled circle and grey title (no strikethrough, #246 (14)); L3 and the pinned rows aren't built yet.
+> **Update Oct 15 (#291; `10-onboarding.md` §9 owns the order and triggers):** built. Move 2 is the first check's top fix word for word with its tag (the habit wording below needed new copy per fix); move 3 is the Starter piece that adds the most outfits (`Add {item}`, budget price, `+N fits` only when N > 0); Start move 2 opens the camera with no extra line; Start move 3 opens C5 (C7 isn't built); a done row is the filled circle and grey title (no strikethrough, #246 (14)). **L3 and the pinned rows built Oct 15 (#292, `10-onboarding.md` §9.9):** the row is the first row of Lookbook and You; L3 gives every move left its own Start; the done check is the row's own badge.
 
 - **When:** after his first re-check card, or right after he taps `Later` on the first check (ruling 23). Then P1 is presented.
 - **Thread:** stylist message `Here's where to start. Three moves, in order.` then the card.
@@ -1368,6 +1368,8 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 - **Partial looks** are never compared with full ones (no delta to a full check).
 
 #### L3 · Your moves (push)
+> **Update Oct 15 (#292; `10-onboarding.md` §9.9):** built. Each move not done has its own `Start` (any order; the card keeps one button); a done move shows the filled check badge (no second check on the right). From You it's pushed inside the You tab (`/you/moves`).
+
 - Inline title `Your moves`. Header `1 of 3 done` (`.headline`) + a 3-slot bar.
 - The 3 moves as `KCard` rows (number circle, title, subtitle, trailing `Start` SecondaryButton small or a `Done` check). Start → as in S14 (cross-tab).
 - When all 3 are done: `All 3 done. Nice work.` and the pinned rows in L1 and Y1 disappear.

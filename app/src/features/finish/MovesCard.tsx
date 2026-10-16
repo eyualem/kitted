@@ -14,7 +14,8 @@ export function openStarter(): void {
   setTimeout(() => router.push('/closet/starter'), 0);
 }
 
-const go = (where: MoveGo) => (where === 'camera' ? router.push('/camera') : openStarter());
+/** Where a move's Start goes (M4): the camera, or Closet then Starter essentials. The card and L3 share it. */
+export const startMove = (where: MoveGo) => (where === 'camera' ? router.push('/camera') : openStarter());
 
 export function MovesCard({ m, readOnly = false }: { m: ChatMessage; readOnly?: boolean }) {
   const plan = useMoves(m.fitCheckId ?? '', typeof m.payload.buyId === 'string' ? m.payload.buyId : null);
@@ -28,7 +29,7 @@ export function MovesCard({ m, readOnly = false }: { m: ChatMessage; readOnly?: 
     <KCard
       accessibilityLabel={spoken}
       accessibilityActions={showStart ? [{ name: 'start', label: startTitle }] : undefined}
-      onAccessibilityAction={showStart && current?.go ? () => go(current.go!) : undefined}
+      onAccessibilityAction={showStart && current?.go ? () => startMove(current.go!) : undefined}
     >
       <KCardSection gap={12} paddingVertical={14} style={{ paddingHorizontal: 16 }}>
         <TagLine left={t('plan.tag')} right={t('plan.tagCount')} />
@@ -43,7 +44,7 @@ export function MovesCard({ m, readOnly = false }: { m: ChatMessage; readOnly?: 
             </View>
           ))}
         </View>
-        {showStart && current?.go ? <KButton title={startTitle} size="regular" fullWidth onPress={() => go(current.go!)} /> : null}
+        {showStart && current?.go ? <KButton title={startTitle} size="regular" fullWidth onPress={() => startMove(current.go!)} /> : null}
       </KCardSection>
     </KCard>
   );

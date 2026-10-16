@@ -14,6 +14,7 @@ import { t } from '@/i18n/en';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { getStarterMarks, STARTER_MARKS_KEY } from './service';
+import { SlotBar } from './SlotBar';
 import { NEXT_STEP, ownedCount, ownership, STARTER, type Ownership, type StarterEntry } from './starter';
 import { toggleStarter } from './starterActions';
 
@@ -35,7 +36,7 @@ export function StarterScreen() {
         </KText>
         <View accessible accessibilityLabel={t('starter.a11y.count', { n })} style={{ gap: space.s }}>
           <KText variant="headline">{t('closet.essentials.count', { n })}</KText>
-          <SlotBar owned={n} />
+          <SlotBar filled={n} slots={12} />
         </View>
       </View>
       <KCard radius={20}>
@@ -58,18 +59,6 @@ export function StarterScreen() {
         </View>
       </KCard>
     </SettingsScroll>
-  );
-}
-
-/** C1's 12-slot bar: owned = ink, missing = surface2. */
-function SlotBar({ owned }: { owned: number }) {
-  const { colors } = useTheme();
-  return (
-    <View style={{ flexDirection: 'row', gap: 4 }}>
-      {Array.from({ length: 12 }, (_, i) => (
-        <View key={i} style={{ flex: 1, height: 8, borderRadius: 4, backgroundColor: i < owned ? colors.ink : colors.surface2 }} />
-      ))}
-    </View>
   );
 }
 

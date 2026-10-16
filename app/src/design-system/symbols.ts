@@ -52,6 +52,8 @@ export const sym = {
   latest: 'arrow.down',
   closet: 'hanger',
   history: 'clock.arrow.circlepath',
+  /** The pinned Your moves row (02 D16). */
+  checklist: 'checklist',
   /** S27's support card. */
   support: 'heart',
 } as const;

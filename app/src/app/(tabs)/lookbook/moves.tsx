@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { YourMovesScreen } from '@/features/finish/YourMovesScreen';
 
-// L3 · Your moves (02-screens.md). Built in P5.
-export default function YourMovesScreen() {
-  return <Placeholder id="L3" name="Your moves" phase="P5" kind="push" />;
-}
+// L3 · Your moves (02-screens.md L3; 10-onboarding.md §9.9), pushed from the pinned row atop Lookbook.
+export default YourMovesScreen;

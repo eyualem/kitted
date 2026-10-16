@@ -202,9 +202,10 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
       { at: '2026-10-22T07:51:00', do: 'closetYes' },
     ],
   },
-  // The end of onboarding (#291): his first check on the Welcome photo (7.5, with a fix to re-check); the taps after it
-  // (Later, a Starter piece, the notification ask) are the screen's `finish` steps (features/finish/demo.ts).
-  ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162].map((n) => [n, { steps: [FIRST_CHECK] }])),
+  // The end of onboarding (#291; L3 and the pinned rows 163–166, #292): his first check on the Welcome photo (7.5, with a
+  // fix to re-check); the taps after it (Later, a Starter piece, the notification ask) are the screen's `finish` steps
+  // (features/finish/demo.ts).
+  ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 
 /** Ids a story made that its screen's link names (`{dup}`): applyDemoScreen fills them in (#280). */

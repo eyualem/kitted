@@ -196,6 +196,11 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 160, name: 'Notification ask · done', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyAllow'] } },
   { n: 161, name: 'Starter essentials', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
   { n: 162, name: 'Your first 3 moves · move 1 done', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
+  // L3 Your moves and the pinned rows (#292, 10-onboarding.md §9.9): the same story, the next morning view of it.
+  { n: 163, name: 'Lookbook · Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook', finish: { steps: ['later'] } },
+  { n: 164, name: 'Your moves', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later'] } },
+  { n: 165, name: 'You · Your moves row', id: 'Y1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you', finish: { steps: ['later', { mark: 's12' }] } },
+  { n: 166, name: 'Your moves · move 1 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you/moves', under: '/you', finish: { steps: ['later', { mark: 's12' }] } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

@@ -31,6 +31,7 @@ export default function YouStack() {
       <Stack.Screen name="notifications" options={{ title: t('notifs.title') }} />
       <Stack.Screen name="acknowledgements" options={{ title: t('settings.acknowledgements') }} />
       <Stack.Screen name="privacy" options={{ title: t('privacy.title') }} />
+      <Stack.Screen name="moves" options={{ title: t('moves.title') }} />
     </Stack>
   );
 }

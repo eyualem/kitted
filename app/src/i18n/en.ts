@@ -69,6 +69,10 @@ const addedInBuild = {
   'starter.removed': 'Removed {item}.',
   'starter.markedToast': 'Marked as owned.',
   'starter.a11y.count': '{n} of 12 starter essentials',
+  // L3 Your moves and the pinned rows (#292, 10-onboarding.md §9.9): VoiceOver only.
+  'moves.a11y.row': 'Move {n}: {title}. {detail}.',
+  'moves.a11y.rowDone': 'Move {n}, done: {title}.',
+  'moves.a11y.pinned': 'Your moves, {n} of 3 done',
   'pay.a11y.loading': 'Loading the plan',
   'pay.a11y.plan': '{plan}, {price} a month, {detail}.',
   'card.a11y.recheck': 'Re-check, {occasion}. Score went from {was} to {now}, up {delta}. {word}. Done: {fix}.',

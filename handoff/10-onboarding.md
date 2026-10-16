@@ -235,7 +235,7 @@ One sequence per phone, for his **first** fit only, stored in kv `onboard.finish
   2. His first check's top fix, word for word, with its tag (`Tuck in your tee` / `Free`). Done if his re-check made it (the re-check's done fixes). No fix: the card's next-level line with `Free · next time you get dressed`. Neither: `Check tomorrow's fit` / `Free · 1 a day`.
   3. The Starter essential he's missing that adds the most outfits to his closet: `Add a grey quarter-zip` / `$40–50 · +3 fits` (budget price; no `+N` when it adds none). Done when Closet gets one.
   - **One button, for the first move not done:** `Start move 1` → the Closet tab, then Starter essentials. `Start move 2` → the camera (a check like any other). `Start move 3` → Starter essentials (C7, the next-buy sheet, isn't built; that's where he marks it once he has it). All done: no button, and the card's title reads `All 3 done. Nice work.`
-- **Where it lives:** in today's chat, and read-only in Past chats. L3 (`Your moves`) and the pinned `Your moves · 1 of 3` rows in Lookbook and You are **not built** here (a follow-up).
+- **Where it lives:** in today's chat, and read-only in Past chats. L3 (`Your moves`) and the pinned `Your moves · 1 of 3` rows in Lookbook and You keep the moves in view after that day: §9.9 (#292).
 
 ### 9.3 C5 · Starter essentials (move 1's destination, 02 C5)
 
@@ -342,4 +342,40 @@ Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check 
 
 **Found and fixed while testing:** demo set-ups could run twice at once and wipe each other's later steps (now one at a time); move 1 stayed undone when the piece he marked was also seen in his photo; `ensure()` returned before a run in flight finished (a tap right after could miss the card); the plans page set state inside an effect (lint); `Later` showed on demo screens without the sequence and after a re-check; Stylist's header didn't follow a purchase.
 
-**Not done (needs the founder or later work):** `expo-notifications` (his OK) to make the ask real and send the daily idea; the real store (RevenueCat) and the Terms and Privacy pages before `PAYWALL_BUILT` can go on; L3 `Your moves` and the pinned `Your moves · 1 of 3` rows (today the card lives in that day's chat, then in Past chats); C7 (the next-buy sheet) for move 3; the iOS Simulator pass and the largest text size.
+**Not done (needs the founder or later work):** `expo-notifications` (his OK) to make the ask real and send the daily idea; the real store (RevenueCat) and the Terms and Privacy pages before `PAYWALL_BUILT` can go on; ~~L3 `Your moves` and the pinned rows~~ (built, §9.9); C7 (the next-buy sheet) for move 3; the iOS Simulator pass and the largest text size.
+
+### 9.9 L3 `Your moves` and the pinned rows (Oct 15, #292)
+
+*02 S14 "Persistence": the moves live in L3 and are pinned atop Lookbook and You as `Your moves · 1 of 3`. Until now the card lived only in that day's chat, so the moves dropped out of sight the next morning. This section closes that gap; 02 L3, D16 and D17 own the layout.*
+
+- **When the rows exist:** only once the sequence has posted its moves card: `onboard.finish` at step `moves`, `paywall` or `done`, with its `checkId` and `movesMsgId`, and that first check still stored. Never at `waiting` or `skipped` (the founder's phone, which already had many fits), never with no state.
+- **The same 3 moves as the card:** L3 and the rows read the card's own plan (`buildMoves`, with the `buyId` kept in the card's chat payload), so move 3 never changes under him and a move turns done in every place at once.
+- **The pinned row** (`KCard`, 52 pt): `checklist` + `Your moves` + trailing `{n} of 3` (n = moves done) + chevron → L3. **The first row** of Lookbook (above the looks) and of You (above the style card): S14 says "pinned atop"; D17's older list put it under the plan card, which the #246 You layout no longer has. From You it pushes L3 inside the You tab (its own route), so Back returns to You.
+- **L3:** inline title `Your moves`; header `{n} of 3 done` (`.headline`) + a 3-slot bar; the 3 moves in the FixRow shape inside one card. **Each move not done has its own trailing `Start`** (secondary, regular): L3 is the list he comes back to, not the chat card, so he can take them in any order (the card keeps its one button for the first move not done). Start goes where the card's does: moves 1 and 3 → the Closet tab, then Starter essentials; move 2 → the camera. A done move shows the card's filled check badge and grey title, with no button (the badge is the Done check; a second check on the right would repeat it).
+- **All 3 done:** L3's header reads `All 3 done. Nice work.` with the bar full and no buttons, and the pinned rows disappear from Lookbook and You. It's read live: if a move turns undone again (he removes the Starter piece he marked), the row comes back, because the row only ever says what's true.
+- **Copy:** only existing deck keys (`lookbook.moves`, `lookbook.movesCount`, `moves.title`, `moves.done`, `moves.allDone`, `plan.start`, `plan.startN`), plus VoiceOver lines (`moves.a11y.*`, `addedInBuild`).
+
+**The pass/fail checks (written before building, Oct 15)**
+- **Y1** · No rows and an empty L3 unless the sequence's step is `moves`, `paywall` or `done` with its moves card and first check; none at `waiting`, `skipped` or with no state.
+- **Y2** · L3 and the rows show the card's own 3 moves (the same titles, details and done states, the same `buyId`), and follow a change at once (a Starter piece marked turns move 1 done everywhere).
+- **Y3** · L3's header is `{n} of 3 done` with n of 3 slots filled; the pinned row's trailing text is `{n} of 3` with the same n.
+- **Y4** · Every move not done has a trailing `Start`; a done one has none. Start: moves 1 and 3 → Closet then Starter essentials; move 2 → the camera. No Start points at a placeholder.
+- **Y5** · All done: `All 3 done. Nice work.`, the bar full, no Start, and no pinned row in Lookbook or You.
+- **Y6** · The row is the first thing in Lookbook and in You; it opens L3; from You, Back returns to You.
+- **Y7** · VoiceOver: the row is one button ("Your moves, 1 of 3 done"); L3's header is a header; each move reads "Move 2: Tuck in your tee. Free." or "Move 1, done: Tap the basics you own."; Start reads "Start move 2".
+- **Y8** · The chat card is unchanged (one Start, for the first move not done; read-only in Past chats), and §9.6's checks still pass.
+- **Q5–Q8** as §9.6: `npm run check` green; 402 pt in light and dark; VoiceOver labels on every new control; no new outward copy.
+
+**Results (Oct 15, tested against the checks above).** Unit tests: `app/src/__tests__/yourMoves.test.ts` (6 tests). Screens: the web preview, demo screens **163** (Lookbook row), **164** (L3 from Lookbook), **165** (You row, move 1 done), **166** (L3 from You), light and dark; screenshots `screenshots/moves-oct15/` (git-ignored). Not on the Simulator (the Mac had under 250 MB free, rule 9). SF Symbols (the checklist, the chevron, the done check) don't draw on web.
+
+| Check | Result | How |
+|---|---|---|
+| Y1 · rows only once the card is posted | Pass | Tests (waiting, skipped, no state, a first check that's gone, after Later) |
+| Y2 · the card's own 3 moves, live | Pass | Tests (equal to the card's plan, the card's `buyId` wins, a Starter mark turns move 1 done); preview 151 and 164 show the same three lines |
+| Y3 · `{n} of 3 done`, the bar, `{n} of 3` | Pass | Tests; preview 163 "0 of 3", 165/166 "1 of 3" with one slot filled |
+| Y4 · a Start on every move left, where the card's goes | Pass | Tests; preview: L3 Start on move 1 → Closet → Starter essentials |
+| Y5 · all done: the line, no Start, no row | Pass (by test) | Tests; **not seen on screen**: no demo story makes move 2 done (that needs a re-check that makes the fix) |
+| Y6 · first row in Lookbook and You; Back returns | Pass | Preview: Lookbook → L3 (`/lookbook/moves`), You → L3 (`/you/moves`) → Back to You |
+| Y7 · VoiceOver | Pass (by code) | Labels tested; not walked with VoiceOver |
+| Y8 · the chat card unchanged | Pass | §9.6's tests pass; preview 151 unchanged |
+| Q5–Q8 | Pass | `npm run check` green; 402 pt light and dark; no new outward copy |

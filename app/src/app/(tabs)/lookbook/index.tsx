@@ -7,6 +7,7 @@ import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { FitCheckRow } from '@/data/types';
 import { shownPhoto } from '@/demo/demoPhotos';
+import { YourMovesRow } from '@/features/finish/YourMovesRow';
 import { fitCheck } from '@/features/fitcheck/session';
 import { openLookPage } from '@/features/lookbook/lookPage';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -36,6 +37,8 @@ export default function LookbookScreen() {
   if (!looks) return null;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
+      {/* Pinned atop while a move is left (02 S14, D16; 10-onboarding.md §9.9). */}
+      <YourMovesRow href="/lookbook/moves" />
       {looks.length === 0 ? (
         <EmptyState art={<GhostLook />} body={t('lookbook.empty')}>
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />
