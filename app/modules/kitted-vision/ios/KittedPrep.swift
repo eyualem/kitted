@@ -51,8 +51,10 @@ enum Prep {
   /// nil in the app (Documents and Caches); the Mac test harness points it at a scratch folder.
   static var rootOverride: URL?
 
-  /// A fit check (a person must be in it) or a clothes scan (no person needed; #88, #100).
-  enum Kind: String { case fit, items }
+  /// A fit check (a person must be in it), a clothes scan (no person needed; #88, #100), or a snap that finishes a
+  /// partial check: his shoes, or his pants and shoes looked down at (no person needed, kept and sent like a fit
+  /// photo, no close-ups; #313).
+  enum Kind: String { case fit, items, snap }
 
   /// What Vision found, and whether the photo may be sent: "ok", "noPerson", "multiplePeople"
   /// or "couldNotFrame". `hide` is every region to blur, in pixels with the origin top-left.
@@ -323,8 +325,8 @@ enum Prep {
     out.people = people.count
 
     guard var main = people.first ?? bodyBox(bodies.first, W, H) else {
-      // A clothes scan needs no person; any face found (a mirror, a poster) is still hidden.
-      if kind == .items { return out }
+      // A clothes scan or a snap needs no person; any face found (a mirror, a poster) is still hidden.
+      if kind != .fit { return out }
       out.status = "noPerson"
       return out
     }
@@ -378,7 +380,7 @@ enum Prep {
     }
     // A clothes scan with someone else in it (#100): their face must have been found too (or
     // their body runs off the top edge), or it can't be sent.
-    if kind == .items, others.contains(where: { o in
+    if kind != .fit, others.contains(where: { o in
       o.minY > H * 0.03 && !faceBoxes.contains { $0.intersects(o.insetBy(dx: -o.width * 0.1, dy: -o.height * 0.05)) }
     }) {
       out.status = "couldNotFrame"
@@ -403,7 +405,11 @@ enum Prep {
     // it sits on that outline. A stock mirror selfie (camera over his face, T-shirts with a printed face on the wall)
     // had the face detector find the print, the body pose land on the shirts, and his real face sent unhidden.
     // With someone else in the photo, their covered outline is taken out, so their head is never taken for his.
-    let mask = kind == .fit ? Measure.personMask(image, w: maskW, h: Int((CGFloat(maskW) * H / W).rounded()), quality: .balanced).map { excluding($0, out.cover) } : nil
+    // A snap (#313) gets the same outline check whenever his upper body is in view (a mirror snap with his head in
+    // it); a snap of his legs and shoes has no shoulders, and there the "top of the outline" is his shins or shoes.
+    let upperBody = (joint(.leftShoulder) ?? joint(.rightShoulder)) != nil
+    let mask = kind == .fit || (kind == .snap && upperBody)
+      ? Measure.personMask(image, w: maskW, h: Int((CGFloat(maskW) * H / W).rounded()), quality: .balanced).map { excluding($0, out.cover) } : nil
     let band = mask.flatMap { headBand($0, main: main, W: W, H: H) }
     if let band { out.hide.append(band) }
     func onOutline(_ r: CGRect) -> Bool {
@@ -424,6 +430,9 @@ enum Prep {
         let span = abs(shoulders[0].x - shoulders[1].x)
         let top = min(shoulders[0].y, shoulders[1].y)
         out.hide.append(CGRect(x: (shoulders[0].x + shoulders[1].x) / 2 - span * 0.55, y: top - span * 1.25, width: span * 1.1, height: span * 1.25))
+      } else if kind == .snap, shoulders.isEmpty {
+        // A snap of his legs and shoes (#313): no upper body in view, so no head to look for; any face found is hidden
+        // above. (A fit photo here can't be sent, and a top band would hide his waistband in a look-down shot.)
       } else if band == nil, main.minY > H * 0.03 {
         // A person whose top is inside the frame, but no face, head joints or shoulders: we can't
         // tell where the face is, so nothing is sent.
@@ -550,7 +559,8 @@ enum Prep {
     // copy is face-hidden too (closet crops may be sent later), and lives in Caches for a week.
     let upload = try writeJPEG(hidden, longEdge: uploadPx, quality: 0.8, to: uploadURL)
     let tZoom = CFAbsoluteTimeGetCurrent()
-    let zoom = try zoomCrops(image: image, hidden: hidden, found: found, sha: sha, in: uploadDir)
+    // A snap is read on its own, with no close-ups (they're cut from his body pose, which a shoe photo doesn't have).
+    let zoom = kind == .snap ? [] : try zoomCrops(image: image, hidden: hidden, found: found, sha: sha, in: uploadDir)
     let zoomMs = ms(since: tZoom)
     let kept = try writeJPEG(image, longEdge: keepPx, quality: 0.85, to: keptURL)
     _ = try writeJPEG(image, longEdge: thumbPx, quality: 0.8, to: thumbURL)

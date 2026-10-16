@@ -13,8 +13,9 @@ export interface PersonBox {
 
 export type PhotoRef =
   | { kind: 'demo'; photoId: string }
-  /** `person`: the one he tapped on "Which one is you?" (02 S23); everyone else is covered in what's sent. */
-  | { kind: 'file'; uri: string; person?: PersonBox }
+  /** `person`: the one he tapped on "Which one is you?" (02 S23); everyone else is covered in what's sent. `snap`: a
+   *  photo that finishes a partial check (his shoes, or his pants and shoes): no person needed (#313). */
+  | { kind: 'file'; uri: string; person?: PersonBox; snap?: boolean }
   | { kind: 'retry'; sha256: string; keptUri: string | null; thumbUri: string | null };
 
 export type PrepResult =

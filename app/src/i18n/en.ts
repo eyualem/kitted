@@ -1002,6 +1002,19 @@ const addedInBuild = {
   // Wrong card (#289): a photo's long-press menu on the piece page; its picker reuses closet.merge.title (no
   // subtitle), its toast item.dup.saidSame, and "Not this piece" keeps closet.piece.splitOff, now with Undo.
   'closet.piece.another': "It's another piece…",
+  // The two-shot check, step 0 (#313, 12-two-shot-check.md §10): a top-only check finished by a photo of the pants and
+  // shoes (02 S9's "Top-only partial", with a look-down tip instead of "Step back so your pants and shoes are in frame.",
+  // since the rear camera points at him), and the short-mirror tip in Mirror mode with a way to Propped.
+  'cam.bottom.tip': 'Point your phone down at your pants and shoes.',
+  'cam.bottom.guide': 'Pants and shoes here',
+  'cam.bottom.a11yShutter': 'Take a photo of your pants and shoes',
+  'cam.bottom.bubbleCap': 'Pants and shoes',
+  'cam.bottom.failed': "Couldn't read your pants and shoes. Try again.",
+  'partial.a11y.snapBottom': 'Snap your pants and shoes',
+  // A top-only card's summary named only the shoes ("…once I see your shoes."); its pants are missing too.
+  'partial.mayChangeBottom': 'Your score may change once I see your pants and shoes.',
+  'cam.tip.shortMirror': "Can't step back? Prop your phone up instead.",
+  'cam.proppedOffer': 'Use Propped',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

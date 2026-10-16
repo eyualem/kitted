@@ -218,6 +218,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
+  // The two-shot check, step 0 (#313, 12-two-shot-check.md §10): a short mirror's top-only check, finished by a photo of
+  // the pants and shoes; the bottom snap's camera; the short-mirror tip in Mirror.
+  { n: 185, name: 'Partial check · top only', id: 'S6p', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: '/stylist' },
+  { n: 186, name: 'Partial check · finished with pants and shoes', id: 'S6p', scenario: 'full', onboarded: true, now: '2026-10-20T08:13:00', href: '/stylist' },
+  { n: 187, name: 'Camera · pants and shoes snap', id: 'S9', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: `/camera?mode=shoeSnap&parent=${STORY_PARTIAL}&part=bottom`, under: '/stylist' },
+  { n: 188, name: 'Camera · short mirror', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=shortMirror&camMode=mirror', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

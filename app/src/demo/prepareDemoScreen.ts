@@ -50,6 +50,8 @@ type Step =
   | { at: string; do: 'openApp' }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
+  /** The partial check's snap (S9): the shoes, or the pants and shoes on a top-only check (#313). */
+  | { at: string; do: 'snap'; photoId: string }
   | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string }
   /** "Which one is you?" (02 S23) on a bundled photo; the second person's box is drawn for the demo. */
   | { at: string; do: 'whichOne'; photoId: string }
@@ -232,6 +234,10 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // All 3 moves done (#292, §9.9 Y5): the re-check made move 2's fix, the first check's top fix (s14b wears the white leather sneakers).
   180: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
   181: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
+  // The two-shot check, step 0 (#313): p01b's outfit read as top only (a short mirror), then its pants and shoes snapped.
+  185: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }] },
+  186: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }, { at: '2026-10-20T08:12:00', do: 'snap', photoId: 'p01b' }] },
+  187: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }] },
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 
@@ -409,6 +415,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       // No chat line since Oct 14 (the camera says what a re-check reads); the step stays so old stories keep their timing.
     } else if (step.do === 'recheck') {
       await fitCheck.start({ mode: 'recheck', photoId: step.photoId, parentCheckId: STORY_FIRST_CHECK, checkId: STORY_RECHECK });
+    } else if (step.do === 'snap') {
+      await fitCheck.start({ mode: 'shoeSnap', photoId: step.photoId, parentCheckId: STORY_PARTIAL });
     } else if (step.hold !== undefined) {
       // Screen 6: freeze mid-reading with the timers off (headless Chrome's virtual time would fire them).
       readingSource.holdAt = step.hold;

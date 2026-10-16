@@ -7,7 +7,7 @@
 
 import {
   applyCorrection, applyFix, applyPartsFix, applyTapAnswer, askWithCloset, askWithClosetParts, cardFixTargets, carryTapAnswer, dayKey, garmentName, isPartsFix,
-  localParts, mergeShoeSnap, PARTS_RUBRIC_VERSION, partsRecheckOutcome, pickShoesFromCloset, RUBRIC_DATA, recheckMerge, recheckOutcome, removeGarment,
+  localParts, mergeBottomSnap, mergeShoeSnap, PARTS_RUBRIC_VERSION, partsRecheckOutcome, pickShoesFromCloset, RUBRIC_DATA, recheckMerge, recheckOutcome, removeGarment,
   seasonNeeds, tapOrder, tapOrdinal, weatherNeeds, weekdayOf, type ClosetItem, type DayWeather, type Fix, type Garment, type Reading,
   type Styles,
 } from '@kitted/core';
@@ -27,6 +27,7 @@ import { patchCheckKeepCloset } from '@/features/closet/checkWrites';
 import { isOwned } from '@/features/closet/profile';
 import { createClosetService, type ClosetService, type DuplicateAnswer } from '@/features/closet/service';
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
+import { snapPart } from './finish';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
 import { evaluateCheck, scoreOptions, scoringEngine, type CheckScoreOptions, type ScoringEngine } from './scoring';
@@ -426,15 +427,17 @@ export function createFitCheckService(deps: ServiceDeps) {
     return (await store.fitChecks.get(row.id)) ?? scored;
   }
 
-  async function finalizeSnap(parent: FitCheckRow, snap: Reading, image: PreparedImage) {
+  /** A snap finishes a partial check (02 D11): a top-only check takes the snap's pants and shoes and becomes a full
+   *  body (mergeBottomSnap, #313); a shoes-only check takes its shoes (mergeShoeSnap). */
+  async function finalizeSnap(parent: FitCheckRow, snap: Reading, image: PreparedImage, part: 'bottom' | 'shoes') {
     const parentReading = await readingOf(parent);
     if (!parentReading) return parent;
     const snapRow = await insertReading(snap, 'lower', image.sha256, null);
-    const merged = mergeShoeSnap(parentReading, snap);
+    const merged = part === 'bottom' ? mergeBottomSnap(parentReading, snap) : mergeShoeSnap(parentReading, snap);
     const mergedRow = await insertReading(merged, 'snapMerged', parent.imageHash, parent.readingId);
     const { row } = await rescore(parent, merged, { readingId: mergedRow.id, snapState: 'snapped', details: { ...parent.details, finish: null } });
-    // The snapped shoes join the closet (footwear only), linked to the first check.
-    await closet.afterSnap(parent.id, snapRow.id, image);
+    // The snapped pieces join the closet (the pants and shoes, or the shoes only), linked to the first check.
+    await closet.afterSnap(parent.id, snapRow.id, image, part === 'bottom' ? 'bottomSnap' : 'shoeSnap');
     return (await store.fitChecks.get(parent.id)) ?? row;
   }
 
@@ -666,7 +669,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     // A new photo replaces a "Which one is you?" still waiting (never its own photo, which is being prepped now).
     if (req.photoUri && !req.person) await dropWhichOne(store, (uri) => uri !== req.photoUri && deps.discardPhoto?.(uri), { onlyOpen: true });
     const prep = await deps.prep.prepare(
-      req.photoUri ? { kind: 'file', uri: req.photoUri, ...(req.person ? { person: req.person } : {}) } : { kind: 'demo', photoId: req.photoId ?? '' },
+      req.photoUri
+        ? { kind: 'file', uri: req.photoUri, ...(req.person ? { person: req.person } : {}), ...(req.mode === 'shoeSnap' ? { snap: true } : {}) }
+        : { kind: 'demo', photoId: req.photoId ?? '' },
     );
     // Two people of comparable size (02 S23): ask which one is him; nothing is sent until he taps.
     if (prep.status === 'multiplePeople' && prep.people && prep.people.length >= 2 && req.photoUri && !req.person && !ctx.abandoned) {
@@ -692,11 +697,12 @@ export function createFitCheckService(deps: ServiceDeps) {
     const style: StyleKey | null = req.mode !== 'check' && parent ? parent.style : going!.style;
 
     if (req.mode === 'shoeSnap' && parent) {
-      await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { ...photoPayload, snap: true } });
-      const r = await runRead(parent.id, image, 'shoeSnap', 'shoeSnap', occasion);
+      const part = snapPart(parent);
+      await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: parent.id, payload: { ...photoPayload, snap: true, ...(part === 'bottom' ? { snapPart: 'bottom' } : {}) } });
+      const r = await runRead(parent.id, image, part === 'bottom' ? 'bottomSnap' : 'shoeSnap', 'shoeSnap', occasion);
       dispatch({ t: 'end', attempt: r.attempt });
       if (!r.reading) return { outcome: 'failed', checkId: parent.id };
-      await finalizeSnap(parent, r.reading, image);
+      await finalizeSnap(parent, r.reading, image, part);
       return { outcome: 'scored', checkId: parent.id };
     }
 

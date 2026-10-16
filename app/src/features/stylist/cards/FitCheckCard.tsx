@@ -1,7 +1,7 @@
 // The fit-check card in the thread (02 D6 → D7 / D11 / S19 / S22 / S23). One slot that shows the
 // live reading, then the result, from the same fit_checks row. One VoiceOver element with
 // custom actions; the buttons inside are also there for touch.
-import { router } from 'expo-router';
+import { router, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import {
@@ -14,7 +14,7 @@ import { OCCASIONS, type ClosetItemRow, type FitCheckRow, type StyleKey } from '
 import { useLive } from '@/data/useLive';
 import { fitCheck, useFitCheckSession } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
-import { weekdayName } from '@/i18n/format';
+import { finishInfo, type FinishInfo } from '@/features/fitcheck/finish';
 import { isRecheckOpen, recheckDeadline } from '@/services/quota';
 import { retryCheck } from '@/features/camera/startCheck';
 import { sessionClock } from '@/state/session';
@@ -280,7 +280,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     ] : []),
     ...(finish ? [
       ...(finish.remembered ? [{ name: 'finishSame', label: finish.remembered.label }] : finish.hasShoes ? [{ name: 'finishPick', label: t('partial.a11y.pick') }] : []),
-      { name: 'finishSnap', label: t('partial.a11y.snap') },
+      { name: 'finishSnap', label: finish.snapLabel },
       { name: 'finishSkip', label: t('partial.a11y.skip') },
     ] : []),
   ];
@@ -301,7 +301,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     moreAsks: () => router.navigate('/closet'),
     finishSame: () => { if (finish?.remembered) void fitCheck.pickShoes(row.id, finish.remembered.item.id); },
     finishPick: () => router.push(`/sheets/pick-shoes/${row.id}`),
-    finishSnap: () => router.push(`/camera?mode=shoeSnap&parent=${row.id}`),
+    finishSnap: () => { if (finish) router.push(finish.snapHref as Href); },
     finishSkip: () => void fitCheck.skipFinish(row.id),
   };
   const spokenHead = {
@@ -520,25 +520,6 @@ function SkippedLine({ choice, onPress }: { choice: string; onPress: () => void 
 
 const lowerFirst = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
 
-interface FinishInfo {
-  remembered: { item: ClosetItemRow; weekday: string; label: string } | null;
-  hasShoes: boolean;
-  second: string;
-}
-
-/** What the partial check's finish row offers: shared by the row and the card's VoiceOver actions. */
-function finishInfo(row: FitCheckRow, closet: ClosetItemRow[]): FinishInfo {
-  const f = row.details.finish;
-  const item = f?.suggestedItemId ? closet.find((c) => c.id === f.suggestedItemId) : undefined;
-  const weekday = f?.weekday !== null && f?.weekday !== undefined ? weekdayName(f.weekday) : null;
-  const remembered = item && weekday ? { item, weekday, label: t('partial.a11y.useSame', { shoes: item.name.toLowerCase(), weekday }) } : null;
-  const hasShoes = closet.some((c) => c.slot === 'shoes' && !c.isDeleted);
-  const second = remembered
-    ? t('partial.finish.same', { weekday: remembered.weekday })
-    : hasShoes ? t('partial.finish.snapOrPick') : t('partial.finish.snapOnly');
-  return { remembered, hasShoes, second };
-}
-
 /** "Finish the check · Same shoes as Monday?" + the remembered pair, the camera, Skip (02 D11). */
 function FinishRow({ row, info }: { row: FitCheckRow; info: FinishInfo }) {
   const { colors, isAccessibilitySize } = useTheme();
@@ -566,7 +547,7 @@ function FinishRow({ row, info }: { row: FitCheckRow; info: FinishInfo }) {
             <Icon name="shoes" size="regular" color={colors.ink} />
           </FinishTile>
         ) : null}
-        <FinishTile label={t('partial.a11y.snap')} onPress={() => router.push(`/camera?mode=shoeSnap&parent=${row.id}`)}>
+        <FinishTile label={info.snapLabel} onPress={() => router.push(info.snapHref as Href)}>
           <Icon name="camera" size="regular" color={colors.ink} />
         </FinishTile>
         <TextLink title={t('common.skip')} color="ink2" compact onPress={() => void fitCheck.skipFinish(row.id)} />

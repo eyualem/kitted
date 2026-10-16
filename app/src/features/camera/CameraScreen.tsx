@@ -44,7 +44,7 @@ type Mode = 'propped' | 'mirror';
 const MODE_KEY = 'camera.mode';
 const SIM_PHOTO = 'p01b';
 
-const FIT_TIPS: readonly FitTip[] = ['dark', 'darkFlash', 'noPerson', 'mirrorAim', 'backlit', 'tooClose', 'tooFar', 'moveLeft', 'moveRight', 'moving', 'good', 'goodFull'];
+const FIT_TIPS: readonly FitTip[] = ['dark', 'darkFlash', 'noPerson', 'mirrorAim', 'backlit', 'tooClose', 'shortMirror', 'tooFar', 'moveLeft', 'moveRight', 'moving', 'good', 'goodFull'];
 const isGoodTip = (tip: FitTip) => tip === 'good' || tip === 'goodFull' || tip === 'darkFlash';
 /** Problem tips are spoken at most this often (Propped), and not in the first moment after opening. */
 const SPEAK_GAP_MS = 4000;
@@ -59,11 +59,13 @@ interface Review {
 
 export function CameraScreen() {
   const { isAccessibilitySize } = useTheme();
-  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string; guide?: string; review?: string; camMode?: string }>();
+  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string; guide?: string; review?: string; camMode?: string; part?: string }>();
   // From the morning/evening card: the card's occasion and style (#61).
   const lens = lensFromParams(p);
   const checkMode: CheckMode = p.mode === 'recheck' || p.mode === 'shoeSnap' ? p.mode : 'check';
   const snap = checkMode === 'shoeSnap';
+  // A top-only check's snap (02 S9 "Top-only partial", #313): his pants and shoes, looked down at.
+  const bottomSnap = snap && p.part === 'bottom';
   // Re-check: one plain note (founder, Oct 14: naming one piece, "Re-check · pants", read as if the rest were ignored).
   // The whole photo is read again; the fixed pieces and any swapped piece count, the rest keeps its first reading.
   const recheckNote = checkMode === 'recheck' ? { title: t('cam.recheck.title'), body: t('cam.recheck.body') } : null;
@@ -314,7 +316,7 @@ export function CameraScreen() {
   };
 
   // --- render ----------------------------------------------------------------------------
-  const tipView = review ? { icon: null, text: t('cam.checking') } : snap ? { icon: null, text: t('cam.shoe.tip') } : fitTipCopy(tip);
+  const tipView = review ? { icon: null, text: t('cam.checking') } : snap ? { icon: null, text: t(bottomSnap ? 'cam.bottom.tip' : 'cam.shoe.tip') } : fitTipCopy(tip);
   const reviewUri = review && 'photoUri' in review.photo ? review.photo.photoUri : null;
   const panel = review?.issue ? reviewPanel(review.issue) : null;
   // The S3 panel says what's wrong; the "Checking the photo…" pill goes while it shows.
@@ -367,7 +369,7 @@ export function CameraScreen() {
       <View style={[StyleSheet.absoluteFill, { experimental_backgroundImage: cameraScrims.bottom }]} pointerEvents="none" />
 
       {snap ? (
-        <LowerGuide share={0.4} label={t('cam.shoe.guide')} width={width} height={height} />
+        <LowerGuide share={bottomSnap ? 0.6 : 0.4} label={t(bottomSnap ? 'cam.bottom.guide' : 'cam.shoe.guide')} width={width} height={height} />
       ) : guide.body && !review ? (
         <BodyOutline box={guide.body} solid={isGoodTip(tip)} width={width} height={height} minY={guideTop} maxY={guideBottom} />
       ) : null}
@@ -393,6 +395,16 @@ export function CameraScreen() {
           <View style={styles.slot} />
         )}
       </View>
+
+      {tip === 'shortMirror' && mode === 'mirror' && !snap && !review && !flashUi.offer ? (
+        <View style={[styles.offerWrap, { top: insets.top + 3 + 52 }]}>
+          <Pressable onPress={() => switchMode('propped')} accessibilityRole="button" style={({ pressed }) => [styles.offer, { opacity: pressed ? opacity.pressed : 1 }]}>
+            <KText variant="subheadline" weight="600" color={fixed.white}>
+              {t('cam.proppedOffer')}
+            </KText>
+          </Pressable>
+        </View>
+      ) : null}
 
       {flashUi.offer ? (
         <View style={[styles.offerWrap, { top: insets.top + 3 + 52 }]}>
@@ -459,7 +471,7 @@ export function CameraScreen() {
           <Pressable
             onPress={shutter}
             accessibilityRole="button"
-            accessibilityLabel={snap ? t('cam.shoe.a11yShutter') : t('cam.a11y.shutter')}
+            accessibilityLabel={snap ? t(bottomSnap ? 'cam.bottom.a11yShutter' : 'cam.shoe.a11yShutter') : t('cam.a11y.shutter')}
             style={({ pressed }) => [styles.shutter, { opacity: pressed ? opacity.pressed : 1 }]}
           >
             <View style={styles.shutterDisc} />

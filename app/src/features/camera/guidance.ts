@@ -42,7 +42,7 @@ export const T = {
 // ---- Live tips ----------------------------------------------------------------------------
 
 export type FitTip =
-  | 'dark' | 'darkFlash' | 'noPerson' | 'mirrorAim' | 'backlit' | 'tooClose' | 'tooFar' | 'moveLeft' | 'moveRight' | 'moving' | 'good' | 'goodFull';
+  | 'dark' | 'darkFlash' | 'noPerson' | 'mirrorAim' | 'backlit' | 'tooClose' | 'shortMirror' | 'tooFar' | 'moveLeft' | 'moveRight' | 'moving' | 'good' | 'goodFull';
 export type ScanTip = 'looking' | 'dark' | 'darkTorch' | 'person' | 'noClothes' | 'moving' | 'glare' | 'cutOff' | 'tooFar' | 'good';
 
 const isGoodState = (s: GuideState) => s === 'good' || s === 'goodFull';
@@ -72,7 +72,8 @@ export function fitTip(g: GuideEvent, o: { mode: 'propped' | 'mirror'; flash: bo
   if (g.state === 'noPerson') return res(dark ? 'darkFlash' : o.mode === 'mirror' ? 'mirrorAim' : 'noPerson');
   const backlit = (g.clipped ?? 0) >= T.backlitClipped && g.subjectLuma !== undefined && g.subjectLuma < T.backlitSubject;
   if (backlit) return res('backlit');
-  if (g.state === 'tooClose') return res('tooClose');
+  // No hips in Mirror is usually a short mirror (a bathroom), where "step back" can't help: offer Propped (#313).
+  if (g.state === 'tooClose') return res(o.mode === 'mirror' ? 'shortMirror' : 'tooClose');
   if (g.bodyShare !== undefined && g.bodyShare < T.tooFarBody) return res('tooFar');
   if (g.state === 'moveLeft' || g.state === 'moveRight') return res(g.state);
   // Propped is hands-free (the countdown already says "Hold still"); Mirror is handheld.

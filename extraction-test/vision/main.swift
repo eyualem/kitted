@@ -418,6 +418,29 @@ case "cutoff":
     }
   }
 
+case "snapprep":
+  // kmeasure snapprep <photo.jpg>...: the snap's prep (#313). Each photo's bottom 25%, 35% and 50% (a shoe or bottom
+  // snap seen from the front) through Prep.locate as a fit photo (what the snap used until #313), as items (the
+  // clothes scan's prep) and as a snap (#313: no person needed; hidden area share); and the whole photo as a fit photo
+  // and as a snap (a face must stay hidden). One JSON line per photo and share.
+  for path in args.dropFirst(2) {
+    guard let img = load(path) else { continue }
+    let W = CGFloat(img.width), H = CGFloat(img.height)
+    // The whole photo as a snap: a face in it must still be hidden (S0.7).
+    let whole = Prep.locate(img), wholeSnap = Prep.locate(img, kind: .snap)
+    if let d = try? JSONSerialization.data(withJSONObject: ["photo": path, "share": 1.0, "fit": whole.status, "fitHidden": whole.hide.count,
+        "snap": wholeSnap.status, "snapHidden": wholeSnap.hide.count] as [String: Any], options: [.sortedKeys]), let s = String(data: d, encoding: .utf8) { print(s) }
+    for share in [0.25, 0.35, 0.5] as [CGFloat] {
+      let h = (H * share).rounded()
+      guard let c = img.cropping(to: CGRect(x: 0, y: H - h, width: W, height: h)) else { continue }
+      let fit = Prep.locate(c), items = Prep.locate(c, kind: .items), snap = Prep.locate(c, kind: .snap)
+      let area = snap.hide.reduce(0) { $0 + $1.intersection(CGRect(x: 0, y: 0, width: W, height: h)).width * $1.intersection(CGRect(x: 0, y: 0, width: W, height: h)).height } / (W * h)
+      let row: [String: Any] = ["photo": path, "share": Double(share), "fit": fit.status, "items": items.status, "hidden": items.hide.count,
+                                "snap": snap.status, "snapHidden": snap.hide.count, "snapHiddenArea": Double((area * 1000).rounded() / 1000)]
+      if let d = try? JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]), let s = String(data: d, encoding: .utf8) { print(s) }
+    }
+  }
+
 default:
   print("unknown command"); exit(2)
 }

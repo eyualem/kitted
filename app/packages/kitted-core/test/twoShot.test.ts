@@ -2,8 +2,15 @@
 // (framing upper_only) drops its bottoms and shoes from scoring, so a shoe snap (mergeShoeSnap, which keeps the
 // framing) can't finish it; only a bottom snap (mergeBottomSnap, framing becomes full body) can.
 import { describe, expect, it } from "vitest";
-import { mergeBottomSnap, mergeShoeSnap, partialLabel, scoreParts, type Reading } from "../src/index";
+import { mergeBottomSnap, mergeShoeSnap, partialLabel, scoreParts as scorePartsAny, type PartsScored, type Reading } from "../src/index";
 import { loadReading } from "./helpers";
+
+/** Every reading here is scorable; narrow the result so its fields can be read. */
+function scoreParts(r: Reading): PartsScored {
+  const s = scorePartsAny(r);
+  if (s.overall === null) throw new Error("unscored");
+  return s as PartsScored;
+}
 
 const full = loadReading("p01b");
 const topOnly: Reading = { ...full, scene: { ...full.scene, framing: "upper_only", shoes_visible: false } };

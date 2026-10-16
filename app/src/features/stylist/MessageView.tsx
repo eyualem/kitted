@@ -126,7 +126,7 @@ function PhotoMessage({ m }: { m: ChatMessage }) {
   const snap = m.payload.snap === true;
   const reading = !!row && (row.status === 'scoring' || (snap && session.kind === 'reading' && session.checkId === row.id && session.mode === 'shoeSnap'));
   let caption: string | undefined;
-  if (snap) caption = t('cam.shoe.bubbleCap');
+  if (snap) caption = t(m.payload.snapPart === 'bottom' ? 'cam.bottom.bubbleCap' : 'cam.shoe.bubbleCap');
   else if (row?.status === 'failed') caption = t('fail.cap.notScored');
   else if (row?.parentId) caption = t('recheck.bubbleCap');
   else if (row) caption = occasionLabel(row.occasion);

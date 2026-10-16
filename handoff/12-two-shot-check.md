@@ -79,7 +79,7 @@ the score (a bug). Nothing in the app has changed yet. Next: step 0, then his sh
 
 | Where | Words |
 |---|---|
-| Live tip, Mirror, no hips or feet | Step 0 (before steps 1–3): "Short mirror? Prop your phone up to get your shoes in." Once step 1 is built: "Short mirror? Take your top half. I'll get the rest next." |
+| Live tip, Mirror, no hips or feet | Step 0 (built): "Can't step back? Prop your phone up instead." + "Use Propped" Once step 1 is built: "Short mirror? Take your top half. I'll get the rest next." |
 | After the top shot | "Now your pants and shoes." · "Point the phone down at your feet." |
 | Down-shot tips | "Tilt down more" · "Both shoes in" · "Hold still" · "Too dark. Turn on the light." |
 | Down-shot quick check fails | "I can't see your shoes. Try again with both feet in the frame." |
@@ -215,12 +215,12 @@ only" row); it was never built. Two bugs found while planning it are fixed too.
   shoe snap of just the shoes has likely never worked on the phone.
 
 **Copy (new, for the founder's skim; outward-facing, built with these words):**
-- Bottom-snap camera tip: "Point your phone down at your feet. Get your pants and shoes in." (differs from 02 S9's
+- Bottom-snap camera tip: "Point your phone down at your pants and shoes." (shortened from "…at your feet. Get your pants and shoes in.", which was cut off in the 2-line pill at 375 pt; differs from 02 S9's
   "Step back so your pants and shoes are in frame." because a rear camera pointed at himself can't step back; the
   look-down shot is the founder's idea, #313). Guide over the lower 60%: "Pants and shoes here". Shutter
   VoiceOver: "Take a photo of your pants and shoes". Bubble caption: "Pants and shoes". Failure toast: "Couldn't
   read your pants and shoes. Try again." Finish tile VoiceOver: "Snap your pants and shoes".
-- Mirror mode, no hips found: "Can't step back? Prop your phone up to get your shoes in." with a "Use Propped"
+- Mirror mode, no hips found: "Can't step back? Prop your phone up instead." (shortened: the longer line was cut off in the pill beside the timer) with a "Use Propped"
   button (Propped keeps "Step back a little. Shoes in frame if you can.").
 
 **Checks (pass/fail):**
@@ -243,3 +243,21 @@ only" row); it was never built. Two bugs found while planning it are fixed too.
 - **S0.9** The quick check after a bottom snap checks only light and blur (like the shoe snap).
 - **S0.10** `npm run check` green; the core and app tests above; the card and camera seen on the web preview in
   light and dark (and on the Simulator if the Mac has the memory; otherwise said so).
+
+## 11. Step 0 results (built Oct 16, every check passes)
+
+| Check | Result |
+|---|---|
+| S0.1 finish row | Pass. Top only: "Snap your bottom half to finish.", the camera tile and Skip only (no "Same shoes as …", no closet pick); VoiceOver "Snap your pants and shoes". `app/src/features/fitcheck/finish.ts`, tests `app/src/__tests__/twoShot.test.ts`. Seen on demo screen 185. |
+| S0.2 camera | Pass. The tile opens `/camera?mode=shoeSnap&…&part=bottom`: "Point your phone down at your pants and shoes.", the guide over the lower 60% "Pants and shoes here" (demo 187, light and dark). Shoes-only cards still open the 40% shoe snap (demo 11 unchanged). |
+| S0.3 merge | Pass. Read as a bottom snap, merged with `mergeBottomSnap`: "Full check", score = the merged reading's (p01t + its snap = 7.5, the same as the full p01b photo; demo 186); no check, no re-check used. |
+| S0.4 shoe snap | Pass. Unchanged (s24 tests, demo 11). |
+| S0.5 closet | Pass. The snap's pants and shoes join the closet, linked to the check (a shoe snap: footwear only); demo 186 asks "Are these your khaki chinos?". |
+| S0.6 failure | Pass. "Couldn't read your pants and shoes. Try again." / "Couldn't read your shoes. Try again or pick a pair." (the shoe line was in the deck but never shown: **bug B3**, a failed snap said nothing). |
+| S0.7 snap prep | Pass on the Mac (`kmeasure snapprep`, the app's own `KittedPrep.swift`): the bottom 25% of his 37 photos prepares 37 of 37 (the old prep 23), nothing hidden on legs and shoes; whole photos through the snap prep hide exactly what a fit photo hides (0 of 32 hide less; the outline head check runs whenever his shoulders are in view). Native: on his phone with the next reinstall; until then the old prep runs. `KittedVisionModule.swift`'s new `prepareSnap` isn't compiled by Xcode yet (the Mac was short on memory and another session had the Simulator); it mirrors `prepareItems` line for line. |
+| S0.8 Mirror tip | Pass. Mirror, no hips: "Can't step back? Prop your phone up instead." + "Use Propped", which switches to Propped (then "Step back a little…", the button goes) (demo 188); Propped unchanged. |
+| S0.9 quick check | Pass (unchanged: snaps are checked for light and blur only). |
+| S0.10 checks | Pass. `npm run check` parts: app typecheck, core typecheck, lint 0 problems, core 758 tests, app 1,091 tests (3 skipped). Web preview, light and dark. Not seen on the iOS Simulator (see S0.7). |
+
+**Also fixed on the way:** a top-only card's summary said "Your score may change once I see your shoes." (now
+"…your pants and shoes."); the chat context test still expected "FC3 · Oct 20" after #311 added the weekday.
