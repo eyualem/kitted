@@ -1,4 +1,4 @@
-// Undo that showed late (09-ui-review §9, #293; checks U1–U7 set before building). On the Simulator the merge Undo and
+// Undo that showed late (09-ui-review §9, #294; checks U1–U7 set before building). On the Simulator the merge Undo and
 // the photo Undo restored the rows exactly (M3, W1, W5) but took seconds to show. Two causes: every closet write waits
 // in one queue, so an Undo waited behind background closet work queued before it; and every row an Undo wrote woke
 // every open screen to re-read all its tables, once per row. The story is pieceMerge's and wrongCard's: his tan chinos

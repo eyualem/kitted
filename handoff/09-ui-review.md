@@ -301,7 +301,7 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 
 ---
 
-## 9. Undo that shows late: pass/fail checks, set before building (Oct 15, #293)
+## 9. Undo that shows late: pass/fail checks, set before building (Oct 15, #294)
 §7 and §8 W7 left one open item: on the Simulator the Undo of a merge ("Same as another piece…") and of a moved or split photo ("It's another piece…", "Not this piece") put the rows back exactly (M3, W1, W5) but took several seconds to show. The fix is timing only: nothing about what Undo restores changes, and no new words. Same rules as §6–§8; G1–G3 apply.
 - **U1 (T) Undo isn't stuck behind slow closet work:** with a slow closet job already waiting in the closet queue (a late closet answer being written, a launch catch-up, the color refresh, or the photo measuring inside them), the merge Undo and the photo Undo start and finish without waiting for that job. Measured in a jest test with a job that takes 5 s on fake timers: Undo is done before it.
 - **U2 (T) The queue stays safe:** a job that was already running when Undo was tapped finishes first (Undo never interleaves with another closet write), and nothing queued after Undo runs before it. A closet answer that lands after the Undo reads the restored rows, so no stale closet summary is written over them. The existing ordering tests (`patchCheckKeepCloset`, the closet call vs Undo on the score card) still pass.
@@ -311,7 +311,7 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 - **U6 (S) On the Simulator:** demo 112 (Same as another piece… → pick → Yes → Undo) and demo 114 (long-press a photo → It's another piece… → Grey tee → Undo): the restored page shows within ~300 ms of the tap on Undo, read from the U5 log lines (tap to done) and a screenshot.
 - **U7 (T) No fit-check score changes** after any of these Undos (as W6).
 
-### §9 results (Oct 15, #293): checked against U1–U7, U1 reworded before building (a held job, not 5 s on fake timers)
+### §9 results (Oct 15, #294): checked against U1–U7, U1 reworded before building (a held job, not 5 s on fake timers)
 | Check | Result | How |
 |---|---|---|
 | U1 | Pass (T) | `undoQueue.test.ts`: a closet job held open in the queue (it never ends until the test releases it); the merge and photo Undos finish before it starts. Against the old queue the Undo hung behind it (the test timed out) |
@@ -319,6 +319,6 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 | U3 | Pass (T) | `pieceMerge.test.ts` M3, `wrongCard.test.ts` W1/W5 unchanged and green; U1 also deep-compares every table to before the merge |
 | U4 | Pass (T, S) | one Undo wakes a watching screen once (was 6 in the test story); on the Simulator the old code reloaded the page 7 times per merge Undo, the new code once |
 | U5 | Pass (T, S) | the three log lines, seen in Metro: `undo photo queued · behind nothing`, `started +13 ms`, `done +17 ms (ran 4 ms)` |
-| U6 | Pass (S) | tap → restored page: demo 114 photo Undo +26 ms, demo 113 merge Undo +76 ms (back on the tan chinos, worn 1 time); the old code was +110 ms on the same merge, so the "several seconds" in §7/§8 W7 didn't reproduce (likely the test taps, DECISIONS-LOG #293) |
+| U6 | Pass (S) | tap → restored page: demo 114 photo Undo +26 ms, demo 113 merge Undo +76 ms (back on the tan chinos, worn 1 time); the old code was +110 ms on the same merge, so the "several seconds" in §7/§8 W7 didn't reproduce (likely the test taps, DECISIONS-LOG #294) |
 | U7 | Pass (T) | every check's score, raw score and part scores equal after a merge and its Undo jump the queue |
 | G1 | Pass | `npm run check`: tsc, lint, core tests and 823 app tests in 72 suites |
