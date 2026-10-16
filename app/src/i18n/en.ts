@@ -374,6 +374,10 @@ const addedInBuild = {
   'mic.a11yStop': 'Stop and use these words',
   'mic.a11yCancel': 'Cancel',
   'mic.listening': 'Listening…',
+  // Round 2 (#302): the speech model's first install, offline, and a mic that heard nothing.
+  'mic.preparing': 'Getting voice ready…',
+  'mic.needsNetwork': 'Voice needs a connection the first time.',
+  'mic.noWords': "I didn't catch that.",
   'mic.error': "Couldn't hear that. Try again.",
   'mic.off.title': 'Microphone is off',
   'mic.off.body': 'Turn it on in Settings to ask your stylist out loud.',

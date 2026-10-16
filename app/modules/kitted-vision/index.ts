@@ -68,7 +68,9 @@ export type PrepareResult =
 export type DictationEvent =
   | { type: 'text'; text: string; final: boolean }
   | { type: 'level'; level: number }
-  | { type: 'end'; error: string | null };
+  | { type: 'end'; error: string | null }
+  /** Round 2 (#302): one stage of the native side ("first words +420 ms"), for the [mic] log. Never his words. */
+  | { type: 'log'; line: string };
 
 /** A clothes scan's prep (#88, #100): no person needed; any face is still hidden. */
 export type PrepareItemsResult =
@@ -182,6 +184,10 @@ interface KittedVisionNative {
   dictationSupported(): Promise<boolean>;
   startDictation(): Promise<void>;
   stopDictation(): Promise<void>;
+  /** Round 2 (#302); absent on builds before it. */
+  startDictationWith?(words: string[]): Promise<void>;
+  stopDictationText?(): Promise<string>;
+  prepareDictation?(): Promise<string>;
   addListener(event: 'onDictation', cb: (e: DictationEvent) => void): { remove(): void };
 }
 
@@ -276,12 +282,30 @@ export async function requestMicrophone(): Promise<'granted' | 'denied'> {
   return native ? native.requestMicrophone() : 'denied';
 }
 
-export async function startDictation(): Promise<void> {
-  if (native) await native.startDictation();
+/** Starts listening; `words` (his piece names) help the model hear them, on builds that take them (#302). */
+export async function startDictation(words: readonly string[] = []): Promise<void> {
+  if (!native) return;
+  if (typeof native.startDictationWith === 'function') await native.startDictationWith([...words]);
+  else await native.startDictation();
 }
 
-export async function stopDictation(): Promise<void> {
-  if (native) await native.stopDictation();
+/** Stops; the words heard, on builds that hand them back after the last result (#302), else null. */
+export async function stopDictation(): Promise<string | null> {
+  if (!native) return null;
+  if (typeof native.stopDictationText === 'function') return await native.stopDictationText();
+  await native.stopDictation();
+  return null;
+}
+
+/** Installs the speech model ahead of the first tap (#302). Older builds: "ready" (they install inside start). */
+export async function prepareDictation(): Promise<'ready' | 'needsNetwork' | 'unsupported'> {
+  if (!native || typeof native.prepareDictation !== 'function') return 'ready';
+  try {
+    const r = await native.prepareDictation();
+    return r === 'needsNetwork' || r === 'unsupported' ? r : 'ready';
+  } catch {
+    return 'needsNetwork';
+  }
 }
 
 export function onDictation(cb: (e: DictationEvent) => void): () => void {
