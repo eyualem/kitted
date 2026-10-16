@@ -1843,12 +1843,23 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Lesson:** a demo screenshot taken ~8 s after launch is sometimes the splash screen or the previous state (the Metro bundle was reloading, or the story's set-ups hadn't finished); wait 12–14 s and recheck any frame that doesn't match its story.
 
 
+300. **The save offer stays a card in the chat, not a pop-up (founder, Oct 16: "Let's go to the chat card. That seems pretty nice.").**
+    - **What was asked:** the founder pictured a modal after the first fit check ("sign in or create account to save your fits").
+    - **Claude's recommendation, which he took:** keep `10-onboarding.md` §3's card, "Keep your fits", with "Save my fits" / "Not now", in the Stylist thread. Three reasons:
+      - The first session already has two modals: the paywall, then the notification ask.
+      - Apple's design guidelines keep modals for what must be handled now, and an optional backup must never look required (5.1.1).
+      - Sign in with Apple or Google makes the account by itself, so the words name the gain ("save my fits"), not "create account".
+    - **Rejected:**
+      - a full-screen modal;
+      - the middle option, a one-time half-height sheet on the second visit.
+    - **Unchanged:** the timing (the first re-check, or the next visit), the cap (twice, the second after 3 more checks), and Settings → Account always there.
+
 ## Oct 16 · The chat's C7 polish (founder: "go on")
 
-300. **The chat's cards read well with VoiceOver, the paused state exists, and Past chats are read-only, against checks written first (`handoff/07-stylist-chat.md` §14, P1–P6; all pass, P5 after one fix).**
+301. **The chat's cards read well with VoiceOver, the paused state exists, and Past chats are read-only, against checks written first (`handoff/07-stylist-chat.md` §14, P1–P6; all pass, P5 after one fix).**
     - **One source for what a card says and shows:** `cardSpoken` (its VoiceOver line, also read after the answer) and `cardControls` (which buttons show today and in Past chats), used by the view and the tests alike.
     - **The paused line** is D4's default, shown when the server (C6, not built) answers `paused`: no Retry, nothing counted.
     - **Demo 175:** yesterday's answers in Past chats. Its first question is the buy one because the demo closet has no olive overshirt until the 22nd; the code rightly drops an outfit card with a piece he doesn't own yet.
     - **The largest text size (P5), checked once the Simulator was free:** another session ("Simulator pass: end of onboarding and Your moves") was using it at first; I launched Kitted on it once before noticing, told that session, and waited. At AX5 the saved line's Undo ran off the edge; the row now wraps. Everything else fit.
-    - **Numbering:** #298 and #299 were taken by the Google and Simulator sessions the same night, so this is #300.
+    - **Numbering:** #298 and #299 were taken by the Google and Simulator sessions the same night, and the save-offer decision took #300, so this is #301.
     - **Also merged:** PR [eyualem/kitted#1](https://github.com/eyualem/kitted/pull/1) (#296, #297) on the founder's go; the main folder was fast-forwarded so his phone gets it through Metro.

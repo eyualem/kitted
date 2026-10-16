@@ -446,7 +446,7 @@ Founder: "plan the things on your side out, with tests planned out in advance as
 | G4 | Pass (T) | every demo question asked: no check's score moves |
 | G5 | Pass | `npm run check`: 925 app tests in 75 suites, lint and typecheck clean. Not checked: the largest text size |
 
-## 14. C7 polish: pass/fail checks, set before building (Oct 16, #300)
+## 14. C7 polish: pass/fail checks, set before building (Oct 16, #301)
 The chat's polish step (§11 C7), on the demo screens. Nothing here spends money or changes a score. The one new line is D4's default, `Questions are paused for a bit. Nothing was counted. Try again later.`
 - **P1 (T) VoiceOver reads each card as one thing:**
   - outfit: "An outfit from your closet: olive overshirt, white tee, dark jeans, white sneakers.", with Wear this and Check it as actions;
@@ -460,7 +460,7 @@ The chat's polish step (§11 C7), on the demo screens. Nothing here spends money
 - **P6 (S) Dark mode** on 167, 169, 171 and 173.
 - **G6** `npm run check` green.
 
-### §14 results (Oct 16, #300): checked against P1–P6, none changed
+### §14 results (Oct 16, #301): checked against P1–P6, none changed
 | Check | Result | How |
 |---|---|---|
 | P1 | Pass (T) | `askC7.test.ts`: each card's one line (`cards.ts` `cardSpoken`), used by the view and the announcement; the outfit card is one VoiceOver element with Wear this and Check it as actions; the picked answer is "selected" |
