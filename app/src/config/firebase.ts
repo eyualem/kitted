@@ -11,6 +11,6 @@ export const FIREBASE_CONFIG = {
   appId: '1:1069635510987:web:0a978290f1266d6764f14e',
 } as const;
 
-/** Google Sign-In on iPhone: the iOS OAuth client (GoogleService-Info.plist CLIENT_ID). Its reversed form is the URL
- *  scheme in app.config.ts. Empty until Google is enabled in the console. */
-export const GOOGLE_IOS_CLIENT_ID = '';
+/** Google Sign-In on iPhone: the "Kitted iOS" app's OAuth client (GoogleService-Info.plist CLIENT_ID). Its reversed
+ *  form is the URL scheme in app.config.ts (GOOGLE_IOS_URL_SCHEME there); keep the two in step. */
+export const GOOGLE_IOS_CLIENT_ID: string = '1069635510987-h35362quu682rbpvvsdhqdkp4ic295v9.apps.googleusercontent.com';
