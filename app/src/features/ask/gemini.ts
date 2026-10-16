@@ -3,7 +3,7 @@
 // split off as it streams, so the deltas this yields are the answer only; the pipeline gates them sentence by
 // sentence (gate.ts). Never picked on his phone until CHAT_LIVE is on (session.ts, A7).
 import { parseSse, type StreamChunk } from '@/services/readingSource/gemini';
-import { createClosingSplitter } from './closing';
+import { createClosingSplitter, EMPTY_BLOCK } from './closing';
 import type { AnswerEvent, AnswerSource } from './source';
 
 /** The chat's starting model (07 §9, #270): a quarter of 3.8 Flash's cost from 2027; C5's test can change it. */
@@ -22,19 +22,25 @@ export interface AskGeminiOptions {
     body: { getReader(): { read(): Promise<{ done: boolean; value?: Uint8Array }> } } | null;
   }>;
   model?: string;
+  /** The answer cap (default ASK_MAX_TOKENS); the model test gives every model the same, higher one (#311). */
+  maxTokens?: number;
   /** Tokens and timing per call, for the cost log (never the text). */
   onCall?: (r: { ms: number; usage?: Record<string, number>; finishReason?: string; model?: string }) => void;
   now?: () => number;
 }
 
+/** The least thinking each model takes: Flash-Lite 3.5 refuses a budget of 0 (HTTP 400, #310) and takes the "minimal"
+ *  level; 3.8 Flash refuses "minimal" and takes a budget of 0 (#311, as the reading call does). */
+export function thinkingFor(model: string): Record<string, unknown> {
+  return /flash-lite/.test(model) ? { thinkingLevel: 'minimal' } : { thinkingBudget: 0 };
+}
+
 /** The request body (A1): rules + guide as the system part, pack + evidence + question as his turn. */
-export function buildAskRequest(system: string, user: string) {
+export function buildAskRequest(system: string, user: string, model: string = ASK_MODEL, maxTokens: number = ASK_MAX_TOKENS) {
   return {
     systemInstruction: { parts: [{ text: system }] },
     contents: [{ role: 'user', parts: [{ text: user }] }],
-    // Flash-Lite 3.5 refuses thinkingBudget 0 (HTTP 400, found in the first live try, #310); its lowest is the
-    // "minimal" thinking level.
-    generationConfig: { temperature: ASK_TEMPERATURE, maxOutputTokens: ASK_MAX_TOKENS, thinkingConfig: { thinkingLevel: 'minimal' } },
+    generationConfig: { temperature: ASK_TEMPERATURE, maxOutputTokens: maxTokens, thinkingConfig: thinkingFor(model) },
   };
 }
 
@@ -54,7 +60,7 @@ export function createAskGemini(opts: AskGeminiOptions): AnswerSource {
         res = await opts.fetch(`${BASE}/${model}:streamGenerateContent?alt=sse`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-goog-api-key': opts.apiKey },
-          body: JSON.stringify(buildAskRequest(req.prompt.system, req.prompt.user)),
+          body: JSON.stringify(buildAskRequest(req.prompt.system, req.prompt.user, model, opts.maxTokens)),
           signal: req.signal,
         });
       } catch {
@@ -101,7 +107,7 @@ export function createAskGemini(opts: AskGeminiOptions): AnswerSource {
       }
       const { rest, block } = split.end();
       if (rest) yield { type: 'delta', text: rest };
-      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused, verdict: block.verdict };
+      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused, verdict: block.verdict, blockFound: block !== EMPTY_BLOCK };
     },
   };
 }

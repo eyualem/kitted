@@ -431,22 +431,38 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 | Check | Result | How |
 |---|---|---|
 | N1–N4 | Pass (T) | `nextBuy.test.ts` (written right after the engine; the checks were committed first): on the demo closet the pick is dark straight jeans, +16 |
-| N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **Not yet on the Simulator** (the Mac was low on memory) |
+| N5 | Pass on web (S) | demo 182: the card under the count; the sheet (`/sheets/next-buy`, replacing the C7 placeholder): +16, $50–60, six unlocked outfits with the jeans dashed, Got it; light and dark. **On the Simulator Oct 17 (§15):** two fixes, then pass |
 | N6 | Pass | `npm run check`: 1041 app tests |
 | Found | | **Two "+N" rules in the app:** the chat's buy card, the Starter list and the first-3-moves card count with `fitsGain` (core `rotation`: any combination without a hard clash, v4), while the Closet now counts outfits rated Put together (#84.3). So on the demo closet the chat suggests a navy polo (+12) and the Closet dark straight jeans (+16). Proposed as a follow-up: one count everywhere |
 
+## 15. Next best buy on the Simulator: two fixes, pass/fail checks set before building (Oct 17, #312)
+Found on the iOS Simulator (iPhone 17 Pro Max, demo 182; first time the sheet ran on iOS, since N5 had passed only on the web): in dark mode the sheet's big "+16" is near-black on the dark sheet, and the sheet says "What it unlocks · 16" but shows 6 outfits with no way to see the other 10.
+- **N7 (S)** The "+16" reads in both themes: it takes a real theme color. `Numeral`'s `color` is a color value, not a token name, so `color="accent"` was an invalid color (black on iOS). It becomes ink, the default: copper is kept for a score that moves (#231).
+- **N8 (T)** No `<Numeral … color="…">` in the app passes a string literal (a token name is never a color); a test scans the source.
+- **N9 (S)** The sheet shows the first 6 outfits, then "Show {n} more" (the Outfits list's own words), which shows all 16 and becomes "Show fewer". 6 or fewer: no link.
+- **N10** `npm run check` green.
+
+### §15 results (Oct 17, #312): checked against N7–N10, none changed
+On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared iPhone 17 Pro left alone), demo 182, light, dark and the largest text size; screenshots `screenshots/nextbuy-oct17/` (git-ignored).
+| Check | Result | How |
+|---|---|---|
+| N7 | Pass (S) | "+16" in ink, clear on the dark sheet (was near-black on it) |
+| N8 | Pass (T) | `numeralColor.test.ts` failed on `NextBuySheet.tsx` before the fix, passes after; it was the app's only string-literal Numeral color |
+| N9 | Pass (S) | 6 outfits, "Show 10 more" shows all 16 (4 rows), then "Show fewer"; Got it below; at the largest size the title, number and line stack and the link reads |
+| N10 | Pass | `npm run check`'s typecheck, lint and 1053 app tests (core untouched) |
+| Found | | The card appears about a second after the outfit list on a cold load, so the list moves down once (`loadNextBuy` scores each Starter candidate). Not fixed: a reserved-height placeholder or computing it with the list is the follow-up if it bothers him. |
 ---
 
-## 16. Fix what a piece is: plan and pass/fail checks, set before building (Oct 16, #311)
-Founder (Oct 16, voice): sometimes the tile itself is wrong, "slim jeans as relaxed, relaxed as slim, a sweatshirt as a hoodie", so give him "a way to change what the tile represents, from a limited choice", with the drawing changing to match; "this has to get planned well because what I am saying right now might not go with the whole thing." **Plan only: nothing is built until he reviews it** (mockup `mockups/piece-edit.html`; DECISIONS-LOG #311). Numbered §16 because PR #4 (not merged) holds §15. Global checks G1–G4 (§6) apply.
+## 17. Fix what a piece is: plan and pass/fail checks, set before building (Oct 16, #314)
+Founder (Oct 16, voice): sometimes the tile itself is wrong, "slim jeans as relaxed, relaxed as slim, a sweatshirt as a hoodie", so give him "a way to change what the tile represents, from a limited choice", with the drawing changing to match; "this has to get planned well because what I am saying right now might not go with the whole thing." **Plan only: nothing is built until he reviews it** (mockup `mockups/piece-edit.html`; DECISIONS-LOG #314). Numbered §17 and #314 because main took §15 and #311–312, and open PRs hold §15–16, #309 and #313. Global checks G1–G4 (§6) apply.
 
-### 16.1 What he'll see
+### 17.1 What he'll see
 - **On a piece's page, a new section "What it is"** right under the name (above worn / last worn / added, so it shows without scrolling past the photos): one row per thing he can change, each showing today's value with a chevron: **Kind · Jeans ›**, **Color · Dark denim ›**, **Leg · Slim ›** (bottoms) or **Fit · Regular ›** (tops and layers), **Pattern · Plain ›** (tops and layers). Under it, one footnote: "Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same." The old line under the name ("Bottom · Dark denim · Slim leg") becomes just the slot word ("Bottoms"), since the rows now say the rest.
 - **A tap on a row opens a short sheet** (half height, a Close button, the familiar iOS pattern of picking one from a list): a grid of pictures, each the piece itself drawn with just that one thing changed, in its own color, with the name under it; the current one ringed with a check. Color is a grid of swatches with names instead of drawings (24 drawings of the same jeans would say nothing).
 - **One tap picks.** The sheet closes, the big drawing redraws to match, a light tick, and the toast: "Changed to relaxed leg. Your scores stay the same." with **Undo** (8 s, as every closet toast). Picking the value it already has just closes the sheet.
 - **The long-press menu stays Rename and Remove** (it's a shortcut; the page is one tap away).
 
-### 16.2 The choices (short, plain words, never a brand)
+### 17.2 The choices (short, plain words, never a brand)
 The lists come from the schema's own values and the words the app already uses (`garmentName`, `value.leg.*`, `value.topFit.*`), so no new vocabulary. Each kind list has a first group of 8 that all draw differently, and a "More kinds" row that opens the rest in the same sheet (a near-synonym there may share a drawing; its name tells it apart). The piece's current kind and its look-alikes (core `FLIP_PAIRS` and the quick tap's pairs) are always in the first group.
 
 | Slot | Rows | Kind, first 8 | More kinds |
@@ -460,10 +476,10 @@ The lists come from the schema's own values and the words the app already uses (
 - **Fit (tops and layers):** Slim · Regular · Relaxed · Oversized (the reading's volume 2–5, as "Not quite right?" offers).
 - **Pattern (tops and layers):** Plain · Stripes · Checks · Graphic print. A piece read as camo or floral also shows its own value. Bottoms and shoes get no pattern row (the drawing doesn't draw patterned bottoms or shoes, and the reading rarely sees one).
 - **Color:** the 24 color families in four groups (Neutrals; Blues and denim; Earth tones; Colors), never "multicolor". The three denim washes are offered only for jeans and denim jackets (plus the current value). Changing jeans to another kind while the color is a denim wash moves it to the nearest plain color (dark → navy, mid → blue, light → light blue) and the toast says so: "Changed to chinos, in navy."
-- **Not offered, on purpose:** the brand word (never in a picker), the slot (a top stays a top and a layer a layer: every kind a top can become is a top or a piece worn either way; a real top ↔ layer move waits, §16.6 call 6), sleeve length (no drawing or scoring for it yet), the hem and the tuck (how he wore it that day, not the piece; they stay on "Not quite right?"), condition, details like zips (they come from the photos).
+- **Not offered, on purpose:** the brand word (never in a picker), the slot (a top stays a top and a layer a layer: every kind a top can become is a top or a piece worn either way; a real top ↔ layer move waits, §17.6 call 6), sleeve length (no drawing or scoring for it yet), the hem and the tuck (how he wore it that day, not the piece; they stay on "Not quite right?"), condition, details like zips (they come from the photos).
 - **Drawn apart first (part of the build):** today the real drawing code (bundled as is for the mockup) draws these pairs the same: Skinny = Slim, Relaxed = Oversized, Sweater = Sweatshirt, Tee = Graphic tee (when the pattern reads plain), Leather = Canvas sneakers. The build gives each its own look (a narrower leg; dropped shoulders and a longer body; a fine knit texture; the print on every graphic tee; a rubber toe cap), so every first-group option looks different. The other look-alikes (Joggers = Sweatpants, Chore coat = Overshirt, the field / rain / shell jackets, Derbies = Dress shoes, the sneaker subtypes in More) keep one drawing and are told apart by name.
 
-### 16.3 What a change touches
+### 17.3 What a change touches
 One closet-service action, `editPiece(itemId, field, value)`, run in the closet's queue like every other closet write (§9: Undo goes ahead of background work).
 - **The piece's own reading** (`garment`): the field takes his value (`subcategory`, `color_family`, `leg_shape`, `pattern`, or `volume` for Fit). Nothing else on it moves.
 - **"He said so"**: the field joins `confirmedFields` and the piece profile's `confirmed` values (both, because the drawing reads one and "known pieces" read the other: `artOf` takes the pattern from `profile.confirmed`, `knownPieces` counts a piece as confirmed from `profile.confirmed`). Volume isn't a confirmable matcher field; Fit is stored on the reading only.
@@ -475,32 +491,32 @@ One closet-service action, `editPiece(itemId, field, value)`, run in the closet'
 - **Never touched:** any fit check's score, raw score or part scores; any reading; any sighting (`closetObs`) or its photo; Lookbook; worn counts; the check's closet summary; `@kitted/core` (no file changes).
 - **Undo** puts back every closet row the action changed (the piece, any other piece `renameAll` renamed, an unmarked Starter piece) exactly as before.
 
-### 16.4 Past fit checks: left alone (decided by Claude, reasons)
+### 17.4 Past fit checks: left alone (decided by Claude, reasons)
 A correction here changes the closet piece, not the checks it was seen in. The checks keep their scores, and the toast says so.
 1. **"Same photo, same score"** is the product's promise: a check is a reading of that photo. The piece is his summary across photos; one wrong merge or one bad reading shouldn't rewrite five scores.
 2. **The check may have been read right.** A photo that read "relaxed" may really show a different pair (the AI merged two pieces), so pushing the piece's new value into every photo could make right scores wrong. "It's another piece…" and "Not this piece" (§8) are the tools for that.
 3. **The blast radius** of a silent re-score is large: Lookbook scores, Your go-tos, the moves card and the chat's history would all shift without him asking.
-4. **The honest path already exists:** each check's "Not quite right?" shows the before and after and makes a new corrected reading. A bulk "Re-score the 3 checks it was in" is a taste call (§16.6 call 2), default no.
+4. **The honest path already exists:** each check's "Not quite right?" shows the before and after and makes a new corrected reading. A bulk "Re-score the 3 checks it was in" is a taste call (§17.6 call 2), default no.
 
-### 16.5 Accessibility, sizes, themes
+### 17.5 Accessibility, sizes, themes
 - VoiceOver: each row reads "Leg, Slim. Button. Double-tap to change."; each option "Relaxed leg, button", the current one "Slim leg, selected"; after a pick the toast is announced and the drawing's label updates (it now names the kind and leg or fit: "Dark jeans, relaxed leg").
 - The largest text sizes: rows stack the value under the label (`ValueRow` as today), the sheet's grid drops to 2 columns, names wrap to 2 lines, Close stays 44 pt.
 - Light and dark: the drawings use the app's dark-mode rims; swatches get a hairline ring so black on night and white on chalk still show.
 - Touch targets 44 pt; no gesture-only path (every pick is a tap).
 
-### 16.6 Taste calls (founder; Claude's default first)
+### 17.6 Taste calls (founder; Claude's default first)
 1. **Where it lives:** rows on the piece page, each opening a picture sheet (default) · or one "Edit" button top right opening a form with every field. Rows: one glance shows what the app thinks, one tap fixes one thing.
 2. **Past checks:** leave them, and say "Your scores stay the same" (default) · or offer "Re-score the {n} checks it was in" with a before/after list (a bulk "Not quite right?"; about +1 day).
 3. **A long-press entry** ("Change what it is…"): no (default) · yes.
-4. **Draw the look-alikes apart** (16.2's five pairs, about half a day in `flats.ts` / `artSpec.ts`): yes (default) · names only.
+4. **Draw the look-alikes apart** (17.2's five pairs, about half a day in `flats.ts` / `artSpec.ts`): yes (default) · names only.
 5. **The words** (all new): "What it is", "Kind", "Color", "Leg", "Fit", "Pattern", "More kinds", "Plain", "Stripes", "Checks", "Graphic print", "Neutrals", "Blues and denim", "Earth tones", "Colors", the footnote "Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same.", the toast "Changed to {value}. Your scores stay the same.", "Changed to {kind}, in {color}.", the sheet subtitle "Pick what it really is.", and VoiceOver's "Double-tap to change." Default: as written.
 6. **Top ↔ layer:** not in v1 (default; the outfit engine treats a top and a layer differently, so moving one is a bigger change than a picker) · a "Worn as · Top / Layer over a top" row.
 7. **"Long-sleeve tee"** isn't a kind the reading knows: later, with the reading and a drawing (default) · now as a sleeve-length row (drawing only, never scored).
 
-### 16.7 Pass/fail checks (written before building; the build must not edit them)
-- **X1 (T) The lists:** for a piece in each slot, the Kind sheet offers exactly 16.2's first group and More kinds, plus the piece's current kind and its look-alikes in the first group when missing; never another slot's kinds; Leg, Fit, Pattern and Color offer exactly 16.2's values. No option label contains a brand (the sentence gate's brand rule) or a body word.
+### 17.7 Pass/fail checks (written before building; the build must not edit them)
+- **X1 (T) The lists:** for a piece in each slot, the Kind sheet offers exactly 17.2's first group and More kinds, plus the piece's current kind and its look-alikes in the first group when missing; never another slot's kinds; Leg, Fit, Pattern and Color offer exactly 17.2's values. No option label contains a brand (the sentence gate's brand rule) or a body word.
 - **X2 (T) The rows:** tops and layers show Kind, Color, Fit, Pattern; bottoms Kind, Color, Leg (no Leg for Shorts and Gym shorts); shoes Kind, Color. The denim washes show only for jeans and denim jackets, or as the current value.
-- **X3 (T) What a pick writes:** exactly the field on `garment`, the field in `confirmedFields` and `profile.confirmed` (confirmable fields), the taught aliases (16.3), `art`, `hex`, `name` (auto-named only) and `updatedAt`; every other field of the row deep-equal to before.
+- **X3 (T) What a pick writes:** exactly the field on `garment`, the field in `confirmedFields` and `profile.confirmed` (confirmable fields), the taught aliases (17.3), `art`, `hex`, `name` (auto-named only) and `updatedAt`; every other field of the row deep-equal to before.
 - **X4 (T) The drawing follows:** after each pick the piece's `artSpec` matches a piece that was read with that value (hoodie → sweatshirt: no hood, no drawstrings; slim → relaxed: the relaxed leg), including a pattern pick on a piece whose photos read another pattern, and a color pick whose measured color is from another family (the family's own color is drawn).
 - **X5 (T) The pictures differ:** within each sheet's first group, every option renders a different drawing (`renderFlat` output) in light and in dark; only the listed More-kinds look-alikes may share one.
 - **X6 (T) The name:** an auto-named "Grey hoodie" becomes "Grey sweatshirt"; a pattern pick names it ("Navy striped tee"); a leg or fit pick leaves the name; a name he set stays; a clash with another piece is settled by the existing detail-word rule.
@@ -511,7 +527,7 @@ A correction here changes the closet piece, not the checks it was seen in. The c
 - **X11 (T) Undo:** inside the toast window every row the pick changed (the piece, a renamed neighbor, an unmarked Starter piece) is deep-equal to before, and everything in X10 is back.
 - **X12 (T) Edge cases:** jeans → chinos in a denim wash moves to the nearest plain color and the toast says it; picking the current value writes nothing and shows no toast; a piece waiting on "Same as your …?" has no editor (it isn't a tile); chat, Starter and seed pieces edit by the same rules; a pick while the closet call is still out for a check that wore the piece is kept when that call lands.
 - **X13 (T) Sync:** the edited row round-trips through the sync envelope (`app/src/sync/schema.ts`) with every edited field; no field is added to the local-only list.
-- **X14 (T) Words and VoiceOver:** every new string is in `en.ts` and passes the copy checks (no emoji, no "unlimited", no "AI stylist", no body words); the rows' and options' VoiceOver labels are as 16.5.
+- **X14 (T) Words and VoiceOver:** every new string is in `en.ts` and passes the copy checks (no emoji, no "unlimited", no "AI stylist", no body words); the rows' and options' VoiceOver labels are as 17.5.
 - **X15 (S) On the Simulator** (a new demo screen with the demo jeans and hoodie): the section, Leg → Relaxed redraws the hero and shows the toast; Undo restores; Kind → Sweatshirt on the hoodie; light, dark and the largest text size with nothing clipped; VoiceOver reads a row and an option.
 - **X16** `npm run check` green (G1).
 

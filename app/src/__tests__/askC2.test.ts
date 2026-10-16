@@ -87,6 +87,7 @@ describe('A1 · one request, the right shape', () => {
 
   it('buildAskRequest asks for the least thinking the model takes (Flash-Lite refuses a budget of 0, #310)', () => {
     expect(buildAskRequest('s', 'u').generationConfig.thinkingConfig).toEqual({ thinkingLevel: 'minimal' });
+    expect(buildAskRequest('s', 'u', 'gemini-3.8-flash').generationConfig.thinkingConfig).toEqual({ thinkingBudget: 0 });
   });
 });
 

@@ -1917,9 +1917,16 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Still off (the model):** an invented detail now and then ("chunky" boots, "straight" jeans that are slim), "in that photo" with no photo, the body refusal reusing the example's second sentence, a few leads over 20 words. Steady between runs: the same advice for the same question.
     - **`CHAT_LIVE` is on** (his OK). Dev builds with the dev key only; a release build can't pick the real source (a test checks the key is `__DEV__`-only). Demo screens keep their scripted answers. Outside testers need the server route (C6).
 
+## Oct 17 · Next best buy on iOS
+
+312. **The next best buy sheet, first run on iOS, two fixes (09-ui-review §15, N7–N10, checks committed first; all pass).** The founder allowed a second Simulator for this ("you can start a simulator. im giving u an exception pass"), so the shared one wasn't touched.
+    - **Dark mode:** the sheet's "+16" was near-black on the dark sheet. `Numeral`'s `color` takes a color value, and `color="accent"` (a token name) was an invalid color, black on iOS; the web had hidden it. It's ink now, not copper: copper is for a score that moves (#231). A test refuses any string-literal Numeral color.
+    - **All 16 outfits:** the sheet said "What it unlocks · 16" but showed 6 with no way to the rest. Now "Show {n} more" / "Show fewer", the Outfits list's own words (no new copy).
+    - **Found, not fixed:** on a cold load the card lands about a second after the list, so the list moves down once.
+
 ## Oct 16 · Fix what a piece is: the plan (a side session of the "+N" work; plan, checks and mockup only)
 
-311. **Fix what a piece is, planned with its checks before any code (founder, Oct 16: "a way to change what the tile represents … from a limited choice … the drawing should change to match"; "this has to get planned well"). Plan and checks X1–X16: `handoff/09-ui-review.md` §16; mockup `mockups/piece-edit.html`. Numbered #311 and §16 because PR #4 holds #309 and §15, and the live chat took #310.**
+314. **Fix what a piece is, planned with its checks before any code (founder, Oct 16: "a way to change what the tile represents … from a limited choice … the drawing should change to match"; "this has to get planned well"). Plan and checks X1–X16: `handoff/09-ui-review.md` §16; mockup `mockups/piece-edit.html`. Numbered #314 and §17 (renumbered from #311 / §16 at the merge with main: main took #311–312 and §15, open PRs hold #309, #313 and §15–16).**
     - **Proposed (his review):** a "What it is" section on a piece's page (Kind, Color, Leg or Fit, Pattern), each row opening a sheet of pictures of the piece with that one thing changed; one tap picks, the drawing redraws, a toast with Undo says the scores stay the same. Five taste calls and two scope calls in §16.6, each with a default.
     - **Decided by Claude (no taste, logged here):**
       - **Past fit checks are left alone.** A check is a reading of its photo ("same photo, same score"); the piece is the summary across photos, and a photo may really show a different piece the app merged in. Each check's "Not quite right?" stays the honest way to re-score one; a bulk re-score is a taste call (default no).
