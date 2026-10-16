@@ -2,8 +2,9 @@
 // and the counting don't care whether it's the real model (C2, later), the demo's seeded answers, or today's
 // "coming soon" line.
 //   delta  · more words of the answer (appended in order)
-//   done   · the answer is complete; `card` / `remember` are the model's closing block (C3 / C4, unused yet),
-//            `refused` = it declined (never counted), `uncounted` = a placeholder that isn't an answer (never counted)
+//   done   · the answer is complete; `card` / `remember` / `need` are the model's closing block (07 §5.2; built and
+//            checked by code: cards.ts, memory.ts, evidence.ts), `refused` = it declined (never counted),
+//            `uncounted` = a placeholder that isn't an answer (never counted)
 //   failed · nothing usable came back; the pipeline shows fail.ask with Retry and counts nothing
 import { t } from '@/i18n/en';
 import type { Scheduler } from '@/services/scheduler';
@@ -11,12 +12,16 @@ import { normalizeQuestion } from './guards';
 
 export type AnswerEvent =
   | { type: 'delta'; text: string }
-  | { type: 'done'; card?: unknown; remember?: unknown; refused?: boolean; uncounted?: boolean }
+  | { type: 'done'; card?: unknown; remember?: unknown; need?: unknown; refused?: boolean; uncounted?: boolean }
   | { type: 'failed'; code: string };
 
 export interface AnswerRequest {
   question: string;
   signal?: AbortSignal;
+  /** What the real model is sent (prompt.ts); the demo and "coming soon" ignore it. */
+  prompt?: { system: string; user: string };
+  /** The second call after a lookup (R3): the demo answers it from its follow-up line. */
+  followUp?: boolean;
 }
 
 export interface AnswerSource {
@@ -37,6 +42,79 @@ export const comingSoonSource: AnswerSource = {
 export interface SeededAnswer {
   question: string;
   answer: string;
+  /** The closing block, naming pieces by their closet name; the demo source turns names into the pack's handles. */
+  card?: Record<string, unknown>;
+  remember?: { key: string; value: string };
+}
+
+/**
+ * The demo's answers with an attachment (07 §1's examples on the full scenario's closet; demo screens 167–173, R9).
+ * Pieces are named, not handled: "P3" changes per question, a name doesn't.
+ */
+export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
+  {
+    question: 'What goes with my olive overshirt?',
+    answer: 'Your white tee and dark jeans, worn open, with the white sneakers. Olive and denim is an easy pair, and the white keeps it light.',
+    card: { type: 'outfit', pieces: ['Olive overshirt', 'White tee', 'Dark jeans', 'White sneakers'], occasion: 'everyday' },
+  },
+  {
+    question: 'What would this outfit score?',
+    answer: "Send me a photo and I'll score it. I only score what I can see.",
+    card: { type: 'check', occasion: 'everyday' },
+  },
+  {
+    question: 'What should I wear to work?',
+    answer: 'That depends on the office. One question first.',
+    card: { type: 'ask', question: 'Is it a suit-and-tie office?', options: ['Yes', 'Business casual', 'Jeans are fine'] },
+  },
+  {
+    question: 'Business casual',
+    answer: "Then the khaki chinos, the light-blue oxford and the brown loafers. Add the navy overshirt if it's cold out.",
+  },
+  {
+    question: 'What should I buy next?',
+    answer: "A navy polo. It works with both chinos, the dark jeans and every shoe you own, and it's a step up from a tee.",
+    card: { type: 'buy', kind: 'polo', shade: 'navy' },
+  },
+  {
+    question: 'Which shoes are my dressiest?',
+    answer: "Your brown loafers. They'd dress up the chinos for a dinner or an interview.",
+    card: { type: 'link', to: 'piece:Brown loafers' },
+  },
+  {
+    question: "I'm a 32 waist.",
+    answer: "Got it. I'll keep that in mind when you ask about pants.",
+    remember: { key: 'waist_size', value: '32' },
+  },
+  {
+    question: 'I also have a grey hoodie.',
+    answer: "Got it. I'll use your grey hoodie in outfit ideas. Wear it in a fit check and I'll add its photo.",
+    remember: { key: 'owns_unphotographed', value: 'grey hoodie' },
+  },
+];
+
+/** "P3" for a piece the pack lists as "P3 · Olive overshirt · …" (the demo names pieces; the pack has the handles). */
+export function handleIn(pack: string, name: string): string | null {
+  const want = name.trim().toLowerCase();
+  for (const line of pack.split('\n')) {
+    const m = /^(P\d+) · ([^·]+?) · /.exec(line.trim());
+    if (m && m[2]!.trim().toLowerCase() === want) return m[1]!;
+  }
+  return null;
+}
+
+/** A demo closing block with its names turned into this question's handles (null when a piece isn't in the pack). */
+function demoBlock(a: SeededAnswer, pack: string): { card: unknown; remember: unknown } {
+  let card: unknown = a.card ?? null;
+  const c = a.card;
+  if (c && Array.isArray(c.pieces)) {
+    const hs = (c.pieces as string[]).map((n) => handleIn(pack, n));
+    card = hs.every((h) => !!h) ? { ...c, pieces: hs } : null;
+  } else if (c && typeof c.to === 'string' && c.to.startsWith('piece:')) {
+    const h = handleIn(pack, c.to.slice(6));
+    card = h ? { ...c, to: `piece:${h}` } : null;
+  }
+  return { card, remember: a.remember ?? null };
 }
 
 /** The seed's Q&A pairs (seed.json → scenarios.*.chatThread): a counted question and the stylist text after it. */
@@ -117,8 +195,9 @@ export function createDemoSource(deps: DemoSourceDeps): AnswerSource {
   return {
     name: 'demo',
     async *answer(req) {
-      const hit = matchSeeded(req.question, deps.answers);
+      const hit = matchSeeded(req.question, [...deps.answers, ...DEMO_CARD_ANSWERS]);
       const text = hit ? hit.answer : t('ask.demoOnly');
+      const block = hit && req.prompt ? demoBlock(hit, req.prompt.user) : { card: null, remember: null };
       const timed = deps.timed();
       if (timed) await deps.scheduler.sleep(hit ? FIRST_MS : FIRST_MS / 2, req.signal);
       const chunks = chunksOf(text);
@@ -126,7 +205,7 @@ export function createDemoSource(deps: DemoSourceDeps): AnswerSource {
         if (timed && i > 0) await deps.scheduler.sleep(CHUNK_MS[i % CHUNK_MS.length]!, req.signal);
         yield { type: 'delta', text: c };
       }
-      yield { type: 'done' };
+      yield { type: 'done', ...(block.card ? { card: block.card } : {}), ...(block.remember ? { remember: block.remember } : {}) };
     },
   };
 }

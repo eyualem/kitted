@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
-import { CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
+import { Chip, ChipFlow, CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 import { useDictation } from './useDictation';
 import { composerState, useComposerDraft } from './composerState';
@@ -30,6 +30,8 @@ export interface ComposerProps {
   startVoice?: boolean;
   /** Called once it's been used and is back to nothing: empty, keyboard down, mic off. */
   onIdle?: () => void;
+  /** Starter questions (07 §6.3): shown above the field while it's open and empty; a tap sends one. */
+  chips?: readonly string[];
 }
 
 let glass: boolean | undefined;
@@ -47,7 +49,7 @@ function hasGlass(): boolean {
 const H = 52;
 const BTN = 40;
 
-export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, startVoice, onIdle }: ComposerProps) {
+export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, startVoice, onIdle, chips = [] }: ComposerProps) {
   const { colors, scheme, a11y } = useTheme();
   const text = useComposerDraft();
   const setText = composerState.setDraft;
@@ -105,8 +107,18 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
     </Circle>
   );
 
+  const showChips = chips.length > 0 && text.length === 0 && !recording && (focused || mode === 'compact');
   return (
     <View style={styles.wrap}>
+      {showChips ? (
+        <View style={{ paddingBottom: space.s }}>
+          <ChipFlow>
+            {chips.map((c) => (
+              <Chip key={c} title={c} small disabled={sendDisabled} onPress={() => void onSend?.(c)} />
+            ))}
+          </ChipFlow>
+        </View>
+      ) : null}
       <View style={[styles.capsule, shell]}>
         {background}
         {recording ? (

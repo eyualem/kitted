@@ -5,7 +5,7 @@ import { useSyncExternalStore } from 'react';
 
 export type LiveAnswer =
   /** Sent; no words yet (the three dots). */
-  | { phase: 'waiting'; questionId: string; replaces: string | null }
+  | { phase: 'waiting'; questionId: string; replaces: string | null; slow?: boolean }
   | { phase: 'streaming'; questionId: string; replaces: string | null; text: string }
   /** Written as `messageId`; the thread drops this row once it shows that message. */
   | { phase: 'done'; questionId: string; replaces: string | null; text: string; messageId: string };
@@ -23,6 +23,14 @@ export const liveAnswer = {
   /** A question in flight (waiting or streaming): send waits (one at a time, 07 §6.1). */
   inFlight: (): boolean => live !== null && live.phase !== 'done',
   start: (questionId: string, replaces: string | null = null) => set({ phase: 'waiting', questionId, replaces }),
+  /** No first word after 6 s (07 §6.4): the dots get "Taking longer…". */
+  slow() {
+    if (live?.phase === 'waiting' && !live.slow) set({ ...live, slow: true });
+  },
+  /** A lookup's second call (R3): the first call's line goes, the dots come back. */
+  restart() {
+    if (live && live.phase !== 'done') set({ phase: 'waiting', questionId: live.questionId, replaces: live.replaces });
+  },
   append(text: string) {
     if (!live || live.phase === 'done') return;
     set({ phase: 'streaming', questionId: live.questionId, replaces: live.replaces, text: (live.phase === 'streaming' ? live.text : '') + text });

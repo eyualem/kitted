@@ -16,6 +16,7 @@ import { OutfitIdeaCard } from './cards/OutfitIdeaCard';
 import { RecheckCard } from './cards/RecheckCard';
 import { WhichOneCard } from '@/features/whichOne/WhichOneCard';
 import { SupportCard } from '@/features/ask/SupportCard';
+import { AskAttachment } from '@/features/ask/AskCardView';
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
@@ -68,11 +69,15 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
       </StylistMessage>
     );
   }
+  // An answer's one card and its "Saved to what I know · Undo" (07 §1, §4).
+  const attached = m.payload.askCard !== undefined || typeof m.payload.savedFact === 'string';
   return (
     <StylistMessage
       showHeader={item.showWho}
       footer={
-        item.newest && m.chips.length > 0 ? (
+        attached ? (
+          <AskAttachment m={m} readOnly={readOnly} />
+        ) : item.newest && m.chips.length > 0 ? (
           <View style={{ paddingTop: 6 }}>
             <ChipFlow>
               {m.chips.map((c) => (

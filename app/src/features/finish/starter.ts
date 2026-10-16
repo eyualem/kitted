@@ -101,7 +101,8 @@ export function outfitCount(closet: readonly ClosetItem[], styles: Styles | null
 
 /** "+N fits" for adding `g` (0 when it adds none, null when the closet is too big to count). */
 export function fitsGain(closet: readonly ClosetItemRow[], styles: Styles | null, g: Garment, slot: string): number | null {
-  const pieces = closet.filter(live);
+  // A piece he only mentioned in chat isn't counted in a "+N" until a fit check sees it (07 §4).
+  const pieces = closet.filter(live).filter((c) => c.source !== 'chat');
   if (pieces.length > GAIN_MAX_PIECES) return null;
   const before = outfitCount(pieces, styles);
   const after = outfitCount([...pieces, { id: '__starter', name: '', slot, garment: g }], styles);
