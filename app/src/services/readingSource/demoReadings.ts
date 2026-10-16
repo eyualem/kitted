@@ -29,12 +29,21 @@ function readingOf(file: unknown): Reading {
   return { scene: r.scene, garments: r.garments, ...(r.held_items ? { held_items: r.held_items } : {}) };
 }
 
+/** "s14b": the Welcome photo's outfit after its top fix (#292, demo screen 180): the chunky sneakers swapped for white
+ *  leather ones, so the re-check makes move 2's fix. */
+function s14AfterFix(): Reading {
+  const r = readingOf(s14);
+  const swap = { subcategory: 'white_leather_sneaker', color_family: 'white', volume: 2, logo: 'none', condition: 'clean', distressed_by_design: false } as const;
+  return { ...r, garments: r.garments.map((g) => (g.category === 'footwear' ? { ...g, ...swap } : g)) };
+}
+
 const BY_ID: Record<string, Reading> = {
   p01a: readingOf(p01a), p01b: readingOf(p01b), s05: readingOf(s05), s09: readingOf(s09), s10: readingOf(s10),
   s12: readingOf(s12), s13: readingOf(s13), s14: readingOf(s14), s15: readingOf(s15), s22: readingOf(s22),
   s24: readingOf(s24), s25: readingOf(s25),
   // A second shot of p01b's outfit (its own hash; demoPhotos.ts): S21's re-check that doesn't see the change (#219).
   p01b2: readingOf(p01b),
+  s14b: s14AfterFix(),
   // Demo screens 34–36 (the one quick tap): shown with s12's stand-in photo (demoPhotos.ts).
   ph1: readingOf(ph1),
   // Demo screens 60–62 (the shoe question): shown with s12's stand-in photo too.

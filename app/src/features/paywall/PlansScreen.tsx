@@ -20,7 +20,7 @@ type Load = { kind: 'loading' } | { kind: 'failed' } | { kind: 'offline' } | { k
 type Buy = 'idle' | 'buying' | 'pending' | 'failed';
 
 export function PlansScreen() {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize: ax } = useTheme();
   const insets = useSafeAreaInsets();
   const from = parseFrom(useLocalSearchParams<{ from?: string }>().from);
   const close = useCloseCover();
@@ -56,6 +56,31 @@ export function PlansScreen() {
     showToast(restoreToast(r));
     if (r === 'restored') done();
   };
+
+  const footer = (
+    <View style={ax ? { gap: 6.5 } : { paddingHorizontal: space.heroGutter, gap: 6.5 }}>
+      {load.kind === 'ok' ? (
+        <KButton
+          title={ctaTitle(load.product, load.trial)}
+          loading={buy === 'buying'}
+          disabled={buy === 'buying' || buy === 'pending'}
+          onPress={() => void purchase(load.product)}
+        />
+      ) : load.kind === 'loading' ? (
+        <KButton title={t('pay.cta.trial')} disabled />
+      ) : null}
+      <KButton title={t('pay.continueFree')} kind="ghost" inkLabel onPress={() => done()} />
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <TextLink title={t('pay.restorePurchases')} color="ink2" compact onPress={() => void restore()} />
+      </View>
+      <LegalLinks />
+      {purchases.mock ? (
+        <KText variant="caption2" color="ink3" style={{ textAlign: 'center' }}>
+          {t('pay.demoNote')}
+        </KText>
+      ) : null}
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, space.l) }}>
@@ -111,36 +136,17 @@ export function PlansScreen() {
             {t('pay.failed')}
           </KText>
         ) : null}
+        {/* At the largest text sizes the buttons would fill the screen and squeeze the page out, so they scroll with it. */}
+        {ax ? footer : null}
       </ScrollView>
-      <View style={{ paddingHorizontal: space.heroGutter, gap: 6.5 }}>
-        {load.kind === 'ok' ? (
-          <KButton
-            title={ctaTitle(load.product, load.trial)}
-            loading={buy === 'buying'}
-            disabled={buy === 'buying' || buy === 'pending'}
-            onPress={() => void purchase(load.product)}
-          />
-        ) : load.kind === 'loading' ? (
-          <KButton title={t('pay.cta.trial')} disabled />
-        ) : null}
-        <KButton title={t('pay.continueFree')} kind="ghost" inkLabel onPress={() => done()} />
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TextLink title={t('pay.restorePurchases')} color="ink2" compact onPress={() => void restore()} />
-        </View>
-        <LegalLinks />
-        {purchases.mock ? (
-          <KText variant="caption2" color="ink3" style={{ textAlign: 'center' }}>
-            {t('pay.demoNote')}
-          </KText>
-        ) : null}
-      </View>
+      {ax ? null : footer}
     </View>
   );
 }
 
 /** The one plan, selected (ink border). The billed price is the biggest number on the page (3.1.2). */
 function PlanCard({ product, trial }: { product: ProProduct; trial: boolean }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize: ax } = useTheme();
   const detail = planDetail(product, trial);
   return (
     <View
@@ -149,11 +155,11 @@ function PlanCard({ product, trial }: { product: ProProduct; trial: boolean }) {
       accessibilityState={{ selected: true, checked: true }}
       accessibilityLabel={t('pay.a11y.plan', { plan: t('pay.plan.monthly'), price: product.price, detail })}
       style={{
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.m, paddingVertical: 13, paddingHorizontal: 17,
+        flexDirection: ax ? 'column' : 'row', alignItems: ax ? 'flex-start' : 'center', justifyContent: 'space-between', gap: space.m, paddingVertical: 13, paddingHorizontal: 17,
         borderRadius: 19.5, borderCurve: 'continuous', borderWidth: 1.5, borderColor: colors.ink, backgroundColor: colors.surface,
       }}
     >
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={{ flex: ax ? undefined : 1, gap: 2 }}>
         <KText variant="headline">{t('pay.plan.monthly')}</KText>
         <KText variant="footnote" color="ink2">
           {detail}

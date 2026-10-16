@@ -38,6 +38,8 @@ const FIRST_RUN_NOW = '2026-10-22T07:38:00';
 const FULL_NOW = '2026-10-22T12:20:00';
 /** The end of onboarding's screens (150–162): a minute after his first check. */
 const FIRST_CHECK_NOW = '2026-10-22T07:43:00';
+/** After the first check's re-check (7:50). */
+const ALL_DONE_NOW = '2026-10-22T07:55:00';
 
 /** The scripted first-run story's check ids (seed.json's story has none; these are ours). */
 export const STORY_FIRST_CHECK = 'story-first';
@@ -209,6 +211,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 172, name: 'Ask · a link to a piece', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 173, name: 'Ask · saved to what I know', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 174, name: 'Ask · a piece from chat', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  // All 3 moves done (#292 Y5): the first check's top fix made by a re-check, a basic marked, the move-3 piece owned.
+  { n: 180, name: 'Your moves · All 3 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
+  { n: 181, name: 'Lookbook · no Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

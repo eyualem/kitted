@@ -63,11 +63,26 @@ export function StarterScreen() {
 }
 
 function StarterRow({ entry, own, onPress }: { entry: StarterEntry; own: Ownership; onPress: () => void }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize: ax } = useTheme();
   // A piece seen in his checks is his: it can't be untapped here (its own page removes it).
   const locked = own.owned && own.how === 'closet';
   const status = own.owned ? (own.how === 'closet' ? t('starter.inCloset') : t('starter.marked')) : null;
   const price = t('starter.price', { a: entry.budget, b: entry.mid });
+  const art = (
+    <View style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
+      {entry.pick ? <PieceArt item={{ garment: entry.pick.garment, hex: displayHex(entry.pick.garment.color_family), name: entry.pick.name }} size={34} /> : <Icon name="closet" size={20} color={colors.ink3} />}
+    </View>
+  );
+  const toggle = (
+    <View
+      style={{
+        width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center',
+        backgroundColor: own.owned ? colors.ink : 'transparent', borderWidth: own.owned ? 0 : 1.5, borderColor: colors.line,
+      }}
+    >
+      {own.owned ? <Icon name="check" size={14} weight="bold" color={colors.surface} /> : null}
+    </View>
+  );
   return (
     <Pressable
       onPress={locked ? undefined : onPress}
@@ -77,29 +92,33 @@ function StarterRow({ entry, own, onPress }: { entry: StarterEntry; own: Ownersh
       accessibilityLabel={`${entry.name}. ${price}${status ? `. ${status}` : ''}`}
       accessibilityHint={locked ? t('starter.a11y.detected') : t('starter.a11y.toggleHint')}
       style={({ pressed }) => ({
-        flexDirection: 'row', alignItems: 'center', gap: space.m, minHeight: 60, paddingVertical: space.s, paddingHorizontal: space.l,
+        flexDirection: ax ? 'column' : 'row', alignItems: ax ? 'stretch' : 'center', gap: space.m, minHeight: 60, paddingVertical: space.s, paddingHorizontal: space.l,
         opacity: pressed ? opacity.pressed : 1,
       })}
     >
-      <View style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
-        {entry.pick ? <PieceArt item={{ garment: entry.pick.garment, hex: displayHex(entry.pick.garment.color_family), name: entry.pick.name }} size={34} /> : <Icon name="closet" size={20} color={colors.ink3} />}
-      </View>
-      <View style={{ flex: 1, gap: 2 }}>
+      {ax ? (
+        // At the largest text sizes the picture and the toggle share a top line, and the words get the full width.
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          {art}
+          {toggle}
+        </View>
+      ) : (
+        art
+      )}
+      <View style={{ flex: ax ? undefined : 1, gap: 2 }}>
         <KText variant="subheadline" weight="600">
           {entry.name}
         </KText>
         <KText variant="footnote" color="ink2">
-          {status ? `${price} · ${status}` : price}
+          {price}
         </KText>
+        {status ? (
+          <KText variant="footnote" color="ink2">
+            {status}
+          </KText>
+        ) : null}
       </View>
-      <View
-        style={{
-          width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center',
-          backgroundColor: own.owned ? colors.ink : 'transparent', borderWidth: own.owned ? 0 : 1.5, borderColor: colors.line,
-        }}
-      >
-        {own.owned ? <Icon name="check" size={14} weight="bold" color={colors.surface} /> : null}
-      </View>
+      {ax ? null : toggle}
     </Pressable>
   );
 }
