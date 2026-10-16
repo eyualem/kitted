@@ -1796,3 +1796,26 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **U8, the queue (09-ui-review §9):** a new check's photo is measured before its closet write joins the queue, and the write reuses that result, so an Undo or an answer tapped right after a check never waits for the 1–1.5 s of measuring. Failed first against the old service, then green.
     - **Not done, and why:** the live tries (C2's last step: his OK on ~$0.50); C5's test (his blind pick and ~$1–2); C6's `/v1/ask` on the Worker (his Cloudflare account); the largest text size on the new cards.
     - **Numbering:** the Google sign-in session used #295 in its code the same evening, so the Undo fix is #296 and this is #297.
+
+295. **Continue with Google is wired to the real Firebase project (founder, Oct 15–16: "let us set up continue with google for now").**
+    - **The approach, settled by Claude:** Firebase's JavaScript SDK (`firebase` 12.19.0) plus Google's sign-in package (`@react-native-google-signin/google-signin` 16.1.5), not the native React Native Firebase packages.
+      - Why: the native packages force static frameworks on every native module, and SQLite stays the phone's real copy (11 §4), so Firebase's native offline cache isn't needed.
+      - Skipped `firebase` 13.0.0: it was 8 days old.
+      - Cost: App Check later needs a custom provider over our own App Attest module, instead of the packaged one.
+    - **Project setup, by CLI on the founder's login:**
+      - Two apps registered: "Kitted iOS" (`com.trykitted.kitted`) and "Kitted app (JS SDK)" (web config).
+      - The founder enabled Google in Authentication (public name "Kitted", his Gmail as support email). That created the iOS OAuth client `1069635510987-h35362…`; its reversed form is the URL scheme in `app.config.ts`.
+      - The web config's API key is in `app/.env.local` (`EXPO_PUBLIC_FIREBASE_API_KEY`). It's public by design, but the repo's pre-commit hook refuses anything shaped like a Google key, so it stays out of git, like the Gemini dev key.
+    - **What's live where:**
+      - The sign-in sheet offers only the providers that really work (`SIGN_IN_LIVE`): Google, on dev builds. Demo screens keep the scripted MockAuth with all three.
+      - You → Settings → Account appears on dev builds for testing. The save offer, Welcome's "I already have an account" and the restore stay off (`ACCOUNTS_BUILT`): signing in backs nothing up until sync is wired, and they'd promise it.
+      - The sign-in is kept in the Keychain (`kitted.fb.*`).
+      - "Delete account" for now deletes only the Auth user and revokes Google's access, since nothing is on the server. It switches to the `deleteAccount` job when sync is wired.
+    - **Checked:**
+      - Type check and the 89 account and onboarding tests pass.
+      - The Simulator build with the new native module succeeds, and Metro was restarted to load the key.
+      - The app runs (schema V7 on iOS).
+    - **Not checked yet:**
+      - Google's sheet opening on the Simulator: a parallel Simulator session was driving the same device.
+      - A full sign-in: it needs the founder's own Google password, which Claude never types.
+    - **Numbering:** #295 was claimed by this commit's message (other sessions skipped it, #296–297).
