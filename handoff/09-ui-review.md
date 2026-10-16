@@ -414,6 +414,6 @@ Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never bu
 | Check | Result | How |
 |---|---|---|
 | O1–O12 | Pass (T) | `closetOutfits.test.ts`, 12 tests on the full demo closet (16 pieces): 37 outfits at Everyday (the mockup's own number), 41 ms; a 40-piece closet under 300 ms (best of 3) |
-| O13 | Partly (S) | web preview: 182 Outfits (37, Try next with no scores, Your go-tos with his real 9.0s), 183 No outfits yet ("Add shoes and you'd have 4 outfits"), 184 the chinos' page (16 outfits, Goes with: Best match, Dressier, More relaxed), light and dark. **Not yet:** the Simulator (in use by another session) and the largest text size |
+| O13 | Pass after two fixes (S) | web preview 182–184 light and dark; then the Simulator (`screenshots/outfits-oct16/`): Outfits, Pieces (the grid draws on iOS), the chinos' page in dark, Outfits at the largest size (chips one per row, the drawing above the text, nothing clipped). **Fixed:** the Pieces / Outfits labels shrank to a few points on iOS (the shared control's shrink-to-fit; off for this bar), and the standing outfit's shoes were drawn too small |
 | O14 | Pass | `npm run check`: 948 app tests |
 | Found, not mine | | on the web preview the Pieces grid draws nothing (main too, before this change); iOS is unaffected as far as earlier sessions saw. Worth a look |

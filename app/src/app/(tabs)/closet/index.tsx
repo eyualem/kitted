@@ -79,6 +79,7 @@ export default function ClosetScreen() {
         <>
           <Segmented<'pieces' | 'outfits'>
             label={t('closet.title')}
+            shrinkToFit={false}
             value={segment}
             onChange={pick}
             options={[{ value: 'pieces', label: t('closet.seg.pieces') }, { value: 'outfits', label: t('closet.seg.outfits') }]}

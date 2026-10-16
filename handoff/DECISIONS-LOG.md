@@ -1901,4 +1901,5 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Worn = a scored check that wore the whole trio; its photo and real score show, never a score for an unworn one.
       - Demo screen 15 is pinned to Pieces so it keeps showing the grid; new screens 182–184.
     - **New words, listed for his skim:** "Clean basics that work together.", "Show {n} more", "Worn {date}" (not used yet), and the slot lines ("Add a top", "Add bottoms", "Add shoes"). The rest are D15's approved labels.
-    - **Not done:** C7's next best buy screen; the Simulator and largest-text check.
+    - **Checked on the Simulator afterwards** (light, dark, the largest size), with two fixes: the Pieces / Outfits labels (the shared Segmented's shrink-to-fit made them tiny in a wide bar; now off there, onboarding unchanged) and bigger shoes in the standing outfit.
+    - **Not done:** C7's next best buy screen.

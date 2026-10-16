@@ -127,8 +127,9 @@ export function StandingOutfit({ items, layerId, width = 96 }: { items: readonly
       style={{ width, height: h, borderRadius: radius.tile, borderCurve: 'continuous', backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}
     >
       {core.map((c) => (
-        <View key={c.id} style={{ height: c.slot === 'shoes' ? piece * 0.7 : piece, alignItems: 'center', justifyContent: 'center' }}>
-          <PieceArt item={c} size={c.slot === 'shoes' ? Math.round(piece * 0.75) : piece} />
+        <View key={c.id} style={{ height: c.slot === 'shoes' ? piece * 0.75 : piece, alignItems: 'center', justifyContent: 'center' }}>
+          {/* Shoes are wide and short: drawn at the tile's full piece size so they don't look tiny next to the top. */}
+          <PieceArt item={c} size={c.slot === 'shoes' ? Math.round(piece * 1.15) : piece} />
         </View>
       ))}
       {layer ? (
