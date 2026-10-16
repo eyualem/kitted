@@ -1842,3 +1842,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **A slip, fixed:** `npx prettier` (not a project dependency) was run on four files and reformatted them with its defaults; they were restored from git and the edits reapplied by hand. Don't run `npx prettier` in this repo.
     - **Lesson:** a demo screenshot taken ~8 s after launch is sometimes the splash screen or the previous state (the Metro bundle was reloading, or the story's set-ups hadn't finished); wait 12–14 s and recheck any frame that doesn't match its story.
 
+
+300. **The save offer stays a card in the chat, not a pop-up (founder, Oct 16: "Let's go to the chat card. That seems pretty nice.").**
+    - **What was asked:** the founder pictured a modal after the first fit check ("sign in or create account to save your fits").
+    - **Claude's recommendation, which he took:** keep `10-onboarding.md` §3's card, "Keep your fits", with "Save my fits" / "Not now", in the Stylist thread. Three reasons:
+      - The first session already has two modals: the paywall, then the notification ask.
+      - Apple's design guidelines keep modals for what must be handled now, and an optional backup must never look required (5.1.1).
+      - Sign in with Apple or Google makes the account by itself, so the words name the gain ("save my fits"), not "create account".
+    - **Rejected:**
+      - a full-screen modal;
+      - the middle option, a one-time half-height sheet on the second visit.
+    - **Unchanged:** the timing (the first re-check, or the next visit), the cap (twice, the second after 3 more checks), and Settings → Account always there.

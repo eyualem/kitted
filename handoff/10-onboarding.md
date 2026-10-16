@@ -62,7 +62,7 @@ After the first score (once he's seen it, §3):
 
 ## 3. The save offer (A3), exactly when
 
-It's an inline stylist card in the thread (`cardType: 'account'`), posted once when **all** of these hold:
+It's an inline stylist card in the thread (`cardType: 'account'`), never a modal or sheet (founder, Oct 16, #300), posted once when **all** of these hold:
 - accounts are on (`ACCOUNTS_BUILT`, or a demo screen) and he isn't signed in;
 - he has a scored fit check (not a failed, held or unreadable one);
 - **either** his first re-check has been scored, **or** this is a later visit than the one that scored his first check (a new launch, or back to the app after 30+ minutes);
