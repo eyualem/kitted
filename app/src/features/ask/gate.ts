@@ -7,13 +7,40 @@
 // words ("elevate", "drip", "vibe") drop their sentence; an opener before a comma ("Absolutely, …") is cut off the first
 // sentence. Markup (**, #, bullets, backticks) never shows: the answer's look is drawn by code (L3).
 
-export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned';
+export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned' | 'handle';
 
 export interface GateContext {
   /** Every score that may be said: the one-decimal numbers in the pack and the evidence ("7.0", "7.5"). */
   allowedScores: ReadonlySet<string>;
   /** He gave a height or a build (so saying it back is possible; the rule runs either way). */
   hasBody?: boolean;
+  /** His closet's piece names ("Navy overshirt"): mid-sentence they lose their capital ("your navy overshirt", #304). */
+  pieceNames?: readonly string[];
+}
+
+/** The pack's handles never show ("your olive overshirt (P13)" → "your olive overshirt"; seen live, #304). */
+export function stripHandles(sentence: string): string {
+  return sentence.replace(/\s*[([](?:P|FC)\d+(?:\s*[,/]\s*(?:P|FC)\d+)*[)\]]/g, '');
+}
+/** A handle left in the words themselves ("Wear P7 with it") can't be cut cleanly: the sentence goes. */
+const BARE_HANDLE = /\b(?:P|FC)\d+\b/;
+
+/** "over your Navy overshirt" → "over your navy overshirt"; a name opening the sentence keeps its capital. */
+export function lowerNames(sentence: string, names: readonly string[] = []): string {
+  let out = sentence;
+  for (const n of names) {
+    if (!n || n.charAt(0) === n.charAt(0).toLowerCase()) continue;
+    const low = n.charAt(0).toLowerCase() + n.slice(1);
+    let from = 0;
+    for (;;) {
+      const i = out.indexOf(n, from);
+      if (i < 0) break;
+      const before = out.slice(0, i).trimEnd();
+      if (before !== '' && !/[.!?:]$/.test(before)) out = out.slice(0, i) + low + out.slice(i + n.length);
+      from = i + n.length;
+    }
+  }
+  return out;
 }
 
 /** One-decimal form of a score: "7" → "7.0", "7.50" → "7.5". */
@@ -108,6 +135,7 @@ export function checkSentence(sentence: string, ctx: GateContext): GateRule | nu
   if (EMOJI.test(sentence)) return 'emoji';
   if (FILLER.test(sentence) || OPENER_ONLY.test(sentence)) return 'filler';
   if (BANNED.test(sentence)) return 'banned';
+  if (BARE_HANDLE.test(sentence)) return 'handle';
   if (UNLIMITED.test(sentence)) return 'unlimited';
   if (AI_STYLIST.test(sentence)) return 'aiStylist';
   if (CREATOR.test(sentence)) return 'creator';
@@ -165,6 +193,7 @@ export function createSentenceStream(ctx: GateContext) {
   const pass = (raw: string): string => {
     let sentence = stripMarkup(raw);
     if (shown === '') sentence = trimOpener(sentence.replace(/^\s+/, ''));
+    sentence = lowerNames(stripHandles(sentence), ctx.pieceNames);
     const rule = sentence.trim() ? checkSentence(sentence, ctx) : null;
     if (rule) {
       dropped.push(rule);

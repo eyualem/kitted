@@ -9,7 +9,7 @@ export type VoiceProblem = 'leadLong' | 'tooLong' | 'tooManySentences' | 'intern
 export const VOICE_LIMITS = { leadWords: 20, words: 70, sentences: 3 } as const;
 
 // Words from inside the app that must never reach him: our own names for things.
-const INTERNAL = /\bStarter 12\b|\bparts engine\b|\brubric\b|\bhandles?\b|\b(?:P|FC)\d+\b|<\/?(?:pack|evidence|guide)>|\b[A-Z]{3}-\d+\b|\bclosing block\b|\bevidence\b/;
+const INTERNAL = /\bStarter 12\b|\bparts engine\b|\brubric\b|\b(?:P|FC)\d+\b|<\/?(?:pack|evidence|guide)>|\b[A-Z]{3}-\d+\b|\bclosing block\b|\bevidence\b/;
 
 const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
 

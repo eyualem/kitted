@@ -47,7 +47,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
       kind: route.kind,
       ...(ev.verdict ? { verdict: ev.verdict } : {}),
       prompt: { system: systemPrompt(route.kind), user: userPrompt(ctx.text, ev.text, question) },
-      gate: { allowedScores: allowedScores(ctx.text, ev.text), hasBody },
+      gate: { allowedScores: allowedScores(ctx.text, ev.text), hasBody, pieceNames: snap.closet.map((c) => c.name) },
       lookup: async (need) => {
         const l = parseLookup(need, ctx.handles);
         if (!l) return null;
@@ -56,7 +56,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
         if (!ev2.text) return null;
         return {
           prompt: { system: systemPrompt(r.kind), user: userPrompt(ctx.text, ev2.text, question) },
-          gate: { allowedScores: allowedScores(ctx.text, ev2.text), hasBody },
+          gate: { allowedScores: allowedScores(ctx.text, ev2.text), hasBody, pieceNames: snap.closet.map((c) => c.name) },
         };
       },
       card: async (raw, gate) => buildCard(raw, {

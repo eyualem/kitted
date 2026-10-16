@@ -175,3 +175,23 @@ describe('J5 · the contradiction check', () => {
     for (const e of EXAMPLES) expect('verdict' in JSON.parse(e.block)).toBe(true);
   });
 });
+
+describe('E0 fixes (#304): routes and evidence the live tries showed missing', () => {
+  it('"Is my outfit today good?" explains today\'s check', async () => {
+    const { store, clock } = await setup();
+    for (const q of ['Is my outfit today good?', 'Is my fit ok?', 'How does my outfit look?']) {
+      const { route } = await evidenceFor(store, clock, q);
+      expect([q, route.kind, route.check !== null]).toEqual([q, 'explain', true]);
+    }
+  });
+  it('a what-if says what he wore on that photo', async () => {
+    const { store, clock } = await setup();
+    const { ev } = await evidenceFor(store, clock, 'What if I wore the Chelsea boots instead of the loafers?');
+    expect(ev.text).toMatch(/On that photo he wore: .*White sneakers/);
+  });
+  it('a shape question with no photo of the piece says the fit only shows in a photo', async () => {
+    const { store, clock } = await setup();
+    const { ev } = await evidenceFor(store, clock, 'Is the overshirt too baggy?');
+    expect(ev.text).toMatch(/only shows in a fit check photo/);
+  });
+});
