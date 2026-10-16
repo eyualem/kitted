@@ -9,7 +9,7 @@ import { store } from '@/data/db';
 import type { ChatMessage, OutfitRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { openPiece } from '@/features/closet/pieceActions';
-import { STARTER } from '@/features/finish/starter';
+import { catalogRow } from '@/features/finish/starter';
 import { openLookPage } from '@/features/lookbook/lookPage';
 import { OutfitTiles } from '@/features/stylist/cards/OutfitTiles';
 import { showToast } from '@/features/toast/toast';
@@ -131,7 +131,7 @@ function AskQuestion({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskC
 }
 
 function BuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }> }) {
-  const row = STARTER.find((e) => e.id === card.starterId);
+  const row = catalogRow(card.starterId);
   if (!row) return null;
   const gain = card.gain === null || card.gain <= 0 ? null : card.gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: card.gain });
   return (

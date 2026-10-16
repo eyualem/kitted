@@ -5,7 +5,8 @@
 import { displayHex, type Styles } from '@kitted/core';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import { buildOutfits, outfitCount, outfitGain, type Outfit, type SlotState } from '@/features/closet/outfits';
-import { ownership, STARTER, type StarterEntry } from './starter';
+import { starterList } from './packs';
+import { ownership, type StarterEntry } from './starter';
 
 /** A Starter piece he doesn't own yet, as a closet row (drawn like his own; never stored). */
 export function ghostPiece(e: StarterEntry): ClosetItemRow | null {
@@ -23,11 +24,12 @@ export function starterGain(closet: readonly ClosetItemRow[], styles: Styles | n
   return ghost ? outfitGain(closet, styles, ghost) : 0;
 }
 
-/** The missing row that adds the most outfits (02's order breaks ties); null when every wearable row is owned. */
+/** The missing row of his list (his looks, #313) that adds the most outfits (the list's order breaks ties, so his first
+ *  look's rows win); null when every wearable row is owned. */
 export function bestMissing(closet: readonly ClosetItemRow[], styles: Styles | null, markedKv: readonly string[]): { entry: StarterEntry; gain: number } | null {
   const own = ownership(closet, markedKv);
   let best: { entry: StarterEntry; gain: number } | null = null;
-  for (const e of STARTER) {
+  for (const e of starterList(styles)) {
     if (own[e.id]?.owned || !e.pick || !e.slot) continue;
     const gain = starterGain(closet, styles, e);
     if (!best || gain > best.gain) best = { entry: e, gain };
@@ -42,7 +44,7 @@ export function bestMissing(closet: readonly ClosetItemRow[], styles: Styles | n
 export function gainForSlot(closet: readonly ClosetItemRow[], checks: readonly FitCheckRow[], styles: Styles | null, slot: SlotState['slot']): number {
   const own = closet.filter((c) => c.source !== 'chat');
   let best = 0;
-  for (const e of STARTER) {
+  for (const e of starterList(styles)) {
     if (e.slot !== slot) continue;
     const ghost = ghostPiece(e);
     if (ghost) best = Math.max(best, outfitCount([...own, ghost], checks, styles));

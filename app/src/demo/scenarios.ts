@@ -4,6 +4,7 @@
 
 import type { AuthProvider, MockScript } from '@/features/account/auth';
 import type { FinishDemo } from '@/features/finish/demo';
+import type { Styles } from '@kitted/core';
 
 export type ScenarioName = 'firstRun' | 'full';
 
@@ -32,6 +33,8 @@ export interface ScreenScenario {
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
+  /** Starter basics by look (#313): his picks for this screen, in place of the scenario's (smart casual + workwear). */
+  looks?: Styles;
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
@@ -218,6 +221,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
+  // Starter basics by look (#313, 09-ui-review §16 K13): the full closet with other picks (190–193; 185–189 left for the
+  // closet-piece session).
+  { n: 190, name: 'Starter essentials · streetwear', id: 'C5', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/starter', under: '/closet', looks: [['streetwear', 0.5]] },
+  { n: 191, name: 'Starter essentials · minimal + smart casual', id: 'C5', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/starter', under: '/closet', looks: [['minimalist', 0.5], ['smart_casual', 0.25]] },
+  { n: 192, name: 'Starter essentials · no picks', id: 'C5', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/starter', under: '/closet', looks: [] },
+  { n: 193, name: 'Closet · Outfits · streetwear pick', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', looks: [['streetwear', 0.5]] },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

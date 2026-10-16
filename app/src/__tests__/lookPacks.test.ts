@@ -1,7 +1,7 @@
-// Starter basics that follow his looks (09-ui-review §16, K1–K12, #313). The draft lists in finish/packs.ts, checked
-// before the founder reviews them: every look's 12 against its own "never with" rules (rubric/v5-styles.md), the blend
-// of up to 3 picks, the stored ids, and that no list changes a score or a "+N". The wiring checks (K9–K12) wait for the
-// build, after his OK on the lists.
+// Starter basics that follow his looks (09-ui-review §16, K1–K12, #313; the founder's OK Oct 17). The lists in
+// finish/packs.ts: every look's 12 against its own "never with" rules (rubric/v5-styles.md), the blend
+// of up to 3 picks, the stored ids, that no list changes a score or a "+N", and the wiring (K9–K12): every suggestion
+// comes from his list, a stored id outside it still works, and changing his looks deletes nothing.
 import { detectStyles, outfitReading, outfitValid, scoreParts, US_EASTERN, type ClosetItem, type Garment, type Styles } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
@@ -9,11 +9,25 @@ import { loadScenario } from '@/data/seedLoader';
 import { STYLES, type ClosetItemRow, type StyleKey } from '@/data/types';
 import { checkSentence } from '@/features/ask/gate';
 import { scoreOptions } from '@/features/fitcheck/scoring';
-import { ghostPiece, starterGain } from '@/features/finish/gains';
 import {
-  CATALOG, catalogRow, COMMON_IDS, CORE_IDS, LIST_SIZE, LOOK_ROWS, overlaps, PACKS, picksOf, QUOTAS, starterList,
+  CATALOG, catalogRow, COMMON_IDS, CORE_IDS, LIST_SIZE, LOOK_ROWS, overlaps, PACKS, picksLine, picksOf, QUOTAS, starterList,
 } from '@/features/finish/packs';
-import { STARTER, type StarterEntry } from '@/features/finish/starter';
+import { cardSpoken, starterFor } from '@/features/ask/cards';
+import { buildStylistContext } from '@/features/ask/context';
+import { buildEvidence } from '@/features/ask/evidence';
+import { routeQuestion } from '@/features/ask/router';
+import { loadStylistSnapshot } from '@/features/ask/snapshot';
+import { bestMissing, ghostPiece, nextBestBuy, starterGain } from '@/features/finish/gains';
+import { buildMoves, pickBuy } from '@/features/finish/moves';
+import { markedPiece, ownedCount, ownership, STARTER, type StarterEntry } from '@/features/finish/starter';
+import { toggleStarter } from '@/features/finish/starterActions';
+import { t } from '@/i18n/en';
+import { manualClock } from '@/services/clock';
+import { counterIds } from '@/services/ids';
+
+const { readFileSync } = jest.requireActual<{ readFileSync(p: string, enc: 'utf8'): string }>('fs');
+const { join } = jest.requireActual<{ join(...p: string[]): string }>('path');
+declare const __dirname: string;
 
 const row = (id: string): StarterEntry => catalogRow(id)!;
 const one = (look: StyleKey): Styles => [[look, 1]];
@@ -268,9 +282,125 @@ describe('K8 · the words', () => {
   });
 });
 
-describe('K9–K12 · wired in (after the founder\'s OK on the lists)', () => {
-  it.todo('K9: Starter essentials shows starterList(his picks), "n of 12" and the 12-slot bar unchanged, with the line naming his looks');
-  it.todo('K10: the Closet\'s next best buy, "Add shoes and you\'d have n", the chat\'s buy-next evidence and move 3\'s pick at posting choose only from his list; ties go to his first pick\'s rows');
-  it.todo('K11: a stored id outside his list still works: move 3\'s buyId, an old chat buy card, a marked piece\'s starterId, a belt kv mark; the chat\'s starterFor prefers his list, then the catalog');
-  it.todo('K12: changing his looks in You → Style profile changes the list at once; a piece he marked from a row no longer shown stays in Closet, and the row comes back marked if he picks that look again');
+const AS_OF = Date.parse('2026-10-22T12:00:00-04:00');
+async function demo() {
+  const store = createMemoryStore();
+  await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: AS_OF });
+  return { store, closet: await store.closet.all(), profile: (await store.profile.get('me'))! };
+}
+const ids = (rows: readonly StarterEntry[]) => rows.map((e) => e.id);
+
+describe('K9 · Starter essentials shows his list', () => {
+  it('the line names his looks (none with no picks), in his order', () => {
+    expect(picksLine(null)).toBeNull();
+    expect(picksLine([])).toBeNull();
+    expect(picksLine(one('streetwear'))).toBe('Picked for streetwear.');
+    expect(picksLine(picks('streetwear', 'minimalist'))).toBe('Picked for your looks: streetwear and minimal.');
+    expect(picksLine(picks('workwear', 'classic_prep', 'outdoor'))).toBe('Picked for your looks: workwear, classic prep and outdoor.');
+    expect(picksLine(picks('preppy'))).toBe('Picked for classic prep.');
+  });
+  it('"{n} of 12" counts only the rows he sees: a piece filling a row of another look doesn\'t count', () => {
+    const streetwear = ids(starterList(one('streetwear')));
+    const loafers = { ...markedPiece(row('s10'), 'L', AS_OF)!, isPhotographed: true, starterId: null, source: 'fitCheck' as const };
+    const own = ownership([loafers], []);
+    expect(own.s10?.owned).toBe(true);
+    expect(ownedCount(own, streetwear)).toBe(0);
+    expect(ownedCount(own, ids(starterList(null)))).toBe(1);
+  });
+  it('the screen draws starterList(his picks) and the line (read from the source)', () => {
+    const src = readFileSync(join(__dirname, '../features/finish/StarterScreen.tsx'), 'utf8');
+    expect(src).toMatch(/starterList\(styles\)/);
+    expect(src).toMatch(/picksLine\(styles\)/);
+    expect(src).not.toMatch(/STARTER\.map/);
+  });
+});
+
+describe('K10 · every suggestion comes from his list', () => {
+  it('on the demo closet: the next best buy, move 3 and "Add shoes" pick only rows of his list, for each look and the demo\'s own picks', async () => {
+    const { closet, profile } = await demo();
+    for (const styles of [profile.styles, ...STYLES.map(one), picks('streetwear', 'outdoor')]) {
+      const list = ids(starterList(styles));
+      const nb = nextBestBuy({ closet, checks: [], styles, marks: [] });
+      if (nb) expect(list).toContain(nb.entry.id);
+      const best = bestMissing(closet, styles, []);
+      if (best) expect(list).toContain(best.entry.id);
+      const buy = pickBuy({ first: { fixes: [], details: {} } as never, recheck: null, closet, styles, markedKv: [] });
+      if (buy) expect(list).toContain(buy);
+    }
+  });
+  it('ties go to his first look: the pick is the earliest row of his list among the most outfits', async () => {
+    const { closet } = await demo();
+    for (const styles of [picks('streetwear', 'minimalist'), picks('minimalist', 'streetwear'), picks('workwear', 'outdoor')]) {
+      const own = ownership(closet, []);
+      const rows = starterList(styles).filter((e) => wearable(e) && !own[e.id]?.owned);
+      const gains = rows.map((e) => starterGain(closet, styles, e));
+      const top = Math.max(...gains);
+      expect(bestMissing(closet, styles, [])!.entry.id).toBe(rows[gains.indexOf(top)]!.id);
+    }
+  });
+  it('the chat\'s buy-next evidence lists only rows of his list', async () => {
+    const { store } = await demo();
+    for (const styles of [one('streetwear'), one('workwear')]) {
+      const p = (await store.profile.get('me'))!;
+      await store.profile.put({ ...p, styles });
+      const snap = await loadStylistSnapshot(store, manualClock(AS_OF));
+      const q = 'What should I buy next?';
+      const ctx = buildStylistContext(snap, q);
+      const route = routeQuestion(q, { closet: snap.closet, checks: snap.checks, context: ctx, dayOf: () => ({ dow: 4, today: true }) });
+      const ev = await buildEvidence(route, snap, ctx, { readingOf: async () => null, starterMarks: [] });
+      const shown = ev.text.split('\n').filter((l) => l.startsWith('- ')).map((l) => /^- (s\d\d)/.exec(l)?.[1]);
+      expect(shown.length).toBeGreaterThan(0);
+      for (const id of shown) expect(ids(starterList(styles))).toContain(id);
+    }
+  });
+});
+
+describe('K11 · a stored id outside his list still works', () => {
+  it('move 3 keeps the piece it named (a quarter-zip) after he switches to streetwear', async () => {
+    const { closet } = await demo();
+    const plan = buildMoves({ first: { fixes: [], details: {} } as never, recheck: null, closet, styles: one('streetwear'), markedKv: [], buyId: 's11' });
+    expect(ids(starterList(one('streetwear')))).not.toContain('s11');
+    expect(plan.moves[2]!.title).toBe(t('plan.move3', { item: row('s11').pick!.phrase }));
+  });
+  it('an old buy card and a new look\'s card both speak, whatever his looks', () => {
+    for (const starterId of ['s08', 's26']) {
+      expect(cardSpoken({ type: 'buy', starterId, gain: 3 }, { nameOf: () => null })).toContain(row(starterId).pick!.name);
+    }
+  });
+  it('the chat\'s named kind finds his list\'s row first, then any row', () => {
+    expect(starterFor('hoodie', null, one('streetwear'))?.id).toBe('s15');
+    expect(starterFor('hoodie', null, null)?.id).toBe('s11');
+    expect(starterFor('chore coat', null, one('workwear'))?.id).toBe('s26');
+    expect(starterFor('chore coat', null, null)?.id).toBe('s07');
+    expect(starterFor('rugby shirt', null, null)?.id).toBe('s31');
+  });
+  it('a marked piece and the belt\'s kv mark keep their rows in every list', () => {
+    const hoodie = markedPiece(row('s15'), 'H', AS_OF)!;
+    for (const styles of [null, one('streetwear'), one('minimalist')]) {
+      const own = ownership([hoodie], ['s12']);
+      expect(own.s15).toEqual({ owned: true, how: 'marked', itemId: 'H' });
+      expect(own.s12?.owned).toBe(true);
+      expect(ids(starterList(styles))).toContain('s12');
+    }
+  });
+});
+
+describe('K12 · changing his looks', () => {
+  it('the list follows his profile at once; a piece he marked stays in Closet and comes back ticked', async () => {
+    const { store } = await demo();
+    const p = (await store.profile.get('me'))!;
+    await store.profile.put({ ...p, styles: one('streetwear') });
+    const toast = await toggleStarter(store, row('s15'), counterIds(), AS_OF);
+    expect(toast).not.toBeNull();
+    const piece = (await store.closet.all()).find((c) => c.starterId === 's15')!;
+    expect(piece).toBeDefined();
+    await store.profile.put({ ...p, styles: one('classic_prep') });
+    const prep = starterList((await store.profile.get('me'))!.styles);
+    expect(ids(prep)).not.toContain('s15');
+    expect((await store.closet.all()).some((c) => c.id === piece.id && !c.isDeleted)).toBe(true);
+    await store.profile.put({ ...p, styles: one('streetwear') });
+    const own = ownership(await store.closet.all(), []);
+    expect(ids(starterList((await store.profile.get('me'))!.styles))).toContain('s15');
+    expect(own.s15).toMatchObject({ owned: true, how: 'marked' });
+  });
 });

@@ -5,7 +5,7 @@ import type { Styles } from '@kitted/core';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import { t } from '@/i18n/en';
 import { bestMissing, starterGain } from './gains';
-import { NEXT_STEP, ownership, STARTER, type Ownership } from './starter';
+import { catalogRow, NEXT_STEP, ownership, type Ownership } from './starter';
 
 export type MoveKind = 'basics' | 'fix' | 'buy';
 /** Where a move's Start goes (M4): never a placeholder. */
@@ -73,7 +73,8 @@ export function buildMoves(i: MovesInput): MovesPlan {
 }
 
 function buyMove(i: MovesInput, own: Record<string, Ownership>): Move {
-  const named = i.buyId ? STARTER.find((e) => e.id === i.buyId && e.pick) : undefined;
+  // A stored id finds its row whichever looks he has now (#313): the move stays the piece it named.
+  const named = i.buyId ? catalogRow(i.buyId) : undefined;
   if (named?.pick) {
     const done = own[named.id]?.owned === true;
     // The +N is what it adds now (it shrinks as he fills other gaps); recounted each draw, never stored.
@@ -89,7 +90,7 @@ function buyMove(i: MovesInput, own: Record<string, Ownership>): Move {
 }
 
 function bestGainFor(i: MovesInput, id: string): number {
-  const e = STARTER.find((x) => x.id === id);
+  const e = catalogRow(id);
   return e ? starterGain(i.closet, i.styles, e) : 0;
 }
 

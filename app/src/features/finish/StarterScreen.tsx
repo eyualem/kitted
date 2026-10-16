@@ -1,5 +1,6 @@
 // C5 · Starter essentials (02 C5; 10-onboarding.md §9.3): move 1's destination. "You probably own a few already. Tap the
-// ones you have." The 12 essentials with their budget and mid prices; pieces seen in his checks are already ticked
+// ones you have." The 12 essentials for his looks (#313, finish/packs.ts; today's 12 with no picks), with a line naming
+// them, and their budget and mid prices; pieces seen in his checks are already ticked
 // ("In your closet"); a tap marks one he owns (a not-photographed closet piece), with "+N fits"; untapping one he
 // marked removes it, with Undo. The Next step card at the end.
 import { Pressable, View } from 'react-native';
@@ -15,15 +16,20 @@ import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { getStarterMarks, STARTER_MARKS_KEY } from './service';
 import { SlotBar } from './SlotBar';
-import { NEXT_STEP, ownedCount, ownership, STARTER, type Ownership, type StarterEntry } from './starter';
+import { picksLine, starterList } from './packs';
+import { NEXT_STEP, ownedCount, ownership, type Ownership, type StarterEntry } from './starter';
 import { toggleStarter } from './starterActions';
 
 export function StarterScreen() {
   const closet = useLive(['closet'], () => store.closet.all(), []);
   const marks = useLive(['kv'], () => getStarterMarks(store), [], STARTER_MARKS_KEY);
-  if (!closet || !marks) return null;
+  const profile = useLive(['profile'], () => store.profile.get('me'), []);
+  if (!closet || !marks || profile === undefined) return null;
+  const styles = profile?.styles ?? null;
+  const list = starterList(styles);
+  const line = picksLine(styles);
   const own = ownership(closet, marks);
-  const n = ownedCount(own);
+  const n = ownedCount(own, list.map((e) => e.id));
   const tap = async (e: StarterEntry) => {
     const toast = await toggleStarter(store, e, newId, sessionClock.nowMs());
     if (toast) showToast(toast.text, toast.undo);
@@ -34,13 +40,18 @@ export function StarterScreen() {
         <KText variant="subheadline" color="ink2">
           {t('starter.sub')}
         </KText>
+        {line ? (
+          <KText variant="subheadline" color="accent">
+            {line}
+          </KText>
+        ) : null}
         <View accessible accessibilityLabel={t('starter.a11y.count', { n })} style={{ gap: space.s }}>
           <KText variant="headline">{t('closet.essentials.count', { n })}</KText>
           <SlotBar filled={n} slots={12} />
         </View>
       </View>
       <KCard radius={20}>
-        {STARTER.map((e, i) => (
+        {list.map((e, i) => (
           <View key={e.id}>
             {i > 0 ? <RowDivider /> : null}
             <StarterRow entry={e} own={own[e.id] ?? { owned: false }} onPress={() => void tap(e)} />

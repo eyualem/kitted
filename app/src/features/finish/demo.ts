@@ -9,7 +9,7 @@ import { demoEntitlements } from '@/services/entitlements';
 import { newId } from '@/services/ids';
 import type { StoreScript } from '@/services/purchases';
 import { finish, setDemoFinish } from './session';
-import { STARTER } from './starter';
+import { catalogRow } from './starter';
 import { toggleStarter } from './starterActions';
 
 export type FinishDemoStep = 'later' | 'paywallShown' | 'notifyYes' | 'notifyAllow' | 'notifyNo' | { mark: string };
@@ -43,7 +43,7 @@ export async function prepareFinishDemo(store: KittedStore, sc: ScreenScenario, 
     // The screen's link opens the paywall: as if the sequence had, so it doesn't open a second.
     else if (step === 'paywallShown') await finish.paywallOpenedByLink();
     else if (typeof step === 'object') {
-      const e = STARTER.find((x) => x.id === step.mark);
+      const e = catalogRow(step.mark);
       if (e) await toggleStarter(store, e, newId, nowMs);
     } else {
       const ask = (await store.chat.all()).find((m) => m.payload.question === 'notify');

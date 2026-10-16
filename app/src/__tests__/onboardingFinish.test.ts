@@ -423,7 +423,7 @@ describe('B1–B2 · Starter essentials', () => {
     expect(own.s01).toMatchObject({ owned: true, how: 'closet' });
     expect(own.s05).toEqual({ owned: false }); // slim jeans don't fill "dark straight jeans"
     expect(own.s10).toMatchObject({ owned: true, how: 'closet' });
-    expect(ownedCount(own)).toBe(2);
+    expect(ownedCount(own, STARTER.map((e) => e.id))).toBe(2); // of today's 12 (his list's ids since #313)
     // A deleted piece doesn't count.
     expect(ownership([{ ...closet[0]!, isDeleted: true }], []).s01).toEqual({ owned: false });
   });
