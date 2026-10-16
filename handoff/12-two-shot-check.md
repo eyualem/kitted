@@ -4,7 +4,10 @@
 bathroom." When the mirror shows only his top half, the camera should notice, then walk him through a second
 photo of his pants and shoes by pointing the phone down, all inside the camera, before anything is scored.
 
-**Status:** planned, checks set first (§6), free tests run (§8). Nothing in the app has changed yet.
+**Status (Oct 16):** planned, checks set first (§6), free tests T1–T3 run (§8): the camera can tell when the
+shoes are missing (0 false asks on 36 of his real photos, every cut copy caught), today's guide tells a
+short-mirror shot to "Step back" on nearly every try, and a top-only card's "Finish the check" can't change
+the score (a bug). Nothing in the app has changed yet. Next: step 0, then his shoot (§9) for T4–T5.
 
 ---
 
@@ -12,7 +15,8 @@ photo of his pants and shoes by pointing the phone down, all inside the camera, 
 
 1. **Mirror mode, bathroom mirror.** Today the tip says "Step back a little. Shoes in frame if you can." and he
    can't. New: "Short mirror? Take your top half. I'll get the rest next." He shoots as usual.
-2. **The camera notices his shoes are missing** (the quick check after the shot, about 0.2 s). It doesn't score
+2. **The camera notices his shoes are missing** (the quick check after the shot, about 0.2 s; photos taken in
+   the Kitted camera only, T1). It doesn't score
    yet. His top-half photo shrinks to a corner thumbnail with a check mark, and the camera says:
    **"Now your pants and shoes. Point the phone down at your feet."**
 3. **The down shot.** He holds the phone at chest height and looks down through it, like a shoe pic. The tip
@@ -106,12 +110,12 @@ back" (no hips) and "Step into the frame" (no shoulders) at each height. No bar;
 **T3 · The top-only finish (unit test, free).** Today: confirm the bug. After step 0: a top-only check finished
 by a bottom snap scores exactly as the merged reading scored as a full photo, with no partial label.
 
-**T4 · Reading from two photos (needs the founder's shoot, ~15 min, and ≤ $0.50 of Gemini; his OK).**
-10 outfits. For each: one full-body propped photo (the truth reading), one bathroom-mirror top half, one down
-shot at 1× and one at 0.5×. Score the two-shot (two readings merged, and one call with both photos) against
-the truth reading.
-- **P4a** shown score within 0.5 of the full-body truth on **≥ 8 of 10** outfits, **none off by 1.5 or more**.
-- **P4b** pants and shoes found on **10 of 10**; the top never doubled (it shows in both photos).
+**T4 · Reading from two photos (needs the founder's shoot, ~20 min, and ≤ $1.50 of Gemini; his OK).**
+8 outfits (shot list in §9). For each: one full-body propped photo (the truth reading), one bathroom-mirror top
+half, one down shot at 1× and one at 0.5×. Score the two-shot (two readings merged, and one call with both
+photos) against the truth reading. (Set Oct 16 before any run: 8 outfits, not 10, so it fits one session.)
+- **P4a** shown score within 0.5 of the full-body truth on **≥ 7 of 8** outfits, **none off by 1.5 or more**.
+- **P4b** pants and shoes found on **8 of 8**; the top never doubled (it shows in both photos).
 - **P4c** per fact against the truth: shoe type ≥ 90%, pants type ≥ 90%, colors ≥ 85%; leg shape, hem, tuck and
   top length each ≥ 75%, **else that fact isn't scored on two-shot checks** (no points either way).
 - **P4d** steady: the same two photos 3 times give a shown score within 0.5 every time.
@@ -137,4 +141,56 @@ their profile (birth year as an age band, picked looks), as the app would hold i
 
 ## 8. Results
 
-(filled below as the tests run)
+### T1 · Does the camera know the shoes are missing? Run Oct 16 (free). Passes on the app's own photos.
+Harness: `kmeasure cutoff` (the app's own `Prep.locate`, with "Which one is you?" resolved to the biggest person
+as he'd usually pick), `extraction-test/twoshot_cutoff.py`, results `extraction-test/results/twoshot1/`.
+The rule tested is the one the installed app already computes: **ask for the down shot when the quick check
+finds no ankle** (`pose` is not `full`).
+
+| | His and his friends' camera photos (37) | Public gold screenshots (225; test half) |
+|---|---|---|
+| P1a full body with shoes, asked anyway (≤ 3%) | **0 of 36** | 4 of 106 = 3.8% (both halves 13 of 210 = 6.2%) |
+| P1b cut copies, asked (≥ 95%) | **252 of 252** | 689 of 693 = 99.4% |
+| A real cut-off, asked | **1 of 1** (703a8b: a bathroom mirror cut at the thighs) | 9 of 12 the AI read as shoes out |
+| P1c cut copies that can still be sent | **252 of 252** | 98% at chest and navel (3 small figures not found), 100% below |
+
+- **Why the public set misses the bar:** the 13 false asks are tight Instagram and Pinterest crops where Apple's
+  body tracker loses the legs (5 even lose the hips); the feet sit at the very bottom edge, so "does he run off
+  the bottom" can't separate them either (tried, `mainBottom`). Two-ankle rules are worse (18–20%).
+- **Decision:** the in-camera second shot runs **only for photos taken in the Kitted camera** (passes every bar).
+  A library photo or screenshot keeps today's path: scored as one photo, and when the AI reads it as top only or
+  shoes out, the card's finish row offers the right snap (after step 0).
+- **What it misses fails safe:** a cut just above the ankle where an ankle is still found (7 of 184) scores as
+  today's "Partial check: shoes not included", with the shoe snap on the card.
+
+### T2 · What today's live guide says on short-mirror shots. Run Oct 16. Confirms the problem.
+| Cut at | His photos told "Step back" | Gold photos told "Step back" |
+|---|---|---|
+| chest | 36 of 36 | 93% |
+| navel | 32 of 36 | 97% |
+| hip | 13 of 36 | 95% |
+| mid-thigh and lower | 0 | 52% → 5% |
+
+A guy at a bathroom mirror is told to step back on nearly every shot, which he can't do.
+
+### T3 · The top-only finish. Run Oct 16: the bug is real.
+`app/packages/kitted-core/test/twoShot.test.ts` (3 pass): a top-only reading plus a shoe snap stays "Partial
+check: top only" with the same score; a bottom snap (`mergeBottomSnap`) makes it a full check scored exactly as
+the full photo. In the app, `finalizeSnap` always uses the shoe snap, so a top-only card's "Finish the check"
+does nothing to the score today. Fixed by step 0.
+
+### T4–T7: waiting on the founder (§9 shot list, the spend OK, the interview question).
+
+## 9. The founder's shoot for T4 and T5 (~20 min, `inputs/two-shot/`)
+
+8 outfits you'd really wear (mix: a tee over wide jeans, a tucked shirt with chinos, a hoodie with slim jeans,
+a jacket with boots, a dark-on-dark one, shorts, one with a long top, one with cuffed pants). For each outfit,
+4 photos, named `o1-full.jpg`, `o1-mirror.jpg`, `o1-down1x.jpg`, `o1-down05x.jpg`:
+1. **full:** the phone propped on the floor 2–3 m away, the whole body with shoes (the truth).
+2. **mirror:** in the bathroom mirror, as you'd shoot it there (top half).
+3. **down1x:** the phone at chest height, looking down at your feet, waistband at the top and both shoes in.
+4. **down05x:** the same at 0.5× (the wide lens).
+
+Plus 10 down shots **without** both shoes (just the floor, one shoe, a bed, the shoes cut off), named
+`noshoes-1.jpg` … for T5. Rule 7: write who's in each photo in `inputs/two-shot/who.txt` (you, or a friend's
+code with birth year and 3 picked looks if they OK it).

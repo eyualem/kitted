@@ -16,6 +16,8 @@
 //       the waist ruler (WaistRuler.swift): the visual waistline against a ruler from his joints, and the pants' shin/thigh width
 //   kmeasure hems <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
 //       the hem probe (HemProbe.swift): folds above the hem, fabric over the shoe, hem spread (M2)
+//   kmeasure cutoff <photo.jpg>...
+//       the two-shot check's T1/T2 (#313): copies cut off at set heights, the quick check's pose and today's live tip
 import CoreImage
 import Foundation
 import ImageIO
@@ -374,6 +376,45 @@ case "people":
       if f.status == "multiplePeople" {
         for (i, c) in f.candidates.enumerated() { try write(Prep.locate(img, pick: c), "\(stem).pick\(i).jpg") }
       } else if !f.others.isEmpty { try write(f, "\(stem).sent.jpg") }
+    }
+  }
+
+case "cutoff":
+  // kmeasure cutoff <photo.jpg>...: the two-shot check's T1/T2 (handoff/12-two-shot-check.md, #313). For each photo with a
+  // full body (shoulders, hips, knees and an ankle), copies cut off at set heights from his own joints (as a short
+  // mirror would cut him), each run through Prep.locate as the quick check after the shot does: its `pose` (full /
+  // upper / none), whether it could be sent, and today's live tip state from the same joints (no shoulders →
+  // noPerson, no hips → tooClose, both ankles → goodFull, else good). One JSON line per photo and cut.
+  for path in args.dropFirst(2) {
+    guard let img = load(path) else { print("{\"photo\":\"\(path)\",\"error\":\"unreadable\"}"); continue }
+    let W = CGFloat(img.width), H = CGFloat(img.height)
+    // "Which one is you?" comes first in the app; here the biggest candidate is picked, as he usually would.
+    func located(_ i: CGImage) -> Prep.Located { let f = Prep.locate(i); return f.status == "multiplePeople" ? Prep.locate(i, pick: f.candidates.first) : f }
+    let full = located(img)
+    let j = full.joints
+    func y(_ a: String, _ b: String) -> CGFloat? {
+      let v = [j[a], j[b]].compactMap { $0?.y }
+      return v.isEmpty ? nil : v.reduce(0, +) / CGFloat(v.count)
+    }
+    var cuts: [(String, CGFloat)] = [("full", H)]
+    if let sh = y("lShoulder", "rShoulder"), let hp = y("lHip", "rHip"), let kn = y("lKnee", "rKnee"), let an = y("lAnkle", "rAnkle"), an > kn, kn > hp, hp > sh {
+      cuts += [("chest", sh + 0.5 * (hp - sh)), ("navel", hp - 0.15 * (hp - sh)), ("hip", hp), ("midthigh", (hp + kn) / 2),
+               ("knee", kn), ("midshin", (kn + an) / 2), ("aboveAnkle", an - 0.25 * (an - kn))]
+    }
+    for (name, cy) in cuts {
+      let h = min(H, cy.rounded())
+      guard h > 16, let c = name == "full" ? img : img.cropping(to: CGRect(x: 0, y: 0, width: W, height: h)) else { continue }
+      let f = name == "full" ? full : located(c)
+      let k = f.joints
+      let shoulders = ["lShoulder", "rShoulder"].filter { k[$0] != nil }.count
+      let hips = ["lHip", "rHip"].filter { k[$0] != nil }.count
+      let ankles = ["lAnkle", "rAnkle"].filter { k[$0] != nil }.count
+      let live = shoulders == 0 ? "noPerson" : hips == 0 ? "tooClose" : ankles == 2 ? "goodFull" : "good"
+      let lowest = k.values.map(\.y).max().map { Double($0 / h) } ?? -1
+      let row: [String: Any] = ["photo": path, "cut": name, "share": Double(h / H), "status": f.status, "pose": f.pose, "live": live,
+                                "joints": k.keys.sorted(), "lowest": (lowest * 1000).rounded() / 1000, "fullBody": cuts.count > 1,
+                                "mainBottom": f.main.map { Double(($0.maxY / h * 1000).rounded() / 1000) } ?? -1]
+      if let d = try? JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]), let s = String(data: d, encoding: .utf8) { print(s) }
     }
   }
 
