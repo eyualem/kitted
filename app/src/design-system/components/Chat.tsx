@@ -54,18 +54,23 @@ export function StylistMark() {
 }
 
 export function StylistMessage({ children, showHeader, body, footer, actions }: StylistMessageProps) {
+  // At the accessibility text sizes the mark goes above the text, so the words get the full width (rows stack there).
+  const { isAccessibilitySize } = useTheme();
+  const stacked = isAccessibilitySize;
   return (
-    <View style={{ flexDirection: 'row', gap: size.markGap, marginTop: showHeader ? 4 : 0 }}>
-      <View style={{ width: size.mark }} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
-        {showHeader ? <StylistMark /> : null}
-      </View>
-      <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
+    <View style={{ flexDirection: stacked ? 'column' : 'row', gap: stacked ? 6 : size.markGap, marginTop: showHeader ? 4 : 0 }}>
+      {!stacked || showHeader ? (
+        <View style={{ width: size.mark }} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+          {showHeader ? <StylistMark /> : null}
+        </View>
+      ) : null}
+      <View style={stacked ? { gap: 4 } : { flex: 1, minWidth: 0, gap: 4 }}>
         <View
           accessible
           accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })}
           accessibilityActions={actions?.map((a) => ({ name: a.name, label: a.label }))}
           onAccessibilityAction={actions ? (e) => actions.find((a) => a.name === e.nativeEvent.actionName)?.onPress() : undefined}
-          style={{ gap: 4, paddingTop: showHeader ? 3 : 0 }}
+          style={{ gap: 4, paddingTop: showHeader && !stacked ? 3 : 0 }}
         >
           {body ?? <KText role="chatText">{children}</KText>}
         </View>

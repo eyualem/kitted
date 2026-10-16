@@ -4,7 +4,7 @@
 // VoiceOver skips it while it streams; the finished answer is announced once (features/ask/session.ts).
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import Animated, { cancelAnimation, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming, type SharedValue } from 'react-native-reanimated';
+import Animated, { cancelAnimation, FadeIn, ReduceMotion, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming, type SharedValue } from 'react-native-reanimated';
 import { KText, StylistMessage, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -29,7 +29,10 @@ export function LiveAnswerRow({ live }: { live: LiveAnswer }) {
         showHeader
         body={
           text ? (
-            <AnswerBody layout={answerLayout(text, closet ?? null)} />
+            // The first words fade in once (180 ms; none with Reduce Motion), then sentences join as they pass.
+            <Animated.View entering={FadeIn.duration(180).reduceMotion(ReduceMotion.System)}>
+              <AnswerBody layout={answerLayout(text, closet ?? null)} />
+            </Animated.View>
           ) : (
             <View style={{ gap: 4 }}>
               <TypingDots />

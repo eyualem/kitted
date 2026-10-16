@@ -28,13 +28,23 @@ export function AnswerBody({ layout }: { layout: AnswerLayout }) {
 }
 
 function Chip({ piece, text }: { piece: ChipPiece; text: string }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
+  // At the accessibility sizes a fixed 10 pt swatch is lost beside the huge words: the name in ink is the chip.
+  if (isAccessibilitySize) {
+    return (
+      <KText role="answerChip" onPress={() => openPiece(piece)}>
+        {text}
+      </KText>
+    );
+  }
   return (
     <KText role="answerChip" onPress={() => openPiece(piece)}>
       <Text>
-        <View style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: piece.hex, borderWidth: 1, borderColor: colors.ink3, marginRight: 4, transform: [{ translateY: 1 }] }} />
+        {/* An inline view sits on the baseline and ignores margins on iOS: lift it a little, then a narrow
+            no-break space so the swatch never wraps away from its name. */}
+        <View style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: piece.hex, borderWidth: 1, borderColor: colors.ink3, transform: [{ translateY: -1 }] }} />
       </Text>
-      {text}
+      {`\u202f${text}`}
     </KText>
   );
 }
