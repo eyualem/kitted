@@ -30,13 +30,13 @@ const measure: GarmentMeasurer = async (check, pieces) => {
   return out;
 };
 
-async function withDuplicate() {
+async function withDuplicate(m: GarmentMeasurer = measure) {
   const store = createMemoryStore();
   const clock = manualClock(at('2026-10-22T07:42:00-04:00'));
   await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at('2026-10-22T07:41:00-04:00') });
   for (const c of await store.closet.all()) if (!['T1', 'B1', 'S1'].includes(c.id)) await store.closet.patch(c.id, { isDeleted: true });
   const ids = counterIds();
-  const closet = createClosetService({ store, clock, scheduler: realScheduler, ids, source: createMockClosetSource(), measure });
+  const closet = createClosetService({ store, clock, scheduler: realScheduler, ids, source: createMockClosetSource(), measure: m });
   const svc = createFitCheckService({
     store, source: createMockReadingSource({ latency: () => 0, scheduler: realScheduler }), prep: demoImagePrep,
     quota: createQuota({ store, clock, isPro: () => true }), clock, scheduler: realScheduler, ids, closet,
@@ -56,7 +56,7 @@ async function withDuplicate() {
   await closet.answer(ask.checkId, ask.ask.obsId, 'new');
   const dup = (await store.closet.get(ask.ask.itemId))!;
   const match = (await store.closetObs.all()).find((x) => x.itemId === dup.id && x.fitCheckId === rc.checkId && x.origin === 'garment')!;
-  return { store, closet, checkId: r.checkId, dup, match };
+  return { store, closet, svc, clock, checkId: r.checkId, dup, match };
 }
 
 const byId = <T extends { id: string }>(xs: readonly T[]) => [...xs].sort((a, b) => (a.id < b.id ? -1 : 1));
@@ -227,4 +227,55 @@ test('U7: no fit-check score changes after a merge and its Undo jump the queue',
   slow.open();
   await slow.done;
   expect(await scores()).toEqual(before);
+});
+
+test('U8: a new check\'s photo is measured outside the queue, so an Undo meanwhile isn\'t stuck behind it', async () => {
+  // Measuring holds open (as a real photo takes 1–1.5 s on the phone) only while `hold` is set.
+  let hold: Promise<void> | null = null;
+  let measuring = 0;
+  const gated: GarmentMeasurer = async (check, pieces) => {
+    if (hold) {
+      measuring++;
+      await hold;
+    }
+    return measure(check, pieces);
+  };
+  const env = await withDuplicate(gated);
+  const before = await tables(env.store);
+  const undo = (await env.closet.merge(env.dup.id, 'B1'))!;
+  let release!: () => void;
+  hold = new Promise<void>((r) => { release = r; });
+  gates.push(release);
+  env.clock.advance(60 * 60_000);
+  const r = (await env.svc.start({ mode: 'check', photoId: 's14', occasion: 'everyday' })) as { checkId: string };
+  await flush();
+  expect(measuring).toBe(1); // the new photo is being measured, and held there
+  // The Undo isn't stuck behind it.
+  await env.closet.unmerge(undo);
+  const now = await tables(env.store);
+  expect(now.closet).toEqual(before.closet); // undone exactly, and the new check's closet isn't written yet
+  expect(now.obs).toEqual(before.obs);
+  // Once the measuring ends, the check's closet is written with its result (the cut-outs).
+  release();
+  await env.closet.settle();
+  const mine = (await env.store.closetObs.all()).filter((o) => o.fitCheckId === r.checkId && o.origin === 'garment');
+  expect(mine.length).toBeGreaterThan(0);
+  expect(mine.some((o) => o.cropFile)).toBe(true);
+  expect(measuring).toBe(1); // measured once, not again inside the write
+});
+
+test('U8: a measure that fails still writes the closet, with no cut-outs', async () => {
+  let fail = false;
+  const flaky: GarmentMeasurer = async (check, pieces) => {
+    if (fail) throw new Error('vision failed');
+    return measure(check, pieces);
+  };
+  const env = await withDuplicate(flaky);
+  fail = true;
+  env.clock.advance(60 * 60_000);
+  const r = (await env.svc.start({ mode: 'check', photoId: 's14', occasion: 'everyday' })) as { checkId: string };
+  await env.closet.settle();
+  const mine = (await env.store.closetObs.all()).filter((o) => o.fitCheckId === r.checkId && o.origin === 'garment');
+  expect(mine.length).toBeGreaterThan(0);
+  expect(mine.every((o) => !o.cropFile)).toBe(true);
 });

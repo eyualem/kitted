@@ -243,30 +243,74 @@ export function createClosetService(deps: ClosetServiceDeps) {
     notItemIds?: string[];
   }
 
+  // ------------------------------------------------------------------ measuring, outside the queue (09-ui-review §9 U8)
+  // Measuring a real photo takes 1–1.5 s on the phone. It needs no closet rows (only the photo and the boxes), so it
+  // runs before the closet write joins the queue (premeasure), and the queued write reuses the result: an Undo or an
+  // answer tapped meanwhile never waits for it. One measure per photo and set of boxes; the last few are kept.
+  type MeasureInput = Parameters<GarmentMeasurer>[1];
+  const measures: { photo: string; boxes: Map<string, string>; result: ReturnType<GarmentMeasurer> }[] = [];
+  const MEASURES_KEPT = 6;
+  const boxKey = (p: MeasureInput[number]) => `${p.category}|${p.box.join(',')}`;
+
+  /** The measurer's input for these pieces on this check's photo, or null when nothing has a box. */
+  async function measureInput(row: FitCheckRow, pieces: readonly Piece[]) {
+    const boxed = pieces.filter((p) => p.origin === 'garment' && p.fields?.visible && p.fields.box.length === 4);
+    if (!deps.measure || boxed.length === 0) return null;
+    // A mirror selfie's photo is the reflection: its cut-outs are flipped back to true view (#109).
+    const mirrored = (await readingOf(row.readingId))?.reading.scene?.mirror_selfie === true;
+    const check = { imageHash: row.imageHash, photoFile: row.photoFile, demoPhotoId: row.demoPhotoId, mirrored };
+    const input = boxed.map((p) => ({ key: `${p.origin}-${p.index}`, category: String(p.garment.category), box: p.fields!.box }));
+    return { boxed, check, input };
+  }
+
+  /** Measures once: a photo already measured (or being measured) with these boxes reuses that result. */
+  function measureOnce(check: Parameters<GarmentMeasurer>[0], input: MeasureInput): ReturnType<GarmentMeasurer> {
+    const photo = `${check.imageHash}|${check.mirrored ? 1 : 0}`;
+    const hit = measures.find((m) => m.photo === photo && input.every((p) => m.boxes.get(p.key) === boxKey(p)));
+    if (hit) return hit.result;
+    const result = deps.measure!(check, input);
+    measures.push({ photo, boxes: new Map(input.map((p) => [p.key, boxKey(p)])), result });
+    if (measures.length > MEASURES_KEPT) measures.shift();
+    return result;
+  }
+
   /** Measures the worn pieces that have a closet box on this check's photo (#104); empty when it can't. */
   async function measurePieces(row: FitCheckRow, pieces: readonly Piece[]): Promise<{ pieces: Map<Piece, Measured>; heads: number[][] | null }> {
     const out = new Map<Piece, Measured>();
     let heads: number[][] | null = null;
-    const measure = deps.measure;
-    const boxed = pieces.filter((p) => p.origin === 'garment' && p.fields?.visible && p.fields.box.length === 4);
-    if (!measure || boxed.length === 0) return { pieces: out, heads };
-    const key = (p: Piece) => `${p.origin}-${p.index}`;
-    // A mirror selfie's photo is the reflection: its cut-outs are flipped back to true view (#109).
-    const mirrored = (await readingOf(row.readingId))?.reading.scene?.mirror_selfie === true;
+    const m = await measureInput(row, pieces);
+    if (!m) return { pieces: out, heads };
     try {
-      const got = await measure(
-        { imageHash: row.imageHash, photoFile: row.photoFile, demoPhotoId: row.demoPhotoId, mirrored },
-        boxed.map((p) => ({ key: key(p), category: String(p.garment.category), box: p.fields!.box })),
-      );
-      for (const p of boxed) {
-        const m = got.get(key(p));
-        if (m) out.set(p, m);
-      }
+      const got = await measureOnce(m.check, m.input);
+      m.boxed.forEach((p, i) => {
+        const r = got.get(m.input[i]!.key);
+        if (r) out.set(p, r);
+      });
       heads = got.heads ?? null;
     } catch (e) {
       console.log('[measure] failed', String(e));
     }
     return { pieces: out, heads };
+  }
+
+  /**
+   * Before a closet write for this check joins the queue: measure its photo now, so the write finds the result.
+   * Every boxed worn piece of the reading is measured (a re-check's write picks the ones it needs). Never throws.
+   */
+  async function premeasure(checkId: string, kind: 'full' | 'recheck', stored: StoredClosetReading | null): Promise<void> {
+    try {
+      const row = await store.fitChecks.get(checkId);
+      const reading = row ? (await readingOf(row.readingId))?.reading : null;
+      if (!row || !reading) return;
+      const pieces = kind === 'full' ? piecesOf(row, reading, stored) : (() => {
+        const fields = fieldsFor(reading.garments, 'recheck', stored);
+        return reading.garments.map((g, i): Piece => ({ origin: 'garment', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null }));
+      })();
+      const m = await measureInput(row, pieces);
+      if (m) await measureOnce(m.check, m.input);
+    } catch {
+      // the write measures (or fails) as before
+    }
   }
 
   /** A look's check and its re-checks (a re-check folds into its look in the Lookbook). */
@@ -568,6 +612,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         stored = null;
       }
       deps.scheduler.clearTimer(timer);
+      if (stored && kind !== 'shoeSnap') await premeasure(checkId, kind, stored.reading);
       if (!written) {
         written = true;
         await serial(() => write(stored, stored ? 'done' : 'fallback'), { label: 'closet answer' });
@@ -1096,6 +1141,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (!row || !reading) return;
       const cached = await storedCloset(row.imageHash, reading.garments, 'full');
       if (cached || !deps.source || !image) {
+        await premeasure(checkId, 'full', cached?.reading ?? null);
         await serial(() => writeFull(checkId, cached, cached ? 'done' : 'fallback'));
         return;
       }
@@ -1112,6 +1158,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (!row || !merged) return;
       const cached = await storedCloset(row.imageHash, merged.garments, 'recheck');
       if (cached || !deps.source || !image) {
+        await premeasure(recheckId, 'recheck', cached?.reading ?? null);
         await serial(() => writeRecheck(recheckId, cached, cached ? 'done' : 'fallback'));
         return;
       }
@@ -1157,6 +1204,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         const image: PreparedImage = { photoId: row.demoPhotoId, sha256: row.imageHash, uploadUri: null };
         const stored = (await storedCloset(row.imageHash, reading.garments, 'full')) ?? (await track(call(image, reading.garments, 'full', row.readingId).catch(() => null)));
         if (!stored) continue;
+        await premeasure(row.id, 'full', stored.reading);
         await serial(() => enrich(row.id, stored), { label: 'catch-up enrich' });
         n++;
       }

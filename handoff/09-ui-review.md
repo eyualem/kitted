@@ -323,3 +323,8 @@ Founder: "long pressing that clothes is going to bring up a small … menu … n
 | U7 | Pass (T) | every check's score, raw score and part scores equal after a merge and its Undo jump the queue |
 | G1 | Pass | `npm run check`: tsc, lint, core tests and 823 app tests in 72 suites |
 - **U8 (T) (added Oct 15, #296, before building) The photo measuring leaves the queue:** a new check's photo is measured before its closet write joins the closet queue, not inside it. While the measuring runs (held open in a test), an Undo and a "Same as your …?" answer run and finish. The closet write that follows uses that measured result. A failed measure still writes the closet (no cut-outs), as today. No score changes.
+
+### U8 result (Oct 15, #296)
+| Check | Result | How |
+|---|---|---|
+| U8 | Pass (T) | `undoQueue.test.ts` U8: a new check's measuring is held open; the merge Undo finishes meanwhile and the tables equal the pre-merge ones; after release the check's sightings carry their cut-outs and the photo was measured once. Against the old service the Undo hung behind the measuring (timed out). A measure that throws still writes the sightings, with no cut-outs. Closet suites 154/154 |
