@@ -200,3 +200,46 @@ a jacket with boots, a dark-on-dark one, shorts, one with a long top, one with c
 Plus 10 down shots **without** both shoes (just the floor, one shoe, a bed, the shoes cut off), named
 `noshoes-1.jpg` … for T5. Rule 7: write who's in each photo in `inputs/two-shot/who.txt` (you, or a friend's
 code with birth year and 3 picked looks if they OK it).
+
+## 10. Step 0: what it does and its checks (set Oct 16 before building; founder: "finish these things up")
+
+Step 0 makes the **post-score** path work for a short mirror: a top-only card offers a photo of the pants and
+shoes, and that photo finishes the check. The spec already describes this (02 S9 "Top-only partial", D11 "Top
+only" row); it was never built. Two bugs found while planning it are fixed too.
+
+**Bugs found (on the way):**
+- **B1 (T3):** a top-only card's Finish the check offers the shoe snap, which can't change the score or label.
+- **B2:** every snap goes through the full-body photo prep, which refuses a photo with no person found ("can't find
+  you"). On the bottom quarter of his 37 photos (a close shoe snap seen from the front) today's prep refuses 14 of
+  37; the clothes-scan prep accepts all 37 (`kmeasure snapprep`, `results/twoshot1/snapprep-phone.jsonl`). So a real
+  shoe snap of just the shoes has likely never worked on the phone.
+
+**Copy (new, for the founder's skim; outward-facing, built with these words):**
+- Bottom-snap camera tip: "Point your phone down at your feet. Get your pants and shoes in." (differs from 02 S9's
+  "Step back so your pants and shoes are in frame." because a rear camera pointed at himself can't step back; the
+  look-down shot is the founder's idea, #313). Guide over the lower 60%: "Pants and shoes here". Shutter
+  VoiceOver: "Take a photo of your pants and shoes". Bubble caption: "Pants and shoes". Failure toast: "Couldn't
+  read your pants and shoes. Try again." Finish tile VoiceOver: "Snap your pants and shoes".
+- Mirror mode, no hips found: "Can't step back? Prop your phone up to get your shoes in." with a "Use Propped"
+  button (Propped keeps "Step back a little. Shoes in frame if you can.").
+
+**Checks (pass/fail):**
+- **S0.1** A top-only card's Finish row: "Snap your bottom half to finish.", the camera tile and Skip only (no
+  closet pair, no "Same shoes as …"); its VoiceOver actions are "Snap your pants and shoes" and Skip.
+- **S0.2** That tile opens the bottom snap: the tip, the 60% guide and the shutter label above; a shoes-only card
+  still opens today's shoe snap (40%, "Shoes and hems here"), unchanged.
+- **S0.3** A snap on a top-only check is read as a bottom snap and merged with `mergeBottomSnap`: the card says
+  "Full check", the score equals scoring the merged reading, no check or re-check is used.
+- **S0.4** A snap on a shoes-only check is unchanged (`mergeShoeSnap`; demo screen 11's story and every existing
+  test pass).
+- **S0.5** The bottom snap's pants and shoes join the closet, linked to the check (a shoe snap: footwear only).
+- **S0.6** A failed bottom snap shows "Couldn't read your pants and shoes. Try again." and the Finish row stays.
+- **S0.7** Snap prep (native; on the phone with the next reinstall): a snap with no person found is prepared and
+  sent, faces still hidden; on the Mac, the bottom-25% crops of his 37 photos prepare 37 of 37 (today 23); a snap
+  that does show a face still has it hidden; the upload is 1024 px like a check. A build without it falls back to
+  today's prep (no crash, today's behavior).
+- **S0.8** Mirror, no hips: the short-mirror tip and "Use Propped", which switches to Propped; Propped, no hips:
+  today's "Step back" tip. Unit-tested in `guidance`.
+- **S0.9** The quick check after a bottom snap checks only light and blur (like the shoe snap).
+- **S0.10** `npm run check` green; the core and app tests above; the card and camera seen on the web preview in
+  light and dark (and on the Simulator if the Mac has the memory; otherwise said so).
