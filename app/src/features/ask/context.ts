@@ -235,7 +235,8 @@ export function buildStylistContext(s: StylistSnapshot, question: string): Styli
     push('', 'Earlier this week:');
     for (const c of recent) {
       const worn = piecesOf(c).map((x) => x.replace(/^P\d+ /, ''));
-      push([checkHandle.get(c.id)!, shortDay(c.createdAt, zone), `${displayScore(c.score!)} ${scoreWordLabel(c.score!)}`, occasionLabel(c.occasion), ...(worn.length ? [worn.map(lower).join(', ')] : [])].join(' · '));
+      // The weekday too: given only "Oct 20", models guessed it was a Monday (#311).
+      push([checkHandle.get(c.id)!, `${weekdayName(localParts(c.createdAt, zone).dow)}, ${shortDay(c.createdAt, zone)}`, `${displayScore(c.score!)} ${scoreWordLabel(c.score!)}`, occasionLabel(c.occasion), ...(worn.length ? [worn.map(lower).join(', ')] : [])].join(' · '));
     }
   }
 

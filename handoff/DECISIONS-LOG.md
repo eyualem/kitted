@@ -1924,3 +1924,17 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **All 16 outfits:** the sheet said "What it unlocks · 16" but showed 6 with no way to the rest. Now "Show {n} more" / "Show fewer", the Outfits list's own words (no new copy).
     - **Found, not fixed:** on a cold load the card lands about a second after the list, so the list moves down once.
 
+
+311. **The chat model test: seven models, pass marks set first, and GPT-5.6 Luna wins (founder, Oct 17: "here is the antropic key … here is the open ai key … i think an open ai api may be good since it is cheaper, but test it first. Plan out the tests. And also set parameters for how good it performed … beforehand."). Plan `handoff/07-stylist-chat.md` §16 (committed before any answer was read); report `extraction-test/results/ask-models1/report.md`.**
+    - **The test:** Gemini 3.5 Flash-Lite (today), Gemini 3.8 Flash, GPT-6 Luna, GPT-5.6 Luna, GPT-5.4 mini, Claude Haiku 5.5, and Claude Sonnet 5.5 as the ceiling. 41 questions × 2 through the app's own pipeline, the same prompt for all. Hard gates G1–G7 (answered, unsafe in its own words before the gate, rules clashes, the block, refusals, speed, cost from Jan 2027) and quality targets Q1–Q5 from 3 blind Claude judges (stylist, beginner, fact-checker) plus a steadiness judge. $1.15.
+    - **Result:** only GPT-5.6 Luna passes every gate, and it is also the only model to clear every quality target (83% good, 4.58 mean, 4.9% invented, 93% steady, 10% voice flags) at 0.035¢ a question and 0.66 s to first words. Today's Flash-Lite: 54% good, 12% invented, fails G2. Neither Claude model won, so no sign of judge bias toward Claude.
+    - **Fixed along the way, for every model:**
+      - the gate's fact rule (a piece given a color or cut his closet contradicts; F1–F3);
+      - the number check's false "7.0" on "score 7.5 on the photo" (it would have deleted correct sentences);
+      - scores in words ("a ten");
+      - "I'm 16" answered on the phone with the onboarding's 18+ line;
+      - weekdays on older checks in the pack;
+      - per-model Gemini thinking settings;
+      - OpenAI and Anthropic answer sources for the test only (`providers.ts`, never wired into the app).
+    - **Not changed:** the app still asks Flash-Lite. Switching is outward-facing (consent and the App Store privacy label name OpenAI for questions, text only; his own OpenAI key on the server, C6) and waits on his blind pick (`blind-pick.html`: GPT-5.6 Luna vs Flash-Lite, 20 pairs; Flash-Lite stays if he prefers it on 13+).
+    - **Keys:** both were pasted in chat, so they're in the transcript. Stored only in the git-ignored `app/.env.development.local`; he should rotate them after the test.

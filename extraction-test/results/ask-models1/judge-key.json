@@ -1,0 +1,371 @@
+{
+ "1": {
+  "A": "gpt-6-luna",
+  "B": "gpt-5.4-mini",
+  "C": "gemini-3.8-flash",
+  "D": "gpt-5.6-luna",
+  "E": "claude-haiku-5-5",
+  "F": "claude-sonnet-5-5",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "2": {
+  "A": "gpt-5.6-luna",
+  "B": "claude-haiku-5-5",
+  "C": "gpt-5.4-mini",
+  "D": "gemini-3.5-flash-lite",
+  "E": "gemini-3.8-flash",
+  "F": "gpt-6-luna",
+  "G": "claude-sonnet-5-5"
+ },
+ "3": {
+  "A": "claude-sonnet-5-5",
+  "B": "gemini-3.8-flash",
+  "C": "gpt-5.4-mini",
+  "D": "gpt-5.6-luna",
+  "E": "claude-haiku-5-5",
+  "F": "gpt-6-luna",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "4": {
+  "A": "gemini-3.5-flash-lite",
+  "B": "gemini-3.8-flash",
+  "C": "claude-haiku-5-5",
+  "D": "gpt-6-luna",
+  "E": "gpt-5.6-luna",
+  "F": "claude-sonnet-5-5",
+  "G": "gpt-5.4-mini"
+ },
+ "5": {
+  "A": "gpt-5.6-luna",
+  "B": "gemini-3.8-flash",
+  "C": "gemini-3.5-flash-lite",
+  "D": "gpt-6-luna",
+  "E": "gpt-5.4-mini",
+  "F": "claude-haiku-5-5",
+  "G": "claude-sonnet-5-5"
+ },
+ "6": {
+  "A": "gemini-3.8-flash",
+  "B": "gemini-3.5-flash-lite",
+  "C": "gpt-5.6-luna",
+  "D": "gpt-5.4-mini",
+  "E": "gpt-6-luna",
+  "F": "claude-sonnet-5-5",
+  "G": "claude-haiku-5-5"
+ },
+ "7": {
+  "A": "gpt-6-luna",
+  "B": "claude-haiku-5-5",
+  "C": "gpt-5.4-mini",
+  "D": "gemini-3.5-flash-lite",
+  "E": "gemini-3.8-flash",
+  "F": "claude-sonnet-5-5",
+  "G": "gpt-5.6-luna"
+ },
+ "8": {
+  "A": "claude-haiku-5-5",
+  "B": "gpt-6-luna",
+  "C": "gpt-5.6-luna",
+  "D": "gpt-5.4-mini",
+  "E": "claude-sonnet-5-5",
+  "F": "gemini-3.5-flash-lite",
+  "G": "gemini-3.8-flash"
+ },
+ "9": {
+  "A": "gemini-3.8-flash",
+  "B": "claude-haiku-5-5",
+  "C": "claude-sonnet-5-5",
+  "D": "gemini-3.5-flash-lite",
+  "E": "gpt-5.4-mini",
+  "F": "gpt-6-luna",
+  "G": "gpt-5.6-luna"
+ },
+ "10": {
+  "A": "gemini-3.5-flash-lite",
+  "B": "gpt-5.4-mini",
+  "C": "claude-sonnet-5-5",
+  "D": "gpt-5.6-luna",
+  "E": "claude-haiku-5-5",
+  "F": "gpt-6-luna",
+  "G": "gemini-3.8-flash"
+ },
+ "11": {
+  "A": "gpt-5.4-mini",
+  "B": "gemini-3.5-flash-lite",
+  "C": "gpt-5.6-luna",
+  "D": "gpt-6-luna",
+  "E": "gemini-3.8-flash",
+  "F": "claude-haiku-5-5",
+  "G": "claude-sonnet-5-5"
+ },
+ "12": {
+  "A": "gemini-3.5-flash-lite",
+  "B": "gemini-3.8-flash",
+  "C": "gpt-5.4-mini",
+  "D": "claude-haiku-5-5",
+  "E": "claude-sonnet-5-5",
+  "F": "gpt-6-luna",
+  "G": "gpt-5.6-luna"
+ },
+ "13": {
+  "A": "claude-sonnet-5-5",
+  "B": "gemini-3.5-flash-lite",
+  "C": "gpt-5.4-mini",
+  "D": "gpt-5.6-luna",
+  "E": "claude-haiku-5-5",
+  "F": "gemini-3.8-flash",
+  "G": "gpt-6-luna"
+ },
+ "14": {
+  "A": "claude-sonnet-5-5",
+  "B": "gpt-5.4-mini",
+  "C": "gpt-6-luna",
+  "D": "gemini-3.5-flash-lite",
+  "E": "gpt-5.6-luna",
+  "F": "gemini-3.8-flash",
+  "G": "claude-haiku-5-5"
+ },
+ "15": {
+  "A": "gpt-5.4-mini",
+  "B": "gpt-5.6-luna",
+  "C": "claude-sonnet-5-5",
+  "D": "gemini-3.8-flash",
+  "E": "gemini-3.5-flash-lite",
+  "F": "claude-haiku-5-5",
+  "G": "gpt-6-luna"
+ },
+ "16": {
+  "A": "claude-haiku-5-5",
+  "B": "gpt-5.4-mini",
+  "C": "gpt-6-luna",
+  "D": "gemini-3.5-flash-lite",
+  "E": "gpt-5.6-luna",
+  "F": "gemini-3.8-flash",
+  "G": "claude-sonnet-5-5"
+ },
+ "17": {
+  "A": "gemini-3.8-flash",
+  "B": "gpt-5.4-mini",
+  "C": "gpt-6-luna",
+  "D": "claude-sonnet-5-5",
+  "E": "gpt-5.6-luna",
+  "F": "claude-haiku-5-5",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "18": {
+  "A": "claude-haiku-5-5",
+  "B": "gemini-3.8-flash",
+  "C": "gpt-5.4-mini",
+  "D": "gpt-6-luna",
+  "E": "gpt-5.6-luna",
+  "F": "claude-sonnet-5-5",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "19": {
+  "A": "gpt-5.6-luna",
+  "B": "gpt-6-luna",
+  "C": "gemini-3.8-flash",
+  "D": "claude-haiku-5-5",
+  "E": "gpt-5.4-mini",
+  "F": "gemini-3.5-flash-lite",
+  "G": "claude-sonnet-5-5"
+ },
+ "20": {
+  "A": "claude-sonnet-5-5",
+  "B": "claude-haiku-5-5",
+  "C": "gpt-5.4-mini",
+  "D": "gemini-3.8-flash",
+  "E": "gpt-5.6-luna",
+  "F": "gemini-3.5-flash-lite",
+  "G": "gpt-6-luna"
+ },
+ "21": {
+  "A": "gpt-5.6-luna",
+  "B": "gpt-5.4-mini",
+  "C": "claude-haiku-5-5",
+  "D": "gemini-3.8-flash",
+  "E": "claude-sonnet-5-5",
+  "F": "gemini-3.5-flash-lite",
+  "G": "gpt-6-luna"
+ },
+ "22": {
+  "A": "gpt-5.4-mini",
+  "B": "gpt-5.6-luna",
+  "C": "gemini-3.5-flash-lite",
+  "D": "claude-sonnet-5-5",
+  "E": "gemini-3.8-flash",
+  "F": "gpt-6-luna",
+  "G": "claude-haiku-5-5"
+ },
+ "23": {
+  "A": "gpt-5.6-luna",
+  "B": "gemini-3.5-flash-lite",
+  "C": "claude-sonnet-5-5",
+  "D": "claude-haiku-5-5",
+  "E": "gpt-5.4-mini",
+  "F": "gpt-6-luna",
+  "G": "gemini-3.8-flash"
+ },
+ "24": {
+  "A": "gemini-3.8-flash",
+  "B": "gemini-3.5-flash-lite",
+  "C": "gpt-5.6-luna",
+  "D": "claude-sonnet-5-5",
+  "E": "claude-haiku-5-5",
+  "F": "gpt-6-luna",
+  "G": "gpt-5.4-mini"
+ },
+ "25": {
+  "A": "gemini-3.5-flash-lite",
+  "B": "gpt-5.4-mini",
+  "C": "claude-sonnet-5-5",
+  "D": "gemini-3.8-flash",
+  "E": "claude-haiku-5-5",
+  "F": "gpt-6-luna",
+  "G": "gpt-5.6-luna"
+ },
+ "26": {
+  "A": "gpt-5.6-luna",
+  "B": "gpt-6-luna",
+  "C": "gemini-3.5-flash-lite",
+  "D": "gemini-3.8-flash",
+  "E": "claude-haiku-5-5",
+  "F": "gpt-5.4-mini",
+  "G": "claude-sonnet-5-5"
+ },
+ "27": {
+  "A": "gpt-6-luna",
+  "B": "gpt-5.6-luna",
+  "C": "claude-sonnet-5-5",
+  "D": "gemini-3.5-flash-lite",
+  "E": "claude-haiku-5-5",
+  "F": "gpt-5.4-mini",
+  "G": "gemini-3.8-flash"
+ },
+ "28": {
+  "A": "claude-haiku-5-5",
+  "B": "gpt-5.6-luna",
+  "C": "gpt-6-luna",
+  "D": "gpt-5.4-mini",
+  "E": "gemini-3.8-flash",
+  "F": "claude-sonnet-5-5",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "29": {
+  "A": "gpt-6-luna",
+  "B": "gpt-5.4-mini",
+  "C": "claude-sonnet-5-5",
+  "D": "gpt-5.6-luna",
+  "E": "gemini-3.8-flash",
+  "F": "gemini-3.5-flash-lite",
+  "G": "claude-haiku-5-5"
+ },
+ "30": {
+  "A": "gpt-5.6-luna",
+  "B": "gemini-3.8-flash",
+  "C": "claude-haiku-5-5",
+  "D": "gpt-5.4-mini",
+  "E": "gpt-6-luna",
+  "F": "claude-sonnet-5-5",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "31": {
+  "A": "gpt-6-luna",
+  "B": "claude-haiku-5-5",
+  "C": "gemini-3.5-flash-lite",
+  "D": "claude-sonnet-5-5",
+  "E": "gemini-3.8-flash",
+  "F": "gpt-5.4-mini",
+  "G": "gpt-5.6-luna"
+ },
+ "32": {
+  "A": "claude-haiku-5-5",
+  "B": "gpt-5.6-luna",
+  "C": "claude-sonnet-5-5",
+  "D": "gpt-5.4-mini",
+  "E": "gemini-3.8-flash",
+  "F": "gpt-6-luna",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "33": {
+  "A": "claude-haiku-5-5",
+  "B": "gpt-6-luna",
+  "C": "claude-sonnet-5-5",
+  "D": "gpt-5.6-luna",
+  "E": "gemini-3.5-flash-lite",
+  "F": "gpt-5.4-mini",
+  "G": "gemini-3.8-flash"
+ },
+ "34": {
+  "A": "claude-sonnet-5-5",
+  "B": "gpt-6-luna",
+  "C": "gpt-5.4-mini",
+  "D": "claude-haiku-5-5",
+  "E": "gemini-3.8-flash",
+  "F": "gpt-5.6-luna",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "35": {
+  "A": "gpt-5.6-luna",
+  "B": "gpt-5.4-mini",
+  "C": "claude-sonnet-5-5",
+  "D": "claude-haiku-5-5",
+  "E": "gpt-6-luna",
+  "F": "gemini-3.5-flash-lite",
+  "G": "gemini-3.8-flash"
+ },
+ "36": {
+  "A": "gemini-3.5-flash-lite",
+  "B": "claude-sonnet-5-5",
+  "C": "gemini-3.8-flash",
+  "D": "gpt-5.6-luna",
+  "E": "gpt-5.4-mini",
+  "F": "claude-haiku-5-5",
+  "G": "gpt-6-luna"
+ },
+ "37": {
+  "A": "claude-sonnet-5-5",
+  "B": "gpt-5.4-mini",
+  "C": "gemini-3.5-flash-lite",
+  "D": "gpt-6-luna",
+  "E": "gemini-3.8-flash",
+  "F": "claude-haiku-5-5",
+  "G": "gpt-5.6-luna"
+ },
+ "38": {
+  "A": "gpt-6-luna",
+  "B": "gpt-5.6-luna",
+  "C": "claude-haiku-5-5",
+  "D": "gpt-5.4-mini",
+  "E": "gemini-3.8-flash",
+  "F": "claude-sonnet-5-5",
+  "G": "gemini-3.5-flash-lite"
+ },
+ "39": {
+  "A": "claude-haiku-5-5",
+  "B": "gpt-5.4-mini",
+  "C": "claude-sonnet-5-5",
+  "D": "gpt-5.6-luna",
+  "E": "gemini-3.8-flash",
+  "F": "gemini-3.5-flash-lite",
+  "G": "gpt-6-luna"
+ },
+ "40": {
+  "A": "gemini-3.5-flash-lite",
+  "B": "claude-haiku-5-5",
+  "C": "gemini-3.8-flash",
+  "D": "gpt-6-luna",
+  "E": "claude-sonnet-5-5",
+  "F": "gpt-5.6-luna",
+  "G": "gpt-5.4-mini"
+ },
+ "41": {
+  "A": "gpt-5.4-mini",
+  "B": "gemini-3.8-flash",
+  "C": "claude-sonnet-5-5",
+  "D": "claude-haiku-5-5",
+  "E": "gpt-6-luna",
+  "F": "gpt-5.6-luna",
+  "G": "gemini-3.5-flash-lite"
+ }
+}
