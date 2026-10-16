@@ -380,3 +380,32 @@ The gap found in the gold set (#224, on the founder's list as P1): ig-098, a mir
 | Q1–Q3 | Pass (T) | `profileLeave.test.ts` (`saveDraft`), failed first, then green |
 | Q4 | Pass (S) | web preview demo 80: picked $100+, went Back without Save, reopened: still $100+ |
 | Seen, not changed | | on web the You tab's style card nests its Edit button inside the tappable card (a web-only "button inside button" warning; iOS is fine). Logged here for a later pass |
+
+---
+
+## 13. The Closet's Outfits half: plan and pass/fail checks, set before building (Oct 16, #306)
+Approved Oct 8 (#84, #87, #88; 02 D15; `mockups/closet-concepts.html`), never built (§2 Closet: "The approved Outfits half isn't built"; "No Goes with"). All words are D15's approved labels; the only new ones are a reason fallback and the go-to caption, listed for his skim. Everything runs on code (no AI, free on every plan); no score moves.
+
+**The plan**
+- **Engine (`features/closet/outfits.ts`, pure):** every top + bottoms + shoes he owns (not ones waiting on "Same as…?"), kept when core's `outfitValid` passes; each scored by the parts engine (today's scoring) on `outfitReading`. A layer joins a trio only when it raises that score by at least 0.5 (it never multiplies the count). Reason line: the outfit's top positive reason from the parts engine, else a plain fallback.
+- **The count** ("{n} pieces · {m} outfits"): trios rated Put together (7.0+) at Everyday; pieces he only mentioned in chat aren't counted.
+- **Worn = a scored fit check whose pieces include the whole trio.** "Your go-tos" shows his kept photo and that check's real score (the best one if worn more than once); "Try next" is the rest, best first for the occasion, never a score.
+- **Closet:** a Pieces | Outfits control under the title; opens on Outfits once he can make 3+, else Pieces; remembers his pick. Outfits: occasion chips (Everyday, Class, Date, Going out, Interview, Event), then Try next and Your go-tos. Each card: the standing outfit (his pieces stacked top / bottoms / shoes, a layer at the side), the reason, Wear this (logs today, Undo) and Check it (camera with the occasion).
+- **No outfits yet:** `No outfits yet` + Top · Bottoms · Shoes with ✓ or what's missing ("Add shoes and you'd have {n} outfits", n from the Starter piece for that slot) + `Tap the basics you own` and `Check my fit`. With 1–2: "{n} outfits so far".
+- **Piece page:** `Goes with`: up to 3 outfits with this piece, `Best match` · `Dressier` · `More relaxed` (the next best fills a missing role), and `{n} outfits` beside Worn and Last worn.
+
+**Checks**
+- **O1 (T)** the engine lists only trios that pass `outfitValid`, never a piece he doesn't own or one waiting on an answer, and never the same trio twice.
+- **O2 (T)** the count equals the trios at 7.0+ at Everyday; adding a layer to the closet never raises it; a chat-only piece never raises it.
+- **O3 (T)** a layer joins a trio only when it raises the score by 0.5 or more.
+- **O4 (T)** the order is best first for the chosen occasion, and changing occasion re-orders.
+- **O5 (T)** an unworn outfit's card data has no score; a worn one carries the check's real score and photo, the best when worn more than once.
+- **O6 (T)** every outfit has a reason line (never blank).
+- **O7 (T)** opening segment: Outfits at 3+ outfits, else Pieces; his tap is remembered and wins after that.
+- **O8 (T)** no outfits yet: the checklist marks each slot, names the missing one with a real "+n" (or says it plainly when n is 0).
+- **O9 (T)** Goes with: every outfit includes the piece; roles Best match / Dressier / More relaxed by dressiness, next best filling a missing role; at most 3; none when the piece can't make an outfit.
+- **O10 (T)** Wear this logs today with Undo; Check it opens the camera with the occasion.
+- **O11 (T)** no fit-check score changes; the engine is the same twice (same closet, same list).
+- **O12 (T)** a 40-piece closet lists in under 300 ms on the Mac (the grid shows while it computes).
+- **O13 (S)** web preview and, if free, the Simulator: demo screens for Outfits (full closet), No outfits yet, and the piece page's Goes with; light and dark; the largest text size.
+- **O14** `npm run check` green.
