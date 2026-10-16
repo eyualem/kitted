@@ -1945,6 +1945,10 @@ Contradictions settled and decisions changed during the build. Newest last.
       - Trail-style sneakers (read as running shoes) cost 2 on Shoes outside an outdoor outfit; outdoor's own list makes 18 counted outfits, 2 of them outdoor (KD-7; its shell and fleece make the look, and a layer isn't in a counted outfit).
       - Jackets add no outfits under the one count (#84.3), so a look's jackets are listed but never the next best buy; the fleece and the flannel are tops, so they can be.
     - **His calls (on his list):** the 7 lists, the 26 new names and their prices (outward-facing), and the new C5 line `Picked for your looks: streetwear and minimal.` Defaults: as drafted.
+    - **Built Oct 17 (the founder: "After the mockups, I agree with them. You may continue.", relayed by the session that started this one; 09-ui-review §16 results, K1–K14 pass).**
+      - Starter essentials draws `starterList(his picks)` with the copper line; the next best buy, "Add shoes and you'd have n", the chat's buy-next evidence and buy card, and move 3 choose from it; stored ids look up the whole catalog (`catalogRow`), so a move, a chat card or a marked piece from another list keeps working. The looks' rows live in `finish/starter.ts` (names in `en.ts`); `finish/packs.ts` holds the lists and the blend.
+      - **Changed for the demo (its profile picks smart casual and workwear):** the next best buy is now brown work boots, +18 (was dark straight jeans, +16), on screen 182, in the chat's demo answer (171: "Get brown work boots next. They go with your jeans and your overshirt, and workwear is one of your looks.") and the evidence. On his phone it follows his own picks.
+      - Demo screens 190–193 (streetwear, minimal + smart casual, no picks, Closet with a streetwear pick); 185–189 left free for the closet-piece session.
 
 ## Oct 17 · Next best buy on iOS
 

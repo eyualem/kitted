@@ -462,7 +462,7 @@ Found in §14: two counts live side by side. The Closet's Outfits and its next b
 | Not done | | Not looked at on the Simulator or the web preview (the Mac was low on memory and another session had the Simulator up); the screens only take the new number, no layout changed |
 
 ## 16. Starter basics that follow his looks: plan and pass/fail checks, set before building (Oct 16, #313)
-The founder (Oct 16): a streetwear pick should see things like baggy jeans, a minimal pick pieces that fit minimal, and so on. Today Starter essentials is one list of 12 (`finish/starter.ts`, from `rubric/v3.md`), mostly smart casual: a streetwear pick is offered a polo, an oxford and loafers, which [STR-3] rules out. That list feeds Starter essentials (C5), the Closet's next best buy (§14), "Add shoes and you'd have n" (§13), the chat's buy card and buy-next evidence, and move 3 of "Your first 3 moves". **Status: planned, checks written, draft lists in code but not wired in (`finish/packs.ts`, `__tests__/lookPacks.test.ts`). Nothing on screen changes until the founder OKs the lists (names and prices are outward-facing).**
+The founder (Oct 16): a streetwear pick should see things like baggy jeans, a minimal pick pieces that fit minimal, and so on. Today Starter essentials is one list of 12 (`finish/starter.ts`, from `rubric/v3.md`), mostly smart casual: a streetwear pick is offered a polo, an oxford and loafers, which [STR-3] rules out. That list feeds Starter essentials (C5), the Closet's next best buy (§14), "Add shoes and you'd have n" (§13), the chat's buy card and buy-next evidence, and move 3 of "Your first 3 moves". **Status: built Oct 17 after the founder's OK on the lists, names, prices and the C5 line ("After the mockups, I agree with them. You may continue.", relayed by the session that started this one). Results below the checks.**
 
 **The plan**
 - **One catalog, ids never removed.** Today's s01–s12 stay exactly as they are (closet rows' `starterId`, the belt's kv mark `starter.marked`, the chat's buy cards and move 3's `buyId` store them; sync carries them). New pieces are s13–s38, appended. Any stored id always finds its row in the catalog, whichever list he sees.
@@ -534,6 +534,16 @@ Shaky prices, said in the review: the overcoat (widest spread), the three retro 
 - **K12 (T, at build)** changing his looks changes the list at once; a marked piece from a row no longer shown stays in Closet and comes back marked.
 - **K13 (S, at build)** web preview and, when the Mac has memory, the Simulator: C5 for a streetwear pick, a minimal + smart casual pick and no picks; light, dark, the largest text size.
 - **K14** `npm run check` green.
+
+### §16 results (Oct 17, #313): checked against K1–K14, none changed
+| Check | Result | How |
+|---|---|---|
+| K1–K8 | Pass (T) | `lookPacks.test.ts`, first on the draft (Oct 16), again after wiring |
+| K9–K12 | Pass (T) | `lookPacks.test.ts`: the line's words; "{n} of 12" counts only his rows; the screen draws `starterList`; the next buy, move 3 and the chat's evidence choose only his rows for each look; ties go to his first look; move 3's stored `buyId` (a quarter-zip) survives a switch to streetwear; old and new buy cards speak; `starterFor` finds his list's row first; a marked hoodie stays in Closet across a look change and comes back ticked |
+| K13 | Pass (S) | the iOS Simulator (iPhone 17 Pro), new demo screens 190–193 (`screenshots/starter-looks/`): streetwear (light, dark), minimal + smart casual (light, largest text), no picks, and Closet's next buy for streetwear ("Baggy dark jeans · +16") and for the demo's own picks ("Brown work boots · +18"); the 37-outfit count unchanged |
+| K14 | Pass | typecheck (app and core), lint, 755 core tests, 1127 app tests |
+| Changed, because the demo profile picks smart casual and workwear | | its list now has work boots, flannel and a denim jacket in place of the casual jacket, loafers and quarter-zip, so the demo's next best buy (screen 182, the chat's demo answer on 171, the buy-next evidence) is **brown work boots, +18** (was dark straight jeans, +16). Tests updated for that alone: `oneCount` G2 (s27 +18; ties in his list's order) and G8 (the demo answer, now "Get brown work boots next…"); `onboardingFinish` B1 counts today's 12 by id (`ownedCount` now takes the list he sees) |
+| Not done | | the web preview (no second web server while memory was low; the Simulator was the check) |
 
 ## 17. Next best buy on the Simulator (numbered §15 on main; §15–16 were taken by #309 and #313): two fixes, pass/fail checks set before building (Oct 17, #312)
 Found on the iOS Simulator (iPhone 17 Pro Max, demo 182; first time the sheet ran on iOS, since N5 had passed only on the web): in dark mode the sheet's big "+16" is near-black on the dark sheet, and the sheet says "What it unlocks · 16" but shows 6 outfits with no way to see the other 10.
