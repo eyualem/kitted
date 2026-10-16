@@ -17,7 +17,7 @@ import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
-import { outfitNow, storedCard, type AskCard } from './cards';
+import { cardControls, cardSpoken, outfitNow, savedUndoShows, storedCard, type AskCard } from './cards';
 import { undoRemember } from './memory';
 import { tapAnswer } from './session';
 
@@ -40,7 +40,7 @@ function CardBody({ m, card, readOnly }: { m: ChatMessage; card: AskCard; readOn
     case 'outfit':
       return <OutfitCard card={card} readOnly={readOnly} />;
     case 'check':
-      return readOnly ? null : (
+      return !cardControls(card, { readOnly, tapped: null }).checkIt ? null : (
         <View style={{ alignItems: 'flex-start' }}>
           <KButton title={t('ask.card.startCheck')} icon="camera" kind="secondary" size="regular" onPress={() => openCamera(card.occasion)} />
         </View>
@@ -79,8 +79,16 @@ function OutfitCard({ card, readOnly }: { card: Extract<AskCard, { type: 'outfit
       else await store.wearLog.delete(day);
     });
   };
+  const c = cardControls(card, { readOnly, tapped: null, gone });
+  const label = cardSpoken(card, { nameOf: (id) => items.find((i) => i.id === id)?.name ?? null }) ?? '';
+  // VoiceOver: one element for the card, its buttons as actions (02 D12's card rule).
+  const actions = [...(c.wear ? [{ name: 'wear', label: t('idea.wear') }] : []), ...(c.checkIt ? [{ name: 'check', label: t('ask.card.checkIt') }] : [])];
   return (
-    <KCard accessibilityLabel={t('ask.card.a11y.outfit', { names })}>
+    <KCard
+      accessibilityLabel={gone ? `${label} ${t('ask.card.gone')}` : label}
+      accessibilityActions={actions}
+      onAccessibilityAction={(e) => (e.nativeEvent.actionName === 'wear' ? void wear() : e.nativeEvent.actionName === 'check' ? openCamera(card.occasion) : undefined)}
+    >
       <KCardSection gap={space.s}>
         <TagLine left={t('idea.tag')} right={t('idea.fromCloset')} />
         <OutfitTiles items={items} />
@@ -89,12 +97,12 @@ function OutfitCard({ card, readOnly }: { card: Extract<AskCard, { type: 'outfit
             {t('ask.card.gone')}
           </KText>
         ) : null}
-        {readOnly || gone ? null : (
+        {c.wear || c.checkIt ? (
           <View style={isAccessibilitySize ? { gap: space.s } : { flexDirection: 'row', gap: space.s }}>
-            <KButton title={t('idea.wear')} size="regular" fullWidth={isAccessibilitySize} onPress={() => void wear()} />
-            <KButton title={t('ask.card.checkIt')} icon="camera" kind="secondary" size="regular" fullWidth={isAccessibilitySize} onPress={() => openCamera(card.occasion)} />
+            {c.wear ? <KButton title={t('idea.wear')} size="regular" fullWidth={isAccessibilitySize} onPress={() => void wear()} /> : null}
+            {c.checkIt ? <KButton title={t('ask.card.checkIt')} icon="camera" kind="secondary" size="regular" fullWidth={isAccessibilitySize} onPress={() => openCamera(card.occasion)} /> : null}
           </View>
-        )}
+        ) : null}
       </KCardSection>
     </KCard>
   );
@@ -106,15 +114,15 @@ function AskQuestion({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskC
     <View style={{ gap: 6 }}>
       <KText role="chatText">{card.question}</KText>
       <ChipFlow>
-        {card.options.map((o) => (
+        {cardControls(card, { readOnly, tapped }).answers.map((a) => (
           <Chip
-            key={o}
-            title={o}
-            state={tapped === o ? 'selected' : 'normal'}
-            // His pick stays solid; the others go quiet once one is picked.
-            disabled={tapped === o ? false : readOnly || tapped !== null}
-            accessibilityHint={t('ask.card.a11y.option', { option: o })}
-            onPress={tapped === null && !readOnly ? () => tapAnswer(m.id, o) : undefined}
+            key={a.option}
+            title={a.option}
+            state={a.picked ? 'selected' : 'normal'}
+            // His pick stays solid (and "selected" for VoiceOver); the others go quiet once one is picked.
+            disabled={!a.picked && !a.tappable}
+            accessibilityHint={t('ask.card.a11y.option', { option: a.option })}
+            onPress={a.tappable ? () => tapAnswer(m.id, a.option) : undefined}
           />
         ))}
       </ChipFlow>
@@ -127,7 +135,7 @@ function BuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }> }) {
   if (!row) return null;
   const gain = card.gain === null || card.gain <= 0 ? null : card.gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: card.gain });
   return (
-    <KCard accessibilityLabel={[t('ask.card.buy.tag'), row.pick?.name ?? row.name, gain, row.budget].filter(Boolean).join('. ')}>
+    <KCard accessibilityLabel={cardSpoken(card, { nameOf: () => null }) ?? ''}>
       <KCardSection gap={4}>
         <TagLine left={t('ask.card.buy.tag')} right={row.budget} />
         <KText variant="headline">{row.pick?.name ?? row.name}</KText>
@@ -175,7 +183,7 @@ function SavedLine({ factId, itemId, readOnly }: { factId: string; itemId: strin
       <KText role="miniLabel" color="ink2">
         {t('ask.saved')}
       </KText>
-      {readOnly ? null : (
+      {!savedUndoShows(readOnly) ? null : (
         <TextLink title={t('common.undo')} compact accessibilityHint={t('ask.saved.a11y')} onPress={() => void undoRemember(factId, itemId, { store })} />
       )}
     </View>

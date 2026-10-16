@@ -213,6 +213,14 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   172: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'Which shoes are my dressiest?' }] },
   173: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: "I'm a 32 waist." }] },
   174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
+  // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
+  // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
+  175: { asOf: '2026-10-21T12:00:00', steps: [
+    { at: '2026-10-21T12:05:00', do: 'ask', text: 'What should I buy next?' },
+    { at: '2026-10-21T12:07:00', do: 'ask', text: 'What should I wear to work?' },
+    { at: '2026-10-21T12:08:00', do: 'askTap', option: 'Business casual' },
+    { at: '2026-10-21T12:09:00', do: 'ask', text: "I'm a 32 waist." },
+  ] },
   // The end of onboarding (#291; L3 and the pinned rows 163–166, #292): his first check on the Welcome photo (7.5, with a
   // fix to re-check); the taps after it (Later, a Starter piece, the notification ask) are the screen's `finish` steps
   // (features/finish/demo.ts).

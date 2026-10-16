@@ -209,6 +209,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 172, name: 'Ask · a link to a piece', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 173, name: 'Ask · saved to what I know', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 174, name: 'Ask · a piece from chat', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 175, name: 'Past chats · yesterday\'s answers, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

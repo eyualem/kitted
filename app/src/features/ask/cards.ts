@@ -124,3 +124,54 @@ export function outfitNow(card: Extract<AskCard, { type: 'outfit' }>, closet: re
   const items = card.itemIds.map((id) => closet.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c && isOwned(c));
   return { items, gone: items.length < card.itemIds.length };
 }
+
+// ---------------------------------------------------------------- what a card says and shows (07 §14 P1, P2, P4)
+export interface CardWords {
+  /** Piece names by id (his closet now). */
+  nameOf: (itemId: string) => string | null;
+  /** A check's link words ("Today's check"), or null when it's gone. */
+  checkLabel?: (checkId: string) => string | null;
+}
+
+const low = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
+
+/** One VoiceOver line for a card (P1), also read after the answer when it's complete (P2). Null: nothing to say. */
+export function cardSpoken(card: AskCard | null, w: CardWords): string | null {
+  if (!card) return null;
+  switch (card.type) {
+    case 'outfit': {
+      const names = card.itemIds.map(w.nameOf).filter((x): x is string => !!x).map(low);
+      return names.length ? t('ask.card.a11y.outfit', { names: names.join(', ') }) : t('ask.card.gone');
+    }
+    case 'check':
+      return t('ask.card.startCheck');
+    case 'ask':
+      return `${card.question} ${card.options.join(', ')}.`;
+    case 'buy': {
+      const row = STARTER.find((e) => e.id === card.starterId);
+      if (!row) return null;
+      const gain = card.gain === null || card.gain <= 0 ? null : card.gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: card.gain });
+      return [t('ask.card.buy.tag'), row.pick?.name ?? row.name, gain, row.budget].filter(Boolean).join('. ') + '.';
+    }
+    case 'link': {
+      if ('itemId' in card) {
+        const n = w.nameOf(card.itemId);
+        return n ? t('ask.card.link.piece', { item: low(n) }) : t('ask.card.gone');
+      }
+      return w.checkLabel?.(card.checkId) ?? t('ask.card.gone');
+    }
+  }
+}
+
+/** Which controls a card shows (P4): Past chats show the card and his pick, never a button that changes anything. */
+export function cardControls(card: AskCard, o: { readOnly: boolean; tapped: string | null; gone?: boolean }) {
+  return {
+    wear: card.type === 'outfit' && !o.readOnly && !o.gone,
+    checkIt: (card.type === 'outfit' && !o.readOnly && !o.gone) || (card.type === 'check' && !o.readOnly),
+    /** The ask card's answers: tappable until one is picked, never in Past chats. */
+    answers: card.type === 'ask' ? card.options.map((option) => ({ option, picked: o.tapped === option, tappable: !o.readOnly && o.tapped === null })) : [],
+  };
+}
+
+/** The saved line's Undo shows only in today's chat (P4). */
+export const savedUndoShows = (readOnly: boolean): boolean => !readOnly;

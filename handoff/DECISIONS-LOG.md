@@ -1796,3 +1796,12 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **U8, the queue (09-ui-review §9):** a new check's photo is measured before its closet write joins the queue, and the write reuses that result, so an Undo or an answer tapped right after a check never waits for the 1–1.5 s of measuring. Failed first against the old service, then green.
     - **Not done, and why:** the live tries (C2's last step: his OK on ~$0.50); C5's test (his blind pick and ~$1–2); C6's `/v1/ask` on the Worker (his Cloudflare account); the largest text size on the new cards.
     - **Numbering:** the Google sign-in session used #295 in its code the same evening, so the Undo fix is #296 and this is #297.
+
+## Oct 16 · The chat's C7 polish (founder: "go on")
+
+298. **The chat's cards read well with VoiceOver, the paused state exists, and Past chats are read-only, against checks written first (`handoff/07-stylist-chat.md` §14, P1–P6; all pass except P5, not checked).**
+    - **One source for what a card says and shows:** `cardSpoken` (its VoiceOver line, also read after the answer) and `cardControls` (which buttons show today and in Past chats), used by the view and the tests alike.
+    - **The paused line** is D4's default, shown when the server (C6, not built) answers `paused`: no Retry, nothing counted.
+    - **Demo 175:** yesterday's answers in Past chats. Its first question is the buy one because the demo closet has no olive overshirt until the 22nd; the code rightly drops an outfit card with a piece he doesn't own yet.
+    - **Not checked:** the largest text size (P5). The Simulator was in use by another session ("Simulator pass: end of onboarding and Your moves"); I launched Kitted on it once before noticing, told that session, and left the Simulator to it.
+    - **Also merged:** PR [eyualem/kitted#1](https://github.com/eyualem/kitted/pull/1) (#296, #297) on the founder's go; the main folder was fast-forwarded so his phone gets it through Metro.

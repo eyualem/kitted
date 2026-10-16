@@ -38,6 +38,8 @@ export interface Prepared {
   remember?: (raw: unknown, answerAt: number) => Promise<{ factId: string; itemId?: string } | null>;
   /** For the log: the router's kind (never his words). */
   kind?: string;
+  /** What VoiceOver reads after the answer (P2): the card's words, or null. */
+  speak?: (card: AskCard | null) => string | null;
 }
 
 const NO_PREP: Prepared = { gate: { allowedScores: new Set() } };
@@ -90,6 +92,8 @@ export interface AskPayload {
   answerTo?: string;
   /** On fail.ask: the question Retry asks again. */
   askRetry?: string;
+  /** On the paused line (07 §6.4, P3): no Retry, nothing counted. */
+  askPaused?: true;
   /** On an answer: its one card (cards.ts), stored by id. */
   askCard?: AskCard;
   /** On an answer: the fact it saved ("Saved to what I know · Undo", C4), and the closet piece it added, if any. */
@@ -231,6 +235,14 @@ export function createAsk(deps: AskDeps) {
     if (!failed && !answer) failed = dropped.length ? 'gated' : 'empty';
     const at = replaces?.createdAt ?? Math.max(clock.nowMs(), question.createdAt + 1);
     try {
+      if (failed === 'paused') {
+        // The server's spend stop (C6): its own line, no Retry (it would only be paused again), nothing counted.
+        const id = replaces?.id ?? ids('M');
+        await store.chat.put(row(id, at, 'stylist', t('ask.paused'), {}, { askPaused: true }));
+        live.clear();
+        log('paused');
+        return { kind: 'failed', messageId: id, code: 'paused' };
+      }
       if (failed || !done) {
         const id = replaces?.id ?? ids('M');
         await store.chat.put(row(id, at, 'stylist', t('fail.ask'), {}, { askRetry: question.id }));
@@ -254,7 +266,9 @@ export function createAsk(deps: AskDeps) {
         await store.chat.patch(question.id, { payload: { ...question.payload, counts: true } });
       }
       log(`${counted ? 'answered · counted' : done.refused ? 'answered · refused' : o.tap ? 'answered · a tap' : 'answered · not counted'}${prep.kind ? ` · ${prep.kind}` : ''}${card ? ` · card ${card.type}` : ''}${saved ? ' · saved' : ''}`);
-      deps.onAnswered?.(answer);
+      // Read once, complete, with its card and the saved line (07 §6.1, P2).
+      const spoken = [answer, prep.speak?.(card) ?? null, saved ? t('ask.saved') : null].filter(Boolean).join(' ');
+      deps.onAnswered?.(spoken.endsWith('.') || spoken.endsWith('?') ? spoken : `${spoken}.`);
       return { kind: 'answered', messageId: id, counted };
     } finally {
       busy = false;

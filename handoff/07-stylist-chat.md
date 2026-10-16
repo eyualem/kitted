@@ -459,3 +459,14 @@ The chat's polish step (§11 C7), on the demo screens. Nothing here spends money
 - **P5 (S) The largest text size** (AX5) on demo screens 167, 169, 171 and 173: nothing clipped, the outfit card's buttons stack, its tiles go 2 across, and the chips wrap.
 - **P6 (S) Dark mode** on 167, 169, 171 and 173.
 - **G6** `npm run check` green.
+
+### §14 results (Oct 16, #298): checked against P1–P6, none changed
+| Check | Result | How |
+|---|---|---|
+| P1 | Pass (T) | `askC7.test.ts`: each card's one line (`cards.ts` `cardSpoken`), used by the view and the announcement; the outfit card is one VoiceOver element with Wear this and Check it as actions; the picked answer is "selected" |
+| P2 | Pass (T) | the outfit answer is read once, with "An outfit from your closet: …"; the saved fact ends "Saved to what I know." |
+| P3 | Pass (T) | a source failing with `paused` writes D4's line, no Retry, nothing counted |
+| P4 | Pass (T, S) | `cardControls`: Past chats show no Wear this, Check it, Undo or tappable answer, and his pick stays. Web preview demo 175 (yesterday's buy card, answered tap, saved fact) |
+| P5 | **Not checked** | the largest text size needs the Simulator, which another session was using; the layout rules (2-across tiles, stacked buttons) are the ones the morning card already uses at AX sizes |
+| P6 | Pass (S) | dark: 171 on the Simulator, 169 and 173 on the web preview |
+| G6 | Pass | `npm run check`: 930 app tests in 76 suites |
