@@ -544,3 +544,114 @@ A correction here changes the closet piece, not the checks it was seen in. The c
 | Fixed on the Simulator | | the selected swatch's check was drawn in the swatch's own color (white or ink now); the knit lines were too faint on black, then too strong (read as grey), now in between; the sheet now closes the moment he taps and the write lands just after (it waited for the write) |
 | Not built (defaults) | | no long-press entry (call 3), no re-scoring of past checks (call 2), no top ↔ layer (call 6), no long-sleeve tee (call 7) |
 
+
+## 18. How baggy a piece is: how the app knows, how sure it is, how he corrects it (plan and pass/fail checks, set before building; Oct 16, #315)
+Founder (Oct 16): "what are we gonna do about how baggy anything is? how will we know and let the user correct?" **Plan only: nothing is built or re-scored. His four calls were decided Oct 16 with the defaults (§18.6).** Numbered §18 and #315 because §15–§17 and #309–#314 are held by main and the open PRs (eyualem/kitted#4, #5, #7). It builds on §17, the piece page's "What it is" rows (PR eyualem/kitted#5, #314). Global checks G1–G4 (§6) apply.
+
+### 18.1 What exists today (from the code)
+- **The reading** (`extraction-test/schema.json`, the live v3 format): `volume` 1–5 on every garment ("1 = fitted close to body, 3 = regular, 5 = very oversized. Garment cut, not the person's body.") and `leg_shape` on bottoms (skinny · slim · straight · relaxed · wide · flare/bootcut · barrel). For tops one number mixes two things: how the piece is cut, and whether it's his size (#164).
+- **What moves points** (parts engine v13, `extraction-test/rubrics/parts_proto.py`, ported in `@kitted/core` `parts.ts`). Only steady groupings are used: a top or layer is **roomy (4–5) or not**; 4 vs 5 and 1 vs 2 never move points (#217). A bottom read "straight" at volume 2 or less is judged slim (v12 `_leg`).
+  - Proportions: a roomy top over skinny legs −1.5 (PF5); "roomier than the look" −1.5 (PB1, #217: a roomy top worn on its own outside every band of the looks the outfit reads as; not when it's tucked or ends at the belt over a full leg, under a layer, over pressed trousers, over loungewear, or when FF5 or SX1 already charged); a slim leg −1.0, skinny −2.0 (PN1); the streetwear shape (PR4) and the waist credit reward a boxy or short top over wide jeans.
+  - Fit: a roomy, non-tailored piece with sleeves over the hands costs 0.5 since v8 ("the roomy hoodie's sleeves run past the wrists", FF5); a stack on loose jeans or cargos never costs (#221).
+  - Style: an oversized top with two dressy pieces (SX1, #214); an oversized graphic tee under a blazer (GT1).
+  - **So "on purpose" vs "too big" is told apart only by the outfit around the piece** (the leg, the look, a tuck, a layer) plus one cue (sleeves past the hands). **There is no size reading:** a jacket a size big with its sleeves at the wrist costs nothing for its size.
+- **Corrections today:**
+  - "Not quite right?" (`app/src/features/correct/fields.ts`), per check: Fit for tops and layers (Slim 2 · Regular 3 · Relaxed 4 · Oversized 5) and Leg for bottoms (the five). It re-scores that check with a before and after, and the closet service also sets the field on the linked piece and marks it confirmed. His phone (Oct 15 pull): 4 corrections stored, all type taps; never a fit or leg correction.
+  - The piece page's Fit and Leg rows (§17): they set the piece and never move a score.
+  - The quick tap asks no fit questions (#122: people answer fuzzy fit questions in their own favour).
+  - The closet matcher: a volume 3+ away from the piece's average costs −2; a leg 3 steps away (slim vs wide) vetoes the match unless he taught it (`closetIdentity.ts`).
+
+### 18.2 How steady the readings are (from saved results; no new spend)
+Script `extraction-test/bagginess_steady.py`, output `extraction-test/results/bagginess1/steadiness.txt`.
+**Rule 7:** every photo here is **profile unknown**. His own profile isn't set yet (the phone's profile row has no birth year and no looks; his to-do list), and the gold, stock and Reddit photos have none. All were scored with one stated test profile: no picked looks, Everyday (a pick never changes a number, #211). So no split by age band or picked look is possible yet; the split is by source. Re-run once he gives his profile.
+
+**The same photo, read 2–3 times** (the shipped reading with close-ups: zoom1 and zoom1-stock arm B, gold1):
+
+| Source | Tops: roomy call same | Layers | Legs: exact | narrow vs not | loose vs not | Score moved by these flips alone |
+|---|---|---|---|---|---|---|
+| His photos (16 tops, 15 bottoms) | 100% | 100% | 67% | 87% | 73% | 3 of 14 (21%) |
+| Instagram (gold) | 96% | 95% | 85% | 100% | 96% | 4 of 125 (3%) |
+| Pinterest (gold) | 100% | 96% | 81% | 96% | 91% | 5 of 69 (7%) |
+| Reddit (gold) | 100% | 100% | 81% | 95% | 86% | 1 of 21 (5%) |
+| Stock | 100% | 94% | 87% | 95% | 95% | 0 of 39 |
+| Stock mirror selfies | 100% | 100% | 75% | 100% | 75% | 0 of 12 |
+
+"Score moved": run 2's reading scored once as read and once with run 1's volume and leg put in.
+
+**Photos of the same piece** (his phone closet; 20 tops and layers and 6 bottoms seen in 2+ checks):
+- Tops: the roomy call agrees on 19 of 20. The one: his black tee, roomy (4) in 4 checks and fitted (2) in one.
+- Bottoms: 5 of 6 keep one leg. His mid-wash jeans (9 checks, including a merged duplicate) read slim 3 times, straight twice, relaxed once and wide 3 times, every time "clear". Either the reading can't hold that pair's leg across photos, or two pairs were merged; the app can't tell which.
+- This overstates steadiness: the matcher splits a piece whose leg reads 3 steps off, so a pair read wildly may already sit as two tiles.
+
+**Is it right?** (Claude's blind labels in `leg_labels.csv`, every run counted): the exact leg is right on 56% of his photos, 72% of stock and 77% of mirror selfies; narrow vs not 80% / 87% / 60%; loose vs not 67% / 80% / 83%. On Fashionpedia's 90 pants, slim vs straight 75% (#223). **Volume has never been labeled: there is no truth for it.**
+
+**How sure is it?** The reading's own `certainty` doesn't predict a flip: tops read "clear" flip the roomy call 2% of the time, "likely" 1%; bottoms 5% and 5%. Flips cluster on overshirts (14%), knit polos (9%) and bombers (8%). So "how sure" can't come from the AI's flag; it has to come from repeats: the same piece read differently across his photos.
+
+**How much it matters:** re-scoring each photo as if nothing were roomy and every leg straight changes 20% of his checks, 26% of stock, 33% of Pinterest and 53% of Instagram (where boxy tops and wide legs earn the shape credits). Bagginess is one of the engine's biggest levers.
+
+**What the judges say** (the gold panel, #224): a roomy top over a loose leg gets the panel's best Fit, 7.6 (38 photos); a roomy top over a slim or straight leg the worst, 5.5 (6 photos); regular tops 6.6–7.4. So for the judges too, the shape around a piece is what makes big read as intended, which is what PB1 and PR4 already do. 30 of 225 photos (13%) have 2+ judges calling a piece swamping, shapeless or a size big, and only 7 of those had a top read roomy: most are hems swallowing the shoes (the stack, which the reading can't see, #273), long shorts or a shapeless blazer. **A size fault isn't in `volume`.**
+
+**In short:** the same photo reads steadily enough for the groupings scores use (tops 94–100%, legs narrow vs not 87–100%), weakest on his own photos' legs (straight, relaxed and wide trade places). The leg is often wrong in detail (56–77%) and roughly right on narrow vs not. Whether a piece is a size big isn't read at all.
+
+### 18.3 Recommended decisions (ranked; Claude's default first)
+**(a) Oversized on purpose vs a size too big**
+1. **Default, now: judge "roomy" by the outfit around it, never the piece alone, and never call a piece "too big" from volume.** That's today's engine (PB1, PR4, PF5, SX1, FF5 at 0.5) and what the judges do (7.6 vs 5.5 above). The piece page's Fit words describe the cut ("Oversized" means cut big), never how it sits on him. No score moves.
+2. **After the size-ladder shoot: two garment cues in the reading,** as #164 planned: `shoulder_seam` (on the shoulder · just past · down the arm) and `ribbed_hem` (a banded hem at the hips). Code decides, never the AI: **cut big** = the seam just past or down the arm with a short or banded body; **a size big** = the seam down the arm with a long body and sleeves past the hands, or a jacket whose sleeves cover the hands. A size big costs on Fit in every look; a cut that's big on purpose is judged only by proportion, as now. Each cue must pass the flip test (90%+ the same over 3 runs, about $2, his OK) and the ladder (80%+ right), or it stays a tip with no points.
+3. **"Runs big / Fits / Runs small" as a piece fact** (about the garment's size, no body word): not in v1; it comes with option 2, when a size rule exists to use it.
+- **Rejected:** asking the AI "oversized on purpose?" (the same guess as volume, `rubric/research/notes/v5-fit.md`); measuring a garment's width against his body (it would rate bodies; never, #164); the body ruler for widths.
+
+**(b) When to ask, when to guess**
+1. **Default: never ask about fit or leg before the score** (#122 stands). Flips that move a score are rare on public photos (3–7%), and an answer about his own fit carries his hopes. The photo's reading scores; "Not quite right?" stays the correction for one check, with its before and after.
+2. **Ask on the piece, afterwards, only when its own photos disagree.** A piece seen in 3+ checks whose readings fall in different groups that scores use (tops: roomy or not; bottoms: narrow, straight or loose) shows **"Not sure"** on its Fit or Leg row ("Seen as slim and as wide. Which is it?"), and Closet's To confirm holds at most one card, "How do your mid-wash jeans fit?", with §17's picture sheet. Never on the score card, Skip keeps it quiet until a new photo disagrees again, and a pick confirms the piece by §17's rules without moving a score. This is the "how sure" signal: repeats, not the AI's flag.
+3. **Rejected:** a tap before the score on the leg (a rare score effect, his hopes in the answer); a question on every new piece (noise: 19 of 20 tops already agree).
+
+**(c) Should a fit he set on a piece feed a new check's score?** It moves scores, so it's his call.
+1. **Default: yes, but only through a question, never silently, after his OK and a paper test.** When a new photo's piece matches a piece he set (a known piece, #126's rules), the photo's fit or leg falls in a different scoring group from his setting, and his setting would move the score by 0.5 or more, the card asks before the score, the way "Your grey work boots?" does: **"Your mid-wash jeans?"** with the piece's drawing, Yes / No. Yes scores with his setting (the Why sheet row says "Leg: straight, from your closet"); No scores the photo as read (it may be another pair). The answer is stored on the check like every tap answer, so the same photo keeps the same score and a re-check reuses it. Old checks never move.
+   - **Why:** on his photos the leg is exact only 56% of the time, and his word about his own jeans is likely better; the question catches a wrong match (the mid-wash case: if two pairs were merged, he says No); it reuses a question he already knows; nothing changes without him seeing it.
+   - **His hopes:** he sets the piece on a screen that says "Your scores stay the same" with no score in sight, so there's no pull toward the flattering value (BG4 keeps any number off that sheet).
+   - **Limits:** one question per check (today's cap; the larger swing wins a tie), never at Gym or Home.
+   - **Build:** after PR #5, about 1 day, behind a switch that ships off (`CLOSET_FIT_FEEDS_SCORE`). His Leg wins over the v12 "fitted straight is slim" rule; a Fit sets volume to its value (Slim 2, Regular 3, Relaxed 4, Oversized 5).
+2. **Use his setting silently whenever the piece matches** (rejected: a wrong match would move a score with no sign of why).
+3. **Never** (today's §17 rule): honest, but it leaves the 56% leg reading in charge of his own jeans for good.
+
+**(d) Truth needed, and what ships before it**
+Truth, most useful first:
+1. **His own picks on the piece page,** free from PR #5 on: each Fit or Leg he sets labels every earlier photo of that piece. The phone already keeps both; `tools/phone/pull.sh` copies them and the script above measures the AI on his own clothes. No shoot needed, and nothing new leaves the phone.
+2. **The size-ladder shoot** (P2 on his list, ~45 min with a friend): the same tee, hoodie and jeans in 2–3 sizes each, plus one piece cut oversized on purpose, mirror and propped. The only truth for "a size big" vs "cut big", and the gate for (a)2.
+3. **The gold set's one-outfit variants** (P1): slim vs straight jeans with the same top, in his own light.
+4. Fashionpedia's leg labels (done, #223): legs only.
+
+**Ships before any of it, no score moves:** §17's Fit and Leg rows; (b)2's "Not sure" row and the one To confirm card; the measuring in (d)1; the paper test for (c)1 on his saved checks. **After the ladder:** (a)2's cues and the size rule, the "Runs big" piece fact, and fixes like "Try a size down in the tee" and "Have the sleeves shortened".
+**Never:** a word about his body, a width measured against him, or a fit word not about the garment ("oversized tee", "runs big"; never "big on you" or "your frame").
+
+### 18.4 What he'll see, once built
+- **The piece page** (on top of §17): a row whose photos disagree reads "Leg · Not sure ›" with "Seen as slim and as wide. Which is it?"; a pick settles it ("Changed to straight leg. Your scores stay the same.").
+- **Closet → To confirm:** "How do your mid-wash jeans fit?" with the drawings, one card at a time.
+- **Only if he OKs (c):** a new photo of those jeans read wide asks "Your mid-wash jeans?" before the score; Yes scores them straight, and the Why sheet row says "from your closet".
+- **New words to skim:** "Not sure", "Seen as {a} and as {b}. Which is it?", "How do your {item} fit?" / "How does your {item} fit?", "from your closet".
+
+### 18.5 Pass/fail checks (written before building; the build must not edit them)
+**Group 1, after PR #5, no score moves (about half a day):**
+- **BG1 (T)** "Not sure" shows on a Fit row exactly when the piece's own unconfirmed readings from 3+ checks include both roomy (4–5) and not (3 or less), and on a Leg row exactly when they span 2+ of narrow (skinny, slim) · straight · loose (relaxed, wide, barrel); never once he has set it; never with 2 checks or fewer.
+- **BG2 (T)** Closet's To confirm holds at most one fit card, the piece with the most checks first; Skip hides it until a new photo of that piece disagrees again; never on a score card.
+- **BG3 (T)** A pick from the row or the card writes exactly what §17's pick writes (X3); every fit check's score, raw score, parts, reading and closet summary are deep-equal before and after (X9).
+- **BG4 (T)** The Fit and Leg sheets show no score, number or "+N".
+- **BG5 (T)** Every new string passes the copy checks and the body-words test; no option or line says "on you", "your body", "frame" or "big on you".
+- **BG6 (T)** `bagginess_steady.py`, run on a pull with piece-page picks, reports the reading's roomy and leg accuracy against them, by source and, once his profile exists, by his age band and looks.
+**Group 2, (c), only on his OK, behind `CLOSET_FIT_FEEDS_SCORE` (about 1 day):**
+- **BG7 (T)** The paper test comes first, before any app code: on his saved checks with his piece picks applied, how many would ask (target: 1 in 5 checks or fewer) and every score that would move, listed before and after for him.
+- **BG8 (T)** The question asks only when the piece is a known piece he set that field on, the photo's group differs from his setting's, the swing is 0.5 or more, the occasion isn't Gym or Home, and no other question is asked on that check (the larger swing first).
+- **BG9 (T)** Yes scores with his value (Leg: the leg the rules judge, over the v12 fitted-straight rule; Fit: volume 2, 3, 4 or 5); No and Skip score the photo as read; the answer is stored on the check, and the same photo scored again gives the same score.
+- **BG10 (T)** Switch off: no score anywhere differs from today (G2, parity). Switch on: every old check is deep-equal.
+- **BG11 (T)** The Why sheet row says "from your closet" whenever his value was used.
+**Group 3, after the size-ladder shoot (its own plan then):**
+- **BG12** `shoulder_seam` and `ribbed_hem` each read the same on 90%+ over 3 runs and right on 80%+ of the ladder, or they stay tips.
+- **BG13 (T)** No rule reads a garment's width against the body (a test checks the engine takes no pose widths).
+
+**Order from here:** Group 1 once PR eyualem/kitted#5 (the piece page's rows) is merged; then BG7's paper test, which needs a few of his own piece-page picks first; Group 2 only after he has seen that before/after; Group 3 after the size-ladder shoot.
+
+### 18.6 His calls: decided Oct 16 (founder: "i agree with you recommendations"), all four defaults
+1. **(c) Decided:** his setting feeds new scores only through the "Your …?" question, behind `CLOSET_FIT_FEEDS_SCORE`, built only after BG7's paper test is shown to him (not chosen: never · silently).
+2. **(b) Decided:** the "Not sure" row and at most one To confirm card; never a fit question before the score (not chosen: the row only · neither).
+3. **(a) Decided:** "on purpose vs too big" stays judged by the outfit around the piece; size faults wait for the size-ladder shoot (not chosen: the ~$2 cue test now).
+4. **The new words (18.4) decided:** as written.

@@ -1,0 +1,140 @@
+# Run to run (same photo, shipped reading with close-ups)
+Instagram    bottom    n= 130 volume exact   90% · within 1  100% · roomy(>=4) same   96% · fitted(<=2) same   99% · any run roomy  85%
+                       leg exact   85% · narrow/straight/loose same   95% · narrow-vs-not  100% · skinny-vs-not  100% · loose-vs-not   96%
+Instagram    outerwear n=  42 volume exact   93% · within 1  100% · roomy(>=4) same   95% · fitted(<=2) same   98% · any run roomy  40%
+Instagram    top       n= 134 volume exact   89% · within 1  100% · roomy(>=4) same   96% · fitted(<=2) same   93% · any run roomy  16%
+Pinterest    bottom    n=  74 volume exact   92% · within 1  100% · roomy(>=4) same   96% · fitted(<=2) same   96% · any run roomy  14%
+                       leg exact   81% · narrow/straight/loose same   85% · narrow-vs-not   96% · skinny-vs-not   99% · loose-vs-not   91%
+Pinterest    outerwear n=  28 volume exact   93% · within 1  100% · roomy(>=4) same   96% · fitted(<=2) same  100% · any run roomy  32%
+Pinterest    top       n=  73 volume exact   95% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same   96% · any run roomy   0%
+Reddit       bottom    n=  21 volume exact   95% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same   95% · any run roomy   0%
+                       leg exact   81% · narrow/straight/loose same   81% · narrow-vs-not   95% · skinny-vs-not  100% · loose-vs-not   86%
+Reddit       outerwear n=   7 volume exact  100% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same  100% · any run roomy   0%
+Reddit       top       n=  21 volume exact   95% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same   95% · any run roomy   0%
+his photos   bottom    n=  15 volume exact   87% · within 1  100% · roomy(>=4) same   87% · fitted(<=2) same  100% · any run roomy  47%
+                       leg exact   67% · narrow/straight/loose same   67% · narrow-vs-not   87% · skinny-vs-not  100% · loose-vs-not   73%
+his photos   outerwear n=   6 volume exact  100% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same  100% · any run roomy  17%
+his photos   top       n=  16 volume exact   88% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same   88% · any run roomy   0%
+mirror       bottom    n=  12 volume exact   67% · within 1  100% · roomy(>=4) same   75% · fitted(<=2) same   92% · any run roomy  25%
+                       leg exact   75% · narrow/straight/loose same   75% · narrow-vs-not  100% · skinny-vs-not  100% · loose-vs-not   75%
+mirror       outerwear n=   6 volume exact   83% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same   83% · any run roomy   0%
+mirror       top       n=  12 volume exact   83% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same   83% · any run roomy   8%
+stock        bottom    n=  39 volume exact   95% · within 1  100% · roomy(>=4) same   97% · fitted(<=2) same   97% · any run roomy  10%
+                       leg exact   87% · narrow/straight/loose same   90% · narrow-vs-not   95% · skinny-vs-not  100% · loose-vs-not   95%
+stock        outerwear n=  18 volume exact   83% · within 1  100% · roomy(>=4) same   94% · fitted(<=2) same  100% · any run roomy  17%
+stock        top       n=  38 volume exact   92% · within 1  100% · roomy(>=4) same  100% · fitted(<=2) same   97% · any run roomy   8%
+
+# Value mix
+('Instagram', 'bottom') {2: '1%', 3: '16%', 4: '58%', 5: '25%'} (n=260)
+('Instagram', 'leg') {'barrel': '5%', 'flare_bootcut': '2%', 'relaxed': '7%', 'slim': '1%', 'straight': '10%', 'wide': '75%'} (n=260)
+('Instagram', 'outerwear') {2: '4%', 3: '58%', 4: '38%'} (n=84)
+('Instagram', 'top') {1: '4%', 2: '19%', 3: '62%', 4: '15%'} (n=268)
+('Pinterest', 'bottom') {1: '11%', 2: '22%', 3: '55%', 4: '10%', 5: '1%'} (n=148)
+('Pinterest', 'leg') {'flare_bootcut': '5%', 'na': '1%', 'relaxed': '11%', 'skinny': '11%', 'slim': '19%', 'straight': '45%', 'wide': '8%'} (n=148)
+('Pinterest', 'outerwear') {1: '2%', 2: '9%', 3: '59%', 4: '27%', 5: '4%'} (n=56)
+('Pinterest', 'top') {1: '8%', 2: '21%', 3: '72%'} (n=146)
+('Reddit', 'bottom') {2: '17%', 3: '83%'} (n=42)
+('Reddit', 'leg') {'relaxed': '5%', 'slim': '17%', 'straight': '76%', 'wide': '2%'} (n=42)
+('Reddit', 'outerwear') {3: '100%'} (n=14)
+('Reddit', 'top') {2: '31%', 3: '69%'} (n=42)
+('his photos', 'bottom') {2: '7%', 3: '53%', 4: '40%'} (n=45)
+('his photos', 'leg') {'relaxed': '36%', 'slim': '7%', 'straight': '24%', 'wide': '33%'} (n=45)
+('his photos', 'outerwear') {3: '83%', 4: '17%'} (n=18)
+('his photos', 'top') {2: '10%', 3: '90%'} (n=48)
+('mirror', 'bottom') {2: '11%', 3: '78%', 4: '11%'} (n=36)
+('mirror', 'leg') {'relaxed': '17%', 'slim': '17%', 'straight': '64%', 'wide': '3%'} (n=36)
+('mirror', 'outerwear') {2: '22%', 3: '78%'} (n=18)
+('mirror', 'top') {2: '31%', 3: '61%', 4: '8%'} (n=36)
+('stock', 'bottom') {1: '8%', 2: '40%', 3: '44%', 4: '9%'} (n=117)
+('stock', 'leg') {'flare_bootcut': '5%', 'relaxed': '9%', 'skinny': '8%', 'slim': '41%', 'straight': '37%', 'wide': '1%'} (n=117)
+('stock', 'outerwear') {1: '4%', 2: '24%', 3: '59%', 4: '13%'} (n=54)
+('stock', 'top') {1: '2%', 2: '52%', 3: '39%', 4: '8%'} (n=114)
+
+# Roomy flips by certainty
+('bottom', 'clear') 270 flip 5%
+('bottom', 'likely') 21 flip 5%
+('outerwear', 'clear') 97 flip 3%
+('outerwear', 'likely') 10 flip 10%
+('top', 'clear') 224 flip 2%
+('top', 'likely') 70 flip 1%
+
+# Tops by kind (n>=8): share read roomy in any run, flip rate
+tee              n= 83 roomy   1% flip   1%
+dress_shirt      n= 38 roomy   3% flip   0%
+sweater          n= 33 roomy  15% flip   3%
+graphic_tee      n= 30 roomy   7% flip   0%
+hoodie           n= 24 roomy  17% flip   0%
+oxford_shirt     n= 21 roomy  24% flip   5%
+overshirt        n= 14 roomy  36% flip  14%
+camp_collar_shirt n= 14 roomy  14% flip   0%
+bomber           n= 13 roomy  46% flip   8%
+suit_jacket      n= 11 roomy   0% flip   0%
+knit_polo        n= 11 roomy   9% flip   9%
+sweatshirt       n= 10 roomy  20% flip   0%
+cardigan         n= 10 roomy  30% flip   0%
+other            n=  9 roomy  33% flip   0%
+leather_jacket   n=  9 roomy  22% flip   0%
+flannel_shirt    n=  8 roomy  25% flip   0%
+polo             n=  8 roomy  12% flip   0%
+
+# Score moves
+Instagram    run-to-run bagginess flips alone change the score on 4/125 (3%); reading no bagginess at all would change 69/130 (53%), net +36.5 points in total
+Pinterest    run-to-run bagginess flips alone change the score on 5/69 (7%); reading no bagginess at all would change 24/72 (33%), net -17.0 points in total
+Reddit       run-to-run bagginess flips alone change the score on 1/21 (5%); reading no bagginess at all would change 4/21 (19%), net -1.0 points in total
+his photos   run-to-run bagginess flips alone change the score on 3/14 (21%); reading no bagginess at all would change 3/15 (20%), net +1.5 points in total
+mirror       run-to-run bagginess flips alone change the score on 0/12 (0%); reading no bagginess at all would change 0/12 (0%), net +0.0 points in total
+stock        run-to-run bagginess flips alone change the score on 0/39 (0%); reading no bagginess at all would change 10/39 (26%), net -6.0 points in total
+examples [('zoom1', 'oct8-8bc29d', 6.5, 7.0), ('zoom1', 'oct8-d6559a', 7.5, 7.0), ('zoom1', 'oct7-ph2', 7.0, 7.5), ('gold1', 'ig-031', 8.0, 7.0), ('gold1', 'ig-051', 7.5, 8.0), ('gold1', 'ig-094', 8.0, 7.5), ('gold1', 'ig-119', 8.0, 7.5), ('gold1', 'pin-007', 7.5, 7.0), ('gold1', 'pin-030', 6.0, 6.5), ('gold1', 'pin-037', 6.5, 7.0), ('gold1', 'pin-051', 7.0, 6.5), ('gold1', 'pin-071', 5.5, 6.0)]
+
+# Across photos of the same piece (his phone, 20261015-103853)
+  Cream striped overshirt        outer     3 checks · volume [3, 3, 3]
+  Medium grey hoodie             top       2 checks · volume [3, 3]
+  Black jeans                    bottom    11 checks · volume [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] · leg ['wide', 'wide', 'wide', 'wide', 'wide', 'wide', 'wide', 'wide', 'wide', 'wide', 'wide']
+  Grey shoes                     shoes     3 checks · volume [3, 3, 3]
+  Washed black jeans             bottom    2 checks · volume [3, 3] · leg ['straight', 'straight']
+  Tan overshirt                  outer     2 checks · volume [3, 3]
+  Faded black Nike hoodie        top       2 checks · volume [3, 3]
+  Black striped Adidas slides    shoes     3 checks · volume [3, 3, 3]
+  White leather sneakers         shoes     3 checks · volume [3, 3, 3]
+  Navy chore coat                outer     4 checks · volume [3, 3, 3, 3]
+  White tee                      top       4 checks · volume [3, 3, 3, 3]
+  Charcoal jeans                 bottom    2 checks · volume [3, 3] · leg ['straight', 'straight']
+  Navy striped Adidas low-profile sneakers shoes     3 checks · volume [3, 3, 3]
+  Black tee                      top       5 checks · volume [4, 4, 2, 4, 4]
+  Mid-wash jeans                 bottom    9 checks · volume [3, 3, 3, 2, 4, 4, 2, 2, 4] · leg ['relaxed', 'straight', 'straight', 'slim', 'wide', 'wide', 'slim', 'slim', 'wide']
+  Blue polo                      top       2 checks · volume [2, 2]
+  White leather sneakers 2       shoes     6 checks · volume [3, 3, 3, 3, 3, 3]
+  Black high-tops                shoes     2 checks · volume [3, 3]
+  Dark green Champion hoodie     outer     2 checks · volume [3, 3]
+  Black sweatshirt               top       2 checks · volume [3, 3]
+  Black polo                     top       2 checks · volume [3, 3]
+  Dark jeans                     bottom    3 checks · volume [3, 3, 3] · leg ['straight', 'straight', 'straight']
+  Cream plaid oxford             top       2 checks · volume [2, 2]
+  Multicolor plaid oxford        top       2 checks · volume [3, 2]
+  Cream jeans                    bottom    2 checks · volume [2, 3] · leg ['straight', 'straight']
+  Red graphic tee                top       2 checks · volume [3, 3]
+top 20 {'vol_same': '18/20', 'roomy_same': '19/20'}
+bottom 6 {'vol_same': '4/6', 'roomy_same': '5/6', 'leg_same': '5/6', 'leg_narrow_same': '5/6', 'leg_group_same': '5/6'}
+
+# Leg reading vs labels (leg_labels.csv, Claude's blind labels; every run)
+his photos   n=45 exact 56% narrow-vs-not 80% loose-vs-not 67%
+mirror       n=30 exact 77% narrow-vs-not 60% loose-vs-not 83%
+stock        n=87 exact 72% narrow-vs-not 87% loose-vs-not 80%
+
+# Gold panel on size (2+ of 5 judges name a size/baggy problem)
+all                        n=225 panel Fit median-of-5 mean 7.07 · 'too big/baggy' 30/225 (13%) · 'too tight' 2
+regular top                n= 91 panel Fit median-of-5 mean 6.60 · 'too big/baggy' 12/91 (13%) · 'too tight' 1
+regular top + loose leg    n= 90 panel Fit median-of-5 mean 7.42 · 'too big/baggy' 11/90 (12%) · 'too tight' 1
+roomy top                  n=  6 panel Fit median-of-5 mean 5.50 · 'too big/baggy' 1/6 (17%) · 'too tight' 0
+roomy top + loose leg      n= 38 panel Fit median-of-5 mean 7.62 · 'too big/baggy' 6/38 (16%) · 'too tight' 0
+
+keywords [('swamp', 21), ('tent', 15), ('sloppy', 13), ('swallow', 11), ('shapeless', 10), ('too long', 6), ('too big', 3), ('size down', 3), ('a size big', 2), ('oversized busy paisl', 1), ('oversized trench swa', 1), ('oversized khaki coat', 1)]
+about [('jean', 57), ('hem', 32), ('tee', 29), ('short', 24), ('shirt', 20), ('sleeve', 17), ('blazer', 12), ('trouser', 12), ('jacket', 11), ('coat', 11), ('pant', 6), ('hoodie', 3)]
+('ig-055', 'retro football jersey with baggy black denim shorts, white socks and clogs reads as one casual idea; shorts are long and shapeless. a cleaner short length would')
+('pin-026', 'rumpled striped blazer over open green plaid shirt and faded baggy grey jeans with worn sneakers; pattern clash and sloppy finish. swap the plaid for a plain te')
+('pin-027', 'oversized navy jacket with gold zip over blue tee and tapered high-rise jeans, with scuffed white sneakers: blue on blue, shapeless and worn. new sneakers and a')
+('pin-039', 'faded grey graphic tee over bootcut jeans stacking on worn sneakers is plain and a bit sloppy. slimmer straight jeans and a clean sneaker would sharpen it.')
+('ig-087', 'wolf graphic tee plus printed jeans and dangling yellow belt straps is three focal points. plain jeans would let the tee lead; hems swallow the sneakers.')
+('pin-066', 'polo half-tucked on one side looks sloppy over plain charcoal jeans. tuck it fully with a belt or leave it fully out.')
+('pin-033', 'oversized busy paisley shirt with pink cuffs swamps the frame over bootcut jeans; swap to a solid, better-sized button-up and the whole outfit settles.')
+('pin-013', 'shredded biker skinnies, logo belt, red undershirt and red patent jordans is too much matched flash. lose the red undershirt and pick cleaner straight jeans.')
