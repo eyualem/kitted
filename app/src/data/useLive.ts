@@ -3,12 +3,33 @@
 import { useEffect, useState, type DependencyList } from 'react';
 import { onChange, type Topic } from './changes';
 
+/**
+ * Calls `reload` once per burst of changes to `topics` (changes in the same tick become one call). The hook's wiring,
+ * apart so tests can count reloads (09-ui-review §9 U4). Returns the unsubscribe.
+ */
+export function watchChanges(topics: readonly Topic[], reload: () => void, key?: string | null): () => void {
+  let alive = true;
+  let scheduled = false;
+  const schedule = () => {
+    if (scheduled) return;
+    scheduled = true;
+    void Promise.resolve().then(() => {
+      scheduled = false;
+      if (alive) reload();
+    });
+  };
+  const off = onChange(topics, schedule, key);
+  return () => {
+    alive = false;
+    off();
+  };
+}
+
 export function useLive<T>(topics: readonly Topic[], load: () => Promise<T>, deps: DependencyList, key?: string | null): T | undefined {
   const [value, setValue] = useState<T | undefined>(undefined);
   useEffect(() => {
     let alive = true;
     let seq = 0;
-    let scheduled = false;
     const run = () => {
       const mine = ++seq;
       load()
@@ -17,16 +38,10 @@ export function useLive<T>(topics: readonly Topic[], load: () => Promise<T>, dep
         })
         .catch((e: unknown) => console.error('useLive load failed', e));
     };
-    const schedule = () => {
-      if (scheduled) return;
-      scheduled = true;
-      void Promise.resolve().then(() => {
-        scheduled = false;
-        if (alive) run();
-      });
-    };
     run();
-    const off = onChange(topics, schedule, key);
+    const off = watchChanges(topics, () => {
+      if (alive) run();
+    }, key);
     return () => {
       alive = false;
       off();

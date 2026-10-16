@@ -25,7 +25,7 @@ import { buildStubs } from '@/services/closetSource/validate';
 import type { ClosetKind, ClosetSource, StoredClosetReading } from '@/services/closetSource/types';
 import type { GarmentMeasurer, Measured } from '@/services/measure/garments';
 import { garmentHex } from '@/features/fitcheck/labels';
-import { serial } from './checkWrites';
+import { serial, type SerialOptions } from './checkWrites';
 import { mergeCandidates, type MergeUndo } from './merge';
 import { isFirstPhoto, photoOffer, photoSightings, type PhotoUndo } from './wrongCard';
 import { assignNames, baseName, isAutoNamed } from './itemName';
@@ -109,6 +109,9 @@ export function changedCategories(targets: readonly string[]): Set<string> {
   }
   return out;
 }
+
+/** An Undo's queue options: it goes ahead of waiting background work (checkWrites, 09-ui-review §9). */
+const UNDO = (label: string): SerialOptions => ({ label, urgent: true });
 
 export function createClosetService(deps: ClosetServiceDeps) {
   const { store, clock, ids } = deps;
@@ -240,30 +243,74 @@ export function createClosetService(deps: ClosetServiceDeps) {
     notItemIds?: string[];
   }
 
+  // ------------------------------------------------------------------ measuring, outside the queue (09-ui-review §9 U8)
+  // Measuring a real photo takes 1–1.5 s on the phone. It needs no closet rows (only the photo and the boxes), so it
+  // runs before the closet write joins the queue (premeasure), and the queued write reuses the result: an Undo or an
+  // answer tapped meanwhile never waits for it. One measure per photo and set of boxes; the last few are kept.
+  type MeasureInput = Parameters<GarmentMeasurer>[1];
+  const measures: { photo: string; boxes: Map<string, string>; result: ReturnType<GarmentMeasurer> }[] = [];
+  const MEASURES_KEPT = 6;
+  const boxKey = (p: MeasureInput[number]) => `${p.category}|${p.box.join(',')}`;
+
+  /** The measurer's input for these pieces on this check's photo, or null when nothing has a box. */
+  async function measureInput(row: FitCheckRow, pieces: readonly Piece[]) {
+    const boxed = pieces.filter((p) => p.origin === 'garment' && p.fields?.visible && p.fields.box.length === 4);
+    if (!deps.measure || boxed.length === 0) return null;
+    // A mirror selfie's photo is the reflection: its cut-outs are flipped back to true view (#109).
+    const mirrored = (await readingOf(row.readingId))?.reading.scene?.mirror_selfie === true;
+    const check = { imageHash: row.imageHash, photoFile: row.photoFile, demoPhotoId: row.demoPhotoId, mirrored };
+    const input = boxed.map((p) => ({ key: `${p.origin}-${p.index}`, category: String(p.garment.category), box: p.fields!.box }));
+    return { boxed, check, input };
+  }
+
+  /** Measures once: a photo already measured (or being measured) with these boxes reuses that result. */
+  function measureOnce(check: Parameters<GarmentMeasurer>[0], input: MeasureInput): ReturnType<GarmentMeasurer> {
+    const photo = `${check.imageHash}|${check.mirrored ? 1 : 0}`;
+    const hit = measures.find((m) => m.photo === photo && input.every((p) => m.boxes.get(p.key) === boxKey(p)));
+    if (hit) return hit.result;
+    const result = deps.measure!(check, input);
+    measures.push({ photo, boxes: new Map(input.map((p) => [p.key, boxKey(p)])), result });
+    if (measures.length > MEASURES_KEPT) measures.shift();
+    return result;
+  }
+
   /** Measures the worn pieces that have a closet box on this check's photo (#104); empty when it can't. */
   async function measurePieces(row: FitCheckRow, pieces: readonly Piece[]): Promise<{ pieces: Map<Piece, Measured>; heads: number[][] | null }> {
     const out = new Map<Piece, Measured>();
     let heads: number[][] | null = null;
-    const measure = deps.measure;
-    const boxed = pieces.filter((p) => p.origin === 'garment' && p.fields?.visible && p.fields.box.length === 4);
-    if (!measure || boxed.length === 0) return { pieces: out, heads };
-    const key = (p: Piece) => `${p.origin}-${p.index}`;
-    // A mirror selfie's photo is the reflection: its cut-outs are flipped back to true view (#109).
-    const mirrored = (await readingOf(row.readingId))?.reading.scene?.mirror_selfie === true;
+    const m = await measureInput(row, pieces);
+    if (!m) return { pieces: out, heads };
     try {
-      const got = await measure(
-        { imageHash: row.imageHash, photoFile: row.photoFile, demoPhotoId: row.demoPhotoId, mirrored },
-        boxed.map((p) => ({ key: key(p), category: String(p.garment.category), box: p.fields!.box })),
-      );
-      for (const p of boxed) {
-        const m = got.get(key(p));
-        if (m) out.set(p, m);
-      }
+      const got = await measureOnce(m.check, m.input);
+      m.boxed.forEach((p, i) => {
+        const r = got.get(m.input[i]!.key);
+        if (r) out.set(p, r);
+      });
       heads = got.heads ?? null;
     } catch (e) {
       console.log('[measure] failed', String(e));
     }
     return { pieces: out, heads };
+  }
+
+  /**
+   * Before a closet write for this check joins the queue: measure its photo now, so the write finds the result.
+   * Every boxed worn piece of the reading is measured (a re-check's write picks the ones it needs). Never throws.
+   */
+  async function premeasure(checkId: string, kind: 'full' | 'recheck', stored: StoredClosetReading | null): Promise<void> {
+    try {
+      const row = await store.fitChecks.get(checkId);
+      const reading = row ? (await readingOf(row.readingId))?.reading : null;
+      if (!row || !reading) return;
+      const pieces = kind === 'full' ? piecesOf(row, reading, stored) : (() => {
+        const fields = fieldsFor(reading.garments, 'recheck', stored);
+        return reading.garments.map((g, i): Piece => ({ origin: 'garment', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null }));
+      })();
+      const m = await measureInput(row, pieces);
+      if (m) await measureOnce(m.check, m.input);
+    } catch {
+      // the write measures (or fails) as before
+    }
   }
 
   /** A look's check and its re-checks (a re-check folds into its look in the Lookbook). */
@@ -555,7 +602,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const timer = deps.scheduler.setTimer(() => {
       if (written) return;
       written = true;
-      fallbackDone = serial(() => write(null, 'fallback'));
+      fallbackDone = serial(() => write(null, 'fallback'), { label: 'closet fallback' });
     }, deadlineMs);
     return track((async () => {
       let stored: Awaited<ReturnType<typeof call>> = null;
@@ -565,12 +612,13 @@ export function createClosetService(deps: ClosetServiceDeps) {
         stored = null;
       }
       deps.scheduler.clearTimer(timer);
+      if (stored && kind !== 'shoeSnap') await premeasure(checkId, kind, stored.reading);
       if (!written) {
         written = true;
-        await serial(() => write(stored, stored ? 'done' : 'fallback'));
+        await serial(() => write(stored, stored ? 'done' : 'fallback'), { label: 'closet answer' });
       } else {
         await fallbackDone;
-        if (stored) await serial(() => enrich(checkId, stored!));
+        if (stored) await serial(() => enrich(checkId, stored!), { label: 'enrich' });
       }
     })());
   }
@@ -1093,6 +1141,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (!row || !reading) return;
       const cached = await storedCloset(row.imageHash, reading.garments, 'full');
       if (cached || !deps.source || !image) {
+        await premeasure(checkId, 'full', cached?.reading ?? null);
         await serial(() => writeFull(checkId, cached, cached ? 'done' : 'fallback'));
         return;
       }
@@ -1109,6 +1158,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (!row || !merged) return;
       const cached = await storedCloset(row.imageHash, merged.garments, 'recheck');
       if (cached || !deps.source || !image) {
+        await premeasure(recheckId, 'recheck', cached?.reading ?? null);
         await serial(() => writeRecheck(recheckId, cached, cached ? 'done' : 'fallback'));
         return;
       }
@@ -1148,13 +1198,14 @@ export function createClosetService(deps: ClosetServiceDeps) {
         const stale = cs.state === 'pending' && now - (cs.startedAt ?? row.createdAt) > deadlineMs && ![...jobs].length;
         if (cs.state !== 'fallback' && !stale) continue;
         attempted.add(row.id);
-        if (stale) await serial(() => writeFull(row.id, null, 'fallback'));
+        if (stale) await serial(() => writeFull(row.id, null, 'fallback'), { label: 'catch-up fallback' });
         const reading = (await readingOf(row.readingId))?.reading;
         if (!reading) continue;
         const image: PreparedImage = { photoId: row.demoPhotoId, sha256: row.imageHash, uploadUri: null };
         const stored = (await storedCloset(row.imageHash, reading.garments, 'full')) ?? (await track(call(image, reading.garments, 'full', row.readingId).catch(() => null)));
         if (!stored) continue;
-        await serial(() => enrich(row.id, stored));
+        await premeasure(row.id, 'full', stored.reading);
+        await serial(() => enrich(row.id, stored), { label: 'catch-up enrich' });
         n++;
       }
       return n;
@@ -1169,7 +1220,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         const art = artOf(it, sightingsOf(it.id, obs).map(observationOfRow));
         if ((art.measured ?? null) !== (it.art?.measured ?? null)) await refreshItem(it.id);
       }
-    }),
+    }, { label: 'refreshColors' }),
     /** Resolves when every closet call in flight has been written (demo screens, tests). */
     async settle(): Promise<void> {
       while (jobs.size > 0) await Promise.allSettled([...jobs]);
@@ -1224,7 +1275,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     restoreItem: (itemId: string) => serial(async () => {
       await store.closet.patch(itemId, { isDeleted: false, updatedAt: clock.nowMs() });
       await renameAll();
-    }),
+    }, UNDO('undo remove piece')),
     /**
      * The piece page's "Use as cover" (#276): this sighting's photo leads the piece's photos and its preview. null puts
      * the best photo back in front. Only a live sighting of this piece can be its cover. Pictures only: the drawing,
@@ -1271,7 +1322,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         profile: { ...p, hiddenObsIds: (p.hiddenObsIds ?? []).filter((x) => x !== obsId), ...(wasCover ? { coverObsId: obsId } : {}) },
         updatedAt: clock.nowMs(),
       });
-    }),
+    }, UNDO('undo remove photo')),
     /**
      * "Not this piece" on a photo (#276): a correction. A sighting he linked by answering "Is this your …?" re-answers
      * it ("No, a new one", #117); any other photo is split off as its own piece ("Not the same", S11), and the two are
@@ -1347,7 +1398,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       const after = new Map((await store.closet.all()).map((c) => [c.id, c]));
       const items = [...before.values()].filter((b) => JSON.stringify(b) !== JSON.stringify(after.get(b.id)));
       return { fromId, intoId, items, obs: moved.map(clone), checks: touched };
-    }),
+    }, { label: 'merge' }),
     /** Undo for merge: every row it changed, back as it was (both pieces' ids, sightings, cover and removed photos). */
     unmerge: (u: MergeUndo) => serial(async () => {
       for (const it of u.items) await store.closet.put(clone(it));
@@ -1359,22 +1410,22 @@ export function createClosetService(deps: ClosetServiceDeps) {
         void _cs;
         await store.fitChecks.patch(c.id, { itemIds: [...c.itemIds], details: c.closetSummary ? { ...rest, closetSummary: clone(c.closetSummary) } : rest });
       }
-    }),
+    }, UNDO('undo merge')),
     /**
      * "Not this piece" with its Undo (09-ui-review §8 W1, W8): the photo (and the same photo checked again) becomes a
      * piece of its own, never matched with this one again; a photo he linked with "Yes, same one" re-answers it "No".
      * The first photo of a piece with other photos works the same, and the piece keeps its name and drawing. A piece's
      * only photo can't be split off (null). Returns the piece the photo is on now and what Undo restores.
      */
-    splitPhoto: (obsId: string) => serial(() => splitPhotoNow(obsId)),
+    splitPhoto: (obsId: string) => serial(() => splitPhotoNow(obsId), { label: 'split photo' }),
     /**
      * "It's another piece…" → a pick (§8 W4): only this photo moves to `intoId` (his own piece of the same kind, not
      * waiting on a question); the worn counts follow, each look once; it's never matched back to the old piece. null
      * on a piece's only photo (the picker merges the piece instead, W9) or when nothing could move.
      */
-    movePhoto: (obsId: string, intoId: string) => serial(() => movePhotoNow(obsId, intoId)),
+    movePhoto: (obsId: string, intoId: string) => serial(() => movePhotoNow(obsId, intoId), { label: 'move photo' }),
     /** Undo for splitPhoto and movePhoto: every row they changed, back exactly; the piece a split made, gone. */
-    restorePhoto: (u: PhotoUndo) => serial(() => restoreRows(u)),
+    restorePhoto: (u: PhotoUndo) => serial(() => restoreRows(u), UNDO('undo photo')),
     /** The pieces a look added that no other check has seen: what "Remove look and its new pieces" would remove. */
     async onlyInLook(checkId: string): Promise<ClosetItemRow[]> {
       const ids = new Set(await onlyInLookIds(await lookCheckIds(checkId)));
@@ -1419,7 +1470,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         if (row) await store.fitChecks.patch(id, { details: { ...row.details, removedFromLookbook: null } });
       }
       await renameAll();
-    }),
+    }, UNDO('undo remove look')),
     /** The open "Same as your …?" questions across his checks (newest first), for the Closet tab. */
     async openAsks(): Promise<{ checkId: string; ask: ClosetAsk }[]> {
       const items = new Map((await store.closet.all()).map((c) => [c.id, c]));

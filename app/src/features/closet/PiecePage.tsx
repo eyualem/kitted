@@ -58,6 +58,7 @@ export function pieceDetail(item: Pick<ClosetItemRow, 'slot' | 'garment' | 'art'
 function addedLine(item: ClosetItemRow): string {
   const date = longDate(item.addedAt, sessionClock.offset);
   if (item.starterId) return t('item.source.starter');
+  if (item.source === 'chat') return t('item.source.chat');
   return item.source === 'fitCheck' ? t('item.source.fitCheck', { date }) : t('item.source.added', { date });
 }
 

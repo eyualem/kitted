@@ -19,6 +19,7 @@ import { Icon, KText, opacity, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
+import { starterChips } from '@/features/ask/chips';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
 import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
@@ -51,6 +52,10 @@ export function StylistScreen() {
   const { today: messages, hasEarlier } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
   const live = useLiveAnswer();
   const askInFlight = useAskInFlight();
+  // The starter chips (07 §6.3): from his closet and today's checks.
+  const chips = useLive(['closet', 'fitChecks'], async () => starterChips({
+    nowMs: sessionClock.nowMs(), zone: sessionClock.offset, closet: await store.closet.all(), checks: await store.fitChecks.all(),
+  }), []) ?? [];
   // While Retry streams, the failed line it replaces steps aside for the live row.
   const replaced = live?.replaces ?? null;
   const shown = useMemo(() => (replaced ? messages.filter((m) => m.id !== replaced) : messages), [messages, replaced]);
@@ -286,6 +291,7 @@ export function StylistScreen() {
             autoFocus={open === 'type'}
             startVoice={open === 'voice'}
             onIdle={DOCK_ALWAYS ? undefined : composerState.close}
+            chips={chips}
           />
         </Animated.View>
       ) : null}

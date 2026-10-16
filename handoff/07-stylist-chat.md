@@ -368,3 +368,80 @@ Cost of the whole test: about $1–2 of Gemini calls (your OK needed, on the lis
 - **D4 · The paused line (outward-facing):** `Questions are paused for a bit. Nothing was counted. Try again later.` Default: as written.
 
 **Changes to 02 (this file wins, per the CLAUDE.md order):** S30's "top pick free, full list Pro" breaks the locked rule "everything that runs on code is free" (the list comes from `rotation`, code only), so the whole buy list is free; the question that asks for it is what counts toward the limit. S25 gains the states in §6 (paused, taking longer, one in flight, draft kept).
+
+---
+
+## 13. C2–C4 pass/fail checks, set before building (Oct 15, #297)
+Founder: "plan the things on your side out, with tests planned out in advance as well, and proceed." Same rules as 09-ui-review §6–§9: (T) a jest test that fails first, (S) seen on the Simulator demo screens. Nothing here spends money: the real model is tested on recorded replies, and **the chat stays "coming soon" on his phone** until he OKs the ~$0.50 of live tries (C2's last step). D2–D4 keep their defaults (§12). New words are listed in CLAUDE.md for a skim.
+
+**C2 · The answer client, without live calls**
+- **A1 (T) One request, the right shape:** one `streamGenerateContent` call. The system part is the §7.1 rules plus `rubric/stylist-guide.md`; the user part is the context pack, the evidence and the question. Temperature 0.3, output capped, the key only in the `x-goog-api-key` header.
+- **A2 (T) Streaming:** text arrives in order, even when the SSE is split at random byte boundaries. The closing block (the JSON at the end, §5.2) never shows in the answer and is parsed into `card`, `remember`, `need` and `refused`; a broken block drops the card, never the answer.
+- **A3 (T) Failures count nothing:** an HTTP error, offline, a broken stream, a finish reason other than STOP, or no first word in 20 s → `I couldn't answer that. It doesn't count.` with Retry. No first word after 6 s → the dots get `Taking longer…`.
+- **A4 (T) The sentence gate (§7.3):** a sentence is dropped if it has an emoji, "unlimited", "AI stylist", a brand or shop, a creator's name, his build word or height said back to him, a body word aimed at him, or a score-like number (`7.5`, `8/10`) the evidence doesn't hold. The rest stays. An answer left empty is the fail line, not counted. Drops are logged by rule name only.
+- **A5 (T) Nothing shows before it's checked:** the live row only ever shows sentences that passed, so a dropped sentence never flashes on screen.
+- **A6 (T) Never sent:** the whole request (not only the pack) holds no birth year or age, name, location, photo or file path.
+- **A7 (T) Off on his phone:** real builds keep "coming soon" until `CHAT_LIVE` is switched on (with his OK), and without a dev key the real client is never picked. Demo screens use the demo source, which now also returns closing blocks, so the cards can be seen.
+
+**C3 · Router, evidence, cards**
+- **R1 (T) The router** picks the right kind (§5.1's 11) on a fixed set of at least 5 example questions per kind, including §1's examples. It names the pieces he means, by his piece names and aliases ("my olive overshirt" → its handle), and the check ("my 7", "today's check", "Tuesday's").
+- **R2 (T) Evidence is computed by code, per kind:**
+  - explain → the named check's parts, reasons and fixes with their targets;
+  - what-if → the score `applyPartsFix` gives on that check;
+  - goes with → `pickOutfit` with the piece pinned (best, dressier, more relaxed);
+  - what to wear → `pickOutfit` for the occasion and today's weather;
+  - buy next → the `rotation` gain per Starter kind, inside his budget;
+  - the rest → none.
+  Every number in the evidence is one the code computed.
+- **R3 (T) One lookup at most:** when the router isn't sure it sends no evidence. A `need` in the closing block makes exactly one second call with that evidence; a second `need` is ignored.
+- **R4 (T) Cards are built by code, never from the model's text:**
+  - an outfit card only from handles of pieces he owns that pass `outfitValid`;
+  - a check card only with a real occasion;
+  - an ask card with 2–4 answers plus `Not sure`;
+  - a buy card whose "+N" comes from `rotation`;
+  - a link only to a check or piece that exists.
+  An unknown handle drops the card and keeps the answer.
+- **R5 (T) No predicted score on an outfit card,** and no brand, shop or link on a buy card.
+- **R6 (T, S) The cards work:**
+  - the outfit card uses the drawn tiles, with Wear this and Check it;
+  - Check it opens the camera with the occasion set;
+  - a link opens the check or the piece page;
+  - tapping an ask card's answer sends it and is never counted as a question.
+- **R7 (T) Starter chips (§6.3):** at most 3, only while the field is empty, one tap sends, built from his data. A new user with an empty closet gets the learn lines and `What should I buy first?`.
+- **R8 (T) Past chats** rebuild cards from the stored handles; a piece removed since shows `No longer in your closet`.
+- **R9 (S) A demo screen per card** (outfit, check, ask, buy, link), light and dark.
+
+**C4 · Memory**
+- **M1 (T) Only the §4 keys:** the value is cleaned (one line, capped) and anything else is dropped. A never-stored topic is dropped even under an allowed key (body, weight, height, health, age, religion, other people).
+- **M2 (T) Saved, shown, undoable:** a saved fact shows `Saved to what I know · Undo` under the answer and appears in You → What your stylist knows as `You told me · Oct 15`. Undo deletes it. A deleted fact stops the same key and value from being learned again.
+- **M3 (T)** `budget` writes `profile.budget`; `look_now` never changes his picked looks.
+- **M4 (T) Pieces he mentions** ("I have black Chelsea boots") become a closet piece with `source: 'chat'`, not photographed, a dashed tile and `From chat`. They're used in outfit ideas but never in a "+N outfits" claim, and the first fit check that sees them asks "Same as your …?" as usual.
+
+**Global**
+- **G4 (T) No fit-check score moves** because of anything here, and a tap answer is never a counted question.
+- **G5** `npm run check` green; the new demo screens seen on the Simulator in light and dark.
+
+### §13 results (Oct 15, #297): checked against A1–A7, R1–R9, M1–M4; no check changed
+| Check | Result | How |
+|---|---|---|
+| A1 | Pass (T) | `askC2.test.ts`: one `streamGenerateContent` call; rules + guide in the system part, `<pack>` + `<evidence>` + the question in his turn; temperature 0.3, 420 output tokens, thinking off; the key only in `x-goog-api-key`. The guide is bundled (`scripts/gen-guide.mjs`) and trimmed by kind (§0 always, never the sources list); a test fails if it drifts from `rubric/stylist-guide.md` |
+| A2 | Pass (T) | text in order at 1-, 3-, 7- and 64-byte splits; the fenced block never shows and is parsed; a broken block drops the card and keeps the answer; a bare JSON last line counts as the block |
+| A3 | Pass (T) | HTTP error, offline, a cut-off or blocked answer fail with nothing counted; on fake time, 6 s with no word → `Taking longer…`, 20 s → the fail line with Retry, nothing counted. The give-up races the stream, so a source that never answers can't hold the question |
+| A4 | Pass (T) | 13 sentences dropped by rule (emoji, unlimited, AI stylist, brand, shop, creator, build said back, body, height, an unbacked score) and 8 kept (a backed 7.5, "skinny jeans", "I guess", "the gap", "1.5 inches", "a slim fit", "32 waist"); an all-dropped answer is the fail line, not counted. The brand list leaves out everyday words that are also brands ("guess", "gap", "boss") |
+| A5 | Pass (T) | every state of the live row while streaming holds only passed sentences |
+| A6 | Pass (T) | on the full scenario, three real questions' whole requests: no birth year, no age words in his part, no file paths, no location |
+| A7 | Pass (T) | `CHAT_LIVE` ships `false` (a test reads the source); no real source without a key; every seeded demo answer passes the gate unchanged |
+| R1 | Pass (T) | `askC3.test.ts`: 50 questions, 5 per kind (§1's examples included) routed right; pieces by name, color + kind, or kind only when he has one piece of that kind ("my chinos" with two pairs asks the model, no guess); checks by score, weekday, or the newest |
+| R2 | Pass (T) | explain: the check in full; what-if: the stored fix targets plus his named swap re-scored by the parts engine; goes with: outfits that all include the piece, no predicted score; buy next: Starter rows he lacks, "+12" for the navy polo from rotation; how-to: nothing |
+| R3 | Pass (T) | an unsure question sends no evidence; one `need` → exactly one second call with that evidence; a second `need` is ignored; a lookup naming an unknown handle is no lookup |
+| R4–R5 | Pass (T) | each card kind checked against his data (an invalid outfit, an unknown handle, a made-up occasion, 1 or 5 options, a brand in an ask, a piece he owns as a buy, a shop link: all dropped); the buy card's "+N" ignores any number the model sends |
+| R6 | Pass (T, S) | the demo's 5 card answers come back with their cards; a tapped answer is his reply, answered, not counted, and the card takes no second tap. Simulator: demo 167 (outfit), 170 (the tap answered), 171 (buy, dark) |
+| R7 | Pass (T, S) | 3 chips from his data ("Why a 9.0?", his most-worn piece, a learn line); an empty closet gets "What should I buy first?". Simulator: they show when the composer opens; a tap sends (log: `route · fitHowTo`) |
+| R8 | Pass (T) | stored cards are ids; a removed piece shows as gone |
+| R9 | Pass (S) | demo screens 167–174 (outfit, start a check, the tap question, answered, buy, link, saved fact, a piece from chat) on the web preview; 167, 170, 171 and the chips on the Simulator, light and dark (`screenshots/chat-cards-oct15/`) |
+| M1 | Pass (T) | `askC4.test.ts`: allowed keys kept and cleaned; 10 dropped (unknown key, weight, body, a partner, health, religion, height, empty, not an object) |
+| M2 | Pass (T, S) | "I'm a 32 waist." saves "Waist 32", in You as "You told me · Oct 15"; Undo removes it and it's never learned again; a known fact isn't saved twice. Web preview: Undo turns the line into "Removed from what I know." |
+| M3 | Pass (T) | budget "$90" → profile 60–100; `look_now` leaves his picked looks alone |
+| M4 | Pass (T) | "grey hoodie" → a closet piece from chat (not photographed, a dashed tile, "From chat"), usable in an outfit card, never in a "+N"; Undo removes it; a later fit check asks or links, never a silent duplicate |
+| G4 | Pass (T) | every demo question asked: no check's score moves |
+| G5 | Pass | `npm run check`: 925 app tests in 75 suites, lint and typecheck clean. Not checked: the largest text size |

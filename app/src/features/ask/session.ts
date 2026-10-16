@@ -1,6 +1,7 @@
 // The app's one ask service (07), wired like the fit check's: the real store, the session clock, the same quota.
 // Answers: demo builds showing seeded data (a demo screen, or the full scenario) get the seeded answers (02 S25);
-// everything else, his phone included, keeps "coming soon" until the real model lands (C2).
+// the real model once CHAT_LIVE is on (liveSource.ts); everything else, his phone included, keeps "coming soon".
+// Every answer goes through the same prepare (pack, route, evidence) and the same sentence gate.
 import { AccessibilityInfo } from 'react-native';
 import { router } from 'expo-router';
 import seed from '../../../assets/seed.json';
@@ -13,7 +14,9 @@ import { mayUpload } from '@/features/privacy/wipe';
 import { newId } from '@/services/ids';
 import { realScheduler } from '@/services/scheduler';
 import { getDemoArgs, sessionClock } from '@/state/session';
+import { liveAnswerSource } from './liveSource';
 import { createAsk, keepsDraft } from './pipeline';
+import { createPrepare } from './prepare';
 import { comingSoonSource, createDemoSource, seededAnswers, type AnswerSource } from './source';
 
 const demoSource = createDemoSource({
@@ -22,7 +25,11 @@ const demoSource = createDemoSource({
   timed: () => getDemoArgs().latency !== 0,
 });
 
+const realSource = liveAnswerSource();
+
 async function pickSource(): Promise<AnswerSource> {
+  if (getDemoArgs().demoScreen !== null && DEMO_ENABLED) return demoSource;
+  if (realSource) return realSource;
   if (!DEMO_ENABLED) return comingSoonSource;
   if (getDemoArgs().demoScreen !== null) return demoSource;
   return (await store.getKv(KV.seedLoaded)) === 'full' ? demoSource : comingSoonSource;
@@ -34,6 +41,8 @@ export const askService = createAsk({
   clock: sessionClock,
   ids: newId,
   source: pickSource,
+  prepare: createPrepare({ store, clock: sessionClock, ids: newId, log: (l) => { if (__DEV__) console.log(`[ask] ${l}`); } }),
+  scheduler: realScheduler,
   consent: () => mayUpload(store),
   // The agreement as a sheet; agreeing just closes it, and his words are still in the composer.
   openConsent: () => router.push('/sheets/consent?from=ask'),
@@ -55,4 +64,9 @@ export async function sendQuestion(text: string): Promise<boolean> {
 
 export function retryQuestion(failedId: string): void {
   void askService.retry(failedId).catch((e: unknown) => console.error('[ask] retry threw', e));
+}
+
+/** An ask card's answer (R6): his tap, sent as his reply, never counted. */
+export function tapAnswer(cardMessageId: string, option: string): void {
+  void askService.tap(cardMessageId, option).catch((e: unknown) => console.error('[ask] tap threw', e));
 }

@@ -1,0 +1,64 @@
+// One question made ready to send (07 §5 steps 2–3): the pack, the route, the evidence, the prompt and the gate's
+// numbers, plus the code that checks the model's closing block (the lookup, the card, the remember). Store and clock
+// injected, so tests run it on the memory store.
+import { dayKey, localParts } from '@kitted/core';
+import type { KittedStore } from '@/data/store';
+import type { FitCheckRow } from '@/data/types';
+import type { Clock } from '@/services/clock';
+import { getStarterMarks } from '@/features/finish/service';
+import { buildCard } from './cards';
+import { buildStylistContext } from './context';
+import { allowedScores, buildEvidence, parseLookup, routeOfLookup, type EvidenceDeps } from './evidence';
+import { applyRemember } from './memory';
+import type { Prepared } from './pipeline';
+import { systemPrompt, userPrompt } from './prompt';
+import { routeQuestion } from './router';
+import { loadStylistSnapshot } from './snapshot';
+
+export interface PrepareDeps {
+  store: KittedStore;
+  clock: Clock;
+  ids: (prefix: string) => string;
+  /** For the log only. */
+  log?: (line: string) => void;
+}
+
+export function createPrepare(deps: PrepareDeps): (question: string) => Promise<Prepared> {
+  const { store, clock } = deps;
+  return async (question) => {
+    const snap = await loadStylistSnapshot(store, clock);
+    const ctx = buildStylistContext(snap, question);
+    const today = dayKey(snap.nowMs, snap.zone);
+    const dayOf = (c: FitCheckRow) => ({ dow: localParts(c.createdAt, snap.zone).dow, today: c.dayKey === today });
+    const route = routeQuestion(question, { closet: snap.closet, checks: snap.checks, context: ctx, dayOf });
+    const marks = await getStarterMarks(store);
+    const evDeps: EvidenceDeps = {
+      readingOf: async (id) => (id ? (await store.readings.get(id))?.reading ?? null : null),
+      starterMarks: marks,
+    };
+    // An unsure route sends the pack alone; the model may ask for one lookup (R3).
+    const ev = route.sure ? await buildEvidence(route, snap, ctx, evDeps) : { text: '', kind: route.kind };
+    deps.log?.(`route · ${route.kind}${route.sure ? '' : ' (unsure)'} · ${route.pieces.length} pieces${route.check ? ' · a check' : ''}${ev.text ? ' · evidence' : ''}`);
+    const hasBody = snap.profile !== null && (snap.profile.heightCm !== null || ['slim', 'average', 'athletic', 'broad', 'bigger'].includes(snap.profile.build));
+    return {
+      kind: route.kind,
+      prompt: { system: systemPrompt(route.kind), user: userPrompt(ctx.text, ev.text, question) },
+      gate: { allowedScores: allowedScores(ctx.text, ev.text), hasBody },
+      lookup: async (need) => {
+        const l = parseLookup(need, ctx.handles);
+        if (!l) return null;
+        const r = routeOfLookup(l);
+        const ev2 = await buildEvidence(r, snap, ctx, evDeps);
+        if (!ev2.text) return null;
+        return {
+          prompt: { system: systemPrompt(r.kind), user: userPrompt(ctx.text, ev2.text, question) },
+          gate: { allowedScores: allowedScores(ctx.text, ev2.text), hasBody },
+        };
+      },
+      card: async (raw, gate) => buildCard(raw, {
+        handles: ctx.handles, closet: snap.closet, checks: snap.checks, styles: snap.profile?.styles ?? null, starterMarks: marks, gate,
+      }),
+      remember: (raw, at) => applyRemember(raw, at, { store, clock, ids: deps.ids }),
+    };
+  };
+}

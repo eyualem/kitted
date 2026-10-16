@@ -114,6 +114,43 @@ function weatherWords(w: Record<string, unknown> | null, nowMs: number, zone: Zo
   return `${main}, ${lower(rain)}`;
 }
 
+/** A check in full, as the card and the Why sheet say it (the pack's "today" block, and explain's evidence). */
+export function fullCheckLines(
+  c: FitCheckRow, zone: ZoneOffset, checkHandle: ReadonlyMap<string, string>, piecesOf: (c: FitCheckRow) => string[],
+): string[] {
+  const out: string[] = [];
+  const score = c.score!;
+  const head = [checkHandle.get(c.id)!, timeText(c.createdAt, zone), `${displayScore(score)} ${scoreWordLabel(score)}`, occasionLabel(c.occasion)];
+  if (c.parentId && checkHandle.get(c.parentId)) head.push(`re-check of ${checkHandle.get(c.parentId)}`);
+  if (c.details.readsAs) head.push(`reads as ${lower(styleLabel(c.details.readsAs))}`);
+  const gf = c.details.goingFor;
+  if (gf?.style) head.push(`going for ${lower(styleLabel(gf.style))}`);
+  else if (gf?.other) head.push(`going for "${oneLine(gf.other, 80)}"`);
+  out.push(head.join(' · '));
+  if (c.explanation) out.push(`  Summary: ${oneLine(c.explanation, 300)}`);
+  if (c.isPartial) out.push(`  Partial check: ${c.notRated.includes('bottom half') ? 'only the top half was in the photo' : 'shoes not in the photo'} (what isn't in the photo never costs points)`);
+  const worn = piecesOf(c);
+  if (worn.length) out.push(`  Pieces: ${worn.join(', ')}`);
+  const parts = c.details.parts;
+  if (parts) {
+    const names = PARTS_DATA.partNames as Record<PartName, string>;
+    const shown = (PARTS_DATA.partOrder as readonly PartName[]).map((k) => {
+      const part = parts.parts[k];
+      if (!part || part.display === null) return `${names[k]} not scored`;
+      const why = part.reasons.map((r) => `${oneLine(r.line, 120)} ${signed(Math.round(r.points * 100) / 100)}`).join('; ');
+      return `${names[k]} ${part.display}${why ? ` (${why})` : ''}`;
+    });
+    out.push(`  Parts: ${shown.join(' · ')}`);
+    if (parts.condition.deduction > 0) out.push(`  Condition: ${oneLine(parts.condition.display, 120)} −${parts.condition.deduction}`);
+  }
+  const fixes = c.fixes.filter((f, i, all) => all.findIndex((g) => g.copy === f.copy) === i);
+  fixes.forEach((f, i) => out.push(`  Fix ${i + 1}: ${oneLine(f.copy, 120)} → ${displayScore(f.to)}${f.raisesLine ? ` (${oneLine(f.raisesLine, 80)})` : ''}`));
+  if (!fixes.length) out.push('  Fixes: none on the card');
+  const tip = c.details.nextLevel?.[0];
+  if (tip) out.push(`  ${c.details.tipLead === 'smallerStep' ? 'Smaller step' : c.details.tipLead === 'tip' ? 'Tip' : 'Next level'}: ${oneLine(tip, 160)}`);
+  return out;
+}
+
 export function buildStylistContext(s: StylistSnapshot, question: string): StylistContext {
   const { zone, nowMs } = s;
   const today = dayKey(nowMs, zone);
@@ -188,37 +225,7 @@ export function buildStylistContext(s: StylistSnapshot, question: string): Styli
   // Today's checks in full: what the card and the Why sheet say.
   if (todays.length) {
     push('', "Today's fit checks (the app's scores; never change them):");
-    for (const c of todays) {
-      const score = c.score!;
-      const head = [checkHandle.get(c.id)!, timeText(c.createdAt, zone), `${displayScore(score)} ${scoreWordLabel(score)}`, occasionLabel(c.occasion)];
-      if (c.parentId && checkHandle.get(c.parentId)) head.push(`re-check of ${checkHandle.get(c.parentId)}`);
-      if (c.details.readsAs) head.push(`reads as ${lower(styleLabel(c.details.readsAs))}`);
-      const gf = c.details.goingFor;
-      if (gf?.style) head.push(`going for ${lower(styleLabel(gf.style))}`);
-      else if (gf?.other) head.push(`going for "${oneLine(gf.other, 80)}"`);
-      push(head.join(' · '));
-      if (c.explanation) push(`  Summary: ${oneLine(c.explanation, 300)}`);
-      if (c.isPartial) push(`  Partial check: ${c.notRated.includes('bottom half') ? 'only the top half was in the photo' : 'shoes not in the photo'} (what isn't in the photo never costs points)`);
-      const worn = piecesOf(c);
-      if (worn.length) push(`  Pieces: ${worn.join(', ')}`);
-      const parts = c.details.parts;
-      if (parts) {
-        const names = PARTS_DATA.partNames as Record<PartName, string>;
-        const shown = (PARTS_DATA.partOrder as readonly PartName[]).map((k) => {
-          const part = parts.parts[k];
-          if (!part || part.display === null) return `${names[k]} not scored`;
-          const why = part.reasons.map((r) => `${oneLine(r.line, 120)} ${signed(Math.round(r.points * 100) / 100)}`).join('; ');
-          return `${names[k]} ${part.display}${why ? ` (${why})` : ''}`;
-        });
-        push(`  Parts: ${shown.join(' · ')}`);
-        if (parts.condition.deduction > 0) push(`  Condition: ${oneLine(parts.condition.display, 120)} −${parts.condition.deduction}`);
-      }
-      const fixes = c.fixes.filter((f, i, all) => all.findIndex((g) => g.copy === f.copy) === i);
-      fixes.forEach((f, i) => push(`  Fix ${i + 1}: ${oneLine(f.copy, 120)} → ${displayScore(f.to)}${f.raisesLine ? ` (${oneLine(f.raisesLine, 80)})` : ''}`));
-      if (!fixes.length) push('  Fixes: none on the card');
-      const tip = c.details.nextLevel?.[0];
-      if (tip) push(`  ${c.details.tipLead === 'smallerStep' ? 'Smaller step' : c.details.tipLead === 'tip' ? 'Tip' : 'Next level'}: ${oneLine(tip, 160)}`);
-    }
+    for (const c of todays) push(...fullCheckLines(c, zone, checkHandle, piecesOf));
   } else {
     push('', 'No fit check today yet.');
   }

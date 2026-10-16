@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import Animated, { cancelAnimation, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming, type SharedValue } from 'react-native-reanimated';
 import { KText, StylistMessage, useTheme } from '@/design-system';
+import { t } from '@/i18n/en';
 import type { LiveAnswer } from './live';
 
 /** Whether the live row still has something to draw, given the ids the thread shows. */
@@ -18,7 +19,16 @@ export function LiveAnswerRow({ live }: { live: LiveAnswer }) {
   const text = live.phase === 'waiting' ? '' : live.text;
   return (
     <View accessibilityElementsHidden={live.phase !== 'done'} importantForAccessibility={live.phase !== 'done' ? 'no-hide-descendants' : 'auto'}>
-      {text ? <StylistMessage>{text}</StylistMessage> : <TypingDots />}
+      {text ? <StylistMessage>{text}</StylistMessage> : (
+        <View style={{ gap: 4 }}>
+          <TypingDots />
+          {live.phase === 'waiting' && live.slow ? (
+            <KText role="miniLabel" color="ink3">
+              {t('ask.slow')}
+            </KText>
+          ) : null}
+        </View>
+      )}
     </View>
   );
 }
