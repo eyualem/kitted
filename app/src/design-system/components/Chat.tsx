@@ -13,45 +13,64 @@ import { Icon } from './Icon';
 import { KText } from './KText';
 
 // ---------------------------------------------------------------------------------------
-// StylistMessage: no bubble; body ink text up to 92% wide. On the first message of a run, a
-// header: an 18 pt avatar square (radius 5, fixed.label, "K" in Archivo Expanded at 10.5,
-// fixed.onDark) + "Your stylist" (footnote semibold ink3), then 4 pt.
+// StylistMessage, look C "stylist note" (founder, Oct 16, #302; mockups/chat-answers.html): a 28 pt column on the
+// leading side holding the K mark (radius 8, fixed.label, Archivo Expanded 14, fixed.onDark) on the first line of a
+// run, then a 10 pt gap and the text. Later lines of the same run keep the column empty, so the text lines up; the
+// footer (cards, chips, buttons) sits in the text column too. `body` replaces the plain text (an answer's lead and
+// chips, features/ask/AnswerBody); `children` is always the whole text, for VoiceOver.
 
 export interface StylistMessageProps {
   children: string;
   showHeader?: boolean;
+  /** Drawn in the text's place (an answer's lead, reason and piece chips). */
+  body?: ReactNode;
   /** Extra content under the text (cards, chips). Not part of the spoken text. */
   footer?: ReactNode;
+  /** VoiceOver actions on the text (an answer's piece chips: "Open dark jeans"). */
+  actions?: readonly { name: string; label: string; onPress: () => void }[];
 }
 
-export function StylistMessage({ children, showHeader, footer }: StylistMessageProps) {
-  const { archivoLoaded } = useTheme();
+export function StylistMark() {
+  const { archivoLoaded, scheme } = useTheme();
   return (
-    <View style={{ maxWidth: '92%', alignSelf: 'flex-start', gap: 4 }}>
-      <View accessible accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })} style={{ gap: 4 }}>
-        {showHeader ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View
-              style={{
-                width: size.avatar,
-                height: size.avatar,
-                borderRadius: radius.avatar,
-                borderCurve: 'continuous',
-                backgroundColor: fixed.label,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text allowFontScaling={false} style={[wordmarkStyle(wordmark.avatar.fontSize, 0, archivoLoaded), { color: fixed.onDark }]}>
-                K
-              </Text>
-            </View>
-            <KText role="stylistWho">{t('common.who')}</KText>
-          </View>
-        ) : null}
-        <KText role="chatText">{children}</KText>
+    <View
+      style={{
+        width: size.mark,
+        height: size.mark,
+        borderRadius: radius.mark,
+        borderCurve: 'continuous',
+        backgroundColor: fixed.label,
+        // On night backgrounds the indigo mark sinks in; a faint rim keeps its edge (#302).
+        ...(scheme === 'dark' ? { borderWidth: 1, borderColor: fixed.labelRimDark } : null),
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text allowFontScaling={false} style={[wordmarkStyle(wordmark.mark.fontSize, 0, archivoLoaded), { color: fixed.onDark }]}>
+        K
+      </Text>
+    </View>
+  );
+}
+
+export function StylistMessage({ children, showHeader, body, footer, actions }: StylistMessageProps) {
+  return (
+    <View style={{ flexDirection: 'row', gap: size.markGap, marginTop: showHeader ? 4 : 0 }}>
+      <View style={{ width: size.mark }} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+        {showHeader ? <StylistMark /> : null}
       </View>
-      {footer}
+      <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
+        <View
+          accessible
+          accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })}
+          accessibilityActions={actions?.map((a) => ({ name: a.name, label: a.label }))}
+          onAccessibilityAction={actions ? (e) => actions.find((a) => a.name === e.nativeEvent.actionName)?.onPress() : undefined}
+          style={{ gap: 4, paddingTop: showHeader ? 3 : 0 }}
+        >
+          {body ?? <KText role="chatText">{children}</KText>}
+        </View>
+        {footer}
+      </View>
     </View>
   );
 }

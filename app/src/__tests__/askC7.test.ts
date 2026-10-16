@@ -63,7 +63,7 @@ describe('P2 · the answer is read once, complete, with its card', () => {
       await o.done;
     }
     expect(spoken).toHaveLength(2);
-    expect(spoken[0]).toMatch(/^Your white tee and dark jeans.*light\. An outfit from your closet: olive overshirt, white tee, dark jeans, white sneakers\.$/);
+    expect(spoken[0]).toMatch(/^Wear it open over your white tee and dark jeans.*light\. An outfit from your closet: olive overshirt, white tee, dark jeans, white sneakers\.$/);
     expect(spoken[1]).toBe("Got it. I'll keep that in mind when you ask about pants. Saved to what I know.");
   });
 });

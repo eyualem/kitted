@@ -54,7 +54,7 @@ export interface SeededAnswer {
 export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
   {
     question: 'What goes with my olive overshirt?',
-    answer: 'Your white tee and dark jeans, worn open, with the white sneakers. Olive and denim is an easy pair, and the white keeps it light.',
+    answer: 'Wear it open over your white tee and dark jeans. Finish with the white sneakers: olive and denim always get along, and the white keeps it light.',
     card: { type: 'outfit', pieces: ['Olive overshirt', 'White tee', 'Dark jeans', 'White sneakers'], occasion: 'everyday' },
   },
   {
@@ -64,16 +64,16 @@ export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
   },
   {
     question: 'What should I wear to work?',
-    answer: 'That depends on the office. One question first.',
+    answer: 'Depends on the office. One quick question first.',
     card: { type: 'ask', question: 'Is it a suit-and-tie office?', options: ['Yes', 'Business casual', 'Jeans are fine'] },
   },
   {
     question: 'Business casual',
-    answer: "Then the khaki chinos, the light-blue oxford and the brown loafers. Add the navy overshirt if it's cold out.",
+    answer: "Then the khaki chinos and the light-blue oxford, with the brown loafers. Add the navy overshirt if it's cold out.",
   },
   {
     question: 'What should I buy next?',
-    answer: "A navy polo. It works with both chinos, the dark jeans and every shoe you own, and it's a step up from a tee.",
+    answer: "Get a navy polo next. It goes with both chinos, the dark jeans and every shoe you own, and it's a step up from a tee.",
     card: { type: 'buy', kind: 'polo', shade: 'navy' },
   },
   {

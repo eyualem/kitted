@@ -176,6 +176,8 @@ export const wordmark = {
   small: { fontSize: 11, letterSpacingEm: 0.32 },
   /** The 18 pt chat avatar "K". */
   avatar: { fontSize: 10.5, letterSpacingEm: 0 },
+  /** The 28 pt mark beside each answer (look C, #302). */
+  mark: { fontSize: 14, letterSpacingEm: 0 },
 } as const;
 
 /**
@@ -227,6 +229,10 @@ export const roles = {
   userBubbleText: { variant: 'body', color: 'onMe' },
   composerPlaceholder: { variant: 'body', color: 'ink3' },
   stylistWho: { variant: 'footnote', weight: '600', color: 'ink3' },
+  /** Look C (#302): an answer's first sentence (the move), then the reason in grey. */
+  answerLead: { variant: 'headline', color: 'ink' },
+  answerRest: { variant: 'callout', color: 'ink2' },
+  answerChip: { variant: 'callout', weight: '600', color: 'ink' },
   dayStamp: { variant: 'footnote', weight: '500', color: 'ink3' },
   photoCaption: { variant: 'footnote', color: 'onMe' },
   welcomeHero: { variant: 'largeTitle', weight: '700', color: 'ink' },

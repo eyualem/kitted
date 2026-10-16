@@ -6,6 +6,9 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import Animated, { cancelAnimation, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming, type SharedValue } from 'react-native-reanimated';
 import { KText, StylistMessage, useTheme } from '@/design-system';
+import { store } from '@/data/db';
+import { useLive } from '@/data/useLive';
+import { AnswerBody, answerLayout } from './AnswerBody';
 import { t } from '@/i18n/en';
 import type { LiveAnswer } from './live';
 
@@ -17,18 +20,30 @@ export function liveRowShows(live: LiveAnswer | null, shownIds: ReadonlySet<stri
 
 export function LiveAnswerRow({ live }: { live: LiveAnswer }) {
   const text = live.phase === 'waiting' ? '' : live.text;
+  const closet = useLive(['closet'], () => store.closet.all(), []);
+  // Look C (#302): drawn like the stored answer it becomes (the mark, the lead, the chips), so nothing jumps when
+  // the thread's row takes over. The dots sit in the text column, beside the mark.
   return (
     <View accessibilityElementsHidden={live.phase !== 'done'} importantForAccessibility={live.phase !== 'done' ? 'no-hide-descendants' : 'auto'}>
-      {text ? <StylistMessage>{text}</StylistMessage> : (
-        <View style={{ gap: 4 }}>
-          <TypingDots />
-          {live.phase === 'waiting' && live.slow ? (
-            <KText role="miniLabel" color="ink3">
-              {t('ask.slow')}
-            </KText>
-          ) : null}
-        </View>
-      )}
+      <StylistMessage
+        showHeader
+        body={
+          text ? (
+            <AnswerBody layout={answerLayout(text, closet ?? null)} />
+          ) : (
+            <View style={{ gap: 4 }}>
+              <TypingDots />
+              {live.phase === 'waiting' && live.slow ? (
+                <KText role="miniLabel" color="ink3">
+                  {t('ask.slow')}
+                </KText>
+              ) : null}
+            </View>
+          )
+        }
+      >
+        {text}
+      </StylistMessage>
     </View>
   );
 }
@@ -46,7 +61,7 @@ export function TypingDots() {
     );
   }
   return (
-    <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center', height: 24, paddingLeft: 2 }}>
+    <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center', height: 22, paddingLeft: 2 }}>
       {[0, 1, 2].map((i) => (
         <Dot key={i} index={i} />
       ))}

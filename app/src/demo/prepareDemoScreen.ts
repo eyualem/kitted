@@ -168,7 +168,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   78: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', hold: 0.86 }] },
   79: { steps: [{ at: '2026-10-22T07:42:00', do: 'whichOne', photoId: 'p01b' }] },
   90: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE }] },
-  91: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE, partial: 'Yes. Olive and navy is an easy pair. Add the' }] },
+  91: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'askHold', text: ASK_OLIVE, partial: 'Yes, olive and navy get along easily. Wear the' }] },
   92: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: ASK_OLIVE }, { at: '2026-10-22T12:09:00', do: 'ask', text: ASK_BELT }] },
   // The seed's two questions plus three more used: the sixth gets the free limit line (no Try Pro until P6).
   93: { steps: [{ at: '2026-10-22T12:20:00', do: 'askUsed', n: 5 }, { at: '2026-10-22T12:21:00', do: 'ask', text: 'What shoes go with my khaki chinos?' }] },

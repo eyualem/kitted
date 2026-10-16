@@ -381,6 +381,8 @@ const addedInBuild = {
   'ask.comingSoon': "Questions are coming soon. For now I can check your fit and plan your outfit.",
   // The stylist's answers, C2–C4 (07 §1, §4, §6; #297): the slow line, the cards, the saved chip, the starter chips.
   'ask.slow': 'Taking longer…',
+  // Look C (#302): a piece chip in an answer, for VoiceOver.
+  'a11y.openPiece': 'Open {name}',
   'ask.card.startCheck': 'Start a fit check',
   'ask.card.checkIt': 'Check it',
   'ask.card.gone': 'No longer in your closet',

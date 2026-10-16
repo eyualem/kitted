@@ -1,4 +1,5 @@
 // One thread row: a stylist line, his bubble, his photo, or a card (02 D12).
+import type React from 'react';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { Chip, ChipFlow, DayStamp, KButton, PhotoBubble, StylistMessage, UserBubble } from '@/design-system';
@@ -17,6 +18,7 @@ import { RecheckCard } from './cards/RecheckCard';
 import { WhichOneCard } from '@/features/whichOne/WhichOneCard';
 import { SupportCard } from '@/features/ask/SupportCard';
 import { AskAttachment } from '@/features/ask/AskCardView';
+import { AnswerBody, answerLayout, chipActions } from '@/features/ask/AnswerBody';
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
@@ -71,6 +73,7 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
   }
   // An answer's one card and its "Saved to what I know · Undo" (07 §1, §4).
   const attached = m.payload.askCard !== undefined || typeof m.payload.savedFact === 'string';
+  if (item.answer) return <AnswerMessage m={m} showHeader={item.showWho} footer={attached ? <AskAttachment m={m} readOnly={readOnly} /> : null} />;
   return (
     <StylistMessage
       showHeader={item.showWho}
@@ -88,6 +91,18 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
         ) : null
       }
     >
+      {text}
+    </StylistMessage>
+  );
+}
+
+/** An answer to his question, look C (#302): the lead, the reason and his pieces as chips. */
+function AnswerMessage({ m, showHeader, footer }: { m: ChatMessage; showHeader: boolean; footer: React.ReactNode }) {
+  const closet = useLive(['closet'], () => store.closet.all(), []);
+  const text = m.text ?? '';
+  const layout = answerLayout(text, closet ?? null);
+  return (
+    <StylistMessage showHeader={showHeader} body={<AnswerBody layout={layout} />} actions={chipActions(layout.chips)} footer={footer}>
       {text}
     </StylistMessage>
   );

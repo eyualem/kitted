@@ -3,8 +3,11 @@
 // the text. Rules: an emoji · "unlimited" · "AI stylist" · a brand or shop · a creator's name · a body word aimed at
 // him · his build or height said back to him · a score-like number the evidence doesn't hold.
 // The stream is cut into sentences as it arrives (SentenceStream), so the live row only ever shows checked sentences.
+// The voice (07 §15.5, K2): filler ("Great question!" alone, "Let me know if…", "Hope this helps") and the banned
+// words ("elevate", "drip", "vibe") drop their sentence; an opener before a comma ("Absolutely, …") is cut off the first
+// sentence. Markup (**, #, bullets, backticks) never shows: the answer's look is drawn by code (L3).
 
-export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score';
+export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned';
 
 export interface GateContext {
   /** Every score that may be said: the one-decimal numbers in the pack and the evidence ("7.0", "7.5"). */
@@ -78,9 +81,33 @@ function scoresSaid(sentence: string): string[] {
   return out;
 }
 
+// The voice spec's never-list (rubric/stylist-guide.md §0). Whole words only.
+const FILLER = /^\s*(?:let me know\b|hope (?:this|that) helps|feel free to\b|happy to help|(?:any|got any) (?:other|more) questions|if you have (?:any )?(?:other |more )?questions)/i;
+const OPENER_ONLY = /^\s*(?:(?:great|good|nice|fair|love this|love that) question|absolutely|sure thing|sure|of course|certainly|definitely|totally|great|awesome|okay so|ok so)\s*[.!]+\s*$/i;
+const OPENER_LEAD = /^\s*(?:(?:great|good|nice) question|absolutely|sure thing|sure|of course|certainly|definitely|totally)\s*[,!:—–-]\s+/i;
+const BANNED = /\b(?:elevat(?:e|es|ed|ing)|drip|vibes?|vibey|game[-\s]?changers?|slay(?:s|ed)?|level(?:s|ed)? up|swag|fire fit|goes hard)\b/i;
+
+/** Model markup never shows (the look is drawn by code): **bold**, __bold__, `code`, a heading's #, a bullet. */
+export function stripMarkup(text: string): string {
+  return text
+    .replace(/\*\*|__|`+/g, '')
+    .replace(/(^|\n)[ \t]*#{1,6}[ \t]+/g, '$1')
+    .replace(/(^|\n)[ \t]*(?:[-*•]|\d+[.)])[ \t]+/g, '$1');
+}
+
+/** The first sentence without an opener: "Absolutely, olive works." → "Olive works." */
+export function trimOpener(sentence: string): string {
+  const m = OPENER_LEAD.exec(sentence);
+  if (!m) return sentence;
+  const rest = sentence.slice(m[0].length);
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
+}
+
 /** The first rule a sentence breaks, or null when it may show. */
 export function checkSentence(sentence: string, ctx: GateContext): GateRule | null {
   if (EMOJI.test(sentence)) return 'emoji';
+  if (FILLER.test(sentence) || OPENER_ONLY.test(sentence)) return 'filler';
+  if (BANNED.test(sentence)) return 'banned';
   if (UNLIMITED.test(sentence)) return 'unlimited';
   if (AI_STYLIST.test(sentence)) return 'aiStylist';
   if (CREATOR.test(sentence)) return 'creator';
@@ -96,17 +123,35 @@ export function checkSentence(sentence: string, ctx: GateContext): GateRule | nu
  * The end of the next sentence in `text` from `from`, or -1 while it may still grow: a . ! or ? (with any closing
  * quote or bracket) followed by whitespace, or a line break. "7.5" and "e.g." mid-word never end one.
  */
+const ABBREV = /(?:^|[^\w])(?:vs|e\.g|i\.e|approx|incl|mr|dr)\.$/i;
+
 function sentenceEnd(text: string, from: number): number {
   for (let i = from; i < text.length; i++) {
     const c = text[i]!;
     if (c === '\n') return i + 1;
     if (c !== '.' && c !== '!' && c !== '?') continue;
+    if (c === '.' && ABBREV.test(text.slice(Math.max(0, i - 6), i + 1))) continue;
     let j = i + 1;
     while (j < text.length && /["'”’)\]]/.test(text[j]!)) j++;
     if (j >= text.length) return -1; // may be "7." of "7.5", or more punctuation: wait
     if (/\s/.test(text[j]!)) return j;
   }
   return -1;
+}
+
+/** A finished text cut into sentences (each with its own trailing space trimmed), the way the stream cuts it. */
+export function sentences(text: string): string[] {
+  const out: string[] = [];
+  let rest = text;
+  for (;;) {
+    const end = sentenceEnd(rest, 0);
+    if (end < 0) break;
+    const s = rest.slice(0, end).trim();
+    if (s) out.push(s);
+    rest = rest.slice(end);
+  }
+  if (rest.trim()) out.push(rest.trim());
+  return out;
 }
 
 /**
@@ -117,7 +162,9 @@ export function createSentenceStream(ctx: GateContext) {
   let buf = '';
   let shown = '';
   const dropped: GateRule[] = [];
-  const pass = (sentence: string): string => {
+  const pass = (raw: string): string => {
+    let sentence = stripMarkup(raw);
+    if (shown === '') sentence = trimOpener(sentence.replace(/^\s+/, ''));
     const rule = sentence.trim() ? checkSentence(sentence, ctx) : null;
     if (rule) {
       dropped.push(rule);
