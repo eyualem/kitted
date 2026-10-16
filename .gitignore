@@ -68,3 +68,5 @@ extraction-test/results/hem4/mp/
 extraction-test/.venv-mp/
 inputs/mediapipe/
 inputs/ansur2/
+# Firebase app config (project kitted-a5b45, #293): kept out of git
+GoogleService-Info.plist

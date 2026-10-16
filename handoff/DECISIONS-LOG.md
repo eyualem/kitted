@@ -1751,3 +1751,15 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Read live, no stored "all done" flag:** all 3 done hides the rows and L3 says `All 3 done. Nice work.`; if a move turns undone again (he removes the Starter piece he marked) the row comes back, because it only says what's true.
     - **No new outward copy:** the deck's `lookbook.moves`, `lookbook.movesCount`, `moves.*`, `plan.start`, `plan.startN`; three VoiceOver lines in `addedInBuild` (`moves.a11y.row`, `.rowDone`, `.pinned`). `SlotBar` moved out of Starter essentials into `features/finish/SlotBar.tsx` (12 or 3 slots, 03 §5); the `checklist` symbol added.
     - **Demo screens 163–166:** 163 Lookbook with the row · 164 L3 · 165 You with the row (move 1 done) · 166 L3 from You. Not on the Simulator (the Mac had under 250 MB free, rule 9).
+
+293. **The real Firebase project exists, with the tested Firestore rules live (founder, Oct 15: set up in the console, then "I am done signing in").**
+    - **The project:** `kitted-a5b45` (display name Kitted), on eyuhaile5@gmail.com. Its database is `(default)`, Standard edition, in us-central1. The console offered nam5 first; the founder switched it on Claude's advice.
+    - **Deployed by Claude:** `firestore.rules` and `firestore.indexes.json`, the files that passed R1–R10 (#290). Checked from outside: an unauthenticated read of `users/someone` and of `users/someone/fitChecks` both return 403 PERMISSION_DENIED.
+    - **Aliases:** `.firebaserc` keeps `demo-kitted` as the default (so emulator runs can never reach the real project) and adds `prod: kitted-a5b45`; real deploys name the project explicitly. `GoogleService-Info.plist` is git-ignored.
+    - **Not deployed yet:**
+      - The Storage rules: Storage isn't set up. Setting it up needs Blaze, which the founder hasn't turned on yet.
+      - The server jobs (`deleteAccount`, the purges): they're deployed once the app is wired to Firebase. Until then they'd add a daily scheduled job and a few cents of build storage for nothing, and `deleteAccount` needs App Check (after the $99 program) anyway.
+    - **The founder's remaining console steps** (CLAUDE.md to-do, P1): Blaze with a $10 budget alert, Storage in us-central1, Anonymous and Google sign-in (Apple after the $99 program), the iPhone app registration and its plist.
+    - **Cost talk, same session:** Firebase is about $0 a month at beta size and about $8 at 10,000 users. The AI is the bill to watch.
+      - The founder's idea was that if Gemini's price rises, Sonnet "will basically be the same". It isn't: a Sonnet 5.5 read costs 1.73¢, against Gemini's 0.59¢ now and about 1.18¢ from January.
+      - So Sonnet stays the quality upgrade, gated on a ~$10 steadiness run, consent and policy changes, and a Sonnet version of the app's reading code. GPT-6 Luna stays the cost fallback. Gemini stays the default.

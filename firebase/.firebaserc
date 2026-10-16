@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "demo-kitted"
+    "default": "demo-kitted",
+    "prod": "kitted-a5b45"
   }
 }
