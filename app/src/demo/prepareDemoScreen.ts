@@ -204,7 +204,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
       { at: '2026-10-22T07:51:00', do: 'closetYes' },
     ],
   },
-  // The stylist's cards (07 §13 R9, #296): the demo's answers with an attachment, on the full scenario's closet.
+  // The stylist's cards (07 §13 R9, #297): the demo's answers with an attachment, on the full scenario's closet.
   167: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What goes with my olive overshirt?' }] },
   168: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What would this outfit score?' }] },
   169: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'What should I wear to work?' }] },

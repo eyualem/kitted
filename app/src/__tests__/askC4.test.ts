@@ -88,6 +88,8 @@ describe('M2 · saved, shown, undoable, never learned again once deleted', () =>
   });
   it('facts read like the seed\'s', () => {
     expect(factText('owns_unphotographed', 'black Chelsea boots')).toBe('You own black Chelsea boots (no photo yet)');
+    expect(factText('owns_unphotographed', 'grey hoodie')).toBe('You own a grey hoodie (no photo yet)');
+    expect(factText('owns_unphotographed', 'olive overshirt')).toBe('You own an olive overshirt (no photo yet)');
     expect(factText('fit_avoid', 'Skinny jeans')).toBe('You avoid skinny jeans');
     expect(factText('occasions_coming', 'a wedding Nov 8')).toBe('Wedding Nov 8');
   });

@@ -379,7 +379,7 @@ const addedInBuild = {
   'mic.off.body': 'Turn it on in Settings to ask your stylist out loud.',
   'mic.off.settings': 'Open Settings',
   'ask.comingSoon': "Questions are coming soon. For now I can check your fit and plan your outfit.",
-  // The stylist's answers, C2–C4 (07 §1, §4, §6; #296): the slow line, the cards, the saved chip, the starter chips.
+  // The stylist's answers, C2–C4 (07 §1, §4, §6; #297): the slow line, the cards, the saved chip, the starter chips.
   'ask.slow': 'Taking longer…',
   'ask.card.startCheck': 'Start a fit check',
   'ask.card.checkIt': 'Check it',
@@ -404,7 +404,7 @@ const addedInBuild = {
   'ask.chip.learn.3': 'How long should my jeans be?',
   'ask.chip.learn.4': 'Should I tuck in my tee?',
   'item.source.chat': 'From chat',
-  // What a fact from the chat says in You → What your stylist knows (C4, #296), in the seed's own style.
+  // What a fact from the chat says in You → What your stylist knows (C4, #297), in the seed's own style.
   'fact.chat.waist_size': 'Waist {v}',
   'fact.chat.inseam': 'Inseam {v}',
   'fact.chat.top_size': 'Top size {v}',

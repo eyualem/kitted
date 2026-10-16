@@ -48,7 +48,9 @@ export function parseRemember(raw: unknown): { key: RememberKey; value: string }
 
 /** The fact as You shows it ("Waist 32", "You own black Chelsea boots (no photo yet)"). */
 export function factText(key: RememberKey, value: string): string {
-  const v = value.replace(/^(?:a |an |my |some )/i, (m) => (key === 'owns_unphotographed' ? m.toLowerCase() : ''));
+  let v = value.replace(/^(?:a |an |my |some )/i, (m) => (key === 'owns_unphotographed' ? m.toLowerCase() : ''));
+  // "You own grey hoodie" reads wrong: a single piece gets "a" ("You own a grey hoodie"), a pair doesn't ("Chelsea boots").
+  if (key === 'owns_unphotographed' && !/^(?:a|an|my|some|two|three|\d)\b/i.test(v) && !/s$/i.test(v.trim())) v = `${/^[aeiou]/i.test(v) ? 'an' : 'a'} ${v}`;
   const lowerV = key === 'owns_unphotographed' || key.startsWith('color') || key.startsWith('fit') || key === 'look_now' ? v.charAt(0).toLowerCase() + v.slice(1) : v;
   return t(`fact.chat.${key}` as StringKey, { v: lowerV, V: v.charAt(0).toUpperCase() + v.slice(1) });
 }
