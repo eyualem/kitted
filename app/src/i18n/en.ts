@@ -378,6 +378,8 @@ const addedInBuild = {
   'mic.off.title': 'Microphone is off',
   'mic.off.body': 'Turn it on in Settings to ask your stylist out loud.',
   'mic.off.settings': 'Open Settings',
+  // A second photo while one is reading (09-ui-review §11, #304): the founder's listed default (#233 item 8).
+  'cam.busy': "Still reading your last photo. Send this one when it's done.",
   'ask.comingSoon': "Questions are coming soon. For now I can check your fit and plan your outfit.",
   // The stylist's answers, C2–C4 (07 §1, §4, §6; #297): the slow line, the cards, the saved chip, the starter chips.
   'ask.slow': 'Taking longer…',
