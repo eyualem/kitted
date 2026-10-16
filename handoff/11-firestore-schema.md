@@ -32,6 +32,8 @@
 | Usage counters (checks and questions today) | The Worker (Cloudflare D1), keyed on the account ID | — | No; the phone keeps a mirror from the server's replies |
 | Pro | RevenueCat, keyed on the account ID | — | No (RevenueCat restores it) |
 
+**The real project (Oct 15, #293–294):** `kitted-a5b45`; Storage bucket `kitted-a5b45.firebasestorage.app`; both sets of rules live.
+
 **Region:** Firestore `us-central1` (regional, the cheaper price in 08 §4) and the Storage bucket in `us-central1` (Cloud Storage's no-cost tier applies only in us-central1, us-east1 and us-west1). The location can never be changed after the database is created, so this is decided now.
 
 ---

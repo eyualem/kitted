@@ -1763,3 +1763,9 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Cost talk, same session:** Firebase is about $0 a month at beta size and about $8 at 10,000 users. The AI is the bill to watch.
       - The founder's idea was that if Gemini's price rises, Sonnet "will basically be the same". It isn't: a Sonnet 5.5 read costs 1.73¢, against Gemini's 0.59¢ now and about 1.18¢ from January.
       - So Sonnet stays the quality upgrade, gated on a ~$10 steadiness run, consent and policy changes, and a Sonnet version of the app's reading code. GPT-6 Luna stays the cost fallback. Gemini stays the default.
+
+294. **Storage is set up and its rules are live (founder, Oct 15: Blaze turned on, then Storage created).**
+    - **The bucket:** `kitted-a5b45.firebasestorage.app`, the new-style default; there's no `appspot.com` bucket.
+    - **Deployed:** `storage.rules`, the file that passed R9.
+    - **Checked from outside, signed out:** listing `users/` and uploading to `users/someone/files/photos/` both return 403 Permission denied.
+    - **Not verified:** the bucket's location. The CLI can't read it without Claude handling the founder's token. Claude advised us-central1 and asked him to confirm it in the console.
