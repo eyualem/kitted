@@ -16,6 +16,7 @@ import { t } from '@/i18n/en';
 import { artSpec } from './artSpec';
 import { GarmentArt } from './GarmentArt';
 import { pickEdit } from './pieceActions';
+import { doubtLine, fitDoubt } from './fitDoubt';
 import { editOptions, editRows, optionA11y, withEdit, type EditField, type EditOption } from './pieceEdit';
 import { isAwaitingAnswer, isOwned } from './profile';
 
@@ -87,11 +88,11 @@ export function EditSheet() {
   const [width, setWidth] = useState(0);
   const [busy, setBusy] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const data = useLive(['closet'], async () => {
+  const data = useLive(['closet', 'closetObs'], async () => {
     const all = await store.closet.all();
     const item = all.find((c) => c.id === id);
     if (!item || !isOwned(item) || isAwaitingAnswer(item, all.filter(isOwned))) return null;
-    return { item };
+    return { item, doubt: fitDoubt(item, await store.closetObs.all()) };
   }, [id]);
   const item = data?.item ?? null;
   const row = item ? editRows(item).find((r) => r.field === field) : undefined;
@@ -108,10 +109,11 @@ export function EditSheet() {
       {list.map((o) => <Choice key={String(o.value)} item={item!} field={field} option={o} size={tile} onPick={() => pick(o.value)} />)}
     </View>
   );
-  const opts = item && row ? editOptions(item, field) : null;
+  // A "Not sure" row (§18): nothing ringed as current, so any pick settles it.
+  const opts = item && row ? editOptions(item, field, { unsure: data?.doubt?.field === field }) : null;
 
   return (
-    <SheetScaffold title={title} subtitle={t('closet.edit.sub')}>
+    <SheetScaffold title={title} subtitle={data?.doubt?.field === field ? doubtLine(data.doubt) : t('closet.edit.sub')}>
       <View style={{ gap: space.l, paddingTop: 4 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
         {item && opts && tile > 0 ? (
           field === 'color' ? (

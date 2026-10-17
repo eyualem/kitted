@@ -29,6 +29,7 @@ import { serial, type SerialOptions } from './checkWrites';
 import { mergeCandidates, type MergeUndo } from './merge';
 import { isFirstPhoto, photoOffer, photoSightings, type PhotoUndo } from './wrongCard';
 import { assignNames, baseName, isAutoNamed } from './itemName';
+import { fitDoubt } from './fitDoubt';
 import { currentValue, editPlan, isOffered, type EditField, type EditValue } from './pieceEdit';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
@@ -1289,9 +1290,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (!it || !isOwned(it)) return null;
       const owned = (await store.closet.all()).filter(isOwned);
       if (isAwaitingAnswer(it, owned)) return null;
-      if (!isOffered(it, field, value) || currentValue(it, field) === value) return null;
+      const allObs = await store.closetObs.all();
+      // On a "Not sure" row (§18) the value it read most is a real answer too: it settles the row.
+      const unsure = fitDoubt(it, allObs)?.field === field;
+      if (!isOffered(it, field, value) || (currentValue(it, field) === value && !unsure)) return null;
       const before = await snapshot();
-      const plan = editPlan(it, field, value, sightingsOf(itemId, await store.closetObs.all()).map(observationOfRow));
+      const plan = editPlan(it, field, value, sightingsOf(itemId, allObs).map(observationOfRow));
       await store.closet.patch(itemId, { ...plan.patch, updatedAt: clock.nowMs() });
       await refreshItem(itemId);
       await renameAll();

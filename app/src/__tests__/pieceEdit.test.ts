@@ -246,7 +246,9 @@ describe('X3 what a pick writes', () => {
     await env.closet.editPiece('T2', 'fit', 5);
     const after = await piece(env.store, 'T2');
     expect(after.garment).toEqual({ ...before.garment, volume: 5 });
-    expect(after.confirmedFields).toEqual(before.confirmedFields);
+    // Amended by §18 (#316), openly: a Fit pick now lists 'volume' as his, as a "Not quite right?" fit correction
+    // already did, so a "Not sure" Fit goes for good. Core reads only its matcher fields there (volume isn't one).
+    expect(after.confirmedFields).toEqual([...before.confirmedFields, 'volume']);
   });
 });
 
