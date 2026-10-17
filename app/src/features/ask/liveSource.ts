@@ -1,9 +1,10 @@
 // The real stylist (07 C2, check A7). Two ways, by who answers (CHAT_PROVIDER):
 //   openai (since Oct 17, #329, the founder: "going with the OpenAI model is probably the better idea"): GPT-5.6 Luna,
 //          the only model past every gate in the model test (#311; 83% good answers vs Flash-Lite's 54%, 0.035¢ a
-//          question), straight to OpenAI with the dev key on a dev build. The server's /v1/ask doesn't take OpenAI
-//          yet (13-server.md §8), so a Release build has no live answers until it does. No silent fallback: consent
-//          (version 2) names OpenAI for questions, so a question is never quietly sent to Google instead.
+//          question). Through our server's /v1/ask?model=gpt-5.6-luna whenever the transport is the server (Release, or
+//          a dev build with EXPO_PUBLIC_KITTED_SERVER; #330, 13-server.md §11); else straight to OpenAI with the dev key.
+//          No silent fallback: consent (version 2) names OpenAI for questions, so a question is never quietly sent to
+//          Google instead.
 //   gemini: sent the way the reading call is (services/server, 13-server.md §8): the dev key on a dev build (#310),
 //          our server's /v1/ask on a Release build or with EXPO_PUBLIC_KITTED_SERVER (#328).
 import { fetch as expoFetch } from 'expo/fetch';
@@ -38,9 +39,11 @@ export function liveAnswerSource(
 ): AnswerSource | null {
   if (!on) return null;
   if (provider === 'openai') {
-    if (!openaiKey) return null;
+    const viaServer = transport?.kind === 'server';
+    if (!viaServer && !openaiKey) return null;
     return createAskOpenAI({
-      apiKey: openaiKey, fetch: streamFetch(), model: CHAT_OPENAI_MODEL, effort: 'none', maxTokens: ASK_MAX_TOKENS,
+      ...(viaServer ? { transport } : { apiKey: openaiKey, fetch: streamFetch() }),
+      model: CHAT_OPENAI_MODEL, effort: 'none', maxTokens: ASK_MAX_TOKENS,
       onCall: (c) => console.log(`[ask] openai ${c.ms} ms · ${c.model ?? '?'} · in ${c.usage.in} (${c.usage.cached} cached) / out ${c.usage.out} tokens${c.stop && c.stop !== 'stop' ? ` · ${c.stop}` : ''}`),
     });
   }
