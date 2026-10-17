@@ -5,7 +5,12 @@ import type { Usage } from './prices';
 interface Chunk {
   candidates?: { finishReason?: string }[];
   usageMetadata?: Usage;
+  /** OpenAI's Responses API events (13 §11). */
+  type?: string;
+  response?: { usage?: { input_tokens?: number; output_tokens?: number; input_tokens_details?: { cached_tokens?: number } } };
 }
+
+const OPENAI_END = ['response.completed', 'response.incomplete', 'response.failed'];
 
 export interface Seen {
   usage?: Usage;
@@ -13,6 +18,17 @@ export interface Seen {
 }
 
 function take(seen: Seen, j: Chunk) {
+  // OpenAI: the last event carries the usage; only "completed" is a finished answer (its output includes reasoning).
+  if (j.type && OPENAI_END.includes(j.type)) {
+    const u = j.response?.usage;
+    if (u) seen.usage = { promptTokenCount: u.input_tokens ?? 0, cachedContentTokenCount: u.input_tokens_details?.cached_tokens ?? 0, candidatesTokenCount: u.output_tokens ?? 0 };
+    seen.finishReason = j.type === 'response.completed' ? 'STOP' : j.type;
+    return;
+  }
+  if (j.type === 'error') {
+    seen.finishReason = 'error';
+    return;
+  }
   if (j.usageMetadata) seen.usage = j.usageMetadata;
   const f = j.candidates?.[0]?.finishReason;
   if (f) seen.finishReason = f;

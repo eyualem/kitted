@@ -225,3 +225,24 @@ Jest unless noted (`app/src/__tests__/serverProxy.test.ts`).
 
 **Not tested here:** the deployed function (needs the founder's go), App Check, Apple sign-in (waits for the $99 program), Continue with Google linking against real Firebase (A11 is the pure rule; the link call itself needs a real Google sign-in on the phone).
 
+
+## 11. Questions on OpenAI through the server (Oct 17, #330)
+
+**Why:** Kit answers with OpenAI's GPT-5.6 Luna since #329, but only on a dev build with a dev key; a Release build had no live answers, and questions must never fall back to Google (consent version 2 names OpenAI). The founder: "Yes: add an OpenAI route for questions on the server."
+
+**The shape:** `/v1/ask?model=gpt-5.6-luna` takes the body `createAskOpenAI` builds today (OpenAI's Responses API) and sends it to `https://api.openai.com/v1/responses` with the server's own key (`OPENAI_KEY` in Secret Manager, a billed project of the founder's, restricted to model calls). Same sign-in, limits, spending stop, logging and "nothing kept" as the Gemini routes. The model decides the company; nothing else in the route changes.
+
+**The shape check (OpenAI):** only `model` (must match `?model=`), `instructions` (text), `input` (user or assistant messages whose content is text or `input_text` parts only), `max_output_tokens` (clamped to 1,024, added if missing), `reasoning` (`effort` none, minimal or low only), `temperature`, `stream` (must be true) and `store` (forced false). Refused: tools, `previous_response_id`, `conversation`, `include`, `background`, `prompt`, `text` formats, images, files, any other field.
+
+**Spend:** from the `response.completed` (or `incomplete`, `failed`) event's `usage`: input at $0.20 a million, its cached part at $0.02, output (reasoning included) at $1.20 (`market/ai-costs.md`). A question counts only on `response.completed`.
+
+**The app:** with the server path (Release, or a dev build with `EXPO_PUBLIC_KITTED_SERVER`), `createAskOpenAI` sends through the transport to `/v1/ask?model=gpt-5.6-luna`; the server's limit and spending stop become the limit and paused lines. A dev build without the server setting keeps the dev key straight to OpenAI. Still never Google.
+
+### The checks (set before building)
+- **O1 Shape:** the app's own Responses body passes and reaches OpenAI at `/v1/responses` unchanged except `store: false` and the output cap; each refused before any call: tools, `previous_response_id`, an `input_image` part, a file part, a `?model=` that differs from the body's model, a model not on the list, reasoning effort `high`, `stream: false`, an unknown field.
+- **O2 Keys:** OpenAI gets `Authorization: Bearer <OPENAI_KEY>` and never the Gemini key; Gemini never gets the OpenAI key; no answer, error or log line holds either key; the app's own Authorization header never reaches OpenAI.
+- **O3 Relay:** the stream's bytes reach the app as OpenAI sent them, the first chunk before OpenAI has finished.
+- **O4 Counting:** `response.completed` counts one question; `response.incomplete`, `response.failed` or a cut-off stream count nothing; OpenAI's 401, 429 or 500 → 502 `upstream`, nothing counted; the question limit and the spending stop apply exactly as on Gemini.
+- **O5 Cost:** 4,470 in (3,620 cached) and 89 out → (850 × 0.20 + 3,620 × 0.02 + 89 × 1.20) / 10⁴ = 0.0349¢ in the day's spend.
+- **O6 The app:** with a server transport, an OpenAI question goes to `<base>/v1/ask?model=gpt-5.6-luna` with the same body as the direct call, `Bearer` sign-in and `X-Kitted-Free: tap` on a tap answer; 429 `limit` → the limit line, 503 `paused` → the paused line, nothing counted; with no server and no dev key → no live answers (never Gemini); a dev build with the dev key and no server setting → straight to OpenAI as before.
+- **O7 Live:** after the founder's key and the deploy, one real question through the deployed `/v1/ask?model=gpt-5.6-luna` answers, counts once and adds its cents.

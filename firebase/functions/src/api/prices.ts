@@ -1,4 +1,4 @@
-// What a Gemini call costs (handoff/13-server.md §4, check M1). Prices per million tokens, paid tier, from
+// What a Gemini or OpenAI call costs (handoff/13-server.md §4, check M1; OpenAI §11, O5). Prices per million tokens, paid tier, from
 // market/ai-costs.md §1 (read Oct 15, 2026). Keep the two in step.
 
 export interface Price {
@@ -14,6 +14,7 @@ export interface Price {
 const DOUBLING_AT = Date.UTC(2027, 0, 1);
 
 export function priceFor(model: string, nowMs: number): Price {
+  if (model.startsWith('gpt-5.6-luna')) return { input: 0.2, output: 1.2, cached: 0.02 };
   if (model.startsWith('gemini-3.5-flash-lite')) return { input: 0.3, output: 2.5, cached: 0.03 };
   if (model.startsWith('gemini-3.1-flash-lite')) return { input: 0.25, output: 1.5, cached: 0.025 };
   // gemini-3.8-flash, and anything unknown priced as the dearest one on our lists.

@@ -3,7 +3,7 @@
 // a question or an answer (check D1). Written against Node's request/response so the tests can run it in-process.
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { costCents } from './prices';
-import { CHECK_ID, KINDS, ROUTES, checkShape, type Kind, type RouteName } from './routes';
+import { CHECK_ID, KINDS, ROUTES, checkShape, providerOf, type Kind, type RouteName } from './routes';
 import { readReply, sseScanner, type Seen } from './sse';
 import { parseTz } from './limits';
 import type { Store, Ticket } from './store';
@@ -15,8 +15,12 @@ export interface ApiDeps {
   /** Throws when the App Check token isn't valid. */
   verifyAppCheck(token: string): Promise<void>;
   geminiKey(): string;
+  /** OpenAI's key, for questions on its models (13 §11). */
+  openaiKey(): string;
   /** https://generativelanguage.googleapis.com, or a fake in tests. */
   geminiBase: string;
+  /** https://api.openai.com, or a fake in tests. */
+  openaiBase: string;
   fetch: typeof fetch;
   now(): number;
   /** One line per call: ids, timings and counts only. */
@@ -155,9 +159,12 @@ export function createApi(deps: ApiDeps) {
       });
     };
     try {
-      const up = await deps.fetch(`${deps.geminiBase}/v1beta/models/${shape.model}:${method}`, {
+      const openai = providerOf(shape.model) === 'openai';
+      const up = await deps.fetch(openai ? `${deps.openaiBase}/v1/responses` : `${deps.geminiBase}/v1beta/models/${shape.model}:${method}`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'x-goog-api-key': deps.geminiKey() },
+        headers: openai
+          ? { 'content-type': 'application/json', authorization: `Bearer ${deps.openaiKey()}` }
+          : { 'content-type': 'application/json', 'x-goog-api-key': deps.geminiKey() },
         body: shape.body,
         signal: ac.signal,
       });

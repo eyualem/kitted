@@ -9,6 +9,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 const PROJECT = 'demo-kitted';
 const KEY = 'server-key-7f3a';
+const OA_KEY = 'oa-server-key-91c2';
 const PHOTO = 'QUJDRA'.repeat(50); // stands in for base64 JPEG data
 
 type Index = typeof import('../functions/src/index');
@@ -46,6 +47,29 @@ function sse(finish = 'STOP', u: Record<string, number> = usage): Respond {
     res.end();
   };
 }
+/** OpenAI's Responses API stream, the way createAskOpenAI reads it. */
+const oaUsage = { input_tokens: 4470, input_tokens_details: { cached_tokens: 3620 }, output_tokens: 89 };
+const oaEvent = (type: string, o: Record<string, unknown>) => Buffer.from(`event: ${type}\ndata: ${JSON.stringify({ type, ...o })}\n\n`);
+function oaSse(end = 'response.completed', usage: Record<string, unknown> = oaUsage): Respond {
+  return (res) => {
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    for (const b of [
+      oaEvent('response.created', { response: { id: 'r1', status: 'in_progress' } }),
+      oaEvent('response.output_text.delta', { delta: 'White leather sneakers.' }),
+      oaEvent(end, { response: { id: 'r1', model: 'gpt-5.6-luna', status: end.slice(9), usage } }),
+    ]) {
+      fake.sent.push(b);
+      res.write(b);
+    }
+    res.end();
+  };
+}
+const oaBody = (o: Record<string, unknown> = {}) => ({
+  model: 'gpt-5.6-luna', instructions: 'You are Kit.', input: [{ role: 'user', content: 'What shoes go with dark straight jeans?' }],
+  max_output_tokens: 420, reasoning: { effort: 'none' }, store: false, stream: true, temperature: 0.3, ...o,
+});
+const LUNA = 'gpt-5.6-luna';
+
 function reply(status = 200, finish = 'STOP'): Respond {
   return (res) => {
     res.writeHead(status, { 'content-type': 'application/json' });
@@ -138,6 +162,8 @@ beforeAll(async () => {
     store: storeMod.firestoreStore(index.adminFirestore(), { configTtlMs: 0, now: () => clockMs }),
     geminiBase: base,
     geminiKey: () => KEY,
+    openaiBase: base,
+    openaiKey: () => OA_KEY,
     verifyAppCheck: async (t) => {
       if (t !== 'good-app-check') throw new Error('bad');
     },
@@ -520,6 +546,124 @@ describe('D1 nothing kept', () => {
     for (const secret of [PHOTO.slice(0, 40), 'striped oxford', 'Read the outfit', 'You are Kit', 'garments']) expect(stored).not.toContain(secret);
     expect(logs.length).toBe(2);
     expect(Object.keys(logs[1]!).sort()).toEqual(['cents', 'model', 'ms', 'outcome', 'route', 'status', 'thinking', 'tokensIn', 'tokensOut', 'uid']);
+  });
+});
+
+// ---- O · questions on OpenAI (13 §11) ------------------------------------------------------------------------------
+describe('O1 OpenAI shape', () => {
+  it("passes the app's own body, forced store:false and the cap, to /v1/responses", async () => {
+    fake.respond = oaSse();
+    const r = await call('ask', oaBody({ max_output_tokens: 99_999, store: true }), { model: LUNA });
+    await r.arrayBuffer();
+    expect(r.status).toBe(200);
+    expect(fake.calls[0]!.url).toBe('/v1/responses');
+    expect(JSON.parse(fake.calls[0]!.body)).toEqual({ ...oaBody(), max_output_tokens: 1024, store: false });
+  });
+  const bad: [string, unknown, string?][] = [
+    ['tools', oaBody({ tools: [{ type: 'web_search' }] })],
+    ['previous_response_id', oaBody({ previous_response_id: 'resp_1' })],
+    ['an image', oaBody({ input: [{ role: 'user', content: [{ type: 'input_image', image_url: 'data:image/jpeg;base64,AAAA' }] }] })],
+    ['a file', oaBody({ input: [{ role: 'user', content: [{ type: 'input_file', file_id: 'f1' }] }] })],
+    ['a different body model', oaBody({ model: 'gpt-6-sol' })],
+    ['a model not on the list', oaBody({ model: 'gpt-6-sol' }), 'gpt-6-sol'],
+    ['high reasoning', oaBody({ reasoning: { effort: 'high' } })],
+    ['no streaming', oaBody({ stream: false })],
+    ['an unknown field', oaBody({ text: { format: { type: 'json_object' } } })],
+  ];
+  for (const [what, body, model] of bad) {
+    it(`refuses ${what} before calling OpenAI`, async () => {
+      const r = await call('ask', body, { model: model ?? LUNA });
+      expect(r.status).toBe(400);
+      expect(fake.calls).toHaveLength(0);
+    });
+  }
+});
+
+describe('O2 keys', () => {
+  it('OpenAI gets only its key; Gemini only its own; the app never sees either', async () => {
+    fake.respond = oaSse();
+    const r = await call('ask', oaBody(), { model: LUNA, appCheck: 'good-app-check' });
+    const text = await r.text();
+    const h = fake.calls[0]!.headers;
+    expect(h.authorization).toBe(`Bearer ${OA_KEY}`);
+    expect(h['x-goog-api-key']).toBeUndefined();
+    expect(h['x-firebase-appcheck']).toBeUndefined();
+    await read('C-1');
+    expect(fake.calls[1]!.headers.authorization).toBeUndefined();
+    expect(fake.calls[1]!.headers['x-goog-api-key']).toBe(KEY);
+    fake.respond = reply(401);
+    const bad = await call('ask', oaBody(), { model: LUNA });
+    const all = text + (await bad.text()) + JSON.stringify(logs);
+    for (const k of [KEY, OA_KEY]) expect(all).not.toContain(k);
+  });
+});
+
+describe('O3 relay', () => {
+  it("OpenAI's bytes arrive unchanged, the first before it finishes", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((r) => (release = r));
+    let ended = false;
+    fake.respond = async (res) => {
+      res.writeHead(200, { 'content-type': 'text/event-stream' });
+      const a = oaEvent('response.output_text.delta', { delta: 'White' });
+      fake.sent.push(a);
+      res.write(a);
+      await gate;
+      const b = oaEvent('response.completed', { response: { usage: oaUsage } });
+      fake.sent.push(b);
+      res.end(b);
+      ended = true;
+    };
+    const r = await call('ask', oaBody(), { model: LUNA });
+    const reader = r.body!.getReader();
+    const got: Uint8Array[] = [(await reader.read()).value!];
+    expect(ended).toBe(false);
+    release();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      got.push(value);
+    }
+    expect(Buffer.concat(got).equals(Buffer.concat(fake.sent))).toBe(true);
+  });
+});
+
+describe('O4 counting', () => {
+  const dayQuestions = async () => (await db.collection(`usage/${me.uid}/usageDays`).get()).docs[0]?.data().questions ?? 0;
+  it('completed counts; incomplete, failed, a cut stream and HTTP errors do not; the limit and the stop apply', async () => {
+    for (const end of ['response.incomplete', 'response.failed']) {
+      fake.respond = oaSse(end);
+      await (await call('ask', oaBody(), { model: LUNA })).arrayBuffer();
+    }
+    fake.respond = (res) => {
+      res.writeHead(200, { 'content-type': 'text/event-stream' });
+      res.end(oaEvent('response.output_text.delta', { delta: 'White' }));
+    };
+    await (await call('ask', oaBody(), { model: LUNA })).arrayBuffer();
+    for (const status of [401, 429, 500]) {
+      fake.respond = reply(status);
+      const r = await call('ask', oaBody(), { model: LUNA });
+      expect([r.status, await json(r)]).toEqual([502, { error: 'upstream', status }]);
+    }
+    expect(await dayQuestions()).toBe(0);
+    fake.respond = oaSse();
+    for (let i = 0; i < 7; i++) expect((await call('ask', oaBody(), { model: LUNA }).then(async (x) => (await x.arrayBuffer(), x.status)))).toBe(200);
+    expect(await dayQuestions()).toBe(7);
+    await expectLimit(call('ask', oaBody(), { model: LUNA }), 'questions');
+    await db.doc('spend/2026-10-20').set({ cents: 999, calls: 1, at: clockMs });
+    me = await signUp();
+    const r = await call('ask', oaBody(), { model: LUNA });
+    expect([r.status, await json(r)]).toEqual([503, { error: 'paused' }]);
+  });
+});
+
+describe('O5 cost', () => {
+  it("adds OpenAI's usage at $0.20 / $0.02 cached / $1.20 per million", async () => {
+    fake.respond = oaSse();
+    await (await call('ask', oaBody(), { model: LUNA })).arrayBuffer();
+    const spent = (await db.doc('spend/2026-10-20').get()).data()!;
+    expect(spent.cents).toBeCloseTo((850 * 0.2 + 3620 * 0.02 + 89 * 1.2) / 1e4, 6);
+    expect(logs.at(-1)).toMatchObject({ route: 'ask', model: LUNA, outcome: 'ok', tokensIn: 4470, tokensOut: 89 });
   });
 });
 
