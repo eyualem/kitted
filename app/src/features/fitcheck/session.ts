@@ -8,6 +8,7 @@ import { demoEntitlements } from '@/services/entitlements';
 import { newId } from '@/services/ids';
 import { imagePrep } from '@/services/imagePrep/real';
 import { createQuota } from '@/services/quota';
+import { serverTier } from '@/services/server/tier';
 import { LIVE_READING, routedSource } from '@/services/readingSource/live';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
@@ -33,6 +34,8 @@ export const quota = createQuota({
   store,
   clock: sessionClock,
   isPro: () => demoEntitlements.isPro() || getDemoArgs().pro,
+  // The server's tier (13-server.md §8, A10): Pro's limits for every account during the beta.
+  serverTier: () => serverTier(store),
   // Testing real readings on the founder's phone: the daily limit doesn't apply (DEV + key only).
   checksUsedOverride: () => getDemoArgs().freeChecksUsed ?? (LIVE_READING ? 0 : null),
 });

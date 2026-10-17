@@ -115,6 +115,8 @@ export const KV_LOCAL: readonly string[] = [
   'closet.fitSkip',
   // The fit-check card line's cap and the answer log (§19, #322): this phone's, never synced.
   'closet.fitLine', 'closet.fitAnswers',
+  // The tier the server last answered with (13-server.md §8, #327): the server's own fact, read back on every answer.
+  'server.tier',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
 export const KV_LOCAL_PREFIXES: readonly string[] = ['sync.', 'demo.', 'notify.', 'account.'];

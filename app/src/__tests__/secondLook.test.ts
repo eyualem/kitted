@@ -79,7 +79,7 @@ describe('the request (look_test.py / b1_test.call)', () => {
 describe('the live call', () => {
   const reply = (body: unknown, status = 200) => async () => ({ ok: status === 200, status, text: async () => JSON.stringify(body) });
   const answer = (a: unknown) => ({ candidates: [{ content: { parts: [{ text: JSON.stringify(a) }] }, finishReason: 'STOP' }], usageMetadata: { promptTokenCount: 1580, candidatesTokenCount: 20 } });
-  const make = (fetch: LookGeminiOptions['fetch'], calls: unknown[] = []) =>
+  const make = (fetch: NonNullable<LookGeminiOptions['fetch']>, calls: unknown[] = []) =>
     createLookGemini({ apiKey: 'k', fetch, scheduler: realScheduler, onCall: (arm, r) => calls.push([arm, r.ok]) });
 
   it('returns the answer with its cost; logs each call once', async () => {

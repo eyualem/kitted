@@ -163,7 +163,7 @@ export function StatusCard({ text, action }: { text: string; action?: { title: s
 
 function FailureCard({ row }: { row: FitCheckRow }) {
   const code = row.details.failCode ?? 'ai';
-  const key = code === 'timeout' ? 'fail.timeout' : code === 'offline' ? 'fail.offline' : code === 'paused' ? 'fail.paused' : code === 'unknownPhoto' ? 'demo.unknownPhoto'
+  const key = code === 'timeout' ? 'fail.timeout' : code === 'offline' ? 'fail.offline' : code === 'paused' ? 'fail.paused' : code === 'limit' ? 'fail.limit' : code === 'unknownPhoto' ? 'demo.unknownPhoto'
     : code === 'replaced' ? 'fail.replaced' : 'fail.ai';
   return (
     <KCard accessibilityLabel={t(key)}>

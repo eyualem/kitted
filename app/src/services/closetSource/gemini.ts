@@ -1,17 +1,18 @@
-// The live closet call (DEV builds with the dev key only, like the scoring read; beta goes through the Worker).
+// The live closet call, sent like the scoring read: the dev key on a dev build, our server's /v1/closet otherwise
+// (services/server, 13-server.md §8), tagged with the check's id so it rides on that check.
 // Byte-for-byte what extraction-test/closet_test.py sends (the closet1 test that passed every bar, #90):
 // gemini-3.8-flash, temperature 0, JSON with the closet schema, thinking off, the stub list in the prompt.
 // One call (not streamed): 12 s timeout, and one retry 2 s later on a network error, 5xx, 429, a non-STOP finish
-// or an answer that fails validation. Never in a Release build.
+// or an answer that fails validation (never after the server's limit or spending stop).
 import promptFile from '../../../assets/gemini/prompt-closet-v1.json';
 import schema from '../../../assets/gemini/schema-closet-v1.json';
 import { AbortError, realScheduler, type Scheduler } from '../scheduler';
+import { checkTag, directTransport, refusalKind, type AiFetch, type AiTransport, type CheckTag } from '../server/transport';
 import type { PreparedImage } from '../readingSource/types';
 import { stubText, validateClosetReading } from './validate';
 import { CLOSET_PROMPT_VERSION, type ClosetFail, type ClosetResult, type ClosetSource, type ClosetStub } from './types';
 
 export const CLOSET_MODEL = 'gemini-3.8-flash';
-const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 export const CLOSET_TIMEOUT_MS = 12_000;
 export const CLOSET_RETRY_MS = 2_000;
 
@@ -24,8 +25,10 @@ export function buildClosetRequest(jpegBase64: string, stubs: readonly ClosetStu
 }
 
 export interface ClosetGeminiOptions {
-  apiKey: string;
-  fetch: (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{
+  /** Our server or Gemini with the dev key (services/server); without it, `apiKey` + `fetch` (the tests). */
+  transport?: AiTransport;
+  apiKey?: string;
+  fetch?: (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{
     ok: boolean;
     status: number;
     text(): Promise<string>;
@@ -45,8 +48,9 @@ export function createClosetGeminiSource(opts: ClosetGeminiOptions): ClosetSourc
   const scheduler = opts.scheduler ?? realScheduler;
   const now = opts.now ?? (() => Date.now());
   const timeoutMs = opts.timeoutMs ?? CLOSET_TIMEOUT_MS;
+  const transport = opts.transport ?? directTransport(opts.apiKey ?? '', opts.fetch as unknown as AiFetch);
 
-  async function attempt(base64: string, stubs: readonly ClosetStub[], outer?: AbortSignal): Promise<Attempt> {
+  async function attempt(base64: string, stubs: readonly ClosetStub[], outer: AbortSignal | undefined, tag: CheckTag | undefined): Promise<Attempt> {
     const ac = new AbortController();
     const onAbort = () => ac.abort();
     outer?.addEventListener('abort', onAbort, { once: true });
@@ -58,12 +62,7 @@ export function createClosetGeminiSource(opts: ClosetGeminiOptions): ClosetSourc
     try {
       let res;
       try {
-        res = await opts.fetch(`${BASE}/${CLOSET_MODEL}:generateContent`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': opts.apiKey },
-          body: JSON.stringify(buildClosetRequest(base64, stubs)),
-          signal: ac.signal,
-        });
+        res = await transport.send({ route: 'closet', model: CLOSET_MODEL, stream: false, body: JSON.stringify(buildClosetRequest(base64, stubs)), signal: ac.signal, ...(tag ? { tag } : {}) });
       } catch {
         if (timedOut) return { fail: 'timeout', retry: false };
         if (outer?.aborted) throw new AbortError();
@@ -77,6 +76,8 @@ export function createClosetGeminiSource(opts: ClosetGeminiOptions): ClosetSourc
         if (outer?.aborted) throw new AbortError();
         return { fail: 'offline', retry: true };
       }
+      // The server's limit or spending stop: asking again would only be refused again (A8).
+      if (refusalKind(res)) return { fail: 'ai', retry: false };
       if (!res.ok) return { fail: 'ai', retry: res.status >= 500 || res.status === 429 };
       let j: { candidates?: { content?: { parts?: { text?: string }[] }; finishReason?: string }[]; usageMetadata?: Record<string, number>; modelVersion?: string };
       try {
@@ -102,8 +103,8 @@ export function createClosetGeminiSource(opts: ClosetGeminiOptions): ClosetSourc
   }
 
   return {
-    async read(image: PreparedImage, stubs, _kind, o) {
-      void _kind;
+    async read(image: PreparedImage, stubs, kind, o) {
+      const tag = o?.checkId ? checkTag(o.checkId, kind) : undefined;
       const base64 = image.uploadBase64;
       if (!base64) return { fail: 'noUpload' };
       if (stubs.length === 0) return { reading: { garments: [] }, model: CLOSET_MODEL, promptVersion: CLOSET_PROMPT_VERSION, latencyMs: 0 };
@@ -113,7 +114,7 @@ export function createClosetGeminiSource(opts: ClosetGeminiOptions): ClosetSourc
       try {
         for (;;) {
           attempts += 1;
-          last = await attempt(base64, stubs, o?.signal);
+          last = await attempt(base64, stubs, o?.signal, tag);
           if ('ok' in last || !last.retry || attempts >= 2) break;
           await scheduler.sleep(opts.retryMs ?? CLOSET_RETRY_MS, o?.signal);
         }

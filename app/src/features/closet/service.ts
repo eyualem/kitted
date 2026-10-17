@@ -592,11 +592,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
   }
 
   /** Ask the closet call, with the 12 s S11 deadline: past it, `onLate` writes the fallback and the answer enriches. */
-  async function call(image: PreparedImage, garments: readonly Garment[], kind: ClosetKind, derivedFrom: string | null) {
+  /** `checkId`: the check the call rides on at the server (a snap's first check: the source gives the snap its own id). */
+  async function call(image: PreparedImage, garments: readonly Garment[], kind: ClosetKind, derivedFrom: string | null, checkId: string) {
     const src = deps.source;
     if (!src) return null;
     const { stubs } = buildStubs(garments, kind);
-    const r = await src.read(image, stubs, kind);
+    const r = await src.read(image, stubs, kind, { checkId });
     if ('fail' in r) return null;
     return saveClosetReading(image.sha256, derivedFrom, { ...r.reading, stubs, kind }, r.model, r.latencyMs);
   }
@@ -616,7 +617,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     return track((async () => {
       let stored: Awaited<ReturnType<typeof call>> = null;
       try {
-        stored = await call(image, garments, kind, derivedFrom);
+        stored = await call(image, garments, kind, derivedFrom, checkId);
       } catch {
         stored = null;
       }
@@ -1214,7 +1215,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         return;
       }
       void track((async () => {
-        const stored = await call(image, snap.garments, kind, snapReadingId).catch(() => null);
+        const stored = await call(image, snap.garments, kind, snapReadingId, parentId).catch(() => null);
         await serial(() => writeSnap(parentId, snapReadingId, stored, kind));
       })());
     },
@@ -1242,7 +1243,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         const reading = (await readingOf(row.readingId))?.reading;
         if (!reading) continue;
         const image: PreparedImage = { photoId: row.demoPhotoId, sha256: row.imageHash, uploadUri: null };
-        const stored = (await storedCloset(row.imageHash, reading.garments, 'full')) ?? (await track(call(image, reading.garments, 'full', row.readingId).catch(() => null)));
+        const stored = (await storedCloset(row.imageHash, reading.garments, 'full')) ?? (await track(call(image, reading.garments, 'full', row.readingId, row.id).catch(() => null)));
         if (!stored) continue;
         await premeasure(row.id, 'full', stored.reading);
         await serial(() => enrich(row.id, stored), { label: 'catch-up enrich' });

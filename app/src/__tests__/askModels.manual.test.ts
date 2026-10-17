@@ -103,7 +103,7 @@ export const QUESTIONS: TestQuestion[] = [
 ];
 
 /** A streaming fetch on Node's https (jest's fetch can't stream). */
-const nodeFetch: AskGeminiOptions['fetch'] = (url, init) =>
+const nodeFetch: NonNullable<AskGeminiOptions['fetch']> = (url, init) =>
   new Promise((resolve, reject) => {
     const req = https.request(url, { method: init.method, headers: init.headers }, (res) => {
       const queue: Uint8Array[] = [];

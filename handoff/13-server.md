@@ -9,6 +9,7 @@
 - **What it does on every call:** checks who's asking (a Firebase sign-in token, a silent guest account is enough), checks today's limit, checks the day's spend, passes the request to Gemini with its own key, relays the answer back as it arrives (streamed), then counts it.
 - **What it keeps:** per account per day, the counts and the check ids that used them; per day, the estimated spend. Never a photo, a reading, a question or an answer. Logs hold the account id, route, model, milliseconds, tokens, cents and the outcome, never content.
 - **Not live yet.** Built and tested on the Firebase emulators with a fake Gemini. Going live needs the founder's OK (a new Gemini key in Secret Manager, a deploy, and whether to keep one instance warm).
+- **The app side is built (#327, §8, §10):** Release builds send every AI call here with a silent guest sign-in; dev builds keep the dev key unless pointed at the server. Once the function is deployed, a Release build scores and answers with no other change.
 
 ## 1. Why the request is passed through (not built on the server)
 
@@ -93,7 +94,7 @@ Base URL (once live): `https://us-central1-kitted-a5b45.cloudfunctions.net/api`.
 4. **Keep one instance warm or not** (`API_MIN_INSTANCES` in `firebase/functions/src/index.ts`, 0 today): removes the 1–2 s wake-up on the first call; costs money every month (price checked before asking).
 5. After the $99 program: App Check (a native package, the founder's OK) and `enforceAppCheck: true`.
 
-The app side (Release builds call the server; dev builds keep the direct key) is its own step: §8.
+The app side (Release builds call the server; dev builds keep the direct key) is built: §8, §10. After the deploy, a dev build can try the live function with `EXPO_PUBLIC_KITTED_SERVER=live` in `app/.env.development.local`.
 
 ## 7. The pass/fail checks (set before building)
 
@@ -131,12 +132,31 @@ Run with `npm --prefix tests run emulate` from `firebase/` (Firestore and Auth e
 - **D2 Rules:** a signed-in client can't read or write `usage/…`, `spend/…`, `server/…` (its own uid included).
 - **D3 Deletion:** `deleteEverything(uid)` removes `usage/{uid}` and its days; `purgeUsage` removes usage days older than 7 days and spend days older than 90.
 
-## 8. The app side (next step, not built)
+## 8. The app side (#327; checks set before building, results in §10)
 
-- A `ProxyFetch` for the four callers: same request bodies, the server URL, the sign-in token, the check id and kind, the time zone. Dev builds keep the direct key (so the founder's phone works without the server); Release builds use only the server.
-- A silent guest sign-in on first launch (the JS SDK's anonymous auth, already installed).
-- Reading 429 `limit` and 503 `paused` into the limit card and the paused line.
-- `npm run guard:release` keeps refusing any key in the bundle.
+**What it is:** the app's four Gemini callers (the scoring read, the second look's two arms, the closet call, the stylist's answer) send the same request bodies to the server's routes instead of to Google, with a guest sign-in. Code: `app/src/services/server/`.
+
+- **Which way a call goes:** a Release build always uses the server (it has no key). A dev build uses the dev key straight to Gemini, as today, so the founder's phone works without the server, unless `EXPO_PUBLIC_KITTED_SERVER` is set in `app/.env.development.local`: `live` = the deployed function, a host like `127.0.0.1` = the local Functions emulator (project `demo-kitted`, its Auth emulator on :9099). A dev build with neither key nor setting keeps the demo-only reading, as today.
+- **The guest account:** an anonymous Firebase sign-in, made the first time a call needs it (after consent, since nothing is sent before it), never at launch: a launch-time sign-in would reach Google before he agreed to anything (the same reason the offline check doesn't probe Google, #325). The SDK keeps it in the Keychain and refreshes its token. Continue with Google while a guest links Google to the same account (same uid, same day's counts).
+- **Headers:** `Authorization: Bearer <ID token>`, `X-Kitted-Tz` (minutes east of UTC, from the app's own clock), and on photo routes `X-Kitted-Check` + `X-Kitted-Kind`: a check's read, its hedge, both look arms and its closet call carry the check's own id; a re-check its own id with `recheck`; a snap (shoe snap, pants-and-shoes finish) `<first check id>-snap` with `snap`, on its read and its closet call. A tap answer adds `X-Kitted-Free: tap`. The model rides as `?model=`.
+- **The server's answers:** 401 `signIn` → a fresh token (forced refresh) and one retry, then the failure line; 429 `limit` → a check's card says it's today's limit (and the phone's count is set to used, so the next photo is held for tomorrow), a question gets the limit line; 503 `paused` → the check's paused card, the questions' paused line with no Retry; 502/504 → the existing failure lines; nothing counted on any of them. The second look and the closet call fail quietly, as they do today.
+- **The tier:** every answer carries `x-kitted-tier`; the phone keeps it, and when it's `pro` (every account during the beta) the phone's own limits are Pro's (10 checks, 50 questions), without calling him Pro anywhere.
+
+### The pass/fail checks (A, app side)
+Jest unless noted (`app/src/__tests__/serverProxy.test.ts`).
+- **A1 Which way:** dev + key + no setting → Gemini's URL with the key in `x-goog-api-key`, the server never called; Release (no key) → the server only, never Google's URL, no key header; dev + `EXPO_PUBLIC_KITTED_SERVER` → the server even with the key; dev without key or setting → no live source.
+- **A2 Same bodies:** for read (with close-ups), each look arm, the closet call and an answer, the body the server receives is byte-equal to the one the direct path sends Gemini; the URL is `<base>/v1/<route>?model=<model>`.
+- **A3 Headers:** the bearer token on every call; the read, its hedge, both look arms and the closet call of one check carry that check's id and `full`; a re-check its own id and `recheck`; `X-Kitted-Tz` is the clock's offset in minutes east; `X-Kitted-Free: tap` only on a tap answer; never `x-goog-api-key` to the server.
+- **A4 Snaps:** a snap's read and its closet call carry `<first check id>-snap` and `snap`; every id sent matches the server's pattern (1–64 of `A–Z a–z 0–9 _ -`).
+- **A5 Guest sign-in:** no account → exactly one anonymous sign-in even when the read and both arms start together, then its token; an existing account (guest or Google) → none; the saved sign-in is awaited first (no new guest per launch); a failed sign-in → the check fails "couldn't score" (offline when it's the network), nothing counted.
+- **A6 401:** one forced refresh and one retry; a second 401 → the failure line, nothing counted, no third call.
+- **A7 Limit:** 429 `limit` on a check → the card's limit line (`fail.limit`), nothing counted, and the phone's count says used (the next photo is held); on a question → the limit line, the question not counted; on a tap answer → the same line.
+- **A8 Paused:** 503 on a check → `fail.paused`; on a question → `ask.paused`, no Retry, not counted; on a look arm or the closet call → a quiet failure (no retry for the closet call).
+- **A9 Other failures:** 502 and 504 → `fail.ai` / `fail.ask` with Try again / Retry, nothing counted; a network error → the offline path.
+- **A10 Tier:** an answer with `x-kitted-tier: pro` → the phone's limits become 10 checks and 50 questions, kept across launches; the You tab's plan row still doesn't say Pro; the direct path never sets it.
+- **A11 Google keeps the uid:** Continue with Google while a guest links the credential (same uid); if that Google account already has a Firebase account, it signs in to it instead.
+- **A12 Release bundle:** `npm run guard:release` passes; the production bundle holds the server URL and no Gemini key.
+- **A13 End to end (Simulator):** a dev build pointed at the Functions emulator (fake Gemini replaying a recorded reading) scores a real, non-demo photo: the card shows a score; the emulator saw the read, the look arms and the closet call on one check id; the server counted one check.
 
 ## 9. Results (Oct 17)
 
@@ -167,3 +187,33 @@ Run with `npm --prefix tests run emulate` from `firebase/` (Firestore and Auth e
 - **An answer cut short is still billed** by what was seen of it; the spend counts it.
 
 **Not tested here (needs the live project):** real Gemini through the server, App Check with a real token, the 1–2 s wake-up of a cold instance, and the purge's collection-group index on real Firestore.
+
+## 10. Results, the app side (Oct 17, #327)
+
+**All checks pass: A1–A12 in Jest (28 tests, `app/src/__tests__/serverProxy.test.ts`), `npm run check` green in `app/` (1,283 tests), `npm run guard:release` passes, and A13 on the Simulator.**
+
+| Check | Result | Note |
+|---|---|---|
+| A1 | Pass | `aiPathFor`: Release → the server whatever the env; dev + key → Gemini; `live` / a host → the server; neither → none (the demo-only reading, as before) |
+| A2 | Pass | read with 2 close-ups, look U and L, the closet call and an answer: the five bodies the server gets equal the direct ones byte for byte; URLs `<base>/v1/<route>?model=` |
+| A3 | Pass | through the real fit-check and closet services against a fake server: read, both arms and the closet call carry the check's id + `full`, `Bearer`, `X-Kitted-Tz: -240`; a hedged read keeps the id; a re-check its own id + `recheck`; `X-Kitted-Free: tap` only on a tap |
+| A4 | Pass | a shoe snap's read and closet call: `<id>-snap` + `snap`; long and odd ids cleaned to the server's pattern |
+| A5 | Pass | three calls at once → one anonymous sign-in; a saved account → none (its load awaited); network failure → offline, sign-in off → "couldn't score", the server never called |
+| A6 | Pass | 401 → forced refresh, one retry; two 401s → `ai`, 2 calls |
+| A7 | Pass | a check: `failCode: limit` (`fail.limit`), nothing counted, the phone's count goes to used and the next photo is held without a call; a question and a tap answer: the limit line, not counted |
+| A8 | Pass | `fail.paused`; `ask.paused` with no Retry; a look arm fails `ai`; the closet call isn't retried |
+| A9 | Pass | 502/504 → `fail.ai` / `fail.ask` with Retry, nothing counted; a network error → offline |
+| A10 | Pass | `x-kitted-tier: pro` → 10 checks / 50 questions on the phone, a second check that day scores instead of being held; `purchased` stays false, the plan row reads it |
+| A11 | Pass | `keepGuest`: a guest links; "credential already in use" → sign in to that account; non-guests sign in |
+| A12 | Pass | the dev key is read once, in `services/server/config.ts`, under `__DEV__`; the production bundle holds the server URL and no key (guard, 3 secret values and every key shape checked) |
+| A13 | Pass | Simulator, dev build with `EXPO_PUBLIC_KITTED_SERVER=127.0.0.1`, the real `api` under the Functions emulator (`npm --prefix tests run appserve`), fake Gemini replaying s15's recorded reading. Two real library photos (stock, profile unknown, not demo photos): prep blurred the face on the phone, the app signed in as a guest on the Auth emulator, and the card scored 7.0 "Put together". The function's ledger for that guest: `checks: 1`, `photoCalls: 5` (read, its hedge, both look arms, the closet call), the app's check id with `kind: full, ok: true`; the fake saw only the server's key. Screenshot `screenshots/server-app/` (git-ignored) |
+
+**Found on the way:**
+- **The look arms can reach the server before the read**, and an arm that finishes first gives the check back (by design, L3); the read then reserves it again. Counted once either way (A13's ledger shows the second reservation's 4 calls under 5 photo calls).
+- **The Functions emulator's first call of a run takes 4–5 s**, so the app hedged its read; both reads carried the same id and rode free. A cold deployed instance should be faster, but the warm-instance question (§6.4) is the same one.
+- **No sign-in at launch:** a launch-time guest sign-in would reach Google before consent, so it happens on the first call that needs a token (after consent). The first check of a fresh install waits one sign-in round trip.
+- **The phone's limits now follow the server's tier**; without it a beta tester's Release build would hold his second photo of the day (the phone's free tier) while the server allows 10.
+- The Simulator's stand-in camera always sends the bundled sample (scored on the phone, never sent); a real photo needs "Choose from your photos".
+
+**Not tested here:** the deployed function (needs the founder's go), App Check, Apple sign-in (waits for the $99 program), Continue with Google linking against real Firebase (A11 is the pure rule; the link call itself needs a real Google sign-in on the phone).
+

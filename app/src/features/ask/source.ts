@@ -22,6 +22,8 @@ export interface AnswerRequest {
   prompt?: { system: string; user: string };
   /** The second call after a lookup (R3): the demo answers it from its follow-up line. */
   followUp?: boolean;
+  /** His tap on the stylist's own question (never counted): the server's free taps (X-Kitted-Free: tap). */
+  tap?: boolean;
 }
 
 export interface AnswerSource {

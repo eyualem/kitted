@@ -152,16 +152,18 @@ export function createAsk(deps: AskDeps) {
     return null;
   }
 
-  async function limitLine(after: number): Promise<void> {
+  async function limitLine(after: number): Promise<string> {
     const pro = (await quota.snapshot()).pro;
     const text = t(pro ? 'ask.limit.pro' : 'ask.limit.free');
-    await store.chat.put(row(ids('M'), after + 1, 'stylist', text, { kind: 'card', cardType: 'limit' }, { tryPro: !pro && deps.tryPro() }));
+    const id = ids('M');
+    await store.chat.put(row(id, after + 1, 'stylist', text, { kind: 'card', cardType: 'limit' }, { tryPro: !pro && deps.tryPro() }));
     deps.onPosted?.(text);
+    return id;
   }
 
   /** One call to the source, gated sentence by sentence (A4–A5), with the first-word timers (A3). */
   async function call(
-    source: AnswerSource, question: ChatMessage, prompt: Prepared['prompt'], gate: GateContext, followUp: boolean,
+    source: AnswerSource, question: ChatMessage, prompt: Prepared['prompt'], gate: GateContext, followUp: boolean, tap = false,
   ): Promise<{ done: Extract<AnswerEvent, { type: 'done' }> | null; failed: string | null; text: string; dropped: GateRule[] }> {
     const ctrl = new AbortController();
     const sentences = createSentenceStream(gate);
@@ -184,7 +186,7 @@ export function createAsk(deps: AskDeps) {
     };
     if (sch) slowTimer = sch.setTimer(() => live.slow(), SLOW_MS);
     armGiveUp();
-    const it = source.answer({ question: question.text ?? '', signal: ctrl.signal, ...(prompt ? { prompt } : {}), ...(followUp ? { followUp } : {}) });
+    const it = source.answer({ question: question.text ?? '', signal: ctrl.signal, ...(prompt ? { prompt } : {}), ...(followUp ? { followUp } : {}), ...(tap ? { tap } : {}) });
     try {
       for (;;) {
         const next = await Promise.race([it.next(), stopped]);
@@ -232,7 +234,7 @@ export function createAsk(deps: AskDeps) {
       prep = deps.prepare ? await deps.prepare(question.text ?? '') : NO_PREP;
       gate = prep.gate;
       const source = await deps.source();
-      let r = await call(source, question, prep.prompt, gate, false);
+      let r = await call(source, question, prep.prompt, gate, false, o.tap === true);
       dropped.push(...r.dropped);
       // One lookup at most (R3): the model's first line goes, and the answer comes from the second call.
       if (!r.failed && r.done?.need && prep.lookup) {
@@ -240,7 +242,7 @@ export function createAsk(deps: AskDeps) {
         if (next) {
           live.restart();
           gate = next.gate;
-          r = await call(source, question, next.prompt, gate, true);
+          r = await call(source, question, next.prompt, gate, true, o.tap === true);
           dropped.push(...r.dropped);
           if (r.done) r.done = { ...r.done, need: null };
           log('lookup');
@@ -266,6 +268,14 @@ export function createAsk(deps: AskDeps) {
         deps.onPosted?.(t('ask.paused'));
         log('paused');
         return { kind: 'failed', messageId: id, code: 'paused' };
+      }
+      if (failed === 'limit') {
+        // The server's daily limit (13 §8, A7): the same limit line as the phone's own, in the failed line's place.
+        if (replaces) await store.chat.delete(replaces.id);
+        live.clear();
+        const lineId = await limitLine(at - 1);
+        log('limit · the server');
+        return { kind: 'failed', messageId: lineId, code: 'limit' };
       }
       if (failed || !done) {
         const id = replaces?.id ?? ids('M');

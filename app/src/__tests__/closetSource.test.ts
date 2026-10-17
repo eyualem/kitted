@@ -34,7 +34,7 @@ function fakeScheduler() {
 function fetcher(plan: ((n: number) => { status?: number; text?: string; throws?: boolean })[]) {
   let n = 0;
   const bodies: string[] = [];
-  const f: ClosetGeminiOptions['fetch'] = async (_u, init) => {
+  const f: NonNullable<ClosetGeminiOptions['fetch']> = async (_u, init) => {
     bodies.push(init.body);
     const p = plan[Math.min(n, plan.length - 1)]!(n);
     n += 1;
@@ -134,7 +134,7 @@ describe('the live call', () => {
   });
   it('12 s timeout: no retry', async () => {
     const sch = fakeScheduler();
-    const f: ClosetGeminiOptions['fetch'] = (_u, init) => new Promise((_res, rej) => init.signal?.addEventListener('abort', () => rej(new Error('aborted'))));
+    const f: NonNullable<ClosetGeminiOptions['fetch']> = (_u, init) => new Promise((_res, rej) => init.signal?.addEventListener('abort', () => rej(new Error('aborted'))));
     const p = createClosetGeminiSource({ apiKey: 'k', fetch: f, scheduler: sch }).read(image, stubs, 'full');
     await Promise.resolve();
     sch.fire();
