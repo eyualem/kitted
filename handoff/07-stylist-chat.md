@@ -900,3 +900,37 @@ Not the composer's own glass. The tab bar's bottom accessory (StylistBar) only f
 | G | Pass | `npm run check` green: typecheck, lint, core tests, 1,157 app tests in 91 suites; no copy, score or native change; no package |
 
 **Also found on the Simulator, older:** the dev build's floating Tools button sits over the open composer's ↑ at rest and takes its taps (drag it away when testing); at the largest text size the compact "You went with your own" card breaks words mid-word ("wen / t", "Clas / s/"). Screenshots `screenshots/composer-glass/` (git-ignored): before and after, light, dark, the largest size, the bar back.
+
+## 20. Two older layout problems at the largest text size (Oct 17, #321)
+Found while checking #319 (§19 results, K2 and "Also found"), both older than it.
+- **The field doesn't grow.** The composer's field is `multiline numberOfLines={1}`. On iOS the new architecture turns `numberOfLines` into the paragraph's `maximumNumberOfLines`, which the field's measurement uses, so its height stays one line whatever he types; a wrapped second line is cut off inside the capsule (seen at the largest size, where a short question already wraps). Its `maxHeight: 120` is also fixed in points, about 4½ lines at the default size but only about 2 at the largest.
+- **The compact "You went with your own" card breaks words mid-word** ("wen / t", "Clas / s/ Work") at the largest size: the photo, the text and the score sit in one row, leaving the text a sliver.
+
+### 20.1 Pass/fail checks, set before fixing
+(S) seen on the iOS Simulator, (C) read in code or a test.
+- **A1 (S)** Default size, light: a question that wraps to 2 and then 3 lines grows the capsule line by line; every word shows; the camera/send buttons stay at the capsule's vertical center (as now).
+- **A2 (S)** Largest size: a question that wraps to 2 lines shows both lines in full, in light and dark.
+- **A3 (S)** A long question (6+ lines at the default size) stops growing at the max height and scrolls inside the field; nothing pushes the thread's newest card off the top of the screen at the largest size.
+- **A4 (S)** At rest (closed bar), and open with one line, the composer looks as before (same height, same place), at the default size and the largest.
+- **A5 (C)** The max height scales with text size (≈ the same number of lines at every size), capped so it can't swallow the screen.
+- **B1 (S)** Demo 12 at the largest size: the compact card shows "TODAY · …" and "You went with your own" with no word broken mid-word; photo and score sit together on one row above the text.
+- **B2 (S)** Demo 12 at the default size: the compact card looks as before (one row: photo · text · score · chevron), in light and dark.
+- **B3 (C)** The other compact rows sharing the shell ("Staying in", an earlier day's card) stack the same way at accessibility sizes and are unchanged at the default sizes.
+- **G** `npm run check` green; no copy, score or native change; no new package.
+
+### §20 results (Oct 17, #321): checked against A1–A5, B1–B3 and G; no check changed
+**The fixes:** the field drops `numberOfLines={1}` (it stays `multiline`), and its max height is the field's padding plus about 4½ body lines times the text scale (capped at the controls' 2×): 120 pt at the default size as before, 222 pt at the largest. `CollapsedShell` (MorningCard) stacks at accessibility sizes whenever it has a photo, a right side or a chevron: photo · score (or the occasion menu) · chevron on one row, the words full width under it. New test `axLayout.test.ts` (3) reads both from the source.
+
+| Check | Result | How |
+|---|---|---|
+| A1 | Pass (S) | default size, light: a question grew the capsule to 2, 3, 4 lines, every word shown, ↑ at the capsule's middle |
+| A2 | Pass (S) | largest size: "Boots or sneakers today?" wraps to 2 lines, both in full, in light and dark (before: the second line cut off) |
+| A3 | Pass (S) | a long question stops at 5 lines (default) and 5 lines (largest), scrolled to the caret; at the largest size the compact card stays on screen above it |
+| A4 | Pass (S) | the closed bar at the default size (light, dark) and the largest, and the open field with one line, look as before |
+| A5 | Pass (C) | `inputMax = 9·2 + 102 × min(max(fontScale, 1), 2)`; test A |
+| B1 | Pass (S) | demo 12, largest size, light and dark: photo and "9.0 Dialed in" on one row, then "Today · Class/Work" and "You went with your own" full width, no word broken (before: "wen / t", "Clas / s/") |
+| B2 | Pass (S) | demo 12, default size, light and dark: one row as before |
+| B3 | Pass (C) | "Staying in" (occasion menu on the top row) and an earlier day's card (no photo, no right side: unchanged) share the shell; test B |
+| G | Pass | `npm run check` green: typecheck, lint, core tests, 1,160 app tests in 92 suites; no copy, score or native change; no package |
+
+Not seen: the phone's on-screen keyboard with a 5-line field at the largest size (the Simulator uses the Mac's keyboard); the thread scrolls under it as it does today. Screenshots `screenshots/ax-layout/` (git-ignored).
