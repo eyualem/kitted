@@ -37,6 +37,15 @@ function s14AfterFix(): Reading {
   return { ...r, garments: r.garments.map((g) => (g.category === 'footwear' ? { ...g, ...swap } : g)) };
 }
 
+/** "p01t": p01b's outfit in a short mirror (#313, the two-shot check): read as top only, so no pants or shoes. */
+function p01bTopOnly(): Reading {
+  const r = readingOf(p01b);
+  return {
+    ...r, scene: { ...r.scene, framing: 'upper_only', shoes_visible: false },
+    garments: r.garments.filter((g) => g.category !== 'bottom' && g.category !== 'footwear'),
+  };
+}
+
 const BY_ID: Record<string, Reading> = {
   p01a: readingOf(p01a), p01b: readingOf(p01b), s05: readingOf(s05), s09: readingOf(s09), s10: readingOf(s10),
   s12: readingOf(s12), s13: readingOf(s13), s14: readingOf(s14), s15: readingOf(s15), s22: readingOf(s22),
@@ -44,6 +53,8 @@ const BY_ID: Record<string, Reading> = {
   // A second shot of p01b's outfit (its own hash; demoPhotos.ts): S21's re-check that doesn't see the change (#219).
   p01b2: readingOf(p01b),
   s14b: s14AfterFix(),
+  // The two-shot check's step 0 (#313): demo screen 185, a top-only check finished by a photo of the pants and shoes.
+  p01t: p01bTopOnly(),
   // Demo screens 34–36 (the one quick tap): shown with s12's stand-in photo (demoPhotos.ts).
   ph1: readingOf(ph1),
   // Demo screens 60–62 (the shoe question): shown with s12's stand-in photo too.
@@ -59,6 +70,12 @@ const BY_ID: Record<string, Reading> = {
 export const SHOE_SNAP_READING: Reading = {
   scene: { framing: 'upper_only', shoes_visible: true, people_count: 1, mirror_selfie: false, lighting: 'good', clothed: 'fully' },
   garments: readingOf(shoeSnapRunners).garments.filter((g) => g.category === 'footwear'),
+};
+
+/** The bottom snap's own reading (#313): p01b's pants and shoes, looked down at (no top in the frame). */
+export const BOTTOM_SNAP_READING: Reading = {
+  scene: { ...readingOf(p01b).scene, framing: 'full_body', shoes_visible: true, mirror_selfie: false },
+  garments: readingOf(p01b).garments.filter((g) => g.category === 'bottom' || g.category === 'footwear'),
 };
 
 export function demoReadingById(id: string): Reading | null {

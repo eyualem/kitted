@@ -19,6 +19,15 @@
         "/Users/eyu/Desktop/files/Kitted/tools/mockshots/serve.js"
       ],
       "port": 8095
+    },
+    {
+      "name": "kitted-web-8083",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd app && npx expo start --web --port 8083"
+      ],
+      "port": 8083
     }
   ]
 }

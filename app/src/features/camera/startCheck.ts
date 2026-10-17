@@ -5,6 +5,7 @@ import { store } from '@/data/db';
 import { normStyleKey, OCCASIONS, type OccasionKey, type StyleKey } from '@/data/types';
 import { fitCheck } from '@/features/fitcheck/session';
 import type { CheckMode } from '@/features/fitcheck/machine';
+import { snapFailedKey, snapPart } from '@/features/fitcheck/finish';
 import type { StartOutcome } from '@/features/fitcheck/service';
 import { showToast } from '@/features/toast/toast';
 import { discardTempPhoto } from '@/services/tempPhoto';
@@ -46,7 +47,9 @@ export async function startCheck(mode: CheckMode, photo: PhotoInput, parentCheck
     });
     return r;
   }
-  explain(r);
+  const snapFail = mode === 'shoeSnap' && parentCheckId ? await snapFailure(parentCheckId, r.outcome) : null;
+  if (snapFail) showToast(t(snapFail));
+  else explain(r);
   // Refused because another photo is still being read (09-ui-review §11 K2): prep never ran, so nothing else would
   // delete his temporary original.
   if (r.outcome === 'busy' && 'photoUri' in photo) discardTempPhoto(photo.photoUri);
@@ -66,6 +69,12 @@ export async function retryCheck(checkId: string): Promise<StartOutcome> {
   }
   explain(r);
   return r;
+}
+
+/** A snap that didn't read (02 S9): "Couldn't read your shoes…" (or the pants and shoes, #313); the Finish row stays. */
+async function snapFailure(parentCheckId: string, outcome: StartOutcome['outcome']) {
+  const parent = await store.fitChecks.get(parentCheckId).catch(() => null);
+  return parent ? snapFailedKey(outcome, snapPart(parent)) : null;
 }
 
 /** S17h "Score it" on a held photo (#281): read and scored now, on today's free check, with the same toasts as a new

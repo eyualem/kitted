@@ -18,6 +18,7 @@ export function simFitEvent(tip: FitTip, body: ViewBox): GuideEvent {
     case 'tooFar':
       return { ...g, bodyShare: 0.24 }; // the bundled photo can't move; only the measure says "far"
     case 'tooClose':
+    case 'shortMirror':
       return { ...g, state: 'tooClose', body: { ...body, height: body.height * 0.55 } };
     case 'moving':
       return { ...g, motion: 0.07 };

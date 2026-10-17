@@ -737,3 +737,91 @@ An answer is **good** when every judge gives it ≥ 4 on all five. Targets:
   - then the outward-facing switch: consent and the privacy label name OpenAI for questions, his own OpenAI key on the server;
   - rotating the two test keys (shared in chat).
 - **Nothing in the app's model choice has changed yet:** the phone still uses Flash-Lite.
+
+---
+
+## 17. The chat UI pass: audit, then fixes (Oct 17, #314)
+Founder, away: "start working on the UI for the chat system … try to find bugs and fix them … keep things like what the card looks like and also what the user's message looks like … just make it very good." In scope: the Stylist tab's conversation (answers in look C, his bubbles, cards in the thread, typing and streaming, rhythm, stamps, the composer, scrolling, Past chats, dark, Dynamic Type, VoiceOver, Reduce Motion). Not in scope: the model, prompts, scoring, the cards' own design. No live questions were sent (demo screens and recorded sources only).
+
+### 17.1 The audit (Oct 17)
+Three passes: the iOS Simulator (demo screens 90–95, 167–175, light, dark, AX5; `screenshots/chat-ui/before/`), a code read for bugs, a code read for accessibility. Findings, most severe first:
+
+**Bugs**
+1. **Last night's answer comes back as a ghost.** A finished live answer stays in memory for good; the next morning (or after "Delete all my data") it draws under the morning card with the K mark, as if just answered. (`live.ts`, `liveRowShows`)
+2. **A double tap sends twice** (send, a starter chip, Retry, a tap answer): `busy` is only set after several awaits, so two bubbles, two answers mixed into one live row, and 6 of 5 questions counted. (`pipeline.ts`)
+3. **The thread pulls him back down while he drags up** during a streaming answer (each new sentence scrolls to the end mid-gesture). (`StylistScreen.tsx`)
+4. **Leaving the composer while voice is getting ready leaves the mic on** with no UI, then an "I didn't catch that." toast 8 s later. (`dictation.ts` `dispose`)
+5. **Stylist lines drawn as cards never get the K mark:** the limit line, the notification ask, "Keep your fits", "Ready to score last night's photo?". The limit line sits under his bubble ownerless (seen on demo 93), and the next stylist line starts a new run. (`thread.ts`)
+6. **Past chats: an old outfit idea's Wear this still works** and overwrites today's wear log. (`MessageView.tsx`, `OutfitIdeaCard.tsx`)
+7. **Piece chips flicker** when the stored answer takes over from the live row (each answer loads the closet on its own; the first frame has no chips). (`MessageView.tsx`, `LiveAnswerRow.tsx`)
+8. **The paused, refused and failed lines are drawn as an answer** (the first sentence semibold as if it were a move): "I rate outfits, never people." is fine as a lead, but "I couldn't answer that." isn't a move.
+9. **Starter chips go stale after 4 am** (yesterday's "Why a 7.0?" in the morning).
+10. **A link card can open a piece that was merged away** (checks `isDeleted`, not `mergedInto`).
+11. **"Scroll to this card" can use a stale position** for a row no longer in today's thread.
+
+**How it looks and feels**
+12. **A white piece's swatch reads as an empty checkbox** ("☐ white tee"): a white square with an ink3 border, seen on every answer naming white sneakers or a white tee.
+13. **One gap everywhere (16 pt):** his two bubbles in a row sit as far apart as a change of speaker; an answer under his question has no more room than anything else (look C asked for 20 pt above an answer). The thread reads as a list, not a conversation.
+14. **At AX5 his bubble wraps one word per line** (78% wide), the typing dots stay 6 pt beside huge words, and the photo bubble's caption cuts to "…".
+15. **A chip name with a hyphen breaks across lines** ("light-" / "blue oxford").
+
+**Accessibility**
+16. **Most new stylist lines are silent to VoiceOver:** only a finished answer is announced. The failure line, the paused line, the limit line, the refusals and the **988 support card** are posted with no announcement, and the waiting row (dots, "Taking longer…") is hidden for up to 20 s.
+17. The answer's announcement isn't queued (iOS can drop it while VoiceOver is speaking).
+18. Auto-follow fights VoiceOver (three-finger scrolls don't count as "scrolled up", so a VoiceOver user reading an older card is pulled to the bottom).
+19. Reduce Motion: the thread's own scrolls and the toast-room slide still animate.
+20. "Earlier chats" is read as "Past chats" (Voice Control "Tap Earlier chats" fails); day stamps aren't headers; the bar doesn't read a waiting draft.
+21. At AX sizes the starter chips stack into a tall column above the field and the keyboard.
+
+**Left as is, on purpose:** the cards' own design; the composer swapping send ↔ mic under VoiceOver focus (the finished answer is announced anyway; a stable slot is a bigger change, a follow-up); a question sent at 3:59 and answered at 4:00 (rare; the answer lands on the new day); an outfit card's Wear this adding a new outfit row per tap (data, not the chat's look); the 20 s give-up starting after the pack is built; leaving the tab mid-dictation dropping the words heard so far (needs the phone to test); redundant VoiceOver hints (copy).
+
+### 17.2 Pass/fail checks, set before fixing
+(T) a jest test, (S) seen on the iOS Simulator, (C) read in code.
+- **U1 (T)** A finished live answer is dropped once the thread shows its row; nothing is drawn after a wipe; a finished answer from an earlier day never draws.
+- **U2 (T)** Two sends in the same tick give one bubble, one answer and one count; the same for Retry and a tap answer.
+- **U3 (T)** Words or a finish for a question that isn't the current one are ignored.
+- **U4 (T)** Disposing the dictation while it gets ready: the native start is never called and no toast shows.
+- **U5 (T)** The limit line, the notification ask, the save offer and "Ready to score" get the mark on the first line of a run; a stylist line right after one continues the run.
+- **U6 (T)** The paused, failed and refused lines are not answers (no lead).
+- **U7 (T)** The rhythm: his bubbles in a row 4 pt; the stylist's lines in a row 8 pt; his line → the stylist 20 pt; the stylist → his line 16 pt; 20 pt above a stamp and 8 pt below it.
+- **U8 (T)** Past chats: an outfit idea has no Wear this.
+- **U9 (T)** A link card to a merged or removed piece isn't a link.
+- **U10 (C)** Starter chips reload on a new day.
+- **U11 (S)** The swatch is a color dot with a faint ring, never a checkbox, in light and dark.
+- **U12 (T)** A chip's name never breaks at its hyphen.
+- **U13 (S)** AX5: his bubble up to 88% wide; the photo caption wraps instead of cutting; the dots grow; the starter chips sit in one row that scrolls.
+- **U14 (T)** The failure, paused, limit, support and refusal lines are each announced once; the answer is announced queued.
+- **U15 (T)** The waiting row is one VoiceOver element, "Your stylist is writing", with "Taking longer…" added when it shows.
+- **U16 (C)** With Reduce Motion the thread jumps instead of scrolling, and the toast room doesn't slide.
+- **U17 (C)** The thread doesn't follow new words while he's dragging; with VoiceOver on it follows only his own sends.
+- **U18 (T)** "Earlier chats" is spoken as shown; day stamps are headers; the bar reads his waiting draft.
+- **U19 (C)** The answer's chips are there on the first frame (one shared closet read).
+- **G** `npm run check` green; G4 holds (no score changes).
+
+### §17 results (Oct 17, #314): checked against U1–U19 and G; no check changed
+`npm run check` green: 1,091 app tests in 87 suites (new `chatUi.test.ts`, 19 tests), core tests, typecheck, lint. Simulator: demo screens 11, 90–94, 167, 170, 175 in light, dark and AX5; before/after in `screenshots/chat-ui/` (git-ignored). The tests were written with the fixes, after the checks; the bugs behind U1–U4 were traced in the code first.
+
+| Check | Result | How |
+|---|---|---|
+| U1 | Pass (T) | `liveAnswer.settle` drops a finished answer once the thread shows its row; `liveRowShows` takes the day; `deleteAllData` clears it |
+| U2 | Pass (T) | `claimed()` in `pipeline.ts` takes the one-question claim before any await: two sends, or two Retries, in the same tick → one bubble, one answer, one count; an early return (consent) gives the claim back |
+| U3 | Pass (T) | `append`/`finish` carry the question id and ignore another |
+| U4 | Pass (T) | `dispose` ends the session (the waiting start stops), stop while getting ready is a cancel |
+| U5 | Pass (T, S) | `isStylistLine`: the limit line, the notification ask, the save offer and "Ready to score" get the mark (demo 93: the limit line now has its K) and continue the run |
+| U6 | Pass (T) | failed, paused and refused lines are plain lines, not a lead and a reason |
+| U7 | Pass (T, S) | `RHYTHM`: 4 / 8 (12 with a card) / 20 / 16, stamps 20 above and 8 below; the live row 20 under his question. Seen on 92, 93, 167, 170 |
+| U8 | Pass (T) | an earlier day's outfit idea has no Wear this and no VoiceOver action |
+| U9 | Pass (T) | `linkedPiece` follows a merge to the piece it lives on in; a removed piece isn't a link; the link's "›" isn't read |
+| U10 | Pass (C) | the starter chips' load depends on today's day key |
+| U11 | Pass (S) | a round 10 pt dot with a faint ring (black 14% light, white 22% dark): white pieces read as a white dot, not a checkbox (92, 93 light; 92 dark) |
+| U12 | Pass (T) | chip names use a no-break hyphen |
+| U13 | Pass (T, S) except the chip row (C) | AX5: his bubble 88% wide (92); the photo's caption goes under the bubble, "Everyday · 8:10", instead of "Every-day" inside it (11); dots 10 pt (90 dark). The starter chips' sideways row at AX sizes is read in code only (the Simulator's hardware keyboard didn't focus the field to show them) |
+| U14 | Pass (T) | the support card, both refusals, the limit, failed and paused lines go through `onPosted`; announcements are queued (`announceForAccessibilityWithOptions`) |
+| U15 | Pass (T) | the waiting and streaming row is one element, "Your stylist is writing" (+ ". Taking longer…"); "Taking longer…" is announced once |
+| U16 | Pass (C) | the thread's scrolls pass `animated: false` and the toast room doesn't slide with Reduce Motion |
+| U17 | Pass (C) | no follow while dragging; with VoiceOver on, only his own sends move the thread |
+| U18 | Pass (T) | "Earlier chats" spoken as shown; day stamps are headers; the bar reads his draft as its value |
+| U19 | Pass (C) | `useAnswerCloset` keeps the last closet read, so a newly drawn answer has its chips on its first frame |
+| G | Pass | `npm run check` green; no score code touched |
+
+**New words (VoiceOver only):** "Your stylist is writing". No visible copy changed. Everything is JS: on his phone through Metro, no reinstall.

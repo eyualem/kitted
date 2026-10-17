@@ -18,7 +18,7 @@ import { RecheckCard } from './cards/RecheckCard';
 import { WhichOneCard } from '@/features/whichOne/WhichOneCard';
 import { SupportCard } from '@/features/ask/SupportCard';
 import { AskAttachment } from '@/features/ask/AskCardView';
-import { AnswerBody, answerLayout, chipActions } from '@/features/ask/AnswerBody';
+import { AnswerBody, answerLayout, chipActions, useAnswerCloset } from '@/features/ask/AnswerBody';
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
@@ -35,7 +35,7 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
   if (m.kind === 'card') {
     if (m.cardType === 'fitCheck' && m.fitCheckId) return <FitCheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
     if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
-    if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} />;
+    if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} readOnly={readOnly} />;
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} />;
     if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;
     // The end of onboarding (ruling 23, 10-onboarding.md §9): "Your first 3 moves", then the notification ask.
@@ -98,9 +98,9 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
 
 /** An answer to his question, look C (#302): the lead, the reason and his pieces as chips. */
 function AnswerMessage({ m, showHeader, footer }: { m: ChatMessage; showHeader: boolean; footer: React.ReactNode }) {
-  const closet = useLive(['closet'], () => store.closet.all(), []);
+  const closet = useAnswerCloset();
   const text = m.text ?? '';
-  const layout = answerLayout(text, closet ?? null);
+  const layout = answerLayout(text, closet);
   return (
     <StylistMessage showHeader={showHeader} body={<AnswerBody layout={layout} />} actions={chipActions(layout.chips)} footer={footer}>
       {text}
@@ -126,7 +126,7 @@ function PhotoMessage({ m }: { m: ChatMessage }) {
   const snap = m.payload.snap === true;
   const reading = !!row && (row.status === 'scoring' || (snap && session.kind === 'reading' && session.checkId === row.id && session.mode === 'shoeSnap'));
   let caption: string | undefined;
-  if (snap) caption = t('cam.shoe.bubbleCap');
+  if (snap) caption = t(m.payload.snapPart === 'bottom' ? 'cam.bottom.bubbleCap' : 'cam.shoe.bubbleCap');
   else if (row?.status === 'failed') caption = t('fail.cap.notScored');
   else if (row?.parentId) caption = t('recheck.bubbleCap');
   else if (row) caption = occasionLabel(row.occasion);

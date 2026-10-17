@@ -1,0 +1,55 @@
+T1/T2, two-shot check: 226 gold photos, 184 with a full body found (shoulders, hips, knees, an ankle) and cut
+Truth for uncut photos = both AI readings agree (shoes in + full body, or shoes out). Tune = even photo numbers, test = odd.
+
+=== tune half ===
+  R0 today's still pose (an ankle found = full)
+    P1a uncut with shoes, asked (bar <= 3%):     9/104 = 8.7%
+    P1b cut copies, asked (bar >= 95%):          591/595 = 99.3%
+    real cut-offs (AI: shoes out), asked:        4/5 = 80.0%
+    missed by cut: {'aboveAnkle': 4}
+  R1 fewer than 2 ankles
+    P1a uncut with shoes, asked (bar <= 3%):     20/104 = 19.2%
+    P1b cut copies, asked (bar >= 95%):          595/595 = 100.0%
+    real cut-offs (AI: shoes out), asked:        4/5 = 80.0%
+  R2 no ankle, or the lowest joint in the bottom 4%
+    P1a uncut with shoes, asked (bar <= 3%):     15/104 = 14.4%
+    P1b cut copies, asked (bar >= 95%):          593/595 = 99.7%
+    real cut-offs (AI: shoes out), asked:        4/5 = 80.0%
+    missed by cut: {'aboveAnkle': 2}
+  R3 fewer than 2 ankles, or the lowest joint in the bottom 4%
+    P1a uncut with shoes, asked (bar <= 3%):     25/104 = 24.0%
+    P1b cut copies, asked (bar >= 95%):          595/595 = 100.0%
+    real cut-offs (AI: shoes out), asked:        4/5 = 80.0%
+
+=== test half ===
+  R0 today's still pose (an ankle found = full)
+    P1a uncut with shoes, asked (bar <= 3%):     4/106 = 3.8%
+    P1b cut copies, asked (bar >= 95%):          689/693 = 99.4%
+    real cut-offs (AI: shoes out), asked:        5/7 = 71.4%
+    missed by cut: {'aboveAnkle': 3, 'midshin': 1}
+  R1 fewer than 2 ankles
+    P1a uncut with shoes, asked (bar <= 3%):     19/106 = 17.9%
+    P1b cut copies, asked (bar >= 95%):          693/693 = 100.0%
+    real cut-offs (AI: shoes out), asked:        5/7 = 71.4%
+  R2 no ankle, or the lowest joint in the bottom 4%
+    P1a uncut with shoes, asked (bar <= 3%):     6/106 = 5.7%
+    P1b cut copies, asked (bar >= 95%):          691/693 = 99.7%
+    real cut-offs (AI: shoes out), asked:        5/7 = 71.4%
+    missed by cut: {'aboveAnkle': 2}
+  R3 fewer than 2 ankles, or the lowest joint in the bottom 4%
+    P1a uncut with shoes, asked (bar <= 3%):     21/106 = 19.8%
+    P1b cut copies, asked (bar >= 95%):          693/693 = 100.0%
+    real cut-offs (AI: shoes out), asked:        5/7 = 71.4%
+
+=== P1c: can it be sent? and T2: today's live tip, by cut height (both halves) ===
+  cut            n   sendable   Step back (no hips)   Step in (no shoulders)  pose full/upper/none
+  full         184       100%                    0%                       0%  184/0/0
+  chest        184        98%                   93%                       7%  0/1/183
+                    not sendable: {'noPerson': 3}
+  navel        184        98%                   97%                       3%  0/1/183
+                    not sendable: {'noPerson': 3}
+  hip          184       100%                   95%                       2%  0/6/178
+  midthigh     184       100%                   52%                       0%  0/88/96
+  knee         184       100%                   23%                       0%  0/142/42
+  midshin      184       100%                    9%                       1%  1/165/18
+  aboveAnkle   184       100%                    5%                       0%  7/168/9

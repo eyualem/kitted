@@ -9,6 +9,7 @@
 import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
 import type { ChatMessage } from '@/data/types';
+import { liveAnswer } from '@/features/ask/live';
 import { INBOX_KEY } from '@/features/scan/inbox';
 import type { PrivacyFiles } from './files';
 
@@ -96,6 +97,8 @@ export async function deleteAllData(d: WipeDeps): Promise<void> {
   d.files.deletePhotos();
   d.files.deleteLogs();
   await d.store.wipe();
+  // An answer held in memory would otherwise draw in the fresh, empty thread (07 §17, U1).
+  liveAnswer.clear();
   await d.clearDeviceId();
   if (d.demo) await d.store.setKv(KV.seedLoaded, 'wiped');
 }

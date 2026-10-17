@@ -115,7 +115,7 @@ describe('contents and order', () => {
     expect(fc.length).toBeGreaterThan(ctx.meta.checksToday);
     expect(ctx.text).toMatch(/Today's fit checks/);
     expect(ctx.text).toMatch(/\n {2}Fix 1: .+ → \d\.\d/);
-    // the weekday too since #311 ("FC3 · Tuesday, Oct 20 · 6.5 …"): given only the date, models guessed the day
+    // Older checks carry their weekday since #311 ("Tuesday, Oct 20"), so "last Tuesday" can be matched to one.
     expect(ctx.text).toMatch(/Earlier this week:\nFC\d · [A-Z][a-z]+day, Oct \d+ · \d\.\d /);
   });
 

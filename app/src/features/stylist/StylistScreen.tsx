@@ -11,7 +11,7 @@
 // A question's answer streams into an in-memory row drawn after the thread (features/ask/live.ts), so the chat
 // table is written once per answer, not per word.
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { AppState, Keyboard, Platform, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { AccessibilityInfo, AppState, Keyboard, Platform, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { dayKey } from '@kitted/core';
@@ -24,13 +24,13 @@ import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAct
 import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
-import { useAskInFlight, useLiveAnswer } from '@/features/ask/live';
+import { liveAnswer, useAskInFlight, useLiveAnswer } from '@/features/ask/live';
 import { LiveAnswerRow, liveRowShows } from '@/features/ask/LiveAnswerRow';
 import { Composer } from './Composer';
 import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
-import { buildThreadItems, splitToday } from './thread';
+import { buildThreadItems, liveGap, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
 import { t } from '@/i18n/en';
 import { useAccountOffer } from '@/features/account/offerSession';
@@ -45,7 +45,10 @@ const SHEET_DISMISS_MS = 400;
 const TOAST_ROOM = 56;
 
 export function StylistScreen() {
-  const { colors } = useTheme();
+  const { colors, a11y } = useTheme();
+  // Reduce Motion: the thread jumps to new rows instead of scrolling to them (07 §17, U16).
+  const motion = !a11y.reduceMotion;
+  const screenReader = useScreenReaderRef();
   const loaded = useLive(['chat'], () => store.chat.all(), []);
   const all = useMemo(() => loaded ?? [], [loaded]);
   const now = sessionClock.nowMs();
@@ -53,15 +56,19 @@ export function StylistScreen() {
   const live = useLiveAnswer();
   const askInFlight = useAskInFlight();
   // The starter chips (07 §6.3): from his closet and today's checks.
+  // Reloaded on a new day too, so yesterday's "Why a 7.0?" doesn't greet him in the morning (U10).
+  const today = dayKey(now, sessionClock.offset);
   const chips = useLive(['closet', 'fitChecks'], async () => starterChips({
     nowMs: sessionClock.nowMs(), zone: sessionClock.offset, closet: await store.closet.all(), checks: await store.fitChecks.all(),
-  }), []) ?? [];
+  }), [today]) ?? [];
   // While Retry streams, the failed line it replaces steps aside for the live row.
   const replaced = live?.replaces ?? null;
   const shown = useMemo(() => (replaced ? messages.filter((m) => m.id !== replaced) : messages), [messages, replaced]);
   const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
   const shownIds = useMemo(() => new Set(shown.map((m) => m.id)), [shown]);
-  const showLive = liveRowShows(live, shownIds);
+  const showLive = liveRowShows(live, shownIds, (at) => dayKey(at, sessionClock.offset) === today);
+  // The thread shows the finished answer's own row now: the live copy goes for good (U1, no ghost tomorrow).
+  useEffect(() => liveAnswer.settle(shownIds), [shownIds, live]);
   const open = useComposerOpen();
   const docked = DOCK_ALWAYS || open !== null;
   // Leaving the tab closes an empty composer; the accessory comes back with the thread.
@@ -89,8 +96,8 @@ export function StylistScreen() {
   const toastRoom = useSharedValue(0);
   const follow = useSharedValue(1);
   useEffect(() => {
-    toastRoom.set(withTiming(toast ? TOAST_ROOM : 0, { duration: 220 }));
-  }, [toast, toastRoom]);
+    toastRoom.set(withTiming(toast ? TOAST_ROOM : 0, { duration: motion ? 220 : 0 }));
+  }, [toast, toastRoom, motion]);
   useAnimatedReaction(
     () => toastRoom.value,
     (now, before) => {
@@ -111,10 +118,11 @@ export function StylistScreen() {
   const viewH = useRef(0);
   const toEnd = useCallback(
     (animated: boolean) => {
-      if (contentH.current > 0 && viewH.current > 0) list.current?.scrollTo({ y: Math.max(0, contentH.current - viewH.current), animated });
-      else list.current?.scrollToEnd({ animated });
+      const a = animated && motion;
+      if (contentH.current > 0 && viewH.current > 0) list.current?.scrollTo({ y: Math.max(0, contentH.current - viewH.current), animated: a });
+      else list.current?.scrollToEnd({ animated: a });
     },
-    [list],
+    [list, motion],
   );
   const first = useRef(true);
   // Only his finger decides whether the thread follows: the momentum end of our own animated
@@ -207,18 +215,19 @@ export function StylistScreen() {
     clearStylistAction();
     if (action.kind === 'checkMyFit') openCamera();
     if (action.kind === 'scrollTo') {
-      const y = rowY.current.get(action.messageId);
+      // Only a row today's thread still shows: a stored position can be stale (U11 in 07 §17's list).
+      const y = shownIds.has(action.messageId) ? rowY.current.get(action.messageId) : undefined;
       if (y !== undefined) {
         atBottom.current = false;
         follow.set(0);
-        list.current?.scrollTo({ y: Math.max(0, y - viewH.current * 0.1), animated: true });
+        list.current?.scrollTo({ y: Math.max(0, y - viewH.current * 0.1), animated: motion });
       } else {
         // On an earlier day: open that day's chat.
         const m = all.find((x) => x.id === action.messageId);
         if (m) router.push(`/stylist/day/${dayKey(m.createdAt, sessionClock.offset)}`);
       }
     }
-  }, [action, all, list, follow]);
+  }, [action, all, list, follow, shownIds, motion]);
 
   // The first view must be the ScrollView itself (no wrapper) for the tab bar to shrink on scroll.
   return (
@@ -239,7 +248,9 @@ export function StylistScreen() {
         scrollEventThrottle={16}
         onContentSizeChange={(_w, h) => {
           contentH.current = h;
-          if (atBottom.current) toEnd(!first.current);
+          // Not while his finger is on it (U17: each new sentence used to pull him back down mid-drag), and with
+          // VoiceOver on only his own sends move the thread (a three-finger scroll never reads as "scrolled up").
+          if (atBottom.current && !dragging.current && !(screenReader.current && !first.current)) toEnd(!first.current);
         }}
         onLayout={(e) => {
           viewH.current = e.nativeEvent.layout.height;
@@ -254,14 +265,14 @@ export function StylistScreen() {
         {items.map((item, i) => (
           <View
             key={item.key}
-            style={i > 0 ? { marginTop: space.stack } : undefined}
+            style={i > 0 ? { marginTop: item.gap } : undefined}
             onLayout={item.type === 'msg' ? (e) => rowY.current.set(item.message.id, e.nativeEvent.layout.y) : undefined}
           >
             <ThreadRow item={item} />
           </View>
         ))}
         {live && showLive ? (
-          <View style={items.length > 0 ? { marginTop: space.stack } : undefined}>
+          <View style={items.length > 0 ? { marginTop: liveGap(shown.length ? shown.reduce((a, m) => (m.createdAt >= a.createdAt ? m : a)) : null) } : undefined}>
             <LiveAnswerRow live={live} />
           </View>
         ) : null}
@@ -299,6 +310,25 @@ export function StylistScreen() {
   );
 }
 
+/** VoiceOver on, as a ref (read inside scroll callbacks). */
+function useScreenReaderRef() {
+  const on = useRef(false);
+  useEffect(() => {
+    let alive = true;
+    void AccessibilityInfo.isScreenReaderEnabled?.().then((v) => {
+      if (alive) on.current = v;
+    });
+    const sub = AccessibilityInfo.addEventListener?.('screenReaderChanged', (v: boolean) => {
+      on.current = v;
+    });
+    return () => {
+      alive = false;
+      sub?.remove();
+    };
+  }, []);
+  return on;
+}
+
 /** Top of today's thread: the way back to earlier days (also the header's clock button). */
 function EarlierChats() {
   const { colors } = useTheme();
@@ -306,7 +336,8 @@ function EarlierChats() {
     <Pressable
       onPress={() => router.push('/stylist/history')}
       accessibilityRole="button"
-      accessibilityLabel={t('history.open.a11y')}
+      // Spoken as shown, so Voice Control's "Tap Earlier chats" works (U18).
+      accessibilityLabel={t('history.open')}
       // 30 pt pill; the slop makes the target 44 without making it look bigger.
       hitSlop={{ top: 7, bottom: 7, left: 4, right: 4 }}
       style={({ pressed }) => [styles.earlier, { backgroundColor: colors.surface2, opacity: pressed ? opacity.pressed : 1 }]}

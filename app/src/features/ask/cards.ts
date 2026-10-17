@@ -175,3 +175,16 @@ export function cardControls(card: AskCard, o: { readOnly: boolean; tapped: stri
 
 /** The saved line's Undo shows only in today's chat (P4). */
 export const savedUndoShows = (readOnly: boolean): boolean => !readOnly;
+
+/**
+ * The piece a link card opens, as it stands now: a piece merged into another opens the one it lives on in, a removed
+ * one opens nothing ("No longer in your closet"). It checked only removal and opened a merged-away page (07 §17, U9).
+ */
+export function linkedPiece(id: string, closet: readonly ClosetItemRow[]): ClosetItemRow | null {
+  let it = closet.find((c) => c.id === id) ?? null;
+  for (let hops = 0; it && it.mergedInto && hops < 5; hops++) {
+    const into: string = it.mergedInto;
+    it = closet.find((c) => c.id === into) ?? null;
+  }
+  return it && isOwned(it) ? it : null;
+}
