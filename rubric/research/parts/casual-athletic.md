@@ -12,6 +12,7 @@
 - **All checks pass:** 20/20 test outfits, the self-check (with the candidates off the engine is exactly v13 on all 449 conformance cases and every gold reading), and the gold guards: held-out r 0.49 → 0.48 (bar: no drop over 0.03), the founder's 20 blind ratings within 0.5: 13 → 14, both runs within 0.5 on every shorts and sweats photo (30/30), no photo outside shorts, sweats and track pieces moved, none of the 39 saved phone checks moved.
 - **The reading test ran small (§7, 52¢ of your 75¢, #332):** a separate narrow look reads whether shorts end above the knee or at/below it (right 99%, steady 92%) and crew socks vs none (right 96%, steady 96%) on the 24 gold shorts photos; putting the same values into the scoring read failed (less steady, and it shook the other fields). Not proven: gym shorts (1 photo), low or tall socks, tracksuits (none in the set). Length and socks stay advice only until the shoot.
 - **Round 2, your five answers (Oct 17, #333, §9): fit and context decide, not flat holds.** Running shoes with gym shorts at Class aren't held any more (5.5 → **6.5**, from the parts); short or tight shorts cost 1.0 on shape (a plain tee over them 7.0 → **6.5**); a full kit is held to **6.0** when it fits cleanly and **5.5** or lower when it doesn't; a matched sweatsuit in a relaxed shape with clean sneakers goes 6.5 → **7.5**, a slim one stays **7.0**. 36 of 37 test outfits pass; the miss (F5b) is an older streetwear rule, flagged in §9. Gold set and your 20: same as round 1. None of your saved checks moved.
+- **Round 3, "how good the components come together" (Oct 17, #334, §11):** at Everyday and Class dressing up no longer earns points by itself: any clean sneaker can earn "shoes match", streetwear's own shoe can earn "the look's own shoe", plain basics that go together earn the +0.5 a smart-casual look gets for its name, and a hoodie that makes sweats read as streetwear counts as effort. Casual fits at 8+ go 8% → 12%, dressy stays 35%; a boxy tee + wide jeans + chunky sneakers now ties a tucked oxford + chinos + loafers at 8.0. Cost: held-out r 0.49 → 0.47, your 20 within 0.5 13 → 12, casual fits 0.15 above the panel.
 
 ## 1. What's true today (v13)
 
@@ -231,6 +232,51 @@ Each reads only fields the live reading already has (except CA5, marked). Propos
 2. Claude: label the shoot's photos blind, re-run §7's arm C on them (~2.5¢), and the 5 judges on the 20.
 3. Claude: the candidates against the shoot's ratings (§6's bars); report the before and after to you.
 4. On your go: port to `parts_proto.py` as v14 and to `@kitted/core` with parity, write the rules and their conformance cases into `rubric/v5-styles.md` and `rules_conformance.py`, and the card's lines into `en.ts`.
+
+## 11. Round 3: the components, not the dressiness (Oct 17, #334)
+
+**Your words:** "They don't always dress dressy… it should really depend on how good the components of the outfit come together." **The principle, at Everyday and Class:** dressing up never earns points by itself; points come from fit, shape, color and shoes that suit the outfit. Interview, event, date and going out keep their rules. Paper only; nothing in the app.
+
+**Where the lean is (gold set, today's v13, Everyday).** Bands by the average dressiness of the tops, jackets and bottoms (shoes left out; athletic = an athletic bottom):
+
+| Credit | Casual (96) | In-between (45) | Dressy (74) |
+|---|---|---|---|
+| Shoes match the clothes ([SHO-4]) | 47% | 67% | 85% |
+| The look's own shoe ([SHO-7]) | 18% | 22% | 72% |
+| Reads as a look ([STY-1]) | 48% | 53% | 82% |
+| Clearly that look top to toe ([STY-2]) | 2% | 2% | 18% |
+| A waist break: a tuck or short top ([PRO-4]) | 27% | 20% | 53% |
+| **8 or more** | **8%** | **4%** | **35%** |
+
+The panel leans the same way, less steeply (8+: casual 18%, in-between 36%, dressy 39%), so following this principle pulls against the panel.
+
+**(1) Every rule where dressiness itself moves points at Everyday and Class, and (2) what changes:**
+
+| Rule | How dressiness moves it today | Change | Status |
+|---|---|---|---|
+| [SHO-4] shoes match the clothes, +0.5 | Only a shoe at dressiness 2.5+ can earn it: canvas, chunky, retro and basketball sneakers never do, even when they're exactly the right shoe | **D1:** any clean sneaker (not running shoes) or boot counts; whether it matches is still the window between the shoe and the clothes | Recommended |
+| [SHO-7] the look's own shoe, +0.5 | Judged on the outfit *without* the shoes: dressy looks are recognised without shoes, but streetwear needs its shoe to be recognised, so a hoodie + wide jeans + chunky sneakers' shoe could never earn it | **D3:** v4's tested-but-off rule: the shoe also counts when it's that look's anchor and another piece is that look's anchor too | Recommended; the one change that *raises* agreement with the panel |
+| [STY-1] reads as a look, +0.5 | Basics read as a look when they include dressy anchors (an oxford, chinos, loafers); a well-fitting tee, jeans and clean sneakers read as no look and miss the +0.5 | **D4:** "the pieces go together", +0.5 on Style, when the outfit reads as no look (and isn't a suit), every part is at least 7, the shoes earned a credit and nothing is worn, stained or wrinkled | Recommended (small) |
+| [LNG-2] the loungewear hold's signs | Only a dressier top (a collared shirt, knit, flannel, overshirt or jacket) counts as the "dressed upper half"; a hoodie that makes sweats read as streetwear only lifts the hold by 0.5 | **D5:** at Everyday and Class, reading as a look counts as that sign (grey hoodie + wide sweats + chunky sneakers at Class: 7.0 → 7.5) | Recommended |
+| [OCC-1] too casual for the occasion | At Everyday and Class it only fires below an average of 1.75: a tank, slides or flip-flops | **D2** (drop it) tried: tee + shorts + slides went 6.5 → 7.0 and held-out r 0.47 → 0.46 | **Not recommended:** those pieces cost for reading as staying in, not for being casual |
+
+**Kept, and why they aren't dressiness:** running shoes ([SHO-3], read as gym; round 2 already lets gym shorts with runners go unheld), slides ([SHO-2], staying in), a tank on its own ([STY-9], reads as an undershirt), the tailored line ([PRO-7]) and the suit credits (a shape and a set, matched by the casual shapes: the waist break, the street shape, a short jacket, workwear, the shorts shape, the sweatsuit shape), and the small "a bit dressy" deduction at Class (dressing up can cost, never earn).
+
+**(3) Before and after (round 3 = V12, on top of rounds 1–2):**
+
+| Band | v13 today: mean · 8+ | Round 3: mean · 8+ | Panel: mean · 8+ | App minus panel, today → round 3 |
+|---|---|---|---|---|
+| Athletic (8) | 6.25 · 0% | 6.38 · 0% | 6.69 · 12% | −0.44 → −0.31 |
+| Casual (96) | 6.97 · 8% | 7.04 · **12%** | 6.89 · 18% | +0.08 → +0.15 |
+| In-between (45) | 7.11 · 4% | 7.16 · **9%** | 7.07 · 36% | +0.04 → +0.09 |
+| Dressy (74) | 7.39 · 35% | 7.39 · **35%** | 7.32 · 39% | +0.07 → +0.07 |
+
+- **Guards:** held-out r 0.49 → **0.47** (bar: no drop over 0.03; pass); all photos 0.58 → 0.56; steadiness 30/30; **your 20: r 0.46 → 0.46, within 0.5 13 → 12 (fail by one):** your quarter-zip + wide jeans + loafers (ig-116, you gave 7.0) goes 7.5 → 8.0, and a bomber + skinny jeans fit you gave 5.5 goes 6.0 → 6.5. None of your 39 saved checks moves its rounded score (4 move their raw score).
+- **Where it costs agreement with the panel, plainly:** on casual fits the app is now 0.15 above the panel on average (was 0.08). D1 lifts some weak casual fits by half a point because their sneakers do match the clothes (a red graphic tee + red jeans + basketball sneakers 5.5 → 6.0, panel 5.0); their real problems stay in Color and Fit. Per change, held-out r: D1 −0.01, D3 +0.01, D4 0.00, D5 0.00.
+- **What it doesn't fix:** the remaining gap (casual 12% vs dressy 35% at 8+) comes from shapes, not dressiness: tucked shirts earn the waist break on half the dressy photos and on a quarter of the casual ones. That's fit and shape, which you said should count.
+- **The pair that shows it:** a boxy tee ending at the belt + wide jeans + chunky sneakers at Class went 7.5 → **8.0**, level with a tucked oxford + chinos + loafers (8.0 before and after).
+- **Test outfits:** 9 new (D1a–D4b), bars set before the run, all pass; 45 of 46 in all (F5b, §9). **Restated after seeing results, said plainly:** A3's bar (a regular hoodie scores like a plain tee) now checks the shape credit instead of the total, because round 3's D3 gives the hoodie's Jordans "the look's own shoe"; A20's (wide jeans + Jordans unchanged) became "not down"; G1 now guards only rounds 1–2. **Found and fixed on the way:** D4 first fired on suits, which already have their own credits (3 dressy photos rose); suits are left out.
+- **Implementation note for the port:** D4 is computed after the parts in the paper test; in the engine it belongs in Style with its own reason line.
 
 ## How to re-run
 

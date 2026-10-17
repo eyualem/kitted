@@ -58,7 +58,10 @@ ENGINE = "v13"
 CAND_OFF = {"ca1": False, "ca1_shape": 0.0, "ca1_waist": 0.0, "ca1_layer": 0.0, "ca1_cap": 0.0, "ca1_slim_fault": 0.0,
             "ca1_need_shoes": False, "ca1_quiet_na": False, "ca2": False, "ca3_runner_hold": None, "ca5": 0.0, "ca6": False,
             # round 2, the founder's five answers (Oct 17; plan §9, DECISIONS-LOG #333): fit and context decide, not flat holds
-            "ca1_fitted": 0.0, "ca3_unheld": False, "kit_cap": None, "kit_fit_rate": 0.0, "ca6_shape": 0.0}
+            "ca1_fitted": 0.0, "ca3_unheld": False, "kit_cap": None, "kit_fit_rate": 0.0, "ca6_shape": 0.0,
+            # round 3, "it should really depend on how good the components of the outfit come together" (#334): at Everyday
+            # and Class dressing up never earns points by itself
+            "d1": False, "d2": False, "d3": False, "d4": 0.0, "d5": False}
 # The variants tried on the gold set (plan §6). V1 is the first draft; CAND (the recommendation) is V2: shorts are
 # judged like pants (Proportions starts at 7), V3 is the cautious alternative (Proportions only when a credit or fault fires).
 VARIANTS = {
@@ -79,7 +82,15 @@ VARIANTS["V9 = V7 with runners held at 6.0 (round 1)"] = dict(VARIANTS["V7 his a
                                                                ca3_runner_hold=6.0)
 VARIANTS["V10 = V7 with the kit at a flat 5.5 (today)"] = dict(VARIANTS["V7 his answers (round 2)"], kit_cap=None, kit_fit_rate=0.0)
 VARIANTS["V11 = V7 without the sweatsuit shape"] = dict(VARIANTS["V7 his answers (round 2)"], ca6_shape=0.0)
-CAND = VARIANTS["V7 his answers (round 2)"]
+# Round 3 (#334): the components, not the dressiness. V12 is the recommendation; V13-V17 take one change out each.
+VARIANTS["V12 components, not dressiness (round 3)"] = dict(VARIANTS["V7 his answers (round 2)"], d1=True, d2=False, d3=True,
+                                                            d4=0.5, d5=True)   # D2 tried and left out (plan §11)
+VARIANTS["V13 = V12 without D1 (shoe match by dressiness)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d1=False)
+VARIANTS["V14 = V12 plus D2 (no too-casual deduction)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d2=True)
+VARIANTS["V15 = V12 without D3 (shoes chosen for the look)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d3=False)
+VARIANTS["V16 = V12 without D4 (the pieces go together)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d4=0.0)
+VARIANTS["V17 = V12 without D5 (a look counts as a sign)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d5=False)
+CAND = VARIANTS["V12 components, not dressiness (round 3)"]
 CA2_BOTTOMS = {"athletic_shorts", "sweatpants", "joggers", "track_pants", "shorts"}
 CA2_SHOES = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
              "white_leather_sneaker"}
@@ -203,6 +214,10 @@ def _shoes_c(c):
             # ---- CA2 (the one edit): a sport or street sneaker is the real shoe for athletic bottoms and shorts
             if c["ca2"] and B is not None and B.get("subcategory") in CA2_BOTTOMS and sub in CA2_SHOES:
                 real = 1.0
+            # ---- round 3, D1: any clean sneaker or boot is a real shoe for the match, under any bottoms; whether it
+            # matches is the window's job (how dressed-up the clothes are), not the shoe's own dressiness
+            if c["d1"] and (sub in CA2_SHOES or sub in R.FOOT_KIND["boots"]):
+                real = 1.0
             p.add(0.5 * up * real * P._match_window(gap), "the shoes match how dressed-up the clothes are", "SD1_matches")
             cc = R.Outfit(o["main"])
             role = max([R.STYLES[st_][0](S, cc)[0] for st_ in o["det_noshoe"]] or [0])
@@ -267,6 +282,11 @@ def _occasion_c(c):
         ded = 0.5 * P.ramp(gap, 0.25, 0.75)
         ceilings = []
         c1 = P._o1_ceiling(gap)
+        if c["d2"] and occasion in R.ATHLETIC_AS_CASUAL:              # ---- round 3, D2: no "too casual" at Everyday/Class
+            c1, ded = None, 0.0                                       # (slides, tanks and sweats keep their own rules)
+        subs_ = {g.get("subcategory") for g in o["main"]}
+        suit_ = "suit_jacket" in subs_ and "suit_trousers" in subs_        # a suit has its own credits (H1, H2_suit)
+        out["no_style_full"] = not o["det"] and not suit_ and len(o["slots"]) == 3   # read by D4 in combine
         if c1 is not None:
             ceilings.append((c1, f"too casual for {occasion.replace('_', ' ')}"))
         elif ded > 0:
@@ -285,6 +305,9 @@ def _occasion_c(c):
                     any(x.get("subcategory") in R.DRESSED_TOPS for x in o["tops"])
                 if c["ca6"] and _sweatsuit(o):                         # ---- CA6: a matched sweatsuit is a sign
                     dressed = True
+                look_sign = False
+                if c["d5"] and not dressed and o["det"] and occasion in R.ATHLETIC_AS_CASUAL:
+                    dressed, look_sign = True, True                   # ---- round 3, D5: reading as a look is the sign
                 real_shoe = bool(S is None or S.get("subcategory") not in R.NOT_REAL_SHOES)
                 kit = B.get("subcategory") == "athletic_shorts" and any(x.get("subcategory") == "jersey" for x in o["tops"])
                 signs = 0 if kit else int(dressed) + int(real_shoe)
@@ -298,7 +321,7 @@ def _occasion_c(c):
                     ceilings.append((c["kit_cap"], "a full kit out of the game"))
                     out["kit_fit_rate"] = c["kit_fit_rate"]
                 elif not hero and not gym_shorts_ok:
-                    lift = t["lounge_style"] if o["det"] else 0.0
+                    lift = t["lounge_style"] if (o["det"] and not look_sign) else 0.0
                     cap = {0: 5.5, 1: 6.5, 2: 7.5}[signs] + lift
                     # ---- CA3: gym shorts with running shoes at Everyday and Class
                     if (c["ca3_runner_hold"] is not None and B.get("subcategory") == "athletic_shorts" and not kit
@@ -336,6 +359,12 @@ def _occasion_c(c):
 def _combine_c(c):
     """v13's combine, with round 2's answer 3: a full kit's ceiling drops by kit_fit_rate x what Fit or Proportions lost."""
     def f(part_scores, cond, occ, occasion, care_or_strain, engine="v13", tune=None):
+        # ---- round 3, D4: "the pieces go together": no look to read as, but every part is at least 7, the shoes earned
+        # a credit and nothing is off. The credit a smart-casual basic gets for reading as its look, for any basics.
+        if (c["d4"] and occ.get("no_style_full") and "cohesion" in part_scores and part_scores.get("shoes", 0) > P.BASE
+                and all(v >= P.BASE for v in part_scores.values()) and not cond.get("faults")):
+            part_scores = dict(part_scores, cohesion=part_scores["cohesion"] + c["d4"])
+            occ["goes_together"] = True
         if occ.get("kit_fit_rate") and occ.get("ceiling") is not None:
             worst = min(part_scores.get(k, P.BASE) for k in ("proportions", "fit"))
             cut = occ["kit_fit_rate"] * max(0.0, P.BASE - worst)
@@ -372,8 +401,11 @@ def candidates(c):
 def score(reading, occasion="everyday", styles=None, cand=None, second_look=None, boldness="a_little"):
     if cand is None:
         return P.score_parts(reading, occasion, styles or {}, second_look, boldness, engine=ENGINE)
+    # round 3, D3: v4's tested-but-off "sc_pair": the look's own shoe also counts when the look needs the shoe to be
+    # detected, as long as another piece is that look's anchor (a hoodie over wide jeans with chunky sneakers)
+    tune = {"sc_pair": True} if cand.get("d3") else None
     with candidates(cand):
-        return P.score_parts(reading, occasion, styles or {}, second_look, boldness, engine=ENGINE)
+        return P.score_parts(reading, occasion, styles or {}, second_look, boldness, engine=ENGINE, tune=tune)
 
 
 def same(a, b):
@@ -533,7 +565,7 @@ OUTFITS = [
      lambda b, a: (a["overall"] <= 7.0, "going out in gym shorts stays 7.0 or less"), []),
     ("A20", "white tee + wide black jeans + white Jordans (control: no shorts), Everyday",
      Rd(RC.TEE, bottom("jeans", "black", "wide", "slight_break"), JORDANS), "everyday",
-     lambda b, a: (same(a, b), "unchanged (the candidates touch only shorts, sweats and track pieces)"), []),
+     lambda b, a: (a["overall"] >= b["overall"], "round 3 restated: not down (rounds 1-2 left it unchanged)"), []),
     # ---- round 2: one or more per answer of the founder's (Oct 17, #333); bars written before the run
     ("F1a", "answer 1: plain tee + gym shorts + running shoes, Everyday", Rd(RC.TEE, GYM, RUNNERS), "everyday",
      lambda b, a: (a["overall"] == 6.5 and a["occasion"]["ceiling"] is None, "not held; 6.5 from the parts"), []),
@@ -578,6 +610,33 @@ OUTFITS = [
      lambda b, a: (a["overall"] >= 7.5, "the shape counts, the length costs nothing: 7.5 or more"), []),
     ("F5b", "answer 5: the same shape in a red tee and purple jorts", Rd(top("tee", "red", 4),
      bottom("shorts", "purple", "wide", "na", volume=5), shoe("chunky_sneaker", "grey")), "everyday", None, []),   # bar vs F5a
+    # ---- round 3 (#334): components, not dressiness; bars written before the run
+    ("D1a", "round 3: white tee + dark straight jeans + black canvas sneakers, Class", Rd(RC.TEE, RC.DJEANS, RC.CANVAS), "class",
+     lambda b, a: (a["parts"]["shoes"]["score"] > b["parts"]["shoes"]["score"] and a["overall"] in (7.0, 7.5),
+                   "the canvas sneakers now earn the match (Shoes up); still Put together"), []),
+    ("D1b", "round 3: white tee + dark straight jeans + derbies, Class (a shoe far dressier than the clothes)",
+     Rd(RC.TEE, RC.DJEANS, RC.DERBY), "class",
+     lambda b, a: (a["overall"] <= 7.5, "dressing up the shoe alone doesn't lift it past 7.5"), []),
+    ("D2a", "round 3: grey hoodie + wide black jeans + white chunky sneakers, Class (streetwear, the look's own shoe)",
+     Rd(top("hoodie", "grey"), RC.mod(RC.WJEANS, color_family="black"), RC.CHUNKY), "class",
+     lambda b, a: (a["overall"] >= b["overall"], "not down"), []),
+    ("D2b", "round 3: boxy white tee ending at the belt + wide mid-wash jeans + white chunky sneakers, Class (a deliberate casual shape)",
+     Rd(top("tee", "white", 4, length="at_belt"), RC.WJEANS, RC.CHUNKY), "class",
+     lambda b, a: (a["overall"] >= 8.0, "a put-together casual fit reaches 8"), []),
+    ("D2c", "round 3: white oxford tucked + straight khaki chinos + brown loafers, Class (the dressy counterpart)",
+     Rd(top("oxford_shirt", "white", tucked="full", length="na"), RC.CHINOS, RC.LOAFER), "class", None, []),   # bar vs D2b
+    ("D3a", "round 3: grey hoodie + black sweatpants (wide) + white chunky sneakers, Class (reads as streetwear)",
+     Rd(top("hoodie", "grey"), bottom("sweatpants", "black", "wide", "cuffed"), RC.CHUNKY), "class",
+     lambda b, a: (a["overall"] >= b["overall"] and a["overall"] >= 7.0, "a look counts as the sign: 7.0 or more, not down"), []),
+    ("D3b", "round 3: the same at a Date (the date's rules unchanged)",
+     Rd(top("hoodie", "grey"), bottom("sweatpants", "black", "wide", "cuffed"), RC.CHUNKY), "date",
+     lambda b, a: (a["occasion"]["ceiling"] == b["occasion"]["ceiling"], "the date's hold is unchanged"), []),
+    ("D4a", "round 3: tank top + khaki shorts + slides, Class", Rd(top("tank_top", "white"),
+     bottom("shorts", "khaki_beige", "relaxed", "na"), SLIDES), "class",
+     lambda b, a: (a["overall"] <= 6.0, "slides and a tank still cost: 6.0 or less"), []),
+    ("D4b", "round 3: plain tee + dark jeans + canvas sneakers at an Interview (unchanged)", Rd(RC.TEE, RC.DJEANS, RC.CANVAS),
+     "interview", lambda b, a: (a["occasion"]["ceiling"] == b["occasion"]["ceiling"] and a["overall"] <= 6.0,
+                                "the interview's hold is unchanged"), []),
 ]
 
 
@@ -589,10 +648,15 @@ def run_outfits(say):
         res[oid] = (b, a)
     bars = {
         "A2": lambda b, a: (a["overall"] >= res["A1"][1]["overall"] + 0.5, "at least 0.5 above A1 (the plain tee)"),
-        "A3": lambda b, a: (a["overall"] == res["A1"][1]["overall"], "same as A1: a regular hoodie earns no shape (STR-14)"),
+        # round 3 restated (plan §11): the hoodie's Jordans now "belong to the look" (D3), so the total can differ from A1;
+        # what A3 guards is the shape credit, so it compares Proportions
+        "A3": lambda b, a: (a["parts"]["proportions"]["score"] == res["A1"][1]["parts"]["proportions"]["score"]
+                            and res["A2"][1]["overall"] >= a["overall"],
+                            "round 3 restated: no shape credit (Proportions as A1), and the oversized A2 at least as high"),
         "A17": lambda b, a: (a["overall"] <= res["A2"][1]["overall"] - 1.0, "at least 1.0 below A2 (loose shorts)"),
         "F2a": lambda b, a: (a["overall"] <= res["A1"][1]["overall"] - 0.5, "at least 0.5 below A1 (loose gym shorts)"),
         "F5b": lambda b, a: (a["overall"] <= res["F5a"][1]["overall"] - 0.5, "at least 0.5 below F5a: the colors clash"),
+        "D2c": lambda b, a: (res["D2b"][1]["overall"] >= a["overall"], "the casual shape D2b scores at least as high as this"),
     }
     for oid, what, rd, occ, bar, fut in OUTFITS:
         b, a = res[oid]
@@ -647,9 +711,13 @@ def main():
         B[p] = [score(rd, "everyday", PROFILE) for rd in rs]
         A[p] = [score(rd, "everyday", PROFILE, cand=CAND) for rd in rs]
     moved = [p for p in runs if any(not same(x, y) for x, y in zip(B[p], A[p]))]
-    outside = [p for p in moved if not any(bottom_sub(rd) in ATH for rd in runs[p])]
+    V7c = VARIANTS["V7 his answers (round 2)"]       # G1 guards rounds 1-2 (shorts only); round 3 moves casual fits on purpose
+    moved7 = [p for p in runs if any(not same(score(rd, "everyday", PROFILE), score(rd, "everyday", PROFILE, cand=V7c))
+                                     for rd in runs[p])]
+    outside = [p for p in moved7 if not any(bottom_sub(rd) in ATH for rd in runs[p])]
     say("== The gold set (5-judge AI panel; profile unknown, one stated test profile, Everyday) ==")
-    say(f"G1 photos that moved: {len(moved)}; outside shorts, sweats and track pieces: {len(outside)} "
+    say(f"   (round 3: {len(moved)} photos move in all, by design)")
+    say(f"G1 rounds 1-2 (V7) photos that moved: {len(moved7)}; outside shorts, sweats and track pieces: {len(outside)} "
         f"{'PASS' if not outside else 'FAIL ' + str(outside)}")
     fails += bool(outside)
 
@@ -695,6 +763,30 @@ def main():
         m1, m2, m3 = metr(S, tp), metr(S, list(runs)), metr(S, sub)
         fw = sum(abs(S[p][0]["overall"] - founder[p]) <= 0.5 for p in fp)
         say(f"    {vn:58s} {m1['r']:.2f} · {m2['r']:.2f} · {m3['r']:.2f} · {m3['w05']}/{m3['n']} · {fw}/{len(fp)}")
+    say()
+    say("  Round 3: by how dressy the clothes are (mean dressiness of tops, jackets and bottoms; athletic = an athletic bottom):")
+    def band(rd):
+        gs = [g for g in rd.get("garments", []) if g.get("category") in ("top", "outerwear", "bottom")]
+        if not gs:
+            return None
+        if any(g.get("subcategory") in R.LOUNGE_BOTTOMS for g in gs):
+            return "athletic"
+        m = st.mean(R.formality(g) for g in gs)
+        return "casual" if m < 2.5 else "in-between" if m < 3.0 else "dressy"
+    bands = {p: band(runs[p][0]) for p in runs}
+    V7 = VARIANTS["V7 his answers (round 2)"]
+    S7 = {p: [score(runs[p][0], "everyday", PROFILE, cand=V7)] for p in runs}
+    for bn in ("athletic", "casual", "in-between", "dressy"):
+        ps = [p for p in runs if bands[p] == bn and B[p][0]["overall"] is not None]
+        def st8(S):
+            v = [S[p][0]["overall"] for p in ps]
+            return f"{st.mean(v):.2f} · 8+ {sum(x >= 8 for x in v)} ({100 * sum(x >= 8 for x in v) / len(v):.0f}%)"
+        pv = [panel[p] for p in ps if p in panel]
+        say(f"    {bn:10s} n {len(ps):3d}   v13 {st8(B)}   round 2 {st8(S7)}   round 3 {st8(A)}   panel {st.mean(pv):.2f} · 8+ "
+            f"{sum(x >= 8 for x in pv)} ({100 * sum(x >= 8 for x in pv) / len(pv):.0f}%)")
+        md = [(A[p][0]["overall"] - panel[p]) for p in ps if p in panel]
+        mb = [(B[p][0]["overall"] - panel[p]) for p in ps if p in panel]
+        say(f"               mean app - panel: v13 {st.mean(mb):+.2f} -> round 3 {st.mean(md):+.2f}")
     say(f"  8+ share, all gold: {sum(B[p][0]['overall'] >= 8 for p in runs if B[p][0]['overall'] is not None)} -> "
         f"{sum(A[p][0]['overall'] >= 8 for p in runs if A[p][0]['overall'] is not None)} photos")
     say()
