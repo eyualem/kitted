@@ -691,14 +691,14 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
    - There's no $3/day spend stop (`app-build-spec.md:243`), and the "paused" line can never fire. `online()` is hard-wired to true (`ask/pipeline.ts:70,136`).
    - App Attest isn't built, even log-only.
    - [you: Cloudflare account] then [code]: the Worker, the proxy sources, server-side limits and the kill switch.
-2. ✔ **Fake demo readings would leak into real checks.** With no key, the mock answers *any* shoe snap or pants-and-shoes snap with a canned demo reading (`readingSource/mock.ts:64-65`). A tester's real snap would merge someone else's shoes into his score. [code] In a non-demo build the mock must refuse every snap.
-3. ✔ **No safe release build.**
+2. ✔ ✅ **Done (#322, §20.7 R3).** ~~**Fake demo readings would leak into real checks.**~~ With no key, the mock answers *any* shoe snap or pants-and-shoes snap with a canned demo reading (`readingSource/mock.ts:64-65`). A tester's real snap would merge someone else's shoes into his score. [code] In a non-demo build the mock must refuse every snap.
+3. ✔ ◐ **Mostly done (#322, §20.7 R1):** demo off by default in Release, `guard:release`, a local Release build booted. Still open: the dev launcher's local-network strings, and the paid team. ~~**No safe release build.**~~
    - The demo tools are on unless `KITTED_DEMO=0` (`app/app.config.ts:4`), and nothing sets that: no `eas.json`, no release script, and `tools/phone/install.sh:11` builds Debug.
    - The `guard:release` script promised in 05 §P8 (`05-build-plan.md:679`) isn't in `package.json`. As written it would always fail anyway: the Firebase key is also `AIza…` and is bundled on purpose.
    - No Release build has ever been made, so minifier, Hermes and `__DEV__` surprises are untested.
    - The dev launcher's local-network strings ship in `Info.plist` (`NSLocalNetworkUsageDescription` "Expo Dev Launcher…", `NSBonjourServices`).
    - [code] for the script, the default and a local Release build on the Simulator; [you: $99 program] for the paid team and App ID (`app.config.ts:22-24`, still the Personal Team `6652QVRQAL`).
-4. ✔ **Two deep links do damage.**
+4. ✔ ✅ **Done (#322, §20.7 R1–R2):** the paywall route needs `paywallOn()`; Release builds have no demo tools, so no `?resetData` or demo links. ~~**Two deep links do damage.**~~
    - `kitted://paywall/plans` opens the paywall on any build: its route is guarded only by age and onboarding (`app/_layout.tsx:89`), not `PAYWALL_BUILT`. The mock "purchase" then turns on Pro until the app restarts (`services/purchases.ts:58-66`, `services/entitlements.ts:21`).
    - In any demo-enabled build, `?resetData=1` wipes the real store and the age block (`state/boot.ts:52-55`), and `kitted://demo/screen/N` wipes it and loads demo data (`demo/prepareDemoScreen.ts:271`).
    - [code] Guard the paywall route by `paywallOn()`; demo off in release (item 3).
@@ -715,26 +715,26 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
 7. **The beta is free-tier only.** Pro is an in-memory demo flag and the paywall is off, so testers get 1 check and 5 questions a day with no way up. [you] Decide: a beta allowance set on the server (default: testers get Pro's limits during the beta), or accept it.
 
 ### 20.2 Looks real but does nothing (fix before the beta; all [code] unless marked)
-8. ✔ **A failed scan says "Saved."** `save()` shows success with `Math.max(saved, 1)` even when every photo failed (`scan/ScanCameraScreen.tsx:132-146`).
+8. ✔ ✅ **Done (#322, R4).** ~~**A failed scan says "Saved."**~~ `save()` shows success with `Math.max(saved, 1)` even when every photo failed (`scan/ScanCameraScreen.tsx:132-146`).
 9. **Closet "+" leads only to "coming soon."** Scans are never read into pieces, and nothing reads `scan.inbox` but its own row (`scan/inbox.ts`, `closet/addActions.ts:13-16`). It's the tab's only header button. Until the item reading exists (it needs the server): put Starter basics first in "+" and keep scanning as "Save for later".
-10. ✔ **Settings › Notifications has 3 switches that do nothing.** The row shows whatever `NOTIFICATIONS_BUILT` says (`you/settings.tsx:47`), and nothing schedules anything. The screen says "That's all I send." Hide the row until `expo-notifications` [you].
-11. **Subscription and "Restore purchases" show with nothing to buy.** `settings.tsx:58-61`, `you/plan.tsx:56`; Restore always says "No purchases to restore." (`settings/plan.ts:81-87`). Hide them with the paywall.
+10. ✔ ✅ **Done (#322, R5): the row is hidden.** ~~**Settings › Notifications has 3 switches that do nothing.**~~ The row shows whatever `NOTIFICATIONS_BUILT` says (`you/settings.tsx:47`), and nothing schedules anything. The screen says "That's all I send." Hide the row until `expo-notifications` [you].
+11. ✅ **Done (#322, R5): hidden with the paywall.** ~~**Subscription and "Restore purchases" show with nothing to buy.**~~ `settings.tsx:58-61`, `you/plan.tsx:56`; Restore always says "No purchases to restore." (`settings/plan.ts:81-87`). Hide them with the paywall.
 12. **"Wear this" changes nothing he can see.**
     - It writes the wear log only (`closet/outfitActions.ts:15-29`, `morning/service.ts:287-299`). Worn ×N, Last worn and Your go-tos count fit checks only (`closet/service.ts:387,419,438`, `closet/outfits.ts:126-140`).
     - The log keeps one row a day (`data/migrations.ts:127-132`), so a second Wear this replaces the first silently.
-13. **"Added to your closet" says "Fix anything I got wrong." but its rows are dead.** `EDIT_ITEM_BUILT = false` (`added/AddedSheet.tsx:27,193`), though the piece page has had "What it is" since #315. Point each row at its piece page; the existing `onEdit` pushes no `?field=`.
-14. ✔ **A re-check or snap whose first check is gone closes the camera silently.** `noParent` (`fitcheck/service.ts:661`) has no case in `explain()` (`camera/startCheck.ts:157-179`).
+13. ✅ **Done (#322, R6): rows open the piece page.** ~~**"Added to your closet" says "Fix anything I got wrong." but its rows are dead.**~~ `EDIT_ITEM_BUILT = false` (`added/AddedSheet.tsx:27,193`), though the piece page has had "What it is" since #315. Point each row at its piece page; the existing `onEdit` pushes no `?field=`.
+14. ✔ ✅ **Done (#322, R7).** ~~**A re-check or snap whose first check is gone closes the camera silently.**~~ `noParent` (`fitcheck/service.ts:661`) has no case in `explain()` (`camera/startCheck.ts:157-179`).
 15. **A scored re-check card has no "Why X?" and no "Not quite right?"** (`stylist/cards/RecheckCard.tsx:161-176`). After a drop he can't see why or correct a misread.
 16. **A dialed-in card (9+) has no next step.** With no fixes and Save and Share switched off (`FitCheckCard.tsx:44-46, 439-447`), the action row is empty.
 17. **"How I score" still explains credits** (§1 item 8, #233 item 1). Waits on [you: #233 OK].
 18. **No offline handling.** `banner.offline` and `banner.online` are unused, send is never disabled, and offline questions get the generic "I couldn't answer that". The photo caption is always "Not scored" (`stylist/MessageView.tsx:130`), and `fail.cap.notSent` is unused.
 19. **Saying "that score is wrong" in chat can't open "Not quite right?"** The router detects it (`ask/router.ts:25`), but no card type opens the sheet (`ask/cards.ts:14-21`).
-20. **Questions have no length cap.** No `maxLength` (`stylist/Composer.tsx:222-240`), and the whole text goes into the prompt. That's a cost risk once the server pays.
-21. **Past chats aren't fully read-only.** An old evening card's occasion picker still edits (`MessageView.tsx:39` renders `MorningCard` without `readOnly`; `MorningCard.tsx:312-326`). Tapping a past day's checked morning row re-pushes the same page (`StylistScreen.tsx:225-227`).
+20. ✅ **Done (#322, R8): 500 characters.** ~~**Questions have no length cap.**~~ No `maxLength` (`stylist/Composer.tsx:222-240`), and the whole text goes into the prompt. That's a cost risk once the server pays.
+21. ✅ **Done (#322, R9).** ~~**Past chats aren't fully read-only.**~~ An old evening card's occasion picker still edits (`MessageView.tsx:39` renders `MorningCard` without `readOnly`; `MorningCard.tsx:312-326`). Tapping a past day's checked morning row re-pushes the same page (`StylistScreen.tsx:225-227`).
 22. **He can't delete one photo or one check.** The look page's ⋯ (Save, Share, Delete photo) isn't built (`lookbook/LookPageScreen.tsx:10`), and "Remove from Lookbook" keeps the file. The only way out is "Delete all photos". Privacy expectation: H.
 23. **"Not now" on consent leaves a bare thread.** The S26 "Turn on fit checks" card isn't built (`noConsent.title` unused, `onboarding/complete.ts:27`).
 24. **The empty Closet has no "Tap the basics you own."** It offers only "Check my fit" (`app/(tabs)/closet/index.tsx:82-85`). Starter essentials is reachable only from "No outfits yet" or Your moves, and with 1–2 pieces the "Add shoes and you'd have N outfits" hint sits on the hidden Outfits half (`closet/outfits.ts:151-155`).
-25. **A "Same as your …?" answer in Closet just vanishes:** no toast, no Undo (`app/(tabs)/closet/index.tsx:107`).
+25. ✅ **Done (#322, R10): a toast with Undo.** ~~**A "Same as your …?" answer in Closet just vanishes:**~~ no toast, no Undo (`app/(tabs)/closet/index.tsx:107`).
 
 ### 20.3 Missing pieces a user will expect (decide or schedule)
 26. **Adding a piece by hand** beyond the 12 Starter basics: "Describe it" (C4d) is a placeholder nothing links to (`app/sheets/describe.tsx`). With 1 free check a day, the closet fills slowly.
@@ -742,8 +742,8 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
 28. **The Lookbook calendar and "Days dressed"** (D16; only filters and Saved were deferred). Logged wear days show nowhere.
 29. **The Pieces grid** has no order or sections: newest first, kinds mixed, no Tops/Layers/Bottoms/Shoes chips at 12+ (`closet/merge.ts:14-17`).
 30. **In the thread,** a new answer can land off-screen with no "Latest" pill, and there's no Stop while an answer streams (07 §6.1).
-31. **Missing records give blank screens.** These show an empty page or only a title: the look page, piece page, photo viewer, past day, and the Why, Correct, Added, Tell me, Edit, Merge and Fact sheets (Pick shoes is fully empty). There's no `app/+not-found.tsx`, so a bad link shows Expo's "Unmatched Route".
-32. **Six placeholder routes show spec IDs** ("S12 · Share card / Placeholder. Built in P6.") if a link reaches them: `share/[checkId]`, `shoe-snap` (replaced by `camera?mode=shoeSnap`), `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation`, `sheets/swap/[ideaId]`. Delete or guard them.
+31. ✅ **Done (#322, R11): "This isn't here anymore." and `+not-found`.** ~~**Missing records give blank screens.**~~ These show an empty page or only a title: the look page, piece page, photo viewer, past day, and the Why, Correct, Added, Tell me, Edit, Merge and Fact sheets (Pick shoes is fully empty). There's no `app/+not-found.tsx`, so a bad link shows Expo's "Unmatched Route".
+32. ✅ **Done (#322, R12): five deleted, the share card's route guarded.** ~~**Six placeholder routes show spec IDs**~~ ("S12 · Share card / Placeholder. Built in P6.") if a link reaches them: `share/[checkId]`, `shoe-snap` (replaced by `camera?mode=shoeSnap`), `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation`, `sheets/swap/[ideaId]`. Delete or guard them.
 33. **A wrong birth year can't be fixed.** "Birth year can't be changed here." points nowhere (`you/profile.tsx:84-90`). An age block survives Delete all my data and has no contact line (`onboarding/AgeStopScreen.tsx`). The check uses the year only, so someone born in late 2008 passes at 17; Declared Age Range is the real check.
 34. **Location, once denied, can't be turned back on.** The weather ask shows only for `unknown` (`morning/MorningCard.tsx:177`).
 35. **Morning-card Swap** never says "Nothing else in your closet works here yet." It leaves out only the last swap, so the original can come back (`morning/service.ts:278-284`).
@@ -769,3 +769,44 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
 2. **[you] this week:** the Cloudflare account (already P1), a support email, OK D2 + #233 so consent matches, and the beta allowance call (item 7).
 3. **[code] after Cloudflare:** the Worker (score, ask, closet read, limits, kill switch, failure log), then the proxy sources, then a TestFlight dry run after the $99 program.
 4. **[code] before the beta:** items 9, 12, 15, 16, 18, 19, 22, 23, 24, 26.
+
+### 20.7 Step 1 built: the release-safety batch (Oct 17, #322). Checks first
+Written before the code. Each passes or fails; the results are under each group once built.
+
+**R1 · A release build is safe**
+- R1.1 With `KITTED_DEMO` unset, the demo tools are on in a Debug build and **off in a Release build** (`__DEV__` false); `KITTED_DEMO=1` turns them on in Release (the Maestro demo build, 05 §P7), `KITTED_DEMO=0` off everywhere.
+- R1.2 `npm run guard:release` exists. It makes a production iOS export and fails when the bundle holds: any `AIza…` key except the Firebase web key (bundled on purpose), the dev Gemini key's exact value, or any other secret value from `app/.env*` (the OpenAI and Anthropic test keys); and when the config with `KITTED_DEMO` unset turns the demo on.
+- R1.3 The guard passes on today's code (run, result recorded below).
+- R1.4 One local Release build boots on the Simulator: Stylist opens, there's no dev menu, and `kitted://demo/screen/7` doesn't open a demo screen.
+
+**R2 · The paywall can't be reached while it's off.** The `paywall` route is registered only while `paywallOn()`; `kitted://paywall/plans` on a real build goes nowhere, so no mock "purchase" can turn on Pro.
+
+**R3 · No canned demo reading in a real check.** The mock reading source answers a shoe snap or a pants-and-shoes snap with its canned reading only for a bundled sample photo or on a demo screen; a real photo's snap gets `unknownPhoto` (nothing counted, nothing merged).
+
+**R4 · A failed scan never says "Saved".** When no photo was saved, the scan camera says so ("Couldn't save that photo. Try again.") and stays open; with some saved, the count is the real count.
+
+**R5 · Settings hides what does nothing.** You › Settings shows no Notifications row while `NOTIFICATIONS_BUILT` is off, and no Subscription section (Manage, Restore) while the paywall is off; Plan & usage shows no Restore while it's off.
+
+**R6 · "Added to your closet" rows open the piece's page** (no `EDIT_ITEM_BUILT`): a tap (and VoiceOver's action) closes the sheet and opens `/closet/item/<id>`; an undone row stays inert.
+
+**R7 · A re-check whose first check is gone says so:** `noParent` shows "That check isn't here anymore. Nothing was sent or counted."
+
+**R8 · A question has a length cap:** the composer's field takes at most 500 characters, and the send path cuts anything longer (dictation) to 500.
+
+**R9 · Past chats are read-only:** an earlier day's "Staying in" card shows its occasion as plain text (no picker), and its "You went with your own" row isn't a button (it pushed the same day again).
+
+**R10 · A "Same as your …?" answer in Closet gets a toast with Undo:** "Saved as your {item}." or "Kept as a new piece."; Undo puts the question back exactly as it was (closet service `unanswer`, an urgent Undo like the others).
+
+**R11 · A missing record shows "This isn't here anymore."** instead of a blank screen: the look page, the piece page (not while a merge moves it), the photo viewer, a past day, and the Why, Not quite right?, Added, What changed?, What it is, Same as which piece?, Fact and Which shoes? sheets. A bad link shows the same page (`app/+not-found.tsx`) with "Go to Kitted".
+
+**R12 · No placeholder route ships:** `shoe-snap`, `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation` and `sheets/swap/[ideaId]` are deleted with their registrations; `share/[checkId]` (linked behind `SHARE_CARD_BUILT` and demo screen 20) is registered only while that flag is on or the demo tools are.
+
+**R13 · Nothing else moves:** `npm run check` green; consent copy untouched.
+
+**Results (Oct 17): all pass.**
+- R1.1–R1.2, R2–R12 in `app/src/__tests__/releaseSafety.test.ts` (41 checks) and the Undo story in `closetService.test.ts`; `npm run check` green, 1,202 app tests.
+- R1.3: `npm run guard:release` passed on today's code: one 6.9 MB Hermes bundle, 3 secret values and every key shape checked; its only `AIza` string is the Firebase key.
+- R1.4: a local Release build booted on the Simulator: Stylist with the saved data, no dev menu; `-demoScreen 7` and `kitted://demo/screen/7` both gave plain Stylist with nothing wiped; `kitted://paywall/plans` opened nothing; `kitted://closet/item/NOPE` showed "This isn't here anymore."; Settings had no Notifications, Subscription or Restore. Then the Debug app went back on and the Simulator was shut down.
+- R6 seen on the Debug build: demo screen 21, a tap on Tan chinos closed the sheet and opened its page on "What it is".
+- Not seen on a screen, tested in code only: R4's panel, R8's stop, R9, R10's toast.
+- Screenshots: `screenshots/release-oct17/` (git-ignored).

@@ -85,11 +85,13 @@ async function load(ideaId: string): Promise<Model | null> {
   };
 }
 
-export function MorningCard({ ideaId }: { ideaId: string }) {
+/** `readOnly`: Past chats (#276; 09 §20.7 R9, #322): an earlier day's card can't be changed, and its checked row isn't a
+ *  button (it asked today's thread to scroll, which pushed the same day's page again). */
+export function MorningCard({ ideaId, readOnly = false }: { ideaId: string; readOnly?: boolean }) {
   const m = useLive(['dailyIdeas', 'outfits', 'closet', 'fitChecks', 'usage', 'kv', 'chat', 'profile'], () => load(ideaId), [ideaId]);
   if (!m) return null;
-  if (m.check) return <CheckedRow m={m} />;
-  if (m.row.state === 'stayingIn') return <StayingInRow m={m} />;
+  if (m.check) return <CheckedRow m={m} readOnly={readOnly} />;
+  if (m.row.state === 'stayingIn') return <StayingInRow m={m} readOnly={readOnly} />;
   if (!m.current) return <PastRow m={m} />;
   return <FullCard m={m} />;
 }
@@ -284,7 +286,7 @@ function whenLabel(row: DailyIdeaRow): string {
 }
 
 /** After a fit check in this window: photo · "You went with your own" · the score (#59). */
-function CheckedRow({ m }: { m: Model }) {
+function CheckedRow({ m, readOnly }: { m: Model; readOnly: boolean }) {
   const { latest, first, messageId } = m.check!;
   const photo = shownPhoto(first.demoPhotoId, first.photoFile, undefined);
   const score = latest.score ?? 0;
@@ -292,7 +294,7 @@ function CheckedRow({ m }: { m: Model }) {
   const occasion = cardOccasionLabel(m.row.occasion);
   return (
     <CollapsedShell
-      onPress={messageId ? () => setStylistAction({ kind: 'scrollTo', messageId }) : undefined}
+      onPress={messageId && !readOnly ? () => setStylistAction({ kind: 'scrollTo', messageId }) : undefined}
       a11y={t('idea.a11y.collapsed', { when: whenLabel(m.row), occasion, what, score: displayScore(score), word: scoreWordLabel(score) })}
       left={photo ? <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={44} height={56} borderRadii={{ tl: radius.thumb, tr: radius.thumb, br: radius.thumb, bl: radius.thumb }} /> : null}
       tag={`${whenLabel(m.row)} · ${occasion}`}
@@ -310,20 +312,27 @@ function CheckedRow({ m }: { m: Model }) {
   );
 }
 
-function StayingInRow({ m }: { m: Model }) {
+function StayingInRow({ m, readOnly }: { m: Model; readOnly: boolean }) {
+  const occasion = cardOccasionLabel(m.row.occasion);
   return (
     <CollapsedShell
       tag={whenLabel(m.row)}
       title={t('idea.stayingIn')}
-      a11y={`${whenLabel(m.row)}: ${t('idea.stayingIn')}`}
+      a11y={readOnly ? `${whenLabel(m.row)}: ${t('idea.stayingIn')}, ${occasion}` : `${whenLabel(m.row)}: ${t('idea.stayingIn')}`}
       right={
-        <MorphPicker
-          label={cardOccasionLabel(m.row.occasion)}
-          value={m.row.occasion}
-          sections={[{ options: EVENING_CARD_OCCASIONS.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
-          onPick={(o) => void morning.change(m.row.id, { occasion: o })}
-          accessibilityLabel={t('idea.a11y.occasion', { occasion: cardOccasionLabel(m.row.occasion) })}
-        />
+        readOnly ? (
+          <KText variant="subheadline" color="ink2">
+            {occasion}
+          </KText>
+        ) : (
+          <MorphPicker
+            label={occasion}
+            value={m.row.occasion}
+            sections={[{ options: EVENING_CARD_OCCASIONS.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
+            onPick={(o) => void morning.change(m.row.id, { occasion: o })}
+            accessibilityLabel={t('idea.a11y.occasion', { occasion })}
+          />
+        )
       }
     />
   );

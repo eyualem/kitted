@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from 'react';
 import { AppState } from 'react-native';
 import { store } from '@/data/db';
+import { DEMO_ENABLED } from '@/demo/config';
 import { demoEntitlements } from '@/services/entitlements';
 import { newId } from '@/services/ids';
 import { imagePrep } from '@/services/imagePrep/real';
@@ -23,6 +24,8 @@ export const readingSource = createMockReadingSource({
   latency: () => getDemoArgs().latency,
   fault: () => getDemoArgs().fault,
   scheduler: realScheduler,
+  // A snap of a real photo gets the story's canned reading only on a demo screen (#322).
+  cannedSnaps: () => DEMO_ENABLED && getDemoArgs().demoScreen !== null,
 });
 
 export const quota = createQuota({

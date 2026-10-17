@@ -8,6 +8,8 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaFrameContext, SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { ThemeProvider, setAppAppearance, useKittedFonts, useTheme } from '@/design-system';
 import { DEMO_ENABLED } from '@/demo/config';
+import { SHARE_CARD_BUILT } from '@/config/features';
+import { usePaywallOn } from '@/features/paywall/switch';
 import { ToastHost } from '@/features/toast/ToastHost';
 import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
@@ -61,6 +63,8 @@ function RootStack({ booted }: { booted: boolean }) {
   const gate = useGate();
   const ready = booted && gate.ready;
   const blocked = gate.ageBlocked;
+  // The paywall sells nothing while it's off (a mock store): no link may open it (09 §20.7 R2, #322).
+  const paywall = usePaywallOn();
 
   // -demoScreen <n> (launch argument): route through the demo screen once the gate is ready.
   useEffect(() => {
@@ -82,11 +86,8 @@ function RootStack({ booted }: { booted: boolean }) {
       </Stack.Protected>
       <Stack.Protected guard={ready && !blocked}>
         <Stack.Screen name="camera" options={cover} />
-        <Stack.Screen name="shoe-snap" options={cover} />
         <Stack.Screen name="scan" options={cover} />
         <Stack.Screen name="photo/[checkId]" options={cover} />
-        <Stack.Screen name="share/[checkId]" options={cover} />
-        <Stack.Screen name="paywall" options={cover} />
         <Stack.Screen name="sheets/why/[checkId]" options={sheet([0.78, 1])} />
         {/* The mockup's height (its top at y = 150 of 874); at full height ~200 pt sat empty under "Save correction" (DECISIONS-LOG #56). */}
         <Stack.Screen name="sheets/correct/[checkId]" options={sheet([0.83, 1])} />
@@ -95,20 +96,23 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/pick-shoes/[checkId]" options={sheet([0.62, 1])} />
         <Stack.Screen name="sheets/tell-me/[checkId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/edit-item/[id]" options={sheet([0.75, 1])} />
-        <Stack.Screen name="sheets/rotation" options={sheet([0.5])} />
         <Stack.Screen name="sheets/next-buy" options={sheet([0.5])} />
-        <Stack.Screen name="sheets/describe" options={sheet([0.5, 1])} />
         <Stack.Screen name="sheets/fact/[id]" options={sheet([0.5])} />
-        <Stack.Screen name="sheets/looks-by-name" options={sheet([0.5])} />
         {/* 02 O3w asked for a 320 pt wheel; it's a list of years now (no new package), so it opens taller. */}
         <Stack.Screen name="sheets/birth-year" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/consent" options={sheet([1])} />
-        <Stack.Screen name="sheets/swap/[ideaId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/scan-inbox" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/merge/[id]" options={sheet([0.6, 1])} />
         {/* A1 (10-onboarding.md): 0.7 leaves room for the email field and its button above the keyboard. */}
         <Stack.Screen name="sheets/sign-in" options={sheet([0.7, 1])} />
+      </Stack.Protected>
+      <Stack.Protected guard={ready && !blocked && paywall}>
+        <Stack.Screen name="paywall" options={cover} />
+      </Stack.Protected>
+      {/* The share card is a placeholder until P6: reachable only behind its switch, or on demo screen 20 (R12). */}
+      <Stack.Protected guard={ready && !blocked && (SHARE_CARD_BUILT || DEMO_ENABLED)}>
+        <Stack.Screen name="share/[checkId]" options={cover} />
       </Stack.Protected>
       <Stack.Protected guard={DEMO_ENABLED}>
         <Stack.Screen name="demo/screen/[n]" />

@@ -20,6 +20,7 @@ import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 import { fitField, typeOptions, volumeWord, type FieldOption } from './fields';
 import { PieceArt } from '@/features/closet/GarmentArt';
+import { GoneSheet } from '@/features/gone/Gone';
 
 type Reason = 'item' | 'detail' | 'fix' | 'score';
 const REASONS: [Reason, Parameters<typeof t>[0]][] = [
@@ -77,6 +78,7 @@ export function CorrectSheet() {
     return { before, after: fresh?.after ?? before, closetHit, nextFix: hideTarget ? fresh?.nextFix ?? undefined : undefined };
   }, [data, draft, scored, request, hideTarget]);
 
+  if (data === null) return <GoneSheet />;
   if (!data || !preview) return <SheetScaffold title={t('nqr.title')} subtitle={t('nqr.sub')} />;
   const { row, reading } = data;
 

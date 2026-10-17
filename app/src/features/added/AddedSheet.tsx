@@ -11,6 +11,7 @@ import type { ClosetAsk, ClosetItemRow, ClosetObservationRow } from '@/data/type
 import { useLive } from '@/data/useLive';
 import { ClosetTile } from '@/features/closet/ClosetTile';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { openPiece } from '@/features/closet/pieceActions';
 import { CLOSET_DEADLINE_MS } from '@/features/closet/service';
 import { isPending } from '@/features/closet/summaryText';
 import { garmentHex, garmentLabel } from '@/features/fitcheck/labels';
@@ -19,12 +20,16 @@ import { SheetList, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
 import { addedDetail } from './addedDetail';
+import { GoneSheet } from '@/features/gone/Gone';
 
 const CLOSET_CATEGORIES = ['top', 'outerwear', 'bottom', 'footwear'];
 
-/** The edit-item sheet (C3) is still a placeholder: until it's built, rows here don't open it. One switch turns it back on.
- *  The sheet closes with the round X like Why and Which shoes (no "Done"). */
-const EDIT_ITEM_BUILT = false;
+/** A row opens the piece's page, where "What it is" fixes a wrong read (#315; 09 §20.7 R6, #322): the sheet closes first,
+ *  then the page opens in Closet. The sheet closes with the round X like Why and Which shoes (no "Done"). */
+function openPieceFromSheet(id: string) {
+  router.back();
+  openPiece({ id });
+}
 
 export function AddedSheet() {
   const { checkId } = useLocalSearchParams<{ checkId: string }>();
@@ -46,6 +51,7 @@ export function AddedSheet() {
     return () => clearTimeout(h);
   }, [pending, data?.cs.startedAt]);
 
+  if (data === null) return <GoneSheet />;
   if (!data) return <SheetScaffold title={t('added.title')} subtitle={t('added.sub')} />;
   const { cs, byId, obs, reading } = data;
   const undone = new Set(cs.undone);
@@ -109,7 +115,7 @@ export function AddedSheet() {
                   <AddedItemRow
                     item={item}
                     removed={removed}
-                    onEdit={() => router.push(`/sheets/edit-item/${item.id}`)}
+                    onEdit={() => openPieceFromSheet(item.id)}
                     onToggle={(u) => void fitCheck.setItemUndone(checkId, item.id, u)}
                   />
                   {ask && candidate && !removed ? (
@@ -181,17 +187,18 @@ function AddedItemRow({ item, removed, onEdit, onToggle }: { item: ClosetItemRow
       style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 16, paddingRight: 8, minHeight: 64 }}
       accessible
       accessibilityLabel={removed ? t('added.a11y.removed', { name }) : t('added.a11y.row', { name, detail: detail.replace(' · ', ', ').toLowerCase() })}
-      accessibilityActions={removed ? [{ name: 'addBack', label: t('added.addBack') }] : [...(EDIT_ITEM_BUILT ? [{ name: 'edit', label: t('common.edit') }] : []), { name: 'undo', label: t('common.undo') }]}
+      accessibilityHint={removed ? undefined : t('closet.piece.a11y.tileHint')}
+      accessibilityActions={removed ? [{ name: 'addBack', label: t('added.addBack') }] : [{ name: 'edit', label: t('common.edit') }, { name: 'undo', label: t('common.undo') }]}
       onAccessibilityAction={(e) => {
         const a = e.nativeEvent.actionName;
-        if (a === 'edit' && EDIT_ITEM_BUILT) onEdit();
+        if (a === 'edit') onEdit();
         else if (a === 'undo') onToggle(true);
         else if (a === 'addBack') onToggle(false);
       }}
     >
       <Pressable
-        onPress={removed || !EDIT_ITEM_BUILT ? undefined : onEdit}
-        disabled={removed || !EDIT_ITEM_BUILT}
+        onPress={removed ? undefined : onEdit}
+        disabled={removed}
         style={({ pressed }) => ({ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, opacity: pressed ? opacity.pressed : 1 })}
       >
         <ClosetTile item={item} size={44} radius={12} scale={0.82} dim={removed} decorative />

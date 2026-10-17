@@ -39,9 +39,10 @@ import { noteLive } from '@/features/fitcheck/reveal';
 import { useCheckReveal } from './useReveal';
 import { useLaterShows } from '@/features/finish/hooks';
 import { finish as finishSequence } from '@/features/finish/session';
+import { SHARE_CARD_BUILT } from '@/config/features';
 
-/** The share card (S12) isn't built yet: its button opened a placeholder. One switch brings the share actions back. */
-export const SHARE_CARD_BUILT = false;
+// The share card's switch lives in config/features.ts (the root layout guards its route by it, #322).
+export { SHARE_CARD_BUILT };
 /** "Save this look" at 9+ has nowhere to save to yet (Lookbook saves come later): hidden until it does something. */
 export const SAVE_LOOK_BUILT = false;
 

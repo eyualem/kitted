@@ -17,6 +17,7 @@ import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reani
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Chip, ChipFlow, CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
+import { QUESTION_MAX_CHARS } from '@/features/ask/pipeline';
 import { useDictation } from './useDictation';
 import { composerState, useComposerDraft } from './composerState';
 import { composerSlots, cursorToField, goesIdle } from './composerSlots';
@@ -230,6 +231,7 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
             ref={field}
             value={text}
             onChangeText={setText}
+            maxLength={QUESTION_MAX_CHARS}
             onFocus={onFocus}
             onBlur={onBlur}
             autoFocus={autoFocus}

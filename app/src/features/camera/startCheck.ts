@@ -170,6 +170,10 @@ export function explain(r: StartOutcome) {
     // No card was posted (prep or a write failed first): say it didn't count. With a card, the card says so.
     showToast(t('fail.ai'));
   }
+  else if (r.outcome === 'noParent') {
+    // A re-check, snap or retry whose first check is gone (deleted meanwhile): the camera closed with nothing said (R7).
+    showToast(t('cam.noParent'));
+  }
   else if (r.outcome === 'busy') {
     // Another photo is still being read (§1 item 7, #233 item 8): this one isn't sent or counted, and he's told.
     showToast(t('cam.busy'));

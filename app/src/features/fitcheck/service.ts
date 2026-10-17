@@ -1188,6 +1188,10 @@ export function createFitCheckService(deps: ServiceDeps) {
     answerDuplicate(checkId: string, obsId: string, a: DuplicateAnswer) {
       return closet.answer(checkId, obsId, a);
     },
+    /** Undo on that answer's toast: the question is open again (#322). */
+    unanswerDuplicate(checkId: string, obsId: string) {
+      return closet.unanswer(checkId, obsId);
+    },
     /** "Not the same": a matched piece was a different one; it becomes its own item. */
     splitItem(checkId: string, obsId: string) {
       return closet.split(checkId, obsId);

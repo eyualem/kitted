@@ -22,6 +22,10 @@ import { liveAnswer as defaultLive } from './live';
 import type { AnswerEvent, AnswerSource } from './source';
 
 /** No first word by then: "Taking longer…" (07 §6.4). */
+/** The longest question (09 §20.7 R8, #322): the field takes no more, and the send path cuts dictation to it, so a
+ *  pasted essay never becomes the prompt (a cost risk once the server pays). */
+export const QUESTION_MAX_CHARS = 500;
+
 export const SLOW_MS = 6_000;
 /** No first word by then, or the stream stalls that long: the fail line, nothing counted (07 §6.4, A3). */
 export const GIVE_UP_MS = 20_000;
@@ -320,7 +324,7 @@ export function createAsk(deps: AskDeps) {
     },
 
     async ask(input: string): Promise<AskOutcome> {
-      const text = input.trim();
+      const text = input.trim().slice(0, QUESTION_MAX_CHARS).trim();
       if (!text) return { kind: 'empty' };
       const now = clock.nowMs();
       const bubble = () => row(ids('M'), now, 'user', text);

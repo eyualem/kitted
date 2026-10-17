@@ -19,6 +19,7 @@ import { pickEdit } from './pieceActions';
 import { doubtLine, fitDoubt } from './fitDoubt';
 import { editOptions, editRows, optionA11y, withEdit, type EditField, type EditOption } from './pieceEdit';
 import { isAwaitingAnswer, isOwned } from './profile';
+import { GoneSheet } from '@/features/gone/Gone';
 
 const GAP = 10;
 const FIELDS: readonly EditField[] = ['kind', 'color', 'leg', 'fit', 'pattern'];
@@ -91,7 +92,9 @@ export function EditSheet() {
   const data = useLive(['closet', 'closetObs'], async () => {
     const all = await store.closet.all();
     const item = all.find((c) => c.id === id);
-    if (!item || !isOwned(item) || isAwaitingAnswer(item, all.filter(isOwned))) return null;
+    if (!item || !isOwned(item)) return null;
+    // Still waiting on his "Same as …?" answer: not editable yet (the sheet stays empty, as before).
+    if (isAwaitingAnswer(item, all.filter(isOwned))) return { item: null, doubt: null };
     return { item, doubt: fitDoubt(item, await store.closetObs.all()) };
   }, [id]);
   const item = data?.item ?? null;
@@ -112,6 +115,7 @@ export function EditSheet() {
   // A "Not sure" row (§18): nothing ringed as current, so any pick settles it.
   const opts = item && row ? editOptions(item, field, { unsure: data?.doubt?.field === field }) : null;
 
+  if (data === null && !busy) return <GoneSheet />;
   return (
     <SheetScaffold title={title} subtitle={data?.doubt?.field === field ? doubtLine(data.doubt) : t('closet.edit.sub')}>
       <View style={{ gap: space.l, paddingTop: 4 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>

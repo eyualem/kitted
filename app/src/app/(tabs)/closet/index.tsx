@@ -22,6 +22,8 @@ import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
 import { closetGridItems } from '@/features/closet/merge';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { toConfirm } from '@/features/closet/toConfirm';
+import { answerWithUndo, type AnswerToastDeps } from '@/features/closet/answerToast';
+import { showToast } from '@/features/toast/toast';
 import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
 import { LinkRow, Section } from '@/features/settings/SettingsList';
 import { fitCheck } from '@/features/fitcheck/session';
@@ -30,6 +32,13 @@ import { OutfitsView } from '@/features/closet/OutfitsView';
 import { openingSegment, outfitCount, SEGMENT_KEY } from '@/features/closet/outfits';
 import { Segmented } from '@/features/onboarding/Segmented';
 import { t } from '@/i18n/en';
+
+/** A "To confirm" answer leaves the card: a toast says it, with Undo (09 §20.7 R10, #322). */
+const answerDeps: AnswerToastDeps = {
+  answer: (c, o, a) => fitCheck.answerDuplicate(c, o, a),
+  unanswer: (c, o) => fitCheck.unanswerDuplicate(c, o),
+  toast: (text, undo) => void showToast(text, undo),
+};
 
 
 const GAP = 10;
@@ -104,7 +113,7 @@ export default function ClosetScreen() {
                 {queue.shown.map(({ checkId, ask, photo, candidate, runnerUp }, i) => (
                   <View key={ask.obsId} style={{ gap: 12 }}>
                     {i > 0 ? <RowDivider /> : null}
-                    <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void fitCheck.answerDuplicate(checkId, ask.obsId, a)} />
+                    <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void answerWithUndo(answerDeps, checkId, ask, a, candidate, runnerUp)} />
                   </View>
                 ))}
                 {fit ? (

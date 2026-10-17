@@ -7,7 +7,7 @@ import { Pressable, ScrollView, StyleSheet, View, useWindowDimensions, type Nati
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconButton, KText, NeckDownPhoto, fixed, neckDownAspect } from '@/design-system';
+import { IconButton, KButton, KText, NeckDownPhoto, fixed, neckDownAspect } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { shownPhoto, type ShownPhoto } from '@/demo/demoPhotos';
@@ -15,6 +15,7 @@ import { occasionLabel } from '@/features/stylist/thread';
 import { t } from '@/i18n/en';
 import { longDate } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
+import { GonePage } from '@/features/gone/Gone';
 
 const PULL_TO_CLOSE = 90;
 const DOUBLE_TAP_MS = 280;
@@ -42,6 +43,14 @@ export function PhotoViewer() {
   const onPage = (e: NativeSyntheticEvent<NativeScrollEvent>) => setPage(Math.round(e.nativeEvent.contentOffset.x / width));
   const photos = data?.photos ?? [];
 
+  // Deleted meanwhile, or an old link (09 §20.7 R11, #322): say so, with a way out of the cover.
+  if (data === null) {
+    return (
+      <GonePage>
+        <KButton title={t('common.close')} size="regular" style={{ alignSelf: 'center' }} onPress={close} />
+      </GonePage>
+    );
+  }
   return (
     <View style={styles.root}>
       <StatusBar style="light" />

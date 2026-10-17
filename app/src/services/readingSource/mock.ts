@@ -15,6 +15,9 @@ export interface MockOptions {
   latency: () => number | 'real';
   fault?: () => DemoFault | null;
   scheduler?: Scheduler;
+  /** Whether a snap of a real photo (no bundled photo id) gets the canned snap reading: only on a demo screen. Off, it
+   *  gets `unknownPhoto`, so a demo reading never merges into a real check (09 §20.7 R3, #322). Default off. */
+  cannedSnaps?: () => boolean;
 }
 
 interface Step {
@@ -60,9 +63,12 @@ export function scheduleFor(reading: Reading): Step[] {
   return steps;
 }
 
-function lookup(image: PreparedImage, kind: ReadKind): { id: string; reading: Reading } | null {
-  if (kind === 'shoeSnap') return { id: 's24_shoe_snap', reading: clone(SHOE_SNAP_READING) };
-  if (kind === 'bottomSnap') return { id: 'p01b_bottom_snap', reading: clone(BOTTOM_SNAP_READING) };
+function lookup(image: PreparedImage, kind: ReadKind, cannedSnaps: boolean): { id: string; reading: Reading } | null {
+  if (kind === 'shoeSnap' || kind === 'bottomSnap') {
+    // A bundled sample photo or a demo screen: the story's own snap. A real photo: not a reading anyone made of it.
+    if (!image.photoId && !cannedSnaps) return null;
+    return kind === 'shoeSnap' ? { id: 's24_shoe_snap', reading: clone(SHOE_SNAP_READING) } : { id: 'p01b_bottom_snap', reading: clone(BOTTOM_SNAP_READING) };
+  }
   if (image.photoId) {
     const r = demoReadingById(image.photoId);
     if (r) return { id: image.photoId, reading: clone(r) };
@@ -83,7 +89,7 @@ export function createMockReadingSource(opts: MockOptions): ReadingSource & { he
     async *read(image: PreparedImage, kind: ReadKind, o?: { signal?: AbortSignal }): AsyncGenerator<ReadingEvent> {
       const signal = o?.signal;
       const fault = opts.fault?.() ?? null;
-      const hit = lookup(image, kind);
+      const hit = lookup(image, kind, opts.cannedSnaps?.() ?? false);
       if (!hit) {
         yield { type: 'failed', code: 'unknownPhoto', counted: false };
         return;

@@ -801,6 +801,19 @@ export function createClosetService(deps: ClosetServiceDeps) {
     return saveSummary(checkId, cs);
   }
 
+  /** Undo on an answer's toast (09 §20.7 R10, #322): the question is open again, exactly as before he answered. */
+  async function applyUnanswer(checkId: string, obsId: string) {
+    const row = await store.fitChecks.get(checkId);
+    if (!row) return null;
+    const cs = summaryOf(row);
+    const ask = cs.asks.find((x) => x.obsId === obsId);
+    if (!ask || !ask.answer) return null;
+    await revertAnswer(cs, ask);
+    cs.touched = true;
+    await renameAll();
+    return saveSummary(checkId, cs);
+  }
+
   async function applySplit(checkId: string, obsId: string) {
     const row = await store.fitChecks.get(checkId);
     const obs = await store.closetObs.get(obsId);
@@ -1187,6 +1200,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       })());
     },
     answer: (checkId: string, obsId: string, a: DuplicateAnswer) => serial(() => applyAnswer(checkId, obsId, a)),
+    unanswer: (checkId: string, obsId: string) => serial(() => applyUnanswer(checkId, obsId), UNDO('unanswer')),
     split: (checkId: string, obsId: string) => serial(() => applySplit(checkId, obsId)),
     setUndone: (checkId: string, itemId: string, undone: boolean) => serial(() => applyUndone(checkId, itemId, undone)),
     correction: (checkId: string, d: { garmentIndex: number; field?: string; value?: unknown; remove?: boolean }, next: Reading, nextReadingId: string) =>

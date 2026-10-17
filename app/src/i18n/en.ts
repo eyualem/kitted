@@ -597,6 +597,16 @@ const addedInBuild = {
   'scan.saved.body': 'Reading clothes from photos is coming soon. Your photo stays on your phone until then.',
   'scan.saved.bodyMany': 'Reading clothes from photos is coming soon. Your photos stay on your phone until then.',
   'scan.another': 'Scan another',
+  // A record that's gone, or an old link (09 §20.7 R11, #322): the page or sheet says so instead of showing nothing.
+  'gone.title': "This isn't here anymore.",
+  'gone.body': 'It was removed, or the link is old.',
+  'gone.home': 'Go to Kitted',
+  // A re-check, snap or retry whose first check was deleted meanwhile (09 §20.7 R7, #322).
+  'cam.noParent': "That check isn't here anymore. Nothing was sent or counted.",
+  // A scan whose every photo failed to save (09 §20.7 R4, #322): it used to say "Saved".
+  'scan.notSaved.title': "Couldn't save that photo.",
+  'scan.notSaved.titleMany': "Couldn't save those photos.",
+  'scan.notSaved.body': 'Nothing was kept. Try again.',
   'scan.done': 'Done',
   'scan.review.title': '{n} of {m} photos need a look',
   'scan.review.title1': '1 of {m} photos needs a look',

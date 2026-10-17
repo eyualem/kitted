@@ -59,6 +59,7 @@
     "lint": "expo lint",
     "test": "jest",
     "typecheck": "tsc --noEmit",
+    "guard:release": "node scripts/guard-release.js",
     "check": "tsc --noEmit && npm run typecheck --workspace @kitted/core && expo lint && npm test --workspace @kitted/core && jest"
   },
   "private": true,

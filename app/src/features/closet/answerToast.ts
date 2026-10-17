@@ -1,0 +1,30 @@
+// "Same as your …?" answered in Closet's "To confirm" card (09 §20.7 R10, #322): the question leaves the card, so the
+// answer is said in a toast with Undo, which opens the question again (closet service `unanswer`).
+import type { ClosetAsk, ClosetItemRow } from '@/data/types';
+import type { DuplicateAnswer } from './service';
+import { t } from '@/i18n/en';
+
+const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
+
+/** The toast's line: the same words the score card's row shows once answered. */
+export function answerLine(a: DuplicateAnswer, candidate: Pick<ClosetItemRow, 'name'>, runnerUp: Pick<ClosetItemRow, 'name'> | null): string {
+  if (a === 'new') return t('item.dup.saidNew');
+  const target = a === 'runnerUp' ? runnerUp ?? candidate : candidate;
+  return t('item.dup.saidSame', { item: lower(target.name) });
+}
+
+export interface AnswerToastDeps {
+  answer: (checkId: string, obsId: string, a: DuplicateAnswer) => Promise<unknown>;
+  unanswer: (checkId: string, obsId: string) => Promise<unknown>;
+  toast: (text: string, undo: () => void) => void;
+}
+
+/** Answer, then say so with Undo; nothing is said when the answer didn't land (the check or the question is gone). */
+export async function answerWithUndo(
+  d: AnswerToastDeps, checkId: string, ask: Pick<ClosetAsk, 'obsId'>, a: DuplicateAnswer,
+  candidate: Pick<ClosetItemRow, 'name'>, runnerUp: Pick<ClosetItemRow, 'name'> | null,
+): Promise<void> {
+  const r = await d.answer(checkId, ask.obsId, a);
+  if (!r) return;
+  d.toast(answerLine(a, candidate, runnerUp), () => void d.unanswer(checkId, ask.obsId));
+}

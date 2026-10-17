@@ -45,6 +45,7 @@ import { PhotoMenu } from './PhotoMenu';
 import { isOwned } from './profile';
 import { SightingCrop } from './SightingCrop';
 import { photoMenuItems, photoOffer, type PhotoMenuItem } from './wrongCard';
+import { GonePage } from '@/features/gone/Gone';
 
 /** iOS destructive red at the mockup's values (as Y7's red rows): systemRed is under 4.5:1 on white. */
 const DANGER = { light: '#C9302C', dark: '#FF6961' } as const;
@@ -82,6 +83,8 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
   // The column's real width (the web preview boxes the app narrower than the window).
   const [colW, setColW] = useState(0);
   const [showFolded, setShowFolded] = useState(false);
+  // Removed from this page: it closes, so it doesn't say "isn't here anymore" on its way out.
+  const [leaving, setLeaving] = useState(false);
   const data = useLive(['closet', 'closetObs', 'fitChecks'], async () => {
     const all = await store.closet.all();
     const item = all.find((c) => c.id === id) ?? null;
@@ -115,7 +118,8 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
   if (!data) return null;
   const W = colW || Math.max(0, Math.round(screenW - space.gutter * 2));
   if (!data.item) {
-    return <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} />;
+    // Folded into another piece: the page moves to it (above). Otherwise it's gone (removed, or an old link).
+    return data.mergedInto || leaving ? <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} /> : <GonePage />;
   }
   const { item, photos, inLookbook, offers, merge, goes, outfitsWith, all: closetAll, doubt } = data;
   const spec = artSpec(item);
@@ -285,7 +289,10 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
       ) : null}
 
       <Pressable
-        onPress={() => removePiece(item, { onRemoved: () => router.back() })}
+        onPress={() => {
+          setLeaving(true);
+          removePiece(item, { onRemoved: () => router.back() });
+        }}
         accessibilityRole="button"
         accessibilityLabel={t('closet.remove.action')}
         style={({ pressed }) => ({

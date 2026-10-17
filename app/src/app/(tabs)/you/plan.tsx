@@ -11,11 +11,14 @@ import { planStatus, restorePurchases, restoreToast, usageLines } from '@/featur
 import { LinkRow, Section, SettingsScroll, ValueRow } from '@/features/settings/SettingsList';
 import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
+import { usePaywallOn } from '@/features/paywall/switch';
 import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
 
 export default function PlanUsageScreen() {
   const plan = usePlan();
+  // Nothing to restore while the paywall is off (09 §20.7 R5, #322).
+  const paywall = usePaywallOn();
   const today = useLive(['usage', 'fitChecks'], async () => {
     const snap = await quota.snapshot();
     const day = await store.usage.get(snap.dayKey);
@@ -48,9 +51,11 @@ export default function PlanUsageScreen() {
 
       {plan.kind !== 'free' ? <KButton kind="secondary" size="large" title={t('settings.manage')} onPress={() => void openManageSubscription()} accessibilityHint={t('settings.a11y.appStoreHint')} /> : null}
 
-      <Section>
-        <LinkRow title={t('settings.restore')} chevron={false} onPress={() => void restore()} />
-      </Section>
+      {paywall ? (
+        <Section>
+          <LinkRow title={t('settings.restore')} chevron={false} onPress={() => void restore()} />
+        </Section>
+      ) : null}
     </SettingsScroll>
   );
 }

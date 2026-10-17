@@ -20,6 +20,7 @@ import { ClosetTile } from '@/features/closet/ClosetTile';
 import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
 import { loadLook, showInChat, type LookPageModel } from './lookPage';
+import { GonePage } from '@/features/gone/Gone';
 
 const PIECE_TILE = 76;
 const BEFORE_W = 50;
@@ -29,6 +30,7 @@ export function LookPage({ id }: { id: string }) {
   const { colors } = useTheme();
   const look = useLive(['fitChecks', 'closet', 'chat'], () => loadLook(store, id, { zone: sessionClock.offset }), [id]);
   if (look === undefined) return <View style={{ flex: 1, backgroundColor: colors.bg }} />;
+  if (look === null) return <GonePage />;
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
