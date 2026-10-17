@@ -703,3 +703,24 @@ Kind ("Wrong item") corrections keep today's behaviour.
 - **BX9 (S) On the Simulator** (a new demo screen: a check of a piece whose photos disagree): the line, a tap opening the sheet on the jeans with only their seen legs, Save, the toast; Outfits with the card; light, dark and the largest text size, nothing clipped.
 - **BX10 (T) Words:** the new strings pass the copy checks, the sentence gate and the body-words rule.
 - **G1–G4** (§6) apply.
+
+### §19 results (Oct 17, #319): checked against BX1–BX10, none changed
+Demo screens **201** (a check of s12 whose mid-wash jeans read slim, wide and wide in earlier photos), **202** (Closet → Outfits with the fit card) and **203** (the sheet the line opens). Seen on the iOS Simulator (iPhone 17 Pro, a turn from the large-text session) and on the web preview. Screenshots `screenshots/bagginess-oct17/` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| BX1 | Pass (T) | `fitLine.test.ts`, on the real fit-check and closet services: a Leg fix on s12's jeans takes the check to the new read; every closet row deep-equal; the sighting has the new leg with `userConfirmed` unchanged; nothing moves piece; another check deep-equal; no piece named. A Fit fix on the hoodie: same. A Kind fix still sets the piece |
+| BX2 | Pass (T) | the jeans stay Not sure after a scored fix; a piece-page pick settles them |
+| BX3 | Pass (T, S) | the line names the piece ("Not sure about your mid-wash jeans' leg? Tap."); none on a check with no Not sure piece, on a garment read `unsure`, or once settled; the line's code never reads a score; the card passes `readOnly` |
+| BX4 | Pass (T, S) | the href carries `only=slim,straight,wide` (this photo straight, earlier slim, wide, wide); `limitTo` keeps the usual order; on the Simulator and the web the sheet opens on the jeans with Slim · Straight · Wide only. Picking Slim showed 7.0 → 6.5 and no "Updated in Closet" pill; Save gave "Correction saved.", the card read 6.5 and the line was gone |
+| BX5 | Pass (T) | one tap stops it; 2 untapped checks stop a 3rd; a check it showed on keeps it; the same check doesn't count twice; `closet.fitLine` is local |
+| BX6 | Pass (T) | a scored fix, a line tap and a Closet-card pick each add one entry (`via: 'card'`), with the photos' reads before the answer; the newest 300 kept; `closet.fitAnswers` is local |
+| BX7 | Pass (T, S) | Outfits draws the same one card; "Same as your …?" stays on Pieces |
+| BX8 | Pass (T) | no Not sure piece: no line; `packages/kitted-core` untouched |
+| BX9 | Pass (S) | 201–203 in light and dark, 201 and 202 at the largest text size: the line wraps inside its pill, nothing clipped |
+| BX10 | Pass (T) | the four new strings pass the sentence gate and the body-words rule |
+| G1 | Pass | `npm run check` steps: tsc, core tsc, lint, core tests, 1167 app tests |
+| G4 | | New words: "Not sure about your {owner} leg?", "Not sure about your {owner} fit?", "Tap.", VoiceOver "Opens Not quite right? for this piece." |
+| Amended | | Two older tests expected a Leg fix to set the piece ("Saved to your tan chinos"): `closetService.test` now shows the patch-in-place path with a Kind fix; `fitCheckService.test` expects the piece left as it was. Both say why in the test |
+| Found | | Picking the honest leg can cost points (Slim took the demo check from 7.0 to 6.5), which cuts against the worry that the line only invites flattering answers; the log will show what he actually picks |
+

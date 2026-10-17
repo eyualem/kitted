@@ -237,9 +237,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 199, name: 'What it is · Kind', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/T6?field=kind', under: '/closet/item/T6' },
   { n: 200, name: 'What it is · Color', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=color', under: '/closet/item/B3' },
   // Bagginess on the fit-check card (09-ui-review §19, #319): s12's jeans are Not sure (201–203).
-  { n: 201, name: 'Fit check · Not sure about your jeans', id: 'S6', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', href: '/stylist' },
-  { n: 202, name: 'Closet · Outfits with the fit card', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', href: '/closet' },
-  { n: 203, name: 'Not quite right? · from the line', id: 'S8', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', href: `/sheets/correct/${STORY_DOUBT}?reason=detail&garment=1&only=slim,straight,wide`, under: '/stylist' },
+  { n: 201, name: 'Fit check · Not sure about your jeans', id: 'S6', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/stylist' },
+  { n: 202, name: 'Closet · Outfits with the fit card', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/closet' },
+  { n: 203, name: 'Not quite right? · from the line', id: 'S8', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: `/sheets/correct/${STORY_DOUBT}?reason=detail&garment=1&only=slim,straight,wide`, under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
