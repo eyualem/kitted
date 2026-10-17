@@ -724,3 +724,99 @@ Demo screens **201** (a check of s12 whose mid-wash jeans read slim, wide and wi
 | Amended | | Two older tests expected a Leg fix to set the piece ("Saved to your tan chinos"): `closetService.test` now shows the patch-in-place path with a Kind fix; `fitCheckService.test` expects the piece left as it was. Both say why in the test |
 | Found | | Picking the honest leg can cost points (Slim took the demo check from 7.0 to 6.5), which cuts against the worry that the line only invites flattering answers; the log will show what he actually picks |
 
+---
+
+## 20. What's missing right now: the whole-app gap audit (Oct 17, #320)
+
+**What this is.** Founder, Oct 17: "go through the app and try to find things that are missing right now." Five read-only agents went through the code area by area: Stylist; Closet and Lookbook; You, onboarding and the paywall; the release plumbing; navigation and dead ends. Each was compared against 02, 05, 07, 10 and this file. Nothing was built or changed. I re-checked by hand the items marked ✔. Paths are under `app/src/` unless they start elsewhere.
+
+Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it needs an account, money, a package or an outward-facing OK.
+
+**The headline.** On his phone (a dev build through Metro) the app is close to whole. But a TestFlight build today can't score a photo or answer a question, ships the demo tools, and has never been built. That is the real gap to the Nov 3 beta, and most of it is on the to-do list already (Cloudflare, $99). Items 20.1–20.3 below are not on it.
+
+### 20.1 Blocks the beta: a tester's build doesn't work
+1. ✔ **No server exists.** There's no Worker, no wrangler config, no `/v1/score` or `/v1/ask` client; the only server code is `firebase/functions` (account deletion, not deployed). In a build without `__DEV__` the Gemini key is undefined (`services/readingSource/live.ts:10`, `closetSource/live.ts:10`, `ask/liveSource.ts:13`).
+   - A real photo then falls to the mock and fails: "This demo only knows its sample photos.", with no Try again (`readingSource/mock.ts:88`, `stylist/cards/FitCheckCard.tsx:164-170`).
+   - Every question gets "Questions are coming soon. For now I can check your fit…", which isn't true either (`ask/session.ts:36-41`).
+   - Daily limits live only in the phone's SQLite (`services/quota.ts:1-4`), so a reinstall or a clock change resets them.
+   - There's no $3/day spend stop (`app-build-spec.md:243`), and the "paused" line can never fire. `online()` is hard-wired to true (`ask/pipeline.ts:70,136`).
+   - App Attest isn't built, even log-only.
+   - [you: Cloudflare account] then [code]: the Worker, the proxy sources, server-side limits and the kill switch.
+2. ✔ **Fake demo readings would leak into real checks.** With no key, the mock answers *any* shoe snap or pants-and-shoes snap with a canned demo reading (`readingSource/mock.ts:64-65`). A tester's real snap would merge someone else's shoes into his score. [code] In a non-demo build the mock must refuse every snap.
+3. ✔ **No safe release build.**
+   - The demo tools are on unless `KITTED_DEMO=0` (`app/app.config.ts:4`), and nothing sets that: no `eas.json`, no release script, and `tools/phone/install.sh:11` builds Debug.
+   - The `guard:release` script promised in 05 §P8 (`05-build-plan.md:679`) isn't in `package.json`. As written it would always fail anyway: the Firebase key is also `AIza…` and is bundled on purpose.
+   - No Release build has ever been made, so minifier, Hermes and `__DEV__` surprises are untested.
+   - The dev launcher's local-network strings ship in `Info.plist` (`NSLocalNetworkUsageDescription` "Expo Dev Launcher…", `NSBonjourServices`).
+   - [code] for the script, the default and a local Release build on the Simulator; [you: $99 program] for the paid team and App ID (`app.config.ts:22-24`, still the Personal Team `6652QVRQAL`).
+4. ✔ **Two deep links do damage.**
+   - `kitted://paywall/plans` opens the paywall on any build: its route is guarded only by age and onboarding (`app/_layout.tsx:89`), not `PAYWALL_BUILT`. The mock "purchase" then turns on Pro until the app restarts (`services/purchases.ts:58-66`, `services/entitlements.ts:21`).
+   - In any demo-enabled build, `?resetData=1` wipes the real store and the age block (`state/boot.ts:52-55`), and `kitted://demo/screen/N` wipes it and loads demo data (`demo/prepareDemoScreen.ts:271`).
+   - [code] Guard the paywall route by `paywallOn()`; demo off in release (item 3).
+5. ✔ **Consent doesn't match what's sent.**
+   - Questions go with height, build, picked looks, budget and saved facts (`ask/context.ts:166-181`). Consent says only "plus the clothes in your closet" (`en.generated.ts:93`), and `CONSENT_VERSION` is still `'1'` (`onboarding/complete.ts:18`).
+   - It still says "face cropped out or blurred" (`:91`), and the generated plist camera string says "cropped out" (`:713`; `app.config.ts` has the right one).
+   - The privacy manifest declares no collected data (`ios/Kitted/PrivacyInfo.xcprivacy`, `NSPrivacyCollectedDataTypes` empty). The privacy-label plan in `inputs/app-store-and-age-rules.md` §4.1 says height and build never leave the phone, which is no longer true.
+   - [you: OK D2 and #233 item 3, outward-facing] then [code]: the words, the version bump (everyone sees consent once more), and the manifest.
+6. **No way to hear from testers.**
+   - `SUPPORT_EMAIL` is null, so "Report a wrong score" and "Contact support" are hidden (§1 item 13).
+   - There's no crash or error reporting: no Sentry or Crashlytics, no ErrorBoundary, no global error handler. Logs go to Metro and dev-only files.
+   - If a tester's check fails, he only learns of it if they tell him.
+   - [you: an email] and [code]: an error boundary now, and failure logging in the Worker. A crash-reporting package needs [you].
+7. **The beta is free-tier only.** Pro is an in-memory demo flag and the paywall is off, so testers get 1 check and 5 questions a day with no way up. [you] Decide: a beta allowance set on the server (default: testers get Pro's limits during the beta), or accept it.
+
+### 20.2 Looks real but does nothing (fix before the beta; all [code] unless marked)
+8. ✔ **A failed scan says "Saved."** `save()` shows success with `Math.max(saved, 1)` even when every photo failed (`scan/ScanCameraScreen.tsx:132-146`).
+9. **Closet "+" leads only to "coming soon."** Scans are never read into pieces, and nothing reads `scan.inbox` but its own row (`scan/inbox.ts`, `closet/addActions.ts:13-16`). It's the tab's only header button. Until the item reading exists (it needs the server): put Starter basics first in "+" and keep scanning as "Save for later".
+10. ✔ **Settings › Notifications has 3 switches that do nothing.** The row shows whatever `NOTIFICATIONS_BUILT` says (`you/settings.tsx:47`), and nothing schedules anything. The screen says "That's all I send." Hide the row until `expo-notifications` [you].
+11. **Subscription and "Restore purchases" show with nothing to buy.** `settings.tsx:58-61`, `you/plan.tsx:56`; Restore always says "No purchases to restore." (`settings/plan.ts:81-87`). Hide them with the paywall.
+12. **"Wear this" changes nothing he can see.**
+    - It writes the wear log only (`closet/outfitActions.ts:15-29`, `morning/service.ts:287-299`). Worn ×N, Last worn and Your go-tos count fit checks only (`closet/service.ts:387,419,438`, `closet/outfits.ts:126-140`).
+    - The log keeps one row a day (`data/migrations.ts:127-132`), so a second Wear this replaces the first silently.
+13. **"Added to your closet" says "Fix anything I got wrong." but its rows are dead.** `EDIT_ITEM_BUILT = false` (`added/AddedSheet.tsx:27,193`), though the piece page has had "What it is" since #315. Point each row at its piece page; the existing `onEdit` pushes no `?field=`.
+14. ✔ **A re-check or snap whose first check is gone closes the camera silently.** `noParent` (`fitcheck/service.ts:661`) has no case in `explain()` (`camera/startCheck.ts:157-179`).
+15. **A scored re-check card has no "Why X?" and no "Not quite right?"** (`stylist/cards/RecheckCard.tsx:161-176`). After a drop he can't see why or correct a misread.
+16. **A dialed-in card (9+) has no next step.** With no fixes and Save and Share switched off (`FitCheckCard.tsx:44-46, 439-447`), the action row is empty.
+17. **"How I score" still explains credits** (§1 item 8, #233 item 1). Waits on [you: #233 OK].
+18. **No offline handling.** `banner.offline` and `banner.online` are unused, send is never disabled, and offline questions get the generic "I couldn't answer that". The photo caption is always "Not scored" (`stylist/MessageView.tsx:130`), and `fail.cap.notSent` is unused.
+19. **Saying "that score is wrong" in chat can't open "Not quite right?"** The router detects it (`ask/router.ts:25`), but no card type opens the sheet (`ask/cards.ts:14-21`).
+20. **Questions have no length cap.** No `maxLength` (`stylist/Composer.tsx:222-240`), and the whole text goes into the prompt. That's a cost risk once the server pays.
+21. **Past chats aren't fully read-only.** An old evening card's occasion picker still edits (`MessageView.tsx:39` renders `MorningCard` without `readOnly`; `MorningCard.tsx:312-326`). Tapping a past day's checked morning row re-pushes the same page (`StylistScreen.tsx:225-227`).
+22. **He can't delete one photo or one check.** The look page's ⋯ (Save, Share, Delete photo) isn't built (`lookbook/LookPageScreen.tsx:10`), and "Remove from Lookbook" keeps the file. The only way out is "Delete all photos". Privacy expectation: H.
+23. **"Not now" on consent leaves a bare thread.** The S26 "Turn on fit checks" card isn't built (`noConsent.title` unused, `onboarding/complete.ts:27`).
+24. **The empty Closet has no "Tap the basics you own."** It offers only "Check my fit" (`app/(tabs)/closet/index.tsx:82-85`). Starter essentials is reachable only from "No outfits yet" or Your moves, and with 1–2 pieces the "Add shoes and you'd have N outfits" hint sits on the hidden Outfits half (`closet/outfits.ts:151-155`).
+25. **A "Same as your …?" answer in Closet just vanishes:** no toast, no Undo (`app/(tabs)/closet/index.tsx:107`).
+
+### 20.3 Missing pieces a user will expect (decide or schedule)
+26. **Adding a piece by hand** beyond the 12 Starter basics: "Describe it" (C4d) is a placeholder nothing links to (`app/sheets/describe.tsx`). With 1 free check a day, the closet fills slowly.
+27. **The share card** (S12, P6; `SHARE_CARD_BUILT = false`; `app/share/[checkId].tsx` is a placeholder). It's the before/after video asset for his daily posts.
+28. **The Lookbook calendar and "Days dressed"** (D16; only filters and Saved were deferred). Logged wear days show nowhere.
+29. **The Pieces grid** has no order or sections: newest first, kinds mixed, no Tops/Layers/Bottoms/Shoes chips at 12+ (`closet/merge.ts:14-17`).
+30. **In the thread,** a new answer can land off-screen with no "Latest" pill, and there's no Stop while an answer streams (07 §6.1).
+31. **Missing records give blank screens.** These show an empty page or only a title: the look page, piece page, photo viewer, past day, and the Why, Correct, Added, Tell me, Edit, Merge and Fact sheets (Pick shoes is fully empty). There's no `app/+not-found.tsx`, so a bad link shows Expo's "Unmatched Route".
+32. **Six placeholder routes show spec IDs** ("S12 · Share card / Placeholder. Built in P6.") if a link reaches them: `share/[checkId]`, `shoe-snap` (replaced by `camera?mode=shoeSnap`), `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation`, `sheets/swap/[ideaId]`. Delete or guard them.
+33. **A wrong birth year can't be fixed.** "Birth year can't be changed here." points nowhere (`you/profile.tsx:84-90`). An age block survives Delete all my data and has no contact line (`onboarding/AgeStopScreen.tsx`). The check uses the year only, so someone born in late 2008 passes at 17; Declared Age Range is the real check.
+34. **Location, once denied, can't be turned back on.** The weather ask shows only for `unknown` (`morning/MorningCard.tsx:177`).
+35. **Morning-card Swap** never says "Nothing else in your closet works here yet." It leaves out only the last swap, so the original can come back (`morning/service.ts:278-284`).
+36. **Chat outfit tiles and the buy card don't open anything.** `OutfitTiles.tsx` has no onPress. `BuyCard` could open the next-buy sheet, which exists.
+37. **Performance at hundreds of pieces is unmeasured.** Outfits score every top × bottom × shoes on the JS thread several times per change (`closet/outfits.ts:82-94, 233-243`; `PiecePage.tsx:100`). The grid and Lookbook aren't virtualized, and Lookbook loads full photos for 50 pt thumbnails (`lookbook/index.tsx:207`). Beta closets are likely fine.
+38. **Nothing to keep the code honest between sessions:** no CI (`.github/` doesn't exist), no end-to-end tests (Maestro, 05 §P7), no remote off-switch, no forced update.
+
+### 20.4 Blocks submission (~Nov 14), already on the to-do list
+- The 3 links (privacy policy, terms, support). App Store Connect also needs a Support URL page.
+- Declared Age Range: not built. It needs iOS 26.4's API while the target is 26.0.
+- Real purchases (RevenueCat), Pro checked on the server, Pro kept across launches, "Redeem a code".
+- Sign in with Apple once Google ships (4.8). Account deletion: `requires-recent-login` has no re-sign-in path, and the server `deleteAccount` needs App Check, which the app doesn't set up.
+- The trial line promises a reminder 2 days before it ends, which needs notifications.
+- The privacy label and review notes are stale: they still say yearly with a 14-day trial, and the example is no longer on the camera.
+- If the chat moves to OpenAI: consent, the promise, the provider name and the label all change.
+- A report path for chat answers (long-press → mailto) once the support email exists.
+
+### 20.5 This file's own drift
+§2 items done in code but not ticked: the "+" pull-down menu (`closet/AddMenu.ios.tsx`), the Lookbook score in Archivo, and the closet's 3-question cap (`closet/toConfirm.ts`).
+
+### 20.6 What I'd do, in order
+1. **[code], about a day, no founder input:** items 2, 3 (script, default and a local Release build on the Simulator), 4, 8, 10, 11, 13, 14, 20, 21, 25, 31, 32. These make a release build safe and remove things that lie.
+2. **[you] this week:** the Cloudflare account (already P1), a support email, OK D2 + #233 so consent matches, and the beta allowance call (item 7).
+3. **[code] after Cloudflare:** the Worker (score, ask, closet read, limits, kill switch, failure log), then the proxy sources, then a TestFlight dry run after the $99 program.
+4. **[code] before the beta:** items 9, 12, 15, 16, 18, 19, 22, 23, 24, 26.

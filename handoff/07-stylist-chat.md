@@ -867,3 +867,36 @@ The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic
 | G | Pass | no copy, score or native change |
 
 **What the Simulator and tests can't show:** the mic is hidden on the Simulator and VoiceOver can't be driven there, so the cursor moves and the kept words rest on the tests and the code read above; his phone's voice test confirms them (CLAUDE.md to-do, the voice item).
+
+## 19. The open composer's words show blurred (Oct 17, #319)
+Found during §18's S1: once the composer is open and resting where the "Ask Kit…" bar sits (no on-screen keyboard: the Simulator's Mac keyboard, voice mode, a draft left after the keyboard went down, VoiceOver keeping it open), its words, mic and send show blurred, with bent copies above and below. The #314 Composer does the same.
+
+### 19.1 The cause (found Oct 17)
+Not the composer's own glass. The tab bar's bottom accessory (StylistBar) only fades its contents (`opacity: 0`) while the composer is open; the system's Liquid Glass capsule around them stays. That capsule belongs to the tab bar, which iOS draws above every tab's screen, and the open composer sits exactly under it (layout.ts: "The open composer sits exactly over it", the assumption that was wrong). So the accessory's glass lenses the composer below it: the blur and the mirrored copies are Liquid Glass bending what's underneath. With the keyboard up the composer rides above the tab bar and looks right, which is why typing on a phone hid it. Not Simulator-only: on the phone it shows while he talks to the mic, and when a draft stays after the keyboard goes down.
+
+### 19.2 Pass/fail checks, set before fixing
+(S) seen on the iOS Simulator (Mac keyboard, so the composer rests over the bar's spot), (C) read in code.
+- **K1 (S)** Demo 12, light: tap the bar, type: the words, the caret and send are crisp, with no copy above or below them.
+- **K2 (S)** The same in dark, and at the largest text size (the capsule grows taller).
+- **K3 (S)** With the composer closed the bar looks as it did before the fix (camera, "Ask Kit…", mic, same place), in light and dark.
+- **K4 (S)** Open → close (empty it and leave the field) → open again: the bar comes back each time, and its words never show through the open composer.
+- **K5 (S)** The thread doesn't jump when the composer opens or closes (the newest card stays where it was).
+- **K6 (S)** Scrolled down (tab bar shrunk, "Ask…" beside it): a tap opens the composer crisp, and closing it brings the small bar back.
+- **K7 (C)** Voice mode (opened from the bar's mic, phone only): the bar's glass is gone while he talks, so the words heard are crisp too.
+- **G** `npm run check` green; no copy, score or native change; no new package.
+
+### §19 results (Oct 17, #319): checked against K1–K7 and G; no check changed
+**The fix:** the tab layout leaves the bottom accessory out while the composer is open (`app/(tabs)/_layout.tsx`: `onThread && !composerOpen`); react-native-screens then calls `setBottomAccessory:nil animated:YES` and puts it back when the composer closes. One thing that came with it: about 3 in 7 opens with a key typed in the first instant (the Simulator's Mac keyboard) left the field unfocused, because autoFocus asks only once, as the field reaches the window, while the accessory is leaving. So the composer asks again 350 ms later if the field never got focus (`AUTOFOCUS_RETRY_MS`); after that, 0 of 2 such opens stayed unfocused, and one shows it working (the first letters lost, the rest landed). Opens without an early key focused 3 of 3 before and after. The letters typed in that first instant are lost with or without the fix (seen with the fix switched off): a Simulator timing quirk, and a phone's keyboard only appears once the field is focused. New test `composerGlass.test.ts` (2) reads both from the source.
+
+| Check | Result | How |
+|---|---|---|
+| K1 | Pass (S) | demo 12, light: tap the bar, type "What goes with tan chinos?": the words, the caret and ↑ crisp, no copies (before: bent "Ask Kit…" with copies above and below) |
+| K2 | Pass (S) | dark, the same; at the largest text size the words and ↑ are crisp. **Found, older (the field's `numberOfLines={1}` from Oct 7–8):** at the largest size a question that wraps doesn't grow the capsule, so its second line is cut off. A follow-up |
+| K3 | Pass (S) | closed: the bar in light and dark looks as before (camera, "Ask Kit…", mic, same place) |
+| K4 | Pass (S) | open → send → scroll the thread (the field lets go, it's empty) → the bar is back; open again → crisp and typing lands |
+| K5 | Pass (S) | the newest card sits at the same height on the open composer as before the fix (both open with the starter chips, card top at the same pixel row) |
+| K6 | Pass (S) | scrolled down, "Ask…" beside the shrunk tab bar: a tap opens the composer crisp, focused, with the tab bar staying shrunk; send and close bring the small "Ask…" back |
+| K7 | Pass (C) | voice mode is the same `open` state, so the accessory is gone while he talks; the mic is hidden on the Simulator, so his phone's voice test sees it (on his list) |
+| G | Pass | `npm run check` green: typecheck, lint, core tests, 1,157 app tests in 91 suites; no copy, score or native change; no package |
+
+**Also found on the Simulator, older:** the dev build's floating Tools button sits over the open composer's ↑ at rest and takes its taps (drag it away when testing); at the largest text size the compact "You went with your own" card breaks words mid-word ("wen / t", "Clas / s/"). Screenshots `screenshots/composer-glass/` (git-ignored): before and after, light, dark, the largest size, the bar back.
