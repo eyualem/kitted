@@ -11,7 +11,7 @@
 - **The recommended candidates (V2 in §5) separate deliberate from lazy by half a point and change nothing else.** An oversized hoodie over gym shorts with Jordans goes 7.0 → **7.5**; a plain tee with the same shorts stays **7.0**; an oversized graphic tee over wide jorts with chunky sneakers 7.0 → **7.5**; a matched grey sweatsuit with clean sneakers 6.5 → **7.0**; a roomy hoodie over short, fitted shorts 7.0 → **6.5**; running shoes with gym shorts at Class 5.5 → **6.0**. Slides, the jersey-and-gym-shorts kit, the interview and going-out holds stay where they are.
 - **All checks pass:** 20/20 test outfits, the self-check (with the candidates off the engine is exactly v13 on all 449 conformance cases and every gold reading), and the gold guards: held-out r 0.49 → 0.48 (bar: no drop over 0.03), the founder's 20 blind ratings within 0.5: 13 → 14, both runs within 0.5 on every shorts and sweats photo (30/30), no photo outside shorts, sweats and track pieces moved, none of the 39 saved phone checks moved.
 - **The reading test ran small (§7, 52¢ of your 75¢, #332):** a separate narrow look reads whether shorts end above the knee or at/below it (right 99%, steady 92%) and crew socks vs none (right 96%, steady 96%) on the 24 gold shorts photos; putting the same values into the scoring read failed (less steady, and it shook the other fields). Not proven: gym shorts (1 photo), low or tall socks, tracksuits (none in the set). Length and socks stay advice only until the shoot.
-- **Your calls (on your to-do list):** the runners-at-Class hold (6.0), shorts judged like pants (V2) or only when there's something to say (V3), the full kit at 5.5, a matched sweatsuit counting as intent, and whether below-knee jorts and crew socks should ever move points (default: no).
+- **Round 2, your five answers (Oct 17, #333, §9): fit and context decide, not flat holds.** Running shoes with gym shorts at Class aren't held any more (5.5 → **6.5**, from the parts); short or tight shorts cost 1.0 on shape (a plain tee over them 7.0 → **6.5**); a full kit is held to **6.0** when it fits cleanly and **5.5** or lower when it doesn't; a matched sweatsuit in a relaxed shape with clean sneakers goes 6.5 → **7.5**, a slim one stays **7.0**. 36 of 37 test outfits pass; the miss (F5b) is an older streetwear rule, flagged in §9. Gold set and your 20: same as round 1. None of your saved checks moved.
 
 ## 1. What's true today (v13)
 
@@ -71,6 +71,8 @@ Two engine facts behind the flattening:
 | G4 | Both runs within 0.5 on the shorts and sweats photos doesn't drop | PASS 30/30 → 30/30 |
 | G5 | Report every saved phone check that moves | 0 of 39 moved |
 
+*Round 2 (#333, your answers): A4's bar became "not held, 6.5" and A15's "a clean kit, 6.0"; both pass under V7. 17 new checks (F1a–F5b) were set before the run: 16 pass, F5b fails (§9). Full output: `extraction-test/results/casual-athletic/report.txt`.*
+
 ## 4. The candidate rules
 
 Each reads only fields the live reading already has (except CA5, marked). Proposed IDs for `rubric/v5-styles.md` in brackets; nothing is in the engine or the doc yet.
@@ -86,13 +88,19 @@ Each reads only fields the live reading already has (except CA5, marked). Propos
 
 **CA2, a sport sneaker matches athletic bottoms and shorts [SHO-14].** Under gym shorts, sweatpants, joggers, track pants or shorts, a basketball, chunky, retro, canvas, low-profile or white leather sneaker counts as the real shoe for "the shoes match how dressed-up the clothes are" (+0.5 on Shoes). Running shoes and slides don't. *Why:* with athletic clothes a clean sneaker is the matching shoe; today the credit can't fire on the most common shoe this age group wears. Jeans with Jordans aren't touched here (that's a separate question for the gold set).
 
-**CA3, running shoes with gym shorts at Everyday and Class [LNG-8].** Held to **6.0 "Getting there"** instead of 5.5. Shoes stays 5.0 ([SHO-3]); slides stay at 5.5; a jersey kit stays at 5.5; going out, a date, an interview and an event are unchanged. *Why:* for a student it's the default campus fit, not a mistake that "needs a fix"; it still says plainly it isn't styled. **Your call:** 5.5 (today; the gold panel's 5.0 on pin-038), 6.0 (default) or 6.5.
+**CA3, running shoes with gym shorts at Everyday and Class [LNG-8].** *Round 2 (your answer 1):* **not held at all**; the parts decide. A plain tee + gym shorts + runners lands at **6.5 "Getting there"** (Shoes 5.0 for the runners, [SHO-3]); at the Gym 7.0; going out 6.0 or less. Slides keep their 5.5 hold (not in your answer; ask if you want them treated the same). *Round 1 had it held to 6.0.*
 
 **CA5, a matched tracksuit [VSP-9].** A track jacket and track pants in the same colour family: +0.5 on Style, "a matched tracksuit, worn as one set". It already reads as vintage sport and isn't held as loungewear with a real shoe. **Future:** the reading can't name `track_jacket` or `track_pants` yet (they're in §7's test). With running shoes it stays held to 7.0.
 
 **CA6, a matched sweatsuit [LNG-9].** A hoodie or sweatshirt with sweatpants or joggers in the same colour family counts as the "dressed upper half" sign in the loungewear ladder: a set chosen on purpose. With a real shoe that's two signs (held to 7.5, or 8.0 when it reads as a style) instead of one. Mismatched sweats with slides (his own Oct 8 checks) don't change: 5.5.
 
-**Kept as they are:** the full kit (a jersey with gym shorts, 5.5, [LNG-4]; your call), the interview and event holds (4.0), going out in gym shorts (6.5 to 7.0), slides with anything out of the house.
+**CA6b, the sweatsuit's shape (round 2, your answer 4).** A matched set earns **+1.0 on Proportions** when the shape is relaxed (a roomy hoodie, or a regular one over relaxed or wide sweats; never slim or skinny), the sneaker is clean (basketball, chunky, retro, canvas, low-profile or white leather) and nothing on Proportions is already off. Roomy or regular hoodie over relaxed sweats with white leather sneakers: 6.5 → **7.5**; over slim joggers: **7.0**; over skinny joggers: **6.5** or less (today's skinny charge); with slides: no credit, **6.5** or less. Sweats are otherwise still kept out of the shape credits ([PRO-8]).
+
+**CA1b, undersized shorts (round 2, your answer 2).** Short, tight shorts (read slim or skinny, or at roominess 2 or less, and not loose) cost **1.0 on Proportions**, under any top; a roomy top over them keeps the bigger −1.5. Shorts that clearly pull cost the same 1.0 on Proportions, on top of Fit's charge for the pull: without it, the new Proportions part diluted the Fit charge and pulling shorts went *up* (6.5 → 7.0, check F2c). That's the one fact charged in two parts; it's deliberate and only for shorts. Length (high on the thigh) isn't in the reading, so "too short" can only show through roominess for now.
+
+**CA7k, the kit follows fit (round 2, your answer 3).** A jersey with gym shorts out of the house (not at a dressy occasion) is held to **6.0**, minus half of whatever Fit or Proportions lost: a clean kit **6.0** (today 5.5), a kit in tight shorts **5.5**, a kit that pulls lower. At the Gym, no hold.
+
+**Kept as they are:** the interview and event holds (4.0), going out in gym shorts (6.5 to 7.0), slides with anything out of the house. *(The full kit moved to CA7k in round 2.)*
 
 ## 5. Before and after
 
@@ -102,9 +110,11 @@ Each reads only fields the live reading already has (except CA5, marked). Propos
 |---|---|---|---|---|---|---|
 | v13 today | 0.49 | 0.58 | 0.42 | 18/30 | 13/20 | (the "before") |
 | V1 first draft (with the waist credit) | 0.45 | 0.56 | 0.29 | 17/30 | 14/20 | 20/20 |
-| **V2 no waist credit, shoes in view (recommended)** | **0.48** | **0.57** | **0.37** | **17/30** | **14/20** | **20/20** |
+| **V2 no waist credit, shoes in view (round 1's pick)** | **0.48** | **0.57** | **0.37** | **17/30** | **14/20** | **20/20** |
 | V3 = V2, Proportions only when a credit or fault fires | 0.49 | 0.58 | 0.44 | 18/30 | 13/20 | 19/20 (A3: a regular hoodie lands 7.5 like the oversized one; raw 7.25 rounds up) |
 | V2 without CA3, without CA2, or without CA1 | 0.48 / 0.48 / 0.49 | | | | | |
+| **V7 your answers (round 2, now recommended)** | **0.48** | **0.57** | **0.37** | **17/30** | **14/20** | **36/37** (F5b, §9) |
+| V7 without one answer each (fitted shorts; runners back at 6.0; kit flat 5.5; no sweatsuit shape) | 0.48 each | | | | | |
 
 **Why V2 over V3:** V3 is neutral on the gold set because the plain fits keep Proportions out, but then the oversized and the regular hoodie both round to 7.5, so the shape you picked doesn't show; V2 keeps that half point (7.5 vs 7.0). V2's cost is on the gold set's lazy shorts fits: with Proportions back at 7, a weak outfit is pulled toward 7 the way a pants outfit already is (a purple pocket tee + wide shorts + slides 6.0 → 6.5, panel 5.5 but **you rated it 7.0**; layered shirts + jorts + runners 5.5 → 6.0, panel 4.5), and a fitted pair of shorts loses its edge (burgundy tee + slim cream shorts + low-profile sneakers 7.5 → 7.0, panel 7.5). The panel isn't the target for these fits (§2), so V2 is the default and V3 the cautious option.
 
@@ -193,13 +203,27 @@ Each reads only fields the live reading already has (except CA5, marked). Propos
 - **Socks (CA8, advice only):** never a point either way by default. Crew socks with gym shorts and basketball sneakers can be named as finishing the look in the chat; crew athletic socks under a smart top (polo, oxford) get a tip ("plain or no-show socks keep a smart top clean").
   - *Test outfits:* oversized hoodie + gym shorts + Jordans + `crew`: same score as `low`; polo + chino shorts + white leather sneakers + `crew`: the tip, same score.
 
-## 9. Your calls (defaults built into the plan)
+## 9. Your calls: answered Oct 17 (round 2, #333)
 
-1. **Running shoes with gym shorts at Class:** 6.0 "Getting there" (default), 5.5 (today) or 6.5.
-2. **Shorts judged like pants (V2, default)** or only when there's something to say (V3: safer on the gold set, but a regular and an oversized hoodie both land at 7.5).
-3. **A basketball jersey with gym shorts** (the full kit): stays 5.5 (default), or held like any gym shorts with a real shoe.
-4. **A matched sweatsuit** counts as a sign of intent (default yes).
-5. **Below-knee jorts and crew socks** never move points, advice only (default), until the shoot says otherwise.
+**Your direction:** "fit and context should decide these scores, not flat holds." Your words, then what changed (on paper; nothing in the app):
+
+| # | You said | What the plan does now | Test outfits (all set before the run) |
+|---|---|---|---|
+| 1 | "why is it a 5.5. it seems a bit too low… i think this is contextual" | The 5.5 was the loungewear hold, not fit: a plain tee isn't a "dressed upper half" and running shoes aren't a "real shoe", so it was capped however it fit. Now gym shorts with running shoes aren't held at Everyday or Class; the parts decide (**6.5**, the runners still cost on Shoes). Gym 7.0, going out 6.0. | A4, F1a–F1c pass; F1d (slides) keeps 5.5 |
+| 2 | "it depends on the fit of the shorts. if the shorts are undersized, then it deserves a lower score" | Short or tight shorts cost 1.0 on shape (CA1b); a roomy shape over loose shorts keeps its +1.0. Plain tee over tight shorts **6.5** vs **7.0** over loose ones; shorts that pull **6.0**. | F2a–F2c, A2, A17 pass |
+| 3 | "if it a person just wearing a full on soccer kit to go to school… lower score" | A kit is held to 6.0 minus half of what Fit or Proportions lost (CA7k): clean **6.0**, tight shorts **5.5**. Gym: no hold. | A15, F3a–F3c pass |
+| 4 | "if the fit is nice, then even higher than that, if not, then lower or at 7 depending on the silhouette" | A matched set in a relaxed shape with clean sneakers earns +1.0 on shape (CA6b): **7.5**; slim joggers **7.0**; skinny **6.5**; with slides **6.5**. | F4a–F4e pass |
+| 5 | "if the colors look good then i think it is good" | No new rule: long jorts never cost for their length, and their colors already count through Color. Sock color isn't read, so socks stay advice only. | F5a passes; **F5b fails** (below) |
+
+**The one miss, F5b (answer 5):** an oversized red tee over wide purple jorts with chunky sneakers scores **7.5**, the same as the black version. In streetwear today's engine halves the "two bright colors fighting" charge ([COL-2], [STR-8]: −1.0 instead of −2.0, from the style research: loud mixes are part of the look), so Color drops only to 6 and the shape credit covers it. Changing that touches every streetwear outfit, not just shorts, so it isn't done here. **Your call (new):** keep it (default), or make two clashing brights cost the full −2.0 in streetwear too.
+
+**What needs a new reading or your OK:**
+- **Sock color** (answer 5): the narrow look (§7) reads sock height only. Adding sock color to it is about 2.5¢ to test on the 24 photos, and only worth it if crew socks should ever count through Color. Default: not yet.
+- **"Too short"** (answer 2): high-on-the-thigh shorts aren't read; the narrow look tells above the knee from at or below it, not how far above. For now only "tight" (roominess) shows.
+- **Slides with gym shorts** (answer 1 named runners only): still held to 5.5. Say if slides should be treated the same.
+- **Sweats with running shoes** (your direction, not asked): joggers + a plain tee + runners at Class are still held to 5.5 by the same ladder. Default: leave until the shoot.
+
+**On the gold set** round 2 changes nothing you'd see: held-out r 0.48 (round 1 0.48, today 0.49), your 20 within 0.5 14 (today 13), steadiness 30/30. The undersized charge fires on 2 gold photos (pin-035, panel 5.5; rd-005, panel 7.5) without moving their rounded scores; no gold photo has a kit, a matched sweatsuit or gym shorts with clean sneakers. **None of your 39 saved checks moved.** So the shoot (§6) is still what tells whether these numbers match how guys your age see the fits.
 
 ## 10. Order of work
 
