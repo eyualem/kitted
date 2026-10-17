@@ -597,6 +597,9 @@ const addedInBuild = {
   'scan.saved.body': 'Reading clothes from photos is coming soon. Your photo stays on your phone until then.',
   'scan.saved.bodyMany': 'Reading clothes from photos is coming soon. Your photos stay on your phone until then.',
   'scan.another': 'Scan another',
+  // The Undo countdown ring (09-ui-review §21, #324): VoiceOver hears the time once, when the toast shows; the ring
+  // and its number are hidden from it. {text}: the toast's message. Windows are 5 s or more, so no singular.
+  'toast.undoFor': '{text} Undo, for {n} seconds.',
   // A record that's gone, or an old link (09 §20.7 R11, #323): the page or sheet says so instead of showing nothing.
   'gone.title': "This isn't here anymore.",
   'gone.body': 'It was removed, or the link is old.',

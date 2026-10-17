@@ -32,6 +32,9 @@ export interface ScreenScenario {
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
+  /** An Undo toast shown once the screen is up (09-ui-review §21, #324): `heldAtMs` starts it held with that much
+   *  time left, so a screenshot catches the ring mid-way; without it, it counts down live. Undo does nothing here. */
+  toast?: { text: 'removed' | 'logged'; removal?: boolean; heldAtMs?: number };
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
@@ -240,6 +243,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 201, name: 'Fit check · Not sure about your jeans', id: 'S6', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/stylist' },
   { n: 202, name: 'Closet · Outfits with the fit card', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/closet' },
   { n: 203, name: 'Not quite right? · from the line', id: 'S8', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: `/sheets/correct/${STORY_DOUBT}?reason=detail&garment=1&only=slim,straight,wide`, under: '/stylist' },
+  // The Undo countdown ring (09-ui-review §21, #324): a removal toast held mid-way, and a 5 s one counting live.
+  { n: 204, name: 'Undo toast · held, 5 of 8 s left', id: 'G2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', toast: { text: 'removed', removal: true, heldAtMs: 4_200 } },
+  { n: 205, name: 'Undo toast · live, 5 s', id: 'G2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', toast: { text: 'logged' } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

@@ -861,3 +861,31 @@ Written before the code. Each passes or fails; the results are under each group 
 - R6 seen on the Debug build: demo screen 21, a tap on Tan chinos closed the sheet and opened its page on "What it is".
 - Not seen on a screen, tested in code only: R4's panel, R8's stop, R9, R10's toast.
 - Screenshots: `screenshots/release-oct17/` (git-ignored).
+
+## 21. The Undo countdown ring (Oct 17, #324). Checks first
+Founder, Oct 17: "some kind of five-second timer with the whole circle thingy that other apps do… to make the UI more intuitive." Written before the code; the build must not edit them. Results under them once built.
+
+**What he'll see:** every toast with Undo has a small ring just before "Undo", with the seconds left inside it (5, 4, 3…). The ring empties as the time runs out and the toast goes when it's empty. Touching and holding the toast stops the count; letting go starts it again. Toasts without Undo look as before.
+
+**The calls (Claude's, logged in #324):**
+- **Two windows, both shown:** 5 s where nothing is lost (Logged for today, a Starter pick, a Closet "Same as your …?" answer; Mail and Gmail use about 5 s); 8 s where something is removed or rewritten (Remove from Closet, Remove photo, Remove from Lookbook, Same as another piece, Not this piece, It's another piece, a "What it is" change, Forget a fact; #118). VoiceOver doubles both, as before (#36).
+- **Ink, not copper:** the ring and its number are ink like "Undo" itself (#231: copper only when the score moves); the track is `line`.
+- **Hold to pause**, with a hard stop: no toast stays longer than max(10 s, 2 × its window) after it appeared, so a removal's pictures (deleted 20 s after, `DELETE_AFTER_MS`) are never gone while Undo still shows.
+- **Wall clock:** the countdown runs on real time, so leaving the app doesn't stop it (as in Mail); a hold ends when the app leaves the screen.
+
+**U1 · The ring.** A toast with Undo shows a ring (track `line`, arc `ink`) immediately before "Undo", inside the same button, with whole seconds left in tabular numerals; a toast without Undo has none. The arc starts full and drains to empty.
+**U2 · It is the real window.** At show the number is the window in seconds (5 or 8; 10 or 16 with VoiceOver); the toast hides when the count reaches 0 (one deadline drives both, so the ring is never empty while the toast stays, or the toast gone with arc left). Plain toasts keep 5 s.
+**U3 · Windows.** Every `showToast` with Undo passes `TOAST_MS_REMOVAL` exactly when it removes or rewrites something (the list above) and the default 5 s otherwise; a test lists the callers.
+**U4 · Hold pauses.** A touch-down anywhere on the toast (on Undo too) freezes the arc and the number; lifting resumes from the same time left; a tap on Undo still undoes at once. A hold can't keep the toast past the hard stop; a test asserts hard stop + 4 s ≤ `DELETE_AFTER_MS`.
+**U5 · Background and foreground.** Coming back after the deadline hides the toast at once (no late Undo); coming back within it shows the arc and number at the right place. A hold in progress ends when the app goes inactive.
+**U6 · Reduce Motion.** No continuous animation: the arc moves in whole-second steps with the number.
+**U7 · VoiceOver.** Announced once: "{message} Undo, for {n} seconds." The ring and number are hidden from VoiceOver; the button stays "Undo" with a fixed hint; nothing is announced again as the seconds pass.
+**U8 · Largest text size.** The ring grows with the text up to 2× (`CONTROL_TEXT_MAX_SCALE`), the number never clips, the message wraps while ring and Undo stay on one line, vertically centred; light and dark from tokens.
+**U9 · A demo screen** (204) shows a removal toast over Closet, for the Simulator.
+
+### §21 results (Oct 17, #324): checked against U1–U9, none changed
+- **In code (`src/__tests__/toast.test.ts`, 17 tests):** U2 (the window in whole seconds, the hide at 0, 5/8 s and 10/16 s with VoiceOver, one deadline), U3 (every Undo caller listed: removals and rewrites 8 s, the rest 5 s; nothing had to change), U4 (freeze and resume, a second touch-down doesn't move it, the hard stop, hard stop + 4 s ≤ `DELETE_AFTER_MS`, both touch targets hold), U5 (wall clock, re-sync on app state, a hold ends when the app leaves), U6, U7 ("Removed your grey hoodie. Undo, for 16 seconds.", one announcement, ring hidden), U1/U8 (ink on `line`, no copper, 2× cap, ring + Undo kept on one line), U9. `npm run check` green (758 core, 1,230 app tests).
+- **On the iOS Simulator (`screenshots/undo-ring/`, git-ignored):** screen 204 in light, dark and the largest text size; screen 205 counting 4 → 3 → 2 → 1 and gone (`205-live-strip.png`); a 5 s press-and-hold froze the count at 2 for the whole hold, then it went on to 1 and left (`hold-timeline.png`, a frame every ~0.5 s); Home with 4 s left and back after ~1 s: the hold ended, the ring was at 2 and still counting; back after ~10 s: same screen, toast gone.
+- **Found and fixed while checking U8:** at the largest size the message broke mid-word ("Remove / d your") and the pill swelled into an oval; at accessibility sizes the message now gets the full width with ring + Undo under it, in a rounded card (24 pt corners).
+- **Not seen on a screen, tested in code only:** U6 (Reduce Motion) and U7 (VoiceOver); a hold reaching the hard stop.
+- **HIG:** Apple has no toast component; this follows the HIG's "give people time to read and act" and WCAG 2.2.1 (a time limit the person can pause: hold), with VoiceOver's doubled window kept because RN can't pause on VoiceOver focus (#36). Material's snackbar guidance (4–10 s, stays while touched) matches both windows.
