@@ -672,3 +672,34 @@ Built on PR eyualem/kitted#5's branch (the piece page's rows), so this PR goes i
 | G3 | Pass (S) | 194–196 in light, dark and the largest text size. **Fixed:** at the largest size a row's "Seen as…" line sat between "Leg" and "Not sure"; it now comes after the value. Skip lines up with the question, not the drawing |
 | G4 | | New words: "Not sure", "Seen as {a} and as {b}.", "Which is it?", "How do your {item} fit?", "How does your {item} fit?", and VoiceOver's "Opens the choices. Your scores stay the same." |
 | Found | | `stylistContext.test.ts` failed on main: #311 added the weekday to the chat pack's "Earlier this week" lines and the test still expected the bare date. Fixed the test (its own commit) |
+
+## 19. Bagginess on the fit-check card: plan and pass/fail checks, set before building (Oct 17, #319)
+Founder (Oct 17): "Build X with the judges' fixes: the scored-fix rule first, then the card line that opens straight to that piece's Leg or Fit, the Outfits card, the answer log, and the stop-after-two cap." The verdict came from a debate (4 advocates, a rebuttal round, 3 blind judges; files in the session's shared notes, `bagginess-debate-*.md`, `judge-1..3.md`): X won 2 of 3 judges; Z (as built) won the integrity judge; the chat asking (Y) won none. It bends §18.6 call 2 ("never on a score card") with a statement, not a question; nothing asks before the score (#122 stands). Numbered §19 and #319: main holds #317–318.
+
+### 19.1 What he'll see
+- **On a fit-check card**, when a piece in it is "Not sure" (§18: its own photos disagree), one quiet line above Why / Not quite right?: **"Not sure about your mid-wash jeans' leg? Tap."** (a top: "Not sure about your black tee's fit? Tap."). It shows whether or not a fix would move the score, so seeing it never says an answer pays. A tap opens "Not quite right?" straight on that piece's row, offering only the leg shapes (or fits) his photos of it showed, plus this photo's; then the live before and after, and Save.
+- **The fix re-scores this check only** (the scored-fix rule): the toast says "Correction saved." The piece in Closet stays as it was and stays "Not sure" until he settles it on its page or the Closet card, with no score in sight.
+- **The line stops for a piece** once he has tapped it once, or after it has shown on 2 checks without a tap. It never shows on Past chats' cards.
+- **Closet → Outfits** shows the same single "How do your … fit?" card at the top (Pieces already does).
+- **Nothing new is sent anywhere.** Every answer is logged on the phone next to what the photos read (for the paper test and to see drift toward the flattering answer).
+
+### 19.2 The scored-fix rule (what changes in built code)
+Today a "Not quite right?" Fit or Leg correction also sets the piece (its `garment`, `confirmedFields`, the sighting's `userConfirmed`) and can move the sighting to another piece when it conflicts with the piece's other photos. From now on, for the two scored bagginess fields (`volume`, `leg_shape`):
+- the check re-scores exactly as today (its new corrected reading);
+- the sighting's garment takes the corrected value (it is that photo's record), but not as confirmed (`userConfirmed` unchanged), so the matcher treats it as one more read;
+- the piece's `garment`, `confirmedFields` and profile are unchanged, so `isSettled` stays false; the sighting is never moved (identity is "It's another piece…"'s job);
+- the toast is "Correction saved." (no "Saved to your …"), and the sheet's "Updated in Closet" pill doesn't show for these fields.
+Kind ("Wrong item") corrections keep today's behaviour.
+
+### 19.3 Pass/fail checks (written before building; the build must not edit them)
+- **BX1 (T) Scored-fix rule:** a Leg or Fit correction from "Not quite right?" changes the check's score and reading as before; the linked piece's `garment`, `confirmedFields`, `profile` and every other closet row are deep-equal before and after; the sighting's garment has the new value and its `userConfirmed` is unchanged; no sighting moves piece; every other check's score, reading and closet summary are deep-equal; the result names no piece (toast "Correction saved."). A Kind correction still sets the piece as today.
+- **BX2 (T) It doesn't settle:** after such a fix on a "Not sure" piece whose photos still disagree, `fitDoubt` still returns Not sure; a pick on the piece page settles it (§18 BG3).
+- **BX3 (T) The line:** a card shows it exactly when a garment of its current reading links (closet summary) to a piece `fitDoubt` calls Not sure, that garment has a Fit or Leg row in "Not quite right?" (not `certainty: 'unsure'`, not an accessory), the card isn't read-only, and the cap allows it; at most one line (the first such garment); its words are the two above with the piece's name lowercased; it doesn't depend on whether a correction would move the score.
+- **BX4 (T) Straight to the row:** the tap opens `/sheets/correct/<check>?reason=detail&garment=<i>&only=<values>`; the sheet opens on that garment, and its Fit or Leg chips are only the values his photos of the piece showed plus this photo's read (legs mapped to the five, flare → straight, barrel → wide; fits to 2–5), in the usual order.
+- **BX5 (T) The cap:** after one tap the line never shows for that piece again; shown on 2 different checks without a tap, it doesn't show on a 3rd; the same check shown again doesn't count twice; the cap lives in a local kv key.
+- **BX6 (T) The answer log:** each of a piece-page pick (with where: the row or the Closet card), a line tap and a scored fix (Fit or Leg) appends one entry with the time, the piece, the field, the value (or none for a tap) and what that piece's photos read; at most the newest 300 are kept; the key is local, never synced.
+- **BX7 (T, S) Outfits:** the single fit card shows at the top of Outfits and of Pieces (the same piece); Pieces' "Same as your …?" questions stay on Pieces only.
+- **BX8 (T) No other score moves:** core has no diff; with no "Not sure" piece the card renders exactly as before.
+- **BX9 (S) On the Simulator** (a new demo screen: a check of a piece whose photos disagree): the line, a tap opening the sheet on the jeans with only their seen legs, Save, the toast; Outfits with the card; light, dark and the largest text size, nothing clipped.
+- **BX10 (T) Words:** the new strings pass the copy checks, the sentence gate and the body-words rule.
+- **G1–G4** (§6) apply.
