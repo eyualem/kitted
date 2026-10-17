@@ -218,12 +218,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
-  // Fix what a piece is (09-ui-review §17, #314): "What it is" on the dark jeans' page and its pickers (185–188: PR #7 holds 190–193).
+  // Fix what a piece is (09-ui-review §17, #315): "What it is" on the dark jeans' page and its pickers (185–188: PR #7 holds 190–193).
   { n: 185, name: 'Closet · What it is', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B3', under: '/closet' },
   { n: 186, name: 'What it is · Leg', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=leg', under: '/closet/item/B3' },
   { n: 187, name: 'What it is · Kind', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/T6?field=kind', under: '/closet/item/T6' },
   { n: 188, name: 'What it is · Color', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=color', under: '/closet/item/B3' },
-  // How baggy a piece is (09-ui-review §18, #315): the dark jeans' photos disagree (194–196: PR #7 holds 190–193).
+  // How baggy a piece is (09-ui-review §18, #316): the dark jeans' photos disagree (194–196: PR #7 holds 190–193).
   { n: 194, name: 'Closet · How do your dark jeans fit?', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 195, name: 'Closet · Leg, Not sure', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B3', under: '/closet' },
   { n: 196, name: 'What it is · Leg, Not sure', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=leg', under: '/closet/item/B3' },

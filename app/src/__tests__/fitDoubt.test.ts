@@ -1,4 +1,4 @@
-// How baggy a piece is, Group 1 (09-ui-review §18, #315; checks BG1–BG5 set before building). A piece seen in 3+
+// How baggy a piece is, Group 1 (09-ui-review §18, #316; checks BG1–BG5 set before building). A piece seen in 3+
 // checks whose readings fall in different groups the scores use shows "Not sure" on its Fit or Leg row, and Closet's
 // To confirm holds at most one "How do your … fit?" card. A pick settles it the way §17's pick does; no score moves.
 import { US_EASTERN, type Garment } from '@kitted/core';

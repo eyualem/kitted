@@ -1002,7 +1002,7 @@ const addedInBuild = {
   // Wrong card (#289): a photo's long-press menu on the piece page; its picker reuses closet.merge.title (no
   // subtitle), its toast item.dup.saidSame, and "Not this piece" keeps closet.piece.splitOff, now with Undo.
   'closet.piece.another': "It's another piece…",
-  // Fix what a piece is (09-ui-review §17, #314): "What it is" on a piece's page, its picker sheets and the toast.
+  // Fix what a piece is (09-ui-review §17, #315): "What it is" on a piece's page, its picker sheets and the toast.
   // Kind and color names reuse garmentName and FAMILY_WORD; Leg and Fit reuse value.leg.* and value.topFit.*.
   'closet.edit.title': 'What it is',
   'closet.edit.kind': 'Kind',
@@ -1030,7 +1030,7 @@ const addedInBuild = {
   'closet.edit.a11y.leg': '{leg} leg',
   'closet.edit.a11y.fit': '{fit} fit',
   'closet.edit.a11y.more': 'Shows {n} more kinds',
-  // How baggy a piece is (09-ui-review §18, #315; the founder's OK on the words, Oct 16): a Fit or Leg its own photos
+  // How baggy a piece is (09-ui-review §18, #316; the founder's OK on the words, Oct 16): a Fit or Leg its own photos
   // disagree on, on the piece page and as one card in Closet's To confirm. {a}, {b}: the leg and fit words, lowercase.
   'closet.unsure.value': 'Not sure',
   'closet.unsure.seen': 'Seen as {a} and as {b}.',

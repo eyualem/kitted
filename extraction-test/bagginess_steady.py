@@ -1,5 +1,5 @@
 """How steady the bagginess readings are (volume for tops and layers, leg_shape for bottoms), from saved results only:
-no API calls (#315, handoff/09-ui-review.md section 18).
+no API calls (#316, handoff/09-ui-review.md section 18).
   - run to run: the shipped reading with close-ups, 2-3 runs of the same photo (zoom1 arm B, zoom1-stock arm B, gold1);
   - across photos of the same piece: the founder's newest phone pull (screenshots/phone/*/SQLite/kitted.db);
   - accuracy: leg_labels.csv (Claude's blind labels);
@@ -236,7 +236,7 @@ for cat in ("top", "bottom"):
     if n:
         print(cat, n, {k[1]: f"{v}/{n}" for k, v in agg.items() if k[0] == cat and k[1] != "n"})
 
-# ---- BG6 (#315): the reading against what he set on the piece page (or "Not quite right?"): each Fit or Leg he set
+# ---- BG6 (#316): the reading against what he set on the piece page (or "Not quite right?"): each Fit or Leg he set
 # labels every photo of that piece. Split by his age band and picked looks once his profile has them (rule 7).
 prof = con.execute("select birth_year, styles from profile where id='me'").fetchone()
 by, looks = (prof[0], json.loads(prof[1] or "[]")) if prof else (None, [])

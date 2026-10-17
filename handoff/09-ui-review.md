@@ -453,8 +453,8 @@ On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared 
 | Found | | The card appears about a second after the outfit list on a cold load, so the list moves down once (`loadNextBuy` scores each Starter candidate). Not fixed: a reserved-height placeholder or computing it with the list is the follow-up if it bothers him. |
 ---
 
-## 17. Fix what a piece is: plan and pass/fail checks, set before building (Oct 16, #314)
-Founder (Oct 16, voice): sometimes the tile itself is wrong, "slim jeans as relaxed, relaxed as slim, a sweatshirt as a hoodie", so give him "a way to change what the tile represents, from a limited choice", with the drawing changing to match; "this has to get planned well because what I am saying right now might not go with the whole thing." **Plan only: nothing is built until he reviews it** (mockup `mockups/piece-edit.html`; DECISIONS-LOG #314). Numbered §17 and #314 because main took §15 and #311–312, and open PRs hold §15–16, #309 and #313. Global checks G1–G4 (§6) apply.
+## 17. Fix what a piece is: plan and pass/fail checks, set before building (Oct 16, #315)
+Founder (Oct 16, voice): sometimes the tile itself is wrong, "slim jeans as relaxed, relaxed as slim, a sweatshirt as a hoodie", so give him "a way to change what the tile represents, from a limited choice", with the drawing changing to match; "this has to get planned well because what I am saying right now might not go with the whole thing." **Plan only: nothing is built until he reviews it** (mockup `mockups/piece-edit.html`; DECISIONS-LOG #315). Numbered §17 and #315 because main took §15 and #311–312, and open PRs hold §15–16, #309 and #313. Global checks G1–G4 (§6) apply.
 
 ### 17.1 What he'll see
 - **On a piece's page, a new section "What it is"** right under the name (above worn / last worn / added, so it shows without scrolling past the photos): one row per thing he can change, each showing today's value with a chevron: **Kind · Jeans ›**, **Color · Dark denim ›**, **Leg · Slim ›** (bottoms) or **Fit · Regular ›** (tops and layers), **Pattern · Plain ›** (tops and layers). Under it, one footnote: "Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same." The old line under the name ("Bottom · Dark denim · Slim leg") becomes just the slot word ("Bottoms"), since the rows now say the rest.
@@ -533,7 +533,7 @@ A correction here changes the closet piece, not the checks it was seen in. The c
 
 **Estimate:** about 2 days: the action and its Undo (half a day), the section and sheets (half a day), the drawings apart (half a day), tests and the Simulator pass (half a day). JS only: on his phone through Metro, no reinstall.
 
-### §17 results (Oct 16, #314): built with every default (founder: "After the mockups, I agree with them. You may continue."), checked against X1–X16, none changed
+### §17 results (Oct 16, #315): built with every default (founder: "After the mockups, I agree with them. You may continue."), checked against X1–X16, none changed
 | Check | Result | How |
 |---|---|---|
 | X1–X14 | Pass (T) | `pieceEdit.test.ts`, 27 tests, run first against no code (the module didn't exist), then green. Two test fixes, not check changes: the demo hoodie's real name is "Heather grey Nike hoodie" (the closet call reads the shade and logo), not the "Grey hoodie" the test guessed, and the seed's "Grey tee" becomes "Heather grey striped tee"; `toHaveProperty` read the dotted string keys as paths |
@@ -545,8 +545,8 @@ A correction here changes the closet piece, not the checks it was seen in. The c
 | Not built (defaults) | | no long-press entry (call 3), no re-scoring of past checks (call 2), no top ↔ layer (call 6), no long-sleeve tee (call 7) |
 
 
-## 18. How baggy a piece is: how the app knows, how sure it is, how he corrects it (plan and pass/fail checks, set before building; Oct 16, #315)
-Founder (Oct 16): "what are we gonna do about how baggy anything is? how will we know and let the user correct?" **Plan only: nothing is built or re-scored. His four calls were decided Oct 16 with the defaults (§18.6).** Numbered §18 and #315 because §15–§17 and #309–#314 are held by main and the open PRs (eyualem/kitted#4, #5, #7). It builds on §17, the piece page's "What it is" rows (PR eyualem/kitted#5, #314). Global checks G1–G4 (§6) apply.
+## 18. How baggy a piece is: how the app knows, how sure it is, how he corrects it (plan and pass/fail checks, set before building; Oct 16, #316)
+Founder (Oct 16): "what are we gonna do about how baggy anything is? how will we know and let the user correct?" **Plan only: nothing is built or re-scored. His four calls were decided Oct 16 with the defaults (§18.6).** Numbered §18 and #316 because §15–§17 and #309–#315 are held by main and the open PRs (eyualem/kitted#4, #5, #7). It builds on §17, the piece page's "What it is" rows (PR eyualem/kitted#5, #315). Global checks G1–G4 (§6) apply.
 
 ### 18.1 What exists today (from the code)
 - **The reading** (`extraction-test/schema.json`, the live v3 format): `volume` 1–5 on every garment ("1 = fitted close to body, 3 = regular, 5 = very oversized. Garment cut, not the person's body.") and `leg_shape` on bottoms (skinny · slim · straight · relaxed · wide · flare/bootcut · barrel). For tops one number mixes two things: how the piece is cut, and whether it's his size (#164).
@@ -656,7 +656,7 @@ Truth, most useful first:
 3. **(a) Decided:** "on purpose vs too big" stays judged by the outfit around the piece; size faults wait for the size-ladder shoot (not chosen: the ~$2 cue test now).
 4. **The new words (18.4) decided:** as written.
 
-### §18 results, Group 1 (Oct 16, #315): checked against BG1–BG6, none changed
+### §18 results, Group 1 (Oct 16, #316): checked against BG1–BG6, none changed
 Built on PR eyualem/kitted#5's branch (the piece page's rows), so this PR goes in after #5. On the iOS Simulator (iPhone 17 Pro, a turn handed over by the chat session) on demo screens **194** (Closet, "How do your dark jeans fit?"), **195** (the dark jeans' page, Leg · Not sure) and **196** (the Leg picker): the demo jeans read slim, wide, wide and straight in four checks. Screenshots `screenshots/bagginess-oct16/` (git-ignored).
 
 | Check | Result | How |

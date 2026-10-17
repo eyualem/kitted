@@ -1281,7 +1281,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 - **VoiceOver:** tile "Navy crewneck, photo" or "Navy crewneck, no photo yet".
 
 #### C3 · Edit item (sheet)
-> **Update Oct 16 (#314, 09-ui-review §17; differs from this spec because the founder picked rows over one form):** the piece page shows a "What it is" section (Kind · Color · Leg or Fit · Pattern); each row opens this route as a one-row picker (`?field=`), pictures of the piece with that one thing changed, one tap picks, a toast with Undo. No Save, no Photo or Delete here (Remove from Closet stays on the page). The form below is superseded.
+> **Update Oct 16 (#315, 09-ui-review §17; differs from this spec because the founder picked rows over one form):** the piece page shows a "What it is" section (Kind · Color · Leg or Fit · Pattern); each row opens this route as a one-row picker (`?field=`), pictures of the piece with that one thing changed, one tap picks, a toast with Undo. No Save, no Photo or Delete here (Remove from Closet stays on the page). The form below is superseded.
 
 - Large detent; toolbar `Cancel` · title `Edit item` · `Save`.
 - Form sections:

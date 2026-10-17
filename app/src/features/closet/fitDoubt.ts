@@ -1,4 +1,4 @@
-// "Not sure" on a piece's Fit or Leg (09-ui-review §18, #315; founder, Oct 16: "how will we know and let the user
+// "Not sure" on a piece's Fit or Leg (09-ui-review §18, #316; founder, Oct 16: "how will we know and let the user
 // correct?"). The reading's own certainty doesn't predict a flip (§18.2), so how sure the app is comes from repeats:
 // a piece seen in 3+ checks whose readings fall in different groups the scores use is "Not sure".
 //   - Tops and layers (Fit): roomy (volume 4–5) or not (3 or less). 4 vs 5 and 1 vs 2 never move a score.

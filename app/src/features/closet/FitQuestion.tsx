@@ -1,4 +1,4 @@
-// Closet's To confirm: "How do your mid-wash jeans fit?" (09-ui-review §18, #315). One card at most, for the piece
+// Closet's To confirm: "How do your mid-wash jeans fit?" (09-ui-review §18, #316). One card at most, for the piece
 // whose own photos disagree most (fitDoubt.fitCard). A tap opens the piece's Leg or Fit picker (§17's sheet, nothing
 // ringed); a pick settles it and the card goes. Skip keeps it quiet until a newer photo disagrees again. Never on a
 // score card, and no answer here moves a score.

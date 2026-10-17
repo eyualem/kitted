@@ -1,4 +1,4 @@
-// Fix what a piece is (09-ui-review §17, #314; checks X1–X14 set before building). On a piece's page, "What it is"
+// Fix what a piece is (09-ui-review §17, #315; checks X1–X14 set before building). On a piece's page, "What it is"
 // shows Kind · Color · Leg or Fit · Pattern; a row opens pictures of the piece with that one thing changed, one tap
 // picks: the piece's reading takes his value as confirmed, the matcher learns the read he corrected away from, the
 // drawing and an app-made name follow, and Undo puts every row back. No fit check's score, reading or sighting moves.
@@ -246,7 +246,7 @@ describe('X3 what a pick writes', () => {
     await env.closet.editPiece('T2', 'fit', 5);
     const after = await piece(env.store, 'T2');
     expect(after.garment).toEqual({ ...before.garment, volume: 5 });
-    // Amended by §18 (#315), openly: a Fit pick now lists 'volume' as his, as a "Not quite right?" fit correction
+    // Amended by §18 (#316), openly: a Fit pick now lists 'volume' as his, as a "Not quite right?" fit correction
     // already did, so a "Not sure" Fit goes for good. Core reads only its matcher fields there (volume isn't one).
     expect(after.confirmedFields).toEqual([...before.confirmedFields, 'volume']);
   });

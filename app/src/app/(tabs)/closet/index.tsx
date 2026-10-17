@@ -50,7 +50,7 @@ export default function ClosetScreen() {
     const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it, obs, checks, livePhotoDeps)]));
     const fitChecks = await store.fitChecks.all();
     const styles = (await store.profile.get('me'))?.styles ?? null;
-    // One "How do your … fit?" at most (§18, #315): the piece whose own photos disagree most, unless he skipped it.
+    // One "How do your … fit?" at most (§18, #316): the piece whose own photos disagree most, unless he skipped it.
     const owned = all.filter(isOwned);
     const fit = fitCard(owned.filter((c) => !isAwaitingAnswer(c, owned)), obs, parseSkips(fitSkips));
     return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count: outfitCount(all, fitChecks, styles), fit };

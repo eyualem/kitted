@@ -37,7 +37,7 @@ interface FlatBase {
 export interface TopFlat extends FlatBase {
   kind: 'top';
   type: TopType;
-  /** oversized: dropped shoulders and a longer, wider body (#314, drawn apart from relaxed). */
+  /** oversized: dropped shoulders and a longer, wider body (#315, drawn apart from relaxed). */
   fit?: 'slim' | 'regular' | 'relaxed' | 'oversized';
   details?: {
     drawstrings?: boolean; pouch?: boolean; ribHem?: boolean; ribCuffs?: boolean; fullZip?: boolean;
@@ -51,7 +51,7 @@ export interface TopFlat extends FlatBase {
 export interface BottomFlat extends FlatBase {
   kind: 'bottom';
   type: BottomType;
-  /** skinny: narrower than slim, close to the hem (#314). */
+  /** skinny: narrower than slim, close to the hem (#315). */
   fit?: 'skinny' | 'slim' | 'straight' | 'relaxed' | 'wide';
   hem?: 'no_break' | 'slight_break' | 'full_break' | 'cuffed';
   wash?: 'rinse' | 'washed' | 'faded';
@@ -65,7 +65,7 @@ export interface ShoeFlat extends FlatBase {
   sole?: string;
   laceColor?: string;
   chunky?: boolean;
-  /** Canvas sneakers: a rubber toe cap and a stripe along the sole (#314, drawn apart from leather). */
+  /** Canvas sneakers: a rubber toe cap and a stripe along the sole (#315, drawn apart from leather). */
   canvas?: boolean;
 }
 

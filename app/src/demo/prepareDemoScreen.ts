@@ -219,7 +219,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
   // The Closet's Outfits (09-ui-review §13, #307). Screen 15 keeps showing the Pieces grid it always did.
   15: { steps: [{ at: '2026-10-22T07:00:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
-  // How baggy a piece is (09-ui-review §18, #315): the dark jeans read slim, wide, wide and straight in four checks.
+  // How baggy a piece is (09-ui-review §18, #316): the dark jeans read slim, wide, wide and straight in four checks.
   194: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   195: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
   196: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },

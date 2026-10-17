@@ -1274,7 +1274,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       return store.closet.get(itemId);
     }),
     /**
-     * "What it is" on a piece's page (09-ui-review §17, #314): his pick for one row (kind, color, leg, fit, pattern)
+     * "What it is" on a piece's page (09-ui-review §17, #315): his pick for one row (kind, color, leg, fit, pattern)
      * becomes the piece's own value, confirmed, and the reads he corrected away from are taught to the matcher
      * (pieceEdit.editPlan); the drawing, its color and a name the app made follow (refreshItem, renameAll). Only closet
      * rows change: no reading, sighting or fit-check score moves. null when the piece isn't his (or waits on "Same as
