@@ -343,21 +343,40 @@ function PastRow({ m }: { m: Model }) {
 }
 
 function CollapsedShell({ tag, title, left, right, body, onPress, a11y }: { tag: string; title?: string; left?: React.ReactNode; right?: React.ReactNode; body?: React.ReactNode; onPress?: () => void; a11y: string }) {
-  const content = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.cardPadH, paddingVertical: space.cardPadV }}>
-      {left}
-      <View style={{ flex: 1, gap: space.xs }}>
-        <MonoLabel>{tag}</MonoLabel>
-        {title ? (
-          <KText variant="subheadline" weight="600">
-            {title}
-          </KText>
-        ) : null}
-        {body}
+  const { isAccessibilitySize } = useTheme();
+  // A tappable row says so (#276): it scrolls to the check it summarizes.
+  const chevron = onPress ? <Icon name="next" size={13} color="ink3" weight="semibold" /> : null;
+  // At the accessibility sizes the photo, the words and the score in one row left the words a sliver, broken mid-word
+  // ("wen / t"): photo · score · chevron on one row, the words full width under it (07 §20).
+  const stacked = isAccessibilitySize && Boolean(left || right || chevron);
+  const words = (
+    <View style={{ flex: stacked ? undefined : 1, gap: space.xs }}>
+      <MonoLabel>{tag}</MonoLabel>
+      {title ? (
+        <KText variant="subheadline" weight="600">
+          {title}
+        </KText>
+      ) : null}
+      {body}
+    </View>
+  );
+  const pad = { paddingHorizontal: space.cardPadH, paddingVertical: space.cardPadV };
+  const content = stacked ? (
+    <View style={[pad, { gap: space.s }]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m }}>
+        {left}
+        <View style={{ flex: 1 }} />
+        {right}
+        {chevron}
       </View>
+      {words}
+    </View>
+  ) : (
+    <View style={[pad, { flexDirection: 'row', alignItems: 'center', gap: space.m }]}>
+      {left}
+      {words}
       {right}
-      {/* A tappable row says so (#276): it scrolls to the check it summarizes. */}
-      {onPress ? <Icon name="next" size={13} color="ink3" weight="semibold" /> : null}
+      {chevron}
     </View>
   );
   return (

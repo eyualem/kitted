@@ -2029,3 +2029,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The lesson:** the dev build on his phone hides the release gaps. Every live path reads the dev key, so nothing had ever exercised the no-key path. That path fails in the open (demo words) in two places, and silently with fake data in one (snaps). From now on, any work that touches a source should ask what a Release build does there.
     - **Proposed order (§20.6):** a code-only release-safety batch first (about a day), then the founder's four items (Cloudflare, support email, consent OK, beta allowance), then the Worker, then the "looks real but does nothing" items before Nov 3.
     - **Not done:** nothing was run on a device or the Simulator (the Mac had ~250 MB free); the claims come from reading the code.
+
+## Oct 17 · Two older layouts at the largest text size
+
+321. **The composer's field grows with what he types, and the compact morning card stacks at accessibility sizes (07 §20).** Both found while checking #319.
+    - **The field:** `numberOfLines={1}` on the multiline field became the paragraph's `maximumNumberOfLines` in iOS's measurement (new architecture), so the field stayed one line tall and a wrapped line was cut off inside the capsule (seen at the largest size, where short questions wrap). Dropped it; the max height now scales with the text (about 4½ lines at every size: 120 pt at the default as before, 222 pt at the largest, capped at the controls' 2×). The send/mic button stays centered on the capsule, as before (iMessage puts it at the bottom; not changed without a taste call).
+    - **The card:** at accessibility sizes `CollapsedShell` puts photo · score · chevron on one row and the words full width under it, like the other rows that stack at those sizes; unchanged at the default sizes. Covers "You went with your own" and "Staying in"; an earlier day's card has nothing to stack.
+    - **Checked:** A1–A5, B1–B3 on the Simulator in light, dark and the largest size; `npm run check` green (1,160 app tests). JS only: on his phone through Metro.

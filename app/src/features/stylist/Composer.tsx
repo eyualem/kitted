@@ -52,11 +52,17 @@ function hasGlass(): boolean {
 
 const H = 52;
 const BTN = 40;
+/** The field's own top + bottom padding, and the most text it shows before it scrolls inside (about 4½ body lines). */
+const INPUT_PAD = 9;
+const INPUT_MAX_TEXT = 102;
 /** After the accessory's exit animation has started; well before he could reach for a key. */
 const AUTOFOCUS_RETRY_MS = 350;
 
 export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, startVoice, onIdle, chips = [] }: ComposerProps) {
-  const { colors, scheme, a11y, isAccessibilitySize } = useTheme();
+  const { colors, scheme, a11y, isAccessibilitySize, fontScale } = useTheme();
+  // The field grows with what he types, up to the same number of lines at every text size (07 §20): its text scales
+  // with Dynamic Type up to the controls' 2× cap, so its max height does too.
+  const inputMax = INPUT_PAD * 2 + INPUT_MAX_TEXT * Math.min(Math.max(fontScale, 1), CONTROL_TEXT_MAX_SCALE);
   const text = useComposerDraft();
   const setText = composerState.setDraft;
   const [focused, setFocused] = useState(false);
@@ -230,13 +236,14 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
             placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
             placeholderTextColor={colors.ink2}
             accessibilityLabel={t('composer.a11y.field')}
+            // No numberOfLines: on iOS it caps the measured height at that many lines, so a wrapped line was cut off
+            // inside the capsule instead of growing it (07 §20).
             multiline
-            numberOfLines={1}
             // The body style's size and leading, scaling with Dynamic Type up to the controls' 2× cap
             // (TextInput takes no dynamicTypeRamp, so it scales linearly like the other controls).
             allowFontScaling
             maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
-            style={[styles.input, { color: colors.ink, paddingLeft: leadButton ? 4 : 12 }]}
+            style={[styles.input, { color: colors.ink, paddingLeft: leadButton ? 4 : 12, maxHeight: inputMax }]}
           />
         )}
         {trailButton}
@@ -300,7 +307,7 @@ const styles = StyleSheet.create({
   wrap: { paddingHorizontal: space.gutter, paddingTop: space.s },
   capsule: { minHeight: H, flexDirection: 'row', alignItems: 'center', gap: 4, padding: 6, overflow: 'hidden' },
   circle: { width: BTN, height: BTN, borderRadius: BTN / 2, alignItems: 'center', justifyContent: 'center' },
-  input: { flex: 1, fontSize: textStyles.body.fontSize, lineHeight: textStyles.body.lineHeight, paddingTop: 9, paddingBottom: 9, paddingRight: space.xs, maxHeight: 120 },
+  input: { flex: 1, fontSize: textStyles.body.fontSize, lineHeight: textStyles.body.lineHeight, paddingTop: INPUT_PAD, paddingBottom: INPUT_PAD, paddingRight: space.xs },
   voice: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: space.s, paddingHorizontal: space.s },
   wave: { flexDirection: 'row', alignItems: 'center', gap: 3, height: 24 },
 });
