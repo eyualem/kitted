@@ -1,0 +1,213 @@
+# Casual and athletic fits: how Kitted should score what guys 18–22 actually wear
+
+*Oct 17, 2026. Claude. A plan with its pass/fail checks written first, and a paper test of the candidate rules. No API calls, no money spent, nothing in the app or in `parts_proto.py` changed. Engine today: parts v13 (`extraction-test/rubrics/parts_proto.py`). The paper test: `extraction-test/casual_athletic_paper.py` (the candidate rules live there and are swapped in only for each score call), its output `extraction-test/results/casual-athletic/report.txt`. DECISIONS-LOG #330.*
+
+**Rule 7.** The gold photos are "profile unknown", scored with one stated test profile (picks Minimal + Smart casual, 0.5 each; boldness "a little"; no age) at Everyday. The founder's saved phone checks are scored at their own occasion with no picks (his profile is still pending). The 20 test outfits are made-up readings with no person in them. Nothing here can be split by age band or picked look yet; the shoot in §6 is built to fix that.
+
+## Bottom line
+
+- **Today these fits aren't punished, they're flattened.** Any shorts fit skips Proportions, so a plain tee + gym shorts + Jordans and an oversized hoodie + gym shorts + Jordans both get **7.0**; the Jordans can't earn "the shoes match the clothes" because that credit needs a shoe dressier than a sneaker; running shoes or slides with gym shorts at Class are held to **5.5 "Needs a fix"**. Effort doesn't show in the number.
+- **The gold set can't tell us what's right.** It has 1 photo with gym shorts, 0 tracksuits, and its 5 judges are AI personas. Even its "22-year-old peer" judge is *harsher* on shorts and sweats than the four stylists (−0.31 against them, vs −0.14 on everything else). The truth for this age group has to come from real guys rating real fits: the shoot in §6.
+- **The recommended candidates (V2 in §5) separate deliberate from lazy by half a point and change nothing else.** An oversized hoodie over gym shorts with Jordans goes 7.0 → **7.5**; a plain tee with the same shorts stays **7.0**; an oversized graphic tee over wide jorts with chunky sneakers 7.0 → **7.5**; a matched grey sweatsuit with clean sneakers 6.5 → **7.0**; a roomy hoodie over short, fitted shorts 7.0 → **6.5**; running shoes with gym shorts at Class 5.5 → **6.0**. Slides, the jersey-and-gym-shorts kit, the interview and going-out holds stay where they are.
+- **All checks pass:** 20/20 test outfits, the self-check (with the candidates off the engine is exactly v13 on all 449 conformance cases and every gold reading), and the gold guards: held-out r 0.49 → 0.48 (bar: no drop over 0.03), the founder's 20 blind ratings within 0.5: 13 → 14, both runs within 0.5 on every shorts and sweats photo (30/30), no photo outside shorts, sweats and track pieces moved, none of the 39 saved phone checks moved.
+- **Two readings are missing for the rest:** where the shorts end (above the knee, at it, below it) and the socks (none showing, low, crew). A reading test is planned (§7, about **$2.50**, needs your OK). Until they pass, length and socks are advice only.
+- **Your calls (on your to-do list):** the runners-at-Class hold (6.0), shorts judged like pants (V2) or only when there's something to say (V3), the full kit at 5.5, a matched sweatsuit counting as intent, and whether below-knee jorts and crew socks should ever move points (default: no).
+
+## 1. What's true today (v13)
+
+Each line is a made-up outfit from the paper test (`OUTFITS` in the script), scored by v13 at the occasion shown.
+
+| | Outfit | v13 | Why |
+|---|---|---|---|
+| A1 | Plain white tee + black gym shorts + white Jordans, Class | **7.0** | Proportions skipped ([PRO-1]); every other part 7 |
+| A2 | Oversized grey hoodie + the same shorts and Jordans, Class | **7.0** | Reads as streetwear (Style 7.5), but no shape credit exists for shorts |
+| A4 | Plain tee + gym shorts + running shoes, Class | **5.5** | Running shoes aren't a "real shoe": no signs of intent, held to 5.5 ([LNG-2]); Shoes 5.0 ([SHO-3]) |
+| A5 | Plain tee + gym shorts + slides, Class | **5.5** | Same hold; Shoes 5.0 |
+| A6 | Oversized graphic tee + wide mid-wash jorts + chunky sneakers, Everyday | **7.0** | Same flattening as A2 |
+| A11 | Grey hoodie + grey sweatpants (a set) + white leather sneakers, Everyday | **6.5** | One sign (the shoe), held to 6.5 |
+| A13 | Navy track jacket + navy track pants + retro runners | **7.0** | Can't happen on a real check: the reading has no track pieces |
+| A15 | Green jersey + gym shorts + Jordans, Everyday | **5.5** | "A full kit" counts no signs ([LNG-4]) |
+| A19 | Oversized hoodie + gym shorts + Jordans, Going out | **6.5** | Too casual for going out |
+
+Two engine facts behind the flattening:
+- **[PRO-1]:** `_proportions` returns "not scored" for any shorts, so the heaviest part (30%) drops out and the rest are mostly 7.
+- **[SHO-2]'s match credit (SD1)** needs a shoe at dressiness 2.5 or more. Basketball, chunky, canvas and retro sneakers are 2, so **Jordans never earn it anywhere**, with shorts or jeans. White leather sneakers (3) and low-profile sneakers (2.5) do.
+
+## 2. Why the gold set can't settle this
+
+- **Coverage:** 23 of 223 gold photos have shorts, 7 have sweats or joggers, **1 has gym shorts** (pin-038: logo tee + basketball shorts + runners; panel 5.0, app 5.0/5.5), none has a tracksuit, and none is a college student's everyday campus fit. Most shorts photos are Instagram creators in chino shorts and loafers.
+- **The judges aren't this age group.** They're Claude fashion personas (`inputs/gold-judge/BRIEF.md`). The one meant as a young peer is *harder* on these fits: on the 32 shorts and sweats photos the peer judge sits 0.31 below the other four, against 0.14 below on the other 193. On pin-038 all five land 4.0–5.2 ("gym wear out of the house").
+- **What young raters say, from the text we already have** (`inputs/rubric-research/tiktok-rated-fits.csv`, one creator's ratings, Oct 2026, not verified on photos): loose cargo shorts ending below the knee with white crew socks and skate sneakers 7.5–8/10; the same shape with a loud graphic or rhinestones 2–5/10. Brandon Balfour (YouTube) docks Nike crew socks and Air Force 1s under a polo and linen shorts ("almost there"). Small and second-hand, but it points the same way as the founder's hunch: the shape is fine, loudness and mismatched dressiness aren't.
+- **So** the gold set is used here only as a guard (nothing else may get worse), never as the target. The target is the shoot (§6).
+
+## 3. The pass/fail checks (written before the candidates ran)
+
+| ID | Check | Result (V2) |
+|---|---|---|
+| P0 | With every candidate off, the engine equals v13 on all 449 conformance cases and every gold reading | PASS |
+| A1 | Plain tee + gym shorts + Jordans stays Put together (7.0 or 7.5) | PASS 7.0 → 7.0 |
+| A2 | Oversized hoodie version at least 0.5 above A1 | PASS 7.0 → 7.5 |
+| A3 | Regular hoodie version equals A1 (a regular hoodie earns no shape, as with jeans, [STR-14]) | PASS 7.0 → 7.0 |
+| A4 | Tee + gym shorts + running shoes at Class held to the candidate hold (6.0) | PASS 5.5 → 6.0 |
+| A5 | Tee + gym shorts + slides at Class stays 5.5 | PASS 5.5 → 5.5 |
+| A6 | Oversized graphic tee + wide jorts + chunky sneakers up at least 0.5 | PASS 7.0 → 7.5 |
+| A7 | Plain tee + relaxed jorts + canvas sneakers stays Put together, no shape credit | PASS 7.0 → 7.0 |
+| A8 | Boxy tee ending at the belt + wide khaki shorts + white leather sneakers up at least 0.5 | PASS 7.5 → 8.0 |
+| A9 | Bomber over a tee + wide shorts + chunky sneakers not down | PASS 7.0 → 7.5 |
+| A10 | Polo + straight chino shorts + white leather sneakers within 0.5 | PASS 7.5 → 7.5 |
+| A11 | Matched grey sweatsuit + white leather sneakers up at least 0.5 | PASS 6.5 → 7.0 |
+| A12 | Grey hoodie + black sweats + slides (his own Oct 8 outfit, made up here) stays 5.5 | PASS 5.5 → 5.5 |
+| A13 | Matched navy tracksuit + retro runners reads as a look, 7.5+ *(future: track pieces)* | PASS 7.0 → 7.5 |
+| A14 | Tracksuit + running shoes stays 7.0 or less *(future)* | PASS 7.0 → 7.0 |
+| A15 | Jersey + gym shorts + Jordans (full kit) stays 5.5 | PASS 5.5 → 5.5 |
+| A16 | Tank + gym shorts + runners at the Gym stays 7.0+ | PASS 7.0 → 7.0 |
+| A17 | Oversized hoodie + short, fitted shorts + Jordans at least 1.0 below A2 | PASS 7.0 → 6.5 (A2 7.5) |
+| A18 | Tee + gym shorts + Jordans at an Interview unchanged, held to 4.0 | PASS 4.0 → 4.0 |
+| A19 | Oversized hoodie + gym shorts + Jordans going out stays 7.0 or less | PASS 6.5 → 6.5 |
+| A20 | Control, tee + wide black jeans + Jordans: unchanged | PASS 7.0 → 7.0 |
+| G1 | No gold photo outside shorts, sweats and track pieces moves | PASS (26 moved, all inside) |
+| G2 | Held-out gold r doesn't drop by more than 0.03 | PASS 0.49 → 0.48 |
+| G3 | The founder's 20 blind ratings: within 0.5 doesn't drop | PASS 13 → 14 (r 0.46 → 0.49) |
+| G4 | Both runs within 0.5 on the shorts and sweats photos doesn't drop | PASS 30/30 → 30/30 |
+| G5 | Report every saved phone check that moves | 0 of 39 moved |
+
+## 4. The candidate rules
+
+Each reads only fields the live reading already has (except CA5, marked). Proposed IDs for `rubric/v5-styles.md` in brackets; nothing is in the engine or the doc yet.
+
+**CA1, the shorts shape [PRO-1 changes, new PRO-15].** Shorts get a Proportions part, judged like pants: it starts at 7.
+- **+1.0, the shorts shape:** a roomy top (roominess 4 or 5) worn on its own, untucked, over loose shorts (relaxed or wide, or roominess 4+). The streetwear and hooper shape: a big tee or hoodie over long loose shorts.
+- **+1.0, a short jacket over loose shorts:** a bomber, denim, leather or track jacket, or any non-tailored layer read as ending at the belt.
+- One shape credit, the larger. Either needs real shoes **in the photo** (not slides; running shoes only at the gym or home).
+- **−1.5, a roomy top over short, fitted shorts** (slim or skinny, or roominess 2 or less), not under a jacket: the band fault's price ([PRO-11]).
+- **Why +1.0, not pants' +1.5:** shorts already cut the leg line; the gold's two bomber-over-shorts photos (panel 7.5) land at 7.5 with +1.0.
+- **Readings:** shorts' roominess 4+ held on 23 of 24 gold photos across two runs, loose or not on 22 of 24, the subcategory on 24 of 24; the top's roominess 4+ on 23 of 23. Two runs only: the reading test (§7) adds the third.
+- **Dropped after the first draft (V1):** "a tucked or short top over loose shorts gives it a waist". On the gold set it fired mostly on lazy fits (a pink graphic tee read as ending at the belt over denim shorts, panel 5.0, went 7.0 → 7.5) and cut the held-out r to 0.45.
+
+**CA2, a sport sneaker matches athletic bottoms and shorts [SHO-14].** Under gym shorts, sweatpants, joggers, track pants or shorts, a basketball, chunky, retro, canvas, low-profile or white leather sneaker counts as the real shoe for "the shoes match how dressed-up the clothes are" (+0.5 on Shoes). Running shoes and slides don't. *Why:* with athletic clothes a clean sneaker is the matching shoe; today the credit can't fire on the most common shoe this age group wears. Jeans with Jordans aren't touched here (that's a separate question for the gold set).
+
+**CA3, running shoes with gym shorts at Everyday and Class [LNG-8].** Held to **6.0 "Getting there"** instead of 5.5. Shoes stays 5.0 ([SHO-3]); slides stay at 5.5; a jersey kit stays at 5.5; going out, a date, an interview and an event are unchanged. *Why:* for a student it's the default campus fit, not a mistake that "needs a fix"; it still says plainly it isn't styled. **Your call:** 5.5 (today; the gold panel's 5.0 on pin-038), 6.0 (default) or 6.5.
+
+**CA5, a matched tracksuit [VSP-9].** A track jacket and track pants in the same colour family: +0.5 on Style, "a matched tracksuit, worn as one set". It already reads as vintage sport and isn't held as loungewear with a real shoe. **Future:** the reading can't name `track_jacket` or `track_pants` yet (they're in §7's test). With running shoes it stays held to 7.0.
+
+**CA6, a matched sweatsuit [LNG-9].** A hoodie or sweatshirt with sweatpants or joggers in the same colour family counts as the "dressed upper half" sign in the loungewear ladder: a set chosen on purpose. With a real shoe that's two signs (held to 7.5, or 8.0 when it reads as a style) instead of one. Mismatched sweats with slides (his own Oct 8 checks) don't change: 5.5.
+
+**Kept as they are:** the full kit (a jersey with gym shorts, 5.5, [LNG-4]; your call), the interview and event holds (4.0), going out in gym shorts (6.5 to 7.0), slides with anything out of the house.
+
+## 5. Before and after
+
+**The variants tried** (held-out r · all r · shorts and sweats r · within 0.5 on shorts and sweats · the founder's 20 within 0.5):
+
+| | Held-out | All | Shorts/sweats | Within 0.5 | Founder's 20 | Test outfits |
+|---|---|---|---|---|---|---|
+| v13 today | 0.49 | 0.58 | 0.42 | 18/30 | 13/20 | (the "before") |
+| V1 first draft (with the waist credit) | 0.45 | 0.56 | 0.29 | 17/30 | 14/20 | 20/20 |
+| **V2 no waist credit, shoes in view (recommended)** | **0.48** | **0.57** | **0.37** | **17/30** | **14/20** | **20/20** |
+| V3 = V2, Proportions only when a credit or fault fires | 0.49 | 0.58 | 0.44 | 18/30 | 13/20 | 19/20 (A3: a regular hoodie lands 7.5 like the oversized one; raw 7.25 rounds up) |
+| V2 without CA3, without CA2, or without CA1 | 0.48 / 0.48 / 0.49 | | | | | |
+
+**Why V2 over V3:** V3 is neutral on the gold set because the plain fits keep Proportions out, but then the oversized and the regular hoodie both round to 7.5, so the shape you picked doesn't show; V2 keeps that half point (7.5 vs 7.0). V2's cost is on the gold set's lazy shorts fits: with Proportions back at 7, a weak outfit is pulled toward 7 the way a pants outfit already is (a purple pocket tee + wide shorts + slides 6.0 → 6.5, panel 5.5 but **you rated it 7.0**; layered shirts + jorts + runners 5.5 → 6.0, panel 4.5), and a fitted pair of shorts loses its edge (burgundy tee + slim cream shorts + low-profile sneakers 7.5 → 7.0, panel 7.5). The panel isn't the target for these fits (§2), so V2 is the default and V3 the cautious option.
+
+**The gold photos that moved (V2, two runs each):** the bomber-over-wide-shorts pair ig-005 and ig-066 7.0 → **7.5** (panel 7.5 both); ig-065 6.0 → 6.5 (panel 5.5, founder 7.0); pin-038 gym shorts + runners 5.0/5.5 → 5.5/6.0 (panel 5.0); pin-059 5.5 → 6.0 (panel 4.5); ig-063 7.5/7.0 → 7.0/7.0 (panel 7.5); rd-005 7.5 → 7.0 (panel 7.5); pin-034 (yellow tee + shorts + dress shoes) 7.0/7.5 → 7.0/7.0 (panel 5.5). The other 18 moved only their raw score. Toward the panel: 3 of the 8 (ig-005, ig-066, pin-034); away from it: 5 (one of them, ig-065, toward your own rating). The 8+ share is unchanged (36 photos). Full table: `results/casual-athletic/report.txt`.
+
+**The founder's saved checks:** 39 checks across every phone pull; 3 have sweats (grey or charcoal hoodie, black sweatpants, slides): **5.5 before and after**. None has shorts, so the shoot is also the first real test of these rules on him.
+
+## 6. The shoot: 20 real athletic and casual fits (you and 2–3 friends, ~40 min)
+
+**Why:** this is the truth the gold set lacks: real guys 18–22, real campus fits, rated by people their age.
+
+**How to shoot each fit:**
+- One **propped** full-body photo with the shins and socks in view (phone on the floor or a chair, 2–3 m away), plus a mirror selfie for half of them.
+- Into `inputs/gold-set/athletic/`, named by fit number and person code (`a04-k.jpg`).
+- Faces are hidden by the app's copy; these stay on the Mac.
+
+**For each person (rule 7), in `inputs/gold-set/athletic/profiles.csv`:** a code, birth year (the age band comes from it), the 3 looks he'd pick in onboarding in order, height, build and fit if he wants, and his OK to use the photos internally.
+
+**For each fit, in `inputs/gold-set/athletic/ratings.csv`, before anyone sees the app's score:**
+- **Your blind rating** (1–10 by halves) and one line why.
+- **A second rater's** blind rating, ideally a friend 18–22 who isn't into fashion. That's what separates your taste from the age group's.
+- The occasion it's for (Class unless the list says otherwise), and the wearer's own answer to "would you wear this to class?" (yes / no).
+
+**The 20 fits** (pairs change one thing, so the ratings show what matters):
+
+| # | Fit | What it isolates |
+|---|---|---|
+| 1 | Plain tee + gym shorts + running shoes | The campus default (CA3) |
+| 2 | Same + Jordans or other basketball sneakers | Runners vs Jordans (CA2) |
+| 3 | Same + slides | Slides vs sneakers |
+| 4 | Oversized hoodie + gym shorts + Jordans + white crew socks | The deliberate shape (CA1) |
+| 5 | Same hoodie, same shoes, no-show socks | Socks (§7) |
+| 6 | Regular-fit hoodie + gym shorts + Jordans | Roomy vs regular top |
+| 7 | Oversized graphic tee + baggy jorts ending below the knee + crew socks + chunky or skate sneakers | Long jorts as a look |
+| 8 | Same tee + shorts ending above the knee + same sneakers | Shorts length (§7) |
+| 9 | Basketball jersey + gym shorts + Jordans | The full kit ([LNG-4]) |
+| 10 | Same jersey over a white tee + baggy jeans + Jordans | A jersey as the one sport piece |
+| 11 | Matching grey sweatsuit (hoodie + sweatpants) + clean sneakers | The sweatsuit (CA6) |
+| 12 | Hoodie + sweatpants that don't match + slides | The lazy version |
+| 13 | Matching tracksuit + retro sneakers (Sambas-type) | Tracksuits (CA5) |
+| 14 | Track jacket + jeans + retro sneakers | The track jacket as a layer |
+| 15 | Quarter-zip or crewneck + gym shorts + running shoes | Gym to class |
+| 16 | Tank + gym shorts + runners, at the Gym | Control (should be fine) |
+| 17 | Short jacket (bomber or zip) over a tee + loose shorts + sneakers | A layer over shorts |
+| 18 | Polo + chino shorts above the knee + white leather sneakers | Classic control |
+| 19 | Fit 7 again, for Going out | The occasion hold |
+| 20 | Hoodie + compression tights under gym shorts + runners | A common gym fit the reading may misname |
+
+**Then (Claude, free, no API):** the 5 AI judges rate the same 20 blind, so we see exactly where the personas and the age group disagree. The photos' readings come from §7's test.
+
+**Pass bars for adopting the rules (set now):** on the 20, the candidate engine must agree with the human average better than v13 does (more within 0.5, and r not lower); fits 4 and 7 must score above fits 1 and 6; and no fit may move by more than 1.0 against both human raters. If your ratings and the second rater's differ by more than 1.0 on 5+ fits, the rules wait for more raters.
+
+## 7. The reading test: shorts length, socks and track pieces (needs your OK, ~$2.50)
+
+**New values in the scoring read:**
+- `shorts_end` on a shorts garment: `above_knee` / `at_knee` / `below_knee` / `na`.
+- `socks` on the footwear: `not_visible` / `low` (no-show or ankle) / `crew` / `tall`.
+- `track_jacket` and `track_pants` as garment kinds (already planned: the engine knows them, the reading doesn't).
+
+**Photos (about 58):** the 23 gold shorts photos, the shoot's 20, and ~15 public screenshots of jorts and gym-shorts fits (TikTok and Reddit, as the gold set; profile unknown).
+
+**Truth:** Claude labels each photo blind; you check the ~10 Claude marks unsure.
+
+**Arms, 3 runs each:**
+- **A:** the live reading (control).
+- **B:** the live reading plus the new values.
+- **C:** a separate narrow look asking only the length and the socks (like the second look, #199).
+- The calls: (A + B) 58 × 3 × 2 × 0.60¢ ≈ $2.10, plus C 58 × 3 × ~0.23¢ ≈ $0.40. **About $2.50; stop at $3.**
+
+**Pass bars (#198's, set now):**
+- **Steady:** the grouping a rule would use (above the knee vs at or below it; crew or tall vs low or not visible) is the same on all 3 runs on ≥ 90% of photos.
+- **Right:** ≥ 85% against the labels when it answers, and "unsure" or `na` on ≤ 30%.
+- **Harmless:** arm B's score steadiness (3 runs within 0.5) no lower than arm A's, and no old field's accuracy down by more than 2 points. Batch 1 failed exactly here (#198: six new fields cost 10 points of steadiness).
+- **Where it goes:** if B fails the harmless bar but C passes, the values go in the second look, not the scoring read.
+
+## 8. Rules waiting on those readings (on paper only)
+
+- **Length (CA7, tip first):** below-knee loose shorts in an outfit that reads as streetwear, vintage sport or no style, with sneakers, are part of the shorts shape (no charge). Chino shorts ending at or below the knee in a polo-and-loafers outfit (classic prep, smart casual) get a tip: "chino shorts look sharpest ending just above the knee" (5 sources for chino shorts above the knee, `rubric/research/notes/v5-fit.md`; jorts past the knee on purpose in the blokecore and streetwear summaries). Points only if the shoot's raters dock it.
+  - *Test outfits:* oversized tee + wide jorts `below_knee` + chunky sneakers: no change from today; navy polo + khaki shorts `below_knee` + loafers: the tip, same score.
+- **Socks (CA8, advice only):** never a point either way by default. Crew socks with gym shorts and basketball sneakers can be named as finishing the look in the chat; crew athletic socks under a smart top (polo, oxford) get a tip ("plain or no-show socks keep a smart top clean").
+  - *Test outfits:* oversized hoodie + gym shorts + Jordans + `crew`: same score as `low`; polo + chino shorts + white leather sneakers + `crew`: the tip, same score.
+
+## 9. Your calls (defaults built into the plan)
+
+1. **Running shoes with gym shorts at Class:** 6.0 "Getting there" (default), 5.5 (today) or 6.5.
+2. **Shorts judged like pants (V2, default)** or only when there's something to say (V3: safer on the gold set, but a regular and an oversized hoodie both land at 7.5).
+3. **A basketball jersey with gym shorts** (the full kit): stays 5.5 (default), or held like any gym shorts with a real shoe.
+4. **A matched sweatsuit** counts as a sign of intent (default yes).
+5. **Below-knee jorts and crew socks** never move points, advice only (default), until the shoot says otherwise.
+
+## 10. Order of work
+
+1. You: the shoot and the ratings (§6), and the OK for the reading test (§7).
+2. Claude: label the photos blind, run §7 (one arm at a time, rule 9), and the 5 judges on the 20.
+3. Claude: the candidates against the shoot's ratings (§6's bars); report the before and after to you.
+4. On your go: port to `parts_proto.py` as v14 and to `@kitted/core` with parity, write the rules and their conformance cases into `rubric/v5-styles.md` and `rules_conformance.py`, and the card's lines into `en.ts`.
+
+## How to re-run
+
+From `extraction-test/` (in a worktree, point it at the main checkout's git-ignored data):
+
+```bash
+KITTED_DATA=/Users/eyu/Desktop/files/Kitted /usr/bin/python3 casual_athletic_paper.py
+```
+
+The candidates are the `CAND` dict and the `VARIANTS` in the script; `CAND_OFF` is v13 exactly (check P0).

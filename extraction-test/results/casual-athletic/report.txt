@@ -1,0 +1,140 @@
+P0 self-check (candidates off == v13): PASS on 449 conformance cases and every gold reading
+
+== The test outfits (bars written before the candidates ran) ==
+PASS A1 plain white tee + black gym shorts + white Jordans, Class
+     v13 7 (Fit 7 · Color 7 · Shoes 7 · Style 7) -> candidates 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7)   bar: stays Put together (7.0 or 7.5)
+     the shoes match how dressed-up the clothes are
+PASS A2 oversized grey hoodie (roominess 4) + gym shorts + Jordans, Class
+     v13 7 (Fit 7 · Color 7 · Shoes 7 · Style 7.5) -> candidates 7.5 (Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5)   bar: at least 0.5 above A1 (the plain tee)
+     a roomy hoodie over loose shorts: a deliberate shape; the shoes match how dressed-up the clothes are
+PASS A3 regular grey hoodie (roominess 3) + gym shorts + Jordans, Class
+     v13 7 (Fit 7 · Color 7 · Shoes 7 · Style 7.5) -> candidates 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5)   bar: same as A1: a regular hoodie earns no shape (STR-14)
+     the shoes match how dressed-up the clothes are
+PASS A4 plain tee + gym shorts + running shoes, Class
+     v13 5.5 (Fit 7 · Color 7 · Shoes 5 · Style 7) -> candidates 6 (Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 7)   bar: held to 6.0 (v13 5.5)
+     loungewear out of the house: held to 6.0
+PASS A5 plain tee + gym shorts + slides, Class
+     v13 5.5 (Fit 7 · Color 7 · Shoes 5 · Style 7) -> candidates 5.5 (Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 7)   bar: stays 5.5 Needs a fix
+     loungewear out of the house: held to 5.5
+PASS A6 oversized black graphic tee + wide mid-wash jorts + chunky sneakers, Everyday
+     v13 7 (Fit 7 · Color 7 · Shoes 7 · Style 7.5) -> candidates 7.5 (Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5)   bar: up at least 0.5: the shorts shape shows
+     a roomy graphic tee over loose shorts: a deliberate shape; the shoes match how dressed-up the clothes are
+PASS A7 plain tee + relaxed jorts + black canvas sneakers, Everyday
+     v13 7 (Fit 7 · Color 7 · Shoes 7 · Style 7) -> candidates 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7)   bar: stays Put together, no shape credit (regular tee)
+     the shoes match how dressed-up the clothes are
+PASS A8 boxy white tee ending at the belt + wide khaki shorts + white leather sneakers, Everyday
+     v13 7.5 (Fit 7 · Color 7 · Shoes 8 · Style 7.5) -> candidates 8 (Proportions 8 · Fit 7 · Color 7 · Shoes 8 · Style 7.5)   bar: up at least 0.5: the waist over loose shorts
+     a roomy tee over loose shorts: a deliberate shape; the shoes match how dressed-up the clothes are
+PASS A9 grey bomber over a white tee + wide cream shorts + chunky sneakers, Everyday
+     v13 7 (Fit 7 · Color 7 · Shoes 7 · Style 7.5) -> candidates 7.5 (Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5)   bar: not down: a short jacket over loose shorts
+     a short bomber over loose shorts; the shoes match how dressed-up the clothes are
+PASS A10 navy polo + straight khaki shorts + white leather sneakers, Everyday
+     v13 7.5 (Fit 7 · Color 7 · Shoes 8 · Style 7.5) -> candidates 7.5 (Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 7.5)   bar: within 0.5 (Proportions now counts, at 7)
+     the shoes match how dressed-up the clothes are
+PASS A11 grey hoodie + grey sweatpants (a set) + white leather sneakers, Everyday
+     v13 6.5 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7) -> candidates 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7)   bar: up at least 0.5: a matched set is a sign of intent
+     the shoes match how dressed-up the clothes are; loungewear out of the house: held to 7.5
+PASS A12 grey hoodie + black sweatpants + black slides, Everyday (his own Oct 8 outfit, made up here)
+     v13 5.5 (Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 7) -> candidates 5.5 (Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 7)   bar: stays 5.5
+     loungewear out of the house: held to 5.5
+PASS A13 navy track jacket + navy track pants + grey retro runners, Everyday  [future: track_jacket, track_pants]
+     v13 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5) -> candidates 7.5 (Proportions 7 · Fit 7 · Color 7 · Shoes 8 · Style 8)   bar: reads as a look: 7.5 or more
+     the shoes match how dressed-up the clothes are; a matched tracksuit, worn as one set
+PASS A14 navy track jacket + navy track pants + running shoes, Everyday  [future: track_jacket, track_pants]
+     v13 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 7.5) -> candidates 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 5 · Style 8)   bar: running shoes still hold it (7.0 or less)
+     a matched tracksuit, worn as one set; loungewear out of the house: held to 7.0
+PASS A15 green jersey + black gym shorts + Jordans (a full kit), Everyday
+     v13 5.5 (Fit 7 · Color 7.5 · Shoes 7 · Style 7) -> candidates 5.5 (Proportions 7 · Fit 7 · Color 7.5 · Shoes 7.5 · Style 7)   bar: stays 5.5 (LNG-4 kept)
+     the shoes match how dressed-up the clothes are; loungewear out of the house: held to 5.5
+PASS A16 tank top + gym shorts + running shoes, Gym
+     v13 7 (Fit 7 · Color 7 · Shoes 7 · Style 7) -> candidates 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7 · Style 7)   bar: fine at the gym (7.0 or more)
+PASS A17 oversized hoodie (roominess 4) + short, fitted khaki shorts + Jordans, Class
+     v13 7 (Fit 7 · Color 7 · Shoes 5.5 · Style 7.5) -> candidates 6.5 (Proportions 5.5 · Fit 7 · Color 7 · Shoes 6 · Style 7.5)   bar: at least 1.0 below A2 (loose shorts)
+     a roomy top over short, fitted shorts: it wants a fuller pair; the shoes match how dressed-up the clothes are
+PASS A18 plain tee + gym shorts + Jordans, Interview
+     v13 4 (Fit 7 · Color 7 · Shoes 7 · Style 7) -> candidates 4 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7)   bar: unchanged, held to 4.0
+     the shoes match how dressed-up the clothes are; athletic bottoms at a dressy occasion: held to 4.0
+PASS A19 oversized hoodie + gym shorts + Jordans, Going out
+     v13 6.5 (Fit 7 · Color 7 · Shoes 7 · Style 7.5) -> candidates 6.5 (Proportions 8 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5)   bar: going out in gym shorts stays 7.0 or less
+     a roomy hoodie over loose shorts: a deliberate shape; the shoes match how dressed-up the clothes are; too casual for going out: held to 6.5
+PASS A20 white tee + wide black jeans + white Jordans (control: no shorts), Everyday
+     v13 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5) -> candidates 7 (Proportions 7 · Fit 7 · Color 7 · Shoes 7.5 · Style 7.5)   bar: unchanged (the candidates touch only shorts, sweats and track pieces)
+20/20 test outfits pass
+
+== The gold set (5-judge AI panel; profile unknown, one stated test profile, Everyday) ==
+G1 photos that moved: 26; outside shorts, sweats and track pieces: 0 PASS
+  all photos                 n 223  r 0.58 -> 0.57   within 0.5 157 -> 156   app sd 0.71 -> 0.70 (panel mean 7.06; app mean 7.11 -> 7.12)
+  held-out test half         n  91  r 0.49 -> 0.48   within 0.5 62 -> 61   app sd 0.69 -> 0.68 (panel mean 6.98; app mean 7.09 -> 7.09)
+  shorts, sweats, joggers    n  30  r 0.42 -> 0.37   within 0.5 18 -> 17   app sd 0.61 -> 0.53 (panel mean 6.57; app mean 6.68 -> 6.73)
+  shorts only                n  23  r 0.52 -> 0.51   within 0.5 13 -> 12   app sd 0.59 -> 0.46 (panel mean 6.46; app mean 6.76 -> 6.83)
+G2 held-out r doesn't drop by more than 0.03: PASS
+G3 the founder's 20 blind ratings: r 0.46 -> 0.49; within 0.5 13 -> 14: PASS
+G4 the two runs within 0.5 on shorts/sweats photos: 30/30 -> 30/30: PASS
+
+  The variants (held-out r · all r · shorts/sweats r · within 0.5 on shorts/sweats · founder's 20 within 0.5):
+    v13 today                                                  0.49 · 0.58 · 0.42 · 18/30 · 13/20
+    V1 first draft                                             0.45 · 0.56 · 0.29 · 17/30 · 14/20
+    V2 no waist credit, shoes in view                          0.48 · 0.57 · 0.37 · 17/30 · 14/20
+    V3 = V2, Proportions only when it has something to say     0.49 · 0.58 · 0.44 · 18/30 · 13/20
+    V4 = V2 without CA3 (runners stay 5.5)                     0.48 · 0.57 · 0.37 · 17/30 · 14/20
+    V5 = V2 without CA2 (no sneaker match)                     0.48 · 0.57 · 0.37 · 17/30 · 14/20
+    V6 = V2 without CA1 (shorts stay NA)                       0.49 · 0.58 · 0.44 · 18/30 · 13/20
+  8+ share, all gold: 36 -> 36 photos
+
+  photo    panel  founder  v13 (2 runs)  ->  candidates (2 runs)   reading (run 1)
+  ig-005    7.5           7/7       -> 7.5/7.5   *   bomber (light_grey, roominess 3) + tee (white, roominess 3) + shorts (off_white_cream, roominess 4, wide) + chunky_sneaker (black, roominess 3)
+           a short bomber over loose shorts; the shoes match how dressed-up the clothes are
+  ig-007    8.0           7/7       -> 7/7       *   cardigan (navy, roominess 4) + tee (white, roominess 3) + sweatpants (navy, roominess 4, wide) + basketball_sneaker (multicolor, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-016    7.5           5.5/5.5   -> 5.5/5.5     puffer (off_white_cream, roominess 4) + hoodie (light_grey, roominess 3) + sweatpants (khaki_beige, roominess 5, wide) + slides_sandals (tan_camel, roominess 3)
+  ig-020    8.0   7.5     7/7       -> 7/7       *   sweater (tan_camel, roominess 3) + tee (white, roominess 3) + shorts (khaki_beige, roominess 4, wide) + loafer (brown, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-021    7.5           7/7       -> 7/7       *   graphic_tee (white, roominess 3) + shorts (khaki_beige, roominess 3, relaxed) + loafer (black, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-022    8.0           7/7       -> 7/7       *   other (tan_camel, roominess 3) + dress_shirt (white, roominess 3) + shorts (black, roominess 3, straight) + loafer (black, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-023    8.0           7.5/7     -> 7.5/7     *   dress_shirt (light_blue, roominess 3) + shorts (black, roominess 3, relaxed) + loafer (burgundy, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-030    7.0           6.5/7     -> 6.5/7     *   dress_shirt (light_blue, roominess 2) + shorts (khaki_beige, roominess 4, wide) + loafer (brown, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-037    7.0           6.5/6.5   -> 6.5/6.5     hoodie (navy, roominess 4) + sweatpants (light_grey, roominess 5, wide)
+  ig-053    7.0           7/7       -> 7/7       *   sweatshirt (navy, roominess 3) + shorts (black, roominess 4, wide) + chunky_sneaker (white, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-055    7.5           6.5/6.5   -> 6.5/6.5   *   jersey (white, roominess 3) + shorts (black, roominess 3, relaxed) + slides_sandals (black, roominess 3)
+  ig-063    7.5           7.5/7     -> 7/7       *   graphic_tee (black, roominess 3) + shorts (olive, roominess 5, wide) + work_boot (brown, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-065    5.5   7.0     6/6       -> 6.5/6.5   *   graphic_tee (purple, roominess 3) + shorts (brown, roominess 5, wide) + slides_sandals (black, roominess 3)
+  ig-066    7.5           7/7       -> 7.5/7.5   *   bomber (charcoal, roominess 4) + tee (black, roominess 3) + shorts (off_white_cream, roominess 5, wide) + chunky_sneaker (brown, roominess 3)
+           a short bomber over loose shorts; the shoes match how dressed-up the clothes are
+  ig-068    7.5           7/7       -> 7/7       *   jersey (black, roominess 3) + shorts (olive, roominess 4, wide) + other (grey, roominess 3)
+  ig-089    7.0           7/7       -> 7/7         sweater (blue, roominess 3) + sweatpants (grey, roominess 4, wide) + white_leather_sneaker (white, roominess 3)
+  ig-090    7.0           7/7       -> 7/7       *   graphic_tee (off_white_cream, roominess 4) + sweatpants (grey, roominess 5, wide) + basketball_sneaker (multicolor, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-101    6.5           6.5/6.5   -> 6.5/6.5   *   tank_top (light_grey, roominess 2) + shorts (khaki_beige, roominess 3, relaxed) + canvas_sneaker (black, roominess 3)
+           the shoes match how dressed-up the clothes are
+  ig-122    7.0           7/7       -> 7/7       *   sweater (black, roominess 3) + shorts (tan_camel, roominess 3, straight) + derby (black, roominess 3)
+           the shoes match how dressed-up the clothes are
+  pin-011   6.0           6.5/6.5   -> 6.5/6.5   *   hoodie (white, roominess 3) + joggers (black, roominess 3, slim) + retro_runner (grey, roominess 3)
+           the shoes match how dressed-up the clothes are
+  pin-021   4.5   6.5     6.5/7     -> 6.5/7     *   dress_shirt (blue, roominess 3) + shorts (khaki_beige, roominess 4, wide)
+  pin-022   5.5           6.5/6.5   -> 6.5/6.5   *   tee (green, roominess 3) + shorts (khaki_beige, roominess 3, relaxed) + slides_sandals (brown, roominess 3)
+  pin-023   3.5           7/6.5     -> 7/6.5     *   other (brown, roominess 5) + tee (white, roominess 3) + shorts (blue, roominess 3, straight) + slides_sandals (brown, roominess 3)
+  pin-024   2.0           -/-       -> -/-         fleece (blue, roominess 4) + tee (white, roominess 3) + shorts (grey, roominess 2, slim) + slides_sandals (tan_camel, roominess 5)
+  pin-034   5.5           7/7.5     -> 7/7       *   tee (yellow, roominess 3) + shorts (black, roominess 3, straight) + dress_shoe (black, roominess 3)
+  pin-035   5.5           7/7       -> 7/7       *   camp_collar_shirt (multicolor, roominess 3) + shorts (denim_mid, roominess 2, straight) + retro_runner (white, roominess 3)
+           the shoes match how dressed-up the clothes are
+  pin-038   5.0           5/5.5     -> 5.5/6     *   graphic_tee (white, roominess 3) + athletic_shorts (blue, roominess 4, wide) + performance_runner (grey, roominess 3)
+  pin-045   6.0           -/-       -> -/-         shorts (denim_mid, roominess 2, slim) + work_boot (tan_camel, roominess 3)
+  pin-058   5.0   5.0     7/7       -> 7/7       *   graphic_tee (pink, roominess 2) + shorts (denim_light, roominess 3, relaxed)
+  pin-059   4.5           5.5/5.5   -> 6/6       *   overshirt (green, roominess 3) + camp_collar_shirt (khaki_beige, roominess 3) + shorts (denim_mid, roominess 3, relaxed) + performance_runner (black, roominess 3)
+  pin-074   6.0           5.5/5.5   -> 5.5/5.5     graphic_tee (grey, roominess 3) + sweatpants (black, roominess 2, slim) + performance_runner (black, roominess 3)
+  rd-005    7.5           7.5/7.5   -> 7/7       *   tee (burgundy, roominess 3) + shorts (off_white_cream, roominess 2, slim) + low_profile_sneaker (black, roominess 3)
+           the shoes match how dressed-up the clothes are
+
+== The saved phone checks (39, every pull, deduped; each at its own occasion, no picks) ==
+  phone-680a61 everyday  v13 5.5 -> 5.5  hoodie (grey, roominess 3) + sweatpants (black, roominess 4, wide) + slides_sandals (black, roominess 3)
+  phone-6b14db everyday  v13 5.5 -> 5.5  hoodie (charcoal, roominess 3) + sweatpants (black, roominess 3, slim) + slides_sandals (black, roominess 3)
+  phone-a765e8 everyday  v13 5.5 -> 5.5  hoodie (grey, roominess 3) + sweatpants (black, roominess 3, relaxed) + slides_sandals (black, roominess 3)
+G5 saved checks that moved: 0
+
+ALL CHECKS PASS
