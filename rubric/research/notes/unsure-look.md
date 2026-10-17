@@ -2,6 +2,8 @@
 
 *Claude, a side session. The founder's idea (Oct 17): when the reading is shaky on a detail that would move the score, ask again, narrowly, and use this beyond shorts. Script `extraction-test/unsure_look.py`; prompt `prompt_unsure_lower.txt` + `schema_unsure_lower.json`; truth `unsure_labels.csv`; results `extraction-test/results/unsure1/`. Nothing in the app or the engine changed.*
 
+**Verdict (run Oct 17, 26.6¢ of the founder's 30¢): it fails, so nothing ships.** The narrow look is right more often and steadier than the main read on both details, but neither reaches the 90% steadiness bar, the shoe isn't right often enough, and settled scores gain only 4 of 223 steady photos while adding 2 new full-point swings. Legs came closest (97% score-right vs 80%). Recommendation: stop chasing steadiness through the reading; the closet's "Your …?" tap is the lever.
+
 **Rule 7:** the gold photos are public screenshots, profile unknown, run with one stated test profile (minimal + smart casual, 0.5 each; boldness "a little"; no age) at Everyday, as `gold_tune.py`. The founder's saved checks are scored at their own occasion with no picks (his profile is still pending). No age or look split is possible.
 
 ## 1. What's already known (not repeated here)
@@ -89,15 +91,29 @@ With the blind labels in hand, the most the look could ever buy, on the gold set
 - **Being right buys nothing against people:** the panel r and the founder's 20 don't move even with the truth swapped in.
 - **The truth is soft exactly where the AI wobbles.** The two blind labellers agree on the shoe type on 39 of 57 photos (68%) and the leg on 42 (74%). On the photos where they agree, the main read is score-right on 76% of shoe reads and 80% of leg reads (exact type: 50% each). So U2 and U5 can only be judged on the easier half (17 shoe photos, 20 leg photos), and the look needs ≥ 86% / ≥ 90% score-right there to pass.
 
-### The run
+### The run (Oct 17; the founder: "Yes, run the second-look test, up to 30 cents.")
 
-*Not run: it waits on the founder's OK of ≤ 30¢ (CLAUDE.md to-do list). The harness was checked end to end with a fake model (no network): the hard stop, the run-by-run order and every check in the report work; a random answerer fails U1–U9 as it should.* Run it with:
+**Spend: 26.6¢ of 30¢** (a 2-call pilot, 0.3¢, then 169 calls; 171 in all, 0 failed), 0.155¢ a call, median 3.3 s, 90th percentile 6.2 s. Full per-photo answers: `extraction-test/results/unsure1/report.md`.
 
-```bash
-cd extraction-test && KITTED_DATA=/Users/eyu/Desktop/files/Kitted /usr/bin/python3 unsure_look.py --run --runs 3
-```
+| Check | Result | Passes |
+|---|---|---|
+| U1 shoe steady | the same shoe on all 3 runs on 55% of set S (bar 90%); runs 0–1 agree 65% vs the main read's 39% | **no** |
+| U2 shoe right | score-right 82% (37/45) vs the main read's 76% (26/34); bar 85% and +10 points | **no** |
+| U3 shoe can't see | 13% ("other" counted) | yes |
+| U4 leg steady | the same leg on all 3 runs on 73% of set G (bar 90%); runs 0–1 agree 77% vs the main read's 33% | **no** |
+| U5 leg right | score-right 97% (58/60) vs 80% (32/40); exact 77% vs 50% | yes |
+| U6 leg can't see | 3% | yes |
+| U7 steadier settled scores | runs score the same 174 → 178 of 223, but 1.0+ apart 5 → 7 (both ways of settling) | **no** |
+| U8 not worse against people | held-out panel r 0.490 → 0.473 when triggered (pass, within 0.02), 0.467 always (fail); the founder's 20: 13 → 13 | when triggered only |
+| U9 harmless to L | covers_shoe still 91% steady, 93% right | yes |
+| U10 cost | +0.045¢ a call over look1's L (0.155 vs 0.110), ≈ 0.05¢ a check folded in | yes |
 
-## 6. ## 6. The founder's saved checks (paper, free)
+What it shows:
+- **Shoes:** the look reads some shoes much better (ig-072's basketball shoes the main read called retro runners; rd-011 and pin-025 settled on the labelled type) but swings among derby, loafer and "other" on the dressy leather shoes the labellers couldn't agree on either. It also called pin-051's suede chukkas derbies 3 times out of 3, and once called ig-056's derbies work boots where the main read was steady, which makes a new full-point swing (7.0 vs 8.0).
+- **Legs:** the look is clearly better (97% score-right) and far steadier than the main read (77% vs 33% across two runs), but a quarter of the photos still change shape across 3 runs (pin-053 relaxed/straight, ig-099 flare/straight). Settling legs alone: set G's photos that score the same on both runs go 20 → 24 of 30, all 223 go 174 → 178, and one new full-point swing (rd-016, where the trigger fired on one run and not the other).
+- **Against people:** no gain, as the ceiling predicted.
+
+## 6. ## 6. ## 6. The founder's saved checks (paper, free)
 
 39 scored checks across his phone pulls (deduped; his own and his friends' photos). U-T1 fires on 4 (10%), U-T2 on 19 (49%):
 - **Shoes:** a suede chukka read "likely" twice (d918c0: 7.5, any other leather shoe 7.0; d1967f, the friend's blazer: a dress shoe 6.5), a low-profile sneaker read "likely" (5a9049: a performance runner 6.0), and a basketball sneaker (af7e93: 8.0; canvas or retro 7.5).
@@ -114,11 +130,10 @@ cd extraction-test && KITTED_DATA=/Users/eyu/Desktop/files/Kitted /usr/bin/pytho
 
 On the founder's saved checks the trigger fires on 23 of 39 (59%), mostly legs read "straight" where slim would cost 0.5. Same-photo steadiness in the app is unchanged either way: the look's answer is stored with the check like L's today, so the same photo keeps the same score; what changes is how far apart two photos of the same outfit can land.
 
-## 8. Recommendation
+## 8. Recommendation (after the run)
 
-1. **Run the test, ≤ 30¢ (Claude's call: yes, but with low expectations).** It's cheap and the folded design costs ~0.05¢ a check at run time, so even the +5-point steadiness ceiling is worth knowing. It will answer three things the paper can't: whether the narrow look is steadier than the main read on these exact photos (U1, U4), whether it's right more often on the half the labellers agree on (U2, U5), and whether adding two questions shakes L's own answer (U9).
-2. **If it passes,** fold `shoe` and `leg_shape` into L (prompt, schema, the app's `secondLook.ts` and `@kitted/core`'s `_second_look`, behind a switch that ships off), then one ~3¢ run on the founder's kept close-ups for his before/after, then his go.
-3. **If it fails,** stop chasing steadiness through the reading: the wobble is spread over a dozen fields, and the honest lever left for his real use (the same clothes over and over) is the closet: the "Your …?" tap already settles a piece he confirmed, from his own answer.
-4. **Not worth a look:** hem and top length (they rarely move the score and already failed narrow looks, #199), top type (the quick tap's job), and anything the flag already hands to a tap.
-
-**The founder's calls** (CLAUDE.md to-do list): the ≤ 30¢; and, if it passes, whether the look settles silently (default) or the Why sheet's shoe or leg line says "read from a closer look".
+1. **Ship nothing.** Neither detail passes, and even the passing parts buy only +4 of 223 steady photos with two new full-point swings. No change to the app, the prompt or `@kitted/core`.
+2. **Stop chasing steadiness through the reading.** Three tries now agree (#220, #278, this): the wobble between photos is spread over a dozen fields, and a second machine guess at the hardest ones (dressy leather shoes, straight vs relaxed legs) is itself unsure, as two careful labellers were.
+3. **The lever is him, through the closet:** the "Your …?" tap (#126) and the "Not sure" row (#316) settle a piece from his own answer once, and every later photo of it follows. If more steadiness is wanted, widen when that tap may ask (more pieces, legs as well as kinds), with its own plan and his OK.
+4. **If legs come back later:** a leg-only look (one question, like #199's passes) might reach 90% steady; worth ~10¢ only if the closet route falls short. Not proposed now.
+5. **Not run (needs a new OK):** the ~3¢ follow-up on his own close-ups.

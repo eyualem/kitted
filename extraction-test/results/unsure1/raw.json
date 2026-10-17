@@ -1,0 +1,5392 @@
+[
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1943,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.31,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-029",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "mostly",
+   "shoe": "chelsea_boot",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2368,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 413,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.34,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-061",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "mostly",
+   "shoe": "performance_runner",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 43,
+   "totalTokenCount": 1944,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.63,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-019",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "white_leather_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2178,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 238,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.33,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-014",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1927,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.2,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-024",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 32,
+   "totalTokenCount": 2300,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 339,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.19,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-010",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "suede_chukka",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.65,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-027",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.83,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-028",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1943,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 3.46,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-032",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "other",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 23,
+   "totalTokenCount": 1962,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.9,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-054",
+  "run": 0,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2315,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 388,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.47,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-040",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2330,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 374,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.28,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-051",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2303,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 340,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.77,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-056",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "shorts",
+   "covers_shoe": "no",
+   "shoe": "chunky_sneaker",
+   "leg_shape": "shorts"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 45,
+   "totalTokenCount": 2154,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    }
+   ],
+   "thoughtsTokenCount": 197,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.67,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-063",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1937,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2266,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 305,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.48,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-062",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1967,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.45,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-072",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 1954,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.76,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-077",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1893,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1937,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1056
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.65,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-082",
+  "run": 0,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "other",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1944,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2637,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 668,
+   "serviceTier": "standard"
+  },
+  "seconds": 7.35,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-071",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "slides_sandals",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.75,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-100",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "flare_bootcut"
+  },
+  "usage": {
+   "promptTokenCount": 1925,
+   "candidatesTokenCount": 34,
+   "totalTokenCount": 2340,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1088
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 381,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.04,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-099",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "no",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "barrel"
+  },
+  "usage": {
+   "promptTokenCount": 1926,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 2623,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1089
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 653,
+   "serviceTier": "standard"
+  },
+  "seconds": 7.77,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-085",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1961,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.0,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-109",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.66,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-119",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1927,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.35,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-125",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2674,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 719,
+   "serviceTier": "standard"
+  },
+  "seconds": 8.17,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-108",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "flare_bootcut"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1951,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.39,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-130",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "suede_chukka",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 30,
+   "totalTokenCount": 1952,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.5,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-129",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "chelsea_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1903,
+   "candidatesTokenCount": 30,
+   "totalTokenCount": 2542,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1066
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 609,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.31,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-124",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.91,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-006",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1895,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1924,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1058
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.46,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-008",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2227,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 289,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.31,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-007",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "retro_runner",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 32,
+   "totalTokenCount": 2052,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 119,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.32,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-011",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "work_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2150,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 212,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.45,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-025",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1961,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.64,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-028",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "no",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.21,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-032",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1948,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.95,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-033",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "shorts",
+   "covers_shoe": "no",
+   "shoe": "derby",
+   "leg_shape": "shorts"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2094,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "thoughtsTokenCount": 153,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.18,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-034",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1928,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.47,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-048",
+  "run": 0,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 4.17,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-040",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 46,
+   "totalTokenCount": 1963,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.03,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-051",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "dress_shoe",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 2243,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 292,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.4,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-049",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "performance_runner",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 33,
+   "totalTokenCount": 2375,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 413,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.32,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-053",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 1926,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.21,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-060",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 2305,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 366,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.63,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-057",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "not_visible",
+   "covers_shoe": "no_shoes_visible",
+   "shoe": "cant_see",
+   "leg_shape": "cant_see"
+  },
+  "usage": {
+   "promptTokenCount": 1893,
+   "candidatesTokenCount": 33,
+   "totalTokenCount": 1926,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1056
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.1,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-067",
+  "run": 0,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1937,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.61,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-063",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2502,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 536,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.19,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-061",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1944,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2247,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 279,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.63,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-069",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "no",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "skinny"
+  },
+  "usage": {
+   "promptTokenCount": 1925,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2224,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1088
+    }
+   ],
+   "thoughtsTokenCount": 272,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.51,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-071",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "white_leather_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 48,
+   "totalTokenCount": 1965,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.66,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-003",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "skinny"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2095,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 157,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.36,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-073",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1961,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.63,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-006",
+  "run": 0,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "derby",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 42,
+   "totalTokenCount": 1981,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.99,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-016",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1937,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 1962,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 3.03,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-011",
+  "run": 0,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "suede_chukka",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 45,
+   "totalTokenCount": 2517,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "thoughtsTokenCount": 550,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.09,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-012",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "mostly",
+   "shoe": "work_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2387,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 433,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.87,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-020",
+  "run": 0,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 31,
+   "totalTokenCount": 2336,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 376,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.89,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-010",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "white_leather_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2158,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    }
+   ],
+   "thoughtsTokenCount": 218,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.3,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-014",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1927,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 3.31,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-024",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "suede_chukka",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 30,
+   "totalTokenCount": 1947,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.13,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-027",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 45,
+   "totalTokenCount": 1962,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.87,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-028",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1943,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.19,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-029",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "performance_runner",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 2531,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 586,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.03,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-019",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.89,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-040",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 30,
+   "totalTokenCount": 1969,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.92,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-054",
+  "run": 1,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2284,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 329,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.8,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-051",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2619,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 676,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.26,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-032",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "work_boot",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1955,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.75,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-061",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1937,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2248,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 286,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.46,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-062",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "shorts",
+   "covers_shoe": "no",
+   "shoe": "work_boot",
+   "leg_shape": "shorts"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2318,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 381,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.35,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-063",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "work_boot",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 45,
+   "totalTokenCount": 2718,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 734,
+   "serviceTier": "standard"
+  },
+  "seconds": 7.0,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-056",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 1954,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.14,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-077",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1893,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1919,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1056
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.73,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-082",
+  "run": 1,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1944,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2353,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 383,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.77,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-071",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2656,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    }
+   ],
+   "thoughtsTokenCount": 689,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.25,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-072",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "retro_runner",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1925,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1953,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1088
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.66,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-099",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "slides_sandals",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.95,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-100",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1944,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.42,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-109",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "partly",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "barrel"
+  },
+  "usage": {
+   "promptTokenCount": 1926,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2556,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1089
+    }
+   ],
+   "thoughtsTokenCount": 603,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.45,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-085",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2439,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 486,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.75,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-108",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1944,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.6,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-119",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1927,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.6,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-125",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "partly",
+   "shoe": "chelsea_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1903,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 2502,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1066
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 570,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.34,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-124",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "flare_bootcut"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 31,
+   "totalTokenCount": 2196,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 243,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.78,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-130",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2617,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "thoughtsTokenCount": 668,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.64,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-129",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.83,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-006",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1895,
+   "candidatesTokenCount": 30,
+   "totalTokenCount": 1925,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1058
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.42,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-008",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "work_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1938,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.47,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-025",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2235,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 297,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.28,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-007",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1961,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.82,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-028",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "retro_runner",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2205,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 279,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.42,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-011",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "shorts",
+   "covers_shoe": "no",
+   "shoe": "derby",
+   "leg_shape": "shorts"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 1941,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.45,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-034",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.86,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-040",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 32,
+   "totalTokenCount": 2332,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "thoughtsTokenCount": 383,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.42,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-032",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2293,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 345,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.61,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-033",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.9,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-051",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "dress_shoe",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 2181,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 230,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.22,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-049",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 46,
+   "totalTokenCount": 2228,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 281,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.75,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-048",
+  "run": 1,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2233,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 296,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.08,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-057",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "performance_runner",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 2377,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 419,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.9,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-053",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2235,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 309,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.82,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-060",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1937,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.67,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-063",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "not_visible",
+   "covers_shoe": "no_shoes_visible",
+   "shoe": "cant_see",
+   "leg_shape": "cant_see"
+  },
+  "usage": {
+   "promptTokenCount": 1893,
+   "candidatesTokenCount": 33,
+   "totalTokenCount": 1926,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1056
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.78,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-067",
+  "run": 1,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 2211,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    }
+   ],
+   "thoughtsTokenCount": 243,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.04,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-061",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1944,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2181,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 213,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.47,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-069",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "no",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "skinny"
+  },
+  "usage": {
+   "promptTokenCount": 1925,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2258,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1088
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 306,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.16,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-071",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "skinny"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2165,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 227,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.23,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-073",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "white_leather_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 48,
+   "totalTokenCount": 1965,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.82,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-003",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1961,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.61,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-006",
+  "run": 1,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "derby",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 1963,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.91,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-016",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1937,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2228,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 266,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.63,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-011",
+  "run": 1,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 31,
+   "totalTokenCount": 2337,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 377,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.66,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-010",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "work_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 46,
+   "totalTokenCount": 2455,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 480,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.59,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-020",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "no",
+   "shoe": "suede_chukka",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 36,
+   "totalTokenCount": 2932,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "thoughtsTokenCount": 974,
+   "serviceTier": "standard"
+  },
+  "seconds": 9.42,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-012",
+  "run": 1,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "performance_runner",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 44,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.01,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-019",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "white_leather_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 35,
+   "totalTokenCount": 2113,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    }
+   ],
+   "thoughtsTokenCount": 166,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.03,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-014",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1927,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.97,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-024",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "suede_chukka",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.6,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-027",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.2,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-028",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1943,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.18,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-029",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2264,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 321,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.78,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-032",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2201,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 274,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.8,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-040",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 45,
+   "totalTokenCount": 2359,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 385,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.57,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-051",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2229,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 262,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.98,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-054",
+  "run": 2,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2508,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 545,
+   "serviceTier": "standard"
+  },
+  "seconds": 6.21,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-056",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1937,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2432,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 470,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.95,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-062",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "chelsea_boot",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 45,
+   "totalTokenCount": 2861,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 887,
+   "serviceTier": "standard"
+  },
+  "seconds": 8.19,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-061",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "shorts",
+   "covers_shoe": "no",
+   "shoe": "work_boot",
+   "leg_shape": "shorts"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2199,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 262,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.69,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-063",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "other",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1944,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2305,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 336,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.04,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-071",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2369,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 404,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.86,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-072",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "mostly",
+   "shoe": "derby",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2233,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 280,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.16,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-077",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "mostly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "barrel"
+  },
+  "usage": {
+   "promptTokenCount": 1893,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1919,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1056
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.69,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-082",
+  "run": 2,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "low_profile_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1925,
+   "candidatesTokenCount": 30,
+   "totalTokenCount": 1955,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1088
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.95,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-099",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "slides_sandals",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.92,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-100",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 1955,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.82,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-108",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "pooling",
+   "covers_shoe": "no",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "barrel"
+  },
+  "usage": {
+   "promptTokenCount": 1926,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2246,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1089
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 294,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.1,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-085",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1944,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.78,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-109",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1944,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.7,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-119",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "no",
+   "shoe": "chelsea_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1903,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1931,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1066
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.67,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-124",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "partly",
+   "shoe": "chelsea_boot",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 48,
+   "totalTokenCount": 1949,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.61,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-125",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "retro_runner",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 43,
+   "totalTokenCount": 1960,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.74,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-006",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "flare_bootcut"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 49,
+   "totalTokenCount": 1971,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.0,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-130",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1895,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1924,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1058
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.76,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-008",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2227,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "thoughtsTokenCount": 289,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.2,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-007",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "suede_chukka",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 46,
+   "totalTokenCount": 2649,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "thoughtsTokenCount": 681,
+   "serviceTier": "standard"
+  },
+  "seconds": 7.01,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "ig-129",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "retro_runner",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 43,
+   "totalTokenCount": 2270,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "thoughtsTokenCount": 326,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.57,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-011",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "no_break",
+   "covers_shoe": "partly",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 29,
+   "totalTokenCount": 1946,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.96,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-028",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "work_boot",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1912,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2517,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1075
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 579,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.88,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-025",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "loafer",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2287,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "thoughtsTokenCount": 339,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.31,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-033",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "white_leather_sneaker",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 32,
+   "totalTokenCount": 2357,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 408,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.74,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-032",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "shorts",
+   "covers_shoe": "no",
+   "shoe": "derby",
+   "leg_shape": "shorts"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 42,
+   "totalTokenCount": 1959,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.55,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-034",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.87,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-040",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1945,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.83,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-051",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "loafer",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 35,
+   "totalTokenCount": 2124,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 188,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.72,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-048",
+  "run": 2,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "dress_shoe",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2211,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "thoughtsTokenCount": 261,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.68,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-049",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1901,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 1929,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1064
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.46,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-060",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2316,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "thoughtsTokenCount": 379,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.8,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-057",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "performance_runner",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 26,
+   "totalTokenCount": 2371,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 416,
+   "serviceTier": "standard"
+  },
+  "seconds": 5.14,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-053",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2184,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 218,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.54,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-061",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "not_visible",
+   "covers_shoe": "no_shoes_visible",
+   "shoe": "cant_see",
+   "leg_shape": "cant_see"
+  },
+  "usage": {
+   "promptTokenCount": 1893,
+   "candidatesTokenCount": 33,
+   "totalTokenCount": 1926,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1056
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.02,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-067",
+  "run": 2,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2310,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "thoughtsTokenCount": 376,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.97,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-063",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "no",
+   "shoe": "basketball_sneaker",
+   "leg_shape": "skinny"
+  },
+  "usage": {
+   "promptTokenCount": 1925,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 2214,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1088
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "thoughtsTokenCount": 262,
+   "serviceTier": "standard"
+  },
+  "seconds": 3.44,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-071",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "canvas_sneaker",
+   "leg_shape": "skinny"
+  },
+  "usage": {
+   "promptTokenCount": 1910,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2084,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1073
+    }
+   ],
+   "thoughtsTokenCount": 146,
+   "serviceTier": "standard"
+  },
+  "seconds": 2.86,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-073",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "white_leather_sneaker",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 48,
+   "totalTokenCount": 1965,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.85,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-003",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "other",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1944,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 2625,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1107
+    }
+   ],
+   "thoughtsTokenCount": 657,
+   "serviceTier": "standard"
+  },
+  "seconds": 7.1,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "pin-069",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "mostly",
+   "shoe": "dress_shoe",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1917,
+   "candidatesTokenCount": 27,
+   "totalTokenCount": 1944,
+   "promptTokensDetails": [
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1080
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 1.91,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-006",
+  "run": 2,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "cropped",
+   "covers_shoe": "no",
+   "shoe": "derby",
+   "leg_shape": "relaxed"
+  },
+  "usage": {
+   "promptTokenCount": 1939,
+   "candidatesTokenCount": 24,
+   "totalTokenCount": 1963,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1102
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "seconds": 2.88,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-016",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "stacked",
+   "covers_shoe": "partly",
+   "shoe": "derby",
+   "leg_shape": "straight"
+  },
+  "usage": {
+   "promptTokenCount": 1937,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 2407,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1100
+    }
+   ],
+   "thoughtsTokenCount": 445,
+   "serviceTier": "standard"
+  },
+  "seconds": 4.96,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-011",
+  "run": 2,
+  "image": "body"
+ },
+ {
+  "json": {
+   "pant_end": "slight_break",
+   "covers_shoe": "partly",
+   "shoe": "suede_chukka",
+   "leg_shape": "slim"
+  },
+  "usage": {
+   "promptTokenCount": 1922,
+   "candidatesTokenCount": 49,
+   "totalTokenCount": 2831,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1085
+    }
+   ],
+   "thoughtsTokenCount": 860,
+   "serviceTier": "standard"
+  },
+  "seconds": 8.07,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-012",
+  "run": 2,
+  "image": "lower"
+ },
+ {
+  "json": {
+   "pant_end": "full_break",
+   "covers_shoe": "partly",
+   "shoe": "work_boot",
+   "leg_shape": "wide"
+  },
+  "usage": {
+   "promptTokenCount": 1929,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 2797,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 837
+    },
+    {
+     "modality": "IMAGE",
+     "tokenCount": 1092
+    }
+   ],
+   "thoughtsTokenCount": 840,
+   "serviceTier": "standard"
+  },
+  "seconds": 8.3,
+  "finish": "STOP",
+  "model_version": "gemini-3.8-flash",
+  "arm": "N",
+  "photo": "rd-020",
+  "run": 2,
+  "image": "lower"
+ }
+]
