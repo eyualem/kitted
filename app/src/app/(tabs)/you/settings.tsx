@@ -3,7 +3,7 @@
 // isn't set yet (support mail, privacy policy, terms: config/links.ts) are hidden, not dead. Deleting data lives in
 // Privacy & data. "Redeem a code" waits for StoreKit (P6), so it isn't shown. Notifications (nothing is scheduled until
 // expo-notifications) and the subscription rows (nothing to buy or restore while the paywall is off) are hidden, not
-// dead (09 §20.7 R5, #322).
+// dead (09 §20.7 R5, #323).
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { KText, space, type AppAppearance } from '@/design-system';

@@ -24,7 +24,7 @@ export const readingSource = createMockReadingSource({
   latency: () => getDemoArgs().latency,
   fault: () => getDemoArgs().fault,
   scheduler: realScheduler,
-  // A snap of a real photo gets the story's canned reading only on a demo screen (#322).
+  // A snap of a real photo gets the story's canned reading only on a demo screen (#323).
   cannedSnaps: () => DEMO_ENABLED && getDemoArgs().demoScreen !== null,
 });
 

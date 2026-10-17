@@ -266,7 +266,7 @@ describe('against his closet (the full seed)', () => {
     expect((await env.row(id2)).details.closetSummary!.asks).toEqual([]);
   });
 
-  it('Undo on an answer\'s toast (#322): the question is open again, its pieces as before the answer', async () => {
+  it('Undo on an answer\'s toast (#323): the question is open again, its pieces as before the answer', async () => {
     const env = await setup({ scenario: 'full' });
     const id = await env.check('p01b');
     await env.closet.settle();
@@ -373,14 +373,16 @@ describe('Undo and corrections follow the stored link', () => {
     expect((await env.row(id)).score).toBe(8);
   });
 
-  it('a piece seen once is patched in place ("Saved to your tan chinos")', async () => {
+  it('a piece seen once is patched in place ("Saved to your tan trousers")', async () => {
+    // Amended by 09-ui-review §19 (#322), openly: a Leg or Fit fix no longer patches the piece (the scored-fix rule,
+    // fitLine.test BX1), so this path is shown with a Kind fix, which still does.
     const env = await setup();
     const id = await env.check('p01b');
     await env.closet.settle();
-    const r = await env.svc.saveCorrection(id, { garmentIndex: 1, field: 'leg_shape', value: 'slim' });
-    expect(r!.itemName).toBe('Tan chinos');
-    const chinos = (await env.owned()).find((c) => c.slot === 'bottom')!;
-    expect([chinos.garment.leg_shape, chinos.confirmedFields]).toEqual(['slim', ['leg_shape']]);
+    const r = await env.svc.saveCorrection(id, { garmentIndex: 1, field: 'subcategory', value: 'trousers' });
+    const piece = (await env.owned()).find((c) => c.slot === 'bottom')!;
+    expect(r!.itemName).toBe(piece.name);
+    expect([piece.garment.subcategory, piece.confirmedFields]).toEqual(['trousers', ['subcategory']]);
   });
 
   it('the bug: a correction never recolors a piece seen in other photos; it relinks instead', async () => {

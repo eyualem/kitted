@@ -80,6 +80,24 @@ function perCheck(itemId: string, obs: readonly ClosetObservationRow[]): ClosetO
   return [...latest.values()].sort((a, b) => a.createdAt - b.createdAt || (a.id < b.id ? -1 : 1));
 }
 
+/** The values his photos of a piece read for a field, one per check, oldest first, as the pickers offer them (legs as
+ *  the five, flare → straight, barrel → wide; fits as 2–5). For the card line's choices and the answer log (§19). */
+export function checkReads(itemId: string, obs: readonly ClosetObservationRow[], field: DoubtField): (string | number)[] {
+  return perCheck(itemId, obs).map((o) => readValue(o.garment, field)).filter((v): v is string | number => v !== null);
+}
+
+/** One reading's value for a field, as the pickers offer it, or null. */
+export function readValue(g: { volume?: unknown; leg_shape?: unknown }, field: DoubtField): string | number | null {
+  if (field === 'fit') {
+    const v = g.volume;
+    if (typeof v !== 'number' || !Number.isFinite(v)) return null;
+    return v <= 2 ? 2 : v >= 5 ? 5 : Math.round(v);
+  }
+  const l = g.leg_shape;
+  if (typeof l !== 'string' || !LEG_GROUP[l]) return null;
+  return l === 'flare_bootcut' ? 'straight' : l === 'barrel' ? 'wide' : l;
+}
+
 function mostCommon(xs: readonly string[], order: readonly string[] = []): string | null {
   const n = new Map<string, number>();
   for (const x of xs) n.set(x, (n.get(x) ?? 0) + 1);

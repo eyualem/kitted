@@ -63,7 +63,7 @@ function RootStack({ booted }: { booted: boolean }) {
   const gate = useGate();
   const ready = booted && gate.ready;
   const blocked = gate.ageBlocked;
-  // The paywall sells nothing while it's off (a mock store): no link may open it (09 §20.7 R2, #322).
+  // The paywall sells nothing while it's off (a mock store): no link may open it (09 §20.7 R2, #323).
   const paywall = usePaywallOn();
 
   // -demoScreen <n> (launch argument): route through the demo screen once the gate is ready.

@@ -1,4 +1,4 @@
-// What the scan camera says after saving (09 §20.7 R4, #322): the real count, and never "Saved" when nothing was kept
+// What the scan camera says after saving (09 §20.7 R4, #323): the real count, and never "Saved" when nothing was kept
 // (it showed `Math.max(saved, 1)`, so a scan whose every photo failed said "Saved for your closet").
 export type SaveOutcome = { kind: 'saved'; count: number } | { kind: 'notSaved'; many: boolean };
 

@@ -1,10 +1,6 @@
-// The release-safety batch (09 §20.7, #322): checks written before the code. A Release build ships no demo tools and no
+// The release-safety batch (09 §20.7, #323): checks written before the code. A Release build ships no demo tools and no
 // secret, no link reaches an unbuilt paywall, no canned demo reading merges into a real check, nothing says "Saved"
 // or shows a switch that does nothing, and a missing record says so. Behaviour where it's pure; the wiring from source.
-declare const __dirname: string;
-declare const require: (id: string) => unknown;
-const { readFileSync, existsSync } = jest.requireActual<{ readFileSync(p: string, enc: 'utf8'): string; existsSync(p: string): boolean }>('fs');
-const { join } = jest.requireActual<{ join(...p: string[]): string }>('path');
 import { demoEnabled } from '@/demo/config';
 import { createMemoryStore } from '@/data/memoryStore';
 import { answerLine, answerWithUndo } from '@/features/closet/answerToast';
@@ -17,6 +13,12 @@ import { counterIds } from '@/services/ids';
 import { createQuota } from '@/services/quota';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import type { PreparedImage, ReadingEvent, ReadKind } from '@/services/readingSource/types';
+
+declare const __dirname: string;
+declare const require: (id: string) => unknown;
+
+const { readFileSync, existsSync } = jest.requireActual<{ readFileSync(p: string, enc: 'utf8'): string; existsSync(p: string): boolean }>('fs');
+const { join } = jest.requireActual<{ join(...p: string[]): string }>('path');
 
 const SRC = join(__dirname, '..');
 const src = (p: string) => readFileSync(join(SRC, p), 'utf8');

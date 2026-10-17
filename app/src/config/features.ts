@@ -5,7 +5,7 @@
 export const PAYWALL_BUILT = false;
 
 /** The share card (S12) isn't built yet: its button opened a placeholder. One switch brings the share actions and its
- *  route back (the root layout registers `share/[checkId]` only while this is on, or on demo builds, #322). */
+ *  route back (the root layout registers `share/[checkId]` only while this is on, or on demo builds, #323). */
 export const SHARE_CARD_BUILT = false;
 
 /** Accounts (10-onboarding.md): Continue with Apple, Google or email. Off until Firebase is set up (08 §6 A0–A1), so no

@@ -31,6 +31,7 @@ import { confirmLens } from '@/features/fitcheck/lensUi';
 import { tipLeadText } from '@/features/fitcheck/scoring';
 import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
+import { DoubtLine } from '@/features/closet/DoubtLine';
 import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
@@ -41,7 +42,7 @@ import { useLaterShows } from '@/features/finish/hooks';
 import { finish as finishSequence } from '@/features/finish/session';
 import { SHARE_CARD_BUILT } from '@/config/features';
 
-// The share card's switch lives in config/features.ts (the root layout guards its route by it, #322).
+// The share card's switch lives in config/features.ts (the root layout guards its route by it, #323).
 export { SHARE_CARD_BUILT };
 /** "Save this look" at 9+ has nowhere to save to yet (Lookbook saves come later): hidden until it does something. */
 export const SAVE_LOOK_BUILT = false;
@@ -447,6 +448,8 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
               {SHARE_CARD_BUILT ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
             </View>
           ) : null}
+          {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}
+          <DoubtLine row={row} readOnly={readOnly} />
           <TextLinkRow>
             <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
             {readOnly ? null : <TextLink title={t('card.nqr')} onPress={go.nqr} compact />}

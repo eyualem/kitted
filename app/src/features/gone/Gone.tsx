@@ -1,4 +1,4 @@
-// A record that's gone (09 §20.7 R11, #322): a look, piece, photo, day or check deleted meanwhile, or an old link. The
+// A record that's gone (09 §20.7 R11, #323): a look, piece, photo, day or check deleted meanwhile, or an old link. The
 // page or sheet says so instead of showing nothing.
 import type { ReactNode } from 'react';
 import { ScrollView } from 'react-native';

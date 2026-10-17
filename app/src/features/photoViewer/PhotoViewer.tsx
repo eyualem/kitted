@@ -43,7 +43,7 @@ export function PhotoViewer() {
   const onPage = (e: NativeSyntheticEvent<NativeScrollEvent>) => setPage(Math.round(e.nativeEvent.contentOffset.x / width));
   const photos = data?.photos ?? [];
 
-  // Deleted meanwhile, or an old link (09 §20.7 R11, #322): say so, with a way out of the cover.
+  // Deleted meanwhile, or an old link (09 §20.7 R11, #323): say so, with a way out of the cover.
   if (data === null) {
     return (
       <GonePage>

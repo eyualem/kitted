@@ -18,7 +18,7 @@ import { ScoreMoveLine } from '@/features/sheet/ScoreMoveLine';
 import { SheetList as List, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
-import { fitField, typeOptions, volumeWord, type FieldOption } from './fields';
+import { fitField, limitTo, typeOptions, volumeWord, type FieldOption } from './fields';
 import { PieceArt } from '@/features/closet/GarmentArt';
 import { GoneSheet } from '@/features/gone/Gone';
 
@@ -30,7 +30,9 @@ const LOW_SNEAKERS = ['white_leather_sneaker', 'low_profile_sneaker', 'canvas_sn
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export function CorrectSheet() {
-  const p = useLocalSearchParams<{ checkId: string; reason?: string; garment?: string; field?: string; value?: string }>();
+  const p = useLocalSearchParams<{ checkId: string; reason?: string; garment?: string; field?: string; value?: string; only?: string }>();
+  // From the card's "Not sure" line (§19): only the values his photos of the piece showed, on that row.
+  const only = p.only ? p.only.split(',').filter(Boolean) : null;
   const data = useLive(['fitChecks', 'readings', 'closet', 'profile'], async () => {
     const row = await store.fitChecks.get(p.checkId);
     const reading = row?.readingId ? (await store.readings.get(row.readingId))?.reading : undefined;
@@ -124,7 +126,8 @@ export function CorrectSheet() {
             const shown = draft && !('remove' in draft) && draft.index === i ? { ...g, [draft.field]: draft.value } : g;
             const isOpen = open === i;
             const fit = fitField(g);
-            const options: FieldOption[] = reason === 'item' ? typeOptions(g, (sub) => cap(garmentName({ subcategory: sub }))) : fit?.options ?? [];
+            const all: FieldOption[] = reason === 'item' ? typeOptions(g, (sub) => cap(garmentName({ subcategory: sub }))) : fit?.options ?? [];
+            const options = reason !== 'item' && String(i) === p.garment ? limitTo(all, only) : all;
             const field = reason === 'item' ? 'subcategory' : fit?.field;
             const title =
               // The title says what I read; the selected chip shows his correction (mockup 9).
@@ -169,7 +172,8 @@ export function CorrectSheet() {
         reason={reason}
         before={preview.before}
         after={preview.after}
-        closetUpdated={!!preview.closetHit && !!draft}
+        // A Fit or Leg fix re-scores this check only and never updates the piece (the scored-fix rule, §19).
+        closetUpdated={!!preview.closetHit && !!draft && !('remove' in draft) && draft.field !== 'volume' && draft.field !== 'leg_shape'}
         nextFix={preview.nextFix?.copy}
       />
       <KButton title={reason === 'score' ? t('nqr.send') : t('nqr.save')} onPress={() => void save()} disabled={reason === 'fix' ? !skipTarget : reason === 'score' ? !feel : !draft} />

@@ -24,7 +24,7 @@ import { GoneSheet } from '@/features/gone/Gone';
 
 const CLOSET_CATEGORIES = ['top', 'outerwear', 'bottom', 'footwear'];
 
-/** A row opens the piece's page, where "What it is" fixes a wrong read (#315; 09 §20.7 R6, #322): the sheet closes first,
+/** A row opens the piece's page, where "What it is" fixes a wrong read (#315; 09 §20.7 R6, #323): the sheet closes first,
  *  then the page opens in Closet. The sheet closes with the round X like Why and Which shoes (no "Done"). */
 function openPieceFromSheet(id: string) {
   router.back();

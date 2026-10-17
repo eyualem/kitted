@@ -85,7 +85,7 @@ async function load(ideaId: string): Promise<Model | null> {
   };
 }
 
-/** `readOnly`: Past chats (#276; 09 §20.7 R9, #322): an earlier day's card can't be changed, and its checked row isn't a
+/** `readOnly`: Past chats (#276; 09 §20.7 R9, #323): an earlier day's card can't be changed, and its checked row isn't a
  *  button (it asked today's thread to scroll, which pushed the same day's page again). */
 export function MorningCard({ ideaId, readOnly = false }: { ideaId: string; readOnly?: boolean }) {
   const m = useLive(['dailyIdeas', 'outfits', 'closet', 'fitChecks', 'usage', 'kv', 'chat', 'profile'], () => load(ideaId), [ideaId]);

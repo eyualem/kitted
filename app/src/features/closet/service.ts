@@ -30,6 +30,7 @@ import { mergeCandidates, type MergeUndo } from './merge';
 import { isFirstPhoto, photoOffer, photoSightings, type PhotoUndo } from './wrongCard';
 import { assignNames, baseName, isAutoNamed } from './itemName';
 import { fitDoubt } from './fitDoubt';
+import { logFitAnswer } from './fitLog';
 import { currentValue, editPlan, isOffered, type EditField, type EditValue } from './pieceEdit';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
@@ -63,6 +64,8 @@ export interface ClosetServiceDeps {
 export type DuplicateAnswer = 'same' | 'new' | 'runnerUp';
 
 const CLOSET_CATEGORIES: readonly string[] = ['top', 'outerwear', 'bottom', 'footwear'];
+/** The scored bagginess fields: a "Not quite right?" fix of one re-scores its check only (§19, #322). */
+const SCORED_FIX_FIELDS: readonly string[] = ['volume', 'leg_shape'];
 const CONFIRMABLE: readonly string[] = [
   'subcategory', 'color_family', 'pattern', 'logo', 'leg_shape', 'sleeve_length', 'lightness', 'shoe_profile', 'denim_wear',
 ];
@@ -801,7 +804,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     return saveSummary(checkId, cs);
   }
 
-  /** Undo on an answer's toast (09 §20.7 R10, #322): the question is open again, exactly as before he answered. */
+  /** Undo on an answer's toast (09 §20.7 R10, #323): the question is open again, exactly as before he answered. */
   async function applyUnanswer(checkId: string, obsId: string) {
     const row = await store.fitChecks.get(checkId);
     if (!row) return null;
@@ -1095,6 +1098,22 @@ export function createClosetService(deps: ClosetServiceDeps) {
     }
     const g = next.garments[d.garmentIndex];
     if (!g || !d.field) return { itemName: null };
+    if (SCORED_FIX_FIELDS.includes(d.field)) {
+      // The scored-fix rule (09-ui-review §19, #322): a Fit or Leg fix made with the score in view re-scores this check
+      // only. The sighting keeps the corrected read as that photo's record, but not as his word (no userConfirmed), the
+      // piece is untouched (so it stays "Not sure" until he settles it with no score in sight), and nothing moves piece.
+      if (!link) return { itemName: null };
+      const o = await store.closetObs.get(link.obsId);
+      if (!o) return { itemName: null };
+      const field = d.field === 'volume' ? 'fit' : 'leg';
+      await logFitAnswer(store, await store.closetObs.all(), {
+        at: clock.nowMs(), kind: 'scoredFix', itemId: link.itemId, field, checkId, value: typeof d.value === 'number' || typeof d.value === 'string' ? d.value : null,
+      });
+      await store.closetObs.patch(o.id, { garment: clone(g), readingId: nextReadingId });
+      cs.touched = true;
+      await saveSummary(checkId, cs);
+      return { itemName: null };
+    }
     if (!link) {
       // A check from before V6 (no links): only its own pieces may take the change.
       const own = (await store.closet.all()).filter((c) => row.itemIds.includes(c.id) && isOwned(c));
@@ -1299,7 +1318,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
      * rows change: no reading, sighting or fit-check score moves. null when the piece isn't his (or waits on "Same as
      * your …?"), the value isn't offered, or it's already the value. Returns what Undo (restoreEdit) restores.
      */
-    editPiece: (itemId: string, field: EditField, value: EditValue) => serial(async (): Promise<{ piece: ClosetItemRow; undo: PhotoUndo; remapped: string | null } | null> => {
+    editPiece: (itemId: string, field: EditField, value: EditValue, o: { via?: 'row' | 'card' } = {}) => serial(async (): Promise<{ piece: ClosetItemRow; undo: PhotoUndo; remapped: string | null } | null> => {
       const it = await store.closet.get(itemId);
       if (!it || !isOwned(it)) return null;
       const owned = (await store.closet.all()).filter(isOwned);
@@ -1310,6 +1329,8 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (!isOffered(it, field, value) || (currentValue(it, field) === value && !unsure)) return null;
       const before = await snapshot();
       const plan = editPlan(it, field, value, sightingsOf(itemId, allObs).map(observationOfRow));
+      // The answer log (§19): a Fit or Leg pick, next to what its photos read.
+      if (field === 'fit' || field === 'leg') await logFitAnswer(store, allObs, { at: clock.nowMs(), kind: 'pick', via: o.via ?? 'row', itemId, field, value });
       await store.closet.patch(itemId, { ...plan.patch, updatedAt: clock.nowMs() });
       await refreshItem(itemId);
       await renameAll();

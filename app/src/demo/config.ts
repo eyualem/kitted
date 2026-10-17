@@ -7,5 +7,5 @@ export function demoEnabled(extraDemo: unknown, isDev: boolean): boolean {
   return isDev;
 }
 
-/** Demo tools (demo/* routes, scripted story, demo store). On in Debug builds, off in Release unless KITTED_DEMO=1 (#322). */
+/** Demo tools (demo/* routes, scripted story, demo store). On in Debug builds, off in Release unless KITTED_DEMO=1 (#323). */
 export const DEMO_ENABLED: boolean = demoEnabled(Constants.expoConfig?.extra?.demo, __DEV__);

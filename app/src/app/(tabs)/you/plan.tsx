@@ -17,7 +17,7 @@ import { sessionClock } from '@/state/session';
 
 export default function PlanUsageScreen() {
   const plan = usePlan();
-  // Nothing to restore while the paywall is off (09 §20.7 R5, #322).
+  // Nothing to restore while the paywall is off (09 §20.7 R5, #323).
   const paywall = usePaywallOn();
   const today = useLive(['usage', 'fitChecks'], async () => {
     const snap = await quota.snapshot();

@@ -1,4 +1,4 @@
-// "Same as your …?" answered in Closet's "To confirm" card (09 §20.7 R10, #322): the question leaves the card, so the
+// "Same as your …?" answered in Closet's "To confirm" card (09 §20.7 R10, #323): the question leaves the card, so the
 // answer is said in a toast with Undo, which opens the question again (closet service `unanswer`).
 import type { ClosetAsk, ClosetItemRow } from '@/data/types';
 import type { DuplicateAnswer } from './service';

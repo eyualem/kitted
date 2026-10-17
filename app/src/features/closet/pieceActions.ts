@@ -116,8 +116,9 @@ export async function pickAnother(
 }
 
 /** A row of "What it is" (§17): its picker sheet. */
-export function editHref(item: Pick<ClosetItemRow, 'id'>, field: EditField): string {
-  return `/sheets/edit-item/${item.id}?field=${field}`;
+/** `via`: where it was opened from, for the answer log (§19): the piece page's row (default) or Closet's fit card. */
+export function editHref(item: Pick<ClosetItemRow, 'id'>, field: EditField, via: 'row' | 'card' = 'row'): string {
+  return `/sheets/edit-item/${item.id}?field=${field}${via === 'card' ? '&via=card' : ''}`;
 }
 
 /**
@@ -125,10 +126,10 @@ export function editHref(item: Pick<ClosetItemRow, 'id'>, field: EditField): str
  * that says what changed, with Undo. `onDone` runs either way (the sheet closes); picking the current value writes
  * nothing and shows no toast.
  */
-export async function pickEdit(item: ClosetItemRow, field: EditField, value: EditValue, o: { onDone?: () => void } = {}): Promise<void> {
+export async function pickEdit(item: ClosetItemRow, field: EditField, value: EditValue, o: { onDone?: () => void; via?: 'row' | 'card' } = {}): Promise<void> {
   // The sheet closes at once (feedback within 0.1 s); the drawing redraws when the write lands, a moment later.
   o.onDone?.();
-  const r = await fitCheck.closet.editPiece(item.id, field, value);
+  const r = await fitCheck.closet.editPiece(item.id, field, value, { via: o.via ?? 'row' });
   if (!r) return;
   if (Platform.OS === 'ios') void Haptics.selectionAsync();
   showToast(editToast(field, item, value, r.remapped), () => fitCheck.closet.restoreEdit(r.undo), { ms: TOAST_MS_REMOVAL });

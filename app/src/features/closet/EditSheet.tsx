@@ -83,7 +83,7 @@ function Swatch({ option, hex, width, onPick }: { option: EditOption; hex: strin
 }
 
 export function EditSheet() {
-  const { id, field: rawField } = useLocalSearchParams<{ id: string; field?: string }>();
+  const { id, field: rawField, via } = useLocalSearchParams<{ id: string; field?: string; via?: string }>();
   const field = (FIELDS.find((f) => f === rawField) ?? 'kind') as EditField;
   const { colors, isAccessibilitySize: ax } = useTheme();
   const [width, setWidth] = useState(0);
@@ -105,7 +105,7 @@ export function EditSheet() {
   const pick = (value: EditOption['value']) => {
     if (!item || busy) return;
     setBusy(true);
-    void pickEdit(item, field, value, { onDone: () => router.back() }).finally(() => setBusy(false));
+    void pickEdit(item, field, value, { onDone: () => router.back(), via: via === 'card' ? 'card' : 'row' }).finally(() => setBusy(false));
   };
   const grid = (list: readonly EditOption[]) => (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: space.m }}>

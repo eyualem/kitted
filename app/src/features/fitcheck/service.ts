@@ -1188,7 +1188,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     answerDuplicate(checkId: string, obsId: string, a: DuplicateAnswer) {
       return closet.answer(checkId, obsId, a);
     },
-    /** Undo on that answer's toast: the question is open again (#322). */
+    /** Undo on that answer's toast: the question is open again (#323). */
     unanswerDuplicate(checkId: string, obsId: string) {
       return closet.unanswer(checkId, obsId);
     },

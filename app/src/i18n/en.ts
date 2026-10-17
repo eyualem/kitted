@@ -597,13 +597,13 @@ const addedInBuild = {
   'scan.saved.body': 'Reading clothes from photos is coming soon. Your photo stays on your phone until then.',
   'scan.saved.bodyMany': 'Reading clothes from photos is coming soon. Your photos stay on your phone until then.',
   'scan.another': 'Scan another',
-  // A record that's gone, or an old link (09 §20.7 R11, #322): the page or sheet says so instead of showing nothing.
+  // A record that's gone, or an old link (09 §20.7 R11, #323): the page or sheet says so instead of showing nothing.
   'gone.title': "This isn't here anymore.",
   'gone.body': 'It was removed, or the link is old.',
   'gone.home': 'Go to Kitted',
-  // A re-check, snap or retry whose first check was deleted meanwhile (09 §20.7 R7, #322).
+  // A re-check, snap or retry whose first check was deleted meanwhile (09 §20.7 R7, #323).
   'cam.noParent': "That check isn't here anymore. Nothing was sent or counted.",
-  // A scan whose every photo failed to save (09 §20.7 R4, #322): it used to say "Saved".
+  // A scan whose every photo failed to save (09 §20.7 R4, #323): it used to say "Saved".
   'scan.notSaved.title': "Couldn't save that photo.",
   'scan.notSaved.titleMany': "Couldn't save those photos.",
   'scan.notSaved.body': 'Nothing was kept. Try again.',
@@ -1063,6 +1063,11 @@ const addedInBuild = {
   'closet.unsure.askLeg': 'How do your {item} fit?',
   'closet.unsure.askFit': 'How does your {item} fit?',
   'closet.unsure.a11y.hint': 'Opens the choices. Your scores stay the same.',
+  // The fit-check card's line for a "Not sure" piece (§19, #322). {owner}: "mid-wash jeans'", "black tee's".
+  'closet.unsure.lineLeg': 'Not sure about your {owner} leg?',
+  'closet.unsure.lineFit': 'Not sure about your {owner} fit?',
+  'closet.unsure.lineTap': 'Tap.',
+  'closet.unsure.a11y.lineHint': 'Opens Not quite right? for this piece.',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

@@ -2,7 +2,7 @@ import type { ExpoConfig } from 'expo/config';
 
 // Demo tools (demo/* routes, scripted story, demo store, ?resetData): KITTED_DEMO=1 on, KITTED_DEMO=0 off; unset, they
 // follow the build: on in Debug, off in Release (src/demo/config.ts reads `__DEV__`), so a Release build is safe by
-// default (09 §20.7 R1, #322). The Maestro demo build (05 §P7) sets KITTED_DEMO=1.
+// default (09 §20.7 R1, #323). The Maestro demo build (05 §P7) sets KITTED_DEMO=1.
 const demo = process.env.KITTED_DEMO === '1' ? true : process.env.KITTED_DEMO === '0' ? false : null;
 
 /** The camera prompt's reason (Apple 5.1.1); used by both the plist and the picker plugin. */

@@ -673,6 +673,57 @@ Built on PR eyualem/kitted#5's branch (the piece page's rows), so this PR goes i
 | G4 | | New words: "Not sure", "Seen as {a} and as {b}.", "Which is it?", "How do your {item} fit?", "How does your {item} fit?", and VoiceOver's "Opens the choices. Your scores stay the same." |
 | Found | | `stylistContext.test.ts` failed on main: #311 added the weekday to the chat pack's "Earlier this week" lines and the test still expected the bare date. Fixed the test (its own commit) |
 
+## 19. Bagginess on the fit-check card: plan and pass/fail checks, set before building (Oct 17, #322)
+Founder (Oct 17): "Build X with the judges' fixes: the scored-fix rule first, then the card line that opens straight to that piece's Leg or Fit, the Outfits card, the answer log, and the stop-after-two cap." The verdict came from a debate (4 advocates, a rebuttal round, 3 blind judges; files in the session's shared notes, `bagginess-debate-*.md`, `judge-1..3.md`): X won 2 of 3 judges; Z (as built) won the integrity judge; the chat asking (Y) won none. It bends §18.6 call 2 ("never on a score card") with a statement, not a question; nothing asks before the score (#122 stands). Numbered §19 and #322: main holds #317–321 (first numbered #319, then #321; the composer fix, the gap audit and the large-text fixes took #319–321 the same day).
+
+### 19.1 What he'll see
+- **On a fit-check card**, when a piece in it is "Not sure" (§18: its own photos disagree), one quiet line above Why / Not quite right?: **"Not sure about your mid-wash jeans' leg? Tap."** (a top: "Not sure about your black tee's fit? Tap."). It shows whether or not a fix would move the score, so seeing it never says an answer pays. A tap opens "Not quite right?" straight on that piece's row, offering only the leg shapes (or fits) his photos of it showed, plus this photo's; then the live before and after, and Save.
+- **The fix re-scores this check only** (the scored-fix rule): the toast says "Correction saved." The piece in Closet stays as it was and stays "Not sure" until he settles it on its page or the Closet card, with no score in sight.
+- **The line stops for a piece** once he has tapped it once, or after it has shown on 2 checks without a tap. It never shows on Past chats' cards.
+- **Closet → Outfits** shows the same single "How do your … fit?" card at the top (Pieces already does).
+- **Nothing new is sent anywhere.** Every answer is logged on the phone next to what the photos read (for the paper test and to see drift toward the flattering answer).
+
+### 19.2 The scored-fix rule (what changes in built code)
+Today a "Not quite right?" Fit or Leg correction also sets the piece (its `garment`, `confirmedFields`, the sighting's `userConfirmed`) and can move the sighting to another piece when it conflicts with the piece's other photos. From now on, for the two scored bagginess fields (`volume`, `leg_shape`):
+- the check re-scores exactly as today (its new corrected reading);
+- the sighting's garment takes the corrected value (it is that photo's record), but not as confirmed (`userConfirmed` unchanged), so the matcher treats it as one more read;
+- the piece's `garment`, `confirmedFields` and profile are unchanged, so `isSettled` stays false; the sighting is never moved (identity is "It's another piece…"'s job);
+- the toast is "Correction saved." (no "Saved to your …"), and the sheet's "Updated in Closet" pill doesn't show for these fields.
+Kind ("Wrong item") corrections keep today's behaviour.
+
+### 19.3 Pass/fail checks (written before building; the build must not edit them)
+- **BX1 (T) Scored-fix rule:** a Leg or Fit correction from "Not quite right?" changes the check's score and reading as before; the linked piece's `garment`, `confirmedFields`, `profile` and every other closet row are deep-equal before and after; the sighting's garment has the new value and its `userConfirmed` is unchanged; no sighting moves piece; every other check's score, reading and closet summary are deep-equal; the result names no piece (toast "Correction saved."). A Kind correction still sets the piece as today.
+- **BX2 (T) It doesn't settle:** after such a fix on a "Not sure" piece whose photos still disagree, `fitDoubt` still returns Not sure; a pick on the piece page settles it (§18 BG3).
+- **BX3 (T) The line:** a card shows it exactly when a garment of its current reading links (closet summary) to a piece `fitDoubt` calls Not sure, that garment has a Fit or Leg row in "Not quite right?" (not `certainty: 'unsure'`, not an accessory), the card isn't read-only, and the cap allows it; at most one line (the first such garment); its words are the two above with the piece's name lowercased; it doesn't depend on whether a correction would move the score.
+- **BX4 (T) Straight to the row:** the tap opens `/sheets/correct/<check>?reason=detail&garment=<i>&only=<values>`; the sheet opens on that garment, and its Fit or Leg chips are only the values his photos of the piece showed plus this photo's read (legs mapped to the five, flare → straight, barrel → wide; fits to 2–5), in the usual order.
+- **BX5 (T) The cap:** after one tap the line never shows for that piece again; shown on 2 different checks without a tap, it doesn't show on a 3rd; the same check shown again doesn't count twice; the cap lives in a local kv key.
+- **BX6 (T) The answer log:** each of a piece-page pick (with where: the row or the Closet card), a line tap and a scored fix (Fit or Leg) appends one entry with the time, the piece, the field, the value (or none for a tap) and what that piece's photos read; at most the newest 300 are kept; the key is local, never synced.
+- **BX7 (T, S) Outfits:** the single fit card shows at the top of Outfits and of Pieces (the same piece); Pieces' "Same as your …?" questions stay on Pieces only.
+- **BX8 (T) No other score moves:** core has no diff; with no "Not sure" piece the card renders exactly as before.
+- **BX9 (S) On the Simulator** (a new demo screen: a check of a piece whose photos disagree): the line, a tap opening the sheet on the jeans with only their seen legs, Save, the toast; Outfits with the card; light, dark and the largest text size, nothing clipped.
+- **BX10 (T) Words:** the new strings pass the copy checks, the sentence gate and the body-words rule.
+- **G1–G4** (§6) apply.
+
+### §19 results (Oct 17, #322): checked against BX1–BX10, none changed
+Demo screens **201** (a check of s12 whose mid-wash jeans read slim, wide and wide in earlier photos), **202** (Closet → Outfits with the fit card) and **203** (the sheet the line opens). Seen on the iOS Simulator (iPhone 17 Pro, a turn from the large-text session) and on the web preview. Screenshots `screenshots/bagginess-oct17/` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| BX1 | Pass (T) | `fitLine.test.ts`, on the real fit-check and closet services: a Leg fix on s12's jeans takes the check to the new read; every closet row deep-equal; the sighting has the new leg with `userConfirmed` unchanged; nothing moves piece; another check deep-equal; no piece named. A Fit fix on the hoodie: same. A Kind fix still sets the piece |
+| BX2 | Pass (T) | the jeans stay Not sure after a scored fix; a piece-page pick settles them |
+| BX3 | Pass (T, S) | the line names the piece ("Not sure about your mid-wash jeans' leg? Tap."); none on a check with no Not sure piece, on a garment read `unsure`, or once settled; the line's code never reads a score; the card passes `readOnly` |
+| BX4 | Pass (T, S) | the href carries `only=slim,straight,wide` (this photo straight, earlier slim, wide, wide); `limitTo` keeps the usual order; on the Simulator and the web the sheet opens on the jeans with Slim · Straight · Wide only. Picking Slim showed 7.0 → 6.5 and no "Updated in Closet" pill; Save gave "Correction saved.", the card read 6.5 and the line was gone |
+| BX5 | Pass (T) | one tap stops it; 2 untapped checks stop a 3rd; a check it showed on keeps it; the same check doesn't count twice; `closet.fitLine` is local |
+| BX6 | Pass (T) | a scored fix, a line tap and a Closet-card pick each add one entry (`via: 'card'`), with the photos' reads before the answer; the newest 300 kept; `closet.fitAnswers` is local |
+| BX7 | Pass (T, S) | Outfits draws the same one card; "Same as your …?" stays on Pieces |
+| BX8 | Pass (T) | no Not sure piece: no line; `packages/kitted-core` untouched |
+| BX9 | Pass (S) | 201–203 in light and dark, 201 and 202 at the largest text size: the line wraps inside its pill, nothing clipped |
+| BX10 | Pass (T) | the four new strings pass the sentence gate and the body-words rule |
+| G1 | Pass | `npm run check` steps: tsc, core tsc, lint, core tests, 1167 app tests |
+| G4 | | New words: "Not sure about your {owner} leg?", "Not sure about your {owner} fit?", "Tap.", VoiceOver "Opens Not quite right? for this piece." |
+| Amended | | Two older tests expected a Leg fix to set the piece ("Saved to your tan chinos"): `closetService.test` now shows the patch-in-place path with a Kind fix; `fitCheckService.test` expects the piece left as it was. Both say why in the test |
+| Found | | Picking the honest leg can cost points (Slim took the demo check from 7.0 to 6.5), which cuts against the worry that the line only invites flattering answers; the log will show what he actually picks |
+
 ---
 
 ## 20. What's missing right now: the whole-app gap audit (Oct 17, #320)
@@ -691,14 +742,14 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
    - There's no $3/day spend stop (`app-build-spec.md:243`), and the "paused" line can never fire. `online()` is hard-wired to true (`ask/pipeline.ts:70,136`).
    - App Attest isn't built, even log-only.
    - [you: Cloudflare account] then [code]: the Worker, the proxy sources, server-side limits and the kill switch.
-2. ✔ ✅ **Done (#322, §20.7 R3).** ~~**Fake demo readings would leak into real checks.**~~ With no key, the mock answers *any* shoe snap or pants-and-shoes snap with a canned demo reading (`readingSource/mock.ts:64-65`). A tester's real snap would merge someone else's shoes into his score. [code] In a non-demo build the mock must refuse every snap.
-3. ✔ ◐ **Mostly done (#322, §20.7 R1):** demo off by default in Release, `guard:release`, a local Release build booted. Still open: the dev launcher's local-network strings, and the paid team. ~~**No safe release build.**~~
+2. ✔ ✅ **Done (#323, §20.7 R3).** ~~**Fake demo readings would leak into real checks.**~~ With no key, the mock answers *any* shoe snap or pants-and-shoes snap with a canned demo reading (`readingSource/mock.ts:64-65`). A tester's real snap would merge someone else's shoes into his score. [code] In a non-demo build the mock must refuse every snap.
+3. ✔ ◐ **Mostly done (#323, §20.7 R1):** demo off by default in Release, `guard:release`, a local Release build booted. Still open: the dev launcher's local-network strings, and the paid team. ~~**No safe release build.**~~
    - The demo tools are on unless `KITTED_DEMO=0` (`app/app.config.ts:4`), and nothing sets that: no `eas.json`, no release script, and `tools/phone/install.sh:11` builds Debug.
    - The `guard:release` script promised in 05 §P8 (`05-build-plan.md:679`) isn't in `package.json`. As written it would always fail anyway: the Firebase key is also `AIza…` and is bundled on purpose.
    - No Release build has ever been made, so minifier, Hermes and `__DEV__` surprises are untested.
    - The dev launcher's local-network strings ship in `Info.plist` (`NSLocalNetworkUsageDescription` "Expo Dev Launcher…", `NSBonjourServices`).
    - [code] for the script, the default and a local Release build on the Simulator; [you: $99 program] for the paid team and App ID (`app.config.ts:22-24`, still the Personal Team `6652QVRQAL`).
-4. ✔ ✅ **Done (#322, §20.7 R1–R2):** the paywall route needs `paywallOn()`; Release builds have no demo tools, so no `?resetData` or demo links. ~~**Two deep links do damage.**~~
+4. ✔ ✅ **Done (#323, §20.7 R1–R2):** the paywall route needs `paywallOn()`; Release builds have no demo tools, so no `?resetData` or demo links. ~~**Two deep links do damage.**~~
    - `kitted://paywall/plans` opens the paywall on any build: its route is guarded only by age and onboarding (`app/_layout.tsx:89`), not `PAYWALL_BUILT`. The mock "purchase" then turns on Pro until the app restarts (`services/purchases.ts:58-66`, `services/entitlements.ts:21`).
    - In any demo-enabled build, `?resetData=1` wipes the real store and the age block (`state/boot.ts:52-55`), and `kitted://demo/screen/N` wipes it and loads demo data (`demo/prepareDemoScreen.ts:271`).
    - [code] Guard the paywall route by `paywallOn()`; demo off in release (item 3).
@@ -715,26 +766,26 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
 7. **The beta is free-tier only.** Pro is an in-memory demo flag and the paywall is off, so testers get 1 check and 5 questions a day with no way up. [you] Decide: a beta allowance set on the server (default: testers get Pro's limits during the beta), or accept it.
 
 ### 20.2 Looks real but does nothing (fix before the beta; all [code] unless marked)
-8. ✔ ✅ **Done (#322, R4).** ~~**A failed scan says "Saved."**~~ `save()` shows success with `Math.max(saved, 1)` even when every photo failed (`scan/ScanCameraScreen.tsx:132-146`).
+8. ✔ ✅ **Done (#323, R4).** ~~**A failed scan says "Saved."**~~ `save()` shows success with `Math.max(saved, 1)` even when every photo failed (`scan/ScanCameraScreen.tsx:132-146`).
 9. **Closet "+" leads only to "coming soon."** Scans are never read into pieces, and nothing reads `scan.inbox` but its own row (`scan/inbox.ts`, `closet/addActions.ts:13-16`). It's the tab's only header button. Until the item reading exists (it needs the server): put Starter basics first in "+" and keep scanning as "Save for later".
-10. ✔ ✅ **Done (#322, R5): the row is hidden.** ~~**Settings › Notifications has 3 switches that do nothing.**~~ The row shows whatever `NOTIFICATIONS_BUILT` says (`you/settings.tsx:47`), and nothing schedules anything. The screen says "That's all I send." Hide the row until `expo-notifications` [you].
-11. ✅ **Done (#322, R5): hidden with the paywall.** ~~**Subscription and "Restore purchases" show with nothing to buy.**~~ `settings.tsx:58-61`, `you/plan.tsx:56`; Restore always says "No purchases to restore." (`settings/plan.ts:81-87`). Hide them with the paywall.
+10. ✔ ✅ **Done (#323, R5): the row is hidden.** ~~**Settings › Notifications has 3 switches that do nothing.**~~ The row shows whatever `NOTIFICATIONS_BUILT` says (`you/settings.tsx:47`), and nothing schedules anything. The screen says "That's all I send." Hide the row until `expo-notifications` [you].
+11. ✅ **Done (#323, R5): hidden with the paywall.** ~~**Subscription and "Restore purchases" show with nothing to buy.**~~ `settings.tsx:58-61`, `you/plan.tsx:56`; Restore always says "No purchases to restore." (`settings/plan.ts:81-87`). Hide them with the paywall.
 12. **"Wear this" changes nothing he can see.**
     - It writes the wear log only (`closet/outfitActions.ts:15-29`, `morning/service.ts:287-299`). Worn ×N, Last worn and Your go-tos count fit checks only (`closet/service.ts:387,419,438`, `closet/outfits.ts:126-140`).
     - The log keeps one row a day (`data/migrations.ts:127-132`), so a second Wear this replaces the first silently.
-13. ✅ **Done (#322, R6): rows open the piece page.** ~~**"Added to your closet" says "Fix anything I got wrong." but its rows are dead.**~~ `EDIT_ITEM_BUILT = false` (`added/AddedSheet.tsx:27,193`), though the piece page has had "What it is" since #315. Point each row at its piece page; the existing `onEdit` pushes no `?field=`.
-14. ✔ ✅ **Done (#322, R7).** ~~**A re-check or snap whose first check is gone closes the camera silently.**~~ `noParent` (`fitcheck/service.ts:661`) has no case in `explain()` (`camera/startCheck.ts:157-179`).
+13. ✅ **Done (#323, R6): rows open the piece page.** ~~**"Added to your closet" says "Fix anything I got wrong." but its rows are dead.**~~ `EDIT_ITEM_BUILT = false` (`added/AddedSheet.tsx:27,193`), though the piece page has had "What it is" since #315. Point each row at its piece page; the existing `onEdit` pushes no `?field=`.
+14. ✔ ✅ **Done (#323, R7).** ~~**A re-check or snap whose first check is gone closes the camera silently.**~~ `noParent` (`fitcheck/service.ts:661`) has no case in `explain()` (`camera/startCheck.ts:157-179`).
 15. **A scored re-check card has no "Why X?" and no "Not quite right?"** (`stylist/cards/RecheckCard.tsx:161-176`). After a drop he can't see why or correct a misread.
 16. **A dialed-in card (9+) has no next step.** With no fixes and Save and Share switched off (`FitCheckCard.tsx:44-46, 439-447`), the action row is empty.
 17. **"How I score" still explains credits** (§1 item 8, #233 item 1). Waits on [you: #233 OK].
 18. **No offline handling.** `banner.offline` and `banner.online` are unused, send is never disabled, and offline questions get the generic "I couldn't answer that". The photo caption is always "Not scored" (`stylist/MessageView.tsx:130`), and `fail.cap.notSent` is unused.
 19. **Saying "that score is wrong" in chat can't open "Not quite right?"** The router detects it (`ask/router.ts:25`), but no card type opens the sheet (`ask/cards.ts:14-21`).
-20. ✅ **Done (#322, R8): 500 characters.** ~~**Questions have no length cap.**~~ No `maxLength` (`stylist/Composer.tsx:222-240`), and the whole text goes into the prompt. That's a cost risk once the server pays.
-21. ✅ **Done (#322, R9).** ~~**Past chats aren't fully read-only.**~~ An old evening card's occasion picker still edits (`MessageView.tsx:39` renders `MorningCard` without `readOnly`; `MorningCard.tsx:312-326`). Tapping a past day's checked morning row re-pushes the same page (`StylistScreen.tsx:225-227`).
+20. ✅ **Done (#323, R8): 500 characters.** ~~**Questions have no length cap.**~~ No `maxLength` (`stylist/Composer.tsx:222-240`), and the whole text goes into the prompt. That's a cost risk once the server pays.
+21. ✅ **Done (#323, R9).** ~~**Past chats aren't fully read-only.**~~ An old evening card's occasion picker still edits (`MessageView.tsx:39` renders `MorningCard` without `readOnly`; `MorningCard.tsx:312-326`). Tapping a past day's checked morning row re-pushes the same page (`StylistScreen.tsx:225-227`).
 22. **He can't delete one photo or one check.** The look page's ⋯ (Save, Share, Delete photo) isn't built (`lookbook/LookPageScreen.tsx:10`), and "Remove from Lookbook" keeps the file. The only way out is "Delete all photos". Privacy expectation: H.
 23. **"Not now" on consent leaves a bare thread.** The S26 "Turn on fit checks" card isn't built (`noConsent.title` unused, `onboarding/complete.ts:27`).
 24. **The empty Closet has no "Tap the basics you own."** It offers only "Check my fit" (`app/(tabs)/closet/index.tsx:82-85`). Starter essentials is reachable only from "No outfits yet" or Your moves, and with 1–2 pieces the "Add shoes and you'd have N outfits" hint sits on the hidden Outfits half (`closet/outfits.ts:151-155`).
-25. ✅ **Done (#322, R10): a toast with Undo.** ~~**A "Same as your …?" answer in Closet just vanishes:**~~ no toast, no Undo (`app/(tabs)/closet/index.tsx:107`).
+25. ✅ **Done (#323, R10): a toast with Undo.** ~~**A "Same as your …?" answer in Closet just vanishes:**~~ no toast, no Undo (`app/(tabs)/closet/index.tsx:107`).
 
 ### 20.3 Missing pieces a user will expect (decide or schedule)
 26. **Adding a piece by hand** beyond the 12 Starter basics: "Describe it" (C4d) is a placeholder nothing links to (`app/sheets/describe.tsx`). With 1 free check a day, the closet fills slowly.
@@ -742,8 +793,8 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
 28. **The Lookbook calendar and "Days dressed"** (D16; only filters and Saved were deferred). Logged wear days show nowhere.
 29. **The Pieces grid** has no order or sections: newest first, kinds mixed, no Tops/Layers/Bottoms/Shoes chips at 12+ (`closet/merge.ts:14-17`).
 30. **In the thread,** a new answer can land off-screen with no "Latest" pill, and there's no Stop while an answer streams (07 §6.1).
-31. ✅ **Done (#322, R11): "This isn't here anymore." and `+not-found`.** ~~**Missing records give blank screens.**~~ These show an empty page or only a title: the look page, piece page, photo viewer, past day, and the Why, Correct, Added, Tell me, Edit, Merge and Fact sheets (Pick shoes is fully empty). There's no `app/+not-found.tsx`, so a bad link shows Expo's "Unmatched Route".
-32. ✅ **Done (#322, R12): five deleted, the share card's route guarded.** ~~**Six placeholder routes show spec IDs**~~ ("S12 · Share card / Placeholder. Built in P6.") if a link reaches them: `share/[checkId]`, `shoe-snap` (replaced by `camera?mode=shoeSnap`), `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation`, `sheets/swap/[ideaId]`. Delete or guard them.
+31. ✅ **Done (#323, R11): "This isn't here anymore." and `+not-found`.** ~~**Missing records give blank screens.**~~ These show an empty page or only a title: the look page, piece page, photo viewer, past day, and the Why, Correct, Added, Tell me, Edit, Merge and Fact sheets (Pick shoes is fully empty). There's no `app/+not-found.tsx`, so a bad link shows Expo's "Unmatched Route".
+32. ✅ **Done (#323, R12): five deleted, the share card's route guarded.** ~~**Six placeholder routes show spec IDs**~~ ("S12 · Share card / Placeholder. Built in P6.") if a link reaches them: `share/[checkId]`, `shoe-snap` (replaced by `camera?mode=shoeSnap`), `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation`, `sheets/swap/[ideaId]`. Delete or guard them.
 33. **A wrong birth year can't be fixed.** "Birth year can't be changed here." points nowhere (`you/profile.tsx:84-90`). An age block survives Delete all my data and has no contact line (`onboarding/AgeStopScreen.tsx`). The check uses the year only, so someone born in late 2008 passes at 17; Declared Age Range is the real check.
 34. **Location, once denied, can't be turned back on.** The weather ask shows only for `unknown` (`morning/MorningCard.tsx:177`).
 35. **Morning-card Swap** never says "Nothing else in your closet works here yet." It leaves out only the last swap, so the original can come back (`morning/service.ts:278-284`).
@@ -770,7 +821,7 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
 3. **[code] after Cloudflare:** the Worker (score, ask, closet read, limits, kill switch, failure log), then the proxy sources, then a TestFlight dry run after the $99 program.
 4. **[code] before the beta:** items 9, 12, 15, 16, 18, 19, 22, 23, 24, 26.
 
-### 20.7 Step 1 built: the release-safety batch (Oct 17, #322). Checks first
+### 20.7 Step 1 built: the release-safety batch (Oct 17, #323). Checks first
 Written before the code. Each passes or fails; the results are under each group once built.
 
 **R1 · A release build is safe**

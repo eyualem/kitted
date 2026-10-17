@@ -22,7 +22,7 @@ import { liveAnswer as defaultLive } from './live';
 import type { AnswerEvent, AnswerSource } from './source';
 
 /** No first word by then: "Taking longer…" (07 §6.4). */
-/** The longest question (09 §20.7 R8, #322): the field takes no more, and the send path cuts dictation to it, so a
+/** The longest question (09 §20.7 R8, #323): the field takes no more, and the send path cuts dictation to it, so a
  *  pasted essay never becomes the prompt (a cost risk once the server pays). */
 export const QUESTION_MAX_CHARS = 500;
 

@@ -21,7 +21,7 @@ import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
 import { askService } from '@/features/ask/session';
 import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
-import { STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
+import { STORY_DOUBT, STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
@@ -61,8 +61,9 @@ type Step =
   | { at: string; do: 'askTap'; option: string }
   /** A stored setting (Closet's remembered Pieces | Outfits tap, #307). */
   | { at: string; do: 'kv'; key: string; value: string }
-  /** Earlier sightings of a closet piece, read with these legs or fits (09-ui-review §18): a day apart, no photo. */
-  | { at: string; do: 'sightings'; itemId: string; legs?: string[]; volumes?: number[] }
+  /** Earlier sightings of a closet piece, read with these legs or fits (09-ui-review §18): a day apart, no photo. The
+   *  piece is `itemId`, or the `slot` piece a story check (`ofCheck`) linked (§19). */
+  | { at: string; do: 'sightings'; itemId?: string; ofCheck?: string; slot?: string; legs?: string[]; volumes?: number[] }
   /** Questions already used today (the limit state without five demo answers in the thread). */
   | { at: string; do: 'askUsed'; n: number }
   /** His question in the thread, its answer held mid-way: the dots (no text) or the first words (07 §6.1). */
@@ -82,6 +83,11 @@ const DUP_STORY: Step[] = [
   { at: '2026-10-22T07:51:00', do: 'closetNo' },
 ];
 
+/** §19's story (screens 201–203): a check of s12, then earlier photos of its jeans read slim, wide and wide. */
+const DOUBT_STORY: Step[] = [
+  { at: '2026-10-22T12:10:00', do: 'check', photoId: 's12', occasion: 'everyday', checkId: STORY_DOUBT },
+  { at: '2026-10-22T12:11:00', do: 'sightings', ofCheck: STORY_DOUBT, slot: 'bottom', legs: ['slim', 'wide', 'wide'] },
+];
 const FIRST_CHECK: Step = { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' };
 
 const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
@@ -225,6 +231,10 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   194: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   195: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
   196: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
+  // Bagginess on the fit-check card (§19, #322): s12's mid-wash jeans, read slim, wide and wide in earlier photos.
+  201: { steps: DOUBT_STORY },
+  202: { steps: [...DOUBT_STORY, { at: '2026-10-22T12:12:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
+  203: { steps: DOUBT_STORY },
   183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
@@ -356,13 +366,20 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       continue;
     }
     if (step.do === 'sightings') {
-      const it = await store.closet.get(step.itemId);
+      let itemId = step.itemId ?? null;
+      if (step.ofCheck) {
+        await fitCheck.closet.settle();
+        const links = (await store.fitChecks.get(step.ofCheck))?.details.closetSummary?.links ?? [];
+        const items = await Promise.all(links.map((l) => store.closet.get(l.itemId)));
+        itemId = items.find((c) => c?.slot === step.slot)?.id ?? null;
+      }
+      const it = itemId ? await store.closet.get(itemId) : null;
       if (!it) continue;
       const reads: Partial<typeof it.garment>[] = [...(step.legs ?? []).map((l) => ({ leg_shape: l })), ...(step.volumes ?? []).map((v) => ({ volume: v }))];
       const t0 = at(step.at);
       for (const [i, r] of reads.entries()) {
         await store.closetObs.put({
-          id: `O-demo-${step.itemId}-${i}`, itemId: step.itemId, fitCheckId: null, readingId: null, closetReadingId: null, garmentIndex: null,
+          id: `O-demo-${it.id}-${i}`, itemId: it.id, fitCheckId: null, readingId: null, closetReadingId: null, garmentIndex: null,
           origin: 'garment', garment: { ...it.garment, ...r }, closet: null, sampledHex: null, sampledL: null, cropFile: null, cropQuality: null,
           decision: 'same', identityScore: null, candidates: [], askItemId: null, answeredAt: null, userConfirmed: null,
           createdAt: t0 - (reads.length - i) * 86_400_000, isDeleted: false,

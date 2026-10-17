@@ -33,7 +33,7 @@ import { openingSegment, outfitCount, SEGMENT_KEY } from '@/features/closet/outf
 import { Segmented } from '@/features/onboarding/Segmented';
 import { t } from '@/i18n/en';
 
-/** A "To confirm" answer leaves the card: a toast says it, with Undo (09 §20.7 R10, #322). */
+/** A "To confirm" answer leaves the card: a toast says it, with Undo (09 §20.7 R10, #323). */
 const answerDeps: AnswerToastDeps = {
   answer: (c, o, a) => fitCheck.answerDuplicate(c, o, a),
   unanswer: (c, o) => fitCheck.unanswerDuplicate(c, o),
@@ -101,6 +101,15 @@ export default function ClosetScreen() {
             onChange={pick}
             options={[{ value: 'pieces', label: t('closet.seg.pieces') }, { value: 'outfits', label: t('closet.seg.outfits') }]}
           />
+          {/* The same one fit card on Outfits (§19, #322): Closet opens there once he has 3+ outfits. */}
+          {segment === 'outfits' && fit ? (
+            <KCard>
+              <KCardSection gap={12}>
+                <TagLine left={t('closet.confirm.tag')} right="1" />
+                <FitQuestion item={fit.item} doubt={fit.doubt} />
+              </KCardSection>
+            </KCard>
+          ) : null}
           {segment === 'outfits' ? <OutfitsView closet={all} checks={fitChecks} count={count} styles={styles} /> : null}
           {segment === 'pieces' ? (
           <>

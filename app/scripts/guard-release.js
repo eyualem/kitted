@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// npm run guard:release (05 §P8, 09 §20.7 R1.2, #322): make a production iOS export and refuse it if it holds a
+// npm run guard:release (05 §P8, 09 §20.7 R1.2, #323): make a production iOS export and refuse it if it holds a
 // secret, or if the default config would ship the demo tools.
 //   - any Google-shaped key (AIza…) except the Firebase web key, which is bundled on purpose (public by design, #295);
 //   - the exact value of every other secret in app/.env* (the dev Gemini key, the OpenAI and Anthropic test keys);

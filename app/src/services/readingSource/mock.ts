@@ -16,7 +16,7 @@ export interface MockOptions {
   fault?: () => DemoFault | null;
   scheduler?: Scheduler;
   /** Whether a snap of a real photo (no bundled photo id) gets the canned snap reading: only on a demo screen. Off, it
-   *  gets `unknownPhoto`, so a demo reading never merges into a real check (09 §20.7 R3, #322). Default off. */
+   *  gets `unknownPhoto`, so a demo reading never merges into a real check (09 §20.7 R3, #323). Default off. */
   cannedSnaps?: () => boolean;
 }
 

@@ -117,7 +117,7 @@ export function PastDayScreen({ dayKey: key }: { dayKey: string }) {
     [day, now],
   );
   const title = day ? chatDayTitle(day.firstAt, now, sessionClock.offset) : '';
-  // No such day (its messages were deleted, or an old link): say so (09 §20.7 R11, #322).
+  // No such day (its messages were deleted, or an old link): say so (09 §20.7 R11, #323).
   if (loaded && !day) return <GonePage />;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xxxl }}>
