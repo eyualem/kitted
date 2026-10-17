@@ -447,7 +447,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
               {SHARE_CARD_BUILT ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
             </View>
           ) : null}
-          {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #321): a statement, never a question before the score. */}
+          {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}
           <DoubtLine row={row} readOnly={readOnly} />
           <TextLinkRow>
             <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />

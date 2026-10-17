@@ -78,7 +78,7 @@ describe('first-run story', () => {
     const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };
     const before = (await store.fitChecks.get(checkId))!;
     const res = await svc.saveCorrection(checkId, { garmentIndex: 1, field: 'leg_shape', value: 'slim' });
-    // Amended by 09-ui-review §19 (#321), openly: a Leg fix re-scores this check only and names no piece.
+    // Amended by 09-ui-review §19 (#322), openly: a Leg fix re-scores this check only and names no piece.
     expect(res).toEqual({ before: 8, after: 8, itemName: null });
     const after = (await store.fitChecks.get(checkId))!;
     expect(after.readingId).not.toBe(before.readingId);

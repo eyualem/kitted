@@ -231,7 +231,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   194: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   195: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
   196: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
-  // Bagginess on the fit-check card (§19, #321): s12's mid-wash jeans, read slim, wide and wide in earlier photos.
+  // Bagginess on the fit-check card (§19, #322): s12's mid-wash jeans, read slim, wide and wide in earlier photos.
   201: { steps: DOUBT_STORY },
   202: { steps: [...DOUBT_STORY, { at: '2026-10-22T12:12:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   203: { steps: DOUBT_STORY },

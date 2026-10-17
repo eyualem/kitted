@@ -113,7 +113,7 @@ export const KV_LOCAL: readonly string[] = [
   'closet.segment',
   // His Skips on the "How do your … fit?" card (09-ui-review §18, #316): a nudge he dismissed on this phone.
   'closet.fitSkip',
-  // The fit-check card line's cap and the answer log (§19, #321): this phone's, never synced.
+  // The fit-check card line's cap and the answer log (§19, #322): this phone's, never synced.
   'closet.fitLine', 'closet.fitAnswers',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
