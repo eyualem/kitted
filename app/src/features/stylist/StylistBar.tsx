@@ -29,8 +29,8 @@ export function StylistBar() {
     };
   }, []);
 
-  // While the composer is open it sits right over this capsule; hide ours so the words don't show
-  // through its glass twice.
+  // The composer opens in this capsule's place and the accessory leaves the tab bar (07 §19); our words fade at once so
+  // they don't linger while the system animates the capsule out.
   return (
     <View style={[styles.row, inline && styles.rowInline, { opacity: open ? 0 : 1 }]} pointerEvents={open ? 'none' : 'auto'}>
       <Pressable

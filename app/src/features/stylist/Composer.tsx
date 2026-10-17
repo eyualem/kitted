@@ -52,6 +52,8 @@ function hasGlass(): boolean {
 
 const H = 52;
 const BTN = 40;
+/** After the accessory's exit animation has started; well before he could reach for a key. */
+const AUTOFOCUS_RETRY_MS = 350;
 
 export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, startVoice, onIdle, chips = [] }: ComposerProps) {
   const { colors, scheme, a11y, isAccessibilitySize } = useTheme();
@@ -99,6 +101,17 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
 
   // VoiceOver's cursor to the field once it's drawn (after ✕ it comes back where the waveform was), F4.
   const field = useRef<TextInput>(null);
+  // Opened from the bar's field: autoFocus asks once, as the field reaches the window, while the tab bar takes its
+  // accessory away (07 §19). If that one ask was refused (seen on the Simulator with a hardware keyboard), ask again.
+  useEffect(() => {
+    if (!autoFocus) return;
+    const id = setTimeout(() => {
+      if (!used.current && field.current && !field.current.isFocused()) field.current.focus();
+    }, AUTOFOCUS_RETRY_MS);
+    return () => clearTimeout(id);
+    // Mount only, like autoFocus.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const cursorNext = useRef(false);
   useEffect(() => {
     if (!cursorNext.current || recording || !field.current) return;
