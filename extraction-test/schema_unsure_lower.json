@@ -1,0 +1,74 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "pant_end": {
+   "type": "STRING",
+   "enum": [
+    "shorts",
+    "cropped",
+    "no_break",
+    "slight_break",
+    "full_break",
+    "stacked",
+    "pooling",
+    "not_visible"
+   ]
+  },
+  "covers_shoe": {
+   "type": "STRING",
+   "enum": [
+    "no",
+    "partly",
+    "mostly",
+    "no_shoes_visible"
+   ]
+  },
+  "shoe": {
+   "type": "STRING",
+   "enum": [
+    "white_leather_sneaker",
+    "canvas_sneaker",
+    "low_profile_sneaker",
+    "retro_runner",
+    "performance_runner",
+    "chunky_sneaker",
+    "basketball_sneaker",
+    "loafer",
+    "derby",
+    "dress_shoe",
+    "suede_chukka",
+    "chelsea_boot",
+    "work_boot",
+    "slides_sandals",
+    "other",
+    "cant_see"
+   ]
+  },
+  "leg_shape": {
+   "type": "STRING",
+   "enum": [
+    "skinny",
+    "slim",
+    "straight",
+    "relaxed",
+    "wide",
+    "barrel",
+    "flare_bootcut",
+    "shorts",
+    "cant_see"
+   ]
+  }
+ },
+ "required": [
+  "pant_end",
+  "covers_shoe",
+  "shoe",
+  "leg_shape"
+ ],
+ "propertyOrdering": [
+  "pant_end",
+  "covers_shoe",
+  "shoe",
+  "leg_shape"
+ ]
+}
