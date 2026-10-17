@@ -26,7 +26,7 @@ export function FitQuestion({ item, doubt }: { item: ClosetItemRow; doubt: FitDo
   return (
     <View style={{ gap: space.s }}>
       <Pressable
-        onPress={() => router.push(editHref(item, doubt.field) as Href)}
+        onPress={() => router.push(editHref(item, doubt.field, 'card') as Href)}
         accessibilityRole="button"
         accessibilityLabel={`${question} ${seen}`}
         accessibilityHint={t('closet.unsure.a11y.hint')}

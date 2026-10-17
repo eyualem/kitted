@@ -92,6 +92,15 @@ export default function ClosetScreen() {
             onChange={pick}
             options={[{ value: 'pieces', label: t('closet.seg.pieces') }, { value: 'outfits', label: t('closet.seg.outfits') }]}
           />
+          {/* The same one fit card on Outfits (§19, #319): Closet opens there once he has 3+ outfits. */}
+          {segment === 'outfits' && fit ? (
+            <KCard>
+              <KCardSection gap={12}>
+                <TagLine left={t('closet.confirm.tag')} right="1" />
+                <FitQuestion item={fit.item} doubt={fit.doubt} />
+              </KCardSection>
+            </KCard>
+          ) : null}
           {segment === 'outfits' ? <OutfitsView closet={all} checks={fitChecks} count={count} styles={styles} /> : null}
           {segment === 'pieces' ? (
           <>
