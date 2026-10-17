@@ -3,7 +3,7 @@
 // with the piece outlined, never the cut-out alone (#276 call 1), and a photo never changes the drawing (call 3).
 //   1. The hero: a swipe gallery, the drawing, then his cover photo and his other photos; page dots only when there
 //      are photos, a light tick per page. A tap on a photo opens it full screen on that check.
-//   2. The name (tap to rename), the slot, then "What it is" (§17, #314): Kind · Color · Leg or Fit · Pattern, each
+//   2. The name (tap to rename), the slot, then "What it is" (§17, #315): Kind · Color · Leg or Fit · Pattern, each
 //      opening its picker; then what the data says: worn, last worn, added.
 //   3. "Your photos · N": square crops, best first, the cover marked. Long-press (or VoiceOver actions): Use as cover ·
 //      Open the look · Not this piece (a correction, with Undo) · It's another piece… (move just this photo to another
@@ -214,7 +214,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
         </KText>
       </View>
 
-      {/* What it is (§17, #314): the rest of the old detail line, each part a row he can fix. */}
+      {/* What it is (§17, #315): the rest of the old detail line, each part a row he can fix. */}
       {rows.length > 0 ? (
         <Section label={t('closet.edit.title')} footer={t('closet.edit.foot')}>
           {rows.map((r) => (

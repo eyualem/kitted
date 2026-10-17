@@ -75,6 +75,11 @@ export interface AskDeps {
   log?: (event: string) => void;
   /** VoiceOver reads the answer once it's complete (07 §6.1). */
   onAnswered?: (text: string) => void;
+  /**
+   * Any other stylist line it posts (the support card, a refusal, the limit line, the failed or paused line): VoiceOver
+   * hears those once too (07 §17, U14); before, only an answer was spoken, so a distress message got silence.
+   */
+  onPosted?: (text: string) => void;
   live?: typeof defaultLive;
 }
 
@@ -141,7 +146,9 @@ export function createAsk(deps: AskDeps) {
 
   async function limitLine(after: number): Promise<void> {
     const pro = (await quota.snapshot()).pro;
-    await store.chat.put(row(ids('M'), after + 1, 'stylist', t(pro ? 'ask.limit.pro' : 'ask.limit.free'), { kind: 'card', cardType: 'limit' }, { tryPro: !pro && deps.tryPro() }));
+    const text = t(pro ? 'ask.limit.pro' : 'ask.limit.free');
+    await store.chat.put(row(ids('M'), after + 1, 'stylist', text, { kind: 'card', cardType: 'limit' }, { tryPro: !pro && deps.tryPro() }));
+    deps.onPosted?.(text);
   }
 
   /** One call to the source, gated sentence by sentence (A4–A5), with the first-word timers (A3). */
@@ -179,7 +186,7 @@ export function createAsk(deps: AskDeps) {
         if (ev.type === 'delta') {
           armGiveUp(); // a stream that stalls 20 s gives up too
           const show = sentences.push(ev.text);
-          if (show) live.append(show);
+          if (show) live.append(show, question.id);
         } else if (ev.type === 'done') {
           done = ev;
           break;
@@ -199,7 +206,7 @@ export function createAsk(deps: AskDeps) {
     }
     if (!failed && done) {
       const rest = sentences.end();
-      if (rest) live.append(rest);
+      if (rest) live.append(rest, question.id);
     }
     return { done, failed, text: sentences.text, dropped: sentences.dropped };
   }
@@ -248,6 +255,7 @@ export function createAsk(deps: AskDeps) {
         const id = replaces?.id ?? ids('M');
         await store.chat.put(row(id, at, 'stylist', t('ask.paused'), {}, { askPaused: true }));
         live.clear();
+        deps.onPosted?.(t('ask.paused'));
         log('paused');
         return { kind: 'failed', messageId: id, code: 'paused' };
       }
@@ -255,6 +263,7 @@ export function createAsk(deps: AskDeps) {
         const id = replaces?.id ?? ids('M');
         await store.chat.put(row(id, at, 'stylist', t('fail.ask'), {}, { askRetry: question.id }));
         live.clear();
+        deps.onPosted?.(t('fail.ask'));
         log(`failed · ${failed}`);
         return { kind: 'failed', messageId: id, code: failed ?? 'noDone' };
       }
@@ -265,7 +274,7 @@ export function createAsk(deps: AskDeps) {
       const card = done.refused || clash || !prep.card ? null : await prep.card(done.card, gate).catch(() => null);
       const saved = done.refused || !prep.remember ? null : await prep.remember(done.remember, at).catch(() => null);
       // The live row keeps showing the words until the thread has this row (live.ts).
-      live.finish(id, answer);
+      live.finish(id, answer, at, question.id);
       if (replaces) await store.chat.delete(replaces.id);
       await store.chat.put(row(id, at, 'stylist', answer, {}, {
         answerTo: question.id, ...(done.refused ? { askRefused: true as const } : {}), ...(card ? { askCard: card } : {}),
@@ -285,6 +294,25 @@ export function createAsk(deps: AskDeps) {
     }
   }
 
+  /**
+   * One question at a time, claimed before the first await (07 §17, U2): a double tap on send, a chip, Retry or a tap
+   * answer used to pass the busy check twice while the first was still awaiting consent and the limit, and sent twice.
+   * `run` hands the question to `go` (the stream, which keeps the claim until it's done) or returns without it.
+   */
+  async function claimed(run: (go: typeof stream) => Promise<AskOutcome>): Promise<AskOutcome> {
+    if (busy || live.inFlight()) return { kind: 'busy' };
+    busy = true;
+    let streaming = false;
+    try {
+      return await run((...a) => {
+        streaming = true;
+        return stream(...a);
+      });
+    } finally {
+      if (!streaming) busy = false;
+    }
+  }
+
   return {
     /** Busy: a question is in flight (the composer's send waits). */
     get busy() {
@@ -300,6 +328,7 @@ export function createAsk(deps: AskDeps) {
         const q = bubble();
         await store.chat.put(q);
         await store.chat.put(row(ids('M'), now + 1, 'stylist', t('support.text'), { kind: 'card', cardType: 'support' }));
+        deps.onPosted?.(t('support.text'));
         log('support');
         return { kind: 'support', questionId: q.id };
       }
@@ -307,6 +336,7 @@ export function createAsk(deps: AskDeps) {
         const q = bubble();
         await store.chat.put(q);
         await store.chat.put(row(ids('M'), now + 1, 'stylist', t('ask.refuseFace'), {}, { askRefused: true }));
+        deps.onPosted?.(t('ask.refuseFace'));
         log('refused · on the phone');
         return { kind: 'refused', questionId: q.id };
       }
@@ -315,25 +345,27 @@ export function createAsk(deps: AskDeps) {
         const q = bubble();
         await store.chat.put(q);
         await store.chat.put(row(ids('M'), now + 1, 'stylist', t('onb.age.title'), {}, { askRefused: true }));
+        deps.onPosted?.(t('onb.age.title'));
         log('refused · under 18, on the phone');
         return { kind: 'refused', questionId: q.id };
       }
-      if (busy || live.inFlight()) return { kind: 'busy' };
-      const gate = await gates();
-      if (gate === 'consent') {
-        deps.openConsent();
-        log('consent');
-        return { kind: 'consent' };
-      }
-      if (gate === 'offline') return { kind: 'offline' };
-      const q = bubble();
-      await store.chat.put(q);
-      if (gate === 'limit') {
-        await limitLine(now);
-        log('limit');
-        return { kind: 'limit', questionId: q.id };
-      }
-      return { kind: 'sent', questionId: q.id, done: stream(q, null) };
+      return claimed(async (go) => {
+        const gate = await gates();
+        if (gate === 'consent') {
+          deps.openConsent();
+          log('consent');
+          return { kind: 'consent' };
+        }
+        if (gate === 'offline') return { kind: 'offline' };
+        const q = bubble();
+        await store.chat.put(q);
+        if (gate === 'limit') {
+          await limitLine(now);
+          log('limit');
+          return { kind: 'limit', questionId: q.id };
+        }
+        return { kind: 'sent', questionId: q.id, done: go(q, null) };
+      });
     },
 
     /**
@@ -344,16 +376,17 @@ export function createAsk(deps: AskDeps) {
       const card = await store.chat.get(cardMessageId);
       const c = card?.payload.askCard as AskCard | undefined;
       if (!card || !c || c.type !== 'ask' || !c.options.includes(option) || typeof card.payload.askTapped === 'string') return { kind: 'empty' };
-      if (busy || live.inFlight()) return { kind: 'busy' };
-      if (!(await deps.consent())) {
-        deps.openConsent();
-        return { kind: 'consent' };
-      }
-      if (!online()) return { kind: 'offline' };
-      await store.chat.patch(card.id, { payload: { ...card.payload, askTapped: option } });
-      const q = row(ids('M'), Math.max(clock.nowMs(), card.createdAt + 1), 'user', option, {}, { tapOf: card.id });
-      await store.chat.put(q);
-      return { kind: 'sent', questionId: q.id, done: stream(q, null, { tap: true }) };
+      return claimed(async (go) => {
+        if (!(await deps.consent())) {
+          deps.openConsent();
+          return { kind: 'consent' };
+        }
+        if (!online()) return { kind: 'offline' };
+        await store.chat.patch(card.id, { payload: { ...card.payload, askTapped: option } });
+        const q = row(ids('M'), Math.max(clock.nowMs(), card.createdAt + 1), 'user', option, {}, { tapOf: card.id });
+        await store.chat.put(q);
+        return { kind: 'sent', questionId: q.id, done: go(q, null, { tap: true }) };
+      });
     },
 
     /** fail.ask's Retry: the same question again, into the failed line's place. Null when there's nothing to retry. */
@@ -362,18 +395,19 @@ export function createAsk(deps: AskDeps) {
       const qid = typeof failed?.payload.askRetry === 'string' ? failed.payload.askRetry : null;
       const q = qid ? await store.chat.get(qid) : null;
       if (!failed || !q) return null;
-      if (busy || live.inFlight()) return { kind: 'busy' };
-      const gate = await gates();
-      if (gate === 'consent') {
-        deps.openConsent();
-        return { kind: 'consent' };
-      }
-      if (gate === 'offline') return { kind: 'offline' };
-      if (gate === 'limit') {
-        await limitLine(Math.max(clock.nowMs(), failed.createdAt));
-        return { kind: 'limit', questionId: q.id };
-      }
-      return { kind: 'sent', questionId: q.id, done: stream(q, failed, { tap: typeof q.payload.tapOf === 'string' }) };
+      return claimed(async (go) => {
+        const gate = await gates();
+        if (gate === 'consent') {
+          deps.openConsent();
+          return { kind: 'consent' };
+        }
+        if (gate === 'offline') return { kind: 'offline' };
+        if (gate === 'limit') {
+          await limitLine(Math.max(clock.nowMs(), failed.createdAt));
+          return { kind: 'limit', questionId: q.id };
+        }
+        return { kind: 'sent', questionId: q.id, done: go(q, failed, { tap: typeof q.payload.tapOf === 'string' }) };
+      });
     },
   };
 }

@@ -16,7 +16,7 @@ export interface ClosetStub {
   color_family: string;
 }
 
-export type ClosetKind = 'full' | 'recheck' | 'shoeSnap';
+export type ClosetKind = 'full' | 'recheck' | 'shoeSnap' | 'bottomSnap';
 
 /** A validated closet answer: one entry per stub index it described (missing = not seen). */
 export interface ClosetReading {

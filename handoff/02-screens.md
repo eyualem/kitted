@@ -1127,6 +1127,8 @@ Same visual language as §2: chalk `bg`, white `KCard`s with radius 26 and dashe
 - **After capture:** the cover closes; his bubble shows the snap (caption `Shoe snap` · time) and the card updates in place (S6p). Never uses a check or the re-check. Failure → a toast `Couldn't read your shoes. Try again or pick a pair.` and the Finish row stays.
 - **VoiceOver:** shutter "Take shoe photo".
 
+> **Update Oct 16 (built, DECISIONS-LOG #313, `12-two-shot-check.md` §10–11):** the top-only variant is built: opened from a top-only card's camera tile (`part=bottom`), tip `Point your phone down at your pants and shoes.` (differs from the line above because the rear camera points at him: he looks down at his own pants and shoes), guide over the lower 60% `Pants and shoes here`, shutter VoiceOver "Take a photo of your pants and shoes", bubble caption `Pants and shoes`; the merge is `mergeBottomSnap` (the card becomes `Full check`). A failed snap now shows its toast (`Couldn't read your shoes. Try again or pick a pair.` / `Couldn't read your pants and shoes. Try again.`); it showed nothing before. Snap photos are prepared without needing a person (faces still hidden). In S2's Mirror mode with no hips found, the tip is `Can't step back? Prop your phone up instead.` with a `Use Propped` pill. Demo screens 185–188.
+
 #### S10 · Pick shoes from Closet (sheet)
 - Medium detent, grabber, title `Which shoes?` + X. Subtitle `I'll use what I know about them. Hems stay unrated.`
 - Grid of his shoes (3 columns, tiles as in C1, minilabel). The last-worn pair is first with the pill `Last worn {weekday}`.
@@ -1281,7 +1283,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 - **VoiceOver:** tile "Navy crewneck, photo" or "Navy crewneck, no photo yet".
 
 #### C3 · Edit item (sheet)
-> **Update Oct 16 (#314, 09-ui-review §17; differs from this spec because the founder picked rows over one form):** the piece page shows a "What it is" section (Kind · Color · Leg or Fit · Pattern); each row opens this route as a one-row picker (`?field=`), pictures of the piece with that one thing changed, one tap picks, a toast with Undo. No Save, no Photo or Delete here (Remove from Closet stays on the page). The form below is superseded.
+> **Update Oct 16 (#315, 09-ui-review §17; differs from this spec because the founder picked rows over one form):** the piece page shows a "What it is" section (Kind · Color · Leg or Fit · Pattern); each row opens this route as a one-row picker (`?field=`), pictures of the piece with that one thing changed, one tap picks, a toast with Undo. No Save, no Photo or Delete here (Remove from Closet stays on the page). The form below is superseded.
 
 - Large detent; toolbar `Cancel` · title `Edit item` · `Save`.
 - Form sections:

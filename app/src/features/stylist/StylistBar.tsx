@@ -47,6 +47,8 @@ export function StylistBar() {
         onPress={() => composerState.open('type')}
         accessibilityRole="button"
         accessibilityLabel={t('composer.a11y.field')}
+        // A waiting draft is read as the field's value (the label alone hid his words, 07 §17, U18).
+        accessibilityValue={draft ? { text: draft } : undefined}
         accessibilityHint={t('composer.a11y.fieldHint')}
         style={styles.field}
       >

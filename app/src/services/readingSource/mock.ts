@@ -7,7 +7,7 @@
 
 import { clone, type Garment, type Reading } from '@kitted/core';
 import { AbortError, realScheduler, type Scheduler } from '../scheduler';
-import { demoLatency, demoReadingById, demoReadingBySha, SHOE_SNAP_READING } from './demoReadings';
+import { BOTTOM_SNAP_READING, demoLatency, demoReadingById, demoReadingBySha, SHOE_SNAP_READING } from './demoReadings';
 import type { DemoFault, PreparedImage, ReadingEvent, ReadingSource, ReadKind, SlotKind } from './types';
 
 export interface MockOptions {
@@ -62,6 +62,7 @@ export function scheduleFor(reading: Reading): Step[] {
 
 function lookup(image: PreparedImage, kind: ReadKind): { id: string; reading: Reading } | null {
   if (kind === 'shoeSnap') return { id: 's24_shoe_snap', reading: clone(SHOE_SNAP_READING) };
+  if (kind === 'bottomSnap') return { id: 'p01b_bottom_snap', reading: clone(BOTTOM_SNAP_READING) };
   if (image.photoId) {
     const r = demoReadingById(image.photoId);
     if (r) return { id: image.photoId, reading: clone(r) };

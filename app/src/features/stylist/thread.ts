@@ -10,11 +10,70 @@ import type { ChatMessage, OccasionKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
 import { stampText } from '@/i18n/format';
 
+/** `gap`: the room above the row, in pt (0 on the first row). */
 export type ThreadItem =
-  | { type: 'stamp'; key: string; text: string }
-  | { type: 'msg'; key: string; message: ChatMessage; showWho: boolean; answer: boolean; newest: boolean };
+  | { type: 'stamp'; key: string; text: string; gap: number }
+  | { type: 'msg'; key: string; message: ChatMessage; showWho: boolean; answer: boolean; newest: boolean; gap: number };
 
 const GAP_MS = 60 * 60_000;
+
+/**
+ * The thread's rhythm (07 §17, U7): one speaker's lines sit close, a change of speaker gets room, and the most room
+ * goes above the stylist's reply to him (look C's 20 pt). Before, every row was 16 pt apart and read as a list.
+ */
+export const RHYTHM = {
+  /** His bubbles in a row. */
+  mine: 4,
+  /** The stylist's lines in a row (a line and the next line). */
+  stylistLines: 8,
+  /** The stylist's lines in a row when a card is one of them. */
+  stylistCards: 12,
+  /** His line → the stylist's reply. */
+  reply: 20,
+  /** The stylist → his line. */
+  toMine: 16,
+  /** Above a day stamp, and below it. */
+  aboveStamp: 20,
+  belowStamp: 8,
+} as const;
+
+/**
+ * Cards that are the stylist talking (a line of text with buttons under it): they carry the mark like his text lines
+ * and continue his run (U5). The outfit, check and support cards are things he shows, not lines.
+ */
+export function isStylistLine(m: ChatMessage | null): boolean {
+  if (!m || m.role !== 'stylist') return false;
+  if (m.kind === 'text') return true;
+  if (m.kind !== 'card') return false;
+  return (
+    m.cardType === 'limit' ||
+    m.cardType === 'account' ||
+    (m.cardType === 'question' && m.payload.question === 'notify') ||
+    (m.cardType === 'held' && m.payload.ready === true)
+  );
+}
+
+/** The room above `m`, after `prev` (null: the first row). */
+export function rowGap(prev: ChatMessage | null, m: ChatMessage, afterStamp: boolean): number {
+  if (afterStamp) return RHYTHM.belowStamp;
+  if (!prev) return 0;
+  const mine = (x: ChatMessage) => x.role === 'user';
+  if (mine(prev) && mine(m)) return RHYTHM.mine;
+  if (mine(prev)) return RHYTHM.reply;
+  if (mine(m)) return RHYTHM.toMine;
+  return isStylistLine(prev) && isStylistLine(m) ? RHYTHM.stylistLines : RHYTHM.stylistCards;
+}
+
+/** The live answer's room above it, after the thread's last message (his question, as a rule). */
+export function liveGap(last: ChatMessage | null): number {
+  if (!last) return 0;
+  return last.role === 'user' ? RHYTHM.reply : isStylistLine(last) ? RHYTHM.stylistLines : RHYTHM.stylistCards;
+}
+
+/** Lines that aren't a reply's move: the failed line (Retry), the paused line and a refusal stay plain (U6). */
+function notAnAnswer(m: ChatMessage): boolean {
+  return typeof m.payload.askRetry === 'string' || m.payload.askPaused === true || m.payload.askRefused === true;
+}
 
 export function sortMessages(ms: readonly ChatMessage[]): ChatMessage[] {
   return [...ms].sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id));
@@ -28,12 +87,13 @@ export function buildThreadItems(messages: readonly ChatMessage[], nowMs: number
     const newDay = !prev || dayKey(prev.createdAt, zone) !== dayKey(m.createdAt, zone);
     const gap = !!prev && m.createdAt - prev.createdAt >= GAP_MS;
     const stamped = newDay || gap || m.payload.stamp === true;
-    if (stamped) out.push({ type: 'stamp', key: `stamp-${m.id}`, text: stampText(m.createdAt, nowMs, zone) });
+    if (stamped) out.push({ type: 'stamp', key: `stamp-${m.id}`, text: stampText(m.createdAt, nowMs, zone), gap: out.length ? RHYTHM.aboveStamp : 0 });
     const isText = (x: ChatMessage | null) => !!x && x.kind === 'text';
     const stylistText = m.role === 'stylist' && m.kind === 'text';
-    const showWho = stylistText && (stamped || !(prev && prev.role === 'stylist' && isText(prev)));
-    const answer = stylistText && (typeof m.payload.answerTo === 'string' || (!stamped && !!prev && prev.role === 'user' && isText(prev)));
-    out.push({ type: 'msg', key: m.id, message: m, showWho, answer, newest: i === sorted.length - 1 });
+    const showWho = isStylistLine(m) && (stamped || !isStylistLine(prev));
+    const answer =
+      stylistText && !notAnAnswer(m) && (typeof m.payload.answerTo === 'string' || (!stamped && !!prev && prev.role === 'user' && isText(prev)));
+    out.push({ type: 'msg', key: m.id, message: m, showWho, answer, newest: i === sorted.length - 1, gap: rowGap(prev, m, stamped && out.length > 0) });
     prev = m;
   });
   return out;

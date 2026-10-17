@@ -32,6 +32,9 @@ import { assignNames, baseName, isAutoNamed } from './itemName';
 import { currentValue, editPlan, isOffered, type EditField, type EditValue } from './pieceEdit';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
 
+/** The snaps that finish a partial check: the shoes, or the pants and shoes (#313). */
+type SnapKind = Extract<ClosetKind, 'shoeSnap' | 'bottomSnap'>;
+
 export const CLOSET_DEADLINE_MS = 12_000;
 /** The longest name he can give a piece (Rename). */
 export const NAME_MAX = 40;
@@ -541,14 +544,15 @@ export function createClosetService(deps: ClosetServiceDeps) {
     await saveSummary(recheckId, cs);
   }
 
-  async function writeSnap(parentId: string, snapReadingId: string, stored: { row: ReadingRow; reading: StoredClosetReading } | null) {
+  async function writeSnap(parentId: string, snapReadingId: string, stored: { row: ReadingRow; reading: StoredClosetReading } | null, kind: SnapKind) {
     const parent = await store.fitChecks.get(parentId);
     const snap = (await readingOf(snapReadingId))?.reading;
     if (!parent || !snap) return;
-    const fields = fieldsFor(snap.garments, 'shoeSnap', stored?.reading ?? null);
+    const fields = fieldsFor(snap.garments, kind, stored?.reading ?? null);
     const pieces: Piece[] = [];
     snap.garments.forEach((g, i) => {
-      if (g.category !== 'footwear' || g.certainty === 'unsure') return;
+      const joins = g.category === 'footwear' || (kind === 'bottomSnap' && g.category === 'bottom');
+      if (!joins || g.certainty === 'unsure') return;
       pieces.push({ origin: 'snap', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null, partial: halfSeen(snap.garments, i) });
     });
     const prev = summaryOf(parent);
@@ -613,7 +617,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         stored = null;
       }
       deps.scheduler.clearTimer(timer);
-      if (stored && kind !== 'shoeSnap') await premeasure(checkId, kind, stored.reading);
+      if (stored && kind !== 'shoeSnap' && kind !== 'bottomSnap') await premeasure(checkId, kind, stored.reading);
       if (!written) {
         written = true;
         await serial(() => write(stored, stored ? 'done' : 'fallback'), { label: 'closet answer' });
@@ -1167,17 +1171,18 @@ export function createClosetService(deps: ClosetServiceDeps) {
       void runJob(recheckId, image, merged.garments, 'recheck', row.readingId, (s, st) => writeRecheck(recheckId, s, st));
     },
     /** A shoe snap finished a partial check: footwear only, into the first check's closet summary. */
-    async afterSnap(parentId: string, snapReadingId: string, image: PreparedImage | null): Promise<void> {
+    /** A snap's pieces join the closet: the shoes (a shoe snap) or the pants and shoes (a bottom snap, #313). */
+    async afterSnap(parentId: string, snapReadingId: string, image: PreparedImage | null, kind: SnapKind = 'shoeSnap'): Promise<void> {
       const snap = (await readingOf(snapReadingId))?.reading;
       if (!snap) return;
-      const cached = image ? await storedCloset(image.sha256, snap.garments, 'shoeSnap') : null;
+      const cached = image ? await storedCloset(image.sha256, snap.garments, kind) : null;
       if (cached || !deps.source || !image) {
-        await serial(() => writeSnap(parentId, snapReadingId, cached));
+        await serial(() => writeSnap(parentId, snapReadingId, cached, kind));
         return;
       }
       void track((async () => {
-        const stored = await call(image, snap.garments, 'shoeSnap', snapReadingId).catch(() => null);
-        await serial(() => writeSnap(parentId, snapReadingId, stored));
+        const stored = await call(image, snap.garments, kind, snapReadingId).catch(() => null);
+        await serial(() => writeSnap(parentId, snapReadingId, stored, kind));
       })());
     },
     answer: (checkId: string, obsId: string, a: DuplicateAnswer) => serial(() => applyAnswer(checkId, obsId, a)),
@@ -1273,7 +1278,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       return store.closet.get(itemId);
     }),
     /**
-     * "What it is" on a piece's page (09-ui-review §17, #314): his pick for one row (kind, color, leg, fit, pattern)
+     * "What it is" on a piece's page (09-ui-review §17, #315): his pick for one row (kind, color, leg, fit, pattern)
      * becomes the piece's own value, confirmed, and the reads he corrected away from are taught to the matcher
      * (pieceEdit.editPlan); the drawing, its color and a name the app made follow (refreshItem, renameAll). Only closet
      * rows change: no reading, sighting or fit-check score moves. null when the piece isn't his (or waits on "Same as

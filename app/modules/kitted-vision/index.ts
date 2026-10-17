@@ -177,6 +177,8 @@ interface KittedVisionNative {
   measureGarments?(keptUri: string, detailUri: string, sha: string, garments: MeasureInput[], mirrored?: boolean): Promise<MeasureResult>;
   printDistance?(a: string, b: string): Promise<number | null>;
   prepareItems?(originalUri: string): Promise<PrepareItemsResult>;
+  /** #313; absent on builds before it. */
+  prepareSnap?(originalUri: string): Promise<PrepareResult>;
   assess?(uri: string, kind: 'fit' | 'scan'): Promise<StillAssessment>;
   reloadUpload(sha256: string): Promise<string | null>;
   reloadZoom?(sha256: string): Promise<string[]>;
@@ -207,6 +209,13 @@ export async function preparePerson(originalUri: string, pick: NormBox): Promise
 }
 
 /** A clothes scan's prep (#100). notImplemented on web and in older native builds. */
+/** A snap that finishes a partial check (#313): no person needed, faces still hidden. A build without it falls back to
+ *  the fit prep (today's: a snap with no person found is refused there). */
+export async function prepareSnap(originalUri: string): Promise<PrepareResult> {
+  if (!native) return { status: 'notImplemented' };
+  return typeof native.prepareSnap === 'function' ? native.prepareSnap(originalUri) : native.prepare(originalUri);
+}
+
 export async function prepareItems(originalUri: string): Promise<PrepareItemsResult> {
   if (!native || typeof native.prepareItems !== 'function') return { status: 'notImplemented' };
   return native.prepareItems(originalUri);

@@ -420,6 +420,8 @@ const addedInBuild = {
   'ask.comingSoon': "Questions are coming soon. For now I can check your fit and plan your outfit.",
   // The stylist's answers, C2–C4 (07 §1, §4, §6; #297): the slow line, the cards, the saved chip, the starter chips.
   'ask.slow': 'Taking longer…',
+  // The chat UI pass (07 §17, #314): what VoiceOver hears on the row while an answer is on its way.
+  'ask.a11yWriting': 'Your stylist is writing',
   // Look C (#302): a piece chip in an answer, for VoiceOver.
   'a11y.openPiece': 'Open {name}',
   'ask.card.startCheck': 'Start a fit check',
@@ -1002,7 +1004,20 @@ const addedInBuild = {
   // Wrong card (#289): a photo's long-press menu on the piece page; its picker reuses closet.merge.title (no
   // subtitle), its toast item.dup.saidSame, and "Not this piece" keeps closet.piece.splitOff, now with Undo.
   'closet.piece.another': "It's another piece…",
-  // Fix what a piece is (09-ui-review §17, #314): "What it is" on a piece's page, its picker sheets and the toast.
+  // The two-shot check, step 0 (#313, 12-two-shot-check.md §10): a top-only check finished by a photo of the pants and
+  // shoes (02 S9's "Top-only partial", with a look-down tip instead of "Step back so your pants and shoes are in frame.",
+  // since the rear camera points at him), and the short-mirror tip in Mirror mode with a way to Propped.
+  'cam.bottom.tip': 'Point your phone down at your pants and shoes.',
+  'cam.bottom.guide': 'Pants and shoes here',
+  'cam.bottom.a11yShutter': 'Take a photo of your pants and shoes',
+  'cam.bottom.bubbleCap': 'Pants and shoes',
+  'cam.bottom.failed': "Couldn't read your pants and shoes. Try again.",
+  'partial.a11y.snapBottom': 'Snap your pants and shoes',
+  // A top-only card's summary named only the shoes ("…once I see your shoes."); its pants are missing too.
+  'partial.mayChangeBottom': 'Your score may change once I see your pants and shoes.',
+  'cam.tip.shortMirror': "Can't step back? Prop your phone up instead.",
+  'cam.proppedOffer': 'Use Propped',
+  // Fix what a piece is (09-ui-review §17, #315): "What it is" on a piece's page, its picker sheets and the toast.
   // Kind and color names reuse garmentName and FAMILY_WORD; Leg and Fit reuse value.leg.* and value.topFit.*.
   'closet.edit.title': 'What it is',
   'closet.edit.kind': 'Kind',

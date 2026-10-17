@@ -92,3 +92,8 @@ export function answerLayout(text: string, closet: readonly ClosetItemRow[] | nu
 
 /** VoiceOver's name for a chip's action: "Open white sneakers". */
 export const chipLabel = (p: ChipPiece): string => t('a11y.openPiece', { name: p.name.toLowerCase() });
+
+/** A chip's name as drawn: its hyphens don't break, so "light-blue oxford" never splits after "light-" (07 §17, U12). */
+export function chipDisplay(name: string): string {
+  return name.replace(/-/g, '\u2011');
+}

@@ -1,4 +1,4 @@
-// C3 · "What it is" → one row's picker (09-ui-review §17, #314; replaces 02 C3's one-form Edit item, founder's pick:
+// C3 · "What it is" → one row's picker (09-ui-review §17, #315; replaces 02 C3's one-form Edit item, founder's pick:
 // one row at a time, from pictures). Kind, Leg, Fit and Pattern: a grid of the piece itself drawn with only that one
 // thing changed, in its own color (pieceEdit.withEdit, the same thing the pick writes), the current one ringed with a
 // check; Kind keeps the rest of the slot's kinds under "More kinds". Color: named swatches in four groups. One tap picks:

@@ -133,6 +133,19 @@ export function createDictationController(deps: DictationDeps) {
     }
   });
 
+  async function cancel(): Promise<void> {
+    if (state === 'idle') return;
+    const was = state;
+    session++;
+    clearTimers();
+    state = 'idle';
+    text = '';
+    level = 0;
+    emit();
+    log('cancelled');
+    if (was !== 'preparing') await deps.native.stop().catch(() => null);
+  }
+
   async function finish(s: number): Promise<string> {
     if (session !== s || (state !== 'listening' && state !== 'starting')) return '';
     state = 'stopping';
@@ -217,25 +230,21 @@ export function createDictationController(deps: DictationDeps) {
       } else armQuiet(s);
     },
     stop(): Promise<string> {
+      // Still getting voice ready: nothing was heard, so stop is a cancel (it used to do nothing, and the mic then went
+      // live with no UI once the model was ready, 07 §17, U4).
+      if (state === 'preparing') return cancel().then(() => '');
       return finish(session);
     },
-    async cancel(): Promise<void> {
-      if (state === 'idle') return;
-      const was = state;
-      session++;
-      clearTimers();
-      state = 'idle';
-      text = '';
-      level = 0;
-      emit();
-      log('cancelled');
-      if (was !== 'preparing') await deps.native.stop().catch(() => null);
-    },
+    cancel,
     dispose() {
+      // A start still waiting on the model or the native side must not go on after this (U4).
+      session++;
       clearTimers();
       off();
       listeners.clear();
-      if (state !== 'idle') void deps.native.stop().catch(() => null);
+      const was = state;
+      state = 'idle';
+      if (was !== 'idle' && was !== 'preparing') void deps.native.stop().catch(() => null);
     },
   };
 }

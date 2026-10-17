@@ -1,7 +1,7 @@
 // ImagePrep for real photos (05 §P3 C): bundled demo photos keep the mockup's crop table;
 // anything else goes through kitted-vision on the phone (the upload: full frame, every face
 // blurred; the copy kept on the phone: unblurred; both without metadata) before anything is sent.
-import { prepare as visionPrepare, preparePerson, reloadUpload, reloadZoom } from '../../../modules/kitted-vision';
+import { prepare as visionPrepare, preparePerson, prepareSnap, reloadUpload, reloadZoom } from '../../../modules/kitted-vision';
 import { demoImagePrep, type ImagePrep } from './demo';
 import { toStoredPath } from '../photoFiles';
 
@@ -14,7 +14,7 @@ export const imagePrep: ImagePrep = {
       const zoomBase64 = await reloadZoom(photo.sha256);
       return { status: 'ok', image: { photoId: null, sha256: photo.sha256, uploadUri: null, uploadBase64, zoomBase64, keptUri: photo.keptUri ?? undefined, thumbUri: photo.thumbUri ?? undefined } };
     }
-    const r = photo.person ? await preparePerson(photo.uri, photo.person) : await visionPrepare(photo.uri);
+    const r = photo.person ? await preparePerson(photo.uri, photo.person) : photo.snap ? await prepareSnap(photo.uri) : await visionPrepare(photo.uri);
     if (r.status === 'multiplePeople') {
       // "Which one is you?" (02 S23): the people he could be, for the question card.
       const people = (r.candidates ?? []).filter((b) => b.length === 4).map(([x, y, width, height]) => ({ x: x!, y: y!, width: width!, height: height! }));

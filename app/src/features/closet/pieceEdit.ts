@@ -1,4 +1,4 @@
-// Fix what a piece is (09-ui-review §17, #314; founder, Oct 16: "a way to change what the tile represents … from a
+// Fix what a piece is (09-ui-review §17, #315; founder, Oct 16: "a way to change what the tile represents … from a
 // limited choice"). A piece's page shows "What it is": Kind · Color · Leg (bottoms) or Fit (tops and layers) ·
 // Pattern (tops and layers). A row opens a sheet of the piece drawn with that one thing changed; one tap picks.
 //   - The lists are the schema's own values in the words the app already uses (garmentName, the leg and fit words of

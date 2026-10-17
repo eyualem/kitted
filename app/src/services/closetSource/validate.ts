@@ -16,15 +16,16 @@ const CLOSET_CATEGORIES = ['top', 'outerwear', 'bottom', 'footwear'];
 /**
  * The stub list for a reading: worn closet pieces (not unsure), in reading order, each field an enum value of the
  * v3 schema (a piece with any non-enum value is left out, so no free text ever reaches the prompt). `map[i]` is
- * the garment index stub i stands for. Shoe snaps ask about footwear only.
+ * the garment index stub i stands for. Shoe snaps ask about footwear only; bottom snaps (#313) about the pants and shoes.
  */
-export function buildStubs(garments: readonly { category?: unknown; subcategory?: unknown; color_family?: unknown; certainty?: unknown }[], kind: 'full' | 'recheck' | 'shoeSnap' = 'full') {
+export function buildStubs(garments: readonly { category?: unknown; subcategory?: unknown; color_family?: unknown; certainty?: unknown }[], kind: 'full' | 'recheck' | 'shoeSnap' | 'bottomSnap' = 'full') {
   const stubs: ClosetStub[] = [];
   const map: number[] = [];
   garments.forEach((g, index) => {
     const { category, subcategory, color_family } = g;
     if (typeof category !== 'string' || !CLOSET_CATEGORIES.includes(category) || g.certainty === 'unsure') return;
     if (kind === 'shoeSnap' && category !== 'footwear') return;
+    if (kind === 'bottomSnap' && category !== 'footwear' && category !== 'bottom') return;
     if (!CATEGORY.includes(category) || typeof subcategory !== 'string' || !SUBCATEGORY.includes(subcategory)) return;
     if (typeof color_family !== 'string' || !COLOR.includes(color_family)) return;
     stubs.push({ i: stubs.length, category, subcategory, color_family });

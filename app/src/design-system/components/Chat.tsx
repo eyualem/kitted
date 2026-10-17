@@ -9,6 +9,7 @@ import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
 import { fixed, radius, size } from '../tokens';
 import { wordmark, wordmarkStyle } from '../typography';
+import { userBubbleMaxWidth } from './chatLayout';
 import { Icon } from './Icon';
 import { KText } from './KText';
 
@@ -85,7 +86,8 @@ export function StylistMessage({ children, showHeader, body, footer, actions }: 
 // tail at 6, trailing-aligned, max 78% wide. Onboarding answers are tappable to change.
 
 export function UserBubble({ children, onPress }: { children: string; onPress?: () => void }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
+  const maxWidth = userBubbleMaxWidth(isAccessibilitySize);
   const bubble = (
     <View
       style={{
@@ -109,13 +111,13 @@ export function UserBubble({ children, onPress }: { children: string; onPress?: 
         accessibilityRole="button"
         accessibilityLabel={children}
         accessibilityHint={t('a11y.changeAnswer')}
-        style={{ alignSelf: 'flex-end', maxWidth: '78%' }}
+        style={{ alignSelf: 'flex-end', maxWidth }}
       >
         {bubble}
       </Pressable>
     );
   }
-  return <View style={{ alignSelf: 'flex-end', maxWidth: '78%' }}>{bubble}</View>;
+  return <View style={{ alignSelf: 'flex-end', maxWidth }}>{bubble}</View>;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -233,12 +235,15 @@ export interface PhotoBubbleProps {
 }
 
 export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onPress }: PhotoBubbleProps) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
+  // At the accessibility sizes the 109 pt caption row inside the frame cut the occasion and "Face hidden when sent" to
+  // "…" (or broke "Every-day"): the caption goes under the bubble, full width, and wraps (07 §17, U13).
+  const below = isAccessibilitySize;
   const innerW = size.photoBubbleWidth - 8;
   const spoken =
     (occasion ? t('a11y.photoOccasion', { time, occasion }) : t('a11y.photo', { time })) +
     (reading ? ` ${t('read.bubble.onlySent')}.` : '');
-  return (
+  const bubble = (
     <Pressable
       onPress={onPress}
       disabled={!onPress}
@@ -266,36 +271,52 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
         height={size.photoBubbleHeight}
         borderRadii={{ tl: radius.photoBubbleInner, tr: radius.photoBubbleInner, br: radius.photoBubbleInnerTail, bl: radius.photoBubbleInner }}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: reading ? 'flex-start' : 'center',
-          paddingTop: 6,
-          paddingBottom: 5,
-          paddingHorizontal: 9,
-          opacity: 0.9,
-          gap: 4,
-        }}
-      >
-        {reading ? (
-          // 109 pt can't hold lock + "Face hidden when sent" + the time on one line: the label wraps.
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, flexShrink: 1 }}>
-            <Icon name="lock" size="small" color={colors.onMe} />
-            <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
-              {t('read.bubble.onlySent')}
+      {below ? null : (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: reading ? 'flex-start' : 'center',
+            paddingTop: 6,
+            paddingBottom: 5,
+            paddingHorizontal: 9,
+            opacity: 0.9,
+            gap: 4,
+          }}
+        >
+          {reading ? (
+            // 109 pt can't hold lock + "Face hidden when sent" + the time on one line: the label wraps.
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, flexShrink: 1 }}>
+              <Icon name="lock" size="small" color={colors.onMe} />
+              <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
+                {t('read.bubble.onlySent')}
+              </KText>
+            </View>
+          ) : (
+            <KText role="photoCaption" numberOfLines={1} style={{ flexShrink: 1 }}>
+              {occasion ?? ''}
             </KText>
-          </View>
-        ) : (
-          <KText role="photoCaption" numberOfLines={1} style={{ flexShrink: 1 }}>
-            {occasion ?? ''}
+          )}
+          <KText role="photoCaption" tabular numberOfLines={1} style={{ flexShrink: 0 }}>
+            {time}
           </KText>
-        )}
-        <KText role="photoCaption" tabular numberOfLines={1} style={{ flexShrink: 0 }}>
-          {time}
+        </View>
+      )}
+    </Pressable>
+  );
+  if (!below) return bubble;
+  const caption = reading ? t('read.bubble.onlySent') : occasion ? `${occasion} · ${time}` : time;
+  return (
+    <View style={{ alignSelf: 'flex-end', alignItems: 'flex-end', gap: 4, maxWidth: '88%' }}>
+      {bubble}
+      {/* The bubble's label already says all of it. */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {reading ? <Icon name="lock" size="small" color="ink2" /> : null}
+        <KText role="dayStamp" color="ink2" style={{ textAlign: 'right', flexShrink: 1 }}>
+          {caption}
         </KText>
       </View>
-    </Pressable>
+    </View>
   );
 }
 
@@ -303,8 +324,9 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
 // DayStamp: centered footnote medium ink3 ("Thursday 8:00 am").
 
 export function DayStamp({ children }: { children: string }) {
+  // A header, so the VoiceOver rotor can jump from day to time (07 §17, U18).
   return (
-    <View style={{ alignSelf: 'center' }}>
+    <View style={{ alignSelf: 'center' }} accessible accessibilityRole="header">
       <KText role="dayStamp" style={{ textAlign: 'center' }}>
         {children}
       </KText>
