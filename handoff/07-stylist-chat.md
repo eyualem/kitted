@@ -848,3 +848,22 @@ The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic
 - **L5 (C)** Both ways out (another tab, a pushed page) reach `dispose` through the composer's unmount.
 - **S1 (S)** The composer looks as before on the Simulator: idle, typing, after a send (demo screens 12 and 90).
 - **G** `npm run check` green; no copy, score or native change.
+
+### §18 results (Oct 17, #315): checked against F1–F4, L1–L5, S1 and G; no check changed
+`npm run check` green: 1,108 app tests in 88 suites (new `composerFocus.test.ts`, 17 tests; `dictation.test.ts` and `chatUi.test.ts` unchanged and passing), 758 core tests, typecheck, lint. The tests were written after the checks and run red first (9 of 17 failed) before the fix.
+
+| Check | Result | How |
+|---|---|---|
+| F1 | Pass (T) | `composerSlots` (new, `features/stylist/composerSlots.ts`) |
+| F2 | Pass (T) | the capsule draws `{leadButton}`, the field or the voice row, `{trailButton}`; every lead is `key="lead"`, every trail `key="trail"`, no fragment per state |
+| F3 | Pass (T, C) | `goesIdle` returns false with VoiceOver on (both the effect and the stop path use it); the capsule's `onAccessibilityEscape` stops the mic (words kept), drops the keyboard and closes; the tab's blur still closes it |
+| F4 | Pass (T, C) | `cursorToField`; the composer sends a VoiceOver `focus` event to the field once it's drawn (after ✕ it replaces the voice row) |
+| L1 | Pass (T) | `dispose` while listening or starting: the native stop's words, else the live text, to `onHeard(…, 'left')`; the composer adds them to the draft without the announcement |
+| L2 | Pass (T) | `dispose` while stopping lets the stop finish; its words land once as 'left'; no "I didn't catch that." after he left |
+| L3 | Pass (T) | U4's case still never starts the native side; idle hands nothing; the native listener is removed, so late events can't land |
+| L4 | Pass (T) | `composerState.appendHeard`: after his typed words with one space; empty heard leaves the draft |
+| L5 | Pass (C) | another tab and a pushed page both blur the Stylist tab → `composerState.close` → the dock unmounts the composer → `useDictation`'s cleanup → `dispose` (iOS; Android keeps the dock mounted, noted in #315) |
+| S1 | Pending | the Simulator was in use by another session at commit time |
+| G | Pass | no copy, score or native change |
+
+**What the Simulator and tests can't show:** the mic is hidden on the Simulator and VoiceOver can't be driven there, so the cursor moves and the kept words rest on the tests and the code read above; his phone's voice test confirms them (CLAUDE.md to-do, the voice item).

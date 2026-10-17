@@ -1960,3 +1960,15 @@ Contradictions settled and decisions changed during the build. Newest last.
       - **At the accessibility sizes:** his bubble may take 88% of the row (78% left one word per line); the photo's caption moves under the photo ("Everyday · 8:10"); the typing dots grow to 10 pt; the starter chips sit in one sideways row.
       - **VoiceOver hears every stylist line once,** the 988 support card included (it heard only answers), queued so it isn't dropped; the waiting row says "Your stylist is writing" (new VoiceOver-only words).
     - **Left on purpose (07 §17.1):** the composer swapping send and mic under VoiceOver focus; a question at 3:59 answered at 4:00; Wear this on an outfit card adding an outfit row per tap; the give-up timer starting after the pack; leaving mid-dictation dropping the words heard so far (needs the phone).
+
+## Oct 17 · The composer under VoiceOver, and words kept mid-dictation
+
+315. **The two follow-ups the chat UI pass left (#314, 07 §17.1) fixed, checks first (07 §18: F1–F4, L1–L5, S1 committed before any code).** Started from the chat UI pass session; the founder is away.
+    - **What the code really did:** the trailing button already stayed the same view across ↑ → 🎙 → ■ → ↑, but only because both branches were unkeyed fragments at the same place (luck, untested). The real loss of VoiceOver's cursor was the composer closing itself once it emptied (after a send by voice, a ✕, a stop with nothing heard), and a send on a phone with no mic leaving no trailing button.
+    - **Calls Claude made (his to overrule):**
+      - **The slots are explicit:** `composerSlots` decides the leading (📷 / ✕ / none) and trailing (↑ / 🎙 / ■ / none) controls; the capsule draws them as keyed children, so the trailing button is one view by design, and a test reads the source to keep it so.
+      - **With VoiceOver on, the composer never closes itself;** VoiceOver's escape gesture (two-finger scrub) puts it away (words wait in the draft), and leaving the tab still does. With VoiceOver off, nothing changes. Chosen over moving the cursor to the tab bar's "Ask your stylist…" bar, which lives in a separate native tree the screen can't focus reliably.
+      - **Where the pressed control goes away, the cursor goes to the field** (after ✕; after a send that leaves no trailing button). After ■ it stays on the trailing button, now send, and the words are announced as before.
+      - **Leaving mid-dictation keeps the words:** `dispose` now stops the native side and hands its last words (else the live text) to the draft, quietly (no announcement, no "I didn't catch that."), never sent; a stop already on its way still lands. The bar shows them when he comes back.
+    - **Not changed:** copy, cards, scores, native code. JS only: on his phone through Metro. The mic itself can't run on the Simulator and VoiceOver can't be driven there, so F3–F4 and L1–L4 rest on tests and the code; his phone confirms them (on his list with the voice test).
+    - **Known, left:** on Android (not shipping) the composer stays docked when he switches tabs, so the mic would keep listening in the background; to fix with the Android pass.

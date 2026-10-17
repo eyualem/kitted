@@ -2,20 +2,24 @@
 // DECISIONS-LOG #70). Liquid Glass where available, to sit with the tab bar.
 //   idle     (📷) Ask your stylist…                       (🎙)
 //   typing   What goes with tan chinos?|                 (↑)    camera hides (#28), mic → send
-//   voice    (✕) ▁▃▅▇ "what shoes go with…"              (■)    stop drops the words in the field
+//   voice    (✕) ▁▃▅▇ "what shoes go with…"              (■)    stop drops the words in the field; so does leaving
 // Never sends by itself: he reads what was heard, then taps send.
 // On iOS it opens from the tab bar's "Ask your stylist…" accessory (StylistBar) and tells the
 // screen when it's done (empty, unfocused, not listening), so the accessory shows again.
 // The draft lives in composerState (07 §6.1): closing the composer keeps his words; only a question that made it
 // into the thread clears them. While an answer streams he can type on, but send waits (one question at a time).
+// VoiceOver (07 §18): the three slots are fixed, keyed children (composerSlots), so the trailing button stays the same
+// view across ↑ → 🎙 → ■ → ↑ and the cursor stays on it; with VoiceOver on it never closes itself (the escape gesture
+// does), and where the pressed control goes away the cursor moves to the field.
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { AccessibilityInfo, Keyboard, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Chip, ChipFlow, CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 import { useDictation } from './useDictation';
 import { composerState, useComposerDraft } from './composerState';
+import { composerSlots, cursorToField, goesIdle } from './composerSlots';
 
 export interface ComposerProps {
   mode: 'compact' | 'idle';
@@ -69,15 +73,17 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
   useEffect(() => () => {
     if (chipsTimer.current) clearTimeout(chipsTimer.current);
   }, []);
-  const mic = useDictation((heard) => {
-    const cur = composerState.draft();
-    setText(cur ? `${cur} ${heard}` : heard);
-    // iOS ignores live regions: say the final words once (never each partial while he talks).
-    AccessibilityInfo.announceForAccessibility?.(t('mic.a11yHeard', { text: heard }));
+  const mic = useDictation((heard, how) => {
+    composerState.appendHeard(heard);
+    // iOS ignores live regions: say the final words once (never each partial while he talks). Not when he left
+    // mid-dictation: the words wait in the draft, and the bar reads them (07 §18, L1).
+    if (how !== 'left') AccessibilityInfo.announceForAccessibility?.(t('mic.a11yHeard', { text: heard }));
   });
+  const screenReader = useScreenReader();
   const typing = focused || text.length > 0;
   const recording = mic.state !== 'idle';
   const idle = mode === 'idle' && !typing;
+  const { lead, trail } = composerSlots({ recording, typing, hasText: text.trim().length > 0, micAvailable: mic.available });
   const used = useRef(false);
   // Between the mic going quiet and the words landing in the field it's briefly "empty": not idle.
   const stopping = useRef(false);
@@ -88,19 +94,44 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
   }, []);
   useEffect(() => {
     if (focused || recording) used.current = true;
-    else if (used.current && !stopping.current && text.length === 0) onIdle?.();
-  }, [focused, recording, text, onIdle]);
+    else if (goesIdle({ used: used.current, stopping: stopping.current, focused, recording, empty: text.length === 0, screenReader })) onIdle?.();
+  }, [focused, recording, text, onIdle, screenReader]);
+
+  // VoiceOver's cursor to the field once it's drawn (after ✕ it comes back where the waveform was), F4.
+  const field = useRef<TextInput>(null);
+  const cursorNext = useRef(false);
+  useEffect(() => {
+    if (!cursorNext.current || recording || !field.current) return;
+    cursorNext.current = false;
+    AccessibilityInfo.sendAccessibilityEvent?.(field.current, 'focus');
+  });
 
   const send = async () => {
     const v = text.trim();
     if (!v || sendDisabled) return;
-    if (await onSend?.(v)) composerState.clearDraftIf(v);
+    if (await onSend?.(v)) {
+      composerState.clearDraftIf(v);
+      const after = composerSlots({ recording: false, typing: focused, hasText: composerState.draft().trim().length > 0, micAvailable: mic.available }).trail;
+      if (screenReader && cursorToField('send', after)) cursorNext.current = true;
+    }
+  };
+  const cancelMic = async () => {
+    if (screenReader && cursorToField('cancel', null)) cursorNext.current = true;
+    await mic.cancel();
   };
   const stopMic = async () => {
     stopping.current = true;
     const heard = await mic.stop(); // the words land through useDictation's onHeard
     stopping.current = false;
-    if (!heard && !focused && !text) onIdle?.();
+    if (!heard && goesIdle({ used: true, stopping: false, focused, recording: false, empty: !composerState.draft(), screenReader })) onIdle?.();
+  };
+  // VoiceOver's escape (two-finger scrub): put it away; words he said or typed wait in the draft (F3).
+  const escape = () => {
+    void (async () => {
+      if (recording) await mic.stop();
+      Keyboard.dismiss();
+      onIdle?.();
+    })();
   };
 
   // A light wash of the surface color over the clear glass, so the words keep their contrast over photos in the thread.
@@ -108,18 +139,38 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
   const shell = { borderRadius: H / 2, borderCurve: 'continuous' as const, borderWidth: 1, borderColor: colors.line };
   const background =
     hasGlass() && !a11y.reduceTransparency ? (
-      <GlassView glassEffectStyle="regular" tintColor={glassTint} style={[StyleSheet.absoluteFill, { borderRadius: H / 2 }]} />
+      <GlassView key="bg" glassEffectStyle="regular" tintColor={glassTint} style={[StyleSheet.absoluteFill, { borderRadius: H / 2 }]} />
     ) : (
-      <View style={[StyleSheet.absoluteFill, { borderRadius: H / 2, backgroundColor: scheme === 'dark' ? colors.surface : colors.surface }]} />
+      <View key="bg" style={[StyleSheet.absoluteFill, { borderRadius: H / 2, backgroundColor: scheme === 'dark' ? colors.surface : colors.surface }]} />
     );
 
-  // Always the icon: the card above always carries the labelled camera action ("Check my fit",
+  // The camera is always the icon: the card above always carries the labelled camera action ("Check my fit",
   // "Check it on" or the link), so a labelled pill here said it twice (#70). VoiceOver: "Check my fit".
-  const camera = typing || recording ? null : (
-    <Circle onPress={onCamera} label={t('composer.a11y.camera')} filled color={colors.primary}>
-      <Icon name="camera" size={22} color={colors.onPrimary} />
-    </Circle>
-  );
+  const leadButton =
+    lead === 'camera' ? (
+      <Circle key="lead" onPress={onCamera} label={t('composer.a11y.camera')} filled color={colors.primary}>
+        <Icon name="camera" size={22} color={colors.onPrimary} />
+      </Circle>
+    ) : lead === 'cancel' ? (
+      <Circle key="lead" onPress={() => void cancelMic()} label={t('mic.a11yCancel')} color={colors.surface2}>
+        <Icon name="close" size={18} color="ink" weight="semibold" />
+      </Circle>
+    ) : null;
+  // One trailing button: the same view whatever it does, so VoiceOver's cursor stays on it (F2).
+  const trailButton =
+    trail === 'send' ? (
+      <Circle key="trail" onPress={() => void send()} label={t('composer.a11y.send')} filled color={colors.primary} disabled={sendDisabled}>
+        <Icon name="arrow.up" size={18} color={colors.onPrimary} weight="bold" />
+      </Circle>
+    ) : trail === 'mic' ? (
+      <Circle key="trail" onPress={() => void mic.start()} label={t('mic.a11y')} color="transparent">
+        <Icon name="mic" size={22} color="ink2" />
+      </Circle>
+    ) : trail === 'stop' ? (
+      <Circle key="trail" onPress={() => void stopMic()} label={t('mic.a11yStop')} filled color={colors.primary}>
+        <View style={{ width: 12, height: 12, borderRadius: 3, backgroundColor: colors.onPrimary }} />
+      </Circle>
+    ) : null;
 
   const showChips = chips.length > 0 && text.length === 0 && !recording && chipsUp;
   return (
@@ -143,58 +194,61 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
           </View>
         )
       ) : null}
-      <View style={[styles.capsule, shell]}>
+      <View style={[styles.capsule, shell]} onAccessibilityEscape={escape}>
         {background}
+        {leadButton}
         {recording ? (
-          <>
-            <Circle onPress={() => void mic.cancel()} label={t('mic.a11yCancel')} color={colors.surface2}>
-              <Icon name="close" size={18} color="ink" weight="semibold" />
-            </Circle>
-            <View style={styles.voice}>
-              <Waveform level={mic.level} color={colors.ink} />
-              {/* Every word he's said so far, wrapping (was one line cut to the last 33 characters, #302). */}
-              <KText variant="body" color={mic.text ? 'ink' : 'ink3'} numberOfLines={4} style={{ flex: 1 }}>
-                {mic.text ? mic.text : mic.state === 'preparing' ? t('mic.preparing') : t('mic.listening')}
-              </KText>
-            </View>
-            <Circle onPress={() => void stopMic()} label={t('mic.a11yStop')} filled color={colors.primary}>
-              <View style={{ width: 12, height: 12, borderRadius: 3, backgroundColor: colors.onPrimary }} />
-            </Circle>
-          </>
+          <View key="voice" style={styles.voice}>
+            <Waveform level={mic.level} color={colors.ink} />
+            {/* Every word he's said so far, wrapping (was one line cut to the last 33 characters, #302). */}
+            <KText variant="body" color={mic.text ? 'ink' : 'ink3'} numberOfLines={4} style={{ flex: 1 }}>
+              {mic.text ? mic.text : mic.state === 'preparing' ? t('mic.preparing') : t('mic.listening')}
+            </KText>
+          </View>
         ) : (
-          <>
-            {camera}
-            <TextInput
-              value={text}
-              onChangeText={setText}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              autoFocus={autoFocus}
-              placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
-              placeholderTextColor={colors.ink2}
-              accessibilityLabel={t('composer.a11y.field')}
-              multiline
-              numberOfLines={1}
-              // The body style's size and leading, scaling with Dynamic Type up to the controls' 2× cap
-              // (TextInput takes no dynamicTypeRamp, so it scales linearly like the other controls).
-              allowFontScaling
-              maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
-              style={[styles.input, { color: colors.ink, paddingLeft: camera ? 4 : 12 }]}
-            />
-            {text.trim().length > 0 ? (
-              <Circle onPress={() => void send()} label={t('composer.a11y.send')} filled color={colors.primary} disabled={sendDisabled}>
-                <Icon name="arrow.up" size={18} color={colors.onPrimary} weight="bold" />
-              </Circle>
-            ) : mic.available ? (
-              <Circle onPress={() => void mic.start()} label={t('mic.a11y')} color="transparent">
-                <Icon name="mic" size={22} color="ink2" />
-              </Circle>
-            ) : null}
-          </>
+          <TextInput
+            key="field"
+            ref={field}
+            value={text}
+            onChangeText={setText}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            autoFocus={autoFocus}
+            placeholder={idle ? t('composer.placeholderIdle') : t('composer.placeholder')}
+            placeholderTextColor={colors.ink2}
+            accessibilityLabel={t('composer.a11y.field')}
+            multiline
+            numberOfLines={1}
+            // The body style's size and leading, scaling with Dynamic Type up to the controls' 2× cap
+            // (TextInput takes no dynamicTypeRamp, so it scales linearly like the other controls).
+            allowFontScaling
+            maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
+            style={[styles.input, { color: colors.ink, paddingLeft: leadButton ? 4 : 12 }]}
+          />
         )}
+        {trailButton}
       </View>
     </View>
   );
+}
+
+/** VoiceOver on (the composer never closes itself then, 07 §18 F3). */
+function useScreenReader(): boolean {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    void AccessibilityInfo.isScreenReaderEnabled?.()
+      .then((v) => {
+        if (alive) setOn(v);
+      })
+      .catch(() => {});
+    const sub = AccessibilityInfo.addEventListener?.('screenReaderChanged', (v: boolean) => setOn(v));
+    return () => {
+      alive = false;
+      sub?.remove();
+    };
+  }, []);
+  return on;
 }
 
 function Circle({ children, onPress, label, filled, color, disabled }: { children: React.ReactNode; onPress: () => void; label: string; filled?: boolean; color: string; disabled?: boolean }) {

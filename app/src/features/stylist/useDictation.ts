@@ -1,5 +1,6 @@
 // The composer's mic (DECISIONS-LOG #70; round 2 #302): tap to start; it stops on a tap, after a pause once he's
 // talked, or after a minute, and the words land in the field (onHeard). ✕ throws them away. Never sends by itself.
+// Unmounting mid-dictation (he left the tab or opened a page) keeps the words heard so far in the draft (07 §18).
 // On-device (kitted-vision → SpeechAnalyzer). The logic lives in dictation.ts (tested); this wraps it for React.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Linking } from 'react-native';
@@ -28,7 +29,7 @@ export interface Dictation {
   cancel: () => Promise<void>;
 }
 
-export function useDictation(onHeard: (text: string) => void): Dictation {
+export function useDictation(onHeard: (text: string, how: 'stop' | 'left') => void): Dictation {
   const [state, setState] = useState<DictationState>('idle');
   const [text, setText] = useState('');
   const level = useSharedValue(0);
@@ -67,7 +68,7 @@ export function useDictation(onHeard: (text: string) => void): Dictation {
       setTimer: (fn, ms) => setTimeout(fn, ms),
       clearTimer: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
       words: () => names.current,
-      onHeard: (h) => heardRef.current(h),
+      onHeard: (h, how) => heardRef.current(h, how),
       onToast: (key) => showToast(t(key)),
       onMicOff: () =>
         Alert.alert(t('mic.off.title'), t('mic.off.body'), [

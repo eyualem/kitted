@@ -5,6 +5,8 @@
 //   stop   · waits for the native side's last words and hands every word to onHeard (the field). A tap on stop, a
 //            pause after he's talked (SILENCE_MS), or the minute cap all end the same way. Never sends anything.
 //   cancel · drops the words.
+//   dispose · he left the tab or opened a page while it listened (the composer unmounts): the words heard so far go to
+//            the draft, quietly ('left'), never sent (07 §18, L1–L3). A stop already on its way still lands.
 // Events from an earlier session never refill the field (a late final after stop). Logs say counts, never words.
 
 export type DictationState = 'idle' | 'preparing' | 'starting' | 'listening' | 'stopping';
@@ -31,7 +33,8 @@ export interface DictationDeps {
   clearTimer: (id: unknown) => void;
   /** His closet's piece names (owned, one line each), for the context words. */
   words: () => readonly string[];
-  onHeard: (text: string) => void;
+  /** 'left': he left mid-dictation (dispose); the words go to the draft without being announced. */
+  onHeard: (text: string, how: 'stop' | 'left') => void;
   onToast: (key: 'mic.error' | 'mic.needsNetwork' | 'mic.noWords') => void;
   onMicOff: () => void;
   log?: (line: string) => void;
@@ -75,6 +78,8 @@ export function createDictationController(deps: DictationDeps) {
   let cap: unknown = null;
   let quiet: unknown = null;
   let nothing: unknown = null;
+  /** Disposed (he left): a stop on its way hands its words as 'left', with no toast. */
+  let left = false;
   const listeners = new Set<(s: DictationSnapshot) => void>();
   const emit = () => {
     const snap = { state, text, level };
@@ -127,7 +132,7 @@ export function createDictationController(deps: DictationDeps) {
       text = '';
       level = 0;
       // The words reach the field before the mic shows idle, so the composer never closes in between.
-      if (!e.error && heard) deps.onHeard(heard);
+      if (!e.error && heard) deps.onHeard(heard, 'stop');
       emit();
       if (e.error) deps.onToast('mic.error');
     }
@@ -166,7 +171,7 @@ export function createDictationController(deps: DictationDeps) {
     level = 0;
     session++;
     // The words reach the field before the mic shows idle, so the composer never closes in between.
-    if (heard) deps.onHeard(heard);
+    if (heard) deps.onHeard(heard, left ? 'left' : 'stop');
     emit();
     return heard;
   }
@@ -225,7 +230,9 @@ export function createDictationController(deps: DictationDeps) {
         nothing = deps.setTimer(() => {
           if (session !== s || state !== 'listening' || text.trim()) return;
           log('auto-stop · no words');
-          void finish(s).then(() => deps.onToast('mic.noWords'));
+          void finish(s).then(() => {
+            if (!left) deps.onToast('mic.noWords');
+          });
         }, NO_WORDS_MS);
       } else armQuiet(s);
     },
@@ -237,14 +244,29 @@ export function createDictationController(deps: DictationDeps) {
     },
     cancel,
     dispose() {
-      // A start still waiting on the model or the native side must not go on after this (U4).
-      session++;
+      const was = state;
+      left = true;
       clearTimers();
       off();
       listeners.clear();
-      const was = state;
+      // A stop already on its way: let it finish and hand its words (L2).
+      if (was === 'stopping') return;
+      // A start still waiting on the model or the native side must not go on after this (U4).
+      session++;
+      const live = text.trim();
       state = 'idle';
-      if (was !== 'idle' && was !== 'preparing') void deps.native.stop().catch(() => null);
+      text = '';
+      level = 0;
+      if (was !== 'starting' && was !== 'listening') return;
+      // He left mid-sentence: keep what he said (the native side's last words, else the live text), never send (L1).
+      log(`left · ${count(live)} words so far`);
+      void deps.native
+        .stop()
+        .catch(() => null)
+        .then((fin) => {
+          const heard = (fin && fin.trim() ? fin : live).trim();
+          if (heard) deps.onHeard(heard, 'left');
+        });
     },
   };
 }
