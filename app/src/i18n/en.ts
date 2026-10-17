@@ -1053,6 +1053,11 @@ const addedInBuild = {
   'closet.unsure.askLeg': 'How do your {item} fit?',
   'closet.unsure.askFit': 'How does your {item} fit?',
   'closet.unsure.a11y.hint': 'Opens the choices. Your scores stay the same.',
+  // The fit-check card's line for a "Not sure" piece (§19, #322). {owner}: "mid-wash jeans'", "black tee's".
+  'closet.unsure.lineLeg': 'Not sure about your {owner} leg?',
+  'closet.unsure.lineFit': 'Not sure about your {owner} fit?',
+  'closet.unsure.lineTap': 'Tap.',
+  'closet.unsure.a11y.lineHint': 'Opens Not quite right? for this piece.',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */
