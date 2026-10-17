@@ -1,4 +1,4 @@
-// The app side of the server (handoff/13-server.md §8, checks A1–A12, #327): the four Gemini callers send the same
+// The app side of the server (handoff/13-server.md §8, checks A1–A12, #328): the four Gemini callers send the same
 // bodies to our server's routes with the guest sign-in and the check's tags, and read its refusals into the limit and
 // paused states. The fit-check and closet services run here as on the phone (real routed sources, the memory store),
 // against a fake server that answers like the `api` function relaying Gemini.

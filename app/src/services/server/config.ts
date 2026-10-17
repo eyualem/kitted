@@ -1,4 +1,4 @@
-// Which way the AI calls go (handoff/13-server.md §8, #327). A Release build has no Gemini key and always calls our
+// Which way the AI calls go (handoff/13-server.md §8, #328). A Release build has no Gemini key and always calls our
 // server (the Cloud Function `api`). A dev build keeps the dev key straight to Gemini (the founder's phone works without
 // the server) unless EXPO_PUBLIC_KITTED_SERVER points it at the server: `live` = the deployed function, a host such as
 // `127.0.0.1` = the local Functions emulator. A dev build with neither keeps the demo-only reading.

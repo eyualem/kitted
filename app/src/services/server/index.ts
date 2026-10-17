@@ -1,4 +1,4 @@
-// The app's one AI transport (13-server.md §8, #327): the dev key straight to Gemini on a dev build, else our server
+// The app's one AI transport (13-server.md §8, #328): the dev key straight to Gemini on a dev build, else our server
 // with the guest sign-in. The four callers (readingSource/live.ts, closetSource/live.ts, ask/liveSource.ts) share it,
 // so a check's read, look arms and closet call share one guest account and token.
 import { fetch as expoFetch } from 'expo/fetch';

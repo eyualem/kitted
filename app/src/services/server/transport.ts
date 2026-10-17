@@ -1,4 +1,4 @@
-// One Gemini request, sent either straight to Google with the dev key or to our server's route (13-server.md §8, #327).
+// One Gemini request, sent either straight to Google with the dev key or to our server's route (13-server.md §8, #328).
 // The four callers (the scoring read, the second look, the closet call, the stylist) build the same request body
 // either way and parse Gemini's own answer either way: the server relays Gemini's body and status on success. On a
 // refusal it answers JSON `{ error }`, read here into `refusal` so a caller can tell the limit or the spending stop

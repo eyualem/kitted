@@ -1,6 +1,6 @@
 // The real stylist (07 C2, check A7), sent the way the reading call is (services/server, 13-server.md §8): the dev key
 // on a dev build (on since Oct 17, #310: his dev build answers for real through Metro), our server's /v1/ask on a
-// Release build (C6, #327).
+// Release build (C6, #328).
 import { aiTransport } from '@/services/server';
 import type { AiTransport } from '@/services/server/transport';
 import { createAskGemini } from './gemini';
