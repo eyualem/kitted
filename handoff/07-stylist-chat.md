@@ -863,7 +863,7 @@ The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic
 | L3 | Pass (T) | U4's case still never starts the native side; idle hands nothing; the native listener is removed, so late events can't land |
 | L4 | Pass (T) | `composerState.appendHeard`: after his typed words with one space; empty heard leaves the draft |
 | L5 | Pass (C) | another tab and a pushed page both blur the Stylist tab → `composerState.close` → the dock unmounts the composer → `useDictation`'s cleanup → `dispose` (iOS; Android keeps the dock mounted, noted in #317) |
-| S1 | Pending | the Simulator was in use by another session at commit time |
+| S1 | Pass (S), with a finding | demo 12, light: the bar at rest, the composer opened with its starter chips, then typed into: the field and ↑ sit where they did. **Found, not from this change:** once open, the capsule's glass draws over its own contents on the Simulator (the words and ↑ show blurred, with a mirrored copy above and below); the #314 Composer, swapped back in for one launch, looks the same. A follow-up, proposed separately |
 | G | Pass | no copy, score or native change |
 
 **What the Simulator and tests can't show:** the mic is hidden on the Simulator and VoiceOver can't be driven there, so the cursor moves and the kept words rest on the tests and the code read above; his phone's voice test confirms them (CLAUDE.md to-do, the voice item).
