@@ -133,6 +133,8 @@ Run with `npm --prefix tests run emulate` from `firebase/` (Firestore and Auth e
 
 ## 8. The app side (next step, not built)
 
+> **Oct 17 (#329): questions now go to OpenAI's GPT-5.6 Luna** (the founder's call after the model test, #311). `/v1/ask` still forwards to Gemini only. Before Release builds answer questions it needs: an `OPENAI_KEY` secret (the founder's own OpenAI key with billing), an OpenAI branch for `/v1/ask` (the Responses API shape: `model` on its list, `instructions`, `input`, `max_output_tokens` clamped, `reasoning`, `stream`, `store: false`; no tools or files), the streamed relay, and the spend from OpenAI's usage (input, cached input at a tenth, output). The app's request comes from `createAskOpenAI` (`app/src/features/ask/providers.ts`).
+
 - A `ProxyFetch` for the four callers: same request bodies, the server URL, the sign-in token, the check id and kind, the time zone. Dev builds keep the direct key (so the founder's phone works without the server); Release builds use only the server.
 - A silent guest sign-in on first launch (the JS SDK's anonymous auth, already installed).
 - Reading 429 `limit` and 503 `paused` into the limit card and the paused line.

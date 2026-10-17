@@ -8,7 +8,7 @@ import { checkSentence, createSentenceStream, scoresIn, type GateContext } from 
 import { ASK_MODEL, buildAskRequest, createAskGemini, type AskGeminiOptions } from '@/features/ask/gemini';
 import { STYLIST_GUIDE } from '@/features/ask/guide.generated';
 import { liveAnswer } from '@/features/ask/live';
-import { liveAnswerSource } from '@/features/ask/liveSource';
+import { CHAT_PROVIDER, liveAnswerSource } from '@/features/ask/liveSource';
 import { createAsk, GIVE_UP_MS, SLOW_MS } from '@/features/ask/pipeline';
 import { createPrepare } from '@/features/ask/prepare';
 import { ANSWER_RULES, guideFor, systemPrompt, userPrompt } from '@/features/ask/prompt';
@@ -273,13 +273,20 @@ describe('A7 · off on his phone', () => {
   it('no real source while CHAT_LIVE is off, or without a key', () => {
     // Jest has no dev key, so even with the switch on (#310) the default source is null here, as in a release build.
     expect(liveAnswerSource()).toBeNull();
-    expect(liveAnswerSource(true, undefined)).toBeNull();
-    expect(liveAnswerSource(false, 'KEY')).toBeNull();
-    expect(liveAnswerSource(true, 'KEY')?.name).toBe('gemini');
+    expect(liveAnswerSource(true, 'openai', undefined)).toBeNull();
+    expect(liveAnswerSource(false, 'openai', 'KEY')).toBeNull();
+    expect(liveAnswerSource(true, 'gemini', 'KEY')?.name).toBe('gemini');
   });
-  it('the key only ever comes from a dev build (__DEV__), so a release build can never pick the real source', () => {
+  it('the chat answers with GPT-5.6 Luna (#329), and never falls back to another company', () => {
+    expect(CHAT_PROVIDER).toBe('openai');
+    expect(liveAnswerSource(true, 'openai', 'KEY')?.name).toBe('openai:gpt-5.6-luna');
+    // No OpenAI key → no live answers at all, never a question quietly sent to Google (consent names OpenAI).
+    expect(liveAnswerSource(true, 'openai', undefined)).toBeNull();
+  });
+  it('the keys only ever come from a dev build (__DEV__), so a release build can never pick the real source', () => {
     const src = readFileSync(join(__dirname, '../features/ask/liveSource.ts'), 'utf8');
-    expect(src).toMatch(/const KEY: string \| undefined = __DEV__ \? process\.env\.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined;/);
+    expect(src).toMatch(/gemini: __DEV__ \? process\.env\.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined,/);
+    expect(src).toMatch(/openai: __DEV__ \? process\.env\.EXPO_PUBLIC_OPENAI_DEV_KEY : undefined,/);
   });
   it('the gate passes every seeded demo answer (the demo screens keep their words)', () => {
     const s = seed as unknown as { scenarios: Record<string, { chatThread?: { role: string; kind: string; text?: string }[] }> };
@@ -290,5 +297,25 @@ describe('A7 · off on his phone', () => {
         expect(st.push(m.text) + st.end()).toBe(m.text);
       }
     }
+  });
+});
+
+describe('Questions go to OpenAI only with the agreement that says so (#329)', () => {
+  it('version 1 covers photos, not questions; version 2 covers both; withdrawn covers neither', async () => {
+    const { mayAsk, mayUpload } = jest.requireActual<typeof import('@/features/privacy/wipe')>('@/features/privacy/wipe');
+    const { CONSENT_VERSION } = jest.requireActual<typeof import('@/features/onboarding/complete')>('@/features/onboarding/complete');
+    const store = createMemoryStore();
+    await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN });
+    expect(CONSENT_VERSION).toBe('2');
+    for (const [v, ask, upload] of [['1', false, true], ['2', true, true], [null, false, false]] as const) {
+      await store.profile.patch('me', { consentVersion: v });
+      expect([v, await mayAsk(store), await mayUpload(store)]).toEqual([v, ask, upload]);
+    }
+  });
+  it('the agreement names OpenAI for questions and Google for photos', () => {
+    expect(t('onb.consent.sent3')).toMatch(/to OpenAI/);
+    expect(t('onb.consent.sent1')).toMatch(/Google's Gemini/);
+    expect(t('onb.consent.kept3')).toMatch(/OpenAI up to 30 days/);
+    expect(t('privacy.promise')).toMatch(/Questions you type to Kit go to OpenAI/);
   });
 });

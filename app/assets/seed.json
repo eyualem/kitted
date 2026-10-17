@@ -364,7 +364,7 @@
     "budget": "30_60",
     "dressCode": null,
     "lastOccasion": "date",
-    "consentVersion": 1,
+    "consentVersion": 2,
     "consentAt": "2026-09-24T19:05:00-04:00",
     "onboardingStep": "done",
     "paywallShownAt": "2026-09-24T19:12:00-04:00",

@@ -262,7 +262,7 @@ def main():
 
     profile = {"heightCm": 178, "heightDisplay": "5′10″", "build": "average", "fitPreference": "regular",
                "styles": STYLES, "styleLabels": ["Smart casual", "Workwear"], "birthYear": 2005, "boldness": None, "boldnessForScoring": "a_little",
-               "budget": "30_60", "dressCode": None, "lastOccasion": "date", "consentVersion": 1, "consentAt": ts("2026-09-24", "19:05"),
+               "budget": "30_60", "dressCode": None, "lastOccasion": "date", "consentVersion": 2, "consentAt": ts("2026-09-24", "19:05"),
                "onboardingStep": "done", "paywallShownAt": ts("2026-09-24", "19:12"), "ideaTime": "08:00", "ideasUnopened": 0, "units": "us",
                "plan": "free", "summaryLine": "5′10″ · Average · Regular fit"}
 

@@ -15,8 +15,12 @@ export interface OnboardingAnswers {
   consent?: boolean;
 }
 
-/** The consent text's version (02 D4: saved with the date; a changed text asks again). */
-export const CONSENT_VERSION = '1';
+/** The consent text's version (02 D4: saved with the date; a changed text asks again). 2 (#329): questions go to
+ *  OpenAI, with his style picks, height and build if given, what he told Kit and his closet as words. */
+export const CONSENT_VERSION = '2';
+/** Questions need an agreement that names OpenAI (version 2+); photos still go only to Google, so version 1 covers
+ *  them. Someone who agreed to version 1 sees the agreement once more the first time he asks Kit something. */
+export const QUESTIONS_CONSENT_FROM = 2;
 
 export async function completeOnboarding(store: KittedStore, a: OnboardingAnswers, nowMs: number, ids: (p: string) => string): Promise<void> {
   await store.profile.put({

@@ -10,7 +10,7 @@ import { store } from '@/data/db';
 import { KV } from '@/data/store';
 import { DEMO_ENABLED } from '@/demo/config';
 import { quota } from '@/features/fitcheck/session';
-import { mayUpload } from '@/features/privacy/wipe';
+import { mayAsk } from '@/features/privacy/wipe';
 import { newId } from '@/services/ids';
 import { connectivity } from '@/services/connectivity';
 import { realScheduler } from '@/services/scheduler';
@@ -52,7 +52,8 @@ export const askService = createAsk({
   source: pickSource,
   prepare: createPrepare({ store, clock: sessionClock, ids: newId, log: (l) => { if (__DEV__) console.log(`[ask] ${l}`); } }),
   scheduler: realScheduler,
-  consent: () => mayUpload(store),
+  // Questions need the agreement that names OpenAI (#329); photos keep their own check (privacy/wipe mayUpload).
+  consent: () => mayAsk(store),
   // The agreement as a sheet; agreeing just closes it, and his words are still in the composer.
   openConsent: () => router.push('/sheets/consent?from=ask'),
   tryPro: () => paywallOn(),

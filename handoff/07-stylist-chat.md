@@ -719,6 +719,7 @@ An answer is **good** when every judge gives it ≥ 4 on all five. Targets:
 5. **Outward-facing, his call:** a non-Google winner means consent and the App Store privacy label name OpenAI or Anthropic for questions (text only, never photos), and a second key on the server.
 
 ### 16.6 Results (Oct 17, #311; full report `extraction-test/results/ask-models1/report.md`)
+> **Decided Oct 17 (#329):** the founder went with GPT-5.6 Luna without finishing the blind pick ("I'd rather go with your judgment… going with the OpenAI model is probably the better idea"). The chat's live source is OpenAI on dev builds (`liveSource.ts` `CHAT_PROVIDER`), consent version 2 names OpenAI for questions, and the server's `/v1/ask` still needs its OpenAI branch (`handoff/13-server.md` §8).
 - **GPT-5.6 Luna is the only model that passes every hard gate** (100% answered, nothing unsafe in its own words, 0 rules clashes, every block parsed, 0.66 s first words, 0.035¢ a question), **and it clears every quality target:** 83% good, mean 4.58, invented 4.9%, the same advice twice 93% (judged), voice flags 10%.
 - **Today's Flash-Lite** fails G2: a promised "ten", "your waist", handles. Its quality is 54% good and 12% invented.
 - **3.8 Flash** fails G1, G6 and G7: hidden tokens, 23% of answers cut off, 3.9 s to first words, 0.81¢ from 2027.

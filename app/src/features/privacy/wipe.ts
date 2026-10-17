@@ -11,6 +11,7 @@ import { KV } from '@/data/store';
 import type { ChatMessage } from '@/data/types';
 import { liveAnswer } from '@/features/ask/live';
 import { INBOX_KEY } from '@/features/scan/inbox';
+import { QUESTIONS_CONSENT_FROM } from '@/features/onboarding/complete';
 import type { PrivacyFiles } from './files';
 
 export interface WipeDeps {
@@ -27,6 +28,12 @@ export interface WipeDeps {
 export async function mayUpload(store: Pick<KittedStore, 'profile'>): Promise<boolean> {
   const p = await store.profile.get('me');
   return !!p && !!p.consentVersion;
+}
+
+/** Whether a question may leave the phone (#329): an agreement that names OpenAI, the chat's provider. */
+export async function mayAsk(store: Pick<KittedStore, 'profile'>): Promise<boolean> {
+  const p = await store.profile.get('me');
+  return !!p && Number(p.consentVersion) >= QUESTIONS_CONSENT_FROM;
 }
 
 /** "Score my fits" off: withdraws consent at once. Turning it back on goes through the consent sheet (giveConsent). */

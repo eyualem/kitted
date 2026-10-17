@@ -867,9 +867,9 @@ const addedInBuild = {
   // You tab (Oct 14): Y7 privacy. Overrides of the deck (DECISIONS-LOG #246, mockups/theme-round2.html): the honest
   // promise (one line, was two: "saved on this iPhone and in its own backup…" + "A face-free copy…") and the switch
   // "Score my fits" (was "Send to Google for fit checks and questions"). The other privacy.* deck keys are used as is.
-  'privacy.promise': "Your photos are saved only on this iPhone. To score a fit, a copy with your face blurred goes to Google's Gemini. Google keeps it up to 55 days to check for misuse and doesn't train on it.",
+  'privacy.promise': "Your photos are saved only on this iPhone. To score a fit, a copy with your face blurred goes to Google's Gemini. Google keeps it up to 55 days to check for misuse and doesn't train on it. Questions you type to Kit go to OpenAI, which keeps them up to 30 days to check for misuse and doesn't train on them either.",
   'privacy.consentToggle': 'Score my fits',
-  'privacy.consentSub': 'Sends a face-blurred copy to {provider}',
+  'privacy.consentSub': 'Face-blurred photos go to {provider}, questions to OpenAI',
   'privacy.storageValueOne': '1 photo · {size}',
   'privacy.size.kb': '{n} KB',
   'privacy.size.mb': '{n} MB',
@@ -887,7 +887,7 @@ const addedInBuild = {
   'privacy.forget.done': "Forgotten. I'll start learning again from your next check.",
   'privacy.failed': "Couldn't finish. Try again.",
   'privacy.a11y.consentOnHint': 'Shows what is sent before you agree',
-  'privacy.a11y.consentOffHint': 'Stops sending photos to Google',
+  'privacy.a11y.consentOffHint': 'Stops sending photos to Google and questions to OpenAI',
   'privacy.a11y.storage': '{label}, {value}',
   // Onboarding and accounts (#289, handoff/10-onboarding.md): the example check (O1e), the sign-in sheet (A1) and email
   // (A2), bringing back his fits (A4), which fits to keep (A5), the save offer (A3), You's Account rows and the
@@ -908,6 +908,16 @@ const addedInBuild = {
   'onb.consent.footerPath': 'You can turn this off anytime in You → Settings → Privacy & data.',
   'onb.consent.introLater': "Before I score a photo, here's what happens to it.",
   'onb.consent.agreeLater': 'Agree',
+  // Consent version 2 (#329): questions go to OpenAI (GPT-5.6 Luna), photos still to Google's Gemini; the chat's
+  // context (style picks, height and build if given, what he told Kit, the closet as words) is said in full (D2);
+  // "face blurred", never "cropped" (#233 item 3). OpenAI's API terms: not used for training, abuse logs kept up to
+  // 30 days (developers.openai.com/api/docs/guides/your-data, checked Oct 17).
+  'onb.consent.sentBody': 'To score your outfit and answer your questions, Kitted sends these to two AI services:',
+  'onb.consent.sent1': "your outfit photo, to Google's Gemini, with your face blurred first (if we can't blur it, we don't send it)",
+  'onb.consent.sent2': "photos of clothes you add to your closet, to Google's Gemini",
+  'onb.consent.sent3': "questions you type to Kit, to OpenAI, with your style picks, your height and build if you gave them, what you've told Kit, and your closet as words (never your photos)",
+  'onb.consent.kept2': "Google and OpenAI use them only to give you an answer and don't use them to train their AI.",
+  'onb.consent.kept3': "Google keeps them up to 55 days and OpenAI up to 30 days, only to check for misuse, then they're deleted.",
   'onb.setup.newAccount': "No fits saved to that account yet. Let's set you up.",
   'acct.sheet.welcome.title': 'Welcome back',
   'acct.sheet.welcome.body': 'Sign in to bring back your closet, Lookbook and chats.',
