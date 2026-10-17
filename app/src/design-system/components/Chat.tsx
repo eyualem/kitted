@@ -1,24 +1,23 @@
 // Chat pieces — StylistMessage (`.say`, `.who`), UserBubble (`.me`), PhotoBubble (`.me.photo`),
 // DayStamp (`.stamp`), and NeckDownPhoto (03 §8 display rules). 03 §5 "Chat", 02 §4.
-// Copy rule: always "Your stylist", never "AI stylist". All strings come from @/i18n/en.
+// Copy rule: the stylist is "Kit" (#318), never "AI stylist". All strings come from @/i18n/en.
 
 import type { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Image, type ImageSource } from 'expo-image';
 import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
-import { fixed, radius, size } from '../tokens';
-import { wordmark, wordmarkStyle } from '../typography';
+import { radius, size } from '../tokens';
 import { userBubbleMaxWidth } from './chatLayout';
 import { Icon } from './Icon';
 import { KText } from './KText';
 
 // ---------------------------------------------------------------------------------------
-// StylistMessage, look C "stylist note" (founder, Oct 16, #302; mockups/chat-answers.html): a 28 pt column on the
-// leading side holding the K mark (radius 8, fixed.label, Archivo Expanded 14, fixed.onDark) on the first line of a
-// run, then a 10 pt gap and the text. Later lines of the same run keep the column empty, so the text lines up; the
-// footer (cards, chips, buttons) sits in the text column too. `body` replaces the plain text (an answer's lead and
-// chips, features/ask/AnswerBody); `children` is always the whole text, for VoiceOver.
+// StylistMessage, look C "stylist note" (founder, Oct 16, #302; mockups/chat-answers.html), with the persona's name in
+// place of the K mark (founder, Oct 17, #318): the first line of a run carries "Kit" small above the text (stylistWho,
+// footnote semibold ink3), the way a group chat shows who's talking; later lines of the same run have no label. The
+// text and the footer (cards, chips, buttons) use the full width. `body` replaces the plain text (an answer's lead and
+// chips, features/ask/AnswerBody); `children` is always the whole text, for VoiceOver ("Kit: …").
 
 export interface StylistMessageProps {
   children: string;
@@ -31,52 +30,24 @@ export interface StylistMessageProps {
   actions?: readonly { name: string; label: string; onPress: () => void }[];
 }
 
-export function StylistMark() {
-  const { archivoLoaded, scheme } = useTheme();
-  return (
-    <View
-      style={{
-        width: size.mark,
-        height: size.mark,
-        borderRadius: radius.mark,
-        borderCurve: 'continuous',
-        backgroundColor: fixed.label,
-        // On night backgrounds the indigo mark sinks in; a faint rim keeps its edge (#302).
-        ...(scheme === 'dark' ? { borderWidth: 1, borderColor: fixed.labelRimDark } : null),
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text allowFontScaling={false} style={[wordmarkStyle(wordmark.mark.fontSize, 0, archivoLoaded), { color: fixed.onDark }]}>
-        K
-      </Text>
-    </View>
-  );
-}
-
 export function StylistMessage({ children, showHeader, body, footer, actions }: StylistMessageProps) {
-  // At the accessibility text sizes the mark goes above the text, so the words get the full width (rows stack there).
-  const { isAccessibilitySize } = useTheme();
-  const stacked = isAccessibilitySize;
   return (
-    <View style={{ flexDirection: stacked ? 'column' : 'row', gap: stacked ? 6 : size.markGap, marginTop: showHeader ? 4 : 0 }}>
-      {!stacked || showHeader ? (
-        <View style={{ width: size.mark }} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
-          {showHeader ? <StylistMark /> : null}
+    <View style={{ gap: 4, marginTop: showHeader ? 4 : 0 }}>
+      {showHeader ? (
+        <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+          <KText role="stylistWho">{t('common.who')}</KText>
         </View>
       ) : null}
-      <View style={stacked ? { gap: 4 } : { flex: 1, minWidth: 0, gap: 4 }}>
-        <View
-          accessible
-          accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })}
-          accessibilityActions={actions?.map((a) => ({ name: a.name, label: a.label }))}
-          onAccessibilityAction={actions ? (e) => actions.find((a) => a.name === e.nativeEvent.actionName)?.onPress() : undefined}
-          style={{ gap: 4, paddingTop: showHeader && !stacked ? 3 : 0 }}
-        >
-          {body ?? <KText role="chatText">{children}</KText>}
-        </View>
-        {footer}
+      <View
+        accessible
+        accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })}
+        accessibilityActions={actions?.map((a) => ({ name: a.name, label: a.label }))}
+        onAccessibilityAction={actions ? (e) => actions.find((a) => a.name === e.nativeEvent.actionName)?.onPress() : undefined}
+        style={{ gap: 4 }}
+      >
+        {body ?? <KText role="chatText">{children}</KText>}
       </View>
+      {footer}
     </View>
   );
 }
@@ -276,7 +247,7 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: reading ? 'flex-start' : 'center',
+            alignItems: 'flex-start',
             paddingTop: 6,
             paddingBottom: 5,
             paddingHorizontal: 9,
@@ -293,7 +264,8 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
               </KText>
             </View>
           ) : (
-            <KText role="photoCaption" numberOfLines={1} style={{ flexShrink: 1 }}>
+            // "Pants and shoes" next to the time doesn't fit 109 pt on one line (it showed "Pants and…"): it wraps.
+            <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
               {occasion ?? ''}
             </KText>
           )}

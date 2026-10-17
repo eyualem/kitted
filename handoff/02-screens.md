@@ -1557,7 +1557,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `common.privacyPolicy` | Privacy policy | R |
 | `common.termsOfUse` | Terms of use | N |
 | `common.latest` | Latest | N |
-| `common.who` | Your stylist | M |
+| `common.who` | Kit | M |
 | `brand.wordmark` | KITTED | M |
 | `brand.wordmark.pro` | KITTED PRO | M |
 | `a11y.brand` | Kitted | N |
@@ -1635,7 +1635,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.consent.kept1` | We don't keep your photos on our servers. They stay on your phone. | R |
 | `onb.consent.kept2` | Google uses them only to give you an answer and doesn't use them to train its AI. | R |
 | `onb.consent.kept3` | Google keeps them for up to 55 days only to check for misuse, then deletes them. | R |
-| `onb.consent.aiTitle` | Your stylist is an AI. | R |
+| `onb.consent.aiTitle` | Kit, your stylist, is an AI. | R |
 | `onb.consent.aiBody` | It can make mistakes, so use "Not quite right?" to fix it. | R |
 | `onb.consent.footer` | You can turn this off anytime in You → Privacy. | R |
 | `onb.consent.agree` | Agree & check my fit | M |
@@ -1837,7 +1837,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | Key | String | Src |
 |---|---|---|
 | `stylist.title` | Stylist | M |
-| `stylist.aiNote` | Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do. | R (ruling 17; first message in the Stylist thread, posted once when onboarding ends, above his first photo bubble) |
+| `stylist.aiNote` | I'm Kit, your stylist. Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do. | R (ruling 17; first message in the Stylist thread, posted once when onboarding ends, above his first photo bubble) |
 | `stylist.quota.free` | 1 free check today | M |
 | `stylist.quota.recheck` | Re-check included | M |
 | `stylist.quota.used` | Check used today | M |
@@ -1858,7 +1858,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `quick.ask` | Ask a question | M |
 | `composer.check` | Check my fit | M |
 | `composer.placeholderIdle` | Ask… | M |
-| `composer.placeholder` | Ask your stylist… | M |
+| `composer.placeholder` | Ask Kit… | M |
 | `composer.a11y.camera` | Check my fit. Opens the camera. | N |
 | `composer.a11y.send` | Send | N |
 | `wear.whereTo` | Where to? | M |
@@ -2113,7 +2113,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 |---|---|---|
 | `you.title` | You | M |
 | `you.basicsLine` | {height} · {build} · {fit} fit | M (mockup: "5′10″ · Average · Regular fit") |
-| `you.knows` | What your stylist knows | M |
+| `you.knows` | What Kit knows | M |
 | `you.knowsAll` | All {n} | M |
 | `fact.source.fitCheck` | From a fit check · {date} | M |
 | `fact.source.told` | You told me · {date} | M |
@@ -2143,7 +2143,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `bold.little` | A little | N (mockup lowercase in "Boldness: a little") |
 | `bold.bold` | Bold | N |
 | `profile.budget` | Budget per piece | N |
-| `knows.title` | What your stylist knows | M |
+| `knows.title` | What Kit knows | M |
 | `knows.header` | Everything I use to style you. Edit or delete anything. | N |
 | `knows.cameFrom` | Where it came from | N |
 | `knows.showCheck` | Show the check | N |
@@ -2194,7 +2194,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `privacy.storage` | Photos on this iPhone | N |
 | `privacy.storageValue` | {n} photos · {size} | R |
 | `privacy.deletePhotos` | Delete all photos | R |
-| `privacy.forget` | Forget what your stylist knows | N |
+| `privacy.forget` | Forget what Kit knows | N |
 | `privacy.deleteAll` | Delete all my data | R |
 | `privacy.deletePhotos.title` | Delete all photos? | N |
 | `privacy.deletePhotos.msg` | Your scores and closet stay. This can't be undone. | N |

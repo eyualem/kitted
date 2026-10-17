@@ -526,7 +526,7 @@ V0, J and every test below are written first and can start now. L1 and K1–K3 w
 **L0, the founder's pick** (`mockups/chat-answers.html`, light and dark):
 - **A · Clean text:** today's look, plus "Your stylist" over every answer, the first sentence semibold, his pieces underlined and tappable, more room above.
 - **B · Soft bubble:** a white bubble on the left, like texting a person.
-- **C · Stylist note (default):** the K mark beside every answer, the move on its own larger line, the reason under it in grey, his pieces as small chips in their own colors.
+- **C · Stylist note (default):** (since Oct 17, #318, the K mark is replaced by the name "Kit" small above the first line of each reply, and the text takes the full width) the K mark beside every answer, the move on its own larger line, the reason under it in grey, his pieces as small chips in their own colors.
 
 **L1, the build (for any pick):** a new `StylistAnswer` in `design-system/components/Chat.tsx` for answers only; other stylist lines (greetings, the limit line) get the same mark and spacing. All formatting is done by code, never by model markup:
 - the lead is the first sentence, split by code;

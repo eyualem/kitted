@@ -15,7 +15,6 @@ export { StageList, defaultStageLabels, type Stage, type StageState } from './St
 export { DetectionTag } from './DetectionTag';
 export {
   StylistMessage,
-  StylistMark,
   UserBubble,
   PhotoBubble,
   NeckDownPhoto,

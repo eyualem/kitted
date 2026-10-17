@@ -47,7 +47,7 @@ const addedInBuild = {
   'read.a11y.progress': '{stage}, step {n} of {total}',
   'read.a11y.stageDone': '{stage}, done',
   'stylist.menu.a11y': 'More',
-  'composer.a11y.field': 'Ask your stylist',
+  'composer.a11y.field': 'Ask Kit',
   'composer.a11y.fieldHint': 'Opens the keyboard',
   'history.title': 'Past chats',
   'history.open': 'Earlier chats',
@@ -380,7 +380,7 @@ const addedInBuild = {
   'mic.noWords': "I didn't catch that.",
   'mic.error': "Couldn't hear that. Try again.",
   'mic.off.title': 'Microphone is off',
-  'mic.off.body': 'Turn it on in Settings to ask your stylist out loud.',
+  'mic.off.body': 'Turn it on in Settings to ask Kit out loud.',
   'mic.off.settings': 'Open Settings',
   // A second photo while one is reading (09-ui-review §11, #305): the founder's listed default (#233 item 8).
   'cam.busy': "Still reading your last photo. Send this one when it's done.",
@@ -421,7 +421,7 @@ const addedInBuild = {
   // The stylist's answers, C2–C4 (07 §1, §4, §6; #297): the slow line, the cards, the saved chip, the starter chips.
   'ask.slow': 'Taking longer…',
   // The chat UI pass (07 §17, #314): what VoiceOver hears on the row while an answer is on its way.
-  'ask.a11yWriting': 'Your stylist is writing',
+  'ask.a11yWriting': 'Kit is writing',
   // Look C (#302): a piece chip in an answer, for VoiceOver.
   'a11y.openPiece': 'Open {name}',
   'ask.card.startCheck': 'Start a fit check',
@@ -436,7 +436,7 @@ const addedInBuild = {
   'ask.card.a11y.outfit': 'An outfit from your closet: {names}.',
   'ask.card.a11y.option': 'Answer: {option}',
   'ask.saved': 'Saved to what I know',
-  'ask.saved.a11y': 'Saved to what your stylist knows. Undo.',
+  'ask.saved.a11y': 'Saved to what Kit knows. Undo.',
   'ask.saved.undone': 'Removed from what I know.',
   // D4 (07 §6.4), the default: the server's spend stop (C6).
   'ask.paused': 'Questions are paused for a bit. Nothing was counted. Try again later.',
@@ -850,7 +850,7 @@ const addedInBuild = {
   'profile.budgetSkip': 'Prefer not to say',
   'profile.budgetNote': 'Only used to suggest what to buy next.',
   'profile.a11y.pick': '{style}, pick {n}',
-  'knows.edit.a11y': 'What your stylist knows',
+  'knows.edit.a11y': 'What Kit knows',
   // You tab (Oct 14): Y7 privacy. Overrides of the deck (DECISIONS-LOG #246, mockups/theme-round2.html): the honest
   // promise (one line, was two: "saved on this iPhone and in its own backup…" + "A face-free copy…") and the switch
   // "Score my fits" (was "Send to Google for fit checks and questions"). The other privacy.* deck keys are used as is.
