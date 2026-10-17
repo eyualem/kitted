@@ -7,7 +7,8 @@
 //   3. Pieces: the look's closet pieces as drawn tiles, each opening its piece page.
 //   4. Show in chat.
 // Read-only: the score is the stored one; nothing here changes the occasion, re-scores, re-checks or corrects.
-// Not built (no dead buttons): Wear this again, the ⋯ menu (Save, Share, Delete photo).
+// The header's ⋯ (09-ui-review §20.8 G22): Delete photo (a confirm; the photo leaves the phone, the score stays) and
+// Remove from Lookbook (the long-press's flow, then back). Not built (no dead buttons): Wear this again, Save, Share.
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { Stack, router } from 'expo-router';
 import {
@@ -21,6 +22,8 @@ import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
 import { loadLook, showInChat, type LookPageModel } from './lookPage';
 import { GonePage } from '@/features/gone/Gone';
+import { confirmDeletePhoto, removeLookMenu } from './lookActions';
+import { LookMenu } from './LookMenu';
 
 const PIECE_TILE = 76;
 const BEFORE_W = 50;
@@ -37,7 +40,18 @@ export function LookPage({ id }: { id: string }) {
       style={{ backgroundColor: colors.bg }}
       contentContainerStyle={{ paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xxxl, gap: space.stack }}
     >
-      <Stack.Screen options={{ title: look?.title ?? '' }} />
+      <Stack.Screen
+        options={{
+          title: look?.title ?? '',
+          headerRight: () => (
+            <LookMenu
+              hasPhoto={!!look.photo}
+              onDeletePhoto={() => confirmDeletePhoto(look.shownId)}
+              onRemove={() => void removeLookMenu(look.checkId, look.title, () => (router.canGoBack() ? router.back() : router.replace('/lookbook')))}
+            />
+          ),
+        }}
+      />
       {look ? <LookBody look={look} /> : null}
     </ScrollView>
   );

@@ -51,7 +51,20 @@ function CardBody({ m, card, readOnly }: { m: ChatMessage; card: AskCard; readOn
       return <BuyCard card={card} />;
     case 'link':
       return <LinkRow card={card} />;
+    case 'correct':
+      return <CorrectRow card={card} readOnly={readOnly} />;
   }
+}
+
+/** "That score is wrong" (09 §20.8 G19): his check's Not quite right?, while that check is still here (today only). */
+function CorrectRow({ card, readOnly }: { card: Extract<AskCard, { type: 'correct' }>; readOnly: boolean }) {
+  const scored = useLive(['fitChecks'], async () => (await store.fitChecks.get(card.checkId))?.status === 'scored', [card.checkId]);
+  if (!scored || !cardControls(card, { readOnly, tapped: null }).correct) return null;
+  return (
+    <View style={{ alignItems: 'flex-start' }}>
+      <KButton title={t('card.nqr')} kind="secondary" size="regular" onPress={() => router.push(`/sheets/correct/${card.checkId}`)} />
+    </View>
+  );
 }
 
 function openCamera(occasion: string) {

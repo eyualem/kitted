@@ -22,6 +22,7 @@ import { AnswerBody, answerLayout, chipActions, useAnswerCloset } from '@/featur
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
+import { NoConsentCard } from '@/features/onboarding/NoConsentCard';
 import { MovesCard } from '@/features/finish/MovesCard';
 import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
 import { retryQuestion } from './ask';
@@ -44,6 +45,8 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'support') return <SupportCard />;
     // "Keep your fits" (A3, #289): after his first score, at most twice.
     if (m.cardType === 'account') return <AccountOfferCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
+    // "Turn on fit checks" (S26, 09-ui-review §20.8 G23): after "Not now" on consent.
+    if (m.cardType === 'turnOnChecks') return <NoConsentCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     // The check limit (02 D19 S17 → S17h, #280): under the photo he took after the free check was used.
     // …and after 4 am, "Ready to score last night's photo?" (S17h, #281).
     if (m.cardType === 'held' && m.fitCheckId && m.payload.ready === true) return <HeldReadyCard checkId={m.fitCheckId} showHeader={item.showWho} readOnly={readOnly} />;
@@ -127,7 +130,8 @@ function PhotoMessage({ m }: { m: ChatMessage }) {
   const reading = !!row && (row.status === 'scoring' || (snap && session.kind === 'reading' && session.checkId === row.id && session.mode === 'shoeSnap'));
   let caption: string | undefined;
   if (snap) caption = t(m.payload.snapPart === 'bottom' ? 'cam.bottom.bubbleCap' : 'cam.shoe.bubbleCap');
-  else if (row?.status === 'failed') caption = t('fail.cap.notScored');
+  // "Not sent" when no connection kept it on the phone (09 §20.8 G18.5); any other failure was sent but not scored.
+  else if (row?.status === 'failed') caption = t(row.details.failCode === 'offline' ? 'fail.cap.notSent' : 'fail.cap.notScored');
   else if (row?.parentId) caption = t('recheck.bubbleCap');
   else if (row) caption = occasionLabel(row.occasion);
   return (

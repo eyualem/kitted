@@ -21,13 +21,19 @@ import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
 import { askService } from '@/features/ask/session';
 import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
+import { connectivity } from '@/services/connectivity';
+import { t } from '@/i18n/en';
+import type { DemoFault } from './demoArgs';
 import { STORY_DOUBT, STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
 /** Story steps per screen (firstRun story; screen 11 runs s24 live inside `full`). */
 type Step =
-  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey; tapLook?: StyleKey }
+  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey; tapLook?: StyleKey; fault?: DemoFault }
+  /** A question that failed for no connection (09-ui-review §20.8 G18.4): his bubble and the offline line with Retry, as
+   *  the pipeline writes them (askPipeline tests cover the path itself; the screen's own state is offline). */
+  | { at: string; do: 'askOffline'; text: string }
   /** His picks from setup (the Going-for tiles, #215), in order. */
   | { at: string; do: 'looks'; styles: StyleKey[] }
   /** "Going for" changed after the score (Change → a look): advice only. */
@@ -235,6 +241,10 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   201: { steps: DOUBT_STORY },
   202: { steps: [...DOUBT_STORY, { at: '2026-10-22T12:12:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   203: { steps: DOUBT_STORY },
+  // Step 4's code-only batch (09-ui-review §20.8): offline (210), "That score is wrong" (211), a re-check that moved (215).
+  210: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', fault: 'offline' }, { at: '2026-10-22T07:44:00', do: 'askOffline', text: 'What goes with my jeans?' }] },
+  211: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'ask', text: 'That score is wrong.' }] },
+  215: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
   183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
@@ -283,6 +293,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   const story = STORY[sc.n] ?? { steps: [] };
   const args = getDemoArgs();
   setDemoArgs({ ...args, latency: 0 });
+  // The connection is pinned (G18): online, or offline on the offline screens, whatever the Mac's Wi-Fi is doing.
+  connectivity.force(!sc.offline);
 
   if (sc.scenario === 'full') {
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at(story.asOf ?? sc.now) });
@@ -290,7 +302,7 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     const a = seed.scenarios.firstRun.onboardingAnswers;
     await completeOnboarding(
       store,
-      { styles: a.styles as unknown as Styles, heightCm: a.heightCm, build: a.build, fitPreference: a.fitPreference, birthYear: a.birthYear },
+      { styles: a.styles as unknown as Styles, heightCm: a.heightCm, build: a.build, fitPreference: a.fitPreference, birthYear: a.birthYear, ...(sc.consent === false ? { consent: false } : {}) },
       at('2026-10-22T07:40:00'),
       newId,
     );
@@ -359,6 +371,16 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     if (step.do === 'ask') {
       const o = await askService.ask(step.text);
       if (o.kind === 'sent') await o.done;
+      continue;
+    }
+    if (step.do === 'askOffline') {
+      const t0 = at(step.at);
+      const q = newId('M');
+      await store.chat.put({ id: q, createdAt: t0, role: 'user', kind: 'text', text: step.text, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {} });
+      await store.chat.put({
+        id: newId('M'), createdAt: t0 + 1, role: 'stylist', kind: 'text', text: t('fail.askOffline'), cardType: null, fitCheckId: null, outfitId: null, itemId: null,
+        chips: [], payload: { askRetry: q },
+      });
       continue;
     }
     if (step.do === 'kv') {
@@ -464,10 +486,16 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       if (step.occasion !== 'everyday') fitCheck.selectOccasion(step.occasion);
       if (step.tapLook) fitCheck.selectLook(step.tapLook);
     } else {
-      await fitCheck.start({
-        mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL),
-        ...(step.style ? { style: step.style } : {}),
-      });
+      // A step's fault (G18: no connection) holds for that check only.
+      if (step.fault) setDemoArgs({ ...getDemoArgs(), fault: step.fault });
+      try {
+        await fitCheck.start({
+          mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL),
+          ...(step.style ? { style: step.style } : {}),
+        });
+      } finally {
+        if (step.fault) setDemoArgs({ ...getDemoArgs(), fault: args.fault });
+      }
     }
   }
   // The closet call lands after the score card: wait for it so the screen shows the written closet.

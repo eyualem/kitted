@@ -71,8 +71,12 @@ export interface AskDeps {
   consent: () => Promise<boolean>;
   /** Opens the agreement; the draft waits in the composer. */
   openConsent: () => void;
-  /** No connectivity signal exists in the app yet: true until one does (07 §6.4 offline state). */
+  /** The phone's connection (services/connectivity.ts; 07 §6.4, 09 §20.8 G18). Default: online. */
   online?: () => boolean;
+  /** A call failed for no connection: is the phone really offline? (G18.4: then the offline line, not fail.ask.)
+   *  Default: yes. Any answer that arrives reports the phone online. */
+  confirmOffline?: () => Promise<boolean>;
+  reportOnline?: () => void;
   /** The paywall is built (P6): the free limit line gets "Try Pro". */
   tryPro: () => boolean;
   /** Event names only, never his words (02 S27, 07 §7.5). */
@@ -265,12 +269,16 @@ export function createAsk(deps: AskDeps) {
       }
       if (failed || !done) {
         const id = replaces?.id ?? ids('M');
-        await store.chat.put(row(id, at, 'stylist', t('fail.ask'), {}, { askRetry: question.id }));
+        // No connection (G18.4): said so, with the same Retry; nothing counted either way.
+        const offline = failed === 'offline' && (await (deps.confirmOffline?.() ?? Promise.resolve(true)).catch(() => true));
+        const text = t(offline ? 'fail.askOffline' : 'fail.ask');
+        await store.chat.put(row(id, at, 'stylist', text, {}, { askRetry: question.id }));
         live.clear();
-        deps.onPosted?.(t('fail.ask'));
+        deps.onPosted?.(text);
         log(`failed · ${failed}`);
         return { kind: 'failed', messageId: id, code: failed ?? 'noDone' };
       }
+      deps.reportOnline?.();
       const counted = done.refused !== true && done.uncounted !== true && !o.tap;
       const id = ids('M');
       const clash = verdictClash(prep.verdict, done.verdict);

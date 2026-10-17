@@ -48,6 +48,8 @@ export function isStylistLine(m: ChatMessage | null): boolean {
   return (
     m.cardType === 'limit' ||
     m.cardType === 'account' ||
+    // S26 (G23): Kit's line with the card under it.
+    m.cardType === 'turnOnChecks' ||
     (m.cardType === 'question' && m.payload.question === 'notify') ||
     (m.cardType === 'held' && m.payload.ready === true)
   );

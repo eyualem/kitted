@@ -18,7 +18,10 @@ export type AskCard =
   /** A Starter row; `gain` from rotation, null when it can't be counted. */
   | { type: 'buy'; starterId: string; gain: number | null }
   | { type: 'link'; checkId: string }
-  | { type: 'link'; itemId: string };
+  | { type: 'link'; itemId: string }
+  /** "That score is wrong" about today's check (09 §20.8 G19): opens its Not quite right?. Built by code from the route
+   *  (prepare.ts), never from the model's block. */
+  | { type: 'correct'; checkId: string };
 
 export interface CardInput {
   handles: Readonly<Record<string, string>>;
@@ -116,6 +119,7 @@ export function storedCard(v: unknown): AskCard | null {
   if (o.type === 'ask' && typeof o.question === 'string' && Array.isArray(o.options)) return o as unknown as AskCard;
   if (o.type === 'buy' && typeof o.starterId === 'string') return o as unknown as AskCard;
   if (o.type === 'link' && (typeof o.checkId === 'string' || typeof o.itemId === 'string')) return o as unknown as AskCard;
+  if (o.type === 'correct' && typeof o.checkId === 'string') return o as unknown as AskCard;
   return null;
 }
 
@@ -160,7 +164,20 @@ export function cardSpoken(card: AskCard | null, w: CardWords): string | null {
       }
       return w.checkLabel?.(card.checkId) ?? t('ask.card.gone');
     }
+    case 'correct':
+      return t('card.nqr');
   }
+}
+
+/**
+ * The card a "that score is wrong" question gets (G19): today's scored check the router named opens its Not quite
+ * right?. An earlier day's check is read-only (#276), and a check that isn't scored has nothing to correct: no card.
+ */
+export function correctCard(route: { kind: string; check: string | null }, handles: Readonly<Record<string, string>>, checks: readonly FitCheckRow[], today: string): AskCard | null {
+  if (route.kind !== 'feedback' || !route.check) return null;
+  const id = handles[route.check];
+  const c = id ? checks.find((x) => x.id === id) : undefined;
+  return c && c.status === 'scored' && c.score !== null && c.dayKey === today ? { type: 'correct', checkId: c.id } : null;
 }
 
 /** Which controls a card shows (P4): Past chats show the card and his pick, never a button that changes anything. */
@@ -168,6 +185,8 @@ export function cardControls(card: AskCard, o: { readOnly: boolean; tapped: stri
   return {
     wear: card.type === 'outfit' && !o.readOnly && !o.gone,
     checkIt: (card.type === 'outfit' && !o.readOnly && !o.gone) || (card.type === 'check' && !o.readOnly),
+    /** Not quite right? (G19): today's chat only; Past chats are read-only. */
+    correct: card.type === 'correct' && !o.readOnly,
     /** The ask card's answers: tappable until one is picked, never in Past chats. */
     answers: card.type === 'ask' ? card.options.map((option) => ({ option, picked: o.tapped === option, tappable: !o.readOnly && o.tapped === null })) : [],
   };

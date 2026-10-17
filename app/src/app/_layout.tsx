@@ -14,6 +14,7 @@ import { ToastHost } from '@/features/toast/ToastHost';
 import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
 import { boot } from '@/state/boot';
+import { startConnectivity } from '@/services/connectivity';
 import { getDemoArgs } from '@/state/session';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -32,6 +33,8 @@ export default function RootLayout() {
       .finally(() => {
         setBooted(true);
         SplashScreen.hideAsync().catch(() => {});
+        // The offline banner's signal (09 §20.8 G18.1): a check now and on each return to the foreground.
+        startConnectivity();
       });
   }, []);
 
@@ -101,6 +104,8 @@ function RootStack({ booted }: { booted: boolean }) {
         {/* 02 O3w asked for a 320 pt wheel; it's a list of years now (no new package), so it opens taller. */}
         <Stack.Screen name="sheets/birth-year" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/consent" options={sheet([1])} />
+        {/* S26's "See an example" (09-ui-review §20.8 G23): O1e as a sheet once onboarding is done. */}
+        <Stack.Screen name="sheets/example" options={sheet([1])} />
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/scan-inbox" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/merge/[id]" options={sheet([0.6, 1])} />

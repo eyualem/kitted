@@ -12,9 +12,12 @@ import { DEMO_ENABLED } from '@/demo/config';
 import { quota } from '@/features/fitcheck/session';
 import { mayUpload } from '@/features/privacy/wipe';
 import { newId } from '@/services/ids';
+import { connectivity } from '@/services/connectivity';
 import { realScheduler } from '@/services/scheduler';
+import { showToast } from '@/features/toast/toast';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { liveAnswerSource } from './liveSource';
+import { t } from '@/i18n/en';
 import { createAsk, keepsDraft } from './pipeline';
 import { createPrepare } from './prepare';
 import { comingSoonSource, createDemoSource, seededAnswers, type AnswerSource } from './source';
@@ -53,6 +56,10 @@ export const askService = createAsk({
   // The agreement as a sheet; agreeing just closes it, and his words are still in the composer.
   openConsent: () => router.push('/sheets/consent?from=ask'),
   tryPro: () => paywallOn(),
+  // The phone's connection (09 §20.8 G18): send waits while offline; a failed call checks before saying so.
+  online: () => connectivity.isOnline(),
+  confirmOffline: () => connectivity.reportOffline(),
+  reportOnline: () => connectivity.reportOnline(),
   log: (e) => {
     if (__DEV__) console.log(`[ask] ${e}`);
   },
@@ -66,11 +73,16 @@ export async function sendQuestion(text: string): Promise<boolean> {
     console.error('[ask] threw', e);
     return { kind: 'busy' as const };
   });
+  // Send is disabled while offline; one that slips through says so and keeps his words (G18.3).
+  if (o.kind === 'offline') showToast(t('banner.offline'));
   return !keepsDraft(o);
 }
 
 export function retryQuestion(failedId: string): void {
-  void askService.retry(failedId).catch((e: unknown) => console.error('[ask] retry threw', e));
+  void askService.retry(failedId).then((o) => {
+    // Still offline (G18): Retry says so instead of doing nothing.
+    if (o?.kind === 'offline') showToast(t('banner.offline'));
+  }).catch((e: unknown) => console.error('[ask] retry threw', e));
 }
 
 /** An ask card's answer (R6): his tap, sent as his reply, never counted. */

@@ -82,6 +82,11 @@ export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
     card: { type: 'link', to: 'piece:Brown loafers' },
   },
   {
+    // "That score is wrong" (09 §20.8 G19): the Not quite right? card comes from code, not from this answer.
+    question: 'That score is wrong.',
+    answer: "Fair to push back. If I read a piece wrong, fix it below and I'll score the check again from that.",
+  },
+  {
     question: "I'm a 32 waist.",
     answer: "Got it. I'll keep that in mind when you ask about pants.",
     remember: { key: 'waist_size', value: '32' },

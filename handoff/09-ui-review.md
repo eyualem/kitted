@@ -775,16 +775,16 @@ Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it
     - The log keeps one row a day (`data/migrations.ts:127-132`), so a second Wear this replaces the first silently.
 13. ✅ **Done (#323, R6): rows open the piece page.** ~~**"Added to your closet" says "Fix anything I got wrong." but its rows are dead.**~~ `EDIT_ITEM_BUILT = false` (`added/AddedSheet.tsx:27,193`), though the piece page has had "What it is" since #315. Point each row at its piece page; the existing `onEdit` pushes no `?field=`.
 14. ✔ ✅ **Done (#323, R7).** ~~**A re-check or snap whose first check is gone closes the camera silently.**~~ `noParent` (`fitcheck/service.ts:661`) has no case in `explain()` (`camera/startCheck.ts:157-179`).
-15. **A scored re-check card has no "Why X?" and no "Not quite right?"** (`stylist/cards/RecheckCard.tsx:161-176`). After a drop he can't see why or correct a misread.
+15. ✅ **Done (#325, §20.8 G15).** ~~**A scored re-check card has no "Why X?" and no "Not quite right?"**~~ (`stylist/cards/RecheckCard.tsx:161-176`). After a drop he can't see why or correct a misread.
 16. **A dialed-in card (9+) has no next step.** With no fixes and Save and Share switched off (`FitCheckCard.tsx:44-46, 439-447`), the action row is empty.
 17. **"How I score" still explains credits** (§1 item 8, #233 item 1). Waits on [you: #233 OK].
-18. **No offline handling.** `banner.offline` and `banner.online` are unused, send is never disabled, and offline questions get the generic "I couldn't answer that". The photo caption is always "Not scored" (`stylist/MessageView.tsx:130`), and `fail.cap.notSent` is unused.
-19. **Saying "that score is wrong" in chat can't open "Not quite right?"** The router detects it (`ask/router.ts:25`), but no card type opens the sheet (`ask/cards.ts:14-21`).
+18. ✅ **Done (#325, G18): Apple's connection check, the banner, send disabled, the offline line, "Not sent".** ~~**No offline handling.**~~ `banner.offline` and `banner.online` are unused, send is never disabled, and offline questions get the generic "I couldn't answer that". The photo caption is always "Not scored" (`stylist/MessageView.tsx:130`), and `fail.cap.notSent` is unused.
+19. ✅ **Done (#325, G19).** ~~**Saying "that score is wrong" in chat can't open "Not quite right?"**~~ The router detects it (`ask/router.ts:25`), but no card type opens the sheet (`ask/cards.ts:14-21`).
 20. ✅ **Done (#323, R8): 500 characters.** ~~**Questions have no length cap.**~~ No `maxLength` (`stylist/Composer.tsx:222-240`), and the whole text goes into the prompt. That's a cost risk once the server pays.
 21. ✅ **Done (#323, R9).** ~~**Past chats aren't fully read-only.**~~ An old evening card's occasion picker still edits (`MessageView.tsx:39` renders `MorningCard` without `readOnly`; `MorningCard.tsx:312-326`). Tapping a past day's checked morning row re-pushes the same page (`StylistScreen.tsx:225-227`).
-22. **He can't delete one photo or one check.** The look page's ⋯ (Save, Share, Delete photo) isn't built (`lookbook/LookPageScreen.tsx:10`), and "Remove from Lookbook" keeps the file. The only way out is "Delete all photos". Privacy expectation: H.
-23. **"Not now" on consent leaves a bare thread.** The S26 "Turn on fit checks" card isn't built (`noConsent.title` unused, `onboarding/complete.ts:27`).
-24. **The empty Closet has no "Tap the basics you own."** It offers only "Check my fit" (`app/(tabs)/closet/index.tsx:82-85`). Starter essentials is reachable only from "No outfits yet" or Your moves, and with 1–2 pieces the "Add shoes and you'd have N outfits" hint sits on the hidden Outfits half (`closet/outfits.ts:151-155`).
+22. ✅ **Done (#325, G22): the look page's ⋯ with Delete photo and Remove from Lookbook.** ~~**He can't delete one photo or one check.**~~ The look page's ⋯ (Save, Share, Delete photo) isn't built (`lookbook/LookPageScreen.tsx:10`), and "Remove from Lookbook" keeps the file. The only way out is "Delete all photos". Privacy expectation: H.
+23. ✅ **Done (#325, G23).** ~~**"Not now" on consent leaves a bare thread.**~~ The S26 "Turn on fit checks" card isn't built (`noConsent.title` unused, `onboarding/complete.ts:27`).
+24. ✅ **Done (#325, G24).** ~~**The empty Closet has no "Tap the basics you own."**~~ It offers only "Check my fit" (`app/(tabs)/closet/index.tsx:82-85`). Starter essentials is reachable only from "No outfits yet" or Your moves, and with 1–2 pieces the "Add shoes and you'd have N outfits" hint sits on the hidden Outfits half (`closet/outfits.ts:151-155`).
 25. ✅ **Done (#323, R10): a toast with Undo.** ~~**A "Same as your …?" answer in Closet just vanishes:**~~ no toast, no Undo (`app/(tabs)/closet/index.tsx:107`).
 
 ### 20.3 Missing pieces a user will expect (decide or schedule)
@@ -861,6 +861,52 @@ Written before the code. Each passes or fails; the results are under each group 
 - R6 seen on the Debug build: demo screen 21, a tap on Tan chinos closed the sheet and opened its page on "What it is".
 - Not seen on a screen, tested in code only: R4's panel, R8's stop, R9, R10's toast.
 - Screenshots: `screenshots/release-oct17/` (git-ignored).
+
+### 20.8 Step 4, the code-only part: items 15, 18, 19, 22, 23, 24 (Oct 17, #325). Checks first
+Written before the code. Items 9, 12, 16 and 26 need product calls and stay out. Existing copy keys first; new words go in `en.ts` and on the founder's skim list.
+
+**G15 · A scored re-check has "Why X?" and "Not quite right?"**
+- G15.1 A scored re-check card (up, down or flat) shows one link row under the result with `Why {score}?` and `Not quite right?` (and `Didn't catch the change? Tell me` when it shows today). Why opens `/sheets/why/<re-check id>`, Not quite right? opens `/sheets/correct/<re-check id>`.
+- G15.2 VoiceOver: both are actions on the card (`why`, `nqr`), as on FitCheckCard.
+- G15.3 Past chats (read-only): Why stays, Not quite right? doesn't.
+- G15.4 The "same photo" and "change not seen" cards are unchanged.
+- G15.5 A correction saved on a re-check re-scores the re-check from its own (merged) reading: its score changes, its `details.recheck` (the first score, the caught fixes) stays, and the first check's score doesn't move.
+
+**G18 · Offline in Stylist**
+- G18.1 The app learns it's offline without a new package: a fit check or a question that fails for no connection marks it offline, and so does a failed connection check. The check is Apple's own (`captive.apple.com`, what iOS itself uses when it joins a network; nothing of his is sent). It runs at launch, on each return to the foreground, and every 10 s while offline and in the foreground. A pass, or any answer or score that arrives, marks it online. On the web preview it's `navigator.onLine`. Not under Jest.
+- G18.2 Stylist shows a capsule at the top while offline: `Offline. Your closet and lookbook still work.` (`banner.offline`), then `Back online.` (`banner.online`) for about 3 s when it comes back. VoiceOver hears each once. It never covers a button (no touches).
+- G18.3 While offline the composer's send and its starter chips are disabled; the draft stays. A send that slips through anyway keeps the draft and nothing is written.
+- G18.4 A question that fails for no connection gets `You're offline, so I couldn't answer that. It doesn't count.` (new, `fail.askOffline`) with Retry, nothing counted; every other failure keeps `I couldn't answer that. It doesn't count.`
+- G18.5 The photo bubble under a check that failed for no connection (`failCode: 'offline'`) reads `Not sent` (`fail.cap.notSent`); other failures keep `Not scored`. The card under it keeps `fail.offline` with Try again.
+- G18.6 A demo screen shows the offline state (the banner, send disabled, the offline answer and a check that wasn't sent).
+
+**G19 · "That score is wrong" can open Not quite right?**
+- G19.1 A question the router reads as `feedback` about today's scored check gets a card under the answer: a `Not quite right?` button that opens `/sheets/correct/<check id>`. Code attaches it from the route, replacing any card the model chose. No card for an earlier day's check, a check that isn't scored, or when no check is named.
+- G19.2 It's stored as `{ type: 'correct', checkId }`, so Past chats draw it without the button, and VoiceOver reads `Not quite right?` with the answer. A check deleted since: the card hides.
+- G19.3 The evidence tells the model the button is under its answer, so it can point to it.
+
+**G22 · Delete one look**
+- G22.1 The look page's header has a ⋯ (`More`) that opens a native menu: `Delete photo` (destructive; only while the look has a photo) and `Remove from Lookbook`.
+- G22.2 `Delete photo` asks `Delete this photo?` / `The score stays in your Lookbook.` with `Cancel` and `Delete photo`. Delete removes his kept photo and its thumb, the face-hidden upload copy, close-ups and detail copy, and the closet cut-outs made from that photo. Every check that holds the same photo (same file or same SHA) loses its paths, its chat bubble hides, and the page shows `Photo deleted`. The score, the reading and the closet pieces stay. A demo photo just stops showing. No Undo (the files are gone).
+- G22.3 `Remove from Lookbook` runs the long-press's own flow (`Its card stays in your chat.`, the new-pieces option, the toast with Undo), then the page goes back.
+
+**G23 · "Not now" on consent gets the S26 card**
+- G23.1 Finishing onboarding without consent ("Not now", and the restore path, which also ends without it) posts, after the AI note, `Send me a fit. I'll score it and start your closet.` with the card `Turn on fit checks` / `To score a photo, I need your OK to send a face-free copy to {provider}.` / `Review and turn on` (the consent sheet; agreeing opens the camera) / `See an example` (the example check as a sheet; its `Check my own fit` closes it and opens the consent sheet).
+- G23.2 Once consent is given, the card's buttons go (the line stays as history).
+- G23.3 Agreeing during onboarding posts no S26 card.
+- G23.4 VoiceOver: the card is one element with both buttons as actions.
+
+**G24 · The empty Closet offers the basics.** Under `Check my fit`, a secondary `Tap the basics you own` (`closet.empty.basics`) opens Starter essentials.
+
+**G0 · Nothing else moves:** `npm run check` green; consent words untouched; each item seen on the Simulator in light, dark and the largest text size.
+
+**Results (Oct 17, #325): all pass.**
+- G15–G24 in `app/src/__tests__/stepFourBatch.test.ts` (24 checks); `npm run check` green (1,255 app tests, with the Undo ring's work in the same tree).
+- Seen on the iOS Simulator (screenshots `screenshots/step4-oct17/`, git-ignored): screen 210 offline in light, dark and the largest size (the banner, "Not sent" under the photo, the offline line with Retry); 211 the answer with its Not quite right? button; 212 the S26 card, See an example → the sheet (213) → Check my own fit → the consent sheet; 214 the empty Closet with both buttons; 215 a re-check that moved, with Why 8.0? and Not quite right?, which opened the sheet on the re-check (score 8.0, its new sneakers); 97 the ⋯ menu → Delete photo → the dialog → "Photo deleted" (the score and Before stayed) → ⋯ → Remove from Lookbook → back to the Lookbook with Undo.
+- One fix found on the Simulator: at the largest size the offline banner ran to three lines over the thread; its text now stops growing at 1.5× (it's an overlay; VoiceOver reads it whole). Also added: Retry while still offline shows the offline toast instead of doing nothing.
+- Screen 10's story now lands as "change not seen", so it can't show G15; screen 215 does (s14 → s14b).
+- Not seen on a device: the real connection check (the Simulator has Wi-Fi; offline was pinned on the demo screen), VoiceOver's actions, deleting a real photo's files (tested in code on the memory store).
+- Found, older, not fixed here: the example check's photo caption breaks as "Everyda y" next to "Example" (screen 131 too).
 
 ## 21. The Undo countdown ring (Oct 17, #324). Checks first
 Founder, Oct 17: "some kind of five-second timer with the whole circle thingy that other apps do… to make the UI more intuitive." Written before the code; the build must not edit them. Results under them once built.

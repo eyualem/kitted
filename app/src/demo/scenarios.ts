@@ -32,6 +32,10 @@ export interface ScreenScenario {
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
+  /** The phone is offline on this screen (09-ui-review §20.8 G18): the banner, send disabled. Others are pinned online. */
+  offline?: boolean;
+  /** Onboarding ended with "Not now" on consent (S26, G23). */
+  consent?: false;
   /** An Undo toast shown once the screen is up (09-ui-review §21, #324): `heldAtMs` starts it held with that much
    *  time left, so a screenshot catches the ring mid-way; without it, it counts down live. Undo does nothing here. */
   toast?: { text: 'removed' | 'logged'; removal?: boolean; heldAtMs?: number };
@@ -246,6 +250,15 @@ export const SCREENS: readonly ScreenScenario[] = [
   // The Undo countdown ring (09-ui-review §21, #324): a removal toast held mid-way, and a 5 s one counting live.
   { n: 204, name: 'Undo toast · held, 5 of 8 s left', id: 'G2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', toast: { text: 'removed', removal: true, heldAtMs: 4_200 } },
   { n: 205, name: 'Undo toast · live, 5 s', id: 'G2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', toast: { text: 'logged' } },
+  // Step 4's code-only batch (09-ui-review §20.8; 206–209 left for the Undo ring's session): offline, "That score is
+  // wrong", the S26 card after Not now and its example sheet, the empty Closet, a re-check that moved (215; screen 10's lands as
+  // "not seen" now). The look page's ⋯ is on screen 97.
+  { n: 210, name: 'Stylist · offline', id: 'G1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:46:00', href: '/stylist', offline: true },
+  { n: 211, name: 'Ask · that score is wrong', id: 'S25', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:46:00', href: '/stylist' },
+  { n: 212, name: 'Turn on fit checks', id: 'S26', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/stylist', consent: false },
+  { n: 213, name: 'Example check · as a sheet', id: 'O1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/sheets/example', under: '/stylist', consent: false },
+  { n: 214, name: 'Closet · empty', id: 'C1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/closet' },
+  { n: 215, name: 'Re-check · Why and Not quite right?', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

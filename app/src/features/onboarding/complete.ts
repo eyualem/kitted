@@ -1,8 +1,9 @@
 // Finishing onboarding (minimal for P2; P4 builds the screens): save the profile and consent,
-// then post the one AI-disclosure line at the top of the thread (ruling 17).
+// then post the one AI-disclosure line at the top of the thread (ruling 17), and after "Not now" the S26 card.
 import type { Styles } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { textMessage } from '@/data/seedLoader';
+import { t } from '@/i18n/en';
 
 export interface OnboardingAnswers {
   styles: Styles;
@@ -25,6 +26,8 @@ export async function completeOnboarding(store: KittedStore, a: OnboardingAnswer
     ideaTime: null, units: 'imperial', createdAt: nowMs,
   });
   await store.chat.put(textMessage(ids('M'), nowMs, 'stylist', null, { aiNote: true }));
+  // "Not now" (S26, 09-ui-review §20.8 G23): the thread says how to turn fit checks on instead of starting bare.
+  if (a.consent === false) await store.chat.put({ ...textMessage(ids('M'), nowMs + 1, 'stylist', t('noConsent.greeting')), kind: 'card', cardType: 'turnOnChecks' });
 }
 
 /** Consent given later (the camera's first open, the sheet, You → Privacy): only the two consent fields change.

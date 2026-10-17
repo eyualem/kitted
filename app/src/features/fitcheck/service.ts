@@ -100,6 +100,10 @@ export interface ServiceDeps {
   /** "Don't score it" on a held photo (02 S17h, #280): deletes his kept copy and thumb (it was never sent). The app
    *  passes features/held/files.ts deleteHeldPhoto; default: nothing on disk (tests, the web preview). */
   deleteHeldFiles?: (row: Pick<FitCheckRow, 'photoFile' | 'thumbFile' | 'imageHash'>) => void;
+  /** The phone's connection (services/connectivity.ts, 09 §20.8 G18): a read that failed for no connection checks it
+   *  before the card says "You're offline" (else it's the plain failure); a score that lands reports online.
+   *  Default: no check (tests keep the code they're given). */
+  net?: { confirmOffline: () => Promise<boolean>; reportOnline: () => void };
 }
 
 export interface CheckRequest {
@@ -297,6 +301,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const finish = ev.partial === 'shoes' ? await rememberedShoes(scored) : null;
     await patchRow(row.id, { snapState: ev.partial ? 'pending' : 'none', details: { ...scored.details, finish } });
     if (!cached) await deps.quota.consumeCheck(scored.details.chargeDay ?? row.dayKey);
+    if (!cached) deps.net?.reportOnline();
     await store.setKv(KV.lastOccasion, row.occasion);
     const p = await store.profile.get('me');
     if (p) await store.profile.patch('me', { lastOccasion: row.occasion });
@@ -552,6 +557,7 @@ export function createFitCheckService(deps: ServiceDeps) {
   }
 
   async function failRow(checkId: string, code: FailCode, attemptNo?: number) {
+    if (code === 'offline' && deps.net && !(await deps.net.confirmOffline().catch(() => true))) code = 'ai';
     const row = await store.fitChecks.get(checkId);
     if (row) await patchRow(checkId, { status: 'failed', details: { ...row.details, failCode: code } });
     dispatch({ t: 'end', attempt: attemptNo });

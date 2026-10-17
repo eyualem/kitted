@@ -91,6 +91,8 @@ export default function ClosetScreen() {
       {items.length === 0 ? (
         <EmptyState icon="closet" title={t('closet.empty.title')} body={t('closet.empty.body')}>
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />
+          {/* The basics he owns, without a photo (02 C1e; 09-ui-review §20.8 G24): Starter essentials. */}
+          <KButton title={t('closet.empty.basics')} kind="secondary" size="regular" style={{ alignSelf: 'center' }} onPress={() => router.push('/closet/starter' as Href)} />
         </EmptyState>
       ) : (
         <>

@@ -17,6 +17,7 @@ import { closetService, startClosetCatchUp } from '@/features/closet/session';
 import { mayUpload } from '@/features/privacy/wipe';
 import { createHeldCatchUp } from '@/features/held/catchUp';
 import { deleteHeldPhoto } from '@/features/held/files';
+import { connectivity } from '@/services/connectivity';
 import { createFitCheckService, DEFAULT_TIMERS, type TimerConfig } from './service';
 import type { SessionState } from './machine';
 
@@ -61,6 +62,8 @@ export const fitCheck = createFitCheckService({
   discardPhoto: discardTempPhoto,
   // "Don't score it" on a held photo (02 S17h, #280): it was never sent; his copy goes.
   deleteHeldFiles: deleteHeldPhoto,
+  // The phone's connection (09 §20.8 G18): "You're offline" only when it really is; a score says it's back.
+  net: { confirmOffline: () => connectivity.reportOffline(), reportOnline: () => connectivity.reportOnline() },
   timers: () => {
     const lat = getDemoArgs().latency;
     return { ...DEFAULT_TIMERS, cacheHitMs: lat === 0 ? 0 : DEFAULT_TIMERS.cacheHitMs, ...timerOverride };

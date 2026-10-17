@@ -30,6 +30,8 @@ import { Composer } from './Composer';
 import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
+import { OfflineBanner } from './OfflineBanner';
+import { useNet } from '@/services/connectivity';
 import { buildThreadItems, liveGap, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
 import { t } from '@/i18n/en';
@@ -55,6 +57,8 @@ export function StylistScreen() {
   const { today: messages, hasEarlier } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
   const live = useLiveAnswer();
   const askInFlight = useAskInFlight();
+  // Offline (09 §20.8 G18.3): send and the starter chips wait; his words stay in the field.
+  const net = useNet();
   // The starter chips (07 §6.3): from his closet and today's checks.
   // Reloaded on a new day too, so yesterday's "Why a 7.0?" doesn't greet him in the morning (U10).
   const today = dayKey(now, sessionClock.offset);
@@ -282,6 +286,7 @@ export function StylistScreen() {
       {/* The scroll-edge fade under the header (as Closet's native one): rows soften into the bar
           instead of being cut in half. A sibling after the ScrollView, so the tab bar still shrinks. */}
       <View pointerEvents="none" style={[styles.edgeFade, { experimental_backgroundImage: edgeFade(colors.bg) }]} />
+      <OfflineBanner top={space.xs} />
       {docked ? (
         <Animated.View
           style={[styles.dock, dockStyle]}
@@ -298,7 +303,7 @@ export function StylistScreen() {
             mode={mode}
             onCamera={openCamera}
             onSend={sendQuestion}
-            sendDisabled={askInFlight}
+            sendDisabled={askInFlight || !net.online}
             autoFocus={open === 'type'}
             startVoice={open === 'voice'}
             onIdle={DOCK_ALWAYS ? undefined : composerState.close}

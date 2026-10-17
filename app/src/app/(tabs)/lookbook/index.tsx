@@ -1,17 +1,16 @@
 // L1 · Lookbook (02 D16). Until P5 builds the calendar and look grid, it shows the real list of
 // his scored checks (newest first; a re-check folds into its check as "8.0 → 9.0"), or the L1e
 // empty state. Tapping a look opens its page (L2, #280). No dev placeholder text in a tab (DECISIONS-LOG #56).
-import { ActionSheetIOS, Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, Numeral, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, spokenScoreLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import type { FitCheckRow } from '@/data/types';
 import { shownPhoto } from '@/demo/demoPhotos';
 import { YourMovesRow } from '@/features/finish/YourMovesRow';
-import { fitCheck } from '@/features/fitcheck/session';
+import { removeLookMenu } from '@/features/lookbook/lookActions';
 import { openLookPage } from '@/features/lookbook/lookPage';
 import { occasionLabel } from '@/features/stylist/thread';
-import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { goToStylist } from '@/router/stylistAction';
 import { longDate } from '@/i18n/format';
 import { t } from '@/i18n/en';
@@ -96,30 +95,8 @@ function LookRow({ look: { check, latest } }: { look: Look }) {
   );
 }
 
-/**
- * Long-press a look (#118): "Remove from Lookbook", and when the look added pieces no other check has seen (a
- * fitting-room try-on), "Remove look and its new pieces". Its chat card stays; a toast offers Undo.
- */
-async function lookMenu(checkId: string, title: string) {
-  const extra = (await fitCheck.closet.onlyInLook(checkId)).length;
-  const options = [
-    t('lookbook.remove.action'),
-    ...(extra > 0 ? [extra === 1 ? t('lookbook.remove.withPiece') : t('lookbook.remove.withPieces', { n: extra })] : []),
-    t('common.cancel'),
-  ];
-  ActionSheetIOS.showActionSheetWithOptions(
-    { title, message: t('lookbook.remove.note'), options, destructiveButtonIndex: extra > 0 ? [0, 1] : 0, cancelButtonIndex: options.length - 1 },
-    (i) => {
-      if (i === options.length - 1) return;
-      const withPieces = i === 1 && extra > 0;
-      void fitCheck.closet.removeLook(checkId, withPieces).then((r) => {
-        if (!r) return;
-        const n = r.removedItems.length;
-        showToast(n === 0 ? t('lookbook.removed') : n === 1 ? t('lookbook.removed1') : t('lookbook.removedN', { n }), () => fitCheck.closet.restoreLook(r), { ms: TOAST_MS_REMOVAL });
-      });
-    },
-  );
-}
+/** Long-press a look (#118): lookActions.ts removeLookMenu (the look page's ⋯ uses it too). */
+const lookMenu = (checkId: string, title: string) => removeLookMenu(checkId, title);
 
 /** L1e: the dashed 3 : 4 ghost of the first look. */
 function GhostLook() {
