@@ -3,6 +3,9 @@
 // client (gemini.ts), so the pipeline after them (the gate, the cards) is identical. Not wired into the app: the keys
 // live only in the git-ignored .env file and reach these through the test harness. A winner would go through the
 // server (C6), never a key on the phone.
+// Since #329 OpenAI's is the app's: GPT-5.6 Luna answers Kit's questions. Since #330 it goes through our server's
+// /v1/ask?model=gpt-5.6-luna when a server transport is given (13-server.md §11); else straight to OpenAI with a dev key.
+import { refusalKind, type AiTransport } from '@/services/server/transport';
 import { createClosingSplitter, EMPTY_BLOCK } from './closing';
 import type { AnswerEvent, AnswerSource } from './source';
 
@@ -22,8 +25,11 @@ export interface CallUsage {
 }
 
 export interface ProviderOptions {
-  apiKey: string;
-  fetch: StreamFetch;
+  /** Straight to the company (a dev key); unused when `transport` is given. */
+  apiKey?: string;
+  fetch?: StreamFetch;
+  /** OpenAI only: our server instead of the key (13-server.md §11). */
+  transport?: AiTransport;
   model: string;
   maxTokens?: number;
   /** OpenAI: the reasoning effort ("none" where the model takes it). */
@@ -100,11 +106,21 @@ export function createAskOpenAI(opts: ProviderOptions): AnswerSource {
       const t0 = now();
       let res;
       try {
-        res = await opts.fetch('https://api.openai.com/v1/responses', {
-          method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${opts.apiKey}` }, body: JSON.stringify(body), signal: req.signal,
-        });
+        res = opts.transport
+          ? await opts.transport.send({
+            route: 'ask', model: opts.model, stream: true, body: JSON.stringify(body), signal: req.signal, ...(req.tap ? { free: 'tap' as const } : {}),
+          })
+          : await opts.fetch!('https://api.openai.com/v1/responses', {
+            method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${opts.apiKey}` }, body: JSON.stringify(body), signal: req.signal,
+          });
       } catch {
         yield { type: 'failed', code: 'offline' };
+        return;
+      }
+      // The server's daily limit or spending stop (13 §8, §11): the pipeline's limit line or paused line, nothing counted.
+      const refusal = 'refusal' in res ? refusalKind(res as Parameters<typeof refusalKind>[0]) : null;
+      if (refusal) {
+        yield { type: 'failed', code: refusal };
         return;
       }
       if (!res.ok || !res.body) {
@@ -171,8 +187,8 @@ export function createAskAnthropic(opts: ProviderOptions): AnswerSource {
       const t0 = now();
       let res;
       try {
-        res = await opts.fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST', headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'x-api-key': opts.apiKey }, body: JSON.stringify(body), signal: req.signal,
+        res = await opts.fetch!('https://api.anthropic.com/v1/messages', {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'x-api-key': opts.apiKey ?? '' }, body: JSON.stringify(body), signal: req.signal,
         });
       } catch {
         yield { type: 'failed', code: 'offline' };

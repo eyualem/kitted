@@ -17,7 +17,7 @@ import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
 import { createQuota } from '@/services/quota';
-import { directTransport, type AiFetch } from '@/services/server/transport';
+import { directTransport, serverTransport, type AiFetch } from '@/services/server/transport';
 
 declare const __dirname: string;
 const { readFileSync } = jest.requireActual<{ readFileSync(p: string, enc: 'utf8'): string }>('fs');
@@ -286,6 +286,12 @@ describe('A7 · off on his phone', () => {
     // No OpenAI key → no live answers at all, even with a working Gemini path: consent names OpenAI for questions.
     expect(liveAnswerSource(true, transport, 'openai', undefined)).toBeNull();
     expect(liveAnswerSource(false, transport, 'openai', 'OKEY')).toBeNull();
+  });
+  it('with the server path, questions on GPT-5.6 Luna go through it, with or without a dev key (#330, O6)', () => {
+    const server = serverTransport({ base: 'https://srv', fetch: fakeFetch([]).fetch as unknown as AiFetch, token: async () => 'T', tzMinutes: () => 0 });
+    expect(liveAnswerSource(true, server, 'openai', undefined)?.name).toBe('openai:gpt-5.6-luna');
+    expect(liveAnswerSource(true, server, 'openai', 'OKEY')?.name).toBe('openai:gpt-5.6-luna');
+    expect(liveAnswerSource(false, server, 'openai', undefined)).toBeNull();
   });
   it('the keys only ever come from a dev build (__DEV__), so a release build can never send them (13-server.md §8)', () => {
     const src = readFileSync(join(__dirname, '../services/server/config.ts'), 'utf8');
