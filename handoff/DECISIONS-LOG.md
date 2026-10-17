@@ -2099,3 +2099,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Checks:** 43 new (P, L, M, D) plus D2 in the rules file; 60 of 60 with R and F; a smoke run of the real function under the Functions emulator (first chunk of a 600 KB photo's answer in 50 ms).
     - **Lessons:** a param with a default still prompts on every emulator run and deploy, so plain values for non-secrets; settle the counts before ending the answer, or a retry right after a failure races the give-back; a give-back needs a call budget behind it, or failed calls are free forever.
     - **Going live needs the founder:** a new Gemini key for the server (Secret Manager), Anonymous sign-in turned on, the deploy, and whether to keep one instance warm. **Next (code):** the app side (13 §8): Release builds call the server with a silent guest sign-in; dev builds keep the direct key.
+
+## Oct 17 · The server goes live
+
+327. **The AI proxy is live (founder, Oct 17: "Let's put the server live… then deploy and test one check and one question"). `https://us-central1-kitted-a5b45.cloudfunctions.net/api`; results in `handoff/13-server.md` §9.**
+    - **Key:** a new Gemini key made by the founder in AI Studio under kitted-a5b45 (the paid, billed project, so Google doesn't train on what we send), pasted only into the terminal into Secret Manager (`GEMINI_KEY` v1); the deploy gave the function's service account read access. The dev key stays in dev builds.
+    - **Anonymous sign-in:** turned on through the Identity Toolkit admin API on the founder's gcloud login, after he couldn't find the console switch.
+    - **No warm instance (founder, Oct 17):** he asked why a server would cost money; the server sleeps and costs ≈ $0 at beta size; only an always-on copy costs (≈ $9.70 a month at 1 vCPU + 0.5 GB, ≈ $8.40 after the free allowance). Gemini is the real cost.
+    - **Old images:** a 1-day Artifact Registry cleanup policy (set by CLI; the deploy's own prompt waited in the terminal).
+    - **Live test:** health 200; a real check 200 in 8.0 s (first bytes 4.0 s), 0.595¢; a question 200 in 1.1 s, 0.008¢; the spend and the guest's day recorded exactly 1 check and 1 question.
+    - **Domain:** the founder will give a proper domain later; `api.<domain>` can then point at the function without changing it.
+    - **Lesson:** a first 2nd-gen deploy enables ~9 Google APIs and ends on an interactive cleanup-policy prompt; run it in a terminal the founder can see, or set the policy first with `firebase functions:artifacts:setpolicy`.

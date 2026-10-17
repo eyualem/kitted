@@ -8,7 +8,7 @@
 - **Where:** one Cloud Function (2nd gen) named `api` in the Firebase project `kitted-a5b45`, region us-central1, next to the database and sign-in that already exist. Founder's call, Oct 17 ("Go with Firebase Cloud Functions").
 - **What it does on every call:** checks who's asking (a Firebase sign-in token, a silent guest account is enough), checks today's limit, checks the day's spend, passes the request to Gemini with its own key, relays the answer back as it arrives (streamed), then counts it.
 - **What it keeps:** per account per day, the counts and the check ids that used them; per day, the estimated spend. Never a photo, a reading, a question or an answer. Logs hold the account id, route, model, milliseconds, tokens, cents and the outcome, never content.
-- **Not live yet.** Built and tested on the Firebase emulators with a fake Gemini. Going live needs the founder's OK (a new Gemini key in Secret Manager, a deploy, and whether to keep one instance warm).
+- **Live since Oct 17 (#327):** `https://us-central1-kitted-a5b45.cloudfunctions.net/api`, with its own Gemini key in Secret Manager, Anonymous sign-in on, no warm instance. The app's Release builds start using it once the app-side branch is merged (§8). A custom domain (`api.<the founder's domain>`) can point at it later without changing the server.
 
 ## 1. Why the request is passed through (not built on the server)
 
@@ -85,12 +85,12 @@ Base URL (once live): `https://us-central1-kitted-a5b45.cloudfunctions.net/api`.
 
 **This changes 11 §0's "never on our servers: usage counts"** for the server's own copy: the counts the limits need, keyed by account, kept 7 days, never synced or shown. The phone's own usage table still never syncs.
 
-## 6. Going live (founder's OK, step by step)
+## 6. Going live (done Oct 17, #327)
 
-1. A **new Gemini API key** made only for the server (the dev key stays in dev builds and is replaced before launch anyway), stored with `firebase functions:secrets:set GEMINI_KEY`.
-2. **Anonymous sign-in** turned on in the console (the silent guest account).
-3. `firebase deploy --only functions:api,functions:purgeUsage,firestore:indexes --project kitted-a5b45` (the index makes the daily purge work), then one real check and one question through it.
-4. **Keep one instance warm or not** (`API_MIN_INSTANCES` in `firebase/functions/src/index.ts`, 0 today): removes the 1–2 s wake-up on the first call; costs money every month (price checked before asking).
+1. ✔ A **new Gemini API key** made only for the server (made by the founder in AI Studio under kitted-a5b45; version 1 stored Oct 17; checked with Google without printing it) (the dev key stays in dev builds and is replaced before launch anyway), stored with `firebase functions:secrets:set GEMINI_KEY`.
+2. ✔ **Anonymous sign-in** turned on (Oct 17, by the Identity Toolkit admin API on the founder's login: the console's own switch).
+3. ✔ `firebase deploy --only functions:api,functions:purgeUsage,firestore:indexes --project kitted-a5b45` (the index makes the daily purge work), then one real check and one question through it.
+4. **Keep one instance warm or not: no for the beta** (founder, Oct 17). At 1 vCPU + 0.5 GB idle, one always-on copy is ≈ $9.70 a month, ≈ $8.40 after Cloud Run's free allowance; without it the server sleeps and costs ≈ $0 at beta size. Setting: (`API_MIN_INSTANCES` in `firebase/functions/src/index.ts`, 0 today): removes the 1–2 s wake-up on the first call; costs money every month (price checked before asking).
 5. After the $99 program: App Check (a native package, the founder's OK) and `enforceAppCheck: true`.
 
 The app side (Release builds call the server; dev builds keep the direct key) is its own step: §8.
@@ -167,3 +167,11 @@ Run with `npm --prefix tests run emulate` from `firebase/` (Firestore and Auth e
 - **An answer cut short is still billed** by what was seen of it; the spend counts it.
 
 **Not tested here (needs the live project):** real Gemini through the server, App Check with a real token, the 1–2 s wake-up of a cold instance, and the purge's collection-group index on real Firestore.
+
+**Live, Oct 17 (#327):** deployed `api` and `purgeUsage` (us-central1, Node 22, 2nd gen) and the indexes; old server images are deleted after 1 day (Artifact Registry cleanup policy). Google sized `api` at 1 vCPU, 512 MiB, 80 at once, no minimum instances.
+- **Health:** 200 in 0.14–0.21 s; a request with no sign-in → 401 `signIn`.
+- **One real fit check** (a guest account; `ig-001`, a public screenshot, face-hidden, the app's exact request with the two close-ups, profile unknown: a plumbing test, not a scoring one): 200, `STOP`, 4 pieces read, first bytes at 4.0 s, done in 8.0 s (7.75 s on the server's clock), 4,142 tokens in / 759 out, 0.595¢.
+- **One question** (Flash-Lite): 200, first words 0.85 s, done 1.1 s, 0.008¢. "White leather low-top sneakers keep the look clean and casual…"
+- **The server's records:** `spend/2026-10-17` 0.60¢ over 2 calls; the guest's day shows 1 check (its check id) and 1 question; the log lines carry ids, model, ms, tokens and cents only.
+- **Left behind:** the test guest accounts in Firebase Auth (harmless; deletable in the console).
+
