@@ -1,20 +1,18 @@
 // Which closet source answers, routed exactly like the scoring read (readingSource/live.ts, decision #41): bundled
-// demo photos replay their bundled closet answers; a real photo goes to Gemini only in a DEV build with the key
-// and only with his consent (the same "Send to Google" gate as the reading). The upload is the same face-hidden
+// demo photos replay their bundled closet answers; a real photo goes to Gemini (through our server on a Release build,
+// with the dev key on a dev build, 13-server.md §8) and only with his consent (the same "Send to Google" gate as the
+// reading). The upload is the same face-hidden
 // 1024 px copy the scoring call sent (kept on the phone; reloaded by its hash for a later catch-up).
-import { fetch as expoFetch } from 'expo/fetch';
 import { reloadUpload } from '../../../modules/kitted-vision';
-import { createClosetGeminiSource, type ClosetGeminiOptions } from './gemini';
+import { aiTransport } from '../server';
+import type { AiTransport } from '../server/transport';
+import { createClosetGeminiSource } from './gemini';
 import type { ClosetSource } from './types';
 
-const KEY: string | undefined = __DEV__ ? process.env.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined;
-export const LIVE_CLOSET = !!KEY;
-
-export function routedClosetSource(mock: ClosetSource, consent: () => Promise<boolean>): ClosetSource {
-  const live = KEY
+export function routedClosetSource(mock: ClosetSource, consent: () => Promise<boolean>, transport: AiTransport | null = aiTransport()): ClosetSource {
+  const live = transport
     ? createClosetGeminiSource({
-        apiKey: KEY,
-        fetch: expoFetch as unknown as ClosetGeminiOptions['fetch'],
+        transport,
         onCall: (c) => console.log(`[closet] ${c.seconds.toFixed(1)} s · in ${c.usage?.promptTokenCount ?? '?'} / out ${c.usage?.candidatesTokenCount ?? '?'} tokens${c.attempts > 1 ? ' · retried' : ''}${c.fail ? ` · failed ${c.fail}` : ''}`),
       })
     : null;

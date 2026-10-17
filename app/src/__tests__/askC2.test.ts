@@ -17,6 +17,7 @@ import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
 import { createQuota } from '@/services/quota';
+import { directTransport, type AiFetch } from '@/services/server/transport';
 
 declare const __dirname: string;
 const { readFileSync } = jest.requireActual<{ readFileSync(p: string, enc: 'utf8'): string }>('fs');
@@ -41,7 +42,7 @@ function sseBody(texts: string[], o: { finish?: string; cut?: number } = {}) {
 
 function fakeFetch(texts: string[], o: { finish?: string; cut?: number; status?: number; throws?: boolean } = {}) {
   const calls: { url: string; init: { headers: Record<string, string>; body: string } }[] = [];
-  const fetch: AskGeminiOptions['fetch'] = async (url, init) => {
+  const fetch: NonNullable<AskGeminiOptions['fetch']> = async (url, init) => {
     calls.push({ url, init });
     if (o.throws) throw new TypeError('Network request failed');
     if (o.status && o.status !== 200) return { ok: false, status: o.status, body: null };
@@ -270,23 +271,27 @@ describe('A6 · never sent', () => {
 });
 
 describe('A7 · off on his phone', () => {
-  it('no real source while CHAT_LIVE is off, or without a key', () => {
-    // Jest has no dev key, so even with the switch on (#310) the default source is null here, as in a release build.
+  it('no real source while CHAT_LIVE is off, or with nowhere to send', () => {
+    // Jest has no dev key and no server setting (a dev build with neither), so the default source is null here.
+    const transport = directTransport('KEY', fakeFetch([]).fetch as unknown as AiFetch);
     expect(liveAnswerSource()).toBeNull();
-    expect(liveAnswerSource(true, 'openai', undefined)).toBeNull();
-    expect(liveAnswerSource(false, 'openai', 'KEY')).toBeNull();
-    expect(liveAnswerSource(true, 'gemini', 'KEY')?.name).toBe('gemini');
+    expect(liveAnswerSource(true, null, 'gemini')).toBeNull();
+    expect(liveAnswerSource(false, transport, 'gemini')).toBeNull();
+    expect(liveAnswerSource(true, transport, 'gemini')?.name).toBe('gemini');
   });
   it('the chat answers with GPT-5.6 Luna (#329), and never falls back to another company', () => {
+    const transport = directTransport('KEY', fakeFetch([]).fetch as unknown as AiFetch);
     expect(CHAT_PROVIDER).toBe('openai');
-    expect(liveAnswerSource(true, 'openai', 'KEY')?.name).toBe('openai:gpt-5.6-luna');
-    // No OpenAI key → no live answers at all, never a question quietly sent to Google (consent names OpenAI).
-    expect(liveAnswerSource(true, 'openai', undefined)).toBeNull();
+    expect(liveAnswerSource(true, transport, 'openai', 'OKEY')?.name).toBe('openai:gpt-5.6-luna');
+    // No OpenAI key → no live answers at all, even with a working Gemini path: consent names OpenAI for questions.
+    expect(liveAnswerSource(true, transport, 'openai', undefined)).toBeNull();
+    expect(liveAnswerSource(false, transport, 'openai', 'OKEY')).toBeNull();
   });
-  it('the keys only ever come from a dev build (__DEV__), so a release build can never pick the real source', () => {
-    const src = readFileSync(join(__dirname, '../features/ask/liveSource.ts'), 'utf8');
-    expect(src).toMatch(/gemini: __DEV__ \? process\.env\.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined,/);
-    expect(src).toMatch(/openai: __DEV__ \? process\.env\.EXPO_PUBLIC_OPENAI_DEV_KEY : undefined,/);
+  it('the keys only ever come from a dev build (__DEV__), so a release build can never send them (13-server.md §8)', () => {
+    const src = readFileSync(join(__dirname, '../services/server/config.ts'), 'utf8');
+    expect(src).toMatch(/DEV_GEMINI_KEY: string \| undefined = __DEV__ \? process\.env\.EXPO_PUBLIC_GEMINI_DEV_KEY \|\| undefined : undefined;/);
+    const live = readFileSync(join(__dirname, '../features/ask/liveSource.ts'), 'utf8');
+    expect(live).toMatch(/DEV_OPENAI_KEY: string \| undefined = __DEV__ \? process\.env\.EXPO_PUBLIC_OPENAI_DEV_KEY \|\| undefined : undefined;/);
   });
   it('the gate passes every seeded demo answer (the demo screens keep their words)', () => {
     const s = seed as unknown as { scenarios: Record<string, { chatThread?: { role: string; kind: string; text?: string }[] }> };

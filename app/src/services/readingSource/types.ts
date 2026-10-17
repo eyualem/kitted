@@ -25,7 +25,8 @@ export interface PreparedImage {
 }
 
 export type SlotKind = 'top' | 'outerwear' | 'held' | 'bottom' | 'footwear';
-export type FailCode = 'timeout' | 'ai' | 'offline' | 'paused' | 'cantFrame' | 'unreadable' | 'unknownPhoto';
+/** 'limit': the server's daily allowance was used (13 §8, A7); 'paused': its spending stop (A8). */
+export type FailCode = 'timeout' | 'ai' | 'offline' | 'paused' | 'limit' | 'cantFrame' | 'unreadable' | 'unknownPhoto';
 
 export type ReadingEvent =
   | { type: 'stage'; stage: 'photoOK' | 'sending' | 'fit' | 'color'; expectedSlots?: number }
@@ -46,13 +47,19 @@ export interface SecondLookCall {
   l: Promise<LookResult<LookAnswerL>>;
 }
 
+/** `checkId`: the check the call belongs to (the server's X-Kitted-Check; a snap passes its first check's id). */
+export interface ReadOpts {
+  signal?: AbortSignal;
+  checkId?: string;
+}
+
 export interface ReadingSource {
-  read(image: PreparedImage, kind: ReadKind, opts?: { signal?: AbortSignal }): AsyncIterable<ReadingEvent>;
+  read(image: PreparedImage, kind: ReadKind, opts?: ReadOpts): AsyncIterable<ReadingEvent>;
   /** Send a hedge request (live source only; the mock records the call). */
   hedge?(): void;
   /** The second look, started next to read() (live source only; null when it can't run: a demo photo, no close-ups,
    *  no key). The demo replays without one. */
-  secondLook?(image: PreparedImage, kind: ReadKind, opts?: { signal?: AbortSignal }): SecondLookCall | null;
+  secondLook?(image: PreparedImage, kind: ReadKind, opts?: ReadOpts): SecondLookCall | null;
 }
 
 /** Debug toggles (04 §11) for the demo: `fault=unreadable|notClothed|offline|ai|paused`. */

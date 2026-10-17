@@ -492,7 +492,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     let lookCall: SecondLookCall | null = null;
     if (withLook) {
       try {
-        lookCall = deps.source.secondLook?.(image, kind, { signal: lookAbort.signal }) ?? null;
+        lookCall = deps.source.secondLook?.(image, kind, { signal: lookAbort.signal, checkId }) ?? null;
       } catch (e: unknown) {
         console.log('[look] could not start', e);
       }
@@ -505,7 +505,9 @@ export function createFitCheckService(deps: ServiceDeps) {
       else abort.signal.addEventListener('abort', () => resolve('stopped'), { once: true });
     });
     const work = (async () => {
-      const it = deps.source.read(image, kind, { signal: abort.signal })[Symbol.asyncIterator]();
+      // The check's id tags the call for the server (13-server.md §8): its hedge and look arms ride on it; a snap's
+      // read gets its own id from it (services/server/transport checkTag).
+      const it = deps.source.read(image, kind, { signal: abort.signal, checkId })[Symbol.asyncIterator]();
       for (;;) {
         const step = await Promise.race([it.next(), stopped]);
         if (step === 'stopped') {
@@ -559,6 +561,9 @@ export function createFitCheckService(deps: ServiceDeps) {
   async function failRow(checkId: string, code: FailCode, attemptNo?: number) {
     if (code === 'offline' && deps.net && !(await deps.net.confirmOffline().catch(() => true))) code = 'ai';
     const row = await store.fitChecks.get(checkId);
+    // The server says today's checks are used (13 §8, A7): the phone's count agrees from now on, so the next photo is
+    // held for tomorrow (S17) instead of being sent and refused again. Nothing is counted for this one.
+    if (code === 'limit' && row && !row.parentId) await deps.quota.consumeCheck(row.dayKey);
     if (row) await patchRow(checkId, { status: 'failed', details: { ...row.details, failCode: code } });
     dispatch({ t: 'end', attempt: attemptNo });
   }

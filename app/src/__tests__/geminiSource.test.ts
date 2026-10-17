@@ -25,7 +25,7 @@ function sse(text: string, n = 6, finishReason = 'STOP') {
 
 function fakeFetch(plan: (call: number, signal?: AbortSignal) => { status?: number; events?: string[]; hang?: boolean; throws?: boolean }) {
   let calls = 0;
-  const f: GeminiOptions['fetch'] = async (_url, init) => {
+  const f: NonNullable<GeminiOptions['fetch']> = async (_url, init) => {
     const p = plan(++calls, init.signal);
     if (p.throws) throw new TypeError('Network request failed');
     const enc = new TextEncoder();
@@ -124,7 +124,7 @@ describe('the source', () => {
   });
 
   it('a stream that ignores the abort still ends the read when the check gives up (Oct 14: the slot stayed busy)', async () => {
-    const deaf: GeminiOptions['fetch'] = async () => ({
+    const deaf: NonNullable<GeminiOptions['fetch']> = async () => ({
       ok: true, status: 200, text: async () => '',
       body: { getReader: () => ({ read: () => new Promise<never>(() => {}) }) }, // never answers, never sees the signal
     });
@@ -139,7 +139,7 @@ describe('the source', () => {
 
   it('a refused call logs its HTTP status and Gemini\'s reason (DEV), never the key', async () => {
     const log = jest.spyOn(console, 'log').mockImplementation(() => {});
-    const refused: GeminiOptions['fetch'] = async () => ({
+    const refused: NonNullable<GeminiOptions['fetch']> = async () => ({
       ok: false, status: 429, body: null,
       text: async () => JSON.stringify({ error: { code: 429, status: 'RESOURCE_EXHAUSTED', message: 'You exceeded your current quota.' } }),
     });

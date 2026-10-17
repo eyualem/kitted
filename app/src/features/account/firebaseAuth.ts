@@ -4,9 +4,10 @@
 // Sync isn't wired yet, so an account holds nothing on the server: `holdings` is null and deleting the account deletes
 // the Auth user only. When sync is wired, deleteAccount calls the server job instead (firebase/functions deleteAccount).
 import { GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin';
-import { GoogleAuthProvider, deleteUser, signInWithCredential, signOut as fbSignOut } from 'firebase/auth';
+import { GoogleAuthProvider, deleteUser, linkWithCredential, signInWithCredential, signOut as fbSignOut } from 'firebase/auth';
 import { GOOGLE_IOS_CLIENT_ID } from '@/config/firebase';
 import { firebaseAuth } from '@/services/firebase/app';
+import { keepGuest } from '@/services/server/guest';
 import type { AuthService, SignInResult } from './auth';
 
 let configured = false;
@@ -33,7 +34,10 @@ export function createFirebaseAuth(now: () => number = () => Date.now()): AuthSe
         if (!isSuccessResponse(res)) return { kind: 'cancelled' };
         const idToken = res.data.idToken;
         if (!idToken) return { kind: 'failed' };
-        const cred = await signInWithCredential(firebaseAuth(), GoogleAuthProvider.credential(idToken));
+        // A guest (the server's silent account, 13-server.md §8) keeps its uid: Google is linked to it (A11).
+        const auth = firebaseAuth();
+        const google = GoogleAuthProvider.credential(idToken);
+        const cred = await keepGuest(auth.currentUser, () => linkWithCredential(auth.currentUser!, google), () => signInWithCredential(auth, google));
         return {
           kind: 'ok',
           user: { uid: cred.user.uid, provider: 'google', email: cred.user.email ?? res.data.user.email ?? null, signedInAt: now() },

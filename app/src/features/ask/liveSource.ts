@@ -1,17 +1,20 @@
-// The real stylist on a DEV build (07 C2, check A7): a dev key, like the reading call (services/readingSource/
-// live.ts). On since Oct 17 (#310). Since Oct 17 (#329, the founder: "going with the OpenAI model is probably the
-// better idea") the answers come from OpenAI's GPT-5.6 Luna, the only model that passed every gate in the model test
-// (#311; 83% good answers vs Flash-Lite's 54%, 0.035¢ a question). Gemini stays one switch away. There's no silent
-// fallback from one to the other: consent names OpenAI for questions, so a missing OpenAI key means no live answers,
-// never a question sent to Google instead. Release builds never have a key (__DEV__ is false there), so they can't
-// pick either; outside testers need the server route (C6, handoff/13-server.md).
+// The real stylist (07 C2, check A7). Two ways, by who answers (CHAT_PROVIDER):
+//   openai (since Oct 17, #329, the founder: "going with the OpenAI model is probably the better idea"): GPT-5.6 Luna,
+//          the only model past every gate in the model test (#311; 83% good answers vs Flash-Lite's 54%, 0.035¢ a
+//          question), straight to OpenAI with the dev key on a dev build. The server's /v1/ask doesn't take OpenAI
+//          yet (13-server.md §8), so a Release build has no live answers until it does. No silent fallback: consent
+//          (version 2) names OpenAI for questions, so a question is never quietly sent to Google instead.
+//   gemini: sent the way the reading call is (services/server, 13-server.md §8): the dev key on a dev build (#310),
+//          our server's /v1/ask on a Release build or with EXPO_PUBLIC_KITTED_SERVER (#328).
 import { fetch as expoFetch } from 'expo/fetch';
 import { Platform } from 'react-native';
-import { ASK_MAX_TOKENS, createAskGemini, type AskGeminiOptions } from './gemini';
-import { createAskOpenAI } from './providers';
+import { aiTransport } from '@/services/server';
+import type { AiTransport } from '@/services/server/transport';
+import { ASK_MAX_TOKENS, createAskGemini } from './gemini';
+import { createAskOpenAI, type ProviderOptions } from './providers';
 import type { AnswerSource } from './source';
 
-/** The switch for real answers (on, #310; dev builds with a dev key only). */
+/** The switch for real answers (on, #310). */
 export const CHAT_LIVE = true;
 
 export type ChatProvider = 'openai' | 'gemini';
@@ -20,26 +23,30 @@ export const CHAT_PROVIDER: ChatProvider = 'openai';
 /** The model test's winner (#311). Reasoning "none", the app's answer cap. */
 export const CHAT_OPENAI_MODEL = 'gpt-5.6-luna';
 
-const DEV_KEYS: Record<ChatProvider, string | undefined> = {
-  gemini: __DEV__ ? process.env.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined,
-  openai: __DEV__ ? process.env.EXPO_PUBLIC_OPENAI_DEV_KEY : undefined,
-};
+/** Dev builds only (__DEV__ is false in Release, and guard:release keeps keys out of the bundle). */
+const DEV_OPENAI_KEY: string | undefined = __DEV__ ? process.env.EXPO_PUBLIC_OPENAI_DEV_KEY || undefined : undefined;
 
-// expo/fetch streams on the phone; in the web preview it throws before sending, so the browser's own fetch (#310).
-const streamFetch = () => (Platform.OS === 'web' ? globalThis.fetch.bind(globalThis) : expoFetch) as unknown as AskGeminiOptions['fetch'];
+// expo/fetch streams on the phone. The web preview can't call OpenAI at all (the browser blocks it, CORS, #329).
+const streamFetch = () => (Platform.OS === 'web' ? globalThis.fetch.bind(globalThis) : expoFetch) as unknown as ProviderOptions['fetch'];
 
-/** The real source, or null when it may not be used (switched off, or no key for the chosen provider). */
-export function liveAnswerSource(on: boolean = CHAT_LIVE, provider: ChatProvider = CHAT_PROVIDER, key: string | undefined = DEV_KEYS[provider]): AnswerSource | null {
-  if (!on || !key) return null;
+/** The real source, or null when it may not be used (switched off, or nowhere to send for the chosen provider). */
+export function liveAnswerSource(
+  on: boolean = CHAT_LIVE,
+  transport: AiTransport | null = aiTransport(),
+  provider: ChatProvider = CHAT_PROVIDER,
+  openaiKey: string | undefined = DEV_OPENAI_KEY,
+): AnswerSource | null {
+  if (!on) return null;
   if (provider === 'openai') {
+    if (!openaiKey) return null;
     return createAskOpenAI({
-      apiKey: key, fetch: streamFetch(), model: CHAT_OPENAI_MODEL, effort: 'none', maxTokens: ASK_MAX_TOKENS,
+      apiKey: openaiKey, fetch: streamFetch(), model: CHAT_OPENAI_MODEL, effort: 'none', maxTokens: ASK_MAX_TOKENS,
       onCall: (c) => console.log(`[ask] openai ${c.ms} ms · ${c.model ?? '?'} · in ${c.usage.in} (${c.usage.cached} cached) / out ${c.usage.out} tokens${c.stop && c.stop !== 'stop' ? ` · ${c.stop}` : ''}`),
     });
   }
+  if (!transport) return null;
   return createAskGemini({
-    apiKey: key,
-    fetch: streamFetch(),
+    transport,
     onCall: (c) => console.log(`[ask] gemini ${c.ms} ms · ${c.model ?? '?'} · in ${c.usage?.promptTokenCount ?? '?'} / out ${c.usage?.candidatesTokenCount ?? '?'} tokens${c.finishReason && c.finishReason !== 'STOP' ? ` · ${c.finishReason}` : ''}`),
   });
 }

@@ -1083,6 +1083,8 @@ const addedInBuild = {
   'closet.unsure.a11y.lineHint': 'Opens Not quite right? for this piece.',
   // A question that failed for no connection (09 §20.8 G18.4); every other failure keeps fail.ask.
   'fail.askOffline': "You're offline, so I couldn't answer that. It doesn't count.",
+  // The server's daily limit on a check the phone thought it had left (13-server.md §8, A7, #328).
+  'fail.limit': "That's today's fit checks. Your photo is saved here. Try again after 4 am. This one doesn't count.",
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

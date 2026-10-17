@@ -33,7 +33,7 @@ export default function YouScreen() {
       {/* Pinned atop while a move is left (02 S14, D17; 10-onboarding.md §9.9). */}
       <YourMovesRow href="/you/moves" />
       {profile ? <StyleCard p={profile} /> : null}
-      {usage.pro ? <PlanRow /> : null}
+      {usage.purchased ? <PlanRow /> : null}
       <View style={{ gap: space.s, marginTop: space.xs }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs }}>
           <View style={{ flexShrink: 1 }} accessibilityRole="header">
