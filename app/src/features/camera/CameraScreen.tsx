@@ -75,6 +75,9 @@ export function CameraScreen() {
   const [mode, setMode] = useState<Mode>('propped');
   const [facing, setFacing] = useState<'front' | 'back'>(snap ? 'back' : 'front');
   const [flash, setFlash] = useState(false);
+  // The tip pill wraps freely at the accessibility sizes, so the top bar's height is measured: the offer pills and
+  // the snap guide's label sit under it instead of on top of the tip (a fixed 52 pt overlapped it at AX5, #313).
+  const [topBarH, setTopBarH] = useState(44);
   const [timer, setTimer] = useState(false);
   const [permission, setPermission] = useState<'asking' | 'granted' | 'denied'>(hasCamera ? 'asking' : 'granted');
   // Simulator: a bundled photo stands in for the live preview.
@@ -369,13 +372,13 @@ export function CameraScreen() {
       <View style={[StyleSheet.absoluteFill, { experimental_backgroundImage: cameraScrims.bottom }]} pointerEvents="none" />
 
       {snap ? (
-        <LowerGuide share={bottomSnap ? 0.6 : 0.4} label={t(bottomSnap ? 'cam.bottom.guide' : 'cam.shoe.guide')} width={width} height={height} />
+        <LowerGuide share={bottomSnap ? 0.6 : 0.4} label={t(bottomSnap ? 'cam.bottom.guide' : 'cam.shoe.guide')} width={width} height={height} minLabelTop={insets.top + 3 + topBarH + 8} />
       ) : guide.body && !review ? (
         <BodyOutline box={guide.body} solid={isGoodTip(tip)} width={width} height={height} minY={guideTop} maxY={guideBottom} />
       ) : null}
 
       {/* Top bar */}
-      <View style={[styles.topBar, { top: insets.top + 3 }]}>
+      <View style={[styles.topBar, { top: insets.top + 3 }]} onLayout={(e) => setTopBarH(e.nativeEvent.layout.height)}>
         <IconButton icon="close" variant="glass" diameter={44} label={t('cam.a11y.close')} onPress={() => router.back()} />
         {panelShown ? (
           <View style={styles.tipSpacer} />
@@ -397,7 +400,7 @@ export function CameraScreen() {
       </View>
 
       {tip === 'shortMirror' && mode === 'mirror' && !snap && !review && !flashUi.offer ? (
-        <View style={[styles.offerWrap, { top: insets.top + 3 + 52 }]}>
+        <View style={[styles.offerWrap, { top: insets.top + 3 + topBarH + 8 }]}>
           <Pressable onPress={() => switchMode('propped')} accessibilityRole="button" style={({ pressed }) => [styles.offer, { opacity: pressed ? opacity.pressed : 1 }]}>
             <KText variant="subheadline" weight="600" color={fixed.white}>
               {t('cam.proppedOffer')}
@@ -407,7 +410,7 @@ export function CameraScreen() {
       ) : null}
 
       {flashUi.offer ? (
-        <View style={[styles.offerWrap, { top: insets.top + 3 + 52 }]}>
+        <View style={[styles.offerWrap, { top: insets.top + 3 + topBarH + 8 }]}>
           <Pressable onPress={() => setFlash(true)} accessibilityRole="button" style={({ pressed }) => [styles.offer, { opacity: pressed ? opacity.pressed : 1 }]}>
             <Icon name="flash" size="small" color={fixed.white} />
             <KText variant="subheadline" weight="600" color={fixed.white}>

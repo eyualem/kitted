@@ -5,6 +5,7 @@ import { scoreParts, type Reading } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
+import { lowerGuideLabelTop } from '@/features/camera/guideLayout';
 import { finishInfo, snapFailedKey, snapPart } from '@/features/fitcheck/finish';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
 import { manualClock } from '@/services/clock';
@@ -153,5 +154,18 @@ describe('S0.7 a snap is prepared as a snap (no person needed), a check as a fit
     expect((await store.fitChecks.get(checkId))!.isPartial).toBe(false);
     const bubble = (await store.chat.all()).find((m) => m.payload.snap === true)!;
     expect(bubble.payload.snapPart).toBe('bottom');
+  });
+});
+
+describe('S0.2 the snap guide label on the Simulator (Oct 16: at AX5 it ran under the tip pill)', () => {
+  test('it sits 14 pt inside the box when the tip is short', () => {
+    // iPhone 17 Pro, 874 pt tall, the bottom snap's 60% box; the tip bar ends at 62 + 44 + 8.
+    expect(lowerGuideLabelTop(874, 0.6, 114)).toBeCloseTo(874 * 0.4 - 106);
+  });
+  test('it moves below a tip that wrapped past the box top', () => {
+    expect(lowerGuideLabelTop(874, 0.6, 62 + 290 + 8)).toBe(360);
+  });
+  test('the shoe snap (40%) keeps its place', () => {
+    expect(lowerGuideLabelTop(874, 0.4, 114)).toBeCloseTo(874 * 0.6 - 106);
   });
 });

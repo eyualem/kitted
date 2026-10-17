@@ -254,10 +254,24 @@ only" row); it was never built. Two bugs found while planning it are fixed too.
 | S0.4 shoe snap | Pass. Unchanged (s24 tests, demo 11). |
 | S0.5 closet | Pass. The snap's pants and shoes join the closet, linked to the check (a shoe snap: footwear only); demo 186 asks "Are these your khaki chinos?". |
 | S0.6 failure | Pass. "Couldn't read your pants and shoes. Try again." / "Couldn't read your shoes. Try again or pick a pair." (the shoe line was in the deck but never shown: **bug B3**, a failed snap said nothing). |
-| S0.7 snap prep | Pass on the Mac (`kmeasure snapprep`, the app's own `KittedPrep.swift`): the bottom 25% of his 37 photos prepares 37 of 37 (the old prep 23), nothing hidden on legs and shoes; whole photos through the snap prep hide exactly what a fit photo hides (0 of 32 hide less; the outline head check runs whenever his shoulders are in view). Native: on his phone with the next reinstall; until then the old prep runs. `KittedVisionModule.swift`'s new `prepareSnap` isn't compiled by Xcode yet (the Mac was short on memory and another session had the Simulator); it mirrors `prepareItems` line for line. |
+| S0.7 snap prep | Pass on the Mac (`kmeasure snapprep`, the app's own `KittedPrep.swift`): the bottom 25% of his 37 photos prepares 37 of 37 (the old prep 23), nothing hidden on legs and shoes; whole photos through the snap prep hide exactly what a fit photo hides (0 of 32 hide less; the outline head check runs whenever his shoulders are in view). Native: on his phone with the next reinstall; until then the old prep runs. `KittedVisionModule.swift`'s new `prepareSnap` and `KittedPrep`'s `.snap` kind compile in Xcode (a fresh `expo run:ios` build for the Simulator, Oct 16, no warnings in either file). |
 | S0.8 Mirror tip | Pass. Mirror, no hips: "Can't step back? Prop your phone up instead." + "Use Propped", which switches to Propped (then "Step back a little…", the button goes) (demo 188); Propped unchanged. |
 | S0.9 quick check | Pass (unchanged: snaps are checked for light and blur only). |
-| S0.10 checks | Pass. `npm run check` parts: app typecheck, core typecheck, lint 0 problems, core 758 tests, app 1,091 tests (3 skipped). Web preview, light and dark. Not seen on the iOS Simulator (see S0.7). |
+| S0.10 checks | Pass. `npm run check` parts: app typecheck, core typecheck, lint 0 problems, core 758 tests, app 1,091 tests (3 skipped). Web preview, light and dark; the iOS Simulator below (§11.1). |
+
+### 11.1 Seen on the iOS Simulator (Oct 16, a new dev build; screenshots `screenshots/short-mirror/`, git-ignored)
+
+Demo screens 185–188 in light, dark and the largest text size (AX5), plus demo 11 (the shoes-only card) as a control.
+
+| Screen | Light / dark | AX5 |
+|---|---|---|
+| 185 top only | Pass: "Partial check: top only", "Snap your bottom half to finish.", the camera tile and Skip only | Pass: rows stack, the tile keeps 44 pt |
+| 186 finished | "FIT CHECK · FULL", 7.5, "Full check", "Are these your khaki chinos?". **Bug: the bubble's caption read "Pants and…"** (109 pt beside the time). **Fixed:** it wraps to 2 lines ("Pants and / shoes"), like the reading caption | Pass: the caption already goes under the bubble there ("Pants and shoes · 8:12") |
+| 187 snap camera | Pass: the tip in 2 lines, the 60% box; the label "Pants and shoes here" now sits on a dark tag (white text alone vanished over a white shirt) | **Bug: the label ran wider than the box and under the 5-line tip pill. Fixed:** capped at 2× (`CONTROL_TEXT_MAX_SCALE`), 2 lines at most, and never above the tip bar's measured bottom (`guideLayout.ts`, tests in `twoShot.test.ts`) |
+| 188 short mirror | Pass: "Can't step back? Prop your phone up instead." + "Use Propped"; **tapping it (0.15 s) switches to Propped** and the tip becomes "Step back a little. Shoes in frame if you can." | **Bug: "Use Propped" sat on top of the tip pill** (a fixed 52 pt below the top). **Fixed:** the offer pills (Use Propped and Turn on flash) sit 8 pt under the top bar's measured height |
+| 11 shoes-only (control) | Unchanged: "Same shoes as Monday?", the closet pair, the camera tile, Skip | — |
+
+`npm run check` green after the fixes. On his phone through Metro (JS only); `prepareSnap` with the next reinstall.
 
 **Also fixed on the way:** a top-only card's summary said "Your score may change once I see your shoes." (now
 "…your pants and shoes."); the chat context test still expected "FC3 · Oct 20" after #311 added the weekday.
