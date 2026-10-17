@@ -55,6 +55,10 @@ const A11Y: Record<Glyph, StringKey> = {
   waistDrawstring: 'closet.art.drawstrings',
 };
 
+const LEG_A11Y: Record<string, StringKey> = {
+  skinny: 'value.leg.skinny', slim: 'value.leg.slim', straight: 'value.leg.straight', relaxed: 'value.leg.relaxed', wide: 'value.leg.wide',
+};
+
 function shapeOf(category: unknown, sub: string): ArtShape {
   if (SHOE[sub] || category === 'footwear') return 'shoe';
   if (BOTTOM[sub] || category === 'bottom') return 'bottom';
@@ -99,11 +103,11 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
     const p: TopFlat['pattern'] =
       pattern === 'stripes' ? { type: 'stripes', line: contrastLine(c), scale: 4.4 }
         : pattern === 'checks_plaid' ? { type: 'gingham', line: contrastLine(c), scale: sub === 'flannel_shirt' ? 9 : 5.5 }
-          : heather ? { type: 'heather' }
+          : sub === 'sweater' ? { type: 'knit' } : heather ? { type: 'heather' }
             : type === 'denim_jacket' ? { type: 'twill' } : { type: 'solid' };
     flat = {
-      kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 4 ? 'relaxed' : type === 'overshirt' ? 'relaxed' : 'regular',
-      pattern: p, details, brand, print: pattern === 'graphic',
+      kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 5 ? 'oversized' : vol === 4 ? 'relaxed' : type === 'overshirt' ? 'relaxed' : 'regular',
+      pattern: p, details, brand, print: pattern === 'graphic' || sub === 'graphic_tee',
       buttonColor: type === 'denim_jacket' ? '#B87A45' : undefined, stitch: type === 'denim_jacket' ? '#D49A5E' : undefined,
     };
     if (details.fullZip || type === 'jacket' || type === 'bomber' || type === 'puffer') glyphs.add('fullZip');
@@ -118,7 +122,7 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
     if ((type === 'chinos' || type === 'trousers') && d.has('cargo_pockets')) type = 'cargos';
     if (type === 'trousers' && d.has('elastic_cuffs')) type = 'joggers';
     const leg = String(g.leg_shape ?? '');
-    const fit: BottomFlat['fit'] = leg === 'skinny' || leg === 'slim' ? 'slim' : leg === 'relaxed' || leg === 'barrel' ? 'relaxed' : leg === 'wide' ? 'wide' : type === 'joggers' ? 'relaxed' : 'straight';
+    const fit: BottomFlat['fit'] = leg === 'skinny' ? 'skinny' : leg === 'slim' ? 'slim' : leg === 'relaxed' || leg === 'barrel' ? 'relaxed' : leg === 'wide' ? 'wide' : type === 'joggers' ? 'relaxed' : 'straight';
     const hemRaw = String(g.hem ?? '');
     const hem: BottomFlat['hem'] = hemRaw === 'full_break' || hemRaw === 'pooling' ? 'full_break' : hemRaw === 'slight_break' ? 'slight_break' : hemRaw === 'cuffed' ? 'cuffed' : 'no_break';
     const jeans = type === 'jeans';
@@ -128,7 +132,8 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
       wash: art?.denimWear === 'faded' ? 'faded' : String(g.color_family) === 'denim_dark' ? 'rinse' : 'washed',
       ripped: art?.denimWear === 'ripped' || (!art && g.distressed_by_design === true),
       sideStripe: d.has('side_stripe'),
-      pattern: type === 'joggers' ? (heather ? { type: 'heather' } : { type: 'solid' }) : { type: 'twill' },
+      // trousers are smooth cloth with a pressed crease; chinos and jeans show their twill
+      pattern: type === 'joggers' ? (heather ? { type: 'heather' } : { type: 'solid' }) : type === 'trousers' ? { type: 'solid' } : { type: 'twill' },
       stitch: jeans ? (denim ? '#C8925A' : mix(c, 0.32)) : undefined,
       buttonColor: jeans && !denim ? '#8D9096' : undefined,
       brand,
@@ -145,18 +150,24 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
     const chunky = art?.shoeProfile === 'chunky' || sub === 'chunky_sneaker';
     const suede = sub === 'suede_chukka';
     flat = {
-      kind: 'shoe', type, color: c, chunky: chunky && (type === 'sneaker' || type === 'runner'),
+      kind: 'shoe', type, color: c, chunky: chunky && (type === 'sneaker' || type === 'runner'), ...(sub === 'canvas_sneaker' ? { canvas: true } : {}),
       pattern: suede ? { type: 'suede' } : { type: 'solid' }, brand,
       sole: type === 'sneaker' || type === 'runner' ? (String(g.color_family) === 'black' && !chunky ? '#F4F3EF' : undefined) : undefined,
     };
     if (chunky) glyphs.add('chunkySole');
   }
   if (shape !== 'shoe') {
-    if (pattern === 'graphic') glyphs.add('graphic');
+    if (pattern === 'graphic' || sub === 'graphic_tee') glyphs.add('graphic');
     if (pattern === 'stripes') glyphs.add('stripes');
     if (pattern === 'checks_plaid') glyphs.add('checks');
   }
   const ordered = PRIORITY.filter((x) => glyphs.has(x));
   const said = [...new Set(ordered.map((x) => t(A11Y[x])))];
-  return { shape, flat, glyphs: ordered, a11y: [item.name, ...said].join(', ') };
+  // The cut he can change on the page (§17.5): the leg of pants, a top's fit when it isn't regular.
+  const legKey = LEG_A11Y[String(g.leg_shape ?? '')];
+  const vol = typeof g.volume === 'number' ? g.volume : 3;
+  const cut = shape === 'bottom' && legKey ? t('closet.edit.a11y.leg', { leg: t(legKey) }).toLowerCase()
+    : shape === 'top' && vol !== 3 ? t('closet.edit.a11y.fit', { fit: t(vol <= 2 ? 'value.topFit.slim' : vol === 4 ? 'value.topFit.relaxed' : 'value.topFit.oversized') }).toLowerCase()
+      : null;
+  return { shape, flat, glyphs: ordered, a11y: [item.name, ...(cut ? [cut] : []), ...said].join(', ') };
 }

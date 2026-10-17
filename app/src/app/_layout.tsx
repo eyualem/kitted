@@ -94,7 +94,7 @@ function RootStack({ booted }: { booted: boolean }) {
         {/* 0.62: at 0.5 the second row of pairs was cut mid-label. */}
         <Stack.Screen name="sheets/pick-shoes/[checkId]" options={sheet([0.62, 1])} />
         <Stack.Screen name="sheets/tell-me/[checkId]" options={sheet([0.5])} />
-        <Stack.Screen name="sheets/edit-item/[id]" options={sheet([1])} />
+        <Stack.Screen name="sheets/edit-item/[id]" options={sheet([0.75, 1])} />
         <Stack.Screen name="sheets/rotation" options={sheet([0.5])} />
         <Stack.Screen name="sheets/next-buy" options={sheet([0.5])} />
         <Stack.Screen name="sheets/describe" options={sheet([0.5, 1])} />

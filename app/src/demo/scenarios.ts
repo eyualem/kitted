@@ -224,6 +224,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 186, name: 'Partial check · finished with pants and shoes', id: 'S6p', scenario: 'full', onboarded: true, now: '2026-10-20T08:13:00', href: '/stylist' },
   { n: 187, name: 'Camera · pants and shoes snap', id: 'S9', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: `/camera?mode=shoeSnap&parent=${STORY_PARTIAL}&part=bottom`, under: '/stylist' },
   { n: 188, name: 'Camera · short mirror', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=shortMirror&camMode=mirror', under: '/stylist' },
+  // Fix what a piece is (09-ui-review §17, #315): "What it is" on the dark jeans' page and its pickers (197–200: the two-shot check took
+  // 185–188, PR #7 holds 190–193, the bagginess rows 194–196).
+  { n: 197, name: 'Closet · What it is', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B3', under: '/closet' },
+  { n: 198, name: 'What it is · Leg', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=leg', under: '/closet/item/B3' },
+  { n: 199, name: 'What it is · Kind', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/T6?field=kind', under: '/closet/item/T6' },
+  { n: 200, name: 'What it is · Color', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=color', under: '/closet/item/B3' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

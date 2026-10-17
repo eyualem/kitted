@@ -18,7 +18,7 @@ export type BottomType = 'jeans' | 'chinos' | 'trousers' | 'cargos' | 'joggers' 
 export type ShoeType = 'sneaker' | 'runner' | 'work_boot' | 'chukka' | 'chelsea' | 'loafer' | 'derby' | 'slides';
 
 export interface FlatPattern {
-  type: 'solid' | 'heather' | 'suede' | 'twill' | 'stripes' | 'gingham';
+  type: 'solid' | 'heather' | 'suede' | 'twill' | 'stripes' | 'gingham' | 'knit';
   /** The pattern's line color (stripes, checks). */
   line?: string;
   /** Repeat size in viewBox units. */
@@ -37,7 +37,8 @@ interface FlatBase {
 export interface TopFlat extends FlatBase {
   kind: 'top';
   type: TopType;
-  fit?: 'slim' | 'regular' | 'relaxed';
+  /** oversized: dropped shoulders and a longer, wider body (#315, drawn apart from relaxed). */
+  fit?: 'slim' | 'regular' | 'relaxed' | 'oversized';
   details?: {
     drawstrings?: boolean; pouch?: boolean; ribHem?: boolean; ribCuffs?: boolean; fullZip?: boolean;
     chestPockets?: 0 | 1 | 2; flaps?: boolean;
@@ -50,7 +51,8 @@ export interface TopFlat extends FlatBase {
 export interface BottomFlat extends FlatBase {
   kind: 'bottom';
   type: BottomType;
-  fit?: 'slim' | 'straight' | 'relaxed' | 'wide';
+  /** skinny: narrower than slim, close to the hem (#315). */
+  fit?: 'skinny' | 'slim' | 'straight' | 'relaxed' | 'wide';
   hem?: 'no_break' | 'slight_break' | 'full_break' | 'cuffed';
   wash?: 'rinse' | 'washed' | 'faded';
   ripped?: boolean;
@@ -63,6 +65,8 @@ export interface ShoeFlat extends FlatBase {
   sole?: string;
   laceColor?: string;
   chunky?: boolean;
+  /** Canvas sneakers: a rubber toe cap and a stripe along the sole (#315, drawn apart from leather). */
+  canvas?: boolean;
 }
 
 export type FlatSpec = TopFlat | BottomFlat | ShoeFlat;
@@ -151,6 +155,12 @@ function patternDefs(id: string, p: FlatPattern | undefined, base: string): stri
     }
     return `<pattern id="${id}" patternUnits="userSpaceOnUse" width="16" height="16"><rect width="16" height="16" fill="${base}"/>${dots}</pattern>`;
   }
+  if (kind === 'knit') {
+    // ribs that read on a tile in any color: lighter lines on dark knits, darker on light ones
+    const dark = lum(base) < 0.12;
+    const line = mix(base, dark ? 0.2 : -0.16);
+    return `<pattern id="${id}" patternUnits="userSpaceOnUse" width="3.2" height="6"><rect width="3.2" height="6" fill="${base}"/><path d="M0.8,0 V6 M2.4,0 V6" stroke="${line}" stroke-width=".6" opacity=".85"/><path d="M0.8,1.5 l.8,1.5 l.8,-1.5 M0.8,4.5 l.8,1.5 l.8,-1.5" fill="none" stroke="${mix(base, 0.12)}" stroke-width=".35" opacity=".6"/></pattern>`;
+  }
   if (kind === 'twill') {
     const line = mix(base, lum(base) < 0.05 ? 0.16 : -0.12);
     return `<pattern id="${id}" patternUnits="userSpaceOnUse" width="3" height="3"><rect width="3" height="3" fill="${base}"/><path d="M-1,1 L1,-1 M0,3 L3,0 M2,4 L4,2" stroke="${line}" stroke-width=".55" opacity=".7"/></pattern>`;
@@ -209,10 +219,10 @@ function top(s: TopFlat, ctx: Ctx): string {
   const tailored = t === 'blazer' || t === 'coat';
   const jacket = t === 'denim_jacket' || t === 'bomber' || t === 'jacket' || t === 'puffer' || tailored;
   const collared = shirt || t === 'denim_jacket' || t === 'jacket' || t === 'polo';
-  const hw = ({ slim: 37, regular: 41, relaxed: 46 } as const)[s.fit ?? 'regular'] + (t === 'puffer' ? 5 : t === 'coat' ? 2 : 0);
-  const hemY = t === 'coat' ? 192 : t === 'blazer' ? 178 : t === 'denim_jacket' || t === 'bomber' ? 158 : t === 'puffer' || t === 'jacket' ? 166 : tee ? 166 : 176;
+  const hw = ({ slim: 37, regular: 41, relaxed: 46, oversized: 50 } as const)[s.fit ?? 'regular'] + (t === 'puffer' ? 5 : t === 'coat' ? 2 : 0);
+  const hemY = (t === 'coat' ? 192 : t === 'blazer' ? 178 : t === 'denim_jacket' || t === 'bomber' ? 158 : t === 'puffer' || t === 'jacket' ? 166 : tee ? 166 : 176) + (s.fit === 'oversized' && t !== 'coat' ? 8 : 0);
   const nw = hood ? 19 : collared || tailored ? 14 : 16.5;
-  const drop = t === 'overshirt' || s.fit === 'relaxed' || t === 'puffer' ? 4 : 0; // a dropped shoulder
+  const drop = s.fit === 'oversized' ? 8 : t === 'overshirt' || s.fit === 'relaxed' || t === 'puffer' ? 4 : 0; // a dropped shoulder
   // a tank's straps sit in from the shoulder, its armholes cut deep
   const S: [number, number] = t === 'tank' ? [nw + 9, 33] : [hw + 9 + drop, 45 + drop * 0.6];
   const A: [number, number] = t === 'tank' ? [hw, 88] : [hw, 82];
@@ -231,7 +241,7 @@ function top(s: TopFlat, ctx: Ctx): string {
     if (tee) {
       return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 24)},58 ${m(hw + 35)},79 Q${m(hw + 29)},88 ${m(hw + 21)},95 L${m(A[0] - 0.5)},${A[1] + 3} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
     }
-    const wide = s.fit === 'relaxed' || t === 'overshirt' || t === 'puffer' || t === 'coat' ? 4 : 0;
+    const wide = s.fit === 'oversized' ? 7 : s.fit === 'relaxed' || t === 'overshirt' || t === 'puffer' || t === 'coat' ? 4 : 0;
     const co = [hw + 31 + wide, 164];
     const ci = [hw + 14 - wide * 0.5, 168];
     const d = `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 27 + wide)},92 ${m(co[0]!)},${co[1]} L${m(ci[0]!)},${ci[1]} Q${m(hw + 9)},120 ${m(A[0] - 0.5)},${A[1] + 2} Z`;
@@ -474,8 +484,8 @@ function bottom(s: BottomFlat, ctx: Ctx): string {
   const shorts = t === 'shorts';
   const jog = t === 'joggers';
   const fit = s.fit ?? 'straight';
-  const legHalf = ({ slim: 12.5, straight: 15.5, relaxed: 18, wide: 21.5 } as const)[fit] + (shorts ? 3 : 0);
-  const g = ({ slim: 5, straight: 4, relaxed: 3, wide: 1.5 } as const)[fit];
+  const legHalf = ({ skinny: 10.5, slim: 12.5, straight: 15.5, relaxed: 18, wide: 21.5 } as const)[fit] + (shorts ? 3 : 0);
+  const g = ({ skinny: 6, slim: 5, straight: 4, relaxed: 3, wide: 1.5 } as const)[fit];
   const wH = 33;
   const hipH = 37.5;
   const top0 = 12;
@@ -494,8 +504,8 @@ function bottom(s: BottomFlat, ctx: Ctx): string {
   const st = s.stitch ?? (jeans ? '#C8925A' : mix(c, -0.25));
   const breakAmt = jog || shorts ? 0 : s.hem === 'full_break' ? 2 : s.hem === 'slight_break' ? 1 : 0;
   const bow = fit === 'wide' ? 4 : fit === 'relaxed' ? 2.5 : 1;
-  // joggers taper into a cuff
-  const taper = jog ? legHalf * 0.45 : 0;
+  // joggers taper into a cuff; a skinny leg narrows toward the hem
+  const taper = jog ? legHalf * 0.45 : fit === 'skinny' && !shorts ? legHalf * 0.3 : 0;
   const oLh = oL + taper;
   const oRh = oR - taper;
   const hemWave = (a: number, b: number) => (breakAmt ? `Q${f((a + b) / 2)},${hemY + 2 + breakAmt} ${b},${hemY}` : `L${b},${hemY}`);
@@ -526,7 +536,8 @@ function bottom(s: BottomFlat, ctx: Ctx): string {
     for (const side of [-1, 1]) {
       const x0 = cx + side * (hipH * 0.5);
       const x1 = cx + side * (g + legHalf);
-      out += `<path d="M${f(x0)},${hipY - 6} L${f(x1)},${hemY - 2}" stroke="#fff" stroke-opacity=".16" stroke-width="1.6"/><path d="M${f(x0 + 1.2)},${hipY - 6} L${f(x1 + 1.2)},${hemY - 2}" stroke="#000" stroke-opacity=".08" stroke-width="1.2"/>`;
+      const [hi, lo] = t === 'trousers' ? ['.29', '.14'] : ['.16', '.08']; // trousers are pressed sharper
+      out += `<path d="M${f(x0)},${hipY - 6} L${f(x1)},${hemY - 2}" stroke="#fff" stroke-opacity="${hi}" stroke-width="1.6"/><path d="M${f(x0 + 1.2)},${hipY - 6} L${f(x1 + 1.2)},${hemY - 2}" stroke="#000" stroke-opacity="${lo}" stroke-width="1.2"/>`;
     }
   }
   // drape: wide legs swing, slim legs bunch at the knee, a break stacks at the hem
@@ -648,6 +659,12 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
     out += fold(ctx, `M98,${ty - 24} q10,4 18,3`, 1.6, 0.7);
     const cup = cup0;
     out += `<path d="${cup}" fill="${sole}" stroke="${soleEdge}" stroke-width="1.1"/><path d="M24,${ty + 4} H186" ${stitch(mix(sole, -0.35), 0.6)}/><path d="M21,${gy - 3.5} H188" stroke="${mix(sole, -0.12)}" stroke-width="3"/><path d="M22,${ty + 8} H187" stroke="#000" stroke-opacity=".05" stroke-width="5"/>`;
+    if (s.canvas) {
+      // a rubber toe cap and the foxing stripe of a canvas sneaker
+      const cap = `M150,${ty + 1} C152,${ty - 14} 164,${ty - 20} 176,${ty - 15} C184,${ty - 11} 187,${ty - 4} 185,${ty + 1} Z`;
+      out += `<path d="${cap}" fill="${sole}" stroke="${soleEdge}" stroke-width="1"/><path d="M155,${ty - 3} C158,${ty - 12} 168,${ty - 15} 177,${ty - 11}" ${stitch(mix(sole, -0.3), 0.5)}/>`;
+      out += `<path d="M22,${ty + 9} H187" stroke="${mix(c, -0.15)}" stroke-width="1.6" opacity=".85"/>`;
+    }
     if (s.brand) out += brandText(t === 'runner' ? 46 : 66, t === 'runner' ? ty - 24 : ty - 14, s.brand.length > 6 ? 5.2 : 7, s.brand, c);
     return out;
   }
