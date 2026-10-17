@@ -6,7 +6,7 @@
 
 ## 0. The short version
 
-- **Recommended:** **Firebase** (Google) for accounts, the synced database and photos. The **Cloudflare Worker** stays the AI proxy (no cold starts, so scoring stays fast) and checks Firebase's sign-in token.
+- **Recommended:** **Firebase** (Google) for accounts, the synced database and photos. *(Oct 17, #326: the AI proxy is a Firebase Cloud Function too, not a Worker; `13-server.md`.)* The **Cloudflare Worker** stays the AI proxy (no cold starts, so scoring stays fast) and checks Firebase's sign-in token.
 - **Why Firebase:**
   - Google is already the company named in consent for scoring, so the privacy story stays at one AI-and-data company plus Cloudflare in transit.
   - It has the most ready-made pieces for a solo builder: Apple and Google sign-in, guest accounts that upgrade without losing data, and resumable photo uploads.

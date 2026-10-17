@@ -16,6 +16,8 @@
 
 ---
 
+> **Amended Oct 17 (#326):** the AI proxy keeps its own per-account daily counts (`usage/{uid}/usageDays`, 7 days) and the day's spend (`spend/{date}`); server-only, never synced or readable by the app. The phone's usage table still never syncs. See `13-server.md` §5.
+
 ## 1. Where things live
 
 | What | Where | Size per user (1 year) | Synced? |

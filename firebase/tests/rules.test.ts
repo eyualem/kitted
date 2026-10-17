@@ -148,3 +148,18 @@ describe('R10 devices', () => {
     await assertFails(setDoc(doc(alice(), 'users/alice/devices/D-4'), { ...good, lastSyncAt: Timestamp.fromMillis(0) }));
   });
 });
+
+describe("D2 the server's own records (handoff/13-server.md §7)", () => {
+  it('no client can read or write usage, spend or the config, its own uid included', async () => {
+    await env.withSecurityRulesDisabled(async (c) => {
+      await setDoc(doc(c.firestore(), 'usage/alice/usageDays/2026-10-20'), { checks: 1 });
+      await setDoc(doc(c.firestore(), 'spend/2026-10-20'), { cents: 1 });
+      await setDoc(doc(c.firestore(), 'server/config'), { tier: 'pro' });
+    });
+    for (const path of ['usage/alice', 'usage/alice/usageDays/2026-10-20', 'spend/2026-10-20', 'server/config']) {
+      await assertFails(getDoc(doc(alice(), path)));
+      await assertFails(setDoc(doc(alice(), path), { checks: 0, tier: 'pro', cents: 0 }));
+    }
+    await assertFails(getDocs(collection(alice(), 'usage/alice/usageDays')));
+  });
+});
