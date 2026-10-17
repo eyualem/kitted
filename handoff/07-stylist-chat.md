@@ -826,7 +826,7 @@ Three passes: the iOS Simulator (demo screens 90–95, 167–175, light, dark, A
 
 **New words (VoiceOver only):** "Your stylist is writing". No visible copy changed. Everything is JS: on his phone through Metro, no reinstall.
 
-## 18. The composer under VoiceOver, and words kept when he leaves mid-dictation (Oct 17, #315)
+## 18. The composer under VoiceOver, and words kept when he leaves mid-dictation (Oct 17, #317)
 The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic and the row turns to ✕ / ■ while he talks, so VoiceOver focus can be lost right as he sends or stops; (2) leaving the Stylist tab or opening a page mid-dictation unmounts the composer, and the mic's `dispose()` drops the words heard so far. No copy changes, no new packages, no live calls.
 
 ### 18.1 What the code does today (read before fixing)
@@ -849,7 +849,7 @@ The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic
 - **S1 (S)** The composer looks as before on the Simulator: idle, typing, after a send (demo screens 12 and 90).
 - **G** `npm run check` green; no copy, score or native change.
 
-### §18 results (Oct 17, #315): checked against F1–F4, L1–L5, S1 and G; no check changed
+### §18 results (Oct 17, #317): checked against F1–F4, L1–L5, S1 and G; no check changed
 `npm run check` green: 1,108 app tests in 88 suites (new `composerFocus.test.ts`, 17 tests; `dictation.test.ts` and `chatUi.test.ts` unchanged and passing), 758 core tests, typecheck, lint. The tests were written after the checks and run red first (9 of 17 failed) before the fix.
 
 | Check | Result | How |
@@ -862,7 +862,7 @@ The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic
 | L2 | Pass (T) | `dispose` while stopping lets the stop finish; its words land once as 'left'; no "I didn't catch that." after he left |
 | L3 | Pass (T) | U4's case still never starts the native side; idle hands nothing; the native listener is removed, so late events can't land |
 | L4 | Pass (T) | `composerState.appendHeard`: after his typed words with one space; empty heard leaves the draft |
-| L5 | Pass (C) | another tab and a pushed page both blur the Stylist tab → `composerState.close` → the dock unmounts the composer → `useDictation`'s cleanup → `dispose` (iOS; Android keeps the dock mounted, noted in #315) |
+| L5 | Pass (C) | another tab and a pushed page both blur the Stylist tab → `composerState.close` → the dock unmounts the composer → `useDictation`'s cleanup → `dispose` (iOS; Android keeps the dock mounted, noted in #317) |
 | S1 | Pending | the Simulator was in use by another session at commit time |
 | G | Pass | no copy, score or native change |
 

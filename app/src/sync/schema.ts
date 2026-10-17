@@ -111,6 +111,8 @@ export const KV_LOCAL: readonly string[] = [
   'onboard.finish',
   // Closet's last Pieces | Outfits tap (#307): a view setting on this phone, like camera.mode.
   'closet.segment',
+  // His Skips on the "How do your … fit?" card (09-ui-review §18, #316): a nudge he dismissed on this phone.
+  'closet.fitSkip',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
 export const KV_LOCAL_PREFIXES: readonly string[] = ['sync.', 'demo.', 'notify.', 'account.'];

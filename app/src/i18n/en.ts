@@ -1017,6 +1017,42 @@ const addedInBuild = {
   'partial.mayChangeBottom': 'Your score may change once I see your pants and shoes.',
   'cam.tip.shortMirror': "Can't step back? Prop your phone up instead.",
   'cam.proppedOffer': 'Use Propped',
+  // Fix what a piece is (09-ui-review §17, #315): "What it is" on a piece's page, its picker sheets and the toast.
+  // Kind and color names reuse garmentName and FAMILY_WORD; Leg and Fit reuse value.leg.* and value.topFit.*.
+  'closet.edit.title': 'What it is',
+  'closet.edit.kind': 'Kind',
+  'closet.edit.color': 'Color',
+  'closet.edit.leg': 'Leg',
+  'closet.edit.fit': 'Fit',
+  'closet.edit.pattern': 'Pattern',
+  'closet.edit.more': 'More kinds',
+  'closet.edit.sub': 'Pick what it really is.',
+  'closet.edit.foot': 'Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same.',
+  'closet.edit.toast': 'Changed to {value}. Your scores stay the same.',
+  'closet.edit.toastRemap': 'Changed to {kind}, in {color}. Your scores stay the same.',
+  'closet.edit.pattern.solid': 'Plain',
+  'closet.edit.pattern.stripes': 'Stripes',
+  'closet.edit.pattern.checks_plaid': 'Checks',
+  'closet.edit.pattern.graphic': 'Graphic print',
+  'closet.edit.pattern.camo': 'Camo',
+  'closet.edit.pattern.floral': 'Floral',
+  'closet.edit.pattern.other': 'Other pattern',
+  'closet.edit.color.neutrals': 'Neutrals',
+  'closet.edit.color.blues': 'Blues and denim',
+  'closet.edit.color.earth': 'Earth tones',
+  'closet.edit.color.colors': 'Colors',
+  'closet.edit.a11y.rowHint': 'Double-tap to change.',
+  'closet.edit.a11y.leg': '{leg} leg',
+  'closet.edit.a11y.fit': '{fit} fit',
+  'closet.edit.a11y.more': 'Shows {n} more kinds',
+  // How baggy a piece is (09-ui-review §18, #316; the founder's OK on the words, Oct 16): a Fit or Leg its own photos
+  // disagree on, on the piece page and as one card in Closet's To confirm. {a}, {b}: the leg and fit words, lowercase.
+  'closet.unsure.value': 'Not sure',
+  'closet.unsure.seen': 'Seen as {a} and as {b}.',
+  'closet.unsure.which': 'Which is it?',
+  'closet.unsure.askLeg': 'How do your {item} fit?',
+  'closet.unsure.askFit': 'How does your {item} fit?',
+  'closet.unsure.a11y.hint': 'Opens the choices. Your scores stay the same.',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

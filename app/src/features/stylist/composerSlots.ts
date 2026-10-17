@@ -1,4 +1,4 @@
-// The composer capsule's three slots as plain logic (07 §18, #315), so VoiceOver's cursor survives a send or a stop.
+// The composer capsule's three slots as plain logic (07 §18, #317), so VoiceOver's cursor survives a send or a stop.
 //   lead   📷 at rest · ✕ while he talks · nothing while he types (#28)
 //   middle the field · the waveform and his words while he talks
 //   trail  ↑ with words · 🎙 when empty and the phone can listen · ■ while he talks

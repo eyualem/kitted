@@ -1,4 +1,4 @@
-// 07 §18 (#315): the composer under VoiceOver (F1–F4) and the words kept when he leaves mid-dictation (L1–L4).
+// 07 §18 (#317): the composer under VoiceOver (F1–F4) and the words kept when he leaves mid-dictation (L1–L4).
 // VoiceOver itself can't be driven here or on the Simulator: the slots, the idle rule and the cursor moves are plain
 // logic, and the capsule's drawing is read from the source (F2).
 import { createDictationController, type DictationNative, type NativeDictationEvent } from '@/features/stylist/dictation';
