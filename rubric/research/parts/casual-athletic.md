@@ -1,6 +1,6 @@
 # Casual and athletic fits: how Kitted should score what guys 18–22 actually wear
 
-*Oct 17, 2026. Claude. A plan with its pass/fail checks written first, and a paper test of the candidate rules. No API calls, no money spent, nothing in the app or in `parts_proto.py` changed. Engine today: parts v13 (`extraction-test/rubrics/parts_proto.py`). The paper test: `extraction-test/casual_athletic_paper.py` (the candidate rules live there and are swapped in only for each score call), its output `extraction-test/results/casual-athletic/report.txt`. DECISIONS-LOG #330.*
+*Oct 17, 2026. Claude. A plan with its pass/fail checks written first, and a paper test of the candidate rules. No API calls, no money spent, nothing in the app or in `parts_proto.py` changed. Engine today: parts v13 (`extraction-test/rubrics/parts_proto.py`). The paper test: `extraction-test/casual_athletic_paper.py` (the candidate rules live there and are swapped in only for each score call), its output `extraction-test/results/casual-athletic/report.txt`. DECISIONS-LOG #331.*
 
 **Rule 7.** The gold photos are "profile unknown", scored with one stated test profile (picks Minimal + Smart casual, 0.5 each; boldness "a little"; no age) at Everyday. The founder's saved phone checks are scored at their own occasion with no picks (his profile is still pending). The 20 test outfits are made-up readings with no person in them. Nothing here can be split by age band or picked look yet; the shoot in §6 is built to fix that.
 
@@ -10,7 +10,7 @@
 - **The gold set can't tell us what's right.** It has 1 photo with gym shorts, 0 tracksuits, and its 5 judges are AI personas. Even its "22-year-old peer" judge is *harsher* on shorts and sweats than the four stylists (−0.31 against them, vs −0.14 on everything else). The truth for this age group has to come from real guys rating real fits: the shoot in §6.
 - **The recommended candidates (V2 in §5) separate deliberate from lazy by half a point and change nothing else.** An oversized hoodie over gym shorts with Jordans goes 7.0 → **7.5**; a plain tee with the same shorts stays **7.0**; an oversized graphic tee over wide jorts with chunky sneakers 7.0 → **7.5**; a matched grey sweatsuit with clean sneakers 6.5 → **7.0**; a roomy hoodie over short, fitted shorts 7.0 → **6.5**; running shoes with gym shorts at Class 5.5 → **6.0**. Slides, the jersey-and-gym-shorts kit, the interview and going-out holds stay where they are.
 - **All checks pass:** 20/20 test outfits, the self-check (with the candidates off the engine is exactly v13 on all 449 conformance cases and every gold reading), and the gold guards: held-out r 0.49 → 0.48 (bar: no drop over 0.03), the founder's 20 blind ratings within 0.5: 13 → 14, both runs within 0.5 on every shorts and sweats photo (30/30), no photo outside shorts, sweats and track pieces moved, none of the 39 saved phone checks moved.
-- **Two readings are missing for the rest:** where the shorts end (above the knee, at it, below it) and the socks (none showing, low, crew). A reading test is planned (§7, about **$2.50**, needs your OK). Until they pass, length and socks are advice only.
+- **The reading test ran small (§7, 52¢ of your 75¢, #332):** a separate narrow look reads whether shorts end above the knee or at/below it (right 99%, steady 92%) and crew socks vs none (right 96%, steady 96%) on the 24 gold shorts photos; putting the same values into the scoring read failed (less steady, and it shook the other fields). Not proven: gym shorts (1 photo), low or tall socks, tracksuits (none in the set). Length and socks stay advice only until the shoot.
 - **Your calls (on your to-do list):** the runners-at-Class hold (6.0), shorts judged like pants (V2) or only when there's something to say (V3), the full kit at 5.5, a matched sweatsuit counting as intent, and whether below-knee jorts and crew socks should ever move points (default: no).
 
 ## 1. What's true today (v13)
@@ -81,7 +81,7 @@ Each reads only fields the live reading already has (except CA5, marked). Propos
 - One shape credit, the larger. Either needs real shoes **in the photo** (not slides; running shoes only at the gym or home).
 - **−1.5, a roomy top over short, fitted shorts** (slim or skinny, or roominess 2 or less), not under a jacket: the band fault's price ([PRO-11]).
 - **Why +1.0, not pants' +1.5:** shorts already cut the leg line; the gold's two bomber-over-shorts photos (panel 7.5) land at 7.5 with +1.0.
-- **Readings:** shorts' roominess 4+ held on 23 of 24 gold photos across two runs, loose or not on 22 of 24, the subcategory on 24 of 24; the top's roominess 4+ on 23 of 23. Two runs only: the reading test (§7) adds the third.
+- **Readings:** shorts' roominess 4+ held on 23 of 24 gold photos across two runs, loose or not on 22 of 24, the subcategory on 24 of 24; the top's roominess 4+ on 23 of 23. Two runs only; a 3-run check comes with the shoot.
 - **Dropped after the first draft (V1):** "a tucked or short top over loose shorts gives it a waist". On the gold set it fired mostly on lazy fits (a pink graphic tee read as ending at the belt over denim shorts, panel 5.0, went 7.0 → 7.5) and cut the held-out r to 0.45.
 
 **CA2, a sport sneaker matches athletic bottoms and shorts [SHO-14].** Under gym shorts, sweatpants, joggers, track pants or shorts, a basketball, chunky, retro, canvas, low-profile or white leather sneaker counts as the real shoe for "the shoes match how dressed-up the clothes are" (+0.5 on Shoes). Running shoes and slides don't. *Why:* with athletic clothes a clean sneaker is the matching shoe; today the credit can't fire on the most common shoe this age group wears. Jeans with Jordans aren't touched here (that's a separate question for the gold set).
@@ -157,28 +157,34 @@ Each reads only fields the live reading already has (except CA5, marked). Propos
 
 **Pass bars for adopting the rules (set now):** on the 20, the candidate engine must agree with the human average better than v13 does (more within 0.5, and r not lower); fits 4 and 7 must score above fits 1 and 6; and no fit may move by more than 1.0 against both human raters. If your ratings and the second rater's differ by more than 1.0 on 5+ fits, the rules wait for more raters.
 
-## 7. The reading test: shorts length, socks and track pieces (needs your OK, ~$2.50)
+## 7. The reading test: shorts length, socks and track pieces (ran Oct 17 at 52¢, #332)
 
-**New values in the scoring read:**
-- `shorts_end` on a shorts garment: `above_knee` / `at_knee` / `below_knee` / `na`.
-- `socks` on the footwear: `not_visible` / `low` (no-show or ankle) / `crew` / `tall`.
-- `track_jacket` and `track_pants` as garment kinds (already planned: the engine knows them, the reading doesn't).
+**What ran.** You OK'd it at a smaller budget ("about $0.75"), so it was cut to fit a hard stop at 75¢, counted from every call's real token usage. Only photos already on the Mac: the **24 gold-set photos whose reading has shorts** (public screenshots, profile unknown; your saved checks have no shorts). No shoot photos and no new screenshots. Script `extraction-test/shorts_read.py`, labels `extraction-test/shorts1_labels.csv`, report `extraction-test/results/shorts1/report.md`.
+- **Truth:** Claude labelled all 24 from the close-ups before any answer existed: length 9 above the knee, 9 at it, 6 below it; socks 17 crew, 5 none showing, 1 low, 1 out of frame.
+- **Arm C, a separate narrow look** (the lower close-up the read already sends, two questions), 3 runs: 72 calls, **7.7¢**.
+- **Arm B, the scoring read with the new values** (`shorts_end`, `socks`, `track_jacket`, `track_pants`), 3 runs: 72 calls, **44.1¢**.
+- **Arm A, the control:** the gold set's own two runs of the same read (Oct 12, same model, prompt and images), no new calls.
+- **Spend: 51.9¢ of the 75¢ cap.**
 
-**Photos (about 58):** the 23 gold shorts photos, the shoot's 20, and ~15 public screenshots of jorts and gym-shorts fits (TikTok and Reddit, as the gold set; profile unknown).
+**Results (bars from #198, set before the run):**
 
-**Truth:** Claude labels each photo blind; you check the ~10 Claude marks unsure.
+| | Steady on 3 runs (≥ 90%) | Right when it answers (≥ 85%) | Can't see (≤ 30%) | Passes |
+|---|---|---|---|---|
+| **C** length: above the knee vs at or below | 22/24 (92%) | 68/69 (99%) | 4% | **yes** |
+| **C** socks: crew vs low or none | 23/24 (96%) | 66/69 (96%) | 4% | **yes** |
+| B length | 18/24 (75%) | 65/70 (93%) | 3% | no (steady) |
+| B socks | 21/24 (88%) | 62/66 (94%) | 8% | no (steady) |
 
-**Arms, 3 runs each:**
-- **A:** the live reading (control).
-- **B:** the live reading plus the new values.
-- **C:** a separate narrow look asking only the length and the socks (like the second look, #199).
-- The calls: (A + B) 58 × 3 × 2 × 0.60¢ ≈ $2.10, plus C 58 × 3 × ~0.23¢ ≈ $0.40. **About $2.50; stop at $3.**
+- **Harmless? No:** inside the scoring read the new values shook the old ones a little. Scores within 0.5 between two runs: A 22/22, B 21/22; old fields the same between runs: A 93.8%, B 91.6% (bar: no more than 2 points lower). The one big jump was the gym-shorts photo (pin-038, 5.0 → 7.0 on one run, its running shoes read once as retro runners), the shoe-type wobble already known.
+- **So, as in #199:** length and socks belong in a separate narrow look, never in the scoring read. In the app that's one extra call of ~0.11¢ (~1 s) on checks whose reading has shorts, or two questions added to the second look (untested: adding questions there could shake its own answers, the same lesson).
+- **Only the two-way length is readable.** "At the knee" vs "below it" isn't: the narrow look called 7 of the 9 knee-length pairs "below the knee" (exact 3-way right 68%). That's enough for CA7's chino-shorts tip ("ending just above the knee" vs not); a rule needing "exactly at the knee" isn't possible.
 
-**Pass bars (#198's, set now):**
-- **Steady:** the grouping a rule would use (above the knee vs at or below it; crew or tall vs low or not visible) is the same on all 3 runs on ≥ 90% of photos.
-- **Right:** ≥ 85% against the labels when it answers, and "unsure" or `na` on ≤ 30%.
-- **Harmless:** arm B's score steadiness (3 runs within 0.5) no lower than arm A's, and no old field's accuracy down by more than 2 points. Batch 1 failed exactly here (#198: six new fields cost 10 points of steadiness).
-- **Where it goes:** if B fails the harmless bar but C passes, the values go in the second look, not the scoring read.
+**What this small test can't prove:**
+- **Gym shorts:** only 1 of the 24 photos (pin-038). Shiny, loose basketball shorts may read differently from chino shorts and jorts.
+- **Socks beyond crew vs none:** 1 low sock and no tall ones, so "low vs none" and "tall" are untested.
+- **Track pieces:** none of the 24 has one. The read named no track piece on any of its 72 calls (no false alarms), but whether it names a real tracksuit right is unknown.
+- **Mirror selfies and his own camera:** these are creator and Pinterest photos, mostly shot by someone else. One labeller (Claude), not you, and 24 photos.
+- **Next:** the shoot (§6) fills every gap above; re-run arm C on its 20 photos (~2.5¢) when it exists.
 
 ## 8. Rules waiting on those readings (on paper only)
 
@@ -197,8 +203,8 @@ Each reads only fields the live reading already has (except CA5, marked). Propos
 
 ## 10. Order of work
 
-1. You: the shoot and the ratings (§6), and the OK for the reading test (§7).
-2. Claude: label the photos blind, run §7 (one arm at a time, rule 9), and the 5 judges on the 20.
+1. You: the shoot and the ratings (§6). (The reading test ran small on Oct 17, §7.)
+2. Claude: label the shoot's photos blind, re-run §7's arm C on them (~2.5¢), and the 5 judges on the 20.
 3. Claude: the candidates against the shoot's ratings (§6's bars); report the before and after to you.
 4. On your go: port to `parts_proto.py` as v14 and to `@kitted/core` with parity, write the rules and their conformance cases into `rubric/v5-styles.md` and `rules_conformance.py`, and the card's lines into `en.ts`.
 

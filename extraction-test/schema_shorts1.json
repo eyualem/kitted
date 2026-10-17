@@ -1,0 +1,4 @@
+{"type": "object", "properties": {
+  "shorts_end": {"type": "string", "enum": ["above_knee", "at_knee", "below_knee", "not_shorts", "cant_see"]},
+  "socks": {"type": "string", "enum": ["not_visible", "low", "crew", "tall", "cant_see"]}},
+ "required": ["shorts_end", "socks"], "propertyOrdering": ["shorts_end", "socks"]}
