@@ -1,4 +1,4 @@
-// The answer log (09-ui-review §19, #319; a judge's fix from the bagginess debate): every answer he gives about a
+// The answer log (09-ui-review §19, #321; a judge's fix from the bagginess debate): every answer he gives about a
 // piece's Fit or Leg, next to what his photos of it read, kept on this phone only. It's what the paper test (§18 BG7)
 // and the drift check read: do answers lean toward the one that scores better? Never sent, never synced.
 import type { KittedStore } from '@/data/store';

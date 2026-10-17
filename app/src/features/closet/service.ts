@@ -64,7 +64,7 @@ export interface ClosetServiceDeps {
 export type DuplicateAnswer = 'same' | 'new' | 'runnerUp';
 
 const CLOSET_CATEGORIES: readonly string[] = ['top', 'outerwear', 'bottom', 'footwear'];
-/** The scored bagginess fields: a "Not quite right?" fix of one re-scores its check only (§19, #319). */
+/** The scored bagginess fields: a "Not quite right?" fix of one re-scores its check only (§19, #321). */
 const SCORED_FIX_FIELDS: readonly string[] = ['volume', 'leg_shape'];
 const CONFIRMABLE: readonly string[] = [
   'subcategory', 'color_family', 'pattern', 'logo', 'leg_shape', 'sleeve_length', 'lightness', 'shoe_profile', 'denim_wear',
@@ -1086,7 +1086,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
     const g = next.garments[d.garmentIndex];
     if (!g || !d.field) return { itemName: null };
     if (SCORED_FIX_FIELDS.includes(d.field)) {
-      // The scored-fix rule (09-ui-review §19, #319): a Fit or Leg fix made with the score in view re-scores this check
+      // The scored-fix rule (09-ui-review §19, #321): a Fit or Leg fix made with the score in view re-scores this check
       // only. The sighting keeps the corrected read as that photo's record, but not as his word (no userConfirmed), the
       // piece is untouched (so it stays "Not sure" until he settles it with no score in sight), and nothing moves piece.
       if (!link) return { itemName: null };

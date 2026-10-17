@@ -1,4 +1,4 @@
-// The fit-check card's line for a "Not sure" piece (09-ui-review §19, #319; the bagginess debate's verdict): "Not sure
+// The fit-check card's line for a "Not sure" piece (09-ui-review §19, #321; the bagginess debate's verdict): "Not sure
 // about your mid-wash jeans' leg? Tap." It's a statement under the score, never a question before it (#122), and it
 // shows whether or not a fix would move the score, so seeing it never says an answer pays. A tap opens "Not quite
 // right?" straight on that piece's row, offering only the values its photos showed (plus this photo's read); that fix

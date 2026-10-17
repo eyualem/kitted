@@ -673,8 +673,8 @@ Built on PR eyualem/kitted#5's branch (the piece page's rows), so this PR goes i
 | G4 | | New words: "Not sure", "Seen as {a} and as {b}.", "Which is it?", "How do your {item} fit?", "How does your {item} fit?", and VoiceOver's "Opens the choices. Your scores stay the same." |
 | Found | | `stylistContext.test.ts` failed on main: #311 added the weekday to the chat pack's "Earlier this week" lines and the test still expected the bare date. Fixed the test (its own commit) |
 
-## 19. Bagginess on the fit-check card: plan and pass/fail checks, set before building (Oct 17, #319)
-Founder (Oct 17): "Build X with the judges' fixes: the scored-fix rule first, then the card line that opens straight to that piece's Leg or Fit, the Outfits card, the answer log, and the stop-after-two cap." The verdict came from a debate (4 advocates, a rebuttal round, 3 blind judges; files in the session's shared notes, `bagginess-debate-*.md`, `judge-1..3.md`): X won 2 of 3 judges; Z (as built) won the integrity judge; the chat asking (Y) won none. It bends §18.6 call 2 ("never on a score card") with a statement, not a question; nothing asks before the score (#122 stands). Numbered §19 and #319: main holds #317–318.
+## 19. Bagginess on the fit-check card: plan and pass/fail checks, set before building (Oct 17, #321)
+Founder (Oct 17): "Build X with the judges' fixes: the scored-fix rule first, then the card line that opens straight to that piece's Leg or Fit, the Outfits card, the answer log, and the stop-after-two cap." The verdict came from a debate (4 advocates, a rebuttal round, 3 blind judges; files in the session's shared notes, `bagginess-debate-*.md`, `judge-1..3.md`): X won 2 of 3 judges; Z (as built) won the integrity judge; the chat asking (Y) won none. It bends §18.6 call 2 ("never on a score card") with a statement, not a question; nothing asks before the score (#122 stands). Numbered §19 and #321: main holds #317–320 (first numbered #319; the composer fix and the gap audit took #319–320 the same day).
 
 ### 19.1 What he'll see
 - **On a fit-check card**, when a piece in it is "Not sure" (§18: its own photos disagree), one quiet line above Why / Not quite right?: **"Not sure about your mid-wash jeans' leg? Tap."** (a top: "Not sure about your black tee's fit? Tap."). It shows whether or not a fix would move the score, so seeing it never says an answer pays. A tap opens "Not quite right?" straight on that piece's row, offering only the leg shapes (or fits) his photos of it showed, plus this photo's; then the live before and after, and Save.
@@ -704,7 +704,7 @@ Kind ("Wrong item") corrections keep today's behaviour.
 - **BX10 (T) Words:** the new strings pass the copy checks, the sentence gate and the body-words rule.
 - **G1–G4** (§6) apply.
 
-### §19 results (Oct 17, #319): checked against BX1–BX10, none changed
+### §19 results (Oct 17, #321): checked against BX1–BX10, none changed
 Demo screens **201** (a check of s12 whose mid-wash jeans read slim, wide and wide in earlier photos), **202** (Closet → Outfits with the fit card) and **203** (the sheet the line opens). Seen on the iOS Simulator (iPhone 17 Pro, a turn from the large-text session) and on the web preview. Screenshots `screenshots/bagginess-oct17/` (git-ignored).
 
 | Check | Result | How |

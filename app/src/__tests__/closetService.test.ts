@@ -349,7 +349,7 @@ describe('Undo and corrections follow the stored link', () => {
   });
 
   it('a piece seen once is patched in place ("Saved to your tan trousers")', async () => {
-    // Amended by 09-ui-review §19 (#319), openly: a Leg or Fit fix no longer patches the piece (the scored-fix rule,
+    // Amended by 09-ui-review §19 (#321), openly: a Leg or Fit fix no longer patches the piece (the scored-fix rule,
     // fitLine.test BX1), so this path is shown with a Kind fix, which still does.
     const env = await setup();
     const id = await env.check('p01b');

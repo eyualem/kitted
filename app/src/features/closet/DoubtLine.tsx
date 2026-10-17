@@ -1,4 +1,4 @@
-// The fit-check card's "Not sure about your mid-wash jeans' leg? Tap." (09-ui-review §19, #319). Which piece, and
+// The fit-check card's "Not sure about your mid-wash jeans' leg? Tap." (09-ui-review §19, #321). Which piece, and
 // whether it may show, is fitLine.cardLine; this draws it (the card's "Scored as … Not right? Tap." pill), counts it
 // toward the cap once per check, and on a tap logs the answer, stops the line for that piece and opens "Not quite
 // right?" on its row. Never on Past chats' cards.

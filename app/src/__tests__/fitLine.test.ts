@@ -1,4 +1,4 @@
-// Bagginess on the fit-check card (09-ui-review §19, #319; checks BX1–BX10 set before building). A "Not sure" piece
+// Bagginess on the fit-check card (09-ui-review §19, #321; checks BX1–BX10 set before building). A "Not sure" piece
 // gets one quiet line on the card that opens "Not quite right?" on its row; that fix re-scores the check only and never
 // sets the piece (the scored-fix rule); the line stops after a tap or 2 checks; every answer is logged on the phone.
 import { US_EASTERN, type Garment } from '@kitted/core';
