@@ -825,3 +825,26 @@ Three passes: the iOS Simulator (demo screens 90–95, 167–175, light, dark, A
 | G | Pass | `npm run check` green; no score code touched |
 
 **New words (VoiceOver only):** "Your stylist is writing". No visible copy changed. Everything is JS: on his phone through Metro, no reinstall.
+
+## 18. The composer under VoiceOver, and words kept when he leaves mid-dictation (Oct 17, #315)
+The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic and the row turns to ✕ / ■ while he talks, so VoiceOver focus can be lost right as he sends or stops; (2) leaving the Stylist tab or opening a page mid-dictation unmounts the composer, and the mic's `dispose()` drops the words heard so far. No copy changes, no new packages, no live calls.
+
+### 18.1 What the code does today (read before fixing)
+- **The trailing button.** The capsule draws `recording ? <>✕, voice, ■</> : <>📷?, field, ↑ | 🎙 | nothing</>`. Both branches are unkeyed fragments at the same place, so React happens to keep the trailing button's view across ↑ → 🎙 → ■ → ↑ (only its label and icon change). That's luck, not design: one added element or a key in either branch would break it, and nothing tests it.
+- **The real loss is the composer closing itself.** After a send by voice (or a ✕ on a mic opened from the bar), the field is empty, not keyboard-focused and the mic is off, so `onIdle` closes the composer: the view under VoiceOver's cursor is gone, and the cursor jumps to wherever iOS puts it.
+- **Where the trailing button goes away:** with no mic (the Simulator, phones without on-device speech), a send leaves no trailing button at all.
+- **Leaving mid-dictation.** The tab's blur closes the composer (`useFocusEffect` → `composerState.close`), which unmounts it; the same happens when a page is pushed over the tab. `useDictation`'s cleanup calls `dispose()`: it bumps the session and stops the native side without waiting, so the words are dropped; a stop already in flight is dropped too (its session no longer matches).
+
+### 18.2 Pass/fail checks, set before fixing
+(T) a jest test, (S) seen on the iOS Simulator, (C) read in code (VoiceOver can't be driven on the Simulator).
+- **F1 (T)** `composerSlots` gives one trailing control for every state that has something to do: text → send, empty with a mic → mic, listening / getting ready / stopping → stop; empty with no mic → none. The leading slot: camera when idle and empty, ✕ while listening, none while typing.
+- **F2 (T)** The capsule draws its leading, middle and trailing slots as fixed, keyed children (`lead`, `field`/`voice`, `trail`), never a fragment per state, so the trailing button is the same view across send → mic → stop → send and VoiceOver's cursor stays on it while its label and icon change.
+- **F3 (T)** With VoiceOver on, the composer never closes itself when it empties (a send, a ✕, a stop with no words); VoiceOver's escape gesture (two-finger scrub) closes it, and leaving the tab still does. With VoiceOver off nothing changes.
+- **F4 (T)** When the control he pressed goes away, VoiceOver's cursor moves to the field: after ✕, and after a send that leaves no trailing button. After ■ the cursor stays on the trailing button (now send) and the words are announced as today.
+- **L1 (T)** Disposing while listening (or starting) hands the words heard so far to the draft, once: the native side's last words when its stop returns them, else the live text. Nothing is sent, nothing is announced.
+- **L2 (T)** Disposing while a stop is in flight still hands that stop's words, once.
+- **L3 (T)** Disposing while getting ready, or idle, hands nothing and never starts the native side (U4 still holds); a late native event after dispose never touches the draft.
+- **L4 (T)** Kept words land after any draft he'd already typed (a space between), so the bar shows them on his return; an empty result leaves the draft as it was.
+- **L5 (C)** Both ways out (another tab, a pushed page) reach `dispose` through the composer's unmount.
+- **S1 (S)** The composer looks as before on the Simulator: idle, typing, after a send (demo screens 12 and 90).
+- **G** `npm run check` green; no copy, score or native change.
