@@ -246,3 +246,19 @@ Jest unless noted (`app/src/__tests__/serverProxy.test.ts`).
 - **O5 Cost:** 4,470 in (3,620 cached) and 89 out → (850 × 0.20 + 3,620 × 0.02 + 89 × 1.20) / 10⁴ = 0.0349¢ in the day's spend.
 - **O6 The app:** with a server transport, an OpenAI question goes to `<base>/v1/ask?model=gpt-5.6-luna` with the same body as the direct call, `Bearer` sign-in and `X-Kitted-Free: tap` on a tap answer; 429 `limit` → the limit line, 503 `paused` → the paused line, nothing counted; with no server and no dev key → no live answers (never Gemini); a dev build with the dev key and no server setting → straight to OpenAI as before.
 - **O7 Live:** after the founder's key and the deploy, one real question through the deployed `/v1/ask?model=gpt-5.6-luna` answers, counts once and adds its cents.
+
+### Results (Oct 17, #330)
+**All pass.** O1–O5 on the emulators (14 new tests; 74 of 74 with the rest), O6 in Jest (`askProviders.test.ts`, `askC2.test.ts`; 1,289 app tests, lint clean), O7 live.
+
+| Check | Result | Note |
+|---|---|---|
+| O1 | Pass | the app's body reaches `/v1/responses` unchanged but `store: false` and the cap (99,999 → 1,024); 9 refusals, none reaching OpenAI |
+| O2 | Pass | OpenAI sees only `Bearer <OPENAI_KEY>`; Gemini only its key; neither key in any answer, error or log |
+| O3 | Pass | the first event reached the test while the fake held the rest; bytes equal |
+| O4 | Pass | incomplete, failed, a cut stream and 401/429/500 counted nothing; 7 completed (5 + 2), the 8th → `questions`; the spending stop → `paused` |
+| O5 | Pass | 4,470 in (3,620 cached) / 89 out = 0.0349¢ |
+| O6 | Pass | with a server transport the body equals the direct call's, to `<base>/v1/ask?model=gpt-5.6-luna`, `Bearer`, `X-Kitted-Free: tap`; 429 → limit line, 503 → paused line, 502 → a plain failure; no server and no key → no live answers, never Gemini |
+| O7 | Pass | live, a guest account: 200, `response.completed`, first words 3.6 s and done 4.5 s (the first call after the deploy, a cold instance), 51 in / 40 out, 0.006¢, counted once; a body with `tools` → 400 `field:tools` |
+
+**The key:** the founder's own, made in OpenAI for the server, separate from the phone's dev key (checked equal: no), restricted to model calls; stored as `OPENAI_KEY` v1 and checked with one tiny call before the deploy.
+**What changes:** every Release build gets Kit's answers through the server; the founder's dev build too (its `EXPO_PUBLIC_KITTED_SERVER=live`), so his questions now count against the server's limits (Pro's in the beta). The dev key stays for a dev build without the server setting.
