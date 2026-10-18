@@ -83,6 +83,7 @@
 
 **Decide (quick taste calls; Claude has a default for each):**
 - [x] ~~Casual and athletic fits, 5 calls~~ answered Oct 17 (#333): fit and context decide. Built on paper (V7, `rubric/research/parts/casual-athletic.md` §9): runners with gym shorts at Class 6.5 (not held), tight shorts −1.0 on shape, a kit 6.0 when it fits, a relaxed matched sweatsuit 7.5. Nothing in the app until the shoot's before/after.
+- [ ] **P1** · **Tuck it in, not swap it, 2 min (#336):** your before/after (the brown check shirt over the navy tee, 21:25 and 21:26) both scored 7.0, and the before card never said "tuck it in" because the app reads an open button-up as a layer. On paper: a tucked open shirt counts as a tucked shirt (your after 7.0 → 7.5, nothing else moves), the before card leads with "Tuck in your flannel → 7.5", and shirts cut to be tucked (dress shirts; oxfords and polos that hang long) get "tuck it in" as a no-number tip instead of a swap of that shirt. Say go (and OK or change the lines in DECISIONS-LOG #336) and Claude ports it. *Unblocks: tuck advice by shirt type.*
 - [ ] **P1** · **Try the casual-fit scoring on your phone, 5 min (#335):** through Metro once the branch is merged (no reinstall). Do a fit check in gym shorts or sweats: an oversized hoodie over loose shorts with clean sneakers should land around 8.0, a plain tee with running shoes at Class 6.5 (no longer 5.5). Tell Claude if any number feels wrong. To switch it off: `CASUAL_FITS_V14 = false` in `app/packages/kitted-core/src/parts.ts` (Claude can flip it).
 - [ ] **P3** · **Casual fits, 3 follow-ups (#333, §9), 2 min:** (1) a red tee over purple jorts scores like a black one because streetwear halves the clash of two bright colors: keep it (**default**) or charge the full amount; (2) slides with gym shorts at Class are still held to 5.5: keep (**default**) or let the parts decide like running shoes; (3) sweats with a plain tee and running shoes at Class are still held to 5.5: keep until the shoot (**default**).
 - [ ] **P1** · **Try "What it is" on your phone, 2 min (#315):** Closet → tap a piece → under its name, tap Leg (pants) or Kind and pick the right one; the drawing changes and the toast has Undo. Through Metro, no reinstall. Tell Claude if any picture or word looks wrong. *Unblocks: fixing the pieces the app read wrong (your slim/relaxed jeans, hoodie/sweatshirt).*
@@ -427,6 +428,10 @@
 - **Timeline:** beta Nov 3, submit about Nov 14, launch about Nov 17–20.
 
 ## Next steps, in order
+
+### Tuck it in, not swap it: on paper Oct 17 (#336), waiting on the founder's go
+- **Found on his before/after:** an open button-up is read as a layer, so its tuck never earns the waist break [PRO-4] and the `tuck` fix only tucks the tee under it. Both photos 7.0; the before card offered cuffs and swaps.
+- **The plan (DECISIONS-LOG #336):** (1) a fully tucked open button-up sets the waist (his after 7.0 → 7.5; gold, his 20 and the other saved checks unchanged); (2) a `tuck_layer` fix ("Tuck in your flannel → 7.5" on his before); (3) shirt types cut to be tucked get a no-number "tuck it in" tip instead of a swap of that shirt when the tuck doesn't move the number. Port to Python + `@kitted/core` with parity, `rubric/v5-styles.md` and conformance cases, after his go.
 
 ### Casual and athletic fits: planned Oct 17 (#331), ported as parts v14 the same day (#335), behind a switch. Start here for gym shorts, jorts, sweats and tracksuits
 **The plan, checks and paper results: `rubric/research/parts/casual-athletic.md`** (paper test `extraction-test/casual_athletic_paper.py`; run it with `KITTED_DATA=/Users/eyu/Desktop/files/Kitted` from a worktree).
