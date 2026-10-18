@@ -321,3 +321,23 @@ describe('#340: the card greeting line is hidden wherever it is still stored', (
     expect(withoutCardGreetings([seeded, answer, posted, card]).map((x) => x.id)).toEqual(['a1', 'c1']);
   });
 });
+
+describe('#341: the score card folds to its rating and opens smoothly', () => {
+  it('both score cards start folded, open on a tap, and fold back from the handle', () => {
+    const check = src('features/stylist/cards/FitCheckCard.tsx');
+    const recheck = src('features/stylist/cards/RecheckCard.tsx');
+    expect(check).toMatch(/useState\(\(\) => openCards\.has\(id\)\)/);
+    for (const s of [check, recheck]) {
+      expect(s).toMatch(/<Expandable open=\{open\}/);
+      expect(s).toMatch(/<ExpandHandle open=\{open\}/);
+      expect(s).toMatch(/name: 'fold'/);
+    }
+    // The "change not seen" re-check keeps its buttons in view.
+    expect(recheck).toMatch(/const open = notSeen \|\| opened;/);
+  });
+
+  it('the thread scrolls with the growth (not after it), and Reduce Motion skips the slide', () => {
+    expect(src('features/stylist/StylistScreen.tsx')).toMatch(/threadGrow\.value/);
+    expect(src('design-system/components/Expandable.tsx')).toMatch(/a11y\.reduceMotion \? 0 : EXPAND_MS/);
+  });
+});

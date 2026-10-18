@@ -2218,3 +2218,7 @@ Contradictions settled and decisions changed during the build. Newest last.
     - The card is posted alone; its hello follows the hour he reads it ("Morning." becomes "Afternoon." after noon), so nothing frozen in a chat row can go stale. Without weather, the season line takes the weather's place.
     - Greeting lines already stored (his phone's earlier days, seeded demo days) are hidden in the thread rather than deleted: one posted 1 ms before its card, or one marked `greeting` by the legacy adoption.
     - Found on the way: `refreshWeather` rewrote "the latest Kit text line before the card", which with no greeting could have been an answer. Removed.
+
+341. **The score card folds to its rating and opens on a tap, smoothly (founder, Oct 18, relaying a friend: "too much information"; then: "I don't want the way it looks to change, I just want it to expand when it's pressed, in a smooth manner"). `handoff/07-stylist-chat.md` §21 follow-up 2.**
+    - Claude's first proposal kept the top fix visible (the fix is the product's payoff); the founder chose the rating alone, folded. Built his way: the fit check's and the scored re-check's cards start folded; the "change not seen" re-check doesn't fold (it asks him to act).
+    - **Lesson:** to grow a card at the bottom of a chat smoothly, scroll the list by the card's height change on the UI thread each frame (a Reanimated reaction), not with `scrollTo` after the fact (iOS clamps to the old content height) or from `onContentSizeChange` (it fires once the growth is over).
