@@ -15,22 +15,30 @@ import type { ClosetArt, ClosetItemRow, ClosetProfile } from '@/data/types';
 import { STARTER } from '@/features/finish/starter';
 import { t, type StringKey } from '@/i18n/en';
 import { doubtLine, type FitDoubt } from './fitDoubt';
+import { engineKind, isVariant, KIND_SLEEVES, VARIANTS } from './kinds';
 import { hexOfArt, profileOfItem } from './profile';
 
 export type EditField = 'kind' | 'color' | 'leg' | 'fit' | 'pattern';
 export type EditValue = string | number;
 export type EditSlot = 'top' | 'outer' | 'bottom' | 'shoes';
 
-/** The first group per slot (8 or fewer, every one drawn differently), then the rest (§17.2). */
+/** The first group per slot (9 or fewer, 3 rows of 3, every one drawn differently), then the rest (§17.2). The
+ *  closet-only kinds (kinds.ts, #338) sit with the reading's: long and short sleeves first among the tops. */
 export const KIND_MAIN: Readonly<Record<EditSlot, readonly string[]>> = {
-  top: ['tee', 'graphic_tee', 'polo', 'oxford_shirt', 'flannel_shirt', 'sweater', 'sweatshirt', 'hoodie'],
-  outer: ['overshirt', 'denim_jacket', 'bomber', 'field_jacket', 'blazer', 'puffer', 'overcoat', 'hoodie'],
-  bottom: ['jeans', 'chinos', 'trousers', 'cargos', 'sweatpants', 'shorts'],
+  top: ['tee', 'long_sleeve_tee', 'graphic_tee', 'polo', 'button_up_shirt', 'short_sleeve_shirt', 'sweater', 'sweatshirt', 'hoodie'],
+  outer: ['overshirt', 'denim_jacket', 'bomber', 'field_jacket', 'blazer', 'puffer', 'overcoat', 'hoodie', 'zip_hoodie'],
+  bottom: ['jeans', 'chinos', 'trousers', 'cargos', 'sweatpants', 'shorts', 'jorts'],
   shoes: ['white_leather_sneaker', 'canvas_sneaker', 'retro_runner', 'chunky_sneaker', 'work_boot', 'chelsea_boot', 'loafer', 'slides_sandals'],
 };
 export const KIND_MORE: Readonly<Record<EditSlot, readonly string[]>> = {
-  top: ['tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan', 'rugby_shirt', 'jersey', 'fleece', 'overshirt', 'denim_jacket', 'chore_coat'],
-  outer: ['chore_coat', 'sweatshirt', 'quarter_zip', 'cardigan', 'flannel_shirt', 'fleece', 'leather_jacket', 'rain_jacket', 'shell_jacket', 'sport_coat', 'suit_jacket', 'camp_collar_shirt'],
+  top: [
+    'flannel_shirt', 'oxford_shirt', 'henley', 'turtleneck', 'tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan',
+    'rugby_shirt', 'jersey', 'fleece', 'zip_hoodie', 'overshirt', 'denim_jacket', 'chore_coat',
+  ],
+  outer: [
+    'chore_coat', 'sweatshirt', 'quarter_zip', 'cardigan', 'flannel_shirt', 'button_up_shirt', 'fleece', 'leather_jacket', 'rain_jacket', 'shell_jacket',
+    'sport_coat', 'suit_jacket', 'camp_collar_shirt',
+  ],
   bottom: ['joggers', 'athletic_shorts', 'drawstring_trousers', 'suit_trousers'],
   shoes: ['low_profile_sneaker', 'basketball_sneaker', 'performance_runner', 'suede_chukka', 'derby', 'dress_shoe'],
 };
@@ -45,8 +53,8 @@ const COLOR_GROUPS: readonly [StringKey, readonly string[]][] = [
   ['closet.edit.color.colors', ['green', 'burgundy', 'red', 'orange', 'yellow', 'pink', 'purple']],
 ];
 const DENIM_WASH: readonly string[] = ['denim_light', 'denim_mid', 'denim_dark'];
-/** The kinds a denim wash is offered for. */
-const DENIM_KINDS: readonly string[] = ['jeans', 'denim_jacket'];
+/** The kinds a denim wash is offered for (jean shorts are a closet-only kind of shorts, #338). */
+const DENIM_KINDS: readonly string[] = ['jeans', 'denim_jacket', 'jorts'];
 /** Off denim, a wash becomes its nearest plain color ("Changed to chinos, in navy."). */
 const WASH_TO_PLAIN: Readonly<Record<string, string>> = { denim_dark: 'navy', denim_mid: 'blue', denim_light: 'light_blue' };
 /** No leg row: shorts have no leg to change. */
@@ -76,8 +84,10 @@ const uniq = <T,>(xs: readonly T[]): T[] => [...new Set(xs)];
 const slotOf = (item: Pick<ClosetItemRow, 'slot'>): EditSlot | null =>
   (['top', 'outer', 'bottom', 'shoes'] as const).find((s) => s === item.slot) ?? null;
 
-/** "Jeans", "Leather sneakers", "Chelsea boots". */
-export const kindWord = (sub: string): string => cap(garmentName({ subcategory: sub }));
+/** "Jeans", "Leather sneakers", "Chelsea boots", "Long-sleeve tee". */
+export const kindWord = (kind: string): string => cap(kindNoun(kind));
+/** "jeans", "long-sleeve tee": a closet-only kind's noun, else the reading kind's. */
+const kindNoun = (kind: string): string => (isVariant(kind) ? VARIANTS[kind]!.noun : garmentName({ subcategory: kind }));
 /** "Dark-wash denim", "Cream", "Khaki". */
 export const colorLabel = (family: string): string => cap(FAMILY_WORD[family] ?? family.split('_').join(' '));
 const volumeOf = (g: Garment): number => {
@@ -106,9 +116,23 @@ export interface EditOptions {
   groups?: { title: string; options: EditOption[] }[];
 }
 
+type Editable = Pick<ClosetItemRow, 'garment'> & Partial<Pick<ClosetItemRow, 'profile'>>;
+type EditableSlot = Editable & Pick<ClosetItemRow, 'slot'>;
+
+/** The piece's kind as he'd name it: a closet-only kind he picked (#338), else the reading's. */
+const kindOf = (item: Editable): string | null => {
+  const v = item.profile?.kindVariant;
+  if (isVariant(v) && engineKind(v) === item.garment.subcategory) return v;
+  return str(item.garment.subcategory);
+};
+
 /** The piece's value for a row (what the picker marks as current). */
-export function currentValue(item: Pick<ClosetItemRow, 'garment'>, field: EditField): EditValue | null {
+export function currentValue(item: Editable, field: EditField): EditValue | null {
   if (field === 'fit') return volumeOf(item.garment);
+  if (field === 'kind') {
+    const k = kindOf(item);
+    return k && k !== 'other' ? k : null;
+  }
   const v = str(item.garment[GARMENT_FIELD[field]]);
   if (field === 'pattern') return v && v !== 'na' ? v : 'solid';
   if (field === 'leg') return v && LEGS.includes(v) ? v : null;
@@ -126,7 +150,7 @@ function valueWord(field: EditField, v: EditValue | null): string {
 
 /** The rows a piece shows: Kind, Color, then Fit + Pattern (tops, layers) or Leg (bottoms but shorts). A Fit or Leg
  *  its photos disagree on (fitDoubt, §18) reads "Not sure" with the line that says what it was seen as. */
-export function editRows(item: Pick<ClosetItemRow, 'slot' | 'garment'>, doubt: FitDoubt | null = null): EditRow[] {
+export function editRows(item: EditableSlot, doubt: FitDoubt | null = null): EditRow[] {
   const slot = slotOf(item);
   if (!slot) return [];
   const fields: EditField[] = ['kind', 'color'];
@@ -144,14 +168,15 @@ const lookAlikesOf = (sub: string, category: string): string[] => [
 
 /** What a row's sheet offers. `unsure` (a "Not sure" row, §18): no option is marked current, since the app doesn't
  *  know which it is, and any pick, the one it read most included, settles it. */
-export function editOptions(item: Pick<ClosetItemRow, 'slot' | 'garment'>, field: EditField, o: { unsure?: boolean } = {}): EditOptions {
+export function editOptions(item: EditableSlot, field: EditField, o: { unsure?: boolean } = {}): EditOptions {
   const cur = o.unsure ? null : currentValue(item, field);
   const opt = (v: EditValue): EditOption => ({ value: v, label: valueWord(field, v), current: v === cur });
   if (field === 'kind') {
     const slot = slotOf(item);
     if (!slot) return { main: [], more: [] };
     const sub = str(item.garment.subcategory);
-    const extra = sub && sub !== 'other' ? [sub, ...lookAlikesOf(sub, String(item.garment.category))] : [];
+    const kind = kindOf(item);
+    const extra = sub && sub !== 'other' ? [kind ?? sub, ...lookAlikesOf(sub, String(item.garment.category))] : [];
     const main = uniq([...KIND_MAIN[slot], ...extra.filter((s) => !KIND_MAIN[slot].includes(s))]);
     const more = KIND_MORE[slot].filter((s) => !main.includes(s));
     return { main: main.map(opt), more: more.map(opt) };
@@ -162,7 +187,7 @@ export function editOptions(item: Pick<ClosetItemRow, 'slot' | 'garment'>, field
     const p = typeof cur === 'string' && !PATTERNS.includes(cur) ? [cur] : [];
     return { main: [...PATTERNS, ...p].map(opt), more: [] };
   }
-  const denimOk = DENIM_KINDS.includes(String(item.garment.subcategory));
+  const denimOk = DENIM_KINDS.includes(String(kindOf(item)));
   const groups = COLOR_GROUPS.map(([title, fams]) => ({
     title: t(title),
     options: fams.filter((f) => !DENIM_WASH.includes(f) || denimOk || f === cur).map(opt),
@@ -180,28 +205,28 @@ export function optionA11y(field: EditField, o: EditOption): { label: string; se
 
 /** The words a pick changed a piece to: "relaxed leg", "oversized fit", "hoodie", "navy", "stripes". */
 function pickedPhrase(field: EditField, value: EditValue): string {
-  if (field === 'kind') return garmentName({ subcategory: String(value) });
+  if (field === 'kind') return kindNoun(String(value));
   if (field === 'color') return FAMILY_WORD[String(value)] ?? String(value);
   const o = optionA11y(field, { value, label: valueWord(field, value), current: false }).label;
   return o.charAt(0).toLowerCase() + o.slice(1);
 }
 
 /** The toast after a pick: "Changed to relaxed leg. Your scores stay the same."; a denim wash that moved says so. */
-export function editToast(field: EditField, _item: Pick<ClosetItemRow, 'garment'>, value: EditValue, remapped: string | null): string {
+export function editToast(field: EditField, _item: Editable, value: EditValue, remapped: string | null): string {
   return remapped
     ? t('closet.edit.toastRemap', { kind: pickedPhrase(field, value), color: pickedPhrase('color', remapped) })
     : t('closet.edit.toast', { value: pickedPhrase(field, value) });
 }
 
 /** The color a kind pick moves a denim wash to (jeans → chinos in dark denim: navy), or null. */
-export function denimRemap(item: Pick<ClosetItemRow, 'garment'>, field: EditField, value: EditValue): string | null {
+export function denimRemap(item: Editable, field: EditField, value: EditValue): string | null {
   if (field !== 'kind' || DENIM_KINDS.includes(String(value))) return null;
   const c = str(item.garment.color_family);
   return c ? WASH_TO_PLAIN[c] ?? null : null;
 }
 
 /** Can `value` be picked for this row of this piece? */
-export function isOffered(item: Pick<ClosetItemRow, 'slot' | 'garment'>, field: EditField, value: EditValue): boolean {
+export function isOffered(item: EditableSlot, field: EditField, value: EditValue): boolean {
   if (!editRows(item).some((r) => r.field === field)) return false;
   const o = editOptions(item, field);
   return [...o.main, ...o.more].some((x) => x.value === value);
@@ -215,6 +240,17 @@ function artWithColor(art: ClosetArt | null | undefined, family: string): Closet
   const shade = key && key.family && !near(key.family) ? null : art.shade;
   const { measured, ...rest } = art;
   return { ...rest, family, shade, ...(measured && near(nearestFamily(measured)) ? { measured } : {}) };
+}
+
+/** The drawing's art after a kind pick (#338): the kind he picked and the sleeves it names, as artOf writes them. */
+function artWithKind(art: ClosetArt | null, profile: ClosetProfile): ClosetArt | null {
+  const kind = profile.kindVariant;
+  const sleeves = profile.confirmed.sleeve_length;
+  if (!art && !kind && !sleeves) return art;
+  const { kind: _k, sleeves: _s, ...rest } = art ?? { family: null, shade: null, details: [], brand: null, shoeProfile: null, denimWear: null };
+  void _k;
+  void _s;
+  return { ...rest, ...(kind ? { kind } : {}), ...(sleeves ? { sleeves } : {}) };
 }
 
 export interface EditPlan {
@@ -233,7 +269,9 @@ export interface EditPlan {
  */
 export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue, sightings: readonly Observation[]): EditPlan {
   const remapped = denimRemap(item, field, value);
-  const g: Garment = { ...item.garment, [GARMENT_FIELD[field]]: value, ...(remapped ? { color_family: remapped } : {}) };
+  // A closet-only kind writes the reading's kind it scores as (#338); the kind itself lives on the profile.
+  const written = field === 'kind' ? engineKind(String(value)) : value;
+  const g: Garment = { ...item.garment, [GARMENT_FIELD[field]]: written, ...(remapped ? { color_family: remapped } : {}) };
   const p0: ClosetProfile = profileOfItem(item);
   const confirmed = { ...p0.confirmed };
   const fields = [...item.confirmedFields];
@@ -242,7 +280,11 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
     if (!fields.includes(f)) fields.push(f);
   };
   const cf = CONFIRM_FIELD[field];
-  if (cf) confirm(cf, String(value));
+  if (cf) confirm(cf, String(written));
+  // A kind named by its sleeves says how long they are (#338): the drawing follows, and the matcher keeps a long- and a
+  // short-sleeve tee apart. Tops and layers only; other kinds leave his sleeves as they were.
+  const sleeves = field === 'kind' && (item.slot === 'top' || item.slot === 'outer') ? KIND_SLEEVES[String(value)] : undefined;
+  if (sleeves) confirmed.sleeve_length = sleeves;
   // Fit has no matcher field, but he said so: listed like "Not quite right?" lists it, so "Not sure" goes for good
   // (§18; core reads only its matcher fields from confirmedFields).
   if (field === 'fit' && !fields.includes('volume')) fields.push('volume');
@@ -255,10 +297,10 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
   let aliases = p0.aliases;
   let fieldAliases = p0.fieldAliases;
   if (field === 'kind') {
-    const reads = sightings.map((o) => str(o.subcategory)).filter((s): s is string => !!s && s !== 'other' && s !== value);
-    aliases = uniq([...p0.aliases.filter((a) => a !== value), ...reads]).sort();
+    const reads = sightings.map((o) => str(o.subcategory)).filter((s): s is string => !!s && s !== 'other' && s !== written);
+    aliases = uniq([...p0.aliases.filter((a) => a !== written), ...reads]).sort();
     if (item.slot === 'shoes' && confirmed.shoeKind !== undefined) {
-      const k = shoeKindOf(value);
+      const k = shoeKindOf(String(written));
       if (k) confirmed.shoeKind = k;
       else delete confirmed.shoeKind;
     }
@@ -270,8 +312,11 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
     if (all.length > 1) fieldAliases = { ...(p0.fieldAliases ?? {}), leg_shape: all };
   }
   const renames = field === 'kind' || field === 'color' || field === 'pattern' || !!remapped;
+  const { kindVariant: oldVariant, ...p1 } = p0;
+  const kindVariant = field === 'kind' ? (isVariant(value) ? String(value) : undefined) : oldVariant;
   const profile: ClosetProfile = {
-    ...p0, confirmed, aliases, ...(fieldAliases ? { fieldAliases } : {}), ...(renames && !p0.nameLocked ? { autoName: true } : {}),
+    ...p1, ...(kindVariant ? { kindVariant } : {}), confirmed, aliases, ...(fieldAliases ? { fieldAliases } : {}),
+    ...(renames && !p0.nameLocked ? { autoName: true } : {}),
   };
   const entry = item.starterId ? STARTER.find((e) => e.id === item.starterId) : undefined;
   const unmark = !!entry && !item.isPhotographed && !entry.fills(g, String(item.slot));
@@ -285,6 +330,7 @@ export function withEdit<T extends ClosetItemRow>(item: T, field: EditField, val
   let art = item.art ?? null;
   if (family) art = artWithColor(art, family);
   if (field === 'pattern' && art) art = { ...art, pattern: String(value) };
+  if (field === 'kind') art = artWithKind(art, profileOfItem(patch));
   const hex = family ? (art ? hexOfArt(art, displayHex(family)) : displayHex(family)) : item.hex;
   return { ...item, ...patch, art, hex };
 }

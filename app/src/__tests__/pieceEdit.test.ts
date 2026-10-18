@@ -114,11 +114,17 @@ describe('X1 the lists', () => {
     const env = await setup({ only: 'all' });
     const want: Record<string, string> = { top: 'T2', outer: 'L1', bottom: 'B1', shoes: 'S1' };
     const slotOf: Record<string, string[]> = { top: [...KIND_MAIN.top, ...KIND_MORE.top], outer: [...KIND_MAIN.outer, ...KIND_MORE.outer], bottom: [...KIND_MAIN.bottom, ...KIND_MORE.bottom], shoes: [...KIND_MAIN.shoes, ...KIND_MORE.shoes] };
-    expect([...KIND_MAIN.top]).toEqual(['tee', 'graphic_tee', 'polo', 'oxford_shirt', 'flannel_shirt', 'sweater', 'sweatshirt', 'hoodie']);
-    expect([...KIND_MORE.top]).toEqual(['tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan', 'rugby_shirt', 'jersey', 'fleece', 'overshirt', 'denim_jacket', 'chore_coat']);
-    expect([...KIND_MAIN.outer]).toEqual(['overshirt', 'denim_jacket', 'bomber', 'field_jacket', 'blazer', 'puffer', 'overcoat', 'hoodie']);
-    expect([...KIND_MORE.outer]).toEqual(['chore_coat', 'sweatshirt', 'quarter_zip', 'cardigan', 'flannel_shirt', 'fleece', 'leather_jacket', 'rain_jacket', 'shell_jacket', 'sport_coat', 'suit_jacket', 'camp_collar_shirt']);
-    expect([...KIND_MAIN.bottom]).toEqual(['jeans', 'chinos', 'trousers', 'cargos', 'sweatpants', 'shorts']);
+    expect([...KIND_MAIN.top]).toEqual(['tee', 'long_sleeve_tee', 'graphic_tee', 'polo', 'button_up_shirt', 'short_sleeve_shirt', 'sweater', 'sweatshirt', 'hoodie']);
+    expect([...KIND_MORE.top]).toEqual([
+      'flannel_shirt', 'oxford_shirt', 'henley', 'turtleneck', 'tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan',
+      'rugby_shirt', 'jersey', 'fleece', 'zip_hoodie', 'overshirt', 'denim_jacket', 'chore_coat',
+    ]);
+    expect([...KIND_MAIN.outer]).toEqual(['overshirt', 'denim_jacket', 'bomber', 'field_jacket', 'blazer', 'puffer', 'overcoat', 'hoodie', 'zip_hoodie']);
+    expect([...KIND_MORE.outer]).toEqual([
+      'chore_coat', 'sweatshirt', 'quarter_zip', 'cardigan', 'flannel_shirt', 'button_up_shirt', 'fleece', 'leather_jacket', 'rain_jacket', 'shell_jacket',
+      'sport_coat', 'suit_jacket', 'camp_collar_shirt',
+    ]);
+    expect([...KIND_MAIN.bottom]).toEqual(['jeans', 'chinos', 'trousers', 'cargos', 'sweatpants', 'shorts', 'jorts']);
     expect([...KIND_MORE.bottom]).toEqual(['joggers', 'athletic_shorts', 'drawstring_trousers', 'suit_trousers']);
     expect([...KIND_MAIN.shoes]).toEqual(['white_leather_sneaker', 'canvas_sneaker', 'retro_runner', 'chunky_sneaker', 'work_boot', 'chelsea_boot', 'loafer', 'slides_sandals']);
     expect([...KIND_MORE.shoes]).toEqual(['low_profile_sneaker', 'basketball_sneaker', 'performance_runner', 'suede_chukka', 'derby', 'dress_shoe']);
@@ -557,3 +563,175 @@ describe('X14 words and VoiceOver', () => {
     expect(artSpec(b3).a11y.startsWith('Dark jeans, slim leg')).toBe(true);
   });
 });
+
+// ---------------------------------------------------------------- X15 more kinds (#338)
+// Founder, Oct 17: "the full sleeve shirt is not included … half sleeve button-ups are not included … add more options".
+// Closet-only kinds (features/closet/kinds.ts): each keeps the reading's kind it scores and matches as, and draws and
+// names as itself. Checks K1–K11 (09-ui-review §22).
+describe('X15 more kinds (#338)', () => {
+  const NEW: Record<string, [string, string]> = {
+    long_sleeve_tee: ['tee', 'Long-sleeve tee'], henley: ['tee', 'Henley'], button_up_shirt: ['oxford_shirt', 'Button-up shirt'],
+    short_sleeve_shirt: ['camp_collar_shirt', 'Short-sleeve shirt'], turtleneck: ['sweater', 'Turtleneck'], zip_hoodie: ['hoodie', 'Zip hoodie'],
+    jorts: ['shorts', 'Jean shorts'],
+  };
+
+  it('K1 every new kind is offered in its slot, in plain words, never a brand', async () => {
+    const env = await setup({ only: 'all' });
+    const t2 = await piece(env.store, 'T2');
+    const tops = editOptions(t2, 'kind');
+    expect(tops.main.slice(0, 6).map((o) => o.label)).toEqual(['Tee', 'Long-sleeve tee', 'Graphic tee', 'Polo', 'Button-up shirt', 'Short-sleeve shirt']);
+    expect(tops.more.map((o) => o.label)).toEqual(expect.arrayContaining(['Henley', 'Turtleneck', 'Zip hoodie', 'Flannel', 'Oxford']));
+    expect(editOptions(await piece(env.store, 'L1'), 'kind').main.map((o) => o.value)).toContain('zip_hoodie');
+    expect(editOptions(await piece(env.store, 'B3'), 'kind').main.map((o) => o.value)).toContain('jorts');
+    for (const [v, [, label]] of Object.entries(NEW)) {
+      const slot = v === 'jorts' ? 'B3' : 'T2';
+      const o = [...editOptions(await piece(env.store, slot), 'kind').main, ...editOptions(await piece(env.store, slot), 'kind').more].find((x) => x.value === v)!;
+      expect(o.label).toBe(label);
+      expect(checkSentence(o.label, { allowedScores: new Set() })).toBeNull();
+    }
+  });
+
+  it('K2 a pick keeps the reading kind, names and draws the new one, and says so', async () => {
+    const env = await setup({ only: 'all' });
+    const t2 = await piece(env.store, 'T2');
+    const tee = draw(t2);
+    const preview = withEdit(t2, 'kind', 'long_sleeve_tee');
+    const r = await env.closet.editPiece('T2', 'kind', 'long_sleeve_tee');
+    const after = await piece(env.store, 'T2');
+    expect(after.garment.subcategory).toBe('tee');
+    expect(after.profile?.kindVariant).toBe('long_sleeve_tee');
+    expect(after.profile?.confirmed.sleeve_length).toBe('long');
+    expect(after.art).toMatchObject({ kind: 'long_sleeve_tee', sleeves: 'long' });
+    expect(after.name).toMatch(/^(Heather )?[Gg]rey long-sleeve tee$/);
+    expect(editRows(after).find((x) => x.field === 'kind')!.value).toBe('Long-sleeve tee');
+    expect(editOptions(after, 'kind').main.find((o) => o.current)!.value).toBe('long_sleeve_tee');
+    expect(draw(after)).toBe(draw(preview));
+    expect(draw(after)).not.toBe(tee);
+    expect(editToast('kind', t2, 'long_sleeve_tee', r!.remapped)).toBe('Changed to long-sleeve tee. Your scores stay the same.');
+  });
+
+  it('K3 scores, readings and sightings never move; Outfits count it as the kind it scores as', async () => {
+    const env = await setup({ only: 'all' });
+    const before = await untouchable(env.store);
+    const checks = await env.store.fitChecks.all();
+    const count0 = outfitCount(await env.store.closet.all(), checks, null);
+    for (const [id, v] of [['T2', 'long_sleeve_tee'], ['T4', 'short_sleeve_shirt'], ['T3', 'turtleneck'], ['B3', 'jorts']] as const) await env.closet.editPiece(id, 'kind', v);
+    expect(await untouchable(env.store)).toEqual(before);
+    const closet = await env.store.closet.all();
+    // the same closet with each piece as the reading kind it scores as (sleeves don't build outfits)
+    const asRead = closet.map((c) => (c.profile?.kindVariant ? { ...c, profile: { ...c.profile, kindVariant: undefined } } : c));
+    expect(outfitCount(closet, checks, null)).toBe(outfitCount(asRead, checks, null));
+    // the tee and the sweater stay what they were; the oxford and the jeans are now a camp shirt and shorts
+    expect(closet.find((c) => c.id === 'T2')!.garment.subcategory).toBe('tee');
+    expect(closet.find((c) => c.id === 'T3')!.garment.subcategory).toBe('sweater');
+    expect(closet.find((c) => c.id === 'T4')!.garment.subcategory).toBe('camp_collar_shirt');
+    expect(outfitCount(closet, checks, null)).toBeLessThanOrEqual(count0);
+  });
+
+  it('K4 picking a plain kind takes the new one off, and the tee draws as it did', async () => {
+    const env = await setup({ only: 'all' });
+    const tee = draw(await piece(env.store, 'T2'));
+    await env.closet.editPiece('T2', 'kind', 'long_sleeve_tee');
+    await env.closet.editPiece('T2', 'kind', 'tee');
+    const back = await piece(env.store, 'T2');
+    expect(back.profile?.kindVariant).toBeUndefined();
+    expect(back.art?.kind).toBeUndefined();
+    expect(back.profile?.confirmed.sleeve_length).toBe('short');
+    expect(back.name).toMatch(/^(Heather )?[Gg]rey tee$/);
+    expect(draw(back)).toBe(tee);
+  });
+
+  it('K5 long and short button-ups: the right reading kind and different drawings', async () => {
+    const env = await setup({ only: 'all' });
+    const t4 = await piece(env.store, 'T4');
+    expect(currentValueOf(t4)).toBe('oxford_shirt');
+    const long = withEdit(t4, 'kind', 'button_up_shirt');
+    const short = withEdit(t4, 'kind', 'short_sleeve_shirt');
+    expect(long.garment.subcategory).toBe('oxford_shirt');
+    expect(short.garment.subcategory).toBe('camp_collar_shirt');
+    expect(artSpec(long).flat).toMatchObject({ type: 'shirt', sleeves: 'long' });
+    expect(artSpec(short).flat).toMatchObject({ type: 'shirt', sleeves: 'short' });
+    for (const scheme of ['light', 'dark'] as const) expect(draw(long, scheme)).not.toBe(draw(short, scheme));
+    await env.closet.editPiece('T4', 'kind', 'short_sleeve_shirt');
+    expect((await piece(env.store, 'T4')).name).toBe('Light-blue short-sleeve shirt');
+  });
+
+  it('K6 a camp shirt now draws short sleeves; henley, turtleneck and zip hoodie draw their own details', async () => {
+    const env = await setup({ only: 'all' });
+    const t2 = await piece(env.store, 'T2');
+    expect(artSpec(withEdit(await piece(env.store, 'T4'), 'kind', 'camp_collar_shirt')).flat).toMatchObject({ sleeves: 'short' });
+    expect(artSpec(withEdit(t2, 'kind', 'henley')).flat).toMatchObject({ type: 'tee', sleeves: 'long', neck: 'henley' });
+    expect(artSpec(withEdit(await piece(env.store, 'T3'), 'kind', 'turtleneck')).flat).toMatchObject({ type: 'crew', neck: 'turtle' });
+    const zip = artSpec(withEdit(t2, 'kind', 'zip_hoodie')).flat;
+    expect(zip).toMatchObject({ type: 'hoodie', details: { fullZip: true, pouch: false } });
+    const svgs = ['tee', 'long_sleeve_tee', 'henley', 'hoodie', 'zip_hoodie', 'sweater', 'turtleneck'].map((v) => draw(withEdit(t2, 'kind', v)));
+    expect(new Set(svgs).size).toBe(svgs.length);
+  });
+
+  it('K7 a kind drawn with its usual sleeves draws exactly as before', () => {
+    const types = ['tee', 'polo', 'tank', 'crew', 'quarter_zip', 'cardigan', 'hoodie', 'shirt', 'overshirt', 'denim_jacket', 'bomber', 'jacket', 'puffer', 'blazer', 'coat'] as const;
+    for (const type of types) {
+      const usual = type === 'tee' || type === 'polo' ? 'short' : type === 'tank' ? 'sleeveless' : 'long';
+      for (const scheme of ['light', 'dark'] as const) {
+        const flat = { kind: 'top' as const, type, color: '#7f8a99' };
+        expect([type, renderFlat({ ...flat, sleeves: usual }, { scheme, id: 'x' })]).toEqual([type, renderFlat(flat, { scheme, id: 'x' })]);
+      }
+    }
+  });
+
+  it('K8 jean shorts keep the wash, draw jean stitching, and plain shorts move it to a color', async () => {
+    const env = await setup({ only: 'all' });
+    const b3 = await piece(env.store, 'B3');
+    const r = await env.closet.editPiece('B3', 'kind', 'jorts');
+    expect(r!.remapped).toBeNull();
+    const j = await piece(env.store, 'B3');
+    expect(j.garment).toMatchObject({ subcategory: 'shorts', color_family: 'denim_dark' });
+    expect(j.name).toBe('Dark jean shorts');
+    expect(editRows(j).map((x) => x.field)).toEqual(['kind', 'color']);
+    expect(editOptions(j, 'color').main.map((o) => o.value)).toEqual(expect.arrayContaining(['denim_light', 'denim_mid', 'denim_dark']));
+    expect((artSpec(j).flat as { stitch?: string }).stitch).toBeDefined();
+    expect(draw(j)).not.toBe(draw(withEdit(b3, 'kind', 'shorts')));
+    const s = await env.closet.editPiece('B3', 'kind', 'shorts');
+    expect(s!.remapped).toBe('navy');
+    expect((await piece(env.store, 'B3')).garment.color_family).toBe('navy');
+  });
+
+  it('K9 a later photo of the piece keeps its kind, name and drawing', async () => {
+    const env = await setup({ only: [] });
+    const { hoodie } = await s12Pieces(env);
+    await env.closet.editPiece(hoodie.id, 'kind', 'zip_hoodie');
+    const named = (await piece(env.store, hoodie.id)).name;
+    expect(named).toMatch(/zip hoodie$/);
+    expect(named).not.toMatch(/zip zip/);
+    const drawn = draw(await piece(env.store, hoodie.id));
+    await check(env, 's12');
+    const after = await piece(env.store, hoodie.id);
+    expect(after.wornCount).toBeGreaterThan(hoodie.wornCount);
+    expect(after.name).toBe(named);
+    expect(after.art?.kind).toBe('zip_hoodie');
+    expect(draw(after)).toBe(drawn);
+  });
+
+  it('K10 confirmed sleeves keep a long- and a short-sleeve tee apart, but not one half seen under a layer', async () => {
+    const env = await setup({ only: 'all' });
+    await env.closet.editPiece('T2', 'kind', 'long_sleeve_tee');
+    const t2 = await piece(env.store, 'T2');
+    const p = profileFromClosetItem(t2 as never, { sightings: [], ...profileExtra(t2) });
+    const obs = { category: 'top', subcategory: 'tee', color_family: 'grey', pattern: 'solid', sleeve_length: 'short' } as never;
+    expect(identity(obs, p).vetoes).toContain('sleeve_length');
+    expect(identity({ ...(obs as object), partial: true } as never, p).vetoes).not.toContain('sleeve_length');
+  });
+
+  it('K11 Undo puts the kind, the name and the drawing back', async () => {
+    const env = await setup({ only: 'all' });
+    const t2 = await piece(env.store, 'T2');
+    const r = await env.closet.editPiece('T2', 'kind', 'henley');
+    await env.closet.restoreEdit(r!.undo);
+    const back = await piece(env.store, 'T2');
+    expect(back.profile?.kindVariant).toBeUndefined();
+    expect(back.name).toBe(t2.name);
+    expect(draw(back)).toBe(draw(t2));
+  });
+});
+
+const currentValueOf = (it: ClosetItemRow) => editOptions(it, 'kind').main.find((o) => o.current)?.value ?? null;

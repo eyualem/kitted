@@ -190,7 +190,8 @@ function measuredOf(family: string | null, sightings: readonly Observation[]): s
 
 /** What the tile and the name show for an item, from its sightings (or its own garment + closet fields). */
 export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 'profile'>, sightings: readonly Observation[]): ClosetArt {
-  const conf = profileOfItem(item).confirmed;
+  const prof = profileOfItem(item);
+  const conf = prof.confirmed;
   const g = item.garment;
   const confirmedColor = item.confirmedFields.includes('color_family') && typeof g.color_family === 'string' ? g.color_family : conf.color_family ?? null;
   const hist = sightings.length > 0 ? sightings : [g as Observation];
@@ -241,6 +242,9 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
     denimWear: pick<'none' | 'faded' | 'ripped'>('denim_wear', ['none', 'faded', 'ripped'], conf.denim_wear),
     // Only on a piece the phone measured: art written for the others stays exactly as before.
     ...(measured ? { measured } : {}),
+    // Only what he picked (#338): a kind of his, and sleeves he confirmed. The reader's sleeve guess never draws.
+    ...(prof.kindVariant ? { kind: prof.kindVariant } : {}),
+    ...(conf.sleeve_length ? { sleeves: conf.sleeve_length } : {}),
   };
 }
 
