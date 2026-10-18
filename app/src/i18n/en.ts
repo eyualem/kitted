@@ -200,6 +200,9 @@ const addedInBuild = {
   'card.fold.a11y': 'First check, {occasion}: {score}, {word}.',
   'card.fold.hint': 'Opens the full card.',
   'card.fold.hide': 'Fold the first check',
+  // The score card folds to its rating and opens on a tap (#344).
+  'card.fold.more': 'Show the fixes and details',
+  'card.fold.less': 'Show less',
   // The card's weather line (#338): pieces joined by " · ", said for the hour he reads it.
   'wx.card.now': '{t}° now',
   'wx.card.at': '{t}° at {time}',

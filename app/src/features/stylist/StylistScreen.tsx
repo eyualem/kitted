@@ -34,6 +34,7 @@ import { OfflineBanner } from './OfflineBanner';
 import { useNet } from '@/services/connectivity';
 import { buildThreadItems, liveGap, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
+import { threadGrow } from './threadGrow';
 import { useAccountOffer } from '@/features/account/offerSession';
 import { useFinishSequence } from '@/features/finish/session';
 
@@ -103,6 +104,14 @@ export function StylistScreen() {
   }, [toast, toastRoom, motion]);
   useAnimatedReaction(
     () => toastRoom.value,
+    (now, before) => {
+      if (before === null || now === before || !follow.value) return;
+      scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
+    },
+  );
+  // A card opening or folding (#344): at the bottom, scroll with its height change, frame by frame.
+  useAnimatedReaction(
+    () => threadGrow.value,
     (now, before) => {
       if (before === null || now === before || !follow.value) return;
       scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
