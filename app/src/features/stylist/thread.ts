@@ -24,8 +24,8 @@ const GAP_MS = 60 * 60_000;
 export const RHYTHM = {
   /** His bubbles in a row. */
   mine: 4,
-  /** The stylist's lines in a row (a line and the next line). */
-  stylistLines: 8,
+  /** The stylist's lines in a row (a bubble and the next bubble, #338). */
+  stylistLines: 4,
   /** The stylist's lines in a row when a card is one of them. */
   stylistCards: 12,
   /** His line → the stylist's reply. */
