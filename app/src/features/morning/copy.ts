@@ -1,9 +1,9 @@
 // The morning card's words, from templates (02 "S1d"): the why line, the weather strip and the
 // spoken summary. Pure, so they're tested without rendering.
-import type { DayWeather, IdeaReason, MissingSlot } from '@kitted/core';
+import { seasonNeeds, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
 import { normStyleKey, type CardOccasion, type ClosetItemRow, type StyleKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
-import { hourText } from '@/i18n/format';
+import { hourText, monthName } from '@/i18n/format';
 import { occasionLabel } from '@/features/stylist/thread';
 
 export function cardOccasionLabel(o: CardOccasion): string {
@@ -119,4 +119,15 @@ export function weatherLine(w: CardWeather, hourNow: number): string {
     if (w.precipChance >= 0.5) parts.push(rainAt !== null && rainAt > hourNow ? t('wx.card.rainFrom', { time: at(rainAt) }) : t('wx.card.rainLikely'));
   }
   return parts.join(' · ');
+}
+
+/** The card's own hello (#340), for the hour he reads it: "Morning." / "Afternoon." / "Evening. Heading out?". */
+export function cardGreeting(slot: 'day' | 'evening', hourNow: number): string {
+  if (slot === 'evening') return t('greet.evening');
+  return hourNow < 12 ? t('greet.morning') : t('greet.afternoon');
+}
+
+/** Without weather, the season says it under the hello ("October: bring a layer."), or nothing in a mild month. */
+export function seasonLine(month: number): string | null {
+  return seasonNeeds(month).layer === 'none' ? null : t('wx.line.season', { month: monthName(month) });
 }
