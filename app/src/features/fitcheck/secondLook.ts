@@ -82,6 +82,18 @@ export function copiedLook(from: { id: string; details: { secondLook?: StoredSec
   return { ...sl, copied: { from: from.id, why: 'samePhoto', arms: [...(sl.u ? ['U' as const] : []), ...(sl.l ? ['L' as const] : [])] } };
 }
 
+/** The look a new check takes from a re-check of the same photo (#341): only the arms read from that photo, never the
+ *  ones it carried from its first check's photo (undefined there = none here). */
+export function ownLookOf(from: { id: string; details: { secondLook?: StoredSecondLook | null } }): StoredSecondLook | null | undefined {
+  const sl = from.details.secondLook;
+  if (sl === undefined) return undefined;
+  const carried = sl?.copied?.why === 'firstCheck' ? sl.copied.arms : [];
+  const u = sl?.u && !carried.includes('U') ? sl.u : null;
+  const l = sl?.l && !carried.includes('L') ? sl.l : null;
+  if (!sl || (!u && !l)) return null;
+  return { version: sl.version, u, l, copied: { from: from.id, why: 'samePhoto', arms: [...(u ? ['U' as const] : []), ...(l ? ['L' as const] : [])] } };
+}
+
 const yn = (b: boolean | null) => (b === null ? 'unknown' : b ? 'yes' : 'no');
 
 /** The service's line once the card is scored: "[look] scored with U, L · peek yes · rests no" or "[look] late, scored
