@@ -1,4 +1,4 @@
-// S12 · turning the card into an image, then sharing or saving it (02 D20, 05 S13; #341). The card is captured from
+// S12 · turning the card into an image, then sharing or saving it (02 D20, 05 S13; #344). The card is captured from
 // its full-size view at 1080 px wide (react-native-view-shot), then handed to the system share sheet (expo-sharing)
 // or added to Photos (expo-media-library, add-only: Kitted never reads his library). The screen says how it went (the
 // app's toasts draw under a full-screen cover); nothing is sent anywhere but where he picks in the share sheet.

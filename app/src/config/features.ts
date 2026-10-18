@@ -4,7 +4,7 @@
  *  Terms and Privacy pages exist (App Review 3.1.2): no "Try Pro" points at it on his phone; demo screens turn it on. */
 export const PAYWALL_BUILT = false;
 
-/** The share card (S12, #341): built. One switch still removes the share actions and the route (the root layout
+/** The share card (S12, #344): built. One switch still removes the share actions and the route (the root layout
  *  registers `share/[checkId]` only while this is on, or on demo builds, #323). The card's Share button also waits for
  *  a build that has the capture and sharing modules (features/share/shareNative.ts). */
 export const SHARE_CARD_BUILT = true;

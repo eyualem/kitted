@@ -8,7 +8,6 @@ export default function LookbookStack() {
     <Stack screenOptions={{ headerShadowVisible: false }}>
       <Stack.Screen name="index" options={{ title: t('tab.lookbook'), headerLargeTitleEnabled: true }} />
       <Stack.Screen name="look/[id]" options={{ title: '' }} />
-      <Stack.Screen name="moves" options={{ title: t('moves.title') }} />
     </Stack>
   );
 }

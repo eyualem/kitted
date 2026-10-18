@@ -76,7 +76,7 @@ const config: ExpoConfig = {
     // NSCameraUsageDescription above: `false` deletes that key, and iOS then kills the app the
     // moment the camera asks for access (DECISIONS-LOG #53).
     ['expo-image-picker', { photosPermission: false, cameraPermission: CAMERA_USAGE, microphonePermission: MIC_USAGE }],
-    // The share card's Save (#341): add-only, so Kitted can put a card in Photos but never read the library.
+    // The share card's Save (#344): add-only, so Kitted can put a card in Photos but never read the library.
     ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false, granularPermissions: [] }],
     // P6: 'expo-notifications',
   ],

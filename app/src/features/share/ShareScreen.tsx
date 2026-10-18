@@ -1,4 +1,4 @@
-// S12 · Share (02 D20, DECISIONS-LOG #343–344): a dark full-screen cover with the card's preview, the three versions
+// S12 · Share (02 D20, DECISIONS-LOG #346–347): a dark full-screen cover with the card's preview, the three versions
 // ("Transparent" | "Solid" | "With photo"), his face choice for the photo version ("Neck down", the default every time, or
 // "Full photo"), and Share / Save. The card is drawn once more at full size, off screen, for the capture, so the image
 // is exactly what the preview shows and never depends on the screen's size or text size. The transparent preview sits
