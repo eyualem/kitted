@@ -435,13 +435,16 @@ describe('X10 everything that reads the closet follows', () => {
     expect(ctx.text).toMatch(/Dark jeans · bottom · [^\n]*relaxed leg/);
   });
 
-  it('a marked Starter piece that no longer fills its row is unmarked, and Undo marks it back', async () => {
+  it('a piece added from the list stays marked through a leg or color fix, and a kind out of its row unmarks it, with Undo (#342)', async () => {
     const env = await setup({ only: [] });
     const s05 = STARTER.find((e) => e.id === 's05')!;
-    const m = markedPiece(s05, 'C-mark', env.clock.nowMs())!;
+    const m = markedPiece(s05, s05.owns[0]!, 'C-mark', env.clock.nowMs())!;
     await env.store.closet.put(m);
     expect(ownership(await env.store.closet.all(), []).s05).toMatchObject({ owned: true });
-    const r = await env.closet.editPiece('C-mark', 'leg', 'slim');
+    await env.closet.editPiece('C-mark', 'leg', 'slim');
+    await env.closet.editPiece('C-mark', 'color', 'denim_light');
+    expect((await piece(env.store, 'C-mark')).starterId).toBe('s05');
+    const r = await env.closet.editPiece('C-mark', 'kind', 'chinos');
     expect((await piece(env.store, 'C-mark')).starterId).toBeNull();
     expect(ownership(await env.store.closet.all(), []).s05).toEqual({ owned: false });
     await env.closet.restoreEdit(r!.undo);

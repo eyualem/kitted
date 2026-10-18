@@ -23,7 +23,7 @@ import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
 import { NoConsentCard } from '@/features/onboarding/NoConsentCard';
-import { MovesCard } from '@/features/finish/MovesCard';
+import { InviteCard } from '@/features/finish/InviteCard';
 import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
 import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
@@ -40,7 +40,7 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} readOnly={readOnly} />;
     if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;
     // The end of onboarding (ruling 23, 10-onboarding.md §9): "Your first 3 moves", then the notification ask.
-    if (m.cardType === 'plan' && m.fitCheckId) return <MovesCard m={m} readOnly={readOnly} />;
+    if (m.cardType === 'plan' && m.fitCheckId) return <InviteCard m={m} readOnly={readOnly} />;
     if (m.cardType === 'question' && m.payload.question === 'notify') return <NotifyAskCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     if (m.cardType === 'support') return <SupportCard />;
     // "Keep your fits" (A3, #289): after his first score, at most twice.

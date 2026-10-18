@@ -195,8 +195,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
   // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
   { n: 150, name: 'First check · Later', id: 'S6', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: {} },
-  { n: 151, name: 'Your first 3 moves', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later'] } },
-  { n: 152, name: 'Paywall · after the moves', id: 'P1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall?from=onboarding', under: '/stylist', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
+  { n: 151, name: 'Optional: tap what you own', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later'] } },
+  { n: 152, name: 'Paywall · after the optional step', id: 'P1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall?from=onboarding', under: '/stylist', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
   { n: 153, name: 'Paywall · the plan', id: 'P1b', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans?from=onboarding', under: '/paywall?from=onboarding', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
   { n: 154, name: 'Paywall · the plan, trial used', id: 'P1b', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'noTrial' } },
   { n: 155, name: 'Paywall · plans didn\'t load', id: 'P1s', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'loadFailed' } },
@@ -205,13 +205,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 158, name: 'Notification ask', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later'] } },
   { n: 159, name: 'Notification ask · pick a time', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyYes'] } },
   { n: 160, name: 'Notification ask · done', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyAllow'] } },
-  { n: 161, name: 'Starter essentials', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
-  { n: 162, name: 'Your first 3 moves · move 1 done', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
-  // L3 Your moves and the pinned rows (#292, 10-onboarding.md §9.9): the same story, the next morning view of it.
-  { n: 163, name: 'Lookbook · Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook', finish: { steps: ['later'] } },
-  { n: 164, name: 'Your moves', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later'] } },
-  { n: 165, name: 'You · Your moves row', id: 'Y1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you', finish: { steps: ['later', { mark: 's12' }] } },
-  { n: 166, name: 'Your moves · move 1 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you/moves', under: '/you', finish: { steps: ['later', { mark: 's12' }] } },
+  { n: 161, name: 'What you already own', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
+  { n: 162, name: 'Optional step · added', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
+  // The optional step skipped, and the tabs with no pinned row (#342 replaced #292's Your moves rows and page).
+  { n: 163, name: 'Lookbook · no pinned row', id: 'L1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook', finish: { steps: ['later'] } },
+  { n: 164, name: 'Optional step · skipped', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', 'skipInvite'] } },
+  { n: 165, name: 'You · no pinned row', id: 'Y1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you', finish: { steps: ['later', { mark: 's12' }] } },
   { n: 167, name: 'Ask · an outfit from his closet', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 168, name: 'Ask · start a fit check', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 169, name: 'Ask · one tap question', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
@@ -221,9 +220,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 173, name: 'Ask · saved to what I know', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 174, name: 'Ask · a piece from chat', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 175, name: 'Past chats · yesterday\'s answers, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
-  // All 3 moves done (#292 Y5): the first check's top fix made by a re-check, a basic marked, the move-3 piece owned.
-  { n: 180, name: 'Your moves · All 3 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
-  { n: 181, name: 'Lookbook · no Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
+  // Two pieces added from the list (#342): the belt and a tee (its first choice, black), the next morning.
+  { n: 180, name: 'What you already own · two added', id: 'C5', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
+  { n: 181, name: 'Lookbook · the re-check story', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
   { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },

@@ -12,7 +12,6 @@ const plurals: Partial<Record<keyof typeof enGenerated, { one: string }>> = {
   'item.wornCount': { one: '1 time' },
   'lookbook.row.full': { one: '{date} · Full check · 1 fix' },
   'pay.today.toTarget': { one: 'One free fix to {target}.' },
-  'plan.move3Sub': { one: '{price} · +1 fit' },
   'share.delta': { one: '{before} → {after} after 1 fix' },
   'push.ready': { one: 'Your fit check is ready. 1 quick fix inside.' },
   'stylist.quota.questions': { one: '1 question left today' },
@@ -63,16 +62,14 @@ const addedInBuild = {
   'card.a11y.changeOccasion': 'Change occasion',
   'card.a11y.review': 'Review added items',
   // The end of onboarding (#291, 10-onboarding.md §9).
-  'card.a11y.laterHint': 'Shows your first 3 moves',
+  'card.a11y.laterHint': 'Shows an optional next step',
   'starter.a11y.toggleHint': 'Marks it as one you own',
+  // What you already own (#342): a row opens "Which one is yours?".
+  'starter.a11y.pickHint': 'Pick which one you have',
+  'starter.a11y.changeHint': 'Change it or remove it',
   'starter.a11y.detected': 'In your closet from your fit checks',
   'starter.removed': 'Removed {item}.',
   'starter.markedToast': 'Marked as owned.',
-  'starter.a11y.count': '{n} of 12 starter essentials',
-  // L3 Your moves and the pinned rows (#292, 10-onboarding.md §9.9): VoiceOver only.
-  'moves.a11y.row': 'Move {n}: {title}. {detail}.',
-  'moves.a11y.rowDone': 'Move {n}, done: {title}.',
-  'moves.a11y.pinned': 'Your moves, {n} of 3 done',
   'pay.a11y.loading': 'Loading the plan',
   'pay.a11y.plan': '{plan}, {price} a month, {detail}.',
   'card.a11y.recheck': 'Re-check, {occasion}. Score went from {was} to {now}, up {delta}. {word}. Done: {fix}.',
