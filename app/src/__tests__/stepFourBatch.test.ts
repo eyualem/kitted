@@ -64,7 +64,7 @@ describe('G15 · a scored re-check has Why and Not quite right?', () => {
   });
 
   it('G15.2–3 VoiceOver gets both as actions; Past chats keep Why only', () => {
-    expect(card).toMatch(/: readOnly \? \[why\] : \[[\s\S]*?why, \{ name: 'nqr', label: t\('card\.nqr'\) \}/);
+    expect(card).toMatch(/: readOnly \? \[fold, why\] : \[[\s\S]*?why, \{ name: 'nqr', label: t\('card\.nqr'\) \}/);
     expect(card).toMatch(/\{readOnly && !notSeen \? \(/);
   });
 

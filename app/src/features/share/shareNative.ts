@@ -1,7 +1,7 @@
 // Is this build able to make share images? The capture (react-native-view-shot), the share sheet (expo-sharing) and
 // Photos (expo-media-library) are native modules: a dev build made before they were added (his phone until its next
 // reinstall) doesn't have them, and their JS throws on import there. So nothing imports them until this says yes, and
-// the card's Share button stays hidden until then (#344).
+// the card's Share button stays hidden until then (#345).
 import { NativeModules, Platform, TurboModuleRegistry } from 'react-native';
 import { requireOptionalNativeModule } from 'expo';
 

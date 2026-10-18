@@ -1,4 +1,4 @@
-// S12 · the share card (02 D20, DECISIONS-LOG #346–347): one overlay, after Strava's share stickers, in three versions.
+// S12 · the share card (02 D20, DECISIONS-LOG #347–348): one overlay, after Strava's share stickers, in three versions.
 // Drawn at a fixed size in pt (360 wide) and captured at 3× (1080 px), so nothing here follows Dynamic Type: it's an
 // image. The overlay: white stats (a small label over a big Archivo value), the tape (5 to 10 in halves; a copper dot
 // on the score, a hollow one on the "before" of a re-check win), then the KITTED wordmark. Copper is the dot only.

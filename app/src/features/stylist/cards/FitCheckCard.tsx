@@ -5,7 +5,7 @@ import { router, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import {
-  FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, MonoLabel, Numeral, PartialLabel, RowDivider, ScoreBlock, Seam,
+  ExpandHandle, Expandable, FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, MonoLabel, Numeral, PartialLabel, RowDivider, ScoreBlock, Seam,
   MorphPicker, RevealStepView, TagLine, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
@@ -21,6 +21,7 @@ import { sessionClock } from '@/state/session';
 import { setStylistAction } from '@/router/stylistAction';
 import { pickOccasion } from '../occasionPicker';
 import { occasionLabel } from '../thread';
+import { threadGrow } from '../threadGrow';
 import { ReadingCard, useInsetShown } from './ReadingCard';
 import { adviceA11y, GoingForAdviceBlock, GoingForInset, GoingForLine } from './GoingFor';
 import { arriveAnnouncement, lineA11y, lookTiles, picksOf } from '@/features/fitcheck/goingFor';
@@ -249,8 +250,24 @@ function FailureCard({ row }: { row: FitCheckRow }) {
   );
 }
 
+/** Score cards he opened, by check id: they stay open while the app runs (#344). */
+const openCards = new Set<string>();
+
+/** Folded to its rating (the Going-for line, the tag, the score, its word and summary) until he taps it; then the rest
+ *  slides open (#344, the founder's friend: "too much information"). */
+export function useCardOpen(id: string): [boolean, (open: boolean) => void] {
+  const [open, setOpen] = useState(() => openCards.has(id));
+  const set = (v: boolean) => {
+    if (v) openCards.add(id);
+    else openCards.delete(id);
+    setOpen(v);
+  };
+  return [open, set];
+}
+
 function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: string | null; asked: AskedGarment | null; readOnly: boolean }) {
   const closet = useCloset() ?? [];
+  const [open, setOpen] = useCardOpen(row.id);
   const picks = usePicks();
   const later = useLaterShows(row, readOnly);
   // "Going for" (#215): the folded line at the top; Change grows it back into the question, in place.
@@ -339,7 +356,9 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     : undefined;
 
   const shareable = !readOnly && shareOffered(row);
-  const actions = readOnly ? [{ name: 'why', label: t('card.why', { score: scoreText }) }] : [
+  const fold = { name: 'fold', label: open ? t('card.fold.less') : t('card.fold.more') };
+  const actions = readOnly ? [fold, { name: 'why', label: t('card.why', { score: scoreText }) }] : [
+    fold,
     { name: 'why', label: t('card.why', { score: scoreText }) },
     { name: 'nqr', label: t('card.nqr') },
     ...(recheckOpen && !dialed ? [{ name: 'recheck', label: t('card.recheck') }] : []),
@@ -362,6 +381,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     ] : []),
   ];
   const go = {
+    fold: () => setOpen(!open),
     why: () => router.push(`/sheets/why/${row.id}`),
     nqr: () => router.push(`/sheets/correct/${row.id}`),
     // The re-check's "only the pants are read again" lives in the camera now, not as a chat line (founder, Oct 14).
@@ -437,12 +457,14 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
             }} />
           )
         ) : null}
+        {/* Folded, a tap anywhere on the rating opens the card; open, the score opens Why as before. */}
+        <Pressable onPress={() => setOpen(true)} disabled={open} accessible={false}>
         <KCardSection>
           <LensTagline row={row} left={t(partial ? 'card.tag.partial' : 'card.tag.full')} occasionHere={!gf} readOnly={readOnly} />
           {partial || finished ? (
             <>
               <View ref={attachScore} onLayout={onScoreLayout} collapsable={false}>
-                <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} onPress={go.why} reveal={blockReveal} />
+                <ScoreBlock score={score} partialLabel={partialText} partialDone={finished} onPress={open ? go.why : () => setOpen(true)} reveal={blockReveal} />
               </View>
               {row.explanation ? (
                 <RevealStepView t={rt} step={plan?.summary}>
@@ -452,7 +474,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
             </>
           ) : (
             <View ref={attachScore} onLayout={onScoreLayout} collapsable={false}>
-              <ScoreBlock score={score} verdict={row.explanation ?? undefined} onPress={go.why} reveal={blockReveal} />
+              <ScoreBlock score={score} verdict={row.explanation ?? undefined} onPress={open ? go.why : () => setOpen(true)} reveal={blockReveal} />
             </View>
           )}
           {/* "Reads as …" moved into the Why sheet (#205, #209). */}
@@ -462,6 +484,9 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
             </RevealStepView>
           ) : null}
         </KCardSection>
+        </Pressable>
+        {/* Today's thread scrolls with it (threadGrow); Past chats' pages don't. */}
+        <Expandable open={open} grow={readOnly ? undefined : threadGrow}>
         {dialed && quietNoFix && !advice && !nextLevel && !wxTip ? null : (<>
         <Seam />
         <KCardSection paddingVertical={4} gap={0}>
@@ -544,6 +569,8 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
           ) : null}
         </KCardSection>
         </RevealStepView>
+        </Expandable>
+        <ExpandHandle open={open} onPress={() => setOpen(!open)} />
       </KCard>
     </View>
   );

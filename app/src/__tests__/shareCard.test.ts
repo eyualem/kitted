@@ -1,4 +1,4 @@
-// The share card (02 D20, DECISIONS-LOG #346; checks SC1–SC10 in 02 D20): one overlay after Strava's share stickers,
+// The share card (02 D20, DECISIONS-LOG #347; checks SC1–SC10 in 02 D20): one overlay after Strava's share stickers,
 // in two versions, transparent and with his photo. The cards are drawn from one read-only model
 // (features/share/shareModel.ts); these tests hold it to the checks. The look on iOS (and the PNG's transparency on a
 // real capture) is a Simulator check: demo screen 20.

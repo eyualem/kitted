@@ -1,13 +1,13 @@
 # 14 · The share card: build plan and tests
 
 Written Oct 18, 2026, after the founder's go: "You can start planning out the implementations and also the test now."
-The design is settled (DECISIONS-LOG #346–348; `mockups/share-card.html`; published page
-https://claude.ai/artifact/F8VZN8HKY8khwxjUJaGAWg). The screen spec is `02-screens.md` D20, update block #346. This
+The design is settled (DECISIONS-LOG #347–349; `mockups/share-card.html`; published page
+https://claude.ai/artifact/F8VZN8HKY8khwxjUJaGAWg). The screen spec is `02-screens.md` D20, update block #347. This
 doc is the plan to make it real on an iPhone, and the checks it must pass. Each check is written before its code, as
 for every feature since #291.
 
 A senior React Native reviewer read a first draft against the installed native sources (view-shot 5.1.0, expo-media-
-library). Their findings are folded in (§2, #349). Results go in §8 as they come in.
+library). Their findings are folded in (§2, #350). Results go in §8 as they come in.
 
 ## 1. What he'll see when it's done
 
@@ -43,7 +43,7 @@ library). Their findings are folded in (§2, #349). Results go in §8 as they co
 
 **Seen on the web preview:** demo screens 20 (re-check win) and 230 (single check), every version.
 
-**Fixed while planning (#349, from the review, checked in the installed native code):**
+**Fixed while planning (#350, from the review, checked in the installed native code):**
 1. **The image would have come out 3× too big.** view-shot's `width`/`height` are points drawn at the device's scale.
    `width: 1080` on a 3× iPhone renders 3240 px, upscaled from the 360 pt view. The capture now passes px ÷ pixel
    ratio.
@@ -222,7 +222,7 @@ the alpha is caught.
 
 ## 8. Results
 
-- **Oct 18 (#349):** the 3× size, the save path and the temp files fixed in `exportCard.ts`; SC6 now checks them. Jest
+- **Oct 18 (#350):** the 3× size, the save path and the temp files fixed in `exportCard.ts`; SC6 now checks them. Jest
   green. Not yet run on iOS.
 
 ## 9. Decisions and asks

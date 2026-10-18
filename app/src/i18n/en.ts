@@ -200,6 +200,9 @@ const addedInBuild = {
   'card.fold.a11y': 'First check, {occasion}: {score}, {word}.',
   'card.fold.hint': 'Opens the full card.',
   'card.fold.hide': 'Fold the first check',
+  // The score card folds to its rating and opens on a tap (#344).
+  'card.fold.more': 'Show the fixes and details',
+  'card.fold.less': 'Show less',
   // The card's weather line (#338): pieces joined by " · ", said for the hour he reads it.
   'wx.card.now': '{t}° now',
   'wx.card.at': '{t}° at {time}',
@@ -1097,7 +1100,7 @@ const addedInBuild = {
   'fail.askOffline': "You're offline, so I couldn't answer that. It doesn't count.",
   // The server's daily limit on a check the phone thought it had left (13-server.md §8, A7, #328).
   'fail.limit': "That's today's fit checks. Your photo is saved here. Try again after 4 am. This one doesn't count.",
-  // The share card (02 D20, DECISIONS-LOG #346–347): one overlay after Strava's share stickers, transparent, solid or
+  // The share card (02 D20, DECISIONS-LOG #347–348): one overlay after Strava's share stickers, transparent, solid or
   // on his photo (founder, Oct 18). Never the occasion, a fix, the date or Kit's name.
   'share.stat.score': 'Score',
   'share.stat.rating': 'Rating',

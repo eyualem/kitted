@@ -1,4 +1,4 @@
-// S12 · the share card's model (02 D20, DECISIONS-LOG #346). Pure: one read-only model from the stored rows; the
+// S12 · the share card's model (02 D20, DECISIONS-LOG #347). Pure: one read-only model from the stored rows; the
 // screen draws it and captures it as an image. Nothing here writes.
 //
 // One design in three versions, after Strava's share stickers (founder, Oct 18): white stats (a small label over a big

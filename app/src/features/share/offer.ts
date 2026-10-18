@@ -1,4 +1,4 @@
-// Where the card's Share button shows (#344): the switch is on, this build can make the image, and the check can be
+// Where the card's Share button shows (#345): the switch is on, this build can make the image, and the check can be
 // shared (a full check at 7.0+, or a re-check that went up; shareModel canShare).
 import { SHARE_CARD_BUILT } from '@/config/features';
 import type { FitCheckRow } from '@/data/types';
