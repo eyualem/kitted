@@ -5,7 +5,7 @@ import { router, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import {
-  FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, MonoLabel, PartialLabel, RowDivider, ScoreBlock, Seam,
+  FinishTile, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, MonoLabel, Numeral, PartialLabel, RowDivider, ScoreBlock, Seam,
   MorphPicker, RevealStepView, TagLine, TextLink, TextLinkRow, TipLine, displayScore, opacity, size, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
@@ -102,6 +102,9 @@ export function FitCheckCard({ checkId, readOnly = false }: { checkId: string; r
   const wxTip = useWeatherTip(row);
   const asked = useTapGarment(row);
   const session = useFitCheckSession();
+  const rechecked = useRechecked(row);
+  // Folded once its re-check is on its way (#338): he can open it again in place.
+  const [open, setOpen] = useState(false);
   // Seen still reading (or asking the quick tap): its result will be new to him, so the score reveal may play once.
   const status = row?.status;
   useEffect(() => {
@@ -122,7 +125,80 @@ export function FitCheckCard({ checkId, readOnly = false }: { checkId: string; r
     const retake = () => router.push({ pathname: '/camera', params: { occasion: row.occasion } });
     return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} action={{ title: t('recheck.samePhoto.button'), onPress: retake }} />;
   }
-  return <ScoredCard row={row} wxTip={wxTip} asked={asked} readOnly={readOnly} />;
+  const card = <ScoredCard row={row} wxTip={wxTip} asked={asked} readOnly={readOnly} />;
+  if (!rechecked) return card;
+  if (!open) return <FoldedCheck row={row} onOpen={() => setOpen(true)} />;
+  return (
+    <View style={{ gap: space.xs }}>
+      <FoldHeader onFold={() => setOpen(false)} />
+      {card}
+    </View>
+  );
+}
+
+/**
+ * Whether this first check has a re-check reading, asking or scored (#338): the thread was his first photo, the first
+ * check's full card, the second photo and the re-check card, two screens of history above the result he waits for.
+ * A failed re-check leaves the card open.
+ */
+function useRechecked(row: FitCheckRow | null | undefined): boolean {
+  return useLive(
+    ['fitChecks'],
+    async () => {
+      if (!row || row.parentId || row.status !== 'scored') return false;
+      return (await store.fitChecks.all()).some((c) => c.parentId === row.id && (c.status === 'scoring' || c.status === 'asking' || c.status === 'scored'));
+    },
+    [row?.id, row?.parentId, row?.status],
+  ) ?? false;
+}
+
+/** The first check, folded under its re-check: "First check · Date", the score and its word, ⌄ to open (#338). */
+function FoldedCheck({ row, onOpen }: { row: FitCheckRow; onOpen: () => void }) {
+  const { isAccessibilitySize } = useTheme();
+  const score = row.score ?? 0;
+  const occasion = occasionLabel(row.occasion);
+  return (
+    <KCard>
+      <Pressable
+        onPress={onOpen}
+        accessibilityRole="button"
+        accessibilityLabel={t('card.fold.a11y', { occasion, score: spokenScore(score), word: scoreWordLabel(score) })}
+        accessibilityHint={t('card.fold.hint')}
+        style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
+      >
+        <View style={[{ paddingHorizontal: space.cardPadH, paddingVertical: space.m, gap: space.s }, isAccessibilitySize ? null : { flexDirection: 'row', alignItems: 'center' }]}>
+          <View style={{ flex: isAccessibilitySize ? undefined : 1, gap: 2 }}>
+            <MonoLabel>{`${t('card.fold.tag')} · ${occasion}`}</MonoLabel>
+            <KText variant="subheadline" color="ink2">
+              {scoreWordLabel(score)}
+            </KText>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s }}>
+            <Numeral size={24} trimDescender={false}>{displayScore(score)}</Numeral>
+            <Icon name="chevron.down" size={13} color="ink3" weight="semibold" />
+          </View>
+        </View>
+      </Pressable>
+    </KCard>
+  );
+}
+
+/** Above the opened first check: "First check ⌃" folds it again. */
+function FoldHeader({ onFold }: { onFold: () => void }) {
+  return (
+    <Pressable
+      onPress={onFold}
+      accessibilityRole="button"
+      accessibilityLabel={t('card.fold.hide')}
+      hitSlop={{ top: 10, bottom: 10 }}
+      style={({ pressed }) => ({ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 4, paddingLeft: space.cardPadH, opacity: pressed ? opacity.pressed : 1 })}
+    >
+      <KText variant="footnote" weight="500" color="ink3">
+        {t('card.fold.tag')}
+      </KText>
+      <Icon name="chevron.up" size={11} color="ink3" weight="semibold" />
+    </Pressable>
+  );
 }
 
 /** Where the one quick tap's garment is in the CURRENT reading (a correction makes a new one), and its type now. */

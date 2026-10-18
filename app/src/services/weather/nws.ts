@@ -32,7 +32,9 @@ export interface NwsPeriod {
 }
 
 /** Live weather carries its source, so the card can label it (sample weather has none). */
-export type SourcedWeather = DayWeather & { source?: 'nws' };
+/** `nowHour` / `highHour` / `lateHour`: the local hours those readings are for, so the card's words follow the clock
+ *  (#338: the evening said "at 8" at 10 pm). */
+export type SourcedWeather = DayWeather & { source?: 'nws'; nowHour?: number; highHour?: number; lateHour?: number };
 
 export function isNwsWeather(w: unknown): boolean {
   return !!w && typeof w === 'object' && (w as { source?: unknown }).source === 'nws';
@@ -179,6 +181,7 @@ export function mapHourly(periods: readonly NwsPeriod[], window: WeatherWindow, 
   }
 
   const temps = span.map((h) => h.tempF);
+  const highH = span[temps.indexOf(Math.max(...temps))];
   const feels = span.map((h) => feelsLikeF(h.tempF, h.mph, h.rh));
   const wetFrom = span.find((h) => h.pop >= 50);
   const counts = new Map<WeatherCondition, number>();
@@ -207,8 +210,13 @@ export function mapHourly(periods: readonly NwsPeriod[], window: WeatherWindow, 
     precipFromHour: wetFrom ? wetFrom.hour : null,
     condition,
     source: 'nws',
+    nowHour: nowH.hour,
+    highHour: highH.hour,
   };
-  if (window === 'evening' && late) out.lateF = Math.round(late.tempF);
+  if (window === 'evening' && late) {
+    out.lateF = Math.round(late.tempF);
+    out.lateHour = late.hour;
+  }
   return out;
 }
 

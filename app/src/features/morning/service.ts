@@ -23,8 +23,8 @@ import type {
 import { normStyleKey, STYLES } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
-import { t, type StringKey } from '@/i18n/en';
-import { hourText, monthName } from '@/i18n/format';
+import { t } from '@/i18n/en';
+import { monthName } from '@/i18n/format';
 import { occasionLabel } from '@/features/stylist/thread';
 
 export interface MorningDeps {
@@ -47,7 +47,11 @@ const HISTORY_DAYS = 14;
 const KV = {
   eveningIgnored: 'idea.evening.ignored',
   style: (slot: IdeaSlot) => `idea.style.${slot}`,
+  /** He changed the card's occasion or style, or swapped a piece: a fresher forecast never re-picks it (#338). */
+  touched: (id: string) => `idea.touched.${id}`,
 } as const;
+/** A card's forecast older than this is fetched again when Stylist shows (#338: "46° now" all afternoon). */
+export const WEATHER_STALE_MS = 45 * 60_000;
 
 export const ideaId = (day: string, slot: IdeaSlot) => `${day}|${slot}`;
 
@@ -89,7 +93,9 @@ export function createMorningService(deps: MorningDeps) {
       timer = setTimeout(() => resolve(null), deps.weather.kind === 'live' ? LIVE_WEATHER_TIMEOUT_MS : WEATHER_TIMEOUT_MS);
     });
     try {
-      return await Promise.race([deps.weather.forecast(window).catch(() => null), timeout]);
+      const w = await Promise.race([deps.weather.forecast(window).catch(() => null), timeout]);
+      // When it was fetched, so the card can tell a stale "now" (#338).
+      return w ? ({ ...w, fetchedAt: clock.nowMs() } as DayWeather) : null;
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -170,7 +176,10 @@ export function createMorningService(deps: MorningDeps) {
     return normStyle(p?.styles?.[0]?.[0]);
   }
 
-  /** The greeting line above the card (template, no AI). */
+  /**
+   * The greeting line above the card (template, no AI). With weather it's only the hello (#338): the card says the
+   * weather once, for the hour he reads it, so a greeting posted at 7 am never says "46° now" at 2 pm.
+   */
   function greeting(slot: IdeaSlot, w: DayWeather | null, nowMs: number, occasion: CardOccasion): string {
     const p = localParts(nowMs, zone);
     const hello = slot === 'evening' ? t('greet.evening') : p.hh < 12 ? t('greet.morning') : t('greet.afternoon');
@@ -179,13 +188,7 @@ export function createMorningService(deps: MorningDeps) {
       if (slot === 'day' && season.layer === 'none') return t('stylist.morning', { occasionWord: occasionLabel(scoringOccasion(occasion)).toLowerCase() });
       return season.layer === 'none' ? hello : `${hello} ${t('wx.line.season', { month: monthName(p.m) })}`;
     }
-    const temps = slot === 'evening'
-      ? t('wx.line.evening', { now: Math.round(w.nowF), late: Math.round(w.lateF ?? w.lowF) })
-      : w.highF - w.nowF >= 8
-        ? t('wx.line.swing', { now: Math.round(w.nowF), high: Math.round(w.highF) })
-        : t('wx.line.flat', { now: Math.round(w.nowF), cond: t(`wx.cond.${w.condition}` as StringKey) });
-    const rain = w.precipChance >= 0.5 ? (w.precipFromHour !== null && w.precipFromHour > p.hh ? ` ${t('wx.line.rainFrom', { time: hourText(w.precipFromHour) })}` : ` ${t('wx.line.rainAll')}`) : '';
-    return `${hello} ${temps}${rain}`;
+    return slot === 'evening' ? t('greet.evening') : p.hh < 12 ? t('greet.morning.idea') : t('greet.afternoon.idea');
   }
 
   /** A seeded "Morning. An easy one…" + idea card from before this feature becomes today's day card. */
@@ -266,6 +269,7 @@ export function createMorningService(deps: MorningDeps) {
       await store.dailyIdeas.put({ ...next, state: 'stayingIn' });
       return { samePick: false };
     }
+    await store.setKv(KV.touched(id), '1');
     const before = row.outfitId ? (await store.outfits.get(row.outfitId))?.itemIds.join('+') : null;
     const result = await pick(next);
     const outfitId = await saveOutfit(result, next.occasion, row.outfitId);
@@ -278,6 +282,7 @@ export function createMorningService(deps: MorningDeps) {
   async function swap(id: string, leaveOut: string[]): Promise<void> {
     const row = await store.dailyIdeas.get(id);
     if (!row) return;
+    await store.setKv(KV.touched(id), '1');
     const result = await pick(row, { exclude: new Set(leaveOut) });
     const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
     await store.dailyIdeas.put({ ...row, outfitId, state: 'idea' });
@@ -316,7 +321,37 @@ export function createMorningService(deps: MorningDeps) {
     if (before) await store.chat.patch(before.id, { text: greeting(row.slot, weather as unknown as DayWeather, before.createdAt, row.occasion) });
   }
 
-  return { ensureCard, change, swap, wear, refreshWeather, greeting };
+  /**
+   * The current card's forecast, fetched again once it's older than WEATHER_STALE_MS (#338), when Stylist shows. A card
+   * he hasn't touched (no Wear this, swap or menu change) is re-picked when the fresher weather asks for something else
+   * (a layer, rain shoes, a hot day); a touched one keeps its outfit and only its weather words change. A checked or
+   * staying-in card shows no weather, so it's left alone. Returns whether anything changed.
+   */
+  async function freshen(nowMs: number = clock.nowMs()): Promise<boolean> {
+    if (deps.enabled && !deps.enabled()) return false;
+    const { day, slot } = slotAt(nowMs, zone);
+    const row = await store.dailyIdeas.get(ideaId(day, slot));
+    if (!row?.weather || row.state === 'stayingIn' || row.fitCheckId) return false;
+    const fetchedAt = typeof row.weather.fetchedAt === 'number' ? row.weather.fetchedAt : row.createdAt;
+    if (nowMs - fetchedAt < WEATHER_STALE_MS) return false;
+    if ((await deps.weather.permission()) !== 'granted') return false;
+    const fresh = (await forecast(row.slot)) as unknown as Record<string, unknown> | null;
+    if (!fresh) return false;
+    const next = { ...row, weather: fresh };
+    const needsOf = (w: Record<string, unknown>) => JSON.stringify(weatherNeeds(w as unknown as DayWeather));
+    const untouched = row.state === 'idea' && (await store.getKv(KV.touched(row.id))) !== '1';
+    if (untouched && needsOf(fresh) !== needsOf(row.weather)) {
+      const result = await pick(next);
+      const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
+      await store.dailyIdeas.put({ ...next, outfitId });
+      if (row.messageId) await store.chat.patch(row.messageId, { outfitId });
+    } else {
+      await store.dailyIdeas.put(next);
+    }
+    return true;
+  }
+
+  return { ensureCard, change, swap, wear, refreshWeather, freshen, greeting };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;
