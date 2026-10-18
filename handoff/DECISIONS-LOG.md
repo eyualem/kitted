@@ -2207,3 +2207,9 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **"Earlier chats" only in the header** (the clock button): the pill floated above a short day.
     - **After a re-check the first card folds** to one row and opens in place on a tap. Dropped while building: shrinking the re-check's photo (it's 131 pt wide; the bulk was the full first card).
     - **Lesson:** a weather sentence stored in a chat row can't follow the clock; keep live words (temperatures, "now") out of stored text and render them from the data.
+
+## Oct 17 · Casual fits: what's left waits; a clean slate on the phone
+
+339. **The founder: "the next time I plug in my phone, we can completely wipe it out. Not my phone, but the app data. Also, what can we do about things that … haven't been done yet? Should we implement them now"** Decided (Claude, the founder's to-do list has the wipe):
+    - **The wipe:** next time the phone is plugged in, pull a copy of the app's data to the Mac first (`tools/phone/pull.sh`; his 39 saved checks are the baseline for every scoring test), then clear it (uninstall and reinstall, as #94). Nothing is lost from the Mac's side.
+    - **The casual-fit leftovers wait (not now):** the shorts-length-and-socks narrow look (#332 passed on chino shorts and jorts, but only 1 gym-shorts photo), tracksuit pieces in the reading (no photo to test on; new reading fields shook steadiness before, #198), sock color, and real ratings from guys 18–22 (the shoot, §6 of `casual-athletic.md`). *Why:* each needs photos that don't exist yet, it's shorts off-season until spring, and the beta (Nov 3) has bigger gaps: the app side of the server (Release builds can't score without it), the support email, the Apple program. Revisit with the shoot, or sooner if the beta's fit checks show many shorts or tracksuits.
