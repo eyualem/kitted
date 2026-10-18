@@ -1,0 +1,179 @@
+<section class="rc">
+<style>
+.rc h2{margin:40px 0 4px;font:700 22px var(--k-sf)}
+.rc h3{margin:34px 0 4px;font:700 18px var(--k-sf)}
+.rc>p{margin:0 0 18px;color:#4a5060;max-width:900px}
+.rc-tagline{display:inline-block;font:600 11px var(--k-mono);letter-spacing:.08em;background:#121628;color:#fff;padding:3px 7px;border-radius:4px;vertical-align:3px;margin-left:8px}
+.rc-card{position:relative;width:360px;overflow:hidden;flex:none;color:#fff;box-shadow:0 30px 60px -28px rgba(16,20,36,.55);
+  background:radial-gradient(120% 70% at 50% 10%,#1E2A55,#121628 55%,#0C1020)}
+.rc-916{height:640px;border-radius:20px}
+.rc-45{height:450px;border-radius:14px}
+.rc-mo{position:absolute;left:24px;font:500 10px/1 var(--k-mono);letter-spacing:.16em;color:rgba(255,255,255,.75)}
+.rc-ttl{position:absolute;left:24px;right:24px;font:38px/1 var(--k-num);letter-spacing:-.01em}
+/* the grid: drawn days + one photo */
+.rc-grid{position:absolute;left:24px;display:grid;grid-template-columns:repeat(3,100px);gap:8px 6px}
+.rc-day{position:relative;border-radius:6px;background:#1E2A52;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);overflow:hidden}
+.rc-day .d{position:absolute;left:8px;top:8px;font:500 10px/1 var(--k-mono);letter-spacing:.12em;color:rgba(255,255,255,.75)}
+.rc-day svg{position:absolute;left:0;top:20px;width:100px;height:calc(100% - 66px)}
+.rc-day .i{position:absolute;left:8px;bottom:7px}
+.rc-day .i b{display:block;font:21px/1 var(--k-num);font-weight:normal;letter-spacing:-.01em}
+.rc-day .i span{display:block;font:400 11px/1.25 var(--k-sf);color:rgba(255,255,255,.8);margin-top:2px}
+.rc-best .k-photo{position:absolute;inset:0}
+.rc-best .band{position:absolute;left:0;right:0;bottom:0;background:rgba(18,22,40,.9);padding:6px 8px 7px}
+.rc-best .band b{font:21px/1 var(--k-num);font-weight:normal}
+.rc-best .band em{font:normal 700 12px var(--k-sf);margin-left:5px}
+.rc-best .band span{display:block;font:400 11px/1.2 var(--k-sf);color:rgba(255,255,255,.82);margin-top:3px}
+.rc-bf{position:absolute;left:6px;top:6px;z-index:2;background:var(--k-label);color:#EEF0F5;font:600 11px/1 var(--k-sf);padding:5px 12px;border-radius:2px;box-shadow:0 0 0 1px #3A4260}
+.rc-bf::before,.rc-bf::after{content:"";position:absolute;top:3px;bottom:3px;border-left:1px dashed var(--k-copper)}
+.rc-bf::before{left:4px}.rc-bf::after{right:4px}
+/* stats + sign-off */
+.rc-stats{position:absolute;left:24px;right:24px;display:flex;border-top:1.5px dashed var(--k-copper);padding-top:9px}
+.rc-stats div{flex:1;padding-left:12px;border-left:1px solid rgba(255,255,255,.16)}
+.rc-stats div:first-child{padding-left:0;border-left:0}
+.rc-stats b{display:block;font:24px/1 var(--k-num);font-weight:normal;letter-spacing:-.01em}
+.rc-stats span{display:block;font:400 11px/1.25 var(--k-sf);color:rgba(255,255,255,.8);margin-top:2px}
+.rc-mw{position:absolute;left:24px;right:24px;font:400 12px/1.3 var(--k-sf);color:rgba(255,255,255,.86)}
+.rc-mw b{font-weight:600;color:#fff}
+.rc-sign{position:absolute;left:24px;display:flex;align-items:center;gap:10px}
+.rc-sign .k-woven{height:20px;font-size:11px;padding:0 14px}
+.rc-sign span:last-child{font:600 12px var(--k-sf);color:rgba(255,255,255,.86);white-space:nowrap}
+.rc-sign.glass{background:rgba(18,22,40,.9);padding:7px 9px;border-radius:9px}
+/* weekly carousel */
+.rc-car{display:flex;gap:14px;align-items:flex-start}
+.rc-slide>.k-photo{position:absolute;inset:0}
+.rc-chip{position:absolute;left:14px;top:96px;font:500 10px/1 var(--k-mono);letter-spacing:.14em;background:rgba(18,22,40,.9);color:rgba(255,255,255,.9);padding:6px 8px;border-radius:4px}
+.rc-panel{position:absolute;left:12px;width:304px;top:252px;box-sizing:border-box;background:rgba(18,22,40,.9);border-radius:12px;padding:14px 14px 12px}
+.rc-lock{display:flex;align-items:flex-end;gap:4px}
+.rc-lock .n{font:72px/.84 var(--k-num);letter-spacing:-.03em}
+.rc-lock .t{font:500 11px var(--k-mono);color:rgba(255,255,255,.75);margin-bottom:2px}
+.rc-lock .w{margin:0 0 1px 12px}
+.rc-lock .w b{display:block;font:700 20px/1.1 var(--k-sf)}
+.rc-lock .w span{display:block;font:400 13px/1.3 var(--k-sf);color:rgba(255,255,255,.82)}
+.rc-pcs{margin-top:10px;border-top:1.5px dashed var(--k-copper);padding-top:7px}
+.rc-pcs div{font:400 12.5px/17px var(--k-sf);color:rgba(255,255,255,.92)}
+.rc-panel .rc-sign{position:relative;left:0;margin-top:10px}
+.rc-panel .rc-sign .k-woven{font-size:10.5px;padding:0 12px}
+.rc-strip{position:absolute;left:16px;top:236px;display:flex;gap:5px}
+.rc-strip div{width:52px}
+.rc-strip .k-photo{height:74px;border-radius:4px;box-shadow:0 0 0 1.5px rgba(255,255,255,.85)}
+.rc-strip b{display:block;text-align:center;font:17px/1 var(--k-num);font-weight:normal;margin-top:7px}
+.rc-strip span{display:block;text-align:center;font:500 10px/1 var(--k-mono);letter-spacing:.1em;color:rgba(255,255,255,.75);margin-top:4px}
+/* face toggle mock */
+.rc-tog{margin-top:12px;width:360px}
+.rc-seg{display:flex;background:#C9CDD6;border-radius:9px;padding:2px}
+.rc-seg span{flex:1;text-align:center;font:600 13px/28px var(--k-sf);color:#3E4456;border-radius:7px}
+.rc-seg span.on{background:#fff;color:#121628;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.rc-tog p{margin:6px 2px 0;font:12px/1.35 var(--k-sf);color:#4a5060}
+</style>
+
+<h2>B3 · Monthly recap: "My October fits" <span class="rc-tagline">AFTER LAUNCH</span></h2>
+<p>A Wrapped-lite identity card for the 1st of the month: his days drawn as the app's outfit flats, his photo only for the best fit, then counts that match exactly what's on the card. Not a ranking, not a streak. Scores are demo numbers.</p>
+<div class="k-stage">
+
+<div>
+<div class="rc-card rc-916">
+ <div class="rc-mo" style="top:94px">OCTOBER 2026</div>
+ <div class="rc-ttl" style="top:110px">My October fits</div>
+ <div class="rc-grid" data-grid="1" style="top:158px;grid-auto-rows:120px"></div>
+ <div class="rc-stats" style="top:416px"><div><b>6</b><span>fit checks</span></div><div><b>3</b><span>scored Sharp</span></div><div><b>Minimal</b><span>3 of 6 fits</span></div></div>
+ <div class="rc-mw" style="top:472px"><b>Most worn:</b> your tan chinos, in 4 fits</div>
+ <div class="rc-sign" style="top:492px"><span class="k-woven">KITTED</span><span>Score your fit · trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;left:0;right:0;height:14%"></i><b style="top:4px">IG Story UI</b><i style="bottom:0;left:0;right:0;height:20%"></i><b style="bottom:4px">Reply bar</b></div>
+</div>
+<div class="k-cap"><b>Story recap</b> · IG Stories, 1080×1920. Days in date order as drawn flats, each with its score and look; the best fit (the one top score) is his photo, neck-down. Every count can be checked on the card: 6 fits, 3 at 8.0+, 3 minimal, tan chinos in 4.</div>
+<div class="rc-tog"><div class="rc-seg"><span class="on">Neck down</span><span>Full photo</span></div><p>Full photo shares the whole picture, background too. One choice for the whole card, asked fresh each time.</p></div>
+</div>
+
+<div>
+<div class="rc-card rc-45">
+ <div class="rc-mo" style="top:22px">OCTOBER 2026</div>
+ <div class="rc-ttl" style="top:38px;font-size:34px">My October fits</div>
+ <div class="rc-grid" data-grid="1" style="top:82px;grid-auto-rows:118px"></div>
+ <div class="rc-stats" style="top:334px"><div><b>6</b><span>fit checks</span></div><div><b>3</b><span>scored Sharp</span></div><div><b>Minimal</b><span>3 of 6 fits</span></div></div>
+ <div class="rc-mw" style="top:390px"><b>Most worn:</b> your tan chinos, in 4 fits</div>
+ <div class="rc-sign" style="top:410px"><span class="k-woven">KITTED</span><span>Score your fit · trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;left:0;width:11.5px;bottom:0"></i><i style="top:0;right:0;width:11.5px;bottom:0"></i><b style="top:4px;left:16px">Grid crop 3:4</b></div>
+</div>
+<div class="k-cap"><b>Feed recap</b> · IG feed / carousel cover, iMessage, 1080×1350. The same card, tighter; all inside the 3:4 grid crop.</div>
+</div>
+
+</div>
+
+<h3>B3b · "My fits this week" (TikTok photo-mode carousel)</h3>
+<p>Six 9:16 slides: a cover, then one fit per slide, neck-down, each with its score lockup and three pieces. Everything sits in TikTok's safe core (14% top, 30% bottom, 12% right). Shown: the cover and three of the five fits. Demo photos are different people; his carousel is all his own fits.</p>
+<div class="rc-car">
+
+<div>
+<div class="rc-card rc-916 rc-slide">
+ <div class="rc-mo" style="top:100px">OCT 13–19</div>
+ <div class="rc-ttl" style="top:118px;font-size:52px;line-height:.98">My fits<br>this week</div>
+ <div class="rc-strip" id="rc-strip"></div>
+ <div class="rc-mw" style="top:362px;font-size:14px"><b>5 fits · 2 scored Sharp</b></div>
+ <div class="rc-mw" style="top:384px">Swipe for each one.</div>
+ <div class="rc-sign" style="top:416px;left:16px"><span class="k-woven">KITTED</span><span>Score your fit · trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;left:0;right:0;height:14%"></i><b style="top:4px">TikTok top</b><i style="bottom:0;left:0;right:0;height:30%"></i><b style="bottom:4px">Caption + sound (30%)</b><i style="top:14%;bottom:30%;right:0;width:12%"></i></div>
+</div>
+<div class="k-cap"><b>Slide 1 · cover</b> · TikTok photo mode, 1080×1920. Five neck-down thumbs; the counts match them.</div>
+</div>
+
+<div><div class="rc-card rc-916 rc-slide" data-fit="0"></div><div class="k-cap"><b>Slide 2 · Monday</b> · 1080×1920.</div></div>
+<div><div class="rc-card rc-916 rc-slide" data-fit="1"></div><div class="k-cap"><b>Slide 3 · Tuesday</b> · 1080×1920.</div></div>
+<div><div class="rc-card rc-916 rc-slide" data-fit="3"></div><div class="k-cap"><b>Slide 5 · Thursday</b> · 1080×1920. (Slide 4 Wednesday, slide 6 Saturday: same layout.)</div></div>
+
+</div>
+<script>
+(function(){
+  // drawn outfit flats: top (centered, 54 wide), bottom under it, shoes at the hem
+  var TOP={
+    tee:'M-12 0 L-24 8 L-19 18 L-13 15 L-13 38 L13 38 L13 15 L19 18 L24 8 L12 0 Q0 7 -12 0Z',
+    shirt:'M-12 0 L-24 7 L-26 36 L-19 36 L-14 15 L-14 40 L14 40 L14 15 L19 36 L26 36 L24 7 L12 0 L0 9Z',
+    hoodie:'M-12 2 L-24 9 L-26 37 L-19 37 L-14 16 L-14 40 L14 40 L14 16 L19 37 L26 37 L24 9 L12 2 Q8 -6 0 -6 Q-8 -6 -12 2Z',
+    polo:'M-12 0 L-24 8 L-19 18 L-13 15 L-13 38 L13 38 L13 15 L19 18 L24 8 L12 0 L0 6Z'
+  };
+  var BOT={pants:'M-15 0 H15 L17 40 H2 L0 10 L-2 40 H-17Z', wide:'M-16 0 H16 L20 40 H2 L0 11 L-2 40 H-20Z'};
+  var SHOE={sneaker:'M0 3 L0 10 H24 L24 7 Q17 6 14 1 L7 1 L5 3Z', boot:'M2 -4 H10 V3 Q18 4 24 6 V10 H2Z'};
+  function flat(o){
+    var ln=o.line||'rgba(0,0,0,.35)', s='';
+    s+='<g transform="translate(50 44)"><path d="'+BOT[o.b]+'" fill="'+o.bc+'" stroke="'+ln+'" stroke-width="1"/><path d="M-15 4 H15" stroke="'+ln+'" stroke-width=".8"/></g>';
+    s+='<g transform="translate(50 6)"><path d="'+TOP[o.t]+'" fill="'+o.tc+'" stroke="'+ln+'" stroke-width="1" stroke-linejoin="round"/>'+
+      (o.t==='shirt'?'<path d="M0 9 V40" stroke="'+ln+'" stroke-width=".9"/>':'')+(o.t==='polo'?'<path d="M0 6 V16" stroke="'+ln+'" stroke-width=".9"/>':'')+
+      (o.t==='hoodie'?'<path d="M-3 4 V14 M3 4 V14" stroke="#F3F4F6" stroke-width="1"/>':'')+'</g>';
+    var sh='<path d="'+SHOE[o.s]+'" fill="'+o.sc+'" stroke="'+ln+'" stroke-width="1" stroke-linejoin="round"/>';
+    s+='<g transform="translate(51 84) scale(-1 1)">'+sh+'</g><g transform="translate(49 84)">'+sh+'</g>';
+    return '<svg viewBox="0 -2 100 98">'+s+'</svg>';
+  }
+  var MONTH=[
+    {d:'OCT 2', n:'7.0', look:'Streetwear', t:'hoodie',tc:'#2E3E63',b:'pants',bc:'#5D7BA6',s:'sneaker',sc:'#EEEEEA'},
+    {d:'OCT 5', n:'7.5', look:'Minimal', t:'tee',tc:'#F4F4F2',b:'pants',bc:'#B9925F',s:'sneaker',sc:'#F4F4F2'},
+    {best:1, d:'OCT 7', n:'8.5', w:'Sharp', look:'Minimal', img:'p01a', neck:.315},
+    {d:'OCT 10', n:'7.5', look:'Smart casual', t:'polo',tc:'#A88B66',b:'pants',bc:'#B9925F',s:'sneaker',sc:'#6B4A33'},
+    {d:'OCT 14', n:'8.0', look:'Workwear', t:'shirt',tc:'#2A2D34',b:'pants',bc:'#2E3036',s:'boot',sc:'#1E1F23',line:'rgba(255,255,255,.35)'},
+    {d:'OCT 17', n:'8.0', look:'Minimal', t:'shirt',tc:'#EDE3CF',b:'pants',bc:'#B9925F',s:'boot',sc:'#A57A50'}
+  ];
+  var cell=function(f){
+    if(f.best) return '<div class="rc-day rc-best"><span class="rc-bf">Best fit</span><div class="k-photo" style="--neck:'+f.neck+'"><img src="img/'+f.img+'.jpg"></div>'+
+      '<div class="band"><b>'+f.n+'</b><em>'+f.w+'</em><span>Oct 7 · '+f.look+'</span></div></div>';
+    return '<div class="rc-day"><span class="d">'+f.d+'</span>'+flat(f)+'<div class="i"><b>'+f.n+'</b><span>'+f.look+'</span></div></div>';
+  };
+  document.querySelectorAll('[data-grid]').forEach(function(g){g.innerHTML=MONTH.map(cell).join('')});
+
+  var WEEK=[
+    {img:'s15',neck:.255,day:'MON',n:'8.0',w:'Sharp',look:'minimal',p:['Cream check overshirt','Tan tee','Wide khaki trousers']},
+    {img:'s14',neck:.225,day:'TUE',n:'7.5',w:'Put together',look:'streetwear',p:['Charcoal denim jacket','White sweater','Grey drawstring trousers']},
+    {img:'s22',neck:.33,day:'WED',n:'7.5',w:'Put together',look:'smart casual',p:['Tan knit polo','Khaki chinos']},
+    {img:'s10',neck:.28,day:'THU',n:'8.0',w:'Sharp',look:'workwear',p:['Black denim jacket','Burgundy sweater','Black slim jeans']},
+    {img:'s05',neck:.21,day:'SAT',n:'7.0',w:'Put together',look:'streetwear',p:['Navy hoodie','Mid-wash slim jeans']}
+  ];
+  document.getElementById('rc-strip').innerHTML=WEEK.map(function(f){return '<div><div class="k-photo" style="--neck:'+f.neck+'"><img src="img/'+f.img+'.jpg"></div><b>'+f.n+'</b><span>'+f.day+'</span></div>'}).join('');
+  var SIGN='<div class="rc-sign"><span class="k-woven">KITTED</span><span>Score your fit · trykitted.com</span></div>';
+  var SAFE='<div class="k-safe"><i style="top:0;left:0;right:0;height:14%"></i><b style="top:4px">TikTok top</b><i style="bottom:0;left:0;right:0;height:30%"></i><b style="bottom:4px">Caption + sound (30%)</b><i style="top:14%;bottom:30%;right:0;width:12%"></i></div>';
+  document.querySelectorAll('[data-fit]').forEach(function(c){
+    var i=+c.getAttribute('data-fit'), f=WEEK[i];
+    c.innerHTML='<div class="k-photo" style="--neck:'+f.neck+'"><img src="img/'+f.img+'.jpg"></div>'+
+      '<span class="rc-chip">'+f.day+' · '+(i+1)+' OF 5</span>'+
+      '<div class="rc-panel"><div class="rc-lock"><span class="n">'+f.n+'</span><span class="t">/10</span><span class="w"><b>'+f.w+'</b><span>Reads as '+f.look+'</span></span></div>'+
+      '<div class="rc-pcs">'+f.p.map(function(x){return '<div>'+x+'</div>'}).join('')+'</div>'+SIGN+'</div>'+SAFE;
+  });
+})();
+</script>
+</section>

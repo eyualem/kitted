@@ -1,0 +1,211 @@
+<section class="cp">
+<style>
+.cp{margin-top:44px}
+.cp h2{margin:0 0 4px;font:700 22px var(--k-sf)}
+.cp>p{margin:0 0 18px;color:#4a5060;max-width:900px}
+.cp-item{display:flex;flex-direction:column}
+.cp-card{position:relative;overflow:hidden;border-radius:10px;box-shadow:0 22px 44px -22px rgba(16,20,36,.55);flex:none;color:#fff;-webkit-font-smoothing:antialiased;background:linear-gradient(#141932,#10142A)}
+.cp-num{font-family:var(--k-num);font-variant-numeric:tabular-nums;letter-spacing:-.035em;line-height:.8}
+.cp-ten{font:500 10px var(--k-mono);letter-spacing:.06em;opacity:.55}
+.cp-url{font:500 9px var(--k-mono);letter-spacing:.08em;color:rgba(255,255,255,.6)}
+.cp-flat{display:block;flex:none}
+.cp-seamv{position:absolute;top:0;bottom:0;border-left:1.5px dashed var(--k-copper)}
+.cp-word{font:700 18px/1 var(--k-sf);letter-spacing:-.01em}
+.cp-reads{font:500 11px/1.25 var(--k-sf);color:rgba(255,255,255,.62)}
+.cp .k-woven.cp-sm{transform:scale(.8);transform-origin:left center}
+/* 1:1 */
+.cp-sq{width:360px;height:360px}
+.cp-sq .k-photo{position:absolute;top:0;left:0;bottom:0;width:198px}
+.cp-sq .k-photo img{object-position:62% 100%}
+.cp-sq .k-photo.full img{object-position:62% 0}
+.cp-sq .cp-seamv{left:198px}
+.cp-sq-col{position:absolute;top:0;bottom:0;left:200px;right:0;padding:22px 16px 20px 18px;display:flex;flex-direction:column}
+.cp-sq-col .k-woven{align-self:flex-start}
+.cp-sq-score{margin-top:auto}
+.cp-sq-score .cp-num{font-size:72px;display:block}
+.cp-sq-score .cp-ten{display:block;margin-top:7px}
+.cp-sq-score .cp-word{margin-top:12px}
+.cp-sq-score .cp-reads{margin-top:5px}
+.cp-sq-flats{display:flex;gap:4px;margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
+.cp-sq-flats .cp-flat{width:31px;height:31px}
+.cp-sq-col .cp-url{margin-top:10px}
+/* 16:9 X */
+.cp-x{width:533px;height:300px}
+.cp-x .k-photo{position:absolute;top:0;left:0;bottom:0;width:206px}
+.cp-x .k-photo img{object-position:69% 100%}
+.cp-x .cp-seamv{left:206px}
+.cp-x-col{position:absolute;top:0;bottom:0;left:208px;right:0;padding:22px 26px 20px 24px}
+.cp-x-top{display:flex;align-items:center;justify-content:space-between}
+.cp-x-score{display:flex;align-items:flex-end;gap:10px;margin-top:26px}
+.cp-x-score .cp-num{font-size:80px}
+.cp-x-score .cp-ten{margin:0 0 5px -4px}
+.cp-x-score .cp-word{font-size:20px;margin:0 0 4px 4px}
+.cp-x-score .cp-reads{margin-top:6px}
+.cp-x-pieces{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:24px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
+.cp-x-pieces div{font:500 9.5px/1.25 var(--k-sf);color:rgba(255,255,255,.82)}
+.cp-x-pieces .cp-flat{width:34px;height:34px;margin:0 0 5px -3px}
+/* Open Graph */
+.cp-og{width:400px;height:210px}
+.cp-og .k-photo{position:absolute;top:0;left:0;bottom:0;width:140px}
+.cp-og .cp-seamv{left:140px}
+.cp-og-col{position:absolute;top:0;bottom:0;left:142px;right:0;padding:18px 20px 16px 20px;display:flex;flex-direction:column}
+.cp-og-top{display:flex;align-items:center;justify-content:space-between}
+.cp-og-top small{font:500 8.5px var(--k-mono);letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.cp-og-score{display:flex;align-items:flex-end;gap:8px;margin-top:16px}
+.cp-og-score .cp-num{font-size:64px}
+.cp-og-score .cp-ten{margin:0 0 4px -3px}
+.cp-og-score .cp-word{margin:0 0 3px 4px}
+.cp-og-score .cp-reads{margin-top:5px}
+.cp-og-pieces{font:500 9.5px/1.4 var(--k-sf);color:rgba(255,255,255,.75);margin-top:12px}
+.cp-og-col .cp-url{margin-top:auto}
+/* iMessage mock */
+.cp-msg{width:360px;background:#fff;border-radius:22px;padding:14px 14px 16px;box-sizing:border-box;box-shadow:0 8px 24px -14px rgba(16,20,36,.4);font-family:var(--k-sf)}
+.cp-msg-h{text-align:center;font:500 11px var(--k-sf);color:#8A8F99;margin-bottom:10px}
+.cp-b{max-width:240px;padding:7px 12px;border-radius:17px;font:15px/1.3 var(--k-sf);margin:3px 0;width:fit-content}
+.cp-b.me{margin-left:auto;background:#1B84FF;color:#fff;border-bottom-right-radius:5px}
+.cp-b.them{background:#E9E9EB;color:#121628;border-bottom-left-radius:5px}
+.cp-link{width:262px;margin:3px 0 3px auto;border-radius:17px;overflow:hidden;background:#E9E9EB}
+.cp-link-img{width:262px;height:137.5px;position:relative;overflow:hidden}
+.cp-link-img .cp-card{position:absolute;top:0;left:0;transform:scale(.655);transform-origin:top left;border-radius:0;box-shadow:none}
+.cp-link-t{padding:8px 12px 9px}
+.cp-link-t b{display:block;font:600 13.5px/1.25 var(--k-sf);color:#121628}
+.cp-link-t span{font:12.5px var(--k-sf);color:#7A7F89}
+.cp-msg-d{text-align:right;font:500 10.5px var(--k-sf);color:#8A8F99;margin:2px 4px 6px 0}
+/* Pinterest 2:3 */
+.cp-pin{width:360px;height:540px;background:#F3F4F6;color:var(--k-ink)}
+.cp-pin .k-photo{position:absolute;top:0;left:0;right:0;height:360px}
+.cp-pin .k-photo img{object-position:100% 100%}
+.cp-pin-seam{position:absolute;top:360px;left:0;right:0;border-top:1.5px dashed var(--k-copper)}
+.cp-pin-body{position:absolute;top:361px;left:0;right:0;bottom:0;padding:16px 24px 0}
+.cp-pin-k{font:500 9px var(--k-mono);letter-spacing:.09em;text-transform:uppercase;color:#646A7A}
+.cp-pin-t{font:700 18px/1.2 var(--k-sf);letter-spacing:-.01em;margin-top:6px}
+.cp-pin-flats{display:flex;gap:6px;margin-top:14px}
+.cp-pin-flats .cp-flat{width:32px;height:32px;background:#fff;border-radius:9px;box-shadow:inset 0 0 0 1px #E3E5EA;padding:3px}
+.cp-pin-score{position:absolute;right:24px;bottom:58px;display:flex;align-items:flex-end;gap:6px}
+.cp-pin-score .cp-num{font-size:44px;color:var(--k-ink)}
+.cp-pin-score .cp-ten{color:var(--k-ink);margin-bottom:3px}
+.cp-pin-score .cp-word{font-size:14px;color:var(--k-ink);margin:0 0 3px 2px}
+.cp-pin-foot{position:absolute;left:24px;right:24px;bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.cp-pin-foot .cp-url{color:#646A7A}
+.cp-pin-foot small{font:500 8.5px var(--k-mono);letter-spacing:.09em;text-transform:uppercase;color:#646A7A;margin-right:8px}
+</style>
+<!--FLATS-->
+<h2>Messages and links · 1:1, 16:9, link preview, Pinterest</h2>
+<p>Where a fit gets sent to one friend or a group chat, and where a link travels. Small, so the score and the label do the work; the photo still leads.</p>
+<div class="k-stage">
+
+<!-- 1:1 neck down -->
+<div class="cp-item" style="width:360px">
+<div class="cp-card cp-sq">
+ <div class="k-photo" style="--neck:.28"><img src="img/s10.jpg" alt=""></div>
+ <div class="cp-seamv"></div>
+ <div class="cp-sq-col">
+  <span class="k-woven cp-sm">KITTED</span>
+  <div class="cp-sq-score"><span class="cp-num">8.0</span><span class="cp-ten">/10</span><div class="cp-word">Sharp</div><div class="cp-reads">Reads as workwear</div></div>
+  <div class="cp-sq-flats">
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#2E333D;--s:rgba(255,255,255,.4);--d:rgba(255,255,255,.28)"><use href="#cp-f-jacket"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#7A2230;--s:rgba(255,255,255,.3);--d:rgba(0,0,0,.3)"><use href="#cp-f-knit"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#272A31;--s:rgba(255,255,255,.4);--d:rgba(255,255,255,.25)"><use href="#cp-f-slim"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#1B1C20;--sole:#5A4030;--s:rgba(255,255,255,.42);--d:rgba(255,255,255,.14)"><use href="#cp-f-boot"/></svg>
+  </div>
+  <span class="cp-url">trykitted.com</span>
+ </div>
+</div>
+<div class="k-cap" style="max-width:360px"><b>1:1 · iMessage, WhatsApp, X.</b> 1080×1080. Neck down. The photo as a print, the score in its column, the four pieces as a row of flats.</div>
+</div>
+
+<!-- 1:1 face shown -->
+<div class="cp-item" style="width:360px">
+<div class="cp-card cp-sq">
+ <div class="k-photo full"><img src="img/s10.jpg" alt=""></div>
+ <div class="cp-seamv"></div>
+ <div class="cp-sq-col">
+  <span class="k-woven cp-sm">KITTED</span>
+  <div class="cp-sq-score"><span class="cp-num">8.0</span><span class="cp-ten">/10</span><div class="cp-word">Sharp</div><div class="cp-reads">Reads as workwear</div></div>
+  <div class="cp-sq-flats">
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#2E333D;--s:rgba(255,255,255,.4);--d:rgba(255,255,255,.28)"><use href="#cp-f-jacket"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#7A2230;--s:rgba(255,255,255,.3);--d:rgba(0,0,0,.3)"><use href="#cp-f-knit"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#272A31;--s:rgba(255,255,255,.4);--d:rgba(255,255,255,.25)"><use href="#cp-f-slim"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#1B1C20;--sole:#5A4030;--s:rgba(255,255,255,.42);--d:rgba(255,255,255,.14)"><use href="#cp-f-boot"/></svg>
+  </div>
+  <span class="cp-url">trykitted.com</span>
+ </div>
+</div>
+<div class="k-cap" style="max-width:360px"><b>1:1 · "Show my face" on.</b> Same card, full photo.</div>
+</div>
+
+<!-- Pinterest -->
+<div class="cp-item" style="width:360px">
+<div class="cp-card cp-pin">
+ <div class="k-photo" style="--neck:.265"><img src="img/s15.jpg" alt=""></div>
+ <div class="cp-pin-seam"></div>
+ <div class="cp-pin-body">
+  <div class="cp-pin-k">Reads as minimal</div>
+  <div class="cp-pin-t">Cream check overshirt, tan tee,<br>wide khaki trousers</div>
+  <div class="cp-pin-flats">
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#EAE1D1;--s:rgba(18,22,40,.38);--d:rgba(90,60,30,.4);--chk:rgba(160,110,60,.42)"><use href="#cp-f-shirt"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#B48957;--s:rgba(18,22,40,.35);--d:rgba(60,35,10,.38)"><use href="#cp-f-tee"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#A99C88;--s:rgba(18,22,40,.35);--d:rgba(50,40,25,.38)"><use href="#cp-f-wide"/></svg>
+   <svg class="cp-flat" viewBox="0 0 100 100" style="--f:#F6F4EE;--sole:#D7B58C;--s:rgba(18,22,40,.4);--d:rgba(60,50,40,.35)"><use href="#cp-f-chunky"/></svg>
+  </div>
+ </div>
+ <div class="cp-pin-score"><span class="cp-num">8.0</span><span class="cp-ten">/10</span><span class="cp-word">Sharp</span></div>
+ <div class="cp-pin-foot"><span class="k-woven cp-sm">KITTED</span><span><small>Score your fit</small><span class="cp-url">trykitted.com</span></span></div>
+ <div class="k-safe"><i style="right:0;bottom:0;width:22%;height:11%"></i><b style="bottom:4px;left:auto;right:4px">Pin buttons</b></div>
+</div>
+<div class="k-cap" style="max-width:360px"><b>Pinterest · 2:3.</b> 1000×1500. Pins are searched, so the pieces are the title ("cream check overshirt, tan tee…") and the score is the proof underneath.</div>
+</div>
+
+<!-- X 16:9 -->
+<div class="cp-item" style="width:533px">
+<div class="cp-card cp-x">
+ <div class="k-photo" style="--neck:.21"><img src="img/s14.jpg" alt=""></div>
+ <div class="cp-seamv"></div>
+ <div class="cp-x-col">
+  <div class="cp-x-top"><span class="k-woven cp-sm">KITTED</span><span class="cp-url">trykitted.com</span></div>
+  <div class="cp-x-score"><span class="cp-num">7.5</span><span class="cp-ten">/10</span><div><div class="cp-word">Put together</div><div class="cp-reads">Reads as streetwear</div></div></div>
+  <div class="cp-x-pieces">
+   <div><svg class="cp-flat" viewBox="0 0 100 100" style="--f:#F1EFEA;--s:rgba(255,255,255,.3);--d:rgba(40,40,50,.28)"><use href="#cp-f-knit"/></svg>White sweater</div>
+   <div><svg class="cp-flat" viewBox="0 0 100 100" style="--f:#3D434D;--s:rgba(255,255,255,.4);--d:rgba(255,255,255,.26)"><use href="#cp-f-jacket"/></svg>Charcoal denim jacket</div>
+   <div><svg class="cp-flat" viewBox="0 0 100 100" style="--f:#8E9096;--s:rgba(255,255,255,.3);--d:rgba(30,30,40,.32);--dr:rgba(240,240,240,.8)"><use href="#cp-f-wide"/></svg>Grey drawstring trousers</div>
+   <div><svg class="cp-flat" viewBox="0 0 100 100" style="--f:#76777A;--sole:#A7A7A3;--s:rgba(255,255,255,.35);--d:rgba(20,20,30,.3)"><use href="#cp-f-chunky"/></svg>Grey chunky sneakers</div>
+  </div>
+ </div>
+</div>
+<div class="k-cap" style="max-width:533px"><b>X in-feed · 16:9.</b> 1600×900. X shows a single image at 16:9 uncropped, so the whole card stays readable in the timeline.</div>
+</div>
+
+<!-- OG card -->
+<div class="cp-item" style="width:400px">
+<div class="cp-card cp-og" id="cp-og">
+ <div class="k-photo" style="--neck:.30"><img src="img/s25.jpg" alt=""></div>
+ <div class="cp-seamv"></div>
+ <div class="cp-og-col">
+  <div class="cp-og-top"><span class="k-woven cp-sm">KITTED</span><small>Scored fit</small></div>
+  <div class="cp-og-score"><span class="cp-num">8.0</span><span class="cp-ten">/10</span><div><div class="cp-word">Sharp</div><div class="cp-reads">Reads as minimal</div></div></div>
+  <div class="cp-og-pieces">Cream camp-collar shirt · Khaki drawstring<br>trousers · Tan chelsea boots</div>
+  <span class="cp-url">trykitted.com</span>
+ </div>
+</div>
+<div class="k-cap" style="max-width:400px"><b>Link preview (Open Graph) · 1.91:1.</b> 1200×630, the image behind trykitted.com/f/… links. Neck down only: a link can travel further than he meant it to.</div>
+</div>
+
+<!-- iMessage mock -->
+<div class="cp-item" style="width:360px">
+<div class="cp-msg">
+ <div class="cp-msg-h">Today 7:42 PM</div>
+ <div class="cp-b me">fit check before tonight</div>
+ <div class="cp-link"><div class="cp-link-img" id="cp-og-slot"></div><div class="cp-link-t"><b>This fit: 8.0 Sharp</b><span>trykitted.com</span></div></div>
+ <div class="cp-msg-d">Delivered</div>
+ <div class="cp-b them">ok the boots are a good call</div>
+ <div class="cp-b them">what app is that</div>
+</div>
+<div class="k-cap" style="max-width:360px"><b>In iMessage.</b> What friends see when he texts the link: the card, a one-line title about the fit, the domain. The second reply is the growth loop.</div>
+</div>
+
+</div>
+<script>(function(){
+ var o=document.getElementById('cp-og'),s=document.getElementById('cp-og-slot');if(!o||!s)return;
+ var k=o.cloneNode(true);k.removeAttribute('id');s.appendChild(k);
+})();</script>
+</section>

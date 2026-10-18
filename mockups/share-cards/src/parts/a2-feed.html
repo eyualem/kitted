@@ -1,0 +1,213 @@
+<section class="fd">
+<style>
+.fd{margin-top:44px}
+.fd h2{margin:0 0 4px;font:700 22px var(--k-sf)}
+.fd>p{margin:0 0 18px;color:#4a5060;max-width:900px}
+.fd-item{display:flex;flex-direction:column;width:360px}
+.fd-card{width:360px;height:450px;position:relative;overflow:hidden;border-radius:10px;box-shadow:0 22px 44px -22px rgba(16,20,36,.55);flex:none;color:#fff;-webkit-font-smoothing:antialiased;background:#121628}
+.fd-num{font-family:var(--k-num);font-variant-numeric:tabular-nums;letter-spacing:-.035em;line-height:.8}
+.fd-ten{font:500 11.5px var(--k-mono);letter-spacing:.04em;opacity:.75}
+.fd-flat{display:block;flex:none}
+.fd-sign{font:600 12px/1.3 var(--k-sf);color:rgba(255,255,255,.86);white-space:nowrap}
+.fd-foot{position:absolute;bottom:20px;left:24px;right:24px;display:flex;align-items:center;gap:10px}
+/* slide 1: the look */
+.fd-s1 .k-photo{position:absolute;top:0;left:0;bottom:0;width:208px}
+.fd-s1 .k-photo img{object-position:64% 100%}
+.fd-s1 .k-photo.full img{object-position:68% 0}
+.fd-s1-seam{position:absolute;top:0;bottom:0;left:208px;border-left:1.5px dashed var(--k-copper)}
+.fd-s1-col{position:absolute;top:0;bottom:0;left:210px;right:0;padding:30px 14px 24px 18px;display:flex;flex-direction:column;background:linear-gradient(#141932,#10142A)}
+.fd-s1-col .k-woven{align-self:flex-start}
+.fd-s1-score{margin-top:0}
+.fd-s1-score .fd-num{font-size:78px;display:block}
+.fd-s1-score .fd-ten{display:block;margin-top:8px}
+.fd-s1-word{font:700 20px/1 var(--k-sf);margin-top:16px}
+.fd-s1-reads{font:400 12.5px/1.3 var(--k-sf);color:rgba(255,255,255,.78);margin-top:6px;white-space:nowrap}
+.fd-s1-foot{display:flex;flex-direction:column;gap:9px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.fd-s1-next{margin-top:auto;font:600 12px var(--k-sf);color:rgba(255,255,255,.88);display:flex;align-items:center;gap:6px}
+.fd-s1-next svg{width:13px;height:13px}
+/* 3:4 grid crop guide (annotation, not exported) */
+.fd-crop{position:absolute;inset:0;pointer-events:none;z-index:40}
+.fd-crop::before,.fd-crop::after{content:"";position:absolute;top:0;bottom:0;border-left:1px dashed #2F9BFF}
+.fd-crop::before{left:11.25px}.fd-crop::after{right:11.25px}
+.fd-crop span{position:absolute;top:8px;left:15px;font:600 9.5px var(--k-mono);letter-spacing:.05em;color:#fff;background:#2F9BFF;padding:2px 5px;border-radius:3px}
+/* slide 2: the pieces */
+.fd-s2{background:#F3F4F6;color:var(--k-ink)}
+.fd-s2-head{position:absolute;top:26px;left:24px;right:24px;display:flex;align-items:baseline;justify-content:space-between}
+.fd-s2-title{font:700 22px/1 var(--k-sf);letter-spacing:-.01em}
+.fd-s2-meta{font:400 12.5px var(--k-sf);color:#3D4352}
+.fd-s2-grid{position:absolute;top:64px;left:24px;right:24px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fd-tile{height:148px;background:#fff;border-radius:12px;box-shadow:inset 0 0 0 1px #E3E5EA;padding:10px 12px 0;box-sizing:border-box;position:relative}
+.fd-tile .fd-flat{width:76px;height:76px;margin:0 auto 6px}
+.fd-tile-n{font:600 12px/1.2 var(--k-sf);color:var(--k-ink)}
+.fd-tile-r{font:500 10.5px var(--k-mono);letter-spacing:.05em;text-transform:uppercase;color:#585E70;margin-top:4px}
+.fd-tile-sw{position:absolute;top:11px;right:11px;width:9px;height:9px;border-radius:5px;box-shadow:inset 0 0 0 .5px rgba(18,22,40,.4)}
+.fd-s2-how{position:absolute;top:322px;margin:0;left:24px;right:24px;font:13px/1.42 var(--k-sf);color:#3D4352}
+.fd-s2-how b{font-weight:600;color:var(--k-ink)}
+.fd-s2-foot{position:absolute;bottom:20px;left:24px;right:24px;display:flex;align-items:center;justify-content:space-between}
+.fd-sign.fd-ink{color:#121628}
+/* slide 3: end card */
+.fd-s3{background:radial-gradient(120% 80% at 50% 0%,#1C2550 0%,#121628 55%,#0B0E1C 100%);text-align:center}
+.fd-s3-h{position:absolute;top:64px;left:24px;right:24px;font:700 31px/1.08 var(--k-sf);letter-spacing:-.02em}
+.fd-s3-h span{color:rgba(255,255,255,.55)}
+.fd-s3-tape{position:absolute;top:186px;left:44px;right:44px;height:62px;border-radius:8px;background:#F3F4F6;overflow:hidden;box-shadow:0 10px 24px -10px rgba(0,0,0,.6)}
+.fd-s3-tape::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:repeating-linear-gradient(90deg,#9097A6 0 1px,transparent 1px 6.8px)}
+.fd-s3-tape::after{content:"";position:absolute;left:0;right:0;top:0;height:22px;background:repeating-linear-gradient(90deg,#121628 0 1px,transparent 1px 34px);background-position:-1px 0}
+.fd-s3-nums{position:absolute;left:0;right:0;top:24px;display:flex;justify-content:space-around;align-items:baseline;font-family:var(--k-num);font-size:22px;color:#8A90A0;padding:0 6px}
+.fd-s3-nums b{font-weight:400;font-size:34px;color:#121628;line-height:30px}
+.fd-s3-mk{position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;background:var(--k-copper)}
+.fd-s3-p{position:absolute;top:272px;left:30px;right:30px;margin:0;font:13.5px/1.5 var(--k-sf);color:rgba(255,255,255,.75)}
+.fd-s3-p span{color:rgba(255,255,255,.5)}
+.fd-s3-free{position:absolute;top:376px;left:0;right:0;font:500 12px var(--k-sf);color:rgba(255,255,255,.72)}
+.fd-center{justify-content:center;bottom:24px}
+/* the move: before -> after */
+.fd-mv .k-photo{position:absolute;top:0;height:250px;width:179px}
+.fd-mv-b{left:0}.fd-mv-a{right:0}
+.fd-mv-seam{position:absolute;top:0;height:250px;left:179.5px;border-left:1.5px dashed var(--k-copper)}
+.fd-mv-chip{position:absolute;top:220px;font:600 10px var(--k-mono);letter-spacing:.1em;color:#fff;background:rgba(18,22,40,.88);padding:4px 7px;border-radius:5px}
+.fd-mv-band{position:absolute;top:250px;left:0;right:0;bottom:0;border-top:1.5px dashed var(--k-copper);padding:14px 24px 0}
+.fd-mv-row{display:flex;align-items:flex-end;gap:10px;height:62px}
+.fd-mv-old .fd-num{font-size:40px;color:rgba(255,255,255,.6)}
+.fd-mv-old{display:flex;align-items:flex-end;gap:6px}
+.fd-mv-old div{font:600 12px/1.15 var(--k-sf);color:rgba(255,255,255,.7);margin:0 0 3px}
+.fd-mv-arrow{width:26px;height:14px;flex:none;margin:0 2px 14px}
+.fd-mv-new .fd-num{font-size:64px}
+.fd-mv-new{display:flex;align-items:flex-end;gap:8px}
+.fd-mv-new div{font:700 19px/1 var(--k-sf);margin:0 0 4px}
+.fd-mv-delta{float:right;margin-top:-4px;font:600 13px var(--k-num);letter-spacing:.02em;color:var(--k-copper);border:1px solid rgba(222,151,98,.55);border-radius:6px;padding:3px 7px}
+.fd-mv-fix{font:600 14.5px/1.2 var(--k-sf);margin-top:12px}
+.fd-mv-fix span{display:block;font:500 10px var(--k-mono);letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:5px}
+.fd-mv-pcs{font:400 11.5px/1.3 var(--k-sf);color:rgba(255,255,255,.75);margin-top:6px}
+/* profile grid mock */
+.fd-grid{width:360px;background:#fff;border-radius:14px;padding:14px 0 0;box-shadow:0 8px 24px -14px rgba(16,20,36,.4)}
+.fd-grid-h{display:flex;justify-content:space-around;font:600 12px var(--k-sf);color:#121628;padding:0 0 10px;border-bottom:1px solid #E6E8EC}
+.fd-grid-h span{opacity:.35}.fd-grid-h span:first-child{opacity:1}
+.fd-grid-g{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px 0 0}
+.fd-gt{aspect-ratio:3/4;background:#E4E6EA;position:relative;overflow:hidden}
+.fd-gt:nth-child(3n+2){background:#D9DCE2}
+.fd-gt .fd-card{position:absolute;top:0;left:50%;transform-origin:top left;box-shadow:none;border-radius:0}
+.fd-grid-cap{font:12px/1.35 var(--k-sf);color:#646A7A;padding:10px 14px 12px}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<style>.fd-fl *{vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}</style>
+<clipPath id="fd-cp-shirt"><path d="M35 12 L21 17 Q13 20 11 29 L4 86 L15 88 L22 46 L22 91 Q22 93 24 93 L76 93 Q78 93 78 91 L78 46 L85 88 L96 86 L89 29 Q87 20 79 17 L65 12 L50 24 Z"/></clipPath>
+<symbol id="fd-f-tee" viewBox="0 0 100 100" class="fd-fl"><path d="M36 17 C41 22 59 22 64 17 L82 23 Q86 25 88 29 L96 44 L82 51 L76 42 L76 88 Q76 90 74 90 L26 90 Q24 90 24 88 L24 42 L18 51 L4 44 L12 29 Q14 25 18 23 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M36 17 C41 26 59 26 64 17" fill="none" stroke="var(--d)" stroke-width="1"/><path d="M24 42 L22 30 M76 42 L78 30" fill="none" stroke="var(--d)" stroke-width=".8"/></symbol>
+<symbol id="fd-f-knit" viewBox="0 0 100 100" class="fd-fl"><path d="M37 15 C42 19 58 19 63 15 L80 20 Q87 22 89 30 L96 82 L85 84 L77 44 L77 88 Q77 90 75 90 L25 90 Q23 90 23 88 L23 44 L15 84 L4 82 L11 30 Q13 22 20 20 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M39 5 L61 5 L63 17 C56 21 44 21 37 17 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M38.5 11 L61.5 11 M23 84 L77 84 M85.6 79 L96 77 M14.4 79 L4 77" fill="none" stroke="var(--d)" stroke-width="1"/></symbol>
+<symbol id="fd-f-shirt" viewBox="0 0 100 100" class="fd-fl"><path d="M35 12 L21 17 Q13 20 11 29 L4 86 L15 88 L22 46 L22 91 Q22 93 24 93 L76 93 Q78 93 78 91 L78 46 L85 88 L96 86 L89 29 Q87 20 79 17 L65 12 L50 24 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><g clip-path="url(#fd-cp-shirt)" stroke="var(--chk,transparent)" stroke-width="1.6" fill="none"><path d="M0 34H100M0 52H100M0 70H100M0 88H100M14 0V100M32 0V100M68 0V100M86 0V100"/></g><path d="M35 12 L40 30 L50 24 L60 30 L65 12 L57 9 Q50 12 43 9 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M50 24 L50 93 M28 36 H41 V48 H28 Z M59 36 H72 V48 H59 Z M28 40 H41 M59 40 H72 M15 82 L4 80 M85 82 L96 80" fill="none" stroke="var(--d)" stroke-width="1"/><circle cx="52.5" cy="40" r="1.1" fill="var(--d)"/><circle cx="52.5" cy="56" r="1.1" fill="var(--d)"/><circle cx="52.5" cy="72" r="1.1" fill="var(--d)"/></symbol>
+<symbol id="fd-f-jacket" viewBox="0 0 100 100" class="fd-fl"><path d="M35 12 L21 17 Q13 20 11 29 L4 80 L15 82 L22 46 L22 82 L78 82 L78 46 L85 82 L96 80 L89 29 Q87 20 79 17 L65 12 L50 24 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M22 73 H78 V82 H22 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M35 12 L40 30 L50 24 L60 30 L65 12 L57 9 Q50 12 43 9 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M50 24 L50 82 M27 35 H42 V39 L34.5 42 L27 39 Z M58 35 H73 V39 L65.5 42 L58 39 Z M34 46 V73 M66 46 V73 M15 76 L4 74 M85 76 L96 74" fill="none" stroke="var(--d)" stroke-width="1"/><circle cx="52.5" cy="44" r="1.2" fill="var(--d)"/><circle cx="52.5" cy="58" r="1.2" fill="var(--d)"/><circle cx="52.5" cy="77.5" r="1.2" fill="var(--d)"/></symbol>
+<symbol id="fd-f-camp" viewBox="0 0 100 100" class="fd-fl"><path d="M36 14 L18 21 Q13 23 11 28 L4 44 L18 51 L24 42 L24 90 Q24 92 26 92 L74 92 Q76 92 76 90 L76 42 L82 51 L96 44 L89 28 Q87 23 82 21 L64 14 L50 34 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M36 14 L32 23 L45 30 L50 34 Z M64 14 L68 23 L55 30 L50 34 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M36 14 Q50 9 64 14 M50 34 L50 92 M24 42 L22 30 M76 42 L78 30" fill="none" stroke="var(--d)" stroke-width="1"/><circle cx="52.5" cy="48" r="1.1" fill="var(--d)"/><circle cx="52.5" cy="62" r="1.1" fill="var(--d)"/><circle cx="52.5" cy="76" r="1.1" fill="var(--d)"/></symbol>
+<symbol id="fd-f-wide" viewBox="0 0 100 100" class="fd-fl"><path d="M29 6 L71 6 L83 94 L55 94 L50 30 L45 94 L17 94 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M29 6 H71 L71.6 13 H28.4 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M39 13 L32 94 M61 13 L68 94 M50 13 L50 27 M31 13 Q36 17 37 25 M69 13 Q64 17 63 25" fill="none" stroke="var(--d)" stroke-width=".9"/><path d="M47.5 13 Q46.5 19 44.5 21 M52.5 13 Q53.5 19 55.5 21" fill="none" stroke="var(--dr,transparent)" stroke-width="1"/></symbol>
+<symbol id="fd-f-chino" viewBox="0 0 100 100" class="fd-fl"><path d="M30 6 L70 6 L73 94 L54 94 L50 30 L46 94 L27 94 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M30 6 H70 L70.3 13 H29.7 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M31 13 Q36 18 38 26 M69 13 Q64 18 62 26 M50 13 L50 27 M38.5 26 L36.5 94 M61.5 26 L63.5 94" fill="none" stroke="var(--d)" stroke-width=".9"/></symbol>
+<symbol id="fd-f-slim" viewBox="0 0 100 100" class="fd-fl"><path d="M30 6 L70 6 L66 94 L54 94 L50 32 L46 94 L34 94 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M30 6 H70 L69.7 13 H30.3 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M31 13 Q38 22 43 15 M69 13 Q62 22 57 15 M50 13 L50 25 Q50 29 46.5 29" fill="none" stroke="var(--d)" stroke-width=".9"/></symbol>
+<symbol id="fd-f-sneak" viewBox="0 0 100 100" class="fd-fl"><path d="M8 72 Q8 58 16 54 L30 50 Q36 46 42 47 L50 49 Q60 58 76 61 Q94 64 95 72 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M6 72 L96 72 Q97 78 92 80 L10 80 Q6 79 6 72 Z" fill="var(--sole)" stroke="var(--s)" stroke-width="1.1"/><path d="M44 50 L52 57 M48 49 L56 55 M9 62 Q13 60 15 54 M76 61 Q72 66 74 72" fill="none" stroke="var(--d)" stroke-width=".9"/></symbol>
+<symbol id="fd-f-chunky" viewBox="0 0 100 100" class="fd-fl"><path d="M5 62 L78 64 Q90 64 96 57 Q99.5 60 98.5 65.5 Q96.5 74 88 77 L14 79 Q5 78 5 62 Z" fill="var(--sole)" stroke="var(--s)" stroke-width="1.1"/><path d="M8 62.5 Q6.5 49 15 44 L27 39 Q33 35 40 36 L50 39 Q60 48 74 52 Q88 55 95 57 Q90 63.5 78 64 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M7 70.5 L86 71.5 Q93 70.5 97.5 65.5 M74 52 Q67.5 57 69.5 63.5 M17 57 Q34 50.5 53 56 M8.5 54 Q12 51 14.5 45 M40 36 Q38 46 30 52" fill="none" stroke="var(--d)" stroke-width=".9"/><path d="M41 41.5 L49.5 38.5 M45 45 L53.5 42 M49 48.5 L57.5 45.5" fill="none" stroke="var(--lace,var(--d))" stroke-width="1.4"/></symbol>
+<symbol id="fd-f-boot" viewBox="0 0 100 100" class="fd-fl"><path d="M19 22 L45 22 Q46 38 48 50 Q66 54 82 60 Q95 64 95 73 L14 73 Q12 48 19 22 Z" fill="var(--f)" stroke="var(--s)" stroke-width="1.1"/><path d="M27 23 L37 23 Q37 38 32 46 Q27 38 27 23 Z" fill="var(--d)" stroke="none"/><path d="M12 73 L96 73 Q96 79 92 80 L12 80 Z" fill="var(--sole)" stroke="var(--s)" stroke-width="1.1"/><path d="M19 22 L20 15 L26 15 L26 22" fill="none" stroke="var(--s)" stroke-width="1"/></symbol>
+</defs></svg>
+
+<h2>Instagram feed post · 4:5 carousel</h2>
+<p>Scores are demo numbers. The post he keeps on his profile. Slide 1 is the cover and the grid tile (key content inside the centered 3:4), slide 2 is what a viewer can copy, slide 3 closes the loop. A re-check win swaps in "The move".</p>
+<div class="k-stage">
+
+<!-- slide 1, neck down, with grid guide -->
+<div class="fd-item">
+<div class="fd-card fd-s1" id="fd-cover">
+ <div class="k-photo" style="--neck:.265"><img src="img/s15.jpg" alt=""></div>
+ <div class="fd-s1-seam"></div>
+ <div class="fd-s1-col">
+  <div class="fd-s1-score"><span class="fd-num">8.0</span><span class="fd-ten">/10</span>
+   <div class="fd-s1-word">Sharp</div><div class="fd-s1-reads">Reads as minimal</div></div>
+  <div class="fd-s1-next">The pieces<svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="fd-s1-foot"><span class="k-woven">KITTED</span><div class="fd-sign">Score your fit<br>trykitted.com</div></div>
+ </div>
+ <div class="fd-crop"><span>3:4 GRID CROP</span></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i><b style="top:4px;left:14px">Grid crops the sides</b></div>
+</div>
+<div class="k-cap"><b>Slide 1 · The look (cover), neck down.</b> 1080×1350. The photo as a tall print, the score in its own column behind a copper seam. Blue lines (not exported) show where the profile grid cuts the 3:4 tile: nothing important sits outside them.</div>
+</div>
+
+<!-- slide 2: the pieces -->
+<div class="fd-item">
+<div class="fd-card fd-s2">
+ <div class="fd-s2-head"><span class="fd-s2-title">The pieces</span><span class="fd-s2-meta">8.0 Sharp · Reads as minimal</span></div>
+ <div class="fd-s2-grid">
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#E8DFCF"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#EAE1D1;--s:rgba(18,22,40,.38);--d:rgba(90,60,30,.4);--chk:rgba(160,110,60,.42)"><use href="#fd-f-shirt"/></svg><div class="fd-tile-n">Cream check overshirt</div><div class="fd-tile-r">The layer</div></div>
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#B48957"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#B48957;--s:rgba(18,22,40,.35);--d:rgba(60,35,10,.38)"><use href="#fd-f-tee"/></svg><div class="fd-tile-n">Tan tee</div><div class="fd-tile-r">The base</div></div>
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#A99C88"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#A99C88;--s:rgba(18,22,40,.35);--d:rgba(50,40,25,.38)"><use href="#fd-f-wide"/></svg><div class="fd-tile-n">Wide khaki trousers</div><div class="fd-tile-r">The shape</div></div>
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#F3F1EB"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#F6F4EE;--sole:#D7B58C;--s:rgba(18,22,40,.4);--d:rgba(60,50,40,.35)"><use href="#fd-f-chunky"/></svg><div class="fd-tile-n">White chunky sneakers</div><div class="fd-tile-r">The shoes</div></div>
+ </div>
+  <div class="fd-foot"><span class="k-woven">KITTED</span><span class="fd-sign fd-ink">Score your fit · trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i><b style="top:4px;left:14px">No overlay UI in feed</b></div>
+</div>
+<div class="k-cap"><b>Slide 2 · The pieces.</b> 1080×1350. The useful slide: each piece drawn in its own color with its job in the outfit. This is what gets saved.</div>
+</div>
+
+<!-- slide 3: end card -->
+<div class="fd-item">
+<div class="fd-card fd-s3">
+ <div class="fd-s3-h">What would<br><span>yours score?</span></div>
+ <div class="fd-s3-tape"><div class="fd-s3-nums"><span>7.0</span><span>7.5</span><b>8.0</b><span>8.5</span><span>9.0</span></div><div class="fd-s3-mk"></div></div>
+ <p class="fd-s3-p">Send a fit pic. Get a score out of 10<br>and the one fix that raises it.<br><span>Same photo, same score.</span></p>
+ <div class="fd-s3-free">Your first fit check each day is free.</div>
+ <div class="fd-foot fd-center"><span class="k-woven">KITTED</span><span class="fd-sign">Score your fit · trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i></div>
+</div>
+<div class="k-cap"><b>Slide 3 · End card.</b> 1080×1350. A question, not a slogan, over the tape measure every score lands on. Same on every carousel, so it becomes a recognisable sign-off.</div>
+</div>
+
+<!-- slide 1, face shown -->
+<div class="fd-item">
+<div class="fd-card fd-s1">
+ <div class="k-photo full"><img src="img/s15.jpg" alt=""></div>
+ <div class="fd-s1-seam"></div>
+ <div class="fd-s1-col">
+  <div class="fd-s1-score"><span class="fd-num">8.0</span><span class="fd-ten">/10</span>
+   <div class="fd-s1-word">Sharp</div><div class="fd-s1-reads">Reads as minimal</div></div>
+  <div class="fd-s1-next">The pieces<svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="fd-s1-foot"><span class="k-woven">KITTED</span><div class="fd-sign">Score your fit<br>trykitted.com</div></div>
+ </div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i></div>
+</div>
+<div class="k-cap"><b>Slide 1 · "Show my face" on.</b> The full photo in the same frame: head to shoes still fit the tall print.</div>
+</div>
+
+<!-- the move -->
+<div class="fd-item">
+<div class="fd-card fd-mv">
+ <div class="k-photo fd-mv-b" style="--neck:.315"><img src="img/p01b.jpg" alt=""></div>
+ <div class="k-photo fd-mv-a" style="--neck:.315"><img src="img/p01a.jpg" alt=""></div>
+ <div class="fd-mv-seam"></div>
+ <span class="fd-mv-chip" style="left:24px">BEFORE</span><span class="fd-mv-chip" style="left:193px">AFTER</span>
+ <div class="fd-mv-band">
+  <div class="fd-mv-row">
+   <div class="fd-mv-old"><span class="fd-num">7.5</span><div>Put<br>together</div></div>
+   <svg class="fd-mv-arrow" viewBox="0 0 26 14"><path d="M1 7h22M17 1.5L23 7l-6 5.5" fill="none" stroke="#DE9762" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+   <div class="fd-mv-new"><span class="fd-num">8.5</span><div>Sharp</div></div>
+  </div>
+  <div class="fd-mv-fix"><span>The fix<b class="fd-mv-delta">+1.0</b></span>Added the overshirt, worn open</div>
+  <div class="fd-mv-pcs">White tee · Khaki overshirt, worn open · Tan chinos</div>
+ </div>
+ <div class="fd-foot"><span class="k-woven">KITTED</span><span class="fd-sign">Score your fit · trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i></div>
+</div>
+<div class="k-cap"><b>Slide 3, for a re-check win · The move.</b> 1080×1350. Before and after on one seam, the score climbing in copper, the fix he made and the pieces (no shoes: the pair shows socks). Demo photos; the real card uses his own two photos.</div>
+</div>
+
+<!-- profile grid mock -->
+<div class="fd-item">
+<div class="fd-grid">
+ <div class="fd-grid-h"><span>Posts</span><span>Reels</span><span>Tagged</span></div>
+ <div class="fd-grid-g"><div class="fd-gt" id="fd-gt1"></div><div class="fd-gt"></div><div class="fd-gt"></div><div class="fd-gt"></div><div class="fd-gt"></div><div class="fd-gt"></div></div>
+ <div class="fd-grid-cap">On his profile the cover shows as a 3:4 tile: the score column, label and seam all survive the crop.</div>
+</div>
+<div class="k-cap"><b>Profile grid (mock).</b> How slide 1 sits among his other posts.</div>
+</div>
+
+</div>
+<script>(function(){
+ var c=document.getElementById('fd-cover'),t=document.getElementById('fd-gt1');if(!c||!t)return;
+ var k=c.cloneNode(true);k.removeAttribute('id');
+ Array.prototype.forEach.call(k.querySelectorAll('.fd-crop,.k-safe'),function(n){n.remove()});
+ t.appendChild(k);
+ function fit(){var s=t.clientHeight/450;k.style.transform='scale('+s+') translateX(-180px)';}
+ fit();window.addEventListener('resize',fit);
+})();</script>
+</section>

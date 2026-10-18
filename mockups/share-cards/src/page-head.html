@@ -1,0 +1,83 @@
+<title>Kitted Share Cards</title>
+<style>
+/*BASE*/
+/* Layout: a light grey gallery wall; each format family is a row of true-proportion cards (drawn at 1/3 of export size).
+   Single theme on purpose: the cards are images with a fixed palette, and they're judged against one neutral ground. */
+:root{
+  color-scheme:light;
+  --pg-bg:#D9DCE2; --pg-panel:#EEF0F3; --pg-ink:#131726; --pg-ink2:#4A5060; --pg-line:#C3C7D0; --pg-accent:#9C5326; --pg-indigo:#1A2448;
+  --pg-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+}
+body{background:var(--pg-bg);color:var(--pg-ink);font:15px/1.5 var(--pg-sans);margin:0}
+.pg-wrap{padding-inline:16px;padding-block:28px 64px;max-width:1240px;margin:0 auto}
+@media (min-width:720px){.pg-wrap{padding-inline:32px}}
+.k-stage{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.k-cap{max-width:360px;font-size:13px;color:var(--pg-ink2);margin-top:10px}
+.pg-top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.pg-h1{font:600 44px/1.02 var(--k-num);letter-spacing:-.01em;margin:0 0 10px;text-wrap:balance}
+.pg-lede{max-width:66ch;color:var(--pg-ink2);margin:0 0 22px}
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:0 0 22px}
+.pg-box{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:14px;padding:16px 18px;min-width:0}
+.pg-box h3{margin:0 0 8px;font:600 12px var(--k-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--pg-ink2)}
+.pg-box ul,.pg-box ol{margin:0;padding-left:18px}
+.pg-box li{margin:4px 0}
+.pg-tablewrap{overflow-x:auto;margin:0 0 22px;background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:14px}
+.pg-table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+.pg-table th,.pg-table td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--pg-line);vertical-align:top}
+.pg-table th{font:600 11px var(--k-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--pg-ink2)}
+.pg-table tr:last-child td{border-bottom:0}
+.pg-when{display:inline-block;font:600 11px var(--k-mono);letter-spacing:.06em;padding:2px 7px;border-radius:5px;border:1px solid var(--pg-line);background:#fff;white-space:nowrap}
+.pg-when.v1{background:var(--pg-indigo);color:#fff;border-color:var(--pg-indigo)}
+.pg-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:100;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;background:var(--pg-bg);border-bottom:1px solid var(--pg-line);margin-bottom:8px}
+.pg-bar a{font:600 13px var(--pg-sans);color:var(--pg-ink);text-decoration:none;padding:6px 10px;border-radius:999px;background:var(--pg-panel);border:1px solid var(--pg-line)}
+.pg-bar a:focus-visible,.pg-toggle:focus-visible{outline:2px solid var(--pg-indigo);outline-offset:2px}
+.pg-toggle{margin-left:auto;font:600 13px var(--pg-sans);padding:6px 12px;border-radius:999px;border:1px solid var(--pg-indigo);background:#fff;color:var(--pg-indigo);cursor:pointer}
+.pg-toggle[aria-pressed="true"]{background:var(--pg-indigo);color:#fff}
+.pg-group{margin-top:44px}
+.pg-gh{border-top:2px solid var(--pg-ink);padding-top:12px;margin-bottom:6px}
+.pg-gt{font:600 34px/1 var(--k-num);margin:0 0 4px}
+.pg-gd{margin:0;color:var(--pg-ink2)}
+.pg-part{margin-top:30px;scroll-margin-top:64px}
+.pg-scroll{overflow-x:auto;padding-bottom:6px}
+.pg-part section h2{font:700 20px/1.25 var(--pg-sans);margin:0 0 4px}
+.pg-part section > p{max-width:76ch;color:var(--pg-ink2);margin:0 0 16px}
+.pg-foot{margin-top:56px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+<div class="pg-wrap">
+<div class="pg-top"><span class="k-woven">KITTED</span><span style="font:600 12px var(--k-mono);letter-spacing:.12em;color:var(--pg-ink2)">SHARE CARD DEMOS · OCT 18, 2026</span></div>
+<h1 class="pg-h1">Share cards, every format</h1>
+<p class="pg-lede">The cards Kitted could hand you after a fit check, for TikTok, Instagram, Snapchat and messages. Each one is drawn at true proportions (one third of export size). The photos are free stock and the scores are demo numbers. Three designers built these, three critics reviewed them, and everything here is the revised version.</p>
+<div class="pg-grid">
+ <div class="pg-box"><h3>Your calls</h3><ul>
+  <li><b>Face:</b> your choice per share. Neck down is the default, and "Full photo" shares the whole picture.</li>
+  <li><b>Which scores:</b> 7.0 and up, plus re-check wins. A low score only shows as the "before".</li>
+  <li><b>Tone:</b> mostly premium, plus a few loud formats for TikTok.</li>
+  <li><b>Both:</b> stills and short videos.</li></ul></div>
+ <div class="pg-box"><h3>What the critics agreed on</h3><ul>
+  <li>The formats that get posted are a game (guess the score) or a story (one fix moved it). A plain score reads as an ad.</li>
+  <li>One sign-off everywhere: the KITTED label, then "Score your fit · trykitted.com".</li>
+  <li>No text smaller than 11 pt drawn, so nothing turns to mush once TikTok compresses it.</li>
+  <li>Kit's name stays off shared cards, because people who see them don't know who Kit is.</li></ul></div>
+ <div class="pg-box"><h3>Recommended first build</h3><ol>
+  <li>The Story card, with a TikTok-safe version and the face toggle</li>
+  <li>The before → after still</li>
+  <li>"Beat my 8.0", the card you send a friend</li>
+  <li>Save to Photos for everything else</li></ol>
+  <p style="margin:8px 0 0;color:var(--pg-ink2)">About 3 days, with one new package (react-native-view-shot). Until video export exists, screen-record the app's own score reveal for your daily posts.</p></div>
+</div>
+<div class="pg-tablewrap"><table class="pg-table">
+<thead><tr><th>Format</th><th>Made how</th><th>Needs</th><th>Work</th><th>When</th></tr></thead>
+<tbody>
+<tr><td>Story card, 1:1, feed slides</td><td>An image captured in the app</td><td>react-native-view-shot (your OK), photo-saving permission text</td><td>2–2.5 days</td><td><span class="pg-when v1">v1</span></td></tr>
+<tr><td>Before → after still, Beat my 8.0</td><td>The same capture</td><td>Nothing more</td><td>1 day</td><td><span class="pg-when v1">v1</span></td></tr>
+<tr><td>Hang tag, weekly carousel</td><td>The same capture</td><td>Your history (carousel)</td><td>1–1.5 days each</td><td><span class="pg-when">v1.1</span></td></tr>
+<tr><td>Stickers for Instagram Stories</td><td>Instagram's Stories share link</td><td>A Facebook App ID (Meta developer account)</td><td>1.5 days</td><td><span class="pg-when">v1.1</span></td></tr>
+<tr><td>Videos: reveal, before → after, guess</td><td>Our own video writer on the phone (no upload)</td><td>A native module; maybe Skia (your OK)</td><td>4–6 days, then 1–2 per format</td><td><span class="pg-when">Later</span></td></tr>
+<tr><td>TikTok green screen, Snapchat stickers</td><td>TikTok Share Kit, Snap Creative Kit</td><td>Developer accounts and review</td><td>1–2.5 days each</td><td><span class="pg-when">Later</span></td></tr>
+<tr><td>Link preview (trykitted.com/f/…)</td><td>A web page on our server</td><td>Domain, hosting, a privacy decision</td><td>3+ days</td><td><span class="pg-when">Later</span></td></tr>
+</tbody></table></div>
+<nav class="pg-bar" aria-label="Formats">
+ <a href="#a1-story">Story</a><a href="#a2-feed">Feed</a><a href="#a3-compact">Messages</a><a href="#b1-stickers">Stickers</a><a href="#b2-tag">Hang tag</a><a href="#b3-recap">Recap</a><a href="#c1-reveal">Reveal</a><a href="#c2-before-after">Before → after</a><a href="#c3-guess">Guess</a>
+ <button class="pg-toggle" id="pg-safe" type="button" aria-pressed="false">Show safe zones</button>
+</nav>

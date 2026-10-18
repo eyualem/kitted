@@ -1,0 +1,208 @@
+<section class="fd">
+<style>
+.fd{margin-top:44px}
+.fd h2{margin:0 0 4px;font:700 22px var(--k-sf)}
+.fd>p{margin:0 0 18px;color:#4a5060;max-width:900px}
+.fd-item{display:flex;flex-direction:column;width:360px}
+.fd-card{width:360px;height:450px;position:relative;overflow:hidden;border-radius:10px;box-shadow:0 22px 44px -22px rgba(16,20,36,.55);flex:none;color:#fff;-webkit-font-smoothing:antialiased;background:#121628}
+.fd-num{font-family:var(--k-num);font-variant-numeric:tabular-nums;letter-spacing:-.035em;line-height:.8}
+.fd-ten{font:500 10.5px var(--k-mono);letter-spacing:.06em;opacity:.55}
+.fd-flat{display:block;flex:none}
+.fd-url{font:500 9.5px var(--k-mono);letter-spacing:.08em;color:rgba(255,255,255,.62)}
+/* slide 1: the look */
+.fd-s1 .k-photo{position:absolute;top:0;left:0;bottom:0;width:224px}
+.fd-s1 .k-photo img{object-position:64% 100%}
+.fd-s1 .k-photo.full img{object-position:68% 0}
+.fd-s1-seam{position:absolute;top:0;bottom:0;left:224px;border-left:1.5px dashed var(--k-copper)}
+.fd-s1-col{position:absolute;top:0;bottom:0;left:226px;right:0;padding:28px 0 26px 18px;display:flex;flex-direction:column;background:linear-gradient(#141932,#10142A)}
+.fd-s1-col .k-woven{transform:scale(.84);transform-origin:left center;align-self:flex-start;padding:0 13px}
+.fd-s1-score{margin-top:auto}
+.fd-s1-score .fd-num{font-size:78px;display:block}
+.fd-s1-score .fd-ten{display:block;margin-top:8px}
+.fd-s1-word{font:700 20px/1 var(--k-sf);margin-top:16px}
+.fd-s1-reads{font:500 11.5px/1.3 var(--k-sf);color:rgba(255,255,255,.62);margin-top:6px}
+.fd-s1-foot{margin-top:auto;display:flex;flex-direction:column;gap:7px}
+.fd-s1-next{font:600 11px var(--k-sf);color:rgba(255,255,255,.88);display:flex;align-items:center;gap:6px}
+.fd-s1-next svg{width:13px;height:13px}
+/* 3:4 grid crop guide (annotation, not exported) */
+.fd-crop{position:absolute;inset:0;pointer-events:none;z-index:40}
+.fd-crop::before,.fd-crop::after{content:"";position:absolute;top:0;bottom:0;border-left:1px dashed #2F9BFF}
+.fd-crop::before{left:11.25px}.fd-crop::after{right:11.25px}
+.fd-crop span{position:absolute;bottom:8px;left:15px;font:600 8.5px var(--k-mono);letter-spacing:.05em;color:#fff;background:#2F9BFF;padding:2px 5px;border-radius:3px}
+/* slide 2: the pieces */
+.fd-s2{background:#F3F4F6;color:var(--k-ink)}
+.fd-s2-head{position:absolute;top:26px;left:24px;right:24px;display:flex;align-items:baseline;justify-content:space-between}
+.fd-s2-title{font:700 22px/1 var(--k-sf);letter-spacing:-.01em}
+.fd-s2-meta{font:500 9.5px var(--k-mono);letter-spacing:.07em;text-transform:uppercase;color:#646A7A}
+.fd-s2-grid{position:absolute;top:64px;left:24px;right:24px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fd-tile{height:118px;background:#fff;border-radius:12px;box-shadow:inset 0 0 0 1px #E3E5EA;padding:10px 12px 0;box-sizing:border-box;position:relative}
+.fd-tile .fd-flat{width:56px;height:56px;margin:0 auto 4px}
+.fd-tile-n{font:600 12px/1.2 var(--k-sf);color:var(--k-ink)}
+.fd-tile-r{font:500 8.5px var(--k-mono);letter-spacing:.07em;text-transform:uppercase;color:#7A8090;margin-top:4px}
+.fd-tile-sw{position:absolute;top:11px;right:11px;width:9px;height:9px;border-radius:5px;box-shadow:inset 0 0 0 .5px rgba(18,22,40,.4)}
+.fd-s2-how{position:absolute;top:322px;margin:0;left:24px;right:24px;font:13px/1.42 var(--k-sf);color:#3D4352}
+.fd-s2-how b{font-weight:600;color:var(--k-ink)}
+.fd-s2-foot{position:absolute;bottom:20px;left:24px;right:24px;display:flex;align-items:center;justify-content:space-between}
+.fd-s2-foot .k-woven{transform:scale(.8);transform-origin:left center}
+.fd-s2-foot .fd-url{color:#646A7A}
+/* slide 3: end card */
+.fd-s3{background:radial-gradient(120% 80% at 50% 0%,#1C2550 0%,#121628 55%,#0B0E1C 100%);text-align:center}
+.fd-s3 .k-woven{position:absolute;top:58px;left:50%;transform:translateX(-50%) scale(1.15)}
+.fd-s3-h{position:absolute;top:116px;left:24px;right:24px;font:700 31px/1.08 var(--k-sf);letter-spacing:-.02em}
+.fd-s3-h span{color:rgba(255,255,255,.55)}
+.fd-s3-tape{position:absolute;top:214px;left:44px;right:44px;height:62px;border-radius:8px;background:#F3F4F6;overflow:hidden;box-shadow:0 10px 24px -10px rgba(0,0,0,.6)}
+.fd-s3-tape::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:repeating-linear-gradient(90deg,#9097A6 0 1px,transparent 1px 6.8px)}
+.fd-s3-tape::after{content:"";position:absolute;left:0;right:0;top:0;height:22px;background:repeating-linear-gradient(90deg,#121628 0 1px,transparent 1px 34px);background-position:-1px 0}
+.fd-s3-nums{position:absolute;left:0;right:0;top:24px;display:flex;justify-content:space-around;align-items:baseline;font-family:var(--k-num);font-size:22px;color:#8A90A0;padding:0 6px}
+.fd-s3-nums b{font-weight:400;font-size:34px;color:#121628;line-height:30px}
+.fd-s3-mk{position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;background:var(--k-copper)}
+.fd-s3-p{position:absolute;top:298px;left:30px;right:30px;margin:0;font:13.5px/1.5 var(--k-sf);color:rgba(255,255,255,.75)}
+.fd-s3-p span{color:rgba(255,255,255,.5)}
+.fd-s3-foot{position:absolute;bottom:26px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.fd-s3-foot .fd-url{font-size:12px;color:#fff;letter-spacing:.1em}
+.fd-s3-foot small{font:500 9px var(--k-mono);letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+/* the move: before -> after */
+.fd-mv .k-photo{position:absolute;top:0;height:270px;width:179px}
+.fd-mv-b{left:0}.fd-mv-a{right:0}
+.fd-mv-seam{position:absolute;top:0;height:270px;left:179.5px;border-left:1.5px dashed var(--k-copper)}
+.fd-mv-chip{position:absolute;top:242px;font:600 9px var(--k-mono);letter-spacing:.1em;color:#fff;background:rgba(14,17,28,.78);padding:4px 7px;border-radius:5px}
+.fd-mv-band{position:absolute;top:270px;left:0;right:0;bottom:0;border-top:1.5px dashed var(--k-copper);padding:14px 24px 0}
+.fd-mv-row{display:flex;align-items:flex-end;gap:10px;height:62px}
+.fd-mv-old .fd-num{font-size:40px;color:rgba(255,255,255,.5)}
+.fd-mv-old{display:flex;align-items:flex-end;gap:6px}
+.fd-mv-old div{font:600 11px/1.15 var(--k-sf);color:rgba(255,255,255,.5);margin:0 0 3px}
+.fd-mv-arrow{width:26px;height:14px;flex:none;margin:0 0 14px}
+.fd-mv-new .fd-num{font-size:64px}
+.fd-mv-new{display:flex;align-items:flex-end;gap:8px}
+.fd-mv-new div{font:700 19px/1 var(--k-sf);margin:0 0 4px}
+.fd-mv-delta{margin:0 0 4px auto;font:600 13px var(--k-num);letter-spacing:.02em;color:var(--k-copper);border:1px solid rgba(222,151,98,.55);border-radius:6px;padding:3px 7px}
+.fd-mv-fix{font:600 14.5px/1.2 var(--k-sf);margin-top:14px}
+.fd-mv-fix span{display:block;font:500 9px var(--k-mono);letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:5px}
+.fd-mv-foot{position:absolute;bottom:18px;left:24px;right:24px;display:flex;align-items:center;justify-content:space-between}
+.fd-mv-foot .k-woven{transform:scale(.8);transform-origin:left center}
+/* profile grid mock */
+.fd-grid{width:360px;background:#fff;border-radius:14px;padding:14px 0 0;box-shadow:0 8px 24px -14px rgba(16,20,36,.4)}
+.fd-grid-h{display:flex;justify-content:space-around;font:600 12px var(--k-sf);color:#121628;padding:0 0 10px;border-bottom:1px solid #E6E8EC}
+.fd-grid-h span{opacity:.35}.fd-grid-h span:first-child{opacity:1}
+.fd-grid-g{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px 0 0}
+.fd-gt{aspect-ratio:3/4;background:#E4E6EA;position:relative;overflow:hidden}
+.fd-gt:nth-child(3n+2){background:#D9DCE2}
+.fd-gt .fd-card{position:absolute;top:0;left:50%;transform-origin:top left;box-shadow:none;border-radius:0}
+.fd-grid-cap{font:12px/1.35 var(--k-sf);color:#646A7A;padding:10px 14px 12px}
+</style>
+<!--FLATS-->
+<h2>Instagram feed post · 4:5 carousel</h2>
+<p>The post he keeps on his profile. Slide 1 is the cover and the grid tile (key content inside the centered 3:4), slide 2 is what a viewer can copy, slide 3 closes the loop. A re-check win swaps in "The move".</p>
+<div class="k-stage">
+
+<!-- slide 1, neck down, with grid guide -->
+<div class="fd-item">
+<div class="fd-card fd-s1" id="fd-cover">
+ <div class="k-photo" style="--neck:.265"><img src="img/s15.jpg" alt=""></div>
+ <div class="fd-s1-seam"></div>
+ <div class="fd-s1-col">
+  <span class="k-woven">KITTED</span>
+  <div class="fd-s1-score"><span class="fd-num">8.0</span><span class="fd-ten">/10</span>
+   <div class="fd-s1-word">Sharp</div><div class="fd-s1-reads">Reads as<br>minimal</div></div>
+  <div class="fd-s1-foot">
+   <div class="fd-s1-next">The pieces<svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+   <div class="fd-url">trykitted.com</div>
+  </div>
+ </div>
+ <div class="fd-crop"><span>3:4 GRID CROP</span></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i><b style="top:4px;left:14px">Grid crops the sides</b></div>
+</div>
+<div class="k-cap"><b>Slide 1 · The look (cover), neck down.</b> 1080×1350. The photo as a tall print, the score in its own column behind a copper seam. Blue lines (not exported) show where the profile grid cuts the 3:4 tile: nothing important sits outside them.</div>
+</div>
+
+<!-- slide 2: the pieces -->
+<div class="fd-item">
+<div class="fd-card fd-s2">
+ <div class="fd-s2-head"><span class="fd-s2-title">The pieces</span><span class="fd-s2-meta">Reads as minimal</span></div>
+ <div class="fd-s2-grid">
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#E8DFCF"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#EAE1D1;--s:rgba(18,22,40,.38);--d:rgba(90,60,30,.4);--chk:rgba(160,110,60,.42)"><use href="#fd-f-shirt"/></svg><div class="fd-tile-n">Cream check overshirt</div><div class="fd-tile-r">The layer · worn open</div></div>
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#B48957"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#B48957;--s:rgba(18,22,40,.35);--d:rgba(60,35,10,.38)"><use href="#fd-f-tee"/></svg><div class="fd-tile-n">Tan tee</div><div class="fd-tile-r">The base</div></div>
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#A99C88"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#A99C88;--s:rgba(18,22,40,.35);--d:rgba(50,40,25,.38)"><use href="#fd-f-wide"/></svg><div class="fd-tile-n">Wide khaki trousers</div><div class="fd-tile-r">The shape</div></div>
+  <div class="fd-tile"><span class="fd-tile-sw" style="background:#F3F1EB"></span><svg class="fd-flat" viewBox="0 0 100 100" style="--f:#F6F4EE;--sole:#D7B58C;--s:rgba(18,22,40,.4);--d:rgba(60,50,40,.35)"><use href="#fd-f-chunky"/></svg><div class="fd-tile-n">White chunky sneakers</div><div class="fd-tile-r">The shoes</div></div>
+ </div>
+ <p class="fd-s2-how"><b>Why it works:</b> one tonal run from cream to khaki. The open overshirt frames a plain tee, and chunky soles carry the wide leg.</p>
+ <div class="fd-s2-foot"><span class="k-woven">KITTED</span><span class="fd-url">trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i><b style="top:4px;left:14px">No overlay UI in feed</b></div>
+</div>
+<div class="k-cap"><b>Slide 2 · The pieces.</b> 1080×1350. The useful slide: each piece drawn in its own color with its job in the outfit, and one line on how they work together. This is what gets saved.</div>
+</div>
+
+<!-- slide 3: end card -->
+<div class="fd-item">
+<div class="fd-card fd-s3">
+ <span class="k-woven">KITTED</span>
+ <div class="fd-s3-h">Score your fit.<br><span>Get the fix.</span></div>
+ <div class="fd-s3-tape"><div class="fd-s3-nums"><span>7.0</span><span>7.5</span><b>8.0</b><span>8.5</span><span>9.0</span></div><div class="fd-s3-mk"></div></div>
+ <p class="fd-s3-p">Send a fit pic. Get a score out of 10<br>and the one fix that raises it.<br><span>Same photo, same score.</span></p>
+ <div class="fd-s3-foot"><span class="fd-url">trykitted.com</span><small>One fit check a day, free</small></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i></div>
+</div>
+<div class="k-cap"><b>Slide 3 · End card.</b> 1080×1350. The ask, in one line, over the tape measure that every score lands on. Same on every carousel, so it becomes a recognisable sign-off.</div>
+</div>
+
+<!-- slide 1, face shown -->
+<div class="fd-item">
+<div class="fd-card fd-s1">
+ <div class="k-photo full"><img src="img/s15.jpg" alt=""></div>
+ <div class="fd-s1-seam"></div>
+ <div class="fd-s1-col">
+  <span class="k-woven">KITTED</span>
+  <div class="fd-s1-score"><span class="fd-num">8.0</span><span class="fd-ten">/10</span>
+   <div class="fd-s1-word">Sharp</div><div class="fd-s1-reads">Reads as<br>minimal</div></div>
+  <div class="fd-s1-foot">
+   <div class="fd-s1-next">The pieces<svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+   <div class="fd-url">trykitted.com</div>
+  </div>
+ </div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i></div>
+</div>
+<div class="k-cap"><b>Slide 1 · "Show my face" on.</b> The full photo in the same frame: head to shoes still fit the tall print.</div>
+</div>
+
+<!-- the move -->
+<div class="fd-item">
+<div class="fd-card fd-mv">
+ <div class="k-photo fd-mv-b" style="--neck:.315"><img src="img/p01b.jpg" alt=""></div>
+ <div class="k-photo fd-mv-a" style="--neck:.315"><img src="img/p01a.jpg" alt=""></div>
+ <div class="fd-mv-seam"></div>
+ <span class="fd-mv-chip" style="left:24px">BEFORE</span><span class="fd-mv-chip" style="left:193px">AFTER</span>
+ <div class="fd-mv-band">
+  <div class="fd-mv-row">
+   <div class="fd-mv-old"><span class="fd-num">7.5</span><div>Put<br>together</div></div>
+   <svg class="fd-mv-arrow" viewBox="0 0 26 14"><path d="M1 7h22M17 1.5L23 7l-6 5.5" fill="none" stroke="#DE9762" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+   <div class="fd-mv-new"><span class="fd-num">8.5</span><div>Sharp</div></div>
+   <span class="fd-mv-delta">+1.0</span>
+  </div>
+  <div class="fd-mv-fix"><span>The move</span>Added the overshirt, worn open</div>
+ </div>
+ <div class="fd-mv-foot"><span class="k-woven">KITTED</span><span class="fd-url">trykitted.com</span></div>
+ <div class="k-safe"><i style="top:0;bottom:0;left:0;width:3.125%"></i><i style="top:0;bottom:0;right:0;width:3.125%"></i></div>
+</div>
+<div class="k-cap"><b>Slide 3, for a re-check win · The move.</b> 1080×1350. Before and after on one seam, the score climbing in copper, and the fix he made, in his words. The brag is "I improved it".</div>
+</div>
+
+<!-- profile grid mock -->
+<div class="fd-item">
+<div class="fd-grid">
+ <div class="fd-grid-h"><span>Posts</span><span>Reels</span><span>Tagged</span></div>
+ <div class="fd-grid-g"><div class="fd-gt" id="fd-gt1"></div><div class="fd-gt"></div><div class="fd-gt"></div><div class="fd-gt"></div><div class="fd-gt"></div><div class="fd-gt"></div></div>
+ <div class="fd-grid-cap">On his profile the cover shows as a 3:4 tile: the score column, label and seam all survive the crop.</div>
+</div>
+<div class="k-cap"><b>Profile grid (mock).</b> How slide 1 sits among his other posts.</div>
+</div>
+
+</div>
+<script>(function(){
+ var c=document.getElementById('fd-cover'),t=document.getElementById('fd-gt1');if(!c||!t)return;
+ var k=c.cloneNode(true);k.removeAttribute('id');
+ Array.prototype.forEach.call(k.querySelectorAll('.fd-crop,.k-safe'),function(n){n.remove()});
+ t.appendChild(k);
+ function fit(){var s=t.clientHeight/450;k.style.transform='scale('+s+') translateX(-180px)';}
+ fit();window.addEventListener('resize',fit);
+})();</script>
+</section>

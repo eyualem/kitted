@@ -1,0 +1,199 @@
+<section class="sk">
+<style>
+.sk h2{margin:0 0 4px;font:700 22px var(--k-sf)}
+.sk>p{margin:0 0 18px;color:#4a5060;max-width:900px}
+.sk-sheet{position:relative;padding:20px;box-sizing:border-box;border-radius:18px;display:flex;gap:24px;align-items:flex-start;
+  background:#fff conic-gradient(#E3E5EA 25%,#fff 0 50%,#E3E5EA 0 75%,#fff 0) 0 0/16px 16px;box-shadow:0 20px 40px -24px rgba(16,20,36,.45)}
+.sk-col{display:flex;flex-direction:column;gap:14px}
+.sk-slot{position:relative;outline:1px dashed rgba(18,22,40,.3);display:grid;place-items:center}
+.sk-lab{font:600 10px var(--k-mono);letter-spacing:.08em;text-transform:uppercase;color:#4a5060;margin-top:6px}
+.sk-sz{position:absolute;right:5px;bottom:4px;font:500 9.5px var(--k-mono);color:rgba(18,22,40,.55)}
+.sk-obj{filter:drop-shadow(0 2px 2px rgba(8,9,13,.3)) drop-shadow(0 8px 12px rgba(8,9,13,.24))}
+
+/* 1 woven score label (canvas 360x200 = 1080x600) */
+.sk-woven{position:relative;width:322px;height:140px;transform:rotate(-4deg)}
+.sk-wv-body{position:absolute;inset:0 14px;background:linear-gradient(180deg,#2B3A72,#22305C 45%,#1C2850);border-radius:1px}
+.sk-wv-body::before,.sk-wv-body::after{content:"";position:absolute;top:8px;bottom:8px;border-left:1.5px dashed var(--k-copper)}
+.sk-wv-body::before{left:9px}.sk-wv-body::after{right:9px}
+.sk-fold{position:absolute;top:4px;bottom:4px;width:16px}
+.sk-fold.l{left:0;clip-path:polygon(0 0,100% 5%,100% 95%,0 100%);background:linear-gradient(90deg,#10162E,#1E2A52)}
+.sk-fold.r{right:0;clip-path:polygon(0 5%,100% 0,100% 100%,0 95%);background:linear-gradient(270deg,#10162E,#1E2A52)}
+.sk-wv-in{position:absolute;inset:14px 38px 12px;color:#EEF0F5;display:flex;flex-direction:column;justify-content:space-between}
+.sk-lock{display:flex;align-items:flex-end;gap:12px}
+.sk-lock .n{font:72px/.84 var(--k-num);letter-spacing:-.03em}
+.sk-lock .t{font:500 11px var(--k-mono);color:rgba(238,240,245,.75);margin:0 0 2px -8px}
+.sk-lock .w{display:flex;flex-direction:column;margin-bottom:1px}
+.sk-lock .w b{font:700 22px/1.1 var(--k-sf)}
+.sk-lock .w span{font:400 13px/1.3 var(--k-sf);color:rgba(238,240,245,.82)}
+.sk-wv-sign{display:flex;align-items:center;gap:10px;border-top:1px dashed rgba(238,240,245,.35);padding-top:8px}
+.sk-wv-sign b{font:12px/1 var(--k-wide);letter-spacing:.3em}
+.sk-wv-sign span{font:600 12px var(--k-sf);color:rgba(238,240,245,.86);white-space:nowrap}
+
+/* 2 the tag (b2's spec, compact: canvas 270x360 = 810x1080) */
+.sk-tagw{position:relative;width:220px;height:392px;zoom:.86;transform:rotate(5deg);transform-origin:110px 0}
+.sk-tagw svg.str{position:absolute;left:0;top:0;width:220px;height:90px;overflow:visible;z-index:3}
+.sk-tag{position:absolute;left:0;top:62px;width:220px;height:330px}
+.sk-paper{position:absolute;inset:0;color:var(--k-ink);text-align:center;padding-top:50px;box-sizing:border-box;
+  background:linear-gradient(165deg,#FFFFFF,#F3F4F6 55%,#E8EAEE);
+  clip-path:polygon(26px 0,194px 0,220px 26px,220px 100%,0 100%,0 26px);
+  -webkit-mask:radial-gradient(circle at 110px 28px,transparent 7px,#000 7.5px);mask:radial-gradient(circle at 110px 28px,transparent 7px,#000 7.5px)}
+.sk-paper svg{position:absolute;inset:0;width:100%;height:100%}
+.sk-ring{position:absolute;left:96px;top:14px;width:28px;height:28px;border-radius:50%;z-index:2;
+  background:radial-gradient(circle,transparent 7.2px,#5E6478 7.6px,#B4B9C6 9.5px,#7C8296 11.5px,#4A5064 13px,transparent 13.6px)}
+.sk-paper .k-woven{height:24px;font-size:12.5px;padding:0 18px}
+.sk-tsc{display:flex;justify-content:center;align-items:flex-end;gap:5px;margin-top:16px}
+.sk-tsc .n{font:104px/.84 var(--k-num);letter-spacing:-.035em}
+.sk-tsc .t{font:500 16px var(--k-mono);color:var(--k-ink2);margin-bottom:3px}
+.sk-tw{font:700 26px/1.15 var(--k-sf);margin-top:8px}
+.sk-tra{font:400 16px/1.2 var(--k-sf);color:var(--k-ink2);margin-top:2px}
+.sk-tsign{margin:14px 22px 0;border-top:1.5px dotted #8A90A0;padding-top:9px;font:600 14px/1.35 var(--k-sf);color:var(--k-ink)}
+
+/* 3 badge (canvas 360x130 = 1080x390) */
+.sk-badge{position:relative;width:322px;height:94px;border-radius:16px;background:#0E111C;color:#fff;box-sizing:border-box;padding:12px 18px 0;transform:rotate(-2deg)}
+.sk-badge::before{content:"";position:absolute;inset:4px;border-radius:13px;border:1px dashed rgba(222,151,98,.85)}
+.sk-bg-r1{display:flex;align-items:center;gap:8px}
+.sk-bg-r1 .n{font:44px/.9 var(--k-num);letter-spacing:-.02em}
+.sk-bg-r1 .t{font:500 9.5px var(--k-mono);color:rgba(255,255,255,.75);align-self:flex-end;margin:0 0 4px -4px}
+.sk-bg-r1 b{font:700 20px var(--k-sf);margin-right:auto}
+.sk-bg-r1 .k-woven{height:28px;font-size:16px;padding:0 18px;letter-spacing:.3em}
+.sk-bg-r2{font:600 12px var(--k-sf);color:rgba(255,255,255,.86);margin-top:8px;padding-left:2px}
+
+/* 4 re-check stub (canvas 360x230 = 1080x690) */
+.sk-tkt{position:relative;width:336px;height:184px;transform:rotate(2deg)}
+.sk-tk-body{position:absolute;inset:0;display:flex;background:linear-gradient(160deg,#FFFFFF,#F3F4F6);border-radius:4px;color:var(--k-ink);
+  -webkit-mask:radial-gradient(circle at 104px 0,transparent 8px,#000 8.5px) top/100% 51% no-repeat,radial-gradient(circle at 104px 100%,transparent 8px,#000 8.5px) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle at 104px 0,transparent 8px,#000 8.5px) top/100% 51% no-repeat,radial-gradient(circle at 104px 100%,transparent 8px,#000 8.5px) bottom/100% 51% no-repeat}
+.sk-tk-stub{width:104px;box-sizing:border-box;padding:16px 0 0 14px;border-right:1.5px dashed #9AA0B0;position:relative}
+.sk-tk-main{flex:1;padding:16px 14px 0 18px;position:relative}
+.sk-tk-k{font:600 10px/1 var(--k-mono);letter-spacing:.16em;color:var(--k-ink2)}
+.sk-tk-n{font:44px/.9 var(--k-num);letter-spacing:-.02em;margin-top:10px;color:var(--k-ink2)}
+.sk-tk-w{font:600 12px var(--k-sf);color:var(--k-ink2);margin-top:4px}
+.sk-tk-lock{display:flex;align-items:flex-end;gap:4px;margin-top:6px}
+.sk-tk-lock .n{font:72px/.84 var(--k-num);letter-spacing:-.03em}
+.sk-tk-lock .t{font:500 11px var(--k-mono);color:var(--k-ink2);margin-bottom:2px}
+.sk-tk-lock b{font:700 20px var(--k-sf);margin:0 0 0 8px}
+.sk-tk-up{position:absolute;right:14px;top:14px;font:18px/1 var(--k-num);color:var(--k-indigo);background:var(--k-copper);padding:5px 7px 4px;border-radius:4px}
+.sk-tk-arr{position:absolute;left:94px;top:62px;width:22px;height:22px;border-radius:50%;background:var(--k-copper);display:grid;place-items:center;z-index:2}
+.sk-tk-fix{font:400 12px/1.3 var(--k-sf);margin-top:10px;padding-top:7px;border-top:1.5px dotted #B8BCC8}
+.sk-tk-fix b{font-weight:700}
+.sk-tk-sign{position:absolute;left:12px;bottom:13px}
+.sk-tk-line{position:absolute;left:18px;bottom:15px;font:600 12px var(--k-sf);color:var(--k-ink);white-space:nowrap}
+.sk-tk-sign .k-woven{height:20px;font-size:10.5px;padding:0 13px;box-shadow:none}
+
+/* stories */
+.sk-story{position:relative;width:360px;height:640px;border-radius:20px;overflow:hidden;background:#111;box-shadow:0 30px 60px -28px rgba(16,20,36,.55);flex:none}
+.sk-story .k-photo{position:absolute;inset:0}
+.sk-story .k-photo.dim img{filter:brightness(.42) saturate(.85) contrast(1.05)}
+.sk-ui{position:absolute;inset:0;pointer-events:none;color:#fff;font-family:var(--k-sf)}
+.sk-ui::before{content:"";position:absolute;left:0;right:0;top:0;height:90px;background:linear-gradient(rgba(0,0,0,.32),transparent)}
+.sk-bars{position:absolute;top:8px;left:8px;right:8px;display:flex;gap:3px}
+.sk-bars i{flex:1;height:2px;border-radius:1px;background:rgba(255,255,255,.4)}
+.sk-bars i.on{background:#fff}.sk-bars i.half{background:linear-gradient(90deg,#fff 60%,rgba(255,255,255,.4) 0)}
+.sk-who{position:absolute;top:20px;left:10px;right:10px;display:flex;align-items:center;gap:8px;font-size:12.5px;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.sk-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3A4A80,#1A2448);display:grid;place-items:center;font:700 12px var(--k-sf);box-shadow:0 0 0 1.5px #fff}
+.sk-who b{font-weight:600}.sk-who span{opacity:.75}
+.sk-who .x{margin-left:auto;font-size:18px;letter-spacing:2px;opacity:.95}
+.sk-bot{position:absolute;left:10px;right:10px;bottom:14px;display:flex;align-items:center;gap:14px}
+.sk-msg{flex:1;height:38px;border-radius:19px;border:1px solid rgba(255,255,255,.75);display:flex;align-items:center;padding-left:16px;font-size:13px;color:rgba(255,255,255,.9);text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.sk-place{position:absolute;transform-origin:0 0}
+.sk-link{position:absolute;display:flex;align-items:center;gap:6px;background:#fff;border-radius:8px;padding:7px 11px;font:700 13px var(--k-sf);color:#3A78E0;box-shadow:0 2px 6px rgba(0,0,0,.25);letter-spacing:.02em}
+</style>
+
+<h2>B1 · Stickers on his own story</h2>
+<p>The Strava pattern: Kitted hands Instagram (Stories sticker API) and Snapchat (Creative Kit) a transparent sticker, and he places it on his own photo. Four stickers, each drawn for a 1080-wide export with no word under 11px drawn, each carrying its own backing and baked shadow. Scores are demo numbers.</p>
+<div class="k-stage">
+
+<div>
+<div class="sk-sheet">
+ <div class="sk-col">
+  <div><div class="sk-slot" style="width:360px;height:200px"><span class="sk-sz">1080×600</span>
+   <div class="sk-obj"><div class="sk-woven"><span class="sk-fold l"></span><span class="sk-fold r"></span><div class="sk-wv-body"></div>
+    <div class="sk-wv-in"><div class="sk-lock"><span class="n">8.0</span><span class="t">/10</span><span class="w"><b>Sharp</b><span>Reads as minimal</span></span></div>
+     <div class="sk-wv-sign"><b>KITTED</b><span>Score your fit · trykitted.com</span></div></div></div></div>
+  </div><div class="sk-lab">1 · Woven score label</div></div>
+
+  <div><div class="sk-slot" style="width:360px;height:130px"><span class="sk-sz">1080×390</span>
+   <div class="sk-obj"><div class="sk-badge"><div class="sk-bg-r1"><span class="n">8.0</span><span class="t">/10</span><b>Sharp</b><span class="k-woven">KITTED</span></div><div class="sk-bg-r2">Score your fit · trykitted.com</div></div></div>
+  </div><div class="sk-lab">3 · Compact badge (KITTED as big as Sharp)</div></div>
+
+  <div><div class="sk-slot" style="width:360px;height:230px"><span class="sk-sz">1080×690</span>
+   <div class="sk-obj sk-stubhere"></div>
+  </div><div class="sk-lab">4 · Re-check stub (demo pair p01b → p01a)</div></div>
+ </div>
+ <div class="sk-col">
+  <div><div class="sk-slot" style="width:270px;height:360px"><span class="sk-sz">810×1080</span>
+   <div class="sk-obj sk-taghere" style="margin-top:-16px"></div>
+  </div><div class="sk-lab">2 · Hang tag (B2 spec)</div></div>
+ </div>
+</div>
+<div class="k-cap"><b>Sticker set</b> · transparent PNGs, 1080 wide (dashed box = the PNG canvas). Sent as the IG Stories sticker asset and as a Snapchat Creative Kit sticker. Cut from round 1: the tape (unreadable at sticker size) and Guess the score (lives in C3). No face toggle here: the photo under the sticker is his own post.</div>
+</div>
+
+<!-- bright photo, face shown -->
+<div>
+<div class="sk-story">
+ <div class="k-photo full"><img src="img/s15.jpg"></div>
+ <div class="sk-place" style="left:12px;top:112px;transform:scale(.82) rotate(-2deg)"><div class="sk-obj sk-taghere"></div></div>
+ <div class="sk-link" style="left:18px;top:458px;transform:rotate(-3deg)"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M6 8a3 3 0 0 0 4.2 0l2-2a3 3 0 0 0-4.2-4.2l-.8.8M8 6a3 3 0 0 0-4.2 0l-2 2a3 3 0 0 0 4.2 4.2l.8-.8" fill="none" stroke="#3A78E0" stroke-width="1.6" stroke-linecap="round"/></svg>TRYKITTED.COM</div>
+ <div class="sk-ui"><div class="sk-bars"><i class="on"></i><i class="half"></i><i></i></div>
+  <div class="sk-who"><span class="sk-av">J</span><b>yourhandle</b><span>2h</span><span class="x">···</span></div>
+  <div class="sk-bot"><div class="sk-msg">Send message</div>
+   <svg width="24" height="22" viewBox="0 0 24 22"><path d="M12 20s-9-5.6-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="#fff" stroke-width="1.8"/></svg>
+   <svg width="24" height="22" viewBox="0 0 24 22"><path d="M22 2 2 9l8 3 3 8z M22 2 10 12" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div></div>
+ <div class="k-safe"><i style="top:0;left:0;right:0;height:14%"></i><b style="top:4px">IG Story UI</b><i style="bottom:0;left:0;right:0;height:20%"></i><b style="bottom:4px">Reply bar</b></div>
+</div>
+<div class="k-cap"><b>On a bright photo</b> · IG Story, 1080×1920. His own photo, face shown (his post, his choice). The tag sticker at 82%, hung over the railing so the fit stays clear, plus Instagram's own link sticker, which the share flow prompts with the URL already copied.</div>
+</div>
+
+<!-- dark photo -->
+<div>
+<div class="sk-story">
+ <div class="k-photo full dim"><img src="img/s10.jpg"></div>
+ <div class="sk-place" style="left:14px;top:340px;transform:scale(.92) rotate(3deg)"><div class="sk-obj"><div class="sk-woven"><span class="sk-fold l"></span><span class="sk-fold r"></span><div class="sk-wv-body"></div>
+    <div class="sk-wv-in"><div class="sk-lock"><span class="n">8.0</span><span class="t">/10</span><span class="w"><b>Sharp</b><span>Reads as workwear</span></span></div>
+     <div class="sk-wv-sign"><b>KITTED</b><span>Score your fit · trykitted.com</span></div></div></div></div></div>
+ <div class="sk-ui"><div class="sk-bars"><i class="on"></i><i class="on"></i><i class="half"></i></div>
+  <div class="sk-who"><span class="sk-av">J</span><b>yourhandle</b><span>41m</span><span class="x">···</span></div>
+  <div class="sk-bot"><div class="sk-msg">Send message</div>
+   <svg width="24" height="22" viewBox="0 0 24 22"><path d="M12 20s-9-5.6-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="#fff" stroke-width="1.8"/></svg>
+   <svg width="24" height="22" viewBox="0 0 24 22"><path d="M22 2 2 9l8 3 3 8z M22 2 10 12" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div></div>
+ <div class="k-safe"><i style="top:0;left:0;right:0;height:14%"></i><b style="top:4px">IG Story UI</b><i style="bottom:0;left:0;right:0;height:20%"></i><b style="bottom:4px">Reply bar</b></div>
+</div>
+<div class="k-cap"><b>On a dark photo</b> · IG Story, 1080×1920. The same street photo dimmed to night levels to test contrast: the indigo label is the hardest case, held by its folded ends, 1.5px copper stitch and baked shadow.</div>
+</div>
+
+<!-- re-check over the after photo -->
+<div>
+<div class="sk-story">
+ <div class="k-photo full"><img src="img/p01a.jpg"></div>
+ <div class="sk-place" style="left:14px;top:286px;transform:scale(.94) rotate(-4deg)"><div class="sk-obj sk-stubhere"></div></div>
+ <div class="sk-ui"><div class="sk-bars"><i class="on"></i><i class="half"></i></div>
+  <div class="sk-who"><span class="sk-av">J</span><b>yourhandle</b><span>8m</span><span class="x">···</span></div>
+  <div class="sk-bot"><div class="sk-msg">Send message</div>
+   <svg width="24" height="22" viewBox="0 0 24 22"><path d="M12 20s-9-5.6-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="#fff" stroke-width="1.8"/></svg>
+   <svg width="24" height="22" viewBox="0 0 24 22"><path d="M22 2 2 9l8 3 3 8z M22 2 10 12" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div></div>
+ <div class="k-safe"><i style="top:0;left:0;right:0;height:14%"></i><b style="top:4px">IG Story UI</b><i style="bottom:0;left:0;right:0;height:20%"></i><b style="bottom:4px">Reply bar</b></div>
+</div>
+<div class="k-cap"><b>After a re-check win</b> · IG Story / Snapchat, 1080×1920. His after photo with the stub: the fix he did, 7.5 → 8.5 and +1.0 in copper. Offered only after a win. Demo photos; the real card uses his own two photos.</div>
+</div>
+
+</div>
+<script>
+(function(){
+  var tw=function(p,w){return '<path d="'+p+'" stroke="#E4E6EB" stroke-width="'+w+'" stroke-linecap="round" fill="none"/><path d="'+p+'" stroke="#8A90A0" stroke-width="'+w+'" stroke-dasharray="1.6 2.6" fill="none"/>'};
+  var TAG='<div class="sk-tagw"><svg class="str" viewBox="0 0 220 90">'+tw('M150 -4 C 140 22, 116 26, 110 48',2.8)+tw('M110 48 C 104 64, 103 76, 106.5 87 M110 48 C 116 64, 117 76, 113.5 87',2.4)+
+   '<ellipse cx="110" cy="48" rx="4.6" ry="3.4" fill="#D3D6DD" stroke="#8A90A0" stroke-width="1"/></svg>'+
+   '<div class="sk-tag"><div class="sk-paper"><svg viewBox="0 0 220 330" preserveAspectRatio="none"><polygon points="29.3,8 190.7,8 212,29.3 212,322 8,322 8,29.3" fill="none" stroke="#DE9762" stroke-width="1.4" stroke-dasharray="3.6 2.6"/></svg>'+
+   '<span class="k-woven">KITTED</span><div class="sk-tsc"><span class="n">8.0</span><span class="t">/10</span></div><div class="sk-tw">Sharp</div><div class="sk-tra">Reads as minimal</div>'+
+   '<div class="sk-tsign">Score your fit<br>trykitted.com</div></div><span class="sk-ring"></span></div></div>';
+  var STUB='<div class="sk-tkt"><div class="sk-tk-body">'+
+   '<div class="sk-tk-stub"><div class="sk-tk-k">BEFORE</div><div class="sk-tk-n">7.5</div><div class="sk-tk-w">Put together</div></div>'+
+   '<div class="sk-tk-main"><div class="sk-tk-k">AFTER</div><div class="sk-tk-lock"><span class="n">8.5</span><span class="t">/10</span><b>Sharp</b></div><span class="sk-tk-up">+1.0</span>'+
+   '<div class="sk-tk-fix"><b>The fix:</b> Khaki overshirt, worn open</div><div class="sk-tk-line">Score your fit · trykitted.com</div></div>'+
+   '<div class="sk-tk-sign"><span class="k-woven">KITTED</span></div>'+
+   '</div><span class="sk-tk-arr"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6h7.5M6.5 3l3 3-3 3" fill="none" stroke="#121628" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>';
+  document.querySelectorAll('.sk-taghere').forEach(function(e){e.innerHTML=TAG});
+  document.querySelectorAll('.sk-stubhere').forEach(function(e){e.innerHTML=STUB});
+})();
+</script>
+</section>
