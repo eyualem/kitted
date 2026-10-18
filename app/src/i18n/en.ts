@@ -198,9 +198,6 @@ const addedInBuild = {
   'greet.morning': 'Morning.',
   'greet.afternoon': 'Afternoon.',
   'greet.evening': 'Evening. Heading out?',
-  // The greeting is only the hello; the weather lives in the card, once, with its times (#338).
-  'greet.morning.idea': "Morning. Here's an idea for today.",
-  'greet.afternoon.idea': "Afternoon. Here's an idea for the rest of the day.",
   // The first check folded under its re-check (#338).
   'card.fold.tag': 'First check',
   'card.fold.a11y': 'First check, {occasion}: {score}, {word}.',

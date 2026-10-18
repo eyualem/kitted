@@ -11,7 +11,7 @@ import { createAsk, type AskDeps } from '@/features/ask/pipeline';
 import { createDemoSource, seededAnswers, type AnswerEvent, type AnswerSource } from '@/features/ask/source';
 import { deleteAllData } from '@/features/privacy/wipe';
 import { createDictationController, type DictationNative } from '@/features/stylist/dictation';
-import { buildThreadItems, isStylistLine, liveGap, RHYTHM, rowGap } from '@/features/stylist/thread';
+import { buildThreadItems, isStylistLine, liveGap, RHYTHM, rowGap, withoutCardGreetings } from '@/features/stylist/thread';
 import { userBubbleMaxWidth } from '@/design-system/components/chatLayout';
 import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
@@ -307,5 +307,17 @@ describe('U18 · small VoiceOver fixes', () => {
     expect(src('app/(tabs)/stylist/_layout.tsx')).toMatch(/accessibilityLabel=\{t\('history\.open\.a11y'\)\}/);
     expect(src('design-system/components/Chat.tsx')).toMatch(/accessibilityRole="header"/);
     expect(src('features/stylist/StylistBar.tsx')).toMatch(/accessibilityValue=\{draft \? \{ text: draft \} : undefined\}/);
+  });
+});
+
+describe('#340: the card greeting line is hidden wherever it is still stored', () => {
+  const m = (id: string, at: number, o: Partial<ChatMessage>): ChatMessage =>
+    ({ id, createdAt: at, role: 'stylist', kind: 'text', text: 'x', cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {}, ...o }) as ChatMessage;
+  it('drops the line posted 1 ms before a morning card, and a marked seeded one; keeps other lines', () => {
+    const posted = m('g1', 1000, { text: 'Morning. 46° now.' });
+    const card = m('c1', 1001, { kind: 'card', cardType: 'morning', text: null, payload: { ideaId: 'x' } });
+    const seeded = m('g2', 500, { text: 'Morning. An easy one…', payload: { greeting: true } });
+    const answer = m('a1', 900, { text: 'A brown leather belt.' });
+    expect(withoutCardGreetings([seeded, answer, posted, card]).map((x) => x.id)).toEqual(['a1', 'c1']);
   });
 });

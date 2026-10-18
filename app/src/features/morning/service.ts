@@ -1,7 +1,7 @@
 // The morning/evening card (02 "S1d", 05 §MC4, DECISIONS-LOG #58–62).
 //
-// Two moments a day: the first time Stylist is shown in a window, the stylist posts a greeting
-// and a card. Day card 4 am–4:59 pm (plans today), evening card 5 pm–3:59 am (plans tonight).
+// Two moments a day: the first time Stylist is shown in a window, the stylist posts a card that opens with its own
+// hello and the weather (#340; it used to post a greeting line above it). Day card 4 am–4:59 pm (plans today), evening card 5 pm–3:59 am (plans tonight).
 // One per day key and slot, locked: the outfit doesn't change on later opens, so the card and
 // the notification agree. Changing the occasion or style, or Swap one, re-picks on purpose.
 //
@@ -23,9 +23,6 @@ import type {
 import { normStyleKey, STYLES } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
-import { t } from '@/i18n/en';
-import { monthName } from '@/i18n/format';
-import { occasionLabel } from '@/features/stylist/thread';
 
 export interface MorningDeps {
   store: KittedStore;
@@ -176,21 +173,6 @@ export function createMorningService(deps: MorningDeps) {
     return normStyle(p?.styles?.[0]?.[0]);
   }
 
-  /**
-   * The greeting line above the card (template, no AI). With weather it's only the hello (#338): the card says the
-   * weather once, for the hour he reads it, so a greeting posted at 7 am never says "46° now" at 2 pm.
-   */
-  function greeting(slot: IdeaSlot, w: DayWeather | null, nowMs: number, occasion: CardOccasion): string {
-    const p = localParts(nowMs, zone);
-    const hello = slot === 'evening' ? t('greet.evening') : p.hh < 12 ? t('greet.morning') : t('greet.afternoon');
-    if (!w) {
-      const season = seasonNeeds(p.m);
-      if (slot === 'day' && season.layer === 'none') return t('stylist.morning', { occasionWord: occasionLabel(scoringOccasion(occasion)).toLowerCase() });
-      return season.layer === 'none' ? hello : `${hello} ${t('wx.line.season', { month: monthName(p.m) })}`;
-    }
-    return slot === 'evening' ? t('greet.evening') : p.hh < 12 ? t('greet.morning.idea') : t('greet.afternoon.idea');
-  }
-
   /** A seeded "Morning. An easy one…" + idea card from before this feature becomes today's day card. */
   async function adoptLegacy(day: string, slot: IdeaSlot, messages: ChatMessage[]): Promise<ChatMessage | null> {
     if (slot !== 'day') return null;
@@ -229,13 +211,11 @@ export function createMorningService(deps: MorningDeps) {
     if (legacy) {
       cardMessageId = legacy.id;
       await store.chat.patch(legacy.id, { cardType: 'morning', outfitId, payload: { ...legacy.payload, ideaId: id } });
+      // The seeded greeting before it is the card's own hello now (#340): marked, so the thread hides it.
       const before = messages.filter((m) => m.role === 'stylist' && m.kind === 'text' && m.createdAt <= legacy.createdAt).sort((a, b) => b.createdAt - a.createdAt)[0];
-      if (before && dayKey(before.createdAt, zone) === day) await store.chat.patch(before.id, { text: greeting(slot, weather, before.createdAt, occasion) });
+      if (before && dayKey(before.createdAt, zone) === day) await store.chat.patch(before.id, { payload: { ...before.payload, greeting: true } });
     } else {
-      await store.chat.put({
-        id: deps.ids('M'), createdAt: nowMs, role: 'stylist', kind: 'text', text: greeting(slot, weather, nowMs, occasion), cardType: null,
-        fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {},
-      });
+      // No greeting line of its own (founder, Oct 18, #340): the card opens with the hello and the weather.
       cardMessageId = deps.ids('M');
       await store.chat.put({
         id: cardMessageId, createdAt: nowMs + 1, role: 'stylist', kind: 'card', text: null, cardType: 'morning', fitCheckId: null,
@@ -313,12 +293,6 @@ export function createMorningService(deps: MorningDeps) {
     const result = await pick(next);
     const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
     await store.dailyIdeas.put({ ...next, outfitId });
-    const card = row.messageId ? await store.chat.get(row.messageId) : null;
-    if (!card) return;
-    const before = (await store.chat.all())
-      .filter((m) => m.role === 'stylist' && m.kind === 'text' && m.createdAt <= card.createdAt)
-      .sort((a, b) => b.createdAt - a.createdAt)[0];
-    if (before) await store.chat.patch(before.id, { text: greeting(row.slot, weather as unknown as DayWeather, before.createdAt, row.occasion) });
   }
 
   /**
@@ -351,7 +325,7 @@ export function createMorningService(deps: MorningDeps) {
     return true;
   }
 
-  return { ensureCard, change, swap, wear, refreshWeather, freshen, greeting };
+  return { ensureCard, change, swap, wear, refreshWeather, freshen };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;

@@ -23,7 +23,7 @@ import { isNwsWeather, weatherSource } from '@/services/weather';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { cardOccasionLabel, ideaTitle, missingLabel, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
+import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { pickSwap } from './swapPicker';
@@ -96,15 +96,18 @@ export function MorningCard({ ideaId, readOnly = false }: { ideaId: string; read
   return <FullCard m={m} />;
 }
 
-/** The hero-strip card (#70), lightened (#338: "too much in the card", the text crammed): the menus in a quiet row
- *  on top ("Class ⌄ · Smart casual ⌄"), the outfit edge to edge, the headline alone on its line, one weather line said
- *  for the hour he reads it, the reason, one primary action per state, and a small camera link. Nothing shares a line
- *  with the headline any more (the badge and "Sample weather" were squeezed beside it and the menus). */
+/** The hero-strip card (#70), lightened (#338: "too much in the card", the text crammed): Kit's hello and one weather
+ *  line said for the hour he reads it (#340: they open the card; no greeting bubble above it), the menus in a quiet row
+ *  ("Class ⌄ · Smart casual ⌄"), the outfit edge to edge, the headline alone on its line, the reason, one primary action
+ *  per state, and a small camera link. */
 function FullCard({ m }: { m: Model }) {
   const { isAccessibilitySize } = useTheme();
   const { row } = m;
   const evening = row.slot === 'evening';
   const weather = row.weather as unknown as CardWeather | null;
+  const now = localParts(sessionClock.nowMs(), sessionClock.offset);
+  const hourNow = now.hh;
+  const season = weather ? null : seasonLine(now.m);
   const enough = m.items.length > 0;
   const occasions = evening ? EVENING_CARD_OCCASIONS : DAY_CARD_OCCASIONS;
   const others = STYLES.filter((s) => !m.myStyles.includes(s));
@@ -137,7 +140,19 @@ function FullCard({ m }: { m: Model }) {
 
   return (
     <KCard>
-      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: space.s, paddingHorizontal: space.cardPadH, paddingTop: space.s, paddingBottom: space.s }}>
+      {/* The card opens with Kit's hello and the weather (founder, Oct 18, #340: no greeting bubble above it), then the
+          menus. Said for the hour he reads it. */}
+      <View style={{ paddingHorizontal: space.cardPadH, paddingTop: space.cardPadV, paddingBottom: space.s, gap: space.xs }}>
+        <KText variant="headline" weight="600">
+          {cardGreeting(row.slot, hourNow)}
+        </KText>
+        {weather ? <WeatherLine w={weather} /> : season ? (
+          <KText variant="footnote" color="ink2">
+            {season}
+          </KText>
+        ) : null}
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: space.s, paddingHorizontal: space.cardPadH, paddingBottom: space.s }}>
         <MorphPicker
           inline
           label={cardOccasionLabel(row.occasion)}
@@ -163,12 +178,9 @@ function FullCard({ m }: { m: Model }) {
       </View>
       <HeroStrip items={enough ? m.items : m.known} needs={needs} />
       <KCardSection>
-        <View style={{ gap: space.xs }}>
-          <KText variant="title3" weight="600" accessibilityRole="header">
-            {title}
-          </KText>
-          {weather ? <WeatherLine w={weather} /> : null}
-        </View>
+        <KText variant="title3" weight="600" accessibilityRole="header">
+          {title}
+        </KText>
         {!weather && m.permission === 'unknown' && weatherSource.kind !== 'none' ? <LocationAsk onAllow={() => void allow()} /> : null}
         <KText variant="subheadline" color="ink2">
           {why}
