@@ -10,8 +10,7 @@
 
 import { G, SLOT_TO_CLOSET } from "./names";
 import { fixTargets, type Fix } from "./fixes";
-import { PARTS_DATA } from "./partsData";
-import { scoreParts, type PartName, type PartsOptions, type PartsScored } from "./parts";
+import { CASUAL_FITS_V14, partsDataFor, scoreParts, type PartName, type PartsOptions, type PartsScored } from "./parts";
 import { PARTS_FIXES_DATA } from "./partsFixesData";
 import { defaultRubric } from "./rubric";
 import type { PartsFix, PartsFixEdit } from "./partsFixes";
@@ -20,7 +19,7 @@ import type { ClosetItem, FixEdit, FixTier, Garment, Reading, RuleId } from "./t
 import { clone, has } from "./util";
 
 /** The rubricVersion a parts-scored check stores ("parts-1.0.0"). */
-export const PARTS_RUBRIC_VERSION = `parts-${PARTS_DATA.version}`;
+export const PARTS_RUBRIC_VERSION = `parts-${partsDataFor(CASUAL_FITS_V14).version}`;
 
 const TIER: Record<PartsFix["class"], FixTier> = { free: "adjust", closet: "swapFromCloset", own: "changeInto", tailor: "tailor" };
 const lowerFirst = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);

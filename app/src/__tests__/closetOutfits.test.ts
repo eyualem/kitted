@@ -45,7 +45,7 @@ test('O2: the count is the trios at 7.0+ at Everyday; a layer or a chat-only pie
   const { closet, checks, styles } = await setup();
   const n = outfitCount(closet, checks, styles);
   expect(n).toBe(buildOutfits({ closet, checks, styles, occasion: 'everyday' }).length);
-  expect(n).toBe(37);
+  expect(n).toBe(47); // v14 (#335): clean sneakers match and plain basics go together, so 10 more trios reach 7.0 (v13: 37)
   const layer = closet.find((c) => c.slot === 'outer')!;
   expect(outfitCount([...closet, { ...layer, id: 'C-layer2' }], checks, styles)).toBe(n);
   const top = closet.find((c) => c.slot === 'top')!;
@@ -163,9 +163,10 @@ test('O12: a 40-piece closet lists in under 300 ms', async () => {
     const src = closet[i % closet.length]!;
     big.push({ ...src, id: `C-x${i}`, garment: { ...src.garment, color_family: tones[i % tones.length] } });
   }
-  // The best of three runs: the full test suite runs files in parallel, which slows any one of them.
+  // The best of five runs: the full test suite runs files in parallel, which slows any one of them (alone it takes
+  // ~155 ms on v14 and ~153 ms on v13; with three runs the parallel suite hit 303-326 ms twice on Oct 17, #335).
   let best = Infinity;
-  for (let r = 0; r < 3; r++) {
+  for (let r = 0; r < 5; r++) {
     const t0 = Date.now();
     buildOutfits({ closet: big, checks, styles, occasion: 'everyday' });
     best = Math.min(best, Date.now() - t0);

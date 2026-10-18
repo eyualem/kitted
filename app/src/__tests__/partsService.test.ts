@@ -129,7 +129,8 @@ describe('parts engine is the default (#209)', () => {
     const { svc } = await setup({ store, now: '2026-10-20T08:10:00-04:00' });
     const { checkId } = (await svc.start({ mode: 'check', photoId: 's24', occasion: 'everyday' })) as { checkId: string };
     const row = (await store.fitChecks.get(checkId))!;
-    expect([row.isPartial, row.notRated, row.snapState, row.details.parts!.naParts]).toEqual([true, ['shoes'], 'pending', ['proportions', 'shoes']]);
+    // v14 (#335): shorts are scored on Proportions now, so only the shoes are out of the photo (v13: ['proportions', 'shoes'])
+    expect([row.isPartial, row.notRated, row.snapState, row.details.parts!.naParts]).toEqual([true, ['shoes'], 'pending', ['shoes']]);
     const picked = (await svc.pickShoes(checkId, 'S1'))!;
     expect([picked.isPartial, picked.snapState, picked.rubricVersion]).toEqual([false, 'closetPick', PARTS_RUBRIC_VERSION]);
     expect(picked.score).toBe(parts(await readingOf(store, checkId), 'everyday'));
