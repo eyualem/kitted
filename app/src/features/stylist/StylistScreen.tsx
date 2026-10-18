@@ -1,6 +1,6 @@
 // S1 Stylist (02 D12): today's thread (newest at the bottom) and the composer.
 // Chats are kept by day (founder, Oct 9): this is today's (4 am day key); earlier days open from
-// "Past chats". A day is a handful of rows, so a plain ScrollView, not a FlatList: it scrolls to
+// "Past chats", by the header's clock button only (#338: the "Earlier chats" pill floated above a short day). A day is a handful of rows, so a plain ScrollView, not a FlatList: it scrolls to
 // its real end (FlatList's cached row heights stopped short as cards grew), and iOS 26 can shrink
 // the tab bar on scroll only when the screen's first view is a ScrollView (FlatList unsupported).
 // Not inverted: on iOS 26 the scroll-edge fade washes out a flipped list (DECISIONS-LOG #25).
@@ -11,11 +11,11 @@
 // A question's answer streams into an in-memory row drawn after the thread (features/ask/live.ts), so the chat
 // table is written once per answer, not per word.
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { AccessibilityInfo, AppState, Keyboard, Platform, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { AccessibilityInfo, AppState, Keyboard, Platform, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { dayKey } from '@kitted/core';
-import { Icon, KText, opacity, space, useTheme } from '@/design-system';
+import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -34,7 +34,6 @@ import { OfflineBanner } from './OfflineBanner';
 import { useNet } from '@/services/connectivity';
 import { buildThreadItems, liveGap, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
-import { t } from '@/i18n/en';
 import { useAccountOffer } from '@/features/account/offerSession';
 import { useFinishSequence } from '@/features/finish/session';
 
@@ -54,7 +53,7 @@ export function StylistScreen() {
   const loaded = useLive(['chat'], () => store.chat.all(), []);
   const all = useMemo(() => loaded ?? [], [loaded]);
   const now = sessionClock.nowMs();
-  const { today: messages, hasEarlier } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
+  const { today: messages } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
   const live = useLiveAnswer();
   const askInFlight = useAskInFlight();
   // Offline (09 §20.8 G18.3): send and the starter chips wait; his words stay in the field.
@@ -182,9 +181,11 @@ export function StylistScreen() {
   // including when the app comes back to the front the next morning (focus doesn't fire then).
   useFocusEffect(
     useCallback(() => {
-      void morning.ensureCard();
+      // …and a card still showing gets a fresher forecast once its own is stale (#338).
+      const post = () => void morning.ensureCard().then(() => morning.freshen()).catch(() => {});
+      post();
       const sub = AppState.addEventListener('change', (st) => {
-        if (st === 'active') void morning.ensureCard();
+        if (st === 'active') post();
       });
       return () => sub.remove();
     }, []),
@@ -265,7 +266,6 @@ export function StylistScreen() {
         keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior="never"
       >
-        {hasEarlier ? <EarlierChats /> : null}
         {items.map((item, i) => (
           <View
             key={item.key}
@@ -334,27 +334,6 @@ function useScreenReaderRef() {
   return on;
 }
 
-/** Top of today's thread: the way back to earlier days (also the header's clock button). */
-function EarlierChats() {
-  const { colors } = useTheme();
-  return (
-    <Pressable
-      onPress={() => router.push('/stylist/history')}
-      accessibilityRole="button"
-      // Spoken as shown, so Voice Control's "Tap Earlier chats" works (U18).
-      accessibilityLabel={t('history.open')}
-      // 30 pt pill; the slop makes the target 44 without making it look bigger.
-      hitSlop={{ top: 7, bottom: 7, left: 4, right: 4 }}
-      style={({ pressed }) => [styles.earlier, { backgroundColor: colors.surface2, opacity: pressed ? opacity.pressed : 1 }]}
-    >
-      <KText variant="footnote" weight="500" color="ink2">
-        {t('history.open')}
-      </KText>
-      <Icon name="next" size={11} color="ink3" weight="semibold" />
-    </Pressable>
-  );
-}
-
 /** Height of the soft edge under the Stylist header (the thread's top padding matches it, so the
  *  first row isn't faded when the thread is scrolled all the way up). */
 const EDGE_FADE = space.xl;
@@ -370,5 +349,4 @@ const styles = StyleSheet.create({
   thread: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: space.gutter, paddingTop: EDGE_FADE },
   edgeFade: { position: 'absolute', top: 0, left: 0, right: 0, height: EDGE_FADE },
   dock: { position: 'absolute', left: 0, right: 0, paddingBottom: 0 },
-  earlier: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, marginBottom: space.stack },
 });

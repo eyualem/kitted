@@ -4,7 +4,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { localParts, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
+import { localParts, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
   Icon, KButton, KCard, KCardSection, KText, MonoLabel, MorphPicker, NeckDownPhoto, Numeral, TextLink, displayScore, opacity, radius, scoreWordLabel, space, useTheme,
 } from '@/design-system';
@@ -23,7 +23,7 @@ import { isNwsWeather, weatherSource } from '@/services/weather';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { badgeTemps, cardOccasionLabel, ideaTitle, missingLabel, styleLabel, weatherSymbol, whyLine } from './copy';
+import { cardOccasionLabel, ideaTitle, missingLabel, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { pickSwap } from './swapPicker';
@@ -96,14 +96,15 @@ export function MorningCard({ ideaId, readOnly = false }: { ideaId: string; read
   return <FullCard m={m} />;
 }
 
-/** The hero-strip card (#70, the Apple-native direction the founder picked): the outfit edge to
- *  edge on top, a headline with a small weather badge, one context line ("Class ⌄ · Smart casual ⌄"),
- *  the reason, one primary action per state, and a one-line camera link. */
+/** The hero-strip card (#70), lightened (#338: "too much in the card", the text crammed): the menus in a quiet row
+ *  on top ("Class ⌄ · Smart casual ⌄"), the outfit edge to edge, the headline alone on its line, one weather line said
+ *  for the hour he reads it, the reason, one primary action per state, and a small camera link. Nothing shares a line
+ *  with the headline any more (the badge and "Sample weather" were squeezed beside it and the menus). */
 function FullCard({ m }: { m: Model }) {
   const { isAccessibilitySize } = useTheme();
   const { row } = m;
   const evening = row.slot === 'evening';
-  const weather = row.weather as unknown as DayWeather | null;
+  const weather = row.weather as unknown as CardWeather | null;
   const enough = m.items.length > 0;
   const occasions = evening ? EVENING_CARD_OCCASIONS : DAY_CARD_OCCASIONS;
   const others = STYLES.filter((s) => !m.myStyles.includes(s));
@@ -136,45 +137,37 @@ function FullCard({ m }: { m: Model }) {
 
   return (
     <KCard>
+      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: space.s, paddingHorizontal: space.cardPadH, paddingTop: space.s, paddingBottom: space.s }}>
+        <MorphPicker
+          inline
+          label={cardOccasionLabel(row.occasion)}
+          value={row.occasion}
+          sections={[{ options: occasions.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
+          onPick={changeOccasion}
+          accessibilityLabel={t('idea.a11y.occasion', { occasion: cardOccasionLabel(row.occasion) })}
+        />
+        <KText variant="subheadline" color="ink3">
+          ·
+        </KText>
+        <MorphPicker
+          inline
+          label={styleLabel(row.style)}
+          value={row.style ?? 'none'}
+          sections={[
+            ...(m.myStyles.length ? [{ title: t('style.menu.yours'), options: m.myStyles.map((s) => ({ value: s, label: styleLabel(s) })) }] : []),
+            { title: m.myStyles.length ? t('style.menu.more') : undefined, options: others.map((s) => ({ value: s, label: styleLabel(s) })) },
+          ]}
+          onPick={(s) => s !== 'none' && void changeStyle(s as StyleKey)}
+          accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
+        />
+      </View>
       <HeroStrip items={enough ? m.items : m.known} needs={needs} />
       <KCardSection>
         <View style={{ gap: space.xs }}>
-          <View style={isAccessibilitySize ? { gap: space.xs } : { flexDirection: 'row', alignItems: 'baseline', gap: space.s }}>
-            <KText variant="title3" weight="600" style={{ flex: isAccessibilitySize ? undefined : 1 }} accessibilityRole="header">
-              {title}
-            </KText>
-            {weather ? <WeatherBadge w={weather} /> : null}
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: space.s }}>
-            <MorphPicker
-              inline
-              label={cardOccasionLabel(row.occasion)}
-              value={row.occasion}
-              sections={[{ options: occasions.map((o) => ({ value: o, label: cardOccasionLabel(o) })) }]}
-              onPick={changeOccasion}
-              accessibilityLabel={t('idea.a11y.occasion', { occasion: cardOccasionLabel(row.occasion) })}
-            />
-            <KText variant="subheadline" color="ink3">
-              ·
-            </KText>
-            <MorphPicker
-              inline
-              label={styleLabel(row.style)}
-              value={row.style ?? 'none'}
-              sections={[
-                ...(m.myStyles.length ? [{ title: t('style.menu.yours'), options: m.myStyles.map((s) => ({ value: s, label: styleLabel(s) })) }] : []),
-                { title: m.myStyles.length ? t('style.menu.more') : undefined, options: others.map((s) => ({ value: s, label: styleLabel(s) })) },
-              ]}
-              onPick={(s) => s !== 'none' && void changeStyle(s as StyleKey)}
-              accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
-            />
-            {weather ? (
-              // Where the weather came from: live NWS, or sample weather (never passed off as real).
-              <KText variant="caption" color="ink3" style={{ marginLeft: 'auto' }}>
-                {isNwsWeather(weather) ? t('wx.nws') : t('wx.sample')}
-              </KText>
-            ) : null}
-          </View>
+          <KText variant="title3" weight="600" accessibilityRole="header">
+            {title}
+          </KText>
+          {weather ? <WeatherLine w={weather} /> : null}
         </View>
         {!weather && m.permission === 'unknown' && weatherSource.kind !== 'none' ? <LocationAsk onAllow={() => void allow()} /> : null}
         <KText variant="subheadline" color="ink2">
@@ -202,9 +195,19 @@ function FullCard({ m }: { m: Model }) {
               {t('own.limit')}
             </KText>
           ) : (
-            <View style={{ flexDirection: 'row' }}>
-              <TextLink title={`${evening ? t('idea.own.linkEvening') : t('idea.own.link')} ›`} onPress={openCamera} compact accessibilityHint={t('own.a11yHint')} />
-            </View>
+            // A quiet line, not a third button (#338): the composer's camera does the same.
+            <Pressable
+              onPress={openCamera}
+              accessibilityRole="button"
+              accessibilityLabel={evening ? t('idea.own.linkEvening') : t('idea.own.link')}
+              accessibilityHint={t('own.a11yHint')}
+              hitSlop={{ top: 12, bottom: 12 }}
+              style={({ pressed }) => ({ alignSelf: 'flex-start', opacity: pressed ? opacity.pressed : 1 })}
+            >
+              <KText variant="footnote" weight="500" color="ink2">
+                {`${evening ? t('idea.own.linkEvening') : t('idea.own.link')} ›`}
+              </KText>
+            </Pressable>
           )
         ) : null}
       </KCardSection>
@@ -212,7 +215,7 @@ function FullCard({ m }: { m: Model }) {
   );
 }
 
-/** The outfit, edge to edge across the top of the card: equal tiles with 1 pt hairline gaps, no
+/** The outfit, edge to edge across the card under the menus: equal tiles with 1 pt hairline gaps, no
  *  labels (each tile is labelled for VoiceOver), dashed "+" tiles for what's missing. 2×2 at AX sizes. */
 function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: readonly MissingSlot[] }) {
   const { colors, isAccessibilitySize } = useTheme();
@@ -225,7 +228,7 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
   return (
     <View
       onLayout={(e) => setW(e.nativeEvent.layout.width)}
-      style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 1, backgroundColor: colors.line, borderTopLeftRadius: radius.card, borderTopRightRadius: radius.card, overflow: 'hidden' }}
+      style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 1, backgroundColor: colors.line }}
     >
       {tileW > 0
         ? [
@@ -250,14 +253,30 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
   );
 }
 
-/** "☂ 46°→63°": the weather at a glance; the greeting above says it in words (#70). */
-function WeatherBadge({ w }: { w: DayWeather }) {
-  const { now, later } = badgeTemps(w);
+/** One weather line for the hour he reads it (#338): "☂ 52° at 8 pm · 47° by midnight · rain likely", and "Sample" at
+ *  the end on sample weather (never passed off as real). Live weather is the National Weather Service's (wx.nws in
+ *  the a11y label). */
+function WeatherLine({ w }: { w: CardWeather }) {
+  const { fontScale } = useTheme();
+  const line = weatherLine(w, localParts(sessionClock.nowMs(), sessionClock.offset).hh);
+  const sample = !isNwsWeather(w);
   return (
-    <View accessible accessibilityLabel={t('idea.badge.a11y', { now, later })} style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}>
-      <Icon name={weatherSymbol(w) as never} size={15} color="ink2" />
-      <KText variant="subheadline" weight="500" color="ink2" style={{ fontVariant: ['tabular-nums'] }}>
-        {`${now}°→${later}°`}
+    <View
+      accessible
+      accessibilityLabel={`${line}. ${sample ? t('wx.card.sample.a11y') : t('wx.nws')}`}
+      style={{ flexDirection: 'row', alignItems: 'flex-start', gap: space.xs }}
+    >
+      {/* On the first line, growing with the text (at the largest size a fixed 14 pt icon floated mid-paragraph). */}
+      <View style={{ paddingTop: 2 * Math.min(fontScale, 2) }}>
+        <Icon name={weatherSymbol(w) as never} size={14} color="ink2" scalesWithText />
+      </View>
+      <KText variant="footnote" color="ink2" style={{ flexShrink: 1, fontVariant: ['tabular-nums'] }}>
+        {line}
+        {sample ? (
+          <KText variant="footnote" color="ink3">
+            {`  ${t('wx.card.sample')}`}
+          </KText>
+        ) : null}
       </KText>
     </View>
   );

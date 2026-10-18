@@ -1,4 +1,4 @@
-// More kinds than the reading names (founder, Oct 17, #338: "the full sleeve shirt is not included … half sleeve
+// More kinds than the reading names (founder, Oct 17, #339: "the full sleeve shirt is not included … half sleeve
 // button-ups are not included … add more options like this"). Each is a closet-only kind: it scores, matches and
 // builds outfits exactly as the reading's own kind (`sub`, what the piece's reading keeps), and it draws and names as
 // itself. The photo reader never returns one (its list is unchanged, so no reading or score moves); he picks it on a

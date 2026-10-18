@@ -119,7 +119,9 @@ export const KV_LOCAL: readonly string[] = [
   'server.tier',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
-export const KV_LOCAL_PREFIXES: readonly string[] = ['sync.', 'demo.', 'notify.', 'account.'];
+// idea.touched.<id>: he changed that day's card on this phone, so a fresher forecast keeps his outfit (#338); a day old
+// by the time another phone could read it.
+export const KV_LOCAL_PREFIXES: readonly string[] = ['sync.', 'demo.', 'notify.', 'account.', 'idea.touched.'];
 
 export function kvPolicy(key: string): KvPolicy | 'local' | null {
   if (Object.prototype.hasOwnProperty.call(KV_SYNCED, key)) return KV_SYNCED[key]!;

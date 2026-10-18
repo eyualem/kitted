@@ -221,7 +221,7 @@ describe('U5–U7 · the thread: marks, answers, rhythm', () => {
     expect(rowGap(me, line, false)).toBe(RHYTHM.reply);
     expect(rowGap(line, me, false)).toBe(RHYTHM.toMine);
     expect(rowGap(line, me, true)).toBe(RHYTHM.belowStamp);
-    expect([RHYTHM.mine, RHYTHM.stylistLines, RHYTHM.reply, RHYTHM.toMine, RHYTHM.aboveStamp, RHYTHM.belowStamp]).toEqual([4, 8, 20, 16, 20, 8]);
+    expect([RHYTHM.mine, RHYTHM.stylistLines, RHYTHM.reply, RHYTHM.toMine, RHYTHM.aboveStamp, RHYTHM.belowStamp]).toEqual([4, 4, 20, 16, 20, 8]);
     expect(liveGap(me)).toBe(RHYTHM.reply);
     // A stamp after a 60-minute gap gets 20 above, the next row 8 below it; the first row nothing.
     const items = buildThreadItems([msg('Q', 'user'), msg('R', 'stylist', {}, 1), msg('Z', 'user', {}, 90)], NOW, US_EASTERN);
@@ -302,7 +302,9 @@ describe('U15 · the waiting row speaks', () => {
 
 describe('U18 · small VoiceOver fixes', () => {
   it('Earlier chats is spoken as shown; stamps are headers; the bar reads his draft', () => {
-    expect(src('features/stylist/StylistScreen.tsx')).toMatch(/accessibilityLabel=\{t\('history\.open'\)\}/);
+    // The thread's "Earlier chats" pill is gone (#338); the header's clock button is the way back, with its label.
+    expect(src('features/stylist/StylistScreen.tsx')).not.toMatch(/history\.open/);
+    expect(src('app/(tabs)/stylist/_layout.tsx')).toMatch(/accessibilityLabel=\{t\('history\.open\.a11y'\)\}/);
     expect(src('design-system/components/Chat.tsx')).toMatch(/accessibilityRole="header"/);
     expect(src('features/stylist/StylistBar.tsx')).toMatch(/accessibilityValue=\{draft \? \{ text: draft \} : undefined\}/);
   });

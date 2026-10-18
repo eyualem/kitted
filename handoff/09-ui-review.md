@@ -936,7 +936,7 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **Not seen on a screen, tested in code only:** U6 (Reduce Motion) and U7 (VoiceOver); a hold reaching the hard stop.
 - **HIG:** Apple has no toast component; this follows the HIG's "give people time to read and act" and WCAG 2.2.1 (a time limit the person can pause: hold), with VoiceOver's doubled window kept because RN can't pause on VoiceOver focus (#36). Material's snackbar guidance (4–10 s, stays while touched) matches both windows.
 
-## 22. More kinds in "What it is" (Oct 17, #338)
+## 22. More kinds in "What it is" (Oct 17, #339)
 **The founder:** "the full sleeve shirt is not included as an option. Half sleeve button-ups are not included … just add more options like this. For clothes."
 **What was missing:** the Kind sheet offered only the photo reader's own kinds. A long-sleeve tee didn't exist at all; a short-sleeve button-up was only "Camp shirt", under More kinds and drawn with long sleeves; a plain long-sleeve button-up was only "Oxford" or "Dress shirt".
 **The design (code `app/src/features/closet/kinds.ts`):** seven closet-only kinds, each kept as the reading kind it scores, matches and builds outfits as, and drawn and named as itself. The photo reader's list is unchanged, so no reading, score or saved check moves.

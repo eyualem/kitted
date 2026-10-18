@@ -32,7 +32,7 @@ const TOP: Record<string, TopType> = {
   sweater: 'crew', sweatshirt: 'crew', fleece: 'crew', rugby_shirt: 'crew', quarter_zip: 'quarter_zip', cardigan: 'cardigan', hoodie: 'hoodie',
   denim_jacket: 'denim_jacket', bomber: 'bomber', leather_jacket: 'jacket', field_jacket: 'jacket', shell_jacket: 'jacket', rain_jacket: 'jacket',
   puffer: 'puffer', blazer: 'blazer', unstructured_blazer: 'blazer', sport_coat: 'blazer', suit_jacket: 'blazer', overcoat: 'coat',
-  // the closet-only kinds (kinds.ts, #338)
+  // the closet-only kinds (kinds.ts, #339)
   long_sleeve_tee: 'tee', henley: 'tee', button_up_shirt: 'shirt', short_sleeve_shirt: 'shirt', turtleneck: 'crew', zip_hoodie: 'hoodie',
 };
 const BOTTOM: Record<string, BottomType> = {
@@ -74,7 +74,7 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
   const sub = String(g.subcategory ?? '');
   const shape = shapeOf(g.category, sub);
   const art: ClosetArt | null = item.art ?? null;
-  // What it's drawn as: a closet-only kind he picked (#338), else the reading's kind. Scores never read this.
+  // What it's drawn as: a closet-only kind he picked (#339), else the reading's kind. Scores never read this.
   const kind = isVariant(art?.kind) ? art!.kind! : sub;
   const d = new Set(art?.details ?? []);
   const known = !!art && (art.details?.length ?? 0) > 0;

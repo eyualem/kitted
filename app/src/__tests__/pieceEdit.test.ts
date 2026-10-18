@@ -564,11 +564,11 @@ describe('X14 words and VoiceOver', () => {
   });
 });
 
-// ---------------------------------------------------------------- X15 more kinds (#338)
+// ---------------------------------------------------------------- X15 more kinds (#339)
 // Founder, Oct 17: "the full sleeve shirt is not included … half sleeve button-ups are not included … add more options".
 // Closet-only kinds (features/closet/kinds.ts): each keeps the reading's kind it scores and matches as, and draws and
 // names as itself. Checks K1–K11 (09-ui-review §22).
-describe('X15 more kinds (#338)', () => {
+describe('X15 more kinds (#339)', () => {
   const NEW: Record<string, [string, string]> = {
     long_sleeve_tee: ['tee', 'Long-sleeve tee'], henley: ['tee', 'Henley'], button_up_shirt: ['oxford_shirt', 'Button-up shirt'],
     short_sleeve_shirt: ['camp_collar_shirt', 'Short-sleeve shirt'], turtleneck: ['sweater', 'Turtleneck'], zip_hoodie: ['hoodie', 'Zip hoodie'],

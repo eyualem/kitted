@@ -8,7 +8,7 @@ import { Image, type ImageSource } from 'expo-image';
 import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
 import { radius, size } from '../tokens';
-import { userBubbleMaxWidth } from './chatLayout';
+import { KIT_BUBBLE_PAD_H, kitBubbleMaxWidth, userBubbleMaxWidth } from './chatLayout';
 import { Icon } from './Icon';
 import { KText } from './KText';
 
@@ -18,6 +18,9 @@ import { KText } from './KText';
 // footnote semibold ink3), the way a group chat shows who's talking; later lines of the same run have no label. The
 // text and the footer (cards, chips, buttons) use the full width. `body` replaces the plain text (an answer's lead and
 // chips, features/ask/AnswerBody); `children` is always the whole text, for VoiceOver ("Kit: …").
+// Kit's bubble (founder, Oct 17, #338: "maybe we should give Kit a bubble"): the text sits in a bubble on the card
+// surface, his bubble mirrored (left-aligned, the small corner bottom-left, a hairline like the cards); "Kit" lines up
+// with the text inside it. The footer (cards, chips, buttons) stays full width under the bubble.
 
 export interface StylistMessageProps {
   children: string;
@@ -31,10 +34,11 @@ export interface StylistMessageProps {
 }
 
 export function StylistMessage({ children, showHeader, body, footer, actions }: StylistMessageProps) {
+  const { colors, isAccessibilitySize } = useTheme();
   return (
     <View style={{ gap: 4, marginTop: showHeader ? 4 : 0 }}>
       {showHeader ? (
-        <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+        <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ paddingLeft: KIT_BUBBLE_PAD_H }}>
           <KText role="stylistWho">{t('common.who')}</KText>
         </View>
       ) : null}
@@ -43,7 +47,21 @@ export function StylistMessage({ children, showHeader, body, footer, actions }: 
         accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })}
         accessibilityActions={actions?.map((a) => ({ name: a.name, label: a.label }))}
         onAccessibilityAction={actions ? (e) => actions.find((a) => a.name === e.nativeEvent.actionName)?.onPress() : undefined}
-        style={{ gap: 4 }}
+        style={{
+          alignSelf: 'flex-start',
+          maxWidth: kitBubbleMaxWidth(isAccessibilitySize),
+          gap: 4,
+          backgroundColor: colors.surface,
+          borderColor: colors.line,
+          borderWidth: 1,
+          paddingVertical: 10,
+          paddingHorizontal: KIT_BUBBLE_PAD_H,
+          borderTopLeftRadius: radius.bubble,
+          borderTopRightRadius: radius.bubble,
+          borderBottomRightRadius: radius.bubble,
+          borderBottomLeftRadius: radius.bubbleTail,
+          borderCurve: 'continuous',
+        }}
       >
         {body ?? <KText role="chatText">{children}</KText>}
       </View>
