@@ -137,6 +137,9 @@ export const purgeUsage = onSchedule({ region: REGION, schedule: 'every day 05:0
 // every emulator run and deploy.
 const GEMINI_KEY = defineSecret('GEMINI_KEY');
 const GEMINI_BASE = process.env.GEMINI_BASE ?? 'https://generativelanguage.googleapis.com';
+/** Questions on GPT-5.6 Luna (13 §11): the founder's own billed key, `firebase functions:secrets:set OPENAI_KEY`. */
+const OPENAI_KEY = defineSecret('OPENAI_KEY');
+const OPENAI_BASE = process.env.OPENAI_BASE ?? 'https://api.openai.com';
 /** 1 keeps one instance warm (no 1–2 s wake-up on the first call) and costs money every month: the founder's call. */
 const API_MIN_INSTANCES = 0;
 
@@ -149,7 +152,9 @@ export function apiDeps(over: Partial<ApiDeps> = {}): ApiDeps {
       await getAppCheck().verifyToken(token);
     },
     geminiKey: () => GEMINI_KEY.value(),
+    openaiKey: () => OPENAI_KEY.value(),
     geminiBase: over.geminiBase ?? GEMINI_BASE,
+    openaiBase: over.openaiBase ?? OPENAI_BASE,
     fetch: globalThis.fetch,
     now: () => Date.now(),
     log: (entry) => logger.info('api', entry),
@@ -163,7 +168,7 @@ export const adminFirestore = () => getFirestore();
 let handle: ReturnType<typeof createApi> | null = null;
 
 export const api = onRequest(
-  { region: REGION, secrets: [GEMINI_KEY], timeoutSeconds: 60, memory: '512MiB', concurrency: 80, minInstances: API_MIN_INSTANCES, invoker: 'public' },
+  { region: REGION, secrets: [GEMINI_KEY, OPENAI_KEY], timeoutSeconds: 60, memory: '512MiB', concurrency: 80, minInstances: API_MIN_INSTANCES, invoker: 'public' },
   async (req, res) => {
     handle ??= createApi(apiDeps());
     try {
