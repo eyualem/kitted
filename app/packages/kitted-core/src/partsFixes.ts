@@ -51,6 +51,8 @@ export interface PartsFixCandidate {
   edits: PartsFixEdit[];
   /** Second-look overrides after the edit (a tuck hides a peek). */
   look?: Record<string, unknown>;
+  /** v1.7 (#336): the slots a tuck tucks; a shown tuck hides fixes that swap one of those pieces for no more gain. */
+  tucks?: string[];
 }
 
 export interface PartsNextLevel {
@@ -66,6 +68,10 @@ export interface PartsNextLevel {
   style?: string;
   /** With `style`: not shown when the Smaller step on the card is in this group (the same move said twice). */
   group?: string;
+  /** v1.7 (#336), with `always`: a tuck tip by shirt type, also shown next to fixes when no tuck fix is shown. */
+  tuck?: boolean;
+  /** v1.7: the slot whose garment fills {name} in an `always` tip (default the bottom). */
+  name?: string;
   /** Second-look overrides after the edit. */
   look?: Record<string, unknown>;
 }
@@ -196,10 +202,24 @@ interface Cand {
   id: string; group: string; cls: PartsFixClass; rank: number; effort: number; free: boolean; to: number; toRaw: number;
   gain: number; rawGain: number; itemId: string | null; order: number; shift: number; pickRank: number; copy: string; tag: string;
   raises: PartRaise[]; raisesLine: string; step: string; drops: boolean; liftsDisplay: boolean; edits: PartsFixEdit[];
+  tucks: Set<string>; swaps: Set<string>;
 }
 
 const first = (r: Reading, cat: string): Garment | null => r.garments.find((g) => g.category === cat) ?? null;
 const index = (r: Reading, cat: string): number => r.garments.findIndex((g) => g.category === cat);
+
+/** parts_fixes._swapped (v1.7, #336): the slots whose first piece the edit replaced (a different kind, color, pattern or
+ *  roominess, or added or removed). A tuck changes none of these, so it never swaps. */
+const SWAP_SLOTS = ["top", "outerwear", "bottom", "footwear"] as const;
+const SWAP_KEYS = ["subcategory", "color_family", "pattern", "volume"] as const;
+function swappedSlots(w: Reading, r: Reading): Set<string> {
+  const out = new Set<string>();
+  for (const slot of SWAP_SLOTS) {
+    const a = first(w, slot), b = first(r, slot);
+    if ((a === null) !== (b === null) || (a !== null && b !== null && SWAP_KEYS.some((k) => nv(a[k]) !== nv(b[k])))) out.add(slot);
+  }
+  return out;
+}
 
 /** parts_fixes._match: "field": value, "field_in": [...], "field_not_in": [...]. */
 function matches(g: Garment, where: Record<string, unknown>): boolean {
@@ -550,7 +570,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
       rawGain: pyRound(res.rawUnrounded - base.rawUnrounded, 6), itemId: info.item_id ?? null, order, shift: shiftOf(r), pickRank: pickRank(res),
       copy: fill(cand.copy, info), tag: cl.tag + (cand.detail ? ` · ${cand.detail}` : ""), raises, raisesLine: raisesLine(res, raises),
       step: fill(cand.step, info), drops: ch.some(([, , , d0, d1]) => d1 < d0), liftsDisplay: ch.some(([, , , d0, d1]) => d1 > d0),
-      edits: clone(cand.edits),
+      edits: clone(cand.edits), tucks: new Set(cand.tucks ?? []), swaps: swappedSlots(w, r),
     });
   });
 
@@ -563,7 +583,15 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   const byKey = (x: Cand, y: Cand) => cmp(keyOf(x), keyOf(y));
 
   const pick = (classes: ReadonlySet<string>): Cand[] => {
-    const fixes = cands.filter((x) => x.gain >= 0.5 && classes.has(x.cls));
+    let fixes = cands.filter((x) => x.gain >= 0.5 && classes.has(x.cls));
+    // v1.7 (#336): tuck it in, not swap it. The best tuck hides fixes that swap a piece it tucks to raise the same
+    // parts (another way to fix the shape) for no more gain; a swap that fixes something else (a color) stays.
+    const tk = [...fixes].sort(byKey).find((x) => x.tucks.size > 0) ?? null;
+    if (tk !== null) {
+      const tkParts = new Set(tk.raises.map((p) => p.part));
+      fixes = fixes.filter((x) => x === tk || !([...x.swaps].some((sl) => tk.tucks.has(sl)) && x.gain <= tk.gain
+        && x.raises.some((p) => tkParts.has(p.part))));
+    }
     const sorted = [...fixes].sort(byKey);
     const groups: string[] = [];
     for (const x of sorted) if (!groups.includes(x.group)) groups.push(x.group);
@@ -609,14 +637,16 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
     out.smallerStep = { id: s.id, class: s.cls, itemId: s.itemId, part: top.part, from: top.from, to: top.to, rawGain: s.rawGain, line };
   }
 
-  // v9 (#232): a stylist's tip with no number, ahead of a Smaller step that means buying something
+  // v9 (#232): a stylist's tip with no number, ahead of a Smaller step that means buying something.
+  // v1.7 (#336): a tuck tip by shirt type also shows next to fixes, when no tuck fix is shown.
   let tipShown = false;
-  if (picked.length === 0 && !lounge) {
+  const tuckShown = picked.some((x) => x.group === "tuck");
+  if (!lounge && (picked.length === 0 || !tuckShown)) {
     const step = out.smallerStep;
     if (step === null || !CAT.classes[step.class]!.free || step.class === "own") {
       for (const nl of CAT.nextLevel) {
-        if (!truthy(nl.always) || !whenOk(nl.when, w)) continue;
-        const piece = truthy(nl.when?.["peek_under"]) ? peekUnder(w) : first(w, "bottom");
+        if (!truthy(nl.always) || (picked.length > 0 && !truthy(nl.tuck)) || !whenOk(nl.when, w)) continue;
+        const piece = truthy(nl.when?.["peek_under"]) ? peekUnder(w) : first(w, nl.name ?? "bottom");
         out.nextLevel = { id: nl.id, part: nl.part, line: fill(nl.copy, { name: garmentName(piece) }), style: null };
         out.smallerStep = null;
         tipShown = true;

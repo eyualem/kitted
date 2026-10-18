@@ -128,6 +128,22 @@ def fix_edges():
     add("fitted_straight_jeans_chunky", Rd(TEE(color="black"), JEANS(volume=2), SHOE(sub="chunky_sneaker")))
     add("fitted_straight_jeans_tucked", Rd(G("top", "polo", "black", tucked="full"), JEANS(volume=2, color="off_white_cream"), SHOE()))
     add("pick_polo_jeans",Rd(G("top", "polo", "navy", tucked="none", length="mid_fly"), JEANS(color="denim_dark"), SHOE(sub="white_leather_sneaker")))
+    # v1.7 (#336): tuck it in, not swap it. The founder's open check shirt over a navy tee (before: tuck the layer), a tuck
+    # that hides a same-gain swap of the shirt, and the tuck tips by shirt type (alone and next to a fix)
+    open_shirt = lambda **kw: G("outerwear", kw.pop("sub", "flannel_shirt"), kw.pop("color", "tan_camel"), **{"tucked": "none", "length": "mid_fly", "volume": 4, "sleeve_end": "covers_hand", **kw})  # noqa: E731
+    add("tuck_layer_open_shirt", Rd(TEE(color="navy"), open_shirt(), JEANS(color="denim_light", leg_shape="relaxed", volume=4, hem="full_break"), SHOE()), occ="going_out")
+    add("tuck_layer_tucked", Rd(TEE(color="navy", tucked="full", length="na"), open_shirt(tucked="full", length="na"), JEANS(color="denim_light", leg_shape="relaxed", volume=4, hem="full_break"), SHOE(sub="retro_runner")), occ="going_out")
+    add("tuck_layer_oxford_open", Rd(TEE(), open_shirt(sub="oxford_shirt", color="light_blue", volume=3, sleeve_end="at_wrist"), JEANS(color="denim_dark", leg_shape="wide"), SHOE()))
+    add("tuck_hides_shirt_swap", Rd(G("top", "oxford_shirt", "white", tucked="none", length="mid_fly", volume=4), JEANS(leg_shape="wide", color="denim_dark"), SHOE()))
+    add("tuck_hides_camp_swap", Rd(G("top", "camp_collar_shirt", "olive", tucked="none", length="mid_fly", volume=5), JEANS(leg_shape="wide", hem="pooling"), SHOE(sub="slides_sandals", color="black")))
+    add("tip_tuck_dress_alone", Rd(G("top", "dress_shirt", "white", tucked="none", length="mid_fly"), JEANS(leg_shape="relaxed", color="denim_dark"), SHOE(sub="loafer", color="brown")))
+    add("tip_tuck_dress_slim", Rd(G("top", "dress_shirt", "white", tucked="none", length="mid_fly"), JEANS(leg_shape="slim", color="black"), SHOE(sub="loafer", color="black")), occ="date")
+    add("tip_tuck_dress_wrinkled", Rd(G("top", "dress_shirt", "white", tucked="none", length="mid_fly", condition="wrinkled"), JEANS(leg_shape="wide"), SHOE(sub="derby", color="brown")))
+    add("tip_tuck_polo_slim", Rd(G("top", "polo", "navy", tucked="none", length="mid_fly"), JEANS(leg_shape="slim", volume=2), SHOE()), occ="class")
+    add("tip_tuck_oxford_slim_chinos", Rd(G("top", "oxford_shirt", "light_blue", tucked="none", length="mid_fly", condition="wrinkled"), G("bottom", "chinos", "khaki_beige", leg_shape="slim"), SHOE()), occ="class")
+    add("tip_tuck_oxford_at_belt", Rd(G("top", "oxford_shirt", "light_blue", tucked="none", length="at_belt"), G("bottom", "chinos", "khaki_beige", leg_shape="slim"), SHOE()))
+    add("tip_tuck_half", Rd(G("top", "dress_shirt", "white", tucked="half", length="na"), JEANS(leg_shape="slim"), SHOE()))
+    add("tip_tuck_gym", Rd(G("top", "polo", "navy", tucked="none", length="mid_fly"), JEANS(leg_shape="slim", volume=2), SHOE()), occ="gym")
     return E
 
 
