@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { ShareScreen } from '@/features/share/ShareScreen';
 
-// S12 · Share card (02-screens.md). Built in P6.
-export default function ShareCardScreen() {
-  return <Placeholder id="S12" name="Share card" phase="P6" kind="cover" />;
-}
+// S12 · Share card (02 D20, DECISIONS-LOG #341).
+export default ShareScreen;

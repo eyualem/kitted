@@ -15,7 +15,8 @@ import { caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSum
 import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { occasionLabel } from '../thread';
-import { FitCheckCard, SHARE_CARD_BUILT } from './FitCheckCard';
+import { FitCheckCard } from './FitCheckCard';
+import { shareOffered } from '@/features/share/offer';
 import { useWinReveal } from './useReveal';
 import type { FitCheckRow } from '@/data/types';
 
@@ -88,7 +89,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const actions = notSeen
     ? readOnly ? [] : [{ name: 'iDid', label: iDidTitle }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
     : readOnly ? [why] : [
-        ...(SHARE_CARD_BUILT && move === 'up' ? [{ name: 'share', label: t('recheck.share') }] : []),
+        ...(move === 'up' && shareOffered(row) ? [{ name: 'share', label: t('recheck.share') }] : []),
         why, { name: 'nqr', label: t('card.nqr') },
         ...(missed ? [{ name: 'tell', label: t('recheck.tellMe') }] : []),
       ];
@@ -174,7 +175,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
           </View>
         ) : (
           <>
-            {SHARE_CARD_BUILT && move === 'up' ? (
+            {move === 'up' && shareOffered(row) ? (
               <KButton title={t('recheck.share')} icon="share" size="regular" fullWidth onPress={() => router.push(`/share/${row.id}`)} />
             ) : null}
             {/* Why and Not quite right? as on the first check's card (09 §20.8 G15): after a drop he can see why and

@@ -1100,6 +1100,32 @@ const addedInBuild = {
   'fail.askOffline': "You're offline, so I couldn't answer that. It doesn't count.",
   // The server's daily limit on a check the phone thought it had left (13-server.md §8, A7, #328).
   'fail.limit': "That's today's fit checks. Your photo is saved here. Try again after 4 am. This one doesn't count.",
+  // The share card (02 D20, DECISIONS-LOG #341; demos mockups/share-cards/). The founder's OK on the build, Oct 18; the
+  // words are the demos' as revised after the critiques. Never the occasion, an open fix, the date or Kit's name.
+  'share.fmt.story': 'Story',
+  'share.fmt.tiktok': 'TikTok',
+  'share.fmt.beforeAfter': 'Before → after',
+  'share.fmt.beat': 'Beat my {score}',
+  'share.face.neck': 'Neck down',
+  'share.face.full': 'Full photo',
+  'share.face.note': 'Full photo shares the whole picture, background too.',
+  'share.face.noNeck': "I can't tell where this photo starts below your face, so neck down shows your pieces instead.",
+  'share.signoff': 'Score your fit · trykitted.com',
+  'share.beat.title': 'Beat my {score}',
+  'share.beat.sub': 'Send a fit pic. Get the score and the fix.',
+  'share.ba.before': 'Before',
+  'share.ba.after': 'After',
+  'share.ba.fix': 'The fix: {fix}',
+  'share.share': 'Share',
+  'share.saved': 'Saved to Photos.',
+  'share.saveDenied': 'Photos access is off. Turn it on in Settings.',
+  'share.failed': "Couldn't make the image. Try again.",
+  'share.a11y.card': 'Share card: {score} out of 10, {word}.',
+  'share.a11y.cardBeforeAfter': 'Share card: {before} to {after} out of 10, {word}.',
+  'share.a11y.cardBeat': 'Share card: beat my {score}, {word}.',
+  'share.a11y.formats': 'Card',
+  'share.a11y.faces': 'Photo',
+  'share.a11y.share': 'Share the card',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */
