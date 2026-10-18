@@ -18,6 +18,7 @@ import { routeQuestion } from '@/features/ask/router';
 import { loadStylistSnapshot } from '@/features/ask/snapshot';
 import { createDemoSource, DEMO_CARD_ANSWERS, seededAnswers, type AnswerEvent, type AnswerSource } from '@/features/ask/source';
 import { STARTER } from '@/features/finish/starter';
+import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
 import { createQuota } from '@/services/quota';
@@ -44,7 +45,7 @@ beforeEach(() => liveAnswer.clear());
 
 describe('R1 · the router', () => {
   const CASES: Record<string, string[]> = {
-    explain: ['Why did I only get a 7?', 'Why is my score so low?', 'How come today\'s check was an 8?', 'Explain my 9', 'What brought my outfit down?'],
+    explain: ['Why did I only get a 7?', 'Why is my score so low?', 'How come today\'s check was an 8?', 'Explain my 9', 'What brought my outfit down?', 'Why a 6.5?', 'Why a 6.5', 'Why an 8?'],
     whatIf: ['What if I swap the jeans for the chinos?', 'If I wore the loafers would it be higher?', 'What if I tuck the tee in?', 'If I added the denim jacket would it be better?', 'What if I wore the Chelsea boots instead of the sneakers?'],
     goesWith: ['What goes with my olive overshirt?', 'What can I wear with khaki chinos?', 'What matches the navy crewneck?', 'What should I pair with my brown loafers?', 'How do I style my denim jacket?'],
     whatToWear: ['What should I wear today?', 'What should I wear to a date tonight?', 'Outfit for the career fair?', "What's tomorrow's outfit?", 'What do I wear to a wedding?'],
@@ -53,7 +54,7 @@ describe('R1 · the router', () => {
     fitHowTo: ['How should chinos fit?', 'How long should my jeans be?', 'How do I cuff my jeans?', 'Should I size up in hoodies?', 'How tight should a tee be?'],
     shape: ['Are my jeans too long?', 'Do my jeans bunch up at the shoe?', 'Is the overshirt too baggy?', 'Should it be tucked or cropped?', 'Does the silhouette look off?'],
     remember: ["I'm a 32 waist.", 'My budget is around $60.', 'I hate skinny jeans.', 'I have black Chelsea boots.', 'I work in an office.'],
-    feedback: ['That score is wrong.', 'It should be higher.', 'That was unfair.', 'I deserved more than that.', "That's not right, it was clean."],
+    feedback: ['That score is wrong.', 'It should be higher.', 'That was unfair.', 'I deserved more than that.', "That's not right, it was clean.", 'Im not wearing slides in that picture', 'You mixed up the checks', "That's not my outfit", "I didn't wear boots"],
   };
   for (const [kind, qs] of Object.entries(CASES)) {
     it(`${kind}: ${qs.length} questions`, async () => {
@@ -71,6 +72,23 @@ describe('R1 · the router', () => {
     const r3 = await routeOf(store, clock, 'What goes with my chinos?'); // two pairs: ambiguous, no guess
     expect(r3.route.pieces).toEqual([]);
     expect(r3.route.sure).toBe(false);
+  });
+
+  // Oct 18, the founder's phone: the app's own chip "Why a 6.5?" fell through to "general", so no check was pinned and
+  // the model explained an older 6.5 (with slides) instead of the one he'd just sent (#341).
+  it('the "Why a {score}?" chip routes to explain and names the newest check with that score', async () => {
+    const { store, clock } = await setup();
+    const snap = await loadStylistSnapshot(store, clock);
+    const scored = snap.checks.filter((c) => c.status === 'scored' && c.score !== null).sort((a, b) => b.createdAt - a.createdAt);
+    const target = scored[0]!;
+    const q = t('ask.chip.why', { score: displayScore(target.score!) });
+    const { route, ctx } = await routeOf(store, clock, q);
+    expect(route.kind).toBe('explain');
+    expect(route.sure).toBe(true);
+    const named = snap.checks.find((c) => c.id === ctx.handles[route.check!])!;
+    expect(displayScore(named.score!)).toBe(displayScore(target.score!));
+    const sameScore = scored.filter((c) => displayScore(c.score!) === displayScore(target.score!));
+    expect(named.id).toBe(sameScore[0]!.id);
   });
 
   it('names the check: by its score, by weekday, and the newest otherwise', async () => {
