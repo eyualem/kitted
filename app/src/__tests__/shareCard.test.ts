@@ -52,7 +52,7 @@ describe('SC2 · the three versions are the same overlay', () => {
     const card = src('src/features/share/ShareCard.tsx');
     expect(card.match(/<Overlay m=\{m\}/g)).toHaveLength(3);
     const solid = card.slice(card.indexOf("if (format === 'solid')"), card.indexOf("if (format === 'sticker')"));
-    expect(solid).toMatch(/backgroundColor: fixed\.indigo/);
+    expect(solid).toMatch(/backgroundColor: SOLID_GROUND\[tone\]/);
     expect(src('src/features/share/ShareScreen.tsx')).toMatch(/value: 'sticker'[\s\S]*value: 'solid'[\s\S]*value: 'photo'/);
     const sticker = card.slice(card.indexOf("if (format === 'sticker')"), card.indexOf('return (\n    <FixedDark>\n      <View style={{ width: w, height: h, backgroundColor'));
     expect(sticker).not.toMatch(/backgroundColor/);
@@ -80,10 +80,19 @@ describe('SC3 · what it says', () => {
     expect(keys.filter((k) => typeof deck[k] !== 'string')).toEqual([]);
     expect(keys.map((k) => deck[k]).join(' ')).not.toMatch(/\bKit\b|occasion|\{time\}|\{date\}/);
   });
-  it('copper only on the score dot', () => {
+  it('copper only on the score dot (the light solid card uses the light theme\'s copper)', () => {
     const card = src('src/features/share/ShareCard.tsx');
     expect(card.match(/fixed\.copper/g)).toHaveLength(1);
-    expect(card).toMatch(/<Circle cx=\{tapeX\(score\)\} cy=\{18\} r=\{5\} fill=\{fixed\.copper\}/);
+    expect(card).toMatch(/const WHITE_INK: Ink = \{ fg: fixed\.white, dot: fixed\.copper \}/);
+    expect(card).toMatch(/const LIGHT_INK: Ink = \{ fg: '#121628', dot: '#9C5326' \}/);
+    expect(card).toMatch(/<Circle cx=\{tapeX\(score\)\} cy=\{18\} r=\{5\} fill=\{ink\.dot\} \/>/);
+  });
+  it('the solid card comes light and dark, starting in the phone\'s appearance', () => {
+    const card = src('src/features/share/ShareCard.tsx');
+    expect(card).toMatch(/const SOLID_GROUND: Readonly<Record<SolidTone, string>> = \{ dark: fixed\.indigo, light: '#F3F4F6' \}/);
+    const screen = src('src/features/share/ShareScreen.tsx');
+    expect(screen).toMatch(/useState<SolidTone>\(system === 'light' \? 'light' : 'dark'\)/);
+    expect(screen).toMatch(/value: 'light'[\s\S]*value: 'dark'/);
   });
 });
 

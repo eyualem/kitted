@@ -3,7 +3,7 @@
 //
 // One design in three versions, after Strava's share stickers (founder, Oct 18): white stats (a small label over a big
 // value), the tape with a copper dot on the score, and the KITTED wordmark. "Transparent" is that overlay alone, a PNG
-// he lays on his own photo or video; "Solid" is the same overlay on the indigo ground; "With photo" is the same overlay
+// he lays on his own photo or video; "Solid" is the same overlay on a ground, dark (indigo) or light (chalk); "With photo" is the same overlay
 // on his fit photo (neck down unless he picks "Full photo" for this share). A single check shows Score and Rating; a re-check that went up shows Before, After and
 // Change. Never the occasion, a fix, the date, Kit's name, or another person.
 //

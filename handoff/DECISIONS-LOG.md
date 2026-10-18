@@ -2279,3 +2279,5 @@ Contradictions settled and decisions changed during the build. Newest last.
 
 347. **The founder: "I don't think you've made a solid version too. You've made one without a background. Can you also make one with a background?"** Added **Solid**: the same overlay on the indigo ground, the transparent sticker's size (1080 × 600), rounded 24 pt corners. The switch is Transparent · Solid · With photo (still opens on With photo). The published page shows all three.
 
+348. **The founder: "Make light and dark modes too for the solid ones."** The solid card now comes **Light** (indigo ink #121628 on chalk #F3F4F6, the dot in the light theme's copper #9C5326, 5.6:1 on chalk) or **Dark** (white on indigo, as before). Same size and layout. On the share screen a "Light | Dark" switch shows under Solid; it starts in the phone's own appearance (the screen itself is always dark, so it asks the system). Transparent and With photo stay white.
+

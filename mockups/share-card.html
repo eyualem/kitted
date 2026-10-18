@@ -25,6 +25,8 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
 .scroll{overflow-x:auto}
 /* the transparent PNG shown on a checkerboard */
 .solid{border-radius:24px;background:#121628}
+.solid.light{background:#F3F4F6}
+.solid.light .ov{color:#121628}
 .checker{border-radius:18px;background:conic-gradient(#3a3d46 25%,#2c2f37 0 50%,#3a3d46 0 75%,#2c2f37 0) 0 0/20px 20px}
 .ov{width:360px;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center}
 .stats{display:flex;gap:34px;justify-content:center;align-items:flex-start}
@@ -49,7 +51,7 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
 <div class="wrap">
   <div class="top"><span class="lbl">KITTED</span>SHARE CARD · OCT 18, 2026</div>
   <h1>One card, three ways</h1>
-  <p class="lede">Modeled on Strava's share stickers: a few white stats, one line, the wordmark. <b>Transparent</b> is a sticker you lay on your own photo or video. <b>Solid</b> is the same on Kitted's indigo. <b>With photo</b> is the same sticker on your fit photo, neck down unless you pick Full photo. Photos are free stock; scores are demo numbers.</p>
+  <p class="lede">Modeled on Strava's share stickers: a few white stats, one line, the wordmark. <b>Transparent</b> is a sticker you lay on your own photo or video. <b>Solid</b> is the same on a light or dark ground. <b>With photo</b> is the same sticker on your fit photo, neck down unless you pick Full photo. Photos are free stock; scores are demo numbers.</p>
 
   <h2>A fit check</h2>
   <p class="sub">Score and Rating. The tape runs 5 to 10; the copper dot is the score, the only color on the card.</p>
@@ -65,7 +67,7 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
 
   <div class="notes">
     <div class="note"><h3>In the app</h3><ul>
-      <li>Share opens on <b>With photo</b>; the switch is Transparent · Solid · With photo.</li>
+      <li>Share opens on <b>With photo</b>; the switch is Transparent · Solid · With photo. Solid has Light | Dark and starts in your phone's appearance.</li>
       <li>"Neck down | Full photo" for the photo version, neck down every time.</li>
       <li>Share sends the image; Save puts it in Photos (the sticker keeps its transparency).</li>
     </ul></div>
@@ -80,25 +82,25 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
 </div>
 <script>
 (function(){
-  function tape(score,before){
+  function tape(score,before,ink,dot){ink=ink||'#fff';dot=dot||'#DE9762';
     var w=200,x=function(s){return (s-5)/5*w},t='';
-    for(var i=0;i<=10;i++){var X=x(5+i/2).toFixed(1),m=i%2===0;t+='<line x1="'+X+'" y1="'+(18-(m?8:4))+'" x2="'+X+'" y2="18" stroke="#fff" stroke-opacity="'+(m?.75:.4)+'" stroke-width="1.25"/>'}
-    t+='<line x1="0" y1="18" x2="'+w+'" y2="18" stroke="#fff" stroke-opacity=".9" stroke-width="1.5"/>';
-    if(before!=null)t+='<circle cx="'+x(before)+'" cy="18" r="4.5" fill="none" stroke="#fff" stroke-width="1.5"/>';
-    t+='<circle cx="'+x(score)+'" cy="18" r="5" fill="#DE9762"/>';
+    for(var i=0;i<=10;i++){var X=x(5+i/2).toFixed(1),m=i%2===0;t+='<line x1="'+X+'" y1="'+(18-(m?8:4))+'" x2="'+X+'" y2="18" stroke="'+ink+'" stroke-opacity="'+(m?.75:.4)+'" stroke-width="1.25"/>'}
+    t+='<line x1="0" y1="18" x2="'+w+'" y2="18" stroke="'+ink+'" stroke-opacity=".9" stroke-width="1.5"/>';
+    if(before!=null)t+='<circle cx="'+x(before)+'" cy="18" r="4.5" fill="none" stroke="'+ink+'" stroke-width="1.5"/>';
+    t+='<circle cx="'+x(score)+'" cy="18" r="5" fill="'+dot+'"/>';
     return '<svg class="tape" width="212" height="26" viewBox="-6 0 212 26" aria-hidden="true">'+t+'</svg>';
   }
-  function ov(o,shadow){
+  function ov(o,shadow,light){
     var s=o.stats.map(function(a){return '<div><div class="l">'+a[0]+'</div><div class="v">'+a[1]+(a[2]?'<small>'+a[2]+'</small>':'')+'</div></div>'}).join('');
-    return '<div class="ov'+(shadow?' shadow':'')+'"><div class="stats'+(o.stats.length>2?' three':'')+'">'+s+'</div>'+tape(o.score,o.before)+'<div class="mark">KITTED</div></div>';
+    return '<div class="ov'+(shadow?' shadow':'')+'"><div class="stats'+(o.stats.length>2?' three':'')+'">'+s+'</div>'+tape(o.score,o.before,light?'#121628':null,light?'#9C5326':null)+'<div class="mark">KITTED</div></div>';
   }
   function photo(o,img,neck){return '<div class="card"><div class="ph" style="--neck:'+neck+'"><img src="../app/assets/demo-photos/'+img+'.jpg" alt=""></div><div class="shade"></div>'+ov(o,true)+'</div>'}
   function tile(html,cap){return '<div>'+html+'<div class="cap">'+cap+'</div></div>'}
   var single={score:8,stats:[['Score','8.0','/10'],['Rating','Sharp']]};
   var win={score:8.5,before:7.5,stats:[['Before','7.5'],['After','8.5'],['Change','+1.0']]};
   var bright={score:7.5,stats:[['Score','7.5','/10'],['Rating','Put together']]};
-  document.getElementById('single').innerHTML=tile('<div class="checker">'+ov(single,false)+'</div>','<b>Transparent</b> · 1080 × 600 PNG, shown on a checkerboard')+tile('<div class="solid">'+ov(single,false)+'</div>','<b>Solid</b> · 1080 × 600, indigo')+tile(photo(single,'s15',.265),'<b>With photo</b> · 1080 × 1920, neck down');
-  document.getElementById('win').innerHTML=tile('<div class="checker">'+ov(win,false)+'</div>','<b>Transparent</b>')+tile('<div class="solid">'+ov(win,false)+'</div>','<b>Solid</b>')+tile(photo(win,'p01a',.315),'<b>With photo</b> · the after photo');
+  document.getElementById('single').innerHTML=tile('<div class="checker">'+ov(single,false)+'</div>','<b>Transparent</b> · 1080 × 600 PNG, shown on a checkerboard')+tile('<div class="solid light">'+ov(single,false,true)+'</div>','<b>Solid, light</b> · 1080 × 600')+tile('<div class="solid">'+ov(single,false)+'</div>','<b>Solid, dark</b> · 1080 × 600')+tile(photo(single,'s15',.265),'<b>With photo</b> · 1080 × 1920, neck down');
+  document.getElementById('win').innerHTML=tile('<div class="checker">'+ov(win,false)+'</div>','<b>Transparent</b>')+tile('<div class="solid light">'+ov(win,false,true)+'</div>','<b>Solid, light</b>')+tile('<div class="solid">'+ov(win,false)+'</div>','<b>Solid, dark</b>')+tile(photo(win,'p01a',.315),'<b>With photo</b> · the after photo');
   document.getElementById('bright').innerHTML=tile(photo(bright,'s14',.21),'<b>With photo</b> · a light background, the longest rating word');
 })();
 </script>

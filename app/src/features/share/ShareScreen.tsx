@@ -1,10 +1,10 @@
 // S12 · Share (02 D20, DECISIONS-LOG #346–347): a dark full-screen cover with the card's preview, the three versions
-// ("Transparent" | "Solid" | "With photo"), his face choice for the photo version ("Neck down", the default every time, or
+// ("Transparent" | "Solid" | "With photo"), Light | Dark for the solid card, his face choice for the photo version ("Neck down", the default every time, or
 // "Full photo"), and Share / Save. The card is drawn once more at full size, off screen, for the capture, so the image
 // is exactly what the preview shows and never depends on the screen's size or text size. The transparent preview sits
 // on a checkerboard so it reads as see-through; the PNG itself has no background.
 import { useRef, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { AccessibilityInfo, StyleSheet, View, useColorScheme, useWindowDimensions } from 'react-native';
 import Svg, { Defs, Pattern, Rect } from 'react-native-svg';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -15,7 +15,7 @@ import { useLive } from '@/data/useLive';
 import { GonePage } from '@/features/gone/Gone';
 import { Segmented } from '@/features/onboarding/Segmented';
 import { t } from '@/i18n/en';
-import { ShareCard } from './ShareCard';
+import { ShareCard, type SolidTone } from './ShareCard';
 import type { ExportResult } from './exportCard';
 import { shareNativeReady } from './shareNative';
 import { FORMAT_SIZE, buildShare, photoFor, shareA11y, type FaceChoice, type ShareFormat, type ShareModel } from './shareModel';
@@ -55,6 +55,9 @@ function ShareBody({ m }: { m: ShareModel }) {
   const { width, height } = useWindowDimensions();
   const { isAccessibilitySize: ax } = useTheme();
   const [format, setFormat] = useState<ShareFormat>('photo');
+  // The solid card starts in the phone's own appearance (this screen is always dark, so ask the system, not the theme).
+  const system = useColorScheme();
+  const [tone, setTone] = useState<SolidTone>(system === 'light' ? 'light' : 'dark');
   // His choice is for this share only: every open starts neck down (founder, Oct 18).
   const [face, setFace] = useState<FaceChoice>('neck');
   const [busy, setBusy] = useState<'share' | 'save' | null>(null);
@@ -96,7 +99,7 @@ function ShareBody({ m }: { m: ShareModel }) {
       {/* The full-size card the capture reads (off screen, never seen or read by VoiceOver). */}
       <View style={styles.offscreen} pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         <View ref={capture} collapsable={false} style={{ width: size.w, height: size.h }}>
-          <ShareCard m={m} format={format} face={face} />
+          <ShareCard m={m} format={format} face={face} tone={tone} />
         </View>
       </View>
 
@@ -116,7 +119,7 @@ function ShareBody({ m }: { m: ShareModel }) {
         >
           {sticker ? <Checker width={size.w * scale} height={(size.h + 80) * scale} /> : null}
           <View style={{ width: size.w, height: size.h, marginTop: sticker ? 40 * scale : 0, transform: [{ scale }], transformOrigin: 'top left' }}>
-            <ShareCard m={m} format={format} face={face} />
+            <ShareCard m={m} format={format} face={face} tone={tone} />
           </View>
         </View>
       </View>
@@ -129,6 +132,14 @@ function ShareBody({ m }: { m: ShareModel }) {
             value={format}
             onChange={(v) => { setFormat(v); setStatus(null); }}
           />
+          {format === 'solid' ? (
+            <Segmented
+              label={t('share.a11y.tone')}
+              options={[{ value: 'light', label: t('share.tone.light') }, { value: 'dark', label: t('share.tone.dark') }]}
+              value={tone}
+              onChange={(v) => { setTone(v); setStatus(null); }}
+            />
+          ) : null}
           {photoCard && hasPhoto ? (
             <Segmented
               label={t('share.a11y.faces')}
