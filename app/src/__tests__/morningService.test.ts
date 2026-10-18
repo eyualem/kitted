@@ -39,7 +39,7 @@ describe('windows', () => {
 });
 
 describe('ensureCard', () => {
-  it('posts a greeting and a card, once per slot; the weather is in the card, not the greeting (#338)', async () => {
+  it('posts the card alone, once per slot: no greeting line above it, the weather is in the card (#338, #340)', async () => {
     const { store, svc } = await setup({ now: '2026-10-22T07:40:00-04:00' });
     expect(await svc.ensureCard()).toBe(ideaId('2026-10-22', 'day'));
     expect(await svc.ensureCard()).toBeNull();
@@ -47,8 +47,7 @@ describe('ensureCard', () => {
     expect(idea).toMatchObject({ slot: 'day', occasion: 'class', state: 'idea' });
     expect(idea.outfitId).not.toBeNull();
     const msgs = (await store.chat.all()).filter((m) => m.createdAt >= at('2026-10-22T07:40:00-04:00'));
-    expect(msgs.map((m) => [m.kind, m.cardType])).toEqual([['text', null], ['card', 'morning']]);
-    expect(msgs[0]!.text).toBe("Morning. Here's an idea for today.");
+    expect(msgs.map((m) => [m.kind, m.cardType])).toEqual([['card', 'morning']]);
     expect(idea.weather).toMatchObject({ nowF: 46, fetchedAt: at('2026-10-22T07:40:00-04:00') });
   });
 
@@ -58,8 +57,8 @@ describe('ensureCard', () => {
     clock.set(at('2026-10-22T18:30:00-04:00'));
     expect(await svc.ensureCard()).toBe('2026-10-22|evening');
     expect(await store.dailyIdeas.get('2026-10-22|evening')).toMatchObject({ occasion: 'going_out', slot: 'evening' });
-    const text = (await store.chat.all()).sort((a, b) => b.createdAt - a.createdAt).find((m) => m.kind === 'text')!.text;
-    expect(text).toBe('Evening. Heading out?');
+    const after = (await store.chat.all()).filter((m) => m.createdAt >= at('2026-10-22T18:30:00-04:00'));
+    expect(after.map((m) => [m.kind, m.cardType])).toEqual([['card', 'morning']]);
   });
 
   it('weekends default to Everyday', async () => {
@@ -68,7 +67,7 @@ describe('ensureCard', () => {
     expect((await store.dailyIdeas.get('2026-10-24|day'))!.occasion).toBe('everyday');
   });
 
-  it('no weather permission: no weather in the greeting, and the pick still works', async () => {
+  it('no weather permission: no weather, and the pick still works', async () => {
     const store = createMemoryStore();
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at('2026-10-20T07:00:00-04:00') });
     const clock = manualClock(at('2026-10-22T07:40:00-04:00'));
@@ -77,8 +76,7 @@ describe('ensureCard', () => {
     const idea = (await store.dailyIdeas.get('2026-10-22|day'))!;
     expect(idea.weather).toBeNull();
     expect(idea.outfitId).not.toBeNull();
-    const text = (await store.chat.all()).find((m) => m.kind === 'text' && m.createdAt >= clock.nowMs())!.text!;
-    expect(text).toBe('Morning. October: bring a layer.');
+    expect((await store.chat.all()).some((m) => m.kind === 'text' && m.createdAt >= clock.nowMs())).toBe(false);
   });
 
   it('an empty closet still posts the card (no outfit)', async () => {
