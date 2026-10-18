@@ -82,7 +82,7 @@ export function copiedLook(from: { id: string; details: { secondLook?: StoredSec
   return { ...sl, copied: { from: from.id, why: 'samePhoto', arms: [...(sl.u ? ['U' as const] : []), ...(sl.l ? ['L' as const] : [])] } };
 }
 
-/** The look a new check takes from a re-check of the same photo (#341): only the arms read from that photo, never the
+/** The look a new check takes from a re-check of the same photo (#342): only the arms read from that photo, never the
  *  ones it carried from its first check's photo (undefined there = none here). */
 export function ownLookOf(from: { id: string; details: { secondLook?: StoredSecondLook | null } }): StoredSecondLook | null | undefined {
   const sl = from.details.secondLook;

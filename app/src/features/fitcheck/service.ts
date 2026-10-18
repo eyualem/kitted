@@ -37,10 +37,10 @@ export { failInterruptedChecks } from './interrupted';
 
 /** The engine a stored check is scored with (#209): the one its rubricVersion names, so editing an old check (a
  *  correction, the occasion, its re-check) never moves it to another engine. New rows take the switch's. */
-/** The reading schema new readings are written in; a stored read in another is read again, never reused (#341). */
+/** The reading schema new readings are written in; a stored read in another is read again, never reused (#342). */
 export const READING_SCHEMA = 'v3';
 
-/** A stored read of a photo a new check reuses (#341): the read, his tap answer on it, whether it's free, its look. */
+/** A stored read of a photo a new check reuses (#342): the read, his tap answer on it, whether it's free, its look. */
 interface StoredRead {
   base: ReadingRow;
   answered: ReadingRow | null;
@@ -245,7 +245,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     return row;
   };
 
-  /** A stored read of this exact photo (#341), so a new check of a photo already read is scored from it, never read
+  /** A stored read of this exact photo (#342), so a new check of a photo already read is scored from it, never read
    *  again: same photo, same score. Only a whole-photo read counts: a new check's ('full'), else a re-check's own read
    *  of it ('recheckRaw', the same prompt). Never a re-check's merged reading (anchored to its first check's photo) or
    *  a correction (it belongs to its own check); his answer to the one quick tap on that read is reused. A read in an
@@ -269,7 +269,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     return { base, answered, free, look };
   }
 
-  /** Scores a check from a stored read of its photo (#341). Scored before without a question (none qualified, or his
+  /** Scores a check from a stored read of its photo (#342). Scored before without a question (none qualified, or his
    *  closet agreed): scored the same way again, so a closet that changed since can't make the same photo ask, or
    *  score, differently (#126). */
   async function finishFromStored(row: FitCheckRow, s: StoredRead): Promise<FitCheckRow> {
@@ -766,7 +766,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
 
     const checkId = req.checkId ?? deps.ids('FC');
-    // A photo already read and scored is scored again from that read, free, even past today's limit (#341).
+    // A photo already read and scored is scored again from that read, free, even past today's limit (#342).
     const stored = req.mode === 'check' ? await storedReadOf(image.sha256, checkId) : null;
     if (hold && !stored?.free) return holdPhoto(checkId, now, image, photoPayload, occasion, style, going);
     if (req.mode === 'check') await replaceAsking(checkId);
@@ -785,7 +785,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: checkId, payload: photoPayload });
     await message({ createdAt: now + 1, role: 'stylist', kind: 'card', cardType: req.mode === 'recheck' ? 'recheck' : 'fitCheck', fitCheckId: checkId });
 
-    // Same photo, same score (#341): a photo already read is never read again.
+    // Same photo, same score (#342): a photo already read is never read again.
     if (stored) return outcomeOf(await finishFromStored(row, stored));
     // A re-check of the same photo (#219): the reading is reused, never re-read, so the score can't move by itself.
     if (req.mode === 'recheck' && parent) {
@@ -848,7 +848,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const row = await store.fitChecks.get(checkId);
     if (!row || row.status !== 'held') return { outcome: 'noParent' };
     if (!row.demoPhotoId && deps.consent && !(await deps.consent())) return { outcome: 'noConsent' };
-    // A photo read since it was held (sent again as a new check): scored from that read, free (#341).
+    // A photo read since it was held (sent again as a new check): scored from that read, free (#342).
     const stored = await storedReadOf(row.imageHash, checkId);
     if (!stored?.free && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
     // A check waiting on the one quick tap hasn't counted yet: scoring this too could go past what today allows.
@@ -897,7 +897,7 @@ export function createFitCheckService(deps: ServiceDeps) {
 
   /** S19 "Try again": re-reads the same photo; nothing was counted the first time. It's a new read, so it uses
    *  today's check (or the first check's re-check) like any other, and its score is charged to today. A new check
-   *  whose photo was read since (sent again) is scored from that read instead, free (#341). */
+   *  whose photo was read since (sent again) is scored from that read instead, free (#342). */
   async function retryInner(checkId: string, ctx: CheckCtx): Promise<StartOutcome> {
     const row = await store.fitChecks.get(checkId);
     if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
@@ -905,7 +905,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const now = clock.nowMs();
     const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
     if (row.parentId && !parent) return { outcome: 'noParent' };
-    // A new check's photo read since it failed (sent again): scored from that read, free (#341).
+    // A new check's photo read since it failed (sent again): scored from that read, free (#342).
     const stored = parent ? null : await storedReadOf(row.imageHash, checkId);
     if (parent ? !isRecheckOpen(parent, now, clock) : !stored?.free && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
     // The photo first: if its copy is gone the row stays failed, so the card stays on screen.

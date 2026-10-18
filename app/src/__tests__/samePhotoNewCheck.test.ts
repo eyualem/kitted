@@ -1,4 +1,4 @@
-// A new check of a photo already read (#341; the founder's Oct 18 check: the same photo scored 6.5 as a re-check, then
+// A new check of a photo already read (#342; the founder's Oct 18 check: the same photo scored 6.5 as a re-check, then
 // 7.5 when he sent it again as a new check, because only a new check's own "full" reading was reused, so the photo
 // first read by a re-check went to the AI again and the jeans' leg read flipped straight → relaxed).
 // The checks, set before the fix:
@@ -75,7 +75,7 @@ async function recheckedP01b(env: Env) {
   return { first, re, recheck, raw };
 }
 
-describe('a new check of a photo already read (#341)', () => {
+describe('a new check of a photo already read (#342)', () => {
   it('N1–N3: first read by a re-check: no call, its own read (not the merged one), the score a new check gets, again', async () => {
     const env = await setup({ pro: true });
     const { recheck, raw } = await recheckedP01b(env);
