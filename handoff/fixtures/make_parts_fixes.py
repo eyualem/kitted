@@ -1,5 +1,5 @@
 """Writes fixtures/parts_fixes.json: the parts fix engine's exact Python output (parts_fixes.suggest_parts_fixes on
-parts_proto.py v13) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
+parts_proto.py v14) for @kitted/core's suggestPartsFixes() parity test (test/partsFixes.parity.test.ts).
 
 Run (after make_parts_parity.py, whose loaders and edge cases it reuses):
     /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_fixes.py

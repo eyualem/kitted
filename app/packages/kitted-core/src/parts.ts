@@ -169,6 +169,35 @@ export interface PartsTune {
   wr_knit_tailored: number;
   /** CON-6: a knit top on a minimal, smart casual or classic prep look (none of the loud-native looks); 0 in v1-v12. */
   wr_knit_clean: number;
+  // ---- v14 (casual and athletic fits, #331-#335; off / null in v1-v13)
+  /** PRO-1, PRO-15, PRO-16: shorts get Proportions, judged like pants. */
+  sh_prop: boolean;
+  /** A roomy top worn alone over loose shorts / a short jacket over them (one credit, at most sh_cap). */
+  sh_shape: number;
+  sh_layer: number;
+  sh_cap: number;
+  /** A roomy top over short, fitted shorts; short, tight shorts (or shorts that pull) under any top. */
+  sh_roomy_fitted: number;
+  sh_fitted: number;
+  /** SHO-4: any clean sneaker (not running shoes) or boot is a real shoe for "the shoes match". */
+  sd1_any_sneaker: boolean;
+  /** STY-12: "the pieces go together" on Style (no look, not a suit, every part >= 7, a shoe credit, no condition fault). */
+  goes_together: number;
+  /** VSP-9: a matched track jacket and track pants on Style. */
+  tracksuit: number;
+  /** LNG-8: gym shorts with running shoes aren't held at Everyday and Class. */
+  gym_runner_unheld: boolean;
+  /** LNG-9: a matched sweatsuit counts as the dressed upper half; in a relaxed shape with a clean sneaker, +this on Proportions. */
+  sweatsuit_sign: boolean;
+  sweatsuit_shape: number;
+  /** LNG-2: at Everyday and Class reading as a look counts as the dressed upper half (instead of lounge_style). */
+  look_sign: boolean;
+  /** LNG-4: a full kit is held to kit_cap, minus kit_fit_rate x what Fit or Proportions lost (null: today's ladder). */
+  kit_cap: number | null;
+  kit_fit_rate: number;
+  /** SHO-4, SHO-7, SHO-9: a shoe too heavy for the leg (chunky, basketball or running shoes under slim or skinny legs) earns
+   *  neither "the shoes match" nor "the look's own shoe". */
+  sw1_blocks_credit: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -268,6 +297,8 @@ export interface PartsData {
   };
   final: { floor: number; floorOccasions: string[]; min: number; max: number };
   copy: { lowestFallback: Record<PartName, string>; solidLine: string };
+  /** v14: what the switch (CASUAL_FITS_V14) rolls back to: the same tables with v13's engine, label, version and tune. */
+  rollback?: { engine: string; label: string; version: string; tune: PartsTune };
 }
 
 /** A check that moved a part. `points` is Python's round(delta, 3). */
@@ -449,6 +480,8 @@ interface PartsOutfit {
   sx: [number, string | null, string | null];
   /** The occasion key (v8's TK1 reads it). */
   occasion: string;
+  /** v14: the full kit's hold was set (scoreParts lowers it by what Fit or Proportions lost). */
+  kitHold?: boolean;
 }
 
 // ================================================================= the engine
@@ -484,6 +517,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const LIGHT_NEUTRALS = PS("LIGHT_NEUTRALS"), LL_DARK = PS("LL_DARK"); // v12 COL-12: light on light
   const WR_KNITS = PS("WR_KNITS"), WR_TEES = PS("WR_TEES"), WR_CASUAL = PS("WR_CASUAL"), WR_DRESSY_OCC = PS("WR_DRESSY_OCC"); // v12 CON-6
   const WR_CLEAN = PS("WR_CLEAN"); // v13 CON-6: looks where a crisp tee is part of the look
+  const SPORT_SNEAKERS = PS("SPORT_SNEAKERS"), BOOTS = PS("BOOTS"); // v14 SHO-4: the clean sneakers and the boots
+  const SWEAT_TOPS = PS("SWEAT_TOPS"), SWEAT_BOTTOMS = PS("SWEAT_BOTTOMS"); // v14 LNG-9: a matched sweatsuit
   /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print.
    *  v12 (cl1_scale): a graphic print only at a medium or large print size, or with a large logo. */
   const loudPrint = (g: Garment): boolean => {
@@ -629,6 +664,55 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     return [t.pb, `the roomy ${what} is roomier than ${look} calls for`];
   }
 
+  /** v14: a hoodie or sweatshirt with sweatpants or joggers in the same colour family (parts_proto._sweatsuit). */
+  function sweatsuit(o: PartsOutfit): boolean {
+    const up = [...o.tops, ...o.outers].filter((g) => SWEAT_TOPS.has(nv(g.subcategory)));
+    const B = o.bottom;
+    return up.length > 0 && B !== null && SWEAT_BOTTOMS.has(nv(B.subcategory)) && up.some((g) => fam(g) === fam(B));
+  }
+
+  /** v14 (PRO-1, PRO-15, PRO-16; parts_proto._shorts_proportions): shorts judged like pants. */
+  function shortsProportions(o: PartsOutfit): Part {
+    const p = new Part(BASE);
+    const T = o.top, O = o.outer, B = o.bottom!, S = o.shoes;
+    const vol = vol3(B);
+    const loose = LOOSE.has(nv(B.leg_shape)) || vol >= BOXY;
+    const fitted = NARROW.has(nv(B.leg_shape)) || vol <= 2;
+    const sSub = S !== null ? nv(S.subcategory) : null;
+    const real = S !== null && !SLIDES.has(sSub) && (!RUNNER.has(sSub) || LOUNGE_OK.has(o.occasion));
+    if (T !== null && O === null && vol3(T) >= BOXY && fitted && !loose) {
+      p.add(-t.sh_roomy_fitted, "a roomy top over short, fitted shorts: it wants a fuller pair", "PS2_roomy_over_fitted");
+      return p;
+    }
+    if (truthy(t.sh_fitted) && B.strain === "clear") {
+      p.add(-t.sh_fitted, "the shorts pull: a size up would sit better", "PS3_fitted_shorts");
+      return p;
+    }
+    if (truthy(t.sh_fitted) && fitted && !loose) {
+      p.add(-t.sh_fitted, "the shorts look short and tight; a fuller pair balances the outfit", "PS3_fitted_shorts");
+      return p;
+    }
+    let rewards: [number, string, string][] = [];
+    if (loose && real) {
+      const oSub = O !== null ? nv(O.subcategory) : null;
+      if (O === null && T !== null && earns(T) && (isNone(T.tucked) || T.tucked === "none" || T.tucked === "na")
+          && T.length !== "below_crotch" && vol3(T) >= BOXY) {
+        rewards.push([t.sh_shape, `a roomy ${rep(or(T.subcategory, "top"))} over loose shorts: a deliberate shape`, "PS1_shorts_shape"]);
+      }
+      if (O !== null && earns(O) && !TAILORED.has(oSub)
+          && (SHORT_LAYERS.has(oSub) || oSub === "track_jacket" || O.length === "cropped" || O.length === "at_belt")) {
+        rewards.push([t.sh_layer, `a short ${rep(or(oSub, "layer"))} over loose shorts`, "PS1_shorts_layer"]);
+      }
+    }
+    rewards = rewards.filter((x) => x[0] > 0);
+    if (rewards.length > 0) {
+      let best = rewards[0]!;
+      for (const x of rewards) if (x[0] > best[0]) best = x; // Python max(): the first of the largest
+      p.add(pyMin(best[0], t.sh_cap), best[1], best[2]);
+    }
+    return p;
+  }
+
   // ---------------------------------------------------------------- PROPORTIONS (30%)
   function proportions(o: PartsOutfit, sl: SecondLook): Part {
     const p = new Part(BASE);
@@ -639,6 +723,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       return p;
     }
     if (SHORTS.has(nv(B.subcategory))) {
+      if (truthy(t.sh_prop)) return shortsProportions(o); // v14
       p.na = "shorts (no shorts-length reading yet)";
       return p;
     }
@@ -767,6 +852,14 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
     if (p.reasons.length === 0 && T !== null && O === null && !RIBBED.has(nv(T.subcategory))) {
       p.tip("a front tuck, or a jacket that ends at the hip, would give it more shape", "P_next_level");
+    }
+    // v14 (LNG-9): a matched sweatsuit in a relaxed shape, finished by a clean sneaker (nothing on Proportions off)
+    if (truthy(t.sweatsuit_shape) && SWEAT_BOTTOMS.has(nv(B.subcategory)) && sweatsuit(o) && !p.reasons.some((r) => r.points < 0)) {
+      const top = [...o.tops, ...o.outers].find((g) => SWEAT_TOPS.has(nv(g.subcategory)))!;
+      const good = !NARROW.has(nv(B.leg_shape)) && vol3(B) >= 3 && vol3(top) >= 3 && (vol3(top) >= BOXY || LOOSE.has(nv(B.leg_shape)));
+      if (good && S !== null && SPORT_SNEAKERS.has(nv(S.subcategory)) && earns(S) && earns(top)) {
+        p.add(t.sweatsuit_shape, "a matched set in a relaxed shape, finished by clean sneakers", "PR7_sweatsuit_shape");
+      }
     }
     return p;
   }
@@ -1029,13 +1122,19 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       // matches the clothes' dressiness (a real shoe; with sweats only a sneaker matches)
       let real = ramp(fs, SH.matches.realFrom, SH.matches.realTo);
       if (athleticBottom && !SNEAKERS.has(sub)) real = 0.0;
+      if (truthy(t.sd1_any_sneaker) && (SPORT_SNEAKERS.has(sub) || BOOTS.has(sub))) real = 1.0; // v14: the window decides
+      // v14: a shoe too heavy for the leg (SW1 below) doesn't suit the outfit: no match and no "look's own shoe"
+      const heavy = truthy(t.sw1_blocks_credit) && NARROW.has(leg) && (BULKY.has(sub) || RUNNER.has(sub));
+      if (heavy) real = 0.0;
       p.add(SH.matches.points * up * real * matchWindow(gap), "the shoes match how dressed-up the clothes are", "SD1_matches");
       // chosen for this look: an anchor or home shoe of a style the clothes read as WITHOUT the shoe
       const c = H.outfit(o.main);
       const role = maxOf(o.detNoShoe.length > 0 ? o.detNoShoe.map((st) => H.role(st, S, c)[0]) : [0]);
       const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
       const suit = subs.has("suit_jacket") && subs.has("suit_trousers");
-      if (truthy(role) && earns(S)) {
+      if (heavy) {
+        // no "look's own shoe" either
+      } else if (truthy(role) && earns(S)) {
         const d0 = o.detNoShoe[0]!;
         p.add(SH.chosen * up, o.detNoShoe.length === 1 ? `a ${STYLE_NAMES[d0]} shoe for a ${STYLE_NAMES[d0]} outfit` : "the shoes belong to the look", "SC_chosen_for_look");
       } else if (truthy(t.sc_pair) && earns(S) && o.det.some((st) => H.role(st, S, c)[0] >= 2
@@ -1208,6 +1307,13 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         p.add(t.h4, `the ${rep(or(g.pattern, "patterned"))} ${rep(or(g.subcategory, "piece"))} is the one standout`, "H4_standout_piece");
       }
     }
+    if (truthy(t.tracksuit)) { // v14 (VSP-9): a matched tracksuit
+      const J = o.outers.filter((g) => g.subcategory === "track_jacket");
+      const Bt = o.bottom;
+      if (J.length > 0 && Bt !== null && Bt.subcategory === "track_pants" && fam(J[0]!) === fam(Bt)) {
+        p.add(t.tracksuit, "a matched tracksuit, worn as one set", "H7_tracksuit");
+      }
+    }
     return p;
   }
 
@@ -1327,15 +1433,28 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       if (dressyRoom) {
         ceilings.push([CE.loungeDressy, "athletic bottoms at a dressy occasion"]);
       } else {
-        const dressed = o.outers.some((x) => DRESSED_OUTER.has(x.subcategory)) || o.tops.some((x) => DRESSED_TOPS.has(x.subcategory));
+        let dressed = o.outers.some((x) => DRESSED_OUTER.has(x.subcategory)) || o.tops.some((x) => DRESSED_TOPS.has(x.subcategory));
+        if (truthy(t.sweatsuit_sign) && sweatsuit(o)) dressed = true; // v14 (LNG-9): a matched set is chosen on purpose
+        let lookSign = false;
+        if (truthy(t.look_sign) && !dressed && o.det.length > 0 && ATHLETIC_AS_CASUAL.has(occasion)) {
+          dressed = true; // v14 (LNG-2): reading as a look is the sign
+          lookSign = true;
+        }
         // shoes out of the photo count as a real shoe: what isn't in the photo never costs points
         const realShoe = S === null || !NOT_REAL_SHOES.has(S.subcategory);
         const kit = B.subcategory === "athletic_shorts" && o.tops.some((x) => x.subcategory === "jersey");
         const signs = kit ? 0 : (dressed ? 1 : 0) + (realShoe ? 1 : 0);
         const hero = signs === 2 && H.outfit(o.main).hero.length > 0;
-        const gymShortsOk = B.subcategory === "athletic_shorts" && !kit && realShoe;
-        const lift = o.det.length > 0 ? t.lounge_style : 0.0; // v8: a clear style around the sweats
-        if (!hero && !gymShortsOk) ceilings.push([CE.loungeLadder[signs]! + lift, "loungewear out of the house"]);
+        let gymShortsOk = B.subcategory === "athletic_shorts" && !kit && realShoe;
+        if (truthy(t.gym_runner_unheld) && B.subcategory === "athletic_shorts" && !kit && S !== null && RUNNER.has(nv(S.subcategory))
+            && ATHLETIC_AS_CASUAL.has(occasion)) gymShortsOk = true; // v14 (LNG-8): the parts decide
+        if (kit && t.kit_cap !== null && t.kit_cap !== undefined) { // v14 (LNG-4): the kit's hold follows its fit
+          ceilings.push([t.kit_cap, "a full kit out of the game"]);
+          o.kitHold = true;
+        } else if (!hero && !gymShortsOk) {
+          const lift = o.det.length > 0 && !lookSign ? t.lounge_style : 0.0; // v8: a clear style around the sweats
+          ceilings.push([CE.loungeLadder[signs]! + lift, "loungewear out of the house"]);
+        }
       }
     }
     if (dressyRoom && S !== null && SLIDES.has(nv(S.subcategory))) ceilings.push([CE.slidesDressy, "slides at a dressy occasion"]);
@@ -1438,10 +1557,30 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     for (const k of ORDER) if (res[k].score !== null) live.set(k, res[k]);
     if (live.size === 0) return { overall: null, reason: "no_part_readable", parts: res, naParts: [...ORDER] };
     const cond = condition(o, scene, occasion, careTips);
+    if (truthy(t.goes_together) && live.has("cohesion")) { // v14 (STY-12): the pieces go together
+      const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
+      const suit = subs.has("suit_jacket") && subs.has("suit_trousers");
+      const shoesScore = live.get("shoes")?.score ?? 0;
+      if (o.det.length === 0 && !suit && o.slots.size === 3 && shoesScore > BASE
+          && Array.from(live.values()).every((r) => r.score! >= BASE) && cond.faults.length === 0) {
+        parts.cohesion.add(t.goes_together, "the pieces go together: nothing off, and the shoes suit the clothes", "H6_goes_together");
+        res.cohesion = parts.cohesion.result(data.partRange.cohesion[0], data.partRange.cohesion[1]);
+        live.set("cohesion", res.cohesion);
+      }
+    }
     const occ = occasionPart(o, occasion);
     const careOrStrain = o.main.some((g) => careFault(g) !== null) || o.main.some((g) => g.strain === "clear");
     const ps = new Map<PartName, number>();
     for (const [k, r] of live) ps.set(k, r.score!);
+    if (o.kitHold && occ.ceiling !== null && truthy(t.kit_fit_rate)) { // v14 (LNG-4): fit moves the kit's hold
+      const worst = pyMin(ps.get("proportions") ?? BASE, ps.get("fit") ?? BASE);
+      const cut = t.kit_fit_rate * pyMax(0.0, BASE - worst);
+      if (cut > 0 && t.kit_cap! - cut < occ.ceiling) {
+        occ.ceiling = pyRound(t.kit_cap! - cut, 3);
+        occ.lines[occ.lines.length - 1] = `a full kit out of the game, and it doesn't fit cleanly: held to ${pyFloat(roundHalf(occ.ceiling))}`;
+        occ.status = occ.lines[occ.lines.length - 1]!;
+      }
+    }
     const { avg, x, floored, wsum } = combine(ps, cond, occ, occasion, careOrStrain);
     const bonus = earnedBonus(ps);
     const penalty = piledPenalty(ps);
@@ -1478,8 +1617,34 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   return { data, scoreParts };
 }
 
-/** The parts engine built from the bundled data (partsData.ts = fixtures/parts.json) on the bundled v4.1 rubric. */
-export const defaultParts: PartsEngine = createParts(PARTS_DATA);
+/** THE SWITCH for the casual-fits update (parts v14, #331-#335; rubric/research/parts/casual-athletic.md). true: new
+ *  checks score with v14. false: the whole app (the card, its fixes, the one quick tap, Going for, the chat's outfit
+ *  judge) rolls back to v13's numbers. A stored check keeps its score either way until it's changed, as with every
+ *  earlier parts update. */
+export const CASUAL_FITS_V14 = true;
+
+/** The bundled data as the switch wants it: v14 as generated, or the same tables with v13's engine, label, version and tune. */
+export function partsDataFor(v14: boolean): PartsData {
+  const rb = PARTS_DATA.rollback;
+  if (v14 || !rb) return PARTS_DATA;
+  return { ...PARTS_DATA, engine: rb.engine, label: rb.label, version: rb.version, tune: rb.tune };
+}
+
+let currentParts: PartsEngine = createParts(partsDataFor(CASUAL_FITS_V14));
+
+/** The parts engine every default path uses (partsData.ts = fixtures/parts.json on the bundled v4.1 rubric), as the
+ *  switch picks it. A stable object, so `engines.parts ?? defaultParts` callers follow the switch. */
+export const defaultParts: PartsEngine = {
+  get data() {
+    return currentParts.data;
+  },
+  scoreParts: (reading: Reading, opts?: PartsOptions) => currentParts.scoreParts(reading, opts),
+};
+
+/** Tests only: flip the switch at run time (the app reads CASUAL_FITS_V14). */
+export function setCasualFitsV14(on: boolean): void {
+  currentParts = createParts(partsDataFor(on));
+}
 
 /** parts_proto.score_parts() (engine v11) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {

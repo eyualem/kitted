@@ -1,6 +1,6 @@
 # Casual and athletic fits: how Kitted should score what guys 18–22 actually wear
 
-*Oct 17, 2026. Claude. A plan with its pass/fail checks written first, and a paper test of the candidate rules. No API calls, no money spent, nothing in the app or in `parts_proto.py` changed. Engine today: parts v13 (`extraction-test/rubrics/parts_proto.py`). The paper test: `extraction-test/casual_athletic_paper.py` (the candidate rules live there and are swapped in only for each score call), its output `extraction-test/results/casual-athletic/report.txt`. DECISIONS-LOG #331.*
+*Oct 17, 2026. Claude. A plan with its pass/fail checks written first, and a paper test of the candidate rules; ported to the app as parts v14 the same day (§12). No API calls for the rules. Engine today: parts v13 (`extraction-test/rubrics/parts_proto.py`). The paper test: `extraction-test/casual_athletic_paper.py` (the candidate rules live there and are swapped in only for each score call), its output `extraction-test/results/casual-athletic/report.txt`. DECISIONS-LOG #331.*
 
 **Rule 7.** The gold photos are "profile unknown", scored with one stated test profile (picks Minimal + Smart casual, 0.5 each; boldness "a little"; no age) at Everyday. The founder's saved phone checks are scored at their own occasion with no picks (his profile is still pending). The 20 test outfits are made-up readings with no person in them. Nothing here can be split by age band or picked look yet; the shoot in §6 is built to fix that.
 
@@ -13,6 +13,7 @@
 - **The reading test ran small (§7, 52¢ of your 75¢, #332):** a separate narrow look reads whether shorts end above the knee or at/below it (right 99%, steady 92%) and crew socks vs none (right 96%, steady 96%) on the 24 gold shorts photos; putting the same values into the scoring read failed (less steady, and it shook the other fields). Not proven: gym shorts (1 photo), low or tall socks, tracksuits (none in the set). Length and socks stay advice only until the shoot.
 - **Round 2, your five answers (Oct 17, #333, §9): fit and context decide, not flat holds.** Running shoes with gym shorts at Class aren't held any more (5.5 → **6.5**, from the parts); short or tight shorts cost 1.0 on shape (a plain tee over them 7.0 → **6.5**); a full kit is held to **6.0** when it fits cleanly and **5.5** or lower when it doesn't; a matched sweatsuit in a relaxed shape with clean sneakers goes 6.5 → **7.5**, a slim one stays **7.0**. 36 of 37 test outfits pass; the miss (F5b) is an older streetwear rule, flagged in §9. Gold set and your 20: same as round 1. None of your saved checks moved.
 - **Round 3, "how good the components come together" (Oct 17, #334, §11):** at Everyday and Class dressing up no longer earns points by itself: any clean sneaker can earn "shoes match", streetwear's own shoe can earn "the look's own shoe", plain basics that go together earn the +0.5 a smart-casual look gets for its name, and a hoodie that makes sweats read as streetwear counts as effort. Casual fits at 8+ go 8% → 12%, dressy stays 35%; a boxy tee + wide jeans + chunky sneakers now ties a tucked oxford + chinos + loafers at 8.0. Cost: held-out r 0.49 → 0.47, your 20 within 0.5 13 → 12, casual fits 0.15 above the panel.
+- **Ported (Oct 17, #335, §12):** rounds 1–3 are in the app as parts v14, behind one switch (`CASUAL_FITS_V14`, on). None of your 39 saved checks changes its score (4 move below the rounding). One guard added while porting: a shoe too heavy for the leg earns neither new shoe credit.
 
 ## 1. What's true today (v13)
 
@@ -277,6 +278,33 @@ The panel leans the same way, less steeply (8+: casual 18%, in-between 36%, dres
 - **The pair that shows it:** a boxy tee ending at the belt + wide jeans + chunky sneakers at Class went 7.5 → **8.0**, level with a tucked oxford + chinos + loafers (8.0 before and after).
 - **Test outfits:** 9 new (D1a–D4b), bars set before the run, all pass; 45 of 46 in all (F5b, §9). **Restated after seeing results, said plainly:** A3's bar (a regular hoodie scores like a plain tee) now checks the shape credit instead of the total, because round 3's D3 gives the hoodie's Jordans "the look's own shoe"; A20's (wide jeans + Jordans unchanged) became "not down"; G1 now guards only rounds 1–2. **Found and fixed on the way:** D4 first fired on suits, which already have their own credits (3 dressy photos rose); suits are left out.
 - **Implementation note for the port:** D4 is computed after the parts in the paper test; in the engine it belongs in Style with its own reason line.
+
+## 12. Ported: parts v14, behind one switch (Oct 17, #335)
+
+**Your words:** "Yes, put the casual-fit changes (rounds 1–3) into the app, behind a switch, with the before/after on my saved checks."
+
+**What's in the app now (on your phone through Metro, no reinstall):** new fit checks score with **parts v14**: everything recommended in rounds 1–3 (CA1 shorts like pants with its shape credit and undersized charge, CA2/D1 any clean sneaker can match, D3 streetwear's own shoe, D4 "the pieces go together", D5 a look counts as effort in sweats, CA3 gym shorts with runners unheld, CA5 the tracksuit (waits for the reading), CA6 the matched sweatsuit and its shape, CA7k the kit by fit). **Not ported:** D2 (dropping the too-casual deduction; not recommended), the waist credit for shorts (dropped in round 1), anything about shorts length or socks (advice only; no new reading in the app).
+
+**The switch:** `CASUAL_FITS_V14` in `app/packages/kitted-core/src/parts.ts`, **set to `true` (on)**, the way v8–v13 shipped: new checks get the new scores, a check you already have keeps its score until you change it (an answer, a correction, the occasion), then it re-scores. **To turn it off:** set it to `false` and reload through Metro; every path (the card, its fixes, the one quick tap, Going for, the chat's outfit judge) goes back to v13's numbers, and new checks are stamped `parts-1.10.0` instead of `parts-1.11.0`.
+
+**One guard added while porting (not in the paper candidate):** a shoe too heavy for the leg (chunky, basketball or running shoes under slim or skinny legs) earns neither "the shoes match" nor "the look's own shoe". Without it the two new shoe credits cancelled most of [SHO-9]'s charge, and an oversized hoodie over slim jeans with chunky sneakers went 5.5 → 6.5. With it that outfit stays 5.5, and no gold number changed (V18 = V12 on every guard).
+
+**Before and after on your saved checks** (all 39 scored checks across every phone pull, each at its own occasion, no picks; profile pending, rule 7): **no check's score changes.** Four move below the rounding:
+
+| Check | Outfit | v13 → v14 | What changed |
+|---|---|---|---|
+| 6bf356 (Class) | navy hoodie + wide mid-wash jeans + white chunky sneakers | 8.0 → 8.0 (raw 8.05 → 8.13) | Shoes 8 → 8.5: "the shoes match how dressed-up the clothes are" |
+| af7e93 (Class) | cream oxford + green hoodie + wide mid-wash jeans + black basketball sneakers | 8.0 → 8.0 (8.00 → 8.08) | Shoes 8 → 8.5: the same match |
+| d1967f (Class) | your friend's navy blazer + black tee + relaxed jeans + grey suede chukkas | 7.0 → 7.0 (6.88 → 6.95) | Shoes 7.5 → 8: "the shoes belong to the look" |
+| ebe23f (Class) | black top + straight charcoal jeans + white leather sneakers | 7.0 → 7.0 (7.08 → 7.18) | Style 7 → 7.5: "the pieces go together" |
+
+Your three sweats checks (hoodie + black sweatpants + slides) stay 5.5: slides aren't a real shoe and the colours don't make a set. You have no shorts checks, so the shorts rules haven't met one of your photos yet; the shoot (§6) is their first real test.
+
+**Gold set (ported v14, Everyday, profile unknown):** 8+ by band: athletic 0% → 0%, casual **8% → 12%**, in-between **4% → 9%**, dressy **35% → 35%**. Held-out r 0.49 → **0.47**; all photos 0.58 → 0.56; your 20: r 0.46 → 0.46, within 0.5 **13 → 12**; steadiness 30/30. Casual fits sit 0.15 above the panel on average (0.08 before).
+
+**Checks:** Python v14 equals the paper candidate on 3,234 comparisons before the guard; parity 25,566 cases (Python = TypeScript, including v13 as a variant, which is what the switch runs), the fix engine's parity, 469 of 469 rules-conformance cases over 150 rules (15 restated on purpose, 20 new), 45 of 46 paper test outfits (F5b, §9). One hand-written fix test was restated: on the stock s13 photo v14's free tuck now leads, and the tie-break it guards (your pick puts loafers above the plain overshirt) still holds one row down. `npm run check` green: typecheck, lint, 781 core tests (a new one proves the switch both ways, the fix engine included), 1,289 app tests. Two app tests restated on purpose: the s24 demo photo wears shorts, so only its shoes are "not in the photo" now; and the demo closet's outfit count (Closet → Outfits, demo screens 182–184) goes **37 → 47**, because clean sneakers now match and plain basics go together, so 10 more trios reach 7.0.
+
+**Worth knowing before you try it:** an oversized hoodie over loose gym shorts with basketball sneakers at Class is now **8.0 "Sharp"** (7.0 before): the shape (+1.0), the sneakers matching (+0.5) and being the look's own shoe (+0.5) add up. A regular hoodie in the same outfit is 7.5. If 8 feels too high for that fit, the switch is the quick way back while we tune it.
 
 ## How to re-run
 

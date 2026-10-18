@@ -45,7 +45,7 @@ test('O2: the count is the trios at 7.0+ at Everyday; a layer or a chat-only pie
   const { closet, checks, styles } = await setup();
   const n = outfitCount(closet, checks, styles);
   expect(n).toBe(buildOutfits({ closet, checks, styles, occasion: 'everyday' }).length);
-  expect(n).toBe(37);
+  expect(n).toBe(47); // v14 (#335): clean sneakers match and plain basics go together, so 10 more trios reach 7.0 (v13: 37)
   const layer = closet.find((c) => c.slot === 'outer')!;
   expect(outfitCount([...closet, { ...layer, id: 'C-layer2' }], checks, styles)).toBe(n);
   const top = closet.find((c) => c.slot === 'top')!;

@@ -90,7 +90,10 @@ VARIANTS["V14 = V12 plus D2 (no too-casual deduction)"] = dict(VARIANTS["V12 com
 VARIANTS["V15 = V12 without D3 (shoes chosen for the look)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d3=False)
 VARIANTS["V16 = V12 without D4 (the pieces go together)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d4=0.0)
 VARIANTS["V17 = V12 without D5 (a look counts as a sign)"] = dict(VARIANTS["V12 components, not dressiness (round 3)"], d5=False)
-CAND = VARIANTS["V12 components, not dressiness (round 3)"]
+# The port (#335): parts v14 in parts_proto.py is V12 plus one guard found while porting (a shoe too heavy for the
+# leg earns neither new shoe credit). CAND now scores with the real engine, so every bar and guard below is v14's own.
+VARIANTS["V18 parts v14 as ported"] = {"engine": "v14"}
+CAND = VARIANTS["V18 parts v14 as ported"]
 CA2_BOTTOMS = {"athletic_shorts", "sweatpants", "joggers", "track_pants", "shorts"}
 CA2_SHOES = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
              "white_leather_sneaker"}
@@ -401,6 +404,8 @@ def candidates(c):
 def score(reading, occasion="everyday", styles=None, cand=None, second_look=None, boldness="a_little"):
     if cand is None:
         return P.score_parts(reading, occasion, styles or {}, second_look, boldness, engine=ENGINE)
+    if cand.get("engine"):                                            # the ported engine itself
+        return P.score_parts(reading, occasion, styles or {}, second_look, boldness, engine=cand["engine"])
     # round 3, D3: v4's tested-but-off "sc_pair": the look's own shoe also counts when the look needs the shoe to be
     # detected, as long as another piece is that look's anchor (a hoodie over wide jeans with chunky sneakers)
     tune = {"sc_pair": True} if cand.get("d3") else None

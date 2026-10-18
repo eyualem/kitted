@@ -17,6 +17,8 @@ import { cardSummary } from './explain';
 export type ScoringEngine = 'parts' | 'v4';
 
 /** The one switch (#209): 'parts' (default) or 'v4' to roll back to rubric v4.1. */
+// Inside 'parts', the casual-fits update (parts v14, #335) has its own switch: CASUAL_FITS_V14 in
+// packages/kitted-core/src/parts.ts (true = v14, false = back to v13's numbers for every scoring path).
 export const DEFAULT_SCORING_ENGINE: ScoringEngine = 'parts';
 let engineNow: ScoringEngine = DEFAULT_SCORING_ENGINE;
 export const scoringEngine = (): ScoringEngine => engineNow;
