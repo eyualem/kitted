@@ -14,7 +14,6 @@ import { FORMAT_SIZE, SAFE, photoFor, type FaceChoice, type ShareFormat, type Sh
 const W = 360;
 const H = 640;
 const PAD = 20;
-const INDIGO_90 = 'rgba(18, 22, 40, 0.90)';
 const DIM = 'rgba(255, 255, 255, 0.75)';
 /** The "before" score beside the after: white @ 55%, as the re-check card's struck "was". */
 const BEFORE_NUM = 'rgba(255, 255, 255, 0.55)';
@@ -41,11 +40,11 @@ function Stitch({ length, vertical = false, color = fixed.copper }: { length: nu
 }
 
 /** The sign-off, the same on every card: the woven label, then the line. */
-function SignOff() {
+function SignOff({ compact = false }: { compact?: boolean }) {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: compact ? 7 : 10 }}>
       <WovenLabel size="small" />
-      <T style={txt(12, '600', 'rgba(255, 255, 255, 0.85)')}>{t('share.signoff')}</T>
+      <T style={txt(compact ? 11 : 12, '600', 'rgba(255, 255, 255, 0.85)')}>{t('share.signoff')}</T>
     </View>
   );
 }
@@ -83,9 +82,21 @@ function PhotoArea({ photo, face, pieces, width, height }: { photo: SharePhoto |
   const shown = photoFor(photo, face);
   if (shown) {
     if (shown.crop) return <NeckDownPhoto source={shown.source} aspect={shown.aspect} crop={shown.crop} width={width} height={height} />;
+    // "Full photo": the whole picture, head to feet, fitted by height; a frame wider than the photo is filled with a
+    // blurred copy of it (a crop from the top would cut the outfit off at the chest).
+    const a = shown.aspect;
+    const fitW = a ? height * a : width;
+    if (!a || fitW >= width) {
+      return (
+        <View style={{ width, height, overflow: 'hidden', backgroundColor: fixed.panel }}>
+          <Image source={shown.source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} />
+        </View>
+      );
+    }
     return (
       <View style={{ width, height, overflow: 'hidden', backgroundColor: fixed.panel }}>
-        <Image source={shown.source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} />
+        <Image source={shown.source} contentFit="cover" blurRadius={24} transition={0} style={{ position: 'absolute', width, height, opacity: 0.55 }} />
+        <Image source={shown.source} contentFit="fill" transition={0} style={{ position: 'absolute', left: (width - fitW) / 2, top: 0, width: fitW, height }} />
       </View>
     );
   }
@@ -129,19 +140,19 @@ function StoryCard({ m, face }: { m: ShareModel; face: FaceChoice }) {
   );
 }
 
-/** TikTok photo mode (9 : 16): the photo full bleed; the words on a 90% indigo panel inside TikTok's safe zone. */
+/** TikTok photo mode (9 : 16): the photo over the band, the words between 14% and 70% of the height and left of the
+ *  12% button rail (TikTok's caption covers the bottom 30%). The panel never sits on the outfit. */
 function TikTokCard({ m, face }: { m: ShareModel; face: FaceChoice }) {
   const safe = SAFE.tiktok;
   const right = Math.round(W * safe.right);
-  const bottom = Math.round(H * (1 - safe.bottom));
-  const hasPhoto = !!photoFor(m.photo, face);
+  const photoH = 340;
   return (
     <View style={{ width: W, height: H, backgroundColor: fixed.indigo }}>
-      <PhotoArea photo={m.photo} face={face} pieces={m.pieces} width={W} height={hasPhoto ? H : Math.round(H * 0.5)} />
-      <View style={{ position: 'absolute', left: 16, right: right, top: bottom - 158, height: 158, borderRadius: 16, backgroundColor: INDIGO_90, padding: 14, gap: 10, borderCurve: 'continuous' }}>
-        <SignOff />
+      <PhotoArea photo={m.photo} face={face} pieces={m.pieces} width={W} height={photoH} />
+      <Stitch length={W} />
+      <View style={{ paddingLeft: PAD, paddingRight: right, paddingTop: 12, gap: 12 }}>
+        <SignOff compact />
         <Lockup m={m} size={64} />
-        {hasPhoto ? <Flats pieces={m.pieces} size={28} gap={6} /> : null}
       </View>
     </View>
   );

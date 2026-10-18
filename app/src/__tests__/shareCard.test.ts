@@ -141,9 +141,8 @@ describe('SC8 · safe zones', () => {
     const card = src('src/features/share/ShareCard.tsx');
     // Story: photo to 400 pt of 640, then the sign-off and lockup (about 110 pt): ends above 512 (80%).
     expect(card).toMatch(/function StoryCard[\s\S]*?const photoH = 400;/);
-    // TikTok: the panel ends at the 70% line, left of the rail.
-    expect(card).toMatch(/const bottom = Math\.round\(H \* \(1 - safe\.bottom\)\)/);
-    expect(card).toMatch(/right: right/);
+    // TikTok: photo to 340 pt, then the sign-off and a 64 pt lockup (about 100 pt): ends above 448 (70%), left of the rail.
+    expect(card).toMatch(/function TikTokCard[\s\S]*?const photoH = 340;[\s\S]*?paddingRight: right/);
   });
 });
 
