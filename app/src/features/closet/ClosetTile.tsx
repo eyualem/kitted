@@ -23,6 +23,8 @@ export interface ClosetTileProps {
   /** Long-press (the piece's menu, #118); VoiceOver gets it as the custom action `longPressLabel`. */
   onLongPress?: () => void;
   longPressLabel?: string;
+  /** How long a press must be held to be a long press (Pressable's own default is 500 ms). */
+  delayLongPress?: number;
   /** VoiceOver custom actions without a press of its own (the Closet tile inside the native long-press menu). */
   actions?: readonly { name: string; label: string; onAction: () => void }[];
   accessibilityHint?: string;
@@ -30,7 +32,7 @@ export interface ClosetTileProps {
   decorative?: boolean;
 }
 
-export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, label, onPress, onLongPress, longPressLabel, actions: own, accessibilityHint, decorative }: ClosetTileProps) {
+export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, label, onPress, onLongPress, longPressLabel, delayLongPress, actions: own, accessibilityHint, decorative }: ClosetTileProps) {
   const { colors } = useTheme();
   const spec = artSpec(item);
   const ghost = item.isPhotographed === false;
@@ -81,7 +83,7 @@ export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, l
   };
   return (
     <Pressable
-      onPress={onPress} onLongPress={onLongPress} accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={spec.a11y}
+      onPress={onPress} onLongPress={onLongPress} delayLongPress={delayLongPress} accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={spec.a11y}
       accessibilityHint={accessibilityHint} accessibilityActions={actions.length > 0 ? actions : undefined} onAccessibilityAction={(e) => onAction(e.nativeEvent.actionName)}
       style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1, transform: [{ scale: pressed ? 0.97 : 1 }] })}
     >
