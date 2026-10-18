@@ -2219,6 +2219,12 @@ Contradictions settled and decisions changed during the build. Newest last.
     - Greeting lines already stored (his phone's earlier days, seeded demo days) are hidden in the thread rather than deleted: one posted 1 ms before its card, or one marked `greeting` by the legacy adoption.
     - Found on the way: `refreshWeather` rewrote "the latest Kit text line before the card", which with no greeting could have been an answer. Removed.
 
+## Oct 18 · Kit explained the wrong check: "Why a 6.5?" wasn't routed
+
+341. **Found on the founder's phone (pulled Oct 18, `screenshots/phone/20261018-021259/`):** he sent the black Towson crewneck + light relaxed jeans + black Puma knit sneakers as a re-check (6.5), asked "Why a 6.5", and Kit answered about slides ("The slides are the main reason…") with a link to the 02:04 check (overshirt, wide jeans, slides), which also scored 6.5. He: "Im not wearing slides in that picture"; Kit: "You're right—I mixed up the checks." and no answer. **The photo reading was right:** both reads of that photo said running shoes (the founder: the Pumas are running shoes).
+    - **Cause:** the router's `explain` pattern didn't match "why a 6.5" (it wanted "why did/is/was…" or "my 6.5"), and that is the app's own starter chip, `ask.chip.why` "Why a {score}?". The question fell to `general`, so no check was pinned and no evidence was computed; the model chose between two 6.5s from the context pack and took the older one. The push-back fell to `general` too.
+    - **Fix (`app/src/features/ask/router.ts`):** `explain` also matches "why (only) a/an/the/that/this <score>"; `feedback` also matches "I'm not wearing…", "I didn't wear…", "mixed up", "not my/the right photo/picture/outfit/fit/check", so a push-back pins the check (newest, unless he names one) and gets the Not quite right? button. Tests in `askC3.test.ts`: the chip's own words route to `explain` and name the newest check with that score; 8 new router cases. JS only; on his phone through Metro once merged.
+
 ## Oct 18 · One optional step instead of "Your first 3 moves"
 
 342. **The founder: make the closet step "explicit that it's optional"; "the second one, I do not understand what it is for at all"; "how would it know that I don't have a heavyweight [tee]? … that seems a bit too soon to assume if it's collecting data as it goes"; "frustrating a user is probably not something that we should do."** Decided and built (`handoff/10-onboarding.md` §9.11, checks O1–O12):
