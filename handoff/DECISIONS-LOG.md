@@ -2244,3 +2244,5 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Kept from #342:** the face toggle and its crop rule, Share and Save, the native-module guard, who's offered a card.
     - **Not yet verified on iOS:** the capture, the PNG's transparency, Share and Save (the native build, ~2 GB of disk).
 
+344. **The founder: "I don't think you've made a solid version too. You've made one without a background. Can you also make one with a background?"** Added **Solid**: the same overlay on the indigo ground, the transparent sticker's size (1080 × 600), rounded 24 pt corners. The switch is Transparent · Solid · With photo (still opens on With photo). The published page shows all three.
+

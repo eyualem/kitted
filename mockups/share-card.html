@@ -24,6 +24,7 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
 .cap b{color:var(--ink)}
 .scroll{overflow-x:auto}
 /* the transparent PNG shown on a checkerboard */
+.solid{border-radius:24px;background:#121628}
 .checker{border-radius:18px;background:conic-gradient(#3a3d46 25%,#2c2f37 0 50%,#3a3d46 0 75%,#2c2f37 0) 0 0/20px 20px}
 .ov{width:360px;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center}
 .stats{display:flex;gap:34px;justify-content:center;align-items:flex-start}
@@ -47,8 +48,8 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
 </style>
 <div class="wrap">
   <div class="top"><span class="lbl">KITTED</span>SHARE CARD · OCT 18, 2026</div>
-  <h1>One card, two ways</h1>
-  <p class="lede">Modeled on Strava's share stickers: a few white stats, one line, the wordmark. <b>Transparent</b> is a sticker you lay on your own photo or video. <b>With photo</b> is the same sticker on your fit photo, neck down unless you pick Full photo. Photos are free stock; scores are demo numbers.</p>
+  <h1>One card, three ways</h1>
+  <p class="lede">Modeled on Strava's share stickers: a few white stats, one line, the wordmark. <b>Transparent</b> is a sticker you lay on your own photo or video. <b>Solid</b> is the same on Kitted's indigo. <b>With photo</b> is the same sticker on your fit photo, neck down unless you pick Full photo. Photos are free stock; scores are demo numbers.</p>
 
   <h2>A fit check</h2>
   <p class="sub">Score and Rating. The tape runs 5 to 10; the copper dot is the score, the only color on the card.</p>
@@ -64,12 +65,12 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
 
   <div class="notes">
     <div class="note"><h3>In the app</h3><ul>
-      <li>Share opens on <b>With photo</b>; a switch picks <b>Transparent</b>.</li>
+      <li>Share opens on <b>With photo</b>; the switch is Transparent · Solid · With photo.</li>
       <li>"Neck down | Full photo" for the photo version, neck down every time.</li>
       <li>Share sends the image; Save puts it in Photos (the sticker keeps its transparency).</li>
     </ul></div>
     <div class="note"><h3>Sizes</h3><ul>
-      <li>Transparent: 1080 × 600 PNG.</li>
+      <li>Transparent and Solid: 1080 × 600 PNG.</li>
       <li>With photo: 1080 × 1920, for Stories and TikTok.</li>
     </ul></div>
     <div class="note"><h3>Gone</h3><ul>
@@ -96,8 +97,8 @@ h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
   var single={score:8,stats:[['Score','8.0','/10'],['Rating','Sharp']]};
   var win={score:8.5,before:7.5,stats:[['Before','7.5'],['After','8.5'],['Change','+1.0']]};
   var bright={score:7.5,stats:[['Score','7.5','/10'],['Rating','Put together']]};
-  document.getElementById('single').innerHTML=tile('<div class="checker">'+ov(single,false)+'</div>','<b>Transparent</b> · 1080 × 600 PNG, shown on a checkerboard')+tile(photo(single,'s15',.265),'<b>With photo</b> · 1080 × 1920, neck down');
-  document.getElementById('win').innerHTML=tile('<div class="checker">'+ov(win,false)+'</div>','<b>Transparent</b>')+tile(photo(win,'p01a',.315),'<b>With photo</b> · the after photo');
+  document.getElementById('single').innerHTML=tile('<div class="checker">'+ov(single,false)+'</div>','<b>Transparent</b> · 1080 × 600 PNG, shown on a checkerboard')+tile('<div class="solid">'+ov(single,false)+'</div>','<b>Solid</b> · 1080 × 600, indigo')+tile(photo(single,'s15',.265),'<b>With photo</b> · 1080 × 1920, neck down');
+  document.getElementById('win').innerHTML=tile('<div class="checker">'+ov(win,false)+'</div>','<b>Transparent</b>')+tile('<div class="solid">'+ov(win,false)+'</div>','<b>Solid</b>')+tile(photo(win,'p01a',.315),'<b>With photo</b> · the after photo');
   document.getElementById('bright').innerHTML=tile(photo(bright,'s14',.21),'<b>With photo</b> · a light background, the longest rating word');
 })();
 </script>

@@ -41,15 +41,19 @@ describe('SC1 · when a card is offered', () => {
   });
 });
 
-describe('SC2 · the two versions are the same overlay', () => {
-  it('sizes: the transparent sticker 1080 × 600, the photo card 1080 × 1920, both 3× their drawn size', () => {
+describe('SC2 · the three versions are the same overlay', () => {
+  it('sizes: the transparent sticker and the solid card 1080 × 600, the photo card 1080 × 1920, all 3× their drawn size', () => {
     expect(FORMAT_SIZE.sticker.px).toEqual({ w: 1080, h: 600 });
+    expect(FORMAT_SIZE.solid).toEqual(FORMAT_SIZE.sticker);
     expect(FORMAT_SIZE.photo.px).toEqual({ w: 1080, h: 1920 });
     for (const s of Object.values(FORMAT_SIZE)) expect([s.px.w / s.w, s.px.h / s.h]).toEqual([3, 3]);
   });
-  it('both versions draw the one Overlay; the sticker has no background', () => {
+  it('all three draw the one Overlay; the sticker has no background, the solid card the indigo ground', () => {
     const card = src('src/features/share/ShareCard.tsx');
-    expect(card.match(/<Overlay m=\{m\}/g)).toHaveLength(2);
+    expect(card.match(/<Overlay m=\{m\}/g)).toHaveLength(3);
+    const solid = card.slice(card.indexOf("if (format === 'solid')"), card.indexOf("if (format === 'sticker')"));
+    expect(solid).toMatch(/backgroundColor: fixed\.indigo/);
+    expect(src('src/features/share/ShareScreen.tsx')).toMatch(/value: 'sticker'[\s\S]*value: 'solid'[\s\S]*value: 'photo'/);
     const sticker = card.slice(card.indexOf("if (format === 'sticker')"), card.indexOf('return (\n    <FixedDark>\n      <View style={{ width: w, height: h, backgroundColor'));
     expect(sticker).not.toMatch(/backgroundColor/);
     expect(src('src/features/share/exportCard.ts')).toMatch(/format: 'png'/); // a PNG keeps the transparency

@@ -1,5 +1,5 @@
-// S12 · Share (02 D20, DECISIONS-LOG #343): a dark full-screen cover with the card's preview, the two versions
-// ("Transparent" | "With photo"), his face choice for the photo version ("Neck down", the default every time, or
+// S12 · Share (02 D20, DECISIONS-LOG #343–344): a dark full-screen cover with the card's preview, the three versions
+// ("Transparent" | "Solid" | "With photo"), his face choice for the photo version ("Neck down", the default every time, or
 // "Full photo"), and Share / Save. The card is drawn once more at full size, off screen, for the capture, so the image
 // is exactly what the preview shows and never depends on the screen's size or text size. The transparent preview sits
 // on a checkerboard so it reads as see-through; the PNG itself has no background.
@@ -66,9 +66,10 @@ function ShareBody({ m }: { m: ShareModel }) {
   const availH = Math.max(200, height - insets.top - insets.bottom - TOP_BAR - CONTROLS);
   const scale = Math.min(availW / size.w, availH / size.h, 1);
   const photoCard = format === 'photo';
+  const sticker = format === 'sticker';
   const hasPhoto = !!m.photo;
   const neckMissing = face === 'neck' && hasPhoto && !photoFor(m.photo, 'neck');
-  const note = !photoCard ? t('share.sticker.note') : neckMissing ? t('share.face.noNeck') : face === 'full' ? t('share.face.note') : null;
+  const note = sticker ? t('share.sticker.note') : !photoCard ? null : neckMissing ? t('share.face.noNeck') : face === 'full' ? t('share.face.note') : null;
 
   const say = (r: ExportResult) => {
     const line = r === 'saved' ? t('share.saved') : r === 'denied' ? t('share.saveDenied') : r === 'failed' ? t('share.failed') : null;
@@ -111,10 +112,10 @@ function ShareBody({ m }: { m: ShareModel }) {
           accessible
           accessibilityRole="image"
           accessibilityLabel={shareA11y(m, format)}
-          style={[styles.preview, { width: size.w * scale, height: (photoCard ? size.h : size.h + 80) * scale }]}
+          style={[styles.preview, !sticker && !photoCard && styles.solidPreview, { width: size.w * scale, height: (sticker ? size.h + 80 : size.h) * scale }]}
         >
-          {photoCard ? null : <Checker width={size.w * scale} height={(size.h + 80) * scale} />}
-          <View style={{ width: size.w, height: size.h, marginTop: photoCard ? 0 : 40 * scale, transform: [{ scale }], transformOrigin: 'top left' }}>
+          {sticker ? <Checker width={size.w * scale} height={(size.h + 80) * scale} /> : null}
+          <View style={{ width: size.w, height: size.h, marginTop: sticker ? 40 * scale : 0, transform: [{ scale }], transformOrigin: 'top left' }}>
             <ShareCard m={m} format={format} face={face} />
           </View>
         </View>
@@ -124,7 +125,7 @@ function ShareBody({ m }: { m: ShareModel }) {
         <View style={{ paddingHorizontal: 24, gap: 10 }}>
           <Segmented
             label={t('share.a11y.versions')}
-            options={[{ value: 'sticker', label: t('share.v.sticker') }, { value: 'photo', label: t('share.v.photo') }]}
+            options={[{ value: 'sticker', label: t('share.v.sticker') }, { value: 'solid', label: t('share.v.solid') }, { value: 'photo', label: t('share.v.photo') }]}
             value={format}
             onChange={(v) => { setFormat(v); setStatus(null); }}
           />
@@ -169,6 +170,8 @@ const styles = StyleSheet.create({
   offscreen: { position: 'absolute', left: -10000, top: 0 },
   top: { alignItems: 'center', justifyContent: 'center' },
   previewWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 },
+  // The solid card draws its own rounded indigo ground; its preview keeps that radius (no frame of its own).
+  solidPreview: { borderRadius: 24 },
   preview: { borderRadius: 18, borderCurve: 'continuous', overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.6, shadowRadius: 20, shadowOffset: { width: 0, height: 20 } },
   controls: { gap: 12, paddingTop: 8 },
   buttons: { flexDirection: 'row', gap: 12, paddingHorizontal: 24 },

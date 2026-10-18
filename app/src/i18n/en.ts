@@ -1100,14 +1100,15 @@ const addedInBuild = {
   'fail.askOffline': "You're offline, so I couldn't answer that. It doesn't count.",
   // The server's daily limit on a check the phone thought it had left (13-server.md §8, A7, #328).
   'fail.limit': "That's today's fit checks. Your photo is saved here. Try again after 4 am. This one doesn't count.",
-  // The share card (02 D20, DECISIONS-LOG #343): one overlay after Strava's share stickers, transparent or on his
-  // photo (founder, Oct 18). Never the occasion, a fix, the date or Kit's name.
+  // The share card (02 D20, DECISIONS-LOG #343–344): one overlay after Strava's share stickers, transparent, solid or
+  // on his photo (founder, Oct 18). Never the occasion, a fix, the date or Kit's name.
   'share.stat.score': 'Score',
   'share.stat.rating': 'Rating',
   'share.stat.before': 'Before',
   'share.stat.after': 'After',
   'share.stat.change': 'Change',
   'share.v.sticker': 'Transparent',
+  'share.v.solid': 'Solid',
   'share.v.photo': 'With photo',
   'share.sticker.note': 'Save it, then add it to your own photo or video.',
   'share.face.neck': 'Neck down',

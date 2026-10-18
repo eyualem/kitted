@@ -1,10 +1,10 @@
 // S12 · the share card's model (02 D20, DECISIONS-LOG #343). Pure: one read-only model from the stored rows; the
 // screen draws it and captures it as an image. Nothing here writes.
 //
-// One design in two versions, after Strava's share stickers (founder, Oct 18): white stats (a small label over a big
+// One design in three versions, after Strava's share stickers (founder, Oct 18): white stats (a small label over a big
 // value), the tape with a copper dot on the score, and the KITTED wordmark. "Transparent" is that overlay alone, a PNG
-// he lays on his own photo or video; "With photo" is the same overlay on his fit photo (neck down unless he picks
-// "Full photo" for this share). A single check shows Score and Rating; a re-check that went up shows Before, After and
+// he lays on his own photo or video; "Solid" is the same overlay on the indigo ground; "With photo" is the same overlay
+// on his fit photo (neck down unless he picks "Full photo" for this share). A single check shows Score and Rating; a re-check that went up shows Before, After and
 // Change. Never the occasion, a fix, the date, Kit's name, or another person.
 //
 // When it's offered: a scored full check at 7.0 or more, or a re-check that went up (its first check is the
@@ -15,13 +15,14 @@ import type { PhotoCrop } from '@/design-system/components/Chat';
 import { displayScore, scoreWordLabel, spokenScore } from '@/design-system/score';
 import { t } from '@/i18n/en';
 
-export type ShareFormat = 'sticker' | 'photo';
+export type ShareFormat = 'sticker' | 'solid' | 'photo';
 export type FaceChoice = 'neck' | 'full';
 
-/** Drawn size (pt) and export size (px, 3×): the sticker 1080 × 600 with a transparent background; the photo card
- *  9 : 16 at 1080 × 1920 (Instagram and Snapchat Stories, TikTok photo mode). */
+/** Drawn size (pt) and export size (px, 3×): the sticker 1080 × 600 with a transparent background, the solid card the
+ *  same size on indigo; the photo card 9 : 16 at 1080 × 1920 (Instagram and Snapchat Stories, TikTok photo mode). */
 export const FORMAT_SIZE: Readonly<Record<ShareFormat, { w: number; h: number; px: { w: number; h: number } }>> = {
   sticker: { w: 360, h: 200, px: { w: 1080, h: 600 } },
+  solid: { w: 360, h: 200, px: { w: 1080, h: 600 } },
   photo: { w: 360, h: 640, px: { w: 1080, h: 1920 } },
 };
 

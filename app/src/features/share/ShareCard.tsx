@@ -1,8 +1,8 @@
-// S12 · the share card (02 D20, DECISIONS-LOG #343): one overlay, after Strava's share stickers, in two versions.
+// S12 · the share card (02 D20, DECISIONS-LOG #343–344): one overlay, after Strava's share stickers, in three versions.
 // Drawn at a fixed size in pt (360 wide) and captured at 3× (1080 px), so nothing here follows Dynamic Type: it's an
 // image. The overlay: white stats (a small label over a big Archivo value), the tape (5 to 10 in halves; a copper dot
 // on the score, a hollow one on the "before" of a re-check win), then the KITTED wordmark. Copper is the dot only.
-// "Transparent": the overlay alone on no background. "With photo": the same overlay on his photo, with a soft shade
+// "Transparent": the overlay alone on no background. "Solid": the same, on the indigo ground. "With photo": the same overlay on his photo, with a soft shade
 // at the bottom so the white reads on a bright photo, sitting just above Instagram's bottom 20%.
 import { Image } from 'expo-image';
 import { Text, View, type TextStyle } from 'react-native';
@@ -11,6 +11,9 @@ import { FixedDark, NeckDownPhoto, fixed, numeralStyle, useTheme, wordmarkStyle 
 import { FORMAT_SIZE, PHOTO_OVERLAY_BOTTOM, photoFor, type FaceChoice, type ShareFormat, type ShareModel, type SharePhoto } from './shareModel';
 
 const SHADOW: TextStyle = { textShadowColor: 'rgba(0, 0, 0, 0.35)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 };
+
+/** The solid card's corner radius (pt). */
+const SOLID_RADIUS = 24;
 
 const TAPE_W = 200;
 const tapeX = (s: number) => ((s - 5) / 5) * TAPE_W;
@@ -96,6 +99,16 @@ function Shade({ width, height }: { width: number; height: number }) {
 /** One version at its drawn size. The sticker has no background at all (the PNG keeps its transparency). */
 export function ShareCard({ m, format, face }: { m: ShareModel; format: ShareFormat; face: FaceChoice }) {
   const { w, h } = FORMAT_SIZE[format];
+  if (format === 'solid') {
+    // The indigo ground with rounded corners (outside them the PNG stays transparent, so it sits like a sticker).
+    return (
+      <FixedDark>
+        <View style={{ width: w, height: h, alignItems: 'center', justifyContent: 'center', backgroundColor: fixed.indigo, borderRadius: SOLID_RADIUS, borderCurve: 'continuous', overflow: 'hidden' }}>
+          <Overlay m={m} shadow={false} />
+        </View>
+      </FixedDark>
+    );
+  }
   if (format === 'sticker') {
     return (
       <FixedDark>
