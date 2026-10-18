@@ -58,8 +58,11 @@ function StyleCard({ p }: { p: ProfileRow }) {
         <View style={{ paddingHorizontal: space.rowX, paddingTop: space.s, paddingBottom: space.l, gap: space.s }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 36 }}>
             <MonoLabel>{t('you.style.label')}</MonoLabel>
+            {/* A cue, not a second button: the card is the one target (no control nested in a control). */}
             <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-              <TextLink title={t('common.edit')} onPress={edit} compact />
+              <KText role="textLink" color="ink">
+                {t('common.edit')}
+              </KText>
             </View>
           </View>
           {picks.length ? (
