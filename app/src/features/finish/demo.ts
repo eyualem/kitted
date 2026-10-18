@@ -12,7 +12,7 @@ import { finish, setDemoFinish } from './session';
 import { STARTER } from './starter';
 import { pickStarter, toggleMarkOnly } from './starterActions';
 
-/** `mark` adds a list row (its first choice); `skipInvite` taps the optional card's Skip once it's posted (#342). */
+/** `mark` adds a list row (its first choice); `skipInvite` taps the optional card's Skip once it's posted (#343). */
 export type FinishDemoStep = 'later' | 'paywallShown' | 'notifyYes' | 'notifyAllow' | 'notifyNo' | 'skipInvite' | { mark: string };
 
 export interface FinishDemo {

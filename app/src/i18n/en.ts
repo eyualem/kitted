@@ -64,7 +64,7 @@ const addedInBuild = {
   // The end of onboarding (#291, 10-onboarding.md §9).
   'card.a11y.laterHint': 'Shows an optional next step',
   'starter.a11y.toggleHint': 'Marks it as one you own',
-  // What you already own (#342): a row opens "Which one is yours?".
+  // What you already own (#343): a row opens "Which one is yours?".
   'starter.a11y.pickHint': 'Pick which one you have',
   'starter.a11y.changeHint': 'Change it or remove it',
   'starter.a11y.detected': 'In your closet from your fit checks',

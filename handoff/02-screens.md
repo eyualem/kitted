@@ -1903,16 +1903,16 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `item.dup.yes` | Yes, same one | N |
 | `item.dup.no` | No, a new one | N |
 | `item.fairUse` | That's a lot of new stuff today. Add the rest in Closet with Describe it. | N |
-| `plan.intro` | Want outfit ideas from your own clothes? This part is optional. | N (#342; was "Here's where to start. Three moves, in order.") |
-| `plan.tag` | Optional | N (#342; was "Your plan") |
-| `plan.tagCount` | About 30 seconds | N (#342; was "3 moves") |
-| `plan.title` | Tap the clothes you already own | N (#342; was "Your first 3 moves") |
-| `plan.body` | I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks. | N (#342) |
-| `plan.show` | Show me the list | N (#342) |
-| `plan.skip` | Skip | N (#342) |
-| `plan.skipped` | Skipped. It's in Closet whenever you want it. | N (#342) |
-| `plan.added` | Added {n} to your closet. | N (#342) |
-| `plan.addMore` | Add more | N (#342) |
+| `plan.intro` | Want outfit ideas from your own clothes? This part is optional. | N (#343; was "Here's where to start. Three moves, in order.") |
+| `plan.tag` | Optional | N (#343; was "Your plan") |
+| `plan.tagCount` | About 30 seconds | N (#343; was "3 moves") |
+| `plan.title` | Tap the clothes you already own | N (#343; was "Your first 3 moves") |
+| `plan.body` | I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks. | N (#343) |
+| `plan.show` | Show me the list | N (#343) |
+| `plan.skip` | Skip | N (#343) |
+| `plan.skipped` | Skipped. It's in Closet whenever you want it. | N (#343) |
+| `plan.added` | Added {n} to your closet. | N (#343) |
+| `plan.addMore` | Add more | N (#343) |
 | `notif.ask` | Want a daily outfit idea at a time you choose? | R |
 | `notif.ask.yes` | Yes, pick a time | R |
 | `notif.ask.no` | No thanks | R |
@@ -2044,15 +2044,15 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `shoes.sub` | I'll use what I know about them. Hems stay unrated. | N |
 | `shoes.lastWorn` | Last worn {weekday} | N |
 | `shoes.snap` | Not here? Snap them | N |
-| `starter.title` | What you already own | N (#342; was "Starter essentials") |
-| `starter.sub` | Optional. Tap what you have and pick the color. Skip anything you're not sure about: your fit checks fill in the rest. | N (#342) |
-| `starter.which` | Which one is yours? | N (#342) |
-| `starter.remove` | Remove from closet | N (#342) |
-| `starter.addedToast` | Added {item}. | N (#342) |
-| `starter.added` | Added: {item} | N (#342) |
+| `starter.title` | What you already own | N (#343; was "Starter essentials") |
+| `starter.sub` | Optional. Tap what you have and pick the color. Skip anything you're not sure about: your fit checks fill in the rest. | N (#343) |
+| `starter.which` | Which one is yours? | N (#343) |
+| `starter.remove` | Remove from closet | N (#343) |
+| `starter.addedToast` | Added {item}. | N (#343) |
+| `starter.added` | Added: {item} | N (#343) |
 | `starter.inCloset` | In your closet | N |
 | `starter.marked` | Marked as owned | N |
-| `starter.item.1` … `starter.item.12` | Plain tee · Polo · Oxford shirt · Crewneck sweater · Jeans · Chinos · Overshirt · Casual jacket · Leather sneakers · Loafers or boots · Quarter-zip or hoodie · Belt | N (#342: plain names, he picks the color; was rubric v3's "White heavyweight tee · … · Leather belt") |
+| `starter.item.1` … `starter.item.12` | Plain tee · Polo · Oxford shirt · Crewneck sweater · Jeans · Chinos · Overshirt · Casual jacket · Leather sneakers · Loafers or boots · Quarter-zip or hoodie · Belt | N (#343: plain names, he picks the color; was rubric v3's "White heavyweight tee · … · Leather belt") |
 | `rotation.title` | How Rotation is counted | R |
 | `rotation.body` | Rotation is how many different outfits your closet makes. I count every top, bottom and shoes combo that works together, plus a layer when it helps. | N |
 | `rotation.rule1` | Pieces have to be close in how dressy they are. | N |

@@ -1,4 +1,4 @@
-// The one optional step after his first fit (10-onboarding.md §9.11, #342; it replaced "Your first 3 moves"): "Tap the
+// The one optional step after his first fit (10-onboarding.md §9.11, #343; it replaced "Your first 3 moves"): "Tap the
 // clothes you already own". Pure: how many he added from the list, and what the card shows.
 import type { ChatMessage, ClosetItemRow } from '@/data/types';
 

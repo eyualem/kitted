@@ -274,7 +274,7 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
     ...p0, confirmed, aliases, ...(fieldAliases ? { fieldAliases } : {}), ...(renames && !p0.nameLocked ? { autoName: true } : {}),
   };
   const entry = item.starterId ? STARTER.find((e) => e.id === item.starterId) : undefined;
-  // A color pick never un-marks a piece he added from the list; a kind out of its row does (#342).
+  // A color pick never un-marks a piece he added from the list; a kind out of its row does (#343).
   const unmark = !!entry && !item.isPhotographed && !keepsRow(entry, g, String(item.slot));
   return { patch: { garment: g, confirmedFields: fields, profile, starterId: unmark ? null : item.starterId }, remapped };
 }

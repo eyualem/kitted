@@ -397,7 +397,7 @@ Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check 
 
 Screens 180–181 use only existing copy. Sequence step 'later' after a scored re-check is harmless: the card posts either way.
 
-### 9.11 One optional step instead of "Your first 3 moves" (Oct 18, #342)
+### 9.11 One optional step instead of "Your first 3 moves" (Oct 18, #343)
 
 *The founder, Oct 18: make it explicit that it's optional; move 2 ("your first check's top fix") made no sense to him; move 3 ("Add a white heavyweight tee") assumed what he doesn't own before the app had learned anything; "frustrating a user is not something we should do." This replaces §9.2's card, §9.3's shopping frame and §9.9's pinned rows. The sequence's order and triggers (§9.1) stay: the card posts when the moves card did, then the paywall and the notification ask as before.*
 

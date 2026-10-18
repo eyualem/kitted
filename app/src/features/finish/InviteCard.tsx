@@ -1,4 +1,4 @@
-// S14 · the one optional step after his first fit (10-onboarding.md §9.11, #342; it replaced "Your first 3 moves"):
+// S14 · the one optional step after his first fit (10-onboarding.md §9.11, #343; it replaced "Your first 3 moves"):
 // "Tap the clothes you already own", said to be optional twice (Kit's line and the tag). One button, one Skip. Skipped:
 // one line, nothing else asked. Added: how many, and "Add more". Read-only in Past chats.
 import { router } from 'expo-router';

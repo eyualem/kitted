@@ -435,7 +435,7 @@ describe('X10 everything that reads the closet follows', () => {
     expect(ctx.text).toMatch(/Dark jeans · bottom · [^\n]*relaxed leg/);
   });
 
-  it('a piece added from the list stays marked through a leg or color fix, and a kind out of its row unmarks it, with Undo (#342)', async () => {
+  it('a piece added from the list stays marked through a leg or color fix, and a kind out of its row unmarks it, with Undo (#343)', async () => {
     const env = await setup({ only: [] });
     const s05 = STARTER.find((e) => e.id === 's05')!;
     const m = markedPiece(s05, s05.owns[0]!, 'C-mark', env.clock.nowMs())!;

@@ -1,4 +1,4 @@
-// "What you already own" (02 C5; 10-onboarding.md §9.3, §9.11, #342): a choice he picks becomes a not-photographed
+// "What you already own" (02 C5; 10-onboarding.md §9.3, §9.11, #343): a choice he picks becomes a not-photographed
 // closet piece in that kind and color; picking again on a row he added changes that same piece; Remove deletes it.
 // Each with Undo. The belt (no closet slot yet) is a kv mark. A piece seen in his checks isn't touched here (its own
 // page does that).

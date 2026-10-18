@@ -207,7 +207,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 160, name: 'Notification ask · done', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyAllow'] } },
   { n: 161, name: 'What you already own', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
   { n: 162, name: 'Optional step · added', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
-  // The optional step skipped, and the tabs with no pinned row (#342 replaced #292's Your moves rows and page).
+  // The optional step skipped, and the tabs with no pinned row (#343 replaced #292's Your moves rows and page).
   { n: 163, name: 'Lookbook · no pinned row', id: 'L1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook', finish: { steps: ['later'] } },
   { n: 164, name: 'Optional step · skipped', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', 'skipInvite'] } },
   { n: 165, name: 'You · no pinned row', id: 'Y1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you', finish: { steps: ['later', { mark: 's12' }] } },
@@ -220,7 +220,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 173, name: 'Ask · saved to what I know', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 174, name: 'Ask · a piece from chat', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 175, name: 'Past chats · yesterday\'s answers, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
-  // Two pieces added from the list (#342): the belt and a tee (its first choice, black), the next morning.
+  // Two pieces added from the list (#343): the belt and a tee (its first choice, black), the next morning.
   { n: 180, name: 'What you already own · two added', id: 'C5', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
   { n: 181, name: 'Lookbook · the re-check story', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
   { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },

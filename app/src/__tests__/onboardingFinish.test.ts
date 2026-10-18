@@ -1,5 +1,5 @@
 // The end of onboarding's checks, set before building (handoff/10-onboarding.md §9.6): the sequence (E1–E7), Later
-// (L1), the one optional step (O1–O9, #342; it replaced the moves M1–M4), the list (B1), the paywall's words and store (P1–P8) and the notification ask
+// (L1), the one optional step (O1–O9, #343; it replaced the moves M1–M4), the list (B1), the paywall's words and store (P1–P8) and the notification ask
 // (N1–N3), as far as they can be checked without a screen. The screens were checked in the web preview (§9.8).
 import { createMemoryStore } from '@/data/memoryStore';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
@@ -345,7 +345,7 @@ describe('L1 · Later', () => {
   });
 });
 
-describe('O1–O9 · the one optional step (#342, §9.11)', () => {
+describe('O1–O9 · the one optional step (#343, §9.11)', () => {
   const card = (payload: Record<string, unknown> = {}) => ({ payload });
 
   it('O1: it says it is optional twice; the card has one button and one Skip', () => {

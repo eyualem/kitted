@@ -1,4 +1,4 @@
-// C5 · What you already own (02 C5; 10-onboarding.md §9.3, §9.11, #342). Optional, and said so. 12 plain rows, no
+// C5 · What you already own (02 C5; 10-onboarding.md §9.3, §9.11, #343). Optional, and said so. 12 plain rows, no
 // prices, no count bar, no buy card: buying ideas wait for Closet's Next best buy, once the closet can back them. A tap
 // asks "Which one is yours?" (the row's realistic kinds and colors) and adds that piece; a row he added opens the same
 // choices plus Remove. Pieces seen in his checks are "In your closet" and locked here (their own page changes them).

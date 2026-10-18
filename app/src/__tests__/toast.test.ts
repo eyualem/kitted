@@ -91,7 +91,7 @@ describe('U3 · which Undo gets which window', () => {
     'features/stylist/cards/OutfitIdeaCard.tsx · toast.logged': false,
     'features/ask/AskCardView.tsx · toast.logged': false,
     'features/closet/OutfitsView.tsx · toast.logged': false,
-    'features/finish/StarterScreen.tsx · (text, undo);': false, // a pick on the list of what he owns (#342)
+    'features/finish/StarterScreen.tsx · (text, undo);': false, // a pick on the list of what he owns (#343)
     'features/finish/StarterScreen.tsx · (text, undo, {': true, // Remove from closet on that list
     'features/you/facts.ts · toast.forgot': true,
     'features/closet/pieceActions.ts · closet.removed': true,

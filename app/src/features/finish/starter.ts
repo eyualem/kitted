@@ -1,7 +1,7 @@
 // The Starter 12 essentials (02 C5; items and 2026 prices from rubric/v3.md): which ones his closet already has, and
 // what each missing one would add ("+N fits" = rotation with it − rotation without it, core rotation.ts). Pure.
 // Each row has one concrete piece (`pick`) for Next best buy's "a grey quarter-zip" and the +N count, so the number is
-// honest about exactly that piece, and the kinds and colors he can say he owns (`owns`, #342).
+// honest about exactly that piece, and the kinds and colors he can say he owns (`owns`, #343).
 import { displayHex, rotation, type ClosetItem, type Garment, type Styles } from '@kitted/core';
 import type { ClosetItemRow } from '@/data/types';
 import { baseName } from '@/features/closet/itemName';
@@ -23,7 +23,7 @@ export interface StarterEntry {
   slot: 'top' | 'bottom' | 'shoes' | 'outer' | null;
   /** The piece Next best buy and the chat's buy cards name, and +N counts: "a grey quarter-zip". */
   pick: { phrase: string; name: string; garment: Garment } | null;
-  /** What he can say he owns (10-onboarding.md §9.11, #342): the realistic kinds and colors, his pick becomes the
+  /** What he can say he owns (10-onboarding.md §9.11, #343): the realistic kinds and colors, his pick becomes the
    *  piece. Empty for the belt (no closet slot). */
   owns: readonly StarterOption[];
   /** Does a closet piece fill this row? */
@@ -153,12 +153,12 @@ export const optionName = (e: StarterEntry, opt: StarterOption): string => {
   return g ? baseName(g, null) : e.name;
 };
 
-/** Does a piece he added from this row still belong to it (#342)? Its kind does; the color never un-marks it. */
+/** Does a piece he added from this row still belong to it (#343)? Its kind does; the color never un-marks it. */
 export function keepsRow(e: StarterEntry, g: Garment, slot: string): boolean {
   return e.owns.some((o) => o.subcategory === sub(g)) || e.fills(g, slot);
 }
 
-/** A not-photographed closet piece for the choice he taps (02 C5 "Tap to own", #342: in his kind and color). */
+/** A not-photographed closet piece for the choice he taps (02 C5 "Tap to own", #343: in his kind and color). */
 export function markedPiece(e: StarterEntry, opt: StarterOption, id: string, nowMs: number): ClosetItemRow | null {
   const garment = ownedGarment(e, opt);
   if (!garment || !e.slot) return null;
