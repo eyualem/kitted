@@ -109,7 +109,7 @@ export function StylistScreen() {
       scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
     },
   );
-  // A card opening or folding (#341): at the bottom, scroll with its height change, frame by frame.
+  // A card opening or folding (#344): at the bottom, scroll with its height change, frame by frame.
   useAnimatedReaction(
     () => threadGrow.value,
     (now, before) => {

@@ -12,7 +12,7 @@
 import { colorDistance, displayHex, FAMILY_WORD, FLIP_PAIRS, garmentName, nearestFamily, RUBRIC_DATA, shadeFromId, shoeKindOf } from '@kitted/core';
 import type { Garment, Observation } from '@kitted/core';
 import type { ClosetArt, ClosetItemRow, ClosetProfile } from '@/data/types';
-import { STARTER } from '@/features/finish/starter';
+import { keepsRow, STARTER } from '@/features/finish/starter';
 import { t, type StringKey } from '@/i18n/en';
 import { doubtLine, type FitDoubt } from './fitDoubt';
 import { hexOfArt, profileOfItem } from './profile';
@@ -274,7 +274,8 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
     ...p0, confirmed, aliases, ...(fieldAliases ? { fieldAliases } : {}), ...(renames && !p0.nameLocked ? { autoName: true } : {}),
   };
   const entry = item.starterId ? STARTER.find((e) => e.id === item.starterId) : undefined;
-  const unmark = !!entry && !item.isPhotographed && !entry.fills(g, String(item.slot));
+  // A color pick never un-marks a piece he added from the list; a kind out of its row does (#343).
+  const unmark = !!entry && !item.isPhotographed && !keepsRow(entry, g, String(item.slot));
   return { patch: { garment: g, confirmedFields: fields, profile, starterId: unmark ? null : item.starterId }, remapped };
 }
 

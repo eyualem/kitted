@@ -43,7 +43,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   );
   const now = row.score ?? 0;
   const occasionWord = occasionLabel(row.occasion);
-  // Folded to its rating like the first check's card (#341); the "change not seen" card keeps its two buttons in view.
+  // Folded to its rating like the first check's card (#344); the "change not seen" card keeps its two buttons in view.
   const [opened, setOpened] = useCardOpen(row.id);
   // The same photo again (#219): nothing was re-read or counted; say so and ask for a new photo after the fix.
   if (rc.samePhoto) {

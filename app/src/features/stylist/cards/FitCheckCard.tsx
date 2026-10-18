@@ -252,11 +252,11 @@ function FailureCard({ row }: { row: FitCheckRow }) {
   );
 }
 
-/** Score cards he opened, by check id: they stay open while the app runs (#341). */
+/** Score cards he opened, by check id: they stay open while the app runs (#344). */
 const openCards = new Set<string>();
 
 /** Folded to its rating (the Going-for line, the tag, the score, its word and summary) until he taps it; then the rest
- *  slides open (#341, the founder's friend: "too much information"). */
+ *  slides open (#344, the founder's friend: "too much information"). */
 export function useCardOpen(id: string): [boolean, (open: boolean) => void] {
   const [open, setOpen] = useState(() => openCards.has(id));
   const set = (v: boolean) => {

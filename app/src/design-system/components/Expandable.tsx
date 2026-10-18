@@ -1,4 +1,4 @@
-// Expandable — a section that slides open and closed (#341: the score card folds to its rating and opens on a tap).
+// Expandable — a section that slides open and closed (#344: the score card folds to its rating and opens on a tap).
 // The children stay mounted (the score reveal and the closet row keep running while folded); the section's height
 // follows their measured height × an eased 0…1, with a fade, so the card grows smoothly instead of jumping. Reduce
 // Motion: no slide, it just shows. Folded, the children are hidden from VoiceOver.

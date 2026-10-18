@@ -322,7 +322,7 @@ describe('#340: the card greeting line is hidden wherever it is still stored', (
   });
 });
 
-describe('#341: the score card folds to its rating and opens smoothly', () => {
+describe('#344: the score card folds to its rating and opens smoothly', () => {
   it('both score cards start folded, open on a tap, and fold back from the handle', () => {
     const check = src('features/stylist/cards/FitCheckCard.tsx');
     const recheck = src('features/stylist/cards/RecheckCard.tsx');
