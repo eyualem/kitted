@@ -129,8 +129,16 @@ describe('SC5 · the photo card keeps the overlay above Instagram\'s bottom 20%'
 describe('SC6–SC7 · Share, Save and VoiceOver', () => {
   it('captures at the export size, shares a PNG, saves add-only', () => {
     const ex = src('src/features/share/exportCard.ts');
-    expect(ex).toMatch(/captureRef\(ref, \{ format: 'png', width: px\.w, height: px\.h, result: 'tmpfile' \}\)/);
+    // view-shot's width/height are points at the device's scale: px / pixel ratio gives exactly the export size.
+    expect(ex).toMatch(/captureRef\(ref, \{ format: 'png', width: px\.w \/ r, height: px\.h \/ r, result: 'tmpfile' \}\)/);
+    expect(ex).toMatch(/const r = PixelRatio\.get\(\)/);
+    // Add-only access, and the PNG file itself goes into Photos (the legacy path re-encodes and can drop transparency).
     expect(ex).toMatch(/requestPermissionsAsync\(true\)/);
+    expect(ex).toMatch(/await Asset\.create\(uri\)/);
+    expect(ex).not.toMatch(/saveToLibraryAsync\(|from 'expo-media-library\/legacy'/);
+    // The captured file is released after use.
+    expect(ex).toMatch(/finally \{\n    release\(uri, RELEASE_AFTER_MS\);/);
+    expect(ex).toMatch(/finally \{\n    if \(uri\) release\(uri\);/);
     expect(src('app.config.ts')).toMatch(/'expo-media-library', \{ photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos\.'/);
   });
   it('the native modules load only on a build that has them', () => {

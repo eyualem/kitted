@@ -2281,3 +2281,10 @@ Contradictions settled and decisions changed during the build. Newest last.
 
 348. **The founder: "Make light and dark modes too for the solid ones."** The solid card now comes **Light** (indigo ink #121628 on chalk #F3F4F6, the dot in the light theme's copper #9C5326, 5.6:1 on chalk) or **Dark** (white on indigo, as before). Same size and layout. On the share screen a "Light | Dark" switch shows under Solid; it starts in the phone's own appearance (the screen itself is always dark, so it asks the system). Transparent and With photo stay white.
 
+349. **The founder: "You can start planning out the implementations and also the test now."** The plan and its checks: `handoff/14-share-card.md` (steps 0–6; checks A1–A8, M1–M6, N1–N4, S1–S11, P0–P8, written before the code). A reviewer read the draft against the installed native code and found three real bugs in what #345–348 built, fixed now:
+    - **The image would have been 3× too big:** view-shot's `width`/`height` are points at the device's scale (`rendererFormat.scale = 0`), so `width: 1080` on a 3× iPhone draws 3240 px. Now px ÷ `PixelRatio.get()`.
+    - **Save could drop the transparency:** the legacy `saveToLibraryAsync` re-encodes through `UIImageWriteToSavedPhotosAlbum`. Now `Asset.create(file)` (adds the PNG file itself; add-only access is enough).
+    - **Temp files were never deleted** (and `fileName` is ignored on iOS): now `releaseCapture` after a save, and 30 s after the share sheet closes.
+    - **Settled:** a ready gate on the captured copy's images and font (resets on every switch; after 4 s "Couldn't make the image", never a different card); switches locked while busy; Open Settings when Photos is denied; the Mac checks read the copies in the Simulator's Photos, never the temp file; the Lookbook look page gets the share button.
+    - **Step 0, before any build:** whether Instagram keeps a PNG's transparency (photo sticker, and Copy → Paste from the share sheet) decides the Transparent route. Test file `screenshots/share-card/test-sticker.png` (1080 × 600, RGBA).
+
