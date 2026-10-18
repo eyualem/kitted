@@ -163,9 +163,10 @@ test('O12: a 40-piece closet lists in under 300 ms', async () => {
     const src = closet[i % closet.length]!;
     big.push({ ...src, id: `C-x${i}`, garment: { ...src.garment, color_family: tones[i % tones.length] } });
   }
-  // The best of three runs: the full test suite runs files in parallel, which slows any one of them.
+  // The best of five runs: the full test suite runs files in parallel, which slows any one of them (alone it takes
+  // ~155 ms on v14 and ~153 ms on v13; with three runs the parallel suite hit 303-326 ms twice on Oct 17, #335).
   let best = Infinity;
-  for (let r = 0; r < 3; r++) {
+  for (let r = 0; r < 5; r++) {
     const t0 = Date.now();
     buildOutfits({ closet: big, checks, styles, occasion: 'everyday' });
     best = Math.min(best, Date.now() - t0);
