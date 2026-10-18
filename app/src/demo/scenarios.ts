@@ -259,6 +259,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 213, name: 'Example check · as a sheet', id: 'O1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/sheets/example', under: '/stylist', consent: false },
   { n: 214, name: 'Closet · empty', id: 'C1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/closet' },
   { n: 215, name: 'Re-check · Why and Not quite right?', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: '/stylist' },
+  // The share card on a single check (#343): Score · Rating; screen 20 is the re-check win (Before · After · Change).
+  { n: 230, name: 'Share card · single check', id: 'S12', scenario: 'full', onboarded: true, now: '2026-10-22T07:51:00', href: '/share/FC3', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

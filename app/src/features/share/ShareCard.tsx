@@ -1,236 +1,119 @@
-// S12 · the share cards themselves (02 D20, DECISIONS-LOG #341; the demos: mockups/share-cards/ a1, a3, c2). Drawn at
-// a fixed size in pt (360 wide) and captured at 3× (1080 px), so nothing here follows Dynamic Type: it's an image.
-// Always the fixed-dark palette. The rules every card keeps (#341): no drawn text under 11 pt (mono labels 10), one
-// score lockup (Archivo numeral, "/10", the word, "Reads as …"), one sign-off (the woven label, then
-// "Score your fit · trykitted.com"), copper only on the seam and the score's movement, text inside its platform's
-// safe zone (shareModel SAFE), text over a photo on ≥ 80% indigo.
+// S12 · the share card (02 D20, DECISIONS-LOG #343): one overlay, after Strava's share stickers, in two versions.
+// Drawn at a fixed size in pt (360 wide) and captured at 3× (1080 px), so nothing here follows Dynamic Type: it's an
+// image. The overlay: white stats (a small label over a big Archivo value), the tape (5 to 10 in halves; a copper dot
+// on the score, a hollow one on the "before" of a re-check win), then the KITTED wordmark. Copper is the dot only.
+// "Transparent": the overlay alone on no background. "With photo": the same overlay on his photo, with a soft shade
+// at the bottom so the white reads on a bright photo, sitting just above Instagram's bottom 20%.
 import { Image } from 'expo-image';
 import { Text, View, type TextStyle } from 'react-native';
-import { FixedDark, NeckDownPhoto, Numeral, WovenLabel, fixed } from '@/design-system';
-import { PieceArt } from '@/features/closet/GarmentArt';
-import { t } from '@/i18n/en';
-import { FORMAT_SIZE, SAFE, photoFor, type FaceChoice, type ShareFormat, type ShareModel, type SharePhoto, type SharePiece } from './shareModel';
+import Svg, { Circle, Defs, Line, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { FixedDark, NeckDownPhoto, fixed, numeralStyle, useTheme, wordmarkStyle } from '@/design-system';
+import { FORMAT_SIZE, PHOTO_OVERLAY_BOTTOM, photoFor, type FaceChoice, type ShareFormat, type ShareModel, type SharePhoto } from './shareModel';
 
-const W = 360;
-const H = 640;
-const PAD = 20;
-const DIM = 'rgba(255, 255, 255, 0.75)';
-/** The "before" score beside the after: white @ 55%, as the re-check card's struck "was". */
-const BEFORE_NUM = 'rgba(255, 255, 255, 0.55)';
+const SHADOW: TextStyle = { textShadowColor: 'rgba(0, 0, 0, 0.35)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 };
 
-const txt = (size: number, weight: TextStyle['fontWeight'], color: string = fixed.white, extra?: TextStyle): TextStyle => ({
-  fontSize: size, fontWeight: weight, color, letterSpacing: size >= 20 ? -0.2 : 0, ...extra,
-});
+const TAPE_W = 200;
+const tapeX = (s: number) => ((s - 5) / 5) * TAPE_W;
 
-/** A fixed text: never scales (the card is an image). */
-function T({ style, children, lines = 1 }: { style: TextStyle; children: string; lines?: number }) {
-  return <Text allowFontScaling={false} numberOfLines={lines} style={style}>{children}</Text>;
-}
-
-/** The copper stitch: 1.5 pt dashes, 5 on / 4 off, sized for a known length (no layout pass before the capture). */
-function Stitch({ length, vertical = false, color = fixed.copper }: { length: number; vertical?: boolean; color?: string }) {
-  const n = Math.max(0, Math.floor((length + 4) / 9));
+/** The tape: 5 to 10 in halves; whole numbers tall (8 pt), halves short (4 pt); the dot on the score. */
+function Tape({ score, before }: { score: number; before: number | null }) {
+  const ticks = Array.from({ length: 11 }, (_, i) => 5 + i / 2);
   return (
-    <View style={{ flexDirection: vertical ? 'column' : 'row', gap: 4, width: vertical ? 1.5 : length, height: vertical ? length : 1.5, overflow: 'hidden' }}>
-      {Array.from({ length: n }, (_, i) => (
-        <View key={i} style={vertical ? { width: 1.5, height: 5, backgroundColor: color } : { width: 5, height: 1.5, backgroundColor: color }} />
-      ))}
-    </View>
+    <Svg width={TAPE_W + 12} height={26} viewBox={`-6 0 ${TAPE_W + 12} 26`}>
+      {ticks.map((s, i) => {
+        const major = i % 2 === 0;
+        return <Line key={s} x1={tapeX(s)} x2={tapeX(s)} y1={18 - (major ? 8 : 4)} y2={18} stroke={fixed.white} strokeOpacity={major ? 0.75 : 0.4} strokeWidth={1.25} />;
+      })}
+      <Line x1={0} x2={TAPE_W} y1={18} y2={18} stroke={fixed.white} strokeOpacity={0.9} strokeWidth={1.5} />
+      {before !== null ? <Circle cx={tapeX(before)} cy={18} r={4.5} fill="none" stroke={fixed.white} strokeWidth={1.5} /> : null}
+      <Circle cx={tapeX(score)} cy={18} r={5} fill={fixed.copper} />
+    </Svg>
   );
 }
 
-/** The sign-off, the same on every card: the woven label, then the line. */
-function SignOff({ compact = false }: { compact?: boolean }) {
+/** The overlay itself: the stats, the tape, the wordmark. `shadow` on a photo. */
+function Overlay({ m, shadow }: { m: ShareModel; shadow: boolean }) {
+  const { archivoLoaded } = useTheme();
+  const s = shadow ? SHADOW : null;
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: compact ? 7 : 10 }}>
-      <WovenLabel size="small" />
-      <T style={txt(compact ? 11 : 12, '600', 'rgba(255, 255, 255, 0.85)')}>{t('share.signoff')}</T>
-    </View>
-  );
-}
-
-/** The score lockup: numeral, "/10", the word and "Reads as …". */
-function Lockup({ m, size = 72 }: { m: ShareModel; size?: number }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 3 }}>
-        <Numeral size={size} fixedSize color={fixed.white}>{m.scoreText}</Numeral>
-        <T style={txt(11, '500', DIM, { fontFamily: 'Menlo', marginBottom: 4 })}>/10</T>
-      </View>
-      <View style={{ paddingBottom: 3, gap: 2, flexShrink: 1 }}>
-        <T style={txt(20, '700')}>{m.word}</T>
-        {m.readsAs ? <T style={txt(13, '400', DIM)}>{m.readsAs}</T> : null}
-      </View>
-    </View>
-  );
-}
-
-function Flats({ pieces, size = 32, gap = 6 }: { pieces: SharePiece[]; size?: number; gap?: number }) {
-  return (
-    <View style={{ flexDirection: 'row', gap }}>
-      {pieces.map((p) => (
-        <View key={p.id} style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-          <PieceArt item={p.item} size={size} />
-        </View>
-      ))}
-    </View>
-  );
-}
-
-/** The photo for this face choice, or the pieces drawn large when there's no photo to show neck down. */
-function PhotoArea({ photo, face, pieces, width, height }: { photo: SharePhoto | null; face: FaceChoice; pieces: SharePiece[]; width: number; height: number }) {
-  const shown = photoFor(photo, face);
-  if (shown) {
-    if (shown.crop) return <NeckDownPhoto source={shown.source} aspect={shown.aspect} crop={shown.crop} width={width} height={height} />;
-    // "Full photo": the whole picture, head to feet, fitted by height; a frame wider than the photo is filled with a
-    // blurred copy of it (a crop from the top would cut the outfit off at the chest).
-    const a = shown.aspect;
-    const fitW = a ? height * a : width;
-    if (!a || fitW >= width) {
-      return (
-        <View style={{ width, height, overflow: 'hidden', backgroundColor: fixed.panel }}>
-          <Image source={shown.source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} />
-        </View>
-      );
-    }
-    return (
-      <View style={{ width, height, overflow: 'hidden', backgroundColor: fixed.panel }}>
-        <Image source={shown.source} contentFit="cover" blurRadius={24} transition={0} style={{ position: 'absolute', width, height, opacity: 0.55 }} />
-        <Image source={shown.source} contentFit="fill" transition={0} style={{ position: 'absolute', left: (width - fitW) / 2, top: 0, width: fitW, height }} />
-      </View>
-    );
-  }
-  return <PiecesArea pieces={pieces} width={width} height={height} />;
-}
-
-/** No photo on this card: the pieces, drawn, two by two, with their names. */
-function PiecesArea({ pieces, width, height }: { pieces: SharePiece[]; width: number; height: number }) {
-  const art = Math.min(118, Math.floor((Math.min(width, height) - 72) / 2));
-  return (
-    <View style={{ width, height, backgroundColor: '#1A2448', alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: art * 2 + 24, gap: 24, justifyContent: 'center' }}>
-        {pieces.map((p) => (
-          <View key={p.id} style={{ width: art, alignItems: 'center', gap: 6 }}>
-            <View style={{ width: art, height: art, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.06)', alignItems: 'center', justifyContent: 'center' }}>
-              <PieceArt item={p.item} size={Math.round(art * 0.78)} />
+    <View style={{ alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', gap: m.stats.length > 2 ? 30 : 34 }}>
+        {m.stats.map((st) => (
+          <View key={st.label} style={{ alignItems: 'center', gap: 4 }}>
+            <Text allowFontScaling={false} style={[{ fontSize: 13, fontWeight: '500', color: fixed.white, opacity: 0.85, letterSpacing: 0.26 }, s]}>{st.label}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+              <Text allowFontScaling={false} numberOfLines={1} style={[numeralStyle(40, 'score', archivoLoaded), { color: fixed.white, letterSpacing: -0.2, lineHeight: 42 }, s]}>{st.value}</Text>
+              {st.unit ? (
+                <Text allowFontScaling={false} style={[numeralStyle(15, 'score', archivoLoaded), { color: fixed.white, opacity: 0.8, marginLeft: 2, letterSpacing: 0 }, s]}>{st.unit}</Text>
+              ) : null}
             </View>
-            <T style={txt(12, '500', 'rgba(255,255,255,0.85)')}>{p.name}</T>
           </View>
         ))}
       </View>
+      <View style={{ marginTop: 14, marginBottom: 14 }}>
+        <Tape score={m.score} before={m.before?.score ?? null} />
+      </View>
+      <Text allowFontScaling={false} style={[wordmarkStyle(11, 0.26, archivoLoaded), { color: fixed.white, opacity: 0.9, marginRight: -11 * 0.26 }, s]}>KITTED</Text>
     </View>
   );
 }
 
-/** Instagram Stories (9 : 16): the photo over the indigo band, every word between 14% and 80% of the height. */
-function StoryCard({ m, face }: { m: ShareModel; face: FaceChoice }) {
-  const photoH = 400;
+/** His photo for this face choice, filling the card: neck down by its crop; "Full photo" head to feet, fitted by
+ *  height (a frame wider than the photo is filled with a blurred copy of it). */
+function Photo({ photo, face }: { photo: SharePhoto | null; face: FaceChoice }) {
+  const { w, h } = FORMAT_SIZE.photo;
+  const shown = photoFor(photo, face);
+  if (!shown) return null;
+  if (shown.crop) return <NeckDownPhoto source={shown.source} aspect={shown.aspect} crop={shown.crop} width={w} height={h} />;
+  const a = shown.aspect;
+  const fitW = a ? h * a : w;
+  if (!a || fitW >= w) return <Image source={shown.source} contentFit="cover" contentPosition="top center" transition={0} style={{ width: w, height: h }} />;
   return (
-    <View style={{ width: W, height: H, backgroundColor: fixed.indigo }}>
-      <PhotoArea photo={m.photo} face={face} pieces={m.pieces} width={W} height={photoH} />
-      <Stitch length={W} />
-      <View style={{ paddingHorizontal: PAD, paddingTop: 12, gap: 14 }}>
-        <SignOff />
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-          <Lockup m={m} />
-          {photoFor(m.photo, face) ? <Flats pieces={m.pieces.slice(0, 3)} size={30} gap={4} /> : null}
-        </View>
-      </View>
+    <View style={{ width: w, height: h }}>
+      <Image source={shown.source} contentFit="cover" blurRadius={24} transition={0} style={{ position: 'absolute', width: w, height: h, opacity: 0.55 }} />
+      <Image source={shown.source} contentFit="fill" transition={0} style={{ position: 'absolute', left: (w - fitW) / 2, top: 0, width: fitW, height: h }} />
     </View>
   );
 }
 
-/** TikTok photo mode (9 : 16): the photo over the band, the words between 14% and 70% of the height and left of the
- *  12% button rail (TikTok's caption covers the bottom 30%). The panel never sits on the outfit. */
-function TikTokCard({ m, face }: { m: ShareModel; face: FaceChoice }) {
-  const safe = SAFE.tiktok;
-  const right = Math.round(W * safe.right);
-  const photoH = 340;
+/** The shade under the overlay on the photo card: clear to 45%, night at 35% by 65%, 65% at the bottom. Drawn in SVG
+ *  so it's the same on iOS, the web preview and the captured image. */
+function Shade({ width, height }: { width: number; height: number }) {
   return (
-    <View style={{ width: W, height: H, backgroundColor: fixed.indigo }}>
-      <PhotoArea photo={m.photo} face={face} pieces={m.pieces} width={W} height={photoH} />
-      <Stitch length={W} />
-      <View style={{ paddingLeft: PAD, paddingRight: right, paddingTop: 12, gap: 12 }}>
-        <SignOff compact />
-        <Lockup m={m} size={64} />
-      </View>
-    </View>
+    <Svg width={width} height={height} style={{ position: 'absolute', left: 0, top: 0 }}>
+      <Defs>
+        <LinearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0.45" stopColor={fixed.night} stopOpacity={0} />
+          <Stop offset="0.65" stopColor={fixed.night} stopOpacity={0.35} />
+          <Stop offset="1" stopColor={fixed.night} stopOpacity={0.65} />
+        </LinearGradient>
+      </Defs>
+      <Rect width={width} height={height} fill="url(#shade)" />
+    </Svg>
   );
 }
 
-/** The re-check win (9 : 16, Instagram Stories' zones): both photos, then before → after with the fix he made. */
-function BeforeAfterCard({ m, face }: { m: ShareModel; face: FaceChoice }) {
-  const b = m.before!;
-  const photoH = 372;
-  const half = W / 2;
-  const tag = (label: string, score: string) => (
-    <View style={{ position: 'absolute', left: 12, bottom: 12, flexDirection: 'row', gap: 6, alignItems: 'center', backgroundColor: fixed.photoTag, borderRadius: 7, paddingHorizontal: 9, paddingVertical: 5 }}>
-      <T style={txt(11, '600', 'rgba(255,255,255,0.85)', { letterSpacing: 1.2 })}>{label.toUpperCase()}</T>
-      <T style={txt(13, '700')}>{score}</T>
-    </View>
-  );
-  return (
-    <View style={{ width: W, height: H, backgroundColor: fixed.indigo }}>
-      <View style={{ flexDirection: 'row', height: photoH }}>
-        <View style={{ width: half, height: photoH }}>
-          <PhotoArea photo={b.photo} face={face} pieces={[]} width={half} height={photoH} />
-          {tag(t('share.ba.before'), b.scoreText)}
-        </View>
-        <View style={{ position: 'absolute', left: half - 0.75, top: 0, zIndex: 2 }}>
-          <Stitch length={photoH} vertical />
-        </View>
-        <View style={{ width: half, height: photoH }}>
-          <PhotoArea photo={m.photo} face={face} pieces={m.pieces} width={half} height={photoH} />
-          {tag(t('share.ba.after'), m.scoreText)}
-        </View>
-      </View>
-      <Stitch length={W} />
-      <View style={{ paddingHorizontal: PAD, paddingTop: 12, gap: 12 }}>
-        <SignOff />
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
-          <Numeral size={40} fixedSize color={BEFORE_NUM} style={{ marginBottom: 6 }}>{b.scoreText}</Numeral>
-          <T style={txt(24, '700', fixed.copper, { marginBottom: 12 })}>→</T>
-          <Numeral size={72} fixedSize color={fixed.white}>{m.scoreText}</Numeral>
-          <View style={{ paddingBottom: 3, gap: 2 }}>
-            <T style={txt(20, '700')}>{m.word}</T>
-            <T style={txt(15, '600', fixed.copper)}>{b.delta}</T>
-          </View>
-        </View>
-        {b.fix ? <T style={txt(15, '600')} lines={2}>{t('share.ba.fix', { fix: b.fix })}</T> : null}
-      </View>
-    </View>
-  );
-}
-
-/** "Beat my 8.0" (4 : 5, for a DM): his fit and the score to beat. */
-function BeatCard({ m, face }: { m: ShareModel; face: FaceChoice }) {
-  const { w, h } = FORMAT_SIZE.beat;
-  const photoH = 262;
-  return (
-    <View style={{ width: w, height: h, backgroundColor: fixed.indigo }}>
-      <PhotoArea photo={m.photo} face={face} pieces={m.pieces} width={w} height={photoH} />
-      <Stitch length={w} />
-      <View style={{ paddingHorizontal: PAD, paddingTop: 14, gap: 10 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
-          <T style={txt(30, '800', fixed.white, { marginBottom: 8, letterSpacing: -0.4 })}>{t('share.beat.title', { score: '' }).trim()}</T>
-          <Numeral size={64} fixedSize color={fixed.white}>{m.scoreText}</Numeral>
-          <T style={txt(18, '700', fixed.white, { marginBottom: 8 })}>{m.word}</T>
-        </View>
-        <T style={txt(14, '400', DIM)}>{t('share.beat.sub')}</T>
-        <SignOff />
-      </View>
-    </View>
-  );
-}
-
-/** One card at its drawn size, inside the fixed-dark palette. */
+/** One version at its drawn size. The sticker has no background at all (the PNG keeps its transparency). */
 export function ShareCard({ m, format, face }: { m: ShareModel; format: ShareFormat; face: FaceChoice }) {
+  const { w, h } = FORMAT_SIZE[format];
+  if (format === 'sticker') {
+    return (
+      <FixedDark>
+        <View style={{ width: w, height: h, alignItems: 'center', justifyContent: 'center' }}>
+          <Overlay m={m} shadow={false} />
+        </View>
+      </FixedDark>
+    );
+  }
   return (
     <FixedDark>
-      {format === 'story' ? <StoryCard m={m} face={face} />
-        : format === 'tiktok' ? <TikTokCard m={m} face={face} />
-          : format === 'beforeAfter' && m.before ? <BeforeAfterCard m={m} face={face} />
-            : <BeatCard m={m} face={face} />}
+      <View style={{ width: w, height: h, backgroundColor: fixed.night, overflow: 'hidden' }}>
+        <Photo photo={m.photo} face={face} />
+        <Shade width={w} height={h} />
+        <View style={{ position: 'absolute', left: 0, right: 0, bottom: PHOTO_OVERLAY_BOTTOM }}>
+          <Overlay m={m} shadow />
+        </View>
+      </View>
     </FixedDark>
   );
 }

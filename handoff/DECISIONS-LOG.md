@@ -2237,3 +2237,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Toasts:** the app's toasts draw under a full-screen cover, so the share screen has its own status line.
     - **Not yet verified:** the real capture, the share sheet and Save on iOS (no native build yet: a Simulator build from this branch needs ~2 GB of disk and the Mac has 4.9 GB free; waiting on the founder).
 
+343. **The founder, on the first set: "These designs are a bit cringy and tacky, let's just go with two designs, one transparent one and one just the way it is … the only thing that differentiates them is that one is transparent … Strava is probably the best example … model it after them … you can basically delete them."** Done:
+    - **One overlay, two versions:** white stats (label over value; Score · Rating, or Before · After · Change on a re-check win), the tape as the route-trace stand-in (copper dot on the score, hollow on the before), the KITTED wordmark. Transparent = the overlay alone (1080 × 600 PNG); With photo = the same overlay on his photo (1080 × 1920), neck down by default.
+    - **Settled by Claude, after a mock round and one art-direction critique:** two stats, not three (a "Look" column overflowed with "Put together" + "Streetwear"); one accent (copper only on the dot; "+1.0" white); a quieter tape (1.25 pt ticks, 8/4 pt); the wordmark at 11 pt; "/10" only on a single check's score; the photo shade at 65% at the bottom (the critic's 50% left white unreadable on a bright kitchen photo); no sign-off line (the wordmark alone, as Strava; trykitted.com isn't registered).
+    - **Deleted:** the four app cards of #342 (Story, TikTok, before → after, Beat my score), their words, and the nine demo families (`mockups/share-cards/`, in git history). The published page now shows the new card (same link).
+    - **Kept from #342:** the face toggle and its crop rule, Share and Save, the native-module guard, who's offered a card.
+    - **Not yet verified on iOS:** the capture, the PNG's transparency, Share and Save (the native build, ~2 GB of disk).
+
