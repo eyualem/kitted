@@ -142,8 +142,10 @@ describe('U4 · holding pauses, up to a hard stop', () => {
 
   it('touch-down on the toast and on Undo both hold; Undo still undoes', () => {
     const host = src('features/toast/ToastHost.tsx');
-    expect(host.match(/onPressIn=\{hold\}/g)).toHaveLength(2);
-    expect(host.match(/onPressOut=\{release\}/g)).toHaveLength(2);
+    // The toast watches touches (a View, not a Pressable: no control nested in a control, #341); Undo holds on its own press.
+    expect(host).toMatch(/<View\s+onTouchStart=\{hold\}\s+onTouchEnd=\{release\}\s+onTouchCancel=\{release\}/);
+    expect(host.match(/onPressIn=\{hold\}/g)).toHaveLength(1);
+    expect(host.match(/onPressOut=\{release\}/g)).toHaveLength(1);
     expect(host).toMatch(/onPress=\{\(\) => \{\s*hideToast\(toast\.id\);\s*void toast\.undo\?\.\(\);/);
   });
 });

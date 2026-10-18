@@ -2218,3 +2218,12 @@ Contradictions settled and decisions changed during the build. Newest last.
     - The card is posted alone; its hello follows the hour he reads it ("Morning." becomes "Afternoon." after noon), so nothing frozen in a chat row can go stale. Without weather, the season line takes the weather's place.
     - Greeting lines already stored (his phone's earlier days, seeded demo days) are hidden in the thread rather than deleted: one posted 1 ms before its card, or one marked `greeting` by the legacy adoption.
     - Found on the way: `refreshWeather` rewrote "the latest Kit text line before the card", which with no greeting could have been an answer. Removed.
+
+## Oct 18 · No control inside a control
+
+341. **The founder (relayed from the UI-checklist session, #340 on PR #18): find every pressable inside another pressable, with the UI UX Pro Max skill as the checklist (`--stack react-native`; its pro-rules "keep one primary gesture per region and avoid nested tap conflicts").**
+    - **How it was searched:** all 158 demo screens in the web preview, each read for any button, link, switch or field inside another (the same thing React's "<button> cannot contain a nested <button>" warning reports), and a TypeScript syntax scan of every `.tsx` in `app/src` for a Pressable, or a component whose root is one, holding another pressable component in its children or props.
+    - **Found, two:** (1) the You tab's style card with its Edit link, already fixed on PR #18 (`app/src/app/(tabs)/you/index.tsx:56`), left to that PR; (2) every Undo toast: the hold-to-pause area was a Pressable wrapped around the Undo Pressable (`app/src/features/toast/ToastHost.tsx:153`). The web scan missed it because the outer one was `accessible={false}`.
+    - **Fixed (2):** the hold area is now a View that watches touches (`onTouchStart` holds, `onTouchEnd`/`onTouchCancel` release), so Undo is the toast's only control; Undo keeps its own hold. Same look, same VoiceOver (the View was never focusable). Seen on the Simulator: holding the words for 6 s left 3 s on a 5 s ring; Undo still undoes; light, dark and the largest text size unchanged. The toast test's source check now looks for the touch watcher.
+    - **Not nested (checked):** `ClosetTile` in the Added sheet's rows and in "How do your … fit?" (`decorative`, no press), `NumberedPill` on the style card (no `onPress`), `TagLine` in Next best buy (no `onPressRight`).
+    - **Note:** PR #18 and main's morning-card entry both use #340.

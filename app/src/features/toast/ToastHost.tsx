@@ -149,11 +149,12 @@ function ToastCapsule({ toast, voiceOver }: { toast: Toast; voiceOver: boolean }
         backgroundColor: scheme === 'dark' ? colors.surface2 : colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: shadow.card,
       }}
     >
-      {/* Holding anywhere on the toast pauses it (not a button for VoiceOver; Undo inside is). */}
-      <Pressable
-        accessible={false}
-        onPressIn={hold}
-        onPressOut={release}
+      {/* Holding anywhere on the toast pauses it. A touch watcher, not a Pressable: Undo is the toast's only
+          control (no control nested in a control) and pauses it on its own press too. */}
+      <View
+        onTouchStart={hold}
+        onTouchEnd={release}
+        onTouchCancel={release}
         style={{
           flexDirection: stacked ? 'column' : 'row', alignItems: stacked ? 'stretch' : 'center', gap: stacked ? 0 : 12, minHeight: size.hit,
           paddingLeft: 16, paddingRight: toast.undo && !stacked ? 8 : 16, paddingTop: stacked ? 8 : 4, paddingBottom: 4,
@@ -182,7 +183,7 @@ function ToastCapsule({ toast, voiceOver }: { toast: Toast; voiceOver: boolean }
             <KText role="textLink">{t('common.undo')}</KText>
           </Pressable>
         ) : null}
-      </Pressable>
+      </View>
     </Animated.View>
   );
 }
