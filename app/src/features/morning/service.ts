@@ -21,6 +21,7 @@ import type {
   CardOccasion, ChatMessage, ClosetItemRow, DailyIdeaRow, FitCheckRow, IdeaSlot, OccasionKey, OutfitRow, StyleKey, WearLogRow,
 } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
+import { wornChecks } from '@/features/fitcheck/tryOn';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
 
@@ -115,7 +116,8 @@ export function historyFor(
     if (!w.outfitId || w.outfitId === row.outfitId || !before(w.day, true)) continue;
     uses.push({ daysAgo: daysBetween(w.day, day), itemIds: rows.itemsOf(w.outfitId) });
   }
-  for (const c of rows.checks) {
+  // Only what he wore: a check followed by another within the hour was a try-on (#360).
+  for (const c of wornChecks(rows.checks)) {
     if (!before(c.dayKey, slotAt(c.createdAt, zone).slot === 'day')) continue;
     uses.push({ daysAgo: daysBetween(c.dayKey, day), itemIds: c.itemIds });
   }

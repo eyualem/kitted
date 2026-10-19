@@ -649,6 +649,8 @@ const addedInBuild = {
   'pfix.tag.closet': 'Free · from your closet',
   'pfix.tag.own': 'Free if you own one',
   'pfix.tag.tailor': 'Tailor',
+  // A fix's piece from his earlier check that day, one he tried and took off (#360).
+  'fix.tag.earlierCheck': 'Free · from your earlier check',
   'pfix.copy.raisesOne': 'Raises {part} to {to}',
   'pfix.copy.raisesOneSame': 'Raises {part}',
   'pfix.copy.raisesTwo': 'Raises {part} and {part2}',
