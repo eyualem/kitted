@@ -935,3 +935,78 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **Found and fixed while checking U8:** at the largest size the message broke mid-word ("Remove / d your") and the pill swelled into an oval; at accessibility sizes the message now gets the full width with ring + Undo under it, in a rounded card (24 pt corners).
 - **Not seen on a screen, tested in code only:** U6 (Reduce Motion) and U7 (VoiceOver); a hold reaching the hard stop.
 - **HIG:** Apple has no toast component; this follows the HIG's "give people time to read and act" and WCAG 2.2.1 (a time limit the person can pause: hold), with VoiceOver's doubled window kept because RN can't pause on VoiceOver focus (#36). Material's snackbar guidance (4–10 s, stays while touched) matches both windows.
+
+---
+
+## 22. The UI audit, Oct 19 (#345)
+
+**What this is.** Founder, Oct 19: "do an audit of the ui for me." Three read-only agents went through the code (Stylist and the fit check; Closet, Lookbook and the closet sheets; onboarding, the camera, You and the design system), each re-checking every open item of §2 and §20 and looking for new problems since the Oct 17–18 changes (Kit's bubbles, the relaid morning card, the folding score card, the optional closet step). I took 16 Simulator screenshots in light, dark and the largest text size (`screenshots/ui-audit-oct19/`, git-ignored; demo screens 1, 7, 12, 17, 96, 97, 150, 151, 161, 175, 182, 197) and checked the top findings by hand (✔). Nothing in the app changed. Paths are under `app/src/`.
+
+**The headline.** The app looks calm and consistent now: the fold, the bubbles and the ink selection did what they meant to. What's left is mostly behaviour behind the polish: one correction the sheet promises and can't make, a photo that survives "Delete photo", beta testers told three different things about their plan, and a few things the fold now hides that he needs to act on.
+
+### 22.1 Fix first (all [code], small unless marked)
+1. ✔ **"Wrong color or fit" can't fix a color, and shoes open to nothing.** The sheet offers fit for tops and leg for pants only (`features/correct/fields.ts:17-22`); a shoe row opens, says "How do they really fit?" and shows no choices (`CorrectSheet.tsx:129-145`). A misread color moves the Color part and can't be corrected here. Fix: color chips per piece (the piece page's "What it is" color list exists), and no fit row for shoes. H · S–M
+2. ✔ **"Delete photo" on a re-checked look leaves a photo on screen.** It deletes only the re-check's photo (`lookbook/LookPageScreen.tsx:49`, `shownId`); the first photo stays as "Before" (`lookbook/lookPage.ts:141, 151-152`), the menu item then disappears, and the Lookbook row keeps drawing the first photo (`(tabs)/lookbook/index.tsx:58`). Against the privacy promise. Fix: "Delete photos" deletes every photo of the look (both checks). H · S
+3. ✔ **Beta testers see Free and Pro at once.** The server gives every tester Pro's limits, and `quota.snapshot()` counts that (`services/quota.ts:95`), but the plan card counts purchases only (`settings/usePlan.ts:14`). Plan & usage says "Free plan · a fit check … and 5 questions" over rows that say "x of 10" and "x of 50"; Settings says "Free plan"; Privacy says "You have Kitted Pro. Deleting your data doesn't cancel it." with Manage subscription, to people who never paid (`(tabs)/you/privacy.tsx:78-85, 132-141, 171`). Fix: billing words follow the purchase; the plan card says "Beta: up to 10 checks and 50 questions a day" when the server's tier is Pro. H · S
+4. ✔ **The re-check card folds shut after "I did make the change".** `open = notSeen || opened` (`stylist/cards/RecheckCard.tsx:73-74`): confirming flips `notSeen` off, so the card he just tapped closes and the thread jumps with it. Fix: start `opened` true when the card was unfolded for "not seen". M · S
+5. **Things he must act on now sit inside the fold.** The fold (#344, your call: the rating alone) also hides, on a partial check, "Finish the check"; the closet question meant to sit right after the score (#117); the "Not sure about your … leg? Tap." line (#322); and `Later` on the first check (screen 150). Changing "Going for" on a folded card rewrites tips no one can see (`FitCheckCard.tsx:292-299, 490-573`). Proposed: keep the rating-only look, but put those action rows (not the fixes) under the summary when they exist. M · S (taste: on your list)
+6. ✔ **After one failed capture, Propped never counts down again.** The catch clears `busy` but not the countdown (`camera/CameraScreen.tsx:184-187`; `autoCapture.ts:36-47`): the tip says he's in frame and nothing happens, no message; in Mirror the timer shoots at once. Fix: reset it and say "Couldn't take the photo. Try again." M · S
+7. ✔ **A piece still waiting on "Same as your …?" opens empty "What it is" sheets.** The Added sheet's rows open its page (`added/AddedSheet.tsx:118-125`), which shows the rows, and each sheet is empty on purpose for a waiting piece (`closet/EditSheet.tsx:96-97`): a title, no choices, no reason. Fix: on that page, show the question instead of "What it is". M · S
+8. **Past chats still act on yesterday.** An unanswered quick tap stays answerable (and VoiceOver announces it), Try again and Retake ignore `readOnly`, an open "Which one is you?" stays pickable (`FitCheckCard.tsx:122-128, 249`, `TapCard.tsx:51-63`, `WhichOneCard.tsx:21`). M · S
+9. ✔ **Kit's question sits outside a bubble.** Since the bubbles (#338), "Is it a suit-and-tie office?" and "No longer in your closet" are bare text under Kit's bubble (`ask/AskCardView.tsx:128, 179`; screen 175). M · S
+10. **"Wear this" leaves no trace.** On a chat outfit or Closet's Try next it logs and toasts, but the outfit stays under "Try next · N not worn yet" and a second tap that day silently replaces the first (`closet/outfitActions.ts:15-29`, `closet/outfits.ts:126-131`, `ask/AskCardView.tsx:80-94`). Fix: count logged wears as worn and show "Wearing this today" on the card. M · M
+
+### 22.2 Stylist and the fit check, new
+- ✔ The re-check card's occasion sits alone top right in spaced capitals ("DATE"), reading as a date column, not "Date" the occasion (screens 12, 97). Put it after "Re-check": "Re-check · Date". M · S
+- ✔ The look page's re-check card says "Dialed in" twice: the word under the score and "Layered and clean. Dialed in. Nothing else changed." (screen 97). L · S
+- The score's "›" means "open the card" when folded and "open Why" when open, plus the ⌄ at the foot: three cues, two meanings (`FitCheckCard.tsx:468, 478`, `ScoreBlock.tsx:80`). M · S
+- After a re-check, "First check" opens to a card that's still folded: two taps to see its fixes (`FitCheckCard.tsx:131-136`). M · S
+- The score reveal still times every fix row while they're folded away, so the copper pop plays unseen and stretches the reveal (`FitCheckCard.tsx:353-357, 511`). M · S
+- "Not quite right?" marks the open row in copper (`CorrectSheet.tsx:186, 199, 212`); selection is ink. M · S
+- "Fix doesn't apply" on a check with no fixes opens an empty list with Save disabled (`CorrectSheet.tsx:106-114, 179`). M · S
+- Opening a very tall card near the bottom keeps its foot in place, so its score can rise under the header (`StylistScreen.tsx:116-123, 190-195`, `Expandable.tsx:28-33`; from reading, check on the phone). M · M
+- The ⌄/⌃ handle and "First check ⌃" are ~37–38 pt tall (44 is the minimum) (`Expandable.tsx:52-55`, `FitCheckCard.tsx:194`). L · S
+- The fold's VoiceOver label says "Show the fixes and details" on cards with no fixes (`en.ts:204`). L · S
+- A re-check past its limit, or Pro's cap, toasts "Check used today" (wrong for 10 a day) (`camera/startCheck.ts`). L · S
+- Dictation can pass the 500-character cap; the question is then cut silently (`composerState.ts:35-40`, `ask/pipeline.ts:345`). L · S
+- Swap and "Saved to your …" lowercase brand names ("medium grey nike hoodie") (`swapPicker.ts:8`, `CorrectSheet.tsx:93`). L · S
+- Consent calls Kit "it" ("so it can answer"); Kit is "he" elsewhere (`en.generated.ts:93`). L · S (outward-facing)
+- At the largest text size the mono labels wrap ("Fit check · / Full", "Next best buy / $50–60") (screens 7, 182 at AX). L · S
+
+### 22.3 Closet and Lookbook, new
+- ✔ The Outfits headline ("16 pieces · 47 outfits") is always the Everyday count while the occasion chips change the lists under it; an occasion with none shows nothing at all (`closet/outfits.ts:142-143`, `OutfitsView.tsx:31-50`). M · S
+- "What you already own" replaces instead of adding: picking again on a row changes that piece, so he can't own a black and a white tee; the toast still says "Added White tee." (`starterActions.ts:25-31`). M · S
+- On Outfits, "To confirm" shows only the fit question; his "Is this your …?" questions wait on Pieces with no badge (`(tabs)/closet/index.tsx:107-123`). Closet opens on Outfits at 3+. M · S
+- Next best buy reruns on every key-value write (the segment tap included): 13 full outfit counts each time (`OutfitsView.tsx:166`, `NextBuySheet.tsx:19`). Feels fine at 16 pieces, not measured at 100. M · S
+- VoiceOver: the next-buy outfits are hidden (`StandingOutfit.tsx:17-18`); a go-to's photo can't be opened (`KCard.tsx:29-33`). M · S
+- The Added sheet's row probably jumps him to the Closet tab, so Back lands on Closet, not the chat (`AddedSheet.tsx:29-31`; from reading). M · S
+- Three names for one screen: "Tap the basics you own" → "What you already own" ← "Tap the clothes you already own". L · S
+- "In your closet" rows on that list are locked, and the hint sends him to a page he can't open from there (`StarterScreen.tsx:90, 119-120`). L · S
+- The piece page shows its name twice (nav title and big title) and "Bottom" under it (screens 96, 197). L · S
+- Next best buy with nothing to suggest is an empty sheet; its row has no pressed state (`NextBuySheet.tsx:20-21`, `OutfitsView.tsx:169-173`). L · S
+- "No outfits yet" puts the secondary button first, the empty Closet the other way (`OutfitsView.tsx:155-156`). L · S
+- Two looks on one day and occasion share a title ("Everyday · October 17") (`lookbook/index.tsx:62`). L · S
+- Remove from Lookbook opens a bottom sheet from the ⋯ pull-down (`LookPageScreen.tsx:50`). L · S
+- The merge picker stays 3 columns at the largest sizes (`MergeSheet.tsx`). Skip on the fit question gives no feedback (`FitQuestion.tsx:22-25`). L · S
+
+### 22.4 Onboarding, camera, You and app-wide, new
+- The agreement opened from a typed question says "Before your first fit check" and "Before I score a photo…" (`onboarding/ConsentScreen.tsx:101`, `en.ts:924`). M · S
+- "Score my fits" stays a row at the largest text sizes, squeezing its long line into a narrow column (`SettingsList.tsx:139`). M · S
+- The camera-off screen: "Choose a photo" is indigo on black (1.39:1) and "Open Settings" looks primary (`CameraScreen.tsx:509-525`; `FixedDark` is unused). L · S
+- The empty circles on "What you already own" are 1.29:1 on white (`StarterScreen.tsx:110`), under 3:1 for a control. L · S
+- Height can be cleared in onboarding but not in the Style profile (`you/profile.tsx:68-74`). L · S
+- "send a face-free copy" (`en.generated.ts:391`) should be face-blurred; the mic and speech permission texts still say "ask your stylist" (`app.config.ts:11-12`, outward-facing). L · S
+- "See all {n}" shows when every fact is already on screen (`you/index.tsx:39`). L · S
+- The birth-year list opens above 2004 at large text sizes (assumes 45 pt rows, `BirthYearSheet.tsx:16, 29`; from reading). L · S
+
+### 22.5 Old items: where they stand (§2 and §20)
+**Fixed since:** copper on tips (one left: "How I score ›" in the Why sheet, `WhySheet.tsx:67`); the re-check's Tell me, two numbers and button order; the Why sheet's empty loading; camera speech after closing; two flash controls; the collapsed morning row; "Earlier chats"; VoiceOver's "Top fix: No quick fixes"; measured tile colors; shoe size and white-piece halos; the "+" pull-down; the Lookbook score in Archivo; the onboarding progress bar, pick order, birth-year list, Welcome status bar, consent's footer and spacing; the notification switches (hidden); the paywall's title; the nav hairlines; the ink tab.
+
+**Still open, worth doing before the beta:** "How I score" explains the old scoring (§1 item 8, waits on your #233 OK); no support email (§1 item 13); "No quick fixes for this one." still reads as a shrug and a 9+ card has no next step (now folded too); "Fit check · Full" and mixed dashed/solid dividers; problems after the shot are 5 s toasts with no Retake; the Propped shutter covers his feet; no Stop while an answer streams and no Copy; "Khaki chinos" capitalized mid-sentence; the Pieces grid has no order or shelves; questions stack above the grid; Lookbook has no months, chevron or "Partial"; "Wear this" counts nothing; Closet "+" leads only to "coming soon"; chat outfit tiles and the buy card don't open anything; Morning Swap can bring the first outfit back; location can't be turned back on once denied; a wrong birth year can't be fixed.
+
+**Still open, design system:** four menu patterns (7 bottom action sheets, native menus in Closet, MorphPicker in Settings); three grouped-list styles (radius 26 full dividers, 20 inset, the Style profile's own rows); every press is a fade with no haptics on Agree, Save or delete; `DANGER` copied twice and a grey Delete on the fact sheet; ink2 vs ink3 1.20:1 and `line` 1.29:1 on white (under 3:1 for control borders, WCAG 1.4.11); "Resets at 4 am." vs "resets 4 am"; "two or three moves" on Welcome (#233).
+
+### 22.6 What I'd do, in order
+1. **[code], about a day:** 22.1 items 1–4, 6–9, then the M items in 22.2–22.4 that are S.
+2. **[you], 2 min:** item 5 (the action rows under the folded rating), and the outward words (consent's "it", the permission texts, #233).
+3. **[code] after that:** "Wear this" counting, the Pieces shelves, one menu system and one grouped list, the border contrast.
