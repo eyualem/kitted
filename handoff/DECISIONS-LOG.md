@@ -2343,5 +2343,5 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The card and Kit** count only what he wore (`historyFor` uses `wornChecks`).
     - **A check's fixes:** a piece from an earlier try-on that day stays, tagged "Free · from your earlier check" (while he's deciding, "the sweatshirt you just had on goes better with these jeans" is the useful thing to hear); a piece from an outfit he wore earlier that day is left out (as the evening card never repeats the day's top); yesterday's pieces as before. Scores never change.
     - **Not changed:** a piece's "Worn n times" and Closet's Your go-tos still count try-ons (a follow-up).
-    - **Checks first:** `app/src/__tests__/tryOn.test.ts` (TO1–TO5); the wiring checks failed before it, all pass, `npm run check`'s steps green (1,389 app tests). New outward words: "Free · from your earlier check".
+    - **Checks first:** `app/src/__tests__/tryOn.test.ts` (TO1–TO5); the wiring checks failed before it, all pass, `npm run check`'s steps green (1,389 app tests). New outward words: "Free · from your earlier check". Merged Oct 19 (PR #28, founder: "You may merge PR 28.").
 
