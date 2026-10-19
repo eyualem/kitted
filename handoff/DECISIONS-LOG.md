@@ -2334,3 +2334,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The first pick for today is the card's outfit** when the occasion matches, and a question with no occasion takes the card's (never Staying in). Not when a piece was deleted or is one he said he avoids (his words beat the card). The evidence line says "same as today's card".
     - **Two bugs found on the way:** "Another" left out the first id, the layer when there was one, so it could keep the Pick's top; and in `@kitted/core` a pinned layer could be dropped for a no-layer outfit with a fresher top (always on a hot day). Both fixed, with tests.
     - **Lesson:** a worktree whose `node_modules` is one symlink to the main checkout's runs the app's tests against the main checkout's `@kitted/core`. For a core change, make `node_modules` a folder of symlinks to the main one's entries, with `@kitted/core` pointing at the worktree's `packages/kitted-core`.
+
+## Oct 19 · Try-ons vs what he wore: several checks in a row
+
+360. **The founder: "It is still recommending a piece I just checked again. Could it be because I am running multiple checks a day?"** His flannel check offered "Swap to your green Champion sweatshirt → 7.5", the top of his check an hour earlier: a check's fixes never looked at other checks. Asked to think about the morning card first, then decide (Claude's call).
+    - **What several checks did to the morning card and Kit:** every check counted as worn, so the tops he tried on and took off lost to every fresher top for about a week (the card leads with the top he's gone longest without, up to 7 days).
+    - **The rule:** a check followed by another check (with pieces) within the hour, the same day, was a try-on; the last of the run is what he wore (`features/fitcheck/tryOn.ts`). Stable: whether a check was a try-on is settled within the hour after it, and the check being scored always counts as following, because its own pieces come after its card.
+    - **The card and Kit** count only what he wore (`historyFor` uses `wornChecks`).
+    - **A check's fixes:** a piece from an earlier try-on that day stays, tagged "Free · from your earlier check" (while he's deciding, "the sweatshirt you just had on goes better with these jeans" is the useful thing to hear); a piece from an outfit he wore earlier that day is left out (as the evening card never repeats the day's top); yesterday's pieces as before. Scores never change.
+    - **Not changed:** a piece's "Worn n times" and Closet's Your go-tos still count try-ons (a follow-up).
+    - **Checks first:** `app/src/__tests__/tryOn.test.ts` (TO1–TO5); the wiring checks failed before it, all pass, `npm run check`'s steps green (1,389 app tests). New outward words: "Free · from your earlier check". Merged Oct 19 (PR #28, founder: "You may merge PR 28.").
+

@@ -12,6 +12,7 @@ import {
   type RubricResult, type ScoreOptions, type ScoredResult, type SecondLookInput, type Styles,
 } from '@kitted/core';
 import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey, type StoredParts, type StyleKey } from '@/data/types';
+import { t } from '@/i18n/en';
 import { cardSummary } from './explain';
 
 export type ScoringEngine = 'parts' | 'v4';
@@ -38,6 +39,8 @@ export interface EvaluateInput {
   hiddenFixTargets?: readonly string[];
   /** A warm day: no "add a layer" or boots fix (#160). Never changes the score. */
   warm?: boolean;
+  /** Closet pieces he tried on in an earlier check that day: a fix that uses one is labelled so (#360). Never the score. */
+  triedEarlier?: ReadonlySet<string>;
   /** Default: the switch. */
   engine?: ScoringEngine;
   /** "Going for" (#215): the look he's going for (null = Not sure). Undefined = a check from before the question, so no
@@ -105,8 +108,15 @@ export function midSentenceNames(text: string, closet: readonly ClosetItem[]): s
   }
   return out;
 }
-const fixesMidSentence = (fixes: readonly Fix[], closet: readonly ClosetItem[]): Fix[] =>
-  fixes.map((f) => (f.itemId ? { ...f, copy: midSentenceNames(f.copy, closet) } : f));
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+/** "Free · from your closet" → "Free · from your earlier check" (or mid-tag, lowercased) for a piece he tried earlier. */
+function triedTag(tag: string): string {
+  const from = t('pfix.tag.closet');
+  const to = t('fix.tag.earlierCheck');
+  return tag.split(from).join(to).split(lowerFirst(from)).join(lowerFirst(to));
+}
+const fixesMidSentence = (fixes: readonly Fix[], closet: readonly ClosetItem[], tried?: ReadonlySet<string>): Fix[] =>
+  fixes.map((f) => (f.itemId ? { ...f, copy: midSentenceNames(f.copy, closet), ...(tried?.has(f.itemId) ? { tag: triedTag(f.tag) } : {}) } : f));
 /** The Going-for move in the same words as the card's fix (the card matches them by copy). */
 function adviceMidSentence(a: ReturnType<typeof goingForAdvice>, closet: readonly ClosetItem[]): ReturnType<typeof goingForAdvice> {
   return a?.move ? { ...a, move: { ...a.move, copy: midSentenceNames(a.move.copy, closet) } } : a;
@@ -124,7 +134,7 @@ function evaluateV4(input: EvaluateInput): Evaluation {
   });
   // `fixes` stays core's (the parity checks read it); the row, which the card shows, gets the mid-sentence names.
   const fixes = raw;
-  const shownFixes = fixesMidSentence(raw.fixes, input.closet);
+  const shownFixes = fixesMidSentence(raw.fixes, input.closet, input.triedEarlier);
   const shownNext = raw.nextLevel.map((l) => midSentenceNames(l, input.closet));
   if (result.overall === null) {
     const status: FitCheckStatus = result.reason === 'not_fully_clothed' ? 'notClothed' : 'unreadable';
@@ -201,7 +211,7 @@ function evaluateParts(input: EvaluateInput): Evaluation {
   });
   const fixes = fx.fixes.map(partsFixAsFix);
   // As in v4: `fixes` stays core's, the row gets the mid-sentence names.
-  const shownFixes = fixesMidSentence(fixes, input.closet);
+  const shownFixes = fixesMidSentence(fixes, input.closet, input.triedEarlier);
   const partial = partialKind(res.notRated);
   const summary = cardSummary({ reading: input.reading, overall: res.overall, lounge: loungeHolds(res), fixes, partial });
   const tip = fx.smallerStep?.line ?? fx.nextLevel?.line ?? null;
