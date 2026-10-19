@@ -147,7 +147,7 @@ describe('the closet: caps, order, handles', () => {
     lastWornAt: null, addedAt: 0, isDeleted: false, cropFile: `closet/C${i}.png`, ...over,
   });
   const snap = (closet: ClosetItemRow[]): StylistSnapshot => ({
-    nowMs: NOW, zone: US_EASTERN, profile: null, otherStyle: null, facts: [], closet, chat: [], checks: [], ideas: [], outfits: [],
+    nowMs: NOW, zone: US_EASTERN, profile: null, otherStyle: null, facts: [], closet, chat: [], checks: [], ideas: [], outfits: [], wears: [],
   });
 
   it('at most 80 pieces, most worn first, P1… mapped back to ids', () => {
