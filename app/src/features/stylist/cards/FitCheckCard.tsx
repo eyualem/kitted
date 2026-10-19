@@ -32,7 +32,7 @@ import { confirmLens } from '@/features/fitcheck/lensUi';
 import { tipLeadText } from '@/features/fitcheck/scoring';
 import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
-import { DoubtLine } from '@/features/closet/DoubtLine';
+import { DoubtLine, useDoubtLine } from '@/features/closet/DoubtLine';
 import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
@@ -273,6 +273,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   const [open, setOpen] = useCardOpen(row.id);
   const picks = usePicks();
   const later = useLaterShows(row, readOnly);
+  const doubt = useDoubtLine(row, readOnly);
   // "Going for" (#215): the folded line at the top; Change grows it back into the question, in place.
   const gf = row.details.goingFor;
   const advice = row.details.goingForAdvice ?? null;
@@ -337,6 +338,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   const moreAsks = firstAsk ? openAsks(cs).filter((a) => a.obsId !== firstAsk.obsId).length : 0;
   const finishing = !readOnly && partial && row.snapState === 'pending' && row.details.finish !== undefined;
   const finish = finishing ? finishInfo(row, closet) : null;
+  const hasActions = !!(firstAsk && askPhoto && askCandidate) || !!finish || !!doubt || !!later;
   // The closet question, for VoiceOver (the card is one element): the question and reason in the label, the answers as actions.
   const askItem = askCandidate ? lowerFirst(askCandidate.name) : '';
   const askLine = firstAsk && askPhoto && askCandidate
@@ -487,6 +489,33 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
           ) : null}
         </KCardSection>
         </Pressable>
+        {/* The rows he acts on (§22.7, item 5; founder, Oct 19: "keep the rating-only fold, but show the action rows …
+            under the summary when they exist. Never the fixes."): here whether folded or open, so they show once and
+            don't move when it opens. None of them: nothing here, the folded card as before. */}
+        {hasActions ? (
+          <RevealStepView t={rt} step={plan?.summary}>
+            <Seam />
+            <KCardSection gap={8}>
+              {firstAsk && askPhoto && askCandidate ? (
+                <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
+                  <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact onAnswer={answerAsk} />
+                  {moreAsks > 0 ? (
+                    <TextLink title={moreAsks === 1 ? t('closet.q.more1') : t('closet.q.more', { n: moreAsks })} onPress={() => router.navigate('/closet')} compact />
+                  ) : null}
+                </View>
+              ) : null}
+              {finish ? <FinishRow row={row} info={finish} /> : null}
+              {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}
+              <DoubtLine doubt={doubt} />
+              {/* `Later` (ruling 23, #291): his first-ever check only. */}
+              {later ? (
+                <TextLinkRow>
+                  <TextLink title={t('card.later')} onPress={() => void finishSequence.later(row.id)} compact accessibilityHint={t('card.a11y.laterHint')} />
+                </TextLinkRow>
+              ) : null}
+            </KCardSection>
+          </RevealStepView>
+        ) : null}
         {/* Today's thread scrolls with it (threadGrow); Past chats' pages don't. */}
         <Expandable open={open} grow={readOnly ? undefined : threadGrow}>
         {dialed && quietNoFix && !advice && !nextLevel && !wxTip ? null : (<>
@@ -530,15 +559,6 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         <RevealStepView t={rt} step={afterFixes}>
         <KCardSection gap={6}>
           {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review} /> : null}
-          {firstAsk && askPhoto && askCandidate ? (
-            <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
-              <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact onAnswer={answerAsk} />
-              {moreAsks > 0 ? (
-                <TextLink title={moreAsks === 1 ? t('closet.q.more1') : t('closet.q.more', { n: moreAsks })} onPress={() => router.navigate('/closet')} compact />
-              ) : null}
-            </View>
-          ) : null}
-          {finish ? <FinishRow row={row} info={finish} /> : null}
           {/* "Re-check after fixing" only when there's a fix to make: under "No quick fixes" it had nothing to check. */}
           {(SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) || SHARE_CARD_BUILT ? (
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
@@ -550,13 +570,9 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
               {SHARE_CARD_BUILT ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
             </View>
           ) : null}
-          {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}
-          <DoubtLine row={row} readOnly={readOnly} />
           <TextLinkRow>
             <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
             {readOnly ? null : <TextLink title={t('card.nqr')} onPress={go.nqr} compact />}
-            {/* `Later` (ruling 23, #291): his first-ever check only; the first 3 moves follow at once. */}
-            {later ? <TextLink title={t('card.later')} onPress={() => void finishSequence.later(row.id)} compact accessibilityHint={t('card.a11y.laterHint')} /> : null}
           </TextLinkRow>
           {row.details.rescoredFrom ? (
             <KText variant="footnote" color="ink3">

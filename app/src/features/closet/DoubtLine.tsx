@@ -14,8 +14,8 @@ import { sessionClock } from '@/state/session';
 import { cardLine, FIT_LINE_KEY, parseLineCap, withShown, withTapped } from './fitLine';
 import { logFitAnswer } from './fitLog';
 
-export function DoubtLine({ row, readOnly }: { row: FitCheckRow; readOnly: boolean }) {
-  const { colors } = useTheme();
+/** The line for this check, or null: the card asks first, so it knows whether its action rows show (§22.7 F16). */
+export function useDoubtLine(row: FitCheckRow, readOnly: boolean): { lead: string; action: string; tap: () => void } | null {
   const rawCap = useLive(['kv'], () => store.getKv(FIT_LINE_KEY), [], FIT_LINE_KEY);
   const data = useLive(['closet', 'closetObs', 'readings'], async () => {
     const reading = row.readingId ? (await store.readings.get(row.readingId))?.reading : null;
@@ -39,6 +39,14 @@ export function DoubtLine({ row, readOnly }: { row: FitCheckRow; readOnly: boole
     })();
     router.push(line.href as Href);
   };
+  return { lead: line.lead, action: line.action, tap };
+}
+
+export function DoubtLine({ doubt }: { doubt: ReturnType<typeof useDoubtLine> }) {
+  const { colors } = useTheme();
+  if (!doubt) return null;
+  const line = doubt;
+  const tap = doubt.tap;
   return (
     <Pressable
       onPress={tap}

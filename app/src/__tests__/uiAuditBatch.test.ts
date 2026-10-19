@@ -230,3 +230,42 @@ describe('F12 · Kit\'s ask-card question is in his bubble', () => {
     expect(view).not.toMatch(/<KText role="chatText">\{card\.question\}<\/KText>/);
   });
 });
+
+// ---------------------------------------------------------------------------------------------------------------- F14–F20
+describe('F14–F20 · item 5: the action rows show under the folded rating, never the fixes', () => {
+  const card = src('features/stylist/cards/FitCheckCard.tsx');
+  const pressEnd = card.indexOf('</Pressable>\n        {/* The rows he acts on');
+  const foldStart = card.indexOf('<Expandable open={open}');
+  const foldEnd = card.indexOf('</Expandable>');
+  const between = card.slice(pressEnd, foldStart);
+  const inside = card.slice(foldStart, foldEnd);
+
+  it('F14–F17 Finish the check, the closet question, the Not sure line and Later sit between the rating and the fold', () => {
+    expect(pressEnd).toBeGreaterThan(0);
+    expect(between).toMatch(/<FinishRow row=\{row\} info=\{finish\} \/>/);
+    expect(between).toMatch(/<DuplicateQuestion ask=\{firstAsk\}/);
+    expect(between).toMatch(/<DoubtLine doubt=\{doubt\} \/>/);
+    expect(between).toMatch(/title=\{t\('card\.later'\)\}/);
+  });
+
+  it('F18 the fixes, tips, closet line, Re-check and Why stay inside the fold; none of the four: nothing drawn', () => {
+    for (const x of ['<FixRow', '<TipLine', '<ClosetSummaryRow', "t('card.recheck')", "t('card.why'"]) {
+      expect(between).not.toContain(x);
+      expect(inside).toContain(x);
+    }
+    expect(card).toMatch(/const hasActions = !!\(firstAsk && askPhoto && askCandidate\) \|\| !!finish \|\| !!doubt \|\| !!later;/);
+    expect(between).toMatch(/\{hasActions \? \(/);
+  });
+
+  it('F19 each row is drawn once (not again inside the fold)', () => {
+    for (const x of ['<FinishRow', '<DuplicateQuestion', '<DoubtLine', "t('card.later')"]) {
+      expect(card.split(x).length - 1).toBe(x === "t('card.later')" ? 2 : 1); // Later: the row and its VoiceOver action
+      expect(inside).not.toContain(x);
+    }
+  });
+
+  it('F20 the rows come in with the summary; the fold still grows the thread', () => {
+    expect(between).toMatch(/<RevealStepView t=\{rt\} step=\{plan\?\.summary\}>/);
+    expect(card).toMatch(/<Expandable open=\{open\} grow=\{readOnly \? undefined : threadGrow\}>/);
+  });
+});

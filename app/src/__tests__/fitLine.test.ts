@@ -178,7 +178,9 @@ describe('BX3 the line shows exactly for a Not sure piece in the check', () => {
     const fl = src('features', 'closet', 'fitLine.ts');
     expect(fl).not.toMatch(/previewCorrection|\.score\b|rescore/); // it never looks at what a fix would score
     expect(src('features', 'closet', 'DoubtLine.tsx')).toMatch(/!readOnly &&/);
-    expect(src('features', 'stylist', 'cards', 'FitCheckCard.tsx')).toMatch(/<DoubtLine row=\{row\} readOnly=\{readOnly\} \/>/);
+    // Since #346 (§22.7 item 5) the card asks the hook first, so the line can show under the folded rating.
+    expect(src('features', 'stylist', 'cards', 'FitCheckCard.tsx')).toMatch(/const doubt = useDoubtLine\(row, readOnly\);/);
+    expect(src('features', 'stylist', 'cards', 'FitCheckCard.tsx')).toMatch(/<DoubtLine doubt=\{doubt\} \/>/);
   });
 });
 

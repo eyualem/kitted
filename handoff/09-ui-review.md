@@ -1028,6 +1028,15 @@ Written before building; the build must not edit them. Item 5 (the action rows u
 - **F12 (item 9).** Kit's ask-card question ("Is it a suit-and-tie office?") sits in a Kit bubble (the same `StylistMessage` bubble, no second name line), its answer chips under it; a link to a piece or check that's gone says "No longer in your closet" in a Kit bubble too. VoiceOver reads the question as Kit's line.
 - **F13 (all).** `npm run check` green; the changed screens seen on the Simulator in light, dark and the largest text size; new words on the founder's skim list.
 
+- **Item 5, added Oct 19 (the founder's call, relayed by the audit session: "Yes: keep the rating-only fold, but show the action rows (Finish the check, the closet question, the Not sure line, Later) under the summary when they exist. Never the fixes.")** Built so those rows sit under the summary whether the card is folded or open, so opening it never shows them twice or moves them; the rest of the open card is unchanged.
+- **F14.** A partial check's folded card shows Finish the check (its buttons work) under the summary.
+- **F15.** A check with an open closet question ("Are these your khaki chinos?") shows it folded, with Yes / No.
+- **F16.** The "Not sure about your … leg? Tap." line shows folded.
+- **F17.** The first check's `Later` shows folded (beside nothing else; Why and Not quite right? stay in the fold).
+- **F18.** No fix row, Next level tip, "Added to your closet" line, Re-check button or Why link is visible while folded; a folded card with none of the four rows looks exactly as before (no extra seam or space).
+- **F19.** Opening the fold doesn't show any of the four rows a second time.
+- **F20.** The score reveal still plays (the rows come in with the summary) and opening still scrolls the thread with the card (threadGrow).
+
 ### §22.7 results (Oct 19, #346): checked against F1–F13, none changed
 All pass. Tests: `app/src/__tests__/uiAuditBatch.test.ts` (F1–F12); two older source checks were updated to the new wiring on purpose (stepFourBatch G22.1 now expects `photoIds` and "Delete photos"; fitLine BX4 now expects `detailGroups`), and the Undo-window list in toast.test.ts names the piece page's answer toast (5 s). `npm run check` green (1,327 tests). Seen on the iOS Simulator (iPhone 17 Pro) in light, dark and the largest text size; screenshots `screenshots/ui-fixes-oct19/` (git-ignored). New demo screens 216–222.
 - **F1–F3:** screen 216 (the tee: Fit, then Blues and denim · Neutrals · Earth tones · Colors as chips with a color dot, Cream picked) and 217 (the sneakers: colors only, no fit title). One fix found on the Simulator: at the largest size the 14 pt dot looked lost beside the text; it's 24 pt there now. At the largest size the color list is long (one chip a line) and scrolls; fine for now.
@@ -1038,4 +1047,5 @@ All pass. Tests: `app/src/__tests__/uiAuditBatch.test.ts` (F1–F12); two older 
 - **F10:** screen 220: the tan chinos still waiting on "Are these your khaki chinos?" show the question card under the name, no "What it is".
 - **F11:** screen 222 (yesterday): the failed check has no Try again; the unanswered "Your brown loafers?" shows "Not answered that day, so it wasn't scored." with no buttons.
 - **F12:** screen 169: "Is it a suit-and-tie office?" in Kit's bubble, the answers under it.
-- **Not done here:** item 5 (the founder's call) and item 10, and the 22.2–22.4 M items.
+- **F14–F20 (item 5):** screens 185 (Finish the check), 70 (the khaki chinos question with Yes / No), 201 (the Not sure line) and 150 (`Later`) show the row under the summary while folded; screen 7 (none of them) is unchanged. Opening screen 150 shows Later once, above the fixes, with Why and Not quite right? still at the foot, and the thread scrolled with the card. At the largest size Finish the check stacks under the summary. The "Not sure" line became a hook (`useDoubtLine`) so the card knows whether it shows, and no empty section is drawn. `npm run check` green (1,331 tests).
+- **Not done here:** item 10, and the 22.2–22.4 M items.
