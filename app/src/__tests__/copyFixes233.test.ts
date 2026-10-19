@@ -1,4 +1,4 @@
-// The Oct 12 copy fixes the founder OK'd on Oct 19 (DECISIONS-LOG #233, #347; 09-ui-review §22.8, checks W1–W6,
+// The Oct 12 copy fixes the founder OK'd on Oct 19 (DECISIONS-LOG #233, #356; 09-ui-review §22.8, checks W1–W6,
 // written before the change). User-facing words only: keys and field names (`proportions`, `leg_shape`) stay.
 import { PARTS_DATA, PARTS_FIXES_DATA, RUBRIC_DATA } from '@kitted/core';
 import { en, t } from '@/i18n/en';

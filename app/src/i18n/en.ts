@@ -1100,7 +1100,7 @@ const addedInBuild = {
   'fail.askOffline': "You're offline, so I couldn't answer that. It doesn't count.",
   // The server's daily limit on a check the phone thought it had left (13-server.md §8, A7, #328).
   'fail.limit': "That's today's fit checks. Your photo is saved here. Try again after 4 am. This one doesn't count.",
-  // The UI audit's fix-first batch (09-ui-review §22.7, #346), Claude's words, on the founder's skim list.
+  // The UI audit's fix-first batch (09-ui-review §22.7, #355), Claude's words, on the founder's skim list.
   // A re-checked look has two photos or more: L2's ⋯ deletes them all.
   'look.deletePhotos': 'Delete photos',
   'look.delete.titleN': 'Delete these photos?',
@@ -1111,6 +1111,35 @@ const addedInBuild = {
   'cam.captureFailed': "Couldn't take the photo. Try again.",
   // Past chats: a quick tap left unanswered that day.
   'tap.pastUnanswered': "Not answered that day, so it wasn't scored.",
+  // The share card (02 D20, DECISIONS-LOG #347–348): one overlay after Strava's share stickers, transparent, solid or
+  // on his photo (founder, Oct 18). Never the occasion, a fix, the date or Kit's name.
+  'share.stat.score': 'Score',
+  'share.stat.rating': 'Rating',
+  'share.stat.before': 'Before',
+  'share.stat.after': 'After',
+  'share.stat.change': 'Change',
+  'share.v.sticker': 'Transparent',
+  'share.v.solid': 'Solid',
+  'share.tone.light': 'Light',
+  'share.tone.dark': 'Dark',
+  'share.a11y.tone': 'Color',
+  'share.v.photo': 'With photo',
+  'share.sticker.note': 'Save it, then add it to your own photo or video.',
+  'share.face.neck': 'Neck down',
+  'share.face.full': 'Full photo',
+  'share.face.note': 'Full photo shares the whole picture, background too.',
+  'share.face.noNeck': "I can't tell where this photo starts below your face, so this version shows the score on its own.",
+  'share.share': 'Share',
+  'share.saved': 'Saved to Photos.',
+  'share.saveDenied': 'Photos access is off. Turn it on in Settings.',
+  'share.openSettings': 'Open Settings',
+  'share.failed': "Couldn't make the image. Try again.",
+  'share.a11y.card': 'Share card: {score} out of 10, {word}.',
+  'share.a11y.cardWin': 'Share card: {before} to {after} out of 10, {word}.',
+  'share.a11y.transparent': 'Transparent sticker.',
+  'share.a11y.versions': 'Version',
+  'share.a11y.faces': 'Photo',
+  'share.a11y.share': 'Share the card',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

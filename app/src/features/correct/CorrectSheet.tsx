@@ -1,6 +1,6 @@
 // S8 Not quite right? (02 D9): fix a detail the app got wrong and see the score live; Save
 // makes a NEW corrected reading (the original is never edited). Four reasons; "Wrong color or fit" edits fit (tops,
-// layers), leg shape (pants) and every piece's color (09 §22.7, #346). The live score and next fix come from the fit-check
+// layers), leg shape (pants) and every piece's color (09 §22.7, #355). The live score and next fix come from the fit-check
 // service's previewCorrection, the same evaluation Save runs with the check's own engine (#276; it used core's
 // v4 score() before, so a parts check could show one number and save another).
 import { useEffect, useMemo, useState } from 'react';

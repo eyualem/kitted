@@ -1,4 +1,4 @@
-// The UI audit's fix-first batch (09-ui-review §22.7, #346): checks F1–F12, written before the code. Behaviour where it's
+// The UI audit's fix-first batch (09-ui-review §22.7, #355): checks F1–F12, written before the code. Behaviour where it's
 // pure or runs on the memory store; the wiring from source. F13 (npm run check, the Simulator) is run by hand.
 import { US_EASTERN, type Garment } from '@kitted/core';
 import seed from '../../assets/seed.json';

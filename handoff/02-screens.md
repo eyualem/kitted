@@ -1064,6 +1064,15 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **Differs from mockup:** the Save icon is `square.and.arrow.down` (the mockup's up-arrow). Watermark stays `scored by KITTED` (09 suggested adding `trykitted.com`; the mockup wins; add the URL only if the founder asks).
 
+> **Update Oct 18 (DECISIONS-LOG #347): one card in two versions, after Strava's share stickers; replaces the layout above and the first set (#346).** Demo page `mockups/share-card.html`. Code: `app/src/features/share/` (`shareModel.ts`, `ShareCard.tsx`, `ShareScreen.tsx`, `exportCard.ts`, `shareNative.ts` + `offer.ts`); tests `app/src/__tests__/shareCard.test.ts`; demo screens 20 (re-check win) and 230 (single check).
+> - **The overlay:** white stats, a small label over a 40 pt Archivo value (a single check: Score "8.0/10" · Rating "Sharp"; a re-check that went up: Before · After · Change), the tape (5 to 10 in halves; a copper dot on the score, a hollow dot on the "before"), then the KITTED wordmark (11 pt). Copper is the dot only. No occasion, fix, date, pieces, sign-off line or Kit.
+> - **Transparent:** the overlay alone, no background, a 1080 × 600 PNG (the preview shows it on a checkerboard): "Save it, then add it to your own photo or video."
+> - **Solid (#348–349):** the same overlay on a ground, the same 1080 × 600, rounded 24 pt corners (outside them the PNG stays transparent). **Dark:** white on indigo #121628. **Light:** indigo ink #121628 on chalk #F3F4F6, the dot in copper #9C5326. "Light | Dark" under Solid, starting in the phone's appearance.
+> - **With photo:** the same overlay on his photo, full bleed 1080 × 1920, a soft night shade over the bottom (clear to 45%, 35% by 65%, 65% at the bottom), the overlay's bottom 132 pt up (above Instagram's bottom 20%), a light text shadow. "Neck down | Full photo", neck down every time; neck down needs the measured head line and the image size, else the overlay shows on night with "I can't tell where this photo starts below your face, so this version shows the score on its own."
+> - **The screen:** "Transparent | Solid | With photo" (opens on With photo), the face toggle under it for the photo version, Share and Save (Photos, add-only), a status line ("Saved to Photos." / "Photos access is off. Turn it on in Settings." / "Couldn't make the image. Try again.").
+> - **Offered:** a scored full check at 7.0+, or a re-check that went up; never a partial. The card's Share button waits for a build with the native modules.
+> - **Checks SC1–SC7 (Oct 18):** SC1 offered (pass) · SC2 two versions of one overlay, the sticker with no background (pass) · SC3 what it says, copper only on the dot (pass) · SC4 the face crop, neck down by default and not stored (pass) · SC5 above Instagram's bottom 20% (pass) · SC6 Share and Save (in tests; **not yet run on iOS**) · SC7 VoiceOver, one image with the score once (tests; not heard on a device). Seen on the web preview, demo screens 20 and 230, both versions. **Not yet seen:** the PNG's transparency and the capture on iOS (needs the native build).
+
 ---
 
 ## 3. Screens not drawn yet

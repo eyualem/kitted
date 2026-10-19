@@ -363,8 +363,9 @@ describe('G22 · delete one look\'s photo', () => {
 
   it('G22.1, G22.3 the ⋯: Delete photo (destructive, with a confirm) while there\'s a photo, Remove from Lookbook then back', () => {
     const page = src('features/lookbook/LookPageScreen.tsx');
-    // Since #346 (§22.7 F4) it deletes every photo of the look: Delete photos on a re-checked one.
-    expect(page).toMatch(/headerRight: \(\) => \(\s*<LookMenu\s*hasPhoto=\{look\.photoIds\.length > 0\}\s*deleteLabel=\{deletePhotoLabel\(look\.photoIds\.length\)\}\s*onDeletePhoto=\{\(\) => confirmDeletePhoto\(look\.photoIds\)\}/);
+    // Since #355 (§22.7 F4) it deletes every photo of the look (Delete photos on a re-checked one); the share button
+    // (#352) may sit beside the ⋯ in the header.
+    expect(page).toMatch(/headerRight: \(\) => \([\s\S]*?<LookMenu\s*hasPhoto=\{look\.photoIds\.length > 0\}\s*deleteLabel=\{deletePhotoLabel\(look\.photoIds\.length\)\}\s*onDeletePhoto=\{\(\) => confirmDeletePhoto\(look\.photoIds\)\}/);
     expect(page).toMatch(/onRemove=\{\(\) => void removeLookMenu\(look\.checkId, look\.title, \(\) => \(router\.canGoBack\(\) \? router\.back\(\) : router\.replace\('\/lookbook'\)\)\)\}/);
     const menu = src('features/lookbook/LookMenu.ios.tsx');
     expect(menu).toMatch(/\{hasPhoto \? <Button label=\{deleteLabel\} systemImage="trash" role="destructive"/);

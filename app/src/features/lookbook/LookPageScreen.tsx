@@ -8,8 +8,9 @@
 //   4. Show in chat.
 // Read-only: the score is the stored one; nothing here changes the occasion, re-scores, re-checks or corrects.
 // The header's ⋯ (09-ui-review §20.8 G22): Delete photo, or Delete photos on a re-checked look (every check's photo,
-// §22.7 F4; a confirm; the photos leave the phone, the score stays) and
-// Remove from Lookbook (the long-press's flow, then back). Not built (no dead buttons): Wear this again, Save, Share.
+// §22.7 F4; a confirm; the photos leave the phone, the score stays) and Remove from Lookbook (the long-press's flow,
+// then back). Share (#352) beside it opens the share card on the look's shown check, when it can be shared on this
+// build. Not built (no dead buttons): Wear this again, Save.
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { Stack, router } from 'expo-router';
 import {
@@ -25,6 +26,7 @@ import { loadLook, showInChat, type LookPageModel } from './lookPage';
 import { GonePage } from '@/features/gone/Gone';
 import { confirmDeletePhoto, deletePhotoLabel, removeLookMenu } from './lookActions';
 import { LookMenu } from './LookMenu';
+import { shareNativeReady } from '@/features/share/shareNative';
 
 const PIECE_TILE = 76;
 const BEFORE_W = 50;
@@ -45,12 +47,26 @@ export function LookPage({ id }: { id: string }) {
         options={{
           title: look?.title ?? '',
           headerRight: () => (
-            <LookMenu
-              hasPhoto={look.photoIds.length > 0}
-              deleteLabel={deletePhotoLabel(look.photoIds.length)}
-              onDeletePhoto={() => confirmDeletePhoto(look.photoIds)}
-              onRemove={() => void removeLookMenu(look.checkId, look.title, () => (router.canGoBack() ? router.back() : router.replace('/lookbook')))}
-            />
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              {look.shareId && shareNativeReady() ? (
+                // A plain icon like the ⋯ beside it: the header's glass capsule is the button's ground.
+                <Pressable
+                  onPress={() => router.push(`/share/${look.shareId}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('card.share.a11y')}
+                  hitSlop={8}
+                  style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1, paddingHorizontal: 6 })}
+                >
+                  <Icon name="share" size="regular" color={colors.ink} />
+                </Pressable>
+              ) : null}
+              <LookMenu
+                hasPhoto={look.photoIds.length > 0}
+                deleteLabel={deletePhotoLabel(look.photoIds.length)}
+                onDeletePhoto={() => confirmDeletePhoto(look.photoIds)}
+                onRemove={() => void removeLookMenu(look.checkId, look.title, () => (router.canGoBack() ? router.back() : router.replace('/lookbook')))}
+              />
+            </View>
           ),
         }}
       />

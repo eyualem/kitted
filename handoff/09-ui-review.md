@@ -938,7 +938,7 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 
 ---
 
-## 22. The UI audit, Oct 19 (#345)
+## 22. The UI audit, Oct 19 (#354)
 
 **What this is.** Founder, Oct 19: "do an audit of the ui for me." Three read-only agents went through the code (Stylist and the fit check; Closet, Lookbook and the closet sheets; onboarding, the camera, You and the design system), each re-checking every open item of §2 and §20 and looking for new problems since the Oct 17–18 changes (Kit's bubbles, the relaid morning card, the folding score card, the optional closet step). I took 16 Simulator screenshots in light, dark and the largest text size (`screenshots/ui-audit-oct19/`, git-ignored; demo screens 1, 7, 12, 17, 96, 97, 150, 151, 161, 175, 182, 197) and checked the top findings by hand (✔). Nothing in the app changed. Paths are under `app/src/`.
 
@@ -1011,7 +1011,7 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 2. **[you], 2 min:** item 5 (the action rows under the folded rating), and the outward words (consent's "it", the permission texts, #233).
 3. **[code] after that:** "Wear this" counting, the Pieces shelves, one menu system and one grouped list, the border contrast.
 
-### 22.7 The fix-first batch, items 1–4 and 6–9 (Oct 19, #346). Checks first
+### 22.7 The fix-first batch, items 1–4 and 6–9 (Oct 19, #355). Checks first
 Written before building; the build must not edit them. Item 5 (the action rows under the folded rating) is the founder's call and isn't here; the fold itself (#344) doesn't change.
 
 - **F1 (item 1).** "Not quite right?" → Wrong color or fit: every top, layer, pants and shoe row opens to a Color group (the piece page's "What it is" colors, in its four groups, denim washes only for jeans and a denim jacket) with the read color selected. Picking one shows the live before → after and Save writes a corrected reading with `color_family` changed (a test on `colorOptions` and on the sheet's draft).
@@ -1037,7 +1037,7 @@ Written before building; the build must not edit them. Item 5 (the action rows u
 - **F19.** Opening the fold doesn't show any of the four rows a second time.
 - **F20.** The score reveal still plays (the rows come in with the summary) and opening still scrolls the thread with the card (threadGrow).
 
-### §22.7 results (Oct 19, #346): checked against F1–F13, none changed
+### §22.7 results (Oct 19, #355): checked against F1–F13, none changed
 All pass. Tests: `app/src/__tests__/uiAuditBatch.test.ts` (F1–F12); two older source checks were updated to the new wiring on purpose (stepFourBatch G22.1 now expects `photoIds` and "Delete photos"; fitLine BX4 now expects `detailGroups`), and the Undo-window list in toast.test.ts names the piece page's answer toast (5 s). `npm run check` green (1,327 tests). Seen on the iOS Simulator (iPhone 17 Pro) in light, dark and the largest text size; screenshots `screenshots/ui-fixes-oct19/` (git-ignored). New demo screens 216–222.
 - **F1–F3:** screen 216 (the tee: Fit, then Blues and denim · Neutrals · Earth tones · Colors as chips with a color dot, Cream picked) and 217 (the sneakers: colors only, no fit title). One fix found on the Simulator: at the largest size the 14 pt dot looked lost beside the text; it's 24 pt there now. At the largest size the color list is long (one chip a line) and scrolls; fine for now.
 - **F4–F5:** screen 97's ⋯ reads "Delete photos" on the re-checked look. The Simulator tool can't press a SwiftUI menu item (as in #343), so the delete itself is proven on the memory store (both photos gone, no Before photo, the score kept; an older look whose re-check photo alone was deleted offers its first photo).
@@ -1050,7 +1050,7 @@ All pass. Tests: `app/src/__tests__/uiAuditBatch.test.ts` (F1–F12); two older 
 - **F14–F20 (item 5):** screens 185 (Finish the check), 70 (the khaki chinos question with Yes / No), 201 (the Not sure line) and 150 (`Later`) show the row under the summary while folded; screen 7 (none of them) is unchanged. Opening screen 150 shows Later once, above the fixes, with Why and Not quite right? still at the foot, and the thread scrolled with the card. At the largest size Finish the check stacks under the summary. The "Not sure" line became a hook (`useDoubtLine`) so the card knows whether it shows, and no empty section is drawn. `npm run check` green (1,331 tests).
 - **Not done here:** item 10, and the 22.2–22.4 M items.
 
-### 22.8 The Oct 12 copy fixes, #233 (Oct 19, #347). Checks first
+### 22.8 The Oct 12 copy fixes, #233 (Oct 19, #356). Checks first
 The founder's OK, relayed by the audit session: "have my OK on the copy fixes from October 12". Items 4 (the paywall) and 8 ("Still reading your last photo…", #305) were already in. Six are left. User-facing words only: field names, rule ids and keys (`leg_shape`, `proportions`, `pr4_legs`) stay.
 - **W1 (item 1).** The "How I score" page explains the five parts (Shape, Fit, Color, Shoes, Style), each starting at 7, how they blend, condition and the occasion; no "credits", "elevated piece" or "point of interest". Its ✕ closes the whole sheet; a "‹ Why 7.5" link at its top goes back to the Why page.
 - **W2 (item 2).** No user-facing reason or tip line says "legs": the parts engine's lines say "pants" ("a roomy top over skinny pants", "chunky sneakers look heavy under narrow pants", …), and v4's thirds tip no longer talks about lengthening his legs. Changed in `parts_proto.py` and `fixes.json` first; every generated file regenerated (parts.json, parts_parity.json, parts_fixes.json, rubric.json, expected_scores.json, rules_conformance.json, seed.json, the core's data files); Python and `@kitted/core` exact on every parity case; no score changes.
@@ -1060,7 +1060,7 @@ The founder's OK, relayed by the audit session: "have my OK on the copy fixes fr
 - **W6 (item 7).** A photo the app couldn't frame says "I couldn't find your face to blur it, so I didn't send it. Get your head in the shot and try again." (on the card and in the camera's after-shot panel).
 - **W7.** `npm run check` green; the Why sheet and its How page, a reason line, Welcome and the frame failure seen on the Simulator in light, dark and the largest text size.
 
-### §22.8 results (Oct 19, #347): checked against W1–W7, none changed
+### §22.8 results (Oct 19, #356): checked against W1–W7, none changed
 All pass. Tests: `app/src/__tests__/copyFixes233.test.ts` (W1–W6); two older tests quoted the old words and were updated on purpose (stepFourBatch G23's "face-free copy", stylistContext's "Parts: Proportions"). `npm run check` green (781 core, 1,338 app tests).
 - **Parity:** `parts_proto.py` and `fixes.json` changed first, then `make_rubric_json.py`, `make_expected.py`, `make_parts_json.py`, `make_parts_fixes.py`, `make_parts_parity.py`, `rules_conformance.py` and `gen-rubric-data.mjs`. Pinned to the phone backup the committed fixtures used (`screenshots/phone/20261015-103853`; the newest backup, after the Oct 18 wipe, would have dropped ~1,000 real cases): parts_parity.json (25,566 cases) and parts_fixes.json (27,602) equal the old ones exactly once the changed words are swapped. No score changed; rubric.py and rubric_parity.json untouched (the v4 thirds tip's id stays, only its shown copy changed).
 - **On the Simulator** (light, dark, the largest size; screenshots `screenshots/ui-fixes-oct19/c-*`): the Why sheet's strip and rows say Shape; the How I score page (new demo screen use: screen 8 → How I score ›) shows the five-part text and "‹ Why 7.5"; Welcome says "the fix that raises it"; the new demo screen 223 shows the frame panel's new line. The Simulator tool's taps didn't land on the page's link or ✕ while the sheet was settling; on the web preview the link goes back to Why (checked by script) and the ✕ is the sheet's own close.

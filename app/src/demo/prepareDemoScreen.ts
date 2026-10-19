@@ -247,7 +247,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   202: { steps: [...DOUBT_STORY, { at: '2026-10-22T12:12:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   203: { steps: DOUBT_STORY },
   // Step 4's code-only batch (09-ui-review §20.8): offline (210), "That score is wrong" (211), a re-check that moved (215).
-  // The UI audit's fix-first batch (09-ui-review §22.7, #346).
+  // The UI audit's fix-first batch (09-ui-review §22.7, #355).
   216: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   217: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   218: { steps: [BETA_TIER] },

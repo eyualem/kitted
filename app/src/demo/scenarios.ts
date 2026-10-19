@@ -258,7 +258,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 213, name: 'Example check · as a sheet', id: 'O1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/sheets/example', under: '/stylist', consent: false },
   { n: 214, name: 'Closet · empty', id: 'C1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/closet' },
   { n: 215, name: 'Re-check · Why and Not quite right?', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: '/stylist' },
-  // The UI audit's fix-first batch (09-ui-review §22.7, #346): a color in Not quite right?, the shoes' row (colors only),
+  // The UI audit's fix-first batch (09-ui-review §22.7, #355): a color in Not quite right?, the shoes' row (colors only),
   // the beta's plan words in Plan & usage and Privacy, a piece still waiting on "Is this your …?", a capture that failed
   // (tap the shutter), and Past chats with an unanswered quick tap and a failed check. The re-check's "I did make the
   // change" is screen 10; Delete photos is on screen 97's ⋯; Kit's ask-card bubble is screen 169.
@@ -269,8 +269,10 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 220, name: 'Closet · a piece waiting on Is this your …?', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet/item/{ask}', under: '/closet' },
   { n: 221, name: 'Camera · the shot failed (tap the shutter)', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?captureFail=1', under: '/stylist' },
   { n: 222, name: 'Past chats · an unanswered tap and a failed check', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
-  // The Oct 12 copy fixes (#233, #347): the camera's panel when no face could be found to blur.
+  // The Oct 12 copy fixes (#233, #356): the camera's panel when no face could be found to blur.
   { n: 223, name: 'Camera · no face to blur, nothing sent', id: 'S3', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?review=cantFrame', under: '/stylist' },
+  // The share card on a single check (#347): Score · Rating; screen 20 is the re-check win (Before · After · Change).
+  { n: 230, name: 'Share card · single check', id: 'S12', scenario: 'full', onboarded: true, now: '2026-10-22T07:51:00', href: '/share/FC3', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
