@@ -16,20 +16,22 @@ import { keepsRow, STARTER } from '@/features/finish/starter';
 import { t, type StringKey } from '@/i18n/en';
 import { doubtLine, type FitDoubt } from './fitDoubt';
 import { hexOfArt, profileOfItem } from './profile';
+import { LONG_SLEEVE_TEE, sleeveRead, TEE_KINDS, type Sleeves } from './sleeves';
 
 export type EditField = 'kind' | 'color' | 'leg' | 'fit' | 'pattern';
 export type EditValue = string | number;
 export type EditSlot = 'top' | 'outer' | 'bottom' | 'shoes';
 
-/** The first group per slot (8 or fewer, every one drawn differently), then the rest (§17.2). */
+/** The first group per slot (8 or fewer, every one drawn differently), then the rest (§17.2). "Long-sleeve tee" is a
+ *  tee with his long sleeves (§24): written as `tee`, never as its own kind. */
 export const KIND_MAIN: Readonly<Record<EditSlot, readonly string[]>> = {
-  top: ['tee', 'graphic_tee', 'polo', 'oxford_shirt', 'flannel_shirt', 'sweater', 'sweatshirt', 'hoodie'],
+  top: ['tee', LONG_SLEEVE_TEE, 'graphic_tee', 'polo', 'oxford_shirt', 'sweater', 'sweatshirt', 'hoodie'],
   outer: ['overshirt', 'denim_jacket', 'bomber', 'field_jacket', 'blazer', 'puffer', 'overcoat', 'hoodie'],
   bottom: ['jeans', 'chinos', 'trousers', 'cargos', 'sweatpants', 'shorts'],
   shoes: ['white_leather_sneaker', 'canvas_sneaker', 'retro_runner', 'chunky_sneaker', 'work_boot', 'chelsea_boot', 'loafer', 'slides_sandals'],
 };
 export const KIND_MORE: Readonly<Record<EditSlot, readonly string[]>> = {
-  top: ['tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan', 'rugby_shirt', 'jersey', 'fleece', 'overshirt', 'denim_jacket', 'chore_coat'],
+  top: ['flannel_shirt', 'tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan', 'rugby_shirt', 'jersey', 'fleece', 'overshirt', 'denim_jacket', 'chore_coat'],
   outer: ['chore_coat', 'sweatshirt', 'quarter_zip', 'cardigan', 'flannel_shirt', 'fleece', 'leather_jacket', 'rain_jacket', 'shell_jacket', 'sport_coat', 'suit_jacket', 'camp_collar_shirt'],
   bottom: ['joggers', 'athletic_shorts', 'drawstring_trousers', 'suit_trousers'],
   shoes: ['low_profile_sneaker', 'basketball_sneaker', 'performance_runner', 'suede_chukka', 'derby', 'dress_shoe'],
@@ -76,8 +78,10 @@ const uniq = <T,>(xs: readonly T[]): T[] => [...new Set(xs)];
 const slotOf = (item: Pick<ClosetItemRow, 'slot'>): EditSlot | null =>
   (['top', 'outer', 'bottom', 'shoes'] as const).find((s) => s === item.slot) ?? null;
 
-/** "Jeans", "Leather sneakers", "Chelsea boots". */
-export const kindWord = (sub: string): string => cap(garmentName({ subcategory: sub }));
+/** "jeans", "leather sneakers", "long-sleeve tee". */
+const kindNoun = (sub: string): string => (sub === LONG_SLEEVE_TEE ? `long-sleeve ${garmentName({ subcategory: 'tee' })}` : garmentName({ subcategory: sub }));
+/** "Jeans", "Leather sneakers", "Chelsea boots", "Long-sleeve tee". */
+export const kindWord = (sub: string): string => cap(kindNoun(sub));
 /** "Dark-wash denim", "Cream", "Khaki". */
 export const colorLabel = (family: string): string => cap(FAMILY_WORD[family] ?? family.split('_').join(' '));
 const volumeOf = (g: Garment): number => {
@@ -106,10 +110,13 @@ export interface EditOptions {
   groups?: { title: string; options: EditOption[] }[];
 }
 
-/** The piece's value for a row (what the picker marks as current). */
-export function currentValue(item: Pick<ClosetItemRow, 'garment'>, field: EditField): EditValue | null {
+type Editable = Pick<ClosetItemRow, 'garment'> & { art?: ClosetArt | null };
+
+/** The piece's value for a row (what the picker marks as current). A tee with long sleeves is a long-sleeve tee (§24). */
+export function currentValue(item: Editable, field: EditField): EditValue | null {
   if (field === 'fit') return volumeOf(item.garment);
   const v = str(item.garment[GARMENT_FIELD[field]]);
+  if (field === 'kind' && v === 'tee' && item.art?.sleeves === 'long') return LONG_SLEEVE_TEE;
   if (field === 'pattern') return v && v !== 'na' ? v : 'solid';
   if (field === 'leg') return v && LEGS.includes(v) ? v : null;
   return v && v !== 'other' ? v : null;
@@ -126,7 +133,7 @@ function valueWord(field: EditField, v: EditValue | null): string {
 
 /** The rows a piece shows: Kind, Color, then Fit + Pattern (tops, layers) or Leg (bottoms but shorts). A Fit or Leg
  *  its photos disagree on (fitDoubt, §18) reads "Not sure" with the line that says what it was seen as. */
-export function editRows(item: Pick<ClosetItemRow, 'slot' | 'garment'>, doubt: FitDoubt | null = null): EditRow[] {
+export function editRows(item: Pick<ClosetItemRow, 'slot'> & Editable, doubt: FitDoubt | null = null): EditRow[] {
   const slot = slotOf(item);
   if (!slot) return [];
   const fields: EditField[] = ['kind', 'color'];
@@ -144,7 +151,7 @@ const lookAlikesOf = (sub: string, category: string): string[] => [
 
 /** What a row's sheet offers. `unsure` (a "Not sure" row, §18): no option is marked current, since the app doesn't
  *  know which it is, and any pick, the one it read most included, settles it. */
-export function editOptions(item: Pick<ClosetItemRow, 'slot' | 'garment'>, field: EditField, o: { unsure?: boolean } = {}): EditOptions {
+export function editOptions(item: Pick<ClosetItemRow, 'slot'> & Editable, field: EditField, o: { unsure?: boolean } = {}): EditOptions {
   const cur = o.unsure ? null : currentValue(item, field);
   const opt = (v: EditValue): EditOption => ({ value: v, label: valueWord(field, v), current: v === cur });
   if (field === 'kind') {
@@ -180,7 +187,7 @@ export function optionA11y(field: EditField, o: EditOption): { label: string; se
 
 /** The words a pick changed a piece to: "relaxed leg", "oversized fit", "hoodie", "navy", "stripes". */
 function pickedPhrase(field: EditField, value: EditValue): string {
-  if (field === 'kind') return garmentName({ subcategory: String(value) });
+  if (field === 'kind') return kindNoun(String(value));
   if (field === 'color') return FAMILY_WORD[String(value)] ?? String(value);
   const o = optionA11y(field, { value, label: valueWord(field, value), current: false }).label;
   return o.charAt(0).toLowerCase() + o.slice(1);
@@ -201,7 +208,7 @@ export function denimRemap(item: Pick<ClosetItemRow, 'garment'>, field: EditFiel
 }
 
 /** Can `value` be picked for this row of this piece? */
-export function isOffered(item: Pick<ClosetItemRow, 'slot' | 'garment'>, field: EditField, value: EditValue): boolean {
+export function isOffered(item: Pick<ClosetItemRow, 'slot'> & Editable, field: EditField, value: EditValue): boolean {
   if (!editRows(item).some((r) => r.field === field)) return false;
   const o = editOptions(item, field);
   return [...o.main, ...o.more].some((x) => x.value === value);
@@ -231,7 +238,13 @@ export interface EditPlan {
  * didn't set made the app's (so it follows a kind, color or pattern), and a marked Starter piece that no longer fills
  * its row unmarked. Pure.
  */
-export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue, sightings: readonly Observation[]): EditPlan {
+export function editPlan(item: ClosetItemRow, field: EditField, picked: EditValue, sightings: readonly Observation[]): EditPlan {
+  // "Long-sleeve tee" is written as a tee with his long sleeves (§24); "Tee" or "Graphic tee" on one makes them short.
+  const longTee = field === 'kind' && picked === LONG_SLEEVE_TEE;
+  const value: EditValue = longTee ? 'tee' : picked;
+  const sleeves: Sleeves | null = longTee ? 'long'
+    : field === 'kind' && TEE_KINDS.includes(String(value)) && (item.art?.sleeves === 'long' || profileOfItem(item).confirmed.sleeve_length === 'long') ? 'short'
+      : null;
   const remapped = denimRemap(item, field, value);
   const g: Garment = { ...item.garment, [GARMENT_FIELD[field]]: value, ...(remapped ? { color_family: remapped } : {}) };
   const p0: ClosetProfile = profileOfItem(item);
@@ -263,6 +276,12 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
       else delete confirmed.shoeKind;
     }
   }
+  if (sleeves) {
+    confirmed.sleeve_length = sleeves;
+    // the sleeve reads his photos gave, so the next photo that reads them the other way still finds it (#115)
+    const all = uniq([...(fieldAliases?.sleeve_length ?? []), ...sightings.map(sleeveRead).filter((x): x is Sleeves => !!x), sleeves]).sort();
+    if (all.length > 1) fieldAliases = { ...(fieldAliases ?? {}), sleeve_length: all };
+  }
   if (field === 'leg') {
     const reads = sightings.map((o) => str(o.leg_shape)).map((l) => (l === 'flare_bootcut' ? 'straight' : l === 'barrel' ? 'wide' : l))
       .filter((l): l is string => !!l && LEGS.includes(l));
@@ -284,6 +303,11 @@ export function withEdit<T extends ClosetItemRow>(item: T, field: EditField, val
   const { patch, remapped } = editPlan(item, field, value, []);
   const family = field === 'color' ? String(value) : remapped;
   let art = item.art ?? null;
+  const sleeves = patch.profile?.confirmed.sleeve_length;
+  if (sleeves && sleeves !== art?.sleeves) {
+    const base: ClosetArt = art ?? { family: str(item.garment.color_family), shade: null, details: [], brand: null, shoeProfile: null, denimWear: null };
+    art = { ...base, sleeves };
+  }
   if (family) art = artWithColor(art, family);
   if (field === 'pattern' && art) art = { ...art, pattern: String(value) };
   const hex = family ? (art ? hexOfArt(art, displayHex(family)) : displayHex(family)) : item.hex;

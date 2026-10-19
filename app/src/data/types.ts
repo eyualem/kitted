@@ -401,6 +401,9 @@ export interface ClosetArt {
   pattern?: string | null;
   shoeProfile: 'sleek' | 'regular' | 'chunky' | null;
   denimWear: 'none' | 'faded' | 'ripped' | null;
+  /** How long its sleeves are (09-ui-review §24, #359): the closet call's read under the drift guard (his pick wins),
+   *  else the scoring read's sleeve end. Missing when nothing said. Draws and names a long-sleeve tee; never a score. */
+  sleeves?: 'short' | 'long' | 'sleeveless';
   /** His measured color (the median of the sightings' sampled colors that read as this family or a neighbor), as
    *  measured: hexOfArt keeps it inside the family for the tile. Only on pieces the phone measured (09-ui-review §7 C1). */
   measured?: string;

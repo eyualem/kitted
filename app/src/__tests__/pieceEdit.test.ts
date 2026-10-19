@@ -114,8 +114,8 @@ describe('X1 the lists', () => {
     const env = await setup({ only: 'all' });
     const want: Record<string, string> = { top: 'T2', outer: 'L1', bottom: 'B1', shoes: 'S1' };
     const slotOf: Record<string, string[]> = { top: [...KIND_MAIN.top, ...KIND_MORE.top], outer: [...KIND_MAIN.outer, ...KIND_MORE.outer], bottom: [...KIND_MAIN.bottom, ...KIND_MORE.bottom], shoes: [...KIND_MAIN.shoes, ...KIND_MORE.shoes] };
-    expect([...KIND_MAIN.top]).toEqual(['tee', 'graphic_tee', 'polo', 'oxford_shirt', 'flannel_shirt', 'sweater', 'sweatshirt', 'hoodie']);
-    expect([...KIND_MORE.top]).toEqual(['tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan', 'rugby_shirt', 'jersey', 'fleece', 'overshirt', 'denim_jacket', 'chore_coat']);
+    expect([...KIND_MAIN.top]).toEqual(['tee', 'long_sleeve_tee', 'graphic_tee', 'polo', 'oxford_shirt', 'sweater', 'sweatshirt', 'hoodie']);
+    expect([...KIND_MORE.top]).toEqual(['flannel_shirt', 'tank_top', 'dress_shirt', 'camp_collar_shirt', 'knit_polo', 'quarter_zip', 'cardigan', 'rugby_shirt', 'jersey', 'fleece', 'overshirt', 'denim_jacket', 'chore_coat']);
     expect([...KIND_MAIN.outer]).toEqual(['overshirt', 'denim_jacket', 'bomber', 'field_jacket', 'blazer', 'puffer', 'overcoat', 'hoodie']);
     expect([...KIND_MORE.outer]).toEqual(['chore_coat', 'sweatshirt', 'quarter_zip', 'cardigan', 'flannel_shirt', 'fleece', 'leather_jacket', 'rain_jacket', 'shell_jacket', 'sport_coat', 'suit_jacket', 'camp_collar_shirt']);
     expect([...KIND_MAIN.bottom]).toEqual(['jeans', 'chinos', 'trousers', 'cargos', 'sweatpants', 'shorts']);
