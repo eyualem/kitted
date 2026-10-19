@@ -7,7 +7,7 @@ import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
 import { openManageSubscription } from '@/features/settings/actions';
-import { planStatus, restorePurchases, restoreToast, usageLines } from '@/features/settings/plan';
+import { isBeta, planStatus, restorePurchases, restoreToast, usageLines } from '@/features/settings/plan';
 import { LinkRow, Section, SettingsScroll, ValueRow } from '@/features/settings/SettingsList';
 import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
@@ -26,7 +26,8 @@ export default function PlanUsageScreen() {
   }, []);
   if (!today) return null;
 
-  const status = planStatus(plan, sessionClock.offset);
+  // No purchase but the server's Pro limits: "Beta", matching the rows under it (09 §22.7 F6).
+  const status = planStatus(plan, sessionClock.offset, plan.kind === 'free' && isBeta(today.snap));
   const lines = usageLines(today.snap, today.rechecks);
   const restore = async () => showToast(restoreToast(await restorePurchases(isProNow)));
 

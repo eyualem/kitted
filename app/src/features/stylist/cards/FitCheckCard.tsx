@@ -119,12 +119,13 @@ export function FitCheckCard({ checkId, readOnly = false }: { checkId: string; r
     return null; // a read that never finished (app closed mid-read): nothing to show yet
   }
   // Read, waiting for the one quick tap (02 "S5q"). From the row, so it survives the app closing.
-  if (row.status === 'asking' && row.details.tap) return <TapCard row={row} />;
-  if (row.status === 'failed') return <FailureCard row={row} />;
+  // Past chats (09 §22.7 F11): yesterday's quick tap, Try again and Retake do nothing there, so they don't show.
+  if (row.status === 'asking' && row.details.tap) return <TapCard row={row} readOnly={readOnly} />;
+  if (row.status === 'failed') return <FailureCard row={row} readOnly={readOnly} />;
   if (row.status === 'notClothed' || row.status === 'unreadable') {
     // Not a dead end: the camera is one tap away (for VoiceOver too, as the card's action).
     const retake = () => router.push({ pathname: '/camera', params: { occasion: row.occasion } });
-    return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} action={{ title: t('recheck.samePhoto.button'), onPress: retake }} />;
+    return <StatusCard text={t(row.status === 'notClothed' ? 'notClothed.text' : 'unreadable.text')} action={readOnly ? undefined : { title: t('recheck.samePhoto.button'), onPress: retake }} />;
   }
   const card = <ScoredCard row={row} wxTip={wxTip} asked={asked} readOnly={readOnly} />;
   if (!rechecked) return card;
@@ -238,7 +239,7 @@ export function StatusCard({ text, action }: { text: string; action?: { title: s
   );
 }
 
-function FailureCard({ row }: { row: FitCheckRow }) {
+function FailureCard({ row, readOnly }: { row: FitCheckRow; readOnly: boolean }) {
   const code = row.details.failCode ?? 'ai';
   const key = code === 'timeout' ? 'fail.timeout' : code === 'offline' ? 'fail.offline' : code === 'paused' ? 'fail.paused' : code === 'limit' ? 'fail.limit' : code === 'unknownPhoto' ? 'demo.unknownPhoto'
     : code === 'replaced' ? 'fail.replaced' : 'fail.ai';
@@ -246,7 +247,7 @@ function FailureCard({ row }: { row: FitCheckRow }) {
     <KCard accessibilityLabel={t(key)}>
       <KCardSection gap={6}>
         <KText role="cardSummary">{t(key)}</KText>
-        {code !== 'unknownPhoto' && code !== 'replaced' ? <KButton title={t('common.tryAgain')} size="regular" kind="secondary" onPress={() => void retryCheck(row.id)} /> : null}
+        {!readOnly && code !== 'unknownPhoto' && code !== 'replaced' ? <KButton title={t('common.tryAgain')} size="regular" kind="secondary" onPress={() => void retryCheck(row.id)} /> : null}
       </KCardSection>
     </KCard>
   );

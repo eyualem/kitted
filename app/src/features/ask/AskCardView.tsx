@@ -4,7 +4,7 @@
 import { dayKey, localParts } from '@kitted/core';
 import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
-import { Chip, ChipFlow, KButton, KCard, KCardSection, KText, TagLine, TextLink, space, useTheme } from '@/design-system';
+import { Chip, ChipFlow, KButton, KCard, KCardSection, KText, StylistMessage, TagLine, TextLink, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage, OutfitRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -125,7 +125,8 @@ function AskQuestion({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskC
   const tapped = typeof m.payload.askTapped === 'string' ? m.payload.askTapped : null;
   return (
     <View style={{ gap: 6 }}>
-      <KText role="chatText">{card.question}</KText>
+      {/* Kit's question is his line: in his bubble, like the answer above it (09 §22.7 F12). */}
+      <StylistMessage>{card.question}</StylistMessage>
       <ChipFlow>
         {cardControls(card, { readOnly, tapped }).answers.map((a) => (
           <Chip
@@ -176,7 +177,7 @@ function LinkRow({ card }: { card: Extract<AskCard, { type: 'link' }> }) {
     return { kind: 'check' as const, label: c.dayKey === today ? t('ask.card.link.today') : t('ask.card.link.day', { day }) };
   }, ['itemId' in card ? card.itemId : card.checkId]);
   if (!data) return null;
-  if (!data.label) return <KText variant="subheadline" color="ink2">{t('ask.card.gone')}</KText>;
+  if (!data.label) return <StylistMessage>{t('ask.card.gone')}</StylistMessage>;
   const pieceId = data.kind === 'piece' ? data.id : null;
   const open = () => (pieceId ? openPiece({ id: pieceId }) : 'checkId' in card ? openLookPage(card.checkId) : undefined);
   // VoiceOver reads the words, not the "›" (07 §17).

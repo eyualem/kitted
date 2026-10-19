@@ -7,7 +7,7 @@ import { deleteHeldPhoto } from '@/features/held/files';
 import { deleteClosetFiles } from '@/features/privacy/files';
 import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
-import { deleteCheckPhoto } from './deletePhoto';
+import { deleteLookPhotos } from './deletePhoto';
 
 /**
  * "Remove from Lookbook", and when the look added pieces no other check has seen (a fitting-room try-on), "Remove look
@@ -35,15 +35,19 @@ export async function removeLookMenu(checkId: string, title: string, after?: () 
   );
 }
 
-/** "Delete this photo?" / "The score stays in your Lookbook." (02 L2), then the photo leaves the phone. */
-export function confirmDeletePhoto(checkId: string): void {
-  Alert.alert(t('look.delete.title'), t('look.delete.msg'), [
+/** "Delete photo" on a look with one photo, "Delete photos" on a re-checked one (every check's photo, §22.7 F4). */
+export const deletePhotoLabel = (n: number): string => t(n > 1 ? 'look.deletePhotos' : 'look.deletePhoto');
+
+/** "Delete this photo?" (or "Delete these photos?") / "The score stays in your Lookbook." (02 L2), then the look's
+ *  photos leave the phone. */
+export function confirmDeletePhoto(checkIds: readonly string[]): void {
+  Alert.alert(t(checkIds.length > 1 ? 'look.delete.titleN' : 'look.delete.title'), t('look.delete.msg'), [
     { text: t('common.cancel'), style: 'cancel' },
     {
-      text: t('look.deletePhoto'),
+      text: deletePhotoLabel(checkIds.length),
       style: 'destructive',
       onPress: () => {
-        void deleteCheckPhoto({ store, deleteKept: deleteHeldPhoto, deleteClosetFiles }, checkId).catch((e: unknown) => console.error('[look] delete photo failed', e));
+        void deleteLookPhotos({ store, deleteKept: deleteHeldPhoto, deleteClosetFiles }, checkIds).catch((e: unknown) => console.error('[look] delete photo failed', e));
       },
     },
   ]);

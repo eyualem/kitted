@@ -10,8 +10,9 @@ import { KText, space, type AppAppearance } from '@/design-system';
 import { PRIVACY_URL, SUPPORT_EMAIL, TERMS_URL } from '@/config/links';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
+import { quota } from '@/features/fitcheck/session';
 import { mailtoUrl, openLink, openManageSubscription } from '@/features/settings/actions';
-import { appVersion, planShortName, restorePurchases, restoreToast, versionLine } from '@/features/settings/plan';
+import { appVersion, isBeta, planShortName, restorePurchases, restoreToast, versionLine } from '@/features/settings/plan';
 import { APPEARANCES, appearanceLabel, loadAppearance, saveAppearance, saveUnits, UNITS, unitsLabel, type Units } from '@/features/settings/prefs';
 import { LinkRow, PickerRow, Section, SettingsScroll } from '@/features/settings/SettingsList';
 import { isProNow, usePlan } from '@/features/settings/usePlan';
@@ -26,6 +27,8 @@ const UNIT_OPTIONS = UNITS.map((u) => ({ value: u, label: unitsLabel(u) }));
 
 export default function SettingsScreen() {
   const plan = usePlan();
+  // The server's beta limits without a purchase read "Beta" (09 §22.7 F6).
+  const snap = useLive(['usage', 'kv'], () => quota.snapshot(), []);
   const paywall = usePaywallOn();
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
   const [appearance, setAppearance] = useState<AppAppearance>('system');
@@ -51,7 +54,7 @@ export default function SettingsScreen() {
       <AccountSection />
       <Section>
         {NOTIFICATIONS_BUILT ? <LinkRow title={t('settings.notifications')} onPress={() => router.push('/you/notifications')} /> : null}
-        <LinkRow title={t('settings.plan')} value={planShortName(plan)} onPress={() => router.push('/you/plan')} />
+        <LinkRow title={t('settings.plan')} value={planShortName(plan, plan.kind === 'free' && isBeta(snap))} onPress={() => router.push('/you/plan')} />
         <LinkRow title={t('settings.privacy')} onPress={() => router.push('/you/privacy')} />
       </Section>
 

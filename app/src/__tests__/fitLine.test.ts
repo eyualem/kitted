@@ -190,7 +190,10 @@ describe('BX4 the sheet offers only those values', () => {
     expect(limitTo(opts, null).map((o) => o.value)).toEqual(['skinny', 'slim', 'straight', 'relaxed', 'wide']);
     const tee: Garment = { category: 'top', subcategory: 'tee', volume: 3 };
     expect(limitTo(fitField(tee)!.options, ['2', '4']).map((o) => o.value)).toEqual([2, 4]);
-    expect(src('features', 'correct', 'CorrectSheet.tsx')).toMatch(/String\(i\) === p\.garment \? limitTo\(all, only\)/);
+    // Since #346 (09 §22.7 F3) the row's groups come from detailGroups, which limits the Fit or Leg group.
+    const sheet = src('features', 'correct', 'CorrectSheet.tsx');
+    expect(sheet).toMatch(/detailGroups\(g, String\(i\) === p\.garment \? only : null\)/);
+    expect(sheet).toMatch(/options: limitTo\(fit\.options, only\)/);
   });
 });
 

@@ -258,6 +258,17 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 213, name: 'Example check · as a sheet', id: 'O1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/sheets/example', under: '/stylist', consent: false },
   { n: 214, name: 'Closet · empty', id: 'C1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/closet' },
   { n: 215, name: 'Re-check · Why and Not quite right?', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: '/stylist' },
+  // The UI audit's fix-first batch (09-ui-review §22.7, #346): a color in Not quite right?, the shoes' row (colors only),
+  // the beta's plan words in Plan & usage and Privacy, a piece still waiting on "Is this your …?", a capture that failed
+  // (tap the shutter), and Past chats with an unanswered quick tap and a failed check. The re-check's "I did make the
+  // change" is screen 10; Delete photos is on screen 97's ⋯; Kit's ask-card bubble is screen 169.
+  { n: 216, name: 'Not quite right? · a color', id: 'S8', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: `/sheets/correct/${STORY_FIRST_CHECK}?reason=detail&garment=0&field=color_family&value=off_white_cream`, under: '/stylist' },
+  { n: 217, name: 'Not quite right? · shoes, colors only', id: 'S8', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: `/sheets/correct/${STORY_FIRST_CHECK}?reason=detail&garment=2`, under: '/stylist' },
+  { n: 218, name: 'Plan & usage · beta', id: 'Y5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 1, href: '/you/plan', under: '/you' },
+  { n: 219, name: 'Privacy & data · beta, no Pro warning', id: 'Y7', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you' },
+  { n: 220, name: 'Closet · a piece waiting on Is this your …?', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet/item/{ask}', under: '/closet' },
+  { n: 221, name: 'Camera · the shot failed (tap the shutter)', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?captureFail=1', under: '/stylist' },
+  { n: 222, name: 'Past chats · an unanswered tap and a failed check', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

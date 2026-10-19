@@ -87,6 +87,7 @@ describe('U3 · which Undo gets which window', () => {
   const EXPECTED: Record<string, boolean> = {
     'lookbook/ · lookbook.removed': true, // Remove from Lookbook (the tab or features/lookbook)
     'app/(tabs)/closet/index.tsx · toast: (text, undo)': false, // a "Same as your …?" answer (#323)
+    'features/closet/PiecePage.tsx · toast: (text, undo)': false, // the same answer on a waiting piece's page (#346)
     'features/morning/MorningCard.tsx · toast.logged': false,
     'features/stylist/cards/OutfitIdeaCard.tsx · toast.logged': false,
     'features/ask/AskCardView.tsx · toast.logged': false,

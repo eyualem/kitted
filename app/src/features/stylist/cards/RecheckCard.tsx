@@ -100,7 +100,11 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
       ];
   const go = {
     fold: () => setOpened(!opened),
-    iDid: () => void fitCheck.confirmFixes(row.id),
+    // He just opened it by acting on it: it stays open once it's no longer "not seen" (09 §22.7 F8).
+    iDid: () => {
+      setOpened(true);
+      void fitCheck.confirmFixes(row.id);
+    },
     tryAnother,
     share: () => router.push(`/share/${row.id}`),
     why: () => router.push(`/sheets/why/${row.id}`),

@@ -59,7 +59,7 @@ interface Review {
 
 export function CameraScreen() {
   const { isAccessibilitySize } = useTheme();
-  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string; guide?: string; review?: string; camMode?: string; part?: string }>();
+  const p = useLocalSearchParams<{ mode?: string; parent?: string; freeze?: string; occasion?: string; style?: string; guide?: string; review?: string; camMode?: string; part?: string; captureFail?: string }>();
   // From the morning/evening card: the card's occasion and style (#61).
   const lens = lensFromParams(p);
   const checkMode: CheckMode = p.mode === 'recheck' || p.mode === 'shoeSnap' ? p.mode : 'check';
@@ -94,6 +94,13 @@ export function CameraScreen() {
   const [whiteout, setWhiteout] = useState(false);
   const [review, setReview] = useState<Review | null>(null);
   const [checking, setChecking] = useState(false);
+  // A capture that failed (09 §22.7 F9): the pill says so until the next tip change or 4 s.
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    if (!failed) return;
+    const h = setTimeout(() => setFailed(false), 4000);
+    return () => clearTimeout(h);
+  }, [failed]);
   // Where the bottom controls start (measured), so the body guide ends above them.
   const [controlsTop, setControlsTop] = useState<number | null>(null);
   const cam = useRef<CameraHandle>(null);
@@ -158,6 +165,12 @@ export function CameraScreen() {
     // The shot is taken: a tip or count still being spoken is stale (#276).
     void Speech.stop();
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (!KittedCameraView && p.captureFail === '1' && !failedOnce.current) {
+      // DEMO (Simulator): the first shot fails, as a native capture that gave no photo would.
+      failedOnce.current = true;
+      captureFailed();
+      return;
+    }
     if (!KittedCameraView) {
       // Simulator: the bundled photo. A demo screen can ask for the panel (?review=).
       const forced = simIssue(p.review);
@@ -183,9 +196,22 @@ export function CameraScreen() {
       await reviewPhoto({ photoUri: shot.uri }, 'camera');
     } catch {
       setWhiteout(false);
-      busy.current = false;
+      captureFailed();
     }
   };
+  /** No photo came back: the 3-2-1 starts over (it stopped at "done", so Propped never counted again and Mirror's
+   *  timer shot at once), and he's told (09 §22.7 F9). */
+  function captureFailed() {
+    busy.current = false;
+    auto.current?.reset();
+    setFailed(true);
+    const text = t('cam.captureFailed');
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    AccessibilityInfo.announceForAccessibility?.(text);
+    // He's 2–3 m away in Propped and can't read the pill.
+    if (live.current.mode === 'propped') Speech.speak(text, { rate: 1.0 });
+  }
+  const failedOnce = useRef(false);
   const captureRef = useRef(capture);
   useEffect(() => {
     captureRef.current = capture;
@@ -231,6 +257,7 @@ export function CameraScreen() {
     setOfferFlash(r.offerFlash);
     if (shown !== prev) {
       setTip(shown);
+      setFailed(false);
       const text = fitTipCopy(shown).text;
       AccessibilityInfo.announceForAccessibility?.(text);
       // He's 2–3 m away in Propped and can't read the pill (02 D5: "spoken once per change, throttled").
@@ -319,7 +346,7 @@ export function CameraScreen() {
   };
 
   // --- render ----------------------------------------------------------------------------
-  const tipView = review ? { icon: null, text: t('cam.checking') } : snap ? { icon: null, text: t(bottomSnap ? 'cam.bottom.tip' : 'cam.shoe.tip') } : fitTipCopy(tip);
+  const tipView = review ? { icon: null, text: t('cam.checking') } : failed ? { icon: null, text: t('cam.captureFailed') } : snap ? { icon: null, text: t(bottomSnap ? 'cam.bottom.tip' : 'cam.shoe.tip') } : fitTipCopy(tip);
   const reviewUri = review && 'photoUri' in review.photo ? review.photo.photoUri : null;
   const panel = review?.issue ? reviewPanel(review.issue) : null;
   // The S3 panel says what's wrong; the "Checking the photo…" pill goes while it shows.

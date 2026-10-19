@@ -20,12 +20,14 @@ export interface ChipProps {
   state?: ChipState;
   small?: boolean;
   icon?: SymKey | SymbolName;
+  /** A color dot before the title (a color choice), ringed so white on chalk and black on night still show. */
+  swatch?: string;
   disabled?: boolean;
   onPress?: () => void;
   accessibilityHint?: string;
 }
 
-export function Chip({ title, state = 'normal', small, icon, disabled, onPress, accessibilityHint }: ChipProps) {
+export function Chip({ title, state = 'normal', small, icon, swatch, disabled, onPress, accessibilityHint }: ChipProps) {
   const { colors, isAccessibilitySize } = useTheme();
   const h = small ? size.chipSmall : size.chip;
   const fg = state === 'selected' ? colors.surface : state === 'accent' ? colors.accent : colors.ink;
@@ -63,6 +65,7 @@ export function Chip({ title, state = 'normal', small, icon, disabled, onPress, 
         }}
       >
         {icon ? <Icon name={icon} size="small" color={fg} scalesWithText /> : null}
+        {swatch ? <View style={{ width: isAccessibilitySize ? 24 : 14, height: isAccessibilitySize ? 24 : 14, borderRadius: isAccessibilitySize ? 12 : 7, backgroundColor: swatch, borderWidth: 1, borderColor: state === 'selected' ? colors.surface : colors.line }} /> : null}
         <KText role="chip" variant={small ? 'subheadline' : undefined} weight={small ? '400' : undefined} color={fg} numberOfLines={isAccessibilitySize ? 0 : 1} style={{ flexShrink: 1 }}>
           {title}
         </KText>

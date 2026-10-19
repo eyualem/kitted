@@ -28,11 +28,14 @@ export function currentPlan(isPro: boolean, nowMs: number, demoPlan?: string | n
 export const hasPro = (p: PlanInfo): boolean => p.kind !== 'free';
 
 /** The status card: "Free plan" / "Kitted Pro · Yearly" / "Pro trial", and its detail line. Free says what a day
- *  holds (the Today list under it already says "Resets at 4 am."). */
-export function planStatus(p: PlanInfo, zone: ZoneOffset): { title: string; detail: string } {
+ *  holds (the Today list under it already says "Resets at 4 am."). `beta`: no purchase, but the server gives every
+ *  tester Pro's limits (13-server.md): "Beta", with those limits, never billing words (09 §22.7 F6). */
+export function planStatus(p: PlanInfo, zone: ZoneOffset, beta = false): { title: string; detail: string } {
   switch (p.kind) {
     case 'free':
-      return { title: t('you.plan.free'), detail: t('usage.freeLine', { questions: LIMITS.freeQuestions }) };
+      return beta
+        ? { title: t('you.plan.beta'), detail: t('usage.betaLine', { checks: LIMITS.proChecks, questions: LIMITS.proQuestions }) }
+        : { title: t('you.plan.free'), detail: t('usage.freeLine', { questions: LIMITS.freeQuestions }) };
     case 'trial':
       return { title: t('you.plan.trial'), detail: t('usage.trialEnds', { date: longDate(p.endsAtMs, zone) }) };
     case 'pro': {
@@ -43,8 +46,12 @@ export function planStatus(p: PlanInfo, zone: ZoneOffset): { title: string; deta
   }
 }
 
-/** Settings' Plan & usage row value: "Free plan" / "Kitted Pro" / "Pro trial". */
-export const planShortName = (p: PlanInfo): string => t(p.kind === 'free' ? 'you.plan.free' : p.kind === 'trial' ? 'you.plan.trial' : 'you.plan.pro');
+/** Settings' Plan & usage row value: "Free plan" / "Beta" / "Kitted Pro" / "Pro trial". */
+export const planShortName = (p: PlanInfo, beta = false): string =>
+  t(p.kind === 'free' ? (beta ? 'you.plan.beta' : 'you.plan.free') : p.kind === 'trial' ? 'you.plan.trial' : 'you.plan.pro');
+
+/** The beta's Pro limits without a purchase: the server's tier, not a subscription (09 §22.7 F6). */
+export const isBeta = (s: { pro: boolean; purchased: boolean } | null | undefined): boolean => !!s && s.pro && !s.purchased;
 
 export interface UsageLine {
   key: 'checks' | 'recheck' | 'questions';

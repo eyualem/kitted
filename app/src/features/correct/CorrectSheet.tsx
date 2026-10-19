@@ -1,6 +1,6 @@
 // S8 Not quite right? (02 D9): fix a detail the app got wrong and see the score live; Save
-// makes a NEW corrected reading (the original is never edited). Four reasons; P2 edits fit
-// (tops) and leg shape (bottoms) in "Wrong color or fit". The live score and next fix come from the fit-check
+// makes a NEW corrected reading (the original is never edited). Four reasons; "Wrong color or fit" edits fit (tops,
+// layers), leg shape (pants) and every piece's color (09 §22.7, #346). The live score and next fix come from the fit-check
 // service's previewCorrection, the same evaluation Save runs with the check's own engine (#276; it used core's
 // v4 score() before, so a parts check could show one number and save another).
 import { useEffect, useMemo, useState } from 'react';
@@ -8,7 +8,7 @@ import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { garmentName, matchClosetItem, type Fix, type Garment } from '@kitted/core';
 import {
-  Chip, ChipFlow, Icon, KButton, KText, Pill, RowDivider, displayScore, opacity, useTheme,
+  Chip, ChipFlow, Icon, KButton, KText, Pill, RowDivider, TagLine, displayScore, opacity, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -18,7 +18,7 @@ import { ScoreMoveLine } from '@/features/sheet/ScoreMoveLine';
 import { SheetList as List, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
-import { fitField, limitTo, typeOptions, volumeWord, type FieldOption } from './fields';
+import { colorGroups, fitField, limitTo, typeOptions, volumeWord, type FieldOption } from './fields';
 import { PieceArt } from '@/features/closet/GarmentArt';
 import { GoneSheet } from '@/features/gone/Gone';
 
@@ -125,41 +125,45 @@ export function CorrectSheet() {
             if (g.certainty === 'unsure' || g.category === 'accessory') return null;
             const shown = draft && !('remove' in draft) && draft.index === i ? { ...g, [draft.field]: draft.value } : g;
             const isOpen = open === i;
-            const fit = fitField(g);
-            const all: FieldOption[] = reason === 'item' ? typeOptions(g, (sub) => cap(garmentName({ subcategory: sub }))) : fit?.options ?? [];
-            const options = reason !== 'item' && String(i) === p.garment ? limitTo(all, only) : all;
-            const field = reason === 'item' ? 'subcategory' : fit?.field;
+            const groups = reason === 'item'
+              ? [{ field: 'subcategory' as const, title: null, options: typeOptions(g, (sub) => cap(garmentName({ subcategory: sub }))) }]
+              : detailGroups(g, String(i) === p.garment ? only : null);
             const title =
               // The title says what I read; the selected chip shows his correction (mockup 9).
               g.category === 'bottom' && typeof g.leg_shape === 'string' && g.leg_shape !== 'na'
                 ? t('nqr.legTitle', { name: garmentLabel(g), leg: g.leg_shape })
                 : garmentLabel(g);
-            const detail = isOpen
-              ? reason === 'item' ? t('nqr.reason.item') : t('nqr.ask.fit')
-              : g.category === 'top' || g.category === 'outerwear' ? t('nqr.fitDetail', { fit: volumeWord(shown.volume) })
+            const closedDetail = g.category === 'top' || g.category === 'outerwear' ? t('nqr.fitDetail', { fit: volumeWord(shown.volume) })
               : g.category === 'footwear' && LOW_SNEAKERS.includes(String(g.subcategory)) ? t('nqr.example.sneakerDetail') : '';
+            const detail = isOpen && reason === 'item' ? t('nqr.reason.item') : closedDetail;
+            // What's selected in a group: his change when it's to that field of this piece, else what I read.
+            const current = (field: keyof Garment & string) =>
+              draft && !('remove' in draft) && draft.index === i && draft.field === field ? draft.value : g[field];
             return (
               <View key={i}>
                 {i > 0 ? <RowDivider /> : null}
                 <Row title={title} detail={detail} garment={shown} active={isOpen} onPress={() => setOpen(isOpen ? null : i)} />
-                {isOpen && (options.length > 0 || reason === 'item') ? (
+                {isOpen && (groups.some((grp) => grp.options.length > 0) || reason === 'item') ? (
                   <OpenPanel>
-                    <ChipFlow rowGap={6}>
-                      {options.map((o) => {
-                        const current = draft && !('remove' in draft) && draft.index === i ? draft.value : field ? g[field] : undefined;
-                        return (
-                          <Chip
-                            key={String(o.value)}
-                            title={o.label}
-                            state={current === o.value ? 'selected' : 'normal'}
-                            onPress={() => field && setDraft({ index: i, field: field as keyof Garment & string, value: o.value })}
-                          />
-                        );
-                      })}
-                      {reason === 'item' ? (
-                        <Chip title={t('nqr.notInPhoto')} state={draft && 'remove' in draft && draft.index === i ? 'selected' : 'normal'} onPress={() => setDraft({ index: i, remove: true })} />
-                      ) : null}
-                    </ChipFlow>
+                    {groups.map((grp) => (grp.options.length === 0 ? null : (
+                      <View key={`${grp.field}-${grp.title ?? ''}`} style={{ gap: 2 }}>
+                        {grp.title ? <TagLine left={grp.title} /> : null}
+                        <ChipFlow rowGap={6} accessibilityLabel={grp.title ?? undefined}>
+                          {grp.options.map((o) => (
+                            <Chip
+                              key={String(o.value)}
+                              title={o.label}
+                              swatch={grp.field === 'color_family' ? garmentHex({ color_family: o.value as Garment['color_family'], category: g.category }) : undefined}
+                              state={current(grp.field) === o.value ? 'selected' : 'normal'}
+                              onPress={() => setDraft({ index: i, field: grp.field, value: o.value })}
+                            />
+                          ))}
+                          {reason === 'item' ? (
+                            <Chip title={t('nqr.notInPhoto')} state={draft && 'remove' in draft && draft.index === i ? 'selected' : 'normal'} onPress={() => setDraft({ index: i, remove: true })} />
+                          ) : null}
+                        </ChipFlow>
+                      </View>
+                    )))}
                   </OpenPanel>
                 ) : null}
               </View>
@@ -181,9 +185,18 @@ export function CorrectSheet() {
   );
 }
 
+/** "Wrong color or fit" for one piece: Fit (tops, layers) or Leg (pants), then its colors in their groups (09 §22.7
+ *  F1–F3). From the card's "Not sure" line (`only`), just that row's values, as his photos showed them. */
+function detailGroups(g: Garment, only: readonly string[] | null): { field: keyof Garment & string; title: string | null; options: FieldOption[] }[] {
+  const fit = fitField(g);
+  const fitGroup = fit ? [{ field: fit.field, title: t(fit.field === 'volume' ? 'closet.edit.fit' : 'closet.edit.leg'), options: limitTo(fit.options, only) }] : [];
+  if (only) return fitGroup;
+  return [...fitGroup, ...colorGroups(g).map((c) => ({ field: 'color_family' as const, title: c.title, options: c.options }))];
+}
+
 function OpenPanel({ children }: { children: React.ReactNode }) {
   const { colors } = useTheme();
-  return <View style={{ backgroundColor: colors.accentSoft, paddingTop: 2, paddingHorizontal: 14, paddingBottom: 14 }}>{children}</View>;
+  return <View style={{ backgroundColor: colors.accentSoft, paddingTop: 2, paddingHorizontal: 14, paddingBottom: 14, gap: 8 }}>{children}</View>;
 }
 
 function Row({ title, detail, garment, active, onPress }: { title: string; detail: string; garment?: Garment; active: boolean; onPress: () => void }) {

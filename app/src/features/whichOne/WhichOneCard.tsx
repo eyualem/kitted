@@ -18,13 +18,15 @@ const MAX_PHOTO_H = 400;
 /** How long the copper outline shows before the check starts, so the tap reads. */
 const OUTLINE_MS = 220;
 
-export function WhichOneCard({ m }: { m: ChatMessage }) {
+/** `readOnly`: Past chats (09 §22.7 F11): an earlier day's open question isn't pickable, so it doesn't show (nothing was
+ *  sent or counted for it). */
+export function WhichOneCard({ m, readOnly = false }: { m: ChatMessage; readOnly?: boolean }) {
   const q = whichOneOf(m);
   const { a11y } = useTheme();
   const [width, setWidth] = useState(0);
   const [chosen, setChosen] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
-  const open = q?.state === 'open';
+  const open = q?.state === 'open' && !readOnly;
 
   useEffect(() => {
     if (open) AccessibilityInfo.announceForAccessibility?.(t('whichOne.q'));

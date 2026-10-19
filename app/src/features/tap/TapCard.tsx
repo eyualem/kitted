@@ -48,7 +48,9 @@ export function tapAs(value: string): string {
   return deck[`tap.as.${value}`] ?? value.replace(/_/g, ' ');
 }
 
-export function TapCard({ row }: { row: FitCheckRow }) {
+/** `readOnly`: Past chats (09 §22.7 F11): left unanswered that day, it shows the question and says it wasn't scored,
+ *  with nothing to tap and nothing announced. */
+export function TapCard({ row, readOnly = false }: { row: FitCheckRow; readOnly?: boolean }) {
   const tap = row.details.tap!;
   const { a11y, isAccessibilitySize } = useTheme();
   const [busy, setBusy] = useState(tap.answer !== null);
@@ -58,8 +60,8 @@ export function TapCard({ row }: { row: FitCheckRow }) {
   const piece = useLive(['closet'], async () => (tap.knownId ? (await store.closet.get(tap.knownId)) ?? null : null), [tap.knownId], tap.knownId ?? '');
 
   useEffect(() => {
-    AccessibilityInfo.announceForAccessibility?.(t('tap.a11y.announce', { question }));
-  }, [question]);
+    if (!readOnly) AccessibilityInfo.announceForAccessibility?.(t('tap.a11y.announce', { question }));
+  }, [question, readOnly]);
 
   const pick = (a: string) => {
     if (busy) return;
@@ -73,6 +75,20 @@ export function TapCard({ row }: { row: FitCheckRow }) {
       }
     });
   };
+
+  if (readOnly) {
+    return (
+      <KCard accessibilityLabel={`${question} ${t('tap.pastUnanswered')}`}>
+        <KCardSection gap={6}>
+          <TagLine left={t(row.isPartial ? 'card.tag.partial' : 'card.tag.full')} right={occasionLabel(tap.occasion)} />
+          <KText variant="headline">{question}</KText>
+          <KText variant="subheadline" color="ink2">
+            {t('tap.pastUnanswered')}
+          </KText>
+        </KCardSection>
+      </KCard>
+    );
+  }
 
   return (
     <Animated.View entering={a11y.reduceMotion ? undefined : FadeIn.duration(180)}>

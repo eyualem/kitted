@@ -1,6 +1,7 @@
 // What "Not quite right?" can change per piece (02 D9), as schema values.
 import { RUBRIC_DATA, type Garment } from '@kitted/core';
 import { t, type StringKey } from '@/i18n/en';
+import { editOptions } from '@/features/closet/pieceEdit';
 
 export interface FieldOption {
   label: string;
@@ -14,11 +15,30 @@ const LEG: [StringKey, string][] = [
   ['value.leg.skinny', 'skinny'], ['value.leg.slim', 'slim'], ['value.leg.straight', 'straight'], ['value.leg.relaxed', 'relaxed'], ['value.leg.wide', 'wide'],
 ];
 
-/** The one fit field each slot edits in "Wrong color or fit" (P2: fit; color, hem, sleeves and tuck come later). */
+/** No leg to fix: shorts. */
+const NO_LEG: readonly string[] = ['shorts', 'athletic_shorts'];
+
+/** The one fit field each slot edits in "Wrong color or fit": Fit for tops and layers, Leg for pants (not shorts);
+ *  shoes have none (09 §22.7 F2: a shoe row opened to "How do they really fit?" and nothing). */
 export function fitField(g: Garment): { field: 'volume' | 'leg_shape'; options: FieldOption[] } | null {
   if (g.category === 'top' || g.category === 'outerwear') return { field: 'volume', options: TOP_FIT.map(([k, v]) => ({ label: t(k), value: v })) };
-  if (g.category === 'bottom') return { field: 'leg_shape', options: LEG.map(([k, v]) => ({ label: t(k), value: v })) };
+  if (g.category === 'bottom' && !NO_LEG.includes(String(g.subcategory))) return { field: 'leg_shape', options: LEG.map(([k, v]) => ({ label: t(k), value: v })) };
   return null;
+}
+
+export interface ColorGroup {
+  title: string;
+  options: FieldOption[];
+}
+
+/** "Wrong color or fit" → Color (09 §22.7 F1): the piece page's "What it is" colors in their four groups (denim
+ *  washes only for jeans and a denim jacket, or when it was read as one), for every top, layer, pants and shoe. */
+export function colorGroups(g: Garment): ColorGroup[] {
+  if (!['top', 'outerwear', 'bottom', 'footwear'].includes(String(g.category))) return [];
+  return (editOptions({ slot: 'top', garment: g }, 'color').groups ?? []).map((grp) => ({
+    title: grp.title,
+    options: grp.options.map((o) => ({ label: o.label, value: o.value as Garment[keyof Garment] })),
+  }));
 }
 
 /** "Wrong item": the types offered for each slot. */

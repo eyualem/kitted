@@ -53,3 +53,11 @@ export async function deleteCheckPhoto(deps: DeletePhotoDeps, checkId: string): 
   if (row.photoFile || row.thumbFile || sha) deps.deleteKept(row);
   return true;
 }
+
+/** A look's photos (L2's "Delete photos", 09 §22.7 F4): each check's (its first check and every re-check). True when
+ *  any had one. */
+export async function deleteLookPhotos(deps: DeletePhotoDeps, checkIds: readonly string[]): Promise<boolean> {
+  let any = false;
+  for (const id of checkIds) any = (await deleteCheckPhoto(deps, id)) || any;
+  return any;
+}

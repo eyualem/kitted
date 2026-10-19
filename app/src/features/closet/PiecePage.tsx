@@ -20,7 +20,7 @@ import { useCallback, useId, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { Stack, router, useFocusEffect, type Href } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { Icon, KText, TagLine, TextLink, opacity, radius, space, useTheme } from '@/design-system';
+import { Icon, KCard, KCardSection, KText, TagLine, TextLink, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ClosetItemRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -42,7 +42,11 @@ import { OutfitCard } from './OutfitsView';
 import { buildOutfits, goesWith } from './outfits';
 import type { PhotoAction } from './PiecePhotoTile';
 import { PhotoMenu } from './PhotoMenu';
-import { isOwned } from './profile';
+import { isAwaitingAnswer, isOwned } from './profile';
+import { answerWithUndo, type AnswerToastDeps } from './answerToast';
+import { DuplicateQuestion } from './DuplicateQuestion';
+import { fitCheck } from '@/features/fitcheck/session';
+import { showToast } from '@/features/toast/toast';
 import { SightingCrop } from './SightingCrop';
 import { photoMenuItems, photoOffer, type PhotoMenuItem } from './wrongCard';
 import { GonePage } from '@/features/gone/Gone';
@@ -50,6 +54,13 @@ import { GonePage } from '@/features/gone/Gone';
 /** iOS destructive red at the mockup's values (as Y7's red rows): systemRed is under 4.5:1 on white. */
 const DANGER = { light: '#C9302C', dark: '#FF6961' } as const;
 const GRID_GAP = 8;
+
+/** His answer to "Is this your …?" on this page: a toast with Undo, as in Closet's To confirm (09 §20.7 R10). */
+const answerDeps: AnswerToastDeps = {
+  answer: (c, o, a) => fitCheck.answerDuplicate(c, o, a),
+  unanswer: (c, o) => fitCheck.unanswerDuplicate(c, o),
+  toast: (text, undo) => void showToast(text, undo),
+};
 
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
@@ -102,7 +113,17 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
     const styles = (await store.profile.get('me'))?.styles ?? null;
     const around = buildOutfits({ closet: all, checks: fitRows, styles, occasion: 'everyday', ...(item.slot === 'outer' ? { withLayer: item.id } : {}) });
     const outfitsWith = around.filter((o) => o.itemIds.includes(item.id));
-    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all), all, goes: goesWith(item.id, around), outfitsWith: outfitsWith.length, doubt: fitDoubt(item, obs) };
+    // Still waiting on "Is this your …?" (#116): its page asks that instead of "What it is", whose sheets are empty for
+    // a waiting piece (09 §22.7 F10). Answering Yes folds it into the other piece (the page moves there).
+    const owned = all.filter(isOwned);
+    const waiting = isAwaitingAnswer(item, owned) ? (await fitCheck.closet.openAsks()).find(({ ask }) => ask.itemId === item.id) ?? null : null;
+    const question = waiting
+      ? { checkId: waiting.checkId, ask: waiting.ask, candidate: all.find((c) => c.id === waiting.ask.candidateId) ?? null, runnerUp: waiting.ask.runnerUpId ? all.find((c) => c.id === waiting.ask.runnerUpId) ?? null : null }
+      : null;
+    return {
+      item, photos, inLookbook, offers, merge: mergeOffer(item, all), all, goes: goesWith(item.id, around), outfitsWith: outfitsWith.length, doubt: fitDoubt(item, obs),
+      awaiting: isAwaitingAnswer(item, owned), question,
+    };
   }, [id]);
   // Folded into another piece (#280): back on this page after the picker closes, it shows the kept piece instead.
   const mergedInto = data && !data.item ? data.mergedInto : null;
@@ -121,7 +142,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
     // Folded into another piece: the page moves to it (above). Otherwise it's gone (removed, or an old link).
     return data.mergedInto || leaving ? <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} /> : <GonePage />;
   }
-  const { item, photos, inLookbook, offers, merge, goes, outfitsWith, all: closetAll, doubt } = data;
+  const { item, photos, inLookbook, offers, merge, goes, outfitsWith, all: closetAll, doubt, awaiting, question } = data;
   const spec = artSpec(item);
   const rows = editRows(item, doubt);
   const hero = photos.shown;
@@ -220,8 +241,20 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
         </KText>
       </View>
 
+      {/* Still waiting on "Is this your …?": the question, as in Closet's To confirm, instead of "What it is" (§22.7 F10). */}
+      {question?.candidate ? (
+        <KCard>
+          <KCardSection gap={12}>
+            <TagLine left={t('closet.confirm.tag')} />
+            <DuplicateQuestion
+              ask={question.ask} photo={item} candidate={question.candidate} runnerUp={question.runnerUp}
+              onAnswer={(a) => void answerWithUndo(answerDeps, question.checkId, question.ask, a, question.candidate!, question.runnerUp)}
+            />
+          </KCardSection>
+        </KCard>
+      ) : null}
       {/* What it is (§17, #315): the rest of the old detail line, each part a row he can fix. */}
-      {rows.length > 0 ? (
+      {rows.length > 0 && !awaiting ? (
         <Section label={t('closet.edit.title')} footer={t('closet.edit.foot')}>
           {rows.map((r) => (
             <LinkRow key={r.field} title={r.label} value={r.value} detail={r.detail} hint={t('closet.edit.a11y.rowHint')} onPress={() => router.push(editHref(item, r.field) as Href)} />

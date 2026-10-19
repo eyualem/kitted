@@ -6,15 +6,17 @@ import { t } from '@/i18n/en';
 
 export interface LookMenuProps {
   hasPhoto: boolean;
+  /** "Delete photo", or "Delete photos" on a re-checked look. */
+  deleteLabel: string;
   onDeletePhoto: () => void;
   onRemove: () => void;
 }
 
-export function LookMenu({ hasPhoto, onDeletePhoto, onRemove }: LookMenuProps) {
+export function LookMenu({ hasPhoto, deleteLabel, onDeletePhoto, onRemove }: LookMenuProps) {
   const { colors } = useTheme();
   const open = () =>
     Alert.alert(t('stylist.menu.a11y'), undefined, [
-      ...(hasPhoto ? [{ text: t('look.deletePhoto'), style: 'destructive' as const, onPress: onDeletePhoto }] : []),
+      ...(hasPhoto ? [{ text: deleteLabel, style: 'destructive' as const, onPress: onDeletePhoto }] : []),
       { text: t('lookbook.remove.action'), onPress: onRemove },
       { text: t('common.cancel'), style: 'cancel' as const },
     ]);

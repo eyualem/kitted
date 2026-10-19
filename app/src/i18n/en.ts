@@ -1100,6 +1100,17 @@ const addedInBuild = {
   'fail.askOffline': "You're offline, so I couldn't answer that. It doesn't count.",
   // The server's daily limit on a check the phone thought it had left (13-server.md §8, A7, #328).
   'fail.limit': "That's today's fit checks. Your photo is saved here. Try again after 4 am. This one doesn't count.",
+  // The UI audit's fix-first batch (09-ui-review §22.7, #346), Claude's words, on the founder's skim list.
+  // A re-checked look has two photos or more: L2's ⋯ deletes them all.
+  'look.deletePhotos': 'Delete photos',
+  'look.delete.titleN': 'Delete these photos?',
+  // Plan & usage and Settings while the server gives every tester Pro's limits (no purchase).
+  'you.plan.beta': 'Beta',
+  'usage.betaLine': 'Up to {checks} fit checks and {questions} questions a day during the beta',
+  // The camera after a capture that failed (the native camera gave no photo).
+  'cam.captureFailed': "Couldn't take the photo. Try again.",
+  // Past chats: a quick tap left unanswered that day.
+  'tap.pastUnanswered': "Not answered that day, so it wasn't scored.",
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

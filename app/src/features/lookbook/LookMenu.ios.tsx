@@ -7,7 +7,7 @@ import { useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 import type { LookMenuProps } from './LookMenu';
 
-export function LookMenu({ hasPhoto, onDeletePhoto, onRemove }: LookMenuProps) {
+export function LookMenu({ hasPhoto, deleteLabel, onDeletePhoto, onRemove }: LookMenuProps) {
   const { colors, scheme } = useTheme();
   return (
     <Host matchContents colorScheme={scheme}>
@@ -15,7 +15,7 @@ export function LookMenu({ hasPhoto, onDeletePhoto, onRemove }: LookMenuProps) {
         label={<Image systemName="ellipsis" size={17} color={colors.ink} modifiers={[frame({ width: 28, height: 28 })]} />}
         modifiers={[accessibilityLabel(t('stylist.menu.a11y'))]}
       >
-        {hasPhoto ? <Button label={t('look.deletePhoto')} systemImage="trash" role="destructive" onPress={onDeletePhoto} /> : null}
+        {hasPhoto ? <Button label={deleteLabel} systemImage="trash" role="destructive" onPress={onDeletePhoto} /> : null}
         <Button label={t('lookbook.remove.action')} systemImage="minus.circle" onPress={onRemove} />
       </Menu>
     </Host>

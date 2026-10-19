@@ -38,7 +38,7 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
     if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} readOnly={readOnly} />;
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} readOnly={readOnly} />;
-    if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;
+    if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} readOnly={readOnly} />;
     // The end of onboarding (ruling 23, 10-onboarding.md §9): "Your first 3 moves", then the notification ask.
     if (m.cardType === 'plan' && m.fitCheckId) return <InviteCard m={m} readOnly={readOnly} />;
     if (m.cardType === 'question' && m.payload.question === 'notify') return <NotifyAskCard m={m} showHeader={item.showWho} readOnly={readOnly} />;

@@ -363,13 +363,14 @@ describe('G22 · delete one look\'s photo', () => {
 
   it('G22.1, G22.3 the ⋯: Delete photo (destructive, with a confirm) while there\'s a photo, Remove from Lookbook then back', () => {
     const page = src('features/lookbook/LookPageScreen.tsx');
-    expect(page).toMatch(/headerRight: \(\) => \(\s*<LookMenu\s*hasPhoto=\{!!look\.photo\}\s*onDeletePhoto=\{\(\) => confirmDeletePhoto\(look\.shownId\)\}/);
+    // Since #346 (§22.7 F4) it deletes every photo of the look: Delete photos on a re-checked one.
+    expect(page).toMatch(/headerRight: \(\) => \(\s*<LookMenu\s*hasPhoto=\{look\.photoIds\.length > 0\}\s*deleteLabel=\{deletePhotoLabel\(look\.photoIds\.length\)\}\s*onDeletePhoto=\{\(\) => confirmDeletePhoto\(look\.photoIds\)\}/);
     expect(page).toMatch(/onRemove=\{\(\) => void removeLookMenu\(look\.checkId, look\.title, \(\) => \(router\.canGoBack\(\) \? router\.back\(\) : router\.replace\('\/lookbook'\)\)\)\}/);
     const menu = src('features/lookbook/LookMenu.ios.tsx');
-    expect(menu).toMatch(/\{hasPhoto \? <Button label=\{t\('look\.deletePhoto'\)\} systemImage="trash" role="destructive"/);
+    expect(menu).toMatch(/\{hasPhoto \? <Button label=\{deleteLabel\} systemImage="trash" role="destructive"/);
     expect(menu).toMatch(/<Button label=\{t\('lookbook\.remove\.action'\)\}/);
     const actions = src('features/lookbook/lookActions.ts');
-    expect(actions).toMatch(/Alert\.alert\(t\('look\.delete\.title'\), t\('look\.delete\.msg'\), \[\s*\{ text: t\('common\.cancel'\), style: 'cancel' \},\s*\{\s*text: t\('look\.deletePhoto'\),\s*style: 'destructive'/);
+    expect(actions).toMatch(/Alert\.alert\(t\(checkIds\.length > 1 \? 'look\.delete\.titleN' : 'look\.delete\.title'\), t\('look\.delete\.msg'\), \[\s*\{ text: t\('common\.cancel'\), style: 'cancel' \},\s*\{\s*text: deletePhotoLabel\(checkIds\.length\),\s*style: 'destructive'/);
     expect([t('look.delete.title'), t('look.delete.msg')]).toEqual(['Delete this photo?', 'The score stays in your Lookbook.']);
     expect(src('app/(tabs)/lookbook/index.tsx')).toMatch(/removeLookMenu\(checkId, title\)/);
   });

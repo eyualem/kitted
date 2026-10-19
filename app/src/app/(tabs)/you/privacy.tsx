@@ -80,9 +80,10 @@ export default function PrivacyDataScreen() {
   const [busy, setBusy] = useState(false);
   const provider = t('config.providerDefault');
   const consentOn = !!profile?.consentVersion;
-  // Demo screen 88 (`?demoPlan=pro`): the Pro warning row without a Pro session.
+  // Demo screen 88 (`?demoPlan=pro`): the Pro warning row without a Pro session. Billing words follow a real purchase
+  // only: the beta's server-given Pro limits are no subscription to cancel (09 §22.7 F6).
   const { demoPlan } = useLocalSearchParams<{ demoPlan?: string }>();
-  const pro = plan?.pro === true || (DEMO_ENABLED && demoPlan === 'pro');
+  const pro = plan?.purchased === true || (DEMO_ENABLED && demoPlan === 'pro');
 
   const run = (job: () => Promise<void>) => async () => {
     if (busy) return;
@@ -168,7 +169,7 @@ export default function PrivacyDataScreen() {
               key="all"
               title={t('acct.delete.row')}
               disabled={busy}
-              onPress={() => askFirst(t('acct.delete.title'), t(plan?.pro ? 'acct.delete.bodyPro' : 'acct.delete.body'), t('acct.delete.yes'), run(deleteAccountAndData))}
+              onPress={() => askFirst(t('acct.delete.title'), t(pro ? 'acct.delete.bodyPro' : 'acct.delete.body'), t('acct.delete.yes'), run(deleteAccountAndData))}
             />
           ) : (
             <DangerRow

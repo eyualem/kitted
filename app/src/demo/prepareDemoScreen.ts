@@ -65,6 +65,8 @@ type Step =
   | { at: string; do: 'ask'; text: string }
   /** Tap an answer on the newest ask card (07 §13 R6). */
   | { at: string; do: 'askTap'; option: string }
+  /** The piece the first open "Is this your …?" asks about is the `{ask}` in the screen's link (09 §22.7 F10). */
+  | { at: string; do: 'linkAsk' }
   /** A stored setting (Closet's remembered Pieces | Outfits tap, #307). */
   | { at: string; do: 'kv'; key: string; value: string }
   /** Earlier sightings of a closet piece, read with these legs or fits (09-ui-review §18): a day apart, no photo. The
@@ -95,6 +97,9 @@ const DOUBT_STORY: Step[] = [
   { at: '2026-10-22T12:11:00', do: 'sightings', ofCheck: STORY_DOUBT, slot: 'bottom', legs: ['slim', 'wide', 'wide'] },
 ];
 const FIRST_CHECK: Step = { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' };
+
+/** The server's beta tier (13-server.md): Pro's limits, no purchase (09 §22.7 F6). */
+const BETA_TIER: Step = { at: '2026-10-21T07:00:00', do: 'kv', key: 'server.tier', value: 'pro' };
 
 const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
 
@@ -242,6 +247,20 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   202: { steps: [...DOUBT_STORY, { at: '2026-10-22T12:12:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   203: { steps: DOUBT_STORY },
   // Step 4's code-only batch (09-ui-review §20.8): offline (210), "That score is wrong" (211), a re-check that moved (215).
+  // The UI audit's fix-first batch (09-ui-review §22.7, #346).
+  216: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  217: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  218: { steps: [BETA_TIER] },
+  219: { steps: [BETA_TIER] },
+  220: { steps: [CLOSET_3, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'linkAsk' }] },
+  222: {
+    asOf: '2026-10-21T08:00:00',
+    steps: [
+      BETA_TIER,
+      { at: '2026-10-21T08:10:00', do: 'check', photoId: 's14', occasion: 'everyday', checkId: 'story-past-fail', fault: 'ai' },
+      { at: '2026-10-21T08:12:00', do: 'check', photoId: 'ph1', occasion: 'everyday', checkId: STORY_TAP },
+    ],
+  },
   210: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', fault: 'offline' }, { at: '2026-10-22T07:44:00', do: 'askOffline', text: 'What goes with my jeans?' }] },
   211: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'ask', text: 'That score is wrong.' }] },
   215: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
@@ -385,6 +404,12 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     }
     if (step.do === 'kv') {
       await store.setKv(step.key, step.value);
+      continue;
+    }
+    if (step.do === 'linkAsk') {
+      await fitCheck.closet.settle();
+      const first = (await fitCheck.closet.openAsks())[0];
+      if (first) demoLinkIds.ask = first.ask.itemId;
       continue;
     }
     if (step.do === 'sightings') {

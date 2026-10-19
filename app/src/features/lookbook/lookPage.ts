@@ -57,6 +57,9 @@ export interface LookPageModel {
   photo: ShownPhoto | null;
   /** The full viewer on the shown check; null when there's no photo (it never opens an empty viewer, K3). */
   photoHref: string | null;
+  /** Every check of the look that still holds a photo (the first check and each re-check): "Delete photo(s)" deletes
+   *  them all, so a deleted re-check never leaves the first photo showing as Before (09 §22.7 F4). */
+  photoIds: string[];
   fixes: LookFixRow[];
   /** "This is dialed in. Nothing to fix." / "No quick fixes for this one." when there are no fix rows (and the summary doesn't say it). */
   noFixLine: string | null;
@@ -151,6 +154,8 @@ export function buildLook(check: FitCheckRow, rechecks: readonly FitCheckRow[], 
   const before = latest
     ? { score: check.score, scoreText: displayScore(check.score), photo: firstPhoto, href: firstPhoto ? `/photo/${check.id}` : null }
     : null;
+  const hasPhoto = (c: FitCheckRow) => !!(c.photoFile || c.thumbFile || c.demoPhotoId);
+  const photoIds = [check, ...rechecks.filter((r) => r.parentId === check.id).sort((a, b) => a.createdAt - b.createdAt)].filter(hasPhoto).map((c) => c.id);
   const actions: LookAction[] = [
     ...(photoHref ? (['photo'] as const) : []),
     ...(before?.href ? (['before'] as const) : []),
@@ -174,6 +179,7 @@ export function buildLook(check: FitCheckRow, rechecks: readonly FitCheckRow[], 
     summary: readOnlySummary(shown.explanation),
     photo,
     photoHref,
+    photoIds,
     fixes,
     noFixLine,
     tip: nextLevel ? { lead: tipLeadText(shown.details.tipLead) ?? t('card.nextLevel'), text: nextLevel } : null,
