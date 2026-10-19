@@ -4,7 +4,7 @@ import { stylesFor } from '@/features/fitcheck/lens';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { KText, LedgerRow, LedgerTotal, Pill, TagLine, displayScore } from '@/design-system';
+import { KText, LedgerRow, LedgerTotal, Pill, TagLine, TextLink, displayScore } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { whatIRead } from '@/features/fitcheck/labels';
@@ -38,7 +38,11 @@ export function WhySheet() {
 
   if (how) {
     return (
-      <SheetScaffold title={t('why.how.title')} onClose={() => setHow(false)}>
+      // Its ✕ closes the sheet like every sheet's; the way back to the math is the link on top (#233 item 1).
+      <SheetScaffold title={t('why.how.title')}>
+        <View style={{ alignItems: 'flex-start' }}>
+          <TextLink title={`‹ ${t('why.title', { score: displayScore(score) })}`} accessibilityLabel={t('why.title', { score: displayScore(score) })} onPress={() => setHow(false)} compact />
+        </View>
         {(['why.how.body1', 'why.how.body2', 'why.how.body3', 'why.how.body4', 'why.how.body5'] as const).map((k) => (
           <KText key={k} variant="body">
             {t(k)}

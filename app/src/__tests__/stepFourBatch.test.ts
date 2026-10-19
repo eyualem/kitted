@@ -402,7 +402,7 @@ describe('G23 · "Not now" on consent gets the S26 card', () => {
     expect(card).toMatch(/\{agreed === false && !readOnly \? \(/);
     expect(card).toMatch(/accessibilityActions=\{\[\{ name: 'review', label: t\('noConsent\.cta'\) \}, \{ name: 'example', label: t\('noConsent\.example'\) \}\]\}/);
     expect(src('features/stylist/MessageView.tsx')).toMatch(/m\.cardType === 'turnOnChecks'\) return <NoConsentCard/);
-    expect(t('noConsent.body', { provider: t('config.providerDefault') })).toBe("To score a photo, I need your OK to send a face-free copy to Google's Gemini API.");
+    expect(t('noConsent.body', { provider: t('config.providerDefault') })).toBe("To score a photo, I need your OK to send a copy with your face blurred to Google's Gemini API.");
   });
 
   it('G23.1 See an example opens O1e as a sheet; Check my own fit closes it and opens the agreement', () => {

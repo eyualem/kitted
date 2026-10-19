@@ -474,7 +474,7 @@ HOODIES = {"hoodie", "sweatshirt"}
 LOUD_NATIVE = {"streetwear", "workwear", "vintage_sport", "outdoor"}   # looks whose own pieces are loud by design
 WEIGHTS ={"proportions": 0.30, "fit": 0.25, "color": 0.15, "shoes": 0.15, "cohesion": 0.15}
 PART_ORDER = ["proportions", "fit", "color", "shoes", "cohesion"]
-PART_NAMES = {"proportions": "Proportions", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
+PART_NAMES = {"proportions": "Shape", "fit": "Fit", "color": "Color", "shoes": "Shoes", "cohesion": "Style"}
 BASE = 7.0                     # every part starts at "fine, nothing off"
 
 # Which reading groupings passed a 3-run steadiness test (>= 90% the same; sources: proportions.md §1 table on
@@ -649,7 +649,7 @@ def _band_fault(o, t):
         return None                                                   # a look the outfit reads as holds it
     what = (sub or "top").replace("_", " ")
     if narrow:
-        return t["pb"], f"a roomy {what} over slim legs: an oversized top wants a fuller leg"
+        return t["pb"], f"a roomy {what} over slim pants: an oversized top wants a fuller leg"
     look = f"a {R.STYLE_NAMES[o['label']]} outfit" if o["label"] else "the rest of the outfit"
     return t["pb"], f"the roomy {what} is roomier than {look} calls for"
 
@@ -705,7 +705,7 @@ def _proportions(o, sl, t):
     p = _Part("proportions")
     T, O, B, S = o["top"], o["outer"], o["bottom"], o["shoes"]
     if B is None:
-        p.na = "legs not in the photo"; return p
+        p.na = "pants not in the photo"; return p
     if B.get("subcategory") in SHORTS:
         if t["sh_prop"]:
             return _shorts_proportions(o, t)                         # v14
@@ -719,9 +719,9 @@ def _proportions(o, sl, t):
     # ---- faults that move points today
     faults = 0.0
     if big_top and leg == "skinny":                                   # proportions.md F5 (v4 P2), 1.5
-        p.add(-1.5, "a roomy top over skinny legs", "PF5_big_top_skinny_leg"); faults += 1.5
+        p.add(-1.5, "a roomy top over skinny pants", "PF5_big_top_skinny_leg"); faults += 1.5
     elif O is not None and leg == "skinny":                           # F6, a trend rule (review 2028)
-        p.add(-0.5, f"the {o_sub.replace('_', ' ')} has nothing sturdy to sit on over skinny legs", "PF6_layer_over_skinny")
+        p.add(-0.5, f"the {o_sub.replace('_', ' ')} has nothing sturdy to sit on over skinny pants", "PF6_layer_over_skinny")
         faults += 0.5
     if sl["peek"]:                                                    # F10/F11 via the second look; -0.5 at most (look1)
         p.add(-0.5, "the top underneath shows below the outer piece", "PF10_peek")
@@ -751,14 +751,14 @@ def _proportions(o, sl, t):
         faults += t["pn_lounge_skinny"]
     if (t.get("pf2_measured") and T is not None and O is None and T.get("tucked") in (None, "none", "na")
             and T.get("_len_measured") == "below_crotch"):
-        p.add(-t["pf2_measured"], "the top runs long, past the hip: it shortens the legs", "PF2m_long_top_measured")
+        p.add(-t["pf2_measured"], "the top runs long, past the hip: it shortens the line", "PF2m_long_top_measured")
         faults += t["pf2_measured"]                                   # what-if (#269, off): the phone measured it
 
     # ---- tips: real rules whose readings haven't passed (they never move the number)
     if T is not None and O is None and T.get("tucked") in (None, "none", "na") and T.get("length") == "below_crotch":
         p.tip("the top may run long, past the bottom of the fly", "PF2_long_top", would=-2.0 if leg in R.LOOSE else -1.5)
     if O is not None and not o_tailored and O.get("length") == "below_crotch" and leg in R.LOOSE:
-        p.tip("a long loose layer over loose legs can shorten the line", "PF3_long_layer_loose_leg", would=-1.5)
+        p.tip("a long loose layer over loose pants can shorten the line", "PF3_long_layer_loose_leg", would=-1.5)
     if o_tailored and B.get("hem") in ("pooling", "full_break"):
         p.tip("check the hem: trousers that bunch on the shoes fight a tailored jacket", "PF1_heavy_hem_tailored",
               would=-2.0)
@@ -766,7 +766,7 @@ def _proportions(o, sl, t):
     if T is not None and O is None and T.get("subcategory") in ("oxford_shirt", "flannel_shirt", "camp_collar_shirt",
                                                                "dress_shirt") \
             and T.get("tucked") in (None, "none", "na") and leg == "wide" and (T.get("volume") or 3) <= 3:
-        p.tip("an untucked shirt over wide legs can hang long; a front tuck gives it shape", "PF4_long_shirt_wide_leg",
+        p.tip("an untucked shirt over wide pants can hang long; a front tuck gives it shape", "PF4_long_shirt_wide_leg",
               would=-1.0)
         pf4 = True
     # v6: PB2, the leg side of the bands that stop at relaxed (the general standard, smart casual, prep). Wide vs
@@ -809,7 +809,7 @@ def _proportions(o, sl, t):
         if pr1 is None or pr1[0] < t["pr4"]:
             if pr1 is not None:
                 rewards.remove(pr1)
-            rewards.append((t["pr4"], "a boxy top over wide legs, finished by street sneakers: the streetwear shape",
+            rewards.append((t["pr4"], "a boxy top over wide pants, finished by street sneakers: the streetwear shape",
                             "PR4_street_shape"))
     # v4 (off in v1-v3): the workwear and outdoor silhouettes (PR5, PR6). Their layers are never PR2's short layers,
     # so one layer earns one shape credit. NOTE: trail_shoe (PR6) and track_jacket (below) aren't values of the live
@@ -824,7 +824,7 @@ def _proportions(o, sl, t):
                             "PR6_outdoor_shape"))
     if not blocked and full and O is not None and o_sub in (SHORT_LAYERS | t["short_layers_extra"]) and _earns(O) \
             and not sl["peek"]:
-        rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
+        rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full pants: a clean, strong shape", "PR2_short_layer"))
     if (t["pr2b"] and not blocked and leg in R.LOOSE and O is not None and not o_tailored
             and o_sub not in (SHORT_LAYERS | t["short_layers_extra"]) and O.get("length") in ("cropped", "at_belt")
             and _earns(O) and not sl["peek"] and not any(x[2] in ("PR5_workwear_shape", "PR6_outdoor_shape") for x in rewards)):
@@ -1145,9 +1145,9 @@ def _shoes(o, occasion, sl, t):
             p.add(0.5 * up, "the right shoes for a suit", "SC_chosen_for_look")
     # shoe weight against the leg (Shoes owns both directions)
     if sub in BULKY and leg in NARROW:
-        p.add(-1.5, "chunky sneakers look heavy under narrow legs", "SW1_chunky_narrow")
+        p.add(-1.5, "chunky sneakers look heavy under narrow pants", "SW1_chunky_narrow")
     elif sub in RUNNER and leg in NARROW:
-        p.add(-0.5, "runners look heavy under narrow legs", "SW1_runner_narrow")
+        p.add(-0.5, "runners look heavy under narrow pants", "SW1_runner_narrow")
     if sub in BULKY and loose_denim and "streetwear" in o["det"] and B.get("hem") != "pooling" and up > 0:
         p.add(t["sw2"] * up, "chunky sneakers carry the wide jeans", "SW2_weight_carries_leg")
     # color (not for slides: their stripes read multicolor in some runs)
@@ -1167,7 +1167,7 @@ def _shoes(o, occasion, sl, t):
         p.add(-0.5 if half else -1.0, "the shoes look worn" if _care_fault(S) == "worn" else "the shoes look dirty", "SQ_worn")
     p.score = clamp(p.score, 2.0, 9.5)
     if leg == "wide" and sub in ("loafer", "dress_shoe", "derby") and not t["sw3_off"]:   # shoe_profile untested: tip
-        p.tip("check the shoe isn't swallowed by the wide legs (a slim shoe can look dainty)", "SW3_dainty_wide", would=-1.0)
+        p.tip("check the shoe isn't swallowed by the wide pants (a slim shoe can look dainty)", "SW3_dainty_wide", would=-1.0)
     return p
 
 

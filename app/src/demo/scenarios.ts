@@ -269,6 +269,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 220, name: 'Closet · a piece waiting on Is this your …?', id: 'C2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet/item/{ask}', under: '/closet' },
   { n: 221, name: 'Camera · the shot failed (tap the shutter)', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?captureFail=1', under: '/stylist' },
   { n: 222, name: 'Past chats · an unanswered tap and a failed check', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
+  // The Oct 12 copy fixes (#233, #347): the camera's panel when no face could be found to blur.
+  { n: 223, name: 'Camera · no face to blur, nothing sent', id: 'S3', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?review=cantFrame', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

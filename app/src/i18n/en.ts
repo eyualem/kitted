@@ -734,11 +734,11 @@ const addedInBuild = {
   'pfix.tip_hem': 'Have the {name} hemmed to just touch your shoes (about $15 at a tailor): a cleaner finish.',
   'pfix.tip_peek': 'Tuck in the layer underneath, or wear one that ends with the {name}: the line looks cleaner.',
   'pfix.tip_knit': 'Two knits together blur: try a smooth layer over the knit, like an overshirt or a jacket.',
-  'pfix.next_street_jacket': 'A short jacket, like a bomber, gives it the streetwear shape and lifts Proportions.',
-  'pfix.next_workwear_coat': 'A chore coat and boots give it the workwear shape and lift Proportions.',
-  'pfix.next_minimal_tuck': 'Tucking in the {name} gives it the minimal shape and lifts Proportions.',
-  'pfix.next_prep_blazer': 'A tucked shirt under a navy blazer gives it the classic prep line and lifts Proportions.',
-  'pfix.next_smart_tuck': 'Tucked into chinos, it takes the smart casual shape and lifts Proportions.',
+  'pfix.next_street_jacket': 'A short jacket, like a bomber, gives it the streetwear shape, which lifts the Shape score.',
+  'pfix.next_workwear_coat': 'A chore coat and boots give it the workwear shape, which lifts the Shape score.',
+  'pfix.next_minimal_tuck': 'Tucking in the {name} gives it the minimal shape, which lifts the Shape score.',
+  'pfix.next_prep_blazer': 'A tucked shirt under a navy blazer gives it the classic prep line, which lifts the Shape score.',
+  'pfix.next_smart_tuck': 'Tucked into chinos, it takes the smart casual shape, which lifts the Shape score.',
   'pfix.next_color': 'One quiet color, like a rust or olive knit, lifts Color.',
   // The Why sheet on the parts engine (#205, #209; wording from mockups/parts-card.html). Part names and the reason lines
   // are core's (parts data partNames, the engine's own lines).

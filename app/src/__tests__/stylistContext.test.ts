@@ -185,7 +185,7 @@ describe('the closet: caps, order, handles', () => {
       imageHash: 'abc', occasion: 'class', style: null, status: 'scored', isPartial: true, notRated: ['shoes'], score: 7, rawScore: 7.1, subscores: {}, occasionAdj: 0,
       rulesFired: [], credits: [], advice: [], explanation: "Nothing's wrong with it; it just doesn't have a waist.", rubricVersion: 'parts-1.5.0', isFavorite: false,
       snapState: 'none', recheckUsed: false, isFirstCheck: false, readingId: 'R-1', parentId: null, itemIds: ['C1'],
-      fixes: [{ target: 'tuck', tier: 'free', effort: 1, free: true, to: 7.5, toRaw: 7.5, gain: 0.5, rawGain: 0.5, edits: [], itemId: null, copy: 'Tuck in your tee', tag: 'Free', raisesLine: 'Raises Proportions' }],
+      fixes: [{ target: 'tuck', tier: 'free', effort: 1, free: true, to: 7.5, toRaw: 7.5, gain: 0.5, rawGain: 0.5, edits: [], itemId: null, copy: 'Tuck in your tee', tag: 'Free', raisesLine: 'Raises Shape' }],
       details: {
         readsAs: 'streetwear', goingFor: { style: 'minimalist', confirmed: true, source: 'setup' }, tipLead: 'smallerStep', nextLevel: ['Dark straight jeans would sit better'],
         parts: {
@@ -200,8 +200,8 @@ describe('the closet: caps, order, handles', () => {
     expect(ctx.text).toContain("  Summary: Nothing's wrong with it; it just doesn't have a waist.");
     expect(ctx.text).toContain('  Partial check: shoes not in the photo');
     expect(ctx.text).toContain('  Pieces: P1 Black tee');
-    expect(ctx.text).toContain('  Parts: Proportions 6.5 (the tee hangs over the wide jeans −0.5) · Fit 7 · Color 7 · Shoes not scored · Style 7');
-    expect(ctx.text).toContain('  Fix 1: Tuck in your tee → 7.5 (Raises Proportions)');
+    expect(ctx.text).toContain('  Parts: Shape 6.5 (the tee hangs over the wide jeans −0.5) · Fit 7 · Color 7 · Shoes not scored · Style 7');
+    expect(ctx.text).toContain('  Fix 1: Tuck in your tee → 7.5 (Raises Shape)');
     expect(ctx.text).toContain('  Smaller step: Dark straight jeans would sit better');
     expect(ctx.handles.FC1).toBe('FC-9');
     expect(ctx.text).not.toMatch(/photos\/|p01b|R-1|abc/);

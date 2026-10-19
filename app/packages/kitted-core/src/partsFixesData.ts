@@ -1014,7 +1014,7 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "style": "streetwear",
    "group": "layer",
    "part": "proportions",
-   "copy": "A short jacket, like a bomber, gives it the streetwear shape and lifts Proportions.",
+   "copy": "A short jacket, like a bomber, gives it the streetwear shape, which lifts the Shape score.",
    "when": {
     "no_outer": true,
     "not_warm": true
@@ -1037,7 +1037,7 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "style": "workwear",
    "group": "layer",
    "part": "proportions",
-   "copy": "A chore coat and boots give it the workwear shape and lift Proportions.",
+   "copy": "A chore coat and boots give it the workwear shape, which lifts the Shape score.",
    "when": {
     "no_outer": true,
     "not_warm": true,
@@ -1076,7 +1076,7 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "style": "minimalist",
    "group": "tuck",
    "part": "proportions",
-   "copy": "Tucking in the {name} gives it the minimal shape and lifts Proportions.",
+   "copy": "Tucking in the {name} gives it the minimal shape, which lifts the Shape score.",
    "when": {
     "no_outer": true,
     "top.tucked_not_in": [
@@ -1109,7 +1109,7 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "style": "classic_prep",
    "group": "layer",
    "part": "proportions",
-   "copy": "A tucked shirt under a navy blazer gives it the classic prep line and lifts Proportions.",
+   "copy": "A tucked shirt under a navy blazer gives it the classic prep line, which lifts the Shape score.",
    "when": {
     "no_outer": true,
     "not_warm": true,
@@ -1152,7 +1152,7 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "style": "smart_casual",
    "group": "tuck",
    "part": "proportions",
-   "copy": "Tucked into chinos, it takes the smart casual shape and lifts Proportions.",
+   "copy": "Tucked into chinos, it takes the smart casual shape, which lifts the Shape score.",
    "when": {
     "no_outer": true,
     "top.tucked_not_in": [

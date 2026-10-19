@@ -368,7 +368,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
    - His echo bubble (text, `me`): `5′10″ · Average · Regular · 2005` (template: `{height} · {build} · {fit} · {birthYear}`; omit height if blank).
    - Stylist message (no "who" header): `Last thing before your first check. Here's what happens to your photo.`
    - **Consent card** (`KCard`, a column of rows; each row is a 2-column grid `23.5 | 1fr`, gap 13, pad 13 / 17, hairline between rows; icon 19.5 in `accent`; title 15.5 semibold → `.subheadline.weight(.semibold)`; body 14 → `.footnote`/`.subheadline` `ink2`). Card header above the rows: `Before your first fit check` (`.headline`, pad 13 / 17 / 0). Rows (text is `app-store-and-age-rules.md` §3, ruling 16; `{provider}` comes from remote config with `consentVersion`, default `Google's Gemini API`):
-     1. Icon `face.dashed`. Title `What gets sent`. Body `To score your outfit and answer your questions, Kitted sends these to {provider}, an AI service:` then 3 bullets: `your outfit photo, with your face cropped out or blurred first (if we can't remove it, we don't send it)` · `photos of clothes you add to your closet` · `questions you type to your stylist, plus the clothes in your closet (not your photos) so it can answer`
+     1. Icon `face.dashed`. Title `What gets sent`. Body `To score your outfit and answer your questions, Kitted sends these to {provider}, an AI service:` then 3 bullets: `your outfit photo, with your face blurred first (if we can't blur it, we don't send it)` · `photos of clothes you add to your closet` · `questions you type to your stylist, plus the clothes in your closet (not your photos) so it can answer`
      2. Icon `hand.raised`. Title `What doesn't`. Body `Your face, your birth year, your name, contacts or location.`
      3. Icon `iphone`. Title `What happens to it`. Bullets: `We don't keep your photos on our servers. They stay on your phone.` · `Google uses them only to give you an answer and doesn't use them to train its AI.` · `Google keeps them for up to 55 days only to check for misuse, then deletes them.`
      4. Icon `info.circle`. Title `Your stylist is an AI.` Body `It can make mistakes, so use "Not quite right?" to fix it.`
@@ -1244,7 +1244,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 
 #### S26 · Turn on fit checks (no consent) + See an example
 - **State (a)**, after "Not now" on O5, or after consent is withdrawn in Y7.
-- **Thread:** stylist with "who" header: `Send me a fit. I'll score it and start your closet.` Then a card: title `.headline` `Turn on fit checks`; body (`.subheadline`, `ink2`) `To score a photo, I need your OK to send a face-free copy to Google's Gemini API.` (provider from config); PrimaryButton `Review and turn on` (→ O5 as a sheet with X) · SecondaryButton `See an example` (→ O1e as a sheet).
+- **Thread:** stylist with "who" header: `Send me a fit. I'll score it and start your closet.` Then a card: title `.headline` `Turn on fit checks`; body (`.subheadline`, `ink2`) `To score a photo, I need your OK to send a copy with your face blurred to Google's Gemini API.` (provider from config); PrimaryButton `Review and turn on` (→ O5 as a sheet with X) · SecondaryButton `See an example` (→ O1e as a sheet).
 - The composer's camera and send are visible; tapping them opens O5 as a sheet. Questions are blocked too (they also go to the AI). Closet "Describe it" and Lookbook still work.
 
 #### S27 · Support card and refusals
@@ -1421,7 +1421,7 @@ Grouped list, inline title `Settings`:
 
 #### Y7 · Privacy & data (push)
 - Inline title `Privacy & data`.
-- **Promise card** (`KCard`, `lock` icon in `accent`): `Your photos are saved on this iPhone and in its own backup. Kitted's servers never keep them.` + `A face-free copy of each check goes to {provider}. Google keeps it up to 55 days to check for misuse and doesn't train on it.`
+- **Promise card** (`KCard`, `lock` icon in `accent`): `Your photos are saved on this iPhone and in its own backup. Kitted's servers never keep them.` + `A copy of each check, with your face blurred, goes to {provider}. Google keeps it up to 55 days to check for misuse and doesn't train on it.`
 - Rows (grouped):
   - Toggle `Send to Google for fit checks and questions` (consent; off = withdraws, every AI call stops at once, S1 shows S26). Footer `Turn this off and Closet, Lookbook and outfit ideas still work.` Turning it back on opens O5 as a sheet.
   - `Photos on this iPhone` · `31 photos · 42 MB` (read-only).
@@ -1570,7 +1570,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.welcome.cardWord` | Sharp | M |
 | `onb.welcome.cardDetail` | Full check | M |
 | `onb.welcome.title` | Look put together.\nWithout trying\ntoo hard. | M |
-| `onb.welcome.body` | Send a fit. Get a score out of 10 and the two or three moves that raise it. | M |
+| `onb.welcome.body` | Send a fit. Get a score out of 10 and the fix that raises it. | M |
 | `onb.welcome.start` | Get started | M |
 | `onb.welcome.example` | See an example check | M |
 | `onb.progress.a11y` | Step {n} of 6 | N |
@@ -1626,7 +1626,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.consent.header` | Before your first fit check | R |
 | `onb.consent.sentTitle` | What gets sent | R |
 | `onb.consent.sentBody` | To score your outfit and answer your questions, Kitted sends these to {provider}, an AI service: | R |
-| `onb.consent.sent1` | your outfit photo, with your face cropped out or blurred first (if we can't remove it, we don't send it) | R |
+| `onb.consent.sent1` | your outfit photo, with your face blurred first (if we can't blur it, we don't send it) | R |
 | `onb.consent.sent2` | photos of clothes you add to your closet | R |
 | `onb.consent.sent3` | questions you type to your stylist, plus the clothes in your closet (not your photos) so it can answer | R |
 | `onb.consent.notTitle` | What doesn't | R |
@@ -1672,7 +1672,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `cam.retake.blurry` | Too blurry. Hold still and try again. | N |
 | `cam.retake.smudge` | Wipe your lens | R |
 | `cam.retake.noPerson` | I can't find you in this photo. | R |
-| `cam.retake.cantFrame` | Couldn't frame this one. Try again. | R |
+| `cam.retake.cantFrame` | I couldn't find your face to blur it, so I didn't send it. Get your head in the shot and try again. | R |
 | `cam.retake.noCount` | This one doesn't count. | N |
 | `cam.retake.retake` | Retake | R |
 | `cam.retake.useAnyway` | Use anyway | R |
@@ -1798,9 +1798,9 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `why.howLink` | How I score › | M |
 | `why.footer` | I score the clothes only. Never your face, body or skin. | M |
 | `why.how.title` | How I score | N |
-| `why.how.body1` | Everyone starts at 7.0. That's a clean, basic outfit. | N |
-| `why.how.body2` | Credits add points: a layer, an elevated piece, a point of interest, and shoes that match. | N |
-| `why.how.body3` | Mistakes take points off, like a pooling hem or loungewear outside the gym. What isn't in the photo never costs you. | N |
+| `why.how.body1` | I score five parts of your outfit: Shape, Fit, Color, Shoes and Style. Each starts at 7, a clean, basic outfit. | N |
+| `why.how.body2` | What works raises a part, like a top that gives you a waist or shoes that suit the look. Mistakes lower it, like pants pooling at the shoe. | N |
+| `why.how.body3` | Your score blends the five parts, then wrinkles or wear take a little off, and the occasion can hold it down (sweats at an interview). What isn't in the photo never costs you. | N |
 | `why.how.body4` | The best score today is 9.5. The same photo always gets the same score. | N |
 | `why.how.body5` | I never score your face, body, weight or skin. | N |
 | `nqr.title` | Not quite right? | M |
@@ -1929,7 +1929,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `buy.fullList` | See the full list | N |
 | `noConsent.greeting` | Send me a fit. I'll score it and start your closet. | R |
 | `noConsent.title` | Turn on fit checks | R |
-| `noConsent.body` | To score a photo, I need your OK to send a face-free copy to {provider}. | N |
+| `noConsent.body` | To score a photo, I need your OK to send a copy with your face blurred to {provider}. | N |
 | `noConsent.cta` | Review and turn on | N |
 | `noConsent.example` | See an example | R |
 
@@ -1959,7 +1959,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `fail.timeout` | That took too long. Try again. This one doesn't count. | R (edited) |
 | `fail.offline` | You're offline. Fit checks need a connection. Your photo is saved here. | R (edited) |
 | `fail.paused` | Fit checks are paused for a bit. Your photo is saved. Try again later. | N |
-| `fail.cantFrame` | Couldn't frame this one. Try again. | R |
+| `fail.cantFrame` | I couldn't find your face to blur it, so I didn't send it. Get your head in the shot and try again. | R |
 | `fail.ask` | I couldn't answer that. It doesn't count. | R |
 | `fail.cap.notScored` | Not scored | N |
 | `fail.cap.notSent` | Not sent | N |
@@ -2176,7 +2176,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `notifs.off` | Notifications are off for Kitted. | N |
 | `privacy.title` | Privacy & data | R |
 | `privacy.promise` | Your photos are saved on this iPhone and in its own backup. Kitted's servers never keep them. | R (CLAUDE.md L35 fix) |
-| `privacy.google` | A face-free copy of each check goes to {provider}. Google keeps it up to 55 days to check for misuse and doesn't train on it. | R |
+| `privacy.google` | A copy of each check, with your face blurred, goes to {provider}. Google keeps it up to 55 days to check for misuse and doesn't train on it. | R |
 | `privacy.consentToggle` | Send to Google for fit checks and questions | R |
 | `privacy.consentFooter` | Turn this off and Closet, Lookbook and outfit ideas still work. | N |
 | `privacy.storage` | Photos on this iPhone | N |
@@ -2256,7 +2256,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `push.idea` | Today: {item1}, {item2}, {item3}, {item4}. | M (mockup: "Today: navy overshirt, grey tee, khaki chinos, white sneakers.") |
 | `push.ready` | Your fit check is ready. {n} quick fixes inside. | M (plural "1 quick fix"; 0 → "Your fit check is ready.") |
 | `push.trial` | Your trial ends {weekday}. Cancel before then and you won't be charged. | M |
-| `plist.NSCameraUsageDescription` | Kitted uses the camera to check your outfit. Your face is cropped out before anything is sent. | N |
+| `plist.NSCameraUsageDescription` | Kitted uses the camera to check your outfit. Faces are blurred before anything is sent. | N |
 | `plist.NSPhotoLibraryAddUsageDescription` | Save your Kitted card to Photos. | R |
 
 ---

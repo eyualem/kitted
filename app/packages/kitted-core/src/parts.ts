@@ -659,7 +659,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const ok = narrow ? PB_ROOMY_NARROW : PB_ROOMY_FULL;
     if (o.det.some((s) => ok.has(s))) return null; // a look the outfit reads as holds it
     const what = rep(or(sub, "top"));
-    if (narrow) return [t.pb, `a roomy ${what} over slim legs: an oversized top wants a fuller leg`];
+    if (narrow) return [t.pb, `a roomy ${what} over slim pants: an oversized top wants a fuller leg`];
     const look = o.label ? `a ${STYLE_NAMES[o.label]} outfit` : "the rest of the outfit";
     return [t.pb, `the roomy ${what} is roomier than ${look} calls for`];
   }
@@ -719,7 +719,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const D = data.proportions;
     const T = o.top, O = o.outer, B = o.bottom, S = o.shoes;
     if (B === null) {
-      p.na = "legs not in the photo";
+      p.na = "pants not in the photo";
       return p;
     }
     if (SHORTS.has(nv(B.subcategory))) {
@@ -736,10 +736,10 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     // faults that move points today
     let faults = 0.0;
     if (bigTop && leg === "skinny") {
-      p.add(-D.bigTopSkinny, "a roomy top over skinny legs", "PF5_big_top_skinny_leg");
+      p.add(-D.bigTopSkinny, "a roomy top over skinny pants", "PF5_big_top_skinny_leg");
       faults += D.bigTopSkinny;
     } else if (O !== null && leg === "skinny") {
-      p.add(-D.layerOverSkinny, `the ${rep(oSub)} has nothing sturdy to sit on over skinny legs`, "PF6_layer_over_skinny");
+      p.add(-D.layerOverSkinny, `the ${rep(oSub)} has nothing sturdy to sit on over skinny pants`, "PF6_layer_over_skinny");
       faults += D.layerOverSkinny;
     }
     if (truthy(sl.peek)) {
@@ -774,7 +774,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.tip("the top may run long, past the bottom of the fly", "PF2_long_top", LOOSE.has(leg) ? D.tips.longTopLoose : D.tips.longTop);
     }
     if (O !== null && !oTailored && O.length === "below_crotch" && LOOSE.has(leg)) {
-      p.tip("a long loose layer over loose legs can shorten the line", "PF3_long_layer_loose_leg", D.tips.longLayerLooseLeg);
+      p.tip("a long loose layer over loose pants can shorten the line", "PF3_long_layer_loose_leg", D.tips.longLayerLooseLeg);
     }
     if (oTailored && (B.hem === "pooling" || B.hem === "full_break")) {
       p.tip("check the hem: trousers that bunch on the shoes fight a tailored jacket", "PF1_heavy_hem_tailored", D.tips.heavyHemTailored);
@@ -782,7 +782,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     let pf4 = false;
     if (T !== null && O === null && LONG_SHIRTS.has(nv(T.subcategory)) && tuckedNone(T) && leg === "wide"
         && vol3(T) <= D.tips.longShirtMaxVolume) {
-      p.tip("an untucked shirt over wide legs can hang long; a front tuck gives it shape", "PF4_long_shirt_wide_leg", D.tips.longShirtWideLeg);
+      p.tip("an untucked shirt over wide pants can hang long; a front tuck gives it shape", "PF4_long_shirt_wide_leg", D.tips.longShirtWideLeg);
       pf4 = true;
     }
     // v6: PB2, the leg side of the bands that stop at relaxed (wide vs relaxed isn't steady: a tip)
@@ -818,7 +818,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       const i = rewards.findIndex((x) => x[2] === "PR1_waist_break" || x[2] === "PR1b_half_tuck");
       if (i < 0 || rewards[i]![0] < t.pr4) {
         if (i >= 0) rewards.splice(i, 1);
-        rewards.push([t.pr4, "a boxy top over wide legs, finished by street sneakers: the streetwear shape", "PR4_street_shape"]);
+        rewards.push([t.pr4, "a boxy top over wide pants, finished by street sneakers: the streetwear shape", "PR4_street_shape"]);
       }
     }
     // v4 (off in v1-v3): the workwear and outdoor shapes (PR5, PR6). Their layers are never PR2's short layers, so
@@ -831,7 +831,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       }
     }
     if (!blocked && full && O !== null && SHORT_LAYERS_ALL.has(oSub) && earns(O) && !truthy(sl.peek)) {
-      rewards.push([t.pr2, `a short ${rep(oSub)} over full legs: a clean, strong shape`, "PR2_short_layer"]);
+      rewards.push([t.pr2, `a short ${rep(oSub)} over full pants: a clean, strong shape`, "PR2_short_layer"]);
     }
     // v8: PR2b, a layer read ending at the belt over a loose leg (91% the same on 2 runs); one layer, one shape credit
     if (truthy(t.pr2b) && !blocked && LOOSE.has(leg) && O !== null && !oTailored && !SHORT_LAYERS_ALL.has(oSub)
@@ -1146,8 +1146,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       }
     }
     // shoe weight against the leg (Shoes owns both directions)
-    if (BULKY.has(sub) && NARROW.has(leg)) p.add(-SH.chunkyNarrow, "chunky sneakers look heavy under narrow legs", "SW1_chunky_narrow");
-    else if (RUNNER.has(sub) && NARROW.has(leg)) p.add(-SH.runnerNarrow, "runners look heavy under narrow legs", "SW1_runner_narrow");
+    if (BULKY.has(sub) && NARROW.has(leg)) p.add(-SH.chunkyNarrow, "chunky sneakers look heavy under narrow pants", "SW1_chunky_narrow");
+    else if (RUNNER.has(sub) && NARROW.has(leg)) p.add(-SH.runnerNarrow, "runners look heavy under narrow pants", "SW1_runner_narrow");
     if (BULKY.has(sub) && looseDenim && o.det.includes("streetwear") && B!.hem !== "pooling" && up > 0) {
       p.add(t.sw2 * up, "chunky sneakers carry the wide jeans", "SW2_weight_carries_leg");
     }
@@ -1167,7 +1167,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
     p.score = clamp(p.score, SH.range[0], SH.range[1]);
     if (leg === "wide" && DAINTY_SHOES.has(sub) && !truthy(t.sw3_off)) {
-      p.tip("check the shoe isn't swallowed by the wide legs (a slim shoe can look dainty)", "SW3_dainty_wide", SH.tips.daintyWide);
+      p.tip("check the shoe isn't swallowed by the wide pants (a slim shoe can look dainty)", "SW3_dainty_wide", SH.tips.daintyWide);
     }
     return p;
   }
