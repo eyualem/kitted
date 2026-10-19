@@ -3,7 +3,7 @@
 // check lands in its window (with the score), when he's staying in, or once its window has passed.
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 import { localParts, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
   Icon, KButton, KCard, KCardSection, KText, MonoLabel, MorphPicker, NeckDownPhoto, Numeral, TextLink, displayScore, opacity, radius, scoreWordLabel, space, useTheme,
@@ -26,6 +26,7 @@ import { sessionClock } from '@/state/session';
 import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
+import { locationRow } from './locationRow';
 import { pickSwap } from './swapPicker';
 import { PieceArt } from '@/features/closet/GarmentArt';
 
@@ -123,11 +124,18 @@ function FullCard({ m }: { m: Model }) {
     const undo = await morning.wear(row.id);
     showToast(t('toast.logged'), undo);
   };
-  const swap = () => pickSwap(m.items, (id) => void morning.swap(row.id, [id]));
+  // Nothing else works without that piece: the card keeps its outfit and says so (09 §23 M2).
+  const swap = () =>
+    pickSwap(m.items, (id) => {
+      void morning.swap(row.id, [id]).then(({ swapped }) => {
+        if (!swapped) showToast(t('swap.none'));
+      });
+    });
   const allow = async () => {
     if ((await weatherSource.requestPermission()) === 'granted') await morning.refreshWeather(row.id);
   };
 
+  const locationAsk = locationRow({ permission: m.permission, hasWeather: !!weather, sourceKind: weatherSource.kind });
   const wearing = row.state === 'wearing';
   const title = enough
     ? ideaTitle(m.reasons, row.occasion)
@@ -181,7 +189,13 @@ function FullCard({ m }: { m: Model }) {
         <KText variant="title3" weight="600" accessibilityRole="header">
           {title}
         </KText>
-        {!weather && m.permission === 'unknown' && weatherSource.kind !== 'none' ? <LocationAsk onAllow={() => void allow()} /> : null}
+        {locationAsk === 'ask' ? <LocationAsk onAllow={() => void allow()} /> : null}
+        {locationAsk === 'settings' ? (
+          // Denied once: only Settings can turn it back on (09 §23 M4). A quiet link, never a nag.
+          <View style={{ alignSelf: 'flex-start' }}>
+            <TextLink title={t('wx.off.link')} color="ink2" compact accessibilityHint={t('wx.off.a11yHint')} onPress={() => void Linking.openSettings()} />
+          </View>
+        ) : null}
         <KText variant="subheadline" color="ink2">
           {why}
         </KText>

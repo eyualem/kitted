@@ -46,6 +46,8 @@ const KV = {
   style: (slot: IdeaSlot) => `idea.style.${slot}`,
   /** He changed the card's occasion or style, or swapped a piece: a fresher forecast never re-picks it (#338). */
   touched: (id: string) => `idea.touched.${id}`,
+  /** The pieces swapped away from this card, as JSON ids (09 §23 M1, #353): none comes back by swapping. */
+  swapped: (id: string) => `idea.swapped.${id}`,
 } as const;
 /** A card's forecast older than this is fetched again when Stylist shows (#338: "46° now" all afternoon). */
 export const WEATHER_STALE_MS = 45 * 60_000;
@@ -250,6 +252,8 @@ export function createMorningService(deps: MorningDeps) {
       return { samePick: false };
     }
     await store.setKv(KV.touched(id), '1');
+    // A new occasion or style is a new plan: what he swapped away before may suit it (M3).
+    await store.setKv(KV.swapped(id), '');
     const before = row.outfitId ? (await store.outfits.get(row.outfitId))?.itemIds.join('+') : null;
     const result = await pick(next);
     const outfitId = await saveOutfit(result, next.occasion, row.outfitId);
@@ -258,14 +262,23 @@ export function createMorningService(deps: MorningDeps) {
     return { samePick: !!before && before === result.outfit?.itemIds.join('+') };
   }
 
-  /** Swap one: the same card, with the given items left out. */
-  async function swap(id: string, leaveOut: string[]): Promise<void> {
+  /**
+   * Swap one: the same card without the given pieces, nor any piece swapped away from it before (09 §23 M1, #353; it
+   * used to leave out only the last one, so the first outfit came back). When nothing else works without them the card
+   * keeps its outfit (it used to go blank) and `swapped` is false: the card says `swap.none` (M2).
+   */
+  async function swap(id: string, leaveOut: string[]): Promise<{ swapped: boolean }> {
     const row = await store.dailyIdeas.get(id);
-    if (!row) return;
+    if (!row) return { swapped: false };
+    const before = parseIds(await store.getKv(KV.swapped(id)));
+    const exclude = new Set([...before, ...leaveOut]);
+    const result = await pick(row, { exclude });
+    if (!result.outfit) return { swapped: false };
     await store.setKv(KV.touched(id), '1');
-    const result = await pick(row, { exclude: new Set(leaveOut) });
+    await store.setKv(KV.swapped(id), JSON.stringify([...exclude]));
     const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
     await store.dailyIdeas.put({ ...row, outfitId, state: 'idea' });
+    return { swapped: true };
   }
 
   /** Wear this: logs the day (as the S1 card did) and returns what to put back on Undo. */
@@ -305,7 +318,9 @@ export function createMorningService(deps: MorningDeps) {
     if (deps.enabled && !deps.enabled()) return false;
     const { day, slot } = slotAt(nowMs, zone);
     const row = await store.dailyIdeas.get(ideaId(day, slot));
-    if (!row?.weather || row.state === 'stayingIn' || row.fitCheckId) return false;
+    if (!row || row.state === 'stayingIn' || row.fitCheckId) return false;
+    // No weather yet (location was off): back from Settings with it on, the card gets its forecast now (09 §23 M5).
+    if (!row.weather) return gainWeather(row);
     const fetchedAt = typeof row.weather.fetchedAt === 'number' ? row.weather.fetchedAt : row.createdAt;
     if (nowMs - fetchedAt < WEATHER_STALE_MS) return false;
     if ((await deps.weather.permission()) !== 'granted') return false;
@@ -325,7 +340,35 @@ export function createMorningService(deps: MorningDeps) {
     return true;
   }
 
+  /** A card planned without weather gets it: an untouched one is re-planned for it, a touched one keeps its outfit. */
+  async function gainWeather(row: DailyIdeaRow): Promise<boolean> {
+    if ((await deps.weather.permission()) !== 'granted') return false;
+    const weather = (await forecast(row.slot)) as unknown as Record<string, unknown> | null;
+    if (!weather) return false;
+    const next = { ...row, weather };
+    const untouched = row.state === 'idea' && (await store.getKv(KV.touched(row.id))) !== '1';
+    if (untouched) {
+      const result = await pick(next);
+      const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
+      await store.dailyIdeas.put({ ...next, outfitId });
+      if (row.messageId) await store.chat.patch(row.messageId, { outfitId });
+    } else {
+      await store.dailyIdeas.put(next);
+    }
+    return true;
+  }
+
   return { ensureCard, change, swap, wear, refreshWeather, freshen };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;
+
+function parseIds(v: string | null): string[] {
+  if (!v) return [];
+  try {
+    const a: unknown = JSON.parse(v);
+    return Array.isArray(a) ? a.filter((x): x is string => typeof x === 'string') : [];
+  } catch {
+    return [];
+  }
+}
