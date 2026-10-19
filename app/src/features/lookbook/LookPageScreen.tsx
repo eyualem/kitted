@@ -13,7 +13,7 @@
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { Stack, router } from 'expo-router';
 import {
-  DeltaRow, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, NeckDownPhoto, RowDivider, ScoreBlock, Seam, TagLine, TipLine,
+  DeltaRow, FixRow, Icon, KButton, KCard, KCardSection, KText, NeckDownPhoto, RowDivider, ScoreBlock, Seam, TagLine, TipLine,
   opacity, radius, space, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
@@ -48,7 +48,16 @@ export function LookPage({ id }: { id: string }) {
           headerRight: () => (
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
               {look.shareId && shareNativeReady() ? (
-                <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={() => router.push(`/share/${look.shareId}`)} />
+                // A plain icon like the ⋯ beside it: the header's glass capsule is the button's ground.
+                <Pressable
+                  onPress={() => router.push(`/share/${look.shareId}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('card.share.a11y')}
+                  hitSlop={8}
+                  style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1, paddingHorizontal: 6 })}
+                >
+                  <Icon name="share" size="regular" color={colors.ink} />
+                </Pressable>
               ) : null}
               <LookMenu
                 hasPhoto={!!look.photo}

@@ -539,7 +539,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
           {finish ? <FinishRow row={row} info={finish} /> : null}
           {/* "Re-check after fixing" only when there's a fix to make: under "No quick fixes" it had nothing to check. */}
           {(SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) || shareable ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: (SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) ? 'flex-start' : 'flex-end' }}>
               {SAVE_LOOK_BUILT && dialed && score >= 9 ? (
                 <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
               ) : recheckOpen && !dialed ? (

@@ -4,7 +4,7 @@
 // is exactly what the preview shows and never depends on the screen's size or text size. The transparent preview sits
 // on a checkerboard so it reads as see-through; the PNG itself has no background.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AccessibilityInfo, Linking, StyleSheet, View, useColorScheme, useWindowDimensions } from 'react-native';
+import { AccessibilityInfo, Linking, ScrollView, StyleSheet, View, useColorScheme, useWindowDimensions } from 'react-native';
 import Svg, { Defs, Pattern, Rect } from 'react-native-svg';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -22,7 +22,11 @@ import { READY_WAIT_MS, createGate } from './readyGate';
 import { FORMAT_SIZE, buildShare, imagesToLoad, photoFor, shareA11y, type FaceChoice, type ShareFormat, type ShareModel } from './shareModel';
 
 const TOP_BAR = 56;
-const CONTROLS = 210; // the version switch + face toggle + its note + the buttons and their status line
+/** The controls' height before they've been measured (the version switch, a toggle, the note, the buttons, the status
+ *  line at the default text size); after the first layout the measured height is used, at any text size. */
+const CONTROLS_GUESS = 210;
+/** The preview never shrinks below this; past it the screen scrolls (the largest text sizes). */
+const MIN_PREVIEW_H = 240;
 
 async function loadShare(checkId: string): Promise<ShareModel | null> {
   const row = await store.fitChecks.get(checkId);
@@ -82,7 +86,10 @@ function ShareBody({ m }: { m: ShareModel }) {
 
   const size = FORMAT_SIZE[format];
   const availW = width - 48;
-  const availH = Math.max(200, height - insets.top - insets.bottom - TOP_BAR - CONTROLS);
+  // The preview gets the room the controls leave (measured, so it holds at every text size and with Open Settings shown);
+  // when that's less than MIN_PREVIEW_H the screen scrolls instead of sliding the card under the title.
+  const [controlsH, setControlsH] = useState(CONTROLS_GUESS);
+  const availH = Math.max(MIN_PREVIEW_H, height - insets.top - insets.bottom - TOP_BAR - controlsH - 16);
   const scale = Math.min(availW / size.w, availH / size.h, 1);
   const photoCard = format === 'photo';
   const sticker = format === 'sticker';
@@ -122,7 +129,7 @@ function ShareBody({ m }: { m: ShareModel }) {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root} contentContainerStyle={{ flexGrow: 1 }} bounces={false} showsVerticalScrollIndicator={false}>
       <StatusBar style="light" />
       {/* The full-size card the capture reads (off screen, never seen or read by VoiceOver). */}
       <View style={styles.offscreen} pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
@@ -152,7 +159,7 @@ function ShareBody({ m }: { m: ShareModel }) {
         </View>
       </View>
 
-      <View style={[styles.controls, { paddingBottom: insets.bottom + 12 }]}>
+      <View style={[styles.controls, { paddingBottom: insets.bottom + 12 }]} onLayout={(e) => setControlsH(Math.ceil(e.nativeEvent.layout.height))}>
         {/* Locked while a capture or the share sheet is open (A3): the copy must stay what the preview shows. */}
         <View style={{ paddingHorizontal: 24, gap: 10, opacity: locked ? 0.5 : 1 }} pointerEvents={locked ? 'none' : 'auto'} accessibilityState={{ disabled: locked }}>
           <Segmented
@@ -190,7 +197,7 @@ function ShareBody({ m }: { m: ShareModel }) {
           <KButton title={t('share.openSettings')} kind="secondary" size="regular" style={{ alignSelf: 'center' }} onPress={() => void Linking.openSettings()} />
         ) : null}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -214,7 +221,7 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: fixed.night },
   offscreen: { position: 'absolute', left: -10000, top: 0 },
   top: { alignItems: 'center', justifyContent: 'center' },
-  previewWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 },
+  previewWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 8 },
   // The solid card draws its own rounded indigo ground; its preview keeps that radius (no frame of its own).
   solidPreview: { borderRadius: 24 },
   preview: { borderRadius: 18, borderCurve: 'continuous', overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.6, shadowRadius: 20, shadowOffset: { width: 0, height: 20 } },
