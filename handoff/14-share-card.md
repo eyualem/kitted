@@ -254,6 +254,48 @@ the alpha is caught.
     all 12 photos, M6.
   - **Disk:** the build filled the Mac to under 1 GB free at one point and hung the first install. This branch's
     `app/ios/Pods` was deleted afterwards (regenerable with `pod install`).
+- **Oct 19 (#352), steps 2 and 4, then the rest of the Simulator pass** (the same Debug build; this round was JS only,
+  through Metro):
+  - **Built:**
+    - the ready gate (`readyGate.ts`: the captured copy counts its images' `onLoad` and waits for the font; a new
+      gate and a remounted copy on every switch; 4 s, then "Couldn't make the image. Try again.");
+    - one press at a time (a ref), with the switches and the other button locked while busy;
+    - no state set after the screen closes;
+    - Open Settings when Photos is denied;
+    - `[share] capture <version> <ms> ms` in the log;
+    - the look page's Share in its header, beside the ⋯;
+    - `NeckDownPhoto` gained an `onLoad`.
+  - **Jest:** A1–A8 in `shareFlow.test.ts` (14 behavior checks: the gate, image counts, release timing with the
+    modules mocked, the look page's share id for a re-check / a plain look / a partial / a 6.5, 500 random head sets).
+    `npm run check` green, 1,340 tests.
+  - **S1 pass:** with the Simulator in light mode the solid card opens on Light.
+  - **S6 pass:** Photos denied → "Photos access is off. Turn it on in Settings." and Open Settings, which opens
+    Settings.
+    - **Found and fixed:** the extra button pushed the card into the title. The preview is now sized to the controls'
+      measured height.
+  - **S2 pass after a fix:** at the largest text size the switches stack and the card slid under the title. Now the
+    preview is sized to the measured controls (at least 240 pt), and past that the screen scrolls.
+  - **N1 pass:** the 7.5 card (demo 7) shows the share button. **Found and fixed:** alone on its row it sat at the
+    left; it's right-aligned now.
+  - **S8 pass:** the partial 7.0 (demo 11), opened, has no share button.
+  - **Look page (A6–A7) pass on the device:**
+    - the share icon sits in the header beside the ⋯;
+    - **found and fixed:** it first drew its own grey circle inside the glass; now a plain icon like the ⋯;
+    - it opens the re-check's Before · After · Change card.
+  - **Gate on the device:** a Save after the photo loaded went through; the log shows `capture photo 192 ms`.
+  - **N4 (a tap the instant the screen opens):** not timed reliably; the Simulator lagged 2–5 s per tap under the
+    Mac's load. The gate is covered by A1.
+  - **S11 part:** `npm run guard:release` passes (40 files, every key shape). This worktree has no `.env` files, so
+    there were no secret values to search for; it runs fully on main after the merge. A Release build wasn't run this
+    round.
+  - **Not run:**
+    - S3 (every rating word on the card; "Put together" was checked on the published mock);
+    - S4 VoiceOver by ear (labels are in tests);
+    - S9 Past chats (the read-only card never gets the button, `shareable = !readOnly && …`);
+    - S10;
+    - M5 on all 12 photos;
+    - M6;
+    - the phone (step 6).
 
 ## 9. Decisions and asks
 

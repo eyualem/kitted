@@ -2303,3 +2303,14 @@ Contradictions settled and decisions changed during the build. Newest last.
       - the installed dev app is now this branch's build, a superset of main's: main's JS still runs on it through Metro.
       - This branch's Pods were deleted afterwards.
 
+352. **The founder: "build step 2 (the ready gate, lock while busy, Open Settings) and the Lookbook look page's share button, then the rest of the Simulator pass."** Built and checked (`handoff/14-share-card.md` §8):
+    - **The ready gate:** it counts the captured copy's image loads and the font; it resets on every switch; after 4 s it says "Couldn't make the image", never a different card.
+    - **Lock while busy:** one press at a time, and the switches lock while it runs.
+    - **Open Settings** when Photos is denied.
+    - **The look page's Share** sits in its header and opens the shown check, so a re-checked look opens its Before · After · Change.
+    - **Three layout fixes the Simulator showed:**
+      1. the preview is sized to the controls' measured height, so the largest text sizes and the Open Settings row never push the card under the title, and the screen scrolls past a 240 pt minimum;
+      2. a lone share icon on the fit-check card is right-aligned;
+      3. the look page's icon is plain, like the ⋯ beside it.
+    - **Tests:** a source-matching test of the look page's header (G22) was loosened to allow the share button beside the ⋯.
+
