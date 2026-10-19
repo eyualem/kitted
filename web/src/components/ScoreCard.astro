@@ -1,0 +1,39 @@
+---
+// The hero's example score card, drawn in the page (no photo, no video): the app's fit-check card at its folded
+// rating (02 D6, #344) plus its top fix, with the score reveal as CSS (#251). It stands in until the founder's own
+// recording exists (15 §10 ask 2): put hero.mp4 and hero.jpg in public/hero/ and Hero.astro shows the video instead.
+// The words are the app's own: "Sharp" is the word for 8–8.5, and "Tuck in your …" is a real fix line (pfix.tuck).
+import Numerals from '@/components/Numerals.astro';
+interface Props { large?: boolean }
+const { large = false } = Astro.props;
+const big = large ? 76 : 60;
+---
+<figure
+  class:list={['m-0 overflow-hidden rounded-xl border bg-surface shadow-[0_1px_2px_rgb(18_22_40/0.06),0_12px_32px_-12px_rgb(18_22_40/0.18)] dark:shadow-none', large ? 'p-6' : 'p-4']}
+  aria-label="An example fit check: 8.0 out of 10, Sharp. Fix: tuck in your white tee, for 8.5."
+>
+  <div class="flex items-center justify-between" aria-hidden="true">
+    <span class="tagline">Fit check · Everyday</span>
+    <span class="tagline">Example</span>
+  </div>
+  <div class="mt-3 flex items-end gap-3" aria-hidden="true">
+    <span class="relative inline-block overflow-hidden leading-none text-ink">
+      <span class="reveal-num block"><Numerals text="8.0" size={big} class="block" /></span>
+    </span>
+    <span class="pb-1 text-[15px] text-ink3">/10</span>
+    <span class="reveal-word pb-1 text-[20px] font-semibold tracking-tight text-ink">Sharp</span>
+  </div>
+  {/* The tape the score rides on (03 "the tape-measure"): faint ticks that slide as the number locks. */}
+  <div class="relative mt-2 h-3 overflow-hidden" aria-hidden="true">
+    <div class="reveal-ticks absolute inset-y-0 left-0 w-[calc(100%+24px)] bg-[repeating-linear-gradient(90deg,var(--k-faint)_0_1px,transparent_1px_8px)] opacity-60 [mask-image:linear-gradient(90deg,transparent,#000_15%,#000_85%,transparent)]"></div>
+  </div>
+  <p class="mt-2 text-[15px] leading-snug text-ink2" aria-hidden="true">Clean basics that work together. One move makes it sharper.</p>
+  <hr class="seam my-3" />
+  <div class="reveal-fix flex items-center justify-between gap-3" aria-hidden="true">
+    <span class="text-[15px] font-semibold text-ink">Tuck in your white tee</span>
+    <span class="flex items-center gap-1 text-copper">
+      <span class="text-[15px] font-semibold">→</span>
+      <Numerals text="8.5" size={22} />
+    </span>
+  </div>
+</figure>

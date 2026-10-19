@@ -1,0 +1,16 @@
+---
+// The laptop's "scan to open on your phone" code (15 §1b, W9): drawn when the site is built, as an SVG in the page,
+// so nothing loads from elsewhere (W7). It points at the same page with ?src=qr. Dark on white in both themes, the
+// way phone cameras read best.
+import QRCode from 'qrcode';
+import { SITE } from '@/lib/site';
+const url = `${SITE.origin}/?src=qr`;
+const svg = await QRCode.toString(url, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#121628', light: '#FFFFFF' } });
+---
+<div class="flex items-center gap-4 rounded-xl border bg-surface p-4">
+  <div class="size-[104px] shrink-0 overflow-hidden rounded-md [&>svg]:size-full" role="img" aria-label={`QR code for ${SITE.origin.replace('https://', '')}`} set:html={svg} />
+  <div>
+    <p class="text-[17px] font-semibold text-ink">On your phone?</p>
+    <p class="mt-1 text-[15px] leading-snug text-ink2">Scan to open Kitted's page. It's an iPhone app.</p>
+  </div>
+</div>

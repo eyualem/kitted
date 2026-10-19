@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+/* Kitted's own tokens (handoff/03-design-system.md §2.1), under shadcn's names so its components take them as they
+   are. Light and dark follow the phone (W3). Copper is the one accent and marks score movement only (03 principle 1);
+   nothing here uses it for decoration. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
+/* A laptop or desktop with a mouse (15 §1b). */
+@custom-variant desk (@media (min-width: 900px) and (pointer: fine));
+
+:root {
+  --k-bg: #F3F4F6;
+  --k-surface: #FFFFFF;
+  --k-surface2: #ECEEF1;
+  --k-ink: #121628;
+  --k-ink2: #585E70;
+  --k-ink3: #646A7A;
+  --k-faint: #848A99;
+  --k-line: #E0E3E8;
+  --k-accent: #9C5326;
+  --k-accent-soft: rgb(156 83 38 / 0.09);
+  --k-on-primary: #FFFFFF;
+  --k-good: #2B7651;
+  --k-label: #1B2340;
+  --k-on-label: #EEF0F5;
+
+  --background: var(--k-bg);
+  --foreground: var(--k-ink);
+  --card: var(--k-surface);
+  --card-foreground: var(--k-ink);
+  --popover: var(--k-surface);
+  --popover-foreground: var(--k-ink);
+  --primary: var(--k-ink);
+  --primary-foreground: var(--k-on-primary);
+  --secondary: var(--k-surface2);
+  --secondary-foreground: var(--k-ink);
+  --muted: var(--k-surface2);
+  --muted-foreground: var(--k-ink2);
+  --accent: var(--k-surface2);
+  --accent-foreground: var(--k-ink);
+  --destructive: var(--k-accent); /* Kitted has no red (03 §2.1): errors are copper with words */
+  --border: var(--k-line);
+  --input: #B9BEC8; /* the Increase Contrast line: a field's edge must read at 3:1 */
+  --ring: var(--k-ink);
+  --radius: 12px;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --k-bg: #0C0E14;
+    --k-surface: #171A23;
+    --k-surface2: #21252F;
+    --k-ink: #ECEEF3;
+    --k-ink2: #A1A7B5;
+    --k-ink3: #9096A5;
+    --k-faint: #6E7484;
+    --k-line: #2A2F3B;
+    --k-accent: #DE9762;
+    --k-accent-soft: rgb(222 151 98 / 0.15);
+    --k-on-primary: #0C0E14;
+    --k-good: #5DC08F;
+    --k-label: #2A3150;
+    --input: #5A6172;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ink: var(--k-ink);
+  --color-ink2: var(--k-ink2);
+  --color-ink3: var(--k-ink3);
+  --color-faint: var(--k-faint);
+  --color-surface: var(--k-surface);
+  --color-surface2: var(--k-surface2);
+  --color-line: var(--k-line);
+  --color-copper: var(--k-accent);
+  --color-copper-soft: var(--k-accent-soft);
+  --color-good: var(--k-good);
+  --color-label: var(--k-label);
+  --color-on-label: var(--k-on-label);
+  --radius-sm: 8px;
+  --radius-md: var(--radius);
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  /* SF Pro for reading text, like the app (03 §3); Archivo only as outlines (glyphs.ts). */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+/* The dashed seam between a card's sections (03 §1, `.seam`). */
+.seam {
+  border: 0;
+  border-top: 1px dashed color-mix(in srgb, var(--k-faint) 45%, transparent);
+  margin: 0;
+}
+
+/* Mono caps taglines (03: ink3, spaced capitals). */
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--k-ink3);
+}
+}
+
+/* The score reveal (02 D6, #251): the numeral rides up a tape and locks; the fix's gain rises in after. With Reduce
+   Motion the card is drawn finished (P3). */
+@keyframes k-tape {
+  0% { transform: translateY(42%); }
+  70% { transform: translateY(-3%); }
+  100% { transform: translateY(0); }
+}
+@keyframes k-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes k-ticks {
+  from { transform: translateX(0); }
+  to { transform: translateX(-24px); }
+}
+.reveal-num { animation: k-tape 700ms cubic-bezier(0.2, 0.9, 0.25, 1) 150ms both; }
+.reveal-ticks { animation: k-ticks 700ms cubic-bezier(0.2, 0.9, 0.25, 1) 150ms both; }
+.reveal-word { animation: k-rise 360ms ease-out 800ms both; }
+.reveal-fix { animation: k-rise 360ms ease-out 1050ms both; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-num, .reveal-ticks, .reveal-word, .reveal-fix { animation: none; }
+}
+
+/* Laptop or desktop with a mouse (15 §1b): two columns and the QR code. Set by CSS alone, so nothing moves after the
+   page shows (W11). */
+.only-desk { display: none; }
+@media (min-width: 900px) and (pointer: fine) {
+  .only-desk { display: block; }
+  .only-touch { display: none; }
+}

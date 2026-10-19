@@ -1,0 +1,87 @@
+---
+// Every page's shell (handoff/15-landing-page.md): the head, the device word, the visit count and the footer.
+// Nothing loads from another server (W7): no font, script or image CDN, no tracker, no cookie.
+import '@/styles/global.css';
+import Wordmark from '@/components/Wordmark.astro';
+import { SITE } from '@/lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Pages other than home don't count visits or show in search results' link previews the same way. */
+  home?: boolean;
+}
+const { title, description, home = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE.origin).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0C0E14" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Kitted" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${SITE.origin}/og.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {/* The device word and where the visitor came from (15 §1b), set before the page draws. A hint only: the form
+        lets anyone pick by hand. iPadOS reports itself as a Mac with touch. */}
+    <script is:inline>
+      (function () {
+        var u = navigator.userAgent || '';
+        var d = /iPhone|iPod/.test(u) ? 'iphone'
+          : /Android/.test(u) ? 'android'
+          : /iPad/.test(u) || (/Macintosh/.test(u) && navigator.maxTouchPoints > 1) ? 'other'
+          : /Mobi/.test(u) ? 'other' : 'desktop';
+        var q = new URLSearchParams(location.search).get('src');
+        var s = q ? q.toLowerCase()
+          : /musical_ly|BytedanceWebview|TikTok/i.test(u) ? 'tiktok'
+          : /Instagram/.test(u) ? 'ig'
+          : /Snapchat/.test(u) ? 'snap' : 'direct';
+        var h = document.documentElement;
+        h.dataset.device = d;
+        h.dataset.src = s;
+      })();
+    </script>
+    {home && (
+      <script is:inline>
+        addEventListener('load', function () {
+          try {
+            var h = document.documentElement;
+            var b = new Blob([JSON.stringify({ src: h.dataset.src, device: h.dataset.device })], { type: 'text/plain' });
+            navigator.sendBeacon('/api/waitlist/visit', b);
+          } catch (e) {}
+        });
+      </script>
+    )}
+  </head>
+  <body class="min-h-dvh">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-10 focus:rounded-md focus:bg-surface focus:px-3 focus:py-2">Skip to content</a>
+    <header class="mx-auto flex max-w-[1080px] items-center px-4 pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
+      <a href="/" aria-label="Kitted home" class="rounded-[2px]"><Wordmark size={13} /></a>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="mx-auto mt-16 max-w-[1080px] px-4 pb-[max(24px,env(safe-area-inset-bottom))] sm:px-6">
+      <hr class="seam" />
+      <nav aria-label="Footer" class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-5 text-[15px] font-semibold">
+        <a href="/privacy" class="py-2">Privacy</a>
+        <a href="/terms" class="py-2">Terms</a>
+        <a href="/support" class="py-2">Support</a>
+        <span class="ml-auto py-2 text-[13px] font-normal text-ink3">Kitted · For guys 18 and up · US</span>
+      </nav>
+    </footer>
+  </body>
+</html>

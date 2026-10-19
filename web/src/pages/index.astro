@@ -1,0 +1,99 @@
+---
+// The beta landing page (handoff/15-landing-page.md §1, §1b, §3). One column on a phone, two on a laptop.
+import Base from '@/layouts/Base.astro';
+import Hero from '@/components/Hero.astro';
+import JoinForm from '@/components/JoinForm.astro';
+import PhoneFrame from '@/components/PhoneFrame.astro';
+import QrCode from '@/components/QrCode.astro';
+import { SITE } from '@/lib/site';
+
+const steps = [
+  ['Snap your fit', 'Prop your phone up, or use the mirror.'],
+  ['Get your score', 'Out of 10, with a word, like Put together or Sharp.'],
+  ['Make the fix', 'One change, and the score it gets you. Re-check to see it.'],
+  ['Your closet builds itself', 'Every check adds your pieces, so outfit ideas come from clothes you own.'],
+];
+const trust = [
+  ['Same photo, same score.', 'The rules are code, so a photo always gets the score it got before.'],
+  ['It rates the outfit, never you.', 'Clothes only. Never your face, body or skin.'],
+  ['Your face is blurred before anything is sent.', "If it can't be blurred, the photo isn't sent."],
+  ['One free fit check a day, always.', 'Seeing your score is never behind a paywall.'],
+];
+const faq = [
+  ['Is it free?', 'Free during the beta. After launch, a fit check a day stays free.'],
+  ['What happens to my photo?', "Your photo stays on your phone. To read the clothes, a copy with your face blurred goes to Google's AI. We keep no photos."],
+  ['When do I get in?', `Invites go out in batches from ${SITE.firstInvites}. iPhone, US, 18 and up.`],
+  ['Android?', "Not yet. Join and pick Android, and you'll hear first."],
+];
+---
+<Base home title="Kitted: rate my fit" description="Send a fit pic. Get a score and the one fix.">
+  <section aria-labelledby="hero-title" class="mx-auto max-w-[1080px] px-4 pt-7 sm:px-6 desk:grid desk:grid-cols-[minmax(0,1fr)_360px] desk:items-center desk:gap-16 desk:pt-14">
+    <div class="mx-auto max-w-[520px] desk:mx-0">
+      <h1 id="hero-title" class="text-[34px] font-bold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[42px] desk:text-[52px]">
+        Send a fit pic. Get a score and the one fix.
+      </h1>
+      <p class="mt-3 text-[17px] leading-[1.45] text-ink2 desk:mt-4 desk:text-[19px]">
+        Kitted rates your outfit out of 10 and tells you the one change that raises it. It rates the outfit, never you.
+      </p>
+      <div class="only-touch mt-6"><Hero /></div>
+      <div id="join" class="mt-6 scroll-mt-6 desk:mt-8">
+        <JoinForm firstInvites={SITE.firstInvites} />
+      </div>
+      <p class="mt-3 text-[13px] leading-snug text-ink3">
+        Free during the beta. iPhone first, US only. We'll only email you about Kitted. Unsubscribe anytime.
+        <a href="/privacy" class="font-semibold text-ink2 underline underline-offset-2">Privacy</a>
+      </p>
+      <div class="only-desk mt-8"><QrCode /></div>
+    </div>
+    <div class="only-desk">
+      <PhoneFrame><Hero /></PhoneFrame>
+    </div>
+  </section>
+
+  <section aria-labelledby="how-title" class="mx-auto mt-16 max-w-[1080px] px-4 sm:px-6 desk:mt-24">
+    <h2 id="how-title" class="tagline">How it works</h2>
+    <ol class="mt-4 grid gap-3 desk:grid-cols-4 desk:gap-4">
+      {steps.map(([title, line], i) => (
+        <li class="flex gap-4 rounded-xl border bg-surface p-4 desk:flex-col desk:gap-3 desk:p-5">
+          <span class="flex size-8 shrink-0 items-center justify-center rounded-full border border-ink text-[15px] font-semibold text-ink" aria-hidden="true">{i + 1}</span>
+          <div>
+            <h3 class="text-[17px] font-semibold text-ink">{title}</h3>
+            <p class="mt-1 text-[15px] leading-snug text-ink2">{line}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section aria-labelledby="trust-title" class="mx-auto mt-14 max-w-[1080px] px-4 sm:px-6 desk:mt-20">
+    <h2 id="trust-title" class="tagline">What you can count on</h2>
+    <ul class="mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+      {trust.map(([title, line]) => (
+        <li>
+          <p class="text-[17px] font-semibold text-ink">{title}</p>
+          <p class="mt-1 text-[15px] leading-snug text-ink2">{line}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section aria-labelledby="faq-title" class="mx-auto mt-14 max-w-[1080px] px-4 sm:px-6 desk:mt-20">
+    <h2 id="faq-title" class="tagline">Questions</h2>
+    {/* The FAQ is plain <details> (no JavaScript), styled like shadcn's accordion. */}
+    <div class="mt-3 divide-y rounded-xl border bg-surface desk:max-w-[720px]">
+      {faq.map(([q, a]) => (
+        <details class="group px-4">
+          <summary class="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-4 py-3 text-[17px] font-semibold text-ink [&::-webkit-details-marker]:hidden">
+            {q}
+            <svg class="size-4 shrink-0 text-ink3 transition-transform group-open:rotate-180" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+          </summary>
+          <p class="pb-4 text-[15px] leading-snug text-ink2">{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="mx-auto mt-14 max-w-[1080px] px-4 sm:px-6 desk:mt-20">
+    <a href="#join" class="inline-flex h-[52px] w-full items-center justify-center rounded-[14px] bg-primary px-6 text-[17px] font-semibold text-primary-foreground sm:w-auto">Join the beta</a>
+  </section>
+</Base>

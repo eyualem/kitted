@@ -1,0 +1,29 @@
+---
+// The link preview image's source (1200 × 630, W6): rendered once to public/og.png by tools/web/og.sh. Not served:
+// firebase.json's hosting.ignore leaves it out. Always the light look, which reads best in iMessage and DMs.
+import '@/styles/global.css';
+import ScoreCard from '@/components/ScoreCard.astro';
+import Wordmark from '@/components/Wordmark.astro';
+---
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Kitted preview card</title>
+    <style is:global>
+      :root { --k-bg: #F3F4F6 !important; --k-surface: #FFFFFF !important; --k-ink: #121628 !important; --k-ink2: #585E70 !important; --k-ink3: #646A7A !important; --k-faint: #848A99 !important; --k-line: #E0E3E8 !important; --k-accent: #9C5326 !important; --k-label: #1B2340 !important; }
+      .reveal-num, .reveal-ticks, .reveal-word, .reveal-fix { animation: none !important; }
+    </style>
+  </head>
+  <body class="m-0 h-[630px] w-[1200px] overflow-hidden bg-background">
+    <div class="grid h-full grid-cols-[1fr_420px] items-center gap-16 px-20">
+      <div>
+        <Wordmark size={20} />
+        <h1 class="mt-10 text-[64px] font-bold leading-[1.04] tracking-[-0.025em] text-ink">Send a fit pic. Get a score and the one fix.</h1>
+        <p class="mt-6 text-[26px] leading-snug text-ink2">It rates the outfit, never you. Join the beta.</p>
+      </div>
+      <div class="[&_figure]:scale-[1.25] [&_figure]:origin-center"><ScoreCard /></div>
+    </div>
+  </body>
+</html>

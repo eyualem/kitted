@@ -1,0 +1,36 @@
+---
+// The hero visual (15 §1): the founder's own 5-second score-reveal recording when public/hero/hero.mp4 and hero.jpg
+// exist, else the drawn example card. The video is decorative (A4), muted and inline, loaded only after the page
+// (P2), and never plays with Reduce Motion (P3): the still frame shows instead.
+import { existsSync } from 'node:fs';
+import ScoreCard from '@/components/ScoreCard.astro';
+interface Props { large?: boolean }
+const { large = false } = Astro.props;
+const hasVideo = existsSync(new URL('../../public/hero/hero.mp4', import.meta.url)) && existsSync(new URL('../../public/hero/hero.jpg', import.meta.url));
+---
+{hasVideo ? (
+  <div class="overflow-hidden rounded-[28px] border-[6px] border-ink bg-ink" aria-hidden="true">
+    <video
+      class="hero-video block aspect-[9/16] w-full object-cover"
+      poster="/hero/hero.jpg"
+      muted
+      playsinline
+      loop
+      preload="none"
+      data-src="/hero/hero.mp4"
+    ></video>
+  </div>
+) : (
+  <ScoreCard large={large} />
+)}
+{hasVideo && (
+  <script is:inline>
+    addEventListener('load', function () {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.querySelectorAll('video.hero-video').forEach(function (v) {
+        v.src = v.dataset.src;
+        v.play().catch(function () {});
+      });
+    });
+  </script>
+)}

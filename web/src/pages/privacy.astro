@@ -1,0 +1,50 @@
+---
+// The privacy policy for the site and the app (15 §5), written from what the app really does (CLAUDE.md "Privacy",
+// the consent screen's words in app/src/i18n/en.ts). The founder OKs it before deploy; it isn't a lawyer's review.
+import Prose from '@/layouts/Prose.astro';
+import { SITE } from '@/lib/site';
+const contact = SITE.supportEmail ?? 'the support email (not set yet)';
+---
+<Prose title="Privacy" description="What Kitted keeps, what it sends, and how to delete it." updated={SITE.policyDate}>
+  <p>Kitted is an iPhone app that rates outfits and suggests fixes. This page covers the app and this website. The short version: your photos stay on your phone, the face in anything sent is blurred first, and we don't sell or share your information for ads.</p>
+
+  <h2>This website</h2>
+  <p>When you join the beta, we keep:</p>
+  <ul>
+    <li>your email address;</li>
+    <li>whether you use an iPhone or an Android phone;</li>
+    <li>that you said you're 18 or older;</li>
+    <li>where you came from (for example TikTok or Instagram) and whether you were on a phone or a computer;</li>
+    <li>the day you joined, and whether we've sent you a beta invite.</li>
+  </ul>
+  <p>We use your email only to send beta invites and Kitted news. Every email has an unsubscribe link. We don't keep your IP address, set cookies, or use tracking pixels or analytics services. To slow down spam, we keep a scrambled code made from your address for up to a day; it can't be turned back into the address. We count visits and signups per day, by where they came from, with no names attached.</p>
+  <p>The site and its list run on Google's Firebase. After launch, we delete the emails of anyone we never invited 90 days after the launch email. Ask us and we'll delete yours sooner.</p>
+
+  <h2>The app: what stays on your phone</h2>
+  <p>Your photos, your closet, your scores and your chats with Kit are saved on your iPhone. Your photos are kept as you took them, with their location data removed.</p>
+
+  <h2>The app: what it sends, and to whom</h2>
+  <ul>
+    <li><strong>Fit checks:</strong> to read your clothes, a copy of your photo goes to Google's Gemini API. Your face is blurred on your phone first, and if the app can't find your face to blur it, the photo isn't sent. Photos of clothes you add to your closet go to Gemini the same way.</li>
+    <li><strong>Questions to Kit:</strong> what you type goes to OpenAI's API as text, with your style picks, your height and build if you gave them, what you've told Kit, and your closet as words. Never a photo.</li>
+    <li><strong>Weather:</strong> if you allow it, your approximate location (about city level) goes to the US National Weather Service for the morning outfit card. We don't store it, and it never goes to Google or OpenAI.</li>
+  </ul>
+  <p>Google and OpenAI use what we send only to give you an answer and don't use it to train their AI. Google keeps it up to 55 days and OpenAI up to 30 days, only to check for misuse, then it's deleted.</p>
+
+  <h2>The app: what our server keeps</h2>
+  <p>The app makes an anonymous account the first time it sends a fit check or a question, so it can apply the daily limits. Our server keeps, per account, how many checks and questions you used each day (for 7 days) and the total we spent on AI each day (for 90 days). It never keeps your photos, your questions or Kit's answers.</p>
+
+  <h2>Age</h2>
+  <p>Kitted is for people 18 and up. The app asks for your birth year and stops if you're under 18. We don't knowingly collect information from anyone younger.</p>
+
+  <h2>Your choices</h2>
+  <ul>
+    <li>Turn off fit checks and questions at any time: in the app, You, then Settings, then Privacy &amp; data.</li>
+    <li>Delete everything on your phone: Privacy &amp; data, then Delete all my data.</li>
+    <li>Leave the email list: the unsubscribe link in any email, or write to us.</li>
+    <li>Ask what we have about you, or ask us to delete it: write to {contact}.</li>
+  </ul>
+
+  <h2>Changes</h2>
+  <p>If this page changes, the date at the top changes too. If a change affects what the app sends, the app asks you again before sending anything.</p>
+</Prose>

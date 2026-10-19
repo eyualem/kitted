@@ -1,0 +1,17 @@
+---
+// A plain iPhone outline for the laptop column (15 §1b): the app's ink edge, the Dynamic Island, the chalk or night
+// screen. Drawn here rather than taken from 21st.dev: their code needs a paid key to read (15 §9), and this is a few
+// lines. The slot is the screen's content.
+---
+<div class="relative mx-auto flex min-h-[640px] w-[352px] flex-col rounded-[52px] border-[10px] border-ink bg-background px-4 pb-6 pt-14 shadow-[0_30px_60px_-30px_rgb(18_22_40/0.45)] dark:shadow-none">
+  <span aria-hidden="true" class="absolute left-1/2 top-3 h-[26px] w-[92px] -translate-x-1/2 rounded-full bg-ink"></span>
+  <p class="tagline mb-3 text-center" aria-hidden="true">Stylist</p>
+  <slot />
+  {/* The app's composer bar (02 D12), so the frame reads as the Stylist screen. Decorative. */}
+  <div aria-hidden="true" class="mt-auto flex h-12 items-center gap-3 rounded-full border bg-surface px-1.5">
+    <span class="flex size-9 items-center justify-center rounded-full bg-ink text-primary-foreground">
+      <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
+    </span>
+    <span class="text-[15px] text-ink3">Ask Kit…</span>
+  </div>
+</div>

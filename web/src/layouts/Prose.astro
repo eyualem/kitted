@@ -1,0 +1,13 @@
+---
+// A plain reading page (privacy, terms, support): one column, the app's type sizes.
+import Base from '@/layouts/Base.astro';
+interface Props { title: string; description: string; updated?: string }
+const { title, description, updated } = Astro.props;
+---
+<Base title={`${title} · Kitted`} description={description}>
+  <article class="mx-auto max-w-[680px] px-4 pt-8 sm:px-6 [&_a]:font-semibold [&_a]:underline [&_a]:underline-offset-2 [&_h2]:mt-9 [&_h2]:text-[20px] [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-ink [&_li]:mt-2 [&_p]:mt-3 [&_p]:text-[17px] [&_p]:leading-[1.5] [&_p]:text-ink2 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:text-[17px] [&_ul]:leading-[1.5] [&_ul]:text-ink2 [&_strong]:font-semibold [&_strong]:text-ink">
+    <h1 class="text-[32px] font-bold leading-tight tracking-[-0.02em] text-ink">{title}</h1>
+    {updated && <span class="tagline mt-2 block">Last updated {updated}</span>}
+    <slot />
+  </article>
+</Base>

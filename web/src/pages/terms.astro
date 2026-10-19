@@ -1,0 +1,33 @@
+---
+// The beta's terms (15 §5). The app's license is Apple's standard EULA. The founder OKs this before deploy.
+import Prose from '@/layouts/Prose.astro';
+import { SITE } from '@/lib/site';
+const contact = SITE.supportEmail ?? 'the support email (not set yet)';
+---
+<Prose title="Terms" description="The terms for Kitted's beta and app." updated={SITE.policyDate}>
+  <p>By joining the beta or using Kitted, you agree to these terms.</p>
+
+  <h2>The beta</h2>
+  <ul>
+    <li>The beta is free. It's test software: things can change, break or be removed, and it can end.</li>
+    <li>Beta builds are shared through Apple's TestFlight. An invite is for you; please don't pass it on.</li>
+    <li>Feedback you send may be used to improve Kitted.</li>
+  </ul>
+
+  <h2>Using Kitted</h2>
+  <ul>
+    <li>You must be 18 or older and in the US.</li>
+    <li>Send photos of yourself, or of someone who said it's OK. Never send photos of anyone under 18.</li>
+    <li>Scores and fixes are opinions about clothes, made by rules in the app. They're not professional advice, and they say nothing about you as a person.</li>
+    <li>Don't use Kitted to harass anyone, or try to break, overload or copy the service.</li>
+  </ul>
+
+  <h2>The app's license</h2>
+  <p>The app is licensed under <a href={SITE.appleEula}>Apple's standard license agreement</a> for apps from the App Store and TestFlight.</p>
+
+  <h2>Privacy</h2>
+  <p>How your information is handled is in the <a href="/privacy">privacy policy</a>.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about these terms: {contact}.</p>
+</Prose>

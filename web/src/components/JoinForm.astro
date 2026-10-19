@@ -1,0 +1,164 @@
+---
+// The waitlist form (15 §1, §3): email, iPhone or Android, 18 or older, Join the beta. shadcn's Input, Label and
+// Button are drawn to plain HTML when the site is built; no React reaches the phone (P1). The platform and the age
+// box are native inputs in shadcn's toggle and checkbox look, so they work before any script and with none.
+// Without JavaScript the form posts itself and the server answers with a page (F14); with it, the small script below
+// sends JSON and swaps the form for one line that screen readers hear (A2).
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+interface Props { firstInvites: string }
+const { firstInvites } = Astro.props;
+const toggle =
+  'flex h-12 cursor-pointer items-center justify-center rounded-[12px] border border-input bg-surface text-[17px] font-semibold text-ink transition-colors hover:bg-surface2 peer-checked:border-ink peer-checked:bg-ink peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring';
+---
+<div data-join data-first={firstInvites}>
+  <form method="post" action="/api/waitlist/join" novalidate class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1.5">
+      <Label htmlFor="join-email" className="text-[15px] font-semibold text-ink">Email</Label>
+      <Input
+        id="join-email"
+        type="email"
+        name="email"
+        inputMode="email"
+        autoComplete="email"
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
+        enterKeyHint="go"
+        maxLength={254}
+        required
+        placeholder="you@example.com"
+        className="h-12 rounded-[12px] border-input bg-surface px-4 text-[17px] text-ink shadow-none placeholder:text-ink3 focus-visible:ring-0 md:text-[17px] dark:bg-surface"
+      />
+    </div>
+
+    <fieldset class="flex flex-col gap-1.5">
+      <legend class="mb-1.5 text-[15px] font-semibold text-ink">I use</legend>
+      <div class="grid grid-cols-2 gap-2">
+        <label>
+          <input type="radio" name="platform" value="ios" class="peer sr-only" />
+          <span class={toggle}>iPhone</span>
+        </label>
+        <label>
+          <input type="radio" name="platform" value="android" class="peer sr-only" />
+          <span class={toggle}>Android</span>
+        </label>
+      </div>
+      <p class="android-note hidden text-[13px] leading-snug text-ink2">iPhone first. Android is coming: join and you'll hear first.</p>
+    </fieldset>
+    {/* The device word (Base.astro's head script) picks the platform before the page draws (15 §1b, W10, W11). */}
+    <script is:inline>
+      (function () {
+        var d = document.documentElement.dataset;
+        var v = d.device === 'iphone' ? 'ios' : d.device === 'android' ? 'android' : '';
+        var el = v && document.querySelector('[data-join] input[name=platform][value=' + v + ']');
+        if (el) el.checked = true;
+      })();
+    </script>
+
+    <div class="flex min-h-11 items-center gap-3">
+      <input id="join-adult" type="checkbox" name="adult" class="size-6 shrink-0 cursor-pointer rounded-[6px] accent-[var(--k-ink)]" />
+      <Label htmlFor="join-adult" className="text-[17px] font-normal leading-snug text-ink">I'm 18 or older</Label>
+    </div>
+
+    {/* The trap field: off screen, skipped by the keyboard and screen readers, never autofilled (F5). */}
+    <div aria-hidden="true" class="absolute -left-[9999px] h-px w-px overflow-hidden">
+      <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" value="" /></label>
+    </div>
+    <input type="hidden" name="src" value="direct" />
+    <input type="hidden" name="device" value="other" />
+
+    <p role="alert" class="join-problem text-[15px] font-semibold text-copper empty:hidden"></p>
+
+    <Button type="submit" className="h-[52px] rounded-[14px] text-[17px] font-semibold">Join the beta</Button>
+  </form>
+
+  <div class="join-done hidden rounded-xl border bg-surface p-5" role="status">
+    <p tabindex="-1" class="join-done-title text-[20px] font-semibold tracking-tight text-ink outline-none"></p>
+    <p class="join-done-line mt-1.5 text-[15px] leading-snug text-ink2"></p>
+  </div>
+</div>
+
+<style>
+  [data-join]:has(input[value='android']:checked) .android-note { display: block; }
+</style>
+
+<script>
+  // Sends the form as JSON and shows the answer in place. The same checks and words as the server (15 §3, F3–F6).
+  const EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+  const WORDS: Record<string, string> = {
+    email: 'Check your email address.',
+    platform: 'Pick iPhone or Android.',
+    adult: 'Kitted is for ages 18 and up.',
+    failed: "That didn't go through. Try again.",
+    rate: "That didn't go through. Try again in a few minutes.",
+  };
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-join]')) {
+    const form = root.querySelector('form')!;
+    const problem = root.querySelector<HTMLElement>('.join-problem')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const h = document.documentElement.dataset;
+    (form.elements.namedItem('src') as HTMLInputElement).value = h.src ?? 'direct';
+    (form.elements.namedItem('device') as HTMLInputElement).value = h.device ?? 'other';
+    let sending = false;
+
+    const show = (key: string | null, field?: Element | null) => {
+      problem.textContent = key ? WORDS[key]! : '';
+      for (const el of form.querySelectorAll('[aria-invalid]')) el.removeAttribute('aria-invalid');
+      if (field) {
+        field.setAttribute('aria-invalid', 'true');
+        if (field instanceof HTMLElement) field.focus();
+      }
+    };
+    form.addEventListener('change', () => {
+      if (problem.textContent) show(null);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (sending) return;
+      const data = new FormData(form);
+      const email = String(data.get('email') ?? '').trim();
+      const platform = String(data.get('platform') ?? '');
+      if (!EMAIL.test(email.toLowerCase())) return show('email', form.elements.namedItem('email') as Element);
+      if (!platform) return show('platform', form.querySelector('input[name=platform]'));
+      if (!data.get('adult')) return show('adult', form.elements.namedItem('adult') as Element);
+      show(null);
+      sending = true;
+      button.disabled = true;
+      button.textContent = 'Joining…';
+      try {
+        const r = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            email, platform, adult: true,
+            src: data.get('src'), device: data.get('device'), website: data.get('website') ?? '',
+          }),
+        });
+        if (r.ok) {
+          const android = platform === 'android';
+          root.querySelector('.join-done-title')!.textContent = android ? "You're on the list for Android." : "You're on the list.";
+          root.querySelector('.join-done-line')!.textContent = android
+            ? "We'll email you when it's ready."
+            : `Invites go out in small batches starting in ${root.dataset.first}. Watch for an email from Kitted.`;
+          form.hidden = true;
+          const done = root.querySelector<HTMLElement>('.join-done')!;
+          done.classList.remove('hidden');
+          done.querySelector<HTMLElement>('.join-done-title')!.focus();
+          return;
+        }
+        const j = (await r.json().catch(() => ({}))) as { error?: string };
+        show(j.error === 'email' || j.error === 'adult' || j.error === 'platform' ? j.error : r.status === 429 ? 'rate' : 'failed');
+      } catch {
+        show('failed');
+      } finally {
+        sending = false;
+        button.disabled = false;
+        button.textContent = 'Join the beta';
+      }
+    });
+  }
+</script>

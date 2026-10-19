@@ -1,0 +1,33 @@
+{
+  "name": "kitted-web",
+  "private": true,
+  "type": "module",
+  "description": "The beta landing page at trykitted.com (handoff/15-landing-page.md). Astro builds plain HTML; React runs only for the form.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro build && node --test tests/*.test.mjs",
+    "guard": "node scripts/guard.mjs",
+    "local": "sh ../tools/web/serve-local.sh"
+  },
+  "dependencies": {
+    "@astrojs/react": "^7.1.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.59.0",
+    "radix-ui": "^1.8.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "qrcode": "^1.5.4",
+    "typescript": "^7.0.2"
+  }
+}

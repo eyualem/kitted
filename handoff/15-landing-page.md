@@ -264,7 +264,71 @@ About 1.5–2 days of Claude's work. Steps 1–5 and 7 need nothing from him but
 
 ## 9. Results
 
-Nothing built yet.
+### Built Oct 19 (#360), on branch `claude/beta-landing-page-plan-5bd638`, not deployed
+
+**Where the code is:**
+- **The page:** `web/` (Astro 7, Tailwind 4, shadcn's Button, Input and Label). The words are in `src/pages/index.astro`, the form in `src/components/JoinForm.astro`, the settings in `src/lib/site.ts`.
+- **The function:** `firebase/functions/src/waitlist/` (`handler.ts`, `admin.ts`), exported as `waitlist` and `purgeWaitlistRate` from `index.ts`.
+- **Hosting:** `firebase/firebase.json` → `hosting`.
+- **The founder's script:** `firebase/scripts/waitlist.mjs` (export a batch, delete an email, show the counts).
+- **The tools:**
+  - `tools/web/serve-local.sh`: the whole site on the emulators. Launch config `kitted-site`, at http://127.0.0.1:5002.
+  - `tools/web/og.sh`: renders the link-preview image.
+  - `tools/web/glyphs.swift`: Archivo's letters as outlines.
+
+**Changed from the plan while building:**
+1. **No React reaches the phone.** With React as an island, the page sent 93 KB of JavaScript (gzipped) against P1's 60 KB: React alone is 65 KB.
+   - shadcn's components are now drawn to HTML when the site is built.
+   - The platform choice and the age box are native inputs in shadcn's look.
+   - A 1.8 KB script sends the form.
+   - First load: about 16 KB in all.
+   - The form also works with JavaScript off: the server answers a plain form post with a page (new check F14).
+2. **21st.dev now needs an account and an API key to read any component's code,** and the free plan allows 2 downloads a day.
+   - Claude can't make accounts, so nothing from 21st.dev is in the page yet.
+   - The phone frame, the steps and the FAQ are drawn in our own code with the app's tokens.
+   - The MIT-licensed candidates, if the founder wants them later: `designali-in/iphone-16-pro` (phone frame), `ln-dev7/how-it-works-02` (vertical steps), `ln-dev7/faqs-01` (FAQ).
+3. **The FAQ uses plain `<details>`,** not shadcn's Accordion, which needs React.
+4. **No font downloads.** The wordmark and the score numerals are Archivo outlines made from the app's own font files.
+5. **The hero is a drawn example card** ("8.0 Sharp", "Tuck in your white tee → 8.5") with the reveal done in CSS, until the founder's recording exists.
+   - Drop `hero.mp4` and `hero.jpg` into `web/public/hero/` and the page shows the video instead (P2 checks it).
+6. **shadcn's installer pulled in an npm package called `cn`,** which wasn't asked for, and pointed the components at it. It was removed and the imports point back at our `src/lib/utils.ts`.
+
+**Checks:**
+- **F1–F14:** 26 of 26 on the Firestore emulator (`firebase/tests/waitlist.test.ts`). The whole Firebase suite: 100 of 100.
+- **W1, W7, W8, W10, P1, P2, A1, A4, L1:** 9 of 9 (`web/tests/build.test.mjs`, `npm --prefix web run check`).
+  - W10 runs the head's device script against iPhone Safari, TikTok's and Instagram's in-app browsers, Android, a Mac, an iPad and Windows.
+- **In the Browser pane, against the real function on the emulators:**
+  - **Phone (375 × 812, dark), the Android preset:**
+    - Android came up already picked;
+    - an empty Join said "Check your email address." and focused the field;
+    - with no age box ticked it said "Kitted is for ages 18 and up." and focused the box;
+    - a full signup showed "You're on the list for Android.".
+    - The emulator's database held one row, lowercased, `src: tiktok`, plus that day's counts. No address was stored.
+  - **Laptop (1280 × 800, light):** two columns, with the card in a phone frame and the QR code.
+  - **320 px wide:** no sideways scroll.
+- **Fixed on the way:**
+  - the numerals were clipped;
+  - the dashed seam touched the text above it (styles moved into a CSS layer);
+  - the privacy page's date line was shown at body size;
+  - the reveal was shortened to about 1.2 s, so the fix shows before people scroll on;
+  - the phone frame was widened, and the app's "Ask Kit…" bar added to it.
+- **Not checked yet:**
+  - **W4** (200% text);
+  - **W5** (inside TikTok on his iPhone);
+  - **W6** (a pasted link's preview);
+  - **W9** (scanning the QR code with a real iPhone);
+  - **A2, A3** with VoiceOver and the keyboard;
+  - **P3** (Reduce Motion: the code turns the animation off; not seen).
+  - They need the live page or his phone.
+- **`npm --prefix web run guard`** refuses a deploy today: the support email isn't set, so the privacy, terms and support pages still say "not set yet".
+
+**Deploying, once the founder says go:**
+1. Put the support email in `web/src/lib/site.ts`.
+2. `firebase functions:secrets:set WAITLIST_SECRET --project kitted-a5b45`, with a long random string (Claude can make one).
+3. `npm --prefix web run check && npm --prefix web run guard`.
+4. From `firebase/`: `tests/node_modules/.bin/firebase deploy --only hosting,functions:waitlist,functions:purgeWaitlistRate --project kitted-a5b45`.
+   - The page goes live at `kitted-a5b45.web.app`.
+5. When trykitted.com is registered: Firebase console → Hosting → Add custom domain, then the DNS records at the registrar.
 
 ## 10. Decisions and asks
 
@@ -282,7 +346,9 @@ Nothing built yet.
      - **Default:** a screen recording of one of his own fit checks on his phone, neck down: the reveal and the fix.
      - The demo photos are stock and can't be used in marketing (CLAUDE.md, the Welcome photo item).
   3. **The words (§3), 3 min.**
-  4. **The first deploy's go.**
+  4. **The first deploy's go** (§9 "Deploying"), after the support email is in.
+  4b. **21st.dev, optional:** a free account and API key (2 downloads a day) if you want any of their pieces. Claude's
+      view: the page doesn't need them.
   5. **Later:**
      - trykitted.com (already P1);
      - the support email (already P1);

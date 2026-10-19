@@ -1,0 +1,22 @@
+---
+// The woven-label wordmark (03 §1, the app's WovenLabel): Archivo Expanded Bold outlines, tracked 0.34 em, on the
+// label indigo with a dashed stitch 7 pt in from each end. A logo, so screen readers hear "Kitted".
+import { WORDMARK } from '@/lib/glyphs';
+interface Props { size?: number }
+const { size = 15 } = Astro.props;
+const scale = size / 100;
+const w = WORDMARK.width * scale;
+const h = (WORDMARK.ascent - 19) * scale; // cap height: the outlines' top is 19 units below the ascent line
+---
+<span
+  role="img"
+  aria-label="Kitted"
+  class="relative inline-flex items-center rounded-[2px] bg-label text-on-label"
+  style={`padding:${Math.round(size * 0.55)}px ${Math.round(size * 1.6)}px ${Math.round(size * 0.55)}px ${Math.round(size * 1.65)}px`}
+>
+  <svg width={w.toFixed(1)} height={h.toFixed(1)} viewBox={`0 19 ${WORDMARK.width} ${WORDMARK.ascent - 19}`} aria-hidden="true" fill="currentColor">
+    <path d={WORDMARK.d} />
+  </svg>
+  <span aria-hidden="true" class="absolute inset-y-[3px] left-[7px] w-px border-l border-dashed border-on-label/55"></span>
+  <span aria-hidden="true" class="absolute inset-y-[3px] right-[7px] w-px border-l border-dashed border-on-label/55"></span>
+</span>

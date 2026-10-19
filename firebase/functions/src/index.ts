@@ -13,6 +13,8 @@ import { HttpsError, onCall, onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { createApi, type ApiDeps } from './api/handler';
 import { firestoreStore } from './api/store';
+import { createWaitlist } from './waitlist/handler';
+import { purgeRateBefore } from './waitlist/admin';
 
 initializeApp();
 
@@ -180,3 +182,41 @@ export const api = onRequest(
     }
   },
 );
+
+// The landing page's waitlist (handoff/15-landing-page.md §4). Public, no sign-in; reached through Firebase Hosting's
+// rewrite of /api/waitlist/** (firebase.json). WAITLIST_SECRET signs unsubscribe links and salts the rate limit's hash:
+// `firebase functions:secrets:set WAITLIST_SECRET` (any long random string) before the first deploy.
+const WAITLIST_SECRET = defineSecret('WAITLIST_SECRET');
+const WAITLIST_ORIGINS = [
+  'https://trykitted.com', 'https://www.trykitted.com',
+  'https://kitted-a5b45.web.app', 'https://kitted-a5b45.firebaseapp.com',
+  // The Hosting emulator, for local checks only.
+  ...(process.env.FUNCTIONS_EMULATOR === 'true' ? ['http://127.0.0.1:5002', 'http://localhost:5002'] : []),
+];
+let waitlistHandle: ReturnType<typeof createWaitlist> | null = null;
+
+export const waitlist = onRequest(
+  { region: REGION, secrets: [WAITLIST_SECRET], timeoutSeconds: 10, memory: '256MiB', concurrency: 80, maxInstances: 5, invoker: 'public' },
+  async (req, res) => {
+    waitlistHandle ??= createWaitlist({
+      db: getFirestore(),
+      secret: () => WAITLIST_SECRET.value(),
+      origins: WAITLIST_ORIGINS,
+      now: () => Date.now(),
+      log: (entry) => logger.info('waitlist', entry),
+    });
+    try {
+      await waitlistHandle(req, res);
+    } catch (e) {
+      logger.error('waitlist', { error: (e as Error).name });
+      if (!res.headersSent) res.status(500).json({ error: 'server' });
+      else res.end();
+    }
+  },
+);
+
+/** The waitlist's rate-limit counters are kept a day at most (§4). */
+export const purgeWaitlistRate = onSchedule({ region: REGION, schedule: 'every day 05:30', timeZone: 'America/New_York' }, async () => {
+  const removed = await purgeRateBefore(getFirestore(), Date.now() - DAY_MS);
+  logger.info('purgeWaitlistRate', { removed });
+});

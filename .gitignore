@@ -70,3 +70,5 @@ inputs/mediapipe/
 inputs/ansur2/
 # Firebase app config (project kitted-a5b45, #293): kept out of git
 GoogleService-Info.plist
+# the Functions emulator's local secrets (written by the test scripts and tools/web/serve-local.sh)
+firebase/functions/.secret.local

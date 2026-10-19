@@ -1,0 +1,20 @@
+---
+// Support (15 §5): the email and the three most common questions. App Review links here.
+import Prose from '@/layouts/Prose.astro';
+import { SITE } from '@/lib/site';
+---
+<Prose title="Support" description="Get help with Kitted.">
+  <p>
+    Write to {SITE.supportEmail ? <a href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a> : 'the support email (not set yet)'}.
+    A person reads every email.
+  </p>
+
+  <h2>My score seems wrong</h2>
+  <p>Tap Not quite right? under the score and fix what the app read wrong, like a piece's fit or color. It scores the check again from that. If it's still off, tell us what you were wearing.</p>
+
+  <h2>How do I delete my data?</h2>
+  <p>In the app: You, then Settings, then Privacy &amp; data, then Delete all my data. To take your email off the beta list, use the unsubscribe link in any Kitted email, or write to us.</p>
+
+  <h2>I didn't get my beta invite</h2>
+  <p>Invites go out in small batches. Check your spam folder for an email from Kitted or from Apple's TestFlight. If a week passes after you were told yours was sent, write to us.</p>
+</Prose>
