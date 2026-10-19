@@ -31,6 +31,32 @@ easy to leave, so the page is built for that browser first.
   - **Beta:** the same waitlist; invites go out by email in batches (§6).
   - **After the app passes review:** the button becomes the App Store pre-order, then the download.
 
+## 1b. By device (founder, Oct 19: "can the page load differently based on what it is opened on like laptops")
+
+One page at one address, adjusted in two ways:
+
+- **The layout follows the screen width** (CSS only, set when the page is built), so nothing jumps after it loads.
+  - **Phone (under 640 px):** §1 as written.
+  - **Tablet:** the same column, wider.
+  - **Laptop or desktop (900 px and up, with a mouse):** two columns.
+    - Left: the headline, the line under it and the form.
+    - Right: the score-reveal loop inside an iPhone frame, with the sections below in a grid.
+- **The content follows the device**, read from the browser's own report of what it's running on. This is only a
+  hint: every visitor can still pick iPhone or Android by hand, and no one is ever turned away.
+  - **iPhone, in Safari or in TikTok's browser:** iPhone is already picked.
+  - **Android:** Android is picked, and the line under the button says "iPhone first. Android is coming: join and
+    you'll hear first."
+  - **Laptop or desktop:**
+    - the form stays, so they can still join with their email;
+    - a QR code is added, "On your phone? Scan to open Kitted's page", pointing to the same page with `?src=qr`;
+    - the platform is left unpicked.
+  - **After launch:** the iPhone visitor gets the App Store button, the Android visitor the waitlist, and the laptop
+    visitor the QR code plus the App Store link.
+- **The QR code** is drawn when the site is built, as an SVG in the page. Nothing loads from outside, which keeps W7.
+  It needs one more small package (`qrcode`), used only while building: one more OK.
+- **The device word** (`iphone` | `android` | `desktop`) is added to the visit and signup counts, next to `src`
+  (§4), so the counts show how many came from a laptop. Nothing else about the device is kept.
+
 ## 2. The stack (the founder's picks, with Claude's pushbacks folded in)
 
 **shadcn/ui: yes, as the base.** Its pieces are Radix underneath (labels, focus, keyboard and screen-reader behavior
@@ -194,6 +220,13 @@ About 1.5–2 days of Claude's work. Steps 1–5 and 7 need nothing from him but
 - W7 The built site makes no request to any server but its own: no font CDN, no script CDN, no tracker. A test
   scans `web/dist`.
 - W8 A test scans the built words for the banned list (§3) and for emoji.
+- W9 At 1280 × 800 with a mouse: two columns, with the video in the phone frame and the QR code. The QR code opens
+  the page with `?src=qr` (scanned with a real iPhone camera).
+- W10 Each device opens with the right platform picked: an iPhone (Safari and TikTok) picks iPhone, an Android
+  browser picks Android, a laptop picks nothing. Each can still be changed by hand. Checked by setting the browser's
+  device report in the Browser pane, and on the founder's phone.
+- W11 Nothing moves after the page loads on any device: the layout is set before the page shows, and the platform
+  pick fills in without moving anything.
 
 **P · speed** (the in-app browser is the reason)
 - P1 First load without the video: ≤ 250 KB transferred, of which ≤ 60 KB of JavaScript, gzipped. A test reads the
