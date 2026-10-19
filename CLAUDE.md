@@ -448,7 +448,7 @@
 ### The UI audit's fix-first batch: built Oct 19 (#355, item 5 and the copy fixes #356 too), not merged. Start here for the audit's follow-ups
 - **Built:** §22.1 items 1–4 and 6–9 (`handoff/09-ui-review.md` §22.7, checks F1–F13 and results; tests `app/src/__tests__/uiAuditBatch.test.ts`; demo screens 216–222).
 - **Code:** colors in "Wrong color or fit" `features/correct/fields.ts` `colorGroups` (reuses `pieceEdit.editOptions`) and `CorrectSheet.tsx` `detailGroups`; `Chip`'s new `swatch`; a look's photos `lookPage.ts` `photoIds` and `deletePhoto.ts` `deleteLookPhotos`; the beta words `settings/plan.ts` `isBeta`; the camera's `captureFailed()`; the waiting piece's question in `PiecePage.tsx`; `readOnly` on `TapCard`, `FailureCard` and `WhichOneCard`.
-- **Open:** item 5 (the action rows under the folded rating, your call), item 10 ("Wear this" leaves no trace), the M items of §22.2–22.4.
+- **Also built:** item 5 (the folded card shows Finish the check, the closet question, the Not sure line and Later under the summary, never the fixes; checks F14–F20) and the Oct 12 copy fixes (#356, §22.8). **Open:** item 10 ("Wear this" leaves no trace), the M items of §22.2–22.4.
 
 ### The UI audit, Oct 19 (#354). Start here for UI fixes
 - **The list: `handoff/09-ui-review.md` §22** (fix-first 10, new findings by area, where every §2/§20 item stands, the order). Screenshots `screenshots/ui-audit-oct19/` (git-ignored).
