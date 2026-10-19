@@ -12,7 +12,7 @@
 // table is written once per answer, not per word.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, AppState, Keyboard, Platform, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { type SharedValue, scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { dayKey } from '@kitted/core';
 import { space, useTheme } from '@/design-system';
@@ -141,14 +141,14 @@ export function StylistScreen() {
   const first = useRef(true);
   const toLatest = () => {
     newBelow.current = false;
+    pillShown.current = false;
     setPill(false);
     atBottom.current = true;
     follow.set(1);
     toEnd(true);
   };
-  // Just above the dock (or the accessory), riding the keyboard and a toast like the dock does.
+  // Just above the dock (or the accessory), riding the keyboard like the dock does.
   const pillBase = useSharedValue(COMPOSER_BOTTOM + ACCESSORY_H + DOCK_GAP);
-  const pillStyle = useAnimatedStyle(() => ({ bottom: pillBase.value + lift.value + toastRoom.value }));
   // Only his finger decides whether the thread follows: the momentum end of our own animated
   // scrollToEnd (content still growing under it) used to read as "scrolled up" and stop it.
   const dragging = useRef(false);
@@ -159,11 +159,17 @@ export function StylistScreen() {
   };
   // The Latest pill (02 G3, 09 §23 L1): scrolled up more than a screen, or scrolled up while something new came in.
   const [pill, setPill] = useState(false);
+  const pillShown = useRef(false);
   const newBelow = useRef(false);
   const offsetY = useRef(0);
+  // Only when it turns on or off: a render on every scroll or size change (a toast growing the footer included) left a
+  // toast's entering animation stuck invisible on iOS (#118, #353).
   const updatePill = () => {
     if (contentH.current - offsetY.current - viewH.current < AT_BOTTOM_PT) newBelow.current = false;
-    setPill(latestPillShows({ contentH: contentH.current, viewH: viewH.current, offsetY: offsetY.current, newBelow: newBelow.current }));
+    const next = latestPillShows({ contentH: contentH.current, viewH: viewH.current, offsetY: offsetY.current, newBelow: newBelow.current });
+    if (next === pillShown.current) return;
+    pillShown.current = next;
+    setPill(next);
   };
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     offsetY.current = e.nativeEvent.contentOffset.y;
@@ -326,11 +332,8 @@ export function StylistScreen() {
           instead of being cut in half. A sibling after the ScrollView, so the tab bar still shrinks. */}
       <View pointerEvents="none" style={[styles.edgeFade, { experimental_backgroundImage: edgeFade(colors.bg) }]} />
       <OfflineBanner top={space.xs} />
-      {pill ? (
-        <Animated.View pointerEvents="box-none" style={[styles.pill, pillStyle]}>
-          <LatestPill onPress={toLatest} />
-        </Animated.View>
-      ) : null}
+      {/* Steps aside while a toast shows (5–8 s), so the two never stack (#353). */}
+      {pill && !toast ? <PillDock base={pillBase} lift={lift} onPress={toLatest} /> : null}
       {docked ? (
         <Animated.View
           style={[styles.dock, dockStyle]}
@@ -357,6 +360,20 @@ export function StylistScreen() {
         </Animated.View>
       ) : null}
     </>
+  );
+}
+
+/**
+ * The Latest pill's spot, riding the keyboard. Its animated style lives only while the pill is on screen: a style kept
+ * on the screen with nothing to draw (and reading the toast's room) left every toast's entering animation stuck
+ * invisible on iOS (found on the Simulator, #353; the same symptom as #118).
+ */
+function PillDock({ base, lift, onPress }: { base: SharedValue<number>; lift: SharedValue<number>; onPress: () => void }) {
+  const style = useAnimatedStyle(() => ({ bottom: base.value + lift.value }));
+  return (
+    <Animated.View pointerEvents="box-none" style={[styles.pill, style]}>
+      <LatestPill onPress={onPress} />
+    </Animated.View>
   );
 }
 
