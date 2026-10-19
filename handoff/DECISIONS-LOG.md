@@ -2334,3 +2334,13 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The first pick for today is the card's outfit** when the occasion matches, and a question with no occasion takes the card's (never Staying in). Not when a piece was deleted or is one he said he avoids (his words beat the card). The evidence line says "same as today's card".
     - **Two bugs found on the way:** "Another" left out the first id, the layer when there was one, so it could keep the Pick's top; and in `@kitted/core` a pinned layer could be dropped for a no-layer outfit with a fresher top (always on a hot day). Both fixed, with tests.
     - **Lesson:** a worktree whose `node_modules` is one symlink to the main checkout's runs the app's tests against the main checkout's `@kitted/core`. For a core change, make `node_modules` a folder of symlinks to the main one's entries, with `@kitted/core` pointing at the worktree's `packages/kitted-core`.
+
+## Oct 19 · The beta landing page
+
+359. **The founder: "let us plan out a landing page… for beta testing… posting videos on tiktok, then having a link to a website", then "use 21st dot dev and ui dot shade cn… i can listen to pushbacks".** Planned, nothing built; the plan, words and checks W/P/F/A/L are in `handoff/15-landing-page.md`.
+    - **A waitlist, not a public TestFlight link (Claude's call, founder's go).** TestFlight isn't possible before the $99 program. At Pro's beta limits an active tester costs ~2.3¢ a day, so the $3 stop covers ~130 testers, and a public link would pause everyone on the first good video. Invites go out in batches (25 → 100 → 250); Apple sends them from a CSV import, so a forwarded link can't let strangers in.
+    - **shadcn/ui and 21st.dev (founder), with three conditions (Claude):** no Magic MCP (paid credits); 21st components keep their layout and motion but take the app's own tokens (no aurora, glow or gradient blobs); every component is read before it goes in (no outside servers, no three.js, a commercial-use license).
+    - **Astro around them, not a React app (Claude's pushback).** TikTok's in-app browser is slow; Astro writes plain HTML and runs React only where something moves. Budget: ≤ 60 KB of JavaScript.
+    - **On Firebase Hosting in `kitted-a5b45`,** with a separate public `waitlist` function (`api` requires a sign-in). No IP, cookie or tracking pixel is kept. Counts by `?src=` per day.
+    - **The site also hosts `/privacy`, `/terms` and `/support`,** which App Review needs anyway (CLAUDE.md to-do P1).
+    - **Waiting on the founder:** the packages, the hero video's source (default: his own check, neck down; the demo photos are stock), the words, and the first deploy's go.
