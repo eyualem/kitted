@@ -9,6 +9,7 @@ import { t, type StringKey } from '@/i18n/en';
 import type { BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType } from './flats';
 import { contrastLine, mix } from './flats';
 import { brandWord } from './itemName';
+import { isVariant, KIND_SLEEVES, VARIANTS } from './kinds';
 import { isLongSleeved } from './sleeves';
 
 export type Glyph =
@@ -32,10 +33,12 @@ const TOP: Record<string, TopType> = {
   sweater: 'crew', sweatshirt: 'crew', fleece: 'crew', rugby_shirt: 'crew', quarter_zip: 'quarter_zip', cardigan: 'cardigan', hoodie: 'hoodie',
   denim_jacket: 'denim_jacket', bomber: 'bomber', leather_jacket: 'jacket', field_jacket: 'jacket', shell_jacket: 'jacket', rain_jacket: 'jacket',
   puffer: 'puffer', blazer: 'blazer', unstructured_blazer: 'blazer', sport_coat: 'blazer', suit_jacket: 'blazer', overcoat: 'coat',
+  // the closet-only kinds (kinds.ts, #361)
+  henley: 'tee', button_up_shirt: 'shirt', short_sleeve_shirt: 'shirt', turtleneck: 'crew', zip_hoodie: 'hoodie',
 };
 const BOTTOM: Record<string, BottomType> = {
   jeans: 'jeans', chinos: 'chinos', trousers: 'trousers', suit_trousers: 'trousers', drawstring_trousers: 'trousers', cargos: 'cargos',
-  joggers: 'joggers', sweatpants: 'joggers', shorts: 'shorts', athletic_shorts: 'shorts',
+  joggers: 'joggers', sweatpants: 'joggers', shorts: 'shorts', athletic_shorts: 'shorts', jorts: 'shorts',
 };
 const SHOE: Record<string, ShoeType> = {
   white_leather_sneaker: 'sneaker', canvas_sneaker: 'sneaker', low_profile_sneaker: 'sneaker', basketball_sneaker: 'sneaker', chunky_sneaker: 'sneaker',
@@ -72,6 +75,8 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
   const sub = String(g.subcategory ?? '');
   const shape = shapeOf(g.category, sub);
   const art: ClosetArt | null = item.art ?? null;
+  // What it's drawn as: a closet-only kind he picked (#361), else the reading's kind. Scores never read this.
+  const kind = isVariant(art?.kind) ? art!.kind! : sub;
   const d = new Set(art?.details ?? []);
   const known = !!art && (art.details?.length ?? 0) > 0;
   const has = (x: string, usual: boolean) => (known ? d.has(x) : usual);
@@ -84,18 +89,19 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
   let flat: FlatSpec;
 
   if (shape === 'top') {
-    let type: TopType = TOP[sub] ?? (g.category === 'outerwear' ? 'jacket' : 'tee');
+    let type: TopType = TOP[kind] ?? TOP[sub] ?? (g.category === 'outerwear' ? 'jacket' : 'tee');
     if (type === 'crew' && d.has('half_zip')) type = 'quarter_zip';
     if (type === 'crew' && d.has('full_zip')) type = 'jacket';
     const vol = typeof g.volume === 'number' ? g.volume : 3;
     const knit = type === 'crew' || type === 'quarter_zip' || type === 'cardigan' || type === 'hoodie' || type === 'bomber';
     const hood = type === 'hoodie';
     const shirtLike = type === 'shirt' || type === 'overshirt';
-    const pockets = type === 'overshirt' ? (known ? (d.has('chest_pocket') ? 2 : 0) : 2) : type === 'shirt' || type === 'denim_jacket' ? (has('chest_pocket', type === 'denim_jacket' || sub === 'oxford_shirt') ? (type === 'denim_jacket' ? 2 : 1) : 0) : 0;
+    const pockets = type === 'overshirt' ? (known ? (d.has('chest_pocket') ? 2 : 0) : 2) : type === 'shirt' || type === 'denim_jacket' ? (has('chest_pocket', type === 'denim_jacket' || kind === 'oxford_shirt') ? (type === 'denim_jacket' ? 2 : 1) : 0) : 0;
+    const zipHood = kind === 'zip_hoodie';
     const details: TopFlat['details'] = {
       drawstrings: hood && has('drawstring', true),
-      pouch: hood && has('front_pouch', !d.has('full_zip')),
-      fullZip: hood && d.has('full_zip'),
+      pouch: hood && !zipHood && has('front_pouch', !d.has('full_zip')),
+      fullZip: hood && (zipHood || d.has('full_zip')),
       ribHem: knit,
       ribCuffs: knit || d.has('elastic_cuffs'),
       chestPockets: pockets as 0 | 1 | 2,
@@ -106,11 +112,18 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
         : pattern === 'checks_plaid' ? { type: 'gingham', line: contrastLine(c), scale: sub === 'flannel_shirt' ? 9 : 5.5 }
           : sub === 'sweater' ? { type: 'knit' } : heather ? { type: 'heather' }
             : type === 'denim_jacket' ? { type: 'twill' } : { type: 'solid' };
+    // The sleeves: what a kind he picked is named for (#361); a tee or polo his photos show with long sleeves (§24, #359);
+    // a henley read short; else the kind's usual (a camp shirt is short-sleeved). Unset draws the type's usual sleeves.
+    const topSleeves = (isVariant(kind) ? VARIANTS[kind]!.sleeves : undefined)
+      ?? (kind === 'henley' && art?.sleeves === 'short' ? 'short' as const : undefined)
+      ?? ((type === 'tee' || type === 'polo') && isLongSleeved(sub, art) ? 'long' as const : undefined)
+      ?? KIND_SLEEVES[kind];
     flat = {
       kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 5 ? 'oversized' : vol === 4 ? 'relaxed' : type === 'overshirt' ? 'relaxed' : 'regular',
       pattern: p, details, brand, print: pattern === 'graphic' || sub === 'graphic_tee',
+      ...(topSleeves ? { sleeves: topSleeves } : {}),
+      ...(kind === 'henley' ? { neck: 'henley' as const } : kind === 'turtleneck' ? { neck: 'turtle' as const } : {}),
       buttonColor: type === 'denim_jacket' ? '#B87A45' : undefined, stitch: type === 'denim_jacket' ? '#D49A5E' : undefined,
-      ...((type === 'tee' || type === 'polo') && isLongSleeved(sub, art) ? { sleeves: 'long' as const } : {}),
     };
     if (details.fullZip || type === 'jacket' || type === 'bomber' || type === 'puffer') glyphs.add('fullZip');
     if (type === 'quarter_zip') glyphs.add('halfZip');
@@ -127,7 +140,7 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
     const fit: BottomFlat['fit'] = leg === 'skinny' ? 'skinny' : leg === 'slim' ? 'slim' : leg === 'relaxed' || leg === 'barrel' ? 'relaxed' : leg === 'wide' ? 'wide' : type === 'joggers' ? 'relaxed' : 'straight';
     const hemRaw = String(g.hem ?? '');
     const hem: BottomFlat['hem'] = hemRaw === 'full_break' || hemRaw === 'pooling' ? 'full_break' : hemRaw === 'slight_break' ? 'slight_break' : hemRaw === 'cuffed' ? 'cuffed' : 'no_break';
-    const jeans = type === 'jeans';
+    const jeans = type === 'jeans' || kind === 'jorts';
     const denim = String(g.color_family ?? '').startsWith('denim');
     flat = {
       kind: 'bottom', type, color: c, fit, hem,

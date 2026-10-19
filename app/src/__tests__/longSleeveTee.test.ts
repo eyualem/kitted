@@ -137,9 +137,9 @@ describe('S4 pieces already in his closet', () => {
 
 // ---------------------------------------------------------------- K "What it is"
 describe('K "What it is"', () => {
-  it('K1 "Long-sleeve tee" sits right after "Tee" in the first group, which stays 8', () => {
+  it('K1 "Long-sleeve tee" sits right after "Tee" in the first group (9 since #361: 3 rows of 3, the button-ups up front)', () => {
     expect(KIND_MAIN.top.slice(0, 2)).toEqual(['tee', 'long_sleeve_tee']);
-    expect(KIND_MAIN.top.length).toBe(8);
+    expect(KIND_MAIN.top.length).toBe(9);
     expect(KIND_MORE.top[0]).toBe('flannel_shirt');
   });
 

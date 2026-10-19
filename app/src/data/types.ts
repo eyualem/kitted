@@ -401,6 +401,8 @@ export interface ClosetArt {
   pattern?: string | null;
   shoeProfile: 'sleek' | 'regular' | 'chunky' | null;
   denimWear: 'none' | 'faded' | 'ripped' | null;
+  /** A closet-only kind he picked (features/closet/kinds.ts, #361): draws and names as it. Only when he picked one. */
+  kind?: string;
   /** How long its sleeves are (09-ui-review §24, #359): the closet call's read under the drift guard (his pick wins),
    *  else the scoring read's sleeve end. Missing when nothing said. Draws and names a long-sleeve tee; never a score. */
   sleeves?: 'short' | 'long' | 'sleeveless';
@@ -426,6 +428,8 @@ export interface ClosetProfile {
   autoName?: boolean;
   /** The detail word the name carries to tell it from another of his pieces ("zip"), sticky. */
   nameDetail?: string | null;
+  /** A closet-only kind he picked (kinds.ts, #361): the reading keeps its own kind (VARIANTS[...].sub). */
+  kindVariant?: string;
   /** The sighting whose photo he picked as the piece's cover (piece page, #276). Absent: the best photo leads. */
   coverObsId?: string | null;
   /** Sightings whose photo he removed from the piece (#276): never shown for it. The sighting still counts (wears,

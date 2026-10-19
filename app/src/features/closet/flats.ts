@@ -46,8 +46,11 @@ export interface TopFlat extends FlatBase {
   drawstringColor?: string;
   /** A printed graphic on the chest (graphic tees). */
   print?: boolean;
-  /** A tee, polo or jersey worn with long sleeves (09-ui-review §24, #359): sleeves to the wrist, a plain hemmed cuff. */
-  sleeves?: 'long';
+  /** Sleeve length (#359, #361): unset draws the type's usual (short on tees and polos, none on a tank, long otherwise);
+   *  a tee, polo or jersey with long sleeves gets slimmer sleeves to the wrist and a plain hemmed cuff (§24, #359). */
+  sleeves?: 'short' | 'long' | 'sleeveless';
+  /** A henley's short button placket, or a turtleneck's rolled collar, in place of the crew neck (#361). */
+  neck?: 'henley' | 'turtle';
 }
 
 export interface BottomFlat extends FlatBase {
@@ -216,9 +219,10 @@ function top(s: TopFlat, ctx: Ctx): string {
   const cx = 100;
   const t = s.type;
   const tee = t === 'tee' || t === 'polo' || t === 'tank';
-  // short sleeves: a tee or polo unless it's the long-sleeve kind (§24); a tank has none
-  const shortSl = tee && s.sleeves !== 'long';
-  // a long-sleeve tee: slimmer sleeves than a sweatshirt's, finished with a stitched hem instead of a cuff
+  // the sleeves as asked (#361), else the type's usual; a tank has none
+  const noSleeves = t === 'tank' || s.sleeves === 'sleeveless';
+  const shortSl = s.sleeves ? s.sleeves === 'short' : tee;
+  // a long-sleeve tee (§24, #359): slimmer sleeves than a sweatshirt's, finished with a stitched hem instead of a cuff
   const longTee = tee && !shortSl;
   const hood = t === 'hoodie';
   const shirt = t === 'shirt' || t === 'overshirt';
@@ -243,7 +247,7 @@ function top(s: TopFlat, ctx: Ctx): string {
   interface Sleeve { d: string; cuff: string | null; co: number[]; ci: number[]; oPt: number[]; iPt: number[]; m: (x: number) => number }
   const sleeve = (side: number): Sleeve => {
     const m = (x: number) => cx + side * x;
-    if (t === 'tank') return { d: '', cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
+    if (noSleeves) return { d: '', cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
     if (shortSl) {
       return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 24)},58 ${m(hw + 35)},79 Q${m(hw + 29)},88 ${m(hw + 21)},95 L${m(A[0] - 0.5)},${A[1] + 3} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
     }
@@ -258,7 +262,7 @@ function top(s: TopFlat, ctx: Ctx): string {
   };
   const L = sleeve(-1);
   const R = sleeve(1);
-  const sleeves = t === 'tank' ? [] : [L, R];
+  const sleeves = noSleeves ? [] : [L, R];
 
   let out = '';
   // ground shadow: an offset silhouette (no blur, so it maps 1:1 to react-native-svg)
@@ -341,13 +345,28 @@ function top(s: TopFlat, ctx: Ctx): string {
   }
 
   // crew neck rib with the inside of the back neck showing (ghost-mannequin depth)
-  const crewNeck = !hood && !collared && !tailored && t !== 'cardigan';
+  const crewNeck = !hood && !collared && !tailored && t !== 'cardigan' && s.neck !== 'turtle';
   if (crewNeck) {
     const depth = t === 'quarter_zip' ? 38 : 44;
     out += `<path d="M${cx - nw},31 Q${cx},23 ${cx + nw},31 Q${cx},${depth} ${cx - nw},31 Z" fill="${mix(c, lum(c) < 0.05 ? 0.12 : -0.32)}" stroke="${edge}" stroke-width="1"/>`;
     out += `<path d="M${cx - nw},31 Q${cx},${depth} ${cx + nw},31" fill="none" stroke="${mix(c, -0.04)}" stroke-width="4.2" stroke-linecap="round"/>`;
     out += `<path d="M${cx - nw},31 Q${cx},${depth} ${cx + nw},31" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="4.2" stroke-dasharray=".6 1.4"/>`;
     out += `<path d="M${cx - nw - 2.4},32.6 Q${cx},${depth + 4.6} ${cx + nw + 2.4},32.6" fill="none" stroke="${edge}" stroke-width=".9"/>`;
+  }
+  // henley: a short button placket below the crew neck
+  if (crewNeck && s.neck === 'henley') {
+    out += `<path d="M${cx - 4.5},37 L${cx + 4.5},37 L${cx + 4.5},66 L${cx - 4.5},66 Z" fill="${fill}" stroke="${edge}" stroke-width=".9"/>`;
+    out += `<path d="M${cx + 4.5},38 V65" stroke="#000" stroke-opacity=".14" stroke-width="1.6" transform="translate(1,0)"/>`;
+    for (const y of [44, 52, 60]) out += `<circle cx="${cx}" cy="${y}" r="1.8" fill="${s.buttonColor ?? mix(c, -0.25)}" stroke="${mix(c, -0.45)}" stroke-width=".5"/>`;
+  }
+  // turtleneck: a rolled collar standing up from the neck
+  if (s.neck === 'turtle' && !hood && !collared && !tailored) {
+    const tw = nw + 3;
+    const roll = `M${cx - tw},34 L${cx - tw + 1},15 Q${cx},11 ${cx + tw - 1},15 L${cx + tw},34 Q${cx},39 ${cx - tw},34 Z`;
+    out += halo(ctx, c, [roll]);
+    out += `<path d="${roll}" fill="${mix(c, -0.04)}" stroke="${edge}" stroke-width="1.1" stroke-linejoin="round"/><path d="${roll}" fill="url(#${id}sx)"/>`;
+    for (let x = cx - tw + 3; x < cx + tw - 1; x += 3) out += `<path d="M${f(x)},${f(16 + Math.abs(x - cx) * 0.02)} L${f(x)},${f(34 + (1 - Math.abs(x - cx) / tw) * 3)}" stroke="#000" stroke-opacity=".13" stroke-width=".55"/>`;
+    out += `<path d="M${cx - tw + 1},15 Q${cx},19 ${cx + tw - 1},15" fill="none" stroke="#000" stroke-opacity=".16" stroke-width="2"/>`;
   }
   if (t === 'quarter_zip' || t === 'bomber' || (t === 'hoodie' && s.details?.fullZip) || t === 'jacket' || t === 'puffer') {
     const y1 = t === 'quarter_zip' ? 84 : hemY - (ribbed ? 12 : 1);
