@@ -570,7 +570,7 @@ describe('X14 words and VoiceOver', () => {
 // ---------------------------------------------------------------- X15 more kinds (#361)
 // Founder, Oct 17: "the full sleeve shirt is not included … half sleeve button-ups are not included … add more options".
 // Closet-only kinds (features/closet/kinds.ts): each keeps the reading's kind it scores and matches as, and draws and
-// names as itself. Checks K1–K11 (09-ui-review §24).
+// names as itself. Checks K1–K11 (09-ui-review §25).
 describe('X15 more kinds (#361)', () => {
   const NEW: Record<string, [string, string]> = {
     long_sleeve_tee: ['tee', 'Long-sleeve tee'], henley: ['tee', 'Henley'], button_up_shirt: ['oxford_shirt', 'Button-up shirt'],
@@ -601,10 +601,11 @@ describe('X15 more kinds (#361)', () => {
     const preview = withEdit(t2, 'kind', 'long_sleeve_tee');
     const r = await env.closet.editPiece('T2', 'kind', 'long_sleeve_tee');
     const after = await piece(env.store, 'T2');
+    // a long-sleeve tee is a tee with his long sleeves (§24, #359), not a closet-only kind
     expect(after.garment.subcategory).toBe('tee');
-    expect(after.profile?.kindVariant).toBe('long_sleeve_tee');
+    expect(after.profile?.kindVariant).toBeUndefined();
     expect(after.profile?.confirmed.sleeve_length).toBe('long');
-    expect(after.art).toMatchObject({ kind: 'long_sleeve_tee', sleeves: 'long' });
+    expect(after.art).toMatchObject({ sleeves: 'long' });
     expect(after.name).toMatch(/^(Heather )?[Gg]rey long-sleeve tee$/);
     expect(editRows(after).find((x) => x.field === 'kind')!.value).toBe('Long-sleeve tee');
     expect(editOptions(after, 'kind').main.find((o) => o.current)!.value).toBe('long_sleeve_tee');
@@ -663,7 +664,10 @@ describe('X15 more kinds (#361)', () => {
     const env = await setup({ only: 'all' });
     const t2 = await piece(env.store, 'T2');
     expect(artSpec(withEdit(await piece(env.store, 'T4'), 'kind', 'camp_collar_shirt')).flat).toMatchObject({ sleeves: 'short' });
-    expect(artSpec(withEdit(t2, 'kind', 'henley')).flat).toMatchObject({ type: 'tee', sleeves: 'long', neck: 'henley' });
+    // a henley takes the sleeves his photos show (T2 reads short), else it's drawn long
+    expect(artSpec(withEdit(t2, 'kind', 'henley')).flat).toMatchObject({ type: 'tee', sleeves: t2.art?.sleeves === 'short' ? 'short' : 'long', neck: 'henley' });
+    const unread = { ...t2, art: t2.art ? (({ sleeves: _s, ...rest }) => rest)(t2.art) : null };
+    expect(artSpec(withEdit(unread, 'kind', 'henley')).flat).toMatchObject({ sleeves: 'long', neck: 'henley' });
     expect(artSpec(withEdit(await piece(env.store, 'T3'), 'kind', 'turtleneck')).flat).toMatchObject({ type: 'crew', neck: 'turtle' });
     const zip = artSpec(withEdit(t2, 'kind', 'zip_hoodie')).flat;
     expect(zip).toMatchObject({ type: 'hoodie', details: { fullZip: true, pouch: false } });
@@ -715,14 +719,15 @@ describe('X15 more kinds (#361)', () => {
     expect(draw(after)).toBe(drawn);
   });
 
-  it('K10 confirmed sleeves keep a long- and a short-sleeve tee apart, but not one half seen under a layer', async () => {
+  it('K10 a kind named by its sleeves confirms them; one that isn\'t leaves them as his photos show', async () => {
     const env = await setup({ only: 'all' });
-    await env.closet.editPiece('T2', 'kind', 'long_sleeve_tee');
-    const t2 = await piece(env.store, 'T2');
-    const p = profileFromClosetItem(t2 as never, { sightings: [], ...profileExtra(t2) });
-    const obs = { category: 'top', subcategory: 'tee', color_family: 'grey', pattern: 'solid', sleeve_length: 'short' } as never;
-    expect(identity(obs, p).vetoes).toContain('sleeve_length');
-    expect(identity({ ...(obs as object), partial: true } as never, p).vetoes).not.toContain('sleeve_length');
+    await env.closet.editPiece('T4', 'kind', 'short_sleeve_shirt');
+    expect((await piece(env.store, 'T4')).profile?.confirmed.sleeve_length).toBe('short');
+    await env.closet.editPiece('T4', 'kind', 'button_up_shirt');
+    expect((await piece(env.store, 'T4')).profile?.confirmed.sleeve_length).toBe('long');
+    const t3 = await piece(env.store, 'T3');
+    await env.closet.editPiece('T3', 'kind', 'turtleneck');
+    expect((await piece(env.store, 'T3')).profile?.confirmed.sleeve_length).toBe(t3.profile?.confirmed.sleeve_length);
   });
 
   it('K11 Undo puts the kind, the name and the drawing back', async () => {

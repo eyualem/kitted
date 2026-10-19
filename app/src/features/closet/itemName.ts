@@ -10,6 +10,7 @@ import type { ClosetArt, ClosetItemRow } from '@/data/types';
 import { colorWord, garmentLabel } from '@/features/fitcheck/labels';
 import { isVariant, VARIANTS } from './kinds';
 import { profileOfItem } from './profile';
+import { isLongSleeved } from './sleeves';
 
 const BRAND_NAME: Readonly<Record<string, string>> = {
   nike: 'Nike', jordan: 'Jordan', adidas: 'Adidas', puma: 'Puma', new_balance: 'New Balance', under_armour: 'Under Armour',
@@ -66,12 +67,13 @@ export function detailWordsOf(art: Pick<ClosetArt, 'details' | 'denimWear' | 'sh
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
 const OTHER: Readonly<Record<string, string>> = { top: 'top', outerwear: 'layer', bottom: 'bottoms', footwear: 'shoes' };
-/** The garment noun ("hoodie"); a closet-only kind he picked says itself ("long-sleeve tee", #361); an "other" type
- *  says what kind of piece it is ("Black top"). */
-function pieceWord(g: Garment, art?: ClosetArt | null): string {
+/** The garment noun ("hoodie", "long-sleeve tee"); a closet-only kind he picked says itself ("short-sleeve shirt",
+ *  #361); an "other" type says what kind of piece it is ("Black top"). */
+function pieceWord(g: Garment, art: ClosetArt | null | undefined): string {
   if (isVariant(art?.kind) && VARIANTS[art!.kind!]!.sub === g.subcategory) return VARIANTS[art!.kind!]!.noun;
   const n = garmentName(g);
-  return n === 'other' || n === 'piece' ? OTHER[String(g.category)] ?? 'piece' : n;
+  if (n === 'other' || n === 'piece') return OTHER[String(g.category)] ?? 'piece';
+  return isLongSleeved(g.subcategory, art) ? `long-sleeve ${n}` : n;
 }
 
 /** The name without a detail word. */

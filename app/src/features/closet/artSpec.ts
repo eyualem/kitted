@@ -9,7 +9,8 @@ import { t, type StringKey } from '@/i18n/en';
 import type { BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType } from './flats';
 import { contrastLine, mix } from './flats';
 import { brandWord } from './itemName';
-import { isVariant, KIND_SLEEVES } from './kinds';
+import { isVariant, KIND_SLEEVES, VARIANTS } from './kinds';
+import { isLongSleeved } from './sleeves';
 
 export type Glyph =
   | 'fullZip' | 'halfZip' | 'drawstrings' | 'pouch' | 'chestPocket' | 'cargoPockets' | 'sideStripe' | 'cuffs' | 'beltLoops'
@@ -33,7 +34,7 @@ const TOP: Record<string, TopType> = {
   denim_jacket: 'denim_jacket', bomber: 'bomber', leather_jacket: 'jacket', field_jacket: 'jacket', shell_jacket: 'jacket', rain_jacket: 'jacket',
   puffer: 'puffer', blazer: 'blazer', unstructured_blazer: 'blazer', sport_coat: 'blazer', suit_jacket: 'blazer', overcoat: 'coat',
   // the closet-only kinds (kinds.ts, #361)
-  long_sleeve_tee: 'tee', henley: 'tee', button_up_shirt: 'shirt', short_sleeve_shirt: 'shirt', turtleneck: 'crew', zip_hoodie: 'hoodie',
+  henley: 'tee', button_up_shirt: 'shirt', short_sleeve_shirt: 'shirt', turtleneck: 'crew', zip_hoodie: 'hoodie',
 };
 const BOTTOM: Record<string, BottomType> = {
   jeans: 'jeans', chinos: 'chinos', trousers: 'trousers', suit_trousers: 'trousers', drawstring_trousers: 'trousers', cargos: 'cargos',
@@ -111,11 +112,16 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
         : pattern === 'checks_plaid' ? { type: 'gingham', line: contrastLine(c), scale: sub === 'flannel_shirt' ? 9 : 5.5 }
           : sub === 'sweater' ? { type: 'knit' } : heather ? { type: 'heather' }
             : type === 'denim_jacket' ? { type: 'twill' } : { type: 'solid' };
+    // The sleeves: what a kind he picked is named for (#361); a tee or polo his photos show with long sleeves (§24, #359);
+    // a henley read short; else the kind's usual (a camp shirt is short-sleeved). Unset draws the type's usual sleeves.
+    const topSleeves = (isVariant(kind) ? VARIANTS[kind]!.sleeves : undefined)
+      ?? (kind === 'henley' && art?.sleeves === 'short' ? 'short' as const : undefined)
+      ?? ((type === 'tee' || type === 'polo') && isLongSleeved(sub, art) ? 'long' as const : undefined)
+      ?? KIND_SLEEVES[kind];
     flat = {
       kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 5 ? 'oversized' : vol === 4 ? 'relaxed' : type === 'overshirt' ? 'relaxed' : 'regular',
       pattern: p, details, brand, print: pattern === 'graphic' || sub === 'graphic_tee',
-      // his confirmed sleeves, else what the kind is named for; unset draws the type's usual sleeves
-      ...(art?.sleeves || KIND_SLEEVES[kind] ? { sleeves: art?.sleeves ?? KIND_SLEEVES[kind] } : {}),
+      ...(topSleeves ? { sleeves: topSleeves } : {}),
       ...(kind === 'henley' ? { neck: 'henley' as const } : kind === 'turtleneck' ? { neck: 'turtle' as const } : {}),
       buttonColor: type === 'denim_jacket' ? '#B87A45' : undefined, stitch: type === 'denim_jacket' ? '#D49A5E' : undefined,
     };

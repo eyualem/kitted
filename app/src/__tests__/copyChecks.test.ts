@@ -154,7 +154,7 @@ describe('closet names (#91)', () => {
   const PATTERNS = ['striped', 'plaid', 'camo', 'floral']; // #115
   const SUBS = (schemaV3 as { properties: { garments: { items: { properties: { subcategory: { enum: string[] } } } } } }).properties.garments.items.properties.subcategory.enum;
   const GARMENT = SUBS.flatMap((s) => core.garmentName({ subcategory: s }).toLowerCase().split(' '));
-  const ALLOWED = new Set([...COLORS, ...SHADE, ...PATTERNS, ...BRANDS, ...DETAILS, ...GARMENT.filter((w) => w !== 'other'), 'top', 'layer', 'bottoms', 'shoes', ...'23456789'.split('')]);
+  const ALLOWED = new Set([...COLORS, ...SHADE, ...PATTERNS, ...BRANDS, ...DETAILS, ...GARMENT.filter((w) => w !== 'other'), 'top', 'layer', 'bottoms', 'shoes', 'long-sleeve', ...'23456789'.split('')]);
 
   it('names for every demo photo come only from the fixed tables', async () => {
     const bad: string[] = [];

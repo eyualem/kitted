@@ -46,7 +46,8 @@ export interface TopFlat extends FlatBase {
   drawstringColor?: string;
   /** A printed graphic on the chest (graphic tees). */
   print?: boolean;
-  /** Sleeve length (#361): unset draws the type's usual (short on tees and polos, none on a tank, long otherwise). */
+  /** Sleeve length (#359, #361): unset draws the type's usual (short on tees and polos, none on a tank, long otherwise);
+   *  a tee, polo or jersey with long sleeves gets slimmer sleeves to the wrist and a plain hemmed cuff (§24, #359). */
   sleeves?: 'short' | 'long' | 'sleeveless';
   /** A henley's short button placket, or a turtleneck's rolled collar, in place of the crew neck (#361). */
   neck?: 'henley' | 'turtle';
@@ -218,9 +219,11 @@ function top(s: TopFlat, ctx: Ctx): string {
   const cx = 100;
   const t = s.type;
   const tee = t === 'tee' || t === 'polo' || t === 'tank';
-  // the sleeves as asked (#361), else the type's usual
+  // the sleeves as asked (#361), else the type's usual; a tank has none
   const noSleeves = t === 'tank' || s.sleeves === 'sleeveless';
   const shortSl = s.sleeves ? s.sleeves === 'short' : tee;
+  // a long-sleeve tee (§24, #359): slimmer sleeves than a sweatshirt's, finished with a stitched hem instead of a cuff
+  const longTee = tee && !shortSl;
   const hood = t === 'hoodie';
   const shirt = t === 'shirt' || t === 'overshirt';
   const tailored = t === 'blazer' || t === 'coat';
@@ -248,7 +251,7 @@ function top(s: TopFlat, ctx: Ctx): string {
     if (shortSl) {
       return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 24)},58 ${m(hw + 35)},79 Q${m(hw + 29)},88 ${m(hw + 21)},95 L${m(A[0] - 0.5)},${A[1] + 3} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
     }
-    const wide = s.fit === 'oversized' ? 7 : s.fit === 'relaxed' || t === 'overshirt' || t === 'puffer' || t === 'coat' ? 4 : 0;
+    const wide = (s.fit === 'oversized' ? 7 : s.fit === 'relaxed' || t === 'overshirt' || t === 'puffer' || t === 'coat' ? 4 : 0) - (longTee ? 3 : 0);
     const co = [hw + 31 + wide, 164];
     const ci = [hw + 14 - wide * 0.5, 168];
     const d = `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 27 + wide)},92 ${m(co[0]!)},${co[1]} L${m(ci[0]!)},${ci[1]} Q${m(hw + 9)},120 ${m(A[0] - 0.5)},${A[1] + 2} Z`;
@@ -288,6 +291,11 @@ function top(s: TopFlat, ctx: Ctx): string {
   // cuffs
   if (!shortSl) {
     for (const sl of sleeves) {
+      if (longTee) {
+        // the hem's stitch line, just above the sleeve's end
+        out += `<path d="M${f(sl.m(sl.oPt[0]!))},${f(sl.oPt[1]!)} L${f(sl.m(sl.iPt[0]!))},${f(sl.iPt[1]!)}" ${stitch(s.stitch ?? mix(c, -0.3), 0.6)}/>`;
+        continue;
+      }
       const rib = !!s.details?.ribCuffs;
       out += `<path d="${sl.cuff}" fill="${rib ? mix(c, -0.05) : fill}" stroke="${edge}" stroke-width="1.1" stroke-linejoin="round"/><path d="${sl.cuff}" fill="#000" opacity="${rib ? 0.08 : 0.04}"/>`;
       if (rib) {

@@ -979,14 +979,43 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **L seen again** after the fix: dark, the largest text size, screen 12 scrolled up; the pill shows above "Ask Kit…".
 - `npm run check` green (1,370 app tests).
 
-## 24. More kinds in "What it is" (Oct 17, #361)
+## 24. Long-sleeve tees in the closet (Oct 19, #359). Checks first
+**What this is.** Founder, Oct 19: "closet does not detect full sleeve tees and does not have the option for them. it also does not have a graphic representation for them." Today the closet call already reads each top's `sleeve_length` (short · long · sleeveless) and the matcher uses it, but nothing he sees does: a long-sleeve tee is named "Grey tee", drawn with short sleeves, and "What it is" has no such kind.
+
+**Decided (Claude's call, no score moves):** a long-sleeve tee stays `tee` (or `graphic_tee`) in the reading, so the scoring read, the rules and every score are untouched (the schema has no long-sleeve kind, and adding one is a reading change that needs the founder and a steadiness test). The sleeves are part of the piece's look instead: `ClosetArt.sleeves`, from the closet call's `sleeve_length` under the drift guard (his pick wins), else from the scoring read's `sleeve_end` (a tee whose sleeves end at the wrist, above it or over the hand has long sleeves). Polos and jerseys follow the same rule; shirts, knits and jackets are drawn as before.
+
+**S · Seeing it**
+- S1 (T) `artOf` gives `sleeves: 'long'` for a tee whose sightings' closet call read `long`, and for a tee with no closet call whose `sleeve_end` is `at_wrist`, `above_wrist` or `covers_hand`; `'short'` from a `short` read; nothing when neither says. One sighting reading the other way doesn't flip it (the drift guard: 2 newer sightings must agree); his confirmed `sleeve_length` wins outright.
+- S2 (T) The name: "Grey long-sleeve tee", "Black long-sleeve graphic tee", "Navy long-sleeve polo"; a short-sleeve tee keeps "Grey tee". A name he typed never changes.
+- S3 (T) The drawing: a long-sleeve tee draws long sleeves (to the wrist) with a plain hemmed cuff (no rib), a crew neck and the tee's own length (no rib hem), so it differs from both a tee and a sweatshirt of the same color. A short-sleeve tee draws exactly as before (same SVG).
+- S4 (T) Pieces already in his closet get it at the next launch (`refreshColors` also re-derives a piece whose sleeves changed, then renames), with no score, sighting or photo touched.
+
+**K · "What it is" (§17)**
+- K1 (T) A top's Kind list has "Long-sleeve tee" in its first group, right after "Tee" (Flannel shirt moves to the front of More kinds, so the first group stays 8, all drawn differently).
+- K2 (T) A long-sleeve tee's Kind row says "Long-sleeve tee" and that option is the current one.
+- K3 (T) Picking "Long-sleeve tee" on a tee writes `subcategory: tee` and his confirmed `sleeve_length: long` (never the word `long_sleeve_tee` in the reading or the matcher's confirmed kind); the toast says "Changed to long-sleeve tee. Your scores stay the same."; the sleeve reads his photos gave that disagree are taught to the matcher (field aliases), so the next photo of it still finds it.
+- K4 (T) Picking "Tee" or "Graphic tee" on a long-sleeve tee sets the sleeves short; another kind leaves the sleeves alone. Undo puts every row back.
+- K5 (T) The option pictures: "Long-sleeve tee" draws long sleeves, "Tee" short.
+
+**M · The morning card**
+- M1 (T) On a hot day a long-sleeve tee no longer counts as a cool short-sleeve top (`ideas.ts`, its `hotShortSleeve` credit and "wrong for the weather"); a piece without the sleeve read is judged by its kind as before.
+
+**Not changed:** the scoring reading, `@kitted/core`'s rules and every score; the closet call's prompt; Python.
+
+### §24 results (Oct 19, #359): every check passes; not yet seen on the Simulator
+- **Tests:** `src/__tests__/longSleeveTee.test.ts`, 14 checks (S1–S4, K1–K5, M1 and a control) pass. Older tests changed only where the new field shows: the seed's grey tee's art now carries `sleeves: 'short'` (`seedLoader.test.ts`), "long-sleeve" is an allowed name word (`copyChecks.test.ts`), and the Kind lists (`pieceEdit.test.ts` X1). `npm run check` green: 1,393 app tests.
+- **Found on the way:** the demo photo p01a (a white tee under an open overshirt) was already read `sleeve_length: long` by the real closet call, and the photo agrees (the cuff shows at his wrist). It's now "White long-sleeve tee"; it used to be "White tee", drawn short.
+- **The drawing:** rendered from the app's own SVG, light and dark (`screenshots/long-sleeve-tee/drawings.png`, git-ignored): the long-sleeve tee has slimmer sleeves than a sweatshirt and a stitched hem where the sweatshirt has ribbed cuffs and hem; a short-sleeve tee draws byte for byte as before.
+- **Known limit:** a tee half hidden under a long-sleeve jacket can have the jacket's sleeves read as its own; the drift guard keeps one such read from flipping a piece already seen, and his pick in "What it is" settles it. Shirts, knits and jackets aren't named or drawn by the sleeve read (a short-sleeve oxford still draws long sleeves).
+- **Not done:** the Simulator pass (the piece page and the Kind sheet; the Mac's memory was tight).
+
+## 25. More kinds in "What it is" (Oct 17, #361; merged onto §24 on Oct 19)
 **The founder:** "the full sleeve shirt is not included as an option. Half sleeve button-ups are not included … just add more options like this. For clothes."
-**What was missing:** the Kind sheet offered only the photo reader's own kinds. A long-sleeve tee didn't exist at all; a short-sleeve button-up was only "Camp shirt", under More kinds and drawn with long sleeves; a plain long-sleeve button-up was only "Oxford" or "Dress shirt".
-**The design (code `app/src/features/closet/kinds.ts`):** seven closet-only kinds, each kept as the reading kind it scores, matches and builds outfits as, and drawn and named as itself. The photo reader's list is unchanged, so no reading, score or saved check moves.
+**What was missing:** the Kind sheet offered only the photo reader's own kinds. A short-sleeve button-up was only "Camp shirt", under More kinds and drawn with long sleeves; a plain long-sleeve button-up was only "Oxford" or "Dress shirt". (The long-sleeve tee is §24's, #359: a tee with long sleeves, read from his photos too.)
+**The design (code `app/src/features/closet/kinds.ts`):** six closet-only kinds, each kept as the reading kind it scores, matches and builds outfits as, and drawn and named as itself. Stored as the piece's `profile.kindVariant`, mirrored into `art.kind`. The photo reader's list is unchanged, so no reading, score or saved check moves.
 
 | Shows as | Scores as | Where |
 |---|---|---|
-| Long-sleeve tee | tee | tops, first group |
 | Button-up shirt | oxford | tops, first group (Oxford moves to More kinds) |
 | Short-sleeve shirt | camp shirt | tops, first group |
 | Henley | tee | tops, More kinds |
@@ -994,10 +1023,10 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 | Zip hoodie | hoodie | layers, first group; tops, More kinds |
 | Jean shorts | shorts (denim washes offered) | bottoms, first group |
 
-- The tops' first group is now 9 (3 rows of 3): Tee · Long-sleeve tee · Graphic tee · Polo · Button-up shirt · Short-sleeve shirt · Sweater · Sweatshirt · Hoodie. Flannel and Oxford move to More kinds (a piece that is one still shows it in the first group, as before).
-- A kind named by its sleeves (tee, polo, the shirts, the new ones) confirms the sleeve length, so the drawing follows and the matcher keeps a long- and a short-sleeve tee apart (a piece half seen under a layer only loses a point, it isn't split off).
-- The reader's own sleeve read never changes a drawing or a name: on his phone, 1 of 13 tee reads said "long", and it was a tee under an overshirt.
-- **Not done:** the morning card's weather still treats a long-sleeve tee as a tee (short sleeves on cold days); the reader never names these kinds by itself (that needs a reading change and a steadiness test).
+- The tops' first group is now 9 (3 rows of 3): Tee · Long-sleeve tee · Graphic tee · Polo · Button-up shirt · Short-sleeve shirt · Sweater · Sweatshirt · Hoodie. Flannel and Oxford sit in More kinds (a piece that is one still shows it in the first group, as before). §24's K1 now expects 9.
+- Button-up shirt and Short-sleeve shirt confirm their sleeves when picked, through §24's sleeve path (`confirmed.sleeve_length`, with the reads his photos gave taught as aliases). A henley takes the sleeves his photos show, else long; a turtleneck is drawn long; a camp shirt is drawn short (it drew long, a bug).
+- **Merging with §24 (Oct 19):** both built a long-sleeve tee the same day. §24's is kept (read from his photos, `sleeves.ts`); this section's own long-sleeve tee was dropped, and its drawing code generalized §24's: `TopFlat.sleeves` takes short, long or sleeveless on any top, and §24's slimmer stitched-hem sleeve stays for long-sleeve tees and polos.
+- **Not done:** the reader never names these six kinds by itself (that needs a reading change and a steadiness test); no new shoe kinds.
 
-**Checks K1–K11 (`app/src/__tests__/pieceEdit.test.ts`, "X15 more kinds"), all pass:** K1 each new kind is offered in its slot in plain words, never a brand · K2 a pick keeps the reading kind, names it ("Grey long-sleeve tee"), draws it as previewed, toasts "Changed to long-sleeve tee." · K3 scores, readings and sightings never move; Outfits count it as the kind it scores as · K4 picking Tee again takes it off and draws exactly as before · K5 long and short button-ups get the right reading kind and different drawings ("Light-blue short-sleeve shirt") · K6 camp shirts now draw short sleeves; henley buttons, turtleneck collar, zip hoodie zip · K7 every top type drawn with its usual sleeves is byte-identical to before (light, dark) · K8 jean shorts keep the wash ("Dark jean shorts"), draw jean stitching, no Leg row; plain Shorts moves dark denim to navy · K9 a later photo of the piece keeps its kind, name and drawing · K10 confirmed sleeves split a long from a short tee, not one half seen · K11 Undo puts it all back. `npm run check` green (1,300 app tests).
-**Seen:** every Kind option's drawing rendered from the app's own drawing code in light and dark (`screenshots/more-kinds/kinds.html`, git-ignored). Not seen on the Simulator: another session was using it.
+**Checks K1–K11 (`app/src/__tests__/pieceEdit.test.ts`, "X15 more kinds"), all pass after the merge:** K1 each new kind is offered in its slot in plain words, never a brand · K2 picking Long-sleeve tee writes a tee with confirmed long sleeves ("Grey long-sleeve tee"), drawn as previewed · K3 scores, readings and sightings never move; Outfits count each as the kind it scores as · K4 picking Tee again sets short sleeves and draws exactly as before · K5 long and short button-ups get the right reading kind and different drawings ("Light-blue short-sleeve shirt") · K6 camp shirts draw short sleeves; henley buttons (with his photos' sleeves), turtleneck collar, zip hoodie zip · K7 every top type drawn with its usual sleeves is byte-identical to before (light, dark) · K8 jean shorts keep the wash ("Dark jean shorts"), draw jean stitching, no Leg row; plain Shorts moves dark denim to navy · K9 a later photo of the piece keeps its kind, name and drawing · K10 a sleeve-named kind confirms its sleeves, another leaves them · K11 Undo puts it all back. `npm run check` green.
+**Seen:** every Kind option's drawing rendered from the app's own drawing code in light and dark before the merge (`screenshots/more-kinds/kinds.html`, git-ignored). Not seen on the Simulator.

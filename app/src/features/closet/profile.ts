@@ -7,6 +7,7 @@ import {
   type ConfirmedFields, type Garment, type KnownPiece, type Lab, type Observation, type StoredProfile,
 } from '@kitted/core';
 import type { ClosetArt, ClosetFields, ClosetItemRow, ClosetObservationRow, ClosetProfile } from '@/data/types';
+import { sleeveRead } from './sleeves';
 
 export const emptyProfile = (): ClosetProfile => ({ aliases: [], distinctFrom: [], confirmed: {} });
 export const profileOfItem = (item: Pick<ClosetItemRow, 'profile'>): ClosetProfile => ({ ...emptyProfile(), ...(item.profile ?? {}) });
@@ -231,6 +232,8 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
   const pick = <T extends string>(f: 'shoe_profile' | 'denim_wear', allowed: readonly string[], c?: string) =>
     guarded(hist.map((o) => (typeof o[f] === 'string' && allowed.includes(o[f] as string) ? (o[f] as T) : null)), (c as T) ?? null);
   const pattern = guarded(hist.map((o) => (typeof o.pattern === 'string' && o.pattern !== 'na' ? o.pattern : null)), conf.pattern ?? null);
+  // Long-sleeve tees (§24): the closet call's sleeve read, else the scoring read's sleeve end; his pick wins.
+  const sleeves = guarded(hist.map(sleeveRead), conf.sleeve_length ?? null);
   const measured = measuredOf(family, sightings);
   return {
     family,
@@ -240,11 +243,11 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
     pattern,
     shoeProfile: pick<'sleek' | 'regular' | 'chunky'>('shoe_profile', ['sleek', 'regular', 'chunky'], conf.shoe_profile),
     denimWear: pick<'none' | 'faded' | 'ripped'>('denim_wear', ['none', 'faded', 'ripped'], conf.denim_wear),
+    ...(sleeves ? { sleeves } : {}),
     // Only on a piece the phone measured: art written for the others stays exactly as before.
     ...(measured ? { measured } : {}),
-    // Only what he picked (#361): a kind of his, and sleeves he confirmed. The reader's sleeve guess never draws.
+    // A closet-only kind he picked (#361).
     ...(prof.kindVariant ? { kind: prof.kindVariant } : {}),
-    ...(conf.sleeve_length ? { sleeves: conf.sleeve_length } : {}),
   };
 }
 
