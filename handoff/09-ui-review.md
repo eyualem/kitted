@@ -935,3 +935,32 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **Found and fixed while checking U8:** at the largest size the message broke mid-word ("Remove / d your") and the pill swelled into an oval; at accessibility sizes the message now gets the full width with ring + Undo under it, in a rounded card (24 pt corners).
 - **Not seen on a screen, tested in code only:** U6 (Reduce Motion) and U7 (VoiceOver); a hold reaching the hard stop.
 - **HIG:** Apple has no toast component; this follows the HIG's "give people time to read and act" and WCAG 2.2.1 (a time limit the person can pause: hold), with VoiceOver's doubled window kept because RN can't pause on VoiceOver focus (#36). Material's snackbar guidance (4–10 s, stays while touched) matches both windows.
+
+## 23. The §20 leftovers, overnight Oct 19 (#353). Checks first
+**What this is.** Founder, Oct 19 (asleep): "make decisions… give me a report in the end." Four [code] items from §20 that nobody else is on (the §22.1 session owns the audit's list; scope agreed with it by message): a crash screen and an error log (§20 item 6, the code half), the `Latest` pill (§20 item 30, G3), the morning card's Swap and location (items 34–35), and outfit counting at large closets (item 37). Not built: Stop while an answer streams (answers are ≤200 tokens and arrive in ~2 s; it's not in 07 §6.1, so it waits for a real complaint). Written before the code; each passes or fails.
+
+**Measured first (item 37), Mac, Jest, the demo closet's pieces cloned to size:** 50 pieces: the count 203 ms, Next best buy 942 ms; 100 pieces: 1.4 s and 7.1 s; 200 pieces: 11.3 s for the count. A phone's JS thread is slower still, and the screen freezes while it runs. Next best buy counts the whole closet 14 times; Closet, the piece page and Outfits each count again.
+
+**E · A crash shows a screen, not a blank app, and leaves a trace**
+- E1 (T) The root layout exports an `ErrorBoundary` (expo-router's own, no package) that draws the crash screen inside its own theme: "Something went wrong." / "Kitted hit a problem on this screen. Your fits and closet are safe on this phone." / **Try again** (retry) and **Go to Kitted** (back to the start, then retry). Copy is new (outward-facing, flagged for his skim).
+- E2 (T) `recordError(error, where)` appends one line to `Documents/logs/errors.log` **in every build** (Release too): the time, where (`render` · `fatal` · `js`), the error's name and message cut to 200 characters, and at most 5 stack lines. The file stays under ~100 KB (the oldest half goes). It never leaves the phone.
+- E3 (T) The global handler (`ErrorUtils.setGlobalHandler`) records every uncaught JS error and then hands it to the handler that was there, so the dev red box and a Release crash behave as before; installing twice doesn't wrap twice.
+- E4 (T) "Delete all my data" removes it (Documents/logs already goes); `tools/phone/pull.sh` prints it.
+- E5 (S) On the Simulator a forced render error (demo-only launch argument `-demoCrash 1`) shows the crash screen in light and dark and at the largest text size, and Try again brings the app back.
+
+**L · The Latest pill (02 G3, 07 §6.1)**
+- L1 (T) `latestPillShows` is true when he has scrolled up more than one screen from the end, or scrolled up at all (more than the 80 pt "at the bottom" band) while new rows or words arrived; false at the bottom.
+- L2 (T) The pill: a 44 pt capsule in `primary` with `arrow.down` and "Latest" (`common.latest`), a button for VoiceOver, centred above the composer or the accessory (above a toast too). A tap scrolls to the end, follows new rows again and hides it.
+- L3 (S) On the Simulator: scrolled up on a long thread it shows; tapping it lands on the newest row; light, dark, the largest text size.
+
+**M · The morning card**
+- M1 (T) Swap leaves out every piece swapped away from this card, not only the last one, so the first outfit never comes back by swapping.
+- M2 (T) When nothing else works without that piece, the card keeps its outfit (it used to go blank) and he gets "Nothing else in your closet works here yet." (`swap.none`, 02); that piece isn't added to the left-out list.
+- M3 (T) Changing the occasion or the style starts the left-out list afresh.
+- M4 (T) Location denied: the card shows a quiet "Turn on local weather" link that opens iOS Settings, never the Allow row (iOS won't ask twice); unknown keeps the Allow row; granted shows neither.
+- M5 (T) Back from Settings with location on, the card gets the forecast the next time Stylist shows (`freshen` used to skip a card with no weather), and an untouched card is re-planned with it.
+
+**P · Outfit counting at large closets**
+- P1 (T) Same answers: `buildOutfits`, `outfitCount`, `nextBestBuy` and `gainForSlot` return exactly what they did before (same outfits, same order, same counts and gains) on the demo closet and on a 60-piece mixed closet, compared against a copy of today's code kept in the test.
+- P2 (T, Mac) Next best buy at 50 pieces in under 300 ms, and a second count of an unchanged closet in under 20 ms. Recorded with the 100- and 200-piece numbers.
+- P3 (T) A changed piece is never scored from the cache: editing a piece's garment (What it is) changes the count when the scoring says it should.
