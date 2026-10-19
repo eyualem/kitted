@@ -9,6 +9,7 @@ import { t, type StringKey } from '@/i18n/en';
 import type { BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType } from './flats';
 import { contrastLine, mix } from './flats';
 import { brandWord } from './itemName';
+import { isLongSleeved } from './sleeves';
 
 export type Glyph =
   | 'fullZip' | 'halfZip' | 'drawstrings' | 'pouch' | 'chestPocket' | 'cargoPockets' | 'sideStripe' | 'cuffs' | 'beltLoops'
@@ -109,6 +110,7 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
       kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 5 ? 'oversized' : vol === 4 ? 'relaxed' : type === 'overshirt' ? 'relaxed' : 'regular',
       pattern: p, details, brand, print: pattern === 'graphic' || sub === 'graphic_tee',
       buttonColor: type === 'denim_jacket' ? '#B87A45' : undefined, stitch: type === 'denim_jacket' ? '#D49A5E' : undefined,
+      ...((type === 'tee' || type === 'polo') && isLongSleeved(sub, art) ? { sleeves: 'long' as const } : {}),
     };
     if (details.fullZip || type === 'jacket' || type === 'bomber' || type === 'puffer') glyphs.add('fullZip');
     if (type === 'quarter_zip') glyphs.add('halfZip');
