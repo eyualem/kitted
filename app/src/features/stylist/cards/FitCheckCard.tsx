@@ -41,10 +41,8 @@ import { noteLive } from '@/features/fitcheck/reveal';
 import { useCheckReveal } from './useReveal';
 import { useLaterShows } from '@/features/finish/hooks';
 import { finish as finishSequence } from '@/features/finish/session';
-import { SHARE_CARD_BUILT } from '@/config/features';
+import { shareOffered } from '@/features/share/offer';
 
-// The share card's switch lives in config/features.ts (the root layout guards its route by it, #323).
-export { SHARE_CARD_BUILT };
 /** "Save this look" at 9+ has nowhere to save to yet (Lookbook saves come later): hidden until it does something. */
 export const SAVE_LOOK_BUILT = false;
 
@@ -357,6 +355,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     ? { t: revealT, values: tapeVals, tape: plan.tape, swap: plan.swap, lock: plan.lock, blankStart: plan.blankStart, word: plan.word, summary: plan.summary }
     : undefined;
 
+  const shareable = !readOnly && shareOffered(row);
   const fold = { name: 'fold', label: open ? t('card.fold.less') : t('card.fold.more') };
   const actions = readOnly ? [fold, { name: 'why', label: t('card.why', { score: scoreText }) }] : [
     fold,
@@ -364,7 +363,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     { name: 'nqr', label: t('card.nqr') },
     ...(recheckOpen && !dialed ? [{ name: 'recheck', label: t('card.recheck') }] : []),
     ...(later ? [{ name: 'later', label: t('card.later') }] : []),
-    ...(SHARE_CARD_BUILT ? [{ name: 'share', label: t('card.share.a11y') }] : []),
+    ...(shareable ? [{ name: 'share', label: t('card.share.a11y') }] : []),
     ...(showCloset ? [{ name: 'review', label: t('card.a11y.review') }] : []),
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
     ...(gf ? [{ name: 'look', label: t('card.a11y.changeLook') }] : []),
@@ -539,14 +538,14 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
           ) : null}
           {finish ? <FinishRow row={row} info={finish} /> : null}
           {/* "Re-check after fixing" only when there's a fix to make: under "No quick fixes" it had nothing to check. */}
-          {(SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) || SHARE_CARD_BUILT ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: recheckOpen || dialed ? 'flex-start' : 'flex-end' }}>
+          {(SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) || shareable ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: (SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) ? 'flex-start' : 'flex-end' }}>
               {SAVE_LOOK_BUILT && dialed && score >= 9 ? (
                 <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
               ) : recheckOpen && !dialed ? (
                 <KButton title={t('card.recheck')} icon="recheck" size="regular" style={{ flex: 1 }} onPress={() => void go.recheck()} />
               ) : null}
-              {SHARE_CARD_BUILT ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
+              {shareable ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
             </View>
           ) : null}
           {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}

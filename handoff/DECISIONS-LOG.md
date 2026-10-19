@@ -2254,3 +2254,63 @@ Contradictions settled and decisions changed during the build. Newest last.
 344. **The score card folds to its rating and opens on a tap, smoothly (founder, Oct 18, relaying a friend: "too much information"; then: "I don't want the way it looks to change, I just want it to expand when it's pressed, in a smooth manner"). `handoff/07-stylist-chat.md` §21 follow-up 2.**
     - Claude's first proposal kept the top fix visible (the fix is the product's payoff); the founder chose the rating alone, folded. Built his way: the fit check's and the scored re-check's cards start folded; the "change not seen" re-check doesn't fold (it asks him to act).
     - **Lesson:** to grow a card at the bottom of a chat smoothly, scroll the list by the card's height change on the UI thread each frame (a Reanimated reaction), not with `scrollTo` after the fact (iOS clamps to the old content height) or from `onContentSizeChange` (it fires once the growth is over).
+
+## Oct 18 · Share cards: demos in many formats
+
+345. **The founder: "for social media … we're going to be making a share card … come up with some demos … think about different platforms like TikTok, Instagram … I don't just want one format."** Demos only, nothing in the app changed. Page: https://claude.ai/artifact/F8VZN8HKY8khwxjUJaGAWg (private); local copy `mockups/share-cards/index.html`, sources, brief, critiques and revision rules in `mockups/share-cards/src/`.
+    - **The founder's calls (all 4 defaults):** (1) face is his choice per share: neck down by default, "Full photo" shares the whole picture (replaces D20's "the face never appears"; #55 asked for this choice); (2) a card is offered at 7.0+ and for re-check wins, a low score only as the "before"; (3) mostly premium, a few loud TikTok formats; (4) stills and short videos.
+    - **How:** a research agent (platform sizes and safe zones, the Instagram Stories sticker API, TikTok Share Kit, Snap Creative Kit, patterns that spread), three designers (stills; stickers and brand objects; motion), three critics (a 20-year-old poster and a growth marketer; an art director and platform checker; policy and engineering), then one revision round.
+    - **The 9 families:** Story 9:16 (an IG version and a TikTok photo-mode version), the IG feed 4:5 carousel, messages (1:1, X 16:9, Pinterest 2:3, a photo-free link preview, "Beat my 8.0" for DMs), transparent stickers over his own photo, the hang tag (the one tag spec), the monthly recap and "My fits this week" (TikTok carousel), the score-reveal video, before → after (a premium cut and a loud one), and "Guess the fit's score" (with Instagram's quiz sticker, and TikTok green screens with his face at the top or the bottom).
+    - **System rules from the critiques:** an 11 pt minimum drawn text size; one score lockup; one sign-off on every card (the woven KITTED label, then "Score your fit · trykitted.com"); copper only on the seam, stitches, delta, arrow and tape marker; safe zones by destination (TikTok/Reels: 14% top, 30% bottom, 12% right; IG Stories: 14% / 20%); no "Kit" on shared cards (viewers don't know him); no ticket numbers or time of day; guess formats neck down only.
+    - **Cut after review:** "NOT SHARP. YET." (it renames a 7.5), "Score in 3 s" (a read takes ~7 s), the photo on a public link preview (our server stores no photos), the tape sticker, the copper label slab, "Why it works" (nothing computes it).
+    - **Recommended first build (~3 days):** the Story card with its TikTok version and the face toggle, the before → after still, "Beat my 8.0", Save to Photos; needs `react-native-view-shot` (founder's OK) and `NSPhotoLibraryAddUsageDescription`. v1.1: hang tag, weekly carousel, the Instagram sticker (a Facebook App ID). Later: video export (our own native writer on the phone, 4–6 days; not ffmpeg-kit, retired; not Remotion, web/server only), TikTok green screen and Snapchat (developer accounts), the link preview (a privacy call). Until video exists: screen-record the in-app reveal.
+    - **Known demo gaps:** the only before/after pair (p01b → p01a) shows socks, no shoes, so its cards list no shoes; scores are illustrative; the photos are stock of different people.
+
+346. **The founder: "Build the recommended first set: the Story card with its TikTok version and the face toggle, the before → after still, and Beat my 8.0, with Save to Photos. You have my OK for react-native-view-shot."** Built (02 D20 update block, checks SC1–SC13):
+    - **Packages:** `react-native-view-shot` 5.1.0 (his OK), `expo-sharing` and `expo-media-library` (Expo's own, named for the share card in 05 §1.1; the user asked for Save to Photos), add-only Photos permission. Installed into the main checkout's node_modules through a symlink (the Mac had 4.9 GB free; a second node_modules is 1.1 GB).
+    - **The face toggle, settled by Claude:** neck down needs a known line below the face (the measured heads, or the demo chin line) and the photo's size; otherwise neck down shows the drawn pieces, never a guess. Full photo fits the whole picture by height (a top crop cut the outfit off at the chest on the 4 : 5 card).
+    - **TikTok:** the words moved off the photo onto the band under it (on a full-bleed photo the panel covered the torso); pieces left off (they're in the photo, and the rail leaves no room).
+    - **Safety on old builds:** the native modules throw on import in a build made before them, so the share screen loads them only after `shareNativeReady()`; the card's Share button shows only on a build that has them (his phone after its next reinstall). `SHARE_CARD_BUILT` is on.
+    - **Toasts:** the app's toasts draw under a full-screen cover, so the share screen has its own status line.
+    - **Not yet verified:** the real capture, the share sheet and Save on iOS (no native build yet: a Simulator build from this branch needs ~2 GB of disk and the Mac has 4.9 GB free; waiting on the founder).
+
+347. **The founder, on the first set: "These designs are a bit cringy and tacky, let's just go with two designs, one transparent one and one just the way it is … the only thing that differentiates them is that one is transparent … Strava is probably the best example … model it after them … you can basically delete them."** Done:
+    - **One overlay, two versions:** white stats (label over value; Score · Rating, or Before · After · Change on a re-check win), the tape as the route-trace stand-in (copper dot on the score, hollow on the before), the KITTED wordmark. Transparent = the overlay alone (1080 × 600 PNG); With photo = the same overlay on his photo (1080 × 1920), neck down by default.
+    - **Settled by Claude, after a mock round and one art-direction critique:** two stats, not three (a "Look" column overflowed with "Put together" + "Streetwear"); one accent (copper only on the dot; "+1.0" white); a quieter tape (1.25 pt ticks, 8/4 pt); the wordmark at 11 pt; "/10" only on a single check's score; the photo shade at 65% at the bottom (the critic's 50% left white unreadable on a bright kitchen photo); no sign-off line (the wordmark alone, as Strava; trykitted.com isn't registered).
+    - **Deleted:** the four app cards of #346 (Story, TikTok, before → after, Beat my score), their words, and the nine demo families (`mockups/share-cards/`, in git history). The published page now shows the new card (same link).
+    - **Kept from #346:** the face toggle and its crop rule, Share and Save, the native-module guard, who's offered a card.
+    - **Not yet verified on iOS:** the capture, the PNG's transparency, Share and Save (the native build, ~2 GB of disk).
+
+348. **The founder: "I don't think you've made a solid version too. You've made one without a background. Can you also make one with a background?"** Added **Solid**: the same overlay on the indigo ground, the transparent sticker's size (1080 × 600), rounded 24 pt corners. The switch is Transparent · Solid · With photo (still opens on With photo). The published page shows all three.
+
+349. **The founder: "Make light and dark modes too for the solid ones."** The solid card now comes **Light** (indigo ink #121628 on chalk #F3F4F6, the dot in the light theme's copper #9C5326, 5.6:1 on chalk) or **Dark** (white on indigo, as before). Same size and layout. On the share screen a "Light | Dark" switch shows under Solid; it starts in the phone's own appearance (the screen itself is always dark, so it asks the system). Transparent and With photo stay white.
+
+350. **The founder: "You can start planning out the implementations and also the test now."** The plan and its checks: `handoff/14-share-card.md` (steps 0–6; checks A1–A8, M1–M6, N1–N4, S1–S11, P0–P8, written before the code). A reviewer read the draft against the installed native code and found three real bugs in what #346–349 built, fixed now:
+    - **The image would have been 3× too big:** view-shot's `width`/`height` are points at the device's scale (`rendererFormat.scale = 0`), so `width: 1080` on a 3× iPhone draws 3240 px. Now px ÷ `PixelRatio.get()`.
+    - **Save could drop the transparency:** the legacy `saveToLibraryAsync` re-encodes through `UIImageWriteToSavedPhotosAlbum`. Now `Asset.create(file)` (adds the PNG file itself; add-only access is enough).
+    - **Temp files were never deleted** (and `fileName` is ignored on iOS): now `releaseCapture` after a save, and 30 s after the share sheet closes.
+    - **Settled:** a ready gate on the captured copy's images and font (resets on every switch; after 4 s "Couldn't make the image", never a different card); switches locked while busy; Open Settings when Photos is denied; the Mac checks read the copies in the Simulator's Photos, never the temp file; the Lookbook look page gets the share button.
+    - **Step 0, before any build:** whether Instagram keeps a PNG's transparency (photo sticker, and Copy → Paste from the share sheet) decides the Transparent route. Test file `screenshots/share-card/test-sticker.png` (1080 × 600, RGBA).
+
+351. **The founder: "go ahead with the native Simulator build."** Step 1 of `handoff/14-share-card.md`, results in its §8:
+    - **The capture works on iOS:** all four versions came out exactly 1080 px wide in Photos. Transparent kept its alpha, and Solid's corners are clear. The photo card matched its preview, with Archivo in the image.
+    - **Other checks:** Apple Vision found no face in the neck-down card. The add-only prompt shows his words, Save says "Saved to Photos.", and Share opens the sheet with Copy in it.
+    - **Found:**
+      - the PNGs are 16-bit wide color (5 MB for the photo card; left as is for now);
+      - the preview jumped when the status line appeared (fixed: it keeps its room).
+    - **How it was built:**
+      - xcodebuild into the existing Kitted DerivedData folder (`-derivedDataPath`) instead of a new one, to save ~3 GB on a near-full disk;
+      - the installed dev app is now this branch's build, a superset of main's: main's JS still runs on it through Metro.
+      - This branch's Pods were deleted afterwards.
+
+352. **The founder: "build step 2 (the ready gate, lock while busy, Open Settings) and the Lookbook look page's share button, then the rest of the Simulator pass."** Built and checked (`handoff/14-share-card.md` §8):
+    - **The ready gate:** it counts the captured copy's image loads and the font; it resets on every switch; after 4 s it says "Couldn't make the image", never a different card.
+    - **Lock while busy:** one press at a time, and the switches lock while it runs.
+    - **Open Settings** when Photos is denied.
+    - **The look page's Share** sits in its header and opens the shown check, so a re-checked look opens its Before · After · Change.
+    - **Three layout fixes the Simulator showed:**
+      1. the preview is sized to the controls' measured height, so the largest text sizes and the Open Settings row never push the card under the title, and the screen scrolls past a 240 pt minimum;
+      2. a lone share icon on the fit-check card is right-aligned;
+      3. the look page's icon is plain, like the ⋯ beside it.
+    - **Tests:** a source-matching test of the look page's header (G22) was loosened to allow the share button beside the ⋯.
+
