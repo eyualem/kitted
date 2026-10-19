@@ -46,9 +46,9 @@ export interface TopFlat extends FlatBase {
   drawstringColor?: string;
   /** A printed graphic on the chest (graphic tees). */
   print?: boolean;
-  /** Sleeve length (#339): unset draws the type's usual (short on tees and polos, none on a tank, long otherwise). */
+  /** Sleeve length (#361): unset draws the type's usual (short on tees and polos, none on a tank, long otherwise). */
   sleeves?: 'short' | 'long' | 'sleeveless';
-  /** A henley's short button placket, or a turtleneck's rolled collar, in place of the crew neck (#339). */
+  /** A henley's short button placket, or a turtleneck's rolled collar, in place of the crew neck (#361). */
   neck?: 'henley' | 'turtle';
 }
 
@@ -218,7 +218,7 @@ function top(s: TopFlat, ctx: Ctx): string {
   const cx = 100;
   const t = s.type;
   const tee = t === 'tee' || t === 'polo' || t === 'tank';
-  // the sleeves as asked (#339), else the type's usual
+  // the sleeves as asked (#361), else the type's usual
   const noSleeves = t === 'tank' || s.sleeves === 'sleeveless';
   const shortSl = s.sleeves ? s.sleeves === 'short' : tee;
   const hood = t === 'hoodie';

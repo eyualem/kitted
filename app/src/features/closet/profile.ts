@@ -242,7 +242,7 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
     denimWear: pick<'none' | 'faded' | 'ripped'>('denim_wear', ['none', 'faded', 'ripped'], conf.denim_wear),
     // Only on a piece the phone measured: art written for the others stays exactly as before.
     ...(measured ? { measured } : {}),
-    // Only what he picked (#339): a kind of his, and sleeves he confirmed. The reader's sleeve guess never draws.
+    // Only what he picked (#361): a kind of his, and sleeves he confirmed. The reader's sleeve guess never draws.
     ...(prof.kindVariant ? { kind: prof.kindVariant } : {}),
     ...(conf.sleeve_length ? { sleeves: conf.sleeve_length } : {}),
   };

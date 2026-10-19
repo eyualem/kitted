@@ -396,3 +396,32 @@ Unit tests: `app/src/__tests__/onboardingFinish.test.ts` (32 tests, every check 
 | Not checked | VoiceOver on a device; the paywall at the largest size in dark; the notification ask at AX sizes (158–160 not re-shot at AX). |
 
 Screens 180–181 use only existing copy. Sequence step 'later' after a scored re-check is harmless: the card posts either way.
+
+### 9.11 One optional step instead of "Your first 3 moves" (Oct 18, #343)
+
+*The founder, Oct 18: make it explicit that it's optional; move 2 ("your first check's top fix") made no sense to him; move 3 ("Add a white heavyweight tee") assumed what he doesn't own before the app had learned anything; "frustrating a user is not something we should do." This replaces §9.2's card, §9.3's shopping frame and §9.9's pinned rows. The sequence's order and triggers (§9.1) stay: the card posts when the moves card did, then the paywall and the notification ask as before.*
+
+**What he'll see.**
+- **In the chat after his first fit (same moment as before):** Kit says `Want outfit ideas from your own clothes? This part is optional.` and one card: tag `Optional` / `About 30 seconds`; title `Tap the clothes you already own`; body `I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks.`; a `Show me the list` button and a `Skip` link. Skip: the card keeps its title and says `Skipped. It's in Closet whenever you want it.`, no buttons. Once he has added one: `Added {n} to your closet.` with an `Add more` link. Past chats: read-only (no button, no link).
+- **The list (was Starter essentials, now "What you already own"):** `Optional. Tap what you have and pick the color. Skip anything you're not sure about: your fit checks fill in the rest.` 12 plain rows (`Plain tee`, `Polo`, `Oxford shirt`, `Crewneck sweater`, `Jeans`, `Chinos`, `Overshirt`, `Casual jacket`, `Leather sneakers`, `Loafers or boots`, `Quarter-zip or hoodie`, `Belt`). No prices, no `n of 12` bar, no "Next step" buy card. A tap opens `Which one is yours?` with the realistic versions (`Black tee`, `White tee`, `Grey tee`…; `Dark jeans`, `Black jeans`…; `Brown loafers`, `Black boots`…) and Cancel; the pick becomes a closet piece in that color and kind, with a toast and Undo. Tapping one he added opens the same choices plus `Remove from closet`. A piece his fit checks found stays `In your closet` and can't be changed here (its own page can).
+- **Gone:** move 2, move 3, the `Your moves · n of 3` rows atop Lookbook and You, the Your moves page. Buying ideas stay where the closet can back them: Closet → Outfits → Next best buy.
+
+**Pass/fail checks (written before the code).**
+- O1 The card names itself optional twice (tag and Kit's line) and has exactly one button and one Skip.
+- O2 Skip changes the card to the skipped line, survives a reload, and posts nothing else; the sequence still goes on to the paywall step as before.
+- O3 Show me the list opens Closet, then the list; Back lands on Closet.
+- O4 No row shows a price or a count bar; no "Next step" card; no pinned moves row in Lookbook or You; `/you/moves` and `/lookbook/moves` don't exist.
+- O5 Picking `Black tee` adds a not-photographed top piece with subcategory `tee`, color `black`, named `Black tee`; its drawing is black.
+- O6 Every option's piece keeps its row marked (its `starterId`), whatever the color; a later color edit on the piece page never un-marks it (only a change of kind out of the row does). The rows' `fills` (what a photographed piece must be to count, which Next best buy relies on) don't change.
+- O7 Picking again on an added row changes that piece (same id, new kind/color), never adds a second one; Remove deletes it with Undo.
+- O8 A piece found by fit checks still locks its row (`In your closet`, disabled), as today.
+- O9 The belt still marks in kv only (no closet slot), with Undo on remove.
+- O10 Next best buy and the chat's buy cards are unchanged in behavior.
+- O11 VoiceOver: the card reads as one element with its title, body and actions; each row is a button that says its state.
+- O12 Light, dark and the largest text size on the Simulator: nothing clipped, no word broken mid-word.
+
+**Results (Oct 18).** `npm run check` green (1,298 app tests; the old M1–M4 and `yourMoves.test.ts` replaced by O1–O9 in `onboardingFinish.test.ts`; `pieceEdit.test.ts` now checks that a leg or color fix keeps a list piece marked and a kind change unmarks it). On the iOS Simulator (dev build through a worktree Metro): demo 151 (the card, light), 164 (skipped, dark), 161/180 (the list, light; 180 dark at the largest text size), 151 at the largest size.
+- O1, O2, O4 **pass** (seen and tested). O3 **pass**: Show me the list → Closet → the list, Back says Closet. O5–O9 **pass** in tests; on screen, 180 shows `Plain tee · Added: Black tee` with a black drawing and the row checked.
+- The `Which one is yours?` menu opens with the row's choices (seen: `Olive / Navy / Tan / Black / Grey overshirt`, `Dark / Black / Mid-wash / Light jeans`). The Simulator tool's injected taps on the menu's buttons landed on the rows behind it, so a pick from the menu itself wasn't seen on screen; the pick is the tested `pickStarter`, and demo 180 shows its result. **Check on the phone:** pick a color from the menu once.
+- O12: no clipping or mid-word breaks at the largest size; the card's tag line stacks. Seen, not changed: a black piece's drawing on the dark tile is low-contrast (the closet's drawings, as everywhere).
+- O11 not checked with VoiceOver on a device.

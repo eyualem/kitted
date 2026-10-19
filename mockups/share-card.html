@@ -1,0 +1,107 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Kitted Share Cards</title>
+<style>
+@font-face{font-family:"AC";src:url("../app/assets/fonts/ArchivoCondensed-SemiBold.ttf")}
+@font-face{font-family:"AX";src:url("../app/assets/fonts/ArchivoExpanded-Bold.ttf")}
+/* Layout: one row of true-size cards on a quiet gallery wall. Single theme on purpose: the cards are images with a
+   fixed palette, judged against one neutral ground. */
+:root{
+  color-scheme:light;
+  --bg:#DADDE3; --ink:#131726; --ink2:#4A5060; --line:#C3C7D0; --copper:#DE9762; --night:#08090D;
+  --sf:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sf);margin:0}
+.wrap{padding-inline:16px;padding-block:32px 64px;max-width:1240px;margin:0 auto}
+@media (min-width:720px){.wrap{padding-inline:32px}}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:16px;font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--ink2)}
+.lbl{display:inline-block;background:#22305C;color:#EEF0F5;font:11px/1 "AX",Arial Black,sans-serif;letter-spacing:.32em;padding:6px 14px 6px 16px;border-radius:2px}
+h1{font:600 44px/1.02 "AC","Arial Narrow",sans-serif;margin:0 0 10px;text-wrap:balance}
+.lede{max-width:66ch;color:var(--ink2);margin:0 0 30px}
+h2{font:700 18px/1.3 var(--sf);margin:34px 0 4px}
+.sub{color:var(--ink2);margin:0 0 16px;max-width:70ch}
+.row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.cap{font-size:13px;color:var(--ink2);margin-top:10px;max-width:360px}
+.cap b{color:var(--ink)}
+.scroll{overflow-x:auto}
+/* the transparent PNG shown on a checkerboard */
+.solid{border-radius:24px;background:#121628}
+.solid.light{background:#F3F4F6}
+.solid.light .ov{color:#121628}
+.checker{border-radius:18px;background:conic-gradient(#3a3d46 25%,#2c2f37 0 50%,#3a3d46 0 75%,#2c2f37 0) 0 0/20px 20px}
+.ov{width:360px;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center}
+.stats{display:flex;gap:34px;justify-content:center;align-items:flex-start}
+.stats.three{gap:30px}
+.l{font:500 13px var(--sf);letter-spacing:.02em;opacity:.85}
+.v{font:40px/42px "AC","Arial Narrow",sans-serif;letter-spacing:-.005em;margin-top:4px;white-space:nowrap}
+.v small{font:15px/1 "AC","Arial Narrow",sans-serif;opacity:.8;margin-left:2px}
+.tape{display:block;margin:14px 0}
+.mark{font:11px/1 "AX",Arial Black,sans-serif;letter-spacing:.26em;margin-right:-.26em;opacity:.9}
+.shadow{text-shadow:0 1px 4px rgba(0,0,0,.35)}
+/* the photo card: neck-down photo, soft shade at the bottom, the same overlay 132 pt up */
+.card{position:relative;width:360px;height:640px;overflow:hidden;border-radius:18px;background:var(--night)}
+.card .ph{position:absolute;inset:0;overflow:hidden}
+.card .ph img{position:absolute;left:0;width:100%;height:calc(100% / (1 - var(--neck) - .02));object-fit:cover;object-position:50% 100%;bottom:0}
+.card .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,13,0) 45%,rgba(8,9,13,.35) 65%,rgba(8,9,13,.65) 100%)}
+.card .ov{position:absolute;left:0;bottom:132px;height:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:40px}
+.note{background:#EEF0F3;border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.note h3{margin:0 0 6px;font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.note ul{margin:0;padding-left:18px}.note li{margin:4px 0}
+</style>
+<div class="wrap">
+  <div class="top"><span class="lbl">KITTED</span>SHARE CARD · OCT 18, 2026</div>
+  <h1>One card, three ways</h1>
+  <p class="lede">Modeled on Strava's share stickers: a few white stats, one line, the wordmark. <b>Transparent</b> is a sticker you lay on your own photo or video. <b>Solid</b> is the same on a light or dark ground. <b>With photo</b> is the same sticker on your fit photo, neck down unless you pick Full photo. Photos are free stock; scores are demo numbers.</p>
+
+  <h2>A fit check</h2>
+  <p class="sub">Score and Rating. The tape runs 5 to 10; the copper dot is the score, the only color on the card.</p>
+  <div class="scroll"><div class="row" id="single"></div></div>
+
+  <h2>A re-check that went up</h2>
+  <p class="sub">Before, After and Change. The hollow dot is the first score.</p>
+  <div class="scroll"><div class="row" id="win"></div></div>
+
+  <h2>On a bright photo</h2>
+  <p class="sub">A soft shade at the bottom keeps the white readable, and the stats sit just above Instagram's reply bar.</p>
+  <div class="scroll"><div class="row" id="bright"></div></div>
+
+  <div class="notes">
+    <div class="note"><h3>In the app</h3><ul>
+      <li>Share opens on <b>With photo</b>; the switch is Transparent · Solid · With photo. Solid has Light | Dark and starts in your phone's appearance.</li>
+      <li>"Neck down | Full photo" for the photo version, neck down every time.</li>
+      <li>Share sends the image; Save puts it in Photos (the sticker keeps its transparency).</li>
+    </ul></div>
+    <div class="note"><h3>Sizes</h3><ul>
+      <li>Transparent and Solid: 1080 × 600 PNG.</li>
+      <li>With photo: 1080 × 1920, for Stories and TikTok.</li>
+    </ul></div>
+    <div class="note"><h3>Gone</h3><ul>
+      <li>The nine earlier formats, the sign-off line, the piece drawings, the hang tag, the videos.</li>
+    </ul></div>
+  </div>
+</div>
+<script>
+(function(){
+  function tape(score,before,ink,dot){ink=ink||'#fff';dot=dot||'#DE9762';
+    var w=200,x=function(s){return (s-5)/5*w},t='';
+    for(var i=0;i<=10;i++){var X=x(5+i/2).toFixed(1),m=i%2===0;t+='<line x1="'+X+'" y1="'+(18-(m?8:4))+'" x2="'+X+'" y2="18" stroke="'+ink+'" stroke-opacity="'+(m?.75:.4)+'" stroke-width="1.25"/>'}
+    t+='<line x1="0" y1="18" x2="'+w+'" y2="18" stroke="'+ink+'" stroke-opacity=".9" stroke-width="1.5"/>';
+    if(before!=null)t+='<circle cx="'+x(before)+'" cy="18" r="4.5" fill="none" stroke="'+ink+'" stroke-width="1.5"/>';
+    t+='<circle cx="'+x(score)+'" cy="18" r="5" fill="'+dot+'"/>';
+    return '<svg class="tape" width="212" height="26" viewBox="-6 0 212 26" aria-hidden="true">'+t+'</svg>';
+  }
+  function ov(o,shadow,light){
+    var s=o.stats.map(function(a){return '<div><div class="l">'+a[0]+'</div><div class="v">'+a[1]+(a[2]?'<small>'+a[2]+'</small>':'')+'</div></div>'}).join('');
+    return '<div class="ov'+(shadow?' shadow':'')+'"><div class="stats'+(o.stats.length>2?' three':'')+'">'+s+'</div>'+tape(o.score,o.before,light?'#121628':null,light?'#9C5326':null)+'<div class="mark">KITTED</div></div>';
+  }
+  function photo(o,img,neck){return '<div class="card"><div class="ph" style="--neck:'+neck+'"><img src="../app/assets/demo-photos/'+img+'.jpg" alt=""></div><div class="shade"></div>'+ov(o,true)+'</div>'}
+  function tile(html,cap){return '<div>'+html+'<div class="cap">'+cap+'</div></div>'}
+  var single={score:8,stats:[['Score','8.0','/10'],['Rating','Sharp']]};
+  var win={score:8.5,before:7.5,stats:[['Before','7.5'],['After','8.5'],['Change','+1.0']]};
+  var bright={score:7.5,stats:[['Score','7.5','/10'],['Rating','Put together']]};
+  document.getElementById('single').innerHTML=tile('<div class="checker">'+ov(single,false)+'</div>','<b>Transparent</b> · 1080 × 600 PNG, shown on a checkerboard')+tile('<div class="solid light">'+ov(single,false,true)+'</div>','<b>Solid, light</b> · 1080 × 600')+tile('<div class="solid">'+ov(single,false)+'</div>','<b>Solid, dark</b> · 1080 × 600')+tile(photo(single,'s15',.265),'<b>With photo</b> · 1080 × 1920, neck down');
+  document.getElementById('win').innerHTML=tile('<div class="checker">'+ov(win,false)+'</div>','<b>Transparent</b>')+tile('<div class="solid light">'+ov(win,false,true)+'</div>','<b>Solid, light</b>')+tile('<div class="solid">'+ov(win,false)+'</div>','<b>Solid, dark</b>')+tile(photo(win,'p01a',.315),'<b>With photo</b> · the after photo');
+  document.getElementById('bright').innerHTML=tile(photo(bright,'s14',.21),'<b>With photo</b> · a light background, the longest rating word');
+})();
+</script>
+</body></html>

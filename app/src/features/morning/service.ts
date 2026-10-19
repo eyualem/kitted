@@ -1,7 +1,7 @@
 // The morning/evening card (02 "S1d", 05 §MC4, DECISIONS-LOG #58–62).
 //
-// Two moments a day: the first time Stylist is shown in a window, the stylist posts a greeting
-// and a card. Day card 4 am–4:59 pm (plans today), evening card 5 pm–3:59 am (plans tonight).
+// Two moments a day: the first time Stylist is shown in a window, the stylist posts a card that opens with its own
+// hello and the weather (#340; it used to post a greeting line above it). Day card 4 am–4:59 pm (plans today), evening card 5 pm–3:59 am (plans tonight).
 // One per day key and slot, locked: the outfit doesn't change on later opens, so the card and
 // the notification agree. Changing the occasion or style, or Swap one, re-picks on purpose.
 //
@@ -18,14 +18,12 @@ import {
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
-  CardOccasion, ChatMessage, ClosetItemRow, DailyIdeaRow, FitCheckRow, IdeaSlot, OccasionKey, OutfitRow, StyleKey,
+  CardOccasion, ChatMessage, ClosetItemRow, DailyIdeaRow, FitCheckRow, IdeaSlot, OccasionKey, OutfitRow, StyleKey, WearLogRow,
 } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
+import { wornChecks } from '@/features/fitcheck/tryOn';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
-import { t } from '@/i18n/en';
-import { monthName } from '@/i18n/format';
-import { occasionLabel } from '@/features/stylist/thread';
 
 export interface MorningDeps {
   store: KittedStore;
@@ -43,12 +41,14 @@ const WEATHER_TIMEOUT_MS = 2_000;
 const LIVE_WEATHER_TIMEOUT_MS = 7_000;
 const EVENING_IGNORE_LIMIT = 3;
 /** How far back the picker looks (its rules reach 7 days). */
-const HISTORY_DAYS = 14;
+export const HISTORY_DAYS = 14;
 const KV = {
   eveningIgnored: 'idea.evening.ignored',
   style: (slot: IdeaSlot) => `idea.style.${slot}`,
   /** He changed the card's occasion or style, or swapped a piece: a fresher forecast never re-picks it (#338). */
   touched: (id: string) => `idea.touched.${id}`,
+  /** The pieces swapped away from this card, as JSON ids (09 §23 M1, #353): none comes back by swapping. */
+  swapped: (id: string) => `idea.swapped.${id}`,
 } as const;
 /** A card's forecast older than this is fetched again when Stylist shows (#338: "46° now" all afternoon). */
 export const WEATHER_STALE_MS = 45 * 60_000;
@@ -83,6 +83,47 @@ export const styleInput = (style: StyleKey | null): Styles | null => (style ? [[
 /** The rubric occasion a card occasion is scored for. */
 export const scoringOccasion = (o: CardOccasion): OccasionKey => (o === 'staying_in' ? 'home' : o);
 
+/** The rows a pick's history is read from (the card's and Kit's, #358). */
+export interface HistoryRows {
+  ideas: readonly DailyIdeaRow[];
+  wears: readonly WearLogRow[];
+  checks: readonly FitCheckRow[];
+  closet: readonly ClosetItemRow[];
+  /** An outfit row's pieces ([] when it's gone). */
+  itemsOf: (outfitId: string) => readonly string[];
+}
+
+/**
+ * What came before a card: other cards shown (and still showing) and what he wore (Wear this,
+ * fit checks), each with how many days ago. Only earlier days count, plus, for the evening card,
+ * the same day's card and morning checks. The card's own outfit never counts. Kit's outfit ideas
+ * read the same history, for the card of the moment he asks in, plus `extra` (his own earlier cards; #358).
+ */
+export function historyFor(
+  row: Pick<DailyIdeaRow, 'id' | 'slot'> & { outfitId?: string | null }, rows: HistoryRows, zone: ZoneOffset, extra: readonly PastUse[] = [],
+): PickHistory {
+  const day = row.id.split('|')[0] ?? '';
+  const from = addDays(day, -HISTORY_DAYS);
+  const evening = row.slot === 'evening';
+  const before = (d: string, sameDay: boolean) => d >= from && (d < day || (evening && sameDay && d === day));
+  const uses: PastUse[] = [...extra];
+  for (const r of rows.ideas) {
+    if (r.id === row.id || !r.outfitId || !before(r.dayKey, r.slot === 'day')) continue;
+    uses.push({ daysAgo: daysBetween(r.dayKey, day), itemIds: rows.itemsOf(r.outfitId) });
+  }
+  // Checks come from the fit-check rows below; the wear log adds what he wore from a card.
+  for (const w of rows.wears) {
+    if (!w.outfitId || w.outfitId === row.outfitId || !before(w.day, true)) continue;
+    uses.push({ daysAgo: daysBetween(w.day, day), itemIds: rows.itemsOf(w.outfitId) });
+  }
+  // Only what he wore: a check followed by another within the hour was a try-on (#360).
+  for (const c of wornChecks(rows.checks)) {
+    if (!before(c.dayKey, slotAt(c.createdAt, zone).slot === 'day')) continue;
+    uses.push({ daysAgo: daysBetween(c.dayKey, day), itemIds: c.itemIds });
+  }
+  return pickHistory(uses, rows.closet as unknown as ClosetItem[]);
+}
+
 export function createMorningService(deps: MorningDeps) {
   const { store, clock } = deps;
   const zone = clock.offset;
@@ -105,32 +146,12 @@ export function createMorningService(deps: MorningDeps) {
     return (await store.closet.all()).filter((c) => !c.isDeleted);
   }
 
-  /**
-   * What came before this card: other cards shown (and still showing) and what he wore (Wear
-   * this, fit checks), each with how many days ago. Only earlier days count, plus, for the
-   * evening card, the same day's card and morning checks. The card's own outfit never counts.
-   */
   async function history(row: Pick<DailyIdeaRow, 'id' | 'slot'> & { outfitId?: string | null }): Promise<PickHistory> {
-    const day = row.id.split('|')[0] ?? '';
-    const from = addDays(day, -HISTORY_DAYS);
-    const evening = row.slot === 'evening';
-    const before = (d: string, sameDay: boolean) => d >= from && (d < day || (evening && sameDay && d === day));
-    const itemsOf = async (outfitId: string) => (await store.outfits.get(outfitId))?.itemIds ?? [];
-    const uses: PastUse[] = [];
-    for (const r of await store.dailyIdeas.all()) {
-      if (r.id === row.id || !r.outfitId || !before(r.dayKey, r.slot === 'day')) continue;
-      uses.push({ daysAgo: daysBetween(r.dayKey, day), itemIds: await itemsOf(r.outfitId) });
-    }
-    // Checks come from the fit-check rows below; the wear log adds what he wore from a card.
-    for (const w of await store.wearLog.all()) {
-      if (!w.outfitId || w.outfitId === row.outfitId || !before(w.day, true)) continue;
-      uses.push({ daysAgo: daysBetween(w.day, day), itemIds: await itemsOf(w.outfitId) });
-    }
-    for (const c of await store.fitChecks.all()) {
-      if (!before(c.dayKey, slotAt(c.createdAt, zone).slot === 'day')) continue;
-      uses.push({ daysAgo: daysBetween(c.dayKey, day), itemIds: c.itemIds });
-    }
-    return pickHistory(uses, (await store.closet.all()) as ClosetItem[]);
+    const [ideas, wears, checks, outfits, closet] = await Promise.all([
+      store.dailyIdeas.all(), store.wearLog.all(), store.fitChecks.all(), store.outfits.all(), store.closet.all(),
+    ]);
+    const items = new Map(outfits.map((o) => [o.id, o.itemIds]));
+    return historyFor(row, { ideas, wears, checks, closet, itemsOf: (id) => items.get(id) ?? [] }, zone);
   }
 
   async function pick(row: Pick<DailyIdeaRow, 'id' | 'slot' | 'occasion' | 'style' | 'weather'> & { outfitId?: string | null }, extra: { exclude?: Set<string> } = {}): Promise<IdeaResult> {
@@ -176,21 +197,6 @@ export function createMorningService(deps: MorningDeps) {
     return normStyle(p?.styles?.[0]?.[0]);
   }
 
-  /**
-   * The greeting line above the card (template, no AI). With weather it's only the hello (#338): the card says the
-   * weather once, for the hour he reads it, so a greeting posted at 7 am never says "46° now" at 2 pm.
-   */
-  function greeting(slot: IdeaSlot, w: DayWeather | null, nowMs: number, occasion: CardOccasion): string {
-    const p = localParts(nowMs, zone);
-    const hello = slot === 'evening' ? t('greet.evening') : p.hh < 12 ? t('greet.morning') : t('greet.afternoon');
-    if (!w) {
-      const season = seasonNeeds(p.m);
-      if (slot === 'day' && season.layer === 'none') return t('stylist.morning', { occasionWord: occasionLabel(scoringOccasion(occasion)).toLowerCase() });
-      return season.layer === 'none' ? hello : `${hello} ${t('wx.line.season', { month: monthName(p.m) })}`;
-    }
-    return slot === 'evening' ? t('greet.evening') : p.hh < 12 ? t('greet.morning.idea') : t('greet.afternoon.idea');
-  }
-
   /** A seeded "Morning. An easy one…" + idea card from before this feature becomes today's day card. */
   async function adoptLegacy(day: string, slot: IdeaSlot, messages: ChatMessage[]): Promise<ChatMessage | null> {
     if (slot !== 'day') return null;
@@ -229,13 +235,11 @@ export function createMorningService(deps: MorningDeps) {
     if (legacy) {
       cardMessageId = legacy.id;
       await store.chat.patch(legacy.id, { cardType: 'morning', outfitId, payload: { ...legacy.payload, ideaId: id } });
+      // The seeded greeting before it is the card's own hello now (#340): marked, so the thread hides it.
       const before = messages.filter((m) => m.role === 'stylist' && m.kind === 'text' && m.createdAt <= legacy.createdAt).sort((a, b) => b.createdAt - a.createdAt)[0];
-      if (before && dayKey(before.createdAt, zone) === day) await store.chat.patch(before.id, { text: greeting(slot, weather, before.createdAt, occasion) });
+      if (before && dayKey(before.createdAt, zone) === day) await store.chat.patch(before.id, { payload: { ...before.payload, greeting: true } });
     } else {
-      await store.chat.put({
-        id: deps.ids('M'), createdAt: nowMs, role: 'stylist', kind: 'text', text: greeting(slot, weather, nowMs, occasion), cardType: null,
-        fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {},
-      });
+      // No greeting line of its own (founder, Oct 18, #340): the card opens with the hello and the weather.
       cardMessageId = deps.ids('M');
       await store.chat.put({
         id: cardMessageId, createdAt: nowMs + 1, role: 'stylist', kind: 'card', text: null, cardType: 'morning', fitCheckId: null,
@@ -270,6 +274,8 @@ export function createMorningService(deps: MorningDeps) {
       return { samePick: false };
     }
     await store.setKv(KV.touched(id), '1');
+    // A new occasion or style is a new plan: what he swapped away before may suit it (M3).
+    await store.setKv(KV.swapped(id), '');
     const before = row.outfitId ? (await store.outfits.get(row.outfitId))?.itemIds.join('+') : null;
     const result = await pick(next);
     const outfitId = await saveOutfit(result, next.occasion, row.outfitId);
@@ -278,14 +284,23 @@ export function createMorningService(deps: MorningDeps) {
     return { samePick: !!before && before === result.outfit?.itemIds.join('+') };
   }
 
-  /** Swap one: the same card, with the given items left out. */
-  async function swap(id: string, leaveOut: string[]): Promise<void> {
+  /**
+   * Swap one: the same card without the given pieces, nor any piece swapped away from it before (09 §23 M1, #353; it
+   * used to leave out only the last one, so the first outfit came back). When nothing else works without them the card
+   * keeps its outfit (it used to go blank) and `swapped` is false: the card says `swap.none` (M2).
+   */
+  async function swap(id: string, leaveOut: string[]): Promise<{ swapped: boolean }> {
     const row = await store.dailyIdeas.get(id);
-    if (!row) return;
+    if (!row) return { swapped: false };
+    const before = parseIds(await store.getKv(KV.swapped(id)));
+    const exclude = new Set([...before, ...leaveOut]);
+    const result = await pick(row, { exclude });
+    if (!result.outfit) return { swapped: false };
     await store.setKv(KV.touched(id), '1');
-    const result = await pick(row, { exclude: new Set(leaveOut) });
+    await store.setKv(KV.swapped(id), JSON.stringify([...exclude]));
     const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
     await store.dailyIdeas.put({ ...row, outfitId, state: 'idea' });
+    return { swapped: true };
   }
 
   /** Wear this: logs the day (as the S1 card did) and returns what to put back on Undo. */
@@ -313,12 +328,6 @@ export function createMorningService(deps: MorningDeps) {
     const result = await pick(next);
     const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
     await store.dailyIdeas.put({ ...next, outfitId });
-    const card = row.messageId ? await store.chat.get(row.messageId) : null;
-    if (!card) return;
-    const before = (await store.chat.all())
-      .filter((m) => m.role === 'stylist' && m.kind === 'text' && m.createdAt <= card.createdAt)
-      .sort((a, b) => b.createdAt - a.createdAt)[0];
-    if (before) await store.chat.patch(before.id, { text: greeting(row.slot, weather as unknown as DayWeather, before.createdAt, row.occasion) });
   }
 
   /**
@@ -331,7 +340,9 @@ export function createMorningService(deps: MorningDeps) {
     if (deps.enabled && !deps.enabled()) return false;
     const { day, slot } = slotAt(nowMs, zone);
     const row = await store.dailyIdeas.get(ideaId(day, slot));
-    if (!row?.weather || row.state === 'stayingIn' || row.fitCheckId) return false;
+    if (!row || row.state === 'stayingIn' || row.fitCheckId) return false;
+    // No weather yet (location was off): back from Settings with it on, the card gets its forecast now (09 §23 M5).
+    if (!row.weather) return gainWeather(row);
     const fetchedAt = typeof row.weather.fetchedAt === 'number' ? row.weather.fetchedAt : row.createdAt;
     if (nowMs - fetchedAt < WEATHER_STALE_MS) return false;
     if ((await deps.weather.permission()) !== 'granted') return false;
@@ -351,7 +362,35 @@ export function createMorningService(deps: MorningDeps) {
     return true;
   }
 
-  return { ensureCard, change, swap, wear, refreshWeather, freshen, greeting };
+  /** A card planned without weather gets it: an untouched one is re-planned for it, a touched one keeps its outfit. */
+  async function gainWeather(row: DailyIdeaRow): Promise<boolean> {
+    if ((await deps.weather.permission()) !== 'granted') return false;
+    const weather = (await forecast(row.slot)) as unknown as Record<string, unknown> | null;
+    if (!weather) return false;
+    const next = { ...row, weather };
+    const untouched = row.state === 'idea' && (await store.getKv(KV.touched(row.id))) !== '1';
+    if (untouched) {
+      const result = await pick(next);
+      const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
+      await store.dailyIdeas.put({ ...next, outfitId });
+      if (row.messageId) await store.chat.patch(row.messageId, { outfitId });
+    } else {
+      await store.dailyIdeas.put(next);
+    }
+    return true;
+  }
+
+  return { ensureCard, change, swap, wear, refreshWeather, freshen };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;
+
+function parseIds(v: string | null): string[] {
+  if (!v) return [];
+  try {
+    const a: unknown = JSON.parse(v);
+    return Array.isArray(a) ? a.filter((x): x is string => typeof x === 'string') : [];
+  } catch {
+    return [];
+  }
+}

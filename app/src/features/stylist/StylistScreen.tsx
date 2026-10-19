@@ -10,9 +10,9 @@
 // newest message stays in view.
 // A question's answer streams into an in-memory row drawn after the thread (features/ask/live.ts), so the chat
 // table is written once per answer, not per word.
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, AppState, Keyboard, Platform, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { type SharedValue, scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { dayKey } from '@kitted/core';
 import { space, useTheme } from '@/design-system';
@@ -31,9 +31,12 @@ import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
 import { OfflineBanner } from './OfflineBanner';
+import { LatestPill } from './LatestPill';
+import { AT_BOTTOM_PT, latestPillShows } from './latestShows';
 import { useNet } from '@/services/connectivity';
 import { buildThreadItems, liveGap, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
+import { threadGrow } from './threadGrow';
 import { useAccountOffer } from '@/features/account/offerSession';
 import { useFinishSequence } from '@/features/finish/session';
 
@@ -108,6 +111,14 @@ export function StylistScreen() {
       scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
     },
   );
+  // A card opening or folding (#344): at the bottom, scroll with its height change, frame by frame.
+  useAnimatedReaction(
+    () => threadGrow.value,
+    (now, before) => {
+      if (before === null || now === before || !follow.value) return;
+      scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
+    },
+  );
   const dockStyle = useAnimatedStyle(() => ({ bottom: COMPOSER_BOTTOM + lift.value }));
   // The dock's measured height: at large text sizes it's far taller than the mockup's, and a fixed
   // pad would leave the newest links under it for good. Never less than the mockup's pad.
@@ -128,13 +139,41 @@ export function StylistScreen() {
     [list, motion],
   );
   const first = useRef(true);
+  const toLatest = () => {
+    newBelow.current = false;
+    pillShown.current = false;
+    setPill(false);
+    atBottom.current = true;
+    follow.set(1);
+    toEnd(true);
+  };
+  // Just above the dock (or the accessory), riding the keyboard like the dock does.
+  const pillBase = useSharedValue(COMPOSER_BOTTOM + ACCESSORY_H + DOCK_GAP);
   // Only his finger decides whether the thread follows: the momentum end of our own animated
   // scrollToEnd (content still growing under it) used to read as "scrolled up" and stop it.
   const dragging = useRef(false);
   const onUserScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
-    atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < 80;
+    atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < AT_BOTTOM_PT;
     follow.set(atBottom.current ? 1 : 0);
+  };
+  // The Latest pill (02 G3, 09 §23 L1): scrolled up more than a screen, or scrolled up while something new came in.
+  const [pill, setPill] = useState(false);
+  const pillShown = useRef(false);
+  const newBelow = useRef(false);
+  const offsetY = useRef(0);
+  // Only when it turns on or off: a render on every scroll or size change (a toast growing the footer included) left a
+  // toast's entering animation stuck invisible on iOS (#118, #353).
+  const updatePill = () => {
+    if (contentH.current - offsetY.current - viewH.current < AT_BOTTOM_PT) newBelow.current = false;
+    const next = latestPillShows({ contentH: contentH.current, viewH: viewH.current, offsetY: offsetY.current, newBelow: newBelow.current });
+    if (next === pillShown.current) return;
+    pillShown.current = next;
+    setPill(next);
+  };
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    offsetY.current = e.nativeEvent.contentOffset.y;
+    updatePill();
   };
   const onDragEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     onUserScroll(e);
@@ -155,7 +194,8 @@ export function StylistScreen() {
     // Closed: toasts sit above the accessory's capsule.
     dockTop.current = COMPOSER_BOTTOM + ACCESSORY_H;
     setToastFloor(dockTop.current);
-  }, [docked]);
+    pillBase.set(dockTop.current + DOCK_GAP);
+  }, [docked, pillBase]);
   useFocusEffect(
     useCallback(() => {
       setToastFloor(dockTop.current);
@@ -251,14 +291,19 @@ export function StylistScreen() {
         onScrollEndDrag={onDragEnd}
         onMomentumScrollEnd={onMomentumEnd}
         scrollEventThrottle={16}
+        onScroll={onScroll}
         onContentSizeChange={(_w, h) => {
+          // Something new below while he's scrolled up: the Latest pill offers the way down (L1).
+          if (h > contentH.current && contentH.current > 0 && !atBottom.current) newBelow.current = true;
           contentH.current = h;
+          updatePill();
           // Not while his finger is on it (U17: each new sentence used to pull him back down mid-drag), and with
           // VoiceOver on only his own sends move the thread (a three-finger scroll never reads as "scrolled up").
           if (atBottom.current && !dragging.current && !(screenReader.current && !first.current)) toEnd(!first.current);
         }}
         onLayout={(e) => {
           viewH.current = e.nativeEvent.layout.height;
+          updatePill();
           toEnd(false);
           first.current = false;
         }}
@@ -287,6 +332,8 @@ export function StylistScreen() {
           instead of being cut in half. A sibling after the ScrollView, so the tab bar still shrinks. */}
       <View pointerEvents="none" style={[styles.edgeFade, { experimental_backgroundImage: edgeFade(colors.bg) }]} />
       <OfflineBanner top={space.xs} />
+      {/* Steps aside while a toast shows (5–8 s), so the two never stack (#353). */}
+      {pill && !toast ? <PillDock base={pillBase} lift={lift} onPress={toLatest} /> : null}
       {docked ? (
         <Animated.View
           style={[styles.dock, dockStyle]}
@@ -296,6 +343,7 @@ export function StylistScreen() {
             dockH.value = e.nativeEvent.layout.height;
             dockTop.current = COMPOSER_BOTTOM + e.nativeEvent.layout.height;
             setToastFloor(dockTop.current);
+            pillBase.set(dockTop.current + DOCK_GAP);
           }}
         >
           {DOCK_ALWAYS ? <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" /> : null}
@@ -312,6 +360,20 @@ export function StylistScreen() {
         </Animated.View>
       ) : null}
     </>
+  );
+}
+
+/**
+ * The Latest pill's spot, riding the keyboard. Its animated style lives only while the pill is on screen: a style kept
+ * on the screen with nothing to draw (and reading the toast's room) left every toast's entering animation stuck
+ * invisible on iOS (found on the Simulator, #353; the same symptom as #118).
+ */
+function PillDock({ base, lift, onPress }: { base: SharedValue<number>; lift: SharedValue<number>; onPress: () => void }) {
+  const style = useAnimatedStyle(() => ({ bottom: base.value + lift.value }));
+  return (
+    <Animated.View pointerEvents="box-none" style={[styles.pill, style]}>
+      <LatestPill onPress={onPress} />
+    </Animated.View>
   );
 }
 
@@ -349,4 +411,5 @@ const styles = StyleSheet.create({
   thread: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: space.gutter, paddingTop: EDGE_FADE },
   edgeFade: { position: 'absolute', top: 0, left: 0, right: 0, height: EDGE_FADE },
   dock: { position: 'absolute', left: 0, right: 0, paddingBottom: 0 },
+  pill: { position: 'absolute', left: 0, right: 0, height: 44 },
 });

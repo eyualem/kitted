@@ -441,13 +441,16 @@ describe('X10 everything that reads the closet follows', () => {
     expect(ctx.text).toMatch(/Dark jeans · bottom · [^\n]*relaxed leg/);
   });
 
-  it('a marked Starter piece that no longer fills its row is unmarked, and Undo marks it back', async () => {
+  it('a piece added from the list stays marked through a leg or color fix, and a kind out of its row unmarks it, with Undo (#343)', async () => {
     const env = await setup({ only: [] });
     const s05 = STARTER.find((e) => e.id === 's05')!;
-    const m = markedPiece(s05, 'C-mark', env.clock.nowMs())!;
+    const m = markedPiece(s05, s05.owns[0]!, 'C-mark', env.clock.nowMs())!;
     await env.store.closet.put(m);
     expect(ownership(await env.store.closet.all(), []).s05).toMatchObject({ owned: true });
-    const r = await env.closet.editPiece('C-mark', 'leg', 'slim');
+    await env.closet.editPiece('C-mark', 'leg', 'slim');
+    await env.closet.editPiece('C-mark', 'color', 'denim_light');
+    expect((await piece(env.store, 'C-mark')).starterId).toBe('s05');
+    const r = await env.closet.editPiece('C-mark', 'kind', 'chinos');
     expect((await piece(env.store, 'C-mark')).starterId).toBeNull();
     expect(ownership(await env.store.closet.all(), []).s05).toEqual({ owned: false });
     await env.closet.restoreEdit(r!.undo);
@@ -564,11 +567,11 @@ describe('X14 words and VoiceOver', () => {
   });
 });
 
-// ---------------------------------------------------------------- X15 more kinds (#339)
+// ---------------------------------------------------------------- X15 more kinds (#361)
 // Founder, Oct 17: "the full sleeve shirt is not included … half sleeve button-ups are not included … add more options".
 // Closet-only kinds (features/closet/kinds.ts): each keeps the reading's kind it scores and matches as, and draws and
-// names as itself. Checks K1–K11 (09-ui-review §22).
-describe('X15 more kinds (#339)', () => {
+// names as itself. Checks K1–K11 (09-ui-review §24).
+describe('X15 more kinds (#361)', () => {
   const NEW: Record<string, [string, string]> = {
     long_sleeve_tee: ['tee', 'Long-sleeve tee'], henley: ['tee', 'Henley'], button_up_shirt: ['oxford_shirt', 'Button-up shirt'],
     short_sleeve_shirt: ['camp_collar_shirt', 'Short-sleeve shirt'], turtleneck: ['sweater', 'Turtleneck'], zip_hoodie: ['hoodie', 'Zip hoodie'],

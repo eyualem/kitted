@@ -182,7 +182,8 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
   const outerAll = shortlist("outer");
   const heavyOwned = input.closet.some((c) => isHeavyOuter(c.garment));
   const warmOwned = input.closet.some((c) => isWarmLayer(c.garment));
-  const layerChoices: (ClosetItem | null)[] = needs?.hot ? [null] : [null, ...outerAll];
+  // A pinned layer is always worn, hot day or not: "no layer" would drop the piece he asked about (#358).
+  const layerChoices: (ClosetItem | null)[] = pinned?.slot === "outer" ? [pinned] : needs?.hot ? [null] : [null, ...outerAll];
 
   type Candidate = { items: ClosetItem[]; layer: ClosetItem | null; wrong: number; repeat: number; fresh: number; value: number; predicted: number; tie: number };
   /** Weather first, then a new outfit, then the top he's gone longest without, then the score. */

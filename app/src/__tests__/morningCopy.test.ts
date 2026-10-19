@@ -1,7 +1,7 @@
 // The morning card's words (02 "S1d"): why lines, the weather strip, and the result's weather tip.
 import type { DayWeather } from '@kitted/core';
 import type { ClosetItemRow } from '@/data/types';
-import { stripLines, weatherLine, whyLine, type CardWeather } from '@/features/morning/copy';
+import { cardGreeting, seasonLine, stripLines, weatherLine, whyLine, type CardWeather } from '@/features/morning/copy';
 import { weatherTipText } from '@/features/morning/weatherTip';
 
 const item = (id: string, name: string) => ({ id, name }) as unknown as ClosetItemRow;
@@ -60,5 +60,18 @@ describe('weatherLine (#338): said for the hour he reads it', () => {
 
   it('a time never breaks across lines', () => {
     expect(weatherLine(day, 7)).toContain('2\u00A0pm');
+  });
+});
+
+describe('the card opens with the hello (#340)', () => {
+  it('for the hour he reads it', () => {
+    expect(cardGreeting('day', 7)).toBe('Morning.');
+    expect(cardGreeting('day', 13)).toBe('Afternoon.');
+    expect(cardGreeting('evening', 19)).toBe('Evening. Heading out?');
+  });
+
+  it('without weather, the season line, or nothing in a mild month', () => {
+    expect(seasonLine(10)).toBe('October: bring a layer.');
+    expect(seasonLine(7)).toBeNull();
   });
 });

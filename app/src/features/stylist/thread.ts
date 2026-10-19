@@ -81,9 +81,18 @@ export function sortMessages(ms: readonly ChatMessage[]): ChatMessage[] {
   return [...ms].sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id));
 }
 
+/**
+ * The greeting line the morning/evening card used to post above itself (#340: the card opens with its own hello and
+ * the weather now). Hidden wherever it's still stored: posted 1 ms before its card, or a seeded one marked `greeting`.
+ */
+export function withoutCardGreetings(messages: readonly ChatMessage[]): ChatMessage[] {
+  const cardAt = new Set(messages.filter((m) => m.kind === 'card' && m.cardType === 'morning').map((m) => m.createdAt));
+  return messages.filter((m) => !(m.role === 'stylist' && m.kind === 'text' && (m.payload.greeting === true || cardAt.has(m.createdAt + 1))));
+}
+
 export function buildThreadItems(messages: readonly ChatMessage[], nowMs: number, zone: ZoneOffset): ThreadItem[] {
   const out: ThreadItem[] = [];
-  const sorted = sortMessages(messages);
+  const sorted = sortMessages(withoutCardGreetings(messages));
   let prev: ChatMessage | null = null;
   sorted.forEach((m, i) => {
     const newDay = !prev || dayKey(prev.createdAt, zone) !== dayKey(m.createdAt, zone);

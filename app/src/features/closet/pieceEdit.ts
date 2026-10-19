@@ -12,7 +12,7 @@
 import { colorDistance, displayHex, FAMILY_WORD, FLIP_PAIRS, garmentName, nearestFamily, RUBRIC_DATA, shadeFromId, shoeKindOf } from '@kitted/core';
 import type { Garment, Observation } from '@kitted/core';
 import type { ClosetArt, ClosetItemRow, ClosetProfile } from '@/data/types';
-import { STARTER } from '@/features/finish/starter';
+import { keepsRow, STARTER } from '@/features/finish/starter';
 import { t, type StringKey } from '@/i18n/en';
 import { doubtLine, type FitDoubt } from './fitDoubt';
 import { engineKind, isVariant, KIND_SLEEVES, VARIANTS } from './kinds';
@@ -23,7 +23,7 @@ export type EditValue = string | number;
 export type EditSlot = 'top' | 'outer' | 'bottom' | 'shoes';
 
 /** The first group per slot (9 or fewer, 3 rows of 3, every one drawn differently), then the rest (§17.2). The
- *  closet-only kinds (kinds.ts, #339) sit with the reading's: long and short sleeves first among the tops. */
+ *  closet-only kinds (kinds.ts, #361) sit with the reading's: long and short sleeves first among the tops. */
 export const KIND_MAIN: Readonly<Record<EditSlot, readonly string[]>> = {
   top: ['tee', 'long_sleeve_tee', 'graphic_tee', 'polo', 'button_up_shirt', 'short_sleeve_shirt', 'sweater', 'sweatshirt', 'hoodie'],
   outer: ['overshirt', 'denim_jacket', 'bomber', 'field_jacket', 'blazer', 'puffer', 'overcoat', 'hoodie', 'zip_hoodie'],
@@ -53,7 +53,7 @@ const COLOR_GROUPS: readonly [StringKey, readonly string[]][] = [
   ['closet.edit.color.colors', ['green', 'burgundy', 'red', 'orange', 'yellow', 'pink', 'purple']],
 ];
 const DENIM_WASH: readonly string[] = ['denim_light', 'denim_mid', 'denim_dark'];
-/** The kinds a denim wash is offered for (jean shorts are a closet-only kind of shorts, #339). */
+/** The kinds a denim wash is offered for (jean shorts are a closet-only kind of shorts, #361). */
 const DENIM_KINDS: readonly string[] = ['jeans', 'denim_jacket', 'jorts'];
 /** Off denim, a wash becomes its nearest plain color ("Changed to chinos, in navy."). */
 const WASH_TO_PLAIN: Readonly<Record<string, string>> = { denim_dark: 'navy', denim_mid: 'blue', denim_light: 'light_blue' };
@@ -119,7 +119,7 @@ export interface EditOptions {
 type Editable = Pick<ClosetItemRow, 'garment'> & Partial<Pick<ClosetItemRow, 'profile'>>;
 type EditableSlot = Editable & Pick<ClosetItemRow, 'slot'>;
 
-/** The piece's kind as he'd name it: a closet-only kind he picked (#339), else the reading's. */
+/** The piece's kind as he'd name it: a closet-only kind he picked (#361), else the reading's. */
 const kindOf = (item: Editable): string | null => {
   const v = item.profile?.kindVariant;
   if (isVariant(v) && engineKind(v) === item.garment.subcategory) return v;
@@ -242,7 +242,7 @@ function artWithColor(art: ClosetArt | null | undefined, family: string): Closet
   return { ...rest, family, shade, ...(measured && near(nearestFamily(measured)) ? { measured } : {}) };
 }
 
-/** The drawing's art after a kind pick (#339): the kind he picked and the sleeves it names, as artOf writes them. */
+/** The drawing's art after a kind pick (#361): the kind he picked and the sleeves it names, as artOf writes them. */
 function artWithKind(art: ClosetArt | null, profile: ClosetProfile): ClosetArt | null {
   const kind = profile.kindVariant;
   const sleeves = profile.confirmed.sleeve_length;
@@ -269,7 +269,7 @@ export interface EditPlan {
  */
 export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue, sightings: readonly Observation[]): EditPlan {
   const remapped = denimRemap(item, field, value);
-  // A closet-only kind writes the reading's kind it scores as (#339); the kind itself lives on the profile.
+  // A closet-only kind writes the reading's kind it scores as (#361); the kind itself lives on the profile.
   const written = field === 'kind' ? engineKind(String(value)) : value;
   const g: Garment = { ...item.garment, [GARMENT_FIELD[field]]: written, ...(remapped ? { color_family: remapped } : {}) };
   const p0: ClosetProfile = profileOfItem(item);
@@ -281,7 +281,7 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
   };
   const cf = CONFIRM_FIELD[field];
   if (cf) confirm(cf, String(written));
-  // A kind named by its sleeves says how long they are (#339): the drawing follows, and the matcher keeps a long- and a
+  // A kind named by its sleeves says how long they are (#361): the drawing follows, and the matcher keeps a long- and a
   // short-sleeve tee apart. Tops and layers only; other kinds leave his sleeves as they were.
   const sleeves = field === 'kind' && (item.slot === 'top' || item.slot === 'outer') ? KIND_SLEEVES[String(value)] : undefined;
   if (sleeves) confirmed.sleeve_length = sleeves;
@@ -319,7 +319,8 @@ export function editPlan(item: ClosetItemRow, field: EditField, value: EditValue
     ...(renames && !p0.nameLocked ? { autoName: true } : {}),
   };
   const entry = item.starterId ? STARTER.find((e) => e.id === item.starterId) : undefined;
-  const unmark = !!entry && !item.isPhotographed && !entry.fills(g, String(item.slot));
+  // A color pick never un-marks a piece he added from the list; a kind out of its row does (#343).
+  const unmark = !!entry && !item.isPhotographed && !keepsRow(entry, g, String(item.slot));
   return { patch: { garment: g, confirmedFields: fields, profile, starterId: unmark ? null : item.starterId }, remapped };
 }
 

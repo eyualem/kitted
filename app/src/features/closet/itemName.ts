@@ -66,7 +66,7 @@ export function detailWordsOf(art: Pick<ClosetArt, 'details' | 'denimWear' | 'sh
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
 const OTHER: Readonly<Record<string, string>> = { top: 'top', outerwear: 'layer', bottom: 'bottoms', footwear: 'shoes' };
-/** The garment noun ("hoodie"); a closet-only kind he picked says itself ("long-sleeve tee", #339); an "other" type
+/** The garment noun ("hoodie"); a closet-only kind he picked says itself ("long-sleeve tee", #361); an "other" type
  *  says what kind of piece it is ("Black top"). */
 function pieceWord(g: Garment, art?: ClosetArt | null): string {
   if (isVariant(art?.kind) && VARIANTS[art!.kind!]!.sub === g.subcategory) return VARIANTS[art!.kind!]!.noun;

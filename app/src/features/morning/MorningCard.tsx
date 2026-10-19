@@ -3,7 +3,7 @@
 // check lands in its window (with the score), when he's staying in, or once its window has passed.
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 import { localParts, type IdeaReason, type MissingSlot } from '@kitted/core';
 import {
   Icon, KButton, KCard, KCardSection, KText, MonoLabel, MorphPicker, NeckDownPhoto, Numeral, TextLink, displayScore, opacity, radius, scoreWordLabel, space, useTheme,
@@ -23,9 +23,10 @@ import { isNwsWeather, weatherSource } from '@/services/weather';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { cardOccasionLabel, ideaTitle, missingLabel, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
+import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
+import { locationRow } from './locationRow';
 import { pickSwap } from './swapPicker';
 import { PieceArt } from '@/features/closet/GarmentArt';
 
@@ -96,15 +97,18 @@ export function MorningCard({ ideaId, readOnly = false }: { ideaId: string; read
   return <FullCard m={m} />;
 }
 
-/** The hero-strip card (#70), lightened (#338: "too much in the card", the text crammed): the menus in a quiet row
- *  on top ("Class ⌄ · Smart casual ⌄"), the outfit edge to edge, the headline alone on its line, one weather line said
- *  for the hour he reads it, the reason, one primary action per state, and a small camera link. Nothing shares a line
- *  with the headline any more (the badge and "Sample weather" were squeezed beside it and the menus). */
+/** The hero-strip card (#70), lightened (#338: "too much in the card", the text crammed): Kit's hello and one weather
+ *  line said for the hour he reads it (#340: they open the card; no greeting bubble above it), the menus in a quiet row
+ *  ("Class ⌄ · Smart casual ⌄"), the outfit edge to edge, the headline alone on its line, the reason, one primary action
+ *  per state, and a small camera link. */
 function FullCard({ m }: { m: Model }) {
   const { isAccessibilitySize } = useTheme();
   const { row } = m;
   const evening = row.slot === 'evening';
   const weather = row.weather as unknown as CardWeather | null;
+  const now = localParts(sessionClock.nowMs(), sessionClock.offset);
+  const hourNow = now.hh;
+  const season = weather ? null : seasonLine(now.m);
   const enough = m.items.length > 0;
   const occasions = evening ? EVENING_CARD_OCCASIONS : DAY_CARD_OCCASIONS;
   const others = STYLES.filter((s) => !m.myStyles.includes(s));
@@ -120,11 +124,18 @@ function FullCard({ m }: { m: Model }) {
     const undo = await morning.wear(row.id);
     showToast(t('toast.logged'), undo);
   };
-  const swap = () => pickSwap(m.items, (id) => void morning.swap(row.id, [id]));
+  // Nothing else works without that piece: the card keeps its outfit and says so (09 §23 M2).
+  const swap = () =>
+    pickSwap(m.items, (id) => {
+      void morning.swap(row.id, [id]).then(({ swapped }) => {
+        if (!swapped) showToast(t('swap.none'));
+      });
+    });
   const allow = async () => {
     if ((await weatherSource.requestPermission()) === 'granted') await morning.refreshWeather(row.id);
   };
 
+  const locationAsk = locationRow({ permission: m.permission, hasWeather: !!weather, sourceKind: weatherSource.kind });
   const wearing = row.state === 'wearing';
   const title = enough
     ? ideaTitle(m.reasons, row.occasion)
@@ -137,7 +148,19 @@ function FullCard({ m }: { m: Model }) {
 
   return (
     <KCard>
-      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: space.s, paddingHorizontal: space.cardPadH, paddingTop: space.s, paddingBottom: space.s }}>
+      {/* The card opens with Kit's hello and the weather (founder, Oct 18, #340: no greeting bubble above it), then the
+          menus. Said for the hour he reads it. */}
+      <View style={{ paddingHorizontal: space.cardPadH, paddingTop: space.cardPadV, paddingBottom: space.s, gap: space.xs }}>
+        <KText variant="headline" weight="600">
+          {cardGreeting(row.slot, hourNow)}
+        </KText>
+        {weather ? <WeatherLine w={weather} /> : season ? (
+          <KText variant="footnote" color="ink2">
+            {season}
+          </KText>
+        ) : null}
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: space.s, paddingHorizontal: space.cardPadH, paddingBottom: space.s }}>
         <MorphPicker
           inline
           label={cardOccasionLabel(row.occasion)}
@@ -163,13 +186,16 @@ function FullCard({ m }: { m: Model }) {
       </View>
       <HeroStrip items={enough ? m.items : m.known} needs={needs} />
       <KCardSection>
-        <View style={{ gap: space.xs }}>
-          <KText variant="title3" weight="600" accessibilityRole="header">
-            {title}
-          </KText>
-          {weather ? <WeatherLine w={weather} /> : null}
-        </View>
-        {!weather && m.permission === 'unknown' && weatherSource.kind !== 'none' ? <LocationAsk onAllow={() => void allow()} /> : null}
+        <KText variant="title3" weight="600" accessibilityRole="header">
+          {title}
+        </KText>
+        {locationAsk === 'ask' ? <LocationAsk onAllow={() => void allow()} /> : null}
+        {locationAsk === 'settings' ? (
+          // Denied once: only Settings can turn it back on (09 §23 M4). A quiet link, never a nag.
+          <View style={{ alignSelf: 'flex-start' }}>
+            <TextLink title={t('wx.off.link')} color="ink2" compact accessibilityHint={t('wx.off.a11yHint')} onPress={() => void Linking.openSettings()} />
+          </View>
+        ) : null}
         <KText variant="subheadline" color="ink2">
           {why}
         </KText>
