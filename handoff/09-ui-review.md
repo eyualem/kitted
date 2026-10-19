@@ -1002,12 +1002,12 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 
 **Not changed:** the scoring reading, `@kitted/core`'s rules and every score; the closet call's prompt; Python.
 
-### §24 results (Oct 19, #359): every check passes; not yet seen on the Simulator
+### §24 results (Oct 19, #359): every check passes, and seen on the Simulator
 - **Tests:** `src/__tests__/longSleeveTee.test.ts`, 14 checks (S1–S4, K1–K5, M1 and a control) pass. Older tests changed only where the new field shows: the seed's grey tee's art now carries `sleeves: 'short'` (`seedLoader.test.ts`), "long-sleeve" is an allowed name word (`copyChecks.test.ts`), and the Kind lists (`pieceEdit.test.ts` X1). `npm run check` green: 1,393 app tests.
 - **Found on the way:** the demo photo p01a (a white tee under an open overshirt) was already read `sleeve_length: long` by the real closet call, and the photo agrees (the cuff shows at his wrist). It's now "White long-sleeve tee"; it used to be "White tee", drawn short.
 - **The drawing:** rendered from the app's own SVG, light and dark (`screenshots/long-sleeve-tee/drawings.png`, git-ignored): the long-sleeve tee has slimmer sleeves than a sweatshirt and a stitched hem where the sweatshirt has ribbed cuffs and hem; a short-sleeve tee draws byte for byte as before.
 - **Known limit:** a tee half hidden under a long-sleeve jacket can have the jacket's sleeves read as its own; the drift guard keeps one such read from flipping a piece already seen, and his pick in "What it is" settles it. Shirts, knits and jackets aren't named or drawn by the sleeve read (a short-sleeve oxford still draws long sleeves).
-- **Not done:** the Simulator pass (the piece page and the Kind sheet; the Mac's memory was tight).
+- **Seen on the Simulator after the merge (Oct 19):** demo screen 214 (empty Closet), a fit check with the sample photo p01b through the stand-in camera, light, then dark at the largest text size. The short-sleeve white tee stays "White tee", drawn as before. Its page → Kind shows "Long-sleeve tee" second, drawn apart from Sweater and Sweatshirt; a pick turns the page title, the name and the drawing into "White long-sleeve tee" with long sleeves, Kind reads "Long-sleeve tee", and the toast "Changed to long-sleeve tee. Your scores stay the same." has the Undo ring (at the largest size it stacks, and the option's label wraps at its hyphen: "Long- / sleeve tee"). Kind → Tee makes it "White tee" again; Undo on that puts the long sleeves back. The Pattern sheet draws all four options with long sleeves. Not seen on screen: a photo the closet call reads as long-sleeved (p01a is only a re-check in the demos), covered by S1's test on the same reading.
 
 ## 25. More kinds in "What it is" (Oct 17, #361; merged onto §24 on Oct 19)
 **The founder:** "the full sleeve shirt is not included as an option. Half sleeve button-ups are not included … just add more options like this. For clothes."
