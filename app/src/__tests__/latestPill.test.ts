@@ -52,7 +52,17 @@ describe('L2 · the pill', () => {
     expect(screen).toMatch(/latestPillShows\(/);
     // The tap: back to following, then to the end.
     expect(screen).toMatch(/const toLatest = [\s\S]{0,300}follow\.set\(1\)[\s\S]{0,200}toEnd\(true\)/);
-    // Its spot rides the keyboard and a toast, like the dock.
-    expect(screen).toMatch(/pillStyle = useAnimatedStyle\(\(\) => \(\{ bottom: [\s\S]{0,80}lift\.value[\s\S]{0,40}toastRoom\.value/);
+    // Its spot rides the keyboard, in a component mounted only while the pill shows, and it steps aside for a toast.
+    // Amended after the Simulator (#353): an animated style kept with no view, reading the toast's room, left every
+    // toast on Stylist invisible.
+    expect(screen).toMatch(/function PillDock\([\s\S]{0,200}useAnimatedStyle\(\(\) => \(\{ bottom: base\.value \+ lift\.value \}\)\)/);
+    expect(screen).toMatch(/\{pill && !toast \? <PillDock /);
+    // The old always-on style is gone.
+    expect(screen).not.toMatch(/pillStyle/);
+  });
+
+  it('the pill re-renders Stylist only when it turns on or off (a render per scroll or size change starved toasts)', () => {
+    const screen = src('features/stylist/StylistScreen.tsx');
+    expect(screen).toMatch(/if \(next === pillShown\.current\) return;/);
   });
 });
