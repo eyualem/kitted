@@ -1,7 +1,7 @@
 // G3 · Latest (02 §G3, 07 §6.1; 09-ui-review §23 L2, #353): a 44 pt capsule centred above the composer while he's
 // scrolled up; a tap takes the thread to its newest row.
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Icon, KText, opacity, useTheme } from '@/design-system';
+import { Icon, KText, opacity, shadow, useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 
 /** Its label stops growing here (an overlay over the thread, like the offline banner). */
@@ -30,7 +30,6 @@ export function LatestPill({ onPress }: { onPress: () => void }) {
 const styles = StyleSheet.create({
   wrap: { position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center' },
   capsule: {
-    minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, borderRadius: 999,
-    shadowColor: '#000', shadowOpacity: 0.18, shadowRadius: 8, shadowOffset: { width: 0, height: 2 },
+    minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, borderRadius: 999, boxShadow: shadow.card,
   },
 });

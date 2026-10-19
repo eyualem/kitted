@@ -11,6 +11,8 @@ export type ErrorWhere = 'render' | 'fatal' | 'js';
 export const LOG_MAX_BYTES = 100_000;
 const MESSAGE_MAX = 200;
 const STACK_LINES = 5;
+/** A frame's length kept (a dev build's frames are long bundle URLs). */
+const FRAME_MAX = 160;
 
 /** One line for the log, ending in a newline. */
 export function errorLine(error: unknown, where: ErrorWhere, nowMs: number): string {
@@ -22,7 +24,8 @@ export function errorLine(error: unknown, where: ErrorWhere, nowMs: number): str
     .split('\n')
     .map((l) => l.trim())
     .filter((l) => l.startsWith('at ') || /@/.test(l))
-    .slice(0, STACK_LINES);
+    .slice(0, STACK_LINES)
+    .map((l) => l.slice(0, FRAME_MAX));
   return `${new Date(nowMs).toISOString()} ${where} ${name}: ${message}${frames.length ? ` | ${frames.join(' | ')}` : ''}\n`;
 }
 

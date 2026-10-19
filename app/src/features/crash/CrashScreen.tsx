@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, type ErrorBoundaryProps } from 'expo-router';
 import { EmptyState, KButton, space, ThemeProvider, useTheme } from '@/design-system';
+import { disarmDemoCrash } from '@/demo/demoCrash';
 import { useDemoState } from '@/demo/demoState';
 import { t } from '@/i18n/en';
 import { recordError } from '@/services/errors/log';
@@ -21,8 +22,12 @@ export function CrashScreen({ error, retry }: ErrorBoundaryProps) {
   );
 }
 
-function Body({ retry }: Pick<ErrorBoundaryProps, 'retry'>) {
+function Body({ retry: redraw }: Pick<ErrorBoundaryProps, 'retry'>) {
   const { colors } = useTheme();
+  const retry = () => {
+    disarmDemoCrash();
+    return redraw();
+  };
   const home = () => {
     // Back through the gate to the start, then draw again.
     try {

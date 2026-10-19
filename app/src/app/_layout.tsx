@@ -17,6 +17,7 @@ import { boot } from '@/state/boot';
 import { startConnectivity } from '@/services/connectivity';
 import { getDemoArgs } from '@/state/session';
 import { CrashScreen } from '@/features/crash/CrashScreen';
+import { demoCrashCheck } from '@/demo/demoCrash';
 import { installErrorHandler } from '@/services/errors/log';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -65,7 +66,8 @@ export default function RootLayout() {
           <View style={{ flex: 1 }}>
             <RootStack booted={booted} />
             <ToastHost />
-            {DEMO_ENABLED && getDemoArgs().crash ? <DemoCrashOnce /> : null}
+            {/* After boot: the demo arguments are read then (and the compiler would keep a first-render read). */}
+            {DEMO_ENABLED && booted ? <DemoCrash /> : null}
           </View>
         </NavThemeFromTokens>
       </WebFrame>
@@ -139,14 +141,9 @@ function RootStack({ booted }: { booted: boolean }) {
   );
 }
 
-/** -demoCrash 1 (demo builds only, 09 §23 E5): throws once while drawing, so the crash screen can be seen; Try again
- *  then draws the app. */
-let demoCrashed = false;
-function DemoCrashOnce() {
-  if (!demoCrashed) {
-    demoCrashed = true;
-    throw new Error('Demo crash (-demoCrash 1)');
-  }
+/** -demoCrash 1 (demo builds only, 09 §23 E5): throws while drawing until Try again, so the crash screen can be seen. */
+function DemoCrash() {
+  demoCrashCheck();
   return null;
 }
 

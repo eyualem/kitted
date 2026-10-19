@@ -54,6 +54,10 @@ describe('E2 · one short line per error, a small file', () => {
     expect(errorLine('plain string', 'js', at)).toContain('Error: plain string');
     expect(errorLine({ weird: true }, 'fatal', at)).toContain('fatal Error:');
     expect(errorLine(undefined, 'js', at)).toContain('js Error:');
+    // A dev build's frames are long bundle URLs: each is cut to 160 characters.
+    const long = new Error('x');
+    long.stack = `Error: x\n    at f (http://127.0.0.1:8082/${'q'.repeat(900)})`;
+    expect(errorLine(long, 'js', at).length).toBeLessThan(260);
   });
 
   it('the file keeps its newest half once it passes ~100 KB, starting on a whole line', () => {
