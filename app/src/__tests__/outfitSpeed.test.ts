@@ -1,5 +1,5 @@
 // Outfit counting at large closets (09-ui-review §23, P1–P3, #353): checks written before the speed-up. The new code
-// gives exactly the answers of a frozen copy of the old (legacy/outfitsBefore.ts), on the demo closet and on a
+// gives exactly the answers of a frozen copy of the old (src/testing/outfitsBefore.ts), on the demo closet and on a
 // 60-piece mixed one; Next best buy at 50 pieces is fast; and a changed piece is never scored from the cache.
 import { US_EASTERN } from '@kitted/core';
 import seed from '../../assets/seed.json';
@@ -7,7 +7,7 @@ import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import * as now from '@/features/closet/outfits';
-import * as before from './legacy/outfitsBefore';
+import * as before from '@/testing/outfitsBefore';
 
 declare const require: (id: string) => unknown;
 

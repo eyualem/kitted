@@ -1,5 +1,5 @@
-// A frozen copy of features/closet/outfits.ts before the speed-up (09 §23 P1, #353): the new code must give exactly
-// these answers. Never edit it to make a test pass.
+// Test only, never imported by the app. A frozen copy of features/closet/outfits.ts before the speed-up (09 §23 P1,
+// #353): the new code must give exactly these answers. Never edit it to make a test pass.
 
 // The Closet's Outfits (09-ui-review §13, #307; approved #84, #87; 02 D15). Pure: every top + bottoms + shoes he owns
 // that core's `outfitValid` lets through, each scored by the parts engine (today's scoring) on `outfitReading`, at an

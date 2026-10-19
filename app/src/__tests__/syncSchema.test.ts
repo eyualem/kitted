@@ -153,6 +153,7 @@ describe('S5 and S6 everything is classified', () => {
       }
       if (/^KV\.style\(/.test(e)) return ['idea.style.day', 'idea.style.evening'];
       if (/^KV\.touched\(/.test(e)) return ['idea.touched.2026-10-22|day'];
+      if (/^KV\.swapped\(/.test(e)) return ['idea.swapped.2026-10-22|day'];
       if (/^NOTIFY_KEY\[/.test(e)) return [KV.notifyIdea, KV.notifyReady, KV.notifyTrial];
       if (/^CURSOR_KV\(/.test(e)) return ['sync.cursor.x'];
       if (e === 'key' || e === 'k' || e === 'step.key') return []; // generic helpers (the store, the engine, demo steps, tests)
