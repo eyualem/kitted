@@ -116,6 +116,18 @@ export function photoFor(p: SharePhoto | null, face: FaceChoice): { source: Shar
   return p.neck && p.aspect ? { source: p.source, aspect: p.aspect, crop: p.neck } : null;
 }
 
+/** How many images the captured copy of this version loads before it's ready (the ready gate, readyGate.ts):
+ *  Transparent and Solid none; With photo one (neck down, or a photo that fills the frame), two in Full photo when a
+ *  frame wider than the photo is filled with a blurred copy; none when the card shows the score on night. */
+export function imagesToLoad(m: ShareModel, format: ShareFormat, face: FaceChoice): number {
+  if (format !== 'photo') return 0;
+  const shown = photoFor(m.photo, face);
+  if (!shown) return 0;
+  if (shown.crop) return 1;
+  const { w, h } = FORMAT_SIZE.photo;
+  return shown.aspect && h * shown.aspect < w ? 2 : 1;
+}
+
 /** VoiceOver for the preview image: "Share card: 8 out of 10, Sharp." / "Share card: 7.5 to 8.5 out of 10, Sharp." */
 export function shareA11y(m: ShareModel, format: ShareFormat): string {
   const base = m.before

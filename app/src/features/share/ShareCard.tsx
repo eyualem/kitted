@@ -73,18 +73,19 @@ function Overlay({ m, shadow, ink = WHITE_INK }: { m: ShareModel; shadow: boolea
 
 /** His photo for this face choice, filling the card: neck down by its crop; "Full photo" head to feet, fitted by
  *  height (a frame wider than the photo is filled with a blurred copy of it). */
-function Photo({ photo, face }: { photo: SharePhoto | null; face: FaceChoice }) {
+function Photo({ photo, face, onImageLoad }: { photo: SharePhoto | null; face: FaceChoice; onImageLoad?: () => void }) {
   const { w, h } = FORMAT_SIZE.photo;
   const shown = photoFor(photo, face);
   if (!shown) return null;
-  if (shown.crop) return <NeckDownPhoto source={shown.source} aspect={shown.aspect} crop={shown.crop} width={w} height={h} />;
+  // Each image reports its load (the captured copy's ready gate counts them; shareModel imagesToLoad says how many).
+  if (shown.crop) return <NeckDownPhoto source={shown.source} aspect={shown.aspect} crop={shown.crop} width={w} height={h} onLoad={onImageLoad} />;
   const a = shown.aspect;
   const fitW = a ? h * a : w;
-  if (!a || fitW >= w) return <Image source={shown.source} contentFit="cover" contentPosition="top center" transition={0} style={{ width: w, height: h }} />;
+  if (!a || fitW >= w) return <Image source={shown.source} contentFit="cover" contentPosition="top center" transition={0} style={{ width: w, height: h }} onLoad={onImageLoad} />;
   return (
     <View style={{ width: w, height: h }}>
-      <Image source={shown.source} contentFit="cover" blurRadius={24} transition={0} style={{ position: 'absolute', width: w, height: h, opacity: 0.55 }} />
-      <Image source={shown.source} contentFit="fill" transition={0} style={{ position: 'absolute', left: (w - fitW) / 2, top: 0, width: fitW, height: h }} />
+      <Image source={shown.source} contentFit="cover" blurRadius={24} transition={0} style={{ position: 'absolute', width: w, height: h, opacity: 0.55 }} onLoad={onImageLoad} />
+      <Image source={shown.source} contentFit="fill" transition={0} style={{ position: 'absolute', left: (w - fitW) / 2, top: 0, width: fitW, height: h }} onLoad={onImageLoad} />
     </View>
   );
 }
@@ -107,7 +108,9 @@ function Shade({ width, height }: { width: number; height: number }) {
 }
 
 /** One version at its drawn size. The sticker has no background at all (the PNG keeps its transparency). */
-export function ShareCard({ m, format, face, tone = 'dark' }: { m: ShareModel; format: ShareFormat; face: FaceChoice; tone?: SolidTone }) {
+export function ShareCard({ m, format, face, tone = 'dark', onImageLoad }: {
+  m: ShareModel; format: ShareFormat; face: FaceChoice; tone?: SolidTone; onImageLoad?: () => void;
+}) {
   const { w, h } = FORMAT_SIZE[format];
   if (format === 'solid') {
     // The ground with rounded corners (outside them the PNG stays transparent, so it sits like a sticker).
@@ -131,7 +134,7 @@ export function ShareCard({ m, format, face, tone = 'dark' }: { m: ShareModel; f
   return (
     <FixedDark>
       <View style={{ width: w, height: h, backgroundColor: fixed.night, overflow: 'hidden' }}>
-        <Photo photo={m.photo} face={face} />
+        <Photo photo={m.photo} face={face} onImageLoad={onImageLoad} />
         <Shade width={w} height={h} />
         <View style={{ position: 'absolute', left: 0, right: 0, bottom: PHOTO_OVERLAY_BOTTOM }}>
           <Overlay m={m} shadow />

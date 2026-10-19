@@ -24,7 +24,10 @@ const RELEASE_AFTER_MS = 30_000;
 export async function captureCard(ref: RefObject<View | null>, format: ShareFormat): Promise<string> {
   const { px } = FORMAT_SIZE[format];
   const r = PixelRatio.get();
-  return captureRef(ref, { format: 'png', width: px.w / r, height: px.h / r, result: 'tmpfile' });
+  const t0 = Date.now();
+  const uri = await captureRef(ref, { format: 'png', width: px.w / r, height: px.h / r, result: 'tmpfile' });
+  console.log(`[share] capture ${format} ${Date.now() - t0} ms`);
+  return uri;
 }
 
 /** Deletes a captured file (view-shot's own release, which only touches its temp folder). */

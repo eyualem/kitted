@@ -1121,6 +1121,7 @@ const addedInBuild = {
   'share.share': 'Share',
   'share.saved': 'Saved to Photos.',
   'share.saveDenied': 'Photos access is off. Turn it on in Settings.',
+  'share.openSettings': 'Open Settings',
   'share.failed': "Couldn't make the image. Try again.",
   'share.a11y.card': 'Share card: {score} out of 10, {word}.',
   'share.a11y.cardWin': 'Share card: {before} to {after} out of 10, {word}.',

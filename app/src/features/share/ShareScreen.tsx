@@ -3,8 +3,8 @@
 // "Full photo"), and Share / Save. The card is drawn once more at full size, off screen, for the capture, so the image
 // is exactly what the preview shows and never depends on the screen's size or text size. The transparent preview sits
 // on a checkerboard so it reads as see-through; the PNG itself has no background.
-import { useRef, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, View, useColorScheme, useWindowDimensions } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AccessibilityInfo, Linking, StyleSheet, View, useColorScheme, useWindowDimensions } from 'react-native';
 import Svg, { Defs, Pattern, Rect } from 'react-native-svg';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -18,7 +18,8 @@ import { t } from '@/i18n/en';
 import { ShareCard, type SolidTone } from './ShareCard';
 import type { ExportResult } from './exportCard';
 import { shareNativeReady } from './shareNative';
-import { FORMAT_SIZE, buildShare, photoFor, shareA11y, type FaceChoice, type ShareFormat, type ShareModel } from './shareModel';
+import { READY_WAIT_MS, createGate } from './readyGate';
+import { FORMAT_SIZE, buildShare, imagesToLoad, photoFor, shareA11y, type FaceChoice, type ShareFormat, type ShareModel } from './shareModel';
 
 const TOP_BAR = 56;
 const CONTROLS = 210; // the version switch + face toggle + its note + the buttons and their status line
@@ -53,7 +54,7 @@ export function ShareScreen() {
 function ShareBody({ m }: { m: ShareModel }) {
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
-  const { isAccessibilitySize: ax } = useTheme();
+  const { isAccessibilitySize: ax, archivoLoaded } = useTheme();
   const [format, setFormat] = useState<ShareFormat>('photo');
   // The solid card starts in the phone's own appearance (this screen is always dark, so ask the system, not the theme).
   const system = useColorScheme();
@@ -61,8 +62,23 @@ function ShareBody({ m }: { m: ShareModel }) {
   // His choice is for this share only: every open starts neck down (founder, Oct 18).
   const [face, setFace] = useState<FaceChoice>('neck');
   const [busy, setBusy] = useState<'share' | 'save' | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<{ line: string; settings: boolean } | null>(null);
   const capture = useRef<View>(null);
+  // One press at a time: state updates arrive a frame late, so a fast second tap is caught here (A3).
+  const running = useRef(false);
+  // Closing the screen mid-share: no state is set on a screen that's gone (the file is still released, exportCard).
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+
+  // The captured copy remounts (key) whenever what it draws changes, and gets a new ready gate: it opens once the
+  // copy's images have loaded, and never before the Archivo font is in (A1–A2).
+  const copyKey = `${format}|${face}|${tone}|${archivoLoaded ? 'a' : '-'}`;
+  const gate = useMemo(() => createGate(archivoLoaded ? imagesToLoad(m, format, face) : Infinity), [m, format, face, archivoLoaded]);
 
   const size = FORMAT_SIZE[format];
   const availW = width - 48;
@@ -73,24 +89,36 @@ function ShareBody({ m }: { m: ShareModel }) {
   const hasPhoto = !!m.photo;
   const neckMissing = face === 'neck' && hasPhoto && !photoFor(m.photo, 'neck');
   const note = sticker ? t('share.sticker.note') : !photoCard ? null : neckMissing ? t('share.face.noNeck') : face === 'full' ? t('share.face.note') : null;
+  const locked = busy !== null;
 
   const say = (r: ExportResult) => {
+    if (!alive.current) return;
     const line = r === 'saved' ? t('share.saved') : r === 'denied' ? t('share.saveDenied') : r === 'failed' ? t('share.failed') : null;
-    setStatus(line);
+    setStatus(line ? { line, settings: r === 'denied' } : null);
     if (line) AccessibilityInfo.announceForAccessibility?.(line);
   };
   const run = async (what: 'share' | 'save') => {
-    if (busy) return;
+    if (running.current) return;
+    running.current = true;
     setBusy(what);
     setStatus(null);
     try {
       if (!shareNativeReady()) return say('failed');
+      // Wait for the copy's images and font; past the wait, say so rather than save a card with a blank photo.
+      if (!(await gate.wait(READY_WAIT_MS))) return say('failed');
+      if (!alive.current) return;
       // Loaded only on a build that has the native modules (shareNative.ts).
       const ex = await import('./exportCard');
       say(await (what === 'share' ? ex.shareCard(capture, format) : ex.saveCard(capture, format)));
     } finally {
-      setBusy(null);
+      running.current = false;
+      if (alive.current) setBusy(null);
     }
+  };
+  const pick = <T,>(set: (v: T) => void) => (v: T) => {
+    if (locked) return;
+    set(v);
+    setStatus(null);
   };
 
   return (
@@ -99,7 +127,7 @@ function ShareBody({ m }: { m: ShareModel }) {
       {/* The full-size card the capture reads (off screen, never seen or read by VoiceOver). */}
       <View style={styles.offscreen} pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         <View ref={capture} collapsable={false} style={{ width: size.w, height: size.h }}>
-          <ShareCard m={m} format={format} face={face} tone={tone} />
+          <ShareCard key={copyKey} m={m} format={format} face={face} tone={tone} onImageLoad={gate.loaded} />
         </View>
       </View>
 
@@ -125,19 +153,20 @@ function ShareBody({ m }: { m: ShareModel }) {
       </View>
 
       <View style={[styles.controls, { paddingBottom: insets.bottom + 12 }]}>
-        <View style={{ paddingHorizontal: 24, gap: 10 }}>
+        {/* Locked while a capture or the share sheet is open (A3): the copy must stay what the preview shows. */}
+        <View style={{ paddingHorizontal: 24, gap: 10, opacity: locked ? 0.5 : 1 }} pointerEvents={locked ? 'none' : 'auto'} accessibilityState={{ disabled: locked }}>
           <Segmented
             label={t('share.a11y.versions')}
             options={[{ value: 'sticker', label: t('share.v.sticker') }, { value: 'solid', label: t('share.v.solid') }, { value: 'photo', label: t('share.v.photo') }]}
             value={format}
-            onChange={(v) => { setFormat(v); setStatus(null); }}
+            onChange={pick(setFormat)}
           />
           {format === 'solid' ? (
             <Segmented
               label={t('share.a11y.tone')}
               options={[{ value: 'light', label: t('share.tone.light') }, { value: 'dark', label: t('share.tone.dark') }]}
               value={tone}
-              onChange={(v) => { setTone(v); setStatus(null); }}
+              onChange={pick(setTone)}
             />
           ) : null}
           {photoCard && hasPhoto ? (
@@ -145,17 +174,21 @@ function ShareBody({ m }: { m: ShareModel }) {
               label={t('share.a11y.faces')}
               options={[{ value: 'neck', label: t('share.face.neck') }, { value: 'full', label: t('share.face.full') }]}
               value={face}
-              onChange={(v) => { setFace(v); setStatus(null); }}
+              onChange={pick(setFace)}
             />
           ) : null}
           {note ? <KText variant="footnote" color={fixed.textDim} style={{ textAlign: 'center' }}>{note}</KText> : null}
         </View>
         <View style={[styles.buttons, ax && { flexDirection: 'column' }]}>
-          <KButton title={t('share.share')} icon="share" size="large" style={ax ? undefined : { flex: 1 }} loading={busy === 'share'} accessibilityLabel={t('share.a11y.share')} onPress={() => void run('share')} />
-          <KButton title={t('share.save')} icon="save" kind="secondary" size="large" style={ax ? undefined : { flex: 1 }} loading={busy === 'save'} accessibilityLabel={t('share.a11y.save')} onPress={() => void run('save')} />
+          <KButton title={t('share.share')} icon="share" size="large" style={ax ? undefined : { flex: 1 }} loading={busy === 'share'} disabled={locked && busy !== 'share'} accessibilityLabel={t('share.a11y.share')} onPress={() => void run('share')} />
+          <KButton title={t('share.save')} icon="save" kind="secondary" size="large" style={ax ? undefined : { flex: 1 }} loading={busy === 'save'} disabled={locked && busy !== 'save'} accessibilityLabel={t('share.a11y.save')} onPress={() => void run('save')} />
         </View>
         {/* The status line's room is kept even when it's empty, so "Saved to Photos." doesn't move the preview. */}
-        <KText variant="footnote" color={fixed.textSoft} style={{ textAlign: 'center', minHeight: 18 }} accessibilityElementsHidden={!status}>{status ?? ' '}</KText>
+        <KText variant="footnote" color={fixed.textSoft} style={{ textAlign: 'center', minHeight: 18 }} accessibilityElementsHidden={!status}>{status?.line ?? ' '}</KText>
+        {/* Photos access turned off: the way back is Settings (A5). */}
+        {status?.settings ? (
+          <KButton title={t('share.openSettings')} kind="secondary" size="regular" style={{ alignSelf: 'center' }} onPress={() => void Linking.openSettings()} />
+        ) : null}
       </View>
     </View>
   );

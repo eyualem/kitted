@@ -8,11 +8,12 @@
 //   4. Show in chat.
 // Read-only: the score is the stored one; nothing here changes the occasion, re-scores, re-checks or corrects.
 // The header's ⋯ (09-ui-review §20.8 G22): Delete photo (a confirm; the photo leaves the phone, the score stays) and
-// Remove from Lookbook (the long-press's flow, then back). Not built (no dead buttons): Wear this again, Save, Share.
+// Remove from Lookbook (the long-press's flow, then back). Share (#352) beside it opens the share card on the look's
+// shown check, when it can be shared on this build. Not built (no dead buttons): Wear this again, Save.
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { Stack, router } from 'expo-router';
 import {
-  DeltaRow, FixRow, Icon, KButton, KCard, KCardSection, KText, NeckDownPhoto, RowDivider, ScoreBlock, Seam, TagLine, TipLine,
+  DeltaRow, FixRow, Icon, IconButton, KButton, KCard, KCardSection, KText, NeckDownPhoto, RowDivider, ScoreBlock, Seam, TagLine, TipLine,
   opacity, radius, space, useTheme,
 } from '@/design-system';
 import { store } from '@/data/db';
@@ -24,6 +25,7 @@ import { loadLook, showInChat, type LookPageModel } from './lookPage';
 import { GonePage } from '@/features/gone/Gone';
 import { confirmDeletePhoto, removeLookMenu } from './lookActions';
 import { LookMenu } from './LookMenu';
+import { shareNativeReady } from '@/features/share/shareNative';
 
 const PIECE_TILE = 76;
 const BEFORE_W = 50;
@@ -44,11 +46,16 @@ export function LookPage({ id }: { id: string }) {
         options={{
           title: look?.title ?? '',
           headerRight: () => (
-            <LookMenu
-              hasPhoto={!!look.photo}
-              onDeletePhoto={() => confirmDeletePhoto(look.shownId)}
-              onRemove={() => void removeLookMenu(look.checkId, look.title, () => (router.canGoBack() ? router.back() : router.replace('/lookbook')))}
-            />
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              {look.shareId && shareNativeReady() ? (
+                <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={() => router.push(`/share/${look.shareId}`)} />
+              ) : null}
+              <LookMenu
+                hasPhoto={!!look.photo}
+                onDeletePhoto={() => confirmDeletePhoto(look.shownId)}
+                onRemove={() => void removeLookMenu(look.checkId, look.title, () => (router.canGoBack() ? router.back() : router.replace('/lookbook')))}
+              />
+            </View>
           ),
         }}
       />
