@@ -2342,3 +2342,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **What follows it:** the name ("Grey long-sleeve tee", also graphic tees, polos and jerseys), the drawing (`flats.ts`: slimmer sleeves to the wrist and a stitched hem, so it's apart from a sweatshirt's ribbing), the morning card on a hot day (core `ideas.ts`: not counted as a cool short-sleeve top), and pieces already in his closet at the next launch (`refreshColors`).
     - **"What it is":** "Long-sleeve tee" right after "Tee" in the Kind list (Flannel shirt moves to the front of More kinds so the first group stays 8). It's a pseudo-kind: written as `tee` plus his confirmed `sleeve_length: long`, with his photos' sleeve reads taught to the matcher; "Tee" or "Graphic tee" on one makes the sleeves short again.
     - **Found:** the demo photo p01a's white tee was already read long by the real closet call, rightly (its cuff shows); it's now "White long-sleeve tee".
+
+## Oct 19 · Try-ons vs what he wore: several checks in a row
+
+360. **The founder: "It is still recommending a piece I just checked again. Could it be because I am running multiple checks a day?"** His flannel check offered "Swap to your green Champion sweatshirt → 7.5", the top of his check an hour earlier: a check's fixes never looked at other checks. Asked to think about the morning card first, then decide (Claude's call).
+    - **What several checks did to the morning card and Kit:** every check counted as worn, so the tops he tried on and took off lost to every fresher top for about a week (the card leads with the top he's gone longest without, up to 7 days).
+    - **The rule:** a check followed by another check (with pieces) within the hour, the same day, was a try-on; the last of the run is what he wore (`features/fitcheck/tryOn.ts`). Stable: whether a check was a try-on is settled within the hour after it, and the check being scored always counts as following, because its own pieces come after its card.
+    - **The card and Kit** count only what he wore (`historyFor` uses `wornChecks`).
+    - **A check's fixes:** a piece from an earlier try-on that day stays, tagged "Free · from your earlier check" (while he's deciding, "the sweatshirt you just had on goes better with these jeans" is the useful thing to hear); a piece from an outfit he wore earlier that day is left out (as the evening card never repeats the day's top); yesterday's pieces as before. Scores never change.
+    - **Not changed:** a piece's "Worn n times" and Closet's Your go-tos still count try-ons (a follow-up).
+    - **Checks first:** `app/src/__tests__/tryOn.test.ts` (TO1–TO5); the wiring checks failed before it, all pass, `npm run check`'s steps green (1,389 app tests). New outward words: "Free · from your earlier check". Merged Oct 19 (PR #28, founder: "You may merge PR 28.").
+

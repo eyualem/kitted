@@ -30,6 +30,7 @@ import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } fr
 import { snapPart } from './finish';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
+import { earlierToday } from './tryOn';
 import { evaluateCheck, scoreOptions, scoringEngine, type CheckScoreOptions, type ScoringEngine } from './scoring';
 import { anchorRecheckLook, copiedLook, hasLook, LOOK_GRACE_MS, lookInput, ownLookOf, settledLine, settleSecondLook } from './secondLook';
 import { dropWhichOne, whichOneOf, type WhichOnePayload } from './whichOne';
@@ -214,8 +215,12 @@ export function createFitCheckService(deps: ServiceDeps) {
   const closetFor = async (row?: FitCheckRow | null): Promise<ClosetItem[]> => {
     const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
     const exclude = new Set([...(row?.details.closetSummary?.added ?? []), ...(parent?.details.closetSummary?.added ?? [])]);
+    // Nor an outfit he already wore earlier that day (#360); what he only tried on stays, labelled (`triedFor`).
+    if (row) for (const id of earlierToday(row, await store.fitChecks.all()).worn) exclude.add(id);
     return (await store.closet.all()).filter((c) => isOwned(c) && !exclude.has(c.id));
   };
+  /** Pieces he tried on in an earlier check that day: a fix that uses one says so (#360). */
+  const triedFor = async (row: FitCheckRow): Promise<ReadonlySet<string>> => earlierToday(row, await store.fitChecks.all()).tried;
 
   /** A warm day for this check (its card's weather, else the month): no "add a layer" or boots fix (#160). */
   const warmFor = async (row: FitCheckRow): Promise<boolean> => {
@@ -292,7 +297,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const details = { ...row.details, ...(patch.details ?? {}) };
     const style = patch.style !== undefined ? patch.style : row.style;
     const ev = evaluateCheck({
-      reading, ...lensInput(occasion, style, p, details.secondLook), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+      reading, ...lensInput(occasion, style, p, details.secondLook), closet: await closetFor(row), triedEarlier: await triedFor(row), firstCheck: row.isFirstCheck,
       hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row),
       goingFor: details.goingFor ? details.goingFor.style : undefined,
     });
@@ -997,7 +1002,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       if (!row || !reading || row.parentId || row.status !== 'scored' || !row.details.goingFor) return null;
       const p = await profile();
       const ev = evaluateCheck({
-        reading, ...lensInput(row.occasion, style, p, row.details.secondLook), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+        reading, ...lensInput(row.occasion, style, p, row.details.secondLook), closet: await closetFor(row), triedEarlier: await triedFor(row), firstCheck: row.isFirstCheck,
         hiddenFixTargets: row.details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row), goingFor: style,
       });
       const d = ev.row.details;
