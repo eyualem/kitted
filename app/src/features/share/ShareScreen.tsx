@@ -154,7 +154,8 @@ function ShareBody({ m }: { m: ShareModel }) {
           <KButton title={t('share.share')} icon="share" size="large" style={ax ? undefined : { flex: 1 }} loading={busy === 'share'} accessibilityLabel={t('share.a11y.share')} onPress={() => void run('share')} />
           <KButton title={t('share.save')} icon="save" kind="secondary" size="large" style={ax ? undefined : { flex: 1 }} loading={busy === 'save'} accessibilityLabel={t('share.a11y.save')} onPress={() => void run('save')} />
         </View>
-        {status ? <KText variant="footnote" color={fixed.textSoft} style={{ textAlign: 'center' }}>{status}</KText> : null}
+        {/* The status line's room is kept even when it's empty, so "Saved to Photos." doesn't move the preview. */}
+        <KText variant="footnote" color={fixed.textSoft} style={{ textAlign: 'center', minHeight: 18 }} accessibilityElementsHidden={!status}>{status ?? ' '}</KText>
       </View>
     </View>
   );

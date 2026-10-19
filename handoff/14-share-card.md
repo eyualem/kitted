@@ -224,6 +224,36 @@ the alpha is caught.
 
 - **Oct 18 (#350):** the 3× size, the save path and the temp files fixed in `exportCard.ts`; SC6 now checks them. Jest
   green. Not yet run on iOS.
+- **Oct 19 (#351), step 1 on the Simulator** (iPhone 17 Pro, iOS 26.5; a Debug build of this branch with the three
+  modules; Metro from the worktree; demo screen 20, the re-check win 8.0 → 9.0). Saved files read back from the
+  Simulator's Photos (`DCIM/100APPLE`) with `tools/share/check_png.py`; copies in `screenshots/share-card/`
+  (git-ignored).
+  - **N1 pass:** the share screen runs; `exportCard` loads on first use (Metro bundled it on the tap).
+  - **N2 pass:** the saved photo card matches the preview, photo included.
+  - **N3 pass:** the numerals are Archivo Condensed and the wordmark Archivo Expanded in the saved file.
+  - **M1 pass, all four:** With photo 1080 × 1920; Transparent, Solid dark and Solid light 1080 × 600. (The 3× fix
+    holds.)
+  - **M2 pass:** Transparent kept its alpha in Photos: 0 of 717 points outside the overlay are filled, and the white
+    overlay is there.
+  - **M3 pass:** Solid dark and light have all 4 corners clear, and the ground is #121628 / #F3F4F6.
+  - **M4 pass:** With photo is opaque.
+  - **M5 pass on this photo:** Apple Vision finds 0 faces in the neck-down card, and 1 in the original p01a (the
+    control). All 12 photos still to do.
+  - **S5 pass:** the first Save asks "'Kitted' would like to add to your Photos. Save your Kitted card to Photos."
+    Allow → "Saved to Photos."
+  - **S7 pass:** Share opens the sheet with the PNG (67 KB for Solid), with Copy and Save Image in it; closing it says
+    nothing.
+  - **S1 part:** Solid opened on Dark with the Simulator in dark, as designed.
+  - **Found:**
+    1. **The saved PNGs are 16-bit (wide color)**: iOS's preferred renderer format on a P3 screen. The photo card is
+       5.0 MB (Transparent 44 KB, Solid 67 KB). Instagram and Messages take it; shrinking it (8-bit, or a JPEG for
+       With photo only) is a later polish if uploads feel slow on the phone (P8).
+    2. **The preview jumped up** when "Saved to Photos." appeared. Fixed: the status line keeps its room.
+    3. **The share sheet names the file by a UUID** ("30792B87-…png"). Harmless, cosmetic.
+  - **Not run yet:** S2–S4, S6, S8–S11, N4 and the ready gate (step 2 isn't built), the look page (step 4), M5 on
+    all 12 photos, M6.
+  - **Disk:** the build filled the Mac to under 1 GB free at one point and hung the first install. This branch's
+    `app/ios/Pods` was deleted afterwards (regenerable with `pod install`).
 
 ## 9. Decisions and asks
 

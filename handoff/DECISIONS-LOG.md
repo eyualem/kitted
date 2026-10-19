@@ -2292,3 +2292,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Settled:** a ready gate on the captured copy's images and font (resets on every switch; after 4 s "Couldn't make the image", never a different card); switches locked while busy; Open Settings when Photos is denied; the Mac checks read the copies in the Simulator's Photos, never the temp file; the Lookbook look page gets the share button.
     - **Step 0, before any build:** whether Instagram keeps a PNG's transparency (photo sticker, and Copy → Paste from the share sheet) decides the Transparent route. Test file `screenshots/share-card/test-sticker.png` (1080 × 600, RGBA).
 
+351. **The founder: "go ahead with the native Simulator build."** Step 1 of `handoff/14-share-card.md`, results in its §8:
+    - **The capture works on iOS:** all four versions came out exactly 1080 px wide in Photos. Transparent kept its alpha, and Solid's corners are clear. The photo card matched its preview, with Archivo in the image.
+    - **Other checks:** Apple Vision found no face in the neck-down card. The add-only prompt shows his words, Save says "Saved to Photos.", and Share opens the sheet with Copy in it.
+    - **Found:**
+      - the PNGs are 16-bit wide color (5 MB for the photo card; left as is for now);
+      - the preview jumped when the status line appeared (fixed: it keeps its room).
+    - **How it was built:**
+      - xcodebuild into the existing Kitted DerivedData folder (`-derivedDataPath`) instead of a new one, to save ~3 GB on a near-full disk;
+      - the installed dev app is now this branch's build, a superset of main's: main's JS still runs on it through Metro.
+      - This branch's Pods were deleted afterwards.
+
