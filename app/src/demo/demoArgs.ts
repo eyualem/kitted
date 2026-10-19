@@ -32,6 +32,8 @@ export interface DemoArgs {
   reveal: boolean;
   /** -demoRevealSlow 4: every score-reveal timing × this (1–10), for frame-by-frame checks. */
   revealSlow: number;
+  /** -demoCrash 1: the first screen throws once while it draws, to show the crash screen (09 §23 E5). */
+  crash: boolean;
 }
 
 export type DemoWeather = 'coldRain' | 'mild' | 'hot' | 'freezing' | 'none';
@@ -59,6 +61,7 @@ export const defaultDemoArgs: DemoArgs = {
   weather: null,
   reveal: false,
   revealSlow: 1,
+  crash: false,
 };
 
 /** Raw key → value pairs from one source. Keys use the deep-link names (no leading dash). */
@@ -71,6 +74,7 @@ const LAUNCH_ALIASES: Readonly<Record<string, keyof DemoArgs>> = {
   demoWeather: 'weather',
   demoReveal: 'reveal',
   demoRevealSlow: 'revealSlow',
+  demoCrash: 'crash',
 };
 
 const ISO_LOCAL = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+-]\d{2}:\d{2})?$/;
@@ -109,6 +113,7 @@ export function parseArgs(raw: RawArgs): Partial<DemoArgs> {
       case 'pro':
       case 'uiTesting':
       case 'reveal':
+      case 'crash':
       case 'frame': {
         const b = bool(value);
         if (b !== null) out[key] = b;
@@ -214,4 +219,5 @@ export const LAUNCH_ARG_KEYS = [
   'demoWeather',
   'demoReveal',
   'demoRevealSlow',
+  'demoCrash',
 ] as const;

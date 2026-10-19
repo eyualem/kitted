@@ -619,6 +619,13 @@ const addedInBuild = {
   'gone.title': "This isn't here anymore.",
   'gone.body': 'It was removed, or the link is old.',
   'gone.home': 'Go to Kitted',
+  // The crash screen (09-ui-review §23 E1, #353): expo-router's ErrorBoundary at the root.
+  'crash.title': 'Something went wrong.',
+  'crash.body': 'Kitted hit a problem on this screen. Your fits and closet are safe on this phone.',
+  'crash.retry': 'Try again',
+  // Location once denied (§23 M4): iOS won't ask twice, so the card points at Settings, quietly.
+  'wx.off.link': 'Turn on local weather',
+  'wx.off.a11yHint': 'Opens Settings, where you can let Kitted use your approximate location.',
   // A re-check, snap or retry whose first check was deleted meanwhile (09 §20.7 R7, #323).
   'cam.noParent': "That check isn't here anymore. Nothing was sent or counted.",
   // A scan whose every photo failed to save (09 §20.7 R4, #323): it used to say "Saved".
