@@ -2373,5 +2373,5 @@ Contradictions settled and decisions changed during the build. Newest last.
       - A new user sees one empty "best fits" card leading to the camera, plus a Sign in row.
     - **Catches:** signing in backs nothing up yet (no sync adapters, #288/#295), so the card's promise waits on sync, or it ships with "Backup is coming" on his phone only; Apple waits on the $99 program; this reverses #246's "no stats" in letter, not in spirit.
     - **Recommended order:** (1) the account card, Account page and sign-out sheet (Google is live; this needs sync before testers); (2) Your best fits; (3) the closet snapshot and next move; (4) Firsts; (5) a monthly recap with Share after the beta (reuses the share card).
-    - Waiting on his pick (to-do, P1).
+    - **Deferred (founder, Oct 21: "have it as something to do in the future… under P2"):** nothing is built; it waits on his pick as a P2 to-do (before the beta).
 
