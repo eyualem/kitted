@@ -978,3 +978,47 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **M4 seen:** with `weather.permission` set to denied and a relaunch, the card shows "Turn on local weather" in the Allow row's place; a tap opens iOS Settings.
 - **L seen again** after the fix: dark, the largest text size, screen 12 scrolled up; the pill shows above "Ask Kit…".
 - `npm run check` green (1,370 app tests).
+
+## 26. The outfit card follows a piece he corrected (Oct 21, #364). Plan and checks first, nothing built
+
+**The founder (Oct 21, 1:24 am):** today's evening card said "Grey fleece"; he changed the fleece's color to olive in Closet → "What it is". "Can we refresh the recommendation cards… make it update on its own… plan it out and plan out tests for it beforehand."
+
+### 26.1 What happens today (his phone, Oct 20 evening card, pulled Oct 21 1:25 am)
+- The card was planned at 1:19 am: grey fleece · green Champion sweatshirt · mid-wash jeans · black Puma running shoes (Going out, streetwear, 47°). At 1:24 he set the fleece's color to olive.
+- **The card draws its pieces live** (`MorningCard.tsx` reads the closet by id), so its tile and its reason line already say olive. **The outfit itself was never re-checked**: it was picked for a grey fleece and stays.
+- **Re-run on his data** (the card's own picker, same seed, history and weather): it picks the same four pieces with the grey fleece and with the olive one (predicted 7 both ways). So a refresh would not have changed tonight's card: the rules don't see an olive fleece over a green sweatshirt as a problem. Whether it should is a separate color call (26.5).
+- **A real gap found:** a piece removed from Closet (or merged into another) silently drops out of today's card, leaving it a tile short (the card filters missing pieces; `MorningCard.tsx` line 56).
+
+### 26.2 Recommendation: yes, with limits
+Auto-refresh is right for the card he hasn't acted on: the card is the app's suggestion, and a suggestion built on a reading he just corrected is out of date. It's wrong for a card he has acted on (Wear this, a check) or one he deliberately shaped (Swap, a new occasion or style): changing those under him reads as the app forgetting what he did.
+
+### 26.3 The design
+- **What counts as a change:** a piece on today's current card whose reading changed (kind, color, leg, fit, pattern: any field of `garment`, or its slot), or that was removed or merged away. Names, photos, cut-outs and measured colors never count (background closet work changes those after every check).
+- **How it's noticed:** when the card's outfit is saved, it keeps a fingerprint of each piece as planned (`details.basis`: id → slot + garment + removed/merged). `freshen()`, which already runs every time Stylist shows and when the app comes back, compares the card's pieces with their fingerprints first. No hook from the closet code; edit in Closet, come back to Stylist, the card is already right.
+- **What it does:**
+  - **A card he hasn't touched:** re-planned exactly as when it was posted (same occasion, style, weather, history and seed, the way the weather refresh does it, #338). Same outfit (tonight's case): only the fingerprint is updated, nothing visible moves.
+  - **A card he swapped or set (occasion, style):** kept if it still passes the outfit rules (`outfitValid`, the picker's own filter); else re-planned with every piece he swapped away still left out.
+  - **Wear this, a checked card, Staying in, an earlier card:** never changed.
+  - **A removed or merged-away piece** counts as a change, so no card is left a tile short (merged: the surviving piece can come back in the re-plan).
+- **What he sees when the outfit changes:** one quiet line under the title, "Updated for your olive fleece." (outward words, his skim), until the card changes again. No line when the outfit stays.
+- **Kit follows on its own:** its first pick for today reads the card's outfit (#358).
+- **Undo:** an edit undone before he's back in Stylist leaves no trace (the fingerprint matches again). Undone after the re-plan: the next look re-plans again, which for an untouched card gives the first outfit back (same inputs).
+- **Cards planned before this ships:** no fingerprint; the first look writes one and changes nothing.
+- **Size:** small, JS only, `features/morning/service.ts` (fingerprint, the check in `freshen`), one line in `MorningCard.tsx`, one string. Reaches his phone through Metro, no reinstall.
+
+### 26.4 Pass/fail checks, set before building (`app/src/__tests__/cardFollowsEdits.test.ts`)
+- **R1** Untouched card; an edit that breaks its outfit (e.g. the shoes' kind to slides at Class) → after `freshen` the card's outfit equals a fresh plan with the same occasion, style, weather, history and seed; the chat message points at it; the "Updated for your …" line names the edited piece.
+- **R2** Untouched card; an edit that doesn't change the pick (his olive fleece, replayed on a closet like his) → the same outfit row and items, no line; only the fingerprint is new.
+- **R3** An edit to a piece that isn't on the card → nothing is written, even when a fresh plan would differ.
+- **R4** A swapped card: an edit that keeps it valid → kept; one that breaks it → re-planned, and no piece he swapped away comes back; the swapped list and the touched flag are unchanged.
+- **R5** After Wear this → never changes; the wear log still points at the same outfit.
+- **R6** A checked card, Staying in, and yesterday's or this morning's card when it's evening → never change.
+- **R7** A piece on the card removed from Closet, or merged into another → the card is re-planned and has all its tiles.
+- **R8** Edit then Undo before Stylist shows → nothing changes. Edit → Stylist (re-planned) → Undo → Stylist → the first outfit is back (untouched card).
+- **R9** A card saved without a fingerprint → the first `freshen` writes one and re-plans nothing.
+- **R10** After a re-plan, Kit's "What should I wear?" names the new outfit (the card's, #358).
+- **R11** Background closet work on a card's piece (a new photo, a measured color, a rename) → no re-plan.
+- **R12** The weather refresh still works as before (§21/#338 tests pass), and a piece change and a stale forecast on the same look re-plan once.
+
+### 26.5 Separate, his call (scoring, not the card): olive over green
+Today's rules treat an olive fleece over a green sweatshirt like any two quiet colors (the stylist guide calls tone-in-tone a safe win, and olive and green are different families). If two greens stacked should read as a clash, that's a color rule (Color part) with its own paper test; default: keep it as is.

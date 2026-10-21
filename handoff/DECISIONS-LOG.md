@@ -2345,3 +2345,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Not changed:** a piece's "Worn n times" and Closet's Your go-tos still count try-ons (a follow-up).
     - **Checks first:** `app/src/__tests__/tryOn.test.ts` (TO1–TO5); the wiring checks failed before it, all pass, `npm run check`'s steps green (1,389 app tests). New outward words: "Free · from your earlier check". Merged Oct 19 (PR #28, founder: "You may merge PR 28.").
 
+## Oct 21 · The outfit card follows a piece he corrected (planned)
+
+364. **The founder: "Can we refresh the recommendation cards… when the color of a piece has been updated and that piece has been recommended for the day… make it update on its own?"** His Oct 20 evening card said "Grey fleece"; at 1:24 am he set the fleece to olive. Plan and checks R1–R12: `handoff/09-ui-review.md` §26. Nothing built.
+    - **Found:** the card draws its pieces live (the tile already showed olive), but its outfit is never re-checked after an edit; and a piece removed from Closet silently leaves the card a tile short.
+    - **Re-run on his data:** the card's own picker chooses the same outfit with the grey and the olive fleece (predicted 7), so a refresh wouldn't have changed tonight's card. Olive over green is a separate color call (default: keep).
+    - **Recommended (Claude's call, his OK pending):** the card keeps a fingerprint of each piece as planned; when Stylist shows, a changed, removed or merged piece re-plans a card he hasn't touched (as the weather refresh does), keeps a swapped or set card if it still passes the outfit rules, and never touches a worn, checked, staying-in or earlier card. A changed outfit shows "Updated for your {piece}." (new words).
+
