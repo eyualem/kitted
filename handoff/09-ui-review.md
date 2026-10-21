@@ -1195,5 +1195,5 @@ Today's rules treat an olive fleece over a green sweatshirt like any two quiet c
 - **Code:** `pieceBasis` / `basisOf` and `followPieces` / `stillWorks` in `features/morning/service.ts` (`freshen()` checks pieces first, then the weather, now `freshenWeather`); `saveOutfit` writes `details.basis` (and `updatedFor`, `origin` after a piece re-plan); `updatedLine` in `morning/copy.ts`; one footnote under the card's title in `MorningCard.tsx`; `idea.updatedFor` in `en.ts`.
 - **Found while building (R8):** after a re-plan the edited piece is usually no longer on the card, so the card stopped watching it and an Undo went unnoticed. The card now keeps watching the pieces of the outfit it first planned until it's back there.
 - **"Still works" for a swapped or set card** is the picker's own filters (`outfitValid`, `itemAllowed`) plus its predicted score not falling below Put together (7), or below where the outfit began when it began lower: the filters alone let sweatpants at Class through.
-- **Not seen on a screen:** this branch can't take main until the repository's origin is confirmed in the app, and his phone's Metro serves main. The line is one footnote under the title.
+- **Merged Oct 21 (PR #31)** after main came in (core 785/785, app 1,493 passed). Not seen on a screen yet: the line is one footnote under the title.
 
