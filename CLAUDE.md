@@ -48,7 +48,7 @@
 - [ ] **P1** · **A support email now, even before the policy pages (#320):** with it, "Report a wrong score" and "Contact support" show for testers; today a tester's failure reaches you only if they tell you. 1 min, goes in `app/src/config/links.ts`.
 - [ ] **P2** · **"How bold" in your style profile (#250):** today your boldness setting quietly changes scores (how much bright color an outfit gets away with). Default: keep it out of the editor and make it advice-only (never moves a score), like your picked looks. *Unblocks: the Style profile's last section.*
 - [ ] **P2** · **The figure for advice (#247): OK the build-step words** "Slim · Average · Athletic · Broad · Bigger · Rather not say" (`mockups/figure-avatar.html`). Default: as written; test them on the 5 guys with the style step.
-- [ ] **P1** · **Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement.** Enrollment can take a few days. *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check.*
+- [ ] **P1** · **Apple Developer Program: enrollment started (founder, Oct 18), waiting on Apple's approval.** When it's approved, tell Claude, then sign the Paid Apps Agreement in App Store Connect (Business). *Unblocks: TestFlight (beta Nov 3), purchases, real weather, the age check, and the end of the weekly reinstall.*
 - [x] ~~Pick how the answers look and sound~~ done Oct 16: look C and voice 1, built overnight (#303).
 - [ ] **P1** · **Reinstall, then try voice input, 5 min (#303):** the voice fixes are native, so they need `tools/phone/install.sh` (ask Claude; it also renews the 7-day permit). Then, with Metro running, ask 3 questions by the mic: a quiet room, right after a fit check's countdown, with music on. You should see every word while you talk, sharp, not blurred (#319), it stops by itself after a short pause, and the words wait in the box for you to send. Also once: start talking, then tap Closet mid-sentence and come back: your words should wait in the bar (#317). Tell Claude what you saw (or plug in so Claude runs `tools/phone/pull.sh`: the new `mic.log` shows each stage). If it failed before, say how (no mic button? stuck? empty after stop? wrong words?). *Unblocks: confirming the fix (V7–V8).*
 - [ ] **P2** · **OK Apple's on-device speech model on the Mac (#302), 1 min:** Apple's own download (size shown when it starts) so a Mac test bench can check voice accuracy on 30 spoken questions without your phone. *Unblocks: voice tests V6.*
@@ -862,7 +862,7 @@ P5's real size is about 6.5 days, not 05's 2.
    - Run the 5 Gemini/Codex prompts at the end of the rubric research report; answers go in `inputs/rubric-research/`.
 3. Shoot the gold set: about 80 photos, with 3+ friends (plan in `speed-and-detail-plan.md`).
 4. Claim @kitted.app / @trykitted and register trykitted.com. Then the waitlist page and the TikTok account.
-5. Join the Apple Developer Program ($99/yr) and sign the Paid Apps Agreement. They block TestFlight, purchases and the age check, not the demo.
+5. Apple Developer Program: enrollment started Oct 18, waiting on Apple; then sign the Paid Apps Agreement. They block TestFlight, purchases and the age check, not the demo.
 
 ### 4c. Closet ideas from the founder (Oct 14)
 - **Long-press a piece → its photo:** the native iOS long-press preview (via `@expo/ui`, already installed) shows his own photo of that piece, cropped to it with nothing above (no face), with actions under it: **Rename** and **Remove from Closet** (today's long-press action moves in). Waiting on his go.
