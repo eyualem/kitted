@@ -30,13 +30,25 @@ import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } fr
 import { snapPart } from './finish';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
+import { earlierToday } from './tryOn';
 import { evaluateCheck, scoreOptions, scoringEngine, type CheckScoreOptions, type ScoringEngine } from './scoring';
-import { anchorRecheckLook, copiedLook, hasLook, LOOK_GRACE_MS, lookInput, settledLine, settleSecondLook } from './secondLook';
+import { anchorRecheckLook, copiedLook, hasLook, LOOK_GRACE_MS, lookInput, ownLookOf, settledLine, settleSecondLook } from './secondLook';
 import { dropWhichOne, whichOneOf, type WhichOnePayload } from './whichOne';
 export { failInterruptedChecks } from './interrupted';
 
 /** The engine a stored check is scored with (#209): the one its rubricVersion names, so editing an old check (a
  *  correction, the occasion, its re-check) never moves it to another engine. New rows take the switch's. */
+/** The reading schema new readings are written in; a stored read in another is read again, never reused (#342). */
+export const READING_SCHEMA = 'v3';
+
+/** A stored read of a photo a new check reuses (#342): the read, his tap answer on it, whether it's free, its look. */
+interface StoredRead {
+  base: ReadingRow;
+  answered: ReadingRow | null;
+  free: boolean;
+  look: StoredSecondLook | null | undefined;
+}
+
 export function engineOf(row: Pick<FitCheckRow, 'rubricVersion'>): ScoringEngine {
   return row.rubricVersion.startsWith('parts-') ? 'parts' : 'v4';
 }
@@ -203,8 +215,12 @@ export function createFitCheckService(deps: ServiceDeps) {
   const closetFor = async (row?: FitCheckRow | null): Promise<ClosetItem[]> => {
     const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
     const exclude = new Set([...(row?.details.closetSummary?.added ?? []), ...(parent?.details.closetSummary?.added ?? [])]);
+    // Nor an outfit he already wore earlier that day (#360); what he only tried on stays, labelled (`triedFor`).
+    if (row) for (const id of earlierToday(row, await store.fitChecks.all()).worn) exclude.add(id);
     return (await store.closet.all()).filter((c) => isOwned(c) && !exclude.has(c.id));
   };
+  /** Pieces he tried on in an earlier check that day: a fix that uses one says so (#360). */
+  const triedFor = async (row: FitCheckRow): Promise<ReadonlySet<string>> => earlierToday(row, await store.fitChecks.all()).tried;
 
   /** A warm day for this check (its card's weather, else the month): no "add a layer" or boots fix (#160). */
   const warmFor = async (row: FitCheckRow): Promise<boolean> => {
@@ -227,12 +243,49 @@ export function createFitCheckService(deps: ServiceDeps) {
     model ??= parent?.model ?? 'demo-bundled';
     promptVersion ??= parent?.promptVersion ?? 'v3';
     const row: ReadingRow = {
-      id: deps.ids('R'), imageHash, source, reading, model, promptVersion, schemaVersion: 'v3',
+      id: deps.ids('R'), imageHash, source, reading, model, promptVersion, schemaVersion: READING_SCHEMA,
       latencyMs, createdAt: clock.nowMs(), derivedFrom,
     };
     await store.readings.put(row);
     return row;
   };
+
+  /** A stored read of this exact photo (#342), so a new check of a photo already read is scored from it, never read
+   *  again: same photo, same score. Only a whole-photo read counts: a new check's ('full'), else a re-check's own read
+   *  of it ('recheckRaw', the same prompt). Never a re-check's merged reading (anchored to its first check's photo) or
+   *  a correction (it belongs to its own check); his answer to the one quick tap on that read is reused. A read in an
+   *  older reading schema is read again; an older prompt version is reused (one photo keeps one score). Free when the
+   *  photo was scored before (a check or a re-check): no call is made. */
+  async function storedReadOf(hash: string, exceptId: string): Promise<StoredRead | null> {
+    if (!hash) return null;
+    const readings = (await store.readings.all()).filter((r) => r.imageHash === hash && r.schemaVersion === READING_SCHEMA);
+    const newest = <T extends { createdAt: number }>(xs: T[]) => xs.sort((a, b) => b.createdAt - a.createdAt)[0];
+    const base = newest(readings.filter((r) => r.source === 'full')) ?? newest(readings.filter((r) => r.source === 'recheckRaw'));
+    if (!base) return null;
+    const answered = newest(readings.filter((r) => r.source === 'tapAnswer' && r.derivedFrom === base.id)) ?? null;
+    const checks = (await store.fitChecks.all()).filter((c) => c.id !== exceptId && c.imageHash === hash);
+    // One replaced while asking never counted, so this one does.
+    const free = checks.some((c) => c.status === 'scored');
+    // ...and the second look the photo was scored with (#199): never asked again (none then = none now). From an
+    // earlier new check of it, else the re-check that read it (its own arms only).
+    const prior = newest(checks.filter((c) => !c.parentId && c.readingId));
+    const reader = base.source === 'recheckRaw' ? newest(checks.filter((c) => c.parentId && c.createdAt <= base.createdAt)) : undefined;
+    const look = prior ? copiedLook(prior) : reader ? ownLookOf(reader) : undefined;
+    return { base, answered, free, look };
+  }
+
+  /** Scores a check from a stored read of its photo (#342). Scored before without a question (none qualified, or his
+   *  closet agreed): scored the same way again, so a closet that changed since can't make the same photo ask, or
+   *  score, differently (#126). */
+  async function finishFromStored(row: FitCheckRow, s: StoredRead): Promise<FitCheckRow> {
+    const ms = deps.timers().cacheHitMs;
+    if (ms > 0) await deps.scheduler.sleep(ms);
+    console.log(`[check] same photo as an earlier ${s.base.source === 'full' ? 'check' : 're-check'}: its reading reused, no call${s.free ? ', nothing counted' : ''}`);
+    const base = s.look !== undefined ? (await patchRow(row.id, { details: { ...row.details, secondLook: s.look } }))! : row;
+    return s.answered ? finalizeCheck(base, s.answered.reading, s.answered, s.free)
+      : s.free ? finalizeCheck(base, s.base.reading, s.base, s.free)
+      : afterRead(base, s.base.reading, s.base, s.free);
+  }
 
   const readingOf = async (row: FitCheckRow): Promise<Reading | null> => (row.readingId ? (await store.readings.get(row.readingId))?.reading ?? null : null);
 
@@ -244,7 +297,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     const details = { ...row.details, ...(patch.details ?? {}) };
     const style = patch.style !== undefined ? patch.style : row.style;
     const ev = evaluateCheck({
-      reading, ...lensInput(occasion, style, p, details.secondLook), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+      reading, ...lensInput(occasion, style, p, details.secondLook), closet: await closetFor(row), triedEarlier: await triedFor(row), firstCheck: row.isFirstCheck,
       hiddenFixTargets: details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row),
       goingFor: details.goingFor ? details.goingFor.style : undefined,
     });
@@ -718,7 +771,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
 
     const checkId = req.checkId ?? deps.ids('FC');
-    if (hold) return holdPhoto(checkId, now, image, photoPayload, occasion, style, going);
+    // A photo already read and scored is scored again from that read, free, even past today's limit (#342).
+    const stored = req.mode === 'check' ? await storedReadOf(image.sha256, checkId) : null;
+    if (hold && !stored?.free) return holdPhoto(checkId, now, image, photoPayload, occasion, style, going);
     if (req.mode === 'check') await replaceAsking(checkId);
     const priorChecks = (await store.fitChecks.all()).filter((c) => !c.parentId && c.status === 'scored');
     const row = emptyRow({
@@ -735,31 +790,8 @@ export function createFitCheckService(deps: ServiceDeps) {
     await message({ createdAt: now, role: 'user', kind: 'photo', fitCheckId: checkId, payload: photoPayload });
     await message({ createdAt: now + 1, role: 'stylist', kind: 'card', cardType: req.mode === 'recheck' ? 'recheck' : 'fitCheck', fitCheckId: checkId });
 
-    if (req.mode === 'check') {
-      const readings = await store.readings.all();
-      const cached = readings
-        .filter((r) => r.imageHash === image.sha256 && r.source === 'full')
-        .sort((a, b) => b.createdAt - a.createdAt)[0];
-      if (cached) {
-        const ms = deps.timers().cacheHitMs;
-        if (ms > 0) await deps.scheduler.sleep(ms);
-        // Same photo, same score: his earlier answer to the one quick tap is reused, never asked again. Free only
-        // if that photo was scored before (one replaced while asking never counted, so this one does).
-        const answered = readings.filter((r) => r.source === 'tapAnswer' && r.derivedFrom === cached.id).sort((a, b) => b.createdAt - a.createdAt)[0];
-        const others = (await store.fitChecks.all()).filter((c) => c.id !== checkId && c.imageHash === image.sha256 && !c.parentId);
-        const free = others.some((c) => c.status === 'scored');
-        // ...and the second look the photo was scored with (#199): never asked again (none then = none now).
-        const prior = others.filter((c) => c.readingId).sort((a, b) => b.createdAt - a.createdAt)[0];
-        const sl = prior ? copiedLook(prior) : undefined;
-        const base = sl !== undefined ? (await patchRow(row.id, { details: { ...row.details, secondLook: sl } }))! : row;
-        // Scored before without a question (none qualified, or his closet agreed): score it the same way again, so
-        // a closet that changed since can't make the same photo ask, or score, differently (#126).
-        const done = answered ? await finalizeCheck(base, answered.reading, answered, free)
-          : free ? await finalizeCheck(base, cached.reading, cached, free)
-          : await afterRead(base, cached.reading, cached, free);
-        return outcomeOf(done);
-      }
-    }
+    // Same photo, same score (#342): a photo already read is never read again.
+    if (stored) return outcomeOf(await finishFromStored(row, stored));
     // A re-check of the same photo (#219): the reading is reused, never re-read, so the score can't move by itself.
     if (req.mode === 'recheck' && parent) {
       const match = await samePhotoAs(row, parent);
@@ -821,7 +853,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     const row = await store.fitChecks.get(checkId);
     if (!row || row.status !== 'held') return { outcome: 'noParent' };
     if (!row.demoPhotoId && deps.consent && !(await deps.consent())) return { outcome: 'noConsent' };
-    if (!(await deps.quota.canStartCheck())) return { outcome: 'limit' };
+    // A photo read since it was held (sent again as a new check): scored from that read, free (#342).
+    const stored = await storedReadOf(row.imageHash, checkId);
+    if (!stored?.free && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
     // A check waiting on the one quick tap hasn't counted yet: scoring this too could go past what today allows.
     if ((await store.fitChecks.all()).some((c) => c.id !== checkId && c.status === 'asking')) return { outcome: 'busy' };
     const prep = await deps.prep.prepare(
@@ -845,6 +879,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       return { outcome: 'failed', checkId };
     }
     images.set(checkId, prep.image);
+    if (stored) return outcomeOf(await finishFromStored((await store.fitChecks.get(checkId))!, stored));
     const gf = moved!.details.goingFor;
     const r = await runRead(checkId, prep.image, 'full', 'check', moved!.occasion, gf ? { ...gf } : undefined, engineOf(moved!) === 'parts');
     if (!r.reading) {
@@ -866,7 +901,8 @@ export function createFitCheckService(deps: ServiceDeps) {
   const scoringHeld = new Set<string>();
 
   /** S19 "Try again": re-reads the same photo; nothing was counted the first time. It's a new read, so it uses
-   *  today's check (or the first check's re-check) like any other, and its score is charged to today. */
+   *  today's check (or the first check's re-check) like any other, and its score is charged to today. A new check
+   *  whose photo was read since (sent again) is scored from that read instead, free (#342). */
   async function retryInner(checkId: string, ctx: CheckCtx): Promise<StartOutcome> {
     const row = await store.fitChecks.get(checkId);
     if (!row || row.status !== 'failed' || (!row.demoPhotoId && !row.photoFile)) return { outcome: 'noParent' };
@@ -874,7 +910,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     const now = clock.nowMs();
     const parent = row.parentId ? await store.fitChecks.get(row.parentId) : null;
     if (row.parentId && !parent) return { outcome: 'noParent' };
-    if (parent ? !isRecheckOpen(parent, now, clock) : !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
+    // A new check's photo read since it failed (sent again): scored from that read, free (#342).
+    const stored = parent ? null : await storedReadOf(row.imageHash, checkId);
+    if (parent ? !isRecheckOpen(parent, now, clock) : !stored?.free && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
     // The photo first: if its copy is gone the row stays failed, so the card stays on screen.
     const prep = await deps.prep.prepare(
       row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
@@ -886,6 +924,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     await patchRow(checkId, { status: 'scoring', details });
     ctx.checkId = checkId;
     images.set(checkId, prep.image);
+    if (stored) return outcomeOf(await finishFromStored((await store.fitChecks.get(checkId))!, stored));
     const gf = !parent ? row.details.goingFor : undefined;
     const withLook = parent ? hasLook(parent.details.secondLook) : engineOf(row) === 'parts';
     const r = await runRead(checkId, prep.image, parent ? 'recheck' : 'full', parent ? 'recheck' : 'check', row.occasion, gf ? { ...gf } : undefined, withLook);
@@ -963,7 +1002,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       if (!row || !reading || row.parentId || row.status !== 'scored' || !row.details.goingFor) return null;
       const p = await profile();
       const ev = evaluateCheck({
-        reading, ...lensInput(row.occasion, style, p, row.details.secondLook), closet: await closetFor(row), firstCheck: row.isFirstCheck,
+        reading, ...lensInput(row.occasion, style, p, row.details.secondLook), closet: await closetFor(row), triedEarlier: await triedFor(row), firstCheck: row.isFirstCheck,
         hiddenFixTargets: row.details.hiddenFixTargets ?? [], warm: await warmFor(row), engine: engineOf(row), goingFor: style,
       });
       const d = ev.row.details;

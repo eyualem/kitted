@@ -39,7 +39,7 @@ describe('windows', () => {
 });
 
 describe('ensureCard', () => {
-  it('posts a greeting with the weather and a card, once per slot', async () => {
+  it('posts the card alone, once per slot: no greeting line above it, the weather is in the card (#338, #340)', async () => {
     const { store, svc } = await setup({ now: '2026-10-22T07:40:00-04:00' });
     expect(await svc.ensureCard()).toBe(ideaId('2026-10-22', 'day'));
     expect(await svc.ensureCard()).toBeNull();
@@ -47,8 +47,8 @@ describe('ensureCard', () => {
     expect(idea).toMatchObject({ slot: 'day', occasion: 'class', state: 'idea' });
     expect(idea.outfitId).not.toBeNull();
     const msgs = (await store.chat.all()).filter((m) => m.createdAt >= at('2026-10-22T07:40:00-04:00'));
-    expect(msgs.map((m) => [m.kind, m.cardType])).toEqual([['text', null], ['card', 'morning']]);
-    expect(msgs[0]!.text).toBe('Morning. 46° now, 63° by afternoon. Rain likely after 5 pm.');
+    expect(msgs.map((m) => [m.kind, m.cardType])).toEqual([['card', 'morning']]);
+    expect(idea.weather).toMatchObject({ nowF: 46, fetchedAt: at('2026-10-22T07:40:00-04:00') });
   });
 
   it('the evening card plans tonight, even after a day card', async () => {
@@ -57,8 +57,8 @@ describe('ensureCard', () => {
     clock.set(at('2026-10-22T18:30:00-04:00'));
     expect(await svc.ensureCard()).toBe('2026-10-22|evening');
     expect(await store.dailyIdeas.get('2026-10-22|evening')).toMatchObject({ occasion: 'going_out', slot: 'evening' });
-    const text = (await store.chat.all()).sort((a, b) => b.createdAt - a.createdAt).find((m) => m.kind === 'text')!.text;
-    expect(text).toMatch(/^Evening\. Heading out\? /);
+    const after = (await store.chat.all()).filter((m) => m.createdAt >= at('2026-10-22T18:30:00-04:00'));
+    expect(after.map((m) => [m.kind, m.cardType])).toEqual([['card', 'morning']]);
   });
 
   it('weekends default to Everyday', async () => {
@@ -67,7 +67,7 @@ describe('ensureCard', () => {
     expect((await store.dailyIdeas.get('2026-10-24|day'))!.occasion).toBe('everyday');
   });
 
-  it('no weather permission: no weather in the greeting, and the pick still works', async () => {
+  it('no weather permission: no weather, and the pick still works', async () => {
     const store = createMemoryStore();
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at('2026-10-20T07:00:00-04:00') });
     const clock = manualClock(at('2026-10-22T07:40:00-04:00'));
@@ -76,8 +76,7 @@ describe('ensureCard', () => {
     const idea = (await store.dailyIdeas.get('2026-10-22|day'))!;
     expect(idea.weather).toBeNull();
     expect(idea.outfitId).not.toBeNull();
-    const text = (await store.chat.all()).find((m) => m.kind === 'text' && m.createdAt >= clock.nowMs())!.text!;
-    expect(text).toBe('Morning. October: bring a layer.');
+    expect((await store.chat.all()).some((m) => m.kind === 'text' && m.createdAt >= clock.nowMs())).toBe(false);
   });
 
   it('an empty closet still posts the card (no outfit)', async () => {
@@ -212,5 +211,66 @@ describe('rotation over two weeks', () => {
     await svc.swap(id, [shoe]);
     const after = (await store.outfits.get((await store.dailyIdeas.get(id))!.outfitId!))!.itemIds;
     expect(after).not.toContain(shoe);
+  });
+});
+
+describe('freshen (#338): a stale forecast is fetched again', () => {
+  const WARM: DayWeather = { window: 'day', nowF: 78, highF: 82, lowF: 74, feelsLowF: 76, feelsHighF: 84, precipChance: 0, precipFromHour: null, condition: 'clear' };
+
+  async function withWeather(first: DayWeather, later: DayWeather) {
+    const store = createMemoryStore();
+    await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at('2026-10-20T07:00:00-04:00') });
+    const clock = manualClock(at('2026-10-22T07:40:00-04:00'));
+    let now = first;
+    const weather: WeatherSource = { kind: 'sample', permission: async () => 'granted', requestPermission: async () => 'granted', forecast: async (window) => ({ ...now, window }) };
+    const svc = createMorningService({ store, clock, weather, ids: counterIds() });
+    await svc.ensureCard();
+    now = later;
+    return { store, clock, svc };
+  }
+
+  it('a fresh forecast is left alone', async () => {
+    const { clock, svc } = await withWeather(COLD_RAIN, WARM);
+    clock.set(at('2026-10-22T08:15:00-04:00'));
+    expect(await svc.freshen()).toBe(false);
+  });
+
+  it('untouched, and the new weather asks for something else: re-picked', async () => {
+    const { store, clock, svc } = await withWeather(WARM, COLD_RAIN);
+    // Planned again for the new weather: its reasons are the cold-rain ones now (the pieces may or may not change; the
+    // outfit row is rewritten in place, so read them before).
+    const reasons = async () => {
+      const id = (await store.dailyIdeas.get('2026-10-22|day'))!.outfitId;
+      return ((id ? (await store.outfits.get(id))?.details : null) as { reasons?: { key: string }[] } | null)?.reasons?.map((r) => r.key) ?? [];
+    };
+    const before = await reasons();
+    clock.set(at('2026-10-22T13:00:00-04:00'));
+    expect(await svc.freshen()).toBe(true);
+    const after = (await store.dailyIdeas.get('2026-10-22|day'))!;
+    expect(after.weather).toMatchObject({ nowF: 46, fetchedAt: at('2026-10-22T13:00:00-04:00') });
+    expect(await reasons()).not.toEqual(before);
+    expect(await reasons()).toContain('wetShoes');
+  });
+
+  it('touched (a swap or a menu change): the outfit stays, only the weather is new', async () => {
+    const { store, clock, svc } = await withWeather(COLD_RAIN, WARM);
+    await svc.change('2026-10-22|day', { occasion: 'everyday' });
+    const before = (await store.dailyIdeas.get('2026-10-22|day'))!;
+    const items = async (id: string | null) => (id ? (await store.outfits.get(id))?.itemIds.join('+') : null);
+    const kept = await items(before.outfitId);
+    clock.set(at('2026-10-22T13:00:00-04:00'));
+    expect(await svc.freshen()).toBe(true);
+    const after = (await store.dailyIdeas.get('2026-10-22|day'))!;
+    expect(after.weather).toMatchObject({ nowF: 78 });
+    expect(await items(after.outfitId)).toBe(kept);
+  });
+
+  it('a card he wore keeps its outfit', async () => {
+    const { store, clock, svc } = await withWeather(COLD_RAIN, WARM);
+    await svc.wear('2026-10-22|day');
+    const kept = (await store.dailyIdeas.get('2026-10-22|day'))!.outfitId;
+    clock.set(at('2026-10-22T13:00:00-04:00'));
+    await svc.freshen();
+    expect((await store.dailyIdeas.get('2026-10-22|day'))!.outfitId).toBe(kept);
   });
 });

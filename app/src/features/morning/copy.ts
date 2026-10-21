@@ -1,9 +1,9 @@
 // The morning card's words, from templates (02 "S1d"): the why line, the weather strip and the
 // spoken summary. Pure, so they're tested without rendering.
-import type { DayWeather, IdeaReason, MissingSlot } from '@kitted/core';
+import { seasonNeeds, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
 import { normStyleKey, type CardOccasion, type ClosetItemRow, type StyleKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
-import { hourText } from '@/i18n/format';
+import { hourText, monthName } from '@/i18n/format';
 import { occasionLabel } from '@/features/stylist/thread';
 
 export function cardOccasionLabel(o: CardOccasion): string {
@@ -79,4 +79,55 @@ export function ideaTitle(reasons: readonly IdeaReason[], occasion: CardOccasion
 /** The glance badge: "46°→63°" by day, "52°→47°" in the evening (now → later). */
 export function badgeTemps(w: DayWeather): { now: number; later: number } {
   return { now: Math.round(w.nowF), later: Math.round(w.window === 'evening' ? w.lateF ?? w.lowF : w.highF) };
+}
+
+/** What the card stores with its weather (#338): the hours the readings are for (live weather only) and when it was
+ *  fetched, so the words follow the clock and a stale forecast is fetched again. */
+export type CardWeather = DayWeather & { nowHour?: number; highHour?: number; lateHour?: number; fetchedAt?: number };
+
+/** A high this much above now is worth saying. */
+const HIGH_SAYS_F = 3;
+
+/**
+ * The card's one weather line, for the hour he reads it (#338): "46° now · 63° by 2 pm · rain after 5 pm" by day,
+ * "52° at 8 pm · 47° by midnight · rain likely" before 8 pm, "50° now · 47° by midnight" after it, "45° now" after
+ * midnight. A time that has passed is never said ("by 2 pm" at 3 pm, "rain after 5 pm" at 6).
+ */
+export function weatherLine(w: CardWeather, hourNow: number): string {
+  // "5 pm" never splits across lines.
+  const at = (h: number) => hourText(h).replace(' ', '\u00A0');
+  const parts: string[] = [];
+  const now = Math.round(w.nowF);
+  const rainAt = w.precipFromHour;
+  if (w.window === 'evening') {
+    const afterMidnight = hourNow < 4;
+    const readAt = w.nowHour ?? 20;
+    parts.push(!afterMidnight && hourNow < readAt ? t('wx.card.at', { t: now, time: at(readAt) }) : t('wx.card.now', { t: now }));
+    if (!afterMidnight) parts.push(t('wx.card.byMidnight', { t: Math.round(w.lateF ?? w.lowF) }));
+    if (w.precipChance >= 0.5) {
+      // Rain hours after midnight come as 0–3; the evening's own as 18–23.
+      const rainLater = rainAt !== null && (afterMidnight ? rainAt > hourNow && rainAt < 4 : rainAt > hourNow || rainAt < 4);
+      parts.push(rainLater ? t('wx.card.rainFrom', { time: at(rainAt) }) : t('wx.card.rainLikely'));
+    }
+  } else {
+    parts.push(t('wx.card.now', { t: now }));
+    const high = Math.round(w.highF);
+    if (high - now >= HIGH_SAYS_F) {
+      if (w.highHour === undefined) parts.push(t('wx.card.high', { t: high }));
+      else if (w.highHour > hourNow) parts.push(t('wx.card.by', { t: high, time: at(w.highHour) }));
+    }
+    if (w.precipChance >= 0.5) parts.push(rainAt !== null && rainAt > hourNow ? t('wx.card.rainFrom', { time: at(rainAt) }) : t('wx.card.rainLikely'));
+  }
+  return parts.join(' · ');
+}
+
+/** The card's own hello (#340), for the hour he reads it: "Morning." / "Afternoon." / "Evening. Heading out?". */
+export function cardGreeting(slot: 'day' | 'evening', hourNow: number): string {
+  if (slot === 'evening') return t('greet.evening');
+  return hourNow < 12 ? t('greet.morning') : t('greet.afternoon');
+}
+
+/** Without weather, the season says it under the hello ("October: bring a layer."), or nothing in a mild month. */
+export function seasonLine(month: number): string | null {
+  return seasonNeeds(month).layer === 'none' ? null : t('wx.line.season', { month: monthName(month) });
 }

@@ -935,3 +935,98 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **Found and fixed while checking U8:** at the largest size the message broke mid-word ("Remove / d your") and the pill swelled into an oval; at accessibility sizes the message now gets the full width with ring + Undo under it, in a rounded card (24 pt corners).
 - **Not seen on a screen, tested in code only:** U6 (Reduce Motion) and U7 (VoiceOver); a hold reaching the hard stop.
 - **HIG:** Apple has no toast component; this follows the HIG's "give people time to read and act" and WCAG 2.2.1 (a time limit the person can pause: hold), with VoiceOver's doubled window kept because RN can't pause on VoiceOver focus (#36). Material's snackbar guidance (4–10 s, stays while touched) matches both windows.
+
+## 23. The §20 leftovers, overnight Oct 19 (#353). Checks first
+**What this is.** Founder, Oct 19 (asleep): "make decisions… give me a report in the end." Four [code] items from §20 that nobody else is on (the §22.1 session owns the audit's list; scope agreed with it by message): a crash screen and an error log (§20 item 6, the code half), the `Latest` pill (§20 item 30, G3), the morning card's Swap and location (items 34–35), and outfit counting at large closets (item 37). Not built: Stop while an answer streams (answers are ≤200 tokens and arrive in ~2 s; it's not in 07 §6.1, so it waits for a real complaint). Written before the code; each passes or fails.
+
+**Measured first (item 37), Mac, Jest, the demo closet's pieces cloned to size:** 50 pieces: the count 203 ms, Next best buy 942 ms; 100 pieces: 1.4 s and 7.1 s; 200 pieces: 11.3 s for the count. A phone's JS thread is slower still, and the screen freezes while it runs. Next best buy counts the whole closet 14 times; Closet, the piece page and Outfits each count again.
+
+**E · A crash shows a screen, not a blank app, and leaves a trace**
+- E1 (T) The root layout exports an `ErrorBoundary` (expo-router's own, no package) that draws the crash screen inside its own theme: "Something went wrong." / "Kitted hit a problem on this screen. Your fits and closet are safe on this phone." / **Try again** (retry) and **Go to Kitted** (back to the start, then retry). Copy is new (outward-facing, flagged for his skim).
+- E2 (T) `recordError(error, where)` appends one line to `Documents/logs/errors.log` **in every build** (Release too): the time, where (`render` · `fatal` · `js`), the error's name and message cut to 200 characters, and at most 5 stack lines. The file stays under ~100 KB (the oldest half goes). It never leaves the phone.
+- E3 (T) The global handler (`ErrorUtils.setGlobalHandler`) records every uncaught JS error and then hands it to the handler that was there, so the dev red box and a Release crash behave as before; installing twice doesn't wrap twice.
+- E4 (T) "Delete all my data" removes it (Documents/logs already goes); `tools/phone/pull.sh` prints it.
+- E5 (S) On the Simulator a forced render error (demo-only launch argument `-demoCrash 1`) shows the crash screen in light and dark and at the largest text size, and Try again brings the app back.
+
+**L · The Latest pill (02 G3, 07 §6.1)**
+- L1 (T) `latestPillShows` is true when he has scrolled up more than one screen from the end, or scrolled up at all (more than the 80 pt "at the bottom" band) while new rows or words arrived; false at the bottom.
+- L2 (T) The pill: a 44 pt capsule in `primary` with `arrow.down` and "Latest" (`common.latest`), a button for VoiceOver, centred above the composer or the accessory (above a toast too). A tap scrolls to the end, follows new rows again and hides it.
+- L3 (S) On the Simulator: scrolled up on a long thread it shows; tapping it lands on the newest row; light, dark, the largest text size.
+
+**M · The morning card**
+- M1 (T) Swap leaves out every piece swapped away from this card, not only the last one, so the first outfit never comes back by swapping.
+- M2 (T) When nothing else works without that piece, the card keeps its outfit (it used to go blank) and he gets "Nothing else in your closet works here yet." (`swap.none`, 02); that piece isn't added to the left-out list.
+- M3 (T) Changing the occasion or the style starts the left-out list afresh.
+- M4 (T) Location denied: the card shows a quiet "Turn on local weather" link that opens iOS Settings, never the Allow row (iOS won't ask twice); unknown keeps the Allow row; granted shows neither.
+- M5 (T) Back from Settings with location on, the card gets the forecast the next time Stylist shows (`freshen` used to skip a card with no weather), and an untouched card is re-planned with it.
+
+**P · Outfit counting at large closets**
+- P1 (T) Same answers: `buildOutfits`, `outfitCount`, `nextBestBuy` and `gainForSlot` return exactly what they did before (same outfits, same order, same counts and gains) on the demo closet and on a 60-piece mixed closet, compared against a copy of today's code kept in the test.
+- P2 (T, Mac) Next best buy at 50 pieces in under 300 ms, and a second count of an unchanged closet in under 20 ms. Recorded with the 100- and 200-piece numbers.
+- P3 (T) A changed piece is never scored from the cache: editing a piece's garment (What it is) changes the count when the scoring says it should.
+
+### §23 results (Oct 19, #353): checked against E, L, M, P; one test fixed in its wording, none in what it checks
+- **P (outfit counting):** `src/__tests__/outfitSpeed.test.ts` against a frozen copy of the old code (`src/testing/outfitsBefore.ts`). P1 passes: the same outfits, order, counts, gains and Goes with on the demo closet, a 60-piece mixed one, a closet with no shoes and one of tops only, at four occasions, twice in a row. P2 passes, with every piece different (the worst case, cold): Next best buy **0.8 s → 0.04 s at 50 pieces, 5.3 s → 0.12 s at 100**; a second count of the same closet 2 ms (50) and 16 ms (100). P3 passes: a changed piece, by a new row or in place, is scored again. **Still slow:** the first count of a big closet is unchanged (~1 s at 100 distinct pieces on the Mac, more on a phone), once per launch; the scoring itself is the cost. How: each judged outfit is remembered by occasion, styles and what its pieces are (their garments, not their ids; ≤60,000 kept), and Next best buy and "Add shoes and you'd have N" count only the outfits the new piece makes (a piece never removes one). P2's "count again" first timed a first count (Next best buy no longer counts the closet); the timing was fixed, not the bar.
+- **E (crash screen):** `src/__tests__/crashScreen.test.ts`, 11 checks pass. On the Simulator (`-demoCrash 1`, dark, the largest text size): the crash screen, Try again brings Stylist back, and `Documents/logs/errors.log` got the line (`… render Error: Demo crash (-demoCrash 1) | at demoCrashCheck …`). Found on the way: React retries a failed render once, so a trigger that threw once recovered unseen, and the React Compiler kept the root's first-render read of the launch arguments; the trigger now mounts after boot and throws until Try again. In a dev build the red error box shows first (Dismiss); Release has none. Dev-build stack lines are bundle URLs, so each frame is cut to 160 characters.
+- **L (Latest pill):** `src/__tests__/latestPill.test.ts`, 6 checks pass (one regex loosened to accept `"arrow.down"` in JSX quotes). On the Simulator at the largest text size: scrolled up on screen 12 the pill sits centred above "Ask Kit…"; a tap scrolled to the newest row and it went away (`screenshots/overnight-oct19/`, git-ignored).
+- **M (morning card):** `src/__tests__/morningSwap.test.ts`, 7 checks pass, and the 36 older morning tests. On the Simulator Swap's sheet opened (screen 25), but its buttons don't take the Simulator tool's taps (the same as #343), so a swap was never seen there; M4's link wasn't seen either (no demo state for a denied permission). Both rest on the tests.
+- **Also:** `idea.swapped.<id>` is per-device like `idea.touched.<id>` (`sync/schema.ts`; the sync test caught it). `npm run check` green: 1,369 app tests.
+
+### §23 on the Simulator after the merge (Oct 19, #357): Swap and the location link seen; a toast bug found and fixed
+- **Found:** after #353, **no toast showed on the Stylist screen** ("Logged for today.", "Nothing else in your closet works here yet.", every Undo toast there). The toast was created (logged) but its capsule never appeared. Cause: the Latest pill's animated style lived on the screen even with no pill drawn and read the toast's room, and the pill re-rendered the screen on every scroll and size change; together they left the toast's entering animation stuck invisible (the same symptom as #118). The old screen with the same data showed it at once. Fixed: the pill's style lives in a small `PillDock` mounted only while the pill shows (riding the keyboard only), the pill steps aside while a toast shows, and the screen re-renders only when the pill turns on or off. `latestPill.test.ts` L2 amended to the new shape, plus one check that the pill never re-renders per scroll.
+- **M1–M2 seen:** demo screen 25, light and dark: swap after swap left out the boots, loafers and runners (`idea.swapped` grew one by one in the app's database, none came back), then with no shoes left the card kept its outfit and showed "Nothing else in your closet works here yet.". The iOS action sheet still doesn't take the Simulator tool's taps (every press arrives as Cancel, logged), so for this run a temporary line picked the last piece directly; it was removed before the commit.
+- **M4 seen:** with `weather.permission` set to denied and a relaunch, the card shows "Turn on local weather" in the Allow row's place; a tap opens iOS Settings.
+- **L seen again** after the fix: dark, the largest text size, screen 12 scrolled up; the pill shows above "Ask Kit…".
+- `npm run check` green (1,370 app tests).
+
+## 24. Long-sleeve tees in the closet (Oct 19, #359). Checks first
+**What this is.** Founder, Oct 19: "closet does not detect full sleeve tees and does not have the option for them. it also does not have a graphic representation for them." Today the closet call already reads each top's `sleeve_length` (short · long · sleeveless) and the matcher uses it, but nothing he sees does: a long-sleeve tee is named "Grey tee", drawn with short sleeves, and "What it is" has no such kind.
+
+**Decided (Claude's call, no score moves):** a long-sleeve tee stays `tee` (or `graphic_tee`) in the reading, so the scoring read, the rules and every score are untouched (the schema has no long-sleeve kind, and adding one is a reading change that needs the founder and a steadiness test). The sleeves are part of the piece's look instead: `ClosetArt.sleeves`, from the closet call's `sleeve_length` under the drift guard (his pick wins), else from the scoring read's `sleeve_end` (a tee whose sleeves end at the wrist, above it or over the hand has long sleeves). Polos and jerseys follow the same rule; shirts, knits and jackets are drawn as before.
+
+**S · Seeing it**
+- S1 (T) `artOf` gives `sleeves: 'long'` for a tee whose sightings' closet call read `long`, and for a tee with no closet call whose `sleeve_end` is `at_wrist`, `above_wrist` or `covers_hand`; `'short'` from a `short` read; nothing when neither says. One sighting reading the other way doesn't flip it (the drift guard: 2 newer sightings must agree); his confirmed `sleeve_length` wins outright.
+- S2 (T) The name: "Grey long-sleeve tee", "Black long-sleeve graphic tee", "Navy long-sleeve polo"; a short-sleeve tee keeps "Grey tee". A name he typed never changes.
+- S3 (T) The drawing: a long-sleeve tee draws long sleeves (to the wrist) with a plain hemmed cuff (no rib), a crew neck and the tee's own length (no rib hem), so it differs from both a tee and a sweatshirt of the same color. A short-sleeve tee draws exactly as before (same SVG).
+- S4 (T) Pieces already in his closet get it at the next launch (`refreshColors` also re-derives a piece whose sleeves changed, then renames), with no score, sighting or photo touched.
+
+**K · "What it is" (§17)**
+- K1 (T) A top's Kind list has "Long-sleeve tee" in its first group, right after "Tee" (Flannel shirt moves to the front of More kinds, so the first group stays 8, all drawn differently).
+- K2 (T) A long-sleeve tee's Kind row says "Long-sleeve tee" and that option is the current one.
+- K3 (T) Picking "Long-sleeve tee" on a tee writes `subcategory: tee` and his confirmed `sleeve_length: long` (never the word `long_sleeve_tee` in the reading or the matcher's confirmed kind); the toast says "Changed to long-sleeve tee. Your scores stay the same."; the sleeve reads his photos gave that disagree are taught to the matcher (field aliases), so the next photo of it still finds it.
+- K4 (T) Picking "Tee" or "Graphic tee" on a long-sleeve tee sets the sleeves short; another kind leaves the sleeves alone. Undo puts every row back.
+- K5 (T) The option pictures: "Long-sleeve tee" draws long sleeves, "Tee" short.
+
+**M · The morning card**
+- M1 (T) On a hot day a long-sleeve tee no longer counts as a cool short-sleeve top (`ideas.ts`, its `hotShortSleeve` credit and "wrong for the weather"); a piece without the sleeve read is judged by its kind as before.
+
+**Not changed:** the scoring reading, `@kitted/core`'s rules and every score; the closet call's prompt; Python.
+
+### §24 results (Oct 19, #359): every check passes, and seen on the Simulator
+- **Tests:** `src/__tests__/longSleeveTee.test.ts`, 14 checks (S1–S4, K1–K5, M1 and a control) pass. Older tests changed only where the new field shows: the seed's grey tee's art now carries `sleeves: 'short'` (`seedLoader.test.ts`), "long-sleeve" is an allowed name word (`copyChecks.test.ts`), and the Kind lists (`pieceEdit.test.ts` X1). `npm run check` green: 1,393 app tests.
+- **Found on the way:** the demo photo p01a (a white tee under an open overshirt) was already read `sleeve_length: long` by the real closet call, and the photo agrees (the cuff shows at his wrist). It's now "White long-sleeve tee"; it used to be "White tee", drawn short.
+- **The drawing:** rendered from the app's own SVG, light and dark (`screenshots/long-sleeve-tee/drawings.png`, git-ignored): the long-sleeve tee has slimmer sleeves than a sweatshirt and a stitched hem where the sweatshirt has ribbed cuffs and hem; a short-sleeve tee draws byte for byte as before.
+- **Known limit:** a tee half hidden under a long-sleeve jacket can have the jacket's sleeves read as its own; the drift guard keeps one such read from flipping a piece already seen, and his pick in "What it is" settles it. Shirts, knits and jackets aren't named or drawn by the sleeve read (a short-sleeve oxford still draws long sleeves).
+- **Seen on the Simulator after the merge (Oct 19):** demo screen 214 (empty Closet), a fit check with the sample photo p01b through the stand-in camera, light, then dark at the largest text size. The short-sleeve white tee stays "White tee", drawn as before. Its page → Kind shows "Long-sleeve tee" second, drawn apart from Sweater and Sweatshirt; a pick turns the page title, the name and the drawing into "White long-sleeve tee" with long sleeves, Kind reads "Long-sleeve tee", and the toast "Changed to long-sleeve tee. Your scores stay the same." has the Undo ring (at the largest size it stacks, and the option's label wraps at its hyphen: "Long- / sleeve tee"). Kind → Tee makes it "White tee" again; Undo on that puts the long sleeves back. The Pattern sheet draws all four options with long sleeves. Not seen on screen: a photo the closet call reads as long-sleeved (p01a is only a re-check in the demos), covered by S1's test on the same reading.
+
+## 25. More kinds in "What it is" (Oct 17, #361; merged onto §24 on Oct 19)
+**The founder:** "the full sleeve shirt is not included as an option. Half sleeve button-ups are not included … just add more options like this. For clothes."
+**What was missing:** the Kind sheet offered only the photo reader's own kinds. A short-sleeve button-up was only "Camp shirt", under More kinds and drawn with long sleeves; a plain long-sleeve button-up was only "Oxford" or "Dress shirt". (The long-sleeve tee is §24's, #359: a tee with long sleeves, read from his photos too.)
+**The design (code `app/src/features/closet/kinds.ts`):** six closet-only kinds, each kept as the reading kind it scores, matches and builds outfits as, and drawn and named as itself. Stored as the piece's `profile.kindVariant`, mirrored into `art.kind`. The photo reader's list is unchanged, so no reading, score or saved check moves.
+
+| Shows as | Scores as | Where |
+|---|---|---|
+| Button-up shirt | oxford | tops, first group (Oxford moves to More kinds) |
+| Short-sleeve shirt | camp shirt | tops, first group |
+| Henley | tee | tops, More kinds |
+| Turtleneck | sweater | tops, More kinds |
+| Zip hoodie | hoodie | layers, first group; tops, More kinds |
+| Jean shorts | shorts (denim washes offered) | bottoms, first group |
+
+- The tops' first group is now 9 (3 rows of 3): Tee · Long-sleeve tee · Graphic tee · Polo · Button-up shirt · Short-sleeve shirt · Sweater · Sweatshirt · Hoodie. Flannel and Oxford sit in More kinds (a piece that is one still shows it in the first group, as before). §24's K1 now expects 9.
+- Button-up shirt and Short-sleeve shirt confirm their sleeves when picked, through §24's sleeve path (`confirmed.sleeve_length`, with the reads his photos gave taught as aliases). A henley takes the sleeves his photos show, else long; a turtleneck is drawn long; a camp shirt is drawn short (it drew long, a bug).
+- **Merging with §24 (Oct 19):** both built a long-sleeve tee the same day. §24's is kept (read from his photos, `sleeves.ts`); this section's own long-sleeve tee was dropped, and its drawing code generalized §24's: `TopFlat.sleeves` takes short, long or sleeveless on any top, and §24's slimmer stitched-hem sleeve stays for long-sleeve tees and polos.
+- **Not done:** the reader never names these six kinds by itself (that needs a reading change and a steadiness test); no new shoe kinds.
+
+**Checks K1–K11 (`app/src/__tests__/pieceEdit.test.ts`, "X15 more kinds"), all pass after the merge:** K1 each new kind is offered in its slot in plain words, never a brand · K2 picking Long-sleeve tee writes a tee with confirmed long sleeves ("Grey long-sleeve tee"), drawn as previewed · K3 scores, readings and sightings never move; Outfits count each as the kind it scores as · K4 picking Tee again sets short sleeves and draws exactly as before · K5 long and short button-ups get the right reading kind and different drawings ("Light-blue short-sleeve shirt") · K6 camp shirts draw short sleeves; henley buttons (with his photos' sleeves), turtleneck collar, zip hoodie zip · K7 every top type drawn with its usual sleeves is byte-identical to before (light, dark) · K8 jean shorts keep the wash ("Dark jean shorts"), draw jean stitching, no Leg row; plain Shorts moves dark denim to navy · K9 a later photo of the piece keeps its kind, name and drawing · K10 a sleeve-named kind confirms its sleeves, another leaves them · K11 Undo puts it all back. `npm run check` green.
+**Seen:** every Kind option's drawing rendered from the app's own drawing code in light and dark before the merge (`screenshots/more-kinds/kinds.html`, git-ignored). Not seen on the Simulator.

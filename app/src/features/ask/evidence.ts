@@ -4,7 +4,8 @@
 // Outfits never carry a predicted score (R5). Pieces mentioned in chat (source 'chat') are used in outfits but never
 // in a "+N outfits" count (07 §4).
 import {
-  dayKey, localParts, pickOutfit, seasonNeeds, weatherNeeds, type ClosetItem, type DayWeather, type Reading,
+  addDays, dayKey, daysBetween, localParts, pickOutfit, seasonNeeds, weatherNeeds,
+  type ClosetItem, type DayWeather, type IdeaReason, type PastUse, type PickHistory, type Reading,
 } from '@kitted/core';
 import { OCCASIONS, type CardOccasion, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
 import { displayScore } from '@/design-system/score';
@@ -12,9 +13,11 @@ import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { overallFor, scoreOptions } from '@/features/fitcheck/scoring';
 import { fitsGain, ownership, STARTER } from '@/features/finish/starter';
 import { whyLine } from '@/features/morning/copy';
+import { HISTORY_DAYS, historyFor, ideaId, scoringOccasion, slotAt } from '@/features/morning/service';
 import { occasionLabel } from '@/features/stylist/thread';
 import { asBudget } from '@/features/you/profile';
 import { fullCheckLines, oneLine, type StylistContext, type StylistSnapshot } from './context';
+import { storedCard } from './cards';
 import { avoidedIds, avoidsPhrase, judgeOutfit, judgementLines } from './judge';
 import { scoresIn } from './gate';
 import type { AskKind } from './prompt';
@@ -76,6 +79,20 @@ function usable(closet: readonly ClosetItemRow[]): ClosetItemRow[] {
 /** Pieces a "+N outfits" may count: not the ones he only mentioned in chat (07 §4). */
 const countable = (closet: readonly ClosetItemRow[]) => closet.filter((c) => c.source !== 'chat');
 
+/** Kit's own outfit cards from the days before today: shown, like a card's (#358). Today's don't count: the same
+ *  question twice in a day gets the same advice. */
+function kitCards(s: StylistSnapshot, today: string): PastUse[] {
+  const from = addDays(today, -HISTORY_DAYS);
+  const out: PastUse[] = [];
+  for (const m of s.chat) {
+    const c = storedCard(m.payload.askCard);
+    if (!c || c.type !== 'outfit') continue;
+    const d = dayKey(m.createdAt, s.zone);
+    if (d >= from && d < today) out.push({ daysAgo: daysBetween(d, today), itemIds: c.itemIds });
+  }
+  return out;
+}
+
 function todaysWeather(s: StylistSnapshot): DayWeather | null {
   const today = dayKey(s.nowMs, s.zone);
   const idea = s.ideas.find((i) => i.dayKey === today && i.weather);
@@ -94,24 +111,61 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
   const avoided = avoidedIds(pieces, s.facts);
   let verdict: 'yes' | 'depends' | 'no' | undefined;
 
-  /** One outfit line from the picker: its pieces by handle and its reasons (no predicted score). */
-  const outfitLine = (label: string, occasion: OccasionKey, pin?: string, exclude?: Set<string>): string[] | null => {
+  // Kit's outfit ideas rotate like the card (#358): the history of the card for the moment he asks in, plus Kit's
+  // own outfit cards from earlier days. Today's card for that moment, when it planned an outfit, is the first pick.
+  const now = slotAt(s.nowMs, s.zone);
+  const nowId = ideaId(now.day, now.slot);
+  const todaysCard = s.ideas.find((i) => i.id === nowId && !!i.outfitId) ?? null;
+  const cardOccasion: OccasionKey | null = todaysCard && todaysCard.occasion !== 'staying_in' ? scoringOccasion(todaysCard.occasion) : null;
+  let seen: PickHistory | null = null;
+  const history = (): PickHistory => {
+    if (!seen) {
+      const items = new Map(s.outfits.map((o) => [o.id, o.itemIds]));
+      seen = historyFor(
+        { id: nowId, slot: now.slot, outfitId: todaysCard?.outfitId ?? null },
+        { ideas: s.ideas, wears: s.wears, checks: s.checks, closet: s.closet, itemsOf: (id) => items.get(id) ?? [] },
+        s.zone, kitCards(s, now.day),
+      );
+    }
+    return seen;
+  };
+
+  /** One outfit line: its pieces by handle, its reasons and the rules' own words (no predicted score). */
+  const lineOf = (label: string, occasion: OccasionKey, items: ClosetItemRow[], reasons: readonly IdeaReason[]): string[] => {
+    const card: CardOccasion = occasion === 'gym' || occasion === 'home' ? 'everyday' : occasion;
+    const why = oneLine(whyLine(reasons, items, card), 160);
+    // The rules' own words on the same outfit (J2): a problem they'd find is said, never hidden.
+    const j = judgeOutfit(items, occasion, styles);
+    const careful = j?.problems.length ? ` · careful: ${oneLine(j.problems[0], 140)}` : '';
+    return [`${label}: ${items.map(nameOf).join(' + ')}${why ? ` · why: ${why}` : ''}${careful}`, items.map((c) => c.id).join('+')];
+  };
+
+  /** Today's card's outfit, when it was planned for this occasion and every piece is still his to wear (#358). */
+  const cardLine = (label: string, occasion: OccasionKey, pin?: string): string[] | null => {
+    if (!todaysCard || cardOccasion !== occasion) return null;
+    const row = s.outfits.find((o) => o.id === todaysCard.outfitId);
+    if (!row || (pin && !row.itemIds.includes(pin))) return null;
+    const items = row.itemIds.map((id) => pieces.find((c) => c.id === id));
+    if (items.some((c) => !c || (avoided.has(c.id) && c.id !== pin))) return null;
+    const reasons = (row.details as { reasons?: IdeaReason[] }).reasons ?? [];
+    return lineOf(`${label} (${lower(occasionLabel(occasion))}, same as today's card)`, occasion, items as ClosetItemRow[], reasons);
+  };
+
+  /** One outfit line from the picker, or today's card's outfit when `fromCard` and it fits. */
+  const outfitLine = (label: string, occasion: OccasionKey, pin?: string, exclude?: Set<string>, fromCard = false): string[] | null => {
+    const fromToday = fromCard ? cardLine(label, occasion, pin) : null;
+    if (fromToday) return fromToday;
     const month = localParts(s.nowMs, s.zone).m;
     const w = todaysWeather(s);
     const r = pickOutfit({
-      closet: pieces as unknown as ClosetItem[], occasion, styles, needs: w ? weatherNeeds(w) : seasonNeeds(month),
+      closet: pieces as unknown as ClosetItem[], occasion, styles, needs: w ? weatherNeeds(w) : seasonNeeds(month), history: history(),
       seed: `${dayKey(s.nowMs, s.zone)}|ask|${label}|${pin ?? ''}`, ...(pin ? { pin } : {}),
       ...(exclude || avoided.size ? { exclude: new Set([...(exclude ?? []), ...[...avoided].filter((id) => id !== pin)]) } : {}),
     });
     // A pinned piece the picker couldn't fit in is no answer to "what goes with it".
     if (!r.outfit || (pin && !r.outfit.itemIds.includes(pin))) return null;
     const items = r.outfit.itemIds.map((id) => pieces.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
-    const card: CardOccasion = occasion === 'gym' || occasion === 'home' ? 'everyday' : occasion;
-    const why = oneLine(whyLine(r.outfit.reasons, items, card), 160);
-    // The rules' own words on the same outfit (J2): a problem they'd find is said, never hidden.
-    const j = judgeOutfit(items, occasion, styles);
-    const careful = j?.problems.length ? ` · careful: ${oneLine(j.problems[0], 140)}` : '';
-    return [`${label} (${lower(occasionLabel(occasion))}): ${items.map(nameOf).join(' + ')}${why ? ` · why: ${why}` : ''}${careful}`, r.outfit.itemIds.join('+')];
+    return lineOf(`${label} (${lower(occasionLabel(occasion))})`, occasion, items, r.outfit.reasons);
   };
 
   switch (route.kind) {
@@ -155,7 +209,7 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
       out.push(`Outfits with ${nameOf(pin)}, from his closet:`);
       const seen = new Set<string>();
       for (const [label, occ] of [['Best', route.occasion ?? 'everyday'], ['Dressier', 'date'], ['More relaxed', 'class']] as const) {
-        const o = outfitLine(label, occ, pin.id);
+        const o = outfitLine(label, occ, pin.id, undefined, label === 'Best');
         if (o && !seen.has(o[1]!)) {
           seen.add(o[1]!);
           out.push(`- ${o[0]}`);
@@ -165,9 +219,12 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
       break;
     }
     case 'whatToWear': {
-      const occ = route.occasion ?? 'everyday';
-      const o = outfitLine('Pick', occ);
-      const other = o ? outfitLine('Another', occ, undefined, new Set(o[1]!.split('+').slice(0, 1))) : null;
+      // No occasion named: the one today's card is planned for, so the two agree (#358).
+      const occ = route.occasion ?? cardOccasion ?? 'everyday';
+      const o = outfitLine('Pick', occ, undefined, undefined, true);
+      // Another means another top (the ids start with the layer when there is one).
+      const top = o ? pieces.find((c) => c.slot === 'top' && o[1]!.split('+').includes(c.id)) : undefined;
+      const other = o ? outfitLine('Another', occ, undefined, new Set(top ? [top.id] : [])) : null;
       if (o) out.push(`Outfits from his closet for ${lower(occasionLabel(occ))}:`, `- ${o[0]}`, ...(other && other[1] !== o[1] ? [`- ${other[0]}`] : []));
       else out.push('His closet can\'t make a full outfit yet (a top, bottoms and shoes).');
       const w = todaysWeather(s);

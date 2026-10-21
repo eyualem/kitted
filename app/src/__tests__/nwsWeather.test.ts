@@ -21,7 +21,7 @@ describe('hourly forecast → DayWeather', () => {
     const w = mapHourly(P(coldRain), 'day', at('2026-10-22T07:30:00-04:00'));
     expect(w).toEqual({
       window: 'day', nowF: 43, highF: 58, lowF: 43, feelsLowF: 38, feelsHighF: 58,
-      precipChance: 0.8, precipFromHour: 16, condition: 'cloudy', source: 'nws',
+      precipChance: 0.8, precipFromHour: 16, condition: 'cloudy', source: 'nws', nowHour: 7, highHour: 15,
     });
     // The card plans for it: a layer is required, it comes off by afternoon, and it's wet.
     expect(weatherNeeds(w!)).toEqual({ layer: 'required', shortsOk: false, wet: true, removable: true, hot: false });
@@ -31,7 +31,7 @@ describe('hourly forecast → DayWeather', () => {
     const w = mapHourly(P(coldRain), 'evening', at('2026-10-22T07:30:00-04:00'));
     expect(w).toEqual({
       window: 'evening', nowF: 50, highF: 52, lowF: 47, feelsLowF: 44, feelsHighF: 52,
-      precipChance: 0.8, precipFromHour: 18, condition: 'rain', lateF: 47, source: 'nws',
+      precipChance: 0.8, precipFromHour: 18, condition: 'rain', lateF: 47, source: 'nws', nowHour: 20, highHour: 18, lateHour: 0,
     });
   });
 
@@ -45,7 +45,7 @@ describe('hourly forecast → DayWeather', () => {
     const w = mapHourly(P(evening), 'evening', at('2026-10-22T17:20:00-05:00'));
     expect(w).toEqual({
       window: 'evening', nowF: 56, highF: 60, lowF: 50, feelsLowF: 47, feelsHighF: 60,
-      precipChance: 0.04, precipFromHour: null, condition: 'clear', lateF: 50, source: 'nws',
+      precipChance: 0.04, precipFromHour: null, condition: 'clear', lateF: 50, source: 'nws', nowHour: 20, highHour: 18, lateHour: 0,
     });
   });
 

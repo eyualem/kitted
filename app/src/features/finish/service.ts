@@ -10,7 +10,6 @@ import { t } from '@/i18n/en';
 import { isRecheckOpen } from '@/services/quota';
 import type { Clock } from '@/services/clock';
 import type { NotificationPermissions } from '@/services/notifications';
-import { pickBuy } from './moves';
 import {
   holdsOffer, movesDue, notifyAskable, notifyDue, parseFinish, paywallDue, type FinishCheck, type FinishState,
 } from './sequence';
@@ -124,9 +123,8 @@ export function createFinishService(deps: FinishDeps) {
       if (d.kind !== 'post') return;
       const first = await deps.store.fitChecks.get(d.checkId);
       if (!first) return;
-      const buyId = pickBuy({ first, recheck: null, closet: await deps.store.closet.all(), styles: (await deps.store.profile.get('me'))?.styles ?? null, markedKv: await getStarterMarks(deps.store) });
       const intro = message({ kind: 'text', text: t('plan.intro') });
-      const card = message({ kind: 'card', cardType: 'plan', fitCheckId: d.checkId, payload: { buyId, why: d.why } });
+      const card = message({ kind: 'card', cardType: 'plan', fitCheckId: d.checkId, payload: { why: d.why } });
       card.createdAt = intro.createdAt + 1;
       await deps.store.chat.put(intro);
       await deps.store.chat.put(card);

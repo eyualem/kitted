@@ -1,4 +1,4 @@
-// Demo screens 150–162 (10-onboarding.md §9): turn the end of onboarding on for its own screens (every other demo screen
+// Demo screens 150–165 and 180–181 (10-onboarding.md §9): turn the end of onboarding on for its own screens (every other demo screen
 // leaves it off, so their stories don't change), script the store and the notification answer, and play its taps
 // through the same code the app runs.
 import type { KittedStore } from '@/data/store';
@@ -10,9 +10,10 @@ import { newId } from '@/services/ids';
 import type { StoreScript } from '@/services/purchases';
 import { finish, setDemoFinish } from './session';
 import { STARTER } from './starter';
-import { toggleStarter } from './starterActions';
+import { pickStarter, toggleMarkOnly } from './starterActions';
 
-export type FinishDemoStep = 'later' | 'paywallShown' | 'notifyYes' | 'notifyAllow' | 'notifyNo' | { mark: string };
+/** `mark` adds a list row (its first choice); `skipInvite` taps the optional card's Skip once it's posted (#343). */
+export type FinishDemoStep = 'later' | 'paywallShown' | 'notifyYes' | 'notifyAllow' | 'notifyNo' | 'skipInvite' | { mark: string };
 
 export interface FinishDemo {
   /** The mock store's outcome (turns the paywall on); omitted = the paywall step is skipped, as on his phone. */
@@ -44,7 +45,11 @@ export async function prepareFinishDemo(store: KittedStore, sc: ScreenScenario, 
     else if (step === 'paywallShown') await finish.paywallOpenedByLink();
     else if (typeof step === 'object') {
       const e = STARTER.find((x) => x.id === step.mark);
-      if (e) await toggleStarter(store, e, newId, nowMs);
+      const first = e?.owns[0];
+      if (e && first) await pickStarter(store, e, first, newId, nowMs);
+      else if (e) await toggleMarkOnly(store, e, nowMs);
+    } else if (step === 'skipInvite') {
+      continue;
     } else {
       const ask = (await store.chat.all()).find((m) => m.payload.question === 'notify');
       if (!ask) continue;
@@ -56,4 +61,8 @@ export async function prepareFinishDemo(store: KittedStore, sc: ScreenScenario, 
     }
   }
   await finish.ensure();
+  if (f.steps?.includes('skipInvite')) {
+    const card = (await store.chat.all()).find((m) => m.cardType === 'plan');
+    if (card) await store.chat.put({ ...card, payload: { ...card.payload, skipped: true } });
+  }
 }
