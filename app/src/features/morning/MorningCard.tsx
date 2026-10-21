@@ -23,7 +23,7 @@ import { isNwsWeather, weatherSource } from '@/services/weather';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
+import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, updatedLine, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { locationRow } from './locationRow';
@@ -45,6 +45,8 @@ interface Model {
   checkUsed: boolean;
   permission: 'granted' | 'denied' | 'unknown';
   myStyles: StyleKey[];
+  /** "Updated for your olive fleece.": re-planned after he corrected one of its pieces (09-ui-review §26, #364). */
+  updated: string | null;
 }
 
 async function load(ideaId: string): Promise<Model | null> {
@@ -83,6 +85,7 @@ async function load(ideaId: string): Promise<Model | null> {
     checkUsed: !snap.pro && snap.checksUsed >= snap.checkLimit,
     permission: await weatherSource.permission(),
     myStyles: Array.from(new Set(myStyles)),
+    updated: outfit ? updatedLine(outfit, closet) : null,
   };
 }
 
@@ -189,6 +192,11 @@ function FullCard({ m }: { m: Model }) {
         <KText variant="title3" weight="600" accessibilityRole="header">
           {title}
         </KText>
+        {m.updated ? (
+          <KText variant="footnote" color="ink3">
+            {m.updated}
+          </KText>
+        ) : null}
         {locationAsk === 'ask' ? <LocationAsk onAllow={() => void allow()} /> : null}
         {locationAsk === 'settings' ? (
           // Denied once: only Settings can turn it back on (09 §23 M4). A quiet link, never a nag.

@@ -979,7 +979,7 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **L seen again** after the fix: dark, the largest text size, screen 12 scrolled up; the pill shows above "Ask Kit…".
 - `npm run check` green (1,370 app tests).
 
-## 26. The outfit card follows a piece he corrected (Oct 21, #364). Plan and checks first, nothing built
+## 26. The outfit card follows a piece he corrected (Oct 21, #364). Checks first, built
 
 **The founder (Oct 21, 1:24 am):** today's evening card said "Grey fleece"; he changed the fleece's color to olive in Closet → "What it is". "Can we refresh the recommendation cards… make it update on its own… plan it out and plan out tests for it beforehand."
 
@@ -1022,3 +1022,11 @@ Auto-refresh is right for the card he hasn't acted on: the card is the app's sug
 
 ### 26.5 Separate, his call (scoring, not the card): olive over green
 Today's rules treat an olive fleece over a green sweatshirt like any two quiet colors (the stylist guide calls tone-in-tone a safe win, and olive and green are different families). If two greens stacked should read as a clash, that's a color rule (Color part) with its own paper test; default: keep it as is.
+
+### 26.6 Results (Oct 21, built on his go: "Build the card refresh as planned in §26, tests first, with the default words and keep olive over green as is.")
+- **Before the code:** R1, R4, R7, R8 and R9 failed (the card never re-planned and lost a tile); R2, R3, R5, R6, R10–R12 passed as guards. **After:** 12 of 12 pass (`app/src/__tests__/cardFollowsEdits.test.ts`), the full suite green (1,401 app tests), lint and types clean.
+- **Code:** `pieceBasis` / `basisOf` and `followPieces` / `stillWorks` in `features/morning/service.ts` (`freshen()` checks pieces first, then the weather, now `freshenWeather`); `saveOutfit` writes `details.basis` (and `updatedFor`, `origin` after a piece re-plan); `updatedLine` in `morning/copy.ts`; one footnote under the card's title in `MorningCard.tsx`; `idea.updatedFor` in `en.ts`.
+- **Found while building (R8):** after a re-plan the edited piece is usually no longer on the card, so the card stopped watching it and an Undo went unnoticed. The card now keeps watching the pieces of the outfit it first planned until it's back there.
+- **"Still works" for a swapped or set card** is the picker's own filters (`outfitValid`, `itemAllowed`) plus its predicted score not falling below Put together (7), or below where the outfit began when it began lower: the filters alone let sweatpants at Class through.
+- **Not seen on a screen:** this branch can't take main until the repository's origin is confirmed in the app, and his phone's Metro serves main. The line is one footnote under the title.
+
