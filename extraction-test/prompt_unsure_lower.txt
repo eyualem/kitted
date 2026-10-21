@@ -1,0 +1,43 @@
+This is a close-up of one person's legs and shoes, cut from an outfit photo. Describe only how the pants end at the shoes, not the person. If the two legs differ, describe the leg with more fabric at the hem.
+
+pant_end:
+- shorts: shorts or a short garment, no pant hem near the shoes
+- cropped: the hem ends above the shoe; ankle, sock or a gap shows (an elastic jogger cuff above the ankle counts)
+- no_break: the hem just reaches the top of the shoe, with no fold
+- slight_break: the hem rests on the shoe with one small dent at the front
+- full_break: the hem rests on the shoe with one deep fold, and the back of the hem reaches the heel
+- stacked: several soft folds sit on the lower leg, above the shoe, like an accordion
+- pooling: so much extra fabric that it collapses over the shoe and spreads onto the floor or under the heel
+- not_visible: the hem or the shoes are hidden or out of frame
+
+covers_shoe: how much of the top of the shoe (laces, tongue, collar) the pant fabric covers: "no", "partly", "mostly", or "no_shoes_visible" (barefoot, socks only, or shoes out of frame).
+
+shoe: the type of shoe. Look at the toe, the lacing, the sole and how high it rises.
+- white_leather_sneaker: a plain white leather low-top court sneaker with a flat clean sole
+- canvas_sneaker: a fabric upper on a flat rubber sole (Converse or Vans style)
+- low_profile_sneaker: a slim, flat, low sneaker with a thin sole, often suede with a gum sole (Samba or Gazelle style)
+- retro_runner: a suede and mesh retro running shoe on a shaped, layered sole
+- performance_runner: a modern running or training shoe: knit or mesh upper, thick foam sole
+- chunky_sneaker: a bulky sneaker on a thick, built-up sole ("dad" sneaker)
+- basketball_sneaker: a padded basketball shoe, high or low (Jordan or Dunk style)
+- loafer: a leather slip-on with no laces, ending below the ankle
+- derby: a laced leather shoe whose lace flaps sit open on top, often with a thicker sole; ends below the ankle
+- dress_shoe: a sleek, formal laced leather shoe with closed lacing and a thin sole (an oxford); ends below the ankle
+- suede_chukka: an ankle boot with two or three eyelets and a plain toe, usually suede
+- chelsea_boot: an ankle boot with elastic side panels and no laces
+- work_boot: a sturdy laced boot that rises above the ankle, often with a lug sole (also combat and hiking boots)
+- slides_sandals: slides, sandals or flip-flops
+- other: a shoe that fits none of these
+- cant_see: the shoes are hidden, cut off or too small to tell
+
+leg_shape: the shape of the pants' leg from hip to hem.
+- skinny: hugs the leg all the way to the ankle
+- slim: close through the thigh and narrow at the hem, following the leg without hugging it
+- straight: about the same width from the knee to the hem, clear of the leg but not roomy
+- relaxed: roomy through the thigh, then straight or gently narrowing, with some room at the hem
+- wide: roomy from the hip to the hem, the fabric hanging well clear of the leg, a wide opening
+- barrel: curved: fullest at the knee, narrower at the hip and the hem
+- flare_bootcut: widens from the knee down
+- shorts: shorts, no pant leg to describe
+- cant_see: the leg is hidden or out of frame
+Return only JSON that matches the schema.
