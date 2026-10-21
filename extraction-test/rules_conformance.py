@@ -266,6 +266,14 @@ case("PRO-9-peek", "PRO-9", "second look: the tee shows below a denim jacket (-0
      Rd(TEE, outer("denim_jacket", "denim_light"), DJEANS, WLS),
      {"fired": [F("PF10_peek", "proportions", -0.5)], "not_fired": [F("PR2_short_layer")], "band": "Put together"},
      second_look={"peek": True})
+case("PRO-9-little", "PRO-9", "v14: the tee shows only a little below the denim jacket: a deliberate layer, no charge, the short-jacket credit stays (#367)",
+     Rd(TEE, outer("denim_jacket", "denim_light"), DJEANS, WLS),
+     {"not_fired": [F("PF10_peek")], "fired": [F("PR2_short_layer")], "band": "Put together"},
+     second_look={"under_present": "yes", "under_shows": "a_little"})
+case("PRO-9-clearly", "PRO-9", "v14: the tee clearly hangs below the denim jacket: -0.5, and no short-jacket credit (#367)",
+     Rd(TEE, outer("denim_jacket", "denim_light"), DJEANS, WLS),
+     {"fired": [F("PF10_peek", "proportions", -0.5)], "not_fired": [F("PR2_short_layer")], "band": "Put together"},
+     second_look={"under_present": "yes", "under_shows": "clearly"})
 case("PRO-10-long", "PRO-10", "a tee that may run past the fly: a tip, no points",
      Rd(top("tee", "white", length="below_crotch"), DJEANS, WLS),
      {"tips": [F("PF2_long_top", "proportions")], "band": "Put together"},

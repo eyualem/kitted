@@ -21,7 +21,8 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.12.0"   # 1.12.0 (#336): v14 also lets a tucked open button-up set the waist (pr1_tucked_layer)
+VERSION = "1.13.0"   # 1.13.0 (#367): v14 counts only a top that clearly shows below the outer piece as a peek (peek_clearly_only)
+# 1.12.0 (#336): v14 also lets a tucked open button-up set the waist (pr1_tucked_layer)
 ENGINE = "v14"
 
 
