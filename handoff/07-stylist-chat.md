@@ -935,3 +935,85 @@ Found while checking #319 (§19 results, K2 and "Also found"), both older than i
 | G | Pass | `npm run check` green: typecheck, lint, core tests, 1,160 app tests in 92 suites; no copy, score or native change; no package |
 
 Not seen: the phone's on-screen keyboard with a 5-line field at the largest size (the Simulator uses the Mac's keyboard); the thread scrolls under it as it does today. Screenshots `screenshots/ax-layout/` (git-ignored).
+
+## 21. The Stylist screen's layout pass (Oct 17, #338)
+The founder, Oct 17: Kit's lines look awkward ("maybe give Kit a bubble"), the evening greeting ("Evening. Heading out? 52° at 8, 47° by midnight.") feels off, "Earlier chats" sits in an awkward spot, the outfit card holds too much and its text feels crammed (the tiles are good), the weather advice isn't accurate to the time, and after a re-check the thread's arrangement falls apart. "The Stylist UI is where the user spends most of their time."
+
+### 21.1 What the code does today (found Oct 17, Simulator demo screens 10, 12, 25, 30)
+- **Kit's lines are bare 17 pt text on the background** with "Kit" above, while his own lines are bubbles: the thread reads as a document with his bubbles in it, and a long greeting looks like an unstyled paragraph.
+- **The weather is said twice:** the greeting holds it in words ("52° at 8, 47° by midnight. Rain likely.") and the card again as a badge ("☂ 52°→47°") squeezed beside the title, with "Sample weather" squeezed beside the two menus. Title, badge, two menus, the source, two sentences, two buttons and a link: eight things in the card's body.
+- **The weather is fetched once,** when the card posts, and never again: opened at 2 pm, the morning card still says "46° now"; the evening line always says "at 8", even at 10 pm or after midnight; "63° by afternoon" names no time.
+- **"Earlier chats" is a pill at the top of the thread,** so on a short day it floats in empty space above the first stamp; the header's clock button already opens the same page.
+- **After a re-check** the thread is his first photo (≈ 300 × 470 pt), the first check's full card (Going for, score, fixes, Next level, Added to Closet, Why), the second photo at the same size, then the re-check card: two screens of history before the result he's waiting for.
+
+### 21.2 The changes
+1. **Kit's bubble.** Every Kit line (greeting, answer, failed line, limit line, the lines above S26 / account / notify cards) sits in a bubble: the card surface, 10/16 padding, corners as his but with the small corner bottom-left, left-aligned, at most 84% wide (answers with chips too). "Kit" stays small above the first bubble of a run (#318), lined up with the text. Cards, chips and buttons stay full width under the bubble.
+2. **The greeting is only the hello.** "Morning. Here's an idea for today." · "Afternoon. Here's an idea for the rest of today." · "Evening. Heading out?" With no weather it still adds the season line. The weather lives in the card, once.
+3. **The outfit card, lighter:** the tiles (as now) · the title alone on its line · one weather line with the times (☂ "52° at 8 pm · 47° by midnight · rain likely", "Sample" at its end on demo weather) · the reason · Wear this | Swap · the camera link in a smaller size. The menus ("Going out ⌄ · Smart casual ⌄") move to a quiet row at the top of the card, above the tiles.
+4. **Weather words follow the clock:** the day line says the hour of the high ("63° by 2 pm"), drops it once the high has passed, and drops "Rain after 5 pm" once it's 5; the evening says "at 8 pm" before 8, "now" after, and only "now" after midnight. A card still open more than 45 minutes after its forecast fetches again when Stylist shows; if the new weather changes what the outfit needs and he hasn't touched the card (no wear, swap or menu change), the outfit is re-picked.
+5. **"Earlier chats" only in the header** (the clock button, left); the pill goes.
+6. **After a re-check, the first card folds:** one row ("First check · Date", the word, the score, ⌄), tap to open it in place, "First check ⌃" above it folds it again. (Planned: the re-check's photo as a small row too. Dropped while building: on the Simulator the photo bubble is 131 pt wide, not the bulk; the full first card was. His before and after photos stay comparable.)
+
+### 21.3 Pass/fail checks, set before building
+(S) seen on the iOS Simulator, (C) read in code or a test.
+- **L1 (S)** Demo 25 and 30, light and dark: every Kit line is a bubble on the left; "Kit" sits above the first one, lined up with the text; his bubbles are unchanged.
+- **L2 (S)** Demo 90–95 and 167–174 (answers, chips, cards, 988 card, the limit line): the answer's lead, reason and piece chips sit inside the bubble; its card (outfit, buy, link, saved fact) sits under it, full width; nothing clipped.
+- **L3 (S)** Demo 30: the greeting says "Evening. Heading out?" with no numbers; the card says the temperatures once, with their times; no badge beside the title; the title isn't wrapped beside anything.
+- **L4 (S)** Demo 25, 26 (thin closet), 27 (new user), 31 (weather ask), 32 (hot day): each card reads top to bottom with no two things squeezed on one line; the menus still open and re-pick.
+- **L5 (C)** Weather words: tests for the day line before and after the high's hour and the rain hour, and the evening line before 8 pm, after 8 pm and after midnight.
+- **L6 (C)** Freshen: a test that a card with a forecast older than 45 minutes fetches again and rewrites nothing he chose; untouched + needs changed → re-picked; touched → outfit kept, weather updated.
+- **L7 (S)** No "Earlier chats" pill in the thread; the header's clock opens Past chats.
+- **L8 (S)** Demo 10 and 12: the first check's card is one row once its re-check is scored; tapping opens it in place and tapping its header folds it; the re-check's photo is a small row; the re-check card's reveal still plays (demo 12 with `-demoReveal 1`).
+- **L9 (S)** The largest text size: bubbles wrap without clipping, the card's rows stack, the folded row stacks as the other compact rows do.
+- **L10 (C)** VoiceOver: a Kit bubble still reads "Kit: …" once; the folded card reads its score and "First check", with an action to open it.
+- **G** `npm run check` green; no score change; no native change; no new package.
+
+### §21 results (Oct 17, #338): checked against L1–L10 and G; L8's photo half dropped (above)
+**What changed:** `StylistMessage` draws Kit's bubble (surface, hairline, 10/16, the small corner bottom-left, ≤ 86% wide, 94% at the accessibility sizes; "Kit" inset to the text); two Kit bubbles in a row sit 4 pt apart (was 8). The greeting with weather is the hello only (`greet.morning.idea`, `greet.afternoon.idea`, `greet.evening`); without weather it keeps the season line. The card: the menus in a top row, the tiles, the title alone, `WeatherLine` (☂ + `weatherLine()`, "Sample" in ink3 on demo weather), the reason, Wear this | Swap, the camera link in footnote ink2. NWS readings carry `nowHour`, `highHour`, `lateHour`; the service stamps `fetchedAt`; `morning.freshen()` runs after `ensureCard` on focus and on return to the app. The thread's "Earlier chats" pill is gone. `FitCheckCard` folds a first check once a re-check is reading, asking or scored (a failed one leaves it open). Screenshots `screenshots/stylist-redo/before` and `after` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| L1 | Pass (S) | demo 25, 30 light and dark: Kit's lines are bubbles on the left, "Kit" above the first, lined up with the text |
+| L2 | Pass (S/C) | demo 30's answer: lead and reason inside the bubble; cards and chips are footers, full width, as before (`AskAttachment` unchanged) |
+| L3 | Pass (S) | demo 30: "Evening. Heading out?"; the card says "52° at 8 pm · 47° by midnight · rain likely  Sample" once; the title alone on its line |
+| L4 | Pass (S) | demo 25, 30: one thing per line; menus on top. 26, 27, 31, 32 read in code only (same rows; the location ask sits under the weather line's place) |
+| L5 | Pass (C) | `morningCopy.test.ts`: the day line before/after the high's and the rain's hour, the evening before 8, after 8 and after midnight, no made-up hour on sample weather, no line break inside "2 pm" |
+| L6 | Pass (C) | `morningService.test.ts`: fresh → left alone; stale + untouched → re-planned (cold-rain reasons); after a menu change → outfit kept, weather new; after Wear this → outfit kept |
+| L7 | Pass (S/C) | no pill on demo 25 or 30; the header's clock opens Past chats (unchanged); `chatUi` U18 now checks the header's label |
+| L8 | Pass (S) | demo 12: "FIRST CHECK · DATE  Sharp  8.0 ⌄" above Kit's line and the re-check; a tap opens the full card with "First check ⌃" above it. The win reveal not re-recorded (its code is untouched) |
+| L9 | Pass (S) | largest size: bubbles wrap, menus wrap to two lines, tiles 2×2, the weather icon grows with the text and sits on the first line (fixed: it stayed 14 pt mid-paragraph), "5 pm" never splits |
+| L10 | Pass (C) | the bubble keeps the one `Kit: …` element; the folded row is a button "First check, Date: 8.0, Sharp." with the hint "Opens the full card." |
+| G | Pass | `npm run check`: typecheck, lint, core tests, 1,297 app tests pass; the one miss was O12 (a 40-piece closet listed in 312 ms against 300 under the full parallel run; 12 of 12 alone, the known timing flake of #335, closet code untouched). New kv prefix `idea.touched.` classified per-device in `sync/schema.ts`. No score change, no native change, no package |
+
+Not seen: the real phone (through Metro, no reinstall), the live NWS words with real hours (the demo uses sample weather, which has no hours, so it says "63° high"), and a live re-check through the camera (demo 10 and 12 show the scored states).
+
+### §21 follow-up (Oct 18, #340): the card opens with the hello and the weather
+The founder, after seeing #338: "drop Kit's separate hello bubble and put the greeting and weather together at the top of the morning card."
+- **What changed:** the morning/evening card is posted alone (no greeting line). It opens with the hello for the hour he reads it ("Morning." / "Afternoon." / "Evening. Heading out?", headline) and the weather line under it (☂ "46° now · 63° high · rain after 5 pm"; without weather, the season line "October: bring a layer." or nothing), then the menus, the tiles, the title, the reason, the buttons. `withoutCardGreetings()` (thread.ts) hides a greeting line still stored from before: one posted 1 ms before its card, or a seeded one the legacy adoption now marks `greeting` (it used to rewrite its text). `refreshWeather` no longer rewrites the line before the card (with no greeting it could have rewritten an answer).
+- **Checked:** on the Simulator, demo 25 (light, dark), 30, 31 (no weather: "October: bring a layer." over the location ask) and 12 (the seeded greeting gone); tests for the hello, the season line, the hidden lines and the service posting the card alone; `npm run check` green (1,301 app tests). No score change, no native change.
+
+### §21 follow-up 2 (Oct 18, #344): the score card folds to its rating and opens smoothly
+The founder (a friend's note on the UI: "too much information"), after a first proposal that kept the top fix visible: "I meant the box that contains the rating. I don't want the way it looks to change, I just want it to expand when it's pressed, in a smooth manner."
+- **What he sees:** a fit check's card, and a scored re-check's card, show only their top: the Going-for line, the tag, the score, its word and summary, and a small ⌄. A tap anywhere on that top opens the rest (the fixes, Next level, the closet row, Why and Not quite right?, Re-check) over 320 ms, height and fade together, with the card exactly as it was; the ⌃ at its foot folds it back. Open, the score opens Why as before. A card he opened stays open while the app runs. The "change not seen" re-check keeps its two buttons in view (it asks him to act). Reduce Motion: no slide.
+- **The motion:** `Expandable` (design-system) keeps the children mounted and animates height × an eased 0…1 on the UI thread; each frame's height change goes to `threadGrow`, and the Stylist thread scrolls by the same amount when he's at the bottom, so the card's foot stays put and its top rises. Found on the way: scrolling the card into view with the thread's scroll-to did nothing (iOS won't scroll past content that hasn't grown yet), and following `onContentSizeChange` lagged a beat behind the growth.
+- **Checked on the Simulator:** demo 7 (folded, open, folded again; video frames at 60 fps show one motion), demo 12 (the re-check folded), dark mode, the largest text size; `npm run check` green (1,303 app tests). VoiceOver: the card stays one element with a "Show the fixes and details" / "Show less" action. Not seen: a live check on the phone.
+
+## 22. Kit's outfit ideas rotate like the morning card (Oct 19, #358)
+
+**The founder:** "Do they actually check the outfit history of the person? What if they repeatedly recommend the same thing again and again?" The morning card did (rotation, Oct 14: 14 days of cards, Wear this and fit checks; no exact outfit again within 7 days; the top he's gone longest without first). Kit's "What should I wear?" and "What goes with my …?" used the same picker with **no history**: the best-scoring outfit almost every day, yesterday's outfit again, and a different outfit from the card for the same day.
+
+### 22.1 The change
+- **Same history as the card:** `historyFor` (exported from `features/morning/service.ts`, the card's own code moved, unchanged) for the card of the moment he asks in (day or evening), from the snapshot's ideas, wear log (new in the snapshot), checks and outfits.
+- **Plus Kit's own outfit cards from earlier days** (Claude's call): an outfit Kit showed yesterday counts as shown, like a card. Today's don't count, so the same question twice in a day gets the same advice (the guide's rule).
+- **The first pick for today is the card's outfit** when the occasion matches: "What should I wear?" with no occasion takes the card's occasion (Class on a weekday, Going out in the evening; never Staying in), and its line says "same as today's card" so Kit can say so. Not when a card piece was deleted or is one he said he avoids: then the picker picks fresh. "What goes with my …?" uses the card's outfit for Best when it holds that piece and the occasion matches.
+- **"Another" means another top** (it left out the first id, which is the layer when there is one).
+- **Found on the way, in `@kitted/core`:** a pinned layer ("What goes with my olive overshirt?") could be dropped for a "no layer" outfit with a fresher top, and was always dropped on a hot day. A pinned layer is now always worn.
+
+### 22.2 Checks, set before building (`app/src/__tests__/askRotation.test.ts`; core `ideas.test.ts`)
+- **K1** no occasion: the card's occasion and its outfit as the Pick. **K2** naming the card's occasion: the same; another occasion: picked fresh. **K3** a card piece deleted or avoided: never offered. **K3b** no card: the picker still answers.
+- **K4** what he wore yesterday isn't today's pick. **K5** Kit's own card from yesterday counts as shown; from earlier today, not. **K6** "What goes with" sees the history too.
+- **K7** the same question twice in one day: the same outfits. **K8** Another never repeats the Pick's top.
+- **Core:** a pinned layer is always in the outfit, with history, in season and on a hot day.
+
+### 22.3 Results (Oct 19)
+Before the change K1, K2, K4, K5, K6 and K8 failed (the bug); after it all pass, the card's 36 tests pass unchanged, `npm run check`'s steps green (1,378 app tests, 782 core). JS only: on his phone through Metro, no reinstall. Not seen on a screen: the answers' words come from the model, which only gets the new evidence lines.

@@ -11,7 +11,7 @@ import { createAsk, type AskDeps } from '@/features/ask/pipeline';
 import { createDemoSource, seededAnswers, type AnswerEvent, type AnswerSource } from '@/features/ask/source';
 import { deleteAllData } from '@/features/privacy/wipe';
 import { createDictationController, type DictationNative } from '@/features/stylist/dictation';
-import { buildThreadItems, isStylistLine, liveGap, RHYTHM, rowGap } from '@/features/stylist/thread';
+import { buildThreadItems, isStylistLine, liveGap, RHYTHM, rowGap, withoutCardGreetings } from '@/features/stylist/thread';
 import { userBubbleMaxWidth } from '@/design-system/components/chatLayout';
 import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
@@ -221,7 +221,7 @@ describe('U5–U7 · the thread: marks, answers, rhythm', () => {
     expect(rowGap(me, line, false)).toBe(RHYTHM.reply);
     expect(rowGap(line, me, false)).toBe(RHYTHM.toMine);
     expect(rowGap(line, me, true)).toBe(RHYTHM.belowStamp);
-    expect([RHYTHM.mine, RHYTHM.stylistLines, RHYTHM.reply, RHYTHM.toMine, RHYTHM.aboveStamp, RHYTHM.belowStamp]).toEqual([4, 8, 20, 16, 20, 8]);
+    expect([RHYTHM.mine, RHYTHM.stylistLines, RHYTHM.reply, RHYTHM.toMine, RHYTHM.aboveStamp, RHYTHM.belowStamp]).toEqual([4, 4, 20, 16, 20, 8]);
     expect(liveGap(me)).toBe(RHYTHM.reply);
     // A stamp after a 60-minute gap gets 20 above, the next row 8 below it; the first row nothing.
     const items = buildThreadItems([msg('Q', 'user'), msg('R', 'stylist', {}, 1), msg('Z', 'user', {}, 90)], NOW, US_EASTERN);
@@ -302,8 +302,42 @@ describe('U15 · the waiting row speaks', () => {
 
 describe('U18 · small VoiceOver fixes', () => {
   it('Earlier chats is spoken as shown; stamps are headers; the bar reads his draft', () => {
-    expect(src('features/stylist/StylistScreen.tsx')).toMatch(/accessibilityLabel=\{t\('history\.open'\)\}/);
+    // The thread's "Earlier chats" pill is gone (#338); the header's clock button is the way back, with its label.
+    expect(src('features/stylist/StylistScreen.tsx')).not.toMatch(/history\.open/);
+    expect(src('app/(tabs)/stylist/_layout.tsx')).toMatch(/accessibilityLabel=\{t\('history\.open\.a11y'\)\}/);
     expect(src('design-system/components/Chat.tsx')).toMatch(/accessibilityRole="header"/);
     expect(src('features/stylist/StylistBar.tsx')).toMatch(/accessibilityValue=\{draft \? \{ text: draft \} : undefined\}/);
+  });
+});
+
+describe('#340: the card greeting line is hidden wherever it is still stored', () => {
+  const m = (id: string, at: number, o: Partial<ChatMessage>): ChatMessage =>
+    ({ id, createdAt: at, role: 'stylist', kind: 'text', text: 'x', cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {}, ...o }) as ChatMessage;
+  it('drops the line posted 1 ms before a morning card, and a marked seeded one; keeps other lines', () => {
+    const posted = m('g1', 1000, { text: 'Morning. 46° now.' });
+    const card = m('c1', 1001, { kind: 'card', cardType: 'morning', text: null, payload: { ideaId: 'x' } });
+    const seeded = m('g2', 500, { text: 'Morning. An easy one…', payload: { greeting: true } });
+    const answer = m('a1', 900, { text: 'A brown leather belt.' });
+    expect(withoutCardGreetings([seeded, answer, posted, card]).map((x) => x.id)).toEqual(['a1', 'c1']);
+  });
+});
+
+describe('#344: the score card folds to its rating and opens smoothly', () => {
+  it('both score cards start folded, open on a tap, and fold back from the handle', () => {
+    const check = src('features/stylist/cards/FitCheckCard.tsx');
+    const recheck = src('features/stylist/cards/RecheckCard.tsx');
+    expect(check).toMatch(/useState\(\(\) => openCards\.has\(id\)\)/);
+    for (const s of [check, recheck]) {
+      expect(s).toMatch(/<Expandable open=\{open\}/);
+      expect(s).toMatch(/<ExpandHandle open=\{open\}/);
+      expect(s).toMatch(/name: 'fold'/);
+    }
+    // The "change not seen" re-check keeps its buttons in view.
+    expect(recheck).toMatch(/const open = notSeen \|\| opened;/);
+  });
+
+  it('the thread scrolls with the growth (not after it), and Reduce Motion skips the slide', () => {
+    expect(src('features/stylist/StylistScreen.tsx')).toMatch(/threadGrow\.value/);
+    expect(src('design-system/components/Expandable.tsx')).toMatch(/a11y\.reduceMotion \? 0 : EXPAND_MS/);
   });
 });

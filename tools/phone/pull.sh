@@ -28,6 +28,9 @@ if [[ -n "$LOG" ]]; then echo "\nCamera guidance (last 40 lines of $LOG):"; tail
 # The mic (#302): every stage of each voice question, counts only (never the words).
 MIC=$(find "$OUT" -name mic.log | head -1)
 if [[ -n "$MIC" ]]; then echo "\nMic (last 40 lines of $MIC):"; tail -40 "$MIC"; fi
+# Crashes and uncaught errors (09-ui-review §23, #353): every build writes them, Release too.
+ERR=$(find "$OUT" -name errors.log | head -1)
+if [[ -n "$ERR" ]]; then echo "\nErrors (last 20 lines of $ERR):"; tail -20 "$ERR"; fi
 SCANS=$(find "$OUT" -path '*scans*' -name '*-photo.jpg' | wc -l | tr -d ' ')
 [[ "$SCANS" != "0" ]] && echo "\n$SCANS clothes scan(s) saved (Documents/scans)."
 true
