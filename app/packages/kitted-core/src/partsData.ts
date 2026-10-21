@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.12.0",
+ "version": "1.13.0",
  "engine": "v14",
  "label": "parts-proto-14 (Oct 17, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "a4f4d412168394f220e3d0848e8039094ded742e1b47e0c26df89591498eb621",
+ "sourceSha256": "8b4c41281d055a7ab826f7a208ec4fa12f1b3d00880111249fd384cc1f1da36c",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -226,7 +226,8 @@ export const PARTS_DATA: PartsData = {
   "kit_cap": 6,
   "kit_fit_rate": 0.5,
   "sw1_blocks_credit": true,
-  "pr1_tucked_layer": true
+  "pr1_tucked_layer": true,
+  "peek_clearly_only": true
  },
  "rollback": {
   "engine": "v13",
@@ -417,7 +418,8 @@ export const PARTS_DATA: PartsData = {
    "kit_cap": null,
    "kit_fit_rate": 0,
    "sw1_blocks_credit": false,
-   "pr1_tucked_layer": false
+   "pr1_tucked_layer": false,
+   "peek_clearly_only": false
   }
  },
  "sets": {

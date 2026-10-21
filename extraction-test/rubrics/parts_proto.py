@@ -456,13 +456,13 @@ VERSIONS["v13"] = "parts-proto-13 (Oct 14, 2026)"
 _OFF14 = dict(sh_prop=False, sh_shape=0.0, sh_layer=0.0, sh_cap=0.0, sh_roomy_fitted=0.0, sh_fitted=0.0, sd1_any_sneaker=False,
               goes_together=0.0, tracksuit=0.0, gym_runner_unheld=False, sweatsuit_sign=False, sweatsuit_shape=0.0,
               look_sign=False, kit_cap=None, kit_fit_rate=0.0, sw1_blocks_credit=False,
-              pr1_tucked_layer=False)
+              pr1_tucked_layer=False, peek_clearly_only=False)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13"):
     TUNE[_e].update(_OFF14)
 TUNE["v14"] = dict(TUNE["v13"], sh_prop=True, sh_shape=1.0, sh_layer=1.0, sh_cap=1.5, sh_roomy_fitted=1.5, sh_fitted=1.0,
                    sd1_any_sneaker=True, sc_pair=True, goes_together=0.5, tracksuit=0.5, gym_runner_unheld=True,
                    sweatsuit_sign=True, sweatsuit_shape=1.0, look_sign=True, kit_cap=6.0, kit_fit_rate=0.5,
-                   sw1_blocks_credit=True, pr1_tucked_layer=True)
+                   sw1_blocks_credit=True, pr1_tucked_layer=True, peek_clearly_only=True)
 VERSIONS["v14"] = "parts-proto-14 (Oct 17, 2026)"
 SPORT_SNEAKERS = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
                   "white_leather_sneaker"}                       # v14: the clean sneakers (not running shoes)
@@ -593,9 +593,11 @@ def _refile(garments):
     return gs
 
 
-def _second_look(sl):
+def _second_look(sl, t=None):
     """Normalize the optional second look. Accepts the raw look answers ({under_present, under_shows, covers_shoe})
-    or the reduced yes/no form ({peek, rests_on_shoe}). Returns {peek: bool|None, rests_on_shoe: bool|None}."""
+    or the reduced yes/no form ({peek, rests_on_shoe}). Returns {peek: bool|None, rests_on_shoe: bool|None}.
+    v14 (peek_clearly_only, Oct 21, #367): only a top that "clearly" shows below the outer piece is a peek; "a little"
+    is a deliberate layer (the founder's olive fleece over a black tee), and it's the answer look U gets wrong."""
     out = {"peek": None, "rests_on_shoe": None}
     if not sl:
         return out
@@ -603,7 +605,8 @@ def _second_look(sl):
         out.update({k: sl.get(k) for k in out if k in sl})
         return out
     if "under_shows" in sl:
-        out["peek"] = bool(sl.get("under_present") == "yes" and sl.get("under_shows") in ("a_little", "clearly"))
+        shows = ("clearly",) if (t or {}).get("peek_clearly_only") else ("a_little", "clearly")
+        out["peek"] = bool(sl.get("under_present") == "yes" and sl.get("under_shows") in shows)
     cs = sl.get("covers_shoe")
     if cs in ("partly", "mostly"):
         out["rests_on_shoe"] = True
@@ -1583,7 +1586,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
     styles = styles or {}
-    sl = _second_look(second_look)
+    sl = _second_look(second_look, t)
     scene, garments, not_rated = R._prepare(reading)
     if scene.get("clothed") != "fully":
         return {"overall": None, "reason": "not_fully_clothed", "parts": {}, "na_parts": PART_ORDER[:]}

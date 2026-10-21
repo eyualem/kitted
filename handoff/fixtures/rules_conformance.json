@@ -25,7 +25,7 @@
   ]
  ],
  "counts": {
-  "cases": 472,
+  "cases": 474,
   "rules": 150
  },
  "rules": [
@@ -5163,6 +5163,278 @@
    "boldness": "a_little",
    "second_look": {
     "peek": true
+   },
+   "expect": {
+    "fired": [
+     {
+      "check": "PF10_peek",
+      "part": "proportions",
+      "points": -0.5
+     }
+    ],
+    "not_fired": [
+     {
+      "check": "PR2_short_layer"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 7.025,
+    "parts": {
+     "proportions": 6.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "workwear"
+    ],
+    "style_label": "workwear"
+   }
+  },
+  {
+   "id": "PRO-9-little",
+   "rule": "PRO-9",
+   "what": "v14: the tee shows only a little below the denim jacket: a deliberate layer, no charge, the short-jacket credit stays (#367)",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "denim_jacket",
+      "color_family": "denim_light",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "jeans",
+      "color_family": "denim_dark",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": {
+    "under_present": "yes",
+    "under_shows": "a_little"
+   },
+   "expect": {
+    "not_fired": [
+     {
+      "check": "PF10_peek"
+     }
+    ],
+    "fired": [
+     {
+      "check": "PR2_short_layer"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.625,
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "workwear"
+    ],
+    "style_label": "workwear"
+   }
+  },
+  {
+   "id": "PRO-9-clearly",
+   "rule": "PRO-9",
+   "what": "v14: the tee clearly hangs below the denim jacket: -0.5, and no short-jacket credit (#367)",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "denim_jacket",
+      "color_family": "denim_light",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "jeans",
+      "color_family": "denim_dark",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": {
+    "under_present": "yes",
+    "under_shows": "clearly"
    },
    "expect": {
     "fired": [

@@ -200,6 +200,8 @@ export interface PartsTune {
   sw1_blocks_credit: boolean;
   /** PRO-4 (#336): a button-up worn open as the one layer and read fully tucked sets the waist like a tucked top. */
   pr1_tucked_layer: boolean;
+  /** v14 (#367): only a top that "clearly" shows below the outer piece is a peek; "a little" is a deliberate layer. */
+  peek_clearly_only: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -627,7 +629,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       if (has(s, "rests_on_shoe")) out.restsOnShoe = nv(s.rests_on_shoe);
       return out;
     }
-    if (has(s, "under_shows")) out.peek = s.under_present === "yes" && (s.under_shows === "a_little" || s.under_shows === "clearly");
+    if (has(s, "under_shows")) out.peek = s.under_present === "yes" && (s.under_shows === "clearly" || (!truthy(t.peek_clearly_only) && s.under_shows === "a_little"));
     const cs = s.covers_shoe;
     if (cs === "partly" || cs === "mostly") out.restsOnShoe = true;
     else if (cs === "no") out.restsOnShoe = false;
