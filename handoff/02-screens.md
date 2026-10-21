@@ -323,6 +323,8 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 ---
 
 ### D3 · O3 Basics
+> **Planned Oct 21 (#369), not built:** O3 becomes the birth-year step only; height, build and fit move to an optional "About you" card from Kit after the first score. Plan, copy and checks: `10-onboarding.md` §10. Until it's built, the layout below is what ships.
+
 - **Presentation:** onboarding push. **Entry:** O2. **Exit:** "Looks right" → O5 (or O4 if under 18); Back → O2 (undoes the last answer).
 
 **Layout**

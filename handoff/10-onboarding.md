@@ -425,3 +425,113 @@ Screens 180–181 use only existing copy. Sequence step 'later' after a scored r
 - The `Which one is yours?` menu opens with the row's choices (seen: `Olive / Navy / Tan / Black / Grey overshirt`, `Dark / Black / Mid-wash / Light jeans`). The Simulator tool's injected taps on the menu's buttons landed on the rows behind it, so a pick from the menu itself wasn't seen on screen; the pick is the tested `pickStarter`, and demo 180 shows its result. **Check on the phone:** pick a color from the menu once.
 - O12: no clipping or mid-word breaks at the largest size; the card's tag line stacks. Seen, not changed: a black piece's drawing on the dark tile is low-contrast (the closet's drawings, as everywhere).
 - O11 not checked with VoiceOver on a device.
+
+---
+
+## 10. Basics down to the birth year; height, build and fit asked after the first score (Oct 21, #369)
+
+*The founder, Oct 21, after the onboarding review: "that sounds good. plan out the things that have to be done and also tests. leave placeholders for auth for now." The review's point: height, build and fit are optional, but they put a screen of questions before he's seen any value, and "Build" (Slim · Average · Broad) is the one question about his body, asked before the app has earned it, in an app whose line is "it rates the outfit, never you." This section is the plan and the checks, written before any code. Nothing is built yet. §10.6 holds the account work as placeholders.*
+
+### 10.1 What he'll see
+
+**O3 becomes the birth-year step.**
+- His looks echo bubble and Kit's reply stay. Kit's reply ends differently: `{style1}. Good pick. One more thing: your birth year.` (one style; the two-style and "Not sure" lines change the same way, §10.5).
+- One card with one row, `Birth year` / `Choose`, which opens the same year list (O3w). No height stepper, no Build, no Fit, no silhouette with the tape (it only showed his height).
+- Under the card: `Kitted is for 18 and up. It never changes your score.`
+- The button `Continue` (was `Looks right`), off until a year is picked; the hint `Pick your birth year to go on.` stays.
+- Under 18: the same "Born in {year}?" confirm, then the age stop, as today.
+- **The tap count stays 8** (the optional fields never counted). What changes is how it feels: one thing to answer, and nothing about his body before the score.
+- **The restore path** (signed in from Welcome, §4.4) already shows only the birth year; it keeps its own line `Welcome back. Your birth year first, then I'll bring back your fits.` Both paths now share one layout.
+
+**O5 Consent:** his echo bubble reads `Born in 2004` (was `5′ 10″ · Average · Regular · 2004`). Nothing else on Consent changes; the consent text already says height and build go with questions "if you gave them", which stays true. `CONSENT_VERSION` doesn't change.
+
+**After the first score, Kit asks once, when it helps (the "About you" card).**
+- An inline Kit card in the thread (`cardType: 'aboutYou'`), never a pop-up: tag `Optional` / `10 seconds`; title `Fit advice that fits you`; body `Tell me your height and how you like clothes to fit, and I'll size my suggestions to you. None of it changes a score.`; PrimaryButton `Add them` · TextLink `Not now`.
+- `Add them` opens a sheet, `About you` (`/sheets/about-you`): `Height` (the stepper, blank until the first tap), `Build`, `Fit you like` (the same controls as You → Style profile, all blank), `Save` (off until one is set) and the X. Save writes the profile; the card reads `Saved. Change them any time in You.` with no buttons.
+- `Not now`: the card reads `No problem. They're in You → Style profile whenever you want.`
+- Past chats: read-only (no buttons).
+- **You → Style profile** still edits all three, as today.
+
+### 10.2 When the card posts (the triggers)
+
+Posted only when **all** of these hold:
+- none of height, build or fit is set (any one set, from the sheet or You, means never again);
+- he has at least one scored full check;
+- nothing is reading or waiting for the one quick tap, and no score reveal is playing (the 4 s settle, §9.1);
+- it has posted fewer than 2 times; a second post needs 7 days since the first `Not now`;
+- the one-ask-per-visit rule (below) allows it.
+
+**And one of:**
+- **T1, when it helps (first choice):** Kit has just answered a question whose answer uses them (the router's `fitHowTo`, `shape` or `buyNext` kinds). The card posts right under that answer, with the body `That answer would fit you better with your height and how you like clothes to fit. None of it changes a score.`
+- **T2, the fallback:** a later visit than the one that scored his first check, once the end-of-onboarding sequence (§9.1) is `done` or `skipped`.
+
+**One ask per visit (extends §9.1's rule).** In one visit, at most one of the end-of-onboarding sequence, the save offer (§3) or this card posts. Order when more than one is due: the sequence, then the save offer (once accounts are on, §10.6), then this card. T1 counts as the visit's ask; T2 never posts in a visit where something else already did.
+
+**Phones with data from before this change:** anyone with any of the three already set never sees it. A profile with all three blank (setup skipped them) can get it by T1 or T2 like a new install. The founder's phone is `skipped` in §9.1, so T2 applies to it if his basics are blank.
+
+### 10.3 What doesn't change
+- **Scores.** Height, build and fit never move a score; today nothing checks it, so UN1 adds the test.
+- **Kit's context.** Height and build are still sent with questions when given, never said back (07 §4); fit preference as today. The privacy test (birth year, name, location, photo paths never in the pack) stays.
+- **Kit's memory** still never saves height or body words (`ask/memory.ts` NEVER list); the sheet and You are the only ways to set them.
+- **The birth year** still never syncs and is never sent.
+- **The build words.** The sheet uses today's `Slim · Average · Broad`. The figure's longer list (#247, `Slim · Average · Athletic · Broad · Bigger · Rather not say`) is still the founder's open P2 call; if he OKs it, the sheet and You change together.
+
+### 10.4 Build steps
+1. **The birth-year step.** `BasicsScreen.tsx`: one layout for both paths (today's restore layout), the new reply and footnote lines, `Continue`. `basics.ts`: `basicsEcho` → `Born in {year}`. A draft saved by an older build that holds height, build or fit (someone mid-setup when the update lands) is still saved by Consent, never dropped.
+2. **One shared fields component.** `BasicsFields` (height, build, fit) out of `BasicsScreen` and `you/profile.tsx`, used by You → Style profile and the new sheet, so the two can't drift.
+3. **The sheet.** `/sheets/about-you`: the fields, Save, X; writes `profile.heightCm`, `build`, `fitPreference` through the same code as You (`features/you/profile.ts`).
+4. **The card and its rules.** `features/aboutYou/`: a pure `aboutYouDue()` (state in kv `aboutYou.offer`: posts, last Not now, msg ids) like `finish/sequence.ts` and `account/offer.ts`; the `aboutYou` card type and its view; the one-ask-per-visit check shared with §9.1 and §3 (one helper, used by all three).
+5. **T1 in the ask flow.** After an answer of kind `fitHowTo`, `shape` or `buyNext` finishes and passes the gate, the ask session calls `aboutYouDue({trigger: 'answer'})`; the card is never a counted question and never posts after a failed, limited or offline answer.
+6. **Copy, demo screens, docs.** The new lines in `app/src/i18n/en.ts` (and 02 §5 copy deck, D3's update block); demo screens from the next free number (240 onward): O3 birth-year step, Consent with the new echo, the card (T1 and T2), the sheet, the saved and Not-now states.
+7. **Checks on the iOS Simulator** (one at a time, rule 9): light, dark, the largest text size; VoiceOver labels by reading the tree.
+
+About 1.5 days. JS only: it reaches his phone through Metro, no reinstall.
+
+### 10.5 The pass/fail checks (written before building, Oct 21)
+
+**The birth-year step (BY)** — tests in `onboardingFlow.test.ts` (updated), on screen on the Simulator:
+- **BY1** O3 shows exactly one field, Birth year; no height, build, fit or silhouette, in both the new-setup and the restore path.
+- **BY2** `Continue` is off until a year is picked, then goes to Consent; the hint shows only while no year is picked.
+- **BY3** Under 18: the confirm, then the age stop; the Keychain lock is set exactly as today (`setAgeBlocked`).
+- **BY4** Consent's echo bubble reads `Born in {year}`; Consent's text and `CONSENT_VERSION` are unchanged.
+- **BY5** A setup finished on the new step saves `heightCm: null`, `build: ''`, `fitPreference: ''`.
+- **BY6** A draft from an older build with height, build or fit set is saved with those values when he agrees (no answer he gave is dropped).
+- **BY7** Resume (F4): closing the app on O3 reopens on O3 with the year kept.
+- **BY8** Kit's three reply lines end with the birth-year line; none says "frame" or "basics".
+- **BY9** The tap count to the camera on the shortest path is 8 (a test walks it).
+
+**The card and its sheet (AY)** — tests in a new `aboutYouCard.test.ts`, the pure rules as unit tests:
+- **AY1** Never before his first scored full check; never while a check is reading, asking or revealing.
+- **AY2** T1: after a `fitHowTo`, `shape` or `buyNext` answer with all three blank, the card posts once, right after that answer, with T1's body.
+- **AY3** T1 never fires after another kind (`whatToWear`, `explain`, `general`…), or after a failed, limited, offline or gate-emptied answer, and never counts as a question.
+- **AY4** T2: on a later visit than the one that scored his first check, with the §9.1 sequence `done` or `skipped`, the card posts once with the default body; never while the sequence is `waiting`, `moves` or `paywall`.
+- **AY5** One ask per visit: in a visit where the sequence or the save offer posted, T2 doesn't post; when the card posted, the save offer waits for the next visit (tested with accounts on, as on demo screens).
+- **AY6** Any of the three set (from the sheet or You) → never posts again; an already-posted card still reads as it did.
+- **AY7** At most 2 posts ever; the second needs 7 days since the first Not now.
+- **AY8** `Add them` opens the sheet; Save is off until one value is set; Save writes the profile through `features/you/profile.ts`, and the card changes to the saved line; X saves nothing.
+- **AY9** Not now changes the card to its line, survives a reload, and posts nothing else.
+- **AY10** Past chats show the card read-only (no buttons, no links).
+- **AY11** The sheet and You → Style profile show the same controls from the same component (one import), and an edit in one shows in the other.
+
+**What must not move (UN):**
+- **UN1 (new test)** Every demo photo scores the same with height, build and fit blank and with each value set.
+- **UN2** Kit's pack: height and build appear only when set; the privacy test (no birth year, name, location or photo path) passes.
+- **UN3** `npm run check` green (typecheck, lint, core and app tests, copy checks).
+
+**On screen (SC)** — iOS Simulator:
+- **SC1** O3, Consent, the card (T1 and T2) and the sheet in light and dark: nothing clipped.
+- **SC2** The largest text size: the year row, the card's buttons and the sheet's segmented controls wrap or stack, no word broken mid-word.
+- **SC3** VoiceOver: O3's year row reads `Birth year, not chosen` / `Birth year, 2004`; the card reads as one element with its actions; the sheet's fields read their values.
+
+### 10.6 Accounts: placeholders (not planned yet)
+
+*The founder, Oct 21: "leave placeholders for auth for now." Today: the silent guest account is live (the server's limits follow it); Continue with Google is real on dev builds only and backs nothing up; the full sign-in design (§3–§5) is built on the stand-in and off (`ACCOUNTS_BUILT = false`). Each item below gets its own plan and checks when it's picked up.*
+
+- **AU1 · Backup and sync for real.** The Firestore and Storage adapters for the built sync engine (`app/src/sync/`, `11-firestore-schema.md`), then the tracker wired into the store. *The real blocker: sign-in protects nothing until this exists.* Not planned yet.
+- **AU2 · Sign in with Apple.** `expo-apple-authentication` (a new package, his OK) after the $99 program; Apple 4.8 requires it before Google can ship in Release. Not planned yet.
+- **AU3 · App Check.** In the app (`@react-native-firebase/app-check`, his OK) and switched on in the server's config (`enforceAppCheck`). Closes the open door below. Not planned yet.
+- **AU4 · Account deletion vs App Check.** The `deleteAccount` function requires App Check (`firebase/functions/src/index.ts:53`) and the app doesn't send it, so "Delete account and all data" would fail once accounts are on. Ship AU3 with accounts, or let the function accept a signed-in call without App Check until then. Not planned yet.
+- **AU5 · Guest accounts and the shared spending stop.** Guests are free to create with the app's public key, each gets Pro's limits during the beta, and the $3 daily stop is shared, so a script could pause checks for everyone. Low risk at TestFlight size; before the public launch: AU3, plus guests on the free tier once purchases exist. Not planned yet.
+- **AU6 · The save offer in the one-ask-per-visit order.** §10.2 already orders it (sequence → save offer → About you); confirm when `ACCOUNTS_BUILT` goes on.
+- **AU7 · Email sign-in by code.** Needs a server route that sends mail (AC1). After launch. Not planned yet.
+- **AU8 · The beta note.** Until AU1, a tester who deletes the app loses his fits; the TestFlight "What to test" text should say so.
