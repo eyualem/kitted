@@ -1,0 +1,58 @@
+photo,shoe_a,shoe_b,leg_a,leg_b,rests_a,rests_b,note_a,note_b
+ig-010,low_profile_sneaker,low_profile_sneaker,wide,relaxed,yes,yes,,relaxed or barrel
+ig-014,white_leather_sneaker,white_leather_sneaker,wide,wide,yes,yes,,shoes barely visible
+ig-019,retro_runner,performance_runner,relaxed,wide,yes,yes,retro or performance runner; relaxed or wide,performance or retro runner
+ig-024,loafer,unsure,wide,wide,yes,yes,loafer or derby,wide or flare loafer or derby
+ig-027,other,other,relaxed,relaxed,yes,yes,suede moccasin lace-up (wallabee style),wallabee moccasin
+ig-028,unsure,unsure,wide,wide,yes,yes,loafer or derby,loafer or derby
+ig-029,derby,derby,wide,wide,yes,yes,,
+ig-032,other,other,wide,wide,yes,yes,low suede hiking shoe,suede hiking approach shoe
+ig-040,loafer,other,barrel,barrel,yes,yes,padded ruched slip-on,ruched slip-on
+ig-051,loafer,other,relaxed,wide,yes,yes,two-tone slip-on; relaxed or wide,two-tone slip-on maybe loafer
+ig-054,unsure,unsure,wide,wide,yes,yes,brown suede shoe mostly hidden,shoes barely visible
+ig-056,derby,derby,wide,wide,yes,yes,derby or boot,
+ig-061,work_boot,unsure,wide,wide,yes,yes,smooth black boot,derby or work_boot
+ig-062,unsure,unsure,wide,relaxed,yes,yes,square-toe loafer or derby,loafer or derby square toe
+ig-063,work_boot,work_boot,shorts,shorts,no,no,high suede hiking-style sneaker boot,suede sneaker-boot
+ig-071,unsure,unsure,wide,wide,yes,yes,chunky derby or loafer,derby or loafer
+ig-072,basketball_sneaker,basketball_sneaker,wide,wide,yes,yes,dunk style,maybe dunk low
+ig-077,unsure,unsure,wide,wide,yes,yes,lug-sole derby or boot,derby or work_boot lug sole
+ig-082,unsure,unsure,wide,wide,yes,yes,metallic silver sneaker,shoes mostly hidden
+ig-085,basketball_sneaker,unsure,wide,wide,yes,yes,high-top,black high sneaker mostly hidden
+ig-099,performance_runner,performance_runner,flare_bootcut,flare_bootcut,yes,yes,bootcut or straight,thin-soled mesh shoe
+ig-100,slides_sandals,slides_sandals,relaxed,relaxed,no,no,,
+ig-108,unsure,unsure,wide,wide,yes,yes,derby or dress_shoe,derby or loafer
+ig-109,loafer,loafer,relaxed,relaxed,yes,yes,,relaxed or wide
+ig-119,derby,derby,relaxed,wide,yes,yes,relaxed or wide,straight or wide
+ig-124,chelsea_boot,chelsea_boot,straight,straight,yes,yes,,ankle boot sides not clear
+ig-125,unsure,unsure,relaxed,straight,yes,yes,chelsea or work_boot,chelsea or work_boot
+ig-129,other,other,straight,relaxed,yes,yes,suede moccasin lace-up (wallabee style),wallabee moccasin
+ig-130,loafer,loafer,flare_bootcut,flare_bootcut,yes,yes,,moc toe
+pin-006,low_profile_sneaker,low_profile_sneaker,wide,wide,no,no,cropped wide,cropped retro leather sneaker
+pin-007,loafer,loafer,relaxed,straight,yes,yes,,
+pin-008,canvas_sneaker,canvas_sneaker,straight,straight,yes,yes,,
+pin-011,retro_runner,retro_runner,relaxed,slim,no,no,cuffed track pants,cuffed track pants
+pin-025,work_boot,work_boot,straight,straight,yes,yes,brown leather lace boot,
+pin-028,basketball_sneaker,basketball_sneaker,relaxed,relaxed,yes,yes,court sneaker,
+pin-032,unsure,low_profile_sneaker,straight,straight,yes,yes,white leather or basketball low,suede low sneaker blurry
+pin-033,loafer,loafer,relaxed,relaxed,yes,yes,,relaxed or straight
+pin-034,unsure,derby,shorts,shorts,no,no,derby or other,derby or loafer
+pin-040,canvas_sneaker,canvas_sneaker,wide,wide,yes,yes,,
+pin-048,loafer,loafer,straight,straight,yes,yes,,
+pin-049,dress_shoe,dress_shoe,straight,straight,yes,yes,,cap-toe oxford
+pin-051,suede_chukka,suede_chukka,slim,slim,yes,yes,leather chukka,smooth leather chukka
+pin-053,performance_runner,performance_runner,straight,straight,yes,yes,,cargo jeans
+pin-057,canvas_sneaker,canvas_sneaker,relaxed,wide,yes,yes,,
+pin-060,derby,derby,relaxed,relaxed,yes,yes,,
+pin-061,canvas_sneaker,canvas_sneaker,flare_bootcut,straight,yes,yes,bootcut or straight,maybe bootcut
+pin-063,unsure,unsure,relaxed,relaxed,yes,yes,brown low casual shoe,relaxed or wide brown shoe hidden
+pin-067,cant_see,cant_see,cant_see,unsure,cant_see,cant_see,,only thighs visible
+pin-069,other,other,straight,straight,yes,yes,cowboy boot,western boot
+pin-071,performance_runner,performance_runner,skinny,slim,yes,no,skinny or slim; cuff touches tongue,cuff at shoe collar
+pin-073,canvas_sneaker,canvas_sneaker,skinny,skinny,yes,no,blurry; hem just at collar,
+rd-003,white_leather_sneaker,white_leather_sneaker,relaxed,relaxed,yes,yes,,
+rd-006,dress_shoe,dress_shoe,straight,straight,yes,yes,dress_shoe or derby,dress_shoe or derby
+rd-011,derby,derby,slim,straight,yes,yes,white-sole hybrid,
+rd-012,suede_chukka,suede_chukka,slim,slim,yes,yes,leather chukka,smooth leather chukka
+rd-016,derby,derby,relaxed,relaxed,no,no,cuffed above shoe,rolled cuffs above shoe
+rd-020,work_boot,work_boot,relaxed,wide,yes,yes,,boot mostly hidden
