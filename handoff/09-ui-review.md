@@ -1145,3 +1145,45 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 
 **Checks K1–K11 (`app/src/__tests__/pieceEdit.test.ts`, "X15 more kinds"), all pass after the merge:** K1 each new kind is offered in its slot in plain words, never a brand · K2 picking Long-sleeve tee writes a tee with confirmed long sleeves ("Grey long-sleeve tee"), drawn as previewed · K3 scores, readings and sightings never move; Outfits count each as the kind it scores as · K4 picking Tee again sets short sleeves and draws exactly as before · K5 long and short button-ups get the right reading kind and different drawings ("Light-blue short-sleeve shirt") · K6 camp shirts draw short sleeves; henley buttons (with his photos' sleeves), turtleneck collar, zip hoodie zip · K7 every top type drawn with its usual sleeves is byte-identical to before (light, dark) · K8 jean shorts keep the wash ("Dark jean shorts"), draw jean stitching, no Leg row; plain Shorts moves dark denim to navy · K9 a later photo of the piece keeps its kind, name and drawing · K10 a sleeve-named kind confirms its sleeves, another leaves them · K11 Undo puts it all back. `npm run check` green.
 **Seen:** every Kind option's drawing rendered from the app's own drawing code in light and dark before the merge (`screenshots/more-kinds/kinds.html`, git-ignored). Not seen on the Simulator.
+
+## 26. Ready for the Apple approval day (Oct 21, #365). Checks first
+**The ask (Oct 21, from the session planning the beta):** make the day the $99 program's approval lands about 2 hours of console work. Code only; no new package, download or spend without the founder. Written before the code; each passes or fails, results under the list once built. The approval-day steps themselves are in `market/app-store-connect.md` §8.
+
+**A · Build profiles and a Release build**
+- A1 `app/eas.json` has three profiles: `development` (the dev client, internal), `preview` (a Release build for internal installs) and `production` (the store, the build number counted by EAS). Each names its EAS environment, so `EXPO_PUBLIC_FIREBASE_API_KEY` comes from EAS's own variables; no key value sits in `eas.json`, and `KITTED_DEMO` is set in none of them (demo tools follow the build: off in Release).
+- A2 `app.config.ts` refuses a `preview` or `production` EAS build that has no `EXPO_PUBLIC_FIREBASE_API_KEY` (a build without it couldn't make the guest account, so every check and question would fail); local runs and `development` don't need it.
+- A3 A built Release `.app` carries none of the dev launcher's local-network keys (`NSBonjourServices` `_expo._tcp`, the "Expo Dev Launcher" `NSLocalNetworkUsageDescription`) and no dev-menu keys; `npm run check:app -- <path to .app>` (new) checks that, the privacy manifest (P1) and the entitlements (S1/S2) on any built app, an EAS `.ipa`'s too once unzipped.
+- A4 `npm run guard:release` passes.
+- A5 A local Release build boots on the Simulator and scores a real library photo through the live server (a Release build has no Gemini key, so a score can only come from the server); then the Debug app goes back on and the Simulator is shut down.
+
+**P · The privacy manifest**
+- P1 The app's own manifest (`ios.privacyManifests` in `app.config.ts`) declares every required-reason API that the app's code or a linked pod uses and whose pod's own manifest isn't in the built app: UserDefaults `CA92.1`, file timestamps `C617.1` (files in the app's own folders: the photo and cut-out clean-up), system boot time `35F9.1` (elapsed time), disk space `E174.1` (expo-file-system's prebuilt framework drops its own manifest). No tracking, no tracking domains.
+- P2 It declares the data the app collects, the same as the nutrition label draft (`market/app-store-connect.md` §5): photos (the face-blurred copy, to Google), other user content (questions, to OpenAI), user ID (the Firebase guest account), product interaction (the server's daily counts), coarse location (to the weather service), other data (height and build, with questions, when given). All for app functionality; none for tracking.
+
+**S · The paid-team switch**
+- S1 One block in `app.config.ts` (`APPLE`: `paid`, `teamId`) is the only place. Off (the default): no entitlements, the Personal Team `6652QVRQAL`, `extra.applePaid` false, the location string as today. A Debug or Release build signs with the free team exactly as before.
+- S2 On: the team is `APPLE.teamId` (the config refuses an empty one), and the entitlements are Declared Age Range, App Attest (`development` for the `development` profile, else `production`), WeatherKit and Sign in with Apple; `extra.applePaid` is true; the location string names Apple Weather.
+- S3 In JS, `APPLE_PAID` (`src/config/apple.ts`, from `extra.applePaid`) is the only reader. Off: the weather is NWS exactly as today, and the native WeatherKit call is never made.
+
+**W · WeatherKit, with NWS behind it**
+- W1 Native `weatherKitHourly(lat, lon)` in `kitted-location` returns the next ~30 hours (start and end in the phone's local time, °F, rain chance, humidity, wind mph, the condition); the JS side maps them to the same `DayWeather` as NWS through the same `mapHourly`, tagged `source: 'weatherkit'`.
+- W2 The coordinate is rounded to 2 decimals before it's sent (as NWS), lives in memory only, and is never stored.
+- W3 Any failure (no entitlement, no module, an error, no answer within the time limit, an empty forecast) falls back to NWS, whose answer is used as is.
+- W4 Cached an hour, one request at a time, as NWS; permission and the prompt go through the same location module.
+- W5 The card treats both as live weather (no "Sample"); with WeatherKit's data it shows Apple's attribution, " Weather" linking to Apple's legal page (WeatherKit's terms require it), and VoiceOver says "Weather: Apple Weather".
+
+**K · StoreKit configuration**
+- K1 `app/storekit/Kitted.storekit` has one subscription group with one auto-renewable product, `kitted.pro.monthly` (the same id as `PRO_MONTHLY`), $9.99 a month, a 1-week free trial as its introductory offer, and nothing else (no yearly, no lifetime).
+- K2 A config plugin points the Debug scheme's Run at it, so a purchases library's real flow can be tried on the Simulator with no App Store Connect; Release and Archive never use it.
+
+**D · Drafts.** `market/app-store-connect.md` has the description, keywords, promotional text, review notes, the privacy label answers, the age rating answers and the approval-day checklist, each matching what the app really sends.
+
+**N · Nothing else moves.** `npm run check` green; no score, copy outside the new attribution line, or Debug behavior changes.
+
+### §26 results (Oct 21, #365): every check passes; K2's path not yet confirmed in Xcode
+- **Tests:** `app/src/__tests__/approvalDay.test.ts`, 16 checks (A1–A3, P1–P2, S1–S3, W1–W5, K1–K2) pass; `npm run check` green (core 785, app 1,497 + 3 skipped).
+- **A4:** `npm run guard:release` passed (one Hermes bundle, every key shape checked).
+- **A3 and A5, a local Release build on the Simulator** (prebuilt in the worktree, Pods cloned from the main checkout, no download): `npm run check:app` passes on the built app: no `_expo._tcp`, no dev launcher string, no dev-menu keys (the dev launcher's own build phase ran: "Strip Local Network Keys for Release"), the manifest's four reasons and six data types, no entitlements. Only ATS's `NSAllowsLocalNetworking` stays (React Native's default, harmless). The bundle holds this branch's WeatherKit code.
+- **A5, scored through the live server:** a stock photo (s14, resized so it had never been read; profile unknown, a plumbing test only) picked through "Choose from your photos" scored **7.5 Put together**, "Good base. Something you own gets you to 8.0.", and the header's "1 free check today" went away. The server's log at 06:38 UTC shows it under the guest account: `read` (two hedged calls), `look` ×2, `closet`, all 200, about 1.7¢. Screenshots `screenshots/release-oct21/` (git-ignored). Then the saved Debug app went back on (dev launcher present), camera permission restored, Simulator shut down.
+- **Found on the way:** on the Simulator the stand-in camera's 3-2-1 captures its bundled sample before a tap on the library button lands (the sample replays its saved reading, never sent, never counted); `kitted://sheets/sample-photos?mode=check&from=camera` opens the photo choice directly. Three sample checks were left in the Simulator's copy of the data.
+- **Not seen:** the switch on (needs the paid team to sign), WeatherKit answering, the Apple mark on a screen, K2's scheme path inside Xcode.

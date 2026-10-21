@@ -1,18 +1,20 @@
 // Where the morning/evening card's weather comes from (02 "S1d", 05 §MC9).
 // Live: the US National Weather Service with approximate location (nws.ts), in dev and release
-// builds. Apple WeatherKit replaces NWS after the paid developer program, behind the same
-// WeatherSource. Demo screens keep sample weather, always labelled "Sample weather" on the card.
+// builds. With the paid-team switch on (src/config/apple.ts, #365), Apple WeatherKit answers first and NWS stands
+// behind it (weatherkit.ts). Demo screens keep sample weather, always labelled "Sample weather" on the card.
 import type { DayWeather, WeatherWindow } from '@kitted/core';
 import * as location from '../../../modules/kitted-location';
 import { store } from '@/data/db';
 import { DEMO_ENABLED } from '@/demo/config';
 import type { DemoWeather } from '@/demo/demoArgs';
+import { APPLE_PAID } from '@/config/apple';
 import { getDemoArgs } from '@/state/session';
 import { createNwsSource } from './nws';
+import { createWeatherKitSource } from './weatherkit';
 import type { WeatherSource } from './types';
 
 export type { WeatherPermission, WeatherSource } from './types';
-export { isNwsWeather, type SourcedWeather } from './nws';
+export { isLiveWeather, isNwsWeather, isWeatherKitWeather, type SourcedWeather } from './nws';
 
 const PERMISSION_KV = 'weather.permission';
 
@@ -60,11 +62,20 @@ const noSource: WeatherSource = {
   forecast: async () => null,
 };
 
-/** Live weather: approximate location (kitted-location) → api.weather.gov. Memory-only caches. */
-const liveSource = createNwsSource({
-  location,
-  log: __DEV__ ? (line) => console.log(line) : undefined,
-});
+const log = __DEV__ ? (line: string) => console.log(line) : undefined;
+
+/** NWS: approximate location (kitted-location) → api.weather.gov. Memory-only caches. */
+const nwsSource = createNwsSource({ location, log });
+
+/** Whether Apple WeatherKit answers first: the paid-team switch is on and this build has the native call (09 §26 S3). */
+export function weatherKitFirst(o: { applePaid: boolean; weatherKitAvailable: boolean }): boolean {
+  return o.applePaid && o.weatherKitAvailable;
+}
+
+/** Live weather: WeatherKit with NWS behind it once the switch is on, else NWS alone (exactly as before #365). */
+const liveSource = weatherKitFirst({ applePaid: APPLE_PAID, weatherKitAvailable: location.weatherKitAvailable })
+  ? createWeatherKitSource({ location, weatherKit: { hourly: location.weatherKitHourly }, fallback: nwsSource, log })
+  : nwsSource;
 
 /**
  * Which source answers right now. Demo screens (and a `-demoWeather` launch argument) keep sample

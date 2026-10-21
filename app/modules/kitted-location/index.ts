@@ -9,10 +9,27 @@ export interface Coordinate {
   longitude: number;
 }
 
+/** One hour of Apple WeatherKit's forecast, as the native side sends it (09 §26 W1). */
+export interface WeatherKitHour {
+  start: string;
+  end: string;
+  tempF: number;
+  /** 0–1. */
+  precipChance: number;
+  /** 0–1. */
+  humidity: number | null;
+  windMph: number | null;
+  /** WeatherKit's condition name, e.g. "mostlyCloudy". */
+  condition: string;
+}
+
 interface KittedLocationNative {
   permission(): Promise<string>;
   requestPermission(): Promise<string>;
   currentLocation(timeoutMs: number): Promise<Coordinate | null>;
+  /** Builds from before #365 don't have these two. */
+  weatherKitHourly?(latitude: number, longitude: number): Promise<WeatherKitHour[]>;
+  weatherKitAttribution?(): Promise<{ serviceName: string; legalPageURL: string }>;
 }
 
 // Optional: absent on web, Android, and native builds from before this module (reinstall needed).
@@ -51,6 +68,31 @@ export async function currentLocation(timeoutMs: number): Promise<Coordinate | n
   try {
     const c = await native.currentLocation(timeoutMs);
     return c && Number.isFinite(c.latitude) && Number.isFinite(c.longitude) ? { latitude: c.latitude, longitude: c.longitude } : null;
+  } catch {
+    return null;
+  }
+}
+
+/** This build has the WeatherKit calls (they still need the paid team's entitlement to answer). */
+export const weatherKitAvailable: boolean = typeof native?.weatherKitHourly === 'function';
+
+/** WeatherKit's hourly forecast for a coordinate (round it first), or null on any failure. Never throws. */
+export async function weatherKitHourly(latitude: number, longitude: number): Promise<WeatherKitHour[] | null> {
+  if (!native?.weatherKitHourly) return null;
+  try {
+    const rows = await native.weatherKitHourly(latitude, longitude);
+    return Array.isArray(rows) ? rows : null;
+  } catch {
+    return null;
+  }
+}
+
+/** WeatherKit's legal attribution page, or null. Never throws. */
+export async function weatherKitLegalUrl(): Promise<string | null> {
+  if (!native?.weatherKitAttribution) return null;
+  try {
+    const a = await native.weatherKitAttribution();
+    return typeof a?.legalPageURL === 'string' && a.legalPageURL.startsWith('https://') ? a.legalPageURL : null;
   } catch {
     return null;
   }
