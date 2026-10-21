@@ -7,7 +7,7 @@ import type { FitCheckRow } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import { isOwned } from '@/features/closet/profile';
 import { getStarterMarks } from '@/features/finish/service';
-import { buildCard, cardSpoken } from './cards';
+import { buildCard, cardSpoken, correctCard } from './cards';
 import { displayScore } from '@/design-system/score';
 import { weekdayName } from '@/i18n/format';
 import { t } from '@/i18n/en';
@@ -42,6 +42,10 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
     };
     // An unsure route sends the pack alone; the model may ask for one lookup (R3).
     const ev = route.sure ? await buildEvidence(route, snap, ctx, evDeps) : { text: '', kind: route.kind };
+    // "That score is wrong" about today's check (09 §20.8 G19): the answer gets its Not quite right?, and the model is
+    // told the button is there so it can point to it.
+    const correct = correctCard(route, ctx.handles, snap.checks, today);
+    if (correct) ev.text = [ev.text, 'Under your answer the app shows a "Not quite right?" button for this check: it lets him fix a piece the photo read wrong, and the check is scored again from that.'].filter(Boolean).join('\n');
     deps.log?.(`route · ${route.kind}${route.sure ? '' : ' (unsure)'} · ${route.pieces.length} pieces${route.check ? ' · a check' : ''}${ev.text ? ' · evidence' : ''}`);
     const owned = snap.closet.filter((c) => isOwned(c) && !c.isDeleted && !c.mergedInto);
     const gatePieces = owned.map((c) => {
@@ -66,7 +70,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
           gate: { allowedScores: allowedScores(ctx.text, ev2.text), hasBody, pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
         };
       },
-      card: async (raw, gate) => buildCard(raw, {
+      card: async (raw, gate) => correct ?? buildCard(raw, {
         handles: ctx.handles, closet: snap.closet, checks: snap.checks, styles: snap.profile?.styles ?? null, starterMarks: marks, gate,
       }),
       remember: (raw, at) => applyRemember(raw, at, { store, clock, ids: deps.ids }),

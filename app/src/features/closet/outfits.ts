@@ -52,9 +52,52 @@ export function outfitPieces(closet: readonly ClosetItemRow[]): ClosetItemRow[] 
   return owned.filter((c) => !isAwaitingAnswer(c, owned)).sort((a, b) => (a.id < b.id ? -1 : 1));
 }
 
+/**
+ * What a scored outfit keeps (the speed-up, 09 §23 P, #353): the ranking, the score and its plain reason. The parts
+ * engine is the cost (~0.1 ms an outfit on a Mac); a 50-piece closet has thousands of trios and Next best buy used to
+ * count them 14 times, so the same pieces at the same occasion are scored once and remembered.
+ */
+interface Scored {
+  overall: number;
+  rawScore: number;
+  reason: string;
+}
+
+/** A piece's garment as a small number: equal garments get the same one, so the cache follows what a piece is (an
+ *  edit to "What it is" is a new number), never its id. Read fresh on every count, so an in-place change is seen. */
+const garmentIds = new Map<string, number>();
+function garmentId(c: ClosetItemRow): number {
+  const k = JSON.stringify(c.garment);
+  let n = garmentIds.get(k);
+  if (n === undefined) {
+    n = garmentIds.size;
+    garmentIds.set(k, n);
+  }
+  return n;
+}
+
+/** Outfits already judged: valid or not, then the score. Cleared whole past CACHE_MAX (~10 MB at most). */
+const CACHE_MAX = 60_000;
+const judged = new Map<string, Scored | null>();
+
 function scoreOf(items: readonly ClosetItemRow[], occasion: OccasionKey, styles: Styles | null) {
   const r = scoreParts(outfitReading(items.map(asItem)), scoreOptions({ occasion, styles: styles ?? [], boldness: null, secondLook: null }));
   return r.overall === null ? null : r;
+}
+
+/** Valid and scored at this occasion (null when not an outfit or not scored), from the cache when it's been judged. */
+function judge(items: readonly ClosetItemRow[], gids: readonly number[], occasion: OccasionKey, styles: Styles | null, stylesKey: string): Scored | null {
+  const key = `${occasion}|${stylesKey}|${gids.join(',')}`;
+  const hit = judged.get(key);
+  if (hit !== undefined) return hit;
+  let out: Scored | null = null;
+  if (outfitValid(items.map(asItem), styles)) {
+    const r = scoreOf(items, occasion, styles);
+    if (r) out = { overall: r.overall, rawScore: r.rawScore, reason: r.overall >= PUT_TOGETHER ? reasonOf(r) : '' };
+  }
+  if (judged.size >= CACHE_MAX) judged.clear();
+  judged.set(key, out);
+  return out;
 }
 
 /** The scoring's best positive reason ("A tucked or short top gives it a waist."), else the plain fallback. */
@@ -77,23 +120,34 @@ export interface OutfitInput {
   withLayer?: string;
   /** Count only: no layers tried (they never change the count). */
   countOnly?: boolean;
-  /** Only the trios with this piece (what adding it adds: the other trios don't change). */
-  withPiece?: string;
 }
 
 /** Every outfit at this occasion, best first (worn ones carry their check). Trios below Put together are left out. */
 export function buildOutfits(i: OutfitInput): Outfit[] {
+  return outfitsOf(i, null);
+}
+
+/**
+ * The outfits, or only those with one piece in them (`only`, an id): Next best buy's gain is the trios its new piece
+ * makes, since adding a piece never removes an outfit (#353).
+ */
+function outfitsOf(i: OutfitInput, only: string | null): Outfit[] {
   const pieces = outfitPieces(i.closet);
+  const gid = new Map(pieces.map((c) => [c.id, garmentId(c)]));
+  const stylesKey = JSON.stringify(i.styles ?? null);
   const by = (slot: string) => pieces.filter((c) => c.slot === slot);
   const tops = by('top'), bottoms = by('bottom'), shoes = by('shoes'), layers = by('outer');
   const worn = wornTrios(i.checks);
+  // With `only`, its own slot holds just it; a piece outside the three slots (a layer) makes no trio of its own.
+  const inSlot = only ? pieces.find((c) => c.id === only)?.slot ?? null : null;
+  if (only && inSlot !== 'top' && inSlot !== 'bottom' && inSlot !== 'shoes') return [];
+  const pick = (slot: string, list: ClosetItemRow[]) => (inSlot === slot ? list.filter((c) => c.id === only) : list);
+  const judgeOf = (items: readonly ClosetItemRow[]) => judge(items, items.map((c) => gid.get(c.id)!), i.occasion, i.styles, stylesKey);
   // Pass 1: every valid trio at Put together or better.
-  const trios: { trio: ClosetItemRow[]; r: NonNullable<ReturnType<typeof scoreOf>> }[] = [];
-  for (const top of tops) for (const bottom of bottoms) for (const shoe of shoes) {
+  const trios: { trio: ClosetItemRow[]; r: Scored }[] = [];
+  for (const top of pick('top', tops)) for (const bottom of pick('bottom', bottoms)) for (const shoe of pick('shoes', shoes)) {
     const trio = [top, bottom, shoe];
-    if (i.withPiece && !trio.some((c) => c.id === i.withPiece)) continue;
-    if (!outfitValid(trio.map(asItem), i.styles)) continue;
-    const r = scoreOf(trio, i.occasion, i.styles);
+    const r = judgeOf(trio);
     if (r && r.overall >= PUT_TOGETHER) trios.push({ trio, r });
   }
   trios.sort((a, b) => b.r.rawScore - a.r.rawScore);
@@ -101,10 +155,7 @@ export function buildOutfits(i: OutfitInput): Outfit[] {
   const out: Outfit[] = [];
   trios.forEach(({ trio, r: base }, idx) => {
     let best = { r: base, layer: null as ClosetItemRow | null };
-    const tryLayer = (layer: ClosetItemRow) => {
-      const items = [layer, ...trio];
-      return outfitValid(items.map(asItem), i.styles) ? scoreOf(items, i.occasion, i.styles) : null;
-    };
+    const tryLayer = (layer: ClosetItemRow) => judgeOf([layer, ...trio]);
     if (i.withLayer) {
       const layer = layers.find((c) => c.id === i.withLayer);
       const r = layer ? tryLayer(layer) : null;
@@ -120,7 +171,7 @@ export function buildOutfits(i: OutfitInput): Outfit[] {
     const dressiness = trio.reduce((s, c) => s + defaultRubric.formality(c.garment), 0) / trio.length;
     out.push({
       itemIds: [...trio.map((c) => c.id), ...(best.layer ? [best.layer.id] : [])], key, layerId: best.layer?.id ?? null,
-      rank: best.r.rawScore, dressiness, reason: reasonOf(best.r), worn: worn.get(key) ?? null,
+      rank: best.r.rawScore, dressiness, reason: best.r.reason, worn: worn.get(key) ?? null,
     });
   });
   return out.sort((a, b) => b.rank - a.rank || (a.key < b.key ? -1 : 1));
@@ -142,20 +193,25 @@ export function wornTrios(checks: readonly FitCheckRow[]): Map<string, NonNullab
   return out;
 }
 
-/** The count (#84.3): trios at 7.0+ at Everyday, leaving out pieces he only mentioned in chat (07 §4). */
-export function outfitCount(closet: readonly ClosetItemRow[], checks: readonly FitCheckRow[], styles: Styles | null): number {
-  return buildOutfits({ closet: closet.filter((c) => c.source !== 'chat'), checks, styles, occasion: 'everyday', countOnly: true }).length;
+/** The outfits a new piece makes under the count, best first: the trios with it (adding a piece never removes one, #353). */
+export function outfitsWith(closet: readonly ClosetItemRow[], checks: readonly FitCheckRow[], styles: Styles | null, piece: ClosetItemRow): Outfit[] {
+  const pool = closet.filter((c) => c.source !== 'chat');
+  return outfitsOf({ closet: [...pool, piece], checks, styles, occasion: 'everyday', countOnly: true }, piece.id);
 }
 
 /**
- * "+N outfits" for adding `piece` (#309): the count with it minus the count without it, which is the trios at 7.0+
- * that use it (a new piece changes no other trio). Pieces he only mentioned in chat aren't counted (07 §4), and a layer
- * adds none (#84.3). The one rule behind every "+N": the chat's buy card, Starter, the moves card, the next best buy.
+ * "+N outfits" for adding `piece` (#309): the count with it minus the count without it, which is the trios at 7.0+ that
+ * use it (#353). Pieces he only mentioned in chat aren't counted (07 §4), and a layer adds none (#84.3). The one rule
+ * behind every "+N": the chat's buy card and buy-next evidence, the "What you already own" toast, the next best buy.
  */
 export function outfitGain(closet: readonly ClosetItemRow[], styles: Styles | null, piece: ClosetItemRow): number {
   if (piece.source === 'chat' || closet.some((c) => c.id === piece.id)) return 0;
-  const pool = closet.filter((c) => c.source !== 'chat');
-  return buildOutfits({ closet: [...pool, piece], checks: [], styles, occasion: 'everyday', countOnly: true, withPiece: piece.id }).length;
+  return outfitsWith(closet, [], styles, piece).length;
+}
+
+/** The count (#84.3): trios at 7.0+ at Everyday, leaving out pieces he only mentioned in chat (07 §4). */
+export function outfitCount(closet: readonly ClosetItemRow[], checks: readonly FitCheckRow[], styles: Styles | null): number {
+  return buildOutfits({ closet: closet.filter((c) => c.source !== 'chat'), checks, styles, occasion: 'everyday', countOnly: true }).length;
 }
 
 /** The two lists the Outfits view shows (#84): Try next (unworn, best first) and Your go-tos (worn, best first). */

@@ -13,6 +13,7 @@ import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { confirmGuess, editFact, FACT_MAX_CHARS, factTitle, forgetWithUndo, sourceLine } from '@/features/you/facts';
 import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
+import { GoneSheet } from '@/features/gone/Gone';
 
 export default function FactSheet() {
   const { colors, isAccessibilitySize } = useTheme();
@@ -22,7 +23,7 @@ export default function FactSheet() {
   const [text, setText] = useState('');
 
   if (fact === undefined) return null;
-  if (!fact || fact.isDeleted) return <SheetScaffold title={t('knows.title')} />;
+  if (!fact || fact.isDeleted) return <GoneSheet />;
 
   const guess = fact.source === 'guess';
   const startEdit = () => {

@@ -111,9 +111,18 @@ export const KV_LOCAL: readonly string[] = [
   'onboard.finish',
   // Closet's last Pieces | Outfits tap (#307): a view setting on this phone, like camera.mode.
   'closet.segment',
+  // His Skips on the "How do your … fit?" card (09-ui-review §18, #316): a nudge he dismissed on this phone.
+  'closet.fitSkip',
+  // The fit-check card line's cap and the answer log (§19, #322): this phone's, never synced.
+  'closet.fitLine', 'closet.fitAnswers',
+  // The tier the server last answered with (13-server.md §8, #328): the server's own fact, read back on every answer.
+  'server.tier',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
-export const KV_LOCAL_PREFIXES: readonly string[] = ['sync.', 'demo.', 'notify.', 'account.'];
+// idea.touched.<id>: he changed that day's card on this phone, so a fresher forecast keeps his outfit (#338); a day old
+// by the time another phone could read it. idea.swapped.<id>: the pieces he swapped away from that card (09 §23 M1,
+// #353), the same.
+export const KV_LOCAL_PREFIXES: readonly string[] = ['sync.', 'demo.', 'notify.', 'account.', 'idea.touched.', 'idea.swapped.'];
 
 export function kvPolicy(key: string): KvPolicy | 'local' | null {
   if (Object.prototype.hasOwnProperty.call(KV_SYNCED, key)) return KV_SYNCED[key]!;

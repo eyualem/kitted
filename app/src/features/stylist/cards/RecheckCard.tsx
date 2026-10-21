@@ -2,10 +2,11 @@
 // photo is merged onto the first reading at the first check's occasion. Honest about the direction (#276): only a win
 // says "Nothing else changed." and gets copper; a drop shows was → now with an ink arrow and its new problems
 // ("New: …"); "Didn't catch the change?" shows only when no fix was caught; "not seen" leads with "Try another photo".
+// A scored re-check has "Why X?" and "Not quite right?" like the first check's card (09 §20.8 G15).
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import {
-  DeltaRow, FixRow, KButton, KCard, KCardSection, KText, RevealStepView, ScoreBlock, Seam, TagLine, TextLink, TextLinkRow, spokenScore,
+  DeltaRow, ExpandHandle, Expandable, FixRow, KButton, KCard, KCardSection, KText, RevealStepView, ScoreBlock, Seam, TagLine, TextLink, TextLinkRow, displayScore, spokenScore,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
@@ -14,11 +15,14 @@ import { caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSum
 import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { occasionLabel } from '../thread';
-import { FitCheckCard, SHARE_CARD_BUILT } from './FitCheckCard';
+import { threadGrow } from '../threadGrow';
+import { FitCheckCard, useCardOpen } from './FitCheckCard';
+import { shareOffered } from '@/features/share/offer';
 import { useWinReveal } from './useReveal';
 import type { FitCheckRow } from '@/data/types';
 
-/** `readOnly`: Past chats (#276): the result as it was, with no buttons (a new photo, "I did make the change", Tell me). */
+/** `readOnly`: Past chats (#276): the result as it was, with no buttons (a new photo, "I did make the change", Tell me,
+ *  Not quite right?); Why stays, as on the first check's card. */
 export function RecheckCard({ checkId, readOnly = false }: { checkId: string; readOnly?: boolean }) {
   const row = useLive(['fitChecks'], () => store.fitChecks.get(checkId), [checkId], checkId);
   const parent = useLive(['fitChecks', 'readings'], async () => {
@@ -40,6 +44,8 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   );
   const now = row.score ?? 0;
   const occasionWord = occasionLabel(row.occasion);
+  // Folded to its rating like the first check's card (#344); the "change not seen" card keeps its two buttons in view.
+  const [opened, setOpened] = useCardOpen(row.id);
   // The same photo again (#219): nothing was re-read or counted; say so and ask for a new photo after the fix.
   if (rc.samePhoto) {
     return (
@@ -66,6 +72,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
     );
   }
   const notSeen = rc.notSeen && !row.details.confirmed;
+  const open = notSeen || opened;
   const done = rc.doneFixes[0];
   const occasion = occasionLabel(row.occasion);
   const outcome = { after: now, doneFixes: rc.doneFixes.map((d) => ({ ...(parent?.row.fixes.find((f) => f.copy === d.copy) ?? { target: '' }), earned: d.earned })) };
@@ -81,13 +88,24 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const iDidTitle = t('recheck.iDid', { fixPast: t(parent?.row.fixes.some((f) => f.edits.some((e) => e.op === 'add_held')) ? 'recheck.fixPast.held' : 'recheck.fixPast.generic') });
   const tryAnother = () => router.push(`/camera?mode=recheck&parent=${row.parentId}`);
   // One VoiceOver element: every button on it is also an action (the "not seen" card has its own two).
-  const actions = readOnly ? [] : notSeen
-    ? [{ name: 'iDid', label: iDidTitle }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
-    : [...(SHARE_CARD_BUILT && move === 'up' ? [{ name: 'share', label: t('recheck.share') }] : []), ...(missed ? [{ name: 'tell', label: t('recheck.tellMe') }] : [])];
+  const scoreText = displayScore(now);
+  const why = { name: 'why', label: t('card.why', { score: scoreText }) };
+  const fold = { name: 'fold', label: open ? t('card.fold.less') : t('card.fold.more') };
+  const actions = notSeen
+    ? readOnly ? [] : [{ name: 'iDid', label: iDidTitle }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
+    : readOnly ? [fold, why] : [
+        fold,
+        ...(move === 'up' && shareOffered(row) ? [{ name: 'share', label: t('recheck.share') }] : []),
+        why, { name: 'nqr', label: t('card.nqr') },
+        ...(missed ? [{ name: 'tell', label: t('recheck.tellMe') }] : []),
+      ];
   const go = {
+    fold: () => setOpened(!opened),
     iDid: () => void fitCheck.confirmFixes(row.id),
     tryAnother,
     share: () => router.push(`/share/${row.id}`),
+    why: () => router.push(`/sheets/why/${row.id}`),
+    nqr: () => router.push(`/sheets/correct/${row.id}`),
     tell: () => router.push(`/sheets/tell-me/${row.id}`),
   };
   const newLines = problems.map((x) => t('recheck.newProblem', { problem: x }));
@@ -108,6 +126,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
       accessibilityActions={actions}
       onAccessibilityAction={(e) => go[e.nativeEvent.actionName as keyof typeof go]?.()}
     >
+      <Pressable onPress={() => setOpened(true)} disabled={open} accessible={false}>
       <KCardSection gap={12}>
         <TagLine left={t('card.tag.recheck')} right={occasion} />
         {notSeen ? (
@@ -144,6 +163,8 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
           </>
         )}
       </KCardSection>
+      </Pressable>
+      <Expandable open={open} grow={readOnly ? undefined : threadGrow}>
       {!notSeen && rc.doneFixes.length > 0 ? (
         <>
           <Seam />
@@ -164,18 +185,30 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
           </View>
         ) : (
           <>
-            {SHARE_CARD_BUILT && move === 'up' ? (
+            {move === 'up' && shareOffered(row) ? (
               <KButton title={t('recheck.share')} icon="share" size="regular" fullWidth onPress={() => router.push(`/share/${row.id}`)} />
             ) : null}
-            {missed ? (
-              <TextLinkRow justify="center">
-                <TextLink title={t('recheck.tellMe')} compact onPress={() => router.push(`/sheets/tell-me/${row.id}`)} />
-              </TextLinkRow>
-            ) : null}
+            {/* Why and Not quite right? as on the first check's card (09 §20.8 G15): after a drop he can see why and
+                correct a misread. Tell me sits with them when no fix was caught. */}
+            <TextLinkRow>
+              <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
+              <TextLink title={t('card.nqr')} onPress={go.nqr} compact />
+              {missed ? <TextLink title={t('recheck.tellMe')} compact onPress={go.tell} /> : null}
+            </TextLinkRow>
           </>
         )}
       </KCardSection>
       )}
+      {/* Past chats keep Why (read-only), as FitCheckCard does. */}
+      {readOnly && !notSeen ? (
+        <KCardSection gap={4} style={{ paddingTop: 4 }}>
+          <TextLinkRow>
+            <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
+          </TextLinkRow>
+        </KCardSection>
+      ) : null}
+      </Expandable>
+      {notSeen ? null : <ExpandHandle open={open} onPress={() => setOpened(!opened)} />}
     </KCard>
     </View>
   );

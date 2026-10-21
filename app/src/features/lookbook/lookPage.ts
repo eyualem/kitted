@@ -14,6 +14,8 @@ import { occasionLabel } from '@/features/stylist/thread';
 import { t } from '@/i18n/en';
 import { longDate } from '@/i18n/format';
 import { goToStylist } from '@/router/stylistAction';
+import { canShare } from '@/features/share/shareModel';
+import { SHARE_CARD_BUILT } from '@/config/features';
 
 /** What a tap on the page can do. Nothing that changes the check (K4). */
 export type LookAction = 'photo' | 'before' | 'piece' | 'chat';
@@ -64,6 +66,9 @@ export interface LookPageModel {
   pieces: LookPiece[];
   chatMessageId: string | null;
   actions: LookAction[];
+  /** The check the share card opens on (the shown one: a re-checked look's re-check, so Before · After · Change), or
+   *  null when it can't be shared (#352; the screen also asks shareNativeReady). */
+  shareId: string | null;
 }
 
 /** The card's own nudge to change the occasion (`sum.lounge`'s second sentence): the page can't change it, so it goes (#282). */
@@ -180,6 +185,7 @@ export function buildLook(check: FitCheckRow, rechecks: readonly FitCheckRow[], 
     pieces,
     chatMessageId: card?.id ?? null,
     actions,
+    shareId: SHARE_CARD_BUILT && canShare(shown) ? shown.id : null,
   };
 }
 

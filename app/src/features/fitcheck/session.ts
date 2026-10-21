@@ -3,10 +3,12 @@
 import { useSyncExternalStore } from 'react';
 import { AppState } from 'react-native';
 import { store } from '@/data/db';
+import { DEMO_ENABLED } from '@/demo/config';
 import { demoEntitlements } from '@/services/entitlements';
 import { newId } from '@/services/ids';
 import { imagePrep } from '@/services/imagePrep/real';
 import { createQuota } from '@/services/quota';
+import { serverTier } from '@/services/server/tier';
 import { LIVE_READING, routedSource } from '@/services/readingSource/live';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
@@ -16,6 +18,7 @@ import { closetService, startClosetCatchUp } from '@/features/closet/session';
 import { mayUpload } from '@/features/privacy/wipe';
 import { createHeldCatchUp } from '@/features/held/catchUp';
 import { deleteHeldPhoto } from '@/features/held/files';
+import { connectivity } from '@/services/connectivity';
 import { createFitCheckService, DEFAULT_TIMERS, type TimerConfig } from './service';
 import type { SessionState } from './machine';
 
@@ -23,12 +26,16 @@ export const readingSource = createMockReadingSource({
   latency: () => getDemoArgs().latency,
   fault: () => getDemoArgs().fault,
   scheduler: realScheduler,
+  // A snap of a real photo gets the story's canned reading only on a demo screen (#323).
+  cannedSnaps: () => DEMO_ENABLED && getDemoArgs().demoScreen !== null,
 });
 
 export const quota = createQuota({
   store,
   clock: sessionClock,
   isPro: () => demoEntitlements.isPro() || getDemoArgs().pro,
+  // The server's tier (13-server.md §8, A10): Pro's limits for every account during the beta.
+  serverTier: () => serverTier(store),
   // Testing real readings on the founder's phone: the daily limit doesn't apply (DEV + key only).
   checksUsedOverride: () => getDemoArgs().freeChecksUsed ?? (LIVE_READING ? 0 : null),
 });
@@ -58,6 +65,8 @@ export const fitCheck = createFitCheckService({
   discardPhoto: discardTempPhoto,
   // "Don't score it" on a held photo (02 S17h, #280): it was never sent; his copy goes.
   deleteHeldFiles: deleteHeldPhoto,
+  // The phone's connection (09 §20.8 G18): "You're offline" only when it really is; a score says it's back.
+  net: { confirmOffline: () => connectivity.reportOffline(), reportOnline: () => connectivity.reportOnline() },
   timers: () => {
     const lat = getDemoArgs().latency;
     return { ...DEFAULT_TIMERS, cacheHitMs: lat === 0 ? 0 : DEFAULT_TIMERS.cacheHitMs, ...timerOverride };

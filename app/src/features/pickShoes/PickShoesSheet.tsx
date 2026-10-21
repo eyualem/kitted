@@ -15,6 +15,7 @@ import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { PieceArt } from '@/features/closet/GarmentArt';
+import { GoneSheet } from '@/features/gone/Gone';
 
 const COLUMNS = 3;
 const GAP = 8;
@@ -40,6 +41,7 @@ export function PickShoesSheet() {
     router.back();
   };
 
+  if (data === null) return <GoneSheet />;
   return (
     <SheetScaffold title={t('shoes.title')} subtitle={t('shoes.sub')}>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: GAP, paddingTop: 4 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>

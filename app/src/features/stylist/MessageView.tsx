@@ -18,11 +18,12 @@ import { RecheckCard } from './cards/RecheckCard';
 import { WhichOneCard } from '@/features/whichOne/WhichOneCard';
 import { SupportCard } from '@/features/ask/SupportCard';
 import { AskAttachment } from '@/features/ask/AskCardView';
-import { AnswerBody, answerLayout, chipActions } from '@/features/ask/AnswerBody';
+import { AnswerBody, answerLayout, chipActions, useAnswerCloset } from '@/features/ask/AnswerBody';
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
-import { MovesCard } from '@/features/finish/MovesCard';
+import { NoConsentCard } from '@/features/onboarding/NoConsentCard';
+import { InviteCard } from '@/features/finish/InviteCard';
 import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
 import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
@@ -35,15 +36,17 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
   if (m.kind === 'card') {
     if (m.cardType === 'fitCheck' && m.fitCheckId) return <FitCheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
     if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
-    if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} />;
-    if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} />;
+    if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} readOnly={readOnly} />;
+    if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} readOnly={readOnly} />;
     if (m.cardType === 'question' && m.payload.question === 'whichOne') return <WhichOneCard m={m} />;
     // The end of onboarding (ruling 23, 10-onboarding.md §9): "Your first 3 moves", then the notification ask.
-    if (m.cardType === 'plan' && m.fitCheckId) return <MovesCard m={m} readOnly={readOnly} />;
+    if (m.cardType === 'plan' && m.fitCheckId) return <InviteCard m={m} readOnly={readOnly} />;
     if (m.cardType === 'question' && m.payload.question === 'notify') return <NotifyAskCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     if (m.cardType === 'support') return <SupportCard />;
     // "Keep your fits" (A3, #289): after his first score, at most twice.
     if (m.cardType === 'account') return <AccountOfferCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
+    // "Turn on fit checks" (S26, 09-ui-review §20.8 G23): after "Not now" on consent.
+    if (m.cardType === 'turnOnChecks') return <NoConsentCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     // The check limit (02 D19 S17 → S17h, #280): under the photo he took after the free check was used.
     // …and after 4 am, "Ready to score last night's photo?" (S17h, #281).
     if (m.cardType === 'held' && m.fitCheckId && m.payload.ready === true) return <HeldReadyCard checkId={m.fitCheckId} showHeader={item.showWho} readOnly={readOnly} />;
@@ -98,9 +101,9 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
 
 /** An answer to his question, look C (#302): the lead, the reason and his pieces as chips. */
 function AnswerMessage({ m, showHeader, footer }: { m: ChatMessage; showHeader: boolean; footer: React.ReactNode }) {
-  const closet = useLive(['closet'], () => store.closet.all(), []);
+  const closet = useAnswerCloset();
   const text = m.text ?? '';
-  const layout = answerLayout(text, closet ?? null);
+  const layout = answerLayout(text, closet);
   return (
     <StylistMessage showHeader={showHeader} body={<AnswerBody layout={layout} />} actions={chipActions(layout.chips)} footer={footer}>
       {text}
@@ -126,8 +129,9 @@ function PhotoMessage({ m }: { m: ChatMessage }) {
   const snap = m.payload.snap === true;
   const reading = !!row && (row.status === 'scoring' || (snap && session.kind === 'reading' && session.checkId === row.id && session.mode === 'shoeSnap'));
   let caption: string | undefined;
-  if (snap) caption = t('cam.shoe.bubbleCap');
-  else if (row?.status === 'failed') caption = t('fail.cap.notScored');
+  if (snap) caption = t(m.payload.snapPart === 'bottom' ? 'cam.bottom.bubbleCap' : 'cam.shoe.bubbleCap');
+  // "Not sent" when no connection kept it on the phone (09 §20.8 G18.5); any other failure was sent but not scored.
+  else if (row?.status === 'failed') caption = t(row.details.failCode === 'offline' ? 'fail.cap.notSent' : 'fail.cap.notScored');
   else if (row?.parentId) caption = t('recheck.bubbleCap');
   else if (row) caption = occasionLabel(row.occasion);
   return (

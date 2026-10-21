@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  FixRow, KButton, KCard, KCardSection, KText, PhotoBubble, RowDivider, ScoreBlock, Seam, StylistMessage, TagLine, TextLink, TextLinkRow, TipLine,
+  FixRow, IconButton, KButton, KCard, KCardSection, KText, PhotoBubble, RowDivider, ScoreBlock, Seam, StylistMessage, TagLine, TextLink, TextLinkRow, TipLine,
   displayScore, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
@@ -18,25 +18,39 @@ import { store } from '@/data/db';
 import { exampleCheck } from './exampleCheck';
 import { OnboardingNav } from './OnboardingNav';
 
-export function ExampleCheckScreen() {
+/** `sheet`: from S26's "See an example" after onboarding (09-ui-review §20.8 G23): an X closes it, and "Check my own
+ *  fit" closes it and opens the agreement as a sheet. */
+export function ExampleCheckScreen({ mode = 'screen' }: { mode?: 'screen' | 'sheet' }) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const { from } = useLocalSearchParams<{ from?: string }>();
-  const fromConsent = from === 'consent';
+  const sheet = mode === 'sheet';
+  const fromConsent = from === 'consent' || sheet;
   const [why, setWhy] = useState(false);
   const ex = exampleCheck();
   const photo = ex ? demoPhoto(ex.photoId) : undefined;
 
   const back = () => (router.canGoBack() ? router.back() : router.replace('/onboarding/welcome'));
   const go = () => {
+    if (sheet) {
+      router.back();
+      setTimeout(() => router.push('/sheets/consent'), 350);
+      return;
+    }
     if (fromConsent) return back();
     void store.setKv('onboarding.step', 'looks');
     router.push('/onboarding/looks');
   };
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
-      <OnboardingNav onBack={back} />
+    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: sheet ? space.s : insets.top }]}>
+      {sheet ? (
+        <View style={styles.closeRow}>
+          <IconButton icon="close" label={t('common.close')} onPress={() => router.back()} />
+        </View>
+      ) : (
+        <OnboardingNav onBack={back} />
+      )}
       <ScrollView contentContainerStyle={styles.thread}>
         <StylistMessage showHeader>{t('onb.example.intro')}</StylistMessage>
         {photo ? (
@@ -93,4 +107,5 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   thread: { paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xl, gap: space.m },
   dock: { paddingHorizontal: space.gutter, paddingTop: space.s, borderTopWidth: StyleSheet.hairlineWidth },
+  closeRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: space.gutter },
 });

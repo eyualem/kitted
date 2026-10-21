@@ -266,6 +266,31 @@ describe('against his closet (the full seed)', () => {
     expect((await env.row(id2)).details.closetSummary!.asks).toEqual([]);
   });
 
+  it('Undo on an answer\'s toast (#323): the question is open again, its pieces as before the answer', async () => {
+    const env = await setup({ scenario: 'full' });
+    const id = await env.check('p01b');
+    await env.closet.settle();
+    const ask = (await env.row(id)).details.closetSummary!.asks![0]!;
+    const before = { row: await env.row(id), b1: (await env.store.closet.get('B1'))!, flagged: (await env.store.closet.get(ask.itemId))! };
+    await env.svc.answerDuplicate(id, ask.obsId, 'same');
+    await env.svc.unanswerDuplicate(id, ask.obsId);
+    const row = await env.row(id);
+    expect(row.details.closetSummary!.asks![0]!.answer).toBeNull();
+    expect([...row.details.closetSummary!.added].sort()).toEqual([...before.row.details.closetSummary!.added].sort());
+    expect((await env.store.closet.get(ask.itemId))).toMatchObject({ isDeleted: false, mergedInto: null, maybeSameAs: 'B1' });
+    expect((await env.store.closet.get('B1'))!.wornCount).toBe(before.b1.wornCount);
+    expect((await env.store.closetObs.get(ask.obsId))).toMatchObject({ itemId: ask.itemId, decision: 'ask', answeredAt: null });
+    expect((await env.closet.openAsks()).map((a) => a.ask.obsId)).toContain(ask.obsId);
+    expect(row.score).toBe(before.row.score);
+    // A No undone the same way: never-ask-again is forgotten too.
+    await env.svc.answerDuplicate(id, ask.obsId, 'new');
+    await env.svc.unanswerDuplicate(id, ask.obsId);
+    expect((await env.store.closet.get('B1'))!.profile!.distinctFrom ?? []).not.toContain(ask.itemId);
+    expect((await env.closet.openAsks()).map((a) => a.ask.obsId)).toContain(ask.obsId);
+    // Nothing to undo: no change.
+    expect(await env.svc.unanswerDuplicate(id, ask.obsId)).toBeNull();
+  });
+
   it('"It\'s my …": the runner-up takes it', async () => {
     const env = await setup({ scenario: 'full' });
     // A second near-color pair: brown chinos next to tan (and khaki B1 on the other side).
@@ -348,14 +373,16 @@ describe('Undo and corrections follow the stored link', () => {
     expect((await env.row(id)).score).toBe(8);
   });
 
-  it('a piece seen once is patched in place ("Saved to your tan chinos")', async () => {
+  it('a piece seen once is patched in place ("Saved to your tan trousers")', async () => {
+    // Amended by 09-ui-review §19 (#322), openly: a Leg or Fit fix no longer patches the piece (the scored-fix rule,
+    // fitLine.test BX1), so this path is shown with a Kind fix, which still does.
     const env = await setup();
     const id = await env.check('p01b');
     await env.closet.settle();
-    const r = await env.svc.saveCorrection(id, { garmentIndex: 1, field: 'leg_shape', value: 'slim' });
-    expect(r!.itemName).toBe('Tan chinos');
-    const chinos = (await env.owned()).find((c) => c.slot === 'bottom')!;
-    expect([chinos.garment.leg_shape, chinos.confirmedFields]).toEqual(['slim', ['leg_shape']]);
+    const r = await env.svc.saveCorrection(id, { garmentIndex: 1, field: 'subcategory', value: 'trousers' });
+    const piece = (await env.owned()).find((c) => c.slot === 'bottom')!;
+    expect(r!.itemName).toBe(piece.name);
+    expect([piece.garment.subcategory, piece.confirmedFields]).toEqual(['trousers', ['subcategory']]);
   });
 
   it('the bug: a correction never recolors a piece seen in other photos; it relinks instead', async () => {

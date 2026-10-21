@@ -15,7 +15,6 @@ export { StageList, defaultStageLabels, type Stage, type StageState } from './St
 export { DetectionTag } from './DetectionTag';
 export {
   StylistMessage,
-  StylistMark,
   UserBubble,
   PhotoBubble,
   NeckDownPhoto,
@@ -31,3 +30,4 @@ export { AddedRow, DeltaRow, QuickStartChip, FinishTile, type DeltaReveal } from
 export { RevealStepView, TapeNumeral, REVEAL_END, stepP, type RevealStep, type TapeNumeralProps } from './ScoreReveal';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
 export { MorphPicker, type MorphOption, type MorphSection, type MorphPickerProps } from './MorphPicker';
+export { Expandable, ExpandHandle, EXPAND_MS } from './Expandable';

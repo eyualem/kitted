@@ -34,6 +34,12 @@ public class KittedVisionModule: Module {
       return try Prep.run(uri: uri, pick: pick)
     }
 
+    /// A snap that finishes a partial check (#313): his shoes, or his pants and shoes looked down at. Prepared like a
+    /// fit photo (kept, uploaded at 1024, faces hidden) but no person is needed and no close-ups are cut.
+    AsyncFunction("prepareSnap") { (uri: String) -> [String: Any] in
+      return try Prep.run(uri: uri, kind: .snap)
+    }
+
     /// A clothes scan (#88, #100): no person needed; any face is still hidden.
     AsyncFunction("prepareItems") { (uri: String) -> [String: Any] in
       return try Prep.run(uri: uri, kind: .items)

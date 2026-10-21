@@ -21,6 +21,7 @@
 | **A chat question** on 3.8 Flash (estimate: 8,700 in incl. the 5,600-token rules + guide, 180 out) | per question | cached prefix / not cached | 0.34¢ / 0.72¢ | 0.68¢ / 1.44¢ |
 | A chat question on 3.5 Flash-Lite, cached | | | 0.16¢ | 0.16¢ |
 | A chat question on 3.5 Flash-Lite with the guide trimmed to the question's sections (~4,000 in) | | | 0.10¢ | 0.10¢ |
+| **A chat question on OpenAI GPT-5.6 Luna, measured** (the chat's model since Oct 17, #329; ~4,470 in, 81% cached at a tenth, ~89 out; $0.20 / $1.20 per million) | per question | | **0.035¢** | 0.035¢ (no rise announced) |
 
 The scoring read's **output** is half its cost (764 tokens at the output price). The shorter v4.1 answer format halved it in the Oct 6 test but read 5 details differently; it's waiting on the gold set (`extraction-test/results/INDEX.md`).
 

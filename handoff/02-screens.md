@@ -1064,6 +1064,15 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 
 **Differs from mockup:** the Save icon is `square.and.arrow.down` (the mockup's up-arrow). Watermark stays `scored by KITTED` (09 suggested adding `trykitted.com`; the mockup wins; add the URL only if the founder asks).
 
+> **Update Oct 18 (DECISIONS-LOG #347): one card in two versions, after Strava's share stickers; replaces the layout above and the first set (#346).** Demo page `mockups/share-card.html`. Code: `app/src/features/share/` (`shareModel.ts`, `ShareCard.tsx`, `ShareScreen.tsx`, `exportCard.ts`, `shareNative.ts` + `offer.ts`); tests `app/src/__tests__/shareCard.test.ts`; demo screens 20 (re-check win) and 230 (single check).
+> - **The overlay:** white stats, a small label over a 40 pt Archivo value (a single check: Score "8.0/10" · Rating "Sharp"; a re-check that went up: Before · After · Change), the tape (5 to 10 in halves; a copper dot on the score, a hollow dot on the "before"), then the KITTED wordmark (11 pt). Copper is the dot only. No occasion, fix, date, pieces, sign-off line or Kit.
+> - **Transparent:** the overlay alone, no background, a 1080 × 600 PNG (the preview shows it on a checkerboard): "Save it, then add it to your own photo or video."
+> - **Solid (#348–349):** the same overlay on a ground, the same 1080 × 600, rounded 24 pt corners (outside them the PNG stays transparent). **Dark:** white on indigo #121628. **Light:** indigo ink #121628 on chalk #F3F4F6, the dot in copper #9C5326. "Light | Dark" under Solid, starting in the phone's appearance.
+> - **With photo:** the same overlay on his photo, full bleed 1080 × 1920, a soft night shade over the bottom (clear to 45%, 35% by 65%, 65% at the bottom), the overlay's bottom 132 pt up (above Instagram's bottom 20%), a light text shadow. "Neck down | Full photo", neck down every time; neck down needs the measured head line and the image size, else the overlay shows on night with "I can't tell where this photo starts below your face, so this version shows the score on its own."
+> - **The screen:** "Transparent | Solid | With photo" (opens on With photo), the face toggle under it for the photo version, Share and Save (Photos, add-only), a status line ("Saved to Photos." / "Photos access is off. Turn it on in Settings." / "Couldn't make the image. Try again.").
+> - **Offered:** a scored full check at 7.0+, or a re-check that went up; never a partial. The card's Share button waits for a build with the native modules.
+> - **Checks SC1–SC7 (Oct 18):** SC1 offered (pass) · SC2 two versions of one overlay, the sticker with no background (pass) · SC3 what it says, copper only on the dot (pass) · SC4 the face crop, neck down by default and not stored (pass) · SC5 above Instagram's bottom 20% (pass) · SC6 Share and Save (in tests; **not yet run on iOS**) · SC7 VoiceOver, one image with the score once (tests; not heard on a device). Seen on the web preview, demo screens 20 and 230, both versions. **Not yet seen:** the PNG's transparency and the capture on iOS (needs the native build).
+
 ---
 
 ## 3. Screens not drawn yet
@@ -1126,6 +1135,8 @@ Same visual language as §2: chalk `bg`, white `KCard`s with radius 26 and dashe
 - **Top-only partial** uses the same screen with tip `Step back so your pants and shoes are in frame.` and a guide over the lower 60%.
 - **After capture:** the cover closes; his bubble shows the snap (caption `Shoe snap` · time) and the card updates in place (S6p). Never uses a check or the re-check. Failure → a toast `Couldn't read your shoes. Try again or pick a pair.` and the Finish row stays.
 - **VoiceOver:** shutter "Take shoe photo".
+
+> **Update Oct 16 (built, DECISIONS-LOG #313, `12-two-shot-check.md` §10–11):** the top-only variant is built: opened from a top-only card's camera tile (`part=bottom`), tip `Point your phone down at your pants and shoes.` (differs from the line above because the rear camera points at him: he looks down at his own pants and shoes), guide over the lower 60% `Pants and shoes here`, shutter VoiceOver "Take a photo of your pants and shoes", bubble caption `Pants and shoes`; the merge is `mergeBottomSnap` (the card becomes `Full check`). A failed snap now shows its toast (`Couldn't read your shoes. Try again or pick a pair.` / `Couldn't read your pants and shoes. Try again.`); it showed nothing before. Snap photos are prepared without needing a person (faces still hidden). In S2's Mirror mode with no hips found, the tip is `Can't step back? Prop your phone up instead.` with a `Use Propped` pill. Demo screens 185–188.
 
 #### S10 · Pick shoes from Closet (sheet)
 - Medium detent, grabber, title `Which shoes?` + X. Subtitle `I'll use what I know about them. Hems stay unrated.`
@@ -1281,6 +1292,8 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 - **VoiceOver:** tile "Navy crewneck, photo" or "Navy crewneck, no photo yet".
 
 #### C3 · Edit item (sheet)
+> **Update Oct 16 (#315, 09-ui-review §17; differs from this spec because the founder picked rows over one form):** the piece page shows a "What it is" section (Kind · Color · Leg or Fit · Pattern); each row opens this route as a one-row picker (`?field=`), pictures of the piece with that one thing changed, one tap picks, a toast with Undo. No Save, no Photo or Delete here (Remove from Closet stays on the page). The form below is superseded.
+
 - Large detent; toolbar `Cancel` · title `Edit item` · `Save`.
 - Form sections:
   - `Type`: a picker of the slot's types (`Tee`, `Polo`, `Oxford`, `Overshirt`, `Sweater`, `Hoodie`, `Jacket`, `Jeans`, `Chinos`, `Trousers`, `Shorts`, `Sneakers`, `Boots`, `Loafers`, `Belt`…).
@@ -1553,7 +1566,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `common.privacyPolicy` | Privacy policy | R |
 | `common.termsOfUse` | Terms of use | N |
 | `common.latest` | Latest | N |
-| `common.who` | Your stylist | M |
+| `common.who` | Kit | M |
 | `brand.wordmark` | KITTED | M |
 | `brand.wordmark.pro` | KITTED PRO | M |
 | `a11y.brand` | Kitted | N |
@@ -1631,7 +1644,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.consent.kept1` | We don't keep your photos on our servers. They stay on your phone. | R |
 | `onb.consent.kept2` | Google uses them only to give you an answer and doesn't use them to train its AI. | R |
 | `onb.consent.kept3` | Google keeps them for up to 55 days only to check for misuse, then deletes them. | R |
-| `onb.consent.aiTitle` | Your stylist is an AI. | R |
+| `onb.consent.aiTitle` | Kit, your stylist, is an AI. | R |
 | `onb.consent.aiBody` | It can make mistakes, so use "Not quite right?" to fix it. | R |
 | `onb.consent.footer` | You can turn this off anytime in You → Privacy. | R |
 | `onb.consent.agree` | Agree & check my fit | M |
@@ -1833,7 +1846,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | Key | String | Src |
 |---|---|---|
 | `stylist.title` | Stylist | M |
-| `stylist.aiNote` | Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do. | R (ruling 17; first message in the Stylist thread, posted once when onboarding ends, above his first photo bubble) |
+| `stylist.aiNote` | I'm Kit, your stylist. Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do. | R (ruling 17; first message in the Stylist thread, posted once when onboarding ends, above his first photo bubble) |
 | `stylist.quota.free` | 1 free check today | M |
 | `stylist.quota.recheck` | Re-check included | M |
 | `stylist.quota.used` | Check used today | M |
@@ -1854,7 +1867,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `quick.ask` | Ask a question | M |
 | `composer.check` | Check my fit | M |
 | `composer.placeholderIdle` | Ask… | M |
-| `composer.placeholder` | Ask your stylist… | M |
+| `composer.placeholder` | Ask Kit… | M |
 | `composer.a11y.camera` | Check my fit. Opens the camera. | N |
 | `composer.a11y.send` | Send | N |
 | `wear.whereTo` | Where to? | M |
@@ -1899,25 +1912,16 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `item.dup.yes` | Yes, same one | N |
 | `item.dup.no` | No, a new one | N |
 | `item.fairUse` | That's a lot of new stuff today. Add the rest in Closet with Describe it. | N |
-| `plan.intro` | Here's where to start. Three moves, in order. | N |
-| `plan.tag` | Your plan | N |
-| `plan.tagCount` | 3 moves | N |
-| `plan.title` | Your first 3 moves | R |
-| `plan.move1` | Tap the basics you own | R |
-| `plan.move1Sub` | 30 seconds · in Closet | N |
-| `plan.move2.layer` | Wear a layer open over a tee | N |
-| `plan.move2Sub` | Free · you own one now | N |
-| `plan.move3` | Add {item} | N (#291: the item carries its article: "a grey quarter-zip", "dark straight jeans") |
-| `plan.move3Sub` | {price} · +{n} fits | N (plural "+1 fit"; with no gain, the price alone) |
-| `plan.move3.nextStepSub` | For interviews and weddings · {price} | N (#291: every essential owned, move 3 is the Next step) |
-| `plan.move.checkNext` | Check tomorrow's fit | N (#291: no fix and no next-level line) |
-| `plan.move.checkNextSub` | Free · 1 a day | N (#291) |
-| `plan.move.nextLevel` | Try one standout color | N |
-| `plan.move.nextLevelSub` | Free · next time you get dressed | N |
-| `plan.start1` | Start move 1 | R |
-| `plan.start` | Start | N |
-| `plan.startN` | Start move {n} | N (#291: moves 2 and 3 on the card) |
-| `plan.move2Prompt` | Show me the layer and I'll check it. | N |
+| `plan.intro` | Want outfit ideas from your own clothes? This part is optional. | N (#343; was "Here's where to start. Three moves, in order.") |
+| `plan.tag` | Optional | N (#343; was "Your plan") |
+| `plan.tagCount` | About 30 seconds | N (#343; was "3 moves") |
+| `plan.title` | Tap the clothes you already own | N (#343; was "Your first 3 moves") |
+| `plan.body` | I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks. | N (#343) |
+| `plan.show` | Show me the list | N (#343) |
+| `plan.skip` | Skip | N (#343) |
+| `plan.skipped` | Skipped. It's in Closet whenever you want it. | N (#343) |
+| `plan.added` | Added {n} to your closet. | N (#343) |
+| `plan.addMore` | Add more | N (#343) |
 | `notif.ask` | Want a daily outfit idea at a time you choose? | R |
 | `notif.ask.yes` | Yes, pick a time | R |
 | `notif.ask.no` | No thanks | R |
@@ -2049,15 +2053,15 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `shoes.sub` | I'll use what I know about them. Hems stay unrated. | N |
 | `shoes.lastWorn` | Last worn {weekday} | N |
 | `shoes.snap` | Not here? Snap them | N |
-| `starter.title` | Starter essentials | M |
-| `starter.sub` | You probably own a few already. Tap the ones you have. | R |
-| `starter.price` | Budget {a} · Mid {b} | N |
+| `starter.title` | What you already own | N (#343; was "Starter essentials") |
+| `starter.sub` | Optional. Tap what you have and pick the color. Skip anything you're not sure about: your fit checks fill in the rest. | N (#343) |
+| `starter.which` | Which one is yours? | N (#343) |
+| `starter.remove` | Remove from closet | N (#343) |
+| `starter.addedToast` | Added {item}. | N (#343) |
+| `starter.added` | Added: {item} | N (#343) |
 | `starter.inCloset` | In your closet | N |
 | `starter.marked` | Marked as owned | N |
-| `starter.next.tag` | Next step | N |
-| `starter.next.item` | Unstructured navy blazer | R |
-| `starter.next.detail` | For interviews and weddings · Budget $80–150 · Mid $200–400 | R |
-| `starter.item.1` … `starter.item.12` | White heavyweight tee · Polo or knit polo · Light-blue or white oxford shirt · Crewneck knit · Dark straight jeans · Chinos, straight or relaxed · Overshirt or chore coat · Casual jacket · White leather sneakers · Loafers or boots · Quarter-zip or plain hoodie · Leather belt | R (rubric v3) |
+| `starter.item.1` … `starter.item.12` | Plain tee · Polo · Oxford shirt · Crewneck sweater · Jeans · Chinos · Overshirt · Casual jacket · Leather sneakers · Loafers or boots · Quarter-zip or hoodie · Belt | N (#343: plain names, he picks the color; was rubric v3's "White heavyweight tee · … · Leather belt") |
 | `rotation.title` | How Rotation is counted | R |
 | `rotation.body` | Rotation is how many different outfits your closet makes. I count every top, bottom and shoes combo that works together, plus a layer when it helps. | N |
 | `rotation.rule1` | Pieces have to be close in how dressy they are. | N |
@@ -2100,16 +2104,13 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `look.delete.title` | Delete this photo? | N |
 | `look.delete.msg` | The score stays in your Lookbook. | R |
 | `look.photoDeleted` | Photo deleted | N |
-| `moves.title` | Your moves | R |
-| `moves.done` | {n} of 3 done | N |
-| `moves.allDone` | All 3 done. Nice work. | N |
 
 ### 5.10 You and settings
 | Key | String | Src |
 |---|---|---|
 | `you.title` | You | M |
 | `you.basicsLine` | {height} · {build} · {fit} fit | M (mockup: "5′10″ · Average · Regular fit") |
-| `you.knows` | What your stylist knows | M |
+| `you.knows` | What Kit knows | M |
 | `you.knowsAll` | All {n} | M |
 | `fact.source.fitCheck` | From a fit check · {date} | M |
 | `fact.source.told` | You told me · {date} | M |
@@ -2139,7 +2140,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `bold.little` | A little | N (mockup lowercase in "Boldness: a little") |
 | `bold.bold` | Bold | N |
 | `profile.budget` | Budget per piece | N |
-| `knows.title` | What your stylist knows | M |
+| `knows.title` | What Kit knows | M |
 | `knows.header` | Everything I use to style you. Edit or delete anything. | N |
 | `knows.cameFrom` | Where it came from | N |
 | `knows.showCheck` | Show the check | N |
@@ -2190,7 +2191,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `privacy.storage` | Photos on this iPhone | N |
 | `privacy.storageValue` | {n} photos · {size} | R |
 | `privacy.deletePhotos` | Delete all photos | R |
-| `privacy.forget` | Forget what your stylist knows | N |
+| `privacy.forget` | Forget what Kit knows | N |
 | `privacy.deleteAll` | Delete all my data | R |
 | `privacy.deletePhotos.title` | Delete all photos? | N |
 | `privacy.deletePhotos.msg` | Your scores and closet stay. This can't be undone. | N |

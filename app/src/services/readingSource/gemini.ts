@@ -3,13 +3,14 @@
 // `run_test.py --format v3 --thinking off` sends: gemini-3.8-flash, temperature 0, JSON with the
 // v3 schema, thinking off. With close-ups (#104) the same call also carries photo prep's face-hidden upper- and
 // lower-body crops, labelled "Image 1:" … and explained by one line from prompt-zoom.json (zoom_test.py, arm B).
-// Streamed (SSE) so each garment's pill appears as it's read. Beta
-// builds use the Worker proxy instead (M4); this file never runs in a Release build.
+// Streamed (SSE) so each garment's pill appears as it's read. Release builds send the same request through our server's
+// /v1/read (services/server, 13-server.md §8): the transport decides, the request and the parsing stay the same.
 import type { Garment, Reading } from '@kitted/core';
 import promptFile from '../../../assets/gemini/prompt-v3.json';
 import zoomFile from '../../../assets/gemini/prompt-zoom.json';
 import schema from '../../../assets/gemini/schema-v3.json';
 import { AbortError } from '../scheduler';
+import { checkTag, directTransport, refusalKind, type AiFetch, type AiTransport } from '../server/transport';
 import type { FailCode, PreparedImage, ReadingEvent, ReadingSource, ReadKind, SlotKind } from './types';
 
 export const GEMINI_MODEL = 'gemini-3.8-flash';
@@ -19,8 +20,6 @@ export const PROMPT_VERSION_ZOOM = 'v3z';
 /** Send photo prep's close-ups with the upload (#104: boots no longer read as slides, tops 80% → 100%, consistency
  *  64/66 vs 60/66; 0.39 → 0.57¢ and +0.5 s per check). false = exactly the Oct 6 lock. */
 export const SEND_CLOSE_UPS = true;
-const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
-
 /** The request body (pure, tested against run_test.py's and zoom_test.py's). No close-ups: exactly the Oct 6 lock. */
 export function buildRequest(jpegBase64: string, zoomBase64: readonly string[] = []) {
   const images = [jpegBase64, ...zoomBase64.slice(0, 2)];
@@ -113,14 +112,12 @@ export function completedGarments(partial: string): Garment[] {
 const SLOT: Record<string, SlotKind> = { top: 'top', outerwear: 'outerwear', bottom: 'bottom', footwear: 'footwear' };
 
 export interface GeminiOptions {
-  apiKey: string;
+  /** Where the request goes (services/server): our server, or Gemini with the dev key. Without it, `apiKey` + `fetch`
+   *  make the direct one (the tests). */
+  transport?: AiTransport;
+  apiKey?: string;
   /** Streaming fetch (expo/fetch on device); injected for tests. */
-  fetch: (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{
-    ok: boolean;
-    status: number;
-    body: { getReader(): { read(): Promise<{ done: boolean; value?: Uint8Array }>; cancel?(): Promise<void> } } | null;
-    text(): Promise<string>;
-  }>;
+  fetch?: AiFetch;
   now?: () => number;
   /** Called once per finished call: latency, model and token counts (cost tracking, S1). */
   onCall?: (info: { seconds: number; model?: string; usage?: Record<string, number>; finishReason?: string; hedged: boolean }) => void;
@@ -153,21 +150,25 @@ async function logRefusal(res: { status: number; text(): Promise<string> }): Pro
 
 export function createGeminiSource(opts: GeminiOptions): ReadingSource {
   const now = opts.now ?? (() => Date.now());
+  const transport = opts.transport ?? directTransport(opts.apiKey ?? '', opts.fetch!);
   let hedgeRequested: (() => void) | null = null;
 
-  async function stream(base64: string, zoom: readonly string[], signal: AbortSignal, onGarment: (g: Garment) => void): Promise<Attempt> {
+  async function stream(
+    base64: string, zoom: readonly string[], signal: AbortSignal, onGarment: (g: Garment) => void, tag: ReturnType<typeof checkTag> | undefined,
+  ): Promise<Attempt> {
     let res;
     try {
-      res = await opts.fetch(`${BASE}/${GEMINI_MODEL}:streamGenerateContent?alt=sse`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': opts.apiKey },
-        body: JSON.stringify(buildRequest(base64, zoom)),
-        signal,
-      });
+      res = await transport.send({ route: 'read', model: GEMINI_MODEL, stream: true, body: JSON.stringify(buildRequest(base64, zoom)), signal, ...(tag ? { tag } : {}) });
     } catch (e) {
       if (signal.aborted) throw new AbortError();
       void e;
       return { fail: 'offline' };
+    }
+    // The server's daily limit or its spending stop (13 §8, A7–A8): their own cards, nothing counted.
+    const refusal = refusalKind(res);
+    if (refusal) {
+      console.log(`[server] read refused · ${refusal}${res.refusal?.which ? ` · ${res.refusal.which}` : ''}`);
+      return { fail: refusal };
     }
     if (!res.ok || !res.body) {
       // DEV: why Gemini said no (429 = quota or rate limit, 403 = key or billing, 400 = the request), so a test on his
@@ -222,8 +223,9 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
     hedge() {
       hedgeRequested?.();
     },
-    async *read(image: PreparedImage, _kind: ReadKind, o?: { signal?: AbortSignal }): AsyncGenerator<ReadingEvent> {
-      void _kind; // re-check and shoe snap send the same full read; core merges the parts
+    async *read(image: PreparedImage, kind: ReadKind, o?: { signal?: AbortSignal; checkId?: string }): AsyncGenerator<ReadingEvent> {
+      // Re-check and shoe snap send the same full read (core merges the parts); the kind only tags the call.
+      const tag = o?.checkId ? checkTag(o.checkId, kind) : undefined;
       const base64 = image.uploadBase64;
       const zoom = SEND_CLOSE_UPS ? image.zoomBase64 ?? [] : [];
       if (!base64) {
@@ -253,7 +255,7 @@ export function createGeminiSource(opts: GeminiOptions): ReadingSource {
         const ac = new AbortController();
         controllers.push(ac);
         if (outer) outer.addEventListener('abort', () => ac.abort(), { once: true });
-        return stream(base64, zoom, ac.signal, onGarment);
+        return stream(base64, zoom, ac.signal, onGarment, tag);
       };
       let hedged = false;
       const attempts: Promise<Attempt>[] = [startAttempt()];

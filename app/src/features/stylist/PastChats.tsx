@@ -15,6 +15,7 @@ import { chatDayTitle } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
 import { ThreadRow } from './MessageView';
 import { buildThreadItems, chatDays, type ChatDay } from './thread';
+import { GonePage } from '@/features/gone/Gone';
 
 interface DayRow {
   day: ChatDay;
@@ -116,11 +117,13 @@ export function PastDayScreen({ dayKey: key }: { dayKey: string }) {
     [day, now],
   );
   const title = day ? chatDayTitle(day.firstAt, now, sessionClock.offset) : '';
+  // No such day (its messages were deleted, or an old link): say so (09 §20.7 R11, #323).
+  if (loaded && !day) return <GonePage />;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xxxl }}>
       <Stack.Screen options={{ title }} />
       {items.map((item, i) => (
-        <View key={item.key} style={i > 0 ? { marginTop: space.stack } : undefined}>
+        <View key={item.key} style={i > 0 ? { marginTop: item.gap } : undefined}>
           <ThreadRow item={item} readOnly />
         </View>
       ))}

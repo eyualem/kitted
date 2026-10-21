@@ -286,6 +286,8 @@ Script (don't mention Kitted until question 9):
 3. "Have you ever asked ChatGPT or someone online about an outfit? Can you show me?" (Ask to see the chat.)
 4. "What's the hardest part about dressing well for you?"
 5. "Where do you get style ideas? Any creators?"
+5b. "Where do you check your outfit before you leave? Does that mirror show your shoes?" (Note: full-length mirror / bathroom or small mirror only / none. Sizes the two-shot check, `handoff/12-two-shot-check.md` T7, #313.)
+5c. "What did you wear to class (or work) today? Would you want an app to rate that, or is it 'not really an outfit'?" (Note: gym shorts, sweats or a tracksuit / jeans or chinos / other; and rate it: yes / no. Sizes how often the athletic default is the daily fit and whether guys want it scored, `rubric/research/parts/casual-athletic.md`, #331.)
 6. "What did you spend on clothes in the last 3 months, roughly? Where?"
 7. "Do you pay for any app subscriptions? Which, and how much?"
 8. "Have you tried any app for clothes or looks? (Umax, Dressly, any rater.) What happened?"

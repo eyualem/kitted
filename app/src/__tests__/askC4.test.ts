@@ -156,7 +156,7 @@ describe('M4 · a piece he mentions', () => {
       quota: createQuota({ store, clock, isPro: () => true }), clock, scheduler: realScheduler, ids, closet,
       timers: () => ({ ...DEFAULT_TIMERS, enabled: false, cacheHitMs: 0 }), tap: () => true,
     });
-    await store.profile.patch('me', { consentVersion: '1', consentAt: clock.nowMs(), onboardingDone: true });
+    await store.profile.patch('me', { consentVersion: '2', consentAt: clock.nowMs(), onboardingDone: true });
     const check = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };
     await closet.settle();
     const row = (await store.fitChecks.get(check.checkId))!;

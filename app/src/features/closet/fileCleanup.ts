@@ -9,7 +9,7 @@
 // there's nothing to delete, so nothing can go missing that he kept. A file another live sighting still names is
 // kept.
 import type { KittedStore } from '@/data/store';
-import { TOAST_MS_REMOVAL } from '@/features/toast/toast';
+import { TOAST_MS_REMOVAL, toastHardStopMs } from '@/features/toast/toast';
 import { printFileOf } from '@/services/measure/garments';
 import { profileOfItem } from './profile';
 
@@ -17,8 +17,8 @@ export const PENDING_DELETES_KV = 'closet.pendingDeletes';
 
 export type PendingDelete = { kind: 'photo'; itemId: string; obsId: string; at: number } | { kind: 'piece'; itemId: string; at: number };
 
-/** After the removal toast is gone even with VoiceOver on (its time doubles, toast.ts), plus a margin. */
-export const DELETE_AFTER_MS = 2 * TOAST_MS_REMOVAL + 4_000;
+/** After the removal toast is surely gone (its hard stop: VoiceOver's doubled time, or the longest hold; toast.ts), plus a margin. */
+export const DELETE_AFTER_MS = toastHardStopMs({ ms: TOAST_MS_REMOVAL }) + 4_000;
 
 export interface CleanupDeps {
   store: KittedStore;

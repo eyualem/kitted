@@ -27,13 +27,16 @@ export interface PiecePhotoTileProps {
   actions: readonly PhotoAction[];
   onPress: () => void;
   onLongPress?: () => void;
+  /** How long a press must be held to be a long press (Pressable's own default is 500 ms). */
+  delayLongPress?: number;
 }
 
-export function PiecePhotoTile({ photo, size, label, actions, onPress, onLongPress }: PiecePhotoTileProps) {
+export function PiecePhotoTile({ photo, size, label, actions, onPress, onLongPress, delayLongPress }: PiecePhotoTileProps) {
   return (
     <Pressable
       onPress={onPress}
       onLongPress={onLongPress}
+      delayLongPress={delayLongPress}
       accessibilityRole="button"
       accessibilityLabel={photo.cover ? t('closet.piece.a11y.coverPhoto', { photo: label }) : label}
       accessibilityHint={t('closet.piece.a11y.photoHint')}

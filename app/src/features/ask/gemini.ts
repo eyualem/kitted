@@ -1,25 +1,29 @@
-// The real stylist (07 §5, C2; checks A1–A3): one streamed Gemini call per question with the dev key, the way the
-// reading call works (services/readingSource/gemini.ts), its SSE parser shared. The closing block (closing.ts) is
+// The real stylist (07 §5, C2; checks A1–A3): one streamed Gemini call per question, the way the reading call works
+// (services/readingSource/gemini.ts), its SSE parser shared: the dev key on a dev build, our server's /v1/ask
+// otherwise (services/server, 13-server.md §8). The closing block (closing.ts) is
 // split off as it streams, so the deltas this yields are the answer only; the pipeline gates them sentence by
 // sentence (gate.ts). Never picked on his phone until CHAT_LIVE is on (session.ts, A7).
 import { parseSse, type StreamChunk } from '@/services/readingSource/gemini';
+import { directTransport, refusalKind, type AiFetch, type AiTransport } from '@/services/server/transport';
 import { createClosingSplitter, EMPTY_BLOCK } from './closing';
 import type { AnswerEvent, AnswerSource } from './source';
 
 /** The chat's starting model (07 §9, #270): a quarter of 3.8 Flash's cost from 2027; C5's test can change it. */
 export const ASK_MODEL = 'gemini-3.5-flash-lite';
-const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 /** ≈200 tokens of answer plus the closing block (07 §5.3). */
 export const ASK_MAX_TOKENS = 420;
 export const ASK_TEMPERATURE = 0.3;
 
 export interface AskGeminiOptions {
-  apiKey: string;
+  /** Our server or Gemini with the dev key (services/server); without it, `apiKey` + `fetch` (the tests). */
+  transport?: AiTransport;
+  apiKey?: string;
   /** Streaming fetch (expo/fetch on device); injected for tests. */
-  fetch: (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{
+  fetch?: (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{
     ok: boolean;
     status: number;
     body: { getReader(): { read(): Promise<{ done: boolean; value?: Uint8Array }> } } | null;
+    text?(): Promise<string>;
   }>;
   model?: string;
   /** The answer cap (default ASK_MAX_TOKENS); the model test gives every model the same, higher one (#311). */
@@ -47,6 +51,7 @@ export function buildAskRequest(system: string, user: string, model: string = AS
 export function createAskGemini(opts: AskGeminiOptions): AnswerSource {
   const now = opts.now ?? (() => Date.now());
   const model = opts.model ?? ASK_MODEL;
+  const transport = opts.transport ?? directTransport(opts.apiKey ?? '', opts.fetch as unknown as AiFetch);
   return {
     name: 'gemini',
     async *answer(req): AsyncGenerator<AnswerEvent, void, void> {
@@ -57,14 +62,18 @@ export function createAskGemini(opts: AskGeminiOptions): AnswerSource {
       const t0 = now();
       let res;
       try {
-        res = await opts.fetch(`${BASE}/${model}:streamGenerateContent?alt=sse`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': opts.apiKey },
-          body: JSON.stringify(buildAskRequest(req.prompt.system, req.prompt.user, model, opts.maxTokens)),
-          signal: req.signal,
+        res = await transport.send({
+          route: 'ask', model, stream: true, body: JSON.stringify(buildAskRequest(req.prompt.system, req.prompt.user, model, opts.maxTokens)),
+          signal: req.signal, ...(req.tap ? { free: 'tap' as const } : {}),
         });
       } catch {
         yield { type: 'failed', code: req.signal?.aborted ? 'aborted' : 'offline' };
+        return;
+      }
+      // The server's daily limit or spending stop (13 §8, A7–A8): the pipeline's limit line or paused line.
+      const refusal = refusalKind(res);
+      if (refusal) {
+        yield { type: 'failed', code: refusal };
         return;
       }
       if (!res.ok || !res.body) {

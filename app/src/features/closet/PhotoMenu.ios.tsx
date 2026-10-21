@@ -3,6 +3,7 @@
 // actions on the tile.
 import { Button, ContextMenu, Host, RNHostView } from '@expo/ui/swift-ui';
 import { useTheme } from '@/design-system';
+import { holdForMenu, MENU_HOLD_MS } from './menuHold';
 import { PiecePhotoTile, type PiecePhotoTileProps } from './PiecePhotoTile';
 
 export function PhotoMenu(props: PiecePhotoTileProps) {
@@ -12,7 +13,8 @@ export function PhotoMenu(props: PiecePhotoTileProps) {
       <ContextMenu>
         <ContextMenu.Trigger>
           <RNHostView matchContents>
-            <PiecePhotoTile {...props} />
+            {/* A hold is the menu's, never a tap that opens the photo (menuHold.ts). */}
+            <PiecePhotoTile {...props} onLongPress={holdForMenu} delayLongPress={MENU_HOLD_MS} />
           </RNHostView>
         </ContextMenu.Trigger>
         <ContextMenu.Items>

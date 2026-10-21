@@ -21,13 +21,19 @@ import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
 import { askService } from '@/features/ask/session';
 import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
-import { STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
+import { connectivity } from '@/services/connectivity';
+import { t } from '@/i18n/en';
+import type { DemoFault } from './demoArgs';
+import { STORY_DOUBT, STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
 const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
 /** Story steps per screen (firstRun story; screen 11 runs s24 live inside `full`). */
 type Step =
-  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey; tapLook?: StyleKey }
+  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey; tapLook?: StyleKey; fault?: DemoFault }
+  /** A question that failed for no connection (09-ui-review §20.8 G18.4): his bubble and the offline line with Retry, as
+   *  the pipeline writes them (askPipeline tests cover the path itself; the screen's own state is offline). */
+  | { at: string; do: 'askOffline'; text: string }
   /** His picks from setup (the Going-for tiles, #215), in order. */
   | { at: string; do: 'looks'; styles: StyleKey[] }
   /** "Going for" changed after the score (Change → a look): advice only. */
@@ -50,6 +56,8 @@ type Step =
   | { at: string; do: 'openApp' }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
+  /** The partial check's snap (S9): the shoes, or the pants and shoes on a top-only check (#313). */
+  | { at: string; do: 'snap'; photoId: string }
   | { at: string; do: 'tap'; answer: 'jeans' | 'work_boot' | 'skip'; checkId?: string }
   /** "Which one is you?" (02 S23) on a bundled photo; the second person's box is drawn for the demo. */
   | { at: string; do: 'whichOne'; photoId: string }
@@ -59,6 +67,9 @@ type Step =
   | { at: string; do: 'askTap'; option: string }
   /** A stored setting (Closet's remembered Pieces | Outfits tap, #307). */
   | { at: string; do: 'kv'; key: string; value: string }
+  /** Earlier sightings of a closet piece, read with these legs or fits (09-ui-review §18): a day apart, no photo. The
+   *  piece is `itemId`, or the `slot` piece a story check (`ofCheck`) linked (§19). */
+  | { at: string; do: 'sightings'; itemId?: string; ofCheck?: string; slot?: string; legs?: string[]; volumes?: number[] }
   /** Questions already used today (the limit state without five demo answers in the thread). */
   | { at: string; do: 'askUsed'; n: number }
   /** His question in the thread, its answer held mid-way: the dots (no text) or the first words (07 §6.1). */
@@ -78,6 +89,11 @@ const DUP_STORY: Step[] = [
   { at: '2026-10-22T07:51:00', do: 'closetNo' },
 ];
 
+/** §19's story (screens 201–203): a check of s12, then earlier photos of its jeans read slim, wide and wide. */
+const DOUBT_STORY: Step[] = [
+  { at: '2026-10-22T12:10:00', do: 'check', photoId: 's12', occasion: 'everyday', checkId: STORY_DOUBT },
+  { at: '2026-10-22T12:11:00', do: 'sightings', ofCheck: STORY_DOUBT, slot: 'bottom', legs: ['slim', 'wide', 'wide'] },
+];
 const FIRST_CHECK: Step = { at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' };
 
 const GF_LOOKS: Step = { at: '2026-10-22T07:41:00', do: 'looks', styles: ['minimalist', 'streetwear', 'smart_casual'] };
@@ -217,6 +233,18 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
   // The Closet's Outfits (09-ui-review §13, #307). Screen 15 keeps showing the Pieces grid it always did.
   15: { steps: [{ at: '2026-10-22T07:00:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  // How baggy a piece is (09-ui-review §18, #316): the dark jeans read slim, wide, wide and straight in four checks.
+  194: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  195: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
+  196: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
+  // Bagginess on the fit-check card (§19, #322): s12's mid-wash jeans, read slim, wide and wide in earlier photos.
+  201: { steps: DOUBT_STORY },
+  202: { steps: [...DOUBT_STORY, { at: '2026-10-22T12:12:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
+  203: { steps: DOUBT_STORY },
+  // Step 4's code-only batch (09-ui-review §20.8): offline (210), "That score is wrong" (211), a re-check that moved (215).
+  210: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', fault: 'offline' }, { at: '2026-10-22T07:44:00', do: 'askOffline', text: 'What goes with my jeans?' }] },
+  211: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'ask', text: 'That score is wrong.' }] },
+  215: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
   183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
@@ -232,6 +260,10 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // All 3 moves done (#292, §9.9 Y5): the re-check made move 2's fix, the first check's top fix (s14b wears the white leather sneakers).
   180: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
   181: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
+  // The two-shot check, step 0 (#313): p01b's outfit read as top only (a short mirror), then its pants and shoes snapped.
+  185: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }] },
+  186: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }, { at: '2026-10-20T08:12:00', do: 'snap', photoId: 'p01b' }] },
+  187: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }] },
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 
@@ -261,6 +293,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   const story = STORY[sc.n] ?? { steps: [] };
   const args = getDemoArgs();
   setDemoArgs({ ...args, latency: 0 });
+  // The connection is pinned (G18): online, or offline on the offline screens, whatever the Mac's Wi-Fi is doing.
+  connectivity.force(!sc.offline);
 
   if (sc.scenario === 'full') {
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at(story.asOf ?? sc.now) });
@@ -268,7 +302,7 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     const a = seed.scenarios.firstRun.onboardingAnswers;
     await completeOnboarding(
       store,
-      { styles: a.styles as unknown as Styles, heightCm: a.heightCm, build: a.build, fitPreference: a.fitPreference, birthYear: a.birthYear },
+      { styles: a.styles as unknown as Styles, heightCm: a.heightCm, build: a.build, fitPreference: a.fitPreference, birthYear: a.birthYear, ...(sc.consent === false ? { consent: false } : {}) },
       at('2026-10-22T07:40:00'),
       newId,
     );
@@ -339,8 +373,40 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       if (o.kind === 'sent') await o.done;
       continue;
     }
+    if (step.do === 'askOffline') {
+      const t0 = at(step.at);
+      const q = newId('M');
+      await store.chat.put({ id: q, createdAt: t0, role: 'user', kind: 'text', text: step.text, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {} });
+      await store.chat.put({
+        id: newId('M'), createdAt: t0 + 1, role: 'stylist', kind: 'text', text: t('fail.askOffline'), cardType: null, fitCheckId: null, outfitId: null, itemId: null,
+        chips: [], payload: { askRetry: q },
+      });
+      continue;
+    }
     if (step.do === 'kv') {
       await store.setKv(step.key, step.value);
+      continue;
+    }
+    if (step.do === 'sightings') {
+      let itemId = step.itemId ?? null;
+      if (step.ofCheck) {
+        await fitCheck.closet.settle();
+        const links = (await store.fitChecks.get(step.ofCheck))?.details.closetSummary?.links ?? [];
+        const items = await Promise.all(links.map((l) => store.closet.get(l.itemId)));
+        itemId = items.find((c) => c?.slot === step.slot)?.id ?? null;
+      }
+      const it = itemId ? await store.closet.get(itemId) : null;
+      if (!it) continue;
+      const reads: Partial<typeof it.garment>[] = [...(step.legs ?? []).map((l) => ({ leg_shape: l })), ...(step.volumes ?? []).map((v) => ({ volume: v }))];
+      const t0 = at(step.at);
+      for (const [i, r] of reads.entries()) {
+        await store.closetObs.put({
+          id: `O-demo-${it.id}-${i}`, itemId: it.id, fitCheckId: null, readingId: null, closetReadingId: null, garmentIndex: null,
+          origin: 'garment', garment: { ...it.garment, ...r }, closet: null, sampledHex: null, sampledL: null, cropFile: null, cropQuality: null,
+          decision: 'same', identityScore: null, candidates: [], askItemId: null, answeredAt: null, userConfirmed: null,
+          createdAt: t0 - (reads.length - i) * 86_400_000, isDeleted: false,
+        });
+      }
       continue;
     }
     if (step.do === 'askTap') {
@@ -409,6 +475,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       // No chat line since Oct 14 (the camera says what a re-check reads); the step stays so old stories keep their timing.
     } else if (step.do === 'recheck') {
       await fitCheck.start({ mode: 'recheck', photoId: step.photoId, parentCheckId: STORY_FIRST_CHECK, checkId: STORY_RECHECK });
+    } else if (step.do === 'snap') {
+      await fitCheck.start({ mode: 'shoeSnap', photoId: step.photoId, parentCheckId: STORY_PARTIAL });
     } else if (step.hold !== undefined) {
       // Screen 6: freeze mid-reading with the timers off (headless Chrome's virtual time would fire them).
       readingSource.holdAt = step.hold;
@@ -418,10 +486,16 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       if (step.occasion !== 'everyday') fitCheck.selectOccasion(step.occasion);
       if (step.tapLook) fitCheck.selectLook(step.tapLook);
     } else {
-      await fitCheck.start({
-        mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL),
-        ...(step.style ? { style: step.style } : {}),
-      });
+      // A step's fault (G18: no connection) holds for that check only.
+      if (step.fault) setDemoArgs({ ...getDemoArgs(), fault: step.fault });
+      try {
+        await fitCheck.start({
+          mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL),
+          ...(step.style ? { style: step.style } : {}),
+        });
+      } finally {
+        if (step.fault) setDemoArgs({ ...getDemoArgs(), fault: args.fault });
+      }
     }
   }
   // The closet call lands after the score card: wait for it so the screen shows the written closet.

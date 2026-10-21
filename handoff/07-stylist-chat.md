@@ -526,7 +526,7 @@ V0, J and every test below are written first and can start now. L1 and K1–K3 w
 **L0, the founder's pick** (`mockups/chat-answers.html`, light and dark):
 - **A · Clean text:** today's look, plus "Your stylist" over every answer, the first sentence semibold, his pieces underlined and tappable, more room above.
 - **B · Soft bubble:** a white bubble on the left, like texting a person.
-- **C · Stylist note (default):** the K mark beside every answer, the move on its own larger line, the reason under it in grey, his pieces as small chips in their own colors.
+- **C · Stylist note (default):** (since Oct 17, #318, the K mark is replaced by the name "Kit" small above the first line of each reply, and the text takes the full width) the K mark beside every answer, the move on its own larger line, the reason under it in grey, his pieces as small chips in their own colors.
 
 **L1, the build (for any pick):** a new `StylistAnswer` in `design-system/components/Chat.tsx` for answers only; other stylist lines (greetings, the limit line) get the same mark and spacing. All formatting is done by code, never by model markup:
 - the lead is the first sentence, split by code;
@@ -719,6 +719,7 @@ An answer is **good** when every judge gives it ≥ 4 on all five. Targets:
 5. **Outward-facing, his call:** a non-Google winner means consent and the App Store privacy label name OpenAI or Anthropic for questions (text only, never photos), and a second key on the server.
 
 ### 16.6 Results (Oct 17, #311; full report `extraction-test/results/ask-models1/report.md`)
+> **Decided Oct 17 (#329):** the founder went with GPT-5.6 Luna without finishing the blind pick ("I'd rather go with your judgment… going with the OpenAI model is probably the better idea"). The chat's live source is OpenAI on dev builds (`liveSource.ts` `CHAT_PROVIDER`), consent version 2 names OpenAI for questions, and the server's `/v1/ask` still needs its OpenAI branch (`handoff/13-server.md` §8).
 - **GPT-5.6 Luna is the only model that passes every hard gate** (100% answered, nothing unsafe in its own words, 0 rules clashes, every block parsed, 0.66 s first words, 0.035¢ a question), **and it clears every quality target:** 83% good, mean 4.58, invented 4.9%, the same advice twice 93% (judged), voice flags 10%.
 - **Today's Flash-Lite** fails G2: a promised "ten", "your waist", handles. Its quality is 54% good and 12% invented.
 - **3.8 Flash** fails G1, G6 and G7: hidden tokens, 23% of answers cut off, 3.9 s to first words, 0.81¢ from 2027.
@@ -737,3 +738,282 @@ An answer is **good** when every judge gives it ≥ 4 on all five. Targets:
   - then the outward-facing switch: consent and the privacy label name OpenAI for questions, his own OpenAI key on the server;
   - rotating the two test keys (shared in chat).
 - **Nothing in the app's model choice has changed yet:** the phone still uses Flash-Lite.
+
+---
+
+## 17. The chat UI pass: audit, then fixes (Oct 17, #314)
+Founder, away: "start working on the UI for the chat system … try to find bugs and fix them … keep things like what the card looks like and also what the user's message looks like … just make it very good." In scope: the Stylist tab's conversation (answers in look C, his bubbles, cards in the thread, typing and streaming, rhythm, stamps, the composer, scrolling, Past chats, dark, Dynamic Type, VoiceOver, Reduce Motion). Not in scope: the model, prompts, scoring, the cards' own design. No live questions were sent (demo screens and recorded sources only).
+
+### 17.1 The audit (Oct 17)
+Three passes: the iOS Simulator (demo screens 90–95, 167–175, light, dark, AX5; `screenshots/chat-ui/before/`), a code read for bugs, a code read for accessibility. Findings, most severe first:
+
+**Bugs**
+1. **Last night's answer comes back as a ghost.** A finished live answer stays in memory for good; the next morning (or after "Delete all my data") it draws under the morning card with the K mark, as if just answered. (`live.ts`, `liveRowShows`)
+2. **A double tap sends twice** (send, a starter chip, Retry, a tap answer): `busy` is only set after several awaits, so two bubbles, two answers mixed into one live row, and 6 of 5 questions counted. (`pipeline.ts`)
+3. **The thread pulls him back down while he drags up** during a streaming answer (each new sentence scrolls to the end mid-gesture). (`StylistScreen.tsx`)
+4. **Leaving the composer while voice is getting ready leaves the mic on** with no UI, then an "I didn't catch that." toast 8 s later. (`dictation.ts` `dispose`)
+5. **Stylist lines drawn as cards never get the K mark:** the limit line, the notification ask, "Keep your fits", "Ready to score last night's photo?". The limit line sits under his bubble ownerless (seen on demo 93), and the next stylist line starts a new run. (`thread.ts`)
+6. **Past chats: an old outfit idea's Wear this still works** and overwrites today's wear log. (`MessageView.tsx`, `OutfitIdeaCard.tsx`)
+7. **Piece chips flicker** when the stored answer takes over from the live row (each answer loads the closet on its own; the first frame has no chips). (`MessageView.tsx`, `LiveAnswerRow.tsx`)
+8. **The paused, refused and failed lines are drawn as an answer** (the first sentence semibold as if it were a move): "I rate outfits, never people." is fine as a lead, but "I couldn't answer that." isn't a move.
+9. **Starter chips go stale after 4 am** (yesterday's "Why a 7.0?" in the morning).
+10. **A link card can open a piece that was merged away** (checks `isDeleted`, not `mergedInto`).
+11. **"Scroll to this card" can use a stale position** for a row no longer in today's thread.
+
+**How it looks and feels**
+12. **A white piece's swatch reads as an empty checkbox** ("☐ white tee"): a white square with an ink3 border, seen on every answer naming white sneakers or a white tee.
+13. **One gap everywhere (16 pt):** his two bubbles in a row sit as far apart as a change of speaker; an answer under his question has no more room than anything else (look C asked for 20 pt above an answer). The thread reads as a list, not a conversation.
+14. **At AX5 his bubble wraps one word per line** (78% wide), the typing dots stay 6 pt beside huge words, and the photo bubble's caption cuts to "…".
+15. **A chip name with a hyphen breaks across lines** ("light-" / "blue oxford").
+
+**Accessibility**
+16. **Most new stylist lines are silent to VoiceOver:** only a finished answer is announced. The failure line, the paused line, the limit line, the refusals and the **988 support card** are posted with no announcement, and the waiting row (dots, "Taking longer…") is hidden for up to 20 s.
+17. The answer's announcement isn't queued (iOS can drop it while VoiceOver is speaking).
+18. Auto-follow fights VoiceOver (three-finger scrolls don't count as "scrolled up", so a VoiceOver user reading an older card is pulled to the bottom).
+19. Reduce Motion: the thread's own scrolls and the toast-room slide still animate.
+20. "Earlier chats" is read as "Past chats" (Voice Control "Tap Earlier chats" fails); day stamps aren't headers; the bar doesn't read a waiting draft.
+21. At AX sizes the starter chips stack into a tall column above the field and the keyboard.
+
+**Left as is, on purpose:** the cards' own design; the composer swapping send ↔ mic under VoiceOver focus (the finished answer is announced anyway; a stable slot is a bigger change, a follow-up); a question sent at 3:59 and answered at 4:00 (rare; the answer lands on the new day); an outfit card's Wear this adding a new outfit row per tap (data, not the chat's look); the 20 s give-up starting after the pack is built; leaving the tab mid-dictation dropping the words heard so far (needs the phone to test); redundant VoiceOver hints (copy).
+
+### 17.2 Pass/fail checks, set before fixing
+(T) a jest test, (S) seen on the iOS Simulator, (C) read in code.
+- **U1 (T)** A finished live answer is dropped once the thread shows its row; nothing is drawn after a wipe; a finished answer from an earlier day never draws.
+- **U2 (T)** Two sends in the same tick give one bubble, one answer and one count; the same for Retry and a tap answer.
+- **U3 (T)** Words or a finish for a question that isn't the current one are ignored.
+- **U4 (T)** Disposing the dictation while it gets ready: the native start is never called and no toast shows.
+- **U5 (T)** The limit line, the notification ask, the save offer and "Ready to score" get the mark on the first line of a run; a stylist line right after one continues the run.
+- **U6 (T)** The paused, failed and refused lines are not answers (no lead).
+- **U7 (T)** The rhythm: his bubbles in a row 4 pt; the stylist's lines in a row 8 pt; his line → the stylist 20 pt; the stylist → his line 16 pt; 20 pt above a stamp and 8 pt below it.
+- **U8 (T)** Past chats: an outfit idea has no Wear this.
+- **U9 (T)** A link card to a merged or removed piece isn't a link.
+- **U10 (C)** Starter chips reload on a new day.
+- **U11 (S)** The swatch is a color dot with a faint ring, never a checkbox, in light and dark.
+- **U12 (T)** A chip's name never breaks at its hyphen.
+- **U13 (S)** AX5: his bubble up to 88% wide; the photo caption wraps instead of cutting; the dots grow; the starter chips sit in one row that scrolls.
+- **U14 (T)** The failure, paused, limit, support and refusal lines are each announced once; the answer is announced queued.
+- **U15 (T)** The waiting row is one VoiceOver element, "Your stylist is writing", with "Taking longer…" added when it shows.
+- **U16 (C)** With Reduce Motion the thread jumps instead of scrolling, and the toast room doesn't slide.
+- **U17 (C)** The thread doesn't follow new words while he's dragging; with VoiceOver on it follows only his own sends.
+- **U18 (T)** "Earlier chats" is spoken as shown; day stamps are headers; the bar reads his waiting draft.
+- **U19 (C)** The answer's chips are there on the first frame (one shared closet read).
+- **G** `npm run check` green; G4 holds (no score changes).
+
+### §17 results (Oct 17, #314): checked against U1–U19 and G; no check changed
+`npm run check` green: 1,091 app tests in 87 suites (new `chatUi.test.ts`, 19 tests), core tests, typecheck, lint. Simulator: demo screens 11, 90–94, 167, 170, 175 in light, dark and AX5; before/after in `screenshots/chat-ui/` (git-ignored). The tests were written with the fixes, after the checks; the bugs behind U1–U4 were traced in the code first.
+
+| Check | Result | How |
+|---|---|---|
+| U1 | Pass (T) | `liveAnswer.settle` drops a finished answer once the thread shows its row; `liveRowShows` takes the day; `deleteAllData` clears it |
+| U2 | Pass (T) | `claimed()` in `pipeline.ts` takes the one-question claim before any await: two sends, or two Retries, in the same tick → one bubble, one answer, one count; an early return (consent) gives the claim back |
+| U3 | Pass (T) | `append`/`finish` carry the question id and ignore another |
+| U4 | Pass (T) | `dispose` ends the session (the waiting start stops), stop while getting ready is a cancel |
+| U5 | Pass (T, S) | `isStylistLine`: the limit line, the notification ask, the save offer and "Ready to score" get the mark (demo 93: the limit line now has its K) and continue the run |
+| U6 | Pass (T) | failed, paused and refused lines are plain lines, not a lead and a reason |
+| U7 | Pass (T, S) | `RHYTHM`: 4 / 8 (12 with a card) / 20 / 16, stamps 20 above and 8 below; the live row 20 under his question. Seen on 92, 93, 167, 170 |
+| U8 | Pass (T) | an earlier day's outfit idea has no Wear this and no VoiceOver action |
+| U9 | Pass (T) | `linkedPiece` follows a merge to the piece it lives on in; a removed piece isn't a link; the link's "›" isn't read |
+| U10 | Pass (C) | the starter chips' load depends on today's day key |
+| U11 | Pass (S) | a round 10 pt dot with a faint ring (black 14% light, white 22% dark): white pieces read as a white dot, not a checkbox (92, 93 light; 92 dark) |
+| U12 | Pass (T) | chip names use a no-break hyphen |
+| U13 | Pass (T, S) except the chip row (C) | AX5: his bubble 88% wide (92); the photo's caption goes under the bubble, "Everyday · 8:10", instead of "Every-day" inside it (11); dots 10 pt (90 dark). The starter chips' sideways row at AX sizes is read in code only (the Simulator's hardware keyboard didn't focus the field to show them) |
+| U14 | Pass (T) | the support card, both refusals, the limit, failed and paused lines go through `onPosted`; announcements are queued (`announceForAccessibilityWithOptions`) |
+| U15 | Pass (T) | the waiting and streaming row is one element, "Your stylist is writing" (+ ". Taking longer…"); "Taking longer…" is announced once |
+| U16 | Pass (C) | the thread's scrolls pass `animated: false` and the toast room doesn't slide with Reduce Motion |
+| U17 | Pass (C) | no follow while dragging; with VoiceOver on, only his own sends move the thread |
+| U18 | Pass (T) | "Earlier chats" spoken as shown; day stamps are headers; the bar reads his draft as its value |
+| U19 | Pass (C) | `useAnswerCloset` keeps the last closet read, so a newly drawn answer has its chips on its first frame |
+| G | Pass | `npm run check` green; no score code touched |
+
+**New words (VoiceOver only):** "Your stylist is writing". No visible copy changed. Everything is JS: on his phone through Metro, no reinstall.
+
+## 18. The composer under VoiceOver, and words kept when he leaves mid-dictation (Oct 17, #317)
+The two items §17.1 left: (1) the composer's trailing button turns send ↔ mic and the row turns to ✕ / ■ while he talks, so VoiceOver focus can be lost right as he sends or stops; (2) leaving the Stylist tab or opening a page mid-dictation unmounts the composer, and the mic's `dispose()` drops the words heard so far. No copy changes, no new packages, no live calls.
+
+### 18.1 What the code does today (read before fixing)
+- **The trailing button.** The capsule draws `recording ? <>✕, voice, ■</> : <>📷?, field, ↑ | 🎙 | nothing</>`. Both branches are unkeyed fragments at the same place, so React happens to keep the trailing button's view across ↑ → 🎙 → ■ → ↑ (only its label and icon change). That's luck, not design: one added element or a key in either branch would break it, and nothing tests it.
+- **The real loss is the composer closing itself.** After a send by voice (or a ✕ on a mic opened from the bar), the field is empty, not keyboard-focused and the mic is off, so `onIdle` closes the composer: the view under VoiceOver's cursor is gone, and the cursor jumps to wherever iOS puts it.
+- **Where the trailing button goes away:** with no mic (the Simulator, phones without on-device speech), a send leaves no trailing button at all.
+- **Leaving mid-dictation.** The tab's blur closes the composer (`useFocusEffect` → `composerState.close`), which unmounts it; the same happens when a page is pushed over the tab. `useDictation`'s cleanup calls `dispose()`: it bumps the session and stops the native side without waiting, so the words are dropped; a stop already in flight is dropped too (its session no longer matches).
+
+### 18.2 Pass/fail checks, set before fixing
+(T) a jest test, (S) seen on the iOS Simulator, (C) read in code (VoiceOver can't be driven on the Simulator).
+- **F1 (T)** `composerSlots` gives one trailing control for every state that has something to do: text → send, empty with a mic → mic, listening / getting ready / stopping → stop; empty with no mic → none. The leading slot: camera when idle and empty, ✕ while listening, none while typing.
+- **F2 (T)** The capsule draws its leading, middle and trailing slots as fixed, keyed children (`lead`, `field`/`voice`, `trail`), never a fragment per state, so the trailing button is the same view across send → mic → stop → send and VoiceOver's cursor stays on it while its label and icon change.
+- **F3 (T)** With VoiceOver on, the composer never closes itself when it empties (a send, a ✕, a stop with no words); VoiceOver's escape gesture (two-finger scrub) closes it, and leaving the tab still does. With VoiceOver off nothing changes.
+- **F4 (T)** When the control he pressed goes away, VoiceOver's cursor moves to the field: after ✕, and after a send that leaves no trailing button. After ■ the cursor stays on the trailing button (now send) and the words are announced as today.
+- **L1 (T)** Disposing while listening (or starting) hands the words heard so far to the draft, once: the native side's last words when its stop returns them, else the live text. Nothing is sent, nothing is announced.
+- **L2 (T)** Disposing while a stop is in flight still hands that stop's words, once.
+- **L3 (T)** Disposing while getting ready, or idle, hands nothing and never starts the native side (U4 still holds); a late native event after dispose never touches the draft.
+- **L4 (T)** Kept words land after any draft he'd already typed (a space between), so the bar shows them on his return; an empty result leaves the draft as it was.
+- **L5 (C)** Both ways out (another tab, a pushed page) reach `dispose` through the composer's unmount.
+- **S1 (S)** The composer looks as before on the Simulator: idle, typing, after a send (demo screens 12 and 90).
+- **G** `npm run check` green; no copy, score or native change.
+
+### §18 results (Oct 17, #317): checked against F1–F4, L1–L5, S1 and G; no check changed
+`npm run check` green: 1,108 app tests in 88 suites (new `composerFocus.test.ts`, 17 tests; `dictation.test.ts` and `chatUi.test.ts` unchanged and passing), 758 core tests, typecheck, lint. The tests were written after the checks and run red first (9 of 17 failed) before the fix.
+
+| Check | Result | How |
+|---|---|---|
+| F1 | Pass (T) | `composerSlots` (new, `features/stylist/composerSlots.ts`) |
+| F2 | Pass (T) | the capsule draws `{leadButton}`, the field or the voice row, `{trailButton}`; every lead is `key="lead"`, every trail `key="trail"`, no fragment per state |
+| F3 | Pass (T, C) | `goesIdle` returns false with VoiceOver on (both the effect and the stop path use it); the capsule's `onAccessibilityEscape` stops the mic (words kept), drops the keyboard and closes; the tab's blur still closes it |
+| F4 | Pass (T, C) | `cursorToField`; the composer sends a VoiceOver `focus` event to the field once it's drawn (after ✕ it replaces the voice row) |
+| L1 | Pass (T) | `dispose` while listening or starting: the native stop's words, else the live text, to `onHeard(…, 'left')`; the composer adds them to the draft without the announcement |
+| L2 | Pass (T) | `dispose` while stopping lets the stop finish; its words land once as 'left'; no "I didn't catch that." after he left |
+| L3 | Pass (T) | U4's case still never starts the native side; idle hands nothing; the native listener is removed, so late events can't land |
+| L4 | Pass (T) | `composerState.appendHeard`: after his typed words with one space; empty heard leaves the draft |
+| L5 | Pass (C) | another tab and a pushed page both blur the Stylist tab → `composerState.close` → the dock unmounts the composer → `useDictation`'s cleanup → `dispose` (iOS; Android keeps the dock mounted, noted in #317) |
+| S1 | Pass (S), with a finding | demo 12, light: the bar at rest, the composer opened with its starter chips, then typed into: the field and ↑ sit where they did. **Found, not from this change:** once open, the capsule's glass draws over its own contents on the Simulator (the words and ↑ show blurred, with a mirrored copy above and below); the #314 Composer, swapped back in for one launch, looks the same. A follow-up, proposed separately |
+| G | Pass | no copy, score or native change |
+
+**What the Simulator and tests can't show:** the mic is hidden on the Simulator and VoiceOver can't be driven there, so the cursor moves and the kept words rest on the tests and the code read above; his phone's voice test confirms them (CLAUDE.md to-do, the voice item).
+
+## 19. The open composer's words show blurred (Oct 17, #319)
+Found during §18's S1: once the composer is open and resting where the "Ask Kit…" bar sits (no on-screen keyboard: the Simulator's Mac keyboard, voice mode, a draft left after the keyboard went down, VoiceOver keeping it open), its words, mic and send show blurred, with bent copies above and below. The #314 Composer does the same.
+
+### 19.1 The cause (found Oct 17)
+Not the composer's own glass. The tab bar's bottom accessory (StylistBar) only fades its contents (`opacity: 0`) while the composer is open; the system's Liquid Glass capsule around them stays. That capsule belongs to the tab bar, which iOS draws above every tab's screen, and the open composer sits exactly under it (layout.ts: "The open composer sits exactly over it", the assumption that was wrong). So the accessory's glass lenses the composer below it: the blur and the mirrored copies are Liquid Glass bending what's underneath. With the keyboard up the composer rides above the tab bar and looks right, which is why typing on a phone hid it. Not Simulator-only: on the phone it shows while he talks to the mic, and when a draft stays after the keyboard goes down.
+
+### 19.2 Pass/fail checks, set before fixing
+(S) seen on the iOS Simulator (Mac keyboard, so the composer rests over the bar's spot), (C) read in code.
+- **K1 (S)** Demo 12, light: tap the bar, type: the words, the caret and send are crisp, with no copy above or below them.
+- **K2 (S)** The same in dark, and at the largest text size (the capsule grows taller).
+- **K3 (S)** With the composer closed the bar looks as it did before the fix (camera, "Ask Kit…", mic, same place), in light and dark.
+- **K4 (S)** Open → close (empty it and leave the field) → open again: the bar comes back each time, and its words never show through the open composer.
+- **K5 (S)** The thread doesn't jump when the composer opens or closes (the newest card stays where it was).
+- **K6 (S)** Scrolled down (tab bar shrunk, "Ask…" beside it): a tap opens the composer crisp, and closing it brings the small bar back.
+- **K7 (C)** Voice mode (opened from the bar's mic, phone only): the bar's glass is gone while he talks, so the words heard are crisp too.
+- **G** `npm run check` green; no copy, score or native change; no new package.
+
+### §19 results (Oct 17, #319): checked against K1–K7 and G; no check changed
+**The fix:** the tab layout leaves the bottom accessory out while the composer is open (`app/(tabs)/_layout.tsx`: `onThread && !composerOpen`); react-native-screens then calls `setBottomAccessory:nil animated:YES` and puts it back when the composer closes. One thing that came with it: about 3 in 7 opens with a key typed in the first instant (the Simulator's Mac keyboard) left the field unfocused, because autoFocus asks only once, as the field reaches the window, while the accessory is leaving. So the composer asks again 350 ms later if the field never got focus (`AUTOFOCUS_RETRY_MS`); after that, 0 of 2 such opens stayed unfocused, and one shows it working (the first letters lost, the rest landed). Opens without an early key focused 3 of 3 before and after. The letters typed in that first instant are lost with or without the fix (seen with the fix switched off): a Simulator timing quirk, and a phone's keyboard only appears once the field is focused. New test `composerGlass.test.ts` (2) reads both from the source.
+
+| Check | Result | How |
+|---|---|---|
+| K1 | Pass (S) | demo 12, light: tap the bar, type "What goes with tan chinos?": the words, the caret and ↑ crisp, no copies (before: bent "Ask Kit…" with copies above and below) |
+| K2 | Pass (S) | dark, the same; at the largest text size the words and ↑ are crisp. **Found, older (the field's `numberOfLines={1}` from Oct 7–8):** at the largest size a question that wraps doesn't grow the capsule, so its second line is cut off. A follow-up |
+| K3 | Pass (S) | closed: the bar in light and dark looks as before (camera, "Ask Kit…", mic, same place) |
+| K4 | Pass (S) | open → send → scroll the thread (the field lets go, it's empty) → the bar is back; open again → crisp and typing lands |
+| K5 | Pass (S) | the newest card sits at the same height on the open composer as before the fix (both open with the starter chips, card top at the same pixel row) |
+| K6 | Pass (S) | scrolled down, "Ask…" beside the shrunk tab bar: a tap opens the composer crisp, focused, with the tab bar staying shrunk; send and close bring the small "Ask…" back |
+| K7 | Pass (C) | voice mode is the same `open` state, so the accessory is gone while he talks; the mic is hidden on the Simulator, so his phone's voice test sees it (on his list) |
+| G | Pass | `npm run check` green: typecheck, lint, core tests, 1,157 app tests in 91 suites; no copy, score or native change; no package |
+
+**Also found on the Simulator, older:** the dev build's floating Tools button sits over the open composer's ↑ at rest and takes its taps (drag it away when testing); at the largest text size the compact "You went with your own" card breaks words mid-word ("wen / t", "Clas / s/"). Screenshots `screenshots/composer-glass/` (git-ignored): before and after, light, dark, the largest size, the bar back.
+
+## 20. Two older layout problems at the largest text size (Oct 17, #321)
+Found while checking #319 (§19 results, K2 and "Also found"), both older than it.
+- **The field doesn't grow.** The composer's field is `multiline numberOfLines={1}`. On iOS the new architecture turns `numberOfLines` into the paragraph's `maximumNumberOfLines`, which the field's measurement uses, so its height stays one line whatever he types; a wrapped second line is cut off inside the capsule (seen at the largest size, where a short question already wraps). Its `maxHeight: 120` is also fixed in points, about 4½ lines at the default size but only about 2 at the largest.
+- **The compact "You went with your own" card breaks words mid-word** ("wen / t", "Clas / s/ Work") at the largest size: the photo, the text and the score sit in one row, leaving the text a sliver.
+
+### 20.1 Pass/fail checks, set before fixing
+(S) seen on the iOS Simulator, (C) read in code or a test.
+- **A1 (S)** Default size, light: a question that wraps to 2 and then 3 lines grows the capsule line by line; every word shows; the camera/send buttons stay at the capsule's vertical center (as now).
+- **A2 (S)** Largest size: a question that wraps to 2 lines shows both lines in full, in light and dark.
+- **A3 (S)** A long question (6+ lines at the default size) stops growing at the max height and scrolls inside the field; nothing pushes the thread's newest card off the top of the screen at the largest size.
+- **A4 (S)** At rest (closed bar), and open with one line, the composer looks as before (same height, same place), at the default size and the largest.
+- **A5 (C)** The max height scales with text size (≈ the same number of lines at every size), capped so it can't swallow the screen.
+- **B1 (S)** Demo 12 at the largest size: the compact card shows "TODAY · …" and "You went with your own" with no word broken mid-word; photo and score sit together on one row above the text.
+- **B2 (S)** Demo 12 at the default size: the compact card looks as before (one row: photo · text · score · chevron), in light and dark.
+- **B3 (C)** The other compact rows sharing the shell ("Staying in", an earlier day's card) stack the same way at accessibility sizes and are unchanged at the default sizes.
+- **G** `npm run check` green; no copy, score or native change; no new package.
+
+### §20 results (Oct 17, #321): checked against A1–A5, B1–B3 and G; no check changed
+**The fixes:** the field drops `numberOfLines={1}` (it stays `multiline`), and its max height is the field's padding plus about 4½ body lines times the text scale (capped at the controls' 2×): 120 pt at the default size as before, 222 pt at the largest. `CollapsedShell` (MorningCard) stacks at accessibility sizes whenever it has a photo, a right side or a chevron: photo · score (or the occasion menu) · chevron on one row, the words full width under it. New test `axLayout.test.ts` (3) reads both from the source.
+
+| Check | Result | How |
+|---|---|---|
+| A1 | Pass (S) | default size, light: a question grew the capsule to 2, 3, 4 lines, every word shown, ↑ at the capsule's middle |
+| A2 | Pass (S) | largest size: "Boots or sneakers today?" wraps to 2 lines, both in full, in light and dark (before: the second line cut off) |
+| A3 | Pass (S) | a long question stops at 5 lines (default) and 5 lines (largest), scrolled to the caret; at the largest size the compact card stays on screen above it |
+| A4 | Pass (S) | the closed bar at the default size (light, dark) and the largest, and the open field with one line, look as before |
+| A5 | Pass (C) | `inputMax = 9·2 + 102 × min(max(fontScale, 1), 2)`; test A |
+| B1 | Pass (S) | demo 12, largest size, light and dark: photo and "9.0 Dialed in" on one row, then "Today · Class/Work" and "You went with your own" full width, no word broken (before: "wen / t", "Clas / s/") |
+| B2 | Pass (S) | demo 12, default size, light and dark: one row as before |
+| B3 | Pass (C) | "Staying in" (occasion menu on the top row) and an earlier day's card (no photo, no right side: unchanged) share the shell; test B |
+| G | Pass | `npm run check` green: typecheck, lint, core tests, 1,160 app tests in 92 suites; no copy, score or native change; no package |
+
+Not seen: the phone's on-screen keyboard with a 5-line field at the largest size (the Simulator uses the Mac's keyboard); the thread scrolls under it as it does today. Screenshots `screenshots/ax-layout/` (git-ignored).
+
+## 21. The Stylist screen's layout pass (Oct 17, #338)
+The founder, Oct 17: Kit's lines look awkward ("maybe give Kit a bubble"), the evening greeting ("Evening. Heading out? 52° at 8, 47° by midnight.") feels off, "Earlier chats" sits in an awkward spot, the outfit card holds too much and its text feels crammed (the tiles are good), the weather advice isn't accurate to the time, and after a re-check the thread's arrangement falls apart. "The Stylist UI is where the user spends most of their time."
+
+### 21.1 What the code does today (found Oct 17, Simulator demo screens 10, 12, 25, 30)
+- **Kit's lines are bare 17 pt text on the background** with "Kit" above, while his own lines are bubbles: the thread reads as a document with his bubbles in it, and a long greeting looks like an unstyled paragraph.
+- **The weather is said twice:** the greeting holds it in words ("52° at 8, 47° by midnight. Rain likely.") and the card again as a badge ("☂ 52°→47°") squeezed beside the title, with "Sample weather" squeezed beside the two menus. Title, badge, two menus, the source, two sentences, two buttons and a link: eight things in the card's body.
+- **The weather is fetched once,** when the card posts, and never again: opened at 2 pm, the morning card still says "46° now"; the evening line always says "at 8", even at 10 pm or after midnight; "63° by afternoon" names no time.
+- **"Earlier chats" is a pill at the top of the thread,** so on a short day it floats in empty space above the first stamp; the header's clock button already opens the same page.
+- **After a re-check** the thread is his first photo (≈ 300 × 470 pt), the first check's full card (Going for, score, fixes, Next level, Added to Closet, Why), the second photo at the same size, then the re-check card: two screens of history before the result he's waiting for.
+
+### 21.2 The changes
+1. **Kit's bubble.** Every Kit line (greeting, answer, failed line, limit line, the lines above S26 / account / notify cards) sits in a bubble: the card surface, 10/16 padding, corners as his but with the small corner bottom-left, left-aligned, at most 84% wide (answers with chips too). "Kit" stays small above the first bubble of a run (#318), lined up with the text. Cards, chips and buttons stay full width under the bubble.
+2. **The greeting is only the hello.** "Morning. Here's an idea for today." · "Afternoon. Here's an idea for the rest of today." · "Evening. Heading out?" With no weather it still adds the season line. The weather lives in the card, once.
+3. **The outfit card, lighter:** the tiles (as now) · the title alone on its line · one weather line with the times (☂ "52° at 8 pm · 47° by midnight · rain likely", "Sample" at its end on demo weather) · the reason · Wear this | Swap · the camera link in a smaller size. The menus ("Going out ⌄ · Smart casual ⌄") move to a quiet row at the top of the card, above the tiles.
+4. **Weather words follow the clock:** the day line says the hour of the high ("63° by 2 pm"), drops it once the high has passed, and drops "Rain after 5 pm" once it's 5; the evening says "at 8 pm" before 8, "now" after, and only "now" after midnight. A card still open more than 45 minutes after its forecast fetches again when Stylist shows; if the new weather changes what the outfit needs and he hasn't touched the card (no wear, swap or menu change), the outfit is re-picked.
+5. **"Earlier chats" only in the header** (the clock button, left); the pill goes.
+6. **After a re-check, the first card folds:** one row ("First check · Date", the word, the score, ⌄), tap to open it in place, "First check ⌃" above it folds it again. (Planned: the re-check's photo as a small row too. Dropped while building: on the Simulator the photo bubble is 131 pt wide, not the bulk; the full first card was. His before and after photos stay comparable.)
+
+### 21.3 Pass/fail checks, set before building
+(S) seen on the iOS Simulator, (C) read in code or a test.
+- **L1 (S)** Demo 25 and 30, light and dark: every Kit line is a bubble on the left; "Kit" sits above the first one, lined up with the text; his bubbles are unchanged.
+- **L2 (S)** Demo 90–95 and 167–174 (answers, chips, cards, 988 card, the limit line): the answer's lead, reason and piece chips sit inside the bubble; its card (outfit, buy, link, saved fact) sits under it, full width; nothing clipped.
+- **L3 (S)** Demo 30: the greeting says "Evening. Heading out?" with no numbers; the card says the temperatures once, with their times; no badge beside the title; the title isn't wrapped beside anything.
+- **L4 (S)** Demo 25, 26 (thin closet), 27 (new user), 31 (weather ask), 32 (hot day): each card reads top to bottom with no two things squeezed on one line; the menus still open and re-pick.
+- **L5 (C)** Weather words: tests for the day line before and after the high's hour and the rain hour, and the evening line before 8 pm, after 8 pm and after midnight.
+- **L6 (C)** Freshen: a test that a card with a forecast older than 45 minutes fetches again and rewrites nothing he chose; untouched + needs changed → re-picked; touched → outfit kept, weather updated.
+- **L7 (S)** No "Earlier chats" pill in the thread; the header's clock opens Past chats.
+- **L8 (S)** Demo 10 and 12: the first check's card is one row once its re-check is scored; tapping opens it in place and tapping its header folds it; the re-check's photo is a small row; the re-check card's reveal still plays (demo 12 with `-demoReveal 1`).
+- **L9 (S)** The largest text size: bubbles wrap without clipping, the card's rows stack, the folded row stacks as the other compact rows do.
+- **L10 (C)** VoiceOver: a Kit bubble still reads "Kit: …" once; the folded card reads its score and "First check", with an action to open it.
+- **G** `npm run check` green; no score change; no native change; no new package.
+
+### §21 results (Oct 17, #338): checked against L1–L10 and G; L8's photo half dropped (above)
+**What changed:** `StylistMessage` draws Kit's bubble (surface, hairline, 10/16, the small corner bottom-left, ≤ 86% wide, 94% at the accessibility sizes; "Kit" inset to the text); two Kit bubbles in a row sit 4 pt apart (was 8). The greeting with weather is the hello only (`greet.morning.idea`, `greet.afternoon.idea`, `greet.evening`); without weather it keeps the season line. The card: the menus in a top row, the tiles, the title alone, `WeatherLine` (☂ + `weatherLine()`, "Sample" in ink3 on demo weather), the reason, Wear this | Swap, the camera link in footnote ink2. NWS readings carry `nowHour`, `highHour`, `lateHour`; the service stamps `fetchedAt`; `morning.freshen()` runs after `ensureCard` on focus and on return to the app. The thread's "Earlier chats" pill is gone. `FitCheckCard` folds a first check once a re-check is reading, asking or scored (a failed one leaves it open). Screenshots `screenshots/stylist-redo/before` and `after` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| L1 | Pass (S) | demo 25, 30 light and dark: Kit's lines are bubbles on the left, "Kit" above the first, lined up with the text |
+| L2 | Pass (S/C) | demo 30's answer: lead and reason inside the bubble; cards and chips are footers, full width, as before (`AskAttachment` unchanged) |
+| L3 | Pass (S) | demo 30: "Evening. Heading out?"; the card says "52° at 8 pm · 47° by midnight · rain likely  Sample" once; the title alone on its line |
+| L4 | Pass (S) | demo 25, 30: one thing per line; menus on top. 26, 27, 31, 32 read in code only (same rows; the location ask sits under the weather line's place) |
+| L5 | Pass (C) | `morningCopy.test.ts`: the day line before/after the high's and the rain's hour, the evening before 8, after 8 and after midnight, no made-up hour on sample weather, no line break inside "2 pm" |
+| L6 | Pass (C) | `morningService.test.ts`: fresh → left alone; stale + untouched → re-planned (cold-rain reasons); after a menu change → outfit kept, weather new; after Wear this → outfit kept |
+| L7 | Pass (S/C) | no pill on demo 25 or 30; the header's clock opens Past chats (unchanged); `chatUi` U18 now checks the header's label |
+| L8 | Pass (S) | demo 12: "FIRST CHECK · DATE  Sharp  8.0 ⌄" above Kit's line and the re-check; a tap opens the full card with "First check ⌃" above it. The win reveal not re-recorded (its code is untouched) |
+| L9 | Pass (S) | largest size: bubbles wrap, menus wrap to two lines, tiles 2×2, the weather icon grows with the text and sits on the first line (fixed: it stayed 14 pt mid-paragraph), "5 pm" never splits |
+| L10 | Pass (C) | the bubble keeps the one `Kit: …` element; the folded row is a button "First check, Date: 8.0, Sharp." with the hint "Opens the full card." |
+| G | Pass | `npm run check`: typecheck, lint, core tests, 1,297 app tests pass; the one miss was O12 (a 40-piece closet listed in 312 ms against 300 under the full parallel run; 12 of 12 alone, the known timing flake of #335, closet code untouched). New kv prefix `idea.touched.` classified per-device in `sync/schema.ts`. No score change, no native change, no package |
+
+Not seen: the real phone (through Metro, no reinstall), the live NWS words with real hours (the demo uses sample weather, which has no hours, so it says "63° high"), and a live re-check through the camera (demo 10 and 12 show the scored states).
+
+### §21 follow-up (Oct 18, #340): the card opens with the hello and the weather
+The founder, after seeing #338: "drop Kit's separate hello bubble and put the greeting and weather together at the top of the morning card."
+- **What changed:** the morning/evening card is posted alone (no greeting line). It opens with the hello for the hour he reads it ("Morning." / "Afternoon." / "Evening. Heading out?", headline) and the weather line under it (☂ "46° now · 63° high · rain after 5 pm"; without weather, the season line "October: bring a layer." or nothing), then the menus, the tiles, the title, the reason, the buttons. `withoutCardGreetings()` (thread.ts) hides a greeting line still stored from before: one posted 1 ms before its card, or a seeded one the legacy adoption now marks `greeting` (it used to rewrite its text). `refreshWeather` no longer rewrites the line before the card (with no greeting it could have rewritten an answer).
+- **Checked:** on the Simulator, demo 25 (light, dark), 30, 31 (no weather: "October: bring a layer." over the location ask) and 12 (the seeded greeting gone); tests for the hello, the season line, the hidden lines and the service posting the card alone; `npm run check` green (1,301 app tests). No score change, no native change.
+
+### §21 follow-up 2 (Oct 18, #344): the score card folds to its rating and opens smoothly
+The founder (a friend's note on the UI: "too much information"), after a first proposal that kept the top fix visible: "I meant the box that contains the rating. I don't want the way it looks to change, I just want it to expand when it's pressed, in a smooth manner."
+- **What he sees:** a fit check's card, and a scored re-check's card, show only their top: the Going-for line, the tag, the score, its word and summary, and a small ⌄. A tap anywhere on that top opens the rest (the fixes, Next level, the closet row, Why and Not quite right?, Re-check) over 320 ms, height and fade together, with the card exactly as it was; the ⌃ at its foot folds it back. Open, the score opens Why as before. A card he opened stays open while the app runs. The "change not seen" re-check keeps its two buttons in view (it asks him to act). Reduce Motion: no slide.
+- **The motion:** `Expandable` (design-system) keeps the children mounted and animates height × an eased 0…1 on the UI thread; each frame's height change goes to `threadGrow`, and the Stylist thread scrolls by the same amount when he's at the bottom, so the card's foot stays put and its top rises. Found on the way: scrolling the card into view with the thread's scroll-to did nothing (iOS won't scroll past content that hasn't grown yet), and following `onContentSizeChange` lagged a beat behind the growth.
+- **Checked on the Simulator:** demo 7 (folded, open, folded again; video frames at 60 fps show one motion), demo 12 (the re-check folded), dark mode, the largest text size; `npm run check` green (1,303 app tests). VoiceOver: the card stays one element with a "Show the fixes and details" / "Show less" action. Not seen: a live check on the phone.
+
+## 22. Kit's outfit ideas rotate like the morning card (Oct 19, #358)
+
+**The founder:** "Do they actually check the outfit history of the person? What if they repeatedly recommend the same thing again and again?" The morning card did (rotation, Oct 14: 14 days of cards, Wear this and fit checks; no exact outfit again within 7 days; the top he's gone longest without first). Kit's "What should I wear?" and "What goes with my …?" used the same picker with **no history**: the best-scoring outfit almost every day, yesterday's outfit again, and a different outfit from the card for the same day.
+
+### 22.1 The change
+- **Same history as the card:** `historyFor` (exported from `features/morning/service.ts`, the card's own code moved, unchanged) for the card of the moment he asks in (day or evening), from the snapshot's ideas, wear log (new in the snapshot), checks and outfits.
+- **Plus Kit's own outfit cards from earlier days** (Claude's call): an outfit Kit showed yesterday counts as shown, like a card. Today's don't count, so the same question twice in a day gets the same advice (the guide's rule).
+- **The first pick for today is the card's outfit** when the occasion matches: "What should I wear?" with no occasion takes the card's occasion (Class on a weekday, Going out in the evening; never Staying in), and its line says "same as today's card" so Kit can say so. Not when a card piece was deleted or is one he said he avoids: then the picker picks fresh. "What goes with my …?" uses the card's outfit for Best when it holds that piece and the occasion matches.
+- **"Another" means another top** (it left out the first id, which is the layer when there is one).
+- **Found on the way, in `@kitted/core`:** a pinned layer ("What goes with my olive overshirt?") could be dropped for a "no layer" outfit with a fresher top, and was always dropped on a hot day. A pinned layer is now always worn.
+
+### 22.2 Checks, set before building (`app/src/__tests__/askRotation.test.ts`; core `ideas.test.ts`)
+- **K1** no occasion: the card's occasion and its outfit as the Pick. **K2** naming the card's occasion: the same; another occasion: picked fresh. **K3** a card piece deleted or avoided: never offered. **K3b** no card: the picker still answers.
+- **K4** what he wore yesterday isn't today's pick. **K5** Kit's own card from yesterday counts as shown; from earlier today, not. **K6** "What goes with" sees the history too.
+- **K7** the same question twice in one day: the same outfits. **K8** Another never repeats the Pick's top.
+- **Core:** a pinned layer is always in the outfit, with history, in season and on a hot day.
+
+### 22.3 Results (Oct 19)
+Before the change K1, K2, K4, K5, K6 and K8 failed (the bug); after it all pass, the card's 36 tests pass unchanged, `npm run check`'s steps green (1,378 app tests, 782 core). JS only: on his phone through Metro, no reinstall. Not seen on a screen: the answers' words come from the model, which only gets the new evidence lines.

@@ -73,12 +73,13 @@ describe('first-run story', () => {
     expect(row.score).toBe(8);
   });
 
-  it('correction: chinos straight → slim, "Score stays 8.0", a new reading, the closet item confirmed', async () => {
+  it('correction: chinos straight → slim, "Score stays 8.0", a new reading, the closet piece left as it was', async () => {
     const { store, svc } = await setup();
     const { checkId } = (await svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' })) as { checkId: string };
     const before = (await store.fitChecks.get(checkId))!;
     const res = await svc.saveCorrection(checkId, { garmentIndex: 1, field: 'leg_shape', value: 'slim' });
-    expect(res).toEqual({ before: 8, after: 8, itemName: 'Tan chinos' });
+    // Amended by 09-ui-review §19 (#322), openly: a Leg fix re-scores this check only and names no piece.
+    expect(res).toEqual({ before: 8, after: 8, itemName: null });
     const after = (await store.fitChecks.get(checkId))!;
     expect(after.readingId).not.toBe(before.readingId);
     expect((await store.readings.get(before.readingId!))!.reading).toEqual(demoReadingById('p01b'));
@@ -89,7 +90,7 @@ describe('first-run story', () => {
     expect(after.rawScore).toBe(8);
     expect(after.rulesFired).toEqual([]);
     const chinos = (await store.closet.all()).find((c) => c.name === 'Tan chinos')!;
-    expect([chinos.garment.leg_shape, chinos.confirmedFields]).toEqual(['slim', ['leg_shape']]);
+    expect([chinos.garment.leg_shape, chinos.confirmedFields]).toEqual(['straight', []]);
     expect((await store.corrections.all())[0]).toMatchObject({ kind: 'wrongDetail', field: 'leg_shape', oldValue: 'straight', newValue: 'slim', scoreBefore: 8, scoreAfter: 8 });
   });
 

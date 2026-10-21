@@ -17,8 +17,13 @@ import { PieceMenu } from '@/features/closet/PieceMenu';
 import { piecePreviewSource } from '@/features/closet/piecePreview';
 import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { FitQuestion } from '@/features/closet/FitQuestion';
+import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
 import { closetGridItems } from '@/features/closet/merge';
+import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { toConfirm } from '@/features/closet/toConfirm';
+import { answerWithUndo, type AnswerToastDeps } from '@/features/closet/answerToast';
+import { showToast } from '@/features/toast/toast';
 import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
 import { LinkRow, Section } from '@/features/settings/SettingsList';
 import { fitCheck } from '@/features/fitcheck/session';
@@ -28,11 +33,20 @@ import { openingSegment, outfitCount, SEGMENT_KEY } from '@/features/closet/outf
 import { Segmented } from '@/features/onboarding/Segmented';
 import { t } from '@/i18n/en';
 
+/** A "To confirm" answer leaves the card: a toast says it, with Undo (09 §20.7 R10, #323). */
+const answerDeps: AnswerToastDeps = {
+  answer: (c, o, a) => fitCheck.answerDuplicate(c, o, a),
+  unanswer: (c, o) => fitCheck.unanswerDuplicate(c, o),
+  toast: (text, undo) => void showToast(text, undo),
+};
+
 
 const GAP = 10;
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
+  // His Skips on the fit card (§18), watched on their own key so other kv writes don't reload the closet.
+  const fitSkips = useLive(['kv'], () => store.getKv(FIT_SKIP_KEY), [], FIT_SKIP_KEY);
   const data = useLive(['closet', 'fitChecks', 'closetObs'], async () => {
     const all = await store.closet.all();
     const byId = new Map(all.map((c) => [c.id, c]));
@@ -45,14 +59,17 @@ export default function ClosetScreen() {
     const previews = new Map(items.map((it) => [it.id, piecePreviewSource(it, obs, checks, livePhotoDeps)]));
     const fitChecks = await store.fitChecks.all();
     const styles = (await store.profile.get('me'))?.styles ?? null;
-    return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count: outfitCount(all, fitChecks, styles) };
-  }, []);
+    // One "How do your … fit?" at most (§18, #316): the piece whose own photos disagree most, unless he skipped it.
+    const owned = all.filter(isOwned);
+    const fit = fitCard(owned.filter((c) => !isAwaitingAnswer(c, owned)), obs, parseSkips(fitSkips));
+    return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count: outfitCount(all, fitChecks, styles), fit };
+  }, [fitSkips]);
   const remembered = useLive(['kv'], () => store.getKv(SEGMENT_KEY), [], SEGMENT_KEY);
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
   if (!data) return null;
-  const { items, byId, previews, asks, all, fitChecks, styles, count } = data;
+  const { items, byId, previews, asks, all, fitChecks, styles, count, fit } = data;
   const segment = openingSegment(count, remembered ?? null);
   const pick = (v: 'pieces' | 'outfits') => void store.setKv(SEGMENT_KEY, v);
   const open = asks.flatMap(({ checkId, ask }) => {
@@ -74,6 +91,8 @@ export default function ClosetScreen() {
       {items.length === 0 ? (
         <EmptyState icon="closet" title={t('closet.empty.title')} body={t('closet.empty.body')}>
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />
+          {/* The basics he owns, without a photo (02 C1e; 09-ui-review §20.8 G24): Starter essentials. */}
+          <KButton title={t('closet.empty.basics')} kind="secondary" size="regular" style={{ alignSelf: 'center' }} onPress={() => router.push('/closet/starter' as Href)} />
         </EmptyState>
       ) : (
         <>
@@ -84,20 +103,36 @@ export default function ClosetScreen() {
             onChange={pick}
             options={[{ value: 'pieces', label: t('closet.seg.pieces') }, { value: 'outfits', label: t('closet.seg.outfits') }]}
           />
+          {/* The same one fit card on Outfits (§19, #322): Closet opens there once he has 3+ outfits. */}
+          {segment === 'outfits' && fit ? (
+            <KCard>
+              <KCardSection gap={12}>
+                <TagLine left={t('closet.confirm.tag')} right="1" />
+                <FitQuestion item={fit.item} doubt={fit.doubt} />
+              </KCardSection>
+            </KCard>
+          ) : null}
           {segment === 'outfits' ? <OutfitsView closet={all} checks={fitChecks} count={count} styles={styles} /> : null}
           {segment === 'pieces' ? (
           <>
-          {/* "To confirm · 2" (#117): the open questions in one quiet card on top, 3 at a time (#111); no badge, no push. */}
-          {queue.total > 0 ? (
+          {/* "To confirm · 2" (#117): the open questions in one quiet card on top, 3 at a time (#111), then at most one
+              "How do your … fit?" (§18); no badge, no push. */}
+          {queue.total > 0 || fit ? (
             <KCard>
               <KCardSection gap={12}>
-                <TagLine left={t('closet.confirm.tag')} right={String(queue.total)} />
+                <TagLine left={t('closet.confirm.tag')} right={String(queue.total + (fit ? 1 : 0))} />
                 {queue.shown.map(({ checkId, ask, photo, candidate, runnerUp }, i) => (
                   <View key={ask.obsId} style={{ gap: 12 }}>
                     {i > 0 ? <RowDivider /> : null}
-                    <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void fitCheck.answerDuplicate(checkId, ask.obsId, a)} />
+                    <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void answerWithUndo(answerDeps, checkId, ask, a, candidate, runnerUp)} />
                   </View>
                 ))}
+                {fit ? (
+                  <View style={{ gap: 12 }}>
+                    {queue.shown.length > 0 ? <RowDivider /> : null}
+                    <FitQuestion item={fit.item} doubt={fit.doubt} />
+                  </View>
+                ) : null}
               </KCardSection>
             </KCard>
           ) : null}

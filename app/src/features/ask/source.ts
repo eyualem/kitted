@@ -22,6 +22,8 @@ export interface AnswerRequest {
   prompt?: { system: string; user: string };
   /** The second call after a lookup (R3): the demo answers it from its follow-up line. */
   followUp?: boolean;
+  /** His tap on the stylist's own question (never counted): the server's free taps (X-Kitted-Free: tap). */
+  tap?: boolean;
 }
 
 export interface AnswerSource {
@@ -80,6 +82,11 @@ export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
     question: 'Which shoes are my dressiest?',
     answer: "Your brown loafers. They'd dress up the chinos for a dinner or an interview.",
     card: { type: 'link', to: 'piece:Brown loafers' },
+  },
+  {
+    // "That score is wrong" (09 §20.8 G19): the Not quite right? card comes from code, not from this answer.
+    question: 'That score is wrong.',
+    answer: "Fair to push back. If I read a piece wrong, fix it below and I'll score the check again from that.",
   },
   {
     question: "I'm a 32 waist.",

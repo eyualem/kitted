@@ -477,3 +477,585 @@ Found in §14: two counts live side by side. The Closet's Outfits and its next b
 | G8 | Pass (T) | the demo answer and its card now name the dark straight jeans, +16, and pass the gate |
 | G9 | Pass | `npm run check`: 1050 app tests. Tests changed for the old rule's numbers: `askC3` R2, R3, R5 (#309) |
 | Not done | | Not looked at on the Simulator or the web preview (the Mac was low on memory and another session had the Simulator up); the screens only take the new number, no layout changed |
+
+**At the merge (Oct 21, PR #4):** G3 is gone with the moves (#343). On today's main (parts v14) G2's evidence reads straight jeans +16, polo +12, quarter-zip +12, and the polo card is +12; G1, G4, G5, G7 and G8 pass as written, on #353's cached count.
+
+---
+
+## 17. Fix what a piece is: plan and pass/fail checks, set before building (Oct 16, #315)
+Founder (Oct 16, voice): sometimes the tile itself is wrong, "slim jeans as relaxed, relaxed as slim, a sweatshirt as a hoodie", so give him "a way to change what the tile represents, from a limited choice", with the drawing changing to match; "this has to get planned well because what I am saying right now might not go with the whole thing." **Plan only: nothing is built until he reviews it** (mockup `mockups/piece-edit.html`; DECISIONS-LOG #315). Numbered §17 and #315 because main took §15 and #311–312, and open PRs hold §15–16, #309 and #313. Global checks G1–G4 (§6) apply.
+
+### 17.1 What he'll see
+- **On a piece's page, a new section "What it is"** right under the name (above worn / last worn / added, so it shows without scrolling past the photos): one row per thing he can change, each showing today's value with a chevron: **Kind · Jeans ›**, **Color · Dark denim ›**, **Leg · Slim ›** (bottoms) or **Fit · Regular ›** (tops and layers), **Pattern · Plain ›** (tops and layers). Under it, one footnote: "Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same." The old line under the name ("Bottom · Dark denim · Slim leg") becomes just the slot word ("Bottoms"), since the rows now say the rest.
+- **A tap on a row opens a short sheet** (half height, a Close button, the familiar iOS pattern of picking one from a list): a grid of pictures, each the piece itself drawn with just that one thing changed, in its own color, with the name under it; the current one ringed with a check. Color is a grid of swatches with names instead of drawings (24 drawings of the same jeans would say nothing).
+- **One tap picks.** The sheet closes, the big drawing redraws to match, a light tick, and the toast: "Changed to relaxed leg. Your scores stay the same." with **Undo** (8 s, as every closet toast). Picking the value it already has just closes the sheet.
+- **The long-press menu stays Rename and Remove** (it's a shortcut; the page is one tap away).
+
+### 17.2 The choices (short, plain words, never a brand)
+The lists come from the schema's own values and the words the app already uses (`garmentName`, `value.leg.*`, `value.topFit.*`), so no new vocabulary. Each kind list has a first group of 8 that all draw differently, and a "More kinds" row that opens the rest in the same sheet (a near-synonym there may share a drawing; its name tells it apart). The piece's current kind and its look-alikes (core `FLIP_PAIRS` and the quick tap's pairs) are always in the first group.
+
+| Slot | Rows | Kind, first 8 | More kinds |
+|---|---|---|---|
+| Top | Kind, Color, Fit, Pattern | Tee, Graphic tee, Polo, Oxford, Flannel, Sweater, Sweatshirt, Hoodie | Tank top, Dress shirt, Camp shirt, Knit polo, Quarter-zip, Cardigan, Rugby shirt, Jersey, Fleece, Overshirt, Denim jacket, Chore coat |
+| Layer | Kind, Color, Fit, Pattern | Overshirt, Denim jacket, Bomber, Field jacket, Blazer, Puffer, Overcoat, Hoodie | Chore coat, Sweatshirt, Quarter-zip, Cardigan, Flannel, Fleece, Leather jacket, Rain jacket, Shell jacket, Sport coat, Suit jacket, Camp shirt |
+| Bottoms | Kind, Color, Leg (not for shorts) | Jeans, Chinos, Trousers, Cargos, Sweatpants, Shorts | Joggers, Gym shorts, Drawstring trousers, Suit trousers |
+| Shoes | Kind, Color | Leather sneakers, Canvas sneakers, Runners, Chunky sneakers, Work boots, Chelsea boots, Loafers, Slides | Low-profile sneakers, High-tops, Running shoes, Chukkas, Derbies, Dress shoes |
+
+- **Leg:** Skinny · Slim · Straight · Relaxed · Wide (the closet matcher's own five).
+- **Fit (tops and layers):** Slim · Regular · Relaxed · Oversized (the reading's volume 2–5, as "Not quite right?" offers).
+- **Pattern (tops and layers):** Plain · Stripes · Checks · Graphic print. A piece read as camo or floral also shows its own value. Bottoms and shoes get no pattern row (the drawing doesn't draw patterned bottoms or shoes, and the reading rarely sees one).
+- **Color:** the 24 color families in four groups (Neutrals; Blues and denim; Earth tones; Colors), never "multicolor". The three denim washes are offered only for jeans and denim jackets (plus the current value). Changing jeans to another kind while the color is a denim wash moves it to the nearest plain color (dark → navy, mid → blue, light → light blue) and the toast says so: "Changed to chinos, in navy."
+- **Not offered, on purpose:** the brand word (never in a picker), the slot (a top stays a top and a layer a layer: every kind a top can become is a top or a piece worn either way; a real top ↔ layer move waits, §17.6 call 6), sleeve length (no drawing or scoring for it yet), the hem and the tuck (how he wore it that day, not the piece; they stay on "Not quite right?"), condition, details like zips (they come from the photos).
+- **Drawn apart first (part of the build):** today the real drawing code (bundled as is for the mockup) draws these pairs the same: Skinny = Slim, Relaxed = Oversized, Sweater = Sweatshirt, Tee = Graphic tee (when the pattern reads plain), Leather = Canvas sneakers. The build gives each its own look (a narrower leg; dropped shoulders and a longer body; a fine knit texture; the print on every graphic tee; a rubber toe cap), so every first-group option looks different. The other look-alikes (Joggers = Sweatpants, Chore coat = Overshirt, the field / rain / shell jackets, Derbies = Dress shoes, the sneaker subtypes in More) keep one drawing and are told apart by name.
+
+### 17.3 What a change touches
+One closet-service action, `editPiece(itemId, field, value)`, run in the closet's queue like every other closet write (§9: Undo goes ahead of background work).
+- **The piece's own reading** (`garment`): the field takes his value (`subcategory`, `color_family`, `leg_shape`, `pattern`, or `volume` for Fit). Nothing else on it moves.
+- **"He said so"**: the field joins `confirmedFields` and the piece profile's `confirmed` values (both, because the drawing reads one and "known pieces" read the other: `artOf` takes the pattern from `profile.confirmed`, `knownPieces` counts a piece as confirmed from `profile.confirmed`). Volume isn't a confirmable matcher field; Fit is stored on the reading only.
+- **Later photos never flip it back, and still find the piece:** a confirmed value beats every sighting (`itemVal`), and the drawing's drift guard already lets a confirmed value win. The value he corrected away from, as his own photos of this piece read it, is taught to the matcher the same way a "Yes, same one" teaches (#115): an old kind becomes an alias (`profile.aliases`), old leg reads join `fieldAliases.leg_shape`. So the next photo that reads his sweatshirt as a hoodie again still lands on this piece instead of making a new tile. Only values his own sightings read are taught, never the whole look-alike family, and "never the same" marks stay.
+- **The next fit check:** a kind he set makes the piece a known piece, so an unsure read of it can ask "Your grey sweatshirt?" before the score, exactly as #126 does today (only when Yes moves the score by 0.5+). Leg and fit are never asked (#122: no fit questions). Otherwise the new check scores what its photo shows, as now.
+- **The drawing, color and name** are re-derived (`refreshItem`, `renameAll`): an auto-named piece renames ("Grey hoodie" → "Grey sweatshirt", "Navy tee" → "Navy striped tee"); a name he set himself never changes; leg and fit aren't in names (they're on the rows), so "Dark jeans" stays "Dark jeans". His measured color stays only while it reads as the new color family (`hexOfArt`), else the family's own color.
+- **Outfits, Next best buy, Starter essentials, the first 3 moves and the chat** all read the piece live, so they follow on the next render: the Outfits count and Goes with can move, the next buy can change, and the chat's piece line says "relaxed leg" from the next question. A Starter piece he only marked ("I own this") whose new kind no longer fills its Starter row is unmarked, so the row shows as not owned (Undo marks it back).
+- **Sync:** the closet row with a new `updatedAt`; no new field, no migration, the newest edit wins (#288).
+- **Never touched:** any fit check's score, raw score or part scores; any reading; any sighting (`closetObs`) or its photo; Lookbook; worn counts; the check's closet summary; `@kitted/core` (no file changes).
+- **Undo** puts back every closet row the action changed (the piece, any other piece `renameAll` renamed, an unmarked Starter piece) exactly as before.
+
+### 17.4 Past fit checks: left alone (decided by Claude, reasons)
+A correction here changes the closet piece, not the checks it was seen in. The checks keep their scores, and the toast says so.
+1. **"Same photo, same score"** is the product's promise: a check is a reading of that photo. The piece is his summary across photos; one wrong merge or one bad reading shouldn't rewrite five scores.
+2. **The check may have been read right.** A photo that read "relaxed" may really show a different pair (the AI merged two pieces), so pushing the piece's new value into every photo could make right scores wrong. "It's another piece…" and "Not this piece" (§8) are the tools for that.
+3. **The blast radius** of a silent re-score is large: Lookbook scores, Your go-tos, the moves card and the chat's history would all shift without him asking.
+4. **The honest path already exists:** each check's "Not quite right?" shows the before and after and makes a new corrected reading. A bulk "Re-score the 3 checks it was in" is a taste call (§17.6 call 2), default no.
+
+### 17.5 Accessibility, sizes, themes
+- VoiceOver: each row reads "Leg, Slim. Button. Double-tap to change."; each option "Relaxed leg, button", the current one "Slim leg, selected"; after a pick the toast is announced and the drawing's label updates (it now names the kind and leg or fit: "Dark jeans, relaxed leg").
+- The largest text sizes: rows stack the value under the label (`ValueRow` as today), the sheet's grid drops to 2 columns, names wrap to 2 lines, Close stays 44 pt.
+- Light and dark: the drawings use the app's dark-mode rims; swatches get a hairline ring so black on night and white on chalk still show.
+- Touch targets 44 pt; no gesture-only path (every pick is a tap).
+
+### 17.6 Taste calls (founder; Claude's default first)
+1. **Where it lives:** rows on the piece page, each opening a picture sheet (default) · or one "Edit" button top right opening a form with every field. Rows: one glance shows what the app thinks, one tap fixes one thing.
+2. **Past checks:** leave them, and say "Your scores stay the same" (default) · or offer "Re-score the {n} checks it was in" with a before/after list (a bulk "Not quite right?"; about +1 day).
+3. **A long-press entry** ("Change what it is…"): no (default) · yes.
+4. **Draw the look-alikes apart** (17.2's five pairs, about half a day in `flats.ts` / `artSpec.ts`): yes (default) · names only.
+5. **The words** (all new): "What it is", "Kind", "Color", "Leg", "Fit", "Pattern", "More kinds", "Plain", "Stripes", "Checks", "Graphic print", "Neutrals", "Blues and denim", "Earth tones", "Colors", the footnote "Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same.", the toast "Changed to {value}. Your scores stay the same.", "Changed to {kind}, in {color}.", the sheet subtitle "Pick what it really is.", and VoiceOver's "Double-tap to change." Default: as written.
+6. **Top ↔ layer:** not in v1 (default; the outfit engine treats a top and a layer differently, so moving one is a bigger change than a picker) · a "Worn as · Top / Layer over a top" row.
+7. **"Long-sleeve tee"** isn't a kind the reading knows: later, with the reading and a drawing (default) · now as a sleeve-length row (drawing only, never scored).
+
+### 17.7 Pass/fail checks (written before building; the build must not edit them)
+- **X1 (T) The lists:** for a piece in each slot, the Kind sheet offers exactly 17.2's first group and More kinds, plus the piece's current kind and its look-alikes in the first group when missing; never another slot's kinds; Leg, Fit, Pattern and Color offer exactly 17.2's values. No option label contains a brand (the sentence gate's brand rule) or a body word.
+- **X2 (T) The rows:** tops and layers show Kind, Color, Fit, Pattern; bottoms Kind, Color, Leg (no Leg for Shorts and Gym shorts); shoes Kind, Color. The denim washes show only for jeans and denim jackets, or as the current value.
+- **X3 (T) What a pick writes:** exactly the field on `garment`, the field in `confirmedFields` and `profile.confirmed` (confirmable fields), the taught aliases (17.3), `art`, `hex`, `name` (auto-named only) and `updatedAt`; every other field of the row deep-equal to before.
+- **X4 (T) The drawing follows:** after each pick the piece's `artSpec` matches a piece that was read with that value (hoodie → sweatshirt: no hood, no drawstrings; slim → relaxed: the relaxed leg), including a pattern pick on a piece whose photos read another pattern, and a color pick whose measured color is from another family (the family's own color is drawn).
+- **X5 (T) The pictures differ:** within each sheet's first group, every option renders a different drawing (`renderFlat` output) in light and in dark; only the listed More-kinds look-alikes may share one.
+- **X6 (T) The name:** an auto-named "Grey hoodie" becomes "Grey sweatshirt"; a pattern pick names it ("Navy striped tee"); a leg or fit pick leaves the name; a name he set stays; a clash with another piece is settled by the existing detail-word rule.
+- **X7 (T) It sticks:** three later sightings that read the old value (hoodie; relaxed) each match this piece with no veto and a score no lower than before the edit, and none of them changes the piece's kind, leg, color or pattern; a genuinely different piece he said "never the same" to stays apart.
+- **X8 (T) Known piece:** after a kind pick, `knownPieces` lists the piece as confirmed with the new kind, and `askWithClosetBy` on an unsure read of its look-alike asks about it under #126's unchanged rules.
+- **X9 (T) No score moves:** every fit check's score, raw score and part scores, every reading, every sighting and every closet summary are deep-equal before a pick, after it and after its Undo; `packages/kitted-core` has no diff (G2).
+- **X10 (T) Everything that reads the closet follows:** after slim → relaxed on the demo closet's jeans, the Outfits count, Goes with, the next best buy and Starter ownership equal a fresh computation on the edited closet, and the chat's piece line says "relaxed leg". A marked Starter piece that no longer fills its row is unmarked.
+- **X11 (T) Undo:** inside the toast window every row the pick changed (the piece, a renamed neighbor, an unmarked Starter piece) is deep-equal to before, and everything in X10 is back.
+- **X12 (T) Edge cases:** jeans → chinos in a denim wash moves to the nearest plain color and the toast says it; picking the current value writes nothing and shows no toast; a piece waiting on "Same as your …?" has no editor (it isn't a tile); chat, Starter and seed pieces edit by the same rules; a pick while the closet call is still out for a check that wore the piece is kept when that call lands.
+- **X13 (T) Sync:** the edited row round-trips through the sync envelope (`app/src/sync/schema.ts`) with every edited field; no field is added to the local-only list.
+- **X14 (T) Words and VoiceOver:** every new string is in `en.ts` and passes the copy checks (no emoji, no "unlimited", no "AI stylist", no body words); the rows' and options' VoiceOver labels are as 17.5.
+- **X15 (S) On the Simulator** (a new demo screen with the demo jeans and hoodie): the section, Leg → Relaxed redraws the hero and shows the toast; Undo restores; Kind → Sweatshirt on the hoodie; light, dark and the largest text size with nothing clipped; VoiceOver reads a row and an option.
+- **X16** `npm run check` green (G1).
+
+**Estimate:** about 2 days: the action and its Undo (half a day), the section and sheets (half a day), the drawings apart (half a day), tests and the Simulator pass (half a day). JS only: on his phone through Metro, no reinstall.
+
+### §17 results (Oct 16, #315): built with every default (founder: "After the mockups, I agree with them. You may continue."), checked against X1–X16, none changed
+| Check | Result | How |
+|---|---|---|
+| X1–X14 | Pass (T) | `pieceEdit.test.ts`, 27 tests, run first against no code (the module didn't exist), then green. Two test fixes, not check changes: the demo hoodie's real name is "Heather grey Nike hoodie" (the closet call reads the shade and logo), not the "Grey hoodie" the test guessed, and the seed's "Grey tee" becomes "Heather grey striped tee"; `toHaveProperty` read the dotted string keys as paths |
+| X5 | Pass (T) | 5 drawings added: a skinny leg (narrower, tapered), an oversized top (dropped shoulders, longer and wider), a knit texture on sweaters, the print on every graphic tee, a canvas toe cap; and one more the test found: chinos and trousers drew the same in navy, so trousers are now smooth cloth with a sharper crease. #287's C5 render hashes still pass: every other drawing is byte for byte the same |
+| X9 | Pass (T) | 6 picks and their Undos across p01b and s12 checks: every score, raw score, part score, reading, sighting and closet summary unchanged; `packages/kitted-core` has no diff |
+| X15 | Pass (S), one note | iPhone 17 Pro Simulator, demo screens 185 (the jeans' page), 186 (Leg), 187 (Kind on the black sweatshirt), 188 (Color) (renumbered 197–200 at the merge with main, whose two-shot check took 185–188): Leg → Relaxed redraws the hero and shows "Changed to relaxed leg. Your scores stay the same." with Undo; Undo puts it back (log `undo edit … ran 5 ms`); light, dark and the largest size (rows stack, the sheet drops to 2 columns, nothing clipped). VoiceOver labels are checked by X14, not read aloud on the Simulator. **Note:** the Simulator tool's screenshots take seconds, so a timed Undo tap twice landed on the row under the toast after the toast had gone; with the toast up, Undo worked |
+| X16 | Pass | typecheck, lint, 755 core tests, 1088 app tests |
+| Fixed on the Simulator | | the selected swatch's check was drawn in the swatch's own color (white or ink now); the knit lines were too faint on black, then too strong (read as grey), now in between; the sheet now closes the moment he taps and the write lands just after (it waited for the write) |
+| Not built (defaults) | | no long-press entry (call 3), no re-scoring of past checks (call 2), no top ↔ layer (call 6), no long-sleeve tee (call 7) |
+
+
+## 18. How baggy a piece is: how the app knows, how sure it is, how he corrects it (plan and pass/fail checks, set before building; Oct 16, #316)
+Founder (Oct 16): "what are we gonna do about how baggy anything is? how will we know and let the user correct?" **Plan only: nothing is built or re-scored. His four calls were decided Oct 16 with the defaults (§18.6).** Numbered §18 and #316 because §15–§17 and #309–#315 are held by main and the open PRs (eyualem/kitted#4, #5, #7). It builds on §17, the piece page's "What it is" rows (PR eyualem/kitted#5, #315). Global checks G1–G4 (§6) apply.
+
+### 18.1 What exists today (from the code)
+- **The reading** (`extraction-test/schema.json`, the live v3 format): `volume` 1–5 on every garment ("1 = fitted close to body, 3 = regular, 5 = very oversized. Garment cut, not the person's body.") and `leg_shape` on bottoms (skinny · slim · straight · relaxed · wide · flare/bootcut · barrel). For tops one number mixes two things: how the piece is cut, and whether it's his size (#164).
+- **What moves points** (parts engine v13, `extraction-test/rubrics/parts_proto.py`, ported in `@kitted/core` `parts.ts`). Only steady groupings are used: a top or layer is **roomy (4–5) or not**; 4 vs 5 and 1 vs 2 never move points (#217). A bottom read "straight" at volume 2 or less is judged slim (v12 `_leg`).
+  - Proportions: a roomy top over skinny legs −1.5 (PF5); "roomier than the look" −1.5 (PB1, #217: a roomy top worn on its own outside every band of the looks the outfit reads as; not when it's tucked or ends at the belt over a full leg, under a layer, over pressed trousers, over loungewear, or when FF5 or SX1 already charged); a slim leg −1.0, skinny −2.0 (PN1); the streetwear shape (PR4) and the waist credit reward a boxy or short top over wide jeans.
+  - Fit: a roomy, non-tailored piece with sleeves over the hands costs 0.5 since v8 ("the roomy hoodie's sleeves run past the wrists", FF5); a stack on loose jeans or cargos never costs (#221).
+  - Style: an oversized top with two dressy pieces (SX1, #214); an oversized graphic tee under a blazer (GT1).
+  - **So "on purpose" vs "too big" is told apart only by the outfit around the piece** (the leg, the look, a tuck, a layer) plus one cue (sleeves past the hands). **There is no size reading:** a jacket a size big with its sleeves at the wrist costs nothing for its size.
+- **Corrections today:**
+  - "Not quite right?" (`app/src/features/correct/fields.ts`), per check: Fit for tops and layers (Slim 2 · Regular 3 · Relaxed 4 · Oversized 5) and Leg for bottoms (the five). It re-scores that check with a before and after, and the closet service also sets the field on the linked piece and marks it confirmed. His phone (Oct 15 pull): 4 corrections stored, all type taps; never a fit or leg correction.
+  - The piece page's Fit and Leg rows (§17): they set the piece and never move a score.
+  - The quick tap asks no fit questions (#122: people answer fuzzy fit questions in their own favour).
+  - The closet matcher: a volume 3+ away from the piece's average costs −2; a leg 3 steps away (slim vs wide) vetoes the match unless he taught it (`closetIdentity.ts`).
+
+### 18.2 How steady the readings are (from saved results; no new spend)
+Script `extraction-test/bagginess_steady.py`, output `extraction-test/results/bagginess1/steadiness.txt`.
+**Rule 7:** every photo here is **profile unknown**. His own profile isn't set yet (the phone's profile row has no birth year and no looks; his to-do list), and the gold, stock and Reddit photos have none. All were scored with one stated test profile: no picked looks, Everyday (a pick never changes a number, #211). So no split by age band or picked look is possible yet; the split is by source. Re-run once he gives his profile.
+
+**The same photo, read 2–3 times** (the shipped reading with close-ups: zoom1 and zoom1-stock arm B, gold1):
+
+| Source | Tops: roomy call same | Layers | Legs: exact | narrow vs not | loose vs not | Score moved by these flips alone |
+|---|---|---|---|---|---|---|
+| His photos (16 tops, 15 bottoms) | 100% | 100% | 67% | 87% | 73% | 3 of 14 (21%) |
+| Instagram (gold) | 96% | 95% | 85% | 100% | 96% | 4 of 125 (3%) |
+| Pinterest (gold) | 100% | 96% | 81% | 96% | 91% | 5 of 69 (7%) |
+| Reddit (gold) | 100% | 100% | 81% | 95% | 86% | 1 of 21 (5%) |
+| Stock | 100% | 94% | 87% | 95% | 95% | 0 of 39 |
+| Stock mirror selfies | 100% | 100% | 75% | 100% | 75% | 0 of 12 |
+
+"Score moved": run 2's reading scored once as read and once with run 1's volume and leg put in.
+
+**Photos of the same piece** (his phone closet; 20 tops and layers and 6 bottoms seen in 2+ checks):
+- Tops: the roomy call agrees on 19 of 20. The one: his black tee, roomy (4) in 4 checks and fitted (2) in one.
+- Bottoms: 5 of 6 keep one leg. His mid-wash jeans (9 checks, including a merged duplicate) read slim 3 times, straight twice, relaxed once and wide 3 times, every time "clear". Either the reading can't hold that pair's leg across photos, or two pairs were merged; the app can't tell which.
+- This overstates steadiness: the matcher splits a piece whose leg reads 3 steps off, so a pair read wildly may already sit as two tiles.
+
+**Is it right?** (Claude's blind labels in `leg_labels.csv`, every run counted): the exact leg is right on 56% of his photos, 72% of stock and 77% of mirror selfies; narrow vs not 80% / 87% / 60%; loose vs not 67% / 80% / 83%. On Fashionpedia's 90 pants, slim vs straight 75% (#223). **Volume has never been labeled: there is no truth for it.**
+
+**How sure is it?** The reading's own `certainty` doesn't predict a flip: tops read "clear" flip the roomy call 2% of the time, "likely" 1%; bottoms 5% and 5%. Flips cluster on overshirts (14%), knit polos (9%) and bombers (8%). So "how sure" can't come from the AI's flag; it has to come from repeats: the same piece read differently across his photos.
+
+**How much it matters:** re-scoring each photo as if nothing were roomy and every leg straight changes 20% of his checks, 26% of stock, 33% of Pinterest and 53% of Instagram (where boxy tops and wide legs earn the shape credits). Bagginess is one of the engine's biggest levers.
+
+**What the judges say** (the gold panel, #224): a roomy top over a loose leg gets the panel's best Fit, 7.6 (38 photos); a roomy top over a slim or straight leg the worst, 5.5 (6 photos); regular tops 6.6–7.4. So for the judges too, the shape around a piece is what makes big read as intended, which is what PB1 and PR4 already do. 30 of 225 photos (13%) have 2+ judges calling a piece swamping, shapeless or a size big, and only 7 of those had a top read roomy: most are hems swallowing the shoes (the stack, which the reading can't see, #273), long shorts or a shapeless blazer. **A size fault isn't in `volume`.**
+
+**In short:** the same photo reads steadily enough for the groupings scores use (tops 94–100%, legs narrow vs not 87–100%), weakest on his own photos' legs (straight, relaxed and wide trade places). The leg is often wrong in detail (56–77%) and roughly right on narrow vs not. Whether a piece is a size big isn't read at all.
+
+### 18.3 Recommended decisions (ranked; Claude's default first)
+**(a) Oversized on purpose vs a size too big**
+1. **Default, now: judge "roomy" by the outfit around it, never the piece alone, and never call a piece "too big" from volume.** That's today's engine (PB1, PR4, PF5, SX1, FF5 at 0.5) and what the judges do (7.6 vs 5.5 above). The piece page's Fit words describe the cut ("Oversized" means cut big), never how it sits on him. No score moves.
+2. **After the size-ladder shoot: two garment cues in the reading,** as #164 planned: `shoulder_seam` (on the shoulder · just past · down the arm) and `ribbed_hem` (a banded hem at the hips). Code decides, never the AI: **cut big** = the seam just past or down the arm with a short or banded body; **a size big** = the seam down the arm with a long body and sleeves past the hands, or a jacket whose sleeves cover the hands. A size big costs on Fit in every look; a cut that's big on purpose is judged only by proportion, as now. Each cue must pass the flip test (90%+ the same over 3 runs, about $2, his OK) and the ladder (80%+ right), or it stays a tip with no points.
+3. **"Runs big / Fits / Runs small" as a piece fact** (about the garment's size, no body word): not in v1; it comes with option 2, when a size rule exists to use it.
+- **Rejected:** asking the AI "oversized on purpose?" (the same guess as volume, `rubric/research/notes/v5-fit.md`); measuring a garment's width against his body (it would rate bodies; never, #164); the body ruler for widths.
+
+**(b) When to ask, when to guess**
+1. **Default: never ask about fit or leg before the score** (#122 stands). Flips that move a score are rare on public photos (3–7%), and an answer about his own fit carries his hopes. The photo's reading scores; "Not quite right?" stays the correction for one check, with its before and after.
+2. **Ask on the piece, afterwards, only when its own photos disagree.** A piece seen in 3+ checks whose readings fall in different groups that scores use (tops: roomy or not; bottoms: narrow, straight or loose) shows **"Not sure"** on its Fit or Leg row ("Seen as slim and as wide. Which is it?"), and Closet's To confirm holds at most one card, "How do your mid-wash jeans fit?", with §17's picture sheet. Never on the score card, Skip keeps it quiet until a new photo disagrees again, and a pick confirms the piece by §17's rules without moving a score. This is the "how sure" signal: repeats, not the AI's flag.
+3. **Rejected:** a tap before the score on the leg (a rare score effect, his hopes in the answer); a question on every new piece (noise: 19 of 20 tops already agree).
+
+**(c) Should a fit he set on a piece feed a new check's score?** It moves scores, so it's his call.
+1. **Default: yes, but only through a question, never silently, after his OK and a paper test.** When a new photo's piece matches a piece he set (a known piece, #126's rules), the photo's fit or leg falls in a different scoring group from his setting, and his setting would move the score by 0.5 or more, the card asks before the score, the way "Your grey work boots?" does: **"Your mid-wash jeans?"** with the piece's drawing, Yes / No. Yes scores with his setting (the Why sheet row says "Leg: straight, from your closet"); No scores the photo as read (it may be another pair). The answer is stored on the check like every tap answer, so the same photo keeps the same score and a re-check reuses it. Old checks never move.
+   - **Why:** on his photos the leg is exact only 56% of the time, and his word about his own jeans is likely better; the question catches a wrong match (the mid-wash case: if two pairs were merged, he says No); it reuses a question he already knows; nothing changes without him seeing it.
+   - **His hopes:** he sets the piece on a screen that says "Your scores stay the same" with no score in sight, so there's no pull toward the flattering value (BG4 keeps any number off that sheet).
+   - **Limits:** one question per check (today's cap; the larger swing wins a tie), never at Gym or Home.
+   - **Build:** after PR #5, about 1 day, behind a switch that ships off (`CLOSET_FIT_FEEDS_SCORE`). His Leg wins over the v12 "fitted straight is slim" rule; a Fit sets volume to its value (Slim 2, Regular 3, Relaxed 4, Oversized 5).
+2. **Use his setting silently whenever the piece matches** (rejected: a wrong match would move a score with no sign of why).
+3. **Never** (today's §17 rule): honest, but it leaves the 56% leg reading in charge of his own jeans for good.
+
+**(d) Truth needed, and what ships before it**
+Truth, most useful first:
+1. **His own picks on the piece page,** free from PR #5 on: each Fit or Leg he sets labels every earlier photo of that piece. The phone already keeps both; `tools/phone/pull.sh` copies them and the script above measures the AI on his own clothes. No shoot needed, and nothing new leaves the phone.
+2. **The size-ladder shoot** (P2 on his list, ~45 min with a friend): the same tee, hoodie and jeans in 2–3 sizes each, plus one piece cut oversized on purpose, mirror and propped. The only truth for "a size big" vs "cut big", and the gate for (a)2.
+3. **The gold set's one-outfit variants** (P1): slim vs straight jeans with the same top, in his own light.
+4. Fashionpedia's leg labels (done, #223): legs only.
+
+**Ships before any of it, no score moves:** §17's Fit and Leg rows; (b)2's "Not sure" row and the one To confirm card; the measuring in (d)1; the paper test for (c)1 on his saved checks. **After the ladder:** (a)2's cues and the size rule, the "Runs big" piece fact, and fixes like "Try a size down in the tee" and "Have the sleeves shortened".
+**Never:** a word about his body, a width measured against him, or a fit word not about the garment ("oversized tee", "runs big"; never "big on you" or "your frame").
+
+### 18.4 What he'll see, once built
+- **The piece page** (on top of §17): a row whose photos disagree reads "Leg · Not sure ›" with "Seen as slim and as wide. Which is it?"; a pick settles it ("Changed to straight leg. Your scores stay the same.").
+- **Closet → To confirm:** "How do your mid-wash jeans fit?" with the drawings, one card at a time.
+- **Only if he OKs (c):** a new photo of those jeans read wide asks "Your mid-wash jeans?" before the score; Yes scores them straight, and the Why sheet row says "from your closet".
+- **New words to skim:** "Not sure", "Seen as {a} and as {b}. Which is it?", "How do your {item} fit?" / "How does your {item} fit?", "from your closet".
+
+### 18.5 Pass/fail checks (written before building; the build must not edit them)
+**Group 1, after PR #5, no score moves (about half a day):**
+- **BG1 (T)** "Not sure" shows on a Fit row exactly when the piece's own unconfirmed readings from 3+ checks include both roomy (4–5) and not (3 or less), and on a Leg row exactly when they span 2+ of narrow (skinny, slim) · straight · loose (relaxed, wide, barrel); never once he has set it; never with 2 checks or fewer.
+- **BG2 (T)** Closet's To confirm holds at most one fit card, the piece with the most checks first; Skip hides it until a new photo of that piece disagrees again; never on a score card.
+- **BG3 (T)** A pick from the row or the card writes exactly what §17's pick writes (X3); every fit check's score, raw score, parts, reading and closet summary are deep-equal before and after (X9).
+- **BG4 (T)** The Fit and Leg sheets show no score, number or "+N".
+- **BG5 (T)** Every new string passes the copy checks and the body-words test; no option or line says "on you", "your body", "frame" or "big on you".
+- **BG6 (T)** `bagginess_steady.py`, run on a pull with piece-page picks, reports the reading's roomy and leg accuracy against them, by source and, once his profile exists, by his age band and looks.
+**Group 2, (c), only on his OK, behind `CLOSET_FIT_FEEDS_SCORE` (about 1 day):**
+- **BG7 (T)** The paper test comes first, before any app code: on his saved checks with his piece picks applied, how many would ask (target: 1 in 5 checks or fewer) and every score that would move, listed before and after for him.
+- **BG8 (T)** The question asks only when the piece is a known piece he set that field on, the photo's group differs from his setting's, the swing is 0.5 or more, the occasion isn't Gym or Home, and no other question is asked on that check (the larger swing first).
+- **BG9 (T)** Yes scores with his value (Leg: the leg the rules judge, over the v12 fitted-straight rule; Fit: volume 2, 3, 4 or 5); No and Skip score the photo as read; the answer is stored on the check, and the same photo scored again gives the same score.
+- **BG10 (T)** Switch off: no score anywhere differs from today (G2, parity). Switch on: every old check is deep-equal.
+- **BG11 (T)** The Why sheet row says "from your closet" whenever his value was used.
+**Group 3, after the size-ladder shoot (its own plan then):**
+- **BG12** `shoulder_seam` and `ribbed_hem` each read the same on 90%+ over 3 runs and right on 80%+ of the ladder, or they stay tips.
+- **BG13 (T)** No rule reads a garment's width against the body (a test checks the engine takes no pose widths).
+
+**Order from here:** Group 1 once PR eyualem/kitted#5 (the piece page's rows) is merged; then BG7's paper test, which needs a few of his own piece-page picks first; Group 2 only after he has seen that before/after; Group 3 after the size-ladder shoot.
+
+### 18.6 His calls: decided Oct 16 (founder: "i agree with you recommendations"), all four defaults
+1. **(c) Decided:** his setting feeds new scores only through the "Your …?" question, behind `CLOSET_FIT_FEEDS_SCORE`, built only after BG7's paper test is shown to him (not chosen: never · silently).
+2. **(b) Decided:** the "Not sure" row and at most one To confirm card; never a fit question before the score (not chosen: the row only · neither).
+3. **(a) Decided:** "on purpose vs too big" stays judged by the outfit around the piece; size faults wait for the size-ladder shoot (not chosen: the ~$2 cue test now).
+4. **The new words (18.4) decided:** as written.
+
+### §18 results, Group 1 (Oct 16, #316): checked against BG1–BG6, none changed
+Built on PR eyualem/kitted#5's branch (the piece page's rows), so this PR goes in after #5. On the iOS Simulator (iPhone 17 Pro, a turn handed over by the chat session) on demo screens **194** (Closet, "How do your dark jeans fit?"), **195** (the dark jeans' page, Leg · Not sure) and **196** (the Leg picker): the demo jeans read slim, wide, wide and straight in four checks. Screenshots `screenshots/bagginess-oct16/` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| BG1 | Pass (T) | `fitDoubt.test.ts`: his mid-wash jeans' 9 reads give "Seen as slim and as wide."; his black tee's 4, 4, 2, 4, 4 gives "slim and relaxed"; one group never (all narrow, all loose, 4 vs 5, flare = straight); never under 3 checks, a re-check of one photo counts once, seed and undone sightings never; never once set (piece page, "Not quite right?", a confirmed leg), never on shoes or shorts |
+| BG2 | Pass (T, S) | one card, the piece in the most checks (then the newest photo, then the id); "do" for a pair, "does" for a top; Skip hides it and the next piece comes in; a newer photo that disagrees brings it back, an agreeing or older one doesn't; bad skip data reads as none; the skips stay on this phone (`closet.fitSkip`, local); only the Closet screen uses the card (a source scan). On the Simulator: the card, tap → the Leg picker, Straight → the card goes and the toast says "Changed to straight leg. Your scores stay the same.", Undo brings it back, Skip hides it (the web preview, the same code) |
+| BG3 | Pass (T) | a pick writes what §17's pick writes (`editPlan`), and every fit check's score, raw score, parts, reading, sighting and closet summary are deep-equal before, after and after Undo. **Two changes to §17, said openly:** (1) on a Not sure row the value it read most is a real answer, so picking it writes (elsewhere picking the current value still writes nothing, X12 passes), and its sheet rings no option; (2) a Fit pick now lists `volume` in `confirmedFields`, as a "Not quite right?" fit correction already did, so a Not sure Fit goes for good; core reads only its matcher fields there. X3's fit test was amended for (2), with the reason in the test |
+| BG4 | Pass (T) | no digit or "+" in any Fit or Leg option, the sheet's subtitle or a Not sure line; `EditSheet.tsx` draws no score, Numeral or outfit count |
+| BG5 | Pass (T) | the six new strings are the OK'd words; each passes the chat's sentence gate and the body-words rule; `copyChecks` green |
+| BG6 | Pass (T) | `bagginess_steady.py --db=<pull>` reports the reading against the Fit and Leg he set, with his age band and looks when set. On a copy of his Oct 15 pull with test picks (mid-wash jeans straight, black tee relaxed, born 2004, minimal + streetwear): legs 22% right on 9 photos, fit 80% on 5. The real pull has no picks yet ("none set yet") |
+| G1 | Pass | `npm run check` steps: tsc, core tsc, lint clean, core tests, 1105 app tests in 87 suites |
+| G2 | Pass | no file under `packages/kitted-core` changed; BG3's deep-equal |
+| G3 | Pass (S) | 194–196 in light, dark and the largest text size. **Fixed:** at the largest size a row's "Seen as…" line sat between "Leg" and "Not sure"; it now comes after the value. Skip lines up with the question, not the drawing |
+| G4 | | New words: "Not sure", "Seen as {a} and as {b}.", "Which is it?", "How do your {item} fit?", "How does your {item} fit?", and VoiceOver's "Opens the choices. Your scores stay the same." |
+| Found | | `stylistContext.test.ts` failed on main: #311 added the weekday to the chat pack's "Earlier this week" lines and the test still expected the bare date. Fixed the test (its own commit) |
+
+## 19. Bagginess on the fit-check card: plan and pass/fail checks, set before building (Oct 17, #322)
+Founder (Oct 17): "Build X with the judges' fixes: the scored-fix rule first, then the card line that opens straight to that piece's Leg or Fit, the Outfits card, the answer log, and the stop-after-two cap." The verdict came from a debate (4 advocates, a rebuttal round, 3 blind judges; files in the session's shared notes, `bagginess-debate-*.md`, `judge-1..3.md`): X won 2 of 3 judges; Z (as built) won the integrity judge; the chat asking (Y) won none. It bends §18.6 call 2 ("never on a score card") with a statement, not a question; nothing asks before the score (#122 stands). Numbered §19 and #322: main holds #317–321 (first numbered #319, then #321; the composer fix, the gap audit and the large-text fixes took #319–321 the same day).
+
+### 19.1 What he'll see
+- **On a fit-check card**, when a piece in it is "Not sure" (§18: its own photos disagree), one quiet line above Why / Not quite right?: **"Not sure about your mid-wash jeans' leg? Tap."** (a top: "Not sure about your black tee's fit? Tap."). It shows whether or not a fix would move the score, so seeing it never says an answer pays. A tap opens "Not quite right?" straight on that piece's row, offering only the leg shapes (or fits) his photos of it showed, plus this photo's; then the live before and after, and Save.
+- **The fix re-scores this check only** (the scored-fix rule): the toast says "Correction saved." The piece in Closet stays as it was and stays "Not sure" until he settles it on its page or the Closet card, with no score in sight.
+- **The line stops for a piece** once he has tapped it once, or after it has shown on 2 checks without a tap. It never shows on Past chats' cards.
+- **Closet → Outfits** shows the same single "How do your … fit?" card at the top (Pieces already does).
+- **Nothing new is sent anywhere.** Every answer is logged on the phone next to what the photos read (for the paper test and to see drift toward the flattering answer).
+
+### 19.2 The scored-fix rule (what changes in built code)
+Today a "Not quite right?" Fit or Leg correction also sets the piece (its `garment`, `confirmedFields`, the sighting's `userConfirmed`) and can move the sighting to another piece when it conflicts with the piece's other photos. From now on, for the two scored bagginess fields (`volume`, `leg_shape`):
+- the check re-scores exactly as today (its new corrected reading);
+- the sighting's garment takes the corrected value (it is that photo's record), but not as confirmed (`userConfirmed` unchanged), so the matcher treats it as one more read;
+- the piece's `garment`, `confirmedFields` and profile are unchanged, so `isSettled` stays false; the sighting is never moved (identity is "It's another piece…"'s job);
+- the toast is "Correction saved." (no "Saved to your …"), and the sheet's "Updated in Closet" pill doesn't show for these fields.
+Kind ("Wrong item") corrections keep today's behaviour.
+
+### 19.3 Pass/fail checks (written before building; the build must not edit them)
+- **BX1 (T) Scored-fix rule:** a Leg or Fit correction from "Not quite right?" changes the check's score and reading as before; the linked piece's `garment`, `confirmedFields`, `profile` and every other closet row are deep-equal before and after; the sighting's garment has the new value and its `userConfirmed` is unchanged; no sighting moves piece; every other check's score, reading and closet summary are deep-equal; the result names no piece (toast "Correction saved."). A Kind correction still sets the piece as today.
+- **BX2 (T) It doesn't settle:** after such a fix on a "Not sure" piece whose photos still disagree, `fitDoubt` still returns Not sure; a pick on the piece page settles it (§18 BG3).
+- **BX3 (T) The line:** a card shows it exactly when a garment of its current reading links (closet summary) to a piece `fitDoubt` calls Not sure, that garment has a Fit or Leg row in "Not quite right?" (not `certainty: 'unsure'`, not an accessory), the card isn't read-only, and the cap allows it; at most one line (the first such garment); its words are the two above with the piece's name lowercased; it doesn't depend on whether a correction would move the score.
+- **BX4 (T) Straight to the row:** the tap opens `/sheets/correct/<check>?reason=detail&garment=<i>&only=<values>`; the sheet opens on that garment, and its Fit or Leg chips are only the values his photos of the piece showed plus this photo's read (legs mapped to the five, flare → straight, barrel → wide; fits to 2–5), in the usual order.
+- **BX5 (T) The cap:** after one tap the line never shows for that piece again; shown on 2 different checks without a tap, it doesn't show on a 3rd; the same check shown again doesn't count twice; the cap lives in a local kv key.
+- **BX6 (T) The answer log:** each of a piece-page pick (with where: the row or the Closet card), a line tap and a scored fix (Fit or Leg) appends one entry with the time, the piece, the field, the value (or none for a tap) and what that piece's photos read; at most the newest 300 are kept; the key is local, never synced.
+- **BX7 (T, S) Outfits:** the single fit card shows at the top of Outfits and of Pieces (the same piece); Pieces' "Same as your …?" questions stay on Pieces only.
+- **BX8 (T) No other score moves:** core has no diff; with no "Not sure" piece the card renders exactly as before.
+- **BX9 (S) On the Simulator** (a new demo screen: a check of a piece whose photos disagree): the line, a tap opening the sheet on the jeans with only their seen legs, Save, the toast; Outfits with the card; light, dark and the largest text size, nothing clipped.
+- **BX10 (T) Words:** the new strings pass the copy checks, the sentence gate and the body-words rule.
+- **G1–G4** (§6) apply.
+
+### §19 results (Oct 17, #322): checked against BX1–BX10, none changed
+Demo screens **201** (a check of s12 whose mid-wash jeans read slim, wide and wide in earlier photos), **202** (Closet → Outfits with the fit card) and **203** (the sheet the line opens). Seen on the iOS Simulator (iPhone 17 Pro, a turn from the large-text session) and on the web preview. Screenshots `screenshots/bagginess-oct17/` (git-ignored).
+
+| Check | Result | How |
+|---|---|---|
+| BX1 | Pass (T) | `fitLine.test.ts`, on the real fit-check and closet services: a Leg fix on s12's jeans takes the check to the new read; every closet row deep-equal; the sighting has the new leg with `userConfirmed` unchanged; nothing moves piece; another check deep-equal; no piece named. A Fit fix on the hoodie: same. A Kind fix still sets the piece |
+| BX2 | Pass (T) | the jeans stay Not sure after a scored fix; a piece-page pick settles them |
+| BX3 | Pass (T, S) | the line names the piece ("Not sure about your mid-wash jeans' leg? Tap."); none on a check with no Not sure piece, on a garment read `unsure`, or once settled; the line's code never reads a score; the card passes `readOnly` |
+| BX4 | Pass (T, S) | the href carries `only=slim,straight,wide` (this photo straight, earlier slim, wide, wide); `limitTo` keeps the usual order; on the Simulator and the web the sheet opens on the jeans with Slim · Straight · Wide only. Picking Slim showed 7.0 → 6.5 and no "Updated in Closet" pill; Save gave "Correction saved.", the card read 6.5 and the line was gone |
+| BX5 | Pass (T) | one tap stops it; 2 untapped checks stop a 3rd; a check it showed on keeps it; the same check doesn't count twice; `closet.fitLine` is local |
+| BX6 | Pass (T) | a scored fix, a line tap and a Closet-card pick each add one entry (`via: 'card'`), with the photos' reads before the answer; the newest 300 kept; `closet.fitAnswers` is local |
+| BX7 | Pass (T, S) | Outfits draws the same one card; "Same as your …?" stays on Pieces |
+| BX8 | Pass (T) | no Not sure piece: no line; `packages/kitted-core` untouched |
+| BX9 | Pass (S) | 201–203 in light and dark, 201 and 202 at the largest text size: the line wraps inside its pill, nothing clipped |
+| BX10 | Pass (T) | the four new strings pass the sentence gate and the body-words rule |
+| G1 | Pass | `npm run check` steps: tsc, core tsc, lint, core tests, 1167 app tests |
+| G4 | | New words: "Not sure about your {owner} leg?", "Not sure about your {owner} fit?", "Tap.", VoiceOver "Opens Not quite right? for this piece." |
+| Amended | | Two older tests expected a Leg fix to set the piece ("Saved to your tan chinos"): `closetService.test` now shows the patch-in-place path with a Kind fix; `fitCheckService.test` expects the piece left as it was. Both say why in the test |
+| Found | | Picking the honest leg can cost points (Slim took the demo check from 7.0 to 6.5), which cuts against the worry that the line only invites flattering answers; the log will show what he actually picks |
+
+---
+
+## 20. What's missing right now: the whole-app gap audit (Oct 17, #320)
+
+**What this is.** Founder, Oct 17: "go through the app and try to find things that are missing right now." Five read-only agents went through the code area by area: Stylist; Closet and Lookbook; You, onboarding and the paywall; the release plumbing; navigation and dead ends. Each was compared against 02, 05, 07, 10 and this file. Nothing was built or changed. I re-checked by hand the items marked ✔. Paths are under `app/src/` unless they start elsewhere.
+
+Each item carries who it needs: **[code]** Claude can fix it alone; **[you]** it needs an account, money, a package or an outward-facing OK.
+
+**The headline.** On his phone (a dev build through Metro) the app is close to whole. But a TestFlight build today can't score a photo or answer a question, ships the demo tools, and has never been built. That is the real gap to the Nov 3 beta, and most of it is on the to-do list already (Cloudflare, $99). Items 20.1–20.3 below are not on it.
+
+### 20.1 Blocks the beta: a tester's build doesn't work
+1. ✔ **No server exists.** There's no Worker, no wrangler config, no `/v1/score` or `/v1/ask` client; the only server code is `firebase/functions` (account deletion, not deployed). In a build without `__DEV__` the Gemini key is undefined (`services/readingSource/live.ts:10`, `closetSource/live.ts:10`, `ask/liveSource.ts:13`).
+   - A real photo then falls to the mock and fails: "This demo only knows its sample photos.", with no Try again (`readingSource/mock.ts:88`, `stylist/cards/FitCheckCard.tsx:164-170`).
+   - Every question gets "Questions are coming soon. For now I can check your fit…", which isn't true either (`ask/session.ts:36-41`).
+   - Daily limits live only in the phone's SQLite (`services/quota.ts:1-4`), so a reinstall or a clock change resets them.
+   - There's no $3/day spend stop (`app-build-spec.md:243`), and the "paused" line can never fire. `online()` is hard-wired to true (`ask/pipeline.ts:70,136`).
+   - App Attest isn't built, even log-only.
+   - [you: Cloudflare account] then [code]: the Worker, the proxy sources, server-side limits and the kill switch.
+2. ✔ ✅ **Done (#323, §20.7 R3).** ~~**Fake demo readings would leak into real checks.**~~ With no key, the mock answers *any* shoe snap or pants-and-shoes snap with a canned demo reading (`readingSource/mock.ts:64-65`). A tester's real snap would merge someone else's shoes into his score. [code] In a non-demo build the mock must refuse every snap.
+3. ✔ ◐ **Mostly done (#323, §20.7 R1):** demo off by default in Release, `guard:release`, a local Release build booted. Still open: the dev launcher's local-network strings, and the paid team. ~~**No safe release build.**~~
+   - The demo tools are on unless `KITTED_DEMO=0` (`app/app.config.ts:4`), and nothing sets that: no `eas.json`, no release script, and `tools/phone/install.sh:11` builds Debug.
+   - The `guard:release` script promised in 05 §P8 (`05-build-plan.md:679`) isn't in `package.json`. As written it would always fail anyway: the Firebase key is also `AIza…` and is bundled on purpose.
+   - No Release build has ever been made, so minifier, Hermes and `__DEV__` surprises are untested.
+   - The dev launcher's local-network strings ship in `Info.plist` (`NSLocalNetworkUsageDescription` "Expo Dev Launcher…", `NSBonjourServices`).
+   - [code] for the script, the default and a local Release build on the Simulator; [you: $99 program] for the paid team and App ID (`app.config.ts:22-24`, still the Personal Team `6652QVRQAL`).
+4. ✔ ✅ **Done (#323, §20.7 R1–R2):** the paywall route needs `paywallOn()`; Release builds have no demo tools, so no `?resetData` or demo links. ~~**Two deep links do damage.**~~
+   - `kitted://paywall/plans` opens the paywall on any build: its route is guarded only by age and onboarding (`app/_layout.tsx:89`), not `PAYWALL_BUILT`. The mock "purchase" then turns on Pro until the app restarts (`services/purchases.ts:58-66`, `services/entitlements.ts:21`).
+   - In any demo-enabled build, `?resetData=1` wipes the real store and the age block (`state/boot.ts:52-55`), and `kitted://demo/screen/N` wipes it and loads demo data (`demo/prepareDemoScreen.ts:271`).
+   - [code] Guard the paywall route by `paywallOn()`; demo off in release (item 3).
+5. ✔ **Consent doesn't match what's sent.**
+   - Questions go with height, build, picked looks, budget and saved facts (`ask/context.ts:166-181`). Consent says only "plus the clothes in your closet" (`en.generated.ts:93`), and `CONSENT_VERSION` is still `'1'` (`onboarding/complete.ts:18`).
+   - It still says "face cropped out or blurred" (`:91`), and the generated plist camera string says "cropped out" (`:713`; `app.config.ts` has the right one).
+   - The privacy manifest declares no collected data (`ios/Kitted/PrivacyInfo.xcprivacy`, `NSPrivacyCollectedDataTypes` empty). The privacy-label plan in `inputs/app-store-and-age-rules.md` §4.1 says height and build never leave the phone, which is no longer true.
+   - [you: OK D2 and #233 item 3, outward-facing] then [code]: the words, the version bump (everyone sees consent once more), and the manifest.
+6. **No way to hear from testers.**
+   - `SUPPORT_EMAIL` is null, so "Report a wrong score" and "Contact support" are hidden (§1 item 13).
+   - There's no crash or error reporting: no Sentry or Crashlytics, no ErrorBoundary, no global error handler. Logs go to Metro and dev-only files.
+   - If a tester's check fails, he only learns of it if they tell him.
+   - [you: an email] and [code]: an error boundary now, and failure logging in the Worker. A crash-reporting package needs [you].
+7. **The beta is free-tier only.** Pro is an in-memory demo flag and the paywall is off, so testers get 1 check and 5 questions a day with no way up. [you] Decide: a beta allowance set on the server (default: testers get Pro's limits during the beta), or accept it.
+
+### 20.2 Looks real but does nothing (fix before the beta; all [code] unless marked)
+8. ✔ ✅ **Done (#323, R4).** ~~**A failed scan says "Saved."**~~ `save()` shows success with `Math.max(saved, 1)` even when every photo failed (`scan/ScanCameraScreen.tsx:132-146`).
+9. **Closet "+" leads only to "coming soon."** Scans are never read into pieces, and nothing reads `scan.inbox` but its own row (`scan/inbox.ts`, `closet/addActions.ts:13-16`). It's the tab's only header button. Until the item reading exists (it needs the server): put Starter basics first in "+" and keep scanning as "Save for later".
+10. ✔ ✅ **Done (#323, R5): the row is hidden.** ~~**Settings › Notifications has 3 switches that do nothing.**~~ The row shows whatever `NOTIFICATIONS_BUILT` says (`you/settings.tsx:47`), and nothing schedules anything. The screen says "That's all I send." Hide the row until `expo-notifications` [you].
+11. ✅ **Done (#323, R5): hidden with the paywall.** ~~**Subscription and "Restore purchases" show with nothing to buy.**~~ `settings.tsx:58-61`, `you/plan.tsx:56`; Restore always says "No purchases to restore." (`settings/plan.ts:81-87`). Hide them with the paywall.
+12. **"Wear this" changes nothing he can see.**
+    - It writes the wear log only (`closet/outfitActions.ts:15-29`, `morning/service.ts:287-299`). Worn ×N, Last worn and Your go-tos count fit checks only (`closet/service.ts:387,419,438`, `closet/outfits.ts:126-140`).
+    - The log keeps one row a day (`data/migrations.ts:127-132`), so a second Wear this replaces the first silently.
+13. ✅ **Done (#323, R6): rows open the piece page.** ~~**"Added to your closet" says "Fix anything I got wrong." but its rows are dead.**~~ `EDIT_ITEM_BUILT = false` (`added/AddedSheet.tsx:27,193`), though the piece page has had "What it is" since #315. Point each row at its piece page; the existing `onEdit` pushes no `?field=`.
+14. ✔ ✅ **Done (#323, R7).** ~~**A re-check or snap whose first check is gone closes the camera silently.**~~ `noParent` (`fitcheck/service.ts:661`) has no case in `explain()` (`camera/startCheck.ts:157-179`).
+15. ✅ **Done (#325, §20.8 G15).** ~~**A scored re-check card has no "Why X?" and no "Not quite right?"**~~ (`stylist/cards/RecheckCard.tsx:161-176`). After a drop he can't see why or correct a misread.
+16. **A dialed-in card (9+) has no next step.** With no fixes and Save and Share switched off (`FitCheckCard.tsx:44-46, 439-447`), the action row is empty.
+17. **"How I score" still explains credits** (§1 item 8, #233 item 1). Waits on [you: #233 OK].
+18. ✅ **Done (#325, G18): Apple's connection check, the banner, send disabled, the offline line, "Not sent".** ~~**No offline handling.**~~ `banner.offline` and `banner.online` are unused, send is never disabled, and offline questions get the generic "I couldn't answer that". The photo caption is always "Not scored" (`stylist/MessageView.tsx:130`), and `fail.cap.notSent` is unused.
+19. ✅ **Done (#325, G19).** ~~**Saying "that score is wrong" in chat can't open "Not quite right?"**~~ The router detects it (`ask/router.ts:25`), but no card type opens the sheet (`ask/cards.ts:14-21`).
+20. ✅ **Done (#323, R8): 500 characters.** ~~**Questions have no length cap.**~~ No `maxLength` (`stylist/Composer.tsx:222-240`), and the whole text goes into the prompt. That's a cost risk once the server pays.
+21. ✅ **Done (#323, R9).** ~~**Past chats aren't fully read-only.**~~ An old evening card's occasion picker still edits (`MessageView.tsx:39` renders `MorningCard` without `readOnly`; `MorningCard.tsx:312-326`). Tapping a past day's checked morning row re-pushes the same page (`StylistScreen.tsx:225-227`).
+22. ✅ **Done (#325, G22): the look page's ⋯ with Delete photo and Remove from Lookbook.** ~~**He can't delete one photo or one check.**~~ The look page's ⋯ (Save, Share, Delete photo) isn't built (`lookbook/LookPageScreen.tsx:10`), and "Remove from Lookbook" keeps the file. The only way out is "Delete all photos". Privacy expectation: H.
+23. ✅ **Done (#325, G23).** ~~**"Not now" on consent leaves a bare thread.**~~ The S26 "Turn on fit checks" card isn't built (`noConsent.title` unused, `onboarding/complete.ts:27`).
+24. ✅ **Done (#325, G24).** ~~**The empty Closet has no "Tap the basics you own."**~~ It offers only "Check my fit" (`app/(tabs)/closet/index.tsx:82-85`). Starter essentials is reachable only from "No outfits yet" or Your moves, and with 1–2 pieces the "Add shoes and you'd have N outfits" hint sits on the hidden Outfits half (`closet/outfits.ts:151-155`).
+25. ✅ **Done (#323, R10): a toast with Undo.** ~~**A "Same as your …?" answer in Closet just vanishes:**~~ no toast, no Undo (`app/(tabs)/closet/index.tsx:107`).
+
+### 20.3 Missing pieces a user will expect (decide or schedule)
+26. **Adding a piece by hand** beyond the 12 Starter basics: "Describe it" (C4d) is a placeholder nothing links to (`app/sheets/describe.tsx`). With 1 free check a day, the closet fills slowly.
+27. **The share card** (S12, P6; `SHARE_CARD_BUILT = false`; `app/share/[checkId].tsx` is a placeholder). It's the before/after video asset for his daily posts.
+28. **The Lookbook calendar and "Days dressed"** (D16; only filters and Saved were deferred). Logged wear days show nowhere.
+29. **The Pieces grid** has no order or sections: newest first, kinds mixed, no Tops/Layers/Bottoms/Shoes chips at 12+ (`closet/merge.ts:14-17`).
+30. **In the thread,** a new answer can land off-screen with no "Latest" pill, and there's no Stop while an answer streams (07 §6.1).
+31. ✅ **Done (#323, R11): "This isn't here anymore." and `+not-found`.** ~~**Missing records give blank screens.**~~ These show an empty page or only a title: the look page, piece page, photo viewer, past day, and the Why, Correct, Added, Tell me, Edit, Merge and Fact sheets (Pick shoes is fully empty). There's no `app/+not-found.tsx`, so a bad link shows Expo's "Unmatched Route".
+32. ✅ **Done (#323, R12): five deleted, the share card's route guarded.** ~~**Six placeholder routes show spec IDs**~~ ("S12 · Share card / Placeholder. Built in P6.") if a link reaches them: `share/[checkId]`, `shoe-snap` (replaced by `camera?mode=shoeSnap`), `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation`, `sheets/swap/[ideaId]`. Delete or guard them.
+33. **A wrong birth year can't be fixed.** "Birth year can't be changed here." points nowhere (`you/profile.tsx:84-90`). An age block survives Delete all my data and has no contact line (`onboarding/AgeStopScreen.tsx`). The check uses the year only, so someone born in late 2008 passes at 17; Declared Age Range is the real check.
+34. **Location, once denied, can't be turned back on.** The weather ask shows only for `unknown` (`morning/MorningCard.tsx:177`).
+35. **Morning-card Swap** never says "Nothing else in your closet works here yet." It leaves out only the last swap, so the original can come back (`morning/service.ts:278-284`).
+36. **Chat outfit tiles and the buy card don't open anything.** `OutfitTiles.tsx` has no onPress. `BuyCard` could open the next-buy sheet, which exists.
+37. **Performance at hundreds of pieces is unmeasured.** Outfits score every top × bottom × shoes on the JS thread several times per change (`closet/outfits.ts:82-94, 233-243`; `PiecePage.tsx:100`). The grid and Lookbook aren't virtualized, and Lookbook loads full photos for 50 pt thumbnails (`lookbook/index.tsx:207`). Beta closets are likely fine.
+38. **Nothing to keep the code honest between sessions:** no CI (`.github/` doesn't exist), no end-to-end tests (Maestro, 05 §P7), no remote off-switch, no forced update.
+
+### 20.4 Blocks submission (~Nov 14), already on the to-do list
+- The 3 links (privacy policy, terms, support). App Store Connect also needs a Support URL page.
+- Declared Age Range: not built. It needs iOS 26.4's API while the target is 26.0.
+- Real purchases (RevenueCat), Pro checked on the server, Pro kept across launches, "Redeem a code".
+- Sign in with Apple once Google ships (4.8). Account deletion: `requires-recent-login` has no re-sign-in path, and the server `deleteAccount` needs App Check, which the app doesn't set up.
+- The trial line promises a reminder 2 days before it ends, which needs notifications.
+- The privacy label and review notes are stale: they still say yearly with a 14-day trial, and the example is no longer on the camera.
+- If the chat moves to OpenAI: consent, the promise, the provider name and the label all change.
+- A report path for chat answers (long-press → mailto) once the support email exists.
+
+### 20.5 This file's own drift
+§2 items done in code but not ticked: the "+" pull-down menu (`closet/AddMenu.ios.tsx`), the Lookbook score in Archivo, and the closet's 3-question cap (`closet/toConfirm.ts`).
+
+### 20.6 What I'd do, in order
+1. **[code], about a day, no founder input:** items 2, 3 (script, default and a local Release build on the Simulator), 4, 8, 10, 11, 13, 14, 20, 21, 25, 31, 32. These make a release build safe and remove things that lie.
+2. **[you] this week:** the Cloudflare account (already P1), a support email, OK D2 + #233 so consent matches, and the beta allowance call (item 7).
+3. **[code] after Cloudflare:** the Worker (score, ask, closet read, limits, kill switch, failure log), then the proxy sources, then a TestFlight dry run after the $99 program.
+4. **[code] before the beta:** items 9, 12, 15, 16, 18, 19, 22, 23, 24, 26.
+
+### 20.7 Step 1 built: the release-safety batch (Oct 17, #323). Checks first
+Written before the code. Each passes or fails; the results are under each group once built.
+
+**R1 · A release build is safe**
+- R1.1 With `KITTED_DEMO` unset, the demo tools are on in a Debug build and **off in a Release build** (`__DEV__` false); `KITTED_DEMO=1` turns them on in Release (the Maestro demo build, 05 §P7), `KITTED_DEMO=0` off everywhere.
+- R1.2 `npm run guard:release` exists. It makes a production iOS export and fails when the bundle holds: any `AIza…` key except the Firebase web key (bundled on purpose), the dev Gemini key's exact value, or any other secret value from `app/.env*` (the OpenAI and Anthropic test keys); and when the config with `KITTED_DEMO` unset turns the demo on.
+- R1.3 The guard passes on today's code (run, result recorded below).
+- R1.4 One local Release build boots on the Simulator: Stylist opens, there's no dev menu, and `kitted://demo/screen/7` doesn't open a demo screen.
+
+**R2 · The paywall can't be reached while it's off.** The `paywall` route is registered only while `paywallOn()`; `kitted://paywall/plans` on a real build goes nowhere, so no mock "purchase" can turn on Pro.
+
+**R3 · No canned demo reading in a real check.** The mock reading source answers a shoe snap or a pants-and-shoes snap with its canned reading only for a bundled sample photo or on a demo screen; a real photo's snap gets `unknownPhoto` (nothing counted, nothing merged).
+
+**R4 · A failed scan never says "Saved".** When no photo was saved, the scan camera says so ("Couldn't save that photo. Try again.") and stays open; with some saved, the count is the real count.
+
+**R5 · Settings hides what does nothing.** You › Settings shows no Notifications row while `NOTIFICATIONS_BUILT` is off, and no Subscription section (Manage, Restore) while the paywall is off; Plan & usage shows no Restore while it's off.
+
+**R6 · "Added to your closet" rows open the piece's page** (no `EDIT_ITEM_BUILT`): a tap (and VoiceOver's action) closes the sheet and opens `/closet/item/<id>`; an undone row stays inert.
+
+**R7 · A re-check whose first check is gone says so:** `noParent` shows "That check isn't here anymore. Nothing was sent or counted."
+
+**R8 · A question has a length cap:** the composer's field takes at most 500 characters, and the send path cuts anything longer (dictation) to 500.
+
+**R9 · Past chats are read-only:** an earlier day's "Staying in" card shows its occasion as plain text (no picker), and its "You went with your own" row isn't a button (it pushed the same day again).
+
+**R10 · A "Same as your …?" answer in Closet gets a toast with Undo:** "Saved as your {item}." or "Kept as a new piece."; Undo puts the question back exactly as it was (closet service `unanswer`, an urgent Undo like the others).
+
+**R11 · A missing record shows "This isn't here anymore."** instead of a blank screen: the look page, the piece page (not while a merge moves it), the photo viewer, a past day, and the Why, Not quite right?, Added, What changed?, What it is, Same as which piece?, Fact and Which shoes? sheets. A bad link shows the same page (`app/+not-found.tsx`) with "Go to Kitted".
+
+**R12 · No placeholder route ships:** `shoe-snap`, `sheets/describe`, `sheets/looks-by-name`, `sheets/rotation` and `sheets/swap/[ideaId]` are deleted with their registrations; `share/[checkId]` (linked behind `SHARE_CARD_BUILT` and demo screen 20) is registered only while that flag is on or the demo tools are.
+
+**R13 · Nothing else moves:** `npm run check` green; consent copy untouched.
+
+**Results (Oct 17): all pass.**
+- R1.1–R1.2, R2–R12 in `app/src/__tests__/releaseSafety.test.ts` (41 checks) and the Undo story in `closetService.test.ts`; `npm run check` green, 1,202 app tests.
+- R1.3: `npm run guard:release` passed on today's code: one 6.9 MB Hermes bundle, 3 secret values and every key shape checked; its only `AIza` string is the Firebase key.
+- R1.4: a local Release build booted on the Simulator: Stylist with the saved data, no dev menu; `-demoScreen 7` and `kitted://demo/screen/7` both gave plain Stylist with nothing wiped; `kitted://paywall/plans` opened nothing; `kitted://closet/item/NOPE` showed "This isn't here anymore."; Settings had no Notifications, Subscription or Restore. Then the Debug app went back on and the Simulator was shut down.
+- R6 seen on the Debug build: demo screen 21, a tap on Tan chinos closed the sheet and opened its page on "What it is".
+- Not seen on a screen, tested in code only: R4's panel, R8's stop, R9, R10's toast.
+- Screenshots: `screenshots/release-oct17/` (git-ignored).
+
+### 20.8 Step 4, the code-only part: items 15, 18, 19, 22, 23, 24 (Oct 17, #325). Checks first
+Written before the code. Items 9, 12, 16 and 26 need product calls and stay out. Existing copy keys first; new words go in `en.ts` and on the founder's skim list.
+
+**G15 · A scored re-check has "Why X?" and "Not quite right?"**
+- G15.1 A scored re-check card (up, down or flat) shows one link row under the result with `Why {score}?` and `Not quite right?` (and `Didn't catch the change? Tell me` when it shows today). Why opens `/sheets/why/<re-check id>`, Not quite right? opens `/sheets/correct/<re-check id>`.
+- G15.2 VoiceOver: both are actions on the card (`why`, `nqr`), as on FitCheckCard.
+- G15.3 Past chats (read-only): Why stays, Not quite right? doesn't.
+- G15.4 The "same photo" and "change not seen" cards are unchanged.
+- G15.5 A correction saved on a re-check re-scores the re-check from its own (merged) reading: its score changes, its `details.recheck` (the first score, the caught fixes) stays, and the first check's score doesn't move.
+
+**G18 · Offline in Stylist**
+- G18.1 The app learns it's offline without a new package: a fit check or a question that fails for no connection marks it offline, and so does a failed connection check. The check is Apple's own (`captive.apple.com`, what iOS itself uses when it joins a network; nothing of his is sent). It runs at launch, on each return to the foreground, and every 10 s while offline and in the foreground. A pass, or any answer or score that arrives, marks it online. On the web preview it's `navigator.onLine`. Not under Jest.
+- G18.2 Stylist shows a capsule at the top while offline: `Offline. Your closet and lookbook still work.` (`banner.offline`), then `Back online.` (`banner.online`) for about 3 s when it comes back. VoiceOver hears each once. It never covers a button (no touches).
+- G18.3 While offline the composer's send and its starter chips are disabled; the draft stays. A send that slips through anyway keeps the draft and nothing is written.
+- G18.4 A question that fails for no connection gets `You're offline, so I couldn't answer that. It doesn't count.` (new, `fail.askOffline`) with Retry, nothing counted; every other failure keeps `I couldn't answer that. It doesn't count.`
+- G18.5 The photo bubble under a check that failed for no connection (`failCode: 'offline'`) reads `Not sent` (`fail.cap.notSent`); other failures keep `Not scored`. The card under it keeps `fail.offline` with Try again.
+- G18.6 A demo screen shows the offline state (the banner, send disabled, the offline answer and a check that wasn't sent).
+
+**G19 · "That score is wrong" can open Not quite right?**
+- G19.1 A question the router reads as `feedback` about today's scored check gets a card under the answer: a `Not quite right?` button that opens `/sheets/correct/<check id>`. Code attaches it from the route, replacing any card the model chose. No card for an earlier day's check, a check that isn't scored, or when no check is named.
+- G19.2 It's stored as `{ type: 'correct', checkId }`, so Past chats draw it without the button, and VoiceOver reads `Not quite right?` with the answer. A check deleted since: the card hides.
+- G19.3 The evidence tells the model the button is under its answer, so it can point to it.
+
+**G22 · Delete one look**
+- G22.1 The look page's header has a ⋯ (`More`) that opens a native menu: `Delete photo` (destructive; only while the look has a photo) and `Remove from Lookbook`.
+- G22.2 `Delete photo` asks `Delete this photo?` / `The score stays in your Lookbook.` with `Cancel` and `Delete photo`. Delete removes his kept photo and its thumb, the face-hidden upload copy, close-ups and detail copy, and the closet cut-outs made from that photo. Every check that holds the same photo (same file or same SHA) loses its paths, its chat bubble hides, and the page shows `Photo deleted`. The score, the reading and the closet pieces stay. A demo photo just stops showing. No Undo (the files are gone).
+- G22.3 `Remove from Lookbook` runs the long-press's own flow (`Its card stays in your chat.`, the new-pieces option, the toast with Undo), then the page goes back.
+
+**G23 · "Not now" on consent gets the S26 card**
+- G23.1 Finishing onboarding without consent ("Not now", and the restore path, which also ends without it) posts, after the AI note, `Send me a fit. I'll score it and start your closet.` with the card `Turn on fit checks` / `To score a photo, I need your OK to send a face-free copy to {provider}.` / `Review and turn on` (the consent sheet; agreeing opens the camera) / `See an example` (the example check as a sheet; its `Check my own fit` closes it and opens the consent sheet).
+- G23.2 Once consent is given, the card's buttons go (the line stays as history).
+- G23.3 Agreeing during onboarding posts no S26 card.
+- G23.4 VoiceOver: the card is one element with both buttons as actions.
+
+**G24 · The empty Closet offers the basics.** Under `Check my fit`, a secondary `Tap the basics you own` (`closet.empty.basics`) opens Starter essentials.
+
+**G0 · Nothing else moves:** `npm run check` green; consent words untouched; each item seen on the Simulator in light, dark and the largest text size.
+
+**Results (Oct 17, #325): all pass.**
+- G15–G24 in `app/src/__tests__/stepFourBatch.test.ts` (24 checks); `npm run check` green (1,255 app tests, with the Undo ring's work in the same tree).
+- Seen on the iOS Simulator (screenshots `screenshots/step4-oct17/`, git-ignored): screen 210 offline in light, dark and the largest size (the banner, "Not sent" under the photo, the offline line with Retry); 211 the answer with its Not quite right? button; 212 the S26 card, See an example → the sheet (213) → Check my own fit → the consent sheet; 214 the empty Closet with both buttons; 215 a re-check that moved, with Why 8.0? and Not quite right?, which opened the sheet on the re-check (score 8.0, its new sneakers); 97 the ⋯ menu → Delete photo → the dialog → "Photo deleted" (the score and Before stayed) → ⋯ → Remove from Lookbook → back to the Lookbook with Undo.
+- One fix found on the Simulator: at the largest size the offline banner ran to three lines over the thread; its text now stops growing at 1.5× (it's an overlay; VoiceOver reads it whole). Also added: Retry while still offline shows the offline toast instead of doing nothing.
+- Screen 10's story now lands as "change not seen", so it can't show G15; screen 215 does (s14 → s14b).
+- Not seen on a device: the real connection check (the Simulator has Wi-Fi; offline was pinned on the demo screen), VoiceOver's actions, deleting a real photo's files (tested in code on the memory store).
+- Found, older, not fixed here: the example check's photo caption breaks as "Everyda y" next to "Example" (screen 131 too).
+
+## 21. The Undo countdown ring (Oct 17, #324). Checks first
+Founder, Oct 17: "some kind of five-second timer with the whole circle thingy that other apps do… to make the UI more intuitive." Written before the code; the build must not edit them. Results under them once built.
+
+**What he'll see:** every toast with Undo has a small ring just before "Undo", with the seconds left inside it (5, 4, 3…). The ring empties as the time runs out and the toast goes when it's empty. Touching and holding the toast stops the count; letting go starts it again. Toasts without Undo look as before.
+
+**The calls (Claude's, logged in #324):**
+- **Two windows, both shown:** 5 s where nothing is lost (Logged for today, a Starter pick, a Closet "Same as your …?" answer; Mail and Gmail use about 5 s); 8 s where something is removed or rewritten (Remove from Closet, Remove photo, Remove from Lookbook, Same as another piece, Not this piece, It's another piece, a "What it is" change, Forget a fact; #118). VoiceOver doubles both, as before (#36).
+- **Ink, not copper:** the ring and its number are ink like "Undo" itself (#231: copper only when the score moves); the track is `line`.
+- **Hold to pause**, with a hard stop: no toast stays longer than max(10 s, 2 × its window) after it appeared, so a removal's pictures (deleted 20 s after, `DELETE_AFTER_MS`) are never gone while Undo still shows.
+- **Wall clock:** the countdown runs on real time, so leaving the app doesn't stop it (as in Mail); a hold ends when the app leaves the screen.
+
+**U1 · The ring.** A toast with Undo shows a ring (track `line`, arc `ink`) immediately before "Undo", inside the same button, with whole seconds left in tabular numerals; a toast without Undo has none. The arc starts full and drains to empty.
+**U2 · It is the real window.** At show the number is the window in seconds (5 or 8; 10 or 16 with VoiceOver); the toast hides when the count reaches 0 (one deadline drives both, so the ring is never empty while the toast stays, or the toast gone with arc left). Plain toasts keep 5 s.
+**U3 · Windows.** Every `showToast` with Undo passes `TOAST_MS_REMOVAL` exactly when it removes or rewrites something (the list above) and the default 5 s otherwise; a test lists the callers.
+**U4 · Hold pauses.** A touch-down anywhere on the toast (on Undo too) freezes the arc and the number; lifting resumes from the same time left; a tap on Undo still undoes at once. A hold can't keep the toast past the hard stop; a test asserts hard stop + 4 s ≤ `DELETE_AFTER_MS`.
+**U5 · Background and foreground.** Coming back after the deadline hides the toast at once (no late Undo); coming back within it shows the arc and number at the right place. A hold in progress ends when the app goes inactive.
+**U6 · Reduce Motion.** No continuous animation: the arc moves in whole-second steps with the number.
+**U7 · VoiceOver.** Announced once: "{message} Undo, for {n} seconds." The ring and number are hidden from VoiceOver; the button stays "Undo" with a fixed hint; nothing is announced again as the seconds pass.
+**U8 · Largest text size.** The ring grows with the text up to 2× (`CONTROL_TEXT_MAX_SCALE`), the number never clips, the message wraps while ring and Undo stay on one line, vertically centred; light and dark from tokens.
+**U9 · A demo screen** (204) shows a removal toast over Closet, for the Simulator.
+
+### §21 results (Oct 17, #324): checked against U1–U9, none changed
+- **In code (`src/__tests__/toast.test.ts`, 17 tests):** U2 (the window in whole seconds, the hide at 0, 5/8 s and 10/16 s with VoiceOver, one deadline), U3 (every Undo caller listed: removals and rewrites 8 s, the rest 5 s; nothing had to change), U4 (freeze and resume, a second touch-down doesn't move it, the hard stop, hard stop + 4 s ≤ `DELETE_AFTER_MS`, both touch targets hold), U5 (wall clock, re-sync on app state, a hold ends when the app leaves), U6, U7 ("Removed your grey hoodie. Undo, for 16 seconds.", one announcement, ring hidden), U1/U8 (ink on `line`, no copper, 2× cap, ring + Undo kept on one line), U9. `npm run check` green (758 core, 1,230 app tests).
+- **On the iOS Simulator (`screenshots/undo-ring/`, git-ignored):** screen 204 in light, dark and the largest text size; screen 205 counting 4 → 3 → 2 → 1 and gone (`205-live-strip.png`); a 5 s press-and-hold froze the count at 2 for the whole hold, then it went on to 1 and left (`hold-timeline.png`, a frame every ~0.5 s); Home with 4 s left and back after ~1 s: the hold ended, the ring was at 2 and still counting; back after ~10 s: same screen, toast gone.
+- **Found and fixed while checking U8:** at the largest size the message broke mid-word ("Remove / d your") and the pill swelled into an oval; at accessibility sizes the message now gets the full width with ring + Undo under it, in a rounded card (24 pt corners).
+- **Not seen on a screen, tested in code only:** U6 (Reduce Motion) and U7 (VoiceOver); a hold reaching the hard stop.
+- **HIG:** Apple has no toast component; this follows the HIG's "give people time to read and act" and WCAG 2.2.1 (a time limit the person can pause: hold), with VoiceOver's doubled window kept because RN can't pause on VoiceOver focus (#36). Material's snackbar guidance (4–10 s, stays while touched) matches both windows.
+
+## 23. The §20 leftovers, overnight Oct 19 (#353). Checks first
+**What this is.** Founder, Oct 19 (asleep): "make decisions… give me a report in the end." Four [code] items from §20 that nobody else is on (the §22.1 session owns the audit's list; scope agreed with it by message): a crash screen and an error log (§20 item 6, the code half), the `Latest` pill (§20 item 30, G3), the morning card's Swap and location (items 34–35), and outfit counting at large closets (item 37). Not built: Stop while an answer streams (answers are ≤200 tokens and arrive in ~2 s; it's not in 07 §6.1, so it waits for a real complaint). Written before the code; each passes or fails.
+
+**Measured first (item 37), Mac, Jest, the demo closet's pieces cloned to size:** 50 pieces: the count 203 ms, Next best buy 942 ms; 100 pieces: 1.4 s and 7.1 s; 200 pieces: 11.3 s for the count. A phone's JS thread is slower still, and the screen freezes while it runs. Next best buy counts the whole closet 14 times; Closet, the piece page and Outfits each count again.
+
+**E · A crash shows a screen, not a blank app, and leaves a trace**
+- E1 (T) The root layout exports an `ErrorBoundary` (expo-router's own, no package) that draws the crash screen inside its own theme: "Something went wrong." / "Kitted hit a problem on this screen. Your fits and closet are safe on this phone." / **Try again** (retry) and **Go to Kitted** (back to the start, then retry). Copy is new (outward-facing, flagged for his skim).
+- E2 (T) `recordError(error, where)` appends one line to `Documents/logs/errors.log` **in every build** (Release too): the time, where (`render` · `fatal` · `js`), the error's name and message cut to 200 characters, and at most 5 stack lines. The file stays under ~100 KB (the oldest half goes). It never leaves the phone.
+- E3 (T) The global handler (`ErrorUtils.setGlobalHandler`) records every uncaught JS error and then hands it to the handler that was there, so the dev red box and a Release crash behave as before; installing twice doesn't wrap twice.
+- E4 (T) "Delete all my data" removes it (Documents/logs already goes); `tools/phone/pull.sh` prints it.
+- E5 (S) On the Simulator a forced render error (demo-only launch argument `-demoCrash 1`) shows the crash screen in light and dark and at the largest text size, and Try again brings the app back.
+
+**L · The Latest pill (02 G3, 07 §6.1)**
+- L1 (T) `latestPillShows` is true when he has scrolled up more than one screen from the end, or scrolled up at all (more than the 80 pt "at the bottom" band) while new rows or words arrived; false at the bottom.
+- L2 (T) The pill: a 44 pt capsule in `primary` with `arrow.down` and "Latest" (`common.latest`), a button for VoiceOver, centred above the composer or the accessory (above a toast too). A tap scrolls to the end, follows new rows again and hides it.
+- L3 (S) On the Simulator: scrolled up on a long thread it shows; tapping it lands on the newest row; light, dark, the largest text size.
+
+**M · The morning card**
+- M1 (T) Swap leaves out every piece swapped away from this card, not only the last one, so the first outfit never comes back by swapping.
+- M2 (T) When nothing else works without that piece, the card keeps its outfit (it used to go blank) and he gets "Nothing else in your closet works here yet." (`swap.none`, 02); that piece isn't added to the left-out list.
+- M3 (T) Changing the occasion or the style starts the left-out list afresh.
+- M4 (T) Location denied: the card shows a quiet "Turn on local weather" link that opens iOS Settings, never the Allow row (iOS won't ask twice); unknown keeps the Allow row; granted shows neither.
+- M5 (T) Back from Settings with location on, the card gets the forecast the next time Stylist shows (`freshen` used to skip a card with no weather), and an untouched card is re-planned with it.
+
+**P · Outfit counting at large closets**
+- P1 (T) Same answers: `buildOutfits`, `outfitCount`, `nextBestBuy` and `gainForSlot` return exactly what they did before (same outfits, same order, same counts and gains) on the demo closet and on a 60-piece mixed closet, compared against a copy of today's code kept in the test.
+- P2 (T, Mac) Next best buy at 50 pieces in under 300 ms, and a second count of an unchanged closet in under 20 ms. Recorded with the 100- and 200-piece numbers.
+- P3 (T) A changed piece is never scored from the cache: editing a piece's garment (What it is) changes the count when the scoring says it should.
+
+### §23 results (Oct 19, #353): checked against E, L, M, P; one test fixed in its wording, none in what it checks
+- **P (outfit counting):** `src/__tests__/outfitSpeed.test.ts` against a frozen copy of the old code (`src/testing/outfitsBefore.ts`). P1 passes: the same outfits, order, counts, gains and Goes with on the demo closet, a 60-piece mixed one, a closet with no shoes and one of tops only, at four occasions, twice in a row. P2 passes, with every piece different (the worst case, cold): Next best buy **0.8 s → 0.04 s at 50 pieces, 5.3 s → 0.12 s at 100**; a second count of the same closet 2 ms (50) and 16 ms (100). P3 passes: a changed piece, by a new row or in place, is scored again. **Still slow:** the first count of a big closet is unchanged (~1 s at 100 distinct pieces on the Mac, more on a phone), once per launch; the scoring itself is the cost. How: each judged outfit is remembered by occasion, styles and what its pieces are (their garments, not their ids; ≤60,000 kept), and Next best buy and "Add shoes and you'd have N" count only the outfits the new piece makes (a piece never removes one). P2's "count again" first timed a first count (Next best buy no longer counts the closet); the timing was fixed, not the bar.
+- **E (crash screen):** `src/__tests__/crashScreen.test.ts`, 11 checks pass. On the Simulator (`-demoCrash 1`, dark, the largest text size): the crash screen, Try again brings Stylist back, and `Documents/logs/errors.log` got the line (`… render Error: Demo crash (-demoCrash 1) | at demoCrashCheck …`). Found on the way: React retries a failed render once, so a trigger that threw once recovered unseen, and the React Compiler kept the root's first-render read of the launch arguments; the trigger now mounts after boot and throws until Try again. In a dev build the red error box shows first (Dismiss); Release has none. Dev-build stack lines are bundle URLs, so each frame is cut to 160 characters.
+- **L (Latest pill):** `src/__tests__/latestPill.test.ts`, 6 checks pass (one regex loosened to accept `"arrow.down"` in JSX quotes). On the Simulator at the largest text size: scrolled up on screen 12 the pill sits centred above "Ask Kit…"; a tap scrolled to the newest row and it went away (`screenshots/overnight-oct19/`, git-ignored).
+- **M (morning card):** `src/__tests__/morningSwap.test.ts`, 7 checks pass, and the 36 older morning tests. On the Simulator Swap's sheet opened (screen 25), but its buttons don't take the Simulator tool's taps (the same as #343), so a swap was never seen there; M4's link wasn't seen either (no demo state for a denied permission). Both rest on the tests.
+- **Also:** `idea.swapped.<id>` is per-device like `idea.touched.<id>` (`sync/schema.ts`; the sync test caught it). `npm run check` green: 1,369 app tests.
+
+### §23 on the Simulator after the merge (Oct 19, #357): Swap and the location link seen; a toast bug found and fixed
+- **Found:** after #353, **no toast showed on the Stylist screen** ("Logged for today.", "Nothing else in your closet works here yet.", every Undo toast there). The toast was created (logged) but its capsule never appeared. Cause: the Latest pill's animated style lived on the screen even with no pill drawn and read the toast's room, and the pill re-rendered the screen on every scroll and size change; together they left the toast's entering animation stuck invisible (the same symptom as #118). The old screen with the same data showed it at once. Fixed: the pill's style lives in a small `PillDock` mounted only while the pill shows (riding the keyboard only), the pill steps aside while a toast shows, and the screen re-renders only when the pill turns on or off. `latestPill.test.ts` L2 amended to the new shape, plus one check that the pill never re-renders per scroll.
+- **M1–M2 seen:** demo screen 25, light and dark: swap after swap left out the boots, loafers and runners (`idea.swapped` grew one by one in the app's database, none came back), then with no shoes left the card kept its outfit and showed "Nothing else in your closet works here yet.". The iOS action sheet still doesn't take the Simulator tool's taps (every press arrives as Cancel, logged), so for this run a temporary line picked the last piece directly; it was removed before the commit.
+- **M4 seen:** with `weather.permission` set to denied and a relaunch, the card shows "Turn on local weather" in the Allow row's place; a tap opens iOS Settings.
+- **L seen again** after the fix: dark, the largest text size, screen 12 scrolled up; the pill shows above "Ask Kit…".
+- `npm run check` green (1,370 app tests).
+
+## 24. Long-sleeve tees in the closet (Oct 19, #359). Checks first
+**What this is.** Founder, Oct 19: "closet does not detect full sleeve tees and does not have the option for them. it also does not have a graphic representation for them." Today the closet call already reads each top's `sleeve_length` (short · long · sleeveless) and the matcher uses it, but nothing he sees does: a long-sleeve tee is named "Grey tee", drawn with short sleeves, and "What it is" has no such kind.
+
+**Decided (Claude's call, no score moves):** a long-sleeve tee stays `tee` (or `graphic_tee`) in the reading, so the scoring read, the rules and every score are untouched (the schema has no long-sleeve kind, and adding one is a reading change that needs the founder and a steadiness test). The sleeves are part of the piece's look instead: `ClosetArt.sleeves`, from the closet call's `sleeve_length` under the drift guard (his pick wins), else from the scoring read's `sleeve_end` (a tee whose sleeves end at the wrist, above it or over the hand has long sleeves). Polos and jerseys follow the same rule; shirts, knits and jackets are drawn as before.
+
+**S · Seeing it**
+- S1 (T) `artOf` gives `sleeves: 'long'` for a tee whose sightings' closet call read `long`, and for a tee with no closet call whose `sleeve_end` is `at_wrist`, `above_wrist` or `covers_hand`; `'short'` from a `short` read; nothing when neither says. One sighting reading the other way doesn't flip it (the drift guard: 2 newer sightings must agree); his confirmed `sleeve_length` wins outright.
+- S2 (T) The name: "Grey long-sleeve tee", "Black long-sleeve graphic tee", "Navy long-sleeve polo"; a short-sleeve tee keeps "Grey tee". A name he typed never changes.
+- S3 (T) The drawing: a long-sleeve tee draws long sleeves (to the wrist) with a plain hemmed cuff (no rib), a crew neck and the tee's own length (no rib hem), so it differs from both a tee and a sweatshirt of the same color. A short-sleeve tee draws exactly as before (same SVG).
+- S4 (T) Pieces already in his closet get it at the next launch (`refreshColors` also re-derives a piece whose sleeves changed, then renames), with no score, sighting or photo touched.
+
+**K · "What it is" (§17)**
+- K1 (T) A top's Kind list has "Long-sleeve tee" in its first group, right after "Tee" (Flannel shirt moves to the front of More kinds, so the first group stays 8, all drawn differently).
+- K2 (T) A long-sleeve tee's Kind row says "Long-sleeve tee" and that option is the current one.
+- K3 (T) Picking "Long-sleeve tee" on a tee writes `subcategory: tee` and his confirmed `sleeve_length: long` (never the word `long_sleeve_tee` in the reading or the matcher's confirmed kind); the toast says "Changed to long-sleeve tee. Your scores stay the same."; the sleeve reads his photos gave that disagree are taught to the matcher (field aliases), so the next photo of it still finds it.
+- K4 (T) Picking "Tee" or "Graphic tee" on a long-sleeve tee sets the sleeves short; another kind leaves the sleeves alone. Undo puts every row back.
+- K5 (T) The option pictures: "Long-sleeve tee" draws long sleeves, "Tee" short.
+
+**M · The morning card**
+- M1 (T) On a hot day a long-sleeve tee no longer counts as a cool short-sleeve top (`ideas.ts`, its `hotShortSleeve` credit and "wrong for the weather"); a piece without the sleeve read is judged by its kind as before.
+
+**Not changed:** the scoring reading, `@kitted/core`'s rules and every score; the closet call's prompt; Python.
+
+### §24 results (Oct 19, #359): every check passes, and seen on the Simulator
+- **Tests:** `src/__tests__/longSleeveTee.test.ts`, 14 checks (S1–S4, K1–K5, M1 and a control) pass. Older tests changed only where the new field shows: the seed's grey tee's art now carries `sleeves: 'short'` (`seedLoader.test.ts`), "long-sleeve" is an allowed name word (`copyChecks.test.ts`), and the Kind lists (`pieceEdit.test.ts` X1). `npm run check` green: 1,393 app tests.
+- **Found on the way:** the demo photo p01a (a white tee under an open overshirt) was already read `sleeve_length: long` by the real closet call, and the photo agrees (the cuff shows at his wrist). It's now "White long-sleeve tee"; it used to be "White tee", drawn short.
+- **The drawing:** rendered from the app's own SVG, light and dark (`screenshots/long-sleeve-tee/drawings.png`, git-ignored): the long-sleeve tee has slimmer sleeves than a sweatshirt and a stitched hem where the sweatshirt has ribbed cuffs and hem; a short-sleeve tee draws byte for byte as before.
+- **Known limit:** a tee half hidden under a long-sleeve jacket can have the jacket's sleeves read as its own; the drift guard keeps one such read from flipping a piece already seen, and his pick in "What it is" settles it. Shirts, knits and jackets aren't named or drawn by the sleeve read (a short-sleeve oxford still draws long sleeves).
+- **Seen on the Simulator after the merge (Oct 19):** demo screen 214 (empty Closet), a fit check with the sample photo p01b through the stand-in camera, light, then dark at the largest text size. The short-sleeve white tee stays "White tee", drawn as before. Its page → Kind shows "Long-sleeve tee" second, drawn apart from Sweater and Sweatshirt; a pick turns the page title, the name and the drawing into "White long-sleeve tee" with long sleeves, Kind reads "Long-sleeve tee", and the toast "Changed to long-sleeve tee. Your scores stay the same." has the Undo ring (at the largest size it stacks, and the option's label wraps at its hyphen: "Long- / sleeve tee"). Kind → Tee makes it "White tee" again; Undo on that puts the long sleeves back. The Pattern sheet draws all four options with long sleeves. Not seen on screen: a photo the closet call reads as long-sleeved (p01a is only a re-check in the demos), covered by S1's test on the same reading.
+
+## 25. More kinds in "What it is" (Oct 17, #361; merged onto §24 on Oct 19)
+**The founder:** "the full sleeve shirt is not included as an option. Half sleeve button-ups are not included … just add more options like this. For clothes."
+**What was missing:** the Kind sheet offered only the photo reader's own kinds. A short-sleeve button-up was only "Camp shirt", under More kinds and drawn with long sleeves; a plain long-sleeve button-up was only "Oxford" or "Dress shirt". (The long-sleeve tee is §24's, #359: a tee with long sleeves, read from his photos too.)
+**The design (code `app/src/features/closet/kinds.ts`):** six closet-only kinds, each kept as the reading kind it scores, matches and builds outfits as, and drawn and named as itself. Stored as the piece's `profile.kindVariant`, mirrored into `art.kind`. The photo reader's list is unchanged, so no reading, score or saved check moves.
+
+| Shows as | Scores as | Where |
+|---|---|---|
+| Button-up shirt | oxford | tops, first group (Oxford moves to More kinds) |
+| Short-sleeve shirt | camp shirt | tops, first group |
+| Henley | tee | tops, More kinds |
+| Turtleneck | sweater | tops, More kinds |
+| Zip hoodie | hoodie | layers, first group; tops, More kinds |
+| Jean shorts | shorts (denim washes offered) | bottoms, first group |
+
+- The tops' first group is now 9 (3 rows of 3): Tee · Long-sleeve tee · Graphic tee · Polo · Button-up shirt · Short-sleeve shirt · Sweater · Sweatshirt · Hoodie. Flannel and Oxford sit in More kinds (a piece that is one still shows it in the first group, as before). §24's K1 now expects 9.
+- Button-up shirt and Short-sleeve shirt confirm their sleeves when picked, through §24's sleeve path (`confirmed.sleeve_length`, with the reads his photos gave taught as aliases). A henley takes the sleeves his photos show, else long; a turtleneck is drawn long; a camp shirt is drawn short (it drew long, a bug).
+- **Merging with §24 (Oct 19):** both built a long-sleeve tee the same day. §24's is kept (read from his photos, `sleeves.ts`); this section's own long-sleeve tee was dropped, and its drawing code generalized §24's: `TopFlat.sleeves` takes short, long or sleeveless on any top, and §24's slimmer stitched-hem sleeve stays for long-sleeve tees and polos.
+- **Not done:** the reader never names these six kinds by itself (that needs a reading change and a steadiness test); no new shoe kinds.
+
+**Checks K1–K11 (`app/src/__tests__/pieceEdit.test.ts`, "X15 more kinds"), all pass after the merge:** K1 each new kind is offered in its slot in plain words, never a brand · K2 picking Long-sleeve tee writes a tee with confirmed long sleeves ("Grey long-sleeve tee"), drawn as previewed · K3 scores, readings and sightings never move; Outfits count each as the kind it scores as · K4 picking Tee again sets short sleeves and draws exactly as before · K5 long and short button-ups get the right reading kind and different drawings ("Light-blue short-sleeve shirt") · K6 camp shirts draw short sleeves; henley buttons (with his photos' sleeves), turtleneck collar, zip hoodie zip · K7 every top type drawn with its usual sleeves is byte-identical to before (light, dark) · K8 jean shorts keep the wash ("Dark jean shorts"), draw jean stitching, no Leg row; plain Shorts moves dark denim to navy · K9 a later photo of the piece keeps its kind, name and drawing · K10 a sleeve-named kind confirms its sleeves, another leaves them · K11 Undo puts it all back. `npm run check` green.
+**Seen:** every Kind option's drawing rendered from the app's own drawing code in light and dark before the merge (`screenshots/more-kinds/kinds.html`, git-ignored). Not seen on the Simulator.

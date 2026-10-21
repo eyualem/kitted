@@ -1,23 +1,26 @@
 // Chat pieces — StylistMessage (`.say`, `.who`), UserBubble (`.me`), PhotoBubble (`.me.photo`),
 // DayStamp (`.stamp`), and NeckDownPhoto (03 §8 display rules). 03 §5 "Chat", 02 §4.
-// Copy rule: always "Your stylist", never "AI stylist". All strings come from @/i18n/en.
+// Copy rule: the stylist is "Kit" (#318), never "AI stylist". All strings come from @/i18n/en.
 
 import type { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Image, type ImageSource } from 'expo-image';
 import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
-import { fixed, radius, size } from '../tokens';
-import { wordmark, wordmarkStyle } from '../typography';
+import { radius, size } from '../tokens';
+import { KIT_BUBBLE_PAD_H, kitBubbleMaxWidth, userBubbleMaxWidth } from './chatLayout';
 import { Icon } from './Icon';
 import { KText } from './KText';
 
 // ---------------------------------------------------------------------------------------
-// StylistMessage, look C "stylist note" (founder, Oct 16, #302; mockups/chat-answers.html): a 28 pt column on the
-// leading side holding the K mark (radius 8, fixed.label, Archivo Expanded 14, fixed.onDark) on the first line of a
-// run, then a 10 pt gap and the text. Later lines of the same run keep the column empty, so the text lines up; the
-// footer (cards, chips, buttons) sits in the text column too. `body` replaces the plain text (an answer's lead and
-// chips, features/ask/AnswerBody); `children` is always the whole text, for VoiceOver.
+// StylistMessage, look C "stylist note" (founder, Oct 16, #302; mockups/chat-answers.html), with the persona's name in
+// place of the K mark (founder, Oct 17, #318): the first line of a run carries "Kit" small above the text (stylistWho,
+// footnote semibold ink3), the way a group chat shows who's talking; later lines of the same run have no label. The
+// text and the footer (cards, chips, buttons) use the full width. `body` replaces the plain text (an answer's lead and
+// chips, features/ask/AnswerBody); `children` is always the whole text, for VoiceOver ("Kit: …").
+// Kit's bubble (founder, Oct 17, #338: "maybe we should give Kit a bubble"): the text sits in a bubble on the card
+// surface, his bubble mirrored (left-aligned, the small corner bottom-left, a hairline like the cards); "Kit" lines up
+// with the text inside it. The footer (cards, chips, buttons) stays full width under the bubble.
 
 export interface StylistMessageProps {
   children: string;
@@ -30,52 +33,39 @@ export interface StylistMessageProps {
   actions?: readonly { name: string; label: string; onPress: () => void }[];
 }
 
-export function StylistMark() {
-  const { archivoLoaded, scheme } = useTheme();
-  return (
-    <View
-      style={{
-        width: size.mark,
-        height: size.mark,
-        borderRadius: radius.mark,
-        borderCurve: 'continuous',
-        backgroundColor: fixed.label,
-        // On night backgrounds the indigo mark sinks in; a faint rim keeps its edge (#302).
-        ...(scheme === 'dark' ? { borderWidth: 1, borderColor: fixed.labelRimDark } : null),
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text allowFontScaling={false} style={[wordmarkStyle(wordmark.mark.fontSize, 0, archivoLoaded), { color: fixed.onDark }]}>
-        K
-      </Text>
-    </View>
-  );
-}
-
 export function StylistMessage({ children, showHeader, body, footer, actions }: StylistMessageProps) {
-  // At the accessibility text sizes the mark goes above the text, so the words get the full width (rows stack there).
-  const { isAccessibilitySize } = useTheme();
-  const stacked = isAccessibilitySize;
+  const { colors, isAccessibilitySize } = useTheme();
   return (
-    <View style={{ flexDirection: stacked ? 'column' : 'row', gap: stacked ? 6 : size.markGap, marginTop: showHeader ? 4 : 0 }}>
-      {!stacked || showHeader ? (
-        <View style={{ width: size.mark }} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
-          {showHeader ? <StylistMark /> : null}
+    <View style={{ gap: 4, marginTop: showHeader ? 4 : 0 }}>
+      {showHeader ? (
+        <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ paddingLeft: KIT_BUBBLE_PAD_H }}>
+          <KText role="stylistWho">{t('common.who')}</KText>
         </View>
       ) : null}
-      <View style={stacked ? { gap: 4 } : { flex: 1, minWidth: 0, gap: 4 }}>
-        <View
-          accessible
-          accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })}
-          accessibilityActions={actions?.map((a) => ({ name: a.name, label: a.label }))}
-          onAccessibilityAction={actions ? (e) => actions.find((a) => a.name === e.nativeEvent.actionName)?.onPress() : undefined}
-          style={{ gap: 4, paddingTop: showHeader && !stacked ? 3 : 0 }}
-        >
-          {body ?? <KText role="chatText">{children}</KText>}
-        </View>
-        {footer}
+      <View
+        accessible
+        accessibilityLabel={t('a11y.stylistSays', { who: t('common.who'), text: children })}
+        accessibilityActions={actions?.map((a) => ({ name: a.name, label: a.label }))}
+        onAccessibilityAction={actions ? (e) => actions.find((a) => a.name === e.nativeEvent.actionName)?.onPress() : undefined}
+        style={{
+          alignSelf: 'flex-start',
+          maxWidth: kitBubbleMaxWidth(isAccessibilitySize),
+          gap: 4,
+          backgroundColor: colors.surface,
+          borderColor: colors.line,
+          borderWidth: 1,
+          paddingVertical: 10,
+          paddingHorizontal: KIT_BUBBLE_PAD_H,
+          borderTopLeftRadius: radius.bubble,
+          borderTopRightRadius: radius.bubble,
+          borderBottomRightRadius: radius.bubble,
+          borderBottomLeftRadius: radius.bubbleTail,
+          borderCurve: 'continuous',
+        }}
+      >
+        {body ?? <KText role="chatText">{children}</KText>}
       </View>
+      {footer}
     </View>
   );
 }
@@ -85,7 +75,8 @@ export function StylistMessage({ children, showHeader, body, footer, actions }: 
 // tail at 6, trailing-aligned, max 78% wide. Onboarding answers are tappable to change.
 
 export function UserBubble({ children, onPress }: { children: string; onPress?: () => void }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
+  const maxWidth = userBubbleMaxWidth(isAccessibilitySize);
   const bubble = (
     <View
       style={{
@@ -109,13 +100,13 @@ export function UserBubble({ children, onPress }: { children: string; onPress?: 
         accessibilityRole="button"
         accessibilityLabel={children}
         accessibilityHint={t('a11y.changeAnswer')}
-        style={{ alignSelf: 'flex-end', maxWidth: '78%' }}
+        style={{ alignSelf: 'flex-end', maxWidth }}
       >
         {bubble}
       </Pressable>
     );
   }
-  return <View style={{ alignSelf: 'flex-end', maxWidth: '78%' }}>{bubble}</View>;
+  return <View style={{ alignSelf: 'flex-end', maxWidth }}>{bubble}</View>;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -146,6 +137,8 @@ export interface NeckDownPhotoProps {
   borderRadii?: { tl: number; tr: number; br: number; bl: number };
   /** "Your outfit photo, Oct 22". Never describe the body. */
   accessibilityLabel?: string;
+  /** Called once the image has loaded (the share card waits on it before it's captured, #352). */
+  onLoad?: () => void;
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
@@ -177,7 +170,7 @@ export function neckDownLayout(crop: PhotoCrop, aspect: number, width: number, h
   };
 }
 
-export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii, accessibilityLabel }: NeckDownPhotoProps) {
+export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii, accessibilityLabel, onLoad }: NeckDownPhotoProps) {
   const { colors } = useTheme();
   const frame = {
     width,
@@ -202,14 +195,14 @@ export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii
     // Stored check photos are already neck-down: cover, top-aligned.
     return (
       <View style={frame} {...a11y}>
-        <Image source={source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} />
+        <Image source={source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} onLoad={onLoad} />
       </View>
     );
   }
   const box = neckDownLayout(crop, aspect, width, height);
   return (
     <View style={frame} {...a11y}>
-      <Image source={source} contentFit="fill" transition={0} style={{ position: 'absolute', ...box }} />
+      <Image source={source} contentFit="fill" transition={0} style={{ position: 'absolute', ...box }} onLoad={onLoad} />
     </View>
   );
 }
@@ -233,12 +226,15 @@ export interface PhotoBubbleProps {
 }
 
 export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onPress }: PhotoBubbleProps) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
+  // At the accessibility sizes the 109 pt caption row inside the frame cut the occasion and "Face hidden when sent" to
+  // "…" (or broke "Every-day"): the caption goes under the bubble, full width, and wraps (07 §17, U13).
+  const below = isAccessibilitySize;
   const innerW = size.photoBubbleWidth - 8;
   const spoken =
     (occasion ? t('a11y.photoOccasion', { time, occasion }) : t('a11y.photo', { time })) +
     (reading ? ` ${t('read.bubble.onlySent')}.` : '');
-  return (
+  const bubble = (
     <Pressable
       onPress={onPress}
       disabled={!onPress}
@@ -266,36 +262,53 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
         height={size.photoBubbleHeight}
         borderRadii={{ tl: radius.photoBubbleInner, tr: radius.photoBubbleInner, br: radius.photoBubbleInnerTail, bl: radius.photoBubbleInner }}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: reading ? 'flex-start' : 'center',
-          paddingTop: 6,
-          paddingBottom: 5,
-          paddingHorizontal: 9,
-          opacity: 0.9,
-          gap: 4,
-        }}
-      >
-        {reading ? (
-          // 109 pt can't hold lock + "Face hidden when sent" + the time on one line: the label wraps.
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, flexShrink: 1 }}>
-            <Icon name="lock" size="small" color={colors.onMe} />
+      {below ? null : (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            paddingTop: 6,
+            paddingBottom: 5,
+            paddingHorizontal: 9,
+            opacity: 0.9,
+            gap: 4,
+          }}
+        >
+          {reading ? (
+            // 109 pt can't hold lock + "Face hidden when sent" + the time on one line: the label wraps.
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, flexShrink: 1 }}>
+              <Icon name="lock" size="small" color={colors.onMe} />
+              <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
+                {t('read.bubble.onlySent')}
+              </KText>
+            </View>
+          ) : (
+            // "Pants and shoes" next to the time doesn't fit 109 pt on one line (it showed "Pants and…"): it wraps.
             <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
-              {t('read.bubble.onlySent')}
+              {occasion ?? ''}
             </KText>
-          </View>
-        ) : (
-          <KText role="photoCaption" numberOfLines={1} style={{ flexShrink: 1 }}>
-            {occasion ?? ''}
+          )}
+          <KText role="photoCaption" tabular numberOfLines={1} style={{ flexShrink: 0 }}>
+            {time}
           </KText>
-        )}
-        <KText role="photoCaption" tabular numberOfLines={1} style={{ flexShrink: 0 }}>
-          {time}
+        </View>
+      )}
+    </Pressable>
+  );
+  if (!below) return bubble;
+  const caption = reading ? t('read.bubble.onlySent') : occasion ? `${occasion} · ${time}` : time;
+  return (
+    <View style={{ alignSelf: 'flex-end', alignItems: 'flex-end', gap: 4, maxWidth: '88%' }}>
+      {bubble}
+      {/* The bubble's label already says all of it. */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {reading ? <Icon name="lock" size="small" color="ink2" /> : null}
+        <KText role="dayStamp" color="ink2" style={{ textAlign: 'right', flexShrink: 1 }}>
+          {caption}
         </KText>
       </View>
-    </Pressable>
+    </View>
   );
 }
 
@@ -303,8 +316,9 @@ export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onP
 // DayStamp: centered footnote medium ink3 ("Thursday 8:00 am").
 
 export function DayStamp({ children }: { children: string }) {
+  // A header, so the VoiceOver rotor can jump from day to time (07 §17, U18).
   return (
-    <View style={{ alignSelf: 'center' }}>
+    <View style={{ alignSelf: 'center' }} accessible accessibilityRole="header">
       <KText role="dayStamp" style={{ textAlign: 'center' }}>
         {children}
       </KText>

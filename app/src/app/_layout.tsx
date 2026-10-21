@@ -2,19 +2,33 @@
 // modal shows at a time. Order of guards: age stop → onboarding → tabs.
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Platform, View } from 'react-native';
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavThemeProvider, router, type Theme as NavigationTheme } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavThemeProvider, router, type ErrorBoundaryProps, type Theme as NavigationTheme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaFrameContext, SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { ThemeProvider, setAppAppearance, useKittedFonts, useTheme } from '@/design-system';
 import { DEMO_ENABLED } from '@/demo/config';
+import { SHARE_CARD_BUILT } from '@/config/features';
+import { usePaywallOn } from '@/features/paywall/switch';
 import { ToastHost } from '@/features/toast/ToastHost';
 import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
 import { boot } from '@/state/boot';
+import { startConnectivity } from '@/services/connectivity';
 import { getDemoArgs } from '@/state/session';
+import { CrashScreen } from '@/features/crash/CrashScreen';
+import { demoCrashCheck } from '@/demo/demoCrash';
+import { installErrorHandler } from '@/services/errors/log';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+// Every uncaught JS error leaves a line in Documents/logs/errors.log, in every build (09 §23 E3, #353).
+installErrorHandler();
+
+/** A screen that throws while it draws shows the crash screen, not a blank app (09 §23 E1, #353). */
+export function ErrorBoundary(props: ErrorBoundaryProps) {
+  SplashScreen.hideAsync().catch(() => {});
+  return <CrashScreen {...props} />;
+}
 
 /** Sheet presentation (06 §2). Detents: .medium = 0.5, .large = 1, .fraction(x) = x. */
 const sheet = (detents: number[]) =>
@@ -30,6 +44,8 @@ export default function RootLayout() {
       .finally(() => {
         setBooted(true);
         SplashScreen.hideAsync().catch(() => {});
+        // The offline banner's signal (09 §20.8 G18.1): a check now and on each return to the foreground.
+        startConnectivity();
       });
   }, []);
 
@@ -50,6 +66,8 @@ export default function RootLayout() {
           <View style={{ flex: 1 }}>
             <RootStack booted={booted} />
             <ToastHost />
+            {/* After boot: the demo arguments are read then (and the compiler would keep a first-render read). */}
+            {DEMO_ENABLED && booted ? <DemoCrash /> : null}
           </View>
         </NavThemeFromTokens>
       </WebFrame>
@@ -61,6 +79,8 @@ function RootStack({ booted }: { booted: boolean }) {
   const gate = useGate();
   const ready = booted && gate.ready;
   const blocked = gate.ageBlocked;
+  // The paywall sells nothing while it's off (a mock store): no link may open it (09 §20.7 R2, #323).
+  const paywall = usePaywallOn();
 
   // -demoScreen <n> (launch argument): route through the demo screen once the gate is ready.
   useEffect(() => {
@@ -82,11 +102,8 @@ function RootStack({ booted }: { booted: boolean }) {
       </Stack.Protected>
       <Stack.Protected guard={ready && !blocked}>
         <Stack.Screen name="camera" options={cover} />
-        <Stack.Screen name="shoe-snap" options={cover} />
         <Stack.Screen name="scan" options={cover} />
         <Stack.Screen name="photo/[checkId]" options={cover} />
-        <Stack.Screen name="share/[checkId]" options={cover} />
-        <Stack.Screen name="paywall" options={cover} />
         <Stack.Screen name="sheets/why/[checkId]" options={sheet([0.78, 1])} />
         {/* The mockup's height (its top at y = 150 of 874); at full height ~200 pt sat empty under "Save correction" (DECISIONS-LOG #56). */}
         <Stack.Screen name="sheets/correct/[checkId]" options={sheet([0.83, 1])} />
@@ -94,21 +111,26 @@ function RootStack({ booted }: { booted: boolean }) {
         {/* 0.62: at 0.5 the second row of pairs was cut mid-label. */}
         <Stack.Screen name="sheets/pick-shoes/[checkId]" options={sheet([0.62, 1])} />
         <Stack.Screen name="sheets/tell-me/[checkId]" options={sheet([0.5])} />
-        <Stack.Screen name="sheets/edit-item/[id]" options={sheet([1])} />
-        <Stack.Screen name="sheets/rotation" options={sheet([0.5])} />
+        <Stack.Screen name="sheets/edit-item/[id]" options={sheet([0.75, 1])} />
         <Stack.Screen name="sheets/next-buy" options={sheet([0.5])} />
-        <Stack.Screen name="sheets/describe" options={sheet([0.5, 1])} />
         <Stack.Screen name="sheets/fact/[id]" options={sheet([0.5])} />
-        <Stack.Screen name="sheets/looks-by-name" options={sheet([0.5])} />
         {/* 02 O3w asked for a 320 pt wheel; it's a list of years now (no new package), so it opens taller. */}
         <Stack.Screen name="sheets/birth-year" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/consent" options={sheet([1])} />
-        <Stack.Screen name="sheets/swap/[ideaId]" options={sheet([0.5])} />
+        {/* S26's "See an example" (09-ui-review §20.8 G23): O1e as a sheet once onboarding is done. */}
+        <Stack.Screen name="sheets/example" options={sheet([1])} />
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/scan-inbox" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/merge/[id]" options={sheet([0.6, 1])} />
         {/* A1 (10-onboarding.md): 0.7 leaves room for the email field and its button above the keyboard. */}
         <Stack.Screen name="sheets/sign-in" options={sheet([0.7, 1])} />
+      </Stack.Protected>
+      <Stack.Protected guard={ready && !blocked && paywall}>
+        <Stack.Screen name="paywall" options={cover} />
+      </Stack.Protected>
+      {/* The share card is a placeholder until P6: reachable only behind its switch, or on demo screen 20 (R12). */}
+      <Stack.Protected guard={ready && !blocked && (SHARE_CARD_BUILT || DEMO_ENABLED)}>
+        <Stack.Screen name="share/[checkId]" options={cover} />
       </Stack.Protected>
       <Stack.Protected guard={DEMO_ENABLED}>
         <Stack.Screen name="demo/screen/[n]" />
@@ -117,6 +139,12 @@ function RootStack({ booted }: { booted: boolean }) {
       </Stack.Protected>
     </Stack>
   );
+}
+
+/** -demoCrash 1 (demo builds only, 09 §23 E5): throws while drawing until Try again, so the crash screen can be seen. */
+function DemoCrash() {
+  demoCrashCheck();
+  return null;
 }
 
 /** React Navigation's theme from our tokens, so native headers and backgrounds match. */

@@ -1,6 +1,4 @@
-import { Placeholder } from '@/features/placeholder/Placeholder';
+import { EditSheet } from '@/features/closet/EditSheet';
 
-// C3 · Edit item (02-screens.md). Built in P5.
-export default function EditItemScreen() {
-  return <Placeholder id="C3" name="Edit item" phase="P5" kind="sheet" />;
-}
+// C3 · "What it is" → one row's picker (09-ui-review §17, #315): pictures of the piece with that one thing changed.
+export default EditSheet;

@@ -16,7 +16,7 @@ export interface ClosetStub {
   color_family: string;
 }
 
-export type ClosetKind = 'full' | 'recheck' | 'shoeSnap';
+export type ClosetKind = 'full' | 'recheck' | 'shoeSnap' | 'bottomSnap';
 
 /** A validated closet answer: one entry per stub index it described (missing = not seen). */
 export interface ClosetReading {
@@ -36,5 +36,6 @@ export type ClosetResult =
   | { fail: ClosetFail };
 
 export interface ClosetSource {
-  read(image: PreparedImage, stubs: readonly ClosetStub[], kind: ClosetKind, opts?: { signal?: AbortSignal }): Promise<ClosetResult>;
+  /** `checkId`: the check the call rides on (the server's X-Kitted-Check; a snap passes its first check's id). */
+  read(image: PreparedImage, stubs: readonly ClosetStub[], kind: ClosetKind, opts?: { signal?: AbortSignal; checkId?: string }): Promise<ClosetResult>;
 }

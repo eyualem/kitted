@@ -4,6 +4,11 @@
  *  Terms and Privacy pages exist (App Review 3.1.2): no "Try Pro" points at it on his phone; demo screens turn it on. */
 export const PAYWALL_BUILT = false;
 
+/** The share card (S12, #345): built. One switch still removes the share actions and the route (the root layout
+ *  registers `share/[checkId]` only while this is on, or on demo builds, #323). The card's Share button also waits for
+ *  a build that has the capture and sharing modules (features/share/shareNative.ts). */
+export const SHARE_CARD_BUILT = true;
+
 /** Accounts (10-onboarding.md): Continue with Apple, Google or email. Off until Firebase is set up (08 §6 A0–A1), so no
  *  sign-in shows on his phone that does nothing; demo screens 130–143 turn them on (features/account/account.ts). */
 export const ACCOUNTS_BUILT = false;

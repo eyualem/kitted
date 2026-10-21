@@ -7,7 +7,9 @@
 //   3. Pieces: the look's closet pieces as drawn tiles, each opening its piece page.
 //   4. Show in chat.
 // Read-only: the score is the stored one; nothing here changes the occasion, re-scores, re-checks or corrects.
-// Not built (no dead buttons): Wear this again, the ⋯ menu (Save, Share, Delete photo).
+// The header's ⋯ (09-ui-review §20.8 G22): Delete photo (a confirm; the photo leaves the phone, the score stays) and
+// Remove from Lookbook (the long-press's flow, then back). Share (#352) beside it opens the share card on the look's
+// shown check, when it can be shared on this build. Not built (no dead buttons): Wear this again, Save.
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { Stack, router } from 'expo-router';
 import {
@@ -20,6 +22,10 @@ import { ClosetTile } from '@/features/closet/ClosetTile';
 import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
 import { loadLook, showInChat, type LookPageModel } from './lookPage';
+import { GonePage } from '@/features/gone/Gone';
+import { confirmDeletePhoto, removeLookMenu } from './lookActions';
+import { LookMenu } from './LookMenu';
+import { shareNativeReady } from '@/features/share/shareNative';
 
 const PIECE_TILE = 76;
 const BEFORE_W = 50;
@@ -29,13 +35,39 @@ export function LookPage({ id }: { id: string }) {
   const { colors } = useTheme();
   const look = useLive(['fitChecks', 'closet', 'chat'], () => loadLook(store, id, { zone: sessionClock.offset }), [id]);
   if (look === undefined) return <View style={{ flex: 1, backgroundColor: colors.bg }} />;
+  if (look === null) return <GonePage />;
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
       style={{ backgroundColor: colors.bg }}
       contentContainerStyle={{ paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xxxl, gap: space.stack }}
     >
-      <Stack.Screen options={{ title: look?.title ?? '' }} />
+      <Stack.Screen
+        options={{
+          title: look?.title ?? '',
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              {look.shareId && shareNativeReady() ? (
+                // A plain icon like the ⋯ beside it: the header's glass capsule is the button's ground.
+                <Pressable
+                  onPress={() => router.push(`/share/${look.shareId}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('card.share.a11y')}
+                  hitSlop={8}
+                  style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1, paddingHorizontal: 6 })}
+                >
+                  <Icon name="share" size="regular" color={colors.ink} />
+                </Pressable>
+              ) : null}
+              <LookMenu
+                hasPhoto={!!look.photo}
+                onDeletePhoto={() => confirmDeletePhoto(look.shownId)}
+                onRemove={() => void removeLookMenu(look.checkId, look.title, () => (router.canGoBack() ? router.back() : router.replace('/lookbook')))}
+              />
+            </View>
+          ),
+        }}
+      />
       {look ? <LookBody look={look} /> : null}
     </ScrollView>
   );

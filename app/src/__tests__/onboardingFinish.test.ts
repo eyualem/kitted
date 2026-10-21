@@ -1,19 +1,21 @@
 // The end of onboarding's checks, set before building (handoff/10-onboarding.md §9.6): the sequence (E1–E7), Later
-// (L1), the moves (M1–M4), Starter essentials (B1–B2), the paywall's words and store (P1–P8) and the notification ask
+// (L1), the one optional step (O1–O9, #343; it replaced the moves M1–M4), the list (B1), the paywall's words and store (P1–P8) and the notification ask
 // (N1–N3), as far as they can be checked without a screen. The screens were checked in the web preview (§9.8).
 import { createMemoryStore } from '@/data/memoryStore';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import { NOTIFICATIONS_BUILT, PAYWALL_BUILT } from '@/config/features';
 import { PRIVACY_URL, TERMS_URL } from '@/config/links';
 import { createOfferService } from '@/features/account/offerService';
-import { buildMoves, pickBuy } from '@/features/finish/moves';
+import { basicsAdded, inviteState } from '@/features/finish/invite';
 import {
   FINISH_SETTLE_MS, firstFull, holdsOffer, laterShows, movesDue, NO_FINISH, notifyAskable, notifyDue, parseFinish, PAYWALL_AFTER_MS, paywallDue,
   type FinishCheck, type FinishState,
 } from '@/features/finish/sequence';
-import { createFinishService, FINISH_KEY, getFinish, type FinishDeps } from '@/features/finish/service';
+import { createFinishService, FINISH_KEY, getFinish, getStarterMarks, type FinishDeps } from '@/features/finish/service';
 import { bestMissing, starterGain } from '@/features/finish/gains';
-import { markedPiece, ownedCount, ownership, STARTER } from '@/features/finish/starter';
+import { keepsRow, markedPiece, optionName, ownedCount, ownership, STARTER } from '@/features/finish/starter';
+import { pickStarter, removeStarter, toggleMarkOnly } from '@/features/finish/starterActions';
+import { displayHex } from '@kitted/core';
 import { ctaTitle, finePrint, paywallPerks, paywallTitle, planDetail, plansReminder, todayCard } from '@/features/paywall/content';
 import { loadNotificationPrefs } from '@/features/settings/prefs';
 import { en, t } from '@/i18n/en';
@@ -344,100 +346,127 @@ describe('L1 · Later', () => {
   });
 });
 
-describe('M1–M4 · the 3 moves', () => {
-  const closet = [piece('T', 'top', 'tee', 'white'), piece('B', 'bottom', 'jeans', 'denim_dark'), piece('S', 'shoes', 'canvas_sneaker', 'white')];
-  const input = (o: Partial<Parameters<typeof buildMoves>[0]> = {}) => ({
-    first: check('a', T0, { fixes: [fix('Tuck in your tee', { tag: 'Free · 10 seconds' }), fix('Swap the slides for sneakers', { free: false, tag: 'Free if you own one' })] }),
-    recheck: null, closet, styles: null, markedKv: [], buyId: null, ...o,
+describe('O1–O9 · the one optional step (#343, §9.11)', () => {
+  const card = (payload: Record<string, unknown> = {}) => ({ payload });
+
+  it('O1: it says it is optional twice; the card has one button and one Skip', () => {
+    expect(t('plan.intro')).toMatch(/optional/i);
+    expect(t('plan.tag')).toBe('Optional');
+    expect(t('plan.show')).toBe('Show me the list');
+    expect(t('plan.skip')).toBe('Skip');
+    // Nothing on it assumes what he owns or should buy.
+    for (const k of ['plan.intro', 'plan.title', 'plan.body', 'plan.skipped', 'starter.sub'] as const) expect(t(k)).not.toMatch(/\$|buy|heavyweight|first 3|moves/i);
   });
 
-  it('M1: basics, the top fix word for word, then the missing piece that adds the most outfits', () => {
-    const p = buildMoves(input());
-    expect(p.moves.map((m) => m.kind)).toEqual(['basics', 'fix', 'buy']);
-    expect(p.moves[0]).toMatchObject({ title: t('plan.move1'), detail: t('plan.move1Sub'), done: false, go: 'starter' });
-    expect(p.moves[1]).toMatchObject({ title: 'Tuck in your tee', detail: 'Free · 10 seconds', go: 'camera' });
-    const best = bestMissing(closet, null, [])!;
-    expect(p.moves[2]!.title).toBe(t('plan.move3', { item: best.entry.pick!.phrase }));
-    expect(p.moves[2]!.detail).toBe(best.gain > 0 ? t('plan.move3Sub', { price: best.entry.budget, n: best.gain }) : best.entry.budget);
-    // The most outfits: no other missing row adds more.
+  it('O2: open, skipped, added (added wins over an earlier Skip)', () => {
+    expect(inviteState(card(), 0)).toBe('open');
+    expect(inviteState(card({ skipped: true }), 0)).toBe('skipped');
+    expect(inviteState(card({ skipped: true }), 2)).toBe('added');
+    expect(t('plan.added', { n: 2 })).toBe('Added 2 to your closet.');
+  });
+
+  it('O5: a pick is a not-photographed piece in his kind and color, named the closet way', () => {
+    const tee = STARTER.find((e) => e.id === 's01')!;
+    const black = tee.owns.find((o) => o.color === 'black')!;
+    const m = markedPiece(tee, black, 'X', T0)!;
+    expect(m).toMatchObject({ isPhotographed: false, source: 'added', starterId: 's01', slot: 'top', name: 'Black tee', hex: displayHex('black') });
+    expect(m.garment).toMatchObject({ subcategory: 'tee', color_family: 'black' });
+    expect(optionName(tee, black)).toBe('Black tee');
+    const boots = STARTER.find((e) => e.id === 's10')!;
+    expect(markedPiece(boots, { subcategory: 'chelsea_boot', color: 'black' }, 'Y', T0)!.garment).toMatchObject({ subcategory: 'chelsea_boot', color_family: 'black' });
+  });
+
+  it('O6: every choice of every row keeps its row marked, whatever the color', () => {
     for (const e of STARTER) {
-      if (!e.pick || !e.slot || ownership(closet, [])[e.id]?.owned) continue;
-      expect(starterGain(closet, null, e)).toBeLessThanOrEqual(best.gain);
+      if (!e.slot) {
+        expect(e.owns).toEqual([]);
+        continue;
+      }
+      expect(e.owns.length).toBeGreaterThan(1);
+      for (const [i, o] of e.owns.entries()) {
+        const m = markedPiece(e, o, `${e.id}-${i}`, T0)!;
+        expect(ownership([m], [])[e.id]).toEqual({ owned: true, how: 'marked', itemId: m.id });
+        expect(keepsRow(e, m.garment, e.slot)).toBe(true);
+        // Every row's own color recolor keeps it too.
+        expect(keepsRow(e, { ...m.garment, color_family: 'burgundy' }, e.slot)).toBe(true);
+      }
     }
+    // Names are plain, no prices or colors in them.
+    expect(STARTER.map((e) => e.name)).toEqual(Array.from({ length: 12 }, (_, i) => en[`starter.item.${i + 1}` as keyof typeof en]));
   });
 
-  it('M2: fallbacks', () => {
-    const noFix = buildMoves(input({ first: check('a', T0, { fixes: [], details: { nextLevel: ['Try one standout color'] } }) }));
-    expect(noFix.moves[1]).toMatchObject({ title: 'Try one standout color', detail: t('plan.move.nextLevelSub') });
-    const nothing = buildMoves(input({ first: check('a', T0, { fixes: [], details: {} }) }));
-    expect(nothing.moves[1]).toMatchObject({ title: t('plan.move.checkNext'), detail: t('plan.move.checkNextSub') });
-    // A piece that adds no outfits: the price alone (no "+0 fits").
-    const bare = buildMoves(input({ closet: [] }));
-    expect(bare.moves[2]!.detail).not.toMatch(/fit/);
-    // Every wearable essential owned: the Next step.
-    const all = STARTER.filter((e) => e.pick).map((e, i) => ({ ...markedPiece(e, `M${i}`, T0)!, isPhotographed: true, starterId: null, source: 'fitCheck' as const }));
-    const full = buildMoves(input({ closet: all }));
-    expect(full.moves[2]!.title).toBe(t('plan.move3', { item: 'unstructured navy blazer' }));
-    expect(full.moves[2]!.detail).toBe(t('plan.move3.nextStepSub', { price: '$80–150' }));
+  it('O7: picking again changes the same piece; Remove deletes it; both undo', async () => {
+    const store = createMemoryStore();
+    const ids = counterIds();
+    const tee = STARTER.find((e) => e.id === 's01')!;
+    const r1 = await pickStarter(store, tee, tee.owns[0]!, ids, T0);
+    expect(r1?.undo).toBeDefined();
+    const [p1] = await store.closet.all();
+    expect(p1).toMatchObject({ name: 'Black tee', isDeleted: false });
+    const r2 = await pickStarter(store, tee, tee.owns[1]!, ids, T0 + 1);
+    const all = (await store.closet.all()).filter((c) => !c.isDeleted);
+    expect(all).toHaveLength(1);
+    expect(all[0]).toMatchObject({ id: p1!.id, name: 'White tee' });
+    expect(r2?.text).toBe(t('starter.addedToast', { item: 'White tee' }));
+    await r2!.undo!();
+    expect((await store.closet.get(p1!.id))?.name).toBe('Black tee');
+    const r3 = await removeStarter(store, tee, T0 + 2);
+    expect((await store.closet.get(p1!.id))?.isDeleted).toBe(true);
+    await r3!.undo!();
+    expect((await store.closet.get(p1!.id))?.isDeleted).toBe(false);
+    // Undo on a first pick takes it back out.
+    const jeans = STARTER.find((e) => e.id === 's05')!;
+    const r4 = await pickStarter(store, jeans, jeans.owns[0]!, ids, T0 + 3);
+    await r4!.undo!();
+    expect(ownership(await store.closet.all(), []).s05).toEqual({ owned: false });
   });
 
-  it('M3: done states, one Start for the first move not done, all done', () => {
-    const p0 = buildMoves(input());
-    expect(p0.current).toBe(0);
-    const buyId = pickBuy(input())!;
-    const marked = markedPiece(STARTER.find((e) => e.id === 's04')!, 'K', T0)!;
-    const p1 = buildMoves(input({ closet: [...closet, marked], buyId }));
-    expect(p1.moves[0]!.done).toBe(true);
-    expect(p1.current).toBe(1);
-    const recheck = check('r', T0 + 1, { parentId: 'a', details: { recheck: { parentScore: 6.5, delta: 0.5, rawDelta: 0.5, notes: [], doneFixes: [{ copy: 'Tuck in your tee', earned: 0.5 }], newProblems: [], notSeen: false } } });
-    const p2 = buildMoves(input({ closet: [...closet, marked], buyId, recheck }));
-    expect(p2.moves[1]!.done).toBe(true);
-    expect(p2.current).toBe(2);
-    const bought = markedPiece(STARTER.find((e) => e.id === buyId)!, 'Q', T0)!;
-    const p3 = buildMoves(input({ closet: [...closet, marked, bought], buyId, recheck }));
-    expect(p3.moves.every((m) => m.done)).toBe(true);
-    expect(p3.current).toBeNull();
-    // Marked while a photographed piece also fills that row: still done (the row shows "In your closet").
-    const knit = piece('W', 'top', 'sweater', 'white');
-    expect(buildMoves(input({ closet: [...closet, knit, marked], buyId })).moves[0]!.done).toBe(true);
-    expect(buildMoves(input({ closet: [...closet, knit, { ...marked, isDeleted: true }], buyId })).moves[0]!.done).toBe(false);
-    expect(buildMoves(input({ markedKv: ['s12'] })).moves[0]!.done).toBe(true);
-    // Move 3 keeps the piece it named, even after another gap becomes bigger.
-    expect(p1.moves[2]!.title).toBe(t('plan.move3', { item: STARTER.find((e) => e.id === buyId)!.pick!.phrase }));
+  it('O8: a piece his fit checks found locks its row; a pick there does nothing', async () => {
+    const store = createMemoryStore();
+    await store.closet.put(piece('T1', 'top', 'tee', 'white'));
+    const tee = STARTER.find((e) => e.id === 's01')!;
+    expect(await pickStarter(store, tee, tee.owns[0]!, counterIds(), T0)).toBeNull();
+    expect(await store.closet.all()).toHaveLength(1);
   });
 
-  it('M4: Start goes to Starter essentials or the camera, never a placeholder', () => {
-    const p = buildMoves(input());
-    expect(p.moves.map((m) => m.go)).toEqual(['starter', 'camera', 'starter']);
+  it('O9: the belt marks in kv only, and a second tap removes it with Undo', async () => {
+    const store = createMemoryStore();
+    const belt = STARTER.find((e) => e.id === 's12')!;
+    expect(markedPiece(belt, { subcategory: 'belt', color: 'brown' }, 'B', T0)).toBeNull();
+    await toggleMarkOnly(store, belt, T0);
+    expect(await getStarterMarks(store)).toEqual(['s12']);
+    const r = await toggleMarkOnly(store, belt, T0);
+    expect(await getStarterMarks(store)).toEqual([]);
+    await r!.undo!();
+    expect(await getStarterMarks(store)).toEqual(['s12']);
+    expect(await store.closet.all()).toHaveLength(0);
+  });
+
+  it('basicsAdded counts list pieces and the belt, never photographed or removed pieces', () => {
+    const tee = STARTER.find((e) => e.id === 's01')!;
+    const m = markedPiece(tee, tee.owns[0]!, 'M', T0)!;
+    expect(basicsAdded([m, { ...m, id: 'D', isDeleted: true }, piece('P', 'top', 'tee', 'white')], ['s12'])).toBe(2);
+    expect(basicsAdded([], [])).toBe(0);
   });
 });
 
-// ── Starter essentials ───────────────────────────────────────────────────────────────────────────────────────────
-describe('B1–B2 · Starter essentials', () => {
-  it('B1: 12 rows in 02 order, prices from rubric v3, pieces in his closet count as owned', () => {
-    expect(STARTER.map((e) => e.name)).toEqual(Array.from({ length: 12 }, (_, i) => en[`starter.item.${i + 1}` as keyof typeof en]));
+// ── What you already own (was Starter essentials) ────────────────────────────────────────────────────────────────
+describe('B1 · the list\'s rows', () => {
+  it('B1: 12 rows in 02 order; the buying data stays for Next best buy; pieces in his closet count as owned', () => {
     expect(STARTER[0]).toMatchObject({ budget: '$15–20', mid: '$35–60' });
     expect(STARTER[11]).toMatchObject({ budget: 'About $30', mid: '$50–100', slot: null });
     const closet = [piece('T1', 'top', 'tee', 'white'), piece('J', 'bottom', 'jeans', 'denim_dark', { garment: { category: 'bottom', subcategory: 'jeans', color_family: 'denim_dark', leg_shape: 'slim' } }), piece('S', 'shoes', 'loafer', 'brown')];
     const own = ownership(closet, []);
     expect(own.s01).toMatchObject({ owned: true, how: 'closet' });
-    expect(own.s05).toEqual({ owned: false }); // slim jeans don't fill "dark straight jeans"
+    expect(own.s05).toEqual({ owned: false }); // a photographed slim jean still doesn't fill the row (O10: fills unchanged)
     expect(own.s10).toMatchObject({ owned: true, how: 'closet' });
     expect(ownedCount(own)).toBe(2);
-    // A deleted piece doesn't count.
     expect(ownership([{ ...closet[0]!, isDeleted: true }], []).s01).toEqual({ owned: false });
-  });
-
-  it('B2: a marked piece is a not-photographed closet piece of that row; the belt lives in kv', () => {
-    const m = markedPiece(STARTER[10]!, 'X', T0)!;
-    expect(m).toMatchObject({ isPhotographed: false, source: 'added', starterId: 's11', slot: 'top', name: 'Grey quarter-zip' });
-    expect(ownership([m], []).s11).toEqual({ owned: true, how: 'marked', itemId: 'X' });
-    expect(markedPiece(STARTER[11]!, 'Y', T0)).toBeNull();
-    expect(ownership([], ['s12']).s12).toEqual({ owned: true, how: 'marked', itemId: null });
     // +N: adding the third slot makes outfits; nothing to pair with makes none.
     const two = [piece('T', 'top', 'tee', 'white'), piece('B', 'bottom', 'chinos', 'khaki_beige')];
     expect(starterGain(two, null, STARTER[8]!)).toBeGreaterThan(0);
     expect(starterGain([], null, STARTER[0]!)).toBe(0);
+    expect(bestMissing(two, null, [])).not.toBeNull();
   });
 });
 

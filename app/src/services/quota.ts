@@ -20,7 +20,10 @@ export const RECHECK_WINDOW_MS = 30 * 60_000;
 
 export interface QuotaSnapshot {
   dayKey: string;
+  /** Pro's limits: a purchase, or the server's tier (every account during the beta, 13-server.md §8, A10). */
   pro: boolean;
+  /** Bought Pro (the plan row and "Try Pro" read this; the server's beta tier never makes him "Pro"). */
+  purchased: boolean;
   checksUsed: number;
   checkLimit: number;
   /** The re-check of today's check is still open. */
@@ -72,6 +75,8 @@ export interface QuotaDeps {
   store: KittedStore;
   clock: Clock;
   isPro: () => boolean;
+  /** The tier the server last answered with (services/server/tier.ts); null before any server answer. */
+  serverTier?: () => Promise<'free' | 'pro' | null>;
   /** Demo override: `freeChecksUsed=<n>`. */
   checksUsedOverride?: () => number | null;
 }
@@ -86,13 +91,15 @@ export function createQuota(deps: QuotaDeps) {
     const now = clock.nowMs();
     const key = today();
     const u = await usage(key);
-    const pro = deps.isPro();
+    const purchased = deps.isPro();
+    const pro = purchased || (await deps.serverTier?.().catch(() => null)) === 'pro';
     const checks = await store.fitChecks.all();
     const todays = checks.filter((c) => c.dayKey === key && !c.parentId && c.status === 'scored');
     const override = deps.checksUsedOverride?.() ?? null;
     return {
       dayKey: key,
       pro,
+      purchased,
       checksUsed: override ?? u.checks,
       checkLimit: pro ? LIMITS.proChecks : LIMITS.freeChecks,
       recheckOpen: todays.some((c) => isRecheckOpen(c, now, clock)),

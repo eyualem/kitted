@@ -17,7 +17,7 @@ import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
-import { cardControls, cardSpoken, outfitNow, savedUndoShows, storedCard, type AskCard } from './cards';
+import { cardControls, cardSpoken, linkedPiece, outfitNow, savedUndoShows, storedCard, type AskCard } from './cards';
 import { undoRemember } from './memory';
 import { tapAnswer } from './session';
 
@@ -51,7 +51,20 @@ function CardBody({ m, card, readOnly }: { m: ChatMessage; card: AskCard; readOn
       return <BuyCard card={card} />;
     case 'link':
       return <LinkRow card={card} />;
+    case 'correct':
+      return <CorrectRow card={card} readOnly={readOnly} />;
   }
+}
+
+/** "That score is wrong" (09 §20.8 G19): his check's Not quite right?, while that check is still here (today only). */
+function CorrectRow({ card, readOnly }: { card: Extract<AskCard, { type: 'correct' }>; readOnly: boolean }) {
+  const scored = useLive(['fitChecks'], async () => (await store.fitChecks.get(card.checkId))?.status === 'scored', [card.checkId]);
+  if (!scored || !cardControls(card, { readOnly, tapped: null }).correct) return null;
+  return (
+    <View style={{ alignItems: 'flex-start' }}>
+      <KButton title={t('card.nqr')} kind="secondary" size="regular" onPress={() => router.push(`/sheets/correct/${card.checkId}`)} />
+    </View>
+  );
 }
 
 function openCamera(occasion: string) {
@@ -152,8 +165,8 @@ function BuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }> }) {
 function LinkRow({ card }: { card: Extract<AskCard, { type: 'link' }> }) {
   const data = useLive(['closet', 'fitChecks'], async () => {
     if ('itemId' in card) {
-      const it = await store.closet.get(card.itemId);
-      return { kind: 'piece' as const, label: it && !it.isDeleted ? t('ask.card.link.piece', { item: lower(it.name) }) : null };
+      const it = linkedPiece(card.itemId, await store.closet.all());
+      return { kind: 'piece' as const, id: it?.id ?? null, label: it ? t('ask.card.link.piece', { item: lower(it.name) }) : null };
     }
     const c = await store.fitChecks.get(card.checkId);
     if (!c) return { kind: 'check' as const, label: null };
@@ -164,8 +177,10 @@ function LinkRow({ card }: { card: Extract<AskCard, { type: 'link' }> }) {
   }, ['itemId' in card ? card.itemId : card.checkId]);
   if (!data) return null;
   if (!data.label) return <KText variant="subheadline" color="ink2">{t('ask.card.gone')}</KText>;
-  const open = () => ('itemId' in card ? openPiece({ id: card.itemId }) : openLookPage(card.checkId));
-  return <TextLink title={`${data.label} ›`} onPress={open} />;
+  const pieceId = data.kind === 'piece' ? data.id : null;
+  const open = () => (pieceId ? openPiece({ id: pieceId }) : 'checkId' in card ? openLookPage(card.checkId) : undefined);
+  // VoiceOver reads the words, not the "›" (07 §17).
+  return <TextLink title={`${data.label} ›`} accessibilityLabel={data.label} onPress={open} />;
 }
 
 function SavedLine({ factId, itemId, readOnly }: { factId: string; itemId: string | null; readOnly: boolean }) {
