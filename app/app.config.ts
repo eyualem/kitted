@@ -1,7 +1,9 @@
 import type { ExpoConfig } from 'expo/config';
 
-// Demo tools (demo/* routes, scripted story, demo store) are on unless KITTED_DEMO=0 (App Store builds).
-const demo = process.env.KITTED_DEMO !== '0';
+// Demo tools (demo/* routes, scripted story, demo store, ?resetData): KITTED_DEMO=1 on, KITTED_DEMO=0 off; unset, they
+// follow the build: on in Debug, off in Release (src/demo/config.ts reads `__DEV__`), so a Release build is safe by
+// default (09 §20.7 R1, #323). The Maestro demo build (05 §P7) sets KITTED_DEMO=1.
+const demo = process.env.KITTED_DEMO === '1' ? true : process.env.KITTED_DEMO === '0' ? false : null;
 
 /** The camera prompt's reason (Apple 5.1.1); used by both the plist and the picker plugin. */
 const CAMERA_USAGE = 'Kitted uses the camera to check your outfit. Faces are blurred before anything is sent.';
@@ -74,7 +76,8 @@ const config: ExpoConfig = {
     // NSCameraUsageDescription above: `false` deletes that key, and iOS then kills the app the
     // moment the camera asks for access (DECISIONS-LOG #53).
     ['expo-image-picker', { photosPermission: false, cameraPermission: CAMERA_USAGE, microphonePermission: MIC_USAGE }],
-    // P6: ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false }],
+    // The share card's Save (#345): add-only, so Kitted can put a card in Photos but never read the library.
+    ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false, granularPermissions: [] }],
     // P6: 'expo-notifications',
   ],
   experiments: { typedRoutes: true, reactCompiler: true },

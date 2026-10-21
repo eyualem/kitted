@@ -13,6 +13,7 @@ import { t } from '@/i18n/en';
 import { whyRows } from './ledgerRows';
 import { PartsBreakdown } from './PartsBreakdown';
 import { whyParts } from './partsRows';
+import { GoneSheet } from '@/features/gone/Gone';
 
 export function WhySheet() {
   const { checkId } = useLocalSearchParams<{ checkId: string }>();
@@ -29,6 +30,7 @@ export function WhySheet() {
     }
     return { row, reading, parts: null, rows: whyRows(reading, row.occasion, stylesFor(row.style, p?.styles ?? []), p?.boldness ?? null, row.details.readsAs ?? null) };
   }, [checkId]);
+  if (data === null) return <GoneSheet />;
   // While it loads: the Why title without its number (it said "How I score", #276).
   if (!data || (!data.rows && !data.parts)) return <SheetScaffold title={t('why.title', { score: '' }).trim()} />;
   const { row, reading, rows, parts } = data;

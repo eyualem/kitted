@@ -29,7 +29,13 @@ import { serial, type SerialOptions } from './checkWrites';
 import { mergeCandidates, type MergeUndo } from './merge';
 import { isFirstPhoto, photoOffer, photoSightings, type PhotoUndo } from './wrongCard';
 import { assignNames, baseName, isAutoNamed } from './itemName';
+import { fitDoubt } from './fitDoubt';
+import { logFitAnswer } from './fitLog';
+import { currentValue, editPlan, isOffered, type EditField, type EditValue } from './pieceEdit';
 import { artOf, halfSeen, hexOfArt, isAwaitingAnswer, isHalfSeen, isLive, isOwned, knownPieces, observationOf, observationOfRow, profileOfItem, sightingsOf, storedProfiles } from './profile';
+
+/** The snaps that finish a partial check: the shoes, or the pants and shoes (#313). */
+type SnapKind = Extract<ClosetKind, 'shoeSnap' | 'bottomSnap'>;
 
 export const CLOSET_DEADLINE_MS = 12_000;
 /** The longest name he can give a piece (Rename). */
@@ -58,6 +64,8 @@ export interface ClosetServiceDeps {
 export type DuplicateAnswer = 'same' | 'new' | 'runnerUp';
 
 const CLOSET_CATEGORIES: readonly string[] = ['top', 'outerwear', 'bottom', 'footwear'];
+/** The scored bagginess fields: a "Not quite right?" fix of one re-scores its check only (§19, #322). */
+const SCORED_FIX_FIELDS: readonly string[] = ['volume', 'leg_shape'];
 const CONFIRMABLE: readonly string[] = [
   'subcategory', 'color_family', 'pattern', 'logo', 'leg_shape', 'sleeve_length', 'lightness', 'shoe_profile', 'denim_wear',
 ];
@@ -540,14 +548,15 @@ export function createClosetService(deps: ClosetServiceDeps) {
     await saveSummary(recheckId, cs);
   }
 
-  async function writeSnap(parentId: string, snapReadingId: string, stored: { row: ReadingRow; reading: StoredClosetReading } | null) {
+  async function writeSnap(parentId: string, snapReadingId: string, stored: { row: ReadingRow; reading: StoredClosetReading } | null, kind: SnapKind) {
     const parent = await store.fitChecks.get(parentId);
     const snap = (await readingOf(snapReadingId))?.reading;
     if (!parent || !snap) return;
-    const fields = fieldsFor(snap.garments, 'shoeSnap', stored?.reading ?? null);
+    const fields = fieldsFor(snap.garments, kind, stored?.reading ?? null);
     const pieces: Piece[] = [];
     snap.garments.forEach((g, i) => {
-      if (g.category !== 'footwear' || g.certainty === 'unsure') return;
+      const joins = g.category === 'footwear' || (kind === 'bottomSnap' && g.category === 'bottom');
+      if (!joins || g.certainty === 'unsure') return;
       pieces.push({ origin: 'snap', index: i, garment: g, fields: fields.get(i) ?? null, confirmed: null, partial: halfSeen(snap.garments, i) });
     });
     const prev = summaryOf(parent);
@@ -583,11 +592,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
   }
 
   /** Ask the closet call, with the 12 s S11 deadline: past it, `onLate` writes the fallback and the answer enriches. */
-  async function call(image: PreparedImage, garments: readonly Garment[], kind: ClosetKind, derivedFrom: string | null) {
+  /** `checkId`: the check the call rides on at the server (a snap's first check: the source gives the snap its own id). */
+  async function call(image: PreparedImage, garments: readonly Garment[], kind: ClosetKind, derivedFrom: string | null, checkId: string) {
     const src = deps.source;
     if (!src) return null;
     const { stubs } = buildStubs(garments, kind);
-    const r = await src.read(image, stubs, kind);
+    const r = await src.read(image, stubs, kind, { checkId });
     if ('fail' in r) return null;
     return saveClosetReading(image.sha256, derivedFrom, { ...r.reading, stubs, kind }, r.model, r.latencyMs);
   }
@@ -607,12 +617,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
     return track((async () => {
       let stored: Awaited<ReturnType<typeof call>> = null;
       try {
-        stored = await call(image, garments, kind, derivedFrom);
+        stored = await call(image, garments, kind, derivedFrom, checkId);
       } catch {
         stored = null;
       }
       deps.scheduler.clearTimer(timer);
-      if (stored && kind !== 'shoeSnap') await premeasure(checkId, kind, stored.reading);
+      if (stored && kind !== 'shoeSnap' && kind !== 'bottomSnap') await premeasure(checkId, kind, stored.reading);
       if (!written) {
         written = true;
         await serial(() => write(stored, stored ? 'done' : 'fallback'), { label: 'closet answer' });
@@ -790,6 +800,19 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await store.closetObs.patch(obsId, { decision: 'answeredNew', answeredAt: now });
       ask.answer = 'new';
     }
+    cs.touched = true;
+    await renameAll();
+    return saveSummary(checkId, cs);
+  }
+
+  /** Undo on an answer's toast (09 §20.7 R10, #323): the question is open again, exactly as before he answered. */
+  async function applyUnanswer(checkId: string, obsId: string) {
+    const row = await store.fitChecks.get(checkId);
+    if (!row) return null;
+    const cs = summaryOf(row);
+    const ask = cs.asks.find((x) => x.obsId === obsId);
+    if (!ask || !ask.answer) return null;
+    await revertAnswer(cs, ask);
     cs.touched = true;
     await renameAll();
     return saveSummary(checkId, cs);
@@ -1076,6 +1099,22 @@ export function createClosetService(deps: ClosetServiceDeps) {
     }
     const g = next.garments[d.garmentIndex];
     if (!g || !d.field) return { itemName: null };
+    if (SCORED_FIX_FIELDS.includes(d.field)) {
+      // The scored-fix rule (09-ui-review §19, #322): a Fit or Leg fix made with the score in view re-scores this check
+      // only. The sighting keeps the corrected read as that photo's record, but not as his word (no userConfirmed), the
+      // piece is untouched (so it stays "Not sure" until he settles it with no score in sight), and nothing moves piece.
+      if (!link) return { itemName: null };
+      const o = await store.closetObs.get(link.obsId);
+      if (!o) return { itemName: null };
+      const field = d.field === 'volume' ? 'fit' : 'leg';
+      await logFitAnswer(store, await store.closetObs.all(), {
+        at: clock.nowMs(), kind: 'scoredFix', itemId: link.itemId, field, checkId, value: typeof d.value === 'number' || typeof d.value === 'string' ? d.value : null,
+      });
+      await store.closetObs.patch(o.id, { garment: clone(g), readingId: nextReadingId });
+      cs.touched = true;
+      await saveSummary(checkId, cs);
+      return { itemName: null };
+    }
     if (!link) {
       // A check from before V6 (no links): only its own pieces may take the change.
       const own = (await store.closet.all()).filter((c) => row.itemIds.includes(c.id) && isOwned(c));
@@ -1166,20 +1205,22 @@ export function createClosetService(deps: ClosetServiceDeps) {
       void runJob(recheckId, image, merged.garments, 'recheck', row.readingId, (s, st) => writeRecheck(recheckId, s, st));
     },
     /** A shoe snap finished a partial check: footwear only, into the first check's closet summary. */
-    async afterSnap(parentId: string, snapReadingId: string, image: PreparedImage | null): Promise<void> {
+    /** A snap's pieces join the closet: the shoes (a shoe snap) or the pants and shoes (a bottom snap, #313). */
+    async afterSnap(parentId: string, snapReadingId: string, image: PreparedImage | null, kind: SnapKind = 'shoeSnap'): Promise<void> {
       const snap = (await readingOf(snapReadingId))?.reading;
       if (!snap) return;
-      const cached = image ? await storedCloset(image.sha256, snap.garments, 'shoeSnap') : null;
+      const cached = image ? await storedCloset(image.sha256, snap.garments, kind) : null;
       if (cached || !deps.source || !image) {
-        await serial(() => writeSnap(parentId, snapReadingId, cached));
+        await serial(() => writeSnap(parentId, snapReadingId, cached, kind));
         return;
       }
       void track((async () => {
-        const stored = await call(image, snap.garments, 'shoeSnap', snapReadingId).catch(() => null);
-        await serial(() => writeSnap(parentId, snapReadingId, stored));
+        const stored = await call(image, snap.garments, kind, snapReadingId, parentId).catch(() => null);
+        await serial(() => writeSnap(parentId, snapReadingId, stored, kind));
       })());
     },
     answer: (checkId: string, obsId: string, a: DuplicateAnswer) => serial(() => applyAnswer(checkId, obsId, a)),
+    unanswer: (checkId: string, obsId: string) => serial(() => applyUnanswer(checkId, obsId), UNDO('unanswer')),
     split: (checkId: string, obsId: string) => serial(() => applySplit(checkId, obsId)),
     setUndone: (checkId: string, itemId: string, undone: boolean) => serial(() => applyUndone(checkId, itemId, undone)),
     correction: (checkId: string, d: { garmentIndex: number; field?: string; value?: unknown; remove?: boolean }, next: Reading, nextReadingId: string) =>
@@ -1202,7 +1243,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         const reading = (await readingOf(row.readingId))?.reading;
         if (!reading) continue;
         const image: PreparedImage = { photoId: row.demoPhotoId, sha256: row.imageHash, uploadUri: null };
-        const stored = (await storedCloset(row.imageHash, reading.garments, 'full')) ?? (await track(call(image, reading.garments, 'full', row.readingId).catch(() => null)));
+        const stored = (await storedCloset(row.imageHash, reading.garments, 'full')) ?? (await track(call(image, reading.garments, 'full', row.readingId, row.id).catch(() => null)));
         if (!stored) continue;
         await premeasure(row.id, 'full', stored.reading);
         await serial(() => enrich(row.id, stored), { label: 'catch-up enrich' });
@@ -1212,14 +1253,20 @@ export function createClosetService(deps: ClosetServiceDeps) {
     },
     /**
      * Pieces whose sightings carry a measured color their tile doesn't use yet (measured before tiles drew in it,
-     * 09-ui-review §7 C1) get it once; every other row is left exactly as it is. Never changes a score.
+     * 09-ui-review §7 C1) get it once, and so do pieces whose sleeve read their art doesn't carry yet (§24, then the names
+     * follow: "Grey long-sleeve tee"); every other row is left exactly as it is. Never changes a score.
      */
     refreshColors: () => serial(async () => {
       const obs = await store.closetObs.all();
+      let renamed = false;
       for (const it of (await store.closet.all()).filter(isOwned)) {
         const art = artOf(it, sightingsOf(it.id, obs).map(observationOfRow));
-        if ((art.measured ?? null) !== (it.art?.measured ?? null)) await refreshItem(it.id);
+        // and pieces whose sleeves were read before the closet drew them (long-sleeve tees, §24): the drawing and name follow
+        const sleeves = (art.sleeves ?? null) !== (it.art?.sleeves ?? null);
+        if ((art.measured ?? null) !== (it.art?.measured ?? null) || sleeves) await refreshItem(it.id);
+        if (sleeves) renamed = true;
       }
+      if (renamed) await renameAll();
     }, { label: 'refreshColors' }),
     /** Resolves when every closet call in flight has been written (demo screens, tests). */
     async settle(): Promise<void> {
@@ -1271,6 +1318,33 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await renameAll();
       return store.closet.get(itemId);
     }),
+    /**
+     * "What it is" on a piece's page (09-ui-review §17, #315): his pick for one row (kind, color, leg, fit, pattern)
+     * becomes the piece's own value, confirmed, and the reads he corrected away from are taught to the matcher
+     * (pieceEdit.editPlan); the drawing, its color and a name the app made follow (refreshItem, renameAll). Only closet
+     * rows change: no reading, sighting or fit-check score moves. null when the piece isn't his (or waits on "Same as
+     * your …?"), the value isn't offered, or it's already the value. Returns what Undo (restoreEdit) restores.
+     */
+    editPiece: (itemId: string, field: EditField, value: EditValue, o: { via?: 'row' | 'card' } = {}) => serial(async (): Promise<{ piece: ClosetItemRow; undo: PhotoUndo; remapped: string | null } | null> => {
+      const it = await store.closet.get(itemId);
+      if (!it || !isOwned(it)) return null;
+      const owned = (await store.closet.all()).filter(isOwned);
+      if (isAwaitingAnswer(it, owned)) return null;
+      const allObs = await store.closetObs.all();
+      // On a "Not sure" row (§18) the value it read most is a real answer too: it settles the row.
+      const unsure = fitDoubt(it, allObs)?.field === field;
+      if (!isOffered(it, field, value) || (currentValue(it, field) === value && !unsure)) return null;
+      const before = await snapshot();
+      const plan = editPlan(it, field, value, sightingsOf(itemId, allObs).map(observationOfRow));
+      // The answer log (§19): a Fit or Leg pick, next to what its photos read.
+      if (field === 'fit' || field === 'leg') await logFitAnswer(store, allObs, { at: clock.nowMs(), kind: 'pick', via: o.via ?? 'row', itemId, field, value });
+      await store.closet.patch(itemId, { ...plan.patch, updatedAt: clock.nowMs() });
+      await refreshItem(itemId);
+      await renameAll();
+      return { piece: (await store.closet.get(itemId))!, undo: await changesSince(before), remapped: plan.remapped };
+    }, { label: 'edit piece' }),
+    /** Undo for editPiece: every closet row it changed (the piece, a neighbor renamed around it), back exactly. */
+    restoreEdit: (u: PhotoUndo) => serial(() => restoreRows(u), UNDO('undo edit')),
     /** Undo for removeItem. */
     restoreItem: (itemId: string) => serial(async () => {
       await store.closet.patch(itemId, { isDeleted: false, updatedAt: clock.nowMs() });

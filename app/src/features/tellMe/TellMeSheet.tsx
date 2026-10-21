@@ -12,6 +12,7 @@ import { fitCheck } from '@/features/fitcheck/session';
 import { ScoreMoveLine } from '@/features/sheet/ScoreMoveLine';
 import { SheetList, SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
+import { GoneSheet } from '@/features/gone/Gone';
 
 export function TellMeSheet() {
   const { checkId } = useLocalSearchParams<{ checkId: string }>();
@@ -41,6 +42,7 @@ export function TellMeSheet() {
   };
   const toggle = (target: string) => setTicked((xs) => (xs.includes(target) ? xs.filter((x) => x !== target) : [...xs, target]));
 
+  if (data === null) return <GoneSheet />;
   return (
     <SheetScaffold title={t('recheck.tell.title')}>
       {data ? (

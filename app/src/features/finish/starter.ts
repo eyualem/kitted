@@ -1,9 +1,17 @@
 // The Starter 12 essentials (02 C5; items and 2026 prices from rubric/v3.md) and which ones his closet already has.
-// Pure. Each row has one concrete piece (`pick`) for "Add a grey quarter-zip" and its "+N outfits", so the number is
-// honest about exactly that piece; the count itself is the Closet's (finish/gains.ts, #309).
+// Pure. Each row has one concrete piece (`pick`) for Next best buy's "a grey quarter-zip" and its "+N outfits", so the
+// number is honest about exactly that piece (the count itself is the Closet's, finish/gains.ts, #309), and the kinds
+// and colors he can say he owns (`owns`, #343).
 import { displayHex, type Garment } from '@kitted/core';
 import type { ClosetItemRow } from '@/data/types';
+import { baseName } from '@/features/closet/itemName';
 import { t } from '@/i18n/en';
+
+/** One "Which one is yours?" choice: a kind and a color (and a leg for bottoms). */
+export interface StarterOption {
+  subcategory: string;
+  color: string;
+}
 
 export interface StarterEntry {
   id: string;
@@ -13,8 +21,11 @@ export interface StarterEntry {
   mid: string;
   /** No closet slot (the belt): marking it is kept in kv only. */
   slot: 'top' | 'bottom' | 'shoes' | 'outer' | null;
-  /** The piece move 3 names and +N counts: "a grey quarter-zip". */
+  /** The piece Next best buy and the chat's buy cards name, and +N counts: "a grey quarter-zip". */
   pick: { phrase: string; name: string; garment: Garment } | null;
+  /** What he can say he owns (10-onboarding.md §9.11, #343): the realistic kinds and colors, his pick becomes the
+   *  piece. Empty for the belt (no closet slot). */
+  owns: readonly StarterOption[];
   /** Does a closet piece fill this row? */
   fills(g: Garment, slot: string): boolean;
 }
@@ -31,6 +42,8 @@ const bottom = (subcategory: string, color_family: string, leg: string, more: Pa
   ({ ...base, category: 'bottom', subcategory, color_family, leg_shape: leg, hem: 'slight_break', ...more });
 const shoe = (subcategory: string, color_family: string): Garment => ({ ...base, category: 'footwear', subcategory, color_family });
 
+const o = (subcategory: string, color: string): StarterOption => ({ subcategory, color });
+
 const sub = (g: Garment) => (typeof g.subcategory === 'string' ? g.subcategory : '');
 const fam = (g: Garment) => (typeof g.color_family === 'string' ? g.color_family : '');
 const leg = (g: Garment) => (typeof g.leg_shape === 'string' ? g.leg_shape : 'na');
@@ -41,41 +54,55 @@ const notNarrow = (g: Garment) => !['skinny', 'slim'].includes(leg(g));
 export const STARTER: readonly StarterEntry[] = [
   { id: 's01', name: t('starter.item.1'), budget: '$15–20', mid: '$35–60', slot: 'top',
     pick: { phrase: 'a white heavyweight tee', name: 'White tee', garment: top('tee', 'white') },
+    owns: [o('tee', 'black'), o('tee', 'white'), o('tee', 'grey'), o('tee', 'navy'), o('tee', 'off_white_cream'), o('tee', 'olive')],
     fills: (g) => sub(g) === 'tee' && ['white', 'off_white_cream'].includes(fam(g)) },
   { id: 's02', name: t('starter.item.2'), budget: '$30–40', mid: '$70–120', slot: 'top',
-    pick: { phrase: 'a navy polo', name: 'Navy polo', garment: top('polo', 'navy') }, fills: is('polo', 'knit_polo') },
+    pick: { phrase: 'a navy polo', name: 'Navy polo', garment: top('polo', 'navy') }, owns: [o('polo', 'navy'), o('polo', 'black'), o('polo', 'white'), o('polo', 'grey'), o('polo', 'olive')],
+    fills: is('polo', 'knit_polo') },
   { id: 's03', name: t('starter.item.3'), budget: '$40–50', mid: '$70–98', slot: 'top',
-    pick: { phrase: 'a light-blue oxford shirt', name: 'Light blue oxford shirt', garment: top('oxford_shirt', 'light_blue') }, fills: is('oxford_shirt') },
+    pick: { phrase: 'a light-blue oxford shirt', name: 'Light blue oxford shirt', garment: top('oxford_shirt', 'light_blue') }, owns: [o('oxford_shirt', 'light_blue'), o('oxford_shirt', 'white')],
+    fills: is('oxford_shirt') },
   { id: 's04', name: t('starter.item.4'), budget: '$40–50', mid: '$80–150', slot: 'top',
-    pick: { phrase: 'a navy crewneck knit', name: 'Navy crewneck', garment: top('sweater', 'navy') }, fills: is('sweater') },
+    pick: { phrase: 'a navy crewneck knit', name: 'Navy crewneck', garment: top('sweater', 'navy') }, owns: [o('sweater', 'navy'), o('sweater', 'grey'), o('sweater', 'charcoal'), o('sweater', 'black'), o('sweater', 'off_white_cream'), o('sweater', 'olive')],
+    fills: is('sweater') },
   { id: 's05', name: t('starter.item.5'), budget: '$50–60', mid: '$80–120', slot: 'bottom',
     pick: { phrase: 'dark straight jeans', name: 'Dark straight jeans', garment: bottom('jeans', 'denim_dark', 'straight') },
+    owns: [o('jeans', 'denim_dark'), o('jeans', 'black'), o('jeans', 'denim_mid'), o('jeans', 'denim_light')],
     fills: (g) => sub(g) === 'jeans' && ['denim_dark', 'black', 'navy', 'charcoal'].includes(fam(g)) && notNarrow(g) },
   { id: 's06', name: t('starter.item.6'), budget: '$50–60', mid: '$80–98', slot: 'bottom',
     pick: { phrase: 'khaki chinos', name: 'Khaki chinos', garment: bottom('chinos', 'khaki_beige', 'straight') },
+    owns: [o('chinos', 'khaki_beige'), o('chinos', 'navy'), o('chinos', 'olive'), o('chinos', 'black'), o('chinos', 'grey')],
     fills: (g) => sub(g) === 'chinos' && notNarrow(g) },
   { id: 's07', name: t('starter.item.7'), budget: '$50–70', mid: '$100–250', slot: 'outer',
-    pick: { phrase: 'an olive overshirt', name: 'Olive overshirt', garment: outer('overshirt', 'olive') }, fills: is('overshirt', 'chore_coat') },
+    pick: { phrase: 'an olive overshirt', name: 'Olive overshirt', garment: outer('overshirt', 'olive') }, owns: [o('overshirt', 'olive'), o('overshirt', 'navy'), o('overshirt', 'tan_camel'), o('overshirt', 'black'), o('overshirt', 'grey')],
+    fills: is('overshirt', 'chore_coat') },
   { id: 's08', name: t('starter.item.8'), budget: '$50–90', mid: '$120–300', slot: 'outer',
-    pick: { phrase: 'a denim jacket', name: 'Denim jacket', garment: outer('denim_jacket', 'denim_mid') }, fills: is('denim_jacket', 'bomber', 'field_jacket') },
+    pick: { phrase: 'a denim jacket', name: 'Denim jacket', garment: outer('denim_jacket', 'denim_mid') }, owns: [o('denim_jacket', 'denim_mid'), o('denim_jacket', 'denim_dark'), o('denim_jacket', 'black'), o('bomber', 'black'), o('bomber', 'olive')],
+    fills: is('denim_jacket', 'bomber', 'field_jacket') },
   { id: 's09', name: t('starter.item.9'), budget: '$70–110', mid: '$150–300', slot: 'shoes',
     pick: { phrase: 'white leather sneakers', name: 'White leather sneakers', garment: shoe('white_leather_sneaker', 'white') },
+    owns: [o('white_leather_sneaker', 'white'), o('low_profile_sneaker', 'black')],
     fills: (g) => sub(g) === 'white_leather_sneaker' || (sub(g) === 'low_profile_sneaker' && fam(g) === 'white') },
   { id: 's10', name: t('starter.item.10'), budget: '$60–110', mid: '$150–275', slot: 'shoes',
-    pick: { phrase: 'brown loafers', name: 'Brown loafers', garment: shoe('loafer', 'brown') }, fills: is('loafer', 'chelsea_boot', 'work_boot', 'suede_chukka') },
+    pick: { phrase: 'brown loafers', name: 'Brown loafers', garment: shoe('loafer', 'brown') }, owns: [o('loafer', 'brown'), o('loafer', 'black'), o('work_boot', 'brown'), o('chelsea_boot', 'black'), o('chelsea_boot', 'brown')],
+    fills: is('loafer', 'chelsea_boot', 'work_boot', 'suede_chukka') },
   { id: 's11', name: t('starter.item.11'), budget: '$40–50', mid: '$80–150', slot: 'top',
     pick: { phrase: 'a grey quarter-zip', name: 'Grey quarter-zip', garment: top('quarter_zip', 'grey') },
+    owns: [o('quarter_zip', 'grey'), o('quarter_zip', 'navy'), o('hoodie', 'grey'), o('hoodie', 'black'), o('hoodie', 'navy')],
     fills: (g) => sub(g) === 'quarter_zip' || (sub(g) === 'hoodie' && (g.pattern ?? 'solid') === 'solid' && g.logo !== 'large') },
-  { id: 's12', name: t('starter.item.12'), budget: 'About $30', mid: '$50–100', slot: null, pick: null, fills: () => false },
+  { id: 's12', name: t('starter.item.12'), budget: 'About $30', mid: '$50–100', slot: null, pick: null, owns: [], fills: () => false },
 ];
 
 const LOOSE = ['relaxed', 'wide'];
 
 type Row = Omit<StarterEntry, 'pick'> & { pick: NonNullable<StarterEntry['pick']> };
 const row = (id: string, name: string, budget: string, mid: string, slot: Row['slot'], phrase: string, pickName: string, garment: Garment,
-  fills: Row['fills']): Row => ({ id, name, budget, mid, slot, pick: { phrase, name: pickName, garment }, fills });
+  fills: Row['fills']): Row => ({ id, name, budget, mid, slot, pick: { phrase, name: pickName, garment }, owns: [], fills });
 
-/** The rows for the looks (#313, 09-ui-review §16; approved Oct 17). Prices: US list prices seen Oct 16, 2026, budget / mid, sources in 09-ui-review §16. */
+/** The rows for the looks (#364, 09-ui-review §16; approved Oct 17): candidates for Next best buy, "Add shoes and you'd
+ *  have n" and Kit's buy cards, never rows of "What you already own" (that list stays these 12, #343; so `owns` is empty).
+ *  Prices (the chat's buy card and evidence, as for s01–s12): US list prices seen Oct 16, 2026, budget / mid, sources in
+ *  market/starter-prices-2026.md. */
 export const LOOK_ROWS: readonly StarterEntry[] = [
   row('s13', t('starter.item.13'), '$40–60', '$80–130', 'bottom', 'baggy dark jeans', 'Baggy dark jeans',
     bottom('jeans', 'denim_dark', 'wide'), (g) => sub(g) === 'jeans' && LOOSE.includes(leg(g))),
@@ -133,12 +160,9 @@ export const LOOK_ROWS: readonly StarterEntry[] = [
 ];
 
 /** Every Starter row there is (today's 12, then the looks' rows; ids never removed or renumbered): what a stored id looks
- *  up (a closet piece's `starterId`, the kv marks, a chat buy card, move 3's `buyId`). Which 12 he sees: finish/packs.ts. */
+ *  up (a closet piece's `starterId`, the kv marks, a chat buy card). Which rows are his candidates: finish/packs.ts. */
 export const CATALOG: readonly StarterEntry[] = [...STARTER, ...LOOK_ROWS];
 export const catalogRow = (id: string): StarterEntry | undefined => CATALOG.find((e) => e.id === id);
-
-/** C5's footer card. */
-export const NEXT_STEP = { name: t('starter.next.item'), budget: '$80–150', mid: '$200–400' } as const;
 
 const live = (c: ClosetItemRow) => !c.isDeleted && !c.mergedInto;
 
@@ -159,16 +183,34 @@ export function ownership(closet: readonly ClosetItemRow[], markedKv: readonly s
   return out;
 }
 
-/** How many of these rows he owns (the list he sees: `ids`; every row when left out). */
+/** How many of these rows he owns (`ids`: the rows a screen shows; every row when left out). */
 export const ownedCount = (o: Record<string, Ownership>, ids?: readonly string[]): number =>
   (ids ?? Object.keys(o)).filter((id) => o[id]?.owned).length;
 
-/** A not-photographed closet piece for a row he taps (02 C5 "Tap to own"). */
-export function markedPiece(e: StarterEntry, id: string, nowMs: number): ClosetItemRow | null {
-  if (!e.pick || !e.slot) return null;
+/** The garment for one "Which one is yours?" choice: the row's piece in his kind and color. */
+export function ownedGarment(e: StarterEntry, opt: StarterOption): Garment | null {
+  if (!e.pick) return null;
+  return { ...e.pick.garment, subcategory: opt.subcategory, color_family: opt.color };
+}
+
+/** "Black tee", "Dark jeans", "Brown loafers": the choice's label and the piece's name (the closet's own naming). */
+export const optionName = (e: StarterEntry, opt: StarterOption): string => {
+  const g = ownedGarment(e, opt);
+  return g ? baseName(g, null) : e.name;
+};
+
+/** Does a piece he added from this row still belong to it (#343)? Its kind does; the color never un-marks it. */
+export function keepsRow(e: StarterEntry, g: Garment, slot: string): boolean {
+  return e.owns.some((o) => o.subcategory === sub(g)) || e.fills(g, slot);
+}
+
+/** A not-photographed closet piece for the choice he taps (02 C5 "Tap to own", #343: in his kind and color). */
+export function markedPiece(e: StarterEntry, opt: StarterOption, id: string, nowMs: number): ClosetItemRow | null {
+  const garment = ownedGarment(e, opt);
+  if (!garment || !e.slot) return null;
   return {
-    id, name: e.pick.name, slot: e.slot, garment: { ...e.pick.garment }, confirmedFields: [], hex: displayHex(e.pick.garment.color_family), photoFile: null,
+    id, name: baseName(garment, null), slot: e.slot, garment, confirmedFields: [], hex: displayHex(opt.color), photoFile: null,
     demoPhotoId: null, isPhotographed: false, source: 'added', starterId: e.id, wornCount: 0, lastWornAt: null, addedAt: nowMs, isDeleted: false,
-    mergedInto: null, maybeSameAs: null, cropFile: null, cropScore: null, updatedAt: nowMs, profile: { aliases: [], distinctFrom: [], confirmed: {} },
+    mergedInto: null, maybeSameAs: null, cropFile: null, cropScore: null, updatedAt: nowMs, profile: { aliases: [], distinctFrom: [], confirmed: {}, autoName: true },
   };
 }

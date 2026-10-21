@@ -176,8 +176,6 @@ export const wordmark = {
   small: { fontSize: 11, letterSpacingEm: 0.32 },
   /** The 18 pt chat avatar "K". */
   avatar: { fontSize: 10.5, letterSpacingEm: 0 },
-  /** The 28 pt mark beside each answer (look C, #302). */
-  mark: { fontSize: 14, letterSpacingEm: 0 },
 } as const;
 
 /**

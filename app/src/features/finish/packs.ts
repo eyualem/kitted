@@ -1,13 +1,12 @@
-// Starter basics that follow his looks (09-ui-review §16, #313; the founder's OK Oct 17). The catalog lives in
-// finish/starter.ts (today's s01–s12 plus the looks' s13–s38; ids never removed or renumbered: closet rows, kv marks, chat
-// cards and move 3 store them); this file holds one ranked list of 12 per look, built from rubric/v5-styles.md's
-// signature and home pieces, and the blend of his up to 3 picks. No picks (or "Not sure") keeps today's 12. The list
-// only chooses which pieces are candidates: every "+N" is still the Closet's count (finish/gains.ts, #309) and no list
-// changes a score (#211). Pure.
+// Starter basics that follow his looks (09-ui-review §16, #364; the founder's OK Oct 17). The catalog lives in
+// finish/starter.ts (today's s01–s12 plus the looks' s13–s38; ids never removed or renumbered: closet rows, kv marks and
+// chat cards store them); this file holds one ranked list of 12 per look, built from rubric/v5-styles.md's signature and
+// home pieces, and the blend of his up to 3 picks. No picks (or "Not sure") keeps today's 12. The list is what Next best
+// buy, "Add shoes and you'd have n" and Kit's buy cards choose from; "What you already own" keeps today's 12 (#343). It
+// only chooses candidates: every "+N" is still the Closet's count (finish/gains.ts, #309) and no list changes a score
+// (#211). Pure.
 import type { Styles } from '@kitted/core';
 import { normStyleKey, type StyleKey } from '@/data/types';
-import { styleLabel } from '@/features/morning/copy';
-import { t } from '@/i18n/en';
 import { CATALOG, catalogRow, LOOK_ROWS, STARTER, type StarterEntry } from './starter';
 
 export { CATALOG, catalogRow, LOOK_ROWS };
@@ -99,7 +98,7 @@ const byId = (id: string): StarterEntry => {
 };
 
 /**
- * The 12 rows Starter essentials shows him. No picks: today's 12. One pick: that look's 12. Two or three: the core,
+ * His 12 candidate basics. No picks: today's 12. One pick: that look's 12. Two or three: the core,
  * then each pick's best rows by QUOTAS in his order, skipping a row already in or one that overlaps one in; any slot left
  * is refilled from his picks in order, then today's list. Order on screen: his first pick's list order, then each later
  * pick's rows in theirs, so ties in "+N" go to his first pick.
@@ -134,13 +133,4 @@ export function starterList(styles: Styles | null): StarterEntry[] {
   for (const p of packs) for (const id of p.ids) if (ids.has(id) && !order.includes(id)) order.push(id);
   for (const e of chosen) if (!order.includes(e.id)) order.push(e.id);
   return order.map(byId);
-}
-
-/** C5's line under the header: "Picked for streetwear." / "Picked for your looks: streetwear and minimal."; null with no picks. */
-export function picksLine(styles: Styles | null): string | null {
-  const words = picksOf(styles).map((k) => styleLabel(k).toLowerCase());
-  if (words.length === 0) return null;
-  if (words.length === 1) return t('starter.forLook', { look: words[0]! });
-  const looks = `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
-  return t('starter.forLooks', { looks });
 }

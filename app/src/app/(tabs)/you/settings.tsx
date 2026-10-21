@@ -1,7 +1,9 @@
 // Y4 · Settings (02-screens.md; the revised design in mockups/theme-round2.html and DECISIONS-LOG #246): the three
 // pushes, appearance and units, the subscription rows, help and about, and the version footer. Rows whose address
 // isn't set yet (support mail, privacy policy, terms: config/links.ts) are hidden, not dead. Deleting data lives in
-// Privacy & data. "Redeem a code" waits for StoreKit (P6), so it isn't shown.
+// Privacy & data. "Redeem a code" waits for StoreKit (P6), so it isn't shown. Notifications (nothing is scheduled until
+// expo-notifications) and the subscription rows (nothing to buy or restore while the paywall is off) are hidden, not
+// dead (09 §20.7 R5, #323).
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { KText, space, type AppAppearance } from '@/design-system';
@@ -16,12 +18,15 @@ import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 import { AccountSection } from '@/features/account/AccountRows';
+import { NOTIFICATIONS_BUILT } from '@/config/features';
+import { usePaywallOn } from '@/features/paywall/switch';
 
 const APPEARANCE_OPTIONS = APPEARANCES.map((a) => ({ value: a, label: appearanceLabel(a) }));
 const UNIT_OPTIONS = UNITS.map((u) => ({ value: u, label: unitsLabel(u) }));
 
 export default function SettingsScreen() {
   const plan = usePlan();
+  const paywall = usePaywallOn();
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
   const [appearance, setAppearance] = useState<AppAppearance>('system');
   useEffect(() => {
@@ -45,7 +50,7 @@ export default function SettingsScreen() {
       {/* Accounts (#289): first, once Firebase exists; hidden until then. */}
       <AccountSection />
       <Section>
-        <LinkRow title={t('settings.notifications')} onPress={() => router.push('/you/notifications')} />
+        {NOTIFICATIONS_BUILT ? <LinkRow title={t('settings.notifications')} onPress={() => router.push('/you/notifications')} /> : null}
         <LinkRow title={t('settings.plan')} value={planShortName(plan)} onPress={() => router.push('/you/plan')} />
         <LinkRow title={t('settings.privacy')} onPress={() => router.push('/you/privacy')} />
       </Section>
@@ -55,10 +60,12 @@ export default function SettingsScreen() {
         {profile ? <PickerRow title={t('settings.units')} value={profile.units} options={UNIT_OPTIONS} onPick={pickUnits} /> : null}
       </Section>
 
-      <Section label={t('settings.subscription')}>
-        <LinkRow title={t('settings.manage')} onPress={() => void openManageSubscription()} hint={t('settings.a11y.appStoreHint')} />
-        <LinkRow title={t('settings.restore')} chevron={false} onPress={() => void restore()} />
-      </Section>
+      {paywall ? (
+        <Section label={t('settings.subscription')}>
+          <LinkRow title={t('settings.manage')} onPress={() => void openManageSubscription()} hint={t('settings.a11y.appStoreHint')} />
+          <LinkRow title={t('settings.restore')} chevron={false} onPress={() => void restore()} />
+        </Section>
+      ) : null}
 
       <Section label={t('settings.helpAbout')}>
         {support ? (

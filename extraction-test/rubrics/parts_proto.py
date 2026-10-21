@@ -29,7 +29,7 @@ Rules for what may move points (the design rule from the batch-1 and look1 tests
     source of score wobble, because his grey suede boots flip between work boot (2.5), chukka (3) and derby (4).
     Here every dressiness comparison is a ramp with a flat middle wide enough to hold the whole boot family.
 
-Thirteen engines. engine="v13" is THE DEFAULT since Oct 14 (v12 plus the founder's call on wrinkled knit tops: a tee,
+Fourteen engines. engine="v14" is THE DEFAULT since Oct 17 (the casual and athletic fits, see TUNE["v14"]); engine="v13" was the default from Oct 14 (v12 plus the founder's call on wrinkled knit tops: a tee,
 hoodie, sweatshirt or tank read clearly wrinkled costs 0.2 when the outfit reads as minimal, smart casual or classic prep
 and none of the loud-native looks; nothing on streetwear, workwear, vintage sport, outdoor or no clear style; the
 amounts are knobs; TUNE["v13"], report ../../rubric/research/parts/v12.md -> "v13"); engine="v12" (the default earlier on Oct 14: v11 plus the founder's calls on his Oct 14 checks: a small graphic
@@ -65,7 +65,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-11 (Oct 13, 2026)"
+VERSION = "parts-proto-14 (Oct 17, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
             "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
@@ -427,6 +427,43 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11"):
 TUNE["v12"].update(wr_half=0.2, wr_knit_tailored=0.2, wr_knit_clean=0.0)
 TUNE["v13"] = dict(TUNE["v12"], wr_knit_clean=0.2)
 VERSIONS["v13"] = "parts-proto-13 (Oct 14, 2026)"
+# v14 (Oct 17, THE DEFAULT; casual and athletic fits, DECISIONS-LOG #331-#335, rubric/research/parts/casual-athletic.md;
+# paper test ../casual_athletic_paper.py, whose candidate V12 this engine reproduces exactly). The founder: "fit and context
+# should decide these scores, not flat holds", and at Everyday and Class "it should really depend on how good the
+# components of the outfit come together": dressing up never earns points by itself. Each knob is 0/False/None in v1-v13.
+#   Shorts get Proportions (PRO-1 changes; PRO-15, PRO-16): sh_prop judges shorts like pants (the part starts at 7): +sh_shape
+#     for a roomy top worn alone over loose shorts, +sh_layer for a short jacket over them (one credit, at most sh_cap; real
+#     shoes in the photo, never slides, runners only at the gym or home); -sh_roomy_fitted for a roomy top over short,
+#     fitted shorts; -sh_fitted for short, tight shorts under any top, or shorts that clearly pull.
+#   sd1_any_sneaker (SHO-4): any clean sneaker (not running shoes) or boot is a real shoe for "the shoes match"; the
+#     window between the shoe and the clothes still decides. (v13: only a shoe at dressiness 2.5+.)
+#   sw1_blocks_credit (SHO-4, SHO-7, SHO-9; found in the port): a shoe too heavy for the leg (chunky, basketball or running
+#     shoes under slim or skinny legs) earns neither "the shoes match" nor "the look's own shoe". Without it the two new
+#     credits offset SHO-9's charge (an oversized hoodie over slim jeans with chunky sneakers went 5.5 -> 6.5).
+#   sc_pair (SHO-7, v4's tested-but-off knob): the look's own shoe also counts when the look needs the shoe to be
+#     recognised, as long as another piece is that look's anchor (streetwear's sneakers).
+#   goes_together (STY-12): +this on Style when the outfit reads as no look (and isn't a suit), every part is at least 7,
+#     the shoes earned a credit and no condition fault fired: the credit a look's name gives dressy basics, for any basics.
+#   tracksuit (VSP-9): a matched track jacket and track pants: +this on Style.
+#   The loungewear ladder (LNG-2, LNG-3, LNG-4, LNG-8, LNG-9): gym_runner_unheld lets gym shorts with running shoes go
+#     unheld at Everyday and Class (the parts decide); sweatsuit_sign counts a matched sweatsuit as the dressed upper
+#     half, and sweatsuit_shape gives it +this on Proportions in a relaxed shape with a clean sneaker; look_sign counts
+#     reading as a look as that sign at Everyday and Class (instead of lounge_style's half point); kit_cap holds a full
+#     kit (a jersey with gym shorts) to this, minus kit_fit_rate x what Fit or Proportions lost.
+_OFF14 = dict(sh_prop=False, sh_shape=0.0, sh_layer=0.0, sh_cap=0.0, sh_roomy_fitted=0.0, sh_fitted=0.0, sd1_any_sneaker=False,
+              goes_together=0.0, tracksuit=0.0, gym_runner_unheld=False, sweatsuit_sign=False, sweatsuit_shape=0.0,
+              look_sign=False, kit_cap=None, kit_fit_rate=0.0, sw1_blocks_credit=False)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13"):
+    TUNE[_e].update(_OFF14)
+TUNE["v14"] = dict(TUNE["v13"], sh_prop=True, sh_shape=1.0, sh_layer=1.0, sh_cap=1.5, sh_roomy_fitted=1.5, sh_fitted=1.0,
+                   sd1_any_sneaker=True, sc_pair=True, goes_together=0.5, tracksuit=0.5, gym_runner_unheld=True,
+                   sweatsuit_sign=True, sweatsuit_shape=1.0, look_sign=True, kit_cap=6.0, kit_fit_rate=0.5,
+                   sw1_blocks_credit=True)
+VERSIONS["v14"] = "parts-proto-14 (Oct 17, 2026)"
+SPORT_SNEAKERS = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
+                  "white_leather_sneaker"}                       # v14: the clean sneakers (not running shoes)
+SWEAT_TOPS = {"hoodie", "sweatshirt"}                            # v14: a matched sweatsuit's top ...
+SWEAT_BOTTOMS = {"sweatpants", "joggers"}                        # ... and its bottoms
 BASE_TOPS = {"tank_top", "tee"}                               # v11 STY-4: plain base tops judged by the layer over them
 COVER_TOPS = {"flannel_shirt", "overshirt", "camp_collar_shirt", "denim_shirt", "oxford_shirt", "dress_shirt", "cardigan"}
 DARK_NEUTRALS = {"black", "charcoal", "navy", "denim_dark"}   # v10 COL-11: the dark base that tones a bright piece down
@@ -617,6 +654,50 @@ def _band_fault(o, t):
     return t["pb"], f"the roomy {what} is roomier than {look} calls for"
 
 
+def _sweatsuit(o):
+    """v14: a hoodie or sweatshirt with sweatpants or joggers in the same colour family."""
+    up = [g for g in o["tops"] + o["outers"] if g.get("subcategory") in SWEAT_TOPS]
+    B = o["bottom"]
+    return bool(up and B is not None and B.get("subcategory") in SWEAT_BOTTOMS and any(_fam(g) == _fam(B) for g in up))
+
+
+def _shorts_proportions(o, t):
+    """v14 (PRO-1, PRO-15, PRO-16): shorts judged like pants, from the readings that held on the gold shorts (roominess
+    4+ 23/24, loose or not 22/24). Length and socks aren't read, so they never move points."""
+    p = _Part("proportions")
+    T, O, B, S = o["top"], o["outer"], o["bottom"], o["shoes"]
+    vol = B.get("volume") or 3
+    loose = B.get("leg_shape") in R.LOOSE or vol >= 4
+    fitted = B.get("leg_shape") in NARROW or vol <= 2
+    s_sub = S.get("subcategory") if S is not None else None
+    real = S is not None and s_sub not in SLIDES and (s_sub not in RUNNER or o.get("occasion") in LOUNGE_OK)
+    if T is not None and O is None and (T.get("volume") or 3) >= 4 and fitted and not loose:
+        p.add(-t["sh_roomy_fitted"], "a roomy top over short, fitted shorts: it wants a fuller pair", "PS2_roomy_over_fitted")
+        return p
+    if t["sh_fitted"] and B.get("strain") == "clear":
+        p.add(-t["sh_fitted"], "the shorts pull: a size up would sit better", "PS3_fitted_shorts")
+        return p
+    if t["sh_fitted"] and fitted and not loose:
+        p.add(-t["sh_fitted"], "the shorts look short and tight; a fuller pair balances the outfit", "PS3_fitted_shorts")
+        return p
+    rewards = []
+    if loose and real:
+        o_sub = O.get("subcategory") if O is not None else None
+        if (O is None and T is not None and _earns(T) and T.get("tucked") in (None, "none", "na")
+                and T.get("length") != "below_crotch" and (T.get("volume") or 3) >= 4):
+            rewards.append((t["sh_shape"], f"a roomy {(T.get('subcategory') or 'top').replace('_', ' ')} over loose shorts: "
+                            "a deliberate shape", "PS1_shorts_shape"))
+        if (O is not None and _earns(O) and o_sub not in TAILORED
+                and (o_sub in (SHORT_LAYERS | {"track_jacket"}) or O.get("length") in ("cropped", "at_belt"))):
+            rewards.append((t["sh_layer"], f"a short {(o_sub or 'layer').replace('_', ' ')} over loose shorts",
+                            "PS1_shorts_layer"))
+    rewards = [x for x in rewards if x[0] > 0]
+    if rewards:
+        pts, line, check = max(rewards, key=lambda x: x[0])
+        p.add(min(pts, t["sh_cap"]), line, check)
+    return p
+
+
 # =====================================================================================================
 # PROPORTIONS (30%): length against length, weight against weight. Never a width against his body.
 # =====================================================================================================
@@ -626,6 +707,8 @@ def _proportions(o, sl, t):
     if B is None:
         p.na = "legs not in the photo"; return p
     if B.get("subcategory") in SHORTS:
+        if t["sh_prop"]:
+            return _shorts_proportions(o, t)                         # v14
         p.na = "shorts (no shorts-length reading yet)"; return p
     leg = _leg(B, o)                                                  # v12: a fitted "straight" leg is judged slim
     lounge = B.get("subcategory") in R.LOUNGE_BOTTOMS
@@ -757,6 +840,14 @@ def _proportions(o, sl, t):
             p.add(pts, line, check); total += pts
     if not p.reasons and T is not None and O is None and T.get("subcategory") not in RIBBED:
         p.tip("a front tuck, or a jacket that ends at the hip, would give it more shape", "P_next_level")
+    # v14 (LNG-9): a matched sweatsuit in a relaxed shape, finished by a clean sneaker (nothing on Proportions off)
+    if (t["sweatsuit_shape"] and B.get("subcategory") in SWEAT_BOTTOMS and _sweatsuit(o)
+            and not any(r["points"] < 0 for r in p.reasons)):
+        top = next(g for g in o["tops"] + o["outers"] if g.get("subcategory") in SWEAT_TOPS)
+        good = (B.get("leg_shape") not in NARROW and (B.get("volume") or 3) >= 3 and (top.get("volume") or 3) >= 3
+                and ((top.get("volume") or 3) >= 4 or B.get("leg_shape") in R.LOOSE))
+        if good and S is not None and S.get("subcategory") in SPORT_SNEAKERS and _earns(S) and _earns(top):
+            p.add(t["sweatsuit_shape"], "a matched set in a relaxed shape, finished by clean sneakers", "PR7_sweatsuit_shape")
     return p
 
 
@@ -1025,6 +1116,12 @@ def _shoes(o, occasion, sl, t):
         real = ramp(fs, 2.0, 2.5)
         if athletic_bottom and sub not in R.FOOT_KIND["sneakers"]:
             real = 0.0
+        if t["sd1_any_sneaker"] and (sub in SPORT_SNEAKERS or sub in R.FOOT_KIND["boots"]):
+            real = 1.0                     # v14: a clean sneaker or boot is a real shoe; the window decides the match
+        # v14: a shoe too heavy for the leg (SW1 below) doesn't suit the outfit: no match and no "look's own shoe"
+        heavy = t["sw1_blocks_credit"] and leg in NARROW and (sub in BULKY or sub in RUNNER)
+        if heavy:
+            real = 0.0
         p.add(0.5 * up * real * _match_window(gap), "the shoes match how dressed-up the clothes are", "SD1_matches")
         # chosen for this look: the shoe is an anchor or home shoe of a style the clothes read as WITHOUT the shoe
         # (detection without the shoe, so the shoe can't reward itself; cohesion.md / shoes.md S-C)
@@ -1032,7 +1129,9 @@ def _shoes(o, occasion, sl, t):
         role = max([R.STYLES[st][0](S, c)[0] for st in o["det_noshoe"]] or [0])
         subs = {g.get("subcategory") for g in o["main"]}
         suit = "suit_jacket" in subs and "suit_trousers" in subs
-        if role and _earns(S):
+        if heavy:
+            pass
+        elif role and _earns(S):
             p.add(0.5 * up, f"a {R.STYLE_NAMES[o['det_noshoe'][0]]} shoe for a {R.STYLE_NAMES[o['det_noshoe'][0]]} outfit"
                   if len(o["det_noshoe"]) == 1 else "the shoes belong to the look", "SC_chosen_for_look")
         elif t["sc_pair"] and _earns(S) and any(
@@ -1201,6 +1300,10 @@ def _cohesion(o, boldness, t):
             g = pat[0]
             p.add(t["h4"], f"the {(g.get('pattern') or 'patterned').replace('_', ' ')} {(g.get('subcategory') or 'piece').replace('_', ' ')} is the one standout",
                   "H4_standout_piece")
+    if t["tracksuit"]:                                                # v14 (VSP-9): a matched tracksuit
+        J = [g for g in o["outers"] if g.get("subcategory") == "track_jacket"]
+        if J and B is not None and B.get("subcategory") == "track_pants" and _fam(J[0]) == _fam(B):
+            p.add(t["tracksuit"], "a matched tracksuit, worn as one set", "H7_tracksuit")
     return p
 
 
@@ -1343,15 +1446,26 @@ def _occasion(o, occasion, t):
             ceilings.append((4.0, "athletic bottoms at a dressy occasion"))
         else:
             dressed = any(x.get("subcategory") in R.DRESSED_OUTER for x in o["outers"]) or \
-                any(t.get("subcategory") in R.DRESSED_TOPS for t in o["tops"])
+                any(g.get("subcategory") in R.DRESSED_TOPS for g in o["tops"])
+            if t["sweatsuit_sign"] and _sweatsuit(o):               # v14 (LNG-9): a matched set is chosen on purpose
+                dressed = True
+            look_sign = False
+            if t["look_sign"] and not dressed and o["det"] and occasion in R.ATHLETIC_AS_CASUAL:
+                dressed, look_sign = True, True                     # v14 (LNG-2): reading as a look is the sign
             # shoes out of the photo count as a real shoe: what isn't in the photo never costs points
             real_shoe = bool(S is None or S.get("subcategory") not in R.NOT_REAL_SHOES)
-            kit = B.get("subcategory") == "athletic_shorts" and any(t.get("subcategory") == "jersey" for t in o["tops"])
+            kit = B.get("subcategory") == "athletic_shorts" and any(g.get("subcategory") == "jersey" for g in o["tops"])
             signs = 0 if kit else int(dressed) + int(real_shoe)
             hero = signs == 2 and bool(R.Outfit(o["main"]).hero)
             gym_shorts_ok = B.get("subcategory") == "athletic_shorts" and not kit and real_shoe
-            if not hero and not gym_shorts_ok:
-                lift = t["lounge_style"] if o["det"] else 0.0       # v8: a clear style around the sweats
+            if (t["gym_runner_unheld"] and B.get("subcategory") == "athletic_shorts" and not kit and S is not None
+                    and S.get("subcategory") in RUNNER and occasion in R.ATHLETIC_AS_CASUAL):
+                gym_shorts_ok = True                                # v14 (LNG-8): the parts decide
+            if kit and t["kit_cap"] is not None:                    # v14 (LNG-4): the kit's hold follows its fit
+                ceilings.append((t["kit_cap"], "a full kit out of the game"))
+                o["kit_hold"] = True
+            elif not hero and not gym_shorts_ok:
+                lift = t["lounge_style"] if (o["det"] and not look_sign) else 0.0   # v8: a clear style around the sweats
                 ceilings.append(({0: 5.5, 1: 6.5, 2: 7.5}[signs] + lift, "loungewear out of the house"))
     if dressy_room and S is not None and S.get("subcategory") in SLIDES:
         ceilings.append((4.0, "slides at a dressy occasion"))
@@ -1380,13 +1494,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v13", tune=None):
+def _tune(engine="v14", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v13", tune=None):
+def earned_bonus(part_scores, engine="v14", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1400,7 +1514,7 @@ def earned_bonus(part_scores, engine="v13", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v13", tune=None):
+def piled_penalty(part_scores, engine="v14", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1411,7 +1525,7 @@ def piled_penalty(part_scores, engine="v13", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v13", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v14", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1450,7 +1564,7 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v13", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v14", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
     _second_look). engine: "v13" (v12 + wrinkled knit tops cost 0.2 on a minimal, smart casual or prep look; default),
@@ -1487,9 +1601,24 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     if not live:
         return {"overall": None, "reason": "no_part_readable", "parts": res, "na_parts": PART_ORDER[:]}
     cond = _condition(o, scene, occasion, care_tips)
+    if t["goes_together"] and "cohesion" in live:                      # v14 (STY-12): the pieces go together
+        subs = {g.get("subcategory") for g in o["main"]}
+        suit = "suit_jacket" in subs and "suit_trousers" in subs
+        if (not o["det"] and not suit and len(o["slots"]) == 3 and live.get("shoes", {}).get("score", 0) > BASE
+                and all(r["score"] >= BASE for r in live.values()) and not cond["faults"]):
+            parts["cohesion"].add(t["goes_together"], "the pieces go together: nothing off, and the shoes suit the clothes",
+                                  "H6_goes_together")
+            res["cohesion"] = parts["cohesion"].result(lo=1.0)
+            live["cohesion"] = res["cohesion"]
     occ = _occasion(o, occasion, t)
     care_or_strain = any(_care_fault(g) for g in o["main"]) or any(g.get("strain") == "clear" for g in o["main"])
     ps = {k: r["score"] for k, r in live.items()}
+    if o.get("kit_hold") and occ["ceiling"] is not None and t["kit_fit_rate"]:   # v14 (LNG-4): fit moves the kit's hold
+        cut = t["kit_fit_rate"] * max(0.0, BASE - min(ps.get(k, BASE) for k in ("proportions", "fit")))
+        if cut > 0 and t["kit_cap"] - cut < occ["ceiling"]:
+            occ["ceiling"] = round(t["kit_cap"] - cut, 3)
+            occ["lines"][-1] = f"a full kit out of the game, and it doesn't fit cleanly: held to {round_half(occ['ceiling'])}"
+            occ["status"] = occ["lines"][-1]
     avg, x, floored, wsum = combine(ps, cond, occ, occasion, care_or_strain, engine, tune)
     bonus = earned_bonus(ps, engine, tune)
     penalty = piled_penalty(ps, engine, tune)                        # v8 (0 in v1-v7): problems in several parts add up

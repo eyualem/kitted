@@ -8,6 +8,7 @@ import { useTheme } from '@/design-system';
 import { sym } from '@/design-system/symbols';
 import { t } from '@/i18n/en';
 import { StylistBar } from '@/features/stylist/StylistBar';
+import { useComposerOpen } from '@/features/stylist/composerState';
 
 export default function TabsLayout() {
   const { colors } = useTheme();
@@ -17,10 +18,14 @@ export default function TabsLayout() {
   // thread itself: not on Past chats, and never on the other tabs.
   const segments = useSegments() as string[];
   const onThread = segments[segments.length - 1] === 'stylist' || (segments.includes('stylist') && segments[segments.length - 1] === 'index');
+  // While the composer is open the accessory leaves the tab bar. The tab bar draws above the screen, so
+  // its glass capsule (still there with its words faded) lensed the open composer resting under it: the
+  // words, mic and send showed blurred, with bent copies above and below (07 §19, #319).
+  const composerOpen = useComposerOpen() !== null;
   return (
     // The selected tab is ink, not copper (founder, #276): copper is for score movement only.
     <NativeTabs tintColor={colors.ink} minimizeBehavior="onScrollDown">
-      {onThread ? (
+      {onThread && !composerOpen ? (
         <NativeTabs.BottomAccessory>
           <StylistBar />
         </NativeTabs.BottomAccessory>

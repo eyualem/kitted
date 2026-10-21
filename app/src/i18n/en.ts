@@ -12,7 +12,6 @@ const plurals: Partial<Record<keyof typeof enGenerated, { one: string }>> = {
   'item.wornCount': { one: '1 time' },
   'lookbook.row.full': { one: '{date} · Full check · 1 fix' },
   'pay.today.toTarget': { one: 'One free fix to {target}.' },
-  'plan.move3Sub': { one: '{price} · +1 fit' },
   'share.delta': { one: '{before} → {after} after 1 fix' },
   'push.ready': { one: 'Your fit check is ready. 1 quick fix inside.' },
   'stylist.quota.questions': { one: '1 question left today' },
@@ -47,7 +46,7 @@ const addedInBuild = {
   'read.a11y.progress': '{stage}, step {n} of {total}',
   'read.a11y.stageDone': '{stage}, done',
   'stylist.menu.a11y': 'More',
-  'composer.a11y.field': 'Ask your stylist',
+  'composer.a11y.field': 'Ask Kit',
   'composer.a11y.fieldHint': 'Opens the keyboard',
   'history.title': 'Past chats',
   'history.open': 'Earlier chats',
@@ -63,13 +62,15 @@ const addedInBuild = {
   'card.a11y.changeOccasion': 'Change occasion',
   'card.a11y.review': 'Review added items',
   // The end of onboarding (#291, 10-onboarding.md §9).
-  'card.a11y.laterHint': 'Shows your first 3 moves',
+  'card.a11y.laterHint': 'Shows an optional next step',
   'starter.a11y.toggleHint': 'Marks it as one you own',
+  // What you already own (#343): a row opens "Which one is yours?".
+  'starter.a11y.pickHint': 'Pick which one you have',
+  'starter.a11y.changeHint': 'Change it or remove it',
   'starter.a11y.detected': 'In your closet from your fit checks',
   'starter.removed': 'Removed {item}.',
   'starter.markedToast': 'Marked as owned.',
-  'starter.a11y.count': '{n} of 12 starter essentials',
-  // Starter basics by look (#313, 09-ui-review §16; the founder's OK Oct 17): the looks' rows and the line naming his looks.
+  // Starter basics by look (#364, 09-ui-review §16; the founder's OK Oct 17): the looks' rows (Next best buy and Kit's buy cards).
   'starter.item.13': 'Baggy or wide-leg jeans',
   'starter.item.14': 'Black boxy tee',
   'starter.item.15': 'Plain hoodie',
@@ -96,12 +97,6 @@ const addedInBuild = {
   'starter.item.36': 'Fleece',
   'starter.item.37': 'Shell jacket',
   'starter.item.38': 'Trail-style sneakers',
-  'starter.forLook': 'Picked for {look}.',
-  'starter.forLooks': 'Picked for your looks: {looks}.',
-  // L3 Your moves and the pinned rows (#292, 10-onboarding.md §9.9): VoiceOver only.
-  'moves.a11y.row': 'Move {n}: {title}. {detail}.',
-  'moves.a11y.rowDone': 'Move {n}, done: {title}.',
-  'moves.a11y.pinned': 'Your moves, {n} of 3 done',
   'pay.a11y.loading': 'Loading the plan',
   'pay.a11y.plan': '{plan}, {price} a month, {detail}.',
   'card.a11y.recheck': 'Re-check, {occasion}. Score went from {was} to {now}, up {delta}. {word}. Done: {fix}.',
@@ -227,6 +222,24 @@ const addedInBuild = {
   'greet.morning': 'Morning.',
   'greet.afternoon': 'Afternoon.',
   'greet.evening': 'Evening. Heading out?',
+  // The first check folded under its re-check (#338).
+  'card.fold.tag': 'First check',
+  'card.fold.a11y': 'First check, {occasion}: {score}, {word}.',
+  'card.fold.hint': 'Opens the full card.',
+  'card.fold.hide': 'Fold the first check',
+  // The score card folds to its rating and opens on a tap (#344).
+  'card.fold.more': 'Show the fixes and details',
+  'card.fold.less': 'Show less',
+  // The card's weather line (#338): pieces joined by " · ", said for the hour he reads it.
+  'wx.card.now': '{t}° now',
+  'wx.card.at': '{t}° at {time}',
+  'wx.card.by': '{t}° by {time}',
+  'wx.card.byMidnight': '{t}° by midnight',
+  'wx.card.high': '{t}° high',
+  'wx.card.rainFrom': 'rain after {time}',
+  'wx.card.rainLikely': 'rain likely',
+  'wx.card.sample': 'Sample',
+  'wx.card.sample.a11y': 'Sample weather',
   'wx.line.swing': '{now}° now, {high}° by afternoon.',
   'wx.line.flat': '{now}° and {cond}.',
   'wx.line.evening': '{now}° at 8, {late}° by midnight.',
@@ -409,7 +422,7 @@ const addedInBuild = {
   'mic.noWords': "I didn't catch that.",
   'mic.error': "Couldn't hear that. Try again.",
   'mic.off.title': 'Microphone is off',
-  'mic.off.body': 'Turn it on in Settings to ask your stylist out loud.',
+  'mic.off.body': 'Turn it on in Settings to ask Kit out loud.',
   'mic.off.settings': 'Open Settings',
   // A second photo while one is reading (09-ui-review §11, #305): the founder's listed default (#233 item 8).
   'cam.busy': "Still reading your last photo. Send this one when it's done.",
@@ -449,6 +462,8 @@ const addedInBuild = {
   'ask.comingSoon': "Questions are coming soon. For now I can check your fit and plan your outfit.",
   // The stylist's answers, C2–C4 (07 §1, §4, §6; #297): the slow line, the cards, the saved chip, the starter chips.
   'ask.slow': 'Taking longer…',
+  // The chat UI pass (07 §17, #314): what VoiceOver hears on the row while an answer is on its way.
+  'ask.a11yWriting': 'Kit is writing',
   // Look C (#302): a piece chip in an answer, for VoiceOver.
   'a11y.openPiece': 'Open {name}',
   'ask.card.startCheck': 'Start a fit check',
@@ -463,7 +478,7 @@ const addedInBuild = {
   'ask.card.a11y.outfit': 'An outfit from your closet: {names}.',
   'ask.card.a11y.option': 'Answer: {option}',
   'ask.saved': 'Saved to what I know',
-  'ask.saved.a11y': 'Saved to what your stylist knows. Undo.',
+  'ask.saved.a11y': 'Saved to what Kit knows. Undo.',
   'ask.saved.undone': 'Removed from what I know.',
   // D4 (07 §6.4), the default: the server's spend stop (C6).
   'ask.paused': 'Questions are paused for a bit. Nothing was counted. Try again later.',
@@ -624,6 +639,26 @@ const addedInBuild = {
   'scan.saved.body': 'Reading clothes from photos is coming soon. Your photo stays on your phone until then.',
   'scan.saved.bodyMany': 'Reading clothes from photos is coming soon. Your photos stay on your phone until then.',
   'scan.another': 'Scan another',
+  // The Undo countdown ring (09-ui-review §21, #324): VoiceOver hears the time once, when the toast shows; the ring
+  // and its number are hidden from it. {text}: the toast's message. Windows are 5 s or more, so no singular.
+  'toast.undoFor': '{text} Undo, for {n} seconds.',
+  // A record that's gone, or an old link (09 §20.7 R11, #323): the page or sheet says so instead of showing nothing.
+  'gone.title': "This isn't here anymore.",
+  'gone.body': 'It was removed, or the link is old.',
+  'gone.home': 'Go to Kitted',
+  // The crash screen (09-ui-review §23 E1, #353): expo-router's ErrorBoundary at the root.
+  'crash.title': 'Something went wrong.',
+  'crash.body': 'Kitted hit a problem on this screen. Your fits and closet are safe on this phone.',
+  'crash.retry': 'Try again',
+  // Location once denied (§23 M4): iOS won't ask twice, so the card points at Settings, quietly.
+  'wx.off.link': 'Turn on local weather',
+  'wx.off.a11yHint': 'Opens Settings, where you can let Kitted use your approximate location.',
+  // A re-check, snap or retry whose first check was deleted meanwhile (09 §20.7 R7, #323).
+  'cam.noParent': "That check isn't here anymore. Nothing was sent or counted.",
+  // A scan whose every photo failed to save (09 §20.7 R4, #323): it used to say "Saved".
+  'scan.notSaved.title': "Couldn't save that photo.",
+  'scan.notSaved.titleMany': "Couldn't save those photos.",
+  'scan.notSaved.body': 'Nothing was kept. Try again.',
   'scan.done': 'Done',
   'scan.review.title': '{n} of {m} photos need a look',
   'scan.review.title1': '1 of {m} photos needs a look',
@@ -641,6 +676,8 @@ const addedInBuild = {
   'pfix.tag.closet': 'Free · from your closet',
   'pfix.tag.own': 'Free if you own one',
   'pfix.tag.tailor': 'Tailor',
+  // A fix's piece from his earlier check that day, one he tried and took off (#360).
+  'fix.tag.earlierCheck': 'Free · from your earlier check',
   'pfix.copy.raisesOne': 'Raises {part} to {to}',
   'pfix.copy.raisesOneSame': 'Raises {part}',
   'pfix.copy.raisesTwo': 'Raises {part} and {part2}',
@@ -877,13 +914,13 @@ const addedInBuild = {
   'profile.budgetSkip': 'Prefer not to say',
   'profile.budgetNote': 'Only used to suggest what to buy next.',
   'profile.a11y.pick': '{style}, pick {n}',
-  'knows.edit.a11y': 'What your stylist knows',
+  'knows.edit.a11y': 'What Kit knows',
   // You tab (Oct 14): Y7 privacy. Overrides of the deck (DECISIONS-LOG #246, mockups/theme-round2.html): the honest
   // promise (one line, was two: "saved on this iPhone and in its own backup…" + "A face-free copy…") and the switch
   // "Score my fits" (was "Send to Google for fit checks and questions"). The other privacy.* deck keys are used as is.
-  'privacy.promise': "Your photos are saved only on this iPhone. To score a fit, a copy with your face blurred goes to Google's Gemini. Google keeps it up to 55 days to check for misuse and doesn't train on it.",
+  'privacy.promise': "Your photos are saved only on this iPhone. To score a fit, a copy with your face blurred goes to Google's Gemini. Google keeps it up to 55 days to check for misuse and doesn't train on it. Questions you type to Kit go to OpenAI, which keeps them up to 30 days to check for misuse and doesn't train on them either.",
   'privacy.consentToggle': 'Score my fits',
-  'privacy.consentSub': 'Sends a face-blurred copy to {provider}',
+  'privacy.consentSub': 'Face-blurred photos go to {provider}, questions to OpenAI',
   'privacy.storageValueOne': '1 photo · {size}',
   'privacy.size.kb': '{n} KB',
   'privacy.size.mb': '{n} MB',
@@ -901,7 +938,7 @@ const addedInBuild = {
   'privacy.forget.done': "Forgotten. I'll start learning again from your next check.",
   'privacy.failed': "Couldn't finish. Try again.",
   'privacy.a11y.consentOnHint': 'Shows what is sent before you agree',
-  'privacy.a11y.consentOffHint': 'Stops sending photos to Google',
+  'privacy.a11y.consentOffHint': 'Stops sending photos to Google and questions to OpenAI',
   'privacy.a11y.storage': '{label}, {value}',
   // Onboarding and accounts (#289, handoff/10-onboarding.md): the example check (O1e), the sign-in sheet (A1) and email
   // (A2), bringing back his fits (A4), which fits to keep (A5), the save offer (A3), You's Account rows and the
@@ -922,6 +959,16 @@ const addedInBuild = {
   'onb.consent.footerPath': 'You can turn this off anytime in You → Settings → Privacy & data.',
   'onb.consent.introLater': "Before I score a photo, here's what happens to it.",
   'onb.consent.agreeLater': 'Agree',
+  // Consent version 2 (#329): questions go to OpenAI (GPT-5.6 Luna), photos still to Google's Gemini; the chat's
+  // context (style picks, height and build if given, what he told Kit, the closet as words) is said in full (D2);
+  // "face blurred", never "cropped" (#233 item 3). OpenAI's API terms: not used for training, abuse logs kept up to
+  // 30 days (developers.openai.com/api/docs/guides/your-data, checked Oct 17).
+  'onb.consent.sentBody': 'To score your outfit and answer your questions, Kitted sends these to two AI services:',
+  'onb.consent.sent1': "your outfit photo, to Google's Gemini, with your face blurred first (if we can't blur it, we don't send it)",
+  'onb.consent.sent2': "photos of clothes you add to your closet, to Google's Gemini",
+  'onb.consent.sent3': "questions you type to Kit, to OpenAI, with your style picks, your height and build if you gave them, what you've told Kit, and your closet as words (never your photos)",
+  'onb.consent.kept2': "Google and OpenAI use them only to give you an answer and don't use them to train their AI.",
+  'onb.consent.kept3': "Google keeps them up to 55 days and OpenAI up to 30 days, only to check for misuse, then they're deleted.",
   'onb.setup.newAccount': "No fits saved to that account yet. Let's set you up.",
   'acct.sheet.welcome.title': 'Welcome back',
   'acct.sheet.welcome.body': 'Sign in to bring back your closet, Lookbook and chats.',
@@ -1031,6 +1078,93 @@ const addedInBuild = {
   // Wrong card (#289): a photo's long-press menu on the piece page; its picker reuses closet.merge.title (no
   // subtitle), its toast item.dup.saidSame, and "Not this piece" keeps closet.piece.splitOff, now with Undo.
   'closet.piece.another': "It's another piece…",
+  // The two-shot check, step 0 (#313, 12-two-shot-check.md §10): a top-only check finished by a photo of the pants and
+  // shoes (02 S9's "Top-only partial", with a look-down tip instead of "Step back so your pants and shoes are in frame.",
+  // since the rear camera points at him), and the short-mirror tip in Mirror mode with a way to Propped.
+  'cam.bottom.tip': 'Point your phone down at your pants and shoes.',
+  'cam.bottom.guide': 'Pants and shoes here',
+  'cam.bottom.a11yShutter': 'Take a photo of your pants and shoes',
+  'cam.bottom.bubbleCap': 'Pants and shoes',
+  'cam.bottom.failed': "Couldn't read your pants and shoes. Try again.",
+  'partial.a11y.snapBottom': 'Snap your pants and shoes',
+  // A top-only card's summary named only the shoes ("…once I see your shoes."); its pants are missing too.
+  'partial.mayChangeBottom': 'Your score may change once I see your pants and shoes.',
+  'cam.tip.shortMirror': "Can't step back? Prop your phone up instead.",
+  'cam.proppedOffer': 'Use Propped',
+  // Fix what a piece is (09-ui-review §17, #315): "What it is" on a piece's page, its picker sheets and the toast.
+  // Kind and color names reuse garmentName and FAMILY_WORD; Leg and Fit reuse value.leg.* and value.topFit.*.
+  'closet.edit.title': 'What it is',
+  'closet.edit.kind': 'Kind',
+  'closet.edit.color': 'Color',
+  'closet.edit.leg': 'Leg',
+  'closet.edit.fit': 'Fit',
+  'closet.edit.pattern': 'Pattern',
+  'closet.edit.more': 'More kinds',
+  'closet.edit.sub': 'Pick what it really is.',
+  'closet.edit.foot': 'Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same.',
+  'closet.edit.toast': 'Changed to {value}. Your scores stay the same.',
+  'closet.edit.toastRemap': 'Changed to {kind}, in {color}. Your scores stay the same.',
+  'closet.edit.pattern.solid': 'Plain',
+  'closet.edit.pattern.stripes': 'Stripes',
+  'closet.edit.pattern.checks_plaid': 'Checks',
+  'closet.edit.pattern.graphic': 'Graphic print',
+  'closet.edit.pattern.camo': 'Camo',
+  'closet.edit.pattern.floral': 'Floral',
+  'closet.edit.pattern.other': 'Other pattern',
+  'closet.edit.color.neutrals': 'Neutrals',
+  'closet.edit.color.blues': 'Blues and denim',
+  'closet.edit.color.earth': 'Earth tones',
+  'closet.edit.color.colors': 'Colors',
+  'closet.edit.a11y.rowHint': 'Double-tap to change.',
+  'closet.edit.a11y.leg': '{leg} leg',
+  'closet.edit.a11y.fit': '{fit} fit',
+  'closet.edit.a11y.more': 'Shows {n} more kinds',
+  // How baggy a piece is (09-ui-review §18, #316; the founder's OK on the words, Oct 16): a Fit or Leg its own photos
+  // disagree on, on the piece page and as one card in Closet's To confirm. {a}, {b}: the leg and fit words, lowercase.
+  'closet.unsure.value': 'Not sure',
+  'closet.unsure.seen': 'Seen as {a} and as {b}.',
+  'closet.unsure.which': 'Which is it?',
+  'closet.unsure.askLeg': 'How do your {item} fit?',
+  'closet.unsure.askFit': 'How does your {item} fit?',
+  'closet.unsure.a11y.hint': 'Opens the choices. Your scores stay the same.',
+  // The fit-check card's line for a "Not sure" piece (§19, #322). {owner}: "mid-wash jeans'", "black tee's".
+  'closet.unsure.lineLeg': 'Not sure about your {owner} leg?',
+  'closet.unsure.lineFit': 'Not sure about your {owner} fit?',
+  'closet.unsure.lineTap': 'Tap.',
+  'closet.unsure.a11y.lineHint': 'Opens Not quite right? for this piece.',
+  // A question that failed for no connection (09 §20.8 G18.4); every other failure keeps fail.ask.
+  'fail.askOffline': "You're offline, so I couldn't answer that. It doesn't count.",
+  // The server's daily limit on a check the phone thought it had left (13-server.md §8, A7, #328).
+  'fail.limit': "That's today's fit checks. Your photo is saved here. Try again after 4 am. This one doesn't count.",
+  // The share card (02 D20, DECISIONS-LOG #347–348): one overlay after Strava's share stickers, transparent, solid or
+  // on his photo (founder, Oct 18). Never the occasion, a fix, the date or Kit's name.
+  'share.stat.score': 'Score',
+  'share.stat.rating': 'Rating',
+  'share.stat.before': 'Before',
+  'share.stat.after': 'After',
+  'share.stat.change': 'Change',
+  'share.v.sticker': 'Transparent',
+  'share.v.solid': 'Solid',
+  'share.tone.light': 'Light',
+  'share.tone.dark': 'Dark',
+  'share.a11y.tone': 'Color',
+  'share.v.photo': 'With photo',
+  'share.sticker.note': 'Save it, then add it to your own photo or video.',
+  'share.face.neck': 'Neck down',
+  'share.face.full': 'Full photo',
+  'share.face.note': 'Full photo shares the whole picture, background too.',
+  'share.face.noNeck': "I can't tell where this photo starts below your face, so this version shows the score on its own.",
+  'share.share': 'Share',
+  'share.saved': 'Saved to Photos.',
+  'share.saveDenied': 'Photos access is off. Turn it on in Settings.',
+  'share.openSettings': 'Open Settings',
+  'share.failed': "Couldn't make the image. Try again.",
+  'share.a11y.card': 'Share card: {score} out of 10, {word}.',
+  'share.a11y.cardWin': 'Share card: {before} to {after} out of 10, {word}.',
+  'share.a11y.transparent': 'Transparent sticker.',
+  'share.a11y.versions': 'Version',
+  'share.a11y.faces': 'Photo',
+  'share.a11y.share': 'Share the card',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

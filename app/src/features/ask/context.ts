@@ -11,7 +11,7 @@
 // control characters, capped, so a piece renamed "Ignore your rules…" stays data on its own line (07 §7.4).
 // Pieces and checks get short handles (P1…, FC1…) the model names in its card; `handles` maps them back to ids.
 import { dayKey, localParts, PARTS_DATA, type DayWeather, type PartName, type Styles, type ZoneOffset } from '@kitted/core';
-import type { ChatMessage, ClosetItemRow, DailyIdeaRow, FactRow, FitCheckRow, OutfitRow } from '@/data/types';
+import type { ChatMessage, ClosetItemRow, DailyIdeaRow, FactRow, FitCheckRow, OutfitRow, WearLogRow } from '@/data/types';
 import { displayScore, scoreWordLabel } from '@/design-system/score';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { colorWord } from '@/features/fitcheck/labels';
@@ -46,6 +46,8 @@ export interface StylistSnapshot {
   checks: readonly FitCheckRow[];
   ideas: readonly DailyIdeaRow[];
   outfits: readonly OutfitRow[];
+  /** What he wore from a card (Wear this), for the rotation Kit's outfit ideas share with the card (#358). */
+  wears: readonly WearLogRow[];
 }
 
 export interface StylistContext {
@@ -235,7 +237,8 @@ export function buildStylistContext(s: StylistSnapshot, question: string): Styli
     push('', 'Earlier this week:');
     for (const c of recent) {
       const worn = piecesOf(c).map((x) => x.replace(/^P\d+ /, ''));
-      push([checkHandle.get(c.id)!, shortDay(c.createdAt, zone), `${displayScore(c.score!)} ${scoreWordLabel(c.score!)}`, occasionLabel(c.occasion), ...(worn.length ? [worn.map(lower).join(', ')] : [])].join(' · '));
+      // The weekday too: given only "Oct 20", models guessed it was a Monday (#311).
+      push([checkHandle.get(c.id)!, `${weekdayName(localParts(c.createdAt, zone).dow)}, ${shortDay(c.createdAt, zone)}`, `${displayScore(c.score!)} ${scoreWordLabel(c.score!)}`, occasionLabel(c.occasion), ...(worn.length ? [worn.map(lower).join(', ')] : [])].join(' · '));
     }
   }
 

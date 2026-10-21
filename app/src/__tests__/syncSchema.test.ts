@@ -17,6 +17,10 @@ import { dataToRow, rowToData } from '@/sync/codec';
 import {
   KV_SYNCED, SYNCED_COLLECTIONS, SYNCED_TABLES, TABLE_POLICY, fileRefs, kvPolicy, syncedFilePath, tablePolicy, type SyncedTable,
 } from '@/sync/schema';
+import { FIT_SKIP_KEY } from '@/features/closet/fitDoubt';
+import { FIT_LINE_KEY } from '@/features/closet/fitLine';
+import { FIT_LOG_KEY } from '@/features/closet/fitLog';
+import { SERVER_TIER_KV } from '@/services/server/tier';
 
 const fs = jest.requireActual('fs') as {
   readFileSync(p: string, e: string): string;
@@ -135,7 +139,7 @@ describe('S5 and S6 everything is classified', () => {
       LOOKS_KEY, OTHER_STYLE_KEY, BASICS_KEY, INBOX_KEY, GOING_FOR_LAST_KV, PENDING_DELETES_KV, WEATHER_PERMISSION_KV,
       PERMISSION_KV: WEATHER_PERMISSION_KV, MODE_KEY: 'camera.mode', REVEAL_KV: KV.revealFullShown,
       ACCOUNT_KEY: 'account.user', OFFER_KEY: 'account.offer', ONBOARDING_STEP_KEY: KV.onboardingStep,
-      FINISH_KEY, STARTER_MARKS_KEY, SEGMENT_KEY,
+      FINISH_KEY, STARTER_MARKS_KEY, SEGMENT_KEY, FIT_SKIP_KEY, FIT_LINE_KEY, FIT_LOG_KEY, SERVER_TIER_KV,
     };
     const resolve = (expr: string): string[] | null => {
       const e = expr.trim();
@@ -148,6 +152,8 @@ describe('S5 and S6 everything is classified', () => {
         return v === undefined ? null : [v];
       }
       if (/^KV\.style\(/.test(e)) return ['idea.style.day', 'idea.style.evening'];
+      if (/^KV\.touched\(/.test(e)) return ['idea.touched.2026-10-22|day'];
+      if (/^KV\.swapped\(/.test(e)) return ['idea.swapped.2026-10-22|day'];
       if (/^NOTIFY_KEY\[/.test(e)) return [KV.notifyIdea, KV.notifyReady, KV.notifyTrial];
       if (/^CURSOR_KV\(/.test(e)) return ['sync.cursor.x'];
       if (e === 'key' || e === 'k' || e === 'step.key') return []; // generic helpers (the store, the engine, demo steps, tests)

@@ -1,5 +1,6 @@
 // Camera guidance (#100): the tip order, the flicker filter and the after-shot reasons.
 import { createTipFilter, fitIssue, fitTip, scanIssue, scanTip, T, type FitTip } from '@/features/camera/guidance';
+import { fitTipCopy } from '@/features/camera/guidanceCopy';
 import type { GuideEvent, StillAssessment } from '../../modules/kitted-vision';
 
 const ok = (extra: Partial<GuideEvent> = {}): GuideEvent => ({ state: 'good', faces: [], luma: 0.5, subjectLuma: 0.5, clipped: 0, bodyShare: 0.7, motion: 0, ...extra });
@@ -44,6 +45,15 @@ describe('fit-check live tips', () => {
     expect(fitTip(ok({ bodyShare: 0.2 }), propped).tip).toBe('tooFar');
     expect(fitTip(ok({ state: 'tooClose', bodyShare: 0.2 }), propped).tip).toBe('tooClose');
     expect(fitTip(ok({ state: 'moveLeft' }), propped).tip).toBe('moveLeft');
+  });
+
+  it('S0.8 (#313): in Mirror, no hips is a short mirror, not "step back"; Propped still says step back', () => {
+    expect(fitTip(ok({ state: 'tooClose' }), mirror)).toEqual({ tip: 'shortMirror', ready: false, offerFlash: false });
+    expect(fitTip({ state: 'tooClose', faces: [] }, mirror).tip).toBe('shortMirror');
+    expect(fitTip(ok({ state: 'tooClose' }), propped).tip).toBe('tooClose');
+    // Dark still comes first.
+    expect(fitTip(ok({ state: 'tooClose', subjectLuma: 0.08 }), mirror).tip).toBe('dark');
+    expect(fitTipCopy('shortMirror')).toEqual({ text: "Can't step back? Prop your phone up instead.", icon: null });
   });
 
   it('"Hold still" only in Mirror (handheld)', () => {

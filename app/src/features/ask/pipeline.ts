@@ -22,6 +22,10 @@ import { liveAnswer as defaultLive } from './live';
 import type { AnswerEvent, AnswerSource } from './source';
 
 /** No first word by then: "Taking longer…" (07 §6.4). */
+/** The longest question (09 §20.7 R8, #323): the field takes no more, and the send path cuts dictation to it, so a
+ *  pasted essay never becomes the prompt (a cost risk once the server pays). */
+export const QUESTION_MAX_CHARS = 500;
+
 export const SLOW_MS = 6_000;
 /** No first word by then, or the stream stalls that long: the fail line, nothing counted (07 §6.4, A3). */
 export const GIVE_UP_MS = 20_000;
@@ -67,14 +71,23 @@ export interface AskDeps {
   consent: () => Promise<boolean>;
   /** Opens the agreement; the draft waits in the composer. */
   openConsent: () => void;
-  /** No connectivity signal exists in the app yet: true until one does (07 §6.4 offline state). */
+  /** The phone's connection (services/connectivity.ts; 07 §6.4, 09 §20.8 G18). Default: online. */
   online?: () => boolean;
+  /** A call failed for no connection: is the phone really offline? (G18.4: then the offline line, not fail.ask.)
+   *  Default: yes. Any answer that arrives reports the phone online. */
+  confirmOffline?: () => Promise<boolean>;
+  reportOnline?: () => void;
   /** The paywall is built (P6): the free limit line gets "Try Pro". */
   tryPro: () => boolean;
   /** Event names only, never his words (02 S27, 07 §7.5). */
   log?: (event: string) => void;
   /** VoiceOver reads the answer once it's complete (07 §6.1). */
   onAnswered?: (text: string) => void;
+  /**
+   * Any other stylist line it posts (the support card, a refusal, the limit line, the failed or paused line): VoiceOver
+   * hears those once too (07 §17, U14); before, only an answer was spoken, so a distress message got silence.
+   */
+  onPosted?: (text: string) => void;
   live?: typeof defaultLive;
 }
 
@@ -139,14 +152,18 @@ export function createAsk(deps: AskDeps) {
     return null;
   }
 
-  async function limitLine(after: number): Promise<void> {
+  async function limitLine(after: number): Promise<string> {
     const pro = (await quota.snapshot()).pro;
-    await store.chat.put(row(ids('M'), after + 1, 'stylist', t(pro ? 'ask.limit.pro' : 'ask.limit.free'), { kind: 'card', cardType: 'limit' }, { tryPro: !pro && deps.tryPro() }));
+    const text = t(pro ? 'ask.limit.pro' : 'ask.limit.free');
+    const id = ids('M');
+    await store.chat.put(row(id, after + 1, 'stylist', text, { kind: 'card', cardType: 'limit' }, { tryPro: !pro && deps.tryPro() }));
+    deps.onPosted?.(text);
+    return id;
   }
 
   /** One call to the source, gated sentence by sentence (A4–A5), with the first-word timers (A3). */
   async function call(
-    source: AnswerSource, question: ChatMessage, prompt: Prepared['prompt'], gate: GateContext, followUp: boolean,
+    source: AnswerSource, question: ChatMessage, prompt: Prepared['prompt'], gate: GateContext, followUp: boolean, tap = false,
   ): Promise<{ done: Extract<AnswerEvent, { type: 'done' }> | null; failed: string | null; text: string; dropped: GateRule[] }> {
     const ctrl = new AbortController();
     const sentences = createSentenceStream(gate);
@@ -169,7 +186,7 @@ export function createAsk(deps: AskDeps) {
     };
     if (sch) slowTimer = sch.setTimer(() => live.slow(), SLOW_MS);
     armGiveUp();
-    const it = source.answer({ question: question.text ?? '', signal: ctrl.signal, ...(prompt ? { prompt } : {}), ...(followUp ? { followUp } : {}) });
+    const it = source.answer({ question: question.text ?? '', signal: ctrl.signal, ...(prompt ? { prompt } : {}), ...(followUp ? { followUp } : {}), ...(tap ? { tap } : {}) });
     try {
       for (;;) {
         const next = await Promise.race([it.next(), stopped]);
@@ -179,7 +196,7 @@ export function createAsk(deps: AskDeps) {
         if (ev.type === 'delta') {
           armGiveUp(); // a stream that stalls 20 s gives up too
           const show = sentences.push(ev.text);
-          if (show) live.append(show);
+          if (show) live.append(show, question.id);
         } else if (ev.type === 'done') {
           done = ev;
           break;
@@ -199,7 +216,7 @@ export function createAsk(deps: AskDeps) {
     }
     if (!failed && done) {
       const rest = sentences.end();
-      if (rest) live.append(rest);
+      if (rest) live.append(rest, question.id);
     }
     return { done, failed, text: sentences.text, dropped: sentences.dropped };
   }
@@ -217,7 +234,7 @@ export function createAsk(deps: AskDeps) {
       prep = deps.prepare ? await deps.prepare(question.text ?? '') : NO_PREP;
       gate = prep.gate;
       const source = await deps.source();
-      let r = await call(source, question, prep.prompt, gate, false);
+      let r = await call(source, question, prep.prompt, gate, false, o.tap === true);
       dropped.push(...r.dropped);
       // One lookup at most (R3): the model's first line goes, and the answer comes from the second call.
       if (!r.failed && r.done?.need && prep.lookup) {
@@ -225,7 +242,7 @@ export function createAsk(deps: AskDeps) {
         if (next) {
           live.restart();
           gate = next.gate;
-          r = await call(source, question, next.prompt, gate, true);
+          r = await call(source, question, next.prompt, gate, true, o.tap === true);
           dropped.push(...r.dropped);
           if (r.done) r.done = { ...r.done, need: null };
           log('lookup');
@@ -248,16 +265,30 @@ export function createAsk(deps: AskDeps) {
         const id = replaces?.id ?? ids('M');
         await store.chat.put(row(id, at, 'stylist', t('ask.paused'), {}, { askPaused: true }));
         live.clear();
+        deps.onPosted?.(t('ask.paused'));
         log('paused');
         return { kind: 'failed', messageId: id, code: 'paused' };
       }
+      if (failed === 'limit') {
+        // The server's daily limit (13 §8, A7): the same limit line as the phone's own, in the failed line's place.
+        if (replaces) await store.chat.delete(replaces.id);
+        live.clear();
+        const lineId = await limitLine(at - 1);
+        log('limit · the server');
+        return { kind: 'failed', messageId: lineId, code: 'limit' };
+      }
       if (failed || !done) {
         const id = replaces?.id ?? ids('M');
-        await store.chat.put(row(id, at, 'stylist', t('fail.ask'), {}, { askRetry: question.id }));
+        // No connection (G18.4): said so, with the same Retry; nothing counted either way.
+        const offline = failed === 'offline' && (await (deps.confirmOffline?.() ?? Promise.resolve(true)).catch(() => true));
+        const text = t(offline ? 'fail.askOffline' : 'fail.ask');
+        await store.chat.put(row(id, at, 'stylist', text, {}, { askRetry: question.id }));
         live.clear();
+        deps.onPosted?.(text);
         log(`failed · ${failed}`);
         return { kind: 'failed', messageId: id, code: failed ?? 'noDone' };
       }
+      deps.reportOnline?.();
       const counted = done.refused !== true && done.uncounted !== true && !o.tap;
       const id = ids('M');
       const clash = verdictClash(prep.verdict, done.verdict);
@@ -265,7 +296,7 @@ export function createAsk(deps: AskDeps) {
       const card = done.refused || clash || !prep.card ? null : await prep.card(done.card, gate).catch(() => null);
       const saved = done.refused || !prep.remember ? null : await prep.remember(done.remember, at).catch(() => null);
       // The live row keeps showing the words until the thread has this row (live.ts).
-      live.finish(id, answer);
+      live.finish(id, answer, at, question.id);
       if (replaces) await store.chat.delete(replaces.id);
       await store.chat.put(row(id, at, 'stylist', answer, {}, {
         answerTo: question.id, ...(done.refused ? { askRefused: true as const } : {}), ...(card ? { askCard: card } : {}),
@@ -285,6 +316,25 @@ export function createAsk(deps: AskDeps) {
     }
   }
 
+  /**
+   * One question at a time, claimed before the first await (07 §17, U2): a double tap on send, a chip, Retry or a tap
+   * answer used to pass the busy check twice while the first was still awaiting consent and the limit, and sent twice.
+   * `run` hands the question to `go` (the stream, which keeps the claim until it's done) or returns without it.
+   */
+  async function claimed(run: (go: typeof stream) => Promise<AskOutcome>): Promise<AskOutcome> {
+    if (busy || live.inFlight()) return { kind: 'busy' };
+    busy = true;
+    let streaming = false;
+    try {
+      return await run((...a) => {
+        streaming = true;
+        return stream(...a);
+      });
+    } finally {
+      if (!streaming) busy = false;
+    }
+  }
+
   return {
     /** Busy: a question is in flight (the composer's send waits). */
     get busy() {
@@ -292,7 +342,7 @@ export function createAsk(deps: AskDeps) {
     },
 
     async ask(input: string): Promise<AskOutcome> {
-      const text = input.trim();
+      const text = input.trim().slice(0, QUESTION_MAX_CHARS).trim();
       if (!text) return { kind: 'empty' };
       const now = clock.nowMs();
       const bubble = () => row(ids('M'), now, 'user', text);
@@ -300,6 +350,7 @@ export function createAsk(deps: AskDeps) {
         const q = bubble();
         await store.chat.put(q);
         await store.chat.put(row(ids('M'), now + 1, 'stylist', t('support.text'), { kind: 'card', cardType: 'support' }));
+        deps.onPosted?.(t('support.text'));
         log('support');
         return { kind: 'support', questionId: q.id };
       }
@@ -307,6 +358,7 @@ export function createAsk(deps: AskDeps) {
         const q = bubble();
         await store.chat.put(q);
         await store.chat.put(row(ids('M'), now + 1, 'stylist', t('ask.refuseFace'), {}, { askRefused: true }));
+        deps.onPosted?.(t('ask.refuseFace'));
         log('refused · on the phone');
         return { kind: 'refused', questionId: q.id };
       }
@@ -315,25 +367,27 @@ export function createAsk(deps: AskDeps) {
         const q = bubble();
         await store.chat.put(q);
         await store.chat.put(row(ids('M'), now + 1, 'stylist', t('onb.age.title'), {}, { askRefused: true }));
+        deps.onPosted?.(t('onb.age.title'));
         log('refused · under 18, on the phone');
         return { kind: 'refused', questionId: q.id };
       }
-      if (busy || live.inFlight()) return { kind: 'busy' };
-      const gate = await gates();
-      if (gate === 'consent') {
-        deps.openConsent();
-        log('consent');
-        return { kind: 'consent' };
-      }
-      if (gate === 'offline') return { kind: 'offline' };
-      const q = bubble();
-      await store.chat.put(q);
-      if (gate === 'limit') {
-        await limitLine(now);
-        log('limit');
-        return { kind: 'limit', questionId: q.id };
-      }
-      return { kind: 'sent', questionId: q.id, done: stream(q, null) };
+      return claimed(async (go) => {
+        const gate = await gates();
+        if (gate === 'consent') {
+          deps.openConsent();
+          log('consent');
+          return { kind: 'consent' };
+        }
+        if (gate === 'offline') return { kind: 'offline' };
+        const q = bubble();
+        await store.chat.put(q);
+        if (gate === 'limit') {
+          await limitLine(now);
+          log('limit');
+          return { kind: 'limit', questionId: q.id };
+        }
+        return { kind: 'sent', questionId: q.id, done: go(q, null) };
+      });
     },
 
     /**
@@ -344,16 +398,17 @@ export function createAsk(deps: AskDeps) {
       const card = await store.chat.get(cardMessageId);
       const c = card?.payload.askCard as AskCard | undefined;
       if (!card || !c || c.type !== 'ask' || !c.options.includes(option) || typeof card.payload.askTapped === 'string') return { kind: 'empty' };
-      if (busy || live.inFlight()) return { kind: 'busy' };
-      if (!(await deps.consent())) {
-        deps.openConsent();
-        return { kind: 'consent' };
-      }
-      if (!online()) return { kind: 'offline' };
-      await store.chat.patch(card.id, { payload: { ...card.payload, askTapped: option } });
-      const q = row(ids('M'), Math.max(clock.nowMs(), card.createdAt + 1), 'user', option, {}, { tapOf: card.id });
-      await store.chat.put(q);
-      return { kind: 'sent', questionId: q.id, done: stream(q, null, { tap: true }) };
+      return claimed(async (go) => {
+        if (!(await deps.consent())) {
+          deps.openConsent();
+          return { kind: 'consent' };
+        }
+        if (!online()) return { kind: 'offline' };
+        await store.chat.patch(card.id, { payload: { ...card.payload, askTapped: option } });
+        const q = row(ids('M'), Math.max(clock.nowMs(), card.createdAt + 1), 'user', option, {}, { tapOf: card.id });
+        await store.chat.put(q);
+        return { kind: 'sent', questionId: q.id, done: go(q, null, { tap: true }) };
+      });
     },
 
     /** fail.ask's Retry: the same question again, into the failed line's place. Null when there's nothing to retry. */
@@ -362,18 +417,19 @@ export function createAsk(deps: AskDeps) {
       const qid = typeof failed?.payload.askRetry === 'string' ? failed.payload.askRetry : null;
       const q = qid ? await store.chat.get(qid) : null;
       if (!failed || !q) return null;
-      if (busy || live.inFlight()) return { kind: 'busy' };
-      const gate = await gates();
-      if (gate === 'consent') {
-        deps.openConsent();
-        return { kind: 'consent' };
-      }
-      if (gate === 'offline') return { kind: 'offline' };
-      if (gate === 'limit') {
-        await limitLine(Math.max(clock.nowMs(), failed.createdAt));
-        return { kind: 'limit', questionId: q.id };
-      }
-      return { kind: 'sent', questionId: q.id, done: stream(q, failed, { tap: typeof q.payload.tapOf === 'string' }) };
+      return claimed(async (go) => {
+        const gate = await gates();
+        if (gate === 'consent') {
+          deps.openConsent();
+          return { kind: 'consent' };
+        }
+        if (gate === 'offline') return { kind: 'offline' };
+        if (gate === 'limit') {
+          await limitLine(Math.max(clock.nowMs(), failed.createdAt));
+          return { kind: 'limit', questionId: q.id };
+        }
+        return { kind: 'sent', questionId: q.id, done: go(q, failed, { tap: typeof q.payload.tapOf === 'string' }) };
+      });
     },
   };
 }

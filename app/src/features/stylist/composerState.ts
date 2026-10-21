@@ -31,6 +31,13 @@ export const composerState = {
     draft = next;
     notify();
   },
+  /** Words from the mic join the draft after anything he typed (07 §18, L4). Never sends. */
+  appendHeard(heard: string) {
+    const h = heard.trim();
+    if (!h) return;
+    const cur = draft;
+    composerState.setDraft(cur ? `${cur} ${h}` : h);
+  },
   /** After a send: clears the draft only if it's still the words that were sent (he may have typed on meanwhile). */
   clearDraftIf(sent: string) {
     if (draft.trim() === sent.trim()) composerState.setDraft('');

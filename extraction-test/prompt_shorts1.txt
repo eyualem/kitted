@@ -1,0 +1,6 @@
+This is a close-up of one person's lower body, cut from an outfit photo. Look only at the bottoms, the legs below them and the socks. Describe what you see; don't judge it.
+
+shorts_end: if the bottoms are shorts, where the shorts' hem ends against the knee. "above_knee": the hem ends on the thigh and the whole kneecap shows below it. "at_knee": the hem ends on the kneecap or covers only part of it. "below_knee": the hem ends below the kneecap, so the whole knee is covered. "not_shorts" when the bottoms are full-length pants. "cant_see" when the knees are out of frame or hidden.
+socks: the socks visible above the shoes. "not_visible": no sock shows (bare ankle, sandals or slides without socks, or socks hidden by boots or long pants). "low": a no-show or ankle sock that ends at or below the ankle bone. "crew": the sock rises above the ankle bone onto the lower calf. "tall": the sock reaches the upper calf, near the knee. "cant_see" when the feet are out of frame.
+If the two legs differ, answer for the leg you can see best.
+Return only JSON that matches the schema.

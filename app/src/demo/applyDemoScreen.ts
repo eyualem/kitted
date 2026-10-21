@@ -6,7 +6,7 @@ import { getDemoArgs, sessionClock, setDemoArgs } from '@/state/session';
 import { demoLinkIds, prepareDemoScreen } from './prepareDemoScreen';
 import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
-import { screenScenario } from './scenarios';
+import { screenScenario, type ScreenScenario } from './scenarios';
 import { prepareAccountDemo } from '@/features/account/demo';
 import { pauseFinishDemo, prepareFinishDemo } from '@/features/finish/demo';
 import { store } from '@/data/db';
@@ -14,6 +14,7 @@ import { store } from '@/data/db';
 export interface DemoTarget {
   href: Href;
   under?: Href;
+  toast?: ScreenScenario['toast'];
 }
 
 /** One set-up at a time: the route's effect can start a second run while the first is still playing its story
@@ -41,7 +42,7 @@ async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
 
   pauseFinishDemo();
   await prepareDemoScreen(scenario);
-  // Starter basics by look (#313): the screen's own picks in place of the scenario's.
+  // Starter basics by look (#364): the screen's own picks in place of the scenario's.
   if (scenario.looks) {
     const p = await store.profile.get('me');
     if (p) await store.profile.put({ ...p, styles: scenario.looks });
@@ -61,5 +62,9 @@ async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
   await new Promise((resolve) => setTimeout(resolve, 0));
   // Ids the story made ("{dup}", #280) filled into the link.
   const fill = (h: string) => h.replace(/\{(\w+)\}/g, (m, k: string) => demoLinkIds[k] ?? m);
-  return { href: fill(scenario.href) as Href, ...(scenario.under ? { under: fill(scenario.under) as Href } : {}) };
+  return {
+    href: fill(scenario.href) as Href,
+    ...(scenario.under ? { under: fill(scenario.under) as Href } : {}),
+    ...(scenario.toast ? { toast: scenario.toast } : {}),
+  };
 }

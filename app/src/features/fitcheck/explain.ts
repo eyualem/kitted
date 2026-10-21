@@ -38,7 +38,7 @@ export function cardSummary({ reading, overall, lounge, fixes, partial }: Summar
   } else {
     parts.push(t('sum.oneMove', { to: displayScore(top.to) }));
   }
-  if (partial) parts.push(t('partial.mayChange'));
+  if (partial) parts.push(t(partial === 'topOnly' ? 'partial.mayChangeBottom' : 'partial.mayChange'));
   return parts.join(' ');
 }
 

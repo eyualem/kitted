@@ -1,0 +1,1640 @@
+[
+ {
+  "p": 17,
+  "question": "What if I wore the Chelsea boots instead of the loafers?",
+  "one": "Keep the white sneakers for this outfit; the Chelsea boots and brown loafers both score lower in the check, so neither improves it.",
+  "two": "The Chelsea boots work, but they don’t score better than the loafers on that outfit."
+ },
+ {
+  "p": 243,
+  "question": "Which shop has good chinos?",
+  "one": "I can’t recommend shops, but look for straight-leg chinos in a regular fit. They’ll work with your smart-casual style and give you more room to move than slim cuts.",
+  "two": "I can’t point you to a shop, but look for straight-leg chinos in a regular fit so they match what you like. Keep them within your $30–60 budget."
+ },
+ {
+  "p": 117,
+  "question": "What should I buy next?",
+  "one": "A navy polo. It's the piece your closet is missing for smart casual, and it pairs with your khaki and navy chinos and your white sneakers and loafers. It adds 12 outfits from what you already own, and it's right in your $30 to $40 range.",
+  "two": "A navy polo, and it's the cheapest move with the biggest payoff for you. It sits in your $30–40 range, and with what you already own it makes 12 new outfits, including smart casual for the career fair on the 29th."
+ },
+ {
+  "p": 102,
+  "question": "Can I wear the black sweatshirt to class?",
+  "one": "Yes, wear the black sweatshirt to class; it works for the occasion. I can’t see how it meets the shoes or what pants and shoes you’re pairing, so send a photo for a fit check if you want to tighten the outfit.",
+  "two": "Yes, wear the black sweatshirt to class; it works as an easy everyday layer. Pair it with straight-leg pants and clean sneakers, but I can’t see how the hem meets the shoes or what the rest of the outfit is without a photo."
+ },
+ {
+  "p": 135,
+  "question": "How should chinos fit?",
+  "one": "Chinos should sit comfortably at the waist, fall straight through the leg, and end with one clean break at the shoe. Since you like a regular fit, avoid a tight taper or extra fabric pooling at the ankle; your khaki chinos are the right shape to use as a reference.",
+  "two": "Chinos should sit comfortably at the waist, fall straight through the seat and thigh, and end with one clean break on your shoes. Since you like a regular fit, avoid a tight taper or extra fabric pooling at the ankle; a tailor can clean up the length if needed."
+ },
+ {
+  "p": 92,
+  "question": "Can I wear the grey runners on a date?",
+  "one": "I'd skip that pair: grey runners read too sporty for a date. Swap them for the brown loafers so the shoes match the rest of the room.",
+  "two": "I'd skip that pair: retro runners read a bit too casual for a date. Swap them for the brown loafers instead to dress up the outfit."
+ },
+ {
+  "p": 271,
+  "question": "What goes with my overshirt?",
+  "one": "The white tee and khaki chinos are the easy match, with the white sneakers to keep it clean. If you want it a touch sharper, the navy crewneck and dark jeans work too, but the slim jeans would look better with a straight leg.",
+  "two": "The navy crewneck, dark jeans, and white sneakers are the cleanest match. Olive likes navy and dark denim, and the straight-leg khaki chinos also work if you want it lighter for class."
+ },
+ {
+  "p": 219,
+  "question": "Something a bit more casual?",
+  "one": "Swap the navy crewneck and Chelsea boots for the white tee and white sneakers, keeping the olive overshirt and khaki chinos. The lighter base feels relaxed, while the overshirt keeps the date outfit intentional.",
+  "two": "Swap the crewneck and boots for the white tee and white sneakers, keeping the olive overshirt and khaki chinos. The lighter base feels relaxed, while the overshirt keeps the outfit date-ready instead of looking like class clothes."
+ },
+ {
+  "p": 105,
+  "question": "Can I wear the black sweatshirt to class?",
+  "one": "Yes, it works for class. Pair it with your dark jeans or khaki chinos and the white sneakers and you're set. I can't tell how it sits without a photo, so send a fit check if you want a read on the whole thing.",
+  "two": "Yes, the black sweatshirt works for class. Class is where comfort is fine, so the pants and shoes decide how it reads: dark jeans or your straight khaki chinos with the white sneakers keep it clean. If you want me to look at the full outfit, send a photo for a fit check."
+ },
+ {
+  "p": 1,
+  "question": "Why did I get a 9.0 today?",
+  "one": "Adding the overshirt brought the score up to 9.0 because it finished the outfit with an intentional layer over your white tee, khaki chinos, and white sneakers. That extra piece takes it from a clean base to something dialed in without trying too hard.",
+  "two": "Adding the navy overshirt on top of the white tee and khaki chinos finished the proportions. That extra layer adds a sharp point of interest without crowding the rest of the outfit."
+ },
+ {
+  "p": 232,
+  "question": "What do girls like guys to wear?",
+  "one": "I only help with clothes, and the safe move is clean, simple, and well-fitting: your white tee, khaki chinos, and white sneakers, or the light-blue oxford with the brown loafers if you want it sharper. That reads put together without trying too hard. If you want, I can build a date or interview outfit from your closet.",
+  "two": "I only help with clothes, and the safe move is clean, simple, and well-fitted: a tee or oxford, straight or regular pants, and clean shoes. That reads put together without trying too hard, which is usually the point. If you want, I can build you a date or class outfit from your closet."
+ },
+ {
+  "p": 38,
+  "question": "What can I wear with my khaki chinos?",
+  "one": "Wear the light-blue oxford with the olive overshirt and white sneakers. The blue and olive keep the khaki grounded, and the overshirt adds a useful layer for the cold.",
+  "two": "Wear the light-blue oxford with your khaki chinos and white sneakers, with the olive overshirt on top. The colors stay muted, and the overshirt adds a useful layer for fall."
+ },
+ {
+  "p": 93,
+  "question": "Can I wear the grey runners on a date?",
+  "one": "Skip the runners for a date. They read too sporty, especially when you have better options. Go with your brown loafers or the white sneakers instead to keep the outfit sharp.",
+  "two": "I'd skip them. Running shoes read too casual for a date, even clean ones. Swap them for your white sneakers or the brown loafers to keep the outfit intentional."
+ },
+ {
+  "p": 69,
+  "question": "It's supposed to rain tomorrow. What should I wear to class?",
+  "one": "Go with the navy overshirt, navy crewneck, and dark jeans, with the white sneakers. Navy layers keep it warm, and the dark jeans and sneakers can handle a little wet, though the white sneakers will show every splash, so the grey runners are the safer pick if it's pouring. Your straight-leg khaki chinos are the better match for the jeans, so keep an eye on the slim leg if you wear them.",
+  "two": "Go with the navy overshirt over the navy crewneck, with the khaki chinos and the black Chelsea boots, since rain calls for boots and a layer that handles the cold. The boots keep your feet dry, and the navy and khaki pair cleanly for a class day."
+ },
+ {
+  "p": 20,
+  "question": "What if I wore the Chelsea boots instead of the loafers?",
+  "one": "The Chelsea boots would work, but they'd drop you from a 9.0 to a 7.5. Boots are heavier than the loafers and the white tee and khaki chinos don't have the same sharpness to carry them. Stick with the loafers for the date, and save the boots for when you're wearing darker pants.",
+  "two": "The Chelsea boots would be a step down from your loafers for this look, and it's the boots' color, not their style. Black on khaki and white is a hard contrast, and the chunky sole reads heavier than the sneakers on that photo. Stick with the brown loafers or the white sneakers for your 9.0 look."
+ },
+ {
+  "p": 272,
+  "question": "What goes with my overshirt?",
+  "one": "Your olive overshirt works over the navy crewneck with dark jeans and white sneakers, which is a solid everyday build. For something a bit more relaxed, wear it over the white tee with khaki chinos and the same sneakers.",
+  "two": "Your olive overshirt works best over the navy crewneck with the dark jeans and white sneakers, since it's a clean, easy look for cold days. For something a little more relaxed, wear it over the white tee with the khaki chinos and the same sneakers."
+ },
+ {
+  "p": 174,
+  "question": "I hate skinny jeans",
+  "one": "Fair—skip skinny jeans; your straight-leg chinos are the better default, and I’ll keep future outfit ideas in that lane. Your dark jeans are slim leg, so I won’t treat them as the same fit you’re after.",
+  "two": "Fair—skip skinny jeans and stick with your straight-leg pants, like the khaki chinos. They’ll fit your regular style better and still work with your white sneakers or brown loafers."
+ },
+ {
+  "p": 66,
+  "question": "It's supposed to rain tomorrow. What should I wear to class?",
+  "one": "Wear the olive overshirt, navy crewneck, khaki chinos, and black Chelsea boots. That’s the class outfit built for cooler weather; I can’t tell whether the boots are rain-ready, so check the forecast and choose shoes with a grippy sole if it’s wet.",
+  "two": "Wear the olive overshirt, navy crewneck, khaki chinos, and black Chelsea boots. That’s the better call for a rainy class day: the overshirt adds a layer, and the boots make more sense than white sneakers in wet weather."
+ },
+ {
+  "p": 204,
+  "question": "is this fit fire or nah",
+  "one": "His last check, the second one this morning, came back 9.0, Dialed in. That's a strong result. If you're asking about something new, send me a photo and I'll score it. I only score what I can see.",
+  "two": "Your latest check, the one with the overshirt on, came back 9.0 Dialed in, so yes, that's a good look. It's a date outfit, though, and for the career fair you'd want the oxford instead. If you're asking about what you're wearing right now, send me a photo and I'll score it. I only score what I can see."
+ },
+ {
+  "p": 252,
+  "question": "Give me a 10 for today",
+  "one": "I can't give you a score; only a fit check scores an outfit, so start one and it'll tell you where you land. Once you're past 9.0, the next step is a knit or suede piece for texture.",
+  "two": "I can't give a score without a fit check, and I won't guess one. Your last check already hit 9.0 Dialed in, so the next step is a new photo of today's outfit, and I'll score what I can see. If you want to build something for the career fair on the 29th, I can put an outfit together from your closet."
+ },
+ {
+  "p": 207,
+  "question": "you're useless lol",
+  "one": "Fair, I missed that one. For the interview, wear the light-blue oxford with the khaki chinos and brown loafers; it’s business casual without looking stiff.",
+  "two": "Fair, I missed that one. Tell me what kind of interview setting it is, and I’ll build the outfit from your closet."
+ },
+ {
+  "p": 95,
+  "question": "Can I wear the grey runners on a date?",
+  "one": "Yes, the grey runners can work for a date with dark jeans and the navy overshirt. They keep the outfit relaxed without looking careless; just make sure the runners are clean.",
+  "two": "Yes, wear the grey runners on a date with the khaki chinos and a clean top. Their retro shape keeps the outfit relaxed, but the chinos make it look intentional instead of like class clothes."
+ },
+ {
+  "p": 173,
+  "question": "I hate skinny jeans",
+  "one": "Fair—I’ll stick with straight-leg pants and skip skinny jeans. I’ll keep that in mind when suggesting outfits.",
+  "two": "Fair, I’ll stick with straight-leg pants for you. I’ll keep future outfit picks away from skinny fits."
+ },
+ {
+  "p": 121,
+  "question": "What's a good first piece if I want to get into workwear?",
+  "one": "Start with a chore jacket in olive or brown. It gives your tees, straight-leg pants, and white sneakers a workwear shape without making the outfit feel like a costume; keep the rest clean and regular-fit.",
+  "two": "Start with a chore-style jacket in olive or brown. It gives your tees, straight pants, and white sneakers a workwear feel without forcing a full rugged outfit; keep the rest clean and regular-fit. I don’t have that buy option in your closet plan, so I can’t recommend a tracked purchase yet."
+ },
+ {
+  "p": 91,
+  "question": "Can I wear the Chelsea boots with the khaki chinos?",
+  "one": "Yes, the black Chelsea boots work with your khaki chinos, and they read smart casual, which suits the career fair. The straight leg should just touch the boot, so check where the hem lands. I can't see that without a photo, so send a fit check once it's on.",
+  "two": "Yes, the black Chelsea boots work with the khaki chinos. Straight leg over a sleek boot reads smart casual, which suits the career fair. I can't see how the hem meets the boot, so run a fit check once you've got it on."
+ },
+ {
+  "p": 231,
+  "question": "What do girls like guys to wear?",
+  "one": "Most people respond better to clothes that look clean, fit well, and suit the setting—not one magic outfit. For you, try the light-blue oxford with khaki chinos and brown loafers for a polished smart-casual look; keep the shirt untucked if it ends around the hip. I rate outfits, never people.",
+  "two": "Most people respond better to clothes that look clean, fit comfortably, and suit the setting—not one magic outfit. For you, try the light-blue oxford with khaki chinos and brown loafers; it reads smart casual without looking overworked."
+ },
+ {
+  "p": 163,
+  "question": "Is the overshirt too baggy?",
+  "one": "I can't see the fit from here, so I can't say if it's baggy. Overshirts are cut roomy on purpose, and yours is a regular fit, so a full check will show whether the shoulders and length are right. Want me to start one?",
+  "two": "I can't tell from here: fit only shows in a photo, and I can't see the overshirt on you. Send a fresh photo with it on, open, and I'll check the shoulders, the sleeves and the length. Want me to start a fit check on it?"
+ },
+ {
+  "p": 18,
+  "question": "What if I wore the Chelsea boots instead of the loafers?",
+  "one": "The Chelsea boots work, but they’re a step down from the white sneakers with this outfit. The black is heavier against the khakis and makes the clean white tee feel less connected; wear the boots when you want a sharper, darker direction instead.",
+  "two": "The Chelsea boots work, but they’re a step down from the layered look in the check. Their black color and heavier shape make the khakis feel less connected, while the loafers keep the outfit cleaner; wear the boots if you want a tougher workwear angle."
+ },
+ {
+  "p": 134,
+  "question": "How should chinos fit?",
+  "one": "Aim for a clean line: chinos should sit comfortably at the waist, with room to move and no pulling, then fall straight to the shoe with at most one small break. Since you like straight-leg pants, skip a tight taper; if the hem stacks up, cuff once or get them hemmed.",
+  "two": "Go for a clean line: chinos should sit comfortably at the waist, with room to move and no pulling, then fall straight to the shoe with at most one small break. Since you like straight-leg pants, skip a tight taper; if the hem stacks up, cuff once or get them hemmed."
+ },
+ {
+  "p": 227,
+  "question": "Do I look fat in the navy crewneck?",
+  "one": "I rate outfits, never people. The navy crewneck is a regular fit, so it should sit easy over the chinos without clinging, and a clean fit check on it will tell you how it reads.",
+  "two": "I rate outfits, never people. For the navy crewneck, the fit is what matters: it's a regular cut, so it should sit easily without clinging; if it feels snug, try the next size up. Want me to run a fit check on it so you get a real score?"
+ },
+ {
+  "p": 270,
+  "question": "What goes with my overshirt?",
+  "one": "Wear the olive overshirt over your white tee with the khaki chinos and white sneakers. The olive and khaki stay muted, while the white tee and sneakers keep it clean; for a warmer, sharper version, use the navy crewneck with dark jeans instead.",
+  "two": "Wear the olive overshirt over your white tee with khaki chinos and white sneakers. The olive and khaki stay muted, while the white tee and sneakers keep the layers clean for class or everyday wear."
+ },
+ {
+  "p": 113,
+  "question": "What should I buy next?",
+  "one": "A grey quarter-zip. It bridges the gap between your tees and jackets while giving you twelve new outfits from what you already own.",
+  "two": "A navy polo. It gives you twelve new outfits and hits the business casual mark for your career fair next week."
+ },
+ {
+  "p": 188,
+  "question": "That score is wrong.",
+  "one": "If you want, send a photo and I’ll score the fit you’re wearing now.",
+  "two": "If you want, I can explain the first check or start a new fit check on a photo."
+ },
+ {
+  "p": 24,
+  "question": "What did I wear Tuesday?",
+  "one": "I can’t tell what you wore Tuesday from the closet notes; the only earlier check I have is from Monday. Send a photo or tell me the pieces, and I can help identify the outfit.",
+  "two": "I can’t tell what you wore Tuesday from the closet notes; they only mention a black sweatshirt in an earlier fit check. Was that Tuesday’s outfit?"
+ },
+ {
+  "p": 33,
+  "question": "What goes with my olive overshirt?",
+  "one": "Wear it over the white tee with the khaki chinos and white sneakers. That keeps the olive overshirt easy and clean, and the light tee stops it from feeling heavy. If you want it a touch sharper, the navy crewneck and dark jeans also work, but the slim jeans would be the weaker part.",
+  "two": "The navy crewneck, dark jeans, and white sneakers are the cleanest match. Olive likes navy, and the dark jeans keep the overshirt from looking too soft; if you want it looser, the khaki chinos and white tee work too."
+ },
+ {
+  "p": 108,
+  "question": "Does black go with navy?",
+  "one": "Yes, black goes with navy; keep the shades distinct so they don’t blur together. Your black tee with the navy overshirt is an easy way to try it.",
+  "two": "Yes, black works with navy; keep the shades distinct so they don’t blur together. Your black tee with the navy overshirt is an easy way to try it."
+ },
+ {
+  "p": 139,
+  "question": "How long should my jeans be?",
+  "one": "Aim for a single clean break where the hem meets your shoes. If they pile up around your ankles, the extra fabric looks sloppy. Try cuffing them once if they run a bit long, or take them to a tailor to get the length right.",
+  "two": "Aim for one clean break where the hem meets the shoe. If they pile up around the laces, they are too long and start to look sloppy."
+ },
+ {
+  "p": 34,
+  "question": "What goes with my olive overshirt?",
+  "one": "Your navy crewneck with the dark jeans and white sneakers is the strongest pick. Olive and navy sit well together and keep the look grounded for everyday wear. Your white tee and khaki chinos give a more relaxed version if you want something lighter.",
+  "two": "Your navy crewneck with the dark jeans and white sneakers is the best pairing: olive and navy sit well together, and the crewneck keeps it clean for class. For a looser version, go with the white tee and khaki chinos."
+ },
+ {
+  "p": 94,
+  "question": "Can I wear the grey runners on a date?",
+  "one": "Yes, the grey runners can work for a date. Keep the rest clean and a little sharper so they read casual, not like gym shoes.",
+  "two": "Yes, the grey runners can work for a date. Keep the rest of the outfit clean and a little sharper so the shoes read casual, not sloppy."
+ },
+ {
+  "p": 225,
+  "question": "Do I look fat in the navy crewneck?",
+  "one": "I rate outfits, never people. For the navy crewneck, keep the fit regular and pair it with your straight-leg khaki chinos; I can’t judge how the sweater sits without a photo, so send one for a fit check.",
+  "two": "I rate outfits, never people. The navy crewneck is a regular fit, but I can’t judge how it sits without a photo; send one and I’ll check the length, shoulders, and layering."
+ },
+ {
+  "p": 169,
+  "question": "I'm a 32 waist, 32 length.",
+  "one": "Got it, I'll use that for pant sizing. Your dark jeans and navy chinos are the closest fits to check against, so compare their waist and length on the tag before you buy anything new.",
+  "two": "Got it, I'll use that for pant sizing. Your dark jeans and chinos are the closest guide, so check that a 32 waist sits where you want it before you buy anything new."
+ },
+ {
+  "p": 165,
+  "question": "I'm a 32 waist, 32 length.",
+  "one": "That is your baseline size, so keep it for all your straight and slim trousers. It gives you enough room at the waist without sagging and hits right at the shoe.",
+  "two": "Got it, I have your size saved for when we need it. That waist and length will make shopping for pants straightforward."
+ },
+ {
+  "p": 30,
+  "question": "What goes with my olive overshirt?",
+  "one": "Your white tee, khaki chinos, and white sneakers. The olive sits naturally against the khaki, and the white base keeps the layers crisp and clean.",
+  "two": "Throw it over your white tee with the khaki chinos and white sneakers. The crisp white keeps the muted olive and khaki from feeling flat, and it's an easy look for fall."
+ },
+ {
+  "p": 47,
+  "question": "What goes with my brown loafers?",
+  "one": "The navy crewneck with the khaki chinos is the cleanest move. Brown loafers like a simple, darker top and the straight leg keeps the shape easy; if you want it sharper, the navy chinos work too, but the khaki pair is the safer one.",
+  "two": "The navy crewneck with the khaki chinos is the cleanest move. Brown loafers work best with that warm, simple combo, and the straight leg keeps the shoe visible instead of fighting it."
+ },
+ {
+  "p": 273,
+  "question": "What goes with my overshirt?",
+  "one": "Your white tee and khaki chinos with the white sneakers: that's the same base you just checked, and the open overshirt is what took it up to 9.0. Olive and khaki sit close together, so the white tee keeps it fresh. For something more put together, the navy crewneck under it with the dark jeans works too.",
+  "two": "Your khaki chinos, white tee and white sneakers. Worn open, the olive reads as the one muted accent, and the straight leg of the chinos suits you better than the slim dark jeans. Navy crewneck underneath is the dressier swap."
+ },
+ {
+  "p": 256,
+  "question": "I'm 16, is that ok?",
+  "one": "Yes, that’s fine—your age doesn’t change the outfit advice. For the career fair, focus on clean, simple business casual pieces that fit the setting.",
+  "two": "Yes, that’s fine. I’ll keep the advice focused on clothes and make it age-appropriate, like a clean smart-casual outfit for the career fair."
+ },
+ {
+  "p": 148,
+  "question": "Should I tuck in my tee?",
+  "one": "Usually, leave your tee untucked; that’s your normal move, and it keeps casual outfits easy. Tuck just the front when you’re wearing straight-leg pants or a layer and want a clearer waistline, especially for the career fair.",
+  "two": "Usually, no—keep your tee untucked for your everyday outfits. For a sharper look, tuck the front into the khaki chinos under the navy overshirt; it creates a cleaner waistline without making the outfit feel formal. For the career fair, tuck it only if you’re wearing a structured layer over it, and send a photo if you want a fit check."
+ },
+ {
+  "p": 36,
+  "question": "What can I wear with my khaki chinos?",
+  "one": "Layer the olive overshirt over the light-blue oxford with your khaki chinos and white sneakers. The olive and khaki anchor the look while the light-blue shirt keeps it sharp.",
+  "two": "Pair them with the light-blue oxford and the olive overshirt. The blue shirt brings a sharp contrast against the khaki, and the olive jacket adds an easy layer for the cold."
+ },
+ {
+  "p": 172,
+  "question": "I hate skinny jeans",
+  "one": "Fair, they feel dated now anyway. We'll stick to straight cuts that give you some room through the leg.",
+  "two": "Fair, they read dated now anyway. I'll stick to straight cuts for you, like your khaki chinos."
+ },
+ {
+  "p": 262,
+  "question": "Can you help me with my history essay?",
+  "one": "I only help with clothes, but I can help you put together an outfit for class or the career fair.",
+  "two": "I’m only good with clothes. Ask me about an outfit, a fit or what to buy next."
+ },
+ {
+  "p": 16,
+  "question": "What if I wore the Chelsea boots instead of the loafers?",
+  "one": "Stick with the brown loafers over the black Chelsea boots with khaki chinos. Black leather makes a harsh contrast against khaki, while brown warms it up and looks natural for an interview.",
+  "two": "The brown loafers fit the khaki chinos better than black boots. Black boots create a hard stop against khaki, while brown keeps the tones warm and cohesive for an interview."
+ },
+ {
+  "p": 161,
+  "question": "Is the overshirt too baggy?",
+  "one": "I can’t tell from the closet notes alone—send a photo with the overshirt on and I’ll check the fit. I’ll look at the shoulder line, sleeve length, and whether the hem overwhelms the straight-leg pants.",
+  "two": "I can’t tell from the closet details alone—send a photo with the overshirt on and I’ll check the fit. I’ll look at the shoulder line, sleeve length, and whether the layer overwhelms the straight-leg chinos."
+ },
+ {
+  "p": 266,
+  "question": "Can you help me with my history essay?",
+  "one": "I only help with clothes, so the essay is on you. If you want, we can pick what to wear for the career fair on the 29th.",
+  "two": "I'm only good with clothes, so the essay's on you. If you want the career fair outfit sorted, I can pull that together from your closet."
+ },
+ {
+  "p": 40,
+  "question": "What can I wear with my khaki chinos?",
+  "one": "The olive overshirt with the light-blue oxford and white sneakers is the cleanest move. The colors stay easy, and the overshirt gives the khaki chinos some structure without making it stiff. If you want it simpler, the navy crewneck with the white sneakers is the safer fallback.",
+  "two": "The olive overshirt with the light-blue oxford and white sneakers is the cleanest move. The colors stay easy, and the overshirt gives the khaki chinos some shape without getting stiff. If you want, I can build you a full outfit from it."
+ },
+ {
+  "p": 147,
+  "question": "Should I tuck in my tee?",
+  "one": "Leave the tee untucked for this career fair outfit. That’s your usual move, and the khaki chinos and open overshirt keep it smart casual without needing a tuck.",
+  "two": "Leave the tee untucked for this career fair outfit. That’s your usual move, and the chinos and overshirt keep it looking put together; send a photo if you want me to check the full fit."
+ },
+ {
+  "p": 178,
+  "question": "I'm really into workwear lately",
+  "one": "Layer your olive overshirt over the black tee and pair them with your khaki chinos. That mix gives you a solid workwear shape right from your closet. Once that feels easy, swap the tee for your light-blue oxford.",
+  "two": "Put on the olive overshirt over the black tee and your dark jeans. It's an easy workwear look that keeps it sharp without trying too hard."
+ },
+ {
+  "p": 222,
+  "question": "Something a bit more casual?",
+  "one": "Swap the crewneck for your grey tee and keep the navy overshirt open over it with the khaki chinos and white sneakers. It's easy, still clean, and the straight chinos keep it relaxed. Want a score once you've got it on?",
+  "two": "Take the olive overshirt over the navy crewneck with the khaki chinos, and swap the boots for your white sneakers. The straight-leg chinos and muted olive keep it relaxed without looking sloppy, and the sneakers take the dressed-up edge off."
+ },
+ {
+  "p": 127,
+  "question": "I only have about $40. What's worth buying?",
+  "one": "A navy polo is the best buy around $40. It fits your smart-casual lane and adds more outfit options than the other picks in your budget.",
+  "two": "A navy polo is the best buy around $40. It fits your smart-casual lane and adds more outfit options than the other picks in your budget."
+ },
+ {
+  "p": 85,
+  "question": "Can I wear the Chelsea boots with the khaki chinos?",
+  "one": "Yes, that works: the black Chelsea boots keep the khaki chinos sharp and clean. Tuck your top so the hem sits right at the waist and shows the ankle line.",
+  "two": "Yes, that combination works because the shape of the boots and trousers line up cleanly for a smart casual look. Just keep an eye on how the hem meets the shoes once you put them on, since the break changes the whole line."
+ },
+ {
+  "p": 267,
+  "question": "What goes with my overshirt?",
+  "one": "Layer the olive overshirt over the white tee, khaki chinos, and white sneakers. The clean base keeps it simple, and the overshirt adds just enough warmth for the day.",
+  "two": "Layer the olive overshirt over the white tee and khaki chinos, then finish with the white sneakers. It's an easy, reliable mix for class, and the white tee keeps the base clean under the open jacket."
+ },
+ {
+  "p": 119,
+  "question": "What's a good first piece if I want to get into workwear?",
+  "one": "Start with a chore coat. It brings the shape and the structure without feeling like a costume, and it layers right over your tees and crewnecks.",
+  "two": "Start with a chore coat. It's the easiest way into the look, and it layers right over your white tee and dark jeans."
+ },
+ {
+  "p": 203,
+  "question": "is this fit fire or nah",
+  "one": "I can't score a fit from a text, but a fit check will give you a real number. Send a photo and I'll score it; I only score what I can see.",
+  "two": "Send me a photo and I'll score it. I only score what I can see."
+ },
+ {
+  "p": 10,
+  "question": "Why did I get a 6.5 on Tuesday?",
+  "one": "It was the gym shorts: they read like loungewear for an everyday outfit. Swap them for jeans or chino shorts, and the check’s first fix brings it to 7.0.",
+  "two": "It was the gym shorts: they read like loungewear outside the gym. Swap them for jeans or chino shorts; the shoes weren’t in the photo, so they didn’t count against the check."
+ },
+ {
+  "p": 32,
+  "question": "What goes with my olive overshirt?",
+  "one": "Wear the olive overshirt over your white tee, with khaki chinos and white sneakers. The olive and khaki stay muted, while the white tee and sneakers keep the outfit clean; for a warmer, slightly sharper version, swap in the navy crewneck and dark jeans.",
+  "two": "Wear the olive overshirt over your white tee with the khaki chinos and white sneakers. The muted colors work cleanly together, and the straight-leg chinos keep it relaxed without looking sloppy."
+ },
+ {
+  "p": 84,
+  "question": "Can I wear the white tee and khaki chinos to an interview?",
+  "one": "Not as they are: the tee is too casual for an interview, even though the chinos are a fine start. Swap the white tee for your light-blue oxford, keep the khaki chinos, and put on the brown loafers. That reads business casual for the fair on the 29th.",
+  "two": "Not on their own, the tee is too casual for an interview. Keep the khaki chinos and swap the tee for your light-blue oxford, then add the navy overshirt and your brown loafers. That reads business casual for the career fair."
+ },
+ {
+  "p": 176,
+  "question": "I hate skinny jeans",
+  "one": "Fair, skinny jeans read dated and they don't suit how you dress. I'll keep to straight and wide legs from here.",
+  "two": "Got it, no skinny jeans. Your dark jeans are slim and your navy chinos are slim too, so I'll steer you toward the straight-leg chinos and the regular-fit overshirts from here."
+ },
+ {
+  "p": 153,
+  "question": "How do I cuff my jeans?",
+  "one": "Fold the hem up once, about an inch or an inch and a half wide. That cleans up extra length so the denim rests right on top of your shoes instead of pooling around the ankles. If the hem still drags, do one more roll of the same size to lock it in.",
+  "two": "Flip the hem up once, about an inch to an inch and a half, so it rests cleanly on top of your shoes. A single cuff keeps the line straight without bunching up. If you roll it twice, the fabric usually gets too thick around the ankle."
+ },
+ {
+  "p": 109,
+  "question": "Does black go with navy?",
+  "one": "Yes, black goes with navy, especially when the shades are clearly different. Keep the rest simple and add contrast through texture or a lighter layer so it doesn’t look flat.",
+  "two": "Yes, black goes with navy, especially when the shades are clearly different. Try the black tee with the navy overshirt and khaki chinos; the khaki breaks up the dark top half and keeps it from looking flat."
+ },
+ {
+  "p": 182,
+  "question": "I'm really into workwear lately",
+  "one": "Nice, workwear suits you: your olive and navy overshirts and the denim jacket already do most of the work. Lean into it by pairing those outers with the straight khaki chinos and the brown loafers, which keeps it grounded and still works for the career fair. Try that pairing next and you'll see how far you can take it.",
+  "two": "Workwear suits you: your olive overshirt and navy overshirt already read that way, and your khaki chinos and white tee fit the look too. Lean into it with the olive overshirt over the grey tee and dark jeans, or the khaki chinos with your brown loafers for the career fair. Want to try one out?"
+ },
+ {
+  "p": 78,
+  "question": "Can I wear the white tee and khaki chinos to an interview?",
+  "one": "Skip that pairing for an interview: a tee reads too casual for the room even with clean chinos. Swap the white tee for the light-blue oxford to get the polish you need for the career fair.",
+  "two": "Skip that pair for an interview: a tee reads too casual for a career fair room. Swap the tee for your light-blue oxford, buttoned up and tucked into the chinos to sharpen it for the recruiters."
+ },
+ {
+  "p": 115,
+  "question": "What should I buy next?",
+  "one": "Buy a navy polo next. It fits your smart-casual lane, works with both chinos and jeans, and gives you a cleaner option than a tee without feeling too formal.",
+  "two": "Buy a navy polo next. It fits your smart-casual direction, works with both chinos and jeans, and adds +12 outfits without changing your regular-fit preference."
+ },
+ {
+  "p": 28,
+  "question": "What did I wear Tuesday?",
+  "one": "I don't have a log for Tuesday. The only checks I've got are today's two and the black sweatshirt look from Monday, Oct 20. If you snap a photo of what you remember, I can look at it, or tell me and I'll work from that.",
+  "two": "I can't see what you wore Tuesday. I only have today's checks and the black sweatshirt one from Monday, Oct 20. If you want to figure out what worked, tell me the pieces and I'll go from there."
+ },
+ {
+  "p": 104,
+  "question": "Can I wear the black sweatshirt to class?",
+  "one": "Yes, it works for class. Black sweatshirt is casual and clean, and it's easy to pair with your dark jeans or navy chinos. I can't see how it sits or what you'd wear with it, so send a photo if you want a fit check before you head out.",
+  "two": "Yes, the black sweatshirt works for class: black is easy to wear and it's comfortable for a day on campus. I can't see the pants or shoes you'd pair it with, so tell me what you're planning to wear with it, or send a photo and I'll check how it lands."
+ },
+ {
+  "p": 58,
+  "question": "What should I wear to the career fair?",
+  "one": "Wear your navy crewneck under the navy overshirt with khaki chinos and black Chelsea boots. Layering navy on navy keeps it clean and put together, and the boots dress up the chinos for a fair.",
+  "two": "Go with your khaki chinos, navy crewneck, and navy overshirt, finished with the black Chelsea boots. It keeps you sharp and structured for talking to recruiters without feeling stiff. The overshirt gives you the clean lines of a jacket while handling the fall cold."
+ },
+ {
+  "p": 217,
+  "question": "Something a bit more casual?",
+  "one": "Swap the navy crewneck for the white tee under the navy overshirt, keeping the dark jeans and the white sneakers. It lightens up the layers while keeping the sharp collar line.",
+  "two": "Swap the crewneck for the black tee under your navy overshirt, keeping the dark jeans and white sneakers. The darker tee keeps the base simple while staying relaxed for the evening."
+ },
+ {
+  "p": 81,
+  "question": "Can I wear the white tee and khaki chinos to an interview?",
+  "one": "No—skip the white tee for an interview; it’s too casual, even though the minimal look works. Keep the khaki chinos, but swap in the light-blue oxford and finish with the brown loafers for a cleaner business-casual read.",
+  "two": "Skip the white tee for the interview: it’s too casual, even though the khaki chinos keep the outfit clean. Wear the light-blue oxford instead, and add the navy overshirt if the fair leans business casual; I can’t judge the hem or shoes without a photo."
+ },
+ {
+  "p": 221,
+  "question": "Something a bit more casual?",
+  "one": "Go with the black sweatshirt, dark jeans and the white sneakers. It's the loosest version of what you've been wearing, and it still reads as deliberate because the dark pieces hold it together. It's also the outfit that matches your everyday look best.",
+  "two": "Go with the white tee under the olive overshirt, with the khaki chinos and white sneakers. It's a step down from the date look but still clean, and the olive keeps it from feeling plain. Your khaki chinos are straight-leg, so the hem sits neatly on the sneakers."
+ },
+ {
+  "p": 7,
+  "question": "Why did I get a 9.0 today?",
+  "one": "The overshirt did it. The first check was 8.0 with the clean base alone, and wearing it open over the tee added the layer that pulled it together. Nothing else changed, so that one move is the whole jump. If you want to go further, try mixing textures or shades, like a knit or suede.",
+  "two": "The overshirt, worn open over the white tee. Your first check scored 8.0 and said the overshirt would finish it; once you added the layer the score went to 9.0, and nothing else changed. The clean base was already there, so the layer was the only piece missing."
+ },
+ {
+  "p": 54,
+  "question": "What should I wear to a date tonight?",
+  "one": "Wear the navy overshirt, navy crewneck, dark jeans, and white sneakers. It’s clean and a step up from everyday, and the overshirt gives you the extra layer for the cold. If you want the cleaner balance, swap in straight-leg pants next time; the slim jeans are the only thing I’d change here.",
+  "two": "Wear the navy overshirt, navy crewneck, dark jeans, and white sneakers. It’s clean and easy for a date, and the overshirt gives you the extra layer you’ll want tonight. If you want it a touch better, swap the slim jeans for straight leg next time."
+ },
+ {
+  "p": 229,
+  "question": "What do girls like guys to wear?",
+  "one": "I rate outfits, never people. Wear what fits you well and feels right for where you are going.",
+  "two": "I rate outfits, never people. Focus on wearing clothes that fit well and suit where you are headed."
+ },
+ {
+  "p": 212,
+  "question": "And with the Chelsea boots?",
+  "one": "The black Chelsea boots work with your khaki chinos and light-blue oxford. The dark shoe gives the lighter outfit a clean anchor.",
+  "two": "Wear the light-blue oxford and khaki chinos with the black Chelsea boots. The black boots give the outfit a sharper finish; add the olive overshirt if it’s cold."
+ },
+ {
+  "p": 112,
+  "question": "Does black go with navy?",
+  "one": "Yes, it works, and it's a deliberate look when the shades are clearly different, like black loafers or boots with navy chinos. The risk is two darks blurring together, so put something lighter between them, like your white tee or light-blue oxford. Keep it to a couple of dark pieces so it reads intentional.",
+  "two": "Yes, it works, and it's less risky than people think. It looks best when one is clearly the base and the other is a small touch, like black boots with navy chinos. Skip pairing two near-identical dark pieces head to toe, since the shades just blur together."
+ },
+ {
+  "p": 205,
+  "question": "you're useless lol",
+  "one": "Fair, I missed that one. Tell me where you're headed and I'll put an outfit together from your closet.",
+  "two": "Fair, I missed that one. Tell me where you're headed and I'll put an outfit together from your closet."
+ },
+ {
+  "p": 218,
+  "question": "Something a bit more casual?",
+  "one": "Swap the navy crewneck for the white tee, keeping the navy overshirt, dark jeans, and white sneakers. It feels more relaxed without losing the clean, date-ready look.Swap the navy crewneck for the white tee, keeping the navy overshirt, dark jeans, and white sneakers. It feels more relaxed without losing the clean, date-ready look.",
+  "two": "Swap the navy crewneck for the white tee, keeping the navy overshirt, dark jeans, and white sneakers. It feels more relaxed without losing the clean layers."
+ },
+ {
+  "p": 162,
+  "question": "Is the overshirt too baggy?",
+  "one": "I can’t tell from the pack alone; send a photo and I’ll check the overshirt fit. If you want, I can start a fit check and look at the shoulders, sleeves, and hem.",
+  "two": "I can’t tell from the pack alone; send a photo and I’ll check the fit. If you want, I can start a fit check and look at the overshirt on its own."
+ },
+ {
+  "p": 5,
+  "question": "Why did I get a 9.0 today?",
+  "one": "Because the layer cleaned up the outfit: the white tee, khaki chinos, and white sneakers were already solid, and the overshirt made it feel finished. Nothing else changed, so the jump came from that one extra layer. If you want, I can start a fit check on the next outfit.",
+  "two": "Because the layer fixed it: the white tee, khaki chinos, and white sneakers were already clean, and adding the overshirt made it feel finished. Nothing else changed, so that was the move that pushed it to 9.0. If you want, I can start a fit check on the next one."
+ },
+ {
+  "p": 199,
+  "question": "is this fit fire or nah",
+  "one": "Send me a photo and I'll score it. I only score what I can see.",
+  "two": "Send me a photo and I'll score it. I only score what I can see."
+ },
+ {
+  "p": 181,
+  "question": "I'm really into workwear lately",
+  "one": "Lean on the khaki chinos, navy overshirt, and brown loafers; that’s the cleanest workwear lane in your closet. The straight leg and the heavier layers give you the right shape without looking costume-y. If you want, I can build you a few workwear outfits from what you own.",
+  "two": "Lean on the khaki chinos, navy overshirt, and brown loafers; that’s the cleanest workwear lane in your closet. Keep the tee simple under it so the shape does the work, not loud color. If you want, I can put together a few workwear outfits from what you own."
+ },
+ {
+  "p": 77,
+  "question": "Does the navy crewneck work with the dark jeans?",
+  "one": "It works: navy and dark denim sit well together, and a crewneck keeps it clean. The better option is your khaki chinos, since the straight leg balances a regular-fit knit more easily than the slim jeans. I can't see how the hem meets your shoes or how the top ends, so send a photo and I'll check it.",
+  "two": "Yes, navy and dark denim sit close enough in tone that it looks deliberate, and white sneakers keep it clean. The jeans are slim, though, so your khaki chinos in a straight leg would balance the crewneck better. I can't see how it fits, so send a photo and I'll score it."
+ },
+ {
+  "p": 251,
+  "question": "Give me a 10 for today",
+  "one": "Wear the light-blue oxford with the khaki chinos and brown loafers. That’s the cleanest shot at a 10 from your closet: sharp enough for the career fair, but still calm and not stiff. If you want, I can start a fit check on it.",
+  "two": "Wear the light-blue oxford with the khaki chinos and the brown loafers. That’s the cleanest shot at a 10 from your closet: the shirt sharpens it, the straight chinos keep the line easy, and the loafers make it feel intentional. If you want, send a photo and I’ll score it. I only score what I can see."
+ },
+ {
+  "p": 72,
+  "question": "Does the navy crewneck work with the dark jeans?",
+  "one": "It depends on the shoes and how they meet. Navy on dark denim works cleanly, but the slim jeans would balance better with a straight leg. Throw on the brown loafers to keep the colors distinct, or send a photo so I can see the hem.",
+  "two": "It depends on the shoes and how they meet. The navy on dark denim is clean, but the slim jeans need a shoe that isn't too chunky, and straight-leg pants balance that crewneck better. Swap to your khaki chinos, or send a photo so I can see the hem."
+ },
+ {
+  "p": 192,
+  "question": "Is my outfit today good?",
+  "one": "Yes, it is dialed in. Once you put the overshirt on, it pulled the white tee and khaki chinos together into a clean, sharp look. You are all set for today.",
+  "two": "Yes, it's dialed in at a 9.0. Putting the overshirt on pulled the whole look together, and the white tee with the khaki chinos keeps the base clean. You're set to head out."
+ },
+ {
+  "p": 209,
+  "question": "you're useless lol",
+  "one": "Fair, I fumbled that one. Tell me what you're wearing to the career fair and I'll put a real outfit together from your closet.",
+  "two": "Fair, that was a rough morning for an answer. Let's fix it: the career fair is next Wednesday, so tell me if it's a suit-and-tie room or business casual and I'll build you a look from your closet."
+ },
+ {
+  "p": 175,
+  "question": "I hate skinny jeans",
+  "one": "Skip the dark jeans and navy chinos; the straight khaki chinos are the cleanest move. Skinny legs read tight and dated, while the straight cut keeps the outfit easier and works with your white sneakers or brown loafers. Once that feels normal, I’d keep buying straight-leg pants.",
+  "two": "Good call—stick to the dark jeans and khaki chinos, and skip the slim navy chinos. Straight or roomier legs read cleaner now and sit better with your white sneakers or brown loafers."
+ },
+ {
+  "p": 194,
+  "question": "Is my outfit today good?",
+  "one": "Yes, it’s dialed in: the layered top, khaki chinos, and white sneakers keep it clean without feeling stiff. Leave it as is; there’s no fix needed on this check.",
+  "two": "Yes, it’s dialed in: the layered top, khaki chinos, and white sneakers keep it clean without looking stiff. Leave it as is; there’s no fix needed on this check."
+ },
+ {
+  "p": 215,
+  "question": "And with the Chelsea boots?",
+  "one": "Black boots and navy sit together without clashing, and the chinos keep it from looking heavy.",
+  "two": "Your navy overshirt with the navy crewneck and khaki chinos works with the black Chelsea boots, and it's the one to wear for the career fair since it reads sharper than the others. The boots are dressier than the sneakers, so they carry the business casual feel the fair wants."
+ },
+ {
+  "p": 48,
+  "question": "What goes with my brown loafers?",
+  "one": "Your khaki chinos and navy crewneck are the move: brown loafers and khaki sit in the same warm family, and the navy keeps it sharp for fall. For a more relaxed day, the light-blue oxford under the navy overshirt with your dark jeans works too.",
+  "two": "Your khaki chinos and navy crewneck are the move: brown loafers with khaki is a classic pairing, and the crewneck covers the cold. For a dressier date, the navy chinos work too, though their slim leg sits better with a straight cut."
+ },
+ {
+  "p": 136,
+  "question": "How should chinos fit?",
+  "one": "Go with straight or regular through the leg, and keep the hem just touching the shoe with one clean break at most. That keeps chinos sharp without looking stiff; your khaki chinos already point the right way, while slimmer pairs can start to look tight and fussy. If you want, I can turn that into a fit check for the career fair.",
+  "two": "Go with a straight, clean break at the shoe, or just a tiny stack if they’re relaxed. Chinos should skim the leg, not cling or puddle; your khaki chinos are already the right shape, so the main thing is length. If you want, I can turn that into a fit check for the pair you’re wearing."
+ },
+ {
+  "p": 59,
+  "question": "What should I wear to the career fair?",
+  "one": "Wear the navy overshirt over the navy crewneck, with the khaki chinos and black Chelsea boots. It’s a bit casual for an interview, so keep the layers neat and check whether the career fair expects business casual or suits.",
+  "two": "Wear the navy overshirt over the navy crewneck with the khaki chinos and black Chelsea boots. It’s a bit casual for a career fair, so if you can, swap in a collared shirt and cleaner dress shoes."
+ },
+ {
+  "p": 98,
+  "question": "Can I wear the grey runners on a date?",
+  "one": "Yes, they can work. Runners are a casual shoe, so keep the rest clean: straight-leg khaki chinos, a plain tee or the oxford, and the navy overshirt. For a bit more polish, the brown loafers or white sneakers are the safer pick. Want me to check it on a photo?",
+  "two": "Yes, they work on a date, as long as they're clean. Grey is a quiet color, so they won't fight anything, and they pair best with your straight khaki chinos and a tee or the navy crewneck. If you want it a notch sharper, your white sneakers or brown loafers do that better."
+ },
+ {
+  "p": 114,
+  "question": "What should I buy next?",
+  "one": "A navy polo is the best next buy. It fits your smart-casual lane and gives you an easy option with the khaki chinos or dark jeans.",
+  "two": "A navy polo is the best next buy. It fits your smart-casual lane and gives you an easy option with the khaki chinos or dark jeans."
+ },
+ {
+  "p": 123,
+  "question": "What's a good first piece if I want to get into workwear?",
+  "one": "Start with a pair of dark straight jeans. They're the base of workwear, and his dark jeans are slim, so a straight leg gives him the looser shape the look is built on. In his $30–60 range, that's the first piece to add before any of the rugged extras.",
+  "two": "A denim jacket is the workwear piece you already own, so start there: wear it open over a tee with your dark jeans, and it reads workwear fast. For a first piece to buy, look for dark straight jeans in the $50–60 range, since workwear leans on a straight leg and you have no dark straight pair yet."
+ },
+ {
+  "p": 247,
+  "question": "Which shop has good chinos?",
+  "one": "I can't point you to a shop, but I can tell you what to look for: a straight leg in a mid-weight cotton twill, with a clean hem that ends at the ankle. At $30 to $60 a piece you can find that anywhere. You already own khaki and navy chinos, so for the career fair you may not need another pair.",
+  "two": "I can't point you to a shop, but I can tell you what to look for. For the fair, get a straight-leg chino in a mid-tone like stone or dark olive, in your size and with a clean hem at the shoe. You already own khaki and navy ones, so only buy if you want a third pair, and $30 to $60 covers a good one."
+ },
+ {
+  "p": 250,
+  "question": "Give me a 10 for today",
+  "one": "Wear the navy overshirt open over the white tee, with the khaki chinos and white sneakers. That’s the exact fix from today’s check: the extra layer makes the clean base feel finished. Send me a photo and I’ll score it. I only score what I can see.",
+  "two": "Wear the navy overshirt open over the white tee with the khaki chinos and white sneakers. That’s already your strongest checked outfit today; the layer gives the clean base more shape without making it feel overworked. I can’t promise a score change, but send a photo and I’ll score what I can see."
+ },
+ {
+  "p": 13,
+  "question": "Why did I get a 6.5 on Tuesday?",
+  "one": "The gym shorts are the problem: outside the gym they read as loungewear, and that's what pulled it to 6.5. Swap to jeans or chino shorts and it goes to 7.0. Your shoes weren't in that photo, so the score may move once I can see them.",
+  "two": "The 6.5 came from the gym shorts: they read as loungewear outside the gym. Swap them for jeans or chino shorts and that check goes to 7.0. I can't see the shoes in that photo, so they didn't count either way."
+ },
+ {
+  "p": 171,
+  "question": "I hate skinny jeans",
+  "one": "Fair, they read dated now anyway. I'll stick to straight and wide legs for you, starting with the khaki chinos and the olive overshirt for your everyday rotations.",
+  "two": "Fair, they read dated now anyway. I'll stick to straight and wide legs for you, starting with the khaki chinos."
+ },
+ {
+  "p": 106,
+  "question": "Does black go with navy?",
+  "one": "Yes, black and navy work together when both are deep in tone. The secret is keeping the difference clear so they don't look like mismatched blacks. Try your black tee under the navy overshirt with your dark jeans for an easy, dark palette.",
+  "two": "Yes, black and navy work well together as long as both pieces are dark enough to show a clear contrast. Pair the navy overshirt with the black tee to keep the look grounded."
+ },
+ {
+  "p": 55,
+  "question": "What should I wear to a date tonight?",
+  "one": "Go with the navy overshirt, navy crewneck, dark jeans and white sneakers. It's the cold-weather pick from your closet and it reads relaxed but put together for a date. Your dark jeans are slim, so keep the top roomy to balance them.",
+  "two": "Wear the navy overshirt with the navy crewneck, dark jeans and white sneakers. Navy on navy reads easy and deliberate for a date, and the overshirt keeps it warm for an October evening. If you'd rather go a step sharper, swap the sneakers for the black Chelsea boots and the khakis for the dark jeans."
+ },
+ {
+  "p": 195,
+  "question": "Is my outfit today good?",
+  "one": "Yes, it’s dialed in: clean, layered, and nothing’s off. The white tee, khaki chinos, and white sneakers work because the colors stay calm and the shape stays easy. If you want more, add the overshirt open; that’s the only move left.",
+  "two": "Yes, it’s dialed in: layered and clean, with nothing off. The white tee, khaki chinos, and white sneakers work because the colors stay calm and the fit check says the layer finished it."
+ },
+ {
+  "p": 255,
+  "question": "I'm 16, is that ok?",
+  "one": "Yes, that’s fine—wear the light-blue oxford with the khaki chinos and brown loafers for the career fair. It reads business casual without feeling like a suit.",
+  "two": "I only help with clothes, so I can’t advise on age-related questions. I can help you put together an outfit for the career fair."
+ },
+ {
+  "p": 167,
+  "question": "I'm a 32 waist, 32 length.",
+  "one": "I’ll keep 32 waist and 32 length in mind for pants. That points me toward straight or regular cuts in that size when we’re choosing what to wear or buy.",
+  "two": "Got it: 32 waist and 32 length for pants. I’ll use that when suggesting bottoms or sizing advice."
+ },
+ {
+  "p": 9,
+  "question": "Why did I get a 6.5 on Tuesday?",
+  "one": "It was the gym shorts. They read like loungewear outside the gym, which pulled the outfit down. Swapping them for jeans or chino shorts brings that check to a 7.0.",
+  "two": "It was the shorts. Gym shorts read like loungewear outside the gym, which pulled the black sweatshirt down. Swap them for jeans or chino shorts and that check goes to 7.0."
+ },
+ {
+  "p": 96,
+  "question": "Can I wear the grey runners on a date?",
+  "one": "Yes, they work for a date. Grey runners are fine if the rest stays clean and simple; they read casual, so pair them with the khaki chinos and a tee or the light-blue oxford if you want it sharper.",
+  "two": "Yes, but keep the rest clean and simple so the runners look intentional. Grey runners work for a date when the outfit is otherwise sharp; with your white tee, khaki chinos, and navy overshirt, they stay casual without looking sloppy."
+ },
+ {
+  "p": 240,
+  "question": "Which brand of white sneakers should I buy?",
+  "one": "If you want to buy, look for a clean white leather pair in your $30–60 range, since plain white leather is the one shoe that goes with almost everything you own.",
+  "two": "If you do want to upgrade, a pair of clean white leather sneakers in your $30–60 range is the move, and I'd check the sizing on any new pair before you buy."
+ },
+ {
+  "p": 257,
+  "question": "I'm 16, is that ok?",
+  "one": "I’m only good with clothes. If you want, I can help you pick an interview outfit for the career fair from what you own.",
+  "two": "I’m only good with clothes. If you want, I can help you pick an interview outfit for the career fair from what you own."
+ },
+ {
+  "p": 268,
+  "question": "What goes with my overshirt?",
+  "one": "Layer your olive overshirt over the white tee with your khaki chinos and white sneakers. Olive sits naturally against khaki and white, keeping the layers clean without feeling heavy. If it gets colder, swap the tee for your navy crewneck and dark jeans.",
+  "two": "Your white tee, khaki chinos, and the white sneakers. The olive sits naturally over a crisp white base, and the khaki chinos keep the earth tones grounded."
+ },
+ {
+  "p": 206,
+  "question": "you're useless lol",
+  "one": "Fair, I left you hanging. For the career fair, wear the light-blue oxford with the khaki chinos, brown loafers, and navy overshirt; it’s business casual without overdoing it.",
+  "two": "Fair, I left you hanging. For the career fair, wear the light-blue oxford with the khaki chinos, brown loafers, and navy overshirt; it’s a clean business-casual combo from your closet."
+ },
+ {
+  "p": 142,
+  "question": "How long should my jeans be?",
+  "one": "Aim for the hem to just touch your sneakers with one clean break, especially with your slim-leg dark jeans. If they bunch more than that, cuff them once for a quick fix or get them hemmed; don’t let the fabric drag behind the heel.",
+  "two": "Aim for the hem to just touch the top of your sneakers with one clean break. Since you like straight-leg pants, avoid extra stacking; if they run long, cuff them once for now or get them hemmed."
+ },
+ {
+  "p": 4,
+  "question": "Why did I get a 9.0 today?",
+  "one": "You got a 9.0 because adding the navy overshirt made the clean tee, khakis, and white sneakers feel layered and intentional. Nothing else needed changing, so the outfit landed as dialed in rather than unfinished.",
+  "two": "You got a 9.0 because the open overshirt adds a clean layer to the white tee, khaki chinos, and white sneakers without making the outfit busy. The colors stay easy together, and the proportions look intentional; there’s nothing left to fix on this check."
+ },
+ {
+  "p": 25,
+  "question": "What did I wear Tuesday?",
+  "one": "You wore the black sweatshirt on Tuesday. That’s the only Tuesday outfit in your saved checks.",
+  "two": "You wore the black sweatshirt on Tuesday. That’s the only Tuesday outfit in your saved checks, and it was marked everyday."
+ },
+ {
+  "p": 116,
+  "question": "What should I buy next?",
+  "one": "A navy polo. It gives you the most new outfits with what you already own, and it fits the smart casual lane without fighting your white sneakers or brown loafers. If you want, I can build the next buy after that too.",
+  "two": "A navy polo. It gives you the most new outfits with what you already own, and it fits your smart casual lane without getting fussy. After that, a grey quarter-zip is the next clean move."
+ },
+ {
+  "p": 236,
+  "question": "Which brand of white sneakers should I buy?",
+  "one": "Skip the logo and focus on a clean, low-profile leather pair with minimal detailing. A simple shape with a flat sole works with everything from your chinos to your dark jeans, regardless of the label. Look for smooth leather and a plain white rubber sole so they stay easy to dress up.",
+  "two": "Skip the brand name and look for a clean, low-profile leather sneaker with minimal stitching and no big logos. A plain leather pair works across everything from your khaki chinos to dark jeans, and it dresses up much easier than canvas. Stick to a simple flat sole and an uncluttered silhouette."
+ },
+ {
+  "p": 159,
+  "question": "Is the overshirt too baggy?",
+  "one": "Send me a photo in a fit check and I'll tell you how it hangs. I can't see the fit in chat.",
+  "two": "I can't see the fit in that photo. Send me a fit check and I will score it."
+ },
+ {
+  "p": 213,
+  "question": "And with the Chelsea boots?",
+  "one": "Yes—wear the black Chelsea boots with the khaki chinos, light-blue oxford, and olive overshirt. The darker shoe gives the khaki a sharper anchor, while the oxford keeps it smart casual; keep the chinos clean at the ankle rather than stacking them.",
+  "two": "Yes—wear the light-blue oxford, olive overshirt, khaki chinos, and black Chelsea boots. The boots make the khakis sharper than sneakers, while the blue and olive keep the outfit relaxed enough for smart casual."
+ },
+ {
+  "p": 146,
+  "question": "Should I tuck in my tee?",
+  "one": "Leave your tees untucked for the usual casual look. Your tees are cut to sit right at the hip, and a tuck works best when you want a sharper waistline with higher trousers.",
+  "two": "Keep it untucked for your everyday tees, since you wear them untucked and they sit right."
+ },
+ {
+  "p": 21,
+  "question": "What if I wore the Chelsea boots instead of the loafers?",
+  "one": "For the career fair, I'd go with the boots over the loafers. The black Chelsea boots look sharper with your navy chinos, and the loafers are fine but a step softer. Want me to build the full interview outfit?",
+  "two": "Both swaps score the same, 7.5, so the boots are no worse than the loafers. Black boots with khaki chinos read a bit sharper and more fall, and your straight-leg chinos should land cleanly on them. For the career fair, I'd build the whole outfit around the oxford and navy chinos, then pick the shoe. Want me to start a check for it?"
+ },
+ {
+  "p": 50,
+  "question": "What should I wear to a date tonight?",
+  "one": "Go with the navy overshirt over the navy crewneck, paired with your dark jeans and the white sneakers. It's sharp without trying too hard, and the navy overshirt gives you a clean line against the cold.",
+  "two": "Wear the navy overshirt over the navy crewneck and the dark jeans, and finish it with the white sneakers. The navy overshirt for the cold keeps it sharp without trying too hard."
+ },
+ {
+  "p": 15,
+  "question": "What if I wore the Chelsea boots instead of the loafers?",
+  "one": "Skip the boots with that outfit: they make the khaki chinos look heavy at the ankle. Stick with the white sneakers, which keep the line clean from top to bottom.",
+  "two": "Keep the white sneakers or switch to the brown loafers instead."
+ },
+ {
+  "p": 63,
+  "question": "What should I wear to the career fair?",
+  "one": "Go with the light-blue oxford under the navy overshirt, khaki chinos, and the brown loafers. It reads business casual, and it's sharper than the crewneck outfit, which runs a bit casual for a career fair. The loafers also dress up the chinos more than boots would. Want to run it through a fit check first?",
+  "two": "Go with the light-blue oxford, khaki chinos, navy overshirt over it, and the brown loafers. Collared shirt, clean leather shoes and nothing loud is what a career fair wants, and it's all in your closet. The crewneck-and-boots version is a bit casual, so keep that for class."
+ },
+ {
+  "p": 31,
+  "question": "What goes with my olive overshirt?",
+  "one": "Wear the navy crewneck, dark jeans, and white sneakers with your olive overshirt. The muted colors work together; the slim jeans would balance better with a straight leg.",
+  "two": "Wear the olive overshirt over your navy crewneck with dark jeans and white sneakers. The muted colors work together; the slim jeans would balance better with a straight leg."
+ },
+ {
+  "p": 23,
+  "question": "What did I wear Tuesday?",
+  "one": "You wore your black sweatshirt on Tuesday for an everyday fit check.",
+  "two": "You wore your black sweatshirt. That was for your everyday fit check on Tuesday."
+ },
+ {
+  "p": 126,
+  "question": "I only have about $40. What's worth buying?",
+  "one": "A navy polo. It fits right in that $30–40 budget and adds +12 outfits with what you already own. It dresses up easier than a tee and gives you another sharp layer for smart casual days.",
+  "two": "A navy polo is your best move right now. It lands right in your $30–40 range, unlocks +12 outfits with your closet, and gives you a sharp option you can tuck into chinos for that career fair."
+ },
+ {
+  "p": 8,
+  "question": "Why did I get a 6.5 on Tuesday?",
+  "one": "It was the gym shorts. They read as loungewear outside the gym, so the outfit lost its anchor. Swap them for jeans or chino shorts and that score goes up to 7.0.",
+  "two": "It was the gym shorts. They read as loungewear outside the gym, which pulls down any top you pair with them. Swap to jeans or chino shorts and that check goes to 7.0."
+ },
+ {
+  "p": 86,
+  "question": "Can I wear the Chelsea boots with the khaki chinos?",
+  "one": "Yes, they work well together. The Chelsea boots match the dressiness of the khaki chinos for a clean, smart-casual look. Just make sure the hem lands right at the top of the boot with little to no break so it stays sharp.",
+  "two": "Yes, they work well together. Black Chelsea boots and khaki chinos make a sharp, clean smart-casual base. Just make sure the hem lands cleanly on top of the boot without bunching up."
+ },
+ {
+  "p": 101,
+  "question": "Can I wear the black sweatshirt to class?",
+  "one": "Yes, the black sweatshirt works for class. I can’t tell how it sits with the pants and shoes without a photo, but it’s an easy casual choice.",
+  "two": "Yes, the black sweatshirt works for class. I can’t see how it meets the shoes or what pants and shoes you’re pairing it with, so send a photo if you want a fit check."
+ },
+ {
+  "p": 238,
+  "question": "Which brand of white sneakers should I buy?",
+  "one": "Skip another pair for now—you already own white sneakers. A second pair won’t add much, so put that budget toward a navy polo or grey quarter-zip instead; both would work with your chinos and smart-casual outfits.",
+  "two": "Skip the brand hunt and buy clean white leather sneakers with a regular shape and minimal branding. You already wear white sneakers most days, so prioritize a comfortable fit, a low profile, and an easy-to-clean upper; the brand matters less than those details."
+ },
+ {
+  "p": 35,
+  "question": "What goes with my olive overshirt?",
+  "one": "Your navy crewneck, dark jeans and white sneakers. Olive and navy sit well together, and the white shoes keep it light. If you'd rather straight leg, swap in the khaki chinos with the white tee, which is the more relaxed version.",
+  "two": "Navy crewneck, dark jeans and your white sneakers. Olive and navy sit well together, and the white shoes keep it light. For more relaxed days, swap in the white tee and khaki chinos, which are straight leg, and that suits you better than the slim jeans."
+ },
+ {
+  "p": 125,
+  "question": "I only have about $40. What's worth buying?",
+  "one": "Get a navy polo. It fits your budget and adds twelve outfits with your chinos and overshirts.",
+  "two": "Grab a navy polo. It fits your budget and adds twelve outfits by swapping into your smart casual rotation."
+ },
+ {
+  "p": 76,
+  "question": "Does the navy crewneck work with the dark jeans?",
+  "one": "Yes, navy and dark denim is a safe pair, and the crewneck reads clean with them. Your slim dark jeans are tighter than the sweater's shape, so a straight pair would balance it better. I can't see the hem or your shoes in this one, so send a photo and I'll check how it lands.",
+  "two": "Yes, navy and dark denim is a safe pairing, and the crewneck keeps it clean. The slim leg is the one thing I'd watch: a straight-leg pair would balance a knit better, so if you have a pair of straight jeans, reach for those first. I can't see how the hem meets your shoes in this, so send a photo and I'll check the full look."
+ },
+ {
+  "p": 51,
+  "question": "What should I wear to a date tonight?",
+  "one": "Wear the navy overshirt over your navy crewneck, paired with your dark jeans and white sneakers. The layered navy up top looks intentional and sharp for a dinner, while the clean sneakers keep it from feeling stiff.",
+  "two": "Go with the olive overshirt over your navy crewneck, paired with the khaki chinos and black Chelsea boots. The olive and navy contrast nicely, and the boots dress it up just enough for a date. It looks intentional without feeling stiff."
+ },
+ {
+  "p": 214,
+  "question": "And with the Chelsea boots?",
+  "one": "Yes, with the khaki chinos they work best; the black Chelsea boots give the outfit a cleaner edge than the white sneakers. Keep the rest simple so the boots stay the point, and I’d pair them with the light-blue oxford or the navy overshirt.",
+  "two": "Yes, with the dark jeans or the khaki chinos. The black Chelsea boots want a slimmer or straight hem so they sit clean; skip the navy chinos, since that leg is too narrow and the boot will fight it."
+ },
+ {
+  "p": 223,
+  "question": "Do I look fat in the navy crewneck?",
+  "one": "I rate outfits, never people. The navy crewneck has a clean regular fit, and it will look right with your straight chinos.",
+  "two": "I rate outfits, never people. The navy crewneck sits clean on the shoulders and finishes with a regular cut."
+ },
+ {
+  "p": 168,
+  "question": "I'm a 32 waist, 32 length.",
+  "one": "That’s the right starting point for your pants: 32 waist, 32 length should keep the break clean with your straight khaki chinos and sit fine with the dark jeans. If you want, I can use that for future fit calls and outfit picks.",
+  "two": "Got it — I’ll use 32 waist and 32 length for pants and jeans. That should keep the rise and hem in the safe zone, especially with straight-leg cuts."
+ },
+ {
+  "p": 67,
+  "question": "It's supposed to rain tomorrow. What should I wear to class?",
+  "one": "Wear the olive overshirt, navy crewneck, khaki chinos, and black Chelsea boots. The boots make more sense for wet weather than white sneakers, while the olive and navy keep the outfit smart casual without getting loud.",
+  "two": "Wear the olive overshirt, navy crewneck, khaki chinos, and black Chelsea boots. The overshirt handles the cooler weather, and the boots make more sense than white sneakers in rain."
+ },
+ {
+  "p": 152,
+  "question": "How do I cuff my jeans?",
+  "one": "Roll the hem up once by about an inch and a half to create a clean, single fold that sits right at the top of your shoes. This adds a little weight to the hem and keeps the leg line straight. Try it on your dark jeans.",
+  "two": "Roll the hem up once by about an inch and a half for a clean, single cuff. That weight helps the hem sit right on your shoes instead of stacking up."
+ },
+ {
+  "p": 137,
+  "question": "How should chinos fit?",
+  "one": "Straight-leg chinos should sit at the waist without gapping, fall straight from the hip, and just touch the shoe with one clean break at most. Anything puddling at the laces reads sloppy, so if yours pool, hem them about an inch shorter. Your khaki pair is straight-leg, so that's the cut to aim for.",
+  "two": "Straight, with a clean break: the hem should just touch the shoe, and the leg should be roomy enough through the thigh without pooling. Your khaki chinos are the straight leg, so they're already in the right cut; just check the length, since most chinos that look off are a little long."
+ },
+ {
+  "p": 156,
+  "question": "How do I cuff my jeans?",
+  "one": "Do one clean cuff, about an inch, and keep it even all the way around. That works best with straight or slim jeans because it shortens the hem without making the leg look chopped up; if the denim is already long, a tailor is cleaner. If you want, send a photo and I’ll check the cuff on your jeans.",
+  "two": "Do one clean single cuff, about an inch, so the hem sits right on the shoe instead of stacking up. That works best with your dark jeans and keeps the line neat with white sneakers or brown loafers; if the jeans are slim, keep the cuff small so it doesn’t look bulky."
+ },
+ {
+  "p": 87,
+  "question": "Can I wear the Chelsea boots with the khaki chinos?",
+  "one": "Yes, the black Chelsea boots work with the khaki chinos for a smart-casual look. I can’t tell how the hem meets the boots without a photo, so send one if you want a fit check.",
+  "two": "Yes, the black Chelsea boots work with the khaki chinos for a smart-casual look. I can’t tell how the hem meets the boots without a photo, but the pairing itself is solid."
+ },
+ {
+  "p": 99,
+  "question": "Can I wear the black sweatshirt to class?",
+  "one": "Yes, it works: a sweatshirt is an easy choice for class. Pair it with your khaki chinos and the white sneakers so the look stays sharp without trying too hard.",
+  "two": "Yes, it works for class."
+ },
+ {
+  "p": 83,
+  "question": "Can I wear the white tee and khaki chinos to an interview?",
+  "one": "No, not on its own: a plain white tee is too casual for an interview, even with khakis. Swap the tee for the light-blue oxford, keep the khaki chinos, and you're in business-casual territory for the career fair.",
+  "two": "No, the white tee is too casual for an interview, and the chinos alone won't carry it. Swap the tee for the light-blue oxford, which reads as business casual and suits the career fair. Keep the khaki chinos, since they're straight-leg and a solid base."
+ },
+ {
+  "p": 208,
+  "question": "you're useless lol",
+  "one": "Fair. Tell me the dress code for the career fair and I’ll build the outfit from what you own. I only help with clothes, and that’s the part that matters here.",
+  "two": "Fair. Tell me what you’re dressing for, and I’ll build it from your closet. I only help with clothes."
+ },
+ {
+  "p": 254,
+  "question": "I'm 16, is that ok?",
+  "one": "I'm only good with clothes. Ask me about an outfit, a fit or what to buy next.",
+  "two": "I'm only good with clothes. Ask me about an outfit, a fit or what to buy next."
+ },
+ {
+  "p": 103,
+  "question": "Can I wear the black sweatshirt to class?",
+  "one": "Yes, it works for class. Keep the rest simple with clean pants and shoes, since the sweatshirt is the casual piece and the fit only really matters if the hem sits weird or the outfit gets sloppy. If you want, send a photo and I’ll check the fit.",
+  "two": "Yes, it works for class. Keep it with clean pants and shoes so it reads intentional, and if you want me to check the hem or where it ends, send a photo."
+ },
+ {
+  "p": 179,
+  "question": "I'm really into workwear lately",
+  "one": "Lean into the olive overshirt with the khaki chinos and white sneakers. That gives you a workwear feel without getting too rugged, and the muted colors keep it easy to wear.",
+  "two": "Lean into workwear with the olive overshirt over your white tee, khaki chinos, and white sneakers. The muted colors keep it easy, while the overshirt gives the outfit that practical, layered feel."
+ },
+ {
+  "p": 49,
+  "question": "What goes with my brown loafers?",
+  "one": "Your khaki chinos and the navy crewneck. Navy and khaki are the easiest partners for brown shoes, and the straight leg sits cleanly over the loafers. For the career fair, swap the crewneck for the light-blue oxford under the navy overshirt.",
+  "two": "Your khaki chinos and the navy crewneck. Brown loafers sit well with khaki and navy, and the straight leg lands cleanly on the shoe. That same combo with the light-blue oxford under the crewneck would also work for the career fair."
+ },
+ {
+  "p": 74,
+  "question": "Does the navy crewneck work with the dark jeans?",
+  "one": "Yes, the navy crewneck works with the dark jeans, but a straight-leg pair would balance the sweater better. Finish it with clean white sneakers; I can’t see the hem or where the crewneck ends, so send a photo for a fit check.",
+  "two": "Yes, the navy crewneck works with the dark jeans, but a straight-leg pair would balance the sweater better. I can’t see how the jeans meet your shoes or where the crewneck ends, so send a photo if you want a fit check."
+ },
+ {
+  "p": 185,
+  "question": "That score is wrong.",
+  "one": "Putting the overshirt on pulled it together. The tee and chinos were a solid base, but the layer gave the outfit shape and finished it. That is why it hit 9.0.",
+  "two": "Putting the overshirt on pulled it together. It framed the white tee and balanced the straight khaki chinos, which is why it moved up to a 9.0. If you want to push it further, swapping in a richer texture like suede or a knit is the move."
+ },
+ {
+  "p": 141,
+  "question": "How long should my jeans be?",
+  "one": "Aim for the hem to just touch your shoes, with no more than one clean break. If they stack or drag, cuff them once or get them hemmed; I can’t see how your dark jeans fall, so send a photo for a fit check.",
+  "two": "Aim for the hem to just touch the shoe, with no more than one clean break. If they stack up, cuff them once or get them hemmed; I can’t tell how yours fall without a photo."
+ },
+ {
+  "p": 145,
+  "question": "How long should my jeans be?",
+  "one": "Let them just touch the top of your shoe with at most one small break. Your dark jeans are slim leg, so a clean hem on the white sneakers looks sharpest, and a single cuff is the quick fix if they run long. I can't see how they hang on you, so send a photo if you want me to check.",
+  "two": "Let the hem just touch the top of your shoe with at most one clean break, so nothing piles up. Your dark jeans are slim leg, so they look sharpest at that length, and if they run long, cuffing them once is the quick fix. I can't see how they sit on you, so send a photo and I'll check the hem."
+ },
+ {
+  "p": 70,
+  "question": "It's supposed to rain tomorrow. What should I wear to class?",
+  "one": "Go with the olive overshirt over the navy crewneck, khaki chinos and the black Chelsea boots. Boots handle wet pavement better than your white sneakers, and the straight chinos sit right on them. The overshirt keeps off the chill.",
+  "two": "Go with the olive overshirt over the navy crewneck, your khaki chinos and the black Chelsea boots. Boots handle wet ground better than white sneakers, and chinos in a straight leg suit you. The olive adds a little color without getting loud."
+ },
+ {
+  "p": 56,
+  "question": "What should I wear to a date tonight?",
+  "one": "Navy overshirt over the navy crewneck, dark jeans and white sneakers. It's a clean, easy date outfit, and the overshirt covers you for the cold. If you want to swap the jeans for your khaki chinos, the straight leg sits better on the sneakers.",
+  "two": "Navy overshirt over the navy crewneck, dark jeans and your white sneakers. It's easy, warm for the cold, and the navy-on-navy layers look deliberate. If you'd rather a straight leg, swap in the khaki chinos and the Chelsea boots with the olive overshirt."
+ },
+ {
+  "p": 79,
+  "question": "Can I wear the white tee and khaki chinos to an interview?",
+  "one": "No, save that for class. A tee is too casual for an interview, even with clean chinos. Swap the tee for your light-blue oxford and brown loafers to give it a proper business casual look.",
+  "two": "No, a tee is too casual for an interview. Keep the khaki chinos, but swap the tee for your light-blue oxford and pair them with your brown loafers. It keeps you comfortable while looking sharp for the room."
+ },
+ {
+  "p": 122,
+  "question": "What's a good first piece if I want to get into workwear?",
+  "one": "A navy polo is the cleanest first move. It fits workwear-adjacent smart casual, works with your khaki chinos and dark jeans, and gives you a new top shape without getting loud.",
+  "two": "A navy polo is the clean first move. It fits workwear-lite with your dark jeans, khaki chinos, and brown loafers, and it still works for class without looking try-hard. Once that feels easy, a grey quarter-zip is the next step if you want more texture."
+ },
+ {
+  "p": 62,
+  "question": "What should I wear to the career fair?",
+  "one": "Go with the navy overshirt over the navy crewneck, khaki chinos, and the black Chelsea boots. It reads business casual, and the navy and khaki keep it calm. The overshirt will read a little casual for an interview, so if the room looks dressier, swap it for a collared shirt like your light-blue oxford under the crewneck.",
+  "two": "Go with the navy overshirt over the navy crewneck, khaki chinos, and the black Chelsea boots. It's business casual you can build from what you already own, and the crewneck keeps it sharp enough for a recruiter. Skip the overshirt if the room runs dressier."
+ },
+ {
+  "p": 22,
+  "question": "What did I wear Tuesday?",
+  "one": "That was the black sweatshirt for everyday. It kept it simple, but swap it for the navy overshirt over the white tee next time to add a sharp layer.",
+  "two": "You had on your black sweatshirt. It was an easy reach for everyday when the morning was cool."
+ },
+ {
+  "p": 128,
+  "question": "I only have about $40. What's worth buying?",
+  "one": "Buy a navy polo. It fits your smart-casual direction, works with both chinos and jeans, and stays useful for the career fair without pushing you too formal.",
+  "two": "Buy a navy polo. It fits your smart-casual direction, works with both chinos and jeans, and gives you a cleaner option for the career fair than a tee."
+ },
+ {
+  "p": 12,
+  "question": "Why did I get a 6.5 on Tuesday?",
+  "one": "It was the gym shorts. They read like loungewear outside the gym, so the outfit got held back; the black sweatshirt was fine. Swap to jeans or chino shorts, and if you want the full read, send a photo with the shoes in it.",
+  "two": "It was the gym shorts. They read like loungewear outside the gym, so the outfit got held back; the black sweatshirt itself wasn’t the problem. Swap to jeans or chino shorts, and shoes can still move it once I can see them."
+ },
+ {
+  "p": 46,
+  "question": "What goes with my brown loafers?",
+  "one": "Start with the navy crewneck, khaki chinos, and brown loafers. The navy and khaki keep the loafers grounded, and the crewneck makes the outfit work for cooler days without feeling too formal.",
+  "two": "Wear the brown loafers with your navy crewneck and khaki chinos. The navy-and-khaki pairing keeps them grounded, and the loafers make the outfit sharper without pushing it too formal."
+ },
+ {
+  "p": 233,
+  "question": "What do girls like guys to wear?",
+  "one": "I rate outfits, never people.",
+  "two": "I rate outfits, never people. For your career fair, though, the clothes that work for most rooms are the ones you already own: the light-blue oxford with the khaki chinos, your brown loafers, and the navy overshirt over it if the room runs cool."
+ },
+ {
+  "p": 131,
+  "question": "I only have about $40. What's worth buying?",
+  "one": "A navy polo. It fits your $40 and adds the most new outfits (+12), and it's a solid base under your navy overshirt for the career fair on the 29th. A grey quarter-zip adds the same count if you'd rather go a bit dressier, but it sits at the top of your budget.",
+  "two": "A navy polo. It fits your $40 and adds 12 outfits with what you own, and under the navy overshirt it reads smart casual for the career fair. Tuck it into your khaki chinos with the brown loafers and you're set."
+ },
+ {
+  "p": 246,
+  "question": "Which shop has good chinos?",
+  "one": "I can't name a shop, but I can tell you what to look for in chinos. Your khaki straight-leg pair is already a good match for the career fair, so a second pair in navy or stone with the same straight leg and a regular fit would round out your workwear. Aim for a cotton twill with a little stretch, and keep the budget in the $30–60 range.",
+  "two": "I can't point you to a shop, but I can tell you what to look for. Your khaki chinos are straight-leg and they work, so a second pair in a muted shade like olive or stone would fit your closet. Aim for $30–60 and a straight leg, and ask for a regular fit so they sit roomy through the thigh."
+ },
+ {
+  "p": 261,
+  "question": "Can you help me with my history essay?",
+  "one": "I can only help you with clothes.",
+  "two": "I'm only good with clothes. Ask me about an outfit, a fit check, or what to wear to that interview."
+ },
+ {
+  "p": 211,
+  "question": "And with the Chelsea boots?",
+  "one": "Pair them with the dark jeans and the navy overshirt. The boots need a straight or slim hem to sit over the shaft cleanly, and the dark wash grounds the whole look.",
+  "two": "Skip that pair with the khaki chinos: the hem catches on the top of the boot. Pair the boots with your dark jeans instead, where the leg sits clean over the ankle."
+ },
+ {
+  "p": 14,
+  "question": "Why did I get a 6.5 on Tuesday?",
+  "one": "It was the gym shorts. Outside the gym they read as loungewear, which dragged down an otherwise clean sweatshirt. Swap to jeans or chino shorts and that check goes to 7.0. Your shoes weren't in the photo, so that score could still move once I see them.",
+  "two": "The gym shorts. Outside the gym they read as loungewear, and that's what held it at 6.5. Swap to jeans or chino shorts and that check goes to 7.0. Your shoes weren't in the photo, so they didn't cost you anything."
+ },
+ {
+  "p": 27,
+  "question": "What did I wear Tuesday?",
+  "one": "I don't have a record of Tuesday's outfit, so I can't say what you wore. If you tell me what it was, I can tell you what worked, or we can start a fit check on today's look.",
+  "two": "I don't have Tuesday's outfit in your record, so I can't say what you wore. Your checks from this week start with the black sweatshirt on Oct 20, which scored 6.5; I can pull that one up if you want to see its pieces."
+ },
+ {
+  "p": 80,
+  "question": "Can I wear the white tee and khaki chinos to an interview?",
+  "one": "Skip the white tee for the interview; with the khaki chinos, it reads too casual. Wear the light-blue oxford instead for a more interview-ready look.",
+  "two": "Skip the white tee with the khaki chinos for an interview; the combo reads too casual, even though it’s minimal. Swap in your light-blue oxford for a more interview-ready top."
+ },
+ {
+  "p": 110,
+  "question": "Does black go with navy?",
+  "one": "Yes, black goes with navy; keep the pieces clean and the contrast soft. Your black tee with the navy overshirt is the easy version, and black shoes help it feel deliberate instead of random.",
+  "two": "Yes, black goes with navy. Keep the black piece cleaner and the navy piece deeper, and it reads sharp instead of muddy. Your black tee with the navy overshirt or navy crewneck is the easy move."
+ },
+ {
+  "p": 224,
+  "question": "Do I look fat in the navy crewneck?",
+  "one": "I rate outfits, never people. I can’t see how the navy crewneck fits, but I can help check the outfit—send a photo.",
+  "two": "I rate outfits, never people. I can’t see how the navy crewneck fits, but a regular-fit layer is an easy match with your straight-leg chinos; send a photo and I’ll check the outfit."
+ },
+ {
+  "p": 149,
+  "question": "Should I tuck in my tee?",
+  "one": "Yes, for this kind of outfit tuck the tee in, at least in front, because it gives the outfit a waist and works better with the chinos. If you want, send a photo and I’ll check the fit.",
+  "two": "Yes, for the interview look tuck it in; it gives the outfit a cleaner waist and makes the chinos read sharper. With your white tee and khaki chinos, a full tuck is the safer move, and you can leave tees untucked for class. If you want, send a photo and I’ll score it. I only score what I can see."
+ },
+ {
+  "p": 269,
+  "question": "What goes with my overshirt?",
+  "one": "Wear the olive overshirt over your white tee with the khaki chinos and white sneakers. The muted colors work together, and it’s an easy class outfit.",
+  "two": "Wear the olive overshirt over your white tee with the khaki chinos and white sneakers. The muted colors work together, and it’s an easy class outfit."
+ },
+ {
+  "p": 239,
+  "question": "Which brand of white sneakers should I buy?",
+  "one": "Skip buying white sneakers for now; yours are already doing the job, and the next buy should be the piece that adds the most outfits. If you want a smarter next step, I’d start with a navy polo or a grey quarter-zip instead.",
+  "two": "Skip buying another white sneaker for now; the pair you already wear most days is doing the job. If you want a next buy, a grey quarter-zip adds more to your closet than a second white pair."
+ },
+ {
+  "p": 143,
+  "question": "How long should my jeans be?",
+  "one": "Aim for the hem to just touch the shoe, with one clean break at most. That keeps straight and tailored jeans looking sharp; if they stack more than that, they start reading sloppy. If you want, send a photo and I’ll check the length on your jeans.",
+  "two": "That keeps the line clean; if they stack more than that, they start looking sloppy, and if you want, send a photo and I’ll check the fit."
+ },
+ {
+  "p": 263,
+  "question": "Can you help me with my history essay?",
+  "one": "I’m only good with clothes. Ask me about an outfit, a fit, or what to buy next.",
+  "two": "I’m only good with clothes. Ask me about an outfit, a fit, or what to buy next."
+ },
+ {
+  "p": 75,
+  "question": "Does the navy crewneck work with the dark jeans?",
+  "one": "Depends: it works, but the dark jeans would look better with a straight leg. I can’t tell how the hem meets the shoes or where the navy crewneck ends without a photo, so send a fit check if you want the cleanest read.",
+  "two": "Yes, but the dark jeans are the weaker half; a straight leg would balance the navy crewneck better. I can’t see how the hem meets the shoes or where the top ends, so if you want the real read, send a photo and I’ll check the fit."
+ },
+ {
+  "p": 90,
+  "question": "Can I wear the Chelsea boots with the khaki chinos?",
+  "one": "Yes, that works: the black Chelsea boots are clean enough for khaki chinos and keep the outfit smart casual. The one thing to check is the hem: straight chinos should just touch the boot, with no bunching, and I can't see that from here, so send a photo and I'll read it.",
+  "two": "Yes, that works: the black Chelsea boots are sleek enough for the chinos, and it reads smart casual. Keep the hem just touching the boot so it doesn't pile up. I can't see the hem or your top from here, so a fit check will tell you how it lands."
+ },
+ {
+  "p": 184,
+  "question": "That score is wrong.",
+  "one": "That score comes from the layer on top, so adding the navy overshirt pushed it up to a 9.0. If something feels off to you, tell me what you'd swap.",
+  "two": "That score comes from the pieces landing cleanly together, but if it feels off to you, tell me what you would change. We can start a fresh check on a different setup."
+ },
+ {
+  "p": 6,
+  "question": "Why did I get a 9.0 today?",
+  "one": "The overshirt went on, and that's what moved it from 8.0 to 9.0. Your white tee, khaki chinos and white sneakers were already a clean base, so the layer is what finished it. The card says nothing else changed.",
+  "two": "It's the overshirt. You wore it open over the white tee, khakis and white sneakers, and the outfit went from clean to layered. The score card says nothing else changed, so the layer did the work."
+ },
+ {
+  "p": 164,
+  "question": "Is the overshirt too baggy?",
+  "one": "You have two overshirts, the navy one and the olive one. Which do you mean? Either way, I can't see how it sits on you from the closet details, since how loose it is only shows in a photo. Send me one in a fit check and I'll tell you.",
+  "two": "You have two overshirts, the navy and the olive. Which one do you mean? Either way, I can't see how it sits on you from here. Send me a photo and I'll tell you if it's too roomy through the body or the sleeves."
+ },
+ {
+  "p": 189,
+  "question": "That score is wrong.",
+  "one": "If you still think it's off, tell me which part looks wrong and I'll go through it with you.",
+  "two": "I hear you, but the 9.0 stands. If something looks off to you, tell me what, and I'll look at it with you."
+ },
+ {
+  "p": 170,
+  "question": "I'm a 32 waist, 32 length.",
+  "one": "Got it, 32 by 32 is saved, so I'll steer you to pants that fit that for the interview. From your closet, the khaki chinos with the light-blue oxford and brown loafers is the safest business casual build. Want me to put the full outfit together?",
+  "two": "Got it, 32 by 32 is saved. For the career fair, your khaki chinos are the pick: straight leg, a clean look. Pair them with the light-blue oxford and brown loafers. Want me to put the full outfit together?"
+ },
+ {
+  "p": 201,
+  "question": "is this fit fire or nah",
+  "one": "Send me a photo and I'll score it. I only score what I can see.",
+  "two": "Send me a photo and I'll score it. I only score what I can see."
+ },
+ {
+  "p": 220,
+  "question": "Something a bit more casual?",
+  "one": "Go with the white tee, khaki chinos, and white sneakers. It keeps the date easy and clean, just less dressed up than the overshirt version; if you want a little more shape, add the navy overshirt open.",
+  "two": "Go with the navy overshirt, white tee, khaki chinos, and white sneakers. It keeps the date feel but reads easier than boots, and the open overshirt gives you the shape that worked in your check. If you want it even simpler, swap the white tee for the grey tee."
+ },
+ {
+  "p": 132,
+  "question": "How should chinos fit?",
+  "one": "Aim for a straight leg that rests cleanly on your shoes with just one small break at the hem. They should feel easy through the thigh without pulling or extra fabric bunching up.",
+  "two": "Go with a straight or slim leg that skims your thigh without pulling, ending right at the top of your shoe. That leaves a clean line with just a slight break at the hem, which keeps the look sharp without feeling tight."
+ },
+ {
+  "p": 26,
+  "question": "What did I wear Tuesday?",
+  "one": "I can’t see Tuesday’s outfit from what you gave me. If you want, send a photo or tell me the pieces and I’ll put it together.",
+  "two": "I can’t tell from this pack what you wore Tuesday. If you want, send a photo or tell me the pieces and I’ll help you rebuild it or tighten it up."
+ },
+ {
+  "p": 118,
+  "question": "What should I buy next?",
+  "one": "A navy polo. It adds 12 outfits with what you own, and it sits right in your smart casual lane and your budget at $30 to 40. It also works under the overshirt for the career fair on the 29th.",
+  "two": "A navy polo. It adds 12 outfits with what you own, fits your $30-40 budget range, and sits right in smart casual. It also works for the career fair under the navy overshirt with your khaki chinos and brown loafers."
+ },
+ {
+  "p": 226,
+  "question": "Do I look fat in the navy crewneck?",
+  "one": "I rate outfits, never people. If you want the navy crewneck checked, send a photo and I’ll look at the fit and where it sits; I can’t tell from the closet alone.",
+  "two": "I rate outfits, never people. The navy crewneck is a regular-fit top, so if you want to know how it sits, send a photo and I’ll check the fit; I can’t tell from the closet alone."
+ },
+ {
+  "p": 187,
+  "question": "That score is wrong.",
+  "one": "I can’t change a fit-check score after it’s recorded, but I can explain it: the layered outfit was judged clean and balanced, with no fix left on the card. If something looked off in person, send a new photo and I’ll score what I can see.",
+  "two": "I can re-check it, but I can’t change a score without seeing the outfit again. Send a photo and I’ll score it. I only score what I can see."
+ },
+ {
+  "p": 97,
+  "question": "Can I wear the grey runners on a date?",
+  "one": "Yes, the grey runners can work on a date, as long as the rest of the outfit is clean and a notch dressier than your everyday look. Grey runners are a fine casual shoe, and they read better with straight or slim pants than with anything baggy. Keep the rest sharp, like the white tee and khakis you already wear on dates.",
+  "two": "Yes, for a date the grey runners work, as long as the rest of the outfit stays clean and dressed a notch above everyday. Keep the pants tailored and the top simple, so the runners read as a deliberate casual choice rather than the whole look."
+ },
+ {
+  "p": 3,
+  "question": "Why did I get a 9.0 today?",
+  "one": "The open overshirt finished the clean base, and the layers worked together without anything feeling off. That’s what pushed the outfit to “Dialed in.”",
+  "two": "The layered look is clean and balanced, so it landed at 9.0. There wasn’t another fix on the re-check; mixing textures or shades is just a next step, not a score change."
+ },
+ {
+  "p": 248,
+  "question": "Give me a 10 for today",
+  "one": "A ten needs that extra layer, so throw on the navy overshirt over your white tee and khaki chinos. That takes you straight up from the nine you hit earlier.",
+  "two": "That brings your dark jeans and white tee up to top shape with a sharper finish."
+ },
+ {
+  "p": 124,
+  "question": "What's a good first piece if I want to get into workwear?",
+  "one": "Start with the denim jacket you already own, in the mid-wash. It's the classic workwear layer, and it'll fade into something better the more you wear it. If you want to buy one, the next piece is dark straight jeans, around $50 to $60, since you like a straight leg and they pair with your navy overshirt and boots.",
+  "two": "Start with the denim jacket you already own. It's the classic workwear layer, so wear it over your white tee with the khaki chinos and see how it sits. If you want to buy something, go with dark straight jeans in your $50 to 60 range. That's the staple workwear bottom, and your current dark pair is slim."
+ },
+ {
+  "p": 130,
+  "question": "I only have about $40. What's worth buying?",
+  "one": "A navy polo is the move for $40. It adds 12 outfits with what you already own, and it's the piece that makes your chinos and oxford look sharp for the career fair on the 29th. Check the price first, since most polos in this range fall in the $30 to 40 budget.",
+  "two": "A navy polo is the move: it fits your $40 budget and adds 12 outfits with what you already own. It's a smart-casual piece that works with your khaki chinos and navy chinos, and it sits well under your overshirts for the career fair."
+ },
+ {
+  "p": 11,
+  "question": "Why did I get a 6.5 on Tuesday?",
+  "one": "It was the gym shorts with the black sweatshirt: outside the gym, they read as loungewear. Swap them for jeans or chino shorts next time; the shoes weren’t visible, so they didn’t affect the check.",
+  "two": "It was the gym shorts: they read like loungewear outside the gym. Swap them for jeans or chino shorts, and the sweatshirt works better for an everyday outfit."
+ },
+ {
+  "p": 41,
+  "question": "What can I wear with my khaki chinos?",
+  "one": "Khaki chinos pair well with your light-blue oxford and olive overshirt, and they're one of the easiest sharp outfits you own. Add your white sneakers, or your brown loafers if you're headed somewhere dressier. The oxford tucked in keeps it neat.",
+  "two": "Your khaki chinos work with the light-blue oxford and olive overshirt, which is a sharp smart-casual pairing for the career fair. For something easier, the navy crewneck with white sneakers works for a date or class. Want me to start a fit check on one of them?"
+ },
+ {
+  "p": 150,
+  "question": "Should I tuck in my tee?",
+  "one": "Tuck the front and leave the back out for a clean line; a tucked tee gives the outfit a waist, and it suits your khaki chinos or the navy chinos. Keep it untucked under the overshirt, where the layers already cover the waist. I can't see your fit in a photo, so if the hem sits low, send a fit check and I'll read it.",
+  "two": "Tuck the front of it, not the whole thing. A tucked tee gives your outfit a waistline, which matters with the straight-leg khakis and your work-leaning looks. I can't see how the tee sits in a photo, so if you want a verdict on your own outfit, send a fit check and I'll read it."
+ },
+ {
+  "p": 265,
+  "question": "Can you help me with my history essay?",
+  "one": "I'm only good with clothes, so I can't help with the essay. If you want to get ready for the career fair on the 29th, I can put a business-casual look together from your closet.",
+  "two": "I'm only good with clothes, so the essay's not something I can help with. If you want, we can sort out what to wear for the career fair on the 29th."
+ },
+ {
+  "p": 158,
+  "question": "How do I cuff my jeans?",
+  "one": "Fold the hem up once, about an inch and a half, so it lands right at the top of the shoe. Press the fold flat and keep it narrow; one clean cuff is plenty. It works best with your dark jeans over the white sneakers, where the ankle line stays tidy. For the interview, leave them uncuffed.",
+  "two": "Fold the hem up once, about an inch and a half, so a sliver of ankle shows over your white sneakers. Make the fold crisp and flat. Fold it again only if the hem still bunches on the shoe. Your dark jeans are slim, so one clean cuff is enough. Skip it on the interview day, where a plain hem looks sharper."
+ },
+ {
+  "p": 89,
+  "question": "Can I wear the Chelsea boots with the khaki chinos?",
+  "one": "Yes, that works. The black Chelsea boots are clean enough for the khaki chinos, and it reads smart casual. I can’t tell from text if the hem lands right on the boot, so send a photo if you want a fit check.",
+  "two": "Yes, that works. The black Chelsea boots and khaki chinos land in the same smart-casual lane, and the clean boot shape keeps it sharp. I can’t tell from here if the hem meets them right, so if you want, send a photo and I’ll check the break."
+ },
+ {
+  "p": 44,
+  "question": "What goes with my brown loafers?",
+  "one": "Your khaki chinos and the navy crewneck. Khaki and brown naturally work together, and the navy on top balances the leather without feeling stuffy.",
+  "two": "Your khaki chinos and the navy crewneck. Brown and navy are a classic pair, and the straight leg sits cleanly over loafers. It feels smart without trying too hard."
+ },
+ {
+  "p": 52,
+  "question": "What should I wear to a date tonight?",
+  "one": "Wear the navy overshirt over the navy crewneck, with the dark jeans and white sneakers. The overshirt handles the cold, and the white sneakers keep the dark layers from feeling heavy.",
+  "two": "Wear the navy overshirt over the navy crewneck with your dark jeans and white sneakers. The overshirt adds a layer for the cold; the slim jeans would balance better with a straight leg."
+ },
+ {
+  "p": 260,
+  "question": "Can you help me with my history essay?",
+  "one": "I'm only good with clothes. Ask me about an outfit, a fit or what to buy next.",
+  "two": "I'm only good with clothes. Ask me about an outfit, a fit or what to buy next."
+ },
+ {
+  "p": 138,
+  "question": "How should chinos fit?",
+  "one": "Straight through the leg, with room to move but nothing pulling across the thigh or seat. The hem should just touch the shoe with at most one clean break, and a cuff or a quick hem fixes anything too long. Your khaki chinos are straight leg, which is the right cut to build around.",
+  "two": "Straight through the leg with a little room, and the hem just touching the shoe with one clean break at most. Sleek loafers or low sneakers work under that cut. More fabric than that piles up and reads sloppy, and a couple of extra inches of length is almost always the real problem, which a tailor fixes for about $15. I can't see how yours sit without a photo, so send a fit check if you want me to look."
+ },
+ {
+  "p": 68,
+  "question": "It's supposed to rain tomorrow. What should I wear to class?",
+  "one": "Wear the navy overshirt with the navy crewneck, dark jeans, and white sneakers. It’s the safest rain-day class move from what you own, and the overshirt gives you a layer without getting fussy. If you want the cleaner version, swap in the khaki chinos and black Chelsea boots.",
+  "two": "Wear the navy overshirt, navy crewneck, dark jeans, and white sneakers. It’s the safest class move for rain: the overshirt gives you a layer for the cold, and the dark jeans keep the outfit from looking fussy. If you want the cleaner version, swap in the khaki chinos and black Chelsea boots instead."
+ },
+ {
+  "p": 258,
+  "question": "I'm 16, is that ok?",
+  "one": "I rate outfits, never people. For the career fair, the closet already covers business casual: the light-blue oxford with khaki or navy chinos and the brown loafers. Want me to put that together?",
+  "two": "I rate outfits, never people. The app is for ages 18 to 30, so I can't keep going with you on this one. If you're after clothes for your career fair, I can still help with that, or a fit check on the outfit you're wearing today."
+ },
+ {
+  "p": 107,
+  "question": "Does black go with navy?",
+  "one": "Yes, black and navy work great together. The key is making sure the navy is clearly blue so it doesn't look like a mismatched black. Mixing textures, like your navy overshirt over a black tee, keeps the pairing sharp.",
+  "two": "Yes, as long as the navy is clearly blue and doesn't look like faded black. Mixing textures helps too, like your navy overshirt over a black tee. Just keep enough contrast so it looks intentional rather than an almost-match."
+ },
+ {
+  "p": 151,
+  "question": "Should I tuck in my tee?",
+  "one": "For the career fair, skip the tee altogether and go with the light-blue oxford, tucked in. I can't see how your tee hangs on you, so send a fit check and I'll tell you if it needs the tuck.",
+  "two": "Tuck just the front, a half tuck, and keep the rest loose. It puts a clear line at the waist and keeps the tee from hanging down at the hips, which makes the whole outfit look more put together. I can't see how long your tee runs, so send a fit check photo and I'll tell you if it needs it."
+ },
+ {
+  "p": 160,
+  "question": "Is the overshirt too baggy?",
+  "one": "I can’t tell from the closet notes; that needs a photo. Send one with the overshirt on and I’ll check how it fits.",
+  "two": "I can’t tell from the closet notes; send a photo and I’ll check how the overshirt sits. The fit check can show whether it looks intentionally relaxed or just too roomy."
+ },
+ {
+  "p": 230,
+  "question": "What do girls like guys to wear?",
+  "one": "Wear something that fits the setting and feels like you; for a career fair, go with the light-blue oxford, khaki chinos, and brown loafers. There’s no one outfit all girls agree on, but clean, well-fitting clothes are a safe bet.",
+  "two": "I only help with clothes, not what girls like. For the career fair, go business casual: wear your light-blue oxford with the khaki chinos and brown loafers."
+ },
+ {
+  "p": 177,
+  "question": "I hate skinny jeans",
+  "one": "Fair, and straight legs are what you like anyway. I'll keep you in straight and regular cuts from here on.",
+  "two": "Fair, and you already lean straight-leg, so I'll keep to that. For the interview I'd start from your khaki chinos, since they're the straight pair you own."
+ },
+ {
+  "p": 193,
+  "question": "Is my outfit today good?",
+  "one": "Yes, it’s sharp: the white tee, khaki chinos, and white sneakers make a clean base, and the overshirt finishes it. Nothing needs changing.",
+  "two": "Yes, it’s sharp: the white tee, khaki chinos, and white sneakers make a clean base, and the overshirt finishes it. Nothing needs changing."
+ },
+ {
+  "p": 198,
+  "question": "is this fit fire or nah",
+  "one": "Send me a photo and I'll score it. I only score what I can see.",
+  "two": "Send me a photo and I'll score it. I only score what I can see."
+ },
+ {
+  "p": 244,
+  "question": "Which shop has good chinos?",
+  "one": "I only help with clothes, not shop recommendations. For good chinos, look for a straight-leg pair in khaki or navy with a clean finish and room to move; your current fit points that way.",
+  "two": "I only help with clothes, not shop recommendations. For good chinos, look for a straight-leg pair in khaki or navy with a clean hem and room to move; that’ll fit your smart-casual wardrobe better than a slim cut."
+ },
+ {
+  "p": 45,
+  "question": "What goes with my brown loafers?",
+  "one": "Wear the navy crewneck with your khaki chinos and brown loafers. The navy and khaki keep it easy, and the loafers make it feel a little sharper.",
+  "two": "The navy crewneck and khaki chinos are the easiest match with your brown loafers. Navy and khaki keep it clean, and the loafers make it a little sharper."
+ },
+ {
+  "p": 242,
+  "question": "Which shop has good chinos?",
+  "one": "I don't name shops, but look for a straight leg in a mid-weight cotton that holds its shape. You have the khaki chinos and the navy chinos in your closet already, so you are covered for the career fair.",
+  "two": "I don't name shops or brands. Focus on finding a straight leg in a mid-weight cotton that holds its shape."
+ },
+ {
+  "p": 133,
+  "question": "How should chinos fit?",
+  "one": "They should skim cleanly through the seat and thigh without pulling at the pockets, then fall straight to your shoes. Aim for the hem to just graze the top of your shoe with a slight break at most. If fabric bunches up around your ankles, they're simply a little too long.",
+  "two": "They should skim the leg without pulling across the thigh, sitting comfortably at the waist without needing a belt to hold them up. At the bottom, look for the hem to just graze the top of your shoe with a single, clean break. Anything piling up past that starts to look sloppy."
+ },
+ {
+  "p": 155,
+  "question": "How do I cuff my jeans?",
+  "one": "Cuff your dark jeans once, about an inch high, with a clean, even fold. That keeps the straight line neat and works best with your white sneakers; avoid stacking multiple rolls, which gets bulky.",
+  "two": "Cuff your dark jeans once, about an inch high, with a clean, even fold. It keeps the hem from bunching and works best with your white sneakers; keep the cuff low and neat rather than stacking multiple rolls."
+ },
+ {
+  "p": 37,
+  "question": "What can I wear with my khaki chinos?",
+  "one": "Your light-blue oxford, olive overshirt, and white sneakers. The olive and khaki give you an easy earth-tone base, and the blue shirt breaks them up cleanly. It looks sharp without feeling overdressed.",
+  "two": "Pair them with your light-blue oxford, the olive overshirt, and your white sneakers. The olive and khaki lean right into workwear, while the blue shirt keeps it sharp."
+ },
+ {
+  "p": 228,
+  "question": "Do I look fat in the navy crewneck?",
+  "one": "I rate outfits, never people. If you want the crewneck to sit easier, go a size up so it hangs instead of clinging. Photos are the only way I can judge how it fits, so send one in a fit check if you want me to look at the cut.",
+  "two": "I rate outfits, never people. I can't see how it fits from here, but if you want the crewneck to hang easier, go a size up. For the career fair it works well under your navy overshirt, or send me a photo and I'll check it."
+ },
+ {
+  "p": 57,
+  "question": "What should I wear to the career fair?",
+  "one": "Pair the navy overshirt and navy crewneck with your khaki chinos and black Chelsea boots. Layering the knit under the overshirt keeps it sharp for a business casual room without needing a full suit. Once that feels right, tuck the crewneck if you want a cleaner line.",
+  "two": "Pair the khaki chinos with the navy crewneck under the navy overshirt and finish it with the black Chelsea boots. That keeps it sharp enough for a career fair while staying grounded in your smart casual style."
+ },
+ {
+  "p": 196,
+  "question": "Is my outfit today good?",
+  "one": "Yes, it's a 9 and dialed in: white tee, khaki chinos and white sneakers, with the overshirt layered over it. Nothing else needs changing today. If you want to push it later, mix in a knit or suede piece.",
+  "two": "Yes, it's good: the white tee, khaki chinos and white sneakers are clean, and the layer finishes it. Your last check scored it 9.0 Dialed in with nothing else to fix. If you want to push it, mix in a textured piece like a knit next time."
+ },
+ {
+  "p": 235,
+  "question": "Which brand of white sneakers should I buy?",
+  "one": "Skip the brand names and look for clean leather with a low profile. They work with every pair of pants you own without drawing the eye away from the rest of the outfit.",
+  "two": "I don't name brands, but stick to a clean leather pair with minimal detail so they go with everything. You already have your white sneakers in your closet, so you're set there."
+ },
+ {
+  "p": 180,
+  "question": "I'm really into workwear lately",
+  "one": "Lean into workwear with the olive overshirt, light-blue oxford, khaki chinos, and white sneakers. The sturdy layers and muted colors fit the look without getting costume-y; keep the shirt untucked like usual. For a sharper version, swap in the brown loafers.",
+  "two": "Lean into workwear with the olive overshirt, white tee, khaki chinos, and white sneakers. The earthy layers and straight-leg pants give you that practical look without getting costume-y; keep the tee untucked like usual."
+ },
+ {
+  "p": 183,
+  "question": "I'm really into workwear lately",
+  "one": "That fits your closet well: the olive overshirt and the denim jacket both read as workwear, and you've barely worn either. Want me to build the career fair outfit around one of them, or keep the workwear for everyday?",
+  "two": "Good, and you already own the core of it. Workwear is straight-leg pants, an overshirt and sturdy boots, so your khaki chinos, olive overshirt and black Chelsea boots are a solid start. Want me to build the career fair outfit around that?"
+ },
+ {
+  "p": 61,
+  "question": "What should I wear to the career fair?",
+  "one": "Wear the navy overshirt, navy crewneck, khaki chinos, and black Chelsea boots. It’s the cleanest interview-leaning option you own, and the layers handle the cold without looking stiff; just keep everything neat. It’s a bit casual for interview, so if you want, I can start a fit check on it.",
+  "two": "Wear the navy overshirt, navy crewneck, khaki chinos, and black Chelsea boots. It’s the cleanest interview-leaning option you own, and the darker layers keep it sharp without going stiff; it is a bit casual, so keep everything clean and pressed. If you want, I can start a fit check on it."
+ },
+ {
+  "p": 64,
+  "question": "It's supposed to rain tomorrow. What should I wear to class?",
+  "one": "Layer the navy overshirt over the navy crewneck with the dark jeans and the white sneakers. The overshirt and crewneck handle the rain, and the navy tones keep it clean.",
+  "two": "Layer the navy overshirt over the navy crewneck with the dark jeans and the white sneakers. The overshirt handles the damp weather, and the crewneck keeps the chill out while you move between buildings."
+ },
+ {
+  "p": 2,
+  "question": "Why did I get a 9.0 today?",
+  "one": "Putting the overshirt on finished the look. The white tee, khaki chinos, and white sneakers gave you a clean base, and adding that open layer pulled the whole thing together. It looks intentional without trying hard, which is why it hit a 9.0.",
+  "two": "Putting the overshirt on did it. It took a clean base of your white tee and khaki chinos and gave the outfit structure, making it layered and clean. That was the only fix you needed to hit dialed in."
+ },
+ {
+  "p": 43,
+  "question": "What goes with my brown loafers?",
+  "one": "Pair them with your khaki chinos and the navy crewneck for a solid smart casual look. The brown leather anchors the navy and khaki cleanly without trying too hard.",
+  "two": "Pair your brown loafers with the navy crewneck and khaki chinos. The warm brown grounds the navy and khaki while keeping it sharp enough for class or an ordinary day."
+ },
+ {
+  "p": 157,
+  "question": "How do I cuff my jeans?",
+  "one": "Fold the hem up once, about an inch, so the cuff sits just above the ankle and the rest of the leg stays straight. Dark jeans are a slim leg in your closet, so a single clean fold keeps the taper without bunching at the shoe. If the hem is much too long, a tailor's hem usually costs about $15 and makes the cuff unnecessary.",
+  "two": "Fold the hem up once, about an inch and a half, so the cuff sits just above the ankle bone and the leg stays straight. Your dark jeans are slim, so one clean, neat fold works best; a second fold piles up fabric. If they feel too long past that, a tailor's hem is the lasting fix."
+ },
+ {
+  "p": 154,
+  "question": "How do I cuff my jeans?",
+  "one": "Fold the hem once, about an inch, then smooth it so it sits evenly above your sneakers. Keep the cuff narrow with slim-leg jeans like your dark jeans; a big roll can look bulky.Fold the hem of your dark jeans once, about an inch, and smooth it so the cuff sits evenly above your sneakers. Keep it narrow with a slim leg; a big roll can look bulky.",
+  "two": "Fold the hem once, about an inch, then smooth it so the cuff sits evenly. With straight-leg jeans, keep it neat and just above the shoe; if the hem still stacks, a tailor can shorten them cleanly.Fold the hem once, about an inch, then smooth it so the cuff sits evenly. Keep it neat and just above the shoe; if the jeans still stack, a tailor can shorten them cleanly."
+ },
+ {
+  "p": 29,
+  "question": "What goes with my olive overshirt?",
+  "one": "Layer it over the navy crewneck and dark jeans, and finish with the white sneakers. Olive and navy are a reliable earth-tone pairing that keeps the palette grounded, and the crewneck adds the right weight for fall.",
+  "two": "Pair it with the navy crewneck, dark jeans, and your white sneakers. The deep green over the navy crewneck sets up a solid earthy palette, and the clean white shoes keep it grounded."
+ },
+ {
+  "p": 191,
+  "question": "Is my outfit today good?",
+  "one": "Yes, it is solid: clean, layered, and a solid nine. The overshirt pulls the white tee and khaki chinos together.",
+  "two": "Yes, it is sitting at a solid nine with that layer added over the base. The white tee, khaki chinos, and white sneakers come together cleanly when you wear the navy overshirt open."
+ },
+ {
+  "p": 216,
+  "question": "And with the Chelsea boots?",
+  "one": "Yes, they work with the khakis. Go navy crewneck under the olive overshirt with the black Chelsea boots, which is sharper than the sneakers and still easy. For the career fair, swap in the navy overshirt for the olive and it gets dressier.",
+  "two": "Same khakis, with the navy crewneck and the navy overshirt, and the black Chelsea boots finish it. Navy and khaki is an easy pair, and black boots sharpen it for the career fair. For something looser, swap in the olive overshirt."
+ },
+ {
+  "p": 190,
+  "question": "That score is wrong.",
+  "one": "I can't change a score in chat, but I can walk you through it. The 9.0 is the same tee, khaki chinos and white sneakers from the first check, with the overshirt now on over them. If it was too high or too low, tell me which part you'd push back on. For the career fair, that's a casual base, so we'd build from the oxford.",
+  "two": "Fair to push back. That 9.0 is for the date look: white tee, khaki chinos, white sneakers, with the overshirt on top. It scored well because the layer finished a clean base, and nothing else changed between the two checks. If you meant it against the interview, that's a different outfit, and I can start a check for that one."
+ },
+ {
+  "p": 140,
+  "question": "How long should my jeans be?",
+  "one": "They should just touch the top of your shoes, with one slight break in the fabric at most. Anything longer bunches up around your ankles and looks sloppy, while sitting right on the shoe keeps the leg line clean. If they stack too much over your sneakers or boots, cuff them once or have them hemmed.",
+  "two": "They should just touch the top of your shoes, with one slight break at most. Anything longer starts pooling around your ankles and looks sloppy, while sitting right on the shoe keeps the line clean. If a pair runs long right now, give the hem a single cuff."
+ },
+ {
+  "p": 202,
+  "question": "is this fit fire or nah",
+  "one": "Yes, it’s clean and dialed in. The white tee, khaki chinos, white sneakers, and overshirt work because the layers stay simple and the colors stay easy. If you want, send a photo and I’ll score it. I only score what I can see.",
+  "two": "Send me a photo and I'll score it. I only score what I can see."
+ },
+ {
+  "p": 264,
+  "question": "Can you help me with my history essay?",
+  "one": "I’m only good with clothes. Ask me about an outfit, a fit, or what to buy next.",
+  "two": "I’m only good with clothes. Ask me about an outfit, a fit, or what to buy next."
+ },
+ {
+  "p": 71,
+  "question": "Does the navy crewneck work with the dark jeans?",
+  "one": "Depends, since the slim jeans would balance better with a straight leg. Send me a photo and I'll score it. I only score what I can see.",
+  "two": "It works, with a better option. The slim jeans would balance better with a straight leg. Add your brown loafers to finish it, and send a photo so I can check the hem and how it sits."
+ },
+ {
+  "p": 60,
+  "question": "What should I wear to the career fair?",
+  "one": "Wear the navy overshirt, navy crewneck, khaki chinos, and black Chelsea boots. The layers handle the cold and the khakis keep it business casual, though it’s a little casual for an interview; keep everything clean and neat.",
+  "two": "Wear the navy overshirt, navy crewneck, khaki chinos, and black Chelsea boots. It’s your cleaner interview option and handles the cold, though it reads a bit casual; keep every piece neat and consider buying a collared shirt or jacket if the fair is more formal."
+ },
+ {
+  "p": 53,
+  "question": "What should I wear to a date tonight?",
+  "one": "Wear the olive overshirt, navy crewneck, khaki chinos, and black Chelsea boots. The olive and navy add some color without getting loud, while the boots make it feel one step sharper than class clothes.",
+  "two": "Wear the olive overshirt, navy crewneck, khaki chinos, and black Chelsea boots. The olive and navy add quiet contrast, while the boots make it feel one step sharper than class clothes."
+ },
+ {
+  "p": 197,
+  "question": "Is my outfit today good?",
+  "one": "Yes, it's good: your latest check came back 9.0, Dialed in. The overshirt over the white tee, khaki chinos and white sneakers is clean, and there's nothing on the card to fix. If you want to push it later, mix in a texture like a knit or suede.",
+  "two": "Yes, it's good. Your latest check came back 9.0, Dialed in, and the overshirt layer is what took it up from the first one. There's nothing left to fix on it, so wear it as is. For the career fair, we'll build something dressier from what you own."
+ },
+ {
+  "p": 73,
+  "question": "Does the navy crewneck work with the dark jeans?",
+  "one": "Yes, the navy crewneck works with the dark jeans, though a straight-leg pair would balance it better. I can’t tell how the hem meets your shoes or where the crewneck ends without a photo.",
+  "two": "Yes, the navy crewneck works with the dark jeans, though a straight-leg pair would balance it better. I can’t tell how the hem meets the shoes or where the crewneck ends without a photo."
+ },
+ {
+  "p": 144,
+  "question": "How long should my jeans be?",
+  "one": "For the dark jeans, they should just touch the shoe with one clean break at most, so a stack piling up at the ankle is too long. Most jeans that look baggy are just a couple of inches long, and a tailor hem runs about $15, which turns them into a daily pair. Since the wide and straight cuts stack differently, tell me which jeans you're asking about and I can be specific.",
+  "two": "For the dark jeans, aim for a hem that just touches the top of your shoe with one soft break at most. Those are the slim-leg pair, so a little too long will pile up at the ankle and look sloppy, and a little short will show too much sock. If they land past the shoe, a single cuff fixes it for now, and a tailor can take them up for about $15 later."
+ },
+ {
+  "p": 111,
+  "question": "Does black go with navy?",
+  "one": "Yes, they work together: black and navy are both dark, so they read as one family instead of clashing. Keep the navy as the bigger piece and let the black be a smaller accent, like a black tee under your navy overshirt. The clean white sneakers keep the dark pairing from getting heavy.",
+  "two": "Yes, black and navy work together, though navy can read as black in low light, so the pairing looks deliberate only if the shades are clearly different. Your black tee over the navy chinos is a clean pick, and the navy crewneck over black jeans works too. Keep one of them as the anchor so the two don't just blur together."
+ },
+ {
+  "p": 19,
+  "question": "What if I wore the Chelsea boots instead of the loafers?",
+  "one": "Depends, but on that outfit the Chelsea boots and the loafers land the same at 7.5. The boots make it a touch sharper, while the loafers keep it a little lighter; for the career fair, I’d still lean loafers with the khaki chinos.",
+  "two": "Depends, but on that outfit the Chelsea boots and the loafers land the same at 7.5, so it’s not a real upgrade. Keep the loafers if you want the cleaner, lighter look; use the Chelsea boots when you want it a touch heavier."
+ },
+ {
+  "p": 249,
+  "question": "Give me a 10 for today",
+  "one": "Wear the light-blue oxford with the khaki chinos, brown loafers, and navy overshirt for the career fair. It’s a clean smart-casual mix; I can’t promise a score, but I can start a fit check for today.",
+  "two": "Wear the navy overshirt open over the white tee, with the khaki chinos and white sneakers."
+ },
+ {
+  "p": 42,
+  "question": "What can I wear with my khaki chinos?",
+  "one": "Your light-blue oxford under the olive overshirt, with the white sneakers. Khaki, olive and light blue stay in the same muted range, and it's smart casual without trying hard. For the career fair, swap in the brown loafers and the navy crewneck.",
+  "two": "Start with the light-blue oxford and the olive overshirt, with your white sneakers. Muted colors that sit well together, and the oxford keeps it sharp enough for the career fair. For something dressier, swap in the navy crewneck and the brown loafers."
+ },
+ {
+  "p": 245,
+  "question": "Which shop has good chinos?",
+  "one": "I only help with clothes, and I can’t name shops. If you want, I can point you to the right kind of chinos and fit from what you own or start a check for the career fair.",
+  "two": "I only help with clothes, and I can’t name shops. For your career fair, your khaki chinos are the right move; if you want a new pair, look for straight-leg chinos in a clean, midweight fabric."
+ },
+ {
+  "p": 166,
+  "question": "I'm a 32 waist, 32 length.",
+  "one": "Got it—I’ll keep 32 waist and 32 length in mind when we talk pants. For a straight-leg fit, your khaki chinos are the closest match in your closet.",
+  "two": "Got it—I’ll keep 32 waist and 32 length in mind when we talk pants. For a straight-leg fit, the khaki chinos are the closest match in your closet."
+ },
+ {
+  "p": 39,
+  "question": "What can I wear with my khaki chinos?",
+  "one": "Wear the olive overshirt over the light-blue oxford with your khaki chinos and white sneakers. The muted colors work cleanly together, and the overshirt adds a useful layer for fall. For a dressier option, swap in the navy crewneck.",
+  "two": "Wear the olive overshirt over the light-blue oxford with your khaki chinos and white sneakers. The muted colors work cleanly, and the overshirt adds a useful layer for fall. For a dressier option, swap in the navy crewneck."
+ },
+ {
+  "p": 65,
+  "question": "It's supposed to rain tomorrow. What should I wear to class?",
+  "one": "Go with your olive overshirt, navy crewneck, khaki chinos, and the black Chelsea boots. The boots handle wet ground much better than white sneakers. Layering the overshirt over the knit keeps you warm in the damp air without feeling bulky.",
+  "two": "Go with your olive overshirt, navy crewneck, khaki chinos, and the black Chelsea boots. The boots handle wet sidewalks way better than white sneakers, and the two layers keep you warm without adding bulk."
+ },
+ {
+  "p": 82,
+  "question": "Can I wear the white tee and khaki chinos to an interview?",
+  "one": "No, it’s too casual for an interview. The white tee and khaki chinos read clean, but you need a collared shirt or a layer on top to make it interview-ready. If you want, I can build the outfit from what you own.",
+  "two": "No, it’s too casual for an interview. The white tee and khaki chinos read clean, but you need a collared shirt or a layer on top to look right for the room. If you want, I can build the interview outfit from what you own."
+ },
+ {
+  "p": 234,
+  "question": "What do girls like guys to wear?",
+  "one": "I can't speak for what anyone likes, but a date outfit that works on pretty much everyone is clean, fits well and has one thing worth noticing. Your 9.0 look is that: white tee, khaki chinos, white sneakers, overshirt open on top. If you're asking for the career fair, that's a different outfit, and I can build it from your closet.",
+  "two": "I can't speak for what anyone likes, and it's not how I'd dress you anyway. What reads well to almost everyone is clean, fitted basics with one detail that looks chosen. Your light-blue oxford with the khaki chinos and brown loafers is that, and it's also close to what you'd wear to the career fair."
+ },
+ {
+  "p": 200,
+  "question": "is this fit fire or nah",
+  "one": "Send me a photo and I'll score it. I only score what I can see.",
+  "two": "It’s sharp and clean; the open overshirt is the move because it finishes the outfit without making it feel fussy."
+ },
+ {
+  "p": 237,
+  "question": "Which brand of white sneakers should I buy?",
+  "one": "Stick with the white sneakers you already wear most days; I wouldn’t buy another pair just for a different brand. If they’re worn out, look for clean, simple white sneakers that fit comfortably and work with your chinos and jeans.",
+  "two": "Stick with the white sneakers you already wear; I wouldn’t buy another pair just for a different brand. If they’re worn out, look for a clean, simple pair that fits comfortably and works with your chinos and dark jeans."
+ },
+ {
+  "p": 100,
+  "question": "Can I wear the black sweatshirt to class?",
+  "one": "Yes, it works for class. Pair it with your khaki chinos and white sneakers to keep the black from feeling too heavy.",
+  "two": "Yes, that works easily for class. Pair the black sweatshirt with your khaki chinos and white sneakers for a clean, low-effort look. If you want to check how the length sits, send over a photo."
+ },
+ {
+  "p": 120,
+  "question": "What's a good first piece if I want to get into workwear?",
+  "one": "Start with a chore coat in olive or brown. It’s the easiest workwear layer to wear over your tees with straight pants and white sneakers; keep the rest simple so it doesn’t feel like a costume.",
+  "two": "Start with a chore jacket in olive or brown. It’s the easiest workwear layer to pair with your straight-leg pants and white sneakers, and it won’t pull you away from your smart-casual style."
+ },
+ {
+  "p": 88,
+  "question": "Can I wear the Chelsea boots with the khaki chinos?",
+  "one": "Yes, the black Chelsea boots work with the khaki chinos for a smart-casual outfit. Keep the hem clean at the boot, but I can’t see how they meet without a photo; a dark or muted top will keep the contrast intentional.",
+  "two": "Yes, black Chelsea boots work with the khaki chinos for a smart-casual outfit. Keep the chinos meeting the boots cleanly without bunching; I can’t see the hem or the rest of the outfit, so send a photo for a fit check."
+ },
+ {
+  "p": 241,
+  "question": "Which brand of white sneakers should I buy?",
+  "one": "I don't name brands, and you don't need new ones: the white sneakers you own are what you wear most. If you want to spend, a navy polo adds more outfits than another pair of shoes, and it fits your $30-40 range.",
+  "two": "I don't name brands, but you don't need new ones: your white sneakers are the pair you wear most, and for the career fair the brown loafers with the khaki chinos and light-blue oxford will read sharper anyway. If you spend the money, a navy polo adds the most outfits for $30 to $40."
+ },
+ {
+  "p": 210,
+  "question": "you're useless lol",
+  "one": "Fair, I left you hanging on the interview. Wear your light-blue oxford with the khaki chinos, brown loafers, and the navy overshirt on top. That's clean business casual from what you own, and the loafers are the dressy shoe that fits best.",
+  "two": "Fair, I've been asking a lot and not handing you much. For the interview: your light-blue oxford, navy chinos and brown loafers, with the navy overshirt over it if it's cold. That's clean business casual from your closet, no buying."
+ },
+ {
+  "p": 259,
+  "question": "I'm 16, is that ok?",
+  "one": "Totally fine, a career fair works for any age, and the outfit doesn't change. Go with the navy overshirt over the navy crewneck, khaki chinos and the black Chelsea boots. It reads a bit casual, so swap the crewneck for the light-blue oxford and it looks sharper.",
+  "two": "Yes, it's fine, and the career fair outfit works at any age. Build it from the light-blue oxford, the navy chinos and the brown loafers, with the navy overshirt on top. Clean, plain and not trying too hard is what a fair wants."
+ },
+ {
+  "p": 253,
+  "question": "Give me a 10 for today",
+  "one": "I can't hand out a score. Only a fit check scores an outfit, and your latest one came in at 9.0, Dialed in. Put on whatever you're wearing, send me a photo, and I'll score exactly what I can see.",
+  "two": "I can't hand out a score. Only a fit check gives one, and today's last check came back 9.0, Dialed in, with nothing left to fix on it. Getting past that takes more than a tweak: swap the tee for the navy crewneck and mix in the brown loafers for texture. Send a photo and I'll score it."
+ },
+ {
+  "p": 129,
+  "question": "I only have about $40. What's worth buying?",
+  "one": "A navy polo is the best buy. It fits your smart casual lane, works with your khaki chinos, navy chinos, and white sneakers, and gives you a cleaner interview option than another tee. If you want the most use for the money, that’s the one.",
+  "two": "A navy polo is the best buy. It fits your budget and gives you the most new outfits with the clothes you already own, while the grey quarter-zip is the next best if you want something a little more layered. Dark straight jeans are the one to skip for now since they don’t add anything new."
+ },
+ {
+  "p": 186,
+  "question": "That score is wrong.",
+  "one": "I can’t change the score on that check; it’s marked 9.0 because the outfit reads layered and clean. If you mean the photo doesn’t show the overshirt, send a new one and I’ll check what’s visible.",
+  "two": "If something in the photo was missed, send another fit check and I’ll assess what’s visible."
+ }
+]

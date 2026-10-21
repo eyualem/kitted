@@ -6,7 +6,7 @@ export type TipIcon = 'checkFilled' | 'warning' | null;
 
 const FIT: Record<FitTip, StringKey> = {
   dark: 'cam.tip.dark', darkFlash: 'cam.tip.darkFlash', noPerson: 'cam.tip.noPerson', mirrorAim: 'cam.tip.mirrorAim', backlit: 'cam.tip.backlit',
-  tooClose: 'cam.tip.tooClose', tooFar: 'cam.tip.tooFar', moveLeft: 'cam.tip.moveLeft', moveRight: 'cam.tip.moveRight', moving: 'cam.tip.moving',
+  tooClose: 'cam.tip.tooClose', shortMirror: 'cam.tip.shortMirror', tooFar: 'cam.tip.tooFar', moveLeft: 'cam.tip.moveLeft', moveRight: 'cam.tip.moveRight', moving: 'cam.tip.moving',
   good: 'cam.tip.good', goodFull: 'cam.tip.goodFull',
 };
 

@@ -18,6 +18,7 @@ import { ClosetTile } from './ClosetTile';
 import { mergePiece, pickAnother } from './pieceActions';
 import { isOwned } from './profile';
 import { photoOffer, pickerContent, type PhotoContext } from './wrongCard';
+import { GoneSheet } from '@/features/gone/Gone';
 
 const COLUMNS = 3;
 const GAP = 10;
@@ -41,6 +42,8 @@ export function MergeSheet() {
   const title = data?.content.title ?? t('closet.merge.title');
   const subtitle = data ? data.content.subtitle ?? undefined : photo ? undefined : t('closet.merge.sub');
 
+  // Gone (removed elsewhere, or an old link); not while its own merge folds it away and the sheet closes.
+  if (data === null && !busy) return <GoneSheet />;
   return (
     <SheetScaffold title={title} subtitle={subtitle}>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP, paddingTop: 4 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>

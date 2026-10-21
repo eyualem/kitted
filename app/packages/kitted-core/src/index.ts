@@ -34,7 +34,7 @@ export type { CreditReason, ScoreTrace, RubricHelpers, Outfit as StyleOutfit } f
 // The parts engine (parts_proto.py v4, parts data 1.1.0): ported with parity.
 export { PARTS_DATA } from "./partsData";
 export {
-  createParts, defaultParts, scoreParts, partsCardRow,
+  createParts, defaultParts, scoreParts, partsCardRow, CASUAL_FITS_V14, partsDataFor, setCasualFitsV14,
   type PartsEngine, type PartsData, type PartsTune, type PartsOptions, type PartsResult, type PartsScored, type PartsUnscored,
   type PartName, type PartResult, type PartReason, type PartTip, type PartsCondition, type PartsOccasion, type PartsLowest,
   type SecondLook, type SecondLookInput,

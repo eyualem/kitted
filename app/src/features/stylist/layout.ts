@@ -10,5 +10,6 @@ export const KEYBOARD_GAP = 8;
 /** Space between the newest message and the top of the dock (mockup: 146 = 92 + 48 + 6). */
 export const DOCK_GAP = 6;
 /** The tab bar's bottom accessory (StylistBar): the system's capsule, measured on iOS 26.5 (53 tall,
- *  its bottom at COMPOSER_BOTTOM). The open composer sits exactly over it. */
+ *  its bottom at COMPOSER_BOTTOM). The open composer takes its place: the accessory leaves the tab bar while it's open,
+ *  since the tab bar draws above the screen and its glass blurred the composer under it (07 §19). */
 export const ACCESSORY_H = 53;

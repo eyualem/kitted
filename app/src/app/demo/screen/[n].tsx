@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { KText, useTheme } from '@/design-system';
-import { applyDemoScreen } from '@/demo/applyDemoScreen';
+import { applyDemoScreen, type DemoTarget } from '@/demo/applyDemoScreen';
+import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 
 export default function DemoScreenRoute() {
@@ -18,6 +19,7 @@ export default function DemoScreenRoute() {
     applyDemoScreen(params).then((target) => {
       if (!alive) return;
       if (!target) return setMissing(params.n ?? '');
+      if (target.toast) setTimeout(() => demoToast(target.toast!), 900);
       if (!target.under) return router.replace(target.href);
       // Present sheets and covers over the screen beneath them, as the real flow does.
       router.replace(target.under);
@@ -35,6 +37,12 @@ export default function DemoScreenRoute() {
       {missing !== null ? <KText variant="body">{t('demo.unknownScreen', { n: missing })}</KText> : null}
     </View>
   );
+}
+
+/** Screens 204–205: an Undo toast over the screen, for the countdown ring (#324). Its Undo does nothing. */
+function demoToast(o: NonNullable<DemoTarget['toast']>) {
+  const text = o.text === 'removed' ? t('closet.removed', { item: 'grey hoodie' }) : t('toast.logged');
+  showToast(text, () => {}, { ...(o.removal ? { ms: TOAST_MS_REMOVAL } : {}), ...(o.heldAtMs ? { demoHeldAtMs: o.heldAtMs } : {}) });
 }
 
 const styles = StyleSheet.create({ root: { flex: 1, alignItems: 'center', justifyContent: 'center' } });

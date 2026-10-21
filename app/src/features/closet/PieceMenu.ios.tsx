@@ -8,6 +8,7 @@ import { background, border, clipShape, clipped, foregroundStyle, frame, offset,
 import { useTheme } from '@/design-system';
 import { t } from '@/i18n/en';
 import { ClosetTile } from './ClosetTile';
+import { holdForMenu, MENU_HOLD_MS } from './menuHold';
 import { openPiece, removePiece, renamePiece } from './pieceActions';
 import type { PieceMenuProps } from './pieceMenuProps';
 import { PREVIEW_MAX, previewFrame, type PiecePreview } from './piecePreview';
@@ -62,7 +63,9 @@ export function PieceMenu({ item, size, aspect, radius, preview }: PieceMenuProp
         <ContextMenu.Trigger>
           <RNHostView matchContents>
             <ClosetTile
-              item={item} size={size} aspect={aspect} radius={radius} label={item.name} onPress={() => openPiece(item)} accessibilityHint={t('closet.piece.a11y.tileHint')}
+              item={item} size={size} aspect={aspect} radius={radius} label={item.name} onPress={() => openPiece(item)}
+              // A hold is the menu's, never a tap on the page under it (menuHold.ts).
+              onLongPress={holdForMenu} delayLongPress={MENU_HOLD_MS} accessibilityHint={t('closet.piece.a11y.tileHint')}
               actions={[
                 { name: 'rename', label: t('closet.rename.action'), onAction: () => renamePiece(item) },
                 { name: 'remove', label: t('closet.remove.action'), onAction: () => removePiece(item) },

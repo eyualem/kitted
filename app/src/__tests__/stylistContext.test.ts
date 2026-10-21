@@ -115,7 +115,8 @@ describe('contents and order', () => {
     expect(fc.length).toBeGreaterThan(ctx.meta.checksToday);
     expect(ctx.text).toMatch(/Today's fit checks/);
     expect(ctx.text).toMatch(/\n {2}Fix 1: .+ → \d\.\d/);
-    expect(ctx.text).toMatch(/Earlier this week:\nFC\d · Oct \d+ · \d\.\d /);
+    // Older checks carry their weekday since #311 ("Tuesday, Oct 20"), so "last Tuesday" can be matched to one.
+    expect(ctx.text).toMatch(/Earlier this week:\nFC\d · [A-Z][a-z]+day, Oct \d+ · \d\.\d /);
   });
 
   it("today's chat only, the last 10 turns, and the question isn't repeated", async () => {
@@ -146,7 +147,7 @@ describe('the closet: caps, order, handles', () => {
     lastWornAt: null, addedAt: 0, isDeleted: false, cropFile: `closet/C${i}.png`, ...over,
   });
   const snap = (closet: ClosetItemRow[]): StylistSnapshot => ({
-    nowMs: NOW, zone: US_EASTERN, profile: null, otherStyle: null, facts: [], closet, chat: [], checks: [], ideas: [], outfits: [],
+    nowMs: NOW, zone: US_EASTERN, profile: null, otherStyle: null, facts: [], closet, chat: [], checks: [], ideas: [], outfits: [], wears: [],
   });
 
   it('at most 80 pieces, most worn first, P1… mapped back to ids', () => {

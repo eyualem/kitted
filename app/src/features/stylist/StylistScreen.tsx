@@ -1,6 +1,6 @@
 // S1 Stylist (02 D12): today's thread (newest at the bottom) and the composer.
 // Chats are kept by day (founder, Oct 9): this is today's (4 am day key); earlier days open from
-// "Past chats". A day is a handful of rows, so a plain ScrollView, not a FlatList: it scrolls to
+// "Past chats", by the header's clock button only (#338: the "Earlier chats" pill floated above a short day). A day is a handful of rows, so a plain ScrollView, not a FlatList: it scrolls to
 // its real end (FlatList's cached row heights stopped short as cards grew), and iOS 26 can shrink
 // the tab bar on scroll only when the screen's first view is a ScrollView (FlatList unsupported).
 // Not inverted: on iOS 26 the scroll-edge fade washes out a flipped list (DECISIONS-LOG #25).
@@ -10,12 +10,12 @@
 // newest message stays in view.
 // A question's answer streams into an in-memory row drawn after the thread (features/ask/live.ts), so the chat
 // table is written once per answer, not per word.
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { AppState, Keyboard, Platform, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import Animated, { scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AccessibilityInfo, AppState, Keyboard, Platform, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import Animated, { type SharedValue, scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
 import { dayKey } from '@kitted/core';
-import { Icon, KText, opacity, space, useTheme } from '@/design-system';
+import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -24,15 +24,19 @@ import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAct
 import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
-import { useAskInFlight, useLiveAnswer } from '@/features/ask/live';
+import { liveAnswer, useAskInFlight, useLiveAnswer } from '@/features/ask/live';
 import { LiveAnswerRow, liveRowShows } from '@/features/ask/LiveAnswerRow';
 import { Composer } from './Composer';
 import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
-import { buildThreadItems, splitToday } from './thread';
+import { OfflineBanner } from './OfflineBanner';
+import { LatestPill } from './LatestPill';
+import { AT_BOTTOM_PT, latestPillShows } from './latestShows';
+import { useNet } from '@/services/connectivity';
+import { buildThreadItems, liveGap, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
-import { t } from '@/i18n/en';
+import { threadGrow } from './threadGrow';
 import { useAccountOffer } from '@/features/account/offerSession';
 import { useFinishSequence } from '@/features/finish/session';
 
@@ -45,23 +49,32 @@ const SHEET_DISMISS_MS = 400;
 const TOAST_ROOM = 56;
 
 export function StylistScreen() {
-  const { colors } = useTheme();
+  const { colors, a11y } = useTheme();
+  // Reduce Motion: the thread jumps to new rows instead of scrolling to them (07 §17, U16).
+  const motion = !a11y.reduceMotion;
+  const screenReader = useScreenReaderRef();
   const loaded = useLive(['chat'], () => store.chat.all(), []);
   const all = useMemo(() => loaded ?? [], [loaded]);
   const now = sessionClock.nowMs();
-  const { today: messages, hasEarlier } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
+  const { today: messages } = useMemo(() => splitToday(all, now, sessionClock.offset), [all, now]);
   const live = useLiveAnswer();
   const askInFlight = useAskInFlight();
+  // Offline (09 §20.8 G18.3): send and the starter chips wait; his words stay in the field.
+  const net = useNet();
   // The starter chips (07 §6.3): from his closet and today's checks.
+  // Reloaded on a new day too, so yesterday's "Why a 7.0?" doesn't greet him in the morning (U10).
+  const today = dayKey(now, sessionClock.offset);
   const chips = useLive(['closet', 'fitChecks'], async () => starterChips({
     nowMs: sessionClock.nowMs(), zone: sessionClock.offset, closet: await store.closet.all(), checks: await store.fitChecks.all(),
-  }), []) ?? [];
+  }), [today]) ?? [];
   // While Retry streams, the failed line it replaces steps aside for the live row.
   const replaced = live?.replaces ?? null;
   const shown = useMemo(() => (replaced ? messages.filter((m) => m.id !== replaced) : messages), [messages, replaced]);
   const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
   const shownIds = useMemo(() => new Set(shown.map((m) => m.id)), [shown]);
-  const showLive = liveRowShows(live, shownIds);
+  const showLive = liveRowShows(live, shownIds, (at) => dayKey(at, sessionClock.offset) === today);
+  // The thread shows the finished answer's own row now: the live copy goes for good (U1, no ghost tomorrow).
+  useEffect(() => liveAnswer.settle(shownIds), [shownIds, live]);
   const open = useComposerOpen();
   const docked = DOCK_ALWAYS || open !== null;
   // Leaving the tab closes an empty composer; the accessory comes back with the thread.
@@ -89,10 +102,18 @@ export function StylistScreen() {
   const toastRoom = useSharedValue(0);
   const follow = useSharedValue(1);
   useEffect(() => {
-    toastRoom.set(withTiming(toast ? TOAST_ROOM : 0, { duration: 220 }));
-  }, [toast, toastRoom]);
+    toastRoom.set(withTiming(toast ? TOAST_ROOM : 0, { duration: motion ? 220 : 0 }));
+  }, [toast, toastRoom, motion]);
   useAnimatedReaction(
     () => toastRoom.value,
+    (now, before) => {
+      if (before === null || now === before || !follow.value) return;
+      scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
+    },
+  );
+  // A card opening or folding (#344): at the bottom, scroll with its height change, frame by frame.
+  useAnimatedReaction(
+    () => threadGrow.value,
     (now, before) => {
       if (before === null || now === before || !follow.value) return;
       scrollTo(list, 0, Math.max(0, scrollY.value + now - before), false);
@@ -111,19 +132,48 @@ export function StylistScreen() {
   const viewH = useRef(0);
   const toEnd = useCallback(
     (animated: boolean) => {
-      if (contentH.current > 0 && viewH.current > 0) list.current?.scrollTo({ y: Math.max(0, contentH.current - viewH.current), animated });
-      else list.current?.scrollToEnd({ animated });
+      const a = animated && motion;
+      if (contentH.current > 0 && viewH.current > 0) list.current?.scrollTo({ y: Math.max(0, contentH.current - viewH.current), animated: a });
+      else list.current?.scrollToEnd({ animated: a });
     },
-    [list],
+    [list, motion],
   );
   const first = useRef(true);
+  const toLatest = () => {
+    newBelow.current = false;
+    pillShown.current = false;
+    setPill(false);
+    atBottom.current = true;
+    follow.set(1);
+    toEnd(true);
+  };
+  // Just above the dock (or the accessory), riding the keyboard like the dock does.
+  const pillBase = useSharedValue(COMPOSER_BOTTOM + ACCESSORY_H + DOCK_GAP);
   // Only his finger decides whether the thread follows: the momentum end of our own animated
   // scrollToEnd (content still growing under it) used to read as "scrolled up" and stop it.
   const dragging = useRef(false);
   const onUserScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
-    atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < 80;
+    atBottom.current = contentSize.height - contentOffset.y - layoutMeasurement.height < AT_BOTTOM_PT;
     follow.set(atBottom.current ? 1 : 0);
+  };
+  // The Latest pill (02 G3, 09 §23 L1): scrolled up more than a screen, or scrolled up while something new came in.
+  const [pill, setPill] = useState(false);
+  const pillShown = useRef(false);
+  const newBelow = useRef(false);
+  const offsetY = useRef(0);
+  // Only when it turns on or off: a render on every scroll or size change (a toast growing the footer included) left a
+  // toast's entering animation stuck invisible on iOS (#118, #353).
+  const updatePill = () => {
+    if (contentH.current - offsetY.current - viewH.current < AT_BOTTOM_PT) newBelow.current = false;
+    const next = latestPillShows({ contentH: contentH.current, viewH: viewH.current, offsetY: offsetY.current, newBelow: newBelow.current });
+    if (next === pillShown.current) return;
+    pillShown.current = next;
+    setPill(next);
+  };
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    offsetY.current = e.nativeEvent.contentOffset.y;
+    updatePill();
   };
   const onDragEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     onUserScroll(e);
@@ -144,7 +194,8 @@ export function StylistScreen() {
     // Closed: toasts sit above the accessory's capsule.
     dockTop.current = COMPOSER_BOTTOM + ACCESSORY_H;
     setToastFloor(dockTop.current);
-  }, [docked]);
+    pillBase.set(dockTop.current + DOCK_GAP);
+  }, [docked, pillBase]);
   useFocusEffect(
     useCallback(() => {
       setToastFloor(dockTop.current);
@@ -170,9 +221,11 @@ export function StylistScreen() {
   // including when the app comes back to the front the next morning (focus doesn't fire then).
   useFocusEffect(
     useCallback(() => {
-      void morning.ensureCard();
+      // …and a card still showing gets a fresher forecast once its own is stale (#338).
+      const post = () => void morning.ensureCard().then(() => morning.freshen()).catch(() => {});
+      post();
       const sub = AppState.addEventListener('change', (st) => {
-        if (st === 'active') void morning.ensureCard();
+        if (st === 'active') post();
       });
       return () => sub.remove();
     }, []),
@@ -207,18 +260,19 @@ export function StylistScreen() {
     clearStylistAction();
     if (action.kind === 'checkMyFit') openCamera();
     if (action.kind === 'scrollTo') {
-      const y = rowY.current.get(action.messageId);
+      // Only a row today's thread still shows: a stored position can be stale (U11 in 07 §17's list).
+      const y = shownIds.has(action.messageId) ? rowY.current.get(action.messageId) : undefined;
       if (y !== undefined) {
         atBottom.current = false;
         follow.set(0);
-        list.current?.scrollTo({ y: Math.max(0, y - viewH.current * 0.1), animated: true });
+        list.current?.scrollTo({ y: Math.max(0, y - viewH.current * 0.1), animated: motion });
       } else {
         // On an earlier day: open that day's chat.
         const m = all.find((x) => x.id === action.messageId);
         if (m) router.push(`/stylist/day/${dayKey(m.createdAt, sessionClock.offset)}`);
       }
     }
-  }, [action, all, list, follow]);
+  }, [action, all, list, follow, shownIds, motion]);
 
   // The first view must be the ScrollView itself (no wrapper) for the tab bar to shrink on scroll.
   return (
@@ -237,12 +291,19 @@ export function StylistScreen() {
         onScrollEndDrag={onDragEnd}
         onMomentumScrollEnd={onMomentumEnd}
         scrollEventThrottle={16}
+        onScroll={onScroll}
         onContentSizeChange={(_w, h) => {
+          // Something new below while he's scrolled up: the Latest pill offers the way down (L1).
+          if (h > contentH.current && contentH.current > 0 && !atBottom.current) newBelow.current = true;
           contentH.current = h;
-          if (atBottom.current) toEnd(!first.current);
+          updatePill();
+          // Not while his finger is on it (U17: each new sentence used to pull him back down mid-drag), and with
+          // VoiceOver on only his own sends move the thread (a three-finger scroll never reads as "scrolled up").
+          if (atBottom.current && !dragging.current && !(screenReader.current && !first.current)) toEnd(!first.current);
         }}
         onLayout={(e) => {
           viewH.current = e.nativeEvent.layout.height;
+          updatePill();
           toEnd(false);
           first.current = false;
         }}
@@ -250,18 +311,17 @@ export function StylistScreen() {
         keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior="never"
       >
-        {hasEarlier ? <EarlierChats /> : null}
         {items.map((item, i) => (
           <View
             key={item.key}
-            style={i > 0 ? { marginTop: space.stack } : undefined}
+            style={i > 0 ? { marginTop: item.gap } : undefined}
             onLayout={item.type === 'msg' ? (e) => rowY.current.set(item.message.id, e.nativeEvent.layout.y) : undefined}
           >
             <ThreadRow item={item} />
           </View>
         ))}
         {live && showLive ? (
-          <View style={items.length > 0 ? { marginTop: space.stack } : undefined}>
+          <View style={items.length > 0 ? { marginTop: liveGap(shown.length ? shown.reduce((a, m) => (m.createdAt >= a.createdAt ? m : a)) : null) } : undefined}>
             <LiveAnswerRow live={live} />
           </View>
         ) : null}
@@ -271,6 +331,9 @@ export function StylistScreen() {
       {/* The scroll-edge fade under the header (as Closet's native one): rows soften into the bar
           instead of being cut in half. A sibling after the ScrollView, so the tab bar still shrinks. */}
       <View pointerEvents="none" style={[styles.edgeFade, { experimental_backgroundImage: edgeFade(colors.bg) }]} />
+      <OfflineBanner top={space.xs} />
+      {/* Steps aside while a toast shows (5–8 s), so the two never stack (#353). */}
+      {pill && !toast ? <PillDock base={pillBase} lift={lift} onPress={toLatest} /> : null}
       {docked ? (
         <Animated.View
           style={[styles.dock, dockStyle]}
@@ -280,6 +343,7 @@ export function StylistScreen() {
             dockH.value = e.nativeEvent.layout.height;
             dockTop.current = COMPOSER_BOTTOM + e.nativeEvent.layout.height;
             setToastFloor(dockTop.current);
+            pillBase.set(dockTop.current + DOCK_GAP);
           }}
         >
           {DOCK_ALWAYS ? <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg, opacity: 0.94 }]} pointerEvents="none" /> : null}
@@ -287,7 +351,7 @@ export function StylistScreen() {
             mode={mode}
             onCamera={openCamera}
             onSend={sendQuestion}
-            sendDisabled={askInFlight}
+            sendDisabled={askInFlight || !net.online}
             autoFocus={open === 'type'}
             startVoice={open === 'voice'}
             onIdle={DOCK_ALWAYS ? undefined : composerState.close}
@@ -299,24 +363,37 @@ export function StylistScreen() {
   );
 }
 
-/** Top of today's thread: the way back to earlier days (also the header's clock button). */
-function EarlierChats() {
-  const { colors } = useTheme();
+/**
+ * The Latest pill's spot, riding the keyboard. Its animated style lives only while the pill is on screen: a style kept
+ * on the screen with nothing to draw (and reading the toast's room) left every toast's entering animation stuck
+ * invisible on iOS (found on the Simulator, #353; the same symptom as #118).
+ */
+function PillDock({ base, lift, onPress }: { base: SharedValue<number>; lift: SharedValue<number>; onPress: () => void }) {
+  const style = useAnimatedStyle(() => ({ bottom: base.value + lift.value }));
   return (
-    <Pressable
-      onPress={() => router.push('/stylist/history')}
-      accessibilityRole="button"
-      accessibilityLabel={t('history.open.a11y')}
-      // 30 pt pill; the slop makes the target 44 without making it look bigger.
-      hitSlop={{ top: 7, bottom: 7, left: 4, right: 4 }}
-      style={({ pressed }) => [styles.earlier, { backgroundColor: colors.surface2, opacity: pressed ? opacity.pressed : 1 }]}
-    >
-      <KText variant="footnote" weight="500" color="ink2">
-        {t('history.open')}
-      </KText>
-      <Icon name="next" size={11} color="ink3" weight="semibold" />
-    </Pressable>
+    <Animated.View pointerEvents="box-none" style={[styles.pill, style]}>
+      <LatestPill onPress={onPress} />
+    </Animated.View>
   );
+}
+
+/** VoiceOver on, as a ref (read inside scroll callbacks). */
+function useScreenReaderRef() {
+  const on = useRef(false);
+  useEffect(() => {
+    let alive = true;
+    void AccessibilityInfo.isScreenReaderEnabled?.().then((v) => {
+      if (alive) on.current = v;
+    });
+    const sub = AccessibilityInfo.addEventListener?.('screenReaderChanged', (v: boolean) => {
+      on.current = v;
+    });
+    return () => {
+      alive = false;
+      sub?.remove();
+    };
+  }, []);
+  return on;
 }
 
 /** Height of the soft edge under the Stylist header (the thread's top padding matches it, so the
@@ -334,5 +411,5 @@ const styles = StyleSheet.create({
   thread: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: space.gutter, paddingTop: EDGE_FADE },
   edgeFade: { position: 'absolute', top: 0, left: 0, right: 0, height: EDGE_FADE },
   dock: { position: 'absolute', left: 0, right: 0, paddingBottom: 0 },
-  earlier: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, marginBottom: space.stack },
+  pill: { position: 'absolute', left: 0, right: 0, height: 44 },
 });

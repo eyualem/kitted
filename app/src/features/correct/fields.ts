@@ -45,3 +45,8 @@ export function volumeWord(v: unknown): string {
   const n = typeof v === 'number' ? v : 3;
   return t(n <= 2 ? 'value.topFit.slim' : n === 3 ? 'value.topFit.regular' : n === 4 ? 'value.topFit.relaxed' : 'value.topFit.oversized');
 }
+
+/** The card's "Not sure" line (§19) opens on one row with only the values his photos of the piece showed. */
+export function limitTo(options: readonly FieldOption[], only: readonly string[] | null): FieldOption[] {
+  return only ? options.filter((o) => only.includes(String(o.value))) : [...options];
+}

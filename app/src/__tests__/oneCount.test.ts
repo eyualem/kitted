@@ -1,5 +1,6 @@
-// One "+N outfits" everywhere (09-ui-review §15, G1–G8, #309): the chat's buy card and evidence, the Starter toast,
-// move 3 and the Closet's next best buy all count with the Closet's own rule (#84.3, closet/outfits.ts).
+// One "+N outfits" everywhere (09-ui-review §15b, G1–G8, #309): the chat's buy card and evidence, the "What you
+// already own" toast and the Closet's next best buy all count with the Closet's own rule (#84.3, closet/outfits.ts).
+// Move 3 is gone since #343 (the moves card was replaced by the one optional step), so its checks went with it.
 import { US_EASTERN } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
@@ -14,10 +15,9 @@ import { loadStylistSnapshot } from '@/features/ask/snapshot';
 import { DEMO_CARD_ANSWERS } from '@/features/ask/source';
 import { outfitCount, outfitGain } from '@/features/closet/outfits';
 import { ghostPiece, nextBestBuy, starterGain } from '@/features/finish/gains';
-import { buildMoves, pickBuy } from '@/features/finish/moves';
 import { starterList } from '@/features/finish/packs';
 import { ownership, STARTER } from '@/features/finish/starter';
-import { toggleStarter } from '@/features/finish/starterActions';
+import { pickStarter } from '@/features/finish/starterActions';
 import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
@@ -57,7 +57,7 @@ async function buyEvidence(store: Awaited<ReturnType<typeof setup>>['store']) {
 }
 
 describe('G1 · every "+N" is the Closet\'s count with it minus without it', () => {
-  it('the chat card, the evidence, move 3, the Closet\'s next buy and the Starter toast agree on the demo closet', async () => {
+  it('the chat card, the evidence and the Closet\'s next buy agree on the demo closet', async () => {
     const { store, closet, styles } = await setup();
     const rows = missing(closet);
     expect(rows.length).toBeGreaterThan(2);
@@ -71,26 +71,24 @@ describe('G1 · every "+N" is the Closet\'s count with it minus without it', () 
       if (card?.type === 'buy' && card.starterId === e.id) expect([e.id, card.gain]).toEqual([e.id, want]);
       const line = lines.find((l) => l.startsWith(`- ${e.id} `));
       if (line) expect(line).toContain(`· +${want} outfits`);
-      // Move 3 names it (as the posted pick) with the same number.
-      const plan = buildMoves({ first: { fixes: [], details: {} }, recheck: null, closet, styles, markedKv: [], buyId: e.id });
-      expect(plan.moves[2]!.detail).toBe(want > 0 ? t('plan.move3Sub', { price: e.budget, n: want }) : e.budget);
     }
     const nb = nextBestBuy({ closet, checks: await store.fitChecks.all(), styles, marks: [] })!;
     expect(nb.gain).toBe(closetGain(closet, styles, nb.entry));
   });
 
-  it('the Starter toast says the same "+N" as the count it adds', async () => {
+  it('the "What you already own" toast says the same "+N" as the count it adds', async () => {
     const { store, closet, styles } = await setup();
     const e = missing(closet).find((x) => closetGain(closet, styles, x) > 1)!;
     const n = closetGain(closet, styles, e);
-    const toast = await toggleStarter(store, e, counterIds(), AS_OF + 1000);
+    const g = e.pick!.garment;
+    const toast = await pickStarter(store, e, { subcategory: String(g.subcategory), color: String(g.color_family) }, counterIds(), AS_OF + 1000);
     expect(toast?.text).toBe(t('toast.fits', { n }));
     expect(outfitCount(await store.closet.all(), [], styles) - outfitCount(closet, [], styles)).toBe(n);
   });
 });
 
-describe('G2–G3 · the same pick in the chat, the moves card and Closet', () => {
-  it('the evidence lists the rows in the Closet\'s ranking; its first row is the next best buy (work boots, +18: the demo picks workwear, #313)', async () => {
+describe('G2 · the same pick in the chat and Closet', () => {
+  it('the evidence lists the rows in the Closet\'s ranking; its first row is the next best buy (work boots, +18: the demo picks workwear, #364)', async () => {
     const { store, closet, styles } = await setup();
     const { lines } = await buyEvidence(store);
     const nb = nextBestBuy({ closet, checks: [], styles, marks: [] })!;
@@ -99,18 +97,10 @@ describe('G2–G3 · the same pick in the chat, the moves card and Closet', () =
     expect(lines[0]).toMatch(/^- s27 brown work boots · \+18 outfits/);
     const gains = lines.map((l) => Number(/\+(\d+) outfits/.exec(l)![1]));
     for (let i = 1; i < gains.length; i++) expect(gains[i - 1]).toBeGreaterThanOrEqual(gains[i]!);
-    // Ties keep his list's order (his first look's rows first, #313).
+    // Ties keep his list's order (his first look's rows first, #364).
     const ids = lines.map((l) => /^- (s\d+)/.exec(l)![1]!);
     const order = starterList(styles).map((e) => e.id);
     for (let i = 1; i < ids.length; i++) if (gains[i - 1] === gains[i]) expect(order.indexOf(ids[i - 1]!)).toBeLessThan(order.indexOf(ids[i]!));
-  });
-
-  it('move 3 picks the next best buy; with nothing that adds one, the first missing row and its price alone', async () => {
-    const { closet, styles } = await setup();
-    const first = { fixes: [], details: {} };
-    expect(pickBuy({ first, recheck: null, closet, styles, markedKv: [] })).toBe(nextBestBuy({ closet, checks: [], styles, marks: [] })!.entry.id);
-    expect(pickBuy({ first, recheck: null, closet: [], styles, markedKv: [] })).toBe('s01');
-    expect(buildMoves({ first, recheck: null, closet: [], styles, markedKv: [], buyId: null }).moves[2]!.detail).toBe(STARTER[0]!.budget);
   });
 });
 

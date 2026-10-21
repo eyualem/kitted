@@ -5,6 +5,7 @@ import { store } from '@/data/db';
 import { normStyleKey, OCCASIONS, type OccasionKey, type StyleKey } from '@/data/types';
 import { fitCheck } from '@/features/fitcheck/session';
 import type { CheckMode } from '@/features/fitcheck/machine';
+import { snapFailedKey, snapPart } from '@/features/fitcheck/finish';
 import type { StartOutcome } from '@/features/fitcheck/service';
 import { showToast } from '@/features/toast/toast';
 import { discardTempPhoto } from '@/services/tempPhoto';
@@ -46,7 +47,9 @@ export async function startCheck(mode: CheckMode, photo: PhotoInput, parentCheck
     });
     return r;
   }
-  explain(r);
+  const snapFail = mode === 'shoeSnap' && parentCheckId ? await snapFailure(parentCheckId, r.outcome) : null;
+  if (snapFail) showToast(t(snapFail));
+  else explain(r);
   // Refused because another photo is still being read (09-ui-review §11 K2): prep never ran, so nothing else would
   // delete his temporary original.
   if (r.outcome === 'busy' && 'photoUri' in photo) discardTempPhoto(photo.photoUri);
@@ -66,6 +69,12 @@ export async function retryCheck(checkId: string): Promise<StartOutcome> {
   }
   explain(r);
   return r;
+}
+
+/** A snap that didn't read (02 S9): "Couldn't read your shoes…" (or the pants and shoes, #313); the Finish row stays. */
+async function snapFailure(parentCheckId: string, outcome: StartOutcome['outcome']) {
+  const parent = await store.fitChecks.get(parentCheckId).catch(() => null);
+  return parent ? snapFailedKey(outcome, snapPart(parent)) : null;
 }
 
 /** S17h "Score it" on a held photo (#281): read and scored now, on today's free check, with the same toasts as a new
@@ -160,6 +169,10 @@ export function explain(r: StartOutcome) {
   } else if (r.outcome === 'error' && !('checkId' in r)) {
     // No card was posted (prep or a write failed first): say it didn't count. With a card, the card says so.
     showToast(t('fail.ai'));
+  }
+  else if (r.outcome === 'noParent') {
+    // A re-check, snap or retry whose first check is gone (deleted meanwhile): the camera closed with nothing said (R7).
+    showToast(t('cam.noParent'));
   }
   else if (r.outcome === 'busy') {
     // Another photo is still being read (§1 item 7, #233 item 8): this one isn't sent or counted, and he's told.

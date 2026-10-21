@@ -7,6 +7,7 @@ import {
   type ConfirmedFields, type Garment, type KnownPiece, type Lab, type Observation, type StoredProfile,
 } from '@kitted/core';
 import type { ClosetArt, ClosetFields, ClosetItemRow, ClosetObservationRow, ClosetProfile } from '@/data/types';
+import { sleeveRead } from './sleeves';
 
 export const emptyProfile = (): ClosetProfile => ({ aliases: [], distinctFrom: [], confirmed: {} });
 export const profileOfItem = (item: Pick<ClosetItemRow, 'profile'>): ClosetProfile => ({ ...emptyProfile(), ...(item.profile ?? {}) });
@@ -190,7 +191,8 @@ function measuredOf(family: string | null, sightings: readonly Observation[]): s
 
 /** What the tile and the name show for an item, from its sightings (or its own garment + closet fields). */
 export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 'profile'>, sightings: readonly Observation[]): ClosetArt {
-  const conf = profileOfItem(item).confirmed;
+  const prof = profileOfItem(item);
+  const conf = prof.confirmed;
   const g = item.garment;
   const confirmedColor = item.confirmedFields.includes('color_family') && typeof g.color_family === 'string' ? g.color_family : conf.color_family ?? null;
   const hist = sightings.length > 0 ? sightings : [g as Observation];
@@ -230,6 +232,8 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
   const pick = <T extends string>(f: 'shoe_profile' | 'denim_wear', allowed: readonly string[], c?: string) =>
     guarded(hist.map((o) => (typeof o[f] === 'string' && allowed.includes(o[f] as string) ? (o[f] as T) : null)), (c as T) ?? null);
   const pattern = guarded(hist.map((o) => (typeof o.pattern === 'string' && o.pattern !== 'na' ? o.pattern : null)), conf.pattern ?? null);
+  // Long-sleeve tees (§24): the closet call's sleeve read, else the scoring read's sleeve end; his pick wins.
+  const sleeves = guarded(hist.map(sleeveRead), conf.sleeve_length ?? null);
   const measured = measuredOf(family, sightings);
   return {
     family,
@@ -239,8 +243,11 @@ export function artOf(item: Pick<ClosetItemRow, 'garment' | 'confirmedFields' | 
     pattern,
     shoeProfile: pick<'sleek' | 'regular' | 'chunky'>('shoe_profile', ['sleek', 'regular', 'chunky'], conf.shoe_profile),
     denimWear: pick<'none' | 'faded' | 'ripped'>('denim_wear', ['none', 'faded', 'ripped'], conf.denim_wear),
+    ...(sleeves ? { sleeves } : {}),
     // Only on a piece the phone measured: art written for the others stays exactly as before.
     ...(measured ? { measured } : {}),
+    // A closet-only kind he picked (#361).
+    ...(prof.kindVariant ? { kind: prof.kindVariant } : {}),
   };
 }
 

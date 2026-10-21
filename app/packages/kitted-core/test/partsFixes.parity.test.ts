@@ -133,9 +133,12 @@ describe("parts fix engine parity (parts_fixes.py)", () => {
     expect(c).toBeDefined();
     const withPick = run(c!);
     const without = run({ ...c!, styles: [] });
-    expect(without.fixes[0]?.id).toBe("color_plain");
-    expect(withPick.fixes[0]?.id).toBe("shoes_loafers");
-    expect(withPick.fixes[0]?.gain).toBe(without.fixes[0]?.gain);
+    // v14 (#335): the free tuck also gains +0.5 now and leads both lists (free moves first); the tie-break shows below it
+    const ids = (r: PartsFixSuggestions) => r.fixes.map((f) => f.id);
+    expect(ids(without).indexOf("color_plain")).toBeLessThan(ids(without).indexOf("shoes_loafers"));
+    expect(ids(withPick).indexOf("shoes_loafers")).toBeLessThan(ids(withPick).indexOf("color_plain"));
+    const gain = (r: PartsFixSuggestions, id: string) => r.fixes.find((f) => f.id === id)?.gain;
+    expect(gain(withPick, "shoes_loafers")).toBe(gain(without, "color_plain"));
   });
 
   it("the Next level line names his first pick's path, only for that pick", () => {

@@ -1,7 +1,9 @@
-// Starter basics that follow his looks (09-ui-review §16, K1–K12, #313; the founder's OK Oct 17). The lists in
+// Starter basics that follow his looks (09-ui-review §16, K1–K12, #364; the founder's OK Oct 17). The lists in
 // finish/packs.ts: every look's 12 against its own "never with" rules (rubric/v5-styles.md), the blend
 // of up to 3 picks, the stored ids, that no list changes a score or a "+N", and the wiring (K9–K12): every suggestion
-// comes from his list, a stored id outside it still works, and changing his looks deletes nothing.
+// comes from his list, a stored id outside it still works, and changing his looks deletes nothing. Since the merge onto
+// #343 the lists feed Next best buy, "Add shoes" and Kit's buy cards; "What you already own" keeps today's 12 (K9), and
+// move 3 is gone with the moves.
 import { detectStyles, outfitReading, outfitValid, scoreParts, US_EASTERN, type ClosetItem, type Garment, type Styles } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
@@ -10,7 +12,7 @@ import { STYLES, type ClosetItemRow, type StyleKey } from '@/data/types';
 import { checkSentence } from '@/features/ask/gate';
 import { scoreOptions } from '@/features/fitcheck/scoring';
 import {
-  CATALOG, catalogRow, COMMON_IDS, CORE_IDS, LIST_SIZE, LOOK_ROWS, overlaps, PACKS, picksLine, picksOf, QUOTAS, starterList,
+  CATALOG, catalogRow, COMMON_IDS, CORE_IDS, LIST_SIZE, LOOK_ROWS, overlaps, PACKS, picksOf, QUOTAS, starterList,
 } from '@/features/finish/packs';
 import { cardSpoken, starterFor } from '@/features/ask/cards';
 import { buildStylistContext } from '@/features/ask/context';
@@ -18,12 +20,8 @@ import { buildEvidence } from '@/features/ask/evidence';
 import { routeQuestion } from '@/features/ask/router';
 import { loadStylistSnapshot } from '@/features/ask/snapshot';
 import { bestMissing, ghostPiece, nextBestBuy, starterGain } from '@/features/finish/gains';
-import { buildMoves, pickBuy } from '@/features/finish/moves';
 import { markedPiece, ownedCount, ownership, STARTER, type StarterEntry } from '@/features/finish/starter';
-import { toggleStarter } from '@/features/finish/starterActions';
-import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
-import { counterIds } from '@/services/ids';
 
 const { readFileSync } = jest.requireActual<{ readFileSync(p: string, enc: 'utf8'): string }>('fs');
 const { join } = jest.requireActual<{ join(...p: string[]): string }>('path');
@@ -290,33 +288,24 @@ async function demo() {
 }
 const ids = (rows: readonly StarterEntry[]) => rows.map((e) => e.id);
 
-describe('K9 · Starter essentials shows his list', () => {
-  it('the line names his looks (none with no picks), in his order', () => {
-    expect(picksLine(null)).toBeNull();
-    expect(picksLine([])).toBeNull();
-    expect(picksLine(one('streetwear'))).toBe('Picked for streetwear.');
-    expect(picksLine(picks('streetwear', 'minimalist'))).toBe('Picked for your looks: streetwear and minimal.');
-    expect(picksLine(picks('workwear', 'classic_prep', 'outdoor'))).toBe('Picked for your looks: workwear, classic prep and outdoor.');
-    expect(picksLine(picks('preppy'))).toBe('Picked for classic prep.');
-  });
-  it('"{n} of 12" counts only the rows he sees: a piece filling a row of another look doesn\'t count', () => {
+describe('K9 · "What you already own" keeps today\'s 12 (#343)', () => {
+  it('a piece filling a row of another look counts only where that row is shown', () => {
     const streetwear = ids(starterList(one('streetwear')));
-    const loafers = { ...markedPiece(row('s10'), 'L', AS_OF)!, isPhotographed: true, starterId: null, source: 'fitCheck' as const };
+    const loafers = { ...markedPiece(row('s10'), { subcategory: 'loafer', color: 'brown' }, 'L', AS_OF)!, isPhotographed: true, starterId: null, source: 'fitCheck' as const };
     const own = ownership([loafers], []);
     expect(own.s10?.owned).toBe(true);
     expect(ownedCount(own, streetwear)).toBe(0);
     expect(ownedCount(own, ids(starterList(null)))).toBe(1);
   });
-  it('the screen draws starterList(his picks) and the line (read from the source)', () => {
+  it('the screen draws today\'s 12, not his looks\' list (read from the source)', () => {
     const src = readFileSync(join(__dirname, '../features/finish/StarterScreen.tsx'), 'utf8');
-    expect(src).toMatch(/starterList\(styles\)/);
-    expect(src).toMatch(/picksLine\(styles\)/);
-    expect(src).not.toMatch(/STARTER\.map/);
+    expect(src).not.toMatch(/starterList/);
+    for (const e of LOOK_ROWS) expect(e.owns).toEqual([]);
   });
 });
 
 describe('K10 · every suggestion comes from his list', () => {
-  it('on the demo closet: the next best buy, move 3 and "Add shoes" pick only rows of his list, for each look and the demo\'s own picks', async () => {
+  it('on the demo closet: the next best buy and "Add shoes" pick only rows of his list, for each look and the demo\'s own picks', async () => {
     const { closet, profile } = await demo();
     for (const styles of [profile.styles, ...STYLES.map(one), picks('streetwear', 'outdoor')]) {
       const list = ids(starterList(styles));
@@ -324,8 +313,6 @@ describe('K10 · every suggestion comes from his list', () => {
       if (nb) expect(list).toContain(nb.entry.id);
       const best = bestMissing(closet, styles, []);
       if (best) expect(list).toContain(best.entry.id);
-      const buy = pickBuy({ first: { fixes: [], details: {} } as never, recheck: null, closet, styles, markedKv: [] });
-      if (buy) expect(list).toContain(buy);
     }
   });
   it('ties go to his first look: the pick is the earliest row of his list among the most outfits', async () => {
@@ -356,12 +343,6 @@ describe('K10 · every suggestion comes from his list', () => {
 });
 
 describe('K11 · a stored id outside his list still works', () => {
-  it('move 3 keeps the piece it named (a quarter-zip) after he switches to streetwear', async () => {
-    const { closet } = await demo();
-    const plan = buildMoves({ first: { fixes: [], details: {} } as never, recheck: null, closet, styles: one('streetwear'), markedKv: [], buyId: 's11' });
-    expect(ids(starterList(one('streetwear')))).not.toContain('s11');
-    expect(plan.moves[2]!.title).toBe(t('plan.move3', { item: row('s11').pick!.phrase }));
-  });
   it('an old buy card and a new look\'s card both speak, whatever his looks', () => {
     for (const starterId of ['s08', 's26']) {
       expect(cardSpoken({ type: 'buy', starterId, gain: 3 }, { nameOf: () => null })).toContain(row(starterId).pick!.name);
@@ -371,11 +352,13 @@ describe('K11 · a stored id outside his list still works', () => {
     expect(starterFor('hoodie', null, one('streetwear'))?.id).toBe('s15');
     expect(starterFor('hoodie', null, null)?.id).toBe('s11');
     expect(starterFor('chore coat', null, one('workwear'))?.id).toBe('s26');
-    expect(starterFor('chore coat', null, null)?.id).toBe('s07');
+    // s07 is plain "Overshirt" since #343, so with no picks the catalog's chore coat row answers.
+    expect(starterFor('chore coat', null, null)?.id).toBe('s26');
+    expect(starterFor('overshirt', null, null)?.id).toBe('s07');
     expect(starterFor('rugby shirt', null, null)?.id).toBe('s31');
   });
   it('a marked piece and the belt\'s kv mark keep their rows in every list', () => {
-    const hoodie = markedPiece(row('s15'), 'H', AS_OF)!;
+    const hoodie = markedPiece(row('s15'), { subcategory: 'hoodie', color: 'grey' }, 'H', AS_OF)!;
     for (const styles of [null, one('streetwear'), one('minimalist')]) {
       const own = ownership([hoodie], ['s12']);
       expect(own.s15).toEqual({ owned: true, how: 'marked', itemId: 'H' });
@@ -386,14 +369,12 @@ describe('K11 · a stored id outside his list still works', () => {
 });
 
 describe('K12 · changing his looks', () => {
-  it('the list follows his profile at once; a piece he marked stays in Closet and comes back ticked', async () => {
+  it('the list follows his profile at once; a piece from a look\'s row stays in Closet and comes back ticked', async () => {
     const { store } = await demo();
     const p = (await store.profile.get('me'))!;
     await store.profile.put({ ...p, styles: one('streetwear') });
-    const toast = await toggleStarter(store, row('s15'), counterIds(), AS_OF);
-    expect(toast).not.toBeNull();
-    const piece = (await store.closet.all()).find((c) => c.starterId === 's15')!;
-    expect(piece).toBeDefined();
+    const piece = markedPiece(row('s15'), { subcategory: 'hoodie', color: 'grey' }, 'H15', AS_OF)!;
+    await store.closet.put(piece);
     await store.profile.put({ ...p, styles: one('classic_prep') });
     const prep = starterList((await store.profile.get('me'))!.styles);
     expect(ids(prep)).not.toContain('s15');

@@ -13,7 +13,8 @@ import { dayKey } from '@kitted/core';
 import { sessionClock } from '@/state/session';
 import { PieceArt } from '@/features/closet/GarmentArt';
 
-export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
+/** `readOnly`: Past chats (07 §17, U8): an earlier day's idea shows what it was, with no Wear this (it would log today). */
+export function OutfitIdeaCard({ outfitId, readOnly = false }: { outfitId: string; readOnly?: boolean }) {
   const { isAccessibilitySize } = useTheme();
   const data = useLive(['outfits', 'closet', 'wearLog'], async () => {
     const o = await store.outfits.get(outfitId);
@@ -41,8 +42,8 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
   return (
     <KCard
       accessibilityLabel={`${t('idea.tag')}, ${t('idea.fromCloset')}: ${o.title ? `${o.title}. ` : ''}${names}.`}
-      accessibilityActions={[{ name: 'wear', label: t('idea.wear') }]}
-      onAccessibilityAction={(e) => (e.nativeEvent.actionName === 'wear' ? void wear() : undefined)}
+      accessibilityActions={readOnly ? undefined : [{ name: 'wear', label: t('idea.wear') }]}
+      onAccessibilityAction={readOnly ? undefined : (e) => (e.nativeEvent.actionName === 'wear' ? void wear() : undefined)}
     >
       <KCardSection gap={space.s}>
         <TagLine left={t('idea.tag')} right={t('idea.fromCloset')} />
@@ -66,9 +67,11 @@ export function OutfitIdeaCard({ outfitId }: { outfitId: string }) {
             {o.summary}
           </KText>
         ) : null}
-        <View style={isAccessibilitySize ? undefined : { flexDirection: 'row' }}>
-          <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} icon={wearing ? 'check' : undefined} size="regular" fullWidth={isAccessibilitySize} disabled={wearing} onPress={() => void wear()} />
-        </View>
+        {readOnly ? null : (
+          <View style={isAccessibilitySize ? undefined : { flexDirection: 'row' }}>
+            <KButton title={wearing ? t('idea.wearing') : t('idea.wear')} icon={wearing ? 'check' : undefined} size="regular" fullWidth={isAccessibilitySize} disabled={wearing} onPress={() => void wear()} />
+          </View>
+        )}
       </KCardSection>
     </KCard>
   );

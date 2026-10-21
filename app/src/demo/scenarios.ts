@@ -33,7 +33,14 @@ export interface ScreenScenario {
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
-  /** Starter basics by look (#313): his picks for this screen, in place of the scenario's (smart casual + workwear). */
+  /** The phone is offline on this screen (09-ui-review §20.8 G18): the banner, send disabled. Others are pinned online. */
+  offline?: boolean;
+  /** Onboarding ended with "Not now" on consent (S26, G23). */
+  consent?: false;
+  /** An Undo toast shown once the screen is up (09-ui-review §21, #324): `heldAtMs` starts it held with that much
+   *  time left, so a screenshot catches the ring mid-way; without it, it counts down live. Undo does nothing here. */
+  toast?: { text: 'removed' | 'logged'; removal?: boolean; heldAtMs?: number };
+  /** Starter basics by look (#364): his picks for this screen, in place of the scenario's (smart casual + workwear). */
   looks?: Styles;
 }
 
@@ -55,6 +62,8 @@ export const STORY_TAP = 'story-tap';
 export const STORY_SHOES = 'story-shoes';
 /** Screens 63–64: "Your grey work boots?" (#126): ph8 answered Boots on Oct 21, then ph9 (boots read "other") on Oct 22. */
 export const STORY_KNOWN = 'story-known';
+/** Screens 201–203: a check whose jeans are "Not sure" (09-ui-review §19). */
+export const STORY_DOUBT = 'story-doubt';
 
 export const SCREENS: readonly ScreenScenario[] = [
   { n: 1, name: 'Welcome', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome' },
@@ -189,8 +198,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
   // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
   { n: 150, name: 'First check · Later', id: 'S6', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: {} },
-  { n: 151, name: 'Your first 3 moves', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later'] } },
-  { n: 152, name: 'Paywall · after the moves', id: 'P1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall?from=onboarding', under: '/stylist', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
+  { n: 151, name: 'Optional: tap what you own', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later'] } },
+  { n: 152, name: 'Paywall · after the optional step', id: 'P1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall?from=onboarding', under: '/stylist', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
   { n: 153, name: 'Paywall · the plan', id: 'P1b', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans?from=onboarding', under: '/paywall?from=onboarding', finish: { paywall: 'ok', steps: ['later', 'paywallShown'] } },
   { n: 154, name: 'Paywall · the plan, trial used', id: 'P1b', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'noTrial' } },
   { n: 155, name: 'Paywall · plans didn\'t load', id: 'P1s', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'loadFailed' } },
@@ -199,13 +208,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 158, name: 'Notification ask', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later'] } },
   { n: 159, name: 'Notification ask · pick a time', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyYes'] } },
   { n: 160, name: 'Notification ask · done', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyAllow'] } },
-  { n: 161, name: 'Starter essentials', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
-  { n: 162, name: 'Your first 3 moves · move 1 done', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
-  // L3 Your moves and the pinned rows (#292, 10-onboarding.md §9.9): the same story, the next morning view of it.
-  { n: 163, name: 'Lookbook · Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook', finish: { steps: ['later'] } },
-  { n: 164, name: 'Your moves', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later'] } },
-  { n: 165, name: 'You · Your moves row', id: 'Y1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you', finish: { steps: ['later', { mark: 's12' }] } },
-  { n: 166, name: 'Your moves · move 1 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you/moves', under: '/you', finish: { steps: ['later', { mark: 's12' }] } },
+  { n: 161, name: 'What you already own', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
+  { n: 162, name: 'Optional step · added', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
+  // The optional step skipped, and the tabs with no pinned row (#343 replaced #292's Your moves rows and page).
+  { n: 163, name: 'Lookbook · no pinned row', id: 'L1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/lookbook', finish: { steps: ['later'] } },
+  { n: 164, name: 'Optional step · skipped', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', 'skipInvite'] } },
+  { n: 165, name: 'You · no pinned row', id: 'Y1', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/you', finish: { steps: ['later', { mark: 's12' }] } },
   { n: 167, name: 'Ask · an outfit from his closet', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 168, name: 'Ask · start a fit check', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 169, name: 'Ask · one tap question', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
@@ -215,18 +223,49 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 173, name: 'Ask · saved to what I know', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 174, name: 'Ask · a piece from chat', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
   { n: 175, name: 'Past chats · yesterday\'s answers, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
-  // All 3 moves done (#292 Y5): the first check's top fix made by a re-check, a basic marked, the move-3 piece owned.
-  { n: 180, name: 'Your moves · All 3 done', id: 'L3', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook/moves', under: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
-  { n: 181, name: 'Lookbook · no Your moves row', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
+  // Two pieces added from the list (#343): the belt and a tee (its first choice, black), the next morning.
+  { n: 180, name: 'What you already own · two added', id: 'C5', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
+  { n: 181, name: 'Lookbook · the re-check story', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
   { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
-  // Starter basics by look (#313, 09-ui-review §16 K13): the full closet with other picks (190–193; 185–189 left for the
-  // closet-piece session).
-  { n: 190, name: 'Starter essentials · streetwear', id: 'C5', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/starter', under: '/closet', looks: [['streetwear', 0.5]] },
-  { n: 191, name: 'Starter essentials · minimal + smart casual', id: 'C5', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/starter', under: '/closet', looks: [['minimalist', 0.5], ['smart_casual', 0.25]] },
-  { n: 192, name: 'Starter essentials · no picks', id: 'C5', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/starter', under: '/closet', looks: [] },
+  // The two-shot check, step 0 (#313, 12-two-shot-check.md §10): a short mirror's top-only check, finished by a photo of
+  // the pants and shoes; the bottom snap's camera; the short-mirror tip in Mirror.
+  { n: 185, name: 'Partial check · top only', id: 'S6p', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: '/stylist' },
+  { n: 186, name: 'Partial check · finished with pants and shoes', id: 'S6p', scenario: 'full', onboarded: true, now: '2026-10-20T08:13:00', href: '/stylist' },
+  { n: 187, name: 'Camera · pants and shoes snap', id: 'S9', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: `/camera?mode=shoeSnap&parent=${STORY_PARTIAL}&part=bottom`, under: '/stylist' },
+  { n: 188, name: 'Camera · short mirror', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=shortMirror&camMode=mirror', under: '/stylist' },
+  // Starter basics by look (#364, 09-ui-review §16): Closet's next best buy for a streetwear pick (190–192, the
+  // Starter list for other picks, were dropped at the merge: "What you already own" keeps one list, #343).
   { n: 193, name: 'Closet · Outfits · streetwear pick', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', looks: [['streetwear', 0.5]] },
+  // How baggy a piece is (09-ui-review §18, #316): the dark jeans' photos disagree (194–196: PR #7 holds 190–193, the piece-edit screens 197–200).
+  { n: 194, name: 'Closet · How do your dark jeans fit?', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
+  { n: 195, name: 'Closet · Leg, Not sure', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B3', under: '/closet' },
+  { n: 196, name: 'What it is · Leg, Not sure', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=leg', under: '/closet/item/B3' },
+  // Fix what a piece is (09-ui-review §17, #315): "What it is" on the dark jeans' page and its pickers (197–200: the two-shot check took
+  // 185–188, PR #7 holds 190–193, the bagginess rows 194–196).
+  { n: 197, name: 'Closet · What it is', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B3', under: '/closet' },
+  { n: 198, name: 'What it is · Leg', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=leg', under: '/closet/item/B3' },
+  { n: 199, name: 'What it is · Kind', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/T6?field=kind', under: '/closet/item/T6' },
+  { n: 200, name: 'What it is · Color', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=color', under: '/closet/item/B3' },
+  // Bagginess on the fit-check card (09-ui-review §19, #322): s12's jeans are Not sure (201–203).
+  { n: 201, name: 'Fit check · Not sure about your jeans', id: 'S6', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/stylist' },
+  { n: 202, name: 'Closet · Outfits with the fit card', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/closet' },
+  { n: 203, name: 'Not quite right? · from the line', id: 'S8', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: `/sheets/correct/${STORY_DOUBT}?reason=detail&garment=1&only=slim,straight,wide`, under: '/stylist' },
+  // The Undo countdown ring (09-ui-review §21, #324): a removal toast held mid-way, and a 5 s one counting live.
+  { n: 204, name: 'Undo toast · held, 5 of 8 s left', id: 'G2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', toast: { text: 'removed', removal: true, heldAtMs: 4_200 } },
+  { n: 205, name: 'Undo toast · live, 5 s', id: 'G2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', toast: { text: 'logged' } },
+  // Step 4's code-only batch (09-ui-review §20.8; 206–209 left for the Undo ring's session): offline, "That score is
+  // wrong", the S26 card after Not now and its example sheet, the empty Closet, a re-check that moved (215; screen 10's lands as
+  // "not seen" now). The look page's ⋯ is on screen 97.
+  { n: 210, name: 'Stylist · offline', id: 'G1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:46:00', href: '/stylist', offline: true },
+  { n: 211, name: 'Ask · that score is wrong', id: 'S25', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:46:00', href: '/stylist' },
+  { n: 212, name: 'Turn on fit checks', id: 'S26', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/stylist', consent: false },
+  { n: 213, name: 'Example check · as a sheet', id: 'O1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/sheets/example', under: '/stylist', consent: false },
+  { n: 214, name: 'Closet · empty', id: 'C1e', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/closet' },
+  { n: 215, name: 'Re-check · Why and Not quite right?', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: '/stylist' },
+  // The share card on a single check (#347): Score · Rating; screen 20 is the re-check win (Before · After · Change).
+  { n: 230, name: 'Share card · single check', id: 'S12', scenario: 'full', onboarded: true, now: '2026-10-22T07:51:00', href: '/share/FC3', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

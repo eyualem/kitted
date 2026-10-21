@@ -1,5 +1,5 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v13 = parts-proto-13, the default since Oct 14: v12 plus wrinkled knit tops costing 0.2 on a minimal, smart casual or prep look (the wrinkle amounts are TUNE knobs; rubric/research/parts/v12.md -> "v13"); v12 was v11 plus the founder's Oct 14 calls (small bright graphics aren't loud, fitted legs cost 1.0 and a "straight" leg at roominess 2 or less is slim, light on light, wrinkles by garment and look; rubric/research/parts/v12.md); v11 was v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
+engine v14 = parts-proto-14, the default since Oct 17: v13 plus the casual and athletic fits (shorts get Proportions, a clean sneaker can earn "the shoes match", the look's own shoe for streetwear, "the pieces go together", the loungewear ladder by fit and context; rubric/research/parts/casual-athletic.md, DECISIONS-LOG #331-#335); v13 was the default from Oct 14: v12 plus wrinkled knit tops costing 0.2 on a minimal, smart casual or prep look (the wrinkle amounts are TUNE knobs; rubric/research/parts/v12.md -> "v13"); v12 was v11 plus the founder's Oct 14 calls (small bright graphics aren't loud, fitted legs cost 1.0 and a "straight" leg at roominess 2 or less is slim, light on light, wrinkles by garment and look; rubric/research/parts/v12.md); v11 was v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
 rubric/research/parts/gold-retune.md; v7 was v6 plus "a condition read counts only on a garment read clear", #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.10.0"
-ENGINE = "v13"
+VERSION = "1.11.0"
+ENGINE = "v14"
 
 
 def sl(s):
@@ -52,6 +52,8 @@ def data(engine=ENGINE):
         "weights": P.WEIGHTS, "partOrder": P.PART_ORDER, "partNames": P.PART_NAMES, "base": P.BASE,
         "partRange": {"default": [2.0, 10.0], "cohesion": [1.0, 10.0]},
         "tune": tune_json(P.TUNE[engine]),
+        # v14: the one switch (core CASUAL_FITS_V14) rolls the app back to v13's numbers; same tables, only the tune differs
+        "rollback": {"engine": "v13", "label": P.VERSIONS["v13"], "version": "1.10.0", "tune": tune_json(P.TUNE["v13"])},
         "sets": {
             "TAILORED": sl(P.TAILORED), "TAILORED_FIT": sl(P.TAILORED_FIT), "RIBBED": sl(P.RIBBED),
             "SHORT_SLEEVE_TYPES": sl(P.SHORT_SLEEVE_TYPES), "PRESSED": sl(P.PRESSED), "NARROW": sl(P.NARROW),
@@ -77,6 +79,8 @@ def data(engine=ENGINE):
             "LIGHT_NEUTRALS": sl(P.LIGHT_NEUTRALS), "LL_DARK": sl(P.LL_DARK),  # v12 COL-12: light on light
             "WR_KNITS": sl(P.WR_KNITS), "WR_TEES": sl(P.WR_TEES), "WR_CASUAL": sl(P.WR_CASUAL),   # v12 CON-6
             "WR_DRESSY_OCC": sl(P.WR_DRESSY_OCC), "WR_CLEAN": sl(P.WR_CLEAN),   # v13 CON-6: the clean looks
+            "SPORT_SNEAKERS": sl(P.SPORT_SNEAKERS), "BOOTS": sl(R.FOOT_KIND["boots"]),   # v14 SHO-4: any clean sneaker or boot
+            "SWEAT_TOPS": sl(P.SWEAT_TOPS), "SWEAT_BOTTOMS": sl(P.SWEAT_BOTTOMS),          # v14 LNG-9: a matched sweatsuit
         },
         "boxyVolume": 4,                     # volume >= this is a roomy / boxy piece (every part)
         "proportions": {

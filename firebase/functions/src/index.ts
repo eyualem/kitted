@@ -2,13 +2,17 @@
 // No job ever opens a photo: files are deleted by prefix, never read (faces are never processed on our servers).
 // Logs hold the uid and counts only, never content.
 import { initializeApp } from 'firebase-admin/app';
+import { getAppCheck } from 'firebase-admin/app-check';
 import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import * as functionsV1 from 'firebase-functions/v1';
 import { logger } from 'firebase-functions/v2';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { defineSecret } from 'firebase-functions/params';
+import { HttpsError, onCall, onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { createApi, type ApiDeps } from './api/handler';
+import { firestoreStore } from './api/store';
 
 initializeApp();
 
@@ -32,6 +36,7 @@ export async function deleteEverything(uid: string): Promise<{ files: number }> 
   const snap = await userRef.get();
   if (snap.exists) await userRef.set({ deleteRequestedAt: FieldValue.serverTimestamp() }, { merge: true });
   await db.recursiveDelete(userRef);
+  await db.recursiveDelete(db.doc(`usage/${uid}`)); // the server's daily counts (handoff/13-server.md §5)
   const bucket = getStorage().bucket();
   const [files] = await bucket.getFiles({ prefix: `users/${uid}/` });
   await bucket.deleteFiles({ prefix: `users/${uid}/`, force: true });
@@ -97,3 +102,81 @@ export const purgeInactive = onSchedule({ region: REGION, schedule: 'every day 0
   const deleted = await purgeInactiveBefore(Date.now() - INACTIVE_DAYS * DAY_MS);
   logger.info('purgeInactive', { deleted });
 });
+
+/** The server's daily counts older than this go (handoff/13-server.md §5); the day's spend after 90 days. */
+export const USAGE_DAYS = 7;
+export const SPEND_DAYS = 90;
+
+/** Deletes usage days and spend days written before their cutoffs. Returns how many. */
+export async function purgeUsageBefore(nowMs: number): Promise<{ usage: number; spend: number }> {
+  const db = getFirestore();
+  const out = { usage: 0, spend: 0 };
+  const sweep = async (q: FirebaseFirestore.Query, key: 'usage' | 'spend') => {
+    for (;;) {
+      const page = await q.limit(400).get();
+      if (page.empty) return;
+      const batch = db.batch();
+      for (const d of page.docs) batch.delete(d.ref);
+      await batch.commit();
+      out[key] += page.size;
+      if (page.size < 400) return;
+    }
+  };
+  await sweep(db.collectionGroup('usageDays').where('at', '<', nowMs - USAGE_DAYS * DAY_MS), 'usage');
+  await sweep(db.collection('spend').where('at', '<', nowMs - SPEND_DAYS * DAY_MS), 'spend');
+  return out;
+}
+
+export const purgeUsage = onSchedule({ region: REGION, schedule: 'every day 05:00', timeZone: 'America/New_York' }, async () => {
+  const removed = await purgeUsageBefore(Date.now());
+  logger.info('purgeUsage', removed);
+});
+
+// The AI proxy (handoff/13-server.md). The key lives only in Secret Manager (`firebase functions:secrets:set GEMINI_KEY`).
+// GEMINI_BASE (functions/.env.local, emulator only) points it at a fake. Plain values, not params: a param prompts on
+// every emulator run and deploy.
+const GEMINI_KEY = defineSecret('GEMINI_KEY');
+const GEMINI_BASE = process.env.GEMINI_BASE ?? 'https://generativelanguage.googleapis.com';
+/** Questions on GPT-5.6 Luna (13 §11): the founder's own billed key, `firebase functions:secrets:set OPENAI_KEY`. */
+const OPENAI_KEY = defineSecret('OPENAI_KEY');
+const OPENAI_BASE = process.env.OPENAI_BASE ?? 'https://api.openai.com';
+/** 1 keeps one instance warm (no 1–2 s wake-up on the first call) and costs money every month: the founder's call. */
+const API_MIN_INSTANCES = 0;
+
+/** The real dependencies; the tests pass their own fakes for Gemini and App Check. */
+export function apiDeps(over: Partial<ApiDeps> = {}): ApiDeps {
+  return {
+    store: over.store ?? firestoreStore(getFirestore()),
+    verifyIdToken: async (token) => ({ uid: (await getAuth().verifyIdToken(token)).uid }),
+    verifyAppCheck: async (token) => {
+      await getAppCheck().verifyToken(token);
+    },
+    geminiKey: () => GEMINI_KEY.value(),
+    openaiKey: () => OPENAI_KEY.value(),
+    geminiBase: over.geminiBase ?? GEMINI_BASE,
+    openaiBase: over.openaiBase ?? OPENAI_BASE,
+    fetch: globalThis.fetch,
+    now: () => Date.now(),
+    log: (entry) => logger.info('api', entry),
+    ...over,
+  };
+}
+
+/** The Admin SDK's Firestore (the tests build a store on it with their own clock). */
+export const adminFirestore = () => getFirestore();
+
+let handle: ReturnType<typeof createApi> | null = null;
+
+export const api = onRequest(
+  { region: REGION, secrets: [GEMINI_KEY, OPENAI_KEY], timeoutSeconds: 60, memory: '512MiB', concurrency: 80, minInstances: API_MIN_INSTANCES, invoker: 'public' },
+  async (req, res) => {
+    handle ??= createApi(apiDeps());
+    try {
+      await handle(req, res);
+    } catch (e) {
+      logger.error('api', { error: (e as Error).name });
+      if (!res.headersSent) res.status(500).json({ error: 'server' });
+      else res.end();
+    }
+  },
+);

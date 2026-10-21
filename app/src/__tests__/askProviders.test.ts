@@ -1,6 +1,7 @@
 // The model test's other companies (07 §16, #311): OpenAI and Anthropic sources on recorded streams. No network.
 import { createAskAnthropic, createAskOpenAI, parseEvents, type CallUsage } from '@/features/ask/providers';
 import type { AnswerEvent } from '@/features/ask/source';
+import { serverTransport, type AiFetch } from '@/services/server/transport';
 
 function body(text: string, cut = 7) {
   const bytes = new TextEncoder().encode(text);
@@ -80,5 +81,40 @@ describe('Anthropic Messages', () => {
     const src = createAskAnthropic({ apiKey: 'A', model: 'claude-sonnet-5-5', fetch: async (_u, init) => ((sent = JSON.parse(init.body)), { ok: false, status: 500, body: null }) });
     await collect(src.answer({ question: 'q', prompt: PROMPT }));
     expect(sent.thinking).toEqual({ type: 'between_tools' });
+  });
+});
+
+describe('OpenAI through our server (13-server.md §11, O6)', () => {
+  const done = ev('response.completed', { type: 'response.completed', response: { model: 'gpt-5.6-luna', usage: { input_tokens: 10, output_tokens: 5 } } });
+  function server(status: number, text: string, seen: { url?: string; headers?: Record<string, string>; body?: string }[]) {
+    const fetch = (async (url: string, init: { headers: Record<string, string>; body: string }) => {
+      seen.push({ url, headers: init.headers, body: init.body });
+      return { ok: status === 200, status, body: status === 200 ? body(text) : null, text: async () => text, headers: { get: () => null } };
+    }) as unknown as AiFetch;
+    return serverTransport({ base: 'https://srv/api', fetch, token: async () => 'GUEST', tzMinutes: () => -240 });
+  }
+  it("sends the same body to /v1/ask?model=gpt-5.6-luna, signed in, with the tap header on a tap", async () => {
+    const seen: { url?: string; headers?: Record<string, string>; body?: string }[] = [];
+    let direct = '';
+    const viaKey = createAskOpenAI({ apiKey: 'K', model: 'gpt-5.6-luna', effort: 'none', maxTokens: 420, fetch: async (_u, init) => {
+      direct = init.body;
+      return { ok: true, status: 200, body: body(ev('response.output_text.delta', { type: 'response.output_text.delta', delta: 'Hi.' + BLOCK }) + done) };
+    } });
+    await collect(viaKey.answer({ question: 'q', prompt: PROMPT }));
+    const viaServer = createAskOpenAI({ transport: server(200, ev('response.output_text.delta', { type: 'response.output_text.delta', delta: 'Hi.' + BLOCK }) + done, seen), model: 'gpt-5.6-luna', effort: 'none', maxTokens: 420 });
+    const out = await collect(viaServer.answer({ question: 'q', prompt: PROMPT, tap: true }));
+    expect(seen[0]!.url).toBe('https://srv/api/v1/ask?model=gpt-5.6-luna');
+    expect(seen[0]!.body).toBe(direct);
+    expect(seen[0]!.headers!.Authorization).toBe('Bearer GUEST');
+    expect(seen[0]!.headers!['X-Kitted-Free']).toBe('tap');
+    expect(out.at(-1)?.type).toBe('done');
+  });
+  it("the server's limit and spending stop become the limit and paused lines; nothing else counts as one", async () => {
+    const limit = createAskOpenAI({ transport: server(429, '{"error":"limit","which":"questions"}', []), model: 'gpt-5.6-luna' });
+    expect(await collect(limit.answer({ question: 'q', prompt: PROMPT }))).toEqual([{ type: 'failed', code: 'limit' }]);
+    const paused = createAskOpenAI({ transport: server(503, '{"error":"paused"}', []), model: 'gpt-5.6-luna' });
+    expect(await collect(paused.answer({ question: 'q', prompt: PROMPT }))).toEqual([{ type: 'failed', code: 'paused' }]);
+    const up = createAskOpenAI({ transport: server(502, '{"error":"upstream","status":500}', []), model: 'gpt-5.6-luna' });
+    expect(await collect(up.answer({ question: 'q', prompt: PROMPT }))).toEqual([{ type: 'failed', code: 'http502' }]);
   });
 });

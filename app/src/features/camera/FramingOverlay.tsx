@@ -6,7 +6,8 @@
 // pill carries the words).
 import { StyleSheet, View } from 'react-native';
 import Svg, { Ellipse, Rect } from 'react-native-svg';
-import { KText, fixed } from '@/design-system';
+import { CONTROL_TEXT_MAX_SCALE, KText, fixed, space } from '@/design-system';
+import { lowerGuideLabelTop } from './guideLayout';
 import type { ViewBox } from '../../../modules/kitted-vision';
 
 export function BodyOutline({
@@ -41,19 +42,30 @@ export function BodyOutline({
   );
 }
 
-/** Shoe snap (S9): a dashed box across the lower `share` of the preview. */
-export function LowerGuide({ share, label, width, height }: { share: number; label: string; width: number; height: number }) {
+/**
+ * Shoe snap (S9): a dashed box across the lower `share` of the preview. The label sits on a dark tag (white text
+ * alone vanished over a white shirt), never above `minLabelTop` (under the tip pill), and is capped in size so
+ * "Pants and shoes here" stays inside the box at the accessibility sizes (#313).
+ */
+export function LowerGuide({ share, label, width, height, minLabelTop = 0 }: { share: number; label: string; width: number; height: number; minLabelTop?: number }) {
   const top = height * (1 - share) - 120;
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       <Svg width={width} height={height}>
         <Rect x={24} y={top} width={width - 48} height={height * share - 40} rx={24} stroke={fixed.white} strokeWidth={2} strokeDasharray="7 5" fill="none" />
       </Svg>
-      <View style={{ position: 'absolute', top: top + 14, left: 0, right: 0, alignItems: 'center' }}>
-        <KText variant="footnote" weight="600" color={fixed.white}>
-          {label}
-        </KText>
+      <View style={{ position: 'absolute', top: lowerGuideLabelTop(height, share, minLabelTop), left: 40, right: 40, alignItems: 'center' }}>
+        <View style={styles.labelTag}>
+          <KText variant="footnote" weight="600" color={fixed.white} numberOfLines={2} maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE} style={{ textAlign: 'center' }}>
+            {label}
+          </KText>
+        </View>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  // Like the camera's "Hold still" tag (03 §2.3: a text shadow alone was 1.0 over white).
+  labelTag: { borderRadius: 12, paddingHorizontal: space.m, paddingVertical: space.xs, backgroundColor: fixed.photoTag, borderWidth: 1, borderColor: fixed.photoTagBorder },
+});

@@ -4,13 +4,15 @@
 //   L  prompt_look_l.txt + schema_look_l.json on the lower close-up: does the pant fabric rest on the shoe
 // The request is look_test.py's (b1_test.call): gemini-3.8-flash, temperature 0, JSON with the arm's schema, thinking
 // off, the prompt then the one image. One attempt per arm, no retry and no hedge (a retry would land after the card).
-// The shoulder-seam arm (US) failed and is not shipped. DEV builds with the key only, like the scoring read.
+// The shoulder-seam arm (US) failed and is not shipped. Sent like the scoring read: the dev key on a dev build, our
+// server's /v1/look otherwise, tagged with the check's id (13-server.md §8).
 import promptL from '../../../assets/gemini/prompt-look-l.json';
 import promptU from '../../../assets/gemini/prompt-look-u.json';
 import schemaL from '../../../assets/gemini/schema-look-l.json';
 import schemaU from '../../../assets/gemini/schema-look-u.json';
 import type { LookAnswerL, LookAnswerU, LookArm } from '@/data/types';
 import { realScheduler, type Scheduler } from '../scheduler';
+import { directTransport, type AiFetch, type AiTransport, type CheckTag } from '../server/transport';
 import type { LookFail, LookResult } from './types';
 
 export const LOOK_MODEL = 'gemini-3.8-flash';
@@ -20,7 +22,6 @@ export const LOOK_TIMEOUT_MS = 12_000;
 /** Gemini 3.8 Flash list prices, $ per token (b1_test.py PRICE_IN / PRICE_OUT). */
 export const LOOK_PRICE_IN = 0.75 / 1e6;
 export const LOOK_PRICE_OUT = 3.75 / 1e6;
-const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 type Schema = { properties: Record<string, { enum?: string[] }>; required: string[] };
 const ARMS: Record<LookArm, { prompt: string; schema: Schema }> = {
@@ -78,8 +79,10 @@ export function lookLogLine(arm: LookArm, r: LookResult<LookAnswerU | LookAnswer
 }
 
 export interface LookGeminiOptions {
-  apiKey: string;
-  fetch: (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{
+  /** Our server or Gemini with the dev key (services/server); without it, `apiKey` + `fetch` (the tests). */
+  transport?: AiTransport;
+  apiKey?: string;
+  fetch?: (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{
     ok: boolean;
     status: number;
     text(): Promise<string>;
@@ -93,16 +96,17 @@ export interface LookGeminiOptions {
 
 export interface LookGemini {
   /** One arm's call. Never rejects: every failure is a { ok: false } result. */
-  arm(arm: 'U', jpegBase64: string, signal?: AbortSignal): Promise<LookResult<LookAnswerU>>;
-  arm(arm: 'L', jpegBase64: string, signal?: AbortSignal): Promise<LookResult<LookAnswerL>>;
+  arm(arm: 'U', jpegBase64: string, signal?: AbortSignal, tag?: CheckTag): Promise<LookResult<LookAnswerU>>;
+  arm(arm: 'L', jpegBase64: string, signal?: AbortSignal, tag?: CheckTag): Promise<LookResult<LookAnswerL>>;
 }
 
 export function createLookGemini(opts: LookGeminiOptions): LookGemini {
   const scheduler = opts.scheduler ?? realScheduler;
   const now = opts.now ?? (() => Date.now());
   const timeoutMs = opts.timeoutMs ?? LOOK_TIMEOUT_MS;
+  const transport = opts.transport ?? directTransport(opts.apiKey ?? '', opts.fetch as unknown as AiFetch);
 
-  async function call(arm: LookArm, base64: string, outer?: AbortSignal): Promise<LookResult<LookAnswerU | LookAnswerL>> {
+  async function call(arm: LookArm, base64: string, outer?: AbortSignal, tag?: CheckTag): Promise<LookResult<LookAnswerU | LookAnswerL>> {
     const t0 = now();
     const ac = new AbortController();
     const onAbort = () => ac.abort();
@@ -123,12 +127,7 @@ export function createLookGemini(opts: LookGeminiOptions): LookGemini {
       let res;
       let body: string;
       try {
-        res = await opts.fetch(`${BASE}/${LOOK_MODEL}:generateContent`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': opts.apiKey },
-          body: JSON.stringify(buildLookRequest(arm, base64)),
-          signal: ac.signal,
-        });
+        res = await transport.send({ route: 'look', model: LOOK_MODEL, stream: false, body: JSON.stringify(buildLookRequest(arm, base64)), signal: ac.signal, ...(tag ? { tag } : {}) });
         body = await res.text();
       } catch {
         return done(fail('offline'));

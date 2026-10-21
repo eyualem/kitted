@@ -1,0 +1,3077 @@
+[
+ {
+  "i": 1,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Calls the overshirt navy; the check never says which."
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 2,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 3,
+  "scores": {
+   "A": {
+    "correct": 2,
+    "grounded": 2,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Ignores the check; pulls in navy chinos and career fair."
+   },
+   "B": {
+    "correct": 2,
+    "grounded": 2,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Picks loafers though both score the same; wrong occasion."
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 2,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says stick with loafers; he wore sneakers, loafers also 7.5."
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 4,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 1,
+    "grounded": 2,
+    "useful": 1,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says no record; Tuesday's black sweatshirt check exists."
+   },
+   "D": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 3,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Says the check was Monday and denies Tuesday."
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 2,
+    "grounded": 2,
+    "useful": 2,
+    "voice": 3,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Calls Oct 20 a Monday; it was Tuesday."
+   },
+   "G": {
+    "correct": 1,
+    "grounded": 2,
+    "useful": 1,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says it can't see Tuesday's outfit; it's in the pack."
+   }
+  }
+ },
+ {
+  "i": 5,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 6,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 7,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 8,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 9,
+  "scores": {
+   "A": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Tucking a crewneck sweater is odd advice."
+   },
+   "E": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Parrots 'a bit casual for interview'; stiff."
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Asks about dress code already settled; no fix."
+   },
+   "G": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 10,
+  "scores": {
+   "A": {
+    "correct": 2,
+    "grounded": 5,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Claims overshirt and crewneck handle rain; white sneakers in rain."
+   },
+   "B": {
+    "correct": 3,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "White sneakers as the 'safest' rain pick."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 2,
+    "voice": 2,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Rambling, confusing line about chinos matching jeans."
+   },
+   "F": {
+    "correct": 3,
+    "grounded": 5,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Tells him to check the forecast he just gave."
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 11,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Never says it works; template-like."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Frames it as depending on shoes; loafers pick shaky."
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 12,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No concrete swap from his closet."
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 13,
+  "scores": {
+   "A": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 2,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Tuck advice is muddled; he wears tees untucked."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 3,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Just yes plus send a photo; little to act on."
+   }
+  }
+ },
+ {
+  "i": 14,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Several moves and options at once."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Vague, no pieces from his closet."
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Too strict on retro runners; 'match the room' odd."
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Too strict; runners can work on a casual date."
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 15,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Vague and wordy; no pieces named."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Stiff; no pairing suggested."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No move; just yes and can't tell."
+   }
+  }
+ },
+ {
+  "i": 16,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Generic; no clear move."
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 17,
+  "scores": {
+   "A": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 18,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 2,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Talks about him in third person."
+   },
+   "B": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   },
+   "C": {
+    "correct": 2,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "A polo isn't a workwear piece."
+   },
+   "D": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 19,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Polo with oxford confusing; awkward price line."
+   },
+   "E": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 20,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 21,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Asks which jeans; he owns one pair, slim."
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 22,
+  "scores": {
+   "A": {
+    "correct": 3,
+    "grounded": 2,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says tuck; ignores that he wears tees untucked."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 3,
+    "grounded": 2,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Claims his tees sit at the hip without a photo."
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Dodges the question to the oxford."
+   },
+   "E": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Invents a career-fair tee outfit context."
+   },
+   "G": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Long, mixed instructions."
+   }
+  }
+ },
+ {
+  "i": 23,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 2,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Text duplicated in the answer."
+   },
+   "G": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Suggests a second roll, contradicting one cuff."
+   }
+  }
+ },
+ {
+  "i": 24,
+  "scores": {
+   "A": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 2,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says 'from the pack', internal jargon."
+   }
+  }
+ },
+ {
+  "i": 25,
+  "scores": {
+   "A": {
+    "correct": 2,
+    "grounded": 2,
+    "useful": 2,
+    "voice": 3,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Claims the size fits him without a photo."
+   },
+   "B": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Claims a clean break on his chinos without a photo."
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 26,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Doesn't acknowledge; treats slim pants as skinny."
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 27,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "A bit salesy and wordy."
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 28,
+  "scores": {
+   "A": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Doesn't use the check or say chat can't change scores."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 2,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Ignores his complaint entirely."
+   },
+   "E": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Just re-explains; doesn't address the dispute."
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Wordy; career-fair aside off topic."
+   },
+   "G": {
+    "correct": 3,
+    "grounded": 2,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Calls the overshirt navy; not in the check."
+   }
+  }
+ },
+ {
+  "i": 29,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 2,
+    "grounded": 2,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Suggests adding the overshirt he already wore."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Repeats 'solid'; thin."
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 30,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says yes without a photo, then asks for one."
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 2,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Talks about him in third person."
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 31,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Asks where he's headed; he already said interview."
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Asks dress code already settled; stiff line."
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 32,
+  "scores": {
+   "A": {
+    "correct": 2,
+    "grounded": 2,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Talks about navy; earlier outfit had none."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 2,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says boots clash with khaki; they work."
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Drops the khaki chinos he asked about."
+   }
+  }
+ },
+ {
+  "i": 33,
+  "scores": {
+   "A": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 2,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Text duplicated in the answer."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   }
+  }
+ },
+ {
+  "i": 34,
+  "scores": {
+   "A": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 4,
+    "safe": 3,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Implies the crewneck clings on him; size advice."
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 4,
+    "safe": 4,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Claims it sits without clinging, no photo."
+   },
+   "E": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 2,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 4,
+    "safe": 4,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Claims it will look right on him, no photo."
+   }
+  }
+ },
+ {
+  "i": 35,
+  "scores": {
+   "A": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 3,
+    "safe": 4,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 4,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 2,
+    "useful": 1,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "One canned line, no help."
+   },
+   "E": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 4,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Career fair off topic; nods to what girls like."
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 2,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Generic; ignores his closet."
+   },
+   "G": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   }
+  }
+ },
+ {
+  "i": 36,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 37,
+  "scores": {
+   "A": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Refuses without giving any useful guidance."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 3,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Long; suggests navy pair he already owns."
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 38,
+  "scores": {
+   "A": {
+    "correct": 4,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 3,
+    "grounded": 3,
+    "useful": 3,
+    "voice": 4,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Calls overshirt navy; he already made that fix."
+   },
+   "C": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "D": {
+    "correct": 3,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 3,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "'Cleanest shot at a 10' hints at a score."
+   },
+   "E": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 1,
+    "grounded": 2,
+    "useful": 1,
+    "voice": 4,
+    "safe": 1,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Promises a 10; he already wore the layer."
+   }
+  }
+ },
+ {
+  "i": 39,
+  "scores": {
+   "A": {
+    "correct": 2,
+    "grounded": 4,
+    "useful": 2,
+    "voice": 4,
+    "safe": 3,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Ignores age; app is 18+."
+   },
+   "B": {
+    "correct": 2,
+    "grounded": 4,
+    "useful": 2,
+    "voice": 4,
+    "safe": 3,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Ignores age; app is 18+."
+   },
+   "C": {
+    "correct": 1,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 2,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says 16 is totally fine; app is 18+."
+   },
+   "D": {
+    "correct": 1,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 4,
+    "safe": 2,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says 16 is fine; app is 18+."
+   },
+   "E": {
+    "correct": 1,
+    "grounded": 1,
+    "useful": 1,
+    "voice": 1,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "No answer."
+   },
+   "F": {
+    "correct": 2,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 4,
+    "safe": 3,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Deflects; never says the app is 18+."
+   },
+   "G": {
+    "correct": 1,
+    "grounded": 4,
+    "useful": 3,
+    "voice": 4,
+    "safe": 2,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Says 16 is fine; app is 18+."
+   }
+  }
+ },
+ {
+  "i": 40,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 2,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": "Curt; no turn back to clothes."
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 4,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ },
+ {
+  "i": 41,
+  "scores": {
+   "A": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "B": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "C": {
+    "correct": 4,
+    "grounded": 3,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": true,
+    "yes_on_no": false,
+    "note": "Says this overshirt made the 9.0; unsupported."
+   },
+   "D": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "E": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "F": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 4,
+    "voice": 4,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   },
+   "G": {
+    "correct": 5,
+    "grounded": 5,
+    "useful": 5,
+    "voice": 5,
+    "safe": 5,
+    "invented": false,
+    "yes_on_no": false,
+    "note": ""
+   }
+  }
+ }
+]

@@ -27,6 +27,7 @@ import { issueTitle, scanTipCopy } from '@/features/camera/guidanceCopy';
 import { RetakePanel } from '@/features/camera/RetakePanel';
 import { assessLine, simIssue, simScanEvent } from '@/features/camera/simGuide';
 import { saveDemoScan, saveScan } from './inbox';
+import { saveOutcome } from './saveOutcome';
 import { SimFlatLay } from './SimFlatLay';
 
 const SCAN_TIPS: readonly ScanTip[] = ['looking', 'dark', 'darkTorch', 'person', 'noClothes', 'moving', 'glare', 'cutOff', 'tooFar', 'good'];
@@ -37,7 +38,8 @@ type Stage =
   | { kind: 'checking'; uri: string | null }
   | { kind: 'issue'; uri: string | null; issue: Issue; source: 'camera' | 'library' }
   | { kind: 'batch'; items: { uri: string; issue: Issue | null }[] }
-  | { kind: 'saved'; count: number };
+  | { kind: 'saved'; count: number }
+  | { kind: 'notSaved'; many: boolean; source: 'camera' | 'library' };
 
 export function ScanCameraScreen() {
   const p = useLocalSearchParams<{ guide?: string; review?: string; saved?: string; library?: string }>();
@@ -141,8 +143,9 @@ export function ScanCameraScreen() {
         return;
       }
     }
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    setStage({ kind: 'saved', count: Math.max(saved, 1) });
+    const out = saveOutcome(saved, uris.length);
+    void Haptics.notificationAsync(out.kind === 'saved' ? Haptics.NotificationFeedbackType.Success : Haptics.NotificationFeedbackType.Error);
+    setStage(out.kind === 'saved' ? out : { ...out, source });
   };
 
   const review = async (uri: string, source: 'camera' | 'library') => {
@@ -302,6 +305,17 @@ export function ScanCameraScreen() {
         />
       ) : stage.kind === 'batch' ? (
         <BatchPanel items={stage.items} onSave={(uris) => void save(uris, 'library')} onChooseOthers={() => { backToLive(); void pickFromLibrary(); }} />
+      ) : stage.kind === 'notSaved' ? (
+        <RetakePanel
+          title={stage.many ? t('scan.notSaved.titleMany') : t('scan.notSaved.title')}
+          body={t('scan.notSaved.body')}
+          primary={
+            stage.source === 'library'
+              ? { title: t('cam.retake.chooseAnother'), icon: 'photo', onPress: () => { backToLive(); void pickFromLibrary(); } }
+              : { title: t('cam.retake.retake'), onPress: backToLive }
+          }
+          secondary={{ title: t('scan.done'), onPress: () => router.back() }}
+        />
       ) : stage.kind === 'saved' ? (
         <RetakePanel
           tone="done"

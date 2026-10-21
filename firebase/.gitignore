@@ -1,3 +1,6 @@
 node_modules/
 functions/lib/
 *-debug.log
+
+# Functions emulator secrets (GEMINI_KEY for local runs)
+functions/.secret.local

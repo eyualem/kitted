@@ -103,7 +103,7 @@ export const QUESTIONS: TestQuestion[] = [
 ];
 
 /** A streaming fetch on Node's https (jest's fetch can't stream). */
-const nodeFetch: AskGeminiOptions['fetch'] = (url, init) =>
+const nodeFetch: NonNullable<AskGeminiOptions['fetch']> = (url, init) =>
   new Promise((resolve, reject) => {
     const req = https.request(url, { method: init.method, headers: init.headers }, (res) => {
       const queue: Uint8Array[] = [];
@@ -159,7 +159,7 @@ function sourceFor(m: (typeof MODELS)[number], calls: Call[]): AnswerSource {
   }
   const opts = { fetch: nodeFetch, model: m.id, maxTokens: TEST_MAX_TOKENS, onCall: (c: Call & { firstMs: number | null }) => calls.push(c) };
   return m.company === 'openai'
-    ? createAskOpenAI({ ...opts, apiKey: env('OPENAI_API_KEY')!, effort: m.effort ?? 'none' })
+    ? createAskOpenAI({ ...opts, apiKey: (env('EXPO_PUBLIC_OPENAI_DEV_KEY') ?? env('OPENAI_API_KEY'))!, effort: m.effort ?? 'none' })
     : createAskAnthropic({ ...opts, apiKey: env('ANTHROPIC_API_KEY')! });
 }
 

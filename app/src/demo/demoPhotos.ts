@@ -61,6 +61,8 @@ export const DEMO_PHOTOS: readonly DemoPhoto[] = [
   ...BUNDLED,
   { ...p01b, id: 'p01b2', sha256: 'demo-p01b-second-shot' },
   { ...s14, id: 's14b', sha256: 'demo-s14-after-fix' },
+  // "p01t": p01b in a short mirror (#313): the card shows it neck to waist, as a bathroom mirror would.
+  { ...p01b, id: 'p01t', sha256: 'demo-p01b-top-only', crop: { ...p01b.crop, foot: p01b.crop.neck + (p01b.crop.foot - p01b.crop.neck) * 0.42 } },
   { ...s12, id: 'ph1', sha256: 'demo-ph1-oct7', latencySeconds: 6.6 },
   { ...s12, id: 'ph8', sha256: 'demo-ph8-oct8', latencySeconds: 9.4 },
   { ...s12, id: 'ph9', sha256: 'demo-ph9-oct8', latencySeconds: 5.7 },

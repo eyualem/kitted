@@ -1,24 +1,55 @@
-// The real stylist on a DEV build (07 C2, check A7): the dev key, like the reading call (services/readingSource/
-// live.ts). On since Oct 17 (#310, the founder's OK on the live tries: "switch CHAT_LIVE on"): his dev build answers
-// for real through Metro. Release builds never have the key (__DEV__ is false there), so they can't pick it; outside
-// testers need the server route (C6).
+// The real stylist (07 C2, check A7). Two ways, by who answers (CHAT_PROVIDER):
+//   openai (since Oct 17, #329, the founder: "going with the OpenAI model is probably the better idea"): GPT-5.6 Luna,
+//          the only model past every gate in the model test (#311; 83% good answers vs Flash-Lite's 54%, 0.035¢ a
+//          question). Through our server's /v1/ask?model=gpt-5.6-luna whenever the transport is the server (Release, or
+//          a dev build with EXPO_PUBLIC_KITTED_SERVER; #330, 13-server.md §11); else straight to OpenAI with the dev key.
+//          No silent fallback: consent (version 2) names OpenAI for questions, so a question is never quietly sent to
+//          Google instead.
+//   gemini: sent the way the reading call is (services/server, 13-server.md §8): the dev key on a dev build (#310),
+//          our server's /v1/ask on a Release build or with EXPO_PUBLIC_KITTED_SERVER (#328).
 import { fetch as expoFetch } from 'expo/fetch';
 import { Platform } from 'react-native';
-import { createAskGemini, type AskGeminiOptions } from './gemini';
+import { aiTransport } from '@/services/server';
+import type { AiTransport } from '@/services/server/transport';
+import { ASK_MAX_TOKENS, createAskGemini } from './gemini';
+import { createAskOpenAI, type ProviderOptions } from './providers';
 import type { AnswerSource } from './source';
 
-/** The switch for real answers (on, #310; dev builds with the dev key only). */
+/** The switch for real answers (on, #310). */
 export const CHAT_LIVE = true;
 
-const KEY: string | undefined = __DEV__ ? process.env.EXPO_PUBLIC_GEMINI_DEV_KEY : undefined;
+export type ChatProvider = 'openai' | 'gemini';
+/** Who answers his questions (#329). Changing it also changes what consent must say (onb.consent.sent3). */
+export const CHAT_PROVIDER: ChatProvider = 'openai';
+/** The model test's winner (#311). Reasoning "none", the app's answer cap. */
+export const CHAT_OPENAI_MODEL = 'gpt-5.6-luna';
 
-/** The real source, or null when it may not be used (switched off, or no key). */
-export function liveAnswerSource(on: boolean = CHAT_LIVE, key: string | undefined = KEY): AnswerSource | null {
-  if (!on || !key) return null;
+/** Dev builds only (__DEV__ is false in Release, and guard:release keeps keys out of the bundle). */
+const DEV_OPENAI_KEY: string | undefined = __DEV__ ? process.env.EXPO_PUBLIC_OPENAI_DEV_KEY || undefined : undefined;
+
+// expo/fetch streams on the phone. The web preview can't call OpenAI at all (the browser blocks it, CORS, #329).
+const streamFetch = () => (Platform.OS === 'web' ? globalThis.fetch.bind(globalThis) : expoFetch) as unknown as ProviderOptions['fetch'];
+
+/** The real source, or null when it may not be used (switched off, or nowhere to send for the chosen provider). */
+export function liveAnswerSource(
+  on: boolean = CHAT_LIVE,
+  transport: AiTransport | null = aiTransport(),
+  provider: ChatProvider = CHAT_PROVIDER,
+  openaiKey: string | undefined = DEV_OPENAI_KEY,
+): AnswerSource | null {
+  if (!on) return null;
+  if (provider === 'openai') {
+    const viaServer = transport?.kind === 'server';
+    if (!viaServer && !openaiKey) return null;
+    return createAskOpenAI({
+      ...(viaServer ? { transport } : { apiKey: openaiKey, fetch: streamFetch() }),
+      model: CHAT_OPENAI_MODEL, effort: 'none', maxTokens: ASK_MAX_TOKENS,
+      onCall: (c) => console.log(`[ask] openai ${c.ms} ms · ${c.model ?? '?'} · in ${c.usage.in} (${c.usage.cached} cached) / out ${c.usage.out} tokens${c.stop && c.stop !== 'stop' ? ` · ${c.stop}` : ''}`),
+    });
+  }
+  if (!transport) return null;
   return createAskGemini({
-    apiKey: key,
-    // expo/fetch streams on the phone; in the web preview it throws before sending, so the browser's own fetch (#310).
-    fetch: (Platform.OS === 'web' ? globalThis.fetch.bind(globalThis) : expoFetch) as unknown as AskGeminiOptions['fetch'],
+    transport,
     onCall: (c) => console.log(`[ask] gemini ${c.ms} ms · ${c.model ?? '?'} · in ${c.usage?.promptTokenCount ?? '?'} / out ${c.usage?.candidatesTokenCount ?? '?'} tokens${c.finishReason && c.finishReason !== 'STOP' ? ` · ${c.finishReason}` : ''}`),
   });
 }
