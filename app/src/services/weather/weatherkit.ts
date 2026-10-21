@@ -1,4 +1,4 @@
-// Apple WeatherKit first, the US National Weather Service behind it (CLAUDE.md plan §4b, 09 §26 W1–W5, #365). Used
+// Apple WeatherKit first, the US National Weather Service behind it (CLAUDE.md plan §4b, 09 §27 W1–W5, #366). Used
 // only while the paid-team switch is on (src/config/apple.ts): WeatherKit needs the paid team's entitlement.
 //
 // Privacy as NWS (DECISIONS-LOG #58): the approximate coordinate is rounded to 2 decimals (about 1 km) before it's

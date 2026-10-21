@@ -4,7 +4,7 @@
 // no background mode, no monitoring, no significant-change service. The coordinate is handed to
 // JS and kept nowhere on this side.
 //
-// Also Apple WeatherKit (09 §26 W1, #365): the hourly forecast for a coordinate JS hands in (already rounded there).
+// Also Apple WeatherKit (09 §27 W1, #366): the hourly forecast for a coordinate JS hands in (already rounded there).
 // It needs the paid team's WeatherKit entitlement; without it the call fails and JS falls back to NWS. JS calls it only
 // while the paid-team switch is on (src/config/apple.ts).
 import CoreLocation

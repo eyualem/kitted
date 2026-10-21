@@ -13,7 +13,8 @@
 // Whether the card is "checked" (collapsed with his score) is derived, not stored: any scored
 // check in that day's window collapses it, whether it started from the card or the composer.
 import {
-  addDays, dayKey, daysBetween, localParts, pickHistory, pickOutfit, seasonNeeds, weatherNeeds,
+  addDays, dayKey, daysBetween, defaultRubric, isScored, itemAllowed, localParts, outfitReading, outfitValid, pickHistory, pickOutfit, seasonNeeds,
+  weatherNeeds,
   type ClosetItem, type DayWeather, type IdeaResult, type PastUse, type PickHistory, type Styles, type WeatherWindow, type ZoneOffset,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
@@ -171,9 +172,16 @@ export function createMorningService(deps: MorningDeps) {
     });
   }
 
-  async function saveOutfit(result: IdeaResult, occasion: CardOccasion, existing: string | null): Promise<string | null> {
+  /**
+   * Saves the card's outfit with each piece's fingerprint as planned (`basis`, 09-ui-review §26, #365). `o` is only for a
+   * re-plan after he corrected a piece: the piece the "Updated for your …" line names, and the outfit first planned.
+   */
+  async function saveOutfit(
+    result: IdeaResult, occasion: CardOccasion, existing: string | null, o: { updatedFor?: string; origin?: string } = {},
+  ): Promise<string | null> {
     if (!result.outfit) return null;
-    const items = await closet();
+    const all = await store.closet.all();
+    const items = all.filter((c) => !c.isDeleted);
     const names = result.outfit.itemIds.map((id) => items.find((c) => c.id === id)?.name ?? '').filter(Boolean);
     const row: OutfitRow = {
       id: existing ?? deps.ids('O'),
@@ -181,7 +189,12 @@ export function createMorningService(deps: MorningDeps) {
       occasion,
       title: null,
       summary: names.join(', '),
-      details: { predictedScore: result.outfit.predicted, missing: result.outfit.missing, reasons: result.outfit.reasons } as OutfitRow['details'],
+      details: {
+        predictedScore: result.outfit.predicted, missing: result.outfit.missing, reasons: result.outfit.reasons,
+        // After a re-plan the first outfit's pieces stay watched too, so undoing his edit brings that outfit back.
+        basis: basisOf([...new Set([...result.outfit.itemIds, ...(o.origin ? o.origin.split('+') : [])])], all),
+        ...(o.updatedFor ? { updatedFor: o.updatedFor } : {}), ...(o.origin ? { origin: o.origin } : {}),
+      } as OutfitRow['details'],
       source: 'idea',
       isSaved: false,
       createdAt: clock.nowMs(),
@@ -339,8 +352,16 @@ export function createMorningService(deps: MorningDeps) {
   async function freshen(nowMs: number = clock.nowMs()): Promise<boolean> {
     if (deps.enabled && !deps.enabled()) return false;
     const { day, slot } = slotAt(nowMs, zone);
-    const row = await store.dailyIdeas.get(ideaId(day, slot));
-    if (!row || row.state === 'stayingIn' || row.fitCheckId) return false;
+    const first = await store.dailyIdeas.get(ideaId(day, slot));
+    if (!first || first.state === 'stayingIn' || first.fitCheckId) return false;
+    // A piece on it he corrected, removed or merged away first (§26), then the weather, on the card as it is now.
+    const followed = await followPieces(first);
+    const row = followed ? (await store.dailyIdeas.get(first.id)) ?? first : first;
+    return (await freshenWeather(row, nowMs)) || followed;
+  }
+
+  /** The weather half of `freshen` (#338, 09 §23 M5). */
+  async function freshenWeather(row: DailyIdeaRow, nowMs: number): Promise<boolean> {
     // No weather yet (location was off): back from Settings with it on, the card gets its forecast now (09 §23 M5).
     if (!row.weather) return gainWeather(row);
     const fetchedAt = typeof row.weather.fetchedAt === 'number' ? row.weather.fetchedAt : row.createdAt;
@@ -360,6 +381,66 @@ export function createMorningService(deps: MorningDeps) {
       await store.dailyIdeas.put(next);
     }
     return true;
+  }
+
+  /**
+   * The card follows a piece he corrected (09-ui-review §26, #365). A piece on the card whose fingerprint changed (its
+   * reading, its sleeves, or it was removed or merged away) re-plans a card he hasn't touched, as it was first planned
+   * (same occasion, style, weather, history and seed). A card he swapped or set keeps its outfit while it still works,
+   * else it's re-planned without what he swapped away. Wear this, a checked card and Staying in are never changed (nor
+   * an earlier card: only the card of this moment comes here). A card saved before fingerprints gets one, nothing else.
+   */
+  async function followPieces(row: DailyIdeaRow): Promise<boolean> {
+    if (row.state !== 'idea' || !row.outfitId) return false;
+    const checks = await store.fitChecks.all();
+    if (checks.some((c) => !c.parentId && c.status === 'scored' && checkInSlot(c, row, zone))) return false;
+    const outfit = await store.outfits.get(row.outfitId);
+    if (!outfit) return false;
+    const all = await store.closet.all();
+    const details = outfit.details as OutfitRow['details'] & { basis?: Record<string, string>; origin?: string };
+    const now = basisOf([...new Set([...outfit.itemIds, ...Object.keys(details.basis ?? {})])], all);
+    const settle = () => store.outfits.put({ ...outfit, details: { ...details, basis: now } as OutfitRow['details'] });
+    if (!details.basis) {
+      await settle();
+      return false;
+    }
+    const changed = Object.keys(now).filter((id) => details.basis![id] !== now[id]);
+    if (changed.length === 0) return false;
+    const live = outfit.itemIds.map((id) => all.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c && !c.isDeleted && !c.mergedInto);
+    const touched = (await store.getKv(KV.touched(row.id))) === '1';
+    if (touched && live.length === outfit.itemIds.length && (await stillWorks(row, live, details.predictedScore))) {
+      await settle();
+      return false;
+    }
+    const exclude = touched ? new Set(parseIds(await store.getKv(KV.swapped(row.id)))) : undefined;
+    const result = await pick(row, exclude ? { exclude } : {});
+    const key = (ids: readonly string[]) => [...ids].sort().join('+');
+    if (!result.outfit || key(result.outfit.itemIds) === key(outfit.itemIds)) {
+      await settle();
+      return false;
+    }
+    // The line names the corrected piece; none when it was removed, or when the re-plan is back where the card began.
+    const origin = details.origin ?? key(outfit.itemIds);
+    const back = key(result.outfit.itemIds) === origin;
+    const updatedFor = back ? undefined : changed.find((id) => live.some((c) => c.id === id));
+    await saveOutfit(result, row.occasion, row.outfitId, { updatedFor, origin: back ? undefined : origin });
+    if (row.messageId) await store.chat.patch(row.messageId, { outfitId: row.outfitId });
+    return true;
+  }
+
+  /** A swapped or set card's outfit still works: the picker's filters pass and its predicted score hasn't fallen below
+   *  Put together (or below where it began, when it began lower). */
+  async function stillWorks(row: DailyIdeaRow, items: ClosetItemRow[], planned?: number): Promise<boolean> {
+    const p = await store.profile.get('me');
+    const boldness = p?.boldness ?? 'a_little';
+    const styles = styleInput(row.style);
+    const occasion = scoringOccasion(row.occasion);
+    const w = row.weather as unknown as DayWeather | null;
+    const needs = w ? weatherNeeds(w) : seasonNeeds(localParts(clock.nowMs(), zone).m);
+    const pieces = items as unknown as ClosetItem[];
+    if (!outfitValid(pieces, styles, boldness) || !pieces.every((it) => itemAllowed(it, needs, occasion))) return false;
+    const sc = defaultRubric.score(outfitReading(pieces), { occasion, styles, boldness });
+    return isScored(sc) && sc.overall >= Math.min(7, planned ?? 7);
   }
 
   /** A card planned without weather gets it: an untouched one is re-planned for it, a touched one keeps its outfit. */
@@ -384,6 +465,23 @@ export function createMorningService(deps: MorningDeps) {
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;
+
+/** Keys in order, so the same reading always prints the same. */
+const stable = (v: unknown): string =>
+  JSON.stringify(v, (_k, x: unknown) =>
+    x && typeof x === 'object' && !Array.isArray(x) ? Object.fromEntries(Object.keys(x).sort().map((k) => [k, (x as Record<string, unknown>)[k]])) : x);
+
+/**
+ * What the picker read of a piece when the card planned it (09-ui-review §26, #365): its slot, its reading and its
+ * sleeves (the picker reads them, #359), or "gone" once it's removed or merged away. Its name, photos and measured
+ * color aren't in it: background closet work changes those after every check.
+ */
+export function pieceBasis(it: ClosetItemRow | null | undefined): string {
+  if (!it || it.isDeleted || it.mergedInto) return 'gone';
+  return stable({ slot: it.slot, garment: it.garment, sleeves: (it.art as { sleeves?: unknown } | null | undefined)?.sleeves ?? null });
+}
+const basisOf = (ids: readonly string[], closet: readonly ClosetItemRow[]): Record<string, string> =>
+  Object.fromEntries(ids.map((id) => [id, pieceBasis(closet.find((c) => c.id === id))]));
 
 function parseIds(v: string | null): string[] {
   if (!v) return [];

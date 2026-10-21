@@ -1,4 +1,4 @@
-// Points the Debug scheme's Run at storekit/Kitted.storekit (09 §26 K2, #365), so the Pro subscription's real purchase
+// Points the Debug scheme's Run at storekit/Kitted.storekit (09 §27 K2, #366), so the Pro subscription's real purchase
 // flow can be tried on the Simulator from Xcode (Product → Run) with no App Store Connect. Xcode reads the file only for
 // a Run from Xcode: Release, Archive and EAS builds never use it, and `expo run:ios` (launched by simctl) doesn't either.
 // The scheme is regenerated at prebuild, so this writes the reference every time.

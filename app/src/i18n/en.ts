@@ -301,6 +301,8 @@ const addedInBuild = {
   'idea.went.own': 'You went with your own',
   'idea.went.pick': 'You wore my pick',
   'idea.stayingIn': 'Staying in tonight',
+  // The card re-planned after he corrected or removed one of its pieces (09-ui-review §26, #365).
+  'idea.updatedFor': 'Updated for your {item}.',
   'idea.past.wore': "{day}'s idea · Wore it",
   'idea.past.own': "{day}'s idea · Went with your own · {score}",
   'idea.past.skipped': "{day}'s idea",

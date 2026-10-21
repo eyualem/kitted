@@ -9,7 +9,7 @@ export interface Coordinate {
   longitude: number;
 }
 
-/** One hour of Apple WeatherKit's forecast, as the native side sends it (09 §26 W1). */
+/** One hour of Apple WeatherKit's forecast, as the native side sends it (09 §27 W1). */
 export interface WeatherKitHour {
   start: string;
   end: string;
@@ -27,7 +27,7 @@ interface KittedLocationNative {
   permission(): Promise<string>;
   requestPermission(): Promise<string>;
   currentLocation(timeoutMs: number): Promise<Coordinate | null>;
-  /** Builds from before #365 don't have these two. */
+  /** Builds from before #366 don't have these two. */
   weatherKitHourly?(latitude: number, longitude: number): Promise<WeatherKitHour[]>;
   weatherKitAttribution?(): Promise<{ serviceName: string; legalPageURL: string }>;
 }

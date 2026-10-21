@@ -1,6 +1,6 @@
-# App Store Connect: the drafts and the approval-day checklist (Oct 21, 2026, #365)
+# App Store Connect: the drafts and the approval-day checklist (Oct 21, 2026, #366)
 
-Everything App Store Connect asks for, written against what the app really sends today, plus the steps for the day the $99 program is approved. **All of it is outward-facing: drafts for the founder's OK, nothing is submitted.** The code side is in `handoff/09-ui-review.md` §26; the older research (rules, sources) in `inputs/app-store-and-age-rules.md`.
+Everything App Store Connect asks for, written against what the app really sends today, plus the steps for the day the $99 program is approved. **All of it is outward-facing: drafts for the founder's OK, nothing is submitted.** The code side is in `handoff/09-ui-review.md` §27; the older research (rules, sources) in `inputs/app-store-and-age-rules.md`.
 
 Rules the copy follows (CLAUDE.md "Wording"): never "AI stylist", "unlimited", "accurate" (until the gold set backs it) or "pocket stylist"; the stylist is Kit and is said plainly to be an AI; no emoji; adults only (college, first job, interviews, dates).
 

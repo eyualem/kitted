@@ -40,7 +40,7 @@ export function isNwsWeather(w: unknown): boolean {
   return !!w && typeof w === 'object' && (w as { source?: unknown }).source === 'nws';
 }
 
-/** Real weather from either live source (NWS, or Apple WeatherKit once the paid-team switch is on, #365). */
+/** Real weather from either live source (NWS, or Apple WeatherKit once the paid-team switch is on, #366). */
 export function isLiveWeather(w: unknown): boolean {
   const s = !!w && typeof w === 'object' ? (w as { source?: unknown }).source : undefined;
   return s === 'nws' || s === 'weatherkit';

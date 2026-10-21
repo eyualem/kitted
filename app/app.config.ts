@@ -12,11 +12,11 @@ const MIC_USAGE = 'Kitted uses the microphone so you can ask your stylist out lo
 const SPEECH_USAGE = 'Kitted turns what you say into text on your phone, so you can ask your stylist out loud.';
 /** The morning card's weather (02 "S1d", DECISIONS-LOG #58): approximate location, asked only from the card. */
 const LOCATION_USAGE = "Kitted uses your approximate location to get today's weather for your outfit idea. It goes only to the US National Weather Service and is never stored.";
-/** The same once WeatherKit is on (APPLE.paid): Apple Weather first, NWS when it's down (#365). Not yet OK'd by the founder. */
+/** The same once WeatherKit is on (APPLE.paid): Apple Weather first, NWS when it's down (#366). Not yet OK'd by the founder. */
 const LOCATION_USAGE_PAID = "Kitted uses your approximate location to get today's weather for your outfit idea. It goes only to Apple Weather (or the US National Weather Service if that's down) and is never stored.";
 
 /**
- * THE PAID-TEAM SWITCH (09 §26 S1–S3, #365). The one place the $99 program's features turn on. Off: the founder's free
+ * THE PAID-TEAM SWITCH (09 §27 S1–S3, #366). The one place the $99 program's features turn on. Off: the founder's free
  * Personal Team, no entitlements (a Personal Team can't sign them), NWS weather. On (approval day, market/app-store-connect.md
  * §8): the paid team's ID, the entitlements for Declared Age Range, App Attest, WeatherKit and Sign in with Apple
  * (EAS turns the matching capabilities on for the App ID), Apple Weather first in the app (src/config/apple.ts), and the
@@ -53,7 +53,7 @@ export function appleSettings(apple: { paid: boolean; teamId: string }, easProfi
 const easProfile = process.env.EAS_BUILD_PROFILE;
 
 /** A store or internal Release build without the Firebase web key can't make the guest account, so every check and
- *  question would fail (09 §26 A2). Locally the key comes from app/.env.local; on EAS from its environment variables. */
+ *  question would fail (09 §27 A2). Locally the key comes from app/.env.local; on EAS from its environment variables. */
 export function requireFirebaseKey(profile: string | undefined, key: string | undefined): void {
   if ((profile === 'preview' || profile === 'production') && !key) {
     throw new Error(`app.config.ts: the "${profile}" build has no EXPO_PUBLIC_FIREBASE_API_KEY. Add it to EAS's ${profile} environment (market/app-store-connect.md §8).`);
@@ -97,7 +97,7 @@ const config: ExpoConfig = {
       NSLocationDefaultAccuracyReduced: true,
       ITSAppUsesNonExemptEncryption: false,
     },
-    // The app's own privacy manifest (09 §26 P1–P2, #365). Pods that ship their own manifest inside a resource bundle
+    // The app's own privacy manifest (09 §27 P1–P2, #366). Pods that ship their own manifest inside a resource bundle
     // are merged in at pod install; prebuilt ones (ExpoFileSystem, ExpoMediaLibrary) drop theirs, so every required-reason
     // API the app or a pod uses is declared here too. Collected data = market/app-store-connect.md §5 (keep them equal).
     privacyManifests: {
@@ -161,7 +161,7 @@ const config: ExpoConfig = {
     ['expo-image-picker', { photosPermission: false, cameraPermission: CAMERA_USAGE, microphonePermission: MIC_USAGE }],
     // The share card's Save (#345): add-only, so Kitted can put a card in Photos but never read the library.
     ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false, granularPermissions: [] }],
-    // The Pro subscription's local StoreKit file on the Debug scheme's Run (09 §26 K2); Release and Archive never use it.
+    // The Pro subscription's local StoreKit file on the Debug scheme's Run (09 §27 K2); Release and Archive never use it.
     './plugins/withStoreKitConfig.js',
     // P6: 'expo-notifications',
   ],

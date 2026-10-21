@@ -1,6 +1,6 @@
 // Where the morning/evening card's weather comes from (02 "S1d", 05 §MC9).
 // Live: the US National Weather Service with approximate location (nws.ts), in dev and release
-// builds. With the paid-team switch on (src/config/apple.ts, #365), Apple WeatherKit answers first and NWS stands
+// builds. With the paid-team switch on (src/config/apple.ts, #366), Apple WeatherKit answers first and NWS stands
 // behind it (weatherkit.ts). Demo screens keep sample weather, always labelled "Sample weather" on the card.
 import type { DayWeather, WeatherWindow } from '@kitted/core';
 import * as location from '../../../modules/kitted-location';
@@ -67,12 +67,12 @@ const log = __DEV__ ? (line: string) => console.log(line) : undefined;
 /** NWS: approximate location (kitted-location) → api.weather.gov. Memory-only caches. */
 const nwsSource = createNwsSource({ location, log });
 
-/** Whether Apple WeatherKit answers first: the paid-team switch is on and this build has the native call (09 §26 S3). */
+/** Whether Apple WeatherKit answers first: the paid-team switch is on and this build has the native call (09 §27 S3). */
 export function weatherKitFirst(o: { applePaid: boolean; weatherKitAvailable: boolean }): boolean {
   return o.applePaid && o.weatherKitAvailable;
 }
 
-/** Live weather: WeatherKit with NWS behind it once the switch is on, else NWS alone (exactly as before #365). */
+/** Live weather: WeatherKit with NWS behind it once the switch is on, else NWS alone (exactly as before #366). */
 const liveSource = weatherKitFirst({ applePaid: APPLE_PAID, weatherKitAvailable: location.weatherKitAvailable })
   ? createWeatherKitSource({ location, weatherKit: { hourly: location.weatherKitHourly }, fallback: nwsSource, log })
   : nwsSource;

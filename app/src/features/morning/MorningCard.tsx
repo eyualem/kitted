@@ -24,7 +24,7 @@ import { weatherKitLegalUrl } from '../../../modules/kitted-location';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
+import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, updatedLine, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { locationRow } from './locationRow';
@@ -46,6 +46,8 @@ interface Model {
   checkUsed: boolean;
   permission: 'granted' | 'denied' | 'unknown';
   myStyles: StyleKey[];
+  /** "Updated for your olive fleece.": re-planned after he corrected one of its pieces (09-ui-review §26, #365). */
+  updated: string | null;
 }
 
 async function load(ideaId: string): Promise<Model | null> {
@@ -84,6 +86,7 @@ async function load(ideaId: string): Promise<Model | null> {
     checkUsed: !snap.pro && snap.checksUsed >= snap.checkLimit,
     permission: await weatherSource.permission(),
     myStyles: Array.from(new Set(myStyles)),
+    updated: outfit ? updatedLine(outfit, closet) : null,
   };
 }
 
@@ -190,6 +193,11 @@ function FullCard({ m }: { m: Model }) {
         <KText variant="title3" weight="600" accessibilityRole="header">
           {title}
         </KText>
+        {m.updated ? (
+          <KText variant="footnote" color="ink3">
+            {m.updated}
+          </KText>
+        ) : null}
         {locationAsk === 'ask' ? <LocationAsk onAllow={() => void allow()} /> : null}
         {locationAsk === 'settings' ? (
           // Denied once: only Settings can turn it back on (09 §23 M4). A quiet link, never a nag.
@@ -283,7 +291,7 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
 /** One weather line for the hour he reads it (#338): "☂ 52° at 8 pm · 47° by midnight · rain likely", and "Sample" at
  *  the end on sample weather (never passed off as real). Live weather names its source in the a11y label: the National
  *  Weather Service, or Apple Weather, whose mark and "Data sources" link show under the line (WeatherKit's terms; 02
- *  "S1d" item 7; #365, only while the paid-team switch is on). */
+ *  "S1d" item 7; #366, only while the paid-team switch is on). */
 function WeatherLine({ w }: { w: CardWeather }) {
   const { fontScale } = useTheme();
   const line = weatherLine(w, localParts(sessionClock.nowMs(), sessionClock.offset).hh);

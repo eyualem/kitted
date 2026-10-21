@@ -1,4 +1,4 @@
-// Ready for the Apple approval day (handoff/09-ui-review.md §26, #365): the build profiles, the Firebase key guard, the
+// Ready for the Apple approval day (handoff/09-ui-review.md §27, #366): the build profiles, the Firebase key guard, the
 // privacy manifest, the paid-team switch, WeatherKit with NWS behind it, the StoreKit file, and the built-app check.
 import coldRain from './fixtures/nws/hourly-cold-rain.json';
 import evening from './fixtures/nws/hourly-evening.json';

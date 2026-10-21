@@ -1,7 +1,7 @@
 // The morning card's words, from templates (02 "S1d"): the why line, the weather strip and the
 // spoken summary. Pure, so they're tested without rendering.
 import { seasonNeeds, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
-import { normStyleKey, type CardOccasion, type ClosetItemRow, type StyleKey } from '@/data/types';
+import { normStyleKey, type CardOccasion, type ClosetItemRow, type OutfitRow, type StyleKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
 import { hourText, monthName } from '@/i18n/format';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -131,3 +131,13 @@ export function cardGreeting(slot: 'day' | 'evening', hourNow: number): string {
 export function seasonLine(month: number): string | null {
   return seasonNeeds(month).layer === 'none' ? null : t('wx.line.season', { month: monthName(month) });
 }
+
+/** "Updated for your olive fleece.": the card re-planned after he corrected one of its pieces (09-ui-review §26, #365).
+ *  Only while the piece is still his; none for a removed or merged one, or when nothing changed. */
+export function updatedLine(outfit: Pick<OutfitRow, 'details'>, closet: readonly ClosetItemRow[]): string | null {
+  const id = (outfit.details as { updatedFor?: string }).updatedFor;
+  const it = id ? closet.find((c) => c.id === id && !c.isDeleted && !c.mergedInto) : undefined;
+  if (!it?.name) return null;
+  return t('idea.updatedFor', { item: it.name.charAt(0).toLowerCase() + it.name.slice(1) });
+}
+

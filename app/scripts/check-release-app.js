@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// npm run check:app -- <path to Kitted.app> [--paid] (09 §26 A3, #365): checks a built Release app (a local build, or an
+// npm run check:app -- <path to Kitted.app> [--paid] (09 §27 A3, #366): checks a built Release app (a local build, or an
 // EAS .ipa unzipped: Payload/Kitted.app) before it goes to testers.
 //   - Info.plist: none of the dev launcher's local-network keys or dev-menu keys (its build phase strips them outside Debug);
 //   - PrivacyInfo.xcprivacy: every required-reason category the app declares (app.config.ts), no tracking;
