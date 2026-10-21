@@ -5,7 +5,8 @@
 import { outfitKey, outfitValid, type ClosetItem, type Styles } from '@kitted/core';
 import { OCCASIONS, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
-import { fitsGain, ownership, STARTER } from '@/features/finish/starter';
+import { starterGain } from '@/features/finish/gains';
+import { ownership, STARTER } from '@/features/finish/starter';
 import { t } from '@/i18n/en';
 import { oneLine } from './context';
 import { checkSentence, type GateContext } from './gate';
@@ -87,8 +88,8 @@ export function buildCard(raw: unknown, input: CardInput): AskCard | null {
       const row = starterFor(kind, typeof o.shade === 'string' ? o.shade : null);
       if (!row || !row.pick || !row.slot) return null;
       if (ownership(input.closet, input.starterMarks)[row.id]?.owned) return null;
-      // "+N" is the rotation's, counting only pieces he's photographed or added (not ones he only mentioned in chat).
-      const gain = fitsGain(input.closet.filter((c) => c.source !== 'chat'), input.styles, row.pick.garment, row.slot);
+      // "+N" is the Closet's count (#309), never the model's; pieces he only mentioned in chat aren't counted.
+      const gain = starterGain(input.closet, input.styles, row);
       return { type: 'buy', starterId: row.id, gain };
     }
     case 'link': {

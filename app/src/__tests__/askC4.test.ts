@@ -7,12 +7,13 @@ import { loadScenario } from '@/data/seedLoader';
 import { buildCard } from '@/features/ask/cards';
 import { buildStylistContext } from '@/features/ask/context';
 import { liveAnswer } from '@/features/ask/live';
-import { applyRemember, budgetOf, factText, garmentOf, parseRemember, undoRemember } from '@/features/ask/memory';
+import { applyRemember, budgetOf, factText, parseRemember, undoRemember } from '@/features/ask/memory';
 import { createAsk } from '@/features/ask/pipeline';
 import { createPrepare } from '@/features/ask/prepare';
 import { loadStylistSnapshot } from '@/features/ask/snapshot';
 import { createDemoSource, seededAnswers } from '@/features/ask/source';
-import { fitsGain } from '@/features/finish/starter';
+import { starterGain } from '@/features/finish/gains';
+import { STARTER } from '@/features/finish/starter';
 import { liveFacts, sourceLine } from '@/features/you/facts';
 import { createClosetService } from '@/features/closet/service';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
@@ -129,8 +130,8 @@ describe('M4 · a piece he mentions', () => {
       .toMatchObject({ type: 'outfit' });
     // …but a "+N outfits" never counts it.
     const closet = await store.closet.all();
-    const polo = garmentOf('navy polo')!;
-    expect(fitsGain(closet, snap.profile?.styles ?? null, polo, 'top')).toBe(fitsGain(closet.filter((c) => c.id !== it.id), snap.profile?.styles ?? null, polo, 'top'));
+    const polo = STARTER.find((e) => e.id === 's02')!;
+    expect(starterGain(closet, snap.profile?.styles ?? null, polo)).toBe(starterGain(closet.filter((c) => c.id !== it.id), snap.profile?.styles ?? null, polo));
     // Undo takes the piece out of the closet too.
     await undoRemember(r!.factId, r!.itemId!, { store });
     expect((await store.closet.get(it.id))!.isDeleted).toBe(true);

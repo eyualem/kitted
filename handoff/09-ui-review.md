@@ -451,6 +451,35 @@ On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared 
 | N9 | Pass (S) | 6 outfits, "Show 10 more" shows all 16 (4 rows), then "Show fewer"; Got it below; at the largest size the title, number and line stack and the link reads |
 | N10 | Pass | `npm run check`'s typecheck, lint and 1053 app tests (core untouched) |
 | Found | | The card appears about a second after the outfit list on a cold load, so the list moves down once (`loadNextBuy` scores each Starter candidate). Not fixed: a reserved-height placeholder or computing it with the list is the follow-up if it bothers him. |
+
+## 15b. One "+N outfits" everywhere: pass/fail checks, set before building (Oct 16, #309)
+Found in §14: two counts live side by side. The Closet's Outfits and its next best buy count trios rated Put together (7.0+ at Everyday, the parts engine; layers never multiply; chat-only pieces never counted; #84.3, `closet/outfits.ts`). The chat's buy card and buy-next evidence, Starter essentials' "+1 fit" toast and move 3 of "Your first 3 moves" still use `fitsGain` (`finish/starter.ts`: core `rotation`, v4 `outfitValid`, no 7.0 bar, and a second piece of a kind he owns adds 0). On the demo closet the chat says navy polo +12 while Closet says dark straight jeans +16 (the old rule gives the straight jeans +0 because he owns slim dark jeans). The founder wants one honest number. Nothing about scoring changes.
+- **G1 (T)** every "+N" (the chat's buy card, the buy-next evidence lines, the Starter toast, move 3's detail, the Closet's next best buy, "Add shoes and you'd have n") equals the Closet's count with the piece minus without it, on the demo closet, for every Starter row he doesn't own.
+- **G2 (T)** with nothing he avoids, the chat's buy-next evidence lists the rows in the Closet's ranking (most outfits first, ties in Starter order), so its first row is the Closet's next best buy. On the demo closet: dark straight jeans, +16. (What he avoids, #303, may still drop a row from the chat's list: that's a filter, not a second count.)
+- **G3 (T)** move 3's pick at posting is the Closet's next best buy whenever a piece adds an outfit; when none does, it's the first missing Starter row with its price alone (as today).
+- **G4 (T)** a piece he only mentioned in chat never changes any of these numbers.
+- **G5 (T)** no import cycle: `closet/outfits.ts` and `finish/starter.ts` don't import each other (read from the source).
+- **G6 (T)** no fit-check score changes: nothing under `packages/kitted-core` or `features/fitcheck` changes, and the existing scoring and parity tests pass unchanged.
+- **G7 (T)** always a number, fast: the old 40-piece cap ("count not available") goes; on a 60-piece closet every Starter row's "+N" is counted in under a second in the test run.
+- **G8 (T)** the demo's "What should I buy next?" (screen 171) suggests the piece the Closet suggests, with the same "+N", and its words pass the sentence gate.
+- **G9** `npm run check` green; tests whose expected numbers came from the old rule are updated and named in #309.
+
+### §15b results (Oct 16, #309): checked against G1–G9, none changed
+| Check | Result | How |
+|---|---|---|
+| G1 | Pass (T) | `oneCount.test.ts`: for each Starter row the demo closet lacks (dark straight jeans, navy polo, grey quarter-zip), the chat card, the evidence line, move 3's detail, the toast and the next best buy all equal the Closet's count with it minus without it |
+| G2 | Pass (T) | the evidence now reads straight jeans +16, polo +11, quarter-zip +11 (was polo +12, quarter-zip +12, jeans +0) |
+| G3 | Pass (T) | move 3 picks the next best buy; an empty closet still gets the white tee with its price alone |
+| G4 | Pass (T) | two chat-only pieces change no number and no evidence line |
+| G5 | Pass (T) | the Starter-piece functions live in the new `finish/gains.ts`; `fitsGain` and the `rotation` import are gone from `starter.ts` |
+| G6 | Pass | the diff touches nothing under `packages/kitted-core` or `features/fitcheck`; the core suite (23 files) and every scoring test pass unchanged |
+| G7 | Pass (T) | 11 rows on a 60-piece closet in ~0.3 s (only the trios with the new piece are scored) |
+| G8 | Pass (T) | the demo answer and its card now name the dark straight jeans, +16, and pass the gate |
+| G9 | Pass | `npm run check`: 1050 app tests. Tests changed for the old rule's numbers: `askC3` R2, R3, R5 (#309) |
+| Not done | | Not looked at on the Simulator or the web preview (the Mac was low on memory and another session had the Simulator up); the screens only take the new number, no layout changed |
+
+**At the merge (Oct 21, PR #4):** G3 is gone with the moves (#343). On today's main (parts v14) G2's evidence reads straight jeans +16, polo +12, quarter-zip +12, and the polo card is +12; G1, G4, G5, G7 and G8 pass as written, on #353's cached count.
+
 ---
 
 ## 17. Fix what a piece is: plan and pass/fail checks, set before building (Oct 16, #315)

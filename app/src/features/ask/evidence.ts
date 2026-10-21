@@ -11,7 +11,8 @@ import { OCCASIONS, type CardOccasion, type ClosetItemRow, type FitCheckRow, typ
 import { displayScore } from '@/design-system/score';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { overallFor, scoreOptions } from '@/features/fitcheck/scoring';
-import { fitsGain, ownership, STARTER } from '@/features/finish/starter';
+import { starterGain } from '@/features/finish/gains';
+import { ownership, STARTER } from '@/features/finish/starter';
 import { whyLine } from '@/features/morning/copy';
 import { HISTORY_DAYS, historyFor, ideaId, scoringOccasion, slotAt } from '@/features/morning/service';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -75,9 +76,6 @@ function usable(closet: readonly ClosetItemRow[]): ClosetItemRow[] {
   const owned = closet.filter(isOwned);
   return owned.filter((c) => !isAwaitingAnswer(c, owned));
 }
-
-/** Pieces a "+N outfits" may count: not the ones he only mentioned in chat (07 §4). */
-const countable = (closet: readonly ClosetItemRow[]) => closet.filter((c) => c.source !== 'chat');
 
 /** Kit's own outfit cards from the days before today: shown, like a card's (#358). Today's don't count: the same
  *  question twice in a day gets the same advice. */
@@ -264,15 +262,16 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
       const own = ownership(s.closet, deps.starterMarks);
       const budget = asBudget(s.profile?.budget ?? null);
       const cap = budget === 'under_30' ? 30 : budget === '30_60' ? 60 : budget === '60_100' ? 100 : Infinity;
+      // "+N" is the Closet's count (#309); the Closet's ranking: most outfits first, ties in Starter order (a stable sort).
       const rows = STARTER.filter((e) => !own[e.id]?.owned && e.pick && e.slot && !avoidsPhrase(e.pick.phrase, s.facts)).map((e) => {
-        const gain = fitsGain(countable(s.closet), styles, e.pick!.garment, e.slot!);
+        const gain = starterGain(s.closet, styles, e);
         const low = Number(/\$(\d+)/.exec(e.budget)?.[1] ?? NaN);
         return { e, gain, over: low > cap };
-      }).sort((a, b) => (b.gain ?? -1) - (a.gain ?? -1));
+      }).sort((a, b) => b.gain - a.gain);
       if (rows.length === 0) out.push('He owns every Starter basic.');
       else out.push('What he could buy next (the Starter basics he doesn\'t own; "+N" is outfits it adds with what he owns):');
       for (const r of rows.slice(0, 5)) {
-        out.push(`- ${r.e.id} ${lower(r.e.pick!.phrase)} · ${r.gain === null ? 'count not available' : `+${r.gain} outfits`} · ${r.e.budget} budget, ${r.e.mid} mid${r.over ? ' · over his budget' : ''}`);
+        out.push(`- ${r.e.id} ${lower(r.e.pick!.phrase)} · +${r.gain} outfits · ${r.e.budget} budget, ${r.e.mid} mid${r.over ? ' · over his budget' : ''}`);
       }
       break;
     }

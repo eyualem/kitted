@@ -75,8 +75,8 @@ export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
   },
   {
     question: 'What should I buy next?',
-    answer: "Get a navy polo next. It goes with both chinos, the dark jeans and every shoe you own, and it's a step up from a tee.",
-    card: { type: 'buy', kind: 'polo', shade: 'navy' },
+    answer: 'Get dark straight jeans next. Your dark jeans are slim, and a straight pair goes with more of your tops and shoes.',
+    card: { type: 'buy', kind: 'jeans', shade: 'dark' },
   },
   {
     question: 'Which shoes are my dressiest?',

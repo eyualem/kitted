@@ -1,8 +1,8 @@
-// The Starter 12 essentials (02 C5; items and 2026 prices from rubric/v3.md): which ones his closet already has, and
-// what each missing one would add ("+N fits" = rotation with it − rotation without it, core rotation.ts). Pure.
-// Each row has one concrete piece (`pick`) for Next best buy's "a grey quarter-zip" and the +N count, so the number is
-// honest about exactly that piece, and the kinds and colors he can say he owns (`owns`, #343).
-import { displayHex, rotation, type ClosetItem, type Garment, type Styles } from '@kitted/core';
+// The Starter 12 essentials (02 C5; items and 2026 prices from rubric/v3.md) and which ones his closet already has.
+// Pure. Each row has one concrete piece (`pick`) for Next best buy's "a grey quarter-zip" and its "+N outfits", so the
+// number is honest about exactly that piece (the count itself is the Closet's, finish/gains.ts, #309), and the kinds
+// and colors he can say he owns (`owns`, #343).
+import { displayHex, type Garment } from '@kitted/core';
 import type { ClosetItemRow } from '@/data/types';
 import { baseName } from '@/features/closet/itemName';
 import { t } from '@/i18n/en';
@@ -110,36 +110,6 @@ export function ownership(closet: readonly ClosetItemRow[], markedKv: readonly s
 }
 
 export const ownedCount = (o: Record<string, Ownership>): number => Object.values(o).filter((x) => x.owned).length;
-
-/** Above this many pieces, "+N fits" isn't counted (the rotation is a nested loop over his closet). */
-export const GAIN_MAX_PIECES = 40;
-
-/** Outfits his closet makes (Put together at Everyday; layers don't multiply, 02 D15). */
-export function outfitCount(closet: readonly ClosetItem[], styles: Styles | null): number {
-  return rotation(closet, styles, { layers: false }).count;
-}
-
-/** "+N fits" for adding `g` (0 when it adds none, null when the closet is too big to count). */
-export function fitsGain(closet: readonly ClosetItemRow[], styles: Styles | null, g: Garment, slot: string): number | null {
-  // A piece he only mentioned in chat isn't counted in a "+N" until a fit check sees it (07 §4).
-  const pieces = closet.filter(live).filter((c) => c.source !== 'chat');
-  if (pieces.length > GAIN_MAX_PIECES) return null;
-  const before = outfitCount(pieces, styles);
-  const after = outfitCount([...pieces, { id: '__starter', name: '', slot, garment: g }], styles);
-  return Math.max(0, after - before);
-}
-
-/** The missing row that adds the most outfits (02's order breaks ties); null when every wearable row is owned. */
-export function bestMissing(closet: readonly ClosetItemRow[], styles: Styles | null, markedKv: readonly string[]): { entry: StarterEntry; gain: number } | null {
-  const own = ownership(closet, markedKv);
-  let best: { entry: StarterEntry; gain: number } | null = null;
-  for (const e of STARTER) {
-    if (own[e.id]?.owned || !e.pick || !e.slot) continue;
-    const gain = fitsGain(closet, styles, e.pick.garment, e.slot) ?? 0;
-    if (!best || gain > best.gain) best = { entry: e, gain };
-  }
-  return best;
-}
 
 /** The garment for one "Which one is yours?" choice: the row's piece in his kind and color. */
 export function ownedGarment(e: StarterEntry, opt: StarterOption): Garment | null {

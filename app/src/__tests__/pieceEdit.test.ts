@@ -15,7 +15,8 @@ import { buildStylistContext } from '@/features/ask/context';
 import { loadStylistSnapshot } from '@/features/ask/snapshot';
 import { artSpec } from '@/features/closet/artSpec';
 import { renderFlat } from '@/features/closet/flats';
-import { outfitCount, nextBestBuy } from '@/features/closet/outfits';
+import { outfitCount } from '@/features/closet/outfits';
+import { nextBestBuy } from '@/features/finish/gains';
 import {
   editOptions, editRows, editToast, KIND_MAIN, KIND_MORE, optionA11y, rowA11y, withEdit, type EditField,
 } from '@/features/closet/pieceEdit';
