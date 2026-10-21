@@ -12,7 +12,8 @@ import { displayScore } from '@/design-system/score';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { overallFor, scoreOptions } from '@/features/fitcheck/scoring';
 import { starterGain } from '@/features/finish/gains';
-import { ownership, STARTER } from '@/features/finish/starter';
+import { starterList } from '@/features/finish/packs';
+import { ownership } from '@/features/finish/starter';
 import { whyLine } from '@/features/morning/copy';
 import { HISTORY_DAYS, historyFor, ideaId, scoringOccasion, slotAt } from '@/features/morning/service';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -263,7 +264,7 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
       const budget = asBudget(s.profile?.budget ?? null);
       const cap = budget === 'under_30' ? 30 : budget === '30_60' ? 60 : budget === '60_100' ? 100 : Infinity;
       // "+N" is the Closet's count (#309); the Closet's ranking: most outfits first, ties in Starter order (a stable sort).
-      const rows = STARTER.filter((e) => !own[e.id]?.owned && e.pick && e.slot && !avoidsPhrase(e.pick.phrase, s.facts)).map((e) => {
+      const rows = starterList(styles).filter((e) => !own[e.id]?.owned && e.pick && e.slot && !avoidsPhrase(e.pick.phrase, s.facts)).map((e) => {
         const gain = starterGain(s.closet, styles, e);
         const low = Number(/\$(\d+)/.exec(e.budget)?.[1] ?? NaN);
         return { e, gain, over: low > cap };

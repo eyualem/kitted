@@ -42,6 +42,11 @@ async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
 
   pauseFinishDemo();
   await prepareDemoScreen(scenario);
+  // Starter basics by look (#364): the screen's own picks in place of the scenario's.
+  if (scenario.looks) {
+    const p = await store.profile.get('me');
+    if (p) await store.profile.put({ ...p, styles: scenario.looks });
+  }
   await setOnboarded(scenario.onboarded);
   // Account screens (#289): on with their scripted sign-in, off everywhere else.
   await prepareAccountDemo(store, scenario, sessionClock.nowMs());

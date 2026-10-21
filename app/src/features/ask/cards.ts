@@ -6,7 +6,8 @@ import { outfitKey, outfitValid, type ClosetItem, type Styles } from '@kitted/co
 import { OCCASIONS, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { starterGain } from '@/features/finish/gains';
-import { ownership, STARTER } from '@/features/finish/starter';
+import { starterList } from '@/features/finish/packs';
+import { catalogRow, CATALOG, ownership, type StarterEntry } from '@/features/finish/starter';
 import { t } from '@/i18n/en';
 import { oneLine } from './context';
 import { checkSentence, type GateContext } from './gate';
@@ -41,11 +42,16 @@ const occasionOr = (v: unknown, fallback: OccasionKey | null): OccasionKey | nul
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z ]+/g, ' ').replace(/\s+/g, ' ').trim();
 
-/** The Starter row a buy card's "kind" (and shade) names: its words all in the row's piece, e.g. "loafers" → s10. */
-export function starterFor(kind: string, shade: string | null): (typeof STARTER)[number] | null {
+/** The Starter row a buy card's "kind" (and shade) names: its words all in the row's piece, e.g. "loafers" → s10. His
+ *  list (his looks, #364) first, then every row. */
+export function starterFor(kind: string, shade: string | null, styles: Styles | null = null): StarterEntry | null {
   const words = norm(kind).split(' ').filter((w) => w.length > 2).map((w) => w.replace(/s$/, ''));
   if (words.length === 0) return null;
-  const rows = STARTER.filter((e) => e.pick).map((e) => ({ e, text: norm(`${e.pick!.phrase} ${e.pick!.name} ${e.name}`) }));
+  return matchRow(starterList(styles), words, shade) ?? matchRow(CATALOG, words, shade);
+}
+
+function matchRow(list: readonly StarterEntry[], words: string[], shade: string | null): StarterEntry | null {
+  const rows = list.filter((e) => e.pick).map((e) => ({ e, text: norm(`${e.pick!.phrase} ${e.pick!.name} ${e.name}`) }));
   const hits = rows.filter((r) => words.every((w) => r.text.includes(w)));
   if (hits.length <= 1) return hits[0]?.e ?? null;
   const sh = shade ? norm(shade) : '';
@@ -85,7 +91,7 @@ export function buildCard(raw: unknown, input: CardInput): AskCard | null {
     }
     case 'buy': {
       const kind = typeof o.kind === 'string' ? o.kind : '';
-      const row = starterFor(kind, typeof o.shade === 'string' ? o.shade : null);
+      const row = starterFor(kind, typeof o.shade === 'string' ? o.shade : null, input.styles);
       if (!row || !row.pick || !row.slot) return null;
       if (ownership(input.closet, input.starterMarks)[row.id]?.owned) return null;
       // "+N" is the Closet's count (#309), never the model's; pieces he only mentioned in chat aren't counted.
@@ -153,7 +159,7 @@ export function cardSpoken(card: AskCard | null, w: CardWords): string | null {
     case 'ask':
       return `${card.question} ${card.options.join(', ')}.`;
     case 'buy': {
-      const row = STARTER.find((e) => e.id === card.starterId);
+      const row = catalogRow(card.starterId);
       if (!row) return null;
       const gain = card.gain === null || card.gain <= 0 ? null : card.gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: card.gain });
       return [t('ask.card.buy.tag'), row.pick?.name ?? row.name, gain, row.budget].filter(Boolean).join('. ') + '.';

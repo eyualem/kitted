@@ -1,11 +1,12 @@
 // What each Starter piece adds, under the Closet's own count (#84.3; one "+N" everywhere, 09-ui-review §15b, #309):
-// the chat's buy card and buy-next evidence, the Closet's next best buy (§14, #308) and "Add shoes and you'd have n".
-// Pure. It sits between closet/outfits.ts (the count, with #353's cache: a gain scores only the trios with the new
+// the chat's buy card and buy-next evidence, the Closet's next best buy (§14, #308) and "Add shoes and you'd have n",
+// choosing from the basics for his looks (finish/packs.ts, #364). Pure. It sits between closet/outfits.ts (the count, with #353's cache: a gain scores only the trios with the new
 // piece) and finish/starter.ts (the 12 basics) so neither imports the other.
 import { displayHex, type Styles } from '@kitted/core';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import { outfitCount, outfitGain, outfitsWith, type Outfit, type SlotState } from '@/features/closet/outfits';
-import { ownership, STARTER, type StarterEntry } from './starter';
+import { starterList } from './packs';
+import { ownership, type StarterEntry } from './starter';
 
 /** A Starter piece he doesn't own yet, as a closet row (drawn like his own; never stored). */
 export function ghostPiece(e: StarterEntry): ClosetItemRow | null {
@@ -23,11 +24,12 @@ export function starterGain(closet: readonly ClosetItemRow[], styles: Styles | n
   return ghost ? outfitGain(closet, styles, ghost) : 0;
 }
 
-/** The missing row that adds the most outfits (02's order breaks ties); null when every wearable row is owned. */
+/** The missing row of his list (his looks, #364) that adds the most outfits (the list's order breaks ties, so his first
+ *  look's rows win); null when every wearable row is owned. */
 export function bestMissing(closet: readonly ClosetItemRow[], styles: Styles | null, markedKv: readonly string[]): { entry: StarterEntry; gain: number } | null {
   const own = ownership(closet, markedKv);
   let best: { entry: StarterEntry; gain: number } | null = null;
-  for (const e of STARTER) {
+  for (const e of starterList(styles)) {
     if (own[e.id]?.owned || !e.pick || !e.slot) continue;
     const gain = starterGain(closet, styles, e);
     if (!best || gain > best.gain) best = { entry: e, gain };
@@ -43,7 +45,7 @@ export function gainForSlot(closet: readonly ClosetItemRow[], checks: readonly F
   const own = closet.filter((c) => c.source !== 'chat');
   const base = outfitCount(own, checks, styles);
   let best = 0;
-  for (const e of STARTER) {
+  for (const e of starterList(styles)) {
     if (e.slot !== slot) continue;
     const ghost = ghostPiece(e);
     if (ghost) best = Math.max(best, base + outfitGain(own, styles, ghost));

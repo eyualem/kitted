@@ -460,7 +460,7 @@ describe('B1 · the list\'s rows', () => {
     expect(own.s01).toMatchObject({ owned: true, how: 'closet' });
     expect(own.s05).toEqual({ owned: false }); // a photographed slim jean still doesn't fill the row (O10: fills unchanged)
     expect(own.s10).toMatchObject({ owned: true, how: 'closet' });
-    expect(ownedCount(own)).toBe(2);
+    expect(ownedCount(own, STARTER.map((e) => e.id))).toBe(2); // of today's 12 (look rows are in the catalog since #364)
     expect(ownership([{ ...closet[0]!, isDeleted: true }], []).s01).toEqual({ owned: false });
     // +N: adding the third slot makes outfits; nothing to pair with makes none.
     const two = [piece('T', 'top', 'tee', 'white'), piece('B', 'bottom', 'chinos', 'khaki_beige')];

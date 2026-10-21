@@ -15,6 +15,7 @@ import { loadStylistSnapshot } from '@/features/ask/snapshot';
 import { DEMO_CARD_ANSWERS } from '@/features/ask/source';
 import { outfitCount, outfitGain } from '@/features/closet/outfits';
 import { ghostPiece, nextBestBuy, starterGain } from '@/features/finish/gains';
+import { starterList } from '@/features/finish/packs';
 import { ownership, STARTER } from '@/features/finish/starter';
 import { pickStarter } from '@/features/finish/starterActions';
 import { t } from '@/i18n/en';
@@ -87,18 +88,19 @@ describe('G1 · every "+N" is the Closet\'s count with it minus without it', () 
 });
 
 describe('G2 · the same pick in the chat and Closet', () => {
-  it('the evidence lists the rows in the Closet\'s ranking; its first row is the next best buy (dark straight jeans, +16)', async () => {
+  it('the evidence lists the rows in the Closet\'s ranking; its first row is the next best buy (work boots, +18: the demo picks workwear, #364)', async () => {
     const { store, closet, styles } = await setup();
     const { lines } = await buyEvidence(store);
     const nb = nextBestBuy({ closet, checks: [], styles, marks: [] })!;
-    expect(nb.entry.id).toBe('s05');
-    expect(nb.gain).toBe(16);
-    expect(lines[0]).toMatch(/^- s05 dark straight jeans · \+16 outfits/);
+    expect(nb.entry.id).toBe('s27');
+    expect(nb.gain).toBe(18);
+    expect(lines[0]).toMatch(/^- s27 brown work boots · \+18 outfits/);
     const gains = lines.map((l) => Number(/\+(\d+) outfits/.exec(l)![1]));
     for (let i = 1; i < gains.length; i++) expect(gains[i - 1]).toBeGreaterThanOrEqual(gains[i]!);
-    // Ties keep the Starter order.
+    // Ties keep his list's order (his first look's rows first, #364).
     const ids = lines.map((l) => /^- (s\d+)/.exec(l)![1]!);
-    for (let i = 1; i < ids.length; i++) if (gains[i - 1] === gains[i]) expect(ids[i - 1]! < ids[i]!).toBe(true);
+    const order = starterList(styles).map((e) => e.id);
+    for (let i = 1; i < ids.length; i++) if (gains[i - 1] === gains[i]) expect(order.indexOf(ids[i - 1]!)).toBeLessThan(order.indexOf(ids[i]!));
   });
 });
 

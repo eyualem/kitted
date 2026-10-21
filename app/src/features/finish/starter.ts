@@ -34,9 +34,12 @@ const base: Garment = {
   pattern: 'solid', logo: 'none', volume: 3, leg_shape: 'na', hem: 'na', tucked: 'na', condition: 'clean', certainty: 'clear', length: 'na',
   pattern_scale: 'na', saturation: 'na', sleeve_end: 'na', strain: 'none', distressed_by_design: false, shows_below_outer: false,
 };
-const top = (subcategory: string, color_family: string): Garment => ({ ...base, category: 'top', subcategory, color_family, tucked: 'none', length: 'at_belt' });
-const outer = (subcategory: string, color_family: string): Garment => ({ ...base, category: 'outerwear', subcategory, color_family, length: 'at_belt' });
-const bottom = (subcategory: string, color_family: string, leg: string): Garment => ({ ...base, category: 'bottom', subcategory, color_family, leg_shape: leg, hem: 'slight_break' });
+const top = (subcategory: string, color_family: string, more: Partial<Garment> = {}): Garment =>
+  ({ ...base, category: 'top', subcategory, color_family, tucked: 'none', length: 'at_belt', ...more });
+const outer = (subcategory: string, color_family: string, more: Partial<Garment> = {}): Garment =>
+  ({ ...base, category: 'outerwear', subcategory, color_family, length: 'at_belt', ...more });
+const bottom = (subcategory: string, color_family: string, leg: string, more: Partial<Garment> = {}): Garment =>
+  ({ ...base, category: 'bottom', subcategory, color_family, leg_shape: leg, hem: 'slight_break', ...more });
 const shoe = (subcategory: string, color_family: string): Garment => ({ ...base, category: 'footwear', subcategory, color_family });
 
 const o = (subcategory: string, color: string): StarterOption => ({ subcategory, color });
@@ -90,6 +93,77 @@ export const STARTER: readonly StarterEntry[] = [
   { id: 's12', name: t('starter.item.12'), budget: 'About $30', mid: '$50–100', slot: null, pick: null, owns: [], fills: () => false },
 ];
 
+const LOOSE = ['relaxed', 'wide'];
+
+type Row = Omit<StarterEntry, 'pick'> & { pick: NonNullable<StarterEntry['pick']> };
+const row = (id: string, name: string, budget: string, mid: string, slot: Row['slot'], phrase: string, pickName: string, garment: Garment,
+  fills: Row['fills']): Row => ({ id, name, budget, mid, slot, pick: { phrase, name: pickName, garment }, owns: [], fills });
+
+/** The rows for the looks (#364, 09-ui-review §16; approved Oct 17): candidates for Next best buy, "Add shoes and you'd
+ *  have n" and Kit's buy cards, never rows of "What you already own" (that list stays these 12, #343; so `owns` is empty).
+ *  Prices (the chat's buy card and evidence, as for s01–s12): US list prices seen Oct 16, 2026, budget / mid, sources in
+ *  market/starter-prices-2026.md. */
+export const LOOK_ROWS: readonly StarterEntry[] = [
+  row('s13', t('starter.item.13'), '$40–60', '$80–130', 'bottom', 'baggy dark jeans', 'Baggy dark jeans',
+    bottom('jeans', 'denim_dark', 'wide'), (g) => sub(g) === 'jeans' && LOOSE.includes(leg(g))),
+  row('s14', t('starter.item.14'), '$15–25', '$45–65', 'top', 'a black boxy tee', 'Black boxy tee',
+    top('tee', 'black', { volume: 4 }), (g) => sub(g) === 'tee' && ['black', 'charcoal'].includes(fam(g))),
+  row('s15', t('starter.item.15'), '$25–50', '$90–150', 'top', 'a plain grey hoodie', 'Grey hoodie',
+    top('hoodie', 'grey', { volume: 4 }), (g) => sub(g) === 'hoodie' && (g.pattern ?? 'solid') === 'solid' && g.logo !== 'large'),
+  row('s16', t('starter.item.16'), '$20–40', '$85–145', 'top', 'a grey crewneck sweatshirt', 'Grey sweatshirt',
+    top('sweatshirt', 'grey'), is('sweatshirt')),
+  row('s17', t('starter.item.17'), '$35–55', '$65–120', 'bottom', 'olive cargo pants', 'Olive cargos',
+    bottom('cargos', 'olive', 'relaxed'), is('cargos')),
+  row('s18', t('starter.item.18'), '$45–80', '$110–170', 'shoes', 'chunky sneakers', 'Chunky sneakers',
+    shoe('chunky_sneaker', 'white'), is('chunky_sneaker', 'basketball_sneaker')),
+  row('s19', t('starter.item.19'), '$40–80', '$140–220', 'outer', 'a black bomber jacket', 'Black bomber',
+    outer('bomber', 'black'), is('bomber')),
+  row('s20', t('starter.item.20'), '$45–90', '$130–240', 'outer', 'a black puffer jacket', 'Black puffer',
+    outer('puffer', 'black'), is('puffer')),
+  row('s21', t('starter.item.21'), '$25–45', '$55–130', 'top', 'a flannel shirt', 'Flannel shirt',
+    top('flannel_shirt', 'olive', { pattern: 'checks_plaid', pattern_scale: 'medium', saturation: 'muted' }), is('flannel_shirt')),
+  row('s22', t('starter.item.22'), '$15–25', '$45–65', 'top', 'a grey heavyweight tee', 'Grey tee',
+    top('tee', 'grey'), (g) => sub(g) === 'tee' && ['grey', 'light_grey'].includes(fam(g))),
+  row('s23', t('starter.item.23'), '$40–80', '$95–200', 'bottom', 'black wide-leg trousers', 'Black wide trousers',
+    bottom('trousers', 'black', 'wide', { hem: 'no_break' }), (g) => sub(g) === 'trousers' && LOOSE.includes(leg(g))),
+  row('s24', t('starter.item.24'), '$40–90', '$150–250', 'shoes', 'black loafers', 'Black loafers',
+    shoe('loafer', 'black'), is('loafer', 'chelsea_boot')),
+  row('s25', t('starter.item.25'), '$70–150', '$240–450', 'outer', 'a charcoal wool overcoat', 'Charcoal overcoat',
+    outer('overcoat', 'charcoal', { length: 'below_crotch' }), is('overcoat')),
+  row('s26', t('starter.item.26'), '$45–80', '$110–190', 'outer', 'a tan chore coat', 'Tan chore coat',
+    outer('chore_coat', 'tan_camel'), is('chore_coat')),
+  row('s27', t('starter.item.27'), '$50–70', '$135–200', 'shoes', 'brown work boots', 'Brown work boots',
+    shoe('work_boot', 'brown'), is('work_boot')),
+  row('s28', t('starter.item.28'), '$40–75', '$95–130', 'outer', 'a denim jacket', 'Denim jacket',
+    outer('denim_jacket', 'denim_mid'), is('denim_jacket')),
+  row('s29', t('starter.item.29'), '$40–70', '$110–200', 'shoes', 'brown suede chukkas', 'Brown suede chukkas',
+    shoe('suede_chukka', 'brown'), is('suede_chukka')),
+  row('s30', t('starter.item.30'), '$40–60', '$75–130', 'top', 'a navy cardigan', 'Navy cardigan',
+    top('cardigan', 'navy'), is('cardigan')),
+  row('s31', t('starter.item.31'), '$35–50', '$95–140', 'top', 'a striped rugby shirt', 'Striped rugby shirt',
+    top('rugby_shirt', 'navy', { pattern: 'stripes', pattern_scale: 'medium' }), is('rugby_shirt')),
+  row('s32', t('starter.item.32'), '$20–40', '$85–120', 'top', 'a retro soccer jersey', 'Retro jersey',
+    top('jersey', 'green', { saturation: 'muted' }), is('jersey')),
+  row('s33', t('starter.item.33'), '$40–70', '$90–150', 'shoes', 'grey retro runners', 'Grey retro runners',
+    shoe('retro_runner', 'grey'), is('retro_runner')),
+  row('s34', t('starter.item.34'), '$40–70', '$75–130', 'shoes', 'brown suede low-profile sneakers', 'Suede low-profile sneakers',
+    shoe('low_profile_sneaker', 'brown'), (g) => sub(g) === 'low_profile_sneaker' && fam(g) !== 'white'),
+  row('s35', t('starter.item.35'), '$40–60', '$85–125', 'bottom', 'light-wash straight jeans', 'Light-wash straight jeans',
+    bottom('jeans', 'denim_light', 'straight'),
+    (g) => sub(g) === 'jeans' && ['denim_light', 'denim_mid'].includes(fam(g)) && !['skinny', 'slim', ...LOOSE].includes(leg(g))),
+  row('s36', t('starter.item.36'), '$30–50', '$65–170', 'top', 'a fleece', 'Fleece',
+    top('fleece', 'olive'), is('fleece')),
+  row('s37', t('starter.item.37'), '$35–80', '$100–190', 'outer', 'a shell jacket', 'Shell jacket',
+    outer('shell_jacket', 'olive'), is('shell_jacket', 'rain_jacket')),
+  row('s38', t('starter.item.38'), '$60–120', '$140–200', 'shoes', 'trail-style sneakers', 'Trail-style sneakers',
+    shoe('performance_runner', 'grey'), is('performance_runner')),
+];
+
+/** Every Starter row there is (today's 12, then the looks' rows; ids never removed or renumbered): what a stored id looks
+ *  up (a closet piece's `starterId`, the kv marks, a chat buy card). Which rows are his candidates: finish/packs.ts. */
+export const CATALOG: readonly StarterEntry[] = [...STARTER, ...LOOK_ROWS];
+export const catalogRow = (id: string): StarterEntry | undefined => CATALOG.find((e) => e.id === id);
+
 const live = (c: ClosetItemRow) => !c.isDeleted && !c.mergedInto;
 
 export type Ownership = { owned: false } | { owned: true; how: 'closet' | 'marked'; itemId: string | null };
@@ -98,7 +172,7 @@ export type Ownership = { owned: false } | { owned: true; how: 'closet' | 'marke
 export function ownership(closet: readonly ClosetItemRow[], markedKv: readonly string[]): Record<string, Ownership> {
   const out: Record<string, Ownership> = {};
   const pieces = closet.filter(live);
-  for (const e of STARTER) {
+  for (const e of CATALOG) {
     const marked = pieces.find((c) => c.starterId === e.id && !c.isPhotographed);
     const seen = pieces.find((c) => !(c.starterId === e.id && !c.isPhotographed) && e.slot !== null && e.fills(c.garment, String(c.slot)));
     if (seen) out[e.id] = { owned: true, how: 'closet', itemId: seen.id };
@@ -109,7 +183,9 @@ export function ownership(closet: readonly ClosetItemRow[], markedKv: readonly s
   return out;
 }
 
-export const ownedCount = (o: Record<string, Ownership>): number => Object.values(o).filter((x) => x.owned).length;
+/** How many of these rows he owns (`ids`: the rows a screen shows; every row when left out). */
+export const ownedCount = (o: Record<string, Ownership>, ids?: readonly string[]): number =>
+  (ids ?? Object.keys(o)).filter((id) => o[id]?.owned).length;
 
 /** The garment for one "Which one is yours?" choice: the row's piece in his kind and color. */
 export function ownedGarment(e: StarterEntry, opt: StarterOption): Garment | null {
