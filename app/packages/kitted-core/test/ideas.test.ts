@@ -83,6 +83,17 @@ describe("pickOutfit", () => {
     expect(pick({ pin: "B3" }).outfit!.itemIds).toContain("B3");
   });
 
+  it("a pinned layer is always worn, whatever the history or the heat (#358)", () => {
+    // History made "no layer" with a fresher top win over every outfit with the pinned layer.
+    const history = pickHistory([{ daysAgo: 1, itemIds: ["T1", "B1", "S1"] }, { daysAgo: 2, itemIds: ["T3", "B2", "S2"] }, { daysAgo: 3, itemIds: ["T4", "B3", "S1"] }], CLOSET);
+    for (const pin of ["L1", "L2", "L3"])
+      for (const needs of [null, seasonNeeds(10), weatherNeeds(day(88))])
+        for (let i = 0; i < 7; i++) {
+          const r = pick({ pin, needs, history, seed: `2026-10-${20 + i}|ask|Best|${pin}` });
+          expect(r.outfit?.itemIds ?? []).toContain(pin);
+        }
+  });
+
   it("thin closet: what he has, and what's missing", () => {
     const r = pick({ closet: CLOSET.filter((c) => c.id === "T2" || c.id === "B1") });
     expect(r).toMatchObject({ state: "thin", outfit: null, known: ["T2", "B1"], missingSlots: ["shoes"] });

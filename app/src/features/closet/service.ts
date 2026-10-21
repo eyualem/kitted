@@ -1253,14 +1253,20 @@ export function createClosetService(deps: ClosetServiceDeps) {
     },
     /**
      * Pieces whose sightings carry a measured color their tile doesn't use yet (measured before tiles drew in it,
-     * 09-ui-review §7 C1) get it once; every other row is left exactly as it is. Never changes a score.
+     * 09-ui-review §7 C1) get it once, and so do pieces whose sleeve read their art doesn't carry yet (§24, then the names
+     * follow: "Grey long-sleeve tee"); every other row is left exactly as it is. Never changes a score.
      */
     refreshColors: () => serial(async () => {
       const obs = await store.closetObs.all();
+      let renamed = false;
       for (const it of (await store.closet.all()).filter(isOwned)) {
         const art = artOf(it, sightingsOf(it.id, obs).map(observationOfRow));
-        if ((art.measured ?? null) !== (it.art?.measured ?? null)) await refreshItem(it.id);
+        // and pieces whose sleeves were read before the closet drew them (long-sleeve tees, §24): the drawing and name follow
+        const sleeves = (art.sleeves ?? null) !== (it.art?.sleeves ?? null);
+        if ((art.measured ?? null) !== (it.art?.measured ?? null) || sleeves) await refreshItem(it.id);
+        if (sleeves) renamed = true;
       }
+      if (renamed) await renameAll();
     }, { label: 'refreshColors' }),
     /** Resolves when every closet call in flight has been written (demo screens, tests). */
     async settle(): Promise<void> {

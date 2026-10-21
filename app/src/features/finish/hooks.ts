@@ -1,14 +1,13 @@
-// What the cards read for the end of onboarding (10-onboarding.md §9): whether `Later` shows, and the moves as they
-// stand now (a move turns done when he does it).
+// What the cards read for the end of onboarding (10-onboarding.md §9): whether `Later` shows, and how many pieces he
+// added from the optional list (§9.11).
 import { store } from '@/data/db';
 import type { FitCheckRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { sessionClock } from '@/state/session';
-import { buildMoves, type MovesPlan } from './moves';
+import { basicsAdded } from './invite';
 import { laterShows } from './sequence';
 import { sequenceOn } from './session';
 import { FINISH_KEY, getFinish, getStarterMarks, STARTER_MARKS_KEY, toFinishChecks } from './service';
-import { loadYourMoves } from './yourMoves';
 
 /** L1: `Later` on his first-ever full check. Only that card loads anything. */
 export function useLaterShows(row: Pick<FitCheckRow, 'id' | 'status' | 'parentId' | 'isFirstCheck'>, readOnly: boolean): boolean {
@@ -19,23 +18,9 @@ export function useLaterShows(row: Pick<FitCheckRow, 'id' | 'status' | 'parentId
   return laterShows(state, row, toFinishChecks(checks, sessionClock.nowMs(), sessionClock));
 }
 
-/** The moves card's plan for its first check, rebuilt from the closet and the re-check as they change. */
-export function useMoves(checkId: string, buyId: string | null): MovesPlan | null | undefined {
+/** How many pieces he has added from "What you already own" (the invite card's "Added {n}"). */
+export function useBasicsAdded(): number | undefined {
   const marks = useLive(['kv'], () => getStarterMarks(store), [], STARTER_MARKS_KEY);
-  return useLive(
-    ['fitChecks', 'closet', 'profile'],
-    async () => {
-      const first = await store.fitChecks.get(checkId);
-      if (!first || !marks) return null;
-      const recheck = (await store.fitChecks.all()).find((c) => c.parentId === checkId && c.status === 'scored') ?? null;
-      const [closet, profile] = await Promise.all([store.closet.all(), store.profile.get('me')]);
-      return buildMoves({ first, recheck, closet, styles: profile?.styles ?? null, markedKv: marks, buyId });
-    },
-    [checkId, buyId, marks?.join()],
-  );
-}
-
-/** L3 and the pinned rows (10-onboarding.md §9.9): the moves card's plan, or null before the card is posted. */
-export function useYourMoves(): MovesPlan | null | undefined {
-  return useLive(['kv', 'chat', 'fitChecks', 'closet', 'profile'], () => loadYourMoves(store), []);
+  const closet = useLive(['closet'], () => store.closet.all(), []);
+  return marks && closet ? basicsAdded(closet, marks) : undefined;
 }

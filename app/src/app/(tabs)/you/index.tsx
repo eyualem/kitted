@@ -11,7 +11,6 @@ import type { ProfileRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
 import { styleLabel } from '@/features/morning/copy';
-import { YourMovesRow } from '@/features/finish/YourMovesRow';
 import { FactCard } from '@/features/you/FactRows';
 import { FACTS_ON_YOU, liveFacts } from '@/features/you/facts';
 import { NumberedPill } from '@/features/you/NumberedPill';
@@ -30,8 +29,6 @@ export default function YouScreen() {
   if (profile === undefined || !facts || !usage) return null;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
-      {/* Pinned atop while a move is left (02 S14, D17; 10-onboarding.md §9.9). */}
-      <YourMovesRow href="/you/moves" />
       {profile ? <StyleCard p={profile} /> : null}
       {usage.purchased ? <PlanRow /> : null}
       <View style={{ gap: space.s, marginTop: space.xs }}>

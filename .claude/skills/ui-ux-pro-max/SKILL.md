@@ -5,7 +5,7 @@ description: "UI/UX design intelligence for web, mobile, and desktop. This skill
 
 # UI/UX Pro Max - Design Intelligence
 
-> **Kitted note (added on install, Oct 18 2026, DECISIONS-LOG #340).** Vendored from `nextlevelbuilder/ui-ux-pro-max-skill` v2.15.0 (commit 56ea9cf, MIT); only `SKILL.md`, `references/`, `data/` and the four search scripts were copied, and the script paths below were made relative to the repo root (run from there). In this app:
+> **Kitted note (added on install, Oct 18 2026, DECISIONS-LOG #363).** Vendored from `nextlevelbuilder/ui-ux-pro-max-skill` v2.15.0 (commit 56ea9cf, MIT); only `SKILL.md`, `references/`, `data/` and the four search scripts were copied, and the script paths below were made relative to the repo root (run from there). In this app:
 > - The stack is **React Native (Expo, iOS first)**: always pass `--stack react-native` (or `swiftui` for native modules). Never `shadcn`, `html-tailwind` or web-only advice.
 > - **Kitted already has a locked design system** (`handoff/03-design-system.md`, `app/src/design-system/`, `mockups/kitted-mockups.html`). Use this skill as a **review checklist** (touch targets, contrast, safe areas, VoiceOver, motion, feedback), never as a source of new colors, fonts, styles or palettes. Never run `--design-system --persist`.
 > - Copy and anything outward-facing still go through the founder (CLAUDE.md). Apple's HIG and `research-context.md` §C14 win over this skill when they disagree.

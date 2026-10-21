@@ -6,7 +6,7 @@ import type { Clock } from '@/services/clock';
 import type { StylistSnapshot } from './context';
 
 export async function loadStylistSnapshot(store: KittedStore, clock: Clock): Promise<StylistSnapshot> {
-  const [p, otherStyle, facts, closet, chat, checks, ideas, outfits] = await Promise.all([
+  const [p, otherStyle, facts, closet, chat, checks, ideas, outfits, wears] = await Promise.all([
     store.profile.get('me'),
     store.getKv(OTHER_STYLE_KEY),
     store.facts.all(),
@@ -15,6 +15,7 @@ export async function loadStylistSnapshot(store: KittedStore, clock: Clock): Pro
     store.fitChecks.all(),
     store.dailyIdeas.all(),
     store.outfits.all(),
+    store.wearLog.all(),
   ]);
   return {
     nowMs: clock.nowMs(),
@@ -27,5 +28,6 @@ export async function loadStylistSnapshot(store: KittedStore, clock: Clock): Pro
     checks,
     ideas,
     outfits,
+    wears,
   };
 }

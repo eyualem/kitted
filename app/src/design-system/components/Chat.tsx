@@ -137,6 +137,8 @@ export interface NeckDownPhotoProps {
   borderRadii?: { tl: number; tr: number; br: number; bl: number };
   /** "Your outfit photo, Oct 22". Never describe the body. */
   accessibilityLabel?: string;
+  /** Called once the image has loaded (the share card waits on it before it's captured, #352). */
+  onLoad?: () => void;
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
@@ -168,7 +170,7 @@ export function neckDownLayout(crop: PhotoCrop, aspect: number, width: number, h
   };
 }
 
-export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii, accessibilityLabel }: NeckDownPhotoProps) {
+export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii, accessibilityLabel, onLoad }: NeckDownPhotoProps) {
   const { colors } = useTheme();
   const frame = {
     width,
@@ -193,14 +195,14 @@ export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii
     // Stored check photos are already neck-down: cover, top-aligned.
     return (
       <View style={frame} {...a11y}>
-        <Image source={source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} />
+        <Image source={source} contentFit="cover" contentPosition="top center" transition={0} style={{ width, height }} onLoad={onLoad} />
       </View>
     );
   }
   const box = neckDownLayout(crop, aspect, width, height);
   return (
     <View style={frame} {...a11y}>
-      <Image source={source} contentFit="fill" transition={0} style={{ position: 'absolute', ...box }} />
+      <Image source={source} contentFit="fill" transition={0} style={{ position: 'absolute', ...box }} onLoad={onLoad} />
     </View>
   );
 }

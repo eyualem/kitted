@@ -986,3 +986,34 @@ The founder, Oct 17: Kit's lines look awkward ("maybe give Kit a bubble"), the e
 | G | Pass | `npm run check`: typecheck, lint, core tests, 1,297 app tests pass; the one miss was O12 (a 40-piece closet listed in 312 ms against 300 under the full parallel run; 12 of 12 alone, the known timing flake of #335, closet code untouched). New kv prefix `idea.touched.` classified per-device in `sync/schema.ts`. No score change, no native change, no package |
 
 Not seen: the real phone (through Metro, no reinstall), the live NWS words with real hours (the demo uses sample weather, which has no hours, so it says "63° high"), and a live re-check through the camera (demo 10 and 12 show the scored states).
+
+### §21 follow-up (Oct 18, #340): the card opens with the hello and the weather
+The founder, after seeing #338: "drop Kit's separate hello bubble and put the greeting and weather together at the top of the morning card."
+- **What changed:** the morning/evening card is posted alone (no greeting line). It opens with the hello for the hour he reads it ("Morning." / "Afternoon." / "Evening. Heading out?", headline) and the weather line under it (☂ "46° now · 63° high · rain after 5 pm"; without weather, the season line "October: bring a layer." or nothing), then the menus, the tiles, the title, the reason, the buttons. `withoutCardGreetings()` (thread.ts) hides a greeting line still stored from before: one posted 1 ms before its card, or a seeded one the legacy adoption now marks `greeting` (it used to rewrite its text). `refreshWeather` no longer rewrites the line before the card (with no greeting it could have rewritten an answer).
+- **Checked:** on the Simulator, demo 25 (light, dark), 30, 31 (no weather: "October: bring a layer." over the location ask) and 12 (the seeded greeting gone); tests for the hello, the season line, the hidden lines and the service posting the card alone; `npm run check` green (1,301 app tests). No score change, no native change.
+
+### §21 follow-up 2 (Oct 18, #344): the score card folds to its rating and opens smoothly
+The founder (a friend's note on the UI: "too much information"), after a first proposal that kept the top fix visible: "I meant the box that contains the rating. I don't want the way it looks to change, I just want it to expand when it's pressed, in a smooth manner."
+- **What he sees:** a fit check's card, and a scored re-check's card, show only their top: the Going-for line, the tag, the score, its word and summary, and a small ⌄. A tap anywhere on that top opens the rest (the fixes, Next level, the closet row, Why and Not quite right?, Re-check) over 320 ms, height and fade together, with the card exactly as it was; the ⌃ at its foot folds it back. Open, the score opens Why as before. A card he opened stays open while the app runs. The "change not seen" re-check keeps its two buttons in view (it asks him to act). Reduce Motion: no slide.
+- **The motion:** `Expandable` (design-system) keeps the children mounted and animates height × an eased 0…1 on the UI thread; each frame's height change goes to `threadGrow`, and the Stylist thread scrolls by the same amount when he's at the bottom, so the card's foot stays put and its top rises. Found on the way: scrolling the card into view with the thread's scroll-to did nothing (iOS won't scroll past content that hasn't grown yet), and following `onContentSizeChange` lagged a beat behind the growth.
+- **Checked on the Simulator:** demo 7 (folded, open, folded again; video frames at 60 fps show one motion), demo 12 (the re-check folded), dark mode, the largest text size; `npm run check` green (1,303 app tests). VoiceOver: the card stays one element with a "Show the fixes and details" / "Show less" action. Not seen: a live check on the phone.
+
+## 22. Kit's outfit ideas rotate like the morning card (Oct 19, #358)
+
+**The founder:** "Do they actually check the outfit history of the person? What if they repeatedly recommend the same thing again and again?" The morning card did (rotation, Oct 14: 14 days of cards, Wear this and fit checks; no exact outfit again within 7 days; the top he's gone longest without first). Kit's "What should I wear?" and "What goes with my …?" used the same picker with **no history**: the best-scoring outfit almost every day, yesterday's outfit again, and a different outfit from the card for the same day.
+
+### 22.1 The change
+- **Same history as the card:** `historyFor` (exported from `features/morning/service.ts`, the card's own code moved, unchanged) for the card of the moment he asks in (day or evening), from the snapshot's ideas, wear log (new in the snapshot), checks and outfits.
+- **Plus Kit's own outfit cards from earlier days** (Claude's call): an outfit Kit showed yesterday counts as shown, like a card. Today's don't count, so the same question twice in a day gets the same advice (the guide's rule).
+- **The first pick for today is the card's outfit** when the occasion matches: "What should I wear?" with no occasion takes the card's occasion (Class on a weekday, Going out in the evening; never Staying in), and its line says "same as today's card" so Kit can say so. Not when a card piece was deleted or is one he said he avoids: then the picker picks fresh. "What goes with my …?" uses the card's outfit for Best when it holds that piece and the occasion matches.
+- **"Another" means another top** (it left out the first id, which is the layer when there is one).
+- **Found on the way, in `@kitted/core`:** a pinned layer ("What goes with my olive overshirt?") could be dropped for a "no layer" outfit with a fresher top, and was always dropped on a hot day. A pinned layer is now always worn.
+
+### 22.2 Checks, set before building (`app/src/__tests__/askRotation.test.ts`; core `ideas.test.ts`)
+- **K1** no occasion: the card's occasion and its outfit as the Pick. **K2** naming the card's occasion: the same; another occasion: picked fresh. **K3** a card piece deleted or avoided: never offered. **K3b** no card: the picker still answers.
+- **K4** what he wore yesterday isn't today's pick. **K5** Kit's own card from yesterday counts as shown; from earlier today, not. **K6** "What goes with" sees the history too.
+- **K7** the same question twice in one day: the same outfits. **K8** Another never repeats the Pick's top.
+- **Core:** a pinned layer is always in the outfit, with history, in season and on a hot day.
+
+### 22.3 Results (Oct 19)
+Before the change K1, K2, K4, K5, K6 and K8 failed (the bug); after it all pass, the card's 36 tests pass unchanged, `npm run check`'s steps green (1,378 app tests, 782 core). JS only: on his phone through Metro, no reinstall. Not seen on a screen: the answers' words come from the model, which only gets the new evidence lines.

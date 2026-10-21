@@ -88,6 +88,9 @@ const ROTATE = { topFresh: 7, outfitDays: 7, mildDays: 2 } as const;
 const W = { recent: 0.75, layerUnneeded: 0.75, layerSuggested: 0.25, wetBoot: 0.5, wetLight: 0.5, hotBoot: 0.75, hotShortSleeve: 0.5 } as const;
 /** Tops that read cool on a hot day (the reading has no sleeve length; these are short-sleeved by type). */
 const SHORT_SLEEVE: ReadonlySet<unknown> = new Set(["tee", "graphic_tee", "polo", "knit_polo", "tank_top", "camp_collar_shirt", "jersey"]);
+/** Short-sleeved by type, unless the closet saw long sleeves on it (the app's art.sleeves: a long-sleeve tee, #359). */
+const isShortSleeved = (it: ClosetItem): boolean =>
+  SHORT_SLEEVE.has(it.garment.subcategory) && (it.art as { sleeves?: unknown } | null | undefined)?.sleeves !== "long";
 
 /** FNV-1a, for deterministic tie-breaks. */
 function hash(s: string): number {
@@ -155,14 +158,14 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
     let b = it.slot !== "top" && ago(it.id) <= ROTATE.mildDays ? -W.recent : 0;
     if (needs?.wet && it.slot === "shoes") b += isBoot(it.garment) ? W.wetBoot : isFairWeatherShoe(it.garment) ? -W.wetLight : 0;
     if (needs?.hot && it.slot === "shoes" && isBoot(it.garment)) b -= W.hotBoot;
-    if (needs?.hot && it.slot === "top" && SHORT_SLEEVE.has(it.garment.subcategory)) b += W.hotShortSleeve;
+    if (needs?.hot && it.slot === "top" && isShortSleeved(it)) b += W.hotShortSleeve;
     return b;
   };
   /** Pieces that are wrong for today's weather (kept as a last resort, never preferred). */
   const wrongWeather = (it: ClosetItem): number => {
     if (!needs) return 0;
     if (it.slot === "shoes") return (needs.hot && isBoot(it.garment)) || (needs.wet && isFairWeatherShoe(it.garment)) ? 1 : 0;
-    if (it.slot === "top" && needs.hot && !SHORT_SLEEVE.has(it.garment.subcategory)) return 1;
+    if (it.slot === "top" && needs.hot && !isShortSleeved(it)) return 1;
     return 0;
   };
   /** Days since this top was last on a card or worn, capped: past a week every top is equally fresh. */
@@ -182,7 +185,8 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
   const outerAll = shortlist("outer");
   const heavyOwned = input.closet.some((c) => isHeavyOuter(c.garment));
   const warmOwned = input.closet.some((c) => isWarmLayer(c.garment));
-  const layerChoices: (ClosetItem | null)[] = needs?.hot ? [null] : [null, ...outerAll];
+  // A pinned layer is always worn, hot day or not: "no layer" would drop the piece he asked about (#358).
+  const layerChoices: (ClosetItem | null)[] = pinned?.slot === "outer" ? [pinned] : needs?.hot ? [null] : [null, ...outerAll];
 
   type Candidate = { items: ClosetItem[]; layer: ClosetItem | null; wrong: number; repeat: number; fresh: number; value: number; predicted: number; tie: number };
   /** Weather first, then a new outfit, then the top he's gone longest without, then the score. */

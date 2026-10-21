@@ -64,7 +64,7 @@ describe('G15 · a scored re-check has Why and Not quite right?', () => {
   });
 
   it('G15.2–3 VoiceOver gets both as actions; Past chats keep Why only', () => {
-    expect(card).toMatch(/: readOnly \? \[why\] : \[[\s\S]*?why, \{ name: 'nqr', label: t\('card\.nqr'\) \}/);
+    expect(card).toMatch(/: readOnly \? \[fold, why\] : \[[\s\S]*?why, \{ name: 'nqr', label: t\('card\.nqr'\) \}/);
     expect(card).toMatch(/\{readOnly && !notSeen \? \(/);
   });
 
@@ -363,7 +363,8 @@ describe('G22 · delete one look\'s photo', () => {
 
   it('G22.1, G22.3 the ⋯: Delete photo (destructive, with a confirm) while there\'s a photo, Remove from Lookbook then back', () => {
     const page = src('features/lookbook/LookPageScreen.tsx');
-    expect(page).toMatch(/headerRight: \(\) => \(\s*<LookMenu\s*hasPhoto=\{!!look\.photo\}\s*onDeletePhoto=\{\(\) => confirmDeletePhoto\(look\.shownId\)\}/);
+    // The share button (#352) may sit beside the ⋯ in the header.
+    expect(page).toMatch(/headerRight: \(\) => \([\s\S]*?<LookMenu\s*hasPhoto=\{!!look\.photo\}\s*onDeletePhoto=\{\(\) => confirmDeletePhoto\(look\.shownId\)\}/);
     expect(page).toMatch(/onRemove=\{\(\) => void removeLookMenu\(look\.checkId, look\.title, \(\) => \(router\.canGoBack\(\) \? router\.back\(\) : router\.replace\('\/lookbook'\)\)\)\}/);
     const menu = src('features/lookbook/LookMenu.ios.tsx');
     expect(menu).toMatch(/\{hasPhoto \? <Button label=\{t\('look\.deletePhoto'\)\} systemImage="trash" role="destructive"/);

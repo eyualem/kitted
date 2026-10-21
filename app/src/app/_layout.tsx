@@ -2,7 +2,7 @@
 // modal shows at a time. Order of guards: age stop → onboarding → tabs.
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Platform, View } from 'react-native';
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavThemeProvider, router, type Theme as NavigationTheme } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavThemeProvider, router, type ErrorBoundaryProps, type Theme as NavigationTheme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaFrameContext, SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -16,8 +16,19 @@ import { useGate } from '@/state/appGate';
 import { boot } from '@/state/boot';
 import { startConnectivity } from '@/services/connectivity';
 import { getDemoArgs } from '@/state/session';
+import { CrashScreen } from '@/features/crash/CrashScreen';
+import { demoCrashCheck } from '@/demo/demoCrash';
+import { installErrorHandler } from '@/services/errors/log';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+// Every uncaught JS error leaves a line in Documents/logs/errors.log, in every build (09 §23 E3, #353).
+installErrorHandler();
+
+/** A screen that throws while it draws shows the crash screen, not a blank app (09 §23 E1, #353). */
+export function ErrorBoundary(props: ErrorBoundaryProps) {
+  SplashScreen.hideAsync().catch(() => {});
+  return <CrashScreen {...props} />;
+}
 
 /** Sheet presentation (06 §2). Detents: .medium = 0.5, .large = 1, .fraction(x) = x. */
 const sheet = (detents: number[]) =>
@@ -55,6 +66,8 @@ export default function RootLayout() {
           <View style={{ flex: 1 }}>
             <RootStack booted={booted} />
             <ToastHost />
+            {/* After boot: the demo arguments are read then (and the compiler would keep a first-render read). */}
+            {DEMO_ENABLED && booted ? <DemoCrash /> : null}
           </View>
         </NavThemeFromTokens>
       </WebFrame>
@@ -126,6 +139,12 @@ function RootStack({ booted }: { booted: boolean }) {
       </Stack.Protected>
     </Stack>
   );
+}
+
+/** -demoCrash 1 (demo builds only, 09 §23 E5): throws while drawing until Try again, so the crash screen can be seen. */
+function DemoCrash() {
+  demoCrashCheck();
+  return null;
 }
 
 /** React Navigation's theme from our tokens, so native headers and backgrounds match. */
