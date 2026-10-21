@@ -21,6 +21,9 @@ How it works ("a fix row never shows a gain that doesn't happen", #204):
   6. A "Next level" line (no number) when its edit would lift the named part. His first pick's path to 8 (entries
      with `style`) comes first: shown when there's no fix and the edited outfit reads as that style, unless the
      Smaller step shown is the same kind of move (same `group`). The generic lines need no fix and no Smaller step.
+  7. Tuck it in, not swap it (v1.7, #336): a shown tuck (`tucks`: the slots it tucks) hides any fix that swaps one of
+     those pieces to raise a part the tuck raises, for no more gain (a color swap stays). A tuck tip by shirt type (`always` + `tuck`: a dress shirt untucked; an oxford or polo
+     hanging to mid-fly or below) also shows next to fixes, when no tuck fix is shown and no free Smaller step is.
 
 Rounding: rubric.round_half for every shown number (via parts_proto), Python round(x, 6) for raw gains; the TS uses
 the same helpers (roundHalf, pyRound). Never mutates its inputs.
@@ -377,6 +380,20 @@ def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm):
     return best
 
 
+SWAP_KEYS = ("subcategory", "color_family", "pattern", "volume")
+
+
+def _swapped(w, r):
+    """v1.7 (#336): the slots whose first piece the edit replaced (a different kind, color, pattern or roominess, or
+    added or removed). A tuck changes none of these, so it never swaps."""
+    out = set()
+    for slot in SLOTS:
+        a, b = _first(w, slot), _first(r, slot)
+        if (a is None) != (b is None) or (a is not None and any(a.get(k) != b.get(k) for k in SWAP_KEYS)):
+            out.add(slot)
+    return out
+
+
 def _picks(styles):
     """His picks in order (the 1st pick first), from [name, weight] pairs or a dict; weight 0 is not a pick."""
     return [k for k, wt in styles.items() if wt and wt > 0]
@@ -432,12 +449,21 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x["step"] = _fill(cand["step"], info)
         x["drops"] = any(d1 < d0 for _, _, _, d0, d1 in _changes(base, res))
         x["lifts_display"] = any(d1 > d0 for _, _, _, d0, d1 in _changes(base, res))
+        x["tucks"] = set(cand.get("tucks") or ())
+        x["swaps"] = _swapped(w, r)
         cands.append(x)
 
     key = lambda x: (x["rank"], -x["gain"], x["pick_rank"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
 
     def pick(allowed_classes):
         fixes = [x for x in cands if x["gain"] >= 0.5 and x["class"] in allowed_classes]
+        # v1.7 (#336): tuck it in, not swap it. The best tuck hides fixes that swap a piece it tucks to raise the same
+        # parts (another way to fix the shape) for no more gain; a swap that fixes something else (a color) stays.
+        tk = next((x for x in sorted(fixes, key=key) if x["tucks"]), None)
+        if tk is not None:
+            tk_parts = {p["part"] for p in tk["raises"]}
+            fixes = [x for x in fixes if x is tk or not (x["swaps"] & tk["tucks"] and x["gain"] <= tk["gain"]
+                                                         and tk_parts & {p["part"] for p in x["raises"]})]
         kept = []
         for grp in dict.fromkeys(x["group"] for x in sorted(fixes, key=key)):
             mx = None             # sorted by class first, so a later entry is a later class or a smaller gain
@@ -475,14 +501,17 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
 
     # v9 (#232): the stylist's tips (a cuff, a hem, the layer underneath) show with no number when there's no fix,
     # ahead of a Smaller step that means buying something and ahead of the generic Next level lines
+    # v1.7 (#336): a tuck tip by shirt type also shows next to fixes, when no tuck fix is shown
     tip_shown = False
-    if not picked and not lounge:
+    tuck_shown = any(x["group"] == "tuck" for x in picked)
+    if not lounge and (not picked or not tuck_shown):
         step = out["smaller_step"]
         if step is None or not classes[step["class"]]["free"] or step["class"] == "own":
             for nl in CATALOG["nextLevel"]:
-                if not nl.get("always") or not _when_ok(nl.get("when"), w, occasion, warm):
+                if not nl.get("always") or (picked and not nl.get("tuck")) or not _when_ok(nl.get("when"), w, occasion, warm):
                     continue
-                piece = _peek_under(w) if nl["when"].get("peek_under") else _first(w, "bottom")
+                piece = (_peek_under(w) if nl["when"].get("peek_under")
+                         else _first(w, nl.get("name") or "bottom"))
                 out["next_level"] = {"id": nl["id"], "part": nl["part"], "line": _fill(nl["copy"], {"name": K.name(piece)}), "style": None}
                 out["smaller_step"] = None
                 tip_shown = True
@@ -514,7 +543,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                 break
 
     for x in picked:
-        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank"):
+        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank", "tucks", "swaps"):
             x.pop(k, None)
     out["fixes"] = picked
     if not picked:

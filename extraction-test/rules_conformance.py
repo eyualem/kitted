@@ -217,6 +217,18 @@ case("PRO-4-hoodie", "PRO-4", "a regular hoodie ending at the belt over straight
 case("PRO-4-knit-loose", "PRO-4", "a regular black sweater ending at the belt over wide trousers with loafers: over a loose leg a knit counts, +1.5",
      Rd(top("sweater", "black", length="at_belt"), WTROUSERS, LOAFER_BK),
      {"fired": [F("PR1_waist_break", "proportions", 1.5)], "overall": 8.0, "band": "Sharp"})
+case("PRO-4-open-shirt-out", "PRO-4", "a check flannel worn open over a navy tee, untucked, over relaxed light jeans: no waist break",
+     Rd(top("tee", "navy"), outer("flannel_shirt", "tan_camel", 4, pattern="checks_plaid", length="mid_fly", tucked="none"),
+        bottom("jeans", "denim_light", "relaxed", volume=4), WLS), {"not_fired": [F("PR1_waist_break")], "overall": 7.0, "band": "Put together"})
+case("PRO-4-open-shirt", "PRO-4", "v14 (#336): the same open flannel and tee, both tucked in: the tucked shirt sets the waist, +1.5",
+     Rd(top("tee", "navy", tucked="full", length="na"),
+        outer("flannel_shirt", "tan_camel", 4, pattern="checks_plaid", length="na", tucked="full"),
+        bottom("jeans", "denim_light", "relaxed", volume=4), WLS),
+     {"fired": [F("PR1_waist_break", "proportions", 1.5)], "not_fired": [F("PR2b_short_layer_read")], "overall": 7.5, "band": "Put together"},
+     vs={"case": "PRO-4-open-shirt-out", "parts": {"proportions": 1.5}, "overall": "up"})
+case("PRO-4-open-jacket", "PRO-4", "a chore coat read as tucked isn't a button-up: no waist break",
+     Rd(top("tee", "navy", tucked="full", length="na"), outer("chore_coat", "brown", length="na", tucked="full"),
+        bottom("jeans", "denim_light", "relaxed", volume=4), WLS), {"not_fired": [F("PR1_waist_break")], "overall": 7.0, "band": "Put together"})
 case("PRO-4-skinny", "PRO-4", "a tuck over skinny jeans earns no waist break (needs a full leg)",
      Rd(top("tee", "white", tucked="full"), SKJEANS, WLS),
      {"not_fired": [F("PR1_waist_break")], "fired": [F("PN1_narrow_leg", "proportions", -2.0)], "band": "Getting there"})

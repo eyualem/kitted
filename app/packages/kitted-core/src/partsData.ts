@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.11.0",
+ "version": "1.12.0",
  "engine": "v14",
  "label": "parts-proto-14 (Oct 17, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "d76b4967ef407e368ec2e76986791930fe527c011d3f1e75f1be6797fc3cc664",
+ "sourceSha256": "a4f4d412168394f220e3d0848e8039094ded742e1b47e0c26df89591498eb621",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -225,7 +225,8 @@ export const PARTS_DATA: PartsData = {
   "look_sign": true,
   "kit_cap": 6,
   "kit_fit_rate": 0.5,
-  "sw1_blocks_credit": true
+  "sw1_blocks_credit": true,
+  "pr1_tucked_layer": true
  },
  "rollback": {
   "engine": "v13",
@@ -415,7 +416,8 @@ export const PARTS_DATA: PartsData = {
    "look_sign": false,
    "kit_cap": null,
    "kit_fit_rate": 0,
-   "sw1_blocks_credit": false
+   "sw1_blocks_credit": false,
+   "pr1_tucked_layer": false
   }
  },
  "sets": {
@@ -677,6 +679,14 @@ export const PARTS_DATA: PartsData = {
    "chelsea_boot",
    "suede_chukka",
    "work_boot"
+  ],
+  "TUCKABLE_LAYERS": [
+   "camp_collar_shirt",
+   "denim_shirt",
+   "dress_shirt",
+   "flannel_shirt",
+   "overshirt",
+   "oxford_shirt"
   ],
   "SWEAT_TOPS": [
    "hoodie",

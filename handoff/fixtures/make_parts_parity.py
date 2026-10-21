@@ -559,6 +559,16 @@ def parts_edges():
     add("v14_heavy_chunky_slim", Rd(TEE(sub="hoodie", color="grey", volume=4), JEANS(color="black", leg_shape="slim"), SHOE(sub="chunky_sneaker")), occ="class")
     add("v14_heavy_chunky_skinny", Rd(TEE(sub="hoodie", color="grey"), JEANS(color="black", leg_shape="skinny"), SHOE(sub="basketball_sneaker")))
     add("v14_tracksuit_runners", Rd(TEE(), G("outerwear", "track_jacket", "navy"), GYM(sub="track_pants", color="navy", leg_shape="straight", volume=3, hem="slight_break"), SHOE(sub="performance_runner", color="grey")))
+    # v14 (#336): a button-up worn open and tucked in sets the waist; guards: two layers, a jacket, untucked, a slim leg, a mirror
+    OPEN = lambda **kw: G("outerwear", kw.pop("sub", "flannel_shirt"), kw.pop("color", "tan_camel"), **{"tucked": "full", "volume": 4, **kw})  # noqa: E731
+    add("v14_tucked_layer", Rd(TEE(color="navy", tucked="full", length="na"), OPEN(), JEANS(color="denim_light", leg_shape="relaxed", volume=4), SHOE()))
+    add("v14_tucked_layer_mirror", Rd(TEE(color="navy", tucked="full", length="na"), OPEN(sub="overshirt", color="brown"), JEANS(color="denim_light", leg_shape="wide", volume=4), SHOE(sub="retro_runner"), mirror_selfie=True))
+    add("v14_tucked_layer_oxford", Rd(TEE(), OPEN(sub="oxford_shirt", color="light_blue", volume=3), JEANS(sub="chinos", color="khaki_beige"), SHOE(sub="loafer", color="brown")))
+    add("v14_tucked_layer_untucked", Rd(TEE(color="navy"), OPEN(tucked="none", length="mid_fly"), JEANS(color="denim_light", leg_shape="relaxed", volume=4), SHOE()))
+    add("v14_tucked_layer_slim", Rd(TEE(color="navy", tucked="full", length="na"), OPEN(), JEANS(color="denim_dark", leg_shape="slim", volume=2), SHOE()))
+    add("v14_tucked_layer_two_outers", Rd(TEE(color="navy", tucked="full", length="na"), OPEN(), G("outerwear", "bomber", "black"), JEANS(color="denim_light", leg_shape="relaxed", volume=4), SHOE()))
+    add("v14_tucked_layer_jacket", Rd(TEE(color="navy", tucked="full", length="na"), G("outerwear", "chore_coat", "brown", tucked="full"), JEANS(color="denim_dark", leg_shape="straight"), SHOE(sub="work_boot", color="brown")))
+    add("v14_tucked_layer_wrinkled", Rd(TEE(color="navy", tucked="full", length="na"), OPEN(condition="wrinkled"), JEANS(color="denim_light", leg_shape="relaxed", volume=4), SHOE()))
     add("v10_knit_on_knit", Rd(G("outerwear", "cardigan", "navy"), TEE(sub="sweater", color="grey", length="at_belt"), JEANS(color="denim_dark"), SHOE(sub="suede_chukka", color="brown")))
     add("v8_standout_pattern", Rd(G("outerwear", "overshirt", "green", pattern="checks_plaid", pattern_scale="medium"), TEE(), JEANS(), SHOE(sub="work_boot", color="brown")))
     return E

@@ -691,6 +691,9 @@ const addedInBuild = {
   'pfix.copy.dialedIn': 'Dialed in. Nothing to fix.',
   'pfix.tuck': 'Tuck in your {name}',
   'pfix.tuck.step': 'A full tuck lifts',
+  // Tuck it in, not swap it (#336): a button-up worn open, tucked in with the tee under it
+  'pfix.tuck_layer': 'Tuck in your {name}',
+  'pfix.tuck_layer.step': 'A full tuck lifts',
   'pfix.push_sleeves': 'Push your sleeves up',
   'pfix.push_sleeves.detail': 'just above the wrist',
   'pfix.push_sleeves.step': 'Pushed-up sleeves lift',
@@ -766,6 +769,9 @@ const addedInBuild = {
   'pfix.hem_tailor.detail': '~$15 at a tailor',
   'pfix.hem_tailor.step': 'A slight break lifts',
   // His first pick's path to 8 (#NEXT): shown only when the card has no fix and he picked that style first
+  // #336: a tuck tip by shirt type (also next to fixes when no tuck fix shows)
+  'pfix.tip_tuck_dress': 'A dress shirt is cut to be tucked in. Tuck it in for a cleaner line.',
+  'pfix.tip_tuck_long': 'Your {name} runs long untucked. Tuck it in for a cleaner line.',
   'pfix.tip_cuff': 'Have the {name} hemmed to just touch your shoes (about $15 at a tailor), or cuff them once: a cleaner finish.',
   'pfix.tip_hem': 'Have the {name} hemmed to just touch your shoes (about $15 at a tailor): a cleaner finish.',
   'pfix.tip_peek': 'Tuck in the layer underneath, or wear one that ends with the {name}: the line looks cleaner.',

@@ -450,15 +450,19 @@ VERSIONS["v13"] = "parts-proto-13 (Oct 14, 2026)"
 #     half, and sweatsuit_shape gives it +this on Proportions in a relaxed shape with a clean sneaker; look_sign counts
 #     reading as a look as that sign at Everyday and Class (instead of lounge_style's half point); kit_cap holds a full
 #     kit (a jersey with gym shorts) to this, minus kit_fit_rate x what Fit or Proportions lost.
+#   pr1_tucked_layer (PRO-4, added Oct 17, DECISIONS-LOG #336, the founder's tucked/untucked pair): a button-up worn open
+#     as the one layer (TUCKABLE_LAYERS) and read fully tucked sets the waist like a tucked top: it earns the waist break
+#     in its place, and no layer shape credit (PR2b, PR5, PR6) on top. Faults and tips still see it as the layer.
 _OFF14 = dict(sh_prop=False, sh_shape=0.0, sh_layer=0.0, sh_cap=0.0, sh_roomy_fitted=0.0, sh_fitted=0.0, sd1_any_sneaker=False,
               goes_together=0.0, tracksuit=0.0, gym_runner_unheld=False, sweatsuit_sign=False, sweatsuit_shape=0.0,
-              look_sign=False, kit_cap=None, kit_fit_rate=0.0, sw1_blocks_credit=False)
+              look_sign=False, kit_cap=None, kit_fit_rate=0.0, sw1_blocks_credit=False,
+              pr1_tucked_layer=False)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13"):
     TUNE[_e].update(_OFF14)
 TUNE["v14"] = dict(TUNE["v13"], sh_prop=True, sh_shape=1.0, sh_layer=1.0, sh_cap=1.5, sh_roomy_fitted=1.5, sh_fitted=1.0,
                    sd1_any_sneaker=True, sc_pair=True, goes_together=0.5, tracksuit=0.5, gym_runner_unheld=True,
                    sweatsuit_sign=True, sweatsuit_shape=1.0, look_sign=True, kit_cap=6.0, kit_fit_rate=0.5,
-                   sw1_blocks_credit=True)
+                   sw1_blocks_credit=True, pr1_tucked_layer=True)
 VERSIONS["v14"] = "parts-proto-14 (Oct 17, 2026)"
 SPORT_SNEAKERS = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
                   "white_leather_sneaker"}                       # v14: the clean sneakers (not running shoes)
@@ -507,6 +511,7 @@ SHORT_SLEEVE_TYPES = {"tee", "graphic_tee", "tank_top"}       # a "covers_hand" 
 PRESSED = {"chinos", "trousers", "suit_trousers", "drawstring_trousers"}
 NARROW = {"skinny", "slim"}
 FULL_LEG = {"straight", "relaxed", "wide"}                    # flare/bootcut and barrel are aliased by rubric.py
+TUCKABLE_LAYERS = {"oxford_shirt", "dress_shirt", "flannel_shirt", "camp_collar_shirt", "denim_shirt", "overshirt"}  # v14 PR1: button-ups worn open
 SHORT_LAYERS = {"bomber", "denim_jacket", "leather_jacket"}   # cut to end at the waist/hip by type (R2 stand-in)
 BULKY = {"chunky_sneaker", "basketball_sneaker"}
 SUIT_SHOES = {"dress_shoe", "derby", "loafer", "chelsea_boot"}   # v2: a suit's own shoes (v5-tailoring.md)
@@ -782,20 +787,24 @@ def _proportions(o, sl, t):
     blocked = faults >= 1.0 or (B.get("hem") == "pooling" and not (t["ff7_loose"] and leg in R.LOOSE)) or lounge
     full = leg in FULL_LEG
     rewards = []
-    if not blocked and full and T is not None:
-        tuck = T.get("tucked") == "full"
-        short = T.get("length") in t.get("pr1_short", ("cropped", "at_belt"))
-        if short and t.get("pr1_ruler_veto") and T.get("length") == "at_belt" and T.get("_waist_ruler") == "low":
+    # v14 (#336): a button-up worn open over a tee and tucked in sets the waist like a tucked top (the founder's pair)
+    tucked_layer = bool(t["pr1_tucked_layer"] and O is not None and len(o["outers"]) == 1
+                        and O.get("subcategory") in TUCKABLE_LAYERS and O.get("tucked") == "full")
+    T1, O1 = (O, None) if tucked_layer else (T, O)
+    if not blocked and full and T1 is not None:
+        tuck = T1.get("tucked") == "full"
+        short = T1.get("length") in t.get("pr1_short", ("cropped", "at_belt"))
+        if short and t.get("pr1_ruler_veto") and T1.get("length") == "at_belt" and T1.get("_waist_ruler") == "low":
             short = False                                              # what-if (#264, off): the phone sees a low waistline
-        ribbed_ok = T.get("subcategory") not in RIBBED or (T.get("volume") or 3) >= 4 or (
+        ribbed_ok = T1.get("subcategory") not in RIBBED or (T1.get("volume") or 3) >= 4 or (
             t["pr1_ribbed_loose"] and leg in R.LOOSE)                 # v8: a knit at the belt over a loose leg
-        if O is None and _earns(T) and (tuck or (short and ribbed_ok)):
+        if O1 is None and _earns(T1) and (tuck or (short and ribbed_ok)):
             pts = t["pr1"] if (tuck or not o.get("mirror")) else t["pr1_mirror_short"]
             if t["pr1_loose"] is not None:                            # v8: the leg sets the size, not the mirror
                 pts = t["pr1_loose"] if leg in R.LOOSE else (t["pr1_straight"] if (tuck or not o.get("mirror"))
                                                              else min(t["pr1_straight"], t["pr1_mirror_short"]))
             rewards.append((pts, "a tucked or short top over a full leg gives it a waist", "PR1_waist_break"))
-        elif O is None and _earns(T) and T.get("tucked") == "half" and T.get("subcategory") not in RIBBED:
+        elif O1 is None and _earns(T1) and T1.get("tucked") == "half" and T1.get("subcategory") not in RIBBED:
             rewards.append((t["pr1b"], "the front tuck gives it a waist", "PR1b_half_tuck"))
     # v3: the streetwear shape (PR4). Same top as the waist break, so it replaces PR1 when larger, never adds to it.
     S_sub = S.get("subcategory") if S is not None else None
@@ -814,7 +823,7 @@ def _proportions(o, sl, t):
     # v4 (off in v1-v3): the workwear and outdoor silhouettes (PR5, PR6). Their layers are never PR2's short layers,
     # so one layer earns one shape credit. NOTE: trail_shoe (PR6) and track_jacket (below) aren't values of the live
     # v3 reading yet (schema.json); they fire only on readings that carry them (the council's cases, the next batch).
-    if not blocked and full and O is not None and _earns(O) and not sl["peek"] and S is not None and _earns(S):
+    if not blocked and full and O is not None and not tucked_layer and _earns(O) and not sl["peek"] and S is not None and _earns(S):
         if (t["pr5"] and o_sub in t["pr5_layers"] and B.get("subcategory") in t["pr5_bottoms"]
                 and S_sub in t["pr5_shoes"] and "workwear" in o["det"]):
             rewards.append((t["pr5"], f"a {o_sub.replace('_', ' ')} over a sturdy leg, finished by boots: the workwear shape",
@@ -825,7 +834,7 @@ def _proportions(o, sl, t):
     if not blocked and full and O is not None and o_sub in (SHORT_LAYERS | t["short_layers_extra"]) and _earns(O) \
             and not sl["peek"]:
         rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
-    if (t["pr2b"] and not blocked and leg in R.LOOSE and O is not None and not o_tailored
+    if (t["pr2b"] and not blocked and leg in R.LOOSE and O is not None and not tucked_layer and not o_tailored
             and o_sub not in (SHORT_LAYERS | t["short_layers_extra"]) and O.get("length") in ("cropped", "at_belt")
             and _earns(O) and not sl["peek"] and not any(x[2] in ("PR5_workwear_shape", "PR6_outdoor_shape") for x in rewards)):
         rewards.append((t["pr2b"], f"a short {(o_sub or 'layer').replace('_', ' ')} over a loose leg: a clean, strong shape",
