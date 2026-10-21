@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.11.0"
+VERSION = "1.12.0"   # 1.12.0 (#336): v14 also lets a tucked open button-up set the waist (pr1_tucked_layer)
 ENGINE = "v14"
 
 
@@ -80,6 +80,7 @@ def data(engine=ENGINE):
             "WR_KNITS": sl(P.WR_KNITS), "WR_TEES": sl(P.WR_TEES), "WR_CASUAL": sl(P.WR_CASUAL),   # v12 CON-6
             "WR_DRESSY_OCC": sl(P.WR_DRESSY_OCC), "WR_CLEAN": sl(P.WR_CLEAN),   # v13 CON-6: the clean looks
             "SPORT_SNEAKERS": sl(P.SPORT_SNEAKERS), "BOOTS": sl(R.FOOT_KIND["boots"]),   # v14 SHO-4: any clean sneaker or boot
+            "TUCKABLE_LAYERS": sl(P.TUCKABLE_LAYERS),                          # v14 PRO-4 (#336): a tucked open shirt
             "SWEAT_TOPS": sl(P.SWEAT_TOPS), "SWEAT_BOTTOMS": sl(P.SWEAT_BOTTOMS),          # v14 LNG-9: a matched sweatsuit
         },
         "boxyVolume": 4,                     # volume >= this is a roomy / boxy piece (every part)

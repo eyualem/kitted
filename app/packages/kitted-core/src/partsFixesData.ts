@@ -3,8 +3,8 @@
 import type { PartsFixCatalog } from "./partsFixes";
 
 export const PARTS_FIXES_DATA: PartsFixCatalog = {
- "_doc": "Fix catalog for the PARTS engine (parts_proto.py v5; DECISIONS-LOG #208, picks #211, the style-crossing swaps #214). Not used by the v4 fix engine above (make_rubric_json.py leaves this block out of rubric.json). Reference: handoff/fixtures/parts_fixes.py; port: @kitted/core src/partsFixes.ts (data: src/partsFixesData.ts, generated from this block). Every candidate is an edit to a COPY of the reading, re-scored by the parts engine. A candidate becomes a fix only when the ROUNDED score rises; an edit that raises a part's half-point but not the rounded score becomes the 'Smaller step' line (no number). Classes rank the card: free (adjust) first, then closet, then own ('Free if you own one'), then tailor; within a class the larger gain first. group: one fix per group; a later class in the same group shows only when its gain is strictly larger. when: '<slot>.<field>_in' / '_not_in' test the first top / outerwear / bottom / footwear of the scored garments (a missing slot reads as null); not_warm, no_outer, occasion_in, quiet are flags. lounge: allowed at gym and home (everything else isn't). look: overrides of the second look after the edit. step: the Smaller-step subject, ending in its verb. The Smaller step prefers an edit in the same group as a shown fix (a smaller version of that move), then the largest raw gain. {name} = the edited garment's plain name, {item} = the closet item's name. His picks shape the fixes, never the score: when two fixes give the same rounded gain (same class), the one whose fixed outfit reads as his earliest pick goes first. nextLevel: an entry with `style` is his first pick's path to 8, tried first and only for that pick; it shows when the card has no fix, the edit really lifts `part` and the edited outfit reads as that style, unless the Smaller step shown is in the same `group`. Entries without `style` keep the old gate (no fix and no Smaller step).",
- "version": "1.6.0",
+ "_doc": "Fix catalog for the PARTS engine (parts_proto.py v5; DECISIONS-LOG #208, picks #211, the style-crossing swaps #214). Not used by the v4 fix engine above (make_rubric_json.py leaves this block out of rubric.json). Reference: handoff/fixtures/parts_fixes.py; port: @kitted/core src/partsFixes.ts (data: src/partsFixesData.ts, generated from this block). Every candidate is an edit to a COPY of the reading, re-scored by the parts engine. A candidate becomes a fix only when the ROUNDED score rises; an edit that raises a part's half-point but not the rounded score becomes the 'Smaller step' line (no number). Classes rank the card: free (adjust) first, then closet, then own ('Free if you own one'), then tailor; within a class the larger gain first. group: one fix per group; a later class in the same group shows only when its gain is strictly larger. when: '<slot>.<field>_in' / '_not_in' test the first top / outerwear / bottom / footwear of the scored garments (a missing slot reads as null); not_warm, no_outer, occasion_in, quiet are flags. lounge: allowed at gym and home (everything else isn't). look: overrides of the second look after the edit. step: the Smaller-step subject, ending in its verb. The Smaller step prefers an edit in the same group as a shown fix (a smaller version of that move), then the largest raw gain. {name} = the edited garment's plain name, {item} = the closet item's name. His picks shape the fixes, never the score: when two fixes give the same rounded gain (same class), the one whose fixed outfit reads as his earliest pick goes first. nextLevel: an entry with `style` is his first pick's path to 8, tried first and only for that pick; it shows when the card has no fix, the edit really lifts `part` and the edited outfit reads as that style, unless the Smaller step shown is in the same `group`. Entries without `style` keep the old gate (no fix and no Smaller step). tucks (v1.7, #336): the slots a tuck candidate tucks (tuck_layer: a button-up worn open, never an overshirt, which is cut to be worn out like a light jacket; the score still credits one read tucked); a shown tuck hides any fix that swaps one of those pieces (a different kind, color, pattern or roominess) to raise a part the tuck raises, for no more gain than the tuck (a color swap stays). An `always` tip with `tuck` (a tuck tip by shirt type) also shows next to fixes when no tuck fix is shown and the Smaller step, if any, isn't a free one; `name` is the slot whose garment fills {name} (default the bottom).",
+ "version": "1.7.0",
  "classes": {
   "free": {
    "rank": 0,
@@ -126,7 +126,56 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    ],
    "look": {
     "peek": false
-   }
+   },
+   "tucks": [
+    "top"
+   ]
+  },
+  {
+   "id": "tuck_layer",
+   "class": "free",
+   "group": "tuck",
+   "effort": 1,
+   "copy": "Tuck in your {name}",
+   "detail": "",
+   "step": "A full tuck lifts",
+   "when": {
+    "outerwear.subcategory_in": [
+     "camp_collar_shirt",
+     "denim_shirt",
+     "dress_shirt",
+     "flannel_shirt",
+     "oxford_shirt"
+    ],
+    "outerwear.tucked_not_in": [
+     "full"
+    ]
+   },
+   "edits": [
+    {
+     "op": "set",
+     "slot": "top",
+     "fields": {
+      "tucked": "full",
+      "length": "na"
+     }
+    },
+    {
+     "op": "set",
+     "slot": "outerwear",
+     "fields": {
+      "tucked": "full",
+      "length": "na"
+     }
+    }
+   ],
+   "look": {
+    "peek": false
+   },
+   "tucks": [
+    "top",
+    "outerwear"
+   ]
   },
   {
    "id": "push_sleeves",
@@ -952,6 +1001,48 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
   }
  ],
  "nextLevel": [
+  {
+   "id": "tip_tuck_dress",
+   "always": true,
+   "tuck": true,
+   "group": "tuck",
+   "part": "proportions",
+   "name": "top",
+   "copy": "A dress shirt is cut to be tucked in. Tuck it in for a cleaner line.",
+   "when": {
+    "top.subcategory_in": [
+     "dress_shirt"
+    ],
+    "top.tucked_not_in": [
+     "full",
+     "half"
+    ]
+   }
+  },
+  {
+   "id": "tip_tuck_long",
+   "always": true,
+   "tuck": true,
+   "group": "tuck",
+   "part": "proportions",
+   "name": "top",
+   "copy": "Your {name} runs long untucked. Tuck it in for a cleaner line.",
+   "when": {
+    "top.subcategory_in": [
+     "knit_polo",
+     "oxford_shirt",
+     "polo"
+    ],
+    "top.tucked_not_in": [
+     "full",
+     "half"
+    ],
+    "top.length_in": [
+     "mid_fly",
+     "below_crotch"
+    ]
+   }
+  },
   {
    "id": "tip_cuff",
    "always": true,

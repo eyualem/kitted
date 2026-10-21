@@ -132,7 +132,7 @@ export function seasonLine(month: number): string | null {
   return seasonNeeds(month).layer === 'none' ? null : t('wx.line.season', { month: monthName(month) });
 }
 
-/** "Updated for your olive fleece.": the card re-planned after he corrected one of its pieces (09-ui-review §26, #364).
+/** "Updated for your olive fleece.": the card re-planned after he corrected one of its pieces (09-ui-review §26, #365).
  *  Only while the piece is still his; none for a removed or merged one, or when nothing changed. */
 export function updatedLine(outfit: Pick<OutfitRow, 'details'>, closet: readonly ClosetItemRow[]): string | null {
   const id = (outfit.details as { updatedFor?: string }).updatedFor;

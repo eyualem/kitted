@@ -1,12 +1,13 @@
 // Outfit counting at large closets (09-ui-review §23, P1–P3, #353): checks written before the speed-up. The new code
 // gives exactly the answers of a frozen copy of the old (src/testing/outfitsBefore.ts), on the demo closet and on a
 // 60-piece mixed one; Next best buy at 50 pieces is fast; and a changed piece is never scored from the cache.
-import { US_EASTERN } from '@kitted/core';
+import { US_EASTERN, type Styles } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import * as now from '@/features/closet/outfits';
+import * as gains from '@/features/finish/gains';
 import * as before from '@/testing/outfitsBefore';
 
 declare const require: (id: string) => unknown;
@@ -39,15 +40,20 @@ function mixed(base: readonly ClosetItemRow[], n: number): ClosetItemRow[] {
 }
 
 const OCC = ['everyday', 'date', 'interview', 'class'] as const;
+const TODAYS_12: Styles = [['smart_casual', 1]];
 
 function sameEverywhere(closet: ClosetItemRow[], checks: FitCheckRow[], styles: Awaited<ReturnType<typeof demo>>['styles']) {
   for (const occasion of OCC) {
     expect(now.buildOutfits({ closet, checks, styles, occasion })).toEqual(before.buildOutfits({ closet, checks, styles, occasion }));
   }
   expect(now.outfitCount(closet, checks, styles)).toBe(before.outfitCount(closet, checks, styles));
-  expect(now.nextBestBuy({ closet, checks, styles, marks: [] })).toEqual(before.nextBestBuy({ closet, checks, styles, marks: [] }));
-  for (const slot of ['top', 'bottom', 'shoes'] as const) {
-    expect(now.gainForSlot(closet, checks, styles, slot)).toBe(before.gainForSlot(closet, checks, styles, slot));
+  // The frozen copy offers today's 12; since #364 the candidates follow his looks, so Next best buy and the gains are
+  // compared on picks whose list is today's 12 (smart casual alone, and none).
+  for (const same of [TODAYS_12, null]) {
+    expect(gains.nextBestBuy({ closet, checks, styles: same, marks: [] })).toEqual(before.nextBestBuy({ closet, checks, styles: same, marks: [] }));
+    for (const slot of ['top', 'bottom', 'shoes'] as const) {
+      expect(gains.gainForSlot(closet, checks, same, slot)).toBe(before.gainForSlot(closet, checks, same, slot));
+    }
   }
   const layer = closet.find((c) => c.slot === 'outer');
   if (layer) {
@@ -79,12 +85,14 @@ test('P2 Next best buy at 50 pieces under 300 ms; a second count of the same clo
   const { closet, checks, styles } = await demo();
   // A fresh copy of the module: nothing remembered from the tests above, so the first numbers are cold.
   let fresh: typeof now = now;
+  let freshGains: typeof gains = gains;
   jest.isolateModules(() => {
     fresh = require('@/features/closet/outfits') as typeof now;
+    freshGains = require('@/features/finish/gains') as typeof gains;
   });
   const big = mixed(closet, 50);
   let t0 = Date.now();
-  fresh.nextBestBuy({ closet: big, checks, styles, marks: [] });
+  freshGains.nextBestBuy({ closet: big, checks, styles, marks: [] });
   const nextBuyMs = Date.now() - t0;
   t0 = Date.now();
   fresh.outfitCount(big, checks, styles);
@@ -99,7 +107,7 @@ test('P2 Next best buy at 50 pieces under 300 ms; a second count of the same clo
     fresh.outfitCount(c, checks, styles);
     const first = Date.now() - a;
     const b = Date.now();
-    fresh.nextBestBuy({ closet: c, checks, styles, marks: [] });
+    freshGains.nextBestBuy({ closet: c, checks, styles, marks: [] });
     timing.push(`${n} pieces: first count ${first} ms, Next best buy after it ${Date.now() - b} ms`);
   }
   console.log(timing.join('\n'));

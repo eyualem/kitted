@@ -5,7 +5,8 @@ import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import type { ClosetItemRow } from '@/data/types';
 import { checkSentence } from '@/features/ask/gate';
-import { ghostPiece, nextBestBuy, outfitCount } from '@/features/closet/outfits';
+import { outfitCount } from '@/features/closet/outfits';
+import { ghostPiece, nextBestBuy } from '@/features/finish/gains';
 import { ownership, STARTER } from '@/features/finish/starter';
 
 async function setup() {

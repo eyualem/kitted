@@ -173,7 +173,7 @@ export function createMorningService(deps: MorningDeps) {
   }
 
   /**
-   * Saves the card's outfit with each piece's fingerprint as planned (`basis`, 09-ui-review §26, #364). `o` is only for a
+   * Saves the card's outfit with each piece's fingerprint as planned (`basis`, 09-ui-review §26, #365). `o` is only for a
    * re-plan after he corrected a piece: the piece the "Updated for your …" line names, and the outfit first planned.
    */
   async function saveOutfit(
@@ -384,7 +384,7 @@ export function createMorningService(deps: MorningDeps) {
   }
 
   /**
-   * The card follows a piece he corrected (09-ui-review §26, #364). A piece on the card whose fingerprint changed (its
+   * The card follows a piece he corrected (09-ui-review §26, #365). A piece on the card whose fingerprint changed (its
    * reading, its sleeves, or it was removed or merged away) re-plans a card he hasn't touched, as it was first planned
    * (same occasion, style, weather, history and seed). A card he swapped or set keeps its outfit while it still works,
    * else it's re-planned without what he swapped away. Wear this, a checked card and Staying in are never changed (nor
@@ -472,7 +472,7 @@ const stable = (v: unknown): string =>
     x && typeof x === 'object' && !Array.isArray(x) ? Object.fromEntries(Object.keys(x).sort().map((k) => [k, (x as Record<string, unknown>)[k]])) : x);
 
 /**
- * What the picker read of a piece when the card planned it (09-ui-review §26, #364): its slot, its reading and its
+ * What the picker read of a piece when the card planned it (09-ui-review §26, #365): its slot, its reading and its
  * sleeves (the picker reads them, #359), or "gone" once it's removed or merged away. Its name, photos and measured
  * color aren't in it: background closet work changes those after every check.
  */

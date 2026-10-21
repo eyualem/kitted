@@ -198,6 +198,8 @@ export interface PartsTune {
   /** SHO-4, SHO-7, SHO-9: a shoe too heavy for the leg (chunky, basketball or running shoes under slim or skinny legs) earns
    *  neither "the shoes match" nor "the look's own shoe". */
   sw1_blocks_credit: boolean;
+  /** PRO-4 (#336): a button-up worn open as the one layer and read fully tucked sets the waist like a tucked top. */
+  pr1_tucked_layer: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -519,6 +521,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const WR_CLEAN = PS("WR_CLEAN"); // v13 CON-6: looks where a crisp tee is part of the look
   const SPORT_SNEAKERS = PS("SPORT_SNEAKERS"), BOOTS = PS("BOOTS"); // v14 SHO-4: the clean sneakers and the boots
   const SWEAT_TOPS = PS("SWEAT_TOPS"), SWEAT_BOTTOMS = PS("SWEAT_BOTTOMS"); // v14 LNG-9: a matched sweatsuit
+  const TUCKABLE_LAYERS = PS("TUCKABLE_LAYERS"); // v14 PRO-4 (#336): button-ups worn open
   /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print.
    *  v12 (cl1_scale): a graphic print only at a medium or large print size, or with a large logo. */
   const loudPrint = (g: Garment): boolean => {
@@ -795,17 +798,21 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const blocked = faults >= D.blockAt || (B.hem === "pooling" && !(truthy(t.ff7_loose) && LOOSE.has(leg))) || lounge;
     const full = FULL_LEG.has(leg);
     const rewards: [number, string, string][] = [];
-    if (!blocked && full && T !== null) {
-      const tuck = T.tucked === "full";
-      const short = SHORT_TOP_LENGTHS.has(nv(T.length));
-      const ribbedOk = !RIBBED.has(nv(T.subcategory)) || vol3(T) >= BOXY || (truthy(t.pr1_ribbed_loose) && LOOSE.has(leg));
-      if (O === null && earns(T) && (tuck || (short && ribbedOk))) {
+    // v14 (#336): a button-up worn open over a tee and tucked in sets the waist like a tucked top (the founder's pair)
+    const tuckedLayer = truthy(t.pr1_tucked_layer) && O !== null && o.outers.length === 1
+      && TUCKABLE_LAYERS.has(nv(O.subcategory)) && O.tucked === "full";
+    const T1 = tuckedLayer ? O : T, O1 = tuckedLayer ? null : O;
+    if (!blocked && full && T1 !== null) {
+      const tuck = T1.tucked === "full";
+      const short = SHORT_TOP_LENGTHS.has(nv(T1.length));
+      const ribbedOk = !RIBBED.has(nv(T1.subcategory)) || vol3(T1) >= BOXY || (truthy(t.pr1_ribbed_loose) && LOOSE.has(leg));
+      if (O1 === null && earns(T1) && (tuck || (short && ribbedOk))) {
         let pts = tuck || !o.mirror ? t.pr1 : t.pr1_mirror_short;
         if (t.pr1_loose !== null && t.pr1_loose !== undefined) { // v8: the leg sets the size, not the mirror
           pts = LOOSE.has(leg) ? t.pr1_loose : tuck || !o.mirror ? t.pr1_straight! : pyMin(t.pr1_straight!, t.pr1_mirror_short);
         }
         rewards.push([pts, "a tucked or short top over a full leg gives it a waist", "PR1_waist_break"]);
-      } else if (O === null && earns(T) && T.tucked === "half" && !RIBBED.has(nv(T.subcategory))) {
+      } else if (O1 === null && earns(T1) && T1.tucked === "half" && !RIBBED.has(nv(T1.subcategory))) {
         rewards.push([t.pr1b, "the front tuck gives it a waist", "PR1b_half_tuck"]);
       }
     }
@@ -823,7 +830,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
     // v4 (off in v1-v3): the workwear and outdoor shapes (PR5, PR6). Their layers are never PR2's short layers, so
     // one layer earns one shape credit. trail_shoe and track_jacket aren't values of the live v3 reading yet.
-    if (!blocked && full && O !== null && earns(O) && !truthy(sl.peek) && S !== null && earns(S)) {
+    if (!blocked && full && O !== null && !tuckedLayer && earns(O) && !truthy(sl.peek) && S !== null && earns(S)) {
       if (truthy(t.pr5) && PR5_LAYERS.has(oSub) && PR5_BOTTOMS.has(nv(B.subcategory)) && PR5_SHOES.has(sSub) && o.det.includes("workwear")) {
         rewards.push([t.pr5, `a ${rep(oSub)} over a sturdy leg, finished by boots: the workwear shape`, "PR5_workwear_shape"]);
       } else if (truthy(t.pr6) && PR6_LAYERS.has(oSub) && PR6_SHOES.has(sSub) && o.det.includes("outdoor")) {
@@ -834,7 +841,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       rewards.push([t.pr2, `a short ${rep(oSub)} over full legs: a clean, strong shape`, "PR2_short_layer"]);
     }
     // v8: PR2b, a layer read ending at the belt over a loose leg (91% the same on 2 runs); one layer, one shape credit
-    if (truthy(t.pr2b) && !blocked && LOOSE.has(leg) && O !== null && !oTailored && !SHORT_LAYERS_ALL.has(oSub)
+    if (truthy(t.pr2b) && !blocked && LOOSE.has(leg) && O !== null && !tuckedLayer && !oTailored && !SHORT_LAYERS_ALL.has(oSub)
         && SHORT_TOP_LENGTHS.has(nv(O.length)) && earns(O) && !truthy(sl.peek)
         && !rewards.some((x) => x[2] === "PR5_workwear_shape" || x[2] === "PR6_outdoor_shape")) {
       rewards.push([t.pr2b, `a short ${rep(or(oSub, "layer"))} over a loose leg: a clean, strong shape`, "PR2b_short_layer_read"]);

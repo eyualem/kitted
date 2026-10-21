@@ -1,4 +1,4 @@
-// The outfit card follows a piece he corrected (09-ui-review §26, #364): checks written before the code. A piece on
+// The outfit card follows a piece he corrected (09-ui-review §26, #365): checks written before the code. A piece on
 // today's card whose reading changed, or that was removed or merged away, re-plans a card he hasn't touched the next
 // time Stylist shows; a swapped or set card is kept while it still passes the outfit rules; a worn, checked,
 // staying-in or earlier card never changes. A changed outfit says "Updated for your {piece}." Nothing calls Google.

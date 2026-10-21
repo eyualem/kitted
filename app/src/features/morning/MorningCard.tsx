@@ -45,7 +45,7 @@ interface Model {
   checkUsed: boolean;
   permission: 'granted' | 'denied' | 'unknown';
   myStyles: StyleKey[];
-  /** "Updated for your olive fleece.": re-planned after he corrected one of its pieces (09-ui-review §26, #364). */
+  /** "Updated for your olive fleece.": re-planned after he corrected one of its pieces (09-ui-review §26, #365). */
   updated: string | null;
 }
 

@@ -75,8 +75,9 @@ export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
   },
   {
     question: 'What should I buy next?',
-    answer: "Get a navy polo next. It goes with both chinos, the dark jeans and every shoe you own, and it's a step up from a tee.",
-    card: { type: 'buy', kind: 'polo', shade: 'navy' },
+    // The demo profile picks smart casual and workwear, so its list has work boots (#364): the Closet's next best buy.
+    answer: 'Get brown work boots next. They go with your jeans and your overshirt, and workwear is one of your looks.',
+    card: { type: 'buy', kind: 'work boots', shade: 'brown' },
   },
   {
     question: 'Which shoes are my dressiest?',

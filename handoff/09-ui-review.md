@@ -442,7 +442,7 @@ Found on the iOS Simulator (iPhone 17 Pro Max, demo 182; first time the sheet ra
 - **N9 (S)** The sheet shows the first 6 outfits, then "Show {n} more" (the Outfits list's own words), which shows all 16 and becomes "Show fewer". 6 or fewer: no link.
 - **N10** `npm run check` green.
 
-### §15 results (Oct 17, #312): checked against N7–N10, none changed
+### §17 results (Oct 17, #312): checked against N7–N10, none changed
 On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared iPhone 17 Pro left alone), demo 182, light, dark and the largest text size; screenshots `screenshots/nextbuy-oct17/` (git-ignored).
 | Check | Result | How |
 |---|---|---|
@@ -451,7 +451,122 @@ On a second Simulator (iPhone 17 Pro Max, the founder's one-time OK; the shared 
 | N9 | Pass (S) | 6 outfits, "Show 10 more" shows all 16 (4 rows), then "Show fewer"; Got it below; at the largest size the title, number and line stack and the link reads |
 | N10 | Pass | `npm run check`'s typecheck, lint and 1053 app tests (core untouched) |
 | Found | | The card appears about a second after the outfit list on a cold load, so the list moves down once (`loadNextBuy` scores each Starter candidate). Not fixed: a reserved-height placeholder or computing it with the list is the follow-up if it bothers him. |
+
+## 15b. One "+N outfits" everywhere: pass/fail checks, set before building (Oct 16, #309)
+Found in §14: two counts live side by side. The Closet's Outfits and its next best buy count trios rated Put together (7.0+ at Everyday, the parts engine; layers never multiply; chat-only pieces never counted; #84.3, `closet/outfits.ts`). The chat's buy card and buy-next evidence, Starter essentials' "+1 fit" toast and move 3 of "Your first 3 moves" still use `fitsGain` (`finish/starter.ts`: core `rotation`, v4 `outfitValid`, no 7.0 bar, and a second piece of a kind he owns adds 0). On the demo closet the chat says navy polo +12 while Closet says dark straight jeans +16 (the old rule gives the straight jeans +0 because he owns slim dark jeans). The founder wants one honest number. Nothing about scoring changes.
+- **G1 (T)** every "+N" (the chat's buy card, the buy-next evidence lines, the Starter toast, move 3's detail, the Closet's next best buy, "Add shoes and you'd have n") equals the Closet's count with the piece minus without it, on the demo closet, for every Starter row he doesn't own.
+- **G2 (T)** with nothing he avoids, the chat's buy-next evidence lists the rows in the Closet's ranking (most outfits first, ties in Starter order), so its first row is the Closet's next best buy. On the demo closet: dark straight jeans, +16. (What he avoids, #303, may still drop a row from the chat's list: that's a filter, not a second count.)
+- **G3 (T)** move 3's pick at posting is the Closet's next best buy whenever a piece adds an outfit; when none does, it's the first missing Starter row with its price alone (as today).
+- **G4 (T)** a piece he only mentioned in chat never changes any of these numbers.
+- **G5 (T)** no import cycle: `closet/outfits.ts` and `finish/starter.ts` don't import each other (read from the source).
+- **G6 (T)** no fit-check score changes: nothing under `packages/kitted-core` or `features/fitcheck` changes, and the existing scoring and parity tests pass unchanged.
+- **G7 (T)** always a number, fast: the old 40-piece cap ("count not available") goes; on a 60-piece closet every Starter row's "+N" is counted in under a second in the test run.
+- **G8 (T)** the demo's "What should I buy next?" (screen 171) suggests the piece the Closet suggests, with the same "+N", and its words pass the sentence gate.
+- **G9** `npm run check` green; tests whose expected numbers came from the old rule are updated and named in #309.
+
+### §15b results (Oct 16, #309): checked against G1–G9, none changed
+| Check | Result | How |
+|---|---|---|
+| G1 | Pass (T) | `oneCount.test.ts`: for each Starter row the demo closet lacks (dark straight jeans, navy polo, grey quarter-zip), the chat card, the evidence line, move 3's detail, the toast and the next best buy all equal the Closet's count with it minus without it |
+| G2 | Pass (T) | the evidence now reads straight jeans +16, polo +11, quarter-zip +11 (was polo +12, quarter-zip +12, jeans +0) |
+| G3 | Pass (T) | move 3 picks the next best buy; an empty closet still gets the white tee with its price alone |
+| G4 | Pass (T) | two chat-only pieces change no number and no evidence line |
+| G5 | Pass (T) | the Starter-piece functions live in the new `finish/gains.ts`; `fitsGain` and the `rotation` import are gone from `starter.ts` |
+| G6 | Pass | the diff touches nothing under `packages/kitted-core` or `features/fitcheck`; the core suite (23 files) and every scoring test pass unchanged |
+| G7 | Pass (T) | 11 rows on a 60-piece closet in ~0.3 s (only the trios with the new piece are scored) |
+| G8 | Pass (T) | the demo answer and its card now name the dark straight jeans, +16, and pass the gate |
+| G9 | Pass | `npm run check`: 1050 app tests. Tests changed for the old rule's numbers: `askC3` R2, R3, R5 (#309) |
+| Not done | | Not looked at on the Simulator or the web preview (the Mac was low on memory and another session had the Simulator up); the screens only take the new number, no layout changed |
+
+**At the merge (Oct 21, PR #4):** G3 is gone with the moves (#343). On today's main (parts v14) G2's evidence reads straight jeans +16, polo +12, quarter-zip +12, and the polo card is +12; G1, G4, G5, G7 and G8 pass as written, on #353's cached count.
+
 ---
+
+## 16. Starter basics that follow his looks: plan and pass/fail checks, set before building (Oct 16, #364)
+The founder (Oct 16): a streetwear pick should see things like baggy jeans, a minimal pick pieces that fit minimal, and so on. Today Starter essentials is one list of 12 (`finish/starter.ts`, from `rubric/v3.md`), mostly smart casual: a streetwear pick is offered a polo, an oxford and loafers, which [STR-3] rules out. That list feeds Starter essentials (C5), the Closet's next best buy (§14), "Add shoes and you'd have n" (§13), the chat's buy card and buy-next evidence, and move 3 of "Your first 3 moves". **Status: built Oct 17 after the founder's OK on the lists, names, prices and the C5 line ("After the mockups, I agree with them. You may continue.", relayed by the session that started this one). Results below the checks.**
+
+**The plan**
+- **One catalog, ids never removed.** Today's s01–s12 stay exactly as they are (closet rows' `starterId`, the belt's kv mark `starter.marked`, the chat's buy cards and move 3's `buyId` store them; sync carries them). New pieces are s13–s38, appended. Any stored id always finds its row in the catalog, whichever list he sees.
+- **One ranked list of 12 per look**, from `rubric/v5-styles.md` (each look's signature and home pieces and its own example outfits) and `rubric/stylist-guide.md` §12–13. Every list has the same core: the white heavyweight tee, white leather sneakers and the belt. Smart casual keeps today's 12 unchanged (it was already a smart casual list). Draft lists, prices and sources: the table below.
+- **His picks blend in his order.** No picks, "Not sure" or "Something else": today's 12, today's order. One pick: that look's 12. Two picks: the core, then 6 rows from the first look's list and 3 from the second; three picks: 4, 3 and 2. A row already in, or one that the same piece would fill (his one pair of wide jeans would show as both "Baggy jeans" and "Dark straight jeans"), is skipped and the next one taken; any slot left is refilled from his picks in order, then today's list. Always 12 rows, so "{n} of 12" and the 12-slot bar don't change. Order: his first look's order first, so a tie in "+N" goes to his first pick.
+- **The "+N" stays the one count (#309).** The list only chooses which pieces are candidates; `starterGain` / `outfitGain` (the Closet's count with the piece minus without it) is unchanged, and picks never change a score (#211). A layer still adds no outfits (#84.3), so a look's jackets (the chore coat, the bomber, the shell) are listed but are never the next best buy or move 3; a fleece and a flannel are tops, so they can be.
+- **What it touches when built:** C5 lists `starterList(profile.styles)`; `ownership` runs over the catalog; `bestMissing`, `nextBestBuy` and `gainForSlot` (gains.ts), the chat's buy-next evidence (evidence.ts) and move 3's pick at posting (moves.ts `pickBuy`) choose from his list; `buyMove`, `AskCardView`, the toast and `toggleStarter` look ids up in the catalog; the chat's `starterFor` (a kind the model names) prefers his list, then the catalog. New copy goes to `en.ts` (the 26 names; the C5 line naming his looks).
+- **Changing his looks** in You → Style profile changes the list the next time it's drawn. Nothing is deleted: a piece he marked from a row no longer shown stays in his Closet (it's a closet piece), and if he picks that look again the row comes back marked. Move 3 keeps the piece it named when the card posted (its `buyId`), even if it's no longer in his list.
+- **One new line on C5 (outward-facing, his OK):** under the header, `Picked for your looks: streetwear and minimal.` (one look: `Picked for streetwear.`; no picks: no line).
+- **Known limits, said in the review:** outdoor has no path to 8 today (KD-7), and of the 18 outfits its own list makes only 2 read as outdoor (its shell and fleece are what make it outdoor, and a layer isn't part of a counted outfit); trail shoes aren't in the reading, so its shoe is "trail-style sneakers" (read as running shoes, which cost 2 on Shoes outside an outdoor outfit). Prep's knit and quarter-zip, worn as the one top, read smart casual. Vintage sport's track jacket isn't in the reading ([VSP-7]), so it isn't listed.
+
+**Draft lists (outward-facing; the founder's review; review page: https://claude.ai/artifact/5MnfBqHZ6HdPLbGYtvKjzv).** Most useful first; *new rows in italics*; the three core rows are in every list. Counts: the counted outfits (7.0+ at Everyday, the closet's hard rules) its own 12 make, and how many read as the look.
+
+| Look | The 12, in order | Outfits from its 12 |
+|---|---|---|
+| Streetwear | *Plain hoodie* · *Baggy or wide-leg jeans* · *Chunky sneakers* · *Black boxy tee* · *Cargo pants* · *Crewneck sweatshirt* · *Bomber jacket* · White heavyweight tee · White leather sneakers · *Flannel shirt* · *Puffer jacket* · Leather belt | 20 (20 read as streetwear) |
+| Minimal | Crewneck knit · *Wide-leg trousers* · *Loafers or Chelsea boots* · *Black boxy tee* · Chinos, straight or relaxed · White heavyweight tee · White leather sneakers · *Grey heavyweight tee* · *Wool overcoat* · Dark straight jeans · Overshirt or chore coat · Leather belt | 12 (8 read as minimal) |
+| Workwear | *Chore coat* · *Work boots* · Dark straight jeans · *Flannel shirt* · White heavyweight tee · *Denim jacket* · *Cargo pants* · *Suede chukka boots* · *Grey heavyweight tee* · Crewneck knit · White leather sneakers · Leather belt | 24 (12 read as workwear) |
+| Smart casual | White heavyweight tee · Polo or knit polo · Light-blue or white oxford shirt · Crewneck knit · Dark straight jeans · Chinos, straight or relaxed · Overshirt or chore coat · Casual jacket · White leather sneakers · Loafers or boots · Quarter-zip or plain hoodie · Leather belt | 18 (17 read as smart casual) |
+| Classic prep | Light-blue or white oxford shirt · Polo or knit polo · Chinos, straight or relaxed · Loafers or boots · *Cardigan* · Crewneck knit · *Rugby shirt* · Quarter-zip or plain hoodie · White heavyweight tee · Dark straight jeans · White leather sneakers · Leather belt | 24 (13 read as classic prep) |
+| Vintage sport | *Retro soccer jersey* · *Rugby shirt* · *Retro runners* · *Low-profile suede sneakers* · Dark straight jeans · *Light-wash straight jeans* · *Crewneck sweatshirt* · Chinos, straight or relaxed · White heavyweight tee · White leather sneakers · *Bomber jacket* · Leather belt | 36 (15 read as vintage sport) |
+| Outdoor | *Fleece* · *Shell jacket* · *Cargo pants* · *Trail-style sneakers* · White heavyweight tee · *Grey heavyweight tee* · *Flannel shirt* · Dark straight jeans · *Crewneck sweatshirt* · *Puffer jacket* · White leather sneakers · Leather belt | 18 (2 read as outdoor) |
+
+**The 26 new rows and their prices** (US list prices seen Oct 16, 2026; budget = the mass retailers, mid = the next step up; sources per piece in `market/starter-prices-2026.md`; snapshot-based prices are good to about ±10–15%; the app shows no brand):
+
+| Id | Row | Budget | Mid | In the lists of |
+|---|---|---|---|---|
+| s13 | Baggy or wide-leg jeans | $40–60 | $80–130 | Streetwear |
+| s14 | Black boxy tee | $15–25 | $45–65 | Streetwear, Minimal |
+| s15 | Plain hoodie | $25–50 | $90–150 | Streetwear |
+| s16 | Crewneck sweatshirt | $20–40 | $85–145 | Streetwear, Vintage sport, Outdoor |
+| s17 | Cargo pants | $35–55 | $65–120 | Streetwear, Workwear, Outdoor |
+| s18 | Chunky sneakers | $45–80 | $110–170 | Streetwear |
+| s19 | Bomber jacket | $40–80 | $140–220 | Streetwear, Vintage sport |
+| s20 | Puffer jacket | $45–90 | $130–240 | Streetwear, Outdoor |
+| s21 | Flannel shirt | $25–45 | $55–130 | Streetwear, Workwear, Outdoor |
+| s22 | Grey heavyweight tee | $15–25 | $45–65 | Minimal, Workwear, Outdoor |
+| s23 | Wide-leg trousers | $40–80 | $95–200 | Minimal |
+| s24 | Loafers or Chelsea boots | $40–90 | $150–250 | Minimal |
+| s25 | Wool overcoat | $70–150 | $240–450 | Minimal |
+| s26 | Chore coat | $45–80 | $110–190 | Workwear |
+| s27 | Work boots | $50–70 | $135–200 | Workwear |
+| s28 | Denim jacket | $40–75 | $95–130 | Workwear |
+| s29 | Suede chukka boots | $40–70 | $110–200 | Workwear |
+| s30 | Cardigan | $40–60 | $75–130 | Classic prep |
+| s31 | Rugby shirt | $35–50 | $95–140 | Classic prep, Vintage sport |
+| s32 | Retro soccer jersey | $20–40 | $85–120 | Vintage sport |
+| s33 | Retro runners | $40–70 | $90–150 | Vintage sport |
+| s34 | Low-profile suede sneakers | $40–70 | $75–130 | Vintage sport |
+| s35 | Light-wash straight jeans | $40–60 | $85–125 | Vintage sport |
+| s36 | Fleece | $30–50 | $65–170 | Outdoor |
+| s37 | Shell jacket | $35–80 | $100–190 | Outdoor |
+| s38 | Trail-style sneakers | $60–120 | $140–200 | Outdoor |
+
+Shaky prices, said in the review: the overcoat (widest spread), the three retro and trail sneakers (brand pages blocked; snapshots), the rugby shirt (one budget shop), and the fleece and trail-style sneakers (two kinds of product in the mid range). Today's white tee row ($15–20 / $35–60) is a little under what heavyweight tees list at now ($15–25 / $45–65); today's rows are left as they are.
+
+**Checks** (T = a test in `lookPacks.test.ts`; K1–K8 pass on the draft today, K9–K12 are `it.todo` until the build)
+- **K1 (T)** every look's list and every blend of 2 or 3 picks (252) is 12 different rows and includes the core.
+- **K2 (T)** no row in a look's list breaks that look's own "never with" rules for a plain outfit: [STR-3], [WRK-2]/[WRK-3], [VSP-2]/[VSP-3], [OUT-1]/[OUT-2], [MIN-1]–[MIN-3], [PRP-2], [SMC-2] (each rule as the pieces it names).
+- **K3 (T)** each look's anchor outfit (its own example in v5-styles) reads as the look, passes the closet's hard rules and is Put together; each of the look's own pieces is in an outfit from its list that reads as the look and counts; every wearable row is in at least one counted outfit from its list (no dead suggestion); every row's piece fills its own row.
+- **K4 (T)** no two rows in any list (each look, today's, every blend) can be filled by the same piece.
+- **K5 (T)** the blend: no picks / unknown keys → today's 12 in order; one pick → its list; old keys map (preppy, old money → classic prep, gorpcore → outdoor); the first pick gets its full share and leads; every row is from his picks or the core (today's list only refills); order matters; repeats dropped, at most 3.
+- **K6 (T)** stored ids stay valid: s01–s12 are today's rows, unchanged and first; new ids run s13 on, unique; every id a list can show is in the catalog.
+- **K7 (T)** the list never changes a score or a "+N": each anchor scores the same under every pick and none; on the demo closet every row's "+N" is the same whichever looks he picked.
+- **K8 (T)** the words: every new name and phrase passes the sentence gate (no brand, no shop); prices read `$a–b`, budget below mid.
+- **K9 (T, at build)** Starter essentials shows his list; "{n} of 12" and the bar unchanged; the new line names his looks.
+- **K10 (T, at build)** the next best buy, "Add shoes and you'd have n", the chat's buy-next evidence and move 3's pick choose only from his list; ties go to his first pick's rows.
+- **K11 (T, at build)** a stored id outside his list still works: move 3's `buyId`, an old chat buy card, a marked piece's `starterId`, a belt kv mark; `starterFor` prefers his list.
+- **K12 (T, at build)** changing his looks changes the list at once; a marked piece from a row no longer shown stays in Closet and comes back marked.
+- **K13 (S, at build)** web preview and, when the Mac has memory, the Simulator: C5 for a streetwear pick, a minimal + smart casual pick and no picks; light, dark, the largest text size.
+- **K14** `npm run check` green.
+
+### §16 results (Oct 17, #364): checked against K1–K14, none changed
+| Check | Result | How |
+|---|---|---|
+| K1–K8 | Pass (T) | `lookPacks.test.ts`, first on the draft (Oct 16), again after wiring |
+| K9–K12 | Pass (T) | `lookPacks.test.ts`: the line's words; "{n} of 12" counts only his rows; the screen draws `starterList`; the next buy, move 3 and the chat's evidence choose only his rows for each look; ties go to his first look; move 3's stored `buyId` (a quarter-zip) survives a switch to streetwear; old and new buy cards speak; `starterFor` finds his list's row first; a marked hoodie stays in Closet across a look change and comes back ticked |
+| K13 | Pass (S) | the iOS Simulator (iPhone 17 Pro), new demo screens 190–193 (`screenshots/starter-looks/`): streetwear (light, dark), minimal + smart casual (light, largest text), no picks, and Closet's next buy for streetwear ("Baggy dark jeans · +16") and for the demo's own picks ("Brown work boots · +18"); the 37-outfit count unchanged |
+| K14 | Pass | typecheck (app and core), lint, 755 core tests, 1127 app tests |
+| Changed, because the demo profile picks smart casual and workwear | | its list now has work boots, flannel and a denim jacket in place of the casual jacket, loafers and quarter-zip, so the demo's next best buy (screen 182, the chat's demo answer on 171, the buy-next evidence) is **brown work boots, +18** (was dark straight jeans, +16). Tests updated for that alone: `oneCount` G2 (s27 +18; ties in his list's order) and G8 (the demo answer, now "Get brown work boots next…"); `onboardingFinish` B1 counts today's 12 by id (`ownedCount` now takes the list he sees) |
+| Not done | | the web preview (no second web server while memory was low; the Simulator was the check) |
+
+**At the merge (Oct 21, PR #7; numbered #313 on its branch, now #364):** onto #343's optional step. The lists feed Closet's Next best buy, "Add shoes and you'd have n" and Kit's buy-next evidence and buy card (K10, K11 pass as restated). "What you already own" keeps its one list of 12 plain names (#343), so K9 now checks that, and the copper "Picked for …" line, its words, demo screens 190–192 and every move 3 check are dropped. Demo screen 193 stays. K13's Simulator pass was of the old Starter screen and wasn't redone.
 
 ## 17. Fix what a piece is: plan and pass/fail checks, set before building (Oct 16, #315)
 Founder (Oct 16, voice): sometimes the tile itself is wrong, "slim jeans as relaxed, relaxed as slim, a sweatshirt as a hoodie", so give him "a way to change what the tile represents, from a limited choice", with the drawing changing to match; "this has to get planned well because what I am saying right now might not go with the whole thing." **Plan only: nothing is built until he reviews it** (mockup `mockups/piece-edit.html`; DECISIONS-LOG #315). Numbered §17 and #315 because main took §15 and #311–312, and open PRs hold §15–16, #309 and #313. Global checks G1–G4 (§6) apply.
@@ -979,7 +1094,59 @@ Founder, Oct 17: "some kind of five-second timer with the whole circle thingy th
 - **L seen again** after the fix: dark, the largest text size, screen 12 scrolled up; the pill shows above "Ask Kit…".
 - `npm run check` green (1,370 app tests).
 
-## 26. The outfit card follows a piece he corrected (Oct 21, #364). Checks first, built
+## 24. Long-sleeve tees in the closet (Oct 19, #359). Checks first
+**What this is.** Founder, Oct 19: "closet does not detect full sleeve tees and does not have the option for them. it also does not have a graphic representation for them." Today the closet call already reads each top's `sleeve_length` (short · long · sleeveless) and the matcher uses it, but nothing he sees does: a long-sleeve tee is named "Grey tee", drawn with short sleeves, and "What it is" has no such kind.
+
+**Decided (Claude's call, no score moves):** a long-sleeve tee stays `tee` (or `graphic_tee`) in the reading, so the scoring read, the rules and every score are untouched (the schema has no long-sleeve kind, and adding one is a reading change that needs the founder and a steadiness test). The sleeves are part of the piece's look instead: `ClosetArt.sleeves`, from the closet call's `sleeve_length` under the drift guard (his pick wins), else from the scoring read's `sleeve_end` (a tee whose sleeves end at the wrist, above it or over the hand has long sleeves). Polos and jerseys follow the same rule; shirts, knits and jackets are drawn as before.
+
+**S · Seeing it**
+- S1 (T) `artOf` gives `sleeves: 'long'` for a tee whose sightings' closet call read `long`, and for a tee with no closet call whose `sleeve_end` is `at_wrist`, `above_wrist` or `covers_hand`; `'short'` from a `short` read; nothing when neither says. One sighting reading the other way doesn't flip it (the drift guard: 2 newer sightings must agree); his confirmed `sleeve_length` wins outright.
+- S2 (T) The name: "Grey long-sleeve tee", "Black long-sleeve graphic tee", "Navy long-sleeve polo"; a short-sleeve tee keeps "Grey tee". A name he typed never changes.
+- S3 (T) The drawing: a long-sleeve tee draws long sleeves (to the wrist) with a plain hemmed cuff (no rib), a crew neck and the tee's own length (no rib hem), so it differs from both a tee and a sweatshirt of the same color. A short-sleeve tee draws exactly as before (same SVG).
+- S4 (T) Pieces already in his closet get it at the next launch (`refreshColors` also re-derives a piece whose sleeves changed, then renames), with no score, sighting or photo touched.
+
+**K · "What it is" (§17)**
+- K1 (T) A top's Kind list has "Long-sleeve tee" in its first group, right after "Tee" (Flannel shirt moves to the front of More kinds, so the first group stays 8, all drawn differently).
+- K2 (T) A long-sleeve tee's Kind row says "Long-sleeve tee" and that option is the current one.
+- K3 (T) Picking "Long-sleeve tee" on a tee writes `subcategory: tee` and his confirmed `sleeve_length: long` (never the word `long_sleeve_tee` in the reading or the matcher's confirmed kind); the toast says "Changed to long-sleeve tee. Your scores stay the same."; the sleeve reads his photos gave that disagree are taught to the matcher (field aliases), so the next photo of it still finds it.
+- K4 (T) Picking "Tee" or "Graphic tee" on a long-sleeve tee sets the sleeves short; another kind leaves the sleeves alone. Undo puts every row back.
+- K5 (T) The option pictures: "Long-sleeve tee" draws long sleeves, "Tee" short.
+
+**M · The morning card**
+- M1 (T) On a hot day a long-sleeve tee no longer counts as a cool short-sleeve top (`ideas.ts`, its `hotShortSleeve` credit and "wrong for the weather"); a piece without the sleeve read is judged by its kind as before.
+
+**Not changed:** the scoring reading, `@kitted/core`'s rules and every score; the closet call's prompt; Python.
+
+### §24 results (Oct 19, #359): every check passes, and seen on the Simulator
+- **Tests:** `src/__tests__/longSleeveTee.test.ts`, 14 checks (S1–S4, K1–K5, M1 and a control) pass. Older tests changed only where the new field shows: the seed's grey tee's art now carries `sleeves: 'short'` (`seedLoader.test.ts`), "long-sleeve" is an allowed name word (`copyChecks.test.ts`), and the Kind lists (`pieceEdit.test.ts` X1). `npm run check` green: 1,393 app tests.
+- **Found on the way:** the demo photo p01a (a white tee under an open overshirt) was already read `sleeve_length: long` by the real closet call, and the photo agrees (the cuff shows at his wrist). It's now "White long-sleeve tee"; it used to be "White tee", drawn short.
+- **The drawing:** rendered from the app's own SVG, light and dark (`screenshots/long-sleeve-tee/drawings.png`, git-ignored): the long-sleeve tee has slimmer sleeves than a sweatshirt and a stitched hem where the sweatshirt has ribbed cuffs and hem; a short-sleeve tee draws byte for byte as before.
+- **Known limit:** a tee half hidden under a long-sleeve jacket can have the jacket's sleeves read as its own; the drift guard keeps one such read from flipping a piece already seen, and his pick in "What it is" settles it. Shirts, knits and jackets aren't named or drawn by the sleeve read (a short-sleeve oxford still draws long sleeves).
+- **Seen on the Simulator after the merge (Oct 19):** demo screen 214 (empty Closet), a fit check with the sample photo p01b through the stand-in camera, light, then dark at the largest text size. The short-sleeve white tee stays "White tee", drawn as before. Its page → Kind shows "Long-sleeve tee" second, drawn apart from Sweater and Sweatshirt; a pick turns the page title, the name and the drawing into "White long-sleeve tee" with long sleeves, Kind reads "Long-sleeve tee", and the toast "Changed to long-sleeve tee. Your scores stay the same." has the Undo ring (at the largest size it stacks, and the option's label wraps at its hyphen: "Long- / sleeve tee"). Kind → Tee makes it "White tee" again; Undo on that puts the long sleeves back. The Pattern sheet draws all four options with long sleeves. Not seen on screen: a photo the closet call reads as long-sleeved (p01a is only a re-check in the demos), covered by S1's test on the same reading.
+
+## 25. More kinds in "What it is" (Oct 17, #361; merged onto §24 on Oct 19)
+**The founder:** "the full sleeve shirt is not included as an option. Half sleeve button-ups are not included … just add more options like this. For clothes."
+**What was missing:** the Kind sheet offered only the photo reader's own kinds. A short-sleeve button-up was only "Camp shirt", under More kinds and drawn with long sleeves; a plain long-sleeve button-up was only "Oxford" or "Dress shirt". (The long-sleeve tee is §24's, #359: a tee with long sleeves, read from his photos too.)
+**The design (code `app/src/features/closet/kinds.ts`):** six closet-only kinds, each kept as the reading kind it scores, matches and builds outfits as, and drawn and named as itself. Stored as the piece's `profile.kindVariant`, mirrored into `art.kind`. The photo reader's list is unchanged, so no reading, score or saved check moves.
+
+| Shows as | Scores as | Where |
+|---|---|---|
+| Button-up shirt | oxford | tops, first group (Oxford moves to More kinds) |
+| Short-sleeve shirt | camp shirt | tops, first group |
+| Henley | tee | tops, More kinds |
+| Turtleneck | sweater | tops, More kinds |
+| Zip hoodie | hoodie | layers, first group; tops, More kinds |
+| Jean shorts | shorts (denim washes offered) | bottoms, first group |
+
+- The tops' first group is now 9 (3 rows of 3): Tee · Long-sleeve tee · Graphic tee · Polo · Button-up shirt · Short-sleeve shirt · Sweater · Sweatshirt · Hoodie. Flannel and Oxford sit in More kinds (a piece that is one still shows it in the first group, as before). §24's K1 now expects 9.
+- Button-up shirt and Short-sleeve shirt confirm their sleeves when picked, through §24's sleeve path (`confirmed.sleeve_length`, with the reads his photos gave taught as aliases). A henley takes the sleeves his photos show, else long; a turtleneck is drawn long; a camp shirt is drawn short (it drew long, a bug).
+- **Merging with §24 (Oct 19):** both built a long-sleeve tee the same day. §24's is kept (read from his photos, `sleeves.ts`); this section's own long-sleeve tee was dropped, and its drawing code generalized §24's: `TopFlat.sleeves` takes short, long or sleeveless on any top, and §24's slimmer stitched-hem sleeve stays for long-sleeve tees and polos.
+- **Not done:** the reader never names these six kinds by itself (that needs a reading change and a steadiness test); no new shoe kinds.
+
+**Checks K1–K11 (`app/src/__tests__/pieceEdit.test.ts`, "X15 more kinds"), all pass after the merge:** K1 each new kind is offered in its slot in plain words, never a brand · K2 picking Long-sleeve tee writes a tee with confirmed long sleeves ("Grey long-sleeve tee"), drawn as previewed · K3 scores, readings and sightings never move; Outfits count each as the kind it scores as · K4 picking Tee again sets short sleeves and draws exactly as before · K5 long and short button-ups get the right reading kind and different drawings ("Light-blue short-sleeve shirt") · K6 camp shirts draw short sleeves; henley buttons (with his photos' sleeves), turtleneck collar, zip hoodie zip · K7 every top type drawn with its usual sleeves is byte-identical to before (light, dark) · K8 jean shorts keep the wash ("Dark jean shorts"), draw jean stitching, no Leg row; plain Shorts moves dark denim to navy · K9 a later photo of the piece keeps its kind, name and drawing · K10 a sleeve-named kind confirms its sleeves, another leaves them · K11 Undo puts it all back. `npm run check` green.
+**Seen:** every Kind option's drawing rendered from the app's own drawing code in light and dark before the merge (`screenshots/more-kinds/kinds.html`, git-ignored). Not seen on the Simulator.
+
+## 26. The outfit card follows a piece he corrected (Oct 21, #365). Checks first, built
 
 **The founder (Oct 21, 1:24 am):** today's evening card said "Grey fleece"; he changed the fleece's color to olive in Closet → "What it is". "Can we refresh the recommendation cards… make it update on its own… plan it out and plan out tests for it beforehand."
 

@@ -12,7 +12,8 @@ import {
   type FinishCheck, type FinishState,
 } from '@/features/finish/sequence';
 import { createFinishService, FINISH_KEY, getFinish, getStarterMarks, type FinishDeps } from '@/features/finish/service';
-import { bestMissing, fitsGain, keepsRow, markedPiece, optionName, ownedCount, ownership, STARTER } from '@/features/finish/starter';
+import { bestMissing, starterGain } from '@/features/finish/gains';
+import { keepsRow, markedPiece, optionName, ownedCount, ownership, STARTER } from '@/features/finish/starter';
 import { pickStarter, removeStarter, toggleMarkOnly } from '@/features/finish/starterActions';
 import { displayHex } from '@kitted/core';
 import { ctaTitle, finePrint, paywallPerks, paywallTitle, planDetail, plansReminder, todayCard } from '@/features/paywall/content';
@@ -459,12 +460,12 @@ describe('B1 · the list\'s rows', () => {
     expect(own.s01).toMatchObject({ owned: true, how: 'closet' });
     expect(own.s05).toEqual({ owned: false }); // a photographed slim jean still doesn't fill the row (O10: fills unchanged)
     expect(own.s10).toMatchObject({ owned: true, how: 'closet' });
-    expect(ownedCount(own)).toBe(2);
+    expect(ownedCount(own, STARTER.map((e) => e.id))).toBe(2); // of today's 12 (look rows are in the catalog since #364)
     expect(ownership([{ ...closet[0]!, isDeleted: true }], []).s01).toEqual({ owned: false });
     // +N: adding the third slot makes outfits; nothing to pair with makes none.
     const two = [piece('T', 'top', 'tee', 'white'), piece('B', 'bottom', 'chinos', 'khaki_beige')];
-    expect(fitsGain(two, null, STARTER[8]!.pick!.garment, 'shoes')).toBeGreaterThan(0);
-    expect(fitsGain([], null, STARTER[0]!.pick!.garment, 'top')).toBe(0);
+    expect(starterGain(two, null, STARTER[8]!)).toBeGreaterThan(0);
+    expect(starterGain([], null, STARTER[0]!)).toBe(0);
     expect(bestMissing(two, null, [])).not.toBeNull();
   });
 });
