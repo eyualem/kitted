@@ -34,10 +34,21 @@ export interface NwsPeriod {
 /** Live weather carries its source, so the card can label it (sample weather has none). */
 /** `nowHour` / `highHour` / `lateHour`: the local hours those readings are for, so the card's words follow the clock
  *  (#338: the evening said "at 8" at 10 pm). */
-export type SourcedWeather = DayWeather & { source?: 'nws'; nowHour?: number; highHour?: number; lateHour?: number };
+export type SourcedWeather = DayWeather & { source?: 'nws' | 'weatherkit'; nowHour?: number; highHour?: number; lateHour?: number };
 
 export function isNwsWeather(w: unknown): boolean {
   return !!w && typeof w === 'object' && (w as { source?: unknown }).source === 'nws';
+}
+
+/** Real weather from either live source (NWS, or Apple WeatherKit once the paid-team switch is on, #366). */
+export function isLiveWeather(w: unknown): boolean {
+  const s = !!w && typeof w === 'object' ? (w as { source?: unknown }).source : undefined;
+  return s === 'nws' || s === 'weatherkit';
+}
+
+/** Apple WeatherKit's data (its attribution must show with it). */
+export function isWeatherKitWeather(w: unknown): boolean {
+  return !!w && typeof w === 'object' && (w as { source?: unknown }).source === 'weatherkit';
 }
 
 // ---------------------------------------------------------------- rounding

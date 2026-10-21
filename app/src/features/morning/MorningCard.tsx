@@ -19,7 +19,8 @@ import { quota } from '@/features/fitcheck/session';
 import { OutfitTiles } from '@/features/stylist/cards/OutfitTiles';
 import { showToast } from '@/features/toast/toast';
 import { setStylistAction } from '@/router/stylistAction';
-import { isNwsWeather, weatherSource } from '@/services/weather';
+import { isLiveWeather, isWeatherKitWeather, weatherSource } from '@/services/weather';
+import { weatherKitLegalUrl } from '../../../modules/kitted-location';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
@@ -288,33 +289,60 @@ function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: r
 }
 
 /** One weather line for the hour he reads it (#338): "☂ 52° at 8 pm · 47° by midnight · rain likely", and "Sample" at
- *  the end on sample weather (never passed off as real). Live weather is the National Weather Service's (wx.nws in
- *  the a11y label). */
+ *  the end on sample weather (never passed off as real). Live weather names its source in the a11y label: the National
+ *  Weather Service, or Apple Weather, whose mark and "Data sources" link show under the line (WeatherKit's terms; 02
+ *  "S1d" item 7; #366, only while the paid-team switch is on). */
 function WeatherLine({ w }: { w: CardWeather }) {
   const { fontScale } = useTheme();
   const line = weatherLine(w, localParts(sessionClock.nowMs(), sessionClock.offset).hh);
-  const sample = !isNwsWeather(w);
+  const sample = !isLiveWeather(w);
+  const apple = isWeatherKitWeather(w);
   return (
-    <View
-      accessible
-      accessibilityLabel={`${line}. ${sample ? t('wx.card.sample.a11y') : t('wx.nws')}`}
-      style={{ flexDirection: 'row', alignItems: 'flex-start', gap: space.xs }}
-    >
-      {/* On the first line, growing with the text (at the largest size a fixed 14 pt icon floated mid-paragraph). */}
-      <View style={{ paddingTop: 2 * Math.min(fontScale, 2) }}>
-        <Icon name={weatherSymbol(w) as never} size={14} color="ink2" scalesWithText />
+    <View style={{ gap: space.xs }}>
+      <View
+        accessible
+        accessibilityLabel={`${line}. ${sample ? t('wx.card.sample.a11y') : apple ? t('wx.apple') : t('wx.nws')}`}
+        style={{ flexDirection: 'row', alignItems: 'flex-start', gap: space.xs }}
+      >
+        {/* On the first line, growing with the text (at the largest size a fixed 14 pt icon floated mid-paragraph). */}
+        <View style={{ paddingTop: 2 * Math.min(fontScale, 2) }}>
+          <Icon name={weatherSymbol(w) as never} size={14} color="ink2" scalesWithText />
+        </View>
+        <KText variant="footnote" color="ink2" style={{ flexShrink: 1, fontVariant: ['tabular-nums'] }}>
+          {line}
+          {sample ? (
+            <KText variant="footnote" color="ink3">
+              {`  ${t('wx.card.sample')}`}
+            </KText>
+          ) : null}
+        </KText>
       </View>
-      <KText variant="footnote" color="ink2" style={{ flexShrink: 1, fontVariant: ['tabular-nums'] }}>
-        {line}
-        {sample ? (
-          <KText variant="footnote" color="ink3">
-            {`  ${t('wx.card.sample')}`}
-          </KText>
-        ) : null}
-      </KText>
+      {apple ? <AppleWeatherMark /> : null}
     </View>
   );
 }
+
+/** Apple's Weather mark and the link to its legal attribution page (the page WeatherKit names, else Apple's own). */
+function AppleWeatherMark() {
+  const open = async () => {
+    const url = (await weatherKitLegalUrl()) ?? APPLE_WEATHER_LEGAL;
+    void Linking.openURL(url);
+  };
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s, flexWrap: 'wrap' }}>
+      <View accessible accessibilityLabel={t('wx.apple')} style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+        <Icon name={'apple.logo' as never} size={12} color="ink3" scalesWithText />
+        <KText variant="caption" color="ink3">
+          {t('wx.attribution')}
+        </KText>
+      </View>
+      <TextLink title={t('wx.sources')} color="ink2" compact onPress={() => void open()} />
+    </View>
+  );
+}
+
+/** WeatherKit's legal attribution page, when the service doesn't hand one back. */
+const APPLE_WEATHER_LEGAL = 'https://weatherkit.apple.com/legal-attribution.html';
 
 function LocationAsk({ onAllow }: { onAllow: () => void }) {
   const { colors } = useTheme();
