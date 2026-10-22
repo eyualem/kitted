@@ -8,6 +8,7 @@ import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
 import { screenScenario, type ScreenScenario } from './scenarios';
 import { prepareAccountDemo } from '@/features/account/demo';
+import { prepareAboutYouDemo } from '@/features/aboutYou/demo';
 import { pauseFinishDemo, prepareFinishDemo } from '@/features/finish/demo';
 import { store } from '@/data/db';
 
@@ -52,6 +53,8 @@ async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
   await prepareAccountDemo(store, scenario, sessionClock.nowMs());
   // The end of onboarding's screens (#291): on with their scripted store and answers, off everywhere else.
   await prepareFinishDemo(store, scenario, sessionClock.nowMs());
+  // Kit's "About you" card (#369): posted in its state on screens 240–244.
+  await prepareAboutYouDemo(store, scenario, sessionClock.nowMs());
   setDemoState({
     screen: n,
     ...(overrides.theme !== undefined ? { theme: overrides.theme } : {}),

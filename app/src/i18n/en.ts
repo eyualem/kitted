@@ -953,16 +953,19 @@ const addedInBuild = {
   // (A2), bringing back his fits (A4), which fits to keep (A5), the save offer (A3), You's Account rows and the
   // onboarding fixes from the UI review. Outward-facing: on the founder's skim list.
   'onb.welcome.haveAccount': 'I already have an account',
-  // "so the advice fits your frame" read as talk about his body (09 UI review): the advice fits him, not his frame.
-  'onb.basics.replyTwo': '{style1} with some {style2}. Good mix. Now a few basics, so the advice fits you.',
-  'onb.basics.replyOne': '{style1}. Good pick. Now a few basics, so the advice fits you.',
-  'onb.basics.replyNone': "No problem. I'll learn your style from your checks. Now a few basics, so the advice fits you.",
+  // Since #369 O3 asks only the birth year (10-onboarding.md §10); height, build and fit come later, from Kit's
+  // "About you" card. Outward-facing: on the founder's skim list.
+  'onb.basics.replyTwo': '{style1} with some {style2}. Good mix. One more thing: your birth year.',
+  'onb.basics.replyOne': '{style1}. Good pick. One more thing: your birth year.',
+  'onb.basics.replyNone': "No problem. I'll learn your style from your checks. One more thing: your birth year.",
+  'onb.basics.cta': 'Continue',
+  'onb.basics.echoYear': 'Born in {year}',
   'onb.example.whyHide': 'Hide the math',
   'onb.example.time': 'Example',
   'onb.example.note': 'A real photo, scored by the same code as yours. Nothing was sent.',
   'onb.example.a11y': 'Example fit check. {occasion}. Score {score} out of 10, {word}. {summary}',
   'onb.basics.yearHint': 'Pick your birth year to go on.',
-  'onb.basics.never': 'None of this changes your score.',
+  'onb.basics.never': 'Kitted is for 18 and up. It never changes your score.',
   'onb.basics.heightClear': 'Clear',
   'onb.basics.heightClear.a11y': 'Clear height',
   'onb.consent.footerPath': 'You can turn this off anytime in You → Settings → Privacy & data.',
@@ -1027,6 +1030,19 @@ const addedInBuild = {
   'acct.choose.confirmTitle': 'Delete the fits on this iPhone?',
   'acct.choose.confirmBody': "The {local} fits that aren't in your account are deleted from this iPhone. It can't be undone.",
   'acct.choose.confirmYes': 'Delete them',
+  // Kit's "About you" card and sheet (#369, 10-onboarding.md §10.1): height, build and fit, asked after the first
+  // score. Outward-facing: on the founder's skim list.
+  'about.tag': 'Optional',
+  'about.tagRight': '10 seconds',
+  'about.title': 'Fit advice that fits you',
+  'about.body': "Tell me your height and how you like clothes to fit, and I'll size my suggestions to you. None of it changes a score.",
+  'about.bodyAnswer': 'That answer would fit you better with your height and how you like clothes to fit. None of it changes a score.',
+  'about.add': 'Add them',
+  'about.notNow': 'Not now',
+  'about.saved': 'Saved. Change them any time in You.',
+  'about.declined': "No problem. They're in You → Style profile whenever you want.",
+  'about.a11y': '{title}. {body}',
+  'about.sheet.title': 'About you',
   'acct.offer.tag': 'Your account',
   'acct.offer.tagRight': 'Optional',
   'acct.offer.title': 'Keep your fits',

@@ -8,6 +8,7 @@ import { fitCheck } from '@/features/fitcheck/session';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { finish } from '@/features/finish/session';
+import { aboutYou } from '@/features/aboutYou/session';
 import { createOfferService } from './offerService';
 
 /** After a check changes, wait this long: the card never lands on top of a score reveal. */
@@ -18,7 +19,8 @@ export const accountOffer = createOfferService({
   now: () => sessionClock.nowMs(),
   ids: newId,
   busy: () => fitCheck.getState().kind !== 'idle',
-  holds: () => finish.holdsOffer(),
+  // One ask per visit (10-onboarding.md §10.2): the sequence goes first, and a visit where Kit asked "About you" waits.
+  holds: async () => (await finish.holdsOffer()) || (await aboutYou.postedThisVisit()),
 });
 
 export function useAccountOffer(): void {

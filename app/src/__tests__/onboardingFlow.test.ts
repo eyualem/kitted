@@ -32,10 +32,10 @@ describe('onboarding basics (02 D3)', () => {
   it('echoes the looks and replies with the template', () => {
     expect(looksEcho([])).toBe('Not sure yet');
     expect(looksEcho(['streetwear', 'workwear'])).toBe('Streetwear · Workwear');
-    expect(looksReply(['smart_casual', 'workwear'])).toBe('Smart casual with some workwear. Good mix. Now a few basics, so the advice fits you.');
+    expect(looksReply(['smart_casual', 'workwear'])).toBe('Smart casual with some workwear. Good mix. One more thing: your birth year.');
     expect(looksReply(['minimalist'])).toMatch(/^Minimal\. Good pick\./);
-    expect(basicsEcho({ heightIn: null, build: 'average', fit: 'regular', birthYear: 2005 })).toBe('Average · Regular · 2005');
-    expect(basicsEcho({ heightIn: 70, build: 'slim', fit: 'relaxed', birthYear: 2005 })).toBe('5′ 10″ · Slim · Relaxed · 2005');
+    // Since #369 O3 asks only the year, so Consent echoes it alone.
+    expect(basicsEcho({ heightIn: null, build: 'average', fit: 'regular', birthYear: 2005 })).toBe('Born in 2005');
   });
 
   // #276: build and fit start blank (a preselected "Average · Regular" was saved as an answer he never gave), and the
@@ -43,8 +43,7 @@ describe('onboarding basics (02 D3)', () => {
   it('build and fit start blank and stay out of the echo until he taps one', () => {
     expect([EMPTY_BASICS.build, EMPTY_BASICS.fit, parseBasics(null).build, parseBasics(null).fit]).toEqual([null, null, null, null]);
     expect(parseBasics(JSON.stringify({ build: 'average', fit: 'nonsense', birthYear: 2005 }))).toMatchObject({ build: 'average', fit: null });
-    expect(basicsEcho({ heightIn: null, build: null, fit: null, birthYear: 2005 })).toBe('2005');
-    expect(basicsEcho({ heightIn: null, build: 'slim', fit: null, birthYear: 2005 })).toBe('Slim · 2005');
+    expect(basicsEcho({ heightIn: null, build: null, fit: null, birthYear: 2005 })).toBe('Born in 2005');
     expect(birthYearAnchor(2026)).toBe(2004);
     expect(birthYears(2026)).toContain(birthYearAnchor(2026));
   });

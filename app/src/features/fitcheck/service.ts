@@ -15,7 +15,7 @@ import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
 import {
   normStyleKey, type ChatMessage, type CheckDetails, type FitCheckRow, type GoingForSource, type GoingForState, type OccasionKey, type ReadingRow, type ReadingSourceKind,
-  type StoredSecondLook, type StyleKey, type TapState,
+  type ProfileRow, type StoredSecondLook, type StyleKey, type TapState,
 } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
@@ -164,6 +164,12 @@ type CheckCtx = { checkId: string | null; abandoned: boolean };
 
 /** What a row is scored with: its occasion and one style, his boldness (#61), and its stored second look (#199). The
  *  one builder for both the card (evaluateCheck) and the one quick tap (askQuestion), so the tap's scores are the card's. */
+/** The only part of the profile a score may see: his picks and boldness. Height, build and fit never reach the scoring
+ *  (10-onboarding.md §10.3, #369; aboutYouCard.test.ts UN1). */
+export function scoringProfile(p: Pick<ProfileRow, 'styles' | 'boldness'> | null | undefined): Profile {
+  return { styles: p?.styles ?? [], boldness: p?.boldness ?? null };
+}
+
 export function lensInput(occasion: OccasionKey, style: StyleKey | null, p: Profile, look?: StoredSecondLook | null) {
   return { occasion, styles: stylesFor(style, p.styles), boldness: p.boldness, secondLook: lookInput(look) };
 }
@@ -205,10 +211,7 @@ export function createFitCheckService(deps: ServiceDeps) {
   /** "Which one is you?" questions he just answered (a double tap starts one check). */
   const picking = new Set<string>();
 
-  const profile = async (): Promise<Profile> => {
-    const p = await store.profile.get('me');
-    return { styles: p?.styles ?? [], boldness: p?.boldness ?? null };
-  };
+  const profile = async (): Promise<Profile> => scoringProfile(await store.profile.get('me'));
 
   /** The closet a check's fixes may use: not undone or merged away, and not the pieces this photo (or, for a
    *  re-check, its first photo) added. So the closet written after a score can never change that score. */

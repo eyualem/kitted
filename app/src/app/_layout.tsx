@@ -116,6 +116,7 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/fact/[id]" options={sheet([0.5])} />
         {/* 02 O3w asked for a 320 pt wheel; it's a list of years now (no new package), so it opens taller. */}
         <Stack.Screen name="sheets/birth-year" options={sheet([0.6, 1])} />
+        <Stack.Screen name="sheets/about-you" options={sheet([0.7, 1])} />
         <Stack.Screen name="sheets/consent" options={sheet([1])} />
         {/* S26's "See an example" (09-ui-review §20.8 G23): O1e as a sheet once onboarding is done. */}
         <Stack.Screen name="sheets/example" options={sheet([1])} />

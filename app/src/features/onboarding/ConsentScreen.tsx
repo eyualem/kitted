@@ -17,10 +17,9 @@ import { t, type StringKey } from '@/i18n/en';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { setOnboarded } from '@/state/appGate';
-import { basicsEcho, BASICS_KEY, EMPTY_BASICS, inchesToCm, loadDraft, LOOKS_KEY, type BasicsDraft } from './basics';
+import { answersFromDraft, basicsEcho, BASICS_KEY, EMPTY_BASICS, loadDraft, LOOKS_KEY, type BasicsDraft } from './basics';
 import { dropAfterConsent, resumeAfterConsent } from '@/features/camera/startCheck';
 import { completeOnboarding, giveConsent } from './complete';
-import { picksToStyles } from './looks';
 import { OnboardingNav } from './OnboardingNav';
 
 type Row = { icon: string; title: StringKey; body?: StringKey; bullets?: StringKey[] };
@@ -75,16 +74,7 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onb
       if (consent && after === 'camera') setTimeout(() => router.push('/camera'), 350);
       return;
     }
-    const d = await loadDraft(store);
-    await completeOnboarding(store, {
-      styles: picksToStyles(d.looks),
-      heightCm: d.basics.heightIn !== null ? inchesToCm(d.basics.heightIn) : null,
-      // '' = not given (#276): the You card and the chat leave it out.
-      build: d.basics.build ?? '',
-      fitPreference: d.basics.fit ?? '',
-      birthYear: d.basics.birthYear,
-      consent,
-    }, now, newId);
+    await completeOnboarding(store, answersFromDraft(await loadDraft(store), consent), now, newId);
     // His own words from "Something else?" stay in kv for later; the step drafts are done.
     await store.deleteKv(LOOKS_KEY);
     await store.deleteKv(BASICS_KEY);

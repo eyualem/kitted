@@ -117,6 +117,9 @@ export const KV_LOCAL: readonly string[] = [
   'closet.fitLine', 'closet.fitAnswers',
   // The tier the server last answered with (13-server.md §8, #328): the server's own fact, read back on every answer.
   'server.tier',
+  // Kit's "About you" ask on this phone (#369, 10-onboarding.md §10): a nudge, like closet.fitSkip; the answers
+  // themselves live in the profile.
+  'aboutYou.offer',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
 // idea.touched.<id>: he changed that day's card on this phone, so a fresher forecast keeps his outfit (#338); a day old

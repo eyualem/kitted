@@ -11,11 +11,10 @@ import { Chip, ChipFlow, KCard, KText, MonoLabel, RowDivider, opacity, space, us
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { styleLabel } from '@/features/morning/copy';
-import { BUILDS, buildLabel, FITS, fitLabel, heightSpoken, stepHeight, type Build, type FitPref } from '@/features/onboarding/basics';
 import { LOOKS, MAX_PICKS, togglePick } from '@/features/onboarding/looks';
-import { Segmented } from '@/features/onboarding/Segmented';
 import { NumberedPill } from '@/features/you/NumberedPill';
-import { BUDGETS, budgetLabel, draftOf, heightText, isDirty, saveDraft, type ProfileDraft } from '@/features/you/profile';
+import { BasicsFields, Row } from '@/features/you/BasicsFields';
+import { BUDGETS, budgetLabel, draftOf, isDirty, saveDraft, type ProfileDraft } from '@/features/you/profile';
 import { t } from '@/i18n/en';
 
 export default function StyleProfileScreen() {
@@ -65,21 +64,7 @@ export default function StyleProfileScreen() {
           <>
             <Section title={t('profile.basics')}>
               <KCard>
-                <Row label={t('onb.basics.height')}>
-                  <HeightStepper
-                    value={draft.heightIn !== null ? heightText(draft.heightIn, units) : null}
-                    spoken={draft.heightIn !== null ? (units === 'metric' ? heightText(draft.heightIn, units) : heightSpoken(draft.heightIn)) : t('onb.basics.heightAdd')}
-                    onStep={(d) => update({ heightIn: stepHeight(draft.heightIn, d) })}
-                  />
-                </Row>
-                <RowDivider inset={space.rowX} />
-                <Field label={t('onb.basics.build')}>
-                  <Segmented<Build> label={t('onb.basics.build')} value={draft.build} onChange={(v) => update({ build: v })} options={BUILDS.map((v) => ({ value: v, label: buildLabel(v) }))} />
-                </Field>
-                <RowDivider inset={space.rowX} />
-                <Field label={t('onb.basics.fit')}>
-                  <Segmented<FitPref> label={t('onb.basics.fit')} value={draft.fit} onChange={(v) => update({ fit: v })} options={FITS.map((v) => ({ value: v, label: fitLabel(v) }))} />
-                </Field>
+                <BasicsFields value={draft} units={units} onChange={update} />
                 <RowDivider inset={space.rowX} />
                 <Row label={t('onb.basics.birthYear')}>
                   <KText variant="callout" color="ink2" tabular>
@@ -176,69 +161,5 @@ function Footer({ children }: { children: string }) {
     <KText variant="footnote" color="ink3" style={{ paddingHorizontal: space.xs }}>
       {children}
     </KText>
-  );
-}
-
-/** A 52 pt row: label left, control right (stacked at accessibility sizes). */
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  const { isAccessibilitySize } = useTheme();
-  return (
-    <View
-      style={[
-        { minHeight: 52, paddingHorizontal: space.rowX, paddingVertical: space.s },
-        isAccessibilitySize ? { gap: space.xs } : { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.m },
-      ]}
-    >
-      <KText variant="callout" weight="500" accessibilityElementsHidden importantForAccessibility="no">
-        {label}
-      </KText>
-      {children}
-    </View>
-  );
-}
-
-/** A label above its full-width control (the segmented build and fit). */
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.m, gap: space.s }}>
-      <KText variant="callout" weight="500" accessibilityElementsHidden importantForAccessibility="no">
-        {label}
-      </KText>
-      {children}
-    </View>
-  );
-}
-
-function HeightStepper({ value, spoken, onStep }: { value: string | null; spoken: string; onStep: (d: 1 | -1) => void }) {
-  const { colors } = useTheme();
-  const circle = (d: 1 | -1) => (
-    <Pressable
-      onPress={() => onStep(d)}
-      hitSlop={7}
-      style={({ pressed }) => ({ width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface, opacity: pressed ? opacity.pressed : 1 })}
-      accessibilityElementsHidden
-      importantForAccessibility="no"
-    >
-      <KText variant="title3" weight="500">
-        {d === 1 ? '+' : '−'}
-      </KText>
-    </Pressable>
-  );
-  return (
-    <View
-      style={{ minHeight: 36, minWidth: 150, paddingVertical: 3, paddingHorizontal: 4, borderRadius: 18, borderCurve: 'continuous', flexDirection: 'row', alignItems: 'center', gap: space.s, backgroundColor: colors.surface2 }}
-      accessible
-      accessibilityRole="adjustable"
-      accessibilityLabel={t('onb.basics.height')}
-      accessibilityValue={{ text: spoken }}
-      accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
-      onAccessibilityAction={(e) => onStep(e.nativeEvent.actionName === 'increment' ? 1 : -1)}
-    >
-      {circle(-1)}
-      <KText variant="callout" weight={value ? '600' : '500'} color={value ? 'ink' : 'ink3'} tabular style={{ flex: 1, textAlign: 'center' }}>
-        {value ?? t('onb.basics.heightAdd')}
-      </KText>
-      {circle(1)}
-    </View>
   );
 }
