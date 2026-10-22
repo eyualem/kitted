@@ -1043,6 +1043,7 @@ const addedInBuild = {
   'about.declined': "No problem. They're in You → Style profile whenever you want.",
   'about.a11y': '{title}. {body}',
   'about.sheet.title': 'About you',
+  'about.sheet.note': 'For sizing and fit advice. None of it changes a score.',
   'acct.offer.tag': 'Your account',
   'acct.offer.tagRight': 'Optional',
   'acct.offer.title': 'Keep your fits',

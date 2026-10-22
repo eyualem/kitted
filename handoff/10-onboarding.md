@@ -430,7 +430,7 @@ Screens 180–181 use only existing copy. Sequence step 'later' after a scored r
 
 ## 10. Basics down to the birth year; height, build and fit asked after the first score (Oct 21, #369)
 
-*The founder, Oct 21, after the onboarding review: "that sounds good. plan out the things that have to be done and also tests. leave placeholders for auth for now." The review's point: height, build and fit are optional, but they put a screen of questions before he's seen any value, and "Build" (Slim · Average · Broad) is the one question about his body, asked before the app has earned it, in an app whose line is "it rates the outfit, never you." This section is the plan and the checks, written before any code. Nothing is built yet. §10.6 holds the account work as placeholders.*
+*The founder, Oct 21, after the onboarding review: "that sounds good. plan out the things that have to be done and also tests. leave placeholders for auth for now." Then: "build the birth-year onboarding plan (§10) with the draft words, tests first." **Built Oct 21; results in §10.7.** The review's point: height, build and fit are optional, but they put a screen of questions before he's seen any value, and "Build" (Slim · Average · Broad) is the one question about his body, asked before the app has earned it, in an app whose line is "it rates the outfit, never you." This section is the plan and the checks, written before any code. §10.6 holds the account work as placeholders.*
 
 ### 10.1 What he'll see
 
@@ -522,6 +522,29 @@ About 1.5 days. JS only: it reaches his phone through Metro, no reinstall.
 - **SC1** O3, Consent, the card (T1 and T2) and the sheet in light and dark: nothing clipped.
 - **SC2** The largest text size: the year row, the card's buttons and the sheet's segmented controls wrap or stack, no word broken mid-word.
 - **SC3** VoiceOver: O3's year row reads `Birth year, not chosen` / `Birth year, 2004`; the card reads as one element with its actions; the sheet's fields read their values.
+
+### 10.7 Results (Oct 21, tested against §10.5)
+
+**Code:** `features/onboarding/BasicsScreen.tsx` (one layout, the year only; `Silhouette.tsx` deleted), `basics.ts` (`basicsEcho` → `Born in {year}`, `answersFromDraft`), `features/you/BasicsFields.tsx` (height, build, fit for You → Style profile and the sheet), `features/aboutYou/` (`rules.ts` pure, `service.ts`, `session.ts`, `AboutYouCard.tsx`, `AboutYouSheet.tsx`, `demo.ts`), `app/sheets/about-you.tsx`, the `afterAnswer` hook in `ask/pipeline.ts`, `scoringProfile` in `fitcheck/service.ts`, kv `aboutYou.offer` (this phone only, `sync/schema.ts`). Copy in `i18n/en.ts` (`onb.basics.*`, `about.*`). Demo screens 240–244 (under an answer, a later visit, the sheet, Not now, saved); 3, 4 and 136 show the step.
+
+**Tests:** `birthYearStep.test.ts` (BY1–BY8), `aboutYouCard.test.ts` (AY1–AY11, UN1), both written first and failing before the code; `onboardingFlow.test.ts` updated for the new lines; `npm run check` green (1,534 app tests; the one lint warning is the existing one in `tryOn.test.ts`).
+
+| Check | Result | How |
+|---|---|---|
+| BY1–BY8 | Pass | Tests; BY1, BY2, BY4 also seen on screen |
+| BY9 · 8 taps to the camera | Pass | Walked on the web preview (year picked → Continue → Consent `Born in 2004`); the count is unchanged, the optional fields never counted |
+| AY1–AY11 | Pass | Tests |
+| AY8 on screen | Pass | iOS Simulator, demo 242: Relaxed → Save → the sheet closes and the card reads `Saved. Change them any time in You.` |
+| UN1 | Pass | New test: every demo photo scores the same with height, build and fit blank or set; the fit check reads the profile only through `scoringProfile` |
+| UN2 | Pass | The existing `stylistContext.test.ts` (height and build only when set; the privacy test) |
+| UN3 | Pass | `npm run check` |
+| SC1 · light and dark | Pass | Simulator: demo 3, 241, 242, 243; screenshots `screenshots/about-you/` (git-ignored) |
+| SC2 · largest text size | Pass after 2 fixes | (1) the sheet's long subtitle sat in its sticky header and hid the fields: the sheet now has a title only and a short note under the fields, `For sizing and fit advice. None of it changes a score.`; (2) the height stepper's − and + outgrew their 30 pt circles (the same code You → Style profile had): the glyphs are capped at 1.3×. The card wraps with no word broken; O3's year row scrolls into view under Kit's line |
+| SC3 · VoiceOver | Not checked on a device | Labels are in the code (`Birth year, not chosen` / `Birth year, 2004`; the card is one element with its title and body; the stepper is one adjustable element) |
+
+**Found on the way:** the Simulator tool's taps often miss the first time after a launch (the dev menu's label takes them); the year pick was confirmed on the web preview, where clicks are exact, and the old layout behaves the same. A worktree Metro sharing the main checkout's `node_modules` picked up another worktree's transform cache (it bundled `hci-slides-review`'s routes): start it with `--clear`.
+
+**Not done:** VoiceOver by ear; the T1 card under a live answer on the phone (the demo posts it under a seeded one); his phone through Metro.
 
 ### 10.6 Accounts: placeholders (not planned yet)
 

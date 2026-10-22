@@ -76,7 +76,9 @@ function HeightStepper({ value, spoken, onStep }: { value: string | null; spoken
       accessibilityElementsHidden
       importantForAccessibility="no"
     >
-      <KText variant="title3" weight="500">
+      {/* Capped: the circle is a fixed 30 pt, and at the largest sizes the glyph outgrew it. VoiceOver adjusts the
+          value instead (the stepper is one adjustable element). */}
+      <KText variant="title3" weight="500" maxFontSizeMultiplier={1.3}>
         {d === 1 ? '+' : '−'}
       </KText>
     </Pressable>

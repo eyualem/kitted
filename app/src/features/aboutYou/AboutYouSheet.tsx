@@ -3,7 +3,7 @@
 // and marks the card; X keeps nothing.
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KButton, KCard } from '@/design-system';
+import { KButton, KCard, KText } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
@@ -33,10 +33,15 @@ export function AboutYouSheet() {
   };
 
   return (
-    <SheetScaffold title={t('about.sheet.title')} subtitle={t('about.body')}>
+    // Title only: the sheet's header is sticky, and at the largest text sizes a long subtitle there hid the fields. The
+    // note scrolls with them.
+    <SheetScaffold title={t('about.sheet.title')}>
       <KCard>
         <BasicsFields value={value} units={profile?.units ?? 'imperial'} onChange={(p) => setEdits({ ...value, ...p })} />
       </KCard>
+      <KText variant="footnote" color="ink3" style={{ paddingHorizontal: 4 }}>
+        {t('about.sheet.note')}
+      </KText>
       <KButton title={t('common.save')} onPress={() => void save()} disabled={!canSave(value) || saving} />
     </SheetScaffold>
   );
