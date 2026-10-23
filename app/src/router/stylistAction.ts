@@ -8,7 +8,7 @@ export type StylistAction =
   | { kind: 'checkMyFit' }
   | { kind: 'styleItem'; itemId: string }
   | { kind: 'wearAgain'; lookId: string }
-  | { kind: 'recheck'; lookId: string }
+  | { kind: 'recheck'; checkId: string }
   | { kind: 'scrollTo'; messageId: string }
   | { kind: 'startMove'; moveId: string }
   | { kind: 'openCard'; messageId: string };

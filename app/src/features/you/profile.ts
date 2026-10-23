@@ -115,11 +115,22 @@ export function applyDraft(p: ProfileRow, d: ProfileDraft): ProfileRow {
   };
 }
 
-/** Writes his draft when it differs from the stored profile (Save, and leaving the screen: 09-ui-review §12). True when
- *  it wrote. */
-export async function saveDraft(store: Pick<KittedStore, 'profile'>, d: ProfileDraft): Promise<boolean> {
-  const fresh = await store.profile.get('me');
-  if (!fresh || !isDirty(fresh, d)) return false;
+/** The profile Y1 and Y2 show when none is stored (a dev or demo install that skipped onboarding, #369): no looks,
+ *  no basics, no birth year and no consent. Saving an edit to it creates the row; nothing else changes. */
+export function blankProfile(nowMs: number): ProfileRow {
+  return {
+    id: 'me', birthYear: null, heightCm: null, build: '', fitPreference: '', styles: [],
+    boldness: null, budget: null, lastOccasion: 'everyday',
+    consentVersion: null, consentAt: null, onboardingDone: true,
+    ideaTime: null, units: 'imperial', createdAt: nowMs,
+  };
+}
+
+/** Writes his draft when it differs from the stored profile (Done, and leaving the screen: 09-ui-review §12), or from
+ *  a blank one when none is stored. True when it wrote. */
+export async function saveDraft(store: Pick<KittedStore, 'profile'>, d: ProfileDraft, nowMs = Date.now()): Promise<boolean> {
+  const fresh = (await store.profile.get('me')) ?? blankProfile(nowMs);
+  if (!isDirty(fresh, d)) return false;
   await store.profile.put(applyDraft(fresh, d));
   return true;
 }

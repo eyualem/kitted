@@ -259,6 +259,8 @@ export function StylistScreen() {
     if (!action) return;
     clearStylistAction();
     if (action.kind === 'checkMyFit') openCamera();
+    // You's Re-check (#369): the same camera the card's own Re-check opens.
+    if (action.kind === 'recheck') router.push(`/camera?mode=recheck&parent=${action.checkId}`);
     if (action.kind === 'scrollTo') {
       // Only a row today's thread still shows: a stored position can be stale (U11 in 07 §17's list).
       const y = shownIds.has(action.messageId) ? rowY.current.get(action.messageId) : undefined;

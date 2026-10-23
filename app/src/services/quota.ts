@@ -28,6 +28,8 @@ export interface QuotaSnapshot {
   checkLimit: number;
   /** The re-check of today's check is still open. */
   recheckOpen: boolean;
+  /** Which check that open re-check belongs to (the newest one still open), for You's Re-check button. */
+  recheckId: string | null;
   questionsUsed: number;
   questionLimit: number;
   heldCount: number;
@@ -46,6 +48,13 @@ export function recheckDeadline(check: WindowCheck, clock: Clock): number {
 export function isRecheckOpen(check: WindowCheck & Pick<FitCheckRow, 'recheckUsed' | 'status' | 'parentId'>, nowMs: number, clock: Clock): boolean {
   if (check.recheckUsed || check.status !== 'scored' || check.parentId) return false;
   return nowMs < recheckDeadline(check, clock);
+}
+
+/** The newest of today's checks whose re-check is still open, or null. */
+export function openRecheckId(checks: readonly FitCheckRow[], nowMs: number, clock: Clock): string | null {
+  let best: FitCheckRow | null = null;
+  for (const c of checks) if (isRecheckOpen(c, nowMs, clock) && (!best || c.createdAt > best.createdAt)) best = c;
+  return best?.id ?? null;
 }
 
 /** The nav subtitle (02 D12), free tier only. */
@@ -103,6 +112,7 @@ export function createQuota(deps: QuotaDeps) {
       checksUsed: override ?? u.checks,
       checkLimit: pro ? LIMITS.proChecks : LIMITS.freeChecks,
       recheckOpen: todays.some((c) => isRecheckOpen(c, now, clock)),
+      recheckId: openRecheckId(todays, now, clock),
       questionsUsed: u.questions,
       questionLimit: pro ? LIMITS.proQuestions : LIMITS.freeQuestions,
       heldCount: checks.filter((c) => c.status === 'held').length,

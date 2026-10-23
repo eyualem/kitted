@@ -1,11 +1,11 @@
 // Y1 · You (02 D17, revised Oct 14 in mockups/theme-round2.html, DECISIONS-LOG #246): "how your stylist sees you".
 // His style card (looks in pick order, basics in one quiet line), the plan row on Pro, what the stylist knows, and
-// today's check. Settings sit behind the gear (the header button, `_layout.tsx`); privacy lives there now. No stats,
-// no body, no copper here (copper is for score movement, #231). The ScrollView is the screen's first view so the
-// iOS 26 tab bar shrinks on scroll.
+// today's check (with Check my fit or Re-check, #369), and Privacy & data one tap away (also in Settings, behind the
+// gear). No stats, no body, no copper here (copper is for score movement, #231). The ScrollView is the screen's first
+// view so the iOS 26 tab bar shrinks on scroll.
 import { Pressable, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { Icon, KButton, KCard, KText, MonoLabel, TextLink, WovenLabel, opacity, space, useTheme } from '@/design-system';
+import { Icon, KButton, KCard, KText, MonoLabel, TextLink, WovenLabel, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ProfileRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
@@ -14,11 +14,13 @@ import { styleLabel } from '@/features/morning/copy';
 import { FactCard } from '@/features/you/FactRows';
 import { FACTS_ON_YOU, liveFacts } from '@/features/you/facts';
 import { NumberedPill } from '@/features/you/NumberedPill';
-import { basicsLine, picksOf, styleCardSpoken } from '@/features/you/profile';
+import { basicsLine, blankProfile, picksOf, styleCardSpoken } from '@/features/you/profile';
+import { todayAction } from '@/features/you/today';
 import { t } from '@/i18n/en';
 import type { QuotaSnapshot } from '@/services/quota';
 import { useIsPro } from '@/services/entitlements';
 import { usePaywallOn } from '@/features/paywall/switch';
+import { goToStylist } from '@/router/stylistAction';
 
 export default function YouScreen() {
   const { colors } = useTheme();
@@ -29,7 +31,8 @@ export default function YouScreen() {
   if (profile === undefined || !facts || !usage) return null;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
-      {profile ? <StyleCard p={profile} /> : null}
+      {/* No profile (an install that skipped onboarding): the blank card still opens the editor. */}
+      <StyleCard p={profile ?? blankProfile(0)} />
       {usage.purchased ? <PlanRow /> : null}
       <View style={{ gap: space.s, marginTop: space.xs }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs }}>
@@ -41,6 +44,7 @@ export default function YouScreen() {
         <FactCard facts={facts.slice(0, FACTS_ON_YOU)} />
       </View>
       <TodayCard s={usage} />
+      <PrivacyRow />
     </ScrollView>
   );
 }
@@ -51,7 +55,7 @@ function StyleCard({ p }: { p: ProfileRow }) {
   const edit = () => router.push('/you/profile');
   return (
     <Pressable onPress={edit} accessibilityRole="button" accessibilityLabel={styleCardSpoken(p)} style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}>
-      <KCard>
+      <KCard radius={radius.cardSmall}>
         <View style={{ paddingHorizontal: space.rowX, paddingTop: space.s, paddingBottom: space.l, gap: space.s }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 36 }}>
             <MonoLabel>{t('you.style.label')}</MonoLabel>
@@ -96,7 +100,7 @@ function PlanRow() {
       accessibilityHint={t('settings.plan')}
       style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
     >
-      <KCard>
+      <KCard radius={radius.cardSmall}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.rowX, paddingVertical: space.rowY, minHeight: 52 }}>
           <WovenLabel text={t('brand.wordmark.pro')} size="small" tone="pro" spokenLabel={t('you.plan.pro')} />
           <KText variant="subheadline" color="ink2" style={{ flex: 1 }}>
@@ -113,12 +117,37 @@ function questionsLeft(n: number): string {
   return n === 1 ? t('you.today.question1') : t('you.today.questions', { n });
 }
 
-/** Today's check and questions (the mockup's last card). Free: done / next at 4 am, the re-check, questions left. */
+/** Privacy & data, one tap from You (09 §2: three taps deep before, under the gear). It stays in Settings too. */
+function PrivacyRow() {
+  return (
+    <Pressable
+      onPress={() => router.push('/you/privacy')}
+      accessibilityRole="button"
+      accessibilityLabel={t('settings.privacy')}
+      style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
+    >
+      <KCard radius={radius.cardSmall}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.rowX, paddingVertical: space.rowY, minHeight: 52 }}>
+          <Icon name="lock" size="small" color="ink2" scalesWithText />
+          <KText variant="callout" weight="500" style={{ flex: 1 }}>
+            {t('settings.privacy')}
+          </KText>
+          <Icon name="next" size="small" color="ink3" weight="semibold" scalesWithText />
+        </View>
+      </KCard>
+    </Pressable>
+  );
+}
+
+/** Today's check and questions (the mockup's last card). Free: done / next at 4 am, the re-check, questions left.
+ *  Its button (#369): Check my fit while a check is left, else Re-check while today's re-check is open. */
 function TodayCard({ s }: { s: QuotaSnapshot }) {
   const { isAccessibilitySize } = useTheme();
   const paywallShown = usePaywallOn();
   const qLeft = Math.max(0, s.questionLimit - s.questionsUsed);
   const cLeft = Math.max(0, s.checkLimit - s.checksUsed);
+  const act = todayAction(s);
+  const tryPro = paywallShown && !s.pro;
   let title: string;
   let right: string | null;
   let line: string;
@@ -136,7 +165,7 @@ function TodayCard({ s }: { s: QuotaSnapshot }) {
     line = s.recheckOpen ? [t('you.today.recheck'), questionsLeft(qLeft)].join(' · ') : questionsLeft(qLeft);
   }
   return (
-    <KCard>
+    <KCard radius={radius.cardSmall}>
       <View style={{ paddingHorizontal: space.rowX, paddingVertical: 14, gap: 2 }} accessible accessibilityLabel={[title, right, line].filter(Boolean).join('. ')}>
         <View style={isAccessibilitySize ? { gap: 2 } : { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: space.m }}>
           <KText variant="callout" weight="600" style={{ flexShrink: 1 }}>
@@ -152,10 +181,15 @@ function TodayCard({ s }: { s: QuotaSnapshot }) {
           {line}
         </KText>
       </View>
-      {/* Free: a quiet outlined "Try Pro" (02 D17), only once the paywall exists. */}
-      {paywallShown && !s.pro ? (
-        <View style={{ paddingHorizontal: space.rowX, paddingBottom: space.m }}>
-          <KButton kind="outline" size="regular" title={t('you.plan.tryPro')} onPress={() => router.push('/paywall?from=you')} />
+      {act || tryPro ? (
+        <View style={{ paddingHorizontal: space.rowX, paddingBottom: space.m, gap: space.s }}>
+          {act?.kind === 'check' ? (
+            <KButton title={t('closet.empty.check')} icon="camera" size="regular" fullWidth onPress={() => goToStylist({ kind: 'checkMyFit' })} />
+          ) : act?.kind === 'recheck' ? (
+            <KButton title={t('look.recheck')} icon="recheck" size="regular" fullWidth onPress={() => goToStylist({ kind: 'recheck', checkId: act.checkId })} />
+          ) : null}
+          {/* Free: a quiet outlined "Try Pro" (02 D17), only once the paywall exists. */}
+          {tryPro ? <KButton kind="outline" size="regular" fullWidth title={t('you.plan.tryPro')} onPress={() => router.push('/paywall?from=you')} /> : null}
         </View>
       ) : null}
     </KCard>
