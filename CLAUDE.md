@@ -41,7 +41,7 @@
     - two with a hand in a pocket.
   - **Name** each file by how you took it (`mirror-chest.jpg`, `propped-floor.jpg`) and put them in `inputs/gold-set/me/tape/`.
   - *Unblocks:* each ruler's error in cm against your real navel. If it's within ~3 cm on both mirror and propped shots, the waist credit and a "top runs long" charge can follow the measured waistline (on paper so far: 8 of your checks would move down). A friend doing the same would separate your own proportions from the ruler's.
-- [ ] **P2** · **Reinstall Kitted when the permit runs out** (reinstalled Oct 19 with the share card's native parts; the free 7-day permit ends 2026-10-25T00:58:45Z UTC; ask Claude, ~1 min with the phone unlocked). Joining the $99 program ends the weekly reinstall.
+- [ ] **P2** · **Reinstall Kitted when the permit runs out** (reinstalled Oct 22 with the Apple-day prep's native changes, #366; Xcode reused the permit, which ends 2026-10-25T00:58:45Z UTC, about 9 pm Oct 24 your time; ask Claude, ~1 min with the phone unlocked, longer after native changes). Joining the $99 program ends the weekly reinstall.
 - [ ] **P1** · **Tell Claude your own profile, 1 min:** your birth year, the 3 looks you'd pick in onboarding in order (Streetwear, Minimal, Smart casual, Classic prep, Workwear, Outdoor, Vintage sport), and height, build and fit if you want. *Unblocks: re-scoring your saved checks the way the app will see you (rule 7); today they use a made-up profile.*
 - [ ] **P1** · **Phone test, about 10 min left** (reinstalled again Oct 9 and connected to the dev server; close-ups and measuring confirmed Oct 8 on 2 checks in the black hoodie, #109). Plug in and unlock the phone, then run `tools/phone/install.sh`. If Kitted can't find the dev server, enter the Mac's address by hand (it changes with the Wi-Fi: `10.0.0.33:8081` on Oct 8, `10.110.115.70:8081` on Oct 9). Tell Claude when you start. Also type one question in Stylist (does the text box ride the keyboard?) and scroll the chat (does the tab bar shrink with "Ask…" beside it?). Then do 4–5 fit checks in the green work boots (mirror and propped; one in a dim room, one against a window), try the mic once, and scan 2–3 clothes on the bed. *Unblocks: the shoe questions and close-ups on real photos, tuning the camera tips, voice input.*
 - [x] ~~OK ≤ 30¢ for the "second look when unsure" test~~ done Oct 17 (#333): 26.6¢ spent; it fails, nothing ships (`rubric/research/notes/unsure-look.md`).
@@ -957,6 +957,7 @@ P5's real size is about 6.5 days, not 05's 2.
   ```bash
   cd app && LANG=en_US.UTF-8 npx expo prebuild --platform ios --no-install
   ```
+  Prebuild may clear and recreate the whole `ios/` folder (Oct 22), Pods and the phone build cache with it: then run `cd app/ios && LANG=en_US.UTF-8 pod install`, and the next `tools/phone/install.sh` is a full build (~10–15 min).
   ```bash
   cd app && LANG=en_US.UTF-8 npx expo run:ios --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D --no-bundler
   ```
