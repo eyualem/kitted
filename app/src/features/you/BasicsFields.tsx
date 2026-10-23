@@ -1,5 +1,5 @@
 // Height, build and fit (02 §3.6 Y2): the one set of controls for You → Style profile and Kit's "About you" sheet
-// (10-onboarding.md §10, #369), so the two can't drift. All three start blank until he taps; none moves a score.
+// (10-onboarding.md §10, #370), so the two can't drift. All three start blank until he taps; none moves a score.
 import { Pressable, View } from 'react-native';
 import { KText, RowDivider, opacity, space, useTheme } from '@/design-system';
 import { BUILDS, buildLabel, FITS, fitLabel, heightSpoken, stepHeight, type Build, type FitPref } from '@/features/onboarding/basics';

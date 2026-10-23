@@ -1,4 +1,4 @@
-// Kit's "About you" card (10-onboarding.md §10.1, #369): an inline card, never a pop-up. Add them opens the sheet; Not
+// Kit's "About you" card (10-onboarding.md §10.1, #370): an inline card, never a pop-up. Add them opens the sheet; Not
 // now folds it to one line; once he's given any of the three (here or in You) it says so. Past chats: no buttons.
 import { router } from 'expo-router';
 import { View } from 'react-native';

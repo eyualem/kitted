@@ -1,4 +1,4 @@
-// Onboarding down to the birth year (10-onboarding.md §10, #369): O3 asks only the birth year; height, build and fit
+// Onboarding down to the birth year (10-onboarding.md §10, #370): O3 asks only the birth year; height, build and fit
 // move to Kit's "About you" card after the first score. Checks BY1–BY8, written before the code (BY9, the tap count,
 // is walked on the Simulator).
 import { createMemoryStore } from '@/data/memoryStore';

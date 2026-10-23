@@ -323,7 +323,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 ---
 
 ### D3 · O3 Basics
-> **Built Oct 21 (#369):** O3 is the birth-year step only (one card, `Birth year` / `Choose`, the footnote `Kitted is for 18 and up. It never changes your score.`, the button `Continue`); height, build and fit moved to Kit's optional "About you" card after the first score. Plan, copy, checks and results: `10-onboarding.md` §10. The layout below (the height stepper, Build, Fit, the silhouette) is superseded.
+> **Built Oct 21 (#370):** O3 is the birth-year step only (one card, `Birth year` / `Choose`, the footnote `Kitted is for 18 and up. It never changes your score.`, the button `Continue`); height, build and fit moved to Kit's optional "About you" card after the first score. Plan, copy, checks and results: `10-onboarding.md` §10. The layout below (the height stepper, Build, Fit, the silhouette) is superseded.
 
 - **Presentation:** onboarding push. **Entry:** O2. **Exit:** "Looks right" → O5 (or O4 if under 18); Back → O2 (undoes the last answer).
 

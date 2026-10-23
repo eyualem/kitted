@@ -46,7 +46,7 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'support') return <SupportCard />;
     // "Keep your fits" (A3, #289): after his first score, at most twice.
     if (m.cardType === 'account') return <AccountOfferCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
-    // "About you" (#369, 10-onboarding.md §10): height, build and fit, after the first score.
+    // "About you" (#370, 10-onboarding.md §10): height, build and fit, after the first score.
     if (m.cardType === 'aboutYou') return <AboutYouCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     // "Turn on fit checks" (S26, 09-ui-review §20.8 G23): after "Not now" on consent.
     if (m.cardType === 'turnOnChecks') return <NoConsentCard m={m} showHeader={item.showWho} readOnly={readOnly} />;

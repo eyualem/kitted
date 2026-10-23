@@ -165,7 +165,7 @@ type CheckCtx = { checkId: string | null; abandoned: boolean };
 /** What a row is scored with: its occasion and one style, his boldness (#61), and its stored second look (#199). The
  *  one builder for both the card (evaluateCheck) and the one quick tap (askQuestion), so the tap's scores are the card's. */
 /** The only part of the profile a score may see: his picks and boldness. Height, build and fit never reach the scoring
- *  (10-onboarding.md §10.3, #369; aboutYouCard.test.ts UN1). */
+ *  (10-onboarding.md §10.3, #370; aboutYouCard.test.ts UN1). */
 export function scoringProfile(p: Pick<ProfileRow, 'styles' | 'boldness'> | null | undefined): Profile {
   return { styles: p?.styles ?? [], boldness: p?.boldness ?? null };
 }
