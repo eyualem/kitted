@@ -23,6 +23,7 @@ import type {
 } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
 import { wornChecks } from '@/features/fitcheck/tryOn';
+import { wearOverridden } from './woreOwn';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
 
@@ -115,6 +116,8 @@ export function historyFor(
   // Checks come from the fit-check rows below; the wear log adds what he wore from a card.
   for (const w of rows.wears) {
     if (!w.outfitId || w.outfitId === row.outfitId || !before(w.day, true)) continue;
+    // Wear this, then a fit check in something else: the check is what he wore (#369).
+    if (wearOverridden(w, rows.itemsOf(w.outfitId), rows.checks, rows.closet, (ms) => slotAt(ms, zone).slot)) continue;
     uses.push({ daysAgo: daysBetween(w.day, day), itemIds: rows.itemsOf(w.outfitId) });
   }
   // Only what he wore: a check followed by another within the hour was a try-on (#360).
