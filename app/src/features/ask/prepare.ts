@@ -53,12 +53,11 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
       const str = (k: string) => (typeof g[k] === 'string' ? String(g[k]) : '');
       return { name: c.name, category: str('category'), subcategory: str('subcategory'), color: str('color_family'), leg: str('leg_shape') };
     });
-    const hasBody = snap.profile !== null && (snap.profile.heightCm !== null || ['slim', 'average', 'athletic', 'broad', 'bigger'].includes(snap.profile.build));
     return {
       kind: route.kind,
       ...(ev.verdict ? { verdict: ev.verdict } : {}),
       prompt: { system: systemPrompt(route.kind), user: userPrompt(ctx.text, ev.text, question) },
-      gate: { allowedScores: allowedScores(ctx.text, ev.text), hasBody, pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
+      gate: { allowedScores: allowedScores(ctx.text, ev.text), pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
       lookup: async (need) => {
         const l = parseLookup(need, ctx.handles);
         if (!l) return null;
@@ -67,7 +66,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
         if (!ev2.text) return null;
         return {
           prompt: { system: systemPrompt(r.kind), user: userPrompt(ctx.text, ev2.text, question) },
-          gate: { allowedScores: allowedScores(ctx.text, ev2.text), hasBody, pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
+          gate: { allowedScores: allowedScores(ctx.text, ev2.text), pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
         };
       },
       card: async (raw, gate) => correct ?? buildCard(raw, {

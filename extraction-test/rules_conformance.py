@@ -703,7 +703,7 @@ case("COL-12-light-denim", "COL-12", "a white tee over light-wash jeans: light d
 case("COL-12-rewards-off", "COL-12", "a khaki overshirt over a white tee, cream chinos and tan chukkas: a color fault, so the shoes' tie-in earns nothing ([COL-5])",
      Rd(TEE, outer("overshirt", "khaki_beige"), bottom("chinos", "off_white_cream", "straight"), shoe("suede_chukka", "tan_camel")),
      {"fired": [F(LL, "color", -1.0)], "not_fired": [F("CP5_tie_in")], "band": "Put together"})
-# v1.9 (#373): the anchoring tip on the card, no points
+# v1.9 (#376): the anchoring tip on the card, no points
 ANCHOR_SHOES = "Light on light washes out: darker pants, or dark shoes like brown leather, would ground it."
 ANCHOR = "Light on light washes out: darker pants, like navy chinos or dark jeans, would ground it."
 case("COL-12-tip-shoes", "COL-12", "a white tee over cream jeans with white leather sneakers: the anchoring tip, with dark shoes as the other way",

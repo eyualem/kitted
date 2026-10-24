@@ -119,7 +119,7 @@ Every table and every kv key is classified in `app/src/sync/schema.ts`. A test f
 
 | Table | Collection | Notes |
 |---|---|---|
-| `profile` | `profile` | without `birthYear` |
+| `profile` | `profile` | without `birthYear`, `heightCm` or `build` (no longer kept, #375) |
 | `fit_checks` | `fitChecks` | file paths are relative (`photos/<sha>-photo.jpg`) |
 | `readings` | `readings` | immutable after create (rules R7); a tombstone is allowed |
 | `closet_items` | `closetItems` | |
@@ -137,7 +137,7 @@ Every table and every kv key is classified in `app/src/sync/schema.ts`. A test f
 | kv key | Synced? | Why |
 |---|---|---|
 | `onboarding.looks`, `onboarding.otherStyle` | yes | his picked looks |
-| `onboarding.basics` | yes, **without `birthYear`** | height, build, fit |
+| `onboarding.basics` | yes, **without `birthYear`** | fit (an older draft's height and build are ignored, #375) |
 | `onboarding.done` | yes | a new phone skips onboarding (the age gate still runs) |
 | `appearance` | yes | (08 §2) |
 | `occasion.last`, `goingFor.last` | yes | the card's memory |

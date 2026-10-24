@@ -55,10 +55,9 @@ describe('privacy (07 §3.2)', () => {
     expect(text).not.toMatch(/-?\d{1,3}\.\d{3,}/);
     expect(text).not.toContain('New York');
     expect(text).not.toMatch(/consent|lat\b|lon\b/i);
-    // Height as words for lengths (never his centimetres), build as his word.
+    // Height and build are never sent (#375), even from a profile stored before.
     expect(text).not.toContain('178');
-    expect(text).toContain('Height: 5′ 10″');
-    expect(text).toContain('Build: average');
+    expect(text).not.toMatch(/Height:|Build:/);
     // The weather as words.
     expect(text).toContain('Weather today: 46° now · 63° high, rain likely after 5 pm');
     expect(text).toContain('His own words for a look: "Old-school skater"');
@@ -83,12 +82,6 @@ describe('privacy (07 §3.2)', () => {
     expect(ctx.text).not.toContain('Yesterday secret question');
   });
 
-  it('"Rather not say" or a blank build, and no height, send neither', async () => {
-    const { ctx } = await pack(async (s) => {
-      await s.profile.patch('me', { build: 'rather_not', heightCm: null });
-    });
-    expect(ctx.text).not.toMatch(/Build:|Height:/);
-  });
 });
 
 describe('contents and order', () => {

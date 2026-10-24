@@ -144,7 +144,7 @@ def fix_edges():
     add("tip_tuck_oxford_at_belt", Rd(G("top", "oxford_shirt", "light_blue", tucked="none", length="at_belt"), G("bottom", "chinos", "khaki_beige", leg_shape="slim"), SHOE()))
     add("tip_tuck_half", Rd(G("top", "dress_shirt", "white", tucked="half", length="na"), JEANS(leg_shape="slim"), SHOE()))
     add("tip_tuck_gym", Rd(G("top", "polo", "navy", tucked="none", length="mid_fly"), JEANS(leg_shape="slim", volume=2), SHOE()), occ="gym")
-    # v1.9 (#373): the anchoring tips on light on light ([COL-12]); light shoes add "dark shoes", dark ones don't; no tip
+    # v1.9 (#376): the anchoring tips on light on light ([COL-12]); light shoes add "dark shoes", dark ones don't; no tip
     # without the charge (a white tee over khaki, a cream shirt over navy chinos)
     add("anchor_cream_khaki_loafers", Rd(G("top", "oxford_shirt", "off_white_cream", tucked="full"), G("bottom", "chinos", "khaki_beige", leg_shape="straight"),
                                          SHOE(sub="loafer", color="brown")))

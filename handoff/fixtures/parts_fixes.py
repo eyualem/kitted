@@ -124,7 +124,7 @@ def _knit_on_knit(r):
 
 
 def _light_on_light(base):
-    """v1.9 tip_anchor (#373): the scored card has the light-on-light charge on Color ([COL-12])."""
+    """v1.9 tip_anchor (#376): the scored card has the light-on-light charge on Color ([COL-12])."""
     return any(x["check"] == "CL2_light_on_light" for x in base["parts"]["color"]["reasons"])
 
 
@@ -514,7 +514,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
     # v9 (#232): the stylist's tips (a cuff, a hem, the layer underneath) show with no number when there's no fix,
     # ahead of a Smaller step that means buying something and ahead of the generic Next level lines
     # v1.7 (#336): a tuck tip by shirt type also shows next to fixes, when no tuck fix is shown
-    # v1.9 (#373): so does an anchoring tip, when no fix shown clears the light on light
+    # v1.9 (#376): so does an anchoring tip, when no fix shown clears the light on light
     tip_shown = False
     tuck_shown = any(x["group"] == "tuck" for x in picked)
     anchored = any(x["anchors"] for x in picked)

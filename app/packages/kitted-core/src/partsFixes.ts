@@ -70,7 +70,7 @@ export interface PartsNextLevel {
   group?: string;
   /** v1.7 (#336), with `always`: a tuck tip by shirt type, also shown next to fixes when no tuck fix is shown. */
   tuck?: boolean;
-  /** v1.9 (#373), with `always`: an anchoring tip, also shown next to fixes when no fix shown clears the light on light. */
+  /** v1.9 (#376), with `always`: an anchoring tip, also shown next to fixes when no fix shown clears the light on light. */
   anchor?: boolean;
   /** v1.7: the slot whose garment fills {name} in an `always` tip (default the bottom). */
   name?: string;
@@ -309,7 +309,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   /** v10 tip_knit (parts_fixes._knit_on_knit): two knit pieces in the upper half, tops and outer layers alike. */
   const knitOnKnit = (r: Reading): boolean =>
     r.garments.filter((g) => (g.category === "top" || g.category === "outerwear") && inList(g.subcategory, KNITS)).length >= 2;
-  /** v1.9 tip_anchor (parts_fixes._light_on_light, #373): the scored card has the light-on-light charge on Color ([COL-12]). */
+  /** v1.9 tip_anchor (parts_fixes._light_on_light, #376): the scored card has the light-on-light charge on Color ([COL-12]). */
   const lightOnLight = (card: PartsScored): boolean => card.parts.color.reasons.some((x) => x.check === "CL2_light_on_light");
   /** The styles the outfit reads as, pick-free (parts_fixes._reads_as). */
   const readsAs = (r: Reading): readonly string[] => RE.detectStyles(r.garments, []).detected as readonly string[];
@@ -655,7 +655,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
 
   // v9 (#232): a stylist's tip with no number, ahead of a Smaller step that means buying something.
   // v1.7 (#336): a tuck tip by shirt type also shows next to fixes, when no tuck fix is shown.
-  // v1.9 (#373): so does an anchoring tip, when no fix shown clears the light on light.
+  // v1.9 (#376): so does an anchoring tip, when no fix shown clears the light on light.
   let tipShown = false;
   const tuckShown = picked.some((x) => x.group === "tuck");
   const anchored = picked.some((x) => x.anchors);
