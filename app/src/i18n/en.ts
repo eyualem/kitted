@@ -781,6 +781,9 @@ const addedInBuild = {
   'pfix.tip_hem': 'Have the {name} hemmed to just touch your shoes (about $15 at a tailor): a cleaner finish.',
   'pfix.tip_peek': 'Tuck in the layer underneath, or wear one that ends with the {name}: the line looks cleaner.',
   'pfix.tip_knit': 'Two knits together blur: try a smooth layer over the knit, like an overshirt or a jacket.',
+  // The anchoring tips (#373): light on light, no points
+  'pfix.tip_anchor_shoes': 'Light on light washes out: darker pants, or dark shoes like brown leather, would ground it.',
+  'pfix.tip_anchor': 'Light on light washes out: darker pants, like navy chinos or dark jeans, would ground it.',
   'pfix.next_street_jacket': 'A short jacket, like a bomber, gives it the streetwear shape and lifts Proportions.',
   'pfix.next_workwear_coat': 'A chore coat and boots give it the workwear shape and lift Proportions.',
   'pfix.next_minimal_tuck': 'Tucking in the {name} gives it the minimal shape and lifts Proportions.',

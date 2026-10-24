@@ -703,6 +703,22 @@ case("COL-12-light-denim", "COL-12", "a white tee over light-wash jeans: light d
 case("COL-12-rewards-off", "COL-12", "a khaki overshirt over a white tee, cream chinos and tan chukkas: a color fault, so the shoes' tie-in earns nothing ([COL-5])",
      Rd(TEE, outer("overshirt", "khaki_beige"), bottom("chinos", "off_white_cream", "straight"), shoe("suede_chukka", "tan_camel")),
      {"fired": [F(LL, "color", -1.0)], "not_fired": [F("CP5_tie_in")], "band": "Put together"})
+# v1.9 (#373): the anchoring tip on the card, no points
+ANCHOR_SHOES = "Light on light washes out: darker pants, or dark shoes like brown leather, would ground it."
+ANCHOR = "Light on light washes out: darker pants, like navy chinos or dark jeans, would ground it."
+case("COL-12-tip-shoes", "COL-12", "a white tee over cream jeans with white leather sneakers: the anchoring tip, with dark shoes as the other way",
+     Rd(TEE, bottom("jeans", "off_white_cream", "straight"), WLS),
+     {"fix_tip": "tip_anchor_shoes", "fix_tip_line": ANCHOR_SHOES, "band": "Put together"})
+case("COL-12-tip", "COL-12", "the same with brown chukkas: the shoes are already dark, so the tip names only darker pants",
+     Rd(TEE, bottom("jeans", "off_white_cream", "straight"), CHUKKA),
+     {"fired": [F(LL, "color", -1.0)], "fix_tip": "tip_anchor", "fix_tip_line": ANCHOR, "band": "Put together"})
+case("COL-12-tip-fix", "COL-12", "the cream oxford over khaki chinos: the card already offers navy chinos with a number, so no tip",
+     Rd(top("oxford_shirt", "off_white_cream"), CHINOS, LOAFER), {"fix_tip_lacks": "tip_anchor", "band": "Put together"})
+case("COL-12-tip-jacket", "COL-12", "a cream hoodie over cream jeans: the short black jacket fix anchors it too, so no tip",
+     Rd(top("hoodie", "off_white_cream", 4, length="at_belt"), bottom("jeans", "off_white_cream", "relaxed"), WLS),
+     {"fix_tip_lacks": "tip_anchor_shoes", "band": "Put together"})
+case("COL-12-tip-free", "COL-12", "a white tee over khaki chinos with white sneakers: no charge, no tip",
+     Rd(TEE, CHINOS, WLS), {"not_fired": [F(LL)], "fix_tip_lacks": "tip_anchor_shoes", "band": "Put together"})
 
 # ===== Shoes (SHO) ===================================================================================================
 case("SHO-1-other", "SHO-1", "shoe type lost: Shoes isn't scored", Rd(TEE, DJEANS, shoe("other", "black")),
