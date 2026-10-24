@@ -1,7 +1,7 @@
 // The piece peek (09-ui-review §28.4, #371), checks written before the build: a fix row that names a closet piece
 // shows that piece on a tap; the card's VoiceOver actions say "Show your …".
 import type { ClosetItemRow } from '@/data/types';
-import { fixPiece, peekActions, peekFrame, peekLines, PEEK_GAP, PEEK_GUTTER, PEEK_MAX_W } from '@/features/stylist/cards/fixPeek';
+import { fixPiece, peekActions, peekFrame, peekLines, peekWidth, PEEK_GAP, PEEK_GUTTER, PEEK_MAX_W } from '@/features/stylist/cards/fixPeek';
 
 const item = (id: string, name: string): ClosetItemRow =>
   ({ id, name, slot: 'shoes', wornCount: 4, isDeleted: false, mergedInto: null, garment: {}, hex: '#F0E9D9' } as unknown as ClosetItemRow);
@@ -52,6 +52,23 @@ describe('PK2 · where the peek goes', () => {
       expect(f.x + f.w).toBeLessThanOrEqual(narrow.width - PEEK_GUTTER);
       expect(f.y).toBeGreaterThanOrEqual(20 + PEEK_GUTTER);
     }
+  });
+});
+
+describe('PK2b · the largest text sizes (found on the Simulator, Oct 24)', () => {
+  const win = { width: 402, height: 874 };
+  const insets = { top: 62, bottom: 34 };
+  it('the peek takes the whole width inside the gutters, so "Open piece" stays on one line', () => {
+    expect(peekWidth(402, true)).toBe(402 - PEEK_GUTTER * 2);
+    expect(peekWidth(402, false)).toBe(PEEK_MAX_W);
+    expect(peekFrame({ x: 32, y: 500, w: 338, h: 56 }, 220, win, insets, peekWidth(402, true)).x).toBe(PEEK_GUTTER);
+  });
+  it('a row too tall for the peek on either side: kept on screen over the row, with no pointer at the wrong spot', () => {
+    const f = peekFrame({ x: 32, y: 120, w: 338, h: 390 }, 450, win, insets);
+    expect(f.pointer).toBe(false);
+    expect(f.y + 450).toBeLessThanOrEqual(win.height - insets.bottom - PEEK_GUTTER);
+    expect(peekFrame({ x: 32, y: 500, w: 338, h: 56 }, 220, win, insets).pointer).toBe(true);
+    expect(peekFrame({ x: 32, y: 180, w: 338, h: 56 }, 220, win, insets).pointer).toBe(true);
   });
 });
 

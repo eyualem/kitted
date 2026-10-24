@@ -10,7 +10,7 @@ import { KText, TextLink, opacity, shadow, useTheme } from '@/design-system';
 import type { ClosetItemRow } from '@/data/types';
 import { ClosetTile } from '@/features/closet/ClosetTile';
 import { openPiece } from '@/features/closet/pieceActions';
-import { peekFrame, peekLines, type Rect } from './fixPeek';
+import { peekFrame, peekLines, peekWidth, type Rect } from './fixPeek';
 
 const MS_OPEN = 200;
 const MS_CLOSE = 150;
@@ -39,13 +39,14 @@ export function PeekRow({ item, children }: { item: ClosetItemRow | null; childr
 }
 
 function PiecePeek({ item, row, onClosed }: { item: ClosetItemRow; row: Rect; onClosed: () => void }) {
-  const { colors, scheme, a11y } = useTheme();
+  const { colors, scheme, a11y, isAccessibilitySize } = useTheme();
   const win = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [h, setH] = useState<number | null>(null);
   const p = useSharedValue(0);
   const lines = peekLines(item);
-  const frame = h !== null ? peekFrame(row, h, win, insets) : null;
+  const w = peekWidth(win.width, isAccessibilitySize);
+  const frame = h !== null ? peekFrame(row, h, win, insets, w) : null;
   const still = a11y.reduceMotion;
 
   const show = (height: number) => {
@@ -84,7 +85,7 @@ function PiecePeek({ item, row, onClosed }: { item: ClosetItemRow; row: Rect; on
         accessibilityViewIsModal
         style={[
           {
-            position: 'absolute', left: frame?.x ?? 0, top: frame?.y ?? -1000, width: frame?.w ?? Math.min(280, win.width - 32),
+            position: 'absolute', left: frame?.x ?? 0, top: frame?.y ?? -1000, width: w,
             borderRadius: 18, borderCurve: 'continuous', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line,
             boxShadow: scheme === 'dark' ? '0px 12px 32px rgba(0,0,0,0.45)' : shadow.card,
             paddingVertical: 16, paddingHorizontal: 16, alignItems: 'center', gap: 10,
@@ -92,7 +93,7 @@ function PiecePeek({ item, row, onClosed }: { item: ClosetItemRow; row: Rect; on
           card,
         ]}
       >
-        {frame ? (
+        {frame?.pointer ? (
           <View
             pointerEvents="none"
             style={{

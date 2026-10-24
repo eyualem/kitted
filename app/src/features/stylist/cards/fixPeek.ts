@@ -18,22 +18,32 @@ export function fixPiece(fix: { itemId?: string | null }, closet: readonly Close
 }
 
 export interface Rect { x: number; y: number; w: number; h: number }
-export interface PeekFrame { x: number; y: number; w: number; above: boolean }
+/** `pointer`: the peek sits right against its row (a row too tall for either side gets it overlapping, no pointer). */
+export interface PeekFrame { x: number; y: number; w: number; above: boolean; pointer: boolean }
 
 export const PEEK_GUTTER = 16;
 export const PEEK_MAX_W = 280;
 /** The gap between the row and the peek, room for its pointer. */
 export const PEEK_GAP = 8;
 
+/** How wide the peek is: 280 pt, or the whole width inside the gutters at the accessibility text sizes, so "Open
+ *  piece" and a long name don't break into one word a line. */
+export function peekWidth(winWidth: number, accessibilitySize = false): number {
+  const room = winWidth - PEEK_GUTTER * 2;
+  return accessibilitySize ? room : Math.min(PEEK_MAX_W, room);
+}
+
 /** Where the peek goes: above the row when it fits under the top inset, else below; centered on the row, inside the
- *  screen's 16 pt gutters. */
-export function peekFrame(row: Rect, peekH: number, win: { width: number; height: number }, insets: { top: number; bottom: number }): PeekFrame {
-  const w = Math.min(PEEK_MAX_W, win.width - PEEK_GUTTER * 2);
+ *  screen's 16 pt gutters. When it fits on neither side it's kept on screen, over the row, without its pointer. */
+export function peekFrame(
+  row: Rect, peekH: number, win: { width: number; height: number }, insets: { top: number; bottom: number }, w = peekWidth(win.width),
+): PeekFrame {
   const x = Math.min(Math.max(PEEK_GUTTER, row.x + row.w / 2 - w / 2), win.width - PEEK_GUTTER - w);
   const aboveY = row.y - PEEK_GAP - peekH;
-  if (aboveY >= insets.top + PEEK_GUTTER) return { x, y: aboveY, w, above: true };
+  if (aboveY >= insets.top + PEEK_GUTTER) return { x, y: aboveY, w, above: true, pointer: true };
   const belowY = row.y + row.h + PEEK_GAP;
-  return { x, y: Math.min(belowY, Math.max(insets.top + PEEK_GUTTER, win.height - insets.bottom - PEEK_GUTTER - peekH)), w, above: false };
+  const y = Math.min(belowY, Math.max(insets.top + PEEK_GUTTER, win.height - insets.bottom - PEEK_GUTTER - peekH));
+  return { x, y, w, above: false, pointer: y === belowY };
 }
 
 /** The peek's words: the name, "Worn 4 times" (none before he's worn it), "Open piece". */
