@@ -4,7 +4,7 @@
 // (closetIdentity.ts reconcileReading): an exact color still matches on v3 fields alone, but a near color
 // (tan vs khaki chinos, grey vs charcoal) is a question for him, never a silent merge.
 
-import { reconcileReading, type ReadingReconcileEntry, type StoredProfile } from "./closetIdentity";
+import { reconcileReading, type ReadingReconcileEntry, type SameOutfit, type StoredProfile } from "./closetIdentity";
 import { SLOT_TO_CLOSET } from "./names";
 import { defaultRubric, type RubricEngine } from "./rubric";
 import type { ClosetItem, Garment, Reading } from "./types";
@@ -53,9 +53,9 @@ export interface ClosetPlan {
  */
 export function closetPlan(
   reading: Reading, closet: readonly ClosetItem[],
-  profiles: Readonly<Record<string, StoredProfile>> = {},
+  profiles: Readonly<Record<string, StoredProfile>> = {}, same?: SameOutfit,
 ): ClosetPlan {
-  const plan: ClosetPlan = { matched: [], toAdd: [], asks: [], entries: reconcileReading(reading, closet, profiles) };
+  const plan: ClosetPlan = { matched: [], toAdd: [], asks: [], entries: reconcileReading(reading, closet, profiles, same) };
   for (const e of plan.entries) {
     const g = e.from === "garment" ? reading.garments[e.index] : reading.held_items?.[e.index];
     if (!g) continue;

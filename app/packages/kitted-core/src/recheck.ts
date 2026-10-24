@@ -132,6 +132,11 @@ export interface RecheckOutcome {
   newProblems: RuleId[];
   /** S21 "change not seen": nothing done and the score didn't move. */
   notSeen: boolean;
+  /** Parts engine only (#380): the score the first check would have with only the done fixes made (what the fixes
+   *  did, rounded); `after` minus this is what the re-check photo read differently. Absent when no fix was caught. */
+  fixTo?: number;
+  /** The parts whose score that read change moved ("proportions"), when it moved the score. */
+  readParts?: string[];
 }
 
 function slotJson(r: Reading, cat: string): string {

@@ -3,7 +3,7 @@
 // settleSecondLook gives each arm until the reading is in plus a 1.5 s grace. An arm that is back by then is stored
 // with the check; one that is late or failed is left out (that arm scores as if it never ran), and the check never
 // fails, waits longer or costs anything because of it.
-import type { SecondLookInput } from '@kitted/core';
+import { defaultRubric, type Reading, type SecondLookInput } from '@kitted/core';
 import type { LookAnswerL, LookAnswerU, LookArm, StoredSecondLook } from '@/data/types';
 import type { LookResult, SecondLookCall } from '@/services/readingSource/types';
 import type { Scheduler } from '@/services/scheduler';
@@ -63,15 +63,43 @@ export function lookInput(sl: StoredSecondLook | null | undefined): SecondLookIn
 /** Does this stored look have any arm? (A re-check only asks for the arms its first check has.) */
 export const hasLook = (sl: StoredSecondLook | null | undefined): sl is StoredSecondLook => !!sl && (!!sl.u || !!sl.l);
 
+/** How much of the top under a layer look U saw below it, least first. */
+const SHOWS: readonly LookAnswerU['under_shows'][] = ['no', 'a_little', 'clearly'];
+const showsRank = (u: LookAnswerU): number => (u.under_present === 'yes' ? Math.max(0, SHOWS.indexOf(u.under_shows)) : 0);
+
+/** The layers look U judges, as the anchored merge tells pieces apart: each outer piece and top by kind and color
+ *  family. The same string for both readings = the same layers (only their state, like a tuck, may differ). */
+function layersOf(r: Reading): string {
+  return ['outerwear', 'top']
+    .map((c) => r.garments.filter((g) => g.category === c).map((g) => `${String(g.subcategory ?? '')}/${defaultRubric.fam(g.color_family ?? null) ?? ''}`).join('+'))
+    .join('|');
+}
+
 /** A re-check is scored like its first check, so the two numbers compare: it uses an arm only if the first check had
  *  it, from the re-check photo when that arm came back in time, else the first check's answer (anchored, like the
- *  reading's merge). A first check without a second look gives a re-check without one. */
-export function anchorRecheckLook(own: StoredSecondLook | null, parent: StoredSecondLook | null | undefined, parentId: string): StoredSecondLook | null {
+ *  reading's merge). A first check without a second look gives a re-check without one.
+ *  The peek, both photos (#380): when `readings` show the same outer piece and top on both (the re-check didn't
+ *  change the layers), the peek counts only if both looks saw it: the re-check keeps whichever U answer shows less.
+ *  Two looks at the same layers minutes apart that disagree mean the peek is borderline, and a borderline peek costs
+ *  nothing (#367). His Oct 24 shirt over the hoodie: `clearly`, then `a_little`. A tuck that hides it still counts
+ *  (it shows less); changed layers take the re-check photo's own answer. L is never settled this way. */
+export function anchorRecheckLook(
+  own: StoredSecondLook | null, parent: StoredSecondLook | null | undefined, parentId: string,
+  readings?: { first: Reading; merged: Reading },
+): StoredSecondLook | null {
   if (!hasLook(parent)) return null;
   const carried: LookArm[] = [];
-  const u = parent.u ? own?.u ?? (carried.push('U'), parent.u) : null;
+  let kept = false;
+  let u = parent.u ? own?.u ?? (carried.push('U'), parent.u) : null;
+  if (u && parent.u && u !== parent.u && readings && layersOf(readings.first) === layersOf(readings.merged) && showsRank(parent.u) < showsRank(u)) {
+    u = parent.u;
+    kept = true;
+  }
   const l = parent.l ? own?.l ?? (carried.push('L'), parent.l) : null;
-  return { version: own?.version ?? parent.version, u, l, ...(carried.length ? { copied: { from: parentId, why: 'firstCheck' as const, arms: carried } } : {}) };
+  const copied = carried.length
+    ? { copied: { from: parentId, why: 'firstCheck' as const, arms: carried } }
+    : kept ? { copied: { from: parentId, why: 'samePieces' as const, arms: ['U' as const] } } : {};
+  return { version: own?.version ?? parent.version, u, l, ...copied };
 }
 
 /** The look a same-photo check takes from the earlier check of that photo (undefined there = none here). */
@@ -87,7 +115,7 @@ export function copiedLook(from: { id: string; details: { secondLook?: StoredSec
 export function ownLookOf(from: { id: string; details: { secondLook?: StoredSecondLook | null } }): StoredSecondLook | null | undefined {
   const sl = from.details.secondLook;
   if (sl === undefined) return undefined;
-  const carried = sl?.copied?.why === 'firstCheck' ? sl.copied.arms : [];
+  const carried = sl?.copied?.why === 'firstCheck' || sl?.copied?.why === 'samePieces' ? sl.copied.arms : [];
   const u = sl?.u && !carried.includes('U') ? sl.u : null;
   const l = sl?.l && !carried.includes('L') ? sl.l : null;
   if (!sl || (!u && !l)) return null;

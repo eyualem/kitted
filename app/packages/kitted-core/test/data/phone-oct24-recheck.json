@@ -1,0 +1,346 @@
+{
+ "_about": "His Oct 24 re-check (pull 20261024-153001; #380): FC-5e3c4c98 (cream striped shirt open over the grey hoodie, baggy jeans, black runners, everyday, going for streetwear) and its re-check FC-9ab0e12d (white sneakers). Profile (rule 7): born 2004 (22-25), picks streetwear, minimal, workwear. No photo, no face, no name.",
+ "first": {
+  "reading": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "off_white_cream",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "at_belt",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "top",
+     "subcategory": "hoodie",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "mid_fly",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": true
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_mid",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "relaxed",
+     "hem": "cuffed",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "performance_runner",
+     "color_family": "black",
+     "pattern": "solid",
+     "logo": "small",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "secondLook": {
+   "version": "look1",
+   "u": {
+    "outer_kind": "open_shirt",
+    "outer_hem_at": "waistband",
+    "under_present": "yes",
+    "under_kind": "hoodie_or_sweatshirt",
+    "under_hem_at": "hip",
+    "under_shows": "clearly"
+   },
+   "l": {
+    "pant_end": "full_break",
+    "covers_shoe": "partly"
+   }
+  },
+  "fixes": [
+   {
+    "target": "closet_shoes",
+    "tier": "swapFromCloset",
+    "effort": 2,
+    "free": true,
+    "to": 7.5,
+    "toRaw": 7.275,
+    "gain": 1,
+    "rawGain": 0.625,
+    "edits": [
+     {
+      "op": "swap_closet",
+      "slot": "footwear"
+     }
+    ],
+    "itemId": "C-0258627b-6843-4818-99e3-a95d0c0171e7",
+    "copy": "Swap to your cream chunky sneakers",
+    "tag": "Raises Shoes and Style \u00b7 free \u00b7 from your earlier check",
+    "engine": "parts",
+    "raisesLine": "Raises Shoes and Style"
+   },
+   {
+    "target": "closet_top",
+    "tier": "swapFromCloset",
+    "effort": 2,
+    "free": true,
+    "to": 7,
+    "toRaw": 6.75,
+    "gain": 0.5,
+    "rawGain": 0.1,
+    "edits": [
+     {
+      "op": "swap_closet",
+      "slot": "top"
+     }
+    ],
+    "itemId": "C-dab6bfce-67ea-4d1b-a19a-0ba0d048aace",
+    "copy": "Swap to your blue long-sleeve tee",
+    "tag": "Raises Color to 7.5 \u00b7 free \u00b7 from your closet",
+    "engine": "parts",
+    "raisesLine": "Raises Color to 7.5"
+   }
+  ],
+  "score": 6.5
+ },
+ "recheck": {
+  "merged": {
+   "scene": {
+    "framing": "full_body",
+    "shoes_visible": true,
+    "people_count": 1,
+    "mirror_selfie": true,
+    "lighting": "good",
+    "clothed": "fully"
+   },
+   "garments": [
+    {
+     "category": "top",
+     "subcategory": "hoodie",
+     "color_family": "charcoal",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "at_belt",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": true
+    },
+    {
+     "category": "bottom",
+     "subcategory": "jeans",
+     "color_family": "denim_mid",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 4,
+     "leg_shape": "relaxed",
+     "hem": "cuffed",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": true,
+     "shows_below_outer": false
+    },
+    {
+     "category": "footwear",
+     "subcategory": "chunky_sneaker",
+     "color_family": "white",
+     "pattern": "solid",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "na",
+     "condition": "clean",
+     "certainty": "clear",
+     "length": "na",
+     "pattern_scale": "na",
+     "saturation": "na",
+     "sleeve_end": "na",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    },
+    {
+     "category": "outerwear",
+     "subcategory": "overshirt",
+     "color_family": "off_white_cream",
+     "pattern": "stripes",
+     "logo": "none",
+     "volume": 3,
+     "leg_shape": "na",
+     "hem": "na",
+     "tucked": "none",
+     "condition": "wrinkled",
+     "certainty": "clear",
+     "length": "at_belt",
+     "pattern_scale": "small",
+     "saturation": "na",
+     "sleeve_end": "at_wrist",
+     "strain": "none",
+     "distressed_by_design": false,
+     "shows_below_outer": false
+    }
+   ]
+  },
+  "ownLook": {
+   "version": "look1",
+   "u": {
+    "outer_kind": "open_shirt",
+    "outer_hem_at": "waistband",
+    "under_present": "yes",
+    "under_kind": "hoodie_or_sweatshirt",
+    "under_hem_at": "waistband",
+    "under_shows": "a_little"
+   },
+   "l": {
+    "pant_end": "stacked",
+    "covers_shoe": "partly"
+   }
+  },
+  "storedScore": 8.0,
+  "storedRecheck": {
+   "parentScore": 6.5,
+   "delta": 1.5,
+   "rawDelta": 1.325,
+   "notes": [
+    "changed: footwear",
+    "new problem: outerwear.condition = wrinkled (F7_care)"
+   ],
+   "doneFixes": [
+    {
+     "copy": "Swap to your cream chunky sneakers",
+     "earned": 1.325
+    }
+   ],
+   "newProblems": [],
+   "notSeen": false
+  }
+ },
+ "closet": [
+  {
+   "id": "C-0258627b-6843-4818-99e3-a95d0c0171e7",
+   "name": "Cream chunky sneakers",
+   "slot": "shoes",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "chunky_sneaker",
+    "color_family": "off_white_cream",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   }
+  },
+  {
+   "id": "C-dab6bfce-67ea-4d1b-a19a-0ba0d048aace",
+   "name": "Blue long-sleeve tee",
+   "slot": "top",
+   "garment": {
+    "category": "top",
+    "subcategory": "tee",
+    "color_family": "blue",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   }
+  }
+ ],
+ "opts": {
+  "occasion": "everyday",
+  "styles": [
+   [
+    "streetwear",
+    1
+   ]
+  ],
+  "boldness": "a_little"
+ }
+}

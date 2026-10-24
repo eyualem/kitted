@@ -1103,6 +1103,19 @@ const addedInBuild = {
   'closet.merge.confirmBody': 'Its photos and wears move to your {item}. Your scores stay the same.',
   'closet.merge.a11y.hint': 'Pick the piece this one is the same as',
   'closet.merge.a11y.pickHint': 'Asks before moving it',
+  // Two pieces that may be one (09-ui-review §29, #380): one card in Closet's To confirm, after the open questions.
+  // Yes folds them with the merge above (its toast item.dup.saidSame, Undo); No keeps them apart for good.
+  'closet.pair.q': 'Are these one piece?',
+  'closet.pair.why.minutes': 'They were in the same outfit a few minutes apart.',
+  'closet.pair.yes': 'Yes, one piece',
+  'closet.pair.no': 'No, two pieces',
+  'closet.pair.saidNo': 'Kept as two pieces.',
+  'closet.pair.a11y': 'Are your {a} and your {b} one piece? {reason}',
+  // A re-check's move that came from the photo, not the fix (09-ui-review §29, #380): the fix row keeps its own number
+  // and this row the rest. {parts}: the part names ("Proportions", "Proportions and Shoes").
+  'recheck.readRow': 'Read a little differently this time',
+  'recheck.readRow.detail': '{parts}, not from your change',
+  'recheck.readRow.a11y': 'Read a little differently this time, not from your change: {delta}.',
   // Wrong card (#289): a photo's long-press menu on the piece page; its picker reuses closet.merge.title (no
   // subtitle), its toast item.dup.saidSame, and "Not this piece" keeps closet.piece.splitOff, now with Undo.
   'closet.piece.another': "It's another piece…",

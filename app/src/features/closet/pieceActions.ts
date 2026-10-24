@@ -9,7 +9,7 @@ import type { ClosetItemRow } from '@/data/types';
 import { showToast, TOAST_MS_REMOVAL } from '@/features/toast/toast';
 import { fitCheck } from '@/features/fitcheck/session';
 import { DELETE_AFTER_MS } from './fileCleanup';
-import { runMerge, type MergeFlowDeps } from './merge';
+import { runMerge, runMergeNow, type MergeFlowDeps } from './merge';
 import { editToast, type EditField, type EditValue } from './pieceEdit';
 import { profileOfItem } from './profile';
 import { closetCleanup, runClosetCleanup } from './session';
@@ -167,6 +167,11 @@ function mergeDeps(): MergeFlowDeps {
  * with a toast that can undo it. `onMerged` runs once it's done (the picker closes; the page moves to the kept piece).
  * An Undo moves that page back to the restored piece if it's still on screen; from anywhere else it moves nothing.
  */
+/** Closet's pair card (#380): folds `from` into `into` at once (the card asked), with the Undo toast. */
+export async function mergePairNow(from: Pick<ClosetItemRow, 'id' | 'name'>, into: Pick<ClosetItemRow, 'id' | 'name'>): Promise<void> {
+  await runMergeNow(from, into, mergeDeps());
+}
+
 export async function mergePiece(
   from: Pick<ClosetItemRow, 'id' | 'name'>, into: Pick<ClosetItemRow, 'id' | 'name'>, o: { onMerged?: () => void } = {},
 ): Promise<void> {

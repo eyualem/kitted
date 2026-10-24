@@ -73,6 +73,11 @@ function outcomeFor(
   return partsRecheckOutcome(first, fixes, merged, opts, sl ? { ...rest, secondLook: sl } : rest, closet);
 }
 
+/** The stored split of a re-check's move (#380): what the fixes did and the parts a different read moved. */
+function readSplit(o: { fixTo?: number; readParts?: string[] }): { fixTo?: number; readParts?: string[] } {
+  return { ...(o.fixTo !== undefined ? { fixTo: o.fixTo } : {}), ...(o.readParts?.length ? { readParts: o.readParts } : {}) };
+}
+
 export interface TimerConfig {
   /** Off for screen 6's frozen state (headless Chrome's virtual time would fire them). */
   enabled: boolean;
@@ -478,8 +483,6 @@ export function createFitCheckService(deps: ServiceDeps) {
     const parentReading = await readingOf(parent);
     if (!parentReading) throw new Error(`re-check parent ${parent.id} has no reading`);
     const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile(), parent.details.secondLook));
-    // The re-check's second look, anchored to the first check's (#199): only the arms the first check had.
-    const look = anchorRecheckLook(ownLook, parent.details.secondLook, parent.id);
     const raw = await insertReading(next, 'recheckRaw', image.sha256, null, latencyMs, model, promptVersion);
     // His answer to the one quick tap holds on the re-check (a second misread can't undo it), unless a fix
     // replaces that whole piece. Re-checks never ask.
@@ -489,6 +492,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     // The anchored merge is engine-free except its "new problem" test, which still asks v4.1's rules (#209).
     const { merged, notes } = recheckMerge(parentReading, carried, targets, opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
+    // The re-check's second look, anchored to the first check's (#199): only the arms the first check had; on the same
+    // layers the peek counts only if both photos show it (#380).
+    const look = anchorRecheckLook(ownLook, parent.details.secondLook, parent.id, { first: parentReading, merged });
     const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts, look, await store.closet.all());
     await patchRow(row.id, { readingId: mergedRow.id });
     const fresh = (await store.fitChecks.get(row.id))!;
@@ -499,6 +505,7 @@ export function createFitCheckService(deps: ServiceDeps) {
           ? {
               parentScore: outcome.before, delta: outcome.delta, rawDelta: outcome.rawDelta, notes,
               doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems, notSeen: outcome.notSeen,
+              ...readSplit(outcome),
             }
           : undefined,
       },
@@ -1351,6 +1358,7 @@ export function createFitCheckService(deps: ServiceDeps) {
             ? {
                 parentScore: outcome.before, delta: outcome.delta, rawDelta: outcome.rawDelta, notes: row.details.recheck?.notes ?? [],
                 doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems, notSeen: false,
+                ...readSplit(outcome),
               }
             : row.details.recheck,
         },

@@ -161,6 +161,11 @@ export interface CheckDetails {
     parentScore: number; delta: number; rawDelta: number; notes: string[]; doneFixes: { copy: string; earned: number }[]; newProblems: string[]; notSeen: boolean;
     /** The same photo as an earlier check that day (#219): its reading reused, no new read, the re-check not used up. */
     samePhoto?: { checkId: string };
+    /** What the caught fixes did (#380): the first check's score with only them made. The card's fix row shows
+     *  fixTo − parentScore and a "Read a little differently" row the rest. Absent on re-checks stored before. */
+    fixTo?: number;
+    /** The parts that read change moved ("proportions"). */
+    readParts?: string[];
   };
   /** "Tell me": he confirmed the fix. */
   confirmed?: boolean;
@@ -220,9 +225,10 @@ export interface StoredSecondLook {
   version: string;
   u: LookAnswerU | null;
   l: LookAnswerL | null;
-  /** Taken from another check rather than read for this one: the same photo checked earlier ('samePhoto'), or a
-   *  re-check arm that didn't come back carrying its first check's answer ('firstCheck'). */
-  copied?: { from: string; why: 'samePhoto' | 'firstCheck'; arms: LookArm[] };
+  /** Taken from another check rather than read for this one: the same photo checked earlier ('samePhoto'), a
+   *  re-check arm that didn't come back carrying its first check's answer ('firstCheck'), or the first check's U kept
+   *  on a re-check of the same layers because it saw less of the peek ('samePieces', #380). */
+  copied?: { from: string; why: 'samePhoto' | 'firstCheck' | 'samePieces'; arms: LookArm[] };
 }
 
 /** Where a pre-picked look came from (02 "Going for"): today's card, his last confirmed look (7 days), his first pick

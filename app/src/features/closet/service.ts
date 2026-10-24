@@ -12,7 +12,7 @@
 // (re-matches only if he hasn't touched S11 for that check).
 import {
   cardFixTargets, closetPlan, garmentName, identity, lessonsOfYes, profileFromClosetItem, SLOT_TO_CLOSET, type ClosetItem, type ConfirmedFields, type Garment,
-  type KnownPiece, type Observation, type Reading, type StoredProfile,
+  type KnownPiece, type Observation, type Reading, type RecentPiece, type StoredProfile,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
@@ -64,6 +64,8 @@ export interface ClosetServiceDeps {
 export type DuplicateAnswer = 'same' | 'new' | 'runnerUp';
 
 const CLOSET_CATEGORIES: readonly string[] = ['top', 'outerwear', 'bottom', 'footwear'];
+/** How far back "the same outfit" reaches for the closet (#380): his checks in a row land 12 s to 2 min apart. */
+export const SAME_OUTFIT_MS = 15 * 60_000;
 /** The scored bagginess fields: a "Not quite right?" fix of one re-scores its check only (§19, #322). */
 const SCORED_FIX_FIELDS: readonly string[] = ['volume', 'leg_shape'];
 const CONFIRMABLE: readonly string[] = [
@@ -358,14 +360,38 @@ export function createClosetService(deps: ClosetServiceDeps) {
   }
 
   /**
+   * The pieces of his latest check in the SAME_OUTFIT_MS before this one (#380), each with its measured lightness in
+   * that photo; a piece merged since points at the one it went into. Empty when there's none. The engine decides
+   * whether it was the same outfit (core settleSameOutfit: 2+ other pieces in common).
+   */
+  async function sameOutfitBefore(row: FitCheckRow, all: readonly ClosetItemRow[], obsAll: readonly ClosetObservationRow[]): Promise<RecentPiece[]> {
+    const prev = (await store.fitChecks.all())
+      .filter((r) => r.id !== row.id && r.createdAt < row.createdAt && r.createdAt >= row.createdAt - SAME_OUTFIT_MS && (r.details.closetSummary?.links?.length ?? 0) > 0)
+      .sort((a, b) => b.createdAt - a.createdAt)[0];
+    if (!prev) return [];
+    const byId = new Map(all.map((c) => [c.id, c]));
+    const kept = (id: string): string | null => {
+      for (let i = 0, c = byId.get(id); c && i < 8; i++, c = c.mergedInto ? byId.get(c.mergedInto) : undefined) if (isOwned(c)) return c.id;
+      return null;
+    };
+    const obsById = new Map(obsAll.map((x) => [x.id, x]));
+    const cs = summaryOf(prev);
+    return cs.links.flatMap((l) => {
+      const id = cs.undone.includes(l.itemId) ? null : kept(l.itemId);
+      return id ? [{ itemId: id, sampledL: obsById.get(l.obsId)?.sampledL ?? null }] : [];
+    });
+  }
+
+  /**
    * Runs the engine for `pieces` against his owned closet (minus `exclude`) and writes the result: sightings,
    * new items, worn counts, open questions. Returns the summary parts it produced.
    */
   async function matchPieces(
     row: FitCheckRow, allPieces: readonly Piece[], lighting: string | null, closetReadingId: string | null,
-    o: { exclude?: ReadonlySet<string>; noWear?: ReadonlySet<string> } = {},
+    o: { exclude?: ReadonlySet<string>; noWear?: ReadonlySet<string>; alsoLinked?: readonly string[] } = {},
   ) {
-    const owned = (await store.closet.all()).filter((c) => isOwned(c) && !o.exclude?.has(c.id));
+    const all = await store.closet.all();
+    const owned = all.filter((c) => isOwned(c) && !o.exclude?.has(c.id));
     const obsAll = await store.closetObs.all();
     const { pieces: measured, heads } = await measurePieces(row, allPieces);
     const out = {
@@ -408,7 +434,9 @@ export function createClosetService(deps: ClosetServiceDeps) {
     // Every piece is a worn garment for the engine (held pieces are matched the same way); index k = pieces[k].
     for (const g of reading.garments) if (g.certainty === 'unsure') g.certainty = 'likely';
     const profiles = storedProfiles(items, obsAll);
-    const plan = closetPlan(reading, items as ClosetItem[], profiles);
+    const recent = await sameOutfitBefore(row, all, obsAll);
+    const plan = closetPlan(reading, items as ClosetItem[], profiles, recent.length > 0 ? { recent, linked: [...linked, ...(o.alsoLinked ?? [])] } : undefined);
+    for (const e of plan.entries) if (e.sameOutfit) console.log(`[closet] same outfit as the check before: ${e.outcome} ${e.itemId ?? e.candidateId}`);
     for (const e of plan.entries) {
       const p = pieces[e.index];
       if (!p) continue;
@@ -539,7 +567,9 @@ export function createClosetService(deps: ClosetServiceDeps) {
       links.push({ ...s, obsId: obs.id });
     }
     for (const s of sightings) await refreshItem(s.itemId);
-    const res = await matchPieces(row, changedPieces, merged.scene?.lighting ?? null, stored?.row.id ?? null, { noWear: new Set(parent.itemIds) });
+    const res = await matchPieces(row, changedPieces, merged.scene?.lighting ?? null, stored?.row.id ?? null, {
+      noWear: new Set(parent.itemIds), alsoLinked: sightings.map((x) => x.itemId),
+    });
     const cs: ClosetSummary = {
       matched: uniq([...sightings.map((s) => s.itemId), ...res.matched]), added: res.added, undone: prev.undone,
       links: [...links, ...res.links], asks: res.asks, state, startedAt: prev.startedAt ?? clock.nowMs(), touched: prev.touched ?? false,
@@ -1415,6 +1445,10 @@ export function createClosetService(deps: ClosetServiceDeps) {
      * (merged, like a "Yes, same one"). The checks that saw it point at the kept piece. Scores never change: only closet
      * rows and the checks' closet summaries move. Returns what Undo needs to put every changed row back, or null.
      */
+    /** "No, two pieces" on Closet's pair card (#380): never matched, asked or offered as one again. */
+    keepApart: (a: string, b: string) => serial(async () => {
+      await markDistinct(a, b);
+    }),
     merge: (fromId: string, intoId: string) => serial(async (): Promise<MergeUndo | null> => {
       if (fromId === intoId) return null;
       const all = await store.closet.all();

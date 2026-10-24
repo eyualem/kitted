@@ -114,6 +114,8 @@ export const KV_LOCAL: readonly string[] = [
   'closet.segment',
   // His Skips on the "How do your … fit?" card (09-ui-review §18, #316): a nudge he dismissed on this phone.
   'closet.fitSkip',
+  // His Skips on the "Are these one piece?" card (09-ui-review §29, #380): the same kind of nudge.
+  'closet.pairSkip',
   // The fit-check card line's cap and the answer log (§19, #322): this phone's, never synced.
   'closet.fitLine', 'closet.fitAnswers',
   // The tier the server last answered with (13-server.md §8, #328): the server's own fact, read back on every answer.

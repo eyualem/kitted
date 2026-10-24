@@ -1,7 +1,7 @@
 // Card sentences from templates (04 §5.6: no text model in the demo). Every number in them comes
 // from the computed result, never written by hand. P8's text model must pass the same checks.
 
-import { garmentName, type Fix, type Reading, type RecheckOutcome } from '@kitted/core';
+import { garmentName, PARTS_DATA, type Fix, type PartName, type Reading, type RecheckOutcome } from '@kitted/core';
 import { displayScore, scoreWordLabel } from '@/design-system/score';
 import type { CheckDetails } from '@/data/types';
 import { en, t, type StringKey } from '@/i18n/en';
@@ -46,10 +46,26 @@ export function cardSummary({ reading, overall, lounge, fixes, partial }: Summar
 export type RecheckMove = 'up' | 'same' | 'down';
 export const recheckMove = (was: number, now: number): RecheckMove => (now > was ? 'up' : now < was ? 'down' : 'same');
 
-/** The caught fix's number on a re-check (02 D10): one caught fix carries the whole move, so its row says the pill's
- *  number; with several (each its own raw points, which don't add up to the rounded pill) or no win, ''. */
-export function caughtFixGain(rc: { parentScore: number; doneFixes: readonly unknown[] }, now: number): string {
-  return recheckMove(rc.parentScore, now) === 'up' && rc.doneFixes.length === 1 ? deltaPill(now - rc.parentScore) : '';
+/** The caught fix's number on a re-check (02 D10): one caught fix carries the move it made (#380: `fixTo`, the first
+ *  check with only the fix made; a re-check stored before carries the whole pill); with several (each its own raw
+ *  points, which don't add up to the rounded pill), no win, or a fix that didn't move the rounded score, ''. */
+export function caughtFixGain(rc: { parentScore: number; doneFixes: readonly unknown[]; fixTo?: number }, now: number): string {
+  if (recheckMove(rc.parentScore, now) !== 'up' || rc.doneFixes.length !== 1) return '';
+  const to = rc.fixTo ?? now;
+  return to > rc.parentScore ? deltaPill(to - rc.parentScore) : '';
+}
+
+/** The re-check's second row (#380): the part of the move the photo read differently, not the fix ("+1.0", the parts
+ *  it moved). Only with a caught fix (`fixTo`), when it moved the rounded score, and not when a "New: …" line already
+ *  says why it dropped. null otherwise, and on re-checks stored before #380. */
+export function readRow(
+  rc: { doneFixes: readonly unknown[]; fixTo?: number; readParts?: readonly string[]; newProblems?: readonly string[] }, now: number,
+): { gain: string; parts: string } | null {
+  if (rc.fixTo === undefined || rc.doneFixes.length === 0 || now === rc.fixTo || (rc.newProblems?.length ?? 0) > 0) return null;
+  const names = PARTS_DATA.partNames as Record<PartName, string>;
+  const parts = (rc.readParts ?? []).map((p) => names[p as PartName]).filter(Boolean);
+  const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` : parts[0] ?? '';
+  return { gain: deltaPill(now - rc.fixTo), parts: list };
 }
 
 /** The re-check's summary (02 D10), honest about the direction (#276): "Layered and clean. Dialed in. Nothing else

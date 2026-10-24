@@ -710,7 +710,11 @@ export function decide(obs: Observation, closet: readonly ItemProfile[], taken: 
   return d;
 }
 
-export interface ReconcileEntry extends Decision { index: number }
+export interface ReconcileEntry extends Decision {
+  index: number;
+  /** Settled toward the piece from the same outfit minutes ago (settleSameOutfit, #380). */
+  sameOutfit?: boolean;
+}
 
 /**
  * Every garment of one check against the closet; each item goes to at most one garment (an asked-about item is
@@ -739,12 +743,86 @@ export function reconcile(observations: readonly Observation[], closet: readonly
 }
 
 export interface ReadingReconcileEntry extends Decision {
+  /** Settled toward the piece from the same outfit minutes ago (#380). */
+  sameOutfit?: boolean;
   from: "garment" | "held";
   /** Index into reading.garments or reading.held_items. */
   index: number;
 }
 
 const CLOSET_CATEGORIES: readonly string[] = ["top", "bottom", "footwear", "outerwear"];
+
+// ---------------------------------------------------------------- the same outfit, minutes ago (#380)
+/** A piece the latest check minutes ago went to, with its measured lightness in that photo. */
+export interface RecentPiece { itemId: string; sampledL: number | null }
+export interface SameOutfit {
+  /** The pieces of the latest check within the window (the app's: 15 minutes), one per garment. */
+  recent: readonly RecentPiece[];
+  /** Pieces of this check already linked outside this plan (his tap answers, a re-check's unchanged pieces). */
+  linked?: readonly string[];
+}
+/** Pieces of this check that must go to the same pieces as that check before it counts as the same outfit: library
+ *  picks a minute apart can be two different days (his Oct 18 dark tees, 32 s apart, measured 3 L* apart). */
+export const SAME_OUTFIT_MIN = 2;
+/** What "a different piece" means here: any veto but the color word and the lightness word, which flip between two
+ *  photos of one piece (his grey suede chukkas read tan 12 s later; L* 10.7 vs 12.8). */
+const SOFT_VETOES: readonly string[] = ["color", "lightness"];
+
+/**
+ * His light jeans went to "Light jeans" at 15:19 and to "Mid-wash jeans" a minute later in the same hoodie and shoes
+ * (the color word flipped, the measured lightness didn't): the same outfit minutes apart is the strongest evidence
+ * there is that a piece is the one he just wore. When at least SAME_OUTFIT_MIN other pieces of this check go to the
+ * pieces the latest check had, a slot whose decision differs from that check's piece R is settled toward R when
+ * nothing but the color or lightness word tells them apart and both photos were measured:
+ *   - no confident match yet (new, or a question): within MEASURED_SAME L* it's R; within MEASURED_FAR, ask about R;
+ *   - a confident match to another piece X: ask between R and X (never a silent move) when R has no veto at all and a
+ *     score of 0 or more, or the two photos measured within MEASURED_SAME.
+ * A different kind, brand, pattern, sleeve, zip or hood, or "No, a different one", is never crossed. Pure.
+ */
+/**
+ * Could this sighting be piece R from the same outfit minutes ago, whose photo measured `recentL`? null when anything
+ * but the color or lightness word tells them apart, or either photo wasn't measured; else how far apart the two
+ * measured (`dL`, L*), whether that's the same measured shade (`sameL`, within MEASURED_SAME) or near (`nearL`, under
+ * MEASURED_FAR), and `alike`: no veto at all and a score of 0 or more. Shared by the matcher and Closet's pair card.
+ */
+export function sameOutfitMatch(o: Observation, R: ItemProfile, recentL: number | null): { dL: number; sameL: boolean; nearL: boolean; alike: boolean; score: number } | null {
+  const obs = readObs(o);
+  const id = identity(o, R);
+  if (id.vetoes.some((v) => !SOFT_VETOES.includes(v)) || obs.sampledL === null || recentL === null) return null;
+  const dL = Math.abs(obs.sampledL - recentL);
+  return { dL, sameL: dL <= MEASURED_SAME, nearL: dL < MEASURED_FAR, alike: id.vetoes.length === 0 && id.score >= 0, score: id.score };
+}
+
+function settleSameOutfit(
+  entries: ReconcileEntry[], observations: readonly Observation[], closet: readonly ItemProfile[], same: SameOutfit,
+): ReconcileEntry[] {
+  const byId = new Map(closet.map((p) => [p.id, p]));
+  const recentIds = new Set(same.recent.map((r) => r.itemId));
+  const linked = new Set(same.linked ?? []);
+  const idOf = (e: ReconcileEntry) => (e.outcome === "same" ? e.itemId ?? null : null);
+  const out = entries.map((e) => ({ ...e }));
+  out.forEach((e, k) => {
+    const slot = readObs(observations[k]!).slot;
+    const overlap = [...linked].filter((id) => recentIds.has(id)).length
+      + out.filter((x, j) => j !== k && idOf(x) !== null && recentIds.has(idOf(x)!)).length;
+    if (overlap < SAME_OUTFIT_MIN || slot === null) return;
+    const taken = new Set(out.flatMap((x, j) => (j === k ? [] : [x.itemId, x.candidateId].filter((id): id is string => !!id))));
+    const r = same.recent.find((x) => byId.get(x.itemId)?.slot === slot && !taken.has(x.itemId) && !linked.has(x.itemId));
+    const R = r ? byId.get(r.itemId) : undefined;
+    if (!r || !R || idOf(e) === R.id) return;
+    const m = sameOutfitMatch(observations[k]!, R, r.sampledL);
+    if (!m) return;
+    if (e.outcome === "same" && e.itemId) {
+      if (m.alike || m.sameL) out[k] = { index: e.index, outcome: "ask", candidateId: R.id, runnerUpId: e.itemId, score: m.score, sameOutfit: true };
+    } else if (m.sameL) {
+      out[k] = { index: e.index, outcome: "same", itemId: R.id, score: m.score, sameOutfit: true };
+    } else if (m.nearL) {
+      const runner = e.candidateId && e.candidateId !== R.id ? e.candidateId : undefined;
+      out[k] = { index: e.index, outcome: "ask", candidateId: R.id, ...(runner ? { runnerUpId: runner } : {}), score: m.score, sameOutfit: true };
+    }
+  });
+  return out;
+}
 
 /**
  * What closetPlan() will return once it wraps this engine: worn pieces then held pieces, each same / new / ask.
@@ -753,7 +831,7 @@ const CLOSET_CATEGORIES: readonly string[] = ["top", "bottom", "footwear", "oute
  */
 export function reconcileReading(
   reading: Reading, closet: readonly ClosetItem[],
-  profiles: Readonly<Record<string, StoredProfile>> = {},
+  profiles: Readonly<Record<string, StoredProfile>> = {}, same?: SameOutfit,
 ): ReadingReconcileEntry[] {
   const lighting = reading.scene?.lighting ?? null;
   const picked: { from: "garment" | "held"; index: number; obs: Observation }[] = [];
@@ -764,7 +842,8 @@ export function reconcileReading(
   reading.garments.forEach((g, i) => visit(g, "garment", i));
   (reading.held_items ?? []).forEach((g, i) => visit(g, "held", i));
   const items = closet.map((it) => profileFromClosetItem(it, profiles[it.id] ?? {}));
-  const plan = reconcile(picked.map((p) => p.obs), items);
+  const obs = picked.map((p) => p.obs);
+  const plan = same && same.recent.length > 0 ? settleSameOutfit(reconcile(obs, items), obs, items, same) : reconcile(obs, items);
   return plan.map((e, k) => {
     const { index: _i, ...d } = e;
     return { ...d, from: picked[k]!.from, index: picked[k]!.index };

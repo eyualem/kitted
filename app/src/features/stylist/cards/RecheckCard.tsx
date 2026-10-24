@@ -7,11 +7,12 @@ import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import {
   DeltaRow, ExpandHandle, Expandable, FixRow, KButton, KCard, KCardSection, KText, RevealStepView, ScoreBlock, Seam, TagLine, TextLink, TextLinkRow, displayScore, spokenScore,
+  size, space, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSummary } from '@/features/fitcheck/explain';
+import { caughtFixGain, newProblemLines, notSeenProblem, readRow, recheckMove, recheckSummary } from '@/features/fitcheck/explain';
 import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { occasionLabel } from '../thread';
@@ -82,6 +83,8 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   // One caught fix carries the whole move, so its row says the pill's number, as the pill prints it ("+1.0"); with
   // several or no win, the rows carry no number.
   const doneGain = caughtFixGain(rc, now);
+  // The rest of the move, when the photo read something differently (#380): its own row, never the fix's.
+  const read = notSeen ? null : readRow(rc, now);
   // "Didn't catch the change? Tell me" only when a fix wasn't caught (none were, or some of the card's weren't).
   const missed = rc.doneFixes.length < (parent?.row.fixes.length ?? 0) || rc.doneFixes.length === 0;
   const problem = parent?.reading ? notSeenProblem(parent.reading, parent.row.fixes) : '';
@@ -118,6 +121,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
             ? t('card.a11y.recheckDown', { occasion, was: spokenScore(rc.parentScore), now: spokenScore(now), word: scoreWordLabel(now) })
             : t('card.a11y.recheckFlat', { occasion, now: spokenScore(now), word: scoreWordLabel(now) }),
         ...newLines.map((x) => `${x}.`),
+        ...(read ? [t('recheck.readRow.a11y', { delta: read.gain })] : []),
       ].join(' ');
   return (
     <View collapsable={false} onTouchStart={touch.onTouchStart} onTouchEnd={touch.onTouchEnd}>
@@ -172,6 +176,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
             {rc.doneFixes.map((d, i) => (
               <FixRow key={i} number={i + 1} title={d.copy} gain={doneGain} done reveal={plan ? { t: winT, badge: plan.badge } : undefined} />
             ))}
+            {read ? <ReadRow gain={read.gain} parts={read.parts} /> : null}
           </KCardSection>
         </>
       ) : null}
@@ -210,6 +215,29 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
       </Expandable>
       {notSeen ? null : <ExpandHandle open={open} onPress={() => setOpened(!opened)} />}
     </KCard>
+    </View>
+  );
+}
+
+/** The re-check's "Read a little differently this time" row (#380): a fix row's layout with an empty ring (nothing he
+ *  did), the parts it moved under it, and the rest of the pill's number. */
+function ReadRow({ gain, parts }: { gain: string; parts: string }) {
+  const { colors, isAccessibilitySize, fontScale } = useTheme();
+  const badge = Math.round(size.fixBadge * Math.min(fontScale, 2));
+  const gainText = <KText role="gain" numberOfLines={1}>{gain}</KText>;
+  return (
+    <View
+      accessible
+      accessibilityLabel={t('recheck.readRow.a11y', { delta: gain })}
+      style={{ flexDirection: 'row', alignItems: isAccessibilitySize ? 'flex-start' : 'center', gap: 12, paddingVertical: space.fixRowV, minHeight: size.hit }}
+    >
+      <View style={{ width: badge, height: badge, borderRadius: badge / 2, borderWidth: 1.3, borderColor: colors.ink3, borderStyle: 'dashed' }} />
+      <View style={{ flex: 1, gap: 3 }}>
+        <KText role="fixTitle" color="ink2">{t('recheck.readRow')}</KText>
+        {parts ? <KText role="fixDetail">{t('recheck.readRow.detail', { parts })}</KText> : null}
+        {isAccessibilitySize ? gainText : null}
+      </View>
+      {isAccessibilitySize ? null : gainText}
     </View>
   );
 }

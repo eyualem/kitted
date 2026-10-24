@@ -93,3 +93,10 @@ export async function runMerge(
   });
   return undo;
 }
+
+/** Closet's pair card "Yes, one piece" (#380): the card was the question, so no confirm; the same merge and toast. */
+export async function runMergeNow(
+  from: Pick<ClosetItemRow, 'id' | 'name'>, into: Pick<ClosetItemRow, 'id' | 'name'>, deps: Omit<MergeFlowDeps, 'confirm'>,
+): Promise<MergeUndo | null> {
+  return runMerge(from, into, { ...deps, confirm: async () => true });
+}

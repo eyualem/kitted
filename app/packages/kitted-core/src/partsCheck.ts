@@ -10,7 +10,7 @@
 
 import { G, SLOT_TO_CLOSET } from "./names";
 import { fixTargets, type Fix } from "./fixes";
-import { CASUAL_FITS_V14, partsDataFor, scoreParts, type PartName, type PartsOptions, type PartsScored } from "./parts";
+import { CASUAL_FITS_V14, partsDataFor, scoreParts, type PartName, type PartsOptions, type PartsScored, type SecondLookInput } from "./parts";
 import { PARTS_FIXES_DATA } from "./partsFixesData";
 import { defaultRubric } from "./rubric";
 import type { PartsFix, PartsFixEdit } from "./partsFixes";
@@ -204,6 +204,51 @@ function partsFixDone(fix: Fix, first: Reading, merged: Reading, closet?: readon
   }) && swapLanded(fix, merged, closet);
 }
 
+/** The first reading with only `targets` (partsFixTargets' form) taken from the re-check's merged reading: what the
+ *  first check would read with the fixes made and nothing else re-read. A whole slot ("footwear") takes the merged
+ *  pieces in that slot; a field ("top.tucked", "*.sleeve_end") takes that field from the merged piece in the same place. */
+function withTargets(first: Reading, merged: Reading, targets: readonly string[]): Reading {
+  const r = clone(first);
+  for (const t of targets) {
+    const dot = t.indexOf(".");
+    if (dot < 0) {
+      const at = r.garments.findIndex((g) => g.category === t);
+      const keep = r.garments.filter((g) => g.category !== t);
+      const put = clone(merged.garments.filter((g) => g.category === t));
+      r.garments = at < 0 ? [...keep, ...put] : [...keep.slice(0, at), ...put, ...keep.slice(at)];
+      continue;
+    }
+    const cat = t.slice(0, dot), field = t.slice(dot + 1);
+    const cats = cat === "*" ? [...new Set(r.garments.map((g) => String(g.category)))] : [cat];
+    for (const c of cats) {
+      const mine = r.garments.filter((g) => g.category === c);
+      const theirs = merged.garments.filter((g) => g.category === c);
+      mine.forEach((g, k) => {
+        const m = theirs[k];
+        if (m && has(m, field)) g[field] = clone(m[field]) as never;
+        else if (m) delete g[field];
+      });
+    }
+  }
+  return r;
+}
+
+const LOOK_U = ["under_present", "under_shows", "peek"];
+const LOOK_L = ["covers_shoe", "rests_on_shoe"];
+/** The look for "the fixes made, nothing re-read": the first check's, with an arm from the re-check's own look where
+ *  a fix changed what that arm sees (U: the top or the layer over it; L: the pants or the shoes). */
+function lookWith(first: SecondLookInput | null | undefined, merged: SecondLookInput | null | undefined, targets: readonly string[]): SecondLookInput | null {
+  const touches = (cats: readonly string[]) => targets.some((t) => t.startsWith("*.") || cats.includes(t.split(".")[0]!));
+  const out: SecondLookInput = { ...(first ?? {}) };
+  const take = (keys: readonly string[]) => {
+    for (const k of keys) delete out[k];
+    for (const k of keys) if (merged && has(merged, k)) out[k] = merged[k];
+  };
+  if (touches(["top", "outerwear"])) take(LOOK_U);
+  if (touches(["bottom", "footwear"])) take(LOOK_L);
+  return Object.keys(out).length > 0 ? out : null;
+}
+
 /** recheckOutcome with the parts engine. `merged` comes from recheckMerge(first, next, cardFixTargets(fixes)).
  *  newProblems: the parts checks that cost points now and didn't before ("cohesion:ST2", "condition").
  *  `mergedOpts`: the options for the merged side when they differ from the first's (the app: the re-check photo's own
@@ -219,7 +264,20 @@ export function partsRecheckOutcome(
   const B = b as PartsScored;
   const rawDelta = Math.round((B.rawUnrounded - A.rawUnrounded) * 1e6) / 1e6;
   const done = fixes.filter((f) => partsFixDone(f, first, merged, closet));
-  const doneFixes = done.map((f) => ({ ...clone(f), earned: done.length === 1 ? rawDelta : f.rawGain }));
+  // What the fixes did (#380): the first reading with only their slots or fields from the re-check, scored with the
+  // first check's look (the re-check's for an arm a fix touched). The rest of the move is the photo read differently:
+  // his Oct 24 sneakers earned +0.5, and the shirt over the hoodie read as peeking "a little" instead of "clearly".
+  const targets = partsFixTargets(done);
+  const mOpts = mergedOpts ?? opts;
+  const cf = done.length > 0
+    ? scoreParts(withTargets(first, merged, targets), { ...opts, secondLook: lookWith(opts.secondLook, mOpts.secondLook, targets) })
+    : null;
+  const C = cf && cf.overall !== null ? (cf as PartsScored) : null;
+  const fixRaw = C ? Math.round((C.rawUnrounded - A.rawUnrounded) * 1e6) / 1e6 : rawDelta;
+  const doneFixes = done.map((f) => ({ ...clone(f), earned: done.length === 1 ? fixRaw : f.rawGain }));
+  const readParts = C && C.overall !== B.overall
+    ? (Object.keys(B.parts) as PartName[]).filter((k) => C.parts[k] && B.parts[k].score !== C.parts[k].score)
+    : [];
   const faults = (s: PartsScored): Set<string> => {
     const out = new Set<string>();
     for (const k of Object.keys(s.parts) as PartName[]) for (const r of s.parts[k].reasons) if (r.points < 0) out.add(`${k}:${r.check}`);
@@ -232,5 +290,6 @@ export function partsRecheckOutcome(
     before: A.overall, after: B.overall, delta, rawDelta, doneFixes,
     newProblems: [...faults(B)].filter((x) => !before.has(x)) as unknown as RuleId[],
     notSeen: doneFixes.length === 0 && delta === 0,
+    ...(C ? { fixTo: C.overall, ...(readParts.length > 0 ? { readParts } : {}) } : {}),
   };
 }
