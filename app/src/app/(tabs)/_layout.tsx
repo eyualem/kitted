@@ -15,7 +15,7 @@ export default function TabsLayout() {
   // The bar shrinks as he scrolls down, the iOS 26 way, on every tab but the thread. On Stylist the
   // "Ask your stylist…" bar is the tab bar's bottom accessory (founder, Oct 9; only on the thread
   // itself: not on Past chats, and never on the other tabs). The thread never shrinks it (founder,
-  // Oct 24, #370): iOS 26 brings a shrunk bar back only on a tap, not when he scrolls back, and a chat
+  // Oct 24, #378): iOS 26 brings a shrunk bar back only on a tap, not when he scrolls back, and a chat
   // opens at its newest message and scrolls itself down as cards load, so it sat shrunk where he reads.
   const segments = useSegments() as string[];
   const onThread = segments[segments.length - 1] === 'stylist' || (segments.includes('stylist') && segments[segments.length - 1] === 'index');
