@@ -91,7 +91,10 @@ export interface PartsFixCatalog {
     neutralFor: Record<string, string>;
     shortSleeve: string[];
     keepVolume: string[];
+    /** How he wears the piece a closet swap replaces (hem, tucked): kept on the swapped-in piece. */
     keepOnSwap: string[];
+    /** The swapped-in piece's own cut (length, sleeve_end): its closet reading, else the replaced piece's (v1.8, #372). */
+    ownOnSwap: string[];
     /** Closet pieces whose type was never read ("other") are never swapped in. */
     closetSkip: string[];
   };
@@ -422,6 +425,9 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
             if (nv(g.subcategory) === nv(cur!.subcategory) && RE.fam(nv(g.color_family)) === RE.fam(nv(cur!.color_family))) continue;
             for (const k of rules.keepOnSwap) {
               if (has(cur!, k) && nv(g.category) === nv(cur!.category)) g[k] = cur![k];
+            }
+            for (const k of rules.ownOnSwap) {
+              if (has(cur!, k) && nv(g.category) === nv(cur!.category) && inList(g[k], [null, "na"])) g[k] = cur![k];
             }
             r = clone(r0);
             r.garments[i] = g;
