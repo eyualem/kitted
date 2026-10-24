@@ -12,8 +12,6 @@ export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator'
 export interface GateContext {
   /** Every score that may be said: the one-decimal numbers in the pack and the evidence ("7.0", "7.5"). */
   allowedScores: ReadonlySet<string>;
-  /** He gave a height or a build (so saying it back is possible; the rule runs either way). */
-  hasBody?: boolean;
   /** His closet's piece names ("Navy overshirt"): mid-sentence they lose their capital ("your navy overshirt", #310). */
   pieceNames?: readonly string[];
   /** His owned pieces' facts, for the fact rule (#311): "your straight jeans" when his jeans are slim is dropped. */

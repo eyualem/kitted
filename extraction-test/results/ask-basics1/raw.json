@@ -1,0 +1,176 @@
+{
+ "at": "2026-10-24T17:54:47.851Z",
+ "model": "gpt-5.6-luna",
+ "profile": "profile unknown: the demo \"full\" scenario, fit preference regular",
+ "spentUsd": 0.00937092,
+ "rows": [
+  {
+   "q": "How should chinos fit?",
+   "profile": "none",
+   "text": "Chinos should sit comfortably at the waist, skim the seat and thigh, and fall straight without pulling or ballooning. The hem should just touch your shoes with one clean break; if they bunch up, shorten them rather than sizing down. Your straight-leg pair is the safest fit for smart casual.",
+   "usd": 0.0009884000000000002,
+   "sentHeight": false,
+   "sentBuild": false
+  },
+  {
+   "q": "How should chinos fit?",
+   "profile": "tall-broad",
+   "text": "Chinos should sit comfortably at the waist, skim the seat and thigh, then fall straight without pulling or ballooning. The hem should just touch your shoes with one clean break; if they bunch up, shorten them rather than sizing down. Your straight-leg pair is the safest fit to aim for.",
+   "usd": 0.00034322000000000004,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "How should chinos fit?",
+   "profile": "short-slim",
+   "text": "Chinos should sit comfortably at the waist, skim the seat and thigh, then fall straight without pulling or ballooning. The hem should just touch your shoes with one clean break; if they bunch heavily, they’re too long. For your regular-fit preference, avoid a skinny taper and keep the leg clean through the ankle.",
+   "usd": 0.00034922,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "How long should my jeans be?",
+   "profile": "none",
+   "text": "Aim for the hem to just touch your sneakers with one clean break. Since you like straight-leg pants, avoid extra fabric pooling; cuff them once as a quick fix, or hem them if they stay too long.",
+   "usd": 0.00031702000000000005,
+   "sentHeight": false,
+   "sentBuild": false
+  },
+  {
+   "q": "How long should my jeans be?",
+   "profile": "tall-broad",
+   "text": "Aim for the hem to just touch your shoes with one clean break, not bunch up around the ankle. Since you like straight-leg pants, a slight break is the safe default; cuff them once temporarily if they run long, then hem them if the fold stays bulky.",
+   "usd": 0.00033682,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "How long should my jeans be?",
+   "profile": "short-slim",
+   "text": "Aim for the hem to just touch your shoes with one clean break, not bunch around the ankle. Since you like straight-leg pants, a slight stack is fine, but the denim shouldn’t drag behind the heel; cuff once if it’s a little long, or hem it for a cleaner line.",
+   "usd": 0.00034402,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "Is the overshirt too baggy?",
+   "profile": "none",
+   "text": "I can’t tell from the closet details alone; fit like that only shows in a photo. Send a picture wearing the navy overshirt, and I’ll check the shoulders, sleeves, and hem.",
+   "usd": 0.0010682,
+   "sentHeight": false,
+   "sentBuild": false
+  },
+  {
+   "q": "Is the overshirt too baggy?",
+   "profile": "tall-broad",
+   "text": "I can’t tell from the closet details alone—fit like bagginess only shows in a photo. Send a photo wearing the navy overshirt, and I’ll check whether the shoulders, sleeves, and hem sit cleanly.",
+   "usd": 0.0003548,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "Is the overshirt too baggy?",
+   "profile": "short-slim",
+   "text": "I can’t tell from the closet notes alone—fit like “too baggy” only shows in a photo. Send a photo wearing the navy overshirt, and I’ll check the shoulders, sleeve length, and hem.",
+   "usd": 0.00035360000000000003,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "What size hoodie should I get?",
+   "profile": "none",
+   "text": "Get your usual top size in a regular-fit hoodie; size up only if you want a noticeably roomier layer. Since you wear regular fits and tees untucked, check that the hem lands around the hip and the sleeves don’t swallow your hands. I can’t choose the exact size without your top size or the hoodie’s measurements.",
+   "usd": 0.0009768,
+   "sentHeight": false,
+   "sentBuild": false
+  },
+  {
+   "q": "What size hoodie should I get?",
+   "profile": "tall-broad",
+   "text": "Get your usual regular-fit size, but choose a hoodie with a roomy cut and longer sleeves; don’t size up automatically. I can’t see how your current tops fit, so send the hoodie’s size chart or a photo of it on and I’ll check the fit.",
+   "usd": 0.00036822000000000005,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "What size hoodie should I get?",
+   "profile": "short-slim",
+   "text": "Get your usual regular-fit size, not an oversized one. A hoodie should have a little room through the body and sleeves without swallowing the hem; if you’re between sizes, size up only if you want a relaxed streetwear fit.",
+   "usd": 0.00034901999999999996,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "How long should a winter coat be on me?",
+   "profile": "none",
+   "text": "Aim for a hem around mid-thigh to just above the knee. That length gives you useful coverage without swallowing a regular-fit outfit; avoid anything that ends at the ankle or hangs far below your knees. I can’t judge the exact length without a photo, so send one for a fit check.",
+   "usd": 0.00034822000000000005,
+   "sentHeight": false,
+   "sentBuild": false
+  },
+  {
+   "q": "How long should a winter coat be on me?",
+   "profile": "tall-broad",
+   "text": "Aim for a coat that ends around mid-thigh, roughly a hand above the knee. That length gives a taller frame clean coverage without swallowing a regular-fit outfit; avoid one that stops at the waist or hangs near the calves. For a broad cut, keep the shoulders comfortable and leave room for a sweater without sizing up everywhere.",
+   "usd": 0.00035242,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "How long should a winter coat be on me?",
+   "profile": "short-slim",
+   "text": "Aim for a coat that ends around mid-thigh, or just above the knee if it’s a dressier style. That gives you warmth without swallowing your outfit; avoid one that hangs near the calf or bunches heavily over your pants. For your regular-fit preference, the shoulder should sit cleanly and the sleeves should reach the wrist.",
+   "usd": 0.00035482000000000005,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "Should I get straight or slim jeans?",
+   "profile": "none",
+   "text": "Get straight jeans. They match your preference for straight-leg pants, work with your overshirts and boots, and won’t duplicate your slim dark jeans; look for dark straight jeans in your usual waist and a clean hem.",
+   "usd": 0.00036802000000000004,
+   "sentHeight": false,
+   "sentBuild": false
+  },
+  {
+   "q": "Should I get straight or slim jeans?",
+   "profile": "tall-broad",
+   "text": "Get straight jeans. They fit your regular-cut preference, work better with your overshirts and boots, and won’t feel as narrow as your current dark jeans; look for a dark wash with a clean hem.",
+   "usd": 0.00037222,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "Should I get straight or slim jeans?",
+   "profile": "short-slim",
+   "text": "Get straight jeans. They match your preference for straight-leg pants, work better with your smart-casual and workwear looks, and won’t feel as restrictive; choose a dark wash for the most outfit options.",
+   "usd": 0.00037222,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "What should I buy next?",
+   "profile": "none",
+   "text": "Buy a pair of brown work boots next. They fit your workwear direction, add a sturdier option beyond white sneakers, and work with your dark jeans, khaki chinos, and overshirts.",
+   "usd": 0.00035042,
+   "sentHeight": false,
+   "sentBuild": false
+  },
+  {
+   "q": "What should I buy next?",
+   "profile": "tall-broad",
+   "text": "Buy a pair of brown work boots next. They fit your workwear direction, add a sturdier option beyond white sneakers, and work with your khaki chinos and dark jeans.",
+   "usd": 0.00035102000000000006,
+   "sentHeight": true,
+   "sentBuild": true
+  },
+  {
+   "q": "What should I buy next?",
+   "profile": "short-slim",
+   "text": "Buy a navy polo next. It fits your smart-casual direction, works with both chinos and jeans, and gives you an easy step up from a tee without feeling formal.",
+   "usd": 0.00035222000000000004,
+   "sentHeight": true,
+   "sentBuild": true
+  }
+ ]
+}

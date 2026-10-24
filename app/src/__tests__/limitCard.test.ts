@@ -22,7 +22,7 @@ import { realScheduler } from '@/services/scheduler';
 jest.mock('@/features/toast/toast', () => ({ showToast: jest.fn() }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn(), dismissAll: jest.fn() } }));
 jest.mock('@/data/db', () => ({ store: {} }));
-jest.mock('@/features/fitcheck/session', () => ({ fitCheck: { start: jest.fn(), retry: jest.fn(), pickPerson: jest.fn() } }));
+jest.mock('@/features/fitcheck/session', () => ({ fitCheck: { start: jest.fn(), retry: jest.fn(), pickPerson: jest.fn(), busy: jest.fn(() => false) } }));
 jest.mock('@/services/tempPhoto', () => ({ discardTempPhoto: jest.fn() }));
 
 const fs = jest.requireActual('fs') as {
@@ -122,7 +122,7 @@ describe('the Limit card (§6.1)', () => {
       expect(ms.map((m) => [m.role, m.kind, m.cardType])).toEqual([['user', 'photo', null], ['stylist', 'card', 'held']]);
       const row = (await env.store.fitChecks.get(id))!;
       const c = limitCardContent(row, await env.quota.snapshot(), { paywallBuilt: false })!;
-      expect([c.state, c.tag, c.tagRight, c.title]).toEqual(['limit', 'Daily limit', 'Resets 4 am', "That's today's free check."]);
+      expect([c.state, c.tag, c.tagRight, c.title]).toEqual(['limit', 'Daily limit', 'Resets at 4 am', "That's today's free check."]);
       expect(c.body).toBe(t('limit.body', { n: 5 }));
       expect(c.body).toBe("I'll save this photo and score it when you open Kitted after 4 am. Questions still work tonight: 5 left.");
       expect(c.save).toBe('Save for tomorrow');

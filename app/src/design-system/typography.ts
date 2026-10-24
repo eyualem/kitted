@@ -210,7 +210,7 @@ export function wordmarkStyle(fontSize: number, letterSpacingEm: number, availab
 
 export type InkColor = keyof Pick<
   ColorTokens,
-  'ink' | 'ink2' | 'ink3' | 'accent' | 'onPrimary' | 'onMe' | 'good' | 'caution' | 'surface'
+  'ink' | 'ink2' | 'ink3' | 'accent' | 'onPrimary' | 'onMe' | 'good' | 'caution' | 'danger' | 'surface'
 >;
 
 export interface TextRole {

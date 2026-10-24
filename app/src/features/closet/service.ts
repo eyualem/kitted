@@ -1268,7 +1268,9 @@ export function createClosetService(deps: ClosetServiceDeps) {
       }
       if (renamed) await renameAll();
     }, { label: 'refreshColors' }),
-    /** Resolves when every closet call in flight has been written (demo screens, tests). */
+    /** True while a closet call (and its measuring) is still out: the next fit check waits for it (#371). */
+    busy: (): boolean => jobs.size > 0,
+    /** Resolves when every closet call in flight has been written (demo screens, tests, the next fit check: #371). */
     async settle(): Promise<void> {
       while (jobs.size > 0) await Promise.allSettled([...jobs]);
       await serial(async () => {});

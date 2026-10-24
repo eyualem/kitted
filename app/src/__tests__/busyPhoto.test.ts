@@ -9,14 +9,17 @@ import { discardTempPhoto } from '@/services/tempPhoto';
 jest.mock('@/features/toast/toast', () => ({ showToast: jest.fn() }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn(), dismissAll: jest.fn() } }));
 jest.mock('@/data/db', () => ({ store: {} }));
-jest.mock('@/features/fitcheck/session', () => ({ fitCheck: { start: jest.fn(), retry: jest.fn(), pickPerson: jest.fn() } }));
+jest.mock('@/features/fitcheck/session', () => ({ fitCheck: { start: jest.fn(), retry: jest.fn(), pickPerson: jest.fn(), busy: jest.fn(() => false) } }));
 jest.mock('@/services/tempPhoto', () => ({ discardTempPhoto: jest.fn() }));
 
 const BUSY_LINE = "Still reading your last photo. Send this one when it's done.";
 
+const WAITS_LINE = "Got it. I'll read this one right after your last check.";
+
 beforeEach(() => {
   jest.mocked(showToast).mockClear();
   jest.mocked(discardTempPhoto).mockClear();
+  jest.mocked(fitCheck.busy).mockReturnValue(false);
 });
 
 test('K1: a photo refused as busy says so; nothing else happens', async () => {
@@ -51,4 +54,24 @@ test('K3: the other outcomes keep their own answer', () => {
   explain({ outcome: 'error' });
   expect(showToast).toHaveBeenLastCalledWith(t('fail.ai'));
   expect(jest.mocked(showToast).mock.calls.flat()).not.toContain(BUSY_LINE);
+});
+
+test('O10 (#371): a photo while another check is going is told it waits its turn; it is kept and scored later', async () => {
+  jest.mocked(fitCheck.busy).mockReturnValue(true);
+  jest.mocked(fitCheck.start).mockResolvedValueOnce({ outcome: 'scored', checkId: 'FC-2' });
+  const r = await startCheck('recheck', { photoUri: 'file:///tmp/kitted-capture-9.jpg' }, 'FC-1');
+  expect(r.outcome).toBe('scored');
+  expect(t('cam.waits')).toBe(WAITS_LINE);
+  expect(showToast).toHaveBeenCalledWith(WAITS_LINE);
+  expect(discardTempPhoto).not.toHaveBeenCalled();
+});
+
+test('O10b: nothing going: no line; a photo dropped while it waited (a reset) is deleted, with nothing said', async () => {
+  jest.mocked(fitCheck.start).mockResolvedValueOnce({ outcome: 'scored', checkId: 'FC-3' });
+  await startCheck('check', { photoUri: 'file:///tmp/kitted-capture-10.jpg' });
+  expect(showToast).not.toHaveBeenCalled();
+  jest.mocked(fitCheck.start).mockResolvedValueOnce({ outcome: 'dropped' });
+  await startCheck('check', { photoUri: 'file:///tmp/kitted-capture-11.jpg' });
+  expect(showToast).not.toHaveBeenCalled();
+  expect(discardTempPhoto).toHaveBeenCalledWith('file:///tmp/kitted-capture-11.jpg');
 });

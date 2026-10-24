@@ -311,7 +311,14 @@ const V7: Migration = {
   ],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5, V6, V7];
+// V8 (Oct 24, #375): height and build are no longer asked or used (a blind test, #374, showed they didn't change Kit's
+// advice). Empty them on every phone; the columns stay so older databases and the sync schema need no reshaping.
+const V8: Migration = {
+  version: 8,
+  statements: [`UPDATE profile SET height_cm = NULL, build = ''`],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5, V6, V7, V8];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 

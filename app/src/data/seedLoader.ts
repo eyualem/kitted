@@ -82,8 +82,9 @@ export async function loadScenario(store: KittedStore, seed: unknown, opts: Load
   if (Object.keys(p).length > 0) {
     const consentAt = sc.profile ? ms(p.consentAt) : null;
     const profile: ProfileRow = {
-      id: 'me', birthYear: typeof p.birthYear === 'number' ? p.birthYear : null, heightCm: typeof p.heightCm === 'number' ? p.heightCm : null,
-      build: String(p.build ?? ''), fitPreference: String(p.fitPreference ?? ''), styles: arr(p.styles) as unknown as Styles,
+      // Height and build are no longer kept (#375): the seed's values are dropped.
+      id: 'me', birthYear: typeof p.birthYear === 'number' ? p.birthYear : null, heightCm: null,
+      build: '', fitPreference: String(p.fitPreference ?? ''), styles: arr(p.styles) as unknown as Styles,
       boldness: str(p.boldness), budget: str(p.budget), lastOccasion: (str(p.lastOccasion) ?? 'everyday') as OccasionKey,
       consentVersion: p.consentVersion === undefined || p.consentVersion === null ? null : String(p.consentVersion),
       consentAt, onboardingDone: true, ideaTime: str(p.ideaTime), units: p.units === 'metric' ? 'metric' : 'imperial',

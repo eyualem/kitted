@@ -38,6 +38,7 @@ import { buildThreadItems, liveGap, splitToday } from './thread';
 import { composerState, useComposerOpen } from './composerState';
 import { threadGrow } from './threadGrow';
 import { useAccountOffer } from '@/features/account/offerSession';
+import { useAboutYou } from '@/features/aboutYou/session';
 import { useFinishSequence } from '@/features/finish/session';
 
 /** No tab-bar accessory off iOS (the web preview): the composer stays docked. */
@@ -216,6 +217,7 @@ export function StylistScreen() {
   useFinishSequence();
   // "Keep your fits" (A3, #289): the save offer, posted when offer.ts says it's due.
   useAccountOffer();
+  useAboutYou();
 
   // The morning/evening card (02 "S1d"): posted the first time Stylist is shown in its window,
   // including when the app comes back to the front the next morning (focus doesn't fire then).
@@ -259,6 +261,8 @@ export function StylistScreen() {
     if (!action) return;
     clearStylistAction();
     if (action.kind === 'checkMyFit') openCamera();
+    // You's Re-check (#370): the same camera the card's own Re-check opens.
+    if (action.kind === 'recheck') router.push(`/camera?mode=recheck&parent=${action.checkId}`);
     if (action.kind === 'scrollTo') {
       // Only a row today's thread still shows: a stored position can be stale (U11 in 07 §17's list).
       const y = shownIds.has(action.messageId) ? rowY.current.get(action.messageId) : undefined;

@@ -90,25 +90,22 @@ describe('facts', () => {
 });
 
 describe('style card and Y2', () => {
-  it('picks in order, basics in one line, height left out when not given', () => {
+  it('picks in order, the fit in one line (height and build are no longer shown, #375)', () => {
     const p = profile();
     expect(picksOf(p.styles)).toEqual(['streetwear', 'minimalist', 'workwear']);
     expect(picksOf([['preppy', 0.5], ['old_money', 0.5]] as unknown as Styles)).toEqual(['classic_prep']);
-    expect(basicsLine(p)).toBe('5′ 10″ · Average build · Regular fit');
-    expect(basicsLine({ ...p, heightCm: null })).toBe('Average build · Regular fit');
-    expect(basicsLine({ ...p, units: 'metric' })).toBe('178 cm · Average build · Regular fit');
-    expect(styleCardSpoken(p)).toBe('Your style: Streetwear, first pick; Minimal; Workwear. 5 feet 10 inches, average build, regular fit. Edit.');
+    expect(basicsLine(p)).toBe('Regular fit');
+    expect(styleCardSpoken(p)).toBe('Your style: Streetwear, first pick; Minimal; Workwear. Regular fit. Edit.');
   });
 
-  it('build and fit he never gave (#276: saved as \'\') are left out, never shown as Average or Regular', () => {
-    const p = { ...profile(), build: '', fitPreference: '' };
-    expect(basicsLine(p)).toBe('5′ 10″');
-    expect(basicsLine({ ...p, heightCm: null })).toBe('');
-    expect(basicsLine({ ...p, fitPreference: 'relaxed' })).toBe('5′ 10″ · Relaxed fit');
-    expect(styleCardSpoken({ ...p, heightCm: null })).toBe('Your style: Streetwear, first pick; Minimal; Workwear. Edit.');
-    expect([draftOf(p).build, draftOf(p).fit]).toEqual([null, null]);
-    // Saving an unrelated change keeps them unset.
-    expect(applyDraft(p, { ...draftOf(p), budget: 'prefer_not' })).toMatchObject({ build: '', fitPreference: '' });
+  it('a fit he never gave (#276: saved as \'\') is left out, never shown as Regular', () => {
+    const p = { ...profile(), fitPreference: '' };
+    expect(basicsLine(p)).toBe('');
+    expect(basicsLine({ ...p, fitPreference: 'relaxed' })).toBe('Relaxed fit');
+    expect(styleCardSpoken(p)).toBe('Your style: Streetwear, first pick; Minimal; Workwear. Edit.');
+    expect(draftOf(p).fit).toBeNull();
+    // Saving an unrelated change keeps it unset.
+    expect(applyDraft(p, { ...draftOf(p), budget: 'prefer_not' })).toMatchObject({ fitPreference: '' });
   });
 
   it('saving with the same picks keeps the stored pairs; new picks use onboarding weights', () => {
@@ -125,7 +122,8 @@ describe('style card and Y2', () => {
     expect(applyDraft(p, d)).toEqual(p);
     const next = applyDraft(p, { ...d, fit: 'relaxed', budget: 'prefer_not' });
     expect(next).toEqual({ ...p, fitPreference: 'relaxed', budget: 'prefer_not' });
-    expect(isDirty(p, { ...d, heightIn: (d.heightIn ?? 0) + 1 })).toBe(true);
-    expect(applyDraft(p, { ...d, heightIn: 72 }).heightCm).toBe(183);
+    expect(isDirty(p, { ...d, fit: 'fitted' })).toBe(true);
+    // Height is never written by the editor (#375): a stored one stays as it was, and V8 empties it on the phone.
+    expect(applyDraft(p, { ...d, fit: 'fitted' }).heightCm).toBe(180);
   });
 });
