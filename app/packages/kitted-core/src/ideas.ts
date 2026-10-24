@@ -8,12 +8,16 @@
 // outfit he hasn't seen in 7 days, then the top he has gone longest without (least recently
 // shown or worn), then the predicted score. Bottoms, shoes and layers only get a mild push.
 //
+// Oct 24 (#378): slides are for home and the gym; anywhere else they're a last resort, like a
+// wrong-weather piece. And the card's look (its style menu) picks among the outfits that read as
+// it, ahead of rotation: picks never move a score, so ranking by score alone ignored the menu.
+//
 // The predicted score only ranks candidates. It is never shown (#59): a number worked out from
 // closet items can differ from what his photo scores.
 
 import { defaultRubric, isScored, type RubricEngine } from "./rubric";
 import { outfitReading, outfitValid } from "./rotation";
-import type { Boldness, ClosetItem, Loose, Styles } from "./types";
+import type { Boldness, ClosetItem, DetectedStyle, Loose, Styles } from "./types";
 import { isBoot, isFairWeatherShoe, isHeavyOuter, isWarmLayer, itemAllowed, type WeatherNeeds } from "./weather";
 
 export type ClosetState = "empty" | "thin" | "enough";
@@ -43,6 +47,8 @@ export interface PickInput {
   exclude?: ReadonlySet<string>;
   /** "Style this": an item that must be in the outfit. */
   pin?: string;
+  /** The card's look (its style menu): outfits that read as it go first, when the closet has any. */
+  look?: DetectedStyle | null;
 }
 
 export interface PickedOutfit {
@@ -91,6 +97,11 @@ const SHORT_SLEEVE: ReadonlySet<unknown> = new Set(["tee", "graphic_tee", "polo"
 /** Short-sleeved by type, unless the closet saw long sleeves on it (the app's art.sleeves: a long-sleeve tee, #359). */
 const isShortSleeved = (it: ClosetItem): boolean =>
   SHORT_SLEEVE.has(it.garment.subcategory) && (it.art as { sleeves?: unknown } | null | undefined)?.sleeves !== "long";
+/** Shoes for home and the gym only (#378): out of the house they're a last resort, never the pick. */
+const HOME_SHOES: ReadonlySet<unknown> = new Set(["slides_sandals"]);
+const HOME_OCCASIONS: ReadonlySet<string> = new Set(["home", "gym"]);
+const wrongOccasion = (it: ClosetItem, occasion: string): number =>
+  it.slot === "shoes" && HOME_SHOES.has(it.garment.subcategory) && !HOME_OCCASIONS.has(occasion) ? 1 : 0;
 
 /** FNV-1a, for deterministic tie-breaks. */
 function hash(s: string): number {
@@ -135,7 +146,7 @@ export function closetState(closet: readonly ClosetItem[], styles?: Styles | nul
 }
 
 export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubric): IdeaResult {
-  const { occasion, styles = null, boldness = "a_little", needs = null, evening = false, seed } = input;
+  const { occasion, styles = null, boldness = "a_little", needs = null, evening = false, seed, look = null } = input;
   const seenItems = input.history?.items ?? new Map<string, number>();
   const seenOutfits = input.history?.outfits ?? new Map<string, number>();
   const ago = (id: string) => seenItems.get(id) ?? Infinity;
@@ -170,58 +181,67 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
   };
   /** Days since this top was last on a card or worn, capped: past a week every top is equally fresh. */
   const topFreshness = (it: ClosetItem): number => Math.min(ago(it.id), ROTATE.topFresh);
-  const shortlist = (slot: keyof typeof KEEP): ClosetItem[] => {
+  const shortlist = (slot: keyof typeof KEEP, keep: number = KEEP[slot]): ClosetItem[] => {
     if (pinned && pinned.slot === slot) return [pinned];
     return bySlot(closet, slot)
       .filter((it) => itemAllowed(it, needs, occasion))
-      .map((it) => ({ it, wrong: wrongWeather(it), fresh: slot === "top" ? topFreshness(it) : 0, rank: itemBonus(it), tie: hash(`${seed}|${it.id}`) }))
+      .map((it) => ({ it, wrong: wrongWeather(it) + wrongOccasion(it, occasion), fresh: slot === "top" ? topFreshness(it) : 0, rank: itemBonus(it), tie: hash(`${seed}|${it.id}`) }))
       .sort((a, b) => a.wrong - b.wrong || b.fresh - a.fresh || b.rank - a.rank || a.tie - b.tie)
-      .slice(0, KEEP[slot])
+      .slice(0, keep)
       .map((x) => x.it);
   };
-  const tops = shortlist("top");
-  const bottoms = shortlist("bottom");
-  const shoes = shortlist("shoes");
-  const outerAll = shortlist("outer");
   const heavyOwned = input.closet.some((c) => isHeavyOuter(c.garment));
   const warmOwned = input.closet.some((c) => isWarmLayer(c.garment));
   // A pinned layer is always worn, hot day or not: "no layer" would drop the piece he asked about (#358).
-  const layerChoices: (ClosetItem | null)[] = pinned?.slot === "outer" ? [pinned] : needs?.hot ? [null] : [null, ...outerAll];
+  const layersOf = (outer: ClosetItem[]): (ClosetItem | null)[] => (pinned?.slot === "outer" ? [pinned] : needs?.hot ? [null] : [null, ...outer]);
 
-  type Candidate = { items: ClosetItem[]; layer: ClosetItem | null; wrong: number; repeat: number; fresh: number; value: number; predicted: number; tie: number };
-  /** Weather first, then a new outfit, then the top he's gone longest without, then the score. */
+  type Candidate = { items: ClosetItem[]; layer: ClosetItem | null; wrong: number; offLook: number; repeat: number; fresh: number; value: number; predicted: number; tie: number };
+  /** Weather and occasion first, then the card's look, then a new outfit, then the top he's gone longest without, then the score. */
   const better = (a: Candidate, b: Candidate): boolean =>
     a.wrong !== b.wrong ? a.wrong < b.wrong
+    : a.offLook !== b.offLook ? a.offLook < b.offLook
     : a.repeat !== b.repeat ? a.repeat < b.repeat
     : a.fresh !== b.fresh ? a.fresh > b.fresh
     : a.value !== b.value ? a.value > b.value
     : a.tie < b.tie;
-  let best: Candidate | null = null;
-  for (const t of tops)
-    for (const b of bottoms)
-      for (const s of shoes)
-        for (const l of layerChoices) {
-          // Scored in rotation's order (layer last); shown layer first.
-          const items = l ? [t, b, s, l] : [t, b, s];
-          const warm = items.some((i) => isWarmLayer(i.garment));
-          if (needs && (needs.layer === "required" || needs.layer === "outer") && warmOwned && !warm) continue;
-          if (needs?.layer === "outer" && heavyOwned && !(l && isHeavyOuter(l.garment))) continue;
-          if (!outfitValid(items, styles, boldness, engine)) continue;
-          const sc = engine.score(outfitReading(items), { occasion, styles, boldness });
-          if (!isScored(sc)) continue;
-          let value = sc.overall + items.reduce((a, i) => a + itemBonus(i), 0);
-          let wrong = items.reduce((a, i) => a + wrongWeather(i), 0);
-          if (needs?.layer === "none" && warm) {
-            value -= W.layerUnneeded; // a sweater at 75° is as wrong as a jacket
-            wrong += 1;
+  const search = (keep?: number): Candidate | null => {
+    const tops = shortlist("top", keep), bottoms = shortlist("bottom", keep), shoes = shortlist("shoes", keep);
+    const layerChoices = layersOf(shortlist("outer", keep));
+    let best: Candidate | null = null;
+    for (const t of tops)
+      for (const b of bottoms)
+        for (const s of shoes)
+          for (const l of layerChoices) {
+            // Scored in rotation's order (layer last); shown layer first.
+            const items = l ? [t, b, s, l] : [t, b, s];
+            const warm = items.some((i) => isWarmLayer(i.garment));
+            if (needs && (needs.layer === "required" || needs.layer === "outer") && warmOwned && !warm) continue;
+            if (needs?.layer === "outer" && heavyOwned && !(l && isHeavyOuter(l.garment))) continue;
+            if (!outfitValid(items, styles, boldness, engine)) continue;
+            const sc = engine.score(outfitReading(items), { occasion, styles, boldness });
+            if (!isScored(sc)) continue;
+            let value = sc.overall + items.reduce((a, i) => a + itemBonus(i), 0);
+            let wrong = items.reduce((a, i) => a + wrongWeather(i) + wrongOccasion(i, occasion), 0);
+            if (needs?.layer === "none" && warm) {
+              value -= W.layerUnneeded; // a sweater at 75° is as wrong as a jacket
+              wrong += 1;
+            }
+            if (needs?.layer === "suggested" && warm) value += W.layerSuggested;
+            const key = outfitKey(items);
+            const repeat = key !== null && (seenOutfits.get(key) ?? Infinity) < ROTATE.outfitDays ? 1 : 0;
+            const tie = hash(`${seed}|${items.map((i) => i.id).join("+")}`);
+            const offLook = look && !sc.detectedStyles.includes(look) ? 1 : 0;
+            const cand: Candidate = { items, layer: l, wrong, offLook, repeat, fresh: topFreshness(t), value, predicted: sc.overall, tie };
+            if (!best || better(cand, best)) best = cand;
           }
-          if (needs?.layer === "suggested" && warm) value += W.layerSuggested;
-          const key = outfitKey(items);
-          const repeat = key !== null && (seenOutfits.get(key) ?? Infinity) < ROTATE.outfitDays ? 1 : 0;
-          const tie = hash(`${seed}|${items.map((i) => i.id).join("+")}`);
-          const cand: Candidate = { items, layer: l, wrong, repeat, fresh: topFreshness(t), value, predicted: sc.overall, tie };
-          if (!best || better(cand, best)) best = cand;
-        }
+    return best;
+  };
+  let best = search();
+  // The shortlists are cut by rotation, which can drop every piece the card's look needs: look again across the whole closet.
+  if (look && best?.offLook) {
+    const wide = search(Infinity);
+    if (wide && better(wide, best)) best = wide;
+  }
   // Weather filtered out every outfit (say his only shoes are suede on a wet day): pick without it.
   if (!best) return needs ? pickOutfit({ ...input, needs: null }, engine) : { state: "thin", outfit: null, known: [], missingSlots: [] };
 
