@@ -967,7 +967,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
    - **Your moves row** (while not all done): same as in L1.
    - **Privacy row** (pad 5, gap 11.5, `.subheadline.weight(.medium)`): `lock` (`ink3`) + `Your photos are saved on this iPhone` + chevron.
 
-**Usage line on the plan card:** `Today: {checksUsed} of 1 checks · {questionsUsed} of 5 questions · resets 4 am` (e.g. `Today: 1 of 1 checks · 2 of 5 questions · resets 4 am`). Pro: title `Kitted Pro`, line `Up to 10 fit checks and 50 questions a day` (ruling 25 wording), button `Manage`. Trial: title `Pro trial`, line `Ends {date}. I'll remind you 2 days before.`
+**Usage line on the plan card:** `Today: {checksUsed} of 1 checks · {questionsUsed} of 5 questions · resets at 4 am` (e.g. `Today: 1 of 1 checks · 2 of 5 questions · resets at 4 am`). Pro: title `Kitted Pro`, line `Up to 10 fit checks and 50 questions a day` (ruling 25 wording), button `Manage`. Trial: title `Pro trial`, line `Ends {date}. I'll remind you 2 days before.`
 
 **Interactions:** Edit → Y2; All 9 → Y3; a fact row → Y3 fact sheet; Try Pro → P1; Manage → Y5; plan card body → Y5; moves row → L3; privacy row → Y7; gear → Y4.
 
@@ -1018,7 +1018,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 1. Day stamp `Thursday 9:12 pm`.
 2. His photo bubble, caption `Everyday` · `9:12` (crop `neck`).
 3. **Limit card** (`KCard`, pad 14 / 16, gap 13):
-   - Tagline: `Daily limit` / `Resets 4 am`.
+   - Tagline: `Daily limit` / `Resets at 4 am`.
    - Headline (19.5 semibold → `.title3.weight(.semibold)`, line height 1.25): `That's today's free check.`
    - Body (`.subheadline`, `ink2`): `I'll save this photo and score it when you open Kitted after 4 am. Questions still work tonight: 3 left.` If the re-check is still open, append ` Today's re-check still works.` If no questions are left: `I'll save this photo and score it when you open Kitted after 4 am.`
    - Buttons (stacked, gap 8, each 49.5 tall, radius 24.5, full width): PrimaryButton `Save for tomorrow` · SecondaryButton (`surface2`) `Try Pro · 14 days free` (trial already used: `Try Pro`).
@@ -1946,7 +1946,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | Key | String | Src |
 |---|---|---|
 | `limit.tag` | Daily limit | M |
-| `limit.resets` | Resets 4 am | M |
+| `limit.resets` | Resets at 4 am | M |
 | `limit.title` | That's today's free check. | M |
 | `limit.body` | I'll save this photo and score it when you open Kitted after 4 am. Questions still work tonight: {n} left. | M (template; mockup "3 left") |
 | `limit.bodyNoQuestions` | I'll save this photo and score it when you open Kitted after 4 am. | M (prefix) |
@@ -2120,7 +2120,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `fact.example.event` | Career fair on Oct 29 | M |
 | `fact.example.boldness` | Boldness: a little | M |
 | `you.plan.free` | Free plan | M |
-| `you.plan.usage` | Today: {checks} of 1 checks · {questions} of 5 questions · resets 4 am | R |
+| `you.plan.usage` | Today: {checks} of 1 checks · {questions} of 5 questions · resets at 4 am | R |
 | `you.plan.resets` | Resets at 4 am | M |
 | `you.plan.tryPro` | Try Pro | M |
 | `you.plan.pro` | Kitted Pro | N |
