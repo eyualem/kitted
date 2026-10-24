@@ -8,7 +8,7 @@
 // outfit he hasn't seen in 7 days, then the top he has gone longest without (least recently
 // shown or worn), then the predicted score. Bottoms, shoes and layers only get a mild push.
 //
-// Oct 24 (#378): slides are for home and the gym; anywhere else they're a last resort, like a
+// Oct 24 (#379): slides are for home and the gym; anywhere else they're a last resort, like a
 // wrong-weather piece. And the card's look (its style menu) picks among the outfits that read as
 // it, ahead of rotation: picks never move a score, so ranking by score alone ignored the menu.
 //
@@ -97,7 +97,7 @@ const SHORT_SLEEVE: ReadonlySet<unknown> = new Set(["tee", "graphic_tee", "polo"
 /** Short-sleeved by type, unless the closet saw long sleeves on it (the app's art.sleeves: a long-sleeve tee, #359). */
 const isShortSleeved = (it: ClosetItem): boolean =>
   SHORT_SLEEVE.has(it.garment.subcategory) && (it.art as { sleeves?: unknown } | null | undefined)?.sleeves !== "long";
-/** Shoes for home and the gym only (#378): out of the house they're a last resort, never the pick. */
+/** Shoes for home and the gym only (#379): out of the house they're a last resort, never the pick. */
 const HOME_SHOES: ReadonlySet<unknown> = new Set(["slides_sandals"]);
 const HOME_OCCASIONS: ReadonlySet<string> = new Set(["home", "gym"]);
 const wrongOccasion = (it: ClosetItem, occasion: string): number =>
@@ -318,7 +318,7 @@ export function swapOptions(input: PickInput & { outfit: readonly string[]; out:
     if (!outfitValid(items, styles, boldness, engine)) continue;
     const predicted = scoreOf(items);
     if (predicted === null || predicted < floor) continue;
-    let wrong = items.reduce((a, i) => a + wrongWeatherOf(i, needs) + wrongOccasion(i, occasion), 0); // slides out of the house go last (#378)
+    let wrong = items.reduce((a, i) => a + wrongWeatherOf(i, needs) + wrongOccasion(i, occasion), 0); // slides out of the house go last (#379)
     if (needs?.layer === "none" && warm) wrong += 1;
     options.push({
       option: { itemId: it.id, outfit: describeOutfit(items, layer, predicted, needs, evening, heavyOwned) },

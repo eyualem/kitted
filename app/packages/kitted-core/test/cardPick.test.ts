@@ -1,4 +1,4 @@
-// The card's outfit: slides stay home, and the card's look is the outfit's look (DECISIONS-LOG #378).
+// The card's outfit: slides stay home, and the card's look is the outfit's look (DECISIONS-LOG #379).
 // Checks P1–P8, written before the change. The founder's Oct 24 day card (test/data/phone-oct24-card.json)
 // picked the charcoal fleece over the brown plaid flannel, mid-wash jeans and black Adidas slides,
 // labelled Streetwear, though that outfit reads as no look and his cream chunky sneakers made a 7.5.
@@ -28,7 +28,7 @@ const card = (over: Partial<Parameters<typeof pickOutfit>[0]> = {}) =>
   pickOutfit({ closet: CLOSET, occasion: "everyday", styles: STREET, needs: NEEDS, history: HISTORY, seed: data.seed, look: "streetwear", ...over });
 const DAYS = ["2026-10-24", "2026-10-25", "2026-10-26", "2026-10-27", "2026-10-28", "2026-10-29", "2026-10-30"];
 
-describe("slides stay home (#378)", () => {
+describe("slides stay home (#379)", () => {
   it("P1 his Oct 24 card: not the slides", () => {
     const ids = card().outfit!.itemIds;
     expect(isSlides(shoeOf(ids))).toBe(false);
@@ -70,7 +70,7 @@ describe("slides stay home (#378)", () => {
   });
 });
 
-describe("the card's look is the outfit's look (#378)", () => {
+describe("the card's look is the outfit's look (#379)", () => {
   it("P5 his Oct 24 card: the outfit reads as streetwear", () => {
     expect(looksOf(card().outfit!.itemIds)).toContain("streetwear");
   });

@@ -168,7 +168,7 @@ export function createMorningService(deps: MorningDeps) {
       closet: (await closet()) as ClosetItem[],
       occasion: scoringOccasion(row.occasion),
       styles: styleInput(row.style),
-      // The card's style menu picks among the outfits that read as it (#378).
+      // The card's style menu picks among the outfits that read as it (#379).
       look: row.style,
       boldness: p?.boldness ?? 'a_little',
       needs: w ? weatherNeeds(w) : seasonNeeds(month),
