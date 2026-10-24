@@ -134,7 +134,8 @@ describe('S6 · Swap opens the sheet', () => {
     }
     expect(existsSync(join(__dirname, '..', 'features/morning/swapPicker.ts'))).toBe(false);
     expect(existsSync(join(__dirname, '..', 'features/morning/swapPicker.web.ts'))).toBe(false);
-    expect(src('app/_layout.tsx')).toMatch(/name="sheets\/swap\/\[ideaId\]" options=\{sheet\(\[0\.5, 1\]\)\}/);
+    // Medium and large; full height only at the accessibility sizes.
+    expect(src('app/_layout.tsx')).toMatch(/name="sheets\/swap\/\[ideaId\]" options=\{sheet\(isAccessibilitySize \? \[1\] : \[0\.5, 1\]\)\}/);
     expect(existsSync(join(__dirname, '..', 'app/sheets/swap/[ideaId].tsx'))).toBe(true);
   });
 });
