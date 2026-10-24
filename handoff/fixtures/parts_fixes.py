@@ -248,6 +248,9 @@ def _expand(op, r0, closet):
                 for k in rules["keepOnSwap"]:                  # how he wears it comes from the photo
                     if k in cur and g.get("category") == cur.get("category"):
                         g[k] = cur[k]
+                for k in rules["ownOnSwap"]:                   # the piece's own cut, when it was read (v1.8, #370)
+                    if k in cur and g.get("category") == cur.get("category") and g.get(k) in (None, "na"):
+                        g[k] = cur[k]
                 r = copy.deepcopy(r0); r["garments"][i] = g
             else:
                 r = copy.deepcopy(r0); r["garments"].append(g)

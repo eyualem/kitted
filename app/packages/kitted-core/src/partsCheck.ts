@@ -150,6 +150,7 @@ export function applyPartsFix(reading: Reading, fix: Pick<Fix, "edits" | "itemId
           if (i < 0) return null;
           const cur = r.garments[i]!;
           for (const k of rules.keepOnSwap) if (has(cur, k) && g.category === cur.category) g[k] = cur[k];
+          for (const k of rules.ownOnSwap) if (has(cur, k) && g.category === cur.category && [null, "na"].includes((g[k] ?? null) as string | null)) g[k] = cur[k];
           r.garments[i] = g;
         } else {
           r.garments.push(g);
@@ -182,20 +183,34 @@ function fieldChanged(first: Reading, merged: Reading, cat: string, field: strin
   const pick = (r: Reading) => r.garments.filter((g) => cat === "*" || g.category === cat).map((g) => g[field] ?? null);
   return JSON.stringify(pick(first)) !== JSON.stringify(pick(merged));
 }
-function partsFixDone(fix: Fix, first: Reading, merged: Reading): boolean {
+/** A closet swap counts as done only when its slot now holds that piece (its kind or its color), not when the piece he
+ *  kept on is just read differently: his grey suede shoes read as grey work boots, then as tan chukkas, and the re-check
+ *  said he'd swapped to his cream chunky sneakers (#370). Without the closet (or the piece), any change counts. */
+function swapLanded(fix: Fix, merged: Reading, closet: readonly ClosetItem[] | undefined): boolean {
+  const slots = partsEdits(fix).flatMap((op) => (op.op === "swap_closet" ? [op.slot] : []));
+  const it = closet && fix.itemId ? closet.find((c) => c.id === fix.itemId) : undefined;
+  if (slots.length === 0 || !it) return true;
+  const fam = (c: unknown) => defaultRubric.fam(c ?? null);
+  return slots.every((slot) => {
+    const g = merged.garments.find((x) => x.category === slot);
+    return !!g && ((g.subcategory ?? null) === (it.garment.subcategory ?? null) || fam(g.color_family) === fam(it.garment.color_family));
+  });
+}
+function partsFixDone(fix: Fix, first: Reading, merged: Reading, closet?: readonly ClosetItem[]): boolean {
   return partsFixTargets([fix]).some((t) => {
     const dot = t.indexOf(".");
     if (dot < 0) return slotJson(first, t) !== slotJson(merged, t);
     return fieldChanged(first, merged, t.slice(0, dot), t.slice(dot + 1));
-  });
+  }) && swapLanded(fix, merged, closet);
 }
 
 /** recheckOutcome with the parts engine. `merged` comes from recheckMerge(first, next, cardFixTargets(fixes)).
  *  newProblems: the parts checks that cost points now and didn't before ("cohesion:ST2", "condition").
  *  `mergedOpts`: the options for the merged side when they differ from the first's (the app: the re-check photo's own
- *  second look); default `opts`, so both sides score alike. */
+ *  second look); default `opts`, so both sides score alike. `closet`: the pieces the card's closet swaps named, so a swap
+ *  counts only when that piece is in the photo. */
 export function partsRecheckOutcome(
-  first: Reading, fixes: readonly Fix[], merged: Reading, opts: PartsOptions = {}, mergedOpts?: PartsOptions,
+  first: Reading, fixes: readonly Fix[], merged: Reading, opts: PartsOptions = {}, mergedOpts?: PartsOptions, closet?: readonly ClosetItem[],
 ): RecheckOutcome | null {
   const a = scoreParts(first, opts);
   const b = scoreParts(merged, mergedOpts ?? opts);
@@ -203,7 +218,7 @@ export function partsRecheckOutcome(
   const A = a as PartsScored;
   const B = b as PartsScored;
   const rawDelta = Math.round((B.rawUnrounded - A.rawUnrounded) * 1e6) / 1e6;
-  const done = fixes.filter((f) => partsFixDone(f, first, merged));
+  const done = fixes.filter((f) => partsFixDone(f, first, merged, closet));
   const doneFixes = done.map((f) => ({ ...clone(f), earned: done.length === 1 ? rawDelta : f.rawGain }));
   const faults = (s: PartsScored): Set<string> => {
     const out = new Set<string>();

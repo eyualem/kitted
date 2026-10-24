@@ -60,13 +60,17 @@ export const LAST_LOOK_MS = 7 * 24 * 3600 * 1000;
 
 
 /** The re-check card's numbers, with the engine the first check was scored with. `opts` carry the first check's second
- *  look; `mergedLook` is the re-check's own (anchored, secondLook.anchorRecheckLook), so each side scores as its card did. */
-function outcomeFor(engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: CheckScoreOptions, mergedLook?: StoredSecondLook | null) {
+ *  look; `mergedLook` is the re-check's own (anchored, secondLook.anchorRecheckLook), so each side scores as its card did.
+ *  `closet`: every piece, so a closet swap counts as done only when that piece is in the photo (#370). */
+function outcomeFor(
+  engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: CheckScoreOptions, mergedLook: StoredSecondLook | null | undefined,
+  closet: readonly ClosetItem[],
+) {
   if (engine !== 'parts') return recheckOutcome(first, fixes, merged, opts);
   const { secondLook: _first, ...rest } = opts;
   void _first;
   const sl = lookInput(mergedLook);
-  return partsRecheckOutcome(first, fixes, merged, opts, sl ? { ...rest, secondLook: sl } : rest);
+  return partsRecheckOutcome(first, fixes, merged, opts, sl ? { ...rest, secondLook: sl } : rest, closet);
 }
 
 export interface TimerConfig {
@@ -325,14 +329,15 @@ export function createFitCheckService(deps: ServiceDeps) {
     const seen = await readingOf(row);
     const engine = engineOf(parent);
     const look = row.details.secondLook;
-    const caught = new Set(seen ? (outcomeFor(engine, first, parent.fixes, seen, opts, look)?.doneFixes ?? []).map((f) => f.target) : []);
+    const pieces = await store.closet.all();
+    const caught = new Set(seen ? (outcomeFor(engine, first, parent.fixes, seen, opts, look, pieces)?.doneFixes ?? []).map((f) => f.target) : []);
     const closet = await closetFor(parent);
     let reading: Reading | null = first;
     for (const f of parent.fixes.filter((x) => !targets || targets.includes(x.target) || caught.has(x.target))) {
       reading = reading ? (isPartsFix(f) ? applyPartsFix(reading, f, { closet }) : applyFix(reading, f, { closet, occasion: parent.occasion })) : null;
     }
     if (!reading) return null;
-    return { row, parent, reading, outcome: outcomeFor(engine, first, parent.fixes, reading, opts, look) };
+    return { row, parent, reading, outcome: outcomeFor(engine, first, parent.fixes, reading, opts, look, pieces) };
   };
 
   /** "Same shoes as Monday?": the shoes from the last logged day before this check. */
@@ -463,7 +468,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     // The anchored merge is engine-free except its "new problem" test, which still asks v4.1's rules (#209).
     const { merged, notes } = recheckMerge(parentReading, carried, targets, opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
-    const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts, look);
+    const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts, look, await store.closet.all());
     await patchRow(row.id, { readingId: mergedRow.id });
     const fresh = (await store.fitChecks.get(row.id))!;
     const { row: scored } = await rescore(fresh, merged, {
