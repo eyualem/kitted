@@ -1,5 +1,5 @@
 // Height, build and fit (02 §3.6 Y2): the one set of controls for You → Style profile and Kit's "About you" sheet
-// (10-onboarding.md §10, #370), so the two can't drift. All three start blank until he taps; none moves a score.
+// (10-onboarding.md §10, #371), so the two can't drift. All three start blank until he taps; none moves a score.
 import { Pressable, View } from 'react-native';
 import { KText, RowDivider, opacity, space, useTheme } from '@/design-system';
 import { BUILDS, buildLabel, FITS, fitLabel, heightSpoken, stepHeight, type Build, type FitPref } from '@/features/onboarding/basics';
@@ -36,11 +36,14 @@ export function BasicsFields({ value, units, onChange }: { value: BasicsValues; 
   );
 }
 
-/** A 52 pt row: label left, control right (stacked at accessibility sizes). */
-export function Row({ label, children }: { label: string; children: React.ReactNode }) {
+/** A 52 pt row: label left, control right (stacked at accessibility sizes). `spoken` makes a read-only row one
+ *  VoiceOver element ("Birth year, 2005"); a row holding a control lets the control speak. */
+export function Row({ label, spoken, children }: { label: string; spoken?: string; children: React.ReactNode }) {
   const { isAccessibilitySize } = useTheme();
   return (
     <View
+      accessible={!!spoken}
+      accessibilityLabel={spoken}
       style={[
         { minHeight: 52, paddingHorizontal: space.rowX, paddingVertical: space.s },
         isAccessibilitySize ? { gap: space.xs } : { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.m },

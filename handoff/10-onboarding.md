@@ -428,7 +428,7 @@ Screens 180–181 use only existing copy. Sequence step 'later' after a scored r
 
 ---
 
-## 10. Basics down to the birth year; height, build and fit asked after the first score (Oct 21, #370)
+## 10. Basics down to the birth year; height, build and fit asked after the first score (Oct 21, #371)
 
 *The founder, Oct 21, after the onboarding review: "that sounds good. plan out the things that have to be done and also tests. leave placeholders for auth for now." Then: "build the birth-year onboarding plan (§10) with the draft words, tests first." **Built Oct 21; results in §10.7.** The review's point: height, build and fit are optional, but they put a screen of questions before he's seen any value, and "Build" (Slim · Average · Broad) is the one question about his body, asked before the app has earned it, in an app whose line is "it rates the outfit, never you." This section is the plan and the checks, written before any code. §10.6 holds the account work as placeholders.*
 

@@ -5,7 +5,7 @@
 import { ActionSheetIOS, Platform, Pressable, View } from 'react-native';
 import { router } from 'expo-router';
 import type { ZoneOffset } from '@kitted/core';
-import { Icon, KButton, KCard, KText, RowDivider, opacity, space, useTheme } from '@/design-system';
+import { Icon, KButton, KCard, KText, radius, RowDivider, opacity, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { FactRow } from '@/data/types';
 import { t } from '@/i18n/en';
@@ -71,7 +71,7 @@ function FactItem({ f, zone }: { f: FactRow; zone: ZoneOffset }) {
 export function FactCard({ facts }: { facts: readonly FactRow[] }) {
   const zone = sessionClock.offset;
   return (
-    <KCard>
+    <KCard radius={radius.cardSmall}>
       {facts.length === 0 ? (
         <KText variant="subheadline" color="ink2" style={{ paddingVertical: space.rowY, paddingHorizontal: space.rowX }}>
           {t('you.facts.empty')}
@@ -79,7 +79,7 @@ export function FactCard({ facts }: { facts: readonly FactRow[] }) {
       ) : (
         facts.map((f, i) => (
           <View key={f.id}>
-            {i > 0 ? <RowDivider /> : null}
+            {i > 0 ? <RowDivider inset={space.rowX} /> : null}
             <FactItem f={f} zone={zone} />
           </View>
         ))

@@ -906,7 +906,7 @@ const addedInBuild = {
   'you.today.done': "Today's check: done",
   'you.today.next': 'next at 4 am',
   'you.today.title': 'Today',
-  'you.today.resets': 'resets 4 am',
+  'you.today.resets': 'resets at 4 am',
   'you.today.recheck': '1 re-check left',
   'you.today.questions': '{n} questions left',
   'you.today.question1': '1 question left',
@@ -953,7 +953,7 @@ const addedInBuild = {
   // (A2), bringing back his fits (A4), which fits to keep (A5), the save offer (A3), You's Account rows and the
   // onboarding fixes from the UI review. Outward-facing: on the founder's skim list.
   'onb.welcome.haveAccount': 'I already have an account',
-  // Since #370 O3 asks only the birth year (10-onboarding.md §10); height, build and fit come later, from Kit's
+  // Since #371 O3 asks only the birth year (10-onboarding.md §10); height, build and fit come later, from Kit's
   // "About you" card. Outward-facing: on the founder's skim list.
   'onb.basics.replyTwo': '{style1} with some {style2}. Good mix. One more thing: your birth year.',
   'onb.basics.replyOne': '{style1}. Good pick. One more thing: your birth year.',
@@ -1030,7 +1030,7 @@ const addedInBuild = {
   'acct.choose.confirmTitle': 'Delete the fits on this iPhone?',
   'acct.choose.confirmBody': "The {local} fits that aren't in your account are deleted from this iPhone. It can't be undone.",
   'acct.choose.confirmYes': 'Delete them',
-  // Kit's "About you" card and sheet (#370, 10-onboarding.md §10.1): height, build and fit, asked after the first
+  // Kit's "About you" card and sheet (#371, 10-onboarding.md §10.1): height, build and fit, asked after the first
   // score. Outward-facing: on the founder's skim list.
   'about.tag': 'Optional',
   'about.tagRight': '10 seconds',

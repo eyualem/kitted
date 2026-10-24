@@ -1,4 +1,4 @@
-// O3 · Basics (02 D3), since #370 the birth-year step: his looks echoed back, Kit's reply, then only the birth year
+// O3 · Basics (02 D3), since #371 the birth-year step: his looks echoed back, Kit's reply, then only the birth year
 // (blank until he picks one on the O3w list; no −/+ on it, since one stray tap could turn 18 into 17, #276). Height,
 // build and fit moved to Kit's "About you" card after the first score (10-onboarding.md §10). "Continue" is off until a
 // year is picked; under 18 asks once ("Born in 2009?"), then sets the age flag and replaces everything with O4. The

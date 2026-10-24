@@ -1,4 +1,4 @@
-// Demo screens 240–244 (10-onboarding.md §10, #370): Kit's "About you" card in each state, posted through the same
+// Demo screens 240–244 (10-onboarding.md §10, #371): Kit's "About you" card in each state, posted through the same
 // service the app runs. The full scenario's profile has its basics cleared first (the card never asks a profile that
 // gave them), and the end-of-onboarding sequence is marked done, as on a phone past its first day.
 import type { KittedStore } from '@/data/store';

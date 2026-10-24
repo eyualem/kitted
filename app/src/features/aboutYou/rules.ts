@@ -1,4 +1,4 @@
-// When Kit asks for height, build and fit (10-onboarding.md §10.2, #370), pure. Never before a scored fit, never while a
+// When Kit asks for height, build and fit (10-onboarding.md §10.2, #371), pure. Never before a scored fit, never while a
 // check is busy, never once one of the three is given, at most twice (the second 7 days after a Not now), and one ask
 // per visit with the end-of-onboarding sequence and the save offer. First under an answer that would use them (T1),
 // else on a later visit once the sequence is over (T2).

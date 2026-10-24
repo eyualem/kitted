@@ -34,7 +34,7 @@ describe('onboarding basics (02 D3)', () => {
     expect(looksEcho(['streetwear', 'workwear'])).toBe('Streetwear · Workwear');
     expect(looksReply(['smart_casual', 'workwear'])).toBe('Smart casual with some workwear. Good mix. One more thing: your birth year.');
     expect(looksReply(['minimalist'])).toMatch(/^Minimal\. Good pick\./);
-    // Since #370 O3 asks only the year, so Consent echoes it alone.
+    // Since #371 O3 asks only the year, so Consent echoes it alone.
     expect(basicsEcho({ heightIn: null, build: 'average', fit: 'regular', birthYear: 2005 })).toBe('Born in 2005');
   });
 

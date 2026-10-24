@@ -1,4 +1,4 @@
-// "About you" (10-onboarding.md §10.1, #370): height, build and fit, from Kit's card. The same controls as You → Style
+// "About you" (10-onboarding.md §10.1, #371): height, build and fit, from Kit's card. The same controls as You → Style
 // profile (BasicsFields), all starting from what he's given (blank on a new install). Save writes through You's code
 // and marks the card; X keeps nothing.
 import { router, useLocalSearchParams } from 'expo-router';

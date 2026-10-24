@@ -1,31 +1,36 @@
 // Y2 · Style profile (02 §3.6 Y2; revised #246): Basics (height, build, fit; birth year read-only), Styles (up to 3,
-// numbered in pick order) and Budget per piece (only ever asked; "Prefer not to say" is an answer). `Save` in the
-// header is on once something changed. It writes the profile row the way onboarding does; none of this moves a
-// score (picks only order tips and break "Reads as" ties, #211).
+// numbered in pick order) and Budget per piece (only ever asked; "Prefer not to say" is an answer). Leaving any way
+// saves, so the header says `Done` (#370), not Save. It writes the profile row the way onboarding does (a blank one
+// when none is stored); none of this moves a score (picks only order tips and break "Reads as" ties, #211). A 4th
+// look buzzes, shakes and says "That's 3", like onboarding's.
 // How bold (02 Y2) is left out on purpose: `profile.boldness` feeds the scoring engine today (parts.ts color and the
 // focal allowance) and the Why sheet re-explains old checks with it, so editing it here would change scores.
+import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { AccessibilityInfo, Pressable, ScrollView, View } from 'react-native';
 import { Stack, router, useNavigation } from 'expo-router';
-import { Chip, ChipFlow, KCard, KText, MonoLabel, RowDivider, opacity, space, useTheme } from '@/design-system';
+import { Chip, ChipFlow, KCard, KText, MonoLabel, RowDivider, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { styleLabel } from '@/features/morning/copy';
 import { LOOKS, MAX_PICKS, togglePick } from '@/features/onboarding/looks';
 import { NumberedPill } from '@/features/you/NumberedPill';
 import { BasicsFields, Row } from '@/features/you/BasicsFields';
-import { BUDGETS, budgetLabel, draftOf, isDirty, saveDraft, type ProfileDraft } from '@/features/you/profile';
+import { BUDGETS, blankProfile, budgetLabel, draftOf, saveDraft, type ProfileDraft } from '@/features/you/profile';
+import { sessionClock } from '@/state/session';
 import { t } from '@/i18n/en';
 
 export default function StyleProfileScreen() {
   const { colors } = useTheme();
-  const profile = useLive(['profile'], () => store.profile.get('me'), []);
+  const stored = useLive(['profile'], () => store.profile.get('me'), []);
+  // None stored (an install that skipped onboarding): edit a blank one; the first change creates the row.
+  const profile = stored === undefined ? undefined : (stored ?? blankProfile(0));
   // His edits; until the first one the draft is the stored profile.
   const [edits, setEdits] = useState<ProfileDraft | null>(null);
   const [saving, setSaving] = useState(false);
+  const [shake, setShake] = useState<Record<string, number>>({});
   const draft = edits ?? (profile ? draftOf(profile) : null);
 
-  const dirty = !!profile && !!draft && isDirty(profile, draft);
   const update = (patch: Partial<ProfileDraft>) => {
     if (draft) setEdits({ ...draft, ...patch });
   };
@@ -34,7 +39,7 @@ export default function StyleProfileScreen() {
     if (!draft || saving) return;
     setSaving(true);
     try {
-      await saveDraft(store, draft);
+      await saveDraft(store, draft, sessionClock.nowMs());
       if (router.canGoBack()) router.back();
     } finally {
       setSaving(false);
@@ -49,7 +54,7 @@ export default function StyleProfileScreen() {
   }, [edits]);
   const navigation = useNavigation();
   useEffect(() => navigation.addListener('beforeRemove', () => {
-    if (latest.current) void saveDraft(store, latest.current).catch((e: unknown) => console.error('[profile] save on leave failed', e));
+    if (latest.current) void saveDraft(store, latest.current, sessionClock.nowMs()).catch((e: unknown) => console.error('[profile] save on leave failed', e));
   }), [navigation]);
 
   const units = profile?.units ?? 'imperial';
@@ -63,10 +68,13 @@ export default function StyleProfileScreen() {
         {profile && draft ? (
           <>
             <Section title={t('profile.basics')}>
-              <KCard>
+              <KCard radius={radius.cardSmall}>
                 <BasicsFields value={draft} units={units} onChange={update} />
                 <RowDivider inset={space.rowX} />
-                <Row label={t('onb.basics.birthYear')}>
+                <Row
+                  label={t('onb.basics.birthYear')}
+                  spoken={t('settings.a11y.value', { label: t('onb.basics.birthYear'), value: profile.birthYear !== null ? String(profile.birthYear) : t('profile.birthYearNone') })}
+                >
                   <KText variant="callout" color="ink2" tabular>
                     {profile.birthYear !== null ? String(profile.birthYear) : t('profile.birthYearNone')}
                   </KText>
@@ -76,7 +84,7 @@ export default function StyleProfileScreen() {
             </Section>
 
             <Section title={t('profile.styles')} right={t('profile.stylesMax')}>
-              <KCard>
+              <KCard radius={radius.cardSmall}>
                 <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.xs }}>
                   <ChipFlow accessibilityLabel={t('profile.styles')}>
                     {LOOKS.map(({ style }) => {
@@ -89,9 +97,17 @@ export default function StyleProfileScreen() {
                           title={styleLabel(style)}
                           filled={picked}
                           accessibilityLabel={picked ? t('profile.a11y.pick', { style: styleLabel(style), n: at + 1 }) : styleLabel(style)}
+                          shake={shake[style] ?? 0}
                           onPress={() => {
                             const r = togglePick(draft.picks, style);
-                            if (!r.full) update({ picks: r.picks });
+                            if (!r.full) {
+                              update({ picks: r.picks });
+                              return;
+                            }
+                            // A 4th look: answer like onboarding (buzz, shake, the line read out; the footer says it).
+                            void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+                            setShake((m) => ({ ...m, [style]: (m[style] ?? 0) + 1 }));
+                            AccessibilityInfo.announceForAccessibility?.(t('profile.stylesFull'));
                           }}
                         />
                       );
@@ -103,7 +119,7 @@ export default function StyleProfileScreen() {
             </Section>
 
             <Section title={t('profile.budget')}>
-              <KCard>
+              <KCard radius={radius.cardSmall}>
                 <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.xs }}>
                   <ChipFlow accessibilityLabel={t('profile.budget')}>
                     {BUDGETS.map((b) => (
@@ -117,24 +133,25 @@ export default function StyleProfileScreen() {
           </>
         ) : null}
       </ScrollView>
-      <Stack.Screen options={{ headerRight: () => <SaveButton enabled={dirty && !saving} onPress={() => void save()} /> }} />
+      <Stack.Screen options={{ headerRight: () => <DoneButton enabled={!saving} onPress={() => void save()} /> }} />
     </>
   );
 }
 
-function SaveButton({ enabled, onPress }: { enabled: boolean; onPress: () => void }) {
+/** Done: saves what changed (leaving any other way does too) and goes back. */
+function DoneButton({ enabled, onPress }: { enabled: boolean; onPress: () => void }) {
   return (
     <Pressable
       onPress={onPress}
       disabled={!enabled}
       accessibilityRole="button"
-      accessibilityLabel={t('common.save')}
+      accessibilityLabel={t('common.done')}
       accessibilityState={{ disabled: !enabled }}
       hitSlop={8}
       style={({ pressed }) => ({ opacity: !enabled ? opacity.disabled : pressed ? opacity.pressed : 1, paddingHorizontal: 6, minHeight: 28, justifyContent: 'center' })}
     >
       <KText variant="body" weight="600" color="ink" maxFontSizeMultiplier={1.4}>
-        {t('common.save')}
+        {t('common.done')}
       </KText>
     </Pressable>
   );
