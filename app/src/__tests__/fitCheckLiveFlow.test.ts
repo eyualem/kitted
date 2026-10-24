@@ -204,14 +204,16 @@ describe('(e) a step that never settles can no longer hold the slot', () => {
     }
   });
 
-  it('one at a time still holds: a second photo while one is genuinely reading is refused ("busy")', async () => {
+  it('one at a time still holds: a second photo while one is genuinely reading waits (#371), a third is refused ("busy")', async () => {
     const { svc, check, mock } = await setup();
     mock.holdAt = 0.5;
     const first = check('p01b');
     await new Promise((r) => setTimeout(r, 20));
-    expect(await check('s15', 'everyday')).toEqual({ outcome: 'busy' });
+    const second = check('s15', 'everyday');
+    expect(await check('s14', 'everyday')).toEqual({ outcome: 'busy' });
     mock.holdAt = null;
     await svc.cancel();
+    expect(await second).toEqual({ outcome: 'dropped' });
     expect((await first).outcome).toBe('failed');
     expect((await check('s15', 'everyday')).outcome).toBe('scored');
   });

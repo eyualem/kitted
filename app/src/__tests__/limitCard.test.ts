@@ -22,7 +22,7 @@ import { realScheduler } from '@/services/scheduler';
 jest.mock('@/features/toast/toast', () => ({ showToast: jest.fn() }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn(), dismissAll: jest.fn() } }));
 jest.mock('@/data/db', () => ({ store: {} }));
-jest.mock('@/features/fitcheck/session', () => ({ fitCheck: { start: jest.fn(), retry: jest.fn(), pickPerson: jest.fn() } }));
+jest.mock('@/features/fitcheck/session', () => ({ fitCheck: { start: jest.fn(), retry: jest.fn(), pickPerson: jest.fn(), busy: jest.fn(() => false) } }));
 jest.mock('@/services/tempPhoto', () => ({ discardTempPhoto: jest.fn() }));
 
 const fs = jest.requireActual('fs') as {

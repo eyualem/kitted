@@ -429,6 +429,8 @@ const addedInBuild = {
   'mic.off.settings': 'Open Settings',
   // A second photo while one is reading (09-ui-review §11, #305): the founder's listed default (#233 item 8).
   'cam.busy': "Still reading your last photo. Send this one when it's done.",
+  // A photo taken while another check is going waits its turn instead (#371; built with this line, on his skim list).
+  'cam.waits': "Got it. I'll read this one right after your last check.",
   // The Closet's Outfits half (09-ui-review §13, #307): D15's approved labels; the reason fallback and the go-to
   // caption are new (listed for the founder's skim).
   'closet.seg.pieces': 'Pieces',
