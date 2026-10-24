@@ -245,7 +245,7 @@ describe('R11 · a missing record says "This isn\'t here anymore."', () => {
 
 describe('R12 · no placeholder route ships', () => {
   const layout = src('app/_layout.tsx');
-  // sheets/swap/[ideaId] was a placeholder until S28 was built on it (#370, swapSheet.test.ts S6).
+  // sheets/swap/[ideaId] was a placeholder until S28 was built on it (#377, swapSheet.test.ts S6).
   it.each(['shoe-snap', 'sheets/describe', 'sheets/looks-by-name', 'sheets/rotation'])('%s is deleted and unregistered', (route) => {
     expect(existsSync(join(SRC, 'app', `${route}.tsx`))).toBe(false);
     expect(layout).not.toContain(`name="${route}"`);

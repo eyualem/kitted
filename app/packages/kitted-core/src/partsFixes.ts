@@ -70,6 +70,8 @@ export interface PartsNextLevel {
   group?: string;
   /** v1.7 (#336), with `always`: a tuck tip by shirt type, also shown next to fixes when no tuck fix is shown. */
   tuck?: boolean;
+  /** v1.9 (#376), with `always`: an anchoring tip, also shown next to fixes when no fix shown clears the light on light. */
+  anchor?: boolean;
   /** v1.7: the slot whose garment fills {name} in an `always` tip (default the bottom). */
   name?: string;
   /** Second-look overrides after the edit. */
@@ -91,7 +93,10 @@ export interface PartsFixCatalog {
     neutralFor: Record<string, string>;
     shortSleeve: string[];
     keepVolume: string[];
+    /** How he wears the piece a closet swap replaces (hem, tucked): kept on the swapped-in piece. */
     keepOnSwap: string[];
+    /** The swapped-in piece's own cut (length, sleeve_end): its closet reading, else the replaced piece's (v1.8, #372). */
+    ownOnSwap: string[];
     /** Closet pieces whose type was never read ("other") are never swapped in. */
     closetSkip: string[];
   };
@@ -203,6 +208,8 @@ interface Cand {
   gain: number; rawGain: number; itemId: string | null; order: number; shift: number; pickRank: number; copy: string; tag: string;
   raises: PartRaise[]; raisesLine: string; step: string; drops: boolean; liftsDisplay: boolean; edits: PartsFixEdit[];
   tucks: Set<string>; swaps: Set<string>;
+  /** v1.9: the fix clears the light-on-light charge. */
+  anchors: boolean;
 }
 
 const first = (r: Reading, cat: string): Garment | null => r.garments.find((g) => g.category === cat) ?? null;
@@ -302,12 +309,17 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   /** v10 tip_knit (parts_fixes._knit_on_knit): two knit pieces in the upper half, tops and outer layers alike. */
   const knitOnKnit = (r: Reading): boolean =>
     r.garments.filter((g) => (g.category === "top" || g.category === "outerwear") && inList(g.subcategory, KNITS)).length >= 2;
+  /** v1.9 tip_anchor (parts_fixes._light_on_light, #376): the scored card has the light-on-light charge on Color ([COL-12]). */
+  const lightOnLight = (card: PartsScored): boolean => card.parts.color.reasons.some((x) => x.check === "CL2_light_on_light");
   /** The styles the outfit reads as, pick-free (parts_fixes._reads_as). */
   const readsAs = (r: Reading): readonly string[] => RE.detectStyles(r.garments, []).detected as readonly string[];
 
-  const whenOk = (when: Record<string, unknown> | undefined, r: Reading): boolean => {
+  const whenOk = (when: Record<string, unknown> | undefined, r: Reading, card: PartsScored | null = null): boolean => {
     for (const [k, v] of Object.entries(when ?? {})) {
-      if (k === "reads_as_in") {
+      if (k === "light_on_light") {
+        // read from the scored card, not the edited outfit
+        if (truthy(v) && !(card !== null && lightOnLight(card))) return false;
+      } else if (k === "reads_as_in") {
         if (truthy(v) && !readsAs(r).some((st) => (v as unknown[]).includes(st))) return false;
       } else if (k === "peek_under") {
         if (truthy(v) && peekUnder(r) === null) return false;
@@ -422,6 +434,9 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
             if (nv(g.subcategory) === nv(cur!.subcategory) && RE.fam(nv(g.color_family)) === RE.fam(nv(cur!.color_family))) continue;
             for (const k of rules.keepOnSwap) {
               if (has(cur!, k) && nv(g.category) === nv(cur!.category)) g[k] = cur![k];
+            }
+            for (const k of rules.ownOnSwap) {
+              if (has(cur!, k) && nv(g.category) === nv(cur!.category) && inList(g[k], [null, "na"])) g[k] = cur![k];
             }
             r = clone(r0);
             r.garments[i] = g;
@@ -571,6 +586,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
       copy: fill(cand.copy, info), tag: cl.tag + (cand.detail ? ` · ${cand.detail}` : ""), raises, raisesLine: raisesLine(res, raises),
       step: fill(cand.step, info), drops: ch.some(([, , , d0, d1]) => d1 < d0), liftsDisplay: ch.some(([, , , d0, d1]) => d1 > d0),
       edits: clone(cand.edits), tucks: new Set(cand.tucks ?? []), swaps: swappedSlots(w, r),
+      anchors: lightOnLight(base) && !lightOnLight(res),
     });
   });
 
@@ -639,13 +655,17 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
 
   // v9 (#232): a stylist's tip with no number, ahead of a Smaller step that means buying something.
   // v1.7 (#336): a tuck tip by shirt type also shows next to fixes, when no tuck fix is shown.
+  // v1.9 (#376): so does an anchoring tip, when no fix shown clears the light on light.
   let tipShown = false;
   const tuckShown = picked.some((x) => x.group === "tuck");
-  if (!lounge && (picked.length === 0 || !tuckShown)) {
+  const anchored = picked.some((x) => x.anchors);
+  if (!lounge) {
     const step = out.smallerStep;
     if (step === null || !CAT.classes[step.class]!.free || step.class === "own") {
       for (const nl of CAT.nextLevel) {
-        if (!truthy(nl.always) || (picked.length > 0 && !truthy(nl.tuck)) || !whenOk(nl.when, w)) continue;
+        if (!truthy(nl.always)) continue;
+        if (picked.length > 0 && !((truthy(nl.tuck) && !tuckShown) || (truthy(nl.anchor) && !anchored))) continue;
+        if (!whenOk(nl.when, w, base)) continue;
         const piece = truthy(nl.when?.["peek_under"]) ? peekUnder(w) : first(w, nl.name ?? "bottom");
         out.nextLevel = { id: nl.id, part: nl.part, line: fill(nl.copy, { name: garmentName(piece) }), style: null };
         out.smallerStep = null;

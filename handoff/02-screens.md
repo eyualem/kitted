@@ -323,6 +323,8 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 ---
 
 ### D3 · O3 Basics
+> **Built Oct 21 (#373):** O3 is the birth-year step only (one card, `Birth year` / `Choose`, the footnote `Kitted is for 18 and up. It never changes your score.`, the button `Continue`); height, build and fit moved to Kit's optional "About you" card after the first score. Plan, copy, checks and results: `10-onboarding.md` §10. The layout below (the height stepper, Build, Fit, the silhouette) is superseded. **Oct 24 (#375):** height and build are no longer asked anywhere (not in Kit's card, not in You → Style profile); Kit's card asks only the fit, one tap. `10-onboarding.md` §11.
+
 - **Presentation:** onboarding push. **Entry:** O2. **Exit:** "Looks right" → O5 (or O4 if under 18); Back → O2 (undoes the last answer).
 
 **Layout**
@@ -820,7 +822,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
     > **Update Oct 14 (founder): the weather is real now, from the US National Weather Service** (api.weather.gov, free, public domain, US only; 05 §MC9). `Allow` shows the real iOS location prompt (When In Use, approximate by default); after it, the card plans with live weather and the label beside the pills reads `Weather: National Weather Service` (key `wx.nws`). `Sample weather` now shows only on sample weather (demo screens, which keep their sample days). Declined, offline, outside the US, or a build without the location module: no weather, the season as before. **Privacy:** only the approximate location, rounded to about 1 km, goes to the National Weather Service; never to Google, never stored by us. Apple WeatherKit (with its mark and `Data sources`) replaces NWS after the paid program.
   - **Allow:** the copper text link (`TextLink`).
   - **Thin closet:** shows only `Check my fit` until Starter essentials (C5) exists; `Add basics` is hidden.
-  - **Swap one:** ~~the iOS action sheet (`The navy chinos`, …), not S28's sheet yet.~~ **Update Oct 23 (#370):** S28's sheet (09-ui-review §28).
+  - **Swap one:** ~~the iOS action sheet (`The navy chinos`, …), not S28's sheet yet.~~ **Update Oct 23 (#377):** S28's sheet (09-ui-review §28).
   - **Same pick after a style change:** a toast `Same pick works for {style}.`, not a why line.
 - **VoiceOver:** the "your own fit" row is its own button ("Going with your own? Check it before you leave. Opens the camera."). The collapsed card: "Today, class: you went with your own, 8.0, Sharp. Shows the result."
 - **VoiceOver:** the card is one element: "Outfit idea for class today. 48 degrees now, high 63, rain likely after 5 pm. Navy overshirt, grey tee, khaki chinos, brown boots." Custom actions: Wear this, Swap one, Change occasion.
@@ -967,7 +969,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
    - **Your moves row** (while not all done): same as in L1.
    - **Privacy row** (pad 5, gap 11.5, `.subheadline.weight(.medium)`): `lock` (`ink3`) + `Your photos are saved on this iPhone` + chevron.
 
-**Usage line on the plan card:** `Today: {checksUsed} of 1 checks · {questionsUsed} of 5 questions · resets 4 am` (e.g. `Today: 1 of 1 checks · 2 of 5 questions · resets 4 am`). Pro: title `Kitted Pro`, line `Up to 10 fit checks and 50 questions a day` (ruling 25 wording), button `Manage`. Trial: title `Pro trial`, line `Ends {date}. I'll remind you 2 days before.`
+**Usage line on the plan card:** `Today: {checksUsed} of 1 checks · {questionsUsed} of 5 questions · resets at 4 am` (e.g. `Today: 1 of 1 checks · 2 of 5 questions · resets at 4 am`). Pro: title `Kitted Pro`, line `Up to 10 fit checks and 50 questions a day` (ruling 25 wording), button `Manage`. Trial: title `Pro trial`, line `Ends {date}. I'll remind you 2 days before.`
 
 **Interactions:** Edit → Y2; All 9 → Y3; a fact row → Y3 fact sheet; Try Pro → P1; Manage → Y5; plan card body → Y5; moves row → L3; privacy row → Y7; gear → Y4.
 
@@ -1018,7 +1020,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 1. Day stamp `Thursday 9:12 pm`.
 2. His photo bubble, caption `Everyday` · `9:12` (crop `neck`).
 3. **Limit card** (`KCard`, pad 14 / 16, gap 13):
-   - Tagline: `Daily limit` / `Resets 4 am`.
+   - Tagline: `Daily limit` / `Resets at 4 am`.
    - Headline (19.5 semibold → `.title3.weight(.semibold)`, line height 1.25): `That's today's free check.`
    - Body (`.subheadline`, `ink2`): `I'll save this photo and score it when you open Kitted after 4 am. Questions still work tonight: 3 left.` If the re-check is still open, append ` Today's re-check still works.` If no questions are left: `I'll save this photo and score it when you open Kitted after 4 am.`
    - Buttons (stacked, gap 8, each 49.5 tall, radius 24.5, full width): PrimaryButton `Save for tomorrow` · SecondaryButton (`surface2`) `Try Pro · 14 days free` (trial already used: `Try Pro`).
@@ -1265,7 +1267,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 - Medium detent, title `Swap one piece` + X. Subtitle `Tap the piece to change.`
 - Row of the outfit's 4 tiles; tapping one shows, below, the alternatives from his closet for that slot that still pass the outfit rules (3-column grid, each with its "fits" count hidden). Tapping an alternative updates the outfit card in place and dismisses. No alternatives: `Nothing else in your closet works here yet.`
 - Code only, free.
-- **Built Oct 23 (#370, 09-ui-review §28; differs from this spec in two places):** "works" is the card picker's own rules (allowed for the occasion and weather, the weather's layer rule, `outfitValid`, and at least Put together, or the card's own score when lower), best first; a pick shows the toast `Swapped in your {piece}.` with Undo (8 s), since a piece swapped away stays out of that card (#353). Over the grid: `Instead of your {piece}`. Nothing is picked when the sheet opens.
+- **Built Oct 23 (#377, 09-ui-review §28; differs from this spec in two places):** "works" is the card picker's own rules (allowed for the occasion and weather, the weather's layer rule, `outfitValid`, and at least Put together, or the card's own score when lower), best first; a pick shows the toast `Swapped in your {piece}.` with Undo (8 s), since a piece swapped away stays out of that card (#353). Over the grid: `Instead of your {piece}`. Nothing is picked when the sheet opens.
 
 #### S29 · Unopened ideas question
 - **When:** 3 daily ideas delivered and none opened. Scheduling stops; asked once.
@@ -1947,7 +1949,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | Key | String | Src |
 |---|---|---|
 | `limit.tag` | Daily limit | M |
-| `limit.resets` | Resets 4 am | M |
+| `limit.resets` | Resets at 4 am | M |
 | `limit.title` | That's today's free check. | M |
 | `limit.body` | I'll save this photo and score it when you open Kitted after 4 am. Questions still work tonight: {n} left. | M (template; mockup "3 left") |
 | `limit.bodyNoQuestions` | I'll save this photo and score it when you open Kitted after 4 am. | M (prefix) |
@@ -2121,7 +2123,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `fact.example.event` | Career fair on Oct 29 | M |
 | `fact.example.boldness` | Boldness: a little | M |
 | `you.plan.free` | Free plan | M |
-| `you.plan.usage` | Today: {checks} of 1 checks · {questions} of 5 questions · resets 4 am | R |
+| `you.plan.usage` | Today: {checks} of 1 checks · {questions} of 5 questions · resets at 4 am | R |
 | `you.plan.resets` | Resets at 4 am | M |
 | `you.plan.tryPro` | Try Pro | M |
 | `you.plan.pro` | Kitted Pro | N |

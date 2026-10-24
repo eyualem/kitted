@@ -44,6 +44,8 @@ export interface ColorTokens {
   good: string;
   /** Warnings only, always with `exclamationmark.triangle`. */
   caution: string;
+  /** Destructive rows and buttons (Delete, Remove): iOS red at the mockup's values; systemRed is under 4.5:1 on white. */
+  danger: string;
   /** Scrim behind custom overlays (system sheets bring their own). */
   dim: string;
 }
@@ -68,6 +70,7 @@ export const lightColors: ColorTokens = {
   onMe: '#F2F3F7',
   good: '#2B7651',
   caution: '#8A5A00',
+  danger: '#C9302C',
   dim: 'rgba(10, 12, 20, 0.42)',
 };
 
@@ -89,6 +92,7 @@ export const darkColors: ColorTokens = {
   onMe: '#EEF0F6',
   good: '#5DC08F',
   caution: '#E2B356',
+  danger: '#FF6961',
   dim: 'rgba(0, 0, 0, 0.55)',
 };
 

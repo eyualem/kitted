@@ -429,6 +429,8 @@ const addedInBuild = {
   'mic.off.settings': 'Open Settings',
   // A second photo while one is reading (09-ui-review §11, #305): the founder's listed default (#233 item 8).
   'cam.busy': "Still reading your last photo. Send this one when it's done.",
+  // A photo taken while another check is going waits its turn instead (#371; built with this line, on his skim list).
+  'cam.waits': "Got it. I'll read this one right after your last check.",
   // The Closet's Outfits half (09-ui-review §13, #307): D15's approved labels; the reason fallback and the go-to
   // caption are new (listed for the founder's skim).
   'closet.seg.pieces': 'Pieces',
@@ -509,7 +511,7 @@ const addedInBuild = {
   'fact.chat.fit_avoid': 'You avoid {v}',
   'fact.chat.look_now': 'Into {v} lately',
   'fact.chat.owns_unphotographed': 'You own {v} (no photo yet)',
-  // Swap one, the S28 sheet (#370, 09-ui-review §28): over the alternatives, the Undo toast after a pick, VoiceOver.
+  // Swap one, the S28 sheet (#377, 09-ui-review §28): over the alternatives, the Undo toast after a pick, VoiceOver.
   'swap.instead': 'Instead of your {item}',
   'swap.done': 'Swapped in your {item}.',
   'swap.a11y.piece': '{name}. Shows what else works here.',
@@ -782,6 +784,9 @@ const addedInBuild = {
   'pfix.tip_hem': 'Have the {name} hemmed to just touch your shoes (about $15 at a tailor): a cleaner finish.',
   'pfix.tip_peek': 'Tuck in the layer underneath, or wear one that ends with the {name}: the line looks cleaner.',
   'pfix.tip_knit': 'Two knits together blur: try a smooth layer over the knit, like an overshirt or a jacket.',
+  // The anchoring tips (#376): light on light, no points
+  'pfix.tip_anchor_shoes': 'Light on light washes out: darker pants, or dark shoes like brown leather, would ground it.',
+  'pfix.tip_anchor': 'Light on light washes out: darker pants, like navy chinos or dark jeans, would ground it.',
   'pfix.next_street_jacket': 'A short jacket, like a bomber, gives it the streetwear shape and lifts Proportions.',
   'pfix.next_workwear_coat': 'A chore coat and boots give it the workwear shape and lift Proportions.',
   'pfix.next_minimal_tuck': 'Tucking in the {name} gives it the minimal shape and lifts Proportions.',
@@ -898,7 +903,6 @@ const addedInBuild = {
   // You tab (Oct 14): Y1–Y3. The style card, facts in the second person (a guess is asked), today's check, the editor.
   'you.style.label': 'Your style',
   'you.style.none': 'No looks picked yet',
-  'you.heightCm': '{n} cm',
   'you.seeAll': 'See all {n}',
   'you.guess.q': '{fact}?',
   'you.guess.doYou': 'Do you {rest}?',
@@ -909,7 +913,7 @@ const addedInBuild = {
   'you.today.done': "Today's check: done",
   'you.today.next': 'next at 4 am',
   'you.today.title': 'Today',
-  'you.today.resets': 'resets 4 am',
+  'you.today.resets': 'resets at 4 am',
   'you.today.recheck': '1 re-check left',
   'you.today.questions': '{n} questions left',
   'you.today.question1': '1 question left',
@@ -956,29 +960,31 @@ const addedInBuild = {
   // (A2), bringing back his fits (A4), which fits to keep (A5), the save offer (A3), You's Account rows and the
   // onboarding fixes from the UI review. Outward-facing: on the founder's skim list.
   'onb.welcome.haveAccount': 'I already have an account',
-  // "so the advice fits your frame" read as talk about his body (09 UI review): the advice fits him, not his frame.
-  'onb.basics.replyTwo': '{style1} with some {style2}. Good mix. Now a few basics, so the advice fits you.',
-  'onb.basics.replyOne': '{style1}. Good pick. Now a few basics, so the advice fits you.',
-  'onb.basics.replyNone': "No problem. I'll learn your style from your checks. Now a few basics, so the advice fits you.",
+  // Since #373 O3 asks only the birth year (10-onboarding.md §10); the fit comes later, from Kit's "About you" card
+  // (height and build are no longer asked, #375). Outward-facing: on the founder's skim list.
+  'onb.basics.replyTwo': '{style1} with some {style2}. Good mix. One more thing: your birth year.',
+  'onb.basics.replyOne': '{style1}. Good pick. One more thing: your birth year.',
+  'onb.basics.replyNone': "No problem. I'll learn your style from your checks. One more thing: your birth year.",
+  'onb.basics.cta': 'Continue',
+  'onb.basics.echoYear': 'Born in {year}',
   'onb.example.whyHide': 'Hide the math',
   'onb.example.time': 'Example',
   'onb.example.note': 'A real photo, scored by the same code as yours. Nothing was sent.',
   'onb.example.a11y': 'Example fit check. {occasion}. Score {score} out of 10, {word}. {summary}',
   'onb.basics.yearHint': 'Pick your birth year to go on.',
-  'onb.basics.never': 'None of this changes your score.',
-  'onb.basics.heightClear': 'Clear',
-  'onb.basics.heightClear.a11y': 'Clear height',
+  'onb.basics.never': 'Kitted is for 18 and up. It never changes your score.',
   'onb.consent.footerPath': 'You can turn this off anytime in You → Settings → Privacy & data.',
   'onb.consent.introLater': "Before I score a photo, here's what happens to it.",
   'onb.consent.agreeLater': 'Agree',
   // Consent version 2 (#329): questions go to OpenAI (GPT-5.6 Luna), photos still to Google's Gemini; the chat's
-  // context (style picks, height and build if given, what he told Kit, the closet as words) is said in full (D2);
+  // context (style picks, the fit he likes if given, what he told Kit, the closet as words) is said in full (D2;
+  // height and build were sent until #375 and are gone; less is sent, so the version stays 2);
   // "face blurred", never "cropped" (#233 item 3). OpenAI's API terms: not used for training, abuse logs kept up to
   // 30 days (developers.openai.com/api/docs/guides/your-data, checked Oct 17).
   'onb.consent.sentBody': 'To score your outfit and answer your questions, Kitted sends these to two AI services:',
   'onb.consent.sent1': "your outfit photo, to Google's Gemini, with your face blurred first (if we can't blur it, we don't send it)",
   'onb.consent.sent2': "photos of clothes you add to your closet, to Google's Gemini",
-  'onb.consent.sent3': "questions you type to Kit, to OpenAI, with your style picks, your height and build if you gave them, what you've told Kit, and your closet as words (never your photos)",
+  'onb.consent.sent3': "questions you type to Kit, to OpenAI, with your style picks, the fit you like if you gave it, what you've told Kit, and your closet as words (never your photos)",
   'onb.consent.kept2': "Google and OpenAI use them only to give you an answer and don't use them to train their AI.",
   'onb.consent.kept3': "Google keeps them up to 55 days and OpenAI up to 30 days, only to check for misuse, then they're deleted.",
   'onb.setup.newAccount': "No fits saved to that account yet. Let's set you up.",
@@ -1030,6 +1036,17 @@ const addedInBuild = {
   'acct.choose.confirmTitle': 'Delete the fits on this iPhone?',
   'acct.choose.confirmBody': "The {local} fits that aren't in your account are deleted from this iPhone. It can't be undone.",
   'acct.choose.confirmYes': 'Delete them',
+  // Kit's "About you" card (#373; one fit question since #375, 10-onboarding.md §11.1): asked after the first score.
+  // Outward-facing: on the founder's skim list.
+  'about.tag': 'Optional',
+  'about.tagRight': 'One tap',
+  'about.title': 'How do you like clothes to fit?',
+  'about.body': "I'll use it when I suggest pieces and sizes. It never changes a score.",
+  'about.bodyAnswer': 'That answer would fit you better if I knew how you like clothes to fit. It never changes a score.',
+  'about.notNow': 'Not now',
+  'about.saved': 'Got it. Change it any time in You.',
+  'about.declined': "No problem. It's in You → Style profile whenever you want.",
+  'about.a11y': '{title}. {body}',
   'acct.offer.tag': 'Your account',
   'acct.offer.tagRight': 'Optional',
   'acct.offer.title': 'Keep your fits',
@@ -1062,7 +1079,6 @@ const addedInBuild = {
   'onb.age.confirm.title': 'Born in {year}?',
   'onb.age.confirm.change': 'Change',
   'onb.age.confirm.yes': "That's right",
-  'you.basics.build': '{build} build',
   'you.basics.fit': '{fit} fit',
   'you.a11y.styleCardNoBasics': 'Your style: {styles}. Edit.',
   'card.a11y.recheckDown': 'Re-check, {occasion}. Score went from {was} to {now}. {word}.',

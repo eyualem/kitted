@@ -1,4 +1,4 @@
-// Swap one, the S28 sheet (09-ui-review §28 S3–S7, #370): checks written before the code. He sees his outfit's pieces,
+// Swap one, the S28 sheet (09-ui-review §28 S3–S7, #377): checks written before the code. He sees his outfit's pieces,
 // picks one, sees what else in his closet works there and picks that; Undo puts the card back exactly.
 import { US_EASTERN, type DayWeather } from '@kitted/core';
 import seed from '../../assets/seed.json';

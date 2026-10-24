@@ -98,21 +98,21 @@
 
 ### You and Settings
 - [x] (#306) **Style profile drops edits on a Back swipe** with no prompt, while Settings saves instantly. Autosave it. `you/profile.tsx:125` · M · S
-- [ ] **Privacy is three taps deep;** "See what I send", the best trust feature, sits under You → gear → Privacy & data. The approved mockup puts Privacy first. `you/settings.tsx:44-48` · M · M
+- [x] (#370) **Privacy is three taps deep;** "See what I send", the best trust feature, sits under You → gear → Privacy & data. The approved mockup puts Privacy first. `you/settings.tsx:44-48` · M · M
 - [ ] **Notification switches look live but do nothing** (nothing is scheduled until P6), under "That's all I send." Hide or say "arrives in the next update". `you/notifications.tsx:34-41` · M · S
-- [ ] **You's "Today" card can't be acted on** ("1 free check today", no button). Add "Check my fit". `you/index.tsx:112-156` · M · S
-- [ ] VoiceOver reads the birth-year row as just "2005". `you/profile.tsx:74-78, 182` · M · S
-- [ ] A 4th style tap in the editor does nothing (onboarding buzzes and shakes). `you/profile.tsx:97-100` · L · S
-- [ ] With no profile You has no way into the editor. `you/index.tsx:32` · L · S
+- [x] (#370) **You's "Today" card can't be acted on** ("1 free check today", no button). Add "Check my fit". `you/index.tsx:112-156` · M · S
+- [x] (#370) VoiceOver reads the birth-year row as just "2005". `you/profile.tsx:74-78, 182` · M · S
+- [x] (#370) A 4th style tap in the editor does nothing (onboarding buzzes and shakes). `you/profile.tsx:97-100` · L · S
+- [x] (#370) With no profile You has no way into the editor. `you/index.tsx:32` · L · S
 - [ ] "Manage subscription" appears 3 times, also for free users. `you/settings.tsx:55-58`, `plan.tsx:49-53`, `privacy.tsx:129-137` · L · S
-- [ ] "Score my fits" has VoiceOver hints written but never passed. `you/privacy.tsx:118` · L · S
+- [x] (#370) "Score my fits" has VoiceOver hints written but never passed. `you/privacy.tsx:118` · L · S
 - [ ] The paywall is a placeholder (correctly hidden) and its drafted title reads as unlimited (#233 item 4). `app/paywall/index.tsx`, `en.generated.ts:659` · M · L
 
 ### App-wide
 - [ ] **Four menu patterns:** native context menu (Closet), bottom action sheets (Lookbook, facts, Closet +), and the custom MorphPicker (Settings). One system: native context menus for every long-press, native menus for pickers; MorphPicker only on the morning card. · M · M
 - [ ] **Grouped lists don't match:** You's cards radius 26 with full dividers, Settings 20 with inset dividers, Style profile its own 52 pt rows. One GroupedList component. `you/FactRows.tsx:82`, `SettingsList.tsx:40-43`, `you/profile.tsx:148-200` · M · S
 - [ ] **Every press is just a fade to 0.82**, no spring, no haptic on commit actions (Agree, save, delete). A small press scale plus light haptics. `design-system/tokens.ts:278`, `KButton.tsx:72` · L · M
-- [ ] Delete buttons look different everywhere (a local `DANGER`, a grey "Delete", system red). A `danger` token. `you/privacy.tsx:21`, `sheets/fact/[id].tsx:105` · L · S
+- [x] (#370) Delete buttons look different everywhere (a local `DANGER`, a grey "Delete", system red). A `danger` token. `you/privacy.tsx:21`, `sheets/fact/[id].tsx:105` · L · S
 - [ ] A hairline under pushed nav bars (Stylist removed its own). `you/_layout.tsx:26-32` · L · S
 - [ ] The selected tab is copper, the most-seen copper in the app. Ink instead? (your taste call) `(tabs)/_layout.tsx:21` · L · S
 - [ ] Two text greys are nearly the same (ink2 #585E70, ink3 #646A7A); outline button borders are ~1.2:1, under 3:1 (WCAG 1.4.11). `design-system/tokens.ts:56-59` · L · S
@@ -1239,7 +1239,7 @@ Today's rules treat an olive fleece over a green sweatshirt like any two quiet c
 - **Found on the way:** on the Simulator the stand-in camera's 3-2-1 captures its bundled sample before a tap on the library button lands (the sample replays its saved reading, never sent, never counted); `kitted://sheets/sample-photos?mode=check&from=camera` opens the photo choice directly. Three sample checks were left in the Simulator's copy of the data.
 - **Not seen:** the switch on (needs the paid team to sign), WeatherKit answering, the Apple mark on a screen, K2's scheme path inside Xcode.
 
-## 28. Swap one, the S28 sheet (Oct 23, #370). Checks first
+## 28. Swap one, the S28 sheet (Oct 23, #377). Checks first
 
 **The founder (Oct 23):** why does Swap use Apple's default menu, would a custom one be better? Answer: yes, S28 (02 §3.3) was always the design. The action sheet (`swapPicker.ts`, "the iOS-standard minimum", #353) was a text list ("The navy chinos"…) and code chose the replacement: he never saw or picked the alternative, and a mis-tap lost the piece for the day (#353's rule keeps a swapped-away piece out). It also never took the Simulator tool's taps (§23).
 
@@ -1261,7 +1261,7 @@ Today's rules treat an olive fleece over a green sweatshirt like any two quiet c
 - S7 (T) The sheet's words: "Swap one piece", "Tap the piece to change.", "Nothing else in your closet works here yet.", "Instead of your {piece}", "Swapped in your {piece}."; each top tile is a button labelled with its piece and selected state; each option is a button "{piece}. Swaps it in." A card that's gone shows the Gone sheet.
 - S8 (S) On the Simulator: Swap opens the sheet at medium; a tile tap shows the options; a pick changes the card and closes the sheet; the toast shows with Undo and Undo puts the first outfit back; a slot with no options shows the line; light, dark, the largest text size (the grid 2 columns); VoiceOver labels from the accessibility tree.
 
-### §28 results (Oct 23, #370): S1–S8 pass; one change from the plan at the largest text size
+### §28 results (Oct 23, #377): S1–S8 pass; one change from the plan at the largest text size
 - **Built:** `swapOptions` in `@kitted/core` `ideas.ts` (the picker's tail moved into `describeOutfit`, shared by both); `morning.swapOptions` / `morning.swapTo` in `features/morning/service.ts` (the old `swap(id, leaveOut)` stays for code that swaps by itself); `features/morning/SwapSheet.tsx` on `/sheets/swap/[ideaId]`; the card's Swap opens it; `swapPicker.ts` and its web stub deleted.
 - **S1 (core, `test/swapOptions.test.ts`, 7 tests):** pass at four occasions × no weather, cold rain, freezing, hot.
 - **S2:** 960 picks of `pickOutfit` (6 occasions × 5 weathers × 4 styles × day/evening × 4 seeds, some with pieces left out) are byte-identical before and after the refactor (a throwaway golden, not committed).

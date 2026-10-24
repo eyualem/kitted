@@ -326,7 +326,7 @@ export function createMorningService(deps: MorningDeps) {
   }
 
   /**
-   * Swap one, the S28 sheet (09-ui-review §28, #370): what could take this piece's place on the card, by the picker's own
+   * Swap one, the S28 sheet (09-ui-review §28, #377): what could take this piece's place on the card, by the picker's own
    * rules. Never a piece swapped away from this card before (#353 M1). [] when the card can't be swapped (gone, worn,
    * checked) or the piece isn't on it.
    */

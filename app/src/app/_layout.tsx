@@ -82,7 +82,7 @@ function RootStack({ booted }: { booted: boolean }) {
   // The paywall sells nothing while it's off (a mock store): no link may open it (09 §20.7 R2, #323).
   const paywall = usePaywallOn();
   // Swap one at the accessibility sizes: its title fills the medium detent and a pick's options would open out of sight
-  // (09-ui-review §28, #370), so it opens full height.
+  // (09-ui-review §28, #377), so it opens full height.
   const { isAccessibilitySize } = useTheme();
 
   // -demoScreen <n> (launch argument): route through the demo screen once the gate is ready.

@@ -16,6 +16,7 @@ import { connectivity } from '@/services/connectivity';
 import { realScheduler } from '@/services/scheduler';
 import { showToast } from '@/features/toast/toast';
 import { getDemoArgs, sessionClock } from '@/state/session';
+import { aboutYou } from '@/features/aboutYou/session';
 import { liveAnswerSource } from './liveSource';
 import { t } from '@/i18n/en';
 import { createAsk, keepsDraft } from './pipeline';
@@ -66,6 +67,8 @@ export const askService = createAsk({
   },
   onAnswered: (text) => announce(text),
   onPosted: (text) => announce(text),
+  // Kit's "About you" card under a fit, shape or buy answer (10-onboarding.md §10.2 T1).
+  afterAnswer: (a) => aboutYou.afterAnswer(a),
 });
 
 /** The composer's send: true when the question made it into the thread (its draft can go). */

@@ -76,7 +76,7 @@ describe('M1–M3 · Swap', () => {
     expect(kept).toContain(shoe);
     expect((await store.dailyIdeas.get(ID))!.outfitId).not.toBeNull();
     expect(t('swap.none')).toBe('Nothing else in your closet works here yet.');
-    // The Swap sheet shows the line when a piece has nothing to swap in (S28, #370; it was the card's toast, #353).
+    // The Swap sheet shows the line when a piece has nothing to swap in (S28, #377; it was the card's toast, #353).
     expect(src('features/morning/SwapSheet.tsx')).toMatch(/length === 0[\s\S]{0,120}t\('swap\.none'\)/);
   });
 

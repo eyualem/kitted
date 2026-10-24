@@ -262,7 +262,7 @@ export interface SwapOption {
 }
 
 /**
- * Swap one (02 S28, 09-ui-review §28, #370): the closet's pieces that could take `out`'s place in `outfit` and still pass
+ * Swap one (02 S28, 09-ui-review §28, #377): the closet's pieces that could take `out`'s place in `outfit` and still pass
  * the picker's rules: allowed for the occasion and weather, the weather's layer rule kept, `outfitValid`, and a score of
  * at least Put together (or the outfit's own score, when that's lower). Pieces already in the outfit and `exclude` (what
  * he swapped away from this card) are never offered. Right for the weather first, then the score, then a stable tie-break.

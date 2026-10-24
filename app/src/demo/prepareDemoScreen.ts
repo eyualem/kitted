@@ -302,7 +302,7 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     const a = seed.scenarios.firstRun.onboardingAnswers;
     await completeOnboarding(
       store,
-      { styles: a.styles as unknown as Styles, heightCm: a.heightCm, build: a.build, fitPreference: a.fitPreference, birthYear: a.birthYear, ...(sc.consent === false ? { consent: false } : {}) },
+      { styles: a.styles as unknown as Styles, fitPreference: a.fitPreference, birthYear: a.birthYear, ...(sc.consent === false ? { consent: false } : {}) },
       at('2026-10-22T07:40:00'),
       newId,
     );

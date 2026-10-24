@@ -3,8 +3,8 @@
 import type { PartsFixCatalog } from "./partsFixes";
 
 export const PARTS_FIXES_DATA: PartsFixCatalog = {
- "_doc": "Fix catalog for the PARTS engine (parts_proto.py v5; DECISIONS-LOG #208, picks #211, the style-crossing swaps #214). Not used by the v4 fix engine above (make_rubric_json.py leaves this block out of rubric.json). Reference: handoff/fixtures/parts_fixes.py; port: @kitted/core src/partsFixes.ts (data: src/partsFixesData.ts, generated from this block). Every candidate is an edit to a COPY of the reading, re-scored by the parts engine. A candidate becomes a fix only when the ROUNDED score rises; an edit that raises a part's half-point but not the rounded score becomes the 'Smaller step' line (no number). Classes rank the card: free (adjust) first, then closet, then own ('Free if you own one'), then tailor; within a class the larger gain first. group: one fix per group; a later class in the same group shows only when its gain is strictly larger. when: '<slot>.<field>_in' / '_not_in' test the first top / outerwear / bottom / footwear of the scored garments (a missing slot reads as null); not_warm, no_outer, occasion_in, quiet are flags. lounge: allowed at gym and home (everything else isn't). look: overrides of the second look after the edit. step: the Smaller-step subject, ending in its verb. The Smaller step prefers an edit in the same group as a shown fix (a smaller version of that move), then the largest raw gain. {name} = the edited garment's plain name, {item} = the closet item's name. His picks shape the fixes, never the score: when two fixes give the same rounded gain (same class), the one whose fixed outfit reads as his earliest pick goes first. nextLevel: an entry with `style` is his first pick's path to 8, tried first and only for that pick; it shows when the card has no fix, the edit really lifts `part` and the edited outfit reads as that style, unless the Smaller step shown is in the same `group`. Entries without `style` keep the old gate (no fix and no Smaller step). tucks (v1.7, #336): the slots a tuck candidate tucks (tuck_layer: a button-up worn open, never an overshirt, which is cut to be worn out like a light jacket; the score still credits one read tucked); a shown tuck hides any fix that swaps one of those pieces (a different kind, color, pattern or roominess) to raise a part the tuck raises, for no more gain than the tuck (a color swap stays). An `always` tip with `tuck` (a tuck tip by shirt type) also shows next to fixes when no tuck fix is shown and the Smaller step, if any, isn't a free one; `name` is the slot whose garment fills {name} (default the bottom).",
- "version": "1.7.0",
+ "_doc": "Fix catalog for the PARTS engine (parts_proto.py v5; DECISIONS-LOG #208, picks #211, the style-crossing swaps #214). Not used by the v4 fix engine above (make_rubric_json.py leaves this block out of rubric.json). Reference: handoff/fixtures/parts_fixes.py; port: @kitted/core src/partsFixes.ts (data: src/partsFixesData.ts, generated from this block). Every candidate is an edit to a COPY of the reading, re-scored by the parts engine. A candidate becomes a fix only when the ROUNDED score rises; an edit that raises a part's half-point but not the rounded score becomes the 'Smaller step' line (no number). Classes rank the card: free (adjust) first, then closet, then own ('Free if you own one'), then tailor; within a class the larger gain first. group: one fix per group; a later class in the same group shows only when its gain is strictly larger. when: '<slot>.<field>_in' / '_not_in' test the first top / outerwear / bottom / footwear of the scored garments (a missing slot reads as null); not_warm, no_outer, occasion_in, quiet are flags. lounge: allowed at gym and home (everything else isn't). look: overrides of the second look after the edit. step: the Smaller-step subject, ending in its verb. The Smaller step prefers an edit in the same group as a shown fix (a smaller version of that move), then the largest raw gain. {name} = the edited garment's plain name, {item} = the closet item's name. His picks shape the fixes, never the score: when two fixes give the same rounded gain (same class), the one whose fixed outfit reads as his earliest pick goes first. nextLevel: an entry with `style` is his first pick's path to 8, tried first and only for that pick; it shows when the card has no fix, the edit really lifts `part` and the edited outfit reads as that style, unless the Smaller step shown is in the same `group`. Entries without `style` keep the old gate (no fix and no Smaller step). tucks (v1.7, #336): the slots a tuck candidate tucks (tuck_layer: a button-up worn open, never an overshirt, which is cut to be worn out like a light jacket; the score still credits one read tucked); a shown tuck hides any fix that swaps one of those pieces (a different kind, color, pattern or roominess) to raise a part the tuck raises, for no more gain than the tuck (a color swap stays). An `always` tip with `tuck` (a tuck tip by shirt type) also shows next to fixes when no tuck fix is shown and the Smaller step, if any, isn't a free one; `name` is the slot whose garment fills {name} (default the bottom). Closet swaps (v1.8, #372): the swapped-in piece keeps how he wears the piece it replaces (keepOnSwap: hem, tucked) but brings its own cut (ownOnSwap: length, sleeve_end) from its closet reading; only when the piece has no reading of one (missing or na) does it take the current piece's. Before v1.8 the length came from the piece it replaced, so swapping a tee that ends at the belt for a sweatshirt that ends mid fly kept the tee's waist credit and promised a score the sweatshirt can't reach. Anchoring tips (v1.9, #376): light_on_light is true when the scored card has the light-on-light charge ([COL-12], CL2_light_on_light); tip_anchor_shoes adds dark shoes when the shoes are light too. An `always` tip with `anchor` also shows next to fixes when no fix shown clears the charge. Tips only, never points: dark shoes don't lift the charge.",
+ "version": "1.9.0",
  "classes": {
   "free": {
    "rank": 0,
@@ -69,7 +69,9 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
   ],
   "keepOnSwap": [
    "hem",
-   "tucked",
+   "tucked"
+  ],
+  "ownOnSwap": [
    "length",
    "sleeve_end"
   ],
@@ -1098,6 +1100,34 @@ export const PARTS_FIXES_DATA: PartsFixCatalog = {
    "copy": "Two knits together blur: try a smooth layer over the knit, like an overshirt or a jacket.",
    "when": {
     "knit_on_knit": true
+   }
+  },
+  {
+   "id": "tip_anchor_shoes",
+   "always": true,
+   "anchor": true,
+   "group": "color",
+   "part": "color",
+   "copy": "Light on light washes out: darker pants, or dark shoes like brown leather, would ground it.",
+   "when": {
+    "light_on_light": true,
+    "footwear.color_family_in": [
+     "white",
+     "off_white_cream",
+     "khaki_beige",
+     "light_grey"
+    ]
+   }
+  },
+  {
+   "id": "tip_anchor",
+   "always": true,
+   "anchor": true,
+   "group": "color",
+   "part": "color",
+   "copy": "Light on light washes out: darker pants, like navy chinos or dark jeans, would ground it.",
+   "when": {
+    "light_on_light": true
    }
   },
   {

@@ -47,8 +47,6 @@ import { SightingCrop } from './SightingCrop';
 import { photoMenuItems, photoOffer, type PhotoMenuItem } from './wrongCard';
 import { GonePage } from '@/features/gone/Gone';
 
-/** iOS destructive red at the mockup's values (as Y7's red rows): systemRed is under 4.5:1 on white. */
-const DANGER = { light: '#C9302C', dark: '#FF6961' } as const;
 const GRID_GAP = 8;
 
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
@@ -75,7 +73,7 @@ function addedLine(item: ClosetItemRow): string {
 }
 
 export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: string | null }) {
-  const { colors, scheme, isAccessibilitySize } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const { width: screenW } = useWindowDimensions();
   // The hero page, with the page count it was read at: when a photo is removed or comes back, the gallery remounts at
   // the drawing, so a page from the old count no longer applies.
@@ -300,7 +298,7 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
           paddingHorizontal: space.rowX, paddingVertical: space.rowY, opacity: pressed ? opacity.pressed : 1,
         })}
       >
-        <KText variant="callout" weight="500" color={DANGER[scheme]}>
+        <KText variant="callout" weight="500" color="danger">
           {t('closet.remove.action')}
         </KText>
       </Pressable>

@@ -1,4 +1,4 @@
-// Swap one, the S28 sheet (09-ui-review §28 S1, #370): what could take one piece's place on the card's outfit. The
+// Swap one, the S28 sheet (09-ui-review §28 S1, #377): what could take one piece's place on the card's outfit. The
 // picker's own rules decide; the list is the same every time for the same input.
 import { describe, expect, it } from "vitest";
 import {

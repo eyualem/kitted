@@ -5,7 +5,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, AppState, Linking, Pressable, View } from 'react-native';
-import { Icon, KCard, KText, TextLink, opacity, space, useTheme } from '@/design-system';
+import { Icon, KCard, KText, radius, TextLink, opacity, space, useTheme } from '@/design-system';
 import { PRIVACY_URL, MANAGE_SUBSCRIPTIONS_URL } from '@/config/links';
 import { store } from '@/data/db';
 import { DEMO_ENABLED } from '@/demo/config';
@@ -18,9 +18,6 @@ import { runDeleteAllData, runDeleteAllPhotos, runForgetFacts, turnScoringOff, t
 import { LinkRow, Section, SettingsScroll, ToggleRow, ValueRow } from '@/features/settings/SettingsList';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
-
-/** iOS destructive red, at the mockup's values (`.danger`): systemRed itself is 3.6:1 on white, under 4.5:1. */
-const DANGER = { light: '#C9302C', dark: '#FF6961' } as const;
 
 function sizeText(bytes: number): string {
   const { n, unit } = bytesParts(bytes);
@@ -51,7 +48,7 @@ function askFirst(title: string, message: string, cta: string, run: () => Promis
 }
 
 function DangerRow({ title, onPress, disabled }: { title: string; onPress: () => void; disabled?: boolean }) {
-  const { colors, scheme } = useTheme();
+  const { colors } = useTheme();
   return (
     <Pressable
       onPress={onPress}
@@ -65,7 +62,7 @@ function DangerRow({ title, onPress, disabled }: { title: string; onPress: () =>
         disabled && { opacity: opacity.disabled },
       ]}
     >
-      <KText variant="callout" weight="500" color={DANGER[scheme]}>
+      <KText variant="callout" weight="500" color="danger">
         {title}
       </KText>
     </Pressable>
@@ -105,7 +102,7 @@ export default function PrivacyDataScreen() {
 
   return (
     <SettingsScroll>
-      <KCard radius={20}>
+      <KCard radius={radius.cardSmall}>
         <View style={{ flexDirection: 'row', gap: space.m, paddingVertical: space.rowY + 2, paddingHorizontal: space.rowX }}>
           <View style={{ paddingTop: 1 }}>
             <Icon name="lock" color="ink2" />
@@ -118,7 +115,7 @@ export default function PrivacyDataScreen() {
 
       <Section footer={t('privacy.consentFooter')}>
         <LinkRow key="sent" title={t('privacy.seeSent')} onPress={() => router.push('/you/sent')} />
-        <ToggleRow key="consent" title={t('privacy.consentToggle')} detail={t('privacy.consentSub', { provider })} value={consentOn} onChange={onToggle} disabled={busy || !profile} />
+        <ToggleRow key="consent" title={t('privacy.consentToggle')} detail={t('privacy.consentSub', { provider })} value={consentOn} onChange={onToggle} disabled={busy || !profile} hint={t(consentOn ? 'privacy.a11y.consentOffHint' : 'privacy.a11y.consentOnHint')} />
         <ValueRow key="photos" label={t('privacy.storage')} value={storageText(usage)} spoken={t('privacy.a11y.storage', { label: t('privacy.storage'), value: storageText(usage) })} />
       </Section>
 

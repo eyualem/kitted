@@ -1,4 +1,4 @@
-// S28 Swap one (02 §3.3, 09-ui-review §28, #370): the card's pieces in a row; tapping one shows what else in his
+// S28 Swap one (02 §3.3, 09-ui-review §28, #377): the card's pieces in a row; tapping one shows what else in his
 // closet works in its place (the picker's own rules, `morning.swapOptions`); tapping one of those changes the card in
 // place, closes the sheet and offers Undo. It replaced the action sheet that let code pick the replacement (#353).
 import { useState } from 'react';

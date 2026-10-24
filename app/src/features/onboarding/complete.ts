@@ -7,8 +7,6 @@ import { t } from '@/i18n/en';
 
 export interface OnboardingAnswers {
   styles: Styles;
-  heightCm: number | null;
-  build: string;
   fitPreference: string;
   birthYear: number | null;
   /** O5: "Agree & check my fit" (true) or "Not now" (false: nothing is ever sent until he agrees later). */
@@ -24,7 +22,7 @@ export const QUESTIONS_CONSENT_FROM = 2;
 
 export async function completeOnboarding(store: KittedStore, a: OnboardingAnswers, nowMs: number, ids: (p: string) => string): Promise<void> {
   await store.profile.put({
-    id: 'me', birthYear: a.birthYear, heightCm: a.heightCm, build: a.build, fitPreference: a.fitPreference, styles: a.styles,
+    id: 'me', birthYear: a.birthYear, heightCm: null, build: '', fitPreference: a.fitPreference, styles: a.styles,
     boldness: null, budget: null, lastOccasion: 'everyday',
     consentVersion: a.consent === false ? null : CONSENT_VERSION, consentAt: a.consent === false ? null : nowMs, onboardingDone: true,
     ideaTime: null, units: 'imperial', createdAt: nowMs,
