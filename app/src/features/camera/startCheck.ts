@@ -34,6 +34,8 @@ export function lensQuery(lens: CheckLens): string {
 }
 
 export async function startCheck(mode: CheckMode, photo: PhotoInput, parentCheckId?: string, lens: CheckLens = {}): Promise<StartOutcome> {
+  // Another check is still going: this photo waits its turn (#371), and he's told it wasn't lost.
+  if (fitCheck.busy()) showToast(t('cam.waits'));
   // The service never throws (it fails the row instead); this catch is the last net for callers that `void` it.
   const r = await fitCheck.start({ mode, parentCheckId, ...lens, ...photo }).catch((e: unknown): StartOutcome => {
     console.error('[check] start threw', e);
@@ -50,9 +52,9 @@ export async function startCheck(mode: CheckMode, photo: PhotoInput, parentCheck
   const snapFail = mode === 'shoeSnap' && parentCheckId ? await snapFailure(parentCheckId, r.outcome) : null;
   if (snapFail) showToast(t(snapFail));
   else explain(r);
-  // Refused because another photo is still being read (09-ui-review §11 K2): prep never ran, so nothing else would
-  // delete his temporary original.
-  if (r.outcome === 'busy' && 'photoUri' in photo) discardTempPhoto(photo.photoUri);
+  // Refused because another photo already waits its turn (09-ui-review §11 K2), or dropped while it waited (a reset,
+  // #371): prep never ran, so nothing else would delete his temporary original.
+  if ((r.outcome === 'busy' || r.outcome === 'dropped') && 'photoUri' in photo) discardTempPhoto(photo.photoUri);
   if (__DEV__) void logResult(mode, photo, r).catch(() => {});
   return r;
 }
@@ -175,8 +177,9 @@ export function explain(r: StartOutcome) {
     showToast(t('cam.noParent'));
   }
   else if (r.outcome === 'busy') {
-    // Another photo is still being read (§1 item 7, #233 item 8): this one isn't sent or counted, and he's told.
+    // Another photo already waits its turn (§1 item 7, #233 item 8, #371): this one isn't sent or counted, and he's told.
     showToast(t('cam.busy'));
   }
-  // 'whichOne': the question card in the thread is the answer. 'held': the Limit card is.
+  // 'whichOne': the question card in the thread is the answer. 'held': the Limit card is. 'dropped': he reset or
+  // deleted his data meanwhile; there's nothing to say.
 }

@@ -1,5 +1,5 @@
 // O3 Basics and O5 Consent logic (02 D3–D4), pure: the draft his answers wait in until consent saves the
-// profile, the 18+ rule, and the echo lines. Since #371 O3 asks only the birth year; height, build and fit (optional,
+// profile, the 18+ rule, and the echo lines. Since #373 O3 asks only the birth year; height, build and fit (optional,
 // blank until he taps, #276) are asked by Kit after the first score (features/aboutYou) and edited in You.
 import type { KittedStore } from '@/data/store';
 import { normStyleKey, type StyleKey } from '@/data/types';
@@ -114,14 +114,14 @@ export function looksReply(looks: readonly StyleKey[]): string {
 export const buildLabel = (b: Build) => t(`build.${b}` as StringKey);
 export const fitLabel = (f: FitPref) => t(`fitpref.${f}` as StringKey);
 
-/** His echo bubble on O5: "Born in 2005" (since #371 O3 asks only the year; an older draft's other answers are still
+/** His echo bubble on O5: "Born in 2005" (since #373 O3 asks only the year; an older draft's other answers are still
  *  saved, answersFromDraft, but not echoed). */
 export function basicsEcho(b: BasicsDraft): string {
   return b.birthYear !== null ? t('onb.basics.echoYear', { year: b.birthYear }) : '';
 }
 
 /** What Consent saves from the drafts (O5). Height, build and fit are whatever the draft holds: blank on the birth-year
- *  step (#371), or an older build's answers, never dropped. */
+ *  step (#373), or an older build's answers, never dropped. */
 export function answersFromDraft(d: Awaited<ReturnType<typeof loadDraft>>, consent: boolean): OnboardingAnswers {
   return {
     styles: picksToStyles(d.looks),

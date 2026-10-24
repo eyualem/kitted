@@ -117,7 +117,7 @@ export const KV_LOCAL: readonly string[] = [
   'closet.fitLine', 'closet.fitAnswers',
   // The tier the server last answered with (13-server.md §8, #328): the server's own fact, read back on every answer.
   'server.tier',
-  // Kit's "About you" ask on this phone (#371, 10-onboarding.md §10): a nudge, like closet.fitSkip; the answers
+  // Kit's "About you" ask on this phone (#373, 10-onboarding.md §10): a nudge, like closet.fitSkip; the answers
   // themselves live in the profile.
   'aboutYou.offer',
 ];

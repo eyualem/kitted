@@ -429,6 +429,8 @@ const addedInBuild = {
   'mic.off.settings': 'Open Settings',
   // A second photo while one is reading (09-ui-review §11, #305): the founder's listed default (#233 item 8).
   'cam.busy': "Still reading your last photo. Send this one when it's done.",
+  // A photo taken while another check is going waits its turn instead (#371; built with this line, on his skim list).
+  'cam.waits': "Got it. I'll read this one right after your last check.",
   // The Closet's Outfits half (09-ui-review §13, #307): D15's approved labels; the reason fallback and the go-to
   // caption are new (listed for the founder's skim).
   'closet.seg.pieces': 'Pieces',
@@ -953,7 +955,7 @@ const addedInBuild = {
   // (A2), bringing back his fits (A4), which fits to keep (A5), the save offer (A3), You's Account rows and the
   // onboarding fixes from the UI review. Outward-facing: on the founder's skim list.
   'onb.welcome.haveAccount': 'I already have an account',
-  // Since #371 O3 asks only the birth year (10-onboarding.md §10); height, build and fit come later, from Kit's
+  // Since #373 O3 asks only the birth year (10-onboarding.md §10); height, build and fit come later, from Kit's
   // "About you" card. Outward-facing: on the founder's skim list.
   'onb.basics.replyTwo': '{style1} with some {style2}. Good mix. One more thing: your birth year.',
   'onb.basics.replyOne': '{style1}. Good pick. One more thing: your birth year.',
@@ -1030,7 +1032,7 @@ const addedInBuild = {
   'acct.choose.confirmTitle': 'Delete the fits on this iPhone?',
   'acct.choose.confirmBody': "The {local} fits that aren't in your account are deleted from this iPhone. It can't be undone.",
   'acct.choose.confirmYes': 'Delete them',
-  // Kit's "About you" card and sheet (#371, 10-onboarding.md §10.1): height, build and fit, asked after the first
+  // Kit's "About you" card and sheet (#373, 10-onboarding.md §10.1): height, build and fit, asked after the first
   // score. Outward-facing: on the founder's skim list.
   'about.tag': 'Optional',
   'about.tagRight': '10 seconds',

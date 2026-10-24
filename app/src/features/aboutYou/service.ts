@@ -1,4 +1,4 @@
-// Posting Kit's "About you" card (10-onboarding.md §10, #371) when aboutYouDue says so: under an answer that would use
+// Posting Kit's "About you" card (10-onboarding.md §10, #373) when aboutYouDue says so: under an answer that would use
 // height, build or fit (afterAnswer, from the ask pipeline), or on a later visit (ensure, from Stylist). The rule is
 // pure (rules.ts); this is the plumbing: the visit clock, one post at a time, Not now and Save.
 import type { ChatMessage } from '@/data/types';

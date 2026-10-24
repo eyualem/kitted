@@ -1,4 +1,4 @@
-// The app's one "About you" service (10-onboarding.md §10, #371), and the hook Stylist runs it from. Held while the
+// The app's one "About you" service (10-onboarding.md §10, #373), and the hook Stylist runs it from. Held while the
 // end-of-onboarding sequence is due or under way or posted this visit (finish.holdsOffer), and in a visit where the
 // save offer posted: one ask per visit.
 import { useFocusEffect } from 'expo-router';

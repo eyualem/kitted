@@ -1,4 +1,4 @@
-// Kit's "About you" card (10-onboarding.md §10.1–§10.2, #371): height, build and fit, asked once after the first score,
+// Kit's "About you" card (10-onboarding.md §10.1–§10.2, #373): height, build and fit, asked once after the first score,
 // first under an answer that would use them (T1), else on a later visit (T2). Checks AY1–AY11 and UN1, written before
 // the code.
 import index from '../../assets/demo-readings/INDEX.json';

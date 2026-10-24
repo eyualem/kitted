@@ -21,7 +21,7 @@ export type CardType =
   | 'item'
   /** "Keep your fits", the save offer (A3, 10-onboarding.md §3). */
   | 'account'
-  /** Kit's "About you" ask: height, build and fit after the first score (10-onboarding.md §10, #371). */
+  /** Kit's "About you" ask: height, build and fit after the first score (10-onboarding.md §10, #373). */
   | 'aboutYou';
 
 /** The seven occasion chips (02 D6); stored as rubric occasion ids. */
