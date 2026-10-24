@@ -70,6 +70,11 @@ type Step =
   /** Earlier sightings of a closet piece, read with these legs or fits (09-ui-review §18): a day apart, no photo. The
    *  piece is `itemId`, or the `slot` piece a story check (`ofCheck`) linked (§19). */
   | { at: string; do: 'sightings'; itemId?: string; ofCheck?: string; slot?: string; legs?: string[]; volumes?: number[] }
+  /** A second copy of a closet piece seen once, as the closet split it (09-ui-review §29, #380): Closet's pair card. */
+  | { at: string; do: 'pairDup'; itemId: string; name: string }
+  /** The re-check card's split as #380 stores it: the caught fix to `fixTo`, the rest read differently in `parts`;
+   *  `from` restages the first check's score (his Oct 24 6.5, so the move has room for both numbers). */
+  | { at: string; do: 'readSplit'; fixTo: number; parts: string[]; from?: number }
   /** Questions already used today (the limit state without five demo answers in the thread). */
   | { at: string; do: 'askUsed'; n: number }
   /** His question in the thread, its answer held mid-way: the dots (no text) or the first words (07 §6.1). */
@@ -245,6 +250,16 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   210: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday', fault: 'offline' }, { at: '2026-10-22T07:44:00', do: 'askOffline', text: 'What goes with my jeans?' }] },
   211: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'ask', text: 'That score is wrong.' }] },
   215: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
+  // The same read minutes apart (09-ui-review §29, #380): the pair card on the demo closet's khaki chinos, and screen
+  // 215's re-check with its move split into the fix's own number and "Read a little differently this time".
+  245: {
+    steps: [
+      { at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] },
+      { at: '2026-10-22T07:31:00', do: 'pairDup', itemId: 'B1', name: 'Tan chinos' },
+      { at: '2026-10-22T07:32:00', do: 'kv', key: 'closet.segment', value: 'pieces' },
+    ],
+  },
+  246: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }, { at: '2026-10-22T07:51:00', do: 'readSplit', fixTo: 7.5, parts: ['proportions'], from: 6.5 }] },
   183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
@@ -406,6 +421,28 @@ async function playStory(sc: ScreenScenario): Promise<void> {
           decision: 'same', identityScore: null, candidates: [], askItemId: null, answeredAt: null, userConfirmed: null,
           createdAt: t0 - (reads.length - i) * 86_400_000, isDeleted: false,
         });
+      }
+      continue;
+    }
+    if (step.do === 'pairDup') {
+      const it = await store.closet.get(step.itemId);
+      if (!it) continue;
+      const id = `${it.id}-dup`;
+      await store.closet.put({ ...it, id, name: step.name, wornCount: 1, addedAt: at(step.at), lastWornAt: at(step.at), maybeSameAs: null, mergedInto: null });
+      await store.closetObs.put({
+        id: `O-demo-${id}`, itemId: id, fitCheckId: null, readingId: null, closetReadingId: null, garmentIndex: null, origin: 'garment',
+        garment: { ...it.garment }, closet: null, sampledHex: null, sampledL: null, cropFile: null, cropQuality: null, decision: 'new',
+        identityScore: null, candidates: [], askItemId: null, answeredAt: null, userConfirmed: null, createdAt: at(step.at), isDeleted: false,
+      });
+      continue;
+    }
+    if (step.do === 'readSplit') {
+      await fitCheck.closet.settle();
+      const row = await store.fitChecks.get(STORY_RECHECK);
+      if (row?.details.recheck) {
+        const rc = { ...row.details.recheck, fixTo: step.fixTo, readParts: step.parts, ...(step.from !== undefined ? { parentScore: step.from } : {}) };
+        await store.fitChecks.patch(row.id, { details: { ...row.details, recheck: rc } });
+        if (step.from !== undefined && row.parentId) await store.fitChecks.patch(row.parentId, { score: step.from });
       }
       continue;
     }

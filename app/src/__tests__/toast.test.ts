@@ -99,6 +99,7 @@ describe('U3 · which Undo gets which window', () => {
     'features/closet/pieceActions.ts · toast: (text, undo)': true, // merge, Not this piece, It's another piece
     'features/closet/pieceActions.ts · editToast': true, // a "What it is" change
     'features/morning/SwapSheet.tsx · swap.done': true, // Swap one rewrites the card, and the piece stays out of it (#377)
+    'features/closet/PairQuestion.tsx · closet.pair.saidNo': false, // "No, two pieces" on the pair card, an answer (#380)
   };
   it('removals and rewrites keep 8 s; the rest are 5 s', () => {
     const seen: Record<string, boolean> = {};

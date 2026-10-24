@@ -275,6 +275,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 241, name: 'About you · a later visit', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'visit' },
   { n: 243, name: 'About you · Not now', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'declined' },
   { n: 244, name: 'About you · saved', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'saved' },
+  // The same read minutes apart (09-ui-review §29, #380): Closet's "Are these one piece?" and a re-check's split move.
+  { n: 245, name: 'Closet · Are these one piece?', id: 'C1q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/closet' },
+  { n: 246, name: 'Re-check · read a little differently', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

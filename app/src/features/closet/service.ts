@@ -1449,6 +1449,13 @@ export function createClosetService(deps: ClosetServiceDeps) {
     keepApart: (a: string, b: string) => serial(async () => {
       await markDistinct(a, b);
     }),
+    /** Undo on that answer's toast: the two may be offered again. */
+    unkeepApart: (a: string, b: string) => serial(async () => {
+      for (const [x, y] of [[a, b], [b, a]] as const) {
+        const it = await store.closet.get(x);
+        if (it) await store.closet.patch(x, { profile: { ...profileOfItem(it), distinctFrom: profileOfItem(it).distinctFrom.filter((z) => z !== y) } });
+      }
+    }),
     merge: (fromId: string, intoId: string) => serial(async (): Promise<MergeUndo | null> => {
       if (fromId === intoId) return null;
       const all = await store.closet.all();

@@ -73,13 +73,15 @@ export function readRow(
  *  the word, and the card lists the new problems under it ("New: …"). The word is returned separately so it can be
  *  set in semibold; `lead` and `tail` are '' when there are none. */
 export function recheckSummary(
-  outcome: Pick<RecheckOutcome, 'after' | 'doneFixes'>, move: RecheckMove, newProblems: readonly string[],
+  outcome: Pick<RecheckOutcome, 'after' | 'doneFixes'>, move: RecheckMove, newProblems: readonly string[], readChanged = false,
 ): { lead: string; word: string; tail: string } {
   const word = scoreWordLabel(outcome.after);
   if (move !== 'up' || newProblems.length > 0) return { lead: '', word: `${word}.`, tail: '' };
   // v4's layer credit, or a parts fix that adds or wears a layer.
   const layered = outcome.doneFixes.some((f) => f.target === 'K1_layered' || (f.engine === 'parts' && /^(wear_held|closet_add_outer|layer_short)$/.test(f.target)));
   const lead = layered ? t('sum.recheck.layer') : t('sum.recheck.generic');
+  // A move partly read differently (#380, its own row) isn't "Nothing else changed.": the lead and the word only.
+  if (readChanged) return { lead, word: `${word}.`, tail: '' };
   const full = t('sum.recheck.tail', { word });
   return { lead, word: `${word}.`, tail: full.slice(word.length + 1).trim() };
 }

@@ -79,12 +79,12 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const outcome = { after: now, doneFixes: rc.doneFixes.map((d) => ({ ...(parent?.row.fixes.find((f) => f.copy === d.copy) ?? { target: '' }), earned: d.earned })) };
   const move = recheckMove(rc.parentScore, now);
   const problems = newProblemLines(rc.newProblems ?? [], row.details);
-  const summary = recheckSummary(outcome as never, move, problems);
-  // One caught fix carries the whole move, so its row says the pill's number, as the pill prints it ("+1.0"); with
-  // several or no win, the rows carry no number.
-  const doneGain = caughtFixGain(rc, now);
   // The rest of the move, when the photo read something differently (#380): its own row, never the fix's.
   const read = notSeen ? null : readRow(rc, now);
+  const summary = recheckSummary(outcome as never, move, problems, !!read);
+  // One caught fix carries the move it made (the pill's number when nothing else was read differently); with several
+  // or no win, the rows carry no number.
+  const doneGain = caughtFixGain(rc, now);
   // "Didn't catch the change? Tell me" only when a fix wasn't caught (none were, or some of the card's weren't).
   const missed = rc.doneFixes.length < (parent?.row.fixes.length ?? 0) || rc.doneFixes.length === 0;
   const problem = parent?.reading ? notSeenProblem(parent.reading, parent.row.fixes) : '';

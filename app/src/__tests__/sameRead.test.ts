@@ -7,9 +7,10 @@ import { scoreParts, setCasualFitsV14, type ClosetItem, type Fix, type Garment, 
 import fixture from '../../packages/kitted-core/test/data/phone-oct24-recheck.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import type { ClosetItemRow, ClosetObservationRow, FitCheckRow, LookAnswerU, StoredSecondLook } from '@/data/types';
-import { caughtFixGain, readRow } from '@/features/fitcheck/explain';
+import { caughtFixGain, readRow, recheckSummary } from '@/features/fitcheck/explain';
 import { anchorRecheckLook, lookInput, ownLookOf } from '@/features/fitcheck/secondLook';
 import { pairCard, pairDoubts, pairKey, parsePairSkips, withPairSkip } from '@/features/closet/pairDoubt';
+import { runMergeNow } from '@/features/closet/merge';
 import { createClosetService } from '@/features/closet/service';
 import { en } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
@@ -93,6 +94,12 @@ describe('A · the re-check card: what the fix did, and what the photo read diff
     expect(readRow(rc, 8)).toEqual({ gain: '+0.5', parts: 'Proportions' });
   });
 
+  it('A1b: with the read row the summary drops "Nothing else changed." (it would contradict the row)', () => {
+    const outcome = { after: 8, doneFixes: [] };
+    expect(recheckSummary(outcome as never, 'up', []).tail).toBe('Nothing else changed.');
+    expect(recheckSummary(outcome as never, 'up', [], true)).toEqual({ lead: 'Fixed and clean.', word: 'Sharp.', tail: '' });
+  });
+
   it('A2: nothing read differently: the fix row carries the whole pill, no second row', () => {
     expect(caughtFixGain({ ...rc, fixTo: 8 }, 8)).toBe('+1.5');
     expect(readRow({ ...rc, fixTo: 8 }, 8)).toBeNull();
@@ -170,7 +177,7 @@ describe('D · "Are these one piece?" in Closet\'s To confirm (#380)', () => {
     expect(all.map((p) => [p.keep.id, p.fold.id, p.why])).toEqual([['C-mid', 'C-light', 'minutes']]);
   });
 
-  it('D2: No keeps them apart for good (never offered again); Skip hides it until a newer photo of either', async () => {
+  it('D2: No keeps them apart for good (never offered again; Undo on its toast offers it again); Skip hides it until a newer photo', async () => {
     const { items, obs, checks } = closet();
     const store = createMemoryStore();
     for (const it of items) await store.closet.put(it);
@@ -180,6 +187,9 @@ describe('D · "Are these one piece?" in Closet\'s To confirm (#380)', () => {
     expect(after.find((c) => c.id === 'C-light')!.profile!.distinctFrom).toContain('C-mid');
     expect(after.find((c) => c.id === 'C-mid')!.profile!.distinctFrom).toContain('C-light');
     expect(pairDoubts(after, obs, checks)).toEqual([]);
+    // Undo on the toast: offered again
+    await svc.unkeepApart('C-mid', 'C-light');
+    expect(pairDoubts(await store.closet.all(), obs, checks)).toHaveLength(1);
     // Skip
     const p = pairCard(items, obs, checks, {})!;
     const skips = parsePairSkips(withPairSkip({}, p));
@@ -187,6 +197,22 @@ describe('D · "Are these one piece?" in Closet\'s To confirm (#380)', () => {
     expect(pairCard(items, obs, checks, skips)).toBeNull();
     const newer = [...obs, obsRow('C-light', 'FC-e', garment('bottom', 'jeans', 'denim_light'), 39, T0 + 2 * 86400_000)];
     expect(pairCard(items, newer, [...checks, check('FC-e', T0 + 2 * 86400_000)], skips)?.key).toBe(pairKey('C-light', 'C-mid'));
+  });
+
+  it('D2b: Yes folds the one with fewer wears with the piece page\'s merge, no second confirm, and its toast\'s Undo unmerges', async () => {
+    const calls: string[] = [];
+    const undo = { fromId: 'C-light', intoId: 'C-mid', items: [], obs: [], checks: [] };
+    let toastUndo: (() => Promise<void> | void) | null = null;
+    const done = await runMergeNow({ id: 'C-light', name: 'Light jeans' }, { id: 'C-mid', name: 'Mid-wash jeans' }, {
+      merge: async (a, b) => (calls.push(`merge ${a}>${b}`), undo),
+      unmerge: async () => void calls.push('unmerge'),
+      toast: (text, u) => { calls.push(text); toastUndo = u; },
+    });
+    expect(done).toBe(undo);
+    await toastUndo!();
+    expect(calls).toEqual(['merge C-light>C-mid', 'Saved as your mid-wash jeans.', 'unmerge']);
+    const src = fs.readFileSync(path.resolve('src/features/closet/PairQuestion.tsx'), 'utf8');
+    expect(src).toMatch(/mergePairNow\(fold, keep\)/);
   });
 
   it('D3: never a piece waiting on an answer, never across slots, and the screen shows one pair card after the questions', () => {
