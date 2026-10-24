@@ -8,6 +8,7 @@
 //  - applyPartsFix: one fix's edits on a reading (S21 "What changed?"), the first state the fix engine tries.
 //  - partsRecheckOutcome: recheckOutcome with the parts engine: before/after are parts scores.
 
+import { identity, profileFromClosetItem, type Observation, type StoredProfile } from "./closetIdentity";
 import { G, SLOT_TO_CLOSET } from "./names";
 import { fixTargets, type Fix } from "./fixes";
 import { CASUAL_FITS_V14, partsDataFor, scoreParts, type PartName, type PartsOptions, type PartsScored } from "./parts";
@@ -182,20 +183,41 @@ function fieldChanged(first: Reading, merged: Reading, cat: string, field: strin
   const pick = (r: Reading) => r.garments.filter((g) => cat === "*" || g.category === cat).map((g) => g[field] ?? null);
   return JSON.stringify(pick(first)) !== JSON.stringify(pick(merged));
 }
-function partsFixDone(fix: Fix, first: Reading, merged: Reading): boolean {
-  return partsFixTargets([fix]).some((t) => {
+/** The closet a re-check's fixes named, as the closet matcher sees it: a "Swap to your …" fix counts as done only
+ *  when the new photo shows a piece that could be that one. */
+export interface FixPieces {
+  items: readonly ClosetItem[];
+  profiles?: Readonly<Record<string, StoredProfile>>;
+}
+
+/** A closet fix's piece is in the merged reading: a garment in the fix's slot the matcher doesn't rule out. Null when
+ *  the fix names no closet piece, or the piece isn't known any more (then the slot changing is the test, as before). */
+function closetPieceWorn(fix: Fix, merged: Reading, pieces?: FixPieces): boolean | null {
+  if (!fix.itemId || !pieces) return null;
+  const op = partsEdits(fix).find((e) => e.op === "swap_closet" || e.op === "add_closet");
+  const item = pieces.items.find((c) => c.id === fix.itemId);
+  if (!op || !("slot" in op) || !item) return null;
+  const profile = profileFromClosetItem(item, pieces.profiles?.[item.id] ?? {});
+  return merged.garments.some((g) => g.category === op.slot && identity(g as Observation, profile).vetoes.length === 0);
+}
+
+function partsFixDone(fix: Fix, first: Reading, merged: Reading, pieces?: FixPieces): boolean {
+  const changed = partsFixTargets([fix]).some((t) => {
     const dot = t.indexOf(".");
     if (dot < 0) return slotJson(first, t) !== slotJson(merged, t);
     return fieldChanged(first, merged, t.slice(0, dot), t.slice(dot + 1));
   });
+  // Oct 23: his tan chukkas ticked "Swap to your cream chunky sneakers": a changed slot alone isn't the swap.
+  return changed && closetPieceWorn(fix, merged, pieces) !== false;
 }
 
 /** recheckOutcome with the parts engine. `merged` comes from recheckMerge(first, next, cardFixTargets(fixes)).
  *  newProblems: the parts checks that cost points now and didn't before ("cohesion:ST2", "condition").
  *  `mergedOpts`: the options for the merged side when they differ from the first's (the app: the re-check photo's own
- *  second look); default `opts`, so both sides score alike. */
+ *  second look); default `opts`, so both sides score alike. `pieces`: the closet the fixes' pieces come from, so a
+ *  "Swap to your …" fix is done only when that piece (or one the matcher can't tell from it) is in the photo. */
 export function partsRecheckOutcome(
-  first: Reading, fixes: readonly Fix[], merged: Reading, opts: PartsOptions = {}, mergedOpts?: PartsOptions,
+  first: Reading, fixes: readonly Fix[], merged: Reading, opts: PartsOptions = {}, mergedOpts?: PartsOptions, pieces?: FixPieces,
 ): RecheckOutcome | null {
   const a = scoreParts(first, opts);
   const b = scoreParts(merged, mergedOpts ?? opts);
@@ -203,7 +225,7 @@ export function partsRecheckOutcome(
   const A = a as PartsScored;
   const B = b as PartsScored;
   const rawDelta = Math.round((B.rawUnrounded - A.rawUnrounded) * 1e6) / 1e6;
-  const done = fixes.filter((f) => partsFixDone(f, first, merged));
+  const done = fixes.filter((f) => partsFixDone(f, first, merged, pieces));
   const doneFixes = done.map((f) => ({ ...clone(f), earned: done.length === 1 ? rawDelta : f.rawGain }));
   const faults = (s: PartsScored): Set<string> => {
     const out = new Set<string>();

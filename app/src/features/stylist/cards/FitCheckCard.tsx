@@ -15,6 +15,9 @@ import { useLive } from '@/data/useLive';
 import { fitCheck, useFitCheckSession } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { finishInfo, type FinishInfo } from '@/features/fitcheck/finish';
+import { openPiece } from '@/features/closet/pieceActions';
+import { PeekRow } from './PiecePeek';
+import { fixPiece, peekActions } from './fixPeek';
 import { isRecheckOpen, recheckDeadline } from '@/services/quota';
 import { retryCheck } from '@/features/camera/startCheck';
 import { sessionClock } from '@/state/session';
@@ -356,8 +359,10 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     : undefined;
 
   const shareable = !readOnly && shareOffered(row);
+  // "Show your cream chunky sneakers" (#371): the card is one VoiceOver element, so each fix's piece is an action.
+  const peeks = dialed ? [] : peekActions(fixes, closet);
   const fold = { name: 'fold', label: open ? t('card.fold.less') : t('card.fold.more') };
-  const actions = readOnly ? [fold, { name: 'why', label: t('card.why', { score: scoreText }) }] : [
+  const actions = readOnly ? [fold, { name: 'why', label: t('card.why', { score: scoreText }) }, ...peeks.map(({ name, label }) => ({ name, label }))] : [
     fold,
     { name: 'why', label: t('card.why', { score: scoreText }) },
     { name: 'nqr', label: t('card.nqr') },
@@ -368,6 +373,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     { name: 'occasion', label: t('card.a11y.changeOccasion') },
     ...(gf ? [{ name: 'look', label: t('card.a11y.changeLook') }] : []),
     ...(changeAnswer ? [{ name: 'changeAnswer', label: t('tap.a11y.change') }] : []),
+    ...peeks.map(({ name, label }) => ({ name, label })),
     ...(askLine ? [
       { name: 'askSame', label: t('item.dup.yes') },
       { name: 'askNew', label: t('item.dup.no') },
@@ -434,7 +440,11 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         // While Change is open the card isn't one VoiceOver element, so the looks can be reached one by one.
         accessibilityLabel={changing ? undefined : label}
         accessibilityActions={changing ? undefined : actions}
-        onAccessibilityAction={(e) => void go[e.nativeEvent.actionName as keyof typeof go]?.()}
+        onAccessibilityAction={(e) => {
+          const peek = peeks.find((x) => x.name === e.nativeEvent.actionName);
+          if (peek) openPiece(peek.item);
+          else void go[e.nativeEvent.actionName as keyof typeof go]?.();
+        }}
       >
         {gf ? (
           changing ? (
@@ -505,10 +515,12 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
             fixes.map((f, i) => (
               <RevealStepView key={f.target + i} t={rt} step={plan?.fixes[i]} style={{}}>
                 {i > 0 ? <RowDivider /> : null}
-                <FixRow
-                  number={i + 1} title={f.copy} detail={f.tag} gain={t('card.gainTo', { score: displayScore(f.to) })}
-                  reveal={plan && i === 0 ? { t: revealT, gain: plan.gain } : undefined}
-                />
+                <PeekRow item={fixPiece(f, closet)}>
+                  <FixRow
+                    number={i + 1} title={f.copy} detail={f.tag} gain={t('card.gainTo', { score: displayScore(f.to) })}
+                    reveal={plan && i === 0 ? { t: revealT, gain: plan.gain } : undefined}
+                  />
+                </PeekRow>
               </RevealStepView>
             ))
           )}

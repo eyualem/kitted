@@ -48,7 +48,7 @@ export {
 } from "./partsFixes";
 // The parts engine in the app's check flow (#209): card fix rows, re-check targets and outcome.
 export {
-  PARTS_RUBRIC_VERSION, isPartsFix, partsFixAsFix, partsFixTargets, cardFixTargets, applyPartsFix, partsRecheckOutcome,
+  PARTS_RUBRIC_VERSION, isPartsFix, partsFixAsFix, partsFixTargets, cardFixTargets, applyPartsFix, partsRecheckOutcome, type FixPieces,
 } from "./partsCheck";
 // "Going for" (#215): what his stated look changes on the card (the advice), never the score.
 export { goingForAdvice, type GoingForAdvice, type GoingForMove, type GoingForOptions, type GoingForEngines } from "./goingFor";

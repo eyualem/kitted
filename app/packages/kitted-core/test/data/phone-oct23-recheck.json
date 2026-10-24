@@ -1,0 +1,307 @@
+{
+ "_note": "The founder's Oct 23 re-check (10:08 pm): first check black tee, light jeans, grey work boots; re-check in his green Champion sweatshirt and tan chukkas. Readings and closet rows only, no photo; profile unknown (rule 7), scored at its own occasion with no picks.",
+ "occasion": "going_out",
+ "first": {
+  "scene": {
+   "framing": "full_body",
+   "shoes_visible": true,
+   "people_count": 1,
+   "mirror_selfie": true,
+   "lighting": "good",
+   "clothed": "fully"
+  },
+  "garments": [
+   {
+    "category": "top",
+    "subcategory": "tee",
+    "color_family": "black",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "color_family": "denim_light",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 4,
+    "leg_shape": "relaxed",
+    "hem": "cuffed",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": true,
+    "shows_below_outer": false
+   },
+   {
+    "category": "footwear",
+    "subcategory": "work_boot",
+    "color_family": "grey",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   }
+  ]
+ },
+ "merged": {
+  "scene": {
+   "framing": "full_body",
+   "shoes_visible": true,
+   "people_count": 1,
+   "mirror_selfie": true,
+   "lighting": "good",
+   "clothed": "fully"
+  },
+  "garments": [
+   {
+    "category": "top",
+    "subcategory": "sweatshirt",
+    "color_family": "green",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 4,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "mid_fly",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "color_family": "denim_light",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 4,
+    "leg_shape": "relaxed",
+    "hem": "cuffed",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": true,
+    "shows_below_outer": false
+   },
+   {
+    "category": "footwear",
+    "subcategory": "suede_chukka",
+    "color_family": "tan_camel",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   }
+  ]
+ },
+ "fixes": [
+  {
+   "target": "closet_top",
+   "tier": "swapFromCloset",
+   "effort": 2,
+   "free": true,
+   "to": 8,
+   "toRaw": 7.967,
+   "gain": 0.5,
+   "rawGain": 0.425,
+   "edits": [
+    {
+     "op": "swap_closet",
+     "slot": "top"
+    }
+   ],
+   "itemId": "C-bac5d0cd-958f-4c7a-9912-94e8195c6512",
+   "copy": "Swap to your green Champion sweatshirt",
+   "tag": "Raises Color and Shoes \u00b7 free \u00b7 from your closet",
+   "engine": "parts",
+   "raisesLine": "Raises Color and Shoes"
+  },
+  {
+   "target": "closet_shoes",
+   "tier": "swapFromCloset",
+   "effort": 2,
+   "free": true,
+   "to": 8,
+   "toRaw": 7.775,
+   "gain": 0.5,
+   "rawGain": 0.233,
+   "edits": [
+    {
+     "op": "swap_closet",
+     "slot": "footwear"
+    }
+   ],
+   "itemId": "C-0258627b-6843-4818-99e3-a95d0c0171e7",
+   "copy": "Swap to your cream chunky sneakers",
+   "tag": "Raises Shoes to 8.5 \u00b7 free \u00b7 from your closet",
+   "engine": "parts",
+   "raisesLine": "Raises Shoes to 8.5"
+  },
+  {
+   "target": "layer_short",
+   "tier": "changeInto",
+   "effort": 3,
+   "free": true,
+   "to": 8,
+   "toRaw": 7.825,
+   "gain": 0.5,
+   "rawGain": 0.283,
+   "edits": [
+    {
+     "op": "add",
+     "garments": [
+      {
+       "category": "outerwear",
+       "subcategory": "bomber",
+       "color_family": "navy"
+      },
+      {
+       "category": "outerwear",
+       "subcategory": "denim_jacket",
+       "color_family": "denim_mid"
+      }
+     ]
+    }
+   ],
+   "itemId": null,
+   "copy": "Add a short jacket: a bomber or a denim jacket",
+   "tag": "Raises Shoes to 8 \u00b7 free if you own one \u00b7 worn open",
+   "engine": "parts",
+   "raisesLine": "Raises Shoes to 8"
+  }
+ ],
+ "closet": [
+  {
+   "id": "C-bac5d0cd-958f-4c7a-9912-94e8195c6512",
+   "name": "Green Champion sweatshirt",
+   "slot": "top",
+   "garment": {
+    "category": "top",
+    "subcategory": "sweatshirt",
+    "color_family": "green",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 4,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "mid_fly",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "confirmedFields": []
+  },
+  {
+   "id": "C-0258627b-6843-4818-99e3-a95d0c0171e7",
+   "name": "Cream chunky sneakers",
+   "slot": "shoes",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "chunky_sneaker",
+    "color_family": "off_white_cream",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "confirmedFields": [
+    "color_family",
+    "subcategory"
+   ]
+  },
+  {
+   "id": "C-23e357bd-55d7-4503-9c5c-4e4edd9d522f",
+   "name": "Tan chukkas",
+   "slot": "shoes",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "suede_chukka",
+    "color_family": "tan_camel",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "confirmedFields": []
+  }
+ ]
+}

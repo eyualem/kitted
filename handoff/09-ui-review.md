@@ -1238,3 +1238,36 @@ Today's rules treat an olive fleece over a green sweatshirt like any two quiet c
 - **A5, scored through the live server:** a stock photo (s14, resized so it had never been read; profile unknown, a plumbing test only) picked through "Choose from your photos" scored **7.5 Put together**, "Good base. Something you own gets you to 8.0.", and the header's "1 free check today" went away. The server's log at 06:38 UTC shows it under the guest account: `read` (two hedged calls), `look` ×2, `closet`, all 200, about 1.7¢. Screenshots `screenshots/release-oct21/` (git-ignored). Then the saved Debug app went back on (dev launcher present), camera permission restored, Simulator shut down.
 - **Found on the way:** on the Simulator the stand-in camera's 3-2-1 captures its bundled sample before a tap on the library button lands (the sample replays its saved reading, never sent, never counted); `kitted://sheets/sample-photos?mode=check&from=camera` opens the photo choice directly. Three sample checks were left in the Simulator's copy of the data.
 - **Not seen:** the switch on (needs the paid team to sign), WeatherKit answering, the Apple mark on a screen, K2's scheme path inside Xcode.
+
+## 28. A re-check's ticks, and the piece peek on a fix row (Oct 23, #370–371). Checks first
+
+**The founder (Oct 23, from his phone):** on a re-check's fix rows the app "may have recommended something that does not exist inside the closet"; and "when the user presses on the recommendation, if it hovers whatever piece is getting recommended from the closet, that may make things easier."
+
+### 28.1 What his phone shows (pulled Oct 23, 10:15 pm)
+- **9:51 pm check** (black tee, light jeans, grey work boots, Going out, 7.5): fixes "Swap to your green Champion sweatshirt", "Swap to your cream chunky sneakers" (both in his closet) and "Add a short jacket: a bomber or a denim jacket · free if you own one". **He has no bomber and no denim jacket in his closet**: that row is a generic fix by design (#162, #208: free moves, then his closet, then "free if you own one"), and its tag says so.
+- **10:08 pm re-check** in the green sweatshirt and his **tan chukkas**: the card ticked both closet swaps, **"✓ Swap to your cream chunky sneakers" included**. A bug: a closet swap counted as done whenever its slot changed (`partsFixDone`), to any piece. Every swap fix's piece exists in his closet; none was removed or merged.
+
+### 28.2 The fix (#370)
+- A "Swap to your …" / "Add your …" fix is done only when the new photo has a piece in that slot the closet matcher doesn't rule out as that piece (`identity` with no veto, the item's stored sightings and aliases). A near read of the same piece (cream read as white) still counts. A piece no longer known falls back to the slot changing. Scores never change: only which rows get the ✓ (and so "Didn't catch the change? Tell me" shows when the shoes swap wasn't the one he was told).
+- **Code:** `partsRecheckOutcome(…, pieces)` and `closetPieceWorn` in `packages/kitted-core/src/partsCheck.ts`; the app passes every closet item and its sightings (`fixPieces` in `features/fitcheck/service.ts`).
+- **Checks (`packages/kitted-core/test/recheckClosetPiece.test.ts`, his readings):** K1 his tan chukkas don't tick the cream sneakers, the sweatshirt still ticks; K2 the cream sneakers tick both; K3 a near color read still ticks; K4 a piece gone from the closet falls back to the old rule; K5 no closet given = the old outcome; K6 before, after and the raw delta unchanged.
+- **Not changed:** tonight's stored re-check keeps its two ticks (stored at the time); new re-checks get the fix. The generic "free if you own one" fixes stay (his call if they should hide when his closet has none of that kind; default: keep, the closet is learned as he goes).
+
+### 28.3 The piece peek (#371): his pick, "Floating peek"
+- **What he sees:** tapping a fix row that names a closet piece floats a small card just above the row (below it when there's no room above): the piece's drawing, its name, "Worn 4 times" (hidden at 0) and "Open piece ›". Tap anywhere else to close it. The row dims while pressed; its look is otherwise unchanged. On the first check's card (the fixes to make) and on a re-check's done rows.
+- **Which rows:** a fix with a closet piece (`itemId`); a piece merged into another shows the one it lives in now; a removed piece, a generic fix ("free if you own one") or a free move (tuck, cuff) isn't pressable.
+- **VoiceOver:** the card is one element; each closet fix adds an action "Show your {item}", which opens the piece's page.
+- **Motion:** fades and grows in from the row in about 0.2 s; Reduce Motion fades only. A light selection tick on open.
+
+### 28.4 Pass/fail checks, set before building (`app/src/__tests__/piecePeek.test.ts`)
+- **PK1** `fixPiece` gives the live closet piece for a closet fix; follows a merge to the surviving piece; null for a removed piece, a generic fix and a free move.
+- **PK2** `peekFrame` puts the peek above the row when it fits under the top inset, else below; never off screen sideways (16 pt gutters), as wide as the screen allows up to 280 pt, at the largest text size too.
+- **PK3** The peek's lines: the item's name, "Worn {n} times" / "Worn 1 time", no worn line at 0, "Open piece".
+- **PK4** VoiceOver: a card with two closet fixes has the actions "Show your green Champion sweatshirt" and "Show your cream chunky sneakers"; a generic fix adds none.
+- **PK5** On the Simulator: the peek opens on a tap, shows the drawing and name, Open piece goes to the piece page, a tap outside closes it, in light, dark and the largest text size.
+
+### 28.5 Results (Oct 23)
+- **#370:** K1–K6 pass (core 793 tests). Before the fix K1 failed the way his card did: both swaps ticked.
+- **#371:** PK1–PK4 pass (app 1,526 tests, tsc and lint clean). PK5 on the web preview at 375 × 812 (screenshots `screenshots/piece-peek/`, git-ignored): dark above the row, light below it, "Open piece" opens the oxford's page, a tap outside closes it. **Not on the iOS Simulator yet** (boot failed with "Invalid argument" while memory was near full); the largest text size and VoiceOver not seen.
+- **Open:** a visible cue that a row can be tapped (today it looks the same until pressed); the Lookbook look page's fix rows (not wired).
+

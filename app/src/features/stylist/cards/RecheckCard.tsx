@@ -17,6 +17,9 @@ import { t } from '@/i18n/en';
 import { occasionLabel } from '../thread';
 import { threadGrow } from '../threadGrow';
 import { FitCheckCard, useCardOpen } from './FitCheckCard';
+import { openPiece } from '@/features/closet/pieceActions';
+import { PeekRow } from './PiecePeek';
+import { fixPiece, peekActions } from './fixPeek';
 import { shareOffered } from '@/features/share/offer';
 import { useWinReveal } from './useReveal';
 import type { FitCheckRow } from '@/data/types';
@@ -37,6 +40,7 @@ export function RecheckCard({ checkId, readOnly = false }: { checkId: string; re
 
 function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { row: FitCheckRow; reading: Parameters<typeof notSeenProblem>[0] | null } | null | undefined; readOnly: boolean }) {
   const rc = row.details.recheck!;
+  const closet = useLive(['closet'], () => store.closet.all(), []) ?? [];
   // The re-check win (#242, #246 (16)): once, only when the score went up and the card shows the change (not the
   // "same photo" or "change not seen" cards, which land as they are).
   const { t: winT, plan, values: winValues, pill, attachScore, onScoreLayout, touch } = useWinReveal(
@@ -91,13 +95,17 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const scoreText = displayScore(now);
   const why = { name: 'why', label: t('card.why', { score: scoreText }) };
   const fold = { name: 'fold', label: open ? t('card.fold.less') : t('card.fold.more') };
+  // "Show your green Champion sweatshirt" (#371): each caught fix's closet piece, as on the first check's card.
+  const peeks = notSeen ? [] : peekActions(rc.doneFixes.map((d) => parent?.row.fixes.find((f) => f.copy === d.copy) ?? {}), closet);
+  const peekA = peeks.map(({ name, label }) => ({ name, label }));
   const actions = notSeen
     ? readOnly ? [] : [{ name: 'iDid', label: iDidTitle }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
-    : readOnly ? [fold, why] : [
+    : readOnly ? [fold, why, ...peekA] : [
         fold,
         ...(move === 'up' && shareOffered(row) ? [{ name: 'share', label: t('recheck.share') }] : []),
         why, { name: 'nqr', label: t('card.nqr') },
         ...(missed ? [{ name: 'tell', label: t('recheck.tellMe') }] : []),
+        ...peekA,
       ];
   const go = {
     fold: () => setOpened(!opened),
@@ -124,7 +132,11 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
     <KCard
       accessibilityLabel={label}
       accessibilityActions={actions}
-      onAccessibilityAction={(e) => go[e.nativeEvent.actionName as keyof typeof go]?.()}
+      onAccessibilityAction={(e) => {
+        const peek = peeks.find((x) => x.name === e.nativeEvent.actionName);
+        if (peek) openPiece(peek.item);
+        else go[e.nativeEvent.actionName as keyof typeof go]?.();
+      }}
     >
       <Pressable onPress={() => setOpened(true)} disabled={open} accessible={false}>
       <KCardSection gap={12}>
@@ -170,7 +182,9 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
           <Seam />
           <KCardSection paddingVertical={4} gap={0}>
             {rc.doneFixes.map((d, i) => (
-              <FixRow key={i} number={i + 1} title={d.copy} gain={doneGain} done reveal={plan ? { t: winT, badge: plan.badge } : undefined} />
+              <PeekRow key={i} item={fixPiece(parent?.row.fixes.find((f) => f.copy === d.copy) ?? {}, closet)}>
+                <FixRow number={i + 1} title={d.copy} gain={doneGain} done reveal={plan ? { t: winT, badge: plan.badge } : undefined} />
+              </PeekRow>
             ))}
           </KCardSection>
         </>

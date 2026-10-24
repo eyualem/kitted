@@ -63,8 +63,8 @@ describe('G15 · a scored re-check has Why and Not quite right?', () => {
     expect(card).toMatch(/<TextLink title=\{t\('card\.why', \{ score: scoreText \}\)\} onPress=\{go\.why\} compact \/>\s*<TextLink title=\{t\('card\.nqr'\)\} onPress=\{go\.nqr\} compact \/>\s*\{missed \?/);
   });
 
-  it('G15.2–3 VoiceOver gets both as actions; Past chats keep Why only', () => {
-    expect(card).toMatch(/: readOnly \? \[fold, why\] : \[[\s\S]*?why, \{ name: 'nqr', label: t\('card\.nqr'\) \}/);
+  it('G15.2–3 VoiceOver gets both as actions; Past chats keep Why only (and each piece\'s Show your …, #371)', () => {
+    expect(card).toMatch(/: readOnly \? \[fold, why(, \.\.\.peekA)?\] : \[[\s\S]*?why, \{ name: 'nqr', label: t\('card\.nqr'\) \}/);
     expect(card).toMatch(/\{readOnly && !notSeen \? \(/);
   });
 

@@ -1174,6 +1174,9 @@ const addedInBuild = {
   'share.a11y.versions': 'Version',
   'share.a11y.faces': 'Photo',
   'share.a11y.share': 'Share the card',
+  // The piece peek (09-ui-review §28.3, #371): a tap on a fix row that names a closet piece shows that piece.
+  'fix.peek.open': 'Open piece',
+  'fix.peek.a11y': 'Show your {item}',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */
