@@ -822,7 +822,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
     > **Update Oct 14 (founder): the weather is real now, from the US National Weather Service** (api.weather.gov, free, public domain, US only; 05 §MC9). `Allow` shows the real iOS location prompt (When In Use, approximate by default); after it, the card plans with live weather and the label beside the pills reads `Weather: National Weather Service` (key `wx.nws`). `Sample weather` now shows only on sample weather (demo screens, which keep their sample days). Declined, offline, outside the US, or a build without the location module: no weather, the season as before. **Privacy:** only the approximate location, rounded to about 1 km, goes to the National Weather Service; never to Google, never stored by us. Apple WeatherKit (with its mark and `Data sources`) replaces NWS after the paid program.
   - **Allow:** the copper text link (`TextLink`).
   - **Thin closet:** shows only `Check my fit` until Starter essentials (C5) exists; `Add basics` is hidden.
-  - **Swap one:** the iOS action sheet (`The navy chinos`, …), not S28's sheet yet.
+  - **Swap one:** ~~the iOS action sheet (`The navy chinos`, …), not S28's sheet yet.~~ **Update Oct 23 (#377):** S28's sheet (09-ui-review §28).
   - **Same pick after a style change:** a toast `Same pick works for {style}.`, not a why line.
 - **VoiceOver:** the "your own fit" row is its own button ("Going with your own? Check it before you leave. Opens the camera."). The collapsed card: "Today, class: you went with your own, 8.0, Sharp. Shows the result."
 - **VoiceOver:** the card is one element: "Outfit idea for class today. 48 degrees now, high 63, rain likely after 5 pm. Navy overshirt, grey tee, khaki chinos, brown boots." Custom actions: Wear this, Swap one, Change occasion.
@@ -1267,6 +1267,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
 - Medium detent, title `Swap one piece` + X. Subtitle `Tap the piece to change.`
 - Row of the outfit's 4 tiles; tapping one shows, below, the alternatives from his closet for that slot that still pass the outfit rules (3-column grid, each with its "fits" count hidden). Tapping an alternative updates the outfit card in place and dismisses. No alternatives: `Nothing else in your closet works here yet.`
 - Code only, free.
+- **Built Oct 23 (#377, 09-ui-review §28; differs from this spec in two places):** "works" is the card picker's own rules (allowed for the occasion and weather, the weather's layer rule, `outfitValid`, and at least Put together, or the card's own score when lower), best first; a pick shows the toast `Swapped in your {piece}.` with Undo (8 s), since a piece swapped away stays out of that card (#353). Over the grid: `Instead of your {piece}`. Nothing is picked when the sheet opens.
 
 #### S29 · Unopened ideas question
 - **When:** 3 daily ideas delivered and none opened. Scheduling stops; asked once.

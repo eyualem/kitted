@@ -4,7 +4,7 @@
 // labelled Streetwear, though that outfit reads as no look and his cream chunky sneakers made a 7.5.
 import { describe, expect, it } from "vitest";
 import {
-  defaultRubric, isScored, outfitReading, pickHistory, pickOutfit, weatherNeeds,
+  defaultRubric, isScored, outfitReading, pickHistory, pickOutfit, swapOptions, weatherNeeds,
   type ClosetItem, type DayWeather, type DetectedStyle, type PastUse, type PickHistory, type Styles,
 } from "../src/index";
 import { readFileSync } from "node:fs";
@@ -49,6 +49,17 @@ describe("slides stay home (#378)", () => {
     const onlySlides = CLOSET.filter((c) => c.slot !== "shoes" || c.garment.subcategory === "slides_sandals");
     const r = pickOutfit({ closet: onlySlides, occasion: "home", styles: STREET, needs: NEEDS, history: HISTORY, seed: data.seed });
     expect(isSlides(shoeOf(r.outfit!.itemIds))).toBe(true);
+  });
+
+  it("P4b Swap one on the shoes, out of the house: slides are still offered, after every other pair", () => {
+    const outfit = card().outfit!.itemIds;
+    const shoe = shoeOf(outfit);
+    const listed = (occasion: string) =>
+      swapOptions({ closet: CLOSET, occasion, styles: STREET, needs: NEEDS, history: HISTORY, seed: data.seed, outfit, out: shoe }).map((o) => o.itemId);
+    const out = listed("everyday");
+    const firstSlides = out.findIndex(isSlides);
+    expect(firstSlides).toBeGreaterThan(0);
+    expect(out.slice(firstSlides).every(isSlides)).toBe(true);
   });
 
   it("P4 slides are his only shoes: the card still has an outfit, with the slides", () => {
