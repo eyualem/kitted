@@ -22,6 +22,7 @@ import { AnswerBody, answerLayout, chipActions, useAnswerCloset } from '@/featur
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
+import { AboutYouCard } from '@/features/aboutYou/AboutYouCard';
 import { NoConsentCard } from '@/features/onboarding/NoConsentCard';
 import { InviteCard } from '@/features/finish/InviteCard';
 import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
@@ -45,6 +46,8 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'support') return <SupportCard />;
     // "Keep your fits" (A3, #289): after his first score, at most twice.
     if (m.cardType === 'account') return <AccountOfferCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
+    // "About you" (#373, 10-onboarding.md §10): height, build and fit, after the first score.
+    if (m.cardType === 'aboutYou') return <AboutYouCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     // "Turn on fit checks" (S26, 09-ui-review §20.8 G23): after "Not now" on consent.
     if (m.cardType === 'turnOnChecks') return <NoConsentCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     // The check limit (02 D19 S17 → S17h, #280): under the photo he took after the free check was used.

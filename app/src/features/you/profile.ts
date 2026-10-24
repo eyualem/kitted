@@ -5,9 +5,7 @@ import type { Styles } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import { normStyleKey, type ProfileRow, type StyleKey } from '@/data/types';
 import { styleLabel } from '@/features/morning/copy';
-import {
-  BUILDS, buildLabel, FITS, fitLabel, heightLabel, heightSpoken, inchesToCm, type Build, type FitPref,
-} from '@/features/onboarding/basics';
+import { FITS, fitLabel, type FitPref } from '@/features/onboarding/basics';
 import { MAX_PICKS, picksToStyles } from '@/features/onboarding/looks';
 import { t, type StringKey } from '@/i18n/en';
 
@@ -28,51 +26,27 @@ export function stylesToSave(original: Styles, picks: readonly StyleKey[]): Styl
   return same ? original : picksToStyles(picks);
 }
 
-export function heightInOf(cm: number | null): number | null {
-  return cm === null ? null : Math.round(cm / 2.54);
-}
-
 /** null = he didn't give it ('' since #276): shown and sent only when he tapped one. */
-const asBuild = (b: string): Build | null => (BUILDS.includes(b as Build) ? (b as Build) : null);
 const asFit = (f: string): FitPref | null => (FITS.includes(f as FitPref) ? (f as FitPref) : null);
 
-/** "5′ 10″" or, in metric, "178 cm". */
-export function heightText(inches: number, units: ProfileRow['units']): string {
-  return units === 'metric' ? t('you.heightCm', { n: inchesToCm(inches) }) : heightLabel(inches);
-}
+type Basics = Pick<ProfileRow, 'fitPreference'>;
 
-type Basics = Pick<ProfileRow, 'heightCm' | 'build' | 'fitPreference' | 'units'>;
-
-/** "5′ 10″ · Average build · Regular fit"; whatever he didn't give is left out (#246, #276); '' when none. */
+/** "Regular fit", or '' when he didn't give one. Height and build are no longer asked or shown (#375). */
 export function basicsLine(p: Basics): string {
-  const h = heightInOf(p.heightCm);
-  const build = asBuild(p.build);
   const fit = asFit(p.fitPreference);
-  return [
-    h !== null ? heightText(h, p.units) : null,
-    build ? t('you.basics.build', { build: buildLabel(build) }) : null,
-    fit ? t('you.basics.fit', { fit: fitLabel(fit) }) : null,
-  ].filter((x): x is string => x !== null).join(' · ');
+  return fit ? t('you.basics.fit', { fit: fitLabel(fit) }) : '';
 }
 
-const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
-/** VoiceOver for the style card, as one element: "Your style: Streetwear, first pick; Minimal; Workwear. 5 feet
- *  10 inches, average build, regular fit. Edit." */
+/** VoiceOver for the style card, as one element: "Your style: Streetwear, first pick; Minimal; Workwear. Regular fit.
+ *  Edit." */
 export function styleCardSpoken(p: Basics & Pick<ProfileRow, 'styles'>): string {
   const picks = picksOf(p.styles);
   const styles = picks.length
     ? picks.map((s, i) => (i === 0 && picks.length > 1 ? t('you.a11y.firstPick', { style: styleLabel(s) }) : styleLabel(s))).join('; ')
     : t('you.style.none');
-  const h = heightInOf(p.heightCm);
-  const build = asBuild(p.build);
   const fit = asFit(p.fitPreference);
-  const parts = [
-    h !== null ? (p.units === 'metric' ? t('you.heightCm', { n: inchesToCm(h) }) : heightSpoken(h)) : null,
-    build ? t('you.basics.build', { build: lower(buildLabel(build)) }) : null,
-    fit ? t('you.basics.fit', { fit: lower(fitLabel(fit)) }) : null,
-  ].filter((x): x is string => x !== null);
-  return parts.length ? t('you.a11y.styleCard', { styles, basics: parts.join(', ') }) : t('you.a11y.styleCardNoBasics', { styles });
+  return fit ? t('you.a11y.styleCard', { styles, basics: t('you.basics.fit', { fit: fitLabel(fit) }) }) : t('you.a11y.styleCardNoBasics', { styles });
 }
 
 /** Budget per piece (Y2): only ever asked, never guessed (#246). `prefer_not` = he chose not to say. */
@@ -85,30 +59,26 @@ export const budgetLabel = (b: Budget) => t(BUDGET_KEYS[b]);
 export const asBudget = (b: string | null): Budget | null => (b !== null && (BUDGETS as readonly string[]).includes(b) ? (b as Budget) : null);
 
 export interface ProfileDraft {
-  heightIn: number | null;
-  build: Build | null;
   fit: FitPref | null;
   picks: StyleKey[];
   budget: Budget | null;
 }
 
 export function draftOf(p: ProfileRow): ProfileDraft {
-  return { heightIn: heightInOf(p.heightCm), build: asBuild(p.build), fit: asFit(p.fitPreference), picks: picksOf(p.styles), budget: asBudget(p.budget) };
+  return { fit: asFit(p.fitPreference), picks: picksOf(p.styles), budget: asBudget(p.budget) };
 }
 
 export function isDirty(p: ProfileRow, d: ProfileDraft): boolean {
   const o = draftOf(p);
-  return o.heightIn !== d.heightIn || o.build !== d.build || o.fit !== d.fit || o.budget !== d.budget || o.picks.join() !== d.picks.join();
+  return o.fit !== d.fit || o.budget !== d.budget || o.picks.join() !== d.picks.join();
 }
 
-/** The row Y2 saves. Untouched fields keep their stored values exactly (height in cm, the style pairs); birth year,
- *  boldness, consent and the rest are never changed here. */
+/** The row Y2 saves. Untouched fields keep their stored values exactly (the style pairs); birth year, boldness, consent
+ *  and the rest are never changed here, and height and build aren't written at all (#375). */
 export function applyDraft(p: ProfileRow, d: ProfileDraft): ProfileRow {
   const o = draftOf(p);
   return {
     ...p,
-    heightCm: d.heightIn === o.heightIn ? p.heightCm : d.heightIn === null ? null : inchesToCm(d.heightIn),
-    build: d.build === o.build ? p.build : (d.build ?? ''),
     fitPreference: d.fit === o.fit ? p.fitPreference : (d.fit ?? ''),
     styles: stylesToSave(p.styles, d.picks),
     budget: d.budget === o.budget ? p.budget : d.budget,

@@ -88,6 +88,9 @@ export interface AskDeps {
    * hears those once too (07 §17, U14); before, only an answer was spoken, so a distress message got silence.
    */
   onPosted?: (text: string) => void;
+  /** After an answer is in the thread (not a failed, limited or offline one): Kit's "About you" card may follow it
+   *  (10-onboarding.md §10.2 T1). Never counted. */
+  afterAnswer?: (a: { kind: string | null; at: number; refused: boolean; uncounted: boolean }) => Promise<unknown>;
   live?: typeof defaultLive;
 }
 
@@ -310,6 +313,7 @@ export function createAsk(deps: AskDeps) {
       // Read once, complete, with its card and the saved line (07 §6.1, P2).
       const spoken = [answer, prep.speak?.(card) ?? null, saved ? t('ask.saved') : null].filter(Boolean).join(' ');
       deps.onAnswered?.(spoken.endsWith('.') || spoken.endsWith('?') ? spoken : `${spoken}.`);
+      await deps.afterAnswer?.({ kind: prep.kind ?? null, at, refused: done.refused === true, uncounted: done.uncounted === true }).catch((e: unknown) => log(`afterAnswer failed · ${String(e)}`));
       return { kind: 'answered', messageId: id, counted };
     } finally {
       busy = false;

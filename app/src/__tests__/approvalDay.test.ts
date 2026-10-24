@@ -120,14 +120,14 @@ describe('P · the privacy manifest', () => {
   it('P2 the collected data matches the nutrition-label draft, all for app functionality, none for tracking', () => {
     const types = pm.NSPrivacyCollectedDataTypes;
     expect(Object.fromEntries(types.map((t) => [t.NSPrivacyCollectedDataType.replace('NSPrivacyCollectedDataType', ''), t.NSPrivacyCollectedDataTypeLinked]))).toEqual({
-      PhotosorVideos: false, OtherUserContent: false, UserID: true, ProductInteraction: true, CoarseLocation: false, OtherDataTypes: false,
+      PhotosorVideos: false, OtherUserContent: false, UserID: true, ProductInteraction: true, CoarseLocation: false,
     });
     for (const t of types) {
       expect(t.NSPrivacyCollectedDataTypeTracking).toBe(false);
       expect(t.NSPrivacyCollectedDataTypePurposes).toEqual(['NSPrivacyCollectedDataTypePurposeAppFunctionality']);
     }
     const draft = readFileSync(join(APP, '..', 'market', 'app-store-connect.md'), 'utf8');
-    for (const label of ['Photos or Videos', 'Other User Content', 'User ID', 'Product Interaction', 'Coarse Location', 'Other Data Types']) expect(draft).toContain(label);
+    for (const label of ['Photos or Videos', 'Other User Content', 'User ID', 'Product Interaction', 'Coarse Location']) expect(draft).toContain(label);
   });
 });
 

@@ -17,19 +17,18 @@ import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { colorWord } from '@/features/fitcheck/labels';
 import { picksOf } from '@/features/fitcheck/goingFor';
 import { cardOccasionLabel, stripLines, styleLabel } from '@/features/morning/copy';
-import { FITS, fitLabel, heightLabel, type FitPref } from '@/features/onboarding/basics';
+import { FITS, fitLabel, type FitPref } from '@/features/onboarding/basics';
 import { occasionLabel } from '@/features/stylist/thread';
 import { liveFacts } from '@/features/you/facts';
-import { asBudget, budgetLabel, heightInOf } from '@/features/you/profile';
+import { asBudget, budgetLabel } from '@/features/you/profile';
 import { t } from '@/i18n/en';
 import { clockTime, signed, weekdayName } from '@/i18n/format';
 
-/** The profile fields the stylist may use. No birth year, no name, no units, no consent state. */
+/** The profile fields the stylist may use. No birth year, no name, no units, no consent state, and since #375 no height
+ *  or build (a blind test showed they didn't change his advice, #374). */
 export interface SnapshotProfile {
   styles: Styles;
   fitPreference: string;
-  heightCm: number | null;
-  build: string;
   budget: string | null;
 }
 
@@ -77,9 +76,6 @@ const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /** The cut of a top from the reading's volume (1 fitted … 5 very oversized). */
 const VOLUME_WORD: Record<number, string> = { 1: 'fitted', 2: 'trim', 3: 'regular', 4: 'roomy', 5: 'oversized' };
-
-/** Build words that are his answer (the onboarding list and #247's); anything else, "Rather not say" included, is left out. */
-const BUILD_WORDS: readonly string[] = ['slim', 'average', 'athletic', 'broad', 'bigger'];
 
 function seasonOf(month: number): string {
   if (month === 12 || month <= 2) return 'winter';
@@ -170,9 +166,6 @@ export function buildStylistContext(s: StylistSnapshot, question: string): Styli
     const other = oneLine(s.otherStyle, 80);
     if (other) push(`His own words for a look: "${other}"`);
     if ((FITS as readonly string[]).includes(prof.fitPreference)) push(`Prefers a ${lower(fitLabel(prof.fitPreference as FitPref))} fit`);
-    const h = heightInOf(prof.heightCm);
-    if (h !== null) push(`Height: ${heightLabel(h)} (for lengths and sizing; never say it back)`);
-    if (BUILD_WORDS.includes(prof.build)) push(`Build: ${prof.build} (for sizing and cut; never say it back)`);
     const budget = asBudget(prof.budget);
     if (budget && budget !== 'prefer_not') push(`Budget: ${budgetLabel(budget)} a piece`);
   }

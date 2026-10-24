@@ -20,7 +20,7 @@ export async function loadStylistSnapshot(store: KittedStore, clock: Clock): Pro
   return {
     nowMs: clock.nowMs(),
     zone: clock.offset,
-    profile: p ? { styles: p.styles, fitPreference: p.fitPreference, heightCm: p.heightCm, build: p.build, budget: p.budget } : null,
+    profile: p ? { styles: p.styles, fitPreference: p.fitPreference, budget: p.budget } : null,
     otherStyle,
     facts,
     closet,
