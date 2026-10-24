@@ -558,3 +558,49 @@ About 1.5 days. JS only: it reaches his phone through Metro, no reinstall.
 - **AU6 · The save offer in the one-ask-per-visit order.** §10.2 already orders it (sequence → save offer → About you); confirm when `ACCOUNTS_BUILT` goes on.
 - **AU7 · Email sign-in by code.** Needs a server route that sends mail (AC1). After launch. Not planned yet.
 - **AU8 · The beta note.** Until AU1, a tester who deletes the app loses his fits; the TestFlight "What to test" text should say so.
+
+
+## 11. Height and build removed; fit stays as one quick question (Oct 24, #375)
+
+*The founder, Oct 24, after the blind test (#374: height and build left Kit's advice the same on 5 of 7 fit and length questions, and one tailored answer said his body back): "Yes: remove height and build everywhere (the About you card and sheet, You → Style profile, Kit's context, consent, Privacy and the App Store label), keep fit as one quick question. Plan and tests first." This section is the plan and the checks, written before the code. It replaces §10's three-field card and sheet.*
+
+### 11.1 What he'll see
+- **Kit's card after the first score** (same triggers and limits as §10.2): tag `Optional` / `One tap`; title `How do you like clothes to fit?`; body (later visit) `I'll use it when I suggest pieces and sizes. It never changes a score.`, (under an answer) `That answer would fit you better if I knew how you like clothes to fit. It never changes a score.`; three buttons `Fitted` · `Regular` · `Relaxed` (a tap saves it); TextLink `Not now`. After a tap: `Got it. Change it any time in You.` Not now: `No problem. It's in You → Style profile whenever you want.` No sheet.
+- **You → Style profile:** Basics shows `Fit you like` and the birth year (read-only). No Height, no Build.
+- **You's style card:** its basics line shows only the fit (`Regular fit`).
+- **You → Settings:** no `Units` row (it only changed how height was shown).
+- **Consent:** questions go with `your style picks, the fit you like if you gave it, what you've told Kit, and your closet as words`. Fit preference was always sent; now it's named, and height and build are gone. `CONSENT_VERSION` stays 2: less is sent, so nobody is asked again.
+- **App Store privacy label:** 5 data types (photos, questions, the guest account's ID, the daily counts, approximate location). "Other Data Types" goes.
+
+### 11.2 Underneath
+- **Kit's pack** never carries height or build, even from an old stored profile; the snapshot stops reading them, and the gate loses its `hasBody` flag (it only noted they'd been given; the body rules run as before).
+- **Stored data:** migration V8 empties `height_cm` and `build` on every phone (the columns stay, empty, so old databases and the sync schema need no reshaping); onboarding and You never write them; the demo seed's values are dropped on load; sync's profile `omit` gains `heightCm` and `build`, like `birthYear`.
+- **Onboarding:** an older draft's height and build are no longer saved (reverses §10's BY6); fit from an older draft still is.
+- **Code that goes:** `AboutYouSheet.tsx`, `/sheets/about-you`, the height stepper and Build control (`BasicsFields` becomes the fit control only), `heightText` / `heightSpoken` uses in You, the Units row.
+- **Not changing:** scores (UN1 runs again), the birth-year step, the card's triggers and caps, fit preference in Kit's pack.
+- **Knock-on (logged, the founder's call by implication):** the drawn figure "in his build" (#247) loses its input; if built later it draws one neutral figure. Its to-do item (OK the build words) goes.
+
+### 11.3 The pass/fail checks (written before building, Oct 24)
+- **HB1** Kit's pack has no `Height:` or `Build:` line, even when the stored profile still has a height and a build; `Prefers a … fit` stays.
+- **HB2** The ask snapshot's profile carries no `heightCm` or `build`.
+- **HB3** You → Style profile and `BasicsFields` have no height or build control; the profile page still has Fit you like and the birth-year row.
+- **HB4** You's basics line and its spoken label show only the fit (`Regular fit`), even when a stored profile has height and build.
+- **HB5** Settings has no Units row.
+- **HB6** The About you card: title `How do you like clothes to fit?`, three choices, `Not now`; no `Add them`, no sheet route, no `AboutYouSheet` file.
+- **HB7** Tapping `Relaxed` saves `fitPreference: 'relaxed'`, changes nothing else in the profile, and turns the card into the saved line; a second tap can't post anything.
+- **HB8** The card counts as answered (never posts again) only when a fit is set; a stored height or build alone no longer counts.
+- **HB9** Onboarding from an older draft with height, build and fit saves the fit and drops the height and build.
+- **HB10** Migration V8 empties height and build in an existing profile row and keeps every other field.
+- **HB11** Sync never sends `heightCm` or `build`.
+- **HB12** Consent's sent line names the fit, not height or build; `CONSENT_VERSION` is still `'2'`.
+- **HB13** The privacy manifest has no `OtherDataTypes`; `market/app-store-connect.md`'s label table has no Other Data Types row.
+- **HB14** No app string asks for or shows his height or build (`about.*`, `you.basics.build`, `onb.basics.heightClear*`, `you.heightCm` are gone from `addedInBuild`).
+- **UN1** (again) Every demo photo scores the same with any fit preference.
+- **SC** On the iOS Simulator, light, dark and the largest text size: the card (both bodies, saved, Not now), You → Style profile, Settings.
+
+### 11.4 Results (Oct 24)
+- **Tests:** HB1–HB14 in `app/src/__tests__/heightBuildRemoved.test.ts` all pass; the older tests that expected height and build (Kit's privacy pack, the You card's line, sync E8, BY6) were changed to expect them gone. `npm run check` green: 1,584 app tests (one older lint warning in `tryOn.test.ts`, not this change).
+- **UN1:** passes again (scores don't read the fit).
+- **SC, the iOS Simulator** (screenshots `screenshots/fit-only/`, git-ignored): the card under an answer and on a later visit in light, dark and the largest size (the three choices stack there); You → Style profile shows Fit you like, the birth year, Styles and Budget, with no Height or Build, in light and in dark at the largest size; Settings has no Units row. Tapping Regular on the web preview saves it and leaves "Got it. Change it any time in You."; the Simulator tool's taps weren't used. One Simulator shot showed "database is locked" from two copies of the JS starting at once during the relaunch (the test harness, not the app); a clean relaunch drew the page.
+- **Left as it is:** the profile's `height_cm`, `build` and `units` columns stay (emptied by V8, never read, never synced); the copy deck's unused keys (`onb.basics.height*`, `build.*` in `en.generated.ts`, from 02 §5); the sentence gate's `BUILD_BACK` (it still drops a sentence about his body).
+- **Not seen:** VoiceOver by ear; his phone (after the merge, through Metro, no reinstall; the V8 migration runs at the next launch).

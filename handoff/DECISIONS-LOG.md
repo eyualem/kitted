@@ -2527,3 +2527,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Found:** the sentence gate's `BUILD_BACK` misses phrasings like "a taller frame"; and Kit once named the 3rd buy instead of the top one from identical evidence.
     - **Recommended (Claude), waiting on the founder:** remove height and build (the About you card, the sheet, You → Style profile, Kit's pack, consent's and Privacy's wording, the App Store privacy label); keep "Fit you like" (taste, not body), so the card becomes one quick fit question. Sending less needs no new consent.
 
+## Oct 24 · Height and build removed; fit stays as one quick question
+
+375. **The founder (Oct 24), after #374: "Yes: remove height and build everywhere (the About you card and sheet, You → Style profile, Kit's context, consent, Privacy and the App Store label), keep fit as one quick question. Plan and tests first."**
+    - **Plan and checks first:** `handoff/10-onboarding.md` §11 (HB1–HB14, UN1, SC), results §11.4.
+    - **Kit's card** asks only "How do you like clothes to fit?" with Fitted · Regular · Relaxed and Not now ("One tap"); a tap saves the fit. The About you sheet and its route are deleted. It counts as answered only when a fit is set.
+    - **You:** Style profile keeps Fit you like, the birth year (read-only), Styles and Budget; the card's line is just "Regular fit"; Settings' Units row is gone (it only formatted height).
+    - **Kit's pack** sends no Height or Build line, even from a profile stored before; the snapshot doesn't carry them.
+    - **Stored data:** migration V8 empties `height_cm` and `build` (the columns stay, unread); sync omits them; an older onboarding draft keeps only its fit.
+    - **Consent** now says "the fit you like if you gave it"; `CONSENT_VERSION` stays 2 (sending less needs no new agreement). **The privacy manifest and the App Store label** drop Other Data Types (5 collected types, not 6).
+    - **Knock-on:** the drawn figure "in his build" (#247) loses its input; the build-words item is off the to-do list. If the figure is built, it takes a neutral figure.
+    - **Checked:** `npm run check` green (1,584 app tests); seen on the iOS Simulator in light, dark and the largest size.

@@ -1,21 +1,23 @@
-// Kit's "About you" card (10-onboarding.md §10.1, #373): an inline card, never a pop-up. Add them opens the sheet; Not
-// now folds it to one line; once he's given any of the three (here or in You) it says so. Past chats: no buttons.
-import { router } from 'expo-router';
+// Kit's "About you" card (10-onboarding.md §10–§11, #373, #375): an inline card, never a pop-up, asking one thing: how
+// he likes clothes to fit. A tap on Fitted, Regular or Relaxed saves it; Not now folds it to one line; once a fit is
+// given (here or in You) it says so. Past chats: no choices. Height and build are no longer asked (#375).
 import { View } from 'react-native';
-import { KButton, KCard, KCardSection, KText, StylistMessage, TagLine, space } from '@/design-system';
+import { KButton, KCard, KCardSection, KText, StylistMessage, TagLine, TextLink, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
+import { FITS, fitLabel } from '@/features/onboarding/basics';
 import { t } from '@/i18n/en';
-import { aboutYouCardView, basicsGiven, type AboutYouCardState, type AboutYouVariant } from './rules';
+import { aboutYouCardView, fitGiven, type AboutYouCardState, type AboutYouVariant } from './rules';
 import { aboutYou } from './session';
 
 export function AboutYouCard({ m, showHeader, readOnly }: { m: ChatMessage; showHeader?: boolean; readOnly?: boolean }) {
+  const { isAccessibilitySize } = useTheme();
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
   if (profile === undefined) return null;
   const variant: AboutYouVariant = m.payload.variant === 'answer' ? 'answer' : 'visit';
   const state: AboutYouCardState = m.payload.state === 'declined' || m.payload.state === 'saved' ? m.payload.state : 'open';
-  const v = aboutYouCardView({ variant, state }, basicsGiven(profile), !!readOnly);
+  const v = aboutYouCardView({ variant, state }, fitGiven(profile), !!readOnly);
   if (v.line) return <StylistMessage showHeader={showHeader}>{v.line}</StylistMessage>;
   return (
     <KCard>
@@ -29,10 +31,19 @@ export function AboutYouCard({ m, showHeader, readOnly }: { m: ChatMessage; show
             {v.body}
           </KText>
         </View>
-        {v.buttons ? (
+        {v.choices ? (
           <View style={{ gap: space.s, paddingTop: space.xs }}>
-            <KButton title={t('about.add')} size="regular" fullWidth onPress={() => router.push({ pathname: '/sheets/about-you', params: { msg: m.id } })} />
-            <KButton title={t('about.notNow')} kind="secondary" size="regular" fullWidth onPress={() => void aboutYou.notNow(m.id)} />
+            {/* The same three choices as You → Style profile; side by side, stacked at the largest text sizes. */}
+            <View style={{ flexDirection: isAccessibilitySize ? 'column' : 'row', gap: space.s }}>
+              {FITS.map((f) => (
+                <View key={f} style={isAccessibilitySize ? undefined : { flex: 1 }}>
+                  <KButton title={fitLabel(f)} kind="secondary" size="regular" fullWidth onPress={() => void aboutYou.pick(m.id, f)} />
+                </View>
+              ))}
+            </View>
+            <View style={{ alignItems: 'center' }}>
+              <TextLink title={t('about.notNow')} color="ink2" onPress={() => void aboutYou.notNow(m.id)} />
+            </View>
           </View>
         ) : null}
       </KCardSection>

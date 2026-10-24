@@ -17,7 +17,8 @@ export interface TablePolicy {
 
 export const TABLE_POLICY: Readonly<Record<TableName, TablePolicy | 'local'>> = {
   // His age never leaves the phone: the age gate runs per device (§2.2).
-  profile: { collection: 'profile', omit: { birthYear: null } },
+  // Height and build never leave the phone either (#375): the columns stay, empty, and are never sent.
+  profile: { collection: 'profile', omit: { birthYear: null, heightCm: null, build: '' } },
   fitChecks: { collection: 'fitChecks', omit: { demoPhotoId: null } },
   readings: { collection: 'readings', immutable: true },
   closet: { collection: 'closetItems', omit: { demoPhotoId: null } },

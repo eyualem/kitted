@@ -1,4 +1,4 @@
-// Y2 · Style profile (02 §3.6 Y2; revised #246): Basics (height, build, fit; birth year read-only), Styles (up to 3,
+// Y2 · Style profile (02 §3.6 Y2; revised #246): Basics (fit; birth year read-only; height and build gone since #375), Styles (up to 3,
 // numbered in pick order) and Budget per piece (only ever asked; "Prefer not to say" is an answer). Leaving any way
 // saves, so the header says `Done` (#370), not Save. It writes the profile row the way onboarding does (a blank one
 // when none is stored); none of this moves a score (picks only order tips and break "Reads as" ties, #211). A 4th
@@ -57,7 +57,6 @@ export default function StyleProfileScreen() {
     if (latest.current) void saveDraft(store, latest.current, sessionClock.nowMs()).catch((e: unknown) => console.error('[profile] save on leave failed', e));
   }), [navigation]);
 
-  const units = profile?.units ?? 'imperial';
   return (
     <>
       <ScrollView
@@ -69,7 +68,7 @@ export default function StyleProfileScreen() {
           <>
             <Section title={t('profile.basics')}>
               <KCard radius={radius.cardSmall}>
-                <BasicsFields value={draft} units={units} onChange={update} />
+                <BasicsFields value={draft} onChange={update} />
                 <RowDivider inset={space.rowX} />
                 <Row
                   label={t('onb.basics.birthYear')}

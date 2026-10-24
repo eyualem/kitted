@@ -1,12 +1,12 @@
-// Kit's "About you" card (10-onboarding.md §10.1–§10.2, #373): height, build and fit, asked once after the first score,
-// first under an answer that would use them (T1), else on a later visit (T2). Checks AY1–AY11 and UN1, written before
-// the code.
+// Kit's "About you" card (10-onboarding.md §10.1–§10.2, #373): asked once after the first score, first under an answer
+// that would use it (T1), else on a later visit (T2). Checks AY1–AY11 and UN1, written before the code. Since #375
+// (§11) it asks only how he likes clothes to fit: height and build are gone (heightBuildRemoved.test.ts).
 import index from '../../assets/demo-readings/INDEX.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import type { ChatMessage, FitCheckRow, ProfileRow } from '@/data/types';
 import { createOfferService } from '@/features/account/offerService';
 import {
-  ABOUT_YOU_KEY, AGAIN_AFTER_MS, aboutYouCardView, aboutYouDue, basicsGiven, canSave, MAX_POSTS, NO_ABOUT_YOU, parseAboutYou,
+  ABOUT_YOU_KEY, AGAIN_AFTER_MS, aboutYouCardView, aboutYouDue, fitGiven, MAX_POSTS, NO_ABOUT_YOU, parseAboutYou,
   type AboutYouInput,
 } from '@/features/aboutYou/rules';
 import { accountPostedSince, createAboutYouService } from '@/features/aboutYou/service';
@@ -53,7 +53,7 @@ async function freshStore(o: { finish?: string; profile?: Partial<ProfileRow> } 
 
 /** A due answer-trigger input; each test changes one thing. */
 const base = (o: Partial<AboutYouInput> = {}): AboutYouInput => ({
-  trigger: { kind: 'answer', answerKind: 'fitHowTo' }, state: NO_ABOUT_YOU, basicsGiven: false,
+  trigger: { kind: 'answer', answerKind: 'fitHowTo' }, state: NO_ABOUT_YOU, fitGiven: false,
   checks: [{ createdAt: T0 - HOUR, status: 'scored', recheck: false }], busy: false, held: false, finishStep: 'done',
   visitStartMs: T0, nowMs: T0, ...o,
 });
@@ -73,7 +73,7 @@ describe('the rules (pure)', () => {
       expect(aboutYouDue(base({ trigger: { kind: 'answer', answerKind } }))).toEqual({ kind: 'post', variant: 'answer' });
     }
     const v = aboutYouCardView({ variant: 'answer', state: 'open' }, false, false);
-    expect(v.body).toBe('That answer would fit you better with your height and how you like clothes to fit. None of it changes a score.');
+    expect(v.body).toBe('That answer would fit you better if I knew how you like clothes to fit. It never changes a score.');
   });
 
   test('AY3: T1 never fires after another kind of answer', () => {
@@ -90,8 +90,8 @@ describe('the rules (pure)', () => {
     // The first check was scored in this visit: not yet.
     expect(visit({ checks: [{ createdAt: T0 + 5, status: 'scored', recheck: false }], nowMs: T0 + 10 }).kind).toBe('no');
     const v = aboutYouCardView({ variant: 'visit', state: 'open' }, false, false);
-    expect(v.body).toBe("Tell me your height and how you like clothes to fit, and I'll size my suggestions to you. None of it changes a score.");
-    expect([v.title, v.tagLeft, v.tagRight, v.buttons]).toEqual(['Fit advice that fits you', 'Optional', '10 seconds', true]);
+    expect(v.body).toBe("I'll use it when I suggest pieces and sizes. It never changes a score.");
+    expect([v.title, v.tagLeft, v.tagRight, v.choices]).toEqual(['How do you like clothes to fit?', 'Optional', 'One tap', true]);
   });
 
   test('AY5: one ask per visit: another ask this visit holds both triggers', () => {
@@ -99,18 +99,16 @@ describe('the rules (pure)', () => {
     expect(aboutYouDue(base({ trigger: { kind: 'visit' }, held: true })).kind).toBe('no');
   });
 
-  test('AY6: any of the three given means never again', () => {
-    expect(basicsGiven(null)).toBe(false);
-    expect(basicsGiven(profile())).toBe(false);
-    expect(basicsGiven(profile({ heightCm: 178 }))).toBe(true);
-    expect(basicsGiven(profile({ build: 'slim' }))).toBe(true);
-    expect(basicsGiven(profile({ fitPreference: 'relaxed' }))).toBe(true);
+  test('AY6: a fit given means never again', () => {
+    expect(fitGiven(null)).toBe(false);
+    expect(fitGiven(profile())).toBe(false);
+    expect(fitGiven(profile({ fitPreference: 'relaxed' }))).toBe(true);
     // A word that isn't one of the choices (an old or junk value) is not an answer.
-    expect(basicsGiven(profile({ build: 'nonsense', fitPreference: '' }))).toBe(false);
-    expect(aboutYouDue(base({ basicsGiven: true })).kind).toBe('no');
+    expect(fitGiven(profile({ fitPreference: 'nonsense' }))).toBe(false);
+    expect(aboutYouDue(base({ fitGiven: true })).kind).toBe('no');
     // A card already in the thread: given since → the saved line; declined stays declined.
-    expect(aboutYouCardView({ variant: 'visit', state: 'open' }, true, false).line).toBe('Saved. Change them any time in You.');
-    expect(aboutYouCardView({ variant: 'visit', state: 'declined' }, true, false).line).toBe("No problem. They're in You → Style profile whenever you want.");
+    expect(aboutYouCardView({ variant: 'visit', state: 'open' }, true, false).line).toBe('Got it. Change it any time in You.');
+    expect(aboutYouCardView({ variant: 'visit', state: 'declined' }, true, false).line).toBe("No problem. It's in You → Style profile whenever you want.");
   });
 
   test('AY7: at most 2 posts, the second 7 days after a Not now', () => {
@@ -126,17 +124,10 @@ describe('the rules (pure)', () => {
     expect(parseAboutYou(JSON.stringify(once))).toEqual(once);
   });
 
-  test('AY8 (rule): Save is off until one value is set', () => {
-    expect(canSave({ heightIn: null, build: null, fit: null })).toBe(false);
-    expect(canSave({ heightIn: 70, build: null, fit: null })).toBe(true);
-    expect(canSave({ heightIn: null, build: 'slim', fit: null })).toBe(true);
-    expect(canSave({ heightIn: null, build: null, fit: 'regular' })).toBe(true);
-  });
-
   test('AY10: Past chats show it read-only', () => {
     const v = aboutYouCardView({ variant: 'answer', state: 'open' }, false, true);
-    expect(v.buttons).toBe(false);
-    expect(v.title).toBe('Fit advice that fits you');
+    expect(v.choices).toBe(false);
+    expect(v.title).toBe('How do you like clothes to fit?');
   });
 });
 
@@ -196,7 +187,7 @@ describe('the service', () => {
     expect(source('features', 'aboutYou', 'session.ts')).toMatch(/finish\.holdsOffer\(\)/);
   });
 
-  test('AY6 (service): never posts once any of the three is given', async () => {
+  test('AY6 (service): never posts once a fit is given', async () => {
     const store = await freshStore({ finish: 'done', profile: { fitPreference: 'regular' } });
     await store.fitChecks.put(check('FC1', T0 - HOUR));
     const svc = svcFor(store);
@@ -204,14 +195,13 @@ describe('the service', () => {
     expect(await svc.afterAnswer({ kind: 'fitHowTo', at: T0 })).toBeNull();
   });
 
-  test('AY8: Save writes the profile through You\'s code and marks the card saved', async () => {
+  test('AY8: a tap writes the fit through You\'s code and marks the card saved', async () => {
     const store = await freshStore({ finish: 'done' });
     await store.fitChecks.put(check('FC1', T0 - HOUR));
     const svc = svcFor(store);
     const id = (await svc.ensure())!;
-    expect(await svc.save(id, { heightIn: null, build: null, fit: null })).toBe(false);
-    expect(await svc.save(id, { heightIn: 70, build: null, fit: 'relaxed' })).toBe(true);
-    expect(await store.profile.get('me')).toMatchObject({ heightCm: 178, build: '', fitPreference: 'relaxed', birthYear: 2004, styles: [['streetwear', 1]] });
+    await svc.pick(id, 'relaxed');
+    expect(await store.profile.get('me')).toMatchObject({ heightCm: null, build: '', fitPreference: 'relaxed', birthYear: 2004, styles: [['streetwear', 1]] });
     expect((await store.chat.get(id))!.payload.state).toBe('saved');
     expect(source('features', 'aboutYou', 'service.ts')).toMatch(/from '@\/features\/you\/profile'/);
   });
@@ -229,16 +219,15 @@ describe('the service', () => {
     expect((await store.chat.all()).filter((m) => m.cardType === 'aboutYou')).toHaveLength(1);
   });
 
-  test('AY11: the sheet and You → Style profile use one fields component', () => {
-    for (const f of [['app', '(tabs)', 'you', 'profile.tsx'], ['features', 'aboutYou', 'AboutYouSheet.tsx']]) {
-      expect(source(...f)).toMatch(/import \{ BasicsFields\b[^}]*\} from '@\/features\/you\/BasicsFields'/);
-    }
-    expect(source('app', '(tabs)', 'you', 'profile.tsx')).not.toMatch(/function HeightStepper/);
+  test('AY11: the card and You → Style profile offer the same fit choices', () => {
+    expect(source('app', '(tabs)', 'you', 'profile.tsx')).toMatch(/import \{ BasicsFields\b[^}]*\} from '@\/features\/you\/BasicsFields'/);
+    expect(source('features', 'aboutYou', 'AboutYouCard.tsx')).toMatch(/FITS/);
+    expect(source('features', 'you', 'BasicsFields.tsx')).toMatch(/FITS/);
   });
 });
 
 describe('what must not move (UN)', () => {
-  test('UN1: every demo photo scores the same with height, build and fit blank or set', () => {
+  test('UN1: every demo photo scores the same with height, build and fit blank or set (and with any fit)', () => {
     const blank = scoringProfile(profile());
     const set = scoringProfile(profile({ heightCm: 190, build: 'broad', fitPreference: 'fitted' }));
     expect(set).toEqual(blank);

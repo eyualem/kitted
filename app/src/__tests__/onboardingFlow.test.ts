@@ -1,6 +1,6 @@
 import { createMemoryStore } from '@/data/memoryStore';
 import {
-  basicsEcho, BASICS_KEY, birthYearAnchor, birthYears, EMPTY_BASICS, heightLabel, inchesToCm, isUnderAge, loadDraft, looksEcho, looksReply, LOOKS_KEY, parseBasics, stepHeight,
+  basicsEcho, BASICS_KEY, birthYearAnchor, birthYears, EMPTY_BASICS, isUnderAge, loadDraft, looksEcho, looksReply, LOOKS_KEY, parseBasics,
 } from '@/features/onboarding/basics';
 import { completeOnboarding, CONSENT_VERSION, giveConsent, hasConsent } from '@/features/onboarding/complete';
 import { mayUpload, withdrawConsent } from '@/features/privacy/wipe';
@@ -11,15 +11,6 @@ const ids = (() => { let n = 0; return (p: string) => `${p}-${++n}`; })();
 const answers = { styles: [['streetwear', 1]] as const, heightCm: null, build: 'average', fitPreference: 'regular', birthYear: 2004 };
 
 describe('onboarding basics (02 D3)', () => {
-  it('height starts blank, the first tap seeds 5′10″, and stays in 4′10″–7′0″', () => {
-    expect(stepHeight(null, 1)).toBe(70);
-    expect(stepHeight(null, -1)).toBe(70);
-    expect(stepHeight(58, -1)).toBe(58);
-    expect(stepHeight(84, 1)).toBe(84);
-    expect(heightLabel(70)).toBe('5′ 10″');
-    expect(inchesToCm(70)).toBe(178);
-  });
-
   it('blocks under 18 by the year picked, and the wheel never preselects', () => {
     expect(isUnderAge(2009, 2026)).toBe(true);
     expect(isUnderAge(2008, 2026)).toBe(false);
@@ -35,15 +26,15 @@ describe('onboarding basics (02 D3)', () => {
     expect(looksReply(['smart_casual', 'workwear'])).toBe('Smart casual with some workwear. Good mix. One more thing: your birth year.');
     expect(looksReply(['minimalist'])).toMatch(/^Minimal\. Good pick\./);
     // Since #373 O3 asks only the year, so Consent echoes it alone.
-    expect(basicsEcho({ heightIn: null, build: 'average', fit: 'regular', birthYear: 2005 })).toBe('Born in 2005');
+    expect(basicsEcho({ fit: 'regular', birthYear: 2005 })).toBe('Born in 2005');
   });
 
-  // #276: build and fit start blank (a preselected "Average · Regular" was saved as an answer he never gave), and the
-  // year list opens near a 22-year-old's year without picking it.
-  it('build and fit start blank and stay out of the echo until he taps one', () => {
-    expect([EMPTY_BASICS.build, EMPTY_BASICS.fit, parseBasics(null).build, parseBasics(null).fit]).toEqual([null, null, null, null]);
-    expect(parseBasics(JSON.stringify({ build: 'average', fit: 'nonsense', birthYear: 2005 }))).toMatchObject({ build: 'average', fit: null });
-    expect(basicsEcho({ heightIn: null, build: null, fit: null, birthYear: 2005 })).toBe('Born in 2005');
+  // #276: the fit starts blank (a preselected "Regular" was saved as an answer he never gave), and the year list opens
+  // near a 22-year-old's year without picking it. Height and build are no longer in the draft (#375).
+  it('the fit starts blank and stays out of the echo', () => {
+    expect([EMPTY_BASICS.fit, parseBasics(null).fit]).toEqual([null, null]);
+    expect(parseBasics(JSON.stringify({ build: 'average', fit: 'nonsense', birthYear: 2005 }))).toEqual({ fit: null, birthYear: 2005 });
+    expect(basicsEcho({ fit: null, birthYear: 2005 })).toBe('Born in 2005');
     expect(birthYearAnchor(2026)).toBe(2004);
     expect(birthYears(2026)).toContain(birthYearAnchor(2026));
   });
@@ -55,7 +46,8 @@ describe('onboarding basics (02 D3)', () => {
     await store.setKv(BASICS_KEY, JSON.stringify({ heightIn: 72, build: 'broad', fit: 'fitted', birthYear: 2001 }));
     const d = await loadDraft(store);
     expect(d.looks).toEqual(['workwear', 'outdoor']);
-    expect(d.basics).toEqual({ heightIn: 72, build: 'broad', fit: 'fitted', birthYear: 2001 });
+    // An older draft's height and build are dropped (#375).
+    expect(d.basics).toEqual({ fit: 'fitted', birthYear: 2001 });
   });
 });
 

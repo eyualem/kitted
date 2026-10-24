@@ -124,8 +124,6 @@ const config: ExpoConfig = {
         collected('NSPrivacyCollectedDataTypeProductInteraction', true),
         // Approximate location, to the weather service only, never stored by us.
         collected('NSPrivacyCollectedDataTypeCoarseLocation', false),
-        // Height and build, sent as words with questions when he gave them.
-        collected('NSPrivacyCollectedDataTypeOtherDataTypes', false),
       ],
     },
     entitlements: apple.entitlements,

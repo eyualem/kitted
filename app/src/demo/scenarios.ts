@@ -273,7 +273,6 @@ export const SCREENS: readonly ScreenScenario[] = [
   // (Basics, now only the birth year), 4 (Consent's "Born in …") and 136 (the restore path) show the step itself.
   { n: 240, name: 'About you · under an answer', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'answer' },
   { n: 241, name: 'About you · a later visit', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'visit' },
-  { n: 242, name: 'About you · the sheet', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/about-you?msg={aboutYou}', under: '/stylist', aboutYou: 'visit' },
   { n: 243, name: 'About you · Not now', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'declined' },
   { n: 244, name: 'About you · saved', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'saved' },
 ];

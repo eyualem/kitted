@@ -40,10 +40,10 @@ describe('the birth-year step (BY)', () => {
 
   test('BY4: Consent echoes the year alone; its text and version are unchanged', () => {
     expect(basicsEcho({ ...EMPTY_BASICS, birthYear: 2004 })).toBe('Born in 2004');
-    // An older draft's answers are still saved (BY6) but no longer echoed.
-    expect(basicsEcho({ heightIn: 70, build: 'slim', fit: 'relaxed', birthYear: 2005 })).toBe('Born in 2005');
+    // An older draft's fit is still saved (BY6) but not echoed.
+    expect(basicsEcho({ fit: 'relaxed', birthYear: 2005 })).toBe('Born in 2005');
     expect(CONSENT_VERSION).toBe('2');
-    expect(t('onb.consent.sent3')).toMatch(/height and build if you gave them/);
+    expect(t('onb.consent.sent3')).toMatch(/the fit you like if you gave it/);
   });
 
   test('BY5: a setup finished on the new step saves no height, build or fit', async () => {
@@ -55,12 +55,13 @@ describe('the birth-year step (BY)', () => {
     expect(await store.profile.get('me')).toMatchObject({ birthYear: 2004, heightCm: null, build: '', fitPreference: '', consentVersion: CONSENT_VERSION });
   });
 
-  test('BY6: a draft from an older build keeps the answers he gave', async () => {
+  // #375 (10-onboarding.md §11): height and build are no longer kept; the fit is (HB9 in heightBuildRemoved.test.ts).
+  test('BY6: a draft from an older build keeps the fit he gave, not his height or build', async () => {
     const store = createMemoryStore();
     await store.init();
     await store.setKv(BASICS_KEY, JSON.stringify({ heightIn: 72, build: 'broad', fit: 'fitted', birthYear: 2001 }));
-    const a = answersFromDraft(await loadDraft(store), false);
-    expect(a).toMatchObject({ heightCm: 183, build: 'broad', fitPreference: 'fitted', birthYear: 2001, consent: false });
+    await completeOnboarding(store, answersFromDraft(await loadDraft(store), true), 1_000, ids);
+    expect(await store.profile.get('me')).toMatchObject({ heightCm: null, build: '', fitPreference: 'fitted', birthYear: 2001 });
   });
 
   test('BY7: closing the app on O3 reopens on O3 with the year kept', async () => {

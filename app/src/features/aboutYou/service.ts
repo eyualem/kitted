@@ -1,14 +1,14 @@
-// Posting Kit's "About you" card (10-onboarding.md §10, #373) when aboutYouDue says so: under an answer that would use
-// height, build or fit (afterAnswer, from the ask pipeline), or on a later visit (ensure, from Stylist). The rule is
-// pure (rules.ts); this is the plumbing: the visit clock, one post at a time, Not now and Save.
+// Posting Kit's "About you" card (10-onboarding.md §10–§11, #373, #375) when aboutYouDue says so: under an answer that
+// would use his fit preference (afterAnswer, from the ask pipeline), or on a later visit (ensure, from Stylist). The
+// rule is pure (rules.ts); this is the plumbing: the visit clock, one post at a time, Not now and the one-tap pick.
 import type { ChatMessage } from '@/data/types';
 import type { KittedStore } from '@/data/store';
 import { FINISH_KEY } from '@/features/finish/service';
 import { parseFinish } from '@/features/finish/sequence';
 import { nextVisitStart } from '@/features/account/offer';
 import { draftOf, saveDraft } from '@/features/you/profile';
-import { ABOUT_YOU_KEY, aboutYouDue, basicsGiven, canSave, parseAboutYou, type AboutYouState, type AboutYouTrigger } from './rules';
-import type { BasicsValues } from '@/features/you/BasicsFields';
+import type { FitPref } from '@/features/onboarding/basics';
+import { ABOUT_YOU_KEY, aboutYouDue, fitGiven, parseAboutYou, type AboutYouState, type AboutYouTrigger } from './rules';
 
 export interface AboutYouDeps {
   store: Pick<KittedStore, 'getKv' | 'setKv' | 'fitChecks' | 'chat' | 'profile'>;
@@ -45,7 +45,7 @@ export function createAboutYouService(deps: AboutYouDeps) {
       const checks = all.map((c) => ({ createdAt: c.createdAt, status: c.status, recheck: c.parentId !== null }));
       const busy = deps.busy() || all.some((c) => c.status === 'scoring' || c.status === 'asking');
       const d = aboutYouDue({
-        trigger, state, basicsGiven: basicsGiven(profile), checks, busy, held: !busy && (await deps.held(start)),
+        trigger, state, fitGiven: fitGiven(profile), checks, busy, held: !busy && (await deps.held(start)),
         finishStep: parseFinish(finish).step, visitStartMs: start, nowMs: deps.now(),
       });
       if (d.kind !== 'post') return null;
@@ -93,14 +93,13 @@ export function createAboutYouService(deps: AboutYouDeps) {
       await mark(messageId, 'declined');
       await setState({ ...(await getState()), declinedAt: deps.now() });
     },
-    /** The sheet's Save: through You's own code (features/you/profile.ts), so the two write the same way. */
-    async save(messageId: string | null, v: BasicsValues): Promise<boolean> {
-      if (!canSave(v)) return false;
+    /** A tap on Fitted, Regular or Relaxed: saved through You's own code (features/you/profile.ts), so the two write
+     *  the same way; only the fit changes. */
+    async pick(messageId: string, fit: FitPref): Promise<void> {
       const p = await deps.store.profile.get('me');
-      if (!p) return false;
-      await saveDraft(deps.store, { ...draftOf(p), heightIn: v.heightIn, build: v.build, fit: v.fit }, deps.now());
+      if (!p) return;
+      await saveDraft(deps.store, { ...draftOf(p), fit }, deps.now());
       await mark(messageId, 'saved');
-      return true;
     },
   };
 }
