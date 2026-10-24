@@ -1,4 +1,4 @@
-// His Oct 23 re-check (#371): a black tee at the belt over light relaxed jeans with grey suede shoes, Going out, 7.5.
+// His Oct 23 re-check (#372): a black tee at the belt over light relaxed jeans with grey suede shoes, Going out, 7.5.
 // The card promised 8.0 for "Swap to your green Champion sweatshirt" and for "Swap to your cream chunky sneakers". He
 // put the sweatshirt on, kept the same shoes, and the re-check came back 7.5, saying he'd done both.
 //  - The sweatshirt's 8.0 kept the tee's length: a closet swap copied `length` from the piece it replaced, so the
@@ -44,7 +44,7 @@ const look = {
 const opts = { occasion: "going_out", styles: [["streetwear", 0.5], ["minimalist", 0.25], ["workwear", 0.25]], boldness: "a_little", secondLook: look } as never;
 const swapTop = { edits: [{ op: "swap_closet", slot: "top" }], itemId: "C-sweatshirt" } as never;
 
-describe("a closet swap brings the piece's own cut (#371)", () => {
+describe("a closet swap brings the piece's own cut (#372)", () => {
   it("the first check is 7.5", () => {
     expect(scoreParts(first, opts).overall).toBe(7.5);
   });
@@ -71,7 +71,7 @@ describe("a closet swap brings the piece's own cut (#371)", () => {
   });
 });
 
-describe("a re-check counts a closet swap only when that piece is in the photo (#371)", () => {
+describe("a re-check counts a closet swap only when that piece is in the photo (#372)", () => {
   // The card's two fix rows as stored that night (the top one no longer comes out of the engine).
   const shoes = partsFixAsFix(suggestPartsFixes(first, { ...(opts as object), closet }).fixes.find((f) => f.itemId === "C-sneakers")!);
   const top = { ...shoes, target: "closet_top", itemId: "C-sweatshirt", edits: [{ op: "swap_closet", slot: "top" }], copy: "Swap to your green Champion sweatshirt" } as never;
