@@ -123,14 +123,22 @@ def _knit_on_knit(r):
     return sum(1 for g in r["garments"] if g.get("category") in ("top", "outerwear") and g.get("subcategory") in KNITS) >= 2
 
 
+def _light_on_light(base):
+    """v1.9 tip_anchor (#376): the scored card has the light-on-light charge on Color ([COL-12])."""
+    return any(x["check"] == "CL2_light_on_light" for x in base["parts"]["color"]["reasons"])
+
+
 def _reads_as(r):
     """The styles the working outfit reads as, pick-free (picks never move a fix's gain or whether it shows)."""
     return R.detect_styles(r["garments"], {})["detected"]
 
 
-def _when_ok(when, r, occasion, warm):
+def _when_ok(when, r, occasion, warm, base=None):
     for k, v in (when or {}).items():
-        if k == "reads_as_in":
+        if k == "light_on_light":                # read from the scored card (base), not the edited outfit
+            if v and not (base is not None and _light_on_light(base)):
+                return False
+        elif k == "reads_as_in":
             if v and not any(s in v for s in _reads_as(r)):
                 return False
         elif k == "peek_under":
@@ -454,6 +462,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x["lifts_display"] = any(d1 > d0 for _, _, _, d0, d1 in _changes(base, res))
         x["tucks"] = set(cand.get("tucks") or ())
         x["swaps"] = _swapped(w, r)
+        x["anchors"] = _light_on_light(base) and not _light_on_light(res)   # v1.9: the fix clears light on light
         cands.append(x)
 
     key = lambda x: (x["rank"], -x["gain"], x["pick_rank"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
@@ -505,13 +514,19 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
     # v9 (#232): the stylist's tips (a cuff, a hem, the layer underneath) show with no number when there's no fix,
     # ahead of a Smaller step that means buying something and ahead of the generic Next level lines
     # v1.7 (#336): a tuck tip by shirt type also shows next to fixes, when no tuck fix is shown
+    # v1.9 (#376): so does an anchoring tip, when no fix shown clears the light on light
     tip_shown = False
     tuck_shown = any(x["group"] == "tuck" for x in picked)
-    if not lounge and (not picked or not tuck_shown):
+    anchored = any(x["anchors"] for x in picked)
+    if not lounge:
         step = out["smaller_step"]
         if step is None or not classes[step["class"]]["free"] or step["class"] == "own":
             for nl in CATALOG["nextLevel"]:
-                if not nl.get("always") or (picked and not nl.get("tuck")) or not _when_ok(nl.get("when"), w, occasion, warm):
+                if not nl.get("always"):
+                    continue
+                if picked and not ((nl.get("tuck") and not tuck_shown) or (nl.get("anchor") and not anchored)):
+                    continue
+                if not _when_ok(nl.get("when"), w, occasion, warm, base):
                     continue
                 piece = (_peek_under(w) if nl["when"].get("peek_under")
                          else _first(w, nl.get("name") or "bottom"))
@@ -546,7 +561,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                 break
 
     for x in picked:
-        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank", "tucks", "swaps"):
+        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank", "tucks", "swaps", "anchors"):
             x.pop(k, None)
     out["fixes"] = picked
     if not picked:
