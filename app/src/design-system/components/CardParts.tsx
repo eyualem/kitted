@@ -57,7 +57,7 @@ export function AddedRow({ items, count, onReview }: { items: { type: GarmentIco
  * (#231, #276): a drop or a score that held gets an ink arrow and no pill, and a score that held isn't struck.
  */
 export function DeltaRow({ was, now, reveal }: { was: number; now: number; reveal?: DeltaReveal }) {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const delta = now - was;
   const changed = delta !== 0;
   const rv = reveal;
@@ -75,7 +75,8 @@ export function DeltaRow({ was, now, reveal }: { was: number; now: number; revea
     return { opacity: Math.min(1, Math.max(0, p * 2)), transform: [{ scale: 0.6 + 0.4 * p }] };
   });
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
+    // At the accessibility sizes 6.5 → 8.0 /10 +1.5 is wider than the card: wrap, or the pill is cut off (09 §29 W1).
+    <View style={{ flexDirection: 'row', flexWrap: isAccessibilitySize ? 'wrap' : 'nowrap', alignItems: 'flex-end', columnGap: 8, rowGap: 4 }}>
       <View style={{ marginBottom: 4 }}>
         {rv?.shrink ? (
           <ShrinkingWas t={rv.t} step={rv.shrink} text={displayScore(was)} />
@@ -110,7 +111,7 @@ export function DeltaRow({ was, now, reveal }: { was: number; now: number; revea
         )}
       </View>
       {delta > 0 ? (
-        <Animated.View style={[{ marginLeft: 'auto', marginBottom: 4 }, rv ? pillStyle : null]}>
+        <Animated.View style={[{ marginLeft: isAccessibilitySize ? 0 : 'auto', marginBottom: 4 }, rv ? pillStyle : null]}>
           <Pill title={deltaPill(delta)} tone="accent" />
         </Animated.View>
       ) : null}

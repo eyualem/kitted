@@ -368,7 +368,9 @@ function whenLabel(row: DailyIdeaRow): string {
 /** After a fit check in this window: photo · "You went with your own" · the score (#59). */
 function CheckedRow({ m, readOnly }: { m: Model; readOnly: boolean }) {
   const { latest, first, messageId } = m.check!;
-  const photo = shownPhoto(first.demoPhotoId, first.photoFile, undefined);
+  // The outfit the score is for: a re-check's own photo when it has one (09 §29 W2).
+  const shot = latest.photoFile || latest.demoPhotoId ? latest : first;
+  const photo = shownPhoto(shot.demoPhotoId, shot.photoFile, undefined);
   const score = latest.score ?? 0;
   const what = m.worePick ? t('idea.went.pick') : t('idea.went.own');
   const occasion = cardOccasionLabel(m.row.occasion);
