@@ -122,7 +122,7 @@ describe('the Limit card (§6.1)', () => {
       expect(ms.map((m) => [m.role, m.kind, m.cardType])).toEqual([['user', 'photo', null], ['stylist', 'card', 'held']]);
       const row = (await env.store.fitChecks.get(id))!;
       const c = limitCardContent(row, await env.quota.snapshot(), { paywallBuilt: false })!;
-      expect([c.state, c.tag, c.tagRight, c.title]).toEqual(['limit', 'Daily limit', 'Resets 4 am', "That's today's free check."]);
+      expect([c.state, c.tag, c.tagRight, c.title]).toEqual(['limit', 'Daily limit', 'Resets at 4 am', "That's today's free check."]);
       expect(c.body).toBe(t('limit.body', { n: 5 }));
       expect(c.body).toBe("I'll save this photo and score it when you open Kitted after 4 am. Questions still work tonight: 5 left.");
       expect(c.save).toBe('Save for tomorrow');

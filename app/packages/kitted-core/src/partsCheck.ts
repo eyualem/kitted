@@ -185,7 +185,7 @@ function fieldChanged(first: Reading, merged: Reading, cat: string, field: strin
 }
 /** A closet swap counts as done only when its slot now holds that piece (its kind or its color), not when the piece he
  *  kept on is just read differently: his grey suede shoes read as grey work boots, then as tan chukkas, and the re-check
- *  said he'd swapped to his cream chunky sneakers (#370). Without the closet (or the piece), any change counts. */
+ *  said he'd swapped to his cream chunky sneakers (#371). Without the closet (or the piece), any change counts. */
 function swapLanded(fix: Fix, merged: Reading, closet: readonly ClosetItem[] | undefined): boolean {
   const slots = partsEdits(fix).flatMap((op) => (op.op === "swap_closet" ? [op.slot] : []));
   const it = closet && fix.itemId ? closet.find((c) => c.id === fix.itemId) : undefined;

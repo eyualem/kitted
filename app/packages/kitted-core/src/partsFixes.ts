@@ -93,7 +93,7 @@ export interface PartsFixCatalog {
     keepVolume: string[];
     /** How he wears the piece a closet swap replaces (hem, tucked): kept on the swapped-in piece. */
     keepOnSwap: string[];
-    /** The swapped-in piece's own cut (length, sleeve_end): its closet reading, else the replaced piece's (v1.8, #370). */
+    /** The swapped-in piece's own cut (length, sleeve_end): its closet reading, else the replaced piece's (v1.8, #371). */
     ownOnSwap: string[];
     /** Closet pieces whose type was never read ("other") are never swapped in. */
     closetSkip: string[];

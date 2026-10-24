@@ -61,7 +61,7 @@ export const LAST_LOOK_MS = 7 * 24 * 3600 * 1000;
 
 /** The re-check card's numbers, with the engine the first check was scored with. `opts` carry the first check's second
  *  look; `mergedLook` is the re-check's own (anchored, secondLook.anchorRecheckLook), so each side scores as its card did.
- *  `closet`: every piece, so a closet swap counts as done only when that piece is in the photo (#370). */
+ *  `closet`: every piece, so a closet swap counts as done only when that piece is in the photo (#371). */
 function outcomeFor(
   engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: CheckScoreOptions, mergedLook: StoredSecondLook | null | undefined,
   closet: readonly ClosetItem[],
