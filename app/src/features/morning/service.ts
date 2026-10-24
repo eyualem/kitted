@@ -14,8 +14,9 @@
 // check in that day's window collapses it, whether it started from the card or the composer.
 import {
   addDays, dayKey, daysBetween, defaultRubric, isScored, itemAllowed, localParts, outfitReading, outfitValid, pickHistory, pickOutfit, seasonNeeds,
-  weatherNeeds,
-  type ClosetItem, type DayWeather, type IdeaResult, type PastUse, type PickHistory, type Styles, type WeatherWindow, type ZoneOffset,
+  swapOptions as coreSwapOptions, weatherNeeds,
+  type ClosetItem, type DayWeather, type IdeaResult, type PastUse, type PickHistory, type PickInput, type Styles, type SwapOption, type WeatherWindow,
+  type ZoneOffset,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
@@ -158,11 +159,12 @@ export function createMorningService(deps: MorningDeps) {
     return historyFor(row, { ideas, wears, checks, closet, itemsOf: (id) => items.get(id) ?? [] }, zone);
   }
 
-  async function pick(row: Pick<DailyIdeaRow, 'id' | 'slot' | 'occasion' | 'style' | 'weather'> & { outfitId?: string | null }, extra: { exclude?: Set<string> } = {}): Promise<IdeaResult> {
+  type PickRow = Pick<DailyIdeaRow, 'id' | 'slot' | 'occasion' | 'style' | 'weather'> & { outfitId?: string | null };
+  async function pickInput(row: PickRow, extra: { exclude?: Set<string> } = {}): Promise<PickInput> {
     const p = await store.profile.get('me');
     const w = row.weather as unknown as DayWeather | null;
     const month = localParts(clock.nowMs(), zone).m;
-    return pickOutfit({
+    return {
       closet: (await closet()) as ClosetItem[],
       occasion: scoringOccasion(row.occasion),
       styles: styleInput(row.style),
@@ -172,7 +174,11 @@ export function createMorningService(deps: MorningDeps) {
       history: await history(row),
       seed: row.id,
       exclude: extra.exclude,
-    });
+    };
+  }
+
+  async function pick(row: PickRow, extra: { exclude?: Set<string> } = {}): Promise<IdeaResult> {
+    return pickOutfit(await pickInput(row, extra));
   }
 
   /**
@@ -317,6 +323,43 @@ export function createMorningService(deps: MorningDeps) {
     const outfitId = await saveOutfit(result, row.occasion, row.outfitId);
     await store.dailyIdeas.put({ ...row, outfitId, state: 'idea' });
     return { swapped: true };
+  }
+
+  /**
+   * Swap one, the S28 sheet (09-ui-review §28, #377): what could take this piece's place on the card, by the picker's own
+   * rules. Never a piece swapped away from this card before (#353 M1). [] when the card can't be swapped (gone, worn,
+   * checked) or the piece isn't on it.
+   */
+  async function swapOptions(id: string, itemId: string): Promise<SwapOption[]> {
+    const row = await store.dailyIdeas.get(id);
+    if (!row?.outfitId || row.state !== 'idea') return [];
+    const outfit = await store.outfits.get(row.outfitId);
+    if (!outfit?.itemIds.includes(itemId)) return [];
+    const exclude = new Set(parseIds(await store.getKv(KV.swapped(id))));
+    return coreSwapOptions({ ...(await pickInput(row, { exclude })), outfit: outfit.itemIds, out: itemId });
+  }
+
+  /**
+   * He picked a piece in the sheet: the same outfit row with that one piece replaced (the chat message keeps pointing at
+   * it), the card touched (#338), the piece swapped away kept out of this card from now on (#353). Returns the Undo, or
+   * null when `inId` isn't an option (nothing changes).
+   */
+  async function swapTo(id: string, outId: string, inId: string): Promise<(() => Promise<void>) | null> {
+    const option = (await swapOptions(id, outId)).find((o) => o.itemId === inId);
+    const row = await store.dailyIdeas.get(id);
+    if (!option || !row?.outfitId) return null;
+    const outfitBefore = await store.outfits.get(row.outfitId);
+    const touchedBefore = await store.getKv(KV.touched(id));
+    const swappedBefore = await store.getKv(KV.swapped(id));
+    await store.setKv(KV.touched(id), '1');
+    await store.setKv(KV.swapped(id), JSON.stringify([...new Set([...parseIds(swappedBefore), outId])]));
+    await saveOutfit({ state: 'enough', outfit: option.outfit, known: [], missingSlots: [] }, row.occasion, row.outfitId);
+    return async () => {
+      if (outfitBefore) await store.outfits.put(outfitBefore);
+      const put = (key: string, v: string | null) => (v === null ? store.deleteKv(key) : store.setKv(key, v));
+      await put(KV.touched(id), touchedBefore);
+      await put(KV.swapped(id), swappedBefore);
+    };
   }
 
   /** Wear this: logs the day (as the S1 card did) and returns what to put back on Undo. */
@@ -464,7 +507,7 @@ export function createMorningService(deps: MorningDeps) {
     return true;
   }
 
-  return { ensureCard, change, swap, wear, refreshWeather, freshen };
+  return { ensureCard, change, swap, swapOptions, swapTo, wear, refreshWeather, freshen };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;

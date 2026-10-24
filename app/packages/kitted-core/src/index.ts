@@ -25,8 +25,8 @@ export {
   type DayWeather, type WeatherCondition, type WeatherWindow, type WeatherNeeds, type LayerNeed, type WeatherTip, type WeatherTipKey,
 } from "./weather";
 export {
-  pickOutfit, closetState, pickHistory, outfitKey,
-  type PickInput, type PickHistory, type PastUse, type PickedOutfit, type IdeaResult, type IdeaReason, type IdeaReasonKey, type ClosetState, type MissingSlot,
+  pickOutfit, closetState, pickHistory, outfitKey, swapOptions,
+  type PickInput, type SwapOption, type PickHistory, type PastUse, type PickedOutfit, type IdeaResult, type IdeaReason, type IdeaReasonKey, type ClosetState, type MissingSlot,
 } from "./ideas";
 export { styleEffects, type StyleEffect, type StyleLens } from "./lens";
 export { explainScore, type ScoreLedger, type LedgerCredit, type LedgerRule, type Explained } from "./ledger";

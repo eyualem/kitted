@@ -28,7 +28,6 @@ import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, s
 import { morning } from './index';
 import { checkInSlot, slotAt } from './service';
 import { locationRow } from './locationRow';
-import { pickSwap } from './swapPicker';
 import { woreThePick } from './woreOwn';
 import { PieceArt } from '@/features/closet/GarmentArt';
 
@@ -133,13 +132,8 @@ function FullCard({ m }: { m: Model }) {
     const undo = await morning.wear(row.id);
     showToast(t('toast.logged'), undo);
   };
-  // Nothing else works without that piece: the card keeps its outfit and says so (09 §23 M2).
-  const swap = () =>
-    pickSwap(m.items, (id) => {
-      void morning.swap(row.id, [id]).then(({ swapped }) => {
-        if (!swapped) showToast(t('swap.none'));
-      });
-    });
+  // S28: he sees the pieces and picks what goes in (09-ui-review §28, #377); the sheet says when nothing else works.
+  const swap = () => router.push(`/sheets/swap/${encodeURIComponent(row.id)}`);
   const allow = async () => {
     if ((await weatherSource.requestPermission()) === 'granted') await morning.refreshWeather(row.id);
   };

@@ -76,8 +76,8 @@ describe('M1–M3 · Swap', () => {
     expect(kept).toContain(shoe);
     expect((await store.dailyIdeas.get(ID))!.outfitId).not.toBeNull();
     expect(t('swap.none')).toBe('Nothing else in your closet works here yet.');
-    // The card shows the line when a swap finds nothing.
-    expect(src('features/morning/MorningCard.tsx')).toMatch(/swapped[\s\S]{0,80}t\('swap\.none'\)/);
+    // The Swap sheet shows the line when a piece has nothing to swap in (S28, #377; it was the card's toast, #353).
+    expect(src('features/morning/SwapSheet.tsx')).toMatch(/length === 0[\s\S]{0,120}t\('swap\.none'\)/);
   });
 
   it('M3 a new occasion or style starts the left-out list afresh', async () => {

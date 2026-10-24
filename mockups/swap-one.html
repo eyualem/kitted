@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swap One Sheet</title>
+<!-- S28 "Swap one" (02 §3.3; 09-ui-review §28, #377). Layout and words only: the app draws each piece with its own
+     code (PieceArt); the shapes here are stand-ins. 1 CSS px = 1 pt inside each phone. -->
+<style>
+  :root { --bg:#F3F4F6; --sheet:#F3F4F6; --surface2:#ECEEF1; --ink:#121628; --ink2:#585E70; --ink3:#646A7A; --faint:#848A99; --line:#E0E3E8; --dim:rgba(18,22,40,.28); --card:#FFFFFF; }
+  .dark { --bg:#0C0E14; --sheet:#0C0E14; --surface2:#21252F; --ink:#ECEEF3; --ink2:#A1A7B5; --ink3:#9096A5; --faint:#6E7484; --line:#2A2F3B; --dim:rgba(0,0,0,.5); --card:#161921; }
+  body { margin:0; padding:24px 16px; background:#D9DCE2; font:15px -apple-system, "SF Pro Text", system-ui, sans-serif; color:#121628; }
+  h1 { font-size:20px; margin:0 0 4px; } p.note { margin:0 0 20px; color:#585E70; max-width:720px; }
+  .row { display:flex; flex-wrap:wrap; gap:28px; }
+  figure { margin:0; } figcaption { font-size:13px; color:#585E70; margin-top:8px; max-width:402px; }
+  .phone { width:402px; height:874px; border-radius:48px; overflow:hidden; position:relative; background:var(--bg); color:var(--ink); box-shadow:0 0 0 10px #111, 0 18px 40px rgba(0,0,0,.25); }
+  .behind { position:absolute; inset:0; padding:70px 16px; }
+  .card { background:var(--card); border-radius:22px; height:300px; }
+  .dim { position:absolute; inset:0; background:var(--dim); }
+  .sheet { position:absolute; left:0; right:0; bottom:0; height:52%; background:var(--sheet); border-radius:34px 34px 0 0; }
+  .sheet.tall { height:60%; }
+  .grab { width:36px; height:5px; border-radius:3px; background:var(--faint); opacity:.5; margin:6px auto 0; }
+  .head { display:flex; gap:12px; padding:22px 20px 12px; }
+  .head .t { flex:1; } .title { font-size:20px; font-weight:700; } .sub { font-size:15px; color:var(--ink2); margin-top:4px; }
+  .x { width:30px; height:30px; border-radius:15px; background:var(--surface2); display:grid; place-items:center; color:var(--ink2); font-size:14px; font-weight:700; }
+  .body { padding:0 20px; }
+  .strip { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .tile { aspect-ratio:1; border-radius:14px; background:var(--surface2); display:grid; place-items:center; position:relative; }
+  .tile.on { box-shadow:0 0 0 2px var(--ink); }
+  .tile.off { opacity:.45; }
+  .tag { font:600 11px ui-monospace, "SF Mono", monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--ink3); margin:18px 0 10px; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px 8px; }
+  .opt .tile { aspect-ratio:1; }
+  .name { font-size:12px; font-weight:500; color:var(--ink); margin-top:6px; line-height:1.25; }
+  .none { color:var(--ink2); font-size:15px; margin-top:18px; }
+  .toast { position:absolute; left:16px; right:16px; bottom:110px; background:var(--ink); color:var(--bg); border-radius:24px; padding:12px 16px; display:flex; align-items:center; gap:10px; font-size:15px; }
+  .toast .m { flex:1; } .ring { width:20px; height:20px; border-radius:10px; border:2px solid currentColor; font-size:10px; display:grid; place-items:center; opacity:.8; } .toast b { font-weight:600; }
+</style>
+</head>
+<body>
+<h1>Swap one piece</h1>
+<p class="note">Swap on the outfit card opens this sheet. Tap a piece, see what else in your closet works there, tap one: the card changes and the sheet closes, with Undo in the toast. The real tiles are the app's own drawings, as on the card.</p>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="overshirt" viewBox="0 0 60 60"><path d="M18 10l8-3h8l8 3 10 8-5 8-5-3v30H18V23l-5 3-5-8z" fill="#5E6A3C"/><path d="M30 8v45" stroke="#00000033"/></symbol>
+    <symbol id="tee" viewBox="0 0 60 60"><path d="M20 10l6-2c1 3 7 3 8 0l6 2 10 8-5 7-5-3v31H20V22l-5 3-5-7z" fill="#C9CCD3"/></symbol>
+    <symbol id="hoodie" viewBox="0 0 60 60"><path d="M20 12l4-3h12l4 3 10 8-5 7-5-3v29H20V24l-5 3-5-7z" fill="#7B808C"/><path d="M24 9c0 8 12 8 12 0" fill="none" stroke="#00000044"/></symbol>
+    <symbol id="sweat" viewBox="0 0 60 60"><path d="M20 10l6-2c1 3 7 3 8 0l6 2 10 8-5 7-5-3v31H20V22l-5 3-5-7z" fill="#2F6B4A"/></symbol>
+    <symbol id="jeans" viewBox="0 0 60 60"><path d="M19 6h22l3 48h-9l-5-34-5 34h-9z" fill="#3B5276"/></symbol>
+    <symbol id="boots" viewBox="0 0 60 60"><path d="M10 22h14v16h18c6 0 9 3 9 7v4H10z" fill="#7A5434"/></symbol>
+  </defs>
+</svg>
+
+<div class="row">
+  <figure>
+    <div class="phone">
+      <div class="behind"><div class="card"></div></div><div class="dim"></div>
+      <div class="sheet"><div class="grab"></div>
+        <div class="head"><div class="t"><div class="title">Swap one piece</div><div class="sub">Tap the piece to change.</div></div><div class="x">✕</div></div>
+        <div class="body">
+          <div class="strip">
+            <div class="tile"><svg width="62" height="62"><use href="#overshirt"/></svg></div>
+            <div class="tile on"><svg width="62" height="62"><use href="#tee"/></svg></div>
+            <div class="tile"><svg width="62" height="62"><use href="#jeans"/></svg></div>
+            <div class="tile"><svg width="62" height="62"><use href="#boots"/></svg></div>
+          </div>
+          <div class="tag">Instead of your grey tee</div>
+          <div class="grid">
+            <div class="opt"><div class="tile"><svg width="80" height="80"><use href="#hoodie"/></svg></div><div class="name">Medium grey Nike hoodie</div></div>
+            <div class="opt"><div class="tile"><svg width="80" height="80"><use href="#sweat"/></svg></div><div class="name">Green crewneck sweatshirt</div></div>
+            <div class="opt"><div class="tile"><svg width="80" height="80"><use href="#tee"/></svg></div><div class="name">White tee</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption>Light · a piece tapped: its ring, and the pieces that still work in its place.</figcaption>
+  </figure>
+
+  <figure class="dark">
+    <div class="phone">
+      <div class="behind"><div class="card"></div></div><div class="dim"></div>
+      <div class="sheet"><div class="grab"></div>
+        <div class="head"><div class="t"><div class="title">Swap one piece</div><div class="sub">Tap the piece to change.</div></div><div class="x">✕</div></div>
+        <div class="body">
+          <div class="strip">
+            <div class="tile"><svg width="62" height="62"><use href="#overshirt"/></svg></div>
+            <div class="tile"><svg width="62" height="62"><use href="#tee"/></svg></div>
+            <div class="tile"><svg width="62" height="62"><use href="#jeans"/></svg></div>
+            <div class="tile on"><svg width="62" height="62"><use href="#boots"/></svg></div>
+          </div>
+          <div class="tag">Instead of your brown boots</div>
+          <div class="none">Nothing else in your closet works here yet.</div>
+        </div>
+      </div>
+    </div>
+    <figcaption>Dark · a piece with nothing to swap in.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="phone">
+      <div class="behind"><div class="card"></div></div>
+      <div class="toast"><span class="m">Swapped in your white tee.</span><span class="ring">5</span><b>Undo</b></div>
+    </div>
+    <figcaption>After a pick: the card has the new piece, the sheet is closed, Undo puts the first outfit back.</figcaption>
+  </figure>
+</div>
+</body>
+</html>
