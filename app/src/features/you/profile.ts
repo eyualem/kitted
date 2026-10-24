@@ -115,7 +115,7 @@ export function applyDraft(p: ProfileRow, d: ProfileDraft): ProfileRow {
   };
 }
 
-/** The profile Y1 and Y2 show when none is stored (a dev or demo install that skipped onboarding, #369): no looks,
+/** The profile Y1 and Y2 show when none is stored (a dev or demo install that skipped onboarding, #370): no looks,
  *  no basics, no birth year and no consent. Saving an edit to it creates the row; nothing else changes. */
 export function blankProfile(nowMs: number): ProfileRow {
   return {

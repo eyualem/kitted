@@ -1,6 +1,6 @@
 // Y1 · You (02 D17, revised Oct 14 in mockups/theme-round2.html, DECISIONS-LOG #246): "how your stylist sees you".
 // His style card (looks in pick order, basics in one quiet line), the plan row on Pro, what the stylist knows, and
-// today's check (with Check my fit or Re-check, #369), and Privacy & data one tap away (also in Settings, behind the
+// today's check (with Check my fit or Re-check, #370), and Privacy & data one tap away (also in Settings, behind the
 // gear). No stats, no body, no copper here (copper is for score movement, #231). The ScrollView is the screen's first
 // view so the iOS 26 tab bar shrinks on scroll.
 import { Pressable, ScrollView, View } from 'react-native';
@@ -140,7 +140,7 @@ function PrivacyRow() {
 }
 
 /** Today's check and questions (the mockup's last card). Free: done / next at 4 am, the re-check, questions left.
- *  Its button (#369): Check my fit while a check is left, else Re-check while today's re-check is open. */
+ *  Its button (#370): Check my fit while a check is left, else Re-check while today's re-check is open. */
 function TodayCard({ s }: { s: QuotaSnapshot }) {
   const { isAccessibilitySize } = useTheme();
   const paywallShown = usePaywallOn();

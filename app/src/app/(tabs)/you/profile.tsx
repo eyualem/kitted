@@ -1,6 +1,6 @@
 // Y2 · Style profile (02 §3.6 Y2; revised #246): Basics (height, build, fit; birth year read-only), Styles (up to 3,
 // numbered in pick order) and Budget per piece (only ever asked; "Prefer not to say" is an answer). Leaving any way
-// saves, so the header says `Done` (#369), not Save. It writes the profile row the way onboarding does (a blank one
+// saves, so the header says `Done` (#370), not Save. It writes the profile row the way onboarding does (a blank one
 // when none is stored); none of this moves a score (picks only order tips and break "Reads as" ties, #211). A 4th
 // look buzzes, shakes and says "That's 3", like onboarding's.
 // How bold (02 Y2) is left out on purpose: `profile.boldness` feeds the scoring engine today (parts.ts color and the

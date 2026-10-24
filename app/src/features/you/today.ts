@@ -1,4 +1,4 @@
-// What You's Today card offers (#369): a check while one is left, else the open re-check of today's check, else
+// What You's Today card offers (#370): a check while one is left, else the open re-check of today's check, else
 // nothing (the card says "next at 4 am").
 import type { QuotaSnapshot } from '@/services/quota';
 
