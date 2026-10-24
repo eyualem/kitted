@@ -12,10 +12,11 @@ import { useComposerOpen } from '@/features/stylist/composerState';
 
 export default function TabsLayout() {
   const { colors } = useTheme();
-  // The bar shrinks as he scrolls down, the iOS 26 way, on every tab. On Stylist the "Ask your
-  // stylist…" bar is the tab bar's bottom accessory, so it tucks in beside the shrunk bar instead of
-  // floating over the thread (founder, Oct 9; this replaces #70's "never" on Stylist). Only on the
-  // thread itself: not on Past chats, and never on the other tabs.
+  // The bar shrinks as he scrolls down, the iOS 26 way, on every tab but the thread. On Stylist the
+  // "Ask your stylist…" bar is the tab bar's bottom accessory (founder, Oct 9; only on the thread
+  // itself: not on Past chats, and never on the other tabs). The thread never shrinks it (founder,
+  // Oct 24, #370): iOS 26 brings a shrunk bar back only on a tap, not when he scrolls back, and a chat
+  // opens at its newest message and scrolls itself down as cards load, so it sat shrunk where he reads.
   const segments = useSegments() as string[];
   const onThread = segments[segments.length - 1] === 'stylist' || (segments.includes('stylist') && segments[segments.length - 1] === 'index');
   // While the composer is open the accessory leaves the tab bar. The tab bar draws above the screen, so
@@ -24,7 +25,7 @@ export default function TabsLayout() {
   const composerOpen = useComposerOpen() !== null;
   return (
     // The selected tab is ink, not copper (founder, #276): copper is for score movement only.
-    <NativeTabs tintColor={colors.ink} minimizeBehavior="onScrollDown">
+    <NativeTabs tintColor={colors.ink} minimizeBehavior={onThread ? 'never' : 'onScrollDown'}>
       {onThread && !composerOpen ? (
         <NativeTabs.BottomAccessory>
           <StylistBar />
