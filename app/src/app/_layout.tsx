@@ -81,6 +81,9 @@ function RootStack({ booted }: { booted: boolean }) {
   const blocked = gate.ageBlocked;
   // The paywall sells nothing while it's off (a mock store): no link may open it (09 §20.7 R2, #323).
   const paywall = usePaywallOn();
+  // Swap one at the accessibility sizes: its title fills the medium detent and a pick's options would open out of sight
+  // (09-ui-review §28, #377), so it opens full height.
+  const { isAccessibilitySize } = useTheme();
 
   // -demoScreen <n> (launch argument): route through the demo screen once the gate is ready.
   useEffect(() => {
@@ -113,6 +116,7 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/tell-me/[checkId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/edit-item/[id]" options={sheet([0.75, 1])} />
         <Stack.Screen name="sheets/next-buy" options={sheet([0.5])} />
+        <Stack.Screen name="sheets/swap/[ideaId]" options={sheet(isAccessibilitySize ? [1] : [0.5, 1])} />
         <Stack.Screen name="sheets/fact/[id]" options={sheet([0.5])} />
         {/* 02 O3w asked for a 320 pt wheel; it's a list of years now (no new package), so it opens taller. */}
         <Stack.Screen name="sheets/birth-year" options={sheet([0.6, 1])} />
