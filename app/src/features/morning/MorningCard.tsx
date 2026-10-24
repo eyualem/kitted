@@ -30,6 +30,7 @@ import { checkInSlot, slotAt } from './service';
 import { locationRow } from './locationRow';
 import { pickSwap } from './swapPicker';
 import { woreThePick } from './woreOwn';
+import { creditLine, ownFitCredit } from './ownFitCredit';
 import { PieceArt } from '@/features/closet/GarmentArt';
 
 interface Model {
@@ -51,6 +52,8 @@ interface Model {
   myStyles: StyleKey[];
   /** "Updated for your olive fleece.": re-planned after he corrected one of its pieces (09-ui-review §26, #365). */
   updated: string | null;
+  /** "Your olive overshirt was in Tuesday's 8.0.": his own 8+ fit shares a piece with this card (#370). */
+  credit: string | null;
 }
 
 async function load(ideaId: string): Promise<Model | null> {
@@ -70,7 +73,18 @@ async function load(ideaId: string): Promise<Model | null> {
     check = { first, latest, messageId: msg?.id ?? null };
   }
   // Merged-away pieces are kept as deleted rows; the match follows them, so read the whole closet.
-  const worePick = !!check && row.state === 'wearing' && woreThePick(outfit?.itemIds ?? [], check.latest.itemIds, await store.closet.all());
+  const allCloset = await store.closet.all();
+  const worePick = !!check && row.state === 'wearing' && woreThePick(outfit?.itemIds ?? [], check.latest.itemIds, allCloset);
+  let credit: string | null = null;
+  if (outfit && !check) {
+    const outfits = new Map((await store.outfits.all()).map((o) => [o.id, o.itemIds]));
+    const c = ownFitCredit(
+      { id: row.id, slot: row.slot, itemIds: items.map((i) => i.id) },
+      { checks, ideas: await store.dailyIdeas.all(), closet: allCloset, itemsOf: (id) => outfits.get(id) ?? [] },
+      zone,
+    );
+    credit = c ? creditLine(c, row, closet, zone) : null;
+  }
   const known: ClosetItemRow[] = [];
   const missingSlots: MissingSlot[] = [];
   if (!outfit) {
@@ -92,6 +106,7 @@ async function load(ideaId: string): Promise<Model | null> {
     permission: await weatherSource.permission(),
     myStyles: Array.from(new Set(myStyles)),
     updated: outfit ? updatedLine(outfit, closet) : null,
+    credit,
   };
 }
 
@@ -150,7 +165,7 @@ function FullCard({ m }: { m: Model }) {
     ? ideaTitle(m.reasons, row.occasion)
     : m.piecesKnown === 0 ? t('idea.title.empty') : m.piecesKnown === 1 ? t('idea.title.thin1') : t('idea.title.thin', { n: m.piecesKnown });
   const why = enough
-    ? whyLine(m.reasons, m.items, row.occasion)
+    ? [whyLine(m.reasons, m.items, row.occasion), m.credit].filter(Boolean).join(' ')
     : m.piecesKnown === 0 ? t('idea.empty') : m.piecesKnown === 1 ? t('idea.thin1') : t('idea.thinN', { n: m.piecesKnown });
   const needs: MissingSlot[] = enough ? (m.missing ? [m.missing] : []) : m.piecesKnown === 0 ? ['top', 'bottom', 'shoes'] : m.missingSlots;
   const showLink = enough && !wearing;

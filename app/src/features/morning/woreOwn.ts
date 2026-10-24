@@ -11,7 +11,7 @@ export const PICK_SHARE = 0.75;
 type Merged = Pick<ClosetItemRow, 'id' | 'mergedInto'>;
 
 /** A piece folded into another goes by the one it became (a merge after the check keeps the match). */
-function rootOf(closet: readonly Merged[]): (id: string) => string {
+export function rootOf(closet: readonly Merged[]): (id: string) => string {
   const byId = new Map(closet.map((c) => [c.id, c]));
   return (id) => {
     let cur = id;

@@ -300,6 +300,13 @@ const addedInBuild = {
   'own.a11yHint': 'Opens the camera',
   'idea.went.own': 'You went with your own',
   'idea.went.pick': 'You wore my pick',
+  // His own 8+ fit, credited on a later card that reuses one of its pieces (founder, Oct 23, #370).
+  'idea.credit': 'Your {item} was in {when} {score}.',
+  'idea.credit.thisMorning': "this morning's",
+  'idea.credit.thisAfternoon': "this afternoon's",
+  'idea.credit.yesterday': "yesterday's",
+  'idea.credit.lastNight': "last night's",
+  'idea.credit.day': "{day}'s",
   'idea.stayingIn': 'Staying in tonight',
   // The card re-planned after he corrected or removed one of its pieces (09-ui-review §26, #365).
   'idea.updatedFor': 'Updated for your {item}.',
