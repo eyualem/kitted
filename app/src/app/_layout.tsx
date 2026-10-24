@@ -113,6 +113,7 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/tell-me/[checkId]" options={sheet([0.5])} />
         <Stack.Screen name="sheets/edit-item/[id]" options={sheet([0.75, 1])} />
         <Stack.Screen name="sheets/next-buy" options={sheet([0.5])} />
+        <Stack.Screen name="sheets/swap/[ideaId]" options={sheet([0.5, 1])} />
         <Stack.Screen name="sheets/fact/[id]" options={sheet([0.5])} />
         {/* 02 O3w asked for a 320 pt wheel; it's a list of years now (no new package), so it opens taller. */}
         <Stack.Screen name="sheets/birth-year" options={sheet([0.6, 1])} />

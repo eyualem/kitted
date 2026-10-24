@@ -509,8 +509,11 @@ const addedInBuild = {
   'fact.chat.fit_avoid': 'You avoid {v}',
   'fact.chat.look_now': 'Into {v} lately',
   'fact.chat.owns_unphotographed': 'You own {v} (no photo yet)',
-  'idea.swap.title': 'Swap which piece?',
-  'idea.swap.item': 'The {item}',
+  // Swap one, the S28 sheet (#370, 09-ui-review §28): over the alternatives, the Undo toast after a pick, VoiceOver.
+  'swap.instead': 'Instead of your {item}',
+  'swap.done': 'Swapped in your {item}.',
+  'swap.a11y.piece': '{name}. Shows what else works here.',
+  'swap.a11y.option': '{name}. Swaps it in.',
   'idea.checkFit': 'Check my fit',
   'idea.a11y.collapsed': '{when}, {occasion}: {what}, {score}, {word}. Shows the result.',
   // Closet accuracy (#91): the summary row, S11's states and sections, the duplicate question, the tile's VoiceOver.

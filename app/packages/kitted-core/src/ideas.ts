@@ -92,6 +92,14 @@ const SHORT_SLEEVE: ReadonlySet<unknown> = new Set(["tee", "graphic_tee", "polo"
 const isShortSleeved = (it: ClosetItem): boolean =>
   SHORT_SLEEVE.has(it.garment.subcategory) && (it.art as { sleeves?: unknown } | null | undefined)?.sleeves !== "long";
 
+/** Pieces that are wrong for today's weather (kept as a last resort, never preferred). */
+function wrongWeatherOf(it: ClosetItem, needs: WeatherNeeds | null): number {
+  if (!needs) return 0;
+  if (it.slot === "shoes") return (needs.hot && isBoot(it.garment)) || (needs.wet && isFairWeatherShoe(it.garment)) ? 1 : 0;
+  if (it.slot === "top" && needs.hot && !isShortSleeved(it)) return 1;
+  return 0;
+}
+
 /** FNV-1a, for deterministic tie-breaks. */
 function hash(s: string): number {
   let h = 0x811c9dc5;
@@ -161,13 +169,7 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
     if (needs?.hot && it.slot === "top" && isShortSleeved(it)) b += W.hotShortSleeve;
     return b;
   };
-  /** Pieces that are wrong for today's weather (kept as a last resort, never preferred). */
-  const wrongWeather = (it: ClosetItem): number => {
-    if (!needs) return 0;
-    if (it.slot === "shoes") return (needs.hot && isBoot(it.garment)) || (needs.wet && isFairWeatherShoe(it.garment)) ? 1 : 0;
-    if (it.slot === "top" && needs.hot && !isShortSleeved(it)) return 1;
-    return 0;
-  };
+  const wrongWeather = (it: ClosetItem): number => wrongWeatherOf(it, needs);
   /** Days since this top was last on a card or worn, capped: past a week every top is equally fresh. */
   const topFreshness = (it: ClosetItem): number => Math.min(ago(it.id), ROTATE.topFresh);
   const shortlist = (slot: keyof typeof KEEP): ClosetItem[] => {
@@ -225,23 +227,85 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
   // Weather filtered out every outfit (say his only shoes are suede on a wet day): pick without it.
   if (!best) return needs ? pickOutfit({ ...input, needs: null }, engine) : { state: "thin", outfit: null, known: [], missingSlots: [] };
 
-  const warm = best.items.some((i) => isWarmLayer(i.garment));
+  return { state: "enough", outfit: describeOutfit(best.items, best.layer, best.predicted, needs, evening, heavyOwned), known: [], missingSlots: [] };
+}
+
+/** The picked pieces as the card saves them: shown layer first, what's missing for the weather, and the reason lines. */
+function describeOutfit(
+  items: readonly ClosetItem[], layer: ClosetItem | null, predicted: number, needs: WeatherNeeds | null, evening: boolean, heavyOwned: boolean,
+): PickedOutfit {
+  const warm = items.some((i) => isWarmLayer(i.garment));
   let missing: MissingSlot | null = null;
   if (needs && (needs.layer === "required" || needs.layer === "outer") && !warm) missing = "layer";
   else if (needs?.layer === "outer" && !heavyOwned) missing = "coat";
 
   const reasons: IdeaReason[] = [];
-  const layerItem = best.layer ?? best.items.find((i) => isWarmLayer(i.garment)) ?? null;
+  const layerItem = layer ?? items.find((i) => isWarmLayer(i.garment)) ?? null;
   if (needs?.hot) reasons.push({ key: "hotLight" });
   else if (missing === "layer") reasons.push({ key: "needLayer" });
   else if (layerItem && needs && needs.layer !== "none") {
-    reasons.push({ key: evening ? "layerLate" : needs.removable && best.layer ? "layerOff" : "layerWarm", itemId: layerItem.id });
+    reasons.push({ key: evening ? "layerLate" : needs.removable && layer ? "layerOff" : "layerWarm", itemId: layerItem.id });
   }
   if (missing === "coat") reasons.push({ key: "needCoat" });
-  const shoe = best.items.find((i) => i.slot === "shoes");
+  const shoe = items.find((i) => i.slot === "shoes");
   if (needs?.wet && shoe && !isFairWeatherShoe(shoe.garment)) reasons.push({ key: "wetShoes", itemId: shoe.id });
   if (reasons.length === 0) reasons.push({ key: "occasion" });
 
-  const shown = best.layer ? [best.layer, ...best.items.filter((i) => i !== best!.layer)] : best.items;
-  return { state: "enough", outfit: { itemIds: shown.map((i) => i.id), missing, reasons: reasons.slice(0, 2), predicted: best.predicted }, known: [], missingSlots: [] };
+  const shown = layer ? [layer, ...items.filter((i) => i !== layer)] : items;
+  return { itemIds: shown.map((i) => i.id), missing, reasons: reasons.slice(0, 2), predicted };
+}
+
+/** One piece he could swap in (S28): the piece, and the whole outfit with it, as the card would save it. */
+export interface SwapOption {
+  itemId: string;
+  outfit: PickedOutfit;
+}
+
+/**
+ * Swap one (02 S28, 09-ui-review §28, #370): the closet's pieces that could take `out`'s place in `outfit` and still pass
+ * the picker's rules: allowed for the occasion and weather, the weather's layer rule kept, `outfitValid`, and a score of
+ * at least Put together (or the outfit's own score, when that's lower). Pieces already in the outfit and `exclude` (what
+ * he swapped away from this card) are never offered. Right for the weather first, then the score, then a stable tie-break.
+ */
+export function swapOptions(input: PickInput & { outfit: readonly string[]; out: string }, engine: RubricEngine = defaultRubric): SwapOption[] {
+  const { occasion, styles = null, boldness = "a_little", needs = null, evening = false, seed } = input;
+  const byId = new Map(input.closet.map((c) => [c.id, c]));
+  const current = input.outfit.map((id) => byId.get(id)).filter((c): c is ClosetItem => !!c);
+  const outItem = current.find((c) => c.id === input.out);
+  if (!outItem) return [];
+  const exclude = input.exclude ?? new Set<string>();
+  const heavyOwned = input.closet.some((c) => isHeavyOuter(c.garment));
+  const warmOwned = input.closet.some((c) => isWarmLayer(c.garment));
+  // Scored in rotation's order (layer last), as the picker does.
+  const ORDER = ["top", "bottom", "shoes", "outer"];
+  const ordered = (items: ClosetItem[]) => [...items].sort((a, b) => ORDER.indexOf(a.slot) - ORDER.indexOf(b.slot));
+  const scoreOf = (items: ClosetItem[]) => {
+    const sc = engine.score(outfitReading(items), { occasion, styles, boldness });
+    return isScored(sc) ? sc.overall : null;
+  };
+  const base = scoreOf(ordered(current));
+  const floor = Math.min(7, base ?? 7);
+  const inOutfit = new Set(input.outfit);
+
+  const options: { option: SwapOption; wrong: number; predicted: number; tie: number }[] = [];
+  for (const it of input.closet) {
+    if (it.slot !== outItem.slot || inOutfit.has(it.id) || exclude.has(it.id) || !itemAllowed(it, needs, occasion)) continue;
+    const items = ordered(current.map((c) => (c.id === outItem.id ? it : c)));
+    const warm = items.some((i) => isWarmLayer(i.garment));
+    const layer = items.find((i) => i.slot === "outer") ?? null;
+    if (needs && (needs.layer === "required" || needs.layer === "outer") && warmOwned && !warm) continue;
+    if (needs?.layer === "outer" && heavyOwned && !(layer && isHeavyOuter(layer.garment))) continue;
+    if (!outfitValid(items, styles, boldness, engine)) continue;
+    const predicted = scoreOf(items);
+    if (predicted === null || predicted < floor) continue;
+    let wrong = items.reduce((a, i) => a + wrongWeatherOf(i, needs), 0);
+    if (needs?.layer === "none" && warm) wrong += 1;
+    options.push({
+      option: { itemId: it.id, outfit: describeOutfit(items, layer, predicted, needs, evening, heavyOwned) },
+      wrong, predicted, tie: hash(`${seed}|swap|${it.id}`),
+    });
+  }
+  return options
+    .sort((a, b) => a.wrong - b.wrong || b.predicted - a.predicted || a.tie - b.tie)
+    .map((o) => o.option);
 }
