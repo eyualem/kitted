@@ -908,7 +908,7 @@ const addedInBuild = {
   'you.today.done': "Today's check: done",
   'you.today.next': 'next at 4 am',
   'you.today.title': 'Today',
-  'you.today.resets': 'resets 4 am',
+  'you.today.resets': 'resets at 4 am',
   'you.today.recheck': '1 re-check left',
   'you.today.questions': '{n} questions left',
   'you.today.question1': '1 question left',
