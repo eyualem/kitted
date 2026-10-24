@@ -2,7 +2,7 @@
 // picker's own rules decide; the list is the same every time for the same input.
 import { describe, expect, it } from "vitest";
 import {
-  defaultRubric, isScored, isWarmLayer, itemAllowed, outfitReading, outfitValid, pickOutfit, swapOptions, weatherNeeds,
+  isWarmLayer, itemAllowed, outfitReading, outfitValid, pickOutfit, scoreParts, swapOptions, weatherNeeds,
   type ClosetItem, type DayWeather, type Styles,
 } from "../src/index";
 import { seedCloset } from "./helpers";
@@ -15,10 +15,10 @@ const day = (lo: number, hi = lo, p = 0): DayWeather => ({
   precipFromHour: p >= 0.5 ? 17 : null, condition: p >= 0.5 ? "rain" : "clear",
 });
 const ORDER = ["top", "bottom", "shoes", "outer"];
+/** The score a fit check of these pieces would give (the parts engine; the picker ranks with it since #380). */
 const scoreOf = (ids: readonly string[], occasion: string) => {
   const items = ids.map(byId).sort((a, b) => ORDER.indexOf(a.slot) - ORDER.indexOf(b.slot));
-  const sc = defaultRubric.score(outfitReading(items), { occasion, styles: STYLES, boldness: "a_little" });
-  return isScored(sc) ? sc.overall : null;
+  return scoreParts(outfitReading(items), { occasion, styles: STYLES, boldness: "a_little" }).overall;
 };
 
 const CASES = [

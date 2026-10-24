@@ -13,7 +13,7 @@
 // Whether the card is "checked" (collapsed with his score) is derived, not stored: any scored
 // check in that day's window collapses it, whether it started from the card or the composer.
 import {
-  addDays, dayKey, daysBetween, defaultRubric, isScored, itemAllowed, localParts, outfitReading, outfitValid, pickHistory, pickOutfit, seasonNeeds,
+  addDays, dayKey, daysBetween, itemAllowed, localParts, outfitReading, outfitValid, pickHistory, pickOutfit, scoreParts, seasonNeeds,
   swapOptions as coreSwapOptions, weatherNeeds,
   type ClosetItem, type DayWeather, type IdeaResult, type PastUse, type PickHistory, type PickInput, type Styles, type SwapOption, type WeatherWindow,
   type ZoneOffset,
@@ -27,6 +27,9 @@ import { wornChecks } from '@/features/fitcheck/tryOn';
 import { wearOverridden } from './woreOwn';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
+
+/** The order the picker scores pieces in (layer last). */
+const SLOT_ORDER = ['top', 'bottom', 'shoes', 'outer'];
 
 export interface MorningDeps {
   store: KittedStore;
@@ -487,8 +490,10 @@ export function createMorningService(deps: MorningDeps) {
     const needs = w ? weatherNeeds(w) : seasonNeeds(localParts(clock.nowMs(), zone).m);
     const pieces = items as unknown as ClosetItem[];
     if (!outfitValid(pieces, styles, boldness) || !pieces.every((it) => itemAllowed(it, needs, occasion))) return false;
-    const sc = defaultRubric.score(outfitReading(pieces), { occasion, styles, boldness });
-    return isScored(sc) && sc.overall >= Math.min(7, planned ?? 7);
+    // The fit check's own scoring, as the picker ranks with since #380; scored in rotation's order (layer last).
+    const ordered = [...pieces].sort((x, y) => SLOT_ORDER.indexOf(x.slot) - SLOT_ORDER.indexOf(y.slot));
+    const overall = scoreParts(outfitReading(ordered), { occasion, styles, boldness }).overall;
+    return overall !== null && overall >= Math.min(7, planned ?? 7);
   }
 
   /** A card planned without weather gets it: an untouched one is re-planned for it, a touched one keeps its outfit. */

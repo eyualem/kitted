@@ -4,7 +4,7 @@
 // labelled Streetwear, though that outfit reads as no look and his cream chunky sneakers made a 7.5.
 import { describe, expect, it } from "vitest";
 import {
-  defaultRubric, isScored, outfitReading, pickHistory, pickOutfit, swapOptions, weatherNeeds,
+  outfitReading, pickHistory, pickOutfit, scoreParts, swapOptions, weatherNeeds,
   type ClosetItem, type DayWeather, type DetectedStyle, type PastUse, type PickHistory, type Styles,
 } from "../src/index";
 import { readFileSync } from "node:fs";
@@ -20,9 +20,11 @@ const STREET: Styles = [["streetwear", 1]];
 const byId = (id: string) => CLOSET.find((c) => c.id === id)!;
 const isSlides = (id: string) => byId(id).garment.subcategory === "slides_sandals";
 const shoeOf = (ids: readonly string[]) => ids.find((id) => byId(id).slot === "shoes")!;
+/** The looks a fit check of these pieces would read (the parts engine, as the picker since #380). */
 const looksOf = (ids: readonly string[], occasion = "everyday") => {
-  const sc = defaultRubric.score(outfitReading(ids.map(byId)), { occasion });
-  return isScored(sc) ? ((sc as { detectedStyles?: unknown[] }).detectedStyles ?? []).map(String) : [];
+  const ORDER = ["top", "bottom", "shoes", "outer"];
+  const sc = scoreParts(outfitReading(ids.map(byId).sort((a, b) => ORDER.indexOf(a.slot) - ORDER.indexOf(b.slot))), { occasion });
+  return sc.overall === null ? [] : sc.detectedStyles.map(String);
 };
 const card = (over: Partial<Parameters<typeof pickOutfit>[0]> = {}) =>
   pickOutfit({ closet: CLOSET, occasion: "everyday", styles: STREET, needs: NEEDS, history: HISTORY, seed: data.seed, look: "streetwear", ...over });
@@ -51,15 +53,18 @@ describe("slides stay home (#379)", () => {
     expect(isSlides(shoeOf(r.outfit!.itemIds))).toBe(true);
   });
 
-  it("P4b Swap one on the shoes, out of the house: slides are still offered, after every other pair", () => {
+  it("P4b Swap one on the shoes, out of the house: slides only after every other pair, and not at all below Put together", () => {
     const outfit = card().outfit!.itemIds;
     const shoe = shoeOf(outfit);
     const listed = (occasion: string) =>
       swapOptions({ closet: CLOSET, occasion, styles: STREET, needs: NEEDS, history: HISTORY, seed: data.seed, outfit, out: shoe }).map((o) => o.itemId);
     const out = listed("everyday");
+    expect(out.length).toBeGreaterThan(0);
     const firstSlides = out.findIndex(isSlides);
-    expect(firstSlides).toBeGreaterThan(0);
-    expect(out.slice(firstSlides).every(isSlides)).toBe(true);
+    if (firstSlides >= 0) expect(out.slice(firstSlides).every(isSlides)).toBe(true);
+    // #380: the sheet scores with the fit check's engine, where slides with this flannel and fleece are a 6.0 (Shoes −2.5),
+    // below Put together, so Swap's floor (#377) leaves them out; v4 had called them a 7.0.
+    expect(out.some(isSlides)).toBe(false);
   });
 
   it("P4 slides are his only shoes: the card still has an outfit, with the slides", () => {
