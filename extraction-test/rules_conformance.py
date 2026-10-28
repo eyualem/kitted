@@ -759,6 +759,34 @@ case("COL-12-tip-jacket", "COL-12", "a cream hoodie over cream jeans: the short 
 case("COL-12-tip-free", "COL-12", "a white tee over khaki chinos with white sneakers: no charge, no tip",
      Rd(TEE, CHINOS, WLS), {"not_fired": [F(LL)], "fix_tip_lacks": "tip_anchor_shoes", "band": "Put together"})
 
+CP8 = "CP8_layer_tie_in"
+GHOOD = outer("hoodie", "green", length="na", saturation="muted")
+OLIVE = bottom("cargos", "olive", "straight")
+case("COL-13-oct28", "COL-13", "v15 (#385): the founder's green zip hoodie over a navy tee picks up the green of his olive cargos: +0.5 "
+     "on Color, with the quiet accent: Color 8.0 (the score stays 7.5; Proportions and the runners set it)", OCT28,
+     {"fired": [F(CP8, "color", 0.5, line="the hoodie picks up the green of the cargos"), F("CP2_quiet_accent", "color", 0.5)],
+      "part": {"color": {"score": 8.0}}, "overall": 7.5, "band": "Put together"},
+     styles=[("streetwear", 0.5), ("minimalist", 0.25), ("workwear", 0.25)])
+case("COL-13-coat", "COL-13", "a tan chore coat over a white tee with khaki chinos and brown boots: the coat picks up the tan, +0.5",
+     Rd(TEE, outer("chore_coat", "tan_camel", length="na"), CHINOS, BOOTS),
+     {"fired": [F(CP8, "color", 0.5)], "band_in": ["Put together", "Sharp"]})
+case("COL-13-one-family", "COL-13", "all one family (a green tee under the green hoodie, olive cargos): no tie-in, that's [COL-7]'s flat tonal",
+     Rd(top("tee", "green", saturation="muted"), GHOOD, OLIVE, WLS), {"not_fired": [F(CP8)], "band": "Put together"})
+case("COL-13-denim", "COL-13", "a denim jacket over a tee with jeans: denim repeats by accident, nothing",
+     Rd(TEE, outer("denim_jacket", "denim_mid"), DJEANS, WLS), {"not_fired": [F(CP8)], "band_in": ["Put together", "Sharp"]})
+case("COL-13-black", "COL-13", "a black bomber over a white tee with black jeans: black never ties in",
+     Rd(TEE, outer("bomber", "black"), bottom("jeans", "black", "straight"), WLS), {"not_fired": [F(CP8)], "band": "Put together"})
+case("COL-13-sweats", "COL-13", "a green hoodie over a white tee with olive joggers: a matched set is the loungewear rules', nothing",
+     Rd(TEE, GHOOD, bottom("joggers", "olive", "straight"), WLS), {"not_fired": [F(CP8)], "band": "Put together"}, occasion="class")
+case("COL-13-bright", "COL-13", "a bright green hoodie over olive cargos: nothing (not on a bright piece)",
+     Rd(TEE, outer("hoodie", "green", length="na", saturation="bright"), OLIVE, WLS), {"not_fired": [F(CP8)], "band": "Put together"})
+case("COL-13-tailored", "COL-13", "a brown blazer with brown trousers: tailoring is one color by design, nothing",
+     Rd(top("oxford_shirt", "white", tucked="full"), outer("blazer", "brown"), bottom("trousers", "brown", "straight"), LOAFER),
+     {"not_fired": [F(CP8)], "band_in": ["Put together", "Sharp"]}, occasion="date")
+case("COL-13-fault", "COL-13", "a big red graphic tee under the green hoodie: a color fault, so no reward",
+     Rd(top("graphic_tee", "red", pattern_scale="large", logo="large"), GHOOD, OLIVE, WLS),
+     {"fired": [F("CL1_loud_print")], "not_fired": [F(CP8)], "band": "Put together"})
+
 # ===== Shoes (SHO) ===================================================================================================
 case("SHO-1-other", "SHO-1", "shoe type lost: Shoes isn't scored", Rd(TEE, DJEANS, shoe("other", "black")),
      {"part": {"shoes": {"na": True}}, "band": "Put together"})

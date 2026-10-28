@@ -25,14 +25,15 @@
   ]
  ],
  "counts": {
-  "cases": 492,
-  "rules": 151
+  "cases": 501,
+  "rules": 152
  },
  "rules": [
   "COL-1",
   "COL-10",
   "COL-11",
   "COL-12",
+  "COL-13",
   "COL-2",
   "COL-3",
   "COL-4",
@@ -12053,11 +12054,11 @@
    "kd": null,
    "python": {
     "overall": 7.5,
-    "raw_score": 7.25,
+    "raw_score": 7.35,
     "parts": {
      "proportions": 8.5,
      "fit": 7.0,
-     "color": 7.5,
+     "color": 8.0,
      "shoes": 5.0,
      "cohesion": 7.0
     },
@@ -24424,6 +24425,1181 @@
     ],
     "style_label": "minimalist",
     "next_level": null
+   }
+  },
+  {
+   "id": "COL-13-oct28",
+   "rule": "COL-13",
+   "what": "v15 (#385): the founder's green zip hoodie over a navy tee picks up the green of his olive cargos: +0.5 on Color, with the quiet accent: Color 8.0 (the score stays 7.5; Proportions and the runners set it)",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": true,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "hoodie",
+      "color_family": "green",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "cargos",
+      "color_family": "olive",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "performance_runner",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "streetwear",
+     0.5
+    ],
+    [
+     "minimalist",
+     0.25
+    ],
+    [
+     "workwear",
+     0.25
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fired": [
+     {
+      "check": "CP8_layer_tie_in",
+      "part": "color",
+      "points": 0.5,
+      "line": "the hoodie picks up the green of the cargos"
+     },
+     {
+      "check": "CP2_quiet_accent",
+      "part": "color",
+      "points": 0.5
+     }
+    ],
+    "part": {
+     "color": {
+      "score": 8.0
+     }
+    },
+    "overall": 7.5,
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.35,
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 8.0,
+     "shoes": 5.0,
+     "cohesion": 7.0
+    },
+    "detected_styles": [],
+    "style_label": null
+   }
+  },
+  {
+   "id": "COL-13-coat",
+   "rule": "COL-13",
+   "what": "a tan chore coat over a white tee with khaki chinos and brown boots: the coat picks up the tan, +0.5",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "chore_coat",
+      "color_family": "tan_camel",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "chinos",
+      "color_family": "khaki_beige",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "work_boot",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fired": [
+     {
+      "check": "CP8_layer_tie_in",
+      "part": "color",
+      "points": 0.5
+     }
+    ],
+    "band_in": [
+     "Put together",
+     "Sharp"
+    ]
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.35,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "workwear"
+    ],
+    "style_label": "workwear"
+   }
+  },
+  {
+   "id": "COL-13-one-family",
+   "rule": "COL-13",
+   "what": "all one family (a green tee under the green hoodie, olive cargos): no tie-in, that's [COL-7]'s flat tonal",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "green",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "muted",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "hoodie",
+      "color_family": "green",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "muted",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "cargos",
+      "color_family": "olive",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "not_fired": [
+     {
+      "check": "CP8_layer_tie_in"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.625,
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [],
+    "style_label": null
+   }
+  },
+  {
+   "id": "COL-13-denim",
+   "rule": "COL-13",
+   "what": "a denim jacket over a tee with jeans: denim repeats by accident, nothing",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "denim_jacket",
+      "color_family": "denim_mid",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "jeans",
+      "color_family": "denim_dark",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "not_fired": [
+     {
+      "check": "CP8_layer_tie_in"
+     }
+    ],
+    "band_in": [
+     "Put together",
+     "Sharp"
+    ]
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.625,
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "workwear"
+    ],
+    "style_label": "workwear"
+   }
+  },
+  {
+   "id": "COL-13-black",
+   "rule": "COL-13",
+   "what": "a black bomber over a white tee with black jeans: black never ties in",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "bomber",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "jeans",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "not_fired": [
+     {
+      "check": "CP8_layer_tie_in"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.625,
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [],
+    "style_label": null
+   }
+  },
+  {
+   "id": "COL-13-sweats",
+   "rule": "COL-13",
+   "what": "a green hoodie over a white tee with olive joggers: a matched set is the loungewear rules', nothing",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "hoodie",
+      "color_family": "green",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "muted",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "joggers",
+      "color_family": "olive",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "class",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "not_fired": [
+     {
+      "check": "CP8_layer_tie_in"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.275,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [],
+    "style_label": null
+   }
+  },
+  {
+   "id": "COL-13-bright",
+   "rule": "COL-13",
+   "what": "a bright green hoodie over olive cargos: nothing (not on a bright piece)",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "hoodie",
+      "color_family": "green",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "bright",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "cargos",
+      "color_family": "olive",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "not_fired": [
+     {
+      "check": "CP8_layer_tie_in"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.625,
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [],
+    "style_label": null
+   }
+  },
+  {
+   "id": "COL-13-tailored",
+   "rule": "COL-13",
+   "what": "a brown blazer with brown trousers: tailoring is one color by design, nothing",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "oxford_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "date",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "not_fired": [
+     {
+      "check": "CP8_layer_tie_in"
+     }
+    ],
+    "band_in": [
+     "Put together",
+     "Sharp"
+    ]
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 8.0,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "smart_casual"
+   }
+  },
+  {
+   "id": "COL-13-fault",
+   "rule": "COL-13",
+   "what": "a big red graphic tee under the green hoodie: a color fault, so no reward",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "graphic_tee",
+      "color_family": "red",
+      "pattern": "graphic",
+      "logo": "large",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "large",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "hoodie",
+      "color_family": "green",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "muted",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "cargos",
+      "color_family": "olive",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fired": [
+     {
+      "check": "CL1_loud_print"
+     }
+    ],
+    "not_fired": [
+     {
+      "check": "CP8_layer_tie_in"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 7.125,
+    "parts": {
+     "proportions": 8.5,
+     "fit": 7.0,
+     "color": 5.5,
+     "shoes": 7.5,
+     "cohesion": 6.5
+    },
+    "detected_styles": [],
+    "style_label": null
    }
   },
   {
@@ -48645,11 +49821,11 @@
    "kd": null,
    "python": {
     "overall": 7.5,
-    "raw_score": 7.25,
+    "raw_score": 7.35,
     "parts": {
      "proportions": 7.0,
      "fit": 7.0,
-     "color": 7.0,
+     "color": 7.5,
      "shoes": 8.0,
      "cohesion": 7.5
     },

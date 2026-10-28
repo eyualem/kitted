@@ -474,10 +474,15 @@ VERSIONS["v14"] = "parts-proto-14 (Oct 17, 2026)"
 #     a narrow leg, no sweats or joggers, no top showing clearly below, a clean layer), plus: read as ending past the fly,
 #     nothing; with slides, nothing (a hoodie, a tee and slides read home; shoes out of the photo are fine, and running
 #     shoes pay their own charge on Shoes). Shorts keep their own rules.
-_OFF15 = dict(hl=0.0)
+#   cp8 (COL-13): on in v15 at 0.5 (below).
+#   cp8 (COL-13, Oct 28, the founder's follow-up): the one outer layer picks up the color family of the bottoms (a green
+#     hoodie over olive cargos), with a top of another family between them, earns this on Color: the shoes' tie-in
+#     ([COL-5]) for the layer. Not white, black, grey, navy or denim (NO_TIE_IN: they repeat by accident), not bright,
+#     not sweats or joggers (a matched set is [LNG-9]'s), not tailoring (a suit is one color), only with no color fault.
+_OFF15 = dict(hl=0.0, cp8=0.0)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14"):
     TUNE[_e].update(_OFF15)
-TUNE["v15"] = dict(TUNE["v14"], hl=1.5)
+TUNE["v15"] = dict(TUNE["v14"], hl=1.5, cp8=0.5)
 VERSIONS["v15"] = "parts-proto-15 (Oct 28, 2026)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
@@ -1056,6 +1061,13 @@ def _color(o, boldness, t):
     if S is not None and _fam(S) not in NO_TIE_IN and not R.is_bright(S) \
             and any(_fam(g) == _fam(S) for g in upper):
         pos.append((t["cp5"], f"the shoes pick up the {_fam(S).replace('_', ' ')} up top", "CP5_tie_in"))
+    L = o["outers"][0] if len(o["outers"]) == 1 else None
+    if (t["cp8"] and L is not None and B is not None and _fam(L) not in NO_TIE_IN and _fam(L) == _fam(B)
+            and not R.is_bright(L) and not R.is_bright(B) and B.get("subcategory") not in R.LOUNGE_BOTTOMS
+            and L.get("subcategory") not in TAILORED and _earns(L) and _earns(B)
+            and o["tops"] and all(_fam(g) != _fam(L) for g in o["tops"])):
+        pos.append((t["cp8"], f"the {(L.get('subcategory') or 'layer').replace('_', ' ')} picks up the "
+                    f"{_fam(L).replace('_', ' ')} of the {(B.get('subcategory') or 'pants').replace('_', ' ')}", "CP8_layer_tie_in"))
     # v2: the lightness credits (color.md P3/P4/P6), only when the reading carries `lightness` on every main piece
     # (and on the shoes for the two that use them). Same logic as the parts1 what-if.
     LV = ("light", "mid", "dark")

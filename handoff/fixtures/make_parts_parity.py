@@ -75,7 +75,7 @@ WHATIF14 = {"sh_shape": 1.5, "sh_layer": 0.5, "sh_cap": 1.0, "sh_fitted": 0.5, "
             "kit_fit_rate": 1.0, "look_sign": False, "sweatsuit_shape": 0.5, "tracksuit": 1.0, "sd1_any_sneaker": False,
             "gym_runner_unheld": False}
 # v15's what-if (#385): a smaller hoodie layer credit
-WHATIF15 = {"hl": 1.0}
+WHATIF15 = {"hl": 1.0, "cp8": 1.0}
 PICKS_VARIANTS = {"none": [], "one": [["workwear", 1.0]],
                   "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]}
 
@@ -583,6 +583,19 @@ def parts_edges():
     add("v15_hoodie_interview", Rd(HOOD(), TEE(color="navy"), JEANS(color="denim_dark"), SHOE()), occ="interview")
     add("v15_hoodie_peek", Rd(HOOD(), TEE(color="navy"), JEANS(color="denim_dark"), SHOE()), sl={"under_present": "yes", "under_shows": "clearly", "covers_shoe": "no"})
     add("v15_hoodie_little_peek", Rd(HOOD(), TEE(color="navy"), JEANS(color="denim_dark"), SHOE()), sl={"under_present": "yes", "under_shows": "a_little", "covers_shoe": "no"})
+    # v15 (COL-13): a layer that picks up the bottoms' color family, and its guards
+    add("v15_tie_green_olive", Rd(HOOD(saturation="muted"), TEE(color="navy"), JEANS(sub="cargos", color="olive"), RUN))
+    add("v15_tie_tan_coat", Rd(G("outerwear", "chore_coat", "tan_camel"), TEE(), JEANS(sub="chinos", color="khaki_beige"), SHOE(sub="work_boot", color="brown")))
+    add("v15_tie_brown_leather", Rd(G("outerwear", "leather_jacket", "brown"), TEE(color="off_white_cream"), JEANS(sub="trousers", color="brown"), SHOE(sub="loafer", color="brown")), occ="date")
+    add("v15_tie_all_green", Rd(HOOD(saturation="muted"), TEE(color="green", saturation="muted"), JEANS(sub="cargos", color="olive"), RUN))
+    add("v15_tie_denim", Rd(G("outerwear", "denim_jacket", "denim_mid"), TEE(color="navy"), JEANS(), SHOE()))
+    add("v15_tie_grey", Rd(HOOD(color="grey"), TEE(color="navy"), JEANS(color="grey"), SHOE()))
+    add("v15_tie_joggers", Rd(HOOD(saturation="muted"), TEE(), JEANS(sub="joggers", color="olive"), SHOE()), occ="class")
+    add("v15_tie_bright", Rd(HOOD(saturation="bright"), TEE(), JEANS(sub="cargos", color="olive"), SHOE()))
+    add("v15_tie_blazer", Rd(G("outerwear", "blazer", "brown"), TEE(sub="oxford_shirt", tucked="full"), JEANS(sub="trousers", color="brown"), SHOE(sub="loafer", color="brown")), occ="date")
+    add("v15_tie_loud", Rd(HOOD(saturation="muted"), TEE(sub="graphic_tee", color="red", pattern="graphic", pattern_scale="large", logo="large"), JEANS(sub="cargos", color="olive"), SHOE()))
+    add("v15_tie_red_tee", Rd(HOOD(saturation="muted"), TEE(color="red"), JEANS(sub="cargos", color="olive"), SHOE()))
+    add("v15_tie_stained", Rd(HOOD(saturation="muted", condition="stained"), TEE(color="navy"), JEANS(sub="cargos", color="olive"), SHOE()))
     add("v14_tracksuit_runners", Rd(TEE(), G("outerwear", "track_jacket", "navy"), GYM(sub="track_pants", color="navy", leg_shape="straight", volume=3, hem="slight_break"), SHOE(sub="performance_runner", color="grey")))
     # v14 (#336): a button-up worn open and tucked in sets the waist; guards: two layers, a jacket, untucked, a slim leg, a mirror
     OPEN = lambda **kw: G("outerwear", kw.pop("sub", "flannel_shirt"), kw.pop("color", "tan_camel"), **{"tucked": "full", "volume": 4, **kw})  # noqa: E731
@@ -821,7 +834,7 @@ def main():
             "PS1_shorts_shape", "PS1_shorts_layer", "PS2_roomy_over_fitted", "PS3_fitted_shorts", "PR7_sweatsuit_shape",
             "H6_goes_together", "H7_tracksuit", "occasion: a full kit out of the game",
             # v15
-            "PR2h_hoodie_layer"]  # v13 adds no new check id (CON-6's knit charge fires in new places; v13 edge cases); v11 adds no new check id (PN1 and H3 fire in new places; see the v11 edge cases)
+            "PR2h_hoodie_layer", "CP8_layer_tie_in"]  # v13 adds no new check id (CON-6's knit charge fires in new places; v13 edge cases); v11 adds no new check id (PN1 and H3 fire in new places; see the v11 edge cases)
     retired = {"CP1_standout_color", "H4_standout_piece", "FF5_too_big", "tip SW3_dainty_wide",   # v8 retired them; v7 only
                "tip CC5_denim_near_match"}                                                       # v9: a fault now (cov7)
     missing = [m for m in must if not (cov7[m] if m in retired else cov[m])]

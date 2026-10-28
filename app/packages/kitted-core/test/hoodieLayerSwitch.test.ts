@@ -20,6 +20,7 @@ describe("the hoodie-layer switch (parts v15)", () => {
     expect(partsDataFor(true, false).engine).toBe("v14");
     expect(partsDataFor(true, false).version).toBe("1.13.0");
     expect(partsDataFor(true, false).tune.hl).toBe(0);
+    expect(partsDataFor(true, false).tune.cp8).toBe(0);
   });
 
   it("his green zip hoodie over the navy tee: 7.0 -> 7.5 on v15; v14 holds it at 7.0; the tee alone stays 7.0", () => {
@@ -27,10 +28,14 @@ describe("the hoodie-layer switch (parts v15)", () => {
     expect(on.overall).toBe(7.5);
     expect(on.parts.proportions?.score).toBe(8.5);
     expect(on.parts.proportions?.reasons.map((r) => r.check)).toEqual(["PR2h_hoodie_layer"]);
+    // COL-13: the hoodie picks up the green of the olive cargos (with the quiet accent, Color 8.0)
+    expect(on.parts.color?.score).toBe(8.0);
+    expect(on.parts.color?.reasons.map((r) => r.check)).toEqual(["CP2_quiet_accent", "CP8_layer_tie_in"]);
     expect(scoreParts(FIRST, opts).overall).toBe(7.0);
     setHoodieLayerV15(false);
     expect(scoreParts(RECHECK, opts).overall).toBe(7.0);
     expect(scoreParts(RECHECK, opts).parts.proportions?.score).toBe(7.0);
+    expect(scoreParts(RECHECK, opts).parts.color?.score).toBe(7.5);
   });
 
   it("the fix engine follows the switch", () => {

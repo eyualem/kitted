@@ -205,6 +205,9 @@ export interface PartsTune {
   // ---- v15 (#385; 0 in v1-v14)
   /** PRO-17: a hoodie or sweatshirt worn as the one layer over a tee and full legs earns this on Proportions (in PR2b's place). */
   hl: number;
+  /** COL-13: the one outer layer in the bottoms' color family (not NO_TIE_IN, not bright, not sweats or tailoring), with a top
+   *  of another family between them, earns this on Color. */
+  cp8: number;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -1045,6 +1048,13 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const upper = main.filter((g) => g.category === "top" || g.category === "outerwear");
     if (S !== null && !NO_TIE_IN.has(fam(S)) && !isBright(S) && upper.some((g) => fam(g) === fam(S))) {
       pos.push([t.cp5, `the shoes pick up the ${rep(fam(S))} up top`, "CP5_tie_in"]);
+    }
+    // v15 (COL-13, #385): the one outer layer picks up the bottoms' color family, with a top of another family between them
+    const L = o.outers.length === 1 ? o.outers[0]! : null;
+    if (truthy(t.cp8) && L !== null && B !== null && !NO_TIE_IN.has(fam(L)) && fam(L) === fam(B) && !isBright(L) && !isBright(B)
+        && !LOUNGE_BOTTOMS.has(nv(B.subcategory)) && !TAILORED.has(nv(L.subcategory)) && earns(L) && earns(B)
+        && o.tops.length > 0 && o.tops.every((g) => fam(g) !== fam(L))) {
+      pos.push([t.cp8, `the ${rep(or(L.subcategory, "layer"))} picks up the ${rep(fam(L))} of the ${rep(or(B.subcategory, "pants"))}`, "CP8_layer_tie_in"]);
     }
     // v2: the lightness credits, only when the reading carries `lightness` on every main piece
     if (truthy(t.lightness) && main.length > 0 && main.every((g) => LV.includes(g["lightness"]))) {

@@ -7,7 +7,7 @@ export const PARTS_DATA: PartsData = {
  "engine": "v15",
  "label": "parts-proto-15 (Oct 28, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "8deeb7f533e2cc055bc9df5f71a4b108a8d7b680e989be80654341bf45d4e914",
+ "sourceSha256": "116451ed0f2be241c81c4dab20d1175167f759a18200c69eb4bea5dbf4f7f605",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -228,7 +228,8 @@ export const PARTS_DATA: PartsData = {
   "sw1_blocks_credit": true,
   "pr1_tucked_layer": true,
   "peek_clearly_only": true,
-  "hl": 1.5
+  "hl": 1.5,
+  "cp8": 0.5
  },
  "rollback": {
   "engine": "v13",
@@ -421,7 +422,8 @@ export const PARTS_DATA: PartsData = {
    "sw1_blocks_credit": false,
    "pr1_tucked_layer": false,
    "peek_clearly_only": false,
-   "hl": 0
+   "hl": 0,
+   "cp8": 0
   }
  },
  "rollback14": {
@@ -615,7 +617,8 @@ export const PARTS_DATA: PartsData = {
    "sw1_blocks_credit": true,
    "pr1_tucked_layer": true,
    "peek_clearly_only": true,
-   "hl": 0
+   "hl": 0,
+   "cp8": 0
   }
  },
  "sets": {

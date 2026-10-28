@@ -24,11 +24,15 @@
   G18  PASS  7 -> 7 (raw 6.950 -> 6.950)  a hoodie over a tee, straight jeans pooling  [bar: unchanged (a clean finish)]
   G19  PASS  7 -> 7 (raw 6.800 -> 6.800)  a hoodie over a tee with slides  [bar: stays 7.0 or less (slides still hold it)]
 
-C1 conformance cases (492): 6 move, 0 without a hoodie or sweatshirt layer: PASS
+C1 conformance cases (501): 10 move, 0 without a hoodie or sweatshirt layer: PASS
      PRO-17-oct28: 7.0 -> 7.5
      PRO-17-sweatshirt: 7.0 -> 7.5
      PRO-17-at-belt: 8.0 -> 8.0
      PRO-17-interview: 5.0 -> 5.0
+     COL-13-oct28: 7.0 -> 7.5
+     COL-13-one-family: 7.0 -> 7.5
+     COL-13-bright: 7.0 -> 7.5
+     COL-13-fault: 6.5 -> 7.0
      OCC-7-openhoodie: 5.0 -> 5.0
      STR-1-sweatshirt-layer: 8.0 -> 8.0
 

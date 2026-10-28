@@ -44,7 +44,8 @@ FIX = json.load(open(K / "app/src/__tests__/fixtures/oct28-hoodie-recheck.json")
 
 
 def score(rd, occ="everyday", styles=None, engine=AFTER, sl=None):
-    return P.score_parts(rd, occ, styles or {}, sl, "a_little", engine=engine)
+    # v15 here is the hoodie layer alone: v15's color tie-in (cp8, COL-13) has its own paper test, tonal_layer_paper.py
+    return P.score_parts(rd, occ, styles or {}, sl, "a_little", engine=engine, tune={"cp8": 0.0} if engine == "v15" else None)
 
 
 def fired(r, check):
