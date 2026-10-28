@@ -558,6 +558,13 @@ const addedInBuild = {
   'closet.q.a11y': '{question} {reason} This photo and your {item} are shown side by side.',
   'closet.q.a11y.crop': 'This photo, the piece outlined',
   'closet.confirm.tag': 'To confirm',
+  // Closet → Pieces in head-to-toe sections (founder, Oct 28; #384). Shown from 4 pieces in 2+ sections.
+  'closet.section.outer': 'Jackets and layers',
+  'closet.section.top': 'Tops',
+  'closet.section.bottom': 'Bottoms',
+  'closet.section.shoes': 'Shoes',
+  'closet.section.a11y': '{section}, {n} pieces',
+  'closet.section.a11y.one': '{section}, 1 piece',
   // Removing a piece or a look (#118, founder Oct 9): long-press → an action sheet → a toast with Undo.
   'closet.remove.action': 'Remove from Closet',
   'closet.removed': 'Removed your {item}.',
