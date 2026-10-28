@@ -275,6 +275,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 241, name: 'About you · a later visit', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'visit' },
   { n: 243, name: 'About you · Not now', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'declined' },
   { n: 244, name: 'About you · saved', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'saved' },
+  { n: 250, name: 'Closet · Pieces, thin (no titles)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  { n: 251, name: 'Closet · Pieces, small (titled)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

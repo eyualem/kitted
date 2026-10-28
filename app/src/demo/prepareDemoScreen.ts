@@ -246,6 +246,9 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   211: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'ask', text: 'That score is wrong.' }] },
   215: { steps: [FIRST_CHECK, { at: '2026-10-22T07:50:00', do: 'recheck', photoId: 's14b' }] },
   183: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'B3'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
+  // Closet → Pieces head to toe (#384): a thin closet (3 pieces, one plain grid) and a small one (4 pieces, titled).
+  250: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  251: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'S1'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
   175: { asOf: '2026-10-21T12:00:00', steps: [
