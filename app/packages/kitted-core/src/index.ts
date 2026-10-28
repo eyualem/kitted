@@ -21,7 +21,7 @@ export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type Rotatio
 export { garmentName, G, SUB_NAME, SLOT_TO_CLOSET, CORE, idx } from "./names";
 export { clone, deepEqual } from "./util";
 export {
-  weatherNeeds, seasonNeeds, weatherTip, itemAllowed, isWarmLayer, isHeavyOuter, isBoot, isSuede, isShorts, isFairWeatherShoe, WEATHER_BANDS,
+  weatherNeeds, seasonNeeds, weatherTip, itemAllowed, isLightLayer, isWarmLayer, isHeavyOuter, isBoot, isSuede, isShorts, isFairWeatherShoe, WEATHER_BANDS,
   type DayWeather, type WeatherCondition, type WeatherWindow, type WeatherNeeds, type LayerNeed, type WeatherTip, type WeatherTipKey,
 } from "./weather";
 export {

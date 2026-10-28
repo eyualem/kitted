@@ -85,9 +85,22 @@ const HEAVY_OUTER: ReadonlySet<unknown> = new Set(["puffer", "overcoat", "field_
 const BOOTS: ReadonlySet<unknown> = new Set(["chelsea_boot", "work_boot"]);
 const SHORTS: ReadonlySet<unknown> = new Set(["shorts", "athletic_shorts"]);
 
-/** Gives warmth: anything worn over the top, or a knit/fleece top. */
-export function isWarmLayer(g: Garment): boolean {
+/**
+ * Shirt-weight pieces (#381). The reader calls a button-up worn open over a tee "outerwear" (an overshirt, or the
+ * shirt's own kind): a light layer for a mild day, not warmth below 50°.
+ */
+const SHIRT_WEIGHT: ReadonlySet<unknown> = new Set([
+  "overshirt", "flannel_shirt", "oxford_shirt", "dress_shirt", "camp_collar_shirt", "rugby_shirt",
+  "tee", "graphic_tee", "polo", "knit_polo", "tank_top", "jersey",
+]);
+
+/** A layer: anything worn over the top, or a knit/fleece top. Enough for a mild day; on a hot one it stays home. */
+export function isLightLayer(g: Garment): boolean {
   return g.category === "outerwear" || WARM_TOPS.has(g.subcategory);
+}
+/** Gives warmth on a cold day: a jacket or coat, a fleece, or a knit top. Never a shirt worn open (#381). */
+export function isWarmLayer(g: Garment): boolean {
+  return isLightLayer(g) && !SHIRT_WEIGHT.has(g.subcategory);
 }
 export function isHeavyOuter(g: Garment): boolean {
   return g.category === "outerwear" && HEAVY_OUTER.has(g.subcategory);
@@ -112,7 +125,7 @@ export function itemAllowed(it: ClosetItem, needs: WeatherNeeds | null, occasion
   if (!needs) return true;
   if (isShorts(g) && !(needs.shortsOk && (occasion === "everyday" || occasion === "gym"))) return false;
   if (needs.wet && isSuede(g)) return false;
-  if (needs.hot && isWarmLayer(g)) return false; // no jacket, and no sweater or hoodie either
+  if (needs.hot && isLightLayer(g)) return false; // no jacket or overshirt, and no sweater or hoodie either
   return true;
 }
 
