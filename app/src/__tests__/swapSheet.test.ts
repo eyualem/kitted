@@ -1,6 +1,7 @@
 // Swap one, the S28 sheet (09-ui-review §28 S3–S7, #377): checks written before the code. He sees his outfit's pieces,
 // picks one, sees what else in his closet works there and picks that; Undo puts the card back exactly.
 import { US_EASTERN, type DayWeather } from '@kitted/core';
+import type { FitCheckRow } from '@/data/types';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
@@ -121,6 +122,60 @@ describe('S5 · Undo puts the card back exactly', () => {
       expect(await store.getKv(`idea.swapped.${ID}`)).toBe(swappedMid);
       expect(await store.getKv(`idea.touched.${ID}`)).toBe('1');
     }
+  });
+});
+
+describe('S9 · the options follow the card\'s rotation (#380)', () => {
+  /** A fit check of `itemIds` at `iso`, saved like a real one. */
+  async function wore(store: Awaited<ReturnType<typeof setup>>['store'], id: string, iso: string, itemIds: string[]) {
+    const base = (await store.fitChecks.all()).find((c) => c.status === 'scored')!;
+    await store.fitChecks.put({ ...base, id, parentId: null, dayKey: iso.slice(0, 10), createdAt: at(iso), itemIds } as FitCheckRow);
+  }
+  /** The card's piece with the most to swap in, and its options. */
+  async function pieceSwap(e: Awaited<ReturnType<typeof setup>>) {
+    let best: { out: string; opts: Awaited<ReturnType<typeof e.svc.swapOptions>> } | null = null;
+    for (const piece of (await e.outfit()).itemIds) {
+      const opts = await e.svc.swapOptions(ID, piece);
+      if (opts.length > (best?.opts.length ?? 1)) best = { out: piece, opts };
+    }
+    if (!best) throw new Error('no piece with two options');
+    return best;
+  }
+
+  it('a piece he wore yesterday goes after the ones he has not worn lately; nothing is hidden', async () => {
+    const e = await setup();
+    const { out, opts } = await pieceSwap(e);
+    const first = opts[0]!.itemId;
+    await wore(e.store, 'YDAY', '2026-10-21T08:30:00-04:00', [first, ...(await e.outfit()).itemIds.filter((id) => id !== out)]);
+    const after = (await e.svc.swapOptions(ID, out)).map((o) => o.itemId);
+    expect(after[0]).not.toBe(first);
+    expect(after.indexOf(first)).toBeGreaterThan(0);
+    expect([...after].sort()).toEqual(opts.map((o) => o.itemId).sort());
+  });
+
+  it('a try-on (another check within the hour) is not worn: the order stays', async () => {
+    const e = await setup();
+    const { out, opts } = await pieceSwap(e);
+    const first = opts[0]!.itemId;
+    const rest = (await e.outfit()).itemIds.filter((id) => id !== out);
+    await wore(e.store, 'TRY', '2026-10-21T08:30:00-04:00', [first, ...rest]);
+    // What he wore 20 minutes later is the card's own outfit: none of it is an option.
+    await wore(e.store, 'WORE', '2026-10-21T08:50:00-04:00', (await e.outfit()).itemIds);
+    expect((await e.svc.swapOptions(ID, out)).map((o) => o.itemId)).toEqual(opts.map((o) => o.itemId));
+  });
+
+  it('Undo after a reordered swap still puts the card back exactly', async () => {
+    const e = await setup();
+    const { out, opts } = await pieceSwap(e);
+    await wore(e.store, 'YDAY', '2026-10-21T08:30:00-04:00', [opts[0]!.itemId]);
+    const before = await e.outfit();
+    const now = await e.svc.swapOptions(ID, out);
+    const undo = await e.svc.swapTo(ID, out, now[0]!.itemId);
+    expect((await e.outfit()).itemIds).toEqual(now[0]!.outfit.itemIds);
+    await undo!();
+    expect(await e.outfit()).toEqual(before);
+    expect(await e.store.getKv(`idea.touched.${ID}`)).toBeNull();
+    expect(await e.store.getKv(`idea.swapped.${ID}`)).toBeNull();
   });
 });
 

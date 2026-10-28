@@ -306,10 +306,15 @@ export interface SwapOption {
  * Swap one (02 S28, 09-ui-review §28, #377): the closet's pieces that could take `out`'s place in `outfit` and still pass
  * the picker's rules: allowed for the occasion and weather, the weather's layer rule kept, `outfitValid`, and a score of
  * at least Put together (or the outfit's own score, when that's lower). Pieces already in the outfit and `exclude` (what
- * he swapped away from this card) are never offered. Right for the weather first, then the score, then a stable tie-break.
+ * he swapped away from this card) are never offered. Ordered as the picker ranks (#380): right for the weather first, then
+ * an outfit not seen this week, then a top he's gone longest without, then the score (less `W.recent` for a bottom, shoe
+ * or layer from the last two days), then a stable tie-break. History only reorders; it never hides an option.
  */
 export function swapOptions(input: PickInput & { outfit: readonly string[]; out: string }, engine: RubricEngine = defaultRubric): SwapOption[] {
   const { occasion, styles = null, boldness = "a_little", needs = null, evening = false, seed } = input;
+  const seenItems = input.history?.items ?? new Map<string, number>();
+  const seenOutfits = input.history?.outfits ?? new Map<string, number>();
+  const ago = (id: string) => seenItems.get(id) ?? Infinity;
   const byId = new Map(input.closet.map((c) => [c.id, c]));
   const current = input.outfit.map((id) => byId.get(id)).filter((c): c is ClosetItem => !!c);
   const outItem = current.find((c) => c.id === input.out);
@@ -328,7 +333,7 @@ export function swapOptions(input: PickInput & { outfit: readonly string[]; out:
   const floor = Math.min(7, base ?? 7);
   const inOutfit = new Set(input.outfit);
 
-  const options: { option: SwapOption; wrong: number; predicted: number; tie: number }[] = [];
+  const options: { option: SwapOption; wrong: number; repeat: number; fresh: number; value: number; tie: number }[] = [];
   for (const it of input.closet) {
     if (it.slot !== outItem.slot || inOutfit.has(it.id) || exclude.has(it.id) || !itemAllowed(it, needs, occasion)) continue;
     const items = ordered(current.map((c) => (c.id === outItem.id ? it : c)));
@@ -341,12 +346,17 @@ export function swapOptions(input: PickInput & { outfit: readonly string[]; out:
     if (predicted === null || predicted < floor) continue;
     let wrong = items.reduce((a, i) => a + wrongWeatherOf(i, needs) + wrongOccasion(i, occasion), 0); // slides out of the house go last (#379)
     if (needs?.layer === "none" && items.some((i) => isLightLayer(i.garment))) wrong += 1;
+    const key = outfitKey(items);
     options.push({
       option: { itemId: it.id, outfit: describeOutfit(items, layer, predicted, needs, evening, heavyOwned) },
-      wrong, predicted, tie: hash(`${seed}|swap|${it.id}`),
+      wrong,
+      repeat: key !== null && (seenOutfits.get(key) ?? Infinity) < ROTATE.outfitDays ? 1 : 0,
+      fresh: it.slot === "top" ? Math.min(ago(it.id), ROTATE.topFresh) : 0,
+      value: predicted - (it.slot !== "top" && ago(it.id) <= ROTATE.mildDays ? W.recent : 0),
+      tie: hash(`${seed}|swap|${it.id}`),
     });
   }
   return options
-    .sort((a, b) => a.wrong - b.wrong || b.predicted - a.predicted || a.tie - b.tie)
+    .sort((a, b) => a.wrong - b.wrong || a.repeat - b.repeat || b.fresh - a.fresh || b.value - a.value || a.tie - b.tie)
     .map((o) => o.option);
 }
