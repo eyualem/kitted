@@ -1,6 +1,6 @@
 // The morning card's words, from templates (02 "S1d"): the why line, the weather strip and the
 // spoken summary. Pure, so they're tested without rendering.
-import { seasonNeeds, type DayWeather, type IdeaReason, type MissingSlot } from '@kitted/core';
+import { seasonNeeds, type DayWeather, type IdeaReason } from '@kitted/core';
 import { normStyleKey, type CardOccasion, type ClosetItemRow, type OutfitRow, type StyleKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
 import { hourText, monthName } from '@/i18n/format';
@@ -43,10 +43,6 @@ export function whyLine(reasons: readonly IdeaReason[], items: readonly ClosetIt
       }
     })
     .join(' ');
-}
-
-export function missingLabel(m: MissingSlot): string {
-  return t(`idea.need.${m}` as StringKey);
 }
 
 /** SF Symbol for the strip. */
