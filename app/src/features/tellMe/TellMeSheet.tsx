@@ -1,7 +1,8 @@
 // S21 What changed? (02 S21): the re-check missed a change he made. One row per fix from the
 // first check, each with a "Done" chip; the score line updates live; "Update score" applies them
-// to the first reading (a userConfirmed reading and a fixConfirmed correction) and the card
-// adds "You confirmed it." Fixes the re-check already saw are ticked and locked.
+// to what the re-check read (a userConfirmed reading and a fixConfirmed correction, #383) and the card
+// adds "Scored from what you told me." Fixes the re-check already saw are ticked and locked; a fix whose
+// piece the photo clearly read otherwise isn't listed (#383): that's "Not quite right?".
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -21,7 +22,10 @@ export function TellMeSheet() {
     const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
     if (!row || !parent) return null;
     const seen = new Set((row.details.recheck?.doneFixes ?? []).map((f) => f.copy));
-    return { row, fixes: parent.fixes.map((f) => ({ target: f.target, copy: f.copy, tag: f.tag, caught: seen.has(f.copy) })) };
+    // Only fixes it caught (locked) and ones he may confirm: not a piece the photo clearly read otherwise (#383).
+    const open = new Set(await fitCheck.confirmableFixes(checkId));
+    const fixes = parent.fixes.filter((f) => seen.has(f.copy) || open.has(f.target));
+    return { row, fixes: fixes.map((f) => ({ target: f.target, copy: f.copy, tag: f.tag, caught: seen.has(f.copy) })) };
   }, [checkId]);
 
   const [ticked, setTicked] = useState<string[]>([]);
