@@ -68,10 +68,11 @@ describe('G15 · a scored re-check has Why and Not quite right?', () => {
     expect(card).toMatch(/\{readOnly && !notSeen \? \(/);
   });
 
-  it('G15.4 the same-photo and not-seen cards are unchanged (no Why or Not quite right? on them)', () => {
+  it('G15.4 the same-photo card is unchanged (no Why or Not quite right?); the not-seen card keeps its two buttons', () => {
     const same = card.slice(card.indexOf('if (rc.samePhoto) {'), card.indexOf('const notSeen ='));
     expect(same).not.toMatch(/card\.why|card\.nqr/);
-    expect(card).toMatch(/const actions = notSeen\s*\? readOnly \? \[\] : \[\{ name: 'iDid'/);
+    // #383: its second is "I did make the change" only when a fix can be confirmed, else Not quite right?.
+    expect(card).toMatch(/const actions = notSeen\s*\? readOnly \? \[\] : \[canConfirm \? \{ name: 'iDid'.*: \{ name: 'nqr'/);
   });
 
   it('G15.5 a correction on a re-check re-scores the re-check only; its first score and caught fixes stay', async () => {

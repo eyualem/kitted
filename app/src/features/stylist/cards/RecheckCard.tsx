@@ -2,6 +2,8 @@
 // photo is merged onto the first reading at the first check's occasion. Honest about the direction (#276): only a win
 // says "Nothing else changed." and gets copper; a drop shows was → now with an ink arrow and its new problems
 // ("New: …"); "Didn't catch the change?" shows only when no fix was caught; "not seen" leads with "Try another photo".
+// A piece the photo added that holds the score is named ("I see your green hoodie now.", #383), and "I did make the
+// change" / "Tell me" offer only fixes the photo didn't clearly read otherwise; else "Not quite right?" (#383).
 // A scored re-check has "Why X?" and "Not quite right?" like the first check's card (09 §20.8 G15).
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
@@ -11,7 +13,7 @@ import {
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSummary } from '@/features/fitcheck/explain';
+import { caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSeenLine, recheckSummary } from '@/features/fitcheck/explain';
 import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { occasionLabel } from '../thread';
@@ -42,6 +44,10 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const { t: winT, plan, values: winValues, pill, attachScore, onScoreLayout, touch } = useWinReveal(
     row, rc.parentScore, { announce: true, enabled: !rc.samePhoto && !(rc.notSeen && !row.details.confirmed) },
   );
+  // The first card's fixes he may still confirm (#383): none when the photo clearly read those pieces otherwise; then
+  // "Not quite right?" stands in for "I did make the change" and "Tell me". undefined while it loads.
+  const confirmable = useLive(['fitChecks', 'readings'], () => fitCheck.confirmableFixes(row.id), [row.id]);
+  const canConfirm = (confirmable?.length ?? 0) > 0;
   const now = row.score ?? 0;
   const occasionWord = occasionLabel(row.occasion);
   // Folded to its rating like the first check's card (#344); the "change not seen" card keeps its two buttons in view.
@@ -79,11 +85,13 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const move = recheckMove(rc.parentScore, now);
   const problems = newProblemLines(rc.newProblems ?? [], row.details);
   const summary = recheckSummary(outcome as never, move, problems);
+  // A piece the photo added that holds the score: named after the word (#383), never "I still see the same outfit".
+  const seenLine = move === 'same' && rc.doneFixes.length === 0 ? recheckSeenLine(rc.seen ?? []) : '';
   // One caught fix carries the whole move, so its row says the pill's number, as the pill prints it ("+1.0"); with
   // several or no win, the rows carry no number.
   const doneGain = caughtFixGain(rc, now);
   // "Didn't catch the change? Tell me" only when a fix wasn't caught (none were, or some of the card's weren't).
-  const missed = rc.doneFixes.length < (parent?.row.fixes.length ?? 0) || rc.doneFixes.length === 0;
+  const missed = canConfirm && (rc.doneFixes.length < (parent?.row.fixes.length ?? 0) || rc.doneFixes.length === 0);
   const problem = parent?.reading ? notSeenProblem(parent.reading, parent.row.fixes) : '';
   const iDidTitle = t('recheck.iDid', { fixPast: t(parent?.row.fixes.some((f) => f.edits.some((e) => e.op === 'add_held')) ? 'recheck.fixPast.held' : 'recheck.fixPast.generic') });
   const tryAnother = () => router.push(`/camera?mode=recheck&parent=${row.parentId}`);
@@ -92,7 +100,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const why = { name: 'why', label: t('card.why', { score: scoreText }) };
   const fold = { name: 'fold', label: open ? t('card.fold.less') : t('card.fold.more') };
   const actions = notSeen
-    ? readOnly ? [] : [{ name: 'iDid', label: iDidTitle }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
+    ? readOnly ? [] : [canConfirm ? { name: 'iDid', label: iDidTitle } : { name: 'nqr', label: t('card.nqr') }, { name: 'tryAnother', label: t('recheck.tryAnother') }]
     : readOnly ? [fold, why] : [
         fold,
         ...(move === 'up' && shareOffered(row) ? [{ name: 'share', label: t('recheck.share') }] : []),
@@ -117,6 +125,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
           : move === 'down'
             ? t('card.a11y.recheckDown', { occasion, was: spokenScore(rc.parentScore), now: spokenScore(now), word: scoreWordLabel(now) })
             : t('card.a11y.recheckFlat', { occasion, now: spokenScore(now), word: scoreWordLabel(now) }),
+        ...(seenLine ? [seenLine] : []),
         ...newLines.map((x) => `${x}.`),
       ].join(' ');
   return (
@@ -154,6 +163,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
                   {summary.word}
                 </KText>
                 {summary.tail ? ` ${summary.tail}` : ''}
+                {seenLine ? ` ${seenLine}` : ''}
                 {row.details.confirmed ? ` ${t('recheck.tell.confirmed')}` : ''}
               </KText>
               {newLines.map((x) => (
@@ -179,9 +189,14 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
       <KCardSection gap={4} style={{ paddingTop: 4 }}>
         {notSeen ? (
           <View style={{ gap: 8 }}>
-            {/* A new photo first; his own word that he made the change second (#276). */}
+            {/* A new photo first; his own word that he made the change second (#276), only for a fix the photo didn't
+                clearly read otherwise (#383); else he corrects the reading, like any check. */}
             <KButton title={t('recheck.tryAnother')} icon="camera" size="regular" fullWidth onPress={tryAnother} />
-            <KButton title={iDidTitle} size="regular" kind="secondary" fullWidth onPress={go.iDid} />
+            {confirmable === undefined ? null : canConfirm ? (
+              <KButton title={iDidTitle} size="regular" kind="secondary" fullWidth onPress={go.iDid} />
+            ) : (
+              <KButton title={t('card.nqr')} size="regular" kind="secondary" fullWidth onPress={go.nqr} />
+            )}
           </View>
         ) : (
           <>
