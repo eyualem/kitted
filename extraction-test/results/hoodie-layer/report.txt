@@ -1,0 +1,55 @@
+== The test outfits (bars written before the run) ==
+  H1   PASS  7 -> 7.5 (raw 6.800 -> 7.250)  his Oct 28 re-check (the stored reading): navy tee, green hoodie, olive straight cargos, black runners  [bar: 7.0 -> 7.5, the credit fires]
+  H1b  PASS  7 -> 7 (raw 6.800 -> 6.800)  his Oct 28 first check (no hoodie)  [bar: unchanged, 7.0]
+  H2   PASS  7 -> 7.5 (raw 7.175 -> 7.625)  a grey hoodie over a white tee, dark straight jeans, white leather sneakers  [bar: the credit fires; not lower]
+  H3   PASS  8 -> 8 (raw 7.775 -> 8.225)  a graphic tee under the green hoodie, wide jeans, chunky sneakers  [bar: the credit fires]
+  H4   PASS  7 -> 7.5 (raw 7.175 -> 7.625)  a zip sweatshirt over a tee (the hoodie/sweatshirt flip)  [bar: the credit fires]
+  G1   PASS  7.5 -> 7.5 (raw 7.275 -> 7.275)  a hoodie over a hoodie  [bar: unchanged]
+  G2   PASS  7.5 -> 7.5 (raw 7.275 -> 7.275)  a hoodie over a tank top  [bar: unchanged]
+  G3   PASS  6.5 -> 6.5 (raw 6.500 -> 6.500)  a hoodie over a tee with sweatpants  [bar: unchanged (loungewear blocks shape credits)]
+  G4   PASS  6.5 -> 6.5 (raw 6.500 -> 6.500)  the same with joggers at Class  [bar: unchanged]
+  G5   PASS  7 -> 7 (raw 6.875 -> 6.875)  a hoodie over a tee with slim jeans  [bar: unchanged (needs full legs)]
+  G6   PASS  6.5 -> 6.5 (raw 6.425 -> 6.425)  a hoodie over a tee with skinny jeans  [bar: unchanged]
+  G7   PASS  7.5 -> 7.5 (raw 7.725 -> 7.725)  a hoodie over a tee under a bomber (two layers)  [bar: unchanged (the one layer only)]
+  G8   PASS  7 -> 7 (raw 7.025 -> 7.025)  the tee clearly shows below the hoodie (second look)  [bar: unchanged, the -0.5 stays]
+  G9   PASS  5 -> 5 (raw 5.000 -> 5.000)  a hoodie over a tee at an interview  [bar: held as before (5.0 or less, no rise)]
+  G10  PASS  7.5 -> 7.5 (raw 7.350 -> 7.350)  the hoodie read as ending past the fly  [bar: unchanged]
+  G11  PASS  8 -> 8 (raw 7.900 -> 8.050)  the hoodie read at the belt over wide jeans ([PRO-14]'s +1.0 today)  [bar: one credit: +1.5 in +1.0's place (Proportions +0.5), never both]
+  G12  PASS  7.5 -> 7.5 (raw 7.625 -> 7.625)  a bomber over a tee  [bar: unchanged]
+  G13  PASS  7.5 -> 7.5 (raw 7.275 -> 7.275)  a hoodie over a tee with loose shorts  [bar: unchanged (shorts keep their rules)]
+  G14  PASS  6 -> 6 (raw 5.875 -> 5.875)  a stained hoodie  [bar: unchanged]
+  G15  PASS  7.5 -> 7.5 (raw 7.275 -> 7.275)  a hoodie on its own (the top)  [bar: unchanged]
+  G16  PASS  7.5 -> 7.5 (raw 7.275 -> 7.275)  a hoodie over an oxford (not a tee)  [bar: unchanged (tees only)]
+  G17  PASS  7.5 -> 7.5 (raw 7.250 -> 7.250)  an overshirt over a tee (not a hoodie)  [bar: unchanged]
+  G18  PASS  7 -> 7 (raw 6.950 -> 6.950)  a hoodie over a tee, straight jeans pooling  [bar: unchanged (a clean finish)]
+  G19  PASS  7 -> 7 (raw 6.800 -> 6.800)  a hoodie over a tee with slides  [bar: stays 7.0 or less (slides still hold it)]
+
+C1 conformance cases (492): 6 move, 0 without a hoodie or sweatshirt layer: PASS
+     PRO-17-oct28: 7.0 -> 7.5
+     PRO-17-sweatshirt: 7.0 -> 7.5
+     PRO-17-at-belt: 8.0 -> 8.0
+     PRO-17-interview: 5.0 -> 5.0
+     OCC-7-openhoodie: 5.0 -> 5.0
+     STR-1-sweatshirt-layer: 8.0 -> 8.0
+
+== The gold set (225 photos, 5-judge AI panel; profile unknown, one stated test profile, Everyday) ==
+  photos whose score or parts move on any run: 2
+     ig-009: panel 7.5 founder -  7/7 -> 7.5/7.5   tee (white) + sweatshirt (navy) + cargos (denim_dark, wide) + work_boot (tan_camel)
+     pin-054: panel 6.5 founder -  6/6 -> 6/6   hoodie (black) + graphic_tee (white) + cargos (multicolor, straight) + performance_runner (black)
+  all photos           n 223  r 0.561 -> 0.562   within 0.5 154 -> 154
+  held-out test half   n  91  r 0.470 -> 0.473   within 0.5 58 -> 58
+C2 held-out r doesn't drop by more than 0.03: PASS
+C3 the founder's 20 blind ratings: r 0.457 -> 0.457; within 0.5 12 -> 12: PASS
+C4 the two runs within 0.5: 218/223 -> 218/223: PASS
+  8+ share by how dressy the clothes are (run 1):
+    athletic   n   8  8+ 0 (0%) -> 0 (0%)   mean 6.38 -> 6.38   panel 8+ 1 (12%)
+    casual     n  96  8+ 12 (12%) -> 12 (12%)   mean 7.04 -> 7.04   panel 8+ 17 (18%)
+    in-between n  45  8+ 4 (9%) -> 4 (9%)   mean 7.16 -> 7.16   panel 8+ 16 (36%)
+    dressy     n  74  8+ 26 (35%) -> 26 (35%)   mean 7.39 -> 7.39   panel 8+ 29 (39%)
+C5 no band's 8+ share rises by more than 3 points: PASS
+
+== His saved phone checks (68, every pull, deduped; his profile, their own occasion and second look) ==
+  phone-cc4e2d everyday  6.5 -> 7 (raw 6.700 -> 7.150)  tee (blue) + cargos (olive, straight) + performance_runner (black) + hoodie (green)
+  saved checks whose score moves: 1
+
+ALL CHECKS PASS

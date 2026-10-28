@@ -60,17 +60,25 @@ export function recheckSeenLine(seen: readonly string[]): string {
   return t(seen.length === 1 ? 'recheck.seen.one' : 'recheck.seen.many', { pieces });
 }
 
+/** The layer shape credits (parts Proportions): a re-check that added a piece and earns one of these "layered" (#385). */
+const LAYER_CREDITS = new Set(['PR2_short_layer', 'PR2b_short_layer_read', 'PR2h_hoodie_layer', 'PR5_workwear_shape', 'PR6_outdoor_shape']);
+/** True when the re-check added a piece of its own (`recheck.seen`, #383) and its score has a layer shape credit: the
+ *  piece he added is the layer that moved it ("Layered and clean.", not "Fixed and clean."). */
+export function addedLayerCredit(seen: readonly string[] | undefined, details: Pick<CheckDetails, 'parts'>): boolean {
+  return (seen?.length ?? 0) > 0 && (details.parts?.parts.proportions?.reasons ?? []).some((r) => LAYER_CREDITS.has(r.check));
+}
+
 /** The re-check's summary (02 D10), honest about the direction (#276): "Layered and clean. Dialed in. Nothing else
  *  changed." only on a real win with no new problem; a win with a new problem, a score that held and a drop say just
  *  the word, and the card lists the new problems under it ("New: …"). The word is returned separately so it can be
  *  set in semibold; `lead` and `tail` are '' when there are none. */
 export function recheckSummary(
-  outcome: Pick<RecheckOutcome, 'after' | 'doneFixes'>, move: RecheckMove, newProblems: readonly string[],
+  outcome: Pick<RecheckOutcome, 'after' | 'doneFixes'>, move: RecheckMove, newProblems: readonly string[], layerAdded = false,
 ): { lead: string; word: string; tail: string } {
   const word = scoreWordLabel(outcome.after);
   if (move !== 'up' || newProblems.length > 0) return { lead: '', word: `${word}.`, tail: '' };
-  // v4's layer credit, or a parts fix that adds or wears a layer.
-  const layered = outcome.doneFixes.some((f) => f.target === 'K1_layered' || (f.engine === 'parts' && /^(wear_held|closet_add_outer|layer_short)$/.test(f.target)));
+  // v4's layer credit, or a parts fix that adds or wears a layer, or (#385) a layer he added on his own that earns a shape credit.
+  const layered = layerAdded || outcome.doneFixes.some((f) => f.target === 'K1_layered' || (f.engine === 'parts' && /^(wear_held|closet_add_outer|layer_short)$/.test(f.target)));
   const lead = layered ? t('sum.recheck.layer') : t('sum.recheck.generic');
   const full = t('sum.recheck.tail', { word });
   return { lead, word: `${word}.`, tail: full.slice(word.length + 1).trim() };

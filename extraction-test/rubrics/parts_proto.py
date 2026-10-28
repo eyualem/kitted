@@ -65,7 +65,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-14 (Oct 17, 2026)"
+VERSION = "parts-proto-15 (Oct 28, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
             "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
@@ -427,7 +427,7 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11"):
 TUNE["v12"].update(wr_half=0.2, wr_knit_tailored=0.2, wr_knit_clean=0.0)
 TUNE["v13"] = dict(TUNE["v12"], wr_knit_clean=0.2)
 VERSIONS["v13"] = "parts-proto-13 (Oct 14, 2026)"
-# v14 (Oct 17, THE DEFAULT; casual and athletic fits, DECISIONS-LOG #331-#335, rubric/research/parts/casual-athletic.md;
+# v14 (Oct 17, the default until Oct 28; casual and athletic fits, DECISIONS-LOG #331-#335, rubric/research/parts/casual-athletic.md;
 # paper test ../casual_athletic_paper.py, whose candidate V12 this engine reproduces exactly). The founder: "fit and context
 # should decide these scores, not flat holds", and at Everyday and Class "it should really depend on how good the
 # components of the outfit come together": dressing up never earns points by itself. Each knob is 0/False/None in v1-v13.
@@ -464,6 +464,23 @@ TUNE["v14"] = dict(TUNE["v13"], sh_prop=True, sh_shape=1.0, sh_layer=1.0, sh_cap
                    sweatsuit_sign=True, sweatsuit_shape=1.0, look_sign=True, kit_cap=6.0, kit_fit_rate=0.5,
                    sw1_blocks_credit=True, pr1_tucked_layer=True, peek_clearly_only=True)
 VERSIONS["v14"] = "parts-proto-14 (Oct 17, 2026)"
+# v15 (Oct 28, THE DEFAULT; DECISIONS-LOG #385; the founder's call on his Oct 28 re-check: a zip hoodie layered over a tee should earn
+# something; paper test ../hoodie_layer_paper.py). v14 plus one knob (0 in v1-v14):
+#   hl (PRO-17): a hoodie or sweatshirt worn as the one layer (HL_LAYERS, category outerwear: the reader files a zip hoodie
+#     open over a top there) over a tee or graphic tee (HL_TOPS, every top under it) and full legs earns this on
+#     Proportions, the size of the short jacket ([PRO-6]). Like the track jacket (v4), it ends on a ribbed band by type, so
+#     its hem sits at the hip whatever its read length (which the reading rarely gives an outer piece); and it's one shape
+#     credit: it takes [PRO-14]'s place, never both. The same guards as [PRO-6] (no Proportions fault of 1+, no pooling on
+#     a narrow leg, no sweats or joggers, no top showing clearly below, a clean layer), plus: read as ending past the fly,
+#     nothing; with slides, nothing (a hoodie, a tee and slides read home; shoes out of the photo are fine, and running
+#     shoes pay their own charge on Shoes). Shorts keep their own rules.
+_OFF15 = dict(hl=0.0)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14"):
+    TUNE[_e].update(_OFF15)
+TUNE["v15"] = dict(TUNE["v14"], hl=1.5)
+VERSIONS["v15"] = "parts-proto-15 (Oct 28, 2026)"
+HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
+HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
 SPORT_SNEAKERS = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
                   "white_leather_sneaker"}                       # v14: the clean sneakers (not running shoes)
 SWEAT_TOPS = {"hoodie", "sweatshirt"}                            # v14: a matched sweatsuit's top ...
@@ -837,9 +854,15 @@ def _proportions(o, sl, t):
     if not blocked and full and O is not None and o_sub in (SHORT_LAYERS | t["short_layers_extra"]) and _earns(O) \
             and not sl["peek"]:
         rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
+    if (t["hl"] and not blocked and full and O is not None and len(o["outers"]) == 1 and o_sub in HL_LAYERS and _earns(O)
+            and not sl["peek"] and O.get("length") != "below_crotch" and o["tops"]
+            and all(g.get("subcategory") in HL_TOPS for g in o["tops"]) and S_sub not in SLIDES):
+        rewards.append((t["hl"], f"the {o_sub} layered over the {T.get('subcategory').replace('_', ' ')} gives it a clean shape",
+                        "PR2h_hoodie_layer"))                # v15 (PRO-17): a ribbed-band layer, like the track jacket
     if (t["pr2b"] and not blocked and leg in R.LOOSE and O is not None and not tucked_layer and not o_tailored
             and o_sub not in (SHORT_LAYERS | t["short_layers_extra"]) and O.get("length") in ("cropped", "at_belt")
-            and _earns(O) and not sl["peek"] and not any(x[2] in ("PR5_workwear_shape", "PR6_outdoor_shape") for x in rewards)):
+            and _earns(O) and not sl["peek"]
+            and not any(x[2] in ("PR5_workwear_shape", "PR6_outdoor_shape", "PR2h_hoodie_layer") for x in rewards)):
         rewards.append((t["pr2b"], f"a short {(o_sub or 'layer').replace('_', ' ')} over a loose leg: a clean, strong shape",
                         "PR2b_short_layer_read"))           # v8: the layer's own length, read (91% the same on 2 runs)
     if (not blocked and o_tailored and T is not None and T.get("tucked") == "full" and B.get("subcategory") in PRESSED
@@ -1506,13 +1529,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v14", tune=None):
+def _tune(engine="v15", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v14", tune=None):
+def earned_bonus(part_scores, engine="v15", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1526,7 +1549,7 @@ def earned_bonus(part_scores, engine="v14", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v14", tune=None):
+def piled_penalty(part_scores, engine="v15", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1537,7 +1560,7 @@ def piled_penalty(part_scores, engine="v14", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v14", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v15", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1576,10 +1599,11 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v14", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v15", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v13" (v12 + wrinkled knit tops cost 0.2 on a minimal, smart casual or prep look; default),
+    _second_look). engine: "v15" (v14 + a hoodie or sweatshirt layered over a tee, PRO-17; default), "v14" (the casual and athletic
+    fits), "v13" (v12 + wrinkled knit tops cost 0.2 on a minimal, smart casual or prep look),
     "v12" (v11 + the founder's Oct 14 calls: small bright graphics aren't loud, fitted legs are
     slim and cost 1.0, light on light, wrinkles by garment and look), "v11" (v10 + the covered base top and skinny joggers), "v10" (v9 + the creators' rules), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]

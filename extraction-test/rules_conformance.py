@@ -444,6 +444,45 @@ case("PRO-16-pull", "PRO-16", "a plain tee over gym shorts that clearly pull: -1
      Rd(TEE, bottom("athletic_shorts", "black", "relaxed", "na", volume=4, strain="clear"), shoe("basketball_sneaker", "white")),
      {"fired": [F("PS3_fitted_shorts", "proportions", -1.0), F("FF6_strain")], "band_in": ["Needs a fix", "Getting there"]},
      occasion="class")
+PR2H = "PR2h_hoodie_layer"
+OCT28 = Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), bottom("cargos", "olive", "straight"),
+           shoe("performance_runner", "black"), mirror_selfie=True)
+case("PRO-17-oct28", "PRO-17", "v15 (#385): the founder's Oct 28 re-check, a green zip hoodie over a navy tee with olive straight "
+     "cargos and black runners: the hoodie layer earns +1.5, 7.0 -> 7.5 (the runners still cost on Shoes)", OCT28,
+     {"fired": [F(PR2H, "proportions", 1.5, line="the hoodie layered over the tee gives it a clean shape")],
+      "part": {"proportions": {"score": 8.5}, "shoes": {"score": 5.0}}, "overall": 7.5, "band": "Put together"},
+     styles=[("streetwear", 0.5), ("minimalist", 0.25), ("workwear", 0.25)])
+case("PRO-17-sweatshirt", "PRO-17", "a grey zip sweatshirt over a white tee, dark straight jeans, white leather sneakers: the same "
+     "credit (hoodie and sweatshirt flip between reads)", Rd(TEE, outer("sweatshirt", "grey", length="na"), DJEANS, WLS),
+     {"fired": [F(PR2H, "proportions", 1.5)], "overall": 7.5, "band": "Put together"})
+case("PRO-17-over-hoodie", "PRO-17", "a zip hoodie over a pullover hoodie: nothing",
+     Rd(top("hoodie", "grey"), outer("hoodie", "green", length="na"), DJEANS, WLS), {"not_fired": [F(PR2H)], "band": "Put together"})
+case("PRO-17-over-tank", "PRO-17", "a zip hoodie over a tank top: nothing",
+     Rd(top("tank_top", "white"), outer("hoodie", "green", length="na"), DJEANS, WLS), {"not_fired": [F(PR2H)], "band": "Put together"})
+case("PRO-17-over-oxford", "PRO-17", "a zip hoodie over an oxford: nothing from this rule (tees only, KD-22)",
+     Rd(top("oxford_shirt", "white"), outer("hoodie", "green", length="na"), DJEANS, WLS), {"not_fired": [F(PR2H)], "band": "Put together"}, kd="KD-22")
+case("PRO-17-joggers", "PRO-17", "a zip hoodie over a tee with joggers at Class: loungewear blocks it ([PRO-8])",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), bottom("joggers", "black", "straight"), WLS),
+     {"not_fired": [F(PR2H)], "band": "Getting there"}, occasion="class")
+case("PRO-17-slim", "PRO-17", "a zip hoodie over a tee with slim jeans: it needs a full leg, nothing",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), SLJEANS, WLS), {"not_fired": [F(PR2H)], "band": "Put together"})
+case("PRO-17-slides", "PRO-17", "a zip hoodie over a tee with dark jeans and slides: nothing (it reads home)",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), DJEANS, SLIDES), {"not_fired": [F(PR2H)], "band": "Put together"})
+case("PRO-17-long", "PRO-17", "a zip hoodie read as ending past the fly over wide jeans: nothing",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="below_crotch"), WJEANS, WLS), {"not_fired": [F(PR2H)], "band": "Put together"})
+case("PRO-17-two-layers", "PRO-17", "a zip hoodie under a bomber: the bomber's credit ([PRO-6]), not this one",
+     Rd(top("tee", "navy"), outer("bomber"), outer("hoodie", "green", length="na"), DJEANS, WLS),
+     {"fired": [F("PR2_short_layer", "proportions", 1.5)], "not_fired": [F(PR2H)], "band": "Put together"})
+case("PRO-17-peek", "PRO-17", "the tee clearly hangs below the zip hoodie: -0.5 and no credit ([PRO-9])",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), DJEANS, WLS),
+     {"fired": [F("PF10_peek", "proportions", -0.5)], "not_fired": [F(PR2H)], "band": "Put together"},
+     second_look={"under_present": "yes", "under_shows": "clearly", "covers_shoe": "no"})
+case("PRO-17-at-belt", "PRO-17", "a zip hoodie read at the belt over wide jeans: +1.5 in [PRO-14]'s place, never both",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="at_belt"), WJEANS, WLS),
+     {"fired": [F(PR2H, "proportions", 1.5)], "not_fired": [F(PR2B)], "part": {"proportions": {"score": 8.5}}, "band": "Sharp"})
+case("PRO-17-interview", "PRO-17", "a zip hoodie over a tee at an interview: the credit fires, the hoodie's hold still caps it at 5.0",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), DJEANS, WLS),
+     {"fired": [F(PR2H)], "ceiling": 5.0, "overall": 5.0, "band": "Needs a fix"}, occasion="interview")
 
 # ===== Fit (FIT) =====================================================================================================
 case("FIT-1-ceiling", "FIT-1", "a sharp tailored outfit still has Fit 7 (no reading can show a good fit)", TAILORED_OK,
