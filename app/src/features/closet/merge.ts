@@ -16,6 +16,41 @@ export function closetGridItems(all: readonly ClosetItemRow[]): ClosetItemRow[] 
   return owned.filter((c) => !isAwaitingAnswer(c, owned)).sort((a, b) => b.addedAt - a.addedAt || (a.id < b.id ? -1 : 1));
 }
 
+/** Closet → Pieces, head to toe (founder, Oct 28; #384): the order of its sections, by the piece's slot. */
+export const PIECE_SECTION_ORDER = ['outer', 'top', 'bottom', 'shoes'] as const;
+export type PieceSectionSlot = (typeof PIECE_SECTION_ORDER)[number];
+
+/** One titled group of the Pieces grid: its slot, its title, and its pieces in the grid's order (newest first). */
+export interface PieceSection {
+  slot: PieceSectionSlot;
+  title: string;
+  items: ClosetItemRow[];
+}
+
+/** Below this many pieces, or with one section only, the grid shows no titles (a tee, jeans and shoes read as one outfit). */
+export const PIECE_SECTIONS_FROM = 4;
+
+/**
+ * The Pieces grid in head-to-toe sections: Jackets and layers · Tops · Bottoms · Shoes, empty ones left out, each in
+ * the order it was given (pass `closetGridItems`, newest first). A piece with no known slot joins Tops, so none is
+ * ever dropped. `titled` is false for a thin closet (fewer than 4 pieces, or all in one section): one plain grid,
+ * still head to toe.
+ */
+export function closetSections(items: readonly ClosetItemRow[]): { titled: boolean; sections: PieceSection[] } {
+  const known = new Set<string>(PIECE_SECTION_ORDER);
+  const sections = PIECE_SECTION_ORDER.map((slot) => ({
+    slot,
+    title: t(`closet.section.${slot}`),
+    items: items.filter((c) => (known.has(c.slot) ? c.slot : 'top') === slot),
+  })).filter((s) => s.items.length > 0);
+  return { titled: items.length >= PIECE_SECTIONS_FROM && sections.length > 1, sections };
+}
+
+/** What VoiceOver reads for a section's title: "Tops, 6 pieces". */
+export function pieceSectionLabel(s: Pick<PieceSection, 'title' | 'items'>): string {
+  return s.items.length === 1 ? t('closet.section.a11y.one', { section: s.title }) : t('closet.section.a11y', { section: s.title, n: s.items.length });
+}
+
 /** What "Same as another piece…" can pick for `item`: the grid's other pieces in its slot. */
 export function mergeCandidates(item: Pick<ClosetItemRow, 'id' | 'slot'>, all: readonly ClosetItemRow[]): ClosetItemRow[] {
   return closetGridItems(all).filter((c) => c.id !== item.id && c.slot === item.slot);
