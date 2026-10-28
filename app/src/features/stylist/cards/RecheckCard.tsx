@@ -13,7 +13,7 @@ import {
 import { scoreWordLabel } from '@/design-system/score';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
-import { caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSeenLine, recheckSummary } from '@/features/fitcheck/explain';
+import { addedLayerCredit, caughtFixGain, newProblemLines, notSeenProblem, recheckMove, recheckSeenLine, recheckSummary } from '@/features/fitcheck/explain';
 import { fitCheck } from '@/features/fitcheck/session';
 import { t } from '@/i18n/en';
 import { occasionLabel } from '../thread';
@@ -84,7 +84,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const outcome = { after: now, doneFixes: rc.doneFixes.map((d) => ({ ...(parent?.row.fixes.find((f) => f.copy === d.copy) ?? { target: '' }), earned: d.earned })) };
   const move = recheckMove(rc.parentScore, now);
   const problems = newProblemLines(rc.newProblems ?? [], row.details);
-  const summary = recheckSummary(outcome as never, move, problems);
+  const summary = recheckSummary(outcome as never, move, problems, rc.doneFixes.length === 0 && addedLayerCredit(rc.seen, row.details));
   // A piece the photo added that holds the score: named after the word (#383), never "I still see the same outfit".
   const seenLine = move === 'same' && rc.doneFixes.length === 0 ? recheckSeenLine(rc.seen ?? []) : '';
   // One caught fix carries the whole move, so its row says the pill's number, as the pill prints it ("+1.0"); with

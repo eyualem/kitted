@@ -1,6 +1,6 @@
 // A re-check that adds a piece (#383; the founder's Oct 28 check). Check 1: a navy tee, green cargos and black runners,
 // 7.0. He put on a green zip hoodie and re-checked: the read saw the hoodie and the merge kept it, but the hoodie earns
-// nothing under today's rules, so the score held at 7.0 and the card said "I still see the same outfit." Then "I did
+// nothing under parts v14, so the score held at 7.0 (since v15, #385, the hoodie layer earns +1.5 on Proportions: 7.5) and the card said "I still see the same outfit." Then "I did
 // make the change" applied the card's only fix (grey work boots, which he wasn't wearing) to the FIRST reading: 7.5 for
 // boots the photo clearly showed weren't there, and the hoodie dropped out of the reading.
 // Now: a re-check that sees a new piece says so, even when the score holds; and "What changed?" / "I did make the change"
@@ -8,7 +8,7 @@
 import type { Reading } from '@kitted/core';
 import fixture from './fixtures/oct28-hoodie-recheck.json';
 import { createMemoryStore } from '@/data/memoryStore';
-import { recheckSeenLine } from '@/features/fitcheck/explain';
+import { addedLayerCredit, recheckSeenLine, recheckSummary } from '@/features/fitcheck/explain';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
@@ -73,9 +73,19 @@ describe('a re-check that adds a piece (#383)', () => {
     const row = await recheck('second', parent.id);
     const merged = (await store.readings.get(row.readingId!))!.reading;
     expect(garments(merged)).toContain('outerwear:hoodie');
-    // The hoodie earns nothing under parts v14 (no part moves), so the score holds; what the card says is the bug.
-    expect(row.score).toBe(7);
-    expect(row.details.recheck).toMatchObject({ delta: 0, notSeen: false, seen: ['green hoodie'] });
+    // Since parts v15 (#385) the hoodie layered over the tee earns the short jacket's credit, so the re-check is 7.5 (v14: 7.0).
+    expect(row.score).toBe(7.5);
+    expect(row.details.recheck).toMatchObject({ delta: 0.5, notSeen: false, seen: ['green hoodie'] });
+  });
+
+  it('A8 (#385): the hoodie he added earns the layer credit, so the card leads "Layered and clean.", not "Fixed and clean."', async () => {
+    const { check, recheck } = await setup({ first: FIRST, second: RECHECK });
+    const parent = await check('first');
+    const row = await recheck('second', parent.id);
+    expect(addedLayerCredit(row.details.recheck!.seen, row.details)).toBe(true);
+    expect(recheckSummary({ after: row.score!, doneFixes: [] }, 'up', [], true).lead).toBe('Layered and clean.');
+    expect(addedLayerCredit([], row.details)).toBe(false);
+    expect(addedLayerCredit(['green hoodie'], parent.details)).toBe(false);
   });
 
   it('A2: the card\'s line for a seen piece that holds the score', () => {
@@ -91,9 +101,9 @@ describe('a re-check that adds a piece (#383)', () => {
     expect(await svc.confirmableFixes(row.id)).toEqual([]);
     // Confirming anyway changes nothing: no score on his word against a clear read.
     const all = parent.fixes.map((f) => f.target);
-    expect(await svc.previewConfirm(row.id, all)).toEqual({ before: 7, after: 7 });
+    expect(await svc.previewConfirm(row.id, all)).toEqual({ before: 7.5, after: 7.5 });
     expect(await svc.confirmFixes(row.id, all)).toBeNull();
-    expect((await store.fitChecks.get(row.id))!.score).toBe(7);
+    expect((await store.fitChecks.get(row.id))!.score).toBe(7.5);
     expect((await store.corrections.all()).filter((c) => c.kind === 'fixConfirmed')).toEqual([]);
   });
 

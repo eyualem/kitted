@@ -20,6 +20,7 @@ export type ScoringEngine = 'parts' | 'v4';
 /** The one switch (#209): 'parts' (default) or 'v4' to roll back to rubric v4.1. */
 // Inside 'parts', the casual-fits update (parts v14, #335) has its own switch: CASUAL_FITS_V14 in
 // packages/kitted-core/src/parts.ts (true = v14, false = back to v13's numbers for every scoring path).
+// The hoodie layer (parts v15, #385) has one too: HOODIE_LAYER_V15 there (true = v15, false = back to v14's numbers).
 export const DEFAULT_SCORING_ENGINE: ScoringEngine = 'parts';
 let engineNow: ScoringEngine = DEFAULT_SCORING_ENGINE;
 export const scoringEngine = (): ScoringEngine => engineNow;
