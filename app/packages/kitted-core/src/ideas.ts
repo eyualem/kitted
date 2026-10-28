@@ -12,13 +12,18 @@
 // wrong-weather piece. And the card's look (its style menu) picks among the outfits that read as
 // it, ahead of rotation: picks never move a score, so ranking by score alone ignored the menu.
 //
+// Oct 28 (#381): on a cold day warmth comes first. An open shirt (the reader calls it outerwear) is a light layer, not
+// warmth: a 38° card had put his brown plaid overshirt over a long-sleeve tee. Outfits rank by how short of warm they
+// fall (a coat on a freezing day, then a fleece, knit or jacket, then a shirt layer, then nothing), so the card only
+// goes without warmth when his closet has none, and then says so.
+//
 // The predicted score only ranks candidates. It is never shown (#59): a number worked out from
 // closet items can differ from what his photo scores.
 
 import { defaultRubric, isScored, type RubricEngine } from "./rubric";
 import { outfitReading, outfitValid } from "./rotation";
 import type { Boldness, ClosetItem, DetectedStyle, Loose, Styles } from "./types";
-import { isBoot, isFairWeatherShoe, isHeavyOuter, isWarmLayer, itemAllowed, type WeatherNeeds } from "./weather";
+import { isBoot, isFairWeatherShoe, isHeavyOuter, isLightLayer, isWarmLayer, itemAllowed, type WeatherNeeds } from "./weather";
 
 export type ClosetState = "empty" | "thin" | "enough";
 export type MissingSlot = "top" | "bottom" | "shoes" | "layer" | "coat";
@@ -111,6 +116,15 @@ function wrongWeatherOf(it: ClosetItem, needs: WeatherNeeds | null): number {
   return 0;
 }
 
+const isCold = (needs: WeatherNeeds | null): boolean => needs?.layer === "required" || needs?.layer === "outer";
+
+/** How far short of warm the outfit falls today (#381): 0 is warm enough; a shirt layer or nothing over the top falls further. */
+function coldnessOf(items: readonly ClosetItem[], layer: ClosetItem | null, needs: WeatherNeeds | null): number {
+  if (!needs || !isCold(needs)) return 0;
+  const coat = needs.layer === "outer" ? (layer && isHeavyOuter(layer.garment) ? 0 : 1) : 0;
+  return coat + (items.some((i) => isWarmLayer(i.garment)) ? 0 : items.some((i) => isLightLayer(i.garment)) ? 1 : 2);
+}
+
 /** FNV-1a, for deterministic tie-breaks. */
 function hash(s: string): number {
   let h = 0x811c9dc5;
@@ -187,20 +201,24 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
     if (pinned && pinned.slot === slot) return [pinned];
     return bySlot(closet, slot)
       .filter((it) => itemAllowed(it, needs, occasion))
-      .map((it) => ({ it, wrong: wrongWeather(it) + wrongOccasion(it, occasion), fresh: slot === "top" ? topFreshness(it) : 0, rank: itemBonus(it), tie: hash(`${seed}|${it.id}`) }))
-      .sort((a, b) => a.wrong - b.wrong || b.fresh - a.fresh || b.rank - a.rank || a.tie - b.tie)
+      .map((it) => ({
+        it, wrong: wrongWeather(it) + wrongOccasion(it, occasion), fresh: slot === "top" ? topFreshness(it) : 0, rank: itemBonus(it), tie: hash(`${seed}|${it.id}`),
+        thin: slot === "outer" && isCold(needs) && !isWarmLayer(it.garment) ? 1 : 0, // on a cold day a layer's job is warmth
+      }))
+      .sort((a, b) => a.wrong - b.wrong || a.thin - b.thin || b.fresh - a.fresh || b.rank - a.rank || a.tie - b.tie)
       .slice(0, keep)
       .map((x) => x.it);
   };
   const heavyOwned = input.closet.some((c) => isHeavyOuter(c.garment));
-  const warmOwned = input.closet.some((c) => isWarmLayer(c.garment));
+  const warmLeft = closet.some((c) => isWarmLayer(c.garment) && itemAllowed(c, needs, occasion));
   // A pinned layer is always worn, hot day or not: "no layer" would drop the piece he asked about (#358).
   const layersOf = (outer: ClosetItem[]): (ClosetItem | null)[] => (pinned?.slot === "outer" ? [pinned] : needs?.hot ? [null] : [null, ...outer]);
 
-  type Candidate = { items: ClosetItem[]; layer: ClosetItem | null; wrong: number; offLook: number; repeat: number; fresh: number; value: number; predicted: number; tie: number };
-  /** Weather and occasion first, then the card's look, then a new outfit, then the top he's gone longest without, then the score. */
+  type Candidate = { items: ClosetItem[]; layer: ClosetItem | null; cold: number; wrong: number; offLook: number; repeat: number; fresh: number; value: number; predicted: number; tie: number };
+  /** Warm enough first, then weather and occasion, then the card's look, then a new outfit, then the top he's gone longest without, then the score. */
   const better = (a: Candidate, b: Candidate): boolean =>
-    a.wrong !== b.wrong ? a.wrong < b.wrong
+    a.cold !== b.cold ? a.cold < b.cold
+    : a.wrong !== b.wrong ? a.wrong < b.wrong
     : a.offLook !== b.offLook ? a.offLook < b.offLook
     : a.repeat !== b.repeat ? a.repeat < b.repeat
     : a.fresh !== b.fresh ? a.fresh > b.fresh
@@ -216,31 +234,29 @@ export function pickOutfit(input: PickInput, engine: RubricEngine = defaultRubri
           for (const l of layerChoices) {
             // Scored in rotation's order (layer last); shown layer first.
             const items = l ? [t, b, s, l] : [t, b, s];
-            const warm = items.some((i) => isWarmLayer(i.garment));
-            if (needs && (needs.layer === "required" || needs.layer === "outer") && warmOwned && !warm) continue;
-            if (needs?.layer === "outer" && heavyOwned && !(l && isHeavyOuter(l.garment))) continue;
+            const layered = items.some((i) => isLightLayer(i.garment));
             if (!outfitValid(items, styles, boldness, engine)) continue;
             const sc = engine.score(outfitReading(items), { occasion, styles, boldness });
             if (!isScored(sc)) continue;
             let value = sc.overall + items.reduce((a, i) => a + itemBonus(i), 0);
             let wrong = items.reduce((a, i) => a + wrongWeather(i) + wrongOccasion(i, occasion), 0);
-            if (needs?.layer === "none" && warm) {
+            if (needs?.layer === "none" && layered) {
               value -= W.layerUnneeded; // a sweater at 75° is as wrong as a jacket
               wrong += 1;
             }
-            if (needs?.layer === "suggested" && warm) value += W.layerSuggested;
+            if (needs?.layer === "suggested" && layered) value += W.layerSuggested;
             const key = outfitKey(items);
             const repeat = key !== null && (seenOutfits.get(key) ?? Infinity) < ROTATE.outfitDays ? 1 : 0;
             const tie = hash(`${seed}|${items.map((i) => i.id).join("+")}`);
             const offLook = look && !sc.detectedStyles.includes(look) ? 1 : 0;
-            const cand: Candidate = { items, layer: l, wrong, offLook, repeat, fresh: topFreshness(t), value, predicted: sc.overall, tie };
+            const cand: Candidate = { items, layer: l, cold: coldnessOf(items, l, needs), wrong, offLook, repeat, fresh: topFreshness(t), value, predicted: sc.overall, tie };
             if (!best || better(cand, best)) best = cand;
           }
     return best;
   };
   let best = search();
-  // The shortlists are cut by rotation, which can drop every piece the card's look needs: look again across the whole closet.
-  if (look && best?.offLook) {
+  // The shortlists are cut by rotation, which can drop every piece the card's look needs, or every warm one: look again across the whole closet.
+  if ((look && best?.offLook) || (best && best.cold > 0 && warmLeft)) {
     const wide = search(Infinity);
     if (wide && better(wide, best)) best = wide;
   }
@@ -256,15 +272,20 @@ function describeOutfit(
 ): PickedOutfit {
   const warm = items.some((i) => isWarmLayer(i.garment));
   let missing: MissingSlot | null = null;
-  if (needs && (needs.layer === "required" || needs.layer === "outer") && !warm) missing = "layer";
+  if (isCold(needs) && !warm) missing = "layer";
   else if (needs?.layer === "outer" && !heavyOwned) missing = "coat";
 
   const reasons: IdeaReason[] = [];
-  const layerItem = layer ?? items.find((i) => isWarmLayer(i.garment)) ?? null;
+  // On a cold day the reason names the piece that keeps him warm (a hoodie under an overshirt, not the overshirt).
+  const warmItem = isCold(needs) ? (layer && isWarmLayer(layer.garment) ? layer : items.find((i) => isWarmLayer(i.garment))) : undefined;
+  const layerItem = warmItem ?? layer ?? items.find((i) => isLightLayer(i.garment)) ?? null;
   if (needs?.hot) reasons.push({ key: "hotLight" });
-  else if (missing === "layer") reasons.push({ key: "needLayer" });
-  else if (layerItem && needs && needs.layer !== "none") {
-    reasons.push({ key: evening ? "layerLate" : needs.removable && layer ? "layerOff" : "layerWarm", itemId: layerItem.id });
+  else if (missing === "layer") {
+    // Cold, and nothing warm: name the shirt layer he's wearing, if any, so the card can say it won't be enough.
+    const thin = layer ?? items.find((i) => isLightLayer(i.garment));
+    reasons.push(thin ? { key: "needLayer", itemId: thin.id } : { key: "needLayer" });
+  } else if (layerItem && needs && needs.layer !== "none") {
+    reasons.push({ key: evening ? "layerLate" : needs.removable && layerItem === layer ? "layerOff" : "layerWarm", itemId: layerItem.id });
   }
   if (missing === "coat") reasons.push({ key: "needCoat" });
   const shoe = items.find((i) => i.slot === "shoes");
@@ -313,13 +334,13 @@ export function swapOptions(input: PickInput & { outfit: readonly string[]; out:
     const items = ordered(current.map((c) => (c.id === outItem.id ? it : c)));
     const warm = items.some((i) => isWarmLayer(i.garment));
     const layer = items.find((i) => i.slot === "outer") ?? null;
-    if (needs && (needs.layer === "required" || needs.layer === "outer") && warmOwned && !warm) continue;
+    if (isCold(needs) && warmOwned && !warm) continue;
     if (needs?.layer === "outer" && heavyOwned && !(layer && isHeavyOuter(layer.garment))) continue;
     if (!outfitValid(items, styles, boldness, engine)) continue;
     const predicted = scoreOf(items);
     if (predicted === null || predicted < floor) continue;
     let wrong = items.reduce((a, i) => a + wrongWeatherOf(i, needs) + wrongOccasion(i, occasion), 0); // slides out of the house go last (#379)
-    if (needs?.layer === "none" && warm) wrong += 1;
+    if (needs?.layer === "none" && items.some((i) => isLightLayer(i.garment))) wrong += 1;
     options.push({
       option: { itemId: it.id, outfit: describeOutfit(items, layer, predicted, needs, evening, heavyOwned) },
       wrong, predicted, tie: hash(`${seed}|swap|${it.id}`),

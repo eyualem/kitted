@@ -35,7 +35,7 @@ export function whyLine(reasons: readonly IdeaReason[], items: readonly ClosetIt
         case 'hotLight':
           return t('why.idea.hotLight');
         case 'needLayer':
-          return t('why.idea.needLayer');
+          return r.itemId ? t('why.idea.needWarmer', { layer: lower(name(r.itemId)) }) : t('why.idea.needLayer');
         case 'needCoat':
           return t('why.idea.needCoat');
         default:
