@@ -272,7 +272,9 @@ const addedInBuild = {
   'why.idea.layerLate': 'Keep the {layer} on; it gets cold late.',
   'why.idea.wetShoes': '{shoes} for the rain.',
   'why.idea.hotLight': 'Light and simple for the heat.',
-  'why.idea.needLayer': "It's cold out, and I haven't seen a layer of yours yet.",
+  'why.idea.needLayer': "It's cold out, and I haven't seen anything warm of yours yet, like a sweater or a jacket.",
+  // #381: the shirt layer he's wearing when nothing warmer is in his closet.
+  'why.idea.needWarmer': "It's cold out, and your {layer} won't be enough on its own. A sweater or a jacket would help.",
   'why.idea.needCoat': 'Below 35°, a warmer coat would help.',
   'why.idea.occasion': 'Clean and easy for {occasion}.',
   'idea.for.everyday': 'today',
@@ -314,7 +316,7 @@ const addedInBuild = {
   'tip.wx.today': 'today',
   'tip.wx.wetSuede': "Rain {when}: suede and rain don't mix.",
   'tip.wx.wetLight': 'Rain {when}: light sneakers will show it.',
-  'tip.wx.coldNoLayer': 'Cold out: bring a layer.',
+  'tip.wx.coldNoLayer': 'Cold out: bring something warm, like a sweater or a jacket.',
   'tip.wx.coldNoCoat': 'Below 35°: grab a warmer coat.',
   'tip.wx.hotLayer': 'Hot out: lose the layer outside.',
   // Re-score (02 D7; DECISIONS-LOG #61–62).
