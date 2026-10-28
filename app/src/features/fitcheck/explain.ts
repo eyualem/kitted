@@ -52,6 +52,14 @@ export function caughtFixGain(rc: { parentScore: number; doneFixes: readonly unk
   return recheckMove(rc.parentScore, now) === 'up' && rc.doneFixes.length === 1 ? deltaPill(now - rc.parentScore) : '';
 }
 
+/** "I see your green hoodie now. It doesn't change the score." (#383): pieces a re-check added that hold the score.
+ *  '' with none. */
+export function recheckSeenLine(seen: readonly string[]): string {
+  if (seen.length === 0) return '';
+  const pieces = seen.length === 1 ? seen[0]! : `${seen.slice(0, -1).join(', ')} and ${seen[seen.length - 1]}`;
+  return t(seen.length === 1 ? 'recheck.seen.one' : 'recheck.seen.many', { pieces });
+}
+
 /** The re-check's summary (02 D10), honest about the direction (#276): "Layered and clean. Dialed in. Nothing else
  *  changed." only on a real win with no new problem; a win with a new problem, a score that held and a drop say just
  *  the word, and the card lists the new problems under it ("New: …"). The word is returned separately so it can be

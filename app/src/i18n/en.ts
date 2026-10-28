@@ -143,6 +143,13 @@ const addedInBuild = {
   'cam.recheck.title': 'Re-check',
   'cam.recheck.body': "I'll read your whole fit again and score what you changed. Everything else keeps its first reading.",
   'recheck.fixPast.held': 'wear it',
+  // A re-check that sees a new piece but holds the score (#383; his Oct 28 green hoodie). Was "I still see the same
+  // outfit." even with the hoodie in the reading.
+  'recheck.seen.one': "I see your {pieces} now. It doesn't change the score.",
+  'recheck.seen.many': "I see your {pieces} now. They don't change the score.",
+  // "What changed?" corrects the re-check's reading (#383), so the card says the score follows it (overrides the
+  // deck's "You confirmed it.").
+  'recheck.tell.confirmed': 'Scored from what you told me.',
   'recheck.fixPast.generic': 'make the change',
   // A re-check of the same photo (#219): no new read, nothing counted, the re-check stays open
   'recheck.samePhoto': "That's the same photo as before, so nothing changed. Make the fix, then take a new photo.",

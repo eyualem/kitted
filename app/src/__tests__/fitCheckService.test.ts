@@ -131,7 +131,7 @@ describe('first-run story', () => {
     expect([row.score, row.parentId, row.occasion]).toEqual([9, checkId, 'date']);
     expect(row.details.recheck).toEqual({
       parentScore: 8, delta: 1, rawDelta: 0.75, notes: ['changed: outerwear'], doneFixes: [{ copy: 'Wear the overshirt, open', earned: 0.75 }],
-      newProblems: [], notSeen: false,
+      newProblems: [], notSeen: false, seen: ['beige overshirt'], rawReadingId: expect.any(String),
     });
     expect((await store.fitChecks.get(checkId))!.recheckUsed).toBe(true);
     const snap = await quota.snapshot();
