@@ -18,7 +18,8 @@ export interface TablePolicy {
 export const TABLE_POLICY: Readonly<Record<TableName, TablePolicy | 'local'>> = {
   // His age never leaves the phone: the age gate runs per device (§2.2).
   // Height and build never leave the phone either (#375): the columns stay, empty, and are never sent.
-  profile: { collection: 'profile', omit: { birthYear: null, heightCm: null, build: '' } },
+  // Consent is per phone (#252): a restored phone asks for the agreement once, so the agreement never syncs (#386).
+  profile: { collection: 'profile', omit: { birthYear: null, heightCm: null, build: '', consentVersion: null, consentAt: null } },
   fitChecks: { collection: 'fitChecks', omit: { demoPhotoId: null } },
   readings: { collection: 'readings', immutable: true },
   closet: { collection: 'closetItems', omit: { demoPhotoId: null } },
@@ -93,7 +94,6 @@ export const KV_SYNCED: Readonly<Record<string, KvPolicy>> = {
   'onboarding.looks': {},
   'onboarding.otherStyle': {},
   'onboarding.basics': { outgoing: withoutBirthYear, incoming: keepLocalBirthYear },
-  [KV.onboardingDone]: {},
   [KV.appearance]: {},
   [KV.lastOccasion]: {},
   'goingFor.last': {},
@@ -106,6 +106,9 @@ export const KV_SYNCED: Readonly<Record<string, KvPolicy>> = {
 
 /** Per-device kv keys, never sent. Exact keys, then prefixes. */
 export const KV_LOCAL: readonly string[] = [
+  // Onboarding is done per phone (#386): a restored phone asks the birth year first, and a synced "done" read at the next
+  // launch would skip it if he closed the app before answering. A4 marks it done after the birth year.
+  KV.onboardingDone,
   KV.onboardingStep, KV.scenario, KV.seedLoaded, KV.ideaTime, KV.notifyIdea, KV.notifyReady, KV.notifyTrial, KV.revealFullShown,
   'idea.evening.ignored', 'camera.mode', 'weather.permission', 'closet.pendingDeletes',
   // The end of onboarding's progress (#291): this phone's first-fit sequence, like onboarding.step.

@@ -141,6 +141,8 @@ describe('S5 and S6 everything is classified', () => {
       PERMISSION_KV: WEATHER_PERMISSION_KV, MODE_KEY: 'camera.mode', REVEAL_KV: KV.revealFullShown,
       ACCOUNT_KEY: 'account.user', OFFER_KEY: 'account.offer', ONBOARDING_STEP_KEY: KV.onboardingStep,
       FINISH_KEY, STARTER_MARKS_KEY, SEGMENT_KEY, FIT_SKIP_KEY, FIT_LINE_KEY, FIT_LOG_KEY, SERVER_TIER_KV, ABOUT_YOU_KEY,
+      // The backup's own bookkeeping (sync/backup.ts, sync/tracking.ts, #386).
+      SYNC_UID_KEY: 'sync.uid', JOIN_MODE_KEY: 'sync.joinMode', LAST_AT_KEY: 'sync.lastAt', TOUCHED_KEY: 'sync.touched',
     };
     const resolve = (expr: string): string[] | null => {
       const e = expr.trim();

@@ -29,7 +29,11 @@ export function turnScoringOn(): void {
 
 export async function runDeleteAllPhotos() {
   await quiet();
-  return deleteAllPhotos({ store, files: realPrivacyFiles });
+  const out = await deleteAllPhotos({ store, files: realPrivacyFiles });
+  // Backed up: the backup's copies go too (#386 B15). Loaded only here, so a phone that never signed in doesn't.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  await (require('@/sync/appBackup') as typeof import('@/sync/appBackup')).backup.forgetPhotos();
+  return out;
 }
 
 export async function runForgetFacts() {

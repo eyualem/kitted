@@ -75,23 +75,26 @@ export function SignInSheet() {
         setTimeout(() => router.push('/onboarding/looks'), 350);
         return;
       case 'choose': {
-        const keep = async () => {
+        const keep = async (mode: 'merge' | 'replace') => {
+          // The backup reads the choice when it joins the account (#386): Use the account's deletes this phone's own
+          // rows before the account's come down. On the stand-in it's never read.
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          await (require('@/sync/appBackup') as typeof import('@/sync/appBackup')).backup.setJoinMode(mode);
           await saveAccount(store, next.user);
           done();
         };
-        // A5: nothing is deleted without a second yes. (Replacing this phone's fits is the sync engine's job, 08 A2; the
-        // stand-in only signs in.)
+        // A5: nothing is deleted without a second yes.
         Alert.alert(
           t('acct.choose.title'),
           t('acct.choose.body', { provider: providerName(provider), fits: next.holdings.fits, local: next.localFits }),
           [
-            { text: t('acct.choose.keepBoth'), style: 'default', onPress: () => void keep() },
+            { text: t('acct.choose.keepBoth'), style: 'default', onPress: () => void keep('merge') },
             {
               text: t('acct.choose.useAccount'),
               onPress: () =>
                 Alert.alert(t('acct.choose.confirmTitle'), t('acct.choose.confirmBody', { local: next.localFits }), [
                   { text: t('common.cancel'), style: 'cancel', onPress: () => setBusy(null) },
-                  { text: t('acct.choose.confirmYes'), style: 'destructive', onPress: () => void keep() },
+                  { text: t('acct.choose.confirmYes'), style: 'destructive', onPress: () => void keep('replace') },
                 ]),
             },
             { text: t('common.cancel'), style: 'cancel', onPress: () => setBusy(null) },

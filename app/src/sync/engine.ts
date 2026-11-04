@@ -4,7 +4,7 @@
 import type { KittedStore } from '@/data/store';
 import type { Table } from '@/data/tables';
 import { dataToRow, rowKey, rowToData } from './codec';
-import { MAX_BATCH, RemoteRefused, RemoteUnavailable, type FileTransport, type RemoteStore } from './remote';
+import { MAX_BATCH, RemoteMissing, RemoteRefused, RemoteUnavailable, type FileTransport, type RemoteStore } from './remote';
 import {
   KV_SYNCED, PREFS_COLLECTION, SYNCED_COLLECTIONS, SYNCED_TABLES, SYNC_SCHEMA_VERSION, fileRefs, isSyncedKv, kvPolicy, tableForCollection,
   tablePolicy, type SyncedTable,
@@ -37,6 +37,10 @@ export interface PushResult {
 const CURSOR_KV = (coll: string) => `sync.cursor.${coll}`;
 const PULL_PAGE = 500;
 const MAX_FILE_TRIES = 8;
+/** A photo whose row arrived before the photo did (his other phone hasn't uploaded it yet): retried for ~4 days with
+ *  the backoff capped at 6 h, then dropped (#386 B14). */
+const MAX_MISSING_TRIES = 24;
+const MAX_BACKOFF_MS = 6 * 3_600_000;
 
 const isDirty = (r: SyncRow) => r.pushedAt === null || r.localAt > r.pushedAt;
 /** Does the remote doc win over this phone's change? Newer wins; a tie goes to the higher device id, the same answer on
@@ -173,14 +177,17 @@ export function createSyncEngine(o: SyncEngineOptions) {
   // ---- the public steps ----
 
   return {
-    /** First sign-in on this phone: every synced row and key counts as changed, once (E8). */
-    async markAllDirty(): Promise<number> {
+    /** First sign-in on this phone: every synced row and key counts as changed, once (E8). `onlyUntracked` skips rows
+     *  the engine already knows (pulled from the account, or tracked since): joining an account after a pull pushes
+     *  only this phone's own rows (#386 "Keep both"). */
+    async markAllDirty(opts: { onlyUntracked?: boolean } = {}): Promise<number> {
       guard();
       let n = 0;
       const now = o.nowMs();
       const mark = async (coll: string, key: string) => {
         const id = syncRowId(coll, key);
         const prev = await store.syncRows.get(id);
+        if (prev && opts.onlyUntracked) return;
         const localAt = Math.max(now, (prev?.localAt ?? 0) + 1);
         await store.syncRows.put({ id, coll, rowKey: key, localAt, pushedAt: prev?.pushedAt ?? null, deleted: false, by: o.deviceId, files: prev?.files ?? [] });
         n += 1;
@@ -254,12 +261,39 @@ export function createSyncEngine(o: SyncEngineOptions) {
       return { applied };
     },
 
-    /** A live listener's docs (the Firestore adapter calls this with each snapshot's changes). */
+    /** A live listener's docs (the Firestore adapter calls this with each snapshot's changes). The cursor moves past
+     *  them, so the next pull doesn't read them again. */
     async applyRemote(coll: string, docs: readonly StoredDoc[]): Promise<number> {
       guard();
       let n = 0;
-      for (const d of docs) if (await apply(coll, d)) n += 1;
+      let cursor = parseCursor(await store.getKv(CURSOR_KV(coll)));
+      for (const d of docs) {
+        if (await apply(coll, d)) n += 1;
+        if (!cursor || d.serverAt > cursor.at || (d.serverAt === cursor.at && d.id > cursor.id)) cursor = { at: d.serverAt, id: d.id };
+      }
+      if (cursor) await store.setKv(CURSOR_KV(coll), JSON.stringify(cursor));
       return n;
+    },
+
+    /** Where the pull of a collection resumes (the live listener starts there). */
+    async cursorOf(coll: string): Promise<Cursor | null> {
+      return parseCursor(await store.getKv(CURSOR_KV(coll)));
+    },
+
+    /** Forgets every change record, queued file and cursor: signing in to another account starts from nothing (B9). */
+    async clearBookkeeping(): Promise<void> {
+      for (const r of await store.syncRows.all()) await store.syncRows.delete(r.id);
+      for (const f of await store.syncFiles.all()) await store.syncFiles.delete(f.path);
+      for (const coll of SYNCED_COLLECTIONS) await store.deleteKv(CURSOR_KV(coll));
+    },
+
+    /** "Delete all photos" while backed up (#386 B15): every backed-up file is removed from the server too. */
+    async removeAllFiles(): Promise<number> {
+      guard();
+      const paths = new Set<string>();
+      for (const r of await store.syncRows.all()) for (const f of r.files) paths.add(f);
+      for (const f of paths) await queueFile(f, 'gone');
+      return paths.size;
     },
 
     /** Pull first (fewer stale writes), then push. */
@@ -291,8 +325,25 @@ export function createSyncEngine(o: SyncEngineOptions) {
           moved += 1;
         } catch (e: unknown) {
           if (e instanceof RemoteUnavailable) break;
+          if (e instanceof RemoteMissing && f.op === 'gone') {
+            // Already gone from the server: that's what a delete wants.
+            await store.syncFiles.delete(f.path);
+            moved += 1;
+            continue;
+          }
           failed += 1;
-          if (f.tries + 1 >= MAX_FILE_TRIES) {
+          if (e instanceof RemoteRefused) {
+            // A rule said no (over 3 MB, a name the rules don't allow): trying again won't change that (B13).
+            console.warn(`[sync] refused ${f.op} ${f.path}`, e.message);
+            await store.syncFiles.delete(f.path);
+          } else if (e instanceof RemoteMissing) {
+            if (f.tries + 1 >= MAX_MISSING_TRIES) {
+              console.warn(`[sync] never arrived: ${f.path}`);
+              await store.syncFiles.delete(f.path);
+            } else {
+              await store.syncFiles.put({ ...f, tries: f.tries + 1, nextAt: now + Math.min(2 ** f.tries * 30_000, MAX_BACKOFF_MS) });
+            }
+          } else if (f.tries + 1 >= MAX_FILE_TRIES) {
             console.warn(`[sync] gave up on ${f.op} ${f.path}`, e);
             await store.syncFiles.delete(f.path);
           } else {
@@ -306,6 +357,11 @@ export function createSyncEngine(o: SyncEngineOptions) {
     /** How many changes are waiting to go up (the "Backed up · just now" line). */
     async pending(): Promise<number> {
       return (await store.syncRows.all()).filter(isDirty).length;
+    },
+
+    /** Files waiting to move (the status line counts them as waiting too). */
+    async pendingFiles(): Promise<number> {
+      return (await store.syncFiles.all()).length;
     },
   };
 }

@@ -1,7 +1,7 @@
 {
   "name": "kitted-firebase-tests",
   "private": true,
-  "description": "Rules and server-job checks R1-R10, F1-F3, the AI proxy's P/L/M/D (handoff/13-server.md \u00a77) (handoff/11-firestore-schema.md \u00a79) on the Firebase emulator (dev-only; Java from the Mac). Run from firebase/: npm --prefix tests run emulate",
+  "description": "Rules and server-job checks R1-R10, F1-F3, the AI proxy's P/L/M/D (handoff/13-server.md \u00a77), the sync adapters X1-X8 (handoff/11-firestore-schema.md \u00a79, \u00a711) on the Firebase emulator (dev-only; Java from the Mac). Run from firebase/: npm --prefix tests run emulate",
   "scripts": {
     "test": "vitest run",
     "emulate": "cd .. && tests/node_modules/.bin/firebase emulators:exec --project demo-kitted --only firestore,storage,auth 'npm --prefix tests test'",

@@ -1,7 +1,8 @@
 // Y7 · Privacy & data (02-screens.md; revised copy DECISIONS-LOG #246, mockups/theme-round2.html → Settings, Privacy):
 // the honest promise, "See what I send" (the face-blurred copy his last check sent), the "Score my fits" switch (off
 // withdraws consent at once; on goes through the consent sheet), his photos' count and size, then the three deletes,
-// each confirmed with the spec's dialog (Cancel is the default). All local, so it works offline.
+// each confirmed with the spec's dialog (Cancel is the default). All local, so it works offline. Signed in to an
+// account, one more line says where the backup stands (#386).
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, AppState, Linking, Pressable, View } from 'react-native';
@@ -18,6 +19,8 @@ import { runDeleteAllData, runDeleteAllPhotos, runForgetFacts, turnScoringOff, t
 import { LinkRow, Section, SettingsScroll, ToggleRow, ValueRow } from '@/features/settings/SettingsList';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
+import { backupText } from '@/features/privacy/backupLine';
+import { useBackupStatus } from '@/sync/appBackup';
 
 function sizeText(bytes: number): string {
   const { n, unit } = bytesParts(bytes);
@@ -74,6 +77,7 @@ export default function PrivacyDataScreen() {
   const account = useLive(['kv'], () => getAccount(store), [], ACCOUNT_KEY);
   const plan = useLive(['usage', 'fitChecks'], () => quota.snapshot(), []);
   const [usage, refreshUsage] = usePhotoUsage();
+  const backupValue = backupText(useBackupStatus());
   const [busy, setBusy] = useState(false);
   const provider = t('config.providerDefault');
   const consentOn = !!profile?.consentVersion;
@@ -117,6 +121,9 @@ export default function PrivacyDataScreen() {
         <LinkRow key="sent" title={t('privacy.seeSent')} onPress={() => router.push('/you/sent')} />
         <ToggleRow key="consent" title={t('privacy.consentToggle')} detail={t('privacy.consentSub', { provider })} value={consentOn} onChange={onToggle} disabled={busy || !profile} hint={t(consentOn ? 'privacy.a11y.consentOffHint' : 'privacy.a11y.consentOnHint')} />
         <ValueRow key="photos" label={t('privacy.storage')} value={storageText(usage)} spoken={t('privacy.a11y.storage', { label: t('privacy.storage'), value: storageText(usage) })} />
+        {account && backupValue ? (
+          <ValueRow key="backup" label={t('backup.row')} value={backupValue} spoken={t('privacy.a11y.storage', { label: t('backup.row'), value: backupValue })} />
+        ) : null}
       </Section>
 
       {PRIVACY_URL ? (

@@ -8,11 +8,17 @@ import { PREFS_COLLECTION, TABLE_POLICY, isSyncedKv, tablePolicy, type SyncedTab
 import type { SyncRow } from './types';
 
 export interface TrackerOptions {
-  /** Whether changes are recorded now (signed in with sync on). */
-  isOn(): boolean;
+  /** Whether changes are recorded now (an account has synced on this phone, #386). The app's answer is read from the
+   *  store once, so it may be a promise. */
+  isOn(): boolean | Promise<boolean>;
   nowMs(): number;
-  deviceId: string;
+  /** This phone's id (the tie-break), or how to read it once it's known. */
+  deviceId: string | (() => string);
+  /** After a change was recorded (the backup schedules its push). */
+  onRecorded?(): void;
 }
+
+const deviceOf = (o: TrackerOptions) => (typeof o.deviceId === 'function' ? o.deviceId() : o.deviceId);
 
 export const syncRowId = (coll: string, key: string) => `${coll}/${key}`;
 
@@ -31,7 +37,11 @@ export async function recordChange(inner: KittedStore, coll: string, key: string
 function trackedTable<T>(inner: KittedStore, name: SyncedTable, opts: TrackerOptions): Table<T> {
   const t = inner[name] as unknown as Table<T>;
   const coll = tablePolicy(name).collection;
-  const record = (key: string, deleted: boolean) => (opts.isOn() ? recordChange(inner, coll, key, deleted, opts.nowMs(), opts.deviceId) : Promise.resolve());
+  const record = async (key: string, deleted: boolean) => {
+    if (!(await opts.isOn())) return;
+    await recordChange(inner, coll, key, deleted, opts.nowMs(), deviceOf(opts));
+    opts.onRecorded?.();
+  };
   return {
     get: (key) => t.get(key),
     all: () => t.all(),
@@ -58,7 +68,9 @@ export function trackChanges(inner: KittedStore, opts: TrackerOptions): KittedSt
     tables[n] = TABLE_POLICY[n] === 'local' ? inner[n] : trackedTable(inner, n as SyncedTable, opts);
   }
   const recordKv = async (key: string, deleted: boolean) => {
-    if (opts.isOn() && isSyncedKv(key)) await recordChange(inner, PREFS_COLLECTION, key, deleted, opts.nowMs(), opts.deviceId);
+    if (!isSyncedKv(key) || !(await opts.isOn())) return;
+    await recordChange(inner, PREFS_COLLECTION, key, deleted, opts.nowMs(), deviceOf(opts));
+    opts.onRecorded?.();
   };
   return {
     ...(tables as unknown as KittedStore),

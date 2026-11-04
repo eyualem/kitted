@@ -411,7 +411,8 @@ describe('G23 · "Not now" on consent gets the S26 card', () => {
     expect(src('app/_layout.tsx')).toMatch(/<Stack\.Screen name="sheets\/example" options=\{sheet\(\[1\]\)\} \/>/);
     const ex = src('features/onboarding/ExampleCheckScreen.tsx');
     expect(ex).toMatch(/if \(sheet\) \{\s*router\.back\(\);\s*setTimeout\(\(\) => router\.push\('\/sheets\/consent'\), 350\);/);
-    expect(src('features/account/RestoreScreen.tsx')).toMatch(/consent: false/);
+    // The end of A4 moved out of the screen (#386); a restored phone still never gets the agreement for him.
+    expect(src('features/account/restore.ts')).toMatch(/consent: false/);
   });
 });
 

@@ -1083,6 +1083,18 @@ const addedInBuild = {
   'acct.delete.bodyPro': "This deletes your account and every fit, photo and chat in it, on this iPhone and in your backup. It can't be undone. Pro keeps billing through Apple until you cancel it in Manage subscription.",
   'acct.delete.yes': 'Delete account',
   'acct.delete.failed': "Couldn't delete your account. Nothing was deleted. Try again.",
+  // Backup and sync made real (#386, 11-firestore-schema.md §11): A4 when the account can't be reached, and the
+  // Privacy screen's backup line.
+  'acct.restore.failed': "I couldn't reach your account. Check your connection and try again.",
+  'acct.restore.retry': 'Try again',
+  'acct.restore.later': 'Continue for now',
+  'acct.restore.laterNote': "Your fits come back once you're online.",
+  'backup.row': 'Backup',
+  'backup.upToDate': 'Up to date',
+  'backup.syncing': 'Backing up…',
+  'backup.waiting': 'Waiting to back up',
+  'backup.offline': 'Waiting for a connection',
+  'backup.never': 'Not backed up yet',
   'acct.a11y.signInHint': 'Opens {provider} sign-in',
   // UI fix batch (#276): the birth-year confirm before the 18+ stop, the basics line with only what he gave, the
   // re-check card's VoiceOver on a drop or a held score, the card without a "Top fix" clause, and the progress bar's

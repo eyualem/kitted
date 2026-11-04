@@ -138,7 +138,7 @@ Every table and every kv key is classified in `app/src/sync/schema.ts`. A test f
 |---|---|---|
 | `onboarding.looks`, `onboarding.otherStyle` | yes | his picked looks |
 | `onboarding.basics` | yes, **without `birthYear`** | fit (an older draft's height and build are ignored, #375) |
-| `onboarding.done` | yes | a new phone skips onboarding (the age gate still runs) |
+| `onboarding.done` | no (#386) | per phone: A4 sets it after the birth year, so a restore closed mid-way can't skip the question |
 | `appearance` | yes | (08 §2) |
 | `occasion.last`, `goingFor.last` | yes | the card's memory |
 | `idea.style.day`, `idea.style.evening` | yes | the morning card's style |
@@ -153,7 +153,7 @@ Every table and every kv key is classified in `app/src/sync/schema.ts`. A test f
 ## 3. Photos and files in Cloud Storage
 
 ```
-users/{uid}/files/photos/<sha>-photo.jpg     kept fit-check photo, re-encoded at 1600 px (no metadata)
+users/{uid}/files/photos/<sha>-photo.jpg     kept fit-check photo as kept on the phone (2048 px, no metadata; #386)
 users/{uid}/files/photos/<sha>-thumb.jpg     its thumb (small; uploaded so the other phone needn't rebuild it)
 users/{uid}/files/closet/<sha>-<key>.png     closet cut-outs
 users/{uid}/files/closet/<sha>-<key>.print   their fingerprints (≤ 64 KB)
@@ -316,7 +316,9 @@ Each check has an ID; the test or step that proves it is named. **Status Oct 15 
 | `app/src/sync/codec.ts` | Row ↔ document |
 | `app/src/sync/tracker.ts` | The store wrapper that records changes in `sync_rows` |
 | `app/src/sync/engine.ts` | Push, pull, newest wins, tombstones, the file queue |
-| `app/src/sync/remote.ts` | The interface the real Firestore adapter will implement |
+| `app/src/sync/remote.ts` | The interface the adapters implement |
+| `app/src/sync/firestoreRemote.ts`, `storageTransport.ts`, `deviceFiles.ts` | The real adapters (#386, §11) |
+| `app/src/sync/backup.ts`, `tracking.ts`, `appBackup.ts`, `appTracking.ts` | When sync runs, joining, restore, status, delete (§11) |
 | `app/src/sync/memoryRemote.ts` | The in-memory server for tests, with the same checks as the rules |
 | `app/src/data/migrations.ts` V7 | `sync_rows` and `sync_files` |
 | `firebase/firebase.json` | The emulator and deploy config |
@@ -328,6 +330,89 @@ Each check has an ID; the test or step that proves it is named. **Status Oct 15 
 **Next, in order (each needs you first):**
 1. ~~OK `firebase-tools` + Java so R and F can run on the emulator.~~ Done Oct 15 (#290): 16 of 16 pass.
 2. The $99 program, then the Firebase project (E4, ~30 min; region `us-central1`).
-3. OK the React Native Firebase packages (app, auth, firestore, storage, app-check, functions).
+3. ~~OK the React Native Firebase packages~~ not needed: the JS SDK already in the app does it (#386, §11).
 
-Then Claude writes the real adapters, wires the tracker into the app's store, and builds the sign-in and Privacy screens.
+The adapters, the wiring, restore and the Privacy line are built (§11).
+
+---
+
+## 11. Making backup real: the adapters, the wiring, restore and the failure cases (Nov 4, #386)
+
+*Written before the code (AU1 in `10-onboarding.md` §10.6). The checks in §11.4 are the bar; their results go in §11.6.*
+
+### 11.1 What he'll see
+- **Never signed in, or a guest** (the server's silent account, `13-server.md` §8): nothing. Nothing is recorded, nothing leaves the phone.
+- **Signed in (Google today, Apple with AU2):** his fits, closet, Lookbook, chats, facts and photos back up while the app is open. Nothing to tap.
+- **You → Privacy & data, signed in:** one line under the photos row: `Backup` · `Up to date` / `Backing up…` / `Waiting to back up` / `Waiting for a connection` / `Not backed up yet`.
+- **A new phone (or a reinstall):** Welcome → I already have an account → sign in → his birth year → `Bringing back your fits…` with the real counts as rows arrive (`214 fits · 38 pieces · 61 chats`) → `Your fits are back.` → Stylist. Photos fill in behind, newest screens first as they land.
+- **An account with fits, on a phone with fits:** `This account already has fits`: Keep both merges; Use the account's (after the second yes) deletes this phone's own rows and their photos, then brings the account's back.
+- **Delete account and all data:** the server copy (every document, every photo, the account) is deleted first; only if that worked is the phone wiped. A failure deletes nothing and says so.
+
+### 11.2 Decisions (defaults; each is logged in #386)
+1. **The Firebase JS SDK already in the app (`firebase` 12.19), no new package.** Firestore through `firebase/firestore` (memory cache: SQLite is the real copy), the server job through `firebase/functions`, files through Cloud Storage's REST API with expo-file-system's native upload and download (the JS Storage SDK needs Blobs, which React Native builds poorly from files; the native task streams the file from disk). Loaded lazily, so tests and the web preview never touch them.
+2. **The adapters take their SDK as an argument** (`createFirestoreRemote({ fs, db, uid })`, `createStorageTransport({ http, … })`), so the same files run in Jest, on the phone, and against the emulators from `firebase/tests` (which has its own copy of the SDK).
+3. **Photos go up as kept (2048 px, metadata already stripped), not re-encoded at 1600 px** (§3 said 1600): a re-encode needs native code and a reinstall for ~0.4 MB saved per photo. A file over the rules' 3 MB is skipped and logged; its row still syncs.
+4. **The server cursor is in microseconds** (Firestore's own precision), so a batch of 400 docs with one `serverAt` is never re-read forever; the engine only orders by it.
+5. **Offline:** the Firestore SDK holds a write while offline instead of failing, so every adapter call has a 20 s limit and reads go `FromServer`; a timeout counts as offline (nothing is marked sent, the next push sends it again; a held write that lands later is the same write, or refused as stale).
+6. **When the phone records changes:** from the first sign-in on this phone (kv `sync.uid`), and still after a sign-out (on the phone only), so edits made while signed out go up at the next sign-in to the same account. Signing in to a different account clears the bookkeeping first. A guest is never recorded.
+7. **When anything leaves the phone (all of these):** the app's account (`account.user`) is the Firebase user, who isn't anonymous; not a demo build; iOS; online; no fit check running (`fitCheck.busy()`, #371). Pushes go 5 s after the last change, at launch and on return to the foreground; pulls at launch and on return, then a live listener per collection while the app is open (D2: a check on one phone shows on the other in seconds). Nothing runs in the background.
+8. **Cellular and battery:** rows always go (a few KB). Photos move only in the foreground, one at a time, never during a check. Telling Wi-Fi from cellular and Low Power Mode needs `expo-network` and `expo-battery` (Expo's own, a reinstall): the founder's OK (to-do, P2); until then photos also go on cellular (~0.7 MB a check).
+9. **A photo another phone hasn't uploaded yet** (its row arrived first) is retried with a backoff up to 6 h for 4 days before it's dropped; a photo already gone from the server when deleting counts as deleted.
+10. **Holdings (A4's counts, A5's question):** read from the server right after sign-in: the fits are counted exactly (his scored checks, not re-checks) by reading the fit-check documents once; pieces and chats by Firestore's count query. Then the restore shows the counts as rows land on this phone.
+11. **Restore order:** rows first; then the birth year Basics asked and the fit go onto the restored profile (a profile written first would be newer and overwrite his synced one); photos after, in the background.
+12. **Keep both** = pull, then push only this phone's rows the account doesn't have. **Use the account's** = delete this phone's synced rows (not the profile: it holds his birth year, which never syncs) and their photo files, the synced kv keys (not the Basics draft), then pull.
+16. **Two per-phone facts stop syncing:** the agreement (`consentVersion`, `consentAt`: consent is per phone, #252) and `onboarding.done` (a restored phone closed before the birth year would otherwise skip it at the next launch).
+13. **The account doc** (`users/{uid}`: `createdAt`, `lastActiveAt`) and this phone's `devices/{id}` are written at most once a day, so `purgeInactive` can find idle accounts.
+14. **Delete account:** the `deleteAccount` job first (it deletes the documents, the files and the Auth user), then the sign-in's own `deleteAccount` (which revokes Google's or Apple's grant; the Auth user already being gone still counts as done), then the phone is wiped. **AU4 decided: the job stops requiring App Check** until AU3 ships: it needs a signed-in caller and deletes only that caller's own data, so App Check adds no protection to it. This is a server change: it ships only with the founder's OK to deploy.
+15. **"Delete all photos" while signed in** also deletes them from the backup (the queue removes every backed-up file), since he'd expect them gone; rows keep their scores.
+
+### 11.3 Files
+| File | What |
+|---|---|
+| `app/src/sync/firestoreRemote.ts` | `RemoteStore` on Firestore: batches with `serverAt = serverTimestamp()`, tombstones drop `data`, merge writes, microsecond cursors, `FromServer` reads, timeouts, error mapping; holdings; the account and device docs; live listeners |
+| `app/src/sync/storageTransport.ts` | `FileTransport` on Storage's REST API, given an http port (expo-file-system on the phone, `fetch` + `fs` in the emulator tests) |
+| `app/src/sync/backup.ts` | The controller: who may sync, when (debounce, launch, foreground, listener), the fit-check pause, join (merge / replace), restore, status, delete |
+| `app/src/sync/firebaseBackup.ts` | Builds the real adapters from the app's Firebase app (lazy) |
+| `app/src/data/db.ts` | Exports the tracked store (and the raw one for the engine) |
+| `firebase/tests/sync.test.ts` | X1–X8 on the emulators |
+
+### 11.4 The checks (written first)
+**B · The app (Jest, `backup.test.ts`, memoryRemote and two phones)**
+- **B1** Never signed in, or a guest: a change records no sync row and makes no remote call.
+- **B2** Signed in: a change reaches the server once, 5 s after the last change; `birthYear` and local-only keys never do.
+- **B3** Offline (a timeout too): nothing is marked sent; when the connection returns, it all goes, once.
+- **B4** While a fit check runs nothing is pushed and no photo moves; it goes when the check is done.
+- **B5** A half-done upload (the app closes mid-photo): the photo stays queued and goes next launch; its row is already up.
+- **B6** A reinstall: a fresh phone signed in to the account gets every row back and its photos; the profile keeps the birth year Basics asked; onboarding isn't marked done by the account (A4 does it after the birth year).
+- **B7** Two phones editing the same row: the newer edit ends up on both; edits to different rows both survive.
+- **B8** Keep both adds this phone's rows to the account; Use the account's leaves only the account's rows (and the profile's birth year), deletes this phone's own photos, and pushes nothing of the old ones.
+- **B9** Sign out: nothing is pushed while signed out; edits made then go up at the next sign-in to the same account; a different account starts from a cleared bookkeeping.
+- **B10** Delete account: the server job is called before anything local; a failure deletes nothing and keeps him signed in; success signs out and wipes (even if the provider's own delete then fails).
+- **B11** Demo builds and the web preview never sync.
+- **B12** The status line: up to date, waiting (n), backing up, offline, not yet.
+- **B13** A photo over 3 MB is skipped and logged; its row syncs.
+- **B14** A photo not uploaded yet on the other phone is retried, not dropped, for 4 days; a 404 on delete is done.
+- **B15** "Delete all photos" while signed in queues every backed-up photo's removal.
+
+**X · On the Firebase emulators (`firebase/tests/sync.test.ts`, the real rules, the real adapters)**
+- **X1** Phone A (signed in) pushes rows of every kind; phone B (a fresh store, same account) pulls them and ends equal, row for row.
+- **X2** A tombstone has no `data` on the server; B deletes the row.
+- **X3** A stale write is refused by the rules and the engine pulls the newer copy instead (E6 for real).
+- **X4** A pull over a batch with one `serverAt` and more docs than a page never stalls or skips.
+- **X5** A photo goes up to `users/{uid}/files/photos/…` and comes down on B byte for byte; a delete removes it; another person can't read it.
+- **X6** A newer app's extra field survives an older phone's write (merge).
+- **X7** Holdings count scored fits (not re-checks), pieces and chats.
+- **X8** The account doc and the device doc pass the rules once a day.
+
+**Still on the phone (D1–D6 above)**, after the merge and the deploy.
+
+### 11.5 What stays off, and what needs the founder
+- **Deploy (his OK):** `deleteAccount` without App Check, plus `cleanUpDeletedUser`, `purgeTombstones`, `purgeInactive`. Until then "Delete account and all data" can't finish for a signed-in account (it says so and deletes nothing).
+- **Packages (his OK, P2):** `expo-network` and `expo-battery` for Wi-Fi-only photos and Low Power Mode.
+- **Accounts stay behind `ACCOUNTS_BUILT`** (off in Release): on his phone only the dev Google sign-in reaches this.
+
+### 11.6 Results (Nov 4)
+- **B1–B15 pass** in Jest (`app/src/__tests__/backup.test.ts`, 23 tests), and E1–E14 and S1–S7 still pass (E8 now expects the agreement to stay on its phone). Each check was run against the built code; B13–B14 also drive the real `storageTransport.ts` with a fake http.
+- **X1–X8 pass on the emulators** with the real rules (`firebase/tests/sync.test.ts`; 82 of 82 with R, F and the server's checks, `npm --prefix firebase/tests run emulate`). Found on the way: Storage refuses a plain upload (the rules can't see its type), so uploads use the SDK's resumable protocol (a small start request with the type, then the bytes, which the phone sends natively); the rules still judge the finished file (a text file is refused).
+- **`npm run check` green.**
+- **Not yet:** the phone or the Simulator (D1–D6), so the Firestore SDK's connection on React Native, expo-file-system's native upload to Storage, and the restore screen on a device are untested; the deploy; Apple's revoke order (AU2).

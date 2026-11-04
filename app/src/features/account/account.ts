@@ -125,6 +125,11 @@ export type AfterSignIn =
   /** Signed in; nothing else to decide. */
   | { next: 'done' };
 
+async function accountHoldings(uid: string): Promise<AccountHoldings | null> {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  return (require('@/sync/appBackup') as typeof import('@/sync/appBackup')).backup.holdings(uid);
+}
+
 /** Scored fits on this phone (A5's "This iPhone has 3"). */
 export async function localFitCount(store: Pick<KittedStore, 'fitChecks'>): Promise<number> {
   return (await store.fitChecks.all()).filter((c) => c.status === 'scored' && c.parentId === null).length;
@@ -136,7 +141,8 @@ export async function afterSignIn(
   from: SignInFrom,
   result: Extract<SignInResult, { kind: 'ok' }>,
 ): Promise<AfterSignIn> {
-  const h = result.holdings;
+  // The real sign-in doesn't know what the account holds; the backup reads it (#386). Unreadable counts as empty.
+  const h = result.holdings ?? (demoScript === null ? await accountHoldings(result.user.uid) : null);
   const hasFits = !!h && h.fits > 0;
   if (from === 'welcome') {
     await saveAccount(store, result.user);

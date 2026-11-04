@@ -15,6 +15,7 @@ import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
 import { boot } from '@/state/boot';
 import { startConnectivity } from '@/services/connectivity';
+import { startBackup } from '@/sync/appBackup';
 import { getDemoArgs } from '@/state/session';
 import { CrashScreen } from '@/features/crash/CrashScreen';
 import { demoCrashCheck } from '@/demo/demoCrash';
@@ -46,6 +47,8 @@ export default function RootLayout() {
         SplashScreen.hideAsync().catch(() => {});
         // The offline banner's signal (09 §20.8 G18.1): a check now and on each return to the foreground.
         startConnectivity();
+        // Backup and sync (#386): nothing runs unless an account is signed in on this phone.
+        startBackup();
       });
   }, []);
 

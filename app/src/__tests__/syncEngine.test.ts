@@ -199,7 +199,8 @@ describe('E8 first sign-in and a new phone', () => {
     expect(await b.app.getKv(KV.appearance)).toBe('dark');
     expect(await b.app.getKv(KV.notifyIdea)).toBeNull();
     expect(await b.app.usage.all()).toEqual([]);
-    expect(await b.app.profile.get('me')).toEqual({ ...profile(), birthYear: null });
+    // His age and the agreement stay on the phone that has them (consent is per phone, #252, #386).
+    expect(await b.app.profile.get('me')).toEqual({ ...profile(), birthYear: null, consentVersion: null, consentAt: null });
   });
 });
 
