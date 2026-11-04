@@ -1,0 +1,183 @@
+<title>Kitted Welcome, Calmer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap">
+<style>
+/* Layout: a review board; each direction is a row of light + dark phones, words underneath. Nov 4, 2026, #388 round 2. */
+:root{
+  --page:#E5E7EB; --page-2:#F1F2F4; --page-ink:#131726; --page-ink-2:#565C6B; --page-line:#C8CCD4; --rivet:#9C5326;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --ios:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0A0C11;--page-2:#11141B;--page-ink:#E8EAF0;--page-ink-2:#9198A7;--page-line:#252A37;--rivet:#D8915A;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#0A0C11;--page-2:#11141B;--page-ink:#E8EAF0;--page-ink-2:#9198A7;--page-line:#252A37;--rivet:#D8915A;color-scheme:dark}
+.t-light{--bg:#F3F4F6;--bg-2:#E6E9F0;--surface:#FFFFFF;--surface-2:#ECEEF1;--ink:#121628;--ink-2:#585E70;--ink-3:#646A7A;--line:#E0E3E8;--accent:#9C5326;--primary:#121628;--on-primary:#FFFFFF;--glow:rgba(43,53,96,.16);--tape:#FFFFFF;--tape-edge:#D9DCE3;--tape-ink:#121628;--bezel:#1B1D22;--label:#1B2340}
+.t-dark{--bg:#0C0E14;--bg-2:#1A2033;--surface:#171A23;--surface-2:#21252F;--ink:#ECEEF3;--ink-2:#A1A7B5;--ink-3:#9096A5;--line:#2A2F3B;--accent:#DE9762;--primary:#ECEEF3;--on-primary:#0C0E14;--glow:rgba(110,128,200,.22);--tape:#1E2230;--tape-edge:#343A4C;--tape-ink:#ECEEF3;--bezel:#2A2D34;--label:#1B2340}
+*{box-sizing:border-box}
+html,body{background:var(--page);color:var(--page-ink)}
+body{font-family:var(--ios);-webkit-font-smoothing:antialiased;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
+.board{max-width:1180px;margin:0 auto}
+.mast{padding-block:44px 26px;border-bottom:1px solid var(--page-line);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:end}
+.mast h1{font-family:var(--display);font-stretch:118%;font-weight:720;font-size:clamp(30px,5vw,50px);line-height:1.02;letter-spacing:-.025em;margin:10px 0 0;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--rivet)}
+.lede{font-size:15px;line-height:1.55;color:var(--page-ink-2);margin:0;max-width:62ch}
+.lede b{color:var(--page-ink)}
+section{padding-block:46px 6px;border-bottom:1px dashed var(--page-line)}
+.head{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:12px 40px;margin-bottom:24px}
+.head h2{margin:6px 0 0;font-family:var(--display);font-stretch:112%;font-weight:700;font-size:26px;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
+.head p{margin:0 0 8px;font-size:14.5px;line-height:1.55;color:var(--page-ink-2);max-width:64ch}
+.tag-rec{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:999px;border:1.5px solid var(--rivet);color:var(--rivet)}
+.row{display:flex;flex-wrap:wrap;gap:16px}
+.ph-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ph-cap{font-family:var(--mono);font-size:11px;color:var(--page-ink-2)}
+.words{margin-top:22px;background:var(--page-2);border:1px solid var(--page-line);border-radius:12px;padding:14px 18px;max-width:860px}
+.words h4{margin:0 0 8px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--rivet)}
+.words ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px;line-height:1.45}
+.words li span{color:var(--page-ink-2)}
+.common{padding-block:40px 0}
+.common ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:14.5px;line-height:1.5;max-width:80ch}
+.common b{font-weight:650}
+.replay{margin-top:14px;font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid var(--page-line);background:var(--page-2);color:var(--page-ink);cursor:pointer}
+.replay:focus-visible{outline:2px solid var(--rivet);outline-offset:2px}
+
+/* phone */
+.phone{zoom:.62;width:428px;height:900px;border-radius:71px;background:var(--bezel);padding:13px;position:relative;box-shadow:0 0 0 1.5px rgba(128,132,145,.35),0 30px 60px -26px rgba(16,20,36,.35);flex:none}
+.screen{position:relative;width:402px;height:874px;border-radius:58px;overflow:hidden;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.3;letter-spacing:-.005em;font-variant-numeric:tabular-nums}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:125px;height:37px;border-radius:19px;background:#000;z-index:30}
+.status{position:absolute;top:0;left:0;right:0;height:58px;display:flex;align-items:center;justify-content:space-between;padding:4px 34px 0 50px;font-weight:600;font-size:17px;z-index:25;color:var(--ink)}
+.status svg{display:block}
+.homebar{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:135px;height:5px;border-radius:4px;background:var(--ink);opacity:.85;z-index:40}
+.glow{position:absolute;left:-60px;right:-60px;top:40px;height:520px;background:radial-gradient(closest-side,var(--glow),transparent);pointer-events:none}
+.hero{position:absolute;left:0;right:0;top:58px;height:450px;display:grid;place-items:center}
+.text{position:absolute;left:28px;right:28px;bottom:150px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.h1{font-size:36px;font-weight:700;letter-spacing:-.03em;line-height:1.08;text-wrap:balance}
+.sub{font-size:17px;color:var(--ink-2);line-height:1.4;max-width:300px}
+.cta{position:absolute;left:24px;right:24px;bottom:40px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.btn{width:100%;height:56px;border-radius:999px;display:grid;place-items:center;font-size:17px;font-weight:600;background:var(--primary);color:var(--on-primary)}
+.link{height:36px;display:grid;place-items:center;font-size:15px;font-weight:600;color:var(--ink-2)}
+.link.acct{border:1px dashed var(--line);border-radius:10px;padding:0 14px}
+
+/* A: the tape */
+.tape-svg{width:402px;height:450px;overflow:visible;filter:drop-shadow(0 22px 26px rgba(18,22,40,.22))}
+.tape-body{fill:none;stroke:var(--tape);stroke-width:88;stroke-linecap:butt}
+.tape-edge{fill:none;stroke:var(--tape-edge);stroke-width:91;stroke-linecap:butt}
+.tape-ticks{fill:none;stroke:var(--tape-ink);stroke-width:20;stroke-dasharray:1.3 11.5;opacity:.5;transform:translateY(-26px)}
+.tape-ticks-big{fill:none;stroke:var(--accent);stroke-width:34;stroke-dasharray:2 62}
+.tape-num{font-family:var(--display);font-stretch:70%;font-weight:640;font-size:27px;fill:var(--tape-ink)}
+.lock{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+.lock .win{width:128px;height:104px;border-radius:22px;background:var(--surface);border:2px solid var(--accent);display:grid;place-items:center;box-shadow:0 12px 30px -12px rgba(18,22,40,.35)}
+.num{font-family:var(--display);font-stretch:70%;font-weight:640;letter-spacing:-.025em;line-height:.82;color:var(--ink)}
+.word{font-size:17px;font-weight:600;color:var(--ink)}
+/* B: the score */
+.bigscore{display:flex;flex-direction:column;align-items:center;gap:10px}
+.bigscore .row1{display:flex;align-items:flex-end;gap:6px}
+.slash{font-family:var(--mono);font-size:22px;color:var(--ink-3);margin-bottom:10px}
+.gainline{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ink-2)}
+.gainline b{font-family:var(--mono);font-weight:500;color:var(--accent)}
+.ring{position:absolute;width:330px;height:330px;border-radius:50%;border:1.5px dashed var(--line)}
+.ring2{position:absolute;width:250px;height:250px;border-radius:50%;border:1px solid var(--line);opacity:.7}
+/* C: the tag */
+.tag-wrap{position:relative;width:240px;height:400px;display:flex;justify-content:center;transform-origin:50% 0;animation:sway 4.5s ease-in-out infinite}
+.string{position:absolute;top:0;left:50%;width:1.5px;height:96px;background:var(--ink-3);transform:translateX(-50%)}
+.hangtag{position:absolute;top:92px;width:200px;height:290px;border-radius:26px 26px 22px 22px;background:var(--label);color:#EEF0F5;display:flex;flex-direction:column;align-items:center;padding:30px 18px 22px;gap:12px;box-shadow:0 26px 50px -20px rgba(18,22,40,.55)}
+.hangtag::before{content:"";position:absolute;inset:8px;border-radius:20px 20px 16px 16px;border:1.3px dashed rgba(222,151,98,.75);pointer-events:none}
+.hole{width:20px;height:20px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 2px rgba(238,240,245,.35)}
+.hangtag .wm{font-family:var(--display);font-stretch:125%;font-weight:700;letter-spacing:.32em;font-size:11px;margin-top:4px}
+.hangtag .num{color:#EEF0F5;font-size:96px;margin-top:10px}
+.hangtag .w{font-size:16px;font-weight:600}
+.hangtag .g{font-family:var(--mono);font-size:13px;color:#DE9762;margin-top:auto}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+/* A's one play */
+@keyframes slide{from{stroke-dashoffset:-440}to{stroke-dashoffset:0}}
+@keyframes slideTxt{from{transform:translateX(160px)}to{transform:none}}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.9)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion: no-preference){
+  .play .tape-move{animation:slide 1.4s cubic-bezier(.2,.8,.2,1) both}
+  .play .lock{animation:pop .35s 1.3s cubic-bezier(.2,.8,.2,1) both}
+}
+@media (prefers-reduced-motion: reduce){.tag-wrap{animation:none}}
+@media (max-width:760px){.mast,.head{grid-template-columns:minmax(0,1fr)}.phone{zoom:.5}}
+</style>
+
+<div class="board">
+<header class="mast">
+  <div><span class="eyebrow">Welcome · round 2 · Nov 4, 2026</span><h1>One object, one line, one button.</h1></div>
+  <p class="lede">Your note: too many things on the screen. Both references do the same thing: one striking object fills the top, a big two-line headline, one sentence, one button. Here are three Kitted versions. Each hero is something only Kitted has: <b>the tape</b> the score lands on, <b>the score itself</b>, or <b>a hang tag</b>. The drawn outfit, the fix row, the closet line, the chip and the wordmark all go. Words are drafts to approve.</p>
+</header>
+
+<section id="a">
+  <div class="head"><div><span class="eyebrow">Direction A</span><h2>The tape</h2><span class="tag-rec">Recommended</span></div>
+  <div><p>A tailor's tape measure sweeps across the top, the same tape a real score lands on. On arrival it slides once and locks on the score in a copper-rimmed window, the way the app's own reveal does (about 1.5 s). It's the chrome ribbon from your reference, but made out of Kitted's own idea: a score you measure, not a guess. With Reduce Motion it's simply still.</p></div></div>
+  <div class="row" id="aplay"></div>
+  <button class="replay" type="button" id="replay">Play the tape again</button>
+  <div class="words"><h4>Words</h4><ul>
+    <li>Headline: <b>Score your fit.<br>Get the one fix.</b></li>
+    <li>Line: <b>Send a fit pic. Kitted rates the outfit, never you.</b></li>
+    <li>In the window: <b>7.5 · Put together</b> <span>(the example outfit after its one fix, the engine's number)</span></li>
+    <li>Button: <b>Get started</b> · under it, only once accounts are on: <b>I already have an account</b></li>
+  </ul></div>
+</section>
+
+<section id="b">
+  <div class="head"><div><span class="eyebrow">Direction B</span><h2>The score</h2></div>
+  <div><p>Pure type: the score is the hero. A huge Archivo numeral, the word under it, and one copper line that says what the fix did. Two faint rings give it a little depth without a picture. Quietest of the three, and the most like the app's own cards.</p></div></div>
+  <div class="row" id="bplay"></div>
+  <div class="words"><h4>Words</h4><ul>
+    <li>Hero: <b>7.5 /10 · Put together</b> and <b>+1.0 from one swap</b></li>
+    <li>Headline, line and button: as in A</li>
+  </ul></div>
+</section>
+
+<section id="c">
+  <div class="head"><div><span class="eyebrow">Direction C</span><h2>The hang tag</h2></div>
+  <div><p>A clothing hang tag on a string, in the woven label's indigo with its copper stitching, printed with the score. It sways gently, like a tag on a rack. The most playful one, and the clearest "this is about clothes" signal. The risk: it can read as a price tag.</p></div></div>
+  <div class="row" id="cplay"></div>
+  <div class="words"><h4>Words</h4><ul>
+    <li>On the tag: <b>KITTED · 7.5 · Put together · → one fix away</b></li>
+    <li>Headline, line and button: as in A</li>
+  </ul></div>
+</section>
+
+<section class="common">
+  <div class="head"><div><span class="eyebrow">For all three</span><h2>What leaves the screen, and why</h2></div><div></div></div>
+  <ul>
+    <li><b>"See an example check" leaves Welcome.</b> One button, like the references. The example check stays one tap away on the Consent screen ("See an example first"), which is exactly where he'd want proof before agreeing. Say if you want it back on Welcome as a small link.</li>
+    <li><b>The closet and "daily check is free" leave too.</b> Kit says the closet after the first score, and "free" is clearer on the camera's limit line. The screen now says one thing: score, fix, never you.</li>
+    <li><b>Still 8 taps to the camera.</b> The sign-in session's "I already have an account" keeps a small place under the button (dashed here).</li>
+    <li><b>No swipe-to-start track.</b> The reference's slider looks nice, but VoiceOver users can't swipe it, and it's slower than a tap. A plain button.</li>
+  </ul>
+</section>
+</div>
+
+<script>
+const STATUS = '<div class="status"><span>9:41</span><svg width="70" height="13" viewBox="0 0 70 13"><g fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></g><rect x="43.5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="45" y="2" width="18" height="9" rx="2" fill="currentColor"/></svg></div>';
+const TEXT = '<div class="text"><div class="h1">Score your fit.<br>Get the one fix.</div><div class="sub">Send a fit pic. Kitted rates the outfit, never you.</div></div><div class="cta"><div class="btn">Get started</div><div class="link acct">I already have an account</div></div>';
+function phone(theme, hero, label){
+  return '<div class="ph-wrap"><div class="phone t-'+theme+'" role="img" aria-label="'+label+', '+theme+'"><div class="screen">'+STATUS+'<div class="island"></div><div class="glow"></div><div class="hero">'+hero+'</div>'+TEXT+'<div class="homebar"></div></div></div><span class="ph-cap">'+theme[0].toUpperCase()+theme.slice(1)+'</span></div>';
+}
+function tape(id){
+  const d = 'M -70 150 C 90 40, 300 90, 210 235 S 150 430, 480 370';
+  let nums = '';
+  const vals = ['4.5','5.0','5.5','6.0','6.5','7.0','7.5','8.0','8.5'];
+  vals.forEach((v,i)=>{ nums += '<textPath href="#'+id+'" startOffset="'+(40+i*64)+'">'+v+'</textPath>'; });
+  return '<svg class="tape-svg" viewBox="0 0 402 450"><defs><path id="'+id+'" d="'+d+'"/></defs>'+
+    '<path class="tape-edge" d="'+d+'"/><path class="tape-body" d="'+d+'"/>'+
+    '<g class="tape-move"><path class="tape-ticks" d="'+d+'"/><path class="tape-ticks-big" d="'+d+'"/></g>'+
+    '<text class="tape-num" dy="9">'+nums+'</text></svg>'+
+    '<div class="lock"><div class="win"><span class="num" style="font-size:66px">7.5</span></div><span class="word">Put together</span></div>';
+}
+function score(){
+  return '<div class="ring"></div><div class="ring2"></div><div class="bigscore"><div class="row1"><span class="num" style="font-size:150px">7.5</span><span class="slash">/10</span></div><span class="word" style="font-size:20px">Put together</span><span class="gainline"><b>+1.0</b> from one swap</span></div>';
+}
+function tag(){
+  return '<div class="tag-wrap"><div class="string"></div><div class="hangtag"><div class="hole"></div><span class="wm">KITTED</span><span class="num">7.5</span><span class="w">Put together</span><span class="g">→ one fix away</span></div></div>';
+}
+document.getElementById('aplay').innerHTML = phone('light', tape('ta1'), 'Direction A, the tape') + phone('dark', tape('ta2'), 'Direction A, the tape');
+document.getElementById('bplay').innerHTML = phone('light', score(), 'Direction B, the score') + phone('dark', score(), 'Direction B, the score');
+document.getElementById('cplay').innerHTML = phone('light', tag(), 'Direction C, the hang tag') + phone('dark', tag(), 'Direction C, the hang tag');
+const box = document.getElementById('aplay');
+function play(){ box.classList.remove('play'); void box.offsetWidth; box.classList.add('play'); }
+document.getElementById('replay').addEventListener('click', play);
+setTimeout(play, 400);
+</script>
