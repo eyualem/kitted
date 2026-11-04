@@ -4,6 +4,7 @@
 // itself (auth.ts); these rules stay.
 import { useSyncExternalStore } from 'react';
 import { Platform } from 'react-native';
+import { requireOptionalNativeModule } from 'expo';
 import { ACCOUNTS_BUILT, SIGN_IN_LIVE } from '@/config/features';
 import { FIREBASE_CONFIG, GOOGLE_IOS_CLIENT_ID } from '@/config/firebase';
 import type { KittedStore } from '@/data/store';
@@ -41,16 +42,33 @@ export function useAccountsOn(): boolean {
   );
 }
 
-/** The sign-in in use. MockAuth until FirebaseAuth is written (08 §6 A1). */
+/** The sign-in in use: MockAuth on demo screens, the real one (firebaseAuth.ts) otherwise. */
 const mockAuth: AuthService = createMockAuth({ script: () => demoScript ?? 'ok' });
 let realAuth: AuthService | null = null;
+
+/** Which sign-ins can really work on this build (SI1, SI3): the live list, less Google without its iOS client and
+ *  Apple without its native module (a dev build from before the module was added). Nothing without the Firebase key. */
+export function availableProviders(o: {
+  live: readonly ('apple' | 'google' | 'email')[];
+  ios: boolean;
+  firebaseKey: boolean;
+  googleClient: boolean;
+  appleModule: boolean;
+}): readonly ('apple' | 'google' | 'email')[] {
+  if (!o.ios || !o.firebaseKey) return [];
+  return o.live.filter((p) => (p === 'google' ? o.googleClient : p === 'apple' ? o.appleModule : true));
+}
 
 /** Sign-in methods that really work here: every one on a demo screen (scripted), else the live ones on iPhone. */
 export function liveProviders(): readonly ('apple' | 'google' | 'email')[] {
   if (demoScript !== null) return ['apple', 'google', 'email'];
-  if (Platform.OS !== 'ios') return [];
-  // Google needs its iOS client ID (set once Google is enabled in the console) and a build with its native module.
-  return FIREBASE_CONFIG.apiKey ? SIGN_IN_LIVE.filter((p) => p !== 'google' || GOOGLE_IOS_CLIENT_ID !== '') : [];
+  return availableProviders({
+    live: SIGN_IN_LIVE,
+    ios: Platform.OS === 'ios',
+    firebaseKey: !!FIREBASE_CONFIG.apiKey,
+    googleClient: GOOGLE_IOS_CLIENT_ID !== '',
+    appleModule: requireOptionalNativeModule('ExpoAppleAuthentication') != null,
+  });
 }
 
 /** You → Settings → Account shows when accounts are on, or when a real sign-in exists to test (#295). */
@@ -58,14 +76,14 @@ export function settingsAccountOn(): boolean {
   return accountsOn() || liveProviders().length > 0;
 }
 
-/** The sign-in in use: MockAuth on demo screens, Firebase (Google) when a live provider exists, MockAuth otherwise
- *  (nothing points at it then). Firebase loads lazily so the web preview and tests never touch the native module. */
+/** The sign-in in use: MockAuth on demo screens, Firebase (Apple, Google) when a live provider exists, MockAuth
+ *  otherwise (nothing points at it then). Firebase loads lazily so the web preview and tests never touch the native module. */
 export const auth: AuthService = {
   signIn: (p) => current().signIn(p),
   sendEmailCode: (e) => current().sendEmailCode(e),
   verifyEmailCode: (e, c) => current().verifyEmailCode(e, c),
   signOut: () => current().signOut(),
-  deleteAccount: () => current().deleteAccount(),
+  deleteAccount: (p) => current().deleteAccount(p),
 };
 
 function current(): AuthService {

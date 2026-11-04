@@ -1,4 +1,5 @@
 // Switches for parts of the app that are still placeholders, so nothing points at them before they're built.
+import { APPLE_PAID } from './apple';
 
 /** The paywall (P1, P1b; 10-onboarding.md §9.4) is built on a mock store. Off until the real store (RevenueCat) and the
  *  Terms and Privacy pages exist (App Review 3.1.2): no "Try Pro" points at it on his phone; demo screens turn it on. */
@@ -17,8 +18,16 @@ export const ACCOUNTS_BUILT = false;
  *  package, the founder's OK): without it the ask can't ask, so it isn't shown (10-onboarding.md §9.5). */
 export const NOTIFICATIONS_BUILT = false;
 
-/** Sign-in methods wired to the real Firebase project (#295), shown in You → Settings → Account on dev builds while the
- *  rest of accounts stays off (ACCOUNTS_BUILT): Google only. Apple waits for the $99 program, email for the Worker's
- *  code route. Signing in backs nothing up yet (sync isn't wired), which is why the save offer and Welcome's "I already
- *  have an account" stay hidden. */
-export const SIGN_IN_LIVE: readonly ('apple' | 'google' | 'email')[] = __DEV__ ? ['google'] : [];
+/** Sign-in methods wired to the real Firebase project (#295, 10-onboarding.md §12), from three facts (SI1):
+ *  - Release: Apple and Google together, only once accounts are on and the team is paid (the build then carries Sign in
+ *    with Apple's entitlement). Never Google alone (Apple 4.8). So `ACCOUNTS_BUILT = true` is the one switch.
+ *  - Dev builds (his phone through Metro): Google, plus Apple once the team is paid, in You → Settings → Account only,
+ *    while the rest of accounts stays off. Signing in backs nothing up until AU1, which is why the save offer and
+ *    Welcome's "I already have an account" stay hidden.
+ *  Email waits for a server route that sends the code (AC1, AU7). */
+export function signInLive(o: { accountsBuilt: boolean; applePaid: boolean; dev: boolean }): readonly ('apple' | 'google' | 'email')[] {
+  if (!o.dev) return o.accountsBuilt && o.applePaid ? ['apple', 'google'] : [];
+  return o.applePaid ? ['apple', 'google'] : ['google'];
+}
+
+export const SIGN_IN_LIVE = signInLive({ accountsBuilt: ACCOUNTS_BUILT, applePaid: APPLE_PAID, dev: __DEV__ });

@@ -1,6 +1,6 @@
 // The guest account the server's limits follow (13-server.md §8, check A5): an anonymous Firebase sign-in, made the
 // first time a call needs one (after consent: nothing is sent before it), never at launch. The SDK keeps the account
-// in the Keychain and refreshes its ID token; Continue with Google later links to the same account (A11).
+// in the Keychain and refreshes its ID token; Continue with Apple or Google later links to the same account (A11).
 import { SignInError } from './transport';
 
 interface TokenUser {
@@ -49,16 +49,17 @@ export function createGuestToken(auth: () => Promise<GuestAuth>, log: (line: str
 }
 
 /**
- * Continue with Google while a guest (A11): link Google to the guest account, so the uid (and today's counts on the
- * server) stay the same. If that Google account already has its own Firebase account, sign in to that one instead.
+ * Continue with Apple or Google while a guest (A11, 10-onboarding.md §12): link it to the guest account, so the uid (and
+ * today's counts on the server) stay the same. If that identity already has its own Firebase account (a second phone),
+ * sign in to that one instead; `signIn` gets the link's error, which carries the credential to use (SI5).
  */
-export async function keepGuest<U>(current: { isAnonymous: boolean } | null, link: () => Promise<U>, signIn: () => Promise<U>): Promise<U> {
+export async function keepGuest<U>(current: { isAnonymous: boolean } | null, link: () => Promise<U>, signIn: (linkError?: unknown) => Promise<U>): Promise<U> {
   if (!current?.isAnonymous) return signIn();
   try {
     return await link();
   } catch (e: unknown) {
     const code = (e as { code?: string } | null)?.code;
-    if (code === 'auth/credential-already-in-use' || code === 'auth/email-already-in-use') return signIn();
+    if (code === 'auth/credential-already-in-use' || code === 'auth/email-already-in-use') return signIn(e);
     throw e;
   }
 }

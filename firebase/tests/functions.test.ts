@@ -67,6 +67,21 @@ describe('F1 deleteAccount', () => {
   });
 });
 
+describe('SI9 deleteAccount without App Check (AU4, 10-onboarding.md §12)', () => {
+  type Run = { run: (req: unknown) => Promise<unknown> };
+  it('takes a signed-in call with no App Check token and deletes only that account', async () => {
+    expect(jobs.DELETE_ACCOUNT_OPTS.enforceAppCheck).toBe(false);
+    await seedPerson('alice');
+    await seedPerson('bob');
+    await expect((jobs.deleteAccount as unknown as Run).run({ auth: { uid: 'alice', token: {} }, data: null, rawRequest: {} })).resolves.toEqual({ ok: true });
+    expect(await holdings('alice')).toEqual({ docs: 0, files: 0, user: 0 });
+    expect((await holdings('bob')).user).toBe(1);
+  });
+  it('still refuses a caller who isn\'t signed in', async () => {
+    await expect((jobs.deleteAccount as unknown as Run).run({ data: null, rawRequest: {} })).rejects.toMatchObject({ code: 'unauthenticated' });
+  });
+});
+
 describe('F2 purgeTombstones', () => {
   it('removes only tombstones older than the cutoff', async () => {
     const now = Date.now();

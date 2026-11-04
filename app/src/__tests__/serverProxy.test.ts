@@ -562,8 +562,9 @@ describe('A11 · Continue with Google keeps the guest\'s uid', () => {
     expect(await keepGuest({ isAnonymous: false }, link, signIn)).toBe('google-uid');
     expect(calls).toEqual(['link', 'link', 'signIn', 'signIn', 'signIn']);
     await expect(keepGuest({ isAnonymous: true }, async () => { throw Object.assign(new Error('x'), { code: 'auth/network-request-failed' }); }, signIn)).rejects.toThrow('x');
-    const src = readFileSync(join(__dirname, '../features/account/firebaseAuth.ts'), 'utf8');
-    expect(src).toMatch(/keepGuest\(auth\.currentUser, \(\) => linkWithCredential/);
+    // The real sign-in goes through it (signInLive.test.ts SI4–SI5 test the rest).
+    const src = readFileSync(join(__dirname, '../features/account/signIn.ts'), 'utf8');
+    expect(src).toMatch(/keepGuest\(d\.current\(\), \(\) => d\.link\(cred\)/);
   });
 });
 

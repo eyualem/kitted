@@ -48,9 +48,13 @@ export async function deleteEverything(uid: string): Promise<{ files: number }> 
   return { files: files.length };
 }
 
+/** App Check isn't in the app yet (AU3), so deleteAccount takes a signed-in call without it (AU4, 10-onboarding.md §12):
+ *  a caller can only ever delete his own account. Back to true when the app sends App Check tokens. */
+export const DELETE_ACCOUNT_OPTS = { region: REGION, enforceAppCheck: false } as const;
+
 /** "Delete account and all data". The phone revokes the Sign in with Apple token first (Apple requires it), then calls
  *  this, then wipes itself. */
-export const deleteAccount = onCall({ region: REGION, enforceAppCheck: true }, async (req) => {
+export const deleteAccount = onCall(DELETE_ACCOUNT_OPTS, async (req) => {
   const uid = req.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
   const { files } = await deleteEverything(uid);

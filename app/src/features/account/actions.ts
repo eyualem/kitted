@@ -4,10 +4,11 @@
 import { runDeleteAllData } from '@/features/privacy/actions';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
-import { auth } from './account';
+import { store } from '@/data/db';
+import { auth, getAccount } from './account';
 
 export async function deleteAccountAndData(): Promise<void> {
-  const r = await auth.deleteAccount();
+  const r = await auth.deleteAccount((await getAccount(store))?.provider);
   if (r.kind !== 'ok') {
     showToast(r.kind === 'offline' ? t('acct.offline') : t('acct.delete.failed'));
     return;

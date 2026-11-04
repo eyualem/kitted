@@ -79,9 +79,10 @@ describe('A · build profiles', () => {
       PAID_ENTITLEMENTS: string[];
     };
     const privacy = loadConfig().default.ios.privacyManifests;
-    const clean = { info: { CFBundleName: 'Kitted' }, privacy, entitlements: {}, paid: false };
+    const { GOOGLE_URL_SCHEME } = require('../../scripts/check-release-app.js') as { GOOGLE_URL_SCHEME: string };
+    const clean = { info: { CFBundleName: 'Kitted', CFBundleURLTypes: [{ CFBundleURLSchemes: ['kitted'] }, { CFBundleURLSchemes: [GOOGLE_URL_SCHEME] }] }, privacy, entitlements: {}, paid: false };
     expect(checkApp(clean)).toEqual([]);
-    expect(checkApp({ ...clean, info: { NSBonjourServices: ['_expo._tcp'], NSLocalNetworkUsageDescription: 'Expo Dev Launcher uses the local network…', EXDevMenuIsOnboardingFinished: true } })).toHaveLength(3);
+    expect(checkApp({ ...clean, info: { ...clean.info, NSBonjourServices: ['_expo._tcp'], NSLocalNetworkUsageDescription: 'Expo Dev Launcher uses the local network…', EXDevMenuIsOnboardingFinished: true } })).toHaveLength(3);
     expect(checkApp({ ...clean, privacy: null })).toEqual(['no PrivacyInfo.xcprivacy in the app']);
     expect(checkApp({ ...clean, privacy: { NSPrivacyTracking: false, NSPrivacyAccessedAPITypes: [], NSPrivacyCollectedDataTypes: [] } }).length).toBe(5);
     const paidEnt = Object.fromEntries(PAID_ENTITLEMENTS.map((k) => [k, true]));

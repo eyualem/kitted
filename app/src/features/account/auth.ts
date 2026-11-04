@@ -1,7 +1,7 @@
 // Sign-in (10-onboarding.md §4–§5): the one interface the account screens talk to. Firebase isn't set up yet, so the
-// app runs on MockAuth, which scripts each outcome for the demo screens; `FirebaseAuth` will implement the same
-// interface (08 §6 A1: @react-native-firebase/auth with expo-apple-authentication and Google Sign-In, a guest account
-// upgraded with linkWithCredential, and the email code checked by the Worker, which mints a custom token).
+// demo screens run on MockAuth, which scripts each outcome; the real one (firebaseAuth.ts over signIn.ts, §12) implements
+// the same interface: Apple and Google through Firebase's JS SDK, a guest account upgraded with linkWithCredential. The
+// email code waits for a server route that sends mail (AU7).
 // Nothing here sends anything anywhere.
 
 export type AuthProvider = 'apple' | 'google' | 'email';
@@ -39,8 +39,8 @@ export interface AuthService {
   sendEmailCode(email: string): Promise<SendCodeResult>;
   verifyEmailCode(email: string, code: string): Promise<VerifyCodeResult>;
   signOut(): Promise<void>;
-  /** Deletes the account and its server copy (Apple: the token is revoked first, TN3194). */
-  deleteAccount(): Promise<DeleteResult>;
+  /** Deletes the account and its server copy (Apple: the token is revoked first, TN3194), given how he signed in. */
+  deleteAccount(provider?: AuthProvider): Promise<DeleteResult>;
 }
 
 /** The scripted outcomes (demo screens 130–143). `ok`: a new, empty account; `existing`: one that already holds fits. */

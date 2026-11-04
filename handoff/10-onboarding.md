@@ -604,3 +604,49 @@ About 1.5 days. JS only: it reaches his phone through Metro, no reinstall.
 - **SC, the iOS Simulator** (screenshots `screenshots/fit-only/`, git-ignored): the card under an answer and on a later visit in light, dark and the largest size (the three choices stack there); You → Style profile shows Fit you like, the birth year, Styles and Budget, with no Height or Build, in light and in dark at the largest size; Settings has no Units row. Tapping Regular on the web preview saves it and leaves "Got it. Change it any time in You."; the Simulator tool's taps weren't used. One Simulator shot showed "database is locked" from two copies of the JS starting at once during the relaunch (the test harness, not the app); a clean relaunch drew the page.
 - **Left as it is:** the profile's `height_cm`, `build` and `units` columns stay (emptied by V8, never read, never synced); the copy deck's unused keys (`onb.basics.height*`, `build.*` in `en.generated.ts`, from 02 §5); the sentence gate's `BUILD_BACK` (it still drops a sentence about his body).
 - **Not seen:** VoiceOver by ear; his phone (after the merge, through Metro, no reinstall; the V8 migration runs at the next launch).
+
+---
+
+## 12. Continue with Apple and Google, real in Release (Nov 3, #386)
+
+*The founder, Nov 3: the Apple Developer Program is active; "multiple parallel workflows" on onboarding. This one makes Apple and Google sign-in real in Release builds, so the account screens (§3–§5) can go on with one switch once backup (AU1, another session, `app/src/sync/`) is merged. It doesn't touch the sync engine or the Welcome screens' content. Picks up AU2 and AU4 from §10.6.*
+
+### 12.1 What he'll see
+- **Today, on his phone (a dev build through Metro):** nothing new until a native rebuild. After it, You → Settings → Account → Back up and sync offers `Continue with Apple` above `Continue with Google`. Signing in still backs nothing up (AU1), which is why the save offer, Welcome's "I already have an account" and the restore stay off (`ACCOUNTS_BUILT`).
+- **A Release build (TestFlight, the App Store):** no sign-in anywhere until `ACCOUNTS_BUILT` is on. With it on: the sheet offers Apple and Google (never Google alone: Apple 4.8), email stays off (AU7).
+- **The words:** no new copy. The sheet, its states and the toasts are §4.1's.
+
+### 12.2 How it works
+- **The switch** (`config/features.ts`): `SIGN_IN_LIVE` is computed from three facts: `ACCOUNTS_BUILT`, the paid team (`APPLE_PAID`, so the build carries Sign in with Apple's entitlement) and `__DEV__`. Release: Apple and Google when accounts are on and the team is paid, else nothing. Dev: Google, plus Apple when the team is paid. So one switch, `ACCOUNTS_BUILT = true`, turns both on in Release.
+- **Apple** (`expo-apple-authentication`, the founder's Nov 3 OK): a fresh random nonce per try; Apple gets its SHA-256 (`expo-crypto`, already installed), Firebase gets the raw one (`OAuthProvider('apple.com').credential({ idToken, rawNonce })`). Only the email scope: Kitted has no use for his name (§4 `AccountUser`). The config plugin isn't added: the entitlement comes only from the paid-team switch (`appleSettings`), so a Personal Team build still signs.
+- **Google in Release:** it was dev-only because of the gate alone (`__DEV__ ? ['google'] : []`, #295, held back because Apple 4.8 needs Apple next to it). The URL scheme (the reversed iOS client ID) and the client ID are in every build; `check:app` now checks the scheme in a built app.
+- **Keeping the guest (13-server.md §8 A11):** before reading `currentUser`, the sign-in waits for the saved sign-in to load (`authStateReady`): at a cold start `currentUser` is null for a moment, and signing in then would orphan the guest. A guest is upgraded with `linkWithCredential`, so the uid, and today's counts on the server, stay the same.
+- **A second phone (an account that already exists):** the link fails with `auth/credential-already-in-use`; the app signs in to that account with the credential from the error (Apple's ID token is meant to be used once; Firebase hands back a fresh credential), else the one it has. The uid becomes the account's, and the server's limits follow it. This phone's guest is left behind: its counts age out after 7 days (13 §5). Until AU1, `holdings` is null, so the sheet goes to set up / done, never restore; AU1 fills it (an injectable `holdingsOf(uid)`).
+- **Sign out (AC4):** Firebase signs out (and Google's own session); his fits stay on this phone. The next AI call makes a fresh guest. That doesn't reset his daily limit: the phone's own count for the day stays.
+- **Delete account and all data:** Apple asks once more (a fresh authorization code) and the app revokes the token (`revokeAccessToken`, Apple TN3194 and 5.1.1(v)); Google's access is revoked. Then the app calls the server's `deleteAccount` (it deletes the server copy, today's counts and the Auth user with admin rights, so no "sign in again first" error), and only if that worked, the phone is wiped. A failure deletes nothing.
+- **AU4, decided:** `deleteAccount` no longer requires App Check until AU3 ships it; it still requires a signed-in caller, who can only delete his own account. Deployed after the merge (`firebase deploy --only functions:deleteAccount`).
+
+### 12.3 What only the founder can click (also on the to-do list)
+1. **Apple portal** (developer.apple.com → Certificates, Identifiers & Profiles): Identifiers → `com.trykitted.kitted` → tick **Sign In with Apple** (Enable as a primary App ID) → Save. (Part of app-store-connect §8's App ID step.)
+2. **Apple portal → Keys → +:** name `Kitted Sign in with Apple`, tick **Sign in with Apple** → Configure → primary App ID `com.trykitted.kitted` → Save → Continue → Register → **Download** the `.p8` file (Apple lets you download it once) and note the **Key ID**. Keep the file out of the repo and out of chats.
+3. **Firebase console** (kitted-a5b45) → Authentication → Sign-in method → Add new provider → **Apple** → Enable. Leave Services ID empty (only the web and Android need it). Under "OAuth code flow configuration": Apple team ID `6652QVRQAL`, the Key ID, and the `.p8` file's contents → Save. (The key is what lets "Delete account" revoke Apple's token.)
+4. **Google Cloud console** (project kitted-a5b45) → Google Auth Platform → Audience: Publishing status should say **In production**. If it says Testing, only listed test users can sign in with Google: tap Publish app (email and profile need no Google review).
+5. **On the Simulator or his phone:** sign in once with his own Apple ID and Google account (Claude never types a password). The Simulator needs an Apple Account in its Settings for the Apple sheet.
+
+### 12.4 The pass/fail checks (written before building, Nov 3)
+Tested by `app/src/__tests__/signInLive.test.ts` (unit, fakes for Firebase and the sheets), `firebase/tests/link.test.ts` (the real Firebase SDK on the Auth emulator) and `firebase/tests/functions.test.ts`, then on the Simulator.
+
+- **SI1 · The switch.** Release: `[]` unless `ACCOUNTS_BUILT` and the paid team, then `['apple', 'google']`; never Google without Apple; never email. Dev: `['google']`, `['apple', 'google']` once paid. `ACCOUNTS_BUILT` is still false.
+- **SI2 · Apple's request.** Email scope only; a new nonce each try (two tries differ); Apple receives SHA-256(raw) in hex; Firebase receives the raw nonce and Apple's ID token under `apple.com`.
+- **SI3 · Apple's outcomes.** His cancel (`ERR_REQUEST_CANCELED`) is `cancelled` (silent); no ID token is `failed`; a network error is `offline`; Apple unavailable on the device is `failed` and the button isn't offered.
+- **SI4 · The guest keeps its uid.** The sign-in waits for the saved sign-in before reading `currentUser`; a guest is linked (Apple and Google), never replaced; the returned uid is the guest's.
+- **SI5 · A second phone.** `credential-already-in-use` signs in to the existing account, with the error's credential when there is one; the uid is the existing account's. Any other link error is reported (`failed` / `offline`), and nothing is signed in.
+- **SI6 · Firebase does what SI4–SI5 assume** (Auth emulator): guest → link Apple → same uid; a second client's guest → link the same Apple identity → `credential-already-in-use` with a credential → sign in → the first account's uid; the same for Google.
+- **SI7 · Sign out.** Firebase and Google sign out; `account.user` is removed; fits, closet and the day's count stay on the phone.
+- **SI8 · Delete account.** Apple: a fresh Apple authorization code is revoked before the server call; Google: access revoked. Then `deleteAccount` is called; `ok` only if it succeeds; a cancel of Apple's sheet or a server failure returns `failed` and the phone keeps everything; offline is `offline`.
+- **SI9 · AU4.** `deleteAccount` runs for a signed-in caller without App Check and still refuses a caller who isn't signed in.
+- **SI10 · Google in Release.** The Google URL scheme is the reversed `GOOGLE_IOS_CLIENT_ID` (a test); `check:app` fails a built app without it.
+- **SI11 · Privacy.** The account's email never reaches Kit's pack or a scoring call (A8's test still passes); Apple's full name is never asked for.
+- **SI12 · The paid-team switch.** `approvalDay.test.ts` passes with `APPLE.paid` on and Team ID `6652QVRQAL`; the built app carries the four entitlements.
+- **SI13 · Quality.** `npm run check` green.
+- **SI14 · On the Simulator** (a paid-team dev build, light, dark, the largest text size): Settings → Account → Back up and sync shows Apple then Google, same size; Apple's system sheet opens and a close is silent; Google's page opens and a close is silent.
