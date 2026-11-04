@@ -81,16 +81,16 @@ Apple counts data as **collected** when it leaves the phone and we or a partner 
 | **Product Interaction** | Yes | Yes | App Functionality | The server's per-account daily counts of checks and questions (kept 7 days). |
 | **Coarse Location** | Yes (conservative) | No | App Functionality | Approximate location, rounded to about 1 km, sent only to the weather service (NWS; Apple Weather once WeatherKit is on); never stored by us. Arguably "not collected" (real-time only); declaring it is the safe side. |
 
-**The label for the release with sign-in and backup (founder, Nov 3: Google and Apple sign-in plus Firebase backup are coming).** The label isn't shown to TestFlight testers, only on the App Store page, so it can be filled in for that release now. It changes from the table above in three places (the schema's list, `handoff/11-firestore-schema.md` §6.6):
+**The label for the release with sign-in and backup (founder, Nov 3: Google and Apple sign-in plus Firebase backup are coming).** The label isn't shown to TestFlight testers, only on the App Store page, so it can be filled in for that release now. It changes from the table above in four places (the schema's list, `handoff/11-firestore-schema.md` §6.6):
 
 | App Store data type | Collected | Linked to the user | Purpose | What changes |
 |---|---|---|---|---|
 | **Email Address** (Contact Info) | Yes | Yes | App Functionality | New: Google's or Apple's sign-in email, kept in Firebase Auth only. |
 | **Photos or Videos** | Yes | **Yes** | App Functionality | Backed-up fit photos (his own copy) live under his account in Cloud Storage. |
 | **Other User Content** | Yes | **Yes** | App Functionality | Backed-up chats, closet, checks and what Kit knows, under his account in Firestore. |
+| **Name** (Contact Info) | Yes | Yes | App Functionality | New (founder, Nov 3, #386): his first name, so Kit and the card can call him by it. From sign-in or typed in You; filled in by the phone, never sent to the AI. Google's profile picture is still cleared after sign-in. |
 | User ID, Product Interaction, Coarse Location | as above | as above | App Functionality | No change. |
 
-- **Name: not collected,** on one condition: Apple's sign-in asks for the email only, and Google's name and profile picture, which Firebase Auth copies in by itself, are cleared right after sign-in (part of the sign-in build). If they aren't cleared, tick **Name** too.
 - **When it ships:** the app's privacy manifest (`app/app.config.ts`, `collected(...)`) changes to match in the same build, and `approvalDay.test.ts` P2 with it.
 
 **Not collected:** name, email (until Continue with Google or Apple ships in a Release build: then **Email Address**, linked, App Functionality), contacts, birth year (stays on the phone), height and build (no longer asked, #375), the unblurred photo, health, financial info, browsing history, search history, diagnostics (crash logs stay on the phone; Apple's own crash reports aren't ours to declare), device ID, purchases (until Pro ships: then **Purchase History**, linked, App Functionality).
