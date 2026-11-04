@@ -132,13 +132,26 @@ describe('P · the privacy manifest', () => {
 });
 
 describe('S · the paid-team switch', () => {
-  it('S1 off by default: the free team, no entitlements, NWS in the location string, applePaid false', () => {
+  it('S1 on since Nov 3: the paid team (the same ID as the free one), the four entitlements, Apple Weather, applePaid true', () => {
     const c = loadConfig({ EAS_BUILD_PROFILE: undefined }).default;
     expect(c.ios.appleTeamId).toBe('6652QVRQAL');
-    expect(c.ios.entitlements).toEqual({});
-    expect(c.ios.infoPlist.NSLocationWhenInUseUsageDescription).toMatch(/only to the US National Weather Service/);
-    expect(c.extra.applePaid).toBe(false);
-    expect(read('app.config.ts')).toMatch(/const APPLE = \{\n {2}paid: false,/);
+    expect(Object.keys(c.ios.entitlements).sort()).toEqual([
+      'com.apple.developer.applesignin',
+      'com.apple.developer.declared-age-range',
+      'com.apple.developer.devicecheck.appattest-environment',
+      'com.apple.developer.weatherkit',
+    ]);
+    expect(c.ios.infoPlist.NSLocationWhenInUseUsageDescription).toMatch(/only to Apple Weather/);
+    expect(c.extra.applePaid).toBe(true);
+    expect(read('app.config.ts')).toMatch(/paid: true,/);
+  });
+
+  it('S1b off: the free team, no entitlements, NWS in the location string', () => {
+    const { appleSettings } = loadConfig();
+    const off = appleSettings({ paid: false, teamId: '' }, undefined);
+    expect(off.entitlements).toEqual({});
+    expect(off.locationUsage).toMatch(/only to the US National Weather Service/);
+    expect(off.applePaid).toBe(false);
   });
 
   it('S2 on: the paid team, the four entitlements (App Attest by profile), Apple Weather in the location string', () => {

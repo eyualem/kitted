@@ -484,7 +484,7 @@ Branch `claude/apple-paid-team`. **[You]** = consoles or calls only you can make
 **A. On TestFlight (the checklist, `market/app-store-connect.md` §8)**
 1. **[You]** Team ID → Claude; App ID `com.trykitted.kitted` (or `com.trykitted.app` if the free team holds it; then the Firebase iOS app is re-added for the new ID) with Sign in with Apple, App Attest, Declared Age Range, WeatherKit, plus WeatherKit under App Services.
 2. **[You]** The Paid Apps Agreement (tax form, bank). Not needed for TestFlight, needed for any purchase; it can take a day.
-3. **[Claude]** `APPLE.paid = true` and the Team ID in `app/app.config.ts`, prebuild, `npm run check`. One native build signed by the paid team ends the 7-day reinstall on your phone (a year-long profile).
+3. **[Claude]** ~~`APPLE.paid = true` and the Team ID~~ done Nov 3: the Team ID is `6652QVRQAL`, the same as the free team's (Apple upgraded it); the approval-day and weather tests and the typecheck pass. Left: prebuild, the full `npm run check` (skipped Nov 3, the Mac was low on memory), a native build. One native build signed by the paid team ends the 7-day reinstall on your phone (a year-long profile).
 4. **[You + Claude]** `eas login` (you), `eas init` and the `projectId`, the Firebase key as an EAS variable for preview and production (Claude).
 5. **[You]** The app record: name, SKU `kitted-ios`, category, age rating 18+, privacy answers (§5), US only, free.
 6. **[Claude]** `guard:release`, `eas build --profile production`, `eas submit` (you type the Apple login once), `check:app --paid` on the built app.

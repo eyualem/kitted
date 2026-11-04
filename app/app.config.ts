@@ -12,7 +12,7 @@ const MIC_USAGE = 'Kitted uses the microphone so you can ask your stylist out lo
 const SPEECH_USAGE = 'Kitted turns what you say into text on your phone, so you can ask your stylist out loud.';
 /** The morning card's weather (02 "S1d", DECISIONS-LOG #58): approximate location, asked only from the card. */
 const LOCATION_USAGE = "Kitted uses your approximate location to get today's weather for your outfit idea. It goes only to the US National Weather Service and is never stored.";
-/** The same once WeatherKit is on (APPLE.paid): Apple Weather first, NWS when it's down (#366). Not yet OK'd by the founder. */
+/** The same once WeatherKit is on (APPLE.paid): Apple Weather first, NWS when it's down (#366). On since Nov 3; the words wait on the founder's skim. */
 const LOCATION_USAGE_PAID = "Kitted uses your approximate location to get today's weather for your outfit idea. It goes only to Apple Weather (or the US National Weather Service if that's down) and is never stored.";
 
 /**
@@ -23,9 +23,10 @@ const LOCATION_USAGE_PAID = "Kitted uses your approximate location to get today'
  * location string that names it. Sign in with Apple's button and App Check still need their packages (the founder's OK).
  */
 const APPLE = {
-  paid: false,
+  // On since Nov 3, 2026: the program upgraded the founder's own team, so the paid Team ID is the free one's.
+  paid: true,
   /** The paid team's 10-character Team ID (developer.apple.com → Membership). Required when `paid` is true. */
-  teamId: '',
+  teamId: '6652QVRQAL',
 };
 const FREE_TEAM_ID = '6652QVRQAL';
 
