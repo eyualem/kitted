@@ -274,7 +274,7 @@ describe('F4–F5 · resume and progress', () => {
 });
 
 describe('F7 · the example check', () => {
-  it("is the engine's score for the Welcome photo, the same as Welcome's mini card, with fixes and the math", () => {
+  it("is the engine's score for Welcome's example outfit, the same as Welcome's card, with fixes and the math", () => {
     const ex = exampleCheck();
     const w = welcomeExample();
     expect(ex).not.toBeNull();
@@ -282,7 +282,7 @@ describe('F7 · the example check', () => {
     expect(ex!.score).toBe(w!.score);
     expect(ex!.why?.strip.length).toBe(5);
     expect(ex!.fixes.every((f) => typeof f.copy === 'string' && f.copy.length > 0)).toBe(true);
-    // Same photo, same score: computed again, it's identical.
+    // Same outfit, same score: computed again, it's identical.
     expect(exampleCheck()).toBe(ex);
   });
 

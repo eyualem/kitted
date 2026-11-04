@@ -1,5 +1,5 @@
-// O1e · Example check (02 §3.1, 10-onboarding.md §2): "Here's a real check." The Welcome photo as his own photo bubble,
-// then the result card the engine gives it (exampleCheck.ts), with "Why 7.5?" opening the math in place. Read-only:
+// O1e · Example check (02 §3.1, 10-onboarding.md §2, §14): "Here's an example check." Welcome's drawn outfit where his
+// photo would be (no photo since #388), then the result card the engine gives it (exampleCheck.ts), with "Why {score}?" opening the math in place. Read-only:
 // no Not quite right?, Re-check or Share. No photo is sent, no consent is needed and nothing is saved. From Welcome the
 // dock says Get started; from Consent, "Check my own fit" goes back to the agreement.
 import { router, useLocalSearchParams } from 'expo-router';
@@ -7,16 +7,17 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  FixRow, IconButton, KButton, KCard, KCardSection, KText, PhotoBubble, RowDivider, ScoreBlock, Seam, StylistMessage, TagLine, TextLink, TextLinkRow, TipLine,
+  FixRow, IconButton, KButton, KCard, KCardSection, KText, RowDivider, ScoreBlock, Seam, StylistMessage, TagLine, TextLink, TextLinkRow, TipLine,
   displayScore, space, spokenScore, useTheme,
 } from '@/design-system';
 import { scoreWordLabel } from '@/design-system/score';
-import { demoPhoto } from '@/demo/demoPhotos';
+import { garmentLabel } from '@/features/fitcheck/labels';
 import { PartsBreakdown } from '@/features/why/PartsBreakdown';
 import { t } from '@/i18n/en';
 import { store } from '@/data/db';
 import { exampleCheck } from './exampleCheck';
 import { OnboardingNav } from './OnboardingNav';
+import { WelcomeOutfit } from './WelcomeHero';
 
 /** `sheet`: from S26's "See an example" after onboarding (09-ui-review §20.8 G23): an X closes it, and "Check my own
  *  fit" closes it and opens the agreement as a sheet. */
@@ -28,7 +29,6 @@ export function ExampleCheckScreen({ mode = 'screen' }: { mode?: 'screen' | 'she
   const fromConsent = from === 'consent' || sheet;
   const [why, setWhy] = useState(false);
   const ex = exampleCheck();
-  const photo = ex ? demoPhoto(ex.photoId) : undefined;
 
   const back = () => (router.canGoBack() ? router.back() : router.replace('/onboarding/welcome'));
   const go = () => {
@@ -53,9 +53,14 @@ export function ExampleCheckScreen({ mode = 'screen' }: { mode?: 'screen' | 'she
       )}
       <ScrollView contentContainerStyle={styles.thread}>
         <StylistMessage showHeader>{t('onb.example.intro')}</StylistMessage>
-        {photo ? (
-          <View style={{ alignSelf: 'flex-end' }}>
-            <PhotoBubble source={photo.source} aspect={photo.aspect} crop={photo.crop} occasion={t('onb.welcome.cardOccasion')} time={t('onb.example.time')} />
+        {ex ? (
+          <View
+            style={{ alignSelf: 'flex-end', alignItems: 'flex-end', gap: 4 }}
+            accessible
+            accessibilityLabel={t('onb.example.outfitA11y', { pieces: ex.pieces.map((p) => garmentLabel(p.garment)).join(', ') })}
+          >
+            <WelcomeOutfit pieces={ex.pieces} width={150} height={196} />
+            <KText variant="footnote" color="ink3">{`${t('onb.welcome.cardOccasion')} · ${t('onb.example.time')}`}</KText>
           </View>
         ) : null}
         {ex ? (

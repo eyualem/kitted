@@ -254,6 +254,8 @@ IDs come from `brainstorm/10_app-setup-product.md` §1 where they exist. New IDs
 Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt wide.
 
 ### D1 · O1 Welcome
+> **Update Nov 4, 2026 (#388, `handoff/10-onboarding.md` §14): Welcome plays one example check.** The hero photo and the mini card are gone. In their place: the example outfit drawn by the closet's flats (a navy crewneck, khaki straight chinos, black running shoes; no photo, so nothing stock and no face) on a tile at the left, and the example card overlapping it at the right: `Fit check · Full`, the score on the reveal's tape (6.5 `Getting there · Everyday`, the engine's), the one fix (`Swap the running shoes for low-profile sneakers → 7.5`) and `Added 3 to your closet`. The first showing in a launch plays it once (~3.3 s: `Your fit` on the tile, the card with `Reading your fit`, the score, the fix, the closet line); a tap skips; Reduce Motion, VoiceOver and a later visit get the resting card. The headline is `Send a fit pic. Get a score and the one fix.` and the body `It rates the outfit, never you, and learns your closet as you go. Your daily check is free.` The status bar follows the theme. At the accessibility sizes the card stands alone at the top. Code `features/onboarding/WelcomeHero.tsx`, `welcomePlay.ts`, `welcomeExample.ts`; demo screens 1 (plays) and 260 (at rest). The layout below is the earlier one.
+
 - **Presentation:** first screen of the onboarding `fullScreenCover`. No nav bar, no tab bar, no Back.
 - **Entry:** cold launch while onboarding isn't done. **Exit:** "Get started" pushes O2; "See an example check" pushes O1e (§3).
 - **Progress:** caption "1/6" in the mockup is the board's label, not UI. O1 has no progress bar.
@@ -1581,8 +1583,8 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.welcome.cardOccasion` | Everyday | M |
 | `onb.welcome.cardWord` | Sharp | M |
 | `onb.welcome.cardDetail` | Full check | M |
-| `onb.welcome.title` | Look put together.\nWithout trying\ntoo hard. | M |
-| `onb.welcome.body` | Send a fit. Get a score out of 10 and the two or three moves that raise it. | M |
+| `onb.welcome.title` | Send a fit pic.\nGet a score and\nthe one fix. | M |
+| `onb.welcome.body` | It rates the outfit, never you, and learns your closet as you go. Your daily check is free. | M |
 | `onb.welcome.start` | Get started | M |
 | `onb.welcome.example` | See an example check | M |
 | `onb.progress.a11y` | Step {n} of 6 | N |
@@ -1654,7 +1656,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `onb.consent.notNow` | Not now | R |
 | `onb.consent.example` | See an example first | M |
 | `config.providerDefault` | Google's Gemini API | R |
-| `onb.example.intro` | Here's a real check. This is what you'll get. | N |
+| `onb.example.intro` | Here's an example check. This is what you'll get. | N |
 | `onb.example.tag` | Example · Full | N |
 | `onb.example.ctaOwn` | Check my own fit | N |
 | `onb.age.title` | Kitted is for ages 18 and up. | R |

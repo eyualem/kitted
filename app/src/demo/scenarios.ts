@@ -45,6 +45,8 @@ export interface ScreenScenario {
   looks?: Styles;
   /** Kit's "About you" card (#373, 10-onboarding.md §10): posted under an answer or on a later visit, then folded. */
   aboutYou?: AboutYouDemo;
+  /** Welcome opens on its resting card, not the play (#388): a later visit, or Reduce Motion. */
+  welcomeRest?: boolean;
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
@@ -277,6 +279,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 244, name: 'About you · saved', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'saved' },
   { n: 250, name: 'Closet · Pieces, thin (no titles)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 251, name: 'Closet · Pieces, small (titled)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  // Welcome says what Kitted does (#388, 10-onboarding.md §14): screen 1 plays the example check once; 260 is its rest.
+  { n: 260, name: 'Welcome · at rest', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome', welcomeRest: true },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

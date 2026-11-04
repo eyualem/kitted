@@ -11,8 +11,8 @@ describe('demo screens', () => {
     expect(SCREENS.find((s) => s.n === 33)?.name).toBe('Reads as smart casual');
   });
 
-  it('only the onboarding screens run before onboarding (1–4, and 130–137 for the example check and sign-in, #289)', () => {
-    expect(SCREENS.filter((s) => !s.onboarded).map((s) => s.n)).toEqual([1, 2, 3, 4, 130, 131, 132, 133, 134, 135, 136, 137]);
+  it('only the onboarding screens run before onboarding (1–4, 130–137 for the example check and sign-in, #289, and 260 for Welcome at rest, #388)', () => {
+    expect(SCREENS.filter((s) => !s.onboarded).map((s) => s.n)).toEqual([1, 2, 3, 4, 130, 131, 132, 133, 134, 135, 136, 137, 260]);
   });
 
   it('matches the 04 §10.3 scenarios', () => {

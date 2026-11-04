@@ -649,3 +649,32 @@ About 1.5 days. JS only: it reaches his phone through Metro, no reinstall.
 ### 14.5 Waiting on the founder
 - Pick a direction (default B) and OK its words (the "Words to approve" box under each direction in the mockups). Nothing is built until then.
 - After the pick: the pass/fail checks are written first (taps to the first check, Skip works, VoiceOver reads each card once, Reduce Motion shows the last frame, the largest text size, resume mid-onboarding, no face in any photo, light and dark), then the build in `app/src/features/onboarding/`, demo screens, `npm run check`, the Simulator.
+
+### 14.6 The pick (Nov 4) and what changes from the mockup
+- **The founder: "go with your recommended route, however, the image has to be different since we don't own it and it looks bad."** So B, with the stock photo (s14, a Pexels/Unsplash test image) replaced by **the app's own drawn pieces**: an example outfit drawn by the closet's flats (`GarmentArt`), which Kitted owns and which can never show a face. The drawing *is* the reading, so the score is still the engine's: a navy crewneck sweater, khaki straight chinos and black running shoes at Everyday score **6.5 "Getting there"**, and the one fix, **"Swap the running shoes for low-profile sneakers"**, takes it to **7.5** (the most common beginner outfit and a full-point fix). Picked by running six candidate outfits through `evaluateCheck`; the others had no fix, an odd one ("Swap the leather sneakers for boots") or a half point.
+- **Words that follow from the drawing** (all else as approved): the chip on the drawing is `Your fit` (was `Your fit pic`: it isn't a photo); the closet line is `Added 3 to your closet` (3 pieces); the example check says `Here's an example check. This is what you'll get.` (was "a real check") and `An example outfit, scored by the same code as yours. Nothing was sent.` (was "A real photo…").
+- **His own photo later:** the example is one reading in `welcomeExample.ts`; a photo of his own (#279 on his list) can replace the drawing there.
+
+### 14.7 The pass/fail checks (written before building, Nov 4)
+- **W1 Taps:** the shortest path to the camera is still 8 taps; the card adds no step and Get started is tappable from the first frame.
+- **W2 No stock photo, no face:** Welcome and the example check use no photo (`WelcomeScreen.tsx` and `ExampleCheckScreen.tsx` don't call `demoPhoto`; `WELCOME_PHOTO` is gone).
+- **W3 The engine's numbers:** `welcomeExample()`'s score, word, summary and fix (copy and target) equal `evaluateCheck` on the example reading at Everyday with no picks; the closet count equals the pieces drawn; the example check shows the same score.
+- **W4 Full check:** the example reading isn't partial (the card says `Full`).
+- **W5 Once:** the play runs on Welcome's first showing in a launch; coming Back to Welcome shows the resting frame.
+- **W6 Reduce Motion:** nothing moves; the resting frame from the first frame.
+- **W7 VoiceOver:** no play; the card is one element read once, "Example fit check. 6.5 out of 10, Getting there. One fix: swap the running shoes for low-profile sneakers, for 7.5. Added 3 pieces to your closet."; the drawing is hidden from VoiceOver.
+- **W8 Skip:** a tap on the hero or the card jumps to the resting frame; Get started works mid-play.
+- **W9 The largest text size:** no card over the drawing; the headline and body wrap whole, the screen scrolls, every button is reachable.
+- **W10 Resume:** Get started still saves the `looks` step; reopening mid-setup lands where he was (resume.ts unchanged).
+- **W11 Words:** the approved headline and body; no emoji, "unlimited", "AI stylist" or "accurate" (the copy checks).
+- **W12 Light and dark:** the drawing, card and text from the theme's tokens; the status bar follows the theme (no forced dark: there's no light photo now).
+- **W13 Sign-in link:** "I already have an account" keeps its place under the two buttons when accounts are on.
+- **W14 The example check:** the drawn outfit in his bubble, no photo; the new intro and note.
+- **W15 The Simulator:** light, dark, the largest size, Reduce Motion; screenshots in `screenshots/welcome-intro/` (git-ignored).
+
+### 14.8 Results (Nov 4, tested against §14.7)
+- **Tests:** W1–W14 in `app/src/__tests__/welcomeIntro.test.tsx` all pass; the older Welcome and example-check tests (`uiFixBatch`, `onboardingAccount` F7) now check the drawn outfit. The full app suite passes (1,629 tests) with typecheck and lint green (one older lint warning in `tryOn.test.ts`, not this change). `npm run check`'s own jest step needs watchman, which wasn't running on the Mac; the same tests were run with `--no-watchman`.
+- **W15, the iOS Simulator** (this branch's Metro; screenshots `screenshots/welcome-intro/`, git-ignored): the resting Welcome in light and dark (`rest-*`); the play caught frame by frame (`play-1-chip` → `play-3-score` → `play-5-rest`: the chip, then the card with the score, then the fix and the closet line); Reduce Motion's first frame is already the full card (`reduce-motion-first-frame`); the example check in light and dark (`example-*`); the largest size in light and dark, top and bottom (`ax-*`): the card alone, then the headline, the body and both buttons reachable by scrolling.
+- **Fixed on the way:** "Your fit" sat on the shoes (the tile now leaves room under the drawing); at the largest size the headline's fixed line breaks stranded "pic." on its own line (they're dropped there, so it wraps by itself).
+- **Left as it is:** at the largest size the card's mono tag ("Fit check · Full") grows like every card's tag in the app (sentence case, ruling 29).
+- **Not seen:** VoiceOver by ear (the card's one-line label is checked in code, W7); his phone (after the merge, JS through Metro, no reinstall).

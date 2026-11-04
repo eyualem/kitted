@@ -971,6 +971,13 @@ const addedInBuild = {
   // (A2), bringing back his fits (A4), which fits to keep (A5), the save offer (A3), You's Account rows and the
   // onboarding fixes from the UI review. Outward-facing: on the founder's skim list.
   'onb.welcome.haveAccount': 'I already have an account',
+  // Welcome plays one example check (#388, 10-onboarding.md §14): the drawn outfit, the card reading it, the score, the
+  // fix and the closet line. Outward-facing: approved by the founder Nov 4 (chip and closet line follow the drawing).
+  'onb.welcome.chip': 'Your fit',
+  'onb.welcome.reading': 'Reading your fit',
+  'onb.welcome.cardFull': 'Full',
+  'onb.welcome.added': 'Added {n} to your closet',
+  'onb.welcome.a11y': 'Example fit check. {score} out of 10, {word}. One fix: {fix}, for {to}. Added {n} pieces to your closet.',
   // Since #373 O3 asks only the birth year (10-onboarding.md §10); the fit comes later, from Kit's "About you" card
   // (height and build are no longer asked, #375). Outward-facing: on the founder's skim list.
   'onb.basics.replyTwo': '{style1} with some {style2}. Good mix. One more thing: your birth year.',
@@ -980,7 +987,8 @@ const addedInBuild = {
   'onb.basics.echoYear': 'Born in {year}',
   'onb.example.whyHide': 'Hide the math',
   'onb.example.time': 'Example',
-  'onb.example.note': 'A real photo, scored by the same code as yours. Nothing was sent.',
+  'onb.example.note': 'An example outfit, scored by the same code as yours. Nothing was sent.',
+  'onb.example.outfitA11y': 'The example outfit: {pieces}',
   'onb.example.a11y': 'Example fit check. {occasion}. Score {score} out of 10, {word}. {summary}',
   'onb.basics.yearHint': 'Pick your birth year to go on.',
   'onb.basics.never': 'Kitted is for 18 and up. It never changes your score.',

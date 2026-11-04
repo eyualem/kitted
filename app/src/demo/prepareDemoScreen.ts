@@ -23,6 +23,7 @@ import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
 import { connectivity } from '@/services/connectivity';
 import { t } from '@/i18n/en';
+import { noteWelcomeShown, resetWelcomeShown } from '@/features/onboarding/welcomePlay';
 import type { DemoFault } from './demoArgs';
 import { STORY_DOUBT, STORY_FIRST_CHECK, STORY_KNOWN, STORY_PARTIAL, STORY_RECHECK, STORY_SHOES, STORY_TAP, type ScreenScenario } from './scenarios';
 
@@ -298,6 +299,9 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   setDemoArgs({ ...args, latency: 0 });
   // The connection is pinned (G18): online, or offline on the offline screens, whatever the Mac's Wi-Fi is doing.
   connectivity.force(!sc.offline);
+  // Welcome's one play (#388): screen 260 opens on the resting card, as a later visit (or Reduce Motion) does.
+  resetWelcomeShown();
+  if (sc.welcomeRest) noteWelcomeShown();
 
   if (sc.scenario === 'full') {
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at(story.asOf ?? sc.now) });
