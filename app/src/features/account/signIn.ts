@@ -57,7 +57,7 @@ export function createSignIn(d: SignInDeps): AuthService {
   /** Link to the guest, or sign in to the account that already holds this identity (a second phone, SI5). */
   async function toFirebase(cred: Cred): Promise<FbUser> {
     await d.ready();
-    return keepGuest(d.current(), () => d.link(cred), (e) => d.signInWith((e && d.credFromError(e)) || cred));
+    return keepGuest(d.current(), () => d.link(cred), (e) => d.signInWith((e ? d.credFromError(e) : null) ?? cred));
   }
 
   async function provider(p: 'apple' | 'google'): Promise<{ cred: Cred; email: string | null } | 'cancelled' | 'failed'> {

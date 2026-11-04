@@ -621,7 +621,7 @@ About 1.5 days. JS only: it reaches his phone through Metro, no reinstall.
 - **Apple** (`expo-apple-authentication`, the founder's Nov 3 OK): a fresh random nonce per try; Apple gets its SHA-256 (`expo-crypto`, already installed), Firebase gets the raw one (`OAuthProvider('apple.com').credential({ idToken, rawNonce })`). Only the email scope: Kitted has no use for his name (§4 `AccountUser`). The config plugin isn't added: the entitlement comes only from the paid-team switch (`appleSettings`), so a Personal Team build still signs.
 - **Google in Release:** it was dev-only because of the gate alone (`__DEV__ ? ['google'] : []`, #295, held back because Apple 4.8 needs Apple next to it). The URL scheme (the reversed iOS client ID) and the client ID are in every build; `check:app` now checks the scheme in a built app.
 - **Keeping the guest (13-server.md §8 A11):** before reading `currentUser`, the sign-in waits for the saved sign-in to load (`authStateReady`): at a cold start `currentUser` is null for a moment, and signing in then would orphan the guest. A guest is upgraded with `linkWithCredential`, so the uid, and today's counts on the server, stay the same.
-- **A second phone (an account that already exists):** the link fails with `auth/credential-already-in-use`; the app signs in to that account with the credential from the error (Apple's ID token is meant to be used once; Firebase hands back a fresh credential), else the one it has. The uid becomes the account's, and the server's limits follow it. This phone's guest is left behind: its counts age out after 7 days (13 §5). Until AU1, `holdings` is null, so the sheet goes to set up / done, never restore; AU1 fills it (an injectable `holdingsOf(uid)`).
+- **A second phone (an account that already exists):** the link fails with `auth/credential-already-in-use`; the app signs in to that account with the credential from the error when Firebase hands one back (production does for Apple), else the one it already has (the emulator hands none back, and that path works). The uid becomes the account's, and the server's limits follow it. This phone's guest is left behind: its counts age out after 7 days (13 §5). Until AU1, `holdings` is null, so the sheet goes to set up / done, never restore; AU1 fills it (an injectable `holdingsOf(uid)`).
 - **Sign out (AC4):** Firebase signs out (and Google's own session); his fits stay on this phone. The next AI call makes a fresh guest. That doesn't reset his daily limit: the phone's own count for the day stays.
 - **Delete account and all data:** Apple asks once more (a fresh authorization code) and the app revokes the token (`revokeAccessToken`, Apple TN3194 and 5.1.1(v)); Google's access is revoked. Then the app calls the server's `deleteAccount` (it deletes the server copy, today's counts and the Auth user with admin rights, so no "sign in again first" error), and only if that worked, the phone is wiped. A failure deletes nothing.
 - **AU4, decided:** `deleteAccount` no longer requires App Check until AU3 ships it; it still requires a signed-in caller, who can only delete his own account. Deployed after the merge (`firebase deploy --only functions:deleteAccount`).
@@ -641,7 +641,7 @@ Tested by `app/src/__tests__/signInLive.test.ts` (unit, fakes for Firebase and t
 - **SI3 · Apple's outcomes.** His cancel (`ERR_REQUEST_CANCELED`) is `cancelled` (silent); no ID token is `failed`; a network error is `offline`; Apple unavailable on the device is `failed` and the button isn't offered.
 - **SI4 · The guest keeps its uid.** The sign-in waits for the saved sign-in before reading `currentUser`; a guest is linked (Apple and Google), never replaced; the returned uid is the guest's.
 - **SI5 · A second phone.** `credential-already-in-use` signs in to the existing account, with the error's credential when there is one; the uid is the existing account's. Any other link error is reported (`failed` / `offline`), and nothing is signed in.
-- **SI6 · Firebase does what SI4–SI5 assume** (Auth emulator): guest → link Apple → same uid; a second client's guest → link the same Apple identity → `credential-already-in-use` with a credential → sign in → the first account's uid; the same for Google.
+- **SI6 · Firebase does what SI4–SI5 assume** (Auth emulator): guest → link Apple → same uid; a second client's guest → link the same Apple identity → `credential-already-in-use` → sign in with the credential (the error's if any, else the app's own) → the first account's uid; sign out and back in → the same uid; the same for Google.
 - **SI7 · Sign out.** Firebase and Google sign out; `account.user` is removed; fits, closet and the day's count stay on the phone.
 - **SI8 · Delete account.** Apple: a fresh Apple authorization code is revoked before the server call; Google: access revoked. Then `deleteAccount` is called; `ok` only if it succeeds; a cancel of Apple's sheet or a server failure returns `failed` and the phone keeps everything; offline is `offline`.
 - **SI9 · AU4.** `deleteAccount` runs for a signed-in caller without App Check and still refuses a caller who isn't signed in.
@@ -650,3 +650,23 @@ Tested by `app/src/__tests__/signInLive.test.ts` (unit, fakes for Firebase and t
 - **SI12 · The paid-team switch.** `approvalDay.test.ts` passes with `APPLE.paid` on and Team ID `6652QVRQAL`; the built app carries the four entitlements.
 - **SI13 · Quality.** `npm run check` green.
 - **SI14 · On the Simulator** (a paid-team dev build, light, dark, the largest text size): Settings → Account → Back up and sync shows Apple then Google, same size; Apple's system sheet opens and a close is silent; Google's page opens and a close is silent.
+
+### 12.5 Results (Nov 4)
+| Check | Result | How |
+|---|---|---|
+| SI1 · the switch | Pass | `signInLive.test.ts`; `ACCOUNTS_BUILT` still false |
+| SI2 · Apple's request | Pass | Test (fresh nonce, hash to Apple, raw to Firebase) and the wiring's source |
+| SI3 · outcomes | Pass | Test; on the Simulator a phone with no Apple Account gets iOS's own "Sign in to your Apple Account" prompt, and closing it returns `ERR_REQUEST_UNKNOWN`, so the sheet shows the failure line (right: nothing signed in). A close of Apple's real sheet is `ERR_REQUEST_CANCELED`, silent by test |
+| SI4 · the guest keeps its uid | Pass | Test, including a saved guest that loads late |
+| SI5 · a second phone | Pass | Test |
+| SI6 · Firebase itself | Pass | `firebase/tests/link.test.ts` on the Auth emulator, Apple and Google. The emulator hands back no credential with `credential-already-in-use`; signing in with the app's own credential lands on the first account |
+| SI7 · Sign out | Pass | Test |
+| SI8 · Delete account | Pass | Test (Apple's code revoked before the server call; failures delete nothing) |
+| SI9 · AU4 | Pass | `functions.test.ts`: a signed-in call with no App Check token deletes only that account; no sign-in is refused. **Not deployed:** the live function still requires App Check until `firebase deploy --only functions:deleteAccount` after the merge |
+| SI10 · Google in Release | Pass | Test; the built Simulator app's Info.plist registers the reversed client ID |
+| SI11 · privacy | Pass | A8's test still passes; no full-name scope |
+| SI12 · the paid-team switch | Pass | `approvalDay.test.ts`; the built app's simulated entitlements carry Sign in with Apple, WeatherKit, App Attest and Declared Age Range under `6652QVRQAL.com.trykitted.kitted` |
+| SI13 · quality | Pass | Typecheck, lint (one older warning), core (853) and app (1,632) tests, `guard:release`; one core parity test timed out once under memory pressure and passed alone in 2 s |
+| SI14 · the Simulator | Pass, as far as it can go | A paid-team dev build (`screenshots/sign-in-nov3/`, git-ignored): Apple then Google, same size, black/white Apple button in light/dark; at the largest size both wrap and the sheet scrolls. Apple's system flow opens (no Apple Account on the Simulator, so it stops at iOS's prompt); Google's page opens ("Sign in to continue to Kitted") and closing it is silent |
+
+**Not done here:** a real sign-in with his Apple ID and Google account (his to do; Claude never types a password), the founder's console steps (§12.3), the deploy of `deleteAccount`, and his phone (a reinstall brings the Apple module; until then his dev build hides the Apple button).
