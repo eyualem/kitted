@@ -604,3 +604,48 @@ About 1.5 days. JS only: it reaches his phone through Metro, no reinstall.
 - **SC, the iOS Simulator** (screenshots `screenshots/fit-only/`, git-ignored): the card under an answer and on a later visit in light, dark and the largest size (the three choices stack there); You → Style profile shows Fit you like, the birth year, Styles and Budget, with no Height or Build, in light and in dark at the largest size; Settings has no Units row. Tapping Regular on the web preview saves it and leaves "Got it. Change it any time in You."; the Simulator tool's taps weren't used. One Simulator shot showed "database is locked" from two copies of the JS starting at once during the relaunch (the test harness, not the app); a clean relaunch drew the page.
 - **Left as it is:** the profile's `height_cm`, `build` and `units` columns stay (emptied by V8, never read, never synced); the copy deck's unused keys (`onb.basics.height*`, `build.*` in `en.generated.ts`, from 02 §5); the sentence gate's `BUILD_BACK` (it still drops a sentence about his body).
 - **Not seen:** VoiceOver by ear; his phone (after the merge, through Metro, no reinstall; the V8 migration runs at the next launch).
+
+---
+
+## 14. Saying what Kitted does, before the first tap (Nov 4, 2026, #388)
+
+*The founder (Nov 3): "let us also work on the onboarding flow of informing the user what the app is for. if we don't, we are going to lose a potential user." Mockups (light and dark, the words to approve, this research): `mockups/onboarding-intro.html` (built by `mockups/make_onboarding_intro.py`), published at https://claude.ai/artifact/RFNAekeSygdwB8hhUf3RxA. Nothing in the app has changed yet: the founder picks a direction and OKs the words first (§12 is the sign-in session's, §13 the backup session's).*
+
+### 14.1 What today's Welcome already does well, and what it misses
+- **Well:** a real result is the hero (s14 at 7.5 "Put together", scored by the same code as his own check, so it can't drift); "See an example check" opens a whole real card with Why, sent nowhere; no account, quiz or paywall before the first score; 8 taps to the camera.
+- **Misses:** the headline is the promise ("Look put together. Without trying too hard."), not the action, so a guy who doesn't already know the app can't say what it does from the screen. The body says "the two or three moves that raise it" while the card now shows one fix (#233 item 5 already flagged it). Nothing says the closet, "it rates the outfit, never you", or that the daily check is free (`market/market-research.md` §5.4, items 1, 3, 4, 5).
+
+### 14.2 The research, ranked for a "send a photo, get a score" app with a short path
+1. **One strong Welcome that shows a real result, then straight to his own photo.** Apple: "Ideally, people can understand your app … simply by experiencing it, but if onboarding is necessary, design a flow that's fast, fun, and optional", and people "grasp and retain information better when they can actually perform the task … instead of just viewing instructional material" ([HIG, Onboarding](https://developer.apple.com/design/human-interface-guidelines/onboarding)). Duolingo moved sign-up after the first lesson and reported "a much better conversion rate" ([Intercom](https://www.intercom.com/blog/?p=15014); the often-quoted +20% is second-hand, [Taplytics](https://taplytics.com/blog/duolingo-ab-test-onboarding)).
+2. **An example he opens himself.** Web product tours people start themselves finish at a median 69% vs 23% for tours that start on their own (vendor data, web, so a direction only; [Produktly 2026](https://produktly.com/research/saas-onboarding-benchmarks-2026)). Today's "See an example check" is this; keep it optional.
+3. **"How it works in 3 steps"** as one line or strip on Welcome. No evidence specific to it; as separate screens it becomes a carousel (5).
+4. **Long quiz funnels** (Cal AI 25+ cards, [Adapty](https://adapty.io/blog/how-to-personalize-onboarding-and-paywalls-in-your-mobile-app/); Umax ~36 screens, Dressly ~40, [ScreensDesign](https://screensdesign.com/apps/dressly-ai-outfit-stylist/)). Built to sell, not to explain; in this category they line up with the paywall and billing complaints (`market/market-research.md`). Don't copy.
+5. **Swipe-through value carousels.** NN/g tested 70 people on 4 iOS apps: task success 91% for those who read the cards vs 94% for those who skipped (no difference), and readers rated the tasks harder (4.92 vs 5.49 of 7, p = 0.047): "Think twice about creating a tutorial for simple applications" ([NN/g](https://www.nngroup.com/articles/mobile-tutorials/)). Luke Wroblewski saw people try to skip intro screens at once (anecdote, [thread](https://threadreaderapp.com/thread/1004399554668609536.html)). The "60–80% skip" figures around the web have no source; we'd measure our own.
+- **Shorter finishes more:** 1–2 step tours 73% vs 3–5 steps 38% (Produktly, above; Chameleon puts 3-step tours at 66–72%, [Chameleon](https://www.chameleon.io/blog/product-tour-benchmarks-highlights)). Vendor, web.
+- **Motion:** no conversion evidence either way. Apple: "Make motion optional", don't use it "as the only way to communicate important information" ([HIG, Motion](https://developer.apple.com/design/human-interface-guidelines/motion)); under Reduce Motion, cut automatic animation and use fades ([HIG, Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility)). So any animated Welcome must say everything in words too and show its last frame under Reduce Motion.
+- **Showing a result before asking:** no controlled study isolates it; the nearest are anecdotes ([dev.to](https://dev.to/johnbuilds/we-ab-tested-value-first-onboarding-generate-before-subscribe-here-is-what-happened-1fif)) and Pinterest's finding that an undismissable sign-up wall hurt retention ([Pinterest Engineering](https://medium.com/@Pinterest_Engineering/lessons-in-growth-and-increasing-signups-d6e7d8fef479)).
+
+### 14.3 The closest competitors (App Store pages, Nov 3)
+| App | Subtitle | How the page explains it | Before the first result |
+|---|---|---|---|
+| Looksee ([id6757265239](https://apps.apple.com/us/app/id6757265239)) | Personal Stylist & Fit Advice | "Get an honest verdict on your outfit before you leave." | Score free; "the First Fix", breakdown and chat paid ($4.99/wk, $39.99/yr) |
+| DRPD ([id6759729079](https://apps.apple.com/us/app/rate-my-outfit-ai-drpd/id6759729079)) | Honest Score & Specific Fixes | "Get your Drip Score in seconds… try one specific Level-Up move, then rescan" | Score "shown before you choose a subscription" (their claim); $3.99/wk |
+| GRWM ([id6737596512](https://apps.apple.com/us/app/grwm-ai-stylist/id6737596512)) | Get Ready With Me AI Helper | "1) Snap a picture… 2) Select what are dressing for 3) Get your ratings and tips" | Tips need a subscription; reviews mention a quiz before the payment page |
+| Dressly ([id6738174180](https://apps.apple.com/us/app/id6738174180)) | Create Your Capsule Wardrobe | A general "AI-powered fashion stylist" pitch | ~40 screens: tracking, sign-up, a "3-minute quiz", "Building Your Plan", paywall |
+
+**So:** Looksee and DRPD lead with "score + one fix" too, so the loop isn't the difference on screen one. What is: the first score comes fast, free and without a quiz, and it rates the outfit, never him. The screenshots' captions are baked into the images, so these are the pages' own texts.
+
+### 14.4 The three directions (mockups) and the recommendation
+| | What it is | Taps to the camera | Evidence |
+|---|---|---|---|
+| **B · One screen that plays one real check (recommended)** | Today's Welcome; the mini card becomes the whole loop, played once (~3 s): "Your fit pic", Reading your fit, 7.5 Put together (the real reveal), the fix "→ 8.0", "Added 4 to your closet". Headline "Send a fit pic. Get a score and the one fix." Rests on the full card; Reduce Motion shows only that. | 8 (+0) | 1, 2 |
+| **C · The example check first** | Welcome's main button "See how it works" opens the example check with 4 numbered notes; "Check my own fit" goes on to setup; "Skip to setup" beside it. | 9 (+1) | 2, but made the default for everyone |
+| **A · Three cards** | Snap · Score and the one fix · It learns your closet, with Next / Skip. | 10 (+2; Skip +1) | 5 |
+
+**Why B:** it's the only one that adds no tap, it shows the real thing instead of describing it (HIG, Duolingo), the example stays something he chooses (69% vs 23%), and its words carry the meaning without the motion (HIG). The closet and "never you" ride in one body line, because the closet is why people stay, not the hook (§5.3 of the market research). Its risk: the card covers part of the photo, and 4 beats in ~3 s could read as busy; the play is once, short, skippable, and the resting frame is a static card like today's.
+
+**Measure it:** whichever ships, a launch-day event per screen (Welcome shown → Get started → Looks → Basics → Consent → camera → first score) is the only way to see where people drop; there's no analytics in the app today (follow-up for the founder: it's a new dependency or our own server route).
+
+### 14.5 Waiting on the founder
+- Pick a direction (default B) and OK its words (the "Words to approve" box under each direction in the mockups). Nothing is built until then.
+- After the pick: the pass/fail checks are written first (taps to the first check, Skip works, VoiceOver reads each card once, Reduce Motion shows the last frame, the largest text size, resume mid-onboarding, no face in any photo, light and dark), then the build in `app/src/features/onboarding/`, demo screens, `npm run check`, the Simulator.
