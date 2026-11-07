@@ -2633,3 +2633,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **`specs.md`** (the blueprint) **and `specs/<feature>.md`** (one per feature, planned with the founder before building), to be written later, are locked: changed only for a big change and only after the founder says yes in chat; never edited to match what got built.
     - **Simulators:** up to two booted at once (was one since Oct 16), the second only when another session has the first.
     - **The old file** is `CLAUDE.old.md`, marked "don't follow", which Claude Code doesn't load automatically; it stays as the source for `plan.md` and `specs.md`, then goes to `handoff/archive/`.
+
+## Nov 7 · The grill-me skill: interview before a spec
+
+387. **The founder (Nov 7): add a "grill me" skill** that interviews him one question at a time, with options and a recommendation, until a feature is clear enough to build, then writes the spec. His draft was taken as the base, with his OK to improve it.
+    - **Where:** `.claude/skills/grill-me/` in the repo (`SKILL.md` plus `references/`: the question bank, the spec templates, the plan and CLAUDE.md templates), so every session and worktree of Kitted has it. Not copied to `~/.claude/skills` (the rule: work only in this folder); copying it there would make it work in other projects too.
+    - **Changed from his draft:** the project's own file names and spec rules win over the skill's defaults (here: `specs.md`, `specs/<feature>.md`, `plan.md`, specs locked after his yes), so it never starts a `SPEC.md` or `PLAN.md` beside them; a feature on a project with no master spec writes only the feature spec; Claude drafts the acceptance criteria and he confirms them, rather than being asked to write them; the ledger says how far along the interview is; in plan mode the spec goes into the plan and approving it is the yes; the made-up Cmd+Shift+M shortcut is gone; the ledger's "Decisions" label fixed to "Decided"; small, clear requests don't trigger it.
+    - **Not checked:** no test runs (they cost usage), and skills load when a session starts, so it is first usable in a new session.
