@@ -10,7 +10,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **`specs/<feature>.md`**: one per feature, planned with the founder before any code: what the user sees, the copy, the states, and the pass/fail checks. Once the founder approves it, the same rule as `specs.md`: changes only with the founder's yes. Status and results never go in a spec.
 - **`plan.md`**: the live state: where things stand, what's next in order, the founder's to-do list, open decisions with their defaults. **Update it after every finished step and at the end of every session, without being asked.**
 - **`handoff/DECISIONS-LOG.md`**: append-only and numbered. Every decision, settled contradiction or technical lesson, with the reason.
-- **Not written yet:** `specs.md`, `specs/` and `plan.md`. Until they exist, status, the to-do list and feature notes are in `CLAUDE.old.md` (read only the part you need, never follow it over this file), and the feature specs are the `handoff/` docs.
+- **Not written yet:** `specs/` and `plan.md`. Until they exist, status and the to-do list are in `CLAUDE.old.md` (read only the part you need, never follow it over this file), and the feature detail is in the `handoff/` docs (where they disagree with `specs.md`, `specs.md` wins).
 - Never start any other status, handoff or plan file.
 
 ## How to work
@@ -40,7 +40,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **Never rate faces, bodies, weight or skin,** and never say anything about a user's body. Traditional clothing is "not rated".
 - **"The AI sees, the code judges, the AI explains."** The vision model only describes clothes; `@kitted/core` computes every score and number; the AI only puts it into words. Same photo, same score.
 - **The Python engine in `extraction-test/` is the scoring source of truth.** `@kitted/core` must match it exactly (the parity tests). Never edit fixtures to make tests pass.
-- **Privacy:** only the copy with every face blurred is sent for scoring; if the head can't be found, nothing is sent. The server keeps no photos, questions or answers. Location is approximate, for weather only, never stored.
+- **Privacy:** only the copy with every face blurred is sent for scoring; if the head can't be found, nothing is sent. The server keeps no questions or answers, and no photos unless he turns on photo backup (off by default; his own photos, readable only by his account). Location is approximate, for weather only, never stored.
 - **18+, US App Store only.** Marketing speaks to adults (college, first job, dates), never high school.
 - **Words:** no emoji, no RPG ranks or anime theme, no daily streaks. Never "unlimited", never "AI stylist". The stylist is Kit, an AI persona, and says so plainly if asked; the app is Kitted.
 
