@@ -10,7 +10,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **`specs/<feature>.md`**: one per feature, planned with the founder before any code: what the user sees, the copy, the states, and the pass/fail checks. Once the founder approves it, the same rule as `specs.md`: changes only with the founder's yes. Status and results never go in a spec.
 - **`plan.md`**: the live state: where things stand, what's next in order, the founder's to-do list, open decisions with their defaults. **Update it after every finished step and at the end of every session, without being asked.**
 - **`handoff/DECISIONS-LOG.md`**: append-only and numbered. Every decision, settled contradiction or technical lesson, with the reason.
-- **`specs/` is written lane by lane** (each lane's first task in `plan.md`). Until a feature has its spec, its detail is in the `handoff/` docs; where they disagree with `specs.md`, `specs.md` wins. The old status file is `handoff/archive/CLAUDE.old.md`: history only.
+- **`specs/` is written lane by lane** (each lane's first task in `plan.md`). Until a feature has its spec, its detail is in the `handoff/` docs; where they disagree with `specs.md`, `specs.md` wins.
 - Never start any other status, handoff or plan file.
 
 ## How to work
@@ -58,9 +58,9 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **Checks:** `npm run check` in `app/`. Before a release: `npm run guard:release`, then `npm run check:app -- <Kitted.app>`. Server: `npm --prefix tests run emulate` in `firebase/`.
 - **A demo screen on the Simulator:** `xcrun simctl launch <udid> com.trykitted.kitted -demoScreen 7 -theme light -demoLatency 0`, then `xcrun simctl io <udid> screenshot <a new path>`. Don't use `simctl openurl` (it raises a prompt a script can't dismiss).
 - **Native rebuild,** only after a native package or `app.config.ts` change: `LANG=en_US.UTF-8 npx expo prebuild --platform ios --no-install` first, then `LANG=en_US.UTF-8 npx expo run:ios --device <udid> --no-bundler` (always the UDID, never the name). A new Swift file in a local module needs `pod install`.
-- **The founder's phone:** `tools/phone/install.sh` (Metro running, phone unlocked, same Wi-Fi); `tools/phone/pull.sh` copies its logs and data. Troubleshooting (trust, the 7-day permit, the Mac's address, the under-18 lock) is in `handoff/archive/CLAUDE.old.md` → "How to run things".
+- **The founder's phone:** `tools/phone/install.sh` (Metro running, phone unlocked, same Wi-Fi); `tools/phone/pull.sh` copies its logs and data. Troubleshooting (trust, the 7-day permit, the Mac's address, the under-18 lock) is in `handoff/15-build-notes.md`.
 
-## Coding traps (the full list: `handoff/archive/CLAUDE.old.md` → "Lessons from the build", and DECISIONS-LOG)
+## Coding traps (the full list: `handoff/15-build-notes.md`, and DECISIONS-LOG)
 - DECISIONS-LOG numbers collide across parallel branches (two branches each take "the next one"). Before merging, renumber the branch's entries to the next free number on main.
 - Hermes on iOS lacks parts of `Intl`: use `app/src/i18n/format.ts` and core `time.ts`.
 - A scrolling iOS sheet needs its ScrollView as the root (`SheetScaffold`). No `inverted` FlatList on iOS 26. No `KeyboardAvoidingView` around absolutely positioned docks.
@@ -75,6 +75,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - `handoff/DECISIONS-LOG.md`: every decision and lesson (append).
 - `handoff/01`–`06`: product brief, screens and copy deck, design system, logic and fixtures, build plan, React Native mapping.
 - `handoff/07`–`14`: the stylist chat, accounts and sync, the UI review backlog, onboarding, the Firestore schema, the two-shot check, the server, the share card.
+- `handoff/15-build-notes.md`: how to run things in detail, and every lesson from the build.
 - `rubric/v5-styles.md`: the live scoring rules in plain words. `rubric/stylist-guide.md`: what Kit knows about style.
 - `mockups/kitted-mockups.html`: the visual source of truth.
 - `market/`: market research, AI costs, App Store Connect drafts.
