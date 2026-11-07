@@ -26,7 +26,8 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 10. **Other sessions share this repo:** stage only your own hunks of shared files (`git add -p`), and never use a bare `git stash`.
 
 ## The founder, and how to report
-- A college student building alone for income; posts short-form video daily. Into style, anime and good movies; taste from Tim Dessaint, Wanhee Kim, Jaye Alexander and Frugal Aesthetic. Often talks by voice dictation: read for intent.
+- A college student building alone for income. Into style, anime and good movies; taste from Tim Dessaint, Wanhee Kim, Jaye Alexander and Frugal Aesthetic. Often talks by voice dictation: read for intent.
+- **Teach as you go.** The founder is learning software engineering to apply for internships. When a task uses something worth knowing (git, tests, an architecture choice, a trade-off, a debugging method), explain it in a few plain sentences: what it is, why it's used here, and how it might come up in an interview. One or two lessons per task, not a lecture on every step. Offer small parts the founder could try by hand.
 - Uses **Codex** (Chrome: Reddit, TikTok; also machine setup) and **Gemini** (YouTube transcripts) for research. Claude writes their prompts and checks what comes back.
 - **Honesty first.** Honest, critical feedback backed by research, with sources, in plain language. Push back when something is a bad idea.
 - **Never pretend something works.** Say what's real, what's mocked and what wasn't checked. If a test fails, say so and show the output.
