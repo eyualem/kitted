@@ -10,13 +10,13 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **`specs/<feature>.md`**: one per feature, planned with the founder before any code: what the user sees, the copy, the states, and the pass/fail checks. Once the founder approves it, the same rule as `specs.md`: changes only with the founder's yes. Status and results never go in a spec.
 - **`plan.md`**: the live state: where things stand, what's next in order, the founder's to-do list, open decisions with their defaults. **Update it after every finished step and at the end of every session, without being asked.**
 - **`handoff/DECISIONS-LOG.md`**: append-only and numbered. Every decision, settled contradiction or technical lesson, with the reason.
-- **Not written yet:** `specs/` and `plan.md`. Until they exist, status and the to-do list are in `CLAUDE.old.md` (read only the part you need, never follow it over this file), and the feature detail is in the `handoff/` docs (where they disagree with `specs.md`, `specs.md` wins).
+- **`specs/` is written lane by lane** (each lane's first task in `plan.md`). Until a feature has its spec, its detail is in the `handoff/` docs; where they disagree with `specs.md`, `specs.md` wins. The old status file is `handoff/archive/CLAUDE.old.md`: history only.
 - Never start any other status, handoff or plan file.
 
 ## How to work
-1. **Start a task** by reading `plan.md`, then the spec for the feature you're touching. Open only the reference docs the task needs.
+1. **Start a task** by reading `plan.md`, then the spec for the feature you're touching. Open only the reference docs the task needs. Claim your task first: mark it `[~] <your session name>` in `plan.md`, commit and push, so no other session takes it. Work only on files in your task's lane; a shared file (listed in `plan.md`) is edited by one session at a time.
 2. **Build what the spec says.** Write the pass/fail checks before the code. If the spec looks wrong, or the work needs something it doesn't cover, ask; never redesign quietly.
-3. **After each finished step:** `npm run check` in `app/` (on its own, then commit), commit, push the branch, update `plan.md`, and add a DECISIONS-LOG entry if anything was decided.
+3. **After each finished step:** `npm run check` in `app/` (on its own, then commit), commit, push the branch, update `plan.md`, and add a DECISIONS-LOG entry if anything was decided. In `plan.md` change only your own task rows, your to-do items and one session-log line (keep the last 15). A task is `[x]` only once merged to main; until then it stays `[~]` with its pull request.
 4. **Ask before:** spending money (AI test runs included), installing or downloading anything, a new npm package, an EAS build, merging to main, or making the repo public.
 5. **Work only in this folder.** Codex and Gemini research outputs go in `inputs/`.
 6. **Test with a real person's profile, never a made-up one.** For each photo record who it is, the age band from their own birth year (18–21, 22–25, 26–30, 31+), their picked looks (up to 3, in order), their fit if given, and the occasion; split results by age band and by look. Never estimate age from a photo. Stock and web photos are "profile unknown", run with one stated test profile. Profiles live in `inputs/` (git-ignored): first names or codes, with the person's OK.
@@ -58,9 +58,10 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **Checks:** `npm run check` in `app/`. Before a release: `npm run guard:release`, then `npm run check:app -- <Kitted.app>`. Server: `npm --prefix tests run emulate` in `firebase/`.
 - **A demo screen on the Simulator:** `xcrun simctl launch <udid> com.trykitted.kitted -demoScreen 7 -theme light -demoLatency 0`, then `xcrun simctl io <udid> screenshot <a new path>`. Don't use `simctl openurl` (it raises a prompt a script can't dismiss).
 - **Native rebuild,** only after a native package or `app.config.ts` change: `LANG=en_US.UTF-8 npx expo prebuild --platform ios --no-install` first, then `LANG=en_US.UTF-8 npx expo run:ios --device <udid> --no-bundler` (always the UDID, never the name). A new Swift file in a local module needs `pod install`.
-- **The founder's phone:** `tools/phone/install.sh` (Metro running, phone unlocked, same Wi-Fi); `tools/phone/pull.sh` copies its logs and data. Troubleshooting (trust, the 7-day permit, the Mac's address, the under-18 lock) is in `CLAUDE.old.md` → "How to run things".
+- **The founder's phone:** `tools/phone/install.sh` (Metro running, phone unlocked, same Wi-Fi); `tools/phone/pull.sh` copies its logs and data. Troubleshooting (trust, the 7-day permit, the Mac's address, the under-18 lock) is in `handoff/archive/CLAUDE.old.md` → "How to run things".
 
-## Coding traps (the full list: `CLAUDE.old.md` → "Lessons from the build", and DECISIONS-LOG)
+## Coding traps (the full list: `handoff/archive/CLAUDE.old.md` → "Lessons from the build", and DECISIONS-LOG)
+- DECISIONS-LOG numbers collide across parallel branches (two branches each take "the next one"). Before merging, renumber the branch's entries to the next free number on main.
 - Hermes on iOS lacks parts of `Intl`: use `app/src/i18n/format.ts` and core `time.ts`.
 - A scrolling iOS sheet needs its ScrollView as the root (`SheetScaffold`). No `inverted` FlatList on iOS 26. No `KeyboardAvoidingView` around absolutely positioned docks.
 - The closet belongs to the closet service: fit-check code writes through `patchCheckKeepCloset`, never `closetSummary` or `itemIds` directly.
