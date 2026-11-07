@@ -2667,3 +2667,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Found while reconciling:** 10 open PRs, three carrying spec work (sign-in #58, backup and sync #57, the Welcome example #59); DECISIONS-LOG numbers collide across branches (#386 on main and on PRs #57/#58; #388 here and on PR #59). New trap in CLAUDE.md: renumber a branch's entries on merge. "Delete all my data" clears the phone's ID, which would reset the free checks: default to Apple DeviceCheck (open decision in `plan.md`).
     - **The founder's to-dos reconciled:** done per him: App Store Connect set up, his profile given, the clothes photos shot. Still open: the domain and handles, the support email and links, rotating the Gemini dev key, the interviews, the competitor teardown.
     - **CLAUDE.md:** rule 1 gains the claim step and lane ownership; rule 3 says what a session may change in `plan.md`; `CLAUDE.old.md` moved to `handoff/archive/` (decided in #386) and its three pointers updated.
+
+## Nov 7 · The old status file goes; its run notes and lessons stay
+
+390. **The founder (Nov 7): get rid of the old status file now that CLAUDE.md, `specs.md` and `plan.md` replace it, and format `plan.md` more, as long as it doesn't hurt sessions.**
+    - **Kept:** CLAUDE.md still pointed at two of its sections that exist nowhere else, "How to run things" (phone troubleshooting, server tests, release builds, screenshot tools) and "Lessons from the build" (about 40 traps). The founder chose to keep both: they moved word for word into `handoff/15-build-notes.md`, a reference doc (not status), and CLAUDE.md points there. Its "Ask before" line was dropped (CLAUDE.md rule 4 holds it).
+    - **Deleted:** `handoff/archive/CLAUDE.old.md` (the old status, to-dos, product notes and docs map, all replaced). Git history keeps it.
+    - **plan.md formatting:** task details in italics after the plain task, bold IDs and priorities, the notes under Tasks as quotes. Every task stays on one line, so a session still finds and changes a task with one search and one edit.
