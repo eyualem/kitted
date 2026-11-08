@@ -1,11 +1,29 @@
 # T14: one photo from the Simulator camera's library sheet ("Sample photos", with "Choose from your photos").
 # Usage: - runFlow: { file: ../common/beta-sample-photo.yaml, env: { N: "4" } }
+# How it gets there: on the Simulator the camera's library button ("Choose a photo") only pushes the route
+# /sheets/sample-photos?mode=check (CameraScreen's pickFromLibrary), and a sample's tap there runs the same startCheck
+# as from the camera (the camera has no quota gate of its own). Maestro can't press that button: it is a Liquid Glass
+# GlassView (isInteractive) that swallows XCTest's instant tap, and longPressOn and short swipes miss it too (the
+# verifier, Nov 8; the glass-button trap). So the sheet opens by its own kitted:// link from the Stylist screen, the
+# same route and query the camera pushes (from=camera only changes how the sheet closes: dismissAll vs back).
 appId: com.trykitted.kitted
 ---
-- tapOn: "Check my fit. Opens the camera."
-- tapOn: "Choose a photo"
+- openLink: "kitted://sheets/sample-photos?mode=check"
+# A fresh install may ask "Open in “Kitted”?" first.
+- runFlow:
+    when:
+      visible: "Open"
+    commands:
+      - tapOn: "Open"
 - extendedWaitUntil:
     visible: "Sample photos"
+    timeout: 10000
+# The sheet opens at 60% height, so photos past the 6th sit below its edge: bring the photo fully into view first.
+- scrollUntilVisible:
+    element:
+      text: "Sample photo ${N}"
+    direction: DOWN
+    visibilityPercentage: 100
     timeout: 10000
 - tapOn: "Sample photo ${N}"
 - waitForAnimationToEnd:

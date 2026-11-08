@@ -57,7 +57,9 @@ name: FP7.5 · four photos and 21 questions on beta
 - assertNotVisible: ".*Daily limit.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 # All three counted: You's Today card says none left.
-- tapOn: "You"
+# The You tab by its link: on the development build the dev menu's floating "Tools" button sits over the You tab, and
+# a tap on "You" opens the dev menu instead (seen Nov 8). The tab bar isn't what this flow tests.
+- openLink: "kitted://you"
 - scrollUntilVisible:
     element:
       text: "Today\\. resets at 4 am\\. 0 of 3 fit checks left · 20 of 20 questions left"
@@ -92,10 +94,11 @@ name: FP7.5 · four photos and 21 questions on beta
 - runFlow: ../common/beta-nothing-to-buy.yaml
 
 # Questions 1–20 are answered; the 21st gets FP7's line.
+# The composer's label is "Ask Kit" until it has had focus, then "Ask Kit Ask Kit…" (label and placeholder): match both.
 - repeat:
     times: 20
     commands:
-      - tapOn: "Ask Kit"
+      - tapOn: "Ask Kit.*"
       - inputText: "Do white socks work with loafers?"
       - tapOn: "Send"
       - waitForAnimationToEnd:
@@ -106,7 +109,7 @@ name: FP7.5 · four photos and 21 questions on beta
 - assertVisible: "Stylist, 1 photo waiting to score"
 - assertNotVisible: "Stylist, .*questions? left today"
 - assertNotVisible: ".*That's 20 questions today\\. More at 4 am\\..*"
-- tapOn: "Ask Kit"
+- tapOn: "Ask Kit.*"
 - inputText: "What shoes go with my khaki chinos?"
 - tapOn: "Send"
 - extendedWaitUntil:
@@ -116,7 +119,9 @@ name: FP7.5 · four photos and 21 questions on beta
 - runFlow: ../common/beta-nothing-to-buy.yaml
 
 # You → Settings → Plan & usage.
-- tapOn: "You"
+# The You tab by its link: on the development build the dev menu's floating "Tools" button sits over the You tab, and
+# a tap on "You" opens the dev menu instead (seen Nov 8). The tab bar isn't what this flow tests.
+- openLink: "kitted://you"
 - scrollUntilVisible:
     element:
       text: "Today\\. resets at 4 am\\. 0 of 3 fit checks left · 0 of 20 questions left"
