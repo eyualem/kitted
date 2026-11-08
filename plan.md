@@ -54,7 +54,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 
 ### Waiting pull requests
 *Ten pieces of finished work were never merged. Reviewing them first means nobody rebuilds them, and nothing that breaks the spec slips in.*
-- [ ] **T1** · Review the 10 waiting pull requests against the spec: merge, close or fix, with a reason each; renumber their clashing log entries · then Y3 · *files: other branches only*
+- [~] getting-started-991baf · **T1** · Review the 10 waiting pull requests against the spec: merge, close or fix, with a reason each; renumber their clashing log entries · then Y3 · *files: other branches only*
 
 ### Free and Pro
 *How Kitted makes money: 7 free checks, then Pro at $9.99 a month or $39.99 a year, with no trial. Done means a new user sees the soft page after his first result, an upgrade button when he hits the daily limit, the paywall at his 8th check, and real purchases.*
