@@ -2790,3 +2790,9 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **For T11 and T21:** T14 writes no lifetime count and no per-check marker. T11 must count only checks it marks as made on free, and T21 only free-tier reservations, so no beta or dev check ever counts toward the 7.
     - **Known gap (T21 owns it):** the server counts a finished read even when the phone calls it "not rated", so 3 not-rated photos could make the server refuse a real 4th on the beta.
     - **Deploy:** the server change needs a functions deploy, and the live `server/config` set to `beta` or cleared. Both are the founder's go.
+
+401. **T14 built: lessons from running its tests (Nov 8).**
+    - **Maestro can't tap a Liquid Glass button.** The camera's interactive "Choose a photo" ignores Maestro's instant tap, and `longPressOn` doesn't help either. Flows reach the same screen by its link (`openLink: "kitted://sheets/sample-photos?mode=check"`, `kitted://you`) when the button only navigates. The verifier checked the button's own route by hand.
+    - **Maestro matches whole labels only.** A view with its own VoiceOver label hides the text inside it. So a check that something is absent, written as part of a label, can never fail. Write positive checks as the exact label, and absence checks as `.*words.*`.
+    - **Metro started from a worktree without `--clear` served a stale screen** (an old `plan.tsx`). Start it with `--clear` when checking a worktree's screens.
+    - **A demo screen that shows the morning card must be in `MORNING_DEMO_SCREENS`** (`features/morning/index.ts`), or `enabled()` blocks the card.

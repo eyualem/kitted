@@ -162,3 +162,26 @@ None.
 - FP7.6's visible `7 of 7 free checks left`: T11's and T21's tests.
 
 **Verdict:** ready · rounds: 2 of 3.
+
+## Summary for the founder
+**Verdict: ready** (round 2; round 1 found two defects, both fixed).
+
+**What a beta tester sees**
+- **Daily limits:** 3 fit checks a day, each with its re-check, and 20 questions. Both reset at 4 am.
+- **A 4th photo:** a card that says `That's today's 3 fit checks.` and `I'll save this photo and score it after 4 am.`, with one button, `Save for tomorrow`. Once saved, the card reads `Saved. I'll score it when you open Kitted after 4 am.`
+- **The 21st question:** Kit says `That's 20 questions today. More at 4 am.`, and it isn't counted.
+- **You → Plan & usage:** `Kitted beta` · `3 fit checks and 20 questions a day · resets at 4 am`, then today's counts. Settings' row says `Kitted beta`.
+- **The morning card,** once the 3 are used: `Your fit checks reset at 4 am.`
+- **Never shown:** a paywall, the soft page, a price, "Pro", "free check" or "trial".
+
+**What's real and what's mocked**
+- The phone's limits, the cards and the words are real code. They were checked on the iOS Simulator in light, dark and the largest text size.
+- A tap-through test sends 4 photos and 21 questions, then opens You, Settings and Plan.
+- The server's beta tier is real code, tested on the Firebase emulator (79 of 79). It is **not deployed**: the live server still gives the old Pro limits until it's deployed and its config says `beta`. That needs your go.
+- Scoring on the Simulator uses the demo's sample photos, not a live AI read.
+
+**Not verified**
+- The limits on the live server: needs the deploy, then a tester's 4th photo on TestFlight (T85).
+- The visible `7 of 7 free checks left` after launch: that's T11's and T21's job.
+- "Delete all my data" followed by a reinstall: not tried.
+- A double tap on `Save for tomorrow` has no automatic test yet. One live try left one saved card.
