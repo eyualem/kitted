@@ -44,7 +44,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 ---
 
 ## Tasks
-> **Marks:** `[ ]` to do · `[~] session name` someone's on it, or its pull request is open · `[x] date, PR` merged to main · `[!] Yn` waiting on you. A code task in `/build-task` shows its stage: `[~] T11 · plan`, `· tests`, `· build`, `· verify`, `· PR #n`, or `· stuck: why`.
+> **Marks:** `[ ]` to do · `[~] session name` someone's on it, or its pull request is open · `[x] date, PR` merged to main · `[!] Yn` waiting on you. Each lane names its spec; a task marked `spec: specs.md` needs no interview. `/build-task` won't start a task until its spec carries the founder's approval line, and offers to start the interview. A code task in `/build-task` shows its stage: `[~] T11 · plan`, `· tests`, `· build`, `· verify`, `· PR #n`, or `· stuck: why`.
 
 > **For sessions:** IDs never change; each lane counts in its own tens and new work takes the next free number. "checks" names the spec criteria that must pass. A session works only in its lane's files. These shared files take one session at a time: `app/src/i18n/en.ts`, `app/app.config.ts`, `app/package.json`, `app/src/config/features.ts`, `app/src/data/types.ts`, `handoff/DECISIONS-LOG.md`, `plan.md`.
 
@@ -54,6 +54,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **T1** · Review the 10 waiting pull requests against the spec: merge, close or fix, with a reason each; renumber their clashing log entries · then Y3 · *files: other branches only*
 
 ### Free and Pro
+Spec: `specs/free-and-pro.md` (interview: T10)
 Lane files: `app/src/features/{paywall,held,finish}`, `app/src/services/{quota,purchases,entitlements}.ts`, `app/src/features/settings/plan.ts`
 - [ ] **T10** · Write the free-and-Pro spec with you: the soft page, the limit card's button, the paywall without a trial, and their words · *done: your yes · files: `specs/free-and-pro.md`*
 - [ ] **T11** · The new limits in the app: 7 free checks (max 1 a day), 3 questions a day, Pro 5 + 30, no trial anywhere · *after T10 · checks: F10 Free and Pro, F10.4 · files: quota.ts, paywall/, settings/plan.ts, en.ts*
@@ -61,6 +62,7 @@ Lane files: `app/src/features/{paywall,held,finish}`, `app/src/services/{quota,p
 - [!] **Y7** · **T13** · Real purchases with RevenueCat, monthly and yearly, and Restore, replacing the pretend store · *after T10 · checks: F10.5, F10.6 on a test account · files: purchases.ts, entitlements.ts, package.json, app.config.ts*
 
 ### Server
+Spec: `specs/limits-and-spend.md` (interview: T20)
 Lane files: `firebase/`
 - [ ] **T20** · Write the limits-and-spend spec with you: how free checks are counted so a wipe can't reset them, and the pause card's words · *done: your yes · files: `specs/limits-and-spend.md`*
 - [ ] **T21** · Server limits: 7 free checks per phone and account for life, 3 questions, Pro 5 + 30 per person (not one switch for everyone), declined questions not counted · *after T20 · checks: F10.1, F10.6, F5.2 · files: `firebase/functions/src/api/{limits,store,handler}.ts`*
@@ -69,6 +71,7 @@ Lane files: `firebase/`
 - [ ] **T24** · A cap of 30 scanned photos a day, free and Pro alike · *after T20 · checks: F7.3 · files: `firebase/functions/src/api/limits.ts`*
 
 ### Setup and You
+Spec: `specs/setup-and-you.md` (interview: T30)
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 - [ ] **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check · *done: your yes · files: `specs/setup-and-you.md`*
 - [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts*
@@ -76,6 +79,7 @@ Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `
 - [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: F1.1, F1.3 · files: onboarding/, en.ts*
 
 ### Sign-in and backup
+Spec: `specs/sign-in-and-backup.md` (interview: T40)
 Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privacy/wipe.ts`
 - [ ] **T40** · Write the sign-in-and-backup spec with you: Apple and Google only, the photo-backup switch and its words · *done: your yes · files: `specs/sign-in-and-backup.md`*
 - [!] **Y3** · **T41** · Finish the waiting sign-in and backup pull requests to the spec: remove email, photo backup off by default (it's on today), then merge · *after T1, T40 · checks: F11 Apple + Google, F11.3 · files: account/, sync/*
@@ -83,6 +87,7 @@ Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privac
 - [ ] **T43** · Restoring on a new phone tested end to end; photos upload only with backup on, and only he can see them · *after T41 · checks: F11.2, F11.4 · files: sync/, `firebase/tests`*
 
 ### Kit and the morning card
+Spec: `specs/kit-and-morning.md` (interview: T50)
 Lane files: `app/src/features/{stylist,ask,morning}`
 - [ ] **T50** · Write the Kit-and-morning spec with you: the decline line, greeting by name, the two notifications · *done: your yes · files: `specs/kit-and-morning.md`*
 - [ ] **T51** · The morning and evening card greets him by name · *after T31, T50 · checks: F6 greeting, F1.5 · files: morning/copy.ts, en.ts*
@@ -90,18 +95,21 @@ Lane files: `app/src/features/{stylist,ask,morning}`
 - [ ] **T53** · Notifications: install expo-notifications, send the daily idea and "fit check ready", remove "trial ending" · *after T50 · checks: F13 · files: finish/service.ts, settings/prefs.ts, you/notifications.tsx, package.json*
 
 ### Fit check and scoring
+Spec: `specs/not-rated.md` (interview: T60)
 Lane files: `app/packages/kitted-core`, `extraction-test/`, `app/src/features/{fitcheck,camera}`
 - [ ] **T60** · Write the "not rated" spec with you: womenswear and the card's words · *done: your yes · files: `specs/not-rated.md`*
 - [ ] **T61** · Dresses, skirts and heels read as "not rated", in the Python engine first, then the app's scoring (parity tests green) · *after T60 · checks: F2.5 · files: `extraction-test/`, core*
-- [ ] **T62** · The card's words to the spec: the head-not-found line, "Taking longer…", "I did make the change" · *after T60 · checks: F2.2, F2.3, F3.3 · files: camera/, fitcheck/, en.ts*
-- [ ] **T63** · A test proving every card with a fix has a free fix · *checks: F2.7 · files: core tests*
+- [ ] **T62** · The card's words to the spec: the head-not-found line, "Taking longer…", "I did make the change" · *spec: specs.md · checks: F2.2, F2.3, F3.3 · files: camera/, fitcheck/, en.ts*
+- [ ] **T63** · A test proving every card with a fix has a free fix · *spec: specs.md · checks: F2.7 · files: core tests*
 
 ### Closet
+Spec: `specs/scan-reading.md` (interview: T70)
 Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetSource`
 - [ ] **T70** · Write the scan-reading spec with you, then test reading on your clothes photos · *after Y9 · done: your yes and the test's result · files: `specs/scan-reading.md`, `extraction-test/`*
 - [ ] **T71** · Scanned photos become Closet pieces ("Waiting to be read" empties) · *after T70, T24 · checks: F7.2, F7.3 · files: scan/, closetSource/*
 
 ### Launch
+Spec: `specs.md` (no interview: the launch bars and constraints are exact there)
 Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 - [ ] **T80** · Switch on the paid Apple team: Apple's weather first, the server lock's entitlement; rebuild the app · *done: Apple's weather on the Simulator · files: app.config.ts*
 - [!] **Y5** · **T81** · Run the "fix works" test on the fix photos · *after T62 · checks: F3.1 (18 of 20 go up) · files: `extraction-test/results`*
@@ -110,6 +118,7 @@ Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 - [!] **Y2** · **T84** · Build and submit to the App Store · *after T83, Y10*
 
 ### Analytics (last, since it touches every lane's files)
+Spec: `specs/analytics.md` (interview: T90)
 - [ ] **T90** · Write the analytics spec with you: the ~15 events and what each one carries · *done: your yes · files: `specs/analytics.md`*
 - [!] **Y8** · **T91** · PostHog installed and sending; a test proves no photo, words, name, birth year or location in any event · *after T90 · checks: F16.1, F16.2 · files: many (shared)*
 
@@ -126,6 +135,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-07 · the spec gate: each lane names its spec, specs carry the founder's approval line, `/build-task` starts the interview when one is missing · #393
 - 2026-11-07 · Maestro installed; flows in `app/e2e/`, replayed by the verifier on every task, locked like tests · #392
 - 2026-11-07 · `/build-task`: one command runs planner, test writer, implementer and verifier as separate agents with a fix loop; test lock hook and guard test · #391
 - 2026-11-07 · plan.md formatting; the old status file deleted, its run notes and lessons kept in `handoff/15-build-notes.md` · #390
