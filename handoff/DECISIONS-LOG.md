@@ -2734,6 +2734,15 @@ Contradictions settled and decisions changed during the build. Newest last.
       - every task still on one line, so sessions find and change a task the same way
     - **No tables:** the founder found tables hard to read in the file pane (#389), so lists are used.
 
+## Oct 21 (landed Nov 7) · The colorblind pass: a warning triangle on the scan camera
+
+396. **The colorblind pass (founder, Oct 21, after Claude reviewed his HCI course against Kitted: "do the pass", then "fix the scan camera's cut-off brackets… add the warning triangle like the rest of the app").** About 8% of men are red-green colorblind and the whole audience is men, so the rule from the course (CS 2484 class 11: never encode meaning in color alone; screenshot → desaturate) was checked across the app. Not a launch blocker; the check took one pass.
+    - **How:** a code search for color-only signals, then 10 screens viewed normal, simulated deuteranopia (Machado 2009 in linear RGB) and grayscale: the score card, Why, the re-check win, the share card, Closet › Outfits, the Color sheet, the scan camera, the fit camera, the limit card in dark. The web preview carried most of it (same tokens); the Simulator had hung on low memory and was restarted once for the after shot.
+    - **Already right:** scores always carry the number and word; `good` always has "+" or a check, `caution` always the triangle (tokens.ts); the most-to-gain part is an up arrow, not copper; the fit camera's guide is dashed vs solid; outfits and pieces are named with their colors; the Color sheet names every swatch (in deuteranopia Green, Burgundy, Red, Orange, Olive and Brown collapse into one mud, so the names carry it); the share card's before/after are a hollow ring vs a filled dot.
+    - **The one miss, fixed:** the scan camera marked the piece running off the edge only by copper vs white brackets ("Step back so every piece fits." doesn't say which). It now also gets `exclamationmark.triangle` in copper on the photo-tag backing at the piece's center (`Brackets` in `features/scan/ScanCameraScreen.tsx`). `npm run check` green (1,509 app tests); before/after on the iOS Simulator in `screenshots/colorblind/` (git-ignored).
+    - **Seen, not verified (not color):** the Why sheet's "+0.5" was cut to "+0…" on two rows in the web preview; check on iOS.
+    - **Later, if beta testers ask:** Kit helping a colorblind user match colors (the measured colors already exist). Suggested, not on the list: one optional beta-signup question about telling colors apart.
+
 ## Oct 24 (landed Nov 7) · The camera is his way to the library; a walk of his Oct 24
 
 397. **Asked (Oct 24): why his fit checks come from the library, why "Too dark" flashes on every open, why Mirror rarely finds him; and a visual walk of his Oct 24 on his own data.** Full write-up `handoff/09-ui-review.md` §29.
