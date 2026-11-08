@@ -14,8 +14,8 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ---
 
 ## Next up
-1. Review the waiting pull requests against the spec (T1).
-2. Write the free-and-Pro and limits specs with you (T10, T20). Everything about money waits on them.
+1. Build the new limits and the three upgrade moments (T11, then T12).
+2. Write the limits spec with you (T20); the free-and-Pro spec is done (T10), so T11 and T12 can start.
 3. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80).
 4. Start your two launch photo sets now; they take the longest (Y5, Y6).
 5. Read scanned clothes into Closet; your clothes photos are in (T70).
@@ -31,7 +31,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y4** · **P1** · Rotate the Gemini dev key: in Google AI Studio delete it, make a new one, paste it into `app/.env.development.local` (2 min) → safety
 - [ ] **Y5** · **P1** · Shoot 20 before/after fix photos with friends, each doing a fix the card suggested; note each person's profile (~1 h) → the "fix works" launch test (T81)
 - [ ] **Y6** · **P1** · Collect 40+ real photos of real people (with their OK and profile), rated blind by you and one friend aged 18–22 (1–2 h) → the "fair score" launch test (T82)
-- [ ] **Y7** · **P2** · Make a RevenueCat account, and the monthly and yearly products in App Store Connect (20 min) → real purchases (T13)
+- [ ] **Y7** · **P2** · Make a RevenueCat account, and the monthly ($9.99) and yearly ($39.99) products in App Store Connect, no free trial, billing grace period on (20 min) → real purchases (T13)
 - [ ] **Y8** · **P2** · Make a PostHog account, US cloud (10 min) → analytics (T91)
 - [ ] **Y9** · **P2** · OK about $1 of Gemini for the scan-reading test (1 min) → scanned clothes (T70)
 - [ ] **Y10** · **P2** · App Store text: name, subtitle, description, privacy label, 18+ rating; drafts in `market/app-store-connect.md` (10 min) → submitting (T84)
@@ -63,7 +63,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 Spec: `specs/free-and-pro.md` (interview: T10)  
 Lane files: `app/src/features/{paywall,held,finish}`, `app/src/services/{quota,purchases,entitlements}.ts`, `app/src/features/settings/plan.ts`
 
-- [ ] **T10** · Write the free-and-Pro spec with you: the soft page, the limit card's button, the paywall without a trial, and their words · *done: your yes · files: `specs/free-and-pro.md`*
+- [x] 2026-11-07, #69 · **T10** · Write the free-and-Pro spec with you: the soft page, the limit card's button, the paywall without a trial, and their words · *done: your yes (Nov 7) · files: `specs/free-and-pro.md`*
 - [ ] **T11** · The new limits in the app: 7 free checks (max 1 a day), 3 questions a day, Pro 5 + 30, no trial anywhere · *after T10 · checks: F10 Free and Pro, F10.4 · files: quota.ts, paywall/, settings/plan.ts, en.ts*
 - [ ] **T12** · The three upgrade moments: the soft page after his first result, the limit card's button, the full paywall at check 8 · *after T10, T11 · checks: F10 "When he sees it", F10.2, F10.3 · files: finish/, paywall/, held/*
 - [!] **Y7** · **T13** · Real purchases with RevenueCat, monthly and yearly, and Restore, replacing the pretend store · *after T10 · checks: F10.5, F10.6 on a test account · files: purchases.ts, entitlements.ts, package.json, app.config.ts*
@@ -167,6 +167,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-07 · T10: `specs/free-and-pro.md` approved: one paywall page, $39.99/yr ("Best value") and $9.99/mo with no offers, the soft page, the limit card's "Score it now with Pro", check 8, Pro ended · #398
 - 2026-11-07 · T1: the 10 waiting pull requests reviewed against the spec (fix 4, close 5, one line for the founder); the scan triangle and the camera's dark tip merged; T41 corrected, T64 and Y16 added · #395–397
 - 2026-11-07 · `WORKFLOW.md`: the whole process on one page; plan.md lanes get a plain intro · #394
 - 2026-11-07 · the spec gate: each lane names its spec, specs carry the founder's approval line, `/build-task` starts the interview when one is missing · #393
