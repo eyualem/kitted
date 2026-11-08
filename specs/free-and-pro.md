@@ -11,7 +11,8 @@ The paywall and limit card were built for the old rules: a 1-week trial, Pro at 
 
 ## Scope
 - **In:** the limits as the app shows and enforces them on the phone; one paywall page used at every moment; the soft page after his first result; the limit card's upgrade button and "Save for tomorrow"; the paywall at check 8 and what happens to that photo; Restore, failed, pending, offline and loading states; what a lapsed Pro user sees; the running count in the Stylist subtitle and You → Plan; removing the trial everywhere.
-- **Out (non-goals):** a free trial; any discount, intro offer, "one-time offer", win-back offer or founding offer; timers or exit offers; a lifetime, weekly or family plan; "unlimited" anywhere; a paywall over a chat question; the server's counting (T20/T21 build the rule stated here); the spend-cap pause card (T20); analytics events (T90); beta testers' limits (plan.md open decision).
+- **Out (non-goals):** a free trial; any discount, intro offer, "one-time offer", win-back offer or founding offer; timers or exit offers; a lifetime, weekly or family plan; "unlimited" anywhere; a paywall over a chat question; the server's counting (T20/T21 build the rule stated here); the spend-cap pause card (T20); analytics events (T90).
+- **The beta** has its own rules (FP7): no paywall, no prices and no purchases until launch.
 
 ## The rules
 - **Free:** 7 free fit checks for life, at most 1 a day (days roll over at 4 am). Each check includes its re-check. 3 questions a day. Everything that runs on code stays free forever: scores, fixes, Closet, Lookbook, outfit ideas, share cards.
@@ -126,6 +127,24 @@ An inline card in the chat, under his photo. The photo is saved on the phone, ne
 - Free, 4th question: `That's today's 3 questions. More at 4 am, or go Pro for up to 30 a day.` No button; not counted.
 - Pro, 31st question: `That's 30 questions today. More at 4 am.`
 
+## FP7. The beta (TestFlight, until launch)
+Friends testing the app never pay and never see a price. The server says which rules a phone is on; during the beta it answers `beta` for everyone, and at launch it switches to free.
+
+- **Limits:** 3 fit checks a day, each with its re-check, and 20 questions a day. Days roll over at 4 am. No lifetime count.
+- **What counts:** as in "What counts": failed, offline, "not rated" and same-photo checks never count.
+- **At launch:** checks made in the beta never count toward the 7 free checks, so every tester starts launch with 7.
+- **Never during the beta:** the paywall, the soft page, `See Pro`, a price, the word "Pro", "free checks" or "trial" anywhere he can see.
+
+**The limit card (a 4th photo the same day)**
+- Tag `Daily limit` · `Resets at 4 am`. Title `That's today's 3 fit checks.` Body `I'll save this photo and score it after 4 am.` One button: `Save for tomorrow`. The saved card works as in FP3.
+
+**Questions**
+- 21st question: `That's 20 questions today. More at 4 am.` No button; not counted.
+
+**Counts he can see**
+- Stylist subtitle: no check line (a waiting photo and `{n} questions left today` keep their priority as built).
+- You → Plan: `Kitted beta` · `3 fit checks and 20 questions a day · resets at 4 am`. No button.
+
 ## Data
 - **Free checks used** (lifetime, free checks only) and **today's checks and questions**: the phone's mirror of the server's counts (the server is the truth from T21). A check carries whether it was made as Pro, so it never counts toward the 7.
 - **When Pro ended**: the date, for You → Plan and the "Pro ended" lines. Comes from the store's entitlement.
@@ -180,12 +199,22 @@ An inline card in the chat, under his photo. The photo is saved on the phone, ne
 - FP6.1 The Stylist subtitle follows FP6 for each case (one test per line).
 - FP6.2 You → Plan follows FP6 for free, Pro and Pro ended.
 
+**The beta (T14)**
+- FP7.1 On the beta rules, a 4th photo in one 4 am–4 am day shows the beta limit card and sends nothing; the server also refuses a 4th check.
+- FP7.2 Each of the 3 checks keeps its re-check, and a re-check doesn't use one of the 3.
+- FP7.3 The 21st question shows FP7's line and isn't counted.
+- FP7.4 Failed, offline, "not rated" and same-photo checks never lower the count.
+- FP7.5 On the beta rules, no paywall or soft page opens from any moment in "The paywall opens only", and no visible string contains a price, "Pro", "free check" or "trial" (a copy test plus a flow through 4 photos and 21 questions).
+- FP7.6 Checks made on the beta rules don't change the 7 free checks: switching the server to free afterwards shows `7 of 7 free checks left`.
+- FP7.7 You → Plan shows the FP7 row.
+
 ## Touches
 - `app/src/services/quota.ts` (limits, counts, which moment), `entitlements.ts`, `purchases.ts` (the mock store gets yearly and monthly, no trial).
 - `app/src/features/paywall/` (one page; `PlansScreen` goes away), `held/` (limit card, the check-8 saved card), `finish/` (the soft page placement), `settings/plan.ts` and You → Plan.
 - The copy deck `handoff/02-screens.md` §5 (which generates `en.ts`): every string above, the trial strings removed.
 - Must not break: same photo, same score; a held photo never sent before a tap; past scores visible and never blurred (`specs.md` F8.1, F10.4).
 - Server (T20/T21) builds the counting rule in "What counts", including "checks made while Pro don't count".
+- The beta (T14): the server's tiers in `firebase/functions/src/api/limits.ts` and `store.ts` (a `beta` tier, the server's config set to it), the phone's `services/server/tier.ts` and `quota.ts`.
 
 ## Assumptions
 - Apple's billing grace period is turned on in App Store Connect, so a failed renewal keeps Pro for its length (Y7).
