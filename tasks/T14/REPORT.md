@@ -63,7 +63,7 @@ Round 1 of 3, 2026-11-08. Screenshots are in `screenshots/t14/` (git-ignored); p
 - **FP7.7** · **pass** · proof: both app tests green; bugs caught: `currentPlan` putting beta before a purchase → `the beta plan…`; one word of the plan line → that test and the copy sweep; `planShortName` beta → free → both FP7.7 tests; `hasPro` true for beta → `the beta plan…`. Screens: demo 256 and 258 match the inventory in light, dark and largest text (`screenshots/t14/256-*.png`, `258-*.png`); VoiceOver labels `Kitted beta. 3 fit checks and 20 questions a day · resets at 4 am`, `Plan & usage, Kitted beta`; no Manage, Restore, See Pro or Try Pro.
 
 ### Break it on purpose
-Every deliberate bug was caught (25 in all: 19 on the phone, 7 on the server; each reverted with `git checkout`, tree clean after). Listed per criterion above. Not caught by any unit test, by design: the Today card's and the morning card's beta branches (components), which only the flow and the screens check; the screens confirm both on the committed code.
+Every deliberate bug was caught (31 in all: 24 on the phone, 7 on the server; each reverted with `git checkout`, tree clean after). Listed per criterion above. Not caught by any unit test, by design: the Today card's and the morning card's beta branches (components), which only the flow and the screens check; the screens confirm both on the committed code.
 
 ### Screens
 Fresh Metro (`--clear`) from this worktree, main Simulator, `-demoLatency 0`. Light, dark and accessibility XXXL for each: `screenshots/t14/<n>-light.png`, `<n>-dark.png`, `<n>-axxxl.png`.
