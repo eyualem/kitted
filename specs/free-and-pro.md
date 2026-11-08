@@ -1,6 +1,6 @@
 # Free and Pro
 
-**Approved by the founder:** 2026-11-07
+**Approved by the founder:** 2026-11-07 (FP7, the beta: 2026-11-08)
 
 After this, a new user knows from his first result how many free checks he has, is offered Pro at three honest moments with one price, and can always close the page and keep using everything that runs on code.
 
