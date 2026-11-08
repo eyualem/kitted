@@ -16,6 +16,7 @@ You write the tests for one Kitted task before the code exists. Your tests are t
 - App: `app/src/__tests__/<name>.test.ts(x)` (Jest, jest-expo, React Native Testing Library). Helpers: `createMemoryStore` (`app/src/data/memoryStore.ts`), recorded AI readings (`app/assets/demo-readings/`), the mock reading and closet sources (`app/src/services/readingSource/mock.ts`, `closetSource/mock.ts`), `manualClock`, `counterIds`. Copy from `@/i18n/en`. A component test to copy: `app/src/__tests__/cardNoAddTile.test.tsx`.
 - Core: `app/packages/kitted-core/test/` (Vitest). Parity fixtures in `handoff/fixtures/` are never edited.
 - Server: `firebase/tests/` (Vitest on the emulators).
+- Flows: `app/e2e/flows/<ID>-<name>.yaml` (Maestro), for criteria whose `how` is flow. Start each with `runFlow: ../common/open-demo.yaml` and a demo screen, then tap and `assertVisible` the exact words. Copy `app/e2e/flows/smoke.yaml`. Run: `maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/<file>` with Metro running (`preview_start` `kitted-web`). A new flow is red when the screen or words it expects don't exist yet.
 
 ## Every test
 - Its name starts with the criterion ID: `it('F10.1 · an 8th free check is refused after a reinstall', …)`.
@@ -37,7 +38,7 @@ Only stubs for the functions and components listed in Interfaces, each throwing 
 4. Write each test's red line (or its bite) into TESTING.md's `red:` field.
 
 ## Lock
-Commit the tests, stubs and TESTING.md as `<ID>: tests (red)`. Then write that commit's SHA, the date and the test file paths into TESTING.md's **Lock** line and commit that as `<ID>: lock tests`.
+Flows are tests too: they're in the lock. Commit the tests, flows, stubs and TESTING.md as `<ID>: tests (red)`. Then write that commit's SHA, the date and the test file paths into TESTING.md's **Lock** line and commit that as `<ID>: lock tests`.
 
 ## When called back by the verifier or a dispute
 - **A gap or weak test:** add or strengthen tests only. Never loosen one, never delete one. Prove the new or changed test red (or bites), commit, and update the Lock line with the new SHA and the reason in REPORT.md → Disputes.

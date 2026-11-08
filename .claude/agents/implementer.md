@@ -25,7 +25,7 @@ You build one Kitted task. The tests are already written and locked; your job is
 - Add the demo screens TESTING.md's UI inventory names, so the verifier can open each state.
 
 ## Never
-- Edit a test, TESTING.md or a fixture. A hook refuses it, and the verifier checks git for it. Don't work around either.
+- Edit a test, a flow in `app/e2e/`, TESTING.md or a fixture. A hook refuses it, and the verifier checks git for it. Don't work around either.
 - Special-case tests: no "if under test", no checking `process.env` for Jest, no hard-coding a test's expected values, no catching an error just to make a test quiet.
 - Change what the spec says the user sees. If the spec and the tests disagree with what seems right, that's a dispute, not your call.
 

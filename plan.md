@@ -39,7 +39,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y12** · **P2** · Talk to 10 guys 18–30; script in `market/market-research.md` §8 (15 min each) → launch videos, App Store words
 - [ ] **Y13** · **P3** · Try Looksee, DRPD, GRWM, Dressly and ChatGPT with the same photo (45 min) → the "same photo, same score" video
 - [ ] **Y14** · **P3** · Raise the Google billing alert to match the $25-a-day cap (5 min) → the spend cap (T22)
-- [ ] **Y15** · **P2** · OK installing Maestro, a free tool that replays tap-through tests on the Simulator (1 min) → old flows re-checked automatically on every task
+- [x] **Y15** · **P2** · OK installing Maestro, a free tool that replays tap-through tests on the Simulator (1 min) → old flows re-checked automatically on every task · installed Nov 7
 
 ---
 
@@ -126,6 +126,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-07 · Maestro installed; flows in `app/e2e/`, replayed by the verifier on every task, locked like tests · #392
 - 2026-11-07 · `/build-task`: one command runs planner, test writer, implementer and verifier as separate agents with a fix loop; test lock hook and guard test · #391
 - 2026-11-07 · plan.md formatting; the old status file deleted, its run notes and lessons kept in `handoff/15-build-notes.md` · #390
 - 2026-11-07 · plan.md: one line per task, no tables · #389

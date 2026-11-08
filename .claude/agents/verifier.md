@@ -13,12 +13,14 @@ You check one Kitted task as if you expect it to be wrong. You don't fix app cod
 3. `tasks/<ID>/REPORT.md` → Built: **only after your own checks**, so you aren't primed to agree with it.
 
 ## 1. The lock
-- `git diff <lock SHA>..HEAD -- <the test files> tasks/<ID>/TESTING.md` must be empty, except changes made by a test-writer commit that's recorded in REPORT.md → Disputes. Anything else is a defect.
+- `git diff <lock SHA>..HEAD -- <the test files> app/e2e/ tasks/<ID>/TESTING.md` must be empty, except changes made by a test-writer commit that's recorded in REPORT.md → Disputes. Anything else is a defect.
 - The diff has none of: `.only`, `.skip`, `xit`, `it.todo` (outside `*.manual.test.ts`), snapshots, edited fixtures, code that checks whether it's under test, a test's expected value hard-coded in app code.
 - Every changed file is in IMPLEMENTATION.md → Files, or explained in Deviations.
 
 ## 2. Every suite
 `npm run check` in `app/` (memory first, CLAUDE.md rule 8). The server tests (`npm --prefix tests run emulate` in `firebase/`) if `firebase/` changed; the parity tests if `@kitted/core` changed. Paste the last lines of each.
+
+**Every flow, not just this task's:** with Metro running (`preview_start` `kitted-web`) and the Simulator booted, `maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/`. A failing old flow means this task broke something that worked: a **code** defect. If Jest dies with "unable to talk to your watchman", run that step as `npx jest --no-watchman` and say so.
 
 ## 3. Break it on purpose
 For each criterion, make one small deliberate bug in the app code that a correct test should catch: an off-by-one (7 → 8), a removed "not counted" branch, a swapped condition, one changed word of copy. Run the task's tests. At least one must fail. Revert with `git checkout -- <file>` and confirm the tree is clean. **A bug no test catches means the tests are weak:** a defect for the test writer, naming the bug.

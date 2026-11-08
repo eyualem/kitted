@@ -77,3 +77,4 @@
 - **A sheet's detents follow its options when the screen is registered;** at the accessibility sizes pick them from `useTheme()` in `RootStack` (Swap one opens full height there, #377).
 - **No `KeyboardAvoidingView` around absolutely positioned docks.** Its padding stacks on the fixed `bottom`. Drive the dock from `useAnimatedKeyboard` (see `StylistScreen.tsx`).
 - **Jest crashes when Watchman isn't running** ("unable to talk to your watchman … Connection refused", Nov 7, #391): `npm run check`'s last step dies before running a test. Run that step as `npx jest --no-watchman` in `app/` (the same tests), and say so in the report.
+- **Maestro and the development build** (Nov 7, #392): launched by Maestro, the dev build stops on its own launcher ("Development servers") instead of the app. `app/e2e/common/open-demo.yaml` taps the running Metro server; every flow opens through it. Metro must be running (`preview_start` `kitted-web`).
