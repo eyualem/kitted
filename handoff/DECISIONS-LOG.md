@@ -2703,3 +2703,15 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Flows live in `app/e2e/flows/`**; `app/e2e/common/open-demo.yaml` opens any demo screen. Launched by Maestro, the development build stops on its own launcher ("Development servers"), so the sub-flow taps the running Metro server first (trap in the build notes). The first flow, `smoke.yaml`, opens demo screen 12 and finds all four tabs: passed in 27 s on the main Simulator.
     - **In `/build-task`:** the planner can pick "flow" as a check, the test writer writes flows with the tests, the verifier replays **every** flow on every task (a failing old flow is a code defect: this task broke something), and flows are locked like tests (the hook blocks the implementer from editing `app/e2e/`; checked: editing or deleting a flow blocked, running Maestro allowed).
     - **Seen in passing:** demo screen 12's card header shows the literal word "DATE" where a date belongs (top right). Not checked whether it's a demo placeholder or a real bug.
+
+## Nov 7 · The spec gate: no code task starts without its approved spec
+
+393. **The founder (Nov 7): checking that a feature has a spec must be part of the workflow, before any planning or tests, and the workflow should send him into the back-and-forth that defines the feature.** Before this, `/build-task` judged "is the spec approved?" with nothing written to check, and when it stopped it only said "run /grill-me".
+    - **Now:**
+      - Each lane in `plan.md` names its spec (`Spec:` under the heading) and the interview task that writes it.
+      - A feature spec carries `**Approved by the founder:** <date>` under its title, added only after his yes in chat.
+      - `/build-task`'s first step is the gate: the file exists, has that line, and contains every criterion ID the task checks. If not, it tells him in plain words which feature isn't defined and how long the interview takes, and asks "Start the interview now?".
+      - On yes, it runs `/grill-me` **in the same session** and writes the lane's spec. After his yes it adds the approval line and opens a PR for him to merge. Then it comes back and builds the original task from the updated main.
+      - The planner refuses to plan from a missing or unapproved spec, as a second check.
+    - **Why the main session, not a subagent:** a subagent can't hold a conversation with him; it runs on its own and returns a result. The interview has to happen where he's talking.
+    - **Tasks that need no interview:** marked `spec: specs.md`, because their criteria are already exact there: T62 (the card's words, so its wait on T60 is dropped), T63, and the Launch lane. `specs.md` counts as approved (#388).

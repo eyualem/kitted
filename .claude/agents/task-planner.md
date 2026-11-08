@@ -10,7 +10,7 @@ You plan one code task for Kitted. The coordinator gives you the task ID. You wr
 ## Read first
 1. `CLAUDE.md` (the rules, the hard lines).
 2. The task's line in `plan.md`: its "checks" are the criteria you must cover; its lane names the files it may touch.
-3. `specs.md`, and the feature spec in `specs/` for this lane if it exists. Where they disagree, `specs.md` wins; flag it.
+3. `specs.md`, and the lane's feature spec (named under the lane's `Spec:` in `plan.md`). **If the task needs that spec and it's missing or has no `**Approved by the founder:**` line, stop at once** and return "no approved spec: <path>". Never plan from a draft or from memory. Where `specs.md` and the feature spec disagree, `specs.md` wins; flag it.
 4. The code the task touches, and the existing tests near it (`app/src/__tests__/`, `app/packages/kitted-core/test/`, `firebase/tests/`), so the plan fits what is there.
 
 ## IMPLEMENTATION.md

@@ -13,9 +13,15 @@ You are the coordinator. You don't write the plan, the tests or the code yoursel
 **Why four agents:** the test writer never sees how the code will be written, so it can't shape tests to fit it; the implementer gets the tests as a fixed contract; the verifier comes in cold and tries to break things. Never do two of these jobs in one mind, and never do one of them yourself.
 
 ## 0. Preflight (stop and tell the founder if any fails)
-- The task is on its own line in `plan.md`, and it's a **code** task. A "Write the … spec with you" task is an interview: say "That one's a spec interview: run /grill-me for it" and stop.
+- The task is on its own line in `plan.md`, and it's a **code** task. If it's a "Write the … spec with you" task, it's the interview itself: go to **The spec gate** below and start it.
+- **The spec gate.** Run it before anything else is planned or tested:
+  - The task's spec is the one its lane names (`Spec:` under the lane's heading in `plan.md`), unless the task's line says `spec: specs.md` (its criteria are already exact there).
+  - It passes only if that file exists, its first lines carry `**Approved by the founder:** <date>`, and every criterion ID in the task's "checks" appears in it (or in `specs.md`). `specs.md` itself counts as approved (the founder approved it in chat on Nov 7, DECISIONS-LOG #388).
+  - If it fails, **don't plan, don't guess.** Tell the founder in plain words, e.g. "T11 can't start yet: the free-and-Pro part of the app isn't defined. Defining it is a back-and-forth with you, about 20–30 minutes (task T10)." Then ask in one AskUserQuestion: **Start the interview now (Recommended)** · Later.
+  - **Now:** run the `grill-me` skill in this session for that feature (the founder answers here; a subagent can't hold a conversation). Tell it: the file to write (the lane's `Spec:` path), the criteria it must cover (every "checks" ID of every task in the lane), and that Kitted's rules apply (CLAUDE.md: specs before code, his yes before it's final). When he says yes, add `**Approved by the founder:** <today> in chat` under the title, mark the interview task `[~] <ID> · PR`, commit, open the PR and ask him to merge it. Once it's merged, come back to step 0 for the original task, from an updated main.
+  - **Later:** mark nothing, change nothing, and say which interview is waiting.
 - Every task on its "after" list is `[x]`. Every `[!] Yn` it waits on is done.
-- Its spec is precise enough: an approved `specs/<feature>.md` for its lane, or criteria in `specs.md` that already state exact behaviour and the exact words the user reads. If words the user will read aren't in any spec, stop: words are the founder's call.
+- Words the user will read that aren't in the spec are the founder's call: they come up as the planner's open questions, never as guesses.
 - Another session hasn't claimed it (`[~]`). The tree is clean.
 - Memory: `top -l 1 | grep PhysMem`; never start while another heavy job runs (CLAUDE.md rule 8).
 - Work on a branch `claude/<id>-<short-name>` from main. Claim the line: `[~] <ID> · plan`, commit, push.
