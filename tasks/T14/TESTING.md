@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `<commit SHA>` · <date> · tests: `app/src/__tests__/betaLimits.test.ts`, `firebase/tests/api.test.ts` (describe `FP7 the beta`), `app/e2e/flows/T14-beta-limits.yaml` (with `app/e2e/common/beta-nothing-to-buy.yaml`, `beta-sample-photo.yaml`)
+**Lock:** `8f78ba055006334bfb3566ae1865baefa5056edf` · 2026-11-08 · tests: `app/src/__tests__/betaLimits.test.ts`, `firebase/tests/api.test.ts` (describe `FP7 the beta`, and L7's changed default test), `app/e2e/flows/T14-beta-limits.yaml` (with `app/e2e/common/beta-nothing-to-buy.yaml`, `beta-sample-photo.yaml`)
 
 Plan-line criteria: FP7.1, FP7.2, FP7.3, FP7.4, FP7.5, FP7.6, FP7.7 (7). All seven are below.
 
