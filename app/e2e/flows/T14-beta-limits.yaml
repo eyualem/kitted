@@ -3,6 +3,11 @@
 # After every step nothing is for sale and no paywall is open (../common/beta-nothing-to-buy.yaml).
 # Sample photos 4–7 (s15, s12, s25, s05) are not in the demo's story, so each one is a new check.
 # Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T14-beta-limits.yaml (Metro running)
+# Matching: Maestro (2.12.1) matches a pattern against an element's WHOLE text or VoiceOver label (a full regex match).
+# The Stylist title, the limit and saved cards, Kit's lines, You's Today card, the Plan & usage card and rows, and
+# Settings' rows are each ONE VoiceOver element whose label joins their parts (e.g. "Stylist, 1 photo waiting to
+# score"), and the views inside them aren't in the hierarchy. So the steps below match those exact labels, and a
+# must-not uses ".*words.*" so it can't pass just because the words sit inside a longer label.
 appId: com.trykitted.kitted
 name: FP7.5 · four photos and 21 questions on beta
 ---
@@ -13,10 +18,11 @@ name: FP7.5 · four photos and 21 questions on beta
 - extendedWaitUntil:
     visible: "Stylist"
     timeout: 90000
-# Stylist home on beta: no check line under the title.
-- assertNotVisible: "1 free check today"
-- assertNotVisible: "Check used today"
-- assertNotVisible: "Re-check included"
+# Stylist home on beta: no check line under the title (nothing at all under it: the title's label is just "Stylist").
+- assertNotVisible: "Stylist, .*"
+- assertNotVisible: ".*1 free check today.*"
+- assertNotVisible: ".*Check used today.*"
+- assertNotVisible: ".*Re-check included.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 
 # Photos 1–3: each is scored, none is held.
@@ -27,7 +33,8 @@ name: FP7.5 · four photos and 21 questions on beta
 - extendedWaitUntil:
     visible: "Fit check, .*Score .* out of 10.*"
     timeout: 30000
-- assertNotVisible: "That's today's 3 fit checks."
+- assertNotVisible: ".*That's today's 3 fit checks\\..*"
+- assertNotVisible: ".*Daily limit.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 - runFlow:
     file: ../common/beta-sample-photo.yaml
@@ -36,7 +43,8 @@ name: FP7.5 · four photos and 21 questions on beta
 - extendedWaitUntil:
     visible: "Fit check, .*Score .* out of 10.*"
     timeout: 30000
-- assertNotVisible: "That's today's 3 fit checks."
+- assertNotVisible: ".*That's today's 3 fit checks\\..*"
+- assertNotVisible: ".*Daily limit.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 - runFlow:
     file: ../common/beta-sample-photo.yaml
@@ -45,13 +53,14 @@ name: FP7.5 · four photos and 21 questions on beta
 - extendedWaitUntil:
     visible: "Fit check, .*Score .* out of 10.*"
     timeout: 30000
-- assertNotVisible: "That's today's 3 fit checks."
+- assertNotVisible: ".*That's today's 3 fit checks\\..*"
+- assertNotVisible: ".*Daily limit.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 # All three counted: You's Today card says none left.
 - tapOn: "You"
 - scrollUntilVisible:
     element:
-      text: "0 of 3 fit checks left · 20 of 20 questions left"
+      text: "Today\\. resets at 4 am\\. 0 of 3 fit checks left · 20 of 20 questions left"
     direction: DOWN
     timeout: 15000
 - runFlow: ../common/beta-nothing-to-buy.yaml
@@ -62,19 +71,23 @@ name: FP7.5 · four photos and 21 questions on beta
     file: ../common/beta-sample-photo.yaml
     env:
       N: "7"
+# The card is one VoiceOver element: tag, title and body word for word ("Resets at 4 am" isn't read; as built).
 - extendedWaitUntil:
-    visible: "That's today's 3 fit checks."
+    visible: "Daily limit\\. That's today's 3 fit checks\\. I'll save this photo and score it after 4 am\\."
     timeout: 15000
-- assertVisible: "I'll save this photo and score it after 4 am."
-- assertVisible: "Save for tomorrow"
-- assertVisible: "1 photo waiting to score"
-- assertNotVisible: "Score it now with Pro"
-- assertNotVisible: "Try Pro"
+- assertVisible: "Stylist, 1 photo waiting to score"
+- assertNotVisible: ".*Score it now with Pro.*"
+- assertNotVisible: ".*Try Pro.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
-- tapOn: "Save for tomorrow"
+# Its one button ("Save for tomorrow", a VoiceOver action on the card, so not its own element; the words are
+# checked by betaLimits.test.ts and the demo 253 screen) fills the bottom of the card: tap there.
+- tapOn:
+    text: "Daily limit\\. That's today's 3 fit checks\\. I'll save this photo and score it after 4 am\\."
+    point: "50%,80%"
 - extendedWaitUntil:
-    visible: "Saved. I'll score it when you open Kitted after 4 am."
+    visible: "Waiting to score\\. After 4 am\\. Saved\\. I'll score it when you open Kitted after 4 am\\."
     timeout: 10000
+- assertNotVisible: ".*Daily limit.*"
 - assertNotVisible: ".*It uses tomorrow's free check.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 
@@ -87,41 +100,45 @@ name: FP7.5 · four photos and 21 questions on beta
       - tapOn: "Send"
       - waitForAnimationToEnd:
           timeout: 10000
-- extendedWaitUntil:
-    visible: "0 questions left today"
-    timeout: 10000
-- assertNotVisible: "That's 20 questions today. More at 4 am."
+# The saved photo still waits, so the subtitle keeps "1 photo waiting to score" over "{n} questions left today"
+# (FP7: a waiting photo keeps its priority; IMPLEMENTATION.md: held first). The count of 20 is proven below by You's
+# Today card (0 of 20 left) and Plan & usage (20 of 20 used), and here by no question being refused early.
+- assertVisible: "Stylist, 1 photo waiting to score"
+- assertNotVisible: "Stylist, .*questions? left today"
+- assertNotVisible: ".*That's 20 questions today\\. More at 4 am\\..*"
 - tapOn: "Ask Kit"
 - inputText: "What shoes go with my khaki chinos?"
 - tapOn: "Send"
 - extendedWaitUntil:
-    visible: "That's 20 questions today. More at 4 am."
+    visible: "Kit: That's 20 questions today\\. More at 4 am\\."
     timeout: 10000
-- assertNotVisible: "Try Pro"
+- assertNotVisible: ".*Try Pro.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 
 # You → Settings → Plan & usage.
 - tapOn: "You"
 - scrollUntilVisible:
     element:
-      text: "0 of 3 fit checks left · 0 of 20 questions left"
+      text: "Today\\. resets at 4 am\\. 0 of 3 fit checks left · 0 of 20 questions left"
     direction: DOWN
     timeout: 15000
-- assertNotVisible: "Today's check: done"
+- assertNotVisible: ".*Today's check: done.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 - tapOn: "Settings"
+# Settings' row is one element: "Plan & usage, Kitted beta".
 - extendedWaitUntil:
-    visible: "Kitted beta"
+    visible: "Plan & usage, Kitted beta"
     timeout: 10000
 - runFlow: ../common/beta-nothing-to-buy.yaml
-- tapOn: "Plan & usage"
+- tapOn: "Plan & usage, Kitted beta"
+# The status card is one element ("Kitted beta. 3 fit checks and 20 questions a day · resets at 4 am"), and so is
+# each usage row ("Fit checks, 3 of 3 used").
 - extendedWaitUntil:
-    visible: "3 fit checks and 20 questions a day · resets at 4 am"
+    visible: "Kitted beta\\. 3 fit checks and 20 questions a day · resets at 4 am"
     timeout: 10000
-- assertVisible: "Kitted beta"
-- assertVisible: "3 of 3"
-- assertVisible: "20 of 20"
-- assertNotVisible: "See Pro"
+- assertVisible: "Fit checks, 3 of 3 used"
+- assertVisible: "Questions, 20 of 20 used"
+- assertNotVisible: ".*See Pro.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 
 # The morning card with the day's checks used, on beta (demo screen 259).
@@ -132,5 +149,5 @@ name: FP7.5 · four photos and 21 questions on beta
 - extendedWaitUntil:
     visible: "Your fit checks reset at 4 am."
     timeout: 90000
-- assertNotVisible: "Your free check resets tomorrow"
+- assertNotVisible: ".*Your free check resets tomorrow.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
