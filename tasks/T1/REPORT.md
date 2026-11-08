@@ -94,8 +94,20 @@ Reviewed Nov 7 against main at 2abd6b91, `specs.md` and CLAUDE.md. Read-only: fo
 3. The cleanup line for CLAUDE.md: yes or no.
 4. Merging #50 and #36 once fixed and green.
 
+## After the founder's yes (Nov 7)
+- **Closed** #59, #49, #44, #39 and #41, each with a comment pointing here. Branches kept.
+- **#36 and #50 brought up to date with main** (a merge, not a rebase, so nothing was force-pushed). Their CLAUDE.md status edits were dropped, and their log entries were renumbered to 396 and 397. Both show as mergeable on GitHub. #50's old CLAUDE.md to-dos became Y16 in `plan.md`.
+- **Checks, each run on its own:**
+  - **#36:** types and lint clean (one old unused-import warning in `tryOn.test.ts`), core 853 passed, app 1,617 passed (4 skipped, the same as main).
+  - **#50:** the same, with app 1,626 passed. That includes its 9 new tests.
+  - **Run note:** Jest was run with `--no-watchman`, because watchman wasn't reachable.
+- **On the iOS Simulator** (both branches combined in a throwaway copy, one Metro; shots in `screenshots/t1/`, git-ignored):
+  - **#36, screen 49 in dark:** the cut-off jeans get copper brackets plus the warning triangle on a dark tag. The hoodie and sneaker don't.
+  - **#50, screen 97 at the largest text size:** "9.0 /10 +1.0" with the pill whole, after "/10".
+- **When merging:** #36, #50 and #68 each add one entry at the end of the decisions log, so the second and third to merge need a one-line conflict resolved there.
+
 ## Not verified
-- No PR's tests were run, on its branch or on main.
-- No screen from these PRs was looked at on the Simulator.
+- Only #36's and #50's tests were run, and only their screens were looked at.
+- #50's main change, the dark tip waiting about a second, depends on a real camera. It is proven only by its tests on the founder's real `guide.log` frames, not on a phone. #50's other walk fix (the folded morning row's photo) wasn't looked at.
 - #48's and #49's numbers were recorded before main moved to the newer scoring rules (parts v15). They may shift.
 - #57's `storage.rules` weren't read; the review relied on its emulator test X5 ("no one else can read them").
