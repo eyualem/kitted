@@ -132,7 +132,7 @@ Yes. Read from the code, not the notes:
 - **FP7.7** · **pass** · proof: both app tests green; the flow's Settings row `Plan & usage, Kitted beta` and the plan card `Kitted beta. 3 fit checks and 20 questions a day · resets at 4 am` passed; bug `planShortName` beta → `you.plan.free` → both FP7.7 tests fail. Screens 256 and 258 unchanged since round 1 (round 2 changed only `morning/index.ts`).
 
 ### Break it on purpose
-Round 2: 11 bugs, each reverted with `git checkout`, tree clean after. 10 caught by unit or server tests (listed above), and 2 component bugs that no unit test catches were caught by the flow. None got through. Round 1's 31 still apply to unchanged code.
+Round 2: 10 distinct bugs, each reverted with `git checkout`, tree clean after. 8 caught by the unit or server tests (listed above); the other 2, in components (the morning card's key, the Today card's beta branch), pass every unit test and are caught by the flow. None got through. Round 1's 31 still apply to unchanged code.
 
 ### Screens
 Demo 259 (Beta · Morning card, checks used), re-shot on a fresh Metro, `-demoLatency 0`:
