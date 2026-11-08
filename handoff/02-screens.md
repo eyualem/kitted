@@ -799,7 +799,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
   7. Footer: Apple's Weather mark + `Data sources` link (WeatherKit attribution, required). Only when live weather is shown.
 - **Closet states:**
   - **Enough** (a valid top + bottom + shoes for the occasion): as above.
-  - **Thin** (some pieces, no valid outfit): the known pieces plus dashed tiles; why line `I only know {n} of your pieces. Check today's fit and I'll learn the rest.`; actions `Check my fit` (primary) · `Add basics` (→ C5).
+  - **Thin** (some pieces, no valid outfit): the known pieces only (no dashed tiles since #380, Oct 28); why line `I only know {n} of your pieces. Check today's fit and I'll learn the rest.`; actions `Check my fit` (primary) · `Add basics` (→ C5).
   - **Empty** (new user): no tiles; `Send me today's fit and I'll start learning your closet.` + `Check my fit`. With consent declined, S26 instead.
 - **After a fit check today** (either path, or a check from the composer): the card collapses in place to one row: photo thumb 44 × 56 (radius 8) · `Today · {Occasion}` tagline over `You went with your own` / `You wore my pick` · his score (Archivo, `.title2`) with the score word under it. Tapping it scrolls to the full result card in the thread. Re-checks update the number.
 - **Past days and slots:** earlier cards render collapsed (`Thursday's idea · Wore it` / `· Went with your own · 8.0` / `· Skipped`), so the thread doesn't fill with full cards.
@@ -810,7 +810,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
   - **80 and up:** no layer; shorts allowed for Everyday.
   - **65 to 79:** no layer needed.
   - **50 to 64:** a light layer is suggested.
-  - **35 to 49:** a layer is required; if none fits, show a dashed tile.
+  - **35 to 49:** a layer is required; if none fits, the why line says so ("It's cold out, and I haven't seen a layer of yours yet."); no dashed tile since #380.
   - **Below 35:** an outer layer is required.
   - **Rain chance 50%+:** no suede; boots or dark sneakers are preferred over white sneakers.
   - **A swing of 15° or more between morning and high:** a layer he can take off.
@@ -843,7 +843,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
    - Body (pad 14 / 16, gap 11.5): title `Sharp, not stiff` (17.5 semibold → `.headline`); description (`.subheadline`, `ink2`, line height 1.4, 2.5 below the title): `Light-blue oxford under a navy crewneck, navy chinos, brown loafers. Match a brown belt to the shoes.`
    - Actions: `Wear this` (primary) · `Swap one` (secondary) · icon button 36 `bookmark` (Save).
 
-**Missing pieces:** a slot the closet can't fill shows a dashed tile (1.5 pt dashed `inkFaint`) and the minilabel `You'd need: {item}`.
+**Missing pieces (#380, Oct 28: replaces the dashed tile):** a slot the closet can't fill draws no tile; the pieces he owns fill the strip, and only the why line names a missing layer or coat. The dashed tile with `You'd need: {item}` looked tappable and did nothing, and the founder wants no add option on the card.
 
 **Not enough closet** (no top + bottom + shoes yet): instead of the card, stylist says `I need your shoes to build outfits.` (or `I need a top, a bottom and shoes to build outfits.`) with chips `Snap them` · `Tap the basics you own` (→ C5).
 

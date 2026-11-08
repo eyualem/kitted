@@ -59,7 +59,7 @@ describe("weatherTip", () => {
   it("cold with no layer, freezing with no coat, hot with a jacket", () => {
     expect(weatherTip(withShoes("loafer"), day(40))?.key).toBe("coldNoLayer");
     const r = withShoes("loafer");
-    r.garments.push({ category: "outerwear", subcategory: "overshirt", color_family: "navy" });
+    r.garments.push({ category: "outerwear", subcategory: "denim_jacket", color_family: "navy" }); // an overshirt isn't warmth (#381)
     expect(weatherTip(r, day(20))?.key).toBe("coldNoCoat");
     expect(weatherTip(r, day(75, 88))?.key).toBe("hotLayer");
     expect(weatherTip(r, null)).toBeNull();

@@ -1,5 +1,5 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v14 = parts-proto-14, the default since Oct 17: v13 plus the casual and athletic fits (shorts get Proportions, a clean sneaker can earn "the shoes match", the look's own shoe for streetwear, "the pieces go together", the loungewear ladder by fit and context; rubric/research/parts/casual-athletic.md, DECISIONS-LOG #331-#335); v13 was the default from Oct 14: v12 plus wrinkled knit tops costing 0.2 on a minimal, smart casual or prep look (the wrinkle amounts are TUNE knobs; rubric/research/parts/v12.md -> "v13"); v12 was v11 plus the founder's Oct 14 calls (small bright graphics aren't loud, fitted legs cost 1.0 and a "straight" leg at roominess 2 or less is slim, light on light, wrinkles by garment and look; rubric/research/parts/v12.md); v11 was v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
+engine v15 = parts-proto-15, the default since Oct 28: v14 plus a hoodie or sweatshirt layered over a tee earning the short jacket's +1.5 on Proportions (PRO-17, DECISIONS-LOG #385); v14 = parts-proto-14, the default from Oct 17: v13 plus the casual and athletic fits (shorts get Proportions, a clean sneaker can earn "the shoes match", the look's own shoe for streetwear, "the pieces go together", the loungewear ladder by fit and context; rubric/research/parts/casual-athletic.md, DECISIONS-LOG #331-#335); v13 was the default from Oct 14: v12 plus wrinkled knit tops costing 0.2 on a minimal, smart casual or prep look (the wrinkle amounts are TUNE knobs; rubric/research/parts/v12.md -> "v13"); v12 was v11 plus the founder's Oct 14 calls (small bright graphics aren't loud, fitted legs cost 1.0 and a "straight" leg at roominess 2 or less is slim, light on light, wrinkles by garment and look; rubric/research/parts/v12.md); v11 was v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
 rubric/research/parts/gold-retune.md; v7 was v6 plus "a condition read counts only on a garment read clear", #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
@@ -21,9 +21,10 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.13.0"   # 1.13.0 (#367): v14 counts only a top that clearly shows below the outer piece as a peek (peek_clearly_only)
+VERSION = "1.14.0"   # 1.14.0 (#385): v15, a hoodie or sweatshirt layered over a tee earns the short jacket's credit (hl)
+# 1.13.0 (#367): v14 counts only a top that clearly shows below the outer piece as a peek (peek_clearly_only)
 # 1.12.0 (#336): v14 also lets a tucked open button-up set the waist (pr1_tucked_layer)
-ENGINE = "v14"
+ENGINE = "v15"
 
 
 def sl(s):
@@ -55,6 +56,8 @@ def data(engine=ENGINE):
         "tune": tune_json(P.TUNE[engine]),
         # v14: the one switch (core CASUAL_FITS_V14) rolls the app back to v13's numbers; same tables, only the tune differs
         "rollback": {"engine": "v13", "label": P.VERSIONS["v13"], "version": "1.10.0", "tune": tune_json(P.TUNE["v13"])},
+        # v15: the second switch (core HOODIE_LAYER_V15) rolls back to v14's numbers (parts data 1.13.0)
+        "rollback14": {"engine": "v14", "label": P.VERSIONS["v14"], "version": "1.13.0", "tune": tune_json(P.TUNE["v14"])},
         "sets": {
             "TAILORED": sl(P.TAILORED), "TAILORED_FIT": sl(P.TAILORED_FIT), "RIBBED": sl(P.RIBBED),
             "SHORT_SLEEVE_TYPES": sl(P.SHORT_SLEEVE_TYPES), "PRESSED": sl(P.PRESSED), "NARROW": sl(P.NARROW),
@@ -83,6 +86,7 @@ def data(engine=ENGINE):
             "SPORT_SNEAKERS": sl(P.SPORT_SNEAKERS), "BOOTS": sl(R.FOOT_KIND["boots"]),   # v14 SHO-4: any clean sneaker or boot
             "TUCKABLE_LAYERS": sl(P.TUCKABLE_LAYERS),                          # v14 PRO-4 (#336): a tucked open shirt
             "SWEAT_TOPS": sl(P.SWEAT_TOPS), "SWEAT_BOTTOMS": sl(P.SWEAT_BOTTOMS),          # v14 LNG-9: a matched sweatsuit
+            "HL_LAYERS": sl(P.HL_LAYERS), "HL_TOPS": sl(P.HL_TOPS),            # v15 PRO-17: a hoodie layered over a tee
         },
         "boxyVolume": 4,                     # volume >= this is a roomy / boxy piece (every part)
         "proportions": {

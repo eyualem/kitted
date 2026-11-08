@@ -1,0 +1,15 @@
+# Smoke: the app opens on a demo screen and shows the tab bar.
+# Run all flows: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/
+appId: com.trykitted.kitted
+name: smoke · opens on a demo screen
+---
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "12"
+- extendedWaitUntil:
+    visible: "Stylist"
+    timeout: 90000
+- assertVisible: "Closet"
+- assertVisible: "Lookbook"
+- assertVisible: "You"

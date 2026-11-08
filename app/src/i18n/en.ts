@@ -143,6 +143,13 @@ const addedInBuild = {
   'cam.recheck.title': 'Re-check',
   'cam.recheck.body': "I'll read your whole fit again and score what you changed. Everything else keeps its first reading.",
   'recheck.fixPast.held': 'wear it',
+  // A re-check that sees a new piece but holds the score (#383; his Oct 28 green hoodie). Was "I still see the same
+  // outfit." even with the hoodie in the reading.
+  'recheck.seen.one': "I see your {pieces} now. It doesn't change the score.",
+  'recheck.seen.many': "I see your {pieces} now. They don't change the score.",
+  // "What changed?" corrects the re-check's reading (#383), so the card says the score follows it (overrides the
+  // deck's "You confirmed it.").
+  'recheck.tell.confirmed': 'Scored from what you told me.',
   'recheck.fixPast.generic': 'make the change',
   // A re-check of the same photo (#219): no new read, nothing counted, the re-check stays open
   'recheck.samePhoto': "That's the same photo as before, so nothing changed. Make the fix, then take a new photo.",
@@ -272,7 +279,9 @@ const addedInBuild = {
   'why.idea.layerLate': 'Keep the {layer} on; it gets cold late.',
   'why.idea.wetShoes': '{shoes} for the rain.',
   'why.idea.hotLight': 'Light and simple for the heat.',
-  'why.idea.needLayer': "It's cold out, and I haven't seen a layer of yours yet.",
+  'why.idea.needLayer': "It's cold out, and I haven't seen anything warm of yours yet, like a sweater or a jacket.",
+  // #381: the shirt layer he's wearing when nothing warmer is in his closet.
+  'why.idea.needWarmer': "It's cold out, and your {layer} won't be enough on its own. A sweater or a jacket would help.",
   'why.idea.needCoat': 'Below 35°, a warmer coat would help.',
   'why.idea.occasion': 'Clean and easy for {occasion}.',
   'idea.for.everyday': 'today',
@@ -283,11 +292,6 @@ const addedInBuild = {
   'idea.for.event': 'an event',
   'idea.for.staying_in': 'tonight',
   'why.idea.sameStyle': 'Same pick works for {style}.',
-  'idea.need.layer': "You'd need: a layer",
-  'idea.need.coat': "You'd need: a warm coat",
-  'idea.need.top': 'A top',
-  'idea.need.bottom': 'Bottoms',
-  'idea.need.shoes': 'Shoes',
   'idea.thin1': "I only know 1 of your pieces. Check today's fit and I'll learn the rest.",
   'idea.thinN': "I only know {n} of your pieces. Check today's fit and I'll learn the rest.",
   'idea.empty': "Send me today's fit and I'll start learning your closet.",
@@ -314,7 +318,7 @@ const addedInBuild = {
   'tip.wx.today': 'today',
   'tip.wx.wetSuede': "Rain {when}: suede and rain don't mix.",
   'tip.wx.wetLight': 'Rain {when}: light sneakers will show it.',
-  'tip.wx.coldNoLayer': 'Cold out: bring a layer.',
+  'tip.wx.coldNoLayer': 'Cold out: bring something warm, like a sweater or a jacket.',
   'tip.wx.coldNoCoat': 'Below 35°: grab a warmer coat.',
   'tip.wx.hotLayer': 'Hot out: lose the layer outside.',
   // Re-score (02 D7; DECISIONS-LOG #61–62).
@@ -558,6 +562,13 @@ const addedInBuild = {
   'closet.q.a11y': '{question} {reason} This photo and your {item} are shown side by side.',
   'closet.q.a11y.crop': 'This photo, the piece outlined',
   'closet.confirm.tag': 'To confirm',
+  // Closet → Pieces in head-to-toe sections (founder, Oct 28; #384). Shown from 4 pieces in 2+ sections.
+  'closet.section.outer': 'Jackets and layers',
+  'closet.section.top': 'Tops',
+  'closet.section.bottom': 'Bottoms',
+  'closet.section.shoes': 'Shoes',
+  'closet.section.a11y': '{section}, {n} pieces',
+  'closet.section.a11y.one': '{section}, 1 piece',
   // Removing a piece or a look (#118, founder Oct 9): long-press → an action sheet → a toast with Undo.
   'closet.remove.action': 'Remove from Closet',
   'closet.removed': 'Removed your {item}.',

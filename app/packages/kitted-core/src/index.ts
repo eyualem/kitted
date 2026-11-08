@@ -21,7 +21,7 @@ export { rotation, outfitValid, outfitReading, itemKey, HARD_RULES, type Rotatio
 export { garmentName, G, SUB_NAME, SLOT_TO_CLOSET, CORE, idx } from "./names";
 export { clone, deepEqual } from "./util";
 export {
-  weatherNeeds, seasonNeeds, weatherTip, itemAllowed, isWarmLayer, isHeavyOuter, isBoot, isSuede, isShorts, isFairWeatherShoe, WEATHER_BANDS,
+  weatherNeeds, seasonNeeds, weatherTip, itemAllowed, isLightLayer, isWarmLayer, isHeavyOuter, isBoot, isSuede, isShorts, isFairWeatherShoe, WEATHER_BANDS,
   type DayWeather, type WeatherCondition, type WeatherWindow, type WeatherNeeds, type LayerNeed, type WeatherTip, type WeatherTipKey,
 } from "./weather";
 export {
@@ -34,7 +34,7 @@ export type { CreditReason, ScoreTrace, RubricHelpers, Outfit as StyleOutfit } f
 // The parts engine (parts_proto.py v4, parts data 1.1.0): ported with parity.
 export { PARTS_DATA } from "./partsData";
 export {
-  createParts, defaultParts, scoreParts, partsCardRow, CASUAL_FITS_V14, partsDataFor, setCasualFitsV14,
+  createParts, defaultParts, scoreParts, partsCardRow, CASUAL_FITS_V14, HOODIE_LAYER_V15, partsDataFor, setCasualFitsV14, setHoodieLayerV15,
   type PartsEngine, type PartsData, type PartsTune, type PartsOptions, type PartsResult, type PartsScored, type PartsUnscored,
   type PartName, type PartResult, type PartReason, type PartTip, type PartsCondition, type PartsOccasion, type PartsLowest,
   type SecondLook, type SecondLookInput,

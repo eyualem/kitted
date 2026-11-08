@@ -31,6 +31,7 @@ import { snapPart } from './finish';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
 import { earlierToday } from './tryOn';
+import { confirmable, seenPieces } from './recheckSeen';
 import { evaluateCheck, scoreOptions, scoringEngine, type CheckScoreOptions, type ScoringEngine } from './scoring';
 import { anchorRecheckLook, copiedLook, hasLook, LOOK_GRACE_MS, lookInput, ownLookOf, settledLine, settleSecondLook } from './secondLook';
 import { dropWhichOne, whichOneOf, type WhichOnePayload } from './whichOne';
@@ -338,23 +339,42 @@ export function createFitCheckService(deps: ServiceDeps) {
     return { ev, row: next! };
   };
 
-  /** S21: the first check's reading with the fixes done applied: the ones he ticks plus the ones
-   *  the re-check already saw. From the FIRST reading, because a re-check re-reads only the changed
-   *  layer (a held overshirt isn't in it, so "wear it open" can't apply there). */
+  /** The re-check photo's own read (#383): linked on the row since #383, else found by its photo (older rows). */
+  const rawReadOf = async (row: FitCheckRow): Promise<Reading | null> => {
+    const id = row.details.recheck?.rawReadingId;
+    if (id) return (await store.readings.get(id))?.reading ?? null;
+    const raws = (await store.readings.all()).filter((r) => r.source === 'recheckRaw' && r.imageHash === row.imageHash);
+    return raws.sort((a, b) => b.createdAt - a.createdAt)[0]?.reading ?? null;
+  };
+
+  /** S21 (#383): the first card's fixes he may still confirm on this re-check: not caught by it, and their pieces not
+   *  clearly read in its photo (confirmable). A re-check whose photo can't be found keeps every uncaught fix. */
+  const confirmableOf = async (row: FitCheckRow, parent: FitCheckRow): Promise<Fix[]> => {
+    const caught = new Set((row.details.recheck?.doneFixes ?? []).map((f) => f.copy));
+    const open = parent.fixes.filter((f) => !caught.has(f.copy));
+    const raw = await rawReadOf(row);
+    return raw ? confirmable(raw, open) : open;
+  };
+
+  /** S21: the re-check's reading with the fixes he says he did applied, the ones he ticks among those he may confirm
+   *  (all of them by default). From what the re-check read (#383), so a piece it saw (his hoodie) stays and a fix
+   *  it caught isn't applied twice; the first check's held items come along for "wear it". null when there's
+   *  nothing to apply: he can't confirm a fix the photo clearly reads otherwise. */
   const confirmDraft = async (recheckId: string, targets?: readonly string[]) => {
     const row = await store.fitChecks.get(recheckId);
     const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
     const first = parent && (await readingOf(parent));
-    if (!row || !parent || !first) return null;
+    const seen = row && (await readingOf(row));
+    if (!row || !parent || !first || !seen) return null;
+    const apply = (await confirmableOf(row, parent)).filter((f) => !targets || targets.includes(f.target));
+    if (apply.length === 0) return null;
     const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile(), parent.details.secondLook));
-    const seen = await readingOf(row);
     const engine = engineOf(parent);
     const look = row.details.secondLook;
     const pieces = await store.closet.all();
-    const caught = new Set(seen ? (outcomeFor(engine, first, parent.fixes, seen, opts, look, pieces)?.doneFixes ?? []).map((f) => f.target) : []);
     const closet = await closetFor(parent);
-    let reading: Reading | null = first;
-    for (const f of parent.fixes.filter((x) => !targets || targets.includes(x.target) || caught.has(x.target))) {
+    let reading: Reading | null = seen.held_items || !first.held_items ? seen : { ...seen, held_items: first.held_items };
+    for (const f of apply) {
       reading = reading ? (isPartsFix(f) ? applyPartsFix(reading, f, { closet }) : applyFix(reading, f, { closet, occasion: parent.occasion })) : null;
     }
     if (!reading) return null;
@@ -490,6 +510,8 @@ export function createFitCheckService(deps: ServiceDeps) {
     const { merged, notes } = recheckMerge(parentReading, carried, targets, opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
     const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts, look, await store.closet.all());
+    // A piece the photo added is a change he made, even when it holds the score (#383): never "not seen" then.
+    const seen = seenPieces(parentReading, merged);
     await patchRow(row.id, { readingId: mergedRow.id });
     const fresh = (await store.fitChecks.get(row.id))!;
     const { row: scored } = await rescore(fresh, merged, {
@@ -498,12 +520,12 @@ export function createFitCheckService(deps: ServiceDeps) {
         recheck: outcome
           ? {
               parentScore: outcome.before, delta: outcome.delta, rawDelta: outcome.rawDelta, notes,
-              doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems, notSeen: outcome.notSeen,
+              doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems,
+              notSeen: outcome.notSeen && seen.length === 0, seen, rawReadingId: raw.id,
             }
           : undefined,
       },
     });
-    void raw;
     await patchRow(parent.id, { recheckUsed: true });
     await deps.quota.consumeRecheck();
     // Changed pieces (the fix) go through the closet engine; the rest are another sighting of the first check's.
@@ -1329,10 +1351,19 @@ export function createFitCheckService(deps: ServiceDeps) {
     /** S21 "What changed?": the score if he did these fixes (all the first check's fixes by default). */
     async previewConfirm(recheckId: string, targets?: readonly string[]) {
       const d = await confirmDraft(recheckId, targets);
-      return d ? { before: d.row.score, after: d.outcome?.after ?? d.row.score } : null;
+      if (d) return { before: d.row.score, after: d.outcome?.after ?? d.row.score };
+      const row = await store.fitChecks.get(recheckId);
+      return row ? { before: row.score, after: row.score } : null;
+    },
+    /** S21 (#383): the targets of the first card's fixes this re-check may confirm (confirmableOf). Empty: the card
+     *  offers "Not quite right?" instead of "I did make the change" and "Tell me". */
+    async confirmableFixes(recheckId: string): Promise<string[]> {
+      const row = await store.fitChecks.get(recheckId);
+      const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
+      return row && parent ? (await confirmableOf(row, parent)).map((f) => f.target) : [];
     },
     /** S21: he did the fix. Apply it to what the re-check read (source userConfirmed), so a change
-     *  the re-check did catch is kept, and re-score against the first check. */
+     *  the re-check did catch is kept, and re-score against the first check. Only fixes it may confirm (#383). */
     async confirmFixes(recheckId: string, targets?: readonly string[]) {
       const d = await confirmDraft(recheckId, targets);
       if (!d) return null;
@@ -1351,6 +1382,8 @@ export function createFitCheckService(deps: ServiceDeps) {
             ? {
                 parentScore: outcome.before, delta: outcome.delta, rawDelta: outcome.rawDelta, notes: row.details.recheck?.notes ?? [],
                 doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems, notSeen: false,
+                ...(row.details.recheck?.seen ? { seen: row.details.recheck.seen } : {}),
+                ...(row.details.recheck?.rawReadingId ? { rawReadingId: row.details.recheck.rawReadingId } : {}),
               }
             : row.details.recheck,
         },

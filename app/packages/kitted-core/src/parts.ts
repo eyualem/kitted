@@ -202,6 +202,12 @@ export interface PartsTune {
   pr1_tucked_layer: boolean;
   /** v14 (#367): only a top that "clearly" shows below the outer piece is a peek; "a little" is a deliberate layer. */
   peek_clearly_only: boolean;
+  // ---- v15 (#385; 0 in v1-v14)
+  /** PRO-17: a hoodie or sweatshirt worn as the one layer over a tee and full legs earns this on Proportions (in PR2b's place). */
+  hl: number;
+  /** COL-13: the one outer layer in the bottoms' color family (not NO_TIE_IN, not bright, not sweats or tailoring), with a top
+   *  of another family between them, earns this on Color. */
+  cp8: number;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -303,6 +309,8 @@ export interface PartsData {
   copy: { lowestFallback: Record<PartName, string>; solidLine: string };
   /** v14: what the switch (CASUAL_FITS_V14) rolls back to: the same tables with v13's engine, label, version and tune. */
   rollback?: { engine: string; label: string; version: string; tune: PartsTune };
+  /** v15: what the second switch (HOODIE_LAYER_V15) rolls back to: v14's engine, label, version and tune. */
+  rollback14?: { engine: string; label: string; version: string; tune: PartsTune };
 }
 
 /** A check that moved a part. `points` is Python's round(delta, 3). */
@@ -524,6 +532,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const SPORT_SNEAKERS = PS("SPORT_SNEAKERS"), BOOTS = PS("BOOTS"); // v14 SHO-4: the clean sneakers and the boots
   const SWEAT_TOPS = PS("SWEAT_TOPS"), SWEAT_BOTTOMS = PS("SWEAT_BOTTOMS"); // v14 LNG-9: a matched sweatsuit
   const TUCKABLE_LAYERS = PS("TUCKABLE_LAYERS"); // v14 PRO-4 (#336): button-ups worn open
+  const HL_LAYERS = PS("HL_LAYERS"), HL_TOPS = PS("HL_TOPS"); // v15 PRO-17: a hoodie layered over a tee
   /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print.
    *  v12 (cl1_scale): a graphic print only at a medium or large print size, or with a large logo. */
   const loudPrint = (g: Garment): boolean => {
@@ -842,10 +851,16 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (!blocked && full && O !== null && SHORT_LAYERS_ALL.has(oSub) && earns(O) && !truthy(sl.peek)) {
       rewards.push([t.pr2, `a short ${rep(oSub)} over full legs: a clean, strong shape`, "PR2_short_layer"]);
     }
+    // v15 (PRO-17, #385): a hoodie or sweatshirt layered over a tee, a ribbed-band layer like the track jacket
+    if (truthy(t.hl) && !blocked && full && O !== null && o.outers.length === 1 && HL_LAYERS.has(oSub) && earns(O)
+        && !truthy(sl.peek) && O.length !== "below_crotch" && o.tops.length > 0
+        && o.tops.every((g) => HL_TOPS.has(nv(g.subcategory))) && !SLIDES.has(sSub)) {
+      rewards.push([t.hl, `the ${rep(oSub)} layered over the ${rep(T!.subcategory)} gives it a clean shape`, "PR2h_hoodie_layer"]);
+    }
     // v8: PR2b, a layer read ending at the belt over a loose leg (91% the same on 2 runs); one layer, one shape credit
     if (truthy(t.pr2b) && !blocked && LOOSE.has(leg) && O !== null && !tuckedLayer && !oTailored && !SHORT_LAYERS_ALL.has(oSub)
         && SHORT_TOP_LENGTHS.has(nv(O.length)) && earns(O) && !truthy(sl.peek)
-        && !rewards.some((x) => x[2] === "PR5_workwear_shape" || x[2] === "PR6_outdoor_shape")) {
+        && !rewards.some((x) => x[2] === "PR5_workwear_shape" || x[2] === "PR6_outdoor_shape" || x[2] === "PR2h_hoodie_layer")) {
       rewards.push([t.pr2b, `a short ${rep(or(oSub, "layer"))} over a loose leg: a clean, strong shape`, "PR2b_short_layer_read"]);
     }
     if (!blocked && oTailored && T !== null && T.tucked === "full" && PRESSED.has(nv(B.subcategory)) && leg !== "skinny" && earns(O)) {
@@ -1033,6 +1048,13 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const upper = main.filter((g) => g.category === "top" || g.category === "outerwear");
     if (S !== null && !NO_TIE_IN.has(fam(S)) && !isBright(S) && upper.some((g) => fam(g) === fam(S))) {
       pos.push([t.cp5, `the shoes pick up the ${rep(fam(S))} up top`, "CP5_tie_in"]);
+    }
+    // v15 (COL-13, #385): the one outer layer picks up the bottoms' color family, with a top of another family between them
+    const L = o.outers.length === 1 ? o.outers[0]! : null;
+    if (truthy(t.cp8) && L !== null && B !== null && !NO_TIE_IN.has(fam(L)) && fam(L) === fam(B) && !isBright(L) && !isBright(B)
+        && !LOUNGE_BOTTOMS.has(nv(B.subcategory)) && !TAILORED.has(nv(L.subcategory)) && earns(L) && earns(B)
+        && o.tops.length > 0 && o.tops.every((g) => fam(g) !== fam(L))) {
+      pos.push([t.cp8, `the ${rep(or(L.subcategory, "layer"))} picks up the ${rep(fam(L))} of the ${rep(or(B.subcategory, "pants"))}`, "CP8_layer_tie_in"]);
     }
     // v2: the lightness credits, only when the reading carries `lightness` on every main piece
     if (truthy(t.lightness) && main.length > 0 && main.every((g) => LV.includes(g["lightness"]))) {
@@ -1632,14 +1654,19 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
  *  earlier parts update. */
 export const CASUAL_FITS_V14 = true;
 
-/** The bundled data as the switch wants it: v14 as generated, or the same tables with v13's engine, label, version and tune. */
-export function partsDataFor(v14: boolean): PartsData {
-  const rb = PARTS_DATA.rollback;
-  if (v14 || !rb) return PARTS_DATA;
+/** THE SWITCH for the hoodie layer (parts v15, #385; PRO-17 in rubric/v5-styles.md). true: a hoodie or sweatshirt
+ *  layered over a tee earns the short jacket's credit on new checks. false: the whole app goes back to v14's numbers.
+ *  With CASUAL_FITS_V14 false, v13 wins (it never had the credit). Stored checks keep their scores until changed. */
+export const HOODIE_LAYER_V15 = true;
+
+/** The bundled data as the switches want it: v15 as generated, v14's tune (HOODIE_LAYER_V15 off), or v13's (CASUAL_FITS_V14 off). */
+export function partsDataFor(v14: boolean, v15: boolean = HOODIE_LAYER_V15): PartsData {
+  const rb = !v14 ? PARTS_DATA.rollback : !v15 ? PARTS_DATA.rollback14 : undefined;
+  if (!rb) return PARTS_DATA;
   return { ...PARTS_DATA, engine: rb.engine, label: rb.label, version: rb.version, tune: rb.tune };
 }
 
-let currentParts: PartsEngine = createParts(partsDataFor(CASUAL_FITS_V14));
+let currentParts: PartsEngine = createParts(partsDataFor(CASUAL_FITS_V14, HOODIE_LAYER_V15));
 
 /** The parts engine every default path uses (partsData.ts = fixtures/parts.json on the bundled v4.1 rubric), as the
  *  switch picks it. A stable object, so `engines.parts ?? defaultParts` callers follow the switch. */
@@ -1650,9 +1677,12 @@ export const defaultParts: PartsEngine = {
   scoreParts: (reading: Reading, opts?: PartsOptions) => currentParts.scoreParts(reading, opts),
 };
 
-/** Tests only: flip the switch at run time (the app reads CASUAL_FITS_V14). */
-export function setCasualFitsV14(on: boolean): void {
-  currentParts = createParts(partsDataFor(on));
+/** Tests only: flip the switches at run time (the app reads CASUAL_FITS_V14 and HOODIE_LAYER_V15). */
+export function setCasualFitsV14(on: boolean, v15: boolean = HOODIE_LAYER_V15): void {
+  currentParts = createParts(partsDataFor(on, v15));
+}
+export function setHoodieLayerV15(on: boolean): void {
+  currentParts = createParts(partsDataFor(CASUAL_FITS_V14, on));
 }
 
 /** parts_proto.score_parts() (engine v11) with the bundled data. Never mutates `reading`. */

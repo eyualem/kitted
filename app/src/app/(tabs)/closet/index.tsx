@@ -5,12 +5,15 @@
 // ("Waiting to be read · 2 photos", #280) opens the scan inbox.
 // Pieces | Outfits (09-ui-review §13, #307; #84, #87): opens on Outfits once he can make 3+, else Pieces, then
 // remembers his tap.
+// Pieces runs head to toe (founder, Oct 28; #384): Jackets and layers · Tops · Bottoms · Shoes, each under a quiet title
+// with its count, on the same scroll; a thin closet (under 4 pieces, or one section) is one plain grid.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, type Href } from 'expo-router';
-import { EmptyState, KButton, KCard, KCardSection, RowDivider, TagLine, radius, space, useTheme } from '@/design-system';
+import { EmptyState, KButton, KCard, KCardSection, KText, RowDivider, TagLine, radius, space, useTheme } from '@/design-system';
+import type { ClosetItemRow } from '@/data/types';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { PieceMenu } from '@/features/closet/PieceMenu';
@@ -19,7 +22,8 @@ import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { FitQuestion } from '@/features/closet/FitQuestion';
 import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
-import { closetGridItems } from '@/features/closet/merge';
+import { closetGridItems, closetSections, pieceSectionLabel, type PieceSection } from '@/features/closet/merge';
+import type { PiecePreview } from '@/features/closet/piecePreview';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { toConfirm } from '@/features/closet/toConfirm';
 import { answerWithUndo, type AnswerToastDeps } from '@/features/closet/answerToast';
@@ -42,6 +46,9 @@ const answerDeps: AnswerToastDeps = {
 
 
 const GAP = 10;
+/** The section title's look (#384): the card-header tag in spaced capitals with its count (as Outfits' "Try next"), or
+ *  'title', a semibold headline with the count beside it in ink2. */
+const PIECE_HEADER: 'tag' | 'title' = 'tag';
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
@@ -136,15 +143,48 @@ export default function ClosetScreen() {
               </KCardSection>
             </KCard>
           ) : null}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-            {tile > 0 ? items.map((it) => (
-              <PieceMenu key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} preview={previews.get(it.id) ?? { kind: 'drawn' }} />
-            )) : null}
+          <View style={{ gap: space.xxl }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+            {tile > 0 ? <PieceSections items={items} tile={tile} previews={previews} /> : null}
           </View>
           </>
           ) : null}
         </>
       )}
     </ScrollView>
+  );
+}
+
+/** The Pieces grid, head to toe (#384): a title per section once the closet has more than one, else one plain grid. */
+function PieceSections({ items, tile, previews }: { items: readonly ClosetItemRow[]; tile: number; previews: Map<string, PiecePreview> }) {
+  const { titled, sections } = closetSections(items);
+  const grid = (list: readonly ClosetItemRow[]) => (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }}>
+      {list.map((it) => (
+        <PieceMenu key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} preview={previews.get(it.id) ?? { kind: 'drawn' }} />
+      ))}
+    </View>
+  );
+  if (!titled) return grid(sections.flatMap((s) => s.items));
+  return sections.map((s) => (
+    <View key={s.slot} style={{ gap: PIECE_HEADER === 'tag' ? space.s : space.m }}>
+      <PieceSectionTitle section={s} />
+      {grid(s.items)}
+    </View>
+  ));
+}
+
+function PieceSectionTitle({ section }: { section: PieceSection }) {
+  const n = String(section.items.length);
+  return (
+    <View accessible accessibilityRole="header" accessibilityLabel={pieceSectionLabel(section)}>
+      {PIECE_HEADER === 'tag' ? (
+        <TagLine left={section.title} right={n} />
+      ) : (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', columnGap: space.s }}>
+          <KText variant="headline" color="ink">{section.title}</KText>
+          <KText variant="subheadline" color="ink2" tabular>{n}</KText>
+        </View>
+      )}
+    </View>
   );
 }
