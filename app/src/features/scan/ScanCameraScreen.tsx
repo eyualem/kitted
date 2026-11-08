@@ -22,7 +22,7 @@ import {
 } from '../../../modules/kitted-vision';
 import { flashControls } from '@/features/camera/cameraControls';
 import { guideLog } from '@/features/camera/devLog';
-import { createTipFilter, scanIssue, scanPieces, scanTip, type Issue, type ScanTip } from '@/features/camera/guidance';
+import { createExposureClock, createTipFilter, scanIssue, scanPieces, scanTip, type Issue, type ScanTip } from '@/features/camera/guidance';
 import { issueTitle, scanTipCopy } from '@/features/camera/guidanceCopy';
 import { RetakePanel } from '@/features/camera/RetakePanel';
 import { assessLine, simIssue, simScanEvent } from '@/features/camera/simGuide';
@@ -70,6 +70,7 @@ export function ScanCameraScreen() {
   const cam = useRef<CameraHandle>(null);
   const busy = useRef(false);
   const filter = useRef(createTipFilter<ScanTip>());
+  const exposure = useRef(createExposureClock());
   const torchRef = useRef(torch);
   const lastLog = useRef(0);
   useEffect(() => {
@@ -84,8 +85,8 @@ export function ScanCameraScreen() {
   // --- live tips ---------------------------------------------------------------------------
   const onGuide = (g: GuideEvent) => {
     setGuide(g);
-    const r = scanTip(g, { torch: torchRef.current });
     const now = Date.now();
+    const r = scanTip(g, { torch: torchRef.current, settling: exposure.current.settling(now) });
     const prev = filter.current.shown;
     const shown = filter.current.feed(r.tip, now);
     setOfferFlash(r.offerFlash);
@@ -329,7 +330,8 @@ export function ScanCameraScreen() {
   );
 }
 
-/** Corner brackets around a piece; copper when it runs off the edge. */
+/** Corner brackets around a piece. One that runs off the edge is copper and carries the warning
+ *  triangle on a dark tag at its center, so it never relies on color alone (03 §2.1 `caution`). */
 function Brackets({ piece }: { piece: ScanPiece }) {
   const c = piece.edge ? fixed.copper : fixed.white;
   const arm = Math.max(10, Math.min(22, Math.min(piece.box.width, piece.box.height) * 0.22));
@@ -340,6 +342,13 @@ function Brackets({ piece }: { piece: ScanPiece }) {
       <View style={[b, { right: 0, top: 0, borderRightWidth: 3, borderTopWidth: 3, borderTopRightRadius: 6 }]} />
       <View style={[b, { left: 0, bottom: 0, borderLeftWidth: 3, borderBottomWidth: 3, borderBottomLeftRadius: 6 }]} />
       <View style={[b, { right: 0, bottom: 0, borderRightWidth: 3, borderBottomWidth: 3, borderBottomRightRadius: 6 }]} />
+      {piece.edge ? (
+        <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]}>
+          <View style={styles.edgeTag}>
+            <Icon name="warning" size={15} weight="semibold" color={fixed.copper} />
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -405,6 +414,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', gap: 6,
   },
   tipSpacer: { flex: 1 },
+  /** The cut-off piece's warning tag (the photo-tag backing, 03 §2.3). */
+  edgeTag: {
+    width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center',
+    backgroundColor: fixed.photoTag, borderWidth: 1, borderColor: fixed.photoTagBorder,
+  },
   offerWrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center', zIndex: 2 },
   offer: {
     flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: size.button, paddingHorizontal: 14, borderRadius: size.button / 2, backgroundColor: fixed.offerPill,

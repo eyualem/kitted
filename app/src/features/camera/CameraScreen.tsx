@@ -31,7 +31,7 @@ import {
 import { createAutoCapture, type Phase } from './autoCapture';
 import { CAMERA_BACKGROUND, cameraFrame, flashControls } from './cameraControls';
 import { BodyOutline, LowerGuide } from './FramingOverlay';
-import { createTipFilter, fitIssue, fitTip, type FitTip, type Issue } from './guidance';
+import { createExposureClock, createTipFilter, fitIssue, fitTip, type FitTip, type Issue } from './guidance';
 import { fitTipCopy, isSpokenTip, issueTitle } from './guidanceCopy';
 import { RetakePanel } from './RetakePanel';
 import { assessLine, simFitEvent, simIssue } from './simGuide';
@@ -99,6 +99,7 @@ export function CameraScreen() {
   const cam = useRef<CameraHandle>(null);
   const busy = useRef(false);
   const filter = useRef(createTipFilter<FitTip>());
+  const exposure = useRef(createExposureClock());
   const opened = useRef(0);
   const lastSpoken = useRef(0);
   // The guide handler runs from native events; it reads the current mode and flash from here.
@@ -107,6 +108,8 @@ export function CameraScreen() {
     live.current = { mode, flash, counting: phase.kind === 'counting' };
   }, [mode, flash, phase.kind]);
 
+  // A flip starts the other camera's exposure from scratch (#380).
+  useEffect(() => exposure.current.reset(), [facing]);
   useEffect(() => {
     opened.current = Date.now();
   }, []);
@@ -224,8 +227,8 @@ export function CameraScreen() {
   const onGuide = (g: GuideEvent) => {
     setGuide(g);
     const { mode: m, flash: f, counting } = live.current;
-    const r = fitTip(g, { mode: m, flash: f });
     const now = Date.now();
+    const r = fitTip(g, { mode: m, flash: f, settling: exposure.current.settling(now) });
     const prev = filter.current.shown;
     const shown = filter.current.feed(r.tip, now);
     setOfferFlash(r.offerFlash);

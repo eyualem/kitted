@@ -37,6 +37,10 @@ export const T = {
   pieceMax: 0.6,
   /** Scan: all pieces together cover less than this share: too far. */
   piecesTooFar: 0.06,
+  /** Live: how long after the first frame (or a flip) the exposure is still settling. His phone's
+   *  first frame always read ISO 294 at 1/60 s and luma 0.03–0.14, and the next one, 0.1–0.2 s
+   *  later, 0.3–0.6 (guide.log, Oct 18–24, #380); so no "too dark" and no countdown before this. */
+  exposureSettleMs: 1000,
 } as const;
 
 // ---- Live tips ----------------------------------------------------------------------------
@@ -63,10 +67,26 @@ export interface FitTipResult {
   offerFlash: boolean;
 }
 
-/** The fit-check camera's tip, most urgent first. Older native builds send only `state`. */
-export function fitTip(g: GuideEvent, o: { mode: 'propped' | 'mirror'; flash: boolean }): FitTipResult {
-  const dark = isDark(g);
-  const res = (tip: FitTip, ready = false): FitTipResult => ({ tip, ready, offerFlash: dark && !o.flash });
+/** True until `T.exposureSettleMs` after the first frame it sees (or after `reset()`, for a
+ *  flip): while the auto-exposure is still finding the light, a dark frame means nothing (#380). */
+export function createExposureClock(settleMs: number = T.exposureSettleMs) {
+  let start: number | null = null;
+  return {
+    settling(nowMs: number): boolean {
+      start ??= nowMs;
+      return nowMs - start < settleMs;
+    },
+    reset() {
+      start = null;
+    },
+  };
+}
+
+/** The fit-check camera's tip, most urgent first. Older native builds send only `state`.
+ *  `settling`: the exposure isn't settled yet, so darkness isn't judged and the 3-2-1 waits. */
+export function fitTip(g: GuideEvent, o: { mode: 'propped' | 'mirror'; flash: boolean; settling?: boolean }): FitTipResult {
+  const dark = !o.settling && isDark(g);
+  const res = (tip: FitTip, ready = false): FitTipResult => ({ tip, ready: ready && !o.settling, offerFlash: dark && !o.flash });
   if (dark && !o.flash) return res('dark');
   // In the dark the pose often fails, so "Step into the frame" would be wrong while he's in it.
   if (g.state === 'noPerson') return res(dark ? 'darkFlash' : o.mode === 'mirror' ? 'mirrorAim' : 'noPerson');
@@ -95,8 +115,8 @@ export function scanPieces<P extends { share: number }>(pieces: readonly P[] | u
 }
 
 /** The clothes-scan camera's tip, most urgent first. */
-export function scanTip(g: GuideEvent, o: { torch: boolean }): ScanTipResult {
-  const dark = isDark({ ...g, subjectLuma: undefined }, T.scanDarkLuma);
+export function scanTip(g: GuideEvent, o: { torch: boolean; settling?: boolean }): ScanTipResult {
+  const dark = !o.settling && isDark({ ...g, subjectLuma: undefined }, T.scanDarkLuma);
   const res = (tip: ScanTip, count = 0): ScanTipResult => ({ tip, count, offerFlash: dark && !o.torch });
   if (dark) return res(o.torch ? 'darkTorch' : 'dark');
   const s = g.scan;

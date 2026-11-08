@@ -9,7 +9,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 - **Built but switched off:** the paywall and purchases (a pretend store), sign-in and backup (waiting in open pull requests), notifications. Every tester gets Pro's limits during the beta.
 - **Still on the old rules:** the 1-week trial, Pro at 10 checks and 50 questions, free at 1 check a day forever with 5 questions.
 - **Not built yet:** the 7 free checks, greeting you by name, the spend cap working the spec's way, the app-only server lock (App Check), PostHog, reading scanned clothes, "not rated" for womenswear, Apple's age check.
-- **10 pull requests are waiting,** three of them with spec work (sign-in, backup, the Welcome example).
+- **3 pull requests are waiting,** each with work before it can merge: sign-in and backup (T41) and the card's outfit picks (T64). The other 7 were merged or closed in T1.
 
 ---
 
@@ -55,7 +55,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 
 ### Waiting pull requests
 *Ten pieces of finished work were never merged. Reviewing them first means nobody rebuilds them, and nothing that breaks the spec slips in.*
-- [~] getting-started-991baf · **T1** · Review the 10 waiting pull requests against the spec: merge, close or fix, with a reason each; renumber their clashing log entries · then Y3 · reviewed: `tasks/T1/REPORT.md`; your yes Nov 7; #59, #49, #44, #39, #41 closed (branches kept); #50 and #36 brought up to date with main, checks green, seen on the Simulator, waiting on your OK to merge · *files: other branches only*
+- [x] 2026-11-07, #68 · **T1** · Review the 10 waiting pull requests against the spec: merge, close or fix, with a reason each; renumber their clashing log entries · `tasks/T1/REPORT.md`: #36 and #50 merged; #59, #49, #44, #39, #41 closed (branches kept); #58 and #57 go on in T41, #48 in T64 · *files: other branches only*
 
 ### Free and Pro
 *How Kitted makes money: 7 free checks, then Pro at $9.99 a month or $39.99 a year, with no trial. Done means a new user sees the soft page after his first result, an upgrade button when he hits the daily limit, the paywall at his 8th check, and real purchases.*
@@ -167,7 +167,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-07 · T1: the 10 waiting pull requests reviewed against the spec (fix 4, close 5, one line for the founder); T41 corrected, T64 added · #395
+- 2026-11-07 · T1: the 10 waiting pull requests reviewed against the spec (fix 4, close 5, one line for the founder); the scan triangle and the camera's dark tip merged; T41 corrected, T64 and Y16 added · #395–397
 - 2026-11-07 · `WORKFLOW.md`: the whole process on one page; plan.md lanes get a plain intro · #394
 - 2026-11-07 · the spec gate: each lane names its spec, specs carry the founder's approval line, `/build-task` starts the interview when one is missing · #393
 - 2026-11-07 · Maestro installed; flows in `app/e2e/`, replayed by the verifier on every task, locked like tests · #392
