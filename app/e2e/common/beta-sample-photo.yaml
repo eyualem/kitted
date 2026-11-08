@@ -1,0 +1,12 @@
+# T14: one photo from the Simulator camera's library sheet ("Sample photos", with "Choose from your photos").
+# Usage: - runFlow: { file: ../common/beta-sample-photo.yaml, env: { N: "4" } }
+appId: com.trykitted.kitted
+---
+- tapOn: "Check my fit. Opens the camera."
+- tapOn: "Choose a photo"
+- extendedWaitUntil:
+    visible: "Sample photos"
+    timeout: 10000
+- tapOn: "Sample photo ${N}"
+- waitForAnimationToEnd:
+    timeout: 15000

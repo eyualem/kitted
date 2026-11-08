@@ -1,0 +1,136 @@
+# T14 · FP7.5 (with FP7.1, FP7.3, FP7.7): the beta, on demo screen 252 (beta, nothing used yet, latency 0). Four photos
+# and 21 questions, then You, Settings and Plan & usage; then the morning card with the day's checks used (259).
+# After every step nothing is for sale and no paywall is open (../common/beta-nothing-to-buy.yaml).
+# Sample photos 4–7 (s15, s12, s25, s05) are not in the demo's story, so each one is a new check.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T14-beta-limits.yaml (Metro running)
+appId: com.trykitted.kitted
+name: FP7.5 · four photos and 21 questions on beta
+---
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "252"
+- extendedWaitUntil:
+    visible: "Stylist"
+    timeout: 90000
+# Stylist home on beta: no check line under the title.
+- assertNotVisible: "1 free check today"
+- assertNotVisible: "Check used today"
+- assertNotVisible: "Re-check included"
+- runFlow: ../common/beta-nothing-to-buy.yaml
+
+# Photos 1–3: each is scored, none is held.
+- runFlow:
+    file: ../common/beta-sample-photo.yaml
+    env:
+      N: "4"
+- extendedWaitUntil:
+    visible: "Fit check, .*Score .* out of 10.*"
+    timeout: 30000
+- assertNotVisible: "That's today's 3 fit checks."
+- runFlow: ../common/beta-nothing-to-buy.yaml
+- runFlow:
+    file: ../common/beta-sample-photo.yaml
+    env:
+      N: "5"
+- extendedWaitUntil:
+    visible: "Fit check, .*Score .* out of 10.*"
+    timeout: 30000
+- assertNotVisible: "That's today's 3 fit checks."
+- runFlow: ../common/beta-nothing-to-buy.yaml
+- runFlow:
+    file: ../common/beta-sample-photo.yaml
+    env:
+      N: "6"
+- extendedWaitUntil:
+    visible: "Fit check, .*Score .* out of 10.*"
+    timeout: 30000
+- assertNotVisible: "That's today's 3 fit checks."
+- runFlow: ../common/beta-nothing-to-buy.yaml
+# All three counted: You's Today card says none left.
+- tapOn: "You"
+- scrollUntilVisible:
+    element:
+      text: "0 of 3 fit checks left · 20 of 20 questions left"
+    direction: DOWN
+    timeout: 15000
+- runFlow: ../common/beta-nothing-to-buy.yaml
+- tapOn: "Stylist"
+
+# Photo 4: the beta limit card, one button, no upgrade.
+- runFlow:
+    file: ../common/beta-sample-photo.yaml
+    env:
+      N: "7"
+- extendedWaitUntil:
+    visible: "That's today's 3 fit checks."
+    timeout: 15000
+- assertVisible: "I'll save this photo and score it after 4 am."
+- assertVisible: "Save for tomorrow"
+- assertVisible: "1 photo waiting to score"
+- assertNotVisible: "Score it now with Pro"
+- assertNotVisible: "Try Pro"
+- runFlow: ../common/beta-nothing-to-buy.yaml
+- tapOn: "Save for tomorrow"
+- extendedWaitUntil:
+    visible: "Saved. I'll score it when you open Kitted after 4 am."
+    timeout: 10000
+- assertNotVisible: ".*It uses tomorrow's free check.*"
+- runFlow: ../common/beta-nothing-to-buy.yaml
+
+# Questions 1–20 are answered; the 21st gets FP7's line.
+- repeat:
+    times: 20
+    commands:
+      - tapOn: "Ask Kit"
+      - inputText: "Do white socks work with loafers?"
+      - tapOn: "Send"
+      - waitForAnimationToEnd:
+          timeout: 10000
+- extendedWaitUntil:
+    visible: "0 questions left today"
+    timeout: 10000
+- assertNotVisible: "That's 20 questions today. More at 4 am."
+- tapOn: "Ask Kit"
+- inputText: "What shoes go with my khaki chinos?"
+- tapOn: "Send"
+- extendedWaitUntil:
+    visible: "That's 20 questions today. More at 4 am."
+    timeout: 10000
+- assertNotVisible: "Try Pro"
+- runFlow: ../common/beta-nothing-to-buy.yaml
+
+# You → Settings → Plan & usage.
+- tapOn: "You"
+- scrollUntilVisible:
+    element:
+      text: "0 of 3 fit checks left · 0 of 20 questions left"
+    direction: DOWN
+    timeout: 15000
+- assertNotVisible: "Today's check: done"
+- runFlow: ../common/beta-nothing-to-buy.yaml
+- tapOn: "Settings"
+- extendedWaitUntil:
+    visible: "Kitted beta"
+    timeout: 10000
+- runFlow: ../common/beta-nothing-to-buy.yaml
+- tapOn: "Plan & usage"
+- extendedWaitUntil:
+    visible: "3 fit checks and 20 questions a day · resets at 4 am"
+    timeout: 10000
+- assertVisible: "Kitted beta"
+- assertVisible: "3 of 3"
+- assertVisible: "20 of 20"
+- assertNotVisible: "See Pro"
+- runFlow: ../common/beta-nothing-to-buy.yaml
+
+# The morning card with the day's checks used, on beta (demo screen 259).
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "259"
+- extendedWaitUntil:
+    visible: "Your fit checks reset at 4 am."
+    timeout: 90000
+- assertNotVisible: "Your free check resets tomorrow"
+- runFlow: ../common/beta-nothing-to-buy.yaml

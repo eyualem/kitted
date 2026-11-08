@@ -8,6 +8,7 @@ import type { KittedStore } from '@/data/store';
 import type { FitCheckRow, UsageDay } from '@/data/types';
 import type { StringKey } from '@/i18n/en';
 import type { Clock } from './clock';
+import type { ServerTier } from './server/tier';
 
 const cfg = RUBRIC_DATA.config as Record<string, number>;
 export const LIMITS = {
@@ -85,7 +86,7 @@ export interface QuotaDeps {
   clock: Clock;
   isPro: () => boolean;
   /** The tier the server last answered with (services/server/tier.ts); null before any server answer. */
-  serverTier?: () => Promise<'free' | 'pro' | null>;
+  serverTier?: () => Promise<ServerTier | null>;
   /** Demo override: `freeChecksUsed=<n>`. */
   checksUsedOverride?: () => number | null;
 }
@@ -144,3 +145,14 @@ export function createQuota(deps: QuotaDeps) {
 }
 
 export type QuotaService = ReturnType<typeof createQuota>;
+
+// T14 stubs (tasks/T14/IMPLEMENTATION.md, Interfaces): written with the tests, built by the implementer.
+export type PlanTier = ServerTier;
+
+export function limitsFor(_tier: PlanTier): { checks: number; questions: number } {
+  throw new Error('T14: not built');
+}
+
+export function questionLimitText(_s: { tier: PlanTier }): string {
+  throw new Error('T14: not built');
+}

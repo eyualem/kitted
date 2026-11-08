@@ -457,9 +457,112 @@ describe('L7 Pro', () => {
     for (let i = 0; i < 52; i++) expect((await ask()).status).toBe(200);
     await expectLimit(call('ask', askBody()), 'questions');
   }, 60_000);
-  it('the beta default is Pro when the config is missing', async () => {
-    await db.doc('server/config').delete();
-    for (let i = 0; i < 2; i++) expect(await read(`B${i}`)).toBe(200);
+  // Changed on purpose by T14 (FP7, DECISIONS-LOG 399): the beta's own rules replace "the beta default is Pro".
+  it('the beta default is beta when the config is missing or its tier is unknown', async () => {
+    for (const reset of [() => db.doc('server/config').delete(), () => setConfig({ tier: 'gold' })]) {
+      await db.recursiveDelete(db.collection('usage'));
+      me = await signUp();
+      await reset();
+      for (let i = 0; i < 3; i++) {
+        fake.respond = sse();
+        const r = await call('read', photoBody(), { check: `B${i}` });
+        await r.arrayBuffer();
+        expect([r.status, r.headers.get('x-kitted-tier')]).toEqual([200, 'beta']);
+      }
+      await expectLimit(call('read', photoBody(), { check: 'B3' }), 'checks');
+    }
+  });
+});
+
+// ---- FP7 · the beta (specs/free-and-pro.md FP7, T14) ---------------------------------------------------------------
+describe('FP7 the beta', () => {
+  beforeEach(() => setConfig({ tier: 'beta' }));
+  /** A read; its status and the tier header it carried. */
+  async function readTier(id: string, kind = 'full', respond: Respond = sse()) {
+    fake.respond = respond;
+    const r = await call('read', photoBody(), { check: id, kind });
+    await r.arrayBuffer();
+    return [r.status, r.headers.get('x-kitted-tier')];
+  }
+  const days = async () => (await db.collection(`usage/${me.uid}/usageDays`).get()).docs.map((d) => ({ id: d.id, ...d.data() }) as Record<string, unknown>);
+
+  it('FP7.1 · beta: 3 checks pass, the 4th new check id is refused', async () => {
+    for (const id of ['B1', 'B2', 'B3']) expect(await readTier(id)).toEqual([200, 'beta']);
+    // The same check id may still call again (a hedge on B3).
+    expect(await readTier('B3')).toEqual([200, 'beta']);
+    await expectLimit(call('read', photoBody(), { check: 'B4' }), 'checks');
+    await expectLimit(call('read', photoBody(), { check: 'B5' }), 'checks');
+    const d = await days();
+    expect(d).toHaveLength(1);
+    expect([d[0]!.checks, d[0]!.rechecks]).toEqual([3, 0]);
+  });
+
+  it('FP7.2 · beta: a re-check per counted check, never a 4th', async () => {
+    // A re-check before any check (a re-check across 4 am) passes; a second one doesn't.
+    expect(await readTier('R0', 'recheck')).toEqual([200, 'beta']);
+    await expectLimit(call('read', photoBody(), { check: 'R00', kind: 'recheck' }), 'rechecks');
+    // A fresh account: check, re-check, three times.
+    me = await signUp();
+    expect(await readTier('C1')).toEqual([200, 'beta']);
+    expect(await readTier('R1', 'recheck')).toEqual([200, 'beta']);
+    // Never more re-checks than the checks counted that day.
+    await expectLimit(call('read', photoBody(), { check: 'R1b', kind: 'recheck' }), 'rechecks');
+    expect(await readTier('C2')).toEqual([200, 'beta']);
+    expect(await readTier('R2', 'recheck')).toEqual([200, 'beta']);
+    expect(await readTier('C3')).toEqual([200, 'beta']);
+    expect(await readTier('R3', 'recheck')).toEqual([200, 'beta']);
+    await expectLimit(call('read', photoBody(), { check: 'R4', kind: 'recheck' }), 'rechecks');
+    await expectLimit(call('read', photoBody(), { check: 'C4' }), 'checks');
+    const d = await days();
+    expect(d).toHaveLength(1);
+    expect([d[0]!.checks, d[0]!.rechecks]).toEqual([3, 3]);
+  });
+
+  it('FP7.3 · beta: 22 questions pass on the server (20 + 2), the 23rd is refused', async () => {
+    // A failed answer gives its question back.
+    expect((await ask(reply(500))).status).toBe(502);
+    for (let i = 0; i < 22; i++) {
+      const r = await ask();
+      expect([r.status, r.headers.get('x-kitted-tier')]).toEqual([200, 'beta']);
+    }
+    await expectLimit(call('ask', askBody()), 'questions');
+    expect((await days())[0]!.questions).toBe(22);
+    // Taps (the stylist's own question) still pass, up to 10.
+    for (let i = 0; i < 10; i++) expect((await ask(sse(), 'tap')).status).toBe(200);
+    await expectLimit(call('ask', askBody(), { free: 'tap' }), 'questions');
+  }, 60_000);
+
+  it('FP7.4 · beta: a failed, timed-out or unfinished read gives the check back', async () => {
+    expect((await readTier('A', 'full', reply(500)))[0]).toBe(502);
+    expect(await readTier('B', 'full', sse('MAX_TOKENS'))).toEqual([200, 'beta']);
+    expect(await readTier('C', 'full', sse('SAFETY'))).toEqual([200, 'beta']);
+    await setConfig({ tier: 'beta', timeoutMs: 300 });
+    fake.respond = () => {}; // never answers
+    const r = await call('read', photoBody(), { check: 'T' });
+    expect([r.status, await json(r)]).toEqual([504, { error: 'timeout' }]);
+    await setConfig({ tier: 'beta' });
+    expect((await days()).map((d) => d.checks ?? 0)).toEqual([0]);
+    for (const id of ['D1', 'D2', 'D3']) expect(await readTier(id)).toEqual([200, 'beta']);
+    await expectLimit(call('read', photoBody(), { check: 'D4' }), 'checks');
+    expect((await days())[0]!.checks).toBe(3);
+  });
+
+  it("FP7.6 · beta checks write no lifetime count; after switching to free, the next day's free check passes", async () => {
+    for (const id of ['B1', 'B2', 'B3']) expect(await readTier(id)).toEqual([200, 'beta']);
+    // usage/{uid} holds only the time zone; the counts live in that day's doc and nowhere else.
+    const user = await db.doc(`usage/${me.uid}`).get();
+    expect(Object.keys(user.data() ?? {}).sort()).toEqual(['tz', 'tzChangedAt']);
+    expect((await db.doc(`usage/${me.uid}`).listCollections()).map((c) => c.id)).toEqual(['usageDays']);
+    const d = await days();
+    expect(d.map((x) => x.id)).toEqual(['2026-10-20']);
+    expect(Object.keys(d[0]!).filter((k) => /free|lifetime|total|trial/i.test(k))).toEqual([]);
+    // The switch: free from now on. The same day, the beta's 3 still count against free's daily limit.
+    await setConfig({ tier: 'free' });
+    await expectLimit(call('read', photoBody(), { check: 'F0' }), 'checks');
+    // Past the next 4 am, the free check passes.
+    clockMs = Date.UTC(2026, 9, 21, 4, 1);
+    expect(await readTier('F1')).toEqual([200, 'free']);
+    expect(Object.keys((await db.doc(`usage/${me.uid}`).get()).data() ?? {}).sort()).toEqual(['tz', 'tzChangedAt']);
   });
 });
 
