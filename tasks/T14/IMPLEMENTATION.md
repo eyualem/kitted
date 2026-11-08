@@ -25,7 +25,7 @@ Only these. Anything else is a deviation the implementer writes in REPORT.md.
 - `app/src/features/settings/usePlan.ts`: passes the tier into `currentPlan` (and re-renders on a tier change).
 - `app/src/app/(tabs)/you/plan.tsx`: Manage only when `hasPro(plan)`; a testID wrapper on the status card.
 - `app/src/app/(tabs)/you/index.tsx`: the Today card's beta branch (no "1 free check today", no Try Pro); a testID wrapper.
-- `app/src/features/morning/MorningCard.tsx`: the "checks used" line on beta (today `Your free check resets tomorrow`; words pending, Open question F-1).
+- `app/src/features/morning/MorningCard.tsx`: the "checks used" line on beta (today `Your free check resets tomorrow`; on beta `Your fit checks reset at 4 am.`, the founder's words, Nov 8).
 - `app/src/demo/scenarios.ts`, `app/src/demo/applyDemoScreen.ts`, `app/src/demo/prepareDemoScreen.ts`: a `tier` field per demo screen (default `free`, so every existing screen looks as it does today) and the new beta screens 252–259.
 
 Not touched: `firebase/functions/src/api/handler.ts` (it already sends `x-kitted-tier: <config.tier>` and passes `config.tier` to `reserve`), `features/fitcheck/service.ts` (a beta snapshot has `pro: false`, so the existing free path holds the photo and offers it after 4 am), `features/finish/` (its `paywallOn` dep is the gated switch), the copy deck `handoff/02-screens.md` and `en.generated.ts`.
@@ -76,7 +76,7 @@ What the tests call. The test writer reads only this section.
 ### Phone: the limit card (`app/src/features/held/content.ts`, `LimitCard.tsx`)
 - `limitCardContent(row, quota: Pick<QuotaSnapshot, 'questionsUsed' | 'questionLimit' | 'recheckOpen' | 'tier'>, o?)`:
   - beta, not saved: `{ state: 'limit', tag: 'Daily limit', tagRight: 'Resets at 4 am', title: "That's today's 3 fit checks.", body: "I'll save this photo and score it after 4 am.", save: 'Save for tomorrow', tryPro: null, dontScore: null, a11y: "Daily limit. That's today's 3 fit checks. I'll save this photo and score it after 4 am." }`. `tryPro` is `null` on beta even with `o.paywallBuilt: true`. The body never adds the re-check sentence on beta (FP7 gives the body exactly).
-  - beta, saved: `{ state: 'saved', tag: 'Waiting to score', tagRight: 'After 4 am', title: null, body: <held.body.beta, words pending F-2>, save: null, tryPro: null, dontScore: "Don't score it", a11y: 'Waiting to score. After 4 am. ' + body }`.
+  - beta, saved: `{ state: 'saved', tag: 'Waiting to score', tagRight: 'After 4 am', title: null, body: "Saved. I'll score it when you open Kitted after 4 am.", save: null, tryPro: null, dontScore: "Don't score it", a11y: "Waiting to score. After 4 am. Saved. I'll score it when you open Kitted after 4 am." }`. On free the saved body stays `Saved. I'll score it when you open Kitted after 4 am. It uses tomorrow's free check.`
   - free and Pro: unchanged.
 - `heldReadyContent(row)`: unchanged (`Ready to score last night's photo?` · `Score it` · `Not this one`).
 - `LimitCard` testIDs (on plain wrapping `View`s, not `accessible`, so VoiceOver is unchanged; the design system's `KCard`/`KButton`/`TextLink` take no testID and are not edited): `limit-card` (the card, limit state), `held-card` (the card, saved state), `limit-card-save` (Save for tomorrow), `limit-card-pro` (the upgrade button; never rendered on beta), `held-card-dont-score` (Don't score it).
@@ -94,7 +94,7 @@ What the tests call. The test writer reads only this section.
 ### Phone: other callers
 - `ask/pipeline.ts` `limitLine`: text = `questionLimitText(snapshot)`; `payload.tryPro = snapshot.tier === 'free' && deps.tryPro()`. Outcome `limit`, nothing counted (as today).
 - `you/index.tsx` `TodayCard`: when `s.pro || s.tier === 'beta'` → title `Today`, right `resets at 4 am`, line `t('you.today.pro', …)` = `{c} of 3 fit checks left · {q} of 20 questions left`; Try Pro only when `paywallOn() && s.tier === 'free'`. Wrapped in `View testID="you-today"`.
-- `MorningCard`: when today's checks are used on beta, the line is `t('own.limit.beta')` (words pending F-1) instead of `own.limit`.
+- `MorningCard`: when today's checks are used on beta, the line is `t('own.limit.beta')` = `Your fit checks reset at 4 am.` instead of `own.limit` (free unchanged).
 - `fitcheck/session.ts`: `serverTier: () => appTier(store)`.
 
 ### New strings (`app/src/i18n/en.ts`, `addedInBuild`, one comment pointing at FP7)
@@ -103,8 +103,8 @@ What the tests call. The test writer reads only this section.
 - `ask.limit.beta`: `That's {n} questions today. More at 4 am.` (n = 20)
 - `you.plan.beta`: `Kitted beta`
 - `you.plan.betaLine`: `{checks} fit checks and {questions} questions a day · resets at 4 am` (3, 20)
-- `held.body.beta`: pending the founder (F-2). Placeholder until he answers: `Saved. I'll score it when you open Kitted after 4 am.`
-- `own.limit.beta`: pending the founder (F-1). Placeholder until he answers: `Your fit checks reset at 4 am.`
+- `held.body.beta`: `Saved. I'll score it when you open Kitted after 4 am.` (the founder, Nov 8)
+- `own.limit.beta`: `Your fit checks reset at 4 am.` (the founder, Nov 8)
 
 ### Demo screens (new; all `scenario: 'full'`, `onboarded: true`, `tier: 'beta'`)
 Every existing screen gets `tier: 'free'` by default (applied before its story), so nothing already shot changes.
@@ -128,7 +128,7 @@ Every existing screen gets `tier: 'free'` by default (applied before its story),
 2. `tier.ts`: the type, `parseTier`, `fallbackTier`, `appTier`, `tierNow`, `onTierChange`, `setDemoTier`, `resetTierForTests`; `tierRecorder` updates the known tier. `transport.ts` uses `parseTier`.
 3. `quota.ts`: `tier` on the snapshot, `LIMITS.beta*`, `limitsFor`, `quotaLine`/`stylistSubtitle` on beta, `questionLimitText`. `fitcheck/session.ts` wires `appTier`.
 4. `paywall/switch.ts`: gate `paywallOn` and `usePaywallOn` on the tier.
-5. `en.ts`: the new keys (with the two placeholders marked "pending the founder").
+5. `en.ts`: the new keys.
 6. `held/content.ts` and `LimitCard.tsx`: the beta variants and the testIDs.
 7. `settings/plan.ts`, `usePlan.ts`, `you/plan.tsx`: the beta plan; Manage only with Pro.
 8. `ask/pipeline.ts`, `you/index.tsx`, `morning/MorningCard.tsx`: the beta lines.
@@ -144,11 +144,11 @@ Every existing screen gets `tier: 'free'` by default (applied before its story),
 - The re-check window rules (30 min; the first-ever check until 4 am).
 
 ## Open questions
-**For the founder (words he reads):**
-- **F-1** · The morning card's line when today's 3 checks are used. Today it says `Your free check resets tomorrow`, which breaks FP7 ("free check"). · the founder · default meanwhile: `Your fit checks reset at 4 am.` (marked pending in `en.ts`; the test checks only that it has no banned word until he answers).
-- **F-2** · The saved card's body on the beta. FP3's says `Saved. I'll score it when you open Kitted after 4 am. It uses tomorrow's free check.`, and FP7 says "the saved card works as in FP3" but also bans "free check". · the founder · default meanwhile: `Saved. I'll score it when you open Kitted after 4 am.` (the last sentence dropped). Alternative: `… It uses one of tomorrow's 3 fit checks.`
+**Settled by the founder (Nov 8, in chat):**
+- **F-1** · The morning card's line on the beta once today's 3 checks are used: `Your fit checks reset at 4 am.` (replaces `Your free check resets tomorrow` on the beta; free unchanged).
+- **F-2** · The saved card's body on the beta: `Saved. I'll score it when you open Kitted after 4 am.` (FP3's last sentence dropped on the beta; the free version unchanged).
 
-**Technical defaults (the coordinator logs them):**
+**Technical defaults (accepted by the coordinator as written, Nov 8; logged):**
 - **T-1** · Lane: the task can't be done inside the lane's files. It needs the minimal out-of-lane edits listed under Files (transport, fitcheck session wiring, ask pipeline, usePlan, the You and Plan screens, the morning card, the demo files). Default: allowed as listed, nothing more.
 - **T-2** · Before the server's first answer, the phone uses `fallbackTier()`: `beta` while `PAYWALL_BUILT` is off, `free` once it's on, so the one launch switch flips both. Without it a new tester sees `1 free check today` until his first check reaches the server.
 - **T-3** · One gate for "no paywall on beta": `paywallOn()` reads the tier, rather than a check at each entry point. The ask line and the limit card also check the tier themselves, so a test that injects "paywall on" still can't show Try Pro on beta.
