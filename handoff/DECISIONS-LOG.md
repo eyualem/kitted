@@ -2674,3 +2674,25 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Kept:** CLAUDE.md still pointed at two of its sections that exist nowhere else, "How to run things" (phone troubleshooting, server tests, release builds, screenshot tools) and "Lessons from the build" (about 40 traps). The founder chose to keep both: they moved word for word into `handoff/15-build-notes.md`, a reference doc (not status), and CLAUDE.md points there. Its "Ask before" line was dropped (CLAUDE.md rule 4 holds it).
     - **Deleted:** `handoff/archive/CLAUDE.old.md` (the old status, to-dos, product notes and docs map, all replaced). Git history keeps it.
     - **plan.md formatting:** task details in italics after the plain task, bold IDs and priorities, the notes under Tasks as quotes. Every task stays on one line, so a session still finds and changes a task with one search and one edit.
+
+## Nov 7 · /build-task: four agents, tests first and locked, a fix loop
+
+391. **The founder (Nov 7): after the spec and the plan, code tasks run through a test writer, an implementer and a verifier, then a report.** He brought draft prompts from a chat with Claude and asked for them to be made better. His main point: "tests shouldn't be made easy in order for the evaluation phase to go easier. It should tick off the boxes, and if it can't, it should state it, and we should find a way to check those boxes off." He chose **one command per task** (`/build-task T11`) running **separate child agents** with an **auto-fix loop**, over four skills run by hand or one session doing everything.
+    - **Built:** `.claude/skills/build-task/` (the coordinator and the three templates) and `.claude/agents/{task-planner,test-writer,implementer,verifier}.md`. Each agent starts with a fresh mind, so the test writer never sees the code to come, and the verifier never shares the implementer's reasoning. Up to 3 build-and-verify rounds; then it stops and says what's still failing. It pauses only for the founder's calls (taste, words, money, installs); the founder merges.
+    - **Against easy tests:**
+      - Tests are committed before the code, and the SHA becomes the lock. The verifier's `git diff` from the lock must be empty.
+      - Every new test fails first for the right reason, and the failure line is recorded. A test for behaviour that already exists proves it bites with a deliberate bug.
+      - The verifier makes one deliberate bug per criterion. If no test catches it, the tests are weak.
+      - Banned: source-text tests (42 of 124 app test files are that kind today) for spec criteria, loose matchers, mocking the unit under test, snapshots, `.only`/`.skip`, and edited fixtures.
+      - Nothing passes without proof. "Not verified" is never pass and names what would verify it.
+    - **Two locks that run on their own:**
+      - `.claude/hooks/protect-tests.sh`, attached only to the implementer agent (in its own frontmatter), refuses edits to tests, TESTING.md and fixtures. Checked on 13 sample calls: 7 test edits blocked, 6 normal actions allowed. Limit: a shell command it can't read is still caught by the verifier's git check.
+      - `app/src/__tests__/testGuards.test.ts` fails `npm run check` on focused, skipped or snapshot tests (the paid `*.manual.test.ts` may skip). The existing suites are clean.
+    - **Fixed in the drafts:**
+      - Results go in REPORT.md, so TESTING.md stays locked.
+      - UI is checked on the Simulator, not the web preview, with a UI inventory per state (light, dark, the largest text, VoiceOver).
+      - The verifier reads the implementer's report last.
+      - The test writer may add throwing stubs, so a red test means missing behaviour, not a missing import.
+      - The repo's real file names and test places replace the drafts' `SPEC.md`, `PLAN.md` and `tasks/TEMPLATES`.
+    - **Defaults the founder accepted with the plan:** task folders are kept after merge as the record (CLAUDE.md's one exception to "no other status file"); the hook goes in; no Maestro yet, so the verifier drives the Simulator itself (Y15 asks for the install).
+    - **Not checked yet:** agents and skills load when a session starts, so the first real run happens in a new session. Suggested first run: T63 (behaviour that exists → the "prove it bites" path).
