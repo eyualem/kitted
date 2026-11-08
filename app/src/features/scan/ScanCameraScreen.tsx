@@ -22,7 +22,7 @@ import {
 } from '../../../modules/kitted-vision';
 import { flashControls } from '@/features/camera/cameraControls';
 import { guideLog } from '@/features/camera/devLog';
-import { createTipFilter, scanIssue, scanPieces, scanTip, type Issue, type ScanTip } from '@/features/camera/guidance';
+import { createExposureClock, createTipFilter, scanIssue, scanPieces, scanTip, type Issue, type ScanTip } from '@/features/camera/guidance';
 import { issueTitle, scanTipCopy } from '@/features/camera/guidanceCopy';
 import { RetakePanel } from '@/features/camera/RetakePanel';
 import { assessLine, simIssue, simScanEvent } from '@/features/camera/simGuide';
@@ -70,6 +70,7 @@ export function ScanCameraScreen() {
   const cam = useRef<CameraHandle>(null);
   const busy = useRef(false);
   const filter = useRef(createTipFilter<ScanTip>());
+  const exposure = useRef(createExposureClock());
   const torchRef = useRef(torch);
   const lastLog = useRef(0);
   useEffect(() => {
@@ -84,8 +85,8 @@ export function ScanCameraScreen() {
   // --- live tips ---------------------------------------------------------------------------
   const onGuide = (g: GuideEvent) => {
     setGuide(g);
-    const r = scanTip(g, { torch: torchRef.current });
     const now = Date.now();
+    const r = scanTip(g, { torch: torchRef.current, settling: exposure.current.settling(now) });
     const prev = filter.current.shown;
     const shown = filter.current.feed(r.tip, now);
     setOfferFlash(r.offerFlash);

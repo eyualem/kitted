@@ -1,5 +1,5 @@
 // Camera guidance (#100): the tip order, the flicker filter and the after-shot reasons.
-import { createTipFilter, fitIssue, fitTip, scanIssue, scanTip, T, type FitTip } from '@/features/camera/guidance';
+import { createExposureClock, createTipFilter, fitIssue, fitTip, scanIssue, scanTip, T, type FitTip } from '@/features/camera/guidance';
 import { fitTipCopy } from '@/features/camera/guidanceCopy';
 import type { GuideEvent, StillAssessment } from '../../modules/kitted-vision';
 
@@ -99,6 +99,67 @@ describe('scan live tips', () => {
 
   it('ignores noise and the bed itself when counting', () => {
     expect(scanTip(scanEv({ pieces: [piece(0.8, true), piece(0.1), piece(0.001)] }), { torch: false })).toEqual({ tip: 'good', count: 1, offerFlash: false });
+  });
+});
+
+// #380: every time the camera opened, its first frame was taken before the auto-exposure had
+// settled (ISO 294, 1/60 s, luma 0.03–0.14), so "Too dark" and Turn on flash showed for a moment
+// on every open. These are his phone's own log lines (guide.log, Oct 18–24).
+describe('the first second after the camera opens (#380)', () => {
+  const firstFrame = (extra: Partial<GuideEvent> = {}): GuideEvent =>
+    ({ state: 'noPerson', faces: [], luma: 0.049, clipped: 0, iso: 294, maxIso: 1920, exposure: 1 / 60, ...extra });
+
+  it('D1: an unsettled first frame never says too dark or offers the flash', () => {
+    const settling = { ...mirror, settling: true };
+    expect(fitTip(firstFrame(), settling)).toEqual({ tip: 'mirrorAim', ready: false, offerFlash: false });
+    expect(fitTip(firstFrame(), { ...propped, settling: true }).tip).toBe('noPerson');
+    expect(fitTip(firstFrame(), mirror).tip).toBe('dark'); // the same frame later is honestly dark
+  });
+
+  it('D2: while settling the countdown waits, even on a good frame', () => {
+    expect(fitTip(ok(), { ...propped, settling: true })).toEqual({ tip: 'good', ready: false, offerFlash: false });
+    expect(fitTip(ok({ subjectLuma: 0.08 }), { ...propped, settling: true }).ready).toBe(false);
+  });
+
+  it('D3: the clock settles after T.exposureSettleMs from the first frame, and restarts on reset', () => {
+    const c = createExposureClock();
+    expect(c.settling(5000)).toBe(true); // first frame starts it
+    expect(c.settling(5000 + T.exposureSettleMs - 1)).toBe(true);
+    expect(c.settling(5000 + T.exposureSettleMs)).toBe(false);
+    c.reset(); // a camera flip starts the exposure over
+    expect(c.settling(9000)).toBe(true);
+    expect(c.settling(9000 + T.exposureSettleMs)).toBe(false);
+  });
+
+  // [ms after opening, frame] from guide.log
+  const replay = (frames: [number, GuideEvent][], mode: 'mirror' | 'propped') => {
+    const clock = createExposureClock();
+    const filter = createTipFilter<FitTip>();
+    return frames.map(([ms, g]) => filter.feed(fitTip(g, { mode, flash: false, settling: clock.settling(ms) }).tip, ms));
+  };
+
+  it('D4: his Oct 24 3:18 pm open (Mirror) never shows "Too dark"', () => {
+    const later = (luma: number): GuideEvent => ({ state: 'noPerson', faces: [], luma, clipped: 0.001, iso: 701, maxIso: 7392, exposure: 1 / 30, motion: 0.01 });
+    const frames: [number, GuideEvent][] = [[0, firstFrame({ iso: 516, maxIso: 7392 })]];
+    for (let ms = 100; ms <= 3000; ms += 100) frames.push([ms, later(0.3)]);
+    const shown = replay(frames, 'mirror');
+    expect(shown).not.toContain('dark');
+    expect(shown[shown.length - 1]).toBe('mirrorAim');
+  });
+
+  it('D5: a room that is really dark still says so, a moment later (Oct 21: ISO at its limit)', () => {
+    const atLimit: GuideEvent = { state: 'noPerson', faces: [], luma: 0.566, clipped: 0, iso: 1920, maxIso: 1920, exposure: 1 / 15 };
+    const frames: [number, GuideEvent][] = [[0, firstFrame()]];
+    for (let ms = 100; ms <= 3000; ms += 100) frames.push([ms, atLimit]);
+    const shown = replay(frames, 'propped');
+    expect(shown.slice(0, 10)).not.toContain('dark'); // the first second
+    expect(shown[shown.length - 1]).toBe('dark');
+  });
+
+  it('D6: the scan camera waits the same way', () => {
+    const dim = scanEv({}, { luma: 0.04 });
+    expect(scanTip(dim, { torch: false }).tip).toBe('dark');
+    expect(scanTip(dim, { torch: false, settling: true })).toEqual({ tip: 'good', count: 2, offerFlash: false });
   });
 });
 
