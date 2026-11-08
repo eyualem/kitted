@@ -3,11 +3,11 @@
 import type { PartsData } from "./parts";
 
 export const PARTS_DATA: PartsData = {
- "version": "1.13.0",
- "engine": "v14",
- "label": "parts-proto-14 (Oct 17, 2026)",
+ "version": "1.14.0",
+ "engine": "v15",
+ "label": "parts-proto-15 (Oct 28, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "8b4c41281d055a7ab826f7a208ec4fa12f1b3d00880111249fd384cc1f1da36c",
+ "sourceSha256": "116451ed0f2be241c81c4dab20d1175167f759a18200c69eb4bea5dbf4f7f605",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -227,7 +227,9 @@ export const PARTS_DATA: PartsData = {
   "kit_fit_rate": 0.5,
   "sw1_blocks_credit": true,
   "pr1_tucked_layer": true,
-  "peek_clearly_only": true
+  "peek_clearly_only": true,
+  "hl": 1.5,
+  "cp8": 0.5
  },
  "rollback": {
   "engine": "v13",
@@ -419,7 +421,204 @@ export const PARTS_DATA: PartsData = {
    "kit_fit_rate": 0,
    "sw1_blocks_credit": false,
    "pr1_tucked_layer": false,
-   "peek_clearly_only": false
+   "peek_clearly_only": false,
+   "hl": 0,
+   "cp8": 0
+  }
+ },
+ "rollback14": {
+  "engine": "v14",
+  "label": "parts-proto-14 (Oct 17, 2026)",
+  "version": "1.13.0",
+  "tune": {
+   "pr1": 1.5,
+   "pr1_mirror_short": 0.5,
+   "pr1b": 0.5,
+   "pr2": 1.5,
+   "pr3": 1,
+   "prop_cap": 2.5,
+   "h1": 0.5,
+   "h2": 0.5,
+   "h2_suit": 0.5,
+   "h4": 0,
+   "cp1": 0,
+   "cp2": 0.5,
+   "cp5": 0.5,
+   "lightness": true,
+   "color_cap": 2,
+   "suit_shoe": true,
+   "earned": {
+    "over": 7.5,
+    "rate": 0.5,
+    "cap": 0.25,
+    "gate": [
+     6.5,
+     7
+    ]
+   },
+   "solid_line": true,
+   "pr4": 1,
+   "pr4_shoes": [
+    "basketball_sneaker",
+    "canvas_sneaker",
+    "chunky_sneaker",
+    "low_profile_sneaker",
+    "retro_runner"
+   ],
+   "h4_graphic_street": false,
+   "sw2": 0.5,
+   "pr4_legs": [
+    "relaxed",
+    "wide"
+   ],
+   "pr4_signature_v3": false,
+   "pr5": 1,
+   "pr5_layers": [
+    "chore_coat"
+   ],
+   "pr5_bottoms": [
+    "cargos",
+    "jeans",
+    "work_pants"
+   ],
+   "pr5_shoes": [
+    "chelsea_boot",
+    "suede_chukka",
+    "work_boot"
+   ],
+   "pr6": 0.5,
+   "pr6_layers": [
+    "fleece",
+    "rain_jacket",
+    "shell_jacket"
+   ],
+   "pr6_shoes": [
+    "trail_shoe"
+   ],
+   "short_layers_extra": [
+    "track_jacket"
+   ],
+   "sc_pair": true,
+   "h2_pick_free": true,
+   "sx": 3,
+   "sx_street_tops": [
+    "graphic_tee"
+   ],
+   "sx_dressy": [
+    "blazer",
+    "cardigan",
+    "chinos",
+    "derby",
+    "dress_shirt",
+    "dress_shoe",
+    "knit_polo",
+    "loafer",
+    "overcoat",
+    "oxford_shirt",
+    "polo",
+    "rugby_shirt",
+    "sport_coat",
+    "suit_jacket",
+    "suit_trousers",
+    "trousers",
+    "unstructured_blazer"
+   ],
+   "sx_min_dressy": 2,
+   "sx_quiet": {
+    "minimalist": 4,
+    "smart_casual": 3,
+    "classic_prep": 3
+   },
+   "pb": 1.5,
+   "pb_roomy_full": [
+    "minimalist",
+    "outdoor",
+    "streetwear",
+    "vintage_sport",
+    "workwear"
+   ],
+   "pb_roomy_narrow": [
+    "outdoor"
+   ],
+   "pb_wide_ok": [
+    "minimalist",
+    "outdoor",
+    "streetwear",
+    "vintage_sport",
+    "workwear"
+   ],
+   "h2_any": true,
+   "occ_target": {
+    "event": [
+     3,
+     4
+    ]
+   },
+   "cond_clear_only": true,
+   "sk1_soft": 0.5,
+   "lounge_style": 0.5,
+   "weights": {
+    "proportions": 0.3,
+    "fit": 0.15,
+    "color": 0.2,
+    "shoes": 0.15,
+    "cohesion": 0.2
+   },
+   "pr1_ribbed_loose": true,
+   "pr2b": 1,
+   "penalty": {
+    "under": 6.5,
+    "rate": 0.5,
+    "cap": 1
+   },
+   "ff5_roomy": true,
+   "ff7_loose": true,
+   "pn_narrow": 1,
+   "pn_skinny": 1,
+   "pn_rip": 0.5,
+   "pr1_loose": 1.5,
+   "pr1_straight": 0.5,
+   "sd3_off": true,
+   "sw3_off": true,
+   "sk2_runner": 5,
+   "cl1": 1.5,
+   "tk1": 2,
+   "int_top": 6,
+   "int_hoodie": 5,
+   "dd_same": 1,
+   "gt1": 1.5,
+   "cl1_own": true,
+   "pn_slim_soft": true,
+   "cp1_dark": 0.5,
+   "h3_base_covered": true,
+   "pn_lounge_skinny": 2,
+   "cl1_scale": true,
+   "pn_fitted_vol": 2,
+   "ll1": 1,
+   "wr_look": true,
+   "wr_half": 0.2,
+   "wr_knit_tailored": 0.2,
+   "wr_knit_clean": 0.2,
+   "sh_prop": true,
+   "sh_shape": 1,
+   "sh_layer": 1,
+   "sh_cap": 1.5,
+   "sh_roomy_fitted": 1.5,
+   "sh_fitted": 1,
+   "sd1_any_sneaker": true,
+   "goes_together": 0.5,
+   "tracksuit": 0.5,
+   "gym_runner_unheld": true,
+   "sweatsuit_sign": true,
+   "sweatsuit_shape": 1,
+   "look_sign": true,
+   "kit_cap": 6,
+   "kit_fit_rate": 0.5,
+   "sw1_blocks_credit": true,
+   "pr1_tucked_layer": true,
+   "peek_clearly_only": true,
+   "hl": 0,
+   "cp8": 0
   }
  },
  "sets": {
@@ -697,6 +896,14 @@ export const PARTS_DATA: PartsData = {
   "SWEAT_BOTTOMS": [
    "joggers",
    "sweatpants"
+  ],
+  "HL_LAYERS": [
+   "hoodie",
+   "sweatshirt"
+  ],
+  "HL_TOPS": [
+   "graphic_tee",
+   "tee"
   ]
  },
  "boxyVolume": 4,

@@ -20,7 +20,9 @@ export type CardType =
   | 'question'
   | 'item'
   /** "Keep your fits", the save offer (A3, 10-onboarding.md §3). */
-  | 'account';
+  | 'account'
+  /** Kit's "About you" ask: height, build and fit after the first score (10-onboarding.md §10, #373). */
+  | 'aboutYou';
 
 /** The seven occasion chips (02 D6); stored as rubric occasion ids. */
 export type OccasionKey = 'everyday' | 'class' | 'date' | 'going_out' | 'interview' | 'event' | 'gym' | 'home';
@@ -159,6 +161,11 @@ export interface CheckDetails {
     parentScore: number; delta: number; rawDelta: number; notes: string[]; doneFixes: { copy: string; earned: number }[]; newProblems: string[]; notSeen: boolean;
     /** The same photo as an earlier check that day (#219): its reading reused, no new read, the re-check not used up. */
     samePhoto?: { checkId: string };
+    /** Pieces the new photo added that the first didn't have ("green hoodie", #383): the card names them even when
+     *  the score holds, and the re-check is never "not seen" with one. Absent on re-checks from before #383. */
+    seen?: string[];
+    /** The re-check photo's own read (source recheckRaw, #383): what "What changed?" checks a fix against. */
+    rawReadingId?: string;
   };
   /** "Tell me": he confirmed the fix. */
   confirmed?: boolean;

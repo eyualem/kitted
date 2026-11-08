@@ -13,7 +13,7 @@ import { sessionClock } from '@/state/session';
 import { setOnboarded } from '@/state/appGate';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import { clearResumeStep } from '@/features/onboarding/resume';
-import { BASICS_KEY, inchesToCm, loadDraft } from '@/features/onboarding/basics';
+import { BASICS_KEY, loadDraft } from '@/features/onboarding/basics';
 import { t } from '@/i18n/en';
 
 const num = (v: string | undefined) => (v && /^\d+$/.test(v) ? Number(v) : 0);
@@ -35,7 +35,7 @@ export function RestoreScreen() {
         // What Basics asked on this phone; his looks and the rest arrive with his synced profile (08 A2).
         const d = await loadDraft(store);
         await completeOnboarding(store, {
-          styles: [], heightCm: d.basics.heightIn !== null ? inchesToCm(d.basics.heightIn) : null, build: d.basics.build ?? '', fitPreference: d.basics.fit ?? '',
+          styles: [], fitPreference: d.basics.fit ?? '',
           birthYear: d.basics.birthYear, consent: false,
         }, sessionClock.nowMs(), newId);
         await store.deleteKv(BASICS_KEY);

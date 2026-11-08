@@ -4,7 +4,7 @@
 // sizes a row's title and value stack instead of squeezing.
 import { Children, isValidElement, type ReactNode } from 'react';
 import { Pressable, ScrollView, Switch, View, type StyleProp, type ViewStyle } from 'react-native';
-import { Icon, KCard, KText, MonoLabel, MorphPicker, RowDivider, opacity, space, useTheme, type MorphOption } from '@/design-system';
+import { Icon, KCard, KText, radius, MonoLabel, MorphPicker, RowDivider, opacity, space, useTheme, type MorphOption } from '@/design-system';
 import { t } from '@/i18n/en';
 
 export function SettingsScroll({ children }: { children: ReactNode }) {
@@ -37,7 +37,7 @@ export function Section({ label, footer, header, children }: { label?: string; f
         </KText>
       ) : null}
       {rows.length > 0 ? (
-        <KCard radius={20}>
+        <KCard radius={radius.cardSmall}>
           {rows.map((r, i) => (
             <View key={r.key ?? i}>
               {i > 0 ? <RowDivider inset={space.rowX} /> : null}
@@ -132,8 +132,9 @@ export function PickerRow<T extends string>({ title, value, options, onPick, spo
   );
 }
 
-/** A switch row (02 Y6). The switch carries the title for VoiceOver and announces on / off itself. */
-export function ToggleRow({ title, detail, value, onChange, disabled }: { title: string; detail?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
+/** A switch row (02 Y6). The switch carries the title for VoiceOver and announces on / off itself; `hint` says what
+ *  flipping it does. */
+export function ToggleRow({ title, detail, value, onChange, disabled, hint }: { title: string; detail?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean; hint?: string }) {
   const { colors } = useTheme();
   return (
     <View style={{ minHeight: 44, paddingVertical: space.rowY, paddingHorizontal: space.rowX, gap: space.m, flexDirection: 'row', alignItems: 'center', opacity: disabled ? opacity.disabled : 1 }}>
@@ -151,6 +152,7 @@ export function ToggleRow({ title, detail, value, onChange, disabled }: { title:
         disabled={disabled}
         trackColor={{ true: colors.good, false: undefined }}
         accessibilityLabel={detail ? t('settings.a11y.value', { label: title, value: detail }) : title}
+        accessibilityHint={hint}
       />
     </View>
   );

@@ -2,9 +2,8 @@
 // Full while it's the current window and nothing's been checked; collapsed to one row once a fit
 // check lands in its window (with the score), when he's staying in, or once its window has passed.
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
-import { localParts, type IdeaReason, type MissingSlot } from '@kitted/core';
+import { localParts, type IdeaReason } from '@kitted/core';
 import {
   Icon, KButton, KCard, KCardSection, KText, MonoLabel, MorphPicker, NeckDownPhoto, Numeral, TextLink, displayScore, opacity, radius, scoreWordLabel, space, useTheme,
 } from '@/design-system';
@@ -24,24 +23,24 @@ import { weatherKitLegalUrl } from '../../../modules/kitted-location';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { cardGreeting, cardOccasionLabel, ideaTitle, missingLabel, seasonLine, styleLabel, updatedLine, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
+import { cardGreeting, cardOccasionLabel, ideaTitle, seasonLine, styleLabel, updatedLine, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
 import { morning } from './index';
+import { HeroStrip } from './HeroStrip';
 import { checkInSlot, slotAt } from './service';
 import { locationRow } from './locationRow';
-import { pickSwap } from './swapPicker';
-import { PieceArt } from '@/features/closet/GarmentArt';
+import { woreThePick } from './woreOwn';
 
 interface Model {
   row: DailyIdeaRow;
   items: ClosetItemRow[];
-  /** Thin closet: what he has, and what's still missing. */
+  /** Thin closet: the pieces he has (the card draws no tile for a missing one, founder, Oct 28, #380). */
   known: ClosetItemRow[];
-  missing: MissingSlot | null;
-  missingSlots: MissingSlot[];
   reasons: IdeaReason[];
   piecesKnown: number;
   /** The check in this card's window (latest re-check folded in), and its card message. */
   check: { first: FitCheckRow; latest: FitCheckRow; messageId: string | null } | null;
+  /** After Wear this, the check shows the pick (else he went with his own, #369). */
+  worePick: boolean;
   current: boolean;
   checkUsed: boolean;
   permission: 'granted' | 'denied' | 'unknown';
@@ -57,7 +56,7 @@ async function load(ideaId: string): Promise<Model | null> {
   const closet = (await store.closet.all()).filter((c) => !c.isDeleted);
   const outfit = row.outfitId ? await store.outfits.get(row.outfitId) : null;
   const items = (outfit?.itemIds ?? []).map((id) => closet.find((c) => c.id === id)).filter((c): c is ClosetItemRow => !!c);
-  const details = (outfit?.details ?? {}) as { missing?: MissingSlot | null; reasons?: IdeaReason[] };
+  const details = (outfit?.details ?? {}) as { reasons?: IdeaReason[] };
   const checks = (await store.fitChecks.all()).filter((c) => c.status === 'scored' && c.score !== null);
   const first = checks.filter((c) => !c.parentId && checkInSlot(c, row, zone)).sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
   let check: Model['check'] = null;
@@ -66,13 +65,13 @@ async function load(ideaId: string): Promise<Model | null> {
     const msg = (await store.chat.all()).find((m) => m.kind === 'card' && m.fitCheckId === latest.id) ?? null;
     check = { first, latest, messageId: msg?.id ?? null };
   }
+  // Merged-away pieces are kept as deleted rows; the match follows them, so read the whole closet.
+  const worePick = !!check && row.state === 'wearing' && woreThePick(outfit?.itemIds ?? [], check.latest.itemIds, await store.closet.all());
   const known: ClosetItemRow[] = [];
-  const missingSlots: MissingSlot[] = [];
   if (!outfit) {
     for (const slot of ['outer', 'top', 'bottom', 'shoes'] as const) {
       const it = closet.find((c) => c.slot === slot);
       if (it) known.push(it);
-      else if (slot !== 'outer') missingSlots.push(slot);
     }
   }
   const now = sessionClock.nowMs();
@@ -81,7 +80,7 @@ async function load(ideaId: string): Promise<Model | null> {
   const profile = await store.profile.get('me');
   const myStyles = Array.from(new Set((profile?.styles ?? []).map(([s]) => normStyleKey(s)).filter((s): s is StyleKey => s !== null)));
   return {
-    row, items, known, missing: details.missing ?? null, missingSlots, reasons: details.reasons ?? [], piecesKnown: closet.length, check,
+    row, items, known, reasons: details.reasons ?? [], piecesKnown: closet.length, check, worePick,
     current: cur.day === row.dayKey && cur.slot === row.slot,
     checkUsed: !snap.pro && snap.checksUsed >= snap.checkLimit,
     permission: await weatherSource.permission(),
@@ -128,13 +127,8 @@ function FullCard({ m }: { m: Model }) {
     const undo = await morning.wear(row.id);
     showToast(t('toast.logged'), undo);
   };
-  // Nothing else works without that piece: the card keeps its outfit and says so (09 §23 M2).
-  const swap = () =>
-    pickSwap(m.items, (id) => {
-      void morning.swap(row.id, [id]).then(({ swapped }) => {
-        if (!swapped) showToast(t('swap.none'));
-      });
-    });
+  // S28: he sees the pieces and picks what goes in (09-ui-review §28, #377); the sheet says when nothing else works.
+  const swap = () => router.push(`/sheets/swap/${encodeURIComponent(row.id)}`);
   const allow = async () => {
     if ((await weatherSource.requestPermission()) === 'granted') await morning.refreshWeather(row.id);
   };
@@ -147,7 +141,6 @@ function FullCard({ m }: { m: Model }) {
   const why = enough
     ? whyLine(m.reasons, m.items, row.occasion)
     : m.piecesKnown === 0 ? t('idea.empty') : m.piecesKnown === 1 ? t('idea.thin1') : t('idea.thinN', { n: m.piecesKnown });
-  const needs: MissingSlot[] = enough ? (m.missing ? [m.missing] : []) : m.piecesKnown === 0 ? ['top', 'bottom', 'shoes'] : m.missingSlots;
   const showLink = enough && !wearing;
 
   return (
@@ -188,7 +181,7 @@ function FullCard({ m }: { m: Model }) {
           accessibilityLabel={t('idea.a11y.style', { style: styleLabel(row.style) })}
         />
       </View>
-      <HeroStrip items={enough ? m.items : m.known} needs={needs} />
+      <HeroStrip items={enough ? m.items : m.known} />
       <KCardSection>
         <KText variant="title3" weight="600" accessibilityRole="header">
           {title}
@@ -247,44 +240,6 @@ function FullCard({ m }: { m: Model }) {
         ) : null}
       </KCardSection>
     </KCard>
-  );
-}
-
-/** The outfit, edge to edge across the card under the menus: equal tiles with 1 pt hairline gaps, no
- *  labels (each tile is labelled for VoiceOver), dashed "+" tiles for what's missing. 2×2 at AX sizes. */
-function HeroStrip({ items, needs }: { items: readonly ClosetItemRow[]; needs: readonly MissingSlot[] }) {
-  const { colors, isAccessibilitySize } = useTheme();
-  const [w, setW] = useState(0);
-  const count = items.length + needs.length;
-  if (count === 0) return null;
-  const cols = isAccessibilitySize ? 2 : count;
-  const tileW = w > 0 ? (w - (cols - 1)) / cols : 0;
-  const tileH = Math.min(Math.round(tileW * 1.05), 120);
-  return (
-    <View
-      onLayout={(e) => setW(e.nativeEvent.layout.width)}
-      style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 1, backgroundColor: colors.line }}
-    >
-      {tileW > 0
-        ? [
-            ...items.map((it) => (
-              <View key={it.id} accessible accessibilityLabel={t('idea.tile.a11y', { name: it.name })} style={{ width: tileW, height: tileH, backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}>
-                <PieceArt item={it} size={Math.round(Math.min(tileW, tileH) * 0.84)} />
-              </View>
-            )),
-            ...needs.map((n) => (
-              <View key={`need-${n}`} accessible accessibilityLabel={missingLabel(n)} style={{ width: tileW, height: tileH, backgroundColor: colors.surface2, padding: space.s }}>
-                <View style={{ flex: 1, borderRadius: 14, borderCurve: 'continuous', borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.inkFaint, alignItems: 'center', justifyContent: 'center', gap: space.xs }}>
-                  <Icon name="plus" size="small" color="ink3" />
-                  <KText variant="caption" color="ink3" numberOfLines={1}>
-                    {missingLabel(n)}
-                  </KText>
-                </View>
-              </View>
-            )),
-          ]
-        : null}
-    </View>
   );
 }
 
@@ -371,7 +326,7 @@ function CheckedRow({ m, readOnly }: { m: Model; readOnly: boolean }) {
   const { latest, first, messageId } = m.check!;
   const photo = shownPhoto(first.demoPhotoId, first.photoFile, undefined);
   const score = latest.score ?? 0;
-  const what = m.row.state === 'wearing' ? t('idea.went.pick') : t('idea.went.own');
+  const what = m.worePick ? t('idea.went.pick') : t('idea.went.own');
   const occasion = cardOccasionLabel(m.row.occasion);
   return (
     <CollapsedShell

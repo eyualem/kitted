@@ -76,13 +76,12 @@ Apple counts data as **collected** when it leaves the phone and we or a partner 
 | App Store data type | Collected | Linked to the user | Purpose | What it is |
 |---|---|---|---|---|
 | **Photos or Videos** | Yes | No | App Functionality | The face-blurred copy of a fit photo, sent through our server to Google's Gemini (no account ID goes with it to Google). |
-| **Other User Content** | Yes | No | App Functionality | Questions to Kit, as text, through our server to OpenAI. |
+| **Other User Content** | Yes | No | App Functionality | Questions to Kit, as text, through our server to OpenAI, with his style picks and the fit he likes as words. |
 | **User ID** | Yes | Yes | App Functionality | The Firebase guest account's ID, the key for the server's daily counts. |
 | **Product Interaction** | Yes | Yes | App Functionality | The server's per-account daily counts of checks and questions (kept 7 days). |
 | **Coarse Location** | Yes (conservative) | No | App Functionality | Approximate location, rounded to about 1 km, sent only to the weather service (NWS; Apple Weather once WeatherKit is on); never stored by us. Arguably "not collected" (real-time only); declaring it is the safe side. |
-| **Other Data Types** | Yes | No | App Functionality | Height and build, as words with a question, only if he gave them. |
 
-**Not collected:** name, email (until Continue with Google or Apple ships in a Release build: then **Email Address**, linked, App Functionality), contacts, birth year (stays on the phone), the unblurred photo, health, financial info, browsing history, search history, diagnostics (crash logs stay on the phone; Apple's own crash reports aren't ours to declare), device ID, purchases (until Pro ships: then **Purchase History**, linked, App Functionality).
+**Not collected:** name, email (until Continue with Google or Apple ships in a Release build: then **Email Address**, linked, App Functionality), contacts, birth year (stays on the phone), height and build (no longer asked, #375), the unblurred photo, health, financial info, browsing history, search history, diagnostics (crash logs stay on the phone; Apple's own crash reports aren't ours to declare), device ID, purchases (until Pro ships: then **Purchase History**, linked, App Functionality).
 
 ## 6. Age rating questionnaire
 - In-app controls: Parental Controls **No**; Age Assurance **Yes** (the birth-year gate; plus Declared Age Range once built).

@@ -2,7 +2,7 @@
 // the paywall (P1 is still a placeholder until P6), so a free plan shows no upgrade button yet. Mocked until P6:
 // the plan comes from the demo entitlement, a trial only on demo screens (features/settings/plan.ts).
 import { View } from 'react-native';
-import { KButton, KCard, KText, space } from '@/design-system';
+import { KButton, KCard, KText, radius, space } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
@@ -32,7 +32,7 @@ export default function PlanUsageScreen() {
 
   return (
     <SettingsScroll>
-      <KCard radius={20} accessibilityLabel={`${status.title}. ${status.detail}`}>
+      <KCard radius={radius.cardSmall} accessibilityLabel={`${status.title}. ${status.detail}`}>
         <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.l, gap: space.xxs }}>
           <KText variant="headline" weight="600">
             {status.title}

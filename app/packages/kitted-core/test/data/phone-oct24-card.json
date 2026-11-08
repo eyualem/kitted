@@ -1,0 +1,924 @@
+{
+ "_doc": "The founder's Oct 24, 2026 day card (screenshots/phone/20261024-151727): his closet (21 live pieces, readings only, no photos), what the card's history held that morning (item and outfit ids -> days since last on a card or worn), the weather and the card's settings. The card picked his charcoal fleece over the brown plaid flannel, mid-wash jeans and black Adidas slides, labelled Streetwear, though that outfit reads as no look (DECISIONS-LOG #379). Profile (rule 7): born 2004 (22-25), picks streetwear, minimal, workwear in that order; fit relaxed; height and build not given.",
+ "profile": {
+  "birthYear": 2004,
+  "styles": [
+   [
+    "streetwear",
+    0.5
+   ],
+   [
+    "minimalist",
+    0.25
+   ],
+   [
+    "workwear",
+    0.25
+   ]
+  ],
+  "fit": "relaxed"
+ },
+ "closet": [
+  {
+   "id": "I-de79cee1-723e-4217-8a68-3409dd94967b",
+   "slot": "top",
+   "name": "Navy crewneck",
+   "garment": {
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false,
+    "category": "top",
+    "subcategory": "sweater",
+    "color_family": "navy"
+   }
+  },
+  {
+   "id": "C-a93dcfbc-c36e-4b11-a6cd-3ffa32b6f0ba",
+   "slot": "bottom",
+   "name": "Black trousers",
+   "garment": {
+    "category": "bottom",
+    "subcategory": "trousers",
+    "color_family": "black",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "straight",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "black",
+    "shade": "black|-|-",
+    "details": [
+     "belt_loops"
+    ],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": "none",
+    "measured": "#030306"
+   }
+  },
+  {
+   "id": "C-26dc2115-4844-4e38-9fd5-4d6e6b5e6729",
+   "slot": "bottom",
+   "name": "Mid-wash jeans",
+   "garment": {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "color_family": "denim_mid",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 4,
+    "leg_shape": "relaxed",
+    "hem": "pooling",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": true,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "denim_mid",
+    "shade": null,
+    "details": [
+     "belt_loops"
+    ],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": "faded"
+   }
+  },
+  {
+   "id": "C-ed4bc7c0-f6f2-424c-a90d-a55a7a4803be",
+   "slot": "shoes",
+   "name": "Black striped Adidas slides",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "slides_sandals",
+    "color_family": "black",
+    "pattern": "stripes",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "small",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "black",
+    "shade": "black|-|-",
+    "details": [],
+    "brand": "adidas",
+    "pattern": "stripes",
+    "shoeProfile": "regular",
+    "denimWear": null,
+    "measured": "#161514"
+   }
+  },
+  {
+   "id": "C-0258627b-6843-4818-99e3-a95d0c0171e7",
+   "slot": "shoes",
+   "name": "Cream chunky sneakers",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "chunky_sneaker",
+    "color_family": "off_white_cream",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "off_white_cream",
+    "shade": "white|-|-",
+    "details": [],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": "chunky",
+    "denimWear": null
+   }
+  },
+  {
+   "id": "C-645c845c-e71d-47fe-849a-402d891b3187",
+   "slot": "shoes",
+   "name": "Black striped slides",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "slides_sandals",
+    "color_family": "black",
+    "pattern": "stripes",
+    "logo": "small",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "medium",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "black",
+    "shade": "black|-|-",
+    "details": [
+     "side_stripe"
+    ],
+    "brand": null,
+    "pattern": "stripes",
+    "shoeProfile": "regular",
+    "denimWear": null,
+    "measured": "#2B2623"
+   }
+  },
+  {
+   "id": "C-23cf0695-0e5d-40d5-9348-436a0e592c27",
+   "slot": "top",
+   "name": "Charcoal tee",
+   "garment": {
+    "category": "top",
+    "subcategory": "tee",
+    "color_family": "charcoal",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "stained",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "charcoal",
+    "shade": "charcoal|-|-",
+    "details": [
+     "chest_pocket"
+    ],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "short",
+    "measured": "#322F32"
+   }
+  },
+  {
+   "id": "C-e43876a9-f8b0-4a97-bc19-05fed8d2415e",
+   "slot": "outer",
+   "name": "Brown plaid overshirt",
+   "garment": {
+    "category": "outerwear",
+    "subcategory": "overshirt",
+    "color_family": "brown",
+    "pattern": "checks_plaid",
+    "logo": "none",
+    "volume": 4,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "wrinkled",
+    "certainty": "clear",
+    "length": "mid_fly",
+    "pattern_scale": "small",
+    "saturation": "muted",
+    "sleeve_end": "covers_hand",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "brown",
+    "shade": "brown|-|-",
+    "details": [
+     "buttons",
+     "collar"
+    ],
+    "brand": null,
+    "pattern": "checks_plaid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long",
+    "measured": "#5F4F3F"
+   }
+  },
+  {
+   "id": "C-e00a256f-ce4e-4ad1-93cf-135efa769589",
+   "slot": "top",
+   "name": "Brown plaid flannel",
+   "garment": {
+    "category": "top",
+    "subcategory": "flannel_shirt",
+    "color_family": "brown",
+    "pattern": "checks_plaid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "mid_fly",
+    "pattern_scale": "small",
+    "saturation": "muted",
+    "sleeve_end": "covers_hand",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "brown",
+    "shade": "brown|-|-",
+    "details": [
+     "buttons",
+     "collar"
+    ],
+    "brand": null,
+    "pattern": "checks_plaid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long",
+    "measured": "#7A5440"
+   }
+  },
+  {
+   "id": "C-3a65e67c-f9f1-4e8d-bfcd-16bb80683901",
+   "slot": "top",
+   "name": "Navy long-sleeve tee",
+   "garment": {
+    "category": "top",
+    "subcategory": "tee",
+    "color_family": "navy",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "full",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "navy",
+    "shade": "navy|-|-",
+    "details": [],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long"
+   }
+  },
+  {
+   "id": "C-dab6bfce-67ea-4d1b-a19a-0ba0d048aace",
+   "slot": "top",
+   "name": "Blue long-sleeve tee",
+   "garment": {
+    "category": "top",
+    "subcategory": "tee",
+    "color_family": "blue",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "blue",
+    "shade": null,
+    "details": [
+     "chest_pocket"
+    ],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long"
+   }
+  },
+  {
+   "id": "C-c259de34-c9e1-4302-8440-23e8ba5f36b8",
+   "slot": "outer",
+   "name": "Olive fleece",
+   "garment": {
+    "category": "outerwear",
+    "subcategory": "fleece",
+    "color_family": "olive",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "olive",
+    "shade": null,
+    "details": [
+     "chest_pocket",
+     "collar",
+     "full_zip"
+    ],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long"
+   }
+  },
+  {
+   "id": "C-f977d23d-736c-4d01-ae61-51e77d3435f1",
+   "slot": "outer",
+   "name": "Charcoal fleece",
+   "garment": {
+    "category": "outerwear",
+    "subcategory": "fleece",
+    "color_family": "charcoal",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "covers_hand",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "charcoal",
+    "shade": "charcoal|-|-",
+    "details": [
+     "chest_pocket",
+     "collar",
+     "full_zip"
+    ],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long",
+    "measured": "#504C45"
+   }
+  },
+  {
+   "id": "C-1120af06-9914-4f29-bbbc-66615c5f54bb",
+   "slot": "top",
+   "name": "Faded black hoodie",
+   "garment": {
+    "category": "top",
+    "subcategory": "hoodie",
+    "color_family": "black",
+    "pattern": "graphic",
+    "logo": "large",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "at_belt",
+    "pattern_scale": "large",
+    "saturation": "na",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "black",
+    "shade": "black|-|faded",
+    "details": [
+     "front_pouch",
+     "hood"
+    ],
+    "brand": "text:towson generals",
+    "pattern": "graphic",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long",
+    "measured": "#171920"
+   }
+  },
+  {
+   "id": "C-6e97e9ec-0a22-4bf7-b8c2-7982338fe2d0",
+   "slot": "bottom",
+   "name": "Washed black jeans",
+   "garment": {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "color_family": "black",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 4,
+    "leg_shape": "relaxed",
+    "hem": "slight_break",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "black",
+    "shade": "black|-|washed",
+    "details": [],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": "faded",
+    "measured": "#131416"
+   }
+  },
+  {
+   "id": "C-a757c2fe-7735-4e85-b048-2d9280767a0d",
+   "slot": "shoes",
+   "name": "Black Puma running shoes",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "performance_runner",
+    "color_family": "black",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "black",
+    "shade": "black|-|-",
+    "details": [],
+    "brand": "puma",
+    "pattern": "solid",
+    "shoeProfile": "regular",
+    "denimWear": null,
+    "measured": "#11141A"
+   }
+  },
+  {
+   "id": "C-3fd3c897-ffe5-4871-b591-f38ec5136904",
+   "slot": "top",
+   "name": "Black long-sleeve tee",
+   "garment": {
+    "category": "top",
+    "subcategory": "tee",
+    "color_family": "black",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "mid_fly",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "black",
+    "shade": "black|-|-",
+    "details": [],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long",
+    "measured": "#202323"
+   }
+  },
+  {
+   "id": "C-21a5d074-f615-48d4-b334-649d820e9b68",
+   "slot": "shoes",
+   "name": "Grey chukkas",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "suede_chukka",
+    "color_family": "grey",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "grey",
+    "shade": "grey|-|-",
+    "details": [],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": "regular",
+    "denimWear": null,
+    "measured": "#52483E"
+   }
+  },
+  {
+   "id": "C-2c390e08-4e57-4fb2-b369-ed667e6a00ae",
+   "slot": "bottom",
+   "name": "Light jeans",
+   "garment": {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "color_family": "denim_light",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "relaxed",
+    "hem": "cuffed",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": true,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "denim_light",
+    "shade": null,
+    "details": [
+     "belt_loops"
+    ],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": "faded",
+    "measured": "#5F7586"
+   }
+  },
+  {
+   "id": "C-23e357bd-55d7-4503-9c5c-4e4edd9d522f",
+   "slot": "shoes",
+   "name": "Tan chukkas",
+   "garment": {
+    "category": "footwear",
+    "subcategory": "suede_chukka",
+    "color_family": "tan_camel",
+    "pattern": "solid",
+    "logo": "none",
+    "volume": 3,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "na",
+    "condition": "clean",
+    "certainty": "likely",
+    "length": "na",
+    "pattern_scale": "na",
+    "saturation": "na",
+    "sleeve_end": "na",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "tan_camel",
+    "shade": "khaki_beige|-|-",
+    "details": [],
+    "brand": null,
+    "pattern": "solid",
+    "shoeProfile": "regular",
+    "denimWear": null
+   }
+  },
+  {
+   "id": "C-bac5d0cd-958f-4c7a-9912-94e8195c6512",
+   "slot": "top",
+   "name": "Green Champion sweatshirt",
+   "garment": {
+    "category": "top",
+    "subcategory": "sweatshirt",
+    "color_family": "green",
+    "pattern": "solid",
+    "logo": "small",
+    "volume": 4,
+    "leg_shape": "na",
+    "hem": "na",
+    "tucked": "none",
+    "condition": "clean",
+    "certainty": "clear",
+    "length": "mid_fly",
+    "pattern_scale": "na",
+    "saturation": "muted",
+    "sleeve_end": "at_wrist",
+    "strain": "none",
+    "distressed_by_design": false,
+    "shows_below_outer": false
+   },
+   "art": {
+    "family": "green",
+    "shade": "green|-|-",
+    "details": [
+     "elastic_cuffs"
+    ],
+    "brand": "champion",
+    "pattern": "solid",
+    "shoeProfile": null,
+    "denimWear": null,
+    "sleeves": "long"
+   }
+  }
+ ],
+ "history": {
+  "items": [
+   [
+    "I-de79cee1-723e-4217-8a68-3409dd94967b",
+    5
+   ],
+   [
+    "C-a93dcfbc-c36e-4b11-a6cd-3ffa32b6f0ba",
+    5
+   ],
+   [
+    "C-21a5d074-f615-48d4-b334-649d820e9b68",
+    1
+   ],
+   [
+    "C-c259de34-c9e1-4302-8440-23e8ba5f36b8",
+    2
+   ],
+   [
+    "C-bac5d0cd-958f-4c7a-9912-94e8195c6512",
+    1
+   ],
+   [
+    "C-26dc2115-4844-4e38-9fd5-4d6e6b5e6729",
+    4
+   ],
+   [
+    "C-a757c2fe-7735-4e85-b048-2d9280767a0d",
+    2
+   ],
+   [
+    "C-23cf0695-0e5d-40d5-9348-436a0e592c27",
+    2
+   ],
+   [
+    "C-6e97e9ec-0a22-4bf7-b8c2-7982338fe2d0",
+    2
+   ],
+   [
+    "C-0258627b-6843-4818-99e3-a95d0c0171e7",
+    2
+   ],
+   [
+    "C-e43876a9-f8b0-4a97-bc19-05fed8d2415e",
+    1
+   ],
+   [
+    "C-3a65e67c-f9f1-4e8d-bfcd-16bb80683901",
+    1
+   ],
+   [
+    "C-2c390e08-4e57-4fb2-b369-ed667e6a00ae",
+    1
+   ],
+   [
+    "C-1120af06-9914-4f29-bbbc-66615c5f54bb",
+    2
+   ],
+   [
+    "C-dab6bfce-67ea-4d1b-a19a-0ba0d048aace",
+    5
+   ],
+   [
+    "C-3fd3c897-ffe5-4871-b591-f38ec5136904",
+    4
+   ],
+   [
+    "C-f977d23d-736c-4d01-ae61-51e77d3435f1",
+    4
+   ],
+   [
+    "C-23e357bd-55d7-4503-9c5c-4e4edd9d522f",
+    1
+   ]
+  ],
+  "outfits": [
+   [
+    "C-21a5d074-f615-48d4-b334-649d820e9b68+C-a93dcfbc-c36e-4b11-a6cd-3ffa32b6f0ba+I-de79cee1-723e-4217-8a68-3409dd94967b",
+    5
+   ],
+   [
+    "C-26dc2115-4844-4e38-9fd5-4d6e6b5e6729+C-a757c2fe-7735-4e85-b048-2d9280767a0d+C-bac5d0cd-958f-4c7a-9912-94e8195c6512",
+    4
+   ],
+   [
+    "C-0258627b-6843-4818-99e3-a95d0c0171e7+C-23cf0695-0e5d-40d5-9348-436a0e592c27+C-6e97e9ec-0a22-4bf7-b8c2-7982338fe2d0",
+    2
+   ],
+   [
+    "C-21a5d074-f615-48d4-b334-649d820e9b68+C-2c390e08-4e57-4fb2-b369-ed667e6a00ae+C-3a65e67c-f9f1-4e8d-bfcd-16bb80683901",
+    1
+   ],
+   [
+    "C-1120af06-9914-4f29-bbbc-66615c5f54bb+C-2c390e08-4e57-4fb2-b369-ed667e6a00ae+C-a757c2fe-7735-4e85-b048-2d9280767a0d",
+    7
+   ],
+   [
+    "C-1120af06-9914-4f29-bbbc-66615c5f54bb+C-21a5d074-f615-48d4-b334-649d820e9b68+C-6e97e9ec-0a22-4bf7-b8c2-7982338fe2d0",
+    5
+   ],
+   [
+    "C-0258627b-6843-4818-99e3-a95d0c0171e7+C-2c390e08-4e57-4fb2-b369-ed667e6a00ae+C-dab6bfce-67ea-4d1b-a19a-0ba0d048aace",
+    5
+   ],
+   [
+    "C-21a5d074-f615-48d4-b334-649d820e9b68+C-2c390e08-4e57-4fb2-b369-ed667e6a00ae+C-3fd3c897-ffe5-4871-b591-f38ec5136904",
+    4
+   ],
+   [
+    "C-1120af06-9914-4f29-bbbc-66615c5f54bb+C-6e97e9ec-0a22-4bf7-b8c2-7982338fe2d0+C-a757c2fe-7735-4e85-b048-2d9280767a0d",
+    2
+   ],
+   [
+    "C-23e357bd-55d7-4503-9c5c-4e4edd9d522f+C-2c390e08-4e57-4fb2-b369-ed667e6a00ae+C-bac5d0cd-958f-4c7a-9912-94e8195c6512",
+    1
+   ]
+  ]
+ },
+ "weather": {
+  "window": "day",
+  "nowF": 60,
+  "highF": 60,
+  "lowF": 52,
+  "feelsLowF": 52,
+  "feelsHighF": 60,
+  "precipChance": 0,
+  "precipFromHour": null,
+  "condition": "clear",
+  "source": "nws",
+  "nowHour": 15,
+  "highHour": 15,
+  "fetchedAt": 1792869285575
+ },
+ "occasion": "everyday",
+ "style": "streetwear",
+ "seed": "2026-10-24|day",
+ "picked": [
+  "C-f977d23d-736c-4d01-ae61-51e77d3435f1",
+  "C-e00a256f-ce4e-4ad1-93cf-135efa769589",
+  "C-26dc2115-4844-4e38-9fd5-4d6e6b5e6729",
+  "C-ed4bc7c0-f6f2-424c-a90d-a55a7a4803be"
+ ]
+}

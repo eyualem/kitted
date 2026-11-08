@@ -1,5 +1,5 @@
 // Y4 · Settings (02-screens.md; the revised design in mockups/theme-round2.html and DECISIONS-LOG #246): the three
-// pushes, appearance and units, the subscription rows, help and about, and the version footer. Rows whose address
+// pushes, appearance (units went with height, #375), the subscription rows, help and about, and the version footer. Rows whose address
 // isn't set yet (support mail, privacy policy, terms: config/links.ts) are hidden, not dead. Deleting data lives in
 // Privacy & data. "Redeem a code" waits for StoreKit (P6), so it isn't shown. Notifications (nothing is scheduled until
 // expo-notifications) and the subscription rows (nothing to buy or restore while the paywall is off) are hidden, not
@@ -9,10 +9,9 @@ import { useEffect, useState } from 'react';
 import { KText, space, type AppAppearance } from '@/design-system';
 import { PRIVACY_URL, SUPPORT_EMAIL, TERMS_URL } from '@/config/links';
 import { store } from '@/data/db';
-import { useLive } from '@/data/useLive';
 import { mailtoUrl, openLink, openManageSubscription } from '@/features/settings/actions';
 import { appVersion, planShortName, restorePurchases, restoreToast, versionLine } from '@/features/settings/plan';
-import { APPEARANCES, appearanceLabel, loadAppearance, saveAppearance, saveUnits, UNITS, unitsLabel, type Units } from '@/features/settings/prefs';
+import { APPEARANCES, appearanceLabel, loadAppearance, saveAppearance } from '@/features/settings/prefs';
 import { LinkRow, PickerRow, Section, SettingsScroll } from '@/features/settings/SettingsList';
 import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
@@ -22,12 +21,10 @@ import { NOTIFICATIONS_BUILT } from '@/config/features';
 import { usePaywallOn } from '@/features/paywall/switch';
 
 const APPEARANCE_OPTIONS = APPEARANCES.map((a) => ({ value: a, label: appearanceLabel(a) }));
-const UNIT_OPTIONS = UNITS.map((u) => ({ value: u, label: unitsLabel(u) }));
 
 export default function SettingsScreen() {
   const plan = usePlan();
   const paywall = usePaywallOn();
-  const profile = useLive(['profile'], () => store.profile.get('me'), []);
   const [appearance, setAppearance] = useState<AppAppearance>('system');
   useEffect(() => {
     void loadAppearance(store).then(setAppearance);
@@ -37,7 +34,6 @@ export default function SettingsScreen() {
     setAppearance(a);
     void saveAppearance(store, a);
   };
-  const pickUnits = (u: Units) => void saveUnits(store, u);
   const restore = async () => showToast(restoreToast(await restorePurchases(isProNow)));
   const v = appVersion();
   // Local consts so the checks below narrow inside the press handlers.
@@ -57,7 +53,6 @@ export default function SettingsScreen() {
 
       <Section>
         <PickerRow title={t('settings.appearance')} value={appearance} options={APPEARANCE_OPTIONS} onPick={pickAppearance} />
-        {profile ? <PickerRow title={t('settings.units')} value={profile.units} options={UNIT_OPTIONS} onPick={pickUnits} /> : null}
       </Section>
 
       {paywall ? (

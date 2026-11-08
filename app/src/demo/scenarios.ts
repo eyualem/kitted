@@ -2,6 +2,7 @@
 // P0 sets the gate, clock and route; the per-screen thread/story state is filled in by the
 // phase that builds each screen (P2 Stylist cards, P5 tabs, P6 paywall/limit/share).
 
+import type { AboutYouDemo } from '@/features/aboutYou/demo';
 import type { AuthProvider, MockScript } from '@/features/account/auth';
 import type { FinishDemo } from '@/features/finish/demo';
 import type { Styles } from '@kitted/core';
@@ -42,6 +43,8 @@ export interface ScreenScenario {
   toast?: { text: 'removed' | 'logged'; removal?: boolean; heldAtMs?: number };
   /** Starter basics by look (#364): his picks for this screen, in place of the scenario's (smart casual + workwear). */
   looks?: Styles;
+  /** Kit's "About you" card (#373, 10-onboarding.md §10): posted under an answer or on a later visit, then folded. */
+  aboutYou?: AboutYouDemo;
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
@@ -266,6 +269,14 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 215, name: 'Re-check · Why and Not quite right?', id: 'S6r', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:51:00', href: '/stylist' },
   // The share card on a single check (#347): Score · Rating; screen 20 is the re-check win (Before · After · Change).
   { n: 230, name: 'Share card · single check', id: 'S12', scenario: 'full', onboarded: true, now: '2026-10-22T07:51:00', href: '/share/FC3', under: '/stylist' },
+  // Onboarding down to the birth year (#373, 10-onboarding.md §10): Kit's "About you" card and its sheet. Screens 3
+  // (Basics, now only the birth year), 4 (Consent's "Born in …") and 136 (the restore path) show the step itself.
+  { n: 240, name: 'About you · under an answer', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'answer' },
+  { n: 241, name: 'About you · a later visit', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'visit' },
+  { n: 243, name: 'About you · Not now', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'declined' },
+  { n: 244, name: 'About you · saved', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'saved' },
+  { n: 250, name: 'Closet · Pieces, thin (no titles)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  { n: 251, name: 'Closet · Pieces, small (titled)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

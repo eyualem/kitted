@@ -18,6 +18,14 @@ describe('morning card copy', () => {
     expect(whyLine([{ key: 'occasion' }], items, 'class')).toBe('Clean and easy for class.');
   });
 
+  it('cold with nothing warm says so plainly, naming the shirt layer he has (#381)', () => {
+    const items = [item('L1', 'Cream striped overshirt')];
+    expect(whyLine([{ key: 'needLayer', itemId: 'L1' }], items, 'class')).toBe(
+      "It's cold out, and your cream striped overshirt won't be enough on its own. A sweater or a jacket would help.",
+    );
+    expect(whyLine([{ key: 'needLayer' }], items, 'class')).toBe("It's cold out, and I haven't seen anything warm of yours yet, like a sweater or a jacket.");
+  });
+
   it('weather strip: rounded temps, rain later vs already raining', () => {
     expect(stripLines(DAY, 7)).toEqual({ main: '46° now · 63° high', rain: 'Rain likely after 5 pm' });
     expect(stripLines(DAY, 18).rain).toBe('Rain likely');
@@ -28,7 +36,7 @@ describe('morning card copy', () => {
   it('result tip says "after 6 pm" only before 6 pm', () => {
     expect(weatherTipText({ key: 'wetLight', fromHour: 18 }, 7)).toBe('Rain after 6 pm: light sneakers will show it.');
     expect(weatherTipText({ key: 'wetLight', fromHour: 18 }, 18)).toBe('Rain today: light sneakers will show it.');
-    expect(weatherTipText({ key: 'coldNoLayer', fromHour: null }, 8)).toBe('Cold out: bring a layer.');
+    expect(weatherTipText({ key: 'coldNoLayer', fromHour: null }, 8)).toBe('Cold out: bring something warm, like a sweater or a jacket.');
   });
 });
 

@@ -15,7 +15,7 @@ import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
 import {
   normStyleKey, type ChatMessage, type CheckDetails, type FitCheckRow, type GoingForSource, type GoingForState, type OccasionKey, type ReadingRow, type ReadingSourceKind,
-  type StoredSecondLook, type StyleKey, type TapState,
+  type ProfileRow, type StoredSecondLook, type StyleKey, type TapState,
 } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
@@ -31,6 +31,7 @@ import { snapPart } from './finish';
 import { firstStyle, stylesFor } from './lens';
 import { ideaId, slotAt } from '@/features/morning/service';
 import { earlierToday } from './tryOn';
+import { confirmable, seenPieces } from './recheckSeen';
 import { evaluateCheck, scoreOptions, scoringEngine, type CheckScoreOptions, type ScoringEngine } from './scoring';
 import { anchorRecheckLook, copiedLook, hasLook, LOOK_GRACE_MS, lookInput, ownLookOf, settledLine, settleSecondLook } from './secondLook';
 import { dropWhichOne, whichOneOf, type WhichOnePayload } from './whichOne';
@@ -60,13 +61,17 @@ export const LAST_LOOK_MS = 7 * 24 * 3600 * 1000;
 
 
 /** The re-check card's numbers, with the engine the first check was scored with. `opts` carry the first check's second
- *  look; `mergedLook` is the re-check's own (anchored, secondLook.anchorRecheckLook), so each side scores as its card did. */
-function outcomeFor(engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: CheckScoreOptions, mergedLook?: StoredSecondLook | null) {
+ *  look; `mergedLook` is the re-check's own (anchored, secondLook.anchorRecheckLook), so each side scores as its card did.
+ *  `closet`: every piece, so a closet swap counts as done only when that piece is in the photo (#372). */
+function outcomeFor(
+  engine: ScoringEngine, first: Reading, fixes: readonly Fix[], merged: Reading, opts: CheckScoreOptions, mergedLook: StoredSecondLook | null | undefined,
+  closet: readonly ClosetItem[],
+) {
   if (engine !== 'parts') return recheckOutcome(first, fixes, merged, opts);
   const { secondLook: _first, ...rest } = opts;
   void _first;
   const sl = lookInput(mergedLook);
-  return partsRecheckOutcome(first, fixes, merged, opts, sl ? { ...rest, secondLook: sl } : rest);
+  return partsRecheckOutcome(first, fixes, merged, opts, sl ? { ...rest, secondLook: sl } : rest, closet);
 }
 
 export interface TimerConfig {
@@ -83,10 +88,21 @@ export interface TimerConfig {
    *  freed and a check still reading fails with Try again, so no step that never settles can block every later photo.
    *  Default SLOT_MS. */
   slotMs?: number;
+  /** The longest a check waits, before its photo is prepped, for the last check's closet call and measuring (#371).
+   *  Default TAIL_MS. */
+  tailMs?: number;
+  /** A photo that waited its turn starts this long after the last check ends, so that score's reveal plays first
+   *  (#371). Default REVEAL_GAP_MS. */
+  revealGapMs?: number;
 }
 
-/** The slot's cap: well past the read's own 14 s give-up, the 1.5 s look grace and photo prep. */
+/** The slot's cap: well past the read's own 14 s give-up, the 1.5 s look grace, photo prep and the tail wait. */
 export const SLOT_MS = 40_000;
+/** The wait for the last check's closet work: its call usually answers in 4–5 s; past 12 s it's written from the
+ *  reading anyway (CLOSET_DEADLINE_MS), so 10 s covers the normal case without holding a photo long. */
+export const TAIL_MS = 10_000;
+/** The score reveal's tape, buzz and word take about 1.5 s. */
+export const REVEAL_GAP_MS = 2_000;
 
 export const DEFAULT_TIMERS: TimerConfig = { enabled: true, hedgeMs: 5_000, slowMs: 9_000, abortMs: 14_000, cacheHitMs: 300, lookGraceMs: LOOK_GRACE_MS, slotMs: SLOT_MS };
 
@@ -144,9 +160,12 @@ export type StartOutcome =
    *  the Limit card is in the thread. After 4 am he's asked "Ready to score last night's photo?" (offerHeld); only his
    *  "Score it" sends it (scoreHeldNow, ruling 27). */
   | { outcome: 'held'; checkId: string }
-  /** 'busy': another check is still being read (one at a time); 'error': it threw before a card was posted. */
+  /** 'busy': another check is going and a photo already waits its turn (one at a time); 'error': it threw before a
+   *  card was posted. */
   /** 'noConsent': "Score my fits" is off (Y7) or he never agreed; nothing was prepped, sent or counted. */
-  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' | 'busy' | 'error' | 'noConsent' }
+  /** 'dropped': the photo was waiting its turn when the check before it was cancelled (a demo reset, Delete all my
+   *  data); nothing was prepped, sent or counted (#371). */
+  | { outcome: 'limit' | 'unknownPhoto' | 'notImplemented' | 'noParent' | 'busy' | 'error' | 'noConsent' | 'dropped' }
   /** 02 S3: nothing was sent and nothing counts. */
   | { outcome: 'photoProblem'; reason: 'noPerson' | 'multiplePeople' | 'couldNotFrame' }
   /** 02 S23: two people of comparable size; the "Which one is you?" card is in the thread. Nothing sent or counted. */
@@ -164,6 +183,12 @@ type CheckCtx = { checkId: string | null; abandoned: boolean };
 
 /** What a row is scored with: its occasion and one style, his boldness (#61), and its stored second look (#199). The
  *  one builder for both the card (evaluateCheck) and the one quick tap (askQuestion), so the tap's scores are the card's. */
+/** The only part of the profile a score may see: his picks and boldness. Height, build and fit never reach the scoring
+ *  (10-onboarding.md §10.3, #373; aboutYouCard.test.ts UN1). */
+export function scoringProfile(p: Pick<ProfileRow, 'styles' | 'boldness'> | null | undefined): Profile {
+  return { styles: p?.styles ?? [], boldness: p?.boldness ?? null };
+}
+
 export function lensInput(occasion: OccasionKey, style: StyleKey | null, p: Profile, look?: StoredSecondLook | null) {
   return { occasion, styles: stylesFor(style, p.styles), boldness: p.boldness, secondLook: lookInput(look) };
 }
@@ -198,17 +223,18 @@ export function createFitCheckService(deps: ServiceDeps) {
     }
   };
   let current: { abort: AbortController; done: Promise<unknown> } | null = null;
-  /** The one check (start or Try again) in flight: a second waits its turn by being refused ('busy'). */
+  /** The one check (start or Try again) in flight: a Try again, Score it or a pick meanwhile is refused ('busy'); a
+   *  new photo waits in `waiting`. */
   let running: Promise<unknown> | null = null;
+  /** A photo taken while another check holds the slot (#371): it starts when that check ends, instead of being thrown
+   *  away or read alongside it. One at a time: a further photo meanwhile is refused ('busy'). */
+  let waiting: { req: CheckRequest; resolve: (o: StartOutcome) => void } | null = null;
   /** cancel() arrived before the in-flight check reached its read: that read is aborted as it starts. */
   let cancelPending = false;
   /** "Which one is you?" questions he just answered (a double tap starts one check). */
   const picking = new Set<string>();
 
-  const profile = async (): Promise<Profile> => {
-    const p = await store.profile.get('me');
-    return { styles: p?.styles ?? [], boldness: p?.boldness ?? null };
-  };
+  const profile = async (): Promise<Profile> => scoringProfile(await store.profile.get('me'));
 
   /** The closet a check's fixes may use: not undone or merged away, and not the pieces this photo (or, for a
    *  re-check, its first photo) added. So the closet written after a score can never change that score. */
@@ -313,26 +339,46 @@ export function createFitCheckService(deps: ServiceDeps) {
     return { ev, row: next! };
   };
 
-  /** S21: the first check's reading with the fixes done applied: the ones he ticks plus the ones
-   *  the re-check already saw. From the FIRST reading, because a re-check re-reads only the changed
-   *  layer (a held overshirt isn't in it, so "wear it open" can't apply there). */
+  /** The re-check photo's own read (#383): linked on the row since #383, else found by its photo (older rows). */
+  const rawReadOf = async (row: FitCheckRow): Promise<Reading | null> => {
+    const id = row.details.recheck?.rawReadingId;
+    if (id) return (await store.readings.get(id))?.reading ?? null;
+    const raws = (await store.readings.all()).filter((r) => r.source === 'recheckRaw' && r.imageHash === row.imageHash);
+    return raws.sort((a, b) => b.createdAt - a.createdAt)[0]?.reading ?? null;
+  };
+
+  /** S21 (#383): the first card's fixes he may still confirm on this re-check: not caught by it, and their pieces not
+   *  clearly read in its photo (confirmable). A re-check whose photo can't be found keeps every uncaught fix. */
+  const confirmableOf = async (row: FitCheckRow, parent: FitCheckRow): Promise<Fix[]> => {
+    const caught = new Set((row.details.recheck?.doneFixes ?? []).map((f) => f.copy));
+    const open = parent.fixes.filter((f) => !caught.has(f.copy));
+    const raw = await rawReadOf(row);
+    return raw ? confirmable(raw, open) : open;
+  };
+
+  /** S21: the re-check's reading with the fixes he says he did applied, the ones he ticks among those he may confirm
+   *  (all of them by default). From what the re-check read (#383), so a piece it saw (his hoodie) stays and a fix
+   *  it caught isn't applied twice; the first check's held items come along for "wear it". null when there's
+   *  nothing to apply: he can't confirm a fix the photo clearly reads otherwise. */
   const confirmDraft = async (recheckId: string, targets?: readonly string[]) => {
     const row = await store.fitChecks.get(recheckId);
     const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
     const first = parent && (await readingOf(parent));
-    if (!row || !parent || !first) return null;
+    const seen = row && (await readingOf(row));
+    if (!row || !parent || !first || !seen) return null;
+    const apply = (await confirmableOf(row, parent)).filter((f) => !targets || targets.includes(f.target));
+    if (apply.length === 0) return null;
     const opts = scoreOptions(lensInput(parent.occasion, parent.style, await profile(), parent.details.secondLook));
-    const seen = await readingOf(row);
     const engine = engineOf(parent);
     const look = row.details.secondLook;
-    const caught = new Set(seen ? (outcomeFor(engine, first, parent.fixes, seen, opts, look)?.doneFixes ?? []).map((f) => f.target) : []);
+    const pieces = await store.closet.all();
     const closet = await closetFor(parent);
-    let reading: Reading | null = first;
-    for (const f of parent.fixes.filter((x) => !targets || targets.includes(x.target) || caught.has(x.target))) {
+    let reading: Reading | null = seen.held_items || !first.held_items ? seen : { ...seen, held_items: first.held_items };
+    for (const f of apply) {
       reading = reading ? (isPartsFix(f) ? applyPartsFix(reading, f, { closet }) : applyFix(reading, f, { closet, occasion: parent.occasion })) : null;
     }
     if (!reading) return null;
-    return { row, parent, reading, outcome: outcomeFor(engine, first, parent.fixes, reading, opts, look) };
+    return { row, parent, reading, outcome: outcomeFor(engine, first, parent.fixes, reading, opts, look, pieces) };
   };
 
   /** "Same shoes as Monday?": the shoes from the last logged day before this check. */
@@ -463,7 +509,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     // The anchored merge is engine-free except its "new problem" test, which still asks v4.1's rules (#209).
     const { merged, notes } = recheckMerge(parentReading, carried, targets, opts);
     const mergedRow = await insertReading(merged, 'recheckMerged', image.sha256, parent.readingId);
-    const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts, look);
+    const outcome = outcomeFor(engineOf(parent), parentReading, parent.fixes, merged, opts, look, await store.closet.all());
+    // A piece the photo added is a change he made, even when it holds the score (#383): never "not seen" then.
+    const seen = seenPieces(parentReading, merged);
     await patchRow(row.id, { readingId: mergedRow.id });
     const fresh = (await store.fitChecks.get(row.id))!;
     const { row: scored } = await rescore(fresh, merged, {
@@ -472,12 +520,12 @@ export function createFitCheckService(deps: ServiceDeps) {
         recheck: outcome
           ? {
               parentScore: outcome.before, delta: outcome.delta, rawDelta: outcome.rawDelta, notes,
-              doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems, notSeen: outcome.notSeen,
+              doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems,
+              notSeen: outcome.notSeen && seen.length === 0, seen, rawReadingId: raw.id,
             }
           : undefined,
       },
     });
-    void raw;
     await patchRow(parent.id, { recheckUsed: true });
     await deps.quota.consumeRecheck();
     // Changed pieces (the fix) go through the closet engine; the rest are another sighting of the first check's.
@@ -663,6 +711,35 @@ export function createFitCheckService(deps: ServiceDeps) {
         running = null;
         cancelPending = false;
       }
+      startWaiting();
+    }
+  }
+
+  /** The slot is free: the photo that waited its turn starts now (after the breath, in afterLast). */
+  function startWaiting() {
+    const w = waiting;
+    if (!w || running) return;
+    waiting = null;
+    void exclusive((ctx) => startInner(w.req, ctx, true)).then(w.resolve, (): void => w.resolve({ outcome: 'error' }));
+  }
+
+  /** Before a check preps its photo (the phone's heaviest step) and reads it: the last check's closet call and
+   *  measuring finish first, up to TAIL_MS, so two checks never run on top of each other (#371). A photo that waited
+   *  its turn also gives the last score's reveal its moment (REVEAL_GAP_MS). Never throws. */
+  async function afterLast(waited: boolean): Promise<void> {
+    const cfg = deps.timers();
+    const capMs = cfg.tailMs ?? TAIL_MS;
+    const gapMs = waited && cfg.enabled ? cfg.revealGapMs ?? REVEAL_GAP_MS : 0;
+    const handles: unknown[] = [];
+    const after = (ms: number) => new Promise<void>((resolve) => handles.push(deps.scheduler.setTimer(resolve, ms)));
+    const settle = closet.settle().catch(() => {});
+    try {
+      await Promise.all([
+        cfg.enabled && capMs > 0 ? Promise.race([settle, after(capMs)]) : settle,
+        gapMs > 0 ? after(gapMs) : null,
+      ]);
+    } finally {
+      handles.forEach((h) => deps.scheduler.clearTimer(h));
     }
   }
 
@@ -676,6 +753,7 @@ export function createFitCheckService(deps: ServiceDeps) {
       running = null;
       cancelPending = false;
     }
+    startWaiting();
     const id = ctx.checkId;
     if (state.kind === 'reading' && (!id || state.checkId === id)) dispatch({ t: 'end' });
     if (!id) return { outcome: 'error' };
@@ -715,11 +793,22 @@ export function createFitCheckService(deps: ServiceDeps) {
     return kids.length === 1 && kids[0]!.details.recheck?.notSeen === true;
   }
 
+  /** A new photo (a check, a re-check, a snap): it starts now, or waits for the check that holds the slot (#371). */
   function start(req: CheckRequest): Promise<StartOutcome> {
+    if (!running) return startNow(req);
+    if (waiting) return Promise.resolve({ outcome: 'busy' });
+    console.log(`[check] ${req.mode} waits its turn: another check is still going`);
+    return new Promise((resolve) => {
+      waiting = { req, resolve };
+    });
+  }
+
+  /** Starts now or not at all ('busy'): "Which one is you?" keeps its question open while another photo reads. */
+  function startNow(req: CheckRequest): Promise<StartOutcome> {
     return exclusive((ctx) => startInner(req, ctx));
   }
 
-  async function startInner(req: CheckRequest, ctx: CheckCtx): Promise<StartOutcome> {
+  async function startInner(req: CheckRequest, ctx: CheckCtx, waited = false): Promise<StartOutcome> {
     const now = clock.nowMs();
     const parent = req.parentCheckId ? await store.fitChecks.get(req.parentCheckId) : null;
     if ((req.mode === 'recheck' || req.mode === 'shoeSnap') && !parent) return { outcome: 'noParent' };
@@ -730,6 +819,9 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (hold && (await deps.quota.snapshot()).pro) return { outcome: 'limit' };
     // One re-check per check, while its window is open (05 §3.1, ruling 22): each one is a paid read.
     if (req.mode === 'recheck' && parent && !isRecheckOpen(parent, now, clock) && !(now < recheckDeadline(parent, clock) && (await triesAfterNotSeen(parent.id)))) return { outcome: 'limit' };
+    // The last check's closet call and measuring end first; nothing is prepped or sent on top of them (#371).
+    await afterLast(waited);
+    if (ctx.abandoned) return { outcome: 'error' };
     // A new photo replaces a "Which one is you?" still waiting (never its own photo, which is being prepped now).
     if (req.photoUri && !req.person) await dropWhichOne(store, (uri) => uri !== req.photoUri && deps.discardPhoto?.(uri), { onlyOpen: true });
     const prep = await deps.prep.prepare(
@@ -858,6 +950,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     if (!stored?.free && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
     // A check waiting on the one quick tap hasn't counted yet: scoring this too could go past what today allows.
     if ((await store.fitChecks.all()).some((c) => c.id !== checkId && c.status === 'asking')) return { outcome: 'busy' };
+    await afterLast(false);
     const prep = await deps.prep.prepare(
       row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
     );
@@ -913,6 +1006,7 @@ export function createFitCheckService(deps: ServiceDeps) {
     // A new check's photo read since it failed (sent again): scored from that read, free (#342).
     const stored = parent ? null : await storedReadOf(row.imageHash, checkId);
     if (parent ? !isRecheckOpen(parent, now, clock) : !stored?.free && !(await deps.quota.canStartCheck())) return { outcome: 'limit' };
+    await afterLast(false);
     // The photo first: if its copy is gone the row stays failed, so the card stays on screen.
     const prep = await deps.prep.prepare(
       row.demoPhotoId ? { kind: 'demo', photoId: row.demoPhotoId } : { kind: 'retry', sha256: row.imageHash, keptUri: row.photoFile, thumbUri: row.thumbFile },
@@ -979,6 +1073,8 @@ export function createFitCheckService(deps: ServiceDeps) {
       };
     },
     start,
+    /** A check is going (or its closet work is), so a new photo would wait its turn (#371): the camera says so. */
+    busy: (): boolean => running !== null || waiting !== null || closet.busy(),
     /** The one quick tap (02 "S5q"): his answer or 'skip'. Queued, and a no-op unless the check is still asking
      *  and unanswered, so a double tap (or a second device) can't score it twice. */
     answerTap(checkId: string, a: TapAnswer): Promise<FitCheckRow | null> {
@@ -1031,7 +1127,7 @@ export function createFitCheckService(deps: ServiceDeps) {
         const person = q?.people[index];
         if (!m || !q || q.state !== 'open' || !person) return null;
         await store.chat.patch(messageId, { payload: { ...m.payload, state: 'picked' } });
-        const r = await start({
+        const r = await startNow({
           mode: q.mode, ...(q.photoId ? { photoId: q.photoId } : { photoUri: q.photoUri, person }), ...(q.parentCheckId ? { parentCheckId: q.parentCheckId } : {}),
           ...(q.occasion ? { occasion: q.occasion } : {}), ...(q.style !== undefined ? { style: q.style } : {}),
         });
@@ -1057,6 +1153,10 @@ export function createFitCheckService(deps: ServiceDeps) {
     },
     /** Stop the current read (screen changes, demo resets). */
     async cancel() {
+      // A photo waiting its turn goes with it: nothing of it was prepped, sent or counted (#371).
+      const w = waiting;
+      waiting = null;
+      w?.resolve({ outcome: 'dropped' });
       const c = current;
       if (c) c.abort.abort();
       else if (running) cancelPending = true; // still preparing: its read stops as it starts
@@ -1251,10 +1351,19 @@ export function createFitCheckService(deps: ServiceDeps) {
     /** S21 "What changed?": the score if he did these fixes (all the first check's fixes by default). */
     async previewConfirm(recheckId: string, targets?: readonly string[]) {
       const d = await confirmDraft(recheckId, targets);
-      return d ? { before: d.row.score, after: d.outcome?.after ?? d.row.score } : null;
+      if (d) return { before: d.row.score, after: d.outcome?.after ?? d.row.score };
+      const row = await store.fitChecks.get(recheckId);
+      return row ? { before: row.score, after: row.score } : null;
+    },
+    /** S21 (#383): the targets of the first card's fixes this re-check may confirm (confirmableOf). Empty: the card
+     *  offers "Not quite right?" instead of "I did make the change" and "Tell me". */
+    async confirmableFixes(recheckId: string): Promise<string[]> {
+      const row = await store.fitChecks.get(recheckId);
+      const parent = row?.parentId ? await store.fitChecks.get(row.parentId) : null;
+      return row && parent ? (await confirmableOf(row, parent)).map((f) => f.target) : [];
     },
     /** S21: he did the fix. Apply it to what the re-check read (source userConfirmed), so a change
-     *  the re-check did catch is kept, and re-score against the first check. */
+     *  the re-check did catch is kept, and re-score against the first check. Only fixes it may confirm (#383). */
     async confirmFixes(recheckId: string, targets?: readonly string[]) {
       const d = await confirmDraft(recheckId, targets);
       if (!d) return null;
@@ -1273,6 +1382,8 @@ export function createFitCheckService(deps: ServiceDeps) {
             ? {
                 parentScore: outcome.before, delta: outcome.delta, rawDelta: outcome.rawDelta, notes: row.details.recheck?.notes ?? [],
                 doneFixes: outcome.doneFixes.map((f) => ({ copy: f.copy, earned: f.earned })), newProblems: outcome.newProblems, notSeen: false,
+                ...(row.details.recheck?.seen ? { seen: row.details.recheck.seen } : {}),
+                ...(row.details.recheck?.rawReadingId ? { rawReadingId: row.details.recheck.rawReadingId } : {}),
               }
             : row.details.recheck,
         },

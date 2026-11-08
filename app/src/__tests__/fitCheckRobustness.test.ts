@@ -131,15 +131,17 @@ describe('Try again', () => {
 });
 
 describe('one check at a time', () => {
-  it('a second photo while one is reading is refused ("busy"); the first card is untouched; cancel fails it visibly', async () => {
+  it('a second photo while one is reading waits its turn (#371), a third is refused ("busy"); the first card is untouched; cancel fails it visibly and drops the waiting one', async () => {
     const { store, svc, source } = await setup({ pro: true });
     source.holdAt = 0.5;
     const first = svc.start({ mode: 'check', photoId: 'p01b', occasion: 'date' });
     await new Promise((r) => setTimeout(r, 20));
     expect(svc.getState()).toMatchObject({ kind: 'reading' });
-    expect(await svc.start({ mode: 'check', photoId: 's15', occasion: 'everyday' })).toEqual({ outcome: 'busy' });
+    const second = svc.start({ mode: 'check', photoId: 's15', occasion: 'everyday' });
+    expect(await svc.start({ mode: 'check', photoId: 's14', occasion: 'everyday' })).toEqual({ outcome: 'busy' });
     expect(svc.getState()).toMatchObject({ kind: 'reading' });
     await svc.cancel();
+    expect(await second).toEqual({ outcome: 'dropped' });
     const r = await first;
     expect(r.outcome).toBe('failed');
     expect((await store.fitChecks.get(idOf(r)))!.status).toBe('failed');

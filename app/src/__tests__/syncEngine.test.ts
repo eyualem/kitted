@@ -38,7 +38,7 @@ const msg = (id: string, text: string, createdAt = 1): ChatMessage => ({
 });
 const fact = (id: string, value: string): FactRow => ({ id, key: 'budget', value, source: 'told', createdAt: 1, isDeleted: false });
 const profile = (over: Partial<ProfileRow> = {}): ProfileRow => ({
-  id: 'me', birthYear: 2003, heightCm: 178, build: 'slim', fitPreference: 'regular', styles: [['minimal', 0.5]] as never, boldness: null, budget: null,
+  id: 'me', birthYear: 2003, heightCm: null, build: '', fitPreference: 'regular', styles: [['minimal', 0.5]] as never, boldness: null, budget: null,
   lastOccasion: 'everyday', consentVersion: 'v2', consentAt: 5, onboardingDone: true, ideaTime: null, units: 'imperial', createdAt: 1, ...over,
 });
 
