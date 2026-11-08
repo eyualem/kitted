@@ -14,8 +14,8 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ---
 
 ## Next up
-1. Review the waiting pull requests against the spec (T1).
-2. Write the free-and-Pro and limits specs with you (T10, T20). Everything about money waits on them.
+1. Build the new limits and the three upgrade moments (T11, then T12).
+2. Write the limits spec with you (T20); the free-and-Pro spec is done (T10), so T11 and T12 can start.
 3. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80).
 4. Start your two launch photo sets now; they take the longest (Y5, Y6).
 5. Read scanned clothes into Closet; your clothes photos are in (T70).
@@ -63,7 +63,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 Spec: `specs/free-and-pro.md` (interview: T10)  
 Lane files: `app/src/features/{paywall,held,finish}`, `app/src/services/{quota,purchases,entitlements}.ts`, `app/src/features/settings/plan.ts`
 
-- [~] funny-austin · PR pending · **T10** · Write the free-and-Pro spec with you: the soft page, the limit card's button, the paywall without a trial, and their words · *done: your yes (Nov 7) · files: `specs/free-and-pro.md`*
+- [x] 2026-11-07, #69 · **T10** · Write the free-and-Pro spec with you: the soft page, the limit card's button, the paywall without a trial, and their words · *done: your yes (Nov 7) · files: `specs/free-and-pro.md`*
 - [ ] **T11** · The new limits in the app: 7 free checks (max 1 a day), 3 questions a day, Pro 5 + 30, no trial anywhere · *after T10 · checks: F10 Free and Pro, F10.4 · files: quota.ts, paywall/, settings/plan.ts, en.ts*
 - [ ] **T12** · The three upgrade moments: the soft page after his first result, the limit card's button, the full paywall at check 8 · *after T10, T11 · checks: F10 "When he sees it", F10.2, F10.3 · files: finish/, paywall/, held/*
 - [!] **Y7** · **T13** · Real purchases with RevenueCat, monthly and yearly, and Restore, replacing the pretend store · *after T10 · checks: F10.5, F10.6 on a test account · files: purchases.ts, entitlements.ts, package.json, app.config.ts*
