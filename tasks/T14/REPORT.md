@@ -106,3 +106,59 @@ Fresh Metro (`--clear`) from this worktree, main Simulator, `-demoLatency 0`. Li
 - The flow-risk note (whole-label matching) → right; the test writer's ruling fixed it. The flow now fails earlier, at the glass button.
 
 **Verdict:** not ready: one code defect (demo 259's morning card) and one test defect (the flow can't open the sample sheet, so the flow is unrun); a minor inventory gap · rounds: 1 of 3.
+
+## Verification, round 2 (verifier)
+Round 2 of 3, 2026-11-08, on `c6687a8d` (build `8cbfe518`, tests `42af5d42`, lock `c6687a8d`). Screenshots in `screenshots/t14/` (git-ignored), paths relative to the repo root. REPORT.md → Built read only after the checks below.
+
+**Lock:** `git diff 42af5d42..HEAD` on `app/src/__tests__/betaLimits.test.ts`, `firebase/tests/api.test.ts`, `app/e2e/` and `tasks/T14/TESTING.md`: only TESTING.md's lock line (the "lock tests (round 2)" commit). Since round 1's lock (`3f4ec42f`) the test files changed only in `42af5d42`, a test-writer commit recorded in Test changes → Round 2 (`beta-sample-photo.yaml`, `T14-beta-limits.yaml`); the build commit `8cbfe518` touched no test file. **Lock holds.** · banned shortcuts: none in `git diff ed6c91cd..HEAD` (no `.only`, `.skip`, `xit`, `it.todo`, snapshots, fixture edits, test detection, test values in app code) · files outside the list: `app/src/features/morning/index.ts` (259 added to `MORNING_DEMO_SCREENS`), explained in Built → Deviations.
+**Suites:** `npm run check` step by step: `tsc --noEmit` clean · core typecheck clean · `expo lint` 0 errors (1 old warning, `tryOn.test.ts`) · core vitest 853/853 · jest (as `npx jest --no-watchman`) **1648 passed, 4 skipped; 123 suites passed, 3 skipped** · server (`npm --prefix tests run emulate`) **79/79**, 3 files · parity: core not touched.
+**Flows:** Metro from this worktree with its caches cleared first (the same as `--clear`), main Simulator: `maestro --device 111D0A09-… test app/e2e/flows/` → `[Passed] FP7.5 · four photos and 21 questions on beta (5m 20s)`, `[Passed] smoke · opens on a demo screen (11s)`, **2/2 Flows Passed**.
+
+### Do the flow's new routes keep FP7.5 proven?
+Yes. Read from the code, not the notes:
+- The camera's library button on the Simulator (`CameraScreen.pickFromLibrary`, no native camera) only does `router.push('/sheets/sample-photos?mode=check&from=camera')`. The flow's `kitted://sheets/sample-photos?mode=check` opens the same sheet with the same mode; `from` changes only how it closes (`dismissAll` vs `back`), and the lens is empty both ways (the composer's camera button pushes `/camera` with no occasion).
+- A sample's tap calls `startCheck(mode, { photoId }, parent, lens)`, and the only quota gate is in `fitCheck.start` (`service.ts`: `hold = req.mode === 'check' && !(await deps.quota.canStartCheck())`). The camera screen has no quota, paywall or plan code, and the composer's camera button is a plain `router.push('/camera')`. So the flow's 4th photo goes through the same hold as a camera photo.
+- What the flow no longer covers is the composer → camera → library-button navigation, and the camera screen's own words. Both checked by hand this round: on demo 259 (3 checks used) the composer's camera button (0.15 s tap) opened the camera, whose words are only `Shoulders and hips in frame`, `Hold still`, `Propped`, `Mirror` (nothing banned), and its own auto-capture took a 4th photo that was held under the beta card, `Save for tomorrow` only, subtitle `1 photo waiting to score` (`screenshots/t14/r2-live-camera-4th.png`). Round 1 proved the library-button path live the same way (`live-4th-photo-held-light.png`); round 2 changed nothing on that path.
+- You by `kitted://you` and the composer as `Ask Kit.*`: navigation only. Every assertion is unchanged, and the Today-card, Settings and Plan steps still match whole labels.
+- One weak spot, not a defect: `beta-sample-photo.yaml`'s optional `tapOn: "Open"` would tap any element whose whole label is `Open`. No such element is on the Stylist screen today.
+
+### Criteria
+- **FP7.1** · **pass** · proof: the four app tests and the server test green; the flow's 4 photos (3 scored, the 4th held with the beta card's whole label, no `Score it now with Pro`) passed; bug `betaChecks` 3→2 (`quota.ts`) → 13 tests fail, including all four FP7.1 tests; round 1's 7 bugs on this criterion all caught. Live camera 4th photo held: `screenshots/t14/r2-live-camera-4th.png`. Not verified: the live server (a deploy, ask the founder; then T85).
+- **FP7.2** · **pass** · proof: three app tests and the server test green; bug "a re-check bumps `checks`" (`consumeRecheck`) → all three FP7.2 app tests fail.
+- **FP7.3** · **pass** · proof: four app tests and the server test green; the flow's 20 questions then `Kit: That's 20 questions today. More at 4 am.` passed; bug `betaQuestions` 20→19 → 7 tests fail (all four FP7.3); server `TIERS.beta.questions` 20→19 → `FP7.3 · beta: 22 questions pass on the server (20 + 2), the 23rd is refused` fails.
+- **FP7.4** · **pass** · proof: the app test and the server test green; bug "a repeated (cached) read counts" (`finalizeCheck` drops `if (!cached)`) → `FP7.4 · failed, offline, not rated and same-photo checks leave 3 checks` fails.
+- **FP7.5** · **pass** · proof: the 7 app tests green and the flow passes end to end (every step swept for the banned words and the paywall). Bugs: the tier gate removed from `paywallOn` → 4 tests fail (paywallOn, the soft page, no upgrade button, FP7.7's plan); the morning card's key `own.limit.beta` → `own.limit` (`MorningCard.tsx`) → **no unit test fails** (22/22), the flow fails at its last step (`Assertion is false: "Your fit checks reset at 4 am." is visible`); the You Today card's beta branch removed (`you/index.tsx`, `s.pro || s.tier === 'beta'` → `s.pro`) → no unit test covers it, the flow fails at `No visible element found: "Today\. resets at 4 am\. 0 of 3 fit checks left · 20 of 20 questions left"`. Both components are proven by the flow only, which is allowed (it is the task's test). Demo 259 now matches the inventory: `screenshots/t14/r2-259-light.png`, `r2-259-dark.png`, `r2-259-axxxl.png`. Not verified: a TestFlight build (T85).
+- **FP7.6** · **pass** (the visible `7 of 7` not testable yet, as TESTING.md) · proof: app and server tests green; bug "free gets the beta's limits" (`limitsFor`: `tier !== 'pro'` → beta) → `FP7.6 · on beta the phone keeps day counts only…` and `FP7.5 · the beta saved card's body…` fail. Would verify the rest: T11's and T21's tests.
+- **FP7.7** · **pass** · proof: both app tests green; the flow's Settings row `Plan & usage, Kitted beta` and the plan card `Kitted beta. 3 fit checks and 20 questions a day · resets at 4 am` passed; bug `planShortName` beta → `you.plan.free` → both FP7.7 tests fail. Screens 256 and 258 unchanged since round 1 (round 2 changed only `morning/index.ts`).
+
+### Break it on purpose
+Round 2: 11 bugs, each reverted with `git checkout`, tree clean after. 10 caught by unit or server tests (listed above), and 2 component bugs that no unit test catches were caught by the flow. None got through. Round 1's 31 still apply to unchanged code.
+
+### Screens
+Demo 259 (Beta · Morning card, checks used), re-shot on a fresh Metro, `-demoLatency 0`:
+- light `screenshots/t14/r2-259-light.png`, dark `r2-259-dark.png`, largest text (accessibility XXXL) `r2-259-axxxl.png`. **Matches:** the morning card is there; the line under `Wear this` / `Swap` reads `Your fit checks reset at 4 am.`; no `Your free check resets tomorrow`, and nothing under the `Stylist` title. VoiceOver label (Maestro hierarchy) exactly `Your fit checks reset at 4 am.`. At the largest size the line wraps to two lines with nothing clipped. The rest of the card (Morning., weather `Sample`, Class/Work · Smart casual, the four pieces, `Layer up today`, its body, `Wear this`, `Swap`) is the same as the free control screen 25 (`screenshots/t14/control-25-light.png`), except that 25 shows its own free subtitle and line.
+- Inventory scope: 259's entry lists only T14's line, like 256–258 (the rest of each screen is existing and unchanged). Round 1 accepted that for 256–258, so it is not counted as a defect here. A note in TESTING.md, "existing and unchanged elsewhere on the screen", would make it explicit.
+- 252–258: the code is unchanged since round 1's shots. The inventory lines added in round 2 (252–255's earlier chat, 254's subtitle `1 photo waiting to score`, the Stylist chrome) match round 1's screenshots (`252-light.png`, `254-light.png`).
+
+### Tried to break it
+- A 4th photo from the camera itself (auto-capture), not the library → held under the beta card (above) · covered by FP7.1's unit test (camera or library).
+- Bites on the flow (above) → the flow catches the components that unit tests don't.
+- Double tap on `Save for tomorrow`, kill and relaunch, 4 am, offline, failed, server/phone disagreement → round 1 (unchanged code) · round 1's proposed test stands: two `saveHeld` calls on one held check leave one saved row and one stylist card.
+- "Delete all my data" / reinstall → not tried (a delete control; not run without the founder's go) · round 1's proposed test stands: after `store.wipe()` and `resetTierForTests()`, `appTier(store)` is `beta` and a fresh quota allows 3 checks.
+
+### Implementer's claims
+- Round 2: 259 added to `MORNING_DEMO_SCREENS`, so demo 259 shows the card and `Your fit checks reset at 4 am.` → confirmed (screens above).
+- Deviation: one file outside the list (`morning/index.ts`) → confirmed, and it is the only one.
+- `prepareDemoScreen` writes a beta screen's `freeChecksUsed` as today's real count, so 252 counts the flow's photos → confirmed by the flow (3 scored, the 4th held).
+- Suites and counts (1648 / 4 skipped, 853, 79, lint) → confirmed.
+- "Not checked on the Simulator; flow not run" → now done by the verifier: passes.
+
+### Defects
+None.
+
+### Not verified
+- FP7.1 on the live server: a deploy (founder's go), then a beta tester's 4th photo on TestFlight (T85).
+- FP7.5 on a TestFlight build (`PAYWALL_BUILT` off, the live server): T85, a friend's phone through 4 photos and 21 questions.
+- FP7.6's visible `7 of 7 free checks left`: T11's and T21's tests.
+
+**Verdict:** ready · rounds: 2 of 3.
