@@ -2715,3 +2715,21 @@ Contradictions settled and decisions changed during the build. Newest last.
       - The planner refuses to plan from a missing or unapproved spec, as a second check.
     - **Why the main session, not a subagent:** a subagent can't hold a conversation with him; it runs on its own and returns a result. The interview has to happen where he's talking.
     - **Tasks that need no interview:** marked `spec: specs.md`, because their criteria are already exact there: T62 (the card's words, so its wait on T60 is dropped), T63, and the Launch lane. `specs.md` counts as approved (#388).
+
+## Nov 7 · WORKFLOW.md, and a plain intro for each lane in plan.md
+
+394. **The founder (Nov 7): format the tasks so he has more context and is on the same page; and put the workflow in one Markdown file, for him and for Claude Code, if that helps.** It did: the process was spread across CLAUDE.md, the coordinator, four agent manuals and the plan's legend, and nothing explained it start to finish.
+    - **`WORKFLOW.md`** (repo root, reference, not status) covers:
+      - the path as a text diagram, readable in the file pane
+      - the documents and who changes each
+      - what the founder does and what runs by itself, and how to start a task or an interview
+      - the six ways tests stay honest, and when a run stops
+      - how to read `plan.md`, and where the exact rules live
+      - a short glossary (spec, test oracle, TDD, mutation testing, PR, worktree, lane, subagent)
+    - **Kept from drifting:** it explains and links, and the manuals win where they disagree. CLAUDE.md says so.
+    - **`plan.md`:**
+      - each lane opens with one plain italic line: what it's for and what "done" looks like in the app
+      - a key for reading a task line
+      - the intro, the spec and the files each on their own line
+      - every task still on one line, so sessions find and change a task the same way
+    - **No tables:** the founder found tables hard to read in the file pane (#389), so lists are used.
