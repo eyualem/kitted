@@ -9,7 +9,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 - **Built but switched off:** the paywall and purchases (a pretend store), sign-in and backup (waiting in open pull requests), notifications. Every tester gets Pro's limits during the beta.
 - **Still on the old rules:** the 1-week trial, Pro at 10 checks and 50 questions, free at 1 check a day forever with 5 questions.
 - **Not built yet:** the 7 free checks, greeting you by name, the spend cap working the spec's way, the app-only server lock (App Check), PostHog, reading scanned clothes, "not rated" for womenswear, Apple's age check.
-- **10 pull requests are waiting,** three of them with spec work (sign-in, backup, the Welcome example).
+- **3 pull requests are waiting,** each with work before it can merge: sign-in and backup (T41) and the card's outfit picks (T64). The other 7 were merged or closed in T1.
 
 ---
 
@@ -27,7 +27,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 
 - [ ] **Y1** · **P1** · Register trykitted.com and claim @kitted.app / @trykitted (10 min) → the support email, the waitlist, videos
 - [ ] **Y2** · **P1** · Set up a support email, a privacy policy page and terms; Apple's standard terms are fine (15 min after Y1) → submitting the app, "Report a wrong score"
-- [ ] **Y3** · **P1** · Say merge, close or fix for each waiting pull request, after Claude's review (10 min) → sign-in and backup (T41)
+- [x] **Y3** · **P1** · Say yes or change Claude's verdicts on the waiting pull requests in `tasks/T1/REPORT.md`: fix 4, close 5, and one line of card copy (10 min) → the camera and scan fixes merged, sign-in and backup (T41), the card's outfit picks (T64) · yes, Nov 7
 - [ ] **Y4** · **P1** · Rotate the Gemini dev key: in Google AI Studio delete it, make a new one, paste it into `app/.env.development.local` (2 min) → safety
 - [ ] **Y5** · **P1** · Shoot 20 before/after fix photos with friends, each doing a fix the card suggested; note each person's profile (~1 h) → the "fix works" launch test (T81)
 - [ ] **Y6** · **P1** · Collect 40+ real photos of real people (with their OK and profile), rated blind by you and one friend aged 18–22 (1–2 h) → the "fair score" launch test (T82)
@@ -40,6 +40,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y13** · **P3** · Try Looksee, DRPD, GRWM, Dressly and ChatGPT with the same photo (45 min) → the "same photo, same score" video
 - [ ] **Y14** · **P3** · Raise the Google billing alert to match the $25-a-day cap (5 min) → the spend cap (T22)
 - [x] **Y15** · **P2** · OK installing Maestro, a free tool that replays tap-through tests on the Simulator (1 min) → old flows re-checked automatically on every task · installed Nov 7
+- [ ] **Y16** · **P3** · Seven small camera and card calls from your Oct 24 walk, each with a default, in `handoff/09-ui-review.md` §29 (lands with the dark-tip fix): your photos from the chat's camera button without opening the camera; Propped stays quiet until it sees you; the Mirror tip's words; after a re-check, opening the first check opens its fixes in one tap; "1 more question in Closet"; a described piece keeps its color; a fix row shows only the outfit's number (3 min) → those small fixes
 
 ---
 
@@ -54,7 +55,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 
 ### Waiting pull requests
 *Ten pieces of finished work were never merged. Reviewing them first means nobody rebuilds them, and nothing that breaks the spec slips in.*
-- [ ] **T1** · Review the 10 waiting pull requests against the spec: merge, close or fix, with a reason each; renumber their clashing log entries · then Y3 · *files: other branches only*
+- [x] 2026-11-07, #68 · **T1** · Review the 10 waiting pull requests against the spec: merge, close or fix, with a reason each; renumber their clashing log entries · `tasks/T1/REPORT.md`: #36 and #50 merged; #59, #49, #44, #39, #41 closed (branches kept); #58 and #57 go on in T41, #48 in T64 · *files: other branches only*
 
 ### Free and Pro
 *How Kitted makes money: 7 free checks, then Pro at $9.99 a month or $39.99 a year, with no trial. Done means a new user sees the soft page after his first result, an upgrade button when he hits the daily limit, the paywall at his 8th check, and real purchases.*
@@ -97,7 +98,7 @@ Spec: `specs/sign-in-and-backup.md` (interview: T40)
 Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privacy/wipe.ts`
 
 - [ ] **T40** · Write the sign-in-and-backup spec with you: Apple and Google only, the photo-backup switch and its words · *done: your yes · files: `specs/sign-in-and-backup.md`*
-- [!] **Y3** · **T41** · Finish the waiting sign-in and backup pull requests to the spec: remove email, photo backup off by default (it's on today), then merge · *after T1, T40 · checks: F11 Apple + Google, F11.3 · files: account/, sync/*
+- [!] **Y3** · **T41** · Finish the sign-in (#58) then backup (#57) pull requests to the spec: ask Apple for his first name (F1.4); take out #58's paid-team switch (that's T80); remove email sign-in, which is on main; build the photo-backup switch, off by default (today there is none and photos always upload); delete in one order (revoke, server once, phone); then merge · *after T1, T40 · checks: F11 Apple + Google, F11.3, F1.4 · files: account/, sync/, `firebase/functions`*
 - [ ] **T42** · "Delete account and all data" also wipes our server · *after T41 · checks: F9.1 · files: account/, privacy/wipe.ts*
 - [ ] **T43** · Restoring on a new phone tested end to end; photos upload only with backup on, and only he can see them · *after T41 · checks: F11.2, F11.4 · files: sync/, `firebase/tests`*
 
@@ -122,6 +123,7 @@ Lane files: `app/packages/kitted-core`, `extraction-test/`, `app/src/features/{f
 - [ ] **T61** · Dresses, skirts and heels read as "not rated", in the Python engine first, then the app's scoring (parity tests green) · *after T60 · checks: F2.5 · files: `extraction-test/`, core*
 - [ ] **T62** · The card's words to the spec: the head-not-found line, "Taking longer…", "I did make the change" · *spec: specs.md · checks: F2.2, F2.3, F3.3 · files: camera/, fitcheck/, en.ts*
 - [ ] **T63** · A test proving every card with a fix has a free fix · *spec: specs.md · checks: F2.7 · files: core tests*
+- [ ] **T64** · The morning card, Kit's ideas and Swap pick outfits with the fit check's scoring, not the old rubric: rebuild #48 on today's main, keeping the warm-layer and Swap-rotation changes · *after Y3 · spec: specs.md · checks: F6, F6.3 · files: core `ideas.ts`, core tests*
 
 ### Closet
 *So the closet fills from day one. Done means photos of clothes laid on a bed become Closet pieces, which makes the morning outfit idea work for a new user.*
@@ -165,6 +167,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-07 · T1: the 10 waiting pull requests reviewed against the spec (fix 4, close 5, one line for the founder); the scan triangle and the camera's dark tip merged; T41 corrected, T64 and Y16 added · #395–397
 - 2026-11-07 · `WORKFLOW.md`: the whole process on one page; plan.md lanes get a plain intro · #394
 - 2026-11-07 · the spec gate: each lane names its spec, specs carry the founder's approval line, `/build-task` starts the interview when one is missing · #393
 - 2026-11-07 · Maestro installed; flows in `app/e2e/`, replayed by the verifier on every task, locked like tests · #392

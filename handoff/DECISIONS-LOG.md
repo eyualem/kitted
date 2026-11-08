@@ -2734,6 +2734,15 @@ Contradictions settled and decisions changed during the build. Newest last.
       - every task still on one line, so sessions find and change a task the same way
     - **No tables:** the founder found tables hard to read in the file pane (#389), so lists are used.
 
+## Nov 7 · T1: the 10 waiting pull requests, reviewed against the spec
+
+395. **The 10 open pull requests (Oct 21–Nov 4) were reviewed against `specs.md` before anyone rebuilt them.** Verdicts and reasons in `tasks/T1/REPORT.md`; the founder says yes or changes them (Y3).
+    - **Fix, then merge:** #50 (camera's dark tip waits ~1 s), #36 (scan triangle, not color alone), #48 (as T64: the card ranks with the fit check's scoring), #58 then #57 (inside T41).
+    - **Close, branches kept for parts:** #59 (the founder turned that Welcome down on Nov 4; it promised "Your daily check is free" and 8 taps), #49 (new UI and copy outside the spec), #44 (its tick fix is on main as abdf2b1b; the peek has no spec), #39 (half on main; the rest is the founder's call).
+    - **The founder's call:** #41's line "Your olive overshirt was in Tuesday's 8.0.", for the Kit-and-morning interview (T50).
+    - **T41 was wrong in two places:** email sign-in is already on main (neither PR adds it), and photo backup has no switch to turn off: photos always upload when signed in (#57 `engine.ts:63` falls back to on). So T41 builds the switch. #58 also asks Apple for email only (breaks F1.4) and carries the unmerged paid-team commits, which belong to T80.
+    - **Lesson:** all 10 conflicted only (or mostly) in CLAUDE.md's old status lines and reused log numbers. `git merge-tree --write-tree --name-only origin/main origin/<branch>` lists a branch's conflicts without touching any checkout, safe with other sessions in the repo.
+
 ## Oct 21 (landed Nov 7) · The colorblind pass: a warning triangle on the scan camera
 
 396. **The colorblind pass (founder, Oct 21, after Claude reviewed his HCI course against Kitted: "do the pass", then "fix the scan camera's cut-off brackets… add the warning triangle like the rest of the app").** About 8% of men are red-green colorblind and the whole audience is men, so the rule from the course (CS 2484 class 11: never encode meaning in color alone; screenshot → desaturate) was checked across the app. Not a launch blocker; the check took one pass.
