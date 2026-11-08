@@ -2777,3 +2777,16 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Settled by Claude (the question limit, which the founder left open):** 20 questions a day. A question costs ~0.04¢ and a check with its re-check ~2–4¢ (`market/ai-costs.md`), so a tester at both caps every day costs about $4 a month; 20 sits between free's 3 and Pro's 30, and anyone who hits it is a heavy user worth hearing from.
     - **How:** a third server tier, `beta`, which the server's config answers for everyone until launch; the phone follows it, as it already does for the server's Pro tier. No lifetime count, and beta checks never count toward the 7 free checks, so every tester starts launch with 7. The beta reuses FP3's Pro-cap limit card with 3, and You → Plan says `Kitted beta`.
     - **Replaces** the open decision "everyone gets Pro's limits during the beta". Written as FP7 in `specs/free-and-pro.md` and approved by the founder (Nov 8: "Yes, merge and build"); T14 builds it, T85 puts it on TestFlight.
+
+400. **T14 planned: the beta's limits (Nov 8).** Plan: `tasks/T14/IMPLEMENTATION.md`.
+    - **Words (the founder, Nov 8):** on the beta, the morning card's used-up line is `Your fit checks reset at 4 am.`, and the saved card drops FP3's last sentence: `Saved. I'll score it when you open Kitted after 4 am.` The free versions are unchanged.
+    - **Settled by Claude:**
+      - Before the server's first answer, the phone assumes `beta` while the paywall flag is off, and `free` once it's on, so one launch switch flips both.
+      - One gate, `paywallOn()`, reads the tier.
+      - The server keeps its 2-question slack (22 there, 20 on the phone).
+      - Day counts carry across a tier switch.
+      - New strings go in `en.ts` `addedInBuild`.
+      - Minimal edits outside the lane: transport, session, ask pipeline, usePlan, the You and Plan screens, the morning card, the demo scenarios.
+    - **For T11 and T21:** T14 writes no lifetime count and no per-check marker. T11 must count only checks it marks as made on free, and T21 only free-tier reservations, so no beta or dev check ever counts toward the 7.
+    - **Known gap (T21 owns it):** the server counts a finished read even when the phone calls it "not rated", so 3 not-rated photos could make the server refuse a real 4th on the beta.
+    - **Deploy:** the server change needs a functions deploy, and the live `server/config` set to `beta` or cleared. Both are the founder's go.
