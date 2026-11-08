@@ -3,6 +3,7 @@
 // either way and parse Gemini's own answer either way: the server relays Gemini's body and status on success. On a
 // refusal it answers JSON `{ error }`, read here into `refusal` so a caller can tell the limit or the spending stop
 // from a failure.
+import { parseTier, type ServerTier } from './tier';
 
 export const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
@@ -100,7 +101,7 @@ export interface ServerTransportOptions {
   /** Minutes east of UTC now (the server's 4 am day). */
   tzMinutes: () => number;
   /** The tier the server answered with (x-kitted-tier), on every success. */
-  onTier?: (tier: 'free' | 'pro') => void;
+  onTier?: (tier: ServerTier) => void;
 }
 
 function refused(status: number, refusal: Refusal, text = JSON.stringify(refusal)): AiResponse {
@@ -130,8 +131,8 @@ export function serverTransport(o: ServerTransportOptions): AiTransport {
     if (req.free) headers['X-Kitted-Free'] = req.free;
     const res = await o.fetch(`${o.base}/v1/${req.route}?model=${encodeURIComponent(req.model)}`, { method: 'POST', headers, body: req.body, signal: req.signal });
     if (res.ok) {
-      const tier = res.headers?.get('x-kitted-tier');
-      if (tier === 'pro' || tier === 'free') o.onTier?.(tier);
+      const tier = parseTier(res.headers?.get('x-kitted-tier'));
+      if (tier) o.onTier?.(tier);
       return res;
     }
     const text = await res.text().catch(() => '');

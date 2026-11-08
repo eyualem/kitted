@@ -267,6 +267,16 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   185: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }] },
   186: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }, { at: '2026-10-20T08:12:00', do: 'snap', photoId: 'p01b' }] },
   187: { asOf: '2026-10-20T08:09:00', steps: [{ at: '2026-10-20T08:10:00', do: 'check', photoId: 'p01t', occasion: 'everyday' }] },
+  // The beta's day (T14, FP7). 253–254: today's 3 fit checks used (the screen's freeChecksUsed), so a 9:12 pm photo is
+  // held under the beta's card. 255: the 20 questions used, then a 21st. 256–258: before the seed's two questions
+  // (12:05, 12:09), so the day's questions start at 0. 259: the morning card with the day's checks used.
+  253: { asOf: '2026-10-22T21:12:00', steps: [{ at: '2026-10-22T21:12:00', do: 'hold', photoId: 's14' }] },
+  254: { asOf: '2026-10-22T21:12:00', steps: [{ at: '2026-10-22T21:12:00', do: 'hold', photoId: 's14', saved: true }] },
+  255: { steps: [{ at: '2026-10-22T12:20:00', do: 'askUsed', n: 20 }, { at: '2026-10-22T12:21:00', do: 'ask', text: 'What shoes go with my khaki chinos?' }] },
+  256: { asOf: ASK_AS_OF, steps: [] },
+  257: { asOf: ASK_AS_OF, steps: [] },
+  258: { asOf: ASK_AS_OF, steps: [] },
+  259: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 
@@ -313,6 +323,12 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   await store.setKv(KV.scenario, sc.scenario);
   await store.setKv(KV.seedLoaded, sc.scenario);
   if (sc.weather && sc.weatherAllowed) await store.setKv(WEATHER_PERMISSION_KV, 'granted');
+  // A beta screen's checks used are today's real count (T14): its next photos count from there.
+  if (sc.tier === 'beta' && sc.freeChecksUsed !== undefined) {
+    const day = dayKey(at(sc.now), US_EASTERN);
+    const u = (await store.usage.get(day)) ?? { dayKey: day, checks: 0, rechecks: 0, questions: 0, items: 0 };
+    await store.usage.put({ ...u, checks: sc.freeChecksUsed });
+  }
 
   for (const step of story.steps) {
     startClock(step.at);

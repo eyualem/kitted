@@ -11,8 +11,8 @@ export interface Config {
   timeoutMs: number;
 }
 
-/** During the beta every account gets Pro's limits (the founder's open call, built with the default). */
-export const DEFAULT_CONFIG: Config = { tier: 'pro', spendCapCents: 300, enforceAppCheck: false, timeoutMs: 30_000 };
+/** During the beta every account gets the beta's day (FP7, the founder, Nov 8): no or unknown tier is `beta`. */
+export const DEFAULT_CONFIG: Config = { tier: 'beta', spendCapCents: 300, enforceAppCheck: false, timeoutMs: 30_000 };
 
 export interface Ticket {
   uid: string;
@@ -42,7 +42,7 @@ export function firestoreStore(db: Firestore, opts: { configTtlMs?: number; now?
       if (cached && now() - cached.at < ttl) return cached.config;
       const d = (await db.doc('server/config').get()).data() ?? {};
       const config: Config = {
-        tier: d.tier === 'free' || d.tier === 'pro' ? d.tier : DEFAULT_CONFIG.tier,
+        tier: d.tier === 'free' || d.tier === 'pro' || d.tier === 'beta' ? d.tier : DEFAULT_CONFIG.tier,
         spendCapCents: num(d.spendCapCents, DEFAULT_CONFIG.spendCapCents),
         enforceAppCheck: typeof d.enforceAppCheck === 'boolean' ? d.enforceAppCheck : DEFAULT_CONFIG.enforceAppCheck,
         timeoutMs: num(d.timeoutMs, DEFAULT_CONFIG.timeoutMs),

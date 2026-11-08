@@ -43,6 +43,8 @@ interface Model {
   worePick: boolean;
   current: boolean;
   checkUsed: boolean;
+  /** The beta's rules (FP7): the checks-used line has the founder's words, not the free check's. */
+  beta: boolean;
   permission: 'granted' | 'denied' | 'unknown';
   myStyles: StyleKey[];
   /** "Updated for your olive fleece.": re-planned after he corrected one of its pieces (09-ui-review §26, #365). */
@@ -83,6 +85,7 @@ async function load(ideaId: string): Promise<Model | null> {
     row, items, known, reasons: details.reasons ?? [], piecesKnown: closet.length, check, worePick,
     current: cur.day === row.dayKey && cur.slot === row.slot,
     checkUsed: !snap.pro && snap.checksUsed >= snap.checkLimit,
+    beta: snap.tier === 'beta',
     permission: await weatherSource.permission(),
     myStyles: Array.from(new Set(myStyles)),
     updated: outfit ? updatedLine(outfit, closet) : null,
@@ -220,7 +223,7 @@ function FullCard({ m }: { m: Model }) {
         {showLink ? (
           m.checkUsed ? (
             <KText variant="footnote" color="ink3">
-              {t('own.limit')}
+              {t(m.beta ? 'own.limit.beta' : 'own.limit')}
             </KText>
           ) : (
             // A quiet line, not a third button (#338): the composer's camera does the same.

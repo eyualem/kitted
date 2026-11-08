@@ -1204,6 +1204,15 @@ const addedInBuild = {
   'share.a11y.versions': 'Version',
   'share.a11y.faces': 'Photo',
   'share.a11y.share': 'Share the card',
+  // The closed beta's day (specs/free-and-pro.md FP7, T14): 3 fit checks and 20 questions, no price, no "Pro". The held
+  // card's body and the morning line are the founder's (Nov 8).
+  'limit.beta.title': "That's today's {n} fit checks.",
+  'limit.beta.body': "I'll save this photo and score it after 4 am.",
+  'ask.limit.beta': "That's {n} questions today. More at 4 am.",
+  'you.plan.beta': 'Kitted beta',
+  'you.plan.betaLine': '{checks} fit checks and {questions} questions a day · resets at 4 am',
+  'held.body.beta': "Saved. I'll score it when you open Kitted after 4 am.",
+  'own.limit.beta': 'Your fit checks reset at 4 am.',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */
