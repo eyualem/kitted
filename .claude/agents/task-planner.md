@@ -23,7 +23,7 @@ You plan one code task for Kitted. The coordinator gives you the task ID. You wr
 - **Expect** is exact: numbers, states, and the copy word for word from the spec. If the spec has no exact words for something the user reads, that's an open question for the founder, not something you write.
 - **Must not** on every criterion: the case that must be refused or must not happen (an 8th free check is refused; a declined question isn't counted; nothing is sent without consent).
 - **Edges** from the spec's failure table that touch this task: offline, a failure mid-way, the 4 am day change, a wipe or reinstall.
-- **How:** pick the strongest check that can run: a behaviour test beats a manual check; a manual check beats "not verified". Never a source-text test (reading code with a regex) for a spec criterion.
+- **How:** pick the strongest check that can run: a behaviour test beats a manual check; a screen flow a person taps through gets a **flow** (Maestro, replayed on every later task); a manual check beats "not verified". Never a source-text test (reading code with a regex) for a spec criterion.
 - **UI inventory:** for each state the task shows (empty, loading, error, offline, done), every visible element with its exact words, VoiceOver label and testID, and the demo screen that shows it; light, dark and the largest text size.
 - **Not testable yet:** anything that can't be checked now (needs the founder's phone, a real photo set, an install), with exactly what would make it checkable. Never drop a criterion and never mark one easier than it is.
 

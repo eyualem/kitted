@@ -2696,3 +2696,10 @@ Contradictions settled and decisions changed during the build. Newest last.
       - The repo's real file names and test places replace the drafts' `SPEC.md`, `PLAN.md` and `tasks/TEMPLATES`.
     - **Defaults the founder accepted with the plan:** task folders are kept after merge as the record (CLAUDE.md's one exception to "no other status file"); the hook goes in; no Maestro yet, so the verifier drives the Simulator itself (Y15 asks for the install).
     - **Not checked yet:** agents and skills load when a session starts, so the first real run happens in a new session. Suggested first run: T63 (behaviour that exists → the "prove it bites" path).
+
+## Nov 7 · Maestro: tap-through flows, replayed on every task
+
+392. **The founder (Nov 7): yes to installing Maestro** (Y15). He ran the two Homebrew commands himself: trusting a package source is his call, not Claude's. Maestro 2.12.1 from mobile.dev's own tap (`mobile-dev-inc/tap`), not a script piped from the internet.
+    - **Flows live in `app/e2e/flows/`**; `app/e2e/common/open-demo.yaml` opens any demo screen. Launched by Maestro, the development build stops on its own launcher ("Development servers"), so the sub-flow taps the running Metro server first (trap in the build notes). The first flow, `smoke.yaml`, opens demo screen 12 and finds all four tabs: passed in 27 s on the main Simulator.
+    - **In `/build-task`:** the planner can pick "flow" as a check, the test writer writes flows with the tests, the verifier replays **every** flow on every task (a failing old flow is a code defect: this task broke something), and flows are locked like tests (the hook blocks the implementer from editing `app/e2e/`; checked: editing or deleting a flow blocked, running Maestro allowed).
+    - **Seen in passing:** demo screen 12's card header shows the literal word "DATE" where a date belongs (top right). Not checked whether it's a demo placeholder or a real bug.

@@ -1,0 +1,16 @@
+# Opens Kitted on a demo screen. The development build first shows its
+# launcher ("Development servers"): tap the running Metro server.
+# Usage: - runFlow: { file: ../common/open-demo.yaml, env: { SCREEN: "12", THEME: "light" } }
+appId: com.trykitted.kitted
+---
+- launchApp:
+    stopApp: true
+    arguments:
+      demoScreen: ${SCREEN}
+      theme: ${THEME || "light"}
+      demoLatency: 0
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:8081"

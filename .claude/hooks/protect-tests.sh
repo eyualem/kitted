@@ -8,12 +8,12 @@ exec python3 -I -c '
 import json, re, sys
 
 PROTECTED = re.compile(
-    r"(^|/)(app/src/__tests__/|app/packages/kitted-core/test/|firebase/tests/|handoff/fixtures/)"
+    r"(^|/)(app/src/__tests__/|app/packages/kitted-core/test/|firebase/tests/|handoff/fixtures/|app/e2e/)"
     r"|(^|/)tasks/[^/]+/TESTING\.md$"
     r"|\.test\.(ts|tsx|js|mjs)$"
 )
 PATH_IN_TEXT = re.compile(
-    r"(app/src/__tests__/|kitted-core/test/|firebase/tests/|handoff/fixtures/"
+    r"(app/src/__tests__/|kitted-core/test/|firebase/tests/|handoff/fixtures/|app/e2e/"
     r"|tasks/[^/\s]+/TESTING\.md|[\w./-]+\.test\.(ts|tsx|js|mjs))"
 )
 WRITES = re.compile(

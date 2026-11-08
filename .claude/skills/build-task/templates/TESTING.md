@@ -6,7 +6,7 @@ Written by the planner; tests written and locked by the test writer. **Locked on
 
 ## Criteria
 One line per criterion on the task's `plan.md` line. Every test name starts with its criterion ID.
-- **F<n.n>** · <the criterion, as the spec says it> · how: <unit | component | server emulator | parity | Simulator state | manual | launch bar> · test: `<file>` › `F<n.n> · <test name>` · expect: <exact value; copy word for word from the spec> · must not: <the case that must fail or be refused> · edges: <from the spec's failure table> · red: <the failure line when first run, or "exists: bites via <deliberate bug>">
+- **F<n.n>** · <the criterion, as the spec says it> · how: <unit | component | server emulator | parity | flow | Simulator state | manual | launch bar> · test: `<file>` › `F<n.n> · <test name>` · expect: <exact value; copy word for word from the spec> · must not: <the case that must fail or be refused> · edges: <from the spec's failure table> · red: <the failure line when first run, or "exists: bites via <deliberate bug>">
 
 ## UI inventory
 Every visible element, per state. Anything on screen that isn't here is a defect; anything here that isn't on screen is a defect.
