@@ -11,11 +11,12 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **`plan.md`**: the live state: where things stand, what's next in order, the founder's to-do list, open decisions with their defaults. **Update it after every finished step and at the end of every session, without being asked.**
 - **`handoff/DECISIONS-LOG.md`**: append-only and numbered. Every decision, settled contradiction or technical lesson, with the reason.
 - **`specs/` is written lane by lane** (each lane's first task in `plan.md`). Until a feature has its spec, its detail is in the `handoff/` docs; where they disagree with `specs.md`, `specs.md` wins.
+- **`tasks/<ID>/`**: one folder per code task, written by `/build-task`: IMPLEMENTATION.md, TESTING.md (the testing contract, locked once the tests commit) and REPORT.md (what was built and the verification). Kept after merge as the task's record.
 - Never start any other status, handoff or plan file.
 
 ## How to work
 1. **Start a task** by reading `plan.md`, then the spec for the feature you're touching. Open only the reference docs the task needs. Claim your task first: mark it `[~] <your session name>` in `plan.md`, commit and push, so no other session takes it. Work only on files in your task's lane; a shared file (listed in `plan.md`) is edited by one session at a time.
-2. **Build what the spec says.** Write the pass/fail checks before the code. If the spec looks wrong, or the work needs something it doesn't cover, ask; never redesign quietly.
+2. **Build what the spec says.** Code tasks run through `/build-task <ID>`: a planner, a test writer, an implementer and a verifier, each a separate agent; never two of those jobs in one mind. Tests come before the code and are locked; never weaken a test to pass it. A criterion passes only with proof; otherwise it's "not verified", with what would verify it. Every visible UI element is in the task's UI inventory; anything else is a defect. If the spec looks wrong, or the work needs something it doesn't cover, ask; never redesign quietly.
 3. **After each finished step:** `npm run check` in `app/` (on its own, then commit), commit, push the branch, update `plan.md`, and add a DECISIONS-LOG entry if anything was decided. In `plan.md` change only your own task lines, your to-do items and one session-log line (keep the last 15). A task is `[x]` only once merged to main; until then it stays `[~]` with its pull request.
 4. **Ask before:** spending money (AI test runs included), installing or downloading anything, a new npm package, an EAS build, merging to main, or making the repo public.
 5. **Work only in this folder.** Codex and Gemini research outputs go in `inputs/`.
