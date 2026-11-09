@@ -94,7 +94,7 @@ Spec: `specs/setup-and-you.md` (interview: T30)
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 
 - [x] 2026-11-09, #78 · **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check; You as the settings home, the feature guide (your beta feedback, Nov 8) · *done: approved Nov 9 · files: `specs/setup-and-you.md`*
-- [~] you-and-first-run · T34 · plan · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
+- [~] you-and-first-run · T34 · tests · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
 - [~] you-and-first-run · **T35** · *(beta)* The feature guide for new users: Kit's hello, then a tip the first time he reaches the score card, Closet, Lookbook and You; "Show me around" in You brings them back · *after T34 · checks: SY2, SY3 · files: onboarding/, you/, en.ts, a few tab screens*
 - [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: SY4, F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts*
 - [ ] **T32** · Apple's age check (Declared Age Range) when he taps Looks right; declined or unavailable, the birth year decides · *after T30, T80 · checks: SY6, F1.2 · files: onboarding/, a native module*
