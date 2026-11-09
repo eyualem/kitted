@@ -7,7 +7,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ## Where things stand
 - **On your phone today:** fit checks with scores, fixes and re-checks; Closet, Lookbook and You; Kit answering for real; the morning and evening card with real weather; share cards; voice input (not yet confirmed on your phone).
 - **Built but switched off:** the paywall and purchases (a pretend store), sign-in and backup (waiting in open pull requests), notifications.
-- **The beta comes first:** friends test for free with no paywall. The server gives everyone the old Pro limits (10 checks, 50 questions) until T14 brings in 3 checks and 20 questions a day. The paywall and real purchases wait for launch.
+- **The beta comes first:** friends test for free with no paywall. The app holds testers to 3 fit checks and 20 questions a day (T14); the live server still allows the old 10 and 50 until it's deployed (Y18). The paywall and real purchases wait for launch.
 - **Still on the old rules:** the 1-week trial, Pro at 10 checks and 50 questions, free at 1 check a day forever with 5 questions.
 - **Not built yet:** the 7 free checks, greeting you by name, the spend cap working the spec's way, the app-only server lock (App Check), PostHog, reading scanned clothes, "not rated" for womenswear, Apple's age check.
 - **3 pull requests are waiting,** each with work before it can merge: sign-in and backup (T41) and the card's outfit picks (T64). The other 7 were merged or closed in T1.
@@ -15,7 +15,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ---
 
 ## Next up
-1. The beta's limits: 3 fit checks and 20 questions a day, no paywall (T14).
+1. Deploy the server's beta limits once you OK it (Y18).
 2. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80). TestFlight needs it.
 3. Put the beta on TestFlight and invite your friends (T85).
 4. Start your two launch photo sets now; they take the longest (Y5, Y6).
