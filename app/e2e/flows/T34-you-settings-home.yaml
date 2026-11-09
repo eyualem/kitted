@@ -53,6 +53,10 @@ name: SY1 · You is the settings home
 - extendedWaitUntil:
     visible: "Appearance, System"
     timeout: 90000
+# Where at=settings lands (round 1, REPORT.md Disputes): this page is too short for the rows' top to reach the top of
+# the visible area, so it opens at the end: every row down to the version line is on screen without a scroll.
+- assertVisible: "Acknowledgements"
+- assertVisible: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
 - assertVisible:
     text: "Plan & usage, Free plan"
     below:
@@ -113,6 +117,10 @@ name: SY1 · You is the settings home
 - extendedWaitUntil:
     visible: "Plan & usage, Kitted Pro"
     timeout: 90000
+# A short page opens at its end (round 1): Subscription's rows and the version line on screen without a scroll.
+- assertVisible: "Restore purchases"
+- assertVisible: "Acknowledgements"
+- assertVisible: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
 - scrollUntilVisible:
     element:
       text: "Restore purchases"

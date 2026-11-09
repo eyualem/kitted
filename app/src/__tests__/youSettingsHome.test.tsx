@@ -239,33 +239,62 @@ describe('SY1.1 · no gear, no Settings page; old links open You', () => {
   });
 
   it('SY1.1 · /you?at=settings opens You scrolled once to its rows; any other value, or none, does not scroll', async () => {
-    mockParams = { at: 'settings' };
-    await renderYou();
-    expect(scrollTo).not.toHaveBeenCalled();
-    await fireEvent(screen.getByTestId('you-rows'), 'layout', { nativeEvent: { layout: { x: 0, y: 640, width: 370, height: 500 } } });
-    expect(scrollTo).toHaveBeenCalledTimes(1);
-    expect(scrollTo).toHaveBeenCalledWith(expect.objectContaining({ y: 640 - space.m, animated: false }));
-    // Only on the first layout after it mounts.
-    await fireEvent(screen.getByTestId('you-rows'), 'layout', { nativeEvent: { layout: { x: 0, y: 700, width: 370, height: 500 } } });
-    expect(scrollTo).toHaveBeenCalledTimes(1);
-    screen.unmount();
+    // Round 1 dispute (REPORT.md): the exact y the native scroll needs depends on iOS's adjusted insets (the nav bar,
+    // the large title, the tab bar), which don't exist in Jest. So this pins what Jest can see on a tall page (sizes
+    // given through the ScrollView's own events): one unanimated scrollTo after the rows' first layout, never past
+    // the rows' top (y ≤ rows.y − space.m), never below 0, and moving 1:1 with the rows (rows 260 pt lower → y 260
+    // lower). Where the rows land on the phone (at the top of the visible area, or the end of a short page) is the
+    // flow's "SY1.2 rows" step.
+    const lay = async (y: number) =>
+      fireEvent(screen.getByTestId('you-rows'), 'layout', { nativeEvent: { layout: { x: 0, y, width: 370, height: 500 } } });
+    const tallPage = async () => {
+      const sv = screen.getByTestId('you-scroll');
+      await fireEvent(sv, 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 402, height: 874 } } });
+      await fireEvent(sv, 'contentSizeChange', 402, 3000);
+    };
+    const scrollToEnd = jest.mocked(ScrollView.prototype.scrollToEnd);
+    const targets: number[] = [];
+    for (const rowsY of [640, 900]) {
+      mockParams = { at: 'settings' };
+      scrollTo.mockClear();
+      scrollToEnd.mockClear();
+      await renderYou();
+      await tallPage();
+      expect(scrollTo).not.toHaveBeenCalled();
+      await lay(rowsY);
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      expect(scrollToEnd).not.toHaveBeenCalled();
+      const arg = scrollTo.mock.calls[0]?.[0] as { y?: number; animated?: boolean } | undefined;
+      expect(arg?.animated).toBe(false);
+      const y = arg?.y ?? Number.NaN;
+      expect([y >= 0, y <= rowsY - space.m]).toEqual([true, true]);
+      targets.push(y);
+      // Only on the first layout after it mounts.
+      await lay(rowsY + 60);
+      expect([scrollTo.mock.calls.length, scrollToEnd.mock.calls.length]).toEqual([1, 0]);
+      await screen.unmount();
+    }
+    expect(targets[1]! - targets[0]!).toBe(260);
 
     // Floored at 0.
     scrollTo.mockClear();
     await renderYou();
-    await fireEvent(screen.getByTestId('you-rows'), 'layout', { nativeEvent: { layout: { x: 0, y: 3, width: 370, height: 500 } } });
+    await tallPage();
+    await lay(3);
     expect(scrollTo).toHaveBeenCalledTimes(1);
     expect(scrollTo).toHaveBeenCalledWith(expect.objectContaining({ y: 0, animated: false }));
-    screen.unmount();
+    await screen.unmount();
 
     const others: Record<string, string>[] = [{}, { at: 'plan' }];
     for (const params of others) {
       mockParams = params;
       scrollTo.mockClear();
+      scrollToEnd.mockClear();
       await renderYou();
-      await fireEvent(screen.getByTestId('you-rows'), 'layout', { nativeEvent: { layout: { x: 0, y: 640, width: 370, height: 500 } } });
-      expect(scrollTo).not.toHaveBeenCalled();
-      screen.unmount();
+      await tallPage();
+      await lay(640);
+      expect([scrollTo.mock.calls.length, scrollToEnd.mock.calls.length]).toEqual([0, 0]);
+      await screen.unmount();
     }
   });
 
@@ -300,7 +329,7 @@ describe('SY1.1 · no gear, no Settings page; old links open You', () => {
     expect([shared.headerRight, shared.headerLeft]).toEqual([undefined, undefined]);
 
     // You itself has no element labelled Settings.
-    screen.unmount();
+    await screen.unmount();
     await renderYou();
     expect(screen.queryByLabelText('Settings')).toBeNull();
     expect(screen.queryByText('Settings')).toBeNull();
@@ -345,7 +374,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     await renderYou();
     const withAccount = ids();
     expect(withAccount.slice(withAccount.indexOf('you-rows'), withAccount.indexOf('you-row-appearance'))).toEqual(['you-rows', 'you-section-account', 'you-section-main']);
-    screen.unmount();
+    await screen.unmount();
     mockAccountsOn = false;
 
     // Notifications built: first in the main card, before Appearance.
@@ -356,14 +385,14 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     ]);
     expect(screen.getByTestId('you-row-notifications')).toHaveTextContent('Notifications', { exact: false });
     expect(label(screen.getByTestId('you-row-notifications'))).toBe('Notifications');
-    screen.unmount();
+    await screen.unmount();
 
     // Not built: no Notifications row.
     await renderRows({ notificationsBuilt: false, links: { support: null, privacy: null, terms: null } });
     expect(screen.getByTestId('you-row-plan')).toBeTruthy();
     expect(screen.queryByTestId('you-row-notifications')).toBeNull();
     expect(screen.queryByText('Notifications')).toBeNull();
-    screen.unmount();
+    await screen.unmount();
 
     // Paywall on (free): Subscription between Privacy & data and Help & about, Manage then Restore.
     given('freePaywall');
@@ -376,7 +405,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     expect(within(screen.getByTestId('you-section-subscription')).getByText('Subscription')).toBeTruthy();
     expect(label(screen.getByTestId('you-row-manage'))).toBe('Manage subscription');
     expect(label(screen.getByTestId('you-row-restore'))).toBe('Restore purchases');
-    screen.unmount();
+    await screen.unmount();
 
     // Beta with the paywall script on: nothing to buy, no Subscription at all (no empty card).
     resetTierForTests();
@@ -388,7 +417,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     expect(screen.queryByText('Subscription')).toBeNull();
     expect(screen.queryByText('Manage subscription')).toBeNull();
     expect(screen.queryByText('Restore purchases')).toBeNull();
-    screen.unmount();
+    await screen.unmount();
 
     // Paywall off (free): no Subscription section either.
     resetTierForTests();
@@ -397,7 +426,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     await renderRows({ notificationsBuilt: false, links: { support: null, privacy: null, terms: null } });
     expect(screen.getByTestId('you-row-plan')).toBeTruthy();
     expect(screen.queryByTestId('you-section-subscription')).toBeNull();
-    screen.unmount();
+    await screen.unmount();
 
     // Every address set: Help & about reads report, support, privacy policy, terms, then Acknowledgements.
     await renderRows({ notificationsBuilt: false, links: LINKS });
@@ -406,13 +435,13 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     expect(['you-row-report', 'you-row-support', 'you-row-privacy-policy', 'you-row-terms'].map((id) => label(screen.getByTestId(id)))).toEqual([
       'Report a wrong score', 'Contact support', 'Privacy policy', 'Terms of use',
     ]);
-    screen.unmount();
+    await screen.unmount();
 
     // Only the support address: the two mail rows, not the two web rows.
     await renderRows({ notificationsBuilt: false, links: { support: 's@x.co', privacy: null, terms: null } });
     const helpMail = within(screen.getByTestId('you-section-help')).getAllByTestId(/^you-row-/).map((el) => el.props.testID);
     expect(helpMail).toEqual(['you-row-report', 'you-row-support', 'you-row-acknowledgements']);
-    screen.unmount();
+    await screen.unmount();
 
     // No address: no mail or web row.
     await renderRows({ notificationsBuilt: false, links: { support: null, privacy: null, terms: null } });
@@ -447,7 +476,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     ]);
     const pro = within(screen.getByTestId('you-pro')).getByRole('button');
     expect([label(pro), pro.props.accessibilityHint]).toEqual(['Kitted Pro', 'Plan & usage']);
-    screen.unmount();
+    await screen.unmount();
 
     // Free: no Pro row.
     resetTierForTests();
@@ -469,7 +498,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     for (const f of live.slice(0, 4)) expect(knows.getAllByText(factTitle(f)).length).toBeGreaterThanOrEqual(1);
     for (const f of live.slice(4)) expect(knows.queryByText(factTitle(f))).toBeNull();
     expect(knows.queryByText("I'll add what I learn here.")).toBeNull();
-    screen.unmount();
+    await screen.unmount();
 
     for (const f of await mockStore.facts.all()) await mockStore.facts.patch(f.id, { isDeleted: true });
     await renderYou();
@@ -526,7 +555,7 @@ describe('SY1.3 · each row does what the Settings row did', () => {
     const planLabel = async () => {
       await renderRows({ notificationsBuilt: false, links: { support: null, privacy: null, terms: null } });
       const l = label(screen.getByTestId('you-row-plan'));
-      screen.unmount();
+      await screen.unmount();
       return l;
     };
     given('free');
@@ -547,10 +576,12 @@ describe('SY1.3 · each row does what the Settings row did', () => {
 
   it('SY1.3 · Appearance shows the saved choice and saves a new one', async () => {
     given('free');
-    const pill = () => within(screen.getByTestId('you-row-appearance')).getByRole('button');
+    // The pill by its label: once open, the menu's options are buttons inside the row too (round 1 dispute).
+    const pill = () => within(screen.getByTestId('you-row-appearance')).getByLabelText(/^Appearance, /);
     // Unset: System.
     await renderRows();
     await waitFor(() => expect(label(pill())).toBe('Appearance, System'));
+    expect(role(pill())).toBe('button');
     // Open and close without a pick: nothing written, still System.
     await fireEvent.press(pill());
     await fireEvent.press(pill());
@@ -561,13 +592,13 @@ describe('SY1.3 · each row does what the Settings row did', () => {
     await fireEvent.press(screen.getByLabelText('option:Light'));
     expect(label(pill())).toBe('Appearance, Light');
     await waitFor(async () => expect(await mockStore.getKv(KV.appearance)).toBe('light'));
-    screen.unmount();
+    await screen.unmount();
 
     // Saved Dark before You opens: Dark.
     await mockStore.setKv(KV.appearance, 'dark');
     await renderRows();
     await waitFor(() => expect(label(pill())).toBe('Appearance, Dark'));
-    screen.unmount();
+    await screen.unmount();
 
     // After "Delete all my data" (the store wiped): System again.
     await mockStore.wipe();
@@ -592,7 +623,7 @@ describe('SY1.3 · each row does what the Settings row did', () => {
 
     // Restore with the demo entitlement Pro.
     jest.mocked(showToast).mockClear();
-    demoEntitlements.setPro(true);
+    await act(async () => demoEntitlements.setPro(true));
     await fireEvent.press(screen.getByTestId('you-row-restore'));
     await waitFor(() => expect(showToast).toHaveBeenCalledTimes(1));
     expect(jest.mocked(showToast).mock.calls).toEqual([['Restored. Kitted Pro is on.']]);
@@ -640,7 +671,7 @@ describe('SY1.4 · Privacy & data once on You', () => {
         jest.mocked(router.push).mockClear();
         await fireEvent.press(row);
         expect(jest.mocked(router.push).mock.calls).toEqual([['/you/privacy']]);
-        screen.unmount();
+        await screen.unmount();
       }
     }
   });
@@ -690,7 +721,7 @@ describe('SY1.6 · VoiceOver reads each row as one button with its value', () =>
     // Section labels are headers.
     expect(roleAbove(screen.getByText('Help & about'))).toBe('header');
     expect(roleAbove(screen.getByText('Subscription'))).toBe('header');
-    screen.unmount();
+    await screen.unmount();
 
     // Beta and Pro read their plan in the row's label.
     resetTierForTests();
@@ -698,7 +729,7 @@ describe('SY1.6 · VoiceOver reads each row as one button with its value', () =>
     given('beta');
     await renderRows();
     expect(label(screen.getByTestId('you-row-plan'))).toBe('Plan & usage, Kitted beta');
-    screen.unmount();
+    await screen.unmount();
     resetTierForTests();
     given('proPaywall');
     await renderRows();
