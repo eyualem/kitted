@@ -45,6 +45,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y16** · **P3** · Seven small camera and card calls from your Oct 24 walk, each with a default, in `handoff/09-ui-review.md` §29 (lands with the dark-tip fix): your photos from the chat's camera button without opening the camera; Propped stays quiet until it sees you; the Mirror tip's words; after a re-check, opening the first check opens its fixes in one tap; "1 more question in Closet"; a described piece keeps its color; a fix row shows only the outfit's number (3 min) → those small fixes
 - [ ] **Y17** · **P2** · Pick your first beta testers (friends, 18 or older) and get, with each one's OK, the email his Apple ID uses; TestFlight sends the invite there (10 min) → the beta (T85)
 - [x] **Y18** · **P2** · OK deploying the server's beta limits to Firebase and setting its live config to `beta` (1 min; Claude runs it) → testers held to 3 checks and 20 questions a day on the real server (T14) · yes, Nov 8
+- [ ] **Y19** · **P2** · The notifications interview with Claude: which nudge, its words, when the app asks your get-dressed time; then OK installing expo-notifications and a second TestFlight build (25 min) → notifications in the beta (T54, T53)
 
 ---
 
@@ -114,10 +115,11 @@ Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privac
 Spec: `specs/kit-and-morning.md` (interview: T50)  
 Lane files: `app/src/features/{stylist,ask,morning}`
 
-- [ ] **T50** · Write the Kit-and-morning spec with you: the decline line, greeting by name, the two notifications · *done: your yes · files: `specs/kit-and-morning.md`*
+- [ ] **T50** · Write the Kit-and-morning spec with you: the decline line, greeting by name (notifications moved to T54) · *done: your yes · files: `specs/kit-and-morning.md`*
 - [ ] **T51** · The morning and evening card greets him by name · *after T31, T50 · checks: F6 greeting, F1.5 · files: morning/copy.ts, en.ts*
 - [ ] **T52** · Kit declines off-topic questions (haircuts, grooming, fitness, dating) with the spec's line, caught on the phone, never counted · *after T50 · checks: F5.2 · files: ask/*
-- [ ] **T53** · Notifications: install expo-notifications, send the daily idea and "fit check ready", remove "trial ending" · *after T50 · checks: F13 · files: finish/service.ts, settings/prefs.ts, you/notifications.tsx, package.json*
+- [~] beta-notifications · **T54** · *(beta)* Write the notifications spec with you: the daily nudge at the time he usually gets dressed, where the app asks that time, the permission ask (Apple's way), the words, local vs. push · *done: your yes · files: `specs/notifications.md`*
+- [~] beta-notifications · **T53** · *(beta)* Notifications in the beta: install expo-notifications (your OK), the ask for his get-dressed time, the daily nudge scheduled on the phone, You → Settings → Notifications; testers who finished setup before it get the ask once; remove "trial ending" · *after T54, PR #71 merged (app.config.ts) · checks: specs/notifications.md · files: services/notifications.ts, finish/, settings/prefs.ts, you/notifications.tsx, morning/, en.ts, package.json, app.config.ts, config/features.ts*
 
 ### Fit check and scoring
 *The core promise: a score he trusts. Done means a dress or skirt is marked "not rated" instead of scored wrong, the card's words match the spec, and every card with a fix offers a free one.*
@@ -174,6 +176,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-08 · beta-notifications: notifications join the beta (founder): T54 (the spec) and T53 (the build) claimed; T50 keeps the decline line and greeting
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
 - 2026-11-08 · The beta first (founder): free for friends, 3 fit checks and 20 questions a day, no paywall (FP7, approved Nov 8; T14 builds it); the paywall and RevenueCat moved to launch; T85 and Y17 added · #399
