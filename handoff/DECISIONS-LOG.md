@@ -2856,3 +2856,11 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The name field is built now (T31's setup and Style profile part moves into T39),** so About you is built once.
     - **Setup ends in Stylist:** Kit's hello, then "Want to check a fit now?" with Check my fit / Later; the camera opens only on a tap, with the agreement on top the first time (SY5). Shortest path stays 6 taps to a live camera, so `specs.md` F1.1 keeps "6 taps" and adds "the camera never opens until he taps Check my fit" (founder's yes, Nov 9); F1.2 and the first-run list say age bands. The founder asked the notifications session to plan a reminder for someone who tapped Later (`firstCheckOffer.laterAt`).
     - **Its own spec file,** deferring to `specs/setup-and-you.md` for Kit's hello, the tips, the name's rules, the agreement's rules and Apple's age check, so two sessions don't edit one file at once.
+
+## Nov 9 · `specs/setup-and-you.md` brought in line with the new setup screens
+
+409. **The founder's yes (Nov 9, in the you-and-first-run session) to four edits,** after he approved `specs/onboarding-screens.md` (#407–408): setup ends in Stylist, not on the camera, and the birth year became an age pick on an About you step.
+    - **SY4:** the name field sits on About you above `How old are you?`; the step's button is `Continue`, waiting only on the age pick. Its rules (trimmed, 30 characters, never sent) don't change.
+    - **SY5:** Welcome → Looks → About you → Stylist (Kit's hello, then the offer card); the camera never opens on its own, and the agreement shows over it the first time he opens it. The "6 taps settled in T33" note went: OS5.5 counts 6.
+    - **SY6:** Apple's age sheet shows on `Continue` with an 18+ band; `Under 18` gets the stop with no Apple sheet; a declined or failed sheet leaves the picked band to decide.
+    - **SY2.1:** Kit's hello posts once at setup's end, above the offer card (no longer "on both the Agree and the Not now path").
