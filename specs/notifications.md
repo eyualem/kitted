@@ -8,7 +8,7 @@ After this, a tester who says yes gets one notification a day, 15 minutes before
 The beta needs testers to come back and check fits; without a nudge most drift after day one. A nudge that lands while he's choosing what to wear is useful on its own (an outfit idea, or "send me the fit"), so it never has to be a "we miss you". The ask card, the Settings page and the saved time were built in October and switched off, waiting for the notification package; this spec changes them to ask the time he gets dressed and turns them on.
 
 ## Scope
-- **In:** Kit's ask in the chat (and the same ask once for testers who finished setup before notifications existed); Apple's permission prompt; the daily nudge and its two lines; scheduling 7 days ahead on the phone; the comeback question after a week with no visit; You → Settings → Notifications; what tapping a nudge opens; "Delete all my data" and the under-18 lock.
+- **In:** Kit's ask in the chat (and the same ask once for testers who finished setup before notifications existed); Apple's permission prompt; the daily nudge and its two lines; scheduling 7 days ahead on the phone; the comeback question after a week with no visit; You → Notifications; what tapping a nudge opens; "Delete all my data" and the under-18 lock.
 - **Out (non-goals):** push from a server (no push key, no device tokens, no server code); a second notification kind in the beta (`Fit check ready` comes with launch, `specs.md` F13; `Trial ending` is gone for good); a separate weekend time; streaks, counts of days, or "we miss you" in any form; asking again after `No thanks`; Apple's provisional (quiet) notifications; the weather in the notification text.
 
 ## The rules
@@ -17,8 +17,8 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 - **Local only:** the phone schedules every nudge itself. Each time the app opens (or comes back to the foreground), it replaces whatever was scheduled with the next 7 days. Nothing is sent to or kept on a server.
 - **What each day's nudge says:** the outfit that day's morning card shows, so the two always agree **(assumed)**. If his closet can't make an outfit for that day, the "Heading out?" line.
 - **A week with no visit:** the 7 scheduled days run out and nothing more is scheduled. On his next open, Kit asks the comeback question once (NT4). Until he answers it (or turns the switch back on in Settings), nothing is scheduled.
-- **Apple's prompt** shows only after he taps `Send me ideas` on Kit's card, or turns on `Daily outfit idea` in Settings when it was never asked. Never at launch, never on its own.
-- **`No thanks` is final:** Kit never asks again; Settings is the only way back.
+- **Apple's prompt** shows only after he taps `Send me ideas` on Kit's card, or turns on `Daily outfit idea` in You → Notifications when it was never asked. Never at launch, never on its own.
+- **`No thanks` is final:** Kit never asks again; You → Notifications is the only way back.
 - **Nothing scheduled** while the switch is off, while iOS has notifications off for Kitted, under the under-18 lock, or after "Delete all my data" (which cancels everything already scheduled).
 
 ## NT1. Kit's ask (in the chat)
@@ -34,8 +34,8 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 **Answers:**
 - `Send me ideas` → Apple's prompt.
   - Allow → the time and the switch are saved, the next 7 days are scheduled, and the card becomes Kit: `Done. Your first idea lands tomorrow at 7:45 am.` (`today` instead of `tomorrow` when today's nudge time hasn't passed yet; the time shown is the nudge time).
-  - Don't Allow → the card becomes Kit: `No problem. You can turn it on later in You → Settings → Notifications.`
-- `No thanks` → Apple's prompt is never shown; the switch is saved off; Kit: `No problem. You can turn it on later in You → Settings → Notifications.`
+  - Don't Allow → the card becomes Kit: `No problem. You can turn it on later in You → Notifications.`
+- `No thanks` → Apple's prompt is never shown; the switch is saved off; Kit: `No problem. You can turn it on later in You → Notifications.`
 - Answered, the card stays as its one line for good. An earlier day's unanswered card shows only the question (as built).
 
 ## NT2. The daily nudge
@@ -44,8 +44,8 @@ Shown under the app name "Kitted", with no title, one line:
 - **No outfit to suggest** (empty closet, or nothing that makes an outfit): `Heading out? Send me today's fit.`
 - **Tap** → the Stylist tab, scrolled to today's card (posted then if it isn't yet). A tap on an older day's nudge opens today's card.
 
-## NT3. You → Settings → Notifications
-The `Notifications` row in Settings shows once notifications are built.
+## NT3. You → Notifications
+The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) shows once notifications are built and opens this page.
 - Header: `One outfit idea a day, 15 minutes before you get dressed. That's all I send.`
 - Rows: `Daily outfit idea` (switch) · `I get dressed at` (the time menu; hidden while the switch is off, as built).
 - Changing the time reschedules at once. Switch off cancels everything scheduled.
@@ -63,8 +63,8 @@ The `Notifications` row in Settings shows once notifications are built.
 **Answers:**
 - `Turn them back on` → the next 7 days are scheduled; Kit: `Back on. Next one lands tomorrow at 7:45 am.` (`today` when today's time hasn't passed).
 - `Change the time` → the time menu opens in the card; picking a time saves it, schedules, and shows the same `Back on.` line with the new time.
-- `No thanks` → the switch is saved off; Kit: `Done. You can turn them on in You → Settings → Notifications.`
-- Ignored → nothing is scheduled; the card stays answerable; turning the switch on in Settings also resumes (and the card becomes its `Back on.` line).
+- `No thanks` → the switch is saved off; Kit: `Done. You can turn them on in You → Notifications.`
+- Ignored → nothing is scheduled; the card stays answerable; turning the switch on in You → Notifications also resumes (and the card becomes its `Back on.` line).
 
 ## Data (all on the phone)
 - **Get-dressed time:** `profile.ideaTime` (as built, "HH:MM"). The nudge time is derived, never stored.
@@ -77,8 +77,8 @@ The `Notifications` row in Settings shows once notifications are built.
 ## Failure and edge cases
 | Situation | What happens |
 |---|---|
-| Don't Allow at Apple's prompt | Kit's later line; nothing scheduled; Settings shows the off card. |
-| He turns notifications off in iOS Settings later | Nothing new scheduled; Settings shows the off card. |
+| Don't Allow at Apple's prompt | Kit's later line; nothing scheduled; You → Notifications shows the off card. |
+| He turns notifications off in iOS Settings later | Nothing new scheduled; You → Notifications shows the off card. |
 | He picks a time, but today's nudge time has passed | The first nudge is tomorrow; the line says `tomorrow`. |
 | The closet changes after scheduling | The next open reschedules with the new outfits. A day's planned outfit that's no longer possible is re-picked by the card; the nudge already shown may have named the old one **(assumed, rare)**. |
 | No weather (location declined or offline) | The outfit is picked by season, as the card does. |
@@ -105,7 +105,7 @@ The `Notifications` row in Settings shows once notifications are built.
 - NT2.4 Tapping a nudge opens Stylist at today's card.
 - NT2.5 No other notification is ever scheduled: no `Fit check ready`, no `Trial ending`, nothing at another time (a test over every schedule call).
 
-**Settings (NT3)**
+**You → Notifications (NT3)**
 - NT3.1 The page shows NT3's header and rows; no `Fit check ready` or `Trial ending` row.
 - NT3.2 Changing the time reschedules all 7 at the new time; switch off leaves nothing scheduled.
 - NT3.3 Switch on with the permission never asked requests Apple's prompt; Don't Allow leaves the switch off.
@@ -120,7 +120,7 @@ The `Notifications` row in Settings shows once notifications are built.
 - NT5.1 "Delete all my data" cancels every scheduled nudge and clears the time, the switch and the asked flags.
 - NT5.2 Under the under-18 lock, no ask posts and nothing is scheduled.
 - NT5.3 Every new string is in the copy deck, has no emoji, and matches this spec word for word (copy test).
-- NT5.4 Kit's ask, Settings and the comeback card work at the largest text size and with VoiceOver (the time menu reads `I get dressed at, 8:00 am`).
+- NT5.4 Kit's ask, You → Notifications and the comeback card work at the largest text size and with VoiceOver (the time menu reads `I get dressed at, 8:00 am`).
 - NT5.5 On a real iPhone (the founder's phone or a TestFlight build): the prompt appears after `Send me ideas`, and a nudge set a few minutes ahead arrives with its line and opens today's card.
 
 ## Checked against Apple's guidelines
@@ -128,7 +128,7 @@ Asked in context after he's seen what the app does, with Kit's card explaining w
 
 ## Touches
 - `app/src/services/notifications.ts` (the real permission and scheduling behind the existing interface), `app/src/config/features.ts` (`NOTIFICATIONS_BUILT`).
-- `app/src/features/finish/` (the ask card, the one-time catch-up), `features/settings/prefs.ts` (the time list), `app/src/app/(tabs)/you/notifications.tsx` and `settings.tsx`, `features/morning/` (each day's outfit ahead of time), `features/privacy/wipe.ts` (cancel on delete).
+- `app/src/features/finish/` (the ask card, the one-time catch-up), `features/settings/prefs.ts` (the time list), `app/src/app/(tabs)/you/notifications.tsx` (the row on You belongs to T34), `features/morning/` (each day's outfit ahead of time), `features/privacy/wipe.ts` (cancel on delete).
 - The copy deck `handoff/02-screens.md` §5 (which generates `en.ts`): the strings above; the old `notif.ask*`, `notifs.header`, `unopened.*` and `push.trial` strings replaced or removed.
 - New package `expo-notifications` (the founder's OK, Nov 9), `app/package.json` and `app/app.config.ts` (after PR #71 is merged): a native rebuild and a new TestFlight build.
 - Must not break: the setup sequence's order and its Back/X; the morning card's locked idea and rotation; nothing sent off the phone.

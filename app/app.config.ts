@@ -164,7 +164,9 @@ const config: ExpoConfig = {
     // P6: 'expo-notifications',
   ],
   experiments: { typedRoutes: true, reactCompiler: true },
-  extra: { demo, applePaid: apple.applePaid },
+  // The EAS project @matemind/kitted (made Nov 8 with `eas init`); EAS builds and submits read it.
+  extra: { demo, applePaid: apple.applePaid, eas: { projectId: 'a8fb4438-eccf-4126-be62-873103370419' } },
+  owner: 'matemind',
 };
 
 export default config;
