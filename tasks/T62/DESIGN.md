@@ -1,6 +1,6 @@
 # T62 · Design: Head not found (what he sees when nothing is sent)
 
-<!-- The coordinator adds the approval line here only after the founder's yes in chat. -->
+**Approved by the founder:** 2026-11-09 in chat (scope: F2.2 only; F2.3 and F3.3 are designed when T62 runs)
 
 **From:** `plan.md` → T62 · **Spec:** `specs.md` → F2.2, and "Failure and edge cases" → the "Head not found" row · **Frames:** `tasks/T62/design.html` (open with `preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/T62/design.html`) · **PNGs:** `tasks/T62/design/`
 
@@ -13,14 +13,14 @@ When the phone can't find his head to blur it, nothing leaves the phone, and Kit
 
 ## Where it lives
 - **Mainly the camera's after-shot panel** (02 S3, `RetakePanel`), inside the camera cover. The camera is always dark. The panel sits over his frozen photo. **How he gets there:** the shutter (Propped 3-2-1, or Mirror's shutter or volume button), or a pick from the library button. Next, the "Checking the photo…" pill shows while the quick check runs on the phone. If that check can't find his head (`fitIssue` → `cantFrame`), the panel slides up. That happens when his whole figure, top included, is inside the photo, but Vision finds no face, no head points and no two shoulders to place the blur on: he's small or far from the phone, turned away with his shoulders hidden, or too dim to read. A head cut off at the photo's top edge is a different case: its top is hidden down to just above his shoulders and the photo is sent (DECISIONS-LOG #304, `KittedPrep.swift` `topEdgeBand`), so it never shows this panel. **How he leaves:** Retake (back to the live camera), Choose another (the photo picker, for a library photo), or the X (closes the camera). No way out sends anything. Retake and Choose another delete the temporary photo (`discard()`); Close only closes the camera (`router.back()`), as today. The cover has no swipe-down.
-- **Rarely, a toast on Stylist** (02 G2, `ToastHost`). This happens when the quick check passed, or couldn't measure, but the full photo prep that runs after the cover closes still can't find his head (`photoProblem` / `couldNotFrame`). No photo bubble or card is posted. The thread shows what it showed before.
+- **Rarely, a toast on Stylist** (02 G2, `ToastHost`): a short message, not a thread card (founder, Nov 9). The camera panel is "the card" that F2.2 means, since that's where he almost always sees it. This happens when the quick check passed, or couldn't measure, but the full photo prep that runs after the cover closes still can't find his head (`photoProblem` / `couldNotFrame`). No photo bubble or card is posted. The thread shows what it showed before.
 - Around it: the camera's top bar (Close, and the flash toggle in Propped or the timer in Mirror) stays visible above the panel. The mode switch, library button, shutter and flip sit under the panel and are covered by it. On Stylist: the header, the thread, the "Ask Kit…" bar and the tab bar.
 
 ## States
 In the order he meets them. Before any of them, the existing "Checking the photo…" pill shows in the camera's top bar. It is unchanged and not drawn.
 
 ### Head not found · a photo he took · when: the quick check after the shutter finds his figure but no face, head points or shoulders (far, turned away or dim) · phone 1 · `design/01-light.png`, `design/01-dark.png`
-The frozen photo in the frames is a drawn, faceless figure standing in for his photo: whole figure inside the frame, top included, far from the phone in a dim room. On his phone it is his own photo, shown only to him; nothing of it leaves the phone. *Not this panel:* a photo with his head cut off at the top edge is hidden and sent (#304).
+The frozen photo in the frames is a drawn figure standing in for his photo. He's about a third of the screen tall, far from the phone in a dim room, with his whole figure inside the frame, top included. His head is a plain, featureless shape in skin and hair tones, with no blur: the frozen photo is shown as is (`reviewUri`), and nothing on it was blurred. On his phone it is his own photo, shown only to him, and nothing of it leaves the phone. *Not this panel:* a photo with his head cut off at the top edge is hidden and sent (#304).
 
 Top to bottom, in VoiceOver's reading order:
 - Close · `IconButton` variant glass, diameter 44, glyph `close` · no visible words · color `fixed.white` on the glass · top bar at safe-area top + 3, side inset 18 · VoiceOver: "Close camera" (`en.ts` `cam.a11y.close`) · tap: closes the camera (`router.back()`, as today). Nothing is sent.
@@ -30,10 +30,11 @@ Top to bottom, in VoiceOver's reading order:
   - Title · `KText` variant `headline` (17/22, 600) · `fixed.white` · "I couldn't find your face to blur it, so I didn't send it." (source: spec, the first sentence of the "Head not found" line) · with the body, one VoiceOver element (see below).
   - Body · `KText` variant `subheadline` (15/20) · `fixed.textDim` (white 75%) · "Get your head in the shot and try again." (source: spec, the line's second sentence).
   - **Title and body are one VoiceOver element** with the header trait, label "I couldn't find your face to blur it, so I didn't send it. Get your head in the shot and try again." (title, a space, body).
-  - **No** "This one doesn't count." under it: the line already says "I didn't send it" (open question 1). **No** "Use anyway": a photo whose face can't be hidden is never sent (ruling 10, `allowUse: false`).
+  - **No** "This one doesn't count." under it (founder, Nov 9): the line already says "I didn't send it". **No** "Use anyway": a photo whose face can't be hidden is never sent (ruling 10, `allowUse: false`).
   - Retake · `PanelButton` (inside `RetakePanel`), min height 50 (`size.buttonLarge`), radius 25, fill `fixed.white`, text `fixed.indigo`, variant `headline`, `CONTROL_TEXT_MAX_SCALE` · "Retake" (`en.ts` `cam.retake.retake`) · margin top 4 (`space.xs`), full width · VoiceOver: "Retake", button · tap: deletes the temporary photo, closes the panel, back to the live camera (`discard()`). Nothing is sent or counted. VoiceOver focus goes back to the shutter ("Take photo").
 - **Where VoiceOver focus goes.** When the panel appears, focus moves to the panel's text element (title + body, header trait), so VoiceOver reads both sentences once. There is no separate announcement, so the line isn't read twice and isn't cut off by a focus jump. On Retake, focus goes back to the shutter. On Choose another (phone 2), the photo picker takes focus. On Close, focus is wherever the screen under the camera puts it, as today. *Change from today:* `RetakePanel` calls `announceForAccessibility(title)` and doesn't move focus. With VoiceOver on, focus is still on the shutter or library button he double-tapped, which this design hides (next point).
 - **While the panel shows, the controls it covers** (mode switch, library button, shutter, flip) **are hidden from VoiceOver**, so swiping from the panel's text goes on to Retake, and back to the flash toggle and Close. *Change from today:* they stay in the tree under the panel.
+- **Spoken in Propped (founder, Nov 9).** When the panel appears after a shutter photo in Propped mode, Kit says the line out loud once, title then body ("I couldn't find your face to blur it, so I didn't send it. Get your head in the shot and try again."). It uses the tips' voice (`Speech.speak`, rate 1.0), and the photo is never read aloud. It's not spoken in Mirror mode or for a library photo (he's holding the phone), and not while VoiceOver is on, because VoiceOver already reads the panel when focus moves and two voices would talk over each other. Retake, Close and Choose another stop it (`Speech.stop()`). *Change from today:* the panel is silent.
 - **Motion and haptics:** the existing ones, both meaningful. A warning haptic (`notificationAsync(Warning)`) once, when the panel appears. The panel slides up (`FadeInDown` 220 ms). With Reduce Motion it fades in (150 ms), with no slide. On Retake it slides down (160 ms), or fades out (120 ms) with Reduce Motion.
 - **Dark:** none. The camera uses the fixed dark set in both appearances, so the light and dark PNGs are the same.
 - **Largest text:** phone 4. The title wraps to 4 lines at 53 pt and the body to 3 lines at 49 pt. The button's text is capped at 2× (34 pt). The panel grows upward from the bottom and every word shows. Its cap is the camera's top bar: top ≥ safe-area top + 3 + 44 + 8. So Close stays reachable, and the words would scroll inside the panel above a pinned Retake if they ever needed more room. With these words at AX5 the panel is about 600 pt tall against about 720 pt of room, so nothing scrolls. *Change from today:* `RetakePanel` has no height cap.
@@ -41,6 +42,7 @@ Top to bottom, in VoiceOver's reading order:
 ### Head not found · a photo from his library · when: the same check, on a photo he picked with the library button · phone 2 · `design/02-light.png`, `design/02-dark.png`
 Same as phone 1, except the button:
 - Choose another · `PanelButton` with the `photo` glyph (small, `fixed.indigo`), gap 8 · "Choose another" (`en.ts` `cam.retake.chooseAnother`) · VoiceOver: "Choose another", button · tap: deletes the temporary photo, closes the panel and opens the photo picker (`discard()` then `pickFromLibrary()`), unchanged. The picker takes VoiceOver focus.
+- **Spoken:** no. A library pick means he's holding the phone.
 - **Motion and haptics, Dark:** as phone 1.
 - **Largest text:** as phone 4. "Choose another" fits on one line at 34 pt beside its glyph. If it ever didn't, it wraps (`flexShrink: 1`) and is never cut.
 
@@ -59,7 +61,7 @@ Top to bottom, in VoiceOver's reading order. Everything but the toast is today's
 The same elements, words and order as phone 1, at AX5 (headline 53/64, subheadline 49/59, the button's text 34/44 under `CONTROL_TEXT_MAX_SCALE` 2). Its reflow is described under phone 1.
 
 ### Largest text · phone 3 at AX5 · phone 5 · `design/05-light.png`, `design/05-dark.png`
-The same elements, words and order as phone 3, at AX5: the toast's `subheadline` 49/59 with radius 24; Kit's message `chatText` 53/64 (it runs under the toast and the bar, as the thread does today); the header ("Stylist" 34, "1 free check today" 24) and the "Ask Kit…" bar (34) capped at 2× (`CONTROL_TEXT_MAX_SCALE`); the tab bar as the system draws it. Its reflow is described under phone 3.
+The same elements, words and order as phone 3, at AX5: the toast's `subheadline` 49/59 with radius 24; Kit's message `chatText` 53/64 (the thread sits at its end, as `StylistScreen` scrolls it: the message's last lines end just above the bar, mostly under the toast, with "Kit" and its first lines scrolled off the top); the header ("Stylist" 34, "1 free check today" 24) and the "Ask Kit…" bar (34) capped at 2× (`CONTROL_TEXT_MAX_SCALE`); the tab bar as the system draws it. Its reflow is described under phone 3.
 
 ### States that don't apply
 - **First time:** the same panel. Consent is already agreed before the camera opens, and his first-ever check behaves the same.
@@ -85,20 +87,22 @@ Every string he reads in this task.
 ## New parts
 None. Changes to existing parts, used by these states:
 - `RetakePanel`: the title and body become one VoiceOver element with the header trait, and VoiceOver focus moves to it when the panel appears. This replaces `announceForAccessibility(title)`, so the line is read once, in full. It also gets a height cap at the camera's top bar, with the words scrolling inside above the pinned buttons. The other retake reasons get both changes for free, and they are harmless there.
-- `CameraScreen`: while the panel shows, the controls under it are hidden from VoiceOver (`accessibilityElementsHidden` / `importantForAccessibility="no-hide-descendants"` on the bottom controls). On Retake, VoiceOver focus goes back to the shutter.
+- `CameraScreen`: while the panel shows, the controls under it are hidden from VoiceOver (`accessibilityElementsHidden` / `importantForAccessibility="no-hide-descendants"` on the bottom controls). On Retake, VoiceOver focus goes back to the shutter. It also speaks this panel's line once in Propped mode after a shutter photo, with VoiceOver off (founder, Nov 9).
+- `ScanCameraScreen`: it shares `RetakePanel`, so the focus move reaches its panels too. While a panel shows there, the controls under it are hidden from VoiceOver the same way, so swiping from the panel's text never reaches a covered control. The scan's words and buttons are unchanged.
 - `ToastHost`: at accessibility text sizes every toast uses radius 24 (the stacked toast's), with or without Undo, so a tall toast keeps all its text on its fill. Today only a toast with Undo does.
 
 ## Checked by the designer
 - **HIG:** checked against Accessibility (VoiceOver focus moves to the new content and back, VoiceOver order, Dynamic Type to AX5, Reduce Motion: pass with the changes above), Feedback (one warning haptic and a plain statement of what happened and what to do: pass) and Modality (the camera cover keeps a visible Close at every text size: pass). Toasts aren't a native iOS pattern, but they're the app's existing G2 pattern for "nothing happened" (Jakob's Law over novelty).
 - **§C14:** tab bar for top-level navigation only: n/a (camera cover) / unchanged (phone 3) · never a tab as an action: pass · settings behind a gear: n/a · 44 pt targets: pass (Close 44, Retake and Choose another 50 tall at full width) · 4.5:1 text: pass. Title white on #171A23 is about 17:1. Body white 75% on #171A23 is 10.17:1. Retake #121628 on white is 17.9:1. The toast's `ink` on `surface` is about 17:1 (light), and on `surface2` about 13:1 (dark) · Dynamic Type at the largest sizes: pass (phones 4 and 5) · feedback within ~0.1 s: pass (the "Checking the photo…" pill at once, then the haptic with the panel) · a clear X on every camera: pass · familiar patterns: pass (the same panel as every other retake reason) · progressive disclosure, notifications, accounts: n/a · privacy in plain words: pass. The line says what wasn't sent and why.
 - **Design system:** only 03 / `tokens.ts` tokens and existing components: `RetakePanel`, `PanelButton`, `IconButton`, `Icon`, `KText`, `ToastHost`, `StylistBar`, `StylistMessage`, NativeTabs. Fixed dark set on the camera (03 §2.3, §9). No new colors or type roles.
-- **Hard lines:** no face or body. The camera frames use a drawn, faceless figure in place of his photo (no face drawn); phone 3 and 5 show no photo (03 §8). No emoji, ranks or streaks. Copper appears only as the active Stylist tab, which 03 §1 allows. The frames' colors come from `tokens.ts` (light and dark), not the old mockup values. No score is shown, so copper marks nothing else. Nothing is said about his body: the words are about the photo ("your head in the shot"), not about him.
+- **Hard lines:** no face or body. The camera frames use a drawn figure in place of his photo, with a plain, featureless head and no face drawn. Phones 3 and 5 show no photo (03 §8). No emoji, ranks or streaks. Copper appears only as the active Stylist tab, which 03 §1 allows. No score is shown, so copper marks nothing else. Nothing is said about his body: the words are about the photo ("your head in the shot"), not about him. The frames' colors come from `tokens.ts` (light and dark), not the old mockup values.
 - **Not checked:** the web preview (`kitted-web`) wasn't opened. The Mac had about 100 MB of memory free, so I didn't start Metro. Today's chrome is taken from the code (`CameraScreen.tsx`, `RetakePanel.tsx`, `ToastHost.tsx`, `StylistBar.tsx`, `HeaderTitle.tsx`). The critic or verifier can compare against demo screen 45 (`/camera?review=noPerson`, the sibling reason) and `/camera?review=cantFrame` (`simIssue` already accepts it). The library variant (phone 2) has no demo route: in the Simulator the review source is always the camera.
 
 ## Open questions for the founder
-1. **Keep "This one doesn't count." under the line, like the other retake panels?** · recommended: **drop it here.** "I didn't send it" already says nothing happened, and a third sentence makes the panel 4 lines at normal size and much taller at large text. · other: keep it as the body's second sentence ("Get your head in the shot and try again. This one doesn't count."), which matches the sibling panels and spells out that his free check is safe.
-2. **Should Kit say the line out loud in Propped mode?** · recommended: **yes, once, in the same voice as the camera tips.** In Propped he's 2–3 m from a phone propped against something, and 17 pt words are hard to read from there. The camera already speaks its tips in Propped. · other: leave it silent (today). Either way it's new behaviour beyond F2.2, so it needs your yes.
-3. **The rare after-the-camera case: a toast, or a card in the thread?** The spec says "the card says why". · recommended: **the toast (phone 3), with the camera panel counted as "the card"**, since that's where he almost always sees it. Nothing was posted, so there's no photo bubble to hang a card on, and a card would leave a permanent "nothing happened" entry in his chat. · other: post a "Not sent" card with Retake (like the unused 02 S19e). It stays readable after 5 s, but it needs a photo bubble for a check that never ran.
+None open. All three were answered on Nov 9 in chat and are written into the design above:
+- "This one doesn't count." is left off: "Leave it off (Recommended)".
+- The line is spoken in Propped: "Yes, say it (Recommended)".
+- The after-camera case is a toast: "Short message (Recommended)". It stays on screen 5 s (`TOAST_MS`). The critic's 8 s suggestion is still only a suggestion.
 
 ## Out of scope
 - **F2.3** ("Taking longer…" at 9 s, giving up at 14 s with a retry, a failed check never uses a check) and **F3.3** ("I did make the change" and "Scored from what you told me."): the other two-thirds of T62, still to design when T62 runs.
@@ -166,6 +170,24 @@ Re-read this file (Changes, Round 2), all 10 PNGs, and `design.html` (its `:root
 
 **Not verified:** the same two as Round 1 (the gap between the cover closing and the phone 3 toast; Bold Text and Increase Contrast).
 
+### Round 3 · Nov 9 · verdict: matches (no blockers)
+Re-read this file (Changes, Round 3, and the founder's Nov 9 answers written in) and the re-shot phones 1, 2, 4 and 5. Phone 3 is unchanged (same file hashes as Round 2). Nothing was run.
+
+**Round 2's points**
+- Blocker (the blurred head): **fixed.** Phones 1, 2 and 4 draw a plain head with no features: a skin-tone oval under a hair cap, with no blur, no eyes and no mouth. That matches "shown as is (`reviewUri`)" in this file, and the frame no longer contradicts "I couldn't find your face to blur it".
+- Polish (the figure doesn't look far): **fixed.** He's now about a third of the screen tall (head at about 310 pt, feet at about 595 pt), facing the camera in a dim room, with his whole figure in frame.
+- Polish (phone 5's scroll position): **fixed.** The thread sits at its end. Kit's message ends just above the bar, mostly under the toast, and its top is scrolled under the header.
+- Polish (the scan camera): **fixed.** `ScanCameraScreen` now hides its covered controls from VoiceOver too, and it's listed under New parts.
+
+**The founder's decisions (Nov 9), checked only against the rules**
+- No "This one doesn't count.": no rule is affected. The panel stays 2 lines plus the button, and phone 4's reflow is unchanged.
+- The line spoken in Propped: no hard line or HIG rule is broken. It's Kit speaking in the first person, in plain words, with nothing said about his body. It's skipped while VoiceOver is on, so two voices never overlap (HIG Accessibility). It's stopped by every button. Close is already covered by today's unmount `Speech.stop()` in `CameraScreen`. It's listed as a *Change from today* in `CameraScreen`.
+- The toast, at 5 s: no rule is broken. It's the existing G2 pattern, held with VoiceOver on (10 s), and every word is on its fill at AX5 (phone 5).
+
+**New in this round:** nothing broken. The words are unchanged. The panel's contrast (17.38, 10.17, 17.93) and phone 5's toast (17.93 light, 13.20 dark, radius 24) are unchanged. The light and dark camera PNGs are still byte-identical. No emoji, ranks or streaks, and copper appears only on the active tab.
+
+**Still open (not blockers):** the Round 1 suggestions the founder didn't take up (rewording the second sentence; no flash toggle over a library photo), and the two items not verified (the gap before the phone 3 toast on a device; Bold Text and Increase Contrast).
+
 ## Changes
 - **Round 2** · from the critic, Round 1 · what changed:
   - Blocker 1: `design.html` now carries the `tokens.ts` light and dark block (from `design-shell.sh`) before the board, so `ink3`, `primary`, `me` and `accentSoft` match the app (ink3 #646A7A light, #9096A5 dark). Re-shot phones 3 and 5 (and every phone, for the same tokens).
@@ -174,3 +196,9 @@ Re-read this file (Changes, Round 2), all 10 PNGs, and `design.html` (its `:root
   - Blocker 4: phones 1, 2 and 4 now show his whole figure inside the frame, far from the phone in a dim room, with no face (a drawn figure stands in for his photo). The "when" lines and Where it lives now say what triggers the panel, and that a head cut off at the top edge is hidden and sent (#304), so it never shows this panel. Re-shot `01`, `02` and `04`.
   - Polish: dropped "deletes the temporary photo" from Close. Close is `router.back()`, as today. Fixed the body contrast to 10.17:1.
   - Not changed: the critic's suggestions and the three open questions are left for the founder.
+- **Round 3** · from the critic, Round 2, and the founder (Nov 9, in chat: "Leave it off (Recommended)", "Yes, say it (Recommended)", "Short message (Recommended)") · what changed:
+  - Blocker: the drawn figure's head on phones 1, 2 and 4 is now a plain, featureless shape in skin and hair tones, with no blur. Re-shot `01`, `02` and `04`.
+  - Polish: the figure is drawn smaller, about a third of the screen tall (head about 310 pt from the top, feet about 600 pt), far from the phone in a dim room.
+  - Polish: phone 5's thread now sits at its end, as `StylistScreen` scrolls it. Re-shot `05`.
+  - Polish: `ScanCameraScreen` hides its covered controls from VoiceOver too (New parts).
+  - The three answers are now in the design, each marked "(founder, Nov 9)": no "This one doesn't count."; the line is spoken in Propped (after a shutter photo, VoiceOver off, stopped by any button); the toast stays. Open questions now lists none. The toast stays at 5 s.

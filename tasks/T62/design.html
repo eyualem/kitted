@@ -482,7 +482,7 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
         <div class="screen">
           <div class="content">
             <div class="nav"><div class="t">Stylist<small class="t62-sub">1 free check today</small></div></div>
-            <div class="thread" style="padding-top:12px">
+            <div class="thread end" style="padding-bottom:146px">
               <div>
                 <div class="t62-who">Kit</div>
                 <div class="t62-kit">I'm Kit, your stylist. Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do.</div>
@@ -493,7 +493,7 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
           <div class="t62-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t62-mic"/></svg></span></div>
         </div>
       </div>
-      <figcaption><b>Largest text · the toast <small>PHONE 5</small></b><span>Phone 3 at AX5 (the toast's text 49 pt; the header and the bar capped at 2x). The toast grows upward over the thread and every word sits on its fill: at accessibility sizes it takes the 24 pt corner of the stacked toast instead of the capsule, even with no Undo. Kit's message and the bar are today's AX5 layout, unchanged.</span></figcaption>
+      <figcaption><b>Largest text · the toast <small>PHONE 5</small></b><span>Phone 3 at AX5 (the toast's text 49 pt; the header and the bar capped at 2x). The toast grows upward over the thread and every word sits on its fill: at accessibility sizes it takes the 24 pt corner of the stacked toast instead of the capsule, even with no Undo. The thread sits at its end, as Stylist scrolls it (Kit's long message ends just above the bar, mostly under the toast). Kit's message and the bar are today's AX5 layout, unchanged.</span></figcaption>
     </figure>
 
 
@@ -913,5 +913,15 @@ document.querySelectorAll(".phone.fixed .status").forEach(function(st){st.style.
 </script>
 <script>
 // T62: the drawn figures stand far from the phone: zoom the viewBox out so his whole figure, head included, sits inside the frame.
-document.querySelectorAll('[data-zoom="far"] svg').forEach(function(g){g.setAttribute('viewBox','-80 -300 360 780');g.setAttribute('preserveAspectRatio','xMidYMid slice')});
+document.querySelectorAll('[data-zoom="far"] svg').forEach(function(g){
+  // About a third of the screen tall, feet just above the panel: viewBox 578 x 1257 around the 417-unit figure.
+  g.setAttribute('viewBox','-189 -517 578 1257');g.setAttribute('preserveAspectRatio','xMidYMid slice');
+  // The room runs past the zoomed-out view: stretch the wall up and the floor down.
+  var r=g.querySelectorAll('rect');
+  if(r[0]){r[0].setAttribute('x','-2000');r[0].setAttribute('y','-2000');r[0].setAttribute('width','4000');r[0].setAttribute('height','2600')}
+  if(r[1]){r[1].setAttribute('x','-2000');r[1].setAttribute('width','4000');r[1].setAttribute('height','2000')}
+  if(r[2]){r[2].setAttribute('x','-2000');r[2].setAttribute('width','4000')}
+  // A plain, featureless head in the skin and hair tones: no blur (the frozen photo is shown as is).
+  g.querySelectorAll('g[filter]').forEach(function(h){h.removeAttribute('filter')});
+});
 </script>
