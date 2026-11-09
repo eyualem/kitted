@@ -51,6 +51,8 @@ export interface ScreenScenario {
   looks?: Styles;
   /** Kit's "About you" card (#373, 10-onboarding.md §10): posted under an answer or on a later visit, then folded. */
   aboutYou?: AboutYouDemo;
+  /** T73 stub (specs/closet-beta.md CB1): Outfits on for this screen. */
+  outfits?: true;
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';

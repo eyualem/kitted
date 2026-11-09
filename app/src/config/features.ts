@@ -22,3 +22,6 @@ export const NOTIFICATIONS_BUILT = false;
  *  code route. Signing in backs nothing up yet (sync isn't wired), which is why the save offer and Welcome's "I already
  *  have an account" stay hidden. */
 export const SIGN_IN_LIVE: readonly ('apple' | 'google' | 'email')[] = __DEV__ ? ['google'] : [];
+
+/** Outfits, Next best buy and Goes with (specs/closet-beta.md CB1). T73 stub: the tests come before the code. */
+export const OUTFITS_BUILT: boolean = false;

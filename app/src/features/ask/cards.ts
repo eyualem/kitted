@@ -214,3 +214,9 @@ export function linkedPiece(id: string, closet: readonly ClosetItemRow[]): Close
   }
   return it && isOwned(it) ? it : null;
 }
+
+/** T73 stub (specs/closet-beta.md CB1): the buy card's "+N outfits" line, with the switch. */
+export function buyGainLine(gain: number | null, on: boolean): string | null {
+  void [gain, on];
+  throw new Error('T73: not built');
+}

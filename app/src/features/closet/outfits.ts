@@ -261,3 +261,15 @@ export function slotChecklist(closet: readonly ClosetItemRow[]): SlotState[] {
   const pieces = outfitPieces(closet);
   return (['top', 'bottom', 'shoes'] as const).map((slot) => ({ slot, have: pieces.some((c) => c.slot === slot) }));
 }
+
+/** T73 stub (specs/closet-beta.md CB1): what Closet opens on, with the switch. */
+export function closetView(on: boolean, count: number, remembered: string | null): { switcher: boolean; segment: 'pieces' | 'outfits' } {
+  void [on, count, remembered];
+  throw new Error('T73: not built');
+}
+
+/** T73 stub (specs/closet-beta.md CB1): a piece's Outfits row and Goes with, with the switch. */
+export function pieceOutfits(on: boolean, around: readonly Outfit[], itemId: string): { outfitsWith: number; goes: { role: GoesWithRole; outfit: Outfit }[] } {
+  void [on, around, itemId];
+  throw new Error('T73: not built');
+}
