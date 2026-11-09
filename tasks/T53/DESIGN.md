@@ -247,5 +247,28 @@ Read: CLAUDE.md, `specs/notifications.md`, `specs.md` F13 and first-run step 9, 
 2. An unanswered ask card plus the switch turned on in You → Notifications first: the spec only covers this for the comeback card. Recommended: the ask card turns into its done line too. Otherwise a later tap on No thanks would turn off what he just turned on. Worth adding as open question 8.
 3. `PickerRow`: only the value "8:00 am ⌄" is tappable, not the whole row. This is as built (Appearance works the same way). Making the whole row the target would match iOS Settings rows.
 
+### Round 2 (Nov 9) · verdict: matches (no blockers)
+Read: the round 2 diff (c8295e09: DESIGN.md, `design.html`), and every re-shot PNG (01, 02, 03, 06, 10, 11, 12, 15 and 16, light and dark). The frames I didn't re-read (04, 05, 07, 08, 09, 13, 14) are unchanged since round 1.
+
+**Round 1 items, re-checked**
+- **Blocker 1, fixed.** "What the switch shows" now says the switch is on only when it is saved on and iOS allows. While Apple's prompt has never been shown, it's off with no time row (phone 9's picture), and phone 9 carries the matching line. That makes NT3 and NT3.3 reachable.
+- **Polish 1, fixed.** The button gaps now match `KButton`'s geometry, measured in the frames:
+  - phone 1, time row to buttons: 13 pt (capsule bottom 664.5 → button top 677.5; DESIGN 12);
+  - phone 11, between wrapped rows: 17 pt (660.5 → 677.5; DESIGN 16);
+  - phone 15, between stacked buttons: 16.5 pt.
+  All are within 2 pt. The frames do it with `.t53-btns .btn{margin:4px 0}`, the same 4 pt as the `Pressable` padding.
+- **Polish 2 and 3, fixed.** Bubble to the time row measures 10.5 pt (DESIGN 10), and Kit's name is 16 pt under the card.
+- **Polish 4, fixed.** Phone 3's spinner button is 135.5 pt (x 16–151.5), the same as Send me ideas on phone 1.
+- **Polish 5, fixed.** On phone 10, only the rows' contents are at 0.4 (`.t53-dis .t53-row > *`). The card, border and divider are at full opacity in both themes, with one 0.4, never stacked. Phone 16 matches.
+- **Polish 6, 8 and 9, written down.** Polish 7 is named as a change from today on phone 15.
+- **Suggestions 1–3** became open questions 8–10 for the founder.
+- Nothing new breaks a rule. Contrast, hit areas, words and hard lines are unchanged from round 1.
+
+**Polish (new, small)**
+1. **Say what tells the app "Apple's prompt has never been shown".** The rule lists "after 'Delete all my data'" as one of the never-asked cases. iOS keeps its answer through a data wipe, though: after a wipe the status is still granted or denied, not undetermined. So iOS's status alone can't produce phone 9 there. With today's `parseSwitch` ("Unset means on") and iOS already allowing, the wiped user would see phone 8 with nothing scheduled, which is round 1's blocker again on one path. The design's intent is right, so this isn't a blocker; it only needs the signal named for the planner. Recommended: make `notify.idea` the source of truth with **unset = off** for the idea switch. `Send me ideas`, and the switch turned on, write `1` before asking iOS. That way Don't Allow still leaves phone 10 greyed on, and coming back from iOS Settings schedules, as NT3 says. No thanks writes `0`, and the wipe clears it, so it reads off.
+2. **If the founder takes open question 1's recommendation** (the switch shows off while paused), add a third condition to "What the switch shows": on only when it is saved on, iOS allows, and the schedule isn't paused waiting for the comeback answer.
+
+**Suggestions:** none new.
+
 ## Changes
 - **Round 2** · from the critic (round 1) · blocker: added "What the switch shows" (on only when saved on and iOS allows; off with no time row while Apple's prompt has never been shown, which looks like phone 9) and the matching line on phone 9. Polish: the button gaps written as 12 pt (time row to buttons) and 16 pt (wrapped rows), and the frames redrawn with 44 pt button boxes (phones 1, 2, 3, 6, 11, 12, 15); the footer's spacing corrected to 10 pt and Kit's name to 16 pt under the card; phone 3's spinner button at Send me ideas' real width (135.5 pt); phone 10 dims each row once and keeps the card at full opacity (frames 10 and 16 redrawn); phone 2's sliver of title noted as as-built; phone 15's `fullWidth` at AX sizes named as a change from today, for the ask and the comeback; the settings page's menu described (as in Settings → Appearance); phone 9's switch while Apple's prompt is up. Open questions 8–10 added from the critic's suggestions. PNGs re-shot: 01, 02, 03, 06, 10, 11, 12, 15, 16, light and dark.
