@@ -69,7 +69,7 @@ Spec: `specs/free-and-pro.md` (interview: T10)
 Lane files: `app/src/features/{paywall,held,finish}`, `app/src/services/{quota,purchases,entitlements}.ts`, `app/src/features/settings/plan.ts`
 
 - [x] 2026-11-07, #69 · **T10** · Write the free-and-Pro spec with you: the soft page, the limit card's button, the paywall without a trial, and their words · *done: your yes (Nov 7) · files: `specs/free-and-pro.md`*
-- [~] T14 · PR #72 · **T14** · The beta's limits: a `beta` tier on the server (3 fit checks and 20 questions a day, no lifetime count), the beta limit card, the questions line and You → Plan's row; no paywall, price or "Pro" anywhere · *after FP7 (your yes, Nov 8) · checks: FP7.1–FP7.7 · files: quota.ts, server/tier.ts, held/, settings/plan.ts, en.ts, `firebase/functions/src/api/{limits,store}.ts`*
+- [x] 2026-11-08, #72 · **T14** · The beta's limits: a `beta` tier on the server (3 fit checks and 20 questions a day, no lifetime count), the beta limit card, the questions line and You → Plan's row; no paywall, price or "Pro" anywhere · *after FP7 (your yes, Nov 8) · checks: FP7.1–FP7.7 · files: quota.ts, server/tier.ts, held/, settings/plan.ts, en.ts, `firebase/functions/src/api/{limits,store}.ts`*
 - [ ] **T11** · *(launch)* The new limits in the app: 7 free checks (max 1 a day), 3 questions a day, Pro 5 + 30, no trial anywhere · *after T10 · checks: F10 Free and Pro, F10.4 · files: quota.ts, paywall/, settings/plan.ts, en.ts*
 - [ ] **T12** · *(launch)* The three upgrade moments: the soft page after his first result, the limit card's button, the full paywall at check 8 · *after T10, T11 · checks: F10 "When he sees it", F10.2, F10.3 · files: finish/, paywall/, held/*
 - [!] **Y7** · **T13** · *(launch)* Real purchases with RevenueCat, monthly and yearly, and Restore, replacing the pretend store · *after T10 · checks: F10.5, F10.6 on a test account · files: purchases.ts, entitlements.ts, package.json, app.config.ts*
@@ -173,7 +173,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-08 · T14 built: the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
+- 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
 - 2026-11-08 · The beta first (founder): free for friends, 3 fit checks and 20 questions a day, no paywall (FP7, approved Nov 8; T14 builds it); the paywall and RevenueCat moved to launch; T85 and Y17 added · #399
 - 2026-11-07 · T10: `specs/free-and-pro.md` approved: one paywall page, $39.99/yr ("Best value") and $9.99/mo with no offers, the soft page, the limit card's "Score it now with Pro", check 8, Pro ended · #398
 - 2026-11-07 · T1: the 10 waiting pull requests reviewed against the spec (fix 4, close 5, one line for the founder); the scan triangle and the camera's dark tip merged; T41 corrected, T64 and Y16 added · #395–397
