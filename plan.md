@@ -140,9 +140,9 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 
 - [ ] **T70** · Write the scan-reading spec with you, then test reading on your clothes photos · *after Y9 · done: your yes and the test's result · files: `specs/scan-reading.md`, `extraction-test/`*
 - [ ] **T71** · Scanned photos become Closet pieces ("Waiting to be read" empties) · *after T70, T24 · checks: F7.2, F7.3 · files: scan/, closetSource/*
-- [~] closet-beta-fixes · **T72** · Your Nov 8 beta notes on Closet: write `specs/closet-beta.md` with you (Outfits off for now; the piece questions one card at a time), and `specs.md` F7 if you say yes · *done: your yes · files: `specs/closet-beta.md`, `specs.md` F7*
-- [~] closet-beta-fixes · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: specs/closet-beta.md · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
-- [~] closet-beta-fixes · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T72 · checks: specs/closet-beta.md · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
+- [~] closet-beta-fixes · **T72** · Your Nov 8 beta notes on Closet: write `specs/closet-beta.md` with you (Outfits off for now; the piece questions one card at a time), and `specs.md` F7 if you say yes · *done: your yes · files: `specs/closet-beta.md`, `specs.md` F7* · **approved Nov 8**, F7 changed
+- [~] closet-beta-fixes · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: CB1.1–CB1.5 · files: closet/, `(tabs)/closet/index.tsx`, ask/ (buy card line), features.ts, en.ts*
+- [~] closet-beta-fixes · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T73 · checks: CB2.1–CB2.10 · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
 
 ### Launch
 *Getting into the App Store. Done means Apple's weather and app lock are on, both launch tests pass (the fix works, the score is fair), every requirement is checked, and the app is submitted.*
@@ -178,6 +178,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-08 · T72: `specs/closet-beta.md` approved (Outfits off for the beta; To confirm one card at a time, swipe or Skip moves on, buttons answer); `specs.md` F7 updated · #405
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
