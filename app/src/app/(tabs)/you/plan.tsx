@@ -7,7 +7,7 @@ import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
 import { openManageSubscription } from '@/features/settings/actions';
-import { planStatus, restorePurchases, restoreToast, usageLines } from '@/features/settings/plan';
+import { hasPro, planStatus, restorePurchases, restoreToast, usageLines } from '@/features/settings/plan';
 import { LinkRow, Section, SettingsScroll, ValueRow } from '@/features/settings/SettingsList';
 import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
@@ -32,16 +32,18 @@ export default function PlanUsageScreen() {
 
   return (
     <SettingsScroll>
-      <KCard radius={radius.cardSmall} accessibilityLabel={`${status.title}. ${status.detail}`}>
-        <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.l, gap: space.xxs }}>
-          <KText variant="headline" weight="600">
-            {status.title}
-          </KText>
-          <KText variant="subheadline" color="ink2">
-            {status.detail}
-          </KText>
-        </View>
-      </KCard>
+      <View testID="plan-status">
+        <KCard radius={radius.cardSmall} accessibilityLabel={`${status.title}. ${status.detail}`}>
+          <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.l, gap: space.xxs }}>
+            <KText variant="headline" weight="600">
+              {status.title}
+            </KText>
+            <KText variant="subheadline" color="ink2">
+              {status.detail}
+            </KText>
+          </View>
+        </KCard>
+      </View>
 
       <Section label={t('usage.today')} footer={t('usage.resets')}>
         {lines.map((l) => (
@@ -49,7 +51,7 @@ export default function PlanUsageScreen() {
         ))}
       </Section>
 
-      {plan.kind !== 'free' ? <KButton kind="secondary" size="large" title={t('settings.manage')} onPress={() => void openManageSubscription()} accessibilityHint={t('settings.a11y.appStoreHint')} /> : null}
+      {hasPro(plan) ? <KButton kind="secondary" size="large" title={t('settings.manage')} onPress={() => void openManageSubscription()} accessibilityHint={t('settings.a11y.appStoreHint')} /> : null}
 
       {paywall ? (
         <Section>

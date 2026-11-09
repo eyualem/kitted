@@ -140,18 +140,19 @@ function PrivacyRow() {
 }
 
 /** Today's check and questions (the mockup's last card). Free: done / next at 4 am, the re-check, questions left.
- *  Its button (#370): Check my fit while a check is left, else Re-check while today's re-check is open. */
+ *  Pro and the beta (FP7): the day's counts. Its button (#370): Check my fit while a check is left, else Re-check
+ *  while today's re-check is open. */
 function TodayCard({ s }: { s: QuotaSnapshot }) {
   const { isAccessibilitySize } = useTheme();
   const paywallShown = usePaywallOn();
   const qLeft = Math.max(0, s.questionLimit - s.questionsUsed);
   const cLeft = Math.max(0, s.checkLimit - s.checksUsed);
   const act = todayAction(s);
-  const tryPro = paywallShown && !s.pro;
+  const tryPro = paywallShown && s.tier === 'free';
   let title: string;
   let right: string | null;
   let line: string;
-  if (s.pro) {
+  if (s.pro || s.tier === 'beta') {
     title = t('you.today.title');
     right = t('you.today.resets');
     line = t('you.today.pro', { checks: cLeft, checkLimit: s.checkLimit, questions: qLeft, questionLimit: s.questionLimit });
@@ -165,33 +166,35 @@ function TodayCard({ s }: { s: QuotaSnapshot }) {
     line = s.recheckOpen ? [t('you.today.recheck'), questionsLeft(qLeft)].join(' · ') : questionsLeft(qLeft);
   }
   return (
-    <KCard radius={radius.cardSmall}>
-      <View style={{ paddingHorizontal: space.rowX, paddingVertical: 14, gap: 2 }} accessible accessibilityLabel={[title, right, line].filter(Boolean).join('. ')}>
-        <View style={isAccessibilitySize ? { gap: 2 } : { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: space.m }}>
-          <KText variant="callout" weight="600" style={{ flexShrink: 1 }}>
-            {title}
-          </KText>
-          {right ? (
-            <KText variant="footnote" color="ink3">
-              {right}
+    <View testID="you-today">
+      <KCard radius={radius.cardSmall}>
+        <View style={{ paddingHorizontal: space.rowX, paddingVertical: 14, gap: 2 }} accessible accessibilityLabel={[title, right, line].filter(Boolean).join('. ')}>
+          <View style={isAccessibilitySize ? { gap: 2 } : { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: space.m }}>
+            <KText variant="callout" weight="600" style={{ flexShrink: 1 }}>
+              {title}
             </KText>
-          ) : null}
+            {right ? (
+              <KText variant="footnote" color="ink3">
+                {right}
+              </KText>
+            ) : null}
+          </View>
+          <KText variant="footnote" color="ink3">
+            {line}
+          </KText>
         </View>
-        <KText variant="footnote" color="ink3">
-          {line}
-        </KText>
-      </View>
-      {act || tryPro ? (
-        <View style={{ paddingHorizontal: space.rowX, paddingBottom: space.m, gap: space.s }}>
-          {act?.kind === 'check' ? (
-            <KButton title={t('closet.empty.check')} icon="camera" size="regular" fullWidth onPress={() => goToStylist({ kind: 'checkMyFit' })} />
-          ) : act?.kind === 'recheck' ? (
-            <KButton title={t('look.recheck')} icon="recheck" size="regular" fullWidth onPress={() => goToStylist({ kind: 'recheck', checkId: act.checkId })} />
-          ) : null}
-          {/* Free: a quiet outlined "Try Pro" (02 D17), only once the paywall exists. */}
-          {tryPro ? <KButton kind="outline" size="regular" fullWidth title={t('you.plan.tryPro')} onPress={() => router.push('/paywall?from=you')} /> : null}
-        </View>
-      ) : null}
-    </KCard>
+        {act || tryPro ? (
+          <View style={{ paddingHorizontal: space.rowX, paddingBottom: space.m, gap: space.s }}>
+            {act?.kind === 'check' ? (
+              <KButton title={t('closet.empty.check')} icon="camera" size="regular" fullWidth onPress={() => goToStylist({ kind: 'checkMyFit' })} />
+            ) : act?.kind === 'recheck' ? (
+              <KButton title={t('look.recheck')} icon="recheck" size="regular" fullWidth onPress={() => goToStylist({ kind: 'recheck', checkId: act.checkId })} />
+            ) : null}
+            {/* Free: a quiet outlined "Try Pro" (02 D17), only once the paywall exists. */}
+            {tryPro ? <KButton kind="outline" size="regular" fullWidth title={t('you.plan.tryPro')} onPress={() => router.push('/paywall?from=you')} /> : null}
+          </View>
+        ) : null}
+      </KCard>
+    </View>
   );
 }

@@ -2,12 +2,14 @@
 // The Firestore side (store.ts) runs these inside a transaction.
 import type { Kind, RouteName } from './routes';
 
-export type Tier = 'free' | 'pro';
+export type Tier = 'free' | 'pro' | 'beta';
 
-/** The app's own numbers (app/src/services/quota.ts LIMITS): a re-check per check. */
+/** The app's own numbers (app/src/services/quota.ts LIMITS): a re-check per check. `beta` is the closed beta's
+ *  day (specs/free-and-pro.md FP7): 3 checks, each with its re-check, and 20 questions; no lifetime count. */
 export const TIERS: Record<Tier, { checks: number; rechecks: number; questions: number }> = {
   free: { checks: 1, rechecks: 1, questions: 5 },
   pro: { checks: 10, rechecks: 10, questions: 50 },
+  beta: { checks: 3, rechecks: 3, questions: 20 },
 };
 /** Calls on one check id: a hedged read, two look arms, the closet call and its retry, with room to spare. */
 export const CALLS_PER_CHECK = 10;

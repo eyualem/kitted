@@ -1,0 +1,16 @@
+# T14 (FP7 "Never during the beta"): nothing on screen sells, prices or says "Pro", "free check(s)" or "trial", and
+# no paywall is open. Run after every step of a beta flow. The patterns are TESTING.md's banned list.
+# Usage: - runFlow: ../common/beta-nothing-to-buy.yaml
+appId: com.trykitted.kitted
+---
+- assertNotVisible: "(?is).*\\bpro\\b.*"
+- assertNotVisible: "(?is).*free checks?.*"
+- assertNotVisible: "(?is).*trial.*"
+- assertNotVisible: "(?s).*\\$\\s?\\d.*"
+- assertNotVisible: "(?s).*/(yr|mo)\\b.*"
+# The paywall and the soft page.
+- assertNotVisible: "Continue free"
+- assertNotVisible: "KITTED PRO"
+- assertNotVisible: "Restore"
+- assertNotVisible: "Restore purchases"
+- assertNotVisible: "Manage subscription"
