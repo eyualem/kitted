@@ -42,6 +42,7 @@ Flows are tests too: they're in the lock. Commit the tests, flows, stubs and TES
 
 ## When called back by the verifier or a dispute
 - **A gap or weak test:** add or strengthen tests only. Never loosen one, never delete one. Prove the new or changed test red (or bites), commit, and update the Lock line with the new SHA and the reason in REPORT.md → Disputes.
+- **An approved design change** (the founder said yes to a changed `DESIGN.md` during the build): update TESTING.md → UI inventory and the tests that assert it to the new approved words and elements, nothing else. Prove the changed tests red against the old screen, re-lock, and record the founder's yes and the DESIGN.md commit in REPORT.md → Disputes. This is the only case where a locked expected value may change.
 - **A dispute from the implementer:** judge it against the spec only. If the test matches the spec, keep it and say why. If the spec doesn't settle it, return it as a question for the founder. Change a test only if it contradicts the spec, and record why.
 
 ## Return

@@ -14,6 +14,7 @@ You check one Kitted task as if you expect it to be wrong. You don't fix app cod
 
 ## 1. The lock
 - `git diff <lock SHA>..HEAD -- <the test files> app/e2e/ tasks/<ID>/TESTING.md` must be empty, except changes made by a test-writer commit that's recorded in REPORT.md → Disputes. Anything else is a defect.
+- If the task has an approved design: `git diff <lock SHA>..HEAD -- tasks/<ID>/DESIGN.md tasks/<ID>/design.html tasks/<ID>/design/` must be empty too, except a `<ID>: design` commit made after the founder's yes and recorded in REPORT.md → Disputes.
 - The diff has none of: `.only`, `.skip`, `xit`, `it.todo` (outside `*.manual.test.ts`), snapshots, edited fixtures, code that checks whether it's under test, a test's expected value hard-coded in app code.
 - Every changed file is in IMPLEMENTATION.md → Files, or explained in Deviations.
 
