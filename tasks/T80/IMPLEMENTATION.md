@@ -2,8 +2,8 @@
 
 > **Parked, Nov 9 (the founder, in chat: use the US weather service for now; Apple's weather is a task for later,
 > "probably migrating sometime soon").** Never built. This plan switches WeatherKit on as built, and that would break
-> Apple's terms (DECISIONS-LOG #407): the card stores its forecast for good, Apple's mark shows only on the card, and Kit
-> sends the numbers to OpenAI. When T80 restarts, re-plan from here with #407's rules. The per-build table, the portal
+> Apple's terms (DECISIONS-LOG #411): the card stores its forecast for good, Apple's mark shows only on the card, and Kit
+> sends the numbers to OpenAI. When T80 restarts, re-plan from here with #411's rules. The per-build table, the portal
 > steps (F-1) and the traps (Metro's `applePaid`, `check:app` on Debug) still hold. TESTING.md was never locked.
 
 

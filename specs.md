@@ -46,14 +46,15 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 ## Core flows
 
 ### First run
-1. Welcome ("See an example check" shows a real scored card, nothing sent).
+1. Welcome: a code-drawn outfit and its score card, no photo ("See an example check" shows a scored example card, nothing sent; `specs/onboarding-screens.md`).
 2. Tap up to 3 looks he'd wear, in order.
-3. Name and birth year: "What should Kit call you?" (first name, optional, Skip; draft copy) above the birth year (the wheel starts blank). Under 18: a polite stop. Plus Apple's Declared Age Range.
-4. Consent, shown when he first opens the camera: names Google (photos), OpenAI (questions) and PostHog (usage counts), says what's sent and kept, and says Kit is an AI.
-5. First fit check → result, with Re-check or Later.
-6. The optional closet step ("Tap the clothes you already own").
-7. The soft upgrade page (skippable from the first frame).
-8. The notification ask, only after "Yes, pick a time".
+3. About you, a plain form like every setup step: "What should Kit call you?" (first name, optional) above "How old are you?" (age bands, none picked). Under 18: a polite stop. Plus Apple's Declared Age Range.
+4. Setup ends in Stylist: Kit's hello and "Want to check a fit now?" (Check my fit / Later). The camera never opens on its own.
+5. Consent, shown when he first opens the camera: names Google (photos), OpenAI (questions) and PostHog (usage counts), says what's sent and kept, and says Kit is an AI.
+6. First fit check → result, with Re-check or Later.
+7. The optional closet step ("Tap the clothes you already own").
+8. The soft upgrade page (skippable from the first frame).
+9. The notification ask: the time he usually gets dressed, after his first scored fit or when he taps Later at step 4; Apple's prompt only after he says yes on Kit's card (`specs/notifications.md`).
 - **Way back:** onboarding has Back; every camera, sheet and paywall has a visible X or Done from the first frame. Closing mid-setup reopens on the step he reached.
 
 ### A fit check
@@ -69,8 +70,8 @@ Offered on Welcome ("I already have an account"), in one chat card after he's se
 
 ### F1. Onboarding
 The first run above, 6 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn each feature from a short tip the first time they reach it, never a tour before the first check (`specs/setup-and-you.md`).
-- F1.1 A fresh install reaches the camera in 6 taps or fewer, with no account and no paywall on the way.
-- F1.2 The birth-year wheel starts blank; a year making him under 18 shows the stop screen and no camera; Declared Age Range under 18 does the same.
+- F1.1 A fresh install reaches the camera in 6 taps or fewer, with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
+- F1.2 The age question starts with nothing picked; "Under 18" shows the stop screen and no camera; Declared Age Range under 18 does the same.
 - F1.3 Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
 - F1.4 The name is optional: skipping it changes nothing but the greetings ("Morning." instead of "Morning, Alex."). If he signs in with Apple and gave no name, Apple's first name fills it.
 - F1.5 His name is used only in code-written lines (the morning and evening greeting, a few card lines). It is never sent to Google, OpenAI or PostHog, and Kit's AI answers never say it. He can change or clear it in You → Style profile.
@@ -149,7 +150,7 @@ Neck-down by default ("Neck down | Full photo"), never gated, a small "scored by
 - F12.1 The default share image shows nothing above the neck.
 
 ### F13. Notifications
-Two kinds, both local: the daily outfit idea at the time he picks, and "fit check ready". Asked only after "Yes, pick a time". Never "we miss you", never streak guilt. ("Trial ending" is gone with the trial.)
+Two kinds, both local: the daily outfit idea, 15 minutes before the time he usually gets dressed, and "fit check ready" (from launch; the beta sends only the daily idea). Apple's prompt only after he says yes on Kit's card. Never "we miss you", never streak guilt. ("Trial ending" is gone with the trial.) Detail: `specs/notifications.md`.
 
 ### F14. Voice input
 The mic in the ask bar; speech turns into text on the phone; audio never leaves it.
