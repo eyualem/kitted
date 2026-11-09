@@ -53,7 +53,7 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 5. First fit check → result, with Re-check or Later.
 6. The optional closet step ("Tap the clothes you already own").
 7. The soft upgrade page (skippable from the first frame).
-8. The notification ask, only after "Yes, pick a time".
+8. The notification ask: the time he usually gets dressed; Apple's prompt only after he says yes on Kit's card (`specs/notifications.md`).
 - **Way back:** onboarding has Back; every camera, sheet and paywall has a visible X or Done from the first frame. Closing mid-setup reopens on the step he reached.
 
 ### A fit check
@@ -149,7 +149,7 @@ Neck-down by default ("Neck down | Full photo"), never gated, a small "scored by
 - F12.1 The default share image shows nothing above the neck.
 
 ### F13. Notifications
-Two kinds, both local: the daily outfit idea at the time he picks, and "fit check ready". Asked only after "Yes, pick a time". Never "we miss you", never streak guilt. ("Trial ending" is gone with the trial.)
+Two kinds, both local: the daily outfit idea, 15 minutes before the time he usually gets dressed, and "fit check ready" (from launch; the beta sends only the daily idea). Apple's prompt only after he says yes on Kit's card. Never "we miss you", never streak guilt. ("Trial ending" is gone with the trial.) Detail: `specs/notifications.md`.
 
 ### F14. Voice input
 The mic in the ask bar; speech turns into text on the phone; audio never leaves it.
