@@ -45,6 +45,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y16** · **P3** · Seven small camera and card calls from your Oct 24 walk, each with a default, in `handoff/09-ui-review.md` §29 (lands with the dark-tip fix): your photos from the chat's camera button without opening the camera; Propped stays quiet until it sees you; the Mirror tip's words; after a re-check, opening the first check opens its fixes in one tap; "1 more question in Closet"; a described piece keeps its color; a fix row shows only the outfit's number (3 min) → those small fixes
 - [ ] **Y17** · **P2** · Pick your first beta testers (friends, 18 or older) and get, with each one's OK, the email his Apple ID uses; TestFlight sends the invite there (10 min) → the beta (T85)
 - [x] **Y18** · **P2** · OK deploying the server's beta limits to Firebase and setting its live config to `beta` (1 min; Claude runs it) → testers held to 3 checks and 20 questions a day on the real server (T14) · yes, Nov 8
+- [ ] **Y20** · **P1** · Say yes (or change) the new location words iOS shows with Apple's weather on, quoted in T80's report (1 min) → Apple's weather in the app (T80)
 - [ ] **Y19** · **P3** · Sign the Paid Apps Agreement in App Store Connect → Business: tax form (W-9) and bank account; it can take a day to clear (15 min) → real purchases (T13)
 
 ---
@@ -119,6 +120,7 @@ Lane files: `app/src/features/{stylist,ask,morning}`
 - [ ] **T51** · The morning and evening card greets him by name · *after T31, T50 · checks: F6 greeting, F1.5 · files: morning/copy.ts, en.ts*
 - [ ] **T52** · Kit declines off-topic questions (haircuts, grooming, fitness, dating) with the spec's line, caught on the phone, never counted · *after T50 · checks: F5.2 · files: ask/*
 - [ ] **T53** · Notifications: install expo-notifications, send the daily idea and "fit check ready", remove "trial ending" · *after T50 · checks: F13 · files: finish/service.ts, settings/prefs.ts, you/notifications.tsx, package.json*
+- [~] morning-card-weather · **T54** · Bug from the beta (Nov 8): two evening cards on one evening. One card per day and window, even when Stylist asks twice while the weather loads · *spec: specs.md · checks: F6 · files: morning/service.ts*
 
 ### Fit check and scoring
 *The core promise: a score he trusts. Done means a dress or skirt is marked "not rated" instead of scored wrong, the card's words match the spec, and every card with a fix offers a free one.*
@@ -147,7 +149,7 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 Spec: `specs.md` (no interview: the launch bars and constraints are exact there)  
 Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 
-- [ ] **T80** · Switch on the paid Apple team: Apple's weather first, the server lock's entitlement; rebuild the app · *done: Apple's weather on the Simulator · files: app.config.ts*
+- [~] morning-card-weather · **T80** · Switch on the paid Apple team: Apple's weather first, the server lock's entitlement; rebuild the app · *done: Apple's weather on the Simulator · files: app.config.ts*
 - [~] apple-connect-beta-setup · PR #71 · **Y17** · **T85** · The beta on TestFlight: the app's App Store Connect record, a build (asks you before an EAS build), your friends invited · *after T14, T80 · done: a friend installs it from the invite · files: app.config.ts* · **console set up Nov 8:** the app record (Apple ID 6830467413), internal group "Kitted team" with you in it, the EAS project `@matemind/kitted` with the Firebase key, uploads aimed at the app (`eas.json`). **First build Nov 8:** 0.1.0 (1) built on EAS and uploaded to TestFlight for Kitted team and installed on your iPhone (before T80: NWS weather, no sign-in, no notifications). Left: Test Information and outside testers by email (needs Y2's privacy link and Y17's emails; Apple reviews the first external build)
 - [!] **Y5** · **T81** · Run the "fix works" test on the fix photos · *after T62 · checks: F3.1 (18 of 20 go up) · files: `extraction-test/results`*
 - [!] **Y6** · **T82** · Run the "fair score" test on the rating set, by age band and look · *checks: the bar in `specs.md` → "The launch" · files: `extraction-test/results`*
