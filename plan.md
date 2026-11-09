@@ -123,7 +123,7 @@ Lane files: `app/src/features/{stylist,ask,morning}`
 - [ ] **T52** · Kit declines off-topic questions (haircuts, grooming, fitness, dating) with the spec's line, caught on the phone, never counted · *after T50 · checks: F5.2 · files: ask/*
 - [~] **T56** · PR #80 · *(beta)* Write the notifications spec with you: the daily nudge 15 minutes before he usually gets dressed, the ask (also at Later on the first-check card), the words, local only · *done: approved Nov 9 · files: `specs/notifications.md`*
 - [~] beta-notifications · **T53** · *(beta)* Notifications in the beta: install expo-notifications (OK'd Nov 9), the ask for his get-dressed time after his first fit, the daily nudge scheduled on the phone, You → Settings → Notifications; testers who finished setup before it get the ask once; remove "trial ending" · *after T56 · checks: specs/notifications.md NT1–NT5 except NT1.8–NT1.10 (T57) · files: services/notifications.ts, finish/, settings/prefs.ts, you/notifications.tsx, morning/, en.ts, package.json, app.config.ts, config/features.ts*
-- [ ] **T57** · *(beta)* Kit's ask at Later on the first-check card (the first-check reminder) · *after T53, T37 · checks: NT1.8–NT1.10 · files: finish/, en.ts*
+- [ ] **T57** · *(beta)* Kit's ask at Later on the first-check card (the first-check reminder) · *after T53, T39 (kv `firstCheckOffer.laterAt`, card `firstCheckOffer`, `specs/onboarding-screens.md` OS5) · checks: NT1.8–NT1.10 · files: finish/, en.ts*
 
 ### Fit check and scoring
 *The core promise: a score he trusts. Done means a dress or skirt is marked "not rated" instead of scored wrong, the card's words match the spec, and every card with a fix offers a free one.*
