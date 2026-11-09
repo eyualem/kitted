@@ -15,7 +15,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ---
 
 ## Next up
-1. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80). TestFlight needs it.
+1. Apple's weather (T80) waits until after the beta (you, Nov 9): the beta keeps the US weather service, which needs no Apple step.
 2. Put the beta on TestFlight and invite your friends (T85).
 3. Start your two launch photo sets now; they take the longest (Y5, Y6).
 4. Read scanned clothes into Closet; your clothes photos are in (T70).
@@ -47,6 +47,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [x] **Y18** · **P2** · OK deploying the server's beta limits to Firebase and setting its live config to `beta` (1 min; Claude runs it) → testers held to 3 checks and 20 questions a day on the real server (T14) · yes, Nov 8
 - [ ] **Y19** · **P3** · Sign the Paid Apps Agreement in App Store Connect → Business: tax form (W-9) and bank account; it can take a day to clear (15 min) → real purchases (T13)
 - [x] **Y20** · **P1** · Say yes (or change) the new location words iOS shows with Apple's weather on, quoted in T80's report (1 min) → Apple's weather in the app (T80) · yes, Nov 8
+- [ ] **Y21** · **P3** · Turn on WeatherKit for the app on Apple's site: developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → com.trykitted.kitted → App Services tab: tick WeatherKit; Capabilities tab: tick WeatherKit, App Attest, Sign in with Apple, Declared Age Range → Save → Confirm (10 min, then up to 30 min for Apple) → Apple's weather (T80)
 
 ---
 
@@ -149,7 +150,7 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 Spec: `specs.md` (no interview: the launch bars and constraints are exact there)  
 Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 
-- [~] morning-card-weather · T80 · plan · **T80** · Switch on the paid Apple team: Apple's weather first, the server lock's entitlement; rebuild the app · *done: Apple's weather on the Simulator · files: app.config.ts*
+- [ ] **T80** · *(after the beta)* Apple's weather, to Apple's rules: switch on the paid team (`APPLE` in app.config.ts), keep Apple's forecast in memory only (the card saves it today; Apple allows only brief caching), Apple's mark and "Data sources" link wherever its weather shows (the fit-check weather tip too), Kit not sent Apple's numbers unless Apple's terms allow it, the "at your own risk" line in the terms if Apple's real-time-guidance rule applies; the beta stays on the US weather service (founder, Nov 9) · *after Y21 · checks: specs.md weather line, F6.1, 09 §27 S1–S3, W1–W5 · plan to re-do: `tasks/T80/` (parked) · files: app.config.ts, morning/, services/weather/, fitcheck tip, ask/*
 - [~] apple-connect-beta-setup · PR #71 · **Y17** · **T85** · The beta on TestFlight: the app's App Store Connect record, a build (asks you before an EAS build), your friends invited · *after T14, T80 · done: a friend installs it from the invite · files: app.config.ts* · **console set up Nov 8:** the app record (Apple ID 6830467413), internal group "Kitted team" with you in it, the EAS project `@matemind/kitted` with the Firebase key, uploads aimed at the app (`eas.json`). **First build Nov 8:** 0.1.0 (1) built on EAS and uploaded to TestFlight for Kitted team and installed on your iPhone (before T80: NWS weather, no sign-in, no notifications). Left: Test Information and outside testers by email (needs Y2's privacy link and Y17's emails; Apple reviews the first external build)
 - [!] **Y5** · **T81** · Run the "fix works" test on the fix photos · *after T62 · checks: F3.1 (18 of 20 go up) · files: `extraction-test/results`*
 - [!] **Y6** · **T82** · Run the "fair score" test on the rating set, by age band and look · *checks: the bar in `specs.md` → "The launch" · files: `extraction-test/results`*
@@ -177,6 +178,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #406
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
@@ -190,4 +192,3 @@ The last 15 sessions, newest first.
 - 2026-11-07 · plan.md formatting; the old status file deleted, its run notes and lessons kept in `handoff/15-build-notes.md` · #390
 - 2026-11-07 · plan.md: one line per task, no tables · #389
 - 2026-11-07 · plan.md written from the spec and a code check; old status file archived · #389
-- 2026-11-07 · the spec interview: `specs.md` written · #388

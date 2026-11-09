@@ -2820,3 +2820,15 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The build:** `eas build --platform ios --profile production --auto-submit`, run in the founder's terminal (his Apple login and 2FA). EAS made the distribution certificate and profile and stores them; `appVersionSource: remote` started the build number at 1. Version 0.1.0, build 1, EAS build `1e8af560`, uploaded to App Store Connect. Apple processed it within minutes ("Ready to Submit" for outside testers, expires in 90 days), and the Kitted team group shows it installed on the founder's iPhone 16 Plus (iOS 26.6.2).
     - **Lesson:** a worktree has no `app/.env*` (git-ignored), so `guard:release` there needs the main checkout's files linked in for the run. EAS doesn't need them; it reads its own environment variables.
     - **Lesson:** inviting testers doesn't cost a build. One build serves every tester and group until it expires (90 days); a new build is needed only when the app changes.
+
+## Nov 9 · Apple's weather parked: its terms (T80)
+
+406. **The founder (Nov 9): "we can use the US weather … but keep this as the tasks that we're going to be doing in the future. We're probably going to be migrating sometime soon."** The beta stays on the US National Weather Service; T80 (Apple's weather) is parked, not built. `specs.md` still names WeatherKit, so T80 must land before launch or the founder changes that line.
+    - **Why it stopped:** Apple's WeatherKit terms, read Nov 9 (Apple Developer Program License Agreement §3.3.8.B and Attachment 8; developer.apple.com/weatherkit/get-started), would be broken by switching it on as built:
+      - Attachment 8 §1.6: Apple's weather data may not be cached or stored beyond brief caching for speed. The card saves its forecast in `daily_ideas.weather` for good (it's read back for history and re-picks).
+      - The " Weather" mark and the legal "Data sources" link must show wherever Apple's data shows. Today only the morning card has them; the fit-check card's weather tip (derived from it) doesn't.
+      - Nothing in the terms allows or forbids sending Apple's numbers to OpenAI (Kit's "Weather today: …" line); the service-provider clause may cover it. Unsettled.
+      - Attachment 8 §2.2: an app giving "real-time weather guidance" must carry an "at your sole risk" line in its terms. Probably not an outfit app, but check when T80 restarts.
+    - **Checked and still true:** the paid team's ID is 6652QVRQAL (the Mac's signing certificate OU, and #404's App Store upload). The founder said yes (Nov 8) to `LOCATION_USAGE_PAID`'s words as written.
+    - **For the restart:** `tasks/T80/` holds the parked plan (what each entitlement changes per build, the portal steps, now Y21, and the traps). It needs a re-plan for the four rules above. WeatherKit needs both the App Services and the Capabilities tick on the App ID, and EAS syncs only the capability.
+    - **Lesson:** read a data provider's terms before wiring it in, not at switch-on. "Free" data often comes with rules about storage and attribution that shape the design (here: what the database may keep).
