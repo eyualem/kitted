@@ -1,0 +1,1236 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="../../mockups/">
+<title>T53 design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a review board. Journey sections of 300px phones on a cool fitting-room grey.
+   Selvedge-indigo ink, one copper-rivet accent, dashed seams as dividers, care-label mono for data. */
+:root{
+  --page:#E5E7EB; --page-2:#F1F2F4; --page-ink:#131726; --page-ink-2:#565C6B; --page-line:#C8CCD4; --rivet:#9C5326;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,monospace;
+  --ios:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Archivo",Arial,sans-serif;
+  /* app tokens, light */
+  --bg:#F3F4F6; --surface:#FFFFFF; --surface-2:#ECEEF1; --ink:#121628; --ink-2:#585E70; --ink-3:#848A99;
+  --line:#E0E3E8; --accent:#9C5326; --accent-soft:rgba(156,83,38,.11); --primary:#121628; --on-primary:#FFFFFF;
+  --good:#2B7651; --glass:rgba(250,250,252,.80); --me:#1B2340; --on-me:#F2F3F7; --dim:rgba(10,12,20,.42);
+  --shadow:0 1px 2px rgba(18,22,40,.05),0 6px 18px rgba(18,22,40,.06);
+  --bezel:#1B1D22;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0A0C11; --page-2:#11141B; --page-ink:#E8EAF0; --page-ink-2:#9198A7; --page-line:#252A37; --rivet:#D8915A;
+    --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+    --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222,151,98,.15); --primary:#ECEEF3; --on-primary:#0C0E14;
+    --good:#5DC08F; --glass:rgba(32,35,46,.78); --me:#2A3150; --on-me:#EEF0F6; --dim:rgba(0,0,0,.55);
+    --shadow:0 0 0 1px rgba(255,255,255,.03); --bezel:#2A2D34; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0A0C11; --page-2:#11141B; --page-ink:#E8EAF0; --page-ink-2:#9198A7; --page-line:#252A37; --rivet:#D8915A;
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222,151,98,.15); --primary:#ECEEF3; --on-primary:#0C0E14;
+  --good:#5DC08F; --glass:rgba(32,35,46,.78); --me:#2A3150; --on-me:#EEF0F6; --dim:rgba(0,0,0,.55);
+  --shadow:0 0 0 1px rgba(255,255,255,.03); --bezel:#2A2D34; color-scheme:dark;
+}
+/* App appearance switch (overrides the page theme inside the phones only) */
+.board[data-app="light"] .phone:not(.fixed){
+  --bg:#F3F4F6; --surface:#FFFFFF; --surface-2:#ECEEF1; --ink:#121628; --ink-2:#585E70; --ink-3:#848A99;
+  --line:#E0E3E8; --accent:#9C5326; --accent-soft:rgba(156,83,38,.11); --primary:#121628; --on-primary:#FFFFFF;
+  --good:#2B7651; --glass:rgba(250,250,252,.80); --me:#1B2340; --on-me:#F2F3F7; --dim:rgba(10,12,20,.42);
+  --shadow:0 1px 2px rgba(18,22,40,.05),0 6px 18px rgba(18,22,40,.06); color-scheme:light;
+}
+.board[data-app="dark"] .phone:not(.fixed), .phone.fixed{
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222,151,98,.15); --primary:#ECEEF3; --on-primary:#0C0E14;
+  --good:#5DC08F; --glass:rgba(32,35,46,.78); --me:#2A3150; --on-me:#EEF0F6; --dim:rgba(0,0,0,.55);
+  --shadow:0 0 0 1px rgba(255,255,255,.03); color-scheme:dark;
+}
+
+html,body{background:var(--page);color:var(--page-ink)}
+body{font-family:var(--display);font-stretch:100%;-webkit-font-smoothing:antialiased;padding-inline:20px;padding-block:0 80px}
+*{box-sizing:border-box}
+.board{max-width:1360px;margin:0 auto}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--rivet);outline-offset:2px}
+
+/* ---------- Board header ---------- */
+.masthead{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end;padding-block:56px 36px;border-bottom:1px solid var(--page-line)}
+.mast-left{display:flex;flex-direction:column;gap:22px;min-width:0}
+.mark-row{display:flex;align-items:center;gap:16px}
+.appicon{width:64px;height:64px;border-radius:15px;background:radial-gradient(120% 90% at 30% 15%,#2F3B66 0%,#1B2340 55%,#121830 100%);position:relative;display:grid;place-items:center;box-shadow:0 8px 24px rgba(18,24,48,.28);flex:none}
+.appicon::before{content:"";position:absolute;inset:6px;border-radius:10px;border:1.3px dashed rgba(222,151,98,.75)}
+.appicon span{font-family:var(--display);font-stretch:125%;font-weight:760;font-size:30px;color:#EEF0F5;letter-spacing:-.02em;line-height:1}
+.woven{display:inline-flex;align-items:center;position:relative;background:#1B2340;color:#EEF0F5;font-family:var(--display);font-stretch:125%;font-weight:700;letter-spacing:.34em;font-size:12px;padding:8px 22px 8px 25px;border-radius:2px;line-height:1}
+.woven::before,.woven::after{content:"";position:absolute;top:3px;bottom:3px;border-left:1px dashed rgba(238,240,245,.55)}
+.woven::before{left:7px}.woven::after{right:7px}
+.woven.sm{font-size:8.5px;padding:6px 16px 6px 18px;letter-spacing:.32em}
+.woven.sm::before{left:5px}.woven.sm::after{right:5px}
+.woven.copper{background:var(--accent);color:var(--on-primary)}
+h1.board-title{font-family:var(--display);font-stretch:118%;font-weight:720;font-size:clamp(34px,5.4vw,64px);line-height:.98;letter-spacing:-.025em;margin:0;text-wrap:balance}
+h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(--page-ink-2);letter-spacing:-.01em}
+.mast-right{display:flex;flex-direction:column;gap:18px;min-width:0}
+.lede{font-size:15.5px;line-height:1.55;color:var(--page-ink-2);margin:0;max-width:60ch}
+.lede b{color:var(--page-ink);font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:11.5px;color:var(--page-ink-2);text-transform:uppercase;letter-spacing:.06em}
+.switch{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.switch .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--page-ink-2)}
+.seg{display:inline-flex;padding:3px;border-radius:999px;background:var(--page-2);border:1px solid var(--page-line)}
+.seg button{border:0;background:transparent;padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--page-ink-2)}
+.seg button[aria-pressed="true"]{background:var(--page-ink);color:var(--page)}
+
+/* ---------- System strip ---------- */
+.system{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--page-line);border:1px solid var(--page-line);margin-block:36px 8px;border-radius:14px;overflow:hidden}
+.sys{background:var(--page-2);padding:20px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.sys h3{margin:0;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-ink-2)}
+.sys p{margin:0;font-size:13px;line-height:1.5;color:var(--page-ink-2)}
+.sys p b{color:var(--page-ink);font-weight:600}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);font-size:10px;color:var(--page-ink-2)}
+.sw i{width:40px;height:40px;border-radius:9px;display:block;border:1px solid rgba(128,128,128,.25)}
+.type-a{font-family:var(--display);font-stretch:72%;font-weight:650;font-size:44px;line-height:.9;letter-spacing:-.02em;color:var(--page-ink)}
+.type-b{font-family:var(--display);font-stretch:125%;font-weight:700;font-size:11px;letter-spacing:.3em;color:var(--page-ink)}
+.type-c{font-family:var(--mono);font-size:11px;color:var(--page-ink-2);letter-spacing:.04em}
+.rules{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.4;color:var(--page-ink-2)}
+.rules li{display:flex;gap:8px}.rules li::before{content:"";flex:none;width:6px;height:6px;margin-top:6px;border-radius:50%;background:var(--rivet)}
+
+/* ---------- Sections ---------- */
+.flow{padding-block:54px 8px}
+.flow-head{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:16px 40px;align-items:baseline;padding-bottom:26px;margin-bottom:30px;border-bottom:1px dashed var(--page-line)}
+.flow-head .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--rivet);display:block;margin-bottom:8px}
+.flow-head h2{margin:0;font-family:var(--display);font-stretch:115%;font-weight:700;font-size:30px;letter-spacing:-.02em;line-height:1.05;text-wrap:balance}
+.flow-head p{margin:0;font-size:14.5px;line-height:1.55;color:var(--page-ink-2);max-width:68ch}
+.row{display:flex;flex-wrap:wrap;gap:44px 26px}
+.shot{margin:0;width:315px;display:flex;flex-direction:column;gap:16px}
+.shot figcaption{display:flex;flex-direction:column;gap:5px;padding-inline:4px}
+.shot figcaption b{font-size:14px;font-weight:650;letter-spacing:-.005em;display:flex;gap:8px;align-items:baseline}
+.shot figcaption b small{font-family:var(--mono);font-weight:400;font-size:10.5px;color:var(--rivet);letter-spacing:.06em}
+.shot figcaption span{font-size:12.5px;line-height:1.5;color:var(--page-ink-2)}
+.foot{margin-top:70px;padding-top:24px;border-top:1px solid var(--page-line);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.foot h4{margin:0 0 8px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rivet)}
+.foot p{margin:0;font-size:13px;line-height:1.55;color:var(--page-ink-2)}
+
+/* ---------- Phone ---------- */
+.phone{zoom:.735;width:428px;height:900px;border-radius:71px;background:var(--bezel);padding:13px;position:relative;box-shadow:0 0 0 1.5px rgba(128,132,145,.35),0 39px 78px -26px rgba(16,20,36,.35),0 15.5px 31px -15.5px rgba(16,20,36,.25);flex:none}
+.screen{position:relative;width:100%;height:100%;border-radius:58px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--ios);font-size:17px;line-height:1.36;letter-spacing:-.005em;font-variant-numeric:tabular-nums}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:125px;height:37px;border-radius:19px;background:#000;z-index:30}
+.status{position:absolute;top:0;left:0;right:0;height:58px;display:flex;align-items:center;justify-content:space-between;padding:4px 36px 0 50px;font-weight:600;font-size:17px;z-index:25;color:var(--ink)}
+.status.on-dark{color:#fff}
+.status .sig{display:flex;gap:6.5px;align-items:center}
+.status svg{display:block}
+.status .sig svg:nth-child(1){width:19px;height:12px}.status .sig svg:nth-child(2){width:17px;height:12px}.status .sig svg:nth-child(3){width:27px;height:13px}
+.status .sig{gap:6px}
+.homebar{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:135px;height:5px;border-radius:4px;background:var(--ink);opacity:.85;z-index:40}
+.homebar.on-dark{background:#fff}
+.content{position:absolute;inset:62px 0 0 0;overflow:hidden;display:flex;flex-direction:column}
+.ic{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block;flex:none}
+.ic.s{width:19.5px;height:19.5px;stroke-width:1.9}
+.ic.xs{width:15.5px;height:15.5px;stroke-width:2.2}
+
+/* nav */
+.nav{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex:none;position:relative}
+.nav .t{position:absolute;left:0;right:0;text-align:center;font-weight:600;font-size:17px;pointer-events:none;display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.nav .t small{font-weight:500;font-size:12px;color:var(--ink-3)}
+.circ{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--ink);position:relative;z-index:2;border:0}
+.circ.glass{background:rgba(255,255,255,.16);color:#fff;backdrop-filter:blur(15.5px);-webkit-backdrop-filter:blur(15.5px)}
+.bigtitle{font-size:34px;font-weight:700;letter-spacing:-.02em;padding:5px 21px 10.5px;line-height:1.1;display:flex;justify-content:space-between;align-items:center}
+.progress{display:flex;gap:5px;flex:1;margin:0 18px;position:relative;z-index:2}
+.progress i{height:4px;border-radius:2.5px;background:var(--line);flex:1}
+.progress i.on{background:var(--ink)}
+
+/* chat */
+.thread{flex:1;display:flex;flex-direction:column;gap:12px;padding:4px 16px 0;overflow:hidden;min-height:0}
+.thread.end{justify-content:flex-end}
+.say{max-width:92%;font-size:17px;line-height:1.42;color:var(--ink)}
+.say .who{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink-3);margin-bottom:4px;letter-spacing:.01em}
+.who i{width:18px;height:18px;border-radius:5px;background:#1B2340;display:inline-grid;place-items:center;font-style:normal;font-family:var(--display);font-stretch:125%;font-weight:760;font-size:10.5px;color:#EEF0F5}
+.me{align-self:flex-end;max-width:78%;background:var(--me);color:var(--on-me);padding:10.5px 15.5px;border-radius:23.5px 23.5px 6.5px 23.5px;font-size:17px;line-height:1.35}
+.me.photo{padding:4px;border-radius:21px 21px 6.5px 21px;display:flex;flex-direction:column;gap:0;width:135px}
+.me.photo .ph{height:171.5px;border-radius:17px 17px 4px 17px;overflow:hidden}
+.me.photo .cap{font-size:13.5px;padding:6.5px 9px 5px;display:flex;justify-content:space-between;opacity:.9}
+.ph svg{width:100%;height:100%;display:block}
+.stamp{align-self:center;font-size:13px;color:var(--ink-3);font-weight:500}
+
+.card{background:var(--surface);border-radius:26px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;flex:none}
+.card-pad{padding:14px 16px}
+.tagline{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.tagline b{color:var(--ink-2);font-weight:500}
+.seam{height:1px;background:repeating-linear-gradient(90deg,var(--ink-3) 0 5px,transparent 5px 9px);opacity:.45;margin:0 18px}
+.score-row{display:flex;align-items:flex-end;gap:15.5px}
+.score{font-family:var(--display);font-stretch:70%;font-weight:640;font-size:75.5px;line-height:.82;letter-spacing:-.025em;color:var(--ink);display:flex;align-items:flex-start}
+.score sub{font-family:var(--mono);font-stretch:100%;font-size:14.5px;font-weight:400;color:var(--ink-3);letter-spacing:0;align-self:flex-end;margin-left:4px;margin-bottom:5px}
+.verdict{display:flex;flex-direction:column;gap:4px;padding-bottom:4px;min-width:0}
+.verdict b{font-size:18px;font-weight:650;letter-spacing:-.01em}
+.verdict span{font-size:14.5px;color:var(--ink-2)}
+.subs{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.sub{display:flex;flex-direction:column;gap:6.5px}
+.sub .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between}
+.sub .k b{font-family:var(--ios);font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:0}
+.bar{height:5px;border-radius:2.5px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink);border-radius:2.5px}
+.summary{font-size:16px;line-height:1.42;color:var(--ink)}
+.fixes{display:flex;flex-direction:column}
+.fix{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:11.5px;align-items:center;padding:10.5px 0}
+.fix+.fix{border-top:1px solid var(--line)}
+.fix .n{width:26px;height:26px;border-radius:50%;border:1.3px solid var(--ink);display:grid;place-items:center;font-size:13px;font-weight:700}
+.fix .what{display:flex;flex-direction:column;gap:2.5px;min-width:0}
+.fix .what b{font-size:16px;font-weight:600;line-height:1.25}
+.fix .what span{font-size:13.5px;color:var(--ink-3)}
+.gain{font-family:var(--mono);font-size:14.5px;color:var(--accent);font-weight:500;white-space:nowrap}
+.gain.big{font-size:15.5px}
+.fix.done .n{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.fix.done .what b{text-decoration:line-through;text-decoration-color:var(--ink-3);color:var(--ink-2)}
+.added{display:flex;align-items:center;gap:10.5px;font-size:15px;color:var(--ink-2)}
+.added .thumbs{display:flex}
+.added .thumbs span{width:28.5px;height:28.5px;border-radius:8px;background:var(--surface-2);border:1.5px solid var(--surface);margin-left:-8px;display:grid;place-items:center;overflow:hidden}
+.added .thumbs span:first-child{margin-left:0}
+.added .thumbs svg{width:23.5px;height:23.5px}
+.added a{margin-left:auto;color:var(--accent);font-weight:600;text-decoration:none}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{height:36px;padding:0 16px;border-radius:18px;border:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--ios);font-size:15px;font-weight:600;white-space:nowrap;background:var(--surface-2);color:var(--ink);cursor:default}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.btn.lg{height:50px;border-radius:25px;font-size:17px;width:100%}
+.btn.ghost{background:transparent;color:var(--ink-2)}
+.btn.out{background:transparent;border:1px solid var(--line)}
+.btn.icon{width:36px;padding:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:34px;padding:0 14px;border-radius:17px;border:1px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;gap:6.5px;font-size:15px;font-weight:550;color:var(--ink);white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip.ac{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.pill{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10.5px;border-radius:13px;font-size:13px;font-weight:600;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill.ac{background:var(--accent-soft);color:var(--accent)}
+.pill.ok{background:transparent;border:1px solid var(--line);color:var(--good)}
+
+/* composer + quick start + tabbar */
+.dock{flex:none;display:flex;flex-direction:column;gap:10px;padding:8px 16px 92px}
+.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.both{display:flex;justify-content:space-between;align-items:baseline;padding:10.5px 0 8px;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink-2)}
+.both b{font-family:var(--mono);font-weight:500;font-size:15.5px;color:var(--accent)}
+.ledger .tot span:first-child small{display:block;font-weight:400;font-size:13px;color:var(--ink-3)}
+.quickrow{display:flex;gap:8px;overflow:hidden;margin-right:-15.5px}
+.qc{flex:none;height:34px;padding:0 13px;border-radius:17px;background:var(--surface);border:1px solid var(--line);display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;white-space:nowrap}
+.qc .ic{color:var(--ink-2)}
+.fitbtn{height:40px;padding:0 16px 0 13px;border-radius:20px;background:var(--primary);color:var(--on-primary);display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:650;flex:none;white-space:nowrap}
+.cfix{position:absolute;left:0;right:0;bottom:0;padding:8px 16px 92px;z-index:15;background:linear-gradient(to bottom,transparent,var(--bg) 22%)}
+.phone[data-composer] .thread.end{padding-bottom:146px}
+.scale{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:13px 36.5px;align-items:center;padding:23.5px 28.5px;border:1px solid var(--page-line);border-radius:18px;background:var(--page-2);margin-top:15.5px}
+.scale-t{font-family:var(--mono);font-size:14.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-ink-2)}
+.scale-n{grid-column:2;font-size:16px;color:var(--page-ink-2)}
+.bands{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--page-line);border-radius:10.5px;overflow:hidden;background-image:repeating-linear-gradient(90deg,var(--page-line) 0 1px,transparent 1px 15.5px);background-size:100% 8px;background-repeat:no-repeat}
+.bands div{display:flex;flex-direction:column;gap:2.5px;padding:15.5px 15.5px 13px;border-left:1px solid var(--page-line);min-width:0}
+.bands div:first-child{border-left:0}
+.bands b{font-family:var(--mono);font-weight:500;font-size:13.5px;color:var(--page-ink-2)}
+.bands span{font-size:18px;font-weight:650;color:var(--page-ink)}
+.bands div.on{background:color-mix(in srgb,var(--rivet) 12%,transparent)}
+.bands div.on b{color:var(--rivet)}
+@media (max-width:988px){.scale{grid-template-columns:minmax(0,1fr)}.scale-n{grid-column:1}.bands{grid-template-columns:repeat(2,minmax(0,1fr))}.bands div{border-top:1px solid var(--page-line)}}
+.links{display:flex;gap:23.5px;font-size:15.5px;font-weight:600;padding-left:2.5px}
+.links a{color:var(--accent);text-decoration:none}
+.share-band{position:absolute;left:0;right:0;bottom:0;height:24%;background:#121628;color:#fff;padding:13px 18px 15.5px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;border-top:1px dashed rgba(222,151,98,.6)}
+.share-mark{position:absolute;top:13px;right:15.5px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:rgba(255,255,255,.6)}
+.share-mark b{font-family:var(--display);font-stretch:125%;font-weight:700;letter-spacing:.24em;color:#fff;font-size:10.5px}
+.q{height:57px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;gap:10.5px;padding:0 13px;font-size:14.5px;line-height:1.18;font-weight:600;color:var(--ink)}
+.q .ic{width:22px;height:22px;color:var(--ink-2)}
+.q.hero{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.q.hero .ic{color:var(--on-primary)}
+.composer{display:flex;gap:9px;align-items:center}
+.composer .cam{width:40px;height:40px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;flex:none}
+.composer .lib{width:40px;height:40px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;flex:none;color:var(--ink-2)}
+.composer .field{flex:1;height:40px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;padding:0 16px;color:var(--ink-3);font-size:17px;min-width:0}
+.tabbar{position:absolute;left:21px;right:21px;bottom:21px;height:62px;border-radius:31px;background:var(--glass);backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);border:.5px solid var(--line);display:flex;padding:4px;z-index:20;box-shadow:0 10.5px 31px -10.5px rgba(10,14,30,.22)}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:600;color:var(--ink-2);border-radius:27px;text-decoration:none}
+.tabbar a .ic{width:24px;height:24px}
+.tabbar a.on{color:var(--accent);background:var(--accent-soft)}
+
+/* sheet */
+.dim{position:absolute;inset:0;background:var(--dim);z-index:50}
+.sheet{position:absolute;left:8px;right:8px;bottom:8px;background:var(--surface);border-radius:38px;z-index:60;padding:8px 20px 24px;display:flex;flex-direction:column;gap:12px}
+.grab{width:36px;height:5px;border-radius:3px;background:var(--line);align-self:center;margin-bottom:2.5px}
+.sheet h4{margin:0;font-size:22px;font-weight:700;letter-spacing:-.015em;display:flex;justify-content:space-between;align-items:center}
+.sheet .sub-t{font-size:15px;color:var(--ink-2);margin-top:-6px;line-height:1.4}
+.ledger{display:flex;flex-direction:column;font-size:15.5px}
+.ledger .l{display:flex;justify-content:space-between;gap:13px;padding:9px 0;border-bottom:1px solid var(--line)}
+.ledger .l span:first-child{color:var(--ink-2);min-width:0}
+.ledger .l span:first-child b{color:var(--ink);font-weight:600}
+.ledger .l span:last-child{font-family:var(--mono);font-size:15px;white-space:nowrap}
+.ledger .l .plus{color:var(--good)}
+.ledger .l .minus{color:var(--accent)}
+.ledger .tot{display:flex;justify-content:space-between;align-items:flex-end;padding-top:13px}
+.ledger .tot span:first-child{font-weight:650;font-size:17px}
+
+/* tiles */
+.tile{border-radius:18px;background:var(--surface-2);display:grid;place-items:center;position:relative;overflow:hidden}
+.tile svg{width:62%;height:62%}
+.minilabel{font-size:13px;color:var(--ink-2);line-height:1.25}
+.minilabel b{display:block;color:var(--ink);font-weight:600;font-size:13.5px}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H10l-4 3.5V16A2.5 2.5 0 0 1 4 13.5z"/></symbol>
+  <symbol id="i-hanger" viewBox="0 0 24 24"><path d="M10 6.2a2 2 0 1 1 2.6 1.9c-.4.1-.6.5-.6.9v.6M12 9.6L3.4 15.6a1.3 1.3 0 0 0 .8 2.4h15.6a1.3 1.3 0 0 0 .8-2.4L12 9.6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.6A1.6 1.6 0 0 1 5.6 7h2.1l1.5-2.2h5.6L16.3 7h2.1A1.6 1.6 0 0 1 20 8.6v8.8a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 17.4z"/><circle cx="12" cy="12.8" r="3.3"/></symbol>
+  <symbol id="i-photo" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.2"/><circle cx="9" cy="10" r="1.6"/><path d="M4.5 16.5l4.3-3.8 3.4 2.9 2.9-2.3 4.4 3.7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M9.5 5.5L16 12l-6.5 6.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4L18 18M6 18l1.6-1.6M16.4 7.6L18 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2L18.5 7.8"/></symbol>
+  <symbol id="i-tee" viewBox="0 0 24 24"><path d="M8.5 4.5L4 7.2l1.8 3.6 2.2-.9V19.5h8V9.9l2.2.9L20 7.2l-4.5-2.7c-.6 1.4-1.9 2.2-3.5 2.2s-2.9-.8-3.5-2.2z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5.5 8.5h13l-1 11h-11z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></symbol>
+  <symbol id="i-q" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.4v.5"/><path d="M12 16.6v.2"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 4v10.5M8.3 7.7L12 4l3.7 3.7"/><path d="M7 11H6.5A1.5 1.5 0 0 0 5 12.5v6A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-6a1.5 1.5 0 0 0-1.5-1.5H17"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M18.5 12.5a6.5 6.5 0 1 1-2-4.7"/><path d="M18.5 4.5v4h-4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.8v.2"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M5 19l1-4L15.5 5.5a2.1 2.1 0 0 1 3 3L9 18z"/></symbol>
+  <symbol id="i-shoe" viewBox="0 0 24 24"><path d="M3.5 17.5V11l3.6-.8 2.6 2 4.6 1.2 5 1.6a1.7 1.7 0 0 1 1.2 1.6v.9z"/><path d="M3.5 17.5v1.5h17.4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M7 4.5h10v15.5l-5-3.6-5 3.6z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.8"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5l7 2.8v5c0 4.3-2.9 7.6-7 9.4-4.1-1.8-7-5.1-7-9.4v-5z"/><path d="M9 12l2.2 2.2L15.2 10"/></symbol>
+  <symbol id="i-blur" viewBox="0 0 24 24"><circle cx="12" cy="9" r="4.5" stroke-dasharray="2 2.2"/><path d="M5 20c.9-3.3 3.6-5.2 7-5.2s6.1 1.9 7 5.2"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="3.5" width="10" height="17" rx="2.4"/><path d="M10.5 17.5h3"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l.8 12.5h8.4L17 7"/></symbol>
+  <symbol id="i-partial" viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="15" rx="3" stroke-dasharray="3 2.4"/><path d="M4.5 13.5h15"/></symbol>
+  <symbol id="i-flash" viewBox="0 0 24 24"><path d="M13 3.5L6.5 13h5l-1 7.5L17.5 11h-5z"/></symbol>
+  <symbol id="i-flip" viewBox="0 0 24 24"><path d="M4.5 9.5A7.5 7.5 0 0 1 18 7M19.5 14.5A7.5 7.5 0 0 1 6 17"/><path d="M18.5 3.5V7.5h-4M5.5 20.5v-4h4"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 1.5H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.4"/><path d="M4 10h16M8.5 3.5v3.5M15.5 3.5v3.5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V6M6.5 11.5L12 6l5.5 5.5"/></symbol>
+</svg>
+
+<style>/* tokens.ts, light then dark */
+:root,.board[data-app="light"] .phone:not(.fixed){--bg:#F3F4F6; --surface:#FFFFFF; --surface-2:#ECEEF1; --ink:#121628; --ink-2:#585E70; --ink-3:#646A7A; --ink-faint:#848A99; --line:#E0E3E8; --accent:#9C5326; --accent-soft:rgba(156, 83, 38, 0.09); --primary:#1A2448; --on-primary:#FFFFFF; --good:#2B7651; --me:#22305C; --on-me:#F2F3F7; --caution:#8A5A00; --danger:#C9302C; --dim:rgba(10, 12, 20, 0.42);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#9096A5; --ink-faint:#6E7484; --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222, 151, 98, 0.15); --primary:#ECEEF3; --on-primary:#0C0E14; --good:#5DC08F; --me:#2B3860; --on-me:#EEF0F6; --caution:#E2B356; --danger:#FF6961; --dim:rgba(0, 0, 0, 0.55);}}
+:root[data-theme="dark"],.board[data-app="dark"] .phone:not(.fixed),.phone.fixed{--bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#9096A5; --ink-faint:#6E7484; --line:#2A2F3B; --accent:#DE9762; --accent-soft:rgba(222, 151, 98, 0.15); --primary:#ECEEF3; --on-primary:#0C0E14; --good:#5DC08F; --me:#2B3860; --on-me:#EEF0F6; --caution:#E2B356; --danger:#FF6961; --dim:rgba(0, 0, 0, 0.55);}
+</style>
+<div class="board" id="board" data-app="auto">
+<header class="masthead">
+  <div class="mast-left">
+    <span class="woven">KITTED</span>
+    <h1 class="board-title">Notifications: Kit's ask, the daily nudge, You → Notifications and the comeback</h1>
+  </div>
+  <div class="mast-right">
+    <p class="lede">Design for T53. Phones are true iPhone 17 size (402 × 874 pt), scaled to fit. Every word on them is the exact copy; what each part is and why is in DESIGN.md.</p>
+    <div class="switch">
+      <span class="lbl" id="app-lbl">App appearance</span>
+      <div class="seg" role="group" aria-labelledby="app-lbl">
+        <button type="button" id="ap-auto" data-v="auto" aria-pressed="true">Match page</button>
+        <button type="button" id="ap-light" data-v="light" aria-pressed="false">Light</button>
+        <button type="button" id="ap-dark" data-v="dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="flow" id="states">
+  <div class="flow-head">
+    <div><span class="eyebrow">T53</span><h2>States</h2></div>
+    <p>One phone per state, in the order he meets them.</p>
+  </div>
+  <div class="row">
+<style>
+/* T53 frames, drawn from app/src/design-system/components/Chat.tsx (StylistMessage), MorphPicker.tsx, KButton.tsx,
+   features/finish/NotifyAskCard.tsx and InviteCard.tsx, features/settings/SettingsList.tsx and stylist/StylistBar.tsx. */
+.t53-thread{position:absolute;left:0;right:0;top:106px;bottom:157px;display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px;overflow:hidden}
+.t53-gap4{height:4px;flex:none}.t53-gap12{height:12px;flex:none}.t53-gap20{height:20px;flex:none}
+.t53-msg{display:flex;flex-direction:column;gap:4px;align-items:stretch;flex:none}
+.t53-who{font-size:13px;line-height:18px;font-weight:600;color:var(--ink-3);padding-left:16px;margin-top:4px}
+.t53-kit{align-self:flex-start;max-width:86%;background:var(--surface);border:1px solid var(--line);border-radius:24px 24px 24px 6px;padding:10px 16px;font-size:17px;line-height:22px;color:var(--ink)}
+.t53-foot{padding-top:6px;display:flex;flex-direction:column;gap:8px}
+.t53-timerow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.t53-label{font-size:15px;line-height:20px;color:var(--ink-2)}
+.t53-pill{display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:0 12px;border-radius:16px;background:var(--surface-2);font-size:15px;line-height:20px;font-weight:600;color:var(--ink)}
+.t53-pill .chev{width:11px;height:11px;color:var(--ink-2)}
+.t53-btns{display:flex;gap:8px;flex-wrap:wrap}
+.t53-btns .btn{flex:none}
+.t53-spin{width:18px;height:18px;border-radius:50%;border:2.2px solid currentColor;border-right-color:transparent;opacity:.8}
+.t53-stamp{align-self:center;font-size:13px;line-height:18px;font-weight:500;color:var(--ink-3);flex:none}
+/* InviteCard (S14) above the ask on the first-fit day */
+.t53-invite{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.t53-invite h4{margin:0;font-size:17px;line-height:22px;font-weight:600;color:var(--ink)}
+.t53-invite p{margin:0;font-size:15px;line-height:20px;color:var(--ink-2)}
+.t53-link{min-height:44px;display:flex;align-items:center;font-size:15px;font-weight:600;color:var(--ink)}
+/* The tab-bar accessory on Stylist (camera, "Ask Kit…", mic), as T62 drew it */
+.t53-acc{position:absolute;left:21px;right:21px;bottom:92px;height:53px;border-radius:27px;background:var(--glass);backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);border:.5px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 8px 0 7px;z-index:16}
+.t53-acc .cam{width:38px;height:38px;border-radius:19px;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;flex:none}
+.t53-acc .field{flex:1;font-size:17px;color:var(--ink-2)}
+.t53-acc .mic{width:38px;height:38px;display:grid;place-items:center;color:var(--ink-2)}
+/* MorphPicker panel, open */
+.t53-scrim{position:absolute;inset:0;background:rgba(18,22,40,.06);z-index:40}
+.t53-panel{position:absolute;z-index:41;background:var(--surface-2);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.t53-panel .top{display:flex;align-items:center;gap:5px;min-height:32px;padding:0 11px;font-size:15px;line-height:20px;font-weight:600;color:var(--ink)}
+.t53-panel .top .chev{width:11px;height:11px;color:var(--ink-2)}
+.t53-panel .rule{height:1px;margin:0 12px;background:var(--line);flex:none}
+.t53-panel .list{padding:5px 0;overflow:hidden}
+.t53-panel .opt{height:44px;display:flex;align-items:center;gap:10px;padding:0 14px;font-size:17px;line-height:22px;color:var(--ink-2)}
+.t53-panel .opt span{flex:1}
+.t53-panel .opt.on{color:var(--ink);font-weight:600}
+.t53-panel .opt .ic{width:17px;height:17px;stroke-width:2.4;color:var(--ink)}
+.board[data-app="dark"] .t53-scrim{background:rgba(0,0,0,.25)}
+.board[data-app="dark"] .t53-panel{box-shadow:0 12px 32px rgba(0,0,0,.45)}
+@media (prefers-color-scheme: dark){ .board:not([data-app="light"]) .t53-scrim{background:rgba(0,0,0,.25)} .board:not([data-app="light"]) .t53-panel{box-shadow:0 12px 32px rgba(0,0,0,.45)} }
+/* Apple's permission alert (system UI, drawn approximately: iOS draws it, in its own light or dark) */
+.t53-dim{position:absolute;inset:0;background:rgba(0,0,0,.2);z-index:40}
+.t53-alert{position:absolute;z-index:41;left:44px;right:44px;top:300px;border-radius:34px;background:rgba(246,246,248,.92);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);padding:22px 18px 16px;color:#000;text-align:center;font-family:var(--ios);box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.t53-alert h5{margin:0 0 6px;font-size:17px;line-height:22px;font-weight:600}
+.t53-alert p{margin:0 0 18px;font-size:15px;line-height:20px;color:rgba(60,60,67,.85)}
+.t53-alert .ab{display:flex;gap:10px}
+.t53-alert .ab span{flex:1;height:48px;border-radius:24px;background:rgba(120,120,128,.16);display:grid;place-items:center;font-size:17px;font-weight:600;color:#000}
+.t53-alert .ab span.def{background:#0A84FF;color:#fff}
+.board[data-app="dark"] .t53-alert{background:rgba(44,44,48,.92);color:#fff}
+.board[data-app="dark"] .t53-alert p{color:rgba(235,235,245,.7)}
+.board[data-app="dark"] .t53-alert .ab span{background:rgba(120,120,128,.32);color:#fff}
+.board[data-app="dark"] .t53-alert .ab span.def{background:#0A84FF}
+.board[data-app="dark"] .t53-dim{background:rgba(0,0,0,.45)}
+@media (prefers-color-scheme: dark){ .board:not([data-app="light"]) .t53-alert{background:rgba(44,44,48,.92);color:#fff} .board:not([data-app="light"]) .t53-alert p{color:rgba(235,235,245,.7)} .board:not([data-app="light"]) .t53-alert .ab span{background:rgba(120,120,128,.32);color:#fff} .board:not([data-app="light"]) .t53-alert .ab span.def{background:#0A84FF} }
+/* You → Notifications (SettingsScroll, Section, ToggleRow, PickerRow) */
+.t53-nav{position:absolute;top:62px;left:0;right:0;height:44px;display:flex;align-items:center;padding:0 16px;z-index:5}
+.t53-nav .back{width:44px;height:44px;border-radius:22px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:.5px solid var(--line);display:grid;place-items:center;color:var(--ink)}
+.t53-nav .t{position:absolute;left:0;right:0;text-align:center;font-size:17px;line-height:22px;font-weight:600;color:var(--ink);pointer-events:none}
+.t53-set{position:absolute;top:106px;left:0;right:0;bottom:0;padding:12px 16px 0;display:flex;flex-direction:column;gap:24px;overflow:hidden}
+.t53-sec{display:flex;flex-direction:column;gap:6px}
+.t53-sec .hd{font-size:15px;line-height:20px;color:var(--ink-2);padding:0 4px 4px}
+.t53-rows{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.t53-row{min-height:44px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.t53-row + .t53-row{border-top:1px solid var(--line);margin-left:16px;padding-left:0}
+.t53-row .ti{flex:1;font-size:16px;line-height:21px;font-weight:600;color:var(--ink)}
+.t53-row .val{display:flex;align-items:center;gap:3px;font-size:15px;line-height:20px;font-weight:500;color:var(--ink-2)}
+.t53-row .val .chev{width:10px;height:10px;color:var(--ink-2)}
+.t53-dis{opacity:.4}
+.t53-sw{width:64px;height:28px;border-radius:14px;background:rgba(120,120,128,.16);position:relative;flex:none}
+.t53-sw::after{content:"";position:absolute;top:2px;left:2px;width:37px;height:24px;border-radius:12px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.t53-sw.on{background:var(--good)}
+.t53-sw.on::after{left:25px}
+.board[data-app="dark"] .t53-sw{background:rgba(120,120,128,.36)}
+.board[data-app="dark"] .t53-sw.on{background:var(--good)}
+@media (prefers-color-scheme: dark){ .board:not([data-app="light"]) .t53-sw:not(.on){background:rgba(120,120,128,.36)} }
+.t53-off{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.t53-off p{margin:0;font-size:16px;line-height:21px;color:var(--ink)}
+/* Lock screen (the mockup's .lock and .notif) */
+.t53-lockstack{position:absolute;left:13px;right:13px;bottom:125px;display:flex;flex-direction:column;gap:9px}
+.t53-lockstack .notif{opacity:1!important}
+/* Largest text (AX5): body 53/64, callout 51/61, subheadline 49/59, footnote 44/52; bar text and buttons capped at 2x. */
+.ax5 .t53-who{font-size:44px;line-height:52px}
+.ax5 .t53-kit{max-width:94%;font-size:53px;line-height:64px}
+.ax5 .t53-label{font-size:49px;line-height:59px}
+.ax5 .t53-pill{font-size:49px;line-height:59px;padding:6px 12px;border-radius:36px}
+.ax5 .t53-pill .chev{width:22px;height:22px}
+.ax5 .t53-btns{flex-direction:column;align-items:stretch}
+.ax5 .t53-btns .btn{height:auto;min-height:60px;font-size:30px;line-height:36px;border-radius:30px;white-space:normal;padding:12px 20px}
+.ax5 .t53-acc .field{font-size:34px}
+.ax5 .t53-nav{background:var(--bg);height:48px}
+.ax5 .t53-nav .t{font-size:34px;line-height:41px}
+.ax5 .t53-sec .hd{font-size:49px;line-height:59px}
+.ax5 .t53-off p{font-size:51px;line-height:61px}
+.ax5 .t53-off .btn{height:auto;min-height:60px;font-size:30px;line-height:36px;border-radius:30px;align-self:stretch;padding:12px 20px}
+.ax5 .t53-row .ti{font-size:51px;line-height:61px}
+.ax5 .t53-row.stack{flex-direction:column;align-items:flex-start;gap:4px}
+.ax5 .t53-row .val{font-size:49px;line-height:59px}
+.ax5 .t53-row .val .chev{width:20px;height:20px}
+.ax5 .t53-stamp{font-size:44px;line-height:52px}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="t53-mic" viewBox="0 0 24 24"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 11.5 a7 7 0 0 0 14 0 M12 18.5 V21.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="t53-down" viewBox="0 0 12 12"><path d="M2 4.2 L6 8.2 L10 4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="t53-up" viewBox="0 0 12 12"><path d="M2 7.8 L6 3.8 L10 7.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+    <!-- 1 · Kit's ask, open -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="7:52">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-msg"><div class="t53-who">Kit</div><div class="t53-kit">Want outfit ideas from your own clothes? This part is optional.</div></div>
+            <div class="t53-gap12"></div>
+            <div class="card t53-invite">
+              <div class="tagline"><span>Optional</span><b>About 30 seconds</b></div>
+              <div style="display:flex;flex-direction:column;gap:4px"><h4>Tap the clothes you already own</h4><p>I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks.</p></div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span class="btn p" style="width:100%">Show me the list</span><span class="t53-link">Skip</span></div>
+            </div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">What time do you usually get dressed to head out? I'll send you an outfit idea 15 minutes before.</div>
+              <div class="t53-foot">
+                <div class="t53-timerow"><span class="t53-label">I get dressed at</span><span class="t53-pill">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-btns"><span class="btn p">Send me ideas</span><span class="btn">No thanks</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>Kit's ask <small>PHONE 1</small></b><span>Once ever, right after his first scored fit: it posts under the optional closet card (both arrive together in the beta; his fit check's card is above, scrolled off). The time he usually gets dressed is up front, 8:00 am unless he set one before. Nothing is asked of iOS yet.</span></figcaption>
+    </figure>
+
+    <!-- 2 · Kit's ask, the time menu open -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="7:52">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-msg"><div class="t53-who">Kit</div><div class="t53-kit">Want outfit ideas from your own clothes? This part is optional.</div></div>
+            <div class="t53-gap12"></div>
+            <div class="card t53-invite">
+              <div class="tagline"><span>Optional</span><b>About 30 seconds</b></div>
+              <div style="display:flex;flex-direction:column;gap:4px"><h4>Tap the clothes you already own</h4><p>I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks.</p></div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span class="btn p" style="width:100%">Show me the list</span><span class="t53-link">Skip</span></div>
+            </div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">What time do you usually get dressed to head out? I'll send you an outfit idea 15 minutes before.</div>
+              <div class="t53-foot">
+                <div class="t53-timerow"><span class="t53-label">I get dressed at</span><span class="t53-pill" style="opacity:0">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-btns"><span class="btn p">Send me ideas</span><span class="btn">No thanks</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+          <div class="t53-scrim"></div>
+          <div class="t53-panel" style="left:132px;width:220px;top:78px;height:746px">
+            <div class="top">8:00 am<svg class="chev"><use href="#t53-up"/></svg></div>
+            <div class="rule"></div>
+            <div class="list">
+              <div class="opt"><span>5:00 am</span></div><div class="opt"><span>5:30 am</span></div><div class="opt"><span>6:00 am</span></div>
+              <div class="opt"><span>6:30 am</span></div><div class="opt"><span>7:00 am</span></div><div class="opt"><span>7:30 am</span></div>
+              <div class="opt on"><span>8:00 am</span><svg class="ic"><use href="#i-check"/></svg></div>
+              <div class="opt"><span>8:30 am</span></div><div class="opt"><span>9:00 am</span></div><div class="opt"><span>9:30 am</span></div>
+              <div class="opt"><span>10:00 am</span></div><div class="opt"><span>10:30 am</span></div><div class="opt"><span>11:00 am</span></div>
+              <div class="opt"><span>11:30 am</span></div><div class="opt"><span>12:00 pm</span></div><div class="opt"><span>12:30 pm</span></div>
+              <div class="opt"><span>1:00 pm</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Kit's ask · picking a time <small>PHONE 2</small></b><span>He taps the time: the pill grows into the menu (the app's own MorphPicker, as on the morning card and in Settings). The 17 half-hour times from 5:00 am to 1:00 pm, his current one ticked. There's no room under it here, so it grows upward; the last row scrolls into view. A pick closes it and the pill shows the new time. Nothing is saved until he taps Send me ideas.</span></figcaption>
+    </figure>
+
+    <!-- 3 · Kit's ask, Apple's prompt -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="7:52">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-msg"><div class="t53-who">Kit</div><div class="t53-kit">Want outfit ideas from your own clothes? This part is optional.</div></div>
+            <div class="t53-gap12"></div>
+            <div class="card t53-invite">
+              <div class="tagline"><span>Optional</span><b>About 30 seconds</b></div>
+              <div style="display:flex;flex-direction:column;gap:4px"><h4>Tap the clothes you already own</h4><p>I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks.</p></div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span class="btn p" style="width:100%">Show me the list</span><span class="t53-link">Skip</span></div>
+            </div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">What time do you usually get dressed to head out? I'll send you an outfit idea 15 minutes before.</div>
+              <div class="t53-foot">
+                <div class="t53-timerow"><span class="t53-label">I get dressed at</span><span class="t53-pill">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-btns"><span class="btn p" style="width:131px"><span class="t53-spin"></span></span><span class="btn" style="opacity:.4">No thanks</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+          <div class="t53-dim"></div>
+          <div class="t53-alert">
+            <h5>“Kitted” Would Like to Send You Notifications</h5>
+            <p>Notifications may include alerts, sounds, and icon badges. These can be configured in Settings.</p>
+            <div class="ab"><span>Don’t Allow</span><span class="def">Allow</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Kit's ask · Apple's prompt <small>PHONE 3</small></b><span>Only after he taps Send me ideas. Apple draws this alert in its own words (drawn here approximately); Kitted can't change it. Behind it, Send me ideas shows a spinner and keeps its width, and No thanks is dimmed, until he answers.</span></figcaption>
+    </figure>
+
+    <!-- 4 · Kit's ask, allowed -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="7:52">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-msg"><div class="t53-who">Kit</div><div class="t53-kit">Want outfit ideas from your own clothes? This part is optional.</div></div>
+            <div class="t53-gap12"></div>
+            <div class="card t53-invite">
+              <div class="tagline"><span>Optional</span><b>About 30 seconds</b></div>
+              <div style="display:flex;flex-direction:column;gap:4px"><h4>Tap the clothes you already own</h4><p>I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks.</p></div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span class="btn p" style="width:100%">Show me the list</span><span class="t53-link">Skip</span></div>
+            </div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">Done. Your first idea lands tomorrow at 7:45 am.</div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>Kit's ask · allowed <small>PHONE 4</small></b><span>He tapped Allow. The time and the switch are saved, the next 7 days are scheduled on the phone, and the card becomes one line for good. The time shown is the nudge time, 15 minutes before 8:00 am. It's 7:52 here, past today's 7:45, so it says tomorrow; before 7:45 it would say today.</span></figcaption>
+    </figure>
+
+    <!-- 5 · Kit's ask, No thanks or Don't Allow -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="7:52">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-msg"><div class="t53-who">Kit</div><div class="t53-kit">Want outfit ideas from your own clothes? This part is optional.</div></div>
+            <div class="t53-gap12"></div>
+            <div class="card t53-invite">
+              <div class="tagline"><span>Optional</span><b>About 30 seconds</b></div>
+              <div style="display:flex;flex-direction:column;gap:4px"><h4>Tap the clothes you already own</h4><p>I'll build outfit ideas from them. Skip it and I'll still learn your closet from your fit checks.</p></div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span class="btn p" style="width:100%">Show me the list</span><span class="t53-link">Skip</span></div>
+            </div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">No problem. You can turn it on later in You → Notifications.</div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>Kit's ask · No thanks, or Don't Allow <small>PHONE 5</small></b><span>The same line for both. No thanks never shows Apple's prompt and saves the switch off; Don't Allow leaves iOS's answer as no. Nothing is scheduled, and Kit never asks again: You → Notifications is the only way back.</span></figcaption>
+    </figure>
+
+    <!-- 6 · Kit's ask, the one-time catch-up for earlier testers -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="8:12">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-stamp">Tuesday 8:12 am</div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">What time do you usually get dressed to head out? I'll send you an outfit idea 15 minutes before.</div>
+              <div class="t53-foot">
+                <div class="t53-timerow"><span class="t53-label">I get dressed at</span><span class="t53-pill">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-btns"><span class="btn p">Send me ideas</span><span class="btn">No thanks</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>Kit's ask · catch-up for earlier testers <small>PHONE 6</small></b><span>A tester who finished setup on the first TestFlight build, before notifications existed, gets the same card once, the next time Stylist opens, if Apple's prompt was never shown. It posts at the end of today's thread (anything else from today sits above it). Same answers as phones 2–5.</span></figcaption>
+    </figure>
+
+    <!-- 7 · The daily nudge on the lock screen (all four lines, for review) -->
+    <figure class="shot">
+      <div class="phone fixed" data-status="dark" data-home="dark">
+        <div class="screen lock">
+          <div style="display:flex;flex-direction:column;align-items:center;padding-top:80.5px;gap:2.5px;color:#fff">
+            <div style="font-size:17px;font-weight:600;opacity:.85">Tuesday, November 10</div>
+            <div class="locktime">7:45</div>
+          </div>
+          <div class="t53-lockstack">
+            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Today: navy overshirt, grey tee, khaki chinos, white sneakers.</p></div></div>
+            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Today's outfit idea is ready.</p></div></div>
+            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Your closet's big enough now: here's today's idea.</p></div></div>
+            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Check today's fit. Each one teaches me your closet.</p></div></div>
+          </div>
+          <div style="position:absolute;left:44px;right:44px;bottom:44px;display:flex;justify-content:space-between">
+            <span class="circ glass" style="width:54.5px;height:54.5px"><svg class="ic s"><use href="#i-flash"/></svg></span>
+            <span class="circ glass" style="width:54.5px;height:54.5px"><svg class="ic s"><use href="#i-camera"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>The daily nudge · its four lines <small>PHONE 7</small></b><span>Shown together for review only: he gets one a day, 15 minutes before his get-dressed time, with the default sound. iOS draws it; the header is the app name, there's no title. Top to bottom: the next nudge once Kit can suggest outfits (it names the pieces on that day's morning card); a later queued day; the first day Kit can suggest (once ever); and every day before Kit can suggest. A tap opens Stylist at today's card. Always dark here (a preview of iOS).</span></figcaption>
+    </figure>
+
+    <!-- 8 · You → Notifications, on -->
+    <figure class="shot">
+      <div class="phone" data-tab="you" data-time="9:41">
+        <div class="screen">
+          <div class="t53-nav"><span class="back"><svg class="ic s"><use href="#i-back"/></svg></span><div class="t">Notifications</div></div>
+          <div class="t53-set">
+            <div class="t53-sec">
+              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="t53-rows">
+                <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw on"></span></div>
+                <div class="t53-row"><span class="ti">I get dressed at</span><span class="val">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>You → Notifications · on <small>PHONE 8</small></b><span>From the Notifications row on You. One switch and the time he gets dressed; tapping the time opens the same menu as phone 2 and reschedules at once. No Fit check ready or Trial ending rows in the beta.</span></figcaption>
+    </figure>
+
+    <!-- 9 · You → Notifications, off -->
+    <figure class="shot">
+      <div class="phone" data-tab="you" data-time="9:41">
+        <div class="screen">
+          <div class="t53-nav"><span class="back"><svg class="ic s"><use href="#i-back"/></svg></span><div class="t">Notifications</div></div>
+          <div class="t53-set">
+            <div class="t53-sec">
+              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="t53-rows">
+                <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>You → Notifications · off <small>PHONE 9</small></b><span>After No thanks, or he switched it off: everything scheduled is cancelled and the time row hides (his time is kept). Switching on when Apple's prompt was never shown asks iOS first (phone 3's alert, over this page); Don't Allow leaves the switch off.</span></figcaption>
+    </figure>
+
+    <!-- 10 · You → Notifications, iOS has them off -->
+    <figure class="shot">
+      <div class="phone" data-tab="you" data-time="9:41">
+        <div class="screen">
+          <div class="t53-nav"><span class="back"><svg class="ic s"><use href="#i-back"/></svg></span><div class="t">Notifications</div></div>
+          <div class="t53-set">
+            <div class="t53-off"><p>Notifications are off for Kitted.</p><span class="btn">Open Settings</span></div>
+            <div class="t53-sec">
+              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="t53-rows t53-dis">
+                <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw on"></span></div>
+                <div class="t53-row"><span class="ti">I get dressed at</span><span class="val">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>You → Notifications · off in iOS <small>PHONE 10</small></b><span>He tapped Don't Allow, or later turned Kitted's notifications off in iOS Settings. The card on top says so and Open Settings goes to Kitted's page there; the switch and time are greyed out and can't be changed, and nothing is scheduled. Coming back with them on clears the card and schedules.</span></figcaption>
+    </figure>
+
+    <!-- 11 · The comeback question -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="8:12">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-stamp">Tuesday 8:12 am</div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">I paused your daily ideas after a week without a visit. Want them back?</div>
+              <div class="t53-foot">
+                <div class="t53-btns"><span class="btn p">Turn them back on</span><span class="btn">Change the time</span><span class="btn">No thanks</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>The comeback question <small>PHONE 11</small></b><span>His first open after the 7 scheduled nudges ran out (a week with no visit), with the switch on. Once per lapse, at the end of today's thread. Until he answers, nothing is scheduled; ignored, it stays answerable.</span></figcaption>
+    </figure>
+
+    <!-- 12 · The comeback, changing the time -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="8:12">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-stamp">Tuesday 8:12 am</div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">I paused your daily ideas after a week without a visit. Want them back?</div>
+              <div class="t53-foot">
+                <div class="t53-timerow"><span class="t53-label">I get dressed at</span><span class="t53-pill">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-btns"><span class="btn p">Turn them back on</span><span class="btn">No thanks</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>The comeback · Change the time <small>PHONE 12</small></b><span>He tapped Change the time: that button gives way to the time, the same pill and menu as phones 1–2. Picking a different time saves it, schedules and shows phone 13's line with the new time; Turn them back on keeps the time shown; No thanks is still there.</span></figcaption>
+    </figure>
+
+    <!-- 13 · The comeback, back on -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="8:12">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-stamp">Tuesday 8:12 am</div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">Back on. Next one lands tomorrow at 7:45 am.</div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>The comeback · back on <small>PHONE 13</small></b><span>After Turn them back on, a new time, or switching it on in You → Notifications. The next 7 days are scheduled. Today or tomorrow by whether today's nudge time has passed (8:12 is past 7:45).</span></figcaption>
+    </figure>
+
+    <!-- 14 · The comeback, No thanks -->
+    <figure class="shot">
+      <div class="phone" data-tab="stylist" data-time="8:12">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-stamp">Tuesday 8:12 am</div>
+            <div class="t53-gap12"></div>
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">Done. You can turn them on in You → Notifications.</div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>The comeback · No thanks <small>PHONE 14</small></b><span>The switch is saved off; nothing is scheduled. You → Notifications then looks like phone 9.</span></figcaption>
+    </figure>
+
+    <!-- 15 · Largest text: Kit's ask -->
+    <figure class="shot">
+      <div class="phone ax5" data-tab="stylist" data-time="7:52">
+        <div class="screen">
+          <div class="content"><div class="nav"><div class="t" style="font-size:34px;line-height:41px">Stylist</div></div></div>
+          <div class="t53-thread">
+            <div class="t53-msg">
+              <div class="t53-who">Kit</div>
+              <div class="t53-kit">What time do you usually get dressed to head out? I'll send you an outfit idea 15 minutes before.</div>
+              <div class="t53-foot">
+                <div class="t53-timerow"><span class="t53-label">I get dressed at</span><span class="t53-pill">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-btns"><span class="btn p">Send me ideas</span><span class="btn">No thanks</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="t53-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t53-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption><b>Largest text · Kit's ask <small>PHONE 15</small></b><span>Phone 1 at AX5 (Kit's line 53 pt, the label and the time 49 pt, the buttons' text capped at 2x, 30 pt). The thread is at its end, so Kit's question starts above the screen and scrolls; nothing is cut or shortened. The time drops under its label, and the buttons stack full width. The comeback card reflows the same way, its three buttons stacked.</span></figcaption>
+    </figure>
+
+    <!-- 16 · Largest text: You → Notifications, off in iOS -->
+    <figure class="shot">
+      <div class="phone ax5" data-tab="you" data-time="9:41">
+        <div class="screen">
+          <div class="t53-nav"><span class="back"><svg class="ic s"><use href="#i-back"/></svg></span><div class="t">Notifications</div></div>
+          <div class="t53-set" style="top:106px">
+            <div class="t53-off" style="margin-top:-330px"><p>Notifications are off for Kitted.</p><span class="btn">Open Settings</span></div>
+            <div class="t53-sec">
+              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="t53-rows t53-dis">
+                <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw on"></span></div>
+                <div class="t53-row stack"><span class="ti">I get dressed at</span><span class="val">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Largest text · You → Notifications <small>PHONE 16</small></b><span>Phone 10 at AX5, its busiest state, scrolled to the end: the card's line and Open Settings come first (scrolled off above here), then the header and the rows. The time row stacks (title, then the time under it); the switch stays beside its title. Nothing truncates.</span></figcaption>
+    </figure>
+
+  </div>
+</section>
+
+</div>
+
+<style>
+.faceblur{position:absolute;border-radius:50%;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(160,160,160,.12)}
+.guide{position:absolute;overflow:visible;opacity:.95;filter:drop-shadow(0 0 3px rgba(0,0,0,.35))}
+.tipline{font-size:13px;color:var(--ink-2);line-height:1.4;padding:8px 0 6px;border-top:1px solid var(--line)}
+.tipline b{color:var(--accent);font-weight:600;margin-right:4px}
+.pk.snap{color:var(--ink);background:var(--surface)}
+.det.up{background:rgba(255,255,255,.92);color:#121628;gap:5px}
+/* onboarding */
+.look{aspect-ratio:3/4;border-radius:13px;overflow:hidden;position:relative;max-width:100%}
+.look svg{width:100%;height:100%;display:block}
+.look.sel{box-shadow:0 0 0 2.5px var(--bg),0 0 0 5px var(--ink)}
+.look.sel::after{content:"";position:absolute;top:8px;right:8px;width:23.5px;height:23.5px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/15.5px no-repeat}
+.field-row{display:flex;flex-direction:column;gap:6.5px}
+.field-row>span{font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.stepper{display:flex;align-items:center;justify-content:space-between;height:36px;border-radius:18px;background:var(--surface-2);padding:0 4px}
+.stepper b{width:30px;height:30px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-weight:500;font-size:18px;line-height:1}
+.stepper strong{font-family:var(--display);font-stretch:80%;font-size:21px;font-weight:650}
+.segs{display:flex;background:var(--surface-2);border-radius:13px;padding:2.5px;gap:2.5px}
+.segs i{flex:1;font-style:normal;text-align:center;font-size:13px;font-weight:550;padding:7px 0;border-radius:10.5px;color:var(--ink-2)}
+.segs i.on{background:var(--surface);color:var(--ink);font-weight:650;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.segs.wide i{font-size:15.5px;padding:8px 0}
+.chip.sm{height:32px;padding:0 10.5px;font-size:14px;border-radius:16px}
+.consent{display:grid;grid-template-columns:23.5px minmax(0,1fr);gap:13px;padding:13px 17px;align-items:start}
+.consent+.consent{border-top:1px solid var(--line)}
+.consent .ic{color:var(--accent);margin-top:1px}
+.consent b{display:block;font-size:15.5px;font-weight:620;line-height:1.3}
+.consent span{display:block;font-size:14px;color:var(--ink-2);line-height:1.38;margin-top:1px}
+
+/* camera */
+.camtip{display:inline-flex;align-items:center;gap:6.5px;height:36.5px;padding:0 14.5px;border-radius:18px;background:rgba(255,255,255,.92);color:#121628;font-size:14.5px;font-weight:650}
+.camtip .ic{color:#2B7651}
+.count{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:5;color:#fff}
+.count b{width:119.5px;height:119.5px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-stretch:75%;font-weight:600;font-size:75.5px;line-height:1;background:rgba(10,12,20,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:3px solid rgba(255,255,255,.9);box-shadow:inset 0 0 0 8px rgba(255,255,255,.12)}
+.count span{font-size:15.5px;font-weight:650;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.camseg{display:flex;gap:2.5px;padding:4px;border-radius:21px;background:rgba(0,0,0,.4);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px)}
+.camseg i{font-style:normal;font-size:14.5px;font-weight:650;color:rgba(255,255,255,.75);padding:6.5px 15.5px;border-radius:17px}
+.camseg i.on{background:rgba(255,255,255,.95);color:#121628}
+.camlib{width:52px;height:52px;border-radius:13px;overflow:hidden;border:2.5px solid rgba(255,255,255,.85);display:block}
+.camlib svg{width:100%;height:100%}
+.shutter{width:88.5px;height:88.5px;border-radius:50%;border:4.5px solid #fff;display:grid;place-items:center}
+.shutter i{width:70px;height:70px;border-radius:50%;background:#fff;display:block}
+
+/* reading */
+.scan{position:absolute;left:0;right:0;top:46%;height:57px;background:linear-gradient(to bottom,transparent,rgba(222,151,98,.22) 70%,rgba(222,151,98,.9) 98%,transparent);animation:scan 2.6s ease-in-out infinite alternate}
+@keyframes scan{from{top:4%}to{top:78%}}
+@media (prefers-reduced-motion: reduce){.scan{animation:none}}
+.det{position:absolute;height:28.5px;padding:0 11.5px;border-radius:14.5px;background:rgba(14,17,28,.78);color:#fff;font-size:13px;font-weight:600;display:inline-flex;align-items:center;backdrop-filter:blur(10.5px);-webkit-backdrop-filter:blur(10.5px);border:1px solid rgba(255,255,255,.18)}
+.det.dim-d{background:rgba(14,17,28,.45);color:rgba(255,255,255,.75)}
+.steps{display:flex;flex-direction:column;gap:11.5px}
+.st{display:flex;align-items:center;gap:13px;font-size:16px;color:var(--ink-3);font-weight:500}
+.st i{width:23.5px;height:23.5px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;flex:none}
+.st span{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--ink-3)}
+.st.done{color:var(--ink)}
+.st.done i{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.st.now{color:var(--ink);font-weight:650}
+.st.now i{border-color:var(--accent);border-top-color:transparent;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.st.now i{animation:none;border-top-color:var(--accent)}}
+
+/* not quite right */
+.read-row{display:grid;grid-template-columns:44px minmax(0,1fr) 21px;gap:13px;align-items:center;padding:10.5px 15.5px;color:var(--ink-3)}
+.read-row+.read-row{border-top:1px solid var(--line)}
+.read-row b{display:block;font-size:15.5px;font-weight:600;color:var(--ink)}
+.read-row div span{display:block;font-size:13.5px;color:var(--ink-2)}
+.read-row.open{background:var(--accent-soft)}
+.read-row.open div span{color:var(--accent);font-weight:600}
+.rt{width:44px;height:44px;border-radius:11.5px;background:var(--surface-2);display:grid;place-items:center}
+.rt svg{width:36.5px;height:36.5px}
+.preview-line{display:flex;justify-content:space-between;align-items:baseline;font-size:15.5px;color:var(--ink-2)}
+.preview-line b{font-family:var(--display);font-stretch:75%;font-size:31px;font-weight:640;color:var(--ink)}
+.preview-line em{font-style:normal;color:var(--accent)}
+
+/* re-check */
+.delta{display:flex;align-items:flex-end;gap:8px}
+.delta .was{font-family:var(--display);font-stretch:70%;font-size:44px;font-weight:500;color:var(--ink-3);line-height:.85;text-decoration:line-through;text-decoration-thickness:1.5px}
+.delta .ic{margin-bottom:8px}
+
+/* partial */
+.partial-l{display:inline-flex;align-items:center;gap:6.5px;font-weight:600;color:var(--ink)!important}
+.pick{display:flex;align-items:center;gap:9px;font-size:14.5px;color:var(--ink-2)}
+.pk{width:44px;height:44px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;border:1px solid var(--line)}
+.pk svg{width:36.5px;height:36.5px}
+.pk:first-of-type{margin-left:auto}
+.sk{font-weight:600;color:var(--ink-2);padding-left:5px}
+
+/* outfit cards */
+.outfit4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.outfit4>div,.grid3>div{display:flex;flex-direction:column;gap:6.5px;min-width:0}
+.outfit4 .tile{aspect-ratio:1;max-width:100%}
+.outfit-hero{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line)}
+.outfit-hero .tile{border-radius:0;aspect-ratio:1/1.05;max-width:100%}
+
+/* lock screen */
+.lock{background:radial-gradient(130% 70% at 20% 0%,#3A4670 0%,#1B2340 45%,#0B0E1A 100%)!important}
+.locktime{font-family:var(--display);font-stretch:62%;font-weight:600;font-size:112px;line-height:.95;letter-spacing:-.02em}
+.notif{display:grid;grid-template-columns:39px minmax(0,1fr);gap:11.5px;padding:13px 14.5px;border-radius:26px;background:rgba(240,242,248,.2);backdrop-filter:blur(31px) saturate(1.4);-webkit-backdrop-filter:blur(31px) saturate(1.4);color:#fff;align-items:start}
+.notif:nth-child(2){opacity:.92}.notif:nth-child(3){opacity:.84}
+.nic{width:39px;height:39px;border-radius:10px;background:radial-gradient(120% 90% at 30% 15%,#2F3B66,#1B2340 55%,#121830);display:grid;place-items:center;position:relative}
+.nic::before{content:"";position:absolute;inset:4px;border-radius:6.5px;border:1px dashed rgba(222,151,98,.75)}
+.nic span{font-family:var(--display);font-stretch:125%;font-weight:760;font-size:18px;color:#EEF0F5}
+.nh{display:flex;justify-content:space-between;font-size:15px}
+.nh span{opacity:.7;font-size:13.5px}
+.notif p{margin:1px 0 0;font-size:15px;line-height:1.32}
+
+/* closet */
+.rotation{display:flex;flex-direction:column;gap:15.5px}
+.ess{display:flex;flex-direction:column;gap:8px}
+.slots{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
+.slots i{height:8px;border-radius:4px;background:var(--surface-2)}
+.slots i.f{background:var(--ink)}
+.nextbuy{display:grid;grid-template-columns:60px minmax(0,1fr);gap:14.5px;align-items:center;padding:13px 15.5px}
+.nextbuy .tile svg{width:78%;height:78%}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10.5px 8px}
+.grid3 .tile{aspect-ratio:1/.92;max-width:100%}
+.tile.ghosted{background:transparent;border:1.5px dashed var(--ink-3)}
+.tile.ghosted svg{opacity:.5}
+
+/* lookbook */
+.intent{display:flex;align-items:center;gap:18px;padding:2.5px 2.5px}
+.intent>div:not(.vr):not(.intent-l){display:flex;align-items:baseline;gap:6.5px}
+.intent span{font-size:14.5px;color:var(--ink-2)}
+.intent .vr{width:1px;height:34px;background:var(--line)}
+.intent-l{margin-left:auto;font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-align:right;line-height:1.3}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);row-gap:2.5px;text-align:center}
+.cal .dow{font-size:11.5px;font-weight:600;color:var(--ink-3);padding-bottom:5px}
+.cal .d{height:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13.5px;color:var(--ink-2);position:relative;border-radius:10.5px}
+.cal .d.wk{background:var(--surface-2)}
+.cal .d.wk.first{border-radius:10.5px 0 0 10.5px}.cal .d.wk.last{border-radius:0 10.5px 10.5px 0}.cal .d.wk.mid{border-radius:0}
+.cal .d.log{color:var(--ink);font-weight:650}
+.cal .d.log::after{content:"";width:5px;height:5px;border-radius:2.5px;background:var(--accent);position:absolute;bottom:2.5px}
+.cal .d.today span{width:27.5px;height:27.5px;border-radius:50%;background:var(--ink);color:var(--surface);display:grid;place-items:center;margin-top:-4px}
+.cal .d.fut{color:var(--ink-3);opacity:.6}
+.look-row{display:grid;grid-template-columns:49.5px minmax(0,1fr) 21px;gap:13px;align-items:center;color:var(--ink-3)}
+.look-row b{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:620;color:var(--ink)}
+.look-row div span{font-size:13.5px;color:var(--ink-2)}
+.lr-ph{width:49.5px;height:62.5px;border-radius:11.5px;overflow:hidden;display:block;flex:none}
+.lr-ph svg{width:100%;height:100%;display:block}
+
+/* you */
+.knows{display:flex;flex-direction:column}
+.fact{display:flex;align-items:center;gap:13px;padding:10.5px 17px;color:var(--ink-3)}
+.fact+.fact{border-top:1px solid var(--line)}
+.fact div{flex:1;min-width:0}
+.fact b{display:block;font-size:15.5px;font-weight:600;color:var(--ink)}
+.fact div span{font-size:13px;color:var(--ink-3)}
+.fact.guess b{font-style:italic;font-weight:550;color:var(--ink-2)}
+.privacy-row{display:flex;align-items:center;gap:11.5px;font-size:15.5px;font-weight:550;color:var(--ink);padding:5px 5px}
+.privacy-row .ic{color:var(--ink-3)}
+
+/* paywall */
+.today{display:grid;grid-template-columns:49.5px minmax(0,1fr);gap:13px;align-items:center;padding:10.5px 13px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.today b{display:block;font-size:16px;font-weight:650}
+.today span{font-size:13.5px;color:var(--ink-2)}
+.perks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:16px;font-weight:550}
+.perks li{display:flex;align-items:center;gap:10.5px}
+.perks .ic{color:var(--accent)}
+.plans{display:flex;flex-direction:column;gap:9px}
+.plan{display:flex;align-items:center;justify-content:space-between;padding:13px 17px;border-radius:19.5px;border:1.5px solid var(--line);background:var(--surface);position:relative}
+.plan.on{border-color:var(--ink)}
+.plan b{display:block;font-size:17px;font-weight:650}
+.plan div span{font-size:13.5px;color:var(--ink-2)}
+.plan .pr{display:flex;align-items:baseline;gap:1px}
+.plan .pr b{font-family:var(--display);font-stretch:80%;font-size:24.5px;font-weight:650}
+.badge{position:absolute;top:-10.5px;right:15.5px;height:21px;padding:0 9px;border-radius:10.5px;background:var(--accent);color:var(--on-primary);font-size:11.5px;font-weight:700;display:flex;align-items:center;letter-spacing:.02em}
+
+/* share */
+.sharecard{position:relative;aspect-ratio:9/16;border-radius:18px;overflow:hidden;max-width:100%;box-shadow:0 20px 40px -12px rgba(0,0,0,.6)}
+.shr{display:flex;flex-direction:column;align-items:center;gap:6.5px;font-size:13.5px;font-weight:600}
+.shr span{width:57px;height:57px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center}
+
+@media (max-width:960px){
+  .masthead{grid-template-columns:minmax(0,1fr);gap:26px;padding-block:36px 28px}
+  .system{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow-head{grid-template-columns:minmax(0,1fr)}
+  .foot{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  body{padding-inline:16px}
+  .system{grid-template-columns:minmax(0,1fr)}
+  .row{justify-content:center}
+}
+</style>
+
+<script>
+(function(){
+const shade=(hex,a)=>{let n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;const t=a<0?0:255,p=Math.abs(a);r=Math.round((t-r)*p+r);g=Math.round((t-g)*p+g);b=Math.round((t-b)*p+b);return'#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1)};
+const MX=pts=>pts.map(p=>[200-p[0],p[1]]);
+const poly=pts=>'M'+pts.map(p=>p.join(',')).join(' L')+' Z';
+let uid=0;
+
+const FIG={
+  date:{skin:'#8D5A3B',top:'tee',topC:'#F2F0EA',bottom:'chino',bottomC:'#C9B48A',pool:1,shoe:'runner',shoeC:'#9AA0A8',wall:['#D7D2CA','#C4BDB2']},
+  dateCuff:{skin:'#8D5A3B',top:'tee',topC:'#F2F0EA',bottom:'chino',bottomC:'#C9B48A',cuff:1,shoe:'runner',shoeC:'#9AA0A8',wall:['#D7D2CA','#C4BDB2']},
+  dateFinal:{skin:'#8D5A3B',top:'tee',topC:'#F2F0EA',bottom:'chino',bottomC:'#C9B48A',cuff:1,shoe:'sneaker',shoeC:'#F4F3EE',wall:['#D7D2CA','#C4BDB2']},
+  partial:{skin:'#C99A74',top:'sweater',topC:'#2B3550',collar:'#F4F4F2',bottom:'jeans',bottomC:'#26324F',shoe:'sneaker',shoeC:'#F4F3EE',cropH:262,wall:['#CED3D7','#B7BDC4']},
+  basic:{skin:'#5E3B26',top:'tee',topC:'#F4F3EF',bottom:'jeans',bottomC:'#26324F',leg:'slim',shoe:'sneaker',shoeC:'#F4F3EE',wall:['#D9D6D0','#C6C1B8']},
+  smart:{skin:'#E0B892',top:'oxford',topC:'#AFC6DE',tuck:1,belt:'#5A3522',bottom:'chino',bottomC:'#2A3046',leg:'slim',shoe:'loafer',shoeC:'#5A3522',wall:['#D5D1C9','#BEB7AB']},
+  work:{skin:'#A87150',top:'tee',topC:'#8F949B',layer:'chore',layerC:'#8A5A32',bottom:'jeans',bottomC:'#2C3A5A',shoe:'boot',shoeC:'#6B4428',wall:['#CFCBC4','#BBB4A9']},
+  street:{skin:'#6B432B',top:'hoodie',topC:'#3A3D44',oversize:1,bottom:'cargo',bottomC:'#6E6A5E',leg:'wide',shoe:'chunky',shoeC:'#E9E7E1',wall:['#C9CDD2','#B1B6BD']},
+  minimal:{skin:'#C48E64',top:'tee',topC:'#1E2026',bottom:'trouser',bottomC:'#5C6068',shoe:'sneaker',shoeC:'#F4F3EE',wall:['#DAD8D4','#C6C3BD']},
+  prep:{skin:'#E8C29E',top:'sweater',topC:'#E6DDC9',collar:'#FFFFFF',bottom:'chino',bottomC:'#B9A88A',shoe:'loafer',shoeC:'#4A2E1F',wall:['#D6D2C9','#C0B9AD']}
+};
+
+function shoePair(o){
+  const c=o.shoeC,t=o.shoe,d=shade(c,-.18);let s='';
+  const up='M63,312 L97,312 Q101,322 102,330 L102,334 L54,334 Q52,322 63,312 Z';
+  const upR=up.replace(/(\d+(\.\d+)?),/g,(m,x)=>(200-parseFloat(x))+',');
+  let sole='#FFFFFF',soleS='#D3D3CE',sy=331,sh=6;
+  if(t==='runner'){sole='#ECECE8';sy=328;sh=9}
+  if(t==='chunky'){sole='#F6F5F1';sy=324;sh=13}
+  if(t==='loafer'){sole=shade(c,-.5);soleS=sole;sy=333;sh=4}
+  if(t==='boot'){sole='#2A1D14';soleS=sole;sy=331;sh=7;s+=`<rect x="64" y="290" width="33" height="26" fill="${c}"/><rect x="103" y="290" width="33" height="26" fill="${c}"/>`}
+  s+=`<path d="${up}" fill="${c}" stroke="${d}" stroke-width=".8"/><path d="${upR}" fill="${c}" stroke="${d}" stroke-width=".8"/>`;
+  s+=`<rect x="52" y="${sy}" width="51" height="${sh}" rx="2.5" fill="${sole}" stroke="${soleS}" stroke-width=".7"/><rect x="97" y="${sy}" width="51" height="${sh}" rx="2.5" fill="${sole}" stroke="${soleS}" stroke-width=".7"/>`;
+  if(t==='runner'||t==='chunky'){s+=`<path d="M64,324 Q80,318 97,326 M136,324 Q120,318 103,326" stroke="${t==='runner'?'#D9733A':'#B8BCC4'}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`}
+  if(t==='loafer'){s+=`<path d="M70,319 Q80,323 92,319 M130,319 Q120,323 108,319" stroke="${shade(c,-.4)}" stroke-width="1.4" fill="none"/>`}
+  if(t==='sneaker'){s+=`<path d="M74,316 L86,316 M114,316 L126,316" stroke="${shade(c,-.15)}" stroke-width="1.2"/>`}
+  return s;
+}
+
+function figure(o,opt){
+  opt=opt||{};
+  const id='fg'+(++uid),s=o.skin,wall=o.wall;
+  const head=opt.head,top0=head?-86:0,h=o.cropH&&!head?o.cropH:346-top0;
+  const fit=opt.fit||'xMidYMid slice';
+  let g=`<svg viewBox="0 ${top0} 200 ${h}" preserveAspectRatio="${fit}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`;
+  g+=`<defs><linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${wall[0]}"/><stop offset="1" stop-color="${wall[1]}"/></linearGradient><linearGradient id="${id}l" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient><filter id="${id}b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="8"/></filter></defs>`;
+  g+=`<rect x="-300" y="-300" width="800" height="900" fill="url(#${id}w)"/><rect x="-300" y="296" width="800" height="300" fill="${shade(wall[1],-.13)}"/><rect x="-300" y="292" width="800" height="5" fill="${shade(wall[1],-.06)}"/>`;
+  g+=`<ellipse cx="100" cy="338" rx="60" ry="5" fill="#000" opacity=".18"/>`;
+  if(head){g+=`<g filter="url(#${id}b)"><ellipse cx="100" cy="-36" rx="23" ry="29" fill="${s}"/><ellipse cx="100" cy="-58" rx="24" ry="13" fill="#1d1712"/></g>`}
+  g+=`<path d="M88,${head?-14:-2} L112,${head?-14:-2} L112,16 Q100,22 88,16 Z" fill="${shade(s,-.08)}"/>`;
+  // shoes then pants
+  g+=shoePair(o);
+  const legs={straight:[[56,150],[100,150],[100,178],[96,314],[67,314],[59,210]],wide:[[55,150],[100,150],[100,178],[99,316],[60,316],[55,210]],slim:[[58,150],[100,150],[99,178],[93,314],[71,314],[62,210]]};
+  const L=legs[o.leg||'straight'].map(p=>p.slice());
+  if(o.pool){L[3][1]=322;L[4][1]=322}
+  if(o.shoe==='boot'&&!o.pool){L[3][1]=310;L[4][1]=310}
+  const b=o.bottomC,bd=shade(b,-.24);
+  g+=`<path d="${poly(L)}" fill="${b}"/><path d="${poly(MX(L))}" fill="${b}"/>`;
+  g+=`<path d="M100,176 L${L[3][0]-1},${L[3][1]} M100,176 L${200-L[3][0]+1},${L[3][1]}" stroke="${bd}" stroke-width="1.1" opacity=".55"/>`;
+  g+=`<rect x="56" y="150" width="88" height="8" fill="${bd}" opacity=".3"/>`;
+  if(o.bottom==='jeans'){g+=`<path d="M60,160 L62,210 L69,312 M140,160 L138,210 L131,312" stroke="#C98A4A" stroke-width=".9" stroke-dasharray="2.2 2" fill="none" opacity=".75"/><path d="M60,162 Q70,172 82,160 M140,162 Q130,172 118,160" stroke="#C98A4A" stroke-width=".9" fill="none" opacity=".7"/>`}
+  if(o.bottom==='chino'||o.bottom==='trouser'){g+=`<path d="M60,158 L66,174 M140,158 L134,174" stroke="${bd}" stroke-width="1" opacity=".6"/>`}
+  if(o.bottom==='trouser'){g+=`<path d="M80,160 L81,312 M120,160 L119,312" stroke="${shade(b,.12)}" stroke-width=".9" opacity=".7"/>`}
+  if(o.bottom==='cargo'){g+=`<rect x="56" y="206" width="16" height="24" rx="2" fill="${shade(b,-.06)}" stroke="${bd}" stroke-width=".9"/><rect x="128" y="206" width="16" height="24" rx="2" fill="${shade(b,-.06)}" stroke="${bd}" stroke-width=".9"/>`}
+  if(o.pool){g+=`<path d="M68,302 Q81,296 95,304 M66,311 Q81,305 97,313 M132,302 Q119,296 105,304 M134,311 Q119,305 103,313" stroke="${bd}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`}
+  if(o.cuff){g+=`<rect x="66" y="302" width="31.5" height="12" rx="1.5" fill="${shade(b,-.06)}" stroke="${bd}" stroke-width=".8"/><rect x="102.5" y="302" width="31.5" height="12" rx="1.5" fill="${shade(b,-.06)}" stroke="${bd}" stroke-width=".8"/>`}
+  if(o.belt){g+=`<rect x="56" y="148" width="88" height="7" fill="${o.belt}"/><rect x="94" y="146.5" width="11" height="10" rx="1.6" fill="none" stroke="#C9B27A" stroke-width="1.7"/>`}
+  // upper body
+  const tc=o.topC,td=shade(tc,-.17),tl=shade(tc,.14);
+  const tb=o.tuck?153:(o.oversize?172:162);
+  const long=o.top!=='tee';
+  let up='';
+  const sleeveS='M62,22 Q49,25 46,40 L39,76 L57,81 L60,54 Z';
+  const sleeveL='M62,22 Q49,25 46,40 L37,149 L54,151 L59,58 Z';
+  const mir=d=>d.replace(/(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/g,(m,x,_,y)=>(200-parseFloat(x))+','+y);
+  if(!long){up+=`<path d="M40,74 L56,79 L54,150 L42,151 Z" fill="${s}"/><path d="${mir('M40,74 L56,79 L54,150 L42,151 Z')}" fill="${s}"/>`}
+  const sl=long?sleeveL:sleeveS;
+  up+=`<path d="${sl}" fill="${tc}"/><path d="${mir(sl)}" fill="${tc}"/>`;
+  if(long){up+=`<path d="M37,141 L54,143 M163,141 L146,143" stroke="${td}" stroke-width="2"/>`}
+  up+=`<path d="M60,22 Q76,13 90,12 Q100,21 110,12 Q124,13 140,22 L148,40 L145,${tb} L55,${tb} L52,40 Z" fill="${tc}"/>`;
+  up+=`<path d="M57,40 L56,${tb-4}" stroke="${td}" stroke-width="1" opacity=".5"/>`;
+  if(o.top==='tee'){up+=`<path d="M89,12.5 Q100,25 111,12.5" stroke="${td}" stroke-width="2.6" fill="none"/>`}
+  if(o.top==='oxford'){up+=`<path d="M89,11 L100,25 L94,31 L84,16 Z" fill="${tl}" stroke="${td}" stroke-width=".8"/><path d="${mir('M89,11 L100,25 L94,31 L84,16 Z')}" fill="${tl}" stroke="${td}" stroke-width=".8"/><path d="M100,26 L100,${tb}" stroke="${td}" stroke-width="1"/>`+[44,70,96,122].map(y=>`<circle cx="102.5" cy="${y}" r="1.4" fill="${td}"/>`).join('')}
+  if(o.top==='sweater'){if(o.collar){up+=`<path d="M88,10 L100,22 L95,29 L84,14 Z" fill="${o.collar}"/><path d="${mir('M88,10 L100,22 L95,29 L84,14 Z')}" fill="${o.collar}"/>`}up+=`<path d="M88,12 Q100,27 112,12" stroke="${td}" stroke-width="4" fill="none"/><rect x="55" y="${tb-9}" width="90" height="9" fill="${td}" opacity=".45"/>`}
+  if(o.top==='hoodie'){up+=`<path d="M76,20 Q100,46 124,20 Q122,4 100,2 Q78,4 76,20 Z" fill="${td}"/><path d="M82,20 Q100,38 118,20" stroke="${shade(tc,-.32)}" stroke-width="1.5" fill="none"/><path d="M94,34 L93,64 M106,34 L107,64" stroke="${tl}" stroke-width="1.6" stroke-linecap="round"/><path d="M72,118 L128,118 L134,${tb-6} L66,${tb-6} Z" fill="none" stroke="${td}" stroke-width="1.5"/><rect x="55" y="${tb-8}" width="90" height="8" fill="${td}" opacity=".5"/>`}
+  if(o.oversize){up=`<g transform="translate(100 0) scale(1.13 1) translate(-100 0)">${up}</g>`}
+  g+=up;
+  if(o.layer){
+    const lc=o.layerC,ld=shade(lc,-.22),ll=shade(lc,.1);
+    const LP='M60,22 Q76,13 90,12 L96,44 L96,166 L53,166 L50,42 Z';
+    g+=`<path d="${sleeveL}" fill="${lc}"/><path d="${mir(sleeveL)}" fill="${lc}"/><path d="M37,140 L54,142 M163,140 L146,142" stroke="${ld}" stroke-width="2"/>`;
+    g+=`<path d="${LP}" fill="${lc}"/><path d="${mir(LP)}" fill="${lc}"/>`;
+    g+=`<path d="M96,44 L96,166 M104,44 L104,166" stroke="${ld}" stroke-width="1.2"/>`;
+    g+=`<path d="M90,12 L81,21 L88,35 L96,44 Z" fill="${ld}" opacity=".55"/><path d="${mir('M90,12 L81,21 L88,35 L96,44 Z')}" fill="${ld}" opacity=".55"/>`;
+    if(o.layer==='overshirt'){g+=`<rect x="64" y="56" width="20" height="18" rx="2" fill="${ll}" stroke="${ld}" stroke-width=".9"/><rect x="116" y="56" width="20" height="18" rx="2" fill="${ll}" stroke="${ld}" stroke-width=".9"/><path d="M64,61 L84,61 M116,61 L136,61" stroke="${ld}" stroke-width=".9"/>`+[58,84,110,136].map(y=>`<circle cx="92" cy="${y}" r="1.7" fill="${ld}"/>`).join('')}
+    if(o.layer==='chore'){g+=`<rect x="60" y="116" width="24" height="24" rx="2" fill="${ll}" stroke="${ld}" stroke-width=".9"/><rect x="116" y="116" width="24" height="24" rx="2" fill="${ll}" stroke="${ld}" stroke-width=".9"/><rect x="66" y="58" width="18" height="16" rx="2" fill="${ll}" stroke="${ld}" stroke-width=".9"/>`+[58,90,122,152].map(y=>`<circle cx="92" cy="${y}" r="1.9" fill="#C9B27A"/>`).join('')}
+  }
+  const hx=long||o.layer?45.5:48;
+  g+=`<ellipse cx="${hx}" cy="157" rx="7" ry="9" fill="${s}"/><ellipse cx="${200-hx}" cy="157" rx="7" ry="9" fill="${s}"/>`;
+  g+=`<rect x="-300" y="-300" width="800" height="900" fill="url(#${id}l)"/>`;
+  if(opt.guide){g+=`<ellipse cx="100" cy="-36" rx="31" ry="37" fill="none" stroke="#fff" stroke-width="2.2" opacity=".9"/><path d="M56,12 Q100,-2 144,12 L161,42 L153,160 L150,250 L147,326 Q147,346 124,346 L76,346 Q53,346 53,326 L50,250 L47,160 L39,42 Z" fill="none" stroke="#fff" stroke-width="2.2" opacity=".9"/>`}
+  return g+'</svg>';
+}
+
+function gi(t,c){
+  const d=shade(c,-.3),l=shade(c,.2),st=`stroke="${d}" stroke-width="1.1" stroke-linejoin="round"`;
+  const LS='M21,9 L13,12 L9,20 L5,50 L12,51 L16,29 L16,53 L44,53 L44,29 L48,51 L55,50 L51,20 L47,12 L39,9 Q30,15 21,9 Z';
+  let p='';
+  if(t==='tee')p=`<path d="M21,9 L13,12 L5,20 L10,27 L16,24.5 L16,52 L44,52 L44,24.5 L50,27 L55,20 L47,12 L39,9 Q30,16 21,9 Z" fill="${c}" ${st}/><path d="M21,9 Q30,16 39,9" fill="none" stroke="${d}" stroke-width="1.7"/>`;
+  else if(t==='oxford')p=`<path d="${LS}" fill="${c}" ${st}/><path d="M21,9 L30,14 L26,21 L18.5,13 Z M39,9 L30,14 L34,21 L41.5,13 Z" fill="${l}" ${st}/><path d="M30,14 V53" stroke="${d}" stroke-width="1"/>`+[24,32,40,48].map(y=>`<circle cx="31.6" cy="${y}" r=".9" fill="${d}"/>`).join('');
+  else if(t==='overshirt'||t==='jacket')p=`<path d="${LS}" fill="${c}" ${st}/><path d="M21,9 L30,15 L25,23 L17,13 Z M39,9 L30,15 L35,23 L43,13 Z" fill="${shade(c,-.12)}" ${st}/><path d="M30,15 V53" stroke="${d}" stroke-width="1.4"/><rect x="19" y="24" width="8" height="7" rx="1" fill="${l}" ${st}/><rect x="33" y="24" width="8" height="7" rx="1" fill="${l}" ${st}/>`+(t==='jacket'?`<path d="M17,40 H43" stroke="#C98A4A" stroke-width=".8" stroke-dasharray="1.6 1.4"/>`:'');
+  else if(t==='sweater')p=`<path d="${LS}" fill="${c}" ${st}/><path d="M21,9 Q30,17 39,9" fill="none" stroke="${d}" stroke-width="2.6"/><path d="M16.5,49.5 H43.5 M5.6,46.5 L12.3,47.4 M54.4,46.5 L47.7,47.4" stroke="${d}" stroke-width="2"/>`;
+  else if(t==='hoodie')p=`<path d="${LS}" fill="${c}" ${st}/><path d="M22,11 Q30,22 38,11 Q37,3 30,3 Q23,3 22,11 Z" fill="${shade(c,-.15)}" ${st}/><path d="M21,37 L39,37 L41,48 L19,48 Z" fill="none" ${st}/>`;
+  else if(['chino','jeans','trouser','cargo'].includes(t)){p=`<path d="M17,6 L43,6 L45,55 L34,55 L30,21 L26,55 L15,55 Z" fill="${c}" ${st}/><path d="M17,10.5 H43" stroke="${d}" stroke-width="1"/>`;if(t==='jeans')p+=`<path d="M18,11 Q22,18 27,11 M42,11 Q38,18 33,11 M17.6,14 L16,54 M42.4,14 L44,54" stroke="#C98A4A" stroke-width=".8" fill="none" stroke-dasharray="1.6 1.3"/>`;else p+=`<path d="M19,11 L23,19 M41,11 L37,19" stroke="${d}" stroke-width="1"/>`}
+  else if(t==='sneaker'||t==='runner'){p=`<path d="M5,42 Q6,32 15,30 L27,27 Q31,33 41,35 Q53,37 55,43 L55,45 L5,45 Z" fill="${c}" ${st}/><path d="M4,45 L56,45 L56,48.5 Q30,50.5 4,48.5 Z" fill="${t==='runner'?'#ECECE8':'#FFFFFF'}" stroke="#C9C9C4" stroke-width=".9"/><path d="M24,30 L27,35 M28.5,29 L31.5,34" stroke="${d}" stroke-width="1"/>`;if(t==='runner')p+=`<path d="M12,40 Q26,34 44,40" stroke="#D9733A" stroke-width="2" fill="none" stroke-linecap="round"/>`}
+  else if(t==='boot')p=`<path d="M13,12 L30,12 L31,33 Q46,35 53,40 L54,45 L11,45 L11,30 Z" fill="${c}" ${st}/><path d="M10,45 H55 V49.5 H10 Z" fill="#2A1D14"/><path d="M13,18 H30" stroke="${d}" stroke-width="1"/>`;
+  else if(t==='loafer')p=`<path d="M5,41 Q8,32 20,32 L33,32 Q47,33 53,38 L55,45 L5,45 Z" fill="${c}" ${st}/><path d="M4,45 H56 V47.5 H4 Z" fill="${shade(c,-.5)}"/><path d="M26,33.5 Q33,38 42,35.5" stroke="${d}" stroke-width="1.3" fill="none"/>`;
+  return `<svg viewBox="0 0 60 60" aria-hidden="true">${p}</svg>`;
+}
+
+function sil(){
+  const ticks=[];for(let i=0;i<=20;i++){const y=6+i*6;ticks.push(`<path d="M70,${y} L${i%4===0?76:73},${y}" stroke="var(--accent)" stroke-width="${i%4===0?1:.7}"/>`)}
+  return `<svg viewBox="0 0 92 132" preserveAspectRatio="xMidYMid meet" aria-hidden="true" style="width:100%;height:100%;display:block"><g fill="var(--accent-soft)" stroke="var(--ink-2)" stroke-width="1.2" stroke-linejoin="round"><circle cx="34" cy="14.5" r="8.5"/><path d="M34,25 C25,25 19,28 17,34 L13,68 L19,69 L23,42 L24,76 L26,125 L33,125 L34,82 L36,125 L43,125 L44,76 L45,42 L49,69 L55,68 L51,34 C49,28 43,25 34,25 Z"/></g><rect x="69" y="3" width="12" height="126" rx="1.5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width=".8"/>${ticks.join('')}<path d="M34,6 L80,6" stroke="var(--accent)" stroke-width="1" stroke-dasharray="2 2"/></svg>`;
+}
+
+const STATUS=t=>`<span>${t}</span><span class="sig"><svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx=".8"/><rect x="4.5" y="5" width="3" height="6" rx=".8"/><rect x="9" y="2.5" width="3" height="8.5" rx=".8"/><rect x="13.5" y="0" width="3" height="11" rx=".8"/></svg><svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor"><path d="M7.5 2.2c2.2 0 4.2.9 5.7 2.3l1.1-1.1A9.6 9.6 0 0 0 7.5.6 9.6 9.6 0 0 0 .7 3.4l1.1 1.1a8 8 0 0 1 5.7-2.3zm0 3.2c1.3 0 2.5.5 3.4 1.3l1.1-1.1a6.4 6.4 0 0 0-9 0l1.1 1.1c.9-.8 2.1-1.3 3.4-1.3zm0 3.1c.5 0 .9.2 1.2.5L7.5 10.2 6.3 9c.3-.3.7-.5 1.2-.5z"/></svg><svg width="25" height="12" viewBox="0 0 25 12"><rect x=".5" y=".5" width="21" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="2" fill="currentColor"/><path d="M23 4v4c.8-.3 1.3-1.1 1.3-2S23.8 4.3 23 4z" fill="currentColor" opacity=".45"/></svg></span>`;
+const TABS=[['stylist','Stylist','i-chat'],['closet','Closet','i-hanger'],['lookbook','Lookbook','i-book'],['you','You','i-person']];
+
+document.querySelectorAll('.phone').forEach(ph=>{
+  const sc=ph.querySelector('.screen');
+  const isl=document.createElement('div');isl.className='island';sc.appendChild(isl);
+  const st=document.createElement('div');st.className='status';
+  const isLock=sc.classList.contains('lock');
+  st.innerHTML=STATUS(isLock?'':(ph.dataset.time||'9:41'));
+  if(sc.classList.contains('lock')||ph.querySelector('[data-guide]'))st.style.color='#fff';
+  if(ph.dataset.status==='onlight')st.style.color='#121628';
+  sc.appendChild(st);
+  if(ph.dataset.composer){const c=document.createElement('div');c.className='cfix';c.innerHTML='<div class="composer"><span class="cam"><svg class="ic"><use href="#i-camera"/></svg></span><span class="lib"><svg class="ic s"><use href="#i-photo"/></svg></span><span class="field">Ask your stylist…</span></div>';sc.appendChild(c)}
+  if(ph.dataset.tab){const tb=document.createElement('nav');tb.className='tabbar';tb.setAttribute('aria-label','Tabs');tb.innerHTML=TABS.map(([k,l,i])=>`<a class="${k===ph.dataset.tab?'on':''}" href="#"><svg class="ic"><use href="#${i}"/></svg>${l}</a>`).join('');sc.appendChild(tb)}
+  const hb=document.createElement('div');hb.className='homebar';sc.appendChild(hb);
+});
+document.querySelectorAll('[data-fig]').forEach(el=>{
+  const o=FIG[el.dataset.fig];if(!o)return;
+  const r=el.clientWidth/Math.max(1,el.clientHeight);
+  el.innerHTML=figure(o,{head:el.dataset.head==='1',guide:el.dataset.guide==='1',fit:(el.dataset.fit==='meet'||r>.85)?'xMidYMid meet':'xMidYMid slice'});
+});
+
+// Real photos (Unsplash/Pexels test set). neck/foot/cx/fy/fr are fractions of the image: chin line, feet, body center, face center and face radius.
+const PH={
+  p01b:{neck:.315,foot:.985,cx:.50,fx:.505,fy:.245,fr:.055,box:[.24,.175,.76,.995]},
+  p01a:{neck:.315,foot:.985,cx:.45,fx:.46,fy:.235,fr:.05,box:[.24,.17,.70,.995]},
+  s24:{neck:.31,foot:1,cx:.55,fx:.55,fy:.25,fr:.08},
+  s15:{neck:.235,foot:.895,cx:.50,fx:.50,fy:.17,fr:.04},
+  s10:{neck:.28,foot:.94,cx:.43,fx:.44,fy:.235,fr:.04},
+  s14:{neck:.21,foot:.94,cx:.46,fx:.47,fy:.16,fr:.045},
+  s22:{neck:.32,foot:1,cx:.45,fx:.45,fy:.27,fr:.05},
+  s05:{neck:.195,foot:.95,cx:.48,fx:.49,fy:.14,fr:.045},
+  s13:{neck:.30,foot:.965,cx:.48,fx:.48,fy:.255,fr:.04},
+  s12:{neck:.235,foot:.875,cx:.55,fx:.56,fy:.18,fr:.04},
+  s25:{neck:.30,foot:.99,cx:.45,fx:.45,fy:.23,fr:.06},
+  s09:{neck:.22,foot:.89,cx:.52,fx:.52,fy:.17,fr:.04}
+};
+function placePhoto(el){
+  const k=el.dataset.photo,c=PH[k];if(!c)return;
+  const mode=el.dataset.crop||'neck';
+  if(getComputedStyle(el).position==='static')el.style.position='relative';
+  el.style.overflow='hidden';
+  const wrap=document.createElement('div');wrap.style.position='absolute';
+  const img=new Image();img.alt='';img.decoding='async';img.src='img/'+k+'.jpg';
+  Object.assign(img.style,{position:'absolute',inset:'0',width:'100%',height:'100%',display:'block',maxWidth:'none'});
+  wrap.appendChild(img);
+  const fit=()=>{
+    const W=el.clientWidth||1,H=el.clientHeight||1,ar=img.naturalWidth/img.naturalHeight,box=W/H;
+    const top=mode==='neck'?c.neck:(mode==='blur'?Math.max(0,c.fy-c.fr*2.4):0);
+    const span=(mode==='full'?1:c.foot+.012)-top;
+    let ih=1/span, iw=ih*ar/box;          // in units of container height / width
+    if(iw<1){iw=1;ih=box/ar}
+    let left=.5-c.cx*iw;left=Math.min(0,Math.max(1-iw,left));
+    let t=-top*ih;t=Math.min(0,Math.max(1-ih,t));
+    Object.assign(wrap.style,{width:iw*100+'%',height:ih*100+'%',left:left*100+'%',top:t*100+'%'});
+    if((mode==='blur'||el.dataset.blurface)&&!wrap.querySelector('.faceblur')){
+      const b=document.createElement('div');b.className='faceblur';
+      const rx=c.fr/ar*100*1.15, ry=c.fr*100*1.25;
+      Object.assign(b.style,{left:(c.fx*100-rx)+'%',top:(c.fy*100-ry)+'%',width:rx*2+'%',height:ry*2+'%'});
+      wrap.appendChild(b);
+    }
+    if(el.dataset.guide&&c.box&&!wrap.querySelector('.guide')){
+      const g=document.createElementNS('http://www.w3.org/2000/svg','svg');g.setAttribute('class','guide');g.setAttribute('viewBox','0 0 100 100');g.setAttribute('preserveAspectRatio','none');
+      const [x0,y0,x1,y1]=c.box;Object.assign(g.style,{left:x0*100+'%',top:y0*100+'%',width:(x1-x0)*100+'%',height:(y1-y0)*100+'%'});
+      g.innerHTML='<ellipse cx="50" cy="7.5" rx="11" ry="7" fill="none" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M28,19 Q50,14 72,19 Q84,22 85,32 L83,97 Q83,100 79,100 L21,100 Q17,100 17,97 L15,32 Q16,22 28,19 Z" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="7 5" vector-effect="non-scaling-stroke"/>';
+      wrap.appendChild(g);
+    }
+  };
+  if(img.complete&&img.naturalWidth)fit();else img.addEventListener('load',fit);
+  el.appendChild(wrap);
+}
+document.querySelectorAll('[data-photo]').forEach(placePhoto);
+
+document.querySelectorAll('[data-gi]').forEach(el=>{const [t,c]=el.dataset.gi.split(':');el.innerHTML=gi(t,c)});
+document.querySelectorAll('[data-sil]').forEach(el=>{el.innerHTML=sil()+(el.dataset.sil?`<div style="text-align:center;font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:2px">${el.dataset.sil}</div>`:'')});
+
+// October 2026 starts on a Thursday. Today is the 22nd.
+const cal=document.getElementById('cal');
+if(cal){
+  const logged=new Set([1,2,5,6,7,9,12,13,14,15,16,19,20,21,22]);
+  let h=['S','M','T','W','T','F','S'].map(d=>`<span class="dow">${d}</span>`).join('');
+  for(let i=0;i<4;i++)h+='<span></span>';
+  for(let d=1;d<=31;d++){
+    const cls=['d'];if(logged.has(d))cls.push('log');if(d===22)cls.push('today');if(d>22)cls.push('fut');
+    if(d>=18&&d<=24){cls.push('wk',d===18?'first':d===24?'last':'mid')}
+    h+=`<span class="${cls.join(' ')}"><span>${d}</span></span>`;
+  }
+  cal.innerHTML=h;
+}
+
+// App appearance switch
+const board=document.getElementById('board');
+const btns=document.querySelectorAll('.seg button');
+const setApp=v=>{board.dataset.app=v;btns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)));try{localStorage.setItem('kitted-app',v)}catch(e){}};
+btns.forEach(b=>b.addEventListener('click',()=>setApp(b.dataset.v)));
+try{const v=localStorage.getItem('kitted-app');if(v)setApp(v)}catch(e){}
+document.querySelectorAll('.screen a[href="#"]').forEach(a=>a.addEventListener('click',e=>e.preventDefault()));
+})();
+</script>
