@@ -14,8 +14,8 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 ## The rules
 - **One a day, every day,** at his nudge time = the time he usually gets dressed minus 15 minutes. Default sound. Nothing else is ever sent, at any hour.
 - **His get-dressed time:** half-hour steps from 5:00 am to 1:00 pm (17 choices), default 8:00 am. A time he set before that's off the list is kept (as built). The time follows the phone's clock, so it stays 8:00 local when he travels **(assumed)**.
-- **Local only:** the phone schedules every nudge itself. Each time the app opens (or comes back to the foreground), it replaces whatever was scheduled with the next 7 days. Nothing is sent to or kept on a server.
-- **What each day's nudge says** (the founder, Nov 9): the outfit that day's morning card shows, so the two always agree **(assumed)**, but only once the morning card can suggest outfits (two different outfits that work, `specs.md` F6.2; T55 in the morning lane decides, and this task asks the morning service, `canSuggest()`). Until then, the "Check today's fit" line. The first day it can suggest gets the "big enough" line, once ever.
+- **Local only:** the phone schedules every nudge itself. Each time the app opens, comes back to the foreground, or goes to the background, it replaces whatever was scheduled with the next 7 days. Nothing is sent to or kept on a server.
+- **What each day's nudge says** (the founder, Nov 9): only the next nudge names an outfit, the one that day's morning card will show (a pick reads what he wore and added since, so later days can't be known ahead; the plain line covers them). Named outfits come only once the morning card can suggest outfits (two different outfits that work, `specs.md` F6.2; T55 in the morning lane decides, and this task asks the morning service, `canSuggest()`). Until then, the "Check today's fit" line. The first day it can suggest gets the "big enough" line, once ever.
 - **A week with no visit:** the 7 scheduled days run out and nothing more is scheduled. On his next open, Kit asks the comeback question once (NT4). Until he answers it (or turns the switch back on in Settings), nothing is scheduled.
 - **Apple's prompt** shows only after he taps `Send me ideas` on Kit's card, or turns on `Daily outfit idea` in You → Notifications when it was never asked. Never at launch, never on its own.
 - **`No thanks` is final:** Kit never asks again; You → Notifications is the only way back.
@@ -51,6 +51,7 @@ Shown under the app name "Kitted", with no title, one line:
 - **Once Kit can suggest outfits:** `Today: {item1}, {item2}, {item3}, {item4}.` Lowercase piece names, as many as the outfit has. Example: `Today: navy overshirt, grey tee, khaki chinos, white sneakers.`
 - **Before Kit can suggest outfits** (`canSuggest()` is false: an empty closet, or fewer than two outfits that work): `Check today's fit. Each one teaches me your closet.`
 - **The first day it can suggest,** once ever: `Your closet's big enough now: here's today's idea.` From the next day on, the `Today: …` line.
+- **Later days still queued** (he hasn't opened the app since; it can suggest): `Today's outfit idea is ready.` Only the next nudge names pieces.
 - **Tap** → the Stylist tab, scrolled to today's card (posted then if it isn't yet). A tap on an older day's nudge opens today's card.
 
 ## NT3. You → Notifications
@@ -80,7 +81,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - **Daily outfit idea switch:** KV `notify.idea` (as built). `notify.ready` and `notify.trial` are no longer read in the beta.
 - **Scheduled through:** the date of the last scheduled nudge, to tell a lapse (NT4) from a normal open.
 - **Asked:** whether Kit's ask was posted, by either route (the setup sequence's `notifyMsgId`, as built; the Later route reads the first-check card's state from `specs/onboarding-screens.md`) and whether the comeback question was posted for the current lapse.
-- **Each day's outfit:** the morning card's locked idea for that day (as built), now also chosen ahead for scheduled days.
+- **The next nudge's outfit:** picked the way the morning card picks it for that day (no new stored row).
 - Nothing leaves the phone. "Delete all my data" clears all of the above and cancels every scheduled nudge.
 
 ## Failure and edge cases
@@ -89,7 +90,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 | Don't Allow at Apple's prompt | Kit's later line; nothing scheduled; You → Notifications shows the off card. |
 | He turns notifications off in iOS Settings later | Nothing new scheduled; You → Notifications shows the off card. |
 | He picks a time, but today's nudge time has passed | The first nudge is tomorrow; the line says `tomorrow`. |
-| The closet changes after scheduling | The next open reschedules with the new outfits. A day's planned outfit that's no longer possible is re-picked by the card; the nudge already shown may have named the old one **(assumed, rare)**. |
+| The closet changes after scheduling | Changes only happen in the app, and leaving the app reschedules, so the next nudge names the current pick. |
 | No weather (location declined or offline) | The outfit is picked by season, as the card does. |
 | The under-18 lock | No ask, nothing scheduled. |
 | "Delete all my data" | Every scheduled nudge cancelled; the ask can come again after setup like a new user. |
@@ -112,7 +113,8 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 
 **The nudge (NT2)**
 - NT2.1 Each open (and each return to the foreground) leaves exactly 7 nudges scheduled, one per day, each at the get-dressed time minus 15 minutes, with the default sound and no title.
-- NT2.2 A day with an outfit gets `Today: …` naming that day's outfit, the same pieces as that day's morning card.
+- NT2.2 Once it can suggest, the next nudge gets `Today: …` naming the same pieces that day's morning card then shows, given no change to his closet, checks or wear log in between; every later queued day gets `Today's outfit idea is ready.`
+- NT2.7 Leaving the app (background) reschedules, so a check or a new piece made today changes tomorrow's named outfit.
 - NT2.3 While the morning service says it can't suggest (empty closet, or one outfit that works), every day gets `Check today's fit. Each one teaches me your closet.`
 - NT2.6 The first scheduled day on which it can suggest gets `Your closet's big enough now: here's today's idea.`; later days get `Today: …`; the "big enough" line is never scheduled again once it has been delivered, including after reinstalling nudges or changing the time.
 - NT2.4 Tapping a nudge opens Stylist at today's card.
