@@ -1,16 +1,16 @@
 ---
 name: build-task
-description: Build one code task from plan.md end to end - plan, tests first, build, independent verify, with a fix loop - using four separate agents so no one checks their own work. Use when the founder says "/build-task T11", "build T11", "do the next task" or similar for a code task. Not for spec-writing tasks (those are /grill-me interviews).
+description: Build one code task from plan.md end to end - design (for screens), plan, tests first, build, independent verify and design review, with a fix loop - using separate agents so no one checks their own work. Use when the founder says "/build-task T11", "build T11", "do the next task" or similar for a code task. Not for spec-writing tasks (those are /grill-me interviews).
 argument-hint: <task ID, e.g. T11>
 ---
 
 # Build a task
 
-You are the coordinator. You don't write the plan, the tests or the code yourself: four agents do, each starting with a fresh mind. Your job is to run them in order, move each defect to the right agent, keep `plan.md` current, and hand the founder one honest report.
+You are the coordinator. You don't write the design, the plan, the tests or the code yourself: separate agents do, each starting with a fresh mind. Your job is to run them in order, move each defect to the right agent, keep `plan.md` current, and hand the founder one honest report.
 
 **Task:** $ARGUMENTS (if empty, ask which task; suggest the first unblocked code task in `plan.md` → "Next up").
 
-**Why four agents:** the test writer never sees how the code will be written, so it can't shape tests to fit it; the implementer gets the tests as a fixed contract; the verifier comes in cold and tries to break things. Never do two of these jobs in one mind, and never do one of them yourself.
+**Why separate agents:** the test writer never sees how the code will be written, so it can't shape tests to fit it; the implementer gets the tests as a fixed contract; the verifier comes in cold and tries to break things. For a screen, the designer draws it before code and the critic, who drew and built nothing, judges both the drawing and the build. Never do two of these jobs in one mind, and never do one of them yourself.
 
 ## 0. Preflight (stop and tell the founder if any fails)
 - The task is on its own line in `plan.md`, and it's a **code** task. If it's a "Write the … spec with you" task, it's the interview itself: go to **The spec gate** below and start it.
@@ -24,10 +24,19 @@ You are the coordinator. You don't write the plan, the tests or the code yoursel
 - Words the user will read that aren't in the spec are the founder's call: they come up as the planner's open questions, never as guesses.
 - Another session hasn't claimed it (`[~]`). The tree is clean.
 - Memory: `top -l 1 | grep PhysMem`; never start while another heavy job runs (CLAUDE.md rule 8).
-- Work on a branch `claude/<id>-<short-name>` from main. Claim the line: `[~] <ID> · plan`, commit, push.
+- Work on a branch `claude/<id>-<short-name>` from main. Claim the line: `[~] <ID> · plan` (or `· design`, see D), commit, push.
+
+## D. Design (only for a task that changes what he sees)
+**When:** the task adds or changes anything on screen (a state, a card, a sheet, a row, words in a new place) **and** has no `tasks/<ID>/IMPLEMENTATION.md` yet. A task planned before this stage existed carries on without it, and a task that changes nothing on screen (server, scoring, tests only) skips it. If `tasks/<ID>/DESIGN.md` already carries the founder's approval line, go to step 1.
+1. Plan line → `[~] <ID> · design`. Run the **ui-designer** agent (`subagent_type: "ui-designer"`) with the task ID, its `plan.md` line, the lane and the spec file. Wait.
+2. Run the **ui-critic** agent with the task ID and mode `design`. Blockers go back to the designer with the critic's findings; then the critic again. At most 2 rounds; a blocker still open after that goes to the founder with the rest.
+3. Show the founder. Open the frames (`preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/<ID>/design.html`) and send the PNGs. In plain words: what he'll see in each state, the NEW words, the open questions with your pick, and the critic's suggestions (optional). Ask in one AskUserQuestion: **Looks right (Recommended)** · Change something. His yes approves the NEW words too.
+4. Changes: run the designer again with his words quoted (and the critic again if more than words changed), then show him again. After 3 rounds of changes, stop drawing and talk it through with him.
+5. His yes: add `**Approved by the founder:** <today> in chat` under DESIGN.md's title, log the NEW words and any decision in DECISIONS-LOG, commit `<ID>: design`.
+- If the design shows the spec is wrong or silent on **behaviour** (not looks), that's a spec change: ask him per CLAUDE.md before going on.
 
 ## 1. Plan
-Run the **task-planner** agent (`subagent_type: "task-planner"`) with: the task ID, its `plan.md` line, the lane, the spec file. Wait for it.
+Run the **task-planner** agent (`subagent_type: "task-planner"`) with: the task ID, its `plan.md` line, the lane, the spec file, and `tasks/<ID>/DESIGN.md` if step D ran. Wait for it.
 - Open questions **for the founder** (taste, words, money, installs): ask them now, in one AskUserQuestion with your recommendation first. Write the answers into IMPLEMENTATION.md and log them in DECISIONS-LOG. Don't continue until answered.
 - **Technical** open questions: accept the planner's default, note it for the log.
 - Check yourself that every criterion ID on the plan line appears in TESTING.md. If one is missing, send it back.
@@ -43,20 +52,26 @@ Plan line → `· build`. Run the **implementer** agent with the task ID (and, o
 ## 4. Verify
 Plan line → `· verify`. Run the **verifier** agent with the task ID. Wait.
 
+## 4b. Design review (only with an approved DESIGN.md)
+After the verifier, unless it found the suites red or the lock broken (screenshots of a broken build waste a run): run the **ui-critic** agent with the task ID and mode `build`. Wait.
+- Blockers labelled **code** join the verifier's code defects.
+- Blockers labelled **design** (the approved design itself breaks a rule, or can't be built natively) go to the founder: keep the design (the implementer finds a way) or change it. A change runs the designer, then his yes, then the test writer updates the inventory's tests to the new approved words, recorded in REPORT.md → Disputes. That's the one case where a locked test's expected words may change, and only with his yes.
+- Polish goes to the implementer with the code defects if any are going anyway; it never holds the task. Suggestions go in the founder's summary.
+
 ## 5. Loop (at most 3 rounds of build and verify)
-On "not ready", sort each defect:
+On "not ready" (or the critic's "doesn't match"), sort each defect:
 - **code** → implementer, with the defects listed.
 - **test** (a deliberate bug went uncaught, a criterion is missing a test) → test-writer, to add or strengthen only; it re-locks.
-Then verify again. After round 3, stop: report what's still failing and why, and leave the line `[~] <ID> · stuck: <one line>`. Never relax a test, the inventory or a criterion to get out of the loop.
+Then verify again (and run 4b again). After round 3, stop: report what's still failing and why, and leave the line `[~] <ID> · stuck: <one line>`. Never relax a test, the inventory, the approved design or a criterion to get out of the loop. The loop ends when the verifier says ready and, for a designed task, the critic says matches.
 
 ## 6. Finish
 - Fill REPORT.md → Summary for the founder (plain words, what he'll see, what's real and what's mocked, what wasn't checked). Commit.
-- Push. Open the PR (title `<ID>: <plain task>`; body = the summary, the verdict, the not-verified list, screenshots). Don't merge: that's the founder's yes.
+- Push. Open the PR (title `<ID>: <plain task>`; body = the summary, the verdict, the not-verified list, screenshots; for a designed task, each design frame next to the built screenshot, and the critic's suggestions). Don't merge: that's the founder's yes.
 - `plan.md`: the line → `[~] <ID> · PR #<n>`; one session-log line (keep 15); any new founder to-do (a "not verified" that needs him) as a Y item. DECISIONS-LOG entry for anything decided (renumber on merge if it clashes).
 - Tell the founder, in plain words with screenshots: what he'll see, the verdict, what's not verified and what would check it, anything that needs him. Teach one thing worth knowing from the run. End with the 1–3 to-dos that unblock the most.
 
 ## Rules for you
 - Run agents one at a time and wait for each; they share this worktree and branch. Never `isolation: worktree`.
-- Pass agents file paths and IDs, not your opinions of the work.
+- Pass agents file paths and IDs, not your opinions of the work. The critic never gets the designer's or the implementer's reasoning, only the files.
 - Don't edit app code, tests, TESTING.md or the verdict yourself. If an agent's output is broken, run it again with what was wrong.
 - Spending money (a live AI test), installing anything, a new package: ask the founder first.

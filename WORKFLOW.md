@@ -21,10 +21,16 @@ The whole process on one page, for the founder and for Claude. It explains and p
      ▼  for each task in the lane
   /build-task T11
      ├─ 0. spec gate ..... is the lane's spec there and approved? if not, offers the interview
-     ├─ 1. planner ....... tasks/T11/IMPLEMENTATION.md + TESTING.md (the contract)
+     ├─ D. design ........ only if the task changes a screen:
+     │     ├─ designer ... each state drawn as phone frames + tasks/T11/DESIGN.md
+     │     ├─ critic ..... checks the frames against Apple's rules, §C14 and the design system
+     │     └─ you ........ look at the frames: yes, or what to change
+     ├─ 1. planner ....... tasks/T11/IMPLEMENTATION.md + TESTING.md (the contract; a design's
+     │                     states and words become the UI inventory, word for word)
      ├─ 2. test writer ... writes every test first, proves each fails, locks them
-     ├─ 3. implementer ... writes code until the locked tests pass
+     ├─ 3. implementer ... writes code until the locked tests pass, to the design's layout
      ├─ 4. verifier ...... checks the lock, plants bugs, checks every screen, tries to break it
+     ├─ 4b. critic ....... (designed tasks) Simulator screenshots vs the approved frames
      └─ loop ............. failures go back to 3 (code) or 2 (weak test), at most 3 rounds
      │
      ▼
@@ -37,7 +43,7 @@ The whole process on one page, for the founder and for Claude. It explains and p
 - **`specs.md`**: What the launch app is. *Changed by: only with your yes in chat.*
 - **`specs/<feature>.md`**: One part of the app in exact detail. *Changed by: written in an interview; only with your yes.*
 - **`plan.md`**: Where things stand, the tasks, your to-dos. *Changed by: every session, only its own lines.*
-- **`tasks/<ID>/`**: One task's plan, testing contract and report. *Changed by: `/build-task` while it runs; kept as the record.*
+- **`tasks/<ID>/`**: One task's plan, testing contract and report, plus, for a task that changes a screen, its design (`DESIGN.md`, `design.html` and the frames in `design/`). *Changed by: `/build-task` while it runs; the design only with your yes; kept as the record.*
 - **`handoff/DECISIONS-LOG.md`**: Every decision, with the reason. *Changed by: appended, never edited.*
 - **`handoff/15-build-notes.md`**: How to run things, and traps already hit. *Changed by: when a trap costs real time.*
 - **`WORKFLOW.md`**: This page. *Changed by: when the process changes.*
@@ -47,10 +53,11 @@ The whole process on one page, for the founder and for Claude. It explains and p
 **You:**
 - Answer the interviews: the whole app once, then each feature once.
 - Decide taste, words users read, money and installs (the only things a run stops to ask).
+- Look at a screen's frames before it's built, and say yes or what to change (5–10 min a screen).
 - Merge pull requests.
 - Do the to-dos only you can do (photos, accounts, phone tests), listed in `plan.md`.
 
-**Runs by itself** once you type `/build-task T11` in a session: the plan, the tests, the code, the checks, the fix loop, the report and the pull request.
+**Runs by itself** once you type `/build-task T11` in a session: the design (it stops once for your look), the plan, the tests, the code, the checks, the fix loop, the report and the pull request.
 
 **Starting things:**
 - A task: open a new session and type `/build-task T11`. If its feature has no spec yet, it walks you into the interview first.
@@ -68,22 +75,33 @@ The rule: **never make a test easier so a task can pass.** Each of these makes c
 5. **Automatic locks.** A hook stops the implementer from editing tests or flows; a guard test fails the build on skipped or focused tests.
 6. **No pass without proof.** Each requirement ends as pass (with proof), fail, or "not verified" with what would verify it. Never quietly dropped.
 
+## How the screens stay right
+
+Tests prove a screen *works*; they can't tell you it looks off. So a task that changes a screen gets two more minds:
+
+1. **A designer before any code.** It turns the spec into every state (normal, empty, loading, error, offline, the refused case) as phone frames in the mockup's own style, with the exact words, VoiceOver labels, dark mode and the largest text size. You approve the look while a change still costs one sentence.
+2. **A critic who drew nothing and built nothing.** It checks the frames against Apple's rules, §C14 and the design system before you see them. After the build it screenshots every state on the Simulator and compares each with your approved frame.
+3. **The critic only blocks on rules.** A difference from your approved design, Apple's rules or §C14 blocks the task. Its own taste goes to you as optional suggestions, so the loop can't run forever on opinion.
+4. **The cost:** about 30–45 minutes more per screen task, plus your 5–10 minutes. A task that changes no screen skips all of it.
+
 ## When a run stops
 
 - **A question only you can answer** (words, taste, money, an install): it asks, then carries on.
+- **A design is ready for your look:** it shows you the frames and waits for your yes.
 - **Its feature isn't defined yet:** it offers the interview.
 - **Three rounds and still failing:** the task shows `stuck: <why>` in `plan.md`, and the report says what's left. Nothing gets loosened to get out.
 
 ## Reading plan.md
 
 - `[ ]` to do · `[~] session name` someone's on it (or a pull request is open) · `[x] date, PR` merged · `[!] Y3` waiting on you (your to-do Y3).
-- During `/build-task` a task shows its stage: `· plan`, `· tests`, `· build`, `· verify`, `· PR #n`, `· stuck`.
+- During `/build-task` a task shows its stage: `· design`, `· plan`, `· tests`, `· build`, `· verify`, `· PR #n`, `· stuck`.
 - A task line reads: **ID** · what it does · *what it waits on · which spec checks it must pass · which files it touches*.
 
 ## Where the exact rules live
 
 - The coordinator: `.claude/skills/build-task/SKILL.md`
 - The four agents: `.claude/agents/task-planner.md`, `test-writer.md`, `implementer.md`, `verifier.md`
+- The design stage: `.claude/agents/ui-designer.md` and `ui-critic.md`; the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
 - The templates: `.claude/skills/build-task/templates/`
 - The test lock: `.claude/hooks/protect-tests.sh`; the guard test: `app/src/__tests__/testGuards.test.ts`
 - The interviews: `.claude/skills/grill-me/SKILL.md`
@@ -98,4 +116,6 @@ The rule: **never make a test easier so a task can pass.** Each of these makes c
 - **Pull request (PR):** a proposed change, reviewed before it joins the main code.
 - **Worktree:** a separate copy of the code for one session, so parallel work doesn't collide.
 - **Lane:** a group of tasks that share files; one session per lane at a time.
+- **Design hand-off:** the drawn, approved screen a builder works from, so nobody guesses at layout. In interviews: "the design is the spec for how it looks."
+- **Independent review:** a check by someone who didn't make the thing. Authors miss their own mistakes because they see what they meant, not what's there. It's why code review, QA and design critique are separate jobs.
 - **Subagent:** a helper Claude starts with a fresh mind and a narrow job; it works on its own and hands back a result, so it can't hold a conversation with you.
