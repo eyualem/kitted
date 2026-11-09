@@ -174,4 +174,4 @@ None.
 - `tsc --noEmit` and the full app jest on HEAD: `npm run check` in `app/` once memory frees up, before merge.
 - F6 on his phone: the next TestFlight build (an EAS build, the founder's OK), then the 3-evening check, now including one fresh setup after 5 pm followed by a fit check (one evening card above the photo).
 - The two Maestro flows and demo screens 30, 12 and 25 in light, dark and largest text: a free Simulator.
-- Open from round 1, unchanged: a hung `weather.permission()` would block that window's later calls until a relaunch (the coordinator found it can't hang today: #405).
+- Open from round 1, unchanged: a hung `weather.permission()` would block that window's later calls until a relaunch (the coordinator found it can't hang today: #406).
