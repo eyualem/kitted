@@ -120,7 +120,7 @@ Lane files: `app/src/features/{stylist,ask,morning}`
 - [ ] **T51** · The morning and evening card greets him by name · *after T31, T50 · checks: F6 greeting, F1.5 · files: morning/copy.ts, en.ts*
 - [ ] **T52** · Kit declines off-topic questions (haircuts, grooming, fitness, dating) with the spec's line, caught on the phone, never counted · *after T50 · checks: F5.2 · files: ask/*
 - [ ] **T53** · Notifications: install expo-notifications, send the daily idea and "fit check ready", remove "trial ending" · *after T50 · checks: F13 · files: finish/service.ts, settings/prefs.ts, you/notifications.tsx, package.json*
-- [~] morning-card-weather · T54 · verify · **T54** · Bug from the beta (Nov 8): two evening cards on one evening. One card per day and window, even when Stylist asks twice while the weather loads · *spec: specs.md · checks: F6 · files: morning/service.ts*
+- [~] morning-card-weather · T54 · PR #75 · **T54** · Bug from the beta (Nov 8): two evening cards on one evening. One card per day and window, even when Stylist asks twice while the weather loads · *spec: specs.md · checks: F6 · files: morning/service.ts*
 
 ### Fit check and scoring
 *The core promise: a score he trusts. Done means a dress or skirt is marked "not rated" instead of scored wrong, the card's words match the spec, and every card with a fix offers a free one.*
@@ -177,7 +177,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-09 · T54: the double evening card's cause found (two asks while the weather loads) and fixed in the morning service; 20 tests, 20 planted bugs caught; verified ready, not yet on the Simulator or your phone · #405, PR (pending)
+- 2026-11-09 · T54: the double evening card's cause found (two asks while the weather loads) and fixed in the morning service; 20 tests, 20 planted bugs caught; verified ready, not yet on the Simulator or your phone · #405, PR #75
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
