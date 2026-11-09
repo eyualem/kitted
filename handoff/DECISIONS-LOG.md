@@ -2796,3 +2796,11 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Maestro matches whole labels only.** A view with its own VoiceOver label hides the text inside it. So a check that something is absent, written as part of a label, can never fail. Write positive checks as the exact label, and absence checks as `.*words.*`.
     - **Metro started from a worktree without `--clear` served a stale screen** (an old `plan.tsx`). Start it with `--clear` when checking a worktree's screens.
     - **A demo screen that shows the morning card must be in `MORNING_DEMO_SCREENS`** (`features/morning/index.ts`), or `enabled()` blocks the card.
+
+402. **The beta's limits are live on the server (Nov 8; the founder: "Check it after the deployment has been made").**
+    - **Before the deploy:** the functions build cleanly, and the emulator tests pass, 79 of 79.
+    - **The deploy:** `firebase deploy --only functions:api,functions:purgeUsage --project kitted-a5b45 --non-interactive`. Both functions updated, with no prompts. Nothing else changed: no rules and no indexes.
+    - **The live check:** a fresh anonymous guest asked one question on `/v1/ask` (Flash-Lite, 30 tokens out, well under 0.01¢). The server answered 200 with `x-kitted-tier: beta`, and the test guest was deleted afterwards.
+    - **So the catch isn't real:** the live `server/config` doesn't set `pro` by hand. The server's own default applies, and it's now `beta`.
+    - **Left behind:** that guest's one-question usage day. The 7-day purge removes it.
+    - **The script:** in the session's scratchpad (`livetier.mjs`), not in the repo. Re-run the same check after any server deploy or config change.
