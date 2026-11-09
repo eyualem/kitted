@@ -94,6 +94,7 @@ Spec: `specs/setup-and-you.md` (interview: T30)
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 
 - [ ] **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check · *done: your yes · files: `specs/setup-and-you.md`*
+- [~] onboarding-screens · **T37** · Write the setup-screens spec with you, from your Nov 9 walk through the TestFlight build: a Welcome picture of our own (today's is a stranger's Unsplash photo), setup as plain screens instead of a pretend chat (the birth-year step first), and setup ending in Stylist with Kit offering a fit check instead of opening the camera on its own; built with T30's name field and agreement · *done: your yes · files: `specs/onboarding-screens.md`*
 - [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts*
 - [ ] **T32** · Apple's age check (Declared Age Range) at first launch · *after T30, T80 · checks: F1.2 · files: onboarding/, a native module*
 - [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: F1.1, F1.3 · files: onboarding/, en.ts*
