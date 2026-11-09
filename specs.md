@@ -63,12 +63,12 @@ Stylist → camera (propped with 3-2-1 auto-capture, mirror, or a library photo)
 Check 1 → the soft page ("6 free checks left") → any day, a second check → the limit card with "Save for tomorrow" and an upgrade button → check 8 → the full paywall, the photo saved and scored at once if he subscribes.
 
 ### Sign-in (optional)
-Offered on Welcome ("I already have an account"), in one chat card after he's seen his first fit, once more after 3 more checks, and in You → Settings **(assumed: as built)**. Never before the first score, never a pop-up.
+Offered on Welcome ("I already have an account"), in one chat card after he's seen his first fit, once more after 3 more checks, and in You **(assumed: as built)**. Never before the first score, never a pop-up.
 
 ## Features
 
 ### F1. Onboarding
-The first run above, 6 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer.
+The first run above, 6 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn each feature from a short tip the first time they reach it, never a tour before the first check (`specs/setup-and-you.md`).
 - F1.1 A fresh install reaches the camera in 6 taps or fewer, with no account and no paywall on the way.
 - F1.2 The birth-year wheel starts blank; a year making him under 18 shows the stop screen and no camera; Declared Age Range under 18 does the same.
 - F1.3 Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
@@ -121,7 +121,7 @@ Every past check with its photo, score and fixes; a look's page; "Show in chat".
 - F8.1 Past scores stay visible forever, free, never blurred.
 
 ### F9. You
-Style profile (looks 1·2·3, fit), What Kit knows (each fact with its source, removable), Settings, Privacy & data ("See what I send" shows the real blurred copy; "Delete all my data").
+The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), What Kit knows (each fact with its source, removable), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "Delete all my data"), and Help & about with "Show me around".
 - F9.1 "Delete all my data" (and "Delete account and all data" when signed in) removes everything on the phone and on our server, with no way back.
 - F9.2 Picked looks change the order of fixes and advice, never a score.
 
