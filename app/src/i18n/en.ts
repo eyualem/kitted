@@ -1140,7 +1140,7 @@ const addedInBuild = {
   'closet.edit.pattern': 'Pattern',
   'closet.edit.more': 'More kinds',
   'closet.edit.sub': 'Pick what it really is.',
-  'closet.edit.foot': 'Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same.',
+  'closet.edit.foot': 'Got one wrong? Change it here. The drawing follows. Your scores stay the same.',
   'closet.edit.toast': 'Changed to {value}. Your scores stay the same.',
   'closet.edit.toastRemap': 'Changed to {kind}, in {color}. Your scores stay the same.',
   'closet.edit.pattern.solid': 'Plain',

@@ -5,6 +5,7 @@
 import type { KittedStore } from '@/data/store';
 import type { Styles } from '@kitted/core';
 import { outfitGain } from '@/features/closet/outfits';
+import { outfitsOn } from '@/features/closet/outfitsSwitch';
 import { t } from '@/i18n/en';
 import { getStarterMarks, STARTER_MARKS_KEY } from './service';
 import { markedPiece, ownedGarment, ownership, type StarterEntry, type StarterOption } from './starter';
@@ -34,8 +35,9 @@ export async function pickStarter(store: KittedStore, e: StarterEntry, opt: Star
   const piece = markedPiece(e, opt, ids('I'), nowMs);
   if (!piece) return null;
   const styles: Styles | null = profile?.styles ?? null;
-  // "+N" is the Closet's own count (#309).
-  const gain = outfitGain(closet, styles, piece);
+  // "+N" is the Closet's own count (#309), said only while Outfits are on (specs/closet-beta.md CB1.2); off, the toast
+  // names the piece.
+  const gain = outfitsOn() ? outfitGain(closet, styles, piece) : 0;
   await store.closet.put(piece);
   const undo = async () => void (await store.closet.put({ ...piece, isDeleted: true, updatedAt: nowMs }));
   return { text: gain > 0 ? t('toast.fits', { n: gain }) : t('starter.addedToast', { item: piece.name }), undo };

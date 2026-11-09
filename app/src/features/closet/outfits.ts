@@ -262,14 +262,15 @@ export function slotChecklist(closet: readonly ClosetItemRow[]): SlotState[] {
   return (['top', 'bottom', 'shoes'] as const).map((slot) => ({ slot, have: pieces.some((c) => c.slot === slot) }));
 }
 
-/** T73 stub (specs/closet-beta.md CB1): what Closet opens on, with the switch. */
+/** What Closet opens on (specs/closet-beta.md CB1.1). Off: his pieces with no switcher, whatever he last tapped (the
+ *  saved segment is read but never followed). On: the switcher, and today's rule (`openingSegment`). */
 export function closetView(on: boolean, count: number, remembered: string | null): { switcher: boolean; segment: 'pieces' | 'outfits' } {
-  void [on, count, remembered];
-  throw new Error('T73: not built');
+  if (!on) return { switcher: false, segment: 'pieces' };
+  return { switcher: true, segment: openingSegment(count, remembered) };
 }
 
-/** T73 stub (specs/closet-beta.md CB1): a piece's Outfits row and Goes with, with the switch. */
+/** A piece's Outfits row and Goes with (CB1.2). Off: none. On: the outfits it's in, and what goes with it, as before. */
 export function pieceOutfits(on: boolean, around: readonly Outfit[], itemId: string): { outfitsWith: number; goes: { role: GoesWithRole; outfit: Outfit }[] } {
-  void [on, around, itemId];
-  throw new Error('T73: not built');
+  if (!on) return { outfitsWith: 0, goes: [] };
+  return { outfitsWith: around.filter((o) => o.itemIds.includes(itemId)).length, goes: goesWith(itemId, around) };
 }

@@ -8,6 +8,7 @@ import { parseArgs, type RawArgs } from './demoArgs';
 import { setDemoState } from './demoState';
 import { screenScenario, type ScreenScenario } from './scenarios';
 import { prepareAccountDemo } from '@/features/account/demo';
+import { prepareOutfitsDemo } from '@/features/closet/outfitsSwitch';
 import { prepareAboutYouDemo } from '@/features/aboutYou/demo';
 import { pauseFinishDemo, prepareFinishDemo } from '@/features/finish/demo';
 import { store } from '@/data/db';
@@ -61,6 +62,8 @@ async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
   await setOnboarded(scenario.onboarded);
   // Account screens (#289): on with their scripted sign-in, off everywhere else.
   await prepareAccountDemo(store, scenario, sessionClock.nowMs());
+  // Outfits (specs/closet-beta.md CB1): on for the screens that show them, off everywhere else, as on his phone.
+  prepareOutfitsDemo(scenario);
   // The end of onboarding's screens (#291): on with their scripted store and answers, off everywhere else.
   await prepareFinishDemo(store, scenario, sessionClock.nowMs());
   // Kit's "About you" card (#373): posted in its state on screens 240–244.
