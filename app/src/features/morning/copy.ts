@@ -1,7 +1,7 @@
 // The morning card's words, from templates (02 "S1d"): the why line, the weather strip and the
 // spoken summary. Pure, so they're tested without rendering.
 import { seasonNeeds, type DayWeather, type IdeaReason } from '@kitted/core';
-import { normStyleKey, type CardOccasion, type ClosetItemRow, type OutfitRow, type StyleKey } from '@/data/types';
+import { normStyleKey, type CardOccasion, type ClosetItemRow, type DailyIdeaRow, type FitCheckRow, type OutfitRow, type StyleKey } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
 import { hourText, monthName } from '@/i18n/format';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -137,3 +137,18 @@ export function updatedLine(outfit: Pick<OutfitRow, 'details'>, closet: readonly
   return t('idea.updatedFor', { item: it.name.charAt(0).toLowerCase() + it.name.slice(1) });
 }
 
+
+/** T55 (F6.2): the card's words when it suggests no outfit. Stub until T55 is built. */
+export function cardWaitLines(_piecesKnown: number): { title: string; why: string } {
+  throw new Error('T55: not built');
+}
+
+/** T55 (F6.2): the collapsed card's tag. Stub until T55 is built. */
+export function checkedTag(_row: Pick<DailyIdeaRow, 'slot' | 'outfitId' | 'occasion'>, _check: Pick<FitCheckRow, 'occasion'>): string {
+  throw new Error('T55: not built');
+}
+
+/** T55 (F6.2): the collapsed card's title. Stub until T55 is built. */
+export function checkedTitle(_row: Pick<DailyIdeaRow, 'slot' | 'outfitId'>, _worePick: boolean): string {
+  throw new Error('T55: not built');
+}

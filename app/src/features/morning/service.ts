@@ -541,7 +541,12 @@ export function createMorningService(deps: MorningDeps) {
     return true;
   }
 
-  return { ensureCard, change, swap, swapOptions, swapTo, wear, refreshWeather, freshen };
+  /** T55 (F13.1): whether the card posted at `nowMs` would suggest an outfit. Stub until T55 is built. */
+  async function canSuggest(_nowMs: number = clock.nowMs()): Promise<boolean> {
+    throw new Error('T55: not built');
+  }
+
+  return { ensureCard, change, swap, swapOptions, swapTo, wear, refreshWeather, freshen, canSuggest };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;
