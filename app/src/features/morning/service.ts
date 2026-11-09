@@ -227,14 +227,39 @@ export function createMorningService(deps: MorningDeps) {
     return messages.find((m) => m.kind === 'card' && m.cardType === 'outfitIdea' && m.outfitId && dayKey(m.createdAt, zone) === day) ?? null;
   }
 
+  /** The cards being planned right now, by idea id (in memory only, empty each launch; the stored row covers a relaunch). */
+  const posting = new Map<string, Promise<string | null>>();
+
   /**
    * Posts the card for this moment if there isn't one yet. Returns the idea id, or null when
    * nothing was posted (already there, evening cards turned off, or posting disabled).
+   *
+   * One card per idea id, however often it's asked (T54): Stylist asks on every focus and every return to the front,
+   * and the plan waits on the weather (up to 7 s live), so a second ask could pass the "already there?" look before the
+   * first had written anything. A call for an id already being planned waits for that one and posts nothing.
    */
   async function ensureCard(nowMs: number = clock.nowMs()): Promise<string | null> {
     if (deps.enabled && !deps.enabled()) return null;
     const { day, slot } = slotAt(nowMs, zone);
     const id = ideaId(day, slot);
+    // No await before this look and the set below: two calls in one tick can't both get past it.
+    const running = posting.get(id);
+    if (running) {
+      // Resolves once the first has stored its card (or failed): never with its error.
+      await running.catch(() => null);
+      return null;
+    }
+    const post = postCard(nowMs, day, slot, id);
+    posting.set(id, post);
+    try {
+      return await post;
+    } finally {
+      // A failed plan lets the next ask try again.
+      if (posting.get(id) === post) posting.delete(id);
+    }
+  }
+
+  async function postCard(nowMs: number, day: string, slot: IdeaSlot, id: string): Promise<string | null> {
     if (await store.dailyIdeas.get(id)) return null;
     const p = await store.profile.get('me');
     // He declined fit checks in onboarding: S26 ("Turn on fit checks") owns the thread, not this card.
@@ -249,14 +274,21 @@ export function createMorningService(deps: MorningDeps) {
     const style = await startingStyle(slot);
     const permission = await deps.weather.permission();
     const weather = permission === 'granted' ? await forecast(slot) : null;
+    // Look again: another instance over the same store may have posted it while the weather loaded.
+    if (await store.dailyIdeas.get(id)) return null;
     const base = { id, slot, occasion, style, weather: weather as unknown as Record<string, unknown> | null };
     const messages = await store.chat.all();
-    const legacy = await adoptLegacy(day, slot, messages);
+    // The card's message is already there without its row (the app was killed between the two writes): that one is the card.
+    const posted = messages.find((m) => m.kind === 'card' && m.cardType === 'morning' && m.payload?.ideaId === id) ?? null;
+    const legacy = posted ? null : await adoptLegacy(day, slot, messages);
     const result = await pick(base);
     const outfitId = await saveOutfit(result, occasion, null);
 
     let cardMessageId: string;
-    if (legacy) {
+    if (posted) {
+      cardMessageId = posted.id;
+      await store.chat.patch(posted.id, { outfitId });
+    } else if (legacy) {
       cardMessageId = legacy.id;
       await store.chat.patch(legacy.id, { cardType: 'morning', outfitId, payload: { ...legacy.payload, ideaId: id } });
       // The seeded greeting before it is the card's own hello now (#340): marked, so the thread hides it.
