@@ -93,10 +93,12 @@ Lane files: `firebase/`
 Spec: `specs/setup-and-you.md` (interview: T30)  
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 
-- [ ] **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check · *done: your yes · files: `specs/setup-and-you.md`*
-- [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts*
-- [ ] **T32** · Apple's age check (Declared Age Range) at first launch · *after T30, T80 · checks: F1.2 · files: onboarding/, a native module*
-- [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: F1.1, F1.3 · files: onboarding/, en.ts*
+- [~] you-and-first-run · PR #78 · **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check; You as the settings home, the feature guide (your beta feedback, Nov 8) · *done: approved Nov 9 · files: `specs/setup-and-you.md`*
+- [~] you-and-first-run · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
+- [~] you-and-first-run · **T35** · *(beta)* The feature guide for new users: Kit's hello, then a tip the first time he reaches the score card, Closet, Lookbook and You; "Show me around" in You brings them back · *after T34 · checks: SY2, SY3 · files: onboarding/, you/, en.ts, a few tab screens*
+- [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: SY4, F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts*
+- [ ] **T32** · Apple's age check (Declared Age Range) when he taps Looks right; declined or unavailable, the birth year decides · *after T30, T80 · checks: SY6, F1.2 · files: onboarding/, a native module*
+- [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: SY5, F1.1, F1.3 · files: onboarding/, en.ts*
 
 ### Sign-in and backup
 *So his fits survive a new phone. Done means optional Apple or Google sign-in, his scores and closet restored on a new phone, photos backed up only if he turns it on, and "Delete account" wiping our server too.*
@@ -169,7 +171,6 @@ Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
 - **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
-- **Where consent shows:** the spec says the first time he opens the camera; the app has it as setup step 4. Default: the spec; settled in T30.
 
 ---
 
