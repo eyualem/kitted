@@ -1,5 +1,7 @@
 # Setup and You
 
+**Approved by the founder:** 2026-11-09
+
 After this, a new user learns each feature the moment he reaches it, finds every setting on You without digging, and setup asks his name (optional), checks his age the Apple way and asks for the privacy agreement when he first opens the camera.
 
 **Part of:** `specs.md` → F1 (Onboarding), F9 (You), "First run".
