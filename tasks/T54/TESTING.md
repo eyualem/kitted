@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `<commit SHA>` · <date> · tests: `app/src/__tests__/morningOneCard.test.ts`
+**Lock:** `fc05ac89b84269a461653eb2f9b0cbe29abb0478` · 2026-11-08 · tests: `app/src/__tests__/morningOneCard.test.ts`
 
 **Scope.** The plan line's only check is **F6**. Here it means F6's lead sentence as it bears on this bug: "Once a day Kit posts an outfit from his closet with the weather …; from 5 pm an evening card", i.e. exactly one card per day key and window (day 4 am–4:59 pm, evening 5 pm–3:59 am). F6.1–F6.3 and the greeting by name aren't this task's criteria (T51, T64, or already built); the paths they share with `ensureCard` (location off or denied, an empty closet) appear below only as edges, so the fix can't break them.
 
