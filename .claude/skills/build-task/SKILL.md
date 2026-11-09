@@ -27,7 +27,7 @@ You are the coordinator. You don't write the design, the plan, the tests or the 
 - Work on a branch `claude/<id>-<short-name>` from main. Claim the line: `[~] <ID> · plan` (or `· design`, see D), commit, push.
 
 ## D. Design (only for a task that changes what he sees)
-**When:** the task adds or changes anything on screen (a state, a card, a sheet, a row, words in a new place) **and** has no `tasks/<ID>/IMPLEMENTATION.md` yet. A task planned before this stage existed carries on without it, and a task that changes nothing on screen (server, scoring, tests only) skips it. If `tasks/<ID>/DESIGN.md` already carries the founder's approval line, go to step 1.
+**When:** the task adds or changes anything on screen (a state, a card, a sheet, a row, words in a new place) **and** has no `tasks/<ID>/IMPLEMENTATION.md` yet. A task planned before this stage existed carries on without it, and a task that changes nothing on screen (server, scoring, tests only) skips it. If `tasks/<ID>/DESIGN.md` already carries the founder's approval line for every state the task shows, go to step 1; if it covers only some (its "Out of scope" says which), run D for the rest.
 1. Plan line → `[~] <ID> · design`. Run the **ui-designer** agent (`subagent_type: "ui-designer"`) with the task ID, its `plan.md` line, the lane and the spec file. Wait.
 2. Run the **ui-critic** agent with the task ID and mode `design`. Blockers go back to the designer with the critic's findings; then the critic again. At most 2 rounds; a blocker still open after that goes to the founder with the rest.
 3. Show the founder. Open the frames (`preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/<ID>/design.html`) and send the PNGs. In plain words: what he'll see in each state, the NEW words, the open questions with your pick, and the critic's suggestions (optional). Ask in one AskUserQuestion: **Looks right (Recommended)** · Change something. His yes approves the NEW words too.
@@ -72,6 +72,7 @@ Then verify again (and run 4b again). After round 3, stop: report what's still f
 
 ## Rules for you
 - Run agents one at a time and wait for each; they share this worktree and branch. Never `isolation: worktree`.
+- An agent type is loaded when the session starts. If one isn't found (`ui-designer`, `ui-critic` in a session older than their files), run `general-purpose` with "Your instructions are `.claude/agents/<name>.md`; read it first and follow it exactly", plus the same task ID and paths.
 - Pass agents file paths and IDs, not your opinions of the work. The critic never gets the designer's or the implementer's reasoning, only the files.
 - Don't edit app code, tests, TESTING.md or the verdict yourself. If an agent's output is broken, run it again with what was wrong.
 - Spending money (a live AI test), installing anything, a new package: ask the founder first.

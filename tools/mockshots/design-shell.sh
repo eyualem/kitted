@@ -13,8 +13,27 @@ mkdir -p "$ROOT/tasks/$ID"
 {
   echo '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
   echo '<base href="../../mockups/">'
-  # Part A: fonts, the mockup's styles, the icon symbols and the board's opening tag.
-  awk '/<div class="board" id="board"/{print; exit} {print}' "$MOCK" | sed "s|<title>.*</title>|<title>$ID design</title>|"
+  # Part A: fonts, the mockup's styles and the icon symbols.
+  awk '/<div class="board" id="board"/{exit} {print}' "$MOCK" | sed "s|<title>.*</title>|<title>$ID design</title>|"
+  # The colors that ship: app/src/design-system/tokens.ts overrides the mockup's older values (03 §11).
+  python3 -I - "$ROOT/app/src/design-system/tokens.ts" <<'PY'
+import re, sys
+src = open(sys.argv[1]).read()
+names = {'bg':'bg','surface':'surface','surface2':'surface-2','ink':'ink','ink2':'ink-2','ink3':'ink-3','line':'line',
+         'accent':'accent','accentSoft':'accent-soft','primary':'primary','onPrimary':'on-primary','good':'good',
+         'me':'me','onMe':'on-me','dim':'dim'}
+def block(var):
+    body = re.search(r'export const ' + var + r': ColorTokens = \{(.*?)\n\};', src, re.S).group(1)
+    pairs = dict(re.findall(r"^\s*(\w+): '([^']+)'", body, re.M))
+    return ' '.join('--%s:%s;' % (css, pairs[k]) for k, css in names.items() if k in pairs)
+light, dark = block('lightColors'), block('darkColors')
+print('<style>/* tokens.ts, light then dark */')
+print(':root,.board[data-app="light"] .phone:not(.fixed){%s}' % light)
+print('@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){%s}}' % dark)
+print(':root[data-theme="dark"],.board[data-app="dark"] .phone:not(.fixed),.phone.fixed{%s}' % dark)
+print('</style>')
+PY
+  echo '<div class="board" id="board" data-app="auto">'
   cat <<EOF
 <header class="masthead">
   <div class="mast-left">
