@@ -1,5 +1,7 @@
 # Notifications
 
+**Approved by the founder:** 2026-11-09
+
 After this, a tester who says yes gets one notification a day, 15 minutes before the time he usually gets dressed to head out: today's outfit idea from his closet once Kit can suggest outfits, and until then a nudge to check today's fit. A tester who skips his first check is asked too, so the same nudge reminds him to send it. It's scheduled on his phone, it stops by itself if he stops coming, and nothing else is ever sent.
 
 **Part of:** `specs.md` → F13 (Notifications) and "First run" step 8. Works with `specs/onboarding-screens.md` (setup ends in the chat with "Want to check a fit now?").
