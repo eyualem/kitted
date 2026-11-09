@@ -1,6 +1,6 @@
 # T55 · The card waits until Kit knows two outfits; a checked card that suggested nothing reads "Today's fit"
 
-**From:** `plan.md` → T55 · **Spec:** `specs.md` → F6.2 (rewritten Nov 9) and F13.1 (new; this task builds only its read side), both with the founder's yes in chat (DECISIONS-LOG #408). The plan line says `spec: specs.md`; `specs.md` counts as approved (#388, as for T54). The lane's own spec `specs/kit-and-morning.md` isn't written yet (T50) and this task doesn't need it · **Lane:** Kit and the morning card · **Built on:** T54's branch (PR #75, not merged)
+**From:** `plan.md` → T55 · **Spec:** `specs.md` → F6.2 (rewritten Nov 9) and F13.1 (new; this task builds only its read side), both with the founder's yes in chat (DECISIONS-LOG #412). The plan line says `spec: specs.md`; `specs.md` counts as approved (#388, as for T54). The lane's own spec `specs/kit-and-morning.md` isn't written yet (T50) and this task doesn't need it · **Lane:** Kit and the morning card · **Built on:** T54's branch (PR #75, not merged)
 
 ## Goal
 A new user's morning or evening card stops suggesting the same single outfit every day: it suggests one only once Kit knows two different outfits of his that work, says why until then, and once he checks a fit it reads "Today's fit" / "Tonight's fit" with his score instead of "You went with your own"; the notifications session gets a read-only `morning.canSuggest()`.
@@ -11,7 +11,7 @@ A new user's morning or evening card stops suggesting the same single outfit eve
 - `MorningCard.tsx:141–146` shows `idea.title.empty` / `idea.title.thin1` / `idea.title.thin` and `idea.empty` / `idea.thin1` / `idea.thinN` whenever the card has no outfit (`enough = m.items.length > 0`), with `piecesKnown` = every non-deleted closet piece. That copy is already F6.2's word for word.
 - `CheckedRow` (`MorningCard.tsx:328–353`) titles the collapsed card `idea.went.pick` ("You wore my pick") after Wear this and a matching check, else `idea.went.own` ("You went with your own"), whether or not the card suggested anything.
 - `freshen` (`service.ts:432`) skips a card only when `stayingIn` or `first.fitCheckId` (never set by a check: "checked" is derived). So a checked card with no outfit can still gain one through `gainWeather`/`freshenWeather`, which would flip its collapsed title to "You went with your own" for a suggestion he never saw.
-- Kit's outfit answers (`app/src/features/ask/evidence.ts:159`) call core `pickOutfit` directly. They don't go through the service, so they keep today's rule (the founder asked about the cards only, #408).
+- Kit's outfit answers (`app/src/features/ask/evidence.ts:159`) call core `pickOutfit` directly. They don't go through the service, so they keep today's rule (the founder asked about the cards only, #412).
 - No Python counterpart: `handoff/fixtures/kitted_logic.py` has `rotation` (ported with parity) but no picker or `closetState`. The new check uses only parity-ported pieces (`outfitValid`, `itemKey`) and the rubric's score, so no Python change and no parity test is involved.
 
 ## Where the new check lives (technical default, logged by the coordinator)
