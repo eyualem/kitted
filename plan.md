@@ -140,6 +140,9 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 
 - [ ] **T70** · Write the scan-reading spec with you, then test reading on your clothes photos · *after Y9 · done: your yes and the test's result · files: `specs/scan-reading.md`, `extraction-test/`*
 - [ ] **T71** · Scanned photos become Closet pieces ("Waiting to be read" empties) · *after T70, T24 · checks: F7.2, F7.3 · files: scan/, closetSource/*
+- [~] closet-beta-fixes · **T72** · Your Nov 8 beta notes on Closet: write `specs/closet-beta.md` with you (Outfits off for now; the piece questions one card at a time), and `specs.md` F7 if you say yes · *done: your yes · files: `specs/closet-beta.md`, `specs.md` F7*
+- [~] closet-beta-fixes · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: specs/closet-beta.md · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
+- [~] closet-beta-fixes · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T72 · checks: specs/closet-beta.md · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
 
 ### Launch
 *Getting into the App Store. Done means Apple's weather and app lock are on, both launch tests pass (the fix works, the score is fair), every requirement is checked, and the app is submitted.*
