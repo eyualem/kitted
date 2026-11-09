@@ -93,13 +93,15 @@ Lane files: `firebase/`
 Spec: `specs/setup-and-you.md` (interview: T30); for T37–T39, `specs/onboarding-screens.md` (interview: T37)  
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 
-- [ ] **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check · *done: your yes · files: `specs/setup-and-you.md`*
+- [~] you-and-first-run · PR #78 · **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check; You as the settings home, the feature guide (your beta feedback, Nov 8) · *done: approved Nov 9 · files: `specs/setup-and-you.md`*
+- [~] you-and-first-run · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
+- [~] you-and-first-run · **T35** · *(beta)* The feature guide for new users: Kit's hello, then a tip the first time he reaches the score card, Closet, Lookbook and You; "Show me around" in You brings them back · *after T34 · checks: SY2, SY3 · files: onboarding/, you/, en.ts, a few tab screens*
 - [~] onboarding-screens · PR #79 · **T37** · Write the setup-screens spec with you, from your Nov 9 walk through the TestFlight build: a Welcome picture of our own (today's is a stranger's Unsplash photo), setup as plain screens instead of a pretend chat (the birth-year step first), and setup ending in Stylist with Kit offering a fit check instead of opening the camera on its own; built with T30's name field and agreement · *done: your yes (Nov 9) · files: `specs/onboarding-screens.md`*
 - [~] onboarding-screens · **T38** · *(beta)* Welcome and the Example check drawn in code: no photo, an outfit drawn like Closet's pieces with its score card playing one fix · *after T37 · checks: OS1, OS2 · files: onboarding/{WelcomeScreen,welcomeExample,ExampleCheckScreen,exampleCheck}, a drawn-outfit view, a bundled reading, en.ts*
 - [~] onboarding-screens · **T39** · *(beta)* Setup as plain screens (Welcome → Looks → About you → Stylist, no agreement step), About you with the name field and age bands, Style profile's Age and Name rows, and Kit's "Want to check a fit now?" card in Stylist (the camera opens only on a tap) · *after T37 · checks: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 · files: onboarding/, `app/onboarding/`, you/ (Style profile), data/types.ts, data/tables.ts, en.ts, e2e flows*
-- [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts* · *the setup field and the Style profile row move into T39 (your call, Nov 9); left here: Apple's first name (with T41)*
-- [ ] **T32** · Apple's age check (Declared Age Range) at first launch · *after T30, T80 · checks: F1.2 · files: onboarding/, a native module*
-- [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: F1.1, F1.3 · files: onboarding/, en.ts*
+- [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: SY4, F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts* · *the setup field and the Style profile row move into T39 (your call, Nov 9); left here: Apple's first name (with T41)*
+- [ ] **T32** · Apple's age check (Declared Age Range) when he taps Looks right; declined or unavailable, the birth year decides · *after T30, T80 · checks: SY6, F1.2 · files: onboarding/, a native module*
+- [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: SY5, F1.1, F1.3 · files: onboarding/, en.ts*
 
 ### Sign-in and backup
 *So his fits survive a new phone. Done means optional Apple or Google sign-in, his scores and closet restored on a new phone, photos backed up only if he turns it on, and "Delete account" wiping our server too.*
@@ -172,13 +174,12 @@ Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
 - **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
-- **Where consent shows:** the spec says the first time he opens the camera; the app has it as setup step 4. Default: the spec; settled in T30.
 
 ---
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-09 · T37: `specs/onboarding-screens.md` approved: a code-drawn Welcome and Example check (the Unsplash photo goes), setup as plain screens with age bands and the name field, setup ending in Stylist with Kit's offer; specs.md F1.1, F1.2 and the first-run list updated; T38, T39 claimed · #405
+- 2026-11-09 · T37: `specs/onboarding-screens.md` approved: a code-drawn Welcome and Example check (the Unsplash photo goes), setup as plain screens with age bands and the name field, setup ending in Stylist with Kit's offer; specs.md F1.1, F1.2 and the first-run list updated; T38, T39 claimed · #406
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
