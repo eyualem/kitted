@@ -4,7 +4,7 @@
 
 After this, a tester who says yes gets one notification a day, 15 minutes before the time he usually gets dressed to head out: today's outfit idea from his closet once Kit can suggest outfits, and until then a nudge to check today's fit. A tester who skips his first check is asked too, so the same nudge reminds him to send it. It's scheduled on his phone, it stops by itself if he stops coming, and nothing else is ever sent.
 
-**Part of:** `specs.md` → F13 (Notifications) and "First run" step 8. Works with `specs/onboarding-screens.md` (setup ends in the chat with "Want to check a fit now?").
+**Part of:** `specs.md` → F13 (Notifications) and "First run" step 9. Works with `specs/onboarding-screens.md` (setup ends in the chat with "Want to check a fit now?").
 
 ## Why
 The beta needs testers to come back and check fits; without a nudge most drift after day one. A nudge that lands while he's choosing what to wear is useful on its own (an outfit idea, or "send me the fit"), so it never has to be a "we miss you". The ask card, the Settings page and the saved time were built in October and switched off, waiting for the notification package; this spec changes them to ask the time he gets dressed and turns them on.
