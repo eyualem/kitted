@@ -357,6 +357,46 @@ describe("F6.2 · a waiting card isn't given an outfit by a re-plan", () => {
     expect((await msgOf(store, DAY_ID)).outfitId).toBeNull();
     expect((await store.outfits.all()).length).toBe(outfits);
   });
+
+  // The threshold is the whole closet's, before Swap's leave-outs (Interfaces, `pick()`): with exactly two outfits, the
+  // pieces left out by Swap leave one outfit, and that one is still the card's to suggest.
+  it("F6.2 · a waiting card isn't given an outfit by a re-plan (edge: at exactly two outfits, Swap still swaps)", async () => {
+    const { store, svc } = await setup({ now: DAY, keep: TWO_TOPS });
+    expect(await svc.ensureCard()).toBe(DAY_ID);
+    const first = (await store.dailyIdeas.get(DAY_ID))!;
+    const before = (await store.outfits.get(first.outfitId!))!.itemIds;
+    const top = before.find((x) => x === 'T1' || x === 'T2')!;
+    const other = top === 'T1' ? 'T2' : 'T1';
+    expect([...before].sort()).toEqual(['B1', 'S1', top].sort());
+    expect(await svc.swap(DAY_ID, [top])).toEqual({ swapped: true });
+    const r = (await store.dailyIdeas.get(DAY_ID))!;
+    expect(r.outfitId).not.toBeNull();
+    expect([...(await store.outfits.get(r.outfitId!))!.itemIds].sort()).toEqual(['B1', 'S1', other].sort());
+    // Must not: the second top swapped away too finds nothing, and the card keeps the outfit it has (M2).
+    expect(await svc.swap(DAY_ID, [other])).toEqual({ swapped: false });
+    const kept = (await store.dailyIdeas.get(DAY_ID))!;
+    expect(kept.outfitId).toBe(r.outfitId);
+    expect([...(await store.outfits.get(kept.outfitId!))!.itemIds].sort()).toEqual(['B1', 'S1', other].sort());
+  });
+
+  it("F6.2 · a waiting card isn't given an outfit by a re-plan (edge: at exactly two outfits, the Swap sheet still offers the other top)", async () => {
+    const { store, svc } = await setup({ now: DAY, keep: TWO_TOPS });
+    expect(await svc.ensureCard()).toBe(DAY_ID);
+    const r = (await store.dailyIdeas.get(DAY_ID))!;
+    const before = (await store.outfits.get(r.outfitId!))!.itemIds;
+    const top = before.find((x) => x === 'T1' || x === 'T2')!;
+    const other = top === 'T1' ? 'T2' : 'T1';
+    const options = await svc.swapOptions(DAY_ID, top);
+    expect(options.map((o) => o.itemId)).toEqual([other]);
+    expect([...options[0]!.outfit.itemIds].sort()).toEqual(['B1', 'S1', other].sort());
+    const undo = await svc.swapTo(DAY_ID, top, other);
+    expect(typeof undo).toBe('function');
+    const after = (await store.dailyIdeas.get(DAY_ID))!;
+    expect(after.outfitId).toBe(r.outfitId);
+    expect([...(await store.outfits.get(after.outfitId!))!.itemIds].sort()).toEqual(['B1', 'S1', other].sort());
+    // Must not: the top swapped away offered back on this card.
+    expect((await svc.swapOptions(DAY_ID, other)).map((o) => o.itemId)).toEqual([]);
+  });
 });
 
 describe("F6.2 · the card's words", () => {
