@@ -1,6 +1,6 @@
 # Notifications
 
-After this, a tester who says yes gets one notification a day, 15 minutes before the time he usually gets dressed to head out: today's outfit idea from his closet, or, when there isn't one, a nudge to send today's fit. A tester who skips his first check is asked too, so the same nudge reminds him to send it. It's scheduled on his phone, it stops by itself if he stops coming, and nothing else is ever sent.
+After this, a tester who says yes gets one notification a day, 15 minutes before the time he usually gets dressed to head out: today's outfit idea from his closet once Kit can suggest outfits, and until then a nudge to check today's fit. A tester who skips his first check is asked too, so the same nudge reminds him to send it. It's scheduled on his phone, it stops by itself if he stops coming, and nothing else is ever sent.
 
 **Part of:** `specs.md` → F13 (Notifications) and "First run" step 8. Works with `specs/onboarding-screens.md` (setup ends in the chat with "Want to check a fit now?").
 
@@ -15,7 +15,7 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 - **One a day, every day,** at his nudge time = the time he usually gets dressed minus 15 minutes. Default sound. Nothing else is ever sent, at any hour.
 - **His get-dressed time:** half-hour steps from 5:00 am to 1:00 pm (17 choices), default 8:00 am. A time he set before that's off the list is kept (as built). The time follows the phone's clock, so it stays 8:00 local when he travels **(assumed)**.
 - **Local only:** the phone schedules every nudge itself. Each time the app opens (or comes back to the foreground), it replaces whatever was scheduled with the next 7 days. Nothing is sent to or kept on a server.
-- **What each day's nudge says:** the outfit that day's morning card shows, so the two always agree **(assumed)**. If his closet can't make an outfit for that day, the "Heading out?" line.
+- **What each day's nudge says** (the founder, Nov 9): the outfit that day's morning card shows, so the two always agree **(assumed)**, but only once the morning card can suggest outfits (two different outfits that work, `specs.md` F6.2; T55 in the morning lane decides, and this task asks the morning service, `canSuggest()`). Until then, the "Check today's fit" line. The first day it can suggest gets the "big enough" line, once ever.
 - **A week with no visit:** the 7 scheduled days run out and nothing more is scheduled. On his next open, Kit asks the comeback question once (NT4). Until he answers it (or turns the switch back on in Settings), nothing is scheduled.
 - **Apple's prompt** shows only after he taps `Send me ideas` on Kit's card, or turns on `Daily outfit idea` in You → Notifications when it was never asked. Never at launch, never on its own.
 - **`No thanks` is final:** Kit never asks again; You → Notifications is the only way back.
@@ -24,7 +24,7 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 ## NT1. Kit's ask (in the chat)
 **When:** once ever, at whichever comes first:
 - **After his first scored fit,** at the end of the setup sequence (in the beta, right after the optional "tap the clothes you own" card; at launch, after the paywall closes, as built).
-- **When he taps Later** on Kit's first-check card ("Want to check a fit now?", `specs/onboarding-screens.md`), with no fit check yet: the Later version of the card (below), right under it. This is the first-check reminder: with no check and no closet, his nudges say `Heading out? Send me today's fit.` until he sends one.
+- **When he taps Later** on Kit's first-check card ("Want to check a fit now?", `specs/onboarding-screens.md`), with no fit check yet: the Later version of the card (below), right under it. This is the first-check reminder: with no check and no closet, his nudges say `Check today's fit. Each one teaches me your closet.` until Kit can suggest outfits.
 - If he leaves the first-check card unanswered, no ask is posted; the card stays in the chat, and the ask comes when he taps Later or after his first scored fit **(assumed)**.
 
 **Testers who finished setup before notifications existed** (the first TestFlight build): the same card, once, the next time Stylist opens, if Apple's prompt was never shown.
@@ -48,8 +48,9 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 
 ## NT2. The daily nudge
 Shown under the app name "Kitted", with no title, one line:
-- **With an outfit:** `Today: {item1}, {item2}, {item3}, {item4}.` Lowercase piece names, as many as the outfit has. Example: `Today: navy overshirt, grey tee, khaki chinos, white sneakers.`
-- **No outfit to suggest** (empty closet, or nothing that makes an outfit): `Heading out? Send me today's fit.`
+- **Once Kit can suggest outfits:** `Today: {item1}, {item2}, {item3}, {item4}.` Lowercase piece names, as many as the outfit has. Example: `Today: navy overshirt, grey tee, khaki chinos, white sneakers.`
+- **Before Kit can suggest outfits** (`canSuggest()` is false: an empty closet, or fewer than two outfits that work): `Check today's fit. Each one teaches me your closet.`
+- **The first day it can suggest,** once ever: `Your closet's big enough now: here's today's idea.` From the next day on, the `Today: …` line.
 - **Tap** → the Stylist tab, scrolled to today's card (posted then if it isn't yet). A tap on an older day's nudge opens today's card.
 
 ## NT3. You → Notifications
@@ -107,12 +108,13 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - NT1.7 After `No thanks`, Kit never posts the ask again (including after more checks and restarts).
 - NT1.8 Tapping Later on the first-check card with no fit check yet posts the Later version once, in its exact words; `Send me nudges` requests Apple's prompt; an unanswered first-check card posts no ask.
 - NT1.9 The ask is posted at most once per user in all: after an ask at Later, the first scored fit posts no second ask.
-- NT1.10 A user who allowed at Later and has no check and no closet gets `Heading out? Send me today's fit.` each day; tapping it opens Stylist at today's card, never the camera.
+- NT1.10 A user who allowed at Later and has no check and no closet gets `Check today's fit. Each one teaches me your closet.` each day; tapping it opens Stylist at today's card, never the camera.
 
 **The nudge (NT2)**
 - NT2.1 Each open (and each return to the foreground) leaves exactly 7 nudges scheduled, one per day, each at the get-dressed time minus 15 minutes, with the default sound and no title.
 - NT2.2 A day with an outfit gets `Today: …` naming that day's outfit, the same pieces as that day's morning card.
-- NT2.3 A day with no outfit (empty closet) gets `Heading out? Send me today's fit.`
+- NT2.3 While the morning service says it can't suggest (empty closet, or one outfit that works), every day gets `Check today's fit. Each one teaches me your closet.`
+- NT2.6 The first scheduled day on which it can suggest gets `Your closet's big enough now: here's today's idea.`; later days get `Today: …`; the "big enough" line is never scheduled again once it has been delivered, including after reinstalling nudges or changing the time.
 - NT2.4 Tapping a nudge opens Stylist at today's card.
 - NT2.5 No other notification is ever scheduled: no `Fit check ready`, no `Trial ending`, nothing at another time (a test over every schedule call).
 
