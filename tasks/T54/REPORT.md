@@ -36,6 +36,8 @@
 ## Disputes
 None.
 
+**Add-only re-lock (Nov 9, test writer):** added the F6 (with F6.2) line "a fresh setup late in the evening, then the first fit check" from the founder's phone. TestFlight 0.1.0 (1), Sun Nov 8: setup done about 11:51 pm, first check (Everyday, 7.0) at 11:52 pm, and two identical evening cards appeared above his photo. Two tests: the main one and the "location never asked" edge. Red on service.ts at fc05ac89 (two cards), green on the fix in dcc1e669. Re-locked at faba63e8 (was fc05ac89), lock line in c277c823. No existing test changed.
+
 ## Verification (verifier)
 **Lock:** `git diff fc05ac89..HEAD -- app/src/__tests__/morningOneCard.test.ts app/e2e/ tasks/T54/TESTING.md`
 - The test file and `app/e2e/` are unchanged.
@@ -137,3 +139,39 @@ None.
 - Demo screens 30, 12 and 25 in light, dark and largest text.
 
 **Verdict:** ready on code and tests; run the Simulator flows and screens before merge. Rounds: 1 of 3.
+
+## Verification, round 2 (verifier)
+**Verdict: ready.** No code or test defects. Rounds: 2 of 3.
+
+**Lock:** `git diff faba63e8..HEAD` touches only TESTING.md's Lock line (`c277c823`). `faba63e8` is add-only (+81/−1 in the test file, the one removed line being the widened import; one new TESTING.md line). App code unchanged since `dcc1e669`. No `.only`, `.skip`, `xit`, `it.todo`, snapshots, fixture edits or test detection.
+
+**Suites** (memory checked first; jest with `--watchman=false`):
+- `morningOneCard.test.ts` on HEAD: `Tests: 22 passed, 22 total`.
+- Red on the old code (`service.ts` at `fc05ac89`, `-t "fresh setup"`): `Tests: 2 failed, 20 skipped`; both received `["2026-11-08|evening", "2026-11-08|evening"]`. Restored; tree clean.
+- The task file plus the five regression suites, `--runInBand`: `Test Suites: 6 passed, 6 total`, `Tests: 80 passed, 80 total`.
+- Lint on the test file: exit 0.
+- **Not run:** full app jest and `tsc --noEmit` (102–286 MB free at every check). The new test file hasn't been type-checked.
+
+### Criterion: F6 (with F6.2), a fresh setup at 11:51 pm, two calls at once, then the first check
+**Pass**, the main test and its "location never asked" edge: red on `fc05ac89`, green on HEAD; every assertion of the line is in the test.
+
+| Bug | What it changes | Caught by |
+|---|---|---|
+| B1 | The waiting call returns the id instead of `null` | both tests |
+| B2 | `posting.set(id, post)` removed (no in-flight lock) | both tests |
+| B3 | Forecast asked unless `'denied'` (so also when `'unknown'`) | the edge test only, as intended |
+| B4 | Row `messageId` set to a fresh id instead of the card's | both tests |
+| B5 | Card `createdAt` = `nowMs + 120_001` (after the check) | both tests |
+| B6 | `checkInSlot` day comparison swapped (`!==`) | both tests |
+| B7 | Both "row already stored" looks removed | both tests |
+| B8 | Evening `defaultOccasion` returns `'everyday'` | both tests |
+| B9 | Empty-closet `saveOutfit` returns an id instead of `null` | both tests |
+
+### Everything that already passed still passes
+**Pass.** The 5 suites are unchanged since `fc05ac89`, 58/58; all 20 earlier tests in the file pass on unchanged app code.
+
+### Not verified (and what would verify it)
+- `tsc --noEmit` and the full app jest on HEAD: `npm run check` in `app/` once memory frees up, before merge.
+- F6 on his phone: the next TestFlight build (an EAS build, the founder's OK), then the 3-evening check, now including one fresh setup after 5 pm followed by a fit check (one evening card above the photo).
+- The two Maestro flows and demo screens 30, 12 and 25 in light, dark and largest text: a free Simulator.
+- Open from round 1, unchanged: a hung `weather.permission()` would block that window's later calls until a relaunch (the coordinator found it can't hang today: #405).
