@@ -1,10 +1,12 @@
-// Y1 · You (02 D17, revised Oct 14 in mockups/theme-round2.html, DECISIONS-LOG #246): "how your stylist sees you".
-// His style card (looks in pick order, basics in one quiet line), the plan row on Pro, what the stylist knows, and
-// today's check (with Check my fit or Re-check, #370), and Privacy & data one tap away (also in Settings, behind the
-// gear). No stats, no body, no copper here (copper is for score movement, #231). The ScrollView is the screen's first
-// view so the iOS 26 tab bar shrinks on scroll.
-import { Pressable, ScrollView, View } from 'react-native';
-import { router } from 'expo-router';
+// Y1 · You (02 D17, revised Oct 14 in mockups/theme-round2.html, DECISIONS-LOG #246; SY1 in specs/setup-and-you.md,
+// #405): "how your stylist sees you", and the home of every setting. His style card (looks in pick order, basics in one
+// quiet line), the plan row on Pro, what the stylist knows, today's check (with Check my fit or Re-check, #370), then
+// the settings rows (features/settings/SettingsRows.tsx) and the version line. No gear, no separate Settings page: a
+// link that opened Settings opens You at its rows (`/you?at=settings`). No stats, no body, no copper here (copper is
+// for score movement, #231). The ScrollView is the screen's first view so the iOS 26 tab bar shrinks on scroll.
+import { useRef } from 'react';
+import { Pressable, ScrollView, View, type LayoutChangeEvent } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Icon, KButton, KCard, KText, MonoLabel, TextLink, WovenLabel, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ProfileRow } from '@/data/types';
@@ -20,21 +22,39 @@ import { t } from '@/i18n/en';
 import type { QuotaSnapshot } from '@/services/quota';
 import { useIsPro } from '@/services/entitlements';
 import { usePaywallOn } from '@/features/paywall/switch';
+import { SettingsRows } from '@/features/settings/SettingsRows';
 import { goToStylist } from '@/router/stylistAction';
 
 export default function YouScreen() {
   const { colors } = useTheme();
   const isPro = useIsPro();
+  const { at } = useLocalSearchParams<{ at?: string }>();
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
   const facts = useLive(['facts'], async () => liveFacts(await store.facts.all()), []);
   const usage = useLive(['usage', 'fitChecks'], () => quota.snapshot(), [isPro]);
+  const scroll = useRef<ScrollView>(null);
+  // `/you?at=settings` (an old Settings link, the demo screens): once, on the rows' first layout, open at them.
+  const openedAtRows = useRef(false);
+  const rowsLaidOut = (e: LayoutChangeEvent) => {
+    if (at !== 'settings' || openedAtRows.current) return;
+    openedAtRows.current = true;
+    scroll.current?.scrollTo({ y: Math.max(0, e.nativeEvent.layout.y - space.m), animated: false });
+  };
   if (profile === undefined || !facts || !usage) return null;
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
+    <ScrollView
+      ref={scroll}
+      testID="you-scroll"
+      contentInsetAdjustmentBehavior="automatic"
+      style={{ backgroundColor: colors.bg }}
+      contentContainerStyle={{ padding: space.gutter, paddingBottom: space.xxxl, gap: space.stack }}
+    >
       {/* No profile (an install that skipped onboarding): the blank card still opens the editor. */}
-      <StyleCard p={profile ?? blankProfile(0)} />
+      <View testID="you-style">
+        <StyleCard p={profile ?? blankProfile(0)} />
+      </View>
       {usage.purchased ? <PlanRow /> : null}
-      <View style={{ gap: space.s, marginTop: space.xs }}>
+      <View testID="you-knows" style={{ gap: space.s, marginTop: space.xs }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs }}>
           <View style={{ flexShrink: 1 }} accessibilityRole="header">
             <MonoLabel>{t('you.knows')}</MonoLabel>
@@ -44,7 +64,7 @@ export default function YouScreen() {
         <FactCard facts={facts.slice(0, FACTS_ON_YOU)} />
       </View>
       <TodayCard s={usage} />
-      <PrivacyRow />
+      <SettingsRows onLayout={rowsLaidOut} />
     </ScrollView>
   );
 }
@@ -93,50 +113,30 @@ function StyleCard({ p }: { p: ProfileRow }) {
 /** Pro only: the indigo woven label with copper stitches on its own row (#246). Free has no row: usage is in Today. */
 function PlanRow() {
   return (
-    <Pressable
-      onPress={() => router.push('/you/plan')}
-      accessibilityRole="button"
-      accessibilityLabel={t('you.plan.pro')}
-      accessibilityHint={t('settings.plan')}
-      style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
-    >
-      <KCard radius={radius.cardSmall}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.rowX, paddingVertical: space.rowY, minHeight: 52 }}>
-          <WovenLabel text={t('brand.wordmark.pro')} size="small" tone="pro" spokenLabel={t('you.plan.pro')} />
-          <KText variant="subheadline" color="ink2" style={{ flex: 1 }}>
-            {t('you.plan.pro')}
-          </KText>
-          <Icon name="next" size="small" color="ink3" weight="semibold" scalesWithText />
-        </View>
-      </KCard>
-    </Pressable>
+    <View testID="you-pro">
+      <Pressable
+        onPress={() => router.push('/you/plan')}
+        accessibilityRole="button"
+        accessibilityLabel={t('you.plan.pro')}
+        accessibilityHint={t('settings.plan')}
+        style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
+      >
+        <KCard radius={radius.cardSmall}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.rowX, paddingVertical: space.rowY, minHeight: 52 }}>
+            <WovenLabel text={t('brand.wordmark.pro')} size="small" tone="pro" spokenLabel={t('you.plan.pro')} />
+            <KText variant="subheadline" color="ink2" style={{ flex: 1 }}>
+              {t('you.plan.pro')}
+            </KText>
+            <Icon name="next" size="small" color="ink3" weight="semibold" scalesWithText />
+          </View>
+        </KCard>
+      </Pressable>
+    </View>
   );
 }
 
 function questionsLeft(n: number): string {
   return n === 1 ? t('you.today.question1') : t('you.today.questions', { n });
-}
-
-/** Privacy & data, one tap from You (09 §2: three taps deep before, under the gear). It stays in Settings too. */
-function PrivacyRow() {
-  return (
-    <Pressable
-      onPress={() => router.push('/you/privacy')}
-      accessibilityRole="button"
-      accessibilityLabel={t('settings.privacy')}
-      style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
-    >
-      <KCard radius={radius.cardSmall}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.rowX, paddingVertical: space.rowY, minHeight: 52 }}>
-          <Icon name="lock" size="small" color="ink2" scalesWithText />
-          <KText variant="callout" weight="500" style={{ flex: 1 }}>
-            {t('settings.privacy')}
-          </KText>
-          <Icon name="next" size="small" color="ink3" weight="semibold" scalesWithText />
-        </View>
-      </KCard>
-    </Pressable>
-  );
 }
 
 /** Today's check and questions (the mockup's last card). Free: done / next at 4 am, the re-check, questions left.

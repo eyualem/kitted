@@ -1,4 +1,4 @@
-// The grouped list You › Settings, Plan & usage and Notifications are built from (02 Y4–Y6; mockups/theme-round2.html
+// The grouped list You, Plan & usage and Notifications are built from (02 Y4–Y6; mockups/theme-round2.html
 // `.rowi`): one mono label per section (#246), a KCard of rows with hairlines between them, 44 pt+ rows, titles
 // 16 pt semibold, details 13 pt ink3. Links are ink (copper is only for a score that moves, #231). At accessibility
 // sizes a row's title and value stack instead of squeezing.
@@ -72,11 +72,12 @@ function Title({ children, color = 'ink', hidden }: { children: string; color?: 
 
 /** A tappable row: a push (chevron) or an action (none). `value` sits on the right in ink3 ("Free plan"); `detail` is
  *  one quiet line under the title ("Seen as slim and as wide. Which is it?"), read after the value. */
-export function LinkRow({ title, value, onPress, hint, chevron = true, detail }: { title: string; value?: string; onPress: () => void; hint?: string; chevron?: boolean; detail?: string }) {
+export function LinkRow({ title, value, onPress, hint, chevron = true, detail, testID }: { title: string; value?: string; onPress: () => void; hint?: string; chevron?: boolean; detail?: string; testID?: string }) {
   const { colors, isAccessibilitySize: ax } = useTheme();
   const row = useRowStyle();
   return (
     <Pressable
+      testID={testID}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${value ? t('settings.a11y.value', { label: title, value }) : title}${detail ? `. ${detail}` : ''}`}
@@ -112,8 +113,8 @@ function Detail({ children }: { children: string }) {
 }
 
 /** A row whose value is a choice: the inline pill grows into its menu (MorphPicker). VoiceOver: "Appearance, System". */
-export function PickerRow<T extends string>({ title, value, options, onPick, spoken }: {
-  title: string; value: T; options: readonly MorphOption<T>[]; onPick: (v: T) => void;
+export function PickerRow<T extends string>({ title, value, options, onPick, spoken, testID }: {
+  title: string; value: T; options: readonly MorphOption<T>[]; onPick: (v: T) => void; testID?: string;
   /** VoiceOver, when the title alone is too short out of context ("Daily outfit idea time, 8:00 am"). */
   spoken?: (valueLabel: string) => string;
 }) {
@@ -121,7 +122,7 @@ export function PickerRow<T extends string>({ title, value, options, onPick, spo
   const { isAccessibilitySize: ax } = useTheme();
   const label = options.find((o) => o.value === value)?.label ?? value;
   return (
-    <View style={row}>
+    <View testID={testID} style={row}>
       <View style={ax ? undefined : { flex: 1 }}>
         <Title hidden>{title}</Title>
       </View>

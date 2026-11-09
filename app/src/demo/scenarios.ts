@@ -153,8 +153,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 80, name: 'Style profile', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you' },
   { n: 81, name: 'What your stylist knows', id: 'Y3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/knows', under: '/you' },
   { n: 82, name: 'Fact sheet · a guess', id: 'Y3f', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/fact/F9', under: '/you/knows' },
-  // You tab (Oct 14): Settings, Plan & usage (one check used) and Notifications during a Pro trial (the demo plan link).
-  { n: 84, name: 'Settings', id: 'Y4', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you' },
+  // You tab (Oct 14; T34): You at its settings rows, Plan & usage (one check used) and Notifications during a Pro trial.
+  { n: 84, name: 'You · settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings' },
   { n: 85, name: 'Plan & usage', id: 'Y5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 1, href: '/you/plan', under: '/you' },
   { n: 86, name: 'Notifications · Pro trial', id: 'Y6', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/notifications?demoPlan=trial', under: '/you' },
   // Y7 · Privacy & data (#246). The demo's photos are bundled (nothing is ever sent), so 89 shows "Nothing sent yet."
@@ -201,8 +201,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 138, name: 'Keep your fits', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'open' } },
   { n: 139, name: 'Keep your fits · Not now', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'declined' } },
   { n: 140, name: 'Sign in · from the offer, fits on both', id: 'A5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/sign-in?from=offer', under: '/stylist', accounts: { script: 'existing', offer: 'open' } },
-  { n: 141, name: 'Settings · Account, signed out', id: 'Y4a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', accounts: { script: 'ok' } },
-  { n: 142, name: 'Settings · Account, signed in', id: 'Y4a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
+  { n: 141, name: 'You · Account, signed out', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok' } },
+  { n: 142, name: 'You · Account, signed in', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok', signedIn: 'apple' } },
   { n: 143, name: 'Privacy · delete account', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
   // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
   // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
@@ -290,8 +290,11 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 255, name: 'Beta · Questions used up', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist', tier: 'beta' },
   { n: 256, name: 'Beta · Plan & usage', id: 'Y5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 1, href: '/you/plan', under: '/you', tier: 'beta' },
   { n: 257, name: 'Beta · You', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 0, href: '/you', tier: 'beta' },
-  { n: 258, name: 'Beta · Settings', id: 'Y4', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', tier: 'beta' },
+  { n: 258, name: 'Beta · You, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', tier: 'beta' },
   { n: 259, name: 'Beta · Morning card, checks used', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 3, href: '/stylist', weather: 'coldRain', weatherAllowed: true, tier: 'beta' },
+  // You as the settings home (T34, specs/setup-and-you.md SY1): Pro bought with the paywall on, at the rows and at the top.
+  { n: 270, name: 'You · Pro, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', finish: { paywall: 'ok', pro: true } },
+  { n: 271, name: 'You · Pro', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', finish: { paywall: 'ok', pro: true } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
