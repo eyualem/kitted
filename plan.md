@@ -46,8 +46,9 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y17** · **P2** · Pick your first beta testers (friends, 18 or older) and get, with each one's OK, the email his Apple ID uses; TestFlight sends the invite there (10 min) → the beta (T85)
 - [x] **Y18** · **P2** · OK deploying the server's beta limits to Firebase and setting its live config to `beta` (1 min; Claude runs it) → testers held to 3 checks and 20 questions a day on the real server (T14) · yes, Nov 8
 - [ ] **Y19** · **P3** · Sign the Paid Apps Agreement in App Store Connect → Business: tax form (W-9) and bank account; it can take a day to clear (15 min) → real purchases (T13)
-- [ ] **Y22** · **P2** · OK a second TestFlight build with notifications in it, once they're built and checked (1 min; Claude runs it) → notifications on testers' phones (T53) · spec approved Nov 9
+- [x] **Y20** · **P1** · Say yes (or change) the new location words iOS shows with Apple's weather on, quoted in T80's report (1 min) → Apple's weather in the app (T80) · yes, Nov 8
 - [ ] **Y21** · **P3** · Turn on WeatherKit for the app on Apple's site: developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → com.trykitted.kitted → App Services tab: tick WeatherKit; Capabilities tab: tick WeatherKit, App Attest, Sign in with Apple, Declared Age Range → Save → Confirm (10 min, then up to 30 min for Apple) → Apple's weather (T80)
+- [ ] **Y22** · **P2** · OK a second TestFlight build with notifications in it, once they're built and checked (1 min; Claude runs it) → notifications on testers' phones (T53) · spec approved Nov 9
 
 ---
 
