@@ -124,7 +124,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - NT5.5 On a real iPhone (the founder's phone or a TestFlight build): the prompt appears after `Send me ideas`, and a nudge set a few minutes ahead arrives with its line and opens today's card.
 
 ## Checked against Apple's guidelines
-Asked in context after he's seen what the app does, with Kit's card explaining why before Apple's prompt; never at launch; a refusal is respected and the way back is in Settings (Human Interface Guidelines → Notifications and → Privacy, "requesting permission"). No marketing, no notifications he didn't ask for (App Review Guideline 4.5.4).
+Asked in context after he's seen what the app does, with Kit's card explaining why before Apple's prompt; never at launch; a refusal is respected and the way back is in You → Notifications (Human Interface Guidelines → Notifications and → Privacy, "requesting permission"). No marketing, no notifications he didn't ask for (App Review Guideline 4.5.4).
 
 ## Touches
 - `app/src/services/notifications.ts` (the real permission and scheduling behind the existing interface), `app/src/config/features.ts` (`NOTIFICATIONS_BUILT`).
