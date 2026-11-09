@@ -148,7 +148,7 @@ Spec: `specs.md` (no interview: the launch bars and constraints are exact there)
 Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 
 - [ ] **T80** · Switch on the paid Apple team: Apple's weather first, the server lock's entitlement; rebuild the app · *done: Apple's weather on the Simulator · files: app.config.ts*
-- [~] apple-connect-beta-setup · PR #71 · **Y17** · **T85** · The beta on TestFlight: the app's App Store Connect record, a build (asks you before an EAS build), your friends invited · *after T14, T80 · done: a friend installs it from the invite · files: app.config.ts* · **console set up Nov 8:** the app record (Apple ID 6830467413), internal group "Kitted team" with you in it, the EAS project `@matemind/kitted` with the Firebase key, uploads aimed at the app (`eas.json`). Left: the build, then Test Information and outside testers (needs Y2's privacy link)
+- [~] apple-connect-beta-setup · PR #71 · **Y17** · **T85** · The beta on TestFlight: the app's App Store Connect record, a build (asks you before an EAS build), your friends invited · *after T14, T80 · done: a friend installs it from the invite · files: app.config.ts* · **console set up Nov 8:** the app record (Apple ID 6830467413), internal group "Kitted team" with you in it, the EAS project `@matemind/kitted` with the Firebase key, uploads aimed at the app (`eas.json`). **First build Nov 8:** 0.1.0 (1) built on EAS and uploaded to TestFlight for Kitted team (before T80: NWS weather, no sign-in, no notifications). Left: Test Information and outside testers by email (needs Y2's privacy link and Y17's emails; Apple reviews the first external build)
 - [!] **Y5** · **T81** · Run the "fix works" test on the fix photos · *after T62 · checks: F3.1 (18 of 20 go up) · files: `extraction-test/results`*
 - [!] **Y6** · **T82** · Run the "fair score" test on the rating set, by age band and look · *checks: the bar in `specs.md` → "The launch" · files: `extraction-test/results`*
 - [ ] **T83** · Check every criterion F1.1–F16.2, saying how; the privacy label matches the spec's Data table · *after everything above*
@@ -175,7 +175,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-08 · T85 console half: app record checked, internal TestFlight group "Kitted team" made with you in it, EAS project linked with the Firebase key and the upload target; no build yet · #403, PR #71
+- 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built and uploaded to TestFlight; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
 - 2026-11-08 · The beta first (founder): free for friends, 3 fit checks and 20 questions a day, no paywall (FP7, approved Nov 8; T14 builds it); the paywall and RevenueCat moved to launch; T85 and Y17 added · #399
