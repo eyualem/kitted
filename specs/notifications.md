@@ -43,8 +43,8 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 - `No thanks` → Apple's prompt is never shown; the switch is saved off; Kit: `No problem. You can turn it on later in You → Notifications.`
 - Answered, the card stays as its one line for good. An earlier day's unanswered card shows only the question (as built).
 
-**The Later version** (same time menu, same answers and lines, except):
-1. Kit: `No problem. What time do you usually get dressed to head out? I'll send you a nudge 15 minutes before, so you can send me the fit.`
+**The Later version** (same time menu, same answers and lines, except). It sits under onboarding's own line after Later, `No rush. Tap the camera button whenever you're ready.` (`specs/onboarding-screens.md` OS5), so it doesn't open with "No problem.":
+1. Kit: `What time do you usually get dressed to head out? I'll send you a nudge 15 minutes before, so you can send me the fit.`
 2. Buttons: `Send me nudges` (primary) · `No thanks` (secondary).
 3. Allow → Kit: `Done. First one lands tomorrow at 7:45 am.` (`today` when today's nudge time hasn't passed).
 
@@ -82,7 +82,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - **Get-dressed time:** `profile.ideaTime` (as built, "HH:MM"). The nudge time is derived, never stored.
 - **Daily outfit idea switch:** KV `notify.idea` (as built). `notify.ready` and `notify.trial` are no longer read in the beta.
 - **Scheduled through:** the date of the last scheduled nudge, to tell a lapse (NT4) from a normal open.
-- **Asked:** whether Kit's ask was posted, by either route (the setup sequence's `notifyMsgId`, as built; the Later route reads the first-check card's state from `specs/onboarding-screens.md`) and whether the comeback question was posted for the current lapse.
+- **Asked:** whether Kit's ask was posted, by either route (the setup sequence's `notifyMsgId`, as built; the Later route reads kv `firstCheckOffer.laterAt`, the time he tapped Later on the `firstCheckOffer` card, and "no scored check yet" from the checks table, `specs/onboarding-screens.md` OS5; "Delete all my data" clears `firstCheckOffer.laterAt`) and whether the comeback question was posted for the current lapse.
 - **The next nudge's outfit:** picked the way the morning card picks it for that day (no new stored row).
 - Nothing leaves the phone. "Delete all my data" clears all of the above and cancels every scheduled nudge.
 
@@ -109,7 +109,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - NT1.5 Don't Allow and `No thanks` each show the later line and schedule nothing.
 - NT1.6 A user whose setup finished with no ask posted, and whose permission was never asked, gets the ask once on the next Stylist open; never a second time.
 - NT1.7 After `No thanks`, Kit never posts the ask again (including after more checks and restarts).
-- NT1.8 Tapping Later on the first-check card with no fit check yet posts the Later version once, in its exact words; `Send me nudges` requests Apple's prompt; an unanswered first-check card posts no ask.
+- NT1.8 Tapping Later on the first-check card with no fit check yet posts the Later version once, in its exact words (starting `What time do you usually get dressed`, under onboarding's `No rush.` line); `Send me nudges` requests Apple's prompt; an unanswered first-check card posts no ask.
 - NT1.9 The ask is posted at most once per user in all: after an ask at Later, the first scored fit posts no second ask.
 - NT1.10 A user who allowed at Later and has no check and no closet gets `Check today's fit. Each one teaches me your closet.` each day; tapping it opens Stylist at today's card, never the camera.
 
