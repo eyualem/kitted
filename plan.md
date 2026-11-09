@@ -93,7 +93,10 @@ Lane files: `firebase/`
 Spec: `specs/setup-and-you.md` (interview: T30)  
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 
-- [ ] **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check · *done: your yes · files: `specs/setup-and-you.md`*
+- [~] you-and-first-run · **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check; from your beta feedback (Nov 8): You as the settings home, the feature guide, going through setup again · *done: your yes · files: `specs/setup-and-you.md`*
+- [~] you-and-first-run · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: specs/setup-and-you.md · files: you/, `app/(tabs)/you/`, settings/, en.ts*
+- [~] you-and-first-run · **T35** · *(beta)* The feature guide for new users: Kit shows each feature when he first reaches it, skippable, and You can show it again · *after T30 · checks: specs/setup-and-you.md · files: onboarding/, you/, en.ts, a few tab screens*
+- [~] you-and-first-run · **T36** · *(beta)* Going through setup again without losing his fits (if the spec keeps it) · *after T30 · checks: specs/setup-and-you.md · files: onboarding/, you/, privacy/actions.ts*
 - [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts*
 - [ ] **T32** · Apple's age check (Declared Age Range) at first launch · *after T30, T80 · checks: F1.2 · files: onboarding/, a native module*
 - [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: F1.1, F1.3 · files: onboarding/, en.ts*
