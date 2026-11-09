@@ -167,6 +167,7 @@ Spec: `specs/analytics.md` (interview: T90)
 Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
+- **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
 - **Where consent shows:** the spec says the first time he opens the camera; the app has it as setup step 4. Default: the spec; settled in T30.
 
 ---
