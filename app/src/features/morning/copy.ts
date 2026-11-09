@@ -137,18 +137,30 @@ export function updatedLine(outfit: Pick<OutfitRow, 'details'>, closet: readonly
   return t('idea.updatedFor', { item: it.name.charAt(0).toLowerCase() + it.name.slice(1) });
 }
 
-
-/** T55 (F6.2): the card's words when it suggests no outfit. Stub until T55 is built. */
-export function cardWaitLines(_piecesKnown: number): { title: string; why: string } {
-  throw new Error('T55: not built');
+/** The card's words while it suggests no outfit (F6.2): why, by how many pieces he has (layers included). */
+export function cardWaitLines(piecesKnown: number): { title: string; why: string } {
+  if (piecesKnown <= 0) return { title: t('idea.title.empty'), why: t('idea.empty') };
+  if (piecesKnown === 1) return { title: t('idea.title.thin1'), why: t('idea.thin1') };
+  return { title: t('idea.title.thin', { n: piecesKnown }), why: t('idea.thinN', { n: piecesKnown }) };
 }
 
-/** T55 (F6.2): the collapsed card's tag. Stub until T55 is built. */
-export function checkedTag(_row: Pick<DailyIdeaRow, 'slot' | 'outfitId' | 'occasion'>, _check: Pick<FitCheckRow, 'occasion'>): string {
-  throw new Error('T55: not built');
+const whenOf = (slot: DailyIdeaRow['slot']) => (slot === 'evening' ? t('idea.tonight') : t('idea.today'));
+
+/** The occasion a checked card names: its own when it suggested an outfit, else the check's (the founder, Nov 9).
+ *  `check` is the check whose score the row shows. */
+export function checkedOccasion(row: Pick<DailyIdeaRow, 'outfitId' | 'occasion'>, check: Pick<FitCheckRow, 'occasion'>): string {
+  return row.outfitId !== null ? cardOccasionLabel(row.occasion) : occasionLabel(check.occasion);
 }
 
-/** T55 (F6.2): the collapsed card's title. Stub until T55 is built. */
-export function checkedTitle(_row: Pick<DailyIdeaRow, 'slot' | 'outfitId'>, _worePick: boolean): string {
-  throw new Error('T55: not built');
+/** The collapsed card's tag: "Today · Class/Work" after a suggestion, "Tonight · Everyday" (his check's) without one. */
+export function checkedTag(row: Pick<DailyIdeaRow, 'slot' | 'outfitId' | 'occasion'>, check: Pick<FitCheckRow, 'occasion'>): string {
+  return `${whenOf(row.slot)} · ${checkedOccasion(row, check)}`;
+}
+
+/** The collapsed card's title: "You wore my pick", "You went with your own" (only after a suggestion), else
+ *  "Today's fit" / "Tonight's fit" (F6.2). */
+export function checkedTitle(row: Pick<DailyIdeaRow, 'slot' | 'outfitId'>, worePick: boolean): string {
+  if (worePick) return t('idea.went.pick');
+  if (row.outfitId !== null) return t('idea.went.own');
+  return row.slot === 'evening' ? t('idea.went.tonight') : t('idea.went.today');
 }

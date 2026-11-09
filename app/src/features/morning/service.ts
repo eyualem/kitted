@@ -15,8 +15,8 @@
 import {
   addDays, dayKey, daysBetween, defaultRubric, isScored, itemAllowed, localParts, outfitReading, outfitValid, pickHistory, pickOutfit, seasonNeeds,
   swapOptions as coreSwapOptions, weatherNeeds,
-  type ClosetItem, type DayWeather, type IdeaResult, type PastUse, type PickHistory, type PickInput, type Styles, type SwapOption, type WeatherWindow,
-  type ZoneOffset,
+  type ClosetItem, type DayWeather, type IdeaResult, type MissingSlot, type PastUse, type PickHistory, type PickInput, type Styles, type SwapOption,
+  type WeatherWindow, type ZoneOffset,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
@@ -24,6 +24,7 @@ import type {
 } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
 import { wornChecks } from '@/features/fitcheck/tryOn';
+import { canSuggestOutfits } from './readiness';
 import { wearOverridden } from './woreOwn';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
@@ -129,6 +130,19 @@ export function historyFor(
   return pickHistory(uses, rows.closet as unknown as ClosetItem[]);
 }
 
+/** The card's plan while it waits for a second outfit (F6.2): no outfit, and the pieces he has, as the picker's own thin
+ *  result names them (one per slot, and the slots still missing). */
+function waiting(closet: readonly ClosetItem[]): IdeaResult {
+  const known: string[] = [];
+  const missingSlots: MissingSlot[] = [];
+  for (const slot of ['outer', 'top', 'bottom', 'shoes'] as const) {
+    const first = closet.find((c) => c.slot === slot);
+    if (first) known.push(first.id);
+    else if (slot !== 'outer') missingSlots.push(slot);
+  }
+  return { state: closet.length === 0 ? 'empty' : 'thin', outfit: null, known, missingSlots };
+}
+
 export function createMorningService(deps: MorningDeps) {
   const { store, clock } = deps;
   const zone = clock.offset;
@@ -179,8 +193,14 @@ export function createMorningService(deps: MorningDeps) {
     };
   }
 
+  /**
+   * Every card plan comes here. Until the whole closet (before Swap's leave-outs) makes two different outfits that work,
+   * the card suggests none and says why (F6.2, T55); the thin result is built as the picker's own.
+   */
   async function pick(row: PickRow, extra: { exclude?: Set<string> } = {}): Promise<IdeaResult> {
-    return pickOutfit(await pickInput(row, extra));
+    const input = await pickInput(row, extra);
+    if (!canSuggestOutfits(input.closet, input.styles, input.boldness)) return waiting(input.closet);
+    return pickOutfit(input);
   }
 
   /**
@@ -434,6 +454,10 @@ export function createMorningService(deps: MorningDeps) {
     const { day, slot } = slotAt(nowMs, zone);
     const first = await store.dailyIdeas.get(ideaId(day, slot));
     if (!first || first.state === 'stayingIn' || first.fitCheckId) return false;
+    // Checked (derived): a scored first check in its window. A card that suggested nothing would otherwise gain an
+    // outfit here, and its "Today's fit" would turn into "You went with your own" for a pick he never saw (T55).
+    const checks = await store.fitChecks.all();
+    if (checks.some((c) => !c.parentId && c.status === 'scored' && checkInSlot(c, first, zone))) return false;
     // A piece on it he corrected, removed or merged away first (§26), then the weather, on the card as it is now.
     const followed = await followPieces(first);
     const row = followed ? (await store.dailyIdeas.get(first.id)) ?? first : first;
@@ -541,9 +565,16 @@ export function createMorningService(deps: MorningDeps) {
     return true;
   }
 
-  /** T55 (F13.1): whether the card posted at `nowMs` would suggest an outfit. Stub until T55 is built. */
-  async function canSuggest(_nowMs: number = clock.nowMs()): Promise<boolean> {
-    throw new Error('T55: not built');
+  /**
+   * F13.1's read side (T55), for the notifications: whether the card posted at `nowMs` would suggest an outfit (the same
+   * answer `ensureCard(nowMs)` would act on): the closet he has, the style that window's card would start with, his
+   * boldness.
+   */
+  async function canSuggest(nowMs: number = clock.nowMs()): Promise<boolean> {
+    // Read-only: no write, no weather, and posting's own gates (off, declined, the evening auto-stop) don't apply.
+    const style = await startingStyle(slotAt(nowMs, zone).slot);
+    const p = await store.profile.get('me');
+    return canSuggestOutfits((await closet()) as ClosetItem[], styleInput(style), p?.boldness ?? 'a_little');
   }
 
   return { ensureCard, change, swap, swapOptions, swapTo, wear, refreshWeather, freshen, canSuggest };

@@ -152,6 +152,11 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   30: { asOf: '2026-10-22T18:29:00', steps: [{ at: '2026-10-22T18:30:00', do: 'morning' }] },
   31: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
   32: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
+  // The card waits for two outfits (F6.2, T55): T1, B1, S1 make one outfit, so it says why; then a new user's card (no
+  // outfit) after his check, day and evening: "Today's fit" / "Tonight's fit" under his check's occasion.
+  39: { steps: [CLOSET_3, { at: '2026-10-22T07:40:00', do: 'morning' }] },
+  40: { steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }, { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'everyday' }] },
+  54: { steps: [{ at: '2026-10-22T18:30:00', do: 'morning' }, { at: '2026-10-22T18:32:00', do: 'check', photoId: 'p01b', occasion: 'everyday' }] },
   // "Reads as" (02 "S6s", #85): s15 picked as streetwear still reads as smart casual (a pick never changes the score).
   33: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's15', occasion: 'everyday', style: 'streetwear' }] },
   // The one quick tap (#85): ph1 asks "Jeans or sweatpants?"; Jeans → 6.5, reads as streetwear; Skip → 6.5 + the skip line.
