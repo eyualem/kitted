@@ -282,7 +282,7 @@ describe('F6.2 · the checked tag names the right occasion', () => {
       within(el).getByText('Today · Everyday');
       expect(within(el).queryByText('Today · Class/Work')).toBeNull();
       expect(el.props.accessibilityLabel.startsWith("Today, Everyday: Today's fit, ")).toBe(true);
-      screen.unmount();
+      await screen.unmount();
     }
     {
       const a = await freshSetup('2026-10-22T18:29:00-04:00', EVENING);
@@ -320,7 +320,7 @@ describe('F6.2 · the checked tag names the right occasion', () => {
     within(el).getByText(`Today · ${occasionLabel('date')}`);
     within(el).getByText(displayScore(B.score!));
     expect(el.props.accessibilityLabel).toBe(`Today, ${occasionLabel('date')}: Today's fit, ${displayScore(B.score!)}, ${scoreWordLabel(B.score!)}. Shows the result.`);
-    screen.unmount();
+    await screen.unmount();
 
     // A re-check of B, its score re-scored for Everyday (as a rescore stores it): the row follows the re-check.
     const re = await a.check('2026-10-22T10:03:00-04:00', { photoId: 'p01a', parentCheckId: B.id });
@@ -331,7 +331,7 @@ describe('F6.2 · the checked tag names the right occasion', () => {
     within(el).getByText('Today · Everyday');
     within(el).getByText(displayScore(re.score!));
     expect(el.props.accessibilityLabel).toBe(`Today, Everyday: Today's fit, ${displayScore(re.score!)}, ${scoreWordLabel(re.score!)}. Shows the result.`);
-    screen.unmount();
+    await screen.unmount();
 
     // Past chats: the same tag.
     await show(a, DAY_ID, true);
