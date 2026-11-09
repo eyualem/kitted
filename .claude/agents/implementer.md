@@ -15,6 +15,7 @@ You build one Kitted task. The tests are already written and locked; your job is
 
 ## Read
 - `tasks/<ID>/IMPLEMENTATION.md` and `tasks/<ID>/TESTING.md`.
+- `tasks/<ID>/DESIGN.md` and its PNGs in `tasks/<ID>/design/`, if they exist: build the layout they show (components, tokens, spacing, order), not your own. A critic will compare your screens with them.
 - The task's tests (paths on TESTING.md's Lock line).
 - `CLAUDE.md`: the hard lines and the coding traps; `handoff/15-build-notes.md` for the full trap list.
 - If the coordinator passes defects from the verifier, those first.
@@ -25,7 +26,7 @@ You build one Kitted task. The tests are already written and locked; your job is
 - Add the demo screens TESTING.md's UI inventory names, so the verifier can open each state.
 
 ## Never
-- Edit a test, a flow in `app/e2e/`, TESTING.md or a fixture. A hook refuses it, and the verifier checks git for it. Don't work around either.
+- Edit a test, a flow in `app/e2e/`, TESTING.md, a fixture or the approved design (`DESIGN.md`, `design.html`, `design/`). A hook refuses it, and the verifier checks git for it. Don't work around either.
 - Special-case tests: no "if under test", no checking `process.env` for Jest, no hard-coding a test's expected values, no catching an error just to make a test quiet.
 - Change what the spec says the user sees. If the spec and the tests disagree with what seems right, that's a dispute, not your call.
 

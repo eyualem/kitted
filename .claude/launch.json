@@ -16,7 +16,7 @@
       "name": "mockups",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "/Users/eyu/Desktop/files/Kitted/tools/mockshots/serve.js"
+        "tools/mockshots/serve.js"
       ],
       "port": 8095
     },
