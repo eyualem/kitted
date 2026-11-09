@@ -100,7 +100,7 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 ## Where the exact rules live
 
 - The coordinator: `.claude/skills/build-task/SKILL.md`
-- The four agents: `.claude/agents/task-planner.md`, `test-writer.md`, `implementer.md`, `verifier.md`
+- The agents: `.claude/agents/task-planner.md`, `test-writer.md`, `implementer.md`, `verifier.md`
 - The design stage: `.claude/agents/ui-designer.md` and `ui-critic.md`; the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
 - The templates: `.claude/skills/build-task/templates/`
 - The test lock: `.claude/hooks/protect-tests.sh`; the guard test: `app/src/__tests__/testGuards.test.ts`

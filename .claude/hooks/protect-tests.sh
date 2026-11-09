@@ -14,7 +14,7 @@ PROTECTED = re.compile(
 )
 PATH_IN_TEXT = re.compile(
     r"(app/src/__tests__/|kitted-core/test/|firebase/tests/|handoff/fixtures/|app/e2e/"
-    r"|tasks/[^/\s]+/(TESTING\.md|DESIGN\.md|design\.html|design/)|[\w./-]+\.test\.(ts|tsx|js|mjs))"
+    r"|tasks/[^/\s]+/design/|\b(TESTING|DESIGN)\.md\b|\bdesign\.html\b|[\w./-]+\.test\.(ts|tsx|js|mjs))"
 )
 WRITES = re.compile(
     r"(sed\s+(-\w*\s+)*-i|perl\s+(-\w*\s+)*-i|\btee\b|\brm\b|\bmv\b|\bcp\b|\btruncate\b|\btouch\b"
@@ -44,6 +44,8 @@ elif tool == "Bash":
     for target in REDIRECT.findall(cmd):
         if PROTECTED.search(target):
             block("writes " + target)
+    if re.search(r"design-(shot|shell)\.sh", cmd):
+        block("the design scripts rewrite the approved design")
     if PATH_IN_TEXT.search(cmd) and WRITES.search(cmd):
         block("a command that changes files names a protected path")
 sys.exit(0)

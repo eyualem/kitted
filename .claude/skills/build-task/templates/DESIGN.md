@@ -1,7 +1,6 @@
 # <ID> · Design: <what it is, in plain words>
 
-<!-- The coordinator adds this line only after the founder's yes in chat: -->
-**Approved by the founder:** <date> in chat
+<!-- Leave this comment. Only the coordinator replaces it with the approval line, after the founder's yes in chat. -->
 
 **From:** `plan.md` → <ID> · **Spec:** `specs/<feature>.md` (or `specs.md` → F<n>) → <criterion IDs> · **Frames:** `tasks/<ID>/design.html` (open with `preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/<ID>/design.html`) · **PNGs:** `tasks/<ID>/design/`
 

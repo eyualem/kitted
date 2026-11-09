@@ -35,7 +35,7 @@
 **Verdict:** <ready | not ready: what's left> · rounds: <n of 3>
 
 ## Design review (critic)
-Only for a task with an approved `DESIGN.md`. Written after the critic's own screenshots, before it reads the sections above.
+Only for a task with an approved `DESIGN.md`. The critic writes it from its own screenshots, and reads the Built and Verification sections only after its own checks.
 - **Round <n>** · <matches | doesn't match>
 - <state> · design `design/<NN>-light.png` ↔ built `review/<NN>-<state>-light.png` · light / dark / largest text · <matches | blockers>
 - **Blockers:** <kind code or design> · <where> · <what, measured> · <rule> · <fix>

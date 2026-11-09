@@ -10,6 +10,7 @@ MOCK=$ROOT/mockups/kitted-mockups.html
 OUT=$ROOT/tasks/$ID/design.html
 [ -e "$OUT" ] && { echo "exists: $OUT"; exit 0; }
 mkdir -p "$ROOT/tasks/$ID"
+trap 'rm -f "$OUT.tmp"' EXIT
 {
   echo '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
   echo '<base href="../../mockups/">'
@@ -19,9 +20,9 @@ mkdir -p "$ROOT/tasks/$ID"
   python3 -I - "$ROOT/app/src/design-system/tokens.ts" <<'PY'
 import re, sys
 src = open(sys.argv[1]).read()
-names = {'bg':'bg','surface':'surface','surface2':'surface-2','ink':'ink','ink2':'ink-2','ink3':'ink-3','line':'line',
+names = {'bg':'bg','surface':'surface','surface2':'surface-2','ink':'ink','ink2':'ink-2','ink3':'ink-3','inkFaint':'ink-faint','line':'line',
          'accent':'accent','accentSoft':'accent-soft','primary':'primary','onPrimary':'on-primary','good':'good',
-         'me':'me','onMe':'on-me','dim':'dim'}
+         'me':'me','onMe':'on-me','caution':'caution','danger':'danger','dim':'dim'}
 def block(var):
     body = re.search(r'export const ' + var + r': ColorTokens = \{(.*?)\n\};', src, re.S).group(1)
     pairs = dict(re.findall(r"^\s*(\w+): '([^']+)'", body, re.M))
@@ -65,5 +66,6 @@ PY
 EOF
   # Part C: closes the board, then the mockup's extra styles and its frame script (status bar, tab bar, photos).
   awk 'f{print} /^<\/footer>/{f=1}' "$MOCK"
-} > "$OUT"
+} > "$OUT.tmp"
+mv "$OUT.tmp" "$OUT"
 echo "$OUT"

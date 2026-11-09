@@ -18,8 +18,9 @@ Each one:
 - the fix.
 
 Kinds:
-- **blocker:** breaks a CLAUDE.md hard line, Apple's HIG, `research-context.md` §C14 or the design system's rules (`handoff/03-design-system.md`). Typical cases: a hit area under 44 pt, text contrast under 4.5:1 (3:1 for a shape that carries meaning), meaning cut off at the largest text size, a missing or wrong VoiceOver label, broken dark mode, a modal with no way out, copper on something that isn't score movement. In build mode, **any difference from the approved design** is also a blocker: an element missing, extra, moved, different words, or a different component or token.
-- **polish:** measurable but small: off the 4-pt grid, uneven spacing between like parts, a misaligned edge. Never blocks.
+- **blocker:** breaks a CLAUDE.md hard line, Apple's HIG, `research-context.md` §C14 or the design system's rules (`handoff/03-design-system.md`). Typical cases: a hit area under 44 pt, text contrast under 4.5:1 (3:1 for a shape that carries meaning), meaning cut off at the largest text size, a missing or wrong VoiceOver label, broken dark mode, a modal with no way out, copper on something that isn't score movement. In build mode, **a difference from the approved design** is also a blocker: an element missing, extra or out of order, different words, a different component or token (checked in the code), or a position off by more than 2 pt.
+  - **A blocker cites something checkable:** a number, the exact words, a named token or component, or a hard line. A principle on its own ("feels heavy", 03 §1's spirit) is a suggestion.
+- **polish:** measurable but small: off the 4-pt grid, uneven spacing between like parts, a misaligned edge, a position within 2 pt of the design. Never blocks. HTML frames never match native text and glass to the pixel, so small rendering differences are never blockers.
 - **suggestion:** your taste beyond the rules and the approved design. Never blocks; it goes to the founder as an optional list. Never relabel a suggestion as a blocker to get it done.
 
 In build mode, add who fixes each blocker: **code** (the build differs from the design: the implementer) or **design** (the approved design itself breaks a rule, or can't be built natively: the founder decides).
@@ -59,7 +60,7 @@ Shoot each state:
 - Tap glass buttons and Undo with `duration: 0.15`. Shut down any Simulator you booted.
 
 Compare each screenshot with its design PNG:
-- Every element is present, in order, with the same words, the same component and the same token. Sample pixel colors against `tokens.ts`.
+- Every element is present, in order, with the same words and the same component. Check tokens in the changed code, not by pixel; use pixels only for contrast.
 - Spacing and alignment in pt (iPhone 17 Pro screenshots are 3x: divide pixels by 3).
 - Hit areas from the hierarchy bounds.
 - The contrast of the real pixels.
