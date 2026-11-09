@@ -1,0 +1,102 @@
+# T73 · Testing contract
+
+Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
+
+**Lock:** `<commit SHA>` · <date> · tests: `app/src/__tests__/closetNoOutfits.test.tsx`, `app/e2e/flows/T73-closet-no-outfits.yaml`, `app/e2e/flows/T73-outfits-on.yaml`, and the three spec-driven edits to existing tests (`pieceEdit.test.ts`, `oneCount.test.ts` G1, `askC7.test.ts`; see IMPLEMENTATION.md → Must not break)
+
+Plan-line criteria: CB1.1, CB1.2, CB1.3, CB1.4, CB1.5 (5). All five are below.
+
+Shared set-up for the unit tests: `setDemoOutfits(false)` in `afterEach` (the switch starts off on every test); a memory store with `loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: Date.parse('2026-10-22T12:00:00-04:00') })` where a closet is needed (the demo's full closet: 3+ outfits, next best buy `s27` brown work boots, +18). Flows run with Metro up on the second Simulator (iPhone 17e `499B2157-5390-43E0-9CD4-0BA05F405B04`) while the main one is busy; each step opens its screen through `../common/open-demo.yaml`. Maestro matches a pattern against an element's whole text or VoiceOver label, so a must-not uses `.*words.*` where the words could sit inside a longer label.
+
+## Criteria
+- **CB1.1** · With the switch off, Closet with 3+ possible outfits shows no `Pieces` or `Outfits` label and opens on the pieces, even when `closet.segment` is saved as `outfits`.
+  · how: unit + flow
+  · test: `closetNoOutfits.test.tsx` › `CB1.1 · switch off: no switcher, pieces, whatever is remembered`; `CB1.1 · the beta build has the switch off`; `CB1.1 · leaving a switch-on demo screen turns it off`; `T73-closet-no-outfits.yaml` (screen 260)
+  · expect: `OUTFITS_BUILT === false`; `outfitsOn()` is `false` on a fresh import. `closetView(false, n, r)` → `{ switcher: false, segment: 'pieces' }` for every `n` in `0, 2, 3, 37` and every `r` in `'outfits'`, `'pieces'`, `'junk'`, `null`. On the demo's full closet `outfitCount(...)` is `>= 3` (the precondition: today this closet would open on Outfits). `prepareOutfitsDemo({ outfits: true })` then `prepareOutfitsDemo({})` → `outfitsOn()` `false`. Flow, screen 260 (full closet, `closet.segment` = `outfits`, switch off): `Closet` (the large title) visible; a section header `Tops, \d+ pieces` visible (the pieces, head to toe); `Pieces`, `Outfits` and `Closet`-the-radiogroup's radios not visible; `.*Try next.*`, `.*Your go-tos.*`, `.*Next best buy.*` not visible.
+  · must not: a saved `outfits` never opens Outfits while off; nothing on Closet writes or deletes `closet.segment` while off (the only writer is the `Segmented`'s `onChange`, which isn't rendered: checked by the verifier on the diff and by deliberately wiring a write, see "Not testable yet"); the switch never stays on after a switch-on demo screen.
+  · edges: wipe or reinstall (no `closet.segment`): `closetView(false, 37, null)` → pieces; a junk value → pieces. Largest text size: screen 260 at the largest size shows the section headers and no switch (screenshot, see UI inventory). Offline and the 4 am day change don't touch this screen's logic (nothing is fetched or dated).
+  · red: `closetView` / `outfitsSwitch` don't exist yet (import fails); the flow fails at `assertNotVisible: "Pieces"` on today's code.
+
+- **CB1.2** · No screen reachable with the switch off shows `Next best buy`, `Goes with`, a piece's `Outfits` row, `Try next`, `Your go-tos`, `No outfits yet`, `outfits with what you own`, or a `+{n} fits` toast.
+  · how: unit + component + flow
+  · test: `closetNoOutfits.test.tsx` › `CB1.2 · a piece page builds no Outfits row or Goes with while off`; `CB1.2 · Kit's buy card has no outfits line while off, on screen and for VoiceOver`; `CB1.2 · Kit still ranks by the Closet's count (private evidence)`; `CB1.2 · Starter essentials says "Added {item}." while off, with Undo`; `CB1.2 · Next best buy's sheet sends him to Closet while off`; `T73-closet-no-outfits.yaml` (screens 260, 261, 171)
+  · expect:
+    - Piece: on the full closet, `buildOutfits({ closet, checks, styles, occasion: 'everyday' })` holds outfits with `B1` (precondition), and `pieceOutfits(false, around, 'B1')` → `{ outfitsWith: 0, goes: [] }`.
+    - Buy card: `buyGainLine(n, false)` → `null` for `n` in `null, 0, 1, 12, 18`; `cardSpoken({ type: 'buy', starterId: 's02', gain: 12 }, { nameOf: () => null })` with the switch off → exactly `Next buy. Navy polo. $30–40.`; rendering `BuyCard` for `{ type: 'buy', starterId: 's27', gain: 18 }` with the switch off shows `Next buy`, `$50–70`, `Brown work boots` and no text matching `/outfits? with what you own/`, and its label is `Next buy. Brown work boots. $50–70.`
+    - Private evidence stays: with the switch off, `buildCard({ type: 'buy', kind: 'work boots', shade: 'brown' }, input)` → `{ type: 'buy', starterId: 's27', gain: 18 }`; the `buyNext` evidence's first line still matches `/^- s27 brown work boots · \+18 outfits/` and the rows stay best first.
+    - Starter: with the switch off, on the full closet, picking a missing basic whose Closet gain is `> 1` (as `oneCount` G1 picks it) → `toast.text` is exactly `t('starter.addedToast', { item: <the new closet row's name> })`, i.e. `Added {item}.`, and does not match `/^\+\d+ fits?$/`; the closet holds the new piece; `toast.undo()` deletes it (the row is `isDeleted: true`).
+    - Sheet: rendering `NextBuySheet` with the switch off renders a redirect to `/closet` (the mocked `Redirect` gets `href: '/closet'`) and no `Next best buy` or `What it unlocks` text.
+    - Flow, screen 260 (Closet): `.*Next best buy.*`, `.*Try next.*`, `.*Your go-tos.*`, `.*No outfits yet.*`, `.*outfits with what you own.*`, `\d+ pieces · \d+ outfits` not visible. Screen 261 (piece `B1`, full closet, off): `.*Goes with.*`, `Outfits, .*` (the row's VoiceOver label), `.*Best match.*` not visible; `Added, .*` (the Added row) visible, so the page is up. Screen 171 (`What should I buy next?`): the card `Next buy. Brown work boots. $50–70.` visible; `.*outfits with what you own.*` not visible.
+  · must not: none of the eight phrases on any switch-off screen above; the buy card never loses its tag, name or price; Kit's ranking and the stored `gain` never change (`oneCount` G1, G2, G8 stay green); a Starter add is never refused or left without Undo.
+  · edges: a `gain` of `0` or `null` with the switch on still shows no line (today's rule, kept). Leaving a switch-on screen (184) for a switch-off one (261) drops Goes with (`prepareOutfitsDemo`, CB1.1's test). Undo of a Starter add while off restores the closet as before.
+  · red: `pieceOutfits`, `buyGainLine` don't exist (import fails); today's `cardSpoken` returns `Next buy. Navy polo. +12 outfits with what you own. $30–40.`; today's `pickStarter` returns `+N fits`; today's `NextBuySheet` renders the sheet; the flow fails at `Outfits, .*` on 261 and `.*outfits with what you own.*` on 171.
+
+- **CB1.3** · The piece page note reads `Got one wrong? Change it here. The drawing follows. Your scores stay the same.`
+  · how: unit + flow
+  · test: `closetNoOutfits.test.tsx` › `CB1.3 · the piece page's note`; `pieceEdit.test.ts` (its `closet.edit.foot` line updated to the new words); `T73-closet-no-outfits.yaml` (screen 261)
+  · expect: `t('closet.edit.foot')` is exactly `Got one wrong? Change it here. The drawing follows. Your scores stay the same.`; flow, screen 261: that exact text visible under `What it is`.
+  · must not: the words `your outfits` or `and your outfits follow` anywhere in the note; the note passes the app's words rules (no emoji, no "unlimited"; `checkSentence`-style rules where `pieceEdit.test.ts` already applies them).
+  · edges: largest text size: the note wraps, nothing cut off (screenshot on 261).
+  · red: today's string is `…The drawing and your outfits follow. …` (both tests fail on it).
+
+- **CB1.4** · The morning card's `Wear this` still logs the outfit with Undo; Swap still swaps; Kit's outfit idea `Wear this` still works (existing tests stay green).
+  · how: existing unit tests (unchanged) + flow
+  · test: `morningService.test.ts` › `wear this logs the day; undo puts it back` and `he taps Wear this every morning`; `swapSheet.test.ts` S3, S4, S5, S6, S7, S9; `morningSwap.test.ts` M1–M3; `chatUi.test.ts` › `the thread passes readOnly to the idea card, which then has no Wear this`; `toast.test.ts` U3; `cardFollowsEdits.test.ts`, `woreOwn.test.ts`, `askRotation.test.ts` (whole files); `T73-closet-no-outfits.yaml` (screens 12 and 13)
+  · expect: all those tests pass unedited. Flow, screen 12 (morning card, switch off): tap `Wear this` → `.*Logged for today\..*` and `Undo` visible; tap `Undo` → `Wear this` visible again; tap `Swap one` (the Swap button's VoiceOver label) → `Swap one piece` and `Tap the piece to change.` visible. Screen 13 (Kit's outfit idea): tap the idea card's `Wear this` (the one inside the `Outfit idea` card; if the morning card also shows one, target the idea card's) → `.*Logged for today\..*` and `Undo` visible, then the button reads `Wearing this today`.
+  · must not: the T73 diff changes no file under `features/morning/`, `features/stylist/`, nor `features/closet/outfitActions.ts` (verifier, on the diff); no existing test above is edited.
+  · edges: the 4 am day change: the morning service's own day tests cover it, unchanged. Offline: Wear this and Swap write locally, as today (no change).
+  · red: exists: these pass today; they bite via deliberate bugs the verifier plants (e.g. `morning.wear` returning an Undo that does nothing → `wear this logs the day; undo puts it back` fails; the flow's Undo step fails).
+
+- **CB1.5** · With the switch on (a demo screen), Outfits, Next best buy and Goes with show exactly as before.
+  · how: unit + flow + Simulator state (screenshots)
+  · test: `closetNoOutfits.test.tsx` › `CB1.5 · switch on: today's opening rule`; `CB1.5 · switch on: a piece's Outfits row and Goes with as before`; `CB1.5 · switch on: the buy line and the Starter toast as before`; `closetOutfits.test.ts`, `nextBuy.test.ts`, `outfitSpeed.test.ts` (unchanged); `oneCount.test.ts` G1 toast and `askC7.test.ts` buy line (run with `setDemoOutfits(true)`); `T73-outfits-on.yaml` (screens 182, 183, 184); Simulator screenshots of 182, 183, 184, 193, 202
+  · expect:
+    - `closetView(true, c, r)` → `{ switcher: true, segment: openingSegment(c, r) }` for `c` in `0, 2, 3, 37` × `r` in `'outfits'`, `'pieces'`, `'junk'`, `null` (so `(3, null)` → outfits, `(2, null)` → pieces, `(37, 'pieces')` → pieces).
+    - `pieceOutfits(true, around, 'B1')` on the full closet → `outfitsWith` = `around.filter((o) => o.itemIds.includes('B1')).length` (`> 0`) and `goes` deep-equals `goesWith('B1', around)` (non-empty).
+    - `buyGainLine(1, true)` → `+1 outfit with what you own`; `buyGainLine(12, true)` → `+12 outfits with what you own`; `buyGainLine(0, true)` and `buyGainLine(null, true)` → `null`; `cardSpoken` buy with the switch on → `Next buy. Navy polo. +12 outfits with what you own. $30–40.`; `pickStarter` with the switch on → `t('toast.fits', { n })` with `n` = the Closet's gain (`oneCount` G1).
+    - `SCREENS` entries 182, 183, 184, 193, 202 have `outfits: true`; 15, 260, 261, 12, 13, 171, 161 don't.
+    - Flow `T73-outfits-on.yaml`: 182 → `Pieces` and `Outfits` visible, `.*Next best buy.*` visible, `.*Try next.*` visible; tap the Next best buy row → `.*What it unlocks.*` visible. 183 → `.*No outfits yet.*` visible. 184 → `.*Goes with.*` visible and `Outfits, .*` visible.
+    - Screenshots: each of 182, 183, 184, 193, 202 in light on `main` and on the branch, same Simulator, `-demoLatency 0`: identical apart from the status bar, except 184's footer note, which shows CB1.3's words (the only intended difference).
+  · must not: a switch-on screen loses the switch, the count line, the occasion chips, Try next, Your go-tos, Next best buy, the fit card above Outfits (202), the Outfits row or Goes with; the switch never reaches a release build (`OUTFITS_BUILT` false, CB1.1; `setDemoOutfits` is called only from the demo set-up).
+  · edges: switching from 182 (on) straight to 260 (off) in one app run: 260 shows no switch (CB1.1's `prepareOutfitsDemo` test; the flow runs 182 after 260 in a separate flow file, each with `stopApp`).
+  · red: `closetView`, `pieceOutfits`, `buyGainLine`, `setDemoOutfits` don't exist (import fails); `SCREENS` 182 has no `outfits` field; the flow fails nowhere on today's code (today everything is on): it bites via the deliberate bug "drop `outfits: true` from 182" → `assertVisible: "Pieces"` fails.
+
+## UI inventory
+T73 adds no element; it removes some. Each state below is today's screen minus the removed parts, so the comparison screen on `main` is named. Anything else that differs is a defect.
+
+### Closet, switch off, Outfits remembered · demo screen 260 (compare: screen 15 on `main`) · light, dark, largest text
+- Large title · "Closet" · VoiceOver: "Closet" (header)
+- Add button (top right) · icon `+` · VoiceOver: "Add an item" · opens Take photo / Choose photos / Describe it, as today
+- Scans-waiting row, only if the closet has scans waiting · as today
+- To confirm card, only if questions are open · as today (T74 changes it; T73 doesn't)
+- Section headers, head to toe · "Jackets and layers" / "Tops" / "Bottoms" / "Shoes" with the count on the right · VoiceOver: "{section}, {n} pieces" (or "{section}, 1 piece"), header
+- Piece tiles · drawings, 3 columns (2 at the largest text sizes) · VoiceOver as today
+- **Gone:** the `Pieces | Outfits` control (VoiceOver radiogroup "Closet" with radios "Pieces" and "Outfits"); with it, everything below moves up by its height. Nothing from Outfits: `{p} pieces · {n} outfits`, the occasion chips, `Next best buy`, `Try next`, `Your go-tos`, outfit cards with `Wear this` / `Check it`, `No outfits yet` and its checklist, the fit card above Outfits.
+
+### A piece's page, switch off · demo screen 261 (compare: screen 184 on `main`) · light, dark, largest text
+- Hero gallery, name, slot line, as today
+- Section "What it is" · rows Kind / Color / Leg or Fit / Pattern as today · footer · "Got one wrong? Change it here. The drawing follows. Your scores stay the same."
+- Rows · "Worn" ("{n} times" / "1 time") · "Last worn" when worn · "Added" · VoiceOver: "Worn, …", "Last worn, …", "Added, …"
+- "Your photos" with its count, the photo grid, "Remove from Closet", as today
+- **Gone:** the row "Outfits" · "{n} outfits" / "1 outfit" (VoiceOver "Outfits, {n} outfits"); the section "Goes with" with its outfit cards and labels "Best match" / "Dressier" / "More relaxed".
+
+### Kit's buy card, switch off · demo screen 171 (compare: screen 171 on `main`) · light, dark, largest text
+- Tag line · left "Next buy", right "$50–70"
+- Name · "Brown work boots"
+- Card VoiceOver: "Next buy. Brown work boots. $50–70."
+- **Gone:** "+18 outfits with what you own" (the subheadline under the name) and its part of the VoiceOver label.
+
+### Starter essentials toast, switch off · demo screen 161 after adding a basic (compare: screen 161 on `main`) · light, dark, largest text
+- Toast · "Added {item}." (e.g. the piece's name as saved) · with "Undo" · window and ring as today (U3)
+- **Gone:** "+{n} fits" / "+1 fit" for a new basic.
+
+### Outfits on · demo screens 182, 183, 184, 193, 202 · light (screenshot compare with `main`)
+- Exactly today's screens (switch, count line, chips, Next best buy row, Try next, Your go-tos, No outfits yet, Outfits row, Goes with), except 184's footer note, which reads CB1.3's words.
+
+### Morning card and Kit's outfit idea · demo screens 12, 13 · light
+- Unchanged: "Wear this", "Swap" (VoiceOver "Swap one"), the toast "Logged for today." with "Undo", "Wearing this today".
+
+## Not testable yet
+- **CB1.1 (must-not: nothing writes `closet.segment` while off)** · why: the write path is a callback on a control that isn't rendered; no unit test reaches it without rendering the whole Closet screen (Reanimated, the live store), and a flow can't read the kv store · would verify it: the verifier's review of the diff, plus a deliberate bug (call `store.setKv(SEGMENT_KEY, 'pieces')` on mount while off) noted in REPORT.md as **not caught by a test**; a Closet screen render test, if a later task makes the screen render under jest.
+- **CB1.2 (Kit's own words)** · why: the real model can still write "+18 outfits" in its answer (the prompt allows a number from evidence; open question for the founder); only the canned demo answer is checked here · would verify it: the founder's decision, then a Kit-lane change and one AI test run of "What should I buy next?" (costs money: his OK).
+- **CB1.1–CB1.3 on his phone** · why: the TestFlight build he has (build 1) predates this · would verify it: the next TestFlight build installed on his iPhone, Closet opened (founder to-do, P2, 2 minutes). Not needed for a pass: the switch's default is unit-tested and the Simulator runs the same code.
