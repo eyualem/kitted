@@ -2821,9 +2821,18 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Lesson:** a worktree has no `app/.env*` (git-ignored), so `guard:release` there needs the main checkout's files linked in for the run. EAS doesn't need them; it reads its own environment variables.
     - **Lesson:** inviting testers doesn't cost a build. One build serves every tester and group until it expires (90 days); a new build is needed only when the app changes.
 
+## Nov 9 · T30: the setup-and-You spec, with the founder
+
+405. **The founder's beta feedback (Nov 8): You is "empty and pointless", there's no step-by-step guide, and he never saw setup.** Interviewed in the you-and-first-run session; `specs/setup-and-you.md` approved Nov 9.
+    - **You is the settings home (SY1):** the style card, What Kit knows and Today stay, then the Settings page's rows (Notifications, Appearance, Plan & usage · Privacy & data · Help & about), the version line. No gear, no Settings page; the tab keeps the name "You" ("Settings" reads as tacky to him). In the beta the Settings page held only four rows, one of them already on You. This overrides `research-context.md` §C14's "Settings live behind a gear": Apple's HIG → Settings names no place for an iPhone app's own settings (read Nov 8).
+    - **The guide is tips at the moment (SY2, SY3), not a tour:** Kit's hello (3 lines plus the AI note, in its place), a tip under the first score, and on the first visits to Closet and Lookbook (once they have something in them) and You, each with Got it. "Show me around" brings them back and posts Kit's hello again. Why: HIG → Onboarding prefers short tips where they apply over one long flow, optional and findable again in a settings area; a tour would sit between him and the first score. Rejected: a swipe tour, both, a guided first check.
+    - **No "set up again" button:** his TestFlight install kept the dev build's data (same bundle ID, so the same app container). Setup's done mark lives in the app's database, which iOS deletes with the app, so reinstalling from TestFlight shows setup as a new user would see it. The age block is in the Keychain and survives. T36 (planned for this) dropped.
+    - **Launch items settled:** the name as "What should Kit call you?" / "First name (optional)", blank means skipped; the agreement on the first camera open (the spec's way; setup goes from Basics straight to the camera); Apple's age check on Looks right, the birth year deciding when he declines or the phone can't answer.
+    - **`specs.md` (his yes):** F9 describes You as the settings home; F1 gains the tips line; sign-in's placement reads "in You".
+
 ## Nov 8–9 · A design stage for /build-task: a designer and a critic
 
-405. **The founder (Nov 8): the workflow has no UI step; he wants "a designer and a critic" next to the spec writer, test writer, builder and verifier, now, before the beta's UI tasks are built.** He picked the shape and the CLAUDE.md rule in chat (Nov 8).
+406. **The founder (Nov 8): the workflow has no UI step; he wants "a designer and a critic" next to the spec writer, test writer, builder and verifier, now, before the beta's UI tasks are built.** He picked the shape and the CLAUDE.md rule in chat (Nov 8).
     - **The shape:** step D in `/build-task`, for a task that changes a screen and isn't planned yet. The `ui-designer` draws every state as phone frames in the mockup's own style (`tasks/<ID>/design.html`, PNGs in `design/`) and writes `DESIGN.md`. The `ui-critic` checks them against the HIG, §C14 and the design system (at most 2 rounds), then the founder approves the look. That approval also approves any NEW words. After the build, step 4b: the critic screenshots every state on the Simulator and compares it with the approved frames.
     - **Why two roles and no more:** each agent adds time (about 30–45 min per screen task) and a hand-off where detail drops. A copywriter adds nothing, because the words are the founder's. Accessibility sits inside the critic.
     - **The critic blocks only on rules:** a difference from the approved design, the HIG, §C14, 03 or a hard line. Its taste goes to the founder as optional suggestions, so the loop can't run on opinion. A blocker in the approved design itself (labelled "design") goes to the founder, and only his yes changes a locked inventory word.
@@ -2832,7 +2841,7 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Lesson:** an agent type is loaded when a session starts, so a session older than `ui-designer.md` or `ui-critic.md` can't call them by name. The skill now says to run `general-purpose` with the agent file as its instructions.
     - **Lesson:** the mockup's CSS still carries the pre-contrast-fix greys (`--ink-3` #848A99 / #6E7484, now `inkFaint`). The critic caught 3.14:1 text in the first dry-run frames. Designs must take colors from `tokens.ts`, which the shell now does.
 
-406. **The dry run: T62's head-not-found case (F2.2), designed and approved (founder, Nov 9).** No app code changed.
+407. **The dry run: T62's head-not-found case (F2.2), designed and approved (founder, Nov 9).** No app code changed.
     - **The designer:** 4 phones, then 5: the camera panel with the spec's line and Retake (Choose another for a library photo), a toast for the rare case after the camera closed, and both at AX5.
     - **The critic, round 1:** 4 blockers: stale greys under 4.5:1; the toast breaking at AX5 (radius 999 clamps and the text leaves its fill); no VoiceOver focus plan; a frozen photo showing a case the engine actually sends (#304, a head cut at the top edge is hidden and sent).
     - **The critic, round 2:** 1 blocker: the drawn head was blurred under "I couldn't find your face to blur it".
