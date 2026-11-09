@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `<commit SHA>` · <date> · tests: `app/src/__tests__/cardThreshold.test.ts`, `app/src/__tests__/cardThresholdCard.test.tsx`, `app/e2e/flows/T55-card-threshold.yaml`
+**Lock:** `4a18497b3adcd7b53abfb1e82866330aa5f1bd5d` · 2026-11-09 · tests: `app/src/__tests__/cardThreshold.test.ts`, `app/src/__tests__/cardThresholdCard.test.tsx`, `app/e2e/flows/T55-card-threshold.yaml`
 
 **Scope.** The plan line's checks are **F6.2** and **F13.1 (its read side)**. F6.2 (specs.md, Nov 9): "Until Kit knows two different outfits of his that work (e.g. 2 tops, 1 bottom, 1 pair of shoes), the card suggests no outfit and says why: "Send me today's fit and I'll start learning your closet." with no pieces, "I only know {n} of your pieces. Check today's fit and I'll learn the rest." with some. Once he checks a fit in that window, the card reads "Today's fit" ("Tonight's fit" in the evening) with his score; "You went with your own" is only for a card that suggested an outfit." F13.1's read side is `morning.canSuggest()`; the notification itself and its two lines belong to the notifications session (see Not testable yet).
 
