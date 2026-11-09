@@ -6,6 +6,7 @@ import type { AboutYouDemo } from '@/features/aboutYou/demo';
 import type { AuthProvider, MockScript } from '@/features/account/auth';
 import type { FinishDemo } from '@/features/finish/demo';
 import type { Styles } from '@kitted/core';
+import type { ServerTier } from '@/services/server/tier';
 
 export type ScenarioName = 'firstRun' | 'full';
 
@@ -20,7 +21,12 @@ export interface ScreenScenario {
   onboarded: boolean;
   /** Demo clock start (America/New_York wall time). */
   now: string;
+  /** Today's fit checks used. On a free screen it pins the count (nothing more counts); on a beta screen it is written
+   *  as today's real count, so the screen's next photos count (T14's flow takes 4 photos on 252). */
   freeChecksUsed?: number;
+  /** The rules the screen is on (services/server/tier.ts): `free` unless it says so, so every older screen looks as it
+   *  always did; `beta` is the closed beta's day (FP7: 3 fit checks, 20 questions, nothing to buy). */
+  tier?: ServerTier;
   /** Where to land, using the same routes the real UI uses. */
   href: string;
   /** For sheets and covers: the screen they're presented over (a sheet needs something beneath it). */
@@ -277,6 +283,15 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 244, name: 'About you · saved', id: 'S1y', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', aboutYou: 'saved' },
   { n: 250, name: 'Closet · Pieces, thin (no titles)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
   { n: 251, name: 'Closet · Pieces, small (titled)', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  // The beta's day (T14, specs/free-and-pro.md FP7): 3 fit checks and 20 questions, no paywall, no price, no "Pro".
+  { n: 252, name: 'Beta · Stylist home', id: 'S1', scenario: 'full', onboarded: true, now: '2026-10-22T08:01:00', freeChecksUsed: 0, href: '/stylist', tier: 'beta' },
+  { n: 253, name: 'Beta · Limit card', id: 'S17', scenario: 'full', onboarded: true, now: '2026-10-22T21:12:00', freeChecksUsed: 3, href: '/stylist', tier: 'beta' },
+  { n: 254, name: 'Beta · Limit card, saved for tomorrow', id: 'S17h', scenario: 'full', onboarded: true, now: '2026-10-22T21:13:00', freeChecksUsed: 3, href: '/stylist', tier: 'beta' },
+  { n: 255, name: 'Beta · Questions used up', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist', tier: 'beta' },
+  { n: 256, name: 'Beta · Plan & usage', id: 'Y5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 1, href: '/you/plan', under: '/you', tier: 'beta' },
+  { n: 257, name: 'Beta · You', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 0, href: '/you', tier: 'beta' },
+  { n: 258, name: 'Beta · Settings', id: 'Y4', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', tier: 'beta' },
+  { n: 259, name: 'Beta · Morning card, checks used', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 3, href: '/stylist', weather: 'coldRain', weatherAllowed: true, tier: 'beta' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

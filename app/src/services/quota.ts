@@ -1,4 +1,5 @@
-// Free tier (05 §3.1): 1 fit check a day with one re-check, 5 questions; Pro: 10 and 50.
+// Free tier (05 §3.1): 1 fit check a day with one re-check, 5 questions; Pro: 10 and 50. The closed beta
+// (specs/free-and-pro.md FP7): 3 fit checks a day, each with its re-check, and 20 questions; no lifetime count.
 // Days roll over at 4 am (core dayKey). A re-check stays open 30 min, or until 4 am after the
 // first-ever check (ruling 22). Failures never consume anything. The server is the source of
 // truth from M4; this is the local mirror the UI reads.
@@ -6,8 +7,9 @@
 import { dayKey, nextRolloverMs, RUBRIC_DATA } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type { FitCheckRow, UsageDay } from '@/data/types';
-import type { StringKey } from '@/i18n/en';
+import { t, type StringKey } from '@/i18n/en';
 import type { Clock } from './clock';
+import type { ServerTier } from './server/tier';
 
 const cfg = RUBRIC_DATA.config as Record<string, number>;
 export const LIMITS = {
@@ -15,14 +17,27 @@ export const LIMITS = {
   freeQuestions: cfg.freeQuestionsPerDay ?? 5,
   proChecks: cfg.proChecksPerDay ?? 10,
   proQuestions: cfg.proQuestionsPerDay ?? 50,
+  betaChecks: 3,
+  betaQuestions: 20,
 };
+
+/** Which day the limits follow: a purchase or the server's `pro` is Pro; the server's `beta` is the beta; else free. */
+export type PlanTier = ServerTier;
+
+export function limitsFor(tier: PlanTier): { checks: number; questions: number } {
+  if (tier === 'pro') return { checks: LIMITS.proChecks, questions: LIMITS.proQuestions };
+  if (tier === 'beta') return { checks: LIMITS.betaChecks, questions: LIMITS.betaQuestions };
+  return { checks: LIMITS.freeChecks, questions: LIMITS.freeQuestions };
+}
 export const RECHECK_WINDOW_MS = 30 * 60_000;
 
 export interface QuotaSnapshot {
   dayKey: string;
-  /** Pro's limits: a purchase, or the server's tier (every account during the beta, 13-server.md §8, A10). */
+  /** The day's rules: `pro` (a purchase or the server's tier), `beta` (the server's tier, FP7) or `free`. */
+  tier: PlanTier;
+  /** Pro's limits (`tier === 'pro'`): a purchase, or the server's tier `pro` (13-server.md §8, A10). */
   pro: boolean;
-  /** Bought Pro (the plan row and "Try Pro" read this; the server's beta tier never makes him "Pro"). */
+  /** Bought Pro (the plan row reads this; the server's tier alone never makes him "Pro"). */
   purchased: boolean;
   checksUsed: number;
   checkLimit: number;
@@ -57,9 +72,9 @@ export function openRecheckId(checks: readonly FitCheckRow[], nowMs: number, clo
   return best?.id ?? null;
 }
 
-/** The nav subtitle (02 D12), free tier only. */
+/** The nav subtitle (02 D12), free tier only: the beta has no check line (FP7). */
 export function quotaLine(s: QuotaSnapshot): StringKey | null {
-  if (s.pro) return null;
+  if (s.pro || s.tier === 'beta') return null;
   if (s.heldCount > 0) return 'stylist.quota.held';
   if (s.checksUsed < s.checkLimit) return 'stylist.quota.free';
   return s.recheckOpen ? 'stylist.quota.recheck' : 'stylist.quota.used';
@@ -85,7 +100,7 @@ export interface QuotaDeps {
   clock: Clock;
   isPro: () => boolean;
   /** The tier the server last answered with (services/server/tier.ts); null before any server answer. */
-  serverTier?: () => Promise<'free' | 'pro' | null>;
+  serverTier?: () => Promise<ServerTier | null>;
   /** Demo override: `freeChecksUsed=<n>`. */
   checksUsedOverride?: () => number | null;
 }
@@ -101,20 +116,24 @@ export function createQuota(deps: QuotaDeps) {
     const key = today();
     const u = await usage(key);
     const purchased = deps.isPro();
-    const pro = purchased || (await deps.serverTier?.().catch(() => null)) === 'pro';
+    const server = (await deps.serverTier?.().catch(() => null)) ?? null;
+    const tier: PlanTier = purchased || server === 'pro' ? 'pro' : server === 'beta' ? 'beta' : 'free';
+    const pro = tier === 'pro';
+    const limits = limitsFor(tier);
     const checks = await store.fitChecks.all();
     const todays = checks.filter((c) => c.dayKey === key && !c.parentId && c.status === 'scored');
     const override = deps.checksUsedOverride?.() ?? null;
     return {
       dayKey: key,
+      tier,
       pro,
       purchased,
       checksUsed: override ?? u.checks,
-      checkLimit: pro ? LIMITS.proChecks : LIMITS.freeChecks,
+      checkLimit: limits.checks,
       recheckOpen: todays.some((c) => isRecheckOpen(c, now, clock)),
       recheckId: openRecheckId(todays, now, clock),
       questionsUsed: u.questions,
-      questionLimit: pro ? LIMITS.proQuestions : LIMITS.freeQuestions,
+      questionLimit: limits.questions,
       heldCount: checks.filter((c) => c.status === 'held').length,
       nextResetMs: nextRolloverMs(now, clock.offset),
     };
@@ -144,3 +163,9 @@ export function createQuota(deps: QuotaDeps) {
 }
 
 export type QuotaService = ReturnType<typeof createQuota>;
+
+/** The line Kit posts when the day's questions are used (07 §6.2; the beta's, FP7). */
+export function questionLimitText(s: Pick<QuotaSnapshot, 'tier'>): string {
+  if (s.tier === 'beta') return t('ask.limit.beta', { n: LIMITS.betaQuestions });
+  return t(s.tier === 'pro' ? 'ask.limit.pro' : 'ask.limit.free');
+}

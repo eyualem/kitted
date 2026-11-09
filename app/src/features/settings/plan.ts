@@ -3,29 +3,34 @@
 //
 // Mocked until P6: there is no StoreKit or RevenueCat yet. The plan comes from the demo entitlement (`pro=1`), the
 // period and renewal date aren't known (so the card says "Kitted Pro" and the Pro line), and a trial exists only
-// on demo screens (`demoPlan=trial`). Restore asks the same demo entitlement.
+// on demo screens (`demoPlan=trial`). Restore asks the same demo entitlement. On the beta's rules (the server's tier
+// `beta`, FP7) the plan is "Kitted beta": its day, and no button.
 import Constants from 'expo-constants';
 import { PARTS_RUBRIC_VERSION, RUBRIC_DATA, type ZoneOffset } from '@kitted/core';
 import { scoringEngine } from '@/features/fitcheck/scoring';
 import { longDate } from '@/i18n/format';
 import { t } from '@/i18n/en';
 import { LIMITS, type QuotaSnapshot } from '@/services/quota';
+import type { ServerTier } from '@/services/server/tier';
 
 export type PlanInfo =
   | { kind: 'free' }
+  | { kind: 'beta' }
   | { kind: 'pro'; period: 'yearly' | 'monthly' | null; renewsAtMs: number | null }
   | { kind: 'trial'; endsAtMs: number };
 
 const DAY_MS = 24 * 3_600_000;
 
-/** Today's plan. `demoPlan` (demo builds only): 'trial' (ends in 7 days), 'yearly' or 'monthly' (renews in 30). */
-export function currentPlan(isPro: boolean, nowMs: number, demoPlan?: string | null): PlanInfo {
+/** Today's plan. `demoPlan` (demo builds only): 'trial' (ends in 7 days), 'yearly' or 'monthly' (renews in 30). A
+ *  purchase is Pro; else the server's `beta` is the beta plan. The server's `pro` alone never makes him "Kitted Pro". */
+export function currentPlan(isPro: boolean, nowMs: number, demoPlan?: string | null, tier?: ServerTier): PlanInfo {
   if (demoPlan === 'trial') return { kind: 'trial', endsAtMs: nowMs + 7 * DAY_MS };
   if (demoPlan === 'yearly' || demoPlan === 'monthly') return { kind: 'pro', period: demoPlan, renewsAtMs: nowMs + 30 * DAY_MS };
-  return isPro ? { kind: 'pro', period: null, renewsAtMs: null } : { kind: 'free' };
+  if (isPro) return { kind: 'pro', period: null, renewsAtMs: null };
+  return tier === 'beta' ? { kind: 'beta' } : { kind: 'free' };
 }
 
-export const hasPro = (p: PlanInfo): boolean => p.kind !== 'free';
+export const hasPro = (p: PlanInfo): boolean => p.kind === 'pro' || p.kind === 'trial';
 
 /** The status card: "Free plan" / "Kitted Pro · Yearly" / "Pro trial", and its detail line. Free says what a day
  *  holds (the Today list under it already says "Resets at 4 am."). */
@@ -33,6 +38,8 @@ export function planStatus(p: PlanInfo, zone: ZoneOffset): { title: string; deta
   switch (p.kind) {
     case 'free':
       return { title: t('you.plan.free'), detail: t('usage.freeLine', { questions: LIMITS.freeQuestions }) };
+    case 'beta':
+      return { title: t('you.plan.beta'), detail: t('you.plan.betaLine', { checks: LIMITS.betaChecks, questions: LIMITS.betaQuestions }) };
     case 'trial':
       return { title: t('you.plan.trial'), detail: t('usage.trialEnds', { date: longDate(p.endsAtMs, zone) }) };
     case 'pro': {
@@ -43,8 +50,9 @@ export function planStatus(p: PlanInfo, zone: ZoneOffset): { title: string; deta
   }
 }
 
-/** Settings' Plan & usage row value: "Free plan" / "Kitted Pro" / "Pro trial". */
-export const planShortName = (p: PlanInfo): string => t(p.kind === 'free' ? 'you.plan.free' : p.kind === 'trial' ? 'you.plan.trial' : 'you.plan.pro');
+/** Settings' Plan & usage row value: "Free plan" / "Kitted beta" / "Kitted Pro" / "Pro trial". */
+export const planShortName = (p: PlanInfo): string =>
+  t(p.kind === 'free' ? 'you.plan.free' : p.kind === 'beta' ? 'you.plan.beta' : p.kind === 'trial' ? 'you.plan.trial' : 'you.plan.pro');
 
 export interface UsageLine {
   key: 'checks' | 'recheck' | 'questions';

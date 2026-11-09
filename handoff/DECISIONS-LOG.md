@@ -2778,9 +2778,36 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **How:** a third server tier, `beta`, which the server's config answers for everyone until launch; the phone follows it, as it already does for the server's Pro tier. No lifetime count, and beta checks never count toward the 7 free checks, so every tester starts launch with 7. The beta reuses FP3's Pro-cap limit card with 3, and You → Plan says `Kitted beta`.
     - **Replaces** the open decision "everyone gets Pro's limits during the beta". Written as FP7 in `specs/free-and-pro.md` and approved by the founder (Nov 8: "Yes, merge and build"); T14 builds it, T85 puts it on TestFlight.
 
+400. **T14 planned: the beta's limits (Nov 8).** Plan: `tasks/T14/IMPLEMENTATION.md`.
+    - **Words (the founder, Nov 8):** on the beta, the morning card's used-up line is `Your fit checks reset at 4 am.`, and the saved card drops FP3's last sentence: `Saved. I'll score it when you open Kitted after 4 am.` The free versions are unchanged.
+    - **Settled by Claude:**
+      - Before the server's first answer, the phone assumes `beta` while the paywall flag is off, and `free` once it's on, so one launch switch flips both.
+      - One gate, `paywallOn()`, reads the tier.
+      - The server keeps its 2-question slack (22 there, 20 on the phone).
+      - Day counts carry across a tier switch.
+      - New strings go in `en.ts` `addedInBuild`.
+      - Minimal edits outside the lane: transport, session, ask pipeline, usePlan, the You and Plan screens, the morning card, the demo scenarios.
+    - **For T11 and T21:** T14 writes no lifetime count and no per-check marker. T11 must count only checks it marks as made on free, and T21 only free-tier reservations, so no beta or dev check ever counts toward the 7.
+    - **Known gap (T21 owns it):** the server counts a finished read even when the phone calls it "not rated", so 3 not-rated photos could make the server refuse a real 4th on the beta.
+    - **Deploy:** the server change needs a functions deploy, and the live `server/config` set to `beta` or cleared. Both are the founder's go.
+
+401. **T14 built: lessons from running its tests (Nov 8).**
+    - **Maestro can't tap a Liquid Glass button.** The camera's interactive "Choose a photo" ignores Maestro's instant tap, and `longPressOn` doesn't help either. Flows reach the same screen by its link (`openLink: "kitted://sheets/sample-photos?mode=check"`, `kitted://you`) when the button only navigates. The verifier checked the button's own route by hand.
+    - **Maestro matches whole labels only.** A view with its own VoiceOver label hides the text inside it. So a check that something is absent, written as part of a label, can never fail. Write positive checks as the exact label, and absence checks as `.*words.*`.
+    - **Metro started from a worktree without `--clear` served a stale screen** (an old `plan.tsx`). Start it with `--clear` when checking a worktree's screens.
+    - **A demo screen that shows the morning card must be in `MORNING_DEMO_SCREENS`** (`features/morning/index.ts`), or `enabled()` blocks the card.
+
+402. **The beta's limits are live on the server (Nov 8; the founder: "Check it after the deployment has been made").**
+    - **Before the deploy:** the functions build cleanly, and the emulator tests pass, 79 of 79.
+    - **The deploy:** `firebase deploy --only functions:api,functions:purgeUsage --project kitted-a5b45 --non-interactive`. Both functions updated, with no prompts. Nothing else changed: no rules and no indexes.
+    - **The live check:** a fresh anonymous guest asked one question on `/v1/ask` (Flash-Lite, 30 tokens out, well under 0.01¢). The server answered 200 with `x-kitted-tier: beta`, and the test guest was deleted afterwards.
+    - **So the catch isn't real:** the live `server/config` doesn't set `pro` by hand. The server's own default applies, and it's now `beta`.
+    - **Left behind:** that guest's one-question usage day. The 7-day purge removes it.
+    - **The script:** in the session's scratchpad (`livetier.mjs`), not in the repo. Re-run the same check after any server deploy or config change.
+
 ## Nov 8 · App Store Connect for the beta: the console half of T85
 
-400. **The founder (Nov 8): "finish setting up Apple Connect for beta testing."** Claude read App Store Connect through the Chrome DevTools plugin (the built-in browser's Apple sign-in loaded only after a long wait, and Claude in Chrome found no browser for the account).
+403. **The founder (Nov 8): "finish setting up Apple Connect for beta testing."** Claude read App Store Connect through the Chrome DevTools plugin (the built-in browser's Apple sign-in loaded only after a long wait, and Claude in Chrome found no browser for the account).
     - **Found:** the app record exists, `Kitted: Outfit Rater for Men` (Apple ID `6830467413`, SKU `kitted-ios`, bundle ID `com.trykitted.kitted` as an Xcode-managed App ID, Lifestyle, content rights answered, version 1.0 Prepare for Submission). Free Apps agreement active to Nov 3, 2027; Paid Apps agreement New (Y18, only for purchases). TestFlight had no builds, no groups and empty Test Information. The EU trader (DSA) notice doesn't apply: US only.
     - **Done:** an internal TestFlight group, "Kitted team", automatic distribution on, with the founder (Account Holder) in it. The EAS project `@matemind/kitted` (`a8fb4438-…`) created with `eas init --force` and its ID put in `app.config.ts` (`extra.eas.projectId`, `owner`), since a dynamic config can't be written by EAS. `eas.json` submit gets `ascAppId` and `appleTeamId`, so `eas submit` goes to this app without asking. `EXPO_PUBLIC_FIREBASE_API_KEY` added as a plaintext EAS variable in `production` and `preview` (public by design, #295); a Release build needs nothing else (it always calls the live server).
     - **Not done (needs the founder):** the first build (asks before an EAS build; Apple's login for the distribution certificate is typed by him), Test Information and Beta App Review contact (his name, phone, email), the privacy policy URL that outside testers need (Y2), and T14 and T80 before friends get it.

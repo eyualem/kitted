@@ -7,7 +7,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ## Where things stand
 - **On your phone today:** fit checks with scores, fixes and re-checks; Closet, Lookbook and You; Kit answering for real; the morning and evening card with real weather; share cards; voice input (not yet confirmed on your phone).
 - **Built but switched off:** the paywall and purchases (a pretend store), sign-in and backup (waiting in open pull requests), notifications.
-- **The beta comes first:** friends test for free with no paywall. The server gives everyone the old Pro limits (10 checks, 50 questions) until T14 brings in 3 checks and 20 questions a day. The paywall and real purchases wait for launch.
+- **The beta comes first:** friends test for free with no paywall. The app and the live server both hold testers to 3 fit checks and 20 questions a day (T14, deployed and checked live Nov 8). The paywall and real purchases wait for launch.
 - **Still on the old rules:** the 1-week trial, Pro at 10 checks and 50 questions, free at 1 check a day forever with 5 questions.
 - **Not built yet:** the 7 free checks, greeting you by name, the spend cap working the spec's way, the app-only server lock (App Check), PostHog, reading scanned clothes, "not rated" for womenswear, Apple's age check.
 - **3 pull requests are waiting,** each with work before it can merge: sign-in and backup (T41) and the card's outfit picks (T64). The other 7 were merged or closed in T1.
@@ -15,11 +15,10 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ---
 
 ## Next up
-1. The beta's limits: 3 fit checks and 20 questions a day, no paywall (T14).
-2. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80). TestFlight needs it.
-3. Put the beta on TestFlight and invite your friends (T85).
-4. Start your two launch photo sets now; they take the longest (Y5, Y6).
-5. Read scanned clothes into Closet; your clothes photos are in (T70).
+1. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80). TestFlight needs it.
+2. Put the beta on TestFlight and invite your friends (T85).
+3. Start your two launch photo sets now; they take the longest (Y5, Y6).
+4. Read scanned clothes into Closet; your clothes photos are in (T70).
 
 Before launch, after the beta: the new free limits, the three upgrade moments and real purchases (T11, T12, T13).
 
@@ -45,7 +44,8 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [x] **Y15** · **P2** · OK installing Maestro, a free tool that replays tap-through tests on the Simulator (1 min) → old flows re-checked automatically on every task · installed Nov 7
 - [ ] **Y16** · **P3** · Seven small camera and card calls from your Oct 24 walk, each with a default, in `handoff/09-ui-review.md` §29 (lands with the dark-tip fix): your photos from the chat's camera button without opening the camera; Propped stays quiet until it sees you; the Mirror tip's words; after a re-check, opening the first check opens its fixes in one tap; "1 more question in Closet"; a described piece keeps its color; a fix row shows only the outfit's number (3 min) → those small fixes
 - [ ] **Y17** · **P2** · Pick your first beta testers (friends, 18 or older) and get, with each one's OK, the email his Apple ID uses; TestFlight sends the invite there (10 min) → the beta (T85)
-- [ ] **Y18** · **P3** · Sign the Paid Apps Agreement in App Store Connect → Business: tax form (W-9) and bank account; it can take a day to clear (15 min) → real purchases (T13)
+- [x] **Y18** · **P2** · OK deploying the server's beta limits to Firebase and setting its live config to `beta` (1 min; Claude runs it) → testers held to 3 checks and 20 questions a day on the real server (T14) · yes, Nov 8
+- [ ] **Y19** · **P3** · Sign the Paid Apps Agreement in App Store Connect → Business: tax form (W-9) and bank account; it can take a day to clear (15 min) → real purchases (T13)
 
 ---
 
@@ -69,7 +69,7 @@ Spec: `specs/free-and-pro.md` (interview: T10)
 Lane files: `app/src/features/{paywall,held,finish}`, `app/src/services/{quota,purchases,entitlements}.ts`, `app/src/features/settings/plan.ts`
 
 - [x] 2026-11-07, #69 · **T10** · Write the free-and-Pro spec with you: the soft page, the limit card's button, the paywall without a trial, and their words · *done: your yes (Nov 7) · files: `specs/free-and-pro.md`*
-- [ ] **T14** · The beta's limits: a `beta` tier on the server (3 fit checks and 20 questions a day, no lifetime count), the beta limit card, the questions line and You → Plan's row; no paywall, price or "Pro" anywhere · *after FP7 (your yes, Nov 8) · checks: FP7.1–FP7.7 · files: quota.ts, server/tier.ts, held/, settings/plan.ts, en.ts, `firebase/functions/src/api/{limits,store}.ts`*
+- [x] 2026-11-08, #72 · **T14** · The beta's limits: a `beta` tier on the server (3 fit checks and 20 questions a day, no lifetime count), the beta limit card, the questions line and You → Plan's row; no paywall, price or "Pro" anywhere · *after FP7 (your yes, Nov 8) · checks: FP7.1–FP7.7 · files: quota.ts, server/tier.ts, held/, settings/plan.ts, en.ts, `firebase/functions/src/api/{limits,store}.ts`*
 - [ ] **T11** · *(launch)* The new limits in the app: 7 free checks (max 1 a day), 3 questions a day, Pro 5 + 30, no trial anywhere · *after T10 · checks: F10 Free and Pro, F10.4 · files: quota.ts, paywall/, settings/plan.ts, en.ts*
 - [ ] **T12** · *(launch)* The three upgrade moments: the soft page after his first result, the limit card's button, the full paywall at check 8 · *after T10, T11 · checks: F10 "When he sees it", F10.2, F10.3 · files: finish/, paywall/, held/*
 - [!] **Y7** · **T13** · *(launch)* Real purchases with RevenueCat, monthly and yearly, and Restore, replacing the pretend store · *after T10 · checks: F10.5, F10.6 on a test account · files: purchases.ts, entitlements.ts, package.json, app.config.ts*
@@ -84,6 +84,7 @@ Lane files: `firebase/`
 - [ ] **T21** · Server limits: 7 free checks per phone and account for life, 3 questions, Pro 5 + 30 per person (not one switch for everyone), declined questions not counted · *after T20 · checks: F10.1, F10.6, F5.2 · files: `firebase/functions/src/api/{limits,store,handler}.ts`*
 - [ ] **T22** · The spend cap: $25 to start, pauses free checks only, resets at 4 am, keeps the photo, alerts you · *after T21 · checks: F15.1, F15.2 · files: `firebase/functions/src/api/`*
 - [ ] **T23** · The server lock (App Check): the app sends proof it's the real app, and the server refuses anything else · *after T80 · checks: F15.3 · files: `firebase/`, `app/src/services/server/`, package.json*
+- [x] 2026-11-08, deployed · **T25** · Deploy the beta's limits to the live server, then check live that it really answers `beta`: one real question from a fresh guest account (about 0.01¢) reads the tier the server sends back. If it says `pro`, the live `server/config` was set by hand, and it's changed to `beta` only with your OK · *after T14 · checks: FP7.1 on the live server · files: none (deploy only)*
 - [ ] **T24** · A cap of 30 scanned photos a day, free and Pro alike · *after T20 · checks: F7.3 · files: `firebase/functions/src/api/limits.ts`*
 
 ### Setup and You
@@ -167,13 +168,16 @@ Spec: `specs/analytics.md` (interview: T90)
 Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
+- **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
 - **Where consent shows:** the spec says the first time he opens the camera; the app has it as setup step 4. Default: the spec; settled in T30.
 
 ---
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-08 · T85 console half: app record checked, internal TestFlight group "Kitted team" made with you in it, EAS project linked with the Firebase key and the upload target; no build yet · #400, PR #71
+- 2026-11-08 · T85 console half: app record checked, internal TestFlight group "Kitted team" made with you in it, EAS project linked with the Firebase key and the upload target; no build yet · #403, PR #71
+- 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
+- 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
 - 2026-11-08 · The beta first (founder): free for friends, 3 fit checks and 20 questions a day, no paywall (FP7, approved Nov 8; T14 builds it); the paywall and RevenueCat moved to launch; T85 and Y17 added · #399
 - 2026-11-07 · T10: `specs/free-and-pro.md` approved: one paywall page, $39.99/yr ("Best value") and $9.99/mo with no offers, the soft page, the limit card's "Score it now with Pro", check 8, Pro ended · #398
 - 2026-11-07 · T1: the 10 waiting pull requests reviewed against the spec (fix 4, close 5, one line for the founder); the scan triangle and the camera's dark tip merged; T41 corrected, T64 and Y16 added · #395–397

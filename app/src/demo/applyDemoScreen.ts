@@ -11,6 +11,7 @@ import { prepareAccountDemo } from '@/features/account/demo';
 import { prepareAboutYouDemo } from '@/features/aboutYou/demo';
 import { pauseFinishDemo, prepareFinishDemo } from '@/features/finish/demo';
 import { store } from '@/data/db';
+import { setDemoTier } from '@/services/server/tier';
 
 export interface DemoTarget {
   href: Href;
@@ -31,15 +32,24 @@ export function applyDemoScreen(params: RawArgs): Promise<DemoTarget | null> {
 async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
   const n = Number(params.n);
   const scenario = Number.isInteger(n) ? screenScenario(n) : undefined;
-  if (!scenario) return null;
+  if (!scenario) {
+    setDemoTier(null);
+    return null;
+  }
 
   const { n: _n, ...rest } = params;
   const overrides = parseArgs(rest);
   const args = { ...getDemoArgs(), ...overrides, demoScreen: n };
-  if (args.freeChecksUsed === null && scenario.freeChecksUsed !== undefined) args.freeChecksUsed = scenario.freeChecksUsed;
+  if (scenario.tier === 'beta') {
+    // A beta screen counts real checks (its freeChecksUsed is written as today's count by the story): only the link's
+    // own freeChecksUsed pins it, never the last screen's.
+    if (overrides.freeChecksUsed === undefined) args.freeChecksUsed = null;
+  } else if (args.freeChecksUsed === null && scenario.freeChecksUsed !== undefined) args.freeChecksUsed = scenario.freeChecksUsed;
   // Each screen's own sample weather unless this link names one (not the previous screen's).
   args.weather = overrides.weather ?? scenario.weather ?? null;
   setDemoArgs(args);
+  // The screen's rules (FP7, T14): free unless it says beta, set before its story runs.
+  setDemoTier(scenario.tier ?? 'free');
 
   pauseFinishDemo();
   await prepareDemoScreen(scenario);

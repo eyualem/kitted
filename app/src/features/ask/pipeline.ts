@@ -13,7 +13,7 @@ import type { KittedStore } from '@/data/store';
 import type { ChatMessage } from '@/data/types';
 import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
-import type { QuotaService } from '@/services/quota';
+import { questionLimitText, type QuotaService } from '@/services/quota';
 import type { Scheduler } from '@/services/scheduler';
 import type { AskCard } from './cards';
 import { createSentenceStream, type GateContext, type GateRule } from './gate';
@@ -156,10 +156,10 @@ export function createAsk(deps: AskDeps) {
   }
 
   async function limitLine(after: number): Promise<string> {
-    const pro = (await quota.snapshot()).pro;
-    const text = t(pro ? 'ask.limit.pro' : 'ask.limit.free');
+    const snapshot = await quota.snapshot();
+    const text = questionLimitText(snapshot);
     const id = ids('M');
-    await store.chat.put(row(id, after + 1, 'stylist', text, { kind: 'card', cardType: 'limit' }, { tryPro: !pro && deps.tryPro() }));
+    await store.chat.put(row(id, after + 1, 'stylist', text, { kind: 'card', cardType: 'limit' }, { tryPro: snapshot.tier === 'free' && deps.tryPro() }));
     deps.onPosted?.(text);
     return id;
   }
