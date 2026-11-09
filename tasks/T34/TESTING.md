@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `<commit SHA>` · <date> · tests: `app/src/__tests__/youSettingsHome.test.tsx`, `app/e2e/flows/T34-you-settings-home.yaml`, and the on-purpose edits to `youTonight.test.ts` (YT2), `releaseSafety.test.ts` (R5), `heightBuildRemoved.test.ts` (line 91), `app/e2e/flows/T14-beta-limits.yaml` (its Settings step)
+**Lock:** `3180d435717afcc3ce63efaaa07ab93c1631898a` · 2026-11-09 · tests: `app/src/__tests__/youSettingsHome.test.tsx`, `app/e2e/flows/T34-you-settings-home.yaml`, and the on-purpose edits to `app/src/__tests__/youTonight.test.ts` (YT2), `app/src/__tests__/releaseSafety.test.ts` (R5), `app/src/__tests__/heightBuildRemoved.test.ts` (HB5), `app/e2e/flows/T14-beta-limits.yaml` (its Settings step); stub `app/src/features/settings/SettingsRows.tsx`
 
 Plan-line criteria: SY1 → SY1.1, SY1.2, SY1.3, SY1.4, SY1.5, SY1.6 (6). All six are below.
 
