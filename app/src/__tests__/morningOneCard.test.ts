@@ -10,9 +10,15 @@ import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import type { KittedStore } from '@/data/store';
 import type { ChatMessage } from '@/data/types';
-import { createMorningService } from '@/features/morning/service';
+import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
+import { checkInSlot, createMorningService } from '@/features/morning/service';
+import { completeOnboarding } from '@/features/onboarding/complete';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
+import { demoImagePrep } from '@/services/imagePrep/demo';
+import { createQuota } from '@/services/quota';
+import { createMockReadingSource } from '@/services/readingSource/mock';
+import { realScheduler } from '@/services/scheduler';
 import type { WeatherPermission, WeatherSource } from '@/services/weather';
 
 const at = (iso: string) => Date.parse(iso);
@@ -377,3 +383,77 @@ describe('F6 · one card per day and window', () => {
     expect(await store.dailyIdeas.get(EVENING_ID)).toBeNull();
   });
 });
+
+// The founder's phone, Sun Nov 8 (TestFlight 0.1.0 (1), before the fix): a fresh setup finished at 11:51 pm, his first
+// fit check (Everyday) at 11:52 pm, and the thread showed two identical evening cards above his photo. Setup writes only
+// the profile and Kit's note; the empty closet makes the card the "Send me today's fit" one; the check collapses it
+// (derived from `checkInSlot`, not stored).
+describe('F6 · a fresh setup late in the evening, then the first fit check', () => {
+  const SETUP_AT = '2026-11-08T23:51:00-05:00';
+  const CHECK_AT = '2026-11-08T23:52:00-05:00';
+  const SUN_EVENING_ID = '2026-11-08|evening';
+  const ANSWERS = seed.scenarios.firstRun.onboardingAnswers;
+
+  async function freshSetupThenCheck(weather: Held) {
+    // One store and one id counter for setup, Stylist's cards and the fit check, as one app has.
+    const store = createMemoryStore();
+    const ids = counterIds();
+    await completeOnboarding(
+      store,
+      { styles: ANSWERS.styles as never, fitPreference: ANSWERS.fitPreference, birthYear: ANSWERS.birthYear, consent: true },
+      at(SETUP_AT),
+      ids,
+    );
+    const { svc, clock } = await setup({ now: SETUP_AT, store, ids, weather });
+    // Stylist's focus and the app's return to the front, as setup closes: two calls at once.
+    const results = await drain(weather, [svc.ensureCard(), svc.ensureCard()]);
+    // His first fit check, a minute later, through the real check service (a bundled demo photo, its recorded reading).
+    clock.set(at(CHECK_AT));
+    const checks = createFitCheckService({
+      store, source: createMockReadingSource({ latency: () => 0, scheduler: realScheduler, fault: () => null }), prep: demoImagePrep,
+      quota: createQuota({ store, clock, isPro: () => false }), clock, scheduler: realScheduler, ids,
+      timers: () => ({ ...DEFAULT_TIMERS, enabled: false, cacheHitMs: 0 }),
+    });
+    const r = (await checks.start({ mode: 'check', photoId: 'p01b', occasion: 'everyday' })) as { outcome: string; checkId: string };
+    return { store, svc, weather, results, r };
+  }
+
+  async function expectOneCheckedCard(e: Awaited<ReturnType<typeof freshSetupThenCheck>>) {
+    // The phone's symptom first: the number of evening cards in the thread.
+    expect((await cardsFor(e.store, SUN_EVENING_ID)).map((m) => m.payload.ideaId)).toEqual([SUN_EVENING_ID]);
+    expect(tally(e.results)).toEqual(tally([SUN_EVENING_ID, null]));
+    expect(e.r.outcome).toBe('scored');
+    const check = (await e.store.fitChecks.get(e.r.checkId))!;
+    expect({ status: check.status, occasion: check.occasion, dayKey: check.dayKey, createdAt: check.createdAt }).toEqual({
+      status: 'scored', occasion: 'everyday', dayKey: '2026-11-08', createdAt: at(CHECK_AT),
+    });
+    const cards = await cardsFor(e.store, SUN_EVENING_ID);
+    expect(cards).toHaveLength(1);
+    // No other morning card at all (not the Saturday evening's, not a Monday's).
+    expect(await allMorningCards(e.store)).toHaveLength(1);
+    const rows = (await e.store.dailyIdeas.all()).filter((row) => row.id === SUN_EVENING_ID);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ messageId: cards[0]!.id, dayKey: '2026-11-08', slot: 'evening', occasion: 'going_out', outfitId: null });
+    expect(await e.store.dailyIdeas.all()).toHaveLength(1);
+    // The card is above his photo, and his check is in its window: the one card counts as checked.
+    expect(cards[0]!.createdAt).toBeLessThan(check.createdAt);
+    expect(checkInSlot(check, rows[0]!, US_EASTERN)).toBe(true);
+    // Stylist shown again after the check (the score's return to the thread) posts nothing.
+    expect(await drain(e.weather, [e.svc.ensureCard()])).toEqual([null]);
+    expect(await cardsFor(e.store, SUN_EVENING_ID)).toHaveLength(1);
+  }
+
+  it('F6 · a fresh setup at 11:51 pm, two calls at once, then the first check: one evening card, checked', async () => {
+    await expectOneCheckedCard(await freshSetupThenCheck(heldWeather()));
+  });
+
+  it("F6 · a fresh setup at 11:51 pm, two calls at once, then the first check: one evening card, checked (edge: location never asked)", async () => {
+    const w = heldWeather({ permission: async () => 'unknown' });
+    const e = await freshSetupThenCheck(w);
+    // No forecast wait: the gap is the store's own awaits.
+    expect(w.calls).toEqual([]);
+    await expectOneCheckedCard(e);
+    expect((await e.store.dailyIdeas.get(SUN_EVENING_ID))!.weather).toBeNull();
+  });
+});
+
