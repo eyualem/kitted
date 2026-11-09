@@ -176,7 +176,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-09 · The design stage (founder, Nov 8): `/build-task` step D (a designer draws every state, a critic checks it, you approve) and 4b (the critic checks the built screens against your frames), for screen tasks only; dry run on T62's head-not-found card, approved · #405–406, PR pending
+- 2026-11-09 · The design stage (founder, Nov 8): `/build-task` step D (a designer draws every state, a critic checks it, you approve) and 4b (the critic checks the built screens against your frames), for screen tasks only; dry run on T62's head-not-found card, approved · #405–406, PR #76
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
