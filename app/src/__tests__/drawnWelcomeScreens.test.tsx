@@ -246,6 +246,14 @@ describe('OS1.3 · the swap', () => {
     await r.rerender(<WelcomeScreen />);
     expectAfter();
     expect(tree()).toBe(still);
+    // Every 10 ms from t 1500 to t 2100 (the window a replayed fade would use): the after state only, unchanged. No
+    // before word, no "Full check", no chunky sneakers, not even for one frame (verifier's M23).
+    for (let tMs = 1510; tMs <= 2100; tMs += 10) {
+      await advance(10);
+      expect([tMs, byId('welcome-card-word-before'), byId('welcome-card-detail-before'), byId('drawn-piece-shoes')]).toEqual([tMs, null, null, null]);
+      expect([tMs, tree() === still]).toEqual([tMs, true]);
+    }
+    expectAfter();
     for (let i = 0; i < 6; i += 1) {
       await advance(500);
       expectAfter();
