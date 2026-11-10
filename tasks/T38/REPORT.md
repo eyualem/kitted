@@ -59,6 +59,11 @@
     - **This is a code fix for the implementer, not a test fix.**
   - **Checks:** `tsc --noEmit` exit 0 on the T38 test files; the no-example and other-reading suites pass; ESLint is clean.
   - **Lock:** `225a8a12`.
+- **Test change, round 3 (the verifier's M23)** · `app/src/__tests__/drawnWelcomeScreens.test.tsx`, `OS1.3 · Reduce Motion turned on mid-play and off again holds the after state (no second play)`.
+  - **Why:** the test sampled only every 500 ms from t 2000, after a replayed fade would be over. A hook with `if (halted.current) return;` removed (M23) brought "Put together" back and faded it to "Sharp" again, and still passed.
+  - **Change (strengthening only, nothing loosened):** after Reduce Motion goes off at t 1500, the test samples every 10 ms to t 2100. Every sample must have no `welcome-card-word-before`, no `welcome-card-detail-before` and no `drawn-piece-shoes`, and the tree must be identical to the after state. The 500 ms checks, the final tree check and `getTimerCount() === 0` stay.
+  - **Proof:** with M23 applied, the test fails at t 1520, where `welcome-card-word-before` and `welcome-card-detail-before` are rendered again. Reverted to `cb0b3b35`'s hook (`git diff cb0b3b35` on the hook is empty), the file passes 23/23. ESLint is clean.
+  - **Lock:** `a12bfc1f`.
 
 ## Verification (verifier)
 **Lock:** `git diff bae9e735..HEAD` on the six test files, `app/e2e/` and TESTING.md is just the lock line (`1141df58`, the test writer's re-lock). From the first lock, `git diff 3c08174e..HEAD` on the tests is only `global` → `globalThis` (7 lines, no expectation changed; `bae9e735`, the test writer, Dispute 1). The build commit `a70ff40c` touches only app files · banned shortcuts: none found (no `.only`/`.skip`/`xit`/`it.todo`, no snapshots, no fixture edits, no `NODE_ENV`/`JEST_WORKER`/`process.env` checks, no expected values typed into app code; every number and word on the card comes from `exampleCheck()` / `applyPartsFix` / `overallFor`) · files outside the list: none (the 8 changed app files are all in IMPLEMENTATION.md → Files; `plan.md` and `tasks/T38/REPORT.md` are the coordinator's).
