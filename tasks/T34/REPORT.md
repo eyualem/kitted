@@ -38,6 +38,14 @@
 
   The code was restored after each bite. Re-locked; see TESTING.md's lock line.
 
+- **Verify round 2, test defects 3–6, and checks for the new behaviour from defects 1–2** · settled by: test-writer · outcome: **added and strengthened, nothing loosened** (Nov 10). Every earlier test is unchanged and passes. The stand-ins grew: the router re-renders on params and focus, the theme can report an accessibility size, and the real `CONTROL_TEXT_MAX_SCALE` is used.
+  - **Defect 3 (flow):** the landing checks on demos 84 and 270 now wait for animations to end, then need the version line (and on 270, `Restore purchases`) `above` the `Stylist` tab. Probed on round 2's build: it passes. With `+ bars.current.bottom` removed it fails at `"Kitted … Scoring v…", Above "Stylist" is visible`.
+  - **Defect 4 (render):** `SY1.1 · the landing allows for the bars…`, with `HeaderHeightContext` 116 and a `SafeAreaInsetsContext` bottom of 83. A tall page expects y = 640 − space.m − 116 = 512. A short page (1228/874, rows at 755) expects y = 1228 − 874 + 83 = 437. Passes now; each bar removed is caught.
+  - **Defect 5 (render):** `SY1.6 · a one-word row title stays whole on one line…`. Passes now; catches `fit={false}` and the fit without `numberOfLines`.
+  - **Defect 6 (flow):** `retryTapIfNoChange: true` on the three Back taps. Not run: the flow now stops earlier, at the new red step.
+  - **New, defect 1 (render and flow):** `SY1.1 · a second old link lands on the rows again; coming back by the tab does not`. It lands, he drags to the top, You blurs and refocuses with no link (no scroll), then the link sets `at=settings` and You refocuses (one more scroll to the same y). Red now: Expected 2 calls, Received 1. My ruling, from the HIG rule that a tab keeps its place: a plain tab return must not jump, so the param has to be cleared after landing, or a link otherwise told apart from a tab return. The flow does Stylist → old link → scroll to the top → Stylist → old link again, expecting `Plan & usage, Free plan` and the version line above the tab bar. Red now at `"Plan & usage, Free plan" is visible`.
+  - **New, defect 2 (render; screenshots stay the verifier's):** `SY1.6 · at the accessibility sizes What Kit knows and See all {n} stack` is red (Expected `column`, Received `row`), with `row` at normal sizes as the control. `SY1.6 · at the accessibility sizes the style card's pick numbers fit their badge` is red: every fixed height around the number must be at least its line height × its `maxFontSizeMultiplier`, and HEAD's 18 pt badge is short of 16 × 2. Neither can prove pixels: a whole digit is still the verifier's screenshot.
+
 ## Verification (verifier)
 *Round 1 build (`f5a915ba`) against the re-locked tests (`5d97ab0e`), Nov 9. No build commit after the re-lock, so this is the same code the implementer described under Not done. Screenshots are in `tasks/T34/shots/`, scaled to half size as JPEG.*
 

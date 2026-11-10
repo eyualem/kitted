@@ -43,6 +43,21 @@ name: SY1 · You is the settings home
     direction: UP
     timeout: 15000
 - assertNotVisible: "Settings"
+# Verify round 2: the old link a second time, after he scrolled away, lands on the rows again.
+- tapOn:
+    text: "Stylist"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Ask Kit.*"
+    timeout: 15000
+- openLink: "kitted://you/settings"
+- extendedWaitUntil:
+    visible: "Plan & usage, Free plan"
+    timeout: 15000
+- assertVisible:
+    text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    above:
+      text: "Stylist"
 
 # ── SY1.2 rows ─ demo 84 (free, opened at the rows): Appearance, Plan & usage, Privacy & data, Help & about's
 # Acknowledgements, then the version line, each below the one before; nothing conditional shows.
@@ -54,9 +69,16 @@ name: SY1 · You is the settings home
     visible: "Appearance, System"
     timeout: 90000
 # Where at=settings lands (round 1, REPORT.md Disputes): this page is too short for the rows' top to reach the top of
-# the visible area, so it opens at the end: every row down to the version line is on screen without a scroll.
+# the visible area, so it opens at the end: every row down to the version line is on screen without a scroll, and
+# above the tab bar, not under it (verify round 2: Maestro counts an element under the translucent bar as visible).
+- waitForAnimationToEnd:
+    timeout: 5000
 - assertVisible: "Acknowledgements"
 - assertVisible: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+- assertVisible:
+    text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    above:
+      text: "Stylist"
 - assertVisible:
     text: "Plan & usage, Free plan"
     below:
@@ -117,10 +139,21 @@ name: SY1 · You is the settings home
 - extendedWaitUntil:
     visible: "Plan & usage, Kitted Pro"
     timeout: 90000
-# A short page opens at its end (round 1): Subscription's rows and the version line on screen without a scroll.
+# A short page opens at its end (round 1): Subscription's rows and the version line on screen without a scroll, above
+# the tab bar (verify round 2).
+- waitForAnimationToEnd:
+    timeout: 5000
 - assertVisible: "Restore purchases"
 - assertVisible: "Acknowledgements"
 - assertVisible: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+- assertVisible:
+    text: "Restore purchases"
+    above:
+      text: "Stylist"
+- assertVisible:
+    text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    above:
+      text: "Stylist"
 - scrollUntilVisible:
     element:
       text: "Restore purchases"
@@ -175,6 +208,7 @@ name: SY1 · You is the settings home
     text: "You"
     leftOf:
       text: "Plan & usage"
+    retryTapIfNoChange: true
 - scrollUntilVisible:
     element:
       text: "Privacy & data"
@@ -192,6 +226,7 @@ name: SY1 · You is the settings home
     text: "You"
     leftOf:
       text: "Privacy & data"
+    retryTapIfNoChange: true
 - scrollUntilVisible:
     element:
       text: "Acknowledgements"
@@ -209,6 +244,7 @@ name: SY1 · You is the settings home
     text: "You"
     leftOf:
       text: "Acknowledgements"
+    retryTapIfNoChange: true
 - scrollUntilVisible:
     element:
       text: "Appearance, System"

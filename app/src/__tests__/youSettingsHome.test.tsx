@@ -13,6 +13,9 @@ import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import { KV, type KittedStore } from '@/data/store';
 import { space } from '@/design-system/tokens';
+import { textStyles } from '@/design-system/typography';
+import { HeaderHeightContext } from 'expo-router/build/react-navigation/elements';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { redirectSystemPath } from '@/app/+native-intent';
 import YouScreen from '@/app/(tabs)/you/index';
 import YouStack from '@/app/(tabs)/you/_layout';
@@ -20,7 +23,9 @@ import { SCREENS } from '@/demo/scenarios';
 import { setDemoPaywall } from '@/features/paywall/switch';
 import { mailtoUrl, openLink, openManageSubscription } from '@/features/settings/actions';
 import { appVersion, versionLine } from '@/features/settings/plan';
+import { LinkRow } from '@/features/settings/SettingsList';
 import { SettingsRows } from '@/features/settings/SettingsRows';
+import { NumberedPill } from '@/features/you/NumberedPill';
 import { showToast } from '@/features/toast/toast';
 import { factTitle, liveFacts } from '@/features/you/facts';
 import { demoEntitlements } from '@/services/entitlements';
@@ -34,6 +39,30 @@ let mockSnapshot: () => Promise<QuotaSnapshot>;
 let mockAccountsOn = false;
 const mockScreens: { name: string; options?: Record<string, unknown> }[] = [];
 const mockStackProps: Record<string, unknown>[] = [];
+/** Verify round 2: the accessibility text sizes (rows stack) for the stand-in theme. */
+let mockAx = false;
+/** The route's params and focus, as the router would change them (verify round 2, a second old link): a params
+ *  change or a focus change re-renders You, as it does under expo-router. `mockFocusGen` counts focuses; -1 = blurred. */
+const mockRouterListeners = new Set<() => void>();
+let mockFocusGen = 0;
+const mockNavListeners = new Map<string, Set<() => void>>();
+function mockNotifyRouter() {
+  mockRouterListeners.forEach((l) => l());
+}
+function mockApplyParams(p: Record<string, string | undefined>) {
+  const next: Record<string, string> = { ...mockParams };
+  for (const [k, val] of Object.entries(p)) {
+    if (val === undefined) delete next[k];
+    else next[k] = val;
+  }
+  mockParams = next;
+  mockNotifyRouter();
+}
+function mockSetFocus(focused: boolean) {
+  mockFocusGen = focused ? Math.abs(mockFocusGen) + 1 : -Math.abs(mockFocusGen) - 1;
+  mockNotifyRouter();
+  mockNavListeners.get(focused ? 'focus' : 'blur')?.forEach((l) => l());
+}
 
 jest.mock('expo-router', () => {
   const Stack = Object.assign(
@@ -48,9 +77,32 @@ jest.mock('expo-router', () => {
       },
     },
   );
+  const React = jest.requireActual('react');
+  const subscribe = (cb: () => void) => {
+    mockRouterListeners.add(cb);
+    return () => mockRouterListeners.delete(cb);
+  };
+  const useGen = (): number => React.useSyncExternalStore(subscribe, () => mockFocusGen);
+  const setParams = jest.fn((p: Record<string, string | undefined>) => mockApplyParams(p));
   return {
-    router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn(), replace: jest.fn(), dismissAll: jest.fn() },
-    useLocalSearchParams: () => mockParams,
+    router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn(), replace: jest.fn(), dismissAll: jest.fn(), setParams },
+    useLocalSearchParams: () => React.useSyncExternalStore(subscribe, () => mockParams),
+    useGlobalSearchParams: () => React.useSyncExternalStore(subscribe, () => mockParams),
+    useIsFocused: () => useGen() > 0,
+    useFocusEffect: (cb: () => void | (() => void)) => {
+      const gen = useGen();
+      React.useEffect(() => (gen > 0 ? cb() : undefined), [cb, gen]);
+    },
+    useNavigation: () => ({
+      isFocused: () => mockFocusGen > 0,
+      setParams,
+      addListener: (type: string, fn: () => void) => {
+        const set = mockNavListeners.get(type) ?? new Set<() => void>();
+        set.add(fn);
+        mockNavListeners.set(type, set);
+        return () => set.delete(fn);
+      },
+    }),
     Stack,
   };
 });
@@ -106,8 +158,7 @@ jest.mock('@/design-system', () => {
   }
   return {
     ...tokens,
-    CONTROL_TEXT_MAX_SCALE: 1.3,
-    useTheme: () => ({ colors, fixed: colors, scheme: 'light', fontScale: 1, isAccessibilitySize: false, archivoLoaded: false, isFixedDark: false, a11y: { reduceMotion: false, reduceTransparency: false, boldText: false, highContrast: false } }),
+    useTheme: () => ({ colors, fixed: colors, scheme: 'light', fontScale: mockAx ? 3.12 : 1, isAccessibilitySize: mockAx, archivoLoaded: false, isFixedDark: false, a11y: { reduceMotion: false, reduceTransparency: false, boldText: false, highContrast: false } }),
     KText: Words,
     MonoLabel: Words,
     KCard: Wrap,
@@ -158,10 +209,15 @@ beforeEach(async () => {
   mockParams = {};
   mockAccountsOn = false;
   mockScreens.length = 0;
+  mockAx = false;
+  mockFocusGen = 1;
+  mockRouterListeners.clear();
+  mockNavListeners.clear();
   mockStackProps.length = 0;
   mockStore = await seeded();
   mockSnapshot = () => Promise.resolve(FREE);
   jest.mocked(router.push).mockClear();
+  jest.mocked(router.setParams).mockClear();
   jest.mocked(openLink).mockClear();
   jest.mocked(openManageSubscription).mockClear();
   jest.mocked(showToast).mockClear();
@@ -757,5 +813,143 @@ describe('SY1.6 · VoiceOver reads each row as one button with its value', () =>
     given('proPaywall');
     await renderRows();
     expect(label(screen.getByTestId('you-row-plan'))).toBe('Plan & usage, Kitted Pro');
+  });
+});
+
+// ── Verify round 2 (REPORT.md → Verification, round 2: defects 1–5) ────────────────────────────────────────────────
+/** The landing's geometry, through the ScrollView's own events. */
+async function page(frame: number, content: number) {
+  const sv = screen.getByTestId('you-scroll');
+  await fireEvent(sv, 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 402, height: frame } } });
+  await fireEvent(sv, 'contentSizeChange', 402, content);
+}
+const rowsAt = (y: number) =>
+  fireEvent(screen.getByTestId('you-rows'), 'layout', { nativeEvent: { layout: { x: 0, y, width: 370, height: 500 } } });
+const scrollArgs = () => scrollTo.mock.calls.map((c) => c[0] as { y?: number; animated?: boolean });
+
+/** The first host element at or above `el` (the badge around the pick's number). */
+function hostAbove(el: ReactTestInstance): ReactTestInstance | null {
+  for (let n: ReactTestInstance | null = el.parent as ReactTestInstance | null; n; n = n.parent as ReactTestInstance | null) {
+    if (typeof n.type === 'string') return n;
+  }
+  return null;
+}
+
+/** The lowest host element that holds both `a` and `b`. */
+function commonHost(a: ReactTestInstance, b: ReactTestInstance): ReactTestInstance | null {
+  const chain = new Set<ReactTestInstance>();
+  for (let n: ReactTestInstance | null = a; n; n = n.parent as ReactTestInstance | null) chain.add(n);
+  for (let n: ReactTestInstance | null = b; n; n = n.parent as ReactTestInstance | null) {
+    if (chain.has(n) && typeof n.type === 'string' && n !== a && n !== b) return n;
+  }
+  return null;
+}
+
+describe('verify round 2 · the landing, its bars, and the largest text', () => {
+  it('SY1.1 · the landing allows for the bars: rows just under a 116 pt nav bar; a short page ends above an 83 pt tab bar', async () => {
+    const withBars = (
+      <SafeAreaInsetsContext.Provider value={{ top: 0, bottom: 83, left: 0, right: 0 }}>
+        <HeaderHeightContext.Provider value={116}>
+          <YouScreen />
+        </HeaderHeightContext.Provider>
+      </SafeAreaInsetsContext.Provider>
+    );
+    mockParams = { at: 'settings' };
+    // A tall page: the rows' top lands just under the nav bar.
+    await render(withBars);
+    await screen.findByTestId('you-today');
+    await settle();
+    await page(874, 3000);
+    await rowsAt(640);
+    expect(scrollArgs()).toEqual([expect.objectContaining({ y: 640 - space.m - 116, animated: false })]);
+    await screen.unmount();
+
+    // A short page (demo 270's numbers): its true end, the tab bar's inset included.
+    scrollTo.mockClear();
+    await render(withBars);
+    await screen.findByTestId('you-today');
+    await settle();
+    await page(874, 1228);
+    await rowsAt(755);
+    expect(scrollArgs()).toEqual([expect.objectContaining({ y: 1228 - 874 + 83, animated: false })]);
+  });
+
+  it('SY1.1 · a second old link lands on the rows again; coming back by the tab does not', async () => {
+    mockParams = { at: 'settings' };
+    await renderYou();
+    await page(874, 3000);
+    await rowsAt(640);
+    expect(scrollArgs()).toEqual([expect.objectContaining({ y: 640 - space.m, animated: false })]);
+    // He scrolls back to the top himself, then goes to Stylist.
+    const sv = screen.getByTestId('you-scroll');
+    await fireEvent(sv, 'scrollBeginDrag', { nativeEvent: { contentOffset: { x: 0, y: 600 } } });
+    await fireEvent(sv, 'scroll', { nativeEvent: { contentOffset: { x: 0, y: 0 }, contentSize: { width: 402, height: 3000 }, layoutMeasurement: { width: 402, height: 874 } } });
+    await act(async () => mockSetFocus(false));
+    // Back to You by its tab (no link): You stays where he left it.
+    await act(async () => mockSetFocus(true));
+    await settle();
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    // Stylist again, then the old link again: You lands on the rows again, once.
+    await act(async () => mockSetFocus(false));
+    await act(async () => {
+      mockApplyParams({ at: 'settings' });
+      mockSetFocus(true);
+    });
+    await settle();
+    expect(scrollArgs()).toEqual([
+      expect.objectContaining({ y: 640 - space.m, animated: false }),
+      expect.objectContaining({ y: 640 - space.m, animated: false }),
+    ]);
+  });
+
+  it('SY1.6 · a one-word row title stays whole on one line (shrinks to fit); a title with spaces wraps', async () => {
+    mockAx = true;
+    await render(
+      <>
+        <LinkRow title="Acknowledgements" onPress={() => undefined} />
+        <LinkRow title="Plan & usage" value="Free plan" onPress={() => undefined} />
+      </>,
+    );
+    const one = screen.getByText('Acknowledgements');
+    const scale = one.props.minimumFontScale as unknown;
+    expect([one.props.numberOfLines, one.props.adjustsFontSizeToFit, typeof scale]).toEqual([1, true, 'number']);
+    expect([(scale as number) > 0, (scale as number) < 1]).toEqual([true, true]);
+    const many = screen.getByText('Plan & usage');
+    expect([many.props.numberOfLines ?? 0, !!many.props.adjustsFontSizeToFit]).toEqual([0, false]);
+  });
+
+  it("SY1.6 · at the accessibility sizes What Kit knows and See all {n} stack (not squeezed side by side)", async () => {
+    given('free');
+    const n = liveFacts(await mockStore.facts.all()).length;
+    const header = async () => {
+      await renderYou();
+      const knows = within(screen.getByTestId('you-knows'));
+      const box = commonHost(knows.getByText('What Kit knows'), knows.getByLabelText(`See all ${n}`));
+      const dir = (StyleSheet.flatten(box?.props.style) ?? {}).flexDirection ?? 'column';
+      await screen.unmount();
+      return dir;
+    };
+    // The control: at normal sizes the link sits to the right of the header.
+    expect(await header()).toBe('row');
+    mockAx = true;
+    expect(await header()).toBe('column');
+  });
+
+  it("SY1.6 · at the accessibility sizes the style card's pick numbers fit their badge", async () => {
+    mockAx = true;
+    await render(<NumberedPill n={1} title="Streetwear" filled />);
+    const digit = screen.getByText('1');
+    const title = screen.getByText('Streetwear');
+    const variant = (digit.props.variant ?? 'body') as keyof typeof textStyles;
+    const cap = digit.props.maxFontSizeMultiplier as number | undefined;
+    const tallest = textStyles[variant].lineHeight * (cap ?? Number.POSITIVE_INFINITY);
+    // Every box between the number and the pill (the badge and anything inside it) must hold the number's tallest
+    // line (its line height at its largest allowed scale), or grow with it (no fixed height).
+    const boxes: { height?: unknown; maxHeight?: unknown }[] = [];
+    for (let n = hostAbove(digit); n && !within(n).queryByText('Streetwear'); n = hostAbove(n)) boxes.push(StyleSheet.flatten(n.props.style) ?? {});
+    expect(boxes.length).toBeGreaterThanOrEqual(1);
+    expect(title).toBeTruthy();
+    const fixed = boxes.flatMap((b) => [b.height, b.maxHeight]).filter((h): h is number => typeof h === 'number');
+    for (const h of fixed) expect([h, h >= tallest]).toEqual([h, true]);
   });
 });
