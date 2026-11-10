@@ -23,7 +23,10 @@ import { weatherKitLegalUrl } from '../../../modules/kitted-location';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { sessionClock } from '@/state/session';
-import { cardGreeting, cardOccasionLabel, ideaTitle, seasonLine, styleLabel, updatedLine, weatherLine, weatherSymbol, whyLine, type CardWeather } from './copy';
+import {
+  cardGreeting, cardOccasionLabel, cardWaitLines, checkedOccasion, checkedTag, checkedTitle, ideaTitle, seasonLine, styleLabel, updatedLine, weatherLine,
+  weatherSymbol, whyLine, type CardWeather,
+} from './copy';
 import { morning } from './index';
 import { HeroStrip } from './HeroStrip';
 import { checkInSlot, slotAt } from './service';
@@ -138,12 +141,10 @@ function FullCard({ m }: { m: Model }) {
 
   const locationAsk = locationRow({ permission: m.permission, hasWeather: !!weather, sourceKind: weatherSource.kind });
   const wearing = row.state === 'wearing';
-  const title = enough
-    ? ideaTitle(m.reasons, row.occasion)
-    : m.piecesKnown === 0 ? t('idea.title.empty') : m.piecesKnown === 1 ? t('idea.title.thin1') : t('idea.title.thin', { n: m.piecesKnown });
-  const why = enough
-    ? whyLine(m.reasons, m.items, row.occasion)
-    : m.piecesKnown === 0 ? t('idea.empty') : m.piecesKnown === 1 ? t('idea.thin1') : t('idea.thinN', { n: m.piecesKnown });
+  // No outfit (an empty closet, or not yet two outfits that work, F6.2): the card says why.
+  const wait = enough ? null : cardWaitLines(m.piecesKnown);
+  const title = wait ? wait.title : ideaTitle(m.reasons, row.occasion);
+  const why = wait ? wait.why : whyLine(m.reasons, m.items, row.occasion);
   const showLink = enough && !wearing;
 
   return (
@@ -324,21 +325,23 @@ function whenLabel(row: DailyIdeaRow): string {
   return row.slot === 'evening' ? t('idea.tonight') : t('idea.today');
 }
 
-/** After a fit check in this window: photo · "You went with your own" · the score (#59). */
+/** After a fit check in this window: photo · "You went with your own" (or "Today's fit" when the card suggested nothing,
+ *  F6.2) · the score (#59). The tag names the check's occasion when the card suggested nothing (the founder, Nov 9). */
 function CheckedRow({ m, readOnly }: { m: Model; readOnly: boolean }) {
   const { latest, first, messageId } = m.check!;
   // The outfit the score is for: a re-check's own photo when it has one (09 §29 W2).
   const shot = latest.photoFile || latest.demoPhotoId ? latest : first;
   const photo = shownPhoto(shot.demoPhotoId, shot.photoFile, undefined);
   const score = latest.score ?? 0;
-  const what = m.worePick ? t('idea.went.pick') : t('idea.went.own');
-  const occasion = cardOccasionLabel(m.row.occasion);
+  const what = checkedTitle(m.row, m.worePick);
+  const occasion = checkedOccasion(m.row, latest);
   return (
     <CollapsedShell
+      testID="idea-checked"
       onPress={messageId && !readOnly ? () => setStylistAction({ kind: 'scrollTo', messageId }) : undefined}
       a11y={t('idea.a11y.collapsed', { when: whenLabel(m.row), occasion, what, score: displayScore(score), word: scoreWordLabel(score) })}
       left={photo ? <NeckDownPhoto source={photo.source} aspect={photo.aspect} crop={photo.crop} width={44} height={56} borderRadii={{ tl: radius.thumb, tr: radius.thumb, br: radius.thumb, bl: radius.thumb }} /> : null}
-      tag={`${whenLabel(m.row)} · ${occasion}`}
+      tag={checkedTag(m.row, latest)}
       title={what}
       right={
         <View style={{ alignItems: 'flex-end' }}>
@@ -392,7 +395,7 @@ function PastRow({ m }: { m: Model }) {
   );
 }
 
-function CollapsedShell({ tag, title, left, right, body, onPress, a11y }: { tag: string; title?: string; left?: React.ReactNode; right?: React.ReactNode; body?: React.ReactNode; onPress?: () => void; a11y: string }) {
+function CollapsedShell({ tag, title, left, right, body, onPress, a11y, testID }: { tag: string; title?: string; left?: React.ReactNode; right?: React.ReactNode; body?: React.ReactNode; onPress?: () => void; a11y: string; testID?: string }) {
   const { isAccessibilitySize } = useTheme();
   // A tappable row says so (#276): it scrolls to the check it summarizes.
   const chevron = onPress ? <Icon name="next" size={13} color="ink3" weight="semibold" /> : null;
@@ -432,11 +435,11 @@ function CollapsedShell({ tag, title, left, right, body, onPress, a11y }: { tag:
   return (
     <KCard>
       {onPress ? (
-        <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={a11y} style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}>
+        <Pressable testID={testID} onPress={onPress} accessibilityRole="button" accessibilityLabel={a11y} style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}>
           {content}
         </Pressable>
       ) : (
-        <View accessible={!right} accessibilityLabel={right ? undefined : a11y}>
+        <View testID={testID} accessible={!right} accessibilityLabel={right ? undefined : a11y}>
           {content}
         </View>
       )}
