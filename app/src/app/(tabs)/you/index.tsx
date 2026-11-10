@@ -8,7 +8,7 @@ import { useCallback, useContext, useEffect, useRef, type RefObject } from 'reac
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { HeaderHeightContext } from 'expo-router/build/react-navigation/elements';
 import { Pressable, ScrollView, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { Icon, KButton, KCard, KText, MonoLabel, TextLink, WovenLabel, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ProfileRow } from '@/data/types';
@@ -28,7 +28,7 @@ import { SettingsRows } from '@/features/settings/SettingsRows';
 import { goToStylist } from '@/router/stylistAction';
 
 export default function YouScreen() {
-  const { colors } = useTheme();
+  const { colors, isAccessibilitySize } = useTheme();
   const isPro = useIsPro();
   const { at } = useLocalSearchParams<{ at?: string }>();
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
@@ -57,7 +57,14 @@ export default function YouScreen() {
       </View>
       {usage.purchased ? <PlanRow /> : null}
       <View testID="you-knows" style={{ gap: space.s, marginTop: space.xs }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs }}>
+        {/* At the accessibility sizes the link goes under the header instead of squeezing beside it. */}
+        <View
+          style={
+            isAccessibilitySize
+              ? { alignItems: 'flex-start', gap: space.xs, paddingHorizontal: space.xs }
+              : { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs }
+          }
+        >
           <View style={{ flexShrink: 1 }} accessibilityRole="header">
             <MonoLabel>{t('you.knows')}</MonoLabel>
           </View>
@@ -74,7 +81,8 @@ export default function YouScreen() {
 /** `/you?at=settings` (an old Settings link, the demo screens): each time he arrives with it, You opens once at its
  *  rows, unanimated: the rows' top just under the nav bar, or the page's true end (above the tab bar) when the page is
  *  too short for that. It lands once the rows, the page and its content have all been measured, and it also works
- *  when You is already open (native tabs keep it mounted, so the link only changes `at`). The offset is ours to clamp
+ *  when You is already open (native tabs keep it mounted, so the link only changes `at`); `at` is cleared when he
+ *  leaves You, so the next link lands again and a return by the tab doesn't. The offset is ours to clamp
  *  (`scrollToOverflowEnabled`): React Native's own clamp leaves out the bars' insets, which stopped the page short of
  *  its end. And on a cold launch the native side can still move the page right after, when it first applies those
  *  insets (iOS shifts an offset set before they existed), or the bars report their final size a moment later; while
@@ -84,6 +92,9 @@ function useLandAtRows(wanted: boolean, ref: RefObject<ScrollView | null>) {
   // tab's own safe area). Outside a navigator (tests) both are 0.
   const top = useContext(HeaderHeightContext) ?? 0;
   const bottom = useContext(SafeAreaInsetsContext)?.bottom ?? 0;
+  // This screen's own navigation (not the router's focused route), to clear its `at` when he leaves.
+  const navigation = useNavigation<{ setParams(p: { at?: string }): void; addListener(type: 'blur', fn: () => void): () => void }>();
+  const wantedNow = useRef(false);
   const bars = useRef({ top: 0, bottom: 0 });
   const rowsY = useRef<number | null>(null);
   const pageH = useRef(0);
@@ -121,10 +132,20 @@ function useLandAtRows(wanted: boolean, ref: RefObject<ScrollView | null>) {
     if (changed && watch.current) again();
   }, [top, bottom, again]);
   useEffect(() => {
+    // Only an arrival starts a landing; `at` clearing (after one) leaves its settling-in watch running.
     pending.current = wanted;
-    if (!wanted) watch.current = null;
+    wantedNow.current = wanted;
     tryLand();
   }, [wanted, tryLand]);
+  // When he leaves You the link is spent: `at` is cleared, so coming back by the tab leaves You where he left it, and
+  // the next old link (which sets it again) lands again.
+  useEffect(
+    () =>
+      navigation.addListener('blur', () => {
+        if (wantedNow.current) navigation.setParams({ at: undefined });
+      }),
+    [navigation],
+  );
 
   return {
     onRowsLayout: (e: LayoutChangeEvent) => {
