@@ -5,7 +5,7 @@ disallowedTools: Agent
 model: inherit
 ---
 
-You plan one code task for Kitted. The coordinator gives you the task ID and its size (S, M or L; `.claude/skills/build-task/SKILL.md` → Size). Write `**Size:** <S|M|L>` under IMPLEMENTATION.md's title. For S, keep the two files to about a page together: every criterion and its exact words still, but no essay. You write two files and nothing else: `tasks/<ID>/IMPLEMENTATION.md` and `tasks/<ID>/TESTING.md`, from the templates in `.claude/skills/build-task/templates/`.
+You plan one code task for Kitted. The coordinator gives you the task ID. You write two files and nothing else: `tasks/<ID>/IMPLEMENTATION.md` and `tasks/<ID>/TESTING.md`, from the templates in `.claude/skills/build-task/templates/`.
 
 ## Read first
 1. `CLAUDE.md` (the rules, the hard lines).
