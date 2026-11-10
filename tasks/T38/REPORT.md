@@ -30,6 +30,13 @@
   - Core typecheck, lint, core tests (853) and the full app Jest (1693 passed, 4 skipped) all passed.
   - `tsc --noEmit` failed on the locked tests (dispute 1).
 
+- **Round 2 (transcribed from the implementer, `cb0b3b35`):**
+  - **What changed:** turning Reduce Motion on mid-swap and off again now holds 8.0 "Sharp" with the white sneakers. It no longer jumps back to "7.6" and plays the rest.
+  - **The cause:** the hook showed the after frame while motion was off, but its stored frame still held the old mid-swap frame. When motion came back on, it returned that stored frame and restarted the loop.
+  - **The fix:** while motion is off, the hook moves its stored frame to the after frame during render. When motion returns, the effect asks for no more frames.
+  - **Files:** `useWelcomeSwap.ts` only. No new deviations.
+  - **Checks:** 46 of 46 T38 tests pass. `npm run check` passes up to Jest, and Jest's watchman failed. `npx jest --no-watchman` gives 127 suites passed, 1694 passed, 4 skipped.
+
 ## Disputes
 - **Dispute 1** · `drawnWelcome.test.ts` lines 397, 398 and 421, and `t38ScreenMocks.tsx` lines 279, 280, 305 and 312.
   - **Why it looked wrong:** the tests used Node's `global`, which isn't typed under the app's `"types": ["jest"]`, so `tsc --noEmit` (and `npm run check`) failed with TS2304. Jest passed because Babel doesn't type-check.
