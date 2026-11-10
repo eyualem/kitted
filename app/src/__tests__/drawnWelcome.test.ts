@@ -394,8 +394,8 @@ describe('OS2.2 · nothing sent, nothing saved', () => {
     const spyKv = jest.spyOn(store, 'setKv').mockImplementation(async (k) => void writes.push(`kv:${k}`));
     const spyDel = jest.spyOn(store, 'deleteKv').mockImplementation(async (k) => void writes.push(`kvdel:${k}`));
     const fetchMock = jest.fn(() => Promise.reject(new Error('T38 test: no network')));
-    const realFetch = global.fetch;
-    global.fetch = fetchMock as never;
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = fetchMock as never;
     try {
       jest.isolateModules(() => {
         jest.doMock('@/data/db', () => ({ store }));
@@ -418,7 +418,7 @@ describe('OS2.2 · nothing sent, nothing saved', () => {
       expect(await store.getKv('onboarding.step')).toBeNull();
       expect(await store.getKv('reveal.fullShown')).toBeNull();
     } finally {
-      global.fetch = realFetch;
+      globalThis.fetch = realFetch;
       spyKv.mockRestore();
       spyDel.mockRestore();
       jest.dontMock('@/data/db');

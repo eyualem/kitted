@@ -276,8 +276,8 @@ export function expectNoPhoto() {
  *  clock is the same whichever of Date.now(), performance.now() or the frame's timestamp the hook uses. */
 export function setUpT38Tests() {
   const state = { watch: undefined as unknown as ReturnType<typeof watchStore>, fetchMock: undefined as unknown as jest.Mock };
-  const g = global as unknown as Record<string, unknown> & { performance: { now: () => number } };
-  const realFetch = global.fetch;
+  const g = globalThis as unknown as Record<string, unknown> & { performance: { now: () => number } };
+  const realFetch = globalThis.fetch;
   const realRaf = g.requestAnimationFrame;
   const realCaf = g.cancelAnimationFrame;
   const realPerfNow = g.performance.now;
@@ -302,14 +302,14 @@ export function setUpT38Tests() {
     state.watch = watch;
     // Offline: anything on these screens that reached for the network would reject, and fail below.
     fetchMock = jest.fn(() => Promise.reject(new Error('T38 test: no network on Welcome or the Example check')));
-    global.fetch = fetchMock as never;
+    globalThis.fetch = fetchMock as never;
     state.fetchMock = fetchMock;
     (AppState as unknown as { currentState: string }).currentState = 'active';
   });
 
   afterEach(() => {
     watch.off();
-    global.fetch = realFetch;
+    globalThis.fetch = realFetch;
     g.requestAnimationFrame = realRaf;
     g.cancelAnimationFrame = realCaf;
     g.performance.now = realPerfNow;
