@@ -1,0 +1,280 @@
+# T74 · CB2.1–CB2.6, CB2.10: Closet's To confirm, one card at a time (specs/closet-beta.md CB2).
+# 262: four open "Is this your …?" questions and the "How do your mid-wash jeans fit?" question (1 of 5 … 5 of 5).
+# 263: the fit question alone (1 of 1, with Skip). 264: one "Is this your …?" question (1 of 1, no Skip).
+# 70: the score card asks "Are these your khaki chinos?"; Closet holds the same question.
+# Run: maestro --device <udid> test -e PORT=8082 app/e2e/flows/T74-confirm-one-card.yaml (Metro running on 8082).
+# Matching: Maestro (2.12.1) sees only what VoiceOver can reach and matches a pattern against an element's WHOLE text
+# or label, so a card is matched by its question's label ("Question 2 of 5. …"), never the hidden tag line, and a
+# must-not uses ".*words.*" where the words could sit inside a longer label. The toast lasts 5 s, so an Undo step gets
+# its own launch and taps at once.
+appId: com.trykitted.kitted
+name: CB2 · To confirm, one card at a time
+---
+# CB2.1 · 262: one card, 1 of 5, with both answers.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "262"
+- extendedWaitUntil:
+    visible: "Question 1 of 5\\. .*"
+    timeout: 90000
+- assertNotVisible: "Question [2-5] of 5\\..*"
+- assertNotVisible: ".*Question 1 of 4\\..*"
+- assertVisible: "Yes, same one"
+- assertVisible: "No, a new one"
+- assertVisible: "Skip"
+
+# CB2.2 · 262: Yes, same one saves, says so with Undo, and the next question shows as 1 of 4.
+- tapOn: "Yes, same one"
+- extendedWaitUntil:
+    visible: ".*Saved as your .*\\..*"
+    timeout: 5000
+- assertVisible: ".*Undo.*"
+- extendedWaitUntil:
+    visible: "Question 1 of 4\\. .*"
+    timeout: 5000
+- assertNotVisible: "Question 1 of 5\\..*"
+
+# CB2.3 · 262, its own launch: Skip to card 2, answer it, Undo at once: card 2 comes back as 2 of 5, word for word.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "262"
+- extendedWaitUntil:
+    visible: "Question 1 of 5\\. .*"
+    timeout: 90000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 2 of 5\\. .*"
+    timeout: 5000
+- copyTextFrom:
+    text: "Question 2 of 5\\. .*"
+- tapOn: "Yes, same one"
+- extendedWaitUntil:
+    visible: "Undo"
+    timeout: 5000
+- tapOn: "Undo"
+- extendedWaitUntil:
+    visible: ${maestro.copiedText}
+    timeout: 5000
+- assertVisible: "Question 2 of 5\\. .*"
+- assertNotVisible: "Question [1345] of 5\\..*"
+- assertNotVisible: "Question \\d of 4\\..*"
+
+# CB2.4 · 262, its own launch: Skip and sideways swipes step through, wrapping both ways; nothing is saved.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "262"
+- extendedWaitUntil:
+    visible: "Question 1 of 5\\. .*"
+    timeout: 90000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 2 of 5\\. .*"
+    timeout: 5000
+- swipe:
+    from:
+      id: "closet-confirm-card"
+    direction: LEFT
+- extendedWaitUntil:
+    visible: "Question 3 of 5\\. .*"
+    timeout: 5000
+- swipe:
+    from:
+      id: "closet-confirm-card"
+    direction: RIGHT
+- extendedWaitUntil:
+    visible: "Question 2 of 5\\. .*"
+    timeout: 5000
+- swipe:
+    from:
+      id: "closet-confirm-card"
+    direction: RIGHT
+- extendedWaitUntil:
+    visible: "Question 1 of 5\\. .*"
+    timeout: 5000
+- swipe:
+    from:
+      id: "closet-confirm-card"
+    direction: RIGHT
+- extendedWaitUntil:
+    visible: "Question 5 of 5\\. How do .*"
+    timeout: 5000
+- swipe:
+    from:
+      id: "closet-confirm-card"
+    direction: LEFT
+- extendedWaitUntil:
+    visible: "Question 1 of 5\\. .*"
+    timeout: 5000
+- assertNotVisible: ".*Saved as your .*"
+- assertNotVisible: ".*Kept as a new piece\\..*"
+- assertNotVisible: "Question \\d of 4\\..*"
+# A mostly vertical drag that starts on the card scrolls Closet (the Shoes section comes into view) and leaves the card
+# as it was (scrolling back up finds the same card).
+- assertNotVisible: "Shoes, \\d+ pieces"
+- swipe:
+    start: "50%,45%"
+    end: "50%,5%"
+    duration: 800
+- extendedWaitUntil:
+    visible: "Shoes, \\d+ pieces"
+    timeout: 5000
+- scrollUntilVisible:
+    element:
+      text: "Question 1 of 5\\. .*"
+    direction: UP
+    timeout: 10000
+- assertNotVisible: "Question [2-5] of 5\\..*"
+- assertNotVisible: ".*Saved as your .*"
+- assertNotVisible: ".*Kept as a new piece\\..*"
+
+# CB2.5 · 262, its own launch: the fit card is last; its Skip rests it and the deck is 1 of 4 without it.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "262"
+- extendedWaitUntil:
+    visible: "Question 1 of 5\\. .*"
+    timeout: 90000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 2 of 5\\. .*"
+    timeout: 5000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 3 of 5\\. .*"
+    timeout: 5000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 4 of 5\\. .*"
+    timeout: 5000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 5 of 5\\. How do .*"
+    timeout: 5000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 1 of 4\\. .*"
+    timeout: 5000
+- assertNotVisible: ".*How do .* fit\\?.*"
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 2 of 4\\. .*"
+    timeout: 5000
+- assertNotVisible: ".*How do .* fit\\?.*"
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 3 of 4\\. .*"
+    timeout: 5000
+- assertNotVisible: ".*How do .* fit\\?.*"
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 4 of 4\\. .*"
+    timeout: 5000
+- assertNotVisible: ".*How do .* fit\\?.*"
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 1 of 4\\. .*"
+    timeout: 5000
+- assertNotVisible: ".*How do .* fit\\?.*"
+- assertNotVisible: ".*Saved as your .*"
+- assertNotVisible: ".*Kept as a new piece\\..*"
+
+# CB2.5 · 262, its own launch: tapping the fit card opens its Leg sheet.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "262"
+- extendedWaitUntil:
+    visible: "Question 1 of 5\\. .*"
+    timeout: 90000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 2 of 5\\. .*"
+    timeout: 5000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 3 of 5\\. .*"
+    timeout: 5000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 4 of 5\\. .*"
+    timeout: 5000
+- tapOn: "Skip"
+- extendedWaitUntil:
+    visible: "Question 5 of 5\\. How do .*"
+    timeout: 5000
+- tapOn: "Question 5 of 5\\. How do .*"
+- extendedWaitUntil:
+    visible: "Leg"
+    timeout: 10000
+
+# CB2.5 · 263: the fit card alone keeps Skip, and goes after it.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "263"
+- extendedWaitUntil:
+    visible: "Question 1 of 1\\. How do .*"
+    timeout: 90000
+- assertVisible: "Skip"
+- tapOn: "Skip"
+- extendedWaitUntil:
+    notVisible: "Question .*"
+    timeout: 5000
+- assertVisible: "Jackets and layers, \\d+ pieces"
+
+# CB2.4, CB2.6 · 264: one question, 1 of 1, no Skip, a swipe does nothing; the answer takes the card away.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "264"
+- extendedWaitUntil:
+    visible: "Question 1 of 1\\. .*"
+    timeout: 90000
+- assertNotVisible: "Skip"
+- swipe:
+    from:
+      id: "closet-confirm-card"
+    direction: LEFT
+- assertVisible: "Question 1 of 1\\. .*"
+- assertNotVisible: "Skip"
+- assertNotVisible: ".*Saved as your .*"
+- assertNotVisible: ".*Kept as a new piece\\..*"
+- tapOn: "No, a new one"
+- extendedWaitUntil:
+    visible: ".*Kept as a new piece\\..*"
+    timeout: 5000
+- extendedWaitUntil:
+    notVisible: "Question .*"
+    timeout: 5000
+- assertVisible: "Jackets and layers, \\d+ pieces"
+- assertNotVisible: ".*All set.*"
+
+# CB2.10 · 70: a question answered on the score card leaves Closet's deck.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "70"
+- extendedWaitUntil:
+    visible: "Yes, same one"
+    timeout: 90000
+- tapOn: "Closet"
+- extendedWaitUntil:
+    visible: "Question 1 of 1\\. .*"
+    timeout: 10000
+- tapOn: "Stylist"
+- extendedWaitUntil:
+    visible: "Yes, same one"
+    timeout: 10000
+- tapOn: "Yes, same one"
+- extendedWaitUntil:
+    visible: ".*Saved as your .*"
+    timeout: 5000
+- tapOn: "Closet"
+- extendedWaitUntil:
+    notVisible: "Question .*"
+    timeout: 10000
+- assertNotVisible: ".*Are these your khaki chinos\\?.*"

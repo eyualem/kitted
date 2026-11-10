@@ -134,6 +134,14 @@ export interface TextLinkProps {
   compact?: boolean;
   /** "Later" is ink2; everything else ink. `accent` stays for score movement only (#231). */
   color?: 'ink' | 'ink2' | 'accent';
+  /** T74 stub: a chevron after the title (Skip ›). Not built: ignored until T74. */
+  trailingIcon?: SymKey;
+}
+
+/** T74 stub: the trailing icon's size and gap at a font scale. */
+export function trailingIconMetrics(fontScale: number): { size: number; gap: number } {
+  void fontScale;
+  throw new Error('T74: not built');
 }
 
 /** Ink semibold text link ("Why 8.0?", "Not quite right?", "Review"): copper is kept for score
