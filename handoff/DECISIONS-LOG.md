@@ -2900,3 +2900,15 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Checked and still true:** the paid team's ID is 6652QVRQAL (the Mac's signing certificate OU, and #404's App Store upload). The founder said yes (Nov 8) to `LOCATION_USAGE_PAID`'s words as written.
     - **For the restart:** `tasks/T80/` holds the parked plan (what each entitlement changes per build, the portal steps, now Y21, and the traps). It needs a re-plan for the four rules above. WeatherKit needs both the App Services and the Capabilities tick on the App ID, and EAS syncs only the capability.
     - **Lesson:** read a data provider's terms before wiring it in, not at switch-on. "Free" data often comes with rules about storage and attribution that shape the design (here: what the database may keep).
+
+## Nov 9 · `specs/setup-and-you.md` brought in line with the new setup screens
+
+415. **The founder's yes (Nov 9, in the you-and-first-run session) to four edits,** after he approved `specs/onboarding-screens.md` (#407–408): setup ends in Stylist, not on the camera, and the birth year became an age pick on an About you step.
+    - **SY4:** the name field sits on About you above `How old are you?`; the step's button is `Continue`, waiting only on the age pick. Its rules (trimmed, 30 characters, never sent) don't change.
+    - **SY5:** Welcome → Looks → About you → Stylist (Kit's hello, then the offer card); the camera never opens on its own, and the agreement shows over it the first time he opens it. The "6 taps settled in T33" note went: OS5.5 counts 6.
+    - **SY6:** Apple's age sheet shows on `Continue` with an 18+ band; `Under 18` gets the stop with no Apple sheet; a declined or failed sheet leaves the picked band to decide.
+    - **SY2.1:** Kit's hello posts once at setup's end, above the offer card (no longer "on both the Agree and the Not now path").
+
+## Nov 9 · The tab bar keeps its labels
+
+416. **The founder (Nov 9, in the Apple Connect beta session): "Keep the labels".** He had asked whether the words under the tab icons (Stylist, Closet, Lookbook, You) were redundant. Kept: Apple's HIG expects labeled tab bars, `specs.md` → Interfaces says "always labeled", and icon-only tabs are unclear to new users, which matters more now that the tips (SY2) send him to each tab by name. Any tab change keeps the labels.
