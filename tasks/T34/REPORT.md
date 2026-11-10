@@ -1,9 +1,10 @@
 # T34 · Report
 
 ## Summary for the founder
-- You now holds every setting: the gear is gone, and under your style card, What Kit knows and Today you'll find Appearance, Plan & usage, Privacy & data (once, not twice), Help & about and the version line. Every row opens the same page as before, and its back button reads "You". Checked in light and dark.
-- Not ready yet. An old link to Settings opens You at the top instead of at the rows. The demo screens that should open at the rows sometimes stop part-way down, with the version line under the tab bar. Both are fixes for the next round.
-- Not checked: the largest text size (the dev server went down mid-check), a real VoiceOver pass, and opening the old link when the app is closed on a real build.
+- You now holds every setting: no gear, and under your style card, What Kit knows and Today you'll find Appearance, Plan & usage, Privacy & data (once), Help & about and the version line. Every row opens the same page as before, with a back button that reads "You". Checked in light, dark and the largest text size.
+- Fixed this round: an old Settings link now opens You at the rows, and the screens that open at the rows land there every time, with nothing under the tab bar. "Acknowledgements" no longer breaks in the middle at the biggest text.
+- Not ready yet: if the same old link is opened a second time, You stays at the top. At the biggest text, "What Kit knows" loses its last letter on the Pro screen, and the style card's pick numbers get cut. Those two were there before this change. Some checks also need to be stronger.
+- Not checked: a real VoiceOver pass, and the old link with the app closed on a real build.
 
 ## Built (implementer)
 *(Pasted by the coordinator from the implementer's hand-back, round 1: the harness refused the file from the subagent.)*
@@ -105,3 +106,62 @@ Each bug was applied alone, then the 4 suites were run (`youSettingsHome`, `rele
 - Stylist on demos 270/271 with `finish`: the next round, with Metro up.
 - "Delete all my data" → `System`: the proposed render test.
 - From TESTING's not-testable list (unchanged): Show me around (T35); the Notifications row (beta-notifications task); the mail and web rows (the founder's support address and pages); sign-in rows on his phone (the accounts task).
+
+## Verification, round 2 (verifier)
+*Build `c01bf1e3` (the landing hook) and `bf74caa0` (one-word row titles fit) against the lock `dbda99e2`, Nov 10. Round-2 screenshots are in `tasks/T34/shots/r2/` (half size, JPEG).*
+
+**Lock:** since `dbda99e2`, only TESTING.md's lock line changed (`8dd8b5a5`). `dbda99e2` itself is add-only: two new loading tests, logged under Disputes. · banned shortcuts: none found · files outside the list: none. The internal import `expo-router/build/react-navigation/elements` is declared in Deviations. I checked that it is the same `HeaderHeightContext` the native stack provides (`NativeStackView.native.js` requires `../../elements`), so it works today, but an expo-router upgrade could move it.
+**Suites:** `npm run check` **green**, in parts: tsc clean; core typecheck clean; lint 0 errors (the old tryOn warning); core `853 passed`; Jest run directly as `npx jest --no-watchman`: `Test Suites: 3 skipped, 124 passed · Tests: 4 skipped, 1667 passed, 1671 total`. · server and parity: not touched.
+**Flows:** the full run gave `[Passed] FP7.5 … (5m 28s)` · `[Failed] SY1 · You is the settings home (1m 55s) (No visible element found: "Privacy & data")` · `[Passed] smoke (11s)`. The failure is in "SY1.3 back reads You": the tap on the glass `‹ You` back button registered but didn't navigate, so the flow was still on Plan & usage (the Simulator's glass-button trap). The T34 flow then passed **2 more runs in a row**: 2 of 3 overall. The round-1 failures (old link, landing) did not recur in any run.
+
+### Criteria
+- **SY1.1** · **fail (one remaining case)** · All unit tests pass, and the flow's "SY1.1 old link" passed in 3 of 3 runs. Deliberate bug "warm link lands only if `at` came before the rows were measured" (the round-1 behaviour) passes the unit tests and is **caught by the flow** (`Assertion is false: "Plan & usage, Free plan" is visible`). **Still failing:** a *second* old link. Stylist (demo 12) → old link (lands at the rows) → scroll to the top → Stylist (`Ask Kit…` visible) → old link again: You stays at the top, and the version line and `Plan & usage, Free plan` are not on screen. Reproduced 2 of 2 (`shots/r2/again-1b-stylist-run2.jpg`, then `again-2-second-link-run2.jpg`). The implementer lists this under Not done; the hook's own comment says "each time he arrives with it".
+- **SY1.2** · **pass** · All render tests pass, including the two new loading tests: the profile-guard and facts-guard bugs that went uncaught in round 1 are now caught. Landings are consistent in all 16 launches: 84, 141, 142, 258 and 270, light and dark, open at the true end with the version line above the tab bar (`shots/r2/{84,141,142,258,270}-{light,dark}.jpg`). 17, 257 and 271 open at the top. Every row is in order and matches the inventory. At the largest size, 84 puts the rows' top just under the nav bar (`ax-84-0.jpg`), the tall-page case.
+- **SY1.3** · **pass** · Render tests pass and every deliberate bug from round 1 is still caught. `‹ You` shows on Plan & usage, Privacy & data, Acknowledgements and Notifications (86), light and dark (`shots/r2/page-*-{light,dark}.jpg`, `86-*.jpg`). Appearance menu: System ✓, Light, Dark; picking Dark reads `Dark` (`appearance-menu-*.jpg`, `appearance-dark-*.jpg`).
+- **SY1.4** · **pass** · Test and deliberate bugs caught. Privacy & data appears once in every screenshot.
+- **SY1.5** · **pass** · Test passes; the deliberate bug (ScrollView wrapped in a View) is caught. The ScrollView is still the root. The tab bar is full on 17's top (`17-light.jpg`) and compact after scrolling (`ax-17-3.jpg` onward); round 1's before/after pair still applies.
+- **SY1.6** · **fail** · The render test passes. At the largest size (`content_size accessibility-extra-extra-extra-large`, reset to `large` after), every settings row title and value is whole. `Acknowledgements` now fits on one line (`ax-84-1.jpg`, `ax-270-1.jpg`, `ax-141-1.jpg`), the version line wraps between words, and the LinkRow pages (85 Plan & usage, 86 Notifications, 87 Privacy & data) are whole, with no mid-word breaks (`ax-85-*.jpg`, `ax-86-*.jpg`, `ax-87-*.jpg`). Rows hide their chevron at accessibility sizes, which is existing `LinkRow` design. **Two clipped elements on You at this size:** (a) on demo 271 the `What Kit knows` header reads "What / Kit know", with the `s` cut off next to `See all 8`, 2 of 2 (`ax-271-1.jpg`, `ax-knows-271-b.jpg`); (b) the style card's pick numbers ("1", "2") are cut inside their badges (`ax-17-0.jpg`). Neither part changed in T34 (only wrapped in a View), but both are on You, and SY1.6 covers demos 17 and 271. A real VoiceOver pass is still not verified.
+
+### Break it on purpose
+Round 1's 31 bugs were rerun against the new code; the scroll bugs were rewritten for the hook. Each was applied alone, run against the 4 suites, then reverted with `git checkout`. The tree was clean every time.
+- Caught by the unit tests (33): every round-1 bug (native-intent ×2, the route, the gear, demo 258, order, conditions, facts 4→5, the Pro row, the version line, every push, Appearance save and load, the mail subject, the policy link, Restore, the hint copy, Privacy twice or missing, the ScrollView wrapper, the label, the header, the role, and all three loading guards). New: landing y past the rows · `animated: true` · landing on every layout · `at` check swapped · the floor at 0 removed.
+- Caught by the flow only (2): the warm link landing only before the rows were measured (round-1 behaviour) → `"Plan & usage, Free plan" is visible` false · no re-landing (`RELANDS = 0`) → `"Kitted … Scoring v…" is visible` false.
+- **Not caught by anything (4):**
+  - The end ignores the tab bar (`+ bars.current.bottom` removed). Demo 270 then opens with the version line under the tab bar and Acknowledgements half covered (`shots/r2/mut-nobottom-270-light.jpg`), yet the flow's landing step passes: Maestro counts elements under the translucent bar as visible.
+  - The top ignores the nav bar (`- bars.current.top` removed). No demo page is tall at normal size, and no test gives the hook a header height.
+  - One-word titles no longer fit (`fit={false}`).
+  - The fit without `numberOfLines` (shrinking never triggers).
+
+### Screens (round 2)
+- All 8 You states (17, 84, 141, 142, 257, 258, 270, 271), light and dark: match the inventory; landings consistent.
+- Appearance menu, pages from You, 86: match.
+- Largest text: You (17 walked top to end, 84, 141, 142, 258, 270, 271; 84 and 270 also dark) and pages 85, 86, 87: rows whole; SY1.6 (a) and (b) clipped.
+- Stylist on 270 and 271, light and dark: the ordinary thread with `Ask Kit…`. No extra card, sheet or paywall from the `finish` set-up (`shots/r2/stylist-{270,271}-{light,dark}.jpg`).
+- Dev build only: the floating Tools button and a "Refreshing…" banner (Metro reloading; no file in the worktree changed). Neither is part of the app.
+
+### Tried to break it
+- Old link a second time → stays at the top (SY1.1 fail above). **Proposed test (render):** mount with `at: 'settings'` (one `scrollTo`), simulate the user dragging and scrolling to 0, re-render with the same `at` after a navigation → expect a second `scrollTo`. That needs a way to tell an arrival from a re-render, such as the router's focus event or a link nonce. **Proposed flow step:** the sequence above, ending `assertVisible` on the version line.
+- Double tap on `Plan & usage, Free plan` → one page; one Back returns to You (`dbl-1.jpg`, `dbl-2-after-back.jpg`) · proposed flow step: the same `doubleTapOn`, then Back → `Appearance, System` visible.
+- Appearance Dark → Privacy & data → Delete all my data → Delete everything → Welcome, drawn light: Appearance is back to System (`del-1-confirm.jpg`, `del-2-after.jpg`) · proposed render test as in round 1 (wipe KV, remount → `Appearance, System`).
+- Cold start from the old link: still not verifiable on the dev build (round 1).
+
+### Implementer's claims (round 2)
+- Warm link lands → **confirmed** (3 of 3 flow runs, plus the deliberate bug caught by the flow)
+- Cold landing is consistent, at the true end → **confirmed** (16 of 16 launches)
+- At the largest size the rows sit just under the nav bar → **confirmed** (`ax-84-0.jpg`)
+- `Acknowledgements` no longer breaks mid-word → **confirmed**
+- The T34 flow "passed 3 runs in a row" → **not quite:** 2 of 3 here, the miss being the glass back-button tap (a flow flake, not the app)
+- Not done: the old link again with `at` already `settings` doesn't land → **confirmed, and it is a fail** under SY1.1
+- `npm run check` green with 1667 passed → **confirmed**
+
+### Defects (round 2)
+1. **code** · A second old link doesn't land at the rows. `app/src/app/(tabs)/you/index.tsx`, `useLandAtRows`: the landing is armed only when `wanted` changes, and on a mounted You `at` stays `settings`. It needs to re-arm on each arrival (for example on the screen's focus with `at=settings`, then clear the param with `router.setParams({ at: undefined })` after landing, so the next link changes it again).
+2. **code (existing on You, not a T34 regression)** · At the largest text size on demo 271, `What Kit knows` is clipped to "Kit know" next to `See all 8` (the header row in `you/index.tsx`). On demo 17 it wraps whole. The style card's numbered badges also cut their digits (`StyleCard` pills). The coordinator decides whether these block T34 or become their own task; SY1.6 as written covers them.
+3. **test** · The flow's landing check passes with the version line under the tab bar (deliberate bug: tab bar inset removed). Assert that the version line is above the tab bar (`above: { text: "Stylist" }`, or an `assertVisible` with a `below`/`above` against the tab bar), or check against a point.
+4. **test** · Nothing checks the nav-bar inset. Proposed render test: wrap `YouScreen` in `HeaderHeightContext.Provider value={116}` and a safe-area bottom of 83, give the tall frame and content as the scroll test does → `y === rows.y − space.m − 116`. Add the same with a short content size → `y === content − page + 83`.
+5. **test** · Nothing checks the one-word title fit. Proposed render test: `LinkRow title="Acknowledgements"` → the title Text has `numberOfLines: 1` and `adjustsFontSizeToFit`; `title="Plan & usage"` → neither.
+6. **test (flake)** · "SY1.3 back reads You" taps the glass back button with a plain `tapOn` and failed 1 of 3. Add `retryTapIfNoChange: true` to the three Back taps (it made the probes pass every time).
+
+**Verdict:** **not ready.** Code defect 1 (SY1.1's second arrival), the clipping under SY1.6 (defect 2, for the coordinator to rule on), and test defects 3–6, including four deliberate bugs no test catches. · rounds: 2 of 3
+
+**Not verified:** a real VoiceOver pass (the founder, or Accessibility Inspector on demo 84) · a cold start from the old link on a real build (founder phone test) · from TESTING's list: Show me around (T35), the Notifications row, the mail and web rows, the sign-in rows on his phone.
