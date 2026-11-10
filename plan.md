@@ -98,7 +98,7 @@ Spec: `specs/setup-and-you.md` (interview: T30); for T37–T39, `specs/onboardin
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 
 - [x] 2026-11-09, #78 · **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check; You as the settings home, the feature guide (your beta feedback, Nov 8) · *done: approved Nov 9 · files: `specs/setup-and-you.md`*
-- [~] you-and-first-run · T34 · verify (round 3) · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
+- [~] you-and-first-run · T34 · PR #85 · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
 - [~] you-and-first-run · **T35** · *(beta)* The feature guide for new users: Kit's hello, then a tip the first time he reaches the score card, Closet, Lookbook and You; "Show me around" in You brings them back · *after T34 · checks: SY2, SY3 · files: onboarding/, you/, en.ts, a few tab screens*
 - [~] onboarding-screens · PR #79 · **T37** · Write the setup-screens spec with you, from your Nov 9 walk through the TestFlight build: a Welcome picture of our own (today's is a stranger's Unsplash photo), setup as plain screens instead of a pretend chat (the birth-year step first), and setup ending in Stylist with Kit offering a fit check instead of opening the camera on its own; built with T30's name field and agreement · *done: your yes (Nov 9) · files: `specs/onboarding-screens.md`*
 - [~] onboarding-screens · **T38** · *(beta)* Welcome and the Example check drawn in code: no photo, an outfit drawn like Closet's pieces with its score card playing one fix · *after T37 · checks: OS1, OS2 · files: onboarding/{WelcomeScreen,welcomeExample,ExampleCheckScreen,exampleCheck}, a drawn-outfit view, a bundled reading, en.ts*
@@ -188,7 +188,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #417, PR #PRNUM
+- 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #417, PR #85
 - 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #414
 - 2026-11-09 · T55: the card waits until Kit knows two outfits that work (founder, F6.2 rewritten, F13.1); a checked card that suggested nothing reads "Today's fit" under your check's occasion; `canSuggest` for the notifications; verified ready in round 2, not on the Simulator · #412–413, PR #82
 - 2026-11-09 · T54: the double evening card's cause found (two asks while the weather loads) and fixed in the morning service; 20 tests, 20 planted bugs caught; verified ready, not yet on the Simulator or your phone · #410, PR #75
