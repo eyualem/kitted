@@ -1,6 +1,6 @@
 # Setup and You
 
-**Approved by the founder:** 2026-11-09
+**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`)
 
 After this, a new user learns each feature the moment he reaches it, finds every setting on You without digging, and setup asks his name (optional), checks his age the Apple way and asks for the privacy agreement when he first opens the camera.
 
@@ -52,22 +52,21 @@ The `Show me around` row in You → Help & about:
 3. From there the tips show as he reaches each place; the first-score tip shows under his **next** scored check, not an old one.
 
 ## SY4. The name (before launch)
-- On setup's basics step, above `Birth year`: the label `What should Kit call you?` and a text field with the placeholder `First name (optional)`. No Skip button: a blank field is skipping, and `Looks right` waits only on the birth year.
+- On setup's About you step (`specs/onboarding-screens.md` OS4), above `How old are you?`: the label `What should Kit call you?` and a text field with the placeholder `First name (optional)`. No Skip button: a blank field is skipping, and `Continue` waits only on the age pick.
 - Trimmed; up to 30 characters **(assumed)**; blank means no name.
 - Style profile → Basics gets a `Name` row to change or clear it (the same placeholder).
 - Used only in code-written lines (F1.5); never sent to Google, OpenAI or PostHog; Kit's AI answers never say it. Signing in with Apple fills an empty one with Apple's first name (F1.4, built with sign-in).
 
 ## SY5. The agreement on the first camera open (before launch)
-- Setup has no agreement step: Welcome → Looks → Basics → (age checks) → the camera, with the agreement on top the first time. Same words and buttons as today's agreement step (`Agree & check my fit`, `Not now`, `See an example first`).
-- `Agree & check my fit` → the camera, live. `Not now` → Stylist with the "Turn on fit checks" card, as today. Kit's hello is posted either way.
+- Setup has no agreement step: Welcome → Looks → About you → Stylist (`specs/onboarding-screens.md` OS5): Kit's hello, then Kit's offer card. The camera never opens on its own; the agreement shows on top of the camera the first time he opens it (Check my fit, or the chat's camera button). Same words and buttons as today's agreement step (`Agree & check my fit`, `Not now`, `See an example first`).
+- `Agree & check my fit` → the camera, live. `Not now` → Stylist with the "Turn on fit checks" card, as today.
 - Nothing is sent anywhere before he agrees (F1.3).
-- How setup reaches the camera in 6 taps (F1.1; 7 today even with this step gone) is settled in T33's plan and checked there.
 
 ## SY6. Apple's age check (before launch)
-- When he taps `Looks right` with a birth year that makes him 18 or older, Apple's age-range sheet asks to share his age range (never his birthday).
+- When he taps `Continue` on About you with an age band of 18 or older, Apple's age-range sheet asks to share his age range (never his birthday).
 - Apple says 18+ → setup goes on. Apple says under 18 → the age stop, as today (no camera, kept through a reinstall).
-- He declines, his iPhone can't answer, or it fails → the birth year alone decides; setup goes on.
-- A birth year under 18 → today's confirm and stop, with no Apple sheet.
+- He declines, his iPhone can't answer, or it fails → the age band he picked decides; setup goes on.
+- `Under 18` → the confirm and stop (`specs/onboarding-screens.md` OS4), with no Apple sheet.
 
 ## Rules
 - A tip's "done" mark is kept on this iPhone only; it isn't backed up. "Delete all my data" clears them, so every tip shows again.
@@ -89,7 +88,7 @@ The `Show me around` row in You → Help & about:
 - SY1.6 Light, dark and the largest text size: nothing clipped, no word broken mid-word; VoiceOver reads each row as a button with its value.
 
 **SY2. Tips**
-- SY2.1 A new setup's end posts Kit's hello with exactly the approved words, once, on both the Agree and the Not now path, and no separate AI note.
+- SY2.1 A new setup's end (About you's Continue) posts Kit's hello with exactly the approved words, once, above Kit's offer card, and no separate AI note.
 - SY2.2 The first-score tip shows under the first scored check's card only; `Got it` removes it for good (it stays gone after closing and reopening the app); re-checking that fit also removes it.
 - SY2.3 The Closet tip shows at the top of Closet while it has at least one piece and the tip isn't done; never on the empty Closet. `Got it` removes it for good.
 - SY2.4 The Lookbook tip: the same, with at least one look.
@@ -105,26 +104,26 @@ The `Show me around` row in You → Help & about:
 - SY3.3 Afterwards the first-score tip shows under the next scored check and under no older one; the Closet, Lookbook and You tips show on their next visit.
 
 **SY4. The name**
-- SY4.1 The basics step shows `What should Kit call you?` with `First name (optional)` above `Birth year`; `Looks right` is enabled with a birth year and a blank name.
+- SY4.1 The About you step shows `What should Kit call you?` with `First name (optional)` above `How old are you?`; `Continue` is enabled with an age picked and a blank name.
 - SY4.2 A name is saved trimmed, at most 30 characters; spaces only means no name.
 - SY4.3 Style profile → Basics changes or clears the name; clearing it changes the greetings back (F1.4).
 - SY4.4 No request to the server (fit check, question, any other) carries the name (a test over every request builder).
 
 **SY5. The agreement**
-- SY5.1 Setup has no agreement screen; after `Looks right` (18+) the camera opens with the agreement on top, the first time only.
+- SY5.1 Setup has no agreement screen; the camera never opens on its own; the first time he opens it, the agreement is on top.
 - SY5.2 `Agree & check my fit` starts the camera; `Not now` lands in Stylist with the "Turn on fit checks" card; before Agree, nothing is sent (F1.3).
 
 **SY6. Apple's age check**
-- SY6.1 Birth year 18+ and Apple says 18+ → setup goes on; Apple says under 18 → the age stop, no camera.
-- SY6.2 Declined, unavailable or failed → the birth year decides and setup goes on.
-- SY6.3 A birth year under 18 → today's confirm and stop, with no Apple sheet.
+- SY6.1 An age band of 18+ and Apple says 18+ → setup goes on; Apple says under 18 → the age stop, no camera.
+- SY6.2 Declined, unavailable or failed → the picked age band decides and setup goes on.
+- SY6.3 `Under 18` → the confirm and stop, with no Apple sheet.
 
 ## Touches
 - SY1: `app/src/app/(tabs)/you/{_layout,index,settings}.tsx`, `app/src/features/{you,settings}`. Must keep Notifications (the beta-notifications session's screen, `you/notifications.tsx`), Plan & usage, Privacy & data and Acknowledgements working, and the beta's Plan row (FP7).
 - SY2–SY3: `app/src/features/onboarding/complete.ts` (Kit's hello), the chat's score card, Closet's and Lookbook's tab screens, a small tips module, `en.ts`.
-- SY4: onboarding's basics step, Style profile, `data/types.ts`, the request builders' tests.
+- SY4: onboarding's About you step, Style profile, `data/types.ts`, the request builders' tests.
 - SY5: onboarding's agreement step and the camera's first open.
-- SY6: onboarding's basics step and a native module (Declared Age Range; T80's paid team).
+- SY6: onboarding's About you step and a native module (Declared Age Range; T80's paid team).
 
 ## Assumptions
 - A name holds at most 30 characters (long enough for any first name; keeps greetings on one line).

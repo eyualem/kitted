@@ -2901,7 +2901,41 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **For the restart:** `tasks/T80/` holds the parked plan (what each entitlement changes per build, the portal steps, now Y21, and the traps). It needs a re-plan for the four rules above. WeatherKit needs both the App Services and the Capabilities tick on the App ID, and EAS syncs only the capability.
     - **Lesson:** read a data provider's terms before wiring it in, not at switch-on. "Free" data often comes with rules about storage and attribution that shape the design (here: what the database may keep).
 
-415. **"Fit check ready" joins the beta; frame 7 isn't four at once (the founder, Nov 9, reviewing T53's design).** He read the design's frame 7 (the four nudge lines side by side) as four notifications at once: "4 notifications at the same time is excessive. a max of one notification per day, unless they leave while the rating is processing. then we can tell them to check their rating out". Frame 7 was the four possible lines for review; he gets one a day. It's redrawn as one notification with the alternatives listed, so it can't be read that way.
+## Nov 9 · `specs/setup-and-you.md` brought in line with the new setup screens
+
+415. **The founder's yes (Nov 9, in the you-and-first-run session) to four edits,** after he approved `specs/onboarding-screens.md` (#407–408): setup ends in Stylist, not on the camera, and the birth year became an age pick on an About you step.
+    - **SY4:** the name field sits on About you above `How old are you?`; the step's button is `Continue`, waiting only on the age pick. Its rules (trimmed, 30 characters, never sent) don't change.
+    - **SY5:** Welcome → Looks → About you → Stylist (Kit's hello, then the offer card); the camera never opens on its own, and the agreement shows over it the first time he opens it. The "6 taps settled in T33" note went: OS5.5 counts 6.
+    - **SY6:** Apple's age sheet shows on `Continue` with an 18+ band; `Under 18` gets the stop with no Apple sheet; a declined or failed sheet leaves the picked band to decide.
+    - **SY2.1:** Kit's hello posts once at setup's end, above the offer card (no longer "on both the Agree and the Not now path").
+
+## Nov 9 · The tab bar keeps its labels
+
+416. **The founder (Nov 9, in the Apple Connect beta session): "Keep the labels".** He had asked whether the words under the tab icons (Stylist, Closet, Lookbook, You) were redundant. Kept: Apple's HIG expects labeled tab bars, `specs.md` → Interfaces says "always labeled", and icon-only tabs are unclear to new users, which matters more now that the tips (SY2) send him to each tab by name. Any tab change keeps the labels.
+
+417. **The founder (Nov 10): "Yes, write it". The workflow is sized to the risk, with at most 3 sessions building at once.**
+    - **Why:** an audit of the 6 beta-fix sessions (Nov 8–10) counted about 9,100 model calls, about 25 times the TestFlight session that started them. The 5-hour usage limit was hit once, and that stopped every session together. Memory fell to about 120 MB free and held checks back. The pipeline caught real problems (the double card's root cause, a test that could never pass, 4 design blockers), but it ran at full size for small changes. A section removal and a one-file bug fix each got a planner, the design stage, up to 3 rounds and 16–20 planted bugs.
+    - **Sizes** (`.claude/skills/build-task/SKILL.md` → Size):
+      - S, small (a bug fix, a removal, words): no design stage, a one-page plan, at most 5 planted bugs, only the screens and flows it changes, 2 rounds.
+      - M, medium: the design stage only for a new state, the critic on changed screens only, at most 10 planted bugs, 2 rounds.
+      - L, large: everything, 3 rounds.
+      - Privacy, scoring, limits, money, the age gate and the server are never S.
+      - Tests first and locked at every size, and every flow runs once before a TestFlight build.
+    - **Sessions:** at most 3 building at once. Finish and merge before starting more, and archive finished sessions instead of reusing them (CLAUDE.md rule 8, WORKFLOW.md).
+    - **Log numbers:** a branch numbers its new entries `N.` and gives them real numbers once, at merge. This replaces the renumbering messages sessions were sending each other. This entry is the first one written that way.
+    - **Not changed:** the redesign stage in eyualem/kitted#83 (art director, interaction designer, a written debate) is still open. Claude recommends holding it until after the beta; that's the founder's call.
+
+## Nov 10 · T34: You is the settings home (built)
+
+418. **T34 built through `/build-task` in three rounds; verified ready in round 3.** The technical calls, made by the coordinator (none is taste or words):
+    - **The plan's defaults T-1 to T-7 (tasks/T34/IMPLEMENTATION.md):** "Show me around" waits for T35 (a row that does nothing would break "hidden, not dead", #323); the rows go one card per spec bullet; the Pro row stays under the style card; an old `kitted://you/settings` link is rewritten in `+native-intent.tsx` to `/you?at=settings` and You opens scrolled to its rows (the scroll also lets demo screens 84, 141, 142, 258 and the new 270, 271 show the rows); section spacing as Settings had it.
+    - **The landing:** the scroll target allows for the nav bar (the native stack's `HeaderHeightContext`, imported from expo-router's internal `build/react-navigation/elements` path, which an expo-router upgrade could move) and the tab bar (its safe-area bottom), lands at the true end on a short page, and lands again for 1.5 s while iOS settles its insets. You clears `at` when he leaves, so a return by the tab keeps his place (the HIG's tab behaviour) and the next old link lands again.
+    - **Kept on purpose:** a second old link opened while You is still on screen, after he scrolled up, leaves You where he is. SY1.1 only asks that the link open You; old links live only in old messages, and closing it would need a per-link nonce. Revisit if it ever matters.
+    - **SY1.6 at the largest text size**, fixed in this task though older than it: a one-word row title (`Acknowledgements`) shrinks to fit its line instead of breaking mid-word (`LinkRow` only; titles with spaces still wrap); What Kit knows stacks over `See all {n}`; the numbered pick badge grows with its number. These apply on the Plan & usage, Privacy & data and Notifications pages and in Style profile too.
+    - **Overrides `research-context.md` §C14's "Settings live behind a gear"** (#405).
+    - **Lessons:** RNTL 14's `unmount()` returns a Promise; not awaiting it overlaps the next render's `act()` and silently stops every later render in the file. A Metro another session left on 8081 serves that branch's code to every flow, so check whose Metro answers (`lsof -p <pid> -d cwd`) before trusting a run.
+
+N. **"Fit check ready" joins the beta; frame 7 isn't four at once (the founder, Nov 9, reviewing T53's design).** He read the design's frame 7 (the four nudge lines side by side) as four notifications at once: "4 notifications at the same time is excessive. a max of one notification per day, unless they leave while the rating is processing. then we can tell them to check their rating out". Frame 7 was the four possible lines for review; he gets one a day. It's redrawn as one notification with the alternatives listed, so it can't be read that way.
     - **NT6 (his yes):** when he leaves during a check, the app asks iOS for extra time (about 30 s); if the score arrives, `Your fit check is ready. 2 quick fixes inside.` (his pick over showing the score, which would sit on the lock screen). No score on the lock screen; nothing when he's in the app, the check failed, or iOS's time ran out (the score waits in the chat). Needs a few lines of native code in the local module, no new package; checked on a real phone.
     - **You → Notifications (his pick):** header `An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send.`; rows Daily outfit idea · I get dressed at · Fit check ready.
     - **`specs.md` F13 (his yes):** "fit check ready" is in the beta, not only at launch.
