@@ -139,6 +139,7 @@ Lane files: `app/packages/kitted-core`, `extraction-test/`, `app/src/features/{f
 - [ ] **T62** · The card's words to the spec: the head-not-found line, "Taking longer…", "I did make the change" · *spec: specs.md · checks: F2.2, F2.3, F3.3 · files: camera/, fitcheck/, en.ts* · **F2.2's design approved Nov 9** (`tasks/T62/DESIGN.md`, the design-stage dry run); F2.3 and F3.3 still get designed when it runs
 - [ ] **T63** · A test proving every card with a fix has a free fix · *spec: specs.md · checks: F2.7 · files: core tests*
 - [ ] **T64** · The morning card, Kit's ideas and Swap pick outfits with the fit check's scoring, not the old rubric: rebuild #48 on today's main, keeping the warm-layer and Swap-rotation changes · *after Y3 · spec: specs.md · checks: F6, F6.3 · files: core `ideas.ts`, core tests*
+- [ ] **T65** · *(beta)* Take out the repeated "what we do with your data" lines across the app (the founder, Nov 9: "we dont have to let them know what we are doing with the data collected at every step"); keep the camera's one-time agreement and Privacy & data. A short list of lines for his yes first · *spec: specs.md (his yes on each removed line) · files: camera/, fitcheck/, stylist/, en.ts*
 
 ### Closet
 *So the closet fills from day one. Done means photos of clothes laid on a bed become Closet pieces, which makes the morning outfit idea work for a new user.*
