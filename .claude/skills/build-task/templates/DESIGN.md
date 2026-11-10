@@ -43,6 +43,13 @@ Components or tokens that don't exist yet, each with why the existing one doesn'
 ## Out of scope
 - <what this design deliberately doesn't cover, and which task does>
 
+## Debate
+One agent at a time; each sees the frames and the others' written points, never their reasoning.
+- **Round <n> · interaction designer** · first read per phone · count table (elements, actions, numbers, words) · points **I1…**: where · kind (cut / collapse / merge / move / extra step / extra choice / number with no decision / empty space / **spec**) · what, counted · evidence · proposal · high | low
+- **Round <n> · <designer | art director>** · I1: accepted (what changed) | kept (one checkable reason) | founder's call · …
+- **Round <n> · critic** · I1: settled for <side> by <rule> | founder's call (what each side gains) · …
+- **The founder** · I1: <his answer, or "the recommendation stands"> · …
+
 ## Design check (critic)
 Written by the critic, round by round.
 - **Round <n>** · <matches | doesn't match>

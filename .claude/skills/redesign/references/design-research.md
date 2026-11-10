@@ -69,6 +69,25 @@ These come from the transcript of WWDC25 session 356, *Get to know the new desig
 3. Shape rules from Apple, not from taste: system chrome stays Apple's, Kitted's own shapes use at most two or three radii, and nested shapes are concentric.
 4. "Serious" is judged by proxies that can be counted, not by adjectives: distinct radii, capsules and circles outside system chrome, type sizes and weights, accent uses, and one primary thing per screen.
 
+
+## 8. Interaction design: cutting steps, features and information (added Nov 9 for the interaction designer)
+
+- **Clarity and deference** (Apple's HIG, the long-standing themes): legible text, precise icons, subtle adornment, and an interface that steps back so content leads. On iOS 26, Apple reframes its themes as hierarchy, harmony and consistency, with an interface that can "prioritize, hide, or simplify" by what the user is doing (createwithswift's reading of the HIG; read Apple's pages directly before quoting them). **[strong: platform rules; secondhand wording]**
+- **Aesthetic and minimalist design** (Nielsen's heuristic 8): every extra unit of information competes with the relevant ones. **[strong]**
+- **Progressive disclosure** (Nielsen, NN/g, 2006): defer secondary options to a later screen or a tap, so attention stays on the few that matter. It improves learnability, efficiency and error rate; NN/g also describes "staged disclosure" (wizards) as a variant. Designs that go past two levels of disclosure tend to fail, so I've used "never three layers deep" as the rule (from the article as quoted secondhand). **[strong]**
+- **Cognitive load** (Whitenton, NN/g, 2013, *Minimize Cognitive Load to Maximize Usability*): intrinsic load comes from the task, extraneous load from the design. Remove the extraneous part: clutter, things to remember, decisions with no payoff. **[strong]**
+- **Hick–Hyman law** (Hick 1952; Hyman 1953): decision time grows logarithmically with the number of equally likely choices. Its effect shrinks for familiar, practised responses, and it isn't a law of "choice overload". So it supports one clear primary action, not "fewer options is always better". **[medium]**
+- **Feature fatigue** (Thompson, Hamilton & Rust, 2005, *Journal of Marketing Research* 42(4)): people weight capability before use and usability after it, so they pick feature-heavy products that satisfy them less. In one study, 66% picked the model with the most features in the store; after use, 56% preferred a simpler one (University of Maryland's summary). **[medium]**
+- **Kitted's own evidence (founder, Nov 9):** a tester said the result card's numbers (gains on every fix, "+1.0" pills, the ledger) felt like sports betting. Numbers change what the product feels like, not just how busy it looks.
+- **Why a debate, and why in writing:** NN/g's critique guidance (a conversation tied to goals, not a verdict) plus Nielsen's independent evaluators. Each agent writes its points before it sees anyone's reasoning, and a third party (the critic) settles what a rule can settle. Taste and features go to the one person who owns them, the founder.
+
+Sources for §8:
+- NN/g, Progressive Disclosure (Nielsen, 2006): https://www.nngroup.com/articles/progressive-disclosure/ · video: https://www.nngroup.com/videos/progressive-disclosure/
+- NN/g, Minimize Cognitive Load to Maximize Usability (Whitenton, 2013): https://www.nngroup.com/articles/minimize-cognitive-load/
+- Hick's law (overview and limits): https://en.wikipedia.org/wiki/Hick%27s_law
+- Thompson, Hamilton & Rust 2005, Feature Fatigue: https://doi.org/10.1509/jmkr.2005.42.4.431 · summary: https://www.rhsmith.umd.edu/news/feature-fatigue-research-proves-simpler-products-are-better-manufacturers-advised-lose-extra
+- Apple's design themes, secondhand: https://www.createwithswift.com/liquid-glass-redefining-design-through-hierarchy-harmony-and-consistency/
+
 ---
 
 ## Sources

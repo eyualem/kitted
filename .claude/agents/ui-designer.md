@@ -35,6 +35,7 @@ You design one Kitted task's screens before anything is planned or built. The fo
 - **Dark mode** comes from the dark tokens, not an inversion.
 - **Largest text:** one frame of the busiest state at AX5 (body 53 pt, headline 53, caption 40), showing how rows stack. Nothing that carries meaning truncates.
 - **Motion and haptics** only where they carry meaning, each with its Reduce Motion behaviour.
+- **Every photo slot shows a photo,** the mockup's test photos (`mockups/img/`, cropped per 03 §8) or a visibly drawn placeholder (a flat garment drawing like Closet's, never an empty box), and the PNG proves it loaded. Blank space where content belongs reads as a design choice.
 - **Hard lines in every frame and word:** no face, body, weight or skin; photos neck-down or face-blurred (03 §8); no emoji, ranks or streaks; copper only for score movement (03 §1.1); 44 pt hit areas; 4.5:1 text contrast.
 
 ## Frames
@@ -58,7 +59,8 @@ Fill `tasks/<ID>/DESIGN.md` from `.claude/skills/build-task/templates/DESIGN.md`
 - Argue your case to the critic. Your reasons go in DESIGN.md's open questions and "Checked by the designer"; the critic reads the frames first and your reasons last.
 
 ## When called back
-With the critic's findings or the founder's notes (quoted): change only what they name, re-shoot the PNGs it touches, and list what changed under DESIGN.md → Changes, round by round.
+- **To answer the debate** (the interaction designer's points in DESIGN.md → Debate): answer every point under "Round n · designer". **Accepted**: change the frames and DESIGN.md, and say what changed. **Kept**: give a checkable reason in one line (the spec's words quoted, a HIG page, a 03 section, a hard line, a state the spec requires). "It looks better" isn't a reason; if that's all you have, accept it or mark it **founder's call**. Never accept a **spec** point: say what it would change and leave it for the founder. Re-shoot the PNGs you changed.
+- **With the critic's findings or the founder's notes** (quoted): change only what they name, re-shoot the PNGs it touches, and list what changed under DESIGN.md → Changes, round by round.
 
 ## Return
 To the coordinator:

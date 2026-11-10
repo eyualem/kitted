@@ -30,19 +30,20 @@ For each direction, write the plan first (DIRECTION.md, from the template): a na
 - **Keep what's fixed** (`visual-tone.md` §1): the hard lines, Apple's chrome, concentric nesting, accessibility.
 - **Keep today's identity unless the brief is against it:** the five things in 03 §1 that make Kitted specific (woven wordmark, seams, tape-measure silhouette, score words, copper as the only accent). Dropping or changing any of them is listed under the direction's "Founder's calls".
 - **Faces:** only those in `visual-tone.md` §3. A face that needs a download goes under "Founder's calls" with its foundry, price, file size and the system fallback, and the direction must still work with the fallback.
-- **Words:** today's words from `en.ts` on every screen, exactly. A direction changes looks, never copy. If a layout seems to need different words, that's an open question.
+- **Words:** today's words from `en.ts` on every screen, exactly. A direction changes looks, never copy. The one exception is content the founder has already decided (the coordinator passes it; the first run's is in `first-directions.md` → Content). Copy it into DIRECTION.md → Content and use it on every board, while today's phones stay as today. If a layout seems to need other words, that's an open question.
+- **A lead direction:** if the coordinator or the candidates name one (the first run's is B Tailored), plan it in full and draw it on four phones. Plan the others only as far as drawing them honestly needs, on three phones each, as contrast.
 
 ### 3. Draw
 - `sh tools/mockshots/design-shell.sh <ID> "Redesign directions"` creates `tasks/<ID>/design.html` with the mockup's CSS, icons and phone frames, and today's colors.
 - **Phones, in this order** (keep the numbers; the critic and the PNGs depend on them):
   - 1–3: today (Stylist home, Result, Closet), drawn from the mockup's markup with today's `en.ts` words, so the comparison is fair;
-  - 4–7: direction A (Stylist home, Result, Closet, Result at largest text);
-  - 8–11: direction B, the same four;
-  - 12–15: direction C, if there is one.
+  - then each direction in turn, the lead first: Stylist home, Result, Closet, and for the lead (or every direction, when there's no lead) the result card at the largest text size;
+  - so the first run is: today 1–3, B 4–7, A 8–10, C 11–13; with no lead and three directions it's A 4–7, B 8–11, C 12–15;
   - `design-shot.sh` counts `<figure class="shot">` from the top of the page, so the figures must sit in this order in the HTML.
 - Wrap each direction's phones in `<div class="direction" data-dir="a">`, and put its rules in one `<style>` block scoped to that wrapper (`.direction[data-dir="a"] .card{border-radius:…}`, its CSS variables, its type). No direction's CSS may leak into another or into today's.
 - Each figcaption names the direction, the screen and the 3–5 rules visible on it ("radius 8 / 4 / 0; no capsules in content; numerals Archivo 64").
 - The same content on every board: the same photo crops (neck-down, 03 §8), the same outfit, score, fixes and closet pieces, so he compares looks, not content.
+- **Every photo slot shows a photo:** the test photos in `mockups/img/` or a visibly drawn placeholder (a flat garment drawing like Closet's), never an empty box. Check each PNG: a blank where a photo belongs reads as a design choice (the founder took an old mockup's unloaded photos for the new design).
 - PNGs: `sh tools/mockshots/design-shot.sh <ID> <n> light`, then `dark`, for every phone. Open every PNG (Read) and fix what's off: overlap, clipping, a stand-in face drawn instead of the one named, a rule in the plan that the frame doesn't follow.
 - **Self-check with the critic's rubric** (`.claude/agents/ui-critic.md` → Rubric) before you return, and fix what you find. You still don't judge your own work for the founder; the critic does.
 
@@ -72,7 +73,8 @@ Nothing here edits tokens, 03, the mockups or app code: it's the list the founde
 - Add the approval line: the coordinator adds it after the founder's yes.
 
 ## When called back
-With the critic's findings or the founder's notes (quoted): change only what they name, re-shoot the PNGs it touches, and list what changed under DIRECTION.md → Changes (or CHANGES.md → Changes), round by round.
+- **To answer the debate** (the interaction designer's points in DIRECTION.md → Debate): answer each under "Round n · art director". **Accepted**: change the boards and say what changed. **Kept**: give a checkable reason in one line (the brief or the founder's Content quoted, a rule in `visual-tone.md`, the HIG, a hard line). A point about what the card shows that the founder already decided in Content is kept, citing it; a point against a spec is the founder's call. Re-shoot what you changed.
+- With the critic's findings or the founder's notes (quoted): change only what they name, re-shoot the PNGs it touches, and list what changed under DIRECTION.md → Changes (or CHANGES.md → Changes), round by round.
 
 ## Return
 To the coordinator:

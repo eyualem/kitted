@@ -1,6 +1,6 @@
 ---
 name: build-task
-description: Build one code task from plan.md end to end - design (for screens), plan, tests first, build, independent verify and design review, with a fix loop - using separate agents so no one checks their own work. Use when the founder says "/build-task T11", "build T11", "do the next task" or similar for a code task. Not for spec-writing tasks (those are /grill-me interviews).
+description: Build one code task from plan.md end to end - design with a debate (for screens), plan, tests first, build, independent verify and design review, with a fix loop - using separate agents so no one checks their own work. Use when the founder says "/build-task T11", "build T11", "do the next task" or similar for a code task. Not for spec-writing tasks (those are /grill-me interviews).
 argument-hint: <task ID, e.g. T11>
 ---
 
@@ -28,9 +28,13 @@ You are the coordinator. You don't write the design, the plan, the tests or the 
 
 ## D. Design (only for a task that changes what he sees)
 **When:** the task adds or changes anything on screen (a state, a card, a sheet, a row, words in a new place) **and** has no `tasks/<ID>/IMPLEMENTATION.md` yet. A task planned before this stage existed carries on without it, and a task that changes nothing on screen (server, scoring, tests only) skips it. If `tasks/<ID>/DESIGN.md` already carries the founder's approval line for every state the task shows, go to step 1; if it covers only some (its "Out of scope" says which), run D for the rest: new states take the next phone numbers so the approved PNGs keep theirs, and his yes rewrites the approval line's scope.
-1. Plan line → `[~] <ID> · design`. Run the **ui-designer** agent (`subagent_type: "ui-designer"`) with the task ID, its `plan.md` line, the lane and the spec file. Wait.
-2. Run the **ui-critic** agent with the task ID and mode `design`. Blockers go back to the designer with the critic's findings; then the critic again. At most 2 rounds; a blocker still open after that goes to the founder with the rest.
-3. Show the founder. Open the frames (`preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/<ID>/design.html`) and send the PNGs. In plain words: what he'll see in each state, the NEW words, the open questions with your pick, and the critic's suggestions (optional). Ask in one AskUserQuestion: **Looks right (Recommended)** · Change something. His yes approves the NEW words too.
+1. Plan line → `[~] <ID> · design`. **The designer proposes:** run the **ui-designer** agent (`subagent_type: "ui-designer"`) with the task ID, its `plan.md` line, the lane and the spec file. Wait.
+2. **The debate**, written in DESIGN.md → Debate, one agent at a time. Each agent sees the frames and the others' written points, never their return messages or reasoning:
+   - **The interaction designer argues against clutter:** run **interaction-designer** with the task ID and mode `design`. It counts what's on each state, says what each element is for, and writes numbered points (I1…) to cut, collapse, merge or move things. Points against the spec are marked **spec**.
+   - **The designer answers:** run the ui-designer again with mode "answer the debate". Each point gets **accepted** (and the frames change) or **kept**, with a checkable reason (the spec's words, the HIG, 03, a hard line) in one line. It can't accept a **spec** point; those go to the founder.
+   - **The critic scores and rules:** run the **ui-critic** with the task ID and mode `design`. It scores the frames on its rubric, then rules on every point still open: **settled**, for one side, by a rule it cites, or **founder's call** (taste or features).
+   - Blockers go back to the designer with the critic's findings, then the critic again. At most 2 rounds for the whole loop; anything still open after that goes to the founder with the rest.
+3. Show the founder. Open the frames (`preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/<ID>/design.html`) and send the PNGs. In plain words: what he'll see in each state, the NEW words, and **one short list of his calls**: the debate's open points and spec points, the designer's open questions and the critic's suggestions. Each one gets your recommended answer and one line on why. Ask in one AskUserQuestion: **Looks right (Recommended)** · Change something. His yes approves the NEW words and your recommended answers on the list, unless he says otherwise; log each answer under Debate.
 4. Changes: run the designer again with his words quoted (and the critic again if more than words changed), then show him again. After 3 rounds of changes, stop drawing and talk it through with him.
 5. His yes: add `**Approved by the founder:** <today> in chat` under DESIGN.md's title, log the NEW words and any decision in DECISIONS-LOG, commit `<ID>: design`.
 - If the design shows the spec is wrong or silent on **behaviour** (not looks), that's a spec change: ask him per CLAUDE.md before going on.
@@ -72,7 +76,7 @@ Then verify again (and run 4b again). After round 3, stop: report what's still f
 
 ## Rules for you
 - Run agents one at a time and wait for each; they share this worktree and branch. Never `isolation: worktree`.
-- An agent type is loaded when the session starts. If one isn't found (`ui-designer`, `ui-critic` in a session older than their files), run `general-purpose` with "Your instructions are `.claude/agents/<name>.md`; read it first and follow it exactly", plus the same task ID and paths.
+- An agent type is loaded when the session starts. If one isn't found (`ui-designer`, `ui-critic`, `interaction-designer` in a session older than their files), run `general-purpose` with "Your instructions are `.claude/agents/<name>.md`; read it first and follow it exactly", plus the same task ID and paths.
 - Pass agents file paths and IDs, not your opinions of the work. The critic never gets the designer's or the implementer's reasoning, only the files.
 - Don't edit app code, tests, TESTING.md or the verdict yourself. If an agent's output is broken, run it again with what was wrong.
 - Spending money (a live AI test), installing anything, a new package: ask the founder first.

@@ -23,7 +23,9 @@ The whole process on one page, for the founder and for Claude. It explains and p
      ├─ 0. spec gate ..... is the lane's spec there and approved? if not, offers the interview
      ├─ D. design ........ only if the task changes a screen:
      │     ├─ designer ... each state drawn as phone frames + tasks/T11/DESIGN.md
-     │     ├─ critic ..... checks the frames against Apple's rules, §C14 and the design system
+     │     ├─ interaction designer ... argues to cut steps, features and information
+     │     ├─ designer ... answers each point: changed, or kept with a rule
+     │     ├─ critic ..... scores the frames on its rubric, rules on the points a rule settles
      │     └─ you ........ look at the frames: yes, or what to change
      ├─ 1. planner ....... tasks/T11/IMPLEMENTATION.md + TESTING.md (the contract; a design's
      │                     states and words become the UI inventory, word for word)
@@ -45,7 +47,8 @@ The whole process on one page, for the founder and for Claude. It explains and p
      ├─ art director ....... 2–3 directions (yours, if you named them), each drawn on the same three screens
      │                       (Stylist home, the result card, Closet) next to today's, with
      │                       its corner sizes, type and color rules written as numbers
-     ├─ critic ............. checks each board follows its own rules, Apple's and the hard lines
+     ├─ interaction designer  argues against clutter on each board; the art director answers
+     ├─ critic ............. scores each board, checks it follows its own rules, rules on the points
      ├─ you ................ pick one (or mix): Claude recommends, you decide
      ├─ art director ....... turns the pick into a change list: every token and component
      ├─ critic ............. checks the list is complete and true to your pick
@@ -100,10 +103,11 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 
 1. **A designer before any code.** It turns the spec into every state (normal, empty, loading, error, offline, the refused case) as phone frames in the mockup's own style, with the exact words, VoiceOver labels, dark mode and the largest text size. You approve the look while a change still costs one sentence.
 2. **A critic who drew nothing and built nothing.** It checks the frames against Apple's rules, §C14 and the design system before you see them. After the build it screenshots every state on the Simulator and compares each with your approved frame.
-3. **The critic only blocks on rules.** A difference from your approved design, Apple's rules or §C14 blocks the task. Its own taste goes to you as optional suggestions, so the loop can't run forever on opinion.
-4. **A written rubric, so "looks off" becomes something to fix.** The critic scores every screen on ten lines (hierarchy, shape consistency, density, alignment, type, color restraint, Apple's rules, accessibility, states and words, and "does this feel like a serious stylist"), counting what can be counted (corner sizes, circles, type sizes, accent uses). Each finding has a severity from 1 (cosmetic) to 4 (unusable), Nielsen's scale.
-5. **The critic looks before it reads.** It writes its first impressions of the frames before it reads the designer's notes, and never gets the designer's reasoning, so it judges what's on the screen, not what was meant.
-6. **The cost:** about 30–45 minutes more per screen task, plus your 5–10 minutes. A task that changes no screen skips all of it.
+3. **An interaction designer argues for the user.** It counts what's on each state, asks what the one thing is that he came for, and argues to cut, collapse behind a tap, or move everything else, including features in the spec. The designer answers each point in writing (changed, or kept with a rule), and the critic settles the ones a rule can settle. Taste and features come to you as one short list, each with a recommended answer. It never changes a spec; only you do.
+4. **The critic only blocks on rules.** A difference from your approved design, Apple's rules or §C14 blocks the task. Its own taste goes to you as optional suggestions, so the loop can't run forever on opinion.
+5. **A written rubric, so "looks off" becomes something to fix.** The critic scores every screen on ten lines (hierarchy, shape consistency, density, alignment, type, color restraint, Apple's rules, accessibility, states and words, and "does this feel like a serious stylist"), counting what can be counted (corner sizes, circles, type sizes, accent uses). Each finding has a severity from 1 (cosmetic) to 4 (unusable), Nielsen's scale.
+6. **The critic looks before it reads.** It writes its first impressions of the frames before it reads the designer's notes, and never gets the designer's reasoning, so it judges what's on the screen, not what was meant.
+7. **The cost:** about 40–60 minutes more per screen task (the debate adds 10–15), plus your 5–10 minutes. A task that changes no screen skips all of it.
 
 ## When a run stops
 
@@ -123,8 +127,8 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 
 - The coordinator: `.claude/skills/build-task/SKILL.md`
 - The agents: `.claude/agents/task-planner.md`, `test-writer.md`, `implementer.md`, `verifier.md`
-- The design stage: `.claude/agents/ui-designer.md` and `ui-critic.md` (the rubric and severity levels are in the critic's file); the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
-- The whole-app redesign: `.claude/skills/redesign/SKILL.md` (the coordinator), `.claude/agents/art-director.md`, the rules a direction is built and judged by in `.claude/skills/redesign/references/visual-tone.md`, the research behind them in `.claude/skills/redesign/references/design-research.md`, and the first run's three candidates (Refined soft, Tailored, Editorial) in `first-directions.md`
+- The design stage: `.claude/agents/ui-designer.md`, `interaction-designer.md` and `ui-critic.md` (the rubric, severity levels and how it rules on the debate are in the critic's file); the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
+- The whole-app redesign: `.claude/skills/redesign/SKILL.md` (the coordinator), `.claude/agents/art-director.md`, the rules a direction is built and judged by in `.claude/skills/redesign/references/visual-tone.md`, the research behind them in `.claude/skills/redesign/references/design-research.md`, and the first run's candidates (B Tailored leading, A Refined soft and C Editorial as contrast) and the result card's content in `first-directions.md`
 - The templates: `.claude/skills/build-task/templates/`
 - The test lock: `.claude/hooks/protect-tests.sh`; the guard test: `app/src/__tests__/testGuards.test.ts`
 - The interviews: `.claude/skills/grill-me/SKILL.md`
@@ -141,6 +145,7 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 - **Lane:** a group of tasks that share files; one session per lane at a time.
 - **Design hand-off:** the drawn, approved screen a builder works from, so nobody guesses at layout. In interviews: "the design is the spec for how it looks."
 - **Design tokens:** the named values a design is built from (a corner radius, a color, a type size), kept in one file (`tokens.ts`) so changing one number restyles every screen that uses it. A redesign is mostly a token change.
+- **Progressive disclosure:** show the one thing most people need, and put the rest one tap away. The result card showing one fix with the others behind a tap is an example. In interviews: it's how you keep a feature-rich product simple.
 - **Art direction:** deciding the look of the whole product before drawing its screens, so every designer draws in one style. In interviews: "we set the visual direction first, then the design system, then screens."
 - **Independent review:** a check by someone who didn't make the thing. Authors miss their own mistakes because they see what they meant, not what's there. It's why code review, QA and design critique are separate jobs.
 - **Subagent:** a helper Claude starts with a fresh mind and a narrow job; it works on its own and hands back a result, so it can't hold a conversation with you.

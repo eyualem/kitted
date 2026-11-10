@@ -22,8 +22,12 @@ Counted on phones 1–3, outside Apple's chrome.
 | Left edges | | | |
 | Decoration with no meaning | | | |
 
-## Direction A · <two or three plain words>
-**The idea:** <one line> · **References:** <2–3 from visual-tone §7, and what it takes from each> · **Phones:** 4 Stylist home, 5 Result, 6 Closet, 7 Result at largest text
+## Content
+What the founder already decided the screens show (from the coordinator; the first run's is `.claude/skills/redesign/references/first-directions.md` → Content). Every board uses all of it; today's phones stay as today. "None" if none.
+- <decision> · <his words, quoted, and the date>
+
+## Direction <letter> · <two or three plain words> · <lead | contrast>
+**The idea:** <one line> · **References:** <2–3 from visual-tone §7, and what it takes from each> · **Phones:** <n> Stylist home, <n> Result, <n> Closet, and for a lead direction <n> Result at largest text
 
 - **Shape scale:** <radius per surface: card, small card, tile, thumbnail, photo, chip, in-content button, composer, his bubble, badge, score block> · capsules and circles kept only for: <list, each with its reason> · nesting: concentric
 - **Type:** <faces; each role's size/weight/tracking/case; max sizes and weights per screen>
@@ -37,14 +41,18 @@ Counted on phones 1–3, outside Apple's chrome.
 - **Fixes in the brief:** <…> · **Gives up:** <…> · **Build cost:** <tokens and components changed, roughly; anything not buildable natively> · **Risk:** <…, and what would show it's real>
 - **Founder's calls:** <a font to buy (foundry, price, size, fallback), a rule from 03 §1 dropped, anything else>
 
-## Direction B · <…>
-(Same parts. Phones 8–11.)
-
-## Direction C · <…>
-(Same parts, if there is one. Phones 12–15.)
+## Direction <letter> · <…> · <lead | contrast>
+(The same parts. A lead direction fills every one; a contrast direction fills enough to draw it honestly: shape scale, type, color, and what it shows against the lead.)
 
 ## Open questions for the founder
 - <question> · recommended: <pick, and why> · other: <option>
+
+## Debate
+One agent at a time; each sees the frames and the others' written points, never their reasoning.
+- **Round <n> · interaction designer** · first read per phone · count table (elements, actions, numbers, words) · points **I1…**: where · kind (cut / collapse / merge / move / extra step / extra choice / number with no decision / empty space / **spec**) · what, counted · evidence · proposal · high | low
+- **Round <n> · <designer | art director>** · I1: accepted (what changed) | kept (one checkable reason) | founder's call · …
+- **Round <n> · critic** · I1: settled for <side> by <rule> | founder's call (what each side gains) · …
+- **The founder** · I1: <his answer, or "the recommendation stands"> · …
 
 ## Design check (critic)
 Written by the critic, round by round.
