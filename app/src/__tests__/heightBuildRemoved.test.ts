@@ -77,7 +77,8 @@ describe('You (HB3–HB5)', () => {
       expect(s).not.toMatch(/HeightStepper|onb\.basics\.height|onb\.basics\.build|BUILDS|stepHeight/);
     }
     expect(src('features', 'you', 'BasicsFields.tsx')).toMatch(/onb\.basics\.fit/);
-    expect(src('app', '(tabs)', 'you', 'profile.tsx')).toMatch(/onb\.basics\.birthYear/);
+    // Its last line (profile.tsx showing the birth year) retired by T39 (#412–#413, OS4.6): the row is Age now, held by
+    // T39-styleProfile "OS4.6 · Name, Fit you like, Age, and the footnote".
   });
 
   test('HB4: the basics line and its spoken label show only the fit', () => {

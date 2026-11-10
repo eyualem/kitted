@@ -50,6 +50,9 @@ const ROWS = [
   { id: 'age-31plus', label: '31 or older', value: '31+' },
 ] as const;
 
+/** What About you (and Restore) no longer asks: height, build, the fit (its label and its three choices). */
+const NOT_ASKED = /^(Height|Build|Fit you like|Fitted|Regular|Relaxed)$/;
+
 const LOOKS_AX = [{ scheme: 'light' as const, ax: false }, { scheme: 'dark' as const, ax: false }, { scheme: 'light' as const, ax: true }, { scheme: 'dark' as const, ax: true }];
 
 // ── helpers ───────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -323,6 +326,8 @@ describe('OS4.1 · About you', () => {
       expect([textOf(btn), isDisabled(btn), btn.props.accessibilityHint]).toEqual(['Continue', true, HINT]);
       // Not present on About you.
       expect(everyString().filter((x) => /Birth year|^Choose$|Kitted is for 18 and up|Pick your birth year to go on/.test(x))).toEqual([]);
+      // Only the name and the age are asked: no height, build or fit (BY1's promise, retired into this test).
+      expect(everyString().filter((x) => NOT_ASKED.test(x))).toEqual([]);
       await r.unmount();
     }
   });
@@ -640,6 +645,9 @@ describe('SY4.1 · the name field', () => {
     expect(byId('about-name-input')).toBeNull();
     expect(byId('about-name-label')).toBeNull();
     expect(byId('about-age-list')).not.toBeNull();
+    // The same age list as setup, and no height, build or fit (BY1's "one layout in both paths").
+    expect(ROWS.map((x) => [x.id, getId(x.id).props.accessibilityRole, textOf(getId(x.id))])).toEqual(ROWS.map((x) => [x.id, 'radio', x.label]));
+    expect(everyString().filter((x) => NOT_ASKED.test(x))).toEqual([]);
     await r.unmount();
   });
 });
