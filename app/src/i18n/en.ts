@@ -980,7 +980,12 @@ const addedInBuild = {
   'onb.basics.echoYear': 'Born in {year}',
   'onb.example.whyHide': 'Hide the math',
   'onb.example.time': 'Example',
-  'onb.example.note': 'A real photo, scored by the same code as yours. Nothing was sent.',
+  // T38 (#411): Welcome and the Example check draw the outfit in code instead of a stranger's photo. The intro
+  // overrides 02 §5's line (en.generated.ts, "Here's a real check."), as recheck.tell.confirmed does.
+  'onb.example.intro': "Here's an example check. This is what you'll get.",
+  'onb.example.note': 'A drawn example, scored by the same code as your photos. Nothing was sent.',
+  'onb.example.a11yOutfit': 'Drawn example outfit, {occasion}: {pieces}.',
+  'onb.welcome.cardA11y': 'Example fit check. {occasion}. {before} out of 10, {beforeWord}. One fix: {fix}. {after} out of 10, {afterWord}.',
   'onb.example.a11y': 'Example fit check. {occasion}. Score {score} out of 10, {word}. {summary}',
   'onb.basics.yearHint': 'Pick your birth year to go on.',
   'onb.basics.never': 'Kitted is for 18 and up. It never changes your score.',
