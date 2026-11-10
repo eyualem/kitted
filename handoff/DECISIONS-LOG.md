@@ -2912,3 +2912,15 @@ Contradictions settled and decisions changed during the build. Newest last.
 ## Nov 9 · The tab bar keeps its labels
 
 416. **The founder (Nov 9, in the Apple Connect beta session): "Keep the labels".** He had asked whether the words under the tab icons (Stylist, Closet, Lookbook, You) were redundant. Kept: Apple's HIG expects labeled tab bars, `specs.md` → Interfaces says "always labeled", and icon-only tabs are unclear to new users, which matters more now that the tips (SY2) send him to each tab by name. Any tab change keeps the labels.
+
+417. **The founder (Nov 10): "Yes, write it". The workflow is sized to the risk, with at most 3 sessions building at once.**
+    - **Why:** an audit of the 6 beta-fix sessions (Nov 8–10) counted about 9,100 model calls, about 25 times the TestFlight session that started them. The 5-hour usage limit was hit once, and that stopped every session together. Memory fell to about 120 MB free and held checks back. The pipeline caught real problems (the double card's root cause, a test that could never pass, 4 design blockers), but it ran at full size for small changes. A section removal and a one-file bug fix each got a planner, the design stage, up to 3 rounds and 16–20 planted bugs.
+    - **Sizes** (`.claude/skills/build-task/SKILL.md` → Size):
+      - S, small (a bug fix, a removal, words): no design stage, a one-page plan, at most 5 planted bugs, only the screens and flows it changes, 2 rounds.
+      - M, medium: the design stage only for a new state, the critic on changed screens only, at most 10 planted bugs, 2 rounds.
+      - L, large: everything, 3 rounds.
+      - Privacy, scoring, limits, money, the age gate and the server are never S.
+      - Tests first and locked at every size, and every flow runs once before a TestFlight build.
+    - **Sessions:** at most 3 building at once. Finish and merge before starting more, and archive finished sessions instead of reusing them (CLAUDE.md rule 8, WORKFLOW.md).
+    - **Log numbers:** a branch numbers its new entries `N.` and gives them real numbers once, at merge. This replaces the renumbering messages sessions were sending each other. This entry is the first one written that way.
+    - **Not changed:** the redesign stage in eyualem/kitted#83 (art director, interaction designer, a written debate) is still open. Claude recommends holding it until after the beta; that's the founder's call.
