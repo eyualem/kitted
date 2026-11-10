@@ -18,7 +18,9 @@ You are the coordinator. You don't draw directions, judge them or write the chan
 - Memory: `top -l 1 | grep PhysMem`; never alongside another heavy job (CLAUDE.md rule 8). This stage boots no Simulator.
 
 ## 1. Directions
-Run the **art-director** agent (`subagent_type: "art-director"`) with the task ID, mode `directions` and the brief, quoted. Wait.
+Run the **art-director** agent (`subagent_type: "art-director"`) with the task ID, mode `directions`, the brief (quoted) and the candidate directions if there are any. Wait.
+- **Candidates:** if the founder (or the session that sent you) already named the directions to draw, pass them as written; the art director draws those and fills their gaps, and doesn't swap one out. The first run's three are in `references/first-directions.md` (Refined soft, Tailored, Editorial); it's also the worked example of a candidate becoming numbers.
+- Anyone's recommendation (yours, the parent session's) goes to the founder in step 3, never to the art director or the critic.
 
 ## 2. Critic
 Run the **ui-critic** agent with the task ID and mode `direction`. Pass only the task ID, the mode and the brief: never the art director's return message. Blockers go back to the art director with the critic's findings, then the critic again. At most 2 rounds; anything still open goes to the founder with the rest.

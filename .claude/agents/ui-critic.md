@@ -96,7 +96,7 @@ Write `tasks/<ID>/REPORT.md` → **Design review (critic)** from the template, w
 ## Mode: direction
 The coordinator gives you the redesign's task ID and the founder's brief, quoted.
 1. **First impressions,** cold: open every PNG in `tasks/<ID>/design/` (today 1–3, then each direction's four), light and dark, and write your read of each before anything else.
-2. **Read** `visual-tone.md`, then DIRECTION.md's Brief, Today table and each direction's rules (not its claims yet), then `design.html` and its scoped style blocks.
+2. **Read** `visual-tone.md` (not `first-directions.md` or anyone's recommendation), then DIRECTION.md's Brief, Today table and each direction's rules (not its claims yet), then `design.html` and its scoped style blocks.
 3. **Check each direction:**
    - **Its frames follow its own rules,** measured: every radius, capsule, circle, type size and weight, and accent use on its phones matches what it wrote. A frame that breaks its own direction is a blocker (the founder would pick a look the build can't match).
    - **The rules hold together:** at most three radii plus 0 and capsule; nested shapes concentric; type limits stated; the accent rule stated.

@@ -42,7 +42,7 @@ The whole process on one page, for the founder and for Claude. It explains and p
 ```
   /redesign <ID>
      ├─ your brief ......... what feels wrong, apps you like, what must stay (your words)
-     ├─ art director ....... 2–3 directions, each drawn on the same three screens
+     ├─ art director ....... 2–3 directions (yours, if you named them), each drawn on the same three screens
      │                       (Stylist home, the result card, Closet) next to today's, with
      │                       its corner sizes, type and color rules written as numbers
      ├─ critic ............. checks each board follows its own rules, Apple's and the hard lines
@@ -124,7 +124,7 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 - The coordinator: `.claude/skills/build-task/SKILL.md`
 - The agents: `.claude/agents/task-planner.md`, `test-writer.md`, `implementer.md`, `verifier.md`
 - The design stage: `.claude/agents/ui-designer.md` and `ui-critic.md` (the rubric and severity levels are in the critic's file); the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
-- The whole-app redesign: `.claude/skills/redesign/SKILL.md` (the coordinator), `.claude/agents/art-director.md`, the rules a direction is built and judged by in `.claude/skills/redesign/references/visual-tone.md`, the research behind them in `.claude/skills/redesign/references/design-research.md`
+- The whole-app redesign: `.claude/skills/redesign/SKILL.md` (the coordinator), `.claude/agents/art-director.md`, the rules a direction is built and judged by in `.claude/skills/redesign/references/visual-tone.md`, the research behind them in `.claude/skills/redesign/references/design-research.md`, and the first run's three candidates (Refined soft, Tailored, Editorial) in `first-directions.md`
 - The templates: `.claude/skills/build-task/templates/`
 - The test lock: `.claude/hooks/protect-tests.sh`; the guard test: `app/src/__tests__/testGuards.test.ts`
 - The interviews: `.claude/skills/grill-me/SKILL.md`
