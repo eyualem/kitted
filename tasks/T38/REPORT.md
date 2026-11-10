@@ -131,4 +131,42 @@ Each bug was run against the 4 T38 suites plus uiFixBatch, onboardingAccount and
 - **code:** none found.
 - Not verified (no fault of the build): every screen state, the T38 flow and the earlier flows, the motion on a device, VoiceOver itself. All need the main Simulator free, with this worktree's Metro. Also check on the device whether "Why 7.5?" inside the grouped `example-card` can be reached by VoiceOver and by Maestro's `tapOn`.
 
+### Round 2 (verifier, Nov 10)
+**Correction to round 1:** my round-1 "Tried to break it" line said that, from reading the code, Reduce Motion turned on and then off again held the after state. That was wrong. The test writer's new test showed the round-1 hook went back to "7.6" and played the rest. I re-ran that test against `a70ff40c`'s `useWelcomeSwap.ts`: red, `Expected: "8.0"`, `Received: "7.6"`.
+
+**Lock:** the Lock line is `225a8a12`, the test writer's commit. `2a8839e5` (also the test writer's) changes only TESTING.md's lock line, the new test's name and its red notes, plus REPORT.md → Disputes. `git diff 2a8839e5..HEAD` on the tests, `app/e2e/` and TESTING.md is empty. The test changes in `225a8a12` only add or strengthen:
+- the mocked frames are held in the background;
+- one new `expect(tree()).toBe(away)`;
+- one new test.
+
+No expectation is loosened. Since round 1, the build changed only `useWelcomeSwap.ts` (`cb0b3b35`, in the file list). Banned shortcuts: none.
+
+**Suites:**
+- I ran `npm run check`'s commands one by one: `tsc --noEmit` exit 0, core typecheck exit 0, `expo lint` 0 errors and 1 warning (the same `tryOn.test.ts` one, not T38's), core `Tests 853 passed (853)`.
+- Jest had to run as `npx jest --no-watchman` (the watchman socket still refuses): `Test Suites: 3 skipped, 127 passed, 127 of 130 total · Tests: 4 skipped, 1694 passed, 1698 total`. All 46 T38 tests pass.
+- Server and parity tests: not touched by this task.
+
+**Flows and screens:** still **not run, not verified**, for the same reason as round 1:
+- the main Simulator is in use by another session's Maestro run and app launches;
+- Metro on 8081 is `you-and-first-run-c080d4`'s;
+- free memory was 170–330 MB.
+
+No screenshots were taken. What would verify them is unchanged (see round 1's Screens).
+
+**Break it on purpose (round 2):** all of round 1's bugs were re-run against round 2 (the 7 suites, now 100 tests). Each was reverted with `git checkout`, and the tree was clean after each.
+- M1–M7 and M10–M22 → each still caught (same tests as round 1).
+- M9, the clock counting frames → **now caught** by `OS1.3 · it doesn't replay from the background, and replays only on a new mount`.
+- M24, the new render-time reset removed (`if (ex && mode === 'still' && frame && !frame.done) setFrame(welcomeAfterFrame(ex));`) → caught by `OS1.3 · Reduce Motion turned on mid-play and off again holds the after state (no second play)`.
+- M8, `if (mode === 'still') return welcomeAfterFrame(ex);` removed → passes. This is an equivalent change now, not a weak test: the render-time reset already moves the stored frame to the after frame, so the hook returns the same thing either way.
+- **M23, the new guard `if (halted.current) return;` removed from the effect → not caught** (100 of 100 pass).
+  - With it removed, turning Reduce Motion off again restarts the frame loop against the original start time. A temporary probe confirmed what that does: Reduce Motion on at 1050 ms, off at 1500 ms, sampled every 16 ms. The card shows "Put together" again and cross-fades to "Sharp" a second time. That is a visible partial second play, which TESTING.md OS1.3's must-not forbids ("a second play without a new mount").
+  - With the real hook, the same probe shows only the after state.
+  - Why the test misses it: the new test checks only every 500 ms (t 2000, 2500, …), after the replayed fade has already ended at 1700–2000 ms.
+  - The probe file was deleted and never committed.
+
+**Verdict:** **not ready** · rounds: 2 of 3
+- **test** (for the test writer): M23 isn't caught. In `OS1.3 · Reduce Motion turned on mid-play and off again holds the after state (no second play)`, after Reduce Motion is turned off again (t 1500), sample at least every 50 ms up to t 2100. Every sample must be the after state: no `welcome-card-word-before`, no `welcome-card-detail-before`, no `drawn-piece-shoes`. The test must fail with `if (halted.current) return;` removed and pass for `cb0b3b35`.
+- **code:** none found. Round 2's hook is correct on every probe I ran.
+- Not verified (unchanged from round 1): every screen state in light, dark, xxxLarge and AX5; the T38 flow and the earlier flows; the motion and tabular figures on a device; VoiceOver itself; whether "Why 7.5?" inside the grouped `example-card` can be reached. All need the main Simulator free, with this worktree's Metro.
+
 ## Design review (critic)
