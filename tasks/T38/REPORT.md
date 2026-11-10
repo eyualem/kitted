@@ -36,6 +36,22 @@
   - **What it should say:** `globalThis`, which is the same object at runtime.
   - **Settled by:** the test writer.
   - **Outcome:** changed to `globalThis` with no expectation changed (`bae9e735`), and re-locked (`1141df58`; Lock line `bae9e735`). The test writer's session hit its usage limit after committing, so its written ruling isn't here; the commits are the record.
+  - **Test writer's ruling (added in round 2):** agreed. It was a type error in the test code, not a question about the spec. Checks run:
+    - `tsc --noEmit` exit 0 on a temporary config that extends the app's tsconfig and covers the T38 test files and everything they import;
+    - all 45 T38 tests passing against `a70ff40c`;
+    - the fetch guard still biting (a `fetch` on open fails OS2.2).
+- **Test change, round 2 (the verifier's M9)** · `app/src/testing/t38ScreenMocks.tsx`, `app/src/__tests__/drawnWelcomeScreens.test.tsx`.
+  - **Why:** the mocked `requestAnimationFrame` kept firing while `AppState` was `background`, so `OS1.3 · it doesn't replay from the background…` never tested a paused clock. A hook whose clock counts frames (`frames++ * 16`) passed it, although on iOS it would come back mid-swap.
+  - **Change (strengthening only, nothing loosened):**
+    - The mocked frames now hold while `setAppState('background')` is in force and resume on `active`, as on iOS. The fake clock keeps going.
+    - The background test also checks that the screen doesn't change while away.
+  - **Proof:** with M9 applied to `useWelcomeSwap.ts`, the background test fails (expected "8.0", received "7.5" after coming back). Reverted, it passes against `a70ff40c`.
+  - **Also added:** `OS1.3 · Reduce Motion turned on mid-play and off again holds the after state (no second play)`. It covers the verifier's own edge, and its basis is TESTING.md OS1.3's must-not "a second play without a new mount (… a re-render)".
+    - **It is red against `a70ff40c`:** right after Reduce Motion is turned off again, the card shows "7.6" instead of "8.0" and then plays the rest.
+    - **Cause:** `useWelcomeSwap` returns its stale `frame` state once `mode` is `play` again.
+    - **This is a code fix for the implementer, not a test fix.**
+  - **Checks:** `tsc --noEmit` exit 0 on the T38 test files; the no-example and other-reading suites pass; ESLint is clean.
+  - **Lock:** `225a8a12`.
 
 ## Verification (verifier)
 **Lock:** `git diff bae9e735..HEAD` on the six test files, `app/e2e/` and TESTING.md is just the lock line (`1141df58`, the test writer's re-lock). From the first lock, `git diff 3c08174e..HEAD` on the tests is only `global` → `globalThis` (7 lines, no expectation changed; `bae9e735`, the test writer, Dispute 1). The build commit `a70ff40c` touches only app files · banned shortcuts: none found (no `.only`/`.skip`/`xit`/`it.todo`, no snapshots, no fixture edits, no `NODE_ENV`/`JEST_WORKER`/`process.env` checks, no expected values typed into app code; every number and word on the card comes from `exampleCheck()` / `applyPartsFix` / `overallFor`) · files outside the list: none (the 8 changed app files are all in IMPLEMENTATION.md → Files; `plan.md` and `tasks/T38/REPORT.md` are the coordinator's).
