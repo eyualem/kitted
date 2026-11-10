@@ -618,11 +618,15 @@ describe('CB2.2 · an answer saves, says so, and shows the next card', () => {
     expect(jest.mocked(fitCheck.answerDuplicate).mock.calls).toEqual([['K-a', 'O-qa', 'new']]);
     expect(jest.mocked(showToast).mock.calls.map((c) => c[0])).toEqual(['Kept as a new piece.']);
     await setOpen([QB, QC, QD]);
-    // Card 1 of 3 is the navy crewneck, with its runner-up.
-    expect(shown()).toEqual({ tag: tagOf(1, 3), label: wordsOf(QB, w.byId).label(1, 3) });
+    // Card 1 of 4 (three questions and the fit question) is the navy crewneck, with its runner-up.
+    expect(shown()).toEqual({ tag: tagOf(1, 4), label: wordsOf(QB, w.byId).label(1, 4) });
     await tap("It's my black sweatshirt");
-    expect(jest.mocked(fitCheck.answerDuplicate).mock.calls[1]).toEqual(['K-b', 'O-qb', 'runnerUp']);
+    expect(jest.mocked(fitCheck.answerDuplicate).mock.calls).toEqual([['K-a', 'O-qa', 'new'], ['K-b', 'O-qb', 'runnerUp']]);
     expect(jest.mocked(showToast).mock.calls.map((c) => c[0])).toEqual(['Kept as a new piece.', 'Saved as your black sweatshirt.']);
+    expect(typeof jest.mocked(showToast).mock.calls[1]![1]).toBe('function');
+    // The store drops it: the loafers, 1 of 3 (two questions and the fit question).
+    await setOpen([QC, QD]);
+    expect(shown()).toEqual({ tag: tagOf(1, 3), label: wordsOf(QC, w.byId).label(1, 3) });
   });
 
   it('CB2.2 · a light haptic on an answer only', async () => {
