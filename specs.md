@@ -150,7 +150,7 @@ Neck-down by default ("Neck down | Full photo"), never gated, a small "scored by
 - F12.1 The default share image shows nothing above the neck.
 
 ### F13. Notifications
-Two kinds, both local: the daily outfit idea, 15 minutes before the time he usually gets dressed, and "fit check ready" (from launch; the beta sends only the daily idea). Apple's prompt only after he says yes on Kit's card. Never "we miss you", never streak guilt. ("Trial ending" is gone with the trial.) Detail: `specs/notifications.md`.
+Two kinds, both local: the daily outfit idea, 15 minutes before the time he usually gets dressed, and "fit check ready" when he left the app while a check was being scored. At most one daily idea a day. Apple's prompt only after he says yes on Kit's card. Never "we miss you", never streak guilt. ("Trial ending" is gone with the trial.) Detail: `specs/notifications.md`.
 
 ### F14. Voice input
 The mic in the ask bar; speech turns into text on the phone; audio never leaves it.

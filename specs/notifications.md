@@ -1,8 +1,8 @@
 # Notifications
 
-**Approved by the founder:** 2026-11-09
+**Approved by the founder:** 2026-11-09 (NT6, "Fit check ready" in the beta: 2026-11-09)
 
-After this, a tester who says yes gets one notification a day, 15 minutes before the time he usually gets dressed to head out: today's outfit idea from his closet once Kit can suggest outfits, and until then a nudge to check today's fit. A tester who skips his first check is asked too, so the same nudge reminds him to send it. It's scheduled on his phone, it stops by itself if he stops coming, and nothing else is ever sent.
+After this, a tester who says yes gets one notification a day, 15 minutes before the time he usually gets dressed to head out: today's outfit idea from his closet once Kit can suggest outfits, and until then a nudge to check today's fit. A tester who skips his first check is asked too, so the same nudge reminds him to send it. If he leaves the app while a fit check is still being scored, one more notification tells him it's ready. It's all on his phone, the daily nudge stops by itself if he stops coming, and nothing else is ever sent.
 
 **Part of:** `specs.md` → F13 (Notifications) and "First run" step 9. Works with `specs/onboarding-screens.md` (setup ends in the chat with "Want to check a fit now?").
 
@@ -10,11 +10,11 @@ After this, a tester who says yes gets one notification a day, 15 minutes before
 The beta needs testers to come back and check fits; without a nudge most drift after day one. A nudge that lands while he's choosing what to wear is useful on its own (an outfit idea, or "send me the fit"), so it never has to be a "we miss you". The ask card, the Settings page and the saved time were built in October and switched off, waiting for the notification package; this spec changes them to ask the time he gets dressed and turns them on.
 
 ## Scope
-- **In:** Kit's ask in the chat, after his first scored fit or when he taps Later on the first-check card (and the same ask once for testers who finished setup before notifications existed); Apple's permission prompt; the daily nudge and its two lines; scheduling 7 days ahead on the phone; the comeback question after a week with no visit; You → Notifications; what tapping a nudge opens; "Delete all my data" and the under-18 lock.
-- **Out (non-goals):** push from a server (no push key, no device tokens, no server code); a second notification kind in the beta (`Fit check ready` comes with launch, `specs.md` F13; `Trial ending` is gone for good); a separate weekend time; streaks, counts of days, or "we miss you" in any form; asking again after `No thanks`; Apple's provisional (quiet) notifications; the weather in the notification text.
+- **In:** Kit's ask in the chat, after his first scored fit or when he taps Later on the first-check card (and the same ask once for testers who finished setup before notifications existed); Apple's permission prompt; the daily nudge and its two lines; scheduling 7 days ahead on the phone; the comeback question after a week with no visit; "Fit check ready" when he leaves during a check (NT6); You → Notifications; what tapping a nudge opens; "Delete all my data" and the under-18 lock.
+- **Out (non-goals):** push from a server (no push key, no device tokens, no server code); any other notification kind (`Trial ending` is gone for good); a separate weekend time; streaks, counts of days, or "we miss you" in any form; asking again after `No thanks`; Apple's provisional (quiet) notifications; the weather in the notification text.
 
 ## The rules
-- **One a day, every day,** at his nudge time = the time he usually gets dressed minus 15 minutes. Default sound. Nothing else is ever sent, at any hour.
+- **At most one nudge a day, every day,** at his nudge time = the time he usually gets dressed minus 15 minutes. Default sound. The only other notification is "Fit check ready" (NT6), and only when he left the app while a check was being scored (the founder, Nov 9: "a max of one notification per day, unless they leave while the rating is processing"). Nothing else is ever sent, at any hour.
 - **His get-dressed time:** half-hour steps from 5:00 am to 1:00 pm (17 choices), default 8:00 am. A time he set before that's off the list is kept (as built). The time follows the phone's clock, so it stays 8:00 local when he travels **(assumed)**.
 - **Local only:** the phone schedules every nudge itself. Each time the app opens, comes back to the foreground, or goes to the background, it replaces whatever was scheduled with the next 7 days. Nothing is sent to or kept on a server.
 - **What each day's nudge says** (the founder, Nov 9): only the next nudge names an outfit, the one that day's morning card will show (a pick reads what he wore and added since, so later days can't be known ahead; the plain line covers them). Named outfits come only once the morning card can suggest outfits (two different outfits that work, `specs.md` F6.2; T55 in the morning lane decides, and this task asks the morning service, `canSuggest()`). Until then, the "Check today's fit" line. The first day it can suggest gets the "big enough" line, once ever.
@@ -58,12 +58,19 @@ Shown under the app name "Kitted", with no title, one line:
 
 ## NT3. You → Notifications
 The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) shows once notifications are built and opens this page.
-- Header: `One outfit idea a day, 15 minutes before you get dressed. That's all I send.`
-- Rows: `Daily outfit idea` (switch) · `I get dressed at` (the time menu; hidden while the switch is off, as built).
+- Header: `An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send.`
+- Rows: `Daily outfit idea` (switch) · `I get dressed at` (the time menu; hidden while the switch is off, as built) · `Fit check ready` (switch, on by default once notifications are allowed).
 - Changing the time reschedules at once. Switch off cancels everything scheduled.
 - Switch on when Apple's prompt was never shown → Apple's prompt; Don't Allow leaves the switch off.
 - **iOS has notifications off for Kitted:** a card on top, `Notifications are off for Kitted.` + `Open Settings` (opens Kitted's page in iOS Settings); the switch and time are greyed out. Coming back with them on clears the card and schedules.
-- `Fit check ready` and `Trial ending` rows are gone in the beta.
+- The `Trial ending` row is gone.
+
+## NT6. Fit check ready
+**When:** he started a fit check and left the app (it went to the background) before the score came back, and the score arrives while the app is still in the background. The app asks iOS for extra time to finish (about 30 seconds; a check takes about 8 s). Only if notifications are allowed and the `Fit check ready` switch is on.
+- **Words** (one line, no title, default sound): `Your fit check is ready. 2 quick fixes inside.` · `Your fit check is ready. 1 quick fix inside.` · `Your fit check is ready.` (no fixes). Never the score on the lock screen.
+- **Tap** → Stylist, scrolled to that check's card.
+- **Not sent:** when he's still in the app; when the check failed, was "not rated", or he was offline (the chat shows it as today) **(assumed)**; when iOS's extra time runs out first (then the score is in the chat when he opens the app, as today). At most one per check.
+- It doesn't count toward the one-nudge-a-day limit, and it never changes the daily nudge.
 
 ## NT4. The comeback question
 **When:** he opens the app after the scheduled nudges ran out (a week with no visit) while the switch is on. Once per lapse.
@@ -80,7 +87,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 
 ## Data (all on the phone)
 - **Get-dressed time:** `profile.ideaTime` (as built, "HH:MM"). The nudge time is derived, never stored.
-- **Daily outfit idea switch:** KV `notify.idea` (as built). `notify.ready` and `notify.trial` are no longer read in the beta.
+- **The switches:** KV `notify.idea` and `notify.ready` (as built). `notify.trial` is no longer read.
 - **Scheduled through:** the date of the last scheduled nudge, to tell a lapse (NT4) from a normal open.
 - **Asked:** whether Kit's ask was posted, by either route (the setup sequence's `notifyMsgId`, as built; the Later route reads kv `firstCheckOffer.laterAt`, the time he tapped Later on the `firstCheckOffer` card, and "no scored check yet" from the checks table, `specs/onboarding-screens.md` OS5; "Delete all my data" clears `firstCheckOffer.laterAt`) and whether the comeback question was posted for the current lapse.
 - **The next nudge's outfit:** picked the way the morning card picks it for that day (no new stored row).
@@ -120,13 +127,21 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - NT2.3 While the morning service says it can't suggest (empty closet, or one outfit that works), every day gets `Check today's fit. Each one teaches me your closet.`
 - NT2.6 The first scheduled day on which it can suggest gets `Your closet's big enough now: here's today's idea.`; later days get `Today: …`; the "big enough" line is never scheduled again once it has been delivered, including after reinstalling nudges or changing the time.
 - NT2.4 Tapping a nudge opens Stylist at today's card.
-- NT2.5 No other notification is ever scheduled: no `Fit check ready`, no `Trial ending`, nothing at another time (a test over every schedule call).
+- NT2.5 Nothing else is ever scheduled or sent: only the daily nudges and NT6's line; never `Trial ending`, never two nudges on one day (a test over every schedule call).
 
 **You → Notifications (NT3)**
-- NT3.1 The page shows NT3's header and rows; no `Fit check ready` or `Trial ending` row.
+- NT3.1 The page shows NT3's header and its three rows; no `Trial ending` row.
 - NT3.2 Changing the time reschedules all 7 at the new time; switch off leaves nothing scheduled.
 - NT3.3 Switch on with the permission never asked requests Apple's prompt; Don't Allow leaves the switch off.
 - NT3.4 With iOS notifications off for Kitted, the off card and `Open Settings` show, the controls are greyed out, and nothing is scheduled.
+
+**Fit check ready (NT6)**
+- NT6.1 A check that scores after the app went to the background (within iOS's extra time) shows NT6's line with the right fix count (2 → `2 quick fixes`, 1 → `1 quick fix`, 0 → no fix part), once.
+- NT6.2 A check that scores while he's in the app sends nothing; a failed, "not rated" or offline check sends nothing.
+- NT6.3 With the `Fit check ready` switch off, or notifications not allowed, nothing is sent.
+- NT6.4 Tapping it opens Stylist at that check's card.
+- NT6.5 The line never contains the score.
+- NT6.6 On a real iPhone: start a check, go to the home screen at once, and the notification arrives with the score in the chat.
 
 **The comeback (NT4)**
 - NT4.1 Opening the app after the last scheduled nudge has passed, with the switch on, posts the comeback question once and schedules nothing.
@@ -147,5 +162,6 @@ Asked in context after he's seen what the app does, with Kit's card explaining w
 - `app/src/services/notifications.ts` (the real permission and scheduling behind the existing interface), `app/src/config/features.ts` (`NOTIFICATIONS_BUILT`).
 - `app/src/features/finish/` (the ask card, its Later version, the one-time catch-up), the first-check card's Later answer (built by T37, onboarding-screens; this task only posts the ask under it), `features/settings/prefs.ts` (the time list), `app/src/app/(tabs)/you/notifications.tsx` (the row on You belongs to T34), `features/morning/` (each day's outfit ahead of time), `features/privacy/wipe.ts` (cancel on delete).
 - The copy deck `handoff/02-screens.md` §5 (which generates `en.ts`): the strings above; the old `notif.ask*`, `notifs.header`, `unopened.*` and `push.trial` strings replaced or removed.
+- A few lines of native iOS code to ask for extra background time while a check finishes (in the app's own local module, no new package).
 - New package `expo-notifications` (the founder's OK, Nov 9), `app/package.json` and `app/app.config.ts` (after PR #71 is merged): a native rebuild and a new TestFlight build.
 - Must not break: the setup sequence's order and its Back/X; the morning card's locked idea and rotation; nothing sent off the phone.
