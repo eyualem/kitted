@@ -10,7 +10,8 @@ const same = (a: WelcomeSwapFrame, b: WelcomeSwapFrame) =>
   a.numeral === b.numeral && a.pieceAfter === b.pieceAfter && a.textAfter === b.textAfter && a.done === b.done;
 
 /** 'still' (Reduce Motion or an accessibility size) → the after frame from the first render, no timer. 'play' → the
- *  frames of the swap, then the after frame. If motion turns off mid-play it jumps to the after state and stays there.
+ *  frames of the swap, then the after frame. If motion turns off mid-play it jumps to the after state and stays there,
+ *  even if motion is turned back on (one play per mount).
  *  null when there is no example. */
 export function useWelcomeSwap(
   ex: WelcomeExample | null,
@@ -22,8 +23,11 @@ export function useWelcomeSwap(
   );
   /** When this mount's swap started (performance.now()), set by the first play. */
   const startedAt = useRef<number | null>(null);
-  /** Motion was turned off once: the swap is over for this mount. */
+  /** Motion was turned off once: the swap is over for this mount, and turning motion back on never replays it. */
   const halted = useRef(mode === 'still');
+  // Still mode shows the after frame; the stored frame moves there too (React's "adjust state while rendering"), so if
+  // motion comes back on, the render before the effects run shows the after state, not the frame it stopped on.
+  if (ex && mode === 'still' && frame && !frame.done) setFrame(welcomeAfterFrame(ex));
 
   useEffect(() => {
     if (!ex) return;
@@ -31,13 +35,10 @@ export function useWelcomeSwap(
       halted.current = true;
       return;
     }
+    // The swap ended (or motion was off once): nothing moves again, so no frame is asked for.
+    if (halted.current) return;
     let id: number | null = null;
     const tick = () => {
-      if (halted.current) {
-        setFrame(welcomeAfterFrame(ex));
-        id = null;
-        return;
-      }
       startedAt.current ??= performance.now();
       const next = welcomeSwapFrame((performance.now() - startedAt.current) / revealSlow(), ex);
       setFrame((prev) => (prev && same(prev, next) ? prev : next));
