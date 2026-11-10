@@ -84,4 +84,56 @@
 - CB1.2 Kit's own words · the founder decided "leave Kit alone" (DECISIONS-LOG #406): not a defect.
 - CB1.1–CB1.3 on his phone · the next TestFlight build on his iPhone (founder to-do, P2, 2 minutes).
 
-**Verdict:** not ready: one locked flow (`T73-closet-no-outfits.yaml`) is red on correct code, and deliberate bug F3 isn't caught. Both are **test** defects for the test writer; there are no code defects. · rounds: 1 of 3
+**Verdict (round 1):** not ready: one locked flow (`T73-closet-no-outfits.yaml`) is red on correct code, and deliberate bug F3 isn't caught. Both are **test** defects for the test writer; there are no code defects. · rounds: 1 of 3
+
+## Verification, round 2 (verifier)
+**Lock:** new lock `eaf3301c` (lock line in `62cd67ca`; reason in Disputes). `git diff eaf3301c..HEAD` on the tests, `app/e2e/` and TESTING.md shows only the lock line (plus REPORT.md). The round-2 test changes (`00f78339..eaf3301c`) touch only `closetNoOutfits.test.tsx`, `T73-closet-no-outfits.yaml` and TESTING.md, and they only add or strengthen:
+- The 261 flow now stops at "No photos of it yet…", then at "Remove from Closet", with the five must-nots at each stop. Nothing was removed.
+- There is a new `ClosetScreen` render test (switch off: four headers, 16 tiles, no switcher or Outfits view, no `setKv`/`deleteKv` of `SEGMENT_KEY`, the saved value still `outfits`) and a switch-on twin.
+
+No app code changed since round 1. Banned shortcuts: none found. Files outside the list: none.
+**Suites:** the check chain (tsc, core typecheck, lint, core vitest, then app jest with `--no-watchman --maxWorkers=2`) is green:
+- lint: 0 errors, 1 warning that was already there (`tryOn.test.ts`)
+- core: Test Files 30 passed (30); the round-1 timeouts didn't recur
+- app jest: Test Suites 3 skipped, 124 passed, 124 of 127 total; Tests 4 skipped, 1664 passed, 1668 total
+- `closetNoOutfits.test.tsx`: 16/16
+- server and parity: not touched
+**Which Metro served the app:** after boot the 17e was sent to this worktree's Metro with `openLink kitted://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8082`, and 8082's log showed `iOS Bundled … (2477 modules)`. Every flow launch was served by 8082: `T73-closet-no-outfits.yaml` made 7 launches and 8082 logged 7 bundles; `T73-outfits-on.yaml` made 3 and 8082 logged 3; the F1 run made 1 and 8082 logged 1. Round 1 also ran on 8082's bundle:
+- open-demo tapped the `:8082` server on the first launch.
+- The round-1 8082 log shows `iOS Bundled` lines, including the 1-module rebuilds for each planted bug.
+- Bugs F1 and F2, which exist only in this worktree's files, turned the flow red there.
+- Screens 260 and 261 and the new note words exist only on this branch.
+
+So no round-1 Simulator result came from 8081.
+**Flows** (iPhone 17e, Metro 8082):
+- `T73-closet-no-outfits.yaml` **green** (exit 0): screens 260, 261 (both new stops: "No photos of it yet…" and "Remove from Closet", must-nots green at each), 171, 25 three times, and 13.
+- `T73-outfits-on.yaml` **green** (exit 0).
+- Round 1 already had `smoke.yaml` green. `T14-beta-limits.yaml` still needs the 17 Pro (see round 1); it wasn't re-run, since no app code changed.
+
+### Criteria
+- **CB1.1** · pass · proof: everything from round 1, plus the new `the Closet screen, switch off…` test. It catches F3 as a write in the loader and as a `deleteKv` in an effect (confirmed to fail on `writes()`: "Expected −1 / Received +5", not on a missing import). It also catches F1. The locked flow's 260 section caught F1 on the Simulator (`"Pieces" is not visible... FAILED`). The must-not "nothing writes `closet.segment` while off" is now proven by a test, not only by reading the diff.
+- **CB1.2** · pass · proof: everything from round 1, plus the locked flow green end to end on the built code (261's new stops included).
+- **CB1.3** · pass · as round 1, and the flow's 261 note step is green in the full run.
+- **CB1.4** · pass · as round 1, and the locked flow's 25 and 13 sections are now green in the locked file itself (not a copy).
+- **CB1.5** · pass · as round 1, plus the switch-on `ClosetScreen` render twin. `T73-outfits-on.yaml` is green. The pixel comparison with main is still **not verified** (round 1's reason and what would verify it).
+
+### Break it on purpose
+- F3, a loader write `if (!on) void store.setKv(SEGMENT_KEY, 'pieces')` → caught by `CB1.1 · the Closet screen, switch off: … closet.segment never written`
+- F3b, an effect `deleteKv(SEGMENT_KEY)` while off → caught by the same test (it fails at `writes()`)
+- F1, the switcher always drawn (`{true ? (`) → caught by the same unit test and by the locked flow's 260 section on the Simulator
+- Each was reverted with `git checkout -- <file>`; the tree was clean after (only the uncommitted `app/metro.config.js`)
+- M1–M13 and F2 from round 1 test app code that hasn't changed, against tests that only grew, so they weren't re-planted
+
+### Screens
+- Unchanged from round 1 (no app code changed). The paths are in the round-1 section.
+
+### Defects
+- None. Both round-1 test defects are fixed: the 261 flow passes on correct code, and F3 is caught.
+
+### Not verified
+- Pixel comparison of 182/183/184/193/202 with main · needs a second Metro from main on one Simulator; the diff review shows the switch-on paths are unchanged.
+- `T14-beta-limits.yaml` on this branch · needs the iPhone 17 Pro (on the 17e the dev build's Tools button covers You's Settings gear); T73 touches nothing that flow covers.
+- CB1.2 Kit's own words · the founder's call ("leave Kit alone", DECISIONS-LOG #406), not a defect.
+- CB1.1–CB1.3 on his phone · the next TestFlight build on his iPhone (founder to-do, P2, 2 minutes).
+
+**Verdict:** ready · nothing fails, every deliberate bug is caught, the lock holds, and each "not verified" item names what would verify it. · rounds: 2 of 3
