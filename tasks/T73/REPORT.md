@@ -1,7 +1,11 @@
 # T73 · Report
 
 ## Summary for the founder
-<filled after verification>
+- Closet opens straight on your pieces, head to toe. The Pieces | Outfits switch is gone, even if you'd last left it on Outfits.
+- A piece's page has no "Outfits" row and no "Goes with". Its note now reads "Got one wrong? Change it here. The drawing follows. Your scores stay the same."
+- Kit's buy card in chat keeps the piece and its price, without "+18 outfits with what you own". Adding a basic from Starter essentials says "Added {item}." instead of "+N fits". Next best buy is gone too.
+- Untouched and re-checked on the Simulator: the morning card's Wear this, its Undo and Swap, and Kit's outfit idea's Wear this. The Outfits code is kept behind one switch, so it can come back whole.
+- Verdict: ready after 2 rounds. Not checked: the five Outfits-on demo screens pixel by pixel against main (the Mac couldn't run two copies of the app), the beta-limits flow on the iPhone 17 Pro, and the next TestFlight build on your phone.
 
 ## Built (implementer)
 - **Changed:** For the beta, Outfits, Next best buy and Goes with sit behind `OUTFITS_BUILT = false`. Closet opens on his pieces, head to toe, with no Pieces | Outfits control; a saved `closet.segment` is ignored and never written. A piece's page has no Outfits row and no Goes with (no outfit lists are built). Kit's buy card keeps its tag, name and price but drops "+N outfits with what you own", on screen and for VoiceOver; Kit's ranking and the stored gain are unchanged. Adding a basic from Starter essentials says "Added {item}." with Undo. The Next best buy route sends him to Closet. The piece page's note has the new words. Demo screens 182, 183, 184, 193 and 202 turn the switch on; every other screen turns it off.
