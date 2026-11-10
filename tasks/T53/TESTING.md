@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `<commit SHA>` · <date> · tests: `app/src/__tests__/T53-notifyAsk.test.ts`, `app/src/__tests__/T53-nudges.test.ts`, `app/src/__tests__/T53-ready.test.ts`, `app/src/__tests__/T53-notifyTap.test.ts`, `app/src/__tests__/T53-notifyCards.test.tsx`, `app/src/__tests__/T53-notificationsPage.test.tsx`, `app/src/__tests__/T53-notifyCopy.test.ts`, `app/e2e/flows/T53-notify-ask.yaml`, `app/e2e/flows/T53-notifications-page.yaml`, `app/e2e/flows/T53-comeback.yaml`
+**Lock:** `eb2a35e2` · 2026-11-10 · tests: `app/src/__tests__/T53-notifyAsk.test.ts`, `app/src/__tests__/T53-nudges.test.ts`, `app/src/__tests__/T53-ready.test.ts`, `app/src/__tests__/T53-notifyTap.test.ts`, `app/src/__tests__/T53-notifyCards.test.tsx`, `app/src/__tests__/T53-notificationsPage.test.tsx`, `app/src/__tests__/T53-notifyCopy.test.ts`, `app/src/testing/notifyDoubles.ts` (the tests' doubles), the changed old tests `app/src/__tests__/onboardingFinish.test.ts` (E5, P3/P7, N1–N3) and `app/src/__tests__/settingsPrefs.test.ts` (the time list, the switches), `app/e2e/flows/T53-notify-ask.yaml`, `app/e2e/flows/T53-notifications-page.yaml`, `app/e2e/flows/T53-comeback.yaml`
 
 Plan-line criteria: NT1.1–NT1.7 (NT1.8–NT1.10 are T57), NT2.1–NT2.7, NT3.1–NT3.4, NT4.1–NT4.3, NT5.1–NT5.5 (26), plus NT6.1–NT6.6 (6), from the coordinator's brief and the approved design (the plan line still needs NT6 added: IMPLEMENTATION → Open questions, technical 14). **32 criteria, all below.**
 
