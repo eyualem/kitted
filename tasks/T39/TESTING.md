@@ -89,7 +89,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Flow: fresh install → `Get started` → `Not sure` → `Under 18` → `Continue` → "Under 18?" and "Kitted is for ages 18 and up." → `Change` → "About you" still shown → `Continue` → `That's right` → "Kitted is for ages 18 and up." and "Thanks for checking it out. You can delete the app from your Home Screen." → `stopApp`, `launchApp` (no clearing) → the stop screen again, no "Back", no "Take photo" → final `clearState` + `clearKeychain` launch.
   · must not: Under 18 blocked with no confirm; `Change` setting the flag; any way from the stop screen to the camera; "Born in …?" as the title.
   · edges: relaunch (flow); reinstall (manual, Not testable yet below); "Delete all my data" keeps the flag (`privacyWipe.test.ts`, unchanged).
-  · red: 3 tests, all red: `Under 18 asks once …`, `Change changes nothing`, `That's right locks the app`: no `age-under18` row. Flow `T39-under-18.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet). Reinstall: Not testable yet (below).
+  · red: 3 tests, all red: `Under 18 asks once …`, `Change changes nothing`, `That's right locks the app`: no `age-under18` row. Re-lock 2: `Change changes nothing` takes the alert's buttons before clearing the mocks (implementer's dispute, upheld); bites via Change setting the lock. Flow `T39-under-18.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet). Reinstall: Not testable yet (below).
 
 - **OS4.5** · No screen before an age is picked says "18" except the `Under 18` and `18–21` choices.
   · how: component
@@ -184,7 +184,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: with the recording transport and a failing `global.fetch`, walk: Looks (a tile, Continue), About you (a name, `22–25`, Continue → `finishSetup`), the card rendered, "Later" (in one run) or "Check my fit" → the camera route's agreement → "Not now" (in another): `fetch` 0 calls, transport 0 calls, `mayUpload(store)` false.
   · must not: any call before Agree, including the guest sign-in, the server's tier check or analytics.
   · edges: offline (the same walk works with the connectivity service reporting offline). The connectivity probe (Apple's captive-portal page, no data of his) is today's behaviour, faked in this test and not counted.
-  · red: 1 test, red: the walk stops at About you (no `about-name-input`). The afterEach of every render test file also asserts fetch 0 and transport 0. No connectivity service is imported by these screens; fetch rejecting (offline) is the offline case.
+  · red: 1 test, red: the walk stops at About you (no `about-name-input`). Re-lock 2: run 2 asserts the walk pushed exactly `['/onboarding/basics']`, clears `router.push`, then exactly `['/camera']` (implementer's dispute, upheld); bites via a push to `/camera` after setup and via a `fetch` in `tapLater`. The afterEach of every render test file also asserts fetch 0 and transport 0. No connectivity service is imported by these screens; fetch rejecting (offline) is the offline case.
 
 - **F1.1** · A fresh install reaches the camera in 6 taps or fewer, with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
   · how: flow + component

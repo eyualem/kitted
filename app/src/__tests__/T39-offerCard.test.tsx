@@ -297,6 +297,9 @@ describe('OS5.7 · nothing leaves the phone before Agree', () => {
     await mockT39.store.wipe();
     jest.clearAllMocks();
     offer = await walkToCard();
+    // The walk's own route (Looks → About you, OS3.2) and nothing else: no camera before Check my fit.
+    expect(pushes()).toEqual(['/onboarding/basics']);
+    (router.push as jest.Mock).mockClear();
     r = await mount(<FirstCheckOfferCard m={offer} />);
     await press(screen.getByLabelText(CHECK_LABEL));
     expect(pushes()).toEqual(['/camera']);

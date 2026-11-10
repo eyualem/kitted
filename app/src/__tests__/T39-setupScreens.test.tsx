@@ -509,8 +509,11 @@ describe('OS4.4 · Under 18', () => {
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
     await press(continueBtn());
+    // The alert's buttons are taken before the mocks are cleared (clearing empties the Alert spy too).
+    const change = alertButtons()[0]!;
+    expect({ text: change.text, style: change.style }).toEqual({ text: 'Change', style: 'cancel' });
     jest.clearAllMocks();
-    alertButtons()[0]!.onPress?.();
+    change.onPress?.();
     await flush();
     expect(setAgeBlocked).not.toHaveBeenCalled();
     expect(await getAgeBlocked()).toBe(false);
