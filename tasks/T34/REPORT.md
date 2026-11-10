@@ -1,10 +1,11 @@
 # T34 · Report
 
 ## Summary for the founder
-- You now holds every setting: no gear, and under your style card, What Kit knows and Today you'll find Appearance, Plan & usage, Privacy & data (once), Help & about and the version line. Every row opens the same page as before, with a back button that reads "You". Checked in light, dark and the largest text size.
-- Fixed this round: an old Settings link now opens You at the rows, and the screens that open at the rows land there every time, with nothing under the tab bar. "Acknowledgements" no longer breaks in the middle at the biggest text.
-- Not ready yet: if the same old link is opened a second time, You stays at the top. At the biggest text, "What Kit knows" loses its last letter on the Pro screen, and the style card's pick numbers get cut. Those two were there before this change. Some checks also need to be stronger.
-- Not checked: a real VoiceOver pass, and the old link with the app closed on a real build.
+- You is now where every setting lives. The gear and the separate Settings page are gone. Under your style card, What Kit knows and Today you'll find Appearance, Plan & usage, Privacy & data (once), Help & about and the version line. Every row opens the same page as before, and its back button reads "You".
+- An old link to Settings opens You at those rows, and does so again on a later visit. The demo screens for the rows open with everything above the tab bar. Checked in light, dark and the biggest text size: nothing is cut off. "Acknowledgements", "What Kit knows" and your numbered style picks all fit now.
+- One small gap, kept on purpose: if you're already on You and open a second old Settings link without leaving, You stays where you are instead of jumping to the rows.
+- Not checked yet: a real VoiceOver pass, and an old link with the app closed on a real install. Both are phone checks for you.
+- Verdict: ready.
 
 ## Built (implementer)
 *(Pasted by the coordinator from the implementer's hand-back, round 1: the harness refused the file from the subagent.)*
@@ -181,3 +182,68 @@ Round 1's 31 bugs were rerun against the new code; the scroll bugs were rewritte
 **Verdict:** **not ready.** Code defect 1 (SY1.1's second arrival), the clipping under SY1.6 (defect 2, for the coordinator to rule on), and test defects 3–6, including four deliberate bugs no test catches. · rounds: 2 of 3
 
 **Not verified:** a real VoiceOver pass (the founder, or Accessibility Inspector on demo 84) · a cold start from the old link on a real build (founder phone test) · from TESTING's list: Show me around (T35), the Notifications row, the mail and web rows, the sign-in rows on his phone.
+
+## Verification, round 3 (verifier)
+*Build `a45d9094` against the lock `132fb593`, Nov 10. Round-3 screenshots are in `tasks/T34/shots/r3/` (half size, JPEG).*
+
+**Lock:** since `132fb593`, only TESTING.md's lock line changed (`05cf7d39`). `132fb593` adds tests and flow steps. It reworks the test's own mocks: the expo-router mock gains a focus model and `setParams`, and the theme mock gains a switchable accessibility size. No assertion was removed or loosened. · banned shortcuts: none found · files outside the list: `app/src/features/you/NumberedPill.tsx`. It is named in Built → Round 3 (defect 2, sent back by the coordinator) but not under Deviations. It is also used by the style profile editor, which I checked (demo 80, normal and largest size: unchanged at normal size, pills whole at the largest).
+**Suites:** `npm run check` **green**, in parts: tsc clean; core typecheck clean; lint 0 errors (the old tryOn warning); core `853 passed`; Jest `npx jest --no-watchman`: `Test Suites: 3 skipped, 124 passed · Tests: 4 skipped, 1672 passed, 1676 total`. · server and parity: not touched.
+**Red, then green:** with the round-2 `index.tsx` and `NumberedPill.tsx` under the round-3 tests: `3 failed, 22 passed, 25 total` (the second old link; What Kit knows stacking; the pick numbers fitting). All 25 pass on HEAD. The other new tests (bar insets, one-word title fit) pass on round-2 code, which is right, since they check behaviour that already existed. They are proved by the deliberate bugs below.
+**Flows:** the full run gave `[Passed] FP7.5 … (5m 31s)` · `[Passed] SY1 · You is the settings home (3m 26s)` · `[Passed] smoke (12s)`. The T34 flow then passed 2 more runs: **3 of 3**.
+
+### Criteria
+- **SY1.1** · **pass** · All unit tests are green, and the flow's "SY1.1 old link" and the new "the old link a second time" passed 3 of 3. My round-2 repro now lands: Stylist → old link → scroll up → Stylist → old link again goes to the rows (`shots/r3/again-1b-stylist.jpg`, `again-2-second-link.jpg`). Returning to You without a link leaves it where it was (`tabreturn-2-you.jpg`). **The stated limit, reproduced:** an old link opened while You is still the focused screen, after a first link landed and he scrolled up, leaves You at the top (`limit-1-top.jpg`, `limit-2-second-link-on-you.jpg`). **Judged against SY1.1:** SY1.1 asks that the Settings page be gone and every link to it open You. In this case You is already open and stays open, so nothing in SY1.1 fails. "Open at the rows" is IMPLEMENTATION's technical default T-5, and TESTING's edges are the cold and warm first arrival, both of which hold. The case needs two old links in a row with no other screen in between. Old links exist only in old messages, so this is rare. I record it as a known limit: the coordinator logs it in DECISIONS-LOG and decides whether it becomes a follow-up (for example, a per-link nonce, so that every arrival changes the params).
+- **SY1.2** · **pass** · Tests green; all of its deliberate bugs caught. Landings are consistent in all 16 launches: 84, 141, 142, 258 and 270 open at the true end with the version line above the tab bar; 17, 257 and 271 open at the top, light and dark (`shots/r3/{17,84,141,142,257,258,270,271}-{light,dark}.jpg`). Rows match the inventory.
+- **SY1.3** · **pass** · Tests green; deliberate bugs caught. `‹ You` shows on Plan & usage, Privacy & data, Acknowledgements and Notifications (86), light and dark (`page-*-{light,dark}.jpg`, `86-*.jpg`). Appearance menu: System ✓, Light, Dark, and Dark saved (`appearance-*.jpg`). Back taps passed every run with `retryTapIfNoChange`.
+- **SY1.4** · **pass** · Test green; deliberate bugs caught; Privacy & data appears once in every screenshot.
+- **SY1.5** · **pass** · Test green; the ScrollView-wrapper bug caught. Full tab bar at 17's top; compact bar after scrolling (the largest-text walk, `ax-17-*-1.jpg` onward).
+- **SY1.6** · **pass** · Render tests green; deliberate bugs caught. At `accessibility-extra-extra-extra-large` (reset to `large` after):
+  - Demos 17 and 271, light and dark, walked top to end (`ax-17-{light,dark}-0…10.jpg`, `ax-271-{light,dark}-0…4.jpg`): `What Kit knows` sits whole over `See all 8`, and the pick numbers `1` and `2` are whole in round discs (`ax-17-light-0.jpg`, `ax-17-dark-0.jpg`).
+  - Every row title and value is whole, `Acknowledgements` is on one line, and the version line wraps between words.
+  - Demos 84, 141, 142, 258 and 270 (light) match; the LinkRow pages 85, 86 and 87, light and dark, are whole with no mid-word breaks (`ax-85-*.jpg`, `ax-86-*.jpg`, `ax-87-*.jpg`).
+  - The 271 Pro row wraps "Kitted / Pro" beside the woven label, between words, which is acceptable.
+  - A real VoiceOver pass is still not verified (TESTING's list).
+
+### Break it on purpose
+46 deliberate bugs: round 2's 39, plus 6 new and the SY1.5 wrapper by hand. Each was applied alone, then reverted; the tree was clean after each.
+- **Caught by the unit tests (43).** Every round-2 bug, including the four that went uncaught then:
+  - the end ignoring the tab bar
+  - the top ignoring the nav bar
+  - the one-word title fit removed
+  - the fit without `numberOfLines`
+
+  The round-1 warm-link behaviour is now caught by a unit test too. New ones caught: blur no longer clears `at` · the landing never arming · What Kit knows side by side at accessibility sizes · the pick badge back to a fixed 18 pt height.
+- **Caught by the flow only (1):** no re-landing (`RELANDS = 0`) → `"Kitted … Scoring v…" is visible` false.
+- **Not caught, and not criterion bugs (2):**
+  - **The badge disc fixed at 18 pt** (still `minHeight`): the digit stays whole, and the disc becomes a rounded square instead of a circle (`shots/r3/mut-disc18-ax-17-light.jpg`).
+  - **The disc grows past the number cap:** a larger disc only.
+
+  Neither clips, breaks a word or changes a label, so neither fails SY1.6 or any other criterion. They are a design detail (a round disc) that no criterion covers. Proposed test, optional: at accessibility sizes the disc's `borderRadius` is half its `minHeight`, and `minHeight` equals `minWidth`.
+
+### Screens (round 3)
+- 8 You states, light and dark: match; landings consistent.
+- Appearance menu, the four pages, 86: match.
+- Largest text: You (17 and 271 in both themes, plus 84, 141, 142, 258 and 270), pages 85, 86 and 87 in both themes, and the profile editor (80): all whole.
+- Stylist on 270 and 271, light and dark: the ordinary thread with `Ask Kit…`, no extra card or sheet (`stylist-*.jpg`).
+- **Side effect of my round-2 delete test, not a code defect:** Privacy & data on the Simulator now reads `Photos on this iPhone, 0 photos · 0 KB` where round 1 showed 7 photos, 9.8 MB. My "Delete everything" removed the demo's saved photo files, and the demo reseed doesn't restore them. The fix is reinstalling the dev build, or re-seeding the photos (founder or coordinator). Nothing else on these screens depends on it.
+- Dev build only: the floating Tools button.
+
+### Tried to break it
+- The old link a second time after leaving You → lands (fixed) · covered by the flow and a unit test.
+- The old link while You is still focused → stays at the top (known limit, above) · proposed test if it becomes a follow-up: the same sequence in the flow, expecting the version line.
+- Back to You with no link → stays put · covered by the unit test "coming back by the tab does not".
+- Push a page from You and come back → no re-landing (`at` is cleared on blur; the Back steps in the flow pass).
+- From round 2, unchanged code paths: a double tap opens one page; Delete all my data resets Appearance to System.
+- Cold start from the old link: still only on a real build (founder phone test).
+
+### Implementer's claims (round 3)
+- `at` cleared on leaving, so a tab return stays put and the next link lands → **confirmed**
+- What Kit knows stacks and the pick numbers fit at accessibility sizes, with normal sizes unchanged → **confirmed** (17 and 271, both themes; demo 80; normal-size screenshots unchanged)
+- Tests 25 of 25, T34 flow green, `npm run check` green (1672) → **confirmed** (flow 3 of 3 here)
+- Seen, not fixed: the 271 Pro row cramped but whole → **confirmed**, not a defect
+- Not done: a link while You is focused doesn't land → **confirmed**; judged a known limit, not a SY1.1 fail
+- Files: `index.tsx`, `NumberedPill.tsx` → **confirmed**. `NumberedPill.tsx` is outside IMPLEMENTATION.md's list and belongs under Deviations.
+
+**Verdict:** **ready.** Nothing fails; every bug that breaks a criterion is caught; the lock holds; every remaining "not verified" names what would verify it. Two notes for the coordinator: log the focused-You limit (or open a follow-up), and add `NumberedPill.tsx` to Deviations. · rounds: 3 of 3
+
+**Not verified:** a real VoiceOver pass (the founder, or Accessibility Inspector on demo 84) · a cold start from the old link on a real build (founder phone test) · from TESTING's list: Show me around (T35), the Notifications row (the beta-notifications task), the mail and web rows (the founder's support address and pages), the sign-in rows on his phone (the accounts task).
