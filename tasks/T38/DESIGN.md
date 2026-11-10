@@ -2,7 +2,6 @@
 
 **Approved by the founder:** 2026-11-09 in chat (all 13 phones; the open questions as picked: 8.0 in ink, "Full check" before the swap, the s14 reading, `onb.example.a11yOutfit` as written, Closet's night-rim rule kept, the drawing kept at AX sizes)
 
-<!-- Leave this comment. Only the coordinator replaces it with the approval line, after the founder's yes in chat. -->
 
 **From:** `plan.md` → T38 · **Spec:** `specs/onboarding-screens.md` → OS1 (OS1.1–OS1.4), OS2 (OS2.1–OS2.2) · **Frames:** `tasks/T38/design.html` (open with `preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/T38/design.html`) · **PNGs:** `tasks/T38/design/`
 
