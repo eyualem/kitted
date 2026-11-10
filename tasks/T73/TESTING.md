@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `6511c1f7` · 2026-11-09 · tests: `app/src/__tests__/closetNoOutfits.test.tsx`, `app/e2e/flows/T73-closet-no-outfits.yaml`, `app/e2e/flows/T73-outfits-on.yaml`, and the three spec-driven edits to existing tests (`pieceEdit.test.ts`, `oneCount.test.ts` G1, `askC7.test.ts`; see IMPLEMENTATION.md → Must not break). Flow helper: `app/e2e/common/open-demo.yaml` taps Metro at `${PORT || '8081'}` (run with `-e PORT=8082` from this worktree).
+**Lock:** `eaf3301c` · 2026-11-09 (round 2, after the verifier; first lock `6511c1f7`, reason in REPORT.md → Disputes) · tests: `app/src/__tests__/closetNoOutfits.test.tsx`, `app/e2e/flows/T73-closet-no-outfits.yaml`, `app/e2e/flows/T73-outfits-on.yaml`, and the three spec-driven edits to existing tests (`pieceEdit.test.ts`, `oneCount.test.ts` G1, `askC7.test.ts`; see IMPLEMENTATION.md → Must not break). Flow helper: `app/e2e/common/open-demo.yaml` taps Metro at `${PORT || '8081'}` (run with `-e PORT=8082` from this worktree).
 
 Plan-line criteria: CB1.1, CB1.2, CB1.3, CB1.4, CB1.5 (5). All five are below.
 
