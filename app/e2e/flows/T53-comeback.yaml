@@ -1,0 +1,116 @@
+# T53 · NT4 · the comeback question after a week without a visit: demo 288 (open) and its three answers, and demos 289
+# (Change the time), 290 (back on) and 291 (No thanks).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T53-comeback.yaml (Metro running)
+# Matching: a full regex match on an element's text or VoiceOver label (Kit's bubble is labelled "Kit: {the line}");
+# "." and "?" are escaped. Taps are scoped to the comeback card (childOf its testID).
+appId: com.trykitted.kitted
+name: T53 · NT4 · the comeback
+---
+# NT4.1 288 · one question, three answers.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "288"
+- extendedWaitUntil:
+    visible:
+      id: "comeback"
+    timeout: 90000
+- assertVisible: "Kit: I paused your daily ideas after a week without a visit\\. Want them back\\?"
+- assertVisible: "Turn them back on"
+- assertVisible: "Change the time"
+- assertVisible:
+    text: "No thanks"
+    childOf:
+      id: "comeback"
+- assertNotVisible: ".*miss you.*"
+
+# NT4.2 back on · at 9:00, today's 7:45 has passed: tomorrow.
+- tapOn: "Turn them back on"
+- extendedWaitUntil:
+    visible:
+      id: "comeback-line"
+    timeout: 10000
+- assertVisible: "Kit: Back on\\. Next one lands tomorrow at 7:45 am\\."
+- assertNotVisible: "Turn them back on"
+- assertNotVisible: "Change the time"
+
+# NT4.2 change the time · the time row in the card, then a pick: back on at the new time.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "288"
+- extendedWaitUntil:
+    visible:
+      id: "comeback"
+    timeout: 90000
+- tapOn: "Change the time"
+- extendedWaitUntil:
+    visible:
+      id: "comeback-time-row"
+    timeout: 10000
+- assertVisible: "I get dressed at, 8:00 am"
+- assertVisible: "Turn them back on"
+- assertNotVisible: "Change the time"
+- tapOn: "I get dressed at, 8:00 am"
+- tapOn: "7:00 am"
+- extendedWaitUntil:
+    visible:
+      id: "comeback-line"
+    timeout: 10000
+- assertVisible: "Kit: Back on\\. Next one lands tomorrow at 6:45 am\\."
+
+# NT4.2 no thanks · the switch saved off.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "288"
+- extendedWaitUntil:
+    visible:
+      id: "comeback"
+    timeout: 90000
+- tapOn:
+    text: "No thanks"
+    childOf:
+      id: "comeback"
+- extendedWaitUntil:
+    visible:
+      id: "comeback-line"
+    timeout: 10000
+- assertVisible: "Kit: Done\\. You can turn them on in You → Notifications\\."
+- assertNotVisible: "Turn them back on"
+
+# NT4.2 289 · Change the time (its own screen).
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "289"
+- extendedWaitUntil:
+    visible:
+      id: "comeback-time-row"
+    timeout: 90000
+- assertVisible: "Kit: I paused your daily ideas after a week without a visit\\. Want them back\\?"
+- assertVisible: "I get dressed at, 8:00 am"
+- assertVisible: "Turn them back on"
+- assertNotVisible: "Change the time"
+
+# NT4.2 290 · back on.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "290"
+- extendedWaitUntil:
+    visible:
+      id: "comeback-line"
+    timeout: 90000
+- assertVisible: "Kit: Back on\\. Next one lands tomorrow at 7:45 am\\."
+
+# NT4.2 291 · No thanks.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "291"
+- extendedWaitUntil:
+    visible:
+      id: "comeback-line"
+    timeout: 90000
+- assertVisible: "Kit: Done\\. You can turn them on in You → Notifications\\."

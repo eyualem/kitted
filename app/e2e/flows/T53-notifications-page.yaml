@@ -1,0 +1,106 @@
+# T53 · NT3 · You → Notifications: demo 284 (on), 86 (a trial plan), 285 (never asked), 286 (paused), 287 (off in iOS).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T53-notifications-page.yaml (Metro running)
+# Matching: a full regex match on an element's text or VoiceOver label; "." is escaped. The switches carry their testIDs.
+appId: com.trykitted.kitted
+name: T53 · NT3 · You → Notifications
+---
+# NT3.1 284 · the header and the three rows; no Trial ending.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "284"
+- extendedWaitUntil:
+    visible:
+      id: "notifs-idea"
+    timeout: 90000
+- assertVisible: "An outfit idea once a day, and a heads-up when a fit check finishes after you leave\\. That's all I send\\."
+- assertVisible:
+    id: "notifs-idea"
+    checked: true
+- assertVisible:
+    id: "notifs-time"
+- assertVisible: "I get dressed at, 8:00 am"
+- assertVisible:
+    id: "notifs-ready"
+    checked: true
+- assertNotVisible: ".*Trial ending.*"
+- assertNotVisible: ".*No reminders to open the app.*"
+- assertNotVisible: ".*Daily outfit idea time.*"
+- assertNotVisible:
+    id: "notifs-off-card"
+
+# NT3.1 86 · on a trial plan: still no Trial ending row.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "86"
+- extendedWaitUntil:
+    visible:
+      id: "notifs-ready"
+    timeout: 90000
+- assertNotVisible: ".*Trial ending.*"
+
+# NT3.3 285 · never asked: the switch off, no time row; on → Apple's prompt (scripted allow) → on with the time row.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "285"
+- extendedWaitUntil:
+    visible:
+      id: "notifs-idea"
+    timeout: 90000
+- assertVisible:
+    id: "notifs-idea"
+    checked: false
+- assertNotVisible:
+    id: "notifs-time"
+- tapOn:
+    id: "notifs-idea"
+- extendedWaitUntil:
+    visible:
+      id: "notifs-time"
+    timeout: 10000
+- assertVisible:
+    id: "notifs-idea"
+    checked: true
+- assertVisible: "I get dressed at, 8:00 am"
+- assertNotVisible:
+    id: "notifs-off-card"
+
+# NT3.3 286 · paused: the daily switch off, no time row, Fit check ready on.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "286"
+- extendedWaitUntil:
+    visible:
+      id: "notifs-idea"
+    timeout: 90000
+- assertVisible:
+    id: "notifs-idea"
+    checked: false
+- assertNotVisible:
+    id: "notifs-time"
+- assertVisible:
+    id: "notifs-ready"
+    checked: true
+
+# NT3.4 287 · off in iOS: the card and Open Settings on top; the rows greyed with his saved values.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "287"
+- extendedWaitUntil:
+    visible:
+      id: "notifs-off-card"
+    timeout: 90000
+- assertVisible: "Notifications are off for Kitted\\."
+- assertVisible: "Open Settings"
+- assertVisible:
+    id: "notifs-idea"
+    enabled: false
+- assertVisible:
+    id: "notifs-ready"
+    enabled: false
+# His saved time stays shown (greyed; the component test checks it can't be changed).
+- assertVisible: "I get dressed at, 8:00 am"

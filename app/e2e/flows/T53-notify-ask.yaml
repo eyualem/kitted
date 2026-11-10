@@ -1,0 +1,134 @@
+# T53 · NT1 · Kit's ask in the chat: demo 158 (open), 159 (Apple's prompt up), 160 / 280 (allowed, today / tomorrow),
+# 281 / 282 (No thanks / Don't Allow) and 283 (the catch-up for first-build testers).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T53-notify-ask.yaml (Metro running)
+# Matching: Maestro matches a pattern against an element's WHOLE text or VoiceOver label (a full regex match). Kit's
+# bubble is one VoiceOver element labelled "Kit: {the line}", so the steps match that label; "." and "?" are escaped.
+# A must-not uses ".*words.*" so it can't pass just because the words sit inside a longer label.
+appId: com.trykitted.kitted
+name: T53 · NT1 · Kit's ask
+---
+# NT1.1 158 · after his first scored fit: the closet card, then Kit's ask under it.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "158"
+- extendedWaitUntil:
+    visible:
+      id: "notify-ask"
+    timeout: 90000
+- assertVisible: "Show me the list"
+- assertVisible:
+    text: "Kit: What time do you usually get dressed to head out\\? I'll send you an outfit idea 15 minutes before\\."
+    below:
+      text: "Show me the list"
+- assertVisible:
+    id: "notify-ask-time-row"
+- assertVisible: "I get dressed at, 8:00 am"
+- assertVisible: "Send me ideas"
+- assertVisible: "No thanks"
+- assertNotVisible: ".*Yes, pick a time.*"
+- assertNotVisible: ".*Daily idea at.*"
+- assertNotVisible: "Set .*"
+
+# NT1.2 menu · the time menu: 5:00 am to 1:00 pm in half hours; picking changes the pill.
+- tapOn: "I get dressed at, 8:00 am"
+- assertVisible: "5:00 am"
+- assertNotVisible: "4:30 am"
+- tapOn: "7:30 am"
+- assertVisible: "I get dressed at, 7:30 am"
+- tapOn: "I get dressed at, 7:30 am"
+- scrollUntilVisible:
+    element: "1:00 pm"
+    direction: DOWN
+- assertNotVisible: "1:30 pm"
+- tapOn: "1:00 pm"
+- assertVisible: "I get dressed at, 1:00 pm"
+
+# NT1.5 tap No thanks · Apple's prompt never shows; the later line, no buttons.
+- tapOn:
+    text: "No thanks"
+    childOf:
+      id: "notify-ask"
+- assertVisible: "Kit: No problem\\. You can turn it on later in You → Notifications\\."
+- assertNotVisible: "Send me ideas"
+- assertNotVisible: ".*You → Settings → Notifications.*"
+
+# NT5.4 159 · while Apple's prompt is up: No thanks is dimmed.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "159"
+- extendedWaitUntil:
+    visible:
+      id: "notify-ask"
+    timeout: 90000
+- assertVisible:
+    text: "No thanks"
+    enabled: false
+
+# NT1.4 160 · allowed at 7:43 with 8:00: today at 7:45.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "160"
+- extendedWaitUntil:
+    visible:
+      id: "notify-ask-line"
+    timeout: 90000
+- assertVisible: "Kit: Done\\. Your first idea lands today at 7:45 am\\."
+- assertNotVisible: "Send me ideas"
+- assertNotVisible: "No thanks"
+- assertNotVisible: ".*lands today at 8:00 am.*"
+
+# NT1.4 280 · allowed at 7:50: tomorrow at 7:45.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "280"
+- extendedWaitUntil:
+    visible:
+      id: "notify-ask-line"
+    timeout: 90000
+- assertVisible: "Kit: Done\\. Your first idea lands tomorrow at 7:45 am\\."
+- assertNotVisible: "Send me ideas"
+- assertNotVisible: "No thanks"
+
+# NT1.5 281 · No thanks.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "281"
+- extendedWaitUntil:
+    visible:
+      id: "notify-ask-line"
+    timeout: 90000
+- assertVisible: "Kit: No problem\\. You can turn it on later in You → Notifications\\."
+- assertNotVisible: "Send me ideas"
+- assertNotVisible: "No thanks"
+
+# NT1.5 282 · Don't Allow.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "282"
+- extendedWaitUntil:
+    visible:
+      id: "notify-ask-line"
+    timeout: 90000
+- assertVisible: "Kit: No problem\\. You can turn it on later in You → Notifications\\."
+- assertNotVisible: "Send me ideas"
+- assertNotVisible: "No thanks"
+
+# NT1.6 283 · a first-build tester: the same card, the last thing in today's thread.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "283"
+- extendedWaitUntil:
+    visible:
+      id: "notify-ask"
+    timeout: 90000
+- assertVisible: "Kit: What time do you usually get dressed to head out\\? I'll send you an outfit idea 15 minutes before\\."
+- assertVisible: "I get dressed at, 8:00 am"
+- assertVisible: "Send me ideas"
+- assertVisible: "No thanks"

@@ -21,6 +21,8 @@ export interface WipeDeps {
   clearDeviceId: () => Promise<void>;
   /** Demo builds load the bundled seed into an empty store at launch; this marker keeps a wiped store empty. */
   demo?: boolean;
+  /** T53 (test writer's stub: declared, not used yet). */
+  cancelNotifications?: () => Promise<void>;
 }
 
 /** Whether a real photo may leave the phone: a profile that holds his consent. Stricter than onboarding's

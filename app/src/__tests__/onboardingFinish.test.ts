@@ -8,7 +8,7 @@ import { PRIVACY_URL, TERMS_URL } from '@/config/links';
 import { createOfferService } from '@/features/account/offerService';
 import { basicsAdded, inviteState } from '@/features/finish/invite';
 import {
-  FINISH_SETTLE_MS, firstFull, holdsOffer, laterShows, movesDue, NO_FINISH, notifyAskable, notifyDue, parseFinish, PAYWALL_AFTER_MS, paywallDue,
+  askDue, catchUpDue, FINISH_SETTLE_MS, firstFull, holdsOffer, laterShows, movesDue, NO_FINISH, notifyDue, parseFinish, PAYWALL_AFTER_MS, paywallDue,
   type FinishCheck, type FinishState,
 } from '@/features/finish/sequence';
 import { createFinishService, FINISH_KEY, getFinish, getStarterMarks, type FinishDeps } from '@/features/finish/service';
@@ -149,10 +149,26 @@ describe('E4–E5 · the paywall and the ask', () => {
     expect(notifyDue({ ...moves, step: 'paywall' }, { paywallClosed: false, paywallSkipped: false })).toBe(false);
     expect(notifyDue(moves, { paywallClosed: false, paywallSkipped: true })).toBe(true);
     expect(notifyDue({ ...moves, step: 'done' }, { paywallClosed: true, paywallSkipped: true })).toBe(false);
-    expect(notifyAskable(true, 'undetermined')).toBe(true);
-    expect(notifyAskable(true, 'granted')).toBe(false);
-    expect(notifyAskable(true, 'denied')).toBe(false);
-    expect(notifyAskable(false, 'undetermined')).toBe(false);
+    // T53 (specs/notifications.md NT1; IMPLEMENTATION technical default 2): the ask is due when built, not under the age
+    // lock, never posted, and he hasn't set the daily switch himself; iOS's answer no longer matters (a wipe keeps it).
+    const ask = { built: true, ageBlocked: false, asked: false, ideaKv: null };
+    expect(askDue(ask)).toBe(true);
+    expect(askDue({ ...ask, built: false })).toBe(false);
+    expect(askDue({ ...ask, ageBlocked: true })).toBe(false);
+    expect(askDue({ ...ask, asked: true })).toBe(false);
+    expect(askDue({ ...ask, ideaKv: '1' })).toBe(false);
+    expect(askDue({ ...ask, ideaKv: '0' })).toBe(false);
+    // NT1.6's catch-up: setup finished (done or skipped), never asked, iOS never asked, the switch never set.
+    const up = { ...ask, permission: 'undetermined' as const, step: 'done' as const };
+    expect(catchUpDue(up)).toBe(true);
+    expect(catchUpDue({ ...up, step: 'skipped' })).toBe(true);
+    for (const step of ['waiting', 'moves', 'paywall'] as const) expect({ step, due: catchUpDue({ ...up, step }) }).toEqual({ step, due: false });
+    for (const permission of ['granted', 'denied'] as const) expect({ permission, due: catchUpDue({ ...up, permission }) }).toEqual({ permission, due: false });
+    expect(catchUpDue({ ...up, asked: true })).toBe(false);
+    expect(catchUpDue({ ...up, ideaKv: '1' })).toBe(false);
+    expect(catchUpDue({ ...up, ideaKv: '0' })).toBe(false);
+    expect(catchUpDue({ ...up, ageBlocked: true })).toBe(false);
+    expect(catchUpDue({ ...up, built: false })).toBe(false);
   });
 });
 
@@ -220,11 +236,14 @@ describe('E1–E7 · the whole sequence through the service', () => {
     }
   });
 
+  // T53: "already asked" is now notify.asked (any route); iOS already allowed no longer skips the ask (technical default 2).
   it('E5: notifications off, or already asked → no ask, the sequence ends', async () => {
-    for (const o of [{ notificationsOn: () => false }, { notifications: scriptedNotifications('allow', 'granted') }, { notifications: unbuiltNotifications, notificationsOn: () => false }]) {
+    for (const o of [{ notificationsOn: () => false }, { asked: true }, { notifications: unbuiltNotifications, notificationsOn: () => false }]) {
       const store = await freshStore();
       await store.fitChecks.put(check('a', T0, { fixes: [] }));
-      const { d } = deps(store, { paywallOn: () => false, ...o });
+      const { asked, ...rest } = o as Partial<FinishDeps> & { asked?: boolean };
+      if (asked) await store.setKv('notify.asked', 'M-earlier');
+      const { d } = deps(store, { paywallOn: () => false, ...rest });
       await createFinishService(d).ensure();
       expect((await cards(store)).map((m) => m.cardType)).toEqual([null, 'plan']);
       expect((await getFinish(store)).step).toBe('done');
@@ -505,7 +524,8 @@ describe('P2–P8 · the paywall', () => {
     } else {
       expect(PAYWALL_BUILT).toBe(false);
     }
-    expect(NOTIFICATIONS_BUILT).toBe(false); // no expo-notifications yet: no ask on his phone
+    // T53 turns notifications on (specs/notifications.md); a build without the native module still shows no ask (NT1.1).
+    expect(NOTIFICATIONS_BUILT).toBe(true);
   });
 
   it('P5/P6: the mock store\'s outcomes, and a purchase makes him Pro', async () => {
@@ -544,6 +564,9 @@ describe('P2–P8 · the paywall', () => {
 });
 
 // ── The notification ask ─────────────────────────────────────────────────────────────────────────────────────────
+// T53 changed the ask (specs/notifications.md NT1): one step, the time up front, Send me ideas asks iOS at once (no
+// "Yes, pick a time", no "Set {time}"). The old N1–N3 tested the two-step card; these test the same promises on the new
+// one. The full contract is T53-notifyAsk.test.ts.
 describe('N1–N3 · the notification ask', () => {
   async function asked(notifications = scriptedNotifications('allow')) {
     const store = await freshStore();
@@ -557,43 +580,40 @@ describe('N1–N3 · the notification ask', () => {
     return { store, s, id, requests };
   }
 
-  it('N1: Yes grows the card with the time (8:00 or his own) and asks only on Set', async () => {
+  it('N1 (NT1.2–NT1.3): the time is on the card (8:00 or his own); Send me ideas asks once', async () => {
     const { store, s, id, requests } = await asked();
-    await s.notifyYes(id);
-    expect((await store.chat.get(id))!.payload).toMatchObject({ state: 'picking', time: '08:00' });
-    expect(requests).toHaveLength(0);
+    expect((await store.chat.get(id))!.payload).toEqual({ question: 'notify', state: 'open', time: '08:00' });
     await s.notifyPickTime(id, '07:30');
     expect(requests).toHaveLength(0);
-    expect(await s.notifySet(id)).toBe('allowed');
+    expect(await s.notifyYes(id)).toBe('allowed');
     expect(requests).toHaveLength(1);
   });
 
-  it('N2: allowed saves the time and the switch; denied and No thanks say where to turn it on', async () => {
+  it('N2 (NT1.4–NT1.5): allowed saves the time and the switch; denied and No thanks say where to turn it on', async () => {
     const a = await asked();
-    await a.s.notifyYes(a.id);
     await a.s.notifyPickTime(a.id, '07:30');
-    await a.s.notifySet(a.id);
+    expect(await a.s.notifyYes(a.id)).toBe('allowed');
     expect((await a.store.profile.get('me'))!.ideaTime).toBe('07:30');
     expect((await loadNotificationPrefs(a.store)).idea).toBe(true);
-    expect((await a.store.chat.get(a.id))!.payload.state).toBe('allowed');
-    expect(t('notif.ask.done', { time: '7:30 am' })).toBe('Done. Your first idea lands tomorrow at 7:30 am.');
+    expect((await a.store.chat.get(a.id))!.payload).toEqual({ question: 'notify', state: 'allowed', time: '07:30', when: 'tomorrow' });
+    expect(t('notif.ask.done', { time: '7:15 am' })).toBe('Done. Your first idea lands tomorrow at 7:15 am.');
 
     const d = await asked(scriptedNotifications('deny'));
-    await d.s.notifyYes(d.id);
-    expect(await d.s.notifySet(d.id)).toBe('denied');
+    expect(await d.s.notifyYes(d.id)).toBe('denied');
+    expect((await d.store.chat.get(d.id))!.payload.state).toBe('denied');
 
     const n = await asked();
     await n.s.notifyNo(n.id);
     expect(n.requests).toHaveLength(0);
     expect((await n.store.chat.get(n.id))!.payload.state).toBe('declined');
     expect((await loadNotificationPrefs(n.store)).idea).toBe(false);
+    expect(t('notif.ask.later')).toBe('No problem. You can turn it on later in You → Notifications.');
   });
 
-  it('N3: an answered ask never changes and never posts again', async () => {
+  it('N3 (NT1.7): an answered ask never changes and never posts again', async () => {
     const { store, s, id, requests } = await asked();
     await s.notifyNo(id);
-    await s.notifyYes(id);
-    expect(await s.notifySet(id)).toBe('declined');
+    expect(await s.notifyYes(id)).toBe('declined');
     expect(requests).toHaveLength(0);
     await s.ensure();
     expect((await cards(store)).filter((m) => m.payload.question === 'notify')).toHaveLength(1);

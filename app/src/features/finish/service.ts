@@ -38,6 +38,10 @@ export interface FinishDeps {
   openPaywall: () => void;
   /** Runs `fn` after `ms` (a real timer in the app, a fake in tests). */
   later: (fn: () => void, ms: number) => void;
+  // T53 (test writer's stub: declared, not used yet).
+  ageBlocked?: () => Promise<boolean>;
+  rescheduleNudges?: () => Promise<void>;
+  afterTodaysCard?: () => Promise<void>;
 }
 
 export async function getFinish(store: Pick<KittedStore, 'getKv'>): Promise<FinishState> {
@@ -220,6 +224,10 @@ export function createFinishService(deps: FinishDeps) {
       const visit = visitStart ?? now();
       const d = s.step === 'waiting' ? movesDue({ state: s, checks: await checks(), busy: false, visitStartMs: visit, nowMs: now(), checksChangedAt }) : null;
       return holdsOffer(s, visit, d?.kind === 'post' || d?.kind === 'wait');
+    },
+    /** T53 stub (test writer). */
+    async askPosted(): Promise<boolean> {
+      throw new Error('T53: not built');
     },
     // ── The notification ask (S15) ──────────────────────────────────────────────────────────────────────────────
     async notifyYes(messageId: string): Promise<void> {

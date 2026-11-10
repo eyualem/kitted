@@ -159,6 +159,14 @@ export function notifyDue(state: FinishState, o: { paywallClosed: boolean; paywa
   return false;
 }
 
+// T53 stubs (test writer): the implementer replaces them.
+export function askDue(_i: { built: boolean; ageBlocked: boolean; asked: boolean; ideaKv: string | null }): boolean {
+  throw new Error('T53: not built');
+}
+export function catchUpDue(_i: { built: boolean; ageBlocked: boolean; asked: boolean; ideaKv: string | null; permission: NotifyPermission; step: FinishStep }): boolean {
+  throw new Error('T53: not built');
+}
+
 /** Post the ask only when notifications are on and the system permission was never asked; otherwise skip it. */
 export const notifyAskable = (on: boolean, permission: NotifyPermission): boolean => on && permission === 'undetermined';
 

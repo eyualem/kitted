@@ -94,6 +94,14 @@ const NOTIFY_KEY: Record<NotificationKind, string> = { idea: KV.notifyIdea, read
 
 export const parseSwitch = (raw: string | null): boolean => raw !== '0';
 
+// T53 stubs (test writer): the implementer replaces them.
+export function parseIdeaSwitch(_raw: string | null): boolean {
+  throw new Error('T53: not built');
+}
+export function parseReadySwitch(_raw: string | null): boolean {
+  throw new Error('T53: not built');
+}
+
 export async function loadNotificationPrefs(store: KittedStore): Promise<NotificationPrefs> {
   const [idea, ready, trial] = await Promise.all(NOTIFICATION_KINDS.map((k) => store.getKv(NOTIFY_KEY[k])));
   return { idea: parseSwitch(idea ?? null), ready: parseSwitch(ready ?? null), trial: parseSwitch(trial ?? null) };

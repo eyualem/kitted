@@ -6,8 +6,8 @@ import type { ProfileRow } from '@/data/types';
 import { mailtoUrl } from '@/features/settings/actions';
 import { currentPlan, planShortName, planStatus, restorePurchases, restoreToast, scoringVersion, usageLines, versionLine } from '@/features/settings/plan';
 import {
-  DEFAULT_IDEA_TIME, IDEA_TIMES, ideaTimeLabel, ideaTimeOptions, loadAppearance, loadNotificationPrefs, parseAppearance, parseIdeaTime,
-  saveAppearance, saveIdeaTime, saveUnits, setNotificationPref,
+  DEFAULT_IDEA_TIME, IDEA_TIMES, ideaTimeLabel, ideaTimeOptions, loadAppearance, loadNotificationPrefs, parseAppearance, parseIdeaSwitch, parseIdeaTime,
+  parseReadySwitch, saveAppearance, saveIdeaTime, saveUnits, setNotificationPref,
 } from '@/features/settings/prefs';
 import { parseZonedIso } from '@/services/clock';
 
@@ -46,21 +46,37 @@ describe('units and the idea time live on the profile', () => {
     expect(ideaTimeLabel('13:30')).toBe('1:30 pm');
     expect(parseIdeaTime(null)).toBe('08:00');
     expect(IDEA_TIMES[0]).toBe('05:00');
-    expect(IDEA_TIMES[IDEA_TIMES.length - 1]).toBe('11:00');
+    // T53 (specs/notifications.md: 5:00 am to 1:00 pm, 17 half hours; was 11:00 am).
+    expect(IDEA_TIMES[IDEA_TIMES.length - 1]).toBe('13:00');
+    expect(IDEA_TIMES).toHaveLength(17);
     expect(ideaTimeOptions('08:00')).toEqual([...IDEA_TIMES]);
     expect(ideaTimeOptions('12:15')).toContain('12:15');
+    expect(ideaTimeOptions('14:00')).toEqual([...IDEA_TIMES, '14:00']);
   });
 });
 
-describe('notification switches (P6 reads them)', () => {
-  it('are on until turned off, each on its own key', async () => {
+describe('notification switches (T53 reads them)', () => {
+  // T53 (specs/notifications.md NT3): the daily idea is on only after his yes ('1'); Fit check ready is on unless he
+  // turned it off ('0'); there is no Trial ending switch. (Before T53 all three were on until turned off.)
+  it('NT6.3 · the daily idea is off until his yes; Fit check ready is on until turned off; no trial switch', async () => {
     const store = createMemoryStore();
-    expect(await loadNotificationPrefs(store)).toEqual({ idea: true, ready: true, trial: true });
+    expect(await loadNotificationPrefs(store)).toEqual({ idea: false, ready: true });
+    await setNotificationPref(store, 'idea', true);
+    expect(await store.getKv(KV.notifyIdea)).toBe('1');
     await setNotificationPref(store, 'ready', false);
     expect(await store.getKv(KV.notifyReady)).toBe('0');
-    expect(await loadNotificationPrefs(store)).toEqual({ idea: true, ready: false, trial: true });
+    expect(await loadNotificationPrefs(store)).toEqual({ idea: true, ready: false });
     await setNotificationPref(store, 'ready', true);
     expect((await loadNotificationPrefs(store)).ready).toBe(true);
+    expect(parseIdeaSwitch(null)).toBe(false);
+    expect(parseIdeaSwitch('0')).toBe(false);
+    expect(parseIdeaSwitch('1')).toBe(true);
+    expect(parseReadySwitch(null)).toBe(true);
+    expect(parseReadySwitch('1')).toBe(true);
+    expect(parseReadySwitch('0')).toBe(false);
+    // notify.trial is never read: a stored '0' there changes nothing.
+    await store.setKv('notify.trial', '0');
+    expect(await loadNotificationPrefs(store)).toEqual({ idea: true, ready: true });
   });
 });
 
