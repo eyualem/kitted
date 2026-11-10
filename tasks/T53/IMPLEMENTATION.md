@@ -331,6 +331,11 @@ Largest text: phone 15 = demo 158, phone 16 = demo 287, and 288, with the Simula
 2. **The "big enough" line when his closet was already big enough at his first nudge.** NT2.6 says the first scheduled day it can suggest gets "Your closet's big enough now: here's today's idea." A tester whose closet already makes two outfits when he says yes (the founder's phone) would get "big enough now" on day one, though nothing changed. · the founder (words he reads) · recommended: send it only after at least one "Check today's fit." nudge was scheduled, otherwise "Today's outfit idea is ready." (a spec change, NT2.6) · **default meanwhile: the spec as written.**
 3. **A nudge that fires while Kitted is open.** The spec doesn't say. · the founder (taste) · **recommended and default: not shown** (iOS's own default for the app in front; today's card is already in Stylist, and it keeps "one a day" quiet).
 
+**The founder's answers (Nov 10, in chat)**
+1. Don't Allow from the switch: **greyed out, still on** (phone 10 as drawn). Spec NT3 and NT3.3 now say so.
+2. The "big enough" line: **only after at least one `Check today's fit` nudge was delivered**; someone who could already suggest when he said yes never gets it. Spec NT2 and NT2.6 now say so.
+3. A nudge while Kitted is open: **not shown** (iOS's default; a technical call, settled by the coordinator).
+
 **Technical defaults (the coordinator logs them)**
 1. **The catch-up (NT1.6)** fires only when the finish sequence's step is `done` or `skipped` (setup finished), no ask was ever posted (`notify.asked` and `notifyMsgId` empty), `notify.idea` is unset, the permission is `undetermined`, notifications are built and he isn't age-blocked. A first-build tester who never checked a fit (step `waiting`) gets the ask after his first scored fit, like a new user.
 2. **The setup ask no longer requires iOS's permission to be `undetermined`** (spec: after "Delete all my data" the ask comes again "like a new user", and iOS keeps its answer through a wipe). It's skipped when already posted, when `notify.idea` was already set in You → Notifications, under the age lock, or when not built. After a wipe with iOS already at Don't Allow, `Send me ideas` shows the later line with no prompt (iOS won't ask twice).

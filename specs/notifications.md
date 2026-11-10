@@ -1,6 +1,6 @@
 # Notifications
 
-**Approved by the founder:** 2026-11-09 (NT6, "Fit check ready" in the beta: 2026-11-09)
+**Approved by the founder:** 2026-11-09 (NT6, "Fit check ready" in the beta: 2026-11-09; NT2.6 and NT3.3: 2026-11-10)
 
 After this, a tester who says yes gets one notification a day, 15 minutes before the time he usually gets dressed to head out: today's outfit idea from his closet once Kit can suggest outfits, and until then a nudge to check today's fit. A tester who skips his first check is asked too, so the same nudge reminds him to send it. If he leaves the app while a fit check is still being scored, one more notification tells him it's ready. It's all on his phone, the daily nudge stops by itself if he stops coming, and nothing else is ever sent.
 
@@ -52,7 +52,7 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 Shown under the app name "Kitted", with no title, one line:
 - **Once Kit can suggest outfits:** `Today's outfit idea is ready.` Never the pieces or the score on the lock screen.
 - **Before Kit can suggest outfits** (`canSuggest()` is false: an empty closet, or fewer than two outfits that work): `Check today's fit. Each one teaches me your closet.`
-- **The first day it can suggest,** once ever: `Your closet's big enough now: here's today's idea.` From the next day on, `Today's outfit idea is ready.`
+- **The first day it can suggest, after at least one `Check today's fit` nudge** (the founder, Nov 10: it marks a real change), once ever: `Your closet's big enough now: here's today's idea.` From the next day on, `Today's outfit idea is ready.` Someone who could already suggest when he said yes never gets it.
 - **Tap** → the Stylist tab, scrolled to today's card (posted then if it isn't yet). A tap on an older day's nudge opens today's card.
 
 ## NT3. You → Notifications
@@ -60,7 +60,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - Header: `An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send.`
 - Rows: `Daily outfit idea` (switch) · `I get dressed at` (the time menu; hidden while the switch is off, as built) · `Fit check ready` (switch, on by default once notifications are allowed).
 - Changing the time reschedules at once. Switch off cancels everything scheduled.
-- Switch on when Apple's prompt was never shown → Apple's prompt; Don't Allow leaves the switch off.
+- Switch on when Apple's prompt was never shown → Apple's prompt; Don't Allow keeps his yes, shown greyed under the off card (phone 10; the founder, Nov 10), so turning notifications on in iOS Settings schedules at once.
 - **iOS has notifications off for Kitted:** a card on top, `Notifications are off for Kitted.` + `Open Settings` (opens Kitted's page in iOS Settings); the switch and time are greyed out. Coming back with them on clears the card and schedules.
 - The `Trial ending` row is gone.
 
@@ -123,14 +123,14 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - NT2.2 Once it can suggest, every day's nudge is `Today's outfit idea is ready.` (after the one-time "big enough" day); no nudge ever lists pieces or shows a score.
 - NT2.7 Leaving the app (background) reschedules, so a check or a new piece made today is reflected in tomorrow's line.
 - NT2.3 While the morning service says it can't suggest (empty closet, or one outfit that works), every day gets `Check today's fit. Each one teaches me your closet.`
-- NT2.6 The first scheduled day on which it can suggest gets `Your closet's big enough now: here's today's idea.`; later days get `Today's outfit idea is ready.`; the "big enough" line is never scheduled again once it has been delivered, including after reinstalling nudges or changing the time.
+- NT2.6 After at least one `Check today's fit` nudge has been delivered, the first scheduled day on which it can suggest gets `Your closet's big enough now: here's today's idea.`; later days get `Today's outfit idea is ready.`; the "big enough" line is never scheduled again once it has been delivered, including after reinstalling nudges or changing the time.
 - NT2.4 Tapping a nudge opens Stylist at today's card.
 - NT2.5 Nothing else is ever scheduled or sent: only the daily nudges and NT6's line; never `Trial ending`, never two nudges on one day (a test over every schedule call).
 
 **You → Notifications (NT3)**
 - NT3.1 The page shows NT3's header and its three rows; no `Trial ending` row.
 - NT3.2 Changing the time reschedules all 7 at the new time; switch off leaves nothing scheduled.
-- NT3.3 Switch on with the permission never asked requests Apple's prompt; Don't Allow leaves the switch off.
+- NT3.3 Switch on with the permission never asked requests Apple's prompt; Don't Allow shows the off card with the switch greyed and on, and nothing is scheduled until iOS allows.
 - NT3.4 With iOS notifications off for Kitted, the off card and `Open Settings` show, the controls are greyed out, and nothing is scheduled.
 
 **Fit check ready (NT6)**
