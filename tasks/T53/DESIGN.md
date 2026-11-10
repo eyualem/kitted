@@ -1,5 +1,7 @@
 # T53 · Design: notifications in the beta (Kit's ask, the daily nudge, You → Notifications, the comeback)
 
+**Approved by the founder:** 2026-11-09 in chat (all 17 states, rounds 1–4)
+
 <!-- Leave this comment. Only the coordinator replaces it with the approval line, after the founder's yes in chat. -->
 
 **From:** `plan.md` → T53 · **Spec:** `specs/notifications.md` → NT1 (except NT1.8–NT1.10, T57), NT2, NT3, NT4, NT5, NT6 · **Frames:** `tasks/T53/design.html` (open with `preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/T53/design.html`) · **PNGs:** `tasks/T53/design/`
