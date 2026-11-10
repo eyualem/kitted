@@ -2864,3 +2864,11 @@ Contradictions settled and decisions changed during the build. Newest last.
 
 412. **The founder takes the look of setup to his own design session (Nov 10, in chat: "don't worry about the design... Just nail the onboarding process").** T39's frames (`tasks/T39/DESIGN.md`, passed by the critic in round 2) become the working layout, not approved looks: the build follows their states, flow and VoiceOver order, and its words come only from the approved specs. T38's build-mode design review (step 4b) is skipped for the same reason; its verifier still checks it on the Simulator. The agreement on the first camera open keeps today's camera words unchanged: his answer on which words was "Something else" with no text, so nothing new is shown without his yes.
 
+413. **T39's planner defaults, settled by Claude (CLAUDE.md: settle what isn't taste, money or words; no new words).**
+    - **VoiceOver on the age rows:** it reads the visible labels ("18–21"); no new spoken words.
+    - **His name and age:** never backed up with sign-in, since SY4 says they're never sent to the server. `sync/schema.ts` omits `name`, `ageBand` and `ageBandAt`, and marks the new kv keys local. That's an edit in the Sign-in lane's file, needed so the spec holds; the open backup PR #57 will need a hand merge there.
+    - **The camera agreement** keeps today's words (#412).
+    - **Looks** stays as it is today, with no "Pick by name instead" link.
+    - **An offer card left untapped at 4 am** stays in yesterday's chat, read-only, and isn't posted again. The Later reminder in `specs/notifications.md` is the nudge. If the founder wants a fresh card each day until the first check, that's a spec change.
+    - **The rest:** the other 16 technical defaults are in `tasks/T39/IMPLEMENTATION.md`. Among them: a V9 migration for the three profile columns, optional profile fields, and `/onboarding/consent` redirecting to About you.
+
