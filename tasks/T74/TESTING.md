@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `53331efd` · 2026-11-10 · tests: `app/src/__tests__/closetDeck.test.tsx` (47), `app/src/__tests__/closetBatch287.test.ts` › `C2` (rewritten as `CB2.1 · C2: …`, the spec-driven edit in IMPLEMENTATION.md → Must not break), `app/e2e/flows/T74-confirm-one-card.yaml`
+**Lock:** `dd92b898` · 2026-11-10 (was `53331efd`; re-locked after the CB2.2 runner-up dispute, REPORT.md → Disputes) · tests: `app/src/__tests__/closetDeck.test.tsx` (47), `app/src/__tests__/closetBatch287.test.ts` › `C2` (rewritten as `CB2.1 · C2: …`, the spec-driven edit in IMPLEMENTATION.md → Must not break), `app/e2e/flows/T74-confirm-one-card.yaml`
 
 Plan-line criteria: CB2.1, CB2.2, CB2.3, CB2.4, CB2.5, CB2.6, CB2.7, CB2.8, CB2.9, CB2.10 (10). All ten are below.
 
