@@ -59,10 +59,17 @@ The whole process on one page, for the founder and for Claude. It explains and p
 
 **Runs by itself** once you type `/build-task T11` in a session: the design (it stops once for your look), the plan, the tests, the code, the checks, the fix loop, the report and the pull request.
 
+**Sized to the risk** (Nov 10): each task is S, M or L, and the checking matches it. It says which in its first line to you, and you can change it.
+- **S** (a bug fix, a removal, words): no design stage, a one-page plan, a few deliberate bugs, 2 rounds at most.
+- **M** (a change to a screen you have): the design stage only for a new state, and the critic looks at the changed screens only.
+- **L** (a new screen or flow): everything.
+
+Anything touching privacy, scoring, limits, money, the age gate or the server is never S. Tests come first and are locked at every size. The table is in `.claude/skills/build-task/SKILL.md` → Size.
+
 **Starting things:**
 - A task: open a new session and type `/build-task T11`. If its feature has no spec yet, it walks you into the interview first.
 - An interview on its own: `/grill-me` and say which feature.
-- Two tasks at once: two sessions, one task each (each gets its own copy of the code). Not tried yet; one at a time is the safe setting.
+- Several tasks at once: one session per task, each with its own copy of the code. **At most 3 building at a time** (Nov 10): six at once ran the Mac out of memory and hit the 5-hour usage limit, which stops every session together. Finish and merge what's open before starting more, and archive a finished session instead of giving it a new task: a fresh session costs less per step than a long one.
 
 ## How the tests stay honest
 

@@ -23,7 +23,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 5. **Work only in this folder.** Codex and Gemini research outputs go in `inputs/`.
 6. **Test with a real person's profile, never a made-up one.** For each photo record who it is, the age band from their own birth year (18–21, 22–25, 26–30, 31+), their picked looks (up to 3, in order), their fit if given, and the occasion; split results by age band and by look. Never estimate age from a photo. Stock and web photos are "profile unknown", run with one stated test profile. Profiles live in `inputs/` (git-ignored): first names or codes, with the person's OK.
 7. **Keep the founder's to-do list current** (in `plan.md`): anything only the founder can do (a phone test, photos, an account, a decision) goes there in plain words, with P1 (this week), P2 (before the beta) or P3 (before launch), how long it takes and what it unblocks. Now and then, not every message, end a report with one line naming the 1–3 items that unblock the most.
-8. **The Mac's memory:** several agents are fine, but check `top -l 1 | grep PhysMem` before heavy work and never stack heavy jobs (an iOS build, a Simulator, `npm run check`, big Python runs). Slower is fine.
+8. **The Mac's memory and the usage limit:** at most 3 sessions building at once; every `/build-task` picks a size (S, M, L) and checks to it. Several agents are fine, but check `top -l 1 | grep PhysMem` before heavy work and never stack heavy jobs (an iOS build, a Simulator, `npm run check`, big Python runs). Slower is fine.
 9. **Simulators: at most two booted at once.** The main one is iPhone 17 Pro, `111D0A09-C2CA-4F72-BF3C-44019A05C89D`. Boot a second only when another session is using the first, and shut down any Simulator you booted when you're done. Never use `EF7ADF2A` (a broken duplicate).
 10. **Other sessions share this repo:** stage only your own hunks of shared files (`git add -p`), and never use a bare `git stash`.
 
@@ -64,7 +64,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **The founder's phone:** `tools/phone/install.sh` (Metro running, phone unlocked, same Wi-Fi); `tools/phone/pull.sh` copies its logs and data. Troubleshooting (trust, the 7-day permit, the Mac's address, the under-18 lock) is in `handoff/15-build-notes.md`.
 
 ## Coding traps (the full list: `handoff/15-build-notes.md`, and DECISIONS-LOG)
-- DECISIONS-LOG numbers collide across parallel branches (two branches each take "the next one"). Before merging, renumber the branch's entries to the next free number on main.
+- DECISIONS-LOG numbers collide across parallel branches. On a branch, number new entries `N.` (and refer to them as `#N`). Give them the next free numbers on main only when the branch merges, once, and don't message other sessions about numbers.
 - Hermes on iOS lacks parts of `Intl`: use `app/src/i18n/format.ts` and core `time.ts`.
 - A scrolling iOS sheet needs its ScrollView as the root (`SheetScaffold`). No `inverted` FlatList on iOS 26. No `KeyboardAvoidingView` around absolutely positioned docks.
 - The closet belongs to the closet service: fit-check code writes through `patchCheckKeepCloset`, never `closetSummary` or `itemIds` directly.
