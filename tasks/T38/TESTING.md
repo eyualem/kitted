@@ -1,0 +1,183 @@
+# T38 · Testing contract
+
+Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
+
+**Lock:** `<commit SHA>` · <date> · tests: `app/src/__tests__/drawnWelcome.test.ts`, `app/src/__tests__/drawnWelcomeScreens.test.tsx`, `app/e2e/flows/T38-drawn-welcome.yaml`
+
+Plan-line criteria: OS1, OS2 → OS1.1, OS1.2, OS1.3, OS1.4, OS2.1, OS2.2 (6). All six are below.
+
+**Shared set-up.**
+- *Pure tests* (`drawnWelcome.test.ts`): the real engine, `demoReadingById`, `en`. "The engine's own answer" means computed in the test, independently of the code under test: `reading = demoReadingById('s14')`; `ev = evaluateCheck({ reading, occasion: 'everyday', styles: [], boldness: null, closet: [], firstCheck: true })`; `top = ev.row.fixes[0]`; `afterReading = applyPartsFix(reading, top)`; `opts = scoreOptions({ occasion: 'everyday', styles: [], boldness: null })`.
+- *Render tests* (`drawnWelcomeScreens.test.tsx`): `@testing-library/react-native`, Jest modern fake timers (they fake `requestAnimationFrame` and `Date`). The design system is mocked as in `cardNoAddTile.test.tsx` (Reanimated needs the native runtime): `KText`, `MonoLabel`, `Numeral` and `WovenLabel` become `Text` passing their props through; `KCard`, `KCardSection`, `Seam`, `TextLinkRow` become `View`; `KButton`, `TextLink` and `IconButton` become a `Pressable` with their `title`/`label` as text and `accessibilityLabel`; `ScoreBlock`, `FixRow`, `TipLine`, `TagLine`, `StylistMessage` render their props' strings as `Text`; `useTheme` returns a test theme (`scheme`, `colors`, `a11y.reduceMotion`, `isAccessibilitySize`) the test controls. Also mocked: `@/features/closet/GarmentArt` (`GarmentArt` records each `spec` prop and renders `null`), `@/features/why/PartsBreakdown` (records `parts`), `expo-router` (`router.push`/`back`/`replace`/`canGoBack` as `jest.fn`, `useLocalSearchParams` returning the test's params, `useFocusEffect` a `jest.fn`), `expo-status-bar` (`setStatusBarStyle` a `jest.fn`), `expo-haptics` (every function a `jest.fn`), `expo-image` (`Image` renders a `View` with testID `photo-image`), `@/demo/demoPhotos` (`demoPhoto` a `jest.fn`), `@/design-system/components/Chat` (`PhotoBubble` and `NeckDownPhoto` as `jest.fn` markers), `@/features/account/account` (`useAccountsOn` returns the test's value), `@/data/db` (`store` = a `createMemoryStore()` initialised per test), `react-native-safe-area-context` (insets top 62, bottom 34), `@/features/fitcheck/reveal` (`revealSlow` returns 1 unless a test says otherwise). `global.fetch` is a `jest.fn` that fails the test if called. "Sent" means any `fetch` call; "saved" means any change to the memory store (fit checks, chat, kv) compared with its state before mount.
+- Every test name starts with its criterion ID.
+
+## Criteria
+
+- **OS1.1** · Welcome shows no photo. The bundled build has no person's photo reachable from Welcome or the Example check.
+  · how: component (both screens, every mode) + unit + manual screenshots
+  · test: `drawnWelcomeScreens.test.tsx` › `OS1.1 · Welcome renders the drawn outfit and no photo`; `OS1.1 · the Example check renders the drawn bubble and no photo, from Welcome and as a sheet`; `OS1.1 · with no example (engine null) Welcome still shows no photo and its buttons work`; `drawnWelcome.test.ts` › `OS1.1 · the example data carries a reading, no photo`; `OS1.1 · the drawing is garments only`
+  · expect: rendering `WelcomeScreen` (accounts off and on), `ExampleCheckScreen` (mode `screen`, `screen` with `from=consent`, and `sheet`): `demoPhoto` called 0 times; `PhotoBubble` and `NeckDownPhoto` rendered 0 times; no element with testID `photo-image`; `welcome-drawing` present on Welcome and `example-bubble` present on the Example check. `exampleCheck()` has no `photoId` key and has `reading` === `welcomeExample().reading` (the same object); `welcomeExample()` has no photo field. `drawnPieces(demoReadingById('s14')).map(p => p.slot)` → `['outer', 'top', 'bottom', 'shoes']` and every `spec.shape` is `top`, `bottom` or `shoe`. With `welcomeExample` mocked to return `null`: no `welcome-drawing`, no `welcome-card`, no `photo-image`; `Get started` still writes `onboarding.step` = `looks` and pushes `/onboarding/looks`.
+  · must not: any photo, `Image`, `PhotoBubble`, `NeckDownPhoto` or `demoPhoto` lookup on either screen in any mode; a hidden photo (an `Image` at opacity 0 or off-screen also fails); the Example check still saying "A real photo".
+  · edges: engine null (above); dark scheme (the same assertions with `scheme: 'dark'`); accessibility size (the same with `isAccessibilitySize: true`).
+  · red: to be filled by the test writer.
+
+- **OS1.2** · The before score, after score, both words and the fix line equal the scoring code's output for the outfit's reading, checked by a test (not typed in).
+  · how: unit (against the engine's own answer) + component (the screen reads only `welcomeExample()`)
+  · test: `drawnWelcome.test.ts` › `OS1.2 · before, after, both words and the fix are the engine's`; `OS1.2 · the after state is the top fix applied to the same reading, and it swaps the shoes only`; `OS1.2 · today's engine gives 7.5 Put together → 8.0 Sharp with the sneaker swap (the approved design)`; `OS1.2 · same reading, same score`; `drawnWelcomeScreens.test.tsx` › `OS1.2 · the card shows whatever welcomeExample says (nothing typed in)`; `OS1.2 · the drawing is drawn from the scored reading, before and after`
+  · expect:
+    - `welcomeExample().score` === `overallFor(reading, opts)` === `ev.row.score`; `.word` === `scoreWordLabel(score)`; `.fix.copy` === `top.copy`; `.fix.tag` === `top.tag`; `.fix.to` === `top.to`; `.after.score` === `overallFor(afterReading, opts)` and === `top.to`; `.after.word` === `scoreWordLabel(after.score)`; `.afterReading` deep-equals `afterReading`; `.reading` is `demoReadingById('s14')` unchanged (deep-equal to the JSON's garments).
+    - `drawnPieces(afterReading)` differs from `drawnPieces(reading)` in exactly one slot, `shoes`; `swapSlot` === `'shoes'`; the after shoes' garment has `subcategory: 'low_profile_sneaker'`, `color_family: 'white'`, `condition: 'clean'`; the before shoes' `spec.flat.chunky` is true and `spec.glyphs` includes `'chunkySole'`; the after shoes' `spec.flat.chunky` is false and `spec.glyphs` doesn't include it.
+    - Pinned (DESIGN.md "What the scoring code gives it"): `score` 7.5, `word` "Put together", `displayScore(score)` "7.5"; `after.score` 8, `after.word` "Sharp", `displayScore(after.score)` "8.0"; `fix.copy` "Swap the chunky sneakers for low-profile sneakers"; `fix.tag` "Raises Shoes to 8 · free if you own one". If this test alone fails after a scoring change, the build stops and the founder sees the new Welcome (IMPLEMENTATION technical default 13); the engine and fixtures are never edited to match.
+    - `welcomeExample()` twice → the same object; `exampleCheck().score` === `welcomeExample().score`.
+    - Render, `welcomeExample` mocked to `{ score: 6, word: 'Getting there', after: { score: 6.5, word: 'Getting there' }, fix: { copy: 'Tuck the tee', tag: 'x', to: 6.5 }, swapSlot: 'shoes', reading, afterReading }`: at t = 0 `welcome-card-score` reads "6.0"; at t = 2000 it reads "6.5", `welcome-card-detail-after` reads "Tuck the tee"; `welcome-card`'s label is "Example fit check. Everyday. 6 out of 10, Getting there. One fix: Tuck the tee. 6.5 out of 10, Getting there."
+    - Render (real `welcomeExample`): the `spec`s `GarmentArt` receives at t = 0 are exactly `drawnPieces(welcomeExample().reading).map(p => p.spec)` (4); at t = 1100 the extra one is `drawnPieces(afterReading)`'s shoes spec; at t = 2000 the shoes spec is the after one and the before shoes' spec is no longer drawn.
+  · must not: the card shows a number, word or fix line that `welcomeExample()` didn't give (the mocked-example test fails if any of "7.5", "8.0", "Put together", "Sharp" or the real fix's words appear); the after score differs from the fix's `to` (Welcome's 8.0 and the Example card's "→ 8.0" can't disagree); a drawn piece that isn't from the scored reading.
+  · edges: the engine gives no fix, or the edits can't be applied → `welcomeExample()` is `null` (test it by mocking `exampleCheck` to return `fixes: []`), and OS1.1's null case applies.
+  · red: to be filled by the test writer.
+
+- **OS1.3** · The swap plays once on open, then holds still; with Reduce Motion on, only the after state shows.
+  · how: unit (the timeline) + component (fake timers) + manual (the Simulator, motion seen)
+  · test: `drawnWelcome.test.ts` › `OS1.3 · the timeline, frame by frame`; `OS1.3 · Reduce Motion and accessibility sizes are still`; `drawnWelcomeScreens.test.tsx` › `OS1.3 · it plays once on open and then holds still`; `OS1.3 · it doesn't replay from the background, and replays only on a new mount`; `OS1.3 · Reduce Motion: the after state from the first frame, no timer`; `OS1.3 · Reduce Motion turned on mid-play jumps to the after state`; `OS1.3 · an accessibility text size shows the after state with no animation`; `OS1.3 · Get started works during the swap`; `OS1.3 · the demo slow factor stretches it`
+  · expect:
+    - `welcomeSwapFrame(t, { score: 7.5, after: { score: 8 } })` →
+      t 0 and 600: `{ numeral: '7.5', pieceAfter: 0, textAfter: 0, done: false }`;
+      t 900: numeral '7.5', pieceAfter 0.5 (±0.01);
+      t 999: '7.5'; t 1000: '7.6'; t 1100: '7.7' with 0.5 < pieceAfter < 1; t 1200: '7.8', pieceAfter 1; t 1300: '7.9'; t 1400 and 1499: '8.0';
+      t 1499: textAfter 0; t 1600: textAfter 0.5 (±0.01); t 1700: textAfter 1;
+      t 1999: done false; t 2000 and t 60000: `{ numeral: '8.0', pieceAfter: 1, textAfter: 1, done: true }`.
+      pieceAfter and textAfter never decrease as t grows (checked every 10 ms from 0 to 2100).
+    - `welcomeAfterFrame(...)` equals the t = 2000 frame. `welcomeMotion({ reduceMotion: false, accessibilitySize: false })` → `'play'`; with `reduceMotion: true` → `'still'`; with `accessibilitySize: true` → `'still'`.
+    - Render, motion allowed: t 0 → `welcome-card-score` "7.5", `welcome-card-word-before` "Put together", `welcome-card-detail-before` "Full check", `drawn-piece-shoes` present, no `drawn-piece-shoes-after`, no `welcome-card-word-after`, no `welcome-card-detail-after`; t 1100 → "7.7", both shoe layers present; t 2000 → "8.0", `welcome-card-word-after` "Sharp", `welcome-card-detail-after` "Swap the chunky sneakers for low-profile sneakers", no `-before` ids, no `drawn-piece-shoes`; then 10 s more → identical tree and `jest.getTimerCount()` 0 (no frame or timer left).
+    - AppState `background` then `active` at t 2500 → still "8.0" / "Sharp". `AppState` `background` at t 1000 and `active` at t 5000 → the after state (no restart from 7.5). Unmount and mount again → "7.5" at t 0 of the new mount.
+    - `a11y.reduceMotion: true` from the start → the first render shows "8.0", "Sharp", the fix line, `drawn-piece-shoes-after`, no `-before` ids; `jest.getTimerCount()` 0. Turned on at t 1000 (re-render with the new theme) → the after state on that render, and nothing changes after.
+    - `isAccessibilitySize: true` → the after state on the first render, no timer, and `welcome-card` present (it was hidden at AX sizes before T38).
+    - Tap `Get started` at t 300 → kv `onboarding.step` = `looks`, `router.push('/onboarding/looks')` once; tap `See an example check` at t 300 → `router.push('/onboarding/example')`.
+    - `revealSlow` mocked to 10: t 1100 → "7.5"; t 11000 → "7.7"; t 20000 → done.
+    - No `expo-haptics` function called in any of these.
+  · must not: a second play without a new mount (scroll, background, a re-render); any motion or timer with Reduce Motion or at an accessibility size; the before state showing at all with Reduce Motion on from the start; a tap blocked or delayed by the swap; a haptic; the count showing a half-step jump such as "7.5" → "8.0" with no tenths when motion is allowed.
+  · edges: Reduce Motion mid-play (above); the app backgrounded mid-play (above); a reinstall or "Delete all my data" → Welcome mounts fresh and plays again (nothing is stored to remember it: the memory store's kv is unchanged by mounting, checked in OS2.2's style).
+  · red: to be filled by the test writer.
+
+- **OS1.4** · The headline, body and buttons are unchanged; VoiceOver reads the card's label as in OS1; light, dark and the largest text size show nothing clipped.
+  · how: unit (words, the label, the layout rule) + component (what renders, VoiceOver props) + flow + manual (Simulator screenshots against the approved frames)
+  · test: `drawnWelcome.test.ts` › `OS1.4 · Welcome's words are unchanged`; `OS1.4 · the card's VoiceOver line`; `OS1.4 · the layout fits every phone`; `drawnWelcomeScreens.test.tsx` › `OS1.4 · Welcome shows its headline, body and buttons, with sign-in only when accounts are on`; `OS1.4 · VoiceOver: the drawing is hidden and the card is one element with the same label in every frame`; `OS1.4 · the status bar is no longer forced`; `OS1.4 · nothing in the card is cut to a line count`; `T38-drawn-welcome.yaml`
+  · expect:
+    - `t('onb.welcome.title')` "Look put together.\nWithout trying\ntoo hard."; `t('onb.welcome.body')` "Send a fit. Get a score out of 10 and the two or three moves that raise it."; `t('onb.welcome.start')` "Get started"; `t('onb.welcome.example')` "See an example check"; `t('onb.welcome.haveAccount')` "I already have an account"; `t('onb.welcome.cardTag')` "Fit check"; `t('onb.welcome.cardOccasion')` "Everyday"; `t('onb.welcome.cardDetail')` "Full check"; `en['onb.welcome.cardA11y']` "Example fit check. {occasion}. {before} out of 10, {beforeWord}. One fix: {fix}. {after} out of 10, {afterWord}."
+    - `welcomeCardA11y(welcomeExample()!)` → "Example fit check. Everyday. 7.5 out of 10, Put together. One fix: Swap the chunky sneakers for low-profile sneakers. 8 out of 10, Sharp."
+    - Render: the four texts above (title with its two line breaks, body, `Get started`, `See an example check`) each once; the title has `accessibilityRole` "header"; `I already have an account` present with `useAccountsOn()` true (tap → `router.push({ pathname: '/sheets/sign-in', params: { from: 'welcome' } })`) and absent with false. `welcome-drawing` has `accessibilityElementsHidden` true and `importantForAccessibility` "no-hide-descendants"; `welcome-card` has `accessible` true and the label above at t 0, t 1100 and t 2000 (identical string). `setStatusBarStyle` is called 0 times, on mount and on unmount. No `Text` inside `welcome-card` (the word layers, the detail layers, the tag labels) has a `numberOfLines` prop.
+    - `welcomeLayout` (non-AX unless said; numbers rounded to 0.1, k to 4 places):
+      - 402 × 874, safeTop 62, bottom 387, card 136 → k 0.8788; drawing 188.1 × 284.7 at left 12, top 132.1; card top 206.5, right 20, width 188; bottomBlockTop 487.0; scrolls false.
+      - 375 × 667, safeTop 20, bottom 359, card 136 → k 0.7407; drawing 158.5 × 240.0, top 44.0; card top 96.0; bottomBlockTop 308.0; scrolls false.
+      - 390 × 844, safeTop 47, bottom 426, card 136 → k 0.8182; drawing top 100.0; card top 164.5; bottomBlockTop 418.0; scrolls false.
+      - 440 × 956, safeTop 62, bottom 400, card 136 → k 1.0000; drawing 214.0 × 324.0, top 147.0; card top 241.0; bottomBlockTop 556.0; scrolls false.
+      - 375 × 667, safeTop 20, bottom 450, card 136 → k 0.6000 (the floor); drawing top 44.0; card top 73.2; bottomBlockTop 262.4; scrolls true.
+      - 375 × 667, safeTop 20, bottom 359, card 260 (a tall card at xxxLarge) → k 0.7407; card top 44.0; drawing top 54.0; bottomBlockTop 328.0; scrolls true.
+      - For every width 375–440 in 1-pt steps (height 874, safeTop 62, bottom 387, card 136): the drawing's drawn right edge 12 + 198k ≤ width − 208 − 8 (never under the card); drawing and card both end at or above bottomBlockTop − 24.
+      - AX (`accessibilitySize: true`, 402 × 874): k 0.69, the drawing centred (left (402 − 147.66) / 2 = 127.2), `card.width` null, the card's top ≥ the drawing's bottom + 24, bottomBlockTop ≥ the card's top + cardAfterHeight + 24.
+    - Flow `T38-drawn-welcome.yaml` (demo screen 1, light): `Get started` and `See an example check` visible; after 3 s the card's element is visible with the label above (Maestro matches it as a regex `Example fit check\. Everyday\. 7\.5 out of 10, Put together\. One fix: Swap the chunky sneakers for low-profile sneakers\. 8 out of 10, Sharp\.`); the headline "Look put together." visible.
+    - Manual (Simulator, iPhone 17 Pro `111D0A09…`, `-demoLatency 0`): demo screen 1 light and dark at the default size after 3 s matches `design/03-light.png` / `03-dark.png`; with `-demoRevealSlow 10`, at about 2 s matches `01-*`, at about 11 s matches `02-*`; content size AX5 matches `08-*` (top) and `09-*` (scrolled to the end), nothing cut off or overlapping; content size xxxLarge (`extra-extra-extra-large`): the card's word and fix wrap, nothing truncated, the card clears the drawing and the wordmark; demo screen 130 light matches `13-light.png` in spirit (at the 17 Pro's size; the 390 × 844 frame itself is in "Not testable yet"). The status bar is dark in light and light in dark.
+  · must not: a changed headline, body or button word; `I already have an account` shown with accounts off; the drawing announced by VoiceOver; the card's label changing between frames; the drawing under the card at any width; text truncated ("…") or clipped at any size; the status bar forced dark in the dark theme.
+  · edges: accounts on (demo 130); accessibility sizes (the card now shows, full width, stacked); a short phone where the content is taller than the screen (scrolls true above: the page scrolls rather than overlapping).
+  · red: to be filled by the test writer.
+
+- **OS2.1** · The Example check shows the drawn outfit and its before result card, with the new intro and caption word for word; `Why {score}?` opens the math.
+  · how: unit (words, the VoiceOver line, the tile) + component + flow + manual screenshots
+  · test: `drawnWelcome.test.ts` › `OS2.1 · the new intro, caption and bubble words`; `OS2.1 · the bubble tile's layout`; `OS2.1 · the before card's content is the engine's`; `drawnWelcomeScreens.test.tsx` › `OS2.1 · the Example check shows the drawn bubble, the before card, the intro and the caption`; `OS2.1 · Why 7.5? opens the math in place and Hide the math closes it`; `OS2.1 · at accessibility sizes the bubble's caption moves under it`; `T38-drawn-welcome.yaml`
+  · expect:
+    - `t('onb.example.intro')` "Here's an example check. This is what you'll get."; `t('onb.example.note')` "A drawn example, scored by the same code as your photos. Nothing was sent."; `en['onb.example.a11yOutfit']` "Drawn example outfit, {occasion}: {pieces}."; `drawnOutfitA11y(drawnPieces(demoReadingById('s14')), 'Everyday')` "Drawn example outfit, Everyday: Charcoal denim jacket, White sweater, Grey drawstring trousers, Grey chunky sneakers."; unchanged: `t('onb.example.tag')` "Example · Full", `t('onb.example.time')` "Example", `t('onb.example.whyHide')` "Hide the math", `t('onb.example.ctaOwn')` "Check my own fit", `t('card.why', { score: '7.5' })` "Why 7.5?", `t('card.nextLevel')` "Next level", `t('card.gainTo', { score: '8.0' })` "→ 8.0".
+    - `tilePlacement(slot, 127, 172)`, each within 1 pt: outer `{ size: 42, left: 2, top: 21 }`; top `{ 53, 37, 13 }`; bottom `{ 53, 37, 66 }`; shoes `{ 61, 33, 109 }`. `welcomePlacement(slot, 1)`: outer `{ 104, 0, 24 }`, top `{ 134, 64, 0 }`, bottom `{ 134, 64, 124 }`, shoes `{ 150, 56, 204 }`; `welcomePlacement(slot, 0.5)` halves every number.
+    - `exampleCheck()`: `score` 7.5; `summary` "Good base. Swapping one piece gets you to 8.0."; `fixes[0].copy` "Swap the chunky sneakers for low-profile sneakers", `fixes[0].tag` "Raises Shoes to 8 · free if you own one", `fixes[0].to` 8; `nextLevel` "Clean chunky sneakers lift Shoes to 7.5. Not enough to move the score yet."; `why.strip.map(c => [c.label, c.display, c.gain])` → `[['Proportions', 8.5, false], ['Fit', 7, false], ['Color', 7, false], ['Shoes', 6.5, true], ['Style', 7.5, false]]`; `why.total` 7.5. (Pinned like OS1.2's: a scoring change that moves them goes to the founder.)
+    - Render `ExampleCheckScreen` (mode `screen`): "Kit" header; the intro text above, once; `example-bubble` with `accessibilityRole` "image" and the label "Drawn example outfit, Everyday: Charcoal denim jacket, White sweater, Grey drawstring trousers, Grey chunky sneakers."; inside it `GarmentArt` gets exactly `drawnPieces(exampleCheck().reading).map(p => p.spec)` (the before shoes, chunky), and there is no `drawn-piece-shoes-after`; its caption texts "Everyday" and "Example"; `example-card` with the label "Example fit check. Everyday. Score 7.5 out of 10, Put together. Good base. Swapping one piece gets you to 8.0."; the card shows "Example · Full", "Everyday", the score 7.5 with "Put together" and the summary, the fix row (number 1, the copy, the tag, "→ 8.0"), "Next level" with the tip line, and "Why 7.5?"; `example-note` reads the caption above; the dock button reads "Get started"; no `example-math`.
+    - Tap "Why 7.5?" → `example-math` present, `PartsBreakdown` got `parts` === `exampleCheck().why` and `score` 7.5; the link now reads "Hide the math"; tap it → `example-math` gone and "Why 7.5?" back. Tapping the score (ScoreBlock's `onPress`) also opens it.
+    - Sheet (`mode: 'sheet'`): the same content; a `Close` circle (tap → `router.back()`); the dock reads "Check my own fit" (tap → `router.back()`, then after 350 ms `router.push('/sheets/consent')`); no `Back` circle. From Welcome: a `Back` circle (tap → `router.back()` when `canGoBack()`, else `router.replace('/onboarding/welcome')`).
+    - `isAccessibilitySize: true`: the bubble's in-frame caption row is gone and a "Everyday · Example" caption is under the bubble, hidden from VoiceOver; the bubble's label is unchanged.
+    - Flow (demo screen 1 → tap `See an example check`): "Here's an example check. This is what you'll get." visible; the bubble's label visible (regex `Drawn example outfit, Everyday: .*`); tap "Why 7.5?" → "Hide the math" visible; tap "Hide the math" → "Why 7.5?" visible; scroll until "A drawn example, scored by the same code as your photos. Nothing was sent." is visible; tap `Back` → "Get started" and "See an example check" visible (Welcome). Then demo screen 213: "Check my own fit" visible; tap `Close` → Stylist visible.
+    - Manual (Simulator, light and dark): demo 131 matches `design/04-*`, scrolled to the end `05-*`, with the math open `06-*`; demo 213 matches `07-*`; AX5 on demo 131 matches `10-*`, nothing cut off.
+  · must not: the old intro ("Here's a real check.") or caption ("A real photo, …") anywhere; the after state (white sneakers, 8.0) in the Example check (it shows the before state only; the swap plays only on Welcome); the bubble tappable (no `onPress`, role "image" not "imagebutton"); Not quite right?, Re-check or Share on the card (read-only as today).
+  · edges: opened from the sheet and from Consent (`from=consent`: the dock reads "Check my own fit" and goes back); accessibility sizes; engine null → the intro and the caption only, no bubble, no card (as today).
+  · red: to be filled by the test writer.
+
+- **OS2.2** · Opening it sends nothing and saves nothing (from Welcome and from "See an example").
+  · how: component (fetch and store watched) + unit
+  · test: `drawnWelcomeScreens.test.tsx` › `OS2.2 · opening the Example check from Welcome sends and saves nothing`; `OS2.2 · opening it as a sheet from See an example sends and saves nothing`; `OS2.2 · opening the math and leaving send and save nothing`; `OS2.2 · Welcome itself sends and saves nothing until Get started`; `drawnWelcome.test.ts` › `OS2.2 · computing the examples touches no store` (extends the existing F7 check)
+  · expect: with a fresh memory store as `@/data/db`'s `store`, mounting `ExampleCheckScreen` (mode `screen`, and mode `sheet`), running all timers, tapping "Why 7.5?" and "Hide the math", then tapping `Back` / `Close`: `fetch` called 0 times; `store.fitChecks.all()` → `[]`; `store.chat.all()` → `[]`; every kv key the test reads (`onboarding.step` and a full kv listing if the store offers one) unchanged from before mount. As a sheet, `Check my own fit` also writes nothing (it only navigates). Mounting `WelcomeScreen` and running the whole swap: `fetch` 0, store unchanged; only tapping `Get started` writes, and only `onboarding.step` = `looks`. `welcomeExample()` and `exampleCheck()` called on a fresh store leave `fitChecks`, `chat` and kv empty, and make no `fetch`.
+  · must not: a fit check row, a chat message, a usage count, a reveal mark, a closet write or any kv write on opening either screen or the sheet; any network call (also none to the reading source: the mocked `fetch` throws, so a hidden call fails the test).
+  · edges: offline (the same tests pass with `fetch` rejecting: nothing on these screens needs the network); opened twice in a row (the memoised example; still nothing written).
+  · red: to be filled by the test writer.
+
+## UI inventory
+Every visible element, per state. Anything on screen that isn't here is a defect; anything here that isn't on screen is a defect. Words in quotes are exact. `MonoLabel` text shows in spaced capitals at the normal sizes (display only; VoiceOver reads the words) and in sentence case at accessibility sizes.
+
+### Welcome · on open (the before state) · demo screen 1 (with `-demoRevealSlow 10`, the first 6 s) · light, dark, largest text (AX: see the AX state) · DESIGN.md phone 1
+- Status bar · system · follows the theme (dark text in light, light text in dark) · not forced.
+- Drawn outfit · no words · VoiceOver: hidden · testID `welcome-drawing`; pieces `drawn-piece-outer` (charcoal denim jacket), `drawn-piece-top` (white sweater), `drawn-piece-bottom` (grey drawstring trousers), `drawn-piece-shoes` (grey chunky sneakers) · no tile behind it · no rim on the jacket in dark (Closet's rule) · scaled by k (0.88 on the 17 Pro).
+- Mini score card · one VoiceOver element: "Example fit check. Everyday. 7.5 out of 10, Put together. One fix: Swap the chunky sneakers for low-profile sneakers. 8 out of 10, Sharp." · testID `welcome-card` · tap: nothing.
+  - Tag left · "Fit check" (shown "FIT CHECK") · inside the card's label · no testID.
+  - Tag right · "Everyday" (shown "EVERYDAY") · inside the card's label · no testID.
+  - Numeral · "7.5" · ink, 52 · tabular figures · testID `welcome-card-score`.
+  - Word · "Put together" · subheadline 600, ink · testID `welcome-card-word-before`.
+  - Detail line (under the score row, full card width) · "Full check" · caption, ink2 · testID `welcome-card-detail-before`.
+- Wordmark · "KITTED" · VoiceOver as today · no testID.
+- Headline · "Look put together.\nWithout trying\ntoo hard." · VoiceOver: the same, header · no testID.
+- Body · "Send a fit. Get a score out of 10 and the two or three moves that raise it." · VoiceOver: the same.
+- Primary button · "Get started" · VoiceOver: "Get started", button · tap: step `looks`, Looks.
+- Ghost button · "See an example check" · VoiceOver: "See an example check", button · tap: the Example check.
+- (Accounts off: no "I already have an account".)
+- Bottom block · testID `welcome-bottom`.
+
+### Welcome · the swap, mid-way · demo screen 1 with `-demoRevealSlow 10` at about 11 s (1100 ms at normal speed) · light, dark · DESIGN.md phone 2
+- As the before state, with: `drawn-piece-shoes` (fading out) and `drawn-piece-shoes-after` (white low-profile sneakers, fading in, about 80%); numeral "7.7" (counting in tenths: 7.6, 7.7, 7.8, 7.9, 8.0); the word and detail still the before layers. The card's VoiceOver label is unchanged. No haptic.
+
+### Welcome · after the fix · demo screen 1 after 2 s (or from the first frame with Reduce Motion) · light, dark, xxxLarge · DESIGN.md phone 3
+- As the before state, with:
+  - Shoes · white low-profile sneakers · testID `drawn-piece-shoes-after` (`drawn-piece-shoes` gone).
+  - Numeral · "8.0" · ink (not copper) · testID `welcome-card-score`.
+  - Word · "Sharp" · testID `welcome-card-word-after`.
+  - Detail line · "Swap the chunky sneakers for low-profile sneakers" · caption ink2, wraps to 2 lines (3+ at the larger sizes), never truncated · testID `welcome-card-detail-after`.
+  - The card is one line taller, grown downward from the same top.
+  - VoiceOver: the same label as the before state.
+- xxxLarge (not AX): the row stays side by side, the word and the fix wrap, the card grows down and never covers the drawing or the wordmark.
+
+### Welcome · with sign-in · demo screen 130 · light, dark · DESIGN.md phone 13 (at the 17 Pro's size)
+- As the after state, plus · text link · "I already have an account" · ink2, centred, 44-pt row · VoiceOver: "I already have an account", button · tap: the sign-in sheet (`from=welcome`). Nothing overlaps; the page doesn't scroll at the default size.
+
+### Welcome · largest text (AX5) · demo screen 1 with content size AX5 · light, dark · DESIGN.md phones 8 (top) and 9 (the end)
+- The after state from the first frame, no animation.
+- One scroll view, stacked: the drawing (k 0.69, centred: jacket 72, sweater 92, trousers 92, shoes 104), then the card at full width (left/right 24): "Fit check" over "Everyday" in sentence case with no tracking, "8.0" (numeral capped at 1.6×) over "Sharp", then "Swap the chunky sneakers for low-profile sneakers" wrapping (about three lines), nothing truncated; then the wordmark, headline, body, `Get started`, `See an example check` (button text capped at 2×, wrapping if needed).
+- VoiceOver order and labels as the before state.
+
+### Welcome · no example (engine null; can't happen with the bundled reading) · no demo screen (component test only)
+- No drawing, no card; the wordmark, headline, body and buttons as above.
+
+### Example check · from Welcome · demo screen 131 · light, dark, largest text · DESIGN.md phones 4 and 5 (scrolled)
+- Back circle · icon only · VoiceOver: "Back", button · tap: Welcome. The bar beside it is empty.
+- Kit's name · "Kit" · hidden from VoiceOver.
+- Kit's intro · "Here's an example check. This is what you'll get." · VoiceOver: the same.
+- Drawn bubble · right-aligned, PhotoBubble's frame (135 wide, `me` fill, radii 21/21/21, 6 bottom right), a 127 × 172 `surface2` tile with the drawn outfit in its before state (chunky sneakers), caption row "Everyday" (left) · "Example" (right), photoCaption, onMe 90% · VoiceOver: one image, "Drawn example outfit, Everyday: Charcoal denim jacket, White sweater, Grey drawstring trousers, Grey chunky sneakers." · testID `example-bubble` · tap: nothing.
+- Result card · VoiceOver: one element, "Example fit check. Everyday. Score 7.5 out of 10, Put together. Good base. Swapping one piece gets you to 8.0." · testID `example-card`:
+  - Tag line · "Example · Full" (shown "EXAMPLE · FULL") · "Everyday".
+  - Score · "7.5" + "/10" · "Put together" · verdict "Good base. Swapping one piece gets you to 8.0." · tap: opens/closes the math.
+  - Fix row 1 · "Swap the chunky sneakers for low-profile sneakers" · "Raises Shoes to 8 · free if you own one" · gain "→ 8.0" in copper.
+  - Next level · lead "Next level" (copper) · "Clean chunky sneakers lift Shoes to 7.5. Not enough to move the score yet."
+  - Link · "Why 7.5?" · VoiceOver: "Why 7.5?", button · tap: opens the math.
+- Caption · "A drawn example, scored by the same code as your photos. Nothing was sent." · footnote ink3 · testID `example-note`.
+- Dock · primary button "Get started" · VoiceOver: "Get started", button · tap: step `looks`, Looks · testID `example-dock` (the dock View).
+- No motion, no haptic.
+
+### Example check · the math open · demo screen 131, tap "Why 7.5?" · light, dark · DESIGN.md phone 6
+- The link reads "Hide the math" (tap: closes).
+- The math under the card (testID `example-math`): the strip "Proportions 8.5 · Fit 7.0 · Color 7.0 · Shoes 6.5 · Style 7.5" with Shoes marked as the most to gain (one VoiceOver element, its `stripLabel`), then each part's rows, the average, the condition row and the total 7.5, all from the engine (PartsBreakdown, unchanged).
+
+### Example check · as a sheet · demo screen 213 · light, dark · DESIGN.md phone 7
+- As from Welcome, with: no Back circle; a Close circle top right · VoiceOver: "Close", button · tap: closes the sheet; the dock button "Check my own fit" · VoiceOver: "Check my own fit", button · tap: closes the sheet, then the agreement; the native grabber and swipe down to close.
+
+### Example check · largest text (AX5) · demo screen 131 with content size AX5 · light, dark · DESIGN.md phone 10
+- Kit's intro wraps. The bubble keeps its size; its caption moves under it as "Everyday · Example" (dayStamp, ink2, right-aligned, wraps to "Everyday ·" / "Example"), hidden from VoiceOver. The card uses today's AX layout (score over word; the gain under the fix text). `Get started` grows to its text. Nothing truncated.
+
+## Not testable yet
+Never dropped, never counted as pass.
+- **OS1.4 / OS2.1 (visual)** · why: the Simulator screenshots and the AX5 / xxxLarge checks need a booted Simulator and Metro, and the Mac has about 400 MB free today (CLAUDE.md: no heavy jobs) · would verify it: the verifier runs the manual checks above on `111D0A09…` once memory allows; until then they are "not verified".
+- **OS1.4 (small phones)** · why: DESIGN.md phones 11–13 (375 × 667 iPhone SE, 390 × 844 with sign-in) need those Simulator sizes, a second device beside the 17 Pro; the layout rule is covered by `welcomeLayout`'s unit tests, not by sight · would verify it: an iPhone SE (3rd gen) Simulator, booted only when the main one is free (two at most), demo screens 1 and 130, compared to `design/11-*`, `12-*`, `13-*`; or the founder's phone if it is one of those sizes.
+- **OS1.3 (seen on a device)** · why: that the motion looks right (the cross-fade, the count with tabular figures not shifting "Put together", the card growing down without a jump) and that Reduce Motion is honoured by the real system setting can only be seen on a Simulator or phone; Jest proves the timeline, not the pixels · would verify it: a Simulator screen recording of demo screen 1 at `-demoRevealSlow 4`, then again with Settings → Accessibility → Motion → Reduce Motion on; the founder's phone (Y11's phone pass is a natural moment).
+- **OS1.4 (VoiceOver itself)** · why: the component test proves the props (hidden drawing, one card element, its label); what VoiceOver actually speaks and in what order needs VoiceOver on a device or the Accessibility Inspector · would verify it: the Simulator's Accessibility Inspector on demo screens 1 and 131, or VoiceOver on the founder's phone.
+- **OS1.1 (the whole bundle)** · why: the tests prove no photo is reachable from these two screens; the bundle still carries the stock photos (s14 included) for the demo stories and the beta's sample-photos sheet, which this criterion doesn't cover · would verify it: as stated, it is verified by the tests; whether the stock photos should leave the beta bundle is a separate founder call (see the coordinator's risk note).
