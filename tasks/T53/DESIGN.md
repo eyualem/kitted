@@ -301,6 +301,27 @@ Read: the round 2 diff (c8295e09: DESIGN.md, `design.html`), and every re-shot P
 
 **Suggestions:** none new.
 
+### Round 3 (Nov 9) · verdict: matches (no blockers)
+Read: the spec change (8bf79970: NT3's header and third row, NT6, NT2.5), the round 3 diff (82466278: DESIGN.md, `design.html`), and every re-shot PNG (07, 08, 09, 10, 16 and 17, light and dark). The other frames are unchanged since round 2.
+
+**Checked and passing**
+- **Words.** Phone 17's line is spec NT6 word for word: "Your fit check is ready. 2 quick fixes inside.", which is `push.ready` with n = 2. The 1-fix line (`push.ready` `one`) and the no-fix line (the new key) are in the caption, in the spec's words. NT3's new header appears in phones 8, 9, 10 and 16, the same four times in `design.html`. "Fit check ready" is `notifs.ready`. No other new words.
+- **States.** NT6 is drawn (phone 17), with tap, when-sent and not-sent written out.
+  - Phone 7 now shows one nudge, matching the founder's "a max of one notification per day". The other three lines are in the caption, never stacked.
+  - Phone 8: three rows in spec order.
+  - Phone 9: the never-asked state, with both switches off.
+  - Phone 10: three greyed rows with their saved values.
+  - Phone 16: all three rows at AX5. Each switch title wraps beside its switch, the time row stacks, and nothing is truncated.
+  - "What the switches show" now has the paused condition and unset-reads-off (my round 2 polish 1 and 2), plus the Fit check ready rule.
+- **Hard lines.** NT6.5 holds: no score on the lock screen. No emoji, no streaks or day counts, and copper only on the active tab. The lock-screen frames are always dark (03 §2.3).
+- **HIG and §C14.** The new row is a `ToggleRow` (44 pt+, a `good` track at 5.51 / 7.78 on `surface`). Its VoiceOver label is "Fit check ready", switch button, on/off, dimmed on phone 10. Both notifications are utility-only, and both can be turned off on this page. Contrast and tokens are unchanged from round 1. The dimming on phone 10 is still one 0.4 per row, never stacked.
+
+**Polish**
+1. **"Delete all my data" and Fit check ready.** After a wipe `notify.ready` is unset, and iOS keeps its answer. So with iOS allowing, Fit check ready reads on and can fire before the ask comes back "like a new user". Spec NT5.1 still says "the switch" (singular, written before NT6). Either is defensible: he did allow iOS, and the notification is useful. Write the choice in "What the switches show" so the planner doesn't guess. Recommended: leave it on; no change to the wipe.
+
+**Suggestions** (optional, for the founder)
+1. **Kit's ask doesn't mention the heads-up.** Kit's ask ("I'll send you an outfit idea 15 minutes before.") names only the nudge, but one Allow also turns on Fit check ready (spec NT3: "on by default once notifications are allowed"). The You → Notifications header discloses it, and he can switch it off, so nothing breaks. If the founder wants the ask to say it too, that's a spec word change.
+
 ## Changes
 - **Round 3** · from the founder: "4 notifications at the same time is excessive. a max of one notification per day, unless they leave while the rating is processing. then we can tell them to check their rating out or someting." (spec NT3 and NT6 changed with his yes, 8bf79970, log #410) · phone 7 redrawn as one nudge on the lock screen, with the other three lines listed in its caption as text; phone 17 added: Fit check ready on the lock screen ("Your fit check is ready. 2 quick fixes inside."), its 1-fix and no-fix lines in the caption, a tap opening that check's card; phones 8, 9, 10 and 16 take NT3's new header and the third row, Fit check ready (phone 9 now draws the never-asked state, both switches off; phone 16 re-scrolled to show all three rows); "What the switches show" rewritten (the paused condition from Q1, `notify.idea` unset reads off, the Fit check ready rule); open questions 1–10 recorded as settled; Words updated (new header, `notifs.ready` and `push.ready` kept, the no-fix line). PNGs re-shot: 07, 08, 09, 10, 16, 17, light and dark.
 - **Round 2** · from the critic (round 1) · blocker: added "What the switch shows" (on only when saved on and iOS allows; off with no time row while Apple's prompt has never been shown, which looks like phone 9) and the matching line on phone 9. Polish: the button gaps written as 12 pt (time row to buttons) and 16 pt (wrapped rows), and the frames redrawn with 44 pt button boxes (phones 1, 2, 3, 6, 11, 12, 15); the footer's spacing corrected to 10 pt and Kit's name to 16 pt under the card; phone 3's spinner button at Send me ideas' real width (135.5 pt); phone 10 dims each row once and keeps the card at full opacity (frames 10 and 16 redrawn); phone 2's sliver of title noted as as-built; phone 15's `fullWidth` at AX sizes named as a change from today, for the ask and the comeback; the settings page's menu described (as in Settings → Appearance); phone 9's switch while Apple's prompt is up. Open questions 8–10 added from the critic's suggestions. PNGs re-shot: 01, 02, 03, 06, 10, 11, 12, 15, 16, light and dark.
