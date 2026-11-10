@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `3c08174e` (3c08174efa538a0c2a89633e73d62d64f8ebaba0) · 2026-11-09 · tests: `app/src/__tests__/drawnWelcome.test.ts`, `app/src/__tests__/drawnWelcomeScreens.test.tsx`, `app/src/__tests__/drawnWelcomeNoExample.test.tsx`, `app/src/__tests__/drawnWelcomeOtherReading.test.tsx`, `app/src/testing/t38ScreenMocks.tsx` (their shared mocks), `app/e2e/flows/T38-drawn-welcome.yaml`; `app/src/__tests__/uiFixBatch.test.ts` (its import renamed to `WELCOME_READING`, assertions unchanged)
+**Lock:** `bae9e735` (bae9e7357190372b9643f918b4ee5c6b936f2e3f) · 2026-11-09 · re-locked after dispute 1 (`global` → `globalThis` for tsc; no expectation changed; see REPORT.md → Disputes); first lock `3c08174e` · tests: `app/src/__tests__/drawnWelcome.test.ts`, `app/src/__tests__/drawnWelcomeScreens.test.tsx`, `app/src/__tests__/drawnWelcomeNoExample.test.tsx`, `app/src/__tests__/drawnWelcomeOtherReading.test.tsx`, `app/src/testing/t38ScreenMocks.tsx` (their shared mocks), `app/e2e/flows/T38-drawn-welcome.yaml`; `app/src/__tests__/uiFixBatch.test.ts` (its import renamed to `WELCOME_READING`, assertions unchanged)
 
 Plan-line criteria: OS1, OS2 → OS1.1, OS1.2, OS1.3, OS1.4, OS2.1, OS2.2 (6). All six are below.
 
