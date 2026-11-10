@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `5d97ab0e728ec0c05ae6538dfdbd88e13ff34cc0` · 2026-11-09 (re-locked after round 1 disputes: awaited unmounts, the Appearance pill lookup, the at=settings scroll expectation and the flow's landing check; see REPORT.md → Disputes; first lock `3180d435`) · tests: `app/src/__tests__/youSettingsHome.test.tsx`, `app/e2e/flows/T34-you-settings-home.yaml`, and the on-purpose edits to `app/src/__tests__/youTonight.test.ts` (YT2), `app/src/__tests__/releaseSafety.test.ts` (R5), `app/src/__tests__/heightBuildRemoved.test.ts` (HB5), `app/e2e/flows/T14-beta-limits.yaml` (its Settings step); stub `app/src/features/settings/SettingsRows.tsx`
+**Lock:** `dbda99e296739a00b3273206a732d89ea05a3545` · 2026-11-09 (re-locked after verify round 1, defect 3: the two added loading tests, profile and facts reads pending; before that `5d97ab0e`, after the round 1 disputes; first lock `3180d435`; see REPORT.md → Disputes) · tests: `app/src/__tests__/youSettingsHome.test.tsx`, `app/e2e/flows/T34-you-settings-home.yaml`, and the on-purpose edits to `app/src/__tests__/youTonight.test.ts` (YT2), `app/src/__tests__/releaseSafety.test.ts` (R5), `app/src/__tests__/heightBuildRemoved.test.ts` (HB5), `app/e2e/flows/T14-beta-limits.yaml` (its Settings step); stub `app/src/features/settings/SettingsRows.tsx`
 
 Plan-line criteria: SY1 → SY1.1, SY1.2, SY1.3, SY1.4, SY1.5, SY1.6 (6). All six are below.
 
