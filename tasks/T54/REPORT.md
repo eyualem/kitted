@@ -175,3 +175,9 @@ None.
 - F6 on his phone: the next TestFlight build (an EAS build, the founder's OK), then the 3-evening check, now including one fresh setup after 5 pm followed by a fit check (one evening card above the photo).
 - The two Maestro flows and demo screens 30, 12 and 25 in light, dark and largest text: a free Simulator.
 - Open from round 1, unchanged: a hung `weather.permission()` would block that window's later calls until a relaunch (the coordinator found it can't hang today: #410).
+
+## Simulator check (coordinator, Nov 9)
+Run after both verifier rounds, once a Simulator was free, on T55's branch (it contains this fix unchanged, plus T55), with this worktree's own Metro (its own cache) on the main Simulator, iPhone 17 Pro `111D0A09`.
+- **Maestro, every flow** (`maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/`): `smoke · opens on a demo screen` passed; `FP7.5 · four photos and 21 questions on beta` passed (6 m 4 s). The third flow (T55's) failed on the first run with Metro's cache still cold (the dev build stayed on its launcher) and passed on a re-run once Metro was warm (exit 0).
+- **Screens:** demo 12 (Stylist home: one day card, collapsed), 30 (the evening card, light and dark: one "Evening. Heading out?" card) and 29 (one collapsed day card). No duplicate card on any screen.
+- **Still not verified:** F6 on his phone (the next TestFlight build).
