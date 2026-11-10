@@ -101,3 +101,12 @@ TESTING.md's inventory for screen 29 says "Today · Class"; the app and the lock
 ### Not verified
 1. `tsc --noEmit` on the two new test blocks: run it, or `npm run check` in `app/`, when memory frees up, before the merge.
 2. Screens 39, 40, 54 and 29 on iOS, and the T55 Maestro flow (round 1's list above, items 1–3).
+
+## Simulator check (coordinator, Nov 9)
+On this branch with this worktree's own Metro (its own cache) on the main Simulator, iPhone 17 Pro `111D0A09`. Screenshots are in the session scratchpad (not committed).
+- **Maestro:** `T55-card-threshold.yaml` failed on the first run with Metro's cache still cold (the dev build stayed on its launcher, screenshot `step-009`), then **passed** on a re-run (exit 0; its last steps: `idea-checked` visible, "Today, Class/Work: You went with your own, …" visible on 29, "Today, .*: Today's fit, .*" not visible). `smoke` and `FP7.5` passed.
+- **Screen 39, light and dark:** "Morning." with the sample weather, the three pieces' strip, "3 pieces so far", "I only know 3 of your pieces. Check today's fit and I'll learn the rest.", "Check my fit"; no Wear this, no Swap.
+- **Screen 40, light and dark:** one folded card, "TODAY · EVERYDAY", "Today's fit", 7.5 Put together, above his Everyday photo.
+- **Screen 54, light and dark:** "TONIGHT · EVERYDAY", "Tonight's fit", 7.5 Put together. At the largest text size the row wraps cleanly (score first, then "Tonight · Everyday", then "Tonight's fit"), nothing cut off.
+- **Screen 29:** a card that suggested an outfit keeps "TODAY · CLASS/WORK" and "You went with your own".
+- **Not verified:** VoiceOver read aloud (the flow asserts the labels' text), and his phone.
