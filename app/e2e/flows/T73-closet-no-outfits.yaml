@@ -57,9 +57,21 @@ name: CB1.1–CB1.4 · Closet without Outfits (switch off)
 - assertNotVisible: ".*Goes with.*"
 - assertNotVisible: ".*Best match.*"
 - assertNotVisible: ".*More relaxed.*"
+# B1 has no photos in the demo closet, so the page's photo part is its "No photos of it yet." line (as on 184), then
+# "Remove from Closet" at the bottom (round 2: "Your photos" never shows for B1). The must-nots run at both stops.
 - scrollUntilVisible:
     element:
-      text: ".*Your photos.*"
+      text: "No photos of it yet\\. Wear it in a fit check and they'll show here\\."
+    direction: DOWN
+    timeout: 15000
+- assertNotVisible: "Outfits, .*"
+- assertNotVisible: ".*Goes with.*"
+- assertNotVisible: ".*Best match.*"
+- assertNotVisible: ".*Dressier.*"
+- assertNotVisible: ".*More relaxed.*"
+- scrollUntilVisible:
+    element:
+      text: "Remove from Closet"
     direction: DOWN
     timeout: 15000
 - assertNotVisible: "Outfits, .*"
