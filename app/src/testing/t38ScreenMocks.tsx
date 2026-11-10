@@ -216,8 +216,42 @@ export function appStateListeners(): ((s: string) => void)[] {
   const add = AppState.addEventListener as unknown as jest.Mock;
   return add.mock.calls.filter((c) => c[0] === 'change').map((c) => c[1] as (s: string) => void);
 }
+/** The mocked display's frames. iOS stops requestAnimationFrame while the app is in the background: a frame due then
+ *  is held, not run, and the held frames run on the first frame after he comes back (setAppState('active')). So a
+ *  swap whose clock counts frames, not time, is caught coming back mid-swap (verifier's M9). */
+const frames = {
+  background: false,
+  nextId: 1,
+  /** id → the pending 16 ms timer, or the callback held while backgrounded. */
+  pending: new Map<number, { timer: ReturnType<typeof setTimeout> | null; cb: (ts: number) => void }>(),
+};
+function scheduleFrame(id: number, cb: (ts: number) => void) {
+  const entry = { timer: null as ReturnType<typeof setTimeout> | null, cb };
+  entry.timer = setTimeout(() => {
+    if (frames.background) {
+      entry.timer = null; // held until he's back
+      return;
+    }
+    frames.pending.delete(id);
+    cb(Date.now());
+  }, 16);
+  frames.pending.set(id, entry);
+}
+function requestFrame(cb: (ts: number) => void): number {
+  const id = frames.nextId++;
+  if (frames.background) frames.pending.set(id, { timer: null, cb });
+  else scheduleFrame(id, cb);
+  return id;
+}
+function cancelFrame(id: number) {
+  const entry = frames.pending.get(id);
+  if (entry?.timer) clearTimeout(entry.timer);
+  frames.pending.delete(id);
+}
 export async function setAppState(s: 'active' | 'background' | 'inactive') {
   (AppState as unknown as { currentState: string }).currentState = s;
+  frames.background = s === 'background';
+  if (s === 'active') for (const [id, entry] of [...frames.pending]) if (!entry.timer) scheduleFrame(id, entry.cb);
   await act(async () => {
     appStateListeners().forEach((l) => l(s));
   });
@@ -273,7 +307,8 @@ export function expectNoPhoto() {
  *  jest.getTimerCount() counts only the screen's own timers and frames). requestAnimationFrame is a 16 ms frame on the
  *  fake clock (a 60 Hz display; React Native's Jest preset makes it a 0 ms timeout, and Jest can't fake it because the
  *  preset defines it after the fake clock is built), and performance.now() reads the fake clock too, so the swap's
- *  clock is the same whichever of Date.now(), performance.now() or the frame's timestamp the hook uses. */
+ *  clock is the same whichever of Date.now(), performance.now() or the frame's timestamp the hook uses. As on iOS,
+ *  frames stop while setAppState('background') holds them, and resume on 'active' (the fake clock keeps going). */
 export function setUpT38Tests() {
   const state = { watch: undefined as unknown as ReturnType<typeof watchStore>, fetchMock: undefined as unknown as jest.Mock };
   const g = globalThis as unknown as Record<string, unknown> & { performance: { now: () => number } };
@@ -287,8 +322,10 @@ export function setUpT38Tests() {
     // Queries see everything, VoiceOver-hidden or not (the drawing is hidden); the tests check hiding explicitly.
     configure({ defaultIncludeHiddenElements: true });
     jest.useFakeTimers({ doNotFake: ['queueMicrotask', 'nextTick', 'setImmediate', 'clearImmediate'] });
-    g.requestAnimationFrame = (cb: (ts: number) => void) => setTimeout(() => cb(Date.now()), 16);
-    g.cancelAnimationFrame = (id: ReturnType<typeof setTimeout>) => clearTimeout(id);
+    frames.background = false;
+    frames.pending.clear();
+    g.requestAnimationFrame = requestFrame;
+    g.cancelAnimationFrame = cancelFrame;
     g.performance.now = () => Date.now();
     jest.clearAllMocks();
     mockT38.theme = themeFor();

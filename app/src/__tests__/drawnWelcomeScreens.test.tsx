@@ -183,11 +183,14 @@ describe('OS1.3 · the swap', () => {
     expectAfter();
     await r.unmount();
 
-    // Backgrounded mid-play and back four seconds later: the after state, not a restart from 7.5.
+    // Backgrounded mid-play and back four seconds later: the after state, not a restart from 7.5 and not the rest of
+    // the swap. While backgrounded no frame runs (as on iOS), so a clock that counted frames would come back mid-swap.
     const r2 = await mount(<WelcomeScreen />);
     await advance(1000);
     await setAppState('background');
+    const away = tree();
     await advance(4000);
+    expect(tree()).toBe(away);
     await setAppState('active');
     await advance(20);
     expectAfter();
@@ -227,6 +230,28 @@ describe('OS1.3 · the swap', () => {
     const still = tree();
     await advance(3000);
     expect(tree()).toBe(still);
+  });
+
+  it('OS1.3 · Reduce Motion turned on mid-play and off again holds the after state (no second play)', async () => {
+    // TESTING.md OS1.3 must-not: "a second play without a new mount (… a re-render)"; the verifier's edge list.
+    const r = await mount(<WelcomeScreen />);
+    await advance(1050);
+    expect(textAt('welcome-card-score')).toBe('7.6');
+    mockT38.theme = themeFor({ reduceMotion: true });
+    await r.rerender(<WelcomeScreen />);
+    expectAfter();
+    await advance(450);
+    const still = tree();
+    mockT38.theme = themeFor({ reduceMotion: false });
+    await r.rerender(<WelcomeScreen />);
+    expectAfter();
+    expect(tree()).toBe(still);
+    for (let i = 0; i < 6; i += 1) {
+      await advance(500);
+      expectAfter();
+    }
+    expect(tree()).toBe(still);
+    expect(jest.getTimerCount()).toBe(0);
   });
 
   it('OS1.3 · an accessibility text size shows the after state with no animation', async () => {
