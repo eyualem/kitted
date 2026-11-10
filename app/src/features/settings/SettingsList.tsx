@@ -55,6 +55,9 @@ export function Section({ label, footer, header, children }: { label?: string; f
   );
 }
 
+/** How far a one-word row title may shrink to stay whole on its line (it only shrinks when it doesn't fit). */
+const TITLE_MIN_SCALE = 0.5;
+
 function useRowStyle(): StyleProp<ViewStyle> {
   const { isAccessibilitySize: ax } = useTheme();
   return ax
@@ -62,9 +65,17 @@ function useRowStyle(): StyleProp<ViewStyle> {
     : { minHeight: 44, paddingVertical: space.rowY, paddingHorizontal: space.rowX, gap: space.m, flexDirection: 'row', alignItems: 'center' };
 }
 
-function Title({ children, color = 'ink', hidden }: { children: string; color?: 'ink' | 'ink2'; hidden?: boolean }) {
+function Title({ children, color = 'ink', hidden, fit }: { children: string; color?: 'ink' | 'ink2'; hidden?: boolean; fit?: boolean }) {
   return (
-    <KText variant="callout" weight="600" color={color} style={{ flexShrink: 1 }} accessibilityElementsHidden={hidden} importantForAccessibility={hidden ? 'no-hide-descendants' : undefined}>
+    <KText
+      variant="callout"
+      weight="600"
+      color={color}
+      style={{ flexShrink: 1 }}
+      accessibilityElementsHidden={hidden}
+      importantForAccessibility={hidden ? 'no-hide-descendants' : undefined}
+      {...(fit ? { numberOfLines: 1, adjustsFontSizeToFit: true, minimumFontScale: TITLE_MIN_SCALE } : null)}
+    >
       {children}
     </KText>
   );
@@ -85,7 +96,9 @@ export function LinkRow({ title, value, onPress, hint, chevron = true, detail, t
       style={({ pressed }) => [row, pressed && { backgroundColor: colors.surface2 }]}
     >
       <View style={ax ? { gap: 2 } : { flex: 1, gap: 2 }}>
-        <Title>{title}</Title>
+        {/* One word ("Acknowledgements") can't wrap between words: at the largest sizes it shrinks to its line
+            instead of breaking mid-word (SY1.6). Titles with spaces wrap as usual. */}
+        <Title fit={!/\s/.test(title.trim())}>{title}</Title>
         {detail && !ax ? <Detail>{detail}</Detail> : null}
       </View>
       {value || chevron ? (
