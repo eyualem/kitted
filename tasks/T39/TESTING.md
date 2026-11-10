@@ -2,7 +2,7 @@
 
 Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
 
-**Lock:** `<commit SHA>` · <date> · tests: `<path>`, `<path>`
+**Lock:** `5f6f3672` · 2026-11-10 · tests: `app/src/__tests__/T39-aboutStep.test.ts`, `app/src/__tests__/T39-setupScreens.test.tsx`, `app/src/__tests__/T39-offerCard.test.tsx`, `app/src/__tests__/T39-styleProfile.test.tsx`, `app/src/__tests__/T39-noLeak.test.ts`, `app/src/testing/t39ScreenMocks.tsx`, `app/e2e/flows/T39-setup-fresh.yaml`, `app/e2e/flows/T39-setup-not-now.yaml`, `app/e2e/flows/T39-setup-later.yaml`, `app/e2e/flows/T39-under-18.yaml`, `app/e2e/flows/T39-screens.yaml`
 
 Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1, OS3.2, OS3.3, OS4.1, OS4.2, OS4.3, OS4.4, OS4.5, OS4.6, OS4.7, OS5.1, OS5.2, OS5.3, OS5.4, OS5.5, OS5.6, OS5.7, F1.1, F1.2, F1.3, SY4.1, SY4.2, SY4.4** (23). All 23 are below.
 
